@@ -824,42 +824,35 @@ async function initialMerge(): Promise<void> {
     return;
   }
 
+  const remoteBase=cloneState(pulled.account.state);
+  acceptRemoteBaseline(pulled.account);
   const localState = store.state;
-  const merged = mergeStates(pulled.account.state, localState, true);
+  const merged = mergeStates(remoteBase, localState, true);
   applyingRemote = true;
   store.state = merged;
-  rememberAccount(pulled.account.userId, pulled.account.revision);
   store.save();
   applyingRemote = false;
 
-  const saved = await request('account-save', { state: merged });
-  if (saved.status === 409 && saved.body.account?.state) {
-    const retryRevision = safeInteger(saved.body.account.revision);
-    if (retryRevision === null) return;
-    const retryMerged = mergeStates(saved.body.account.state, merged, true);
-    applyingRemote = true;
-    store.state = retryMerged;
-    rememberAccount(String(saved.body.account.userId || ''), retryRevision);
-    store.save();
-    applyingRemote = false;
-    const retried = await request('account-save', { state: retryMerged });
-    const retriedRevision = safeInteger(retried.body.account?.revision);
-    if (retried.ok && retried.body.account && retriedRevision !== null) {
-      rememberAccount(String(retried.body.account.userId || ''), retriedRevision);
-    }
+  dirtyGlobal=false;
+  dirtyPaperKeys.clear();
+  markInitialDifferences(remoteBase,merged);
+  const keys=[...dirtyPaperKeys];
+  const globalWasDirty=dirtyGlobal;
+  const outcome=v3WriteActive
+    ? await persistV3Desired(merged,keys,globalWasDirty)
+    : await persistLegacyDesired(merged);
+  if(outcome.kind==='unauthorized'){
+    clearRememberedAccount();
     return;
   }
-  const savedRevision = safeInteger(saved.body.account?.revision);
-  if (saved.ok && saved.body.account && savedRevision !== null) {
-    rememberAccount(String(saved.body.account.userId || ''), savedRevision);
-  }
+  if(outcome.kind==='ok')clearSyncedDirty(outcome.state,keys,globalWasDirty);
 }
 
 async function pullRemote(): Promise<void> {
-  if (!activeToken || saving || saveTimer !== undefined) return;
+  if (!activeToken || saving || saveTimer !== undefined || localDirty()) return;
 
   let remote: RemoteAccount | null = null;
-  const delta = await v3DeltaFromState(revision, store.state);
+  const delta = await v3DeltaFromState(revision, syncedState || store.state);
   if (delta.kind === 'unauthorized') {
     clearRememberedAccount();
     return;
@@ -889,38 +882,46 @@ async function pullRemote(): Promise<void> {
     if (remote) setReadDiagnostic('legacy');
   }
 
-  if (remote && remote.revision > revision) applyRemote(remote);
+  if (!remote) return;
+  v3WriteActive=remote.writeEnabled;
+  setWriteDiagnostic(v3WriteActive?'v3':'legacy');
+  if (remote.revision !== revision) applyRemote(remote);
+  else if (!syncedState) syncedState=cloneState(remote.state);
 }
 
 async function saveRemote(): Promise<void> {
-  if (!activeToken || applyingRemote) return;
+  if (!activeToken || applyingRemote || !localDirty()) return;
   if (saving) { queuedSave = true; return; }
   saving = true;
+  const desired=cloneState(store.state);
+  const keys=[...dirtyPaperKeys];
+  const globalWasDirty=dirtyGlobal;
   try {
-    let result = await request('account-save', { state: store.state });
-    if (result.status === 409 && result.body.account?.state) {
-      const conflictRevision = safeInteger(result.body.account.revision);
-      if (conflictRevision === null) return;
-      const merged = mergeStates(result.body.account.state, store.state, true);
-      applyingRemote = true;
-      store.state = merged;
-      rememberAccount(String(result.body.account.userId || ''), conflictRevision);
-      store.save();
-      applyingRemote = false;
-      result = await request('account-save', { state: merged });
+    const outcome=v3WriteActive
+      ? await persistV3Desired(desired,keys,globalWasDirty)
+      : await persistLegacyDesired(desired);
+    if(outcome.kind==='unauthorized'){
+      clearRememberedAccount();
+      return;
     }
-    const savedRevision = safeInteger(result.body.account?.revision);
-    if (result.ok && result.body.account && savedRevision !== null) {
-      rememberAccount(String(result.body.account.userId || ''), savedRevision);
-    }
+    if(outcome.kind==='ok')clearSyncedDirty(outcome.state,keys,globalWasDirty);
   } finally {
     saving = false;
     if (queuedSave) { queuedSave = false; void saveRemote(); }
   }
 }
 
-function scheduleSave(): void {
+function scheduleSave(event:Event): void {
   if (!activeToken || applyingRemote) return;
+  const detail=(event as CustomEvent<{scope?:'paper'|'global';paperId?:string;paperIds?:string[]}>).detail;
+  if(detail?.scope==='paper'&&typeof detail.paperId==='string'&&detail.paperId){
+    dirtyPaperKeys.add(detail.paperId);
+  }else{
+    dirtyGlobal=true;
+  }
+  for(const paperId of detail?.paperIds || []){
+    if(typeof paperId==='string'&&paperId)dirtyPaperKeys.add(paperId);
+  }
   if (saveTimer) window.clearTimeout(saveTimer);
   saveTimer = window.setTimeout(() => { saveTimer = undefined; void saveRemote(); }, SAVE_DEBOUNCE_MS);
 }
@@ -929,6 +930,11 @@ async function detectSessionChange(): Promise<void> {
   const token = sessionToken();
   if (token === activeToken) return;
   activeToken = token;
+  syncedState=null;
+  v3WriteActive=false;
+  dirtyGlobal=false;
+  dirtyPaperKeys.clear();
+  setWriteDiagnostic(token?'legacy':'none');
   if (!token) {
     clearRememberedAccount();
     setReadDiagnostic('none');
@@ -943,6 +949,7 @@ store.addEventListener('change', scheduleSave);
 activeToken = sessionToken();
 activeUserId = storedUserId();
 revision = activeUserId ? storedRevision() : 0;
+setWriteDiagnostic(activeToken?'legacy':'none');
 if (activeToken) void initialMerge();
 else setReadDiagnostic('none');
 window.setInterval(() => { void detectSessionChange(); }, TOKEN_WATCH_MS);
