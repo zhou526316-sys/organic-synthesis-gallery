@@ -27,6 +27,7 @@ test('D3c V3 schema is isolated, additive and applied before Worker deployment',
     'user_library_v3_commits',
     'user_library_v3_changes',
     'user_library_v3_shape',
+    'user_library_v3_authority',
     'user_library_v3_shadow_sync',
     'user_library_v3_backfill',
   ]){
@@ -65,7 +66,10 @@ test('D3c4a ships dormant authenticated bounded V3 mutation without activating w
   assert.ok(userUi.includes('USER_LIBRARY_V3_SHADOW_WRITE_FAILED'));
   assert.ok((userUi.match(/safeV3ShadowLibraryWrite\(/g)||[]).length>=3);
   assert.ok(userUi.includes('applyUserLibraryV3Mutation'));
+  assert.ok(userUi.includes('userLibraryV3Authority'));
   assert.ok(userUi.includes("mode === 'account-v3-mutate'"));
+  assert.ok(userUi.includes("'user_library_v3_write_suspended'"));
+  assert.ok(userUi.includes('writeAuthority'));
   assert.ok(userUi.includes("'user_library_v3_write_disabled'"));
   assert.ok(userUi.includes("'user_library_client_upgrade_required'"));
   for(const mode of ['account-v3-head','account-v3-page','account-v3-delta','account-v3-mutate']) assert.ok(userUi.includes(mode),mode);
@@ -126,6 +130,8 @@ test('D3c mutation and delta primitives are bounded and revision-fenced',()=>{
   assert.ok(v3.includes('deleted?1:0'));
   assert.ok(v3.includes('INSERT INTO user_paper_state'));
   assert.ok(v3.includes('INSERT INTO user_library_head'));
+  assert.ok(v3.includes('INSERT INTO user_library_v3_authority'));
+  assert.ok(v3.includes('DELETE FROM user_library_state WHERE user_id=?'));
   assert.ok(v3.includes('DELETE FROM user_library_v3_changes'));
   assert.ok(v3.includes('DELETE FROM user_library_v3_commits'));
   assert.ok(v3.includes('deleted=1 AND revision<?'));
@@ -142,6 +148,8 @@ test('D3c4a client mutation foundation is dirty-key bounded and dormant behind t
     'persistV3Desired',
     'user_library_client_upgrade_required',
     "dataset.accountSyncWrite",
+    "writeAuthority",
+    "'suspended'",
   ]) assert.ok(accountSync.includes(token),token);
   assert.ok(accountSync.includes("detail?.scope==='paper'"));
   assert.ok(accountSync.includes('detail?.paperIds || []'));
@@ -152,6 +160,7 @@ test('D3c4a client mutation foundation is dirty-key bounded and dormant behind t
   assert.ok(accountSyncTest.includes('toBeGreaterThan(1_500_000)'));
   assert.ok(accountSyncTest.includes('toEqual([32,32,1])'));
   assert.ok(accountSyncTest.includes('legacy_save_must_not_run'));
+  assert.ok(accountSyncTest.includes('write_must_not_run_while_suspended'));
   const config=section(
     deploy,
     '- name: Generate frontend deployment configuration',
