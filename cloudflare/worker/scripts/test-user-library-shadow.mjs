@@ -11,6 +11,7 @@ import {
   shadowWriteUserLibraryState,
   splitUserLibraryState,
   stableStateJson,
+  userLibraryRowShadowEnabled,
 } from '../src/user-library-shadow.js';
 
 class Statement {
@@ -80,7 +81,7 @@ class D1 {
   async batch(statements){const out=[];for(const s of statements)out.push(await s.run());return out;}
   close(){this.sqlite.close();}
 }
-const envFor=db=>({DB:db,USER_LIBRARY_ROW_SHADOW_ENABLED:'1',USER_LIBRARY_ROW_READ_ENABLED:'1'});
+const envFor=db=>({DB:db,USER_LIBRARY_ROW_SHADOW_ENABLED:'1',USER_LIBRARY_ROW_READ_ENABLED:'1',USER_LIBRARY_V3_WRITE_ENABLED:'0'});
 
 function stateFixture(){
   return {
@@ -251,6 +252,34 @@ test('row read flag is independently gated and empty accounts remain a valid emp
   assert.deepEqual(empty.state,{});
 });
 
+
+test('V3 write authority disables legacy row shadow, backfill and parity compare',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env={...envFor(db),USER_LIBRARY_V3_WRITE_ENABLED:'1'};
+  db.sqlite.prepare('INSERT INTO users(id) VALUES (?)').run('u-v3-authority');
+  const state=stateFixture();
+  db.sqlite.prepare('INSERT INTO user_library_state(user_id,state_json,revision,updated_at) VALUES(?,?,?,?)')
+    .run('u-v3-authority',JSON.stringify(state),3,300);
+
+  assert.equal(userLibraryRowShadowEnabled(env),false);
+  const write=await shadowWriteUserLibraryState(env,'u-v3-authority',state,3,300);
+  assert.equal(write.enabled,false);
+  assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS c FROM user_library_head').get().c,0);
+
+  const backfill=await backfillUserLibraryShadowPage(env,20);
+  assert.equal(backfill.status,409);
+  assert.equal(backfill.body.error,'user_library_row_shadow_disabled');
+
+  const compare=await compareUserLibraryShadowPage(env,0,20);
+  assert.equal(compare.status,409);
+  assert.equal(compare.body.error,'user_library_row_shadow_disabled');
+
+  const status=await getUserLibraryShadowStatus(env);
+  assert.equal(status.body.configured,true);
+  assert.equal(status.body.enabled,false);
+  assert.equal(status.body.readPathActive,false);
+  assert.equal(status.body.v3CompatHeads,0);
+});
 
 test('real account-pull API uses rows when fresh and legacy fallback when row revision is stale',async t=>{
   const db=new D1();t.after(()=>db.close());

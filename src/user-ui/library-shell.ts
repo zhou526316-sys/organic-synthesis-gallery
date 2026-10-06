@@ -648,8 +648,13 @@ export class GalleryUserShell extends HTMLElement {
       if (store.state.statuses.length <= 1) { alert(this.tr('至少保留一个阅读状态。', 'Keep at least one reading status.')); return; }
       if (!confirm(this.tr(`删除阅读状态“${current.name}”？使用该状态的文献会恢复为未设置。`, `Delete reading status “${current.name}”? Papers using it will become unset.`))) return;
       store.state.statuses = store.state.statuses.filter(item => item.id !== id);
-      Object.values(store.state.papers).forEach(paper => { if (paper.statusId === id) delete paper.statusId; });
-      store.save(); return;
+      const affectedPaperIds:string[]=[];
+      for(const [paperId,paper] of Object.entries(store.state.papers)){
+        if(paper.statusId!==id)continue;
+        delete paper.statusId;
+        affectedPaperIds.push(paperId);
+      }
+      store.save(true,{scope:'global',paperIds:affectedPaperIds}); return;
     }
     if (action === 'add-collection') { const name = prompt(this.tr('收藏夹名称', 'Folder name')); if (name?.trim()) { store.state.collections.push({ id: makeId('collection'), name: name.trim(), style: { rgb: [96,116,145], shape: 'pill' } }); store.save(); } return; }
     if (action === 'add-alias') { const name = prompt(this.tr('概念组名称', 'Concept group name')); if (!name?.trim()) return; const raw = prompt(this.tr('同义词/别名，用逗号分隔', 'Synonyms/aliases separated by commas')); const terms = (raw || '').split(/[,，;]/).map(value => value.trim()).filter(Boolean); if (terms.length) { store.state.aliases.push({ id: makeId('alias'), name: name.trim(), terms }); store.save(); } return; }
