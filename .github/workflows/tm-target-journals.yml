@@ -6,6 +6,7 @@ on:
     paths:
       - 'public/toc-mainline.user.js'
       - 'cloudflare/worker/src/media.js'
+      - 'cloudflare/worker/src/local-captures.js'
       - 'scripts/test-rsc-media-revalidation.mjs'
       - 'scripts/tm-rsc-elsevier-ccs.inc.js'
       - 'scripts/tm-private-pdf-capture.inc.js'
@@ -40,8 +41,7 @@ jobs:
             docs/literature-scope-contract.md docs/literature-update-protocol.md \
             public/papers.gz.b64 public/rolling-supplement.json \
             .github/workflows/literature-audit.yml .github/workflows/prepublish-review-gate.yml \
-            .github/workflows/new-body-continuous.yml audit/media-auto-policy.json \
-            cloudflare/worker/src/local-captures.js
+            .github/workflows/new-body-continuous.yml audit/media-auto-policy.json
 
       - name: Verify source syntax and existing queue/controller protections
         run: |
