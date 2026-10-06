@@ -114,6 +114,48 @@
       "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-fig2c-source.png",
       "display_width_pct": 78,
       "caption": "原文 Fig. 2c｜硼酸来源与 TMAF 当量直接影响 3a 收率：原位硼氢化得到的较干燥硼酸在较低当量下即可工作；商业硼酸需要更高用量，而继续增加 TMAF 反而使收率下降，和含氟硼物种的分布变化一致。"
+    },
+    {
+      "id": "fig1_context",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-fig1abcd.png",
+      "display_width_pct": 100,
+      "caption": "原文 Fig. 1a–d｜作者先把问题拆成四步：两个瞬态自由基直接交叉偶联为什么困难；羧酸/羧酸偶联与羧酸/硼酸偶联的差别；以及如何通过前体活化把羧酸盐和含氟硼物种的氧化窗口拉到约 0.8 V。"
+    },
+    {
+      "id": "fig2_conditions",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-fig2a-conditions.png",
+      "display_width_pct": 92,
+      "caption": "原文 Fig. 2a｜优化后的标准反应框架：羧酸与硼酸在 TMAF、B₂O₃、丙酮和氮气条件下，以 RVC/RVC 电极进行交替极性电解；后续所有物种与电位讨论都围绕这套条件展开。"
+    },
+    {
+      "id": "fig2_source",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-fig2c-water.png",
+      "display_width_pct": 76,
+      "caption": "原文 Fig. 2c｜由烯烃硼氢化得到的硼酸与商业硼酸在用量和 TMAF 当量上的差异，提示硼酸来源/含水状态会改变可用的活性硼物种分布。"
+    },
+    {
+      "id": "si_water",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-si-water.png",
+      "display_width_pct": 82,
+      "caption": "Supporting Information Table 5｜直接加水后，目标交叉产物 3a 从 58% 降到 5%，而同源偶联 4a 升到 62%。这个对照把“水会破坏交叉偶联窗口”从经验现象变成了明确的条件实验。"
+    },
+    {
+      "id": "si_radical_trap",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-si-radical-trap.png",
+      "display_width_pct": 76,
+      "caption": "Supporting Information Fig. 6｜甲基丙烯酸酯捕获有机硼来源的烷基自由基并得到加成产物，为自由基中间体提供了直接的化学捕获证据。"
+    },
+    {
+      "id": "si_icp",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-si-icp.png",
+      "display_width_pct": 72,
+      "caption": "Supporting Information Table 6｜ICP–MS 检测到的 Ni、Pd 等过渡金属仅处于 ppb–低 ppm 水平，不支持由痕量常规过渡金属催化剂主导该偶联的解释。"
+    },
+    {
+      "id": "si_bpin",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-si-bpin.png",
+      "display_width_pct": 82,
+      "caption": "Supporting Information Fig. 7｜作者提出的原位 Bpin 副产物形成路径：水使活性含氟硼物种回到硼酸，丙酮在还原半周期形成羰基自由基阴离子后可进一步把硼酸引向氧化还原不活泼的 Bpin 物种。"
     }
   ],
   "sections": [
@@ -121,19 +163,15 @@
       "eyebrow": "第一层｜先把核心难点说清楚",
       "heading": "自由基很会成键，难的是两个“都很短命”的自由基怎样只彼此相遇",
       "paragraphs": [
-        "如原文 Fig. 1a 所示，两个碳自由基一旦碰到，成键通常非常快。可正因为它们都太活泼，体系里如果同时存在 A• 和 B•，A–A、A–B、B–B 三种碰撞都会发生；哪一种产物多，首先取决于某一瞬间 A• 和 B• 各有多少。",
-        "原文 Fig. 1d 进一步把问题落到本文的两类前体上：羧酸盐和有机硼物种都能经电氧化生成短寿命烷基自由基，但它们原始氧化难易并不一致。因此作者必须先控制两边自由基的生成速率，而不能等自由基生成之后再想办法分选。"
+        "原文 Fig. 1a 把核心难题抽象成两个普通瞬态自由基之间的直接交叉偶联：它们都寿命短、都容易同类碰撞，因此交叉成键的关键不是“有没有自由基”，而是两类自由基在同一时刻各有多少。",
+        "原文 Fig. 1b–d 进一步把这一问题落到羧酸和有机硼上：羧酸盐与硼酸衍生物本来处在不同氧化窗口，作者的策略是先改变前体物种，使两边都进入约 0.8 V 的可氧化状态，再讨论后续的同步生成与选择性。"
       ],
       "figures": [
-        "fig1a_transient",
-        "fig1d_strategy"
+        "fig1_context"
       ],
       "figures_after_paragraph": {
-        "1": [
-          "fig1a_transient"
-        ],
         "2": [
-          "fig1d_strategy"
+          "fig1_context"
         ]
       }
     },
@@ -158,33 +196,32 @@
       "heading": "谁更容易被氧化，谁就先大量生成自由基，也就先和自己偶联",
       "paragraphs": [
         "当作者使用已经活化的羧酸盐去配较难氧化的烷基三氟硼酸盐时，羧酸来源的自偶联占主导；反过来，让有机硼一侧先进入容易氧化的状态，而羧酸仍保持不活泼时，又变成有机硼自偶联。",
-        "两个方向相反的对照给出了同一个结论：哪一类前体更容易被氧化，哪一类自由基就会更早、更大量地出现，并优先形成同源偶联。原文 Fig. 2b 把这个判断概括成前体物种与氧化窗口的匹配问题；相关前体之间约 400 mV 的差距，已经足以让短寿命烷基自由基明显错开生成。"
+        "两个方向相反的对照给出了同一个结论：哪一类前体更容易被氧化，哪一类自由基就会更早、更大量地出现，并优先形成同源偶联。原文 Fig. 2b 把这个判断概括成前体物种与氧化窗口的匹配问题；相关前体之间约 400 mV 的差距，已经足以让短寿命烷基自由基明显错开生成。 这与前文原文 Fig. 1d 所概括的“氧化窗口失配”正好对应。"
       ],
-      "figures": [],
-      "figures_after_paragraph": {}
+      "figures": []
     },
     {
       "eyebrow": "第四层｜TMAF 把两类前体调到同一个氧化窗口",
       "heading": "它不是普通添加剂，而是在反应开始前先把两类前体“调到同一个频道”",
       "paragraphs": [
+        "在进入物种细节之前，原文 Fig. 2a 先给出优化后的标准反应框架：RVC/RVC 电极、60 mA、8 F mol⁻¹、10 Hz，配合 TMAF、B₂O₃、丙酮和氮气。后面的电位、含氟硼物种和电极讨论，都建立在这套条件上。",
         "原文 Fig. 2b 给出了 TMAF 调控前体物种的核心图景：羧酸转化为羧酸盐后，氧化峰降到约 0.8 V；硼酸在适量氟离子下形成单氟/二氟硼酸盐，它们的氧化窗口也落在约 0.8 V，因此两边开始具备在相近电位生成自由基的条件。",
-        "原文 Fig. 2d–f 用循环伏安和 ¹⁹F NMR 把这一物种变化与氧化电位对应起来。TMAF 也不是越多越好：氟离子过量时，三氟硼酸盐逐渐占主导，氧化电位升到约 1.2 V，两个前体又重新不同步。",
-        "把这些认识落实到反应条件，就是原文 Fig. 2a：TMAF、RVC 电极、交替极性、B₂O₃ 和无水/惰性环境共同构成标准体系。这里每个条件都对应前文的一类失活或失配问题，而不是互相独立的经验优化。"
+        "原文 Fig. 2d–f 用循环伏安和 ¹⁹F NMR 把这一物种变化与氧化电位对应起来。TMAF 也不是越多越好：氟离子过量时，三氟硼酸盐逐渐占主导，氧化电位升到约 1.2 V，两个前体又重新不同步。"
       ],
       "figures": [
+        "fig2_conditions",
         "fig2_activation",
-        "fig2_redox",
-        "fig2a_conditions"
+        "fig2_redox"
       ],
       "figures_after_paragraph": {
         "1": [
-          "fig2_activation"
+          "fig2_conditions"
         ],
         "2": [
-          "fig2_redox"
+          "fig2_activation"
         ],
         "3": [
-          "fig2a_conditions"
+          "fig2_redox"
         ]
       }
     },
@@ -193,14 +230,18 @@
       "heading": "水不是简单降低电导或稀释，而是直接把活性含氟硼物种推回不活泼的硼酸",
       "paragraphs": [
         "原文 Fig. 2c 直接比较了不同硼酸来源和 TMAF 当量：原位硼氢化得到、比较干燥的硼酸，用较低当量即可取得约 55% 的交叉偶联；商业硼酸通常需要明显更高用量，而继续增加 TMAF 反而使收率下降。",
-        "结合补充实验，这一趋势可以进一步归因到含水量和含氟硼物种分布：水会把 BFₓ(OH)ᵧ 活性物种重新推回硼酸，并可促进形成当前体系几乎不能被氧化的频哪醇硼酸酯。因此 B₂O₃ 更合理地理解为维持低含水量、保护活性物种分布的干燥剂。"
+        "Supporting Information Table 5 给出了更直接的对照：标准条件下交叉产物 3a 为 58%，加入 0.5 mL 水并去掉 B₂O₃ 后，3a 降到 5%，同源偶联 4a 升到 62%。结合补充实验中的物种分析，水会把 BFₓ(OH)ᵧ 活性硼物种推回硼酸，并在丙酮体系中促进形成当前条件下难以继续氧化的 Bpin 物种。"
       ],
       "figures": [
-        "fig2c_water"
+        "fig2_source",
+        "si_water"
       ],
       "figures_after_paragraph": {
         "1": [
-          "fig2c_water"
+          "fig2_source"
+        ],
+        "2": [
+          "si_water"
         ]
       }
     },
@@ -240,10 +281,23 @@
       "eyebrow": "第八层｜哪些实验让自由基图景更可信",
       "heading": "自由基捕获、痕量金属和副产物分别回答三个不同问题",
       "paragraphs": [
-        "自由基捕获和 ICP–MS 属于正文机理叙事之外的补充控制：甲基丙烯酸甲酯可以捕获有机硼来源的烷基自由基，而过渡金属含量低于 ppm 水平，因此不支持痕量 Ni/Pd 主导常规交叉偶联的解释。这里后续只在 SI 图能干净对应时补图，不用无关主图代替。",
-        "丙酮相关副反应则已经画在原文 Fig. 3d 右侧：还原半周期中丙酮可以接受电子形成羰基自由基阴离子，随后参与形成观察到的 Bpin 副产物。因此交替极性的还原半周期并不是“空档”。"
+        "Supporting Information Fig. 6 用甲基丙烯酸酯捕获到了有机硼来源的烷基自由基；Supporting Information Table 6 的 ICP–MS 则显示 Ni、Pd 等过渡金属仅处于 ppb–低 ppm 水平。两组实验分别支持“确有自由基生成”和“不需要用痕量常规过渡金属催化来解释反应”。",
+        "Supporting Information Fig. 7 进一步解释了丙酮并非完全沉默：在还原半周期里，丙酮可接受电子形成羰基自由基阴离子，随后参与把硼酸引向 Bpin 副产物。这说明交替极性的还原半周期并不是空档，而是会真实改变副反应网络。"
       ],
-      "figures": []
+      "figures": [
+        "si_radical_trap",
+        "si_icp",
+        "si_bpin"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "si_radical_trap",
+          "si_icp"
+        ],
+        "2": [
+          "si_bpin"
+        ]
+      }
     },
     {
       "eyebrow": "第九层｜底物拓展：这套交叉偶联到底能走多远",
