@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const mode=process.argv[2]||'source';
 const root=mode==='source'?'public':mode;
 const src=fs.readFileSync(root+'/toc-mainline.user.js','utf8');
-for(const needle of ["// @version      6.2.37","var VERSION = '6.2.20';","PUBLISHER_MEDIA_REVISION = '20261006-rsc-preview-reject-v12'","https://api.crossref.org/works/","ccs-crossref-route-v1","ccsTocIndexUrlFromCrossrefPayload",'function pairedJobs','assertBoundCaptureJob','captureVersion: VERSION','capture_server_upgrade_pending','overnightRetryEligible','checkpointKey','capture_job_stale_or_unbound','capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch','svgQuality','visualScope','candidateRequestUrl','figuresStaged','pending_verified_promotion','runtimeVersion: VERSION','GM_listValues','NEXT_BATCH_DELAY_MS = 12000'])assert.ok(src.includes(needle),'Missing release contract: '+needle);
+for(const needle of ["// @version      6.2.37","var VERSION = '6.2.20';","PUBLISHER_MEDIA_REVISION = '20261006-rsc-remote-html-pdf-v13'","https://api.crossref.org/works/","ccs-crossref-route-v1","ccsTocIndexUrlFromCrossrefPayload",'function pairedJobs','assertBoundCaptureJob','captureVersion: VERSION','capture_server_upgrade_pending','overnightRetryEligible','checkpointKey','capture_job_stale_or_unbound','capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch','svgQuality','visualScope','candidateRequestUrl','figuresStaged','pending_verified_promotion','runtimeVersion: VERSION','GM_listValues','NEXT_BATCH_DELAY_MS = 12000'])assert.ok(src.includes(needle),'Missing release contract: '+needle);
 assert.ok(!src.includes("String(queue.mediaGeneration)+':'+String(queue.generatedAt)"),'Queue refresh must not erase capture completion');
 assert.ok(!/BRIDGE_WRITE_TOKEN\s*=|Bearer [A-Za-z0-9_-]{20,}/.test(src),'Embedded write credential');
 const a=src.indexOf('  async function uploadArticleFigure('),b=src.indexOf('  async function uploadCapture(',a);
@@ -16,7 +16,7 @@ const loader=fs.readFileSync('cloudflare/scripts/build-bridge-loader.mjs','utf8'
 assert.ok(loader.includes("const loaderVersion = '2.2.57';")&&loader.includes('// @grant        GM_listValues'));
 if(mode!=='source'){
  const bridge=fs.readFileSync(root+'/gallery-vpn-bridge.user.js','utf8');
- assert.ok(bridge.includes('// @version      2.2.57')&&bridge.includes("var VERSION = '6.2.20';")&&bridge.includes("PUBLISHER_MEDIA_REVISION = '20261006-rsc-preview-reject-v12'")&&bridge.includes('https://api.crossref.org/works/'));
+ assert.ok(bridge.includes('// @version      2.2.57')&&bridge.includes("var VERSION = '6.2.20';")&&bridge.includes("PUBLISHER_MEDIA_REVISION = '20261006-rsc-remote-html-pdf-v13'")&&bridge.includes('https://api.crossref.org/works/'));
  assert.ok(bridge.includes('organicGalleryCloudflareBridgeWriteToken'));
  assert.ok(!/\beval\s*\(/.test(bridge));
  const q=JSON.parse(fs.readFileSync(root+'/toc-demand-live.json','utf8'));
