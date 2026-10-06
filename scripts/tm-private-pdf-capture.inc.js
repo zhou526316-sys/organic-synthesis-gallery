@@ -69,7 +69,7 @@
     if(node&&String(node.getAttribute&&node.getAttribute('type')||'').toLowerCase()==='application/pdf')score+=80;
     if(/\b(?:download\s+)?pdf\b/i.test(text))score+=60;
     if(/\/doi\/(?:pdf|epdf)\//.test(u)||/\/pdfdirect\//.test(u)||/\.pdf(?:[?#]|$)/.test(u))score+=40;
-    if(/support|supplement|supporting|si\b|esm|appendix/.test(t+' '+u))score-=100;
+    if(/support|supplement|supporting|(?:^|[\/_\.-])suppl(?:ement)?(?:[\/_\.?&#-]|$)|(?:^|[\/_\.-])si(?:[\/_\.?&#-]|$)|esm|appendix/.test(t+' '+u))score-=100;
     return score;
   }
 
@@ -106,7 +106,7 @@
       try{raw=decodeURIComponent(raw);}catch(_){}
       var url=normalizeUrl(raw,baseUrl||location.href);
       if(!url||url===normalizeUrl(baseUrl,baseUrl)||seen.has(url)||!privatePdfHostAllowed(publisher,url)||!privatePdfUrlLooksStrong(url))return;
-      if(/support|supplement|supporting|si\b|esm|appendix/i.test(url))return;
+      if(/support|supplement|supporting|(?:^|[\/_\.-])suppl(?:ement)?(?:[\/_\.?&#-]|$)|(?:^|[\/_\.-])si(?:[\/_\.?&#-]|$)|esm|appendix/i.test(url))return;
       seen.add(url);rows.push({url:url,score:Number(score||60),source:source||'pdf_viewer_asset'});
     }
     try{
