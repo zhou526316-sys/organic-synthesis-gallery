@@ -1,4 +1,4 @@
-export const RESULT_WINDOW_SIZE = 60;
+export const RESULT_WINDOW_SIZE = 24;
 
 export function resultWindowState(total, page = 1, size = RESULT_WINDOW_SIZE) {
   if (!Number.isSafeInteger(total) || total < 0) throw new Error('invalid_result_total');
