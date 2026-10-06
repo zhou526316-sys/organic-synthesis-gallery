@@ -777,6 +777,14 @@ CREATE TABLE IF NOT EXISTS user_library_v3_shape (
   revision INTEGER NOT NULL CHECK (revision >= 0)
 );
 
+
+CREATE TABLE IF NOT EXISTS user_library_v3_authority (
+  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  authority TEXT NOT NULL DEFAULT 'v3' CHECK (authority = 'v3'),
+  activated_revision INTEGER NOT NULL CHECK (activated_revision >= 1),
+  activated_at INTEGER NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS user_library_v3_shadow_sync (
   user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
   source_revision INTEGER NOT NULL DEFAULT 0 CHECK (source_revision >= 0),
