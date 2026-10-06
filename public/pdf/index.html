@@ -11,7 +11,7 @@
     header{display:flex;align-items:center;gap:12px;min-height:58px;padding:10px 16px;background:#fff;border-bottom:1px solid #d9e2ef}
     a{color:#2456c6;text-decoration:none;font-weight:650}#doi{font-size:13px;color:#56657a;overflow-wrap:anywhere}
     main{position:relative;flex:1;min-height:0}#pdf-frame{width:100%;height:100%;border:0;background:#fff}
-    #status{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:#56657a;background:#f5f7fb}
+    #status{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center;color:#56657a;background:#f5f7fb}
     #status[hidden]{display:none}.bad{color:#9f2d20}
   </style>
 </head>
@@ -30,18 +30,33 @@
       const frame=document.getElementById('pdf-frame');
       document.getElementById('doi').textContent=doi;
       const safeFallback=()=>{try{const u=new URL(fallback,location.origin);return /^https?:$/.test(u.protocol)?u.href:'';}catch{return ''}};
-      const goFallback=()=>{const url=safeFallback();if(url)location.replace(url);else{status.textContent='该论文尚无可用的私有 PDF。';status.className='bad';}};
+      const showFallback=()=>{
+        const url=safeFallback();
+        status.replaceChildren();
+        const message=document.createElement('div');
+        message.textContent='该论文尚无已验证的私有 PDF。';
+        status.appendChild(message);
+        if(url){
+          const link=document.createElement('a');
+          link.id='publisher-fallback';
+          link.href=url;
+          link.rel='noopener noreferrer';
+          link.textContent='打开出版社原文 ↗';
+          status.appendChild(link);
+        }
+        status.className='bad';
+      };
       if(!/^10\.\d{4,9}\/.+/.test(doi)){status.textContent='DOI 无效。';status.className='bad';return;}
       let token='';try{token=localStorage.getItem(SESSION_KEY)||'';}catch{}
-      if(!token){goFallback();return;}
+      if(!token){showFallback();return;}
       const url=new URL('/api/user-ui/private-pdf/open',API_BASE);url.searchParams.set('doi',doi);
       fetch(url,{method:'POST',headers:{authorization:'Bearer '+token},cache:'no-store'})
         .then(async response=>response.ok?response.json():null)
         .then(data=>{
-          if(!data||data.available!==true||typeof data.url!=='string'){goFallback();return;}
+          if(!data||data.available!==true||typeof data.url!=='string'){showFallback();return;}
           frame.src=data.url;frame.hidden=false;status.hidden=true;
         })
-        .catch(goFallback);
+        .catch(showFallback);
     })();
   </script>
 </body>

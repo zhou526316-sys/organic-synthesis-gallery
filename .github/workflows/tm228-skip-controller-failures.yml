@@ -61,12 +61,13 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.50' public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.56' public/gallery-vpn-bridge.user.js
           grep -F "var VERSION = '6.2.20';" public/gallery-vpn-bridge.user.js
           grep -F "var CONTROLLER_REVISION = '2.2.41';" public/gallery-vpn-bridge.user.js
           grep -F 'controllerFailureDisposition' public/gallery-vpn-bridge.user.js
           grep -F "badge('已跳过 '" public/gallery-vpn-bridge.user.js
-          grep -F "controller_lease_lost|another_task_still_active|capture_server_upgrade_pending" public/gallery-vpn-bridge.user.js
+          grep -F "controller_lease_lost|capture_server_upgrade_pending" public/gallery-vpn-bridge.user.js
+          grep -F "another_task_still_active|task_tab_handle_unavailable|previous_task_tab_not_closed" public/gallery-vpn-bridge.user.js
       - uses: actions/upload-artifact@v4
         if: always()
         with:
