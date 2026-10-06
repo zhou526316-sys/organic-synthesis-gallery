@@ -2,10 +2,10 @@ name: Media delivery integrity regression
 on:
   push:
     branches: [fix/media-delivery-20261004, main]
-    paths: [scripts/apply-media-delivery-fix.py, scripts/test-media-delivery-fix.mjs, cloudflare/worker/src/publication-pagination.js, cloudflare/worker/src/local-captures.js, cloudflare/scripts/read-publication-pages.mjs, cloudflare/scripts/merge-new-body-auto.mjs, cloudflare/scripts/merge-worker-media.mjs, cloudflare/scripts/build-pages-mirror.mjs, .github/workflows/media-delivery-fix.yml]
+    paths: [scripts/apply-media-delivery-fix.py, scripts/test-media-delivery-fix.mjs, cloudflare/worker/scripts/test-tampermonkey-report-history.mjs, cloudflare/worker/src/publication-pagination.js, cloudflare/worker/src/local-captures.js, cloudflare/scripts/read-publication-pages.mjs, cloudflare/scripts/merge-new-body-auto.mjs, cloudflare/scripts/merge-worker-media.mjs, cloudflare/scripts/build-pages-mirror.mjs, .github/workflows/media-delivery-fix.yml]
   pull_request:
     branches: [main]
-    paths: [scripts/test-media-delivery-fix.mjs, cloudflare/worker/src/publication-pagination.js, cloudflare/worker/src/local-captures.js, cloudflare/scripts/read-publication-pages.mjs, cloudflare/scripts/merge-new-body-auto.mjs, cloudflare/scripts/merge-worker-media.mjs, cloudflare/scripts/build-pages-mirror.mjs, .github/workflows/media-delivery-fix.yml]
+    paths: [scripts/test-media-delivery-fix.mjs, cloudflare/worker/scripts/test-tampermonkey-report-history.mjs, cloudflare/worker/src/publication-pagination.js, cloudflare/worker/src/local-captures.js, cloudflare/scripts/read-publication-pages.mjs, cloudflare/scripts/merge-new-body-auto.mjs, cloudflare/scripts/merge-worker-media.mjs, cloudflare/scripts/build-pages-mirror.mjs, .github/workflows/media-delivery-fix.yml]
 permissions:
   contents: read
 concurrency:
