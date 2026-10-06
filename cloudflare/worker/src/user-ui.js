@@ -311,7 +311,7 @@ async function accountState(env, payload, ctx) {
   if (!session) return { status: 401, body: { error: 'not_authenticated' } };
 
   const mode = String(payload?.mode || '');
-  const writeConfigured = userLibraryV3WriteEnabled(env);
+  const writeConfigured = userLibraryV3WriteEnabled(env, session.user_id);
   const writeAuthority = await userLibraryV3Authority(env,session.user_id);
   if (mode === 'account-v3-mutate') {
     if (!writeConfigured) {
