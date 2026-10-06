@@ -241,6 +241,7 @@ let architectureRefreshSerial = 0;
 let resultWindowPage = 1;
 let remoteLiteratureView: RemoteLiteratureViewState | null = null;
 let remoteLiteratureViewLoading = false;
+let literatureRegistryKey = '';
 
 store.addEventListener('counts', () => {
   if (sort === 'readers') renderCards();
@@ -510,8 +511,10 @@ function mergePapers(base: Paper[], additions: Paper[]): Paper[] {
 }
 
 function prettyDate(value: string): string {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return '—';
   const [year, month, day] = value.split('-').map(Number);
   const date = new Date(Date.UTC(year, month - 1, day));
+  if (!Number.isFinite(date.getTime())) return '—';
   return new Intl.DateTimeFormat(language === 'zh' ? 'zh-CN' : 'en', {
     year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC',
   }).format(date);
@@ -669,6 +672,12 @@ function figureMarkup(paper: Paper): string {
 }
 
 function syncLiteratureDoiRegistry(): void {
+  const scope = architectureMemberDois ? 'all-time' : (architectureFallbackActive ? 'hot-fallback' : 'current-corpus');
+  const key = architectureMemberDois
+    ? `all-time:${architectureClient?.catalogId || ''}:${architectureMemberDois.length}`
+    : `${scope}:${papers.map(paperDoi).filter(Boolean).join('|')}`;
+  let node = document.getElementById('gallery-literature-doi-registry') as HTMLScriptElement | null;
+  if (node && literatureRegistryKey === key) return;
   const dois = architectureMemberDois
     ? [...architectureMemberDois]
     : [...new Set(
@@ -677,7 +686,6 @@ function syncLiteratureDoiRegistry(): void {
           .filter((doi): doi is string => Boolean(doi))
           .map(doi => doi.toLowerCase())
       )].sort();
-  let node = document.getElementById('gallery-literature-doi-registry') as HTMLScriptElement | null;
   if (!node) {
     node = document.createElement('script');
     node.id = 'gallery-literature-doi-registry';
@@ -686,11 +694,12 @@ function syncLiteratureDoiRegistry(): void {
   }
   node.textContent = JSON.stringify({
     updatedAt: new Date().toISOString(),
-    scope: architectureMemberDois ? 'all-time' : (architectureFallbackActive ? 'hot-fallback' : 'current-corpus'),
+    scope,
     complete: Boolean(architectureMemberDois),
     count: dois.length,
     dois,
   });
+  literatureRegistryKey = key;
 }
 
 function resetResultWindow(): void {
@@ -859,11 +868,13 @@ function mount(): void {
     sort = value === 'oldest' || value === 'readers' ? value : 'newest';
     resetResultWindow();
     renderCards();
+    if (query.trim() || dateFrom || dateTo) scheduleArchitectureCorpusRefresh(0);
   });
   document.querySelector<HTMLInputElement>('#newOnly')?.addEventListener('change', event => {
     onlyNew = (event.target as HTMLInputElement).checked;
     resetResultWindow();
     renderCards();
+    if (query.trim() || dateFrom || dateTo) scheduleArchitectureCorpusRefresh(0);
   });
   document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.addEventListener('click', () => {
     selectedJournals.clear();
@@ -871,6 +882,7 @@ function mount(): void {
     resetResultWindow();
     persistFilterPreferences();
     mount();
+    if (query.trim() || dateFrom || dateTo) scheduleArchitectureCorpusRefresh(0);
   });
   document.querySelectorAll<HTMLInputElement>('[data-journal-option]').forEach(input => input.addEventListener('change', () => {
     if (input.checked) selectedJournals.add(input.value);
@@ -883,6 +895,7 @@ function mount(): void {
     if (clear) clear.disabled = selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo;
     document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.classList.toggle('active', selectedJournals.size === 0 && excludedJournals.size === 0);
     renderCards();
+    if (query.trim() || dateFrom || dateTo) scheduleArchitectureCorpusRefresh(0);
   }));
   document.querySelectorAll<HTMLButtonElement>('[data-journal-exclude]').forEach(button => button.addEventListener('click', () => {
     const journal = button.dataset.journalExclude?.trim();
@@ -913,6 +926,7 @@ function mount(): void {
     if (clear) clear.disabled = selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo;
     document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.classList.toggle('active', selectedJournals.size === 0 && excludedJournals.size === 0);
     renderCards();
+    if (query.trim() || dateFrom || dateTo) scheduleArchitectureCorpusRefresh(0);
   }));
   document.querySelector<HTMLInputElement>('#dateFrom')?.addEventListener('change', event => {
     dateFrom = (event.target as HTMLInputElement).value;
@@ -942,6 +956,10 @@ function mount(): void {
   });
 
   const moveResultPage = (delta: number): void => {
+    if (activeRemoteLiteratureView()) {
+      void moveRemoteResultPage(delta);
+      return;
+    }
     resultWindowPage = Math.max(1, resultWindowPage + delta);
     renderCards();
     document.querySelector<HTMLElement>('#gallery')?.scrollIntoView({ block: 'start', behavior: 'auto' });
