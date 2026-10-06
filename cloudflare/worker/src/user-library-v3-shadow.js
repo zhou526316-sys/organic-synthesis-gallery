@@ -388,9 +388,11 @@ export async function getUserLibraryV3ShadowStatus(env) {
       SELECT COUNT(*) AS count
       FROM user_library_state legacy
       LEFT JOIN user_library_v3_shadow_sync sync ON sync.user_id=legacy.user_id
-      WHERE sync.user_id IS NULL
+      LEFT JOIN user_library_v3_authority authority ON authority.user_id=legacy.user_id
+      WHERE authority.user_id IS NULL
+        AND (sync.user_id IS NULL
          OR sync.source_revision<>legacy.revision
-         OR sync.source_updated_at<>legacy.updated_at
+         OR sync.source_updated_at<>legacy.updated_at)
     `).first(),
     env.DB.prepare('SELECT * FROM user_library_v3_backfill WHERE id=1').first(),
   ]);
