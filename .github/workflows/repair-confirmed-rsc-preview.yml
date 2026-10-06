@@ -20,56 +20,48 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  quarantine:
+  purge:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      D1_NAME: organic-synthesis-gallery
       REPAIR_DOI: ${{ github.event.inputs.doi || '10.1039/d6sc06421c' }}
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v5
-        with:
-          node-version: '22'
-      - name: Install Worker dependencies
-        working-directory: cloudflare/worker
-        run: npm install --no-audit --no-fund
-      - name: Quarantine confirmed RSC preview TOC and reopen capture gap
-        working-directory: cloudflare/worker
+      - name: Wait for deployed purge endpoint and remove rejected RSC preview
         shell: bash
         run: |
           set -euo pipefail
-          DOI="$(printf '%s' "$REPAIR_DOI" | tr '[:upper:]' '[:lower:]')"
-          [[ "$DOI" =~ ^10\.1039/[a-z0-9._()/+-]+$ ]] || { echo "Refusing non-RSC DOI: $DOI" >&2; exit 1; }
-          NOW="$(date +%s%3N)"
-          npx wrangler d1 execute "$D1_NAME" --remote --command "
-            UPDATE toc_assets
-               SET available = 0,
-                   reason = 'rsc_pdf_preview_quarantined',
-                   checked_at = $NOW,
-                   updated_at = $NOW
-             WHERE doi = '$DOI' AND available = 1;
-            INSERT INTO media_repair_state
-              (doi, repair_version, attempts, last_attempt_at, next_retry_at, last_root_cause, last_outcome, reported_priority, updated_at)
-            VALUES
-              ('$DOI', 1, 0, 0, 0, 'rsc_pdf_preview_quarantined', 'missing', 1, $NOW)
-            ON CONFLICT(doi) DO UPDATE SET
-              next_retry_at = 0,
-              last_root_cause = 'rsc_pdf_preview_quarantined',
-              last_outcome = 'missing',
-              reported_priority = 1,
-              updated_at = excluded.updated_at;
-          "
-      - name: Verify quarantine
-        working-directory: cloudflare/worker
+          test -n "$BRIDGE_WRITE_TOKEN"
+          for i in {1..36}; do
+            CODE="$(curl --silent --show-error --output /tmp/rsc-purge.json --write-out '%{http_code}' --max-time 20               --request POST               --header "authorization: Bearer $BRIDGE_WRITE_TOKEN"               --header 'content-type: application/json'               --data "{"doi":"$REPAIR_DOI","dryRun":false}"               https://api.gczhouwld.com/api/admin/media/purge-rsc-preview || true)"
+            if [ "$CODE" = "200" ]; then
+              cat /tmp/rsc-purge.json
+              node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('/tmp/rsc-purge.json','utf8'));if(x.ok!==true||!Array.isArray(x.affectedDois)||!x.affectedDois.includes(process.env.REPAIR_DOI.toLowerCase()))process.exit(1)"
+              exit 0
+            fi
+            sleep 10
+          done
+          cat /tmp/rsc-purge.json 2>/dev/null || true
+          exit 1
+
+      - name: Verify production TOC no longer serves quarantined preview
         shell: bash
         run: |
           set -euo pipefail
-          DOI="$(printf '%s' "$REPAIR_DOI" | tr '[:upper:]' '[:lower:]')"
-          npx wrangler d1 execute "$D1_NAME" --remote --command "
-            SELECT doi, available, reason FROM toc_assets WHERE doi = '$DOI';
-            SELECT doi, next_retry_at, last_root_cause, last_outcome, reported_priority
-              FROM media_repair_state WHERE doi = '$DOI';
-          " --json
+          node - <<'NODE'
+          const doi=process.env.REPAIR_DOI.toLowerCase();
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          for(let i=0;i<20;i++){
+            const u=new URL('https://api.gczhouwld.com/api/toc');
+            u.searchParams.set('doi',doi);
+            u.searchParams.set('verify',String(Date.now()));
+            const r=await fetch(u,{headers:{'cache-control':'no-cache'}});
+            const x=await r.json().catch(()=>({}));
+            if(x.available===false&&x.reason==='rsc_pdf_preview_quarantined'){
+              console.log(JSON.stringify(x));
+              process.exit(0);
+            }
+            await sleep(3000);
+          }
+          throw new Error('quarantined RSC preview is still publicly available');
+          NODE
