@@ -65,12 +65,20 @@ function captureBelongsToDoi(item, doi) {
   return embedded.every(value => value === target);
 }
 
+export function rscPdfPreviewCapture(item) {
+  const doi = normalizeDoi(item?.doi || '');
+  if (!doi || !doi.startsWith('10.1039/')) return false;
+  const raw = String(item?.sourceUrl || '').split('#', 1)[0].split('?', 1)[0].toLowerCase();
+  return /(?:^|\/)[^/]+\.pdf\.(?:gif|png|jpe?g|webp)$/.test(raw);
+}
+
 function captureIntakeError(payload, doi) {
   if (payload?.captureVersion !== '6.2.20') return 'capture_client_upgrade_required';
   if (!/^[a-z0-9-]{16,80}$/i.test(String(payload?.jobId || ''))) return 'capture_job_binding_missing';
   if (normalizeDoi(payload?.pageDoi || '') !== doi) return 'capture_page_doi_unverified';
   if (!safeUrl(payload?.articleUrl) || !safeUrl(payload?.sourceUrl)) return 'capture_source_evidence_missing';
   if (!captureBelongsToDoi(payload, doi)) return 'media_source_doi_mismatch';
+  if (String(payload?.kind || '').toLowerCase() === 'official' && rscPdfPreviewCapture({ doi, sourceUrl: payload?.sourceUrl })) return 'rsc_pdf_preview_not_toc';
   return '';
 }
 
@@ -1031,6 +1039,7 @@ export async function promoteOfficialLocalTocs(request, env, options = {}) {
         String(item?.kind || '') === 'official' &&
         Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH &&
         captureBelongsToDoi(item, doi) &&
+        !rscPdfPreviewCapture(item) &&
         item?.r2Key
       );
     })
@@ -1115,7 +1124,7 @@ export async function getLocalCaptureIndex(request, env) {
   const rawItems = Object.values(index.items || {});
   const validItems = rawItems.filter(item => {
     const doi = normalizeDoi(item?.doi);
-    return Boolean(doi && Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH && captureBelongsToDoi(item, doi));
+    return Boolean(doi && Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH && captureBelongsToDoi(item, doi) && !rscPdfPreviewCapture(item));
   });
   const items = validItems.map(item => ({
     ...item,
