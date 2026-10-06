@@ -53,3 +53,19 @@ Effective from the user's 2026-10-06 instruction: **for a Gallery paper whose `a
 6. Private PDF completion is only `stored` or `already_stored`. `not_found`, `failed`, cached misses, 401/403/429, viewer HTML, or a merely discovered PDF link never count as a completed PDF.
 7. A PDF failure remains independent of successfully captured TOC/body/text media and does not invalidate those receipts. The controller must continue to later DOI jobs rather than stall on one failed PDF.
 8. Old in-memory controllers must fail closed after a controller-generation cutover. Stale controller final reports and private-PDF uploads must not overwrite current completion truth.
+
+## WeChat draft editorial gate
+
+Effective from the user's 2026-10-06 instruction: **公众号草稿不得从正在编辑的源稿直接写入微信。先生成纯文字审阅稿与纯图片审阅稿，分别审核通过后，才允许合成并写入公众号草稿。**
+
+1. For every daily or retrospective WeChat draft, create a review package under `audit/wechat-working/` before any `sync_daily_draft` or `sync_retrospective_draft` trigger:
+   - a `*-text-only.md` file containing the complete user-facing editorial text but no body images;
+   - a `*-images-only.md` or equivalent image manifest containing every cover/body image, source, crop, caption, and intended placement, but no article narrative;
+   - a machine-readable `*-review-gate.json` recording the exact source-file fingerprints and review status.
+2. Text review and image review are independent gates. Text review checks scientific accuracy, causal strength, narrative order, duplicated claims, title/subtitle rules, terminology and unsupported assertions. Image review checks file decodability, source correctness, crop boundaries, duplicate panels, image-caption correspondence, cover ratio/crop, and that chemical structures/data are not redrawn by generative models.
+3. A draft may be written to WeChat only when both `textReview` and `imageReview` are `pass`, the review gate fingerprints still match the current source manifests, and the image files required by the manifest are decodable.
+4. Any edit to the reviewed source manifests, image source/crop, cover configuration, captions, or editorial text invalidates the prior gate. Regenerate the review package and review it again before writing the draft.
+5. After WeChat `draft/add` or `draft/update`, perform `draft/get` readback and inspect the combined preview. The readback is a final transport/layout QA layer; it does not replace the pre-draft text/image review.
+6. Publisher triggers are terminal actions only. Editorial work must not repeatedly trigger WeChat while text, figures, crops, or covers are still being revised.
+7. Prefer publisher-hosted raster images or locally verified PNG/JPEG assets. A filename extension alone is not proof that an image is valid; decode the raster before publication. Avoid progressive JPEGs in the WeChat pipeline where a normalized PNG/JPEG can be used instead.
+
