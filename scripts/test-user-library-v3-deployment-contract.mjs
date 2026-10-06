@@ -10,6 +10,7 @@ const shadow=readFileSync('cloudflare/worker/src/user-library-v3-shadow.js','utf
 const index=readFileSync('cloudflare/worker/src/index.js','utf8');
 const userUi=readFileSync('cloudflare/worker/src/user-ui.js','utf8');
 const accountSync=readFileSync('src/user-ui/account-sync.ts','utf8');
+const accountSyncTest=readFileSync('tests/account-sync-v3.spec.ts','utf8');
 const packageJson=JSON.parse(readFileSync('cloudflare/worker/package.json','utf8'));
 const quality=readFileSync('.github/workflows/site-quality-gate.yml','utf8');
 
@@ -106,6 +107,7 @@ test('D3c mutation and delta primitives are bounded and revision-fenced',()=>{
   for(const token of [
     'MAX_MUTATION_OPS = 32',
     'MAX_MUTATION_BYTES = 2 * 1024 * 1024',
+    'MAX_GLOBAL_BYTES = 1_500_000',
     'MAX_PAGE_LIMIT = 100',
     'MAX_DELTA_LIMIT = 100',
     'CHANGE_RETENTION_REVISIONS = 512',
@@ -145,6 +147,11 @@ test('D3c4a client mutation foundation is dirty-key bounded and dormant behind t
   assert.ok(accountSync.includes('detail?.paperIds || []'));
   assert.ok(accountSync.includes('relevantPaperKeys'));
   assert.ok(!accountSync.includes('Object.keys(target.metadata || {})'));
+  assert.ok(accountSync.includes('mergeDirtyState'));
+  assert.ok(!accountSync.includes('allChangedKeys'));
+  assert.ok(accountSyncTest.includes('toBeGreaterThan(1_500_000)'));
+  assert.ok(accountSyncTest.includes('toEqual([32,32,1])'));
+  assert.ok(accountSyncTest.includes('legacy_save_must_not_run'));
   const config=section(
     deploy,
     '- name: Generate frontend deployment configuration',
@@ -181,6 +188,7 @@ test('D3c through D3c4a regression suites are part of the site quality gate',()=
   assert.ok(quality.includes('npm run test:user-library-v3'));
   assert.ok(quality.includes('npm run test:user-library-v3-shadow'));
   assert.ok(quality.includes('node scripts/test-user-library-v3-deployment-contract.mjs'));
+  assert.ok(quality.includes('tests/account-sync-v3.spec.ts'));
 });
 
 console.log('USER_LIBRARY_V3_DEPLOYMENT_CONTRACT_PASS');
