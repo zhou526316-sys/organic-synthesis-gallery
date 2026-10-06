@@ -5,11 +5,14 @@ export interface PublishedHotFallbackResult {
   sourceCommit: string;
   catalogId: string;
   papers: unknown[];
+  totalCount: number;
+  pageSize: number | null;
+  headOnly: boolean;
 }
 
 export function loadPublishedHotFallback(
   siteBase: string | URL,
-  options?: PublishedCatalogClientOptions & { signal?: AbortSignal },
+  options?: PublishedCatalogClientOptions & { signal?: AbortSignal; headOnly?: boolean },
 ): Promise<PublishedHotFallbackResult>;
 
 export interface PublishedCatalogClientOptions {
