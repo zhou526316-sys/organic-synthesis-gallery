@@ -39,6 +39,12 @@ class D1 {
         created_at INTEGER NOT NULL DEFAULT 0,
         expires_at INTEGER NOT NULL
       );
+      CREATE TABLE user_library_state (
+        user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+        state_json TEXT NOT NULL,
+        revision INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL
+      );
     `);
     const v2=fs.readFileSync(new URL('../../user-library-state-v2.sql',import.meta.url),'utf8');
     const v3=fs.readFileSync(new URL('../../user-library-state-v3.sql',import.meta.url),'utf8');
