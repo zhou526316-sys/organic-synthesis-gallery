@@ -47,10 +47,13 @@ try{
   await page.waitForTimeout(300);const before=context.pages().length;await page.locator('.card a.open').first().click();for(let i=0;i<30&&context.pages().length===before;i++)await page.waitForTimeout(100);
   const target=context.pages().at(-1);await target.waitForURL(/publisher-fallback\.html/,{timeout:5000,waitUntil:'commit'});assert.match(target.url(),/publisher-fallback\.html/);assert.equal(privateCalls,0);await context.close();
  });
- await test('owner without stored PDF falls back to publisher',async()=>{
+ await test('owner without verified PDF stays in viewer and exposes explicit publisher fallback',async()=>{
   const context=await contextWith(['private_pdf_read'],{available:false});const page=await context.newPage();await page.goto(base);await page.waitForFunction(()=>window.__pdfCap?.read===true,{timeout:5000});await page.locator('.card a.open').first().waitFor();await page.locator('.card a.open').first().evaluate(a=>{a.href='/publisher-fallback.html';});
   await page.waitForTimeout(300);const before=context.pages().length;await page.locator('.card a.open').first().click();for(let i=0;i<30&&context.pages().length===before;i++)await page.waitForTimeout(100);
-  const target=context.pages().at(-1);await target.waitForURL(/publisher-fallback\.html/,{timeout:5000,waitUntil:'commit'});assert.match(target.url(),/publisher-fallback\.html/);await context.close();
+  const target=context.pages().at(-1);await target.waitForURL(/\/pdf\/?\?doi=/,{timeout:5000,waitUntil:'commit'});
+  await target.getByText('该论文尚无已验证的私有 PDF。').waitFor();
+  const fallback=target.locator('#publisher-fallback');await fallback.waitFor();assert.match(await fallback.getAttribute('href'),/publisher-fallback\.html/);
+  assert.match(target.url(),/\/pdf\/?\?doi=/);await context.close();
  });
  await test('owner setup page shows current account and claims only after explicit confirmation',async()=>{
   const context=await browser.newContext();await context.addInitScript(()=>localStorage.setItem('organic-gallery-session-v1','fixture-session'));let claim=0;
