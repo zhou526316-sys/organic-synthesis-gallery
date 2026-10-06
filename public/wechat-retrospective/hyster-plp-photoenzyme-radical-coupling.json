@@ -143,18 +143,6 @@
       "caption": "原文 Fig. 2d｜工程化 TmLTA EQLSL 在 cell-free lysate 中仍能保持高活性与高对映选择性，并可在更低酶负载下运行；这说明进化得到的反应性并不只存在于高度纯化的理想体系。"
     },
     {
-      "id": "fig1a_context",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-fig1a-context.png",
-      "display_width_pct": 92,
-      "caption": "原文 Fig. 1a｜PLP 被放在“具有发色团、但光酶功能尚未被充分开发”的辅因子位置；右侧同时列出内亚胺、外亚胺、醌式与半醌等状态，为后文把醌式激发态引入催化循环提供背景。"
-    },
-    {
-      "id": "fig1b_analogy",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-fig1b-analogy.png",
-      "display_width_pct": 86,
-      "caption": "原文 Fig. 1b｜DNA photolyase 提供了作者借鉴的光物理范式：强吸光天线通过 FRET 把能量传给真正负责还原化学的辅因子。本文把类似的“收光/反应分工”迁移到 Rh6G 与 PLP 醌式中间体之间。"
-    },
-    {
       "id": "si_natural_aa_failure",
       "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-si-natural-aa-failure.png",
       "display_width_pct": 78,
@@ -170,11 +158,11 @@
         "这篇工作把 PLP 本身纳入了光化学催化循环：Rh6G 负责高效吸收 470 nm 光并通过 FRET 把激发能交给酶内醌式中间体 [Q]；真正完成关键单电子还原的是生成的 ¹[Q]*。这样一来，自由基前体的还原与 PLP 半醌自由基的生成都发生在酶活性位点附近，为后续立体选择性 C–C 成键创造了条件。"
       ],
       "figures": [
-        "fig1a_context"
+        "fig1_darkspace"
       ],
       "figures_after_paragraph": {
         "1": [
-          "fig1a_context"
+          "fig1_darkspace"
         ]
       }
     },
@@ -187,14 +175,14 @@
       ],
       "figures": [
         "si_natural_aa_failure",
-        "fig1b_analogy"
+        "fig1_photolyase"
       ],
       "figures_after_paragraph": {
         "1": [
           "si_natural_aa_failure"
         ],
         "2": [
-          "fig1b_analogy"
+          "fig1_photolyase"
         ]
       }
     },
