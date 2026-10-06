@@ -9,6 +9,7 @@ const MEDIA_REBUILD_EPOCH = 1790082000000;
 // RSC TOCs imported before the preview-rejection cutover must be revalidated once.
 // This prevents legacy page-preview GIFs from permanently satisfying the media queue.
 const RSC_TOC_REVALIDATION_EPOCH = 1791300000000; // 2026-10-06T15:20:00Z
+const CONFIRMED_RSC_PREVIEW_HASHES = new Set(['da1fc0b53216c2a1c1e1311fc39711b0']);
 
 export function normalizeDoi(value) {
   if (typeof value !== 'string') return null;
@@ -130,6 +131,7 @@ function figureQualityCounts(rows) {
 export function rscTocNeedsRevalidation(doi, toc) {
   if (!String(doi || '').toLowerCase().startsWith('10.1039/')) return false;
   if (!toc || Number(toc.available) !== 1 || !toc.r2_key) return false;
+  if (CONFIRMED_RSC_PREVIEW_HASHES.has(String(toc.content_hash || '').toLowerCase())) return true;
   if (String(toc.reason || '') !== 'imported') return false;
   return Number(toc.updated_at || toc.checked_at || 0) < RSC_TOC_REVALIDATION_EPOCH;
 }
