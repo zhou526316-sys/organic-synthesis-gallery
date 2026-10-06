@@ -1,5 +1,5 @@
 import { STAGE_STORAGE_REVISION } from './stage-storage.js';
-import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport, promoteOfficialLocalTocs, promoteStagedArticleFigures, promoteStagedNatureSciencePrimaryVisuals, purgeCrossDoiLocalMedia } from './local-captures.js';
+import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport, promoteOfficialLocalTocs, promoteStagedArticleFigures, promoteStagedNatureSciencePrimaryVisuals, purgeCrossDoiLocalMedia, purgeRejectedRscPreviewLocalMedia } from './local-captures.js';
 import {
   bridgeQueue,
   getArticleFigures,
@@ -782,6 +782,7 @@ async function handleApi(request, env, ctx) {
       '/api/media/primary/import',
       '/api/media/local-capture/import',
       '/api/admin/media/promote-local-tocs',
+      '/api/admin/media/purge-rsc-preview',
       '/api/admin/media/promote-staged-nature-science-primary',
       '/api/media/local-diagnostics/import',
       '/api/media/tampermonkey-report/import',
@@ -861,6 +862,9 @@ async function handleApi(request, env, ctx) {
   }
   if (request.method === 'POST' && url.pathname === '/api/media/local-capture/import') {
     return resultResponse(await importLocalCapture(request, env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/media/purge-rsc-preview') {
+    return resultResponse(await purgeRejectedRscPreviewLocalMedia(env, await readJson(request)));
   }
   if (request.method === 'POST' && url.pathname === '/api/admin/media/promote-local-tocs') {
     const limit = Math.max(1, Math.min(30, Number(url.searchParams.get('limit') || 12)));
