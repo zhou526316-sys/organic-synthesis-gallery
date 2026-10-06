@@ -186,15 +186,21 @@ jobs:
         run: |
           set -euo pipefail
           npx wrangler d1 execute "$D1_NAME" --remote --file=../user-library-state-v3.sql >/tmp/user-library-v3-migration.txt
-          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('user_library_v3_head','user_library_v3_rows','user_library_v3_commits','user_library_v3_changes','user_library_v3_shape','user_library_v3_shadow_sync','user_library_v3_backfill') ORDER BY name;" --json >/tmp/user-library-v3-schema-check.json
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('user_library_v3_authority','user_library_v3_head','user_library_v3_rows','user_library_v3_commits','user_library_v3_changes','user_library_v3_shape','user_library_v3_shadow_sync','user_library_v3_backfill') ORDER BY name;" --json >/tmp/user-library-v3-schema-check.json
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='trigger' AND name IN ('trg_user_library_state_block_v3_insert','trg_user_library_state_block_v3_update') ORDER BY name;" --json >/tmp/user-library-v3-trigger-check.json
           node - <<'NODE'
           const fs=require('fs');
           const data=JSON.parse(fs.readFileSync('/tmp/user-library-v3-schema-check.json','utf8'));
           const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
           const names=rows.map(x=>x.name).sort();
-          const expected=['user_library_v3_backfill','user_library_v3_changes','user_library_v3_commits','user_library_v3_head','user_library_v3_rows','user_library_v3_shadow_sync','user_library_v3_shape'];
+          const expected=['user_library_v3_authority','user_library_v3_backfill','user_library_v3_changes','user_library_v3_commits','user_library_v3_head','user_library_v3_rows','user_library_v3_shadow_sync','user_library_v3_shape'];
           if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('user library v3 migration incomplete: '+JSON.stringify(names));
-          console.log(JSON.stringify({userLibraryV3SchemaReady:true,tables:names,shadow:'enabled',boundedRead:'enabled-after-deploy',accountPull:'D3b',write:'disabled'}));
+          const triggerData=JSON.parse(fs.readFileSync('/tmp/user-library-v3-trigger-check.json','utf8'));
+          const triggerRows=Array.isArray(triggerData)?triggerData.flatMap(x=>x.results||[]):(triggerData.results||[]);
+          const triggers=triggerRows.map(x=>x.name).sort();
+          const expectedTriggers=['trg_user_library_state_block_v3_insert','trg_user_library_state_block_v3_update'];
+          if(JSON.stringify(triggers)!==JSON.stringify(expectedTriggers)) throw new Error('user library v3 authority triggers incomplete: '+JSON.stringify(triggers));
+          console.log(JSON.stringify({userLibraryV3SchemaReady:true,tables:names,triggers,shadow:'enabled',boundedRead:'enabled-after-deploy',accountPull:'D3b',write:'disabled'}));
           NODE
 
       - name: Apply Evidence Index D1 migration
