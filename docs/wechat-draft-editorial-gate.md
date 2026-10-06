@@ -71,3 +71,25 @@ The final preview is therefore a transport/layout check, not the primary editori
 ## Tooling independence
 
 The WeChat editorial/publisher acceptance path must not depend on TinyFish. Browser automation may never be a prerequisite for approval. Source fingerprints, local/source-image inspection, fixed-IP publisher results, WeChat `draft/get` readback and the relay preview are the authoritative QA path.
+
+## Materialized-crop rule
+
+Effective from the 2026-10-06 crop failures, production WeChat figures follow a **what-you-review-is-what-you-publish** rule.
+
+1. `source_url + crop_frac` is a staging instruction only. It must not be treated as a visually approved production asset.
+2. For every cropped chemistry/evidence figure, first render the crop into a standalone PNG/JPEG and review that exact raster.
+3. The review package must show both:
+   - the source figure with the crop rectangle;
+   - the resulting cropped raster at the size/aspect ratio that will be used in the article.
+4. After visual approval, freeze the raster under `public/wechat-assets/reviewed/` (or another versioned repository asset path) and make the production manifest reference that pinned asset. Do not recalculate the crop during the final WeChat write.
+5. Any change to the crop rectangle, source image, resize policy, or caption creates a new asset fingerprint and invalidates the prior image approval.
+6. A cropped figure must be rejected if any of the following is visible:
+   - a structure, axis, label, legend, arrow, condition, product or panel identifier is cut off;
+   - unrelated neighbouring panels or partial graphics leak into the crop;
+   - excessive blank/page chrome remains;
+   - the crop is too tight to understand the chemistry without the missing context;
+   - the caption claims content that is not actually visible in the crop.
+7. For multi-panel scope figures, prefer complete logical blocks or split them into two or more reviewed assets. Never use a narrow crop merely to make the image smaller.
+8. Keep a small visual safety margin around chemical structures and labels. Tight trimming may remove empty page space, but it must not trim chemical meaning.
+9. Production review should be based on the pinned raster itself, not on crop coordinates, filenames, or the source figure alone.
+
