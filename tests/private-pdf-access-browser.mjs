@@ -33,13 +33,13 @@ async function contextWith(capabilities,openResult={available:true,url:base+'/pr
  return context;
 }
 try{
- await test('owner click routes to private URL only when capability and PDF are available',async()=>{
+ await test('owner click routes through the stable /pdf/ viewer when capability is present',async()=>{
   const context=await contextWith(['private_pdf_read']);const page=await context.newPage();await page.goto(base);await page.waitForFunction(()=>window.__pdfCap?.read===true,{timeout:5000});await page.locator('.card a.open').first().waitFor();
   await page.locator('.card a.open').first().evaluate(a=>{a.href='/publisher-fallback.html';});
   await page.waitForTimeout(300);
-  const before=context.pages().length;await page.locator('.card a.open').first().click();await page.waitForFunction(n=>window.length>=0,before).catch(()=>{});
+  const before=context.pages().length;await page.locator('.card a.open').first().click();
   for(let i=0;i<30&&context.pages().length===before;i++)await page.waitForTimeout(100);
-  assert.equal(context.pages().length,before+1);const target=context.pages().at(-1);await target.waitForURL(/private-hit\.html/,{timeout:5000,waitUntil:'commit'});assert.match(target.url(),/private-hit\.html/);await context.close();
+  assert.equal(context.pages().length,before+1);const target=context.pages().at(-1);await target.waitForURL(/\/pdf\/?\?doi=/,{timeout:5000,waitUntil:'commit'});await target.locator('#pdf-frame').waitFor();await target.waitForFunction(()=>document.querySelector('#pdf-frame')?.getAttribute('src')?.includes('/private-hit.html'),{timeout:5000});assert.match(target.url(),/\/pdf\/?\?doi=/);await context.close();
  });
  await test('ordinary account keeps original publisher link with no private lookup',async()=>{
   const context=await contextWith([]);let privateCalls=0;context.on('request',r=>{if(r.url().includes('/private-pdf/open'))privateCalls++;});
