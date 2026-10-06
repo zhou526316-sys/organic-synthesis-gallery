@@ -248,6 +248,9 @@ async function handleApi(request, env, ctx) {
       literatureCatalogIndexReadPathConfigured: literatureCatalogIndexReadEnabled(env)
         && literatureCatalogIndexShadowEnabled(env)
         && Boolean(env.LITERATURE_INDEX_DB),
+      literatureCatalogIndexReadPathActive: literatureCatalogIndexReadEnabled(env)
+        && literatureCatalogIndexShadowEnabled(env)
+        && Boolean(env.LITERATURE_INDEX_DB),
       literatureCatalogIndexDb: Boolean(env.LITERATURE_INDEX_DB),
       userLibraryRowShadowEnabled: String(env.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1',
       userLibraryRowReadEnabled: String(env.USER_LIBRARY_ROW_READ_ENABLED || '') === '1',
