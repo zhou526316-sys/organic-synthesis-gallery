@@ -55,7 +55,7 @@
       if(publisher==='wiley')return sub('onlinelibrary.wiley.com');
       if(publisher==='nature')return sub('nature.com');
       if(publisher==='science')return sub('science.org');
-      if(publisher==='rsc')return sub('pubs.rsc.org');
+      if(publisher==='rsc')return sub('pubs.rsc.org')||sub('rscj.silverchair-cdn.com');
       if(publisher==='elsevier')return sub('sciencedirect.com')||sub('sciencedirectassets.com')||sub('cell.com');
       if(publisher==='ccs')return sub('chinesechemsoc.org')||sub('ccspublishing.org.cn');
       return false;
@@ -75,7 +75,15 @@
 
   function privatePdfUrlLooksStrong(value) {
     var u=String(value||'').toLowerCase();
-    return /\.pdf(?:[?#]|$)/.test(u)||/\/doi\/(?:pdf|epdf)\//.test(u)||/\/pdfdirect\//.test(u)||/[?&](?:file|pdf|pdfurl|url)=[^&#]*\.pdf(?:[&#]|$)/.test(u);
+    return /\.pdf(?:[?#]|$)/.test(u)||/\/doi\/(?:pdf|epdf)\//.test(u)||/\/pdfdirect\//.test(u)||/\/article-?pdf\//.test(u)||/[?&](?:file|pdf|pdfurl|url)=[^&#]*\.pdf(?:[&#]|$)/.test(u);
+  }
+
+  function rscDeterministicPdfUrl(job) {
+    var doi=normalizeDoi(job&&job.doi),suffix=doi.split('/')[1]||'';
+    if(String(job&&job.publisher||publisherForDoi(doi))!=='rsc')return '';
+    var match=/^([a-z])(\d)([a-z]{2})/i.exec(suffix);
+    if(!match)return '';
+    return 'https://pubs.rsc.org/en/content/articlepdf/'+String(2020+Number(match[2]))+'/'+match[3].toLowerCase()+'/'+suffix.toLowerCase();
   }
 
   function discoverExplicitPdfCandidates(job) {
@@ -95,6 +103,12 @@
       var text=String(a.textContent||'')+' '+String(a.getAttribute('title')||'')+' '+String(a.getAttribute('aria-label')||'');
       if(a.tagName==='LINK'||privatePdfUrlLooksStrong(href)||/\bpdf\b/i.test(href+' '+text))add(href,a,false);
     });
+    if(publisher==='rsc'){
+      var rscUrl=rscDeterministicPdfUrl(job);
+      if(rscUrl&&!seen.has(rscUrl)&&privatePdfHostAllowed('rsc',rscUrl)){
+        seen.add(rscUrl);rows.push({url:rscUrl,score:260,source:'rsc_articlepdf_route'});
+      }
+    }
     return rows.sort(function(a,b){return b.score-a.score;}).slice(0,6);
   }
 
@@ -298,7 +312,8 @@
         lastError=error;
         var code=Number(error&&error.httpStatus||0);
         if(code===401){GM_deleteValue(PRIVATE_PDF_LEASE_KEY);break;}
-        if(code===429||code===403)break;
+        if(code===429)break;
+        if(code===403&&String(job.publisher||publisherForDoi(doi))!=='rsc')break;
       }
     }
     var failed={status:'failed',at:Date.now(),reason:captureLiveError(lastError&&lastError.message||lastError||'unknown'),revision:PRIVATE_PDF_CAPTURE_REVISION};

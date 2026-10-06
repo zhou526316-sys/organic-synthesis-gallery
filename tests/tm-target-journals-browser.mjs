@@ -20,7 +20,7 @@ const harness=[
   "function articleFigureImageUrls(node,base){const out=[];const add=v=>{try{if(v){const u=new URL(v,base).href;if(!out.includes(u))out.push(u)}}catch{}};['data-full-src','data-full','data-lg-src','data-hi-res-src','data-src-large','data-original','data-src','data-lazy-src','src'].forEach(k=>add(node.getAttribute&&node.getAttribute(k)));if(node.getAttribute){String(node.getAttribute('srcset')||'').split(',').forEach(x=>add(x.trim().split(/\\s+/)[0]));}return out}",
   "function contextFor(node){let out=[];[node.alt,node.title,node.getAttribute&&node.getAttribute('aria-label')].forEach(v=>{if(v)out.push(v)});let root=node.parentElement;for(let d=0;root&&d<4;d++,root=root.parentElement){out.push(String(root.className||''),String(root.id||''),String(root.textContent||'').slice(0,600));}return out.join(' ')}",
   adapters,
-  "globalThis.T={rscRouteParts,rscArticleHtmlUrl,rscPdfPreviewUrl,rscBodyFigureContext,rscGraphicalAbstractCandidates,elsevierGraphicalAbstractCandidates,ccsAssetFigureLabel,ccsTocIndexUrlFromCrossrefPayload,ccsTocIndexUrls,ccsTocIndexCandidatesFromDocument};",
+  "globalThis.T={rscRouteParts,rscArticleHtmlUrl,rscPdfPreviewUrl,rscBodyFigureContext,rscGraphicalAbstractCandidates,rscIssuePageUrls,rscIssueTocCandidatesFromDocument,elsevierGraphicalAbstractCandidates,ccsAssetFigureLabel,ccsTocIndexUrlFromCrossrefPayload,ccsTocIndexUrls,ccsTocIndexCandidatesFromDocument};",
   '})();'
 ].join('\n');
 await page.addScriptTag({content:harness});
@@ -74,6 +74,25 @@ try{
     assert.ok(!result.candidates.some(url=>/\.pdf\.gif(?:$|[?#])/i.test(url)));
     assert.ok(source.includes("stage:'rsc_toc_candidate',event:'pdf_preview_rejected'"));
     assert.ok(source.includes("stage:'rsc_figure_candidate',event:'pdf_preview_rejected'"));
+  });
+
+  await tc('RSC issue page binds one non-preview visual to the target DOI',async()=>{
+    const result=await page.evaluate(()=>{
+      const root=document.querySelector('#fixture');
+      root.innerHTML='<meta name="citation_volume" content="18"><meta name="citation_issue" content="42">'+
+        '<a href="/sc/issue/18/42">Current issue</a>'+
+        '<article class="issue-item"><a href="/sc/article/doi/10.1039/D6SC06421C/1">10.1039/D6SC06421C</a>'+
+        '<img alt="Graphical abstract" src="/assets/d6sc06421c-ga.png"><img alt="Article PDF first page preview" src="/assets/d6sc06421c.pdf.gif"></article>'+
+        '<article class="issue-item"><a href="/sc/article/doi/10.1039/D6SC00000A/2">10.1039/D6SC00000A</a><img src="/assets/other.png"></article>';
+      return {
+        urls:T.rscIssuePageUrls({doi:'10.1039/d6sc06421c',publisher:'rsc'},root,'https://pubs.rsc.org/sc/article/doi/10.1039/D6SC06421C/1'),
+        rows:T.rscIssueTocCandidatesFromDocument({doi:'10.1039/d6sc06421c',publisher:'rsc'},root,'https://pubs.rsc.org/sc/issue/18/42')
+          .map(x=>({url:x.url,kind:x.kind,source:x.source}))
+      };
+    });
+    assert.ok(result.urls.some(url=>/\/sc\/issue\/18\/42/.test(url)));
+    assert.equal(result.rows.length,1);assert.equal(result.rows[0].kind,'official');
+    assert.match(result.rows[0].url,/d6sc06421c-ga\.png/);assert.doesNotMatch(result.rows[0].url,/pdf\.gif/);
   });
 
   await tc('Chem graphical abstract is isolated from numbered figures',async()=>{
@@ -166,7 +185,7 @@ try{
   await tc('capture protocol and core controller stay unchanged',async()=>{
     assert.ok(source.includes("var VERSION = '6.2.20'"));
     assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.41'"));
-    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261006-rsc-preview-reject-v12'"));
+    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261007-rsc-issue-pdf-v13'"));
     assert.ok(source.includes("PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'"));
   });
 }finally{await browser.close()}
