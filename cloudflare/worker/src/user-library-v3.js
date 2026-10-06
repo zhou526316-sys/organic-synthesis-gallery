@@ -116,6 +116,21 @@ async function shapeRow(env, userId) {
   `).bind(userId).first();
 }
 
+async function authorityRow(env,userId) {
+  return env.DB.prepare(`
+    SELECT authority,activated_revision,activated_at
+    FROM user_library_v3_authority WHERE user_id=?
+  `).bind(userId).first();
+}
+
+export async function userLibraryV3Authority(env,userIdValue) {
+  if (!env?.DB) return 'legacy';
+  const userId = safeText(userIdValue,300);
+  if (!userId) return 'legacy';
+  const row = await authorityRow(env,userId);
+  return row?.authority === 'v3' ? 'v3' : 'legacy';
+}
+
 async function existingRows(env, userId, operations) {
   if (!operations.length) return new Map();
   const placeholders = operations.map(() => '?').join(',');
@@ -219,6 +234,12 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
       INSERT INTO user_library_v3_commits (user_id,revision,expected_revision,updated_at)
       VALUES (?,?,?,?)
     `).bind(userId,nextRevision,currentRevision,now),
+    env.DB.prepare(`
+      INSERT INTO user_library_v3_authority (user_id,authority,activated_revision,activated_at)
+      VALUES (?,'v3',?,?)
+      ON CONFLICT(user_id) DO NOTHING
+    `).bind(userId,nextRevision,now),
+    env.DB.prepare('DELETE FROM user_library_state WHERE user_id=?').bind(userId),
   ];
 
   mutation.operations.forEach((op, seq) => {
@@ -356,6 +377,7 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
     operationCount:mutation.operations.length,
     changeFloorRevision:nextFloor,
     compatibilityReadPath:'rows-v2',
+    writeAuthority:'v3',
   };
 }
 
