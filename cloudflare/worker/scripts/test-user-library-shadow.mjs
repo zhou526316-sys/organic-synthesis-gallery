@@ -243,6 +243,41 @@ test('row read fails closed on stale revision, missing rows, or source-hash mism
   assert.equal(hash.reason,'row_source_hash_mismatch');
 });
 
+test('V3 write authority disables legacy row shadow/backfill/compare but leaves row reads available',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const state=stateFixture();
+  db.sqlite.prepare('INSERT INTO users(id) VALUES (?)').run('u-authority');
+  db.sqlite.prepare('INSERT INTO user_library_state(user_id,state_json,revision,updated_at) VALUES(?,?,?,?)')
+    .run('u-authority',JSON.stringify(state),1,100);
+
+  const env={...envFor(db),USER_LIBRARY_V3_WRITE_ENABLED:'1'};
+  const shadow=await shadowWriteUserLibraryState(env,'u-authority',state,1,100);
+  assert.equal(shadow.enabled,false);
+
+  const backfill=await backfillUserLibraryShadowPage(env,20);
+  assert.equal(backfill.status,409);
+  assert.equal(backfill.body.error,'user_library_row_shadow_disabled');
+
+  const compare=await compareUserLibraryShadowPage(env,0,20);
+  assert.equal(compare.status,409);
+  assert.equal(compare.body.error,'user_library_row_shadow_disabled');
+
+  const status=await getUserLibraryShadowStatus(env);
+  assert.equal(status.body.configured,true);
+  assert.equal(status.body.enabled,false);
+  assert.equal(status.body.readConfigured,true);
+  assert.equal(status.body.readPathActive,false);
+
+  db.sqlite.prepare(`
+    INSERT INTO user_library_head
+      (user_id,revision,updated_at,global_json,papers_split,metadata_split,paper_count,metadata_count,source_state_hash,shadow_version)
+    VALUES ('u-authority',1,100,'{}',1,1,0,0,'v3-authority:1',2)
+  `).run();
+  const rows=await readUserLibraryStateFromRows(env,'u-authority',{revision:1,updated_at:100});
+  assert.equal(rows.ready,true);
+  assert.equal(rows.compatibilityAuthority,'v3');
+});
+
 test('row read flag is independently gated and empty accounts remain a valid empty state',async t=>{
   const db=new D1();t.after(()=>db.close());
   const disabled={DB:db,USER_LIBRARY_ROW_SHADOW_ENABLED:'1',USER_LIBRARY_ROW_READ_ENABLED:'0'};
