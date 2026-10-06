@@ -31,7 +31,7 @@ test('D3c V3 schema is isolated, additive and applied before Worker deployment',
   const deployStep=deploy.indexOf('Deploy frontend assets');
   assert.ok(migrate>0&&deployStep>migrate);
   assert.ok(deploy.includes('wrangler d1 execute "$D1_NAME" --remote --file=../user-library-state-v3.sql'));
-  assert.ok(schema.includes('Legacy user_library_state remains authoritative')===false);
+  assert.ok(schema.includes('Legacy user_library_state remains authoritative in D3a'));
   assert.ok(schema.includes('D3c isolated row/delta foundation'));
 });
 
