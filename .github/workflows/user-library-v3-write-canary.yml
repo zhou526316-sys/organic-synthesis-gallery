@@ -64,21 +64,9 @@ jobs:
           NOW_MS="$(node -p 'Date.now()')"
           EXPIRES_MS="$((NOW_MS + 600000))"
 
-          cat > "$RUNNER_TEMP/user-library-v3-canary-cleanup.sql" <<SQL
-          DELETE FROM user_library_v3_changes WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_library_v3_commits WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_library_v3_rows WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_library_v3_shape WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_library_v3_authority WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_library_v3_shadow_sync WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_paper_state WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_library_head WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_library_state WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_profile_sessions WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_sessions WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM users WHERE id='$CANARY_USER_ID';
-          SQL
-          npx wrangler d1 execute "$D1_NAME" --remote --file="$RUNNER_TEMP/user-library-v3-canary-cleanup.sql" >/tmp/user-library-v3-canary-preclean.txt
+          # users is the FK root for every canary-owned user-library/session row.
+          # One root delete is safer than maintaining a hand-ordered child-table list.
+          npx wrangler d1 execute "$D1_NAME" --remote --command "DELETE FROM users WHERE id='$CANARY_USER_ID';" >/tmp/user-library-v3-canary-preclean.txt
           npx wrangler d1 execute "$D1_NAME" --remote --command "INSERT INTO users(id,display_name,email,avatar_url,created_at,updated_at) VALUES('$CANARY_USER_ID','D3c4b production canary',NULL,NULL,$NOW_MS,$NOW_MS);" >/tmp/user-library-v3-canary-user.txt
           npx wrangler d1 execute "$D1_NAME" --remote --command "INSERT INTO user_sessions(token_hash,user_id,created_at,expires_at) VALUES('$TOKEN_HASH','$CANARY_USER_ID',$NOW_MS,$EXPIRES_MS);" >/tmp/user-library-v3-canary-session.txt
 
@@ -261,21 +249,7 @@ jobs:
           REPORT_PATH: /tmp/user-library-v3-write-canary-report.json
         run: |
           set -euo pipefail
-          cat > "$RUNNER_TEMP/user-library-v3-canary-cleanup.sql" <<SQL
-          DELETE FROM user_library_v3_changes WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_library_v3_commits WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_library_v3_rows WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_library_v3_shape WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_library_v3_authority WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_library_v3_shadow_sync WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_paper_state WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_library_head WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_library_state WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_profile_sessions WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM user_sessions WHERE user_id='$CANARY_USER_ID';
-          DELETE FROM users WHERE id='$CANARY_USER_ID';
-          SQL
-          npx wrangler d1 execute "$D1_NAME" --remote --file="$RUNNER_TEMP/user-library-v3-canary-cleanup.sql" >/tmp/user-library-v3-canary-cleanup.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --command "DELETE FROM users WHERE id='$CANARY_USER_ID';" >/tmp/user-library-v3-canary-cleanup.txt
           npx wrangler d1 execute "$D1_NAME" --remote --command "
             SELECT 'users' AS table_name,COUNT(*) AS c FROM users WHERE id='$CANARY_USER_ID'
             UNION ALL SELECT 'sessions',COUNT(*) FROM user_sessions WHERE user_id='$CANARY_USER_ID'
@@ -303,7 +277,7 @@ jobs:
           fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
           console.log(JSON.stringify({canaryCleanup:true,rows}));
           NODE
-          rm -f "$RUNNER_TEMP/user-library-v3-canary-credentials.json" "$RUNNER_TEMP/user-library-v3-canary-cleanup.sql"
+          rm -f "$RUNNER_TEMP/user-library-v3-canary-credentials.json"
 
       - name: Preserve D3c4b production canary evidence
         if: always()
