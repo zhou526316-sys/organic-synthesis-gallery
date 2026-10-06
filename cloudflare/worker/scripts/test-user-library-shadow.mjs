@@ -37,6 +37,12 @@ class D1 {
         revision INTEGER NOT NULL,
         updated_at INTEGER NOT NULL
       );
+      CREATE TABLE user_library_v3_authority (
+        user_id TEXT PRIMARY KEY,
+        authority TEXT NOT NULL DEFAULT 'v3',
+        activated_revision INTEGER NOT NULL,
+        activated_at INTEGER NOT NULL
+      );
       CREATE TABLE user_library_head (
         user_id TEXT PRIMARY KEY,
         revision INTEGER NOT NULL,

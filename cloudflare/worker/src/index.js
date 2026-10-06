@@ -264,7 +264,10 @@ async function handleApi(request, env, ctx) {
       userLibraryRowReadEnabled: String(env.USER_LIBRARY_ROW_READ_ENABLED || '') === '1',
       userLibraryV3ShadowEnabled: userLibraryV3ShadowEnabled(env),
       userLibraryV3ReadEnabled: String(env.USER_LIBRARY_V3_READ_ENABLED || '') === '1',
-      userLibraryV3WriteEnabled: String(env.USER_LIBRARY_V3_WRITE_ENABLED || '') === '1',
+      userLibraryV3WriteConfigured: String(env.USER_LIBRARY_V3_WRITE_ENABLED || '') === '1',
+      userLibraryV3WriteCanaryOnly: String(env.USER_LIBRARY_V3_WRITE_CANARY_ONLY || '') === '1',
+      userLibraryV3WriteEnabled: String(env.USER_LIBRARY_V3_WRITE_ENABLED || '') === '1'
+        && String(env.USER_LIBRARY_V3_WRITE_CANARY_ONLY || '') !== '1',
       siteAnalyticsMaterializedShadowEnabled: String(env.SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED || '') === '1',
       siteAnalyticsMaterializedReadEnabled: siteAnalyticsMaterializedReadEnabled(env),
       kv: Boolean(env.STATE),
