@@ -39,7 +39,7 @@ Hot/Archive separation is the first scale boundary; a bounded result window is t
 - Broad historical date ranges must be chunked/cursor-based rather than resolving and rendering the entire range in one operation.
 - CSS `content-visibility` and lazy media are performance aids, not substitutes for bounding DOM cardinality.
 
-Until this rule is implemented end to end, global search and broad date ranges are considered a known scale-risk surface.
+This rule is now implemented for normal all-time search and broad historical filtering through the generation-fenced indexed read path. Compatibility-only cases such as two-character chemistry queries and reader-count sorting remain on the bounded static path.
 
 ## 5. Search-index rule
 
@@ -97,7 +97,7 @@ R2 remains the durable byte source for Evidence and encrypted handoff payloads. 
 
 Per-user paper state must scale by row/key, not by endlessly enlarging one serialized library document.
 
-The row-oriented D1 read model is the migration direction. Legacy state may remain as a compatibility/write authority only while parity and rollback require it. The current legacy document-size ceiling is not an acceptable final architecture. D3c now has an isolated bounded mutation/delta foundation; D3c1 may populate it only as a non-authoritative shadow from the current legacy write authority, with revision-fenced dual-write and full semantic parity. V3 read/write activation remains separately gated; no paper state may be silently dropped during migration.
+The row-oriented D1 read model is the migration direction. Legacy state may remain as a compatibility/write authority only while parity and rollback require it. The current legacy document-size ceiling is not an acceptable final architecture. D3c has an isolated bounded mutation/delta foundation; D3c1 established revision-fenced shadow parity, and D3c2 exposes authenticated bounded V3 head/page/delta reads with an O(1) legacy revision freshness fence. Normal account-pull remains D3b and V3 writes remain disabled until later gates; no paper state may be silently dropped during migration.
 
 ## 11. Analytics rule
 
@@ -139,8 +139,8 @@ Architecture changes must test at least:
 
 1. **P0 — bounded frontend results: GUARDED.** Browser DOM is a fixed result window; the static Archive compatibility path now fails closed before >1000-result truncation or >36 monthly-segment fanout. Cursor-based indexed paging remains the preferred path for broad historical discovery.
 2. **P0 — bounded fallback: COMPLETE.** Deployed architecture failures use verified Hot fallback / retained Hot state rather than reloading all history.
-3. **P1 — indexed all-time search: ACTIVATION GATE.** Dedicated D1 shadow has repeated full row/search/view parity and the frontend is generation/revision fenced. Production activation may set the read flag only with a live current-generation cursor canary, safe generation-handoff fallback, and automatic redeploy to read-disabled mode on canary failure.
-4. **P1 — user-library D3c: SHADOW PARITY.** Bounded V3 mutation/delta primitives are merged; D3c1 now validates revision-fenced shadow population and full semantic parity while V3 read/write authority remains off.
+3. **P1 — indexed all-time search: PRODUCTION ACTIVE.** The dedicated D1 read path is live behind static generation/revision authority. Production canary verified the current 826-card generation, cursor paging, current catalog identity and safe rollback; generation handoff and compatibility cases still fall back to bounded static reads.
+4. **P1 — user-library D3c: BOUNDED READ.** D3c1 production parity is complete. D3c2 enables authenticated bounded V3 head/page/delta capability with legacy-revision freshness fencing while normal account-pull stays D3b and V3 write authority stays off.
 5. **P2 — continue index/materialization cutovers:** any remaining metadata path that still relies on corpus-wide/prefix-wide scans must migrate behind parity/freshness gates.
 
 These priorities are scale-safety work. They do not alter the Tampermonkey acquisition workflow in this architecture task.

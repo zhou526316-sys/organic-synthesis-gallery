@@ -40,14 +40,14 @@ test('D3c V3 schema is isolated, additive and applied before Worker deployment',
   assert.ok(schema.includes('D3c isolated row/delta foundation'));
 });
 
-test('D3c production read/write activation remains explicitly off',()=>{
+test('D3c2 enables bounded V3 reads while V3 writes remain explicitly off',()=>{
   const config=section(
     deploy,
     '- name: Generate frontend deployment configuration',
     '- name: Deploy frontend assets',
   );
   assert.ok(config.includes('USER_LIBRARY_V3_SHADOW_ENABLED = "1"'));
-  assert.ok(config.includes('USER_LIBRARY_V3_READ_ENABLED = "0"'));
+  assert.ok(config.includes('USER_LIBRARY_V3_READ_ENABLED = "1"'));
   assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "0"'));
   assert.ok(v3.includes("USER_LIBRARY_V3_WRITE_ENABLED"));
   assert.ok(v3.includes("reason:'user_library_v3_write_disabled'"));
@@ -56,13 +56,18 @@ test('D3c production read/write activation remains explicitly off',()=>{
   assert.ok(shadow.includes('user_library_v3_shadow_atomic_batch_required'));
 });
 
-test('D3c1 uses only fail-open shadow writes and authenticated admin diagnostics',()=>{
+test('D3c2 adds authenticated bounded V3 sync reads without cutting account-pull or write authority',()=>{
   assert.ok(userUi.includes("from './user-library-v3-shadow.js'"));
+  assert.ok(userUi.includes("from './user-library-v3.js'"));
   assert.ok(userUi.includes('safeV3ShadowLibraryWrite'));
   assert.ok(userUi.includes('USER_LIBRARY_V3_SHADOW_WRITE_FAILED'));
   assert.ok((userUi.match(/safeV3ShadowLibraryWrite\(/g)||[]).length>=3);
-  assert.ok(!userUi.includes("from './user-library-v3.js'"));
   assert.ok(!userUi.includes('applyUserLibraryV3Mutation'));
+  for(const mode of ['account-v3-head','account-v3-page','account-v3-delta']) assert.ok(userUi.includes(mode),mode);
+  assert.ok(userUi.includes('v3ReadFreshness'));
+  assert.ok(userUi.includes("'SELECT revision, updated_at FROM user_library_state WHERE user_id = ?'"));
+  assert.ok(userUi.includes("if (mode === 'account-pull')"));
+  assert.ok(userUi.includes('const current = await readAccountLibraryState'));
   for(const path of [
     '/api/admin/user-library-v3/status',
     '/api/admin/user-library-v3/backfill',
@@ -73,7 +78,7 @@ test('D3c1 uses only fail-open shadow writes and authenticated admin diagnostics
   assert.ok(index.includes('requireWriteAuthorization'));
 });
 
-test('D3c1 shadow is revision-fenced and preserves legacy shape semantics',()=>{
+test('D3c2 shadow is revision-fenced, shape-preserving, and emits delta continuity',()=>{
   for(const token of [
     'inflight_revision',
     'user_library_v3_shadow_revision_conflict',
@@ -84,6 +89,10 @@ test('D3c1 shadow is revision-fenced and preserves legacy shape semantics',()=>{
     'source_state_hash',
     'revisionMismatches',
     'semantic_mismatch',
+    'shadowRowDiff',
+    'user_library_v3_commits',
+    'user_library_v3_changes',
+    "op:'delete'",
   ]) assert.ok(shadow.includes(token),token);
   assert.ok(shadow.includes('typeof env.DB.batch'));
   assert.ok(shadow.includes('source_revision<excluded.inflight_revision'));
@@ -109,26 +118,28 @@ test('D3c mutation and delta primitives are bounded and revision-fenced',()=>{
   assert.ok(v3.includes('deleted?1:0'));
 });
 
-test('D3c1 production deploy backfills, reconciles, and requires two stable parity passes',()=>{
+test('D3c2 production deploy keeps full parity while bounded reads are enabled and writes stay off',()=>{
   const block=section(
     deploy,
-    '- name: Backfill and verify user library V3 shadow parity',
+    '- name: Backfill and verify user library V3 shadow parity and bounded reads',
     '- name: Advance and reconcile Evidence Index shadow',
   );
   assert.ok(block.includes('continue-on-error: true'));
-  assert.ok(block.includes("phase:'D3c1-user-library-v3-shadow'"));
+  assert.ok(block.includes("phase:'D3c2-user-library-v3-bounded-read'"));
   assert.ok(block.includes('/api/admin/user-library-v3/backfill?limit=20'));
   assert.ok(block.includes('/api/admin/user-library-v3/reconcile?limit=20'));
   assert.ok(block.includes('/api/admin/user-library-v3/compare?offset='));
   assert.ok(block.includes('revisionMismatches'));
   assert.ok(block.includes('passes.length<2'));
   assert.ok(block.includes('mismatched===0'));
-  assert.ok(block.includes('readEnabled!==false'));
+  assert.ok(block.includes('readEnabled!==true'));
   assert.ok(block.includes('writeEnabled!==false'));
+  assert.ok(block.includes('boundedReadEnabled:true'));
+  assert.ok(block.includes('accountPullCutover:false'));
   assert.ok(block.includes('user-library-v3-shadow-'));
 });
 
-test('D3c and D3c1 regression suites are part of the site quality gate',()=>{
+test('D3c through D3c2 regression suites are part of the site quality gate',()=>{
   assert.equal(packageJson.scripts['test:user-library-v3'],'node scripts/test-user-library-v3.mjs');
   assert.equal(packageJson.scripts['test:user-library-v3-shadow'],'node scripts/test-user-library-v3-shadow.mjs');
   assert.ok(quality.includes('npm run test:user-library-v3'));
