@@ -1,8 +1,14 @@
-import { api } from './platform-api';
+import {
+  api,
+  queryLiteratureCatalogView,
+  type LiteratureCatalogViewItem,
+  type LiteratureCatalogViewRequest,
+  type LiteratureCatalogViewResponse,
+} from './platform-api';
 import { chineseTitle, validChineseTitle } from '../shared/chinese-title-overrides.js';
 import './styles.css';
 import { mountUserShell } from './user-shell';
-import { earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
+import { beijingDate, earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
 import { RESULT_WINDOW_SIZE, resultWindowState } from '../shared/result-window.js';
 import { store } from './user-ui/shared';
@@ -87,6 +93,22 @@ interface WechatEditionManifest {
   title?: string;
   featuredDoi: string;
   dois: string[];
+}
+
+interface RemoteLiteratureScope {
+  key: string;
+  request: LiteratureCatalogViewRequest;
+}
+
+interface RemoteLiteratureViewState {
+  scopeKey: string;
+  matched: number;
+  page: number;
+  pageSize: number;
+  papers: Paper[];
+  hasMore: boolean;
+  nextCursor: string | null;
+  pageCursors: string[];
 }
 
 type Language = 'zh' | 'en';
@@ -217,6 +239,8 @@ let latestCollectionDate = '';
 let architectureRefreshTimer: number | null = null;
 let architectureRefreshSerial = 0;
 let resultWindowPage = 1;
+let remoteLiteratureView: RemoteLiteratureViewState | null = null;
+let remoteLiteratureViewLoading = false;
 
 store.addEventListener('counts', () => {
   if (sort === 'readers') renderCards();
