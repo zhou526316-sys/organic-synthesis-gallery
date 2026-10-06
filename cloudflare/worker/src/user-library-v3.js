@@ -64,6 +64,12 @@ export function userLibraryV3ReadEnabled(env) {
 export function userLibraryV3WriteEnabled(env) {
   return flag(env?.USER_LIBRARY_V3_WRITE_ENABLED);
 }
+export function userLibraryV3WriteAllowed(env,userIdValue='') {
+  if (userLibraryV3WriteEnabled(env)) return true;
+  const userId=safeText(userIdValue,300);
+  const canaryUserId=safeText(env?.USER_LIBRARY_V3_WRITE_CANARY_USER_ID,300);
+  return Boolean(userId && canaryUserId && userId===canaryUserId);
+}
 
 function normalizeOperation(raw) {
   if (!plainObject(raw)) throw new Error('user_library_v3_operation_invalid');
@@ -242,13 +248,13 @@ function conflict(currentRevision) {
 }
 
 export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowValue = Date.now()) {
-  if (!userLibraryV3WriteEnabled(env)) {
+  const userId = requiredText(userIdValue, 300, 'user_library_v3_user_id_invalid');
+  if (!userLibraryV3WriteAllowed(env,userId)) {
     return { ok:false, disabled:true, reason:'user_library_v3_write_disabled' };
   }
   if (!env?.DB || typeof env.DB.batch !== 'function') {
     throw new Error('user_library_v3_atomic_batch_required');
   }
-  const userId = requiredText(userIdValue, 300, 'user_library_v3_user_id_invalid');
   const mutation = normalizeMutation(input);
   const now = integer(nowValue, 1, 'user_library_v3_updated_at_invalid');
   const current = await headRow(env, userId);
