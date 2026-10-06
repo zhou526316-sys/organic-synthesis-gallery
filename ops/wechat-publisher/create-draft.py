@@ -351,6 +351,27 @@ def require_editorial_review_gate(
             raise RuntimeError(
                 f"WeChat review gate stale for {rel}: expected {expected or 'missing'}, actual {actual}"
             )
+
+    asset_rows = gate.get("assets") if isinstance(gate.get("assets"), list) else []
+    for row in asset_rows:
+        if not isinstance(row, dict):
+            raise RuntimeError("invalid WeChat review asset row")
+        rel = str(row.get("path") or "").strip()
+        expected = str(row.get("blobSha") or "").strip().lower()
+        if not rel or not expected:
+            raise RuntimeError("WeChat review asset missing path/blobSha")
+        asset = (ROOT / rel).resolve()
+        try:
+            asset.relative_to(ROOT.resolve())
+        except ValueError as exc:
+            raise RuntimeError(f"WeChat reviewed asset escapes repository: {rel}") from exc
+        if not asset.exists():
+            raise RuntimeError(f"WeChat reviewed asset missing: {rel}")
+        actual = git_blob_sha(asset)
+        if actual != expected:
+            raise RuntimeError(
+                f"WeChat reviewed asset changed after approval: {rel}: expected {expected}, actual {actual}"
+            )
     return gate
 
 
