@@ -227,6 +227,43 @@ test('atomic first-migration guard catches a legacy write racing after freshness
   assert.equal(db.sqlite.prepare("SELECT revision FROM user_library_state WHERE user_id='u-race-freshness'").get().revision,2);
 });
 
+test('database authority trigger blocks stale old-Worker legacy INSERT and UPDATE',async t=>{
+  const db=new D1();t.after(()=>db.close());addUser(db,'u-trigger');
+  const env=envFor(db);
+  const created=await applyUserLibraryV3Mutation(env,'u-trigger',{
+    expectedRevision:0,
+    globalState:{statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},followedSearches:[],searchHistory:[],hideRead:false},
+  },1000);
+  assert.equal(created.ok,true);
+  assert.equal(db.sqlite.prepare("SELECT authority FROM user_library_v3_authority WHERE user_id='u-trigger'").get().authority,'v3');
+
+  assert.throws(
+    ()=>db.sqlite.prepare(`
+      INSERT INTO user_library_state(user_id,state_json,revision,updated_at)
+      VALUES('u-trigger','{}',1,1100)
+    `).run(),
+    /user_library_v3_authority_active/,
+  );
+
+  addUser(db,'u-trigger-update');
+  db.sqlite.prepare(`
+    INSERT INTO user_library_state(user_id,state_json,revision,updated_at)
+    VALUES('u-trigger-update','{}',1,1000)
+  `).run();
+  db.sqlite.prepare(`
+    INSERT INTO user_library_v3_authority(user_id,authority,activated_revision,activated_at)
+    VALUES('u-trigger-update','v3',1,1000)
+  `).run();
+  assert.throws(
+    ()=>db.sqlite.prepare(`
+      UPDATE user_library_state SET state_json='{"stale":true}',revision=2,updated_at=1200
+      WHERE user_id='u-trigger-update'
+    `).run(),
+    /user_library_v3_authority_active/,
+  );
+  assert.equal(db.sqlite.prepare("SELECT revision FROM user_library_state WHERE user_id='u-trigger-update'").get().revision,1);
+});
+
 test('V3 mutation keeps bounded D3b compatibility rows readable without rewriting unchanged rows',async t=>{
   const db=new D1();t.after(()=>db.close());addUser(db);
   const env=envFor(db);
