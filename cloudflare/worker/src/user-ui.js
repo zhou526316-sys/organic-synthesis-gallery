@@ -255,6 +255,21 @@ async function linkProfileToSession(env, profileId, session) {
   await env.DB.prepare('DELETE FROM paper_readers WHERE profile_id = ?').bind(profileId).run();
 }
 
+async function v3ReadFreshness(env,userId,result) {
+  const legacy = await env.DB.prepare(
+    'SELECT revision, updated_at FROM user_library_state WHERE user_id = ?'
+  ).bind(userId).first();
+  const legacyRevision = Number(legacy?.revision || 0);
+  const legacyUpdatedAt = Number(legacy?.updated_at || 0);
+  const head = result?.head || result;
+  const v3Revision = Number(head?.revision || 0);
+  const v3UpdatedAt = Number(head?.updatedAt || 0);
+  return {
+    fresh:legacyRevision===v3Revision && legacyUpdatedAt===v3UpdatedAt,
+    legacyRevision,legacyUpdatedAt,v3Revision,v3UpdatedAt,
+  };
+}
+
 async function accountState(env, payload, ctx) {
   const session = await authenticatedSession(env, payload?.sessionToken);
   if (!session) return { status: 401, body: { error: 'not_authenticated' } };
@@ -268,6 +283,8 @@ async function accountState(env, payload, ctx) {
       if (mode === 'account-v3-head') {
         const head = await readUserLibraryV3Head(env,session.user_id);
         if (!head?.ready) return { status:503, body:{ error:String(head?.reason || 'user_library_v3_read_unavailable') } };
+        const freshness=await v3ReadFreshness(env,session.user_id,head);
+        if(!freshness.fresh) return { status:409, body:{ error:'user_library_v3_not_fresh',...freshness } };
         return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-head', ...head } } };
       }
       if (mode === 'account-v3-page') {
@@ -276,6 +293,8 @@ async function accountState(env, payload, ctx) {
           limit: payload?.limit == null ? 100 : Number(payload.limit),
         });
         if (!page?.ready) return { status:503, body:{ error:String(page?.reason || 'user_library_v3_read_unavailable') } };
+        const freshness=await v3ReadFreshness(env,session.user_id,page);
+        if(!freshness.fresh) return { status:409, body:{ error:'user_library_v3_not_fresh',...freshness } };
         return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-page', ...page } } };
       }
       const delta = await readUserLibraryV3Delta(env,session.user_id,{
@@ -285,6 +304,8 @@ async function accountState(env, payload, ctx) {
         limit: payload?.limit == null ? 100 : Number(payload.limit),
       });
       if (!delta?.ready) return { status:503, body:{ error:String(delta?.reason || 'user_library_v3_read_unavailable') } };
+      const freshness=await v3ReadFreshness(env,session.user_id,delta);
+      if(!freshness.fresh) return { status:409, body:{ error:'user_library_v3_not_fresh',...freshness } };
       return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-delta', ...delta } } };
     } catch (error) {
       return { status:400, body:{ error:String(error?.message || error).slice(0,180) } };
