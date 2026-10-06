@@ -17,8 +17,8 @@ test('production Worker binds a dedicated search D1 in shadow-only mode',()=>{
   assert.match(deploy,/binding = "LITERATURE_INDEX_DB"/);
   assert.match(deploy,/database_name = "\$LITERATURE_INDEX_D1_NAME"/);
   assert.match(deploy,/LITERATURE_CATALOG_INDEX_SHADOW_ENABLED = "1"/);
-  assert.match(deploy,/LITERATURE_CATALOG_INDEX_READ_ENABLED = "0"/);
-  assert.ok(!deploy.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "1"'));
+  assert.match(deploy,/LITERATURE_CATALOG_INDEX_READ_ENABLED = "1"/);
+  assert.ok(!deploy.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "0"'));
 });
 
 test('Cloudflare binding resolution uses indentation-safe node one-liners',()=>{
@@ -34,10 +34,14 @@ test('primary D1 remains FTS-free and deployment verifies that boundary',()=>{
   assert.match(deploy,/primary D1 must remain free of literature FTS tables/);
 });
 
-test('public view code exists while production remains explicitly read-disabled',()=>{
+test('public view canary is explicitly read-enabled while static fallback remains in frontend',()=>{
   assert.ok(worker.includes('/api/literature/catalog-view'));
-  assert.match(deploy,/LITERATURE_CATALOG_INDEX_READ_ENABLED = "0"/);
-  assert.ok(!deploy.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "1"'));
+  assert.match(deploy,/LITERATURE_CATALOG_INDEX_READ_ENABLED = "1"/);
+  assert.ok(!deploy.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "0"'));
+  const frontend=readFileSync(path.join(root,'src/main.ts'),'utf8');
+  assert.ok(frontend.includes('static-fallback'));
+  assert.ok(frontend.includes('client.search(needle)'));
+  assert.ok(frontend.includes('client.range(dateFrom, dateTo || client.asOfDate)'));
 });
 
 test('shadow sync follows successful Worker and Pages deployments without frontend read cutover',()=>{
