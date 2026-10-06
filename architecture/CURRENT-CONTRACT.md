@@ -139,7 +139,7 @@ Architecture changes must test at least:
 
 1. **P0 — bounded frontend results: GUARDED.** Browser DOM is a fixed result window; the static Archive compatibility path now fails closed before >1000-result truncation or >36 monthly-segment fanout. Cursor-based indexed paging remains the preferred path for broad historical discovery.
 2. **P0 — bounded fallback: COMPLETE.** Deployed architecture failures use verified Hot fallback / retained Hot state rather than reloading all history.
-3. **P1 — indexed all-time search: CUTOVER GATE.** Dedicated D1 shadow has full row/search/view parity; frontend indexed-read support may be merged while production read activation remains a separate flag.
+3. **P1 — indexed all-time search: ACTIVATION GATE.** Dedicated D1 shadow has repeated full row/search/view parity and the frontend is generation/revision fenced. Production activation may set the read flag only with a live current-generation cursor canary, safe generation-handoff fallback, and automatic redeploy to read-disabled mode on canary failure.
 4. **P1 — user-library D3c: SHADOW PARITY.** Bounded V3 mutation/delta primitives are merged; D3c1 now validates revision-fenced shadow population and full semantic parity while V3 read/write authority remains off.
 5. **P2 — continue index/materialization cutovers:** any remaining metadata path that still relies on corpus-wide/prefix-wide scans must migrate behind parity/freshness gates.
 
