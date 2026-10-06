@@ -866,8 +866,11 @@ jobs:
 
           let status=await call('/api/admin/user-library-v3/status');
           if(status.writeEnabled===true){
-            if(status.configured!==true||status.enabled!==false||status.readEnabled!==true){
-              throw new Error('user library V3 write-authority mode invalid: '+JSON.stringify(status));
+            const expectedHeads=Number(status.legacyUsers||0)+Number(status.v3AuthorityUsers||0);
+            if(status.configured!==true||status.enabled!==false||status.readEnabled!==true
+              ||Number(status.revisionMismatches||0)!==0
+              ||Number(status.v3Heads||0)!==expectedHeads){
+              throw new Error('user library V3 write-authority mode invalid: '+JSON.stringify({status,expectedHeads}));
             }
             const report={
               schemaVersion:1,phase:'D3c4b-user-library-v3-write-authority',ok:true,
@@ -977,6 +980,7 @@ jobs:
 
       - name: Verify V3 write activation with isolated account
         id: user_library_v3_write_canary
+        if: steps.user_library_v3_shadow.outcome == 'success'
         continue-on-error: true
         working-directory: cloudflare/worker
         env:
@@ -1161,8 +1165,8 @@ jobs:
           console.log('USER_LIBRARY_V3_WRITE_CANARY_DB '+JSON.stringify(row));
           NODE
 
-      - name: Roll back V3 write activation on canary failure
-        if: steps.user_library_v3_write_canary.outcome == 'failure'
+      - name: Roll back V3 write activation on authority/canary failure
+        if: steps.user_library_v3_shadow.outcome == 'failure' || steps.user_library_v3_write_canary.outcome == 'failure'
         working-directory: cloudflare/worker
         env:
           WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
@@ -1257,7 +1261,7 @@ jobs:
           retention-days: 14
 
       - name: Fail deployment after safe V3 write rollback
-        if: always() && steps.user_library_v3_write_canary.outcome == 'failure'
+        if: always() && (steps.user_library_v3_shadow.outcome == 'failure' || steps.user_library_v3_write_canary.outcome == 'failure')
         run: |
           echo "V3 user-library write activation failed; production was rolled back to WRITE_ENABLED=0." >&2
           exit 1
