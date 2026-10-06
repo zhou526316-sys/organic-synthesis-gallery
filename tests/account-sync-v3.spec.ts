@@ -650,6 +650,94 @@ test('malformed V3 identity or counts are discarded before any partial state is 
   expect(savedState.papers['10.1234/legacy'].note).toBe('integrity fallback');
 });
 
+test('V3-authoritative account under global write rollback stays suspended and never attempts legacy save', async ({ page }) => {
+  test.setTimeout(60_000);
+  const local = fullState('local pending');
+  await seedSession(page, local);
+  await stubCommonApi(page);
+
+  const modes:string[]=[];
+  const remote = fullState('remote committed');
+  const head = {
+    ready:true,
+    revision:2,
+    updatedAt:200,
+    globalState:globalState(false),
+    globalRevision:1,
+    paperCount:1,
+    metadataCount:1,
+    changeFloorRevision:1,
+    papersSplit:true,
+    metadataSplit:true,
+  };
+
+  await page.route('https://api.gczhouwld.com/api/user-ui/reader-counts', async route => {
+    const body=route.request().postDataJSON() as any;
+    const mode=String(body?.mode || '');
+    if(!mode){
+      await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({counts:{}})});
+      return;
+    }
+    modes.push(mode);
+    if(mode==='account-v3-head'){
+      await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
+        account:{userId:'u-suspended',readPath:'v3-head',writeEnabled:false,writeAuthority:'v3',...head},
+      })});
+      return;
+    }
+    if(mode==='account-v3-page'){
+      await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
+        account:{
+          userId:'u-suspended',readPath:'v3-page',writeEnabled:false,writeAuthority:'v3',
+          ready:true,scanStartRevision:2,head,count:1,hasMore:false,nextKey:null,
+          rows:[{
+            paperKey:'10.1234/legacy',
+            paperPresent:true,
+            paperState:remote.papers['10.1234/legacy'],
+            metadataPresent:true,
+            metadata:remote.metadata['10.1234/legacy'],
+          }],
+        },
+      })});
+      return;
+    }
+    if(mode==='account-v3-delta'){
+      await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
+        account:{
+          userId:'u-suspended',readPath:'v3-delta',writeEnabled:false,writeAuthority:'v3',
+          ready:true,resetRequired:false,sinceRevision:2,targetRevision:2,head,
+          globalRevision:1,count:0,hasMore:false,nextCursor:null,changes:[],
+        },
+      })});
+      return;
+    }
+    if(mode==='account-save'||mode==='account-v3-mutate'){
+      await route.fulfill({status:500,contentType:'application/json',body:JSON.stringify({error:'write_must_not_run_while_suspended'})});
+      return;
+    }
+    if(mode==='account-pull'){
+      await route.fulfill({status:500,contentType:'application/json',body:JSON.stringify({error:'legacy_pull_must_not_run'})});
+      return;
+    }
+    await route.fulfill({status:400,contentType:'application/json',body:'{}'});
+  });
+
+  await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded'});
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.dataset.accountSyncRead||'')).toBe('v3');
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.dataset.accountSyncWrite||'')).toBe('suspended');
+  await page.waitForTimeout(1500);
+
+  expect(modes).toContain('account-v3-head');
+  expect(modes).toContain('account-v3-page');
+  expect(modes).toContain('account-v3-delta');
+  expect(modes).not.toContain('account-save');
+  expect(modes).not.toContain('account-v3-mutate');
+  expect(modes).not.toContain('account-pull');
+  const localAfter=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)||'{}'),STATE_KEY);
+  expect(localAfter.papers['10.1234/legacy'].note).toBe('local pending');
+  expect(await page.evaluate(key=>localStorage.getItem(key),REVISION_KEY)).toBe('2');
+});
+
 test('session removal clears remembered account revision and disables account sync', async ({ page }) => {
   test.setTimeout(60_000);
   await seedSession(page);
