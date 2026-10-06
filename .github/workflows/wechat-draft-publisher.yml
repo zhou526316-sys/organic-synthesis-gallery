@@ -105,6 +105,18 @@ jobs:
             exit 0
           fi
           git commit -m "audit: record WeChat draft preview"
-          git fetch origin main
-          git rebase origin/main
-          git push origin HEAD:main
+          # main may advance while the publisher is running (literature/Tampermonkey
+          # jobs write audit state in parallel). Rebase-and-push with a bounded
+          # retry so a successful WeChat draft is not reported as failed merely
+          # because the audit receipt lost a ref race.
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "receipt push raced with another main update; retrying ($attempt/5)" >&2
+            sleep 2
+          done
+          echo "failed to persist WeChat receipt after 5 ref-race retries" >&2
+          exit 1
