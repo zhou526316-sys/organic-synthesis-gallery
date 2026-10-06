@@ -43,17 +43,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          gh workflow run deploy-worker-frontend.yml --repo "$REPO" --ref main
-          for i in {1..30}; do
-            RUN_ID="$(gh run list --repo "$REPO" --workflow deploy-worker-frontend.yml --branch main --event workflow_dispatch --limit 10 --json databaseId,headSha,status --jq ".[] | select(.headSha == \"$GITHUB_SHA\") | .databaseId" | head -n1)"
-            if [ -n "$RUN_ID" ]; then
-              echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-            sleep 2
-          done
-          echo "Could not resolve dispatched Worker frontend deploy run." >&2
-          exit 1
+          DISPATCH_OUTPUT="$(gh workflow run deploy-worker-frontend.yml --repo "$REPO" --ref main 2>&1)"
+          printf '%s\n' "$DISPATCH_OUTPUT"
+          RUN_ID="$(printf '%s\n' "$DISPATCH_OUTPUT" | sed -nE 's#.*?/actions/runs/([0-9]+).*#\\1#p' | tail -n1)"
+          if [ -z "$RUN_ID" ]; then
+            echo "Could not resolve the Worker deploy run id from gh workflow dispatch output." >&2
+            exit 1
+          fi
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+          echo "Dispatched Worker frontend deploy run $RUN_ID."
 
       - name: Wait for Worker frontend deploy
         env:
