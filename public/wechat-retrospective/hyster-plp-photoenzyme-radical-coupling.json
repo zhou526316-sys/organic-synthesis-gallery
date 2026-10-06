@@ -147,6 +147,18 @@
       "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-si-natural-aa-failure.png",
       "display_width_pct": 78,
       "caption": "Supporting Information Fig. 11｜直接光激发天然氨基酸来源的醌式中间体时，无论 WT 还是工程化酶都没有得到目标产物。这一负结果支持“天然体系的短寿命激发态不足以完成所需分子间化学”的判断。"
+    },
+    {
+      "id": "fig5_abc",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-fig5abc.png",
+      "display_width_pct": 100,
+      "caption": "原文 Fig. 5a–c｜a：吡啶鎓盐 1a 对 ¹[Q]* 的淬灭；b：工程化体系中长寿命激发态分量增加；c：由基态电位与激发能估算 ¹[Q]* 具有约 −1.8 V（vs SCE）的还原能力。三块数据分别从反应性、寿命和热力学三个方向检验 ¹[Q]*。"
+    },
+    {
+      "id": "fig5_de",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-fig5de.png",
+      "display_width_pct": 100,
+      "caption": "原文 Fig. 5d–e｜d：换成更难还原的硫鎓前体后目标产物只有约 3%；e：在酶外先生成自由基再接触基态醌式中间体，不得到目标交叉产物。两个负结果共同限制了“任意自由基都能与基态 [Q] 偶联”的替代解释。"
     }
   ],
   "sections": [
@@ -309,28 +321,19 @@
       "eyebrow": "第九层｜激发态 PLP 是否足以完成还原",
       "heading": "寿命、荧光淬灭和氧化还原能力从三个方向把 [Q]* 锁定为关键物种",
       "paragraphs": [
-        "原文 Fig. 5a–b 从动力学侧检验 ¹[Q]*：Fig. 5a 中吡啶鎓盐 1a 会逐步淬灭 [Q]* 荧光；Fig. 5b 的时间分辨实验则显示工程化体系中与分子间反应相关的长寿命激发态分量明显增加。",
-        "原文 Fig. 5c 从热力学侧检验电子转移：作者根据基态电位和激发能估算，¹[Q]* 的激发态氧化电位约为 −1.8 V（vs SCE），能够覆盖模型吡啶鎓盐，并与不同自由基前体的反应边界相吻合。",
-        "原文 Fig. 5d–e 用两个负结果排除替代解释：更难还原的硫鎓前体只给出很低收率；在酶外先生成自由基、再让它接触基态醌式中间体，也不会得到目标交叉产物。"
+        "原文 Fig. 5a–c 把 ¹[Q]* 的关键证据集中在一起：Fig. 5a 中吡啶鎓盐 1a 会逐步淬灭 [Q]* 荧光；Fig. 5b 显示工程化体系中与分子间反应相关的长寿命激发态分量明显增加；Fig. 5c 则估算 ¹[Q]* 的激发态氧化电位约为 −1.8 V（vs SCE）。三类结果分别回答“能不能反应”“来不来得及反应”和“热力学上能不能还原”三个问题。",
+        "原文 Fig. 5d–e 再用负结果排除更简单的替代解释：更难还原的硫鎓前体只给出很低收率；在酶外先生成自由基、再让它接触基态醌式中间体，也不会得到目标交叉产物。因此关键步骤应当包含酶内 ¹[Q]* 先触发电子转移，并在活性位点附近共生成需要复合的两个自由基。"
       ],
       "figures": [
-        "fig5_quenching",
-        "fig5_lifetime",
-        "fig5_redox",
-        "fig5_control_d",
-        "fig5_control_e"
+        "fig5_abc",
+        "fig5_de"
       ],
       "figures_after_paragraph": {
         "1": [
-          "fig5_quenching",
-          "fig5_lifetime"
+          "fig5_abc"
         ],
         "2": [
-          "fig5_redox"
-        ],
-        "3": [
-          "fig5_control_d",
-          "fig5_control_e"
+          "fig5_de"
         ]
       }
     },
