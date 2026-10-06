@@ -26,92 +26,39 @@
       "repo_path": "public/wechat-assets/natchem-2026-10-06-cover-v2.jpg"
     },
     {
-      "id": "fig1",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig1_HTML.png",
-      "crop_frac": [
-        0.56,
-        0,
-        1,
-        0.24
-      ],
-      "caption": "原文 Fig. 1c（仅保留本文反应）｜羧酸提供一段碳链，有机硼提供另一段碳链；后文所有设计都在回答同一个问题：怎样让两边的烷基自由基同步生成，而不是各自先自偶联。"
-    },
-    {
       "id": "fig1_failures",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig1_HTML.png",
-      "crop_frac": [
-        0,
-        0.64,
-        1,
-        1
-      ],
-      "caption": "原文 Fig. 1e｜直流与交替极性电解的直接比较：交替极性能够缓解自由基过氧化和电极钝化，但此时目标交叉偶联仍很低，说明后续还必须解决两类自由基的同步生成。"
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-problem.png",
+      "caption": "原文 Fig. 1e｜先看最关键的失败模式：普通直流与交替极性电解都会生成自由基，但产物分布暴露出过氧化、自偶联与电极失活等竞争通道。交替极性先把“自由基能不能持续存在”这一步救回来，后面还要继续解决两类自由基是否同步生成。"
     },
     {
       "id": "fig2_activation",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig2_HTML.png",
-      "crop_frac": [
-        0,
-        0.2,
-        0.6,
-        0.6
-      ],
-      "caption": "原文 Fig. 2b｜TMAF 同时改变两类前体。羧酸变成约 0.8 V 可氧化的羧酸盐；硼酸在适量氟离子下形成单氟/二氟硼酸盐，氧化电位也降到约 0.8 V。氟过量形成三氟硼酸盐后，电位升到约 1.2 V，又重新失配。"
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-redox-species.png",
+      "caption": "原文 Fig. 2b｜TMAF 不是普通添加剂，而是在改变两类前体的实际存在形态：羧酸转成较易氧化的羧酸盐，硼酸则依氟化程度形成不同硼物种。单氟/二氟硼物种与羧酸盐落入接近的氧化窗口，三氟化后又重新失配。"
     },
     {
       "id": "fig2_redox",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig2_HTML.png",
-      "crop_frac": [
-        0,
-        0.59,
-        1,
-        1
-      ],
-      "caption": "原文 Fig. 2d–f｜循环伏安和 ¹⁹F NMR 把“氧化还原匹配”落到具体物种上：低到中等 TMAF 用量时出现新的约 0.8 V 氧化波，并能看到单氟/二氟硼物种；羧酸盐一侧也处在相近窗口。"
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-redox-evidence.png",
+      "caption": "原文 Fig. 2d–f｜循环伏安与 ¹⁹F NMR 把“氧化还原匹配”从概念落到实验：不同 TMAF 用量对应不同硼物种和氧化信号，说明最佳条件本质上是在调物种分布，而不只是筛一个经验当量。"
     },
     {
       "id": "fig3_electrode",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig3_HTML.png",
-      "crop_frac": [
-        0,
-        0,
-        1,
-        0.36
-      ],
-      "caption": "原文 Fig. 3a–c｜玻碳把有机硼来源自由基进一步氧化的第二次氧化推到更高电位；交替极性的还原半周期又能抑制电极表面持续钝化。电极材料和波形解决的是两个不同问题。"
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-electrode.png",
+      "caption": "原文 Fig. 3a–c｜电极材料和交替极性控制的是不同失败通道：碳电极把进一步氧化推向更高电位，而反向半周期帮助维持电极表面的持续工作能力。"
     },
     {
       "id": "fig3_mechanism",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig3_HTML.png",
-      "crop_frac": [
-        0,
-        0.35,
-        1,
-        1
-      ],
-      "caption": "原文 Fig. 3d｜作者提出的整体图景：两类被氟化物活化的前体在相近电位被氧化，形成两个瞬态自由基；交叉偶联与两个自偶联的统计关系接近 2:1:1。红框是需要被交替极性抑制的自由基过氧化通道。"
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-mechanism.png",
+      "caption": "原文 Fig. 3d｜作者提出的整体图景：两类经调控的前体在接近的电位窗口释放两个短寿命自由基；当生成通量接近时，交叉偶联开始能够与两种自偶联竞争。"
     },
     {
-      "id": "table1_hydroboration",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Tab1_HTML.png",
-      "crop_frac": [
-        0,
-        0,
-        1,
-        0.34
-      ],
-      "caption": "原文 Table 1（上部）｜把烯烃先原位硼氢化，再直接进入电解偶联，相当于把“羧酸 + 烯烃”变成一种新的 C(sp³)–C(sp³) 片段偶联入口。"
+      "id": "fig4_scope",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-scope.png",
+      "caption": "原文 Fig. 4a｜底物/片段拓展。不同 organoboron 来源的烷基片段都能够参与成键，包括简单芳基烷基链、含酯或醚的片段、保留烯烃的链段、环状与更拥挤的烷基片段。这里真正重要的是：方法不再停留在一个模型自由基对。"
     },
     {
       "id": "fig4_tandem",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig4_HTML.png",
-      "crop_frac": [
-        0,
-        0.43,
-        1,
-        1
-      ],
-      "caption": "原文 Fig. 4b｜电解先构建新的烷基–烷基 C–C 键，再利用保留下来的芳基卤素继续做 Suzuki–Miyaura 或 Buchwald–Hartwig 偶联，说明这一步可以作为后续复杂化的前端模块。"
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-diversification.png",
+      "caption": "原文 Fig. 4b｜合成出口。烯烃可先原位硼氢化再进入电解，相当于形式上的“羧酸 + 烯烃”偶联；产物中保留的芳基卤素还能继续接 Suzuki–Miyaura 或 Buchwald–Hartwig 等传统偶联。"
     }
   ],
   "sections": [
@@ -130,9 +77,7 @@
         "作者先照着 Kolbe 电解的思路做普通直流恒流电解。结果并不是“反应慢一点”，而是反应走向完全错误：自由基继续被氧化成碳正离子，随后形成醇、醛等副产物；有机硼来源物种还会在电极表面接枝，让电极越来越钝。",
         "把电极极性按固定频率来回切换后，质量平衡明显改善，过氧化和电极钝化都减轻，自由基终于能持续生成。但这时目标交叉产物仍不到 5%，两个自偶联产物反而最多。这一步非常关键，因为它把问题进一步缩小了：波形已经解决“有没有自由基”，剩下的是“两种自由基是不是同时出现”。"
       ],
-      "figures": [
-        "fig1_failures"
-      ]
+      "figures": []
     },
     {
       "eyebrow": "第三层｜两个反向实验把答案指向电位",
@@ -193,30 +138,41 @@
       ]
     },
     {
-      "eyebrow": "第九层｜合成上真正买来了什么",
-      "heading": "最有价值的不是一个 58% 的模型反应，而是把“羧酸 + 烯烃”接成新的片段偶联入口",
+      "eyebrow": "第九层｜从机理回到方法学：它到底能接多宽",
+      "heading": "底物拓展不是“多摆几个例子”，而是在检验这套自由基同步策略能不能离开模型体系",
       "paragraphs": [
-        "烷基硼酸可以由烯烃一步硼氢化得到。作者把硼氢化和电解直接串起来，就把反应从“羧酸 + 硼酸”进一步前移成形式上的“羧酸 + 烯烃”偶联——两个非常庞大的原料池因此被接到了一起。",
-        "更进一步，电解后保留下来的芳基卤素还能继续做 Suzuki–Miyaura 偶联或 Buchwald–Hartwig 胺化。也就是说，电解在这里更像一个前端“拼碳骨架”的模块，后面还能继续接传统交叉偶联。"
+        "看到这里如果只停在电位和波形，容易把这篇文章读成一篇漂亮的电化学机理论文。但对合成方法学来说，还要追问更现实的问题：换掉两边的烷基片段以后，这套“同步生成”还能不能成立？Fig. 4a 给出的答案是肯定但并非无限制。",
+        "作者展示了多种 organoboron 来源的烷基片段：从较简单的芳基烷基链，到带酯、醚、烯烃等官能团的链段，再到环状和更拥挤的烷基片段，都能够进入 C(sp³)–C(sp³) 成键。它说明这套设计不是只对某一对模型底物偶然有效。",
+        "但这里也能反过来看出方法的边界：每换一个底物，前体氧化电位、氟化物种分布、自由基寿命和过氧化倾向都会一起变化。所以“底物范围”本身其实也是这套动力学窗口的一张地图——能不能做，不只取决于官能团是否耐受，还取决于两边自由基能否继续在相近时间尺度上被供给。"
       ],
       "figures": [
-        "table1_hydroboration",
+        "fig4_scope"
+      ]
+    },
+    {
+      "eyebrow": "第十层｜合成上真正买来了什么",
+      "heading": "从硼酸继续向上游追到烯烃，再把产物接回传统偶联，才是这套方法真正的合成价值",
+      "paragraphs": [
+        "作者没有把反应停在“羧酸 + 硼酸”这一层。烷基硼酸可以由烯烃原位硼氢化得到，因此从逆合成角度看，这一步还可以被前移成形式上的“羧酸 + 烯烃”C(sp³)–C(sp³) 偶联。论文同时展示了同类偶联以及不同 organoboron feedstock 的使用，说明自由基来源可以在一定范围内被重新组合。",
+        "更进一步，电解以后保留下来的芳基卤素还能继续做 Suzuki–Miyaura 或 Buchwald–Hartwig 胺化。我的理解是，这一步电化学反应更适合作为一个“先拼三维烷基骨架”的前端模块，而不是孤立的终点反应：先用电化学处理传统交叉偶联最难处理的两个 sp³ 片段，再把熟悉的金属催化接回来。"
+      ],
+      "figures": [
         "fig4_tandem"
       ]
     },
     {
-      "eyebrow": "第十层｜边界在哪里",
-      "heading": "这仍是一套依赖物种平衡和时间尺度的精细体系，而不是“两个自由基都能随便接”",
+      "eyebrow": "第十一层｜边界在哪里",
+      "heading": "底物拓展变宽了，但它仍是一套依赖物种平衡和时间尺度的精细体系",
       "paragraphs": [
-        "未保护酰胺和醇，以及硝基、氰基、吡啶基、呋喃基、噻吩基等底物仍然困难；商业硼酸里的水会明显拖累反应；标准条件还需要无水 TMAF、氮气、RVC 电极和较高总电量。",
-        "因此最值得迁移到其它反应里的不是某一个固定电流或频率，而是一条设计原则：先用物种化学把两个自由基前体的氧化窗口对齐，再用动态电化学控制它们的瞬时生成通量。"
+        "未保护酰胺和醇，以及硝基、氰基、吡啶基、呋喃基、噻吩基等底物仍然困难；商业硼酸里的水会明显拖累反应；标准条件还需要无水 TMAF、氮气、RVC 电极和较高总电量。换句话说，Fig. 4 展示了可迁移性，却没有消除这套化学对前体状态和反应环境的敏感。",
+        "因此最值得迁移到其它反应里的不是某一个固定电流或频率，而是一条设计原则：先用物种化学把两个自由基前体的氧化窗口对齐，再用动态电化学管理自由基生成、过氧化和电极失活；最后再用底物拓展去验证这个动力学窗口到底有多宽。"
       ]
     }
   ],
   "takehome": [
-    "交替极性电解先解决“自由基能否持续存在”；TMAF 的物种调控才进一步解决“两种自由基能否同步生成”。",
-    "交叉选择性主要来自生成通量的匹配，而不是催化剂对两个自由基的特异识别；2:1:1 的统计关系正是这个机制的重要线索。",
-    "水、TMAF 当量、电极材料、频率和总电量看似是不同优化参数，实际上都在调节同一个自由基生成—失活网络。"
+    "第一层设计逻辑：交替极性先解决“自由基能否持续存在”，TMAF 再通过物种调控解决“两种自由基能否在相近时间生成”。",
+    "最值得迁移的机理认识：交叉选择性主要来自自由基生成通量的匹配，而不是某个催化剂对两个自由基进行特异识别。",
+    "最值得合成化学家关注的结果：Fig. 4 已把方法从模型反应推进到底物/片段拓展、羧酸–烯烃形式偶联和后续 Suzuki/Buchwald–Hartwig 复杂化，但水敏感性和氧化窗口仍决定着真正的适用边界。"
   ],
   "takehome_heading": "读到最后，这篇 Nature Chemistry 最值得带走的三点",
   "ai_notice": "本文由“化之岛”基于 Nature Chemistry 最终正文与作者提供的 Supporting Information 整理，AI 辅助资料归纳与文字校核，最终内容经人工审核。化学结构与数据均来自论文原文，不使用生成模型重绘。",
@@ -230,5 +186,7 @@
     "crop_235_1": "0_0_1_1",
     "crop_1_1": "0.287234_0_0.712766_1",
     "description": "今日精选使用已审核的 2.35:1 成品封面：上部为 Nature Chemistry 原文 Fig. 1e，底部为深蓝标题安全区，避免微信白字压在浅色反应图上。"
-  }
+  },
+  "lead_figure_id": "fig1_failures",
+  "lead_figure_position": "after_quick_points"
 }
