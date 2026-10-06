@@ -60,6 +60,14 @@ CREATE TABLE IF NOT EXISTS user_library_v3_changes (
 CREATE INDEX IF NOT EXISTS idx_user_library_v3_changes_user_revision
   ON user_library_v3_changes(user_id, revision, seq);
 
+
+CREATE TABLE IF NOT EXISTS user_library_v3_shape (
+  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  papers_split INTEGER NOT NULL CHECK (papers_split IN (0,1)),
+  metadata_split INTEGER NOT NULL CHECK (metadata_split IN (0,1)),
+  revision INTEGER NOT NULL CHECK (revision >= 0)
+);
+
 CREATE TABLE IF NOT EXISTS user_library_v3_shadow_sync (
   user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
   source_revision INTEGER NOT NULL DEFAULT 0 CHECK (source_revision >= 0),
