@@ -460,6 +460,12 @@ test('public literature view is hard-gated by read flag and ready catalog genera
   assert.equal(enabled.body.readPathActive,true);
   assert.equal(enabled.body.matched,1);
   assert.equal(enabled.body.items[0].doi,'10.1234/archive');
+  const capped=await queryPublishedLiteratureCatalogView(readEnv,{
+    catalogId:g.catalogId,query:'chem',limit:100,
+  });
+  assert.equal(capped.status,200);
+  assert.equal(capped.body.limit,60);
+  assert.equal(capped.body.count,3);
   const status=await getLiteratureCatalogIndexStatus(readEnv);
   assert.equal(status.status,200);
   assert.equal(status.body.readConfigured,true);
