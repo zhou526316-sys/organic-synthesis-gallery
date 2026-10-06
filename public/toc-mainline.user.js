@@ -50,7 +50,7 @@
   var IMMEDIATE_RESTART_REVISION = '20261001-immediate-restart-v3';
   var MISSING_CAPTURE_REVISION = '20261006-oct1-bundle-v7';
   var QUEUE_COVERAGE_REVISION = '20261006-queue-coverage-v9';
-  var PUBLISHER_MEDIA_REVISION = '20261006-rsc-preview-reject-v12';
+  var PUBLISHER_MEDIA_REVISION = '20261006-rsc-remote-html-pdf-v13';
   var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
@@ -2081,6 +2081,11 @@ function embeddedJobDois(value) {
     return row?'https://pubs.rsc.org/en/content/articlehtml/'+row.year+'/'+row.code+'/'+row.suffix:'';
   }
 
+  function rscArticlePdfUrl(job) {
+    var row=rscRouteParts(job);
+    return row?'https://pubs.rsc.org/en/content/articlepdf/'+row.year+'/'+row.code+'/'+row.suffix:'';
+  }
+
   function rscPdfPreviewUrl(value) {
     var raw=String(value||'').split('#',1)[0].split('?',1)[0].toLowerCase();
     return /(?:^|\/)[^/]+\.pdf\.(?:gif|png|jpe?g|webp)$/.test(raw);
@@ -2131,6 +2136,33 @@ function embeddedJobDois(value) {
       }
     });
     return rows.sort(function(a,b){return b.score-a.score;});
+  }
+
+  async function rscRemoteVisualCandidates(job, trace) {
+    if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='rsc')return {toc:[],figures:[]};
+    var target=rscArticleHtmlUrl(job);if(!target)return {toc:[],figures:[]};
+    try{
+      var response=await gmRequest({method:'GET',url:target,timeout:25000,
+        headers:{Accept:'text/html,application/xhtml+xml;q=0.9,*/*;q=0.1'}});
+      var status=Number(response&&response.status||0),finalUrl=String(response&&(response.finalUrl||response.responseURL)||target);
+      var html=String(response&&response.responseText||'');
+      var doi=normalizeDoi(job&&job.doi),suffix=(doi.split('/')[1]||'').toLowerCase();
+      var identity=(finalUrl+' '+html.slice(0,300000)).toLowerCase();
+      if(status<200||status>=400)throw new Error('rsc_articlehtml_http_'+status);
+      if(!publisherArticleHostAllowed('rsc',finalUrl))throw new Error('rsc_articlehtml_origin_mismatch');
+      if(identity.indexOf(doi)<0&&(!suffix||identity.indexOf(suffix)<0))throw new Error('rsc_articlehtml_doi_unverified');
+      var doc=new DOMParser().parseFromString(html,'text/html');
+      var toc=rscGraphicalAbstractCandidates(job,doc,finalUrl);
+      if(!toc.length)toc=collectCandidates(job,trace,doc,finalUrl,'rsc_remote_html',true).filter(function(row){return row&&row.kind==='official';});
+      var figures=collectArticleFigureCandidates(job,trace,doc,finalUrl,'rsc_remote_html');
+      pushTrace(trace,{stage:'rsc_remote_html',event:'scan_complete',status:toc.length||figures.length?'found':'none',
+        url:finalUrl,message:'official='+toc.length+';figures='+new Set(figures.map(function(x){return x.label;})).size});
+      return {toc:toc,figures:figures};
+    }catch(error){
+      pushTrace(trace,{stage:'rsc_remote_html',event:'scan_failed',status:'failed',url:target,
+        message:captureLiveError(error&&error.message||error)});
+      return {toc:[],figures:[]};
+    }
   }
 
   function elsevierGraphicalAbstractCandidates(job, root, baseUrl) {
@@ -4849,8 +4881,9 @@ function embeddedJobDois(value) {
   }
 
   async function waitForPairedVisuals(job,trace) {
-    var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started,iframeAttempted=false,accessGateStarted=0;
-    var toc=[],figures=[],recoveredOfficialToc=[];
+    var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started,iframeAttempted=false,accessGateStarted=0,rscRemoteAttempted=false;
+    var toc=[],figures=[],recoveredOfficialToc=[],rscRemote={toc:[],figures:[]};
+    function mergeRows(base,extra,keyFn){var out=base.slice(),seen=new Set(out.map(keyFn));extra.forEach(function(row){var key=keyFn(row);if(!seen.has(key)){seen.add(key);out.push(row);}});return out;}
     while (Date.now()-started<90000 && Date.now()<job.captureDeadline) {
       if (isAbortRequested()) throw new Error('user_aborted');
       assertBoundCaptureJob(job);
@@ -4882,6 +4915,12 @@ function embeddedJobDois(value) {
       if(wantsToc&&!toc.length&&recoveredOfficialToc.length)toc=recoveredOfficialToc.slice();
       figures=wantsFigures?collectArticleFigureCandidates(job,trace,document,location.href,'paired_dom'):[];
       var now=Date.now(),elapsed=now-started;
+      if(job.publisher==='rsc'&&!rscRemoteAttempted&&elapsed>=3500&&((wantsToc&&!toc.length)||(wantsFigures&&!figures.length))){
+        rscRemoteAttempted=true;
+        rscRemote=await rscRemoteVisualCandidates(job,trace);
+      }
+      if(wantsToc&&rscRemote.toc.length)toc=mergeRows(toc,rscRemote.toc,function(x){return String(x.kind||'')+'|'+String(x.url||'');});
+      if(wantsFigures&&rscRemote.figures.length)figures=mergeRows(figures,rscRemote.figures,function(x){return String(x.label||'')+'|'+String(x.url||'');});
       if(state.shell&&!toc.length&&!figures.length){
         captureLiveUpdate(job,'page_loading');
         if(elapsed>=30000)throw new Error('publisher_page_not_ready');
@@ -4917,13 +4956,13 @@ function embeddedJobDois(value) {
 
   // Private PDF capture is an optional owner-only side channel. It never
   // determines TOC/body/fulltext task success and can be disabled independently.
-  var PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-bundle-v6';
+  var PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-bundle-v7';
   var PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01';
   var PRIVATE_PDF_CAPTURE_ENDPOINT = WORKER + '/api/private-pdf/import';
   var PRIVATE_PDF_LEASE_KEY = P + 'private-pdf-capture-lease-v1';
   var PRIVATE_PDF_ATTEMPT_PREFIX = P + 'private-pdf-attempt-v2:';
   var PRIVATE_PDF_MAX_BYTES = 60 * 1024 * 1024;
-  var PRIVATE_PDF_QUEUE_REVISION = '20261006-private-pdf-queue-v3';
+  var PRIVATE_PDF_QUEUE_REVISION = '20261006-private-pdf-queue-v4';
 
   function privatePdfCaptureEligibleByAddedDate(job) {
     var addedDate=String(job&&job.addedDate||'').trim();
@@ -4935,6 +4974,7 @@ function embeddedJobDois(value) {
     var doi=normalizeDoi(job&&job.doi);if(!doi)return false;
     var prior=GM_getValue(PRIVATE_PDF_ATTEMPT_PREFIX+doi,null),ts=Number(now||Date.now());
     if(!prior)return true;
+    if(prior.status!=='stored'&&String(prior.revision||'')!==PRIVATE_PDF_CAPTURE_REVISION)return true;
     var age=Math.max(0,ts-Number(prior.at||0));
     if(prior.status==='stored'&&age<30*24*60*60*1000){
       // A PDF stored by the pre-bundle runtime is reusable as PDF bytes, but
@@ -5023,6 +5063,7 @@ function embeddedJobDois(value) {
     if(meta)score+=120;
     if(node&&String(node.getAttribute&&node.getAttribute('type')||'').toLowerCase()==='application/pdf')score+=80;
     if(/\b(?:download\s+)?pdf\b/i.test(text))score+=60;
+    if(/\/content\/articlepdf\//.test(u))score+=100;
     if(/\/doi\/(?:pdf|epdf)\//.test(u)||/\/pdfdirect\//.test(u)||/\.pdf(?:[?#]|$)/.test(u))score+=40;
     if(/support|supplement|supporting|(?:^|[\/_\.-])suppl(?:ement)?(?:[\/_\.?&#-]|$)|(?:^|[\/_\.-])si(?:[\/_\.?&#-]|$)|esm|appendix/.test(t+' '+u))score-=100;
     return score;
@@ -5030,7 +5071,7 @@ function embeddedJobDois(value) {
 
   function privatePdfUrlLooksStrong(value) {
     var u=String(value||'').toLowerCase();
-    return /\.pdf(?:[?#]|$)/.test(u)||/\/doi\/(?:pdf|epdf)\//.test(u)||/\/pdfdirect\//.test(u)||/[?&](?:file|pdf|pdfurl|url)=[^&#]*\.pdf(?:[&#]|$)/.test(u);
+    return /\.pdf(?:[?#]|$)/.test(u)||/\/content\/articlepdf\//.test(u)||/\/doi\/(?:pdf|epdf)\//.test(u)||/\/pdfdirect\//.test(u)||/[?&](?:file|pdf|pdfurl|url)=[^&#]*\.pdf(?:[&#]|$)/.test(u);
   }
 
   function discoverExplicitPdfCandidates(job) {
@@ -5044,6 +5085,7 @@ function embeddedJobDois(value) {
       if(score<30)return;
       seen.add(url);rows.push({url:url,score:score,source:meta?'citation_pdf_url':'explicit_pdf_link'});
     }
+    if(publisher==='rsc'){var deterministicRscPdf=rscArticlePdfUrl(job);if(deterministicRscPdf)add(deterministicRscPdf,null,false);}
     Array.from(document.querySelectorAll('meta[name="citation_pdf_url" i],meta[property="citation_pdf_url" i]')).forEach(function(m){add(m.getAttribute('content'),m,true);});
     Array.from(document.querySelectorAll('link[type="application/pdf" i][href],a[href],iframe[src],embed[src],object[data]')).forEach(function(a){
       var href=a.getAttribute('href')||a.getAttribute('src')||a.getAttribute('data')||'';

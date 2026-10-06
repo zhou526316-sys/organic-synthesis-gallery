@@ -10,6 +10,11 @@
     return row?'https://pubs.rsc.org/en/content/articlehtml/'+row.year+'/'+row.code+'/'+row.suffix:'';
   }
 
+  function rscArticlePdfUrl(job) {
+    var row=rscRouteParts(job);
+    return row?'https://pubs.rsc.org/en/content/articlepdf/'+row.year+'/'+row.code+'/'+row.suffix:'';
+  }
+
   function rscPdfPreviewUrl(value) {
     var raw=String(value||'').split('#',1)[0].split('?',1)[0].toLowerCase();
     return /(?:^|\/)[^/]+\.pdf\.(?:gif|png|jpe?g|webp)$/.test(raw);
