@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.34
+// @version      6.2.35
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -55,7 +55,8 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.34';
+  var INSTALL_REVISION = '6.2.35';
+  var STALE_CONTROLLER_TAKEOVER_REVISION = '20261006-stale-controller-takeover-v1';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -3574,7 +3575,7 @@ function embeddedJobDois(value) {
     var now=Date.now(),lease=GM_getValue(LEASE_KEY,null);
     if (controllerPaused()) return false;
     if (lease&&Number(lease.expiresAt||0)>now&&lease.owner!==CONTROLLER_ID) return false;
-    GM_setValue(LEASE_KEY,{owner:CONTROLLER_ID,expiresAt:now+90000,renewedAt:now});
+    GM_setValue(LEASE_KEY,{owner:CONTROLLER_ID,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,expiresAt:now+90000,renewedAt:now});
     await sleep(250);
     if(controllerPaused()){releaseIdlePausedLease();return false;}
     var confirmed=GM_getValue(LEASE_KEY,null);
@@ -3587,7 +3588,7 @@ function embeddedJobDois(value) {
     var lease=GM_getValue(LEASE_KEY,null),now=Date.now();
     // An expired owner must reacquire; waking from suspension cannot resurrect it.
     if(!lease||lease.owner!==CONTROLLER_ID||Number(lease.expiresAt||0)<=now)return false;
-    GM_setValue(LEASE_KEY,{owner:CONTROLLER_ID,expiresAt:now+90000,renewedAt:now});
+    GM_setValue(LEASE_KEY,{owner:CONTROLLER_ID,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,expiresAt:now+90000,renewedAt:now});
     return true;
   }
 
@@ -3668,6 +3669,23 @@ function embeddedJobDois(value) {
   function completedPublisherResult(job) {
     var result=GM_getValue(resultKey(job.doi),null);
     return result&&result.jobId===job.jobId&&result.version===VERSION&&result.finishedAt?result:null;
+  }
+
+  function retireStaleControllerState() {
+    var active=GM_getValue(ACTIVE_JOB_KEY,null),lease=GM_getValue(LEASE_KEY,null),summary=GM_getValue(SUMMARY_KEY,{})||{};
+    var observed=String(active&&active.controllerRevision||lease&&lease.controllerRevision||summary.controllerRevision||'');
+    if(!observed||observed===CONTROLLER_REVISION)return {retired:false,observed:observed};
+    var doi=normalizeDoi(active&&active.doi);
+    if(active)GM_deleteValue(ACTIVE_JOB_KEY);
+    if(doi){
+      var p=GM_getValue(progressKey(doi),null);if(!p||!p.jobId||!active||p.jobId===active.jobId)GM_deleteValue(progressKey(doi));
+    }
+    var hb=currentPublisherHeartbeat();if(!active||!hb||!hb.jobId||hb.jobId===active.jobId)GM_deleteValue(HEARTBEAT_KEY);
+    GM_deleteValue(LEASE_KEY);GM_deleteValue(RESUME_REQUEST_KEY);
+    var manual=GM_getValue(MANUAL_RUN_KEY,null);
+    if(manual&&!manual.completedAt)GM_deleteValue(MANUAL_RUN_KEY);
+    CONTROLLER_STOP_REASON='';
+    return {retired:true,observed:observed,doi:doi};
   }
 
   function reconcileActiveJobBeforeDispatch() {
@@ -3837,7 +3855,7 @@ function embeddedJobDois(value) {
     GM_deleteValue(ACTIVE_JOB_KEY);GM_deleteValue(HEARTBEAT_KEY);
     GM_deleteValue(ABORT_KEY);GM_setValue(ENABLED_KEY,true);
     CONTROLLER_STOP_REASON='';
-    GM_setValue(LEASE_KEY,{owner:manualLeaseOwner(run),manualRunId:run.id,expiresAt:Date.now()+90000});
+    GM_setValue(LEASE_KEY,{owner:manualLeaseOwner(run),manualRunId:run.id,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,expiresAt:Date.now()+90000});
     manualExecution=run;
     run.summary={controllerRunId:'manual:'+run.id,lifecycleRevision:IMMEDIATE_RESTART_REVISION,
       controllerRevision:CONTROLLER_REVISION,version:VERSION,mode:'missing_only',missingRevision:MISSING_CAPTURE_REVISION,
@@ -3854,7 +3872,7 @@ function embeddedJobDois(value) {
     if(!manualExecutionCurrent(run)||controllerPaused())return false;
     var lease=GM_getValue(LEASE_KEY,null);
     if(!lease||lease.owner!==manualLeaseOwner(run))return false;
-    GM_setValue(LEASE_KEY,{owner:manualLeaseOwner(run),manualRunId:run.id,expiresAt:Date.now()+90000});
+    GM_setValue(LEASE_KEY,{owner:manualLeaseOwner(run),manualRunId:run.id,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,expiresAt:Date.now()+90000});
     return true;
   }
 
@@ -4193,7 +4211,7 @@ function embeddedJobDois(value) {
           break;
         }
         s.phase='running';row.state='active';
-        var job=Object.assign({},row.job,{jobId:crypto.randomUUID(),controllerId:manualLeaseOwner(run),captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:row.attempts+1});
+        var job=Object.assign({},row.job,{jobId:crypto.randomUUID(),controllerId:manualLeaseOwner(run),controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:row.attempts+1});
         coverageStats(run);manualSummary(run);
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);
         GM_setValue(ACTIVE_JOB_KEY,job);markPublisherDispatch(job);
@@ -4429,7 +4447,7 @@ function embeddedJobDois(value) {
         var attemptGeneration=pdfOnly?pdfGeneration:evidenceOnly?evidenceGeneration:generation;
         var attemptKind=pdfOnly?'pdf':evidenceOnly?'evidence':'figures';
         var priorAttempt=GM_getValue(attemptKey(batch[i].doi,attemptGeneration,attemptKind),null);
-        var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
+        var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
         markPublisherDispatch(job);
         var taskParts=[];
@@ -5367,7 +5385,11 @@ function embeddedJobDois(value) {
   if (isGalleryPage()) {
     mountCaptureLivePanel();
     startAutomaticCaptureReports();
-    if(location.hash==='#osg-start-from-head'){
+    var staleTakeover=retireStaleControllerState();
+    if(staleTakeover.retired&&!controllerPaused()){
+      badge('已自动淘汰旧 controller '+staleTakeover.observed+'；正在按最新规则重新生成缺项队列','#175cd3');
+      setTimeout(function(){forceStartFromHead();},250);
+    }else if(location.hash==='#osg-start-from-head'){
       try{history.replaceState(null,'',location.pathname+location.search);}catch(_){}
       forceStartFromHead();
     }else setTimeout(controllerRun, 1500);

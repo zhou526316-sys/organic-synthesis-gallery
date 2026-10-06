@@ -70,7 +70,7 @@ jobs:
             report.deployments=await deployments();
             const p=Object.fromEntries(report.probes.map(x=>[x.key,x]));
             report.passed=report.deployments.length===2&&report.deployments.every(x=>x.conclusion==='success')
-              &&['canonical_installer','worker_installer'].every(k=>p[k].status===200&&p[k].matchesTested&&p[k].marker&&p[k].panelMarker&&p[k].button&&p[k].version==='2.2.53')
+              &&['canonical_installer','worker_installer'].every(k=>p[k].status===200&&p[k].matchesTested&&p[k].marker&&p[k].panelMarker&&p[k].button&&p[k].version==='2.2.54')
               &&p.stage_inventory.status===200&&p.stage_inventory.data?.schemaVersion==='capture-inventory-v1'&&p.stage_inventory.data?.complete===true&&p.stage_inventory.data?.count===p.stage_inventory.data?.actualItems&&p.stage_inventory.data?.mediaGeneration===1790082000000
               &&p.production_inventory.status===200&&p.production_inventory.data?.items?.length===1&&p.production_inventory.data.items[0].capturedFiguresPresent
               &&p.capabilities.data?.captureVersion==='6.2.20'&&p.capabilities.data?.mediaControllerRevision==='2.2.41'&&p.capabilities.data?.mediaGeneration===1790082000000
