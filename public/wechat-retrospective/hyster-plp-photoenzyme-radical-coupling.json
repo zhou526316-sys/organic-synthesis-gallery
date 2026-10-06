@@ -107,10 +107,16 @@
       "caption": "原文 Fig. 5c｜由基态电位和激发能估算，¹[Q]* 的激发态氧化电位约为 −1.8 V（vs SCE）。这个还原能力能够覆盖模型吡啶鎓盐，并与不同还原性自由基前体的反应边界相吻合。"
     },
     {
-      "id": "fig5_controls",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-controls-de.png",
-      "display_width_pct": 88,
-      "caption": "原文 Fig. 5d–e｜两个控制实验分别测试更难还原的硫鎓前体以及“先在溶液中生成自由基、再去碰基态醌式中间体”的路径。前者反应很弱，后者不给交叉产物，说明反应依赖于酶内 ¹[Q]* 先触发电子转移并共生成自由基对。"
+      "id": "fig5_control_d",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-control-d.png",
+      "display_width_pct": 78,
+      "caption": "原文 Fig. 5d｜把自由基前体换成还原电位更负的硫鎓盐后，目标产物只得到约 3% 收率。这个结果给出了 ¹[Q]* 还原能力的实验边界，与 Fig. 5c 的电位估算相互呼应。"
+    },
+    {
+      "id": "fig5_control_e",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-control-e.png",
+      "display_width_pct": 82,
+      "caption": "原文 Fig. 5e｜用金属、Ni 体系或 365 nm 光在酶外先生成自由基，再让它接触基态醌式中间体，并不能得到目标交叉产物；观察到的主要是自由基自身副反应。这个负结果支持“酶内激发态先触发电子转移并共生成自由基对”的路径。"
     }
   ],
   "sections": [
@@ -252,7 +258,8 @@
         "fig5_quenching",
         "fig5_lifetime",
         "fig5_redox",
-        "fig5_controls"
+        "fig5_control_d",
+        "fig5_control_e"
       ],
       "figures_after_paragraph": {
         "1": [
@@ -263,7 +270,8 @@
           "fig5_redox"
         ],
         "3": [
-          "fig5_controls"
+          "fig5_control_d",
+          "fig5_control_e"
         ]
       }
     },
