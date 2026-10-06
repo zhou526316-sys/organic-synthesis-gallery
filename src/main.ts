@@ -1,7 +1,6 @@
 import {
   api,
   queryLiteratureCatalogView,
-  type LiteratureCatalogViewItem,
   type LiteratureCatalogViewRequest,
   type LiteratureCatalogViewResponse,
 } from './platform-api';
@@ -1477,7 +1476,6 @@ async function fetchRemoteLiteraturePage(
     const data = response.data;
     validateRemoteLiteratureResponse(data, client, scope, page);
     if (serial !== architectureRefreshSerial || architectureClient !== client || remoteLiteratureScope()?.key !== scope.key) {
-      remoteLiteratureViewLoading = false;
       return true;
     }
     const pageCursors = [...existingCursors];
@@ -1507,7 +1505,6 @@ async function fetchRemoteLiteraturePage(
     return true;
   } catch (error) {
     if (serial !== architectureRefreshSerial || architectureClient !== client) {
-      remoteLiteratureViewLoading = false;
       return true;
     }
     remoteLiteratureViewLoading = false;
@@ -1541,10 +1538,14 @@ async function moveRemoteResultPage(delta: number): Promise<boolean> {
     architectureRefreshTimer = null;
   }
   const handled = await fetchRemoteLiteraturePage(client, scope, targetPage, cursor, serial, remote.pageCursors);
-  if (handled && activeRemoteLiteratureView()?.page === targetPage) {
+  if (!handled) {
+    scheduleArchitectureCorpusRefresh(0);
+    return false;
+  }
+  if (activeRemoteLiteratureView()?.page === targetPage) {
     document.querySelector<HTMLElement>('#gallery')?.scrollIntoView({ block: 'start', behavior: 'auto' });
   }
-  return handled;
+  return true;
 }
 
 async function refreshArchitectureCorpus(serial: number): Promise<void> {
