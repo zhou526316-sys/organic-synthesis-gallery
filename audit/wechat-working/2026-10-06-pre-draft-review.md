@@ -6,34 +6,32 @@ This review supersedes all earlier Oct-6 layout approvals.
 
 ## Text review — PASS
 
-- Both articles were optimized on the existing drafts, not rewritten from zero.
-- The narrative now follows the original papers more completely: problem → design/engineering → mechanistic evidence → substrate scope → synthetic/application value → limitations.
-- Nature Chemistry no longer spends the whole article on one mechanistic point. The substrate-scope and synthetic-utility sections are explicit and separated.
-- Hyster likewise balances protein engineering, scope, FRET evidence, radical-pair mechanism, excited-state evidence, peer-review boundaries and Lenacapavir application.
-- Explanations remain progressively layered and use short plain-language interpretations before specialist detail.
-- Claims about FRET, excited-state lifetime and radical-flux matching remain within the evidence boundaries of the papers.
+- Both articles are optimized from the existing drafts, not rewritten from zero.
+- The narrative follows each paper progressively: problem → design/engineering → mechanistic evidence → substrate scope → synthetic/application value → limitations.
+- Nature Chemistry no longer concentrates on a single mechanism point: alternating-polarity electrolysis, redox/speciation matching, electrode effects, mechanism, substrate scope, hydroboration feedstock entry and downstream diversification are all represented.
+- Hyster balances PLP photochemistry, directed evolution, active-site remodeling, substrate scope, external and intra-enzyme FRET, radical-pair mechanism, excited-state lifetime, peer-review boundaries and Lenacapavir application.
+- Interpretive comments are kept separate from direct evidence and do not strengthen causal claims beyond the paper.
 
 ## Image review — PASS
 
-- Production figures are materialized WYSIWYG PNG/JPEG assets; no production body figure uses runtime `crop_frac`.
+- All production body figures are materialized WYSIWYG PNG/JPEG assets; no production body figure uses runtime `crop_frac`.
 - Nature Chemistry Fig. 1e is the first scientific image, before “先看反应本身”.
-- The alternating-polarity discussion now has its own Fig. 3b–c evidence image.
-- Electrode-material discussion uses a separate Fig. 3a image rather than an oversized combined crop.
-- Fig. 2 speciation/CV evidence, Fig. 3 mechanism, Fig. 4 scope, hydroboration feedstock logic and tandem diversification are all shown next to the paragraphs they explain.
-- Hyster contains material from every main-text figure family: Fig. 1 overview; Fig. 2 evolution; Fig. 3 scope; Fig. 4 external/intra-enzyme FRET; Fig. 5 lifetime, mechanism and application.
-- Low-information panels are intentionally not stretched to 100% width: evolution 72%, lifetime 70%, Lenacapavir application 58%, electrode-material panel 68%.
-- Scope and dense mechanistic/evidence figures remain wide enough to read labels and structures.
-- Crops with residual neighbouring-panel fragments were rejected rather than published.
-- User-confirmed blue Hyster cover remains unchanged.
+- The alternating-polarity section has its own Fig. 3b–c image immediately after the paragraph discussing scan-to-scan passivation/recovery.
+- Electrode material uses its own compact Fig. 3a image; it is not stretched full width.
+- Fig. 2 speciation/CV evidence, Fig. 3 mechanism, Fig. 4 substrate scope, hydroboration entry and downstream diversification are shown next to the exact paragraphs they explain.
+- Hyster covers every main-text figure family used in the narrative: Fig. 1 overview; Fig. 2 evolution and active-site remodeling; Fig. 3 two scope blocks; Fig. 4 external/intra-enzyme FRET evidence; Fig. 5 lifetime, mechanism and Lenacapavir application.
+- Low-information panels are deliberately narrower: evolution 72%, lifetime 70%, Lenacapavir 58%, electrode-material 68%; the active-site panel is 82%. Dense scope/mechanistic figures remain wide.
+- Crops with neighbouring-panel leakage or clipped chemistry are excluded from production.
+- The user-confirmed blue Hyster cover remains unchanged.
 
 ## Placement review — PASS
 
-Figures are no longer mechanically dumped at section ends. The publisher now supports `figures_after_paragraph`, so evidence appears immediately after the paragraph it substantiates. Remaining section figures fall back to the section end only when no finer placement is specified.
+The publisher supports `figures_after_paragraph`: evidence appears after the paragraph it substantiates rather than being dumped at section ends. This is now the default narrative rule for these two articles.
 
-## SI policy
+## Main-text / SI policy
 
-Supplementary Information may be added when it materially clarifies a claim that the main figures do not show (for example a negative control, water effect or failed substrate), but SI images are not inserted merely to increase image count. Main-text figures take priority and are now represented throughout both narratives.
+Main-text figures take priority and should be shown wherever they materially advance the paper's argument. SI figures may be added selectively for claims that the main figures do not directly visualize—such as water effects, negative controls or failed substrates—but not merely to increase image count or interrupt the narrative.
 
 ## Gate decision
 
-**PASS.** The exact current manifests and pinned assets may be written to WeChat once their blob fingerprints are recorded in the gate. Final acceptance still requires `draft/get` readback.
+**PASS.** The current manifests and pinned assets may be written to WeChat after their exact blob fingerprints are recorded in the review gate. Final acceptance requires `draft/get` readback.
