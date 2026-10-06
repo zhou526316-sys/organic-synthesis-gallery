@@ -322,7 +322,7 @@
         0,
         0,
         0.275,
-        0.31
+        0.275
       ],
       "output": "public/wechat-assets/reviewed/2026-10-06/hyster-quenching-a.png",
       "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-quenching-a.jpg"
@@ -334,7 +334,7 @@
         0.55,
         0,
         1,
-        0.31
+        0.275
       ],
       "output": "public/wechat-assets/reviewed/2026-10-06/hyster-redox-c-clean.png",
       "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-redox-c-clean.jpg"
@@ -346,10 +346,34 @@
         0,
         0.3,
         1,
-        0.55
+        0.49
       ],
       "output": "public/wechat-assets/reviewed/2026-10-06/hyster-controls-de.png",
       "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-controls-de.jpg"
+    },
+    {
+      "id": "daily-cross-scope-upper",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Tab1_HTML.png",
+      "crop_frac": [
+        0,
+        0.3,
+        1,
+        0.68
+      ],
+      "output": "public/wechat-assets/reviewed/2026-10-06/daily-cross-scope-upper.png",
+      "proof": "audit/wechat-working/crop-proofs/2026-10-06/daily-cross-scope-upper.jpg"
+    },
+    {
+      "id": "daily-cross-scope-lower",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Tab1_HTML.png",
+      "crop_frac": [
+        0,
+        0.57,
+        1,
+        1
+      ],
+      "output": "public/wechat-assets/reviewed/2026-10-06/daily-cross-scope-lower.png",
+      "proof": "audit/wechat-working/crop-proofs/2026-10-06/daily-cross-scope-lower.jpg"
     }
   ]
 }
