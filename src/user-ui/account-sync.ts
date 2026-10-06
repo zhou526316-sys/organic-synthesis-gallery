@@ -276,13 +276,10 @@ function mergeDirtyState(
   }
   for(const key of keys){
     const desiredRow=rowSnapshotFor(desired,key);
-    if(!desiredRow.paperPresent){
-      delete merged.papers[key];
-      delete merged.metadata[key];
-      continue;
-    }
-    merged.papers[key]=mergePaper(remote.papers?.[key],desiredRow.paperState,true);
+    if(desiredRow.paperPresent) merged.papers[key]=mergePaper(remote.papers?.[key],desiredRow.paperState,true);
+    else delete merged.papers[key];
     if(desiredRow.metadataPresent) merged.metadata[key]=structuredClone(desiredRow.metadata!);
+    else delete merged.metadata[key];
   }
   return merged;
 }
@@ -302,14 +299,10 @@ function committedSubset(base: UserUiState, target: UserUiState, keys: string[],
   }
   for (const key of keys) {
     const row = rowSnapshotFor(target,key);
-    if (row.paperPresent) {
-      next.papers[key] = structuredClone(row.paperState!);
-      if (row.metadataPresent) next.metadata[key] = structuredClone(row.metadata!);
-      else delete next.metadata[key];
-    } else {
-      delete next.papers[key];
-      delete next.metadata[key];
-    }
+    if (row.paperPresent) next.papers[key] = structuredClone(row.paperState!);
+    else delete next.papers[key];
+    if (row.metadataPresent) next.metadata[key] = structuredClone(row.metadata!);
+    else delete next.metadata[key];
   }
   return next;
 }
@@ -550,6 +543,11 @@ async function saveViaV3(
     .filter((item): item is Record<string,unknown> => Boolean(item));
   const globalChanged = globalWasDirty && !sameJson(globalStateOf(base),globalStateOf(desired));
   const batches = mutationBatches(operations);
+  if(!globalChanged && batches.length===0){
+    syncedState=cloneState(base);
+    clearSyncedDirty(desired,keys,globalWasDirty);
+    return {kind:'ok'};
+  }
   let expectedRevision = revision;
   const expectedUserId = activeUserId;
 
@@ -873,6 +871,7 @@ async function initialMerge(): Promise<void> {
   markInitialDifferences(remoteBase,merged);
   const keys=[...dirtyPaperKeys];
   const globalWasDirty=dirtyGlobal;
+  if(!keys.length && !globalWasDirty) return;
   const outcome=v3WriteActive
     ? await persistV3Desired(merged,keys,globalWasDirty)
     : await persistLegacyDesired(merged,keys,globalWasDirty);
