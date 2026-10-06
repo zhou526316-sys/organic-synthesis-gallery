@@ -139,6 +139,7 @@ export class PublishedCatalogClient {
     this.release = null;
     this.membership = null;
     this.asOfDate = '';
+    this.catalogId = '';
     this.memberDois = [];
     this.earliestDate = '';
   }
@@ -214,6 +215,7 @@ export class PublishedCatalogClient {
     const months = catalog.shards.map(row => row.month).filter(month => /^\d{4}-\d{2}$/.test(month)).sort();
     this.earliestDate = months.length ? `${months[0]}-01` : '';
     this.asOfDate = asOfDate;
+    this.catalogId = release.catalogId;
     this.reader = reader;
     this.delivery = delivery;
     this.release = release;
