@@ -62,7 +62,7 @@
     return rows.sort(function(a,b){return b.score-a.score;});
   }
   function rscDoiFromTextOrHref(value) {
-    var match=String(value||'').toLowerCase().match(/10\.1039\/[a-z0-9._()\/+\-]+/i);
+    var match=String(value||'').toLowerCase().match(/10\.1039\/[a-z0-9._()+\-]+/i);
     return match?normalizeDoi(match[0]):'';
   }
 
