@@ -232,9 +232,20 @@ export async function readUserLibraryStateFromRows(env, userId, authorityMeta = 
 
 export async function getUserLibraryShadowStatus(env) {
   if (!env?.DB) return {status:503,body:{error:'user_library_shadow_db_missing'}};
-  const [legacy,head,papers,mismatch,backfill] = await Promise.all([
+  const [legacy,head,legacyHead,v3CompatHead,papers,mismatch,backfill] = await Promise.all([
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_state').first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_head').first(),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM user_library_head head
+      INNER JOIN user_library_state legacy ON legacy.user_id=head.user_id
+    `).first(),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM user_library_head head
+      INNER JOIN user_library_v3_authority authority ON authority.user_id=head.user_id
+      WHERE authority.authority='v3'
+    `).first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_paper_state').first(),
     env.DB.prepare(`
       SELECT COUNT(*) AS count
@@ -250,6 +261,8 @@ export async function getUserLibraryShadowStatus(env) {
   ]);
   const legacyUsers=Number(legacy?.count||0);
   const shadowHeads=Number(head?.count||0);
+  const legacyShadowHeads=Number(legacyHead?.count||0);
+  const v3CompatHeads=Number(v3CompatHead?.count||0);
   const revisionMismatches=Number(mismatch?.count||0);
   const backfillComplete=Number(backfill?.complete||0)===1;
   const backfillHealthy=backfillComplete
@@ -258,11 +271,11 @@ export async function getUserLibraryShadowStatus(env) {
     &&safeText(backfill?.last_error,180)==='';
   const readConfigured=userLibraryRowReadEnabled(env);
   const readPathActive=readConfigured&&userLibraryRowShadowEnabled(env)
-    &&backfillHealthy&&legacyUsers===shadowHeads&&revisionMismatches===0;
+    &&backfillHealthy&&legacyUsers===legacyShadowHeads&&revisionMismatches===0;
   return {status:200,body:{
     version:1,shadowVersion:SHADOW_VERSION,enabled:userLibraryRowShadowEnabled(env),
     readConfigured,readPathActive,
-    legacyUsers,shadowHeads,paperRows:Number(papers?.count||0),
+    legacyUsers,shadowHeads,legacyShadowHeads,v3CompatHeads,paperRows:Number(papers?.count||0),
     revisionMismatches,
     backfill:backfill?{
       complete:Number(backfill.complete||0)===1,
