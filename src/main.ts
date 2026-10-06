@@ -590,6 +590,63 @@ function filteredPapers(): Paper[] {
   return [sharedPaper, ...filtered.filter(paper => paper !== sharedPaper)];
 }
 
+function remoteLiteratureScope(): RemoteLiteratureScope | null {
+  const client = architectureClient;
+  if (!client?.catalogId || architectureFallbackActive || activeEdition?.dois.length || sharedDoiFromLocation()) return null;
+  if (sort === 'readers') return null;
+  const needle = query.trim();
+  const queryCodepoints = [...needle].length;
+  if (needle && queryCodepoints < 3) return null;
+  const expandsArchive = queryCodepoints >= 3 || Boolean(dateFrom || dateTo);
+  if (!expandsArchive) return null;
+  const request: LiteratureCatalogViewRequest = {
+    catalogId: client.catalogId,
+    query: needle,
+    selectedJournals: [...selectedJournals].sort(),
+    excludedJournals: [...excludedJournals].sort(),
+    dateFrom,
+    dateTo,
+    addedDate: onlyNew ? beijingDate() : '',
+    sort: sort === 'oldest' ? 'oldest' : 'newest',
+    limit: RESULT_WINDOW_SIZE,
+  };
+  return {
+    key: JSON.stringify(request),
+    request,
+  };
+}
+
+function activeRemoteLiteratureView(): RemoteLiteratureViewState | null {
+  const scope = remoteLiteratureScope();
+  return scope && remoteLiteratureView?.scopeKey === scope.key ? remoteLiteratureView : null;
+}
+
+function remoteViewItemToPaper(item: LiteratureCatalogViewItem): Paper {
+  const doi = normalizeDoi(item.doi);
+  if (!doi || typeof item.journal !== 'string' || !Array.isArray(item.authors)) {
+    throw new Error('literature_catalog_view_item_invalid');
+  }
+  const addedDate = validAddedDate(item.addedDate) || undefined;
+  return normalizePaper({
+    journal: item.journal,
+    title: typeof item.title === 'string' ? item.title : null,
+    titleZh: typeof item.titleZh === 'string' ? item.titleZh : undefined,
+    doi,
+    date: typeof item.firstOnlineDate === 'string' ? item.firstOnlineDate : '',
+    url: null,
+    new: Boolean(addedDate && isNewTodayDate(addedDate)),
+    addedDate,
+    authors: item.authors,
+    synthesisType: item.synthesisType === 'formal' || item.synthesisType === 'total' ? item.synthesisType : undefined,
+  });
+}
+
+function clearRemoteLiteratureView(): void {
+  remoteLiteratureView = null;
+  remoteLiteratureViewLoading = false;
+  document.documentElement.dataset.catalogQuery = 'static';
+}
+
 function synthesisBadge(paper: Paper): string {
   if (paper.synthesisType === 'formal') return `<span class='tag formal-total'>${escapeHtml(t('formalSynthesis'))}</span>`;
   if (paper.synthesisType === 'total') return `<span class='tag total'>${escapeHtml(t('totalSynthesis'))}</span>`;
@@ -638,6 +695,7 @@ function syncLiteratureDoiRegistry(): void {
 
 function resetResultWindow(): void {
   resultWindowPage = 1;
+  clearRemoteLiteratureView();
 }
 
 function resultScopeIsDefaultRecent(): boolean {
