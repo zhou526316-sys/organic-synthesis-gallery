@@ -66,7 +66,7 @@ jobs:
 
           # users is the FK root for every canary-owned user-library/session row.
           # One root delete is safer than maintaining a hand-ordered child-table list.
-          npx wrangler d1 execute "$D1_NAME" --remote --command "DELETE FROM users WHERE id='$CANARY_USER_ID';" >/tmp/user-library-v3-canary-preclean.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --command "DELETE FROM users WHERE id='$CANARY_USER_ID';" --json | tee /tmp/user-library-v3-canary-preclean.json
           npx wrangler d1 execute "$D1_NAME" --remote --command "INSERT INTO users(id,display_name,email,avatar_url,created_at,updated_at) VALUES('$CANARY_USER_ID','D3c4b production canary',NULL,NULL,$NOW_MS,$NOW_MS);" >/tmp/user-library-v3-canary-user.txt
           npx wrangler d1 execute "$D1_NAME" --remote --command "INSERT INTO user_sessions(token_hash,user_id,created_at,expires_at) VALUES('$TOKEN_HASH','$CANARY_USER_ID',$NOW_MS,$EXPIRES_MS);" >/tmp/user-library-v3-canary-session.txt
 
@@ -249,7 +249,8 @@ jobs:
           REPORT_PATH: /tmp/user-library-v3-write-canary-report.json
         run: |
           set -euo pipefail
-          npx wrangler d1 execute "$D1_NAME" --remote --command "DELETE FROM users WHERE id='$CANARY_USER_ID';" >/tmp/user-library-v3-canary-cleanup.txt
+          if [ ! -x node_modules/.bin/wrangler ]; then npm install --no-audit --no-fund; fi
+          npx wrangler d1 execute "$D1_NAME" --remote --command "DELETE FROM users WHERE id='$CANARY_USER_ID';" --json | tee /tmp/user-library-v3-canary-cleanup.json
           npx wrangler d1 execute "$D1_NAME" --remote --command "
             SELECT 'users' AS table_name,COUNT(*) AS c FROM users WHERE id='$CANARY_USER_ID'
             UNION ALL SELECT 'sessions',COUNT(*) FROM user_sessions WHERE user_id='$CANARY_USER_ID'
@@ -259,9 +260,11 @@ jobs:
             UNION ALL SELECT 'v3_changes',COUNT(*) FROM user_library_v3_changes WHERE user_id='$CANARY_USER_ID'
             UNION ALL SELECT 'v3_shape',COUNT(*) FROM user_library_v3_shape WHERE user_id='$CANARY_USER_ID'
             UNION ALL SELECT 'v3_authority',COUNT(*) FROM user_library_v3_authority WHERE user_id='$CANARY_USER_ID'
+            UNION ALL SELECT 'v3_shadow_sync',COUNT(*) FROM user_library_v3_shadow_sync WHERE user_id='$CANARY_USER_ID'
             UNION ALL SELECT 'compat_rows',COUNT(*) FROM user_paper_state WHERE user_id='$CANARY_USER_ID'
             UNION ALL SELECT 'compat_head',COUNT(*) FROM user_library_head WHERE user_id='$CANARY_USER_ID'
-            UNION ALL SELECT 'legacy_state',COUNT(*) FROM user_library_state WHERE user_id='$CANARY_USER_ID';
+            UNION ALL SELECT 'legacy_state',COUNT(*) FROM user_library_state WHERE user_id='$CANARY_USER_ID'
+            UNION ALL SELECT 'profile_sessions',COUNT(*) FROM user_profile_sessions WHERE user_id='$CANARY_USER_ID';
           " --json > /tmp/user-library-v3-canary-cleanup-check.json
           node - <<'NODE'
           const fs=require('fs');

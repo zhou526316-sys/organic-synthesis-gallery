@@ -48,10 +48,13 @@ test('D3c4b canary exercises real write, bounded reads, compatibility and confli
   ]) assert.ok(workflow.includes(token),token);
 });
 
-test('D3c4b canary always removes the temporary user and verifies zero residue',()=>{
+test('D3c4b canary deletes the FK root and verifies zero residue in every owned table',()=>{
   assert.ok(workflow.includes('- name: Clean up isolated canary account'));
   assert.ok(workflow.includes('if: always()'));
+  assert.ok(workflow.includes("DELETE FROM users WHERE id='$CANARY_USER_ID'"));
+  assert.ok(workflow.includes('if [ ! -x node_modules/.bin/wrangler ]'));
   for(const table of [
+    'user_library_v3_head',
     'user_library_v3_changes',
     'user_library_v3_commits',
     'user_library_v3_rows',
@@ -61,6 +64,7 @@ test('D3c4b canary always removes the temporary user and verifies zero residue',
     'user_paper_state',
     'user_library_head',
     'user_library_state',
+    'user_profile_sessions',
     'user_sessions',
     'users',
   ]) assert.ok(workflow.includes(table),table);
