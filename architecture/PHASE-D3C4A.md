@@ -127,6 +127,16 @@ No write is silently redirected to the old monolithic authority after V3 activat
 
 The deployment contract must fail if D3c4a turns the write flag on.
 
+## Authority-transition concurrency fence
+
+The first mutation that converts a legacy-authoritative account to V3 is protected at three layers:
+
+1. the request pre-read requires legacy revision/updated_at, V3 head/shape and shadow-sync revision to match exactly;
+2. the same freshness relationship is re-evaluated inside the atomic D1 batch before the V3 authority marker can be created;
+3. D1 triggers reject every future INSERT or UPDATE of `user_library_state` once that user has a V3 authority marker.
+
+Therefore an in-flight old Worker is safe in either serialization order: if its legacy write commits first, V3 migration fails closed as stale; if V3 authority commits first, the old legacy write is rejected by D1. A legacy document cannot be resurrected behind V3 authority.
+
 ## D3c4b activation gate
 
 D3c4b is a separate production activation.
