@@ -10,6 +10,7 @@ import { buildLegacyTitlePresentation } from '../architecture/title-presentation
 import { loadScopeCorrections } from './lib/scope-corrections.mjs';
 import { isExcludedDoi } from '../shared/literature-policy.js';
 import { beijingDate } from '../shared/literature-lifecycle.mjs';
+import { RESULT_WINDOW_SIZE } from '../shared/result-window.js';
 
 const ROOT = process.cwd();
 const PUBLIC = path.resolve(ROOT, 'public');
@@ -103,6 +104,9 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   const presentationRef = ref(`title-presentation.${sha256(presentationText)}.json`, presentationText);
 
   const hotCandidateDois = new Set([...bundle.partitions.hot, ...bundle.partitions.future]);
+  const hotCandidateRecords = bundle.records
+    .filter(row => hotCandidateDois.has(row.doi))
+    .sort((a, b) => String(b.firstOnlineDate || b.paper?.date || '').localeCompare(String(a.firstOnlineDate || a.paper?.date || '')));
   const hotFallbackBody = {
     schema: 'gallery-hot-fallback-v1',
     catalogId: bundle.catalog.recordSetHash,
@@ -112,11 +116,39 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
     generatedAsOfDate: asOfDate,
     scope: 'hot-plus-future-candidates',
     count: hotCandidateDois.size,
-    records: bundle.records.filter(row => hotCandidateDois.has(row.doi)),
+    records: hotCandidateRecords,
   };
   const hotFallbackText = stable(hotFallbackBody) + '\n';
   const hotFallbackRef = ref(`hot-fallback.${sha256(hotFallbackText)}.json`, hotFallbackText);
   assert(hotFallbackRef.bytes <= 4 * 1024 * 1024, 'hot_fallback_over_budget');
+
+  const hotDateBuckets = new Map();
+  for (const row of hotCandidateRecords) {
+    const date = typeof row.firstOnlineDate === 'string' ? row.firstOnlineDate : null;
+    const precision = row.datePrecision === 'day' ? 'day' : 'unknown';
+    const key = `${date || ''}|${precision}`;
+    const prior = hotDateBuckets.get(key) || { firstOnlineDate: date, datePrecision: precision, count: 0 };
+    prior.count += 1;
+    hotDateBuckets.set(key, prior);
+  }
+  const hotHeadRecordLimit = RESULT_WINDOW_SIZE + bundle.partitions.future.length;
+  const hotHeadBody = {
+    schema: 'gallery-hot-head-v1',
+    catalogId: bundle.catalog.recordSetHash,
+    doiSetHash: bundle.catalog.doiSetHash,
+    publicationSlot,
+    sourceCommit,
+    generatedAsOfDate: asOfDate,
+    scope: 'hot-plus-future-candidates',
+    pageSize: RESULT_WINDOW_SIZE,
+    candidateCount: hotCandidateRecords.length,
+    dateBuckets: [...hotDateBuckets.values()],
+    count: Math.min(hotHeadRecordLimit, hotCandidateRecords.length),
+    records: hotCandidateRecords.slice(0, hotHeadRecordLimit),
+  };
+  const hotHeadText = stable(hotHeadBody) + '\n';
+  const hotHeadRef = ref(`hot-head.${sha256(hotHeadText)}.json`, hotHeadText);
+  assert(hotHeadRef.bytes <= 512 * 1024, 'hot_head_over_budget');
 
   const members = Object.fromEntries(bundle.records.map(row => [row.doi, row.revision]));
   const serial = Date.parse(publicationSlot);
@@ -161,6 +193,7 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
     [membershipRef.path]: membershipText,
     [acquisitionRef.path]: acquisitionText,
     [hotFallbackRef.path]: hotFallbackText,
+    [hotHeadRef.path]: hotHeadText,
   };
   const objects = Object.entries(generated).map(([pathname, content]) => {
     assertSafeRelative(pathname);
@@ -185,6 +218,7 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
     acquisitionBasis: acquisitionRef,
     titlePresentation: presentationRef,
     hotFallback: hotFallbackRef,
+    hotHead: hotHeadRef,
     objects,
   };
   const releaseText = stable(release) + '\n';
@@ -209,6 +243,7 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   assert(releaseRoundtrip.membership.sha256 === membershipRef.sha256, 'membership_release_mismatch');
   assert(releaseRoundtrip.acquisitionBasis.sha256 === acquisitionRef.sha256, 'acquisition_release_mismatch');
   assert(releaseRoundtrip.hotFallback.sha256 === hotFallbackRef.sha256, 'hot_fallback_release_mismatch');
+  assert(releaseRoundtrip.hotHead.sha256 === hotHeadRef.sha256, 'hot_head_release_mismatch');
 
   await rm(output, { recursive:true, force:true });
   await mkdir(path.dirname(output), { recursive:true });
@@ -221,6 +256,8 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
     largestObjectBytes:Math.max(0,...objects.map(row=>row.bytes)),
     titleCompatibilityOverrides:Object.keys(presentation.overrides).length,
     hotFallbackCandidates:hotFallbackBody.count,
+    hotHeadRecords:hotHeadBody.count,
+    hotHeadBytes:hotHeadRef.bytes,
     productionActivation:false, frontendReadActivation:true, dispatchEnabled:false,
   };
   console.log('GALLERY_ARCHITECTURE_PUBLIC ' + JSON.stringify(report));
