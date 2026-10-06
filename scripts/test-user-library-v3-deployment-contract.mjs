@@ -9,6 +9,8 @@ const v3=readFileSync('cloudflare/worker/src/user-library-v3.js','utf8');
 const shadow=readFileSync('cloudflare/worker/src/user-library-v3-shadow.js','utf8');
 const index=readFileSync('cloudflare/worker/src/index.js','utf8');
 const userUi=readFileSync('cloudflare/worker/src/user-ui.js','utf8');
+const accountSync=readFileSync('src/user-ui/account-sync.ts','utf8');
+const accountSyncTest=readFileSync('tests/account-sync-v3.spec.ts','utf8');
 const packageJson=JSON.parse(readFileSync('cloudflare/worker/package.json','utf8'));
 const quality=readFileSync('.github/workflows/site-quality-gate.yml','utf8');
 
@@ -56,14 +58,17 @@ test('D3c2 enables bounded V3 reads while V3 writes remain explicitly off',()=>{
   assert.ok(shadow.includes('user_library_v3_shadow_atomic_batch_required'));
 });
 
-test('D3c2 adds authenticated bounded V3 sync reads without cutting account-pull or write authority',()=>{
+test('D3c4a ships dormant authenticated bounded V3 mutation without activating write authority',()=>{
   assert.ok(userUi.includes("from './user-library-v3-shadow.js'"));
   assert.ok(userUi.includes("from './user-library-v3.js'"));
   assert.ok(userUi.includes('safeV3ShadowLibraryWrite'));
   assert.ok(userUi.includes('USER_LIBRARY_V3_SHADOW_WRITE_FAILED'));
   assert.ok((userUi.match(/safeV3ShadowLibraryWrite\(/g)||[]).length>=3);
-  assert.ok(!userUi.includes('applyUserLibraryV3Mutation'));
-  for(const mode of ['account-v3-head','account-v3-page','account-v3-delta']) assert.ok(userUi.includes(mode),mode);
+  assert.ok(userUi.includes('applyUserLibraryV3Mutation'));
+  assert.ok(userUi.includes("mode === 'account-v3-mutate'"));
+  assert.ok(userUi.includes("'user_library_v3_write_disabled'"));
+  assert.ok(userUi.includes("'user_library_client_upgrade_required'"));
+  for(const mode of ['account-v3-head','account-v3-page','account-v3-delta','account-v3-mutate']) assert.ok(userUi.includes(mode),mode);
   assert.ok(userUi.includes('v3ReadFreshness'));
   assert.ok(userUi.includes("'SELECT revision, updated_at FROM user_library_state WHERE user_id = ?'"));
   assert.ok(userUi.includes("if (mode === 'account-pull')"));
@@ -101,9 +106,12 @@ test('D3c2 shadow is revision-fenced, shape-preserving, and emits delta continui
 test('D3c mutation and delta primitives are bounded and revision-fenced',()=>{
   for(const token of [
     'MAX_MUTATION_OPS = 32',
-    'MAX_MUTATION_BYTES = 512 * 1024',
+    'MAX_MUTATION_BYTES = 2 * 1024 * 1024',
+    'MAX_GLOBAL_BYTES = 1_500_000',
     'MAX_PAGE_LIMIT = 100',
     'MAX_DELTA_LIMIT = 100',
+    'CHANGE_RETENTION_REVISIONS = 512',
+    'COMPAT_ROW_SHADOW_VERSION = 2',
     'expectedRevision',
     'user_library_v3_revision_conflict',
     'user_library_v3_atomic_batch_required',
@@ -116,6 +124,41 @@ test('D3c mutation and delta primitives are bounded and revision-fenced',()=>{
   assert.ok(v3.includes('user_library_v3_commits'));
   assert.ok(v3.includes('user_library_v3_changes'));
   assert.ok(v3.includes('deleted?1:0'));
+  assert.ok(v3.includes('INSERT INTO user_paper_state'));
+  assert.ok(v3.includes('INSERT INTO user_library_head'));
+  assert.ok(v3.includes('DELETE FROM user_library_v3_changes'));
+  assert.ok(v3.includes('DELETE FROM user_library_v3_commits'));
+  assert.ok(v3.includes('deleted=1 AND revision<?'));
+});
+
+test('D3c4a client mutation foundation is dirty-key bounded and dormant behind the write flag',()=>{
+  for(const token of [
+    "account-v3-mutate",
+    'V3_MUTATION_OP_LIMIT = 32',
+    'V3_MUTATION_TARGET_BYTES = 1_500_000',
+    'dirtyPaperKeys',
+    'dirtyGlobal',
+    'mutationBatches',
+    'persistV3Desired',
+    'user_library_client_upgrade_required',
+    "dataset.accountSyncWrite",
+  ]) assert.ok(accountSync.includes(token),token);
+  assert.ok(accountSync.includes("detail?.scope==='paper'"));
+  assert.ok(accountSync.includes('detail?.paperIds || []'));
+  assert.ok(accountSync.includes('relevantPaperKeys'));
+  assert.ok(!accountSync.includes('Object.keys(target.metadata || {})'));
+  assert.ok(accountSync.includes('mergeDirtyState'));
+  assert.ok(!accountSync.includes('allChangedKeys'));
+  assert.ok(accountSyncTest.includes('toBeGreaterThan(1_500_000)'));
+  assert.ok(accountSyncTest.includes('toEqual([32,32,1])'));
+  assert.ok(accountSyncTest.includes('legacy_save_must_not_run'));
+  const config=section(
+    deploy,
+    '- name: Generate frontend deployment configuration',
+    '- name: Deploy frontend assets',
+  );
+  assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "0"'));
+  assert.ok(!config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "1"'));
 });
 
 test('D3c2 production deploy keeps full parity while bounded reads are enabled and writes stay off',()=>{
@@ -139,12 +182,13 @@ test('D3c2 production deploy keeps full parity while bounded reads are enabled a
   assert.ok(block.includes('user-library-v3-shadow-'));
 });
 
-test('D3c through D3c2 regression suites are part of the site quality gate',()=>{
+test('D3c through D3c4a regression suites are part of the site quality gate',()=>{
   assert.equal(packageJson.scripts['test:user-library-v3'],'node scripts/test-user-library-v3.mjs');
   assert.equal(packageJson.scripts['test:user-library-v3-shadow'],'node scripts/test-user-library-v3-shadow.mjs');
   assert.ok(quality.includes('npm run test:user-library-v3'));
   assert.ok(quality.includes('npm run test:user-library-v3-shadow'));
   assert.ok(quality.includes('node scripts/test-user-library-v3-deployment-contract.mjs'));
+  assert.ok(quality.includes('tests/account-sync-v3.spec.ts'));
 });
 
 console.log('USER_LIBRARY_V3_DEPLOYMENT_CONTRACT_PASS');
