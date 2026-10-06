@@ -379,6 +379,10 @@ def require_editorial_review_gate(
                 continue
             manifest = json.loads(source.read_text(encoding="utf-8"))
             figures = manifest.get("figures") if isinstance(manifest, dict) else []
+            figure_map = {
+                str(fig.get("id")): fig
+                for fig in figures if isinstance(figures, list) and isinstance(fig, dict) and fig.get("id")
+            }
             for fig in figures if isinstance(figures, list) else []:
                 if not isinstance(fig, dict):
                     continue
@@ -394,6 +398,44 @@ def require_editorial_review_gate(
                     raise RuntimeError(
                         f"reviewed production figure must be pinned to repo_path: {rel}#{fig_id}"
                     )
+
+            if bool(gate.get("strictFigurePlacement")):
+                used = set()
+                lead_id = str(manifest.get("lead_figure_id") or "").strip()
+                if lead_id:
+                    used.add(lead_id)
+                for section_index, section in enumerate(manifest.get("sections") or [], start=1):
+                    if not isinstance(section, dict):
+                        continue
+                    ids = [str(x) for x in (section.get("figures") or [])]
+                    positions = section.get("figures_after_paragraph")
+                    positions = positions if isinstance(positions, dict) else {}
+                    positioned = set()
+                    for positioned_ids in positions.values():
+                        if isinstance(positioned_ids, str):
+                            positioned_ids = [positioned_ids]
+                        if isinstance(positioned_ids, list):
+                            positioned.update(str(x) for x in positioned_ids)
+                    missing = [x for x in ids if x not in positioned]
+                    if missing:
+                        raise RuntimeError(
+                            f"strict figure placement missing paragraph mapping: {rel} section {section_index}: {missing}"
+                        )
+                    used.update(ids)
+
+                label_re = re.compile(
+                    r"(?:原文\s+)?(?:Fig\.|Table\s+\d+|Supporting Information\s+(?:Fig\.|Table)|SI\s+(?:Fig\.|Table))",
+                    re.IGNORECASE,
+                )
+                for fig_id in sorted(used):
+                    fig = figure_map.get(fig_id)
+                    if not fig:
+                        raise RuntimeError(f"used figure missing from manifest: {rel}#{fig_id}")
+                    caption = str(fig.get("caption") or "").strip()
+                    if not label_re.search(caption):
+                        raise RuntimeError(
+                            f"used scientific figure caption lacks Fig/Table/SI identifier: {rel}#{fig_id}"
+                        )
     return gate
 
 
