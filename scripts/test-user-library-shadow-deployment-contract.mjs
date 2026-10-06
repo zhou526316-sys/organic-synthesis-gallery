@@ -31,7 +31,11 @@ test('D3b account reads are row-primary with a lazy legacy JSON fallback',()=>{
   const helper=section(userUi,'async function readAccountLibraryState','async function linkProfileToSession');
   assert.ok(helper.includes("SELECT revision, updated_at FROM user_library_state WHERE user_id = ?"));
   assert.ok(helper.includes('readUserLibraryStateFromRows'));
-  assert.ok(helper.includes("readPath: 'rows'"));
+  assert.ok(helper.includes("readPath: v3Authority ? 'rows-v3-compat' : 'rows'"));
+  assert.ok(helper.includes("readPath:'rows-v3-compat-unavailable'"));
+  assert.ok(helper.includes("writeAuthority:'legacy'"));
+  assert.ok(shadow.includes('compatibilityAuthority'));
+  assert.ok(shadow.includes("? 'v3' : 'legacy'") || shadow.includes("?'v3':'legacy'"));
   assert.ok(helper.includes("SELECT state_json, revision, updated_at FROM user_library_state WHERE user_id = ?"));
   assert.ok(helper.includes("readPath: legacy ? 'legacy_fallback' : 'legacy_empty'"));
   const account=section(userUi,'async function accountState','async function cleanOpenReaderCounts');
@@ -100,11 +104,14 @@ test('admin routes and health expose D3b row-read activation',()=>{
     '/api/admin/user-library-shadow/backfill',
     '/api/admin/user-library-shadow/compare',
   ]) assert.ok(index.includes(path),path);
-  assert.ok(index.includes("userLibraryRowShadowEnabled: String(env.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1'"));
+  assert.ok(index.includes('userLibraryRowShadowEnabled: userLibraryRowShadowEnabled(env)'));
   assert.ok(index.includes("userLibraryRowReadEnabled: String(env.USER_LIBRARY_ROW_READ_ENABLED || '') === '1'"));
   assert.ok(deploy.includes('body?.userLibraryRowShadowEnabled === true'));
   assert.ok(deploy.includes('body?.userLibraryRowReadEnabled === true'));
   assert.ok(shadow.includes('readConfigured,readPathActive'));
+  assert.ok(shadow.includes("USER_LIBRARY_V3_WRITE_ENABLED"));
+  assert.ok(shadow.includes("!== '1'"));
+  assert.ok(shadow.includes("error:'user_library_row_shadow_disabled'"));
 });
 
 console.log('USER_LIBRARY_ROW_SHADOW_DEPLOYMENT_CONTRACT_PASS');

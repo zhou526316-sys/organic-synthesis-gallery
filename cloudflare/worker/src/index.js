@@ -51,7 +51,7 @@ import {
   queryPublishedLiteratureCatalogView,
 } from './literature-catalog-index.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
-import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus } from './user-library-shadow.js';
+import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus, userLibraryRowShadowEnabled } from './user-library-shadow.js';
 import {
   backfillUserLibraryV3ShadowPage,
   compareUserLibraryV3ShadowPage,
@@ -260,7 +260,7 @@ async function handleApi(request, env, ctx) {
         && literatureCatalogIndexShadowEnabled(env)
         && Boolean(env.LITERATURE_INDEX_DB),
       literatureCatalogIndexDb: Boolean(env.LITERATURE_INDEX_DB),
-      userLibraryRowShadowEnabled: String(env.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1',
+      userLibraryRowShadowEnabled: userLibraryRowShadowEnabled(env),
       userLibraryRowReadEnabled: String(env.USER_LIBRARY_ROW_READ_ENABLED || '') === '1',
       userLibraryV3ShadowEnabled: userLibraryV3ShadowEnabled(env),
       userLibraryV3ReadEnabled: String(env.USER_LIBRARY_V3_READ_ENABLED || '') === '1',

@@ -339,6 +339,54 @@ test('authenticated V3 head/page/delta modes are bounded and freshness-fenced',a
   assert.equal(unauth.body.error,'not_authenticated');
 });
 
+test('status separates legacy authority from stale monolithic copies',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env=envFor(db);
+  const state=fixture('stale-copy');
+  putLegacy(db,'u-stale-copy',state,1,100);
+  await shadowWriteUserLibraryV3FromState(env,'u-stale-copy',state,1,100,150);
+  db.sqlite.prepare(`
+    INSERT INTO user_library_v3_authority(user_id,authority,activated_revision,activated_at)
+    VALUES('u-stale-copy','v3',1,200)
+  `).run();
+
+  const status=await getUserLibraryV3ShadowStatus(env);
+  assert.equal(status.status,200);
+  assert.equal(status.body.legacyUsers,0);
+  assert.equal(status.body.legacyDocuments,1);
+  assert.equal(status.body.staleLegacyDocuments,1);
+  assert.equal(status.body.v3AuthorityUsers,1);
+  assert.equal(status.body.revisionMismatches,0);
+});
+
+test('V3 write authority automatically disables legacy-to-V3 shadow/backfill/compare',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const state=fixture('authoritative');
+  putLegacy(db,'u-authority',state,1,100);
+  const env={...envFor(db),USER_LIBRARY_V3_WRITE_ENABLED:'1'};
+
+  const shadow=await shadowWriteUserLibraryV3FromState(env,'u-authority',state,1,100,200);
+  assert.equal(shadow.enabled,false);
+  assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS c FROM user_library_v3_head').get().c,0);
+
+  const backfill=await backfillUserLibraryV3ShadowPage(env,20);
+  assert.equal(backfill.status,409);
+  assert.equal(backfill.body.error,'user_library_v3_shadow_disabled');
+
+  const repair=await reconcileUserLibraryV3ShadowPage(env,20);
+  assert.equal(repair.status,409);
+  assert.equal(repair.body.error,'user_library_v3_shadow_disabled');
+
+  const compare=await compareUserLibraryV3ShadowPage(env,0,20);
+  assert.equal(compare.status,409);
+  assert.equal(compare.body.error,'user_library_v3_shadow_disabled');
+
+  const status=await getUserLibraryV3ShadowStatus(env);
+  assert.equal(status.body.configured,true);
+  assert.equal(status.body.enabled,false);
+  assert.equal(status.body.writeEnabled,true);
+});
+
 test('shadow can be independently disabled and does not activate V3 read/write authority',async t=>{
   const db=new D1();t.after(()=>db.close());
   const state=fixture();
