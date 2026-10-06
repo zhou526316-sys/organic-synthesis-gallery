@@ -1,0 +1,48 @@
+name: WeChat Materialize Crops
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/wechat-crop-materialize-request.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-materialize-crops
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build exact crop rasters
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet pillow
+          python3 ops/wechat-publisher/materialize-crops.py
+          mkdir -p /tmp/wechat-crops
+          cp -a public/wechat-assets/reviewed/2026-10-06 /tmp/wechat-crops/assets
+          cp -a audit/wechat-working/crop-proofs/2026-10-06 /tmp/wechat-crops/proofs
+      - name: Commit reviewed candidates and proofs
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            rm -rf public/wechat-assets/reviewed/2026-10-06 audit/wechat-working/crop-proofs/2026-10-06
+            mkdir -p public/wechat-assets/reviewed audit/wechat-working/crop-proofs
+            cp -a /tmp/wechat-crops/assets public/wechat-assets/reviewed/2026-10-06
+            cp -a /tmp/wechat-crops/proofs audit/wechat-working/crop-proofs/2026-10-06
+            git add public/wechat-assets/reviewed/2026-10-06 audit/wechat-working/crop-proofs/2026-10-06
+            git commit -m "wechat: materialize reviewed crop candidates" || exit 0
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
