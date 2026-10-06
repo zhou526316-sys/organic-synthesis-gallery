@@ -4937,6 +4937,11 @@ function embeddedJobDois(value) {
     return score;
   }
 
+  function privatePdfUrlLooksStrong(value) {
+    var u=String(value||'').toLowerCase();
+    return /\.pdf(?:[?#]|$)/.test(u)||/\/doi\/(?:pdf|epdf)\//.test(u)||/\/pdfdirect\//.test(u)||/[?&](?:file|pdf|pdfurl|url)=[^&#]*\.pdf(?:[&#]|$)/.test(u);
+  }
+
   function discoverExplicitPdfCandidates(job) {
     assertBoundCaptureJob(job);
     var publisher=job.publisher||publisherForDoi(job.doi),seen=new Set(),rows=[];
@@ -4949,11 +4954,39 @@ function embeddedJobDois(value) {
       seen.add(url);rows.push({url:url,score:score,source:meta?'citation_pdf_url':'explicit_pdf_link'});
     }
     Array.from(document.querySelectorAll('meta[name="citation_pdf_url" i],meta[property="citation_pdf_url" i]')).forEach(function(m){add(m.getAttribute('content'),m,true);});
-    Array.from(document.querySelectorAll('link[type="application/pdf" i][href],a[href]')).forEach(function(a){
-      var href=a.getAttribute('href')||'',text=String(a.textContent||'')+' '+String(a.getAttribute('title')||'')+' '+String(a.getAttribute('aria-label')||'');
-      if(a.tagName==='LINK'||/\.pdf(?:[?#]|$)|\/doi\/(?:pdf|epdf)\/|\/pdfdirect\/|\bpdf\b/i.test(href+' '+text))add(href,a,false);
+    Array.from(document.querySelectorAll('link[type="application/pdf" i][href],a[href],iframe[src],embed[src],object[data]')).forEach(function(a){
+      var href=a.getAttribute('href')||a.getAttribute('src')||a.getAttribute('data')||'';
+      var text=String(a.textContent||'')+' '+String(a.getAttribute('title')||'')+' '+String(a.getAttribute('aria-label')||'');
+      if(a.tagName==='LINK'||privatePdfUrlLooksStrong(href)||/\bpdf\b/i.test(href+' '+text))add(href,a,false);
     });
-    return rows.sort(function(a,b){return b.score-a.score;}).slice(0,4);
+    return rows.sort(function(a,b){return b.score-a.score;}).slice(0,6);
+  }
+
+  function privatePdfViewerCandidates(job,html,baseUrl) {
+    var publisher=job.publisher||publisherForDoi(job.doi),seen=new Set(),rows=[];
+    if(!html||String(html).length>3*1024*1024)return rows;
+    function add(raw,source,score){
+      raw=String(raw||'').replace(/&amp;/g,'&').replace(/\\u002[fF]/g,'/').replace(/\\\//g,'/');
+      try{raw=decodeURIComponent(raw);}catch(_){}
+      var url=normalizeUrl(raw,baseUrl||location.href);
+      if(!url||url===normalizeUrl(baseUrl,baseUrl)||seen.has(url)||!privatePdfHostAllowed(publisher,url)||!privatePdfUrlLooksStrong(url))return;
+      if(/support|supplement|supporting|si\b|esm|appendix/i.test(url))return;
+      seen.add(url);rows.push({url:url,score:Number(score||60),source:source||'pdf_viewer_asset'});
+    }
+    try{
+      var doc=new DOMParser().parseFromString(String(html),'text/html');
+      Array.from(doc.querySelectorAll('meta[name="citation_pdf_url" i],meta[property="citation_pdf_url" i]')).forEach(function(n){add(n.getAttribute('content'),'viewer_citation_pdf',140);});
+      Array.from(doc.querySelectorAll('iframe[src],embed[src],object[data],link[href],a[href]')).forEach(function(n){
+        var raw=n.getAttribute('src')||n.getAttribute('data')||n.getAttribute('href')||'';
+        if(privatePdfUrlLooksStrong(raw))add(raw,'viewer_dom_asset',100);
+      });
+    }catch(_){}
+    var normalized=String(html).replace(/\\u002[fF]/g,'/').replace(/\\\//g,'/');
+    var named=/(?:pdfUrl|pdf_url|fileUrl|file_url|downloadUrl|download_url|pdfPath|pdf_path|file)\s*["']?\s*[:=]\s*["']([^"']+)["']/gi,m;
+    while((m=named.exec(normalized))!==null)add(m[1],'viewer_script_named',120);
+    var rawUrls=/(?:https?:\/\/|\/)[^"'<>\\\s]+(?:\.pdf(?:[?#][^"'<>\\\s]*)?|\/doi\/(?:pdf|epdf)\/[^"'<>\\\s]+|\/pdfdirect\/[^"'<>\\\s]+)/gi;
+    while((m=rawUrls.exec(normalized))!==null)add(m[0],'viewer_script_url',80);
+    return rows.sort(function(a,b){return b.score-a.score;}).slice(0,6);
   }
 
   function privatePdfBytesValid(buffer) {
@@ -4963,22 +4996,66 @@ function embeddedJobDois(value) {
     try{return new TextDecoder('latin1').decode(bytes.slice(Math.max(0,bytes.length-4096))).indexOf('%%EOF')>=0;}catch(_){return false;}
   }
 
-  async function fetchPrivatePdfWithBrowserSession(job,candidate,trace) {
+  function privatePdfHtmlFromBuffer(buffer,contentType) {
+    var bytes=new Uint8Array(buffer||new ArrayBuffer(0));
+    if(!bytes.length||bytes.length>3*1024*1024)return '';
+    var prefix='';try{prefix=new TextDecoder('utf-8').decode(bytes.slice(0,Math.min(bytes.length,2048)));}catch(_){}
+    if(!/html|text|javascript|json/i.test(String(contentType||''))&&!/^\s*</.test(prefix))return '';
+    try{return new TextDecoder('utf-8').decode(bytes);}catch(_){return '';}
+  }
+
+  function privatePdfDiscoveryWaitMs(job) {
+    var publisher=job.publisher||publisherForDoi(job.doi);
+    if(publisher==='ccs')return 20000;
+    if(publisher==='elsevier'||publisher==='rsc')return 15000;
+    return 10000;
+  }
+
+  async function waitForPrivatePdfCandidates(job,trace) {
+    var started=Date.now(),waitMs=privatePdfDiscoveryWaitMs(job),rows=[];
+    captureLiveUpdate(job,'private_pdf_wait',{pdfStatus:'waiting_page',pdfStage:'等待页面和动态 PDF 控件'});
+    while(Date.now()-started<waitMs){
+      if(isAbortRequested())throw new Error('user_aborted');
+      assertBoundCaptureJob(job);
+      rows=discoverExplicitPdfCandidates(job);
+      if(rows.length){
+        captureLiveUpdate(job,'private_pdf_discovery',{pdfStatus:'searching',pdfStage:'已发现 '+rows.length+' 个 PDF 候选'});
+        pushTrace(trace,{stage:'private_pdf_discovery',event:'complete',status:'found',message:'explicit_candidates='+rows.length+';waitedMs='+(Date.now()-started)});
+        return rows;
+      }
+      captureLiveUpdate(job,'private_pdf_discovery',{pdfStatus:'searching',pdfStage:'查找 PDF 入口'});
+      await sleep(750);
+    }
+    pushTrace(trace,{stage:'private_pdf_discovery',event:'complete',status:'none',message:'explicit_candidates=0;waitedMs='+(Date.now()-started)});
+    captureLiveUpdate(job,'private_pdf_not_found',{pdfStatus:'not_found',pdfStage:'等待后仍未找到 PDF 入口'});
+    return [];
+  }
+
+  async function fetchPrivatePdfWithBrowserSession(job,candidate,trace,seen,depth) {
     assertBoundCaptureJob(job);
     var target;
     try{target=new URL(candidate.url,location.href);}catch(_){return null;}
     if(target.origin!==location.origin)return null;
+    captureLiveUpdate(job,'private_pdf_browser',{pdfStatus:'browser_download',pdfStage:'浏览器会话下载'});
     var started=Date.now(),abort=new AbortController(),timer=setTimeout(function(){abort.abort();},45000);
     try{
       var response=await fetch(target.href,{method:'GET',credentials:'include',cache:'no-store',redirect:'follow',
-        headers:{Accept:'application/pdf,application/octet-stream;q=0.9,*/*;q=0.1'},signal:abort.signal});
-      var buffer=await response.arrayBuffer(),status=Number(response.status||0),finalUrl=response.url||target.href;
+        headers:{Accept:'application/pdf,application/octet-stream;q=0.9,text/html;q=0.5,*/*;q=0.1'},signal:abort.signal});
+      var buffer=await response.arrayBuffer(),status=Number(response.status||0),finalUrl=response.url||target.href,contentType=String(response.headers&&response.headers.get&&response.headers.get('content-type')||'');
       pushTrace(trace,{stage:'private_pdf_fetch',event:'browser_response',status:status>=200&&status<300?'ok':'http_error',
-        httpStatus:status,url:finalUrl,byteLength:buffer&&buffer.byteLength||0,message:'transport=browser_session;durationMs='+(Date.now()-started)});
+        httpStatus:status,url:finalUrl,byteLength:buffer&&buffer.byteLength||0,message:'transport=browser_session;contentType='+contentType+';durationMs='+(Date.now()-started)});
       if(status<200||status>=300){var e=new Error('private_pdf_browser_http_'+status);e.httpStatus=status;throw e;}
       if(!privatePdfHostAllowed(job.publisher||publisherForDoi(job.doi),finalUrl))throw new Error('private_pdf_redirect_host_mismatch');
-      if(!privatePdfBytesValid(buffer))throw new Error('private_pdf_invalid_bytes');
-      return {buffer:buffer,sourceUrl:finalUrl,byteLength:buffer.byteLength,transport:'browser_session'};
+      captureLiveUpdate(job,'private_pdf_validation',{pdfStatus:'validating',pdfStage:'校验下载内容',pdfBytes:buffer&&buffer.byteLength||0});
+      if(privatePdfBytesValid(buffer))return {buffer:buffer,sourceUrl:finalUrl,byteLength:buffer.byteLength,transport:'browser_session'};
+      var html=privatePdfHtmlFromBuffer(buffer,contentType),nested=privatePdfViewerCandidates(job,html,finalUrl);
+      if(nested.length&&Number(depth||0)<2){
+        pushTrace(trace,{stage:'private_pdf_viewer',event:'asset_discovery',status:'found',url:finalUrl,message:'viewer_assets='+nested.length});
+        for(var i=0;i<nested.length;i+=1){
+          try{var resolved=await fetchExplicitPdf(job,nested[i],trace,seen,Number(depth||0)+1);if(resolved)return resolved;}catch(_){}
+        }
+      }
+      throw new Error(html?'private_pdf_viewer_no_valid_pdf':'private_pdf_invalid_bytes');
     }catch(error){
       pushTrace(trace,{stage:'private_pdf_fetch',event:'browser_failed',status:'fallback',httpStatus:Number(error&&error.httpStatus||0),
         url:target.href,message:'transport=browser_session;'+captureLiveError(error&&error.message||error)});
@@ -4986,21 +5063,35 @@ function embeddedJobDois(value) {
     }finally{clearTimeout(timer);}
   }
 
-  async function fetchExplicitPdf(job,candidate,trace) {
+  async function fetchExplicitPdf(job,candidate,trace,seen,depth) {
     assertBoundCaptureJob(job);
-    var browserPdf=await fetchPrivatePdfWithBrowserSession(job,candidate,trace);
+    seen=seen||new Set();depth=Number(depth||0);
+    var key=normalizeUrl(candidate&&candidate.url,location.href);
+    if(!key||seen.has(key))throw new Error('private_pdf_viewer_loop');
+    seen.add(key);
+    var browserPdf=await fetchPrivatePdfWithBrowserSession(job,candidate,trace,seen,depth);
     if(browserPdf)return browserPdf;
+    captureLiveUpdate(job,'private_pdf_gm',{pdfStatus:'gm_download',pdfStage:'备用下载'});
     var started=Date.now();
     try{
       var response=await gmRequest({method:'GET',url:candidate.url,responseType:'arraybuffer',timeout:45000,
-        headers:{Accept:'application/pdf,application/octet-stream;q=0.9,*/*;q=0.1',Referer:location.href}});
+        headers:{Accept:'application/pdf,application/octet-stream;q=0.9,text/html;q=0.5,*/*;q=0.1',Referer:location.href}});
       var status=Number(response.status||0),buffer=response.response,finalUrl=response.finalUrl||candidate.url;
+      var headers=String(response.responseHeaders||''),contentType=(headers.match(/(?:^|\r?\n)content-type:\s*([^\r\n]+)/i)||[])[1]||'';
       pushTrace(trace,{stage:'private_pdf_fetch',event:'response',status:status>=200&&status<300?'ok':'http_error',
-        httpStatus:status,url:finalUrl,byteLength:buffer&&buffer.byteLength||0,message:'transport=gm;durationMs='+(Date.now()-started)});
+        httpStatus:status,url:finalUrl,byteLength:buffer&&buffer.byteLength||0,message:'transport=gm;contentType='+contentType+';durationMs='+(Date.now()-started)});
       if(status<200||status>=300){var e=new Error('private_pdf_http_'+status);e.httpStatus=status;throw e;}
       if(!privatePdfHostAllowed(job.publisher||publisherForDoi(job.doi),finalUrl))throw new Error('private_pdf_redirect_host_mismatch');
-      if(!privatePdfBytesValid(buffer))throw new Error('private_pdf_invalid_bytes');
-      return {buffer:buffer,sourceUrl:finalUrl,byteLength:buffer.byteLength,transport:'gm'};
+      captureLiveUpdate(job,'private_pdf_validation',{pdfStatus:'validating',pdfStage:'校验下载内容',pdfBytes:buffer&&buffer.byteLength||0});
+      if(privatePdfBytesValid(buffer))return {buffer:buffer,sourceUrl:finalUrl,byteLength:buffer.byteLength,transport:'gm'};
+      var html=privatePdfHtmlFromBuffer(buffer,contentType),nested=privatePdfViewerCandidates(job,html,finalUrl);
+      if(nested.length&&depth<2){
+        pushTrace(trace,{stage:'private_pdf_viewer',event:'asset_discovery',status:'found',url:finalUrl,message:'viewer_assets='+nested.length+';transport=gm'});
+        for(var i=0;i<nested.length;i+=1){
+          try{var resolved=await fetchExplicitPdf(job,nested[i],trace,seen,depth+1);if(resolved)return resolved;}catch(_){}
+        }
+      }
+      throw new Error(html?'private_pdf_viewer_no_valid_pdf':'private_pdf_invalid_bytes');
     }catch(error){
       pushTrace(trace,{stage:'private_pdf_fetch',event:'failed',status:'failed',httpStatus:Number(error&&error.httpStatus||0),
         url:candidate.url,message:'transport=gm;'+captureLiveError(error&&error.message||error)});
@@ -5010,6 +5101,7 @@ function embeddedJobDois(value) {
 
   async function uploadPrivatePdf(job,pdf,lease,trace) {
     assertBoundCaptureJob(job);
+    captureLiveUpdate(job,'private_pdf_upload',{pdfStatus:'uploading',pdfStage:'上传私有 PDF',pdfBytes:Number(pdf&&pdf.byteLength||0)});
     var u=new URL(PRIVATE_PDF_CAPTURE_ENDPOINT);
     u.searchParams.set('doi',normalizeDoi(job.doi));
     u.searchParams.set('publisher',job.publisher||publisherForDoi(job.doi));
@@ -5027,6 +5119,7 @@ function embeddedJobDois(value) {
     if(!body||body.stored!==true||normalizeDoi(body.doi)!==normalizeDoi(job.doi)||!body.contentHash)throw new Error('private_pdf_receipt_invalid');
     pushTrace(trace,{stage:'private_pdf_upload',event:'complete',status:'ok',url:PRIVATE_PDF_CAPTURE_ENDPOINT,
       byteLength:Number(body.byteLength||pdf.byteLength||0),message:'stored=1;active='+String(Boolean(body.active))+';verification='+String(Boolean(body.requiresVerification))});
+    captureLiveUpdate(job,'private_pdf_saved',{pdfStatus:'stored',pdfStage:'已收到 stored=1 回执',pdfBytes:Number(body.byteLength||pdf.byteLength||0)});
     return body;
   }
 
