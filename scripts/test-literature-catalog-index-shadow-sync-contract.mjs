@@ -40,7 +40,7 @@ test('shadow sync retries only transient API failures and checkpoints resumable 
   assert.match(sync,/shadow_import_batch_contract_mismatch/);
 });
 
-test('shadow sync requires row, search and filtered-view parity while read path stays inactive',()=>{
+test('shadow sync keeps admin parity inactive while validating the public read canary',()=>{
   for(const token of [
     '/api/admin/literature-catalog-index/rows',
     '/api/admin/literature-catalog-index/view',
@@ -51,9 +51,13 @@ test('shadow sync requires row, search and filtered-view parity while read path 
     'shadow_view_order_mismatch',
     'literature_catalog_short_query_requires_compatibility',
     'literature_catalog_reader_sort_requires_compatibility',
+    'shadow_query_read_path_must_remain_inactive',
+    'shadow_view_read_path_must_remain_inactive',
+    'shadow_rows_read_path_must_remain_inactive',
+    'literature_read_canary_not_active_after_ready_generation',
     'viewParity',
-    'shadow_read_path_accidentally_active',
-    'readPathActive: false',
+    'readConfigured: true',
+    'readPathActive: true',
   ]) assert.ok(sync.includes(token),token);
 });
 
