@@ -83,6 +83,7 @@ interface SyncResponse {
   error?: string;
   currentRevision?: number;
   writeEnabled?: boolean;
+  writeAuthority?: 'legacy' | 'v3';
 }
 
 interface RemoteAccount {
@@ -650,6 +651,13 @@ async function persistV3Desired(
 async function persistLegacyDesired(desired:UserUiState,keys:string[],globalWasDirty:boolean,allowRecovery=true):Promise<PersistOutcome>{
   let response=await request('account-save',{state:desired});
   if(response.status===401)return {kind:'unauthorized'};
+  if(response.status===503&&response.body.error==='user_library_v3_write_suspended'
+    &&response.body.writeAuthority==='v3'){
+    v3WriteActive=false;
+    v3AuthorityActive=true;
+    setWriteDiagnostic('suspended');
+    return {kind:'failure'};
+  }
 
   if(response.status===409&&response.body.error==='user_library_client_upgrade_required'&&allowRecovery){
     const recovery=await recoveryPull();
