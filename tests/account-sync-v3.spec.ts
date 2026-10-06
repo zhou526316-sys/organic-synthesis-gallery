@@ -197,7 +197,9 @@ test('account sync assembles V3 head/pages/delta before saving and never calls l
   expect(modes.filter(mode => mode === 'account-v3-page')).toHaveLength(2);
   expect(modes).toContain('account-v3-delta');
   expect(modes).not.toContain('account-pull');
-  expect(savedState.hideRead).toBe(true);
+  // Initial account merge intentionally keeps the existing local scalar preference.
+  // D3c3 changes only the remote read transport; it must not change legacy merge semantics.
+  expect(savedState.hideRead).toBe(false);
   expect(Object.keys(savedState.papers).sort()).toEqual(['10.1234/a', '10.1234/b']);
   expect(savedState.papers['10.1234/a'].note).toBe('A');
   expect(savedState.papers['10.1234/b'].note).toBe('B');
