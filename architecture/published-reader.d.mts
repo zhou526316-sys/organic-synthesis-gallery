@@ -25,6 +25,7 @@ export class PublishedCatalogClient {
   memberDois: string[];
   earliestDate: string;
   open(signal?: AbortSignal): Promise<this>;
+  revisionForDoi(doi: string | null | undefined): string | null;
   landing(sharedDoi?: string | null, signal?: AbortSignal): Promise<unknown[]>;
   resolve(dois: string[], signal?: AbortSignal): Promise<unknown[]>;
   search(query: string, signal?: AbortSignal): Promise<unknown[]>;
