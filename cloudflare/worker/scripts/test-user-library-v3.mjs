@@ -264,6 +264,54 @@ test('pruned or future delta revision fails closed into full-resync semantics',a
   assert.equal(future.reason,'user_library_v3_future_revision');
 });
 
+test('V3 write retention advances the delta floor and prunes only history older than 512 revisions',async t=>{
+  const db=new D1();t.after(()=>db.close());addUser(db);
+  const env=envFor(db);
+
+  db.sqlite.prepare(`
+    INSERT INTO user_library_v3_head
+      (user_id,revision,updated_at,global_json,global_revision,paper_count,metadata_count,change_floor_revision,schema_version)
+    VALUES ('u1',513,513000,'{}',513,0,0,0,1)
+  `).run();
+  db.sqlite.prepare(`
+    INSERT INTO user_library_v3_shape(user_id,papers_split,metadata_split,revision)
+    VALUES ('u1',1,1,513)
+  `).run();
+  db.sqlite.prepare(`
+    INSERT INTO user_library_v3_commits(user_id,revision,expected_revision,updated_at)
+    VALUES ('u1',1,0,1000)
+  `).run();
+  db.sqlite.prepare(`
+    INSERT INTO user_library_v3_changes
+      (user_id,revision,seq,paper_key,op,doi,paper_present,paper_state_json,metadata_present,metadata_json,updated_at)
+    VALUES ('u1',1,0,'old','delete',NULL,0,NULL,0,NULL,1000)
+  `).run();
+  db.sqlite.prepare(`
+    INSERT INTO user_library_v3_rows
+      (user_id,paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,deleted,revision,updated_at)
+    VALUES ('u1','old',NULL,0,NULL,0,NULL,1,1,1000)
+  `).run();
+
+  const result=await applyUserLibraryV3Mutation(env,'u1',{
+    expectedRevision:513,
+    globalState:{statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},followedSearches:[],searchHistory:[],hideRead:false},
+  },514000);
+  assert.equal(result.ok,true);
+  assert.equal(result.revision,514);
+  assert.equal(result.changeFloorRevision,2);
+  assert.equal(USER_LIBRARY_V3_LIMITS.changeRetentionRevisions,512);
+
+  const head=await readUserLibraryV3Head(env,'u1');
+  assert.equal(head.changeFloorRevision,2);
+  assert.equal(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_v3_changes WHERE user_id='u1' AND revision=1").get().c,0);
+  assert.equal(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_v3_commits WHERE user_id='u1' AND revision=1").get().c,0);
+  assert.equal(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_v3_rows WHERE user_id='u1' AND paper_key='old'").get().c,0);
+
+  const reset=await readUserLibraryV3Delta(env,'u1',{sinceRevision:1});
+  assert.equal(reset.resetRequired,true);
+  assert.equal(reset.reason,'user_library_v3_change_log_pruned');
+});
+
 test('mutation bounds reject unbounded, duplicate and monolithic-global payloads',async t=>{
   const db=new D1();t.after(()=>db.close());addUser(db);
   const env=envFor(db);
