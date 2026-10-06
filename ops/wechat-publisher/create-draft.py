@@ -626,17 +626,30 @@ def build_retrospective_content(data: dict, uploaded_urls: dict[str, str] | None
     ]
 
     rendered_figures = set()
-    lead_html = figure_html("fig1", figures, uploaded_urls)
-    if lead_html:
+    lead_figure_id = str(data.get("lead_figure_id") or "fig1").strip()
+    lead_position = str(data.get("lead_figure_position") or "before_quick_points").strip()
+    lead_html = figure_html(lead_figure_id, figures, uploaded_urls) if lead_figure_id else ""
+    if lead_html and lead_position == "before_quick_points":
         parts.append(lead_html)
-        rendered_figures.add("fig1")
-    for point in data.get("quick_points", []):
+        rendered_figures.add(lead_figure_id)
+    for point_index, point in enumerate(data.get("quick_points", []), start=1):
         parts.append(
             "<section style='background:#f7f8fa;border-radius:8px;padding:11px 13px;margin:9px 0;'>"
             f"<strong style='font-size:14px;line-height:1.55;'>{esc(point.get('label') or '')}</strong>"
             f"<p style='font-size:14px;line-height:1.78;margin:4px 0 0;color:#444;text-align:justify;'>{esc(point.get('text') or '')}</p>"
             "</section>"
         )
+        if (
+            lead_html
+            and lead_position == "after_first_quick_point"
+            and point_index == 1
+            and lead_figure_id not in rendered_figures
+        ):
+            parts.append(lead_html)
+            rendered_figures.add(lead_figure_id)
+    if lead_html and lead_position == "after_quick_points" and lead_figure_id not in rendered_figures:
+        parts.append(lead_html)
+        rendered_figures.add(lead_figure_id)
 
     for section in data.get("sections", []):
         parts.append(
