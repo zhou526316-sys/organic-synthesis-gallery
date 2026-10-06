@@ -31,9 +31,11 @@ test('D3b account reads are row-primary with a lazy legacy JSON fallback',()=>{
   const helper=section(userUi,'async function readAccountLibraryState','async function linkProfileToSession');
   assert.ok(helper.includes("SELECT revision, updated_at FROM user_library_state WHERE user_id = ?"));
   assert.ok(helper.includes('readUserLibraryStateFromRows'));
-  assert.ok(/readPath\s*:\s*['"]rows['"]/.test(helper));
-  assert.ok(helper.includes('compatibilityAuthority'));
-  assert.ok(helper.includes("? 'v3' : 'legacy'") || helper.includes("?'v3':'legacy'"));
+  assert.ok(helper.includes("readPath: v3Authority ? 'rows-v3-compat' : 'rows'"));
+  assert.ok(helper.includes("readPath:'rows-v3-compat-unavailable'"));
+  assert.ok(helper.includes("writeAuthority:'legacy'"));
+  assert.ok(shadow.includes('compatibilityAuthority'));
+  assert.ok(shadow.includes("? 'v3' : 'legacy'") || shadow.includes("?'v3':'legacy'"));
   assert.ok(helper.includes("SELECT state_json, revision, updated_at FROM user_library_state WHERE user_id = ?"));
   assert.ok(helper.includes("readPath: legacy ? 'legacy_fallback' : 'legacy_empty'"));
   const account=section(userUi,'async function accountState','async function cleanOpenReaderCounts');
