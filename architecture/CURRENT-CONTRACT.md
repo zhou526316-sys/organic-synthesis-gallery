@@ -54,7 +54,7 @@ The dedicated literature metadata/FTS index is a read optimization, not a new li
 - The browser must first verify the static Pages architecture generation and obtain its content-addressed `catalogId`.
 - D1 may serve a filtered view only when the Worker explicitly reports the indexed read path active and the requested `catalogId` is a ready generation.
 - Indexed responses are bounded to the result-window size and must expose total matched, current count, continuation state and an opaque scope-bound cursor.
-- The browser must never treat D1 failure, generation-not-ready, malformed responses or cursor failure as an empty result. It falls back to the verified static Archive reader.
+- The browser must never treat D1 failure, generation-not-ready, malformed responses or cursor failure as an empty result. It may fall back only to the bounded verified static Archive reader; if the static result/fanout guard is exceeded, retain the verified Hot state and expose limited-read status rather than fabricate completeness.
 - Two-character chemistry searches such as `Ni` / `Pd`, reader-count sorting, edition ordering and exact DOI deep-link behavior remain on their compatibility/static paths until separately proven equivalent.
 - The default Hot landing remains static/content-addressed; D1 is for all-time/historical filtered discovery rather than replacing the Hot truth surface.
 - The primary D1 remains FTS-free. The rebuildable search index stays isolated in the dedicated Literature Index D1.
@@ -136,7 +136,7 @@ Architecture changes must test at least:
 
 ## 15. Current priority order
 
-1. **P0 — bounded frontend results: COMPLETE.** Browser DOM is a fixed result window rather than an all-results render.
+1. **P0 — bounded frontend results: GUARDED.** Browser DOM is a fixed result window; the static Archive compatibility path now fails closed before >1000-result truncation or >36 monthly-segment fanout. Cursor-based indexed paging remains the preferred path for broad historical discovery.
 2. **P0 — bounded fallback: COMPLETE.** Deployed architecture failures use verified Hot fallback / retained Hot state rather than reloading all history.
 3. **P1 — indexed all-time search: CUTOVER GATE.** Dedicated D1 shadow has full row/search/view parity; frontend indexed-read support may be merged while production read activation remains a separate flag.
 4. **P1 — user-library D3c:** move writes toward row-authoritative state and remove the monolithic-document size ceiling only after verified dual-path parity.
