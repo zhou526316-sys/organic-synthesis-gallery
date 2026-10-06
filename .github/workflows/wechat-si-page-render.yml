@@ -1,0 +1,66 @@
+name: WeChat SI Page Render
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/wechat-si-render-request.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-si-page-render
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Render selected SI pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+          python3 - <<'PY'
+          import urllib.request
+          from pathlib import Path
+          items={
+            "natchem":"https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_MOESM1_ESM.pdf",
+            "hyster":"https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_MOESM1_ESM.pdf",
+          }
+          for key,url in items.items():
+            req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+            with urllib.request.urlopen(req,timeout=120) as r:
+                Path(f"/tmp/{key}.pdf").write_bytes(r.read())
+          PY
+          mkdir -p /tmp/si-render
+          for p in 39 40 45; do
+            pdftoppm -f "$p" -singlefile -png -r 150 /tmp/natchem.pdf "/tmp/si-render/natchem-p${p}" >/dev/null 2>&1
+          done
+          for p in 17 31; do
+            pdftoppm -f "$p" -singlefile -png -r 150 /tmp/hyster.pdf "/tmp/si-render/hyster-p${p}" >/dev/null 2>&1
+          done
+      - name: Persist SI page renders
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          TARGET="audit/wechat-working/si-renders/2026-10-06"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            rm -rf "$TARGET"
+            mkdir -p "$TARGET"
+            cp -a /tmp/si-render/. "$TARGET/"
+            git add "$TARGET"
+            git commit -m "audit: render selected SI pages" || exit 0
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
