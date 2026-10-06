@@ -6,16 +6,89 @@ const SYNC_USER_KEY = 'organic-gallery-account-sync-user-v1';
 const POLL_INTERVAL_MS = 45_000;
 const TOKEN_WATCH_MS = 800;
 const SAVE_DEBOUNCE_MS = 700;
+const V3_PAGE_LIMIT = 100;
+const V3_MAX_PAGES_PER_SYNC = 2000;
+
+type SyncMode =
+  | 'account-merge'
+  | 'account-save'
+  | 'account-pull'
+  | 'account-v3-head'
+  | 'account-v3-page'
+  | 'account-v3-delta';
+
+interface V3Head {
+  ready: true;
+  revision: number;
+  updatedAt: number;
+  globalState: Record<string, unknown>;
+  globalRevision: number;
+  paperCount: number;
+  metadataCount: number;
+  changeFloorRevision: number;
+  papersSplit: boolean;
+  metadataSplit: boolean;
+}
+
+interface V3Row {
+  paperKey: string;
+  doi?: string | null;
+  paperPresent?: boolean;
+  paperState?: unknown;
+  metadataPresent?: boolean;
+  metadata?: unknown;
+  deleted?: boolean;
+  revision?: number;
+  updatedAt?: number;
+  op?: 'upsert' | 'delete';
+}
+
+interface AccountPayload {
+  userId: string;
+  revision?: number;
+  updatedAt?: number;
+  state?: UserUiState;
+  readPath?: string;
+  ready?: boolean;
+  globalState?: Record<string, unknown>;
+  globalRevision?: number;
+  paperCount?: number;
+  metadataCount?: number;
+  changeFloorRevision?: number;
+  papersSplit?: boolean;
+  metadataSplit?: boolean;
+  scanStartRevision?: number;
+  head?: V3Head;
+  rows?: V3Row[];
+  changes?: V3Row[];
+  count?: number;
+  hasMore?: boolean;
+  nextKey?: string | null;
+  nextCursor?: { revision: number; seq: number } | null;
+  sinceRevision?: number;
+  targetRevision?: number;
+  resetRequired?: boolean;
+  reason?: string;
+}
 
 interface SyncResponse {
-  account?: {
-    userId: string;
-    revision: number;
-    updatedAt: number;
-    state: UserUiState;
-  };
+  account?: AccountPayload;
   error?: string;
 }
+
+interface RemoteAccount {
+  userId: string;
+  revision: number;
+  updatedAt: number;
+  state: UserUiState;
+  readPath: 'v3' | 'legacy';
+}
+
+type V3Outcome =
+  | { kind: 'ok'; account: RemoteAccount }
+  | { kind: 'reset' }
+  | { kind: 'unauthorized' }
+  | { kind: 'fallback' };
 
 let activeToken = '';
 let activeUserId = '';
@@ -55,6 +128,19 @@ function clearRememberedAccount(): void {
   } catch { /* optional */ }
 }
 
+function setReadDiagnostic(mode: 'v3' | 'legacy' | 'none'): void {
+  document.documentElement.dataset.accountSyncRead = mode;
+}
+
+function plainObject(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+function safeInteger(value: unknown, minimum = 0): number | null {
+  const number = Number(value);
+  return Number.isSafeInteger(number) && number >= minimum ? number : null;
+}
+
 function byId<T extends { id: string }>(remote: T[] = [], local: T[] = [], localWins = true): T[] {
   const map = new Map<string, T>();
   const first = localWins ? remote : local;
@@ -79,10 +165,6 @@ function mergePaper(remote: any = {}, local: any = {}, localWins = true): any {
   const localNoteAt = Number(local?.noteUpdatedAt || 0);
   const lastOpenedAt = Math.max(Number(remote?.lastOpenedAt || 0), Number(local?.lastOpenedAt || 0)) || undefined;
 
-  // Records created before updatedAt existed keep the old additive behavior so
-  // upgrading does not silently discard saved state. As soon as either side has
-  // a real edit timestamp, the newer paper snapshot wins, which makes removals
-  // (unsave, clear status/folders/tags) durable across devices.
   if (!remoteUpdatedAt && !localUpdatedAt) {
     const noteSource = localNoteAt > remoteNoteAt ? local : remote;
     const base = localWins ? { ...remote, ...local } : { ...local, ...remote };
@@ -118,8 +200,6 @@ function mergePaper(remote: any = {}, local: any = {}, localWins = true): any {
     lastOpenedAt,
   } as any;
 
-  // Object spreading cannot express deletion of an optional field, so explicitly
-  // remove a stale status when the newest snapshot says the status is unset.
   if (typeof generalSource?.statusId === 'string' && generalSource.statusId) merged.statusId = generalSource.statusId;
   else delete merged.statusId;
   return merged;
@@ -144,7 +224,98 @@ function mergeStates(remote: UserUiState, local: UserUiState, localWins = true):
   };
 }
 
-async function request(mode: 'account-merge' | 'account-save' | 'account-pull', state?: UserUiState): Promise<{ ok: boolean; status: number; body: SyncResponse }> {
+function validGlobalState(value: unknown): value is Omit<UserUiState, 'papers' | 'metadata'> {
+  if (!plainObject(value)) return false;
+  return Array.isArray(value.statuses)
+    && Array.isArray(value.quickTerms)
+    && Array.isArray(value.collections)
+    && Array.isArray(value.aliases)
+    && plainObject(value.actionStyles)
+    && Array.isArray(value.followedSearches)
+    && Array.isArray(value.searchHistory)
+    && typeof value.hideRead === 'boolean';
+}
+
+function v3Head(value: unknown): V3Head | null {
+  if (!plainObject(value) || value.ready !== true) return null;
+  const revisionValue = safeInteger(value.revision);
+  const updatedAt = safeInteger(value.updatedAt);
+  const globalRevision = safeInteger(value.globalRevision);
+  const paperCount = safeInteger(value.paperCount);
+  const metadataCount = safeInteger(value.metadataCount);
+  const changeFloorRevision = safeInteger(value.changeFloorRevision);
+  if (revisionValue === null || updatedAt === null || globalRevision === null
+    || paperCount === null || metadataCount === null || changeFloorRevision === null
+    || globalRevision > revisionValue || changeFloorRevision > revisionValue
+    || !validGlobalState(value.globalState)
+    || value.papersSplit !== true || value.metadataSplit !== true) return null;
+  return {
+    ready: true,
+    revision: revisionValue,
+    updatedAt,
+    globalState: value.globalState,
+    globalRevision,
+    paperCount,
+    metadataCount,
+    changeFloorRevision,
+    papersSplit: true,
+    metadataSplit: true,
+  };
+}
+
+function stateFromGlobal(
+  globalState: unknown,
+  papers: UserUiState['papers'],
+  metadata: UserUiState['metadata'],
+): UserUiState | null {
+  if (!validGlobalState(globalState)) return null;
+  return {
+    ...(globalState as Omit<UserUiState, 'papers' | 'metadata'>),
+    papers,
+    metadata,
+  };
+}
+
+function applyV3Row(state: UserUiState, row: V3Row): boolean {
+  const key = typeof row?.paperKey === 'string' ? row.paperKey : '';
+  if (!key) return false;
+  if (row.op === 'delete' || row.deleted === true) {
+    delete state.papers[key];
+    delete state.metadata[key];
+    return true;
+  }
+  if (row.paperPresent === true) {
+    if (!plainObject(row.paperState)) return false;
+    state.papers[key] = row.paperState as unknown as UserUiState['papers'][string];
+  } else {
+    delete state.papers[key];
+  }
+  if (row.metadataPresent === true) {
+    if (!plainObject(row.metadata)) return false;
+    state.metadata[key] = row.metadata as unknown as UserUiState['metadata'][string];
+  } else {
+    delete state.metadata[key];
+  }
+  return true;
+}
+
+function cloneState(value: UserUiState): UserUiState {
+  return structuredClone(value);
+}
+
+function validUserId(value: unknown): string {
+  return typeof value === 'string' && value.trim() ? value.trim() : '';
+}
+
+function stateMatchesHead(state: UserUiState, head: V3Head): boolean {
+  return Object.keys(state.papers || {}).length === head.paperCount
+    && Object.keys(state.metadata || {}).length === head.metadataCount;
+}
+
+async function request(
+  mode: SyncMode,
+  options: { state?: UserUiState; [key: string]: unknown } = {},
+): Promise<{ ok: boolean; status: number; body: SyncResponse }> {
   const token = sessionToken();
   if (!token) return { ok: false, status: 401, body: { error: 'not_signed_in' } };
   const response = await fetch(`${WORKER_API_BASE}/api/user-ui/reader-counts`, {
@@ -155,57 +326,234 @@ async function request(mode: 'account-merge' | 'account-save' | 'account-pull', 
       sessionToken: token,
       profileId: store.profileId,
       revision,
-      state,
+      ...options,
     }),
   });
   const body = await response.json().catch(() => ({})) as SyncResponse;
   return { ok: response.ok, status: response.status, body };
 }
 
+function legacyAccount(result: { ok: boolean; status: number; body: SyncResponse }): RemoteAccount | null {
+  const account = result.body.account;
+  const nextRevision = safeInteger(account?.revision);
+  const updatedAt = safeInteger(account?.updatedAt);
+  const userId = validUserId(account?.userId);
+  if (!result.ok || !account || !account.state || !userId || nextRevision === null || updatedAt === null) return null;
+  return {
+    userId,
+    revision: nextRevision,
+    updatedAt,
+    state: account.state,
+    readPath: 'legacy',
+  };
+}
+
+async function legacyPull(): Promise<{ result: RemoteAccount | null; status: number }> {
+  const response = await request('account-pull');
+  return { result: legacyAccount(response), status: response.status };
+}
+
+async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState): Promise<V3Outcome> {
+  let next = cloneState(baseState);
+  let afterRevision: number | null = null;
+  let afterSeq = -1;
+  let finalRevision = sinceRevision;
+  let finalUpdatedAt = 0;
+  let userId = '';
+
+  for (let pageNo = 0; pageNo < V3_MAX_PAGES_PER_SYNC; pageNo += 1) {
+    const response = await request('account-v3-delta', {
+      sinceRevision,
+      afterRevision,
+      afterSeq,
+      limit: V3_PAGE_LIMIT,
+    });
+    if (response.status === 401) return { kind: 'unauthorized' };
+    if (!response.ok || !response.body.account) return { kind: 'fallback' };
+    const account = response.body.account;
+    if (account.readPath !== 'v3-delta') return { kind: 'fallback' };
+    if (account.resetRequired === true) return { kind: 'reset' };
+
+    const head = v3Head(account.head);
+    const targetRevision = safeInteger(account.targetRevision);
+    const pageUserId = validUserId(account.userId);
+    if (!head || targetRevision === null || targetRevision < sinceRevision
+      || targetRevision !== head.revision || !pageUserId) return { kind: 'fallback' };
+    if (userId && pageUserId !== userId) return { kind: 'fallback' };
+    userId = pageUserId;
+    finalRevision = targetRevision;
+    finalUpdatedAt = head.updatedAt;
+
+    if (account.globalState !== undefined) {
+      const replaced = stateFromGlobal(account.globalState, next.papers, next.metadata);
+      if (!replaced) return { kind: 'fallback' };
+      next = replaced;
+    }
+
+    const changes = Array.isArray(account.changes) ? account.changes : null;
+    if (!changes) return { kind: 'fallback' };
+    for (const change of changes) if (!applyV3Row(next, change)) return { kind: 'fallback' };
+
+    if (account.hasMore !== true) {
+      if (!stateMatchesHead(next,head)) return { kind: 'fallback' };
+      return {
+        kind: 'ok',
+        account: { userId, revision: finalRevision, updatedAt: finalUpdatedAt, state: next, readPath: 'v3' },
+      };
+    }
+
+    const cursor = account.nextCursor;
+    const cursorRevision = safeInteger(cursor?.revision);
+    const cursorSeq = safeInteger(cursor?.seq);
+    if (cursorRevision === null || cursorSeq === null
+      || (afterRevision !== null && (cursorRevision < afterRevision
+        || (cursorRevision === afterRevision && cursorSeq <= afterSeq)))) return { kind: 'fallback' };
+    afterRevision = cursorRevision;
+    afterSeq = cursorSeq;
+  }
+  return { kind: 'fallback' };
+}
+
+async function v3FullPull(): Promise<V3Outcome> {
+  const headResponse = await request('account-v3-head');
+  if (headResponse.status === 401) return { kind: 'unauthorized' };
+  if (!headResponse.ok || !headResponse.body.account) return { kind: 'fallback' };
+  const account = headResponse.body.account;
+  const initialUserId = validUserId(account.userId);
+  if (account.readPath !== 'v3-head' || !initialUserId) return { kind: 'fallback' };
+  const initialHead = v3Head(account);
+  if (!initialHead) return { kind: 'fallback' };
+
+  let state = stateFromGlobal(initialHead.globalState, {}, {});
+  if (!state) return { kind: 'fallback' };
+  let afterKey = '';
+
+  for (let pageNo = 0; pageNo < V3_MAX_PAGES_PER_SYNC; pageNo += 1) {
+    const pageResponse = await request('account-v3-page', { afterKey, limit: V3_PAGE_LIMIT });
+    if (pageResponse.status === 401) return { kind: 'unauthorized' };
+    if (!pageResponse.ok || !pageResponse.body.account) return { kind: 'fallback' };
+    const page = pageResponse.body.account;
+    const pageHead = v3Head(page.head);
+    const pageUserId = validUserId(page.userId);
+    const scanStartRevision = safeInteger(page.scanStartRevision);
+    if (page.readPath !== 'v3-page' || !pageHead || pageUserId !== initialUserId
+      || scanStartRevision === null || scanStartRevision !== pageHead.revision
+      || pageHead.revision < initialHead.revision) return { kind: 'fallback' };
+    const rows = Array.isArray(page.rows) ? page.rows : null;
+    if (!rows || safeInteger(page.count) !== rows.length) return { kind: 'fallback' };
+    let previousKey = afterKey;
+    for (const row of rows) {
+      const rowKey = typeof row?.paperKey === 'string' ? row.paperKey : '';
+      if (!rowKey || (previousKey && rowKey <= previousKey) || !applyV3Row(state,row)) return { kind: 'fallback' };
+      previousKey = rowKey;
+    }
+
+    if (page.hasMore !== true) break;
+    const nextKey = typeof page.nextKey === 'string' ? page.nextKey : '';
+    if (!nextKey || nextKey <= afterKey) return { kind: 'fallback' };
+    afterKey = nextKey;
+    if (pageNo === V3_MAX_PAGES_PER_SYNC - 1) return { kind: 'fallback' };
+  }
+
+  const catchup = await v3DeltaFromState(initialHead.revision, state);
+  if (catchup.kind === 'reset') return { kind: 'fallback' };
+  if (catchup.kind !== 'ok' || catchup.account.userId !== initialUserId) return catchup.kind === 'ok' ? { kind:'fallback' } : catchup;
+  return catchup;
+}
+
+async function preferredInitialPull(): Promise<{ account: RemoteAccount | null; status: number }> {
+  const v3 = await v3FullPull();
+  if (v3.kind === 'ok') {
+    setReadDiagnostic('v3');
+    return { account: v3.account, status: 200 };
+  }
+  if (v3.kind === 'unauthorized') return { account: null, status: 401 };
+  const legacy = await legacyPull();
+  if (legacy.result) setReadDiagnostic('legacy');
+  return { account: legacy.result, status: legacy.status };
+}
+
+function applyRemote(account: RemoteAccount): void {
+  applyingRemote = true;
+  store.state = account.state;
+  rememberAccount(account.userId, account.revision);
+  store.save();
+  applyingRemote = false;
+}
+
 async function initialMerge(): Promise<void> {
-  // Pull first and merge locally. The original server-side account-merge used
-  // OR/union semantics, which could resurrect a favorite or tag that a newer
-  // device had deliberately removed.
-  const pulled = await request('account-pull');
-  if (!pulled.ok || !pulled.body.account) {
+  const pulled = await preferredInitialPull();
+  if (!pulled.account) {
     if (pulled.status === 401) clearRememberedAccount();
     return;
   }
 
   const localState = store.state;
-  const merged = mergeStates(pulled.body.account.state, localState, true);
+  const merged = mergeStates(pulled.account.state, localState, true);
   applyingRemote = true;
   store.state = merged;
-  rememberAccount(pulled.body.account.userId, pulled.body.account.revision);
+  rememberAccount(pulled.account.userId, pulled.account.revision);
   store.save();
   applyingRemote = false;
 
-  const saved = await request('account-save', merged);
-  if (saved.status === 409 && saved.body.account) {
+  const saved = await request('account-save', { state: merged });
+  if (saved.status === 409 && saved.body.account?.state) {
+    const retryRevision = safeInteger(saved.body.account.revision);
+    if (retryRevision === null) return;
     const retryMerged = mergeStates(saved.body.account.state, merged, true);
     applyingRemote = true;
     store.state = retryMerged;
-    rememberAccount(saved.body.account.userId, saved.body.account.revision);
+    rememberAccount(String(saved.body.account.userId || ''), retryRevision);
     store.save();
     applyingRemote = false;
-    const retried = await request('account-save', retryMerged);
-    if (retried.ok && retried.body.account) rememberAccount(retried.body.account.userId, retried.body.account.revision);
+    const retried = await request('account-save', { state: retryMerged });
+    const retriedRevision = safeInteger(retried.body.account?.revision);
+    if (retried.ok && retried.body.account && retriedRevision !== null) {
+      rememberAccount(String(retried.body.account.userId || ''), retriedRevision);
+    }
     return;
   }
-  if (saved.ok && saved.body.account) rememberAccount(saved.body.account.userId, saved.body.account.revision);
+  const savedRevision = safeInteger(saved.body.account?.revision);
+  if (saved.ok && saved.body.account && savedRevision !== null) {
+    rememberAccount(String(saved.body.account.userId || ''), savedRevision);
+  }
 }
 
 async function pullRemote(): Promise<void> {
-  if (!activeToken || saving) return;
-  const result = await request('account-pull');
-  if (!result.ok || !result.body.account) return;
-  if (result.body.account.revision > revision) {
-    applyingRemote = true;
-    store.state = result.body.account.state;
-    rememberAccount(result.body.account.userId, result.body.account.revision);
-    store.save();
-    applyingRemote = false;
+  if (!activeToken || saving || saveTimer !== undefined) return;
+
+  let remote: RemoteAccount | null = null;
+  const delta = await v3DeltaFromState(revision, store.state);
+  if (delta.kind === 'unauthorized') {
+    clearRememberedAccount();
+    return;
   }
+  if (delta.kind === 'ok') {
+    remote = delta.account;
+    setReadDiagnostic('v3');
+  } else if (delta.kind === 'reset') {
+    const full = await v3FullPull();
+    if (full.kind === 'unauthorized') {
+      clearRememberedAccount();
+      return;
+    }
+    if (full.kind === 'ok') {
+      remote = full.account;
+      setReadDiagnostic('v3');
+    }
+  }
+
+  if (!remote) {
+    const legacy = await legacyPull();
+    if (legacy.status === 401) {
+      clearRememberedAccount();
+      return;
+    }
+    remote = legacy.result;
+    if (remote) setReadDiagnostic('legacy');
+  }
+
+  if (remote && remote.revision > revision) applyRemote(remote);
 }
 
 async function saveRemote(): Promise<void> {
@@ -213,17 +561,22 @@ async function saveRemote(): Promise<void> {
   if (saving) { queuedSave = true; return; }
   saving = true;
   try {
-    let result = await request('account-save', store.state);
-    if (result.status === 409 && result.body.account) {
+    let result = await request('account-save', { state: store.state });
+    if (result.status === 409 && result.body.account?.state) {
+      const conflictRevision = safeInteger(result.body.account.revision);
+      if (conflictRevision === null) return;
       const merged = mergeStates(result.body.account.state, store.state, true);
       applyingRemote = true;
       store.state = merged;
-      rememberAccount(result.body.account.userId, result.body.account.revision);
+      rememberAccount(String(result.body.account.userId || ''), conflictRevision);
       store.save();
       applyingRemote = false;
-      result = await request('account-save', merged);
+      result = await request('account-save', { state: merged });
     }
-    if (result.ok && result.body.account) rememberAccount(result.body.account.userId, result.body.account.revision);
+    const savedRevision = safeInteger(result.body.account?.revision);
+    if (result.ok && result.body.account && savedRevision !== null) {
+      rememberAccount(String(result.body.account.userId || ''), savedRevision);
+    }
   } finally {
     saving = false;
     if (queuedSave) { queuedSave = false; void saveRemote(); }
@@ -242,6 +595,7 @@ async function detectSessionChange(): Promise<void> {
   activeToken = token;
   if (!token) {
     clearRememberedAccount();
+    setReadDiagnostic('none');
     return;
   }
   const rememberedUser = storedUserId();
@@ -254,5 +608,6 @@ activeToken = sessionToken();
 activeUserId = storedUserId();
 revision = activeUserId ? storedRevision() : 0;
 if (activeToken) void initialMerge();
+else setReadDiagnostic('none');
 window.setInterval(() => { void detectSessionChange(); }, TOKEN_WATCH_MS);
 window.setInterval(() => { if (activeToken) void pullRemote(); }, POLL_INTERVAL_MS);
