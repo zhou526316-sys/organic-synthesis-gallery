@@ -85,6 +85,11 @@ function staticFrontendOnly(): boolean {
   return location.hostname.endsWith('.github.io') || location.protocol === 'file:';
 }
 
+function localDevelopmentHost(): boolean {
+  if (typeof location === 'undefined') return false;
+  return location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+}
+
 function normalizeDoi(value: unknown): string | null {
   if (typeof value !== 'string') return null;
   const cleaned = value.trim().toLowerCase()
@@ -239,6 +244,10 @@ function workerRequest<T>(method: string, path: string, body?: unknown): Promise
 }
 
 async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResponse<T>> {
+  if (!localDevelopmentHost() && path === '/api/literature/catalog-view') {
+    return workerRequest<T>('POST', path, body);
+  }
+
   const requested = body && typeof body === 'object' && Array.isArray((body as { dois?: unknown }).dois)
     ? (body as { dois: unknown[] }).dois.map(normalizeDoi).filter((doi): doi is string => Boolean(doi))
     : [];
@@ -364,6 +373,9 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
 }
 
 async function request<T>(method: string, path: string, body?: unknown): Promise<ApiResponse<T>> {
+  if (method === 'GET' && !localDevelopmentHost() && path === '/api/_healthcheck') {
+    return workerRequest<T>('GET', path);
+  }
   if (method === 'GET' && staticFrontendOnly() && path === '/api/literature/supplement') {
     const data = await fetchStaticJson<unknown>('literature-supplement.json', { papers: [] }, 'no-cache');
     return {

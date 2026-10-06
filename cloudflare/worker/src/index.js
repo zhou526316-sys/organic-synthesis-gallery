@@ -98,6 +98,7 @@ const json = (value, init = {}) => new Response(JSON.stringify(value), {
 
 // Site analytics routes live under /api/user-ui/ and inherit browser CORS.
 const BROWSER_READ_PATHS = new Set([
+  '/api/_healthcheck',
   '/api/paper-titles/resolve',
   '/api/title-translations/zh',
   '/api/literature/supplement',
@@ -262,7 +263,7 @@ async function handleApi(request, env, ctx) {
       wechatTicketRelay: Boolean(env.WECHAT_TICKET_RELAY_URL && env.WECHAT_TICKET_RELAY_KEY),
       wechatTicketRelayHost: (() => { try { return env.WECHAT_TICKET_RELAY_URL ? new URL(env.WECHAT_TICKET_RELAY_URL).hostname : null; } catch { return null; } })(),
       integrations: integrationStatus(env).body,
-    });
+    }, { headers: cors });
   }
 
   if (request.method === 'GET' && url.pathname === '/api/wechat/js-sdk-signature') {

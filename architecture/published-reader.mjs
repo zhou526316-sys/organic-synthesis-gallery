@@ -8,6 +8,8 @@ const MEMBERSHIP_SCHEMA = 'gallery-published-membership-v1';
 const assert = (ok, message) => { if (!ok) throw new Error(message); };
 const isHash = value => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);
 const isSha = value => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value);
+const STATIC_ARCHIVE_MAX_RESULTS = 1000;
+const STATIC_ARCHIVE_MAX_SEGMENTS = 36;
 
 async function digest(bytes) {
   const hash = await globalThis.crypto.subtle.digest('SHA-256', bytes);
@@ -141,6 +143,7 @@ export class PublishedCatalogClient {
     this.asOfDate = '';
     this.memberDois = [];
     this.earliestDate = '';
+    this.catalogId = '';
   }
 
   async fetchBytes(url, { cache = 'no-store', maxBytes = 4 * 1024 * 1024, label = 'architecture' } = {}, signal) {
@@ -219,6 +222,7 @@ export class PublishedCatalogClient {
     this.release = release;
     this.membership = membership;
     this.memberDois = memberDois;
+    this.catalogId = release.catalogId;
 
     const second = await this.fetchBytes(deliveryUrl, { maxBytes: 2 * 1024 * 1024, label: 'delivery_recheck' }, signal);
     assert(new TextDecoder().decode(second.bytes) === firstText, 'delivery_changed_during_architecture_open');
@@ -247,10 +251,45 @@ export class PublishedCatalogClient {
     return recordPapers(plan.records);
   }
 
+  async resolveIndexed(items, signal) {
+    const reader = this.requireOpen();
+    assert(Array.isArray(items), 'indexed_resolution_items_invalid');
+    const expected = items.map(item => {
+      const doi = normalizeDoi(item?.doi);
+      const revision = typeof item?.revision === 'string' ? item.revision.toLowerCase() : '';
+      assert(doi && isHash(revision), 'indexed_resolution_identity_invalid');
+      return { doi, revision };
+    });
+    assert(new Set(expected.map(item => item.doi)).size === expected.length, 'indexed_resolution_duplicate_doi');
+    for (const item of expected) {
+      assert(this.membership?.members?.[item.doi] === item.revision, `indexed_membership_revision_mismatch:${item.doi}`);
+    }
+    const plan = await resolveDoisPlan(reader, expected.map(item => item.doi), {
+      asOfDate: this.asOfDate,
+      signal,
+      concurrency: 8,
+    });
+    assert(plan.complete === true && plan.unavailable.length === 0 && plan.updateRequired.length === 0,
+      'indexed_doi_resolution_incomplete');
+    const byDoi = new Map(plan.records.map(record => [normalizeDoi(record?.doi), record]));
+    const ordered = expected.map(item => {
+      const record = byDoi.get(item.doi);
+      assert(record && record.revision === item.revision, `indexed_record_revision_mismatch:${item.doi}`);
+      return record;
+    });
+    return recordPapers(ordered);
+  }
+
   async search(query, signal) {
     const reader = this.requireOpen();
-    const search = await globalSearchPlan(reader, query, { asOfDate: this.asOfDate, limit: 1000, signal });
+    const catalog = await reader.open(signal);
+    assert(Array.isArray(catalog.search) && catalog.search.length <= STATIC_ARCHIVE_MAX_SEGMENTS,
+      'global_search_fanout_window_required');
+    const search = await globalSearchPlan(reader, query, {
+      asOfDate: this.asOfDate, limit: STATIC_ARCHIVE_MAX_RESULTS, signal,
+    });
     assert(search.definitive === true && search.catalogUpdateRequired !== true, 'global_search_incomplete');
+    assert(Number(search.matched || 0) === search.results.length, 'global_search_result_window_required');
     if (!search.results.length) return [];
     return this.resolve(search.results.map(row => row.doi), signal);
   }
@@ -263,15 +302,22 @@ export class PublishedCatalogClient {
     assert(!from || from <= to, 'invalid_date_range');
     const fromMonth = from ? from.slice(0, 7) : '';
     const toMonth = to.slice(0, 7);
+    const refs = catalog.search.filter(row => row.month !== 'undated'
+      && (!fromMonth || row.month >= fromMonth) && row.month <= toMonth);
+    assert(refs.length <= STATIC_ARCHIVE_MAX_SEGMENTS, 'date_range_fanout_window_required');
     const dois = [];
-    for (const ref of catalog.search.filter(row => row.month !== 'undated'
-      && (!fromMonth || row.month >= fromMonth) && row.month <= toMonth)) {
+    let matched = 0;
+    for (const ref of refs) {
       const segment = await reader.read(ref, signal);
       for (const row of segment.entries || []) {
         if (typeof row.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(row.date)) continue;
-        if ((!from || row.date >= from) && row.date <= to) dois.push(row.doi);
+        if ((!from || row.date >= from) && row.date <= to) {
+          matched += 1;
+          if (dois.length < STATIC_ARCHIVE_MAX_RESULTS) dois.push(row.doi);
+        }
       }
     }
+    assert(matched === dois.length, 'date_range_result_window_required');
     return this.resolve(dois, signal);
   }
 }

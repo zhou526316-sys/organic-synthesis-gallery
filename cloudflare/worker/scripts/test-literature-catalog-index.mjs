@@ -505,6 +505,9 @@ test('public read route exists but production deployment remains read-inactive',
   assert.ok(source.includes('/api/admin/literature-catalog-index/view'));
   assert.ok(source.includes('/api/literature/catalog-view'));
   assert.ok(source.split('/api/literature/catalog-view').length - 1 >= 2,'public path must be both CORS-readable and routed');
+  assert.ok(source.split('/api/_healthcheck').length - 1 >= 2,'healthcheck must be both CORS-readable and routed for capability discovery');
+  const healthBlock=source.split("url.pathname === '/api/_healthcheck'")[1]?.split("url.pathname === '/api/wechat/js-sdk-signature'")[0]||'';
+  assert.ok(healthBlock.includes("{ headers: cors }"),'healthcheck GET must attach browser CORS headers');
   assert.ok(!source.includes('/api/literature/catalog-search'));
   assert.ok(!source.includes('/api/user-ui/literature-search'));
 

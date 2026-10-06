@@ -68,7 +68,9 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.50' public/gallery-vpn-bridge.user.js
+          BRIDGE_VERSION="$(sed -n 's#^// @version[[:space:]]*##p' public/gallery-vpn-bridge.user.js | head -1 | tr -d '\r')"
+          test -n "$BRIDGE_VERSION"
+          grep -F '// @updateURL    https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js' public/gallery-vpn-bridge.user.js
           grep -F "var CONTROLLER_REVISION = '2.2.41';" public/gallery-vpn-bridge.user.js
           grep -F "var GALLERY_HOST = 'gallery.gczhouwld.com';" public/gallery-vpn-bridge.user.js
           grep -F 'requireCompletedCapturePacket' audit/media-auto-policy.json
@@ -84,7 +86,12 @@ jobs:
           grep -F "result.fulltext=await tryCaptureArticleEvidence" public/toc-mainline.user.js
           grep -F "EVIDENCE_INVENTORY_ENDPOINT" public/toc-mainline.user.js
           grep -F "var evidenceJobs=[];" public/toc-mainline.user.js
-          grep -F "PRIVATE_PDF_QUEUE_REVISION = '20261005-private-pdf-queue-v1'" public/toc-mainline.user.js
+          PDF_QUEUE_REVISION="$(sed -n "s#^  var PRIVATE_PDF_QUEUE_REVISION = '\\([^']*\\)';#\\1#p" public/toc-mainline.user.js | head -1 | tr -d '\r')"
+          test -n "$PDF_QUEUE_REVISION"
+          case "$PDF_QUEUE_REVISION" in
+            *-private-pdf-queue-v*) ;;
+            *) echo "Unexpected PRIVATE_PDF_QUEUE_REVISION: $PDF_QUEUE_REVISION" >&2; exit 1 ;;
+          esac
           grep -F "capturePrivatePdf:true" public/toc-mainline.user.js
           grep -F "totalTextBudget:null" scripts/test-tm232-evidence-capture.mjs
           grep -F "abstractOnly:true" scripts/test-tm232-evidence-capture.mjs

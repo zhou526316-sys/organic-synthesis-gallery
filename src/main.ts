@@ -2,11 +2,16 @@ import { api } from './platform-api';
 import { chineseTitle, validChineseTitle } from '../shared/chinese-title-overrides.js';
 import './styles.css';
 import { mountUserShell } from './user-shell';
-import { earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
+import { beijingDate, earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
 import { RESULT_WINDOW_SIZE, resultWindowState } from '../shared/result-window.js';
 import { store } from './user-ui/shared';
 import { PublishedCatalogClient, loadPublishedHotFallback } from '../architecture/published-reader.mjs';
+import {
+  fetchLiteratureCatalogView,
+  literatureCatalogIndexedReadActive,
+  type LiteratureCatalogViewRequest,
+} from './literature-catalog-view';
 
 interface Paper {
   journal: string;
@@ -217,6 +222,18 @@ let latestCollectionDate = '';
 let architectureRefreshTimer: number | null = null;
 let architectureRefreshSerial = 0;
 let resultWindowPage = 1;
+let indexedViewCapability: boolean | null = null;
+let indexedViewSerial = 0;
+let indexedViewState: {
+  requestKey: string;
+  matched: number;
+  page: number;
+  cursors: string[];
+  hasMore: boolean;
+  nextCursor: string | null;
+  papers: Paper[];
+  loading: boolean;
+} | null = null;
 
 store.addEventListener('counts', () => {
   if (sort === 'readers') renderCards();
@@ -614,6 +631,9 @@ function syncLiteratureDoiRegistry(): void {
 
 function resetResultWindow(): void {
   resultWindowPage = 1;
+  indexedViewSerial += 1;
+  if (indexedViewState && architectureLandingPapers.length) setArchitectureCorpus(architectureLandingPapers);
+  indexedViewState = null;
 }
 
 function resultScopeIsDefaultRecent(): boolean {
@@ -635,29 +655,38 @@ function renderCards(): void {
   const count = document.querySelector<HTMLElement>('#resultCount');
   const scope = document.querySelector<HTMLElement>('#resultScopeLabel');
   if (!gallery || !count) return;
-  const list = filteredPapers();
-  const windowState = resultWindowState(list.length, resultWindowPage, RESULT_WINDOW_SIZE);
-  resultWindowPage = windowState.page;
-  const renderedList = list.slice(windowState.start, windowState.end);
+  const indexed = indexedViewState;
+  const list = indexed ? indexed.papers : filteredPapers();
+  const localWindow = indexed ? null : resultWindowState(list.length, resultWindowPage, RESULT_WINDOW_SIZE);
+  if (localWindow) resultWindowPage = localWindow.page;
+  const renderedList = indexed ? list : list.slice(localWindow!.start, localWindow!.end);
+  const totalMatched = indexed ? indexed.matched : list.length;
+  const currentPage = indexed ? indexed.page : localWindow!.page;
+  const totalPages = indexed
+    ? Math.max(1, Math.ceil(indexed.matched / RESULT_WINDOW_SIZE))
+    : localWindow!.pages;
+  const firstShown = totalMatched ? (indexed ? (currentPage - 1) * RESULT_WINDOW_SIZE + 1 : localWindow!.start + 1) : 0;
+  const endShown = indexed ? firstShown + renderedList.length - (renderedList.length ? 1 : 0) : localWindow!.end;
+  const hasPrevious = indexed ? currentPage > 1 : localWindow!.hasPrevious;
+  const hasNext = indexed ? indexed.hasMore : localWindow!.hasNext;
   const windowControls = document.querySelector<HTMLElement>('#resultWindowControls');
   const windowStatus = document.querySelector<HTMLElement>('#resultWindowStatus');
   const previousPage = document.querySelector<HTMLButtonElement>('#previousResultPage');
   const nextPage = document.querySelector<HTMLButtonElement>('#nextResultPage');
-  count.textContent = String(list.length);
-  if (windowControls) windowControls.hidden = list.length === 0;
+  count.textContent = String(totalMatched);
+  if (windowControls) windowControls.hidden = totalMatched === 0;
   if (windowStatus) {
-    const first = list.length ? windowState.start + 1 : 0;
     windowStatus.textContent = language === 'zh'
-      ? `当前显示 ${first}–${windowState.end} / 共 ${list.length} 篇 · 第 ${windowState.page}/${windowState.pages} 页`
-      : `Showing ${first}–${windowState.end} of ${list.length} · Page ${windowState.page}/${windowState.pages}`;
+      ? `当前显示 ${firstShown}–${endShown} / 共 ${totalMatched} 篇 · 第 ${currentPage}/${totalPages} 页`
+      : `Showing ${firstShown}–${endShown} of ${totalMatched} · Page ${currentPage}/${totalPages}`;
   }
   if (previousPage) {
-    previousPage.disabled = !windowState.hasPrevious;
-    previousPage.dataset.available = windowState.hasPrevious ? 'true' : 'false';
+    previousPage.disabled = indexed ? indexed.loading || !hasPrevious : !hasPrevious;
+    previousPage.dataset.available = hasPrevious ? 'true' : 'false';
   }
   if (nextPage) {
-    nextPage.disabled = !windowState.hasNext;
-    nextPage.dataset.available = windowState.hasNext ? 'true' : 'false';
+    nextPage.disabled = indexed ? indexed.loading || !hasNext : !hasNext;
+    nextPage.dataset.available = hasNext ? 'true' : 'false';
   }
   if (scope) {
     const recent = resultScopeIsDefaultRecent();
@@ -831,6 +860,10 @@ function mount(): void {
   });
 
   const moveResultPage = (delta: number): void => {
+    if (indexedViewState) {
+      void moveIndexedResultPage(delta);
+      return;
+    }
     resultWindowPage = Math.max(1, resultWindowPage + delta);
     renderCards();
     document.querySelector<HTMLElement>('#gallery')?.scrollIntoView({ block: 'start', behavior: 'auto' });
@@ -1316,9 +1349,156 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
   }
 }
 
+function indexedViewRequest(cursor = ''): LiteratureCatalogViewRequest | null {
+  const client = architectureClient;
+  if (!client || activeEdition || sharedDoiFromLocation() || sort === 'readers') return null;
+  const needle = query.trim();
+  if (needle && [...needle].length < 3) return null;
+  // Keep the default Hot landing, journal-only filtering and new-only filtering local.
+  // D1 is used only when the user requests historical/all-time discovery.
+  if (!needle && !dateFrom && !dateTo) return null;
+  return {
+    catalogId: client.catalogId,
+    query: needle,
+    selectedJournals: [...selectedJournals].sort(),
+    excludedJournals: [...excludedJournals].sort(),
+    dateFrom,
+    dateTo,
+    addedDate: onlyNew ? beijingDate() : '',
+    sort: sort === 'oldest' ? 'oldest' : 'newest',
+    limit: RESULT_WINDOW_SIZE,
+    cursor,
+  };
+}
+
+function indexedViewRequestKey(request: LiteratureCatalogViewRequest): string {
+  return JSON.stringify({
+    catalogId: request.catalogId,
+    query: request.query || '',
+    selectedJournals: request.selectedJournals || [],
+    excludedJournals: request.excludedJournals || [],
+    dateFrom: request.dateFrom || '',
+    dateTo: request.dateTo || '',
+    addedDate: request.addedDate || '',
+    sort: request.sort || 'newest',
+  });
+}
+
+async function loadIndexedViewPage(
+  serial: number,
+  request: LiteratureCatalogViewRequest,
+  page: number,
+  cursors: string[],
+): Promise<boolean> {
+  const client = architectureClient;
+  if (!client || request.catalogId !== client.catalogId) return false;
+  const requestKey = indexedViewRequestKey(request);
+  const response = await fetchLiteratureCatalogView(request);
+  if (serial !== architectureRefreshSerial && page === 1) return false;
+  if (page > 1 && serial !== indexedViewSerial) return false;
+  if (architectureClient !== client) return false;
+  const indexedPapers = normalizeArchitectureRows(await client.resolveIndexed(response.items));
+  if (indexedPapers.length !== response.items.length) throw new Error('literature_catalog_view_excluded_member');
+  indexedViewState = {
+    requestKey,
+    matched: response.matched,
+    page,
+    cursors,
+    hasMore: response.hasMore,
+    nextCursor: response.nextCursor,
+    papers: indexedPapers,
+    loading: false,
+  };
+  architectureReadLimited = false;
+  setArchitectureCorpus(indexedPapers);
+  document.documentElement.dataset.catalogQueryRead = 'd1-index';
+  mount();
+  return true;
+}
+
+async function tryIndexedArchitectureView(serial: number): Promise<boolean> {
+  const request = indexedViewRequest('');
+  if (!request) return false;
+  if (indexedViewCapability === null) {
+    indexedViewCapability = await literatureCatalogIndexedReadActive();
+    document.documentElement.dataset.catalogIndexCapability = indexedViewCapability ? 'active' : 'inactive';
+  }
+  if (!indexedViewCapability) return false;
+  try {
+    return await loadIndexedViewPage(serial, request, 1, ['']);
+  } catch (error) {
+    indexedViewCapability = false;
+    indexedViewState = null;
+    document.documentElement.dataset.catalogIndexCapability = 'degraded';
+    document.documentElement.dataset.catalogQueryRead = 'static-segments';
+    console.warn('D1 literature view unavailable; using verified static catalog reader', error);
+    return false;
+  }
+}
+
+async function moveIndexedResultPage(delta: number): Promise<void> {
+  const client = architectureClient;
+  const state = indexedViewState;
+  if (!client || !state || state.loading) return;
+  const targetPage = state.page + delta;
+  if (targetPage < 1) return;
+  let cursor = '';
+  const cursors = [...state.cursors];
+  if (delta > 0) {
+    if (!state.hasMore || !state.nextCursor) return;
+    cursor = state.nextCursor;
+    cursors[targetPage - 1] = cursor;
+  } else {
+    cursor = cursors[targetPage - 1] || '';
+  }
+  const request = indexedViewRequest(cursor);
+  if (!request || indexedViewRequestKey(request) !== state.requestKey) {
+    resetResultWindow();
+    scheduleArchitectureCorpusRefresh(0);
+    return;
+  }
+  const token = ++indexedViewSerial;
+  indexedViewState = { ...state, loading: true };
+  renderCards();
+  try {
+    const response = await fetchLiteratureCatalogView(request);
+    if (token !== indexedViewSerial || architectureClient !== client) return;
+    const indexedPapers = normalizeArchitectureRows(await client.resolveIndexed(response.items));
+    if (indexedPapers.length !== response.items.length) throw new Error('literature_catalog_view_excluded_member');
+    indexedViewState = {
+      requestKey: state.requestKey,
+      matched: response.matched,
+      page: targetPage,
+      cursors,
+      hasMore: response.hasMore,
+      nextCursor: response.nextCursor,
+      papers: indexedPapers,
+      loading: false,
+    };
+    setArchitectureCorpus(indexedPapers);
+    document.documentElement.dataset.catalogQueryRead = 'd1-index';
+    mount();
+    document.querySelector<HTMLElement>('#gallery')?.scrollIntoView({ block: 'start', behavior: 'auto' });
+  } catch (error) {
+    if (token !== indexedViewSerial) return;
+    console.warn('D1 literature page unavailable; returning to verified static catalog reader', error);
+    indexedViewCapability = false;
+    indexedViewState = null;
+    resultWindowPage = 1;
+    document.documentElement.dataset.catalogIndexCapability = 'degraded';
+    document.documentElement.dataset.catalogQueryRead = 'static-segments';
+    setArchitectureCorpus(architectureLandingPapers);
+    scheduleArchitectureCorpusRefresh(0);
+  }
+}
+
 async function refreshArchitectureCorpus(serial: number): Promise<void> {
   const client = architectureClient;
   if (!client || serial !== architectureRefreshSerial) return;
+  if (await tryIndexedArchitectureView(serial)) return;
+  if (serial !== architectureRefreshSerial || architectureClient !== client) return;
+  indexedViewState = null;
+  document.documentElement.dataset.catalogQueryRead = 'static-segments';
   try {
     let additions: Paper[] = [];
     const needle = query.trim();
