@@ -40,6 +40,7 @@ DEFAULT_PREVIEW_BASE_URL = "https://relay.gczhouwld.com/wechat-preview"
 DEFAULT_BODY_IMAGE_CACHE = Path("/var/lib/osg-wechat-publisher/body-images.json")
 DEFAULT_PDF_CACHE_DIR = Path("/var/lib/osg-wechat-publisher/source-pdfs")
 DEFAULT_SOURCE_IMAGE_CACHE_DIR = Path("/var/lib/osg-wechat-publisher/source-images")
+EDITORIAL_GATE_DIR = ROOT / "audit" / "wechat-working"
 FEATURED_DIR = ROOT / "public" / "wechat-featured"
 EDITION_DIR = ROOT / "public" / "wechat-editions"
 DEFAULT_SOURCE_URL = "https://gallery.gczhouwld.com/"
@@ -283,6 +284,74 @@ def load_edition(date: str) -> dict:
     if not isinstance(data, dict):
         raise RuntimeError(f"invalid WeChat edition data: {path}")
     return data
+
+
+def git_blob_sha(path: Path) -> str:
+    payload = path.read_bytes()
+    header = f"blob {len(payload)}\0".encode("utf-8")
+    return hashlib.sha1(header + payload).hexdigest()
+
+
+def require_editorial_review_gate(
+    gate_path: Path,
+    required_sources: list[Path],
+) -> dict:
+    if not gate_path.exists():
+        raise RuntimeError(
+            f"WeChat editorial review gate missing: {gate_path.relative_to(ROOT)}"
+        )
+    gate = json.loads(gate_path.read_text(encoding="utf-8"))
+    if not isinstance(gate, dict):
+        raise RuntimeError(f"invalid WeChat editorial review gate: {gate_path}")
+
+    text_review = str(gate.get("textReview") or "").strip().lower()
+    image_review = str(gate.get("imageReview") or "").strip().lower()
+    if text_review != "pass" or image_review != "pass":
+        raise RuntimeError(
+            "WeChat editorial review gate not approved: "
+            + json.dumps(
+                {"textReview": text_review, "imageReview": image_review},
+                ensure_ascii=False,
+            )
+        )
+
+    artifacts = gate.get("artifacts") if isinstance(gate.get("artifacts"), dict) else {}
+    for key in ("textOnly", "imagesOnly"):
+        rel = str(artifacts.get(key) or "").strip()
+        if not rel:
+            raise RuntimeError(f"WeChat review gate missing artifact: {key}")
+        artifact = (ROOT / rel).resolve()
+        try:
+            artifact.relative_to(ROOT.resolve())
+        except ValueError as exc:
+            raise RuntimeError(f"WeChat review artifact escapes repository: {rel}") from exc
+        if not artifact.exists() or artifact.stat().st_size <= 0:
+            raise RuntimeError(f"WeChat review artifact missing or empty: {rel}")
+
+    source_rows = gate.get("sources") if isinstance(gate.get("sources"), list) else []
+    indexed = {
+        str(row.get("path") or "").strip(): row
+        for row in source_rows
+        if isinstance(row, dict) and str(row.get("path") or "").strip()
+    }
+    for source in required_sources:
+        source = source.resolve()
+        try:
+            rel = str(source.relative_to(ROOT.resolve())).replace("\\", "/")
+        except ValueError as exc:
+            raise RuntimeError(f"WeChat reviewed source escapes repository: {source}") from exc
+        if not source.exists():
+            raise RuntimeError(f"WeChat reviewed source missing: {rel}")
+        row = indexed.get(rel)
+        if not row:
+            raise RuntimeError(f"WeChat review gate does not cover source: {rel}")
+        expected = str(row.get("blobSha") or "").strip().lower()
+        actual = git_blob_sha(source)
+        if not expected or expected != actual:
+            raise RuntimeError(
+                f"WeChat review gate stale for {rel}: expected {expected or 'missing'}, actual {actual}"
+            )
+    return gate
 
 
 def load_retrospective_slug(slug: str) -> dict | None:
@@ -895,14 +964,142 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
             card=(int(width*0.055),int(height*0.68),int(width*0.945),int(height*0.94))
             draw.rounded_rectangle(card,radius=max(20,int(width*0.022)),fill="#ffffff")
             src=image.convert("RGB")
-            fitted=ImageOps.contain(
+            fitted=ImageOps.fit(
                 src,
                 (card[2]-card[0]-int(width*0.04),card[3]-card[1]-int(height*0.035)),
                 method=Image.Resampling.LANCZOS,
+                centering=(0.50, 0.50),
             )
             px=card[0]+(card[2]-card[0]-fitted.width)//2
             py=card[1]+(card[3]-card[1]-fitted.height)//2
             canvas.paste(fitted,(px,py))
+            canvas = canvas.convert("RGB")
+
+        elif layout == "retrospective_abstract_square":
+            # Abstract editorial cover inspired by the established retrospective
+            # visual language. Only symbolic light/energy/radical motifs are drawn;
+            # all chemical structures remain in the original-paper reaction inset.
+            from PIL import ImageFilter, ImageChops
+
+            canvas = Image.new("RGBA", (width, height), "#09284a")
+            draw = ImageDraw.Draw(canvas)
+
+            # Soft blue/magenta/gold glows create an abstract enzyme-pocket field.
+            glow = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+            gd = ImageDraw.Draw(glow)
+            for cx, cy, rgb in [
+                (int(width*0.20), int(height*0.61), (255, 66, 188)),
+                (int(width*0.55), int(height*0.62), (245, 188, 66)),
+                (int(width*0.78), int(height*0.64), (77, 153, 255)),
+            ]:
+                for rad, alpha in [
+                    (int(width*0.18), 18),
+                    (int(width*0.12), 34),
+                    (int(width*0.075), 58),
+                ]:
+                    gd.ellipse((cx-rad, cy-rad, cx+rad, cy+rad), fill=(*rgb, alpha))
+            glow = glow.filter(ImageFilter.GaussianBlur(max(18, int(width*0.03))))
+            canvas = Image.alpha_composite(canvas, glow)
+            draw = ImageDraw.Draw(canvas)
+
+            gold = "#e8c36f"
+            white = "#f7f9fc"
+            muted = "#cbd9e8"
+
+            kicker = str(cover.get("thumb_kicker") or "往期精选｜Nature")
+            title_text = str(cover.get("thumb_title") or "")
+            meta = str(cover.get("thumb_meta") or "Nature")
+
+            kicker_font = choose_font(max(34, int(width * 0.044)), True)
+            title_font = choose_font(max(50, int(width * 0.064)), True)
+            meta_font = choose_font(max(25, int(width * 0.032)), True)
+            label_font = choose_font(max(25, int(width * 0.031)), True)
+
+            # Header.
+            draw.rounded_rectangle(
+                (int(width*0.055), int(height*0.048), int(width*0.945), int(height*0.13)),
+                radius=max(16, int(width*0.018)), outline=gold, width=3, fill="#09284a"
+            )
+            draw.text((int(width*0.075), int(height*0.066)), kicker, font=kicker_font, fill=gold)
+            mbox = draw.textbbox((0,0), meta, font=meta_font)
+            draw.text((int(width*0.925)-(mbox[2]-mbox[0]), int(height*0.073)), meta, font=meta_font, fill=muted)
+
+            # Main title: no subtitle.
+            y = int(height*0.17)
+            lines = wrap_text(draw, title_text, title_font, int(width*0.88), 3)
+            for idx, line in enumerate(lines):
+                draw.text(
+                    (int(width*0.06), y),
+                    line,
+                    font=title_font,
+                    fill=gold if idx == 0 else white,
+                )
+                y += int(height*0.073)
+
+            # Abstract FRET pathway.
+            center = (int(width*0.58), int(height*0.59))
+            for rad, alpha in [(210,110),(165,135),(120,165)]:
+                r = int(rad * width / 1000)
+                draw.ellipse(
+                    (center[0]-r, center[1]-r, center[0]+r, center[1]+r),
+                    outline=(70,155,255,alpha), width=max(4,int(width*0.006))
+                )
+
+            # Incoming light beam.
+            for i in range(8):
+                y0=int(height*(0.55+i*0.004))
+                draw.line(
+                    (int(width*0.03), y0, int(width*0.22), int(height*(0.59+i*0.003))),
+                    fill=(255,70,190,210-i*18), width=max(3,int(width*0.006))
+                )
+
+            # Donor / acceptor / radical-pair symbols.
+            donor=(int(width*0.25),int(height*0.61))
+            accept=(int(width*0.55),int(height*0.60))
+            r1=(int(width*0.75),int(height*0.58))
+            r2=(int(width*0.84),int(height*0.64))
+            draw.ellipse((donor[0]-55,donor[1]-55,donor[0]+55,donor[1]+55),fill="#f441b8")
+            draw.text((donor[0]-53,donor[1]+63),"Rh6G",font=label_font,fill=white)
+            draw.ellipse((accept[0]-58,accept[1]-58,accept[0]+58,accept[1]+58),fill="#efb83f",outline="#ffe8a5",width=4)
+            draw.text((accept[0]-42,accept[1]-17),"PLP*",font=label_font,fill="#152433")
+
+            # FRET arc.
+            draw.arc(
+                (int(width*0.27),int(height*0.45),int(width*0.62),int(height*0.67)),
+                start=205,end=340,fill=gold,width=max(7,int(width*0.010))
+            )
+            draw.polygon([
+                (int(width*0.575),int(height*0.545)),
+                (int(width*0.615),int(height*0.55)),
+                (int(width*0.59),int(height*0.585)),
+            ], fill=gold)
+            draw.text((int(width*0.37),int(height*0.50)),"FRET",font=label_font,fill=gold)
+
+            draw.ellipse((r1[0]-32,r1[1]-32,r1[0]+32,r1[1]+32),fill="#579cf5")
+            draw.ellipse((r2[0]-30,r2[1]-30,r2[0]+30,r2[1]+30),fill="#fb6666")
+            draw.text((r1[0]-8,r1[1]-17),"•",font=label_font,fill=white)
+            draw.text((r2[0]-8,r2[1]-17),"•",font=label_font,fill=white)
+            draw.line((r1[0]+25,r1[1]+15,r2[0]-25,r2[1]-12),fill=gold,width=max(5,int(width*0.007)))
+
+            # Factual anchor: the original reaction crop, tightly trimmed and
+            # placed in a bottom card. No generated chemistry is drawn.
+            rgb = image.convert("RGB")
+            bg = Image.new("RGB", rgb.size, "white")
+            diff = ImageChops.difference(rgb, bg).convert("L")
+            bbox = diff.point(lambda p: 255 if p > 18 else 0).getbbox()
+            if bbox:
+                rgb = rgb.crop(bbox)
+            fitted = ImageOps.contain(
+                rgb,
+                (int(width*0.82), int(height*0.20)),
+                method=Image.Resampling.LANCZOS,
+            )
+            card=(int(width*0.055),int(height*0.76),int(width*0.945),int(height*0.96))
+            draw.rounded_rectangle(card,radius=max(18,int(width*0.022)),fill="#ffffff")
+            px=(width-fitted.width)//2
+            py=card[1]+(card[3]-card[1]-fitted.height)//2
+            canvas.alpha_composite(fitted.convert("RGBA"),(px,py))
+
             canvas = canvas.convert("RGB")
 
         elif layout == "retrospective_figure_square":
@@ -1074,7 +1271,7 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
         format="JPEG",
         quality=95,
         optimize=True,
-        progressive=True,
+        progressive=False,
         dpi=(300, 300),
     )
     return target
@@ -1323,6 +1520,16 @@ def prepare_featured_local_images(featured: dict | None, override_pdf: str = "")
                 raise RuntimeError(f"featured repo_path escapes repository: {repo_image}") from exc
             if not local.exists():
                 raise RuntimeError(f"featured repository image is missing: {repo_image}")
+            try:
+                from PIL import Image, UnidentifiedImageError
+                with Image.open(local) as image:
+                    image.load()
+            except ImportError as exc:
+                raise RuntimeError("local image validation requires Pillow") from exc
+            except (UnidentifiedImageError, OSError, ValueError) as exc:
+                raise RuntimeError(
+                    f"featured repository image is not a decodable raster: {repo_image}"
+                ) from exc
             prepared[fig_id] = local
             continue
         if isinstance(fig.get("pdf_render"), dict):
@@ -2291,6 +2498,11 @@ def main() -> int:
             }, ensure_ascii=False))
             return 0
 
+        require_editorial_review_gate(
+            EDITORIAL_GATE_DIR / f"retrospective-{slug}-review-gate.json",
+            [RETROSPECTIVE_DIR / f"{slug}.json"],
+        )
+
         load_env(Path(args.env_file))
         token = get_access_token()
         uploaded_urls, local_images = upload_featured_images(token, data, args.featured_pdf)
@@ -2410,6 +2622,19 @@ def main() -> int:
             "note": "No preview URL is created before the WeChat draft is written.",
         }, ensure_ascii=False))
         return 0
+
+    required_review_sources = []
+    edition_path = EDITION_DIR / f"{publication_date}.json"
+    if edition_path.exists():
+        required_review_sources.append(edition_path)
+    if featured:
+        required_review_sources.append(FEATURED_DIR / f"{publication_date}.json")
+    if retrospective_slug:
+        required_review_sources.append(RETROSPECTIVE_DIR / f"{retrospective_slug}.json")
+    require_editorial_review_gate(
+        EDITORIAL_GATE_DIR / f"{publication_date}-review-gate.json",
+        required_review_sources,
+    )
 
     load_env(Path(args.env_file))
     token = get_access_token()
