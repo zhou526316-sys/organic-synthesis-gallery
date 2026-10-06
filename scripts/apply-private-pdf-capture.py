@@ -30,7 +30,7 @@ new="""  async function finishPairedJob(job,result,trace,token) {
       if(job.capturePrivatePdf===true&&job.captureToc!==true&&job.captureFigures!==true&&job.captureEvidence!==true&&job.opportunisticEvidence!==true&&job.opportunisticFigures!==true){
         result.status='failed';result.reason=privatePdfReason;
       }
-      captureLiveUpdate(job,'private_pdf_failed',{pdfStatus:'failed',pdfStage:'PDF 抓取异常',pdfError:privatePdfReason});
+      if(typeof captureLiveUpdate==='function')captureLiveUpdate(job,'private_pdf_failed',{pdfStatus:'failed',pdfStage:'PDF 抓取异常',pdfError:privatePdfReason});
       if(typeof pushTrace==='function')pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:privatePdfReason});
     }
 """
