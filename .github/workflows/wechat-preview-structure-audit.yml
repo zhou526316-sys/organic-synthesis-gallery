@@ -38,6 +38,7 @@ jobs:
           articles=re.findall(r"<article\b.*?</article>",raw,flags=re.I|re.S)
           def strip(s):
               return re.sub(r'\s+',' ',htmlmod.unescape(re.sub(r'<[^>]+>',' ',s))).strip()
+
           report={
               'preview_url':url,
               'media_id':receipt.get('media_id'),
@@ -45,6 +46,7 @@ jobs:
               'article_count':len(articles),
               'articles':[]
           }
+          article_texts=[]
           for idx,a in enumerate(articles,1):
               title_m=re.search(r'<h1[^>]*>(.*?)</h1>',a,flags=re.I|re.S)
               imgs=[]
@@ -52,7 +54,7 @@ jobs:
                   attrs=m.group(1)
                   src_m=re.search(r"""src=['"]([^'"]+)['"]""",attrs,flags=re.I)
                   style_m=re.search(r"""style=['"]([^'"]+)['"]""",attrs,flags=re.I)
-                  tail=a[m.end():m.end()+1000]
+                  tail=a[m.end():m.end()+1400]
                   cap_m=re.search(r"<p[^>]*>(.*?)</p>",tail,flags=re.I|re.S)
                   width=None
                   style=style_m.group(1) if style_m else ''
@@ -63,6 +65,8 @@ jobs:
                       'width_pct':width,
                       'caption':strip(cap_m.group(1)) if cap_m else ''
                   })
+              txt=strip(a)
+              article_texts.append(txt)
               report['articles'].append({
                   'index':idx,
                   'title':strip(title_m.group(1)) if title_m else '',
@@ -70,31 +74,72 @@ jobs:
                   'images':imgs
               })
 
-          full=strip(raw)
-          checks={
-              'daily_fig1e': '原文 Fig. 1e' in full,
-              'daily_alternating_fig3bc': '原文 Fig. 3b–c' in full,
-              'daily_electrode_fig3a': '原文 Fig. 3a' in full,
-              'daily_scope': '原文 Fig. 4a（底物拓展局部）' in full,
-              'daily_hydroboration': '原文 Fig. 4（上游衔接）' in full,
-              'daily_diversification': '原文 Fig. 4b' in full,
-              'hyster_fig1c': '原文 Fig. 1c' in full,
-              'hyster_evolution': '原文 Fig. 2b' in full,
-              'hyster_active_site': '原文 Fig. 2c' in full,
-              'hyster_scope_pyrimidine': '原文 Fig. 3（嘧啶系列）' in full,
-              'hyster_scope_pyridine': '原文 Fig. 3（吡啶系列）' in full,
-              'hyster_external_fret': '原文 Fig. 4b–c' in full,
-              'hyster_internal_fret': '原文 Fig. 4d–e' in full,
-              'hyster_lifetime': '原文 Fig. 5b' in full,
-              'hyster_mechanism': '原文 Fig. 5f' in full,
-              'hyster_application': '原文 Fig. 5g' in full,
-              'daily_old_isolated_fig1c_absent': '原文 Fig. 1c（仅保留本文反应）' not in full,
+          if len(article_texts) < 2:
+              raise SystemExit('expected two articles')
+          daily, retro = article_texts[0], article_texts[1]
+
+          daily_checks={
+              'fig1e':'原文 Fig. 1e' in daily,
+              'fig1a':'原文 Fig. 1a' in daily,
+              'fig1bc':'原文 Fig. 1b–c' in daily,
+              'fig1d':'原文 Fig. 1d' in daily,
+              'fig2a':'原文 Fig. 2a' in daily,
+              'fig2b':'原文 Fig. 2b' in daily,
+              'fig2c':'原文 Fig. 2c' in daily,
+              'fig2df':'原文 Fig. 2d–f' in daily,
+              'fig3a':'原文 Fig. 3a' in daily,
+              'fig3bc':'原文 Fig. 3b–c' in daily,
+              'fig3d':'原文 Fig. 3d' in daily,
+              'table1_upper':'原文 Table 1（底物拓展上半部分）' in daily,
+              'table1_lower':'原文 Table 1（底物拓展下半部分）' in daily,
+              'fig4a':'原文 Fig. 4a' in daily,
+              'table1_route':'原文 Table 1 顶部路线示意' in daily,
+              'fig4b':'原文 Fig. 4b' in daily,
+              'si_water':'Supporting Information Table 5' in daily,
+              'si_radical':'Supporting Information Fig. 6' in daily,
+              'si_icp':'Supporting Information Table 6' in daily,
+              'si_bpin':'Supporting Information Fig. 7' in daily,
+              'old_isolated_fig1c_absent':'原文 Fig. 1c（仅保留本文反应）' not in daily,
           }
-          report['checks']=checks
-          if len(articles)!=2 or receipt.get('draft_readback')!='ok' or not all(checks.values()):
-              Path('/tmp/wechat-preview-structure.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          retro_checks={
+              'fig1a':'原文 Fig. 1a' in retro,
+              'fig1b':'原文 Fig. 1b' in retro,
+              'fig1c':'原文 Fig. 1c' in retro,
+              'fig2a':'原文 Fig. 2a' in retro,
+              'fig2b':'原文 Fig. 2b' in retro,
+              'fig2c':'原文 Fig. 2c' in retro,
+              'fig2d':'原文 Fig. 2d' in retro,
+              'fig3':'原文 Fig. 3' in retro,
+              'fig4a':'原文 Fig. 4a' in retro,
+              'fig4bc':'原文 Fig. 4b–c' in retro,
+              'fig4de':'原文 Fig. 4d–e' in retro,
+              'fig5abc':'原文 Fig. 5a–c' in retro,
+              'fig5de':'原文 Fig. 5d–e' in retro,
+              'fig5f':'原文 Fig. 5f' in retro,
+              'fig5g':'原文 Fig. 5g' in retro,
+              'si_natural_aa':'Supporting Information Fig. 11' in retro,
+          }
+          counts={
+              'daily_image_count': report['articles'][0]['image_count'],
+              'retro_image_count': report['articles'][1]['image_count'],
+              'daily_expected_min':21,
+              'retro_expected_min':17,
+          }
+          report['checks']={'daily':daily_checks,'retrospective':retro_checks,'counts':counts}
+
+          ok=(
+              len(articles)==2
+              and receipt.get('draft_readback')=='ok'
+              and all(daily_checks.values())
+              and all(retro_checks.values())
+              and counts['daily_image_count']>=counts['daily_expected_min']
+              and counts['retro_image_count']>=counts['retro_expected_min']
+          )
+          Path('/tmp/wechat-preview-structure.json').write_text(
+              json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8'
+          )
+          if not ok:
               raise SystemExit('preview structure audit failed')
-          Path('/tmp/wechat-preview-structure.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
       - name: Persist structure audit
         shell: bash
@@ -108,7 +153,7 @@ jobs:
             git reset --hard origin/main
             cp /tmp/wechat-preview-structure.json "$TARGET"
             git add "$TARGET"
-            git commit -m "audit: verify final WeChat preview structure" || exit 0
+            git commit -m "audit: verify complete WeChat figure-text structure" || exit 0
             if git push origin HEAD:main; then exit 0; fi
             sleep 2
           done
