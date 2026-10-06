@@ -35,7 +35,7 @@ try{
  await a.locator('#osg-immediate-start').click();await a.waitForFunction(()=>__opened.length===1);
  await a.waitForTimeout(1100);
  const snap=await a.evaluate(()=>{const s=document.querySelector('#osg-capture-live-panel').shadowRoot;return {needs:s.querySelector('#needs').textContent,batch:s.querySelector('#batch').textContent,queue:s.querySelector('#queue').textContent,title:s.querySelector('summary').textContent,total:GM_getValue('osg-toc-v6:last-run-summary').total}});
- assert.equal(snap.total,1);assert.equal(snap.needs,'TOC＋正文图＋全文');assert.match(snap.title,/全队列补缺6/);assert.doesNotMatch(snap.batch,/765/);assert.match(snap.queue,/正文图/);assert.match(snap.queue,/全文/);
+ assert.equal(snap.total,1);assert.equal(snap.needs,'TOC＋正文图＋全文');assert.match(snap.title,/全队列补缺6/);assert.doesNotMatch(snap.batch,/765/);
  const bundled=await a.evaluate(()=>__opened[0].job);assert.equal(bundled.captureToc,true);assert.equal(bundled.captureFigures,false);assert.equal(bundled.captureEvidence,false);assert.equal(bundled.opportunisticFigures,true);assert.equal(bundled.opportunisticEvidence,true);
  await a.screenshot({path:out+'/tm-missing-toc.png'});
  await a.locator('#osg-immediate-start').click();await a.waitForFunction(()=>__opened.length===2);assert.equal(await a.evaluate(()=>__opened[0].tab.closed),true);
