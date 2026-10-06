@@ -14,7 +14,7 @@
   "quick_points": [
     {
       "label": "先把反应看懂",
-      "text": "上图（原文 Fig. 1c）先把这篇工作的反应设计放在一起：杂芳基甲胺与 PLP 形成醌式中间体，Rh6G 吸收 470 nm 光并把能量传给酶内 [Q]；生成的 ¹[Q]* 再还原吡啶鎓自由基前体，使两个自由基在同一手性环境附近出现并形成新的 C–C 键。"
+      "text": "下面的原文 Fig. 1c 把这篇工作的反应设计放在一起：杂芳基甲胺与 PLP 形成醌式中间体，Rh6G 吸收 470 nm 光并把能量传给酶内 [Q]；生成的 ¹[Q]* 再还原吡啶鎓自由基前体，使两个自由基在同一手性环境附近出现并形成新的 C–C 键。"
     },
     {
       "label": "全文需要连续解决两个问题",
@@ -141,6 +141,24 @@
       "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-fig2d-lysate.png",
       "display_width_pct": 72,
       "caption": "原文 Fig. 2d｜工程化 TmLTA EQLSL 在 cell-free lysate 中仍能保持高活性与高对映选择性，并可在更低酶负载下运行；这说明进化得到的反应性并不只存在于高度纯化的理想体系。"
+    },
+    {
+      "id": "fig1a_context",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-fig1a-context.png",
+      "display_width_pct": 92,
+      "caption": "原文 Fig. 1a｜PLP 被放在“具有发色团、但光酶功能尚未被充分开发”的辅因子位置；右侧同时列出内亚胺、外亚胺、醌式与半醌等状态，为后文把醌式激发态引入催化循环提供背景。"
+    },
+    {
+      "id": "fig1b_analogy",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-fig1b-analogy.png",
+      "display_width_pct": 86,
+      "caption": "原文 Fig. 1b｜DNA photolyase 提供了作者借鉴的光物理范式：强吸光天线通过 FRET 把能量传给真正负责还原化学的辅因子。本文把类似的“收光/反应分工”迁移到 Rh6G 与 PLP 醌式中间体之间。"
+    },
+    {
+      "id": "si_natural_aa_failure",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-si-natural-aa-failure.png",
+      "display_width_pct": 78,
+      "caption": "Supporting Information Fig. 11｜直接光激发天然氨基酸来源的醌式中间体时，无论 WT 还是工程化酶都没有得到目标产物。这一负结果支持“天然体系的短寿命激发态不足以完成所需分子间化学”的判断。"
     }
   ],
   "sections": [
@@ -148,15 +166,15 @@
       "eyebrow": "第一层｜这篇 Nature 的创新点落在哪里",
       "heading": "创新点不在于 PLP 酶第一次参与光反应，而在于让“酶结合的 PLP 醌式激发态”直接进入催化循环",
       "paragraphs": [
-        "原文 Fig. 1a 先给出整篇文章的背景：PLP 是维生素 B₆ 的活性辅因子，能够形成内亚胺、外亚胺、醌式和半醌等多种中间体，但在已知光酶体系中仍属于“chromophoric cofactor dark space”。此前也已有“光 + PLP 酶”的反应，不过很多体系依赖外部光催化剂先在溶液中生成自由基，再让自由基进入酶口袋。",
+        "原文 Fig. 1a 把 PLP 放在一个很有意思的位置：它本身具有可见光吸收的发色团状态，也能形成醌式/半醌等电子结构，但其“光酶”反应空间此前远没有黄素等辅因子开发充分。PLP 同时又擅长通过内亚胺、外亚胺和醌式中间体完成酸碱与 C–C 键化学。",
         "这篇工作把 PLP 本身纳入了光化学催化循环：Rh6G 负责高效吸收 470 nm 光并通过 FRET 把激发能交给酶内醌式中间体 [Q]；真正完成关键单电子还原的是生成的 ¹[Q]*。这样一来，自由基前体的还原与 PLP 半醌自由基的生成都发生在酶活性位点附近，为后续立体选择性 C–C 成键创造了条件。"
       ],
       "figures": [
-        "fig1_darkspace"
+        "fig1a_context"
       ],
       "figures_after_paragraph": {
         "1": [
-          "fig1_darkspace"
+          "fig1a_context"
         ]
       }
     },
@@ -164,15 +182,19 @@
       "eyebrow": "第二层｜第一道难题：PLP 为什么“点不亮”",
       "heading": "它不是完全不吸光，而是吸得不够强、激发态又消失得太快",
       "paragraphs": [
-        "原文 Fig. 1a 同时说明了为什么 [Q] 值得尝试：醌式 PLP 在可见光区有吸收，而且电子丰富，激发后有望成为强还原剂；真正的问题是吸光弱、激发态太短。文献中甘氨酸来源醌式中间体的激发态寿命约 0.2 ns，本工作中直接激发丙氨酸来源醌式中间体也没有得到目标产物。",
-        "作者因此换用非天然杂芳基甲胺来形成更共轭的醌式中间体，同时借鉴原文 Fig. 1b 的 DNA photolyase：由一个强吸光“天线”先收光，再通过 FRET 把能量交给真正执行光化学的辅因子。对应到本文，直接用 505 nm 激发 [Q] 只有约 16% 产物，而 Rh6G 吸收 470 nm 光后向 [Q] 传能，模型反应可推进到约 90%。"
+        "PLP 的醌式中间体并不是完全不能吸收可见光，问题在于吸收不强、可用于分子间化学的激发态又太短。Supporting Information Fig. 11 中，作者直接光激发天然氨基酸来源的醌式中间体时并没有得到目标产物；结合约 0.2 ns 的短寿命背景，这说明仅仅“把 PLP 照亮”还不够。",
+        "作者因此换用非天然杂芳基甲胺形成新的醌式中间体，并借鉴原文 Fig. 1b 所展示的 photolyase FRET 思路：让一个强吸光天线先收光，再把能量交给真正负责还原化学的辅因子。直接用 505 nm 光激发 [Q] 时目标产物只有约 16%；加入 Rh6G 并用 470 nm 激发后，模型反应可以推进到约 90%。"
       ],
       "figures": [
-        "fig1_photolyase"
+        "si_natural_aa_failure",
+        "fig1b_analogy"
       ],
       "figures_after_paragraph": {
+        "1": [
+          "si_natural_aa_failure"
+        ],
         "2": [
-          "fig1_photolyase"
+          "fig1b_analogy"
         ]
       }
     },
