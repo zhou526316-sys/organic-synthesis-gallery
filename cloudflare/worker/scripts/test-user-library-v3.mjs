@@ -8,6 +8,8 @@ import {
   readUserLibraryV3Delta,
   readUserLibraryV3Head,
   readUserLibraryV3Page,
+  userLibraryV3WriteAllowed,
+  userLibraryV3WriteEnabled,
 } from '../src/user-library-v3.js';
 import { readUserLibraryStateFromRows } from '../src/user-library-shadow.js';
 import { shadowWriteUserLibraryV3FromState } from '../src/user-library-v3-shadow.js';
@@ -666,6 +668,39 @@ test('per-user V3 authority survives global write rollback without reviving lega
   assert.equal(suspendedMutation.body.error,'user_library_v3_write_suspended');
   const row=db.sqlite.prepare("SELECT paper_state_json FROM user_library_v3_rows WHERE user_id='u-rollback' AND paper_key='a'").get();
   assert.equal(JSON.parse(row.paper_state_json).note,'v3');
+});
+
+test('canary user can exercise V3 writes while global write remains disabled',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  addUser(db,'u-canary');
+  addUser(db,'u-normal');
+  const env=envFor(db,{
+    USER_LIBRARY_V3_WRITE_ENABLED:'0',
+    USER_LIBRARY_V3_WRITE_CANARY_USER_ID:'u-canary',
+  });
+  assert.equal(userLibraryV3WriteEnabled(env),false);
+  assert.equal(userLibraryV3WriteAllowed(env,'u-canary'),true);
+  assert.equal(userLibraryV3WriteAllowed(env,'u-normal'),false);
+
+  const globalState={
+    statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},
+    followedSearches:[],searchHistory:[],hideRead:false,
+  };
+  const canary=await applyUserLibraryV3Mutation(env,'u-canary',{
+    expectedRevision:0,
+    globalState,
+    operations:[{paperKey:'a',paperState:{favorite:true}}],
+  },1000);
+  assert.equal(canary.ok,true);
+  assert.equal(canary.revision,1);
+
+  const normal=await applyUserLibraryV3Mutation(env,'u-normal',{
+    expectedRevision:0,
+    globalState,
+  },1000);
+  assert.equal(normal.disabled,true);
+  assert.equal(normal.reason,'user_library_v3_write_disabled');
+  assert.equal(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_v3_head WHERE user_id='u-normal'").get().c,0);
 });
 
 test('V3 writes are independently disabled and require an atomic D1 batch',async t=>{
