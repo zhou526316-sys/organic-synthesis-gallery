@@ -339,6 +339,26 @@ test('authenticated V3 head/page/delta modes are bounded and freshness-fenced',a
   assert.equal(unauth.body.error,'not_authenticated');
 });
 
+test('status separates legacy authority from stale monolithic copies',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env=envFor(db);
+  const state=fixture('stale-copy');
+  putLegacy(db,'u-stale-copy',state,1,100);
+  await shadowWriteUserLibraryV3FromState(env,'u-stale-copy',state,1,100,150);
+  db.sqlite.prepare(`
+    INSERT INTO user_library_v3_authority(user_id,authority,activated_revision,activated_at)
+    VALUES('u-stale-copy','v3',1,200)
+  `).run();
+
+  const status=await getUserLibraryV3ShadowStatus(env);
+  assert.equal(status.status,200);
+  assert.equal(status.body.legacyUsers,0);
+  assert.equal(status.body.legacyDocuments,1);
+  assert.equal(status.body.staleLegacyDocuments,1);
+  assert.equal(status.body.v3AuthorityUsers,1);
+  assert.equal(status.body.revisionMismatches,0);
+});
+
 test('V3 write authority automatically disables legacy-to-V3 shadow/backfill/compare',async t=>{
   const db=new D1();t.after(()=>db.close());
   const state=fixture('authoritative');
