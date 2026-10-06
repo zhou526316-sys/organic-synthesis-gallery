@@ -460,6 +460,10 @@ test('public literature view is hard-gated by read flag and ready catalog genera
   assert.equal(enabled.body.readPathActive,true);
   assert.equal(enabled.body.matched,1);
   assert.equal(enabled.body.items[0].doi,'10.1234/archive');
+  const status=await getLiteratureCatalogIndexStatus(readEnv);
+  assert.equal(status.status,200);
+  assert.equal(status.body.readConfigured,true);
+  assert.equal(status.body.readPathActive,true);
 
   const short=await queryPublishedLiteratureCatalogView(readEnv,{
     catalogId:g.catalogId,query:'Ni',limit:60,
@@ -500,7 +504,7 @@ test('public read route exists but production deployment remains read-inactive',
   assert.ok(source.includes('/api/admin/literature-catalog-index/rows'));
   assert.ok(source.includes('/api/admin/literature-catalog-index/view'));
   assert.ok(source.includes('/api/literature/catalog-view'));
-  assert.ok(source.includes("'/api/literature/catalog-view',"));
+  assert.ok(source.split('/api/literature/catalog-view').length - 1 >= 2,'public path must be both CORS-readable and routed');
   assert.ok(!source.includes('/api/literature/catalog-search'));
   assert.ok(!source.includes('/api/user-ui/literature-search'));
 
