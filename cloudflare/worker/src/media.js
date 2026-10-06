@@ -6,6 +6,9 @@ const DOI_LIMIT = 1200;
 const QUERY_CHUNK = 80;
 // Media written before the 2.2.17 contamination recovery cutover is quarantined.
 const MEDIA_REBUILD_EPOCH = 1790082000000;
+// RSC TOCs imported before the preview-rejection cutover must be revalidated once.
+// This prevents legacy page-preview GIFs from permanently satisfying the media queue.
+const RSC_TOC_REVALIDATION_EPOCH = 1791300000000; // 2026-10-06T15:20:00Z
 
 export function normalizeDoi(value) {
   if (typeof value !== 'string') return null;
@@ -124,6 +127,13 @@ function figureQualityCounts(rows) {
   };
 }
 
+export function rscTocNeedsRevalidation(doi, toc) {
+  if (!String(doi || '').toLowerCase().startsWith('10.1039/')) return false;
+  if (!toc || Number(toc.available) !== 1 || !toc.r2_key) return false;
+  if (String(toc.reason || '') !== 'imported') return false;
+  return Number(toc.updated_at || toc.checked_at || 0) < RSC_TOC_REVALIDATION_EPOCH;
+}
+
 function tocResponse(request, doi, toc, figures, primary, variants = []) {
   const primaryResponse = primaryVisualResponse(request, doi, primary, variants);
   if (primaryResponse.available && primaryResponse.kind === 'official_visual') {
@@ -139,7 +149,8 @@ function tocResponse(request, doi, toc, figures, primary, variants = []) {
       cacheState: 'hit',
     };
   }
-  if (toc && Number(toc.available) === 1 && toc.r2_key) {
+  const rscRevalidationRequired = rscTocNeedsRevalidation(doi, toc);
+  if (toc && Number(toc.available) === 1 && toc.r2_key && !rscRevalidationRequired) {
     return {
       available: true,
       doi,
@@ -192,7 +203,7 @@ function tocResponse(request, doi, toc, figures, primary, variants = []) {
   return {
     available: false,
     doi,
-    reason: toc?.reason || 'cache_miss',
+    reason: rscRevalidationRequired ? 'rsc_legacy_toc_revalidation_required' : (toc?.reason || 'cache_miss'),
     cacheHit: true,
     cacheState: 'miss',
   };
@@ -326,7 +337,8 @@ function inventoryItem(doi, toc, figures, primary, duplicateHashes) {
     toc.content_hash &&
     figures.some(item => item.content_hash === toc.content_hash && String(item.semantic_key || '').toLowerCase() !== 'figure-1')
   );
-  const suspiciousToc = Boolean(nonFigureOneMatch || (toc?.content_hash && duplicateHashes.has(toc.content_hash)));
+  const rscRevalidationRequired = rscTocNeedsRevalidation(doi, toc);
+  const suspiciousToc = Boolean(rscRevalidationRequired || nonFigureOneMatch || (toc?.content_hash && duplicateHashes.has(toc.content_hash)));
   const trueToc = tocStored && !suspiciousToc;
   const primaryKind = primary?.kind || '';
   const largeSource = primaryKind === 'official_visual'
@@ -366,6 +378,7 @@ function inventoryItem(doi, toc, figures, primary, duplicateHashes) {
     figureOneStored: Boolean(one),
     fallbackLabel: fallback?.label,
     suspiciousToc,
+    rscRevalidationRequired,
     primaryKind: primaryKind || undefined,
     primarySource: primary?.source || undefined,
     primaryConfidence: primary ? Number(primary.confidence || 0) : undefined,
