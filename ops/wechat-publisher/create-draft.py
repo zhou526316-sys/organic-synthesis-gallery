@@ -418,10 +418,21 @@ def figure_html(fig_id: str, figures: dict[str, dict], uploaded_urls: dict[str, 
     if not source:
         return ""
     caption = esc(fig.get("caption") or "")
+    try:
+        width_pct = int(fig.get("display_width_pct") or 100)
+    except (TypeError, ValueError):
+        width_pct = 100
+    width_pct = max(45, min(100, width_pct))
+    image_style = (
+        f"display:block;width:{width_pct}%;max-width:100%;height:auto;"
+        "margin:0 auto;"
+    )
+    caption_margin = "7px auto 0"
+    caption_width = f"{width_pct}%"
     return (
         "<section style='margin:20px 0 24px;'>"
-        f"<img src='{esc(source)}' style='display:block;width:100%;height:auto;margin:0;'/>"
-        f"<p style='font-size:11px;color:#777;line-height:1.65;margin:7px 2px 0;'>{caption}</p>"
+        f"<img src='{esc(source)}' style='{image_style}'/>"
+        f"<p style='font-size:11px;color:#777;line-height:1.65;margin:{caption_margin};width:{caption_width};max-width:100%;'>{caption}</p>"
         "</section>"
     )
 
