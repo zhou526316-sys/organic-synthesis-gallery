@@ -39,7 +39,7 @@ Hot/Archive separation is the first scale boundary; a bounded result window is t
 - Broad historical date ranges must be chunked/cursor-based rather than resolving and rendering the entire range in one operation.
 - CSS `content-visibility` and lazy media are performance aids, not substitutes for bounding DOM cardinality.
 
-Until this rule is implemented end to end, global search and broad date ranges are considered a known scale-risk surface.
+This rule is now implemented for normal all-time search and broad historical filtering through the generation-fenced indexed read path. Compatibility-only cases such as two-character chemistry queries and reader-count sorting remain on the bounded static path.
 
 ## 5. Search-index rule
 
@@ -139,7 +139,7 @@ Architecture changes must test at least:
 
 1. **P0 — bounded frontend results: GUARDED.** Browser DOM is a fixed result window; the static Archive compatibility path now fails closed before >1000-result truncation or >36 monthly-segment fanout. Cursor-based indexed paging remains the preferred path for broad historical discovery.
 2. **P0 — bounded fallback: COMPLETE.** Deployed architecture failures use verified Hot fallback / retained Hot state rather than reloading all history.
-3. **P1 — indexed all-time search: ACTIVATION GATE.** Dedicated D1 shadow has repeated full row/search/view parity and the frontend is generation/revision fenced. Production activation may set the read flag only with a live current-generation cursor canary, safe generation-handoff fallback, and automatic redeploy to read-disabled mode on canary failure.
+3. **P1 — indexed all-time search: PRODUCTION ACTIVE.** The dedicated D1 read path is live behind static generation/revision authority. Production canary verified the current 826-card generation, cursor paging, current catalog identity and safe rollback; generation handoff and compatibility cases still fall back to bounded static reads.
 4. **P1 — user-library D3c: BOUNDED READ.** D3c1 production parity is complete. D3c2 enables authenticated bounded V3 head/page/delta capability with legacy-revision freshness fencing while normal account-pull stays D3b and V3 write authority stays off.
 5. **P2 — continue index/materialization cutovers:** any remaining metadata path that still relies on corpus-wide/prefix-wide scans must migrate behind parity/freshness gates.
 
