@@ -253,6 +253,93 @@ jobs:
           console.log(JSON.stringify({literatureIndexSchemaReady:true,tables:names,primaryD1FtsFree:true}));
           NODE
 
+      - name: Verify user library V3 write activation preflight
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: |
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const base=String(process.env.WORKER_URL||'').replace(/\/$/,'');
+          const token=process.env.BRIDGE_WRITE_TOKEN||'';
+          const reportPath='/tmp/user-library-v3-write-preflight.json';
+          const report={schemaVersion:1,phase:'D3c4b-write-preflight',ok:false,startedAt:new Date().toISOString()};
+          const save=()=>fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
+          save();
+          if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for D3c4b preflight');
+          async function call(path){
+            const response=await fetch(base+path,{
+              headers:{authorization:`Bearer ${token}`,'cache-control':'no-cache',pragma:'no-cache'},
+              signal:AbortSignal.timeout(30000),
+            });
+            const text=await response.text();
+            let body={};try{body=text?JSON.parse(text):{};}catch{}
+            if(!response.ok) throw new Error(path+' failed: '+response.status+' '+text.slice(0,700));
+            return body;
+          }
+
+          const status=await call('/api/admin/user-library-v3/status');
+          if(status.readEnabled!==true) throw new Error('V3 bounded read is not active: '+JSON.stringify(status));
+          if(status.writeEnabled===true){
+            report.ok=true;
+            report.alreadyActive=true;
+            report.legacyUsers=Number(status.legacyUsers||0);
+            report.v3AuthorityUsers=Number(status.v3AuthorityUsers||0);
+            report.completedAt=new Date().toISOString();
+            save();
+            console.log('USER_LIBRARY_V3_WRITE_PREFLIGHT '+JSON.stringify(report));
+            process.exit(0);
+          }
+          if(status.configured!==true||status.enabled!==true||status.revisionMismatches!==0||status.backfill?.complete!==true){
+            throw new Error('V3 shadow is not ready for write activation: '+JSON.stringify(status));
+          }
+
+          const passes=[];
+          for(let attempt=1;attempt<=6&&passes.length<2;attempt+=1){
+            const before=await call('/api/admin/user-library-v3/status');
+            if(before.writeEnabled!==false||before.enabled!==true||before.revisionMismatches!==0){
+              throw new Error('V3 preflight authority changed: '+JSON.stringify(before));
+            }
+            let offset=0,checked=0,mismatched=0;
+            for(let pageNo=0;pageNo<200;pageNo+=1){
+              const page=await call('/api/admin/user-library-v3/compare?offset='+offset+'&limit=20');
+              checked+=Number(page.checked||0);
+              mismatched+=Number(page.mismatched||0);
+              if(page.complete===true) break;
+              if(Number(page.nextOffset||0)<=offset) throw new Error('V3 preflight compare cursor stalled');
+              offset=Number(page.nextOffset);
+            }
+            const after=await call('/api/admin/user-library-v3/status');
+            const stable=before.legacyUsers===after.legacyUsers
+              &&before.v3AuthorityUsers===after.v3AuthorityUsers
+              &&after.revisionMismatches===0
+              &&after.writeEnabled===false
+              &&after.enabled===true;
+            if(stable&&mismatched===0&&checked===Number(after.legacyUsers||0)){
+              passes.push({checked,legacyUsers:Number(after.legacyUsers||0),v3AuthorityUsers:Number(after.v3AuthorityUsers||0)});
+            }
+            if(passes.length<2) await new Promise(resolve=>setTimeout(resolve,750));
+          }
+          if(passes.length<2) throw new Error('D3c4b preflight could not obtain two stable zero-mismatch passes');
+          report.ok=true;
+          report.alreadyActive=false;
+          report.stableParityPasses=passes.length;
+          report.legacyUsers=passes.at(-1)?.legacyUsers||0;
+          report.v3AuthorityUsers=passes.at(-1)?.v3AuthorityUsers||0;
+          report.completedAt=new Date().toISOString();
+          save();
+          console.log('USER_LIBRARY_V3_WRITE_PREFLIGHT '+JSON.stringify(report));
+          NODE
+
+      - name: Preserve user library V3 write preflight report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: user-library-v3-write-preflight-${{ github.run_id }}
+          path: /tmp/user-library-v3-write-preflight.json
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Generate frontend deployment configuration
         working-directory: cloudflare/worker
         shell: bash
@@ -281,7 +368,9 @@ jobs:
           USER_LIBRARY_ROW_READ_ENABLED = "1"
           USER_LIBRARY_V3_SHADOW_ENABLED = "1"
           USER_LIBRARY_V3_READ_ENABLED = "1"
-          USER_LIBRARY_V3_WRITE_ENABLED = "0"
+          USER_LIBRARY_V3_WRITE_ENABLED = "1"
+          USER_LIBRARY_V3_WRITE_CANARY_ONLY = "1"
+          USER_LIBRARY_V3_WRITE_CANARY_USER_ID = "arch-v3-canary-$GITHUB_RUN_ID"
           SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED = "1"
           SITE_ANALYTICS_MATERIALIZED_READ_ENABLED = "1"
           LITERATURE_CATALOG_INDEX_SHADOW_ENABLED = "1"
@@ -862,6 +951,347 @@ jobs:
           path: /tmp/user-library-v3-shadow-report.json
           if-no-files-found: error
           retention-days: 7
+
+      - name: Verify V3 write activation with isolated account
+        id: user_library_v3_write_canary
+        if: steps.user_library_v3_shadow.outcome == 'success'
+        continue-on-error: true
+        working-directory: cloudflare/worker
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+        run: |
+          set -euo pipefail
+          REPORT=/tmp/user-library-v3-write-canary.json
+          USER_ID="arch-v3-canary-${GITHUB_RUN_ID}"
+          TOKEN="$(node -e "process.stdout.write(require('crypto').randomBytes(32).toString('base64url'))")"
+          echo "::add-mask::$TOKEN"
+          TOKEN_HASH="$(TOKEN="$TOKEN" node -e "process.stdout.write(require('crypto').createHash('sha256').update(process.env.TOKEN).digest('hex'))")"
+          NOW="$(node -e "process.stdout.write(String(Date.now()))")"
+          EXPIRES="$((NOW + 3600000))"
+          printf '%s' "$USER_ID" >/tmp/user-library-v3-canary-user
+          printf '%s' "$TOKEN" >/tmp/user-library-v3-canary-token
+          node - <<'NODE'
+          const fs=require('fs');
+          fs.writeFileSync('/tmp/user-library-v3-write-canary.json',JSON.stringify({
+            schemaVersion:1,phase:'D3c4b-user-library-v3-write-canary',
+            ok:false,rolledBack:false,cleanedUp:false,startedAt:new Date().toISOString(),
+          },null,2)+'\n');
+          NODE
+
+          npx wrangler d1 execute "$D1_NAME" --remote --command "DELETE FROM users WHERE id='$USER_ID'; INSERT INTO users(id,display_name,created_at,updated_at) VALUES('$USER_ID','Architecture V3 Canary',$NOW,$NOW); INSERT INTO user_sessions(token_hash,user_id,created_at,expires_at) VALUES('$TOKEN_HASH','$USER_ID',$NOW,$EXPIRES);" >/tmp/user-library-v3-canary-create.txt
+
+          CANARY_TOKEN="$TOKEN" CANARY_USER_ID="$USER_ID" node - <<'NODE'
+          import fs from 'node:fs';
+          const base=String(process.env.WORKER_URL||'').replace(/\/$/,'');
+          const token=process.env.CANARY_TOKEN||'';
+          const userId=process.env.CANARY_USER_ID||'';
+          const reportPath='/tmp/user-library-v3-write-canary.json';
+          const report=JSON.parse(fs.readFileSync(reportPath,'utf8'));
+          const globalState=hideRead=>({
+            statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},
+            followedSearches:[],searchHistory:[],hideRead,
+          });
+          async function post(mode,extra={},expected=200){
+            const response=await fetch(base+'/api/user-ui/reader-counts',{
+              method:'POST',
+              headers:{'content-type':'application/json','cache-control':'no-cache'},
+              body:JSON.stringify({mode,sessionToken:token,...extra}),
+              signal:AbortSignal.timeout(30000),
+            });
+            const text=await response.text();
+            let body={};try{body=text?JSON.parse(text):{};}catch{}
+            if(response.status!==expected){
+              throw new Error(mode+' expected '+expected+' got '+response.status+': '+text.slice(0,900));
+            }
+            return body;
+          }
+          const paperA={
+            favorite:true,collections:[],note:'A1',quickTerms:[],tags:[],updatedAt:100,
+          };
+          const paperB={
+            favorite:true,collections:[],note:'B1',quickTerms:[],tags:[],updatedAt:100,
+          };
+          const metaA={id:'10.9999/canary-a',doi:'10.9999/canary-a',title:'Canary A',journal:'JACS'};
+          const metaB={id:'10.9999/canary-b',doi:'10.9999/canary-b',title:'Canary B',journal:'Angew'};
+
+          const empty=await post('account-v3-head');
+          if(empty.account?.userId!==userId||empty.account?.revision!==0
+            ||empty.account?.writeEnabled!==true||empty.account?.writeAuthority!=='legacy'){
+            throw new Error('unexpected empty canary head: '+JSON.stringify(empty));
+          }
+
+          const first=await post('account-v3-mutate',{
+            expectedRevision:0,
+            globalState:globalState(false),
+            operations:[
+              {paperKey:'10.9999/canary-a',paperState:paperA,metadata:metaA},
+              {paperKey:'10.9999/canary-b',paperState:paperB,metadata:metaB},
+            ],
+          });
+          if(first.account?.revision!==1||first.account?.writeAuthority!=='v3'
+            ||first.account?.paperCount!==2||first.account?.metadataCount!==2){
+            throw new Error('first V3 mutation invalid: '+JSON.stringify(first));
+          }
+
+          const head1=await post('account-v3-head');
+          if(head1.account?.revision!==1||head1.account?.writeAuthority!=='v3'
+            ||head1.account?.writeEnabled!==true||head1.account?.paperCount!==2){
+            throw new Error('V3 head after first mutation invalid: '+JSON.stringify(head1));
+          }
+
+          const page1=await post('account-v3-page',{limit:10,afterKey:''});
+          const pageKeys=(page1.account?.rows||[]).map(row=>row.paperKey).sort();
+          if(page1.account?.readPath!=='v3-page'||page1.account?.count!==2
+            ||JSON.stringify(pageKeys)!==JSON.stringify(['10.9999/canary-a','10.9999/canary-b'])){
+            throw new Error('V3 page invalid: '+JSON.stringify(page1));
+          }
+
+          const delta0=await post('account-v3-delta',{sinceRevision:0,limit:10});
+          const delta0Keys=(delta0.account?.changes||[]).map(row=>[row.paperKey,row.op]).sort();
+          if(delta0.account?.targetRevision!==1||delta0.account?.resetRequired!==false
+            ||JSON.stringify(delta0Keys)!==JSON.stringify([
+              ['10.9999/canary-a','upsert'],['10.9999/canary-b','upsert'],
+            ])){
+            throw new Error('initial V3 delta invalid: '+JSON.stringify(delta0));
+          }
+
+          const compat1=await post('account-pull');
+          if(compat1.account?.readPath!=='rows-v3-compat'||compat1.account?.writeAuthority!=='v3'
+            ||compat1.account?.state?.papers?.['10.9999/canary-a']?.note!=='A1'
+            ||compat1.account?.state?.papers?.['10.9999/canary-b']?.note!=='B1'){
+            throw new Error('D3b compatibility read invalid: '+JSON.stringify(compat1));
+          }
+
+          const oldSave=await post('account-save',{revision:1,state:compat1.account.state},409);
+          if(oldSave.error!=='user_library_client_upgrade_required'||oldSave.writeAuthority!=='v3'){
+            throw new Error('legacy save was not rejected after V3 authority: '+JSON.stringify(oldSave));
+          }
+
+          const conflict=await post('account-v3-mutate',{
+            expectedRevision:0,
+            operations:[{paperKey:'10.9999/canary-a',paperState:paperA,metadata:metaA}],
+          },409);
+          if(conflict.error!=='user_library_v3_revision_conflict'||conflict.currentRevision!==1){
+            throw new Error('V3 revision conflict invalid: '+JSON.stringify(conflict));
+          }
+
+          const second=await post('account-v3-mutate',{
+            expectedRevision:1,
+            globalState:globalState(true),
+            operations:[
+              {
+                paperKey:'10.9999/canary-a',
+                paperState:{...paperA,note:'A2',updatedAt:200},
+                metadata:metaA,
+              },
+              {paperKey:'10.9999/canary-b',delete:true},
+            ],
+          });
+          if(second.account?.revision!==2||second.account?.paperCount!==1||second.account?.metadataCount!==1){
+            throw new Error('second V3 mutation invalid: '+JSON.stringify(second));
+          }
+
+          const delta1=await post('account-v3-delta',{sinceRevision:1,limit:10});
+          const delta1Keys=(delta1.account?.changes||[]).map(row=>[row.paperKey,row.op]).sort();
+          if(delta1.account?.targetRevision!==2
+            ||delta1.account?.globalState?.hideRead!==true
+            ||JSON.stringify(delta1Keys)!==JSON.stringify([
+              ['10.9999/canary-a','upsert'],['10.9999/canary-b','delete'],
+            ])){
+            throw new Error('second V3 delta invalid: '+JSON.stringify(delta1));
+          }
+
+          const compat2=await post('account-pull');
+          if(compat2.account?.revision!==2||compat2.account?.state?.hideRead!==true
+            ||compat2.account?.state?.papers?.['10.9999/canary-a']?.note!=='A2'
+            ||compat2.account?.state?.papers?.['10.9999/canary-b']!==undefined){
+            throw new Error('compatibility read after delete invalid: '+JSON.stringify(compat2));
+          }
+
+          Object.assign(report,{
+            ok:true,userId,revision:2,
+            v3Read:true,delta:true,compatibilityRead:true,conflictFence:true,
+            legacySaveRejected:true,completedAt:new Date().toISOString(),
+          });
+          fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
+          console.log('USER_LIBRARY_V3_WRITE_CANARY_HTTP '+JSON.stringify(report));
+          NODE
+
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT (SELECT COUNT(*) FROM user_library_state WHERE user_id='$USER_ID') AS legacy_docs, (SELECT COUNT(*) FROM user_library_v3_authority WHERE user_id='$USER_ID' AND authority='v3') AS authority_rows, (SELECT COUNT(*) FROM user_library_v3_head WHERE user_id='$USER_ID') AS v3_heads, (SELECT COUNT(*) FROM user_library_head WHERE user_id='$USER_ID') AS compat_heads, (SELECT COUNT(*) FROM user_paper_state WHERE user_id='$USER_ID') AS compat_rows;" --json >/tmp/user-library-v3-canary-db.json
+
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const unpack=file=>{
+            const data=JSON.parse(fs.readFileSync(file,'utf8'));
+            return Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
+          };
+          const row=unpack('/tmp/user-library-v3-canary-db.json')[0]||{};
+          if(Number(row.legacy_docs||0)!==0||Number(row.authority_rows||0)!==1
+            ||Number(row.v3_heads||0)!==1||Number(row.compat_heads||0)!==1
+            ||Number(row.compat_rows||0)!==1){
+            throw new Error('V3 canary database invariants failed: '+JSON.stringify(row));
+          }
+          const path='/tmp/user-library-v3-write-canary.json';
+          const report=JSON.parse(fs.readFileSync(path,'utf8'));
+          report.databaseVerified=true;
+          report.monolithicDocumentRemoved=true;
+          fs.writeFileSync(path,JSON.stringify(report,null,2)+'\n');
+          console.log('USER_LIBRARY_V3_WRITE_CANARY_DB '+JSON.stringify(row));
+          NODE
+
+      - name: Promote V3 write activation to all users
+        id: user_library_v3_write_promote
+        if: steps.user_library_v3_shadow.outcome == 'success' && steps.user_library_v3_write_canary.outcome == 'success'
+        continue-on-error: true
+        working-directory: cloudflare/worker
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+        run: |
+          set -euo pipefail
+          sed -i 's/USER_LIBRARY_V3_WRITE_CANARY_ONLY = "1"/USER_LIBRARY_V3_WRITE_CANARY_ONLY = "0"/' wrangler.frontend.toml
+          grep -F 'USER_LIBRARY_V3_WRITE_ENABLED = "1"' wrangler.frontend.toml
+          grep -F 'USER_LIBRARY_V3_WRITE_CANARY_ONLY = "0"' wrangler.frontend.toml
+          npx wrangler deploy --config wrangler.frontend.toml
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const base=String(process.env.WORKER_URL||'').replace(/\/$/,'');
+          let last=null;
+          for(let attempt=1;attempt<=10;attempt+=1){
+            const response=await fetch(base+'/api/_healthcheck?v3-write-promote='+Date.now(),{
+              headers:{'cache-control':'no-cache',pragma:'no-cache'},
+              signal:AbortSignal.timeout(30000),
+            });
+            const body=await response.json().catch(()=>({}));
+            last={status:response.status,body};
+            if(response.ok
+              &&body?.userLibraryV3ReadEnabled===true
+              &&body?.userLibraryV3WriteConfigured===true
+              &&body?.userLibraryV3WriteCanaryOnly===false
+              &&body?.userLibraryV3WriteEnabled===true
+              &&body?.userLibraryV3ShadowEnabled===false) break;
+            await new Promise(resolve=>setTimeout(resolve,1500));
+          }
+          if(last?.body?.userLibraryV3ReadEnabled!==true
+            ||last?.body?.userLibraryV3WriteConfigured!==true
+            ||last?.body?.userLibraryV3WriteCanaryOnly!==false
+            ||last?.body?.userLibraryV3WriteEnabled!==true
+            ||last?.body?.userLibraryV3ShadowEnabled!==false){
+            throw new Error('V3 public write promotion verification failed: '+JSON.stringify(last));
+          }
+          const path='/tmp/user-library-v3-write-canary.json';
+          let report={};try{report=JSON.parse(fs.readFileSync(path,'utf8'));}catch{}
+          report.publicActivationPromoted=true;
+          report.publicActivationVerifiedAt=new Date().toISOString();
+          fs.writeFileSync(path,JSON.stringify(report,null,2)+'\n');
+          console.log('USER_LIBRARY_V3_WRITE_PROMOTED '+JSON.stringify({ok:true}));
+          NODE
+
+      - name: Roll back V3 write activation on authority/canary failure
+        if: steps.user_library_v3_shadow.outcome == 'failure' || steps.user_library_v3_write_canary.outcome == 'failure' || steps.user_library_v3_write_promote.outcome == 'failure'
+        working-directory: cloudflare/worker
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+        run: |
+          set -euo pipefail
+          sed -i 's/USER_LIBRARY_V3_WRITE_ENABLED = "1"/USER_LIBRARY_V3_WRITE_ENABLED = "0"/' wrangler.frontend.toml
+          sed -i 's/USER_LIBRARY_V3_WRITE_CANARY_ONLY = "[01]"/USER_LIBRARY_V3_WRITE_CANARY_ONLY = "0"/' wrangler.frontend.toml
+          grep -F 'USER_LIBRARY_V3_WRITE_ENABLED = "0"' wrangler.frontend.toml
+          grep -F 'USER_LIBRARY_V3_WRITE_CANARY_ONLY = "0"' wrangler.frontend.toml
+          npx wrangler deploy --config wrangler.frontend.toml
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const base=String(process.env.WORKER_URL||'').replace(/\/$/,'');
+          let last=null;
+          for(let attempt=1;attempt<=10;attempt+=1){
+            const response=await fetch(base+'/api/_healthcheck?v3-write-rollback='+Date.now(),{
+              headers:{'cache-control':'no-cache',pragma:'no-cache'},
+              signal:AbortSignal.timeout(30000),
+            });
+            const body=await response.json().catch(()=>({}));
+            last={status:response.status,body};
+            if(response.ok&&body?.userLibraryV3ReadEnabled===true
+              &&body?.userLibraryV3WriteConfigured===false
+              &&body?.userLibraryV3WriteCanaryOnly===false
+              &&body?.userLibraryV3WriteEnabled===false
+              &&body?.userLibraryV3ShadowEnabled===true) break;
+            await new Promise(resolve=>setTimeout(resolve,1500));
+          }
+          if(last?.body?.userLibraryV3WriteConfigured!==false
+            ||last?.body?.userLibraryV3WriteCanaryOnly!==false
+            ||last?.body?.userLibraryV3WriteEnabled!==false
+            ||last?.body?.userLibraryV3ReadEnabled!==true
+            ||last?.body?.userLibraryV3ShadowEnabled!==true){
+            throw new Error('V3 write rollback verification failed: '+JSON.stringify(last));
+          }
+          const path='/tmp/user-library-v3-write-canary.json';
+          let report={};try{report=JSON.parse(fs.readFileSync(path,'utf8'));}catch{}
+          report.rolledBack=true;
+          report.rollbackVerifiedAt=new Date().toISOString();
+          fs.writeFileSync(path,JSON.stringify(report,null,2)+'\n');
+          console.log('USER_LIBRARY_V3_WRITE_ROLLBACK '+JSON.stringify({ok:true}));
+          NODE
+
+      - name: Clean up isolated V3 write canary account
+        if: always()
+        working-directory: cloudflare/worker
+        run: |
+          set -euo pipefail
+          if [ -f /tmp/user-library-v3-canary-user ]; then
+            USER_ID="$(cat /tmp/user-library-v3-canary-user)"
+            npx wrangler d1 execute "$D1_NAME" --remote --command "DELETE FROM users WHERE id='$USER_ID';" >/tmp/user-library-v3-canary-cleanup.txt
+            npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT (SELECT COUNT(*) FROM users WHERE id='$USER_ID') AS users, (SELECT COUNT(*) FROM user_sessions WHERE user_id='$USER_ID') AS sessions, (SELECT COUNT(*) FROM user_library_v3_authority WHERE user_id='$USER_ID') AS authority_rows, (SELECT COUNT(*) FROM user_library_v3_head WHERE user_id='$USER_ID') AS v3_heads, (SELECT COUNT(*) FROM user_library_head WHERE user_id='$USER_ID') AS compat_heads;" --json >/tmp/user-library-v3-canary-cleanup-check.json
+            node - <<'NODE'
+            import fs from 'node:fs';
+            const data=JSON.parse(fs.readFileSync('/tmp/user-library-v3-canary-cleanup-check.json','utf8'));
+            const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
+            const row=rows[0]||{};
+            if(['users','sessions','authority_rows','v3_heads','compat_heads'].some(key=>Number(row[key]||0)!==0)){
+              throw new Error('V3 canary cleanup incomplete: '+JSON.stringify(row));
+            }
+            const path='/tmp/user-library-v3-write-canary.json';
+            let report={};try{report=JSON.parse(fs.readFileSync(path,'utf8'));}catch{}
+            report.cleanedUp=true;
+            report.cleanupVerifiedAt=new Date().toISOString();
+            fs.writeFileSync(path,JSON.stringify(report,null,2)+'\n');
+            NODE
+          fi
+          rm -f /tmp/user-library-v3-canary-token
+
+      - name: Remove stale monolithic rows for V3-authoritative accounts
+        if: always()
+        working-directory: cloudflare/worker
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$D1_NAME" --remote --command "DELETE FROM user_library_state WHERE user_id IN (SELECT user_id FROM user_library_v3_authority WHERE authority='v3');" >/tmp/user-library-v3-authority-legacy-cleanup.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT COUNT(*) AS stale_legacy_documents FROM user_library_state legacy INNER JOIN user_library_v3_authority authority ON authority.user_id=legacy.user_id WHERE authority.authority='v3';" --json >/tmp/user-library-v3-authority-legacy-cleanup-check.json
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const data=JSON.parse(fs.readFileSync('/tmp/user-library-v3-authority-legacy-cleanup-check.json','utf8'));
+          const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
+          const count=Number(rows[0]?.stale_legacy_documents||0);
+          if(count!==0) throw new Error('stale V3-authority legacy documents remain: '+count);
+          const path='/tmp/user-library-v3-write-canary.json';
+          let report={};try{report=JSON.parse(fs.readFileSync(path,'utf8'));}catch{}
+          report.staleLegacyDocuments=0;
+          report.authorityLegacyCleanupVerifiedAt=new Date().toISOString();
+          fs.writeFileSync(path,JSON.stringify(report,null,2)+'\n');
+          console.log('USER_LIBRARY_V3_AUTHORITY_LEGACY_CLEANUP '+JSON.stringify({staleLegacyDocuments:count}));
+          NODE
+
+      - name: Preserve V3 write activation canary report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: user-library-v3-write-canary-${{ github.run_id }}
+          path: /tmp/user-library-v3-write-canary.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Fail deployment after safe V3 write rollback
+        if: always() && (steps.user_library_v3_shadow.outcome == 'failure' || steps.user_library_v3_write_canary.outcome == 'failure' || steps.user_library_v3_write_promote.outcome == 'failure')
+        run: |
+          echo "V3 user-library write activation failed; production was rolled back to WRITE_ENABLED=0." >&2
+          exit 1
 
       - name: Advance and reconcile Evidence Index shadow
         id: evidence_index_shadow
@@ -1481,9 +1911,11 @@ jobs:
                 body?.scheduledHandoffIndexReadEnabled === true &&
                 body?.userLibraryRowShadowEnabled === true &&
                 body?.userLibraryRowReadEnabled === true &&
-                body?.userLibraryV3ShadowEnabled === true &&
+                body?.userLibraryV3ShadowEnabled === false &&
                 body?.userLibraryV3ReadEnabled === true &&
-                body?.userLibraryV3WriteEnabled === false &&
+                body?.userLibraryV3WriteConfigured === true &&
+                body?.userLibraryV3WriteCanaryOnly === false &&
+                body?.userLibraryV3WriteEnabled === true &&
                 body?.siteAnalyticsMaterializedShadowEnabled === true &&
                 body?.siteAnalyticsMaterializedReadEnabled === true &&
                 body?.literatureCatalogIndexShadowEnabled === true &&
@@ -1498,6 +1930,8 @@ jobs:
                 userLibraryRowReadEnabled: body.userLibraryRowReadEnabled,
                 userLibraryV3ShadowEnabled: body.userLibraryV3ShadowEnabled,
                 userLibraryV3ReadEnabled: body.userLibraryV3ReadEnabled,
+                userLibraryV3WriteConfigured: body.userLibraryV3WriteConfigured,
+                userLibraryV3WriteCanaryOnly: body.userLibraryV3WriteCanaryOnly,
                 userLibraryV3WriteEnabled: body.userLibraryV3WriteEnabled,
                 siteAnalyticsMaterializedShadowEnabled: body.siteAnalyticsMaterializedShadowEnabled,
                 siteAnalyticsMaterializedReadEnabled: body.siteAnalyticsMaterializedReadEnabled,
