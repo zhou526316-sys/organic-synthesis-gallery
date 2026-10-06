@@ -380,6 +380,64 @@ export async function backfillUserLibraryV3ShadowPage(env, limitValue = 20) {
   }};
 }
 
+export async function reconcileUserLibraryV3ShadowPage(env, limitValue = 20) {
+  if (!userLibraryV3ShadowEnabled(env)) {
+    return { status:409, body:{ error:'user_library_v3_shadow_disabled' } };
+  }
+  if (!env?.DB) return { status:503, body:{ error:'user_library_v3_shadow_db_missing' } };
+  const limit = Math.max(1,Math.min(MAX_BACKFILL_LIMIT,Number(limitValue || 20)));
+  const page = await env.DB.prepare(`
+    SELECT legacy.user_id,legacy.state_json,legacy.revision,legacy.updated_at
+    FROM user_library_state legacy
+    LEFT JOIN user_library_v3_shadow_sync sync ON sync.user_id=legacy.user_id
+    WHERE sync.user_id IS NULL
+       OR sync.source_revision<>legacy.revision
+       OR sync.source_updated_at<>legacy.updated_at
+    ORDER BY legacy.user_id ASC
+    LIMIT ?
+  `).bind(limit).all();
+  const rows = page?.results || [];
+  let synced=0,skippedStale=0,failed=0;
+  const reasons={};
+  for (const row of rows) {
+    const state=parseJson(row.state_json);
+    if(!plainObject(state)){
+      failed+=1;
+      reasons.invalid_legacy_state=Number(reasons.invalid_legacy_state||0)+1;
+      continue;
+    }
+    try{
+      const result=await shadowWriteUserLibraryV3FromState(
+        env,row.user_id,state,Number(row.revision||0),Number(row.updated_at||0),Date.now(),
+      );
+      if(result.sourceChanged||result.skippedStale) skippedStale+=1;
+      else if(result.written||result.unchanged) synced+=1;
+    }catch(error){
+      failed+=1;
+      const reason=safeText(error?.message||String(error),180)||'unknown_error';
+      reasons[reason]=Number(reasons[reason]||0)+1;
+    }
+  }
+  const remaining=await env.DB.prepare(`
+    SELECT COUNT(*) AS count
+    FROM user_library_state legacy
+    LEFT JOIN user_library_v3_shadow_sync sync ON sync.user_id=legacy.user_id
+    WHERE sync.user_id IS NULL
+       OR sync.source_revision<>legacy.revision
+       OR sync.source_updated_at<>legacy.updated_at
+  `).first();
+  return {status:200,body:{
+    ok:true,
+    checked:rows.length,
+    synced,
+    skippedStale,
+    failed,
+    reasons,
+    remaining:Number(remaining?.count||0),
+    complete:Number(remaining?.count||0)===0,
+  }};
+}
+
 async function compareOne(env, legacy) {
   const sync = await v3Sync(env, legacy.user_id);
   if (!sync) return { matched:false, reason:'missing_sync' };
