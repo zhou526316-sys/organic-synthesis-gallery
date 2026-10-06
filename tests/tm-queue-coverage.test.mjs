@@ -11,7 +11,7 @@ const inv=articles=>({media:{items:articles.map(a=>({doi:a.doi,tocStored:true,fi
 function h(q=queue([]),inventory=inv([]),opts={}){
  const store=new Map(),opened=[],calls=[],timers=new Map();let now=EPOCH+12*86400000,id=0;
  class D extends Date{constructor(...args){super(...(args.length?args:[now]))}static now(){return now}}
- const get=u=>{calls.push(u);if(u.includes('capture-capabilities'))return {captureVersion:'6.2.20',mediaControllerRevision:'2.2.40',mediaGeneration:EPOCH,evidenceSchemaVersion:'article-evidence-v2',mode:'verified-staging'};
+ const get=u=>{calls.push(u);if(u.includes('capture-capabilities'))return {captureVersion:'6.2.20',mediaControllerRevision:'2.2.41',mediaGeneration:EPOCH,evidenceSchemaVersion:'article-evidence-v2',mode:'verified-staging'};
   if(u.includes('toc-demand'))return q;if(u.includes('local-capture-index'))return inventory.tocs;if(u.includes('/staged?'))return inventory.figures;throw Error('unexpected get '+u)};
  const ctx=vm.createContext({console,Date:D,URL,Map,Set,document:{},crypto:{randomUUID},location:{hostname:'gallery.gczhouwld.com',pathname:'/',href:'https://gallery.gczhouwld.com/',hash:''},window:{open(){},close(){},alert(){},prompt(){return null}},
  GM_getValue:(k,d)=>store.has(k)?structuredClone(store.get(k)):d,GM_setValue:(k,v)=>store.set(k,structuredClone(v)),GM_deleteValue:k=>store.delete(k),GM_listValues:()=>[...store.keys()],GM_registerMenuCommand(){},
