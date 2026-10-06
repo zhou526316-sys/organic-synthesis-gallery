@@ -41,13 +41,25 @@ function fixture({ corruptRelease = false, active = true, badMembership = false,
   const hotFallbackText = stable(hotFallbackBody)+'\n';
   const hotFallbackRef = ref(`hot-fallback.${sha256(hotFallbackText)}.json`, hotFallbackText);
   generated[hotFallbackRef.path] = hotFallbackText;
+  const hotRows = bundle.records.filter(row => bundle.partitions.hot.includes(row.doi));
+  const hotHeadBody = {
+    schema:'gallery-hot-head-v1', catalogId:bundle.catalog.recordSetHash, doiSetHash:bundle.catalog.doiSetHash,
+    publicationSlot, sourceCommit, generatedAsOfDate:'2026-10-04', scope:'hot-plus-future-candidates',
+    pageSize:24, candidateCount:hotRows.length,
+    dateBuckets:[{ firstOnlineDate:'2026-10-03', datePrecision:'day', count:hotRows.length }],
+    count:hotRows.length, records:hotRows,
+  };
+  const hotHeadText = stable(hotHeadBody)+'\n';
+  const hotHeadRef = ref(`hot-head.${sha256(hotHeadText)}.json`, hotHeadText);
+  generated[hotHeadRef.path] = hotHeadText;
   const objects = Object.entries(generated).map(([path,text]) => ref(path,text)).sort((a,b)=>a.path.localeCompare(b.path));
   const release = {
     schema:'gallery-architecture-public-v1', productionActivation:false, frontendReadActivation:active,
     publicationSlot, sourceCommit, markerBlobSha:'c'.repeat(40), datasetSha256,
     asOfDate:'2026-10-04', recordCount:bundle.records.length, catalogId:bundle.catalog.recordSetHash,
     doiSetHash:bundle.catalog.doiSetHash, catalogCurrent:currentRef, membership:membershipRef,
-    hotFallback:hotFallbackRef, titlePresentation:ref('title.fixture.json', stable({schema:'x'})+'\n'), objects,
+    hotFallback:hotFallbackRef, hotHead:hotHeadRef, hotHeadInline:hotHeadBody,
+    titlePresentation:ref('title.fixture.json', stable({schema:'x'})+'\n'), objects,
   };
   const releaseText = stable(release)+'\n';
   const architectureObjects = Object.fromEntries(objects.map(row=>['architecture-v1/'+row.path,row.sha256]));
@@ -124,6 +136,20 @@ test('frontend reader requires explicit frontend-only activation', async () => {
   );
 });
 
+
+test('bounded Hot head uses the release-inline payload without a second object request', async () => {
+  const source = fixture();
+  const requests = [];
+  const fetcher = async url => {
+    requests.push(new URL(url).pathname);
+    return source.fetcher(url);
+  };
+  const fallback = await loadPublishedHotFallback('https://example.invalid/', { fetcher, headOnly:true });
+  assert.equal(fallback.headOnly, true);
+  assert.deepEqual(fallback.papers.map(row => row.doi), ['10.1234/hot']);
+  assert.equal(requests.some(path => /\/architecture-v1\/hot-head\./.test(path)), false);
+  assert.deepEqual(requests.slice(0,2).sort(), ['/architecture-v1/release.json','/release-delivery.json'].sort());
+});
 
 test('bounded Hot fallback survives an all-time membership validation failure without loading Archive', async () => {
   const source = fixture({ badMembership:true });

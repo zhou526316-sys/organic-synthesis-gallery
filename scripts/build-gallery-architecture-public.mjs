@@ -219,6 +219,7 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
     titlePresentation: presentationRef,
     hotFallback: hotFallbackRef,
     hotHead: hotHeadRef,
+    hotHeadInline: hotHeadBody,
     objects,
   };
   const releaseText = stable(release) + '\n';
@@ -244,6 +245,8 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   assert(releaseRoundtrip.acquisitionBasis.sha256 === acquisitionRef.sha256, 'acquisition_release_mismatch');
   assert(releaseRoundtrip.hotFallback.sha256 === hotFallbackRef.sha256, 'hot_fallback_release_mismatch');
   assert(releaseRoundtrip.hotHead.sha256 === hotHeadRef.sha256, 'hot_head_release_mismatch');
+  assert(stable(releaseRoundtrip.hotHeadInline) === stable(hotHeadBody), 'hot_head_inline_release_mismatch');
+  assert(sha256(stable(releaseRoundtrip.hotHeadInline) + '\n') === hotHeadRef.sha256, 'hot_head_inline_hash_mismatch');
 
   await rm(output, { recursive:true, force:true });
   await mkdir(path.dirname(output), { recursive:true });

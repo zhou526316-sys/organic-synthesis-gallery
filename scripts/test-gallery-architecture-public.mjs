@@ -44,6 +44,8 @@ test('public architecture publishes a bounded hash-bound Hot head object', () =>
   const builder = readFileSync('scripts/build-gallery-architecture-public.mjs','utf8');
   assert.ok(builder.includes("schema: 'gallery-hot-head-v1'"));
   assert.ok(builder.includes('hotHead: hotHeadRef'));
+  assert.ok(builder.includes('hotHeadInline: hotHeadBody'));
+  assert.ok(builder.includes('hot_head_inline_hash_mismatch'));
   assert.ok(builder.includes('RESULT_WINDOW_SIZE'));
   assert.ok(builder.includes('hot_head_over_budget'));
   const delivery = readFileSync('scripts/pages-release-delivery.mjs','utf8');

@@ -15,6 +15,11 @@ async function digest(bytes) {
   const hash = await globalThis.crypto.subtle.digest('SHA-256', bytes);
   return [...new Uint8Array(hash)].map(v => v.toString(16).padStart(2, '0')).join('');
 }
+function stableJson(value) {
+  if (value === null || typeof value !== 'object') return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(stableJson).join(',')}]`;
+  return `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${stableJson(value[key])}`).join(',')}}`;
+}
 function sameSet(a, b) {
   return a.length === b.length && new Set(a).size === a.length && new Set(b).size === b.length
     && a.every(value => b.includes(value));
@@ -101,14 +106,24 @@ export async function loadPublishedHotFallback(
     && release.objects.some(ref => ref?.path === selectedPath && ref?.sha256 === selectedRef.sha256),
     usingHead ? 'architecture_hot_head_not_in_release' : 'architecture_hot_fallback_not_in_release');
 
-  const selectedRead = await fetchBytes(new URL(selectedPath, architectureBase), {
-    cache:'default',
-    maxBytes:Math.min(usingHead ? 512 * 1024 : 4 * 1024 * 1024, selectedRef.bytes),
-    label:refLabel,
-  });
-  assert(selectedRead.bytes.byteLength === selectedRef.bytes && await digest(selectedRead.bytes) === selectedRef.sha256,
-    usingHead ? 'architecture_hot_head_hash_mismatch' : 'architecture_hot_fallback_hash_mismatch');
-  const payload = parseJson(selectedRead.bytes, refLabel);
+  let payload;
+  if (usingHead && release.hotHeadInline) {
+    const inlineBytes = new TextEncoder().encode(stableJson(release.hotHeadInline) + '\n');
+    assert(inlineBytes.byteLength === selectedRef.bytes,
+      'architecture_hot_head_inline_size_mismatch');
+    assert(await digest(inlineBytes) === selectedRef.sha256,
+      'architecture_hot_head_inline_hash_mismatch');
+    payload = release.hotHeadInline;
+  } else {
+    const selectedRead = await fetchBytes(new URL(selectedPath, architectureBase), {
+      cache:'default',
+      maxBytes:Math.min(usingHead ? 512 * 1024 : 4 * 1024 * 1024, selectedRef.bytes),
+      label:refLabel,
+    });
+    assert(selectedRead.bytes.byteLength === selectedRef.bytes && await digest(selectedRead.bytes) === selectedRef.sha256,
+      usingHead ? 'architecture_hot_head_hash_mismatch' : 'architecture_hot_fallback_hash_mismatch');
+    payload = parseJson(selectedRead.bytes, refLabel);
+  }
 
   let pageSize = null;
   let totalCount = 0;
