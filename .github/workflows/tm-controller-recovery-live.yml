@@ -51,7 +51,7 @@ jobs:
             if(attempt<2)await sleep(15000);
           }
           const caps=report.probes.find(v=>v.key==='capabilities');
-          report.passed=report.deployments.length===2&&report.deployments.every(v=>v.conclusion==='success')&&report.probes.slice(0,2).every(v=>v.status===200&&v.matchesTested&&v.marker&&v.panelMarker&&v.version==='2.2.52')&&caps?.status===200&&caps.data.captureVersion==='6.2.20'&&caps.data.mediaControllerRevision==='2.2.41'&&caps.data.mediaGeneration===1790082000000;
+          report.passed=report.deployments.length===2&&report.deployments.every(v=>v.conclusion==='success')&&report.probes.slice(0,2).every(v=>v.status===200&&v.matchesTested&&v.marker&&v.panelMarker&&v.version==='2.2.53')&&caps?.status===200&&caps.data.captureVersion==='6.2.20'&&caps.data.mediaControllerRevision==='2.2.41'&&caps.data.mediaGeneration===1790082000000;
           report.verifiedAt=new Date().toISOString();
           console.log('IMMEDIATE_RESTART_LIVE',JSON.stringify(report));
           await writeFile(process.env.RUNNER_TEMP+'/immediate-restart-live.json',JSON.stringify(report,null,2));
