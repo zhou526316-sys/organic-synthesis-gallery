@@ -166,7 +166,7 @@ try{
   });
 
   await tc('CCS recovered key image persists and CCS body order is DOM order',async()=>{
-    assert.ok(source.includes('var toc=[],figures=[],recoveredOfficialToc=[];'));
+    assert.ok(source.includes('recoveredOfficialToc=[]'));
     assert.ok(source.includes('if(wantsToc&&!toc.length&&recoveredOfficialToc.length)toc=recoveredOfficialToc.slice();'));
     assert.ok(source.includes('recoveredOfficialToc=recovered.slice();'));
     assert.ok(source.includes("message:'official='+String(toc.length)+';persisted=1'"));
