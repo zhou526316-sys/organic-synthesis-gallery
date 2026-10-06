@@ -282,7 +282,10 @@ jobs:
           const status=await call('/api/admin/user-library-v3/status');
           if(status.readEnabled!==true) throw new Error('V3 bounded read is not active: '+JSON.stringify(status));
 
-          if(status.writeConfigured===true && status.writeCanaryOnly===false && status.writeEnabled===true){
+          const statusWriteConfigured = status.writeConfigured === true
+            || (status.writeConfigured == null && status.writeEnabled === true);
+          const statusCanaryOnly = status.writeCanaryOnly === true;
+          if(statusWriteConfigured && !statusCanaryOnly && status.writeEnabled===true){
             report.ok=true;
             report.alreadyActive=true;
             report.legacyUsers=Number(status.legacyUsers||0);
@@ -294,7 +297,7 @@ jobs:
             process.exit(0);
           }
 
-          if(status.writeConfigured===true){
+          if(statusWriteConfigured){
             throw new Error('unexpected partial V3 write activation before preflight: '+JSON.stringify(status));
           }
           if(status.configured!==true||status.enabled!==true
@@ -305,7 +308,9 @@ jobs:
           const passes=[];
           for(let attempt=1;attempt<=6&&passes.length<2;attempt+=1){
             const before=await call('/api/admin/user-library-v3/status');
-            if(before.writeConfigured!==false||before.enabled!==true||before.revisionMismatches!==0){
+            const beforeWriteConfigured = before.writeConfigured === true
+              || (before.writeConfigured == null && before.writeEnabled === true);
+            if(beforeWriteConfigured||before.enabled!==true||before.revisionMismatches!==0){
               throw new Error('V3 preflight authority changed: '+JSON.stringify(before));
             }
             let offset=0,checked=0,mismatched=0;
@@ -321,7 +326,8 @@ jobs:
             const stable=before.legacyUsers===after.legacyUsers
               &&before.v3AuthorityUsers===after.v3AuthorityUsers
               &&after.revisionMismatches===0
-              &&after.writeConfigured===false
+              &&!(after.writeConfigured === true
+                || (after.writeConfigured == null && after.writeEnabled === true))
               &&after.enabled===true;
             if(stable&&mismatched===0&&checked===Number(after.legacyUsers||0)){
               passes.push({checked,legacyUsers:Number(after.legacyUsers||0),v3AuthorityUsers:Number(after.v3AuthorityUsers||0)});
