@@ -2,7 +2,10 @@ import { installGalleryPerformanceRuntime } from './performance-runtime';
 import { validChineseTitle } from '../shared/chinese-title-overrides.js';
 
 const ZH_CACHE_KEY = 'organic-gallery-zh-title-cache-v2';
-const restoreLegacyMediaListeners = installGalleryPerformanceRuntime();
+const cleanupGalleryPerformanceRuntime = installGalleryPerformanceRuntime();
+window.addEventListener('pagehide', event => {
+  if (!event.persisted) cleanupGalleryPerformanceRuntime();
+}, { once: true });
 
 async function preloadChineseTitleCache(): Promise<void> {
   try {
@@ -39,9 +42,7 @@ function firstContentReady(): Promise<void> {
 const firstContent = firstContentReady();
 const mainReady = import('./main');
 
-void mainReady.finally(() => {
-  restoreLegacyMediaListeners();
-}).then(async () => {
+void mainReady.then(async () => {
   await firstContent;
   // Everything below is useful after the first cards exist, but none of it
   // should compete with the architecture/Hot-head requests needed to paint them.
