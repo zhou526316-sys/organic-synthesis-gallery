@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.36
+// @version      6.2.37
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -50,12 +50,12 @@
   var IMMEDIATE_RESTART_REVISION = '20261001-immediate-restart-v3';
   var MISSING_CAPTURE_REVISION = '20261006-oct1-bundle-v7';
   var QUEUE_COVERAGE_REVISION = '20261006-queue-coverage-v9';
-  var PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11';
+  var PUBLISHER_MEDIA_REVISION = '20261006-rsc-preview-reject-v12';
   var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.36';
+  var INSTALL_REVISION = '6.2.37';
   var STALE_CONTROLLER_TAKEOVER_REVISION = '20261006-stale-controller-takeover-v1';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
@@ -1864,6 +1864,10 @@ function embeddedJobDois(value) {
       if(job.publisher==='rsc')context=rscBodyFigureContext(node,context);
       if (!context || context.official) return;
       visualUrls(node, context.block, baseUrl || location.href).forEach(function (url, rank) {
+        if(job.publisher==='rsc'&&rscPdfPreviewUrl(url)){
+          pushTrace(trace,{stage:'rsc_figure_candidate',event:'pdf_preview_rejected',status:'rejected',url:url,message:'page-preview asset cannot be a numbered body figure'});
+          return;
+        }
         var label=context.label||'';
         if(job.publisher==='ccs'){
           var assetLabel=ccsAssetFigureLabel(url);
@@ -2077,6 +2081,11 @@ function embeddedJobDois(value) {
     return row?'https://pubs.rsc.org/en/content/articlehtml/'+row.year+'/'+row.code+'/'+row.suffix:'';
   }
 
+  function rscPdfPreviewUrl(value) {
+    var raw=String(value||'').split('#',1)[0].split('?',1)[0].toLowerCase();
+    return /(?:^|\/)[^/]+\.pdf\.(?:gif|png|jpe?g|webp)$/.test(raw);
+  }
+
   function rscBodyFigureContext(node, original) {
     if(!node||!node.closest)return original;
     if(original&&(original.label||original.official))return original;
@@ -2103,7 +2112,7 @@ function embeddedJobDois(value) {
     ));}
     function add(node,score,source,text){
       articleFigureImageUrls(node,base).forEach(function(url,rank){
-        if(!url||seen.has(url)||reject(text,url)||!candidateBelongsToJob(url,job))return;
+        if(!url||rscPdfPreviewUrl(url)||seen.has(url)||reject(text,url)||!candidateBelongsToJob(url,job))return;
         seen.add(url);rows.push({url:url,kind:'official',assetType:'graphical_abstract',score:score-rank,
           text:String(text||'Graphical Abstract').slice(0,1000),source:source,element:node.tagName&&node.tagName.toLowerCase()==='img'?node:null});
       });
@@ -2283,7 +2292,13 @@ function embeddedJobDois(value) {
 
   function collectCandidates(job, trace, root, baseUrl, sourceName, quiet) {
     var scope = root || document, rows = [], seen = new Set();
-    function add(row) { if (!seen.has(row.url) && candidateBelongsToJob(row.url,job) && !reject(row.text,row.url)) { seen.add(row.url); rows.push(row); } }
+    function add(row) {
+      if (String(job && job.publisher || '') === 'rsc' && rscPdfPreviewUrl(row && row.url)) {
+        pushTrace(trace,{stage:'rsc_toc_candidate',event:'pdf_preview_rejected',status:'rejected',url:row&&row.url||'',message:'page-preview asset cannot be an official TOC'});
+        return;
+      }
+      if (!seen.has(row.url) && candidateBelongsToJob(row.url,job) && !reject(row.text,row.url)) { seen.add(row.url); rows.push(row); }
+    }
     scope.querySelectorAll('img,object[type^="image"]').forEach(function(node) {
       var context=visualScope(node);
       if (!context) return;
