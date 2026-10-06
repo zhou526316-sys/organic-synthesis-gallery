@@ -271,7 +271,8 @@ async function main() {
     site: SITE.origin,
     worker: WORKER.origin,
     startedAt: new Date().toISOString(),
-    readPathActive: false,
+    readConfigured: true,
+    readPathActive: null,
   };
   try {
     const deliveryRead = await fetchJson(new URL('release-delivery.json', SITE), { maxBytes: 4 * 1024 * 1024 });
@@ -360,8 +361,9 @@ async function main() {
     await writeFile(REPORT, jsonText(report));
 
     const statusBefore = await api('/api/admin/literature-catalog-index/status');
-    assert(statusBefore.body.enabled === true && statusBefore.body.readConfigured === false
-      && statusBefore.body.readPathActive === false, 'shadow_runtime_configuration_invalid');
+    const readyBefore = (statusBefore.body.generations || []).some(row => row?.ready === true);
+    assert(statusBefore.body.enabled === true && statusBefore.body.readConfigured === true
+      && statusBefore.body.readPathActive === readyBefore, 'shadow_runtime_configuration_invalid');
 
     const begin = await api('/api/admin/literature-catalog-index/begin', { method: 'POST', body: generation });
     let importedBatches = 0;
@@ -448,8 +450,8 @@ async function main() {
     const ready = (statusAfter.body.generations || []).find(row => row.catalogId === generation.catalogId);
     assert(ready?.ready === true && ready.recordCount === generation.recordCount
       && ready.importedRows === generation.recordCount, 'shadow_status_not_ready');
-    assert(statusAfter.body.readConfigured === false && statusAfter.body.readPathActive === false,
-      'shadow_read_path_accidentally_active');
+    assert(statusAfter.body.readConfigured === true && statusAfter.body.readPathActive === true,
+      'literature_read_canary_not_active_after_ready_generation');
 
     Object.assign(report, {
       ok: true,
@@ -469,7 +471,8 @@ async function main() {
       viewParity: { scenarios:viewParity.length,mismatched:0,views:viewParity },
       shortQueryCompatibility: true,
       readerSortCompatibility: true,
-      readPathActive: false,
+      readConfigured: true,
+      readPathActive: true,
     });
     await writeFile(REPORT, jsonText(report));
     console.log('LITERATURE_CATALOG_INDEX_SHADOW_READY ' + JSON.stringify(report));
