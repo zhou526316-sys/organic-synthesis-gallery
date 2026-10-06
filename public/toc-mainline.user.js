@@ -4306,12 +4306,16 @@ function embeddedJobDois(value) {
       var queueCheckedAt=Date.now();
       var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
       var media=productionMediaSnapshot(productionInventory);
-      var evidenceInventory=null;
+      var evidenceInventory=null,stageInventory=null;
       try { evidenceInventory=await getPrivateJson(EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),writeToken()); }
       catch(error){ try{console.warn('[OSG TOC] evidence inventory unavailable; evidence-only backlog paused',String(error&&error.message||error));}catch(_){} }
+      try {
+        var staged=await getJson(WORKER+'/api/article-figures/staged?inventory=1&ts='+Date.now());
+        if(staged&&staged.schemaVersion==='capture-inventory-v1'&&staged.complete===true&&Array.isArray(staged.items)&&staged.items.length===Number(staged.count))stageInventory=staged;
+      } catch(error){ try{console.warn('[OSG TOC] staged figure inventory unavailable; local checkpoints still reused',String(error&&error.message||error));}catch(_){} }
       var mediaJobs=pairedJobs(queue,media);
       var evidenceMissing=evidenceInventory?evidenceMissingDois(queue,evidenceInventory):new Set();
-      var pdfJobs=privatePdfBackfillJobs(queue);
+      var pdfJobs=privatePdfBackfillJobs(queue,mapCaptureRows(stageInventory),mapCaptureRows(productionInventory));
       var evidenceJobs=[]; // Text incompleteness is no longer an independent queue trigger.
       var generation=VERSION+':paired:'+String(queue.mediaGeneration);
       var evidenceGeneration=EVIDENCE_SCHEMA_VERSION+':'+CONTROLLER_REVISION+':'+String(queue.latestAddedDate||queue.generatedAt||'');
@@ -4906,14 +4910,19 @@ function embeddedJobDois(value) {
     return true;
   }
 
-  function privatePdfBackfillJobs(queue) {
+  function privatePdfBackfillJobs(queue,stageMap,productionMap) {
     if(!privatePdfLease())return [];
+    stageMap=stageMap||new Map();productionMap=productionMap||new Map();
     return (queue&&Array.isArray(queue.articles)?queue.articles:[]).filter(function(raw){return privatePdfQueueNeeded(raw,Date.now());}).map(function(raw){
-      var doi=normalizeDoi(raw&&raw.doi);
+      var doi=normalizeDoi(raw&&raw.doi),stage=stageMap.get(doi)||{},production=productionMap.get(doi)||{},figs={};
+      [stage.figures||{},production.capturedFigures||[]].forEach(function(group){
+        Object.keys(group).forEach(function(k){var f=group[k];if(validReceiptForDoi(f,doi))figs[f.label]=f;});
+      });
       var job=Object.assign({},raw,{doi:doi,publisher:publisherForDoi(doi),state:'private_pdf_gap',
         captureToc:false,captureFigures:false,captureEvidence:false,
         opportunisticFigures:recentFullCaptureEligible(raw),opportunisticEvidence:recentFullCaptureEligible(raw),
-        capturePrivatePdf:true,allowFigureOne:false});
+        capturePrivatePdf:true,allowFigureOne:false,capturedFigures:figs,
+        expectedFigureCount:Math.max(0,Number(stage.expectedFigureCount||0),Object.keys(figs).length)});
       job.mediaNeed=captureMediaNeed(job);
       return job;
     }).sort(compareMissingCaptureJobs);
