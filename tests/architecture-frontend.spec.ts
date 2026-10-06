@@ -260,6 +260,111 @@ test('active D1 catalog view keeps all-time search server-paged and avoids stati
   }
 });
 
+test('D1 metadata is discovery-only and card content comes from the verified static revision', async ({ page }) => {
+  const data = fixture();
+  const canonical = data.indexedItems.find(item => item.doi === data.archiveDoi);
+  if (!canonical) throw new Error('Archive indexed fixture missing');
+
+  await page.route('**/api/_healthcheck', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ok: true,
+        literatureCatalogIndexShadowEnabled: true,
+        literatureCatalogIndexReadEnabled: true,
+        literatureCatalogIndexReadPathConfigured: true,
+        literatureCatalogIndexReadPathActive: true,
+        literatureCatalogIndexDb: true,
+      }),
+    });
+  });
+  await page.route('**/api/literature/catalog-view', async route => {
+    const body = route.request().postDataJSON() as any;
+    expect(body.catalogId).toBe(data.catalogId);
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        version: 1,
+        schemaVersion: 'literature-catalog-index-v1',
+        enabled: true,
+        readPathActive: true,
+        catalogId: data.catalogId,
+        matched: 1,
+        count: 1,
+        limit: RESULT_WINDOW_SIZE,
+        hasMore: false,
+        nextCursor: null,
+        sort: 'newest',
+        items: [{ ...canonical, title: 'UNTRUSTED D1 TITLE MUST NOT RENDER' }],
+      }),
+    });
+  });
+  await stubOptionalApi(page);
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+  await page.locator('#search').fill(data.archiveDoi);
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''), { timeout: 30000 })
+    .toBe('d1-index');
+  const card = page.locator(`#gallery > .card[data-doi="${data.archiveDoi}"]`);
+  await expect(card).toHaveCount(1);
+  await expect(card).not.toContainText('UNTRUSTED D1 TITLE MUST NOT RENDER');
+  if (canonical.title) await expect(card).toContainText(canonical.title);
+});
+
+test('D1 revision mismatch degrades to verified static search', async ({ page }) => {
+  const data = fixture();
+  const canonical = data.indexedItems.find(item => item.doi === data.archiveDoi);
+  if (!canonical) throw new Error('Archive indexed fixture missing');
+  let staticSearchRequests = 0;
+
+  await page.route('**/api/_healthcheck', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ok: true,
+        literatureCatalogIndexShadowEnabled: true,
+        literatureCatalogIndexReadEnabled: true,
+        literatureCatalogIndexReadPathConfigured: true,
+        literatureCatalogIndexReadPathActive: true,
+        literatureCatalogIndexDb: true,
+      }),
+    });
+  });
+  await page.route('**/api/literature/catalog-view', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        version: 1,
+        schemaVersion: 'literature-catalog-index-v1',
+        enabled: true,
+        readPathActive: true,
+        catalogId: data.catalogId,
+        matched: 1,
+        count: 1,
+        limit: RESULT_WINDOW_SIZE,
+        hasMore: false,
+        nextCursor: null,
+        sort: 'newest',
+        items: [{ ...canonical, revision: 'f'.repeat(64) }],
+      }),
+    });
+  });
+  await page.route(/\/architecture-v1\/search\//, async route => {
+    staticSearchRequests += 1;
+    await route.continue();
+  });
+  await stubOptionalApi(page);
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+  await page.locator('#search').fill(data.archiveDoi);
+  await expect.poll(() => staticSearchRequests, { timeout: 30000 }).toBeGreaterThan(0);
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''), { timeout: 30000 })
+    .toBe('static-segments');
+  await expect(page.locator(`#gallery > .card[data-doi="${data.archiveDoi}"]`)).toHaveCount(1);
+});
+
 test('D1 catalog-view failure falls back to verified static search instead of false empty', async ({ page }) => {
   const data = fixture();
   let indexedViewRequests = 0;
