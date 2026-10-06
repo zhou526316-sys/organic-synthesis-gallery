@@ -177,6 +177,18 @@ test('D3c4b client mutation path remains dirty-key bounded after activation',()=
   assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "1"'));
 });
 
+test('first V3 authority claim is freshness-fenced both before and inside the atomic batch',()=>{
+  for(const token of [
+    'legacyAuthorityMeta',
+    'shadowSyncMeta',
+    'legacyShadowFresh',
+    'user_library_v3_shadow_not_fresh',
+    "THEN 'v3' ELSE 'stale' END",
+    'INNER JOIN user_library_v3_shadow_sync',
+  ]) assert.ok(v3.includes(token),token);
+  assert.ok(userUi.includes("String(result.reason || 'user_library_v3_revision_conflict')"));
+});
+
 test('D3c4b production deployment requires isolated write canary, compatibility read, conflict fence, cleanup and rollback',()=>{
   const authorityBlock=section(
     deploy,
