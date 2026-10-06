@@ -136,6 +136,11 @@ function rememberAccount(userId: string, nextRevision: number): void {
 function clearRememberedAccount(): void {
   activeUserId = '';
   revision = 0;
+  syncedState = null;
+  v3WriteActive = false;
+  dirtyGlobal = false;
+  dirtyPaperKeys.clear();
+  setWriteDiagnostic('none');
   try {
     localStorage.removeItem(SYNC_USER_KEY);
     localStorage.removeItem(SYNC_REVISION_KEY);
@@ -452,6 +457,7 @@ function legacyAccount(result: { ok: boolean; status: number; body: SyncResponse
     updatedAt,
     state: account.state,
     readPath: 'legacy',
+    writeEnabled: account.writeEnabled === true,
   };
 }
 
@@ -467,6 +473,7 @@ async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState): 
   let finalRevision = sinceRevision;
   let finalUpdatedAt = 0;
   let userId = '';
+  let writeEnabled: boolean | null = null;
 
   for (let pageNo = 0; pageNo < V3_MAX_PAGES_PER_SYNC; pageNo += 1) {
     const response = await request('account-v3-delta', {
@@ -484,10 +491,13 @@ async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState): 
     const head = v3Head(account.head);
     const targetRevision = safeInteger(account.targetRevision);
     const pageUserId = validUserId(account.userId);
+    const pageWriteEnabled = account.writeEnabled === true;
     if (!head || targetRevision === null || targetRevision < sinceRevision
       || targetRevision !== head.revision || !pageUserId) return { kind: 'fallback' };
     if (userId && pageUserId !== userId) return { kind: 'fallback' };
+    if (writeEnabled !== null && writeEnabled !== pageWriteEnabled) return { kind:'fallback' };
     userId = pageUserId;
+    writeEnabled = pageWriteEnabled;
     finalRevision = targetRevision;
     finalUpdatedAt = head.updatedAt;
 
@@ -505,7 +515,7 @@ async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState): 
       if (!stateMatchesHead(next,head)) return { kind: 'fallback' };
       return {
         kind: 'ok',
-        account: { userId, revision: finalRevision, updatedAt: finalUpdatedAt, state: next, readPath: 'v3' },
+        account: { userId, revision: finalRevision, updatedAt: finalUpdatedAt, state: next, readPath: 'v3', writeEnabled:writeEnabled === true },
       };
     }
 
@@ -527,6 +537,7 @@ async function v3FullPull(): Promise<V3Outcome> {
   if (!headResponse.ok || !headResponse.body.account) return { kind: 'fallback' };
   const account = headResponse.body.account;
   const initialUserId = validUserId(account.userId);
+  const initialWriteEnabled = account.writeEnabled === true;
   if (account.readPath !== 'v3-head' || !initialUserId) return { kind: 'fallback' };
   const initialHead = v3Head(account);
   if (!initialHead) return { kind: 'fallback' };
@@ -542,8 +553,10 @@ async function v3FullPull(): Promise<V3Outcome> {
     const page = pageResponse.body.account;
     const pageHead = v3Head(page.head);
     const pageUserId = validUserId(page.userId);
+    const pageWriteEnabled = page.writeEnabled === true;
     const scanStartRevision = safeInteger(page.scanStartRevision);
     if (page.readPath !== 'v3-page' || !pageHead || pageUserId !== initialUserId
+      || pageWriteEnabled !== initialWriteEnabled
       || scanStartRevision === null || scanStartRevision !== pageHead.revision
       || pageHead.revision < initialHead.revision) return { kind: 'fallback' };
     const rows = Array.isArray(page.rows) ? page.rows : null;
@@ -564,7 +577,10 @@ async function v3FullPull(): Promise<V3Outcome> {
 
   const catchup = await v3DeltaFromState(initialHead.revision, state);
   if (catchup.kind === 'reset') return { kind: 'fallback' };
-  if (catchup.kind !== 'ok' || catchup.account.userId !== initialUserId) return catchup.kind === 'ok' ? { kind:'fallback' } : catchup;
+  if (catchup.kind !== 'ok' || catchup.account.userId !== initialUserId
+    || catchup.account.writeEnabled !== initialWriteEnabled) {
+    return catchup.kind === 'ok' ? { kind:'fallback' } : catchup;
+  }
   return catchup;
 }
 
@@ -584,6 +600,11 @@ function applyRemote(account: RemoteAccount): void {
   applyingRemote = true;
   store.state = account.state;
   rememberAccount(account.userId, account.revision);
+  syncedState = cloneState(account.state);
+  v3WriteActive = account.writeEnabled;
+  dirtyGlobal = false;
+  dirtyPaperKeys.clear();
+  setWriteDiagnostic(v3WriteActive ? 'v3' : 'legacy');
   store.save();
   applyingRemote = false;
 }
