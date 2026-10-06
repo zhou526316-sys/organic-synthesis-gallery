@@ -805,6 +805,106 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
                 fill="#98a2b3",
             )
 
+        elif layout == "hyster_fret_abstract":
+            # Hyster retrospective cover: abstract editorial illustration of
+            # energy transfer -> excited PLP -> localized radical coupling.
+            # Chemistry in the small inset remains the original paper crop.
+            canvas = Image.new("RGBA", (width, height), "#082a4d")
+            draw = ImageDraw.Draw(canvas)
+
+            # Layered blue background gives the cover depth without inventing
+            # a molecular structure.
+            for i in range(14):
+                x0 = int(width * (0.02 + i * 0.075))
+                shade = max(15, 52 - i * 2)
+                draw.ellipse(
+                    (x0-int(width*0.18), int(height*0.20),
+                     x0+int(width*0.30), int(height*0.70)),
+                    fill=(10, 55+shade//2, 92+shade, 14),
+                )
+
+            gold = "#efca78"
+            white = "#f7f9fc"
+            cyan = "#69d7ff"
+            purple = "#c5a4ff"
+            muted = "#cad7e5"
+
+            kicker = str(cover.get("thumb_kicker") or "往期精选｜Nature｜Hyster")
+            title_text = str(cover.get("thumb_title") or data.get("headline") or "")
+            kicker_font = choose_font(max(30, int(width*0.038)), True)
+            title_font = choose_font(max(55, int(width*0.070)), True)
+            node_font = choose_font(max(25, int(width*0.030)), True)
+            small_font = choose_font(max(20, int(width*0.024)), True)
+
+            # Header.
+            draw.rounded_rectangle(
+                (int(width*0.055), int(height*0.045), int(width*0.73), int(height*0.125)),
+                radius=max(14,int(width*0.018)),
+                fill=(7,39,73,235), outline=gold, width=max(2,int(width*0.0025)),
+            )
+            draw.text((int(width*0.075), int(height*0.062)), kicker, font=kicker_font, fill=gold)
+
+            # Main title: no subtitle.
+            y = int(height*0.16)
+            for line in wrap_text(draw, title_text, title_font, int(width*0.88), 3):
+                draw.text((int(width*0.06), y), line, font=title_font, fill=white)
+                y += int(height*0.075)
+
+            # Abstract FRET / PLP energy-transfer diagram.
+            cy = int(height*0.49)
+            r1 = int(width*0.075)
+            r2 = int(width*0.085)
+            x1 = int(width*0.18)
+            x2 = int(width*0.49)
+            x3 = int(width*0.78)
+
+            # donor glow
+            for rr,alpha in [(int(r1*1.7),35),(int(r1*1.35),65)]:
+                draw.ellipse((x1-rr,cy-rr,x1+rr,cy+rr),fill=(245,193,73,alpha))
+            draw.ellipse((x1-r1,cy-r1,x1+r1,cy+r1),fill="#e4b84e")
+            t="Rh6G*"; b=draw.textbbox((0,0),t,font=small_font)
+            draw.text((x1-(b[2]-b[0])//2,cy-(b[3]-b[1])//2),t,font=small_font,fill="#102941")
+
+            # acceptor glow / enzyme pocket
+            for rr,alpha in [(int(r2*2.0),25),(int(r2*1.55),55)]:
+                draw.ellipse((x2-rr,cy-rr,x2+rr,cy+rr),fill=(73,194,239,alpha),outline=(116,214,255,70))
+            draw.ellipse((x2-r2,cy-r2,x2+r2,cy+r2),fill="#4bb8e3")
+            t="PLP*"; b=draw.textbbox((0,0),t,font=node_font)
+            draw.text((x2-(b[2]-b[0])//2,cy-(b[3]-b[1])//2),t,font=node_font,fill="#062743")
+
+            # FRET arrow.
+            arrow_y = cy
+            draw.line((x1+r1+18,arrow_y,x2-r2-28,arrow_y),fill=gold,width=max(3,int(width*0.004)))
+            draw.polygon([
+                (x2-r2-28,arrow_y),
+                (x2-r2-48,arrow_y-int(height*0.012)),
+                (x2-r2-48,arrow_y+int(height*0.012)),
+            ],fill=gold)
+            ft="FRET"; b=draw.textbbox((0,0),ft,font=small_font)
+            draw.text((((x1+x2)-(b[2]-b[0]))//2,cy-int(height*0.055)),ft,font=small_font,fill=gold)
+
+            # localized radical pair and bond formation.
+            pr = int(width*0.038)
+            draw.ellipse((x3-pr*2,cy-pr,x3,cy+pr),fill=purple)
+            draw.ellipse((x3+int(width*0.045),cy-pr,x3+int(width*0.045)+pr*2,cy+pr),fill=cyan)
+            draw.line((x3,cy,x3+int(width*0.045),cy),fill=white,width=max(3,int(width*0.004)))
+            t="C–C"; b=draw.textbbox((0,0),t,font=node_font)
+            draw.text((x3+int(width*0.022)-(b[2]-b[0])//2,cy+int(height*0.065)),t,font=node_font,fill=white)
+
+            # Original reaction inset — paper artwork, not redrawn chemistry.
+            card=(int(width*0.055),int(height*0.68),int(width*0.945),int(height*0.94))
+            draw.rounded_rectangle(card,radius=max(20,int(width*0.022)),fill="#ffffff")
+            src=image.convert("RGB")
+            fitted=ImageOps.contain(
+                src,
+                (card[2]-card[0]-int(width*0.04),card[3]-card[1]-int(height*0.035)),
+                method=Image.Resampling.LANCZOS,
+            )
+            px=card[0]+(card[2]-card[0]-fitted.width)//2
+            py=card[1]+(card[3]-card[1]-fitted.height)//2
+            canvas.paste(fitted,(px,py))
+            canvas = canvas.convert("RGB")
+
         elif layout == "retrospective_figure_square":
             # Full editorial square for secondary WeChat cards, echoing the
             # established blue/gold retrospective visual language while keeping
