@@ -481,7 +481,11 @@ def build_content(
         ])
 
         rendered_figures = set()
-        lead_figure_id = str(featured.get("lead_figure_id") or "fig1").strip()
+        lead_figure_id = (
+            str(featured.get("lead_figure_id") or "").strip()
+            if "lead_figure_id" in featured
+            else "fig1"
+        )
         lead_position = str(featured.get("lead_figure_position") or "before_quick_points").strip()
         if lead_figure_id and lead_position == "before_quick_points":
             lead_html = figure_html(lead_figure_id, figures, uploaded_urls)
