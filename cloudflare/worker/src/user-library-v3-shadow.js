@@ -141,7 +141,7 @@ function rowStatements(env, userId, split, revision, updatedAt, tombstones = [])
   const statements = [
     env.DB.prepare(`
       DELETE FROM user_library_v3_rows
-      WHERE user_id=? AND ${claim}
+      WHERE user_id=? AND deleted=0 AND ${claim}
     `).bind(userId,userId,revision,revision),
   ];
   for (const row of split.rows || []) {
