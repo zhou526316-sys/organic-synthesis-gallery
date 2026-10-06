@@ -242,21 +242,19 @@ function clearSyncedDirty(snapshot: UserUiState, keys: string[], globalWasDirty:
   if (globalWasDirty && sameJson(globalStateOf(store.state),globalStateOf(snapshot))) dirtyGlobal = false;
 }
 
+function relevantPaperKeys(base:UserUiState,target:UserUiState):Set<string>{
+  return new Set([...Object.keys(base.papers || {}),...Object.keys(target.papers || {})]);
+}
+
 function markInitialDifferences(base: UserUiState, target: UserUiState): void {
-  const keys = new Set([
-    ...Object.keys(base.papers || {}), ...Object.keys(base.metadata || {}),
-    ...Object.keys(target.papers || {}), ...Object.keys(target.metadata || {}),
-  ]);
-  for (const key of keys) if (mutationOperation(base,target,key)) dirtyPaperKeys.add(key);
+  for (const key of relevantPaperKeys(base,target)) {
+    if (mutationOperation(base,target,key)) dirtyPaperKeys.add(key);
+  }
   if (!sameJson(globalStateOf(base),globalStateOf(target))) dirtyGlobal = true;
 }
 
 function allChangedKeys(base: UserUiState, target: UserUiState): string[] {
-  const keys = new Set([
-    ...Object.keys(base.papers || {}), ...Object.keys(base.metadata || {}),
-    ...Object.keys(target.papers || {}), ...Object.keys(target.metadata || {}),
-  ]);
-  return [...keys].filter(key=>Boolean(mutationOperation(base,target,key)));
+  return [...relevantPaperKeys(base,target)].filter(key=>Boolean(mutationOperation(base,target,key)));
 }
 
 function committedSubset(base: UserUiState, target: UserUiState, keys: string[], globalChanged: boolean): UserUiState {
