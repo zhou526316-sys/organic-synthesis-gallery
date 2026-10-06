@@ -853,7 +853,7 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Backfill and verify user library V3 shadow parity and bounded reads
+      - name: Verify user library V3 authority mode after deployment
         id: user_library_v3_shadow
         continue-on-error: true
         env:
@@ -884,6 +884,25 @@ jobs:
           }
 
           let status=await call('/api/admin/user-library-v3/status');
+          if(status.writeEnabled===true){
+            const expectedHeads=Number(status.legacyUsers||0)+Number(status.v3AuthorityUsers||0);
+            if(status.configured!==true||status.enabled!==false||status.readEnabled!==true
+              ||Number(status.revisionMismatches||0)!==0
+              ||Number(status.v3Heads||0)!==expectedHeads){
+              throw new Error('user library V3 write-authority mode invalid: '+JSON.stringify({status,expectedHeads}));
+            }
+            const report={
+              schemaVersion:1,phase:'D3c4b-user-library-v3-write-authority',ok:true,
+              shadowConfigured:true,shadowEnabled:false,boundedReadEnabled:true,writePathActive:true,
+              legacyUsers:Number(status.legacyUsers||0),
+              v3Heads:Number(status.v3Heads||0),
+              v3AuthorityUsers:Number(status.v3AuthorityUsers||0),
+              verifiedAt:new Date().toISOString(),
+            };
+            fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
+            console.log('USER_LIBRARY_V3_AUTHORITY '+JSON.stringify(report));
+            process.exit(0);
+          }
           if(status.enabled!==true||status.readEnabled!==true||status.writeEnabled!==false){
             throw new Error('user library V3 shadow configuration invalid: '+JSON.stringify(status));
           }
