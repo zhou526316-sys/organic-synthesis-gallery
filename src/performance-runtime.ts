@@ -33,6 +33,7 @@ const FIGURE_ROOT_MARGIN = '900px 0px';
 const installStartedAt = performance.now();
 
 let manifestPromise: Promise<StaticMediaManifest> | null = null;
+let staticFallbackActive = false;
 let scanQueued = false;
 let tocObserver: IntersectionObserver | null = null;
 let figureObserver: IntersectionObserver | null = null;
@@ -341,33 +342,39 @@ function suppressLegacyScrollMediaHandlers(): () => void {
 
 export function installGalleryPerformanceRuntime(): () => void {
   installPerformanceCss();
-  void loadManifest();
-  const restoreAddEventListener = suppressLegacyScrollMediaHandlers();
+
   const observer = new MutationObserver(records => {
-    if (shouldScanDisplay(records)) scheduleScan();
+    if (staticFallbackActive && shouldScanDisplay(records)) scheduleScan();
   });
   observer.observe(document.documentElement, { childList: true, subtree: true });
 
-  const refreshMedia = (): void => {
-    manifestPromise = null;
+  const enableStaticFallback = (forceRefresh = false): void => {
+    staticFallbackActive = true;
+    if (forceRefresh) manifestPromise = null;
     document.querySelectorAll<HTMLElement>('.toc-slot[data-doi]').forEach(slot => {
       delete slot.dataset.performanceTocObserved;
     });
-    void loadManifest(true).then(() => scheduleScan());
+    void loadManifest(forceRefresh).then(() => scheduleScan());
+  };
+  const fallbackOnApiFailure = (): void => enableStaticFallback(false);
+  const refreshMedia = (): void => {
+    if (!staticFallbackActive) return;
+    enableStaticFallback(true);
   };
   const refreshOnPageShow = (event: PageTransitionEvent): void => {
-    if (event.persisted) refreshMedia();
+    if (event.persisted && staticFallbackActive) refreshMedia();
   };
+
+  window.addEventListener('gallery-media-static-fallback', fallbackOnApiFailure);
   window.addEventListener('pageshow', refreshOnPageShow);
   window.addEventListener('gallery-assets-updated', refreshMedia as EventListener);
 
-  scheduleScan();
   return () => {
+    window.removeEventListener('gallery-media-static-fallback', fallbackOnApiFailure);
     window.removeEventListener('pageshow', refreshOnPageShow);
     window.removeEventListener('gallery-assets-updated', refreshMedia as EventListener);
     tocObserver?.disconnect();
     figureObserver?.disconnect();
     observer.disconnect();
-    restoreAddEventListener();
   };
 }
