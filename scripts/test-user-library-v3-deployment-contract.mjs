@@ -59,7 +59,7 @@ test('D3c4b activates V3 writes only after preflight and retains automatic flag 
   assert.ok(!config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "0"'));
   assert.ok(deploy.includes('/api/admin/user-library-v3/compare?offset='));
   assert.ok(deploy.includes('D3c4b preflight could not obtain two stable zero-mismatch passes'));
-  assert.ok(deploy.includes('- name: Roll back V3 write activation on canary failure'));
+  assert.ok(deploy.includes('- name: Roll back V3 write activation on authority/canary failure'));
   assert.ok(deploy.includes('s/USER_LIBRARY_V3_WRITE_ENABLED = "1"/USER_LIBRARY_V3_WRITE_ENABLED = "0"/'));
   assert.ok(v3.includes("USER_LIBRARY_V3_WRITE_ENABLED"));
   assert.ok(v3.includes("reason:'user_library_v3_write_disabled'"));
@@ -186,6 +186,9 @@ test('D3c4b production deployment requires isolated write canary, compatibility 
   assert.ok(authorityBlock.includes("phase:'D3c4b-user-library-v3-write-authority'"));
   assert.ok(authorityBlock.includes('shadowEnabled:false'));
   assert.ok(authorityBlock.includes('writePathActive:true'));
+  assert.ok(authorityBlock.includes('revisionMismatches'));
+  assert.ok(authorityBlock.includes('expectedHeads'));
+  assert.ok(authorityBlock.includes("steps.user_library_v3_shadow.outcome == 'success'"));
 
   const canary=section(
     deploy,
@@ -202,14 +205,17 @@ test('D3c4b production deployment requires isolated write canary, compatibility 
     'legacy_docs',
     'authority_rows',
     'monolithicDocumentRemoved=true',
-    '- name: Roll back V3 write activation on canary failure',
+    '- name: Roll back V3 write activation on authority/canary failure',
     'USER_LIBRARY_V3_WRITE_ENABLED = "0"',
     '- name: Clean up isolated V3 write canary account',
+    '- name: Remove stale monolithic rows for V3-authoritative accounts',
+    'stale_legacy_documents',
+    'staleLegacyDocuments=0',
     "DELETE FROM users WHERE id='$USER_ID'",
     '- name: Fail deployment after safe V3 write rollback',
   ]) assert.ok(canary.includes(token),token);
-  assert.ok(canary.includes("if: steps.user_library_v3_write_canary.outcome == 'failure'"));
-  assert.ok(canary.includes("if: always() && steps.user_library_v3_write_canary.outcome == 'failure'"));
+  assert.ok(canary.includes("if: steps.user_library_v3_shadow.outcome == 'failure' || steps.user_library_v3_write_canary.outcome == 'failure'"));
+  assert.ok(canary.includes("if: always() && (steps.user_library_v3_shadow.outcome == 'failure' || steps.user_library_v3_write_canary.outcome == 'failure')"));
   assert.ok(canary.includes("body?.userLibraryV3WriteEnabled===false"));
   assert.ok(canary.includes("body?.userLibraryV3ShadowEnabled===true"));
 
