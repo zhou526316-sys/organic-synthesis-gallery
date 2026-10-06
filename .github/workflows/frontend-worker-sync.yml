@@ -45,7 +45,7 @@ jobs:
           set -euo pipefail
           DISPATCH_OUTPUT="$(gh workflow run deploy-worker-frontend.yml --repo "$REPO" --ref main 2>&1)"
           printf '%s\n' "$DISPATCH_OUTPUT"
-          RUN_ID="$(printf '%s\n' "$DISPATCH_OUTPUT" | sed -nE 's#.*?/actions/runs/([0-9]+).*#\\1#p' | tail -n1)"
+          RUN_ID="$(printf '%s\n' "$DISPATCH_OUTPUT" | sed -nE 's#.*?/actions/runs/([0-9]+).*#\1#p' | tail -n1)"
           if [ -z "$RUN_ID" ]; then
             echo "Could not resolve the Worker deploy run id from gh workflow dispatch output." >&2
             exit 1
