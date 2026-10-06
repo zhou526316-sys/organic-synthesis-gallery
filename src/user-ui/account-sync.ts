@@ -73,6 +73,7 @@ interface AccountPayload {
   resetRequired?: boolean;
   reason?: string;
   writeEnabled?: boolean;
+  writeAuthority?: 'legacy' | 'v3';
   operationCount?: number;
 }
 
@@ -91,6 +92,7 @@ interface RemoteAccount {
   state: UserUiState;
   readPath: 'v3' | 'legacy';
   writeEnabled: boolean;
+  writeAuthority: 'legacy' | 'v3';
 }
 
 
@@ -120,6 +122,7 @@ let saving = false;
 let queuedSave = false;
 let syncedState: UserUiState | null = null;
 let v3WriteActive = false;
+let v3AuthorityActive = false;
 let dirtyGlobal = false;
 const dirtyPaperKeys = new Set<string>();
 
@@ -149,6 +152,7 @@ function clearRememberedAccount(): void {
   revision = 0;
   syncedState = null;
   v3WriteActive = false;
+  v3AuthorityActive = false;
   dirtyGlobal = false;
   dirtyPaperKeys.clear();
   setWriteDiagnostic('none');
@@ -162,7 +166,7 @@ function setReadDiagnostic(mode: 'v3' | 'legacy' | 'none'): void {
   document.documentElement.dataset.accountSyncRead = mode;
 }
 
-function setWriteDiagnostic(mode: 'v3' | 'legacy' | 'none'): void {
+function setWriteDiagnostic(mode: 'v3' | 'legacy' | 'suspended' | 'none'): void {
   document.documentElement.dataset.accountSyncWrite = mode;
 }
 
@@ -525,6 +529,7 @@ function legacyAccount(result: { ok: boolean; status: number; body: SyncResponse
     state: account.state,
     readPath: 'legacy',
     writeEnabled: account.writeEnabled === true,
+    writeAuthority: account.writeAuthority === 'v3' ? 'v3' : 'legacy',
   };
 }
 
@@ -612,7 +617,10 @@ async function persistV3Desired(
     if(!recovery.account)return {kind:'failure'};
     acceptRemoteBaseline(recovery.account);
     base=recovery.account.state;
-    if(!recovery.account.writeEnabled)return persistLegacyDesired(desired,keys,globalWasDirty,false);
+    if(!recovery.account.writeEnabled){
+      if(recovery.account.writeAuthority==='v3')return {kind:'failure'};
+      return persistLegacyDesired(desired,keys,globalWasDirty,false);
+    }
   }
 
   const outcome=await saveViaV3(base,desired,keys,globalWasDirty);
@@ -626,7 +634,10 @@ async function persistV3Desired(
   acceptRemoteBaseline(recovery.account);
   const merged=mergeDirtyState(recovery.account.state,desired,keys,globalWasDirty);
   replaceStoreStateWithoutDirty(merged);
-  if(!recovery.account.writeEnabled)return persistLegacyDesired(merged,keys,globalWasDirty,false);
+  if(!recovery.account.writeEnabled){
+    if(recovery.account.writeAuthority==='v3')return {kind:'failure'};
+    return persistLegacyDesired(merged,keys,globalWasDirty,false);
+  }
 
   const retryKeys=keys.filter(key=>Boolean(mutationOperation(recovery.account!.state,merged,key)));
   const retryGlobal=globalWasDirty&&!sameJson(globalStateOf(recovery.account.state),globalStateOf(merged));
@@ -665,6 +676,7 @@ async function persistLegacyDesired(desired:UserUiState,keys:string[],globalWasD
     const remote:RemoteAccount={
       userId,revision:conflictRevision,updatedAt,state:conflictState,
       readPath:'legacy',writeEnabled:account.writeEnabled===true,
+      writeAuthority:account.writeAuthority==='v3'?'v3':'legacy',
     };
     acceptRemoteBaseline(remote);
     const merged=mergeStates(remote.state,desired,true);
@@ -688,6 +700,7 @@ async function persistLegacyDesired(desired:UserUiState,keys:string[],globalWasD
     rememberAccount(retryUserId,retryRevision);
     syncedState=cloneState(merged);
     v3WriteActive=false;
+    v3AuthorityActive=false;
     setWriteDiagnostic('legacy');
     return {kind:'ok',state:merged};
   }
@@ -699,7 +712,8 @@ async function persistLegacyDesired(desired:UserUiState,keys:string[],globalWasD
   rememberAccount(userId,nextRevision);
   syncedState=cloneState(desired);
   v3WriteActive=response.body.account.writeEnabled===true;
-  setWriteDiagnostic(v3WriteActive?'v3':'legacy');
+  v3AuthorityActive=response.body.account.writeAuthority==='v3';
+  setWriteDiagnostic(v3AuthorityActive&&!v3WriteActive?'suspended':v3WriteActive?'v3':'legacy');
   return {kind:'ok',state:desired};
 }
 
@@ -711,6 +725,7 @@ async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState): 
   let finalUpdatedAt = 0;
   let userId = '';
   let writeEnabled: boolean | null = null;
+  let writeAuthority: 'legacy' | 'v3' | null = null;
 
   for (let pageNo = 0; pageNo < V3_MAX_PAGES_PER_SYNC; pageNo += 1) {
     const response = await request('account-v3-delta', {
@@ -729,12 +744,15 @@ async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState): 
     const targetRevision = safeInteger(account.targetRevision);
     const pageUserId = validUserId(account.userId);
     const pageWriteEnabled = account.writeEnabled === true;
+    const pageWriteAuthority = account.writeAuthority === 'v3' ? 'v3' : 'legacy';
     if (!head || targetRevision === null || targetRevision < sinceRevision
       || targetRevision !== head.revision || !pageUserId) return { kind: 'fallback' };
     if (userId && pageUserId !== userId) return { kind: 'fallback' };
     if (writeEnabled !== null && writeEnabled !== pageWriteEnabled) return { kind:'fallback' };
+    if (writeAuthority !== null && writeAuthority !== pageWriteAuthority) return { kind:'fallback' };
     userId = pageUserId;
     writeEnabled = pageWriteEnabled;
+    writeAuthority = pageWriteAuthority;
     finalRevision = targetRevision;
     finalUpdatedAt = head.updatedAt;
 
@@ -752,7 +770,10 @@ async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState): 
       if (!stateMatchesHead(next,head)) return { kind: 'fallback' };
       return {
         kind: 'ok',
-        account: { userId, revision: finalRevision, updatedAt: finalUpdatedAt, state: next, readPath: 'v3', writeEnabled:writeEnabled === true },
+        account: {
+          userId, revision: finalRevision, updatedAt: finalUpdatedAt, state: next, readPath:'v3',
+          writeEnabled:writeEnabled === true, writeAuthority:writeAuthority || 'legacy',
+        },
       };
     }
 
@@ -775,6 +796,7 @@ async function v3FullPull(): Promise<V3Outcome> {
   const account = headResponse.body.account;
   const initialUserId = validUserId(account.userId);
   const initialWriteEnabled = account.writeEnabled === true;
+  const initialWriteAuthority = account.writeAuthority === 'v3' ? 'v3' : 'legacy';
   if (account.readPath !== 'v3-head' || !initialUserId) return { kind: 'fallback' };
   const initialHead = v3Head(account);
   if (!initialHead) return { kind: 'fallback' };
@@ -791,9 +813,11 @@ async function v3FullPull(): Promise<V3Outcome> {
     const pageHead = v3Head(page.head);
     const pageUserId = validUserId(page.userId);
     const pageWriteEnabled = page.writeEnabled === true;
+    const pageWriteAuthority = page.writeAuthority === 'v3' ? 'v3' : 'legacy';
     const scanStartRevision = safeInteger(page.scanStartRevision);
     if (page.readPath !== 'v3-page' || !pageHead || pageUserId !== initialUserId
       || pageWriteEnabled !== initialWriteEnabled
+      || pageWriteAuthority !== initialWriteAuthority
       || scanStartRevision === null || scanStartRevision !== pageHead.revision
       || pageHead.revision < initialHead.revision) return { kind: 'fallback' };
     const rows = Array.isArray(page.rows) ? page.rows : null;
@@ -815,7 +839,8 @@ async function v3FullPull(): Promise<V3Outcome> {
   const catchup = await v3DeltaFromState(initialHead.revision, state);
   if (catchup.kind === 'reset') return { kind: 'fallback' };
   if (catchup.kind !== 'ok' || catchup.account.userId !== initialUserId
-    || catchup.account.writeEnabled !== initialWriteEnabled) {
+    || catchup.account.writeEnabled !== initialWriteEnabled
+    || catchup.account.writeAuthority !== initialWriteAuthority) {
     return catchup.kind === 'ok' ? { kind:'fallback' } : catchup;
   }
   return catchup;
@@ -837,7 +862,8 @@ function acceptRemoteBaseline(account: RemoteAccount): void {
   rememberAccount(account.userId,account.revision);
   syncedState=cloneState(account.state);
   v3WriteActive=account.writeEnabled;
-  setWriteDiagnostic(v3WriteActive?'v3':'legacy');
+  v3AuthorityActive=account.writeAuthority==='v3';
+  setWriteDiagnostic(v3AuthorityActive&&!v3WriteActive?'suspended':v3WriteActive?'v3':'legacy');
 }
 
 function applyRemote(account: RemoteAccount): void {
@@ -918,13 +944,18 @@ async function pullRemote(): Promise<void> {
 
   if (!remote) return;
   v3WriteActive=remote.writeEnabled;
-  setWriteDiagnostic(v3WriteActive?'v3':'legacy');
+  v3AuthorityActive=remote.writeAuthority==='v3';
+  setWriteDiagnostic(v3AuthorityActive&&!v3WriteActive?'suspended':v3WriteActive?'v3':'legacy');
   if (remote.revision !== revision) applyRemote(remote);
   else if (!syncedState) syncedState=cloneState(remote.state);
 }
 
 async function saveRemote(): Promise<void> {
   if (!activeToken || applyingRemote || !localDirty()) return;
+  if (v3AuthorityActive && !v3WriteActive) {
+    setWriteDiagnostic('suspended');
+    return;
+  }
   if (saving) { queuedSave = true; return; }
   saving = true;
   const desired=cloneState(store.state);
@@ -966,6 +997,7 @@ async function detectSessionChange(): Promise<void> {
   activeToken = token;
   syncedState=null;
   v3WriteActive=false;
+  v3AuthorityActive=false;
   dirtyGlobal=false;
   dirtyPaperKeys.clear();
   setWriteDiagnostic(token?'legacy':'none');
