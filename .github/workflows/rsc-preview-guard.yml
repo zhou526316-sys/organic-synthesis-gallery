@@ -1,0 +1,35 @@
+name: RSC PDF preview TOC guard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cloudflare/worker/src/local-captures.js'
+      - 'cloudflare/worker/src/index.js'
+      - 'cloudflare/worker/scripts/test-rsc-preview-guard.mjs'
+      - '.github/workflows/rsc-preview-guard.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cloudflare/worker/src/local-captures.js'
+      - 'cloudflare/worker/src/index.js'
+      - 'cloudflare/worker/scripts/test-rsc-preview-guard.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Run RSC preview guard regression
+        run: node cloudflare/worker/scripts/test-rsc-preview-guard.mjs
+      - name: Check Worker syntax
+        run: |
+          node --check cloudflare/worker/src/local-captures.js
+          node --check cloudflare/worker/src/index.js
