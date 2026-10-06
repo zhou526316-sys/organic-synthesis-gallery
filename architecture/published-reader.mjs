@@ -56,7 +56,10 @@ function recordPapers(records) {
   return out;
 }
 
-export async function loadPublishedHotFallback(siteBase, { fetcher = globalThis.fetch, signal } = {}) {
+export async function loadPublishedHotFallback(
+  siteBase,
+  { fetcher = globalThis.fetch, signal, headOnly = false } = {},
+) {
   const site = new URL(siteBase);
   const architectureBase = new URL('architecture-v1/', site);
   const fetchBytes = async (url, { cache = 'no-store', maxBytes = 4 * 1024 * 1024, label = 'architecture_fallback' } = {}) => {
@@ -79,6 +82,7 @@ export async function loadPublishedHotFallback(siteBase, { fetcher = globalThis.
   assert(delivery.files && isHash(delivery.files['architecture-v1/release.json']), 'delivery_architecture_release_missing');
   assert(delivery.architectureObjects && typeof delivery.architectureObjects === 'object', 'delivery_architecture_objects_missing');
   assert(await digest(releaseRead.bytes) === delivery.files['architecture-v1/release.json'], 'architecture_release_hash_mismatch');
+
   const release = parseJson(releaseRead.bytes, 'architecture_release');
   assert(release?.schema === RELEASE_SCHEMA && release.frontendReadActivation === true, 'frontend_architecture_not_active');
   assert(release.productionActivation === false, 'frontend_activation_scope_invalid');
@@ -86,38 +90,73 @@ export async function loadPublishedHotFallback(siteBase, { fetcher = globalThis.
     && release.datasetSha256 === delivery.datasetSha256 && release.recordCount === delivery.productionCards
     && release.catalogId === delivery.architectureCatalogId, 'architecture_release_generation_mismatch');
 
-  const fallbackRef = release.hotFallback;
-  assert(fallbackRef && isHash(fallbackRef.sha256) && Number.isSafeInteger(fallbackRef.bytes) && fallbackRef.bytes > 0,
-    'architecture_hot_fallback_missing');
-  const fallbackPath = ensurePath(fallbackRef.path);
-  assert(delivery.architectureObjects['architecture-v1/' + fallbackPath] === fallbackRef.sha256,
-    'architecture_hot_fallback_unbound');
-  assert(Array.isArray(release.objects) && release.objects.some(ref => ref?.path === fallbackPath && ref?.sha256 === fallbackRef.sha256),
-    'architecture_hot_fallback_not_in_release');
+  const usingHead = Boolean(headOnly && release.hotHead);
+  const selectedRef = usingHead ? release.hotHead : release.hotFallback;
+  const refLabel = usingHead ? 'architecture_hot_head' : 'architecture_hot_fallback';
+  assert(selectedRef && isHash(selectedRef.sha256) && Number.isSafeInteger(selectedRef.bytes) && selectedRef.bytes > 0,
+    usingHead ? 'architecture_hot_head_missing' : 'architecture_hot_fallback_missing');
+  const selectedPath = ensurePath(selectedRef.path);
+  assert(delivery.architectureObjects['architecture-v1/' + selectedPath] === selectedRef.sha256,
+    usingHead ? 'architecture_hot_head_unbound' : 'architecture_hot_fallback_unbound');
+  assert(Array.isArray(release.objects)
+    && release.objects.some(ref => ref?.path === selectedPath && ref?.sha256 === selectedRef.sha256),
+    usingHead ? 'architecture_hot_head_not_in_release' : 'architecture_hot_fallback_not_in_release');
 
-  const fallbackRead = await fetchBytes(new URL(fallbackPath, architectureBase), {
-    cache:'default', maxBytes:Math.min(4 * 1024 * 1024, fallbackRef.bytes), label:'architecture_hot_fallback',
+  const selectedRead = await fetchBytes(new URL(selectedPath, architectureBase), {
+    cache:'default',
+    maxBytes:Math.min(usingHead ? 512 * 1024 : 4 * 1024 * 1024, selectedRef.bytes),
+    label:refLabel,
   });
-  assert(fallbackRead.bytes.byteLength === fallbackRef.bytes && await digest(fallbackRead.bytes) === fallbackRef.sha256,
-    'architecture_hot_fallback_hash_mismatch');
-  const fallback = parseJson(fallbackRead.bytes, 'architecture_hot_fallback');
-  assert(fallback?.schema === 'gallery-hot-fallback-v1' && fallback.catalogId === release.catalogId
-    && fallback.doiSetHash === release.doiSetHash && fallback.publicationSlot === release.publicationSlot
-    && fallback.sourceCommit === release.sourceCommit && fallback.scope === 'hot-plus-future-candidates'
-    && typeof fallback.generatedAsOfDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(fallback.generatedAsOfDate)
-    && Array.isArray(fallback.records) && fallback.count === fallback.records.length
-    && fallback.count <= delivery.productionCards, 'architecture_hot_fallback_generation_mismatch');
+  assert(selectedRead.bytes.byteLength === selectedRef.bytes && await digest(selectedRead.bytes) === selectedRef.sha256,
+    usingHead ? 'architecture_hot_head_hash_mismatch' : 'architecture_hot_fallback_hash_mismatch');
+  const payload = parseJson(selectedRead.bytes, refLabel);
+
+  let pageSize = null;
+  let totalCount = 0;
+  let candidates = [];
+  if (usingHead) {
+    assert(payload?.schema === 'gallery-hot-head-v1' && payload.catalogId === release.catalogId
+      && payload.doiSetHash === release.doiSetHash && payload.publicationSlot === release.publicationSlot
+      && payload.sourceCommit === release.sourceCommit && payload.scope === 'hot-plus-future-candidates'
+      && typeof payload.generatedAsOfDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(payload.generatedAsOfDate)
+      && Number.isSafeInteger(payload.pageSize) && payload.pageSize >= 1 && payload.pageSize <= 100
+      && Number.isSafeInteger(payload.candidateCount) && payload.candidateCount >= 0
+      && Array.isArray(payload.dateBuckets) && Array.isArray(payload.records)
+      && payload.count === payload.records.length && payload.count <= payload.candidateCount,
+      'architecture_hot_head_generation_mismatch');
+    const bucketCount = payload.dateBuckets.reduce((sum, bucket) => {
+      assert(bucket && (bucket.firstOnlineDate === null || typeof bucket.firstOnlineDate === 'string')
+        && (bucket.datePrecision === 'day' || bucket.datePrecision === 'unknown')
+        && Number.isSafeInteger(bucket.count) && bucket.count >= 0, 'architecture_hot_head_bucket_invalid');
+      return sum + bucket.count;
+    }, 0);
+    assert(bucketCount === payload.candidateCount, 'architecture_hot_head_bucket_count_mismatch');
+    totalCount = payload.dateBuckets.reduce((sum, bucket) =>
+      sum + (classifyDate(bucket.firstOnlineDate, asOfDate, bucket.datePrecision) === 'hot' ? bucket.count : 0), 0);
+    pageSize = payload.pageSize;
+    candidates = payload.records;
+  } else {
+    assert(payload?.schema === 'gallery-hot-fallback-v1' && payload.catalogId === release.catalogId
+      && payload.doiSetHash === release.doiSetHash && payload.publicationSlot === release.publicationSlot
+      && payload.sourceCommit === release.sourceCommit && payload.scope === 'hot-plus-future-candidates'
+      && typeof payload.generatedAsOfDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(payload.generatedAsOfDate)
+      && Array.isArray(payload.records) && payload.count === payload.records.length
+      && payload.count <= delivery.productionCards, 'architecture_hot_fallback_generation_mismatch');
+    candidates = payload.records;
+  }
 
   const deliveryDois = new Set(delivery.dois.map(value => normalizeDoi(value)).filter(Boolean));
   const seen = new Set();
   const hotRecords = [];
-  for (const row of fallback.records) {
+  for (const row of candidates) {
     const doi = normalizeDoi(row?.doi || row?.paper?.doi || row?.paper?.url);
     assert(doi && deliveryDois.has(doi) && row?.paper && isHash(row?.revision) && !seen.has(doi),
-      'architecture_hot_fallback_record_invalid');
+      usingHead ? 'architecture_hot_head_record_invalid' : 'architecture_hot_fallback_record_invalid');
     seen.add(doi);
     if (classifyDate(row.firstOnlineDate, asOfDate, row.datePrecision) === 'hot') hotRecords.push(row);
   }
+  if (!usingHead) totalCount = hotRecords.length;
+  const visibleRecords = usingHead ? hotRecords.slice(0, pageSize) : hotRecords;
 
   const second = await fetchBytes(deliveryUrl, { maxBytes:2 * 1024 * 1024, label:'delivery_recheck' });
   assert(new TextDecoder().decode(second.bytes) === firstText, 'delivery_changed_during_architecture_fallback');
@@ -127,7 +166,10 @@ export async function loadPublishedHotFallback(siteBase, { fetcher = globalThis.
     publicationSlot:release.publicationSlot,
     sourceCommit:release.sourceCommit,
     catalogId:release.catalogId,
-    papers:recordPapers(hotRecords),
+    papers:recordPapers(visibleRecords),
+    totalCount,
+    pageSize,
+    headOnly:usingHead,
   };
 }
 
@@ -197,20 +239,10 @@ export class PublishedCatalogClient {
       assert(delivery.architectureObjects[key] === ref.sha256, `architecture_required_object_unbound:${ref.path}`);
     }
 
-    const fallbackRef = release.hotFallback;
-    assert(fallbackRef && isHash(fallbackRef.sha256) && Number.isSafeInteger(fallbackRef.bytes) && fallbackRef.bytes > 0,
-      'architecture_hot_fallback_missing');
-    const fallbackPath = ensurePath(fallbackRef.path);
-    assert(delivery.architectureObjects['architecture-v1/' + fallbackPath] === fallbackRef.sha256,
-      'architecture_hot_fallback_unbound');
-    assert(release.objects.some(ref => ref?.path === fallbackPath && ref?.sha256 === fallbackRef.sha256),
-      'architecture_hot_fallback_not_in_release');
-
     const reader = new CatalogReader(this.architectureBase, { fetcher: this.fetcher, currentRef: release.catalogCurrent });
-    const [membership, catalog, hotFallback] = await Promise.all([
+    const [membership, catalog] = await Promise.all([
       this.readRef(release.membership, signal),
       reader.open(signal),
-      this.readRef(fallbackRef, signal),
     ]);
 
     assert(membership?.schema === MEMBERSHIP_SCHEMA && membership.scope === 'all-time' && membership.complete === true,
@@ -228,24 +260,6 @@ export class PublishedCatalogClient {
     assert(catalog.recordCount === membership.count && catalog.recordSetHash === membership.catalogId
       && catalog.doiSetHash === membership.doiSetHash, 'catalog_membership_mismatch');
 
-    assert(hotFallback?.schema === 'gallery-hot-fallback-v1' && hotFallback.catalogId === release.catalogId
-      && hotFallback.doiSetHash === release.doiSetHash && hotFallback.publicationSlot === release.publicationSlot
-      && hotFallback.sourceCommit === release.sourceCommit && hotFallback.scope === 'hot-plus-future-candidates'
-      && typeof hotFallback.generatedAsOfDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(hotFallback.generatedAsOfDate)
-      && Array.isArray(hotFallback.records) && hotFallback.count === hotFallback.records.length
-      && hotFallback.count <= delivery.productionCards, 'architecture_hot_fallback_generation_mismatch');
-
-    const deliveryDoiSet = new Set(deliveryDois);
-    const hotSeen = new Set();
-    const hotRecords = [];
-    for (const row of hotFallback.records) {
-      const doi = normalizeDoi(row?.doi || row?.paper?.doi || row?.paper?.url);
-      assert(doi && deliveryDoiSet.has(doi) && row?.paper && isHash(row?.revision) && !hotSeen.has(doi),
-        'architecture_hot_fallback_record_invalid');
-      assert(membership.members?.[doi] === row.revision, 'architecture_hot_fallback_revision_mismatch');
-      hotSeen.add(doi);
-      if (classifyDate(row.firstOnlineDate, asOfDate, row.datePrecision) === 'hot') hotRecords.push(row);
-    }
 
     const months = catalog.shards.map(row => row.month).filter(month => /^\d{4}-\d{2}$/.test(month)).sort();
     this.earliestDate = months.length ? `${months[0]}-01` : '';
@@ -256,7 +270,7 @@ export class PublishedCatalogClient {
     this.membership = membership;
     this.memberDois = memberDois;
     this.catalogId = release.catalogId;
-    this.hotRecords = hotRecords;
+    this.hotRecords = null;
 
     const second = await this.fetchBytes(deliveryUrl, { maxBytes: 2 * 1024 * 1024, label: 'delivery_recheck' }, signal);
     assert(new TextDecoder().decode(second.bytes) === firstText, 'delivery_changed_during_architecture_open');
