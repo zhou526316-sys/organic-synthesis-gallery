@@ -68,9 +68,9 @@ function captureBelongsToDoi(item, doi) {
 function isRscPdfPagePreviewUrl(value) {
   try {
     const url = new URL(String(value || ''));
-    return /(?:^|\\.)rscj\\.silverchair-cdn\\.com$/i.test(url.hostname) && /\\.pdf\\.gif$/i.test(url.pathname);
+    return /(?:^|\.)rscj\.silverchair-cdn\.com$/i.test(url.hostname) && /\.pdf\.gif$/i.test(url.pathname);
   } catch {
-    return /\\.pdf\\.gif(?:[?#]|$)/i.test(String(value || ''));
+    return /\.pdf\.gif(?:[?#]|$)/i.test(String(value || ''));
   }
 }
 
