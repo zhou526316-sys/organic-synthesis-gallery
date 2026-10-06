@@ -210,6 +210,7 @@ let batchTimer: number | null = null;
 let batchRunning = false;
 let batchAgain = false;
 let inventoryFingerprint = '';
+let inventoryTimer: number | null = null;
 let bridgeStageTimer: number | null = null;
 let bridgeStageCursor = 0;
 let newnessTimer: number | null = null;
@@ -252,6 +253,9 @@ app.addEventListener('gallery-corpus-query', event => {
 hydrateFilterPreferences();
 hydrateBrowserCaches();
 document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
+window.addEventListener('gallery-title-cache-updated', () => {
+  if (hydrateChineseTitleCache() && language === 'zh') renderCards();
+});
 
 function initialLanguage(): Language {
   try {
@@ -312,15 +316,25 @@ function t(key: CopyKey): string {
   return copy[language][key];
 }
 
-function hydrateBrowserCaches(): void {
+function hydrateChineseTitleCache(): boolean {
+  let changed = false;
   try {
     const zh = JSON.parse(localStorage.getItem(ZH_CACHE_KEY) || '{}') as Record<string, unknown>;
     for (const [title, value] of Object.entries(zh)) {
-      if (typeof value === 'string' && value.trim()) zhTitleCache.set(title, value.trim());
+      if (typeof value !== 'string' || !value.trim()) continue;
+      const normalized = value.trim();
+      if (zhTitleCache.get(title) === normalized) continue;
+      zhTitleCache.set(title, normalized);
+      changed = true;
     }
   } catch {
     // Ignore malformed cache.
   }
+  return changed;
+}
+
+function hydrateBrowserCaches(): void {
+  hydrateChineseTitleCache();
   try {
     const resolved = JSON.parse(localStorage.getItem(TITLE_CACHE_KEY) || '{}') as Record<string, unknown>;
     for (const [key, value] of Object.entries(resolved)) {
@@ -1125,17 +1139,21 @@ function stageBridgeGaps(inventory: MediaInventoryResponse): void {
   }, 22_000);
 }
 
-function scheduleInventory(): void {
-  const dois = [...new Set(papers.map(paperDoi).filter((doi): doi is string => Boolean(doi)).map(doi => doi.toLowerCase()))].sort();
-  const fingerprint = dois.join('|');
-  if (!dois.length || fingerprint === inventoryFingerprint) return;
-  inventoryFingerprint = fingerprint;
-  void api.post('/api/media/inventory', { dois }).then(response => {
-    const inventory = response.data as MediaInventoryResponse;
-    stageBridgeGaps(inventory);
-  }).catch(() => {
-    inventoryFingerprint = '';
-  });
+function scheduleInventory(delay = 4500): void {
+  if (inventoryTimer !== null) window.clearTimeout(inventoryTimer);
+  inventoryTimer = window.setTimeout(() => {
+    inventoryTimer = null;
+    const dois = [...new Set(papers.map(paperDoi).filter((doi): doi is string => Boolean(doi)).map(doi => doi.toLowerCase()))].sort();
+    const fingerprint = dois.join('|');
+    if (!dois.length || fingerprint === inventoryFingerprint) return;
+    inventoryFingerprint = fingerprint;
+    void api.post('/api/media/inventory', { dois }).then(response => {
+      const inventory = response.data as MediaInventoryResponse;
+      stageBridgeGaps(inventory);
+    }).catch(() => {
+      inventoryFingerprint = '';
+    });
+  }, Math.max(0, delay));
 }
 
 async function resolveTitles(): Promise<void> {
