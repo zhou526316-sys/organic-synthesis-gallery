@@ -75,6 +75,13 @@ async function v3Sync(env, userId) {
   `).bind(userId).first();
 }
 
+async function hasV3Authority(env,userId) {
+  const row=await env.DB.prepare(
+    "SELECT authority FROM user_library_v3_authority WHERE user_id=?"
+  ).bind(userId).first();
+  return row?.authority==='v3';
+}
+
 function rebuildV3State(head, shape, rows) {
   if (!head || !shape) throw new Error('user_library_v3_shadow_missing_head');
   const globalState = parseJson(head.global_json);
@@ -207,6 +214,9 @@ export async function shadowWriteUserLibraryV3FromState(env, userIdValue, state,
   if (!userLibraryV3ShadowEnabled(env)) return { enabled:false, written:false };
   if (!env?.DB || typeof env.DB.batch !== 'function') throw new Error('user_library_v3_shadow_atomic_batch_required');
   const userId = safeText(userIdValue, 300);
+  if (userId && await hasV3Authority(env,userId)) {
+    return { enabled:false,written:false,reason:'user_library_v3_authority_active' };
+  }
   const revision = Number(revisionValue || 0);
   const updatedAt = Number(updatedAtValue || 0);
   const now = Number(nowValue || 0);
@@ -357,10 +367,11 @@ export async function shadowWriteUserLibraryV3FromState(env, userIdValue, state,
 
 export async function getUserLibraryV3ShadowStatus(env) {
   if (!env?.DB) return { status:503, body:{ error:'user_library_v3_shadow_db_missing' } };
-  const [legacy,heads,sync,revisionMismatch,backfill] = await Promise.all([
+  const [legacy,heads,sync,authorityCount,revisionMismatch,backfill] = await Promise.all([
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_state').first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_v3_head').first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_v3_shadow_sync').first(),
+    env.DB.prepare("SELECT COUNT(*) AS count FROM user_library_v3_authority WHERE authority='v3'").first(),
     env.DB.prepare(`
       SELECT COUNT(*) AS count
       FROM user_library_state legacy
@@ -380,6 +391,7 @@ export async function getUserLibraryV3ShadowStatus(env) {
     legacyUsers:Number(legacy?.count || 0),
     v3Heads:Number(heads?.count || 0),
     syncedUsers:Number(sync?.count || 0),
+    v3AuthorityUsers:Number(authorityCount?.count || 0),
     revisionMismatches:Number(revisionMismatch?.count || 0),
     backfill:backfill ? {
       complete:Number(backfill.complete || 0)===1,
@@ -418,10 +430,11 @@ export async function backfillUserLibraryV3ShadowPage(env, limitValue = 20) {
 
   const cursor = safeText(progress?.cursor_user_id,300);
   const page = await env.DB.prepare(`
-    SELECT user_id,state_json,revision,updated_at
-    FROM user_library_state
-    WHERE (?='' OR user_id>?)
-    ORDER BY user_id ASC
+    SELECT legacy.user_id,legacy.state_json,legacy.revision,legacy.updated_at
+    FROM user_library_state legacy
+    LEFT JOIN user_library_v3_authority authority ON authority.user_id=legacy.user_id
+    WHERE authority.user_id IS NULL AND (?='' OR legacy.user_id>?)
+    ORDER BY legacy.user_id ASC
     LIMIT ?
   `).bind(cursor,cursor,limit).all();
   const rows = page?.results || [];
@@ -482,9 +495,11 @@ export async function reconcileUserLibraryV3ShadowPage(env, limitValue = 20) {
     SELECT legacy.user_id,legacy.state_json,legacy.revision,legacy.updated_at
     FROM user_library_state legacy
     LEFT JOIN user_library_v3_shadow_sync sync ON sync.user_id=legacy.user_id
-    WHERE sync.user_id IS NULL
+    LEFT JOIN user_library_v3_authority authority ON authority.user_id=legacy.user_id
+    WHERE authority.user_id IS NULL
+      AND (sync.user_id IS NULL
        OR sync.source_revision<>legacy.revision
-       OR sync.source_updated_at<>legacy.updated_at
+       OR sync.source_updated_at<>legacy.updated_at)
     ORDER BY legacy.user_id ASC
     LIMIT ?
   `).bind(limit).all();
@@ -514,9 +529,11 @@ export async function reconcileUserLibraryV3ShadowPage(env, limitValue = 20) {
     SELECT COUNT(*) AS count
     FROM user_library_state legacy
     LEFT JOIN user_library_v3_shadow_sync sync ON sync.user_id=legacy.user_id
-    WHERE sync.user_id IS NULL
+    LEFT JOIN user_library_v3_authority authority ON authority.user_id=legacy.user_id
+    WHERE authority.user_id IS NULL
+      AND (sync.user_id IS NULL
        OR sync.source_revision<>legacy.revision
-       OR sync.source_updated_at<>legacy.updated_at
+       OR sync.source_updated_at<>legacy.updated_at)
   `).first();
   return {status:200,body:{
     ok:true,
@@ -567,9 +584,11 @@ export async function compareUserLibraryV3ShadowPage(env, offsetValue = 0, limit
   const offset = Math.max(0,Math.floor(Number(offsetValue || 0)));
   const limit = Math.max(1,Math.min(MAX_COMPARE_LIMIT,Number(limitValue || 20)));
   const page = await env.DB.prepare(`
-    SELECT user_id,state_json,revision,updated_at
-    FROM user_library_state
-    ORDER BY user_id ASC
+    SELECT legacy.user_id,legacy.state_json,legacy.revision,legacy.updated_at
+    FROM user_library_state legacy
+    LEFT JOIN user_library_v3_authority authority ON authority.user_id=legacy.user_id
+    WHERE authority.user_id IS NULL
+    ORDER BY legacy.user_id ASC
     LIMIT ? OFFSET ?
   `).bind(limit,offset).all();
   const rows = page?.results || [];
@@ -583,7 +602,12 @@ export async function compareUserLibraryV3ShadowPage(env, offsetValue = 0, limit
       reasons[result.reason] = Number(reasons[result.reason] || 0) + 1;
     }
   }
-  const totalRow = await env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_state').first();
+  const totalRow = await env.DB.prepare(`
+    SELECT COUNT(*) AS count
+    FROM user_library_state legacy
+    LEFT JOIN user_library_v3_authority authority ON authority.user_id=legacy.user_id
+    WHERE authority.user_id IS NULL
+  `).first();
   const total = Number(totalRow?.count || 0);
   const nextOffset = offset + rows.length;
   return { status:200, body:{
