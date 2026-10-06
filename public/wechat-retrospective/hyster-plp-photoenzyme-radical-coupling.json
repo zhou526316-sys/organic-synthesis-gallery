@@ -81,6 +81,12 @@
       "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-application.png",
       "caption": "原文 Fig. 5g｜Lenacapavir 核心片段应用：一步同时建立新的 C–C 键和手性胺中心，得到 82% 分析收率、98:2 e.r.；这里真正展示的是新的逆合成入口，而不是把单次结果直接等同于成熟工艺。",
       "display_width_pct": 58
+    },
+    {
+      "id": "fig2_active_site",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/hyster-active-site.png",
+      "display_width_pct": 82,
+      "caption": "原文 Fig. 2c｜五轮进化的关键突变并不是散落在蛋白表面，而是集中在包围醌式中间体与底物的多个环区。它们同时改变活性位点空间、局部柔性以及发色团的相对位置，因此“蛋白工程”在这里也会反馈到后面的光物理过程。"
     }
   ],
   "sections": [
@@ -109,11 +115,15 @@
         "我的理解是，后续 Fig. 4 和 Fig. 5 很重要，因为它们提醒我们不要把这条进化曲线简单解释成“底物结合更好了”。FRET、激发态寿命和活性位点几何都在变化，进化优化的是一整套光物理—化学耦合网络。"
       ],
       "figures": [
-        "fig2_evolution"
+        "fig2_evolution",
+        "fig2_active_site"
       ],
       "figures_after_paragraph": {
         "1": [
           "fig2_evolution"
+        ],
+        "3": [
+          "fig2_active_site"
         ]
       }
     },
