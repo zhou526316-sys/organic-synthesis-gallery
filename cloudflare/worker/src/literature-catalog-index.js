@@ -513,7 +513,9 @@ export async function queryPublishedLiteratureCatalogView(env,input={}){
   if(!env?.LITERATURE_INDEX_DB){
     return {status:503,body:{error:'literature_catalog_index_db_missing',readPathActive:false}};
   }
-  const result=await queryLiteratureCatalogView(env,input);
+  const requestedLimit=Number(input?.limit||60);
+  const publicInput={...input,limit:Math.max(1,Math.min(60,Number.isFinite(requestedLimit)?Math.floor(requestedLimit):60))};
+  const result=await queryLiteratureCatalogView(env,publicInput);
   if(result.status!==200) return {status:result.status,body:{...result.body,readPathActive:false}};
   return {status:200,body:{...result.body,readPathActive:true}};
 }
