@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { test } from 'node:test';
 import { DatabaseSync } from 'node:sqlite';
+import { readerCounts } from '../src/user-ui.js';
 import {
   backfillUserLibraryV3ShadowPage,
   compareUserLibraryV3ShadowPage,
@@ -9,6 +10,11 @@ import {
   reconcileUserLibraryV3ShadowPage,
   shadowWriteUserLibraryV3FromState,
 } from '../src/user-library-v3-shadow.js';
+import {
+  readUserLibraryV3Delta,
+  readUserLibraryV3Head,
+  readUserLibraryV3Page,
+} from '../src/user-library-v3.js';
 
 class Statement {
   constructor(db,sql){this.db=db;this.sql=sql;this.args=[];}
@@ -31,6 +37,12 @@ class D1 {
     this.sqlite.exec(`
       PRAGMA foreign_keys=ON;
       CREATE TABLE users (id TEXT PRIMARY KEY);
+      CREATE TABLE user_sessions (
+        token_hash TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        created_at INTEGER NOT NULL DEFAULT 0,
+        expires_at INTEGER NOT NULL
+      );
       CREATE TABLE user_library_state (
         user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
         state_json TEXT NOT NULL,
@@ -174,6 +186,157 @@ test('reconciliation repairs a user changed after historical cursor passed it',a
   ).get();
   assert.equal(Number(row.revision),2);
   assert.equal(JSON.parse(row.paper_state_json).note,'after');
+});
+
+test('legacy shadow writes emit bounded net deltas including tombstone deletions',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const shadowEnv=envFor(db);
+  const first={
+    ...fixture('before'),
+    papers:{
+      '10.1234/a':{favorite:true,note:'before',updatedAt:10},
+      '10.1234/delete':{favorite:true,updatedAt:10},
+    },
+    metadata:{
+      '10.1234/a':{id:'10.1234/a',doi:'10.1234/a',title:'A',journal:'JACS'},
+      '10.1234/delete':{id:'10.1234/delete',doi:'10.1234/delete',title:'Delete',journal:'JACS'},
+    },
+  };
+  putLegacy(db,'u-delta',first,1,100);
+  const initial=await shadowWriteUserLibraryV3FromState(shadowEnv,'u-delta',first,1,100,150);
+  assert.equal(initial.written,true);
+  assert.equal(initial.changeFloorRevision,1);
+
+  const second={
+    ...first,
+    hideRead:true,
+    papers:{
+      '10.1234/a':{favorite:true,note:'after',updatedAt:20},
+      '10.1234/new':{favorite:true,updatedAt:20},
+    },
+    metadata:{
+      '10.1234/a':first.metadata['10.1234/a'],
+      '10.1234/new':{id:'10.1234/new',doi:'10.1234/new',title:'New',journal:'Angew'},
+    },
+  };
+  putLegacy(db,'u-delta',second,2,200);
+  const updated=await shadowWriteUserLibraryV3FromState(shadowEnv,'u-delta',second,2,200,250);
+  assert.equal(updated.written,true);
+  assert.equal(updated.revision,2);
+  assert.equal(updated.changeFloorRevision,1);
+  assert.equal(updated.changeCount,3);
+
+  const readEnv={...shadowEnv,USER_LIBRARY_V3_READ_ENABLED:'1'};
+  const head=await readUserLibraryV3Head(readEnv,'u-delta');
+  assert.equal(head.ready,true);
+  assert.equal(head.revision,2);
+  assert.equal(head.changeFloorRevision,1);
+  assert.equal(head.papersSplit,true);
+  assert.equal(head.metadataSplit,true);
+  assert.equal(head.globalState.hideRead,true);
+
+  const page=await readUserLibraryV3Page(readEnv,'u-delta',{limit:10});
+  assert.deepEqual(page.rows.map(row=>row.paperKey),['10.1234/a','10.1234/new']);
+  assert.ok(!page.rows.some(row=>row.paperKey==='10.1234/delete'));
+
+  const delta=await readUserLibraryV3Delta(readEnv,'u-delta',{sinceRevision:1,limit:10});
+  assert.equal(delta.resetRequired,false);
+  assert.equal(delta.targetRevision,2);
+  assert.equal(delta.hasMore,false);
+  assert.deepEqual(delta.changes.map(row=>[row.paperKey,row.op]),[
+    ['10.1234/a','upsert'],
+    ['10.1234/delete','delete'],
+    ['10.1234/new','upsert'],
+  ]);
+  assert.equal(delta.globalState.hideRead,true);
+  const tombstone=db.sqlite.prepare(
+    "SELECT deleted,revision FROM user_library_v3_rows WHERE user_id='u-delta' AND paper_key='10.1234/delete'"
+  ).get();
+  assert.equal(Number(tombstone.deleted),1);
+  assert.equal(Number(tombstone.revision),2);
+});
+
+test('authenticated V3 head/page/delta modes are bounded and freshness-fenced',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const shadowEnv=envFor(db);
+  const token='v3-sync-session-token';
+  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token));
+  const tokenHash=[...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,'0')).join('');
+  const first={
+    ...fixture('before'),
+    papers:{
+      '10.1234/a':{favorite:true,note:'before',updatedAt:10},
+      '10.1234/b':{favorite:true,updatedAt:10},
+    },
+    metadata:{
+      '10.1234/a':{id:'10.1234/a',doi:'10.1234/a',title:'A',journal:'JACS'},
+      '10.1234/b':{id:'10.1234/b',doi:'10.1234/b',title:'B',journal:'Angew'},
+    },
+  };
+  putLegacy(db,'u-api-v3',first,1,100);
+  db.sqlite.prepare('INSERT INTO user_sessions(token_hash,user_id,expires_at) VALUES(?,?,?)')
+    .run(tokenHash,'u-api-v3',Date.now()+60_000);
+  await shadowWriteUserLibraryV3FromState(shadowEnv,'u-api-v3',first,1,100,150);
+
+  const disabled=await readerCounts(shadowEnv,{mode:'account-v3-head',sessionToken:token});
+  assert.equal(disabled.status,503);
+  assert.equal(disabled.body.error,'user_library_v3_read_disabled');
+
+  const env={...shadowEnv,USER_LIBRARY_V3_READ_ENABLED:'1'};
+  const head=await readerCounts(env,{mode:'account-v3-head',sessionToken:token});
+  assert.equal(head.status,200);
+  assert.equal(head.body.account.readPath,'v3-head');
+  assert.equal(head.body.account.revision,1);
+  assert.equal(head.body.account.paperCount,2);
+  assert.equal(head.body.account.papersSplit,true);
+
+  const firstPage=await readerCounts(env,{mode:'account-v3-page',sessionToken:token,limit:1});
+  assert.equal(firstPage.status,200);
+  assert.equal(firstPage.body.account.count,1);
+  assert.equal(firstPage.body.account.hasMore,true);
+  assert.ok(firstPage.body.account.nextKey);
+  const secondPage=await readerCounts(env,{
+    mode:'account-v3-page',sessionToken:token,limit:1,afterKey:firstPage.body.account.nextKey,
+  });
+  assert.equal(secondPage.status,200);
+  assert.equal(secondPage.body.account.count,1);
+  assert.equal(secondPage.body.account.hasMore,false);
+
+  const second={
+    ...first,
+    papers:{
+      '10.1234/a':{favorite:true,note:'after',updatedAt:20},
+      '10.1234/c':{favorite:true,updatedAt:20},
+    },
+    metadata:{
+      '10.1234/a':first.metadata['10.1234/a'],
+      '10.1234/c':{id:'10.1234/c',doi:'10.1234/c',title:'C',journal:'JACS'},
+    },
+  };
+  putLegacy(db,'u-api-v3',second,2,200);
+
+  const stale=await readerCounts(env,{mode:'account-v3-head',sessionToken:token});
+  assert.equal(stale.status,409);
+  assert.equal(stale.body.error,'user_library_v3_not_fresh');
+  assert.equal(stale.body.legacyRevision,2);
+  assert.equal(stale.body.v3Revision,1);
+
+  await shadowWriteUserLibraryV3FromState(shadowEnv,'u-api-v3',second,2,200,250);
+  const delta=await readerCounts(env,{
+    mode:'account-v3-delta',sessionToken:token,sinceRevision:1,limit:10,
+  });
+  assert.equal(delta.status,200);
+  assert.equal(delta.body.account.readPath,'v3-delta');
+  assert.equal(delta.body.account.targetRevision,2);
+  assert.deepEqual(delta.body.account.changes.map(row=>[row.paperKey,row.op]),[
+    ['10.1234/a','upsert'],
+    ['10.1234/b','delete'],
+    ['10.1234/c','upsert'],
+  ]);
+
+  const unauth=await readerCounts(env,{mode:'account-v3-head',sessionToken:'wrong'});
+  assert.equal(unauth.status,401);
+  assert.equal(unauth.body.error,'not_authenticated');
 });
 
 test('shadow can be independently disabled and does not activate V3 read/write authority',async t=>{
