@@ -600,6 +600,7 @@ function remoteLiteratureScope(): RemoteLiteratureScope | null {
   const needle = query.trim();
   const queryCodepoints = [...needle].length;
   if (needle && queryCodepoints < 3) return null;
+  if (/[\u3400-\u9fff]/u.test(needle)) return null;
   const expandsArchive = queryCodepoints >= 3 || Boolean(dateFrom || dateTo);
   if (!expandsArchive) return null;
   const request: LiteratureCatalogViewRequest = {
@@ -622,26 +623,6 @@ function remoteLiteratureScope(): RemoteLiteratureScope | null {
 function activeRemoteLiteratureView(): RemoteLiteratureViewState | null {
   const scope = remoteLiteratureScope();
   return scope && remoteLiteratureView?.scopeKey === scope.key ? remoteLiteratureView : null;
-}
-
-function remoteViewItemToPaper(item: LiteratureCatalogViewItem): Paper {
-  const doi = normalizeDoi(item.doi);
-  if (!doi || typeof item.journal !== 'string' || !Array.isArray(item.authors)) {
-    throw new Error('literature_catalog_view_item_invalid');
-  }
-  const addedDate = validAddedDate(item.addedDate) || undefined;
-  return normalizePaper({
-    journal: item.journal,
-    title: typeof item.title === 'string' ? item.title : null,
-    titleZh: typeof item.titleZh === 'string' ? item.titleZh : undefined,
-    doi,
-    date: typeof item.firstOnlineDate === 'string' ? item.firstOnlineDate : '',
-    url: null,
-    new: Boolean(addedDate && isNewTodayDate(addedDate)),
-    addedDate,
-    authors: item.authors,
-    synthesisType: item.synthesisType === 'formal' || item.synthesisType === 'total' ? item.synthesisType : undefined,
-  });
 }
 
 function clearRemoteLiteratureView(): void {
@@ -1467,6 +1448,15 @@ function validateRemoteLiteratureResponse(
   }
   if (!data.hasMore && data.nextCursor) throw new Error('literature_catalog_remote_cursor_unexpected');
   if (data.sort !== scope.request.sort) throw new Error('literature_catalog_remote_sort_mismatch');
+  const seen = new Set<string>();
+  for (const item of data.items) {
+    const doi = normalizeDoi(item?.doi);
+    if (!doi || seen.has(doi.toLowerCase())) throw new Error('literature_catalog_remote_doi_invalid');
+    seen.add(doi.toLowerCase());
+    if (client.revisionForDoi(doi) !== item.revision) {
+      throw new Error('literature_catalog_remote_revision_mismatch');
+    }
+  }
 }
 
 async function fetchRemoteLiteraturePage(
@@ -1494,9 +1484,12 @@ async function fetchRemoteLiteraturePage(
     pageCursors[page - 1] = cursor;
     if (data.hasMore && data.nextCursor) pageCursors[page] = data.nextCursor;
     else pageCursors.length = page;
-    const remotePapers = data.items.map(remoteViewItemToPaper)
-      .filter(paper => !isExcludedDoi(paperDoi(paper)));
-    if (remotePapers.length !== data.items.length) throw new Error('literature_catalog_remote_scope_mismatch');
+    const orderedDois = data.items.map(item => normalizeDoi(item.doi))
+      .filter((doi): doi is string => Boolean(doi));
+    const resolved = normalizeArchitectureRows(await client.resolve(orderedDois));
+    const byDoi = new Map(resolved.map(paper => [paperDoi(paper)?.toLowerCase() || '', paper]));
+    const remotePapers = orderedDois.map(doi => byDoi.get(doi.toLowerCase())).filter((paper): paper is Paper => Boolean(paper));
+    if (remotePapers.length !== data.items.length) throw new Error('literature_catalog_remote_resolution_incomplete');
     remoteLiteratureView = {
       scopeKey: scope.key,
       matched: data.matched,
