@@ -33,7 +33,8 @@ function doiForPaperKey(paperKey, metadata) {
 }
 
 export function userLibraryRowShadowEnabled(env) {
-  return String(env?.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1';
+  return String(env?.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1'
+    && String(env?.USER_LIBRARY_V3_WRITE_ENABLED || '') !== '1';
 }
 export function userLibraryRowReadEnabled(env) {
   return String(env?.USER_LIBRARY_ROW_READ_ENABLED || '') === '1';
@@ -242,9 +243,8 @@ export async function getUserLibraryShadowStatus(env) {
     `).first(),
     env.DB.prepare(`
       SELECT COUNT(*) AS count
-      FROM user_library_head head
-      INNER JOIN user_library_v3_authority authority ON authority.user_id=head.user_id
-      WHERE authority.authority='v3'
+      FROM user_library_head
+      WHERE shadow_version>=2
     `).first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_paper_state').first(),
     env.DB.prepare(`
@@ -273,7 +273,9 @@ export async function getUserLibraryShadowStatus(env) {
   const readPathActive=readConfigured&&userLibraryRowShadowEnabled(env)
     &&backfillHealthy&&legacyUsers===legacyShadowHeads&&revisionMismatches===0;
   return {status:200,body:{
-    version:1,shadowVersion:SHADOW_VERSION,enabled:userLibraryRowShadowEnabled(env),
+    version:1,shadowVersion:SHADOW_VERSION,
+    configured:String(env?.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1',
+    enabled:userLibraryRowShadowEnabled(env),
     readConfigured,readPathActive,
     legacyUsers,shadowHeads,legacyShadowHeads,v3CompatHeads,paperRows:Number(papers?.count||0),
     revisionMismatches,
@@ -377,6 +379,7 @@ async function compareOne(env, legacy) {
 }
 
 export async function compareUserLibraryShadowPage(env, offsetValue = 0, limitValue = 20) {
+  if (!userLibraryRowShadowEnabled(env)) return {status:409,body:{error:'user_library_row_shadow_disabled'}};
   if (!env?.DB) return {status:503,body:{error:'user_library_shadow_db_missing'}};
   const offset=Math.max(0,Math.floor(Number(offsetValue||0)));
   const limit=Math.max(1,Math.min(MAX_COMPARE_LIMIT,Number(limitValue||20)));
