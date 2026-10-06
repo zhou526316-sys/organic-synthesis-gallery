@@ -54,6 +54,19 @@ function doiForAnchor(anchor: HTMLAnchorElement): string {
   return (card?.dataset.doi || '').trim().toLowerCase();
 }
 
+async function resolvePrivatePdf(doi: string, token: string): Promise<string | null> {
+  const url = new URL('/api/user-ui/private-pdf/open', API_BASE);
+  url.searchParams.set('doi', doi);
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { authorization: 'Bearer ' + token },
+    cache: 'no-store',
+  });
+  if (!response.ok) return null;
+  const data = await response.json() as { available?: boolean; url?: string };
+  return data.available && typeof data.url === 'string' ? data.url : null;
+}
+
 function installClickRouting(): void {
   document.addEventListener('click', event => {
     if (!ownerReadEnabled || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -65,13 +78,28 @@ function installClickRouting(): void {
     if (!doi || !fallback || !token) return;
 
     event.preventDefault();
-    const viewer = new URL('/pdf/', window.location.origin);
-    viewer.searchParams.set('doi', doi);
-    viewer.searchParams.set('fallback', fallback);
-    if (anchor.target === '_blank') {
-      const opened = window.open(viewer.toString(), '_blank', 'noopener');
-      if (!opened) window.location.href = viewer.toString();
-    } else window.location.href = viewer.toString();
+    const newTab = anchor.target === '_blank';
+    // Keep a WindowProxy so the asynchronous entitlement lookup can reuse the
+    // user-initiated popup. Setting noopener in window.open may deliberately
+    // return null in some browsers, leaving an orphan about:blank tab.
+    const target = newTab ? window.open('about:blank', '_blank') : window;
+    if (!target) {
+      window.location.href = fallback;
+      return;
+    }
+    if (newTab) {
+      try { target.opener = null; } catch { /* optional hardening */ }
+    }
+
+    void resolvePrivatePdf(doi, token)
+      .then(privateUrl => {
+        try { target.location.replace(privateUrl || fallback); }
+        catch { if (!newTab) window.location.href = fallback; }
+      })
+      .catch(() => {
+        try { target.location.replace(fallback); }
+        catch { if (!newTab) window.location.href = fallback; }
+      });
   }, false);
 }
 
