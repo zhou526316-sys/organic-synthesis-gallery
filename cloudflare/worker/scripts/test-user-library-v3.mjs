@@ -10,6 +10,7 @@ import {
   readUserLibraryV3Page,
 } from '../src/user-library-v3.js';
 import { readUserLibraryStateFromRows } from '../src/user-library-shadow.js';
+import { shadowWriteUserLibraryV3FromState } from '../src/user-library-v3-shadow.js';
 import { readerCounts } from '../src/user-ui.js';
 
 class Statement {
@@ -53,6 +54,9 @@ class D1 {
   }
   prepare(sql){return new Statement(this,sql);}
   async batch(statements){
+    const hook=this.beforeBatch;
+    this.beforeBatch=null;
+    if(typeof hook==='function')hook();
     const out=[];
     this.sqlite.exec('BEGIN IMMEDIATE');
     try{
@@ -117,6 +121,110 @@ test('bounded V3 mutation creates revision-fenced head and paged current rows',a
     [...first.rows,...second.rows].map(row=>row.paperKey).sort(),
     ['10.1234/a','title:no-doi'],
   );
+});
+
+test('first V3 migration requires an exactly fresh legacy shadow and removes legacy only after success',async t=>{
+  const db=new D1();t.after(()=>db.close());addUser(db,'u-migrate');
+  const state={
+    statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},
+    papers:{a:{favorite:true,note:'legacy',updatedAt:10}},
+    metadata:{a:{id:'a',title:'A',journal:'JACS'}},
+    followedSearches:[],searchHistory:[],hideRead:false,
+  };
+  db.sqlite.prepare(`
+    INSERT INTO user_library_state(user_id,state_json,revision,updated_at)
+    VALUES('u-migrate',?,1,100)
+  `).run(JSON.stringify(state));
+  const shadowEnv=envFor(db,{USER_LIBRARY_V3_WRITE_ENABLED:'0'});
+  const shadow=await shadowWriteUserLibraryV3FromState(shadowEnv,'u-migrate',state,1,100,150);
+  assert.equal(shadow.written,true);
+
+  const env=envFor(db,{USER_LIBRARY_V3_WRITE_ENABLED:'1'});
+  const migrated=await applyUserLibraryV3Mutation(env,'u-migrate',{
+    expectedRevision:1,
+    operations:[{
+      paperKey:'a',
+      paperState:{favorite:true,note:'v3',updatedAt:20},
+      metadata:{id:'a',title:'A',journal:'JACS'},
+    }],
+  },200);
+  assert.equal(migrated.ok,true);
+  assert.equal(migrated.revision,2);
+  assert.equal(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_state WHERE user_id='u-migrate'").get().c,0);
+  assert.equal(db.sqlite.prepare("SELECT authority FROM user_library_v3_authority WHERE user_id='u-migrate'").get().authority,'v3');
+  assert.equal(JSON.parse(db.sqlite.prepare("SELECT paper_state_json FROM user_library_v3_rows WHERE user_id='u-migrate' AND paper_key='a'").get().paper_state_json).note,'v3');
+});
+
+test('stale legacy revision blocks first V3 migration without deleting or changing authority',async t=>{
+  const db=new D1();t.after(()=>db.close());addUser(db,'u-stale');
+  const state={
+    statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},
+    papers:{a:{favorite:true,note:'r1',updatedAt:10}},
+    metadata:{a:{id:'a',title:'A',journal:'JACS'}},
+    followedSearches:[],searchHistory:[],hideRead:false,
+  };
+  db.sqlite.prepare(`
+    INSERT INTO user_library_state(user_id,state_json,revision,updated_at)
+    VALUES('u-stale',?,1,100)
+  `).run(JSON.stringify(state));
+  const shadowEnv=envFor(db,{USER_LIBRARY_V3_WRITE_ENABLED:'0'});
+  await shadowWriteUserLibraryV3FromState(shadowEnv,'u-stale',state,1,100,150);
+
+  const newer={...state,papers:{a:{favorite:true,note:'r2',updatedAt:20}}};
+  db.sqlite.prepare(`
+    UPDATE user_library_state SET state_json=?,revision=2,updated_at=200 WHERE user_id='u-stale'
+  `).run(JSON.stringify(newer));
+
+  const env=envFor(db,{USER_LIBRARY_V3_WRITE_ENABLED:'1'});
+  const blocked=await applyUserLibraryV3Mutation(env,'u-stale',{
+    expectedRevision:1,
+    operations:[{paperKey:'a',paperState:{favorite:true,note:'must-not-win'},metadata:state.metadata.a}],
+  },250);
+  assert.equal(blocked.ok,false);
+  assert.equal(blocked.conflict,true);
+  assert.equal(blocked.reason,'user_library_v3_shadow_not_fresh');
+  assert.equal(blocked.currentRevision,2);
+  assert.equal(blocked.v3Revision,1);
+  assert.equal(db.sqlite.prepare("SELECT revision FROM user_library_state WHERE user_id='u-stale'").get().revision,2);
+  assert.equal(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_v3_authority WHERE user_id='u-stale'").get().c,0);
+  assert.equal(db.sqlite.prepare("SELECT revision FROM user_library_v3_head WHERE user_id='u-stale'").get().revision,1);
+});
+
+test('atomic first-migration guard catches a legacy write racing after freshness pre-read',async t=>{
+  const db=new D1();t.after(()=>db.close());addUser(db,'u-race-freshness');
+  const state={
+    statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},
+    papers:{a:{favorite:true,note:'r1',updatedAt:10}},
+    metadata:{a:{id:'a',title:'A',journal:'JACS'}},
+    followedSearches:[],searchHistory:[],hideRead:false,
+  };
+  db.sqlite.prepare(`
+    INSERT INTO user_library_state(user_id,state_json,revision,updated_at)
+    VALUES('u-race-freshness',?,1,100)
+  `).run(JSON.stringify(state));
+  const shadowEnv=envFor(db,{USER_LIBRARY_V3_WRITE_ENABLED:'0'});
+  await shadowWriteUserLibraryV3FromState(shadowEnv,'u-race-freshness',state,1,100,150);
+
+  db.beforeBatch=()=>{
+    const newer={...state,papers:{a:{favorite:true,note:'r2-race',updatedAt:20}}};
+    db.sqlite.prepare(`
+      UPDATE user_library_state SET state_json=?,revision=2,updated_at=200
+      WHERE user_id='u-race-freshness'
+    `).run(JSON.stringify(newer));
+  };
+
+  const env=envFor(db,{USER_LIBRARY_V3_WRITE_ENABLED:'1'});
+  const blocked=await applyUserLibraryV3Mutation(env,'u-race-freshness',{
+    expectedRevision:1,
+    operations:[{paperKey:'a',paperState:{favorite:true,note:'must-not-win'},metadata:state.metadata.a}],
+  },250);
+  assert.equal(blocked.ok,false);
+  assert.equal(blocked.conflict,true);
+  assert.equal(blocked.reason,'user_library_v3_shadow_not_fresh');
+  assert.equal(blocked.currentRevision,2);
+  assert.equal(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_v3_authority WHERE user_id='u-race-freshness'").get().c,0);
+  assert.equal(db.sqlite.prepare("SELECT revision FROM user_library_v3_head WHERE user_id='u-race-freshness'").get().revision,1);
+  assert.equal(db.sqlite.prepare("SELECT revision FROM user_library_state WHERE user_id='u-race-freshness'").get().revision,2);
 });
 
 test('V3 mutation keeps bounded D3b compatibility rows readable without rewriting unchanged rows',async t=>{
