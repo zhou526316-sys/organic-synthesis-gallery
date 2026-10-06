@@ -9,11 +9,11 @@
     },
     {
       "path": "public/wechat-featured/2026-10-06.json",
-      "blobSha": "d9a7bf27aaddfce9b143c32c3d14d23aed17e637"
+      "blobSha": "9c3d2609684f0807e6fdcf0c62edbb300906a773"
     },
     {
       "path": "public/wechat-retrospective/hyster-plp-photoenzyme-radical-coupling.json",
-      "blobSha": "40953c845becb0582eec250b6d4df9fa4b7610eb"
+      "blobSha": "92e1132befe604d891a473773e52a210f151e2e3"
     }
   ],
   "artifacts": {
@@ -25,18 +25,16 @@
   "textReview": "pass",
   "imageReview": "pass",
   "reviewNotes": [
-    "Text-only artifact reviewed independently and completed with jump-card template wording and originality notice.",
-    "Images-only artifact reviewed independently; used chemistry/evidence images are publisher rasters with argument-specific crops.",
-    "Broken local Hyster cover dependency removed; retrospective cover now composes from a verified publisher raster and writes non-progressive JPEG.",
-    "Final WeChat transport/layout remains pending until draft/get readback."
+    "Visual revision self-reviewed after user screenshot feedback.",
+    "Hyster opening image now uses the full Fig. 1c horizontal overview instead of the narrow left crop.",
+    "Hyster cover restored to the user-confirmed blue FRET/PLP* cover; no replacement design is generated.",
+    "Nature Chemistry cover now uses Fig. 1e with a dark title-safe band.",
+    "TinyFish is not part of the approval path; transport QA remains pending until draft/get."
   ],
-  "approvedAt": "2026-10-06T05:54:27Z",
-  "transportReview": "pass",
-  "transportReviewedAt": "2026-10-06T06:01:05Z",
-  "draftReadback": "ok",
-  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/46996052560b30137c073a13.html",
-  "mediaId": "KhELYUzvwADwB_l1xH1SWFv31tB1FbKXF89D7ZHLK2znutU4BOGt5XD22WOo65yQ",
-  "nonBlockingNotes": [
-    "Gallery jump-card miniatures fell back to text-only cards; QR and titles/DOIs are intact. Do not re-sync the approved draft solely for this optional presentation fallback."
-  ]
+  "approvedAt": "2026-10-06T06:20:00Z",
+  "transportReview": "pending",
+  "transportReviewedAt": null,
+  "draftReadback": null,
+  "previewUrl": null,
+  "mediaId": null
 }
