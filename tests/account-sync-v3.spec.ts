@@ -221,10 +221,16 @@ test('V3 write authority batches 65 dirty paper keys as 32/32/1 and never calls 
   for (let index = 0; index < 65; index += 1) {
     const key = `10.1234/local-${String(index).padStart(2,'0')}`;
     local.papers[key] = {
-      favorite:true,collections:[],note:`N${index}`,quickTerms:[],tags:[],updatedAt:100+index,
+      favorite:true,
+      collections:[],
+      note:`N${index}-${'x'.repeat(30000)}`,
+      quickTerms:[],
+      tags:[],
+      updatedAt:100+index,
     };
     local.metadata[key] = { id:key,doi:key,title:`Local ${index}`,journal:'JACS' };
   }
+  expect(JSON.stringify(local).length).toBeGreaterThan(1_500_000);
   await seedSession(page,local);
   await stubCommonApi(page);
 
