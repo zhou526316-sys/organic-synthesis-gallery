@@ -1914,7 +1914,7 @@ def upload_gallery_card_visuals(token: str, papers: list[dict], featured: dict |
         return {}
 
     by_doi: dict[str, str] = {}
-    for item in payload.get("items", []) if isinstance(payload, dict) else []:
+    for item in ((payload.get("items") or []) if isinstance(payload, dict) else []):
         if not isinstance(item, dict):
             continue
         doi = normalize_doi(item.get("doi"))
