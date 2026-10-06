@@ -10,6 +10,11 @@
     return row?'https://pubs.rsc.org/en/content/articlehtml/'+row.year+'/'+row.code+'/'+row.suffix:'';
   }
 
+  function rscPdfPreviewUrl(value) {
+    var raw=String(value||'').split('#',1)[0].split('?',1)[0].toLowerCase();
+    return /(?:^|\/)[^/]+\.pdf\.(?:gif|png|jpe?g|webp)$/.test(raw);
+  }
+
   function rscBodyFigureContext(node, original) {
     if(!node||!node.closest)return original;
     if(original&&(original.label||original.official))return original;
@@ -36,7 +41,7 @@
     ));}
     function add(node,score,source,text){
       articleFigureImageUrls(node,base).forEach(function(url,rank){
-        if(!url||seen.has(url)||reject(text,url)||!candidateBelongsToJob(url,job))return;
+        if(!url||rscPdfPreviewUrl(url)||seen.has(url)||reject(text,url)||!candidateBelongsToJob(url,job))return;
         seen.add(url);rows.push({url:url,kind:'official',assetType:'graphical_abstract',score:score-rank,
           text:String(text||'Graphical Abstract').slice(0,1000),source:source,element:node.tagName&&node.tagName.toLowerCase()==='img'?node:null});
       });
