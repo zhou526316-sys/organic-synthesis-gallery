@@ -1,0 +1,75 @@
+name: Repair confirmed RSC preview TOC
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/repair-confirmed-rsc-preview.yml'
+  workflow_dispatch:
+    inputs:
+      doi:
+        description: 'Confirmed RSC DOI whose stored TOC is a page/PDF preview'
+        required: true
+        default: '10.1039/d6sc06421c'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repair-confirmed-rsc-preview
+  cancel-in-progress: false
+
+jobs:
+  quarantine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      D1_NAME: organic-synthesis-gallery
+      REPAIR_DOI: ${{ github.event.inputs.doi || '10.1039/d6sc06421c' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install Worker dependencies
+        working-directory: cloudflare/worker
+        run: npm install --no-audit --no-fund
+      - name: Quarantine confirmed RSC preview TOC and reopen capture gap
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          DOI="$(printf '%s' "$REPAIR_DOI" | tr '[:upper:]' '[:lower:]')"
+          [[ "$DOI" =~ ^10\.1039/[a-z0-9._()/+-]+$ ]] || { echo "Refusing non-RSC DOI: $DOI" >&2; exit 1; }
+          NOW="$(date +%s%3N)"
+          npx wrangler d1 execute "$D1_NAME" --remote --command "
+            UPDATE toc_assets
+               SET available = 0,
+                   reason = 'rsc_pdf_preview_quarantined',
+                   checked_at = $NOW,
+                   updated_at = $NOW
+             WHERE doi = '$DOI' AND available = 1;
+            INSERT INTO media_repair_state
+              (doi, repair_version, attempts, last_attempt_at, next_retry_at, last_root_cause, last_outcome, reported_priority, updated_at)
+            VALUES
+              ('$DOI', 1, 0, 0, 0, 'rsc_pdf_preview_quarantined', 'missing', 1, $NOW)
+            ON CONFLICT(doi) DO UPDATE SET
+              next_retry_at = 0,
+              last_root_cause = 'rsc_pdf_preview_quarantined',
+              last_outcome = 'missing',
+              reported_priority = 1,
+              updated_at = excluded.updated_at;
+          "
+      - name: Verify quarantine
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          DOI="$(printf '%s' "$REPAIR_DOI" | tr '[:upper:]' '[:lower:]')"
+          npx wrangler d1 execute "$D1_NAME" --remote --command "
+            SELECT doi, available, reason FROM toc_assets WHERE doi = '$DOI';
+            SELECT doi, next_retry_at, last_root_cause, last_outcome, reported_priority
+              FROM media_repair_state WHERE doi = '$DOI';
+          " --json
