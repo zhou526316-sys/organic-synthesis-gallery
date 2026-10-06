@@ -56,7 +56,7 @@
         0,
         0,
         1,
-        0.45
+        0.43
       ],
       "output": "public/wechat-assets/reviewed/2026-10-06/daily-scope.png",
       "proof": "audit/wechat-working/crop-proofs/2026-10-06/daily-scope.jpg"
@@ -180,6 +180,30 @@
       ],
       "output": "public/wechat-assets/reviewed/2026-10-06/hyster-lifetime-ab.png",
       "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-lifetime-ab.jpg"
+    },
+    {
+      "id": "hyster-lifetime-ab",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig5_HTML.png",
+      "crop_frac": [
+        0,
+        0,
+        0.58,
+        0.31
+      ],
+      "output": "public/wechat-assets/reviewed/2026-10-06/hyster-lifetime-ab.png",
+      "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-lifetime-ab.jpg"
+    },
+    {
+      "id": "hyster-redox-c",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig5_HTML.png",
+      "crop_frac": [
+        0.55,
+        0,
+        1,
+        0.31
+      ],
+      "output": "public/wechat-assets/reviewed/2026-10-06/hyster-redox-c.png",
+      "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-redox-c.jpg"
     }
   ]
 }
