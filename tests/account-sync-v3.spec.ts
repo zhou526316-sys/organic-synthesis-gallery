@@ -475,7 +475,7 @@ test('live write-authority flip upgrades a dirty paper from legacy save to V3 mu
       const writeEnabled=activated;
       const head=headFor(revision,writeEnabled);
       await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
-        account:{userId:'u-live',readPath:'v3-page',writeEnabled,ready:true,
+        account:{userId:'u-live',readPath:'v3-page',writeEnabled,writeAuthority:'legacy',ready:true,
           scanStartRevision:revision,head,count:0,hasMore:false,nextKey:null,rows:[]},
       })});
       return;
@@ -485,7 +485,7 @@ test('live write-authority flip upgrades a dirty paper from legacy save to V3 mu
       const writeEnabled=activated;
       const head=headFor(revision,writeEnabled);
       await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
-        account:{userId:'u-live',readPath:'v3-delta',writeEnabled,ready:true,
+        account:{userId:'u-live',readPath:'v3-delta',writeEnabled,writeAuthority:'legacy',ready:true,
           resetRequired:false,sinceRevision:revision,targetRevision:revision,head,
           globalRevision:revision,count:0,hasMore:false,nextCursor:null,changes:[]},
       })});
