@@ -1,0 +1,90 @@
+name: WeChat Preview Visual Audit
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'audit/automation-triggers/wechat-preview-audit-request.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-preview-visual-audit
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Capture rendered WeChat assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, re, urllib.request
+          from pathlib import Path
+
+          receipt = json.loads(Path('audit/wechat-publisher/latest.json').read_text(encoding='utf-8'))
+          preview = str(receipt.get('preview_url') or '').strip()
+          if not preview:
+              raise SystemExit('missing preview_url')
+          req = urllib.request.Request(preview, headers={'User-Agent':'Mozilla/5.0'})
+          html = urllib.request.urlopen(req, timeout=60).read().decode('utf-8', errors='replace')
+
+          def imgs(fragment):
+              return re.findall(r"<img[^>]+src=['\"]([^'\"]+)['\"]", fragment, flags=re.I)
+
+          head = re.search(r"<section class=['\"]bundle-head['\"].*?</section>", html, flags=re.I|re.S)
+          a1 = re.search(r"<article id=['\"]article-1['\"].*?</article>", html, flags=re.I|re.S)
+          a2 = re.search(r"<article id=['\"]article-2['\"].*?</article>", html, flags=re.I|re.S)
+          head_imgs = imgs(head.group(0) if head else '')
+          a1_imgs = imgs(a1.group(0) if a1 else '')
+          a2_imgs = imgs(a2.group(0) if a2 else '')
+          if len(head_imgs) < 2 or not a1_imgs or not a2_imgs:
+              raise SystemExit(f'unexpected preview image structure: head={len(head_imgs)} a1={len(a1_imgs)} a2={len(a2_imgs)}')
+
+          targets = {
+              'cover-daily': head_imgs[0],
+              'cover-retrospective': head_imgs[1],
+              'article1-first-body': a1_imgs[0],
+              'article2-first-body': a2_imgs[0],
+          }
+          out = Path('/tmp/wechat-visual-audit')
+          out.mkdir(parents=True, exist_ok=True)
+          meta = {'preview_url': preview, 'media_id': receipt.get('media_id'), 'assets': {}}
+          for name, url in targets.items():
+              request = urllib.request.Request(url, headers={'User-Agent':'Mozilla/5.0','Referer':preview})
+              payload = urllib.request.urlopen(request, timeout=60).read()
+              ext = '.jpg' if payload[:3] == b'\xff\xd8\xff' else '.png' if payload[:8] == b'\x89PNG\r\n\x1a\n' else '.bin'
+              path = out / f'{name}{ext}'
+              path.write_bytes(payload)
+              meta['assets'][name] = {'url': url, 'file': path.name, 'bytes': len(payload)}
+          (out/'audit.json').write_text(json.dumps(meta, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+          PY
+
+      - name: Persist visual audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          DEST="audit/wechat-working/rendered/2026-10-06"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            rm -rf "$DEST"
+            mkdir -p "$DEST"
+            cp -a /tmp/wechat-visual-audit/. "$DEST/"
+            git add "$DEST"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "audit: capture rendered WeChat visual assets"
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
