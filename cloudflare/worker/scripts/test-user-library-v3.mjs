@@ -578,6 +578,52 @@ test('authenticated V3 mutation API stays dormant until enabled and legacy accou
   assert.equal(conflict.body.currentRevision,1);
 });
 
+test('isolated canary user can mutate while global V3 writes remain disabled',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  addUser(db,'u-canary');
+  addUser(db,'u-regular');
+  const session=async (userId,token)=>{
+    const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token));
+    const tokenHash=[...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,'0')).join('');
+    db.sqlite.prepare('INSERT INTO user_sessions(token_hash,user_id,expires_at) VALUES(?,?,?)')
+      .run(tokenHash,userId,Date.now()+60_000);
+  };
+  await session('u-canary','v3-canary-token');
+  await session('u-regular','v3-regular-token');
+
+  const env=envFor(db,{
+    USER_LIBRARY_V3_WRITE_ENABLED:'0',
+    USER_LIBRARY_V3_WRITE_CANARY_USER_ID:'u-canary',
+  });
+  const canary=await readerCounts(env,{
+    mode:'account-v3-mutate',
+    sessionToken:'v3-canary-token',
+    expectedRevision:0,
+    globalState:{statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},followedSearches:[],searchHistory:[],hideRead:false},
+    operations:[{paperKey:'canary-paper',paperState:{favorite:true},metadata:{id:'canary-paper',title:'Canary'}}],
+  });
+  assert.equal(canary.status,200);
+  assert.equal(canary.body.account.writeEnabled,true);
+  assert.equal(canary.body.account.writeAuthority,'v3');
+  assert.equal(canary.body.account.revision,1);
+
+  const head=await readerCounts(env,{mode:'account-v3-head',sessionToken:'v3-canary-token'});
+  assert.equal(head.status,200);
+  assert.equal(head.body.account.writeEnabled,true);
+  assert.equal(head.body.account.writeAuthority,'v3');
+
+  const regular=await readerCounts(env,{
+    mode:'account-v3-mutate',
+    sessionToken:'v3-regular-token',
+    expectedRevision:0,
+    operations:[{paperKey:'regular-paper',paperState:{favorite:true}}],
+  });
+  assert.equal(regular.status,503);
+  assert.equal(regular.body.error,'user_library_v3_write_disabled');
+  assert.equal(regular.body.writeEnabled,false);
+  assert.equal(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_v3_authority WHERE user_id='u-regular'").get().c,0);
+});
+
 test('per-user V3 authority survives global write rollback without reviving legacy writes',async t=>{
   const db=new D1();t.after(()=>db.close());addUser(db,'u-rollback');
   const token='v3-rollback-token';
