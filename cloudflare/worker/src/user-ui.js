@@ -403,6 +403,7 @@ async function accountState(env, payload, ctx) {
           updatedAt: current.updatedAt,
           state: current.state,
           readPath: current.readPath,
+          writeEnabled: userLibraryV3WriteEnabled(env),
         },
       },
     };
