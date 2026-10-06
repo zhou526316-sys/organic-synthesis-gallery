@@ -1,4 +1,5 @@
 const SESSION_KEY = 'organic-gallery-session-v1';
+const API_BASE = 'https://api.gczhouwld.com';
 const READ_CAPABILITY = 'private_pdf_read';
 
 let ownerReadEnabled = false;
