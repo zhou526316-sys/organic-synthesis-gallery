@@ -999,7 +999,7 @@ jobs:
 
       - name: Verify V3 write activation with isolated account
         id: user_library_v3_write_canary
-        if: steps.user_library_v3_shadow.outcome == 'success'
+        if: steps.user_library_v3_write_preflight.outputs.activation_mode == 'activate' && steps.user_library_v3_shadow.outcome == 'success'
         continue-on-error: true
         working-directory: cloudflare/worker
         env:
@@ -1186,7 +1186,7 @@ jobs:
 
       - name: Promote V3 write activation to all users
         id: user_library_v3_write_promote
-        if: steps.user_library_v3_shadow.outcome == 'success' && steps.user_library_v3_write_canary.outcome == 'success'
+        if: steps.user_library_v3_write_preflight.outputs.activation_mode == 'activate' && steps.user_library_v3_shadow.outcome == 'success' && steps.user_library_v3_write_canary.outcome == 'success'
         continue-on-error: true
         working-directory: cloudflare/worker
         env:
@@ -1194,6 +1194,7 @@ jobs:
         run: |
           set -euo pipefail
           sed -i 's/USER_LIBRARY_V3_WRITE_CANARY_ONLY = "1"/USER_LIBRARY_V3_WRITE_CANARY_ONLY = "0"/' wrangler.frontend.toml
+          sed -i 's/USER_LIBRARY_V3_WRITE_CANARY_USER_ID = ".*"/USER_LIBRARY_V3_WRITE_CANARY_USER_ID = ""/' wrangler.frontend.toml
           grep -F 'USER_LIBRARY_V3_WRITE_ENABLED = "1"' wrangler.frontend.toml
           grep -F 'USER_LIBRARY_V3_WRITE_CANARY_ONLY = "0"' wrangler.frontend.toml
           npx wrangler deploy --config wrangler.frontend.toml
@@ -1232,7 +1233,7 @@ jobs:
           NODE
 
       - name: Roll back V3 write activation on authority/canary failure
-        if: steps.user_library_v3_shadow.outcome == 'failure' || steps.user_library_v3_write_canary.outcome == 'failure' || steps.user_library_v3_write_promote.outcome == 'failure'
+        if: steps.user_library_v3_write_preflight.outputs.activation_mode == 'activate' && (steps.user_library_v3_shadow.outcome == 'failure' || steps.user_library_v3_write_canary.outcome == 'failure' || steps.user_library_v3_write_promote.outcome == 'failure')
         working-directory: cloudflare/worker
         env:
           WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
@@ -1240,6 +1241,7 @@ jobs:
           set -euo pipefail
           sed -i 's/USER_LIBRARY_V3_WRITE_ENABLED = "1"/USER_LIBRARY_V3_WRITE_ENABLED = "0"/' wrangler.frontend.toml
           sed -i 's/USER_LIBRARY_V3_WRITE_CANARY_ONLY = "[01]"/USER_LIBRARY_V3_WRITE_CANARY_ONLY = "0"/' wrangler.frontend.toml
+          sed -i 's/USER_LIBRARY_V3_WRITE_CANARY_USER_ID = ".*"/USER_LIBRARY_V3_WRITE_CANARY_USER_ID = ""/' wrangler.frontend.toml
           grep -F 'USER_LIBRARY_V3_WRITE_ENABLED = "0"' wrangler.frontend.toml
           grep -F 'USER_LIBRARY_V3_WRITE_CANARY_ONLY = "0"' wrangler.frontend.toml
           npx wrangler deploy --config wrangler.frontend.toml
@@ -1324,7 +1326,7 @@ jobs:
           NODE
 
       - name: Preserve V3 write activation canary report
-        if: always()
+        if: always() && steps.user_library_v3_write_preflight.outputs.activation_mode == 'activate'
         uses: actions/upload-artifact@v4
         with:
           name: user-library-v3-write-canary-${{ github.run_id }}
@@ -1333,7 +1335,7 @@ jobs:
           retention-days: 14
 
       - name: Fail deployment after safe V3 write rollback
-        if: always() && (steps.user_library_v3_shadow.outcome == 'failure' || steps.user_library_v3_write_canary.outcome == 'failure' || steps.user_library_v3_write_promote.outcome == 'failure')
+        if: always() && steps.user_library_v3_write_preflight.outputs.activation_mode == 'activate' && (steps.user_library_v3_shadow.outcome == 'failure' || steps.user_library_v3_write_canary.outcome == 'failure' || steps.user_library_v3_write_promote.outcome == 'failure')
         run: |
           echo "V3 user-library write activation failed; production was rolled back to WRITE_ENABLED=0." >&2
           exit 1
