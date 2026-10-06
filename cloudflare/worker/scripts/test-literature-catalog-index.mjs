@@ -498,7 +498,7 @@ test('read flag is independently visible but cannot activate the dormant read pa
   assert.equal(status.body.readPathActive,false);
 });
 
-test('public read route exists but production deployment remains read-inactive',()=>{
+test('public read route is production-enabled only with live canary and automatic rollback',()=>{
   const source=readFileSync(new URL('../src/index.js',import.meta.url),'utf8');
   assert.ok(source.includes('/api/admin/literature-catalog-index/query'));
   assert.ok(source.includes('/api/admin/literature-catalog-index/rows'));
@@ -516,8 +516,15 @@ test('public read route exists but production deployment remains read-inactive',
   assert.ok(!wrangler.includes('LITERATURE_INDEX_DB'),'repository wrangler stays resource-neutral; production binding is generated');
   assert.ok(deploy.includes('binding = "LITERATURE_INDEX_DB"'));
   assert.ok(deploy.includes('LITERATURE_CATALOG_INDEX_SHADOW_ENABLED = "1"'));
-  assert.ok(deploy.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "0"'));
-  assert.ok(!deploy.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "1"'));
+  const config=deploy.split('- name: Generate frontend deployment configuration')[1]?.split('- name: Dry-run frontend Worker bundle')[0]||'';
+  assert.ok(config.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "1"'));
+  assert.ok(!config.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "0"'));
+  assert.ok(deploy.includes('- name: Verify literature indexed read activation'));
+  assert.ok(deploy.includes('architecture-v1/release.json?indexed-canary='));
+  assert.ok(deploy.includes('- name: Roll back literature indexed read on canary failure'));
+  assert.ok(deploy.includes('s/LITERATURE_CATALOG_INDEX_READ_ENABLED = "1"/LITERATURE_CATALOG_INDEX_READ_ENABLED = "0"/'));
+  assert.ok(deploy.includes('literatureCatalogIndexReadEnabled===false'));
+  assert.ok(deploy.includes('literatureCatalogIndexReadPathActive===false'));
   assert.ok(deploy.includes('literature-catalog-index-v1.sql'));
   const primarySchema=readFileSync(new URL('../../schema.sql',import.meta.url),'utf8');
   assert.ok(!primarySchema.includes('literature_catalog_fts'),'primary D1 schema must stay free of FTS virtual tables');
