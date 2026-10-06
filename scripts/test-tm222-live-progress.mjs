@@ -68,6 +68,6 @@ try{
  await page.screenshot({path:output+'/tm222-live-panel-desktop.png'});
  await page.setViewportSize({width:390,height:844});await page.screenshot({path:output+'/tm222-live-panel-mobile.png'});
  const box=await page.locator('#osg-capture-live-panel').boundingBox();assert.ok(box.x>=0&&box.x+box.width<=390);passed++;console.log('TM222_PASS phone-width panel fits viewport');
- await page.locator('#osg-capture-live-panel summary').click();assert.equal(await page.locator('#osg-capture-live-panel details').getAttribute('open'),null);passed++;console.log('TM222_PASS panel folds without pausing capture');
+ const outerDetails=page.locator('#osg-capture-live-panel details').first();await outerDetails.locator('summary').first().click();assert.equal(await outerDetails.getAttribute('open'),null);passed++;console.log('TM222_PASS panel folds without pausing capture');
 }finally{await browser.close();}
 console.log('TM222_PROGRESS_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,scope:'controlled Chromium and mocked GM storage, not authenticated publisher capture'}));
