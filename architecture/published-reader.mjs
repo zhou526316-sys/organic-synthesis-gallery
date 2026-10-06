@@ -251,6 +251,35 @@ export class PublishedCatalogClient {
     return recordPapers(plan.records);
   }
 
+  async resolveIndexed(items, signal) {
+    const reader = this.requireOpen();
+    assert(Array.isArray(items), 'indexed_resolution_items_invalid');
+    const expected = items.map(item => {
+      const doi = normalizeDoi(item?.doi);
+      const revision = typeof item?.revision === 'string' ? item.revision.toLowerCase() : '';
+      assert(doi && isHash(revision), 'indexed_resolution_identity_invalid');
+      return { doi, revision };
+    });
+    assert(new Set(expected.map(item => item.doi)).size === expected.length, 'indexed_resolution_duplicate_doi');
+    for (const item of expected) {
+      assert(this.membership?.members?.[item.doi] === item.revision, `indexed_membership_revision_mismatch:${item.doi}`);
+    }
+    const plan = await resolveDoisPlan(reader, expected.map(item => item.doi), {
+      asOfDate: this.asOfDate,
+      signal,
+      concurrency: 8,
+    });
+    assert(plan.complete === true && plan.unavailable.length === 0 && plan.updateRequired.length === 0,
+      'indexed_doi_resolution_incomplete');
+    const byDoi = new Map(plan.records.map(record => [normalizeDoi(record?.doi), record]));
+    const ordered = expected.map(item => {
+      const record = byDoi.get(item.doi);
+      assert(record && record.revision === item.revision, `indexed_record_revision_mismatch:${item.doi}`);
+      return record;
+    });
+    return recordPapers(ordered);
+  }
+
   async search(query, signal) {
     const reader = this.requireOpen();
     const catalog = await reader.open(signal);
