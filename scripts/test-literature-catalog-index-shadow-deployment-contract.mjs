@@ -56,7 +56,7 @@ test('activation canary validates current generation, cursor paging and safe gen
     '- name: Roll back literature indexed read on canary failure',
   );
   assert.ok(canary.includes('continue-on-error: true'));
-  assert.ok(canary.includes('release-delivery.json?indexed-canary='));
+  assert.ok(canary.includes('architecture-v1/release.json?indexed-canary='));
   assert.ok(canary.includes('/api/admin/literature-catalog-index/status'));
   assert.ok(canary.includes('/api/literature/catalog-view'));
   assert.ok(canary.includes("query:''"));
