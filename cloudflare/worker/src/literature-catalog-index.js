@@ -514,7 +514,7 @@ export async function queryPublishedLiteratureCatalogView(env,input={}){
     return {status:503,body:{error:'literature_catalog_index_db_missing',readPathActive:false}};
   }
   const result=await queryLiteratureCatalogView(env,input);
-  if(result.status!==200) return result;
+  if(result.status!==200) return {status:result.status,body:{...result.body,readPathActive:false}};
   return {status:200,body:{...result.body,readPathActive:true}};
 }
 
