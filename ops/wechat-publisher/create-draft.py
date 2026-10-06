@@ -895,10 +895,11 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
             card=(int(width*0.055),int(height*0.68),int(width*0.945),int(height*0.94))
             draw.rounded_rectangle(card,radius=max(20,int(width*0.022)),fill="#ffffff")
             src=image.convert("RGB")
-            fitted=ImageOps.contain(
+            fitted=ImageOps.fit(
                 src,
                 (card[2]-card[0]-int(width*0.04),card[3]-card[1]-int(height*0.035)),
                 method=Image.Resampling.LANCZOS,
+                centering=(0.50, 0.50),
             )
             px=card[0]+(card[2]-card[0]-fitted.width)//2
             py=card[1]+(card[3]-card[1]-fitted.height)//2
