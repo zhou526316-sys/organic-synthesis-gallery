@@ -64,6 +64,10 @@ try{
     assert.equal(result.preview,true);assert.equal(result.ga.length,0);
   });
 
+  await tc('generic RSC TOC collector also blocks PDF-page previews',async()=>{
+    assert.ok(source.includes("if (job.publisher==='rsc'&&isRscPdfPagePreviewUrl(row&&row.url)) return;"));
+  });
+
   await tc('Gallery never aliases TOC into the body-figure strip',async()=>{
     assert.ok(frontend.includes("slot.hidden = true;"));
     assert.ok(frontend.includes("slot.dataset.state = 'empty';"));
