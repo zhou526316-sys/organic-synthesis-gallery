@@ -11,6 +11,11 @@ import {
   shadowWriteUserLibraryV3FromState,
 } from '../src/user-library-v3-shadow.js';
 import {
+  compareUserLibraryShadowPage,
+  getUserLibraryShadowStatus,
+} from '../src/user-library-shadow.js';
+import {
+  applyUserLibraryV3Mutation,
   readUserLibraryV3Delta,
   readUserLibraryV3Head,
   readUserLibraryV3Page,
@@ -50,6 +55,7 @@ class D1 {
         updated_at INTEGER NOT NULL
       );
     `);
+    this.sqlite.exec(fs.readFileSync(new URL('../../user-library-state-v2.sql',import.meta.url),'utf8'));
     this.sqlite.exec(fs.readFileSync(new URL('../../user-library-state-v3.sql',import.meta.url),'utf8'));
   }
   prepare(sql){return new Statement(this,sql);}
@@ -337,6 +343,69 @@ test('authenticated V3 head/page/delta modes are bounded and freshness-fenced',a
   const unauth=await readerCounts(env,{mode:'account-v3-head',sessionToken:'wrong'});
   assert.equal(unauth.status,401);
   assert.equal(unauth.body.error,'not_authenticated');
+});
+
+test('V3 write authority verifies against D3b compatibility without any legacy state document',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  db.sqlite.prepare('INSERT INTO users(id) VALUES (?)').run('u-authority');
+  const env={
+    DB:db,
+    USER_LIBRARY_ROW_SHADOW_ENABLED:'1',
+    USER_LIBRARY_ROW_READ_ENABLED:'1',
+    USER_LIBRARY_V3_SHADOW_ENABLED:'1',
+    USER_LIBRARY_V3_READ_ENABLED:'1',
+    USER_LIBRARY_V3_WRITE_ENABLED:'1',
+  };
+  const globalState={
+    statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},
+    followedSearches:[],searchHistory:[],hideRead:false,
+  };
+  const mutation=await applyUserLibraryV3Mutation(env,'u-authority',{
+    expectedRevision:0,
+    globalState,
+    operations:[{
+      paperKey:'10.1234/a',
+      paperState:{favorite:true,note:'authority'},
+      metadata:{id:'10.1234/a',doi:'10.1234/a',title:'A',journal:'JACS'},
+    }],
+  },1000);
+  assert.equal(mutation.ok,true);
+  assert.equal(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_state WHERE user_id='u-authority'").get().c,0);
+
+  const rowStatus=await getUserLibraryShadowStatus(env);
+  assert.equal(rowStatus.body.authority,'v3');
+  assert.equal(rowStatus.body.writeAuthority,true);
+  assert.equal(rowStatus.body.authorityUsers,1);
+  assert.equal(rowStatus.body.shadowHeads,1);
+  assert.equal(rowStatus.body.revisionMismatches,0);
+  assert.equal(rowStatus.body.readPathActive,true);
+
+  const v3Status=await getUserLibraryV3ShadowStatus(env);
+  assert.equal(v3Status.body.authority,'v3');
+  assert.equal(v3Status.body.writeEnabled,true);
+  assert.equal(v3Status.body.v3Heads,1);
+  assert.equal(v3Status.body.compatibilityHeads,1);
+  assert.equal(v3Status.body.compatibilityMismatches,0);
+  assert.equal(v3Status.body.legacyUsers,0);
+
+  const rowCompare=await compareUserLibraryShadowPage(env,0,20);
+  assert.equal(rowCompare.body.authority,'v3');
+  assert.equal(rowCompare.body.checked,1);
+  assert.equal(rowCompare.body.mismatched,0);
+  assert.equal(rowCompare.body.complete,true);
+
+  const v3Compare=await compareUserLibraryV3ShadowPage(env,0,20);
+  assert.equal(v3Compare.body.authority,'v3');
+  assert.equal(v3Compare.body.comparison,'v3-to-d3b-compatibility');
+  assert.equal(v3Compare.body.checked,1);
+  assert.equal(v3Compare.body.mismatched,0);
+
+  const blockedBackfill=await backfillUserLibraryV3ShadowPage(env,20);
+  assert.equal(blockedBackfill.status,409);
+  assert.equal(blockedBackfill.body.error,'user_library_v3_write_authority_active');
+  const blockedReconcile=await reconcileUserLibraryV3ShadowPage(env,20);
+  assert.equal(blockedReconcile.status,409);
+  assert.equal(blockedReconcile.body.error,'user_library_v3_write_authority_active');
 });
 
 test('shadow can be independently disabled and does not activate V3 read/write authority',async t=>{
