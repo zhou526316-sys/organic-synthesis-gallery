@@ -106,6 +106,11 @@ type V3SaveOutcome =
   | { kind:'unauthorized' }
   | { kind:'failure' };
 
+type PersistOutcome =
+  | { kind:'ok'; state:UserUiState }
+  | { kind:'unauthorized' }
+  | { kind:'failure' };
+
 let activeToken = '';
 let activeUserId = '';
 let revision = 0;
@@ -555,6 +560,114 @@ async function recoveryPull(): Promise<{account:RemoteAccount|null;status:number
   if(v3.kind==='unauthorized')return {account:null,status:401};
   const legacy=await legacyPull();
   return {account:legacy.result,status:legacy.status};
+}
+
+function replaceStoreStateWithoutDirty(state:UserUiState):void{
+  applyingRemote=true;
+  store.state=state;
+  store.save();
+  applyingRemote=false;
+}
+
+async function persistV3Desired(
+  desired:UserUiState,
+  keys:string[],
+  globalWasDirty:boolean,
+  allowRecovery=true,
+):Promise<PersistOutcome>{
+  let base=syncedState;
+  if(!base){
+    const recovery=await recoveryPull();
+    if(recovery.status===401)return {kind:'unauthorized'};
+    if(!recovery.account)return {kind:'failure'};
+    acceptRemoteBaseline(recovery.account);
+    base=recovery.account.state;
+    if(!recovery.account.writeEnabled)return persistLegacyDesired(desired,false);
+  }
+
+  const outcome=await saveViaV3(base,desired,keys,globalWasDirty);
+  if(outcome.kind==='ok')return {kind:'ok',state:desired};
+  if(outcome.kind==='unauthorized')return {kind:'unauthorized'};
+  if(!allowRecovery)return {kind:'failure'};
+
+  const recovery=await recoveryPull();
+  if(recovery.status===401)return {kind:'unauthorized'};
+  if(!recovery.account)return {kind:'failure'};
+  acceptRemoteBaseline(recovery.account);
+  const merged=mergeStates(recovery.account.state,desired,true);
+  replaceStoreStateWithoutDirty(merged);
+  if(!recovery.account.writeEnabled)return persistLegacyDesired(merged,false);
+
+  const retryKeys=allChangedKeys(recovery.account.state,merged);
+  const retryGlobal=!sameJson(globalStateOf(recovery.account.state),globalStateOf(merged));
+  const retry=await saveViaV3(recovery.account.state,merged,retryKeys,retryGlobal);
+  if(retry.kind==='ok')return {kind:'ok',state:merged};
+  if(retry.kind==='unauthorized')return {kind:'unauthorized'};
+  return {kind:'failure'};
+}
+
+async function persistLegacyDesired(desired:UserUiState,allowRecovery=true):Promise<PersistOutcome>{
+  let response=await request('account-save',{state:desired});
+  if(response.status===401)return {kind:'unauthorized'};
+
+  if(response.status===409&&response.body.error==='user_library_client_upgrade_required'&&allowRecovery){
+    const recovery=await recoveryPull();
+    if(recovery.status===401)return {kind:'unauthorized'};
+    if(!recovery.account||!recovery.account.writeEnabled)return {kind:'failure'};
+    acceptRemoteBaseline(recovery.account);
+    const merged=mergeStates(recovery.account.state,desired,true);
+    replaceStoreStateWithoutDirty(merged);
+    return persistV3Desired(
+      merged,
+      allChangedKeys(recovery.account.state,merged),
+      !sameJson(globalStateOf(recovery.account.state),globalStateOf(merged)),
+      false,
+    );
+  }
+
+  if(response.status===409&&response.body.account?.state&&allowRecovery){
+    const account=response.body.account;
+    const conflictRevision=safeInteger(account.revision);
+    const updatedAt=safeInteger(account.updatedAt);
+    const userId=validUserId(account.userId);
+    if(conflictRevision===null||updatedAt===null||!userId)return {kind:'failure'};
+    const remote:RemoteAccount={
+      userId,revision:conflictRevision,updatedAt,state:account.state,
+      readPath:'legacy',writeEnabled:account.writeEnabled===true,
+    };
+    acceptRemoteBaseline(remote);
+    const merged=mergeStates(remote.state,desired,true);
+    replaceStoreStateWithoutDirty(merged);
+    if(remote.writeEnabled){
+      return persistV3Desired(
+        merged,
+        allChangedKeys(remote.state,merged),
+        !sameJson(globalStateOf(remote.state),globalStateOf(merged)),
+        false,
+      );
+    }
+    response=await request('account-save',{state:merged});
+    if(response.status===401)return {kind:'unauthorized'};
+    if(!response.ok||!response.body.account)return {kind:'failure'};
+    const retryRevision=safeInteger(response.body.account.revision);
+    const retryUserId=validUserId(response.body.account.userId);
+    if(retryRevision===null||!retryUserId)return {kind:'failure'};
+    rememberAccount(retryUserId,retryRevision);
+    syncedState=cloneState(merged);
+    v3WriteActive=false;
+    setWriteDiagnostic('legacy');
+    return {kind:'ok',state:merged};
+  }
+
+  if(!response.ok||!response.body.account)return {kind:'failure'};
+  const nextRevision=safeInteger(response.body.account.revision);
+  const userId=validUserId(response.body.account.userId);
+  if(nextRevision===null||!userId)return {kind:'failure'};
+  rememberAccount(userId,nextRevision);
+  syncedState=cloneState(desired);
+  v3WriteActive=response.body.account.writeEnabled===true;
+  setWriteDiagnostic(v3WriteActive?'v3':'legacy');
+  return {kind:'ok',state:desired};
 }
 
 async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState): Promise<V3Outcome> {
