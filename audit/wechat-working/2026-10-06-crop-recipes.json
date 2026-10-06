@@ -86,18 +86,6 @@
       "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-evolution.jpg"
     },
     {
-      "id": "hyster-active-site",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig2_HTML.png",
-      "crop_frac": [
-        0,
-        0.48,
-        0.5,
-        1
-      ],
-      "output": "public/wechat-assets/reviewed/2026-10-06/hyster-active-site.png",
-      "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-active-site.jpg"
-    },
-    {
       "id": "hyster-scope-pyrimidine",
       "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig3_HTML.png",
       "crop_frac": [
@@ -146,18 +134,6 @@
       "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-fret-internal.jpg"
     },
     {
-      "id": "hyster-lifetime",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig5_HTML.png",
-      "crop_frac": [
-        0,
-        0,
-        1,
-        0.34
-      ],
-      "output": "public/wechat-assets/reviewed/2026-10-06/hyster-lifetime.png",
-      "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-lifetime.jpg"
-    },
-    {
       "id": "hyster-mechanism",
       "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig5_HTML.png",
       "crop_frac": [
@@ -192,6 +168,30 @@
       ],
       "output": "public/wechat-assets/reviewed/2026-10-06/daily-problem.png",
       "proof": "audit/wechat-working/crop-proofs/2026-10-06/daily-problem.jpg"
+    },
+    {
+      "id": "hyster-lifetime-ab",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig5_HTML.png",
+      "crop_frac": [
+        0,
+        0,
+        0.61,
+        0.31
+      ],
+      "output": "public/wechat-assets/reviewed/2026-10-06/hyster-lifetime-ab.png",
+      "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-lifetime-ab.jpg"
+    },
+    {
+      "id": "hyster-redox-c",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig5_HTML.png",
+      "crop_frac": [
+        0.58,
+        0,
+        1,
+        0.31
+      ],
+      "output": "public/wechat-assets/reviewed/2026-10-06/hyster-redox-c.png",
+      "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-redox-c.jpg"
     }
   ]
 }
