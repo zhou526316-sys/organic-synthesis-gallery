@@ -41,6 +41,14 @@ test('D3c V3 schema is isolated, additive and applied before Worker deployment',
   assert.ok(deploy.includes('wrangler d1 execute "$D1_NAME" --remote --file=../user-library-state-v3.sql'));
   assert.ok(schema.includes('Legacy user_library_state remains authoritative in D3a'));
   assert.ok(schema.includes('D3c isolated row/delta foundation'));
+  for(const trigger of [
+    'trg_user_library_state_block_v3_insert',
+    'trg_user_library_state_block_v3_update',
+    'user_library_v3_authority_active',
+  ]){
+    assert.ok(schema.includes(trigger),trigger);
+    assert.ok(migration.includes(trigger),trigger);
+  }
 });
 
 test('D3c4b activates V3 writes only after preflight and retains automatic flag rollback',()=>{
