@@ -659,12 +659,13 @@ async function persistLegacyDesired(desired:UserUiState,keys:string[],globalWasD
 
   if(response.status===409&&response.body.account?.state&&allowRecovery){
     const account=response.body.account;
+    const conflictState=account.state;
     const conflictRevision=safeInteger(account.revision);
     const updatedAt=safeInteger(account.updatedAt);
     const userId=validUserId(account.userId);
-    if(conflictRevision===null||updatedAt===null||!userId)return {kind:'failure'};
+    if(!conflictState||conflictRevision===null||updatedAt===null||!userId)return {kind:'failure'};
     const remote:RemoteAccount={
-      userId,revision:conflictRevision,updatedAt,state:account.state,
+      userId,revision:conflictRevision,updatedAt,state:conflictState,
       readPath:'legacy',writeEnabled:account.writeEnabled===true,
     };
     acceptRemoteBaseline(remote);
