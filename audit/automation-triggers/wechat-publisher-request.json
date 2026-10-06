@@ -1,7 +1,7 @@
 {
-  "requestId": "wechat-daily-2026-10-06-completeness-wysiwyg-final-v1",
-  "requestedAt": "2026-10-06T07:52:00Z",
+  "requestId": "wechat-daily-2026-10-06-complete-scope-materialized-v1",
+  "requestedAt": "2026-10-06T08:31:00Z",
   "publicationDate": "2026-10-06",
   "action": "sync_daily_draft",
-  "reason": "Terminal sync after completeness and WYSIWYG-crop review. Both features now include substrate scope, synthetic utility and method boundaries; Nature Chemistry no longer opens with isolated Fig. 1c; all cropped body figures are materialized reviewed repo assets and source/asset fingerprints are pinned in the review gate. Require WeChat draft/get readback."
+  "reason": "Terminal sync after complete editorial optimization and materialized-crop QA. Daily: Fig.1e opening follows matching text, full scope + hydroboration + diversification added, duplicate tail removed. Hyster: directed evolution + two scope panels + external/internal FRET + mechanism + clean lifetime + Lenacapavir application, user-approved cover retained. All production body figures pinned by blob SHA; no runtime crop_frac; no TinyFish dependency. Require draft/get readback."
 }
