@@ -9,11 +9,11 @@
     },
     {
       "path": "public/wechat-featured/2026-10-06.json",
-      "blobSha": "9c3d2609684f0807e6fdcf0c62edbb300906a773"
+      "blobSha": "b482899efcf61156e69e70414e8009be2b7d7b00"
     },
     {
       "path": "public/wechat-retrospective/hyster-plp-photoenzyme-radical-coupling.json",
-      "blobSha": "92e1132befe604d891a473773e52a210f151e2e3"
+      "blobSha": "c30208a5577318a863a1d7b98d406b24c516d126"
     }
   ],
   "artifacts": {
@@ -25,13 +25,12 @@
   "textReview": "pass",
   "imageReview": "pass",
   "reviewNotes": [
-    "Visual revision self-reviewed after user screenshot feedback.",
-    "Hyster opening image now uses the full Fig. 1c horizontal overview instead of the narrow left crop.",
-    "Hyster cover restored to the user-confirmed blue FRET/PLP* cover; no replacement design is generated.",
-    "Nature Chemistry cover now uses Fig. 1e with a dark title-safe band.",
-    "TinyFish is not part of the approval path; transport QA remains pending until draft/get."
+    "Exact user-confirmed Hyster cover is pinned as a repository asset.",
+    "Hyster first body image is pinned to the complete horizontal Fig. 1c user reference.",
+    "Nature Chemistry cover is pinned to the reviewed Fig. 1e/title-safe-band asset.",
+    "No TinyFish dependency; final transport QA waits for draft/get."
   ],
-  "approvedAt": "2026-10-06T06:20:00Z",
+  "approvedAt": "2026-10-06T06:53:00Z",
   "transportReview": "pending",
   "transportReviewedAt": null,
   "draftReadback": null,
