@@ -367,8 +367,20 @@ export async function shadowWriteUserLibraryV3FromState(env, userIdValue, state,
 
 export async function getUserLibraryV3ShadowStatus(env) {
   if (!env?.DB) return { status:503, body:{ error:'user_library_v3_shadow_db_missing' } };
-  const [legacy,heads,sync,authorityCount,revisionMismatch,backfill] = await Promise.all([
+  const [legacy,legacyDocuments,staleLegacyDocuments,heads,sync,authorityCount,revisionMismatch,backfill] = await Promise.all([
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM user_library_state legacy
+      LEFT JOIN user_library_v3_authority authority ON authority.user_id=legacy.user_id
+      WHERE authority.user_id IS NULL
+    `).first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_state').first(),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM user_library_state legacy
+      INNER JOIN user_library_v3_authority authority ON authority.user_id=legacy.user_id
+      WHERE authority.authority='v3'
+    `).first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_v3_head').first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_v3_shadow_sync').first(),
     env.DB.prepare("SELECT COUNT(*) AS count FROM user_library_v3_authority WHERE authority='v3'").first(),
@@ -389,6 +401,8 @@ export async function getUserLibraryV3ShadowStatus(env) {
     readEnabled:flag(env.USER_LIBRARY_V3_READ_ENABLED),
     writeEnabled:flag(env.USER_LIBRARY_V3_WRITE_ENABLED),
     legacyUsers:Number(legacy?.count || 0),
+    legacyDocuments:Number(legacyDocuments?.count || 0),
+    staleLegacyDocuments:Number(staleLegacyDocuments?.count || 0),
     v3Heads:Number(heads?.count || 0),
     syncedUsers:Number(sync?.count || 0),
     v3AuthorityUsers:Number(authorityCount?.count || 0),
