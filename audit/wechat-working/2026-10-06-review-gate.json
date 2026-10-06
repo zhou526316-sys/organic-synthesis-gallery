@@ -4,6 +4,10 @@
   "purpose": "WeChat pre-draft editorial gate",
   "sources": [
     {
+      "path": "public/wechat-editions/2026-10-06.json",
+      "blobSha": "420892b055148fdc0486fa560beaaa8b7a149c15"
+    },
+    {
       "path": "public/wechat-featured/2026-10-06.json",
       "blobSha": "d9a7bf27aaddfce9b143c32c3d14d23aed17e637"
     },
@@ -14,10 +18,16 @@
   ],
   "artifacts": {
     "textOnly": "audit/wechat-working/2026-10-06-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-06-images-only.md"
+    "imagesOnly": "audit/wechat-working/2026-10-06-images-only.md",
+    "preDraftReview": "audit/wechat-working/2026-10-06-pre-draft-review.md"
   },
-  "textReview": "pending",
-  "imageReview": "pending",
-  "reviewNotes": [],
-  "approvedAt": null
+  "textReview": "pass",
+  "imageReview": "pass",
+  "reviewNotes": [
+    "Text-only artifact reviewed independently and completed with jump-card template wording and originality notice.",
+    "Images-only artifact reviewed independently; used chemistry/evidence images are publisher rasters with argument-specific crops.",
+    "Broken local Hyster cover dependency removed; retrospective cover now composes from a verified publisher raster and writes non-progressive JPEG.",
+    "Final WeChat transport/layout remains pending until draft/get readback."
+  ],
+  "approvedAt": "2026-10-06T05:54:27Z"
 }
