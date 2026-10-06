@@ -128,6 +128,7 @@ const copy = {
     totalSynthesis: '全合成',
     formalSynthesis: '形式全合成',
     figures: '正文图片',
+    figuresPending: '正文图片待抓取',
     fetching: '正在获取原始 TOC / Figure',
     articleGraphic: '文章图',
     toc: '文章图 / TOC',
@@ -167,6 +168,7 @@ const copy = {
     totalSynthesis: 'Total synthesis',
     formalSynthesis: 'Formal total synthesis',
     figures: 'Article figures',
+    figuresPending: 'Article figures pending',
     fetching: 'Fetching original TOC / Figure',
     articleGraphic: 'Article graphic',
     toc: 'Article graphic / TOC',
@@ -997,9 +999,16 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
 
 function renderFigures(slot: HTMLElement, result: FigureResponse): void {
   if (!result.available || !result.figures.length) {
-    const doi = normalizeDoi(slot.dataset.figureDoi);
-    const remembered = doi ? tocCache.get(doi.toLowerCase())?.result : undefined;
-    if (remembered?.available && remembered.imageUrl) renderFigureFallback(slot, remembered.imageUrl);
+    const heading = document.createElement('div');
+    heading.className = 'figure-strip-heading';
+    heading.textContent = t('figures');
+    const pending = document.createElement('div');
+    pending.className = 'figure-strip-empty';
+    pending.textContent = t('figuresPending');
+    slot.replaceChildren(heading, pending);
+    slot.classList.remove('generated');
+    slot.classList.add('loaded');
+    slot.dataset.state = 'missing';
     return;
   }
   const heading = document.createElement('div');
@@ -1051,28 +1060,6 @@ function renderFigures(slot: HTMLElement, result: FigureResponse): void {
   slot.classList.add('loaded');
   slot.dataset.state = 'done';
   requestAnimationFrame(syncNav);
-}
-
-function renderFigureFallback(slot: HTMLElement, imageUrl: string): void {
-  const heading = document.createElement('div');
-  heading.className = 'figure-strip-heading';
-  heading.textContent = t('figures');
-  const strip = document.createElement('div');
-  strip.className = 'figure-strip';
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.className = 'figure-thumb';
-  const image = new Image();
-  image.src = imageUrl;
-  image.alt = t('articleGraphic');
-  const label = document.createElement('span');
-  label.textContent = t('articleGraphic');
-  button.append(image, label);
-  button.addEventListener('click', () => openLightbox(imageUrl, t('articleGraphic')));
-  strip.appendChild(button);
-  slot.replaceChildren(heading, strip);
-  slot.classList.add('loaded');
-  slot.dataset.state = 'fallback';
 }
 
 function openLightbox(imageUrl: string, alt: string, caption?: string): void {
