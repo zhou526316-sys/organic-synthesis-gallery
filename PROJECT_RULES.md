@@ -39,3 +39,17 @@ Effective from the user's 2026-09-25 instruction: public-facing Gallery text mus
 3. Internal implementation may retain actual model identifiers, API configuration, provenance, audit records, tests about backend contracts, and private operational logs where technically required; these must not be surfaced as public UI copy.
 4. Future UI changes must preserve this rule across both Chinese and English copy.
 
+
+
+## 2026-10-01+ publisher-visit acquisition bundle
+
+Effective from the user's 2026-10-06 instruction: **for a Gallery paper whose `addedDate >= 2026-10-01`, once Tampermonkey opens the publisher article page for any genuine acquisition gap, the same authenticated visit must also attempt body figures, full-text HTML evidence, and the owner-private article PDF.**
+
+1. `addedDate` is the authority for this cutoff. Publication date is not a substitute, and an empty `addedDate` does not qualify.
+2. The visit may have been triggered by a missing TOC or a private-PDF gap. After the page is open, body figures and full-text evidence are companion acquisition layers even if they were not the original trigger.
+3. Body-figure incompleteness or text incompleteness alone must not create a standalone publisher-page visit. This rule bundles work into a visit that is already justified.
+4. Reuse existing trustworthy local/server receipts and content hashes. Re-scan the live article page when needed to determine completeness, but do not redownload/reupload a figure already proven for the same DOI/label.
+5. For Oct-1+ papers, `abstract_only` or `partial` HTML evidence does not count as complete when an eligible publisher visit is already happening; attempt complete article text in that visit.
+6. Private PDF completion is only `stored` or `already_stored`. `not_found`, `failed`, cached misses, 401/403/429, viewer HTML, or a merely discovered PDF link never count as a completed PDF.
+7. A PDF failure remains independent of successfully captured TOC/body/text media and does not invalidate those receipts. The controller must continue to later DOI jobs rather than stall on one failed PDF.
+8. Old in-memory controllers must fail closed after a controller-generation cutover. Stale controller final reports and private-PDF uploads must not overwrite current completion truth.
