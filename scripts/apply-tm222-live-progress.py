@@ -9,7 +9,7 @@ def once(s, a, b):
 p = Path('public/toc-mainline.user.js')
 s = p.read_text()
 if 'BEGIN OSG_LIVE_PROGRESS_V1' in s:
-    revision = re.search(r"var CONTROLLER_REVISION = '(\\d+)\\.(\\d+)\\.(\\d+)';", s)
+    revision = re.search(r"var CONTROLLER_REVISION = '([0-9]+)\\.([0-9]+)\\.([0-9]+)';", s)
     assert revision and tuple(map(int, revision.groups())) >= (2, 2, 22)
     print('TM222_ALREADY_APPLIED')
     raise SystemExit(0)
