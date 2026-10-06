@@ -39,7 +39,16 @@ If preflight fails, WRITE=1 is not deployed.
 
 ## Isolated production canary
 
-After deployment, the workflow creates one temporary production-D1 user and opaque bearer session. No real user account is used.
+Activation is two-stage. The first deployment sets `USER_LIBRARY_V3_WRITE_ENABLED=1` together with `USER_LIBRARY_V3_WRITE_CANARY_ONLY=1` and the exact temporary canary user id.
+
+During this stage:
+
+- only the temporary canary account receives `writeEnabled=true`;
+- ordinary users still receive `writeEnabled=false` and remain on the legacy write path;
+- legacy-to-V3 shadow remains active for ordinary legacy-authoritative accounts;
+- no real account can cross the V3 authority boundary.
+
+The workflow then creates one temporary production-D1 user and opaque bearer session. No real user account is used.
 
 The canary proves:
 
@@ -57,9 +66,21 @@ The canary proves:
 
 The temporary user is deleted afterward. Foreign-key cascades must leave no session, authority, V3 head or D3b head residue.
 
+## Public promotion
+
+Only after the isolated canary and database invariant checks pass does the workflow change `USER_LIBRARY_V3_WRITE_CANARY_ONLY` from 1 to 0 and redeploy the same built Worker.
+
+The second deployment must verify:
+
+- V3 bounded reads remain enabled;
+- V3 write is configured;
+- canary-only mode is false;
+- public `writeEnabled=true`;
+- legacy-to-V3 shadow is disabled because public V3 write authority is active.
+
 ## Automatic rollback
 
-If the isolated canary fails:
+If the isolated canary or public-promotion verification fails:
 
 - the same built Worker is redeployed with `USER_LIBRARY_V3_WRITE_ENABLED=0`;
 - health must prove bounded reads remain enabled;
@@ -109,10 +130,11 @@ D3c4b is complete only after:
 - D3c3 frontend is deployed on canonical surfaces;
 - D3c4a code and schema are deployed with WRITE=0;
 - activation preflight passes;
-- WRITE=1 deployment succeeds;
+- canary-only WRITE=1 deployment succeeds without exposing ordinary users;
 - isolated canary passes;
+- public promotion redeploy succeeds;
 - cleanup passes;
-- canonical health remains read=true/write=true/shadow=false;
+- canonical health remains read=true/write=true/canaryOnly=false/shadow=false;
 - no rollback is triggered.
 
 At that point the user-library scale migration D3c is complete.
