@@ -385,7 +385,7 @@ test('V3 write authority batches 65 dirty paper keys as 32/32/1 and never calls 
       await route.fulfill({
         status:200,contentType:'application/json',
         body:JSON.stringify({account:{
-          userId:'u-write',readPath:'v3-mutate',writeEnabled:true,
+          userId:'u-write',readPath:'v3-mutate',writeEnabled:true,writeAuthority:'v3',
           revision:nextRevision,updatedAt:1000+nextRevision,
           paperCount:Math.min((nextRevision-10)*32,65),
           metadataCount:Math.min((nextRevision-10)*32,65),
@@ -509,7 +509,7 @@ test('live write-authority flip upgrades a dirty paper from legacy save to V3 mu
       expect(body.expectedRevision).toBe(2);
       expect(body.operations).toHaveLength(1);
       await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
-        account:{userId:'u-live',readPath:'v3-mutate',writeEnabled:true,
+        account:{userId:'u-live',readPath:'v3-mutate',writeEnabled:true,writeAuthority:'v3',
           revision:3,updatedAt:300,paperCount:1,metadataCount:1,
           operationCount:1,changeFloorRevision:2},
       })});
