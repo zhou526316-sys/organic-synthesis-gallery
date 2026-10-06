@@ -7,6 +7,7 @@ const schema=readFileSync('cloudflare/schema.sql','utf8');
 const migration=readFileSync('cloudflare/user-library-state-v3.sql','utf8');
 const v3=readFileSync('cloudflare/worker/src/user-library-v3.js','utf8');
 const shadow=readFileSync('cloudflare/worker/src/user-library-v3-shadow.js','utf8');
+const rowShadow=readFileSync('cloudflare/worker/src/user-library-shadow.js','utf8');
 const index=readFileSync('cloudflare/worker/src/index.js','utf8');
 const userUi=readFileSync('cloudflare/worker/src/user-ui.js','utf8');
 const accountSync=readFileSync('src/user-ui/account-sync.ts','utf8');
@@ -49,6 +50,10 @@ test('D3c V3 schema is isolated, additive and applied before Worker deployment',
     assert.ok(schema.includes(trigger),trigger);
     assert.ok(migration.includes(trigger),trigger);
   }
+  assert.ok(migration.includes("CHECK (authority = 'v3')"));
+  assert.ok(schema.includes("CHECK (authority = 'v3')"));
+  assert.ok(deploy.includes('trg_user_library_state_block_v3_insert'));
+  assert.ok(deploy.includes('trg_user_library_state_block_v3_update'));
 });
 
 test('D3c2 enables bounded V3 reads while V3 writes remain explicitly off',()=>{
@@ -65,6 +70,9 @@ test('D3c2 enables bounded V3 reads while V3 writes remain explicitly off',()=>{
   assert.ok(v3.includes("reason:'user_library_v3_read_disabled'"));
   assert.ok(shadow.includes('userLibraryV3ShadowEnabled'));
   assert.ok(shadow.includes('user_library_v3_shadow_atomic_batch_required'));
+  assert.ok(shadow.includes("&& !flag(env?.USER_LIBRARY_V3_WRITE_ENABLED)"));
+  assert.ok(rowShadow.includes("String(env?.USER_LIBRARY_V3_WRITE_ENABLED || '') !== '1'"));
+  assert.ok(rowShadow.includes("error:'user_library_row_shadow_disabled'"));
 });
 
 test('D3c4a ships dormant authenticated bounded V3 mutation without activating write authority',()=>{
@@ -155,6 +163,8 @@ test('first V3 authority claim is freshness-fenced both before and inside the at
     'INNER JOIN user_library_v3_shadow_sync',
   ]) assert.ok(v3.includes(token),token);
   assert.ok(userUi.includes("String(result.reason || 'user_library_v3_revision_conflict')"));
+  assert.ok(migration.includes("THEN 'v3'"));
+  assert.ok(migration.includes("RAISE(ABORT, 'user_library_v3_authority_active')"));
 });
 
 test('D3c4a client mutation foundation is dirty-key bounded and dormant behind the write flag',()=>{
