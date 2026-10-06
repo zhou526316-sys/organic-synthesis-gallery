@@ -65,7 +65,11 @@ export async function loadPublishedHotFallback(siteBase, { fetcher = globalThis.
   };
 
   const deliveryUrl = new URL('release-delivery.json', site);
-  const first = await fetchBytes(deliveryUrl, { maxBytes:2 * 1024 * 1024, label:'delivery' });
+  const releaseUrl = new URL('release.json', architectureBase);
+  const [first, releaseRead] = await Promise.all([
+    fetchBytes(deliveryUrl, { maxBytes:2 * 1024 * 1024, label:'delivery' }),
+    fetchBytes(releaseUrl, { maxBytes:2 * 1024 * 1024, label:'architecture_release' }),
+  ]);
   const firstText = new TextDecoder().decode(first.bytes);
   const delivery = parseJson(first.bytes, 'delivery');
   const asOfDate = serverBeijingDate(first.response.headers);
@@ -74,10 +78,6 @@ export async function loadPublishedHotFallback(siteBase, { fetcher = globalThis.
   assert(isHash(delivery.datasetSha256) && isHash(delivery.architectureCatalogId), 'delivery_architecture_identity_missing');
   assert(delivery.files && isHash(delivery.files['architecture-v1/release.json']), 'delivery_architecture_release_missing');
   assert(delivery.architectureObjects && typeof delivery.architectureObjects === 'object', 'delivery_architecture_objects_missing');
-
-  const releaseRead = await fetchBytes(new URL('release.json', architectureBase), {
-    maxBytes:2 * 1024 * 1024, label:'architecture_release',
-  });
   assert(await digest(releaseRead.bytes) === delivery.files['architecture-v1/release.json'], 'architecture_release_hash_mismatch');
   const release = parseJson(releaseRead.bytes, 'architecture_release');
   assert(release?.schema === RELEASE_SCHEMA && release.frontendReadActivation === true, 'frontend_architecture_not_active');
