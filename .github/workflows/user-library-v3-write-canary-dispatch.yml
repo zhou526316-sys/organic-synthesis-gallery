@@ -1,0 +1,74 @@
+name: Dispatch requested D3c4b production canary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'D3C4B_CANARY_REQUEST'
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: user-library-v3-canary-dispatch
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout request
+        uses: actions/checkout@v4
+
+      - name: Validate request and deployed Worker source
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT="$(node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const request=JSON.parse(fs.readFileSync('D3C4B_CANARY_REQUEST','utf8'));
+          if(request?.schemaVersion!==1||request?.action!=='D3C4B') throw new Error('invalid D3c4b canary request');
+          const source=String(request?.workerSourceCommit||'');
+          if(!/^[a-f0-9]{40}$/.test(source)) throw new Error('invalid Worker source commit');
+          process.stdout.write(source);
+          NODE
+          )"
+          RUN_ID="$(gh run list --repo "$REPO" --workflow deploy-worker-frontend.yml --branch main --limit 50 \
+            --json databaseId,headSha,status,conclusion \
+            --jq ".[] | select(.headSha == \"$SOURCE_COMMIT\" and .status == \"completed\" and .conclusion == \"success\") | .databaseId" | head -n1)"
+          if [ -z "$RUN_ID" ]; then
+            echo "No successful Worker deployment found for requested source $SOURCE_COMMIT" >&2
+            exit 1
+          fi
+          echo "worker_source_commit=$SOURCE_COMMIT" >> "$GITHUB_OUTPUT"
+          echo "worker_deploy_run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch protected production canary
+        id: dispatch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUTPUT="$(gh workflow run user-library-v3-write-canary.yml --repo "$REPO" --ref main -f confirmation=D3C4B 2>&1)"
+          printf '%s\n' "$OUTPUT"
+          RUN_ID="$(printf '%s\n' "$OUTPUT" | grep -Eo '[0-9]+$' | tail -n1)"
+          if [ -z "$RUN_ID" ]; then
+            echo "Could not resolve D3c4b canary run id." >&2
+            exit 1
+          fi
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for canary result
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ steps.dispatch.outputs.run_id }}
+        run: gh run watch "$RUN_ID" --repo "$REPO" --exit-status

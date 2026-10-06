@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const workflow=readFileSync('.github/workflows/user-library-v3-write-canary.yml','utf8');
+const dispatcher=readFileSync('.github/workflows/user-library-v3-write-canary-dispatch.yml','utf8');
 const deploy=readFileSync('.github/workflows/deploy-worker-frontend.yml','utf8');
 
 test('D3c4b canary is manual, isolated and never enables global writes',()=>{
@@ -65,6 +66,19 @@ test('D3c4b canary always removes the temporary user and verifies zero residue',
   ]) assert.ok(workflow.includes(table),table);
   assert.ok(workflow.includes('cleanupVerified=true'));
   assert.ok(workflow.includes('user-library-v3-write-canary-${{ github.run_id }}'));
+});
+
+test('D3c4b dispatcher is marker-only and cannot mutate production data itself',()=>{
+  assert.ok(dispatcher.includes("paths:"));
+  assert.ok(dispatcher.includes("D3C4B_CANARY_REQUEST"));
+  assert.ok(dispatcher.includes("actions: write"));
+  assert.ok(dispatcher.includes("contents: read"));
+  assert.ok(dispatcher.includes("deploy-worker-frontend.yml"));
+  assert.ok(dispatcher.includes("conclusion"));
+  assert.ok(dispatcher.includes("user-library-v3-write-canary.yml"));
+  assert.ok(dispatcher.includes("confirmation=D3C4B"));
+  assert.ok(!dispatcher.includes("wrangler d1"));
+  assert.ok(!dispatcher.includes("USER_LIBRARY_V3_WRITE_ENABLED"));
 });
 
 console.log('USER_LIBRARY_V3_WRITE_CANARY_CONTRACT_PASS');
