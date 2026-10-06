@@ -1,0 +1,115 @@
+name: WeChat Preview Structure Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/wechat-preview-structure-audit-request.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-preview-structure-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Audit draft/get preview structure
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, re, html as htmlmod, urllib.request
+          from pathlib import Path
+
+          receipt=json.loads(Path('audit/wechat-publisher/latest.json').read_text(encoding='utf-8'))
+          url=str(receipt.get('preview_url') or '').strip()
+          if not url:
+              raise SystemExit('missing preview_url')
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+          raw=urllib.request.urlopen(req,timeout=60).read().decode('utf-8','replace')
+
+          articles=re.findall(r"<article\b.*?</article>",raw,flags=re.I|re.S)
+          def strip(s):
+              return re.sub(r'\s+',' ',htmlmod.unescape(re.sub(r'<[^>]+>',' ',s))).strip()
+          report={
+              'preview_url':url,
+              'media_id':receipt.get('media_id'),
+              'draft_readback':receipt.get('draft_readback'),
+              'article_count':len(articles),
+              'articles':[]
+          }
+          for idx,a in enumerate(articles,1):
+              title_m=re.search(r'<h1[^>]*>(.*?)</h1>',a,flags=re.I|re.S)
+              imgs=[]
+              for m in re.finditer(r"<img\b([^>]*)>",a,flags=re.I|re.S):
+                  attrs=m.group(1)
+                  src_m=re.search(r"""src=['"]([^'"]+)['"]""",attrs,flags=re.I)
+                  style_m=re.search(r"""style=['"]([^'"]+)['"]""",attrs,flags=re.I)
+                  tail=a[m.end():m.end()+1000]
+                  cap_m=re.search(r"<p[^>]*>(.*?)</p>",tail,flags=re.I|re.S)
+                  width=None
+                  style=style_m.group(1) if style_m else ''
+                  wm=re.search(r'width\s*:\s*([0-9]+)%',style,flags=re.I)
+                  if wm: width=int(wm.group(1))
+                  imgs.append({
+                      'src':src_m.group(1) if src_m else '',
+                      'width_pct':width,
+                      'caption':strip(cap_m.group(1)) if cap_m else ''
+                  })
+              report['articles'].append({
+                  'index':idx,
+                  'title':strip(title_m.group(1)) if title_m else '',
+                  'image_count':len(imgs),
+                  'images':imgs
+              })
+
+          full=strip(raw)
+          checks={
+              'daily_fig1e': '原文 Fig. 1e' in full,
+              'daily_alternating_fig3bc': '原文 Fig. 3b–c' in full,
+              'daily_electrode_fig3a': '原文 Fig. 3a' in full,
+              'daily_scope': '原文 Fig. 4a（底物拓展局部）' in full,
+              'daily_hydroboration': '原文 Fig. 4（上游衔接）' in full,
+              'daily_diversification': '原文 Fig. 4b' in full,
+              'hyster_fig1c': '原文 Fig. 1c' in full,
+              'hyster_evolution': '原文 Fig. 2b' in full,
+              'hyster_active_site': '原文 Fig. 2c' in full,
+              'hyster_scope_pyrimidine': '原文 Fig. 3（嘧啶系列）' in full,
+              'hyster_scope_pyridine': '原文 Fig. 3（吡啶系列）' in full,
+              'hyster_external_fret': '原文 Fig. 4b–c' in full,
+              'hyster_internal_fret': '原文 Fig. 4d–e' in full,
+              'hyster_lifetime': '原文 Fig. 5b' in full,
+              'hyster_mechanism': '原文 Fig. 5f' in full,
+              'hyster_application': '原文 Fig. 5g' in full,
+              'daily_old_isolated_fig1c_absent': '原文 Fig. 1c（仅保留本文反应）' not in full,
+          }
+          report['checks']=checks
+          if len(articles)!=2 or receipt.get('draft_readback')!='ok' or not all(checks.values()):
+              Path('/tmp/wechat-preview-structure.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+              raise SystemExit('preview structure audit failed')
+          Path('/tmp/wechat-preview-structure.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Persist structure audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          TARGET="audit/wechat-working/2026-10-06-preview-structure.json"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/wechat-preview-structure.json "$TARGET"
+            git add "$TARGET"
+            git commit -m "audit: verify final WeChat preview structure" || exit 0
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
