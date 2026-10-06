@@ -529,6 +529,7 @@ test('live write-authority flip upgrades a dirty paper from legacy save to V3 mu
   activated=true;
   const actions=page.locator('gallery-paper-actions').first();
   await actions.locator('button[data-action="favorite"]').click();
+  await actions.locator('button[data-action="toggle-favorite"]').click();
 
   await expect.poll(()=>mutations.length,{timeout:10000}).toBe(1);
   expect(modes.filter(mode=>mode==='account-v3-mutate')).toHaveLength(1);
