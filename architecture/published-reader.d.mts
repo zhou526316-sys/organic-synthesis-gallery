@@ -23,6 +23,7 @@ export class PublishedCatalogClient {
   asOfDate: string;
   memberDois: string[];
   earliestDate: string;
+  catalogId: string;
   open(signal?: AbortSignal): Promise<this>;
   landing(sharedDoi?: string | null, signal?: AbortSignal): Promise<unknown[]>;
   resolve(dois: string[], signal?: AbortSignal): Promise<unknown[]>;

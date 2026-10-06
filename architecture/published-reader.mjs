@@ -141,6 +141,7 @@ export class PublishedCatalogClient {
     this.asOfDate = '';
     this.memberDois = [];
     this.earliestDate = '';
+    this.catalogId = '';
   }
 
   async fetchBytes(url, { cache = 'no-store', maxBytes = 4 * 1024 * 1024, label = 'architecture' } = {}, signal) {
@@ -219,6 +220,7 @@ export class PublishedCatalogClient {
     this.release = release;
     this.membership = membership;
     this.memberDois = memberDois;
+    this.catalogId = release.catalogId;
 
     const second = await this.fetchBytes(deliveryUrl, { maxBytes: 2 * 1024 * 1024, label: 'delivery_recheck' }, signal);
     assert(new TextDecoder().decode(second.bytes) === firstText, 'delivery_changed_during_architecture_open');
