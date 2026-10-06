@@ -17,11 +17,20 @@ new="""  async function finishPairedJob(job,result,trace,token) {
     try {
       var privatePdfResult=await maybeCapturePrivatePdf(job,trace);
       if(privatePdfResult)result.privatePdf=privatePdfResult;
+      var pdfOnly=job.capturePrivatePdf===true&&job.captureToc!==true&&job.captureFigures!==true&&job.captureEvidence!==true&&job.opportunisticEvidence!==true&&job.opportunisticFigures!==true;
+      if(pdfOnly&&privatePdfResult&&!/^(?:stored|already_stored)$/.test(String(privatePdfResult.status||''))){
+        result.status='failed';
+        result.reason=String(privatePdfResult.reason||('private_pdf_'+String(privatePdfResult.status||'failed')));
+      }
     } catch (privatePdfError) {
       var privatePdfReason=String(privatePdfError&&privatePdfError.message||privatePdfError||'private_pdf_failed')
         .replace(/https?:\\/\\/\\S+/gi,'[url]')
         .replace(/[A-Za-z0-9+/_=-]{40,}/g,'[redacted]').slice(0,180);
       result.privatePdf={status:'failed',reason:privatePdfReason};
+      if(job.capturePrivatePdf===true&&job.captureToc!==true&&job.captureFigures!==true&&job.captureEvidence!==true&&job.opportunisticEvidence!==true&&job.opportunisticFigures!==true){
+        result.status='failed';result.reason=privatePdfReason;
+      }
+      captureLiveUpdate(job,'private_pdf_failed',{pdfStatus:'failed',pdfStage:'PDF 抓取异常',pdfError:privatePdfReason});
       if(typeof pushTrace==='function')pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:privatePdfReason});
     }
 """
@@ -31,4 +40,4 @@ call="  installManualRestartListener();\n"
 if s.count(call)!=1: raise RuntimeError('install anchor mismatch')
 s=s.replace(call,"  installPrivatePdfLeaseReceiver();\n"+call,1)
 p.write_text(s)
-print('Applied private PDF capture side-channel without changing media queue/status semantics')
+print('Applied Private PDF v5 with truthful pure-PDF status and live telemetry')
