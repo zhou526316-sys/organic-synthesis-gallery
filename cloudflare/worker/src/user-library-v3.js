@@ -278,20 +278,20 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
   statements.push(env.DB.prepare(`
     INSERT INTO user_library_head
       (user_id,revision,updated_at,global_json,papers_split,metadata_split,paper_count,metadata_count,source_state_hash,shadow_version)
-    VALUES (?,?,?,?,1,1,?,?,?,?)
+    VALUES (?,?,?,?,?,?,?,?,?,?)
     ON CONFLICT(user_id) DO UPDATE SET
       revision=excluded.revision,
       updated_at=excluded.updated_at,
       global_json=excluded.global_json,
-      papers_split=1,
-      metadata_split=1,
+      papers_split=excluded.papers_split,
+      metadata_split=excluded.metadata_split,
       paper_count=excluded.paper_count,
       metadata_count=excluded.metadata_count,
       source_state_hash=excluded.source_state_hash,
       shadow_version=excluded.shadow_version
     WHERE user_library_head.revision < excluded.revision
   `).bind(
-    userId,nextRevision,now,globalJson,paperCount,metadataCount,
+    userId,nextRevision,now,globalJson,papersSplit?1:0,metadataSplit?1:0,paperCount,metadataCount,
     `v3-authority:${nextRevision}`,COMPAT_ROW_SHADOW_VERSION,
   ));
 
