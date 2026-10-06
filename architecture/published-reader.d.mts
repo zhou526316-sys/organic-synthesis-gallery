@@ -21,6 +21,7 @@ export class PublishedCatalogClient {
   readonly siteBase: URL;
   readonly architectureBase: URL;
   asOfDate: string;
+  catalogId: string;
   memberDois: string[];
   earliestDate: string;
   open(signal?: AbortSignal): Promise<this>;
