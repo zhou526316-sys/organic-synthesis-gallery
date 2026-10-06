@@ -86,6 +86,18 @@ test('Archive deep-link resolves without loading all history into landing', asyn
   assert.deepEqual(landing.map(row=>row.doi), ['10.1234/archive','10.1234/hot']);
 });
 
+test('indexed discovery resolves only revision-bound content records', async () => {
+  const client = await new PublishedCatalogClient('https://example.invalid/', fixture()).open();
+  assert.equal(client.catalogId.length, 64);
+  const revision = client.membership.members['10.1234/archive'];
+  const rows = await client.resolveIndexed([{ doi:'10.1234/archive', revision }]);
+  assert.deepEqual(rows.map(row => row.doi), ['10.1234/archive']);
+  await assert.rejects(
+    client.resolveIndexed([{ doi:'10.1234/archive', revision:'f'.repeat(64) }]),
+    /indexed_membership_revision_mismatch/
+  );
+});
+
 test('global search resolves Archive records on demand', async () => {
   const client = await new PublishedCatalogClient('https://example.invalid/', fixture()).open();
   const rows = await client.search('Archive nickel');

@@ -10,12 +10,30 @@ test.use({
   timezoneId: 'Asia/Shanghai',
 });
 
+type IndexedFixtureRecord = {
+  doi: string;
+  revision: string;
+  firstOnlineDate: string | null;
+  datePrecision: 'day' | 'unknown';
+  addedDate: string | null;
+  paper: {
+    title?: string | null;
+    titleEn?: string | null;
+    titleZh?: string | null;
+    authors?: string[];
+    journal?: string;
+    synthesisType?: 'methodology' | 'total' | 'formal';
+  };
+};
+
 type ArchitectureFixture = {
   hotCount: number;
   archiveCount: number;
   memberCount: number;
   archiveDoi: string;
   archiveDate: string;
+  catalogId: string;
+  records: IndexedFixtureRecord[];
 };
 
 function readJson(file: string): any {
@@ -36,15 +54,12 @@ function fixture(): ArchitectureFixture {
   if (!archive.length) throw new Error('Architecture browser regression requires at least one Archive DOI');
 
   const archiveDoi = String(archive[0]).toLowerCase();
-  let archiveDate = '';
-  for (const ref of catalog.shards || []) {
+  const records = (catalog.shards || []).flatMap((ref: any) => {
     const shard = readJson(path.join(root, ref.path));
-    const row = (shard.records || []).find((item: any) => String(item.doi || '').toLowerCase() === archiveDoi);
-    if (row) {
-      archiveDate = String(row.firstOnlineDate || row.paper?.date || '');
-      break;
-    }
-  }
+    return Array.isArray(shard.records) ? shard.records : [];
+  }) as IndexedFixtureRecord[];
+  const archiveRecord = records.find(item => String(item.doi || '').toLowerCase() === archiveDoi);
+  const archiveDate = String(archiveRecord?.firstOnlineDate || '');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(archiveDate)) throw new Error('Archive fixture date missing');
 
   return {
@@ -53,10 +68,22 @@ function fixture(): ArchitectureFixture {
     memberCount: Number(release.recordCount),
     archiveDoi,
     archiveDate,
+    catalogId: String(release.catalogId),
+    records,
   };
 }
 
-async function stubOptionalApi(page: import('@playwright/test').Page): Promise<void> {
+async function stubOptionalApi(
+  page: import('@playwright/test').Page,
+  catalogView?: (route: import('@playwright/test').Route) => Promise<void>,
+): Promise<void> {
+  await page.route('**/api/literature/catalog-view', catalogView || (async route => {
+    await route.fulfill({
+      status: 503,
+      contentType: 'application/json',
+      body: JSON.stringify({ error: 'literature_catalog_index_read_disabled', readPathActive: false }),
+    });
+  }));
   await page.route('https://api.gczhouwld.com/**', async route => {
     const url = route.request().url();
     if (url.includes('/api/user-ui/reader-counts/mark')) {
@@ -77,6 +104,45 @@ async function stubOptionalApi(page: import('@playwright/test').Page): Promise<v
     }
     await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
   });
+}
+
+function indexedItem(record: IndexedFixtureRecord): Record<string, unknown> {
+  const synthesisType = ['methodology', 'total', 'formal'].includes(String(record.paper?.synthesisType || ''))
+    ? record.paper.synthesisType
+    : null;
+  return {
+    doi: String(record.doi).toLowerCase(),
+    revision: record.revision,
+    title: String(record.paper?.title ?? record.paper?.titleEn ?? ''),
+    titleZh: String(record.paper?.titleZh ?? ''),
+    authors: Array.isArray(record.paper?.authors) ? record.paper.authors : [],
+    journal: String(record.paper?.journal || ''),
+    firstOnlineDate: record.firstOnlineDate || null,
+    datePrecision: record.datePrecision === 'day' ? 'day' : 'unknown',
+    addedDate: record.addedDate || null,
+    synthesisType,
+  };
+}
+
+function largestJournalPageFixture(data: ArchitectureFixture): { journal: string; records: IndexedFixtureRecord[] } {
+  const groups = new Map<string, IndexedFixtureRecord[]>();
+  for (const record of data.records) {
+    const journal = String(record.paper?.journal || '');
+    if (!journal) continue;
+    const group = groups.get(journal) || [];
+    group.push(record);
+    groups.set(journal, group);
+  }
+  const candidates = [...groups.entries()]
+    .filter(([, rows]) => rows.length > RESULT_WINDOW_SIZE)
+    .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+  if (!candidates.length) throw new Error('Indexed browser regression requires a journal with more than one result window');
+  const [journal, records] = candidates[0];
+  records.sort((a, b) => {
+    const date = String(b.firstOnlineDate || '').localeCompare(String(a.firstOnlineDate || ''));
+    return date || String(a.doi).localeCompare(String(b.doi));
+  });
+  return { journal, records };
 }
 
 test('architecture-v1 landing is Hot-only while all-time membership stays complete', async ({ page }) => {
@@ -132,6 +198,98 @@ test('result pagination keeps DOM cardinality bounded across pages', async ({ pa
 });
 
 
+
+test('indexed journal view uses server totals and cursor pages while resolving static content', async ({ page }) => {
+  const data = fixture();
+  const indexedFixture = largestJournalPageFixture(data);
+  let catalogCalls = 0;
+
+  await stubOptionalApi(page, async route => {
+    catalogCalls += 1;
+    const body = route.request().postDataJSON() as Record<string, any>;
+    expect(body.catalogId).toBe(data.catalogId);
+    expect(body.selectedJournals).toContain(indexedFixture.journal);
+    expect(body.sort).toBe('newest');
+    const cursor = typeof body.cursor === 'string' ? body.cursor : '';
+    const pageIndex = cursor ? Number(cursor.replace(/^page-/, '')) : 0;
+    expect(Number.isSafeInteger(pageIndex) && pageIndex >= 0).toBe(true);
+    const start = pageIndex * RESULT_WINDOW_SIZE;
+    const records = indexedFixture.records.slice(start, start + RESULT_WINDOW_SIZE);
+    const hasMore = start + records.length < indexedFixture.records.length;
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        version: 1,
+        schemaVersion: 'literature-catalog-index-v1',
+        enabled: true,
+        readPathActive: true,
+        catalogId: data.catalogId,
+        matched: indexedFixture.records.length,
+        count: records.length,
+        limit: RESULT_WINDOW_SIZE,
+        hasMore,
+        nextCursor: hasMore ? `page-${pageIndex + 1}` : null,
+        sort: 'newest',
+        items: records.map(indexedItem),
+      }),
+    });
+  });
+
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
+    .toBe('architecture-v1');
+
+  const picker = page.locator('.journal-picker');
+  await picker.locator('summary').click();
+  await expect(picker).toHaveAttribute('open', '');
+  const targetOption = picker.getByRole('checkbox', { name: indexedFixture.journal, exact: true });
+  await targetOption.check();
+  await expect(targetOption).toBeChecked();
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogDiscovery || ''), { timeout: 30000 })
+    .toBe('d1-index');
+  await expect(page.locator('#resultCount')).toHaveText(String(indexedFixture.records.length));
+  await expect.poll(async () => page.locator('#gallery > .card').count())
+    .toBe(Math.min(RESULT_WINDOW_SIZE, indexedFixture.records.length));
+  await expect(page.locator('#gallery > .card').first())
+    .toHaveAttribute('data-doi', String(indexedFixture.records[0].doi).toLowerCase());
+
+  const next = page.locator('#nextResultPage');
+  await next.scrollIntoViewIfNeeded();
+  await expect(next).toBeEnabled();
+  await next.click();
+  await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )2\//);
+  await expect(page.locator('#previousResultPage')).toBeEnabled();
+  await expect(page.locator('#resultCount')).toHaveText(String(indexedFixture.records.length));
+  await expect(page.locator('#gallery > .card').first())
+    .toHaveAttribute('data-doi', String(indexedFixture.records[RESULT_WINDOW_SIZE].doi).toLowerCase());
+  expect(catalogCalls).toBe(2);
+});
+
+test('read-disabled indexed endpoint is probed once then static discovery remains authoritative', async ({ page }) => {
+  const data = fixture();
+  let probes = 0;
+  await stubOptionalApi(page, async route => {
+    probes += 1;
+    await route.fulfill({
+      status: 503,
+      contentType: 'application/json',
+      body: JSON.stringify({ error: 'literature_catalog_index_read_disabled', readPathActive: false }),
+    });
+  });
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+  await page.locator('#search').fill(data.archiveDoi);
+  await expect.poll(async () => page.locator(`#gallery > .card[data-doi="${data.archiveDoi}"]:not([hidden])`).count(), { timeout: 30000 })
+    .toBe(1);
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogDiscovery || ''))
+    .toBe('static-segments');
+  expect(probes).toBe(1);
+
+  await page.locator('#dateFrom').fill(data.archiveDate);
+  await page.locator('#dateFrom').dispatchEvent('change');
+  await page.waitForTimeout(500);
+  expect(probes).toBe(1);
+});
 
 test('verified Hot fallback stays bounded when full membership verification fails', async ({ page }) => {
   const data = fixture();

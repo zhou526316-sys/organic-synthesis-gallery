@@ -2,7 +2,13 @@ import { api } from './platform-api';
 import { chineseTitle, validChineseTitle } from '../shared/chinese-title-overrides.js';
 import './styles.css';
 import { mountUserShell } from './user-shell';
-import { earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
+import { beijingDate, earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
+import {
+  fetchIndexedLiteratureView,
+  indexedLiteratureViewScopeKey,
+  indexedReadDefinitelyDisabled,
+  type IndexedLiteratureViewRequest,
+} from './literature-indexed-view';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
 import { RESULT_WINDOW_SIZE, resultWindowState } from '../shared/result-window.js';
 import { store } from './user-ui/shared';
@@ -217,6 +223,19 @@ let latestCollectionDate = '';
 let architectureRefreshTimer: number | null = null;
 let architectureRefreshSerial = 0;
 let resultWindowPage = 1;
+
+interface IndexedViewState {
+  scopeKey: string;
+  matched: number;
+  page: number;
+  cursors: string[];
+  hasMore: boolean;
+  nextCursor: string | null;
+  loading: boolean;
+}
+
+let indexedViewState: IndexedViewState | null = null;
+let indexedReadAvailability: 'unknown' | 'enabled' | 'disabled' = 'unknown';
 
 store.addEventListener('counts', () => {
   if (sort === 'readers') renderCards();
@@ -509,6 +528,7 @@ function scheduleNewnessBoundary(): void {
   newnessTimer = window.setTimeout(() => {
     newnessTimer = null;
     renderCards();
+    if (onlyNew) scheduleArchitectureCorpusRefresh(0);
     scheduleNewnessBoundary();
   }, delay);
 }
@@ -612,8 +632,41 @@ function syncLiteratureDoiRegistry(): void {
   });
 }
 
+function indexedViewRequest(client = architectureClient): { request: IndexedLiteratureViewRequest; scopeKey: string } | null {
+  if (!client || indexedReadAvailability === 'disabled' || activeEdition || sharedDoiFromLocation()) return null;
+  if (sort === 'readers') return null;
+  const needle = query.trim();
+  if (needle && [...needle].length < 3) return null;
+  const hasIndexedScope = Boolean(
+    needle
+    || onlyNew
+    || selectedJournals.size
+    || excludedJournals.size
+    || dateFrom
+    || dateTo
+  );
+  if (!hasIndexedScope) return null;
+  const request: IndexedLiteratureViewRequest = {
+    catalogId: client.catalogId,
+    query: needle,
+    selectedJournals: [...selectedJournals].sort(),
+    excludedJournals: [...excludedJournals].sort(),
+    dateFrom,
+    dateTo,
+    addedDate: onlyNew ? beijingDate() : '',
+    sort: sort === 'oldest' ? 'oldest' : 'newest',
+  };
+  return { request, scopeKey: indexedLiteratureViewScopeKey(request) };
+}
+
+function activeIndexedViewState(): IndexedViewState | null {
+  const view = indexedViewRequest();
+  return view && indexedViewState?.scopeKey === view.scopeKey ? indexedViewState : null;
+}
+
 function resetResultWindow(): void {
   resultWindowPage = 1;
+  indexedViewState = null;
 }
 
 function resultScopeIsDefaultRecent(): boolean {
@@ -635,29 +688,42 @@ function renderCards(): void {
   const count = document.querySelector<HTMLElement>('#resultCount');
   const scope = document.querySelector<HTMLElement>('#resultScopeLabel');
   if (!gallery || !count) return;
-  const list = filteredPapers();
-  const windowState = resultWindowState(list.length, resultWindowPage, RESULT_WINDOW_SIZE);
-  resultWindowPage = windowState.page;
-  const renderedList = list.slice(windowState.start, windowState.end);
+  const indexedState = activeIndexedViewState();
+  const list = indexedState ? papers : filteredPapers();
+  const localWindow = indexedState ? null : resultWindowState(list.length, resultWindowPage, RESULT_WINDOW_SIZE);
+  if (localWindow) resultWindowPage = localWindow.page;
+  if (indexedState) resultWindowPage = indexedState.page;
+  const renderedList = indexedState ? list : list.slice(localWindow!.start, localWindow!.end);
+  const totalMatched = indexedState ? indexedState.matched : list.length;
+  const page = indexedState ? indexedState.page : localWindow!.page;
+  const pages = indexedState
+    ? Math.max(1, Math.ceil(indexedState.matched / RESULT_WINDOW_SIZE))
+    : localWindow!.pages;
+  const first = totalMatched && renderedList.length
+    ? (indexedState ? (page - 1) * RESULT_WINDOW_SIZE + 1 : localWindow!.start + 1)
+    : 0;
+  const end = first ? first + renderedList.length - 1 : 0;
+  const hasPrevious = indexedState ? page > 1 : localWindow!.hasPrevious;
+  const hasNext = indexedState ? indexedState.hasMore : localWindow!.hasNext;
+  const pagerLoading = indexedState?.loading === true;
   const windowControls = document.querySelector<HTMLElement>('#resultWindowControls');
   const windowStatus = document.querySelector<HTMLElement>('#resultWindowStatus');
   const previousPage = document.querySelector<HTMLButtonElement>('#previousResultPage');
   const nextPage = document.querySelector<HTMLButtonElement>('#nextResultPage');
-  count.textContent = String(list.length);
-  if (windowControls) windowControls.hidden = list.length === 0;
+  count.textContent = String(totalMatched);
+  if (windowControls) windowControls.hidden = totalMatched === 0;
   if (windowStatus) {
-    const first = list.length ? windowState.start + 1 : 0;
     windowStatus.textContent = language === 'zh'
-      ? `当前显示 ${first}–${windowState.end} / 共 ${list.length} 篇 · 第 ${windowState.page}/${windowState.pages} 页`
-      : `Showing ${first}–${windowState.end} of ${list.length} · Page ${windowState.page}/${windowState.pages}`;
+      ? `当前显示 ${first}–${end} / 共 ${totalMatched} 篇 · 第 ${page}/${pages} 页`
+      : `Showing ${first}–${end} of ${totalMatched} · Page ${page}/${pages}`;
   }
   if (previousPage) {
-    previousPage.disabled = !windowState.hasPrevious;
-    previousPage.dataset.available = windowState.hasPrevious ? 'true' : 'false';
+    previousPage.disabled = pagerLoading || !hasPrevious;
+    previousPage.dataset.available = hasPrevious ? 'true' : 'false';
   }
   if (nextPage) {
-    nextPage.disabled = !windowState.hasNext;
-    nextPage.dataset.available = windowState.hasNext ? 'true' : 'false';
+    nextPage.disabled = pagerLoading || !hasNext;
+    nextPage.dataset.available = hasNext ? 'true' : 'false';
   }
   if (scope) {
     const recent = resultScopeIsDefaultRecent();
@@ -748,11 +814,13 @@ function mount(): void {
     sort = value === 'oldest' || value === 'readers' ? value : 'newest';
     resetResultWindow();
     renderCards();
+    scheduleArchitectureCorpusRefresh(0);
   });
   document.querySelector<HTMLInputElement>('#newOnly')?.addEventListener('change', event => {
     onlyNew = (event.target as HTMLInputElement).checked;
     resetResultWindow();
     renderCards();
+    scheduleArchitectureCorpusRefresh(0);
   });
   document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.addEventListener('click', () => {
     selectedJournals.clear();
@@ -760,6 +828,7 @@ function mount(): void {
     resetResultWindow();
     persistFilterPreferences();
     mount();
+    scheduleArchitectureCorpusRefresh(0);
   });
   document.querySelectorAll<HTMLInputElement>('[data-journal-option]').forEach(input => input.addEventListener('change', () => {
     if (input.checked) selectedJournals.add(input.value);
@@ -772,6 +841,7 @@ function mount(): void {
     if (clear) clear.disabled = selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo;
     document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.classList.toggle('active', selectedJournals.size === 0 && excludedJournals.size === 0);
     renderCards();
+    scheduleArchitectureCorpusRefresh(0);
   }));
   document.querySelectorAll<HTMLButtonElement>('[data-journal-exclude]').forEach(button => button.addEventListener('click', () => {
     const journal = button.dataset.journalExclude?.trim();
@@ -802,6 +872,7 @@ function mount(): void {
     if (clear) clear.disabled = selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo;
     document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.classList.toggle('active', selectedJournals.size === 0 && excludedJournals.size === 0);
     renderCards();
+    scheduleArchitectureCorpusRefresh(0);
   }));
   document.querySelector<HTMLInputElement>('#dateFrom')?.addEventListener('change', event => {
     dateFrom = (event.target as HTMLInputElement).value;
@@ -831,6 +902,10 @@ function mount(): void {
   });
 
   const moveResultPage = (delta: number): void => {
+    if (activeIndexedViewState()) {
+      void moveIndexedResultPage(delta);
+      return;
+    }
     resultWindowPage = Math.max(1, resultWindowPage + delta);
     renderCards();
     document.querySelector<HTMLElement>('#gallery')?.scrollIntoView({ block: 'start', behavior: 'auto' });
@@ -1316,10 +1391,45 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
   }
 }
 
-async function refreshArchitectureCorpus(serial: number): Promise<void> {
-  const client = architectureClient;
-  if (!client || serial !== architectureRefreshSerial) return;
+async function applyIndexedArchitecturePage(
+  client: PublishedCatalogClient,
+  view: { request: IndexedLiteratureViewRequest; scopeKey: string },
+  page: number,
+  cursor: string,
+  cursorHistory: string[],
+  serial: number,
+): Promise<boolean> {
+  const indexed = await fetchIndexedLiteratureView({ ...view.request, ...(cursor ? { cursor } : {}) });
+  const resolved = normalizeArchitectureRows(await client.resolveIndexed(indexed.items));
+  if (serial !== architectureRefreshSerial || architectureClient !== client) return false;
+  if (resolved.length !== indexed.count) throw new Error('indexed_resolved_count_mismatch');
+  const previous = indexedViewState?.scopeKey === view.scopeKey ? indexedViewState : null;
+  if (previous && previous.matched !== indexed.matched) throw new Error('indexed_matched_count_changed');
+  const cursors = [...cursorHistory];
+  cursors[page - 1] = cursor;
+  if (indexed.hasMore && indexed.nextCursor) cursors[page] = indexed.nextCursor;
+  else cursors.length = page;
+  indexedViewState = {
+    scopeKey: view.scopeKey,
+    matched: indexed.matched,
+    page,
+    cursors,
+    hasMore: indexed.hasMore,
+    nextCursor: indexed.nextCursor,
+    loading: false,
+  };
+  indexedReadAvailability = 'enabled';
+  resultWindowPage = page;
+  architectureReadLimited = false;
+  setArchitectureCorpus(resolved);
+  document.documentElement.dataset.catalogDiscovery = 'd1-index';
+  mount();
+  return true;
+}
+
+async function refreshArchitectureCorpusStatic(serial: number, client: PublishedCatalogClient): Promise<void> {
   try {
+    indexedViewState = null;
     let additions: Paper[] = [];
     const needle = query.trim();
     if (needle.length >= 2) additions = mergePapers(additions, normalizeArchitectureRows(await client.search(needle)));
@@ -1329,13 +1439,72 @@ async function refreshArchitectureCorpus(serial: number): Promise<void> {
     if (serial !== architectureRefreshSerial || architectureClient !== client) return;
     architectureReadLimited = false;
     setArchitectureCorpus(mergePapers(architectureLandingPapers, additions));
+    document.documentElement.dataset.catalogDiscovery = 'static-segments';
     mount();
   } catch (error) {
     if (serial !== architectureRefreshSerial || architectureClient !== client) return;
     console.warn('architecture-v1 on-demand read unavailable; retaining bounded Hot landing set', error);
+    indexedViewState = null;
     architectureReadLimited = true;
     setArchitectureCorpus(architectureLandingPapers);
+    document.documentElement.dataset.catalogDiscovery = 'hot-limited';
     mount();
+  }
+}
+
+async function refreshArchitectureCorpus(serial: number): Promise<void> {
+  const client = architectureClient;
+  if (!client || serial !== architectureRefreshSerial) return;
+  const view = indexedViewRequest(client);
+  if (view && indexedReadAvailability !== 'disabled') {
+    try {
+      const applied = await applyIndexedArchitecturePage(client, view, 1, '', [''], serial);
+      if (applied) return;
+    } catch (error) {
+      if (serial !== architectureRefreshSerial || architectureClient !== client) return;
+      if (indexedReadDefinitelyDisabled(error)) indexedReadAvailability = 'disabled';
+      console.warn('indexed literature discovery unavailable; using verified static reader', error);
+      indexedViewState = null;
+    }
+  }
+  await refreshArchitectureCorpusStatic(serial, client);
+}
+
+async function moveIndexedResultPage(delta: number): Promise<void> {
+  const client = architectureClient;
+  const state = activeIndexedViewState();
+  const view = indexedViewRequest(client);
+  if (!client || !state || !view || state.loading || (delta !== -1 && delta !== 1)) return;
+  const targetPage = state.page + delta;
+  if (targetPage < 1) return;
+  let cursor = '';
+  const cursors = [...state.cursors];
+  if (delta > 0) {
+    if (!state.hasMore || !state.nextCursor) return;
+    cursor = state.nextCursor;
+    cursors[targetPage - 1] = cursor;
+  } else {
+    cursor = cursors[targetPage - 1] || '';
+  }
+  architectureRefreshSerial += 1;
+  const serial = architectureRefreshSerial;
+  if (architectureRefreshTimer !== null) {
+    window.clearTimeout(architectureRefreshTimer);
+    architectureRefreshTimer = null;
+  }
+  indexedViewState = { ...state, loading: true };
+  renderCards();
+  try {
+    const applied = await applyIndexedArchitecturePage(client, view, targetPage, cursor, cursors, serial);
+    if (!applied) return;
+    document.querySelector<HTMLElement>('#gallery')?.scrollIntoView({ block: 'start', behavior: 'auto' });
+  } catch (error) {
+    if (serial !== architectureRefreshSerial || architectureClient !== client) return;
+    if (indexedReadDefinitelyDisabled(error)) indexedReadAvailability = 'disabled';
+    console.warn('indexed literature page unavailable; reverting to verified static reader', error);
+    indexedViewState = null;
+    resultWindowPage = targetPage;
+    await refreshArchitectureCorpusStatic(serial, client);
   }
 }
 
@@ -1361,7 +1530,10 @@ async function load(): Promise<void> {
       latestCollectionDate = legacyDates[legacyDates.length - 1] || '';
     }
     mount();
-    if (architectureMode === 'architecture-v1' && (dateFrom || dateTo || query.trim())) scheduleArchitectureCorpusRefresh(0);
+    if (architectureMode === 'architecture-v1'
+      && (indexedViewRequest() || dateFrom || dateTo || query.trim())) {
+      scheduleArchitectureCorpusRefresh(0);
+    }
     void resolveTitles().then(() => resolveTitles());
     void loadTranslations();
   } catch (error) {

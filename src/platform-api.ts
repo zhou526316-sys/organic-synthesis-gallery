@@ -239,6 +239,10 @@ function workerRequest<T>(method: string, path: string, body?: unknown): Promise
 }
 
 async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResponse<T>> {
+  if (staticFrontendOnly() && path === '/api/literature/catalog-view') {
+    return workerRequest<T>('POST', path, body);
+  }
+
   const requested = body && typeof body === 'object' && Array.isArray((body as { dois?: unknown }).dois)
     ? (body as { dois: unknown[] }).dois.map(normalizeDoi).filter((doi): doi is string => Boolean(doi))
     : [];
