@@ -1,5 +1,11 @@
 import { normalizeDoi } from './media.js';
-import { rebuildUserLibraryState, splitUserLibraryState, stableStateJson } from './user-library-shadow.js';
+import {
+  compareUserLibraryShadowPage,
+  getUserLibraryShadowStatus,
+  rebuildUserLibraryState,
+  splitUserLibraryState,
+  stableStateJson,
+} from './user-library-shadow.js';
 
 const MAX_BACKFILL_LIMIT = 50;
 const MAX_COMPARE_LIMIT = 50;
@@ -357,32 +363,68 @@ export async function shadowWriteUserLibraryV3FromState(env, userIdValue, state,
 
 export async function getUserLibraryV3ShadowStatus(env) {
   if (!env?.DB) return { status:503, body:{ error:'user_library_v3_shadow_db_missing' } };
-  const [legacy,heads,sync,revisionMismatch,backfill] = await Promise.all([
+  const writeEnabled=flag(env.USER_LIBRARY_V3_WRITE_ENABLED);
+  const [legacy,heads,sync,backfill] = await Promise.all([
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_state').first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_v3_head').first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_v3_shadow_sync').first(),
-    env.DB.prepare(`
-      SELECT COUNT(*) AS count
-      FROM user_library_state legacy
-      LEFT JOIN user_library_v3_shadow_sync sync ON sync.user_id=legacy.user_id
-      WHERE sync.user_id IS NULL
-         OR sync.source_revision<>legacy.revision
-         OR sync.source_updated_at<>legacy.updated_at
-    `).first(),
     env.DB.prepare('SELECT * FROM user_library_v3_backfill WHERE id=1').first(),
   ]);
+  if(writeEnabled){
+    const compat=await getUserLibraryShadowStatus(env);
+    return { status:200, body:{
+      ok:true,
+      authority:'v3',
+      configured:flag(env.USER_LIBRARY_V3_SHADOW_ENABLED),
+      enabled:userLibraryV3ShadowEnabled(env),
+      readEnabled:flag(env.USER_LIBRARY_V3_READ_ENABLED),
+      writeEnabled:true,
+      legacyUsers:Number(legacy?.count || 0),
+      v3Heads:Number(heads?.count || 0),
+      syncedUsers:Number(sync?.count || 0),
+      compatibilityHeads:Number(compat.body?.shadowHeads || 0),
+      compatibilityMismatches:Number(compat.body?.revisionMismatches || 0),
+      revisionMismatches:Number(compat.body?.revisionMismatches || 0),
+      backfill:backfill ? {
+        complete:Number(backfill.complete || 0)===1,
+        historicalOnly:true,
+        cursorUserId:String(backfill.cursor_user_id || ''),
+        scannedUsers:Number(backfill.scanned_users || 0),
+        syncedUsers:Number(backfill.synced_users || 0),
+        skippedFresh:Number(backfill.skipped_fresh || 0),
+        skippedStale:Number(backfill.skipped_stale || 0),
+        failedUsers:Number(backfill.failed_users || 0),
+        startedAt:Number(backfill.started_at || 0),
+        updatedAt:Number(backfill.updated_at || 0),
+        lastError:String(backfill.last_error || ''),
+      } : null,
+    }};
+  }
+
+  const revisionMismatch=await env.DB.prepare(`
+    SELECT COUNT(*) AS count
+    FROM user_library_state legacy
+    LEFT JOIN user_library_v3_shadow_sync sync ON sync.user_id=legacy.user_id
+    WHERE sync.user_id IS NULL
+       OR sync.source_revision<>legacy.revision
+       OR sync.source_updated_at<>legacy.updated_at
+  `).first();
   return { status:200, body:{
     ok:true,
+    authority:'legacy',
     configured:flag(env.USER_LIBRARY_V3_SHADOW_ENABLED),
     enabled:userLibraryV3ShadowEnabled(env),
     readEnabled:flag(env.USER_LIBRARY_V3_READ_ENABLED),
-    writeEnabled:flag(env.USER_LIBRARY_V3_WRITE_ENABLED),
+    writeEnabled:false,
     legacyUsers:Number(legacy?.count || 0),
     v3Heads:Number(heads?.count || 0),
     syncedUsers:Number(sync?.count || 0),
+    compatibilityHeads:null,
+    compatibilityMismatches:null,
     revisionMismatches:Number(revisionMismatch?.count || 0),
     backfill:backfill ? {
       complete:Number(backfill.complete || 0)===1,
+      historicalOnly:false,
       cursorUserId:String(backfill.cursor_user_id || ''),
       scannedUsers:Number(backfill.scanned_users || 0),
       syncedUsers:Number(backfill.synced_users || 0),
@@ -395,8 +437,10 @@ export async function getUserLibraryV3ShadowStatus(env) {
     } : null,
   }};
 }
-
 export async function backfillUserLibraryV3ShadowPage(env, limitValue = 20) {
+  if (flag(env.USER_LIBRARY_V3_WRITE_ENABLED)) {
+    return { status:409, body:{ error:'user_library_v3_write_authority_active' } };
+  }
   if (!userLibraryV3ShadowEnabled(env)) {
     return { status:409, body:{ error:'user_library_v3_shadow_disabled' } };
   }
@@ -473,6 +517,9 @@ export async function backfillUserLibraryV3ShadowPage(env, limitValue = 20) {
 }
 
 export async function reconcileUserLibraryV3ShadowPage(env, limitValue = 20) {
+  if (flag(env.USER_LIBRARY_V3_WRITE_ENABLED)) {
+    return { status:409, body:{ error:'user_library_v3_write_authority_active' } };
+  }
   if (!userLibraryV3ShadowEnabled(env)) {
     return { status:409, body:{ error:'user_library_v3_shadow_disabled' } };
   }
@@ -560,6 +607,17 @@ async function compareOne(env, legacy) {
 }
 
 export async function compareUserLibraryV3ShadowPage(env, offsetValue = 0, limitValue = 20) {
+  if (flag(env.USER_LIBRARY_V3_WRITE_ENABLED)) {
+    const compat=await compareUserLibraryShadowPage(env,offsetValue,limitValue);
+    if(compat.status!==200) return compat;
+    return {status:200,body:{
+      ...compat.body,
+      authority:'v3',
+      writeAuthority:true,
+      comparison:'v3-to-d3b-compatibility',
+    }};
+  }
+
   if (!userLibraryV3ShadowEnabled(env)) {
     return { status:409, body:{ error:'user_library_v3_shadow_disabled' } };
   }
@@ -597,4 +655,5 @@ export async function compareUserLibraryV3ShadowPage(env, offsetValue = 0, limit
     total,
     complete:nextOffset>=total,
   }};
+
 }
