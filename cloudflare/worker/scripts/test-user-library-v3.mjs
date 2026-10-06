@@ -9,6 +9,7 @@ import {
   readUserLibraryV3Head,
   readUserLibraryV3Page,
 } from '../src/user-library-v3.js';
+import { readUserLibraryStateFromRows } from '../src/user-library-shadow.js';
 
 class Statement {
   constructor(db,sql){this.db=db;this.sql=sql;this.args=[];}
@@ -29,8 +30,10 @@ class D1 {
   constructor(){
     this.sqlite=new DatabaseSync(':memory:');
     this.sqlite.exec('PRAGMA foreign_keys=ON; CREATE TABLE users (id TEXT PRIMARY KEY);');
-    const schema=fs.readFileSync(new URL('../../user-library-state-v3.sql',import.meta.url),'utf8');
-    this.sqlite.exec(schema);
+    const v2=fs.readFileSync(new URL('../../user-library-state-v2.sql',import.meta.url),'utf8');
+    const v3=fs.readFileSync(new URL('../../user-library-state-v3.sql',import.meta.url),'utf8');
+    this.sqlite.exec(v2);
+    this.sqlite.exec(v3);
   }
   prepare(sql){return new Statement(this,sql);}
   async batch(statements){
@@ -52,6 +55,7 @@ const envFor=(db,overrides={})=>({
   USER_LIBRARY_V3_SHADOW_ENABLED:'1',
   USER_LIBRARY_V3_READ_ENABLED:'1',
   USER_LIBRARY_V3_WRITE_ENABLED:'1',
+  USER_LIBRARY_ROW_READ_ENABLED:'1',
   ...overrides,
 });
 function addUser(db,id='u1'){db.sqlite.prepare('INSERT INTO users(id) VALUES (?)').run(id);}
@@ -97,6 +101,54 @@ test('bounded V3 mutation creates revision-fenced head and paged current rows',a
     [...first.rows,...second.rows].map(row=>row.paperKey).sort(),
     ['10.1234/a','title:no-doi'],
   );
+});
+
+test('V3 mutation keeps bounded D3b compatibility rows readable without rewriting unchanged rows',async t=>{
+  const db=new D1();t.after(()=>db.close());addUser(db);
+  const env=envFor(db);
+  const first=await applyUserLibraryV3Mutation(env,'u1',{
+    expectedRevision:0,
+    globalState:{statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},followedSearches:[],searchHistory:[],hideRead:false},
+    operations:[
+      {paperKey:'a',paperState:{favorite:true,note:'A'},metadata:{id:'a',title:'A'}},
+      {paperKey:'b',paperState:{favorite:true,note:'B'},metadata:{id:'b',title:'B'}},
+    ],
+  },1000);
+  assert.equal(first.ok,true);
+  const rowA1=db.sqlite.prepare("SELECT revision,paper_state_json FROM user_paper_state WHERE user_id='u1' AND paper_key='a'").get();
+  const rowB1=db.sqlite.prepare("SELECT revision,paper_state_json FROM user_paper_state WHERE user_id='u1' AND paper_key='b'").get();
+  assert.equal(Number(rowA1.revision),1);
+  assert.equal(Number(rowB1.revision),1);
+
+  const second=await applyUserLibraryV3Mutation(env,'u1',{
+    expectedRevision:1,
+    operations:[{paperKey:'a',paperState:{favorite:true,note:'A2'},metadata:{id:'a',title:'A'}}],
+  },2000);
+  assert.equal(second.ok,true);
+  const rowA2=db.sqlite.prepare("SELECT revision,paper_state_json FROM user_paper_state WHERE user_id='u1' AND paper_key='a'").get();
+  const rowB2=db.sqlite.prepare("SELECT revision,paper_state_json FROM user_paper_state WHERE user_id='u1' AND paper_key='b'").get();
+  assert.equal(Number(rowA2.revision),2);
+  assert.equal(JSON.parse(rowA2.paper_state_json).note,'A2');
+  assert.equal(Number(rowB2.revision),1);
+  assert.equal(JSON.parse(rowB2.paper_state_json).note,'B');
+
+  const compat=await readUserLibraryStateFromRows(env,'u1',{revision:2,updated_at:2000});
+  assert.equal(compat.ready,true);
+  assert.equal(compat.compatibilityAuthority,'v3');
+  assert.equal(compat.revision,2);
+  assert.deepEqual(Object.keys(compat.state.papers).sort(),['a','b']);
+  assert.equal(compat.state.papers.a.note,'A2');
+  assert.equal(compat.state.papers.b.note,'B');
+
+  const deleted=await applyUserLibraryV3Mutation(env,'u1',{
+    expectedRevision:2,
+    operations:[{paperKey:'b',delete:true}],
+  },3000);
+  assert.equal(deleted.ok,true);
+  const compatAfterDelete=await readUserLibraryStateFromRows(env,'u1',{revision:3,updated_at:3000});
+  assert.equal(compatAfterDelete.ready,true);
+  assert.deepEqual(Object.keys(compatAfterDelete.state.papers),['a']);
+  assert.equal(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_paper_state WHERE user_id='u1' AND paper_key='b'").get().c,0);
 });
 
 test('delete is an explicit tombstone and stale expected revision is rejected',async t=>{
