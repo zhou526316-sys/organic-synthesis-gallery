@@ -217,9 +217,12 @@ test('D3c4b production deployment requires isolated write canary, compatibility 
   );
   for(const token of [
     'arch-v3-canary-',
-    "mode:'account-v3-mutate'",
-    "mode:'account-v3-delta'",
-    "mode:'account-pull'",
+    "post('account-v3-head'",
+    "post('account-v3-page'",
+    "post('account-v3-mutate'",
+    "post('account-v3-delta'",
+    "post('account-pull'",
+    "post('account-save'",
     'user_library_v3_revision_conflict',
     'user_library_client_upgrade_required',
     'legacy_docs',
