@@ -127,6 +127,14 @@ Both “每日精选” and “往期精选” use the same deep-reading standar
 - Never reuse one figure for two different claims. Each image must have one clear evidentiary role and its explanation goes below the image.
 - Keep “chemical space” discussion paper-specific. For the 2026-10-05 bundle, the chemical-space discussion belongs to the MacMillan retrospective, not the JACS daily pick.
 
+## Internal editorial assembly before WeChat
+
+For every user-selected daily feature / retrospective pair, build and self-audit an internal editorial plan **before** writing the WeChat draft. The plan must contain the paper-specific causal narrative and an image map that assigns one evidentiary job to each crop. The internal QA must check source support, evidence level, Chinese-first language, duplicate-image use, crop completeness and actual WeChat-card cover behavior. These working artifacts are not sent to the user unless requested; after they pass, update the real WeChat draft and inspect the draft/get preview.
+
+For dense multi-panel paper figures, prefer **multiple argument-specific crops** placed next to the relevant explanation. Do not use the full multi-panel figure simply because it is visually convenient. The opening figure should show the current reaction cleanly and completely.
+
+For retrospectives without a suitable portrait, a purpose-built abstract editorial cover is allowed. It may use symbolic light/energy/protein/radical motifs, but must not invent literal chemical structures; a small original-paper reaction crop should remain the factual visual anchor. Do not add a subtitle unless the user requests one.
+
 ## Automation release gates
 
 A WeChat draft is not send-ready merely because the API write succeeds.
