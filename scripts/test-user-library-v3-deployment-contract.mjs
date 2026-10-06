@@ -137,6 +137,18 @@ test('D3c mutation and delta primitives are bounded and revision-fenced',()=>{
   assert.ok(v3.includes('deleted=1 AND revision<?'));
 });
 
+test('first V3 authority claim is freshness-fenced both before and inside the atomic batch',()=>{
+  for(const token of [
+    'legacyAuthorityMeta',
+    'shadowSyncMeta',
+    'legacyShadowFresh',
+    'user_library_v3_shadow_not_fresh',
+    "THEN 'v3' ELSE 'stale' END",
+    'INNER JOIN user_library_v3_shadow_sync',
+  ]) assert.ok(v3.includes(token),token);
+  assert.ok(userUi.includes("String(result.reason || 'user_library_v3_revision_conflict')"));
+});
+
 test('D3c4a client mutation foundation is dirty-key bounded and dormant behind the write flag',()=>{
   for(const token of [
     "account-v3-mutate",
