@@ -906,6 +906,10 @@ async function initialMerge(): Promise<void> {
   const keys=[...dirtyPaperKeys];
   const globalWasDirty=dirtyGlobal;
   if(!keys.length && !globalWasDirty) return;
+  if(v3AuthorityActive&&!v3WriteActive){
+    setWriteDiagnostic('suspended');
+    return;
+  }
   const outcome=v3WriteActive
     ? await persistV3Desired(merged,keys,globalWasDirty)
     : await persistLegacyDesired(merged,keys,globalWasDirty);
