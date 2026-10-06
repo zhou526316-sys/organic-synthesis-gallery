@@ -717,29 +717,58 @@ function renderCards(): void {
   const count = document.querySelector<HTMLElement>('#resultCount');
   const scope = document.querySelector<HTMLElement>('#resultScopeLabel');
   if (!gallery || !count) return;
-  const list = filteredPapers();
-  const windowState = resultWindowState(list.length, resultWindowPage, RESULT_WINDOW_SIZE);
-  resultWindowPage = windowState.page;
-  const renderedList = list.slice(windowState.start, windowState.end);
+  const remote = activeRemoteLiteratureView();
+  const list = remote ? remote.papers : filteredPapers();
+  let renderedList: Paper[];
+  let total: number;
+  let currentPage: number;
+  let pages: number;
+  let first: number;
+  let end: number;
+  let hasPrevious: boolean;
+  let hasNext: boolean;
+  if (remote) {
+    renderedList = list;
+    total = remote.matched;
+    currentPage = remote.page;
+    pages = Math.max(1, Math.ceil(total / remote.pageSize));
+    first = total ? (currentPage - 1) * remote.pageSize + 1 : 0;
+    end = Math.min(total, (currentPage - 1) * remote.pageSize + renderedList.length);
+    hasPrevious = currentPage > 1;
+    hasNext = remote.hasMore;
+    resultWindowPage = currentPage;
+  } else {
+    const windowState = resultWindowState(list.length, resultWindowPage, RESULT_WINDOW_SIZE);
+    resultWindowPage = windowState.page;
+    renderedList = list.slice(windowState.start, windowState.end);
+    total = list.length;
+    currentPage = windowState.page;
+    pages = windowState.pages;
+    first = list.length ? windowState.start + 1 : 0;
+    end = windowState.end;
+    hasPrevious = windowState.hasPrevious;
+    hasNext = windowState.hasNext;
+  }
   const windowControls = document.querySelector<HTMLElement>('#resultWindowControls');
   const windowStatus = document.querySelector<HTMLElement>('#resultWindowStatus');
   const previousPage = document.querySelector<HTMLButtonElement>('#previousResultPage');
   const nextPage = document.querySelector<HTMLButtonElement>('#nextResultPage');
-  count.textContent = String(list.length);
-  if (windowControls) windowControls.hidden = list.length === 0;
+  count.textContent = String(total);
+  if (windowControls) windowControls.hidden = total === 0;
   if (windowStatus) {
-    const first = list.length ? windowState.start + 1 : 0;
     windowStatus.textContent = language === 'zh'
-      ? `当前显示 ${first}–${windowState.end} / 共 ${list.length} 篇 · 第 ${windowState.page}/${windowState.pages} 页`
-      : `Showing ${first}–${windowState.end} of ${list.length} · Page ${windowState.page}/${windowState.pages}`;
+      ? `当前显示 ${first}–${end} / 共 ${total} 篇 · 第 ${currentPage}/${pages} 页`
+      : `Showing ${first}–${end} of ${total} · Page ${currentPage}/${pages}`;
   }
   if (previousPage) {
-    previousPage.disabled = !windowState.hasPrevious;
-    previousPage.dataset.available = windowState.hasPrevious ? 'true' : 'false';
+    const available = hasPrevious && !remoteLiteratureViewLoading;
+    previousPage.disabled = !available;
+    previousPage.dataset.available = available ? 'true' : 'false';
   }
   if (nextPage) {
-    nextPage.disabled = !windowState.hasNext;
-    nextPage.dataset.available = windowState.hasNext ? 'true' : 'false';
+    const available = hasNext && !remoteLiteratureViewLoading;
+    nextPage.disabled = !available;
+    nextPage.dataset.available = available ? 'true' : 'false';
   }
   if (scope) {
     const recent = resultScopeIsDefaultRecent();
