@@ -143,6 +143,44 @@ test('architecture-v1 landing is Hot-only while all-time membership stays comple
   expect(data.hotCount).toBeLessThan(data.memberCount);
 });
 
+test('verified Hot bootstrap renders before all-time membership finishes', async ({ page }) => {
+  const data = fixture();
+  let releaseMembership!: () => void;
+  const membershipGate = new Promise<void>(resolve => { releaseMembership = resolve; });
+  let membershipRequests = 0;
+
+  await page.route(/\/architecture-v1\/membership\.[^/]+\.json(?:\?.*)?$/, async route => {
+    membershipRequests += 1;
+    await membershipGate;
+    await route.continue();
+  });
+  await stubOptionalApi(page);
+
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
+    .toBe('architecture-hot-bootstrap');
+  await expect.poll(async () => page.locator('#gallery > .card').count(), { timeout: 30000 })
+    .toBe(Math.min(data.hotCount, RESULT_WINDOW_SIZE));
+  await expect(page.locator('#resultCount')).toHaveText(String(data.hotCount));
+
+  const bootstrapRegistry = await page.locator('#gallery-literature-doi-registry')
+    .evaluate(node => JSON.parse(node.textContent || '{}'));
+  expect(bootstrapRegistry.complete).toBe(false);
+  expect(bootstrapRegistry.scope).toBe('hot-fallback');
+  expect(membershipRequests).toBeGreaterThan(0);
+
+  releaseMembership();
+
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
+    .toBe('architecture-v1');
+  const fullRegistry = await page.locator('#gallery-literature-doi-registry')
+    .evaluate(node => JSON.parse(node.textContent || '{}'));
+  expect(fullRegistry.complete).toBe(true);
+  expect(fullRegistry.count).toBe(data.memberCount);
+  expect(fullRegistry.dois).toContain(data.archiveDoi);
+});
+
 test('result pagination keeps DOM cardinality bounded across pages', async ({ page }) => {
   const data = fixture();
   await stubOptionalApi(page);
