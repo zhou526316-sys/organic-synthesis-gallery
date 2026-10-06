@@ -65,12 +65,27 @@ function captureBelongsToDoi(item, doi) {
   return embedded.every(value => value === target);
 }
 
+export function isRejectedRscPreviewCapture(item, doi = item?.doi) {
+  const target = normalizeDoi(doi || item?.doi || '');
+  if (!target || !target.startsWith('10.1039/')) return false;
+  const source = String(item?.sourceUrl || '');
+  let path = source.split(/[?#]/, 1)[0].toLowerCase();
+  try { path = new URL(source).pathname.toLowerCase(); } catch {}
+  const semantic = [item?.caption, item?.source, item?.assetType, item?.candidateSource, item?.candidateKind]
+    .map(value => String(value || '')).join(' ').replace(/\s+/g, ' ').toLowerCase();
+  return /\.pdf\.(?:gif|png|jpe?g|webp)$/.test(path)
+    || /\bfirstpagepreview(?:image)?\b/.test(semantic)
+    || /\b(?:article\s+pdf\s+)?first\s+page(?:\s+of\b[^.]{0,180})?\s+preview\b/.test(semantic)
+    || /\bpdf\s+first\s+page\s+preview\b/.test(semantic);
+}
+
 function captureIntakeError(payload, doi) {
   if (payload?.captureVersion !== '6.2.20') return 'capture_client_upgrade_required';
   if (!/^[a-z0-9-]{16,80}$/i.test(String(payload?.jobId || ''))) return 'capture_job_binding_missing';
   if (normalizeDoi(payload?.pageDoi || '') !== doi) return 'capture_page_doi_unverified';
   if (!safeUrl(payload?.articleUrl) || !safeUrl(payload?.sourceUrl)) return 'capture_source_evidence_missing';
   if (!captureBelongsToDoi(payload, doi)) return 'media_source_doi_mismatch';
+  if (isRejectedRscPreviewCapture(payload, doi)) return 'rsc_pdf_preview_rejected';
   return '';
 }
 
@@ -1031,6 +1046,7 @@ export async function promoteOfficialLocalTocs(request, env, options = {}) {
         String(item?.kind || '') === 'official' &&
         Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH &&
         captureBelongsToDoi(item, doi) &&
+        !isRejectedRscPreviewCapture(item, doi) &&
         item?.r2Key
       );
     })
@@ -1110,12 +1126,86 @@ export async function promoteOfficialLocalTocs(request, env, options = {}) {
   };
 }
 
+export async function purgeRejectedRscPreviewLocalMedia(env, payload = {}) {
+  if (!env?.MEDIA || !env?.DB) return { status: 503, body: { error: 'Cloudflare media bindings are not configured.' } };
+  const requestedRaw = String(payload?.doi || '').trim();
+  const requestedDoi = requestedRaw ? normalizeDoi(requestedRaw) : null;
+  if (requestedRaw && !requestedDoi) return { status: 400, body: { error: 'invalid_doi' } };
+  if (requestedDoi && !requestedDoi.startsWith('10.1039/')) return { status: 400, body: { error: 'rsc_doi_required' } };
+  const dryRun = payload?.dryRun === true;
+  const index = await readIndex(env);
+  const rejected = Object.entries(index.items || {}).filter(([, item]) => {
+    const doi = normalizeDoi(item?.doi);
+    return Boolean(doi && (!requestedDoi || doi === requestedDoi) && isRejectedRscPreviewCapture(item, doi));
+  });
+  const affectedDois = [...new Set(rejected.map(([, item]) => normalizeDoi(item?.doi)).filter(Boolean))];
+  const removed = rejected.map(([identity, item]) => ({
+    identity,
+    doi: normalizeDoi(item?.doi),
+    r2Key: String(item?.r2Key || ''),
+    contentHash: String(item?.contentHash || ''),
+    sourceUrl: safeUrl(item?.sourceUrl || ''),
+  }));
+
+  if (!dryRun && rejected.length) {
+    for (const [identity, item] of rejected) {
+      if (item?.r2Key) { try { await env.MEDIA.delete(item.r2Key); } catch {} }
+      delete index.items[identity];
+    }
+    index.version = 1;
+    index.updatedAt = Date.now();
+    await env.MEDIA.put(INDEX_KEY, JSON.stringify(index), {
+      httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
+    });
+
+    const now = Date.now();
+    for (const doi of affectedDois) {
+      const hashes = [...new Set(rejected
+        .filter(([, item]) => normalizeDoi(item?.doi) === doi)
+        .map(([, item]) => String(item?.contentHash || ''))
+        .filter(Boolean))];
+      for (const hash of hashes) {
+        await env.DB.prepare(
+          `UPDATE toc_assets
+             SET available = 0, reason = 'rsc_pdf_preview_quarantined', checked_at = ?, updated_at = ?
+           WHERE doi = ? AND content_hash = ?`
+        ).bind(now, now, doi, hash).run();
+      }
+      await env.DB.prepare(
+        `INSERT INTO media_repair_state
+          (doi, repair_version, attempts, last_attempt_at, next_retry_at, last_root_cause, last_outcome, reported_priority, updated_at)
+         VALUES (?, 1, 0, 0, 0, 'rsc_pdf_preview_quarantined', 'missing', 1, ?)
+         ON CONFLICT(doi) DO UPDATE SET
+           next_retry_at = 0,
+           last_root_cause = 'rsc_pdf_preview_quarantined',
+           last_outcome = 'missing',
+           reported_priority = 1,
+           updated_at = excluded.updated_at`
+      ).bind(doi, now).run();
+    }
+  }
+
+  return {
+    status: 200,
+    body: {
+      ok: true,
+      dryRun,
+      requestedDoi: requestedDoi || '',
+      rejected: rejected.length,
+      affectedDois,
+      removed: removed.slice(0, 50),
+      updatedAt: Date.now(),
+    },
+  };
+}
+
 export async function getLocalCaptureIndex(request, env) {
   const index = await readIndex(env);
   const rawItems = Object.values(index.items || {});
   const validItems = rawItems.filter(item => {
     const doi = normalizeDoi(item?.doi);
-    return Boolean(doi && Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH && captureBelongsToDoi(item, doi));
+    return Boolean(doi && Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH &&
+      captureBelongsToDoi(item, doi) && !isRejectedRscPreviewCapture(item, doi));
   });
   const items = validItems.map(item => ({
     ...item,
