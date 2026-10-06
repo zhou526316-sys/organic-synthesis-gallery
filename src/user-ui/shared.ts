@@ -435,7 +435,7 @@ class Store extends EventTarget {
     return data;
   }
 
-  save(broadcast = true, detail?: { paperId?: string; scope?: 'paper' | 'global' }): void {
+  save(broadcast = true, detail?: { paperId?: string; paperIds?: string[]; scope?: 'paper' | 'global' }): void {
     this.metadataSaveQueued = false;
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state)); } catch { /* optional */ }
     if (broadcast) this.dispatchEvent(new CustomEvent('change', { detail: detail || { scope: 'global' } }));
