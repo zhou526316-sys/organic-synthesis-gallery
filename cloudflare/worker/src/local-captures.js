@@ -318,6 +318,9 @@ export async function importTampermonkeyReport(request, env, payload) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
   const doi = normalizeDoi(payload?.doi);
   if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
+  if (String(payload?.controllerRevision || '') !== '2.2.41') {
+    return { status: 409, body: { stored: false, doi, code: 'stale_controller_revision', error: 'stale_controller_revision', expectedControllerRevision: '2.2.41' } };
+  }
   const trace = sanitizeTrace(payload?.trace);
   const now = Date.now();
   const attemptId = String(now) + '-' + crypto.randomUUID().slice(0, 8);

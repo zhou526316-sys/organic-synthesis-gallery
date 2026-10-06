@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.32
+// @version      6.2.33
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -43,17 +43,19 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.40';
+  var CONTROLLER_REVISION = '2.2.41';
   var CAPTURE_HOTFIX_REVISION = '20261001-newest-retry-v1';
   var CONTROLLER_LIFECYCLE_REVISION = '20261001-controller-recovery-v2';
   var controllerResumeTimer = null;
   var IMMEDIATE_RESTART_REVISION = '20261001-immediate-restart-v3';
-  var MISSING_CAPTURE_REVISION = '20261006-toc-pdf-truth-v6';
-  var QUEUE_COVERAGE_REVISION = '20261006-queue-coverage-v8';
+  var MISSING_CAPTURE_REVISION = '20261006-oct1-bundle-v7';
+  var QUEUE_COVERAGE_REVISION = '20261006-queue-coverage-v9';
   var PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11';
   var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
-  var INSTALL_REVISION = '6.2.32';
+  var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
+  var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
+  var INSTALL_REVISION = '6.2.33';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -324,6 +326,14 @@
   function autoReportKeys() {
     try{return GM_listValues().filter(function(k){return String(k).indexOf(AUTO_REPORT_PREFIX)===0;});}catch(_){return [];}
   }
+  function pruneStaleAutomaticReports() {
+    try{
+      autoReportKeys().forEach(function(k){
+        var row=GM_getValue(k,null),revision=String(row&&row.payload&&row.payload.controllerRevision||'');
+        if(revision&&revision!==CONTROLLER_REVISION)GM_deleteValue(k);
+      });
+    }catch(_){}
+  }
   function enqueueCaptureReport(job,trace,status,reason,final,actualPageUrl) {
     try {
       var doi=normalizeDoi(job&&job.doi);if(!doi||!job.jobId)return false;
@@ -414,6 +424,11 @@
       if(current&&current.revision===item.revision)GM_deleteValue(key);
       GM_setValue(AUTO_REPORT_ACK,{at:Date.now(),state:'delivered',doi:item.payload.doi,attemptId:receipt.attemptId,kind:item.payload.candidateSource,pending:autoReportKeys().length,error:''});
     }catch(error){
+      if(/stale_controller_revision/i.test(String(error&&error.message||error))){
+        if(key)GM_deleteValue(key);
+        GM_setValue(AUTO_REPORT_ACK,{at:Date.now(),state:'stale_discarded',pending:autoReportKeys().length,error:'旧 controller 回执已丢弃'});
+        return;
+      }
       if(key&&item){var current=GM_getValue(key,null);if(current){current.tries=Number(current.tries||0)+1;current.nextAt=Date.now()+Math.min(300000,15000*Math.pow(2,Math.min(current.tries,5)));GM_setValue(key,current);}}
       GM_setValue(AUTO_REPORT_ACK,{at:Date.now(),state:'pending_retry',pending:autoReportKeys().length,error:autoReportText(error&&error.message||error)});
     }finally{
@@ -424,6 +439,7 @@
   function startAutomaticCaptureReports() {
     if(!isGalleryPage()||globalThis.__OSG_AUTO_REPORT_STARTED__)return;
     globalThis.__OSG_AUTO_REPORT_STARTED__=true;
+    pruneStaleAutomaticReports();
     // A durable Gallery sender survives publisher-tab closure. One request at a time.
     setInterval(function(){drainAutomaticReports().catch(function(){});},10000);
     drainAutomaticReports().catch(function(){});
@@ -3852,6 +3868,8 @@ function embeddedJobDois(value) {
     if(!job)return '—';
     var parts=[];
     if(job.captureToc)parts.push(job.existingTocKind==='figure1'?'官方 TOC（已有 Figure 1）':job.existingTocKind==='official_local'?'官方 TOC（已抓到，待网页同步）':'TOC');
+    if(job.captureFigures||job.opportunisticFigures)parts.push('正文图');
+    if(job.captureEvidence||job.opportunisticEvidence)parts.push('全文');
     if(job.capturePrivatePdf)parts.push('PDF');
     return parts.length?parts.join('＋'):'已齐全';
   }
@@ -3861,6 +3879,16 @@ function embeddedJobDois(value) {
   function captureBatchDate(job) {
     // Site addition date first; original publication date is only the legacy fallback.
     return String(job.addedDate||job.date||'');
+  }
+  function recentFullCaptureEligible(job) {
+    var added=String(job&&job.addedDate||'').trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(added)&&added>=RECENT_FULL_CAPTURE_CUTOFF;
+  }
+  function captureMediaNeed(job) {
+    return [job&&job.captureToc?'toc':'',
+      job&&(job.captureFigures||job.opportunisticFigures)?'figures':'',
+      job&&(job.captureEvidence||job.opportunisticEvidence)?'evidence':'',
+      job&&job.capturePrivatePdf?'pdf':''].filter(Boolean).join('+');
   }
   function compareMissingCaptureJobs(a,b) {
     return captureBatchDate(b).localeCompare(captureBatchDate(a))
@@ -3955,19 +3983,22 @@ function embeddedJobDois(value) {
     if(!inventory.evidenceKnown&&!textLevel)nonQueueUnknown.push('文本');
     var tocNeeded=tocKnown&&!productionOfficial;
     var pdfNeeded=privatePdfQueueNeeded(raw,Date.now(),true);
+    var bundleVisit=Boolean(recentFullCaptureEligible(raw)&&(tocNeeded||pdfNeeded));
     var job=Object.assign({},raw,{doi:doi,publisher:publisherForDoi(doi),missingOnly:true,recaptureFromHead:false,
       captureToc:tocNeeded,
-      // Figures/text are opportunistic only while a TOC visit is already required.
-      // They are never queue obligations and never keep a DOI pending by themselves.
+      // From 2026-10-01 onward, once a publisher page is opened for any real
+      // acquisition gap, use that same authenticated visit to collect body
+      // figures and full-text evidence as well. These companion layers do not
+      // create a standalone visit by themselves.
       captureFigures:false,
       captureEvidence:false,
-      opportunisticFigures:Boolean(tocNeeded&&needFigures),
-      opportunisticEvidence:Boolean(tocNeeded&&inventory.evidenceKnown&&!textLevel),
-      capturePrivatePdf:pdfNeeded,
+      opportunisticFigures:Boolean(bundleVisit||(tocNeeded&&needFigures)),
+      opportunisticEvidence:Boolean(bundleVisit&&textLevel!=='complete'||tocNeeded&&inventory.evidenceKnown&&!textLevel),
+      capturePrivatePdf:Boolean(pdfNeeded||(bundleVisit&&privatePdfLease())),
       expectedFigureCount:expected,figureCoverageUnconfirmed:Boolean(tocNeeded&&inspectFigures),missingFigureCount:expected>0?Math.max(0,expected-knownCount):0,
       capturedFigures:figs,existingEvidenceLevel:textLevel,existingTocKind:productionOfficial?'official':localOfficial?'official_local':fallback?'figure1':'',
       unknownNeeds:unknown,nonQueueUnknownNeeds:nonQueueUnknown,allowFigureOne:Boolean(tocNeeded&&!official&&!fallback&&isNatureScienceFamilyJob(raw))});
-    job.mediaNeed=[job.captureToc?'toc':'',job.captureFigures?'figures':'',job.captureEvidence?'evidence':'',job.capturePrivatePdf?'pdf':''].filter(Boolean).join('+');
+    job.mediaNeed=captureMediaNeed(job);
     job.state=job.captureToc?'no_visual':'private_pdf_gap';
     return job;
   }
@@ -4269,7 +4300,7 @@ function embeddedJobDois(value) {
       if(!await acquireLease()) {badge(controllerPaused()?'媒体抓取已暂停':'另一个 Gallery 控制页正在运行','#6b7280');return;}
       renew=setInterval(renewLease,15000);
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
-      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.40')throw new Error('capture_server_upgrade_pending');
+      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!==CONTROLLER_REVISION)throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var architectureMembership=await observeArchitectureMembership(queue);
       var queueCheckedAt=Date.now();
@@ -4325,17 +4356,25 @@ function embeddedJobDois(value) {
         var mediaAvailable=mediaJobs.filter(eligibleMedia);
         var merged=new Map();
         mediaAvailable.forEach(function(raw){
-          var job=Object.assign({},raw);
-          // Missing text may be captured while this TOC visit is already open,
-          // but it never creates an evidence-only job.
-          job.opportunisticEvidence=evidenceMissing.has(normalizeDoi(job.doi));
+          var job=Object.assign({},raw),doi=normalizeDoi(raw.doi),recent=recentFullCaptureEligible(job);
+          // A 2026-10-01+ visit is a one-page acquisition bundle: TOC when
+          // needed, body figures, missing/incomplete full text and PDF when
+          // not already stored. Older records keep the previous behavior.
+          job.opportunisticFigures=Boolean(job.opportunisticFigures||recent);
+          job.opportunisticEvidence=Boolean(evidenceMissing.has(doi));
           job.captureEvidence=false;
           job.capturePrivatePdf=privatePdfQueueNeeded(job,Date.now());
-          merged.set(normalizeDoi(job.doi),job);
+          job.mediaNeed=captureMediaNeed(job);
+          merged.set(doi,job);
         });
         pdfJobs.forEach(function(raw){
-          var doi=normalizeDoi(raw.doi);
-          if(!merged.has(doi))merged.set(doi,Object.assign({},raw));
+          var doi=normalizeDoi(raw.doi),job=Object.assign({},raw);
+          if(recentFullCaptureEligible(job)){
+            job.opportunisticFigures=true;
+            job.opportunisticEvidence=evidenceMissing.has(doi);
+          }
+          job.mediaNeed=captureMediaNeed(job);
+          if(!merged.has(doi))merged.set(doi,job);
         });
         return Array.from(merged.values());
       }
@@ -4841,13 +4880,13 @@ function embeddedJobDois(value) {
 
   // Private PDF capture is an optional owner-only side channel. It never
   // determines TOC/body/fulltext task success and can be disabled independently.
-  var PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-live-v5';
+  var PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-bundle-v6';
   var PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01';
   var PRIVATE_PDF_CAPTURE_ENDPOINT = WORKER + '/api/private-pdf/import';
   var PRIVATE_PDF_LEASE_KEY = P + 'private-pdf-capture-lease-v1';
   var PRIVATE_PDF_ATTEMPT_PREFIX = P + 'private-pdf-attempt-v2:';
   var PRIVATE_PDF_MAX_BYTES = 60 * 1024 * 1024;
-  var PRIVATE_PDF_QUEUE_REVISION = '20261006-private-pdf-queue-v2';
+  var PRIVATE_PDF_QUEUE_REVISION = '20261006-private-pdf-queue-v3';
 
   function privatePdfCaptureEligibleByAddedDate(job) {
     var addedDate=String(job&&job.addedDate||'').trim();
@@ -4871,8 +4910,12 @@ function embeddedJobDois(value) {
     if(!privatePdfLease())return [];
     return (queue&&Array.isArray(queue.articles)?queue.articles:[]).filter(function(raw){return privatePdfQueueNeeded(raw,Date.now());}).map(function(raw){
       var doi=normalizeDoi(raw&&raw.doi);
-      return Object.assign({},raw,{doi:doi,publisher:publisherForDoi(doi),mediaNeed:'pdf',state:'private_pdf_gap',
-        captureToc:false,captureFigures:false,captureEvidence:false,capturePrivatePdf:true,allowFigureOne:false});
+      var job=Object.assign({},raw,{doi:doi,publisher:publisherForDoi(doi),state:'private_pdf_gap',
+        captureToc:false,captureFigures:false,captureEvidence:false,
+        opportunisticFigures:recentFullCaptureEligible(raw),opportunisticEvidence:recentFullCaptureEligible(raw),
+        capturePrivatePdf:true,allowFigureOne:false});
+      job.mediaNeed=captureMediaNeed(job);
+      return job;
     }).sort(compareMissingCaptureJobs);
   }
 
@@ -5108,6 +5151,7 @@ function embeddedJobDois(value) {
     u.searchParams.set('articleUrl',location.href);
     u.searchParams.set('sourceUrl',pdf.sourceUrl);
     u.searchParams.set('versionKind','unknown');
+    u.searchParams.set('controllerRevision',CONTROLLER_REVISION);
     var response=await gmRequest({method:'POST',url:u.toString(),timeout:90000,
       headers:{'content-type':'application/pdf',authorization:'Bearer '+lease.token},data:pdf.buffer});
     var status=Number(response.status||0),raw=String(response.responseText||''),body={};
@@ -5289,10 +5333,14 @@ function embeddedJobDois(value) {
   }
 
   function evidenceMissingDois(queue,evidenceInventory) {
-    var existing=new Set();
+    var existing=new Set(),byDoi=new Map();
+    (queue&&Array.isArray(queue.articles)?queue.articles:[]).forEach(function(raw){var doi=normalizeDoi(raw&&raw.doi);if(doi)byDoi.set(doi,raw);});
     (evidenceInventory&&Array.isArray(evidenceInventory.items)?evidenceInventory.items:[]).forEach(function(row){
-      var doi=normalizeDoi(row&&row.doi);
-      if(doi&&row&&row.available!==false)existing.add(doi);
+      var doi=normalizeDoi(row&&row.doi),raw=byDoi.get(doi);
+      if(!doi||!row||row.available===false)return;
+      // For Oct-1+ papers, abstract-only/partial evidence is not enough for the
+      // new one-visit bundle; use the open page to try to reach complete text.
+      if(!recentFullCaptureEligible(raw)||String(row.evidenceLevel||'')==='complete')existing.add(doi);
     });
     return new Set((queue&&Array.isArray(queue.articles)?queue.articles:[]).map(function(raw){return normalizeDoi(raw&&raw.doi);})
       .filter(function(doi){return doi&&!existing.has(doi);}));

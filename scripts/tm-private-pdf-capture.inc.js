@@ -1,6 +1,6 @@
   // Private PDF capture is an optional owner-only side channel. It never
   // determines TOC/body/fulltext task success and can be disabled independently.
-  var PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-live-v5';
+  var PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-bundle-v6';
   var PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01';
   var PRIVATE_PDF_CAPTURE_ENDPOINT = WORKER + '/api/private-pdf/import';
   var PRIVATE_PDF_LEASE_KEY = P + 'private-pdf-capture-lease-v1';
@@ -244,6 +244,7 @@
     u.searchParams.set('articleUrl',location.href);
     u.searchParams.set('sourceUrl',pdf.sourceUrl);
     u.searchParams.set('versionKind','unknown');
+    u.searchParams.set('controllerRevision',CONTROLLER_REVISION);
     var response=await gmRequest({method:'POST',url:u.toString(),timeout:90000,
       headers:{'content-type':'application/pdf',authorization:'Bearer '+lease.token},data:pdf.buffer});
     var status=Number(response.status||0),raw=String(response.responseText||''),body={};

@@ -246,6 +246,9 @@ export async function importPrivatePdf(request, env) {
   const url = new URL(request.url);
   const doi = normalizeDoi(url.searchParams.get('doi'));
   if (!doi) return { status: 400, body: { error: 'invalid_doi' } };
+  if (String(url.searchParams.get('controllerRevision') || '') !== '2.2.41') {
+    return { status: 409, body: { error: 'stale_controller_revision', expectedControllerRevision: '2.2.41', doi } };
+  }
   const publisher = publisherForPdfDoi(doi);
   if (publisher === 'other') return { status: 400, body: { error: 'unsupported_pdf_publisher' } };
   const articleUrl = safeHttpsUrl(url.searchParams.get('articleUrl'));

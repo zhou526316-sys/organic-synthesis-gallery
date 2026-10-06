@@ -52,7 +52,7 @@ await test('foreign DOI remains excluded from publication listing',async()=>{
  const r={...row(1),sourceUrl:row(2).sourceUrl};const e=env({r});const p=await readPublicationPages(stageUrl,'stage',u=>transport(u,e));assert.equal(p.count,0);
 });
 const d=row(1).doi;
-const success={doi:d,jobId:'capture-fixture-123456789',captureVersion:'6.2.20',controllerRevision:'2.2.39',final:true,status:'success',mediaNeed:'figures',figuresStored:2,figuresDiscovered:2,figureLabels:['Figure 1','Figure 2'],articleUrl:row(1).articleUrl,sourceUrl:row(1).sourceUrl,updatedAt:E+6000};
+const success={doi:d,jobId:'capture-fixture-123456789',captureVersion:'6.2.20',controllerRevision:'2.2.41',final:true,status:'success',mediaNeed:'figures',figuresStored:2,figuresDiscovered:2,figureLabels:['Figure 1','Figure 2'],articleUrl:row(1).articleUrl,sourceUrl:row(1).sourceUrl,updatedAt:E+6000};
 await test('valid older complete packet survives a newer TOC-only report',async()=>{
  const e=env({}, {[d]:{...success,status:'partial',mediaNeed:'toc',updatedAt:E+9000,attempts:[success]}});
  const p=await readPublicationPages(reportsUrl,'reports',u=>transport(u,e));assert.equal(p.count,1);assert.equal(p.items[0].mediaNeed,'figures');assert.ok(completedPacketMap({reports:p}).has(d));
