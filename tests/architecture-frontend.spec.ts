@@ -10,12 +10,29 @@ test.use({
   timezoneId: 'Asia/Shanghai',
 });
 
+type ArchitectureRecordFixture = {
+  doi: string;
+  revision: string;
+  firstOnlineDate: string;
+  datePrecision: string;
+  addedDate: string;
+  paper: {
+    journal: string;
+    title: string;
+    titleZh?: string;
+    authors: string[];
+    synthesisType?: 'methodology' | 'total' | 'formal';
+  };
+};
+
 type ArchitectureFixture = {
+  catalogId: string;
   hotCount: number;
   archiveCount: number;
   memberCount: number;
   archiveDoi: string;
   archiveDate: string;
+  records: ArchitectureRecordFixture[];
 };
 
 function readJson(file: string): any {
@@ -35,28 +52,68 @@ function fixture(): ArchitectureFixture {
   const hot = Array.isArray(lifecycle.partitions?.hot) ? lifecycle.partitions.hot : [];
   if (!archive.length) throw new Error('Architecture browser regression requires at least one Archive DOI');
 
-  const archiveDoi = String(archive[0]).toLowerCase();
-  let archiveDate = '';
+  const records: ArchitectureRecordFixture[] = [];
   for (const ref of catalog.shards || []) {
     const shard = readJson(path.join(root, ref.path));
-    const row = (shard.records || []).find((item: any) => String(item.doi || '').toLowerCase() === archiveDoi);
-    if (row) {
-      archiveDate = String(row.firstOnlineDate || row.paper?.date || '');
-      break;
+    for (const row of shard.records || []) {
+      const doi = String(row.doi || '').toLowerCase();
+      if (!doi || !row.paper) continue;
+      records.push({
+        doi,
+        revision: String(row.revision || ''),
+        firstOnlineDate: String(row.firstOnlineDate || row.paper?.date || ''),
+        datePrecision: String(row.datePrecision || 'unknown'),
+        addedDate: String(row.addedDate || row.paper?.addedDate || ''),
+        paper: {
+          journal: String(row.paper.journal || ''),
+          title: String(row.paper.title || ''),
+          titleZh: typeof row.paper.titleZh === 'string' ? row.paper.titleZh : undefined,
+          authors: Array.isArray(row.paper.authors) ? row.paper.authors.map(String) : [],
+          synthesisType: row.paper.synthesisType,
+        },
+      });
     }
   }
+  records.sort((a,b)=>a.doi.localeCompare(b.doi));
+  const archiveDoi = String(archive[0]).toLowerCase();
+  const archiveRow = records.find(row => row.doi === archiveDoi);
+  const archiveDate = String(archiveRow?.firstOnlineDate || '');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(archiveDate)) throw new Error('Archive fixture date missing');
 
   return {
+    catalogId: String(release.catalogId || ''),
     hotCount: hot.length,
     archiveCount: archive.length,
     memberCount: Number(release.recordCount),
     archiveDoi,
     archiveDate,
+    records,
   };
 }
 
-async function stubOptionalApi(page: import('@playwright/test').Page): Promise<void> {
+type LiteratureViewHandler = (body: any) => Promise<{ status?: number; body: any }> | { status?: number; body: any };
+
+async function stubOptionalApi(
+  page: import('@playwright/test').Page,
+  literatureView?: LiteratureViewHandler,
+): Promise<void> {
+  await page.route('https://organic-synthesis-gallery.zhou526316.workers.dev/api/literature/catalog-view', async route => {
+    if (!literatureView) {
+      await route.fulfill({
+        status: 503,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'literature_catalog_index_read_disabled', readPathActive: false }),
+      });
+      return;
+    }
+    const body = route.request().postDataJSON();
+    const result = await literatureView(body);
+    await route.fulfill({
+      status: result.status || 200,
+      contentType: 'application/json',
+      body: JSON.stringify(result.body),
+    });
+  });
   await page.route('https://api.gczhouwld.com/**', async route => {
     const url = route.request().url();
     if (url.includes('/api/user-ui/reader-counts/mark')) {
@@ -77,6 +134,27 @@ async function stubOptionalApi(page: import('@playwright/test').Page): Promise<v
     }
     await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
   });
+}
+
+function viewItem(row: ArchitectureRecordFixture) {
+  return {
+    doi: row.doi,
+    revision: row.revision,
+    title: row.paper.title,
+    titleZh: row.paper.titleZh || '',
+    authors: row.paper.authors,
+    journal: row.paper.journal,
+    firstOnlineDate: row.firstOnlineDate,
+    datePrecision: row.datePrecision,
+    addedDate: row.addedDate || null,
+    synthesisType: row.paper.synthesisType || 'methodology',
+  };
+}
+
+function newestFirst(rows: ArchitectureRecordFixture[]): ArchitectureRecordFixture[] {
+  return [...rows].sort((a,b) =>
+    b.firstOnlineDate.localeCompare(a.firstOnlineDate) || a.doi.localeCompare(b.doi)
+  );
 }
 
 test('architecture-v1 landing is Hot-only while all-time membership stays complete', async ({ page }) => {
