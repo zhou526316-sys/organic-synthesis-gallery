@@ -38,6 +38,9 @@ export function userLibraryRowShadowEnabled(env) {
 export function userLibraryRowReadEnabled(env) {
   return String(env?.USER_LIBRARY_ROW_READ_ENABLED || '') === '1';
 }
+function userLibraryV3WriteAuthorityEnabled(env) {
+  return String(env?.USER_LIBRARY_V3_WRITE_ENABLED || '') === '1';
+}
 
 export async function splitUserLibraryState(state) {
   if (!plainObject(state)) throw new Error('user_library_state_invalid');
@@ -232,16 +235,11 @@ export async function readUserLibraryStateFromRows(env, userId, authorityMeta = 
 
 export async function getUserLibraryShadowStatus(env) {
   if (!env?.DB) return {status:503,body:{error:'user_library_shadow_db_missing'}};
-  const [legacy,head,papers,mismatch,backfill] = await Promise.all([
+  const writeAuthority=userLibraryV3WriteAuthorityEnabled(env);
+  const [legacy,head,papers,backfill] = await Promise.all([
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_state').first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_head').first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_paper_state').first(),
-    env.DB.prepare(`
-      SELECT COUNT(*) AS count
-      FROM user_library_state legacy
-      LEFT JOIN user_library_head shadow ON shadow.user_id=legacy.user_id
-      WHERE shadow.user_id IS NULL OR shadow.revision<>legacy.revision OR shadow.updated_at<>legacy.updated_at
-    `).first(),
     env.DB.prepare(`
       SELECT cursor_user_id,complete,scanned_users,synced_users,skipped_stale,invalid_states,
         failed_users,started_at,updated_at,last_error
@@ -250,31 +248,73 @@ export async function getUserLibraryShadowStatus(env) {
   ]);
   const legacyUsers=Number(legacy?.count||0);
   const shadowHeads=Number(head?.count||0);
+  const readConfigured=userLibraryRowReadEnabled(env);
+  if(writeAuthority){
+    const [v3Heads,mismatch]=await Promise.all([
+      env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_v3_head').first(),
+      env.DB.prepare(`
+        SELECT COUNT(*) AS count
+        FROM user_library_v3_head v3
+        LEFT JOIN user_library_v3_shape shape ON shape.user_id=v3.user_id
+        LEFT JOIN user_library_head compat ON compat.user_id=v3.user_id
+        WHERE compat.user_id IS NULL OR shape.user_id IS NULL
+          OR compat.revision<>v3.revision OR compat.updated_at<>v3.updated_at
+          OR compat.paper_count<>v3.paper_count OR compat.metadata_count<>v3.metadata_count
+          OR compat.papers_split<>shape.papers_split OR compat.metadata_split<>shape.metadata_split
+      `).first(),
+    ]);
+    const authorityUsers=Number(v3Heads?.count||0);
+    const revisionMismatches=Number(mismatch?.count||0);
+    const readPathActive=readConfigured&&userLibraryRowShadowEnabled(env)
+      &&authorityUsers===shadowHeads&&revisionMismatches===0;
+    return {status:200,body:{
+      version:2,shadowVersion:SHADOW_VERSION,authority:'v3',writeAuthority:true,
+      enabled:userLibraryRowShadowEnabled(env),readConfigured,readPathActive,
+      authorityUsers,legacyUsers,shadowHeads,paperRows:Number(papers?.count||0),
+      revisionMismatches,
+      backfill:backfill?{
+        complete:Number(backfill.complete||0)===1,
+        historicalOnly:true,
+        scannedUsers:Number(backfill.scanned_users||0),syncedUsers:Number(backfill.synced_users||0),
+        skippedStale:Number(backfill.skipped_stale||0),invalidStates:Number(backfill.invalid_states||0),
+        failedUsers:Number(backfill.failed_users||0),startedAt:Number(backfill.started_at||0),
+        updatedAt:Number(backfill.updated_at||0),lastError:safeText(backfill.last_error,180),
+      }:{complete:false,historicalOnly:true,scannedUsers:0,syncedUsers:0,skippedStale:0,invalidStates:0,failedUsers:0,startedAt:0,updatedAt:0,lastError:''},
+    }};
+  }
+
+  const mismatch=await env.DB.prepare(`
+    SELECT COUNT(*) AS count
+    FROM user_library_state legacy
+    LEFT JOIN user_library_head shadow ON shadow.user_id=legacy.user_id
+    WHERE shadow.user_id IS NULL OR shadow.revision<>legacy.revision OR shadow.updated_at<>legacy.updated_at
+  `).first();
   const revisionMismatches=Number(mismatch?.count||0);
   const backfillComplete=Number(backfill?.complete||0)===1;
   const backfillHealthy=backfillComplete
     &&Number(backfill?.invalid_states||0)===0
     &&Number(backfill?.failed_users||0)===0
     &&safeText(backfill?.last_error,180)==='';
-  const readConfigured=userLibraryRowReadEnabled(env);
   const readPathActive=readConfigured&&userLibraryRowShadowEnabled(env)
     &&backfillHealthy&&legacyUsers===shadowHeads&&revisionMismatches===0;
   return {status:200,body:{
-    version:1,shadowVersion:SHADOW_VERSION,enabled:userLibraryRowShadowEnabled(env),
-    readConfigured,readPathActive,
-    legacyUsers,shadowHeads,paperRows:Number(papers?.count||0),
+    version:2,shadowVersion:SHADOW_VERSION,authority:'legacy',writeAuthority:false,
+    enabled:userLibraryRowShadowEnabled(env),readConfigured,readPathActive,
+    authorityUsers:legacyUsers,legacyUsers,shadowHeads,paperRows:Number(papers?.count||0),
     revisionMismatches,
     backfill:backfill?{
-      complete:Number(backfill.complete||0)===1,
+      complete:Number(backfill.complete||0)===1,historicalOnly:false,
       scannedUsers:Number(backfill.scanned_users||0),syncedUsers:Number(backfill.synced_users||0),
       skippedStale:Number(backfill.skipped_stale||0),invalidStates:Number(backfill.invalid_states||0),
       failedUsers:Number(backfill.failed_users||0),startedAt:Number(backfill.started_at||0),
       updatedAt:Number(backfill.updated_at||0),lastError:safeText(backfill.last_error,180),
-    }:{complete:false,scannedUsers:0,syncedUsers:0,skippedStale:0,invalidStates:0,failedUsers:0,startedAt:0,updatedAt:0,lastError:''},
+    }:{complete:false,historicalOnly:false,scannedUsers:0,syncedUsers:0,skippedStale:0,invalidStates:0,failedUsers:0,startedAt:0,updatedAt:0,lastError:''},
   }};
 }
-
 export async function backfillUserLibraryShadowPage(env, limitValue = 20) {
+  if (userLibraryV3WriteAuthorityEnabled(env)) {
+    return {status:409,body:{error:'user_library_v3_write_authority_active'}};
+  }
   if (!userLibraryRowShadowEnabled(env)) return {status:409,body:{error:'user_library_row_shadow_disabled'}};
   if (!env?.DB) return {status:503,body:{error:'user_library_shadow_db_missing'}};
   const limit=Math.max(1,Math.min(MAX_BACKFILL_LIMIT,Number(limitValue||20)));
@@ -339,7 +379,7 @@ export async function backfillUserLibraryShadowPage(env, limitValue = 20) {
   }};
 }
 
-async function compareOne(env, legacy) {
+async function compareLegacyOne(env, legacy) {
   const head=await env.DB.prepare(`
     SELECT user_id,revision,updated_at,global_json,papers_split,metadata_split,paper_count,metadata_count,source_state_hash,shadow_version
     FROM user_library_head WHERE user_id=?
@@ -350,16 +390,62 @@ async function compareOne(env, legacy) {
   }
   const rows=await env.DB.prepare(`
     SELECT paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,revision,updated_at
-    FROM user_paper_state WHERE user_id=? AND revision=? ORDER BY paper_key ASC
-  `).bind(legacy.user_id,head.revision).all();
+    FROM user_paper_state WHERE user_id=? ORDER BY paper_key ASC
+  `).bind(legacy.user_id).all();
   const original=parseJson(legacy.state_json);
   if(!plainObject(original)) return {matched:false,reason:'invalid_legacy_state'};
   let rebuilt;
   try{rebuilt=rebuildUserLibraryState(head,rows?.results||[]);}catch{return {matched:false,reason:'rebuild_failed'};}
   const originalHash=await sha256Hex(stableStateJson(original));
   const rebuiltHash=await sha256Hex(stableStateJson(rebuilt));
-  if(originalHash!==head.source_state_hash) return {matched:false,reason:'source_hash_mismatch'};
+  if(Number(head.shadow_version||0)<2&&originalHash!==head.source_state_hash) return {matched:false,reason:'source_hash_mismatch'};
   if(rebuiltHash!==originalHash) return {matched:false,reason:'semantic_mismatch'};
+  return {matched:true};
+}
+
+async function compareV3CompatibilityOne(env, authority) {
+  const [shape,compat,v3RowsResult,compatRowsResult]=await Promise.all([
+    env.DB.prepare('SELECT papers_split,metadata_split,revision FROM user_library_v3_shape WHERE user_id=?').bind(authority.user_id).first(),
+    env.DB.prepare(`
+      SELECT user_id,revision,updated_at,global_json,papers_split,metadata_split,paper_count,metadata_count,source_state_hash,shadow_version
+      FROM user_library_head WHERE user_id=?
+    `).bind(authority.user_id).first(),
+    env.DB.prepare(`
+      SELECT paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,revision,updated_at
+      FROM user_library_v3_rows WHERE user_id=? AND deleted=0 ORDER BY paper_key ASC
+    `).bind(authority.user_id).all(),
+    env.DB.prepare(`
+      SELECT paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,revision,updated_at
+      FROM user_paper_state WHERE user_id=? ORDER BY paper_key ASC
+    `).bind(authority.user_id).all(),
+  ]);
+  if(!shape) return {matched:false,reason:'missing_v3_shape'};
+  if(!compat) return {matched:false,reason:'missing_compat_head'};
+  if(Number(shape.revision||0)!==Number(authority.revision||0)) return {matched:false,reason:'v3_shape_revision_mismatch'};
+  if(Number(compat.revision||0)!==Number(authority.revision||0)
+    ||Number(compat.updated_at||0)!==Number(authority.updated_at||0)) {
+    return {matched:false,reason:'compat_revision_mismatch'};
+  }
+  if(Number(compat.paper_count||0)!==Number(authority.paper_count||0)
+    ||Number(compat.metadata_count||0)!==Number(authority.metadata_count||0)
+    ||Number(compat.papers_split||0)!==Number(shape.papers_split||0)
+    ||Number(compat.metadata_split||0)!==Number(shape.metadata_split||0)) {
+    return {matched:false,reason:'compat_head_mismatch'};
+  }
+  let v3State,compatState;
+  try{
+    v3State=rebuildUserLibraryState({
+      global_json:authority.global_json,
+      papers_split:shape.papers_split,
+      metadata_split:shape.metadata_split,
+    },v3RowsResult?.results||[]);
+    compatState=rebuildUserLibraryState(compat,compatRowsResult?.results||[]);
+  }catch{
+    return {matched:false,reason:'compat_rebuild_failed'};
+  }
+  if(stableStateJson(v3State)!==stableStateJson(compatState)) {
+    return {matched:false,reason:'compat_semantic_mismatch'};
+  }
   return {matched:true};
 }
 
@@ -368,26 +454,35 @@ export async function compareUserLibraryShadowPage(env, offsetValue = 0, limitVa
   const offset=Math.max(0,Math.floor(Number(offsetValue||0)));
   const limit=Math.max(1,Math.min(MAX_COMPARE_LIMIT,Number(limitValue||20)));
   const totals=await getUserLibraryShadowStatus(env);
-  const page=await env.DB.prepare(`
-    SELECT user_id,state_json,revision,updated_at
-    FROM user_library_state
-    ORDER BY user_id ASC
-    LIMIT ? OFFSET ?
-  `).bind(limit,offset).all();
+  const writeAuthority=totals.body.writeAuthority===true;
+  const page=writeAuthority
+    ? await env.DB.prepare(`
+        SELECT user_id,revision,updated_at,global_json,paper_count,metadata_count
+        FROM user_library_v3_head ORDER BY user_id ASC LIMIT ? OFFSET ?
+      `).bind(limit,offset).all()
+    : await env.DB.prepare(`
+        SELECT user_id,state_json,revision,updated_at
+        FROM user_library_state ORDER BY user_id ASC LIMIT ? OFFSET ?
+      `).bind(limit,offset).all();
   const rows=page?.results||[];
   const reasons={};
   let matched=0;
-  for(const legacy of rows){
-    const result=await compareOne(env,legacy);
+  for(const row of rows){
+    const result=writeAuthority
+      ? await compareV3CompatibilityOne(env,row)
+      : await compareLegacyOne(env,row);
     if(result.matched) matched+=1;
     else reasons[result.reason]=(reasons[result.reason]||0)+1;
   }
+  const total=Number(totals.body.authorityUsers||0);
   const nextOffset=offset+rows.length;
-  const complete=nextOffset>=Number(totals.body.legacyUsers||0);
+  const complete=nextOffset>=total;
   return {status:200,body:{
-    version:1,readPathActive:totals.body.readPathActive===true,offset,limit,checked:rows.length,matched,
-    mismatched:rows.length-matched,reasons,complete,nextOffset:complete?null:nextOffset,
-    legacyUsers:totals.body.legacyUsers,shadowHeads:totals.body.shadowHeads,
+    version:2,authority:totals.body.authority,writeAuthority,
+    readPathActive:totals.body.readPathActive===true,
+    offset,limit,checked:rows.length,matched,mismatched:rows.length-matched,reasons,
+    complete,nextOffset:complete?null:nextOffset,total,
+    authorityUsers:total,legacyUsers:totals.body.legacyUsers,shadowHeads:totals.body.shadowHeads,
     revisionMismatches:totals.body.revisionMismatches,
   }};
 }
