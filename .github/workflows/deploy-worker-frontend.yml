@@ -1958,9 +1958,11 @@ jobs:
                 body?.scheduledHandoffIndexReadEnabled === true &&
                 body?.userLibraryRowShadowEnabled === true &&
                 body?.userLibraryRowReadEnabled === true &&
-                body?.userLibraryV3ShadowEnabled === true &&
+                body?.userLibraryV3ShadowEnabled === false &&
                 body?.userLibraryV3ReadEnabled === true &&
-                body?.userLibraryV3WriteEnabled === false &&
+                body?.userLibraryV3WriteConfigured === true &&
+                body?.userLibraryV3WriteCanaryOnly === false &&
+                body?.userLibraryV3WriteEnabled === true &&
                 body?.siteAnalyticsMaterializedShadowEnabled === true &&
                 body?.siteAnalyticsMaterializedReadEnabled === true &&
                 body?.literatureCatalogIndexShadowEnabled === true &&
@@ -1975,6 +1977,8 @@ jobs:
                 userLibraryRowReadEnabled: body.userLibraryRowReadEnabled,
                 userLibraryV3ShadowEnabled: body.userLibraryV3ShadowEnabled,
                 userLibraryV3ReadEnabled: body.userLibraryV3ReadEnabled,
+                userLibraryV3WriteConfigured: body.userLibraryV3WriteConfigured,
+                userLibraryV3WriteCanaryOnly: body.userLibraryV3WriteCanaryOnly,
                 userLibraryV3WriteEnabled: body.userLibraryV3WriteEnabled,
                 siteAnalyticsMaterializedShadowEnabled: body.siteAnalyticsMaterializedShadowEnabled,
                 siteAnalyticsMaterializedReadEnabled: body.siteAnalyticsMaterializedReadEnabled,
