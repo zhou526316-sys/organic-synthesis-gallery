@@ -60,7 +60,10 @@ test('D3c2 enables bounded V3 reads while V3 writes remain explicitly off',()=>{
   assert.ok(config.includes('USER_LIBRARY_V3_SHADOW_ENABLED = "1"'));
   assert.ok(config.includes('USER_LIBRARY_V3_READ_ENABLED = "1"'));
   assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "0"'));
+  assert.ok(config.includes('USER_LIBRARY_V3_WRITE_CANARY_USER_ID = "__gallery_v3_write_canary__"'));
+  assert.ok(!config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "1"'));
   assert.ok(v3.includes("USER_LIBRARY_V3_WRITE_ENABLED"));
+  assert.ok(v3.includes("USER_LIBRARY_V3_WRITE_CANARY_USER_ID"));
   assert.ok(v3.includes("reason:'user_library_v3_write_disabled'"));
   assert.ok(v3.includes("reason:'user_library_v3_read_disabled'"));
   assert.ok(shadow.includes('userLibraryV3ShadowEnabled'));
@@ -93,6 +96,20 @@ test('D3c4a ships dormant authenticated bounded V3 mutation without activating w
   ]) assert.ok(index.includes(path),path);
   assert.ok(!index.includes('/api/user-ui/library-v3'));
   assert.ok(index.includes('requireWriteAuthorization'));
+});
+
+test('D3c4b production canary remains isolated from the global write switch',()=>{
+  const config=section(
+    deploy,
+    '- name: Generate frontend deployment configuration',
+    '- name: Deploy frontend assets',
+  );
+  assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "0"'));
+  assert.ok(config.includes('USER_LIBRARY_V3_WRITE_CANARY_USER_ID = "__gallery_v3_write_canary__"'));
+  assert.ok(!config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "1"'));
+  assert.ok(v3.includes("if (flag(env?.USER_LIBRARY_V3_WRITE_ENABLED)) return true"));
+  assert.ok(v3.includes("env?.USER_LIBRARY_V3_WRITE_CANARY_USER_ID"));
+  assert.ok(v3.includes("canaryUserId === userId"));
 });
 
 test('D3c2 shadow is revision-fenced, shape-preserving, and emits delta continuity',()=>{
