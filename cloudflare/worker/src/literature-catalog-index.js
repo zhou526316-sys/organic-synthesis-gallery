@@ -503,6 +503,21 @@ export async function queryLiteratureCatalogView(env,{
   }};
 }
 
+export async function queryPublishedLiteratureCatalogView(env,input={}){
+  if(!literatureCatalogIndexReadEnabled(env)){
+    return {status:503,body:{error:'literature_catalog_index_read_disabled',readPathActive:false}};
+  }
+  if(!literatureCatalogIndexShadowEnabled(env)){
+    return {status:503,body:{error:'literature_catalog_index_shadow_disabled',readPathActive:false}};
+  }
+  if(!env?.LITERATURE_INDEX_DB){
+    return {status:503,body:{error:'literature_catalog_index_db_missing',readPathActive:false}};
+  }
+  const result=await queryLiteratureCatalogView(env,input);
+  if(result.status!==200) return result;
+  return {status:200,body:{...result.body,readPathActive:true}};
+}
+
 export async function listLiteratureCatalogIndexRows(env,{catalogId:catalogIdValue,afterDoi='',limit=200}={}){
   if(!literatureCatalogIndexShadowEnabled(env)) return {status:409,body:{error:'literature_catalog_index_shadow_disabled',enabled:false,readPathActive:false}};
   if(!env?.LITERATURE_INDEX_DB) return {status:503,body:{error:'literature_catalog_index_db_missing'}};
@@ -549,6 +564,8 @@ export async function getLiteratureCatalogIndexStatus(env){
     importedRows:Number(row.imported_rows||0),ready:Number(row.ready||0)===1,
     createdAt:Number(row.created_at||0),updatedAt:Number(row.updated_at||0),
   }));
+  const readConfigured=literatureCatalogIndexReadEnabled(env);
+  const readPathActive=readConfigured&&generations.some(row=>row.ready===true);
   return {status:200,body:{version:1,schemaVersion:LITERATURE_CATALOG_INDEX_SCHEMA_VERSION,
-    enabled:true,readConfigured:literatureCatalogIndexReadEnabled(env),readPathActive:false,generations}};
+    enabled:true,readConfigured,readPathActive,generations}};
 }
