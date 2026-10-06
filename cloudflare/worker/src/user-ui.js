@@ -7,6 +7,7 @@ import {
   readUserLibraryV3Delta,
   readUserLibraryV3Head,
   readUserLibraryV3Page,
+  userLibraryV3Authority,
   userLibraryV3ReadEnabled,
   userLibraryV3WriteEnabled,
 } from './user-library-v3.js';
@@ -210,7 +211,8 @@ async function safeAnalyticsShadowTask(env, ctx, taskFactory, label) {
 }
 
 async function readAccountLibraryState(env, userId) {
-  const v3Authority = userLibraryV3WriteEnabled(env);
+  const writeAuthority = await userLibraryV3Authority(env,userId);
+  const v3Authority = writeAuthority === 'v3';
   const authorityMeta = v3Authority
     ? await env.DB.prepare(
         'SELECT revision, updated_at FROM user_library_v3_head WHERE user_id = ?'
@@ -227,6 +229,7 @@ async function readAccountLibraryState(env, userId) {
       updatedAt: Number(rowRead.updatedAt || 0),
       state: rowRead.state || {},
       readPath: v3Authority ? 'rows-v3-compat' : 'rows',
+      writeAuthority,
     };
   }
 
@@ -238,6 +241,7 @@ async function readAccountLibraryState(env, userId) {
       state:null,
       readPath:'rows-v3-compat-unavailable',
       unavailable:true,
+      writeAuthority,
       fallbackReason:String(rowRead?.reason || 'row_read_unavailable'),
     };
   }
@@ -251,6 +255,7 @@ async function readAccountLibraryState(env, userId) {
     updatedAt: Number(legacy?.updated_at || 0),
     state: parseState(legacy?.state_json) || {},
     readPath: legacy ? 'legacy_fallback' : 'legacy_empty',
+    writeAuthority:'legacy',
     fallbackReason: String(rowRead?.reason || 'row_read_unavailable'),
   };
 }
@@ -278,7 +283,8 @@ async function v3ReadFreshness(env,userId,result) {
   const head = result?.head || result;
   const v3Revision = Number(head?.revision || 0);
   const v3UpdatedAt = Number(head?.updatedAt || 0);
-  if (userLibraryV3WriteEnabled(env)) {
+  const writeAuthority = await userLibraryV3Authority(env,userId);
+  if (writeAuthority === 'v3') {
     return {
       fresh:true,
       authority:'v3',
@@ -305,9 +311,15 @@ async function accountState(env, payload, ctx) {
   if (!session) return { status: 401, body: { error: 'not_authenticated' } };
 
   const mode = String(payload?.mode || '');
+  const writeConfigured = userLibraryV3WriteEnabled(env);
+  const writeAuthority = await userLibraryV3Authority(env,session.user_id);
   if (mode === 'account-v3-mutate') {
-    if (!userLibraryV3WriteEnabled(env)) {
-      return { status:503, body:{ error:'user_library_v3_write_disabled', writeEnabled:false } };
+    if (!writeConfigured) {
+      return { status:503, body:{
+        error:writeAuthority==='v3'?'user_library_v3_write_suspended':'user_library_v3_write_disabled',
+        writeEnabled:false,
+        writeAuthority,
+      }};
     }
     try {
       const mutationInput={
@@ -336,6 +348,7 @@ async function accountState(env, payload, ctx) {
         metadataCount:Number(result.metadataCount || 0),
         operationCount:Number(result.operationCount || 0),
         changeFloorRevision:Number(result.changeFloorRevision || 0),
+        writeAuthority:'v3',
       }}};
     } catch (error) {
       const message=String(error?.message || error).slice(0,180);
@@ -354,7 +367,7 @@ async function accountState(env, payload, ctx) {
         if (!head?.ready) return { status:503, body:{ error:String(head?.reason || 'user_library_v3_read_unavailable') } };
         const freshness=await v3ReadFreshness(env,session.user_id,head);
         if(!freshness.fresh) return { status:409, body:{ error:'user_library_v3_not_fresh',...freshness } };
-        return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-head', writeEnabled:userLibraryV3WriteEnabled(env), ...head } } };
+        return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-head', writeEnabled:writeConfigured, writeAuthority, ...head } } };
       }
       if (mode === 'account-v3-page') {
         const page = await readUserLibraryV3Page(env,session.user_id,{
@@ -364,7 +377,7 @@ async function accountState(env, payload, ctx) {
         if (!page?.ready) return { status:503, body:{ error:String(page?.reason || 'user_library_v3_read_unavailable') } };
         const freshness=await v3ReadFreshness(env,session.user_id,page);
         if(!freshness.fresh) return { status:409, body:{ error:'user_library_v3_not_fresh',...freshness } };
-        return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-page', writeEnabled:userLibraryV3WriteEnabled(env), ...page } } };
+        return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-page', writeEnabled:writeConfigured, writeAuthority, ...page } } };
       }
       const delta = await readUserLibraryV3Delta(env,session.user_id,{
         sinceRevision: payload?.sinceRevision == null ? 0 : Number(payload.sinceRevision),
@@ -375,7 +388,7 @@ async function accountState(env, payload, ctx) {
       if (!delta?.ready) return { status:503, body:{ error:String(delta?.reason || 'user_library_v3_read_unavailable') } };
       const freshness=await v3ReadFreshness(env,session.user_id,delta);
       if(!freshness.fresh) return { status:409, body:{ error:'user_library_v3_not_fresh',...freshness } };
-      return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-delta', writeEnabled:userLibraryV3WriteEnabled(env), ...delta } } };
+      return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-delta', writeEnabled:writeConfigured, writeAuthority, ...delta } } };
     } catch (error) {
       return { status:400, body:{ error:String(error?.message || error).slice(0,180) } };
     }
@@ -403,17 +416,21 @@ async function accountState(env, payload, ctx) {
           updatedAt: current.updatedAt,
           state: current.state,
           readPath: current.readPath,
-          writeEnabled: userLibraryV3WriteEnabled(env),
+          writeEnabled: writeConfigured,
+          writeAuthority: current.writeAuthority || writeAuthority,
         },
       },
     };
   }
 
-  if (userLibraryV3WriteEnabled(env) && (mode === 'account-save' || mode === 'account-merge')) {
-    return { status:409, body:{
-      error:'user_library_client_upgrade_required',
+  if ((writeConfigured || writeAuthority === 'v3') && (mode === 'account-save' || mode === 'account-merge')) {
+    const suspended = writeAuthority === 'v3' && !writeConfigured;
+    return { status:suspended?503:409, body:{
+      error:suspended?'user_library_v3_write_suspended':'user_library_client_upgrade_required',
       currentRevision:Number(current.revision || 0),
       writePath:'v3',
+      writeEnabled:writeConfigured,
+      writeAuthority,
     }};
   }
 
