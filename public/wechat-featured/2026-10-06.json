@@ -20,6 +20,18 @@
   ],
   "figures": [
     {
+      "id": "cover_final",
+      "body": false,
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig1_HTML.png",
+      "crop_frac": [
+        0,
+        0.64,
+        1,
+        1
+      ],
+      "caption": ""
+    },
+    {
       "id": "fig1",
       "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig1_HTML.png",
       "crop_frac": [
@@ -39,7 +51,7 @@
         1,
         1
       ],
-      "caption": "原文 Fig. 1e｜普通直流条件下主要看到过氧化、脱羧/脱硼副反应和电极钝化；改成交替极性后，自由基相关产物明显增加，但目标交叉偶联仍低于 5%，两个自偶联产物成为主产物。"
+      "caption": "原文 Fig. 1e｜直流与交替极性电解的直接比较：交替极性能够缓解自由基过氧化和电极钝化，但此时目标交叉偶联仍很低，说明后续还必须解决两类自由基的同步生成。"
     },
     {
       "id": "fig2_activation",
@@ -215,14 +227,15 @@
   "takehome_heading": "读到最后，这篇 Nature Chemistry 最值得带走的三点",
   "ai_notice": "本文由“化之岛”基于 Nature Chemistry 最终正文与作者提供的 Supporting Information 整理，AI 辅助资料归纳与文字校核，最终内容经人工审核。化学结构与数据均来自论文原文，不使用生成模型重绘。",
   "cover": {
-    "source_figure_id": "fig1",
+    "source_figure_id": "cover_final",
+    "layout": "daily_reference_darkband",
     "canvas": {
       "width": 1880,
       "height": 800,
-      "background": "white"
+      "background": "#0a2442"
     },
     "crop_235_1": "0_0_1_1",
     "crop_1_1": "0.287234_0_0.712766_1",
-    "description": "今日精选封面使用 Nature Chemistry 原文 Fig. 1 的高清裁图，化学结构不重绘。"
+    "description": "今日精选封面以 Nature Chemistry 原文 Fig. 1e 为唯一科学图像来源；上部完整展示直流/交替极性与副反应对照，下部保留深色标题安全区供微信卡片白字叠加，不重绘化学结构。"
   }
 }
