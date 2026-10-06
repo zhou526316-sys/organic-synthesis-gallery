@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.35
+// @version      6.2.36
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -55,7 +55,7 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.35';
+  var INSTALL_REVISION = '6.2.36';
   var STALE_CONTROLLER_TAKEOVER_REVISION = '20261006-stale-controller-takeover-v1';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
@@ -373,7 +373,7 @@
       }
       var finalResult=job._liveResult||{};
       var figureItems=(finalResult.figures&&Array.isArray(finalResult.figures.items)?finalResult.figures.items:[]).filter(function(item){return item&&/^(?:staged|already_staged)$/.test(String(item.status||''));});
-      var payload={doi:doi,jobId:job.jobId,captureVersion:VERSION,controllerRevision:CONTROLLER_REVISION,mediaNeed:String(job.mediaNeed||''),final:Boolean(final),publisher:job.publisher||publisherForDoi(doi),status:final?String(status||'failed'):'progress',reason:final?autoReportText(reason):'failure_checkpoint:'+autoReportCause(last),candidateSource:final?'auto_final_result':'auto_failure_checkpoint',articleUrl:page,sourceUrl:autoReportUrl(last.url),startedAt:job.startedAt||'',finishedAt:final?nowIso():'',queueGeneratedAt:job.queueGeneratedAt||'',tocStatus:String(finalResult.toc&&finalResult.toc.status||''),figuresDiscovered:Math.max(0,Number(finalResult.figures&&finalResult.figures.discovered||0)),figuresStored:Math.max(0,Number(finalResult.figures&&finalResult.figures.stored||0)),figureLabels:figureItems.map(function(item){return String(item.label||'').slice(0,80);}).filter(Boolean).slice(0,20),fulltextStatus:String(finalResult.fulltext&&finalResult.fulltext.status||''),evidenceChars:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.chars||0)),evidenceSections:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.sections||0)),evidenceLevel:String(finalResult.fulltext&&finalResult.fulltext.evidenceLevel||''),trace:[context].concat(events).concat(architectureEvent?[architectureEvent]:[]).concat(architectureObserverEvent?[architectureObserverEvent]:[])};
+      var payload={doi:doi,jobId:job.jobId,captureVersion:VERSION,controllerRevision:CONTROLLER_REVISION,mediaNeed:String(job.mediaNeed||''),final:Boolean(final),publisher:job.publisher||publisherForDoi(doi),status:final?String(status||'failed'):'progress',reason:final?autoReportText(reason):'failure_checkpoint:'+autoReportCause(last),candidateSource:final?'auto_final_result':'auto_failure_checkpoint',articleUrl:page,sourceUrl:autoReportUrl(last.url),startedAt:job.startedAt||'',finishedAt:final?nowIso():'',queueGeneratedAt:job.queueGeneratedAt||'',tocStatus:String(finalResult.toc&&finalResult.toc.status||''),figuresDiscovered:Math.max(0,Number(finalResult.figures&&finalResult.figures.discovered||0)),figuresStored:Math.max(0,Number(finalResult.figures&&finalResult.figures.stored||0)),figureLabels:figureItems.map(function(item){return String(item.label||'').slice(0,80);}).filter(Boolean).slice(0,20),fulltextStatus:String(finalResult.fulltext&&finalResult.fulltext.status||''),evidenceChars:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.chars||0)),evidenceSections:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.sections||0)),evidenceLevel:String(finalResult.fulltext&&finalResult.fulltext.evidenceLevel||''),privatePdfStatus:String(finalResult.privatePdf&&finalResult.privatePdf.status||''),privatePdfBytes:Math.max(0,Number(finalResult.privatePdf&&finalResult.privatePdf.byteLength||0)),trace:[context].concat(events).concat(architectureEvent?[architectureEvent]:[]).concat(architectureObserverEvent?[architectureObserverEvent]:[])};
       GM_setValue(key,{revision:revision,payload:payload,createdAt:prior?prior.createdAt:Date.now(),tries:Number(prior&&prior.tries||0),nextAt:Number(prior&&prior.nextAt||0)});
       if(final)GM_deleteValue(AUTO_REPORT_PREFIX+job.jobId+':checkpoint');
       return true;
@@ -4452,8 +4452,8 @@ function embeddedJobDois(value) {
         markPublisherDispatch(job);
         var taskParts=[];
         if(job.captureToc===true)taskParts.push('TOC');
-        if(job.captureFigures===true)taskParts.push('正文图');
-        if(job.captureEvidence===true)taskParts.push('文字证据');
+        if(job.captureFigures===true||job.opportunisticFigures===true)taskParts.push('正文图');
+        if(job.captureEvidence===true||job.opportunisticEvidence===true)taskParts.push('全文');
         if(job.capturePrivatePdf===true)taskParts.push('PDF');
         badge((taskParts.join('＋')||'媒体检查')+' '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
         var tab=null,result=null,closed=true,skipReason='',taskUrl=articleUrl(job);
@@ -4921,7 +4921,13 @@ function embeddedJobDois(value) {
     var prior=GM_getValue(PRIVATE_PDF_ATTEMPT_PREFIX+doi,null),ts=Number(now||Date.now());
     if(!prior)return true;
     var age=Math.max(0,ts-Number(prior.at||0));
-    if(prior.status==='stored'&&age<30*24*60*60*1000)return false;
+    if(prior.status==='stored'&&age<30*24*60*60*1000){
+      // A PDF stored by the pre-bundle runtime is reusable as PDF bytes, but
+      // Oct-1+ papers still need one authenticated page visit under the bundle
+      // revision so body figures and full text are not skipped.
+      if(recentFullCaptureEligible(job)&&String(prior.revision||'')!==PRIVATE_PDF_CAPTURE_REVISION)return true;
+      return false;
+    }
     if(ignoreCooldown)return true;
     if(prior.status==='not_found'&&age<6*60*60*1000)return false;
     if(prior.status==='failed'&&age<30*60*1000)return false;
@@ -5205,8 +5211,12 @@ function embeddedJobDois(value) {
     pushTrace(trace,{stage:'private_pdf_lease',event:'active',status:'ok',message:'expiresAt='+String(Number(lease.expiresAt||0))+';revision='+String(lease.revision||PRIVATE_PDF_CAPTURE_REVISION)});
     var doi=normalizeDoi(job.doi),key=PRIVATE_PDF_ATTEMPT_PREFIX+doi,prior=GM_getValue(key,null),now=Date.now();
     if(prior&&prior.status==='stored'&&now-Number(prior.at||0)<30*24*60*60*1000){
+      if(String(prior.revision||'')!==PRIVATE_PDF_CAPTURE_REVISION){
+        prior=Object.assign({},prior,{revision:PRIVATE_PDF_CAPTURE_REVISION,bundleUpgradedAt:Date.now()});
+        GM_setValue(key,prior);
+      }
       captureLiveUpdate(job,'private_pdf_saved',{pdfStatus:'already_stored',pdfStage:'复用已存储 PDF 回执',pdfBytes:Number(prior.byteLength||0)});
-      return {status:'already_stored',documentId:prior.documentId||'',byteLength:Number(prior.byteLength||0)};
+      return {status:'already_stored',documentId:prior.documentId||'',byteLength:Number(prior.byteLength||0),revision:PRIVATE_PDF_CAPTURE_REVISION};
     }
     // Automatic runs respect a not-found cooldown. An explicit missing-only Start
     // is a deliberate retry request and must actually rediscover the page.
@@ -5245,17 +5255,20 @@ function embeddedJobDois(value) {
       var privatePdfResult=await maybeCapturePrivatePdf(job,trace);
       if(privatePdfResult)result.privatePdf=privatePdfResult;
       var pdfOnly=job.capturePrivatePdf===true&&job.captureToc!==true&&job.captureFigures!==true&&job.captureEvidence!==true&&job.opportunisticEvidence!==true&&job.opportunisticFigures!==true;
-      if(pdfOnly&&privatePdfResult&&!/^(?:stored|already_stored)$/.test(String(privatePdfResult.status||''))){
-        result.status='failed';
-        result.reason=String(privatePdfResult.reason||('private_pdf_'+String(privatePdfResult.status||'failed')));
+      if(job.capturePrivatePdf===true&&privatePdfResult&&!/^(?:stored|already_stored)$/.test(String(privatePdfResult.status||''))){
+        var pdfReason=String(privatePdfResult.reason||('private_pdf_'+String(privatePdfResult.status||'failed')));
+        result.status=pdfOnly?'failed':result.status==='success'?'partial':result.status;
+        result.reason=(String(result.reason||'')+(result.reason?';':'')+'pdf='+pdfReason).slice(0,240);
       }
     } catch (privatePdfError) {
       var privatePdfReason=String(privatePdfError&&privatePdfError.message||privatePdfError||'private_pdf_failed')
         .replace(/https?:\/\/\S+/gi,'[url]')
         .replace(/[A-Za-z0-9+/_=-]{40,}/g,'[redacted]').slice(0,180);
       result.privatePdf={status:'failed',reason:privatePdfReason};
-      if(job.capturePrivatePdf===true&&job.captureToc!==true&&job.captureFigures!==true&&job.captureEvidence!==true&&job.opportunisticEvidence!==true&&job.opportunisticFigures!==true){
-        result.status='failed';result.reason=privatePdfReason;
+      if(job.capturePrivatePdf===true){
+        var pdfOnlyCatch=job.captureToc!==true&&job.captureFigures!==true&&job.captureEvidence!==true&&job.opportunisticEvidence!==true&&job.opportunisticFigures!==true;
+        result.status=pdfOnlyCatch?'failed':result.status==='success'?'partial':result.status;
+        result.reason=(String(result.reason||'')+(result.reason?';':'')+'pdf='+privatePdfReason).slice(0,240);
       }
       if(typeof captureLiveUpdate==='function')captureLiveUpdate(job,'private_pdf_failed',{pdfStatus:'failed',pdfStage:'PDF 抓取异常',pdfError:privatePdfReason});
       if(typeof pushTrace==='function')pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:privatePdfReason});

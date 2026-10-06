@@ -271,8 +271,12 @@
     pushTrace(trace,{stage:'private_pdf_lease',event:'active',status:'ok',message:'expiresAt='+String(Number(lease.expiresAt||0))+';revision='+String(lease.revision||PRIVATE_PDF_CAPTURE_REVISION)});
     var doi=normalizeDoi(job.doi),key=PRIVATE_PDF_ATTEMPT_PREFIX+doi,prior=GM_getValue(key,null),now=Date.now();
     if(prior&&prior.status==='stored'&&now-Number(prior.at||0)<30*24*60*60*1000){
+      if(String(prior.revision||'')!==PRIVATE_PDF_CAPTURE_REVISION){
+        prior=Object.assign({},prior,{revision:PRIVATE_PDF_CAPTURE_REVISION,bundleUpgradedAt:Date.now()});
+        GM_setValue(key,prior);
+      }
       captureLiveUpdate(job,'private_pdf_saved',{pdfStatus:'already_stored',pdfStage:'复用已存储 PDF 回执',pdfBytes:Number(prior.byteLength||0)});
-      return {status:'already_stored',documentId:prior.documentId||'',byteLength:Number(prior.byteLength||0)};
+      return {status:'already_stored',documentId:prior.documentId||'',byteLength:Number(prior.byteLength||0),revision:PRIVATE_PDF_CAPTURE_REVISION};
     }
     if(prior&&prior.status==='not_found'&&now-Number(prior.at||0)<6*60*60*1000&&!job.missingOnly&&!job.manualRunId){
       captureLiveUpdate(job,'private_pdf_not_found',{pdfStatus:'not_found_cached',pdfStage:'沿用自动冷却记录'});

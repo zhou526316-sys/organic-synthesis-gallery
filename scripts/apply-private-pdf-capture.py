@@ -18,17 +18,20 @@ new="""  async function finishPairedJob(job,result,trace,token) {
       var privatePdfResult=await maybeCapturePrivatePdf(job,trace);
       if(privatePdfResult)result.privatePdf=privatePdfResult;
       var pdfOnly=job.capturePrivatePdf===true&&job.captureToc!==true&&job.captureFigures!==true&&job.captureEvidence!==true&&job.opportunisticEvidence!==true&&job.opportunisticFigures!==true;
-      if(pdfOnly&&privatePdfResult&&!/^(?:stored|already_stored)$/.test(String(privatePdfResult.status||''))){
-        result.status='failed';
-        result.reason=String(privatePdfResult.reason||('private_pdf_'+String(privatePdfResult.status||'failed')));
+      if(job.capturePrivatePdf===true&&privatePdfResult&&!/^(?:stored|already_stored)$/.test(String(privatePdfResult.status||''))){
+        var pdfReason=String(privatePdfResult.reason||('private_pdf_'+String(privatePdfResult.status||'failed')));
+        result.status=pdfOnly?'failed':result.status==='success'?'partial':result.status;
+        result.reason=(String(result.reason||'')+(result.reason?';':'')+'pdf='+pdfReason).slice(0,240);
       }
     } catch (privatePdfError) {
       var privatePdfReason=String(privatePdfError&&privatePdfError.message||privatePdfError||'private_pdf_failed')
         .replace(/https?:\\/\\/\\S+/gi,'[url]')
         .replace(/[A-Za-z0-9+/_=-]{40,}/g,'[redacted]').slice(0,180);
       result.privatePdf={status:'failed',reason:privatePdfReason};
-      if(job.capturePrivatePdf===true&&job.captureToc!==true&&job.captureFigures!==true&&job.captureEvidence!==true&&job.opportunisticEvidence!==true&&job.opportunisticFigures!==true){
-        result.status='failed';result.reason=privatePdfReason;
+      if(job.capturePrivatePdf===true){
+        var pdfOnlyCatch=job.captureToc!==true&&job.captureFigures!==true&&job.captureEvidence!==true&&job.opportunisticEvidence!==true&&job.opportunisticFigures!==true;
+        result.status=pdfOnlyCatch?'failed':result.status==='success'?'partial':result.status;
+        result.reason=(String(result.reason||'')+(result.reason?';':'')+'pdf='+privatePdfReason).slice(0,240);
       }
       if(typeof captureLiveUpdate==='function')captureLiveUpdate(job,'private_pdf_failed',{pdfStatus:'failed',pdfStage:'PDF 抓取异常',pdfError:privatePdfReason});
       if(typeof pushTrace==='function')pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:privatePdfReason});

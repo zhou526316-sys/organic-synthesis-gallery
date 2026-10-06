@@ -50,7 +50,7 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.54' public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.55' public/gallery-vpn-bridge.user.js
           grep -F '// @match        https://www.chinesechemsoc.org/*' public/gallery-vpn-bridge.user.js
           grep -F "var CAPTURE_HOTFIX_REVISION = '20261001-newest-retry-v1';" public/gallery-vpn-bridge.user.js
           mkdir -p "$RUNNER_TEMP/tm-installer"

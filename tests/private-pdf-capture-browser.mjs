@@ -96,9 +96,9 @@ try{
     const x=await page.evaluate(async()=>{T.setFetch(async()=>{throw new Error('native_fetch_not_injected')});GM_setValue(T.PRIVATE_PDF_LEASE_KEY,{token:'C'.repeat(48),scope:'private_pdf_capture',expiresAt:Date.now()+600000});GM_deleteValue('osg-toc-v6:private-pdf-attempt-v2:10.1021/jacs.6c12345');let calls=[];T.setGm(async o=>{calls.push(o.url);return{status:403,response:new ArrayBuffer(0),responseHeaders:'',finalUrl:o.url}});const r=await T.maybeCapturePrivatePdf({doi:'10.1021/jacs.6c12345',publisher:'acs',addedDate:'2026-10-01',jobId:'fixture-job-12345678'},[]);return{r,calls}});
     assert.equal(x.r.status,'failed');assert.equal(x.calls.length,1);assert.match(x.r.reason,/403/);
   });
-  await tc('finishPairedJob keeps media success when PDF fails',async()=>{
-    const out=await page.evaluate(async()=>{T.setMaybe(async()=>({status:'failed',reason:'fixture_pdf_failure'}));return T.finishPairedJob({doi:'10.1021/jacs.6c12345',jobId:'fixture-job-12345678'},{status:'success',reason:'media_ok',figures:{discovered:0},fulltext:{status:'stored'}},[],null)});
-    assert.equal(out.status,'success');assert.equal(out.privatePdf.status,'failed');
+  await tc('combined media success becomes partial when PDF fails',async()=>{
+    const out=await page.evaluate(async()=>{T.setMaybe(async()=>({status:'failed',reason:'fixture_pdf_failure'}));return T.finishPairedJob({doi:'10.1021/jacs.6c12345',jobId:'fixture-job-12345678',capturePrivatePdf:true,opportunisticFigures:true},{status:'success',reason:'media_ok',figures:{discovered:0},fulltext:{status:'stored'}},[],null)});
+    assert.equal(out.status,'partial');assert.equal(out.privatePdf.status,'failed');assert.match(out.reason,/pdf=fixture_pdf_failure/);
   });
   await tc('pure PDF failure is never reported as success',async()=>{
     const out=await page.evaluate(async()=>{T.setMaybe(async()=>({status:'not_found'}));return T.finishPairedJob({doi:'10.1021/jacs.6c12345',jobId:'fixture-job-12345678',capturePrivatePdf:true,captureToc:false,captureFigures:false,captureEvidence:false},{status:'success',reason:'media_not_requested',figures:{discovered:0},fulltext:{status:'not_requested'}},[],null)});
