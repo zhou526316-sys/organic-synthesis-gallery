@@ -1,27 +1,29 @@
-# 2026-10-06 公众号纯图片审阅稿（所见即所得最终候选）
+# 2026-10-06 公众号纯图片审阅稿（所见即所得终版）
 
-> 所有正文裁图已物化为独立 PNG/JPEG；生产 manifest 不再包含 `crop_frac`。公众号只上传本文件列出的固定 raster。裁切证明保存在 `audit/wechat-working/crop-proofs/2026-10-06/`。
+> 最终生产稿不再包含任何 `source_url + crop_frac` 动态裁切。正文图全部已经先物化成独立 PNG/JPEG、逐张查看，再固定为 repo_path。微信写入阶段只上传这些已审核 raster。
 
-## 硬性验收
-- 不允许结构/箭头/坐标轴/图例被切断。
-- 不允许出现相邻 panel 的半截内容。
-- 底物范围按完整逻辑块展示；不为了缩小图片而破坏可读性。
-- 图注只能解释画面中真正可见的信息。
-- 今日精选第一张正文图与“交替极性解决了什么、没解决什么”文字成对出现，不再孤立放 Fig. 1c。
-- 往期精选保留用户确认的蓝色 FRET/PLP* 封面与完整 Fig. 1c 总览。
+## 硬性审核规则
+
+- 结构、箭头、坐标轴、图例、panel 标签不得被切断。
+- 不得露出相邻 panel 的半截内容。
+- 底物拓展按完整逻辑块展示，不为缩小尺寸硬切成碎片。
+- 一张图只承担一个明确叙事任务，图注只描述实际可见内容。
+- 今日精选开场改用完整 Fig. 1e 问题图，不再孤立展示 Fig. 1c。
+- 往期精选保留用户确认的蓝色 FRET/PLP* 封面和完整 Fig. 1c 总览。
 
 # 今日精选｜Nature Chemistry
 
 ## cover_final（封面/非正文）
 
 - repo_path: `public/wechat-assets/natchem-2026-10-06-cover-v2.jpg`
+- intended placement: 仅封面
 - caption: 
 - review basis: pinned repository asset, directly inspected
 
 ## fig1
 
 - repo_path: `public/wechat-assets/reviewed/2026-10-06/daily-problem.png`
-- intended placement: 交替极性电解解决了过氧化和电极钝化，却还没有解决“同步生成”
+- intended placement: 正文开头/开篇视觉锚点
 - caption: 原文 Fig. 1e｜先看作者真正面对的问题：羧酸与硼酸都能产生瞬态烷基自由基，但在普通条件下会同时出现自偶联、过氧化、质子脱硼和脱羧等竞争通道。交替极性电解先压住一部分失活路径，后面的“氧化还原匹配”才有意义。
 - crop proof: `audit/wechat-working/crop-proofs/2026-10-06/daily-problem.jpg`
 
@@ -75,13 +77,14 @@
 ## abstract_cover（封面/非正文）
 
 - repo_path: `public/wechat-assets/hyster-plp-photoenzyme-retrospective-cover.jpg`
+- intended placement: 仅封面
 - caption: 
 - review basis: pinned repository asset, directly inspected
 
 ## fig1
 
 - repo_path: `public/wechat-assets/hyster-fig1c-overview.png`
-- intended placement: 未引用
+- intended placement: 正文开头/开篇视觉锚点
 - caption: 原文 Fig. 1c｜左侧是本文的不对称自由基–自由基交叉偶联；中间给出 Rh6G 吸光后向酶内醌式 PLP 发生 FRET 的设计；右侧吸收光谱展示该 PLP 中间体的可见光吸收特征。
 - review basis: pinned repository asset, directly inspected
 
