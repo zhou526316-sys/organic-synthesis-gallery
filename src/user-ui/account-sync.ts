@@ -246,6 +246,14 @@ function markInitialDifferences(base: UserUiState, target: UserUiState): void {
   if (!sameJson(globalStateOf(base),globalStateOf(target))) dirtyGlobal = true;
 }
 
+function allChangedKeys(base: UserUiState, target: UserUiState): string[] {
+  const keys = new Set([
+    ...Object.keys(base.papers || {}), ...Object.keys(base.metadata || {}),
+    ...Object.keys(target.papers || {}), ...Object.keys(target.metadata || {}),
+  ]);
+  return [...keys].filter(key=>Boolean(mutationOperation(base,target,key)));
+}
+
 function committedSubset(base: UserUiState, target: UserUiState, keys: string[], globalChanged: boolean): UserUiState {
   const next = cloneState(base);
   if (globalChanged) {
@@ -679,15 +687,19 @@ async function preferredInitialPull(): Promise<{ account: RemoteAccount | null; 
   return { account: legacy.result, status: legacy.status };
 }
 
+function acceptRemoteBaseline(account: RemoteAccount): void {
+  rememberAccount(account.userId,account.revision);
+  syncedState=cloneState(account.state);
+  v3WriteActive=account.writeEnabled;
+  setWriteDiagnostic(v3WriteActive?'v3':'legacy');
+}
+
 function applyRemote(account: RemoteAccount): void {
   applyingRemote = true;
   store.state = account.state;
-  rememberAccount(account.userId, account.revision);
-  syncedState = cloneState(account.state);
-  v3WriteActive = account.writeEnabled;
+  acceptRemoteBaseline(account);
   dirtyGlobal = false;
   dirtyPaperKeys.clear();
-  setWriteDiagnostic(v3WriteActive ? 'v3' : 'legacy');
   store.save();
   applyingRemote = false;
 }
