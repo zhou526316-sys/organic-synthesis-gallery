@@ -61,8 +61,11 @@ export function userLibraryV3ShadowEnabled(env) {
 export function userLibraryV3ReadEnabled(env) {
   return flag(env?.USER_LIBRARY_V3_READ_ENABLED);
 }
-export function userLibraryV3WriteEnabled(env) {
-  return flag(env?.USER_LIBRARY_V3_WRITE_ENABLED);
+export function userLibraryV3WriteEnabled(env, userIdValue = '') {
+  if (flag(env?.USER_LIBRARY_V3_WRITE_ENABLED)) return true;
+  const canaryUserId = safeText(env?.USER_LIBRARY_V3_WRITE_CANARY_USER_ID, 300);
+  const userId = safeText(userIdValue, 300);
+  return Boolean(canaryUserId && userId && canaryUserId === userId);
 }
 
 function normalizeOperation(raw) {
@@ -242,13 +245,13 @@ function conflict(currentRevision) {
 }
 
 export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowValue = Date.now()) {
-  if (!userLibraryV3WriteEnabled(env)) {
+  const userId = requiredText(userIdValue, 300, 'user_library_v3_user_id_invalid');
+  if (!userLibraryV3WriteEnabled(env, userId)) {
     return { ok:false, disabled:true, reason:'user_library_v3_write_disabled' };
   }
   if (!env?.DB || typeof env.DB.batch !== 'function') {
     throw new Error('user_library_v3_atomic_batch_required');
   }
-  const userId = requiredText(userIdValue, 300, 'user_library_v3_user_id_invalid');
   const mutation = normalizeMutation(input);
   const now = integer(nowValue, 1, 'user_library_v3_updated_at_invalid');
   const current = await headRow(env, userId);
