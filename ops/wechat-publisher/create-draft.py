@@ -460,10 +460,13 @@ def build_content(
         ])
 
         rendered_figures = set()
-        lead_html = figure_html("fig1", figures, uploaded_urls)
-        if lead_html:
-            parts.append(lead_html)
-            rendered_figures.add("fig1")
+        lead_figure_id = str(featured.get("lead_figure_id") or "fig1").strip()
+        lead_position = str(featured.get("lead_figure_position") or "before_quick_points").strip()
+        if lead_figure_id and lead_position == "before_quick_points":
+            lead_html = figure_html(lead_figure_id, figures, uploaded_urls)
+            if lead_html:
+                parts.append(lead_html)
+                rendered_figures.add(lead_figure_id)
         for point in featured.get("quick_points", []):
             parts.append(
                 "<section style='background:#f7f8fa;border-radius:8px;padding:11px 13px;margin:9px 0;'>"
@@ -471,6 +474,11 @@ def build_content(
                 f"<p style='font-size:14px;line-height:1.78;margin:4px 0 0;color:#444;text-align:justify;'>{esc(point.get('text') or '')}</p>"
                 "</section>"
             )
+        if lead_figure_id and lead_position == "after_quick_points":
+            lead_html = figure_html(lead_figure_id, figures, uploaded_urls)
+            if lead_html:
+                parts.append(lead_html)
+                rendered_figures.add(lead_figure_id)
 
         for section in featured.get("sections", []):
             parts.append(
