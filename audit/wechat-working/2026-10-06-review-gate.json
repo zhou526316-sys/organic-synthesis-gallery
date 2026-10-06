@@ -25,15 +25,16 @@
   "textReview": "pass",
   "imageReview": "pass",
   "reviewNotes": [
-    "Exact user-confirmed Hyster cover is pinned as a repository asset.",
-    "Hyster first body image is pinned to the complete horizontal Fig. 1c user reference.",
-    "Nature Chemistry cover is pinned to the reviewed Fig. 1e/title-safe-band asset.",
-    "No TinyFish dependency; final transport QA waits for draft/get."
+    "Final pinned-asset source fingerprints passed before WeChat sync.",
+    "Exact user-confirmed Hyster cover and complete Hyster Fig. 1c are repository assets and were visually verified after commit.",
+    "Nature Chemistry Fig. 1e/title-safe-band cover was visually verified after commit.",
+    "WeChat draft/update succeeded and draft/get readback returned ok.",
+    "TinyFish is not part of the approval path."
   ],
   "approvedAt": "2026-10-06T06:53:00Z",
-  "transportReview": "pending",
-  "transportReviewedAt": null,
-  "draftReadback": null,
-  "previewUrl": null,
-  "mediaId": null
+  "transportReview": "pass",
+  "transportReviewedAt": "2026-10-06T06:54:52.207306Z",
+  "draftReadback": "ok",
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/de44843725384f5efc2865cc.html",
+  "mediaId": "KhELYUzvwADwB_l1xH1SWFv31tB1FbKXF89D7ZHLK2znutU4BOGt5XD22WOo65yQ"
 }
