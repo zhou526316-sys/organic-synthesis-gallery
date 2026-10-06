@@ -10,11 +10,15 @@ on:
       - 'cloudflare/worker/src/index.js'
       - 'cloudflare/worker/src/private-pdf.js'
       - 'cloudflare/worker/src/local-captures.js'
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend', 'Deploy Worker frontend assets']
+    types: [completed]
 permissions:
   contents: read
   actions: read
 jobs:
   verify:
+    if: github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
