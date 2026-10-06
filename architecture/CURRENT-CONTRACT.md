@@ -97,7 +97,7 @@ R2 remains the durable byte source for Evidence and encrypted handoff payloads. 
 
 Per-user paper state must scale by row/key, not by endlessly enlarging one serialized library document.
 
-The row-oriented D1 model is the migration direction. The current legacy document-size ceiling is not an acceptable final architecture. D3c1 established revision-fenced shadow parity, D3c2 proved bounded V3 reads, and D3c3 moves the browser to V3-first reads with whole-attempt legacy fallback. D3c4a preinstalls bounded dirty-key V3 mutation, same-transaction D3b compatibility mirroring, and bounded change/tombstone retention while the production V3 write flag remains off. Only D3c4b may activate V3 write authority after an isolated production canary and automatic rollback are proven.
+The row-oriented D1 model is the production user-library architecture. D3c1 established revision-fenced shadow parity, D3c2 proved bounded V3 reads, D3c3 moved the browser to V3-first reads with whole-attempt compatibility fallback, and D3c4a installed bounded dirty-key mutations plus same-transaction D3b compatibility mirroring. D3c4b activates V3 write authority only after full production preflight and an isolated synthetic-account canary. Normal user-library reads and writes no longer depend on one monolithic serialized document or its 1.5 MB ceiling; legacy JSON remains migration/legacy evidence only.
 
 ## 11. Analytics rule
 
@@ -140,7 +140,7 @@ Architecture changes must test at least:
 1. **P0 — bounded frontend results: GUARDED.** Browser DOM is a fixed result window; the static Archive compatibility path now fails closed before >1000-result truncation or >36 monthly-segment fanout. Cursor-based indexed paging remains the preferred path for broad historical discovery.
 2. **P0 — bounded fallback: COMPLETE.** Deployed architecture failures use verified Hot fallback / retained Hot state rather than reloading all history.
 3. **P1 — indexed all-time search: PRODUCTION ACTIVE.** The dedicated D1 read path is live behind static generation/revision authority. Production canary verified the current 826-card generation, cursor paging, current catalog identity and safe rollback; generation handoff and compatibility cases still fall back to bounded static reads.
-4. **P1 — user-library D3c: WRITE FOUNDATION.** D3c1/D3c2 are production-proven; D3c3 performs the V3-first frontend read cutover. D3c4a installs bounded dirty-key mutations and compatibility mirroring with writes still disabled. D3c4b is the final separately-canary-gated write activation that removes the monolithic document ceiling from normal operation.
+4. **P1 — user-library D3c: FINAL WRITE CUTOVER.** D3c1–D3c4a are the proven migration foundation. D3c4b activates per-user V3 write authority behind full parity preflight, synthetic-account API canary, cleanup verification and immediate canary-time rollback. After activation, normal state growth is row/key bounded and the monolithic document ceiling is retired from normal operation.
 5. **P2 — continue index/materialization cutovers:** any remaining metadata path that still relies on corpus-wide/prefix-wide scans must migrate behind parity/freshness gates.
 
 These priorities are scale-safety work. They do not alter the Tampermonkey acquisition workflow in this architecture task.
