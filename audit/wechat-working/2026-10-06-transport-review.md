@@ -1,33 +1,30 @@
-# 2026-10-06 WeChat transport/readback review — paragraph-aligned main-figure edition
+# 2026-10-06 WeChat transport/readback review — complete figure/text edition
 
 Status: **PASS**
 
-Final draft:
 - stage: `draft_update`
 - media_id: `KhELYUzvwADwB_l1xH1SWFv31tB1FbKXF89D7ZHLK2znutU4BOGt5XD22WOo65yQ`
 - paper_count: `29`
 - draft_readback: `ok`
-- generatedAt: `2026-10-06T08:41:36.547953Z`
-- preview_url: https://relay.gczhouwld.com/wechat-preview/ff8ada89f9637dbb495c618a.html
+- generatedAt: `2026-10-06T10:16:35.073733Z`
+- preview_url: https://relay.gczhouwld.com/wechat-preview/ed6a93e2b0b006de52717146.html
 
-## Draft/get structure audit
+## Final readback coverage
 
-- Article count: 2.
-- Daily article body images: 10 total in preview, including the Gallery QR image and 9 scientific/synthetic figures.
-- Hyster body images: 10.
-- All required structural checks passed:
-  - Nature Chemistry Fig. 1e is present and the old isolated Fig. 1c opening is absent.
-  - Alternating-polarity Fig. 3b–c and electrode-material Fig. 3a are both present.
-  - Nature Chemistry substrate scope, hydroboration entry and downstream diversification are present.
-  - Hyster Fig. 1 overview, Fig. 2 evolution + active-site remodeling, Fig. 3 scope, Fig. 4 external/internal FRET, and Fig. 5 lifetime/mechanism/application are present.
+Daily article:
+- 21 images in WeChat preview, including the Gallery QR and 20 scientific/evidence images.
+- Fig. 1a–e, Fig. 2a–f, Fig. 3a–d, Table 1, Fig. 4a–b are all represented.
+- SI Table 5, SI Fig. 6, SI Table 6 and SI Fig. 7 are present where the main text does not directly show the supporting control.
+- Old isolated Fig. 1c opening is absent.
 
-## Width/layout readback
+Retrospective article:
+- 17 images in WeChat preview.
+- Fig. 1a–c, Fig. 2a–d, Fig. 3, Fig. 4a–e and Fig. 5a–g are represented.
+- SI Fig. 11 natural-amino-acid negative experiment is included.
+- Fig. 5a–c and Fig. 5d–e are shown as complete evidence bands rather than clipped single-panel crops.
 
-The paragraph-aligned widths survived WeChat `draft/get`:
-- Daily electrode-material panel: 68%; alternating-polarity panel: 92%.
-- Hyster evolution: 72%; active-site: 82%; lifetime: 70%; Lenacapavir application: 58%.
-- Dense scope/mechanistic figures remain 92–100% where readability requires it.
+## Layout rule verified
 
-## Final decision
+Except for the explicitly requested opening figures, images follow the paragraph that first explains them. Figure-specific prose names the exact Fig./Table/SI item; references to previously shown images are explicitly marked as such.
 
-**PASS.** The latest WeChat draft is the reviewed paragraph-aligned, scope-complete version. The final acceptance path used pinned repository rasters + fixed-IP publisher + WeChat `draft/get` + GitHub-runner preview structure audit; it did not depend on TinyFish.
+Final decision: **PASS**.
