@@ -5,7 +5,8 @@ import vm from 'node:vm';
 import { createHash, webcrypto } from 'node:crypto';
 
 const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
-// Installer revisions advance independently; this gate binds metadata consistency, not a stale release number.
+const controllerRevision=source.match(/var CONTROLLER_REVISION = '([^']+)';/)?.[1]||'';
+// Installer/controller revisions advance independently; this gate binds metadata consistency, not a stale release number.
 const begin=source.indexOf('// BEGIN ARCHITECTURE MEMBERSHIP CORE v1');
 const end=source.indexOf('// END ARCHITECTURE MEMBERSHIP CORE v1');
 assert.ok(begin>0&&end>begin,'membership core markers missing');
@@ -55,7 +56,8 @@ test('actual userscript keeps capture protocol while advancing install metadata'
   assert.match(metadataVersion,/^6\.2\.\d+$/);
   assert.equal(installRevision,metadataVersion);
   assert.ok(source.includes("var VERSION = '6.2.20';"));
-  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.40';"));
+  assert.match(controllerRevision,/^\d+\.\d+\.\d+$/);
+  assert.ok(source.includes(`controllerRevision:CONTROLLER_REVISION`));
 });
 test('actual userscript observes membership in manual and automatic paths without filtering',()=>{
   assert.ok(source.includes('s.architectureMembership=architectureMembership;'));
@@ -109,5 +111,5 @@ test('self-contained Bridge gets a diagnostic install-version bump while capture
   assert.match(loaderVersion,/^2\.2\.\d+$/);
   assert.ok(Number(loaderVersion.split('.')[2]) >= 41);
   assert.ok(source.includes("var VERSION = '6.2.20';"));
-  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.40';"));
+  assert.match(controllerRevision,/^\d+\.\d+\.\d+$/);
 });
