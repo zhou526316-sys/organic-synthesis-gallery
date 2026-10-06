@@ -45,11 +45,15 @@ jobs:
           if (!maintenance.includes("! grep -Eq '^(main|\\[assets\\]|\\[vars\\]|\\[ai\\]|\\[triggers\\]|\\[\\[r2_buckets\\]\\])' wrangler.user-ui.toml")) fail('maintenance config deployability guard missing');
 
           const deploys=[...canonical.matchAll(/npx\s+wrangler\s+deploy\b[^\n]*--config\s+wrangler\.frontend\.toml/g)];
-          if (deploys.length!==3) fail('canonical workflow must have dry-run, primary deploy, and one conditional rollback deploy');
-          const rollback=canonical.split('- name: Roll back literature indexed read on canary failure')[1]
+          if (deploys.length!==4) fail('canonical workflow must have dry-run, primary deploy, indexed-read rollback, and V3-write rollback only');
+          const indexRollback=canonical.split('- name: Roll back literature indexed read on canary failure')[1]
             ?.split('- name: Preserve literature indexed read activation report')[0] || '';
-          if (!rollback.includes("if: steps.literature_index_read_canary.outcome == 'failure'")) fail('indexed-read rollback must be failure-only');
-          if ((rollback.match(/npx\s+wrangler\s+deploy\b[^\n]*--config\s+wrangler\.frontend\.toml/g)||[]).length!==1) fail('rollback must contain exactly one deploy');
+          if (!indexRollback.includes("if: steps.literature_index_read_canary.outcome == 'failure'")) fail('indexed-read rollback must be failure-only');
+          if ((indexRollback.match(/npx\s+wrangler\s+deploy\b[^\n]*--config\s+wrangler\.frontend\.toml/g)||[]).length!==1) fail('indexed-read rollback must contain exactly one deploy');
+          const writeRollback=canonical.split('- name: Roll back V3 write authority on canary failure')[1]
+            ?.split('- name: Preserve user library V3 write activation reports')[0] || '';
+          if (!writeRollback.includes("if: steps.user_library_v3_write_canary.outcome == 'failure'")) fail('V3-write rollback must be failure-only');
+          if ((writeRollback.match(/npx\s+wrangler\s+deploy\b[^\n]*--config\s+wrangler\.frontend\.toml/g)||[]).length!==1) fail('V3-write rollback must contain exactly one deploy');
           for (const required of [
             'Canonical production Worker deployment authority',
             'PDF_R2_BUCKET: organic-synthesis-gallery-private-pdf',
@@ -59,6 +63,10 @@ jobs:
             'PRIVATE_PDF_PROCESSING_ENABLED = "0"',
             'EVIDENCE_INDEX_SHADOW_ENABLED = "1"',
             'Advance and reconcile Evidence Index shadow',
+            'Verify user library V3 write activation preflight',
+            'Verify isolated user library V3 write canary',
+            'Roll back V3 write authority on canary failure',
+            'USER_LIBRARY_V3_WRITE_ENABLED = "1"',
             "readPathActive!==false",
             'Verify canonical Worker bindings survived deployment and secret sync'
           ]) if (!canonical.includes(required)) fail('canonical workflow missing '+required);
