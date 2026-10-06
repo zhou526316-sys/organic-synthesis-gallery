@@ -6,7 +6,7 @@ const restoreLegacyMediaListeners = installGalleryPerformanceRuntime();
 
 async function preloadChineseTitleCache(): Promise<void> {
   try {
-    const response = await fetch(new URL('./title-translations-zh.json', document.baseURI), { cache: 'no-cache' });
+    const response = await fetch(new URL('./title-translations-zh.json', document.baseURI), { cache: 'default' });
     if (!response.ok) return;
     const payload = await response.json() as { translations?: Array<{ title?: unknown; zh?: unknown }> };
     const cached = JSON.parse(localStorage.getItem(ZH_CACHE_KEY) || '{}') as Record<string, unknown>;
@@ -22,12 +22,12 @@ async function preloadChineseTitleCache(): Promise<void> {
   }
 }
 
-void preloadChineseTitleCache().finally(async () => {
-  try {
-    await import('./main');
-  } finally {
-    restoreLegacyMediaListeners();
-  }
+const titleCachePreload = preloadChineseTitleCache();
+const mainReady = import('./main');
+
+void mainReady.finally(() => {
+  restoreLegacyMediaListeners();
+}).then(async () => {
   // Navigation is independent and latency-sensitive: load it before optional
   // user/account/feedback modules so a slow dynamic chunk cannot postpone the
   // basic page escape controls.
@@ -43,4 +43,10 @@ void preloadChineseTitleCache().finally(async () => {
   await import('./media-enhancements');
   await import('./runtime-recovery');
   await import('./nature-figure-fallbacks');
+});
+
+void Promise.allSettled([titleCachePreload, mainReady]).then(results => {
+  if (results[0]?.status === 'fulfilled') {
+    window.dispatchEvent(new CustomEvent('gallery-title-cache-updated'));
+  }
 });
