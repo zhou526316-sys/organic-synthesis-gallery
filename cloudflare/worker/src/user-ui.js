@@ -1,6 +1,7 @@
 import { recordReaderOpen } from './reader-count-ledger.js';
 import { normalizeDoi } from './media.js';
 import { readUserLibraryStateFromRows, shadowWriteUserLibraryState, userLibraryRowShadowEnabled } from './user-library-shadow.js';
+import { shadowWriteUserLibraryV3FromState, userLibraryV3ShadowEnabled } from './user-library-v3-shadow.js';
 import { markMaterializedVisitorPaperOpen, markSiteAnalyticsMaterializedUnhealthy, materializeSitePageViewEvent, materializeSitePageViewForActiveRead, siteAnalyticsMaterializedReadEnabled, siteAnalyticsMaterializedShadowEnabled } from './site-analytics-materialized.js';
 
 const FEEDBACK_KINDS = new Set(['toc', 'image', 'title', 'date', 'duplicate', 'classification', 'other']);
@@ -172,6 +173,22 @@ async function safeShadowLibraryWrite(env, ctx, userId, state, revision, updated
   await task;
 }
 
+async function safeV3ShadowLibraryWrite(env, ctx, userId, state, revision, updatedAt) {
+  if (!userLibraryV3ShadowEnabled(env)) return;
+  const task = shadowWriteUserLibraryV3FromState(env,userId,state,revision,updatedAt)
+    .catch(error => {
+      console.warn('USER_LIBRARY_V3_SHADOW_WRITE_FAILED', {
+        message:String(error?.message || error).slice(0,180),
+        revision:Number(revision || 0),
+      });
+    });
+  if (ctx?.waitUntil) {
+    ctx.waitUntil(task);
+    return;
+  }
+  await task;
+}
+
 async function safeAnalyticsShadowTask(env, ctx, taskFactory, label) {
   if (!siteAnalyticsMaterializedShadowEnabled(env)) return;
   const task = Promise.resolve().then(taskFactory).catch(error => {
@@ -276,6 +293,7 @@ async function accountState(env, payload, ctx) {
          updated_at = excluded.updated_at`
     ).bind(session.user_id, mergedJson, nextRevision, now).run();
     await safeShadowLibraryWrite(env, ctx, session.user_id, merged, nextRevision, now);
+    await safeV3ShadowLibraryWrite(env, ctx, session.user_id, merged, nextRevision, now);
     return { status: 200, body: { account: { userId: session.user_id, revision: nextRevision, updatedAt: now, state: merged } } };
   }
 
@@ -307,6 +325,7 @@ async function accountState(env, payload, ctx) {
        updated_at = excluded.updated_at`
   ).bind(session.user_id, incomingJson, nextRevision, now).run();
   await safeShadowLibraryWrite(env, ctx, session.user_id, incoming, nextRevision, now);
+  await safeV3ShadowLibraryWrite(env, ctx, session.user_id, incoming, nextRevision, now);
   return { status: 200, body: { account: { userId: session.user_id, revision: nextRevision, updatedAt: now, state: incoming } } };
 }
 
