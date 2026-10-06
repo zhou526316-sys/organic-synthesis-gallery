@@ -19,7 +19,8 @@
   "artifacts": {
     "textOnly": "audit/wechat-working/2026-10-06-text-only.md",
     "imagesOnly": "audit/wechat-working/2026-10-06-images-only.md",
-    "preDraftReview": "audit/wechat-working/2026-10-06-pre-draft-review.md"
+    "preDraftReview": "audit/wechat-working/2026-10-06-pre-draft-review.md",
+    "transportReview": "audit/wechat-working/2026-10-06-transport-review.md"
   },
   "textReview": "pass",
   "imageReview": "pass",
@@ -29,5 +30,13 @@
     "Broken local Hyster cover dependency removed; retrospective cover now composes from a verified publisher raster and writes non-progressive JPEG.",
     "Final WeChat transport/layout remains pending until draft/get readback."
   ],
-  "approvedAt": "2026-10-06T05:54:27Z"
+  "approvedAt": "2026-10-06T05:54:27Z",
+  "transportReview": "pass",
+  "transportReviewedAt": "2026-10-06T06:01:05Z",
+  "draftReadback": "ok",
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/46996052560b30137c073a13.html",
+  "mediaId": "KhELYUzvwADwB_l1xH1SWFv31tB1FbKXF89D7ZHLK2znutU4BOGt5XD22WOo65yQ",
+  "nonBlockingNotes": [
+    "Gallery jump-card miniatures fell back to text-only cards; QR and titles/DOIs are intact. Do not re-sync the approved draft solely for this optional presentation fallback."
+  ]
 }
