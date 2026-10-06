@@ -122,6 +122,42 @@ async function authorityRow(env,userId) {
     FROM user_library_v3_authority WHERE user_id=?
   `).bind(userId).first();
 }
+async function legacyAuthorityMeta(env,userId) {
+  return env.DB.prepare(`
+    SELECT revision,updated_at
+    FROM user_library_state WHERE user_id=?
+  `).bind(userId).first();
+}
+
+async function shadowSyncMeta(env,userId) {
+  return env.DB.prepare(`
+    SELECT source_revision,source_updated_at
+    FROM user_library_v3_shadow_sync WHERE user_id=?
+  `).bind(userId).first();
+}
+
+function legacyShadowFresh(legacy,current,shape,sync) {
+  if (!legacy || !current || !shape || !sync) return false;
+  const revision=Number(legacy.revision || 0);
+  const updatedAt=Number(legacy.updated_at || 0);
+  return revision>=1
+    && Number(current.revision || 0)===revision
+    && Number(current.updated_at || 0)===updatedAt
+    && Number(shape.revision || 0)===revision
+    && Number(sync.source_revision || 0)===revision
+    && Number(sync.source_updated_at || 0)===updatedAt;
+}
+
+function shadowFreshnessConflict(legacy,currentRevision) {
+  return {
+    ok:false,
+    conflict:true,
+    reason:'user_library_v3_shadow_not_fresh',
+    currentRevision:Number(legacy?.revision || currentRevision || 0),
+    v3Revision:Number(currentRevision || 0),
+  };
+}
+
 
 export async function userLibraryV3Authority(env,userIdValue) {
   if (!env?.DB) return 'legacy';
@@ -204,8 +240,24 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
   const now = integer(nowValue, 1, 'user_library_v3_updated_at_invalid');
   const current = await headRow(env, userId);
   const currentShape = await shapeRow(env,userId);
+  const currentAuthority = await authorityRow(env,userId);
   const currentRevision = Number(current?.revision || 0);
   if (mutation.expectedRevision !== currentRevision) return conflict(currentRevision);
+
+  let legacyMeta = null;
+  let syncMeta = null;
+  const firstMigration = currentAuthority?.authority !== 'v3';
+  if (firstMigration) {
+    legacyMeta = await legacyAuthorityMeta(env,userId);
+    if (legacyMeta) {
+      syncMeta = await shadowSyncMeta(env,userId);
+      if (!legacyShadowFresh(legacyMeta,current,currentShape,syncMeta)) {
+        return shadowFreshnessConflict(legacyMeta,currentRevision);
+      }
+    } else if (currentRevision !== 0 || current || currentShape) {
+      return shadowFreshnessConflict(null,currentRevision);
+    }
+  }
 
   const existing = await existingRows(env, userId, mutation.operations);
   let paperCount = Number(current?.paper_count || 0);
@@ -229,16 +281,43 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
   const nextFloor = Math.max(floor, Math.max(0,nextRevision-CHANGE_RETENTION_REVISIONS));
   const papersSplit = currentShape ? Number(currentShape.papers_split || 0)===1 : true;
   const metadataSplit = currentShape ? Number(currentShape.metadata_split || 0)===1 : true;
+  const authorityStatement = firstMigration && legacyMeta
+    ? env.DB.prepare(`
+        INSERT INTO user_library_v3_authority (user_id,authority,activated_revision,activated_at)
+        VALUES (
+          ?,
+          CASE WHEN EXISTS (
+            SELECT 1
+            FROM user_library_state legacy
+            INNER JOIN user_library_v3_head head ON head.user_id=legacy.user_id
+            INNER JOIN user_library_v3_shape shape ON shape.user_id=legacy.user_id
+            INNER JOIN user_library_v3_shadow_sync sync ON sync.user_id=legacy.user_id
+            WHERE legacy.user_id=?
+              AND legacy.revision=?
+              AND legacy.updated_at=?
+              AND head.revision=legacy.revision
+              AND head.updated_at=legacy.updated_at
+              AND shape.revision=legacy.revision
+              AND sync.source_revision=legacy.revision
+              AND sync.source_updated_at=legacy.updated_at
+          ) THEN 'v3' ELSE 'stale' END,
+          ?,?
+        )
+        ON CONFLICT(user_id) DO NOTHING
+      `).bind(
+        userId,userId,Number(legacyMeta.revision),Number(legacyMeta.updated_at),nextRevision,now,
+      )
+    : env.DB.prepare(`
+        INSERT INTO user_library_v3_authority (user_id,authority,activated_revision,activated_at)
+        VALUES (?,'v3',?,?)
+        ON CONFLICT(user_id) DO NOTHING
+      `).bind(userId,nextRevision,now);
   const statements = [
     env.DB.prepare(`
       INSERT INTO user_library_v3_commits (user_id,revision,expected_revision,updated_at)
       VALUES (?,?,?,?)
     `).bind(userId,nextRevision,currentRevision,now),
-    env.DB.prepare(`
-      INSERT INTO user_library_v3_authority (user_id,authority,activated_revision,activated_at)
-      VALUES (?,'v3',?,?)
-      ON CONFLICT(user_id) DO NOTHING
-    `).bind(userId,nextRevision,now),
+    authorityStatement,
     env.DB.prepare('DELETE FROM user_library_state WHERE user_id=?').bind(userId),
   ];
 
@@ -360,6 +439,22 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
   } catch (error) {
     const after = await headRow(env, userId);
     if (Number(after?.revision || 0) !== currentRevision) return conflict(after?.revision || 0);
+    if (firstMigration) {
+      const [afterAuthority,afterLegacy,afterShape,afterSync] = await Promise.all([
+        authorityRow(env,userId),
+        legacyAuthorityMeta(env,userId),
+        shapeRow(env,userId),
+        shadowSyncMeta(env,userId),
+      ]);
+      if (afterAuthority?.authority !== 'v3') {
+        if (afterLegacy && !legacyShadowFresh(afterLegacy,after,afterShape,afterSync)) {
+          return shadowFreshnessConflict(afterLegacy,currentRevision);
+        }
+        if (!afterLegacy && currentRevision !== 0) {
+          return shadowFreshnessConflict(null,currentRevision);
+        }
+      }
+    }
     throw error;
   }
 
