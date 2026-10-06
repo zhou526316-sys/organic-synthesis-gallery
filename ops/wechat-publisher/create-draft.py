@@ -905,6 +905,133 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
             canvas.paste(fitted,(px,py))
             canvas = canvas.convert("RGB")
 
+        elif layout == "retrospective_abstract_square":
+            # Abstract editorial cover inspired by the established retrospective
+            # visual language. Only symbolic light/energy/radical motifs are drawn;
+            # all chemical structures remain in the original-paper reaction inset.
+            from PIL import ImageFilter, ImageChops
+
+            canvas = Image.new("RGBA", (width, height), "#09284a")
+            draw = ImageDraw.Draw(canvas)
+
+            # Soft blue/magenta/gold glows create an abstract enzyme-pocket field.
+            glow = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+            gd = ImageDraw.Draw(glow)
+            for cx, cy, rgb in [
+                (int(width*0.20), int(height*0.61), (255, 66, 188)),
+                (int(width*0.55), int(height*0.62), (245, 188, 66)),
+                (int(width*0.78), int(height*0.64), (77, 153, 255)),
+            ]:
+                for rad, alpha in [
+                    (int(width*0.18), 18),
+                    (int(width*0.12), 34),
+                    (int(width*0.075), 58),
+                ]:
+                    gd.ellipse((cx-rad, cy-rad, cx+rad, cy+rad), fill=(*rgb, alpha))
+            glow = glow.filter(ImageFilter.GaussianBlur(max(18, int(width*0.03))))
+            canvas = Image.alpha_composite(canvas, glow)
+            draw = ImageDraw.Draw(canvas)
+
+            gold = "#e8c36f"
+            white = "#f7f9fc"
+            muted = "#cbd9e8"
+
+            kicker = str(cover.get("thumb_kicker") or "往期精选｜Nature")
+            title_text = str(cover.get("thumb_title") or "")
+            meta = str(cover.get("thumb_meta") or "Nature")
+
+            kicker_font = choose_font(max(34, int(width * 0.044)), True)
+            title_font = choose_font(max(50, int(width * 0.064)), True)
+            meta_font = choose_font(max(25, int(width * 0.032)), True)
+            label_font = choose_font(max(25, int(width * 0.031)), True)
+
+            # Header.
+            draw.rounded_rectangle(
+                (int(width*0.055), int(height*0.048), int(width*0.945), int(height*0.13)),
+                radius=max(16, int(width*0.018)), outline=gold, width=3, fill="#09284a"
+            )
+            draw.text((int(width*0.075), int(height*0.066)), kicker, font=kicker_font, fill=gold)
+            mbox = draw.textbbox((0,0), meta, font=meta_font)
+            draw.text((int(width*0.925)-(mbox[2]-mbox[0]), int(height*0.073)), meta, font=meta_font, fill=muted)
+
+            # Main title: no subtitle.
+            y = int(height*0.17)
+            lines = wrap_text(draw, title_text, title_font, int(width*0.88), 3)
+            for idx, line in enumerate(lines):
+                draw.text(
+                    (int(width*0.06), y),
+                    line,
+                    font=title_font,
+                    fill=gold if idx == 0 else white,
+                )
+                y += int(height*0.073)
+
+            # Abstract FRET pathway.
+            center = (int(width*0.58), int(height*0.59))
+            for rad, alpha in [(210,110),(165,135),(120,165)]:
+                r = int(rad * width / 1000)
+                draw.ellipse(
+                    (center[0]-r, center[1]-r, center[0]+r, center[1]+r),
+                    outline=(70,155,255,alpha), width=max(4,int(width*0.006))
+                )
+
+            # Incoming light beam.
+            for i in range(8):
+                y0=int(height*(0.55+i*0.004))
+                draw.line(
+                    (int(width*0.03), y0, int(width*0.22), int(height*(0.59+i*0.003))),
+                    fill=(255,70,190,210-i*18), width=max(3,int(width*0.006))
+                )
+
+            # Donor / acceptor / radical-pair symbols.
+            donor=(int(width*0.25),int(height*0.61))
+            accept=(int(width*0.55),int(height*0.60))
+            r1=(int(width*0.75),int(height*0.58))
+            r2=(int(width*0.84),int(height*0.64))
+            draw.ellipse((donor[0]-55,donor[1]-55,donor[0]+55,donor[1]+55),fill="#f441b8")
+            draw.text((donor[0]-53,donor[1]+63),"Rh6G",font=label_font,fill=white)
+            draw.ellipse((accept[0]-58,accept[1]-58,accept[0]+58,accept[1]+58),fill="#efb83f",outline="#ffe8a5",width=4)
+            draw.text((accept[0]-42,accept[1]-17),"PLP*",font=label_font,fill="#152433")
+
+            # FRET arc.
+            draw.arc(
+                (int(width*0.27),int(height*0.45),int(width*0.62),int(height*0.67)),
+                start=205,end=340,fill=gold,width=max(7,int(width*0.010))
+            )
+            draw.polygon([
+                (int(width*0.575),int(height*0.545)),
+                (int(width*0.615),int(height*0.55)),
+                (int(width*0.59),int(height*0.585)),
+            ], fill=gold)
+            draw.text((int(width*0.37),int(height*0.50)),"FRET",font=label_font,fill=gold)
+
+            draw.ellipse((r1[0]-32,r1[1]-32,r1[0]+32,r1[1]+32),fill="#579cf5")
+            draw.ellipse((r2[0]-30,r2[1]-30,r2[0]+30,r2[1]+30),fill="#fb6666")
+            draw.text((r1[0]-8,r1[1]-17),"•",font=label_font,fill=white)
+            draw.text((r2[0]-8,r2[1]-17),"•",font=label_font,fill=white)
+            draw.line((r1[0]+25,r1[1]+15,r2[0]-25,r2[1]-12),fill=gold,width=max(5,int(width*0.007)))
+
+            # Factual anchor: the original reaction crop, tightly trimmed and
+            # placed in a bottom card. No generated chemistry is drawn.
+            rgb = image.convert("RGB")
+            bg = Image.new("RGB", rgb.size, "white")
+            diff = ImageChops.difference(rgb, bg).convert("L")
+            bbox = diff.point(lambda p: 255 if p > 18 else 0).getbbox()
+            if bbox:
+                rgb = rgb.crop(bbox)
+            fitted = ImageOps.contain(
+                rgb,
+                (int(width*0.82), int(height*0.20)),
+                method=Image.Resampling.LANCZOS,
+            )
+            card=(int(width*0.055),int(height*0.76),int(width*0.945),int(height*0.96))
+            draw.rounded_rectangle(card,radius=max(18,int(width*0.022)),fill="#ffffff")
+            px=(width-fitted.width)//2
+            py=card[1]+(card[3]-card[1]-fitted.height)//2
+            canvas.alpha_composite(fitted.convert("RGBA"),(px,py))
+
+            canvas = canvas.convert("RGB")
+
         elif layout == "retrospective_figure_square":
             # Full editorial square for secondary WeChat cards, echoing the
             # established blue/gold retrospective visual language while keeping
