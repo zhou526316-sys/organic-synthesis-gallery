@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-05T23:05:00.000Z",
-  "requestedBy": "prepublish-primary-20261006-0800",
+  "requestedAt": "2026-10-06T00:07:00.000Z",
+  "requestedBy": "postrelease-fixed-slot-20261006-0800",
   "publicationSlot": "2026-10-06T08:00:00+08:00",
-  "baselineMainSha": "c94e46de302fb5c92ceed7472617c9f9e9bfc9d2",
-  "reason": "Fresh prepublish audit required because the prior paired snapshot was generated at 2026-10-05T01:22:00.391Z, outside the 65-minute freshness window for the 2026-10-06 08:00 Asia/Shanghai slot, and no current-slot machine run is present. Recompute the full DOI union with the canonical registry (Chemical Science and Green Chemistry activeFrom=2026-10-01; Chem remains 2026-09-19), preserve the three-day review window, seven-day machine safety tail, created/deposit rescue and verifiedThrough catch-up. Persist paired latest/compact snapshots and do not mutate production literature or media."
+  "baselineMainSha": "320d868476a37055064d7037061cf8d88aebdf24",
+  "reason": "Post-release DOI-union audit after verified 2026-10-06 08:00 fixed-slot delivery. Recompute against the deployed 826-card production set, preserve the canonical registry and activeFrom rules, three-day review window, seven-day machine safety tail, created/deposit rescue and verifiedThrough catch-up. Persist paired latest/compact snapshots only; do not mutate production literature or media."
 }
