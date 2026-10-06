@@ -333,9 +333,11 @@ async function accountState(env, payload, ctx) {
       if (result?.disabled) return { status:503, body:{ error:result.reason, writeEnabled:false } };
       if (result?.conflict) {
         return { status:409, body:{
-          error:'user_library_v3_revision_conflict',
+          error:String(result.reason || 'user_library_v3_revision_conflict'),
           currentRevision:Number(result.currentRevision || 0),
+          v3Revision:Number(result.v3Revision ?? result.currentRevision ?? 0),
           writeEnabled:true,
+          writeAuthority,
         }};
       }
       return { status:200, body:{ account:{
