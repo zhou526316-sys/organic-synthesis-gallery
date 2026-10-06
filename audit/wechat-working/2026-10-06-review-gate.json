@@ -106,7 +106,8 @@
     "textOnly": "audit/wechat-working/2026-10-06-text-only.md",
     "imagesOnly": "audit/wechat-working/2026-10-06-images-only.md",
     "preDraftReview": "audit/wechat-working/2026-10-06-pre-draft-review.md",
-    "transportReview": "audit/wechat-working/2026-10-06-transport-review.md"
+    "transportReview": "audit/wechat-working/2026-10-06-transport-review.md",
+    "previewStructure": "audit/wechat-working/2026-10-06-preview-structure.json"
   },
   "artifactShas": {
     "textOnly": "8bb8cc1d4919cb4ca2285972d25230f6e734826d",
@@ -116,20 +117,19 @@
   "textReview": "pass",
   "imageReview": "pass",
   "reviewNotes": [
-    "Narrative preserved and optimized rather than rebuilt from scratch.",
-    "Main-text figures are placed at the paragraphs they explain; SI remains optional for gaps not covered by main figures.",
-    "Nature Chemistry starts with Fig. 1e, includes dedicated alternating-polarity and electrode-material evidence, substrate scope, hydroboration and downstream diversification.",
-    "Hyster includes the approved cover, Fig. 1 overview, Fig. 2 evolution plus active-site remodeling, Fig. 3 scope blocks, Fig. 4 external/internal FRET evidence, Fig. 5 lifetime/mechanism/application.",
-    "Low-information panels use narrower centered widths; dense scope and mechanistic panels stay wide.",
-    "All production body figures are pinned WYSIWYG rasters; runtime crop_frac is forbidden.",
+    "Final paragraph-aligned main-figure edition passed text and image review.",
+    "Nature Chemistry begins with Fig. 1e, then places alternating-polarity/electrode/redox/mechanism/scope/application figures next to the paragraphs they explain.",
+    "Hyster includes Fig. 1 overview, Fig. 2 evolution and active-site remodeling, Fig. 3 scope, Fig. 4 external/internal FRET, and Fig. 5 lifetime/mechanism/application.",
+    "Low-information images retain narrower centered widths after WeChat draft/get; dense figures remain wide.",
+    "All required preview-structure checks passed and the old isolated daily Fig. 1c opening is absent.",
     "No TinyFish dependency."
   ],
   "approvedAt": "2026-10-06T09:12:00Z",
-  "transportReview": "pending",
-  "transportReviewedAt": null,
-  "draftReadback": null,
-  "previewUrl": null,
-  "mediaId": null,
+  "transportReview": "pass",
+  "transportReviewedAt": "2026-10-06T08:41:36.547953Z",
+  "draftReadback": "ok",
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/ff8ada89f9637dbb495c618a.html",
+  "mediaId": "KhELYUzvwADwB_l1xH1SWFv31tB1FbKXF89D7ZHLK2znutU4BOGt5XD22WOo65yQ",
   "artifactBlobs": {
     "textOnly": "8bb8cc1d4919cb4ca2285972d25230f6e734826d",
     "imagesOnly": "ecc5546b472220ceeac9e4bda86f725ff975c8c8",
