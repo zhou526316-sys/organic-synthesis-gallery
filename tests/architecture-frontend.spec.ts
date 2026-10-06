@@ -223,7 +223,8 @@ test('architecture-v1 landing is Hot-only while all-time membership stays comple
   expect(data.archiveCount).toBeGreaterThan(0);
   expect(data.memberCount).toBeGreaterThan(data.hotCount);
 
-  await stubOptionalApi(page);
+  const viewCalls: any[] = [];
+  await stubOptionalApi(page, fixtureViewHandler(data, viewCalls));
   await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
 
   await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
@@ -240,6 +241,8 @@ test('architecture-v1 landing is Hot-only while all-time membership stays comple
   expect(registry.count).toBe(data.memberCount);
   expect(registry.dois).toContain(data.archiveDoi);
   expect(data.hotCount).toBeLessThan(data.memberCount);
+  expect(viewCalls).toHaveLength(0);
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogQuery || 'static')).toBe('static');
 });
 
 test('result pagination keeps DOM cardinality bounded across pages', async ({ page }) => {
@@ -271,6 +274,103 @@ test('result pagination keeps DOM cardinality bounded across pages', async ({ pa
 });
 
 
+
+test('D1 cursor canary keeps only the current verified 60-card window in memory', async ({ page }) => {
+  const data = fixture();
+  const calls: any[] = [];
+  await stubOptionalApi(page, fixtureViewHandler(data, calls));
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
+    .toBe('architecture-v1');
+
+  const expected = newestFirst(data.records.filter(row => row.firstOnlineDate.includes('2026')));
+  expect(expected.length).toBeGreaterThan(RESULT_WINDOW_SIZE);
+
+  const registryBefore = await page.locator('#gallery-literature-doi-registry').textContent();
+  await page.locator('#search').fill('2026');
+
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogQuery || ''), { timeout: 30000 })
+    .toBe('d1-cursor');
+  await expect(page.locator('#resultCount')).toHaveText(String(expected.length));
+  await expect.poll(async () => page.locator('#gallery > .card').count()).toBe(RESULT_WINDOW_SIZE);
+  await expect(page.locator('#gallery > .card').first()).toHaveAttribute('data-doi', expected[0].doi);
+  expect(calls.length).toBeGreaterThan(0);
+  expect(calls.at(-1).catalogId).toBe(data.catalogId);
+  expect(calls.at(-1).query).toBe('2026');
+  expect(calls.at(-1).limit).toBe(RESULT_WINDOW_SIZE);
+
+  const next = page.locator('#nextResultPage');
+  await next.scrollIntoViewIfNeeded();
+  await expect(next).toBeEnabled();
+  await next.click();
+  await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )2\//);
+  await expect(page.locator('#gallery > .card').first()).toHaveAttribute('data-doi', expected[RESULT_WINDOW_SIZE].doi);
+  expect(calls.at(-1).cursor).toBe(`fixture:${RESULT_WINDOW_SIZE}`);
+  expect(await page.locator('#gallery-literature-doi-registry').textContent()).toBe(registryBefore);
+  expect(await page.locator('#gallery > .card').count()).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+});
+
+test('D1 cursor canary forwards journal/date/sort filters without expanding the DOM window', async ({ page }) => {
+  const data = fixture();
+  const calls: any[] = [];
+  await stubOptionalApi(page, fixtureViewHandler(data, calls));
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
+    .toBe('architecture-v1');
+
+  await page.locator('#search').fill('2026');
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogQuery || ''), { timeout: 30000 })
+    .toBe('d1-cursor');
+
+  const targetJournal = data.records.some(row => row.paper.journal === 'JACS')
+    ? 'JACS'
+    : data.records.find(row => row.paper.journal)?.paper.journal || '';
+  expect(targetJournal).not.toBe('');
+  await page.locator('.journal-picker summary').click();
+  await page.locator(`[data-journal-option][value="${targetJournal}"]`).check();
+  await expect.poll(() => String(calls.at(-1)?.selectedJournals?.[0] || ''), { timeout: 30000 }).toBe(targetJournal);
+  expect(await page.locator('#gallery > .card').count()).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+  for (const journal of await page.locator('#gallery > .card').evaluateAll(cards => cards.map(card => card.getAttribute('data-journal')))) {
+    expect(journal).toBe(targetJournal);
+  }
+
+  await page.locator('#sort').selectOption('oldest');
+  await expect.poll(() => String(calls.at(-1)?.sort || ''), { timeout: 30000 }).toBe('oldest');
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogQuery || '')).toBe('d1-cursor');
+
+  const targetDate = data.records.find(row => row.paper.journal === targetJournal && /^2026-/.test(row.firstOnlineDate))?.firstOnlineDate;
+  expect(targetDate).toMatch(/^2026-/);
+  await page.locator('#dateFrom').fill(targetDate!);
+  await page.locator('#dateFrom').dispatchEvent('change');
+  await page.locator('#dateTo').fill(targetDate!);
+  await page.locator('#dateTo').dispatchEvent('change');
+  await expect.poll(() => String(calls.at(-1)?.dateFrom || ''), { timeout: 30000 }).toBe(targetDate);
+  await expect.poll(() => String(calls.at(-1)?.dateTo || ''), { timeout: 30000 }).toBe(targetDate);
+  expect(await page.locator('#gallery > .card').count()).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+});
+
+test('short, translated-Chinese and readers queries stay on the static compatibility path', async ({ page }) => {
+  const data = fixture();
+  const calls: any[] = [];
+  await stubOptionalApi(page, fixtureViewHandler(data, calls));
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
+    .toBe('architecture-v1');
+
+  await page.locator('#search').fill('Ni');
+  await page.waitForTimeout(500);
+  expect(calls).toHaveLength(0);
+
+  await page.locator('#search').fill('有机合成');
+  await page.waitForTimeout(500);
+  expect(calls).toHaveLength(0);
+
+  await page.locator('#sort').selectOption('readers');
+  await page.locator('#search').fill('2026');
+  await page.waitForTimeout(500);
+  expect(calls).toHaveLength(0);
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogQuery || 'static')).not.toBe('d1-cursor');
+});
 
 test('verified Hot fallback stays bounded when full membership verification fails', async ({ page }) => {
   const data = fixture();
@@ -316,9 +416,13 @@ test('Archive DOI deep-link is resolved on demand and placed first', async ({ pa
   await expect(page.locator('#resultScopeLabel')).toHaveText(/当前筛选|Current filter/);
 });
 
-test('global search loads an Archive DOI from search shards on demand', async ({ page }) => {
+test('D1 failure falls back to search shards without producing a false empty result', async ({ page }) => {
   const data = fixture();
-  await stubOptionalApi(page);
+  let d1Attempts = 0;
+  await stubOptionalApi(page, async () => {
+    d1Attempts += 1;
+    return { status: 503, body: { error: 'forced_d1_failure', readPathActive: false } };
+  });
   await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
   await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
     .toBe('architecture-v1');
@@ -331,6 +435,8 @@ test('global search loads an Archive DOI from search shards on demand', async ({
     return (await cards.first().getAttribute('data-doi')) || '';
   }, { timeout: 30000 }).toBe(data.archiveDoi);
   await expect(page.locator('#resultScopeLabel')).toHaveText(/当前筛选|Current filter/);
+  expect(d1Attempts).toBeGreaterThan(0);
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogQuery || '')).toBe('static-fallback');
 });
 
 test('historical date filter loads matching Archive month on demand', async ({ page }) => {
