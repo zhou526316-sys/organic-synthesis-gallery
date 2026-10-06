@@ -1,46 +1,36 @@
-# 2026-10-06 WeChat transport/readback review — scope-complete WYSIWYG
+# 2026-10-06 WeChat transport/readback review — complete scope-rich revision
 
 Status: **PASS**
 
-Final WeChat publisher result:
-- stage: `draft_update`
-- paper_count: `29`
-- article_count: `2`
-- draft_readback: `ok`
+- WeChat stage: `draft_update`
+- WeChat `draft_readback`: `ok`
 - media_id: `KhELYUzvwADwB_l1xH1SWFv31tB1FbKXF89D7ZHLK2znutU4BOGt5XD22WOo65yQ`
-- receipt time: `2026-10-06T07:44:44.054726Z`
-- preview: https://relay.gczhouwld.com/wechat-preview/6042550fb27bf3726eea84b7.html
+- daily paper count: 29
+- article bundle count: 2 (daily + Hyster retrospective)
+- receipt generatedAt: `2026-10-06T08:20:53.723144Z`
+- preview: https://relay.gczhouwld.com/wechat-preview/f73202f8902894037b2ab329.html
 
-## Readback decision
+## Final editorial structure verified from the pinned source manifests
 
-The final fixed-IP publisher run completed successfully and immediately read the same draft back through WeChat `draft/get`.
+### Daily Nature Chemistry
+- Opening: two explanation cards first, then the reviewed Fig. 1e failure-mode panel.
+- Full progression: problem → oxidation-potential mismatch → TMAF/speciation → CV/19F-NMR evidence → electrode/waveform → mechanism → radical evidence → substrate scope → upstream hydroboration + downstream diversification → limitations.
+- Production body figures: 8.
+- Dedicated scope image present: `fig4_scope`.
+- Route/application images present: `fig4_hydroboration`, `fig4_tandem`.
 
-The source fingerprints used for this write still match the passed gate:
-- daily Nature Chemistry manifest: `cb172b559f3b63f6ee64d6f26a74cbd31eeffe5f`
-- Hyster retrospective manifest: `7979c88174aac3318e5f77d8bbaf3f44a2d5044c`
+### Hyster Nature retrospective
+- User-confirmed blue FRET/PLP* cover retained.
+- Complete horizontal Fig. 1c retained as the body overview.
+- Full progression: novelty → photophysical bottleneck → directed evolution → substrate scope → FRET concept/evidence → intra-enzyme FRET → radical-pair stereocontrol → excited-state lifetime → peer-review boundaries → limitations → Lenacapavir application.
+- Production body figures: 9.
+- Dedicated substrate-scope images present: `fig3_scope_pyrimidine`, `fig3_scope_pyridine`.
+- Long text-only stretches are interrupted by scope, FRET, mechanism, lifetime, review callout and application visuals.
 
-The gate also pins every production raster by Git blob SHA. No body figure is produced by runtime fractional cropping.
+## Crop integrity
 
-## Final content state
+All production body images are repository-pinned rasters reviewed after materialization. Runtime `crop_frac` is forbidden by the publisher gate. The final sync therefore uploads the exact reviewed raster rather than recomputing a crop.
 
-### Nature Chemistry
-- no isolated Fig. 1c opening image;
-- Fig. 1e appears after the text that explains the failure modes / alternating-polarity role;
-- redox speciation, electrochemical evidence, electrode behaviour and mechanism each have their own reviewed figure;
-- Fig. 4a substrate/feedstock scope is now a dedicated section;
-- Fig. 4b synthetic diversification / downstream coupling is now a dedicated section;
-- limitations remain after the scope/application discussion.
+No TinyFish dependency was used.
 
-### Nature / Hyster
-- exact user-confirmed blue FRET/PLP* cover retained;
-- complete Fig. 1c overview retained;
-- directed evolution is shown before deeper mechanism;
-- Fig. 3 scope is split into readable pyrimidine and pyridine blocks;
-- external FRET, intra-enzyme FRET, radical mechanism, lifetime evidence and Lenacapavir application are each represented by separate reviewed visuals;
-- peer-review caveats and current limitations remain explicit.
-
-## Final decision
-
-**PASS — the current WeChat draft is the reviewed scope-complete, WYSIWYG version.**
-
-No TinyFish dependency was used for the final approval path.
+Final decision: **PASS — current WeChat draft is the optimized version for user inspection.**
