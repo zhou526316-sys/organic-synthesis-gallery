@@ -393,12 +393,15 @@ jobs:
 
           try{
             if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for indexed-read activation canary');
-            const delivery=await jsonFetch(new URL('release-delivery.json?indexed-canary='+Date.now(),site));
-            if(!delivery?.ok) throw new Error('release delivery unavailable: '+JSON.stringify(delivery));
-            const catalogId=String(delivery.body?.architectureCatalogId||'');
-            const productionCards=Number(delivery.body?.productionCards||0);
-            if(!/^[a-f0-9]{64}$/.test(catalogId)||!Number.isSafeInteger(productionCards)||productionCards<1){
-              throw new Error('release delivery architecture identity invalid: '+JSON.stringify(delivery.body));
+            const release=await jsonFetch(new URL('architecture-v1/release.json?indexed-canary='+Date.now(),site));
+            if(!release?.ok) throw new Error('architecture release unavailable: '+JSON.stringify(release));
+            const catalogId=String(release.body?.catalogId||'');
+            const productionCards=Number(release.body?.recordCount||0);
+            if(release.body?.schema!=='gallery-architecture-public-v1'
+              ||release.body?.productionActivation!==false
+              ||!/^[a-f0-9]{64}$/.test(catalogId)
+              ||!Number.isSafeInteger(productionCards)||productionCards<1){
+              throw new Error('architecture release identity invalid: '+JSON.stringify(release.body));
             }
 
             const status=await jsonFetch(worker+'/api/admin/literature-catalog-index/status',{
