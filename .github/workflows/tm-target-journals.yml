@@ -30,7 +30,7 @@ jobs:
       - uses: actions/setup-node@v5
         with: {node-version: 22}
 
-      - name: Prove discovery and publication rules are outside this change
+      - name: Prove literature discovery and publication rules are outside this change
         run: |
           BASE="$(git merge-base HEAD origin/main)"
           git diff --exit-code "$BASE" HEAD -- \
@@ -38,13 +38,15 @@ jobs:
             docs/literature-scope-contract.md docs/literature-update-protocol.md \
             public/papers.gz.b64 public/rolling-supplement.json \
             .github/workflows/literature-audit.yml .github/workflows/prepublish-review-gate.yml \
-            .github/workflows/new-body-continuous.yml audit/media-auto-policy.json \
-            cloudflare/worker/src/media.js cloudflare/worker/src/local-captures.js
+            .github/workflows/new-body-continuous.yml audit/media-auto-policy.json
 
       - name: Verify source syntax and existing queue/controller protections
         run: |
           set -euo pipefail
           node --check public/toc-mainline.user.js
+          node --check cloudflare/worker/src/media.js
+          node --check cloudflare/worker/src/local-captures.js
+          grep -F 'rsc_pdf_page_preview_not_toc' cloudflare/worker/src/local-captures.js
           node tests/tm-queue-coverage.test.mjs
           node tests/tm-missing-only.test.mjs
           node tests/tm-immediate-restart.test.mjs
