@@ -184,15 +184,15 @@ jobs:
         run: |
           set -euo pipefail
           npx wrangler d1 execute "$D1_NAME" --remote --file=../user-library-state-v3.sql >/tmp/user-library-v3-migration.txt
-          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('user_library_v3_head','user_library_v3_rows','user_library_v3_commits','user_library_v3_changes') ORDER BY name;" --json >/tmp/user-library-v3-schema-check.json
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('user_library_v3_head','user_library_v3_rows','user_library_v3_commits','user_library_v3_changes','user_library_v3_shape','user_library_v3_shadow_sync','user_library_v3_backfill') ORDER BY name;" --json >/tmp/user-library-v3-schema-check.json
           node - <<'NODE'
           const fs=require('fs');
           const data=JSON.parse(fs.readFileSync('/tmp/user-library-v3-schema-check.json','utf8'));
           const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
           const names=rows.map(x=>x.name).sort();
-          const expected=['user_library_v3_changes','user_library_v3_commits','user_library_v3_head','user_library_v3_rows'];
+          const expected=['user_library_v3_backfill','user_library_v3_changes','user_library_v3_commits','user_library_v3_head','user_library_v3_rows','user_library_v3_shadow_sync','user_library_v3_shape'];
           if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('user library v3 migration incomplete: '+JSON.stringify(names));
-          console.log(JSON.stringify({userLibraryV3SchemaReady:true,tables:names,activation:'disabled'}));
+          console.log(JSON.stringify({userLibraryV3SchemaReady:true,tables:names,shadow:'enabled-after-deploy',read:'disabled',write:'disabled'}));
           NODE
 
       - name: Apply Evidence Index D1 migration
@@ -277,7 +277,7 @@ jobs:
           SCHEDULED_HANDOFF_INDEX_READ_ENABLED = "1"
           USER_LIBRARY_ROW_SHADOW_ENABLED = "1"
           USER_LIBRARY_ROW_READ_ENABLED = "1"
-          USER_LIBRARY_V3_SHADOW_ENABLED = "0"
+          USER_LIBRARY_V3_SHADOW_ENABLED = "1"
           USER_LIBRARY_V3_READ_ENABLED = "0"
           USER_LIBRARY_V3_WRITE_ENABLED = "0"
           SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED = "1"
