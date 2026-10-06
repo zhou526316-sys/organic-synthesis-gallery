@@ -86,10 +86,10 @@ jobs:
               if receipt["mode"] == "retrospective"
               else Path("audit/wechat-publisher/latest.json")
           )
-          target.write_text(
-              json.dumps(receipt, ensure_ascii=False, indent=2) + "\n",
-              encoding="utf-8",
-          )
+          payload = json.dumps(receipt, ensure_ascii=False, indent=2) + "\n"
+          target.write_text(payload, encoding="utf-8")
+          Path("/tmp/wechat-publisher-receipt.json").write_text(payload, encoding="utf-8")
+          Path("/tmp/wechat-publisher-receipt-target.txt").write_text(str(target), encoding="utf-8")
           PY
 
       - name: Commit publisher receipt
@@ -98,25 +98,31 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for receipt in audit/wechat-publisher/latest.json audit/wechat-publisher/retrospective-latest.json; do
-            if [ -f "$receipt" ]; then git add "$receipt"; fi
-          done
-          if git diff --cached --quiet; then
-            exit 0
-          fi
-          git commit -m "audit: record WeChat draft preview"
-          # main may advance while the publisher is running (literature/Tampermonkey
-          # jobs write audit state in parallel). Rebase-and-push with a bounded
-          # retry so a successful WeChat draft is not reported as failed merely
-          # because the audit receipt lost a ref race.
+
+          TARGET="$(cat /tmp/wechat-publisher-receipt-target.txt)"
+
+          apply_receipt() {
+            mkdir -p "$(dirname "$TARGET")"
+            cp /tmp/wechat-publisher-receipt.json "$TARGET"
+            git add "$TARGET"
+          }
+
+          # The receipt is derived data. Re-apply it on top of the newest main
+          # rather than rebasing two competing versions of the same JSON file.
           for attempt in 1 2 3 4 5; do
             git fetch origin main
-            git rebase origin/main
+            git reset --hard origin/main
+            apply_receipt
+            if git diff --cached --quiet; then
+              exit 0
+            fi
+            git commit -m "audit: record WeChat draft preview"
             if git push origin HEAD:main; then
               exit 0
             fi
             echo "receipt push raced with another main update; retrying ($attempt/5)" >&2
             sleep 2
           done
+
           echo "failed to persist WeChat receipt after 5 ref-race retries" >&2
           exit 1
