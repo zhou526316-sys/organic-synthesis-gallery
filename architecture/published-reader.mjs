@@ -229,6 +229,13 @@ export class PublishedCatalogClient {
 
   requireOpen() { assert(this.reader && this.asOfDate, 'published_catalog_not_open'); return this.reader; }
 
+  revisionForDoi(value) {
+    const doi = normalizeDoi(value);
+    if (!doi || !this.membership?.members) return null;
+    const revision = this.membership.members[doi];
+    return isHash(revision) ? revision : null;
+  }
+
   async landing(sharedDoi, signal) {
     const reader = this.requireOpen();
     const records = await reader.hot(this.asOfDate, signal);
