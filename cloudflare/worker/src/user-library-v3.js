@@ -1,8 +1,10 @@
 import { normalizeDoi } from './media.js';
 
 const MAX_MUTATION_OPS = 32;
-const MAX_MUTATION_BYTES = 512 * 1024;
-const MAX_GLOBAL_BYTES = 256 * 1024;
+const MAX_MUTATION_BYTES = 2 * 1024 * 1024;
+const MAX_GLOBAL_BYTES = 1_500_000;
+const CHANGE_RETENTION_REVISIONS = 512;
+const COMPAT_ROW_SHADOW_VERSION = 2;
 const MAX_ROW_BYTES = 256 * 1024;
 const MAX_PAGE_LIMIT = 100;
 const MAX_DELTA_LIMIT = 100;
@@ -209,6 +211,7 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
   const globalJson = mutation.hasGlobal ? mutation.globalJson : currentGlobalJson;
   const globalRevision = mutation.hasGlobal ? nextRevision : Number(current?.global_revision || 0);
   const floor = Number(current?.change_floor_revision || 0);
+  const nextFloor = Math.max(floor, Math.max(0,nextRevision-CHANGE_RETENTION_REVISIONS));
   const papersSplit = currentShape ? Number(currentShape.papers_split || 0)===1 : true;
   const metadataSplit = currentShape ? Number(currentShape.metadata_split || 0)===1 : true;
   const statements = [
@@ -247,6 +250,59 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
     ));
   });
 
+  mutation.operations.forEach(op => {
+    if (op.deleted) {
+      statements.push(env.DB.prepare(
+        'DELETE FROM user_paper_state WHERE user_id=? AND paper_key=?'
+      ).bind(userId,op.paperKey));
+      return;
+    }
+    statements.push(env.DB.prepare(`
+      INSERT INTO user_paper_state
+        (user_id,paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,revision,updated_at)
+      VALUES (?,?,?,?,?,?,?,?,?)
+      ON CONFLICT(user_id,paper_key) DO UPDATE SET
+        doi=excluded.doi,
+        paper_present=excluded.paper_present,
+        paper_state_json=excluded.paper_state_json,
+        metadata_present=excluded.metadata_present,
+        metadata_json=excluded.metadata_json,
+        revision=excluded.revision,
+        updated_at=excluded.updated_at
+    `).bind(
+      userId,op.paperKey,op.doi,op.paperPresent?1:0,op.paperStateJson,
+      op.metadataPresent?1:0,op.metadataJson,nextRevision,now,
+    ));
+  });
+
+  statements.push(env.DB.prepare(`
+    INSERT INTO user_library_head
+      (user_id,revision,updated_at,global_json,papers_split,metadata_split,paper_count,metadata_count,source_state_hash,shadow_version)
+    VALUES (?,?,?,?,?,?,?,?,?,?)
+    ON CONFLICT(user_id) DO UPDATE SET
+      revision=excluded.revision,
+      updated_at=excluded.updated_at,
+      global_json=excluded.global_json,
+      papers_split=excluded.papers_split,
+      metadata_split=excluded.metadata_split,
+      paper_count=excluded.paper_count,
+      metadata_count=excluded.metadata_count,
+      source_state_hash=excluded.source_state_hash,
+      shadow_version=excluded.shadow_version
+    WHERE user_library_head.revision < excluded.revision
+  `).bind(
+    userId,nextRevision,now,globalJson,papersSplit?1:0,metadataSplit?1:0,paperCount,metadataCount,
+    `v3-authority:${nextRevision}`,COMPAT_ROW_SHADOW_VERSION,
+  ));
+
+  if (nextFloor > floor) {
+    statements.push(
+      env.DB.prepare('DELETE FROM user_library_v3_changes WHERE user_id=? AND revision<?').bind(userId,nextFloor),
+      env.DB.prepare('DELETE FROM user_library_v3_commits WHERE user_id=? AND revision<?').bind(userId,nextFloor),
+      env.DB.prepare('DELETE FROM user_library_v3_rows WHERE user_id=? AND deleted=1 AND revision<?').bind(userId,nextFloor),
+    );
+  }
+
   statements.push(env.DB.prepare(`
     INSERT INTO user_library_v3_shape (user_id,papers_split,metadata_split,revision)
     VALUES (?,?,?,?)
@@ -264,14 +320,14 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
         change_floor_revision=?,schema_version=1
       WHERE user_id=? AND revision=?
     `).bind(
-      nextRevision,now,globalJson,globalRevision,paperCount,metadataCount,floor,userId,currentRevision,
+      nextRevision,now,globalJson,globalRevision,paperCount,metadataCount,nextFloor,userId,currentRevision,
     ));
   } else {
     statements.push(env.DB.prepare(`
       INSERT INTO user_library_v3_head
         (user_id,revision,updated_at,global_json,global_revision,paper_count,metadata_count,change_floor_revision,schema_version)
       VALUES (?,?,?,?,?,?,?,?,1)
-    `).bind(userId,nextRevision,now,globalJson,globalRevision,paperCount,metadataCount,floor));
+    `).bind(userId,nextRevision,now,globalJson,globalRevision,paperCount,metadataCount,nextFloor));
   }
 
   try {
@@ -298,6 +354,8 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
     metadataCount,
     globalRevision,
     operationCount:mutation.operations.length,
+    changeFloorRevision:nextFloor,
+    compatibilityReadPath:'rows-v2',
   };
 }
 
@@ -420,4 +478,5 @@ export const USER_LIBRARY_V3_LIMITS = Object.freeze({
   maxRowBytes:MAX_ROW_BYTES,
   maxPageLimit:MAX_PAGE_LIMIT,
   maxDeltaLimit:MAX_DELTA_LIMIT,
+  changeRetentionRevisions:CHANGE_RETENTION_REVISIONS,
 });
