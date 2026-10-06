@@ -1,25 +1,46 @@
-# 2026-10-06 WeChat transport/readback review — completeness + WYSIWYG final
+# 2026-10-06 WeChat transport/readback review — scope-complete WYSIWYG
 
 Status: **PASS**
 
+Final WeChat publisher result:
 - stage: `draft_update`
-- draft_readback: `ok`
 - paper_count: `29`
+- article_count: `2`
+- draft_readback: `ok`
 - media_id: `KhELYUzvwADwB_l1xH1SWFv31tB1FbKXF89D7ZHLK2znutU4BOGt5XD22WOo65yQ`
-- generatedAt: `2026-10-06T07:44:44.054726Z`
-- preview_url: https://relay.gczhouwld.com/wechat-preview/6042550fb27bf3726eea84b7.html
+- receipt time: `2026-10-06T07:44:44.054726Z`
+- preview: https://relay.gczhouwld.com/wechat-preview/6042550fb27bf3726eea84b7.html
 
-## What changed in this final pass
+## Readback decision
 
-1. Nature Chemistry no longer opens with the isolated/awkward Fig. 1c crop. The article first explains the failure modes, then inserts the complete reviewed Fig. 1e problem panel.
-2. Nature Chemistry now includes a dedicated substrate-scope image and discussion, followed by a separate downstream-diversification image.
-3. Hyster retains the approved blue cover and complete Fig. 1c overview.
-4. Hyster now follows a fuller research arc: protein engineering → substrate scope → FRET evidence → intra-enzyme FRET → radical-pair mechanism → excited-state evidence → limitations → Lenacapavir.
-5. The Hyster scope figure is split into two readable reviewed rasters (pyrimidine / pyridine), and the long text-only middle is broken by evidence images.
-6. Every production crop is a pinned, fingerprinted repository raster; no body figure is dynamically re-cropped during the WeChat write.
+The final fixed-IP publisher run completed successfully and immediately read the same draft back through WeChat `draft/get`.
 
-## Transport decision
+The source fingerprints used for this write still match the passed gate:
+- daily Nature Chemistry manifest: `cb172b559f3b63f6ee64d6f26a74cbd31eeffe5f`
+- Hyster retrospective manifest: `7979c88174aac3318e5f77d8bbaf3f44a2d5044c`
 
-The fixed-IP publisher completed successfully and WeChat `draft/get` returned `draft_readback=ok`. The two-article draft bundle and 29-paper daily count are preserved.
+The gate also pins every production raster by Git blob SHA. No body figure is produced by runtime fractional cropping.
 
-Final decision: **PASS — inspect the latest draft directly in the WeChat Official Account backend.**
+## Final content state
+
+### Nature Chemistry
+- no isolated Fig. 1c opening image;
+- Fig. 1e appears after the text that explains the failure modes / alternating-polarity role;
+- redox speciation, electrochemical evidence, electrode behaviour and mechanism each have their own reviewed figure;
+- Fig. 4a substrate/feedstock scope is now a dedicated section;
+- Fig. 4b synthetic diversification / downstream coupling is now a dedicated section;
+- limitations remain after the scope/application discussion.
+
+### Nature / Hyster
+- exact user-confirmed blue FRET/PLP* cover retained;
+- complete Fig. 1c overview retained;
+- directed evolution is shown before deeper mechanism;
+- Fig. 3 scope is split into readable pyrimidine and pyridine blocks;
+- external FRET, intra-enzyme FRET, radical mechanism, lifetime evidence and Lenacapavir application are each represented by separate reviewed visuals;
+- peer-review caveats and current limitations remain explicit.
+
+## Final decision
+
+**PASS — the current WeChat draft is the reviewed scope-complete, WYSIWYG version.**
+
+No TinyFish dependency was used for the final approval path.
