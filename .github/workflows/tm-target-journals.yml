@@ -5,6 +5,8 @@ on:
     branches: [fix/tm-chem-rsc-ccs-20261004, main]
     paths:
       - 'public/toc-mainline.user.js'
+      - 'cloudflare/worker/src/media.js'
+      - 'scripts/test-rsc-media-revalidation.mjs'
       - 'scripts/tm-rsc-elsevier-ccs.inc.js'
       - 'scripts/tm-private-pdf-capture.inc.js'
       - 'scripts/apply-private-pdf-capture.py'
@@ -39,7 +41,7 @@ jobs:
             public/papers.gz.b64 public/rolling-supplement.json \
             .github/workflows/literature-audit.yml .github/workflows/prepublish-review-gate.yml \
             .github/workflows/new-body-continuous.yml audit/media-auto-policy.json \
-            cloudflare/worker/src/media.js cloudflare/worker/src/local-captures.js
+            cloudflare/worker/src/local-captures.js
 
       - name: Verify source syntax and existing queue/controller protections
         run: |
@@ -50,6 +52,7 @@ jobs:
           node tests/tm-immediate-restart.test.mjs
           node tests/tm-controller-recovery.test.mjs
           node tests/tm-newest-retry.test.mjs
+          node scripts/test-rsc-media-revalidation.mjs
           node scripts/test-tm223-upload.mjs
           node scripts/test-tm220-release.mjs
           node scripts/test-tm222-auto-report.mjs
@@ -73,7 +76,7 @@ jobs:
           node cloudflare/scripts/build-cloudflare-bridge.mjs
           node cloudflare/scripts/build-bridge-loader.mjs
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F "PUBLISHER_MEDIA_REVISION = '20261006-rsc-preview-reject-v12'" public/gallery-vpn-bridge.user.js
+          grep -F "PUBLISHER_MEDIA_REVISION = '20261006-rsc-remote-html-pdf-v13'" public/gallery-vpn-bridge.user.js
           grep -F "PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'" public/gallery-vpn-bridge.user.js
           grep -F "PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'" public/gallery-vpn-bridge.user.js
           grep -F "ccs_toc_index_key_image" public/gallery-vpn-bridge.user.js
