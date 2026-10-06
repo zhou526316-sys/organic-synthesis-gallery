@@ -8,6 +8,8 @@ const TOKEN_WATCH_MS = 800;
 const SAVE_DEBOUNCE_MS = 700;
 const V3_PAGE_LIMIT = 100;
 const V3_MAX_PAGES_PER_SYNC = 2000;
+const V3_MUTATION_OP_LIMIT = 32;
+const V3_MUTATION_TARGET_BYTES = 1_500_000;
 
 type SyncMode =
   | 'account-merge'
@@ -15,7 +17,8 @@ type SyncMode =
   | 'account-pull'
   | 'account-v3-head'
   | 'account-v3-page'
-  | 'account-v3-delta';
+  | 'account-v3-delta'
+  | 'account-v3-mutate';
 
 interface V3Head {
   ready: true;
@@ -69,11 +72,16 @@ interface AccountPayload {
   targetRevision?: number;
   resetRequired?: boolean;
   reason?: string;
+  writeEnabled?: boolean;
+  operationCount?: number;
 }
+
 
 interface SyncResponse {
   account?: AccountPayload;
   error?: string;
+  currentRevision?: number;
+  writeEnabled?: boolean;
 }
 
 interface RemoteAccount {
@@ -82,7 +90,9 @@ interface RemoteAccount {
   updatedAt: number;
   state: UserUiState;
   readPath: 'v3' | 'legacy';
+  writeEnabled: boolean;
 }
+
 
 type V3Outcome =
   | { kind: 'ok'; account: RemoteAccount }
@@ -97,6 +107,10 @@ let applyingRemote = false;
 let saveTimer: number | undefined;
 let saving = false;
 let queuedSave = false;
+let syncedState: UserUiState | null = null;
+let v3WriteActive = false;
+let dirtyGlobal = false;
+const dirtyPaperKeys = new Set<string>();
 
 function sessionToken(): string {
   try { return localStorage.getItem(SESSION_KEY) || ''; } catch { return ''; }
@@ -130,6 +144,95 @@ function clearRememberedAccount(): void {
 
 function setReadDiagnostic(mode: 'v3' | 'legacy' | 'none'): void {
   document.documentElement.dataset.accountSyncRead = mode;
+}
+
+function setWriteDiagnostic(mode: 'v3' | 'legacy' | 'none'): void {
+  document.documentElement.dataset.accountSyncWrite = mode;
+}
+
+function globalStateOf(state: UserUiState): Omit<UserUiState, 'papers' | 'metadata'> {
+  return {
+    statuses: state.statuses,
+    quickTerms: state.quickTerms,
+    collections: state.collections,
+    aliases: state.aliases,
+    actionStyles: state.actionStyles,
+    followedSearches: state.followedSearches,
+    searchHistory: state.searchHistory,
+    hideRead: state.hideRead,
+  };
+}
+
+function sameJson(a: unknown, b: unknown): boolean {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+function rowSnapshotFor(state: UserUiState, key: string): {
+  paperPresent: boolean;
+  paperState?: UserUiState['papers'][string];
+  metadataPresent: boolean;
+  metadata?: UserUiState['metadata'][string];
+} {
+  const paperPresent = Object.prototype.hasOwnProperty.call(state.papers || {}, key);
+  const metadataPresent = Object.prototype.hasOwnProperty.call(state.metadata || {}, key);
+  return {
+    paperPresent,
+    paperState: paperPresent ? state.papers[key] : undefined,
+    metadataPresent,
+    metadata: metadataPresent ? state.metadata[key] : undefined,
+  };
+}
+
+function mutationOperation(base: UserUiState, target: UserUiState, key: string): Record<string, unknown> | null {
+  const before = rowSnapshotFor(base,key);
+  const after = rowSnapshotFor(target,key);
+  if (before.paperPresent === after.paperPresent
+    && before.metadataPresent === after.metadataPresent
+    && sameJson(before.paperState,after.paperState)
+    && sameJson(before.metadata,after.metadata)) return null;
+  if (!after.paperPresent && !after.metadataPresent) return { paperKey:key, delete:true };
+  const operation: Record<string, unknown> = { paperKey:key };
+  if (after.paperPresent) operation.paperState = after.paperState;
+  if (after.metadataPresent) operation.metadata = after.metadata;
+  return operation;
+}
+
+function mutationBatches(operations: Record<string, unknown>[]): Record<string, unknown>[][] {
+  const batches: Record<string, unknown>[][] = [];
+  let batch: Record<string, unknown>[] = [];
+  for (const operation of operations) {
+    const candidate = [...batch,operation];
+    const bytes = new TextEncoder().encode(JSON.stringify({ operations:candidate })).byteLength;
+    if (batch.length && (candidate.length > V3_MUTATION_OP_LIMIT || bytes > V3_MUTATION_TARGET_BYTES)) {
+      batches.push(batch);
+      batch = [operation];
+    } else {
+      batch = candidate;
+    }
+  }
+  if (batch.length) batches.push(batch);
+  return batches;
+}
+
+function clearSyncedDirty(snapshot: UserUiState, keys: string[], globalWasDirty: boolean): void {
+  for (const key of keys) {
+    const current = rowSnapshotFor(store.state,key);
+    const saved = rowSnapshotFor(snapshot,key);
+    if (current.paperPresent === saved.paperPresent
+      && current.metadataPresent === saved.metadataPresent
+      && sameJson(current.paperState,saved.paperState)
+      && sameJson(current.metadata,saved.metadata)) dirtyPaperKeys.delete(key);
+  }
+  if (globalWasDirty && sameJson(globalStateOf(store.state),globalStateOf(snapshot))) dirtyGlobal = false;
+}
+
+function markInitialDifferences(base: UserUiState, target: UserUiState): void {
+  const keys = new Set([
+    ...Object.keys(base.papers || {}), ...Object.keys(base.metadata || {}),
+    ...Object.keys(target.papers || {}), ...Object.keys(target.metadata || {}),
+  ]);
+  for (const key of keys) if (mutationOperation(base,target,key)) dirtyPaperKeys.add(key);
+  if (!sameJson(globalStateOf(base),globalStateOf(target))) dirtyGlobal = true;
 }
 
 function plainObject(value: unknown): value is Record<string, unknown> {
@@ -301,6 +404,10 @@ function applyV3Row(state: UserUiState, row: V3Row): boolean {
 
 function cloneState(value: UserUiState): UserUiState {
   return structuredClone(value);
+}
+
+function localDirty(): boolean {
+  return dirtyGlobal || dirtyPaperKeys.size > 0;
 }
 
 function validUserId(value: unknown): string {
