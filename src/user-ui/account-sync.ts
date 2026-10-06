@@ -100,6 +100,12 @@ type V3Outcome =
   | { kind: 'unauthorized' }
   | { kind: 'fallback' };
 
+type V3SaveOutcome =
+  | { kind:'ok' }
+  | { kind:'conflict'; currentRevision:number }
+  | { kind:'unauthorized' }
+  | { kind:'failure' };
+
 let activeToken = '';
 let activeUserId = '';
 let revision = 0;
@@ -238,6 +244,29 @@ function markInitialDifferences(base: UserUiState, target: UserUiState): void {
   ]);
   for (const key of keys) if (mutationOperation(base,target,key)) dirtyPaperKeys.add(key);
   if (!sameJson(globalStateOf(base),globalStateOf(target))) dirtyGlobal = true;
+}
+
+function committedSubset(base: UserUiState, target: UserUiState, keys: string[], globalChanged: boolean): UserUiState {
+  const next = cloneState(base);
+  if (globalChanged) {
+    const global = globalStateOf(target);
+    next.statuses = structuredClone(global.statuses);
+    next.quickTerms = structuredClone(global.quickTerms);
+    next.collections = structuredClone(global.collections);
+    next.aliases = structuredClone(global.aliases);
+    next.actionStyles = structuredClone(global.actionStyles);
+    next.followedSearches = structuredClone(global.followedSearches);
+    next.searchHistory = structuredClone(global.searchHistory);
+    next.hideRead = global.hideRead;
+  }
+  for (const key of keys) {
+    const row = rowSnapshotFor(target,key);
+    if (row.paperPresent) next.papers[key] = structuredClone(row.paperState!);
+    else delete next.papers[key];
+    if (row.metadataPresent) next.metadata[key] = structuredClone(row.metadata!);
+    else delete next.metadata[key];
+  }
+  return next;
 }
 
 function plainObject(value: unknown): value is Record<string, unknown> {
@@ -464,6 +493,60 @@ function legacyAccount(result: { ok: boolean; status: number; body: SyncResponse
 async function legacyPull(): Promise<{ result: RemoteAccount | null; status: number }> {
   const response = await request('account-pull');
   return { result: legacyAccount(response), status: response.status };
+}
+
+async function saveViaV3(
+  base: UserUiState,
+  desired: UserUiState,
+  keys: string[],
+  globalWasDirty: boolean,
+): Promise<V3SaveOutcome> {
+  const operations = keys.map(key=>mutationOperation(base,desired,key))
+    .filter((item): item is Record<string,unknown> => Boolean(item));
+  const globalChanged = globalWasDirty && !sameJson(globalStateOf(base),globalStateOf(desired));
+  const batches = mutationBatches(operations);
+  let expectedRevision = revision;
+  const expectedUserId = activeUserId;
+
+  const send = async (options: Record<string,unknown>): Promise<V3SaveOutcome> => {
+    const response = await request('account-v3-mutate',{expectedRevision,...options});
+    if(response.status===401)return {kind:'unauthorized'};
+    if(response.status===409&&response.body.error==='user_library_v3_revision_conflict'){
+      return {kind:'conflict',currentRevision:safeInteger(response.body.currentRevision)||expectedRevision};
+    }
+    const account=response.body.account;
+    const nextRevision=safeInteger(account?.revision);
+    const userId=validUserId(account?.userId);
+    if(!response.ok||!account||account.readPath!=='v3-mutate'||account.writeEnabled!==true
+      ||nextRevision===null||nextRevision<=expectedRevision||!userId
+      ||(expectedUserId&&userId!==expectedUserId))return {kind:'failure'};
+    expectedRevision=nextRevision;
+    rememberAccount(userId,nextRevision);
+    return {kind:'ok'};
+  };
+
+  if(globalChanged){
+    const outcome=await send({globalState:globalStateOf(desired),operations:[]});
+    if(outcome.kind!=='ok')return outcome;
+  }
+  for(const batch of batches){
+    const outcome=await send({operations:batch});
+    if(outcome.kind!=='ok')return outcome;
+  }
+
+  syncedState=committedSubset(base,desired,keys,globalChanged);
+  v3WriteActive=true;
+  setWriteDiagnostic('v3');
+  clearSyncedDirty(desired,keys,globalWasDirty);
+  return {kind:'ok'};
+}
+
+async function recoveryPull(): Promise<{account:RemoteAccount|null;status:number}> {
+  const v3=await v3FullPull();
+  if(v3.kind==='ok')return {account:v3.account,status:200};
+  if(v3.kind==='unauthorized')return {account:null,status:401};
+  const legacy=await legacyPull();
+  return {account:legacy.result,status:legacy.status};
 }
 
 async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState): Promise<V3Outcome> {
