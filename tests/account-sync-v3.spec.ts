@@ -211,6 +211,95 @@ test('account sync assembles V3 head/pages/delta before saving and never calls l
   expect(remembered).toEqual({ revision: '6', user: 'u-v3' });
 });
 
+test('new account under WRITE=1 migrates directly through V3 without creating a legacy document', async ({ page }) => {
+  test.setTimeout(60_000);
+  const key='10.1234/new-user';
+  const local={
+    ...globalState(false),
+    papers:{
+      [key]:{favorite:true,collections:[],note:'new-user',quickTerms:[],tags:[],updatedAt:10},
+    },
+    metadata:{
+      [key]:{id:key,doi:key,title:'New User',journal:'JACS'},
+    },
+  };
+  await seedSession(page,local);
+  await stubCommonApi(page);
+
+  const modes:string[]=[];
+  const mutations:any[]=[];
+  let revision=0;
+  const emptyHead={
+    ready:true,revision:0,updatedAt:0,globalState:globalState(false),
+    globalRevision:0,paperCount:0,metadataCount:0,changeFloorRevision:0,
+    papersSplit:true,metadataSplit:true,
+  };
+
+  await page.route('https://api.gczhouwld.com/api/user-ui/reader-counts', async route => {
+    const body=route.request().postDataJSON() as any;
+    const mode=String(body?.mode || '');
+    if(!mode){
+      await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({counts:{}})});
+      return;
+    }
+    modes.push(mode);
+    if(mode==='account-v3-head'){
+      await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
+        account:{userId:'u-new',readPath:'v3-head',writeEnabled:true,writeAuthority:'legacy',...emptyHead},
+      })});
+      return;
+    }
+    if(mode==='account-v3-page'){
+      await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
+        account:{
+          userId:'u-new',readPath:'v3-page',writeEnabled:true,writeAuthority:'legacy',
+          ready:true,scanStartRevision:0,head:emptyHead,count:0,hasMore:false,nextKey:null,rows:[],
+        },
+      })});
+      return;
+    }
+    if(mode==='account-v3-delta'){
+      await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
+        account:{
+          userId:'u-new',readPath:'v3-delta',writeEnabled:true,writeAuthority:'legacy',
+          ready:true,resetRequired:false,sinceRevision:0,targetRevision:0,head:emptyHead,
+          globalRevision:0,count:0,hasMore:false,nextCursor:null,changes:[],
+        },
+      })});
+      return;
+    }
+    if(mode==='account-v3-mutate'){
+      mutations.push(structuredClone(body));
+      expect(body.expectedRevision).toBe(revision);
+      revision+=1;
+      await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
+        account:{
+          userId:'u-new',readPath:'v3-mutate',writeEnabled:true,writeAuthority:'v3',
+          revision,updatedAt:100+revision,paperCount:revision>=2?1:0,
+          metadataCount:revision>=2?1:0,operationCount:(body.operations||[]).length,changeFloorRevision:0,
+        },
+      })});
+      return;
+    }
+    if(mode==='account-save'||mode==='account-pull'){
+      await route.fulfill({status:500,contentType:'application/json',body:JSON.stringify({error:'legacy_path_must_not_run'})});
+      return;
+    }
+    await route.fulfill({status:400,contentType:'application/json',body:'{}'});
+  });
+
+  await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded'});
+  await expect.poll(()=>mutations.length,{timeout:30000}).toBe(2);
+  expect(mutations[0].operations).toEqual([]);
+  expect(mutations[0].globalState).toBeTruthy();
+  expect(mutations[1].operations).toHaveLength(1);
+  expect(mutations[1].operations[0].paperKey).toBe(key);
+  expect(modes).not.toContain('account-save');
+  expect(modes).not.toContain('account-pull');
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.dataset.accountSyncWrite || '')).toBe('v3');
+  await expect.poll(()=>page.evaluate(k=>localStorage.getItem(k),REVISION_KEY)).toBe('2');
+});
+
 test('V3 write authority batches 65 dirty paper keys as 32/32/1 and never calls legacy account-save', async ({ page }) => {
   test.setTimeout(60_000);
   const local = {
