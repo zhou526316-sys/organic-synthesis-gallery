@@ -1,7 +1,7 @@
 {
-  "requestId": "wechat-daily-2026-10-06-user-selected-deepread-v1",
-  "requestedAt": "2026-10-06T01:25:00Z",
+  "requestId": "wechat-daily-2026-10-06-user-selected-deepread-v2-source-images",
+  "requestedAt": "2026-10-06T01:31:00Z",
   "publicationDate": "2026-10-06",
   "action": "sync_daily_draft",
-  "reason": "User selected today's feature 10.1038/s41557-026-02237-z and retrospective 10.1038/s41586-026-10930-9. Build one two-article WeChat draft using main text+SI for the Nature Chemistry feature and main text+SI+peer review for the Hyster Nature retrospective; Chinese-first, evidence-led, shallow-to-deep, original figures only, and a figure-led square secondary-card cover."
+  "reason": "Retry Oct 6 selected daily+retrospective draft after Nature PDF endpoint returned HTML. Use Springer Nature publisher-hosted original figure images instead of remote PDF download; keep all deep-reading/editorial content unchanged."
 }
