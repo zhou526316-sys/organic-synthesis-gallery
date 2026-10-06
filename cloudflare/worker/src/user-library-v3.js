@@ -42,6 +42,19 @@ function flag(value) {
   return String(value || '') === '1';
 }
 
+function emptyGlobalState() {
+  return {
+    statuses:[],
+    quickTerms:[],
+    collections:[],
+    aliases:[],
+    actionStyles:{},
+    followedSearches:[],
+    searchHistory:[],
+    hideRead:false,
+  };
+}
+
 export function userLibraryV3ShadowEnabled(env) {
   return flag(env?.USER_LIBRARY_V3_SHADOW_ENABLED);
 }
@@ -485,7 +498,7 @@ export async function readUserLibraryV3Head(env, userIdValue) {
   const head = await headRow(env, userId);
   if (!head) {
     return {
-      ready:true, revision:0, updatedAt:0, globalState:{}, globalRevision:0,
+      ready:true, revision:0, updatedAt:0, globalState:emptyGlobalState(), globalRevision:0,
       paperCount:0, metadataCount:0, changeFloorRevision:0,
       papersSplit:true, metadataSplit:true,
     };
