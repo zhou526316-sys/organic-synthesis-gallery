@@ -9,11 +9,11 @@
     },
     {
       "path": "public/wechat-featured/2026-10-06.json",
-      "blobSha": "cb172b559f3b63f6ee64d6f26a74cbd31eeffe5f"
+      "blobSha": "5ffcffb591fe66eaf79a92379de8e42e435a9e81"
     },
     {
       "path": "public/wechat-retrospective/hyster-plp-photoenzyme-radical-coupling.json",
-      "blobSha": "7979c88174aac3318e5f77d8bbaf3f44a2d5044c"
+      "blobSha": "f9dea381a05f204647ee422a2fbcb4f74d3b85df"
     }
   ],
   "assets": [
@@ -23,11 +23,11 @@
     },
     {
       "path": "public/wechat-assets/reviewed/2026-10-06/daily-problem.png",
-      "blobSha": "3904c52fc0a1ac5bef8a0ad86afec9d71f744745"
+      "blobSha": "df8f7ef362fd83e46c7e0195973b1de2df256f2e"
     },
     {
       "path": "public/wechat-assets/reviewed/2026-10-06/daily-redox-species.png",
-      "blobSha": "80b713eea6ff64dbf95a207f1ad710a319bacd72"
+      "blobSha": "496be606cec18362bd5db010e68d882a3d4789e3"
     },
     {
       "path": "public/wechat-assets/reviewed/2026-10-06/daily-redox-evidence.png",
@@ -43,7 +43,11 @@
     },
     {
       "path": "public/wechat-assets/reviewed/2026-10-06/daily-scope.png",
-      "blobSha": "21b5cba21b87a4155c13bfd1d8b2f747d74b622a"
+      "blobSha": "ca1cd6a2a01cd2bc5ac9815f5525b8bb7d5686f9"
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-06/daily-hydroboration.png",
+      "blobSha": "f354d5cf1b243cad7752d340ad8b30f199e8f399"
     },
     {
       "path": "public/wechat-assets/reviewed/2026-10-06/daily-diversification.png",
@@ -71,19 +75,19 @@
     },
     {
       "path": "public/wechat-assets/reviewed/2026-10-06/hyster-fret-external.png",
-      "blobSha": "c098e646b81b803fc43ae3089d2e7f6f891063df"
+      "blobSha": "fa63c0d3a62cedbdb3126f54e9fc7e11df740041"
     },
     {
       "path": "public/wechat-assets/reviewed/2026-10-06/hyster-fret-internal.png",
-      "blobSha": "617db066d1088803064ae16371e513d6a2bbac7d"
+      "blobSha": "bfcd321b9e9a6b2c8b2fe2e7f248e2dc4df341b9"
     },
     {
       "path": "public/wechat-assets/reviewed/2026-10-06/hyster-mechanism.png",
       "blobSha": "e78ec2bf53392d6abf5ab680b9399da0fe79a96a"
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-06/hyster-lifetime-ab.png",
-      "blobSha": "5c007edf6e705040bdb36aaa916011933236012d"
+      "path": "public/wechat-assets/reviewed/2026-10-06/hyster-lifetime-b.png",
+      "blobSha": "6720e22e4b6d8903b813c1edd519872b72ea7a38"
     },
     {
       "path": "public/wechat-assets/reviewed/2026-10-06/hyster-application.png",
@@ -105,18 +109,23 @@
   "textReview": "pass",
   "imageReview": "pass",
   "reviewNotes": [
-    "Both articles preserve their existing foundations but now follow the original-paper progression more completely.",
-    "Both articles include explicit substrate-scope discussion, synthetic utility and method boundaries.",
-    "Nature Chemistry no longer opens with isolated Fig. 1c; the reviewed Fig. 1e problem image is paired with matching text.",
-    "Hyster retains the exact approved cover/full Fig. 1c and adds readable Fig. 3 scope blocks to improve completeness and visual rhythm.",
-    "All production body figures are pinned WYSIWYG rasters; runtime fractional cropping is not used.",
-    "Fixed-IP WeChat publisher succeeded; draft/get readback returned ok.",
-    "No TinyFish dependency in the final approval path."
+    "Existing articles optimized rather than rewritten from scratch.",
+    "Both articles now include substrate-scope coverage and route/application context.",
+    "All production body figures are pinned, actually rendered rasters; runtime crop_frac is forbidden.",
+    "Daily opening Fig. 1e is placed after matching explanatory text rather than appearing as an unexplained Fig. 1c crop.",
+    "Hyster scope/FRET/mechanism/lifetime/application images are split into argument-specific complete panels to avoid long text-only runs.",
+    "No TinyFish dependency in the approval path."
   ],
-  "approvedAt": "2026-10-06T07:50:00Z",
-  "transportReview": "pass",
-  "transportReviewedAt": "2026-10-06T07:44:44.054726Z",
-  "draftReadback": "ok",
-  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/6042550fb27bf3726eea84b7.html",
-  "mediaId": "KhELYUzvwADwB_l1xH1SWFv31tB1FbKXF89D7ZHLK2znutU4BOGt5XD22WOo65yQ"
+  "approvedAt": "2026-10-06T08:30:00Z",
+  "transportReview": "pending",
+  "transportReviewedAt": null,
+  "draftReadback": null,
+  "previewUrl": null,
+  "mediaId": null,
+  "artifactBlobs": {
+    "textOnly": "75e6687596767de116b655bd38fd8888296a0df7",
+    "imagesOnly": "72f19b0453526bfeed3a9f209e4f72cbb75c522d",
+    "preDraftReview": "c7d0f31eb79f2e5b9a67f4170a3657d60f755f1e"
+  },
+  "materializedCropReviewRequired": true
 }
