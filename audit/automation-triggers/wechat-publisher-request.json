@@ -1,7 +1,7 @@
 {
-  "requestId": "wechat-daily-2026-10-06-complete-figure-text-final-v8",
-  "requestedAt": "2026-10-06T10:25:00Z",
+  "requestId": "wechat-daily-2026-10-06-debug-final-v9",
+  "requestedAt": "2026-10-06T10:30:00Z",
   "publicationDate": "2026-10-06",
   "action": "sync_daily_draft",
-  "reason": "Retry exact reviewed final source state after publisher robustness fix. Optional Gallery mini-card media can now fail soft instead of aborting the draft. All reviewed article text/images, figure numbering, paragraph placement and blob-pinned assets are unchanged. Require draft/get readback."
+  "reason": "Diagnostic rerun of the exact reviewed final draft after enabling traceback. Do not change article content."
 }
