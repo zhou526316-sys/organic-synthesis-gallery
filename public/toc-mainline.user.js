@@ -5127,26 +5127,33 @@ function embeddedJobDois(value) {
     if(!job||!currentCaptureJob(job)||!privatePdfCaptureEligibleByAddedDate(job))return null;
     var lease=privatePdfLease();
     if(!lease){
+      captureLiveUpdate(job,'private_pdf_no_lease',{pdfStatus:'skipped',pdfStage:'未获得 owner PDF 授权'});
       pushTrace(trace,{stage:'private_pdf_lease',event:'missing',status:'skipped',message:'eligible_addedDate='+String(job.addedDate||'')+';revision='+PRIVATE_PDF_CAPTURE_REVISION});
       return {status:'skipped',reason:'capture_lease_missing',revision:PRIVATE_PDF_CAPTURE_REVISION};
     }
     pushTrace(trace,{stage:'private_pdf_lease',event:'active',status:'ok',message:'expiresAt='+String(Number(lease.expiresAt||0))+';revision='+String(lease.revision||PRIVATE_PDF_CAPTURE_REVISION)});
     var doi=normalizeDoi(job.doi),key=PRIVATE_PDF_ATTEMPT_PREFIX+doi,prior=GM_getValue(key,null),now=Date.now();
-    if(prior&&prior.status==='stored'&&now-Number(prior.at||0)<30*24*60*60*1000)return {status:'already_stored',documentId:prior.documentId||''};
-    if(prior&&prior.status==='not_found'&&now-Number(prior.at||0)<6*60*60*1000)return {status:'not_found_cached'};
-    var candidates=discoverExplicitPdfCandidates(job);
+    if(prior&&prior.status==='stored'&&now-Number(prior.at||0)<30*24*60*60*1000){
+      captureLiveUpdate(job,'private_pdf_saved',{pdfStatus:'already_stored',pdfStage:'复用已存储 PDF 回执',pdfBytes:Number(prior.byteLength||0)});
+      return {status:'already_stored',documentId:prior.documentId||'',byteLength:Number(prior.byteLength||0)};
+    }
+    // Automatic runs respect a not-found cooldown. An explicit missing-only Start
+    // is a deliberate retry request and must actually rediscover the page.
+    if(prior&&prior.status==='not_found'&&now-Number(prior.at||0)<6*60*60*1000&&!job.missingOnly&&!job.manualRunId){
+      captureLiveUpdate(job,'private_pdf_not_found',{pdfStatus:'not_found_cached',pdfStage:'沿用自动冷却记录'});
+      return {status:'not_found_cached'};
+    }
+    var candidates=await waitForPrivatePdfCandidates(job,trace);
     if(!candidates.length){
-      GM_setValue(key,{status:'not_found',at:now,revision:PRIVATE_PDF_CAPTURE_REVISION});
-      pushTrace(trace,{stage:'private_pdf_discovery',event:'complete',status:'none',message:'explicit_candidates=0'});
+      GM_setValue(key,{status:'not_found',at:Date.now(),revision:PRIVATE_PDF_CAPTURE_REVISION});
       return {status:'not_found'};
     }
-    pushTrace(trace,{stage:'private_pdf_discovery',event:'complete',status:'found',message:'explicit_candidates='+candidates.length});
     var lastError=null;
-    for(var i=0;i<Math.min(3,candidates.length);i+=1){
+    for(var i=0;i<Math.min(4,candidates.length);i+=1){
       try{
-        var pdf=await fetchExplicitPdf(job,candidates[i],trace);
+        var pdf=await fetchExplicitPdf(job,candidates[i],trace,new Set(),0);
         var receipt=await uploadPrivatePdf(job,pdf,lease,trace);
-        var saved={status:'stored',at:Date.now(),documentId:String(receipt.documentId||''),contentHash:String(receipt.contentHash||''),byteLength:Number(receipt.byteLength||0),active:Boolean(receipt.active),revision:PRIVATE_PDF_CAPTURE_REVISION};
+        var saved={status:'stored',at:Date.now(),documentId:String(receipt.documentId||''),contentHash:String(receipt.contentHash||''),byteLength:Number(receipt.byteLength||pdf.byteLength||0),active:Boolean(receipt.active),revision:PRIVATE_PDF_CAPTURE_REVISION};
         GM_setValue(key,saved);return saved;
       }catch(error){
         lastError=error;
@@ -5156,7 +5163,9 @@ function embeddedJobDois(value) {
       }
     }
     var failed={status:'failed',at:Date.now(),reason:captureLiveError(lastError&&lastError.message||lastError||'unknown'),revision:PRIVATE_PDF_CAPTURE_REVISION};
-    GM_setValue(key,failed);return failed;
+    GM_setValue(key,failed);
+    captureLiveUpdate(job,'private_pdf_failed',{pdfStatus:'failed',pdfStage:'PDF 抓取失败',pdfError:failed.reason});
+    return failed;
   }
 
   async function finishPairedJob(job,result,trace,token) {
@@ -5164,11 +5173,20 @@ function embeddedJobDois(value) {
     try {
       var privatePdfResult=await maybeCapturePrivatePdf(job,trace);
       if(privatePdfResult)result.privatePdf=privatePdfResult;
+      var pdfOnly=job.capturePrivatePdf===true&&job.captureToc!==true&&job.captureFigures!==true&&job.captureEvidence!==true&&job.opportunisticEvidence!==true&&job.opportunisticFigures!==true;
+      if(pdfOnly&&privatePdfResult&&!/^(?:stored|already_stored)$/.test(String(privatePdfResult.status||''))){
+        result.status='failed';
+        result.reason=String(privatePdfResult.reason||('private_pdf_'+String(privatePdfResult.status||'failed')));
+      }
     } catch (privatePdfError) {
       var privatePdfReason=String(privatePdfError&&privatePdfError.message||privatePdfError||'private_pdf_failed')
         .replace(/https?:\/\/\S+/gi,'[url]')
         .replace(/[A-Za-z0-9+/_=-]{40,}/g,'[redacted]').slice(0,180);
       result.privatePdf={status:'failed',reason:privatePdfReason};
+      if(job.capturePrivatePdf===true&&job.captureToc!==true&&job.captureFigures!==true&&job.captureEvidence!==true&&job.opportunisticEvidence!==true&&job.opportunisticFigures!==true){
+        result.status='failed';result.reason=privatePdfReason;
+      }
+      captureLiveUpdate(job,'private_pdf_failed',{pdfStatus:'failed',pdfStage:'PDF 抓取异常',pdfError:privatePdfReason});
       if(typeof pushTrace==='function')pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:privatePdfReason});
     }
     if(job.missingOnly&&result.figures&&result.figures.discovered>0){var cp=readCheckpoint(job.doi);cp.figureCoverage={expected:Math.max(Number(cp.figureCoverage&&cp.figureCoverage.expected||0),Number(result.figures.discovered)),observedAt:Date.now()};saveCheckpoint(job.doi,cp,job);}
