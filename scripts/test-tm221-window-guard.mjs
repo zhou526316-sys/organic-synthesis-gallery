@@ -53,7 +53,7 @@ await test('repeated resume while loading does not delete lease or duplicate dis
 });
 await test('lease lost while fetching queue opens zero pages and latches stop',async()=>{
  const h=harness(source,{onFetch:async(u,c,m,s)=>{if(u.includes('toc-demand'))s.delete(c.T.leaseKey);}});
- await h.run();await h.run();assert.equal(h.opened.length,0);assert.equal(h.summary().stopReason,'controller_lease_lost');assert.equal(h.summary().failed,0);assert.equal(h.timers.size,0);
+ await h.run();await h.run();assert.equal(h.opened.length,0);assert.equal(h.summary(),undefined);assert.ok(h.badges.some(x=>String(x).includes('controller_lease_lost')));assert.equal(h.timers.size,0);
 });
 await test('lease lost after first open stops entire batch and closes only its page',async()=>{
  const h=harness(source,{onOpen:(j,c,s)=>s.delete(c.T.leaseKey)});await h.run();await h.run();
