@@ -59,7 +59,9 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.50' public/gallery-vpn-bridge.user.js
+          BRIDGE_VERSION="$(sed -n 's#^// @version[[:space:]]*##p' public/gallery-vpn-bridge.user.js | head -1 | tr -d '\r')"
+          test -n "$BRIDGE_VERSION"
+          grep -F '// @updateURL    https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js' public/gallery-vpn-bridge.user.js
           grep -F "var CONTROLLER_REVISION = '2.2.41';" public/gallery-vpn-bridge.user.js
           grep -F "var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';" public/gallery-vpn-bridge.user.js
           grep -F 'EVIDENCE_INVENTORY_ENDPOINT' public/gallery-vpn-bridge.user.js
