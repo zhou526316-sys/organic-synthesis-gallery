@@ -251,34 +251,30 @@ jobs:
           set -euo pipefail
           if [ ! -x node_modules/.bin/wrangler ]; then npm install --no-audit --no-fund; fi
           npx wrangler d1 execute "$D1_NAME" --remote --command "DELETE FROM users WHERE id='$CANARY_USER_ID';" --json | tee /tmp/user-library-v3-canary-cleanup.json
-          npx wrangler d1 execute "$D1_NAME" --remote --command "
-            SELECT 'users' AS table_name,COUNT(*) AS c FROM users WHERE id='$CANARY_USER_ID'
-            UNION ALL SELECT 'sessions',COUNT(*) FROM user_sessions WHERE user_id='$CANARY_USER_ID'
-            UNION ALL SELECT 'v3_head',COUNT(*) FROM user_library_v3_head WHERE user_id='$CANARY_USER_ID'
-            UNION ALL SELECT 'v3_rows',COUNT(*) FROM user_library_v3_rows WHERE user_id='$CANARY_USER_ID'
-            UNION ALL SELECT 'v3_commits',COUNT(*) FROM user_library_v3_commits WHERE user_id='$CANARY_USER_ID'
-            UNION ALL SELECT 'v3_changes',COUNT(*) FROM user_library_v3_changes WHERE user_id='$CANARY_USER_ID'
-            UNION ALL SELECT 'v3_shape',COUNT(*) FROM user_library_v3_shape WHERE user_id='$CANARY_USER_ID'
-            UNION ALL SELECT 'v3_authority',COUNT(*) FROM user_library_v3_authority WHERE user_id='$CANARY_USER_ID'
-            UNION ALL SELECT 'v3_shadow_sync',COUNT(*) FROM user_library_v3_shadow_sync WHERE user_id='$CANARY_USER_ID'
-            UNION ALL SELECT 'compat_rows',COUNT(*) FROM user_paper_state WHERE user_id='$CANARY_USER_ID'
-            UNION ALL SELECT 'compat_head',COUNT(*) FROM user_library_head WHERE user_id='$CANARY_USER_ID'
-            UNION ALL SELECT 'legacy_state',COUNT(*) FROM user_library_state WHERE user_id='$CANARY_USER_ID'
-            UNION ALL SELECT 'profile_sessions',COUNT(*) FROM user_profile_sessions WHERE user_id='$CANARY_USER_ID';
-          " --json > /tmp/user-library-v3-canary-cleanup-check.json
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT COUNT(*) AS c FROM users WHERE id='$CANARY_USER_ID';" --json | tee /tmp/user-library-v3-canary-user-check.json
+          npx wrangler d1 execute "$D1_NAME" --remote --command "PRAGMA foreign_key_check;" --json | tee /tmp/user-library-v3-canary-fk-check.json
           node - <<'NODE'
           const fs=require('fs');
-          const raw=JSON.parse(fs.readFileSync('/tmp/user-library-v3-canary-cleanup-check.json','utf8'));
-          const rows=Array.isArray(raw)?raw.flatMap(x=>x.results||[]):(raw.results||[]);
-          const residue=rows.filter(row=>Number(row.c||0)!==0);
-          if(residue.length)throw new Error('D3c4b canary cleanup left residue: '+JSON.stringify(residue));
+          const unpack=file=>{
+            const raw=JSON.parse(fs.readFileSync(file,'utf8'));
+            return Array.isArray(raw)?raw.flatMap(x=>x.results||[]):(raw.results||[]);
+          };
+          const userRows=unpack('/tmp/user-library-v3-canary-user-check.json');
+          const fkRows=unpack('/tmp/user-library-v3-canary-fk-check.json');
+          if(Number(userRows[0]?.c||0)!==0)throw new Error('D3c4b canary user root still exists');
+          if(fkRows.length)throw new Error('D3c4b canary cleanup left foreign-key residue: '+JSON.stringify(fkRows));
+          const cleanupRaw=JSON.parse(fs.readFileSync('/tmp/user-library-v3-canary-cleanup.json','utf8'));
+          const cleanupEntries=Array.isArray(cleanupRaw)?cleanupRaw:[cleanupRaw];
+          const cascadeChanges=cleanupEntries.reduce((sum,row)=>sum+Number(row?.meta?.changes||0),0);
           const reportPath=process.env.REPORT_PATH;
           let report={schemaVersion:1,phase:'D3c4b-user-library-v3-production-write-canary',ok:false};
           try{report=JSON.parse(fs.readFileSync(reportPath,'utf8'));}catch{}
+          if(report.ok===true && cascadeChanges<1)throw new Error('D3c4b successful canary cleanup changed no rows');
           report.cleanupVerified=true;
+          report.cleanupCascadeChanges=cascadeChanges;
           report.cleanupVerifiedAt=new Date().toISOString();
           fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
-          console.log(JSON.stringify({canaryCleanup:true,rows}));
+          console.log(JSON.stringify({canaryCleanup:true,userRows,fkRows,cascadeChanges}));
           NODE
           rm -f "$RUNNER_TEMP/user-library-v3-canary-credentials.json"
 

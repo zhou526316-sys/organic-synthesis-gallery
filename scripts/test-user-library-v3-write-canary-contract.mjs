@@ -48,26 +48,14 @@ test('D3c4b canary exercises real write, bounded reads, compatibility and confli
   ]) assert.ok(workflow.includes(token),token);
 });
 
-test('D3c4b canary deletes the FK root and verifies zero residue in every owned table',()=>{
+test('D3c4b canary deletes the FK root and verifies zero residue by FK integrity',()=>{
   assert.ok(workflow.includes('- name: Clean up isolated canary account'));
   assert.ok(workflow.includes('if: always()'));
   assert.ok(workflow.includes("DELETE FROM users WHERE id='$CANARY_USER_ID'"));
   assert.ok(workflow.includes('if [ ! -x node_modules/.bin/wrangler ]'));
-  for(const table of [
-    'user_library_v3_head',
-    'user_library_v3_changes',
-    'user_library_v3_commits',
-    'user_library_v3_rows',
-    'user_library_v3_shape',
-    'user_library_v3_authority',
-    'user_library_v3_shadow_sync',
-    'user_paper_state',
-    'user_library_head',
-    'user_library_state',
-    'user_profile_sessions',
-    'user_sessions',
-    'users',
-  ]) assert.ok(workflow.includes(table),table);
+  assert.ok(workflow.includes("SELECT COUNT(*) AS c FROM users WHERE id='$CANARY_USER_ID'"));
+  assert.ok(workflow.includes('PRAGMA foreign_key_check'));
+  assert.ok(workflow.includes('cascadeChanges'));
   assert.ok(workflow.includes('cleanupVerified=true'));
   assert.ok(workflow.includes('user-library-v3-write-canary-${{ github.run_id }}'));
 });
