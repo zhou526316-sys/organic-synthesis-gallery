@@ -220,6 +220,8 @@ let architectureFallbackActive = false;
 let architectureBootstrapPending = false;
 let architectureReadLimited = false;
 let architectureLandingPapers: Paper[] = [];
+let hotBootstrapTotal = 0;
+let hotFullLoadPromise: Promise<void> | null = null;
 let architectureMemberDois: string[] | null = null;
 let architectureEarliestDate = '';
 let latestCollectionDate = '';
@@ -686,16 +688,19 @@ function renderCards(): void {
   const indexed = indexedViewState;
   const list = indexed ? indexed.papers : filteredPapers();
   const windowSize = indexed?.limit || resultWindowSize();
-  const localWindow = indexed ? null : resultWindowState(list.length, resultWindowPage, windowSize);
+  const localTotal = !indexed && resultScopeIsDefaultRecent() && hotBootstrapTotal > list.length
+    ? hotBootstrapTotal
+    : list.length;
+  const localWindow = indexed ? null : resultWindowState(localTotal, resultWindowPage, windowSize);
   if (localWindow) resultWindowPage = localWindow.page;
-  const renderedList = indexed ? list : list.slice(localWindow!.start, localWindow!.end);
-  const totalMatched = indexed ? indexed.matched : list.length;
+  const renderedList = indexed ? list : list.slice(localWindow!.start, Math.min(localWindow!.end, list.length));
+  const totalMatched = indexed ? indexed.matched : localTotal;
   const currentPage = indexed ? indexed.page : localWindow!.page;
   const totalPages = indexed
     ? Math.max(1, Math.ceil(indexed.matched / indexed.limit))
     : localWindow!.pages;
-  const firstShown = totalMatched ? (indexed ? (currentPage - 1) * RESULT_WINDOW_SIZE + 1 : localWindow!.start + 1) : 0;
-  const endShown = indexed ? firstShown + renderedList.length - (renderedList.length ? 1 : 0) : localWindow!.end;
+  const firstShown = totalMatched ? (indexed ? (currentPage - 1) * indexed.limit + 1 : localWindow!.start + 1) : 0;
+  const endShown = renderedList.length ? firstShown + renderedList.length - 1 : firstShown;
   const hasPrevious = indexed ? currentPage > 1 : localWindow!.hasPrevious;
   const hasNext = indexed ? indexed.hasMore : localWindow!.hasNext;
   const windowControls = document.querySelector<HTMLElement>('#resultWindowControls');
@@ -805,12 +810,12 @@ function mount(): void {
     const value = (event.target as HTMLSelectElement).value;
     sort = value === 'oldest' || value === 'readers' ? value : 'newest';
     resetResultWindow();
-    renderCards();
+    renderLocalHotView();
   });
   document.querySelector<HTMLInputElement>('#newOnly')?.addEventListener('change', event => {
     onlyNew = (event.target as HTMLInputElement).checked;
     resetResultWindow();
-    renderCards();
+    renderLocalHotView();
   });
   document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.addEventListener('click', () => {
     selectedJournals.clear();
@@ -829,7 +834,7 @@ function mount(): void {
     const clear = document.querySelector<HTMLButtonElement>('#clearCustomFilters');
     if (clear) clear.disabled = selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo;
     document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.classList.toggle('active', selectedJournals.size === 0 && excludedJournals.size === 0);
-    renderCards();
+    renderLocalHotView();
   }));
   document.querySelectorAll<HTMLButtonElement>('[data-journal-exclude]').forEach(button => button.addEventListener('click', () => {
     const journal = button.dataset.journalExclude?.trim();
@@ -859,7 +864,7 @@ function mount(): void {
     const clear = document.querySelector<HTMLButtonElement>('#clearCustomFilters');
     if (clear) clear.disabled = selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo;
     document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.classList.toggle('active', selectedJournals.size === 0 && excludedJournals.size === 0);
-    renderCards();
+    renderLocalHotView();
   }));
   document.querySelector<HTMLInputElement>('#dateFrom')?.addEventListener('change', event => {
     dateFrom = (event.target as HTMLInputElement).value;
@@ -888,17 +893,21 @@ function mount(): void {
     scheduleArchitectureCorpusRefresh(0);
   });
 
-  const moveResultPage = (delta: number): void => {
+  const moveResultPage = async (delta: number): Promise<void> => {
     if (indexedViewState) {
-      void moveIndexedResultPage(delta);
+      await moveIndexedResultPage(delta);
       return;
+    }
+    if (delta > 0 && hotBootstrapTotal > papers.length && resultScopeIsDefaultRecent()) {
+      try { await ensureFullHotCorpus(); }
+      catch { return; }
     }
     resultWindowPage = Math.max(1, resultWindowPage + delta);
     renderCards();
     document.querySelector<HTMLElement>('#gallery')?.scrollIntoView({ block: 'start', behavior: 'auto' });
   };
-  document.querySelector<HTMLButtonElement>('#previousResultPage')?.addEventListener('click', () => moveResultPage(-1));
-  document.querySelector<HTMLButtonElement>('#nextResultPage')?.addEventListener('click', () => moveResultPage(1));
+  document.querySelector<HTMLButtonElement>('#previousResultPage')?.addEventListener('click', () => { void moveResultPage(-1); });
+  document.querySelector<HTMLButtonElement>('#nextResultPage')?.addEventListener('click', () => { void moveResultPage(1); });
 
   renderCards();
   scheduleInventory();
@@ -1294,6 +1303,42 @@ function setArchitectureCorpus(rows: Paper[]): void {
   applyResolvedTitles();
 }
 
+async function ensureFullHotCorpus(): Promise<void> {
+  if (!hotBootstrapTotal || papers.length >= hotBootstrapTotal) {
+    hotBootstrapTotal = 0;
+    return;
+  }
+  if (hotFullLoadPromise) return hotFullLoadPromise;
+  const siteBase = new URL('./', document.baseURI).toString();
+  hotFullLoadPromise = loadPublishedHotFallback(siteBase)
+    .then(fallback => {
+      const rows = normalizeArchitectureRows(fallback.papers);
+      architectureLandingPapers = rows;
+      architectureEarliestDate = rows.map(paper => paper.date)
+        .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort()[0] || architectureEarliestDate;
+      setArchitectureCorpus(rows);
+      hotBootstrapTotal = 0;
+      architectureReadLimited = false;
+    })
+    .catch(error => {
+      architectureReadLimited = true;
+      console.warn('full Hot compatibility snapshot unavailable; keeping bounded first page', error);
+      throw error;
+    })
+    .finally(() => {
+      hotFullLoadPromise = null;
+    });
+  return hotFullLoadPromise;
+}
+
+function renderLocalHotView(): void {
+  if (hotBootstrapTotal > papers.length) {
+    void ensureFullHotCorpus().then(() => renderCards()).catch(() => renderCards());
+    return;
+  }
+  renderCards();
+}
+
 async function activateArchitectureClientInBackground(siteBase: string): Promise<void> {
   try {
     const client = await new PublishedCatalogClient(siteBase).open();
@@ -1326,6 +1371,7 @@ async function activateArchitectureClientInBackground(siteBase: string): Promise
 
 function installFastHotFallback(fallback: Awaited<ReturnType<typeof loadPublishedHotFallback>>): void {
   const fallbackRows = normalizeArchitectureRows(fallback.papers);
+  hotBootstrapTotal = Math.max(Number(fallback.totalCount || 0), fallbackRows.length);
   architectureClient = null;
   architectureFallbackActive = true;
   architectureBootstrapPending = true;
@@ -1351,7 +1397,7 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
 
   if (fastBootstrapEligible) {
     try {
-      const fallback = await loadPublishedHotFallback(siteBase);
+      const fallback = await loadPublishedHotFallback(siteBase, { headOnly: true });
       installFastHotFallback(fallback);
       void activateArchitectureClientInBackground(siteBase);
       return 'architecture-hot-fallback';
@@ -1373,6 +1419,7 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
     architectureMemberDois = [...client.memberDois];
     architectureEarliestDate = client.earliestDate || '';
     architectureLandingPapers = mergePapers(landingRows, editionRows);
+    hotBootstrapTotal = 0;
     const architectureDates = architectureLandingPapers.map(paper => paper.date)
       .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
     latestCollectionDate = architectureDates[architectureDates.length - 1] || '';
@@ -1402,6 +1449,7 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
       architectureEarliestDate = orderedFallback.map(paper => paper.date)
         .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort()[0] || '';
       architectureLandingPapers = orderedFallback;
+      hotBootstrapTotal = 0;
       const dates = orderedFallback.map(paper => paper.date)
         .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
       latestCollectionDate = dates[dates.length - 1] || '';
