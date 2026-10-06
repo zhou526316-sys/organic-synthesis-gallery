@@ -484,7 +484,7 @@ test('public literature view is hard-gated by read flag and ready catalog genera
   });
   assert.equal(wrongGeneration.status,409);
   assert.equal(wrongGeneration.body.error,'literature_catalog_generation_not_ready');
-  assert.equal(wrongGeneration.body.readPathActive,undefined);
+  assert.equal(wrongGeneration.body.readPathActive,false);
 });
 
 test('read flag is independently visible but cannot activate the dormant read path',async t=>{
