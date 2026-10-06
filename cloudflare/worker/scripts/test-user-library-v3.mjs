@@ -10,6 +10,7 @@ import {
   readUserLibraryV3Page,
 } from '../src/user-library-v3.js';
 import { readUserLibraryStateFromRows } from '../src/user-library-shadow.js';
+import { readerCounts } from '../src/user-ui.js';
 
 class Statement {
   constructor(db,sql){this.db=db;this.sql=sql;this.args=[];}
@@ -29,7 +30,16 @@ class Statement {
 class D1 {
   constructor(){
     this.sqlite=new DatabaseSync(':memory:');
-    this.sqlite.exec('PRAGMA foreign_keys=ON; CREATE TABLE users (id TEXT PRIMARY KEY);');
+    this.sqlite.exec(`
+      PRAGMA foreign_keys=ON;
+      CREATE TABLE users (id TEXT PRIMARY KEY);
+      CREATE TABLE user_sessions (
+        token_hash TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        created_at INTEGER NOT NULL DEFAULT 0,
+        expires_at INTEGER NOT NULL
+      );
+    `);
     const v2=fs.readFileSync(new URL('../../user-library-state-v2.sql',import.meta.url),'utf8');
     const v3=fs.readFileSync(new URL('../../user-library-state-v3.sql',import.meta.url),'utf8');
     this.sqlite.exec(v2);
@@ -343,6 +353,74 @@ test('mutation bounds reject unbounded, duplicate and monolithic-global payloads
     },1000),
     /user_library_v3_mutation_oversized|user_library_v3_paper_state_oversized/,
   );
+});
+
+test('authenticated V3 mutation API stays dormant until enabled and legacy account-pull reads row compatibility after cutover',async t=>{
+  const db=new D1();t.after(()=>db.close());addUser(db,'u-api');
+  const token='v3-write-api-token';
+  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token));
+  const tokenHash=[...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,'0')).join('');
+  db.sqlite.prepare('INSERT INTO user_sessions(token_hash,user_id,expires_at) VALUES(?,?,?)')
+    .run(tokenHash,'u-api',Date.now()+60_000);
+
+  const disabledEnv=envFor(db,{USER_LIBRARY_V3_WRITE_ENABLED:'0'});
+  const disabled=await readerCounts(disabledEnv,{
+    mode:'account-v3-mutate',
+    sessionToken:token,
+    expectedRevision:0,
+    operations:[{paperKey:'a',paperState:{favorite:true}}],
+  });
+  assert.equal(disabled.status,503);
+  assert.equal(disabled.body.error,'user_library_v3_write_disabled');
+
+  const env=envFor(db);
+  const globalState={
+    statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},
+    followedSearches:[],searchHistory:[],hideRead:false,
+  };
+  const mutated=await readerCounts(env,{
+    mode:'account-v3-mutate',
+    sessionToken:token,
+    expectedRevision:0,
+    globalState,
+    operations:[{
+      paperKey:'a',
+      paperState:{favorite:true,note:'bounded'},
+      metadata:{id:'a',title:'A',journal:'JACS'},
+    }],
+  });
+  assert.equal(mutated.status,200);
+  assert.equal(mutated.body.account.readPath,'v3-mutate');
+  assert.equal(mutated.body.account.revision,1);
+  assert.equal(mutated.body.account.paperCount,1);
+  assert.equal(mutated.body.account.metadataCount,1);
+
+  const pull=await readerCounts(env,{mode:'account-pull',sessionToken:token});
+  assert.equal(pull.status,200);
+  assert.equal(pull.body.account.readPath,'rows-v3-compat');
+  assert.equal(pull.body.account.revision,1);
+  assert.equal(pull.body.account.state.papers.a.note,'bounded');
+  assert.equal(pull.body.account.state.metadata.a.title,'A');
+
+  const oldSave=await readerCounts(env,{
+    mode:'account-save',
+    sessionToken:token,
+    revision:1,
+    state:{...globalState,papers:{},metadata:{}},
+  });
+  assert.equal(oldSave.status,409);
+  assert.equal(oldSave.body.error,'user_library_client_upgrade_required');
+  assert.equal(oldSave.body.writePath,'v3');
+
+  const conflict=await readerCounts(env,{
+    mode:'account-v3-mutate',
+    sessionToken:token,
+    expectedRevision:0,
+    operations:[{paperKey:'b',paperState:{favorite:true}}],
+  });
+  assert.equal(conflict.status,409);
+  assert.equal(conflict.body.error,'user_library_v3_revision_conflict');
+  assert.equal(conflict.body.currentRevision,1);
 });
 
 test('V3 writes are independently disabled and require an atomic D1 batch',async t=>{
