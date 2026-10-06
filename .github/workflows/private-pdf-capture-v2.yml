@@ -39,7 +39,7 @@ jobs:
           grep -F 'PRIVATE_PDF_PROCESSING_ENABLED = "0"' .github/workflows/deploy-worker-frontend.yml
           grep -F "if (!await hasCapability(env, userId, CAPTURE_CAPABILITY))" cloudflare/worker/src/private-pdf.js
           grep -F "const lease = await captureLeaseRow(request, env);" cloudflare/worker/src/private-pdf.js
-          grep -F "PRIVATE_PDF_CAPTURE_REVISION = '20261005-private-pdf-session-v4'" public/toc-mainline.user.js
+          grep -F "PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-live-v5'" public/toc-mainline.user.js
           grep -F "PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'" public/toc-mainline.user.js
       - name: Check isolated PDF backend and migrations
         run: |
@@ -87,7 +87,7 @@ jobs:
           node cloudflare/scripts/build-cloudflare-bridge.mjs
           node cloudflare/scripts/build-bridge-loader.mjs
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F "PRIVATE_PDF_CAPTURE_REVISION = '20261005-private-pdf-session-v4'" public/gallery-vpn-bridge.user.js
+          grep -F "PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-live-v5'" public/gallery-vpn-bridge.user.js
           grep -F "PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'" public/gallery-vpn-bridge.user.js
       - name: Dry-run Worker bundle
         working-directory: cloudflare/worker
