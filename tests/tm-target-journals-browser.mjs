@@ -20,7 +20,7 @@ const harness=[
   "function articleFigureImageUrls(node,base){const out=[];const add=v=>{try{if(v){const u=new URL(v,base).href;if(!out.includes(u))out.push(u)}}catch{}};['data-full-src','data-full','data-lg-src','data-hi-res-src','data-src-large','data-original','data-src','data-lazy-src','src'].forEach(k=>add(node.getAttribute&&node.getAttribute(k)));if(node.getAttribute){String(node.getAttribute('srcset')||'').split(',').forEach(x=>add(x.trim().split(/\\s+/)[0]));}return out}",
   "function contextFor(node){let out=[];[node.alt,node.title,node.getAttribute&&node.getAttribute('aria-label')].forEach(v=>{if(v)out.push(v)});let root=node.parentElement;for(let d=0;root&&d<4;d++,root=root.parentElement){out.push(String(root.className||''),String(root.id||''),String(root.textContent||'').slice(0,600));}return out.join(' ')}",
   adapters,
-  "globalThis.T={rscRouteParts,rscArticleHtmlUrl,rscBodyFigureContext,rscGraphicalAbstractCandidates,elsevierGraphicalAbstractCandidates,ccsAssetFigureLabel,ccsTocIndexUrlFromCrossrefPayload,ccsTocIndexUrls,ccsTocIndexCandidatesFromDocument};",
+  "globalThis.T={rscRouteParts,rscArticleHtmlUrl,rscPdfPreviewUrl,rscBodyFigureContext,rscGraphicalAbstractCandidates,elsevierGraphicalAbstractCandidates,ccsAssetFigureLabel,ccsTocIndexUrlFromCrossrefPayload,ccsTocIndexUrls,ccsTocIndexCandidatesFromDocument};",
   '})();'
 ].join('\n');
 await page.addScriptTag({content:harness});
@@ -52,6 +52,28 @@ try{
     assert.equal(result.ga.length,1);assert.equal(result.ga[0].kind,'official');
     assert.match(result.ga[0].source,/rsc_graphical_abstract/);
     assert.equal(result.fig.label,'Figure 1');assert.equal(result.fig.official,false);
+  });
+
+  await tc('RSC page-preview PDF GIF is never accepted as graphical abstract',async()=>{
+    const result=await page.evaluate(()=>{
+      const root=document.querySelector('#fixture');
+      root.innerHTML='<section class="abstract_graphical"><h2>Graphical abstract</h2>'+
+        '<img alt="Graphical abstract" src="/image/article/d6sc06421c.pdf.gif">'+
+        '<img alt="Graphical abstract reaction" src="/image/article/d6sc06421c-ga.png"></section>';
+      return {
+        preview:T.rscPdfPreviewUrl('https://pubs.rsc.org/image/article/d6sc06421c.pdf.gif'),
+        candidates:T.rscGraphicalAbstractCandidates(
+          {doi:'10.1039/d6sc06421c',publisher:'rsc'},root,
+          'https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc06421c'
+        ).map(x=>x.url)
+      };
+    });
+    assert.equal(result.preview,true);
+    assert.equal(result.candidates.length,1);
+    assert.match(result.candidates[0],/d6sc06421c-ga\.png/);
+    assert.ok(!result.candidates.some(url=>/\.pdf\.gif(?:$|[?#])/i.test(url)));
+    assert.ok(source.includes("stage:'rsc_toc_candidate',event:'pdf_preview_rejected'"));
+    assert.ok(source.includes("stage:'rsc_figure_candidate',event:'pdf_preview_rejected'"));
   });
 
   await tc('Chem graphical abstract is isolated from numbered figures',async()=>{
@@ -144,7 +166,7 @@ try{
   await tc('capture protocol and core controller stay unchanged',async()=>{
     assert.ok(source.includes("var VERSION = '6.2.20'"));
     assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.41'"));
-    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11'"));
+    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261006-rsc-preview-reject-v12'"));
     assert.ok(source.includes("PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'"));
   });
 }finally{await browser.close()}
