@@ -1427,9 +1427,125 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
   }
 }
 
+function validateRemoteLiteratureResponse(
+  data: LiteratureCatalogViewResponse,
+  client: PublishedCatalogClient,
+  scope: RemoteLiteratureScope,
+  page: number,
+): void {
+  if (!data || data.readPathActive !== true || data.catalogId !== client.catalogId) {
+    throw new Error('literature_catalog_remote_generation_mismatch');
+  }
+  if (!Number.isSafeInteger(data.matched) || data.matched < 0
+    || !Number.isSafeInteger(data.count) || data.count < 0
+    || data.count !== data.items.length || data.count > RESULT_WINDOW_SIZE
+    || data.limit !== RESULT_WINDOW_SIZE) {
+    throw new Error('literature_catalog_remote_window_invalid');
+  }
+  const minimumMatched = (page - 1) * RESULT_WINDOW_SIZE + data.count;
+  if (data.matched < minimumMatched) throw new Error('literature_catalog_remote_total_invalid');
+  if (data.hasMore && (!data.nextCursor || typeof data.nextCursor !== 'string')) {
+    throw new Error('literature_catalog_remote_cursor_missing');
+  }
+  if (!data.hasMore && data.nextCursor) throw new Error('literature_catalog_remote_cursor_unexpected');
+  if (data.sort !== scope.request.sort) throw new Error('literature_catalog_remote_sort_mismatch');
+}
+
+async function fetchRemoteLiteraturePage(
+  client: PublishedCatalogClient,
+  scope: RemoteLiteratureScope,
+  page: number,
+  cursor: string,
+  serial: number,
+  existingCursors: string[] = [''],
+): Promise<boolean> {
+  remoteLiteratureViewLoading = true;
+  renderCards();
+  try {
+    const response = await queryLiteratureCatalogView({
+      ...scope.request,
+      cursor,
+    });
+    const data = response.data;
+    validateRemoteLiteratureResponse(data, client, scope, page);
+    if (serial !== architectureRefreshSerial || architectureClient !== client || remoteLiteratureScope()?.key !== scope.key) {
+      remoteLiteratureViewLoading = false;
+      return true;
+    }
+    const pageCursors = [...existingCursors];
+    pageCursors[page - 1] = cursor;
+    if (data.hasMore && data.nextCursor) pageCursors[page] = data.nextCursor;
+    else pageCursors.length = page;
+    const remotePapers = data.items.map(remoteViewItemToPaper)
+      .filter(paper => !isExcludedDoi(paperDoi(paper)));
+    if (remotePapers.length !== data.items.length) throw new Error('literature_catalog_remote_scope_mismatch');
+    remoteLiteratureView = {
+      scopeKey: scope.key,
+      matched: data.matched,
+      page,
+      pageSize: data.limit,
+      papers: remotePapers,
+      hasMore: data.hasMore,
+      nextCursor: data.nextCursor || null,
+      pageCursors,
+    };
+    remoteLiteratureViewLoading = false;
+    architectureReadLimited = false;
+    document.documentElement.dataset.catalogQuery = 'd1-cursor';
+    renderCards();
+    return true;
+  } catch (error) {
+    if (serial !== architectureRefreshSerial || architectureClient !== client) {
+      remoteLiteratureViewLoading = false;
+      return true;
+    }
+    remoteLiteratureViewLoading = false;
+    remoteLiteratureView = null;
+    document.documentElement.dataset.catalogQuery = 'static-fallback';
+    console.warn('D1 literature view unavailable; falling back to verified static architecture reader', error);
+    return false;
+  }
+}
+
+async function moveRemoteResultPage(delta: number): Promise<boolean> {
+  const remote = activeRemoteLiteratureView();
+  const client = architectureClient;
+  const scope = remoteLiteratureScope();
+  if (!remote || !client || !scope || remoteLiteratureViewLoading) return false;
+  const targetPage = remote.page + delta;
+  if (targetPage < 1) return true;
+  let cursor = '';
+  if (delta > 0) {
+    if (!remote.hasMore || !remote.nextCursor) return true;
+    cursor = remote.nextCursor;
+  } else if (delta < 0) {
+    cursor = remote.pageCursors[targetPage - 1] ?? '';
+  } else {
+    return true;
+  }
+  architectureRefreshSerial += 1;
+  const serial = architectureRefreshSerial;
+  if (architectureRefreshTimer !== null) {
+    window.clearTimeout(architectureRefreshTimer);
+    architectureRefreshTimer = null;
+  }
+  const handled = await fetchRemoteLiteraturePage(client, scope, targetPage, cursor, serial, remote.pageCursors);
+  if (handled && activeRemoteLiteratureView()?.page === targetPage) {
+    document.querySelector<HTMLElement>('#gallery')?.scrollIntoView({ block: 'start', behavior: 'auto' });
+  }
+  return handled;
+}
+
 async function refreshArchitectureCorpus(serial: number): Promise<void> {
   const client = architectureClient;
   if (!client || serial !== architectureRefreshSerial) return;
+  const remoteScope = remoteLiteratureScope();
+  if (remoteScope) {
+    const handled = await fetchRemoteLiteraturePage(client, remoteScope, 1, '', serial, ['']);
+    if (handled) return;
+  } else {
+    clearRemoteLiteratureView();
+  }
   try {
     let additions: Paper[] = [];
     const needle = query.trim();
@@ -1439,12 +1555,14 @@ async function refreshArchitectureCorpus(serial: number): Promise<void> {
     }
     if (serial !== architectureRefreshSerial || architectureClient !== client) return;
     architectureReadLimited = false;
+    if (remoteScope) document.documentElement.dataset.catalogQuery = 'static-fallback';
     setArchitectureCorpus(mergePapers(architectureLandingPapers, additions));
     mount();
   } catch (error) {
     if (serial !== architectureRefreshSerial || architectureClient !== client) return;
     console.warn('architecture-v1 on-demand read unavailable; retaining bounded Hot landing set', error);
     architectureReadLimited = true;
+    clearRemoteLiteratureView();
     setArchitectureCorpus(architectureLandingPapers);
     mount();
   }
