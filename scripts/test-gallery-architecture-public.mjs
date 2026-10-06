@@ -57,7 +57,9 @@ test('TOC rescue stays dormant until the bounded media path fails', () => {
   assert.ok(rescue.includes("gallery-media-static-fallback"));
   assert.ok(rescue.includes('function activate()'));
   assert.ok(!/\nscheduleScan\(0\);\s*\n\}\)\(\);\s*$/.test(rescue));
-  assert.ok(!rescue.includes("cache: 'no-store'"));
+  const manifestBlock = rescue.slice(rescue.indexOf('async function loadManifest()'), rescue.indexOf('async function loadLiveCaptures()'));
+  assert.ok(manifestBlock.includes("cache: 'default'"));
+  assert.ok(!manifestBlock.includes("cache: 'no-store'"));
 });
 
 test('public architecture publishes a bounded hash-bound Hot fallback object', () => {
