@@ -99,17 +99,19 @@
   "artifactShas": {
     "textOnly": "9da384752efbdd2ce217d70fb1ae476ac57c6103",
     "imagesOnly": "7bbbf095404642ef7f7f3163884ebd70f0fe7dc8",
-    "preDraftReview": "a91c0e4b43ba65ad2cc7fe813ca1cfa05652cb2b"
+    "preDraftReview": "a91c0e4b43ba65ad2cc7fe813ca1cfa05652cb2b",
+    "transportReview": "acfc07186fb59113b24c4f2224cdc972e409a7f1"
   },
   "textReview": "pass",
   "imageReview": "pass",
   "reviewNotes": [
-    "Both articles now include explicit substrate scope, synthetic utility and method boundaries.",
-    "Nature Chemistry opening figure is Fig. 1e placed after its explanatory text; isolated Fig. 1c is removed from the opening.",
-    "All cropped production body figures are materialized, directly inspected and fingerprinted repo assets.",
-    "Hyster now alternates protein engineering, scope, FRET, mechanism, lifetime and application figures to avoid long text-only stretches.",
-    "Exact user-confirmed Hyster cover remains pinned.",
-    "Fixed-IP WeChat publisher completed successfully and draft/get readback is ok."
+    "Both articles preserve their existing foundations but now follow the original-paper progression more completely.",
+    "Both articles include explicit substrate-scope discussion, synthetic utility and method boundaries.",
+    "Nature Chemistry no longer opens with isolated Fig. 1c; the reviewed Fig. 1e problem image is paired with matching text.",
+    "Hyster retains the exact approved cover/full Fig. 1c and adds readable Fig. 3 scope blocks to improve completeness and visual rhythm.",
+    "All production body figures are pinned WYSIWYG rasters; runtime fractional cropping is not used.",
+    "Fixed-IP WeChat publisher succeeded; draft/get readback returned ok.",
+    "No TinyFish dependency in the final approval path."
   ],
   "approvedAt": "2026-10-06T07:50:00Z",
   "transportReview": "pass",
