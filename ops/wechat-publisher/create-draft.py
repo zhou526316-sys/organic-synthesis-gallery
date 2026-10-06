@@ -379,12 +379,14 @@ def require_editorial_review_gate(
             if not rel.startswith("public/wechat-") or not rel.endswith(".json"):
                 continue
             manifest = json.loads(source.read_text(encoding="utf-8"))
-            figures = manifest.get("figures") if isinstance(manifest, dict) else []
+            figures_raw = manifest.get("figures") if isinstance(manifest, dict) else []
+            figures = figures_raw if isinstance(figures_raw, list) else []
             figure_map = {
                 str(fig.get("id")): fig
-                for fig in figures if isinstance(figures, list) and isinstance(fig, dict) and fig.get("id")
+                for fig in figures
+                if isinstance(fig, dict) and fig.get("id")
             }
-            for fig in figures if isinstance(figures, list) else []:
+            for fig in figures:
                 if not isinstance(fig, dict):
                     continue
                 fig_id = str(fig.get("id") or "unknown")
