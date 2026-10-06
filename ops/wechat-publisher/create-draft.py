@@ -372,6 +372,28 @@ def require_editorial_review_gate(
             raise RuntimeError(
                 f"WeChat reviewed asset changed after approval: {rel}: expected {expected}, actual {actual}"
             )
+    if bool(gate.get("materializedCropReviewRequired")):
+        for source in required_sources:
+            rel = str(source.resolve().relative_to(ROOT.resolve())).replace("\\", "/")
+            if not rel.startswith("public/wechat-") or not rel.endswith(".json"):
+                continue
+            manifest = json.loads(source.read_text(encoding="utf-8"))
+            figures = manifest.get("figures") if isinstance(manifest, dict) else []
+            for fig in figures if isinstance(figures, list) else []:
+                if not isinstance(fig, dict):
+                    continue
+                fig_id = str(fig.get("id") or "unknown")
+                if isinstance(fig.get("crop_frac"), list):
+                    raise RuntimeError(
+                        f"runtime crop_frac forbidden after materialized review: {rel}#{fig_id}"
+                    )
+                if fig.get("body") is False:
+                    continue
+                repo_image = str(fig.get("repo_path") or "").strip()
+                if not repo_image:
+                    raise RuntimeError(
+                        f"reviewed production figure must be pinned to repo_path: {rel}#{fig_id}"
+                    )
     return gate
 
 
