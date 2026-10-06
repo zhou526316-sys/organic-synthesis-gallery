@@ -1875,9 +1875,9 @@ jobs:
                 body?.scheduledHandoffIndexReadEnabled === true &&
                 body?.userLibraryRowShadowEnabled === true &&
                 body?.userLibraryRowReadEnabled === true &&
-                body?.userLibraryV3ShadowEnabled === true &&
+                body?.userLibraryV3ShadowEnabled === false &&
                 body?.userLibraryV3ReadEnabled === true &&
-                body?.userLibraryV3WriteEnabled === false &&
+                body?.userLibraryV3WriteEnabled === true &&
                 body?.siteAnalyticsMaterializedShadowEnabled === true &&
                 body?.siteAnalyticsMaterializedReadEnabled === true &&
                 body?.literatureCatalogIndexShadowEnabled === true &&
