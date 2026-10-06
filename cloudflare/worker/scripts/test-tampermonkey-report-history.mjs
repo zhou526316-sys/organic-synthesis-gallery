@@ -23,6 +23,7 @@ const req = path => new Request('https://example.test' + path);
 const failed = await importTampermonkeyReport(req('/api/media/tampermonkey-report/import'), env, {
   doi,
   publisher: 'acs',
+  controllerRevision: '2.2.41',
   status: 'failed',
   reason: 'image_http_403',
   articleUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c99999',
@@ -40,6 +41,7 @@ assert.equal(failed.body.failureCount, 1);
 const succeeded = await importTampermonkeyReport(req('/api/media/tampermonkey-report/import'), env, {
   doi,
   publisher: 'acs',
+  controllerRevision: '2.2.41',
   status: 'success',
   reason: 'captured_rendered_canvas',
   mediaNeed: 'evidence',
@@ -47,6 +49,8 @@ const succeeded = await importTampermonkeyReport(req('/api/media/tampermonkey-re
   evidenceLevel: 'abstract_only',
   evidenceChars: 842,
   evidenceSections: 1,
+  privatePdfStatus: 'stored',
+  privatePdfBytes: 456789,
   assetType: 'toc_graphic',
   candidateKind: 'official',
   candidateSource: 'live_dom',
@@ -78,6 +82,9 @@ assert.equal(history.body.latest.fulltextStatus, 'stored');
 assert.equal(history.body.latest.evidenceLevel, 'abstract_only');
 assert.equal(history.body.latest.evidenceChars, 842);
 assert.equal(history.body.latest.evidenceSections, 1);
+assert.equal(history.body.latest.privatePdfStatus, 'stored');
+assert.equal(history.body.latest.privatePdfBytes, 456789);
+assert.ok(history.body.attempts.some(item => item.status === 'success' && item.privatePdfStatus === 'stored' && item.privatePdfBytes === 456789));
 assert.equal(history.body.failureCount, 1);
 assert.equal(history.body.successCount, 1);
 assert.equal(history.body.attempts.length, 2);
