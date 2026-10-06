@@ -5,7 +5,6 @@
   "kicker": "往期精选｜Hyster",
   "digest": "Hyster 团队把原本光物理性质很差的 PLP 醌式中间体变成酶内光还原剂，通过能量转移在活性位点内同时生成并约束一对瞬态自由基，实现高对映选择性的 C(sp³)–C(sp³) 偶联。",
   "source_url": "https://gallery.gczhouwld.com/?doi=10.1038/s41586-026-10930-9",
-  "pdf_url": "https://www.nature.com/articles/s41586-026-10930-9.pdf",
   "paper": {
     "doi": "10.1038/s41586-026-10930-9",
     "journal": "Nature",
@@ -25,88 +24,40 @@
   "figures": [
     {
       "id": "cover_scheme",
-      "body": false,
       "caption": "",
-      "pdf_render": {
-        "page_index": 1,
-        "clip": [
-          40,
-          245,
-          555,
-          600
-        ],
-        "zoom": 4
-      }
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig1_HTML.png",
+      "body": false,
+      "crop_frac": [
+        0,
+        0.3,
+        1,
+        1
+      ]
     },
     {
       "id": "fig1",
       "caption": "原文 Fig. 1｜这篇文章的起点是“辅因子暗区”：PLP 能形成电子丰富的醌式中间体，但直接吸光和激发态寿命都不理想。作者借鉴 DNA 光裂合酶的“天线辅因子”思路，用罗丹明 6G 吸光，再通过 FRET 把能量交给酶内醌式中间体。",
-      "pdf_render": {
-        "page_index": 1,
-        "clip": [
-          40,
-          45,
-          555,
-          610
-        ],
-        "zoom": 4
-      }
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig1_HTML.png"
     },
     {
       "id": "fig2",
       "caption": "原文 Fig. 2｜野生型 TmLTA 起始只有约 5% 收率，却已经给出 99:1 e.r.；五轮定向进化把收率提高到约 90%，而高对映选择性基本保持。突变集中在围绕底物通道的多个环区，说明进化主要在重塑反应微环境。",
-      "pdf_render": {
-        "page_index": 2,
-        "clip": [
-          40,
-          45,
-          555,
-          525
-        ],
-        "zoom": 4
-      }
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig2_HTML.png"
     },
     {
       "id": "fig3",
       "caption": "原文 Fig. 3｜底物范围并非“普遍高收率”：不同取代会显著影响活性和对映选择性，部分吡啶底物甚至接近消旋。正是这些差异帮助反推醌式中间体形成、底物结合和活性位点几何之间的关系。",
-      "pdf_render": {
-        "page_index": 3,
-        "clip": [
-          40,
-          45,
-          555,
-          625
-        ],
-        "zoom": 4
-      }
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig3_HTML.png"
     },
     {
       "id": "fig4",
       "caption": "原文 Fig. 4｜FRET 证据链：罗丹明 6G 的激发态能被酶内醌式中间体动态淬灭，二者发射/吸收光谱有良好重叠；同时，酶内外亚胺激发态也能向相邻活性位点的醌式中间体传能，形成第二条不依赖外加光敏剂的能量转移通道。",
-      "pdf_render": {
-        "page_index": 4,
-        "clip": [
-          40,
-          45,
-          555,
-          530
-        ],
-        "zoom": 4
-      }
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig4_HTML.png"
     },
     {
       "id": "fig5",
       "caption": "原文 Fig. 5｜激发态醌式中间体的寿命和还原能力决定它能否真正参与分子间反应。作者通过寿命测量、Stern–Volmer 淬灭、氧化还原电位估算以及不同自由基前体测试，把“FRET 产生 [Q]* → 单电子还原 → 自由基对复合”这条链逐步闭合。",
-      "pdf_render": {
-        "page_index": 5,
-        "clip": [
-          40,
-          45,
-          555,
-          545
-        ],
-        "zoom": 4
-      }
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig5_HTML.png"
     }
   ],
   "sections": [
