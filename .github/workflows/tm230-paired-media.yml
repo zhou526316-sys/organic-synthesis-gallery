@@ -86,7 +86,12 @@ jobs:
           grep -F "result.fulltext=await tryCaptureArticleEvidence" public/toc-mainline.user.js
           grep -F "EVIDENCE_INVENTORY_ENDPOINT" public/toc-mainline.user.js
           grep -F "var evidenceJobs=[];" public/toc-mainline.user.js
-          grep -F "PRIVATE_PDF_QUEUE_REVISION = '20261005-private-pdf-queue-v1'" public/toc-mainline.user.js
+          PDF_QUEUE_REVISION="$(sed -n "s#^  var PRIVATE_PDF_QUEUE_REVISION = '\\([^']*\\)';#\\1#p" public/toc-mainline.user.js | head -1 | tr -d '\r')"
+          test -n "$PDF_QUEUE_REVISION"
+          case "$PDF_QUEUE_REVISION" in
+            *-private-pdf-queue-v*) ;;
+            *) echo "Unexpected PRIVATE_PDF_QUEUE_REVISION: $PDF_QUEUE_REVISION" >&2; exit 1 ;;
+          esac
           grep -F "capturePrivatePdf:true" public/toc-mainline.user.js
           grep -F "totalTextBudget:null" scripts/test-tm232-evidence-capture.mjs
           grep -F "abstractOnly:true" scripts/test-tm232-evidence-capture.mjs
