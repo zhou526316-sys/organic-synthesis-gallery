@@ -975,6 +975,55 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
             canvas.paste(fitted,(px,py))
             canvas = canvas.convert("RGB")
 
+        elif layout == "daily_reference_darkband":
+            # Daily main-cover layout: keep the exact reviewed publisher panel
+            # intact in a light card and reserve a dark lower band for WeChat's
+            # own white title overlay. No chemistry or data are redrawn.
+            canvas = Image.new("RGB", (width, height), "#0a2442")
+            draw = ImageDraw.Draw(canvas)
+
+            # Subtle dark vertical gradient keeps the title-safe lower region
+            # readable after WeChat applies its own card text.
+            top_rgb = (18, 53, 92)
+            bottom_rgb = (5, 22, 42)
+            for yy in range(height):
+                t = yy / max(1, height - 1)
+                rgb = tuple(
+                    int(top_rgb[i] * (1 - t) + bottom_rgb[i] * t)
+                    for i in range(3)
+                )
+                draw.line((0, yy, width, yy), fill=rgb)
+
+            margin_x = max(24, int(width * 0.022))
+            top_y = max(22, int(height * 0.035))
+            panel_w = width - margin_x * 2
+            panel_h = max(1, int(image.height * (panel_w / max(1, image.width))))
+            max_panel_h = int(height * 0.56)
+            if panel_h > max_panel_h:
+                scale = max_panel_h / panel_h
+                panel_w = max(1, int(panel_w * scale))
+                panel_h = max(1, int(panel_h * scale))
+            panel = image.resize((panel_w, panel_h), Image.Resampling.LANCZOS)
+            px = (width - panel_w) // 2
+
+            mask = Image.new("L", (panel_w, panel_h), 0)
+            md = ImageDraw.Draw(mask)
+            md.rounded_rectangle(
+                (0, 0, panel_w - 1, panel_h - 1),
+                radius=max(10, int(width * 0.012)),
+                fill=255,
+            )
+            card = Image.new("RGB", (panel_w, panel_h), "white")
+            card.paste(panel, (0, 0))
+            canvas.paste(card, (px, top_y), mask)
+
+            separator_y = top_y + panel_h + max(16, int(height * 0.025))
+            draw.line(
+                (margin_x + 10, separator_y, width - margin_x - 10, separator_y),
+                fill="#c28e35",
+                width=max(2, int(height * 0.003)),
+            )
+
         elif layout == "retrospective_abstract_square":
             # Abstract editorial cover inspired by the established retrospective
             # visual language. Only symbolic light/energy/radical motifs are drawn;
