@@ -202,13 +202,16 @@ function rowSnapshotFor(state: UserUiState, key: string): {
 function mutationOperation(base: UserUiState, target: UserUiState, key: string): Record<string, unknown> | null {
   const before = rowSnapshotFor(base,key);
   const after = rowSnapshotFor(target,key);
+  // Metadata is ancillary to user paper state. A metadata-only browser cache entry
+  // is never promoted into the cloud library.
+  if (!after.paperPresent) {
+    return before.paperPresent || before.metadataPresent ? { paperKey:key, delete:true } : null;
+  }
   if (before.paperPresent === after.paperPresent
     && before.metadataPresent === after.metadataPresent
     && sameJson(before.paperState,after.paperState)
     && sameJson(before.metadata,after.metadata)) return null;
-  if (!after.paperPresent && !after.metadataPresent) return { paperKey:key, delete:true };
-  const operation: Record<string, unknown> = { paperKey:key };
-  if (after.paperPresent) operation.paperState = after.paperState;
+  const operation: Record<string, unknown> = { paperKey:key, paperState:after.paperState };
   if (after.metadataPresent) operation.metadata = after.metadata;
   return operation;
 }
@@ -253,8 +256,35 @@ function markInitialDifferences(base: UserUiState, target: UserUiState): void {
   if (!sameJson(globalStateOf(base),globalStateOf(target))) dirtyGlobal = true;
 }
 
-function allChangedKeys(base: UserUiState, target: UserUiState): string[] {
-  return [...relevantPaperKeys(base,target)].filter(key=>Boolean(mutationOperation(base,target,key)));
+function mergeDirtyState(
+  remote:UserUiState,
+  desired:UserUiState,
+  keys:string[],
+  globalWasDirty:boolean,
+):UserUiState{
+  const merged=cloneState(remote);
+  if(globalWasDirty){
+    const globals=mergeStates(remote,desired,true);
+    merged.statuses=structuredClone(globals.statuses);
+    merged.quickTerms=structuredClone(globals.quickTerms);
+    merged.collections=structuredClone(globals.collections);
+    merged.aliases=structuredClone(globals.aliases);
+    merged.actionStyles=structuredClone(globals.actionStyles);
+    merged.followedSearches=structuredClone(globals.followedSearches);
+    merged.searchHistory=structuredClone(globals.searchHistory);
+    merged.hideRead=globals.hideRead;
+  }
+  for(const key of keys){
+    const desiredRow=rowSnapshotFor(desired,key);
+    if(!desiredRow.paperPresent){
+      delete merged.papers[key];
+      delete merged.metadata[key];
+      continue;
+    }
+    merged.papers[key]=mergePaper(remote.papers?.[key],desiredRow.paperState,true);
+    if(desiredRow.metadataPresent) merged.metadata[key]=structuredClone(desiredRow.metadata!);
+  }
+  return merged;
 }
 
 function committedSubset(base: UserUiState, target: UserUiState, keys: string[], globalChanged: boolean): UserUiState {
@@ -272,10 +302,14 @@ function committedSubset(base: UserUiState, target: UserUiState, keys: string[],
   }
   for (const key of keys) {
     const row = rowSnapshotFor(target,key);
-    if (row.paperPresent) next.papers[key] = structuredClone(row.paperState!);
-    else delete next.papers[key];
-    if (row.metadataPresent) next.metadata[key] = structuredClone(row.metadata!);
-    else delete next.metadata[key];
+    if (row.paperPresent) {
+      next.papers[key] = structuredClone(row.paperState!);
+      if (row.metadataPresent) next.metadata[key] = structuredClone(row.metadata!);
+      else delete next.metadata[key];
+    } else {
+      delete next.papers[key];
+      delete next.metadata[key];
+    }
   }
   return next;
 }
@@ -580,7 +614,7 @@ async function persistV3Desired(
     if(!recovery.account)return {kind:'failure'};
     acceptRemoteBaseline(recovery.account);
     base=recovery.account.state;
-    if(!recovery.account.writeEnabled)return persistLegacyDesired(desired,false);
+    if(!recovery.account.writeEnabled)return persistLegacyDesired(desired,keys,globalWasDirty,false);
   }
 
   const outcome=await saveViaV3(base,desired,keys,globalWasDirty);
@@ -592,19 +626,19 @@ async function persistV3Desired(
   if(recovery.status===401)return {kind:'unauthorized'};
   if(!recovery.account)return {kind:'failure'};
   acceptRemoteBaseline(recovery.account);
-  const merged=mergeStates(recovery.account.state,desired,true);
+  const merged=mergeDirtyState(recovery.account.state,desired,keys,globalWasDirty);
   replaceStoreStateWithoutDirty(merged);
-  if(!recovery.account.writeEnabled)return persistLegacyDesired(merged,false);
+  if(!recovery.account.writeEnabled)return persistLegacyDesired(merged,keys,globalWasDirty,false);
 
-  const retryKeys=allChangedKeys(recovery.account.state,merged);
-  const retryGlobal=!sameJson(globalStateOf(recovery.account.state),globalStateOf(merged));
+  const retryKeys=keys.filter(key=>Boolean(mutationOperation(recovery.account!.state,merged,key)));
+  const retryGlobal=globalWasDirty&&!sameJson(globalStateOf(recovery.account.state),globalStateOf(merged));
   const retry=await saveViaV3(recovery.account.state,merged,retryKeys,retryGlobal);
   if(retry.kind==='ok')return {kind:'ok',state:merged};
   if(retry.kind==='unauthorized')return {kind:'unauthorized'};
   return {kind:'failure'};
 }
 
-async function persistLegacyDesired(desired:UserUiState,allowRecovery=true):Promise<PersistOutcome>{
+async function persistLegacyDesired(desired:UserUiState,keys:string[],globalWasDirty:boolean,allowRecovery=true):Promise<PersistOutcome>{
   let response=await request('account-save',{state:desired});
   if(response.status===401)return {kind:'unauthorized'};
 
@@ -613,12 +647,12 @@ async function persistLegacyDesired(desired:UserUiState,allowRecovery=true):Prom
     if(recovery.status===401)return {kind:'unauthorized'};
     if(!recovery.account||!recovery.account.writeEnabled)return {kind:'failure'};
     acceptRemoteBaseline(recovery.account);
-    const merged=mergeStates(recovery.account.state,desired,true);
+    const merged=mergeDirtyState(recovery.account.state,desired,keys,globalWasDirty);
     replaceStoreStateWithoutDirty(merged);
     return persistV3Desired(
       merged,
-      allChangedKeys(recovery.account.state,merged),
-      !sameJson(globalStateOf(recovery.account.state),globalStateOf(merged)),
+      keys.filter(key=>Boolean(mutationOperation(recovery.account!.state,merged,key))),
+      globalWasDirty&&!sameJson(globalStateOf(recovery.account.state),globalStateOf(merged)),
       false,
     );
   }
@@ -637,10 +671,12 @@ async function persistLegacyDesired(desired:UserUiState,allowRecovery=true):Prom
     const merged=mergeStates(remote.state,desired,true);
     replaceStoreStateWithoutDirty(merged);
     if(remote.writeEnabled){
+      const boundedMerged=mergeDirtyState(remote.state,desired,keys,globalWasDirty);
+      replaceStoreStateWithoutDirty(boundedMerged);
       return persistV3Desired(
-        merged,
-        allChangedKeys(remote.state,merged),
-        !sameJson(globalStateOf(remote.state),globalStateOf(merged)),
+        boundedMerged,
+        keys.filter(key=>Boolean(mutationOperation(remote.state,boundedMerged,key))),
+        globalWasDirty&&!sameJson(globalStateOf(remote.state),globalStateOf(boundedMerged)),
         false,
       );
     }
@@ -838,7 +874,7 @@ async function initialMerge(): Promise<void> {
   const globalWasDirty=dirtyGlobal;
   const outcome=v3WriteActive
     ? await persistV3Desired(merged,keys,globalWasDirty)
-    : await persistLegacyDesired(merged);
+    : await persistLegacyDesired(merged,keys,globalWasDirty);
   if(outcome.kind==='unauthorized'){
     clearRememberedAccount();
     return;
@@ -897,7 +933,7 @@ async function saveRemote(): Promise<void> {
   try {
     const outcome=v3WriteActive
       ? await persistV3Desired(desired,keys,globalWasDirty)
-      : await persistLegacyDesired(desired);
+      : await persistLegacyDesired(desired,keys,globalWasDirty);
     if(outcome.kind==='unauthorized'){
       clearRememberedAccount();
       return;
