@@ -23,7 +23,7 @@
 ## fig1
 
 - repo_path: `public/wechat-assets/reviewed/2026-10-06/daily-problem.png`
-- intended placement: 正文开头/开篇视觉锚点
+- intended placement: 第二层“交替极性电解解决了过氧化和电极钝化，却还没有解决同步生成”正文之后
 - caption: 原文 Fig. 1e｜先看作者真正面对的问题：羧酸与硼酸都能产生瞬态烷基自由基，但在普通条件下会同时出现自偶联、过氧化、质子脱硼和脱羧等竞争通道。交替极性电解先压住一部分失活路径，后面的“氧化还原匹配”才有意义。
 - crop proof: `audit/wechat-working/crop-proofs/2026-10-06/daily-problem.jpg`
 
