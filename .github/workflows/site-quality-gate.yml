@@ -108,6 +108,7 @@ jobs:
           npm run test:reader-counts
           npm run test:user-library-shadow
           npm run test:user-library-v3
+          npm run test:user-library-v3-shadow
           npm run test:site-analytics-materialized
 
       - name: Test fulltext-backed article summaries

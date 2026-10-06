@@ -52,6 +52,13 @@ import {
 } from './literature-catalog-index.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus } from './user-library-shadow.js';
+import {
+  backfillUserLibraryV3ShadowPage,
+  compareUserLibraryV3ShadowPage,
+  getUserLibraryV3ShadowStatus,
+  reconcileUserLibraryV3ShadowPage,
+  userLibraryV3ShadowEnabled,
+} from './user-library-v3-shadow.js';
 import { backfillSiteAnalyticsMaterializedPage, compareSiteAnalyticsBodies, getSiteAnalyticsMaterializedReadiness, getSiteAnalyticsMaterializedStatus, materializedSiteAnalyticsStats, siteAnalyticsMaterializedReadEnabled } from './site-analytics-materialized.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
@@ -255,6 +262,9 @@ async function handleApi(request, env, ctx) {
       literatureCatalogIndexDb: Boolean(env.LITERATURE_INDEX_DB),
       userLibraryRowShadowEnabled: String(env.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1',
       userLibraryRowReadEnabled: String(env.USER_LIBRARY_ROW_READ_ENABLED || '') === '1',
+      userLibraryV3ShadowEnabled: userLibraryV3ShadowEnabled(env),
+      userLibraryV3ReadEnabled: String(env.USER_LIBRARY_V3_READ_ENABLED || '') === '1',
+      userLibraryV3WriteEnabled: String(env.USER_LIBRARY_V3_WRITE_ENABLED || '') === '1',
       siteAnalyticsMaterializedShadowEnabled: String(env.SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED || '') === '1',
       siteAnalyticsMaterializedReadEnabled: siteAnalyticsMaterializedReadEnabled(env),
       kv: Boolean(env.STATE),
@@ -429,6 +439,31 @@ async function handleApi(request, env, ctx) {
     const offset = Math.max(0, Number(url.searchParams.get('offset') || 0));
     const limit = Math.max(1, Math.min(50, Number(url.searchParams.get('limit') || 20)));
     return resultResponse(await compareUserLibraryShadowPage(env, offset, limit));
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/admin/user-library-v3/status') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await getUserLibraryV3ShadowStatus(env));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/user-library-v3/backfill') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const limit = Math.max(1, Math.min(50, Number(url.searchParams.get('limit') || 20)));
+    return resultResponse(await backfillUserLibraryV3ShadowPage(env, limit));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/user-library-v3/reconcile') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const limit = Math.max(1, Math.min(50, Number(url.searchParams.get('limit') || 20)));
+    return resultResponse(await reconcileUserLibraryV3ShadowPage(env, limit));
+  }
+  if (request.method === 'GET' && url.pathname === '/api/admin/user-library-v3/compare') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const offset = Math.max(0, Number(url.searchParams.get('offset') || 0));
+    const limit = Math.max(1, Math.min(50, Number(url.searchParams.get('limit') || 20)));
+    return resultResponse(await compareUserLibraryV3ShadowPage(env, offset, limit));
   }
 
   if (request.method === 'GET' && url.pathname === '/api/admin/site-analytics-materialized/status') {

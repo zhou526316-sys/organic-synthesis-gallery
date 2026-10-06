@@ -97,7 +97,7 @@ R2 remains the durable byte source for Evidence and encrypted handoff payloads. 
 
 Per-user paper state must scale by row/key, not by endlessly enlarging one serialized library document.
 
-The row-oriented D1 read model is the migration direction. Legacy state may remain as a compatibility/write authority only while parity and rollback require it. The current legacy document-size ceiling is not an acceptable final architecture. The next write-side phase must move toward row-authoritative per-paper mutations with revision fencing and a reversible legacy compatibility period; no paper state may be silently dropped during migration.
+The row-oriented D1 read model is the migration direction. Legacy state may remain as a compatibility/write authority only while parity and rollback require it. The current legacy document-size ceiling is not an acceptable final architecture. D3c now has an isolated bounded mutation/delta foundation; D3c1 may populate it only as a non-authoritative shadow from the current legacy write authority, with revision-fenced dual-write and full semantic parity. V3 read/write activation remains separately gated; no paper state may be silently dropped during migration.
 
 ## 11. Analytics rule
 
@@ -140,7 +140,7 @@ Architecture changes must test at least:
 1. **P0 — bounded frontend results: GUARDED.** Browser DOM is a fixed result window; the static Archive compatibility path now fails closed before >1000-result truncation or >36 monthly-segment fanout. Cursor-based indexed paging remains the preferred path for broad historical discovery.
 2. **P0 — bounded fallback: COMPLETE.** Deployed architecture failures use verified Hot fallback / retained Hot state rather than reloading all history.
 3. **P1 — indexed all-time search: CUTOVER GATE.** Dedicated D1 shadow has full row/search/view parity; frontend indexed-read support may be merged while production read activation remains a separate flag.
-4. **P1 — user-library D3c:** move writes toward row-authoritative state and remove the monolithic-document size ceiling only after verified dual-path parity.
+4. **P1 — user-library D3c: SHADOW PARITY.** Bounded V3 mutation/delta primitives are merged; D3c1 now validates revision-fenced shadow population and full semantic parity while V3 read/write authority remains off.
 5. **P2 — continue index/materialization cutovers:** any remaining metadata path that still relies on corpus-wide/prefix-wide scans must migrate behind parity/freshness gates.
 
 These priorities are scale-safety work. They do not alter the Tampermonkey acquisition workflow in this architecture task.

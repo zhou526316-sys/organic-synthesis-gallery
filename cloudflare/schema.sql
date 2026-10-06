@@ -768,6 +768,40 @@ CREATE TABLE IF NOT EXISTS user_library_v3_changes (
 CREATE INDEX IF NOT EXISTS idx_user_library_v3_changes_user_revision
   ON user_library_v3_changes(user_id, revision, seq);
 
+
+
+CREATE TABLE IF NOT EXISTS user_library_v3_shape (
+  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  papers_split INTEGER NOT NULL CHECK (papers_split IN (0,1)),
+  metadata_split INTEGER NOT NULL CHECK (metadata_split IN (0,1)),
+  revision INTEGER NOT NULL CHECK (revision >= 0)
+);
+
+CREATE TABLE IF NOT EXISTS user_library_v3_shadow_sync (
+  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  source_revision INTEGER NOT NULL DEFAULT 0 CHECK (source_revision >= 0),
+  source_updated_at INTEGER NOT NULL DEFAULT 0,
+  source_state_hash TEXT NOT NULL DEFAULT '',
+  inflight_revision INTEGER NOT NULL DEFAULT 0 CHECK (inflight_revision >= 0),
+  inflight_started_at INTEGER NOT NULL DEFAULT 0,
+  synced_at INTEGER NOT NULL DEFAULT 0,
+  last_error TEXT NOT NULL DEFAULT ''
+);
+
+CREATE TABLE IF NOT EXISTS user_library_v3_backfill (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  cursor_user_id TEXT,
+  complete INTEGER NOT NULL DEFAULT 0 CHECK (complete IN (0,1)),
+  scanned_users INTEGER NOT NULL DEFAULT 0,
+  synced_users INTEGER NOT NULL DEFAULT 0,
+  skipped_fresh INTEGER NOT NULL DEFAULT 0,
+  skipped_stale INTEGER NOT NULL DEFAULT 0,
+  failed_users INTEGER NOT NULL DEFAULT 0,
+  started_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL,
+  last_error TEXT NOT NULL DEFAULT ''
+);
+
 -- Materialized site analytics shadow. Raw site_pageviews_v1 remains authoritative in D4a.
 CREATE TABLE IF NOT EXISTS site_global_stats_v2 (
   id INTEGER PRIMARY KEY CHECK (id = 1),

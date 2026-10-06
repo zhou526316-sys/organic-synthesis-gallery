@@ -116,7 +116,7 @@ If `sinceRevision < change_floor_revision`, the response must say `resetRequired
 ## Migration path
 
 1. **D3c0 — foundation:** add isolated V3 schema, bounded pure read/write primitives and regression tests. No API activation.
-2. **D3c1 — shadow population:** translate existing D3b row heads/rows into V3 and verify semantic parity.
+2. **D3c1 — shadow population:** copy the current authoritative legacy account snapshot into V3, preserve legacy shape semantics explicitly, dual-write subsequent legacy saves fail-open, and verify full semantic parity. D3b remains the active read path during this phase.
 3. **D3c2 — paged/delta read shadow:** add authenticated read endpoints behind an independent disabled flag; compare reconstructed state with D3b.
 4. **D3c3 — frontend compatibility:** teach account-sync to perform paged initial sync and bounded delta polling while legacy save remains authoritative.
 5. **D3c4 — row-authoritative writes:** enable bounded V3 mutation writes behind a separate flag only after parity, conflict, tombstone and rollback tests pass.
