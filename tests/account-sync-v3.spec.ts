@@ -211,6 +211,122 @@ test('account sync assembles V3 head/pages/delta before saving and never calls l
   expect(remembered).toEqual({ revision: '6', user: 'u-v3' });
 });
 
+test('V3 write authority batches 65 dirty paper keys as 32/32/1 and never calls legacy account-save', async ({ page }) => {
+  test.setTimeout(60_000);
+  const local = {
+    ...globalState(false),
+    papers: {} as Record<string, any>,
+    metadata: {} as Record<string, any>,
+  };
+  for (let index = 0; index < 65; index += 1) {
+    const key = `10.1234/local-${String(index).padStart(2,'0')}`;
+    local.papers[key] = {
+      favorite:true,collections:[],note:`N${index}`,quickTerms:[],tags:[],updatedAt:100+index,
+    };
+    local.metadata[key] = { id:key,doi:key,title:`Local ${index}`,journal:'JACS' };
+  }
+  await seedSession(page,local);
+  await stubCommonApi(page);
+
+  const modes:string[]=[];
+  const mutations:any[]=[];
+  const head = {
+    ready:true,
+    revision:10,
+    updatedAt:1000,
+    globalState:globalState(false),
+    globalRevision:10,
+    paperCount:0,
+    metadataCount:0,
+    changeFloorRevision:10,
+    papersSplit:true,
+    metadataSplit:true,
+  };
+  let nextRevision=10;
+
+  await page.route('https://api.gczhouwld.com/api/user-ui/reader-counts', async route => {
+    const body = route.request().postDataJSON() as any;
+    const mode = String(body?.mode || '');
+    if (!mode) {
+      await route.fulfill({ status:200,contentType:'application/json',body:JSON.stringify({counts:{}}) });
+      return;
+    }
+    modes.push(mode);
+
+    if (mode === 'account-v3-head') {
+      await route.fulfill({
+        status:200,contentType:'application/json',
+        body:JSON.stringify({account:{userId:'u-write',readPath:'v3-head',writeEnabled:true,...head}}),
+      });
+      return;
+    }
+    if (mode === 'account-v3-page') {
+      await route.fulfill({
+        status:200,contentType:'application/json',
+        body:JSON.stringify({account:{
+          userId:'u-write',readPath:'v3-page',writeEnabled:true,ready:true,
+          scanStartRevision:10,head,count:0,hasMore:false,nextKey:null,rows:[],
+        }}),
+      });
+      return;
+    }
+    if (mode === 'account-v3-delta') {
+      await route.fulfill({
+        status:200,contentType:'application/json',
+        body:JSON.stringify({account:{
+          userId:'u-write',readPath:'v3-delta',writeEnabled:true,ready:true,
+          resetRequired:false,sinceRevision:10,targetRevision:10,head,
+          globalRevision:10,count:0,hasMore:false,nextCursor:null,changes:[],
+        }}),
+      });
+      return;
+    }
+    if (mode === 'account-v3-mutate') {
+      mutations.push(structuredClone(body));
+      expect(body.expectedRevision).toBe(nextRevision);
+      expect(Array.isArray(body.operations)).toBe(true);
+      expect(body.operations.length).toBeLessThanOrEqual(32);
+      nextRevision += 1;
+      await route.fulfill({
+        status:200,contentType:'application/json',
+        body:JSON.stringify({account:{
+          userId:'u-write',readPath:'v3-mutate',writeEnabled:true,
+          revision:nextRevision,updatedAt:1000+nextRevision,
+          paperCount:Math.min((nextRevision-10)*32,65),
+          metadataCount:Math.min((nextRevision-10)*32,65),
+          operationCount:body.operations.length,
+          changeFloorRevision:10,
+        }}),
+      });
+      return;
+    }
+    if (mode === 'account-save') {
+      await route.fulfill({
+        status:500,contentType:'application/json',
+        body:JSON.stringify({error:'legacy_save_must_not_run'}),
+      });
+      return;
+    }
+    if (mode === 'account-pull') {
+      await route.fulfill({
+        status:500,contentType:'application/json',
+        body:JSON.stringify({error:'legacy_pull_must_not_run'}),
+      });
+      return;
+    }
+    await route.fulfill({ status:400,contentType:'application/json',body:'{}' });
+  });
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil:'domcontentloaded' });
+  await expect.poll(() => mutations.length, { timeout:30000 }).toBe(3);
+  expect(mutations.map(item=>item.operations.length)).toEqual([32,32,1]);
+  expect(mutations.map(item=>item.expectedRevision)).toEqual([10,11,12]);
+  expect(modes).not.toContain('account-save');
+  expect(modes).not.toContain('account-pull');
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.accountSyncWrite || '')).toBe('v3');
+  await expect.poll(() => page.evaluate(key => localStorage.getItem(key), REVISION_KEY)).toBe('13');
+});
+
 test('a stale V3 page discards partial V3 state and falls back to the legacy pull atomically', async ({ page }) => {
   test.setTimeout(60_000);
   await seedSession(page);
