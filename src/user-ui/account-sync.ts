@@ -246,6 +246,7 @@ function v3Head(value: unknown): V3Head | null {
   const changeFloorRevision = safeInteger(value.changeFloorRevision);
   if (revisionValue === null || updatedAt === null || globalRevision === null
     || paperCount === null || metadataCount === null || changeFloorRevision === null
+    || globalRevision > revisionValue || changeFloorRevision > revisionValue
     || !validGlobalState(value.globalState)
     || value.papersSplit !== true || value.metadataSplit !== true) return null;
   return {
@@ -302,6 +303,15 @@ function cloneState(value: UserUiState): UserUiState {
   return structuredClone(value);
 }
 
+function validUserId(value: unknown): string {
+  return typeof value === 'string' && value.trim() ? value.trim() : '';
+}
+
+function stateMatchesHead(state: UserUiState, head: V3Head): boolean {
+  return Object.keys(state.papers || {}).length === head.paperCount
+    && Object.keys(state.metadata || {}).length === head.metadataCount;
+}
+
 async function request(
   mode: SyncMode,
   options: { state?: UserUiState; [key: string]: unknown } = {},
@@ -327,9 +337,10 @@ function legacyAccount(result: { ok: boolean; status: number; body: SyncResponse
   const account = result.body.account;
   const nextRevision = safeInteger(account?.revision);
   const updatedAt = safeInteger(account?.updatedAt);
-  if (!result.ok || !account || !account.state || nextRevision === null || updatedAt === null) return null;
+  const userId = validUserId(account?.userId);
+  if (!result.ok || !account || !account.state || !userId || nextRevision === null || updatedAt === null) return null;
   return {
-    userId: String(account.userId || ''),
+    userId,
     revision: nextRevision,
     updatedAt,
     state: account.state,
@@ -365,8 +376,11 @@ async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState): 
 
     const head = v3Head(account.head);
     const targetRevision = safeInteger(account.targetRevision);
-    if (!head || targetRevision === null || targetRevision < sinceRevision) return { kind: 'fallback' };
-    userId = String(account.userId || '');
+    const pageUserId = validUserId(account.userId);
+    if (!head || targetRevision === null || targetRevision < sinceRevision
+      || targetRevision !== head.revision || !pageUserId) return { kind: 'fallback' };
+    if (userId && pageUserId !== userId) return { kind: 'fallback' };
+    userId = pageUserId;
     finalRevision = targetRevision;
     finalUpdatedAt = head.updatedAt;
 
@@ -381,6 +395,7 @@ async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState): 
     for (const change of changes) if (!applyV3Row(next, change)) return { kind: 'fallback' };
 
     if (account.hasMore !== true) {
+      if (!stateMatchesHead(next,head)) return { kind: 'fallback' };
       return {
         kind: 'ok',
         account: { userId, revision: finalRevision, updatedAt: finalUpdatedAt, state: next, readPath: 'v3' },
@@ -404,7 +419,8 @@ async function v3FullPull(): Promise<V3Outcome> {
   if (headResponse.status === 401) return { kind: 'unauthorized' };
   if (!headResponse.ok || !headResponse.body.account) return { kind: 'fallback' };
   const account = headResponse.body.account;
-  if (account.readPath !== 'v3-head') return { kind: 'fallback' };
+  const initialUserId = validUserId(account.userId);
+  if (account.readPath !== 'v3-head' || !initialUserId) return { kind: 'fallback' };
   const initialHead = v3Head(account);
   if (!initialHead) return { kind: 'fallback' };
 
@@ -417,10 +433,20 @@ async function v3FullPull(): Promise<V3Outcome> {
     if (pageResponse.status === 401) return { kind: 'unauthorized' };
     if (!pageResponse.ok || !pageResponse.body.account) return { kind: 'fallback' };
     const page = pageResponse.body.account;
-    if (page.readPath !== 'v3-page' || !v3Head(page.head)) return { kind: 'fallback' };
+    const pageHead = v3Head(page.head);
+    const pageUserId = validUserId(page.userId);
+    const scanStartRevision = safeInteger(page.scanStartRevision);
+    if (page.readPath !== 'v3-page' || !pageHead || pageUserId !== initialUserId
+      || scanStartRevision === null || scanStartRevision !== pageHead.revision
+      || pageHead.revision < initialHead.revision) return { kind: 'fallback' };
     const rows = Array.isArray(page.rows) ? page.rows : null;
-    if (!rows) return { kind: 'fallback' };
-    for (const row of rows) if (!applyV3Row(state, row)) return { kind: 'fallback' };
+    if (!rows || safeInteger(page.count) !== rows.length) return { kind: 'fallback' };
+    let previousKey = afterKey;
+    for (const row of rows) {
+      const rowKey = typeof row?.paperKey === 'string' ? row.paperKey : '';
+      if (!rowKey || (previousKey && rowKey <= previousKey) || !applyV3Row(state,row)) return { kind: 'fallback' };
+      previousKey = rowKey;
+    }
 
     if (page.hasMore !== true) break;
     const nextKey = typeof page.nextKey === 'string' ? page.nextKey : '';
@@ -431,7 +457,7 @@ async function v3FullPull(): Promise<V3Outcome> {
 
   const catchup = await v3DeltaFromState(initialHead.revision, state);
   if (catchup.kind === 'reset') return { kind: 'fallback' };
-  if (catchup.kind !== 'ok') return catchup;
+  if (catchup.kind !== 'ok' || catchup.account.userId !== initialUserId) return catchup.kind === 'ok' ? { kind:'fallback' } : catchup;
   return catchup;
 }
 
