@@ -107,6 +107,12 @@ async function headRow(env, userId) {
     FROM user_library_v3_head WHERE user_id=?
   `).bind(userId).first();
 }
+async function shapeRow(env, userId) {
+  return env.DB.prepare(`
+    SELECT papers_split,metadata_split,revision
+    FROM user_library_v3_shape WHERE user_id=?
+  `).bind(userId).first();
+}
 
 async function existingRows(env, userId, operations) {
   if (!operations.length) return new Map();
@@ -293,7 +299,12 @@ export async function readUserLibraryV3Head(env, userIdValue) {
     return {
       ready:true, revision:0, updatedAt:0, globalState:{}, globalRevision:0,
       paperCount:0, metadataCount:0, changeFloorRevision:0,
+      papersSplit:true, metadataSplit:true,
     };
+  }
+  const shape = await shapeRow(env,userId);
+  if (!shape || Number(shape.revision || 0) !== Number(head.revision || 0)) {
+    return { ready:false, reason:'user_library_v3_shape_revision_mismatch' };
   }
   return {
     ready:true,
@@ -304,6 +315,8 @@ export async function readUserLibraryV3Head(env, userIdValue) {
     paperCount:Number(head.paper_count || 0),
     metadataCount:Number(head.metadata_count || 0),
     changeFloorRevision:Number(head.change_floor_revision || 0),
+    papersSplit:Number(shape.papers_split || 0)===1,
+    metadataSplit:Number(shape.metadata_split || 0)===1,
   };
 }
 
