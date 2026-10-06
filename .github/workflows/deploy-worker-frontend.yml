@@ -24,6 +24,7 @@ on:
       - 'scripts/test-scheduled-handoff-shadow-deployment-contract.mjs'
       - 'scripts/test-user-library-shadow-deployment-contract.mjs'
       - 'scripts/test-user-library-v3-deployment-contract.mjs'
+      - 'scripts/user-library-v3-write-activation-canary.mjs'
       - 'scripts/test-site-analytics-materialized-deployment-contract.mjs'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-bridge-loader.mjs'
