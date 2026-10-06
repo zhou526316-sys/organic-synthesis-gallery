@@ -157,6 +157,67 @@ function newestFirst(rows: ArchitectureRecordFixture[]): ArchitectureRecordFixtu
   );
 }
 
+function fixtureViewHandler(data: ArchitectureFixture, calls: any[]): LiteratureViewHandler {
+  return body => {
+    calls.push(structuredClone(body));
+    if (body?.catalogId !== data.catalogId) {
+      return { status: 409, body: { error: 'literature_catalog_generation_not_ready', readPathActive: false } };
+    }
+    const query = String(body?.query || '').trim().toLowerCase();
+    if (query && [...query].length < 3) {
+      return { status: 422, body: { error: 'literature_catalog_short_query_requires_compatibility', readPathActive: false } };
+    }
+    if (body?.sort === 'readers') {
+      return { status: 422, body: { error: 'literature_catalog_reader_sort_requires_compatibility', readPathActive: false } };
+    }
+    const selected = new Set(Array.isArray(body?.selectedJournals) ? body.selectedJournals : []);
+    const excluded = new Set(Array.isArray(body?.excludedJournals) ? body.excludedJournals : []);
+    const dateFrom = String(body?.dateFrom || '');
+    const dateTo = String(body?.dateTo || '');
+    const addedDate = String(body?.addedDate || '');
+    let rows = data.records.filter(row => {
+      if (selected.size && !selected.has(row.paper.journal)) return false;
+      if (excluded.has(row.paper.journal)) return false;
+      if (dateFrom && row.firstOnlineDate < dateFrom) return false;
+      if (dateTo && row.firstOnlineDate > dateTo) return false;
+      if (addedDate && row.addedDate !== addedDate) return false;
+      if (!query) return true;
+      return [
+        row.paper.title,
+        row.paper.titleZh || '',
+        row.doi,
+        row.paper.journal,
+        row.paper.authors.join(' '),
+        row.firstOnlineDate,
+      ].some(value => String(value || '').toLowerCase().includes(query));
+    });
+    rows = [...rows].sort((a,b) => body?.sort === 'oldest'
+      ? a.firstOnlineDate.localeCompare(b.firstOnlineDate) || a.doi.localeCompare(b.doi)
+      : b.firstOnlineDate.localeCompare(a.firstOnlineDate) || a.doi.localeCompare(b.doi));
+    const limit = Math.max(1, Math.min(100, Number(body?.limit || RESULT_WINDOW_SIZE)));
+    const cursor = String(body?.cursor || '');
+    const offset = cursor ? Number(cursor.replace(/^fixture:/, '')) : 0;
+    const pageRows = rows.slice(offset, offset + limit);
+    const hasMore = offset + pageRows.length < rows.length;
+    return {
+      body: {
+        version: 1,
+        schemaVersion: 'literature-catalog-index-v1',
+        enabled: true,
+        readPathActive: true,
+        catalogId: data.catalogId,
+        matched: rows.length,
+        count: pageRows.length,
+        limit,
+        hasMore,
+        nextCursor: hasMore ? `fixture:${offset + pageRows.length}` : null,
+        sort: body?.sort === 'oldest' ? 'oldest' : 'newest',
+        items: pageRows.map(viewItem),
+      },
+    };
+  };
+}
+
 test('architecture-v1 landing is Hot-only while all-time membership stays complete', async ({ page }) => {
   const data = fixture();
   expect(data.archiveCount).toBeGreaterThan(0);
