@@ -69,7 +69,7 @@ jobs:
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
           grep -F '// @version      2.2.50' public/gallery-vpn-bridge.user.js
-          grep -F "var CONTROLLER_REVISION = '2.2.40';" public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.41';" public/gallery-vpn-bridge.user.js
           grep -F "var GALLERY_HOST = 'gallery.gczhouwld.com';" public/gallery-vpn-bridge.user.js
           grep -F 'requireCompletedCapturePacket' audit/media-auto-policy.json
           grep -F 'latestAddedDate' cloudflare/scripts/build-live-toc-demand-queue.mjs

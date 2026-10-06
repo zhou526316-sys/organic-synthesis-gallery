@@ -70,7 +70,7 @@ jobs:
           grep -F '// @match        https://gallery.gczhouwld.com/*' public/gallery-vpn-bridge.user.js
           grep -F '// @updateURL    https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js' public/gallery-vpn-bridge.user.js
           grep -F '// @downloadURL  https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js' public/gallery-vpn-bridge.user.js
-          grep -F "var CONTROLLER_REVISION = '2.2.40';" public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.41';" public/gallery-vpn-bridge.user.js
           grep -F "var GALLERY_HOST = 'gallery.gczhouwld.com';" public/gallery-vpn-bridge.user.js
           grep -F "badge('已跳过 '" public/gallery-vpn-bridge.user.js
       - uses: actions/upload-artifact@v4

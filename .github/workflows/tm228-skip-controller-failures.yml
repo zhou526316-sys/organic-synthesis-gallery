@@ -63,7 +63,7 @@ jobs:
           node scripts/validate-tm220-artifacts.mjs public
           grep -F '// @version      2.2.50' public/gallery-vpn-bridge.user.js
           grep -F "var VERSION = '6.2.20';" public/gallery-vpn-bridge.user.js
-          grep -F "var CONTROLLER_REVISION = '2.2.40';" public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.41';" public/gallery-vpn-bridge.user.js
           grep -F 'controllerFailureDisposition' public/gallery-vpn-bridge.user.js
           grep -F "badge('已跳过 '" public/gallery-vpn-bridge.user.js
           grep -F "controller_lease_lost|another_task_still_active|capture_server_upgrade_pending" public/gallery-vpn-bridge.user.js

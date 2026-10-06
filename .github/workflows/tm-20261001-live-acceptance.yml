@@ -57,7 +57,7 @@ jobs:
           const cors=await probe('ccs_preflight','https://api.gczhouwld.com/api/article-figures/stage',{method:'OPTIONS',headers:{origin:'https://www.chinesechemsoc.org','access-control-request-method':'POST','access-control-request-headers':'authorization,content-type'}});
           await probe('queue','https://gallery.gczhouwld.com/toc-demand-live.json'+suffix);
           report.verifiedAt=new Date().toISOString();
-          report.passed=report.deployments.length===2&&report.deployments.every(x=>x.conclusion==='success')&&site.status===200&&site.matchesTested&&site.hotfix&&site.ccsMatch&&worker.status===200&&worker.matchesTested&&caps.data?.mediaControllerRevision==='2.2.40'&&caps.data?.captureVersion==='6.2.20'&&caps.data?.mediaGeneration===1790082000000&&cors.status===204&&cors.acao==='https://www.chinesechemsoc.org';
+          report.passed=report.deployments.length===2&&report.deployments.every(x=>x.conclusion==='success')&&site.status===200&&site.matchesTested&&site.hotfix&&site.ccsMatch&&worker.status===200&&worker.matchesTested&&caps.data?.mediaControllerRevision==='2.2.41'&&caps.data?.captureVersion==='6.2.20'&&caps.data?.mediaGeneration===1790082000000&&cors.status===204&&cors.acao==='https://www.chinesechemsoc.org';
           report.authenticatedUserBrowserVerified=false;
           await writeFile(process.env.RUNNER_TEMP+'/tm-20261001-live-acceptance.json',JSON.stringify(report,null,2));
           console.log('LIVE_ACCEPTANCE',JSON.stringify(report));

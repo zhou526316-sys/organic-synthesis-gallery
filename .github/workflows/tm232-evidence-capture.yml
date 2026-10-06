@@ -60,7 +60,7 @@ jobs:
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
           grep -F '// @version      2.2.50' public/gallery-vpn-bridge.user.js
-          grep -F "var CONTROLLER_REVISION = '2.2.40';" public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.41';" public/gallery-vpn-bridge.user.js
           grep -F "var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';" public/gallery-vpn-bridge.user.js
           grep -F 'EVIDENCE_INVENTORY_ENDPOINT' public/gallery-vpn-bridge.user.js
           grep -F 'evidenceBackfillJobs' public/gallery-vpn-bridge.user.js
