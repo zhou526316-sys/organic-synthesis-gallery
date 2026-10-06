@@ -1226,6 +1226,27 @@ jobs:
           fi
           rm -f /tmp/user-library-v3-canary-token
 
+      - name: Remove stale monolithic rows for V3-authoritative accounts
+        if: always()
+        working-directory: cloudflare/worker
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$D1_NAME" --remote --command "DELETE FROM user_library_state WHERE user_id IN (SELECT user_id FROM user_library_v3_authority WHERE authority='v3');" >/tmp/user-library-v3-authority-legacy-cleanup.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT COUNT(*) AS stale_legacy_documents FROM user_library_state legacy INNER JOIN user_library_v3_authority authority ON authority.user_id=legacy.user_id WHERE authority.authority='v3';" --json >/tmp/user-library-v3-authority-legacy-cleanup-check.json
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const data=JSON.parse(fs.readFileSync('/tmp/user-library-v3-authority-legacy-cleanup-check.json','utf8'));
+          const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
+          const count=Number(rows[0]?.stale_legacy_documents||0);
+          if(count!==0) throw new Error('stale V3-authority legacy documents remain: '+count);
+          const path='/tmp/user-library-v3-write-canary.json';
+          let report={};try{report=JSON.parse(fs.readFileSync(path,'utf8'));}catch{}
+          report.staleLegacyDocuments=0;
+          report.authorityLegacyCleanupVerifiedAt=new Date().toISOString();
+          fs.writeFileSync(path,JSON.stringify(report,null,2)+'\n');
+          console.log('USER_LIBRARY_V3_AUTHORITY_LEGACY_CLEANUP '+JSON.stringify({staleLegacyDocuments:count}));
+          NODE
+
       - name: Preserve V3 write activation canary report
         if: always()
         uses: actions/upload-artifact@v4
