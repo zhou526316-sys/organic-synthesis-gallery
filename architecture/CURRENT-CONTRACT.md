@@ -22,6 +22,10 @@ The browser-visible working set, rendered-card count, media hydration set, mutab
 ## 3. Public frontend read model
 
 - The default landing page loads Hot only.
+- The initial landing payload is independently bounded from the full Hot corpus. A hash-bound Hot-head object carries at most one desktop result window (24 records, plus only the bounded future-date cushion needed for date rollover correctness) and compact date buckets for the complete Hot count.
+- The browser may show the verified Hot head before all-time membership/catalog initialization finishes. The all-time registry is initialized in the background and upgrades the same page to full `architecture-v1` without redefining the already rendered Hot records.
+- The full Hot compatibility snapshot must not be downloaded on ordinary first paint. It is an on-demand compatibility path for interactions that genuinely need more Hot rows, such as later pages or local reader-count sorting.
+- Mobile rendering is additionally bounded to 2 cards per page; desktop rendering is bounded to 24 cards per page.
 - The hero keeps the latest collection date only; it does not display all-time paper count or journal count.
 - Exact `?doi=` links and edition DOI lists resolve individual Archive records on demand.
 - Historical date filters load only the necessary date/search segments.
@@ -137,8 +141,8 @@ Architecture changes must test at least:
 
 ## 15. Current priority order
 
-1. **P0 — bounded frontend results: GUARDED.** Browser DOM is a fixed result window; the static Archive compatibility path now fails closed before >1000-result truncation or >36 monthly-segment fanout. Cursor-based indexed paging remains the preferred path for broad historical discovery.
-2. **P0 — bounded fallback: COMPLETE.** Deployed architecture failures use verified Hot fallback / retained Hot state rather than reloading all history.
+1. **P0 — bounded frontend results: COMPLETE.** Browser DOM is a fixed responsive result window (24 desktop / 2 mobile); the initial Hot network payload is also bounded through the hash-bound Hot-head object instead of downloading the complete rolling-three-month snapshot. The static Archive compatibility path fails closed before >1000-result truncation or >36 monthly-segment fanout. Cursor-based indexed paging remains the preferred path for broad historical discovery.
+2. **P0 — bounded fallback: COMPLETE.** Deployed architecture failures use verified Hot state rather than reloading all history. The complete Hot fallback object is compatibility-only and is not a normal first-paint dependency.
 3. **P1 — indexed all-time search: PRODUCTION ACTIVE.** The dedicated D1 read path is live behind static generation/revision authority. Production canary verified the current 826-card generation, cursor paging, current catalog identity and safe rollback; generation handoff and compatibility cases still fall back to bounded static reads.
 4. **P1 — user-library D3c: WRITE FOUNDATION.** D3c1/D3c2 are production-proven; D3c3 performs the V3-first frontend read cutover. D3c4a installs bounded dirty-key mutations and compatibility mirroring with writes still disabled. D3c4b is the final separately-canary-gated write activation that removes the monolithic document ceiling from normal operation.
 5. **P2 — continue index/materialization cutovers:** any remaining metadata path that still relies on corpus-wide/prefix-wide scans must migrate behind parity/freshness gates.
