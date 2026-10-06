@@ -93,3 +93,25 @@ Effective from the 2026-10-06 crop failures, production WeChat figures follow a 
 8. Keep a small visual safety margin around chemical structures and labels. Tight trimming may remove empty page space, but it must not trim chemical meaning.
 9. Production review should be based on the pinned raster itself, not on crop coordinates, filenames, or the source figure alone.
 
+## Figure-reference and placement rule
+
+Effective from the 2026-10-06 editorial review:
+
+1. Main-text figures should be represented wherever they materially advance the paper's argument. Do not omit a main-text figure simply because another figure already illustrates the same general topic.
+2. If a paragraph describes data, a scheme, a control, a substrate scope, a structural panel, or a mechanistic panel that has an identifiable source figure/table, the prose must explicitly name that source (`Fig. X`, `Table X`, `Supporting Information Fig. X`, etc.).
+3. With one documented lead-image exception, the order is always **explanation first, figure immediately after**. Do not alternate arbitrarily between image-before-text and text-before-image.
+4. A lead image may appear before its explanation only when the editorial brief explicitly requires it. The immediately following prose must then say `上图（原文 Fig. X）` so the relationship is unambiguous.
+5. If a figure has already been shown earlier and is referenced again later, write `前文原文 Fig. X` (or equivalent) rather than duplicating it without reason.
+6. Use `figures_after_paragraph` to bind each figure to the exact paragraph it supports. Section-end dumping is a fallback, not the default.
+7. When one paragraph discusses multiple panels, either:
+   - show the complete logical multi-panel block after that paragraph; or
+   - split it into individually reviewed assets and explicitly name each panel in prose/caption.
+8. Main-text figures have priority. Supporting Information figures may be added when they directly visualize a claim, control, limitation, failure mode, or mechanistic point that the main-text figures do not show.
+9. Image count is not itself a quality goal. A figure is included only when it improves scientific comprehension or reading rhythm.
+10. Low-information single panels should use a narrower centered `display_width_pct`; dense scope, multi-panel evidence, and mechanism figures should remain wide enough to read structures, labels, and axes.
+11. The image review gate must fail if:
+    - a paragraph materially describes an identifiable figure/table but the figure is absent without an explicit earlier-reference rationale;
+    - a placed figure is not named or unambiguously identified in the adjacent prose;
+    - an image is placed before the prose that explains it without a documented lead-image exception;
+    - a caption and the adjacent prose identify different source panels.
+
