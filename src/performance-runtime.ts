@@ -26,13 +26,15 @@ interface StaticMediaManifest {
   items?: Record<string, StaticMediaItem>;
 }
 
-const TOC_HIGH_PRIORITY_COUNT = 24;
+const TOC_HIGH_PRIORITY_COUNT = 4;
+const TOC_ROOT_MARGIN = '720px 0px';
 const FIGURE_DELAY_MS = 1900;
 const FIGURE_ROOT_MARGIN = '900px 0px';
 const installStartedAt = performance.now();
 
 let manifestPromise: Promise<StaticMediaManifest> | null = null;
 let scanQueued = false;
+let tocObserver: IntersectionObserver | null = null;
 let figureObserver: IntersectionObserver | null = null;
 const pendingCommits: Array<() => void> = [];
 let commitFrame = 0;
@@ -46,9 +48,8 @@ function loadManifest(forceRefresh = false): Promise<StaticMediaManifest> {
   if (forceRefresh) manifestPromise = null;
   if (!manifestPromise) {
     const url = new URL('./media-index.json', document.baseURI);
-    if (forceRefresh) url.searchParams.set('refresh', String(Date.now()));
     manifestPromise = fetch(url, {
-      cache: 'no-store',
+      cache: forceRefresh ? 'reload' : 'default',
       credentials: 'same-origin',
     })
       .then(response => response.ok ? response.json() as Promise<StaticMediaManifest> : { items: {} })
@@ -144,7 +145,7 @@ function tocCandidate(item: StaticMediaItem | undefined): { url: string; label: 
     : null;
 }
 
-function hydrateTocSlot(slot: HTMLElement, item: StaticMediaItem | undefined, priorityIndex: number): void {
+function hydrateTocSlot(slot: HTMLElement, item: StaticMediaItem | undefined, highPriority: boolean): void {
   const candidate = tocCandidate(item);
   if (!candidate) return;
   if (slot.dataset.performanceTocUrl === candidate.url && slot.querySelector('.toc-image')) return;
@@ -154,9 +155,9 @@ function hydrateTocSlot(slot: HTMLElement, item: StaticMediaItem | undefined, pr
   const image = new Image();
   image.alt = candidate.label;
   image.className = 'toc-image';
-  image.loading = 'eager';
+  image.loading = highPriority ? 'eager' : 'lazy';
   image.decoding = 'async';
-  image.fetchPriority = priorityIndex < TOC_HIGH_PRIORITY_COUNT ? 'high' : 'auto';
+  image.fetchPriority = highPriority ? 'high' : 'auto';
   image.referrerPolicy = 'no-referrer';
 
   image.addEventListener('load', () => {
@@ -182,9 +183,53 @@ function hydrateTocSlot(slot: HTMLElement, item: StaticMediaItem | undefined, pr
 
   image.addEventListener('error', () => {
     if (slot.dataset.performanceTocLoading === candidate.url) delete slot.dataset.performanceTocLoading;
+    delete slot.dataset.performanceTocObserved;
   }, { once: true });
 
   image.src = candidate.url;
+}
+
+function tocIsNearViewport(slot: HTMLElement): boolean {
+  const card = slot.closest<HTMLElement>('.card');
+  if (!card) return false;
+  const rect = card.getBoundingClientRect();
+  return rect.bottom >= -160 && rect.top <= window.innerHeight + 320;
+}
+
+function observeTocSlots(manifest: StaticMediaManifest): void {
+  const slots = [...document.querySelectorAll<HTMLElement>('.toc-slot[data-doi]')]
+    .filter(slot => slot.dataset.performanceTocObserved !== '1'
+      && !slot.dataset.performanceTocUrl
+      && !slot.dataset.performanceTocLoading);
+  if (!slots.length) return;
+
+  let immediate = 0;
+  for (const slot of slots) {
+    if (tocIsNearViewport(slot) && immediate < TOC_HIGH_PRIORITY_COUNT) {
+      slot.dataset.performanceTocObserved = '1';
+      const doi = (slot.dataset.doi || '').trim().toLowerCase();
+      hydrateTocSlot(slot, manifest.items?.[doi], true);
+      immediate += 1;
+      continue;
+    }
+
+    if (!('IntersectionObserver' in window)) continue;
+    slot.dataset.performanceTocObserved = '1';
+    if (!tocObserver) {
+      tocObserver = new IntersectionObserver(entries => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const target = entry.target as HTMLElement;
+          tocObserver?.unobserve(target);
+          const doi = (target.dataset.doi || '').trim().toLowerCase();
+          void loadManifest().then(current => {
+            hydrateTocSlot(target, current.items?.[doi], tocIsNearViewport(target));
+          });
+        }
+      }, { rootMargin: TOC_ROOT_MARGIN, threshold: 0 });
+    }
+    tocObserver.observe(slot);
+  }
 }
 
 function renderFiguresFromManifest(slot: HTMLElement, item: StaticMediaItem | undefined): void {
@@ -271,11 +316,7 @@ async function scanGallery(): Promise<void> {
   const gallery = document.querySelector<HTMLElement>('#gallery');
   if (!gallery) return;
   const manifest = await loadManifest();
-  const tocSlots = [...gallery.querySelectorAll<HTMLElement>('.toc-slot[data-doi]')];
-  tocSlots.forEach((slot, index) => {
-    const doi = (slot.dataset.doi || '').trim().toLowerCase();
-    hydrateTocSlot(slot, manifest.items?.[doi], index);
-  });
+  observeTocSlots(manifest);
   observeFigureSlots(manifest);
 }
 
@@ -300,7 +341,7 @@ function suppressLegacyScrollMediaHandlers(): () => void {
 
 export function installGalleryPerformanceRuntime(): () => void {
   installPerformanceCss();
-  void loadManifest(true);
+  void loadManifest();
   const restoreAddEventListener = suppressLegacyScrollMediaHandlers();
   const observer = new MutationObserver(records => {
     if (shouldScanDisplay(records)) scheduleScan();
@@ -309,15 +350,23 @@ export function installGalleryPerformanceRuntime(): () => void {
 
   const refreshMedia = (): void => {
     manifestPromise = null;
+    document.querySelectorAll<HTMLElement>('.toc-slot[data-doi]').forEach(slot => {
+      delete slot.dataset.performanceTocObserved;
+    });
     void loadManifest(true).then(() => scheduleScan());
   };
-  window.addEventListener('pageshow', refreshMedia);
+  const refreshOnPageShow = (event: PageTransitionEvent): void => {
+    if (event.persisted) refreshMedia();
+  };
+  window.addEventListener('pageshow', refreshOnPageShow);
   window.addEventListener('gallery-assets-updated', refreshMedia as EventListener);
 
   scheduleScan();
   return () => {
-    window.removeEventListener('pageshow', refreshMedia);
+    window.removeEventListener('pageshow', refreshOnPageShow);
     window.removeEventListener('gallery-assets-updated', refreshMedia as EventListener);
+    tocObserver?.disconnect();
+    figureObserver?.disconnect();
     observer.disconnect();
     restoreAddEventListener();
   };
