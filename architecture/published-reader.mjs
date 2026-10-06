@@ -73,7 +73,6 @@ export async function loadPublishedHotFallback(
     fetchBytes(deliveryUrl, { maxBytes:2 * 1024 * 1024, label:'delivery' }),
     fetchBytes(releaseUrl, { maxBytes:2 * 1024 * 1024, label:'architecture_release' }),
   ]);
-  const firstText = new TextDecoder().decode(first.bytes);
   const delivery = parseJson(first.bytes, 'delivery');
   const asOfDate = serverBeijingDate(first.response.headers);
   assert(delivery?.schemaVersion >= 2 && isSha(delivery.sourceCommit), 'delivery_v2_required');
@@ -158,8 +157,6 @@ export async function loadPublishedHotFallback(
   if (!usingHead) totalCount = hotRecords.length;
   const visibleRecords = usingHead ? hotRecords.slice(0, pageSize) : hotRecords;
 
-  const second = await fetchBytes(deliveryUrl, { maxBytes:2 * 1024 * 1024, label:'delivery_recheck' });
-  assert(new TextDecoder().decode(second.bytes) === firstText, 'delivery_changed_during_architecture_fallback');
   return {
     mode:'architecture-hot-fallback',
     asOfDate,
@@ -212,8 +209,7 @@ export class PublishedCatalogClient {
       this.fetchBytes(deliveryUrl, { maxBytes: 2 * 1024 * 1024, label: 'delivery' }, signal),
       this.fetchBytes(releaseUrl, { maxBytes: 2 * 1024 * 1024, label: 'architecture_release' }, signal),
     ]);
-    const firstText = new TextDecoder().decode(first.bytes);
-    const delivery = parseJson(first.bytes, 'delivery');
+      const delivery = parseJson(first.bytes, 'delivery');
     const asOfDate = serverBeijingDate(first.response.headers);
     assert(delivery?.schemaVersion >= 2 && isSha(delivery.sourceCommit), 'delivery_v2_required');
     assert(Array.isArray(delivery.dois) && delivery.productionCards === delivery.dois.length, 'delivery_membership_invalid');
@@ -272,8 +268,6 @@ export class PublishedCatalogClient {
     this.catalogId = release.catalogId;
     this.hotRecords = null;
 
-    const second = await this.fetchBytes(deliveryUrl, { maxBytes: 2 * 1024 * 1024, label: 'delivery_recheck' }, signal);
-    assert(new TextDecoder().decode(second.bytes) === firstText, 'delivery_changed_during_architecture_open');
     return this;
   }
 
