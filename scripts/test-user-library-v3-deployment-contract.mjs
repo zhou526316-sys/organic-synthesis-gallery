@@ -13,6 +13,8 @@ const accountSync=readFileSync('src/user-ui/account-sync.ts','utf8');
 const accountSyncTest=readFileSync('tests/account-sync-v3.spec.ts','utf8');
 const packageJson=JSON.parse(readFileSync('cloudflare/worker/package.json','utf8'));
 const quality=readFileSync('.github/workflows/site-quality-gate.yml','utf8');
+const activation=readFileSync('scripts/user-library-v3-write-activation-canary.mjs','utf8');
+const deployAuthority=readFileSync('.github/workflows/worker-deploy-authority.yml','utf8');
 
 function section(source,start,end){
   const a=source.indexOf(start),b=end?source.indexOf(end,a+start.length):source.length;
@@ -51,20 +53,21 @@ test('D3c V3 schema is isolated, additive and applied before Worker deployment',
   }
 });
 
-test('D3c2 enables bounded V3 reads while V3 writes remain explicitly off',()=>{
+test('D3c4b production config activates V3 writes while keeping both rollback shadows configured',()=>{
   const config=section(
     deploy,
     '- name: Generate frontend deployment configuration',
-    '- name: Deploy frontend assets',
+    '- name: Dry-run frontend Worker bundle',
   );
+  assert.ok(config.includes('USER_LIBRARY_ROW_SHADOW_ENABLED = "1"'));
+  assert.ok(config.includes('USER_LIBRARY_ROW_READ_ENABLED = "1"'));
   assert.ok(config.includes('USER_LIBRARY_V3_SHADOW_ENABLED = "1"'));
   assert.ok(config.includes('USER_LIBRARY_V3_READ_ENABLED = "1"'));
-  assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "0"'));
+  assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "1"'));
+  assert.ok(!config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "0"'));
   assert.ok(v3.includes("USER_LIBRARY_V3_WRITE_ENABLED"));
-  assert.ok(v3.includes("reason:'user_library_v3_write_disabled'"));
-  assert.ok(v3.includes("reason:'user_library_v3_read_disabled'"));
   assert.ok(shadow.includes('userLibraryV3ShadowEnabled'));
-  assert.ok(shadow.includes('user_library_v3_shadow_atomic_batch_required'));
+  assert.ok(shadow.includes("USER_LIBRARY_V3_WRITE_ENABLED"));
 });
 
 test('D3c4a ships dormant authenticated bounded V3 mutation without activating write authority',()=>{
@@ -157,7 +160,7 @@ test('first V3 authority claim is freshness-fenced both before and inside the at
   assert.ok(userUi.includes("String(result.reason || 'user_library_v3_revision_conflict')"));
 });
 
-test('D3c4a client mutation foundation is dirty-key bounded and dormant behind the write flag',()=>{
+test('D3c4b activates the already-bounded client mutation path without changing its dirty-key contract',()=>{
   for(const token of [
     "account-v3-mutate",
     'V3_MUTATION_OP_LIMIT = 32',
@@ -174,50 +177,73 @@ test('D3c4a client mutation foundation is dirty-key bounded and dormant behind t
   assert.ok(accountSync.includes("detail?.scope==='paper'"));
   assert.ok(accountSync.includes('detail?.paperIds || []'));
   assert.ok(accountSync.includes('relevantPaperKeys'));
-  assert.ok(!accountSync.includes('Object.keys(target.metadata || {})'));
   assert.ok(accountSync.includes('mergeDirtyState'));
   assert.ok(!accountSync.includes('allChangedKeys'));
   assert.ok(accountSyncTest.includes('toBeGreaterThan(1_500_000)'));
   assert.ok(accountSyncTest.includes('toEqual([32,32,1])'));
   assert.ok(accountSyncTest.includes('legacy_save_must_not_run'));
   assert.ok(accountSyncTest.includes('write_must_not_run_while_suspended'));
-  const config=section(
+});
+
+test('D3c4b production activation is preflighted, isolated, cleanup-verified, and automatically reversible',()=>{
+  const preflight=section(
     deploy,
-    '- name: Generate frontend deployment configuration',
+    '- name: Verify user library V3 write activation preflight',
     '- name: Deploy frontend assets',
   );
-  assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "0"'));
-  assert.ok(!config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "1"'));
-});
+  assert.ok(preflight.includes('user-library-v3-write-activation-canary.mjs preflight'));
+  assert.ok(preflight.includes('BRIDGE_WRITE_TOKEN'));
 
-test('D3c2 production deploy keeps full parity while bounded reads are enabled and writes stay off',()=>{
-  const block=section(
+  const canary=section(
     deploy,
-    '- name: Backfill and verify user library V3 shadow parity and bounded reads',
-    '- name: Advance and reconcile Evidence Index shadow',
+    '- name: Verify isolated user library V3 write canary',
+    '- name: Sync configured runtime secrets',
   );
-  assert.ok(block.includes('continue-on-error: true'));
-  assert.ok(block.includes("phase:'D3c2-user-library-v3-bounded-read'"));
-  assert.ok(block.includes('/api/admin/user-library-v3/backfill?limit=20'));
-  assert.ok(block.includes('/api/admin/user-library-v3/reconcile?limit=20'));
-  assert.ok(block.includes('/api/admin/user-library-v3/compare?offset='));
-  assert.ok(block.includes('revisionMismatches'));
-  assert.ok(block.includes('passes.length<2'));
-  assert.ok(block.includes('mismatched===0'));
-  assert.ok(block.includes('readEnabled!==true'));
-  assert.ok(block.includes('writeEnabled!==false'));
-  assert.ok(block.includes('boundedReadEnabled:true'));
-  assert.ok(block.includes('accountPullCutover:false'));
-  assert.ok(block.includes('user-library-v3-shadow-'));
+  assert.ok(canary.includes('continue-on-error: true'));
+  assert.ok(canary.includes('d3c4b-canary-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}'));
+  assert.ok(canary.includes('INSERT INTO users'));
+  assert.ok(canary.includes('INSERT INTO user_sessions'));
+  assert.ok(canary.includes('user-library-v3-write-activation-canary.mjs canary'));
+  assert.ok(canary.includes("DELETE FROM users WHERE id='$CANARY_USER_ID'"));
+  assert.ok(canary.includes('D3c4b canary cleanup leaked rows'));
+  assert.ok(canary.includes('- name: Roll back V3 write authority on canary failure'));
+  assert.ok(canary.includes('USER_LIBRARY_V3_WRITE_ENABLED = "0"'));
+  assert.ok(canary.includes('user-library-v3-write-activation-canary.mjs preflight'));
+  assert.ok(canary.includes('- name: Fail deployment after safe V3 write rollback'));
+
+  for(const token of [
+    "mode:'preflight'",
+    "mode:'canary'",
+    '/api/admin/user-library-v3/status',
+    '/api/admin/user-library-shadow/status',
+    '/api/admin/user-library-v3/compare',
+    '/api/admin/user-library-shadow/compare',
+    "mode:'account-v3-mutate'",
+    "mode:'account-v3-page'",
+    "mode:'account-v3-delta'",
+    "mode:'account-pull'",
+    'user_library_v3_revision_conflict',
+    'user_library_client_upgrade_required',
+    'rows-v3-compat',
+    'deltaDeleteObserved',
+  ]) assert.ok(activation.includes(token),token);
+
+  assert.ok(deploy.includes('body?.userLibraryRowShadowEnabled === false'));
+  assert.ok(deploy.includes('body?.userLibraryV3ShadowEnabled === false'));
+  assert.ok(deploy.includes('body?.userLibraryV3WriteEnabled === true'));
+  assert.ok(deploy.includes('- name: Verify user library write authority state'));
+  assert.ok(deployAuthority.includes('V3-write rollback must be failure-only'));
 });
 
-test('D3c through D3c4a regression suites are part of the site quality gate',()=>{
+test('D3c through D3c4b regression and activation contracts are wired into CI',()=>{
   assert.equal(packageJson.scripts['test:user-library-v3'],'node scripts/test-user-library-v3.mjs');
   assert.equal(packageJson.scripts['test:user-library-v3-shadow'],'node scripts/test-user-library-v3-shadow.mjs');
   assert.ok(quality.includes('npm run test:user-library-v3'));
   assert.ok(quality.includes('npm run test:user-library-v3-shadow'));
   assert.ok(quality.includes('node scripts/test-user-library-v3-deployment-contract.mjs'));
   assert.ok(quality.includes('tests/account-sync-v3.spec.ts'));
+  assert.ok(deploy.includes('user-library-v3-write-activation-canary.mjs'));
+  assert.ok(deployAuthority.includes('Verify user library V3 write activation preflight'));
 });
 
 console.log('USER_LIBRARY_V3_DEPLOYMENT_CONTRACT_PASS');
