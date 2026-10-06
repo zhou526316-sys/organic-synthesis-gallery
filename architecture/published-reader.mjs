@@ -144,6 +144,7 @@ export class PublishedCatalogClient {
     this.memberDois = [];
     this.earliestDate = '';
     this.catalogId = '';
+    this.hotRecords = null;
   }
 
   async fetchBytes(url, { cache = 'no-store', maxBytes = 4 * 1024 * 1024, label = 'architecture' } = {}, signal) {
@@ -164,7 +165,11 @@ export class PublishedCatalogClient {
 
   async open(signal) {
     const deliveryUrl = new URL('release-delivery.json', this.siteBase);
-    const first = await this.fetchBytes(deliveryUrl, { maxBytes: 2 * 1024 * 1024, label: 'delivery' }, signal);
+    const releaseUrl = new URL('release.json', this.architectureBase);
+    const [first, releaseRead] = await Promise.all([
+      this.fetchBytes(deliveryUrl, { maxBytes: 2 * 1024 * 1024, label: 'delivery' }, signal),
+      this.fetchBytes(releaseUrl, { maxBytes: 2 * 1024 * 1024, label: 'architecture_release' }, signal),
+    ]);
     const firstText = new TextDecoder().decode(first.bytes);
     const delivery = parseJson(first.bytes, 'delivery');
     const asOfDate = serverBeijingDate(first.response.headers);
@@ -173,10 +178,6 @@ export class PublishedCatalogClient {
     assert(isHash(delivery.datasetSha256) && isHash(delivery.architectureCatalogId), 'delivery_architecture_identity_missing');
     assert(delivery.files && isHash(delivery.files['architecture-v1/release.json']), 'delivery_architecture_release_missing');
     assert(delivery.architectureObjects && typeof delivery.architectureObjects === 'object', 'delivery_architecture_objects_missing');
-
-    const releaseRead = await this.fetchBytes(new URL('release.json', this.architectureBase), {
-      maxBytes: 2 * 1024 * 1024, label: 'architecture_release',
-    }, signal);
     assert(await digest(releaseRead.bytes) === delivery.files['architecture-v1/release.json'], 'architecture_release_hash_mismatch');
     const release = parseJson(releaseRead.bytes, 'architecture_release');
     assert(release?.schema === RELEASE_SCHEMA && release.frontendReadActivation === true, 'frontend_architecture_not_active');
@@ -196,7 +197,22 @@ export class PublishedCatalogClient {
       assert(delivery.architectureObjects[key] === ref.sha256, `architecture_required_object_unbound:${ref.path}`);
     }
 
-    const membership = await this.readRef(release.membership, signal);
+    const fallbackRef = release.hotFallback;
+    assert(fallbackRef && isHash(fallbackRef.sha256) && Number.isSafeInteger(fallbackRef.bytes) && fallbackRef.bytes > 0,
+      'architecture_hot_fallback_missing');
+    const fallbackPath = ensurePath(fallbackRef.path);
+    assert(delivery.architectureObjects['architecture-v1/' + fallbackPath] === fallbackRef.sha256,
+      'architecture_hot_fallback_unbound');
+    assert(release.objects.some(ref => ref?.path === fallbackPath && ref?.sha256 === fallbackRef.sha256),
+      'architecture_hot_fallback_not_in_release');
+
+    const reader = new CatalogReader(this.architectureBase, { fetcher: this.fetcher, currentRef: release.catalogCurrent });
+    const [membership, catalog, hotFallback] = await Promise.all([
+      this.readRef(release.membership, signal),
+      reader.open(signal),
+      this.readRef(fallbackRef, signal),
+    ]);
+
     assert(membership?.schema === MEMBERSHIP_SCHEMA && membership.scope === 'all-time' && membership.complete === true,
       'published_membership_invalid');
     const members = Object.keys(membership.members || {}).map(normalizeDoi);
@@ -209,10 +225,27 @@ export class PublishedCatalogClient {
       && membership.publicationSlot === release.publicationSlot && membership.sourceCommit === release.sourceCommit
       && membership.markerBlobSha === release.markerBlobSha, 'published_membership_generation_mismatch');
 
-    const reader = new CatalogReader(this.architectureBase, { fetcher: this.fetcher, currentRef: release.catalogCurrent });
-    const catalog = await reader.open(signal);
     assert(catalog.recordCount === membership.count && catalog.recordSetHash === membership.catalogId
       && catalog.doiSetHash === membership.doiSetHash, 'catalog_membership_mismatch');
+
+    assert(hotFallback?.schema === 'gallery-hot-fallback-v1' && hotFallback.catalogId === release.catalogId
+      && hotFallback.doiSetHash === release.doiSetHash && hotFallback.publicationSlot === release.publicationSlot
+      && hotFallback.sourceCommit === release.sourceCommit && hotFallback.scope === 'hot-plus-future-candidates'
+      && typeof hotFallback.generatedAsOfDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(hotFallback.generatedAsOfDate)
+      && Array.isArray(hotFallback.records) && hotFallback.count === hotFallback.records.length
+      && hotFallback.count <= delivery.productionCards, 'architecture_hot_fallback_generation_mismatch');
+
+    const deliveryDoiSet = new Set(deliveryDois);
+    const hotSeen = new Set();
+    const hotRecords = [];
+    for (const row of hotFallback.records) {
+      const doi = normalizeDoi(row?.doi || row?.paper?.doi || row?.paper?.url);
+      assert(doi && deliveryDoiSet.has(doi) && row?.paper && isHash(row?.revision) && !hotSeen.has(doi),
+        'architecture_hot_fallback_record_invalid');
+      assert(membership.members?.[doi] === row.revision, 'architecture_hot_fallback_revision_mismatch');
+      hotSeen.add(doi);
+      if (classifyDate(row.firstOnlineDate, asOfDate, row.datePrecision) === 'hot') hotRecords.push(row);
+    }
 
     const months = catalog.shards.map(row => row.month).filter(month => /^\d{4}-\d{2}$/.test(month)).sort();
     this.earliestDate = months.length ? `${months[0]}-01` : '';
@@ -223,6 +256,7 @@ export class PublishedCatalogClient {
     this.membership = membership;
     this.memberDois = memberDois;
     this.catalogId = release.catalogId;
+    this.hotRecords = hotRecords;
 
     const second = await this.fetchBytes(deliveryUrl, { maxBytes: 2 * 1024 * 1024, label: 'delivery_recheck' }, signal);
     assert(new TextDecoder().decode(second.bytes) === firstText, 'delivery_changed_during_architecture_open');
@@ -233,7 +267,9 @@ export class PublishedCatalogClient {
 
   async landing(sharedDoi, signal) {
     const reader = this.requireOpen();
-    const records = await reader.hot(this.asOfDate, signal);
+    const records = Array.isArray(this.hotRecords)
+      ? structuredClone(this.hotRecords)
+      : await reader.hot(this.asOfDate, signal);
     assert(Array.isArray(records), 'landing_hot_invalid');
     const doi = normalizeDoi(sharedDoi);
     if (doi && !records.some(row => normalizeDoi(row?.doi) === doi)) {
