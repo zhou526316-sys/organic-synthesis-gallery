@@ -15,6 +15,7 @@ on:
       - 'cloudflare/worker/package.json'
       - 'cloudflare/site-analytics-v2.sql'
       - 'cloudflare/user-library-state-v2.sql'
+      - 'cloudflare/user-library-state-v3.sql'
       - 'cloudflare/evidence-index-v1.sql'
       - 'cloudflare/summary-candidate-index-v1.sql'
       - 'cloudflare/literature-catalog-index-v1.sql'
@@ -22,6 +23,7 @@ on:
       - 'scripts/test-literature-catalog-index-shadow-deployment-contract.mjs'
       - 'scripts/test-scheduled-handoff-shadow-deployment-contract.mjs'
       - 'scripts/test-user-library-shadow-deployment-contract.mjs'
+      - 'scripts/test-user-library-v3-deployment-contract.mjs'
       - 'scripts/test-site-analytics-materialized-deployment-contract.mjs'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-bridge-loader.mjs'
@@ -192,7 +194,7 @@ jobs:
           const names=rows.map(x=>x.name).sort();
           const expected=['user_library_v3_backfill','user_library_v3_changes','user_library_v3_commits','user_library_v3_head','user_library_v3_rows','user_library_v3_shadow_sync','user_library_v3_shape'];
           if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('user library v3 migration incomplete: '+JSON.stringify(names));
-          console.log(JSON.stringify({userLibraryV3SchemaReady:true,tables:names,shadow:'enabled-after-deploy',read:'disabled',write:'disabled'}));
+          console.log(JSON.stringify({userLibraryV3SchemaReady:true,tables:names,shadow:'enabled',boundedRead:'enabled-after-deploy',accountPull:'D3b',write:'disabled'}));
           NODE
 
       - name: Apply Evidence Index D1 migration
@@ -278,7 +280,7 @@ jobs:
           USER_LIBRARY_ROW_SHADOW_ENABLED = "1"
           USER_LIBRARY_ROW_READ_ENABLED = "1"
           USER_LIBRARY_V3_SHADOW_ENABLED = "1"
-          USER_LIBRARY_V3_READ_ENABLED = "0"
+          USER_LIBRARY_V3_READ_ENABLED = "1"
           USER_LIBRARY_V3_WRITE_ENABLED = "0"
           SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED = "1"
           SITE_ANALYTICS_MATERIALIZED_READ_ENABLED = "1"
@@ -736,7 +738,7 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Backfill and verify user library V3 shadow parity
+      - name: Backfill and verify user library V3 shadow parity and bounded reads
         id: user_library_v3_shadow
         continue-on-error: true
         env:
@@ -749,8 +751,8 @@ jobs:
           const token=process.env.BRIDGE_WRITE_TOKEN;
           const reportPath='/tmp/user-library-v3-shadow-report.json';
           fs.writeFileSync(reportPath,JSON.stringify({
-            schemaVersion:1,phase:'D3c1-user-library-v3-shadow',
-            ok:false,status:'started',readPathActive:false,writePathActive:false,startedAt:new Date().toISOString(),
+            schemaVersion:1,phase:'D3c2-user-library-v3-bounded-read',
+            ok:false,status:'started',boundedReadEnabled:true,accountPullCutover:false,writePathActive:false,startedAt:new Date().toISOString(),
           },null,2)+'\n');
           if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for user library V3 shadow');
 
@@ -767,7 +769,7 @@ jobs:
           }
 
           let status=await call('/api/admin/user-library-v3/status');
-          if(status.enabled!==true||status.readEnabled!==false||status.writeEnabled!==false){
+          if(status.enabled!==true||status.readEnabled!==true||status.writeEnabled!==false){
             throw new Error('user library V3 shadow configuration invalid: '+JSON.stringify(status));
           }
 
@@ -794,7 +796,7 @@ jobs:
           const passes=[];
           for(let attempt=1;attempt<=6&&passes.length<2;attempt+=1){
             const before=await call('/api/admin/user-library-v3/status');
-            if(before.enabled!==true||before.readEnabled!==false||before.writeEnabled!==false){
+            if(before.enabled!==true||before.readEnabled!==true||before.writeEnabled!==false){
               throw new Error('user library V3 authority changed unexpectedly: '+JSON.stringify(before));
             }
             if(before.revisionMismatches!==0||before.legacyUsers!==before.v3Heads){
@@ -822,7 +824,7 @@ jobs:
               &&before.v3Heads===after.v3Heads
               &&after.legacyUsers===after.v3Heads
               &&after.revisionMismatches===0
-              &&after.readEnabled===false
+              &&after.readEnabled===true
               &&after.writeEnabled===false;
             const pass={stable,checked,mismatched,reasons,legacyUsers:after.legacyUsers,v3Heads:after.v3Heads};
             console.log(JSON.stringify({userLibraryV3ComparisonAttempt:attempt,...pass}));
@@ -832,12 +834,12 @@ jobs:
           if(passes.length<2) throw new Error('user library V3 shadow could not obtain two stable full parity passes');
 
           const finalStatus=await call('/api/admin/user-library-v3/status');
-          if(finalStatus.readEnabled!==false||finalStatus.writeEnabled!==false||finalStatus.revisionMismatches!==0){
+          if(finalStatus.readEnabled!==true||finalStatus.writeEnabled!==false||finalStatus.revisionMismatches!==0){
             throw new Error('user library V3 shadow final state invalid: '+JSON.stringify(finalStatus));
           }
           const report={
-            schemaVersion:1,phase:'D3c1-user-library-v3-shadow',ok:true,
-            shadowEnabled:true,readPathActive:false,writePathActive:false,
+            schemaVersion:1,phase:'D3c2-user-library-v3-bounded-read',ok:true,
+            shadowEnabled:true,boundedReadEnabled:true,accountPullCutover:false,writePathActive:false,
             legacyUsers:Number(finalStatus.legacyUsers||0),
             v3Heads:Number(finalStatus.v3Heads||0),
             revisionMismatches:Number(finalStatus.revisionMismatches||0),
@@ -1479,6 +1481,9 @@ jobs:
                 body?.scheduledHandoffIndexReadEnabled === true &&
                 body?.userLibraryRowShadowEnabled === true &&
                 body?.userLibraryRowReadEnabled === true &&
+                body?.userLibraryV3ShadowEnabled === true &&
+                body?.userLibraryV3ReadEnabled === true &&
+                body?.userLibraryV3WriteEnabled === false &&
                 body?.siteAnalyticsMaterializedShadowEnabled === true &&
                 body?.siteAnalyticsMaterializedReadEnabled === true &&
                 body?.literatureCatalogIndexShadowEnabled === true &&
@@ -1491,6 +1496,9 @@ jobs:
                 scheduledHandoffIndexReadEnabled: body.scheduledHandoffIndexReadEnabled,
                 userLibraryRowShadowEnabled: body.userLibraryRowShadowEnabled,
                 userLibraryRowReadEnabled: body.userLibraryRowReadEnabled,
+                userLibraryV3ShadowEnabled: body.userLibraryV3ShadowEnabled,
+                userLibraryV3ReadEnabled: body.userLibraryV3ReadEnabled,
+                userLibraryV3WriteEnabled: body.userLibraryV3WriteEnabled,
                 siteAnalyticsMaterializedShadowEnabled: body.siteAnalyticsMaterializedShadowEnabled,
                 siteAnalyticsMaterializedReadEnabled: body.siteAnalyticsMaterializedReadEnabled,
                 literatureCatalogIndexShadowEnabled: body.literatureCatalogIndexShadowEnabled,
