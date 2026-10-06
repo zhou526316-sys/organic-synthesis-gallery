@@ -95,14 +95,33 @@ function rebuildV3State(head, shape, rows) {
 }
 
 function rowStatements(env, userId, split, revision, updatedAt) {
+  const claim = `EXISTS (
+    SELECT 1 FROM user_library_v3_shadow_sync
+    WHERE user_id=? AND inflight_revision=? AND source_revision<?
+  )`;
   const statements = [
-    env.DB.prepare('DELETE FROM user_library_v3_rows WHERE user_id=?').bind(userId),
+    env.DB.prepare(`
+      DELETE FROM user_library_v3_rows
+      WHERE user_id=? AND ${claim}
+    `).bind(userId,userId,revision,revision),
   ];
   for (const row of split.rows || []) {
     statements.push(env.DB.prepare(`
       INSERT INTO user_library_v3_rows
         (user_id,paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,deleted,revision,updated_at)
-      VALUES (?,?,?,?,?,?,?,?,?,?)
+      SELECT ?,?,?,?,?,?,?,?,?,?
+      WHERE ${claim}
+      ON CONFLICT(user_id,paper_key) DO UPDATE SET
+        doi=excluded.doi,
+        paper_present=excluded.paper_present,
+        paper_state_json=excluded.paper_state_json,
+        metadata_present=excluded.metadata_present,
+        metadata_json=excluded.metadata_json,
+        deleted=excluded.deleted,
+        revision=excluded.revision,
+        updated_at=excluded.updated_at
+      WHERE user_library_v3_rows.revision<=excluded.revision
+        AND ${claim}
     `).bind(
       userId,
       row.paperKey,
@@ -114,6 +133,8 @@ function rowStatements(env, userId, split, revision, updatedAt) {
       0,
       revision,
       updatedAt,
+      userId,revision,revision,
+      userId,revision,revision,
     ));
   }
   return statements;
@@ -121,7 +142,7 @@ function rowStatements(env, userId, split, revision, updatedAt) {
 
 export async function shadowWriteUserLibraryV3FromState(env, userIdValue, state, revisionValue, updatedAtValue, nowValue = Date.now()) {
   if (!userLibraryV3ShadowEnabled(env)) return { enabled:false, written:false };
-  if (!env?.DB) throw new Error('user_library_v3_shadow_db_missing');
+  if (!env?.DB || typeof env.DB.batch !== 'function') throw new Error('user_library_v3_shadow_atomic_batch_required');
   const userId = safeText(userIdValue, 300);
   const revision = Number(revisionValue || 0);
   const updatedAt = Number(updatedAtValue || 0);
@@ -137,18 +158,36 @@ export async function shadowWriteUserLibraryV3FromState(env, userIdValue, state,
   if (currentRevision > revision) {
     return { enabled:true, written:false, skippedStale:true, currentRevision };
   }
-  if (currentRevision === revision
-      && Number(current?.source_updated_at || 0) === updatedAt
-      && String(current?.source_state_hash || '') === split.sourceStateHash) {
-    return { enabled:true, written:false, unchanged:true, revision };
+  if (currentRevision === revision) {
+    if (Number(current?.source_updated_at || 0) === updatedAt
+        && String(current?.source_state_hash || '') === split.sourceStateHash) {
+      return { enabled:true, written:false, unchanged:true, revision };
+    }
+    throw new Error('user_library_v3_shadow_revision_conflict');
   }
 
+  const claimCheck = `EXISTS (
+    SELECT 1 FROM user_library_v3_shadow_sync
+    WHERE user_id=? AND inflight_revision=? AND source_revision<?
+  )`;
   const statements = [
-    ...rowStatements(env, userId, split, revision, updatedAt),
+    env.DB.prepare(`
+      INSERT INTO user_library_v3_shadow_sync
+        (user_id,source_revision,source_updated_at,source_state_hash,inflight_revision,inflight_started_at,synced_at,last_error)
+      VALUES (?,0,0,'',?,?,0,'')
+      ON CONFLICT(user_id) DO UPDATE SET
+        inflight_revision=excluded.inflight_revision,
+        inflight_started_at=excluded.inflight_started_at,
+        last_error=''
+      WHERE user_library_v3_shadow_sync.source_revision<excluded.inflight_revision
+        AND user_library_v3_shadow_sync.inflight_revision<excluded.inflight_revision
+    `).bind(userId,revision,now),
+    ...rowStatements(env,userId,split,revision,updatedAt),
     env.DB.prepare(`
       INSERT INTO user_library_v3_head
         (user_id,revision,updated_at,global_json,global_revision,paper_count,metadata_count,change_floor_revision,schema_version)
-      VALUES (?,?,?,?,?,?,?,?,1)
+      SELECT ?,?,?,?,?,?,?,?,1
+      WHERE ${claimCheck}
       ON CONFLICT(user_id) DO UPDATE SET
         revision=excluded.revision,
         updated_at=excluded.updated_at,
@@ -158,38 +197,53 @@ export async function shadowWriteUserLibraryV3FromState(env, userIdValue, state,
         metadata_count=excluded.metadata_count,
         change_floor_revision=excluded.change_floor_revision,
         schema_version=excluded.schema_version
-      WHERE user_library_v3_head.revision <= excluded.revision
+      WHERE user_library_v3_head.revision<=excluded.revision
+        AND ${claimCheck}
     `).bind(
       userId,revision,updatedAt,split.globalJson,revision,
       split.paperCount,split.metadataCount,revision,
+      userId,revision,revision,
+      userId,revision,revision,
     ),
     env.DB.prepare(`
       INSERT INTO user_library_v3_shape (user_id,papers_split,metadata_split,revision)
-      VALUES (?,?,?,?)
+      SELECT ?,?,?,?
+      WHERE ${claimCheck}
       ON CONFLICT(user_id) DO UPDATE SET
         papers_split=excluded.papers_split,
         metadata_split=excluded.metadata_split,
         revision=excluded.revision
-      WHERE user_library_v3_shape.revision <= excluded.revision
-    `).bind(userId,split.papersSplit?1:0,split.metadataSplit?1:0,revision),
+      WHERE user_library_v3_shape.revision<=excluded.revision
+        AND ${claimCheck}
+    `).bind(
+      userId,split.papersSplit?1:0,split.metadataSplit?1:0,revision,
+      userId,revision,revision,
+      userId,revision,revision,
+    ),
     env.DB.prepare(`
-      INSERT INTO user_library_v3_shadow_sync
-        (user_id,source_revision,source_updated_at,source_state_hash,inflight_revision,inflight_started_at,synced_at,last_error)
-      VALUES (?,?,?,?,0,0,?,'')
-      ON CONFLICT(user_id) DO UPDATE SET
-        source_revision=excluded.source_revision,
-        source_updated_at=excluded.source_updated_at,
-        source_state_hash=excluded.source_state_hash,
+      UPDATE user_library_v3_shadow_sync
+      SET source_revision=?,
+        source_updated_at=?,
+        source_state_hash=?,
         inflight_revision=0,
         inflight_started_at=0,
-        synced_at=excluded.synced_at,
+        synced_at=?,
         last_error=''
-      WHERE user_library_v3_shadow_sync.source_revision <= excluded.source_revision
-    `).bind(userId,revision,updatedAt,split.sourceStateHash,now),
+      WHERE user_id=? AND inflight_revision=? AND source_revision<?
+    `).bind(revision,updatedAt,split.sourceStateHash,now,userId,revision,revision),
   ];
-  await runStatements(env, statements);
+  await env.DB.batch(statements);
 
-  const after = await sourceMeta(env, userId);
+  const sync = await v3Sync(env,userId);
+  const committedRevision = Number(sync?.source_revision || 0);
+  if (committedRevision > revision) {
+    return { enabled:true,written:false,skippedStale:true,currentRevision:committedRevision };
+  }
+  if (committedRevision !== revision || String(sync?.source_state_hash || '') !== split.sourceStateHash) {
+    throw new Error('user_library_v3_shadow_claim_lost');
+  }
+
+  const after = await sourceMeta(env,userId);
   if (Number(after?.revision || 0) !== revision || Number(after?.updated_at || 0) !== updatedAt) {
     return {
       enabled:true,
