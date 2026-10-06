@@ -27,7 +27,7 @@ const harness=[
 "var gmRequest=async()=>{throw new Error('transport_not_injected')};",
 "function isGalleryPage(){return false}",
 "function normalizeDoi(v){return String(v||'').toLowerCase().replace(/^https?:\\/\\/(?:dx\\.)?doi\\.org\\//,'').replace(/^doi:\\s*/,'').replace(/[?#].*$/,'').replace(/[).,;]+$/,'')}",
-"function publisherForDoi(d){d=normalizeDoi(d);if(d.startsWith('10.1021/'))return 'acs';if(d.startsWith('10.1002/'))return 'wiley';return 'other'}",
+"function publisherForDoi(d){d=normalizeDoi(d);if(d.startsWith('10.1021/'))return 'acs';if(d.startsWith('10.1002/'))return 'wiley';if(d.startsWith('10.1039/'))return 'rsc';return 'other'}",
 "function normalizeUrl(v,b){try{return new URL(v,b||location.href).href}catch{return ''}}",
 "function currentCaptureJob(){return true}",
 "function assertBoundCaptureJob(job){return normalizeDoi(job.doi)}",
@@ -38,7 +38,7 @@ const harness=[
 "function enqueueCaptureReport(){return true};function nowIso(){return new Date().toISOString()}",
 runtime,
 finish,
-"globalThis.T={privatePdfLease,privatePdfLeaseDiagnostics,privatePdfCaptureEligibleByAddedDate,privatePdfBytesValid,discoverExplicitPdfCandidates,privatePdfViewerCandidates,waitForPrivatePdfCandidates,maybeCapturePrivatePdf,finishPairedJob,PRIVATE_PDF_LEASE_KEY,PRIVATE_PDF_CAPTURE_REVISION,setGm:fn=>{gmRequest=fn},setFetch:fn=>{window.fetch=fn},setMaybe:fn=>{maybeCapturePrivatePdf=fn}};",
+"globalThis.T={privatePdfLease,privatePdfLeaseDiagnostics,privatePdfCaptureEligibleByAddedDate,privatePdfBytesValid,privatePdfHostAllowed,rscDeterministicPdfUrl,discoverExplicitPdfCandidates,privatePdfViewerCandidates,waitForPrivatePdfCandidates,maybeCapturePrivatePdf,finishPairedJob,PRIVATE_PDF_LEASE_KEY,PRIVATE_PDF_CAPTURE_REVISION,setGm:fn=>{gmRequest=fn},setFetch:fn=>{window.fetch=fn},setMaybe:fn=>{maybeCapturePrivatePdf=fn}};",
 '})();'
 ].join('\n');
 await page.addScriptTag({content:harness});
@@ -52,6 +52,32 @@ try{
   await tc('dynamic PDF control is awaited instead of declaring zero candidates immediately',async()=>{
     const x=await page.evaluate(async()=>{const meta=document.querySelector('meta[name="citation_pdf_url"]');if(meta)meta.remove();setTimeout(()=>{const m=document.createElement('meta');m.name='citation_pdf_url';m.content='https://pubs.acs.org/doi/pdf/10.1021/jacs.6c12345';document.head.appendChild(m)},60);const trace=[];const rows=await T.waitForPrivatePdfCandidates({doi:'10.1021/jacs.6c12345',publisher:'acs',jobId:'fixture-job-12345678'},trace);return{rows,trace}});
     assert.equal(x.rows.length,1);assert.equal(x.rows[0].source,'citation_pdf_url');assert.ok(x.trace.some(row=>row.stage==='private_pdf_discovery'&&row.status==='found'));
+  });
+  await tc('RSC adds deterministic articlepdf route and accepts signed Silverchair CDN',async()=>{
+    const rows=await page.evaluate(()=>T.discoverExplicitPdfCandidates({doi:'10.1039/d6sc06421c',publisher:'rsc'}));
+    assert.ok(rows.some(x=>x.source==='rsc_articlepdf_route'&&x.url==='https://pubs.rsc.org/en/content/articlepdf/2026/sc/d6sc06421c'));
+    assert.equal(await page.evaluate(()=>T.privatePdfHostAllowed('rsc','https://rscj.silverchair-cdn.com/rscj/content_public/journal/sc/x.pdf')),true);
+  });
+  await tc('RSC 403 tries the second official PDF candidate before failing',async()=>{
+    const x=await page.evaluate(async()=>{
+      const a=document.createElement('a');a.href='https://pubs.rsc.org/sc/article-pdf/doi/10.1039/D6SC06421C/14817948/d6sc06421c.pdf';a.textContent='Article PDF';document.body.appendChild(a);
+      GM_setValue(T.PRIVATE_PDF_LEASE_KEY,{token:'R'.repeat(48),scope:'private_pdf_capture',expiresAt:Date.now()+600000});
+      GM_deleteValue('osg-toc-v6:private-pdf-attempt-v2:10.1039/d6sc06421c');
+      const pdf=new TextEncoder().encode('%PDF-1.7\\n'+('R'.repeat(4096))+'\\n%%EOF').buffer;
+      let gets=[],posts=0;
+      T.setFetch(async()=>{throw new Error('rsc_redirect_cors')});
+      T.setGm(async o=>{
+        if(o.method==='GET'){
+          gets.push(o.url);
+          if(/\/en\/content\/articlepdf\/2026\/sc\/d6sc06421c$/.test(o.url))return{status:403,response:new ArrayBuffer(0),responseHeaders:'content-type: text/html',finalUrl:o.url};
+          return{status:200,response:pdf,responseHeaders:'content-type: application/pdf',finalUrl:'https://rscj.silverchair-cdn.com/rscj/content_public/journal/sc/file/d6sc06421c.pdf'};
+        }
+        posts++;return{status:201,responseText:JSON.stringify({stored:true,doi:'10.1039/d6sc06421c',documentId:'rsc_pdf_fixture',contentHash:'c'.repeat(64),byteLength:pdf.byteLength,active:true,requiresVerification:false})};
+      });
+      const out=await T.maybeCapturePrivatePdf({doi:'10.1039/d6sc06421c',publisher:'rsc',addedDate:'2026-10-06',jobId:'fixture-job-12345678'},[]);
+      a.remove();return{out,gets,posts};
+    });
+    assert.equal(x.out.status,'stored');assert.ok(x.gets.length>=2);assert.equal(x.posts,1);
   });
   await tc('CCS ePDF viewer HTML exposes only explicit nested PDF assets',async()=>{
     const rows=await page.evaluate(()=>T.privatePdfViewerCandidates({doi:'10.31635/ccschem.026.202507094',publisher:'ccs'},'<html><iframe src="/doi/pdf/10.31635/ccschem.026.202507094"></iframe><a href="/doi/suppl/x/test.pdf">Supporting Information</a></html>','https://www.chinesechemsoc.org/doi/epdf/10.31635/ccschem.026.202507094'));
