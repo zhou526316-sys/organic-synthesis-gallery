@@ -53,6 +53,7 @@ The dedicated literature metadata/FTS index is a read optimization, not a new li
 
 - The browser must first verify the static Pages architecture generation and obtain its content-addressed `catalogId`.
 - D1 may serve a filtered view only when the Worker explicitly reports the indexed read path active and the requested `catalogId` is a ready generation.
+- Every D1 result DOI/revision must match the verified all-time membership and the content-addressed record before card metadata is rendered; D1 metadata alone is never card authority.
 - Indexed responses are bounded to the result-window size and must expose total matched, current count, continuation state and an opaque scope-bound cursor.
 - The browser must never treat D1 failure, generation-not-ready, malformed responses or cursor failure as an empty result. It may fall back only to the bounded verified static Archive reader; if the static result/fanout guard is exceeded, retain the verified Hot state and expose limited-read status rather than fabricate completeness.
 - Two-character chemistry searches such as `Ni` / `Pd`, reader-count sorting, edition ordering and exact DOI deep-link behavior remain on their compatibility/static paths until separately proven equivalent.
