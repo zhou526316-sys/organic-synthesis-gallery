@@ -423,6 +423,91 @@ test('authenticated V3 mutation API stays dormant until enabled and legacy accou
   assert.equal(conflict.body.currentRevision,1);
 });
 
+test('per-user V3 authority survives global write rollback without reviving legacy writes',async t=>{
+  const db=new D1();t.after(()=>db.close());addUser(db,'u-rollback');
+  const token='v3-rollback-token';
+  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token));
+  const tokenHash=[...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,'0')).join('');
+  db.sqlite.prepare('INSERT INTO user_sessions(token_hash,user_id,expires_at) VALUES(?,?,?)')
+    .run(tokenHash,'u-rollback',Date.now()+60_000);
+
+  const legacyState={
+    statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},
+    followedSearches:[],searchHistory:[],hideRead:false,
+    papers:{a:{favorite:true,note:'legacy'}},
+    metadata:{a:{id:'a',title:'A'}},
+  };
+  db.sqlite.prepare('INSERT INTO user_library_state(user_id,state_json,revision,updated_at) VALUES(?,?,?,?)')
+    .run('u-rollback',JSON.stringify(legacyState),1,1000);
+
+  // Seed the already-proven V3/D3b shadow snapshot that exists before activation.
+  const globalJson=JSON.stringify({
+    statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},
+    followedSearches:[],searchHistory:[],hideRead:false,
+  });
+  db.sqlite.prepare(`
+    INSERT INTO user_library_v3_head
+      (user_id,revision,updated_at,global_json,global_revision,paper_count,metadata_count,change_floor_revision,schema_version)
+    VALUES ('u-rollback',1,1000,?,1,1,1,1,1)
+  `).run(globalJson);
+  db.sqlite.prepare("INSERT INTO user_library_v3_shape(user_id,papers_split,metadata_split,revision) VALUES('u-rollback',1,1,1)").run();
+  db.sqlite.prepare(`
+    INSERT INTO user_library_v3_rows
+      (user_id,paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,deleted,revision,updated_at)
+    VALUES ('u-rollback','a',NULL,1,?,1,?,0,1,1000)
+  `).run(JSON.stringify({favorite:true,note:'legacy'}),JSON.stringify({id:'a',title:'A'}));
+  db.sqlite.prepare(`
+    INSERT INTO user_library_head
+      (user_id,revision,updated_at,global_json,papers_split,metadata_split,paper_count,metadata_count,source_state_hash,shadow_version)
+    VALUES ('u-rollback',1,1000,?,1,1,1,1,'legacy-shadow',1)
+  `).run(globalJson);
+  db.sqlite.prepare(`
+    INSERT INTO user_paper_state
+      (user_id,paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,revision,updated_at)
+    VALUES ('u-rollback','a',NULL,1,?,1,?,1,1000)
+  `).run(JSON.stringify({favorite:true,note:'legacy'}),JSON.stringify({id:'a',title:'A'}));
+
+  const active=envFor(db);
+  const mutated=await readerCounts(active,{
+    mode:'account-v3-mutate',sessionToken:token,expectedRevision:1,
+    operations:[{paperKey:'a',paperState:{favorite:true,note:'v3'},metadata:{id:'a',title:'A'}}],
+  });
+  assert.equal(mutated.status,200);
+  assert.equal(mutated.body.account.revision,2);
+  assert.equal(mutated.body.account.writeAuthority,'v3');
+  assert.equal(db.sqlite.prepare("SELECT authority FROM user_library_v3_authority WHERE user_id='u-rollback'").get().authority,'v3');
+  assert.equal(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_state WHERE user_id='u-rollback'").get().c,0);
+
+  const rolledBack={...active,USER_LIBRARY_V3_WRITE_ENABLED:'0'};
+  const head=await readerCounts(rolledBack,{mode:'account-v3-head',sessionToken:token});
+  assert.equal(head.status,200);
+  assert.equal(head.body.account.revision,2);
+  assert.equal(head.body.account.writeAuthority,'v3');
+  assert.equal(head.body.account.writeEnabled,false);
+
+  const pull=await readerCounts(rolledBack,{mode:'account-pull',sessionToken:token});
+  assert.equal(pull.status,200);
+  assert.equal(pull.body.account.readPath,'rows-v3-compat');
+  assert.equal(pull.body.account.writeAuthority,'v3');
+  assert.equal(pull.body.account.state.papers.a.note,'v3');
+
+  const oldSave=await readerCounts(rolledBack,{
+    mode:'account-save',sessionToken:token,revision:2,state:legacyState,
+  });
+  assert.equal(oldSave.status,503);
+  assert.equal(oldSave.body.error,'user_library_v3_write_suspended');
+  assert.equal(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_state WHERE user_id='u-rollback'").get().c,0);
+
+  const suspendedMutation=await readerCounts(rolledBack,{
+    mode:'account-v3-mutate',sessionToken:token,expectedRevision:2,
+    operations:[{paperKey:'a',paperState:{favorite:true,note:'must-not-write'},metadata:{id:'a',title:'A'}}],
+  });
+  assert.equal(suspendedMutation.status,503);
+  assert.equal(suspendedMutation.body.error,'user_library_v3_write_suspended');
+  const row=db.sqlite.prepare("SELECT paper_state_json FROM user_library_v3_rows WHERE user_id='u-rollback' AND paper_key='a'").get();
+  assert.equal(JSON.parse(row.paper_state_json).note,'v3');
+});
+
 test('V3 writes are independently disabled and require an atomic D1 batch',async t=>{
   const db=new D1();t.after(()=>db.close());addUser(db);
   const disabled=envFor(db,{USER_LIBRARY_V3_WRITE_ENABLED:'0'});
