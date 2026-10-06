@@ -10,7 +10,6 @@ import { PublishedCatalogClient, loadPublishedHotFallback } from '../architectur
 import {
   fetchLiteratureCatalogView,
   literatureCatalogIndexedReadActive,
-  type LiteratureCatalogViewItem,
   type LiteratureCatalogViewRequest,
 } from './literature-catalog-view';
 
@@ -1385,34 +1384,20 @@ function indexedViewRequestKey(request: LiteratureCatalogViewRequest): string {
   });
 }
 
-function indexedViewItemsToPapers(items: LiteratureCatalogViewItem[]): Paper[] {
-  return items.map(item => normalizePaper({
-    journal: item.journal,
-    title: item.title || null,
-    titleZh: item.titleZh || undefined,
-    doi: item.doi,
-    date: item.firstOnlineDate || '',
-    url: `https://doi.org/${item.doi}`,
-    new: isNewTodayDate(item.addedDate || undefined),
-    addedDate: item.addedDate || undefined,
-    authors: item.authors,
-    synthesisType: item.synthesisType === 'formal' || item.synthesisType === 'total'
-      ? item.synthesisType
-      : undefined,
-  })).filter(paper => !isExcludedDoi(paperDoi(paper)));
-}
-
 async function loadIndexedViewPage(
   serial: number,
   request: LiteratureCatalogViewRequest,
   page: number,
   cursors: string[],
 ): Promise<boolean> {
+  const client = architectureClient;
+  if (!client || request.catalogId !== client.catalogId) return false;
   const requestKey = indexedViewRequestKey(request);
   const response = await fetchLiteratureCatalogView(request);
   if (serial !== architectureRefreshSerial && page === 1) return false;
   if (page > 1 && serial !== indexedViewSerial) return false;
-  const indexedPapers = indexedViewItemsToPapers(response.items);
+  if (architectureClient !== client) return false;
+  const indexedPapers = normalizeArchitectureRows(await client.resolveIndexed(response.items));
   if (indexedPapers.length !== response.items.length) throw new Error('literature_catalog_view_excluded_member');
   indexedViewState = {
     requestKey,
@@ -1452,8 +1437,9 @@ async function tryIndexedArchitectureView(serial: number): Promise<boolean> {
 }
 
 async function moveIndexedResultPage(delta: number): Promise<void> {
+  const client = architectureClient;
   const state = indexedViewState;
-  if (!state || state.loading) return;
+  if (!client || !state || state.loading) return;
   const targetPage = state.page + delta;
   if (targetPage < 1) return;
   let cursor = '';
@@ -1476,8 +1462,8 @@ async function moveIndexedResultPage(delta: number): Promise<void> {
   renderCards();
   try {
     const response = await fetchLiteratureCatalogView(request);
-    if (token !== indexedViewSerial) return;
-    const indexedPapers = indexedViewItemsToPapers(response.items);
+    if (token !== indexedViewSerial || architectureClient !== client) return;
+    const indexedPapers = normalizeArchitectureRows(await client.resolveIndexed(response.items));
     if (indexedPapers.length !== response.items.length) throw new Error('literature_catalog_view_excluded_member');
     indexedViewState = {
       requestKey: state.requestKey,
