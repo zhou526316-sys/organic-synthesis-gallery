@@ -490,7 +490,7 @@
         0,
         0,
         1,
-        0.22
+        0.19
       ],
       "output": "public/wechat-assets/reviewed/2026-10-06/daily-fig2a-conditions.png",
       "proof": "audit/wechat-working/crop-proofs/2026-10-06/daily-fig2a-conditions.jpg"
@@ -506,6 +506,42 @@
       ],
       "output": "public/wechat-assets/reviewed/2026-10-06/daily-fig2c-water.png",
       "proof": "audit/wechat-working/crop-proofs/2026-10-06/daily-fig2c-water.jpg"
+    },
+    {
+      "id": "daily-fig1a-transient",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig1_HTML.png",
+      "crop_frac": [
+        0,
+        0,
+        0.24,
+        0.19
+      ],
+      "output": "public/wechat-assets/reviewed/2026-10-06/daily-fig1a-transient.png",
+      "proof": "audit/wechat-working/crop-proofs/2026-10-06/daily-fig1a-transient.jpg"
+    },
+    {
+      "id": "daily-fig1d-strategy",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig1_HTML.png",
+      "crop_frac": [
+        0,
+        0.16,
+        1,
+        0.7
+      ],
+      "output": "public/wechat-assets/reviewed/2026-10-06/daily-fig1d-strategy.png",
+      "proof": "audit/wechat-working/crop-proofs/2026-10-06/daily-fig1d-strategy.jpg"
+    },
+    {
+      "id": "daily-fig2c-source",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig2_HTML.png",
+      "crop_frac": [
+        0.6,
+        0.17,
+        1,
+        0.51
+      ],
+      "output": "public/wechat-assets/reviewed/2026-10-06/daily-fig2c-source.png",
+      "proof": "audit/wechat-working/crop-proofs/2026-10-06/daily-fig2c-source.jpg"
     }
   ]
 }
