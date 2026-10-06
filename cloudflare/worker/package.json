@@ -14,6 +14,7 @@
     "test:reader-counts": "node scripts/test-reader-counts.mjs",
     "test:user-library-shadow": "node scripts/test-user-library-shadow.mjs",
     "test:user-library-v3": "node scripts/test-user-library-v3.mjs",
+    "test:user-library-v3-shadow": "node scripts/test-user-library-v3-shadow.mjs",
     "test:site-analytics-materialized": "node scripts/test-site-analytics-materialized.mjs",
     "test:article-summary": "node scripts/test-article-summary.mjs",
     "test:summary-review": "node scripts/test-summary-review.mjs",
