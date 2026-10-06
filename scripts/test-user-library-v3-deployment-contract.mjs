@@ -60,7 +60,7 @@ test('D3c1 uses only fail-open shadow writes and authenticated admin diagnostics
   assert.ok(userUi.includes("from './user-library-v3-shadow.js'"));
   assert.ok(userUi.includes('safeV3ShadowLibraryWrite'));
   assert.ok(userUi.includes('USER_LIBRARY_V3_SHADOW_WRITE_FAILED'));
-  assert.ok((userUi.match(/safeV3ShadowLibraryWrite\\(/g)||[]).length>=3);
+  assert.ok((userUi.match(/safeV3ShadowLibraryWrite\(/g)||[]).length>=3);
   assert.ok(!userUi.includes("from './user-library-v3.js'"));
   assert.ok(!userUi.includes('applyUserLibraryV3Mutation'));
   for(const path of [
