@@ -986,7 +986,9 @@ async function hydrateMediaBatch(): Promise<void> {
       });
     }
   } catch {
-    // Generated fallbacks remain visible.
+    // The normal path is the bounded visible-DOI API batch. Only if it fails
+    // do we activate the large static media manifest as a compatibility fallback.
+    window.dispatchEvent(new CustomEvent('gallery-media-static-fallback'));
   } finally {
     batchRunning = false;
     if (batchAgain) {
