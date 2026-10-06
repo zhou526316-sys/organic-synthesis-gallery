@@ -14,7 +14,7 @@
   "quick_points": [
     {
       "label": "先把反应看懂",
-      "text": "杂芳基甲胺先与 PLP 形成醌式中间体；罗丹明 6G 吸收 470 nm 光，再通过 Förster 共振能量转移（FRET）把能量交给这个酶内中间体。激发态 PLP 随后把一个电子交给吡啶鎓自由基前体，于是两个自由基几乎在同一个手性口袋里同时出现，并形成新的 C–C 键。"
+      "text": "杂芳基甲胺先与 PLP 形成醌式中间体；Rh6G 吸收 470 nm 光后，通过 FRET 把能量交给这个酶内中间体。激发态 PLP 随后把一个电子交给吡啶鎓自由基前体，于是两个自由基在同一个手性口袋附近共生成并形成新的 C–C 键。下图对应原文 Fig. 1c，先把这条反应路径、Rh6G→[Q] 的能量输入和 [Q] 的可见光吸收放在同一张图里。"
     },
     {
       "label": "全文需要连续解决两个问题",
@@ -328,5 +328,7 @@
     "crop_1_1": "0_0_1_1",
     "preserve_existing_thumb": false,
     "description": "使用用户确认的蓝色 FRET/PLP* 往期精选封面原图；发布脚本只做尺寸标准化，不重新设计。"
-  }
+  },
+  "lead_figure_id": "fig1",
+  "lead_figure_position": "after_first_quick_point"
 }
