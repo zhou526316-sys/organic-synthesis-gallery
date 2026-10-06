@@ -56,6 +56,11 @@
       "caption": "原文 Fig. 4a（底物拓展局部）｜方法并不只适用于模型底物：线性脂肪链、酯、烯烃、缩醛/醚、环烷基、芳基氟以及较拥挤的萜类骨架都能进入这类 C(sp³)–C(sp³) 偶联。不同底物收率差异也提醒我们，物种平衡和自由基生成速度仍然是适用边界。"
     },
     {
+      "id": "fig4_hydroboration",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-hydroboration.png",
+      "caption": "原文 Fig. 4（上游衔接）｜烷基硼酸可以由商业烯烃先做 Brown 硼氢化得到，除去溶剂后无需色谱纯化即可进入电解偶联。于是从路线设计上，这套方法把“羧酸 + 硼酸”进一步前移成了形式上的“羧酸 + 烯烃”片段偶联。"
+    },
+    {
       "id": "fig4_tandem",
       "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-diversification.png",
       "caption": "原文 Fig. 4b｜合成价值不仅是“做出一个偶联产物”：电解先拼出新的烷基–烷基骨架，保留下来的芳基卤素还可以继续接 Suzuki–Miyaura 或 Buchwald–Hartwig 等后续转化，把这一步变成复杂化的前端模块。"
@@ -163,6 +168,7 @@
         "这也是我认为这篇工作最有迁移价值的地方：redox matching 不是为了得到一个漂亮模型产物，而是在尝试把“自由基怎么同步生成”变成可以被路线设计调用的参数。"
       ],
       "figures": [
+        "fig4_hydroboration",
         "fig4_tandem"
       ]
     },
