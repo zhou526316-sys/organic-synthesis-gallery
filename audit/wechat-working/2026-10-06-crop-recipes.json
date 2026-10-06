@@ -51,15 +51,38 @@
     },
     {
       "id": "daily-scope",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig4_HTML.png",
-      "crop_frac": [
-        0,
-        0,
-        1,
-        0.43
-      ],
       "output": "public/wechat-assets/reviewed/2026-10-06/daily-scope.png",
-      "proof": "audit/wechat-working/crop-proofs/2026-10-06/daily-scope.jpg"
+      "proof": "audit/wechat-working/crop-proofs/2026-10-06/daily-scope.jpg",
+      "components": [
+        {
+          "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig4_HTML.png",
+          "crop_frac": [
+            0.22,
+            0,
+            0.78,
+            0.14
+          ]
+        },
+        {
+          "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig4_HTML.png",
+          "crop_frac": [
+            0,
+            0.12,
+            0.51,
+            0.43
+          ]
+        },
+        {
+          "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig4_HTML.png",
+          "crop_frac": [
+            0.49,
+            0.12,
+            1,
+            0.43
+          ]
+        }
+      ],
+      "gap": 20
     },
     {
       "id": "daily-diversification",
