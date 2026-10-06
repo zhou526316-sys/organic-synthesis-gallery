@@ -1,6 +1,6 @@
 # 2026-10-06 公众号纯图片审阅稿（最终图文重排版）
 
-> 生产正文不再使用运行时 crop_frac。以下均为已经实际裁成独立 PNG/JPEG 的固定资产；图片位置跟随叙事，低信息密度 panel 缩窄居中，scope/复杂机理图保留大尺寸。
+> 生产正文不再使用运行时 crop_frac。以下均为已经实际裁成独立 PNG/JPEG 的固定资产；图片位置跟随叙事，低信息密度 panel 缩窄居中，scope/复杂机理图保留大尺寸。正文主图优先，SI 仅在主图无法解释关键论点时补充。
 
 # 今日精选｜Nature Chemistry
 
@@ -67,10 +67,19 @@
 - 2.35:1 crop: `0_0.287234_1_0.712766`
 - 1:1 crop: `0_0_1_1`
 
+## 正文首图：fig1
+
+- placement: 标题/作者信息后、quick points 前
+- repo_path: `public/wechat-assets/hyster-fig1c-overview.png`
+- display_width_pct: 100
+- caption: 原文 Fig. 1c｜先把整篇工作的逻辑放在一张图里看：左侧是不对称自由基–自由基偶联；中间是 Rh6G 吸光并通过 FRET 把能量交给酶内醌式 PLP；右侧光谱说明这个中间体为什么有机会被“点亮”。
+
 ## 第三层｜先看蛋白工程：从 5% 到 90% 到底改了什么
 
 - **fig2_evolution**｜第 1 段后｜宽度 72%｜`public/wechat-assets/reviewed/2026-10-06/hyster-evolution.png`
   - 原文 Fig. 2b｜野生型 TmLTA 只有约 5% 收率，却已经给出 99:1 e.r.；五轮定向进化把收率推进到约 90%，高对映选择性基本保持。换句话说，最初就已经“会选方向”，后续主要是在把有效反应事件做多。
+- **fig2_active_site**｜第 3 段后｜宽度 82%｜`public/wechat-assets/reviewed/2026-10-06/hyster-active-site.png`
+  - 原文 Fig. 2c｜五轮进化的关键突变并不是散落在蛋白表面，而是集中在包围醌式中间体与底物的多个环区。它们同时改变活性位点空间、局部柔性以及发色团的相对位置，因此“蛋白工程”在这里也会反馈到后面的光物理过程。
 
 ## 第四层｜工程化以后，底物拓展告诉了我们什么
 
