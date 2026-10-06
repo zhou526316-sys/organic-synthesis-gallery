@@ -261,8 +261,8 @@
       "crop_frac": [
         0,
         0,
-        0.275,
-        0.98
+        0.31,
+        1
       ],
       "output": "public/wechat-assets/reviewed/2026-10-06/hyster-fret-pathways.png",
       "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-fret-pathways.jpg"
@@ -314,6 +314,42 @@
       ],
       "output": "public/wechat-assets/reviewed/2026-10-06/audit-natchem-table1-full.png",
       "proof": "audit/wechat-working/crop-proofs/2026-10-06/audit-natchem-table1-full.jpg"
+    },
+    {
+      "id": "hyster-quenching-a",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig5_HTML.png",
+      "crop_frac": [
+        0,
+        0,
+        0.275,
+        0.31
+      ],
+      "output": "public/wechat-assets/reviewed/2026-10-06/hyster-quenching-a.png",
+      "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-quenching-a.jpg"
+    },
+    {
+      "id": "hyster-redox-c-clean",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig5_HTML.png",
+      "crop_frac": [
+        0.55,
+        0,
+        1,
+        0.31
+      ],
+      "output": "public/wechat-assets/reviewed/2026-10-06/hyster-redox-c-clean.png",
+      "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-redox-c-clean.jpg"
+    },
+    {
+      "id": "hyster-controls-de",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig5_HTML.png",
+      "crop_frac": [
+        0,
+        0.3,
+        1,
+        0.55
+      ],
+      "output": "public/wechat-assets/reviewed/2026-10-06/hyster-controls-de.png",
+      "proof": "audit/wechat-working/crop-proofs/2026-10-06/hyster-controls-de.jpg"
     }
   ]
 }
