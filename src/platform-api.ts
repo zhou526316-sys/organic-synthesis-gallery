@@ -4,6 +4,46 @@ export interface ApiResponse<T = unknown> {
   headers: Headers;
 }
 
+export interface LiteratureCatalogViewRequest {
+  catalogId: string;
+  query?: string;
+  selectedJournals?: string[];
+  excludedJournals?: string[];
+  dateFrom?: string;
+  dateTo?: string;
+  addedDate?: string;
+  sort?: 'newest' | 'oldest';
+  limit?: number;
+  cursor?: string;
+}
+
+export interface LiteratureCatalogViewItem {
+  doi: string;
+  revision: string;
+  title: string;
+  titleZh?: string;
+  authors: string[];
+  journal: string;
+  firstOnlineDate?: string | null;
+  datePrecision?: string;
+  addedDate?: string | null;
+  synthesisType?: 'methodology' | 'total' | 'formal' | null;
+}
+
+export interface LiteratureCatalogViewResponse {
+  version: number;
+  schemaVersion: string;
+  readPathActive: boolean;
+  catalogId: string;
+  matched: number;
+  count: number;
+  limit: number;
+  hasMore: boolean;
+  nextCursor?: string | null;
+  sort: 'newest' | 'oldest';
+  items: LiteratureCatalogViewItem[];
+}
+
 interface StaticToc {
   available: boolean;
   imageUrl?: string;
@@ -236,6 +276,12 @@ async function rawRequest<T>(method: string, path: string, body?: unknown): Prom
 
 function workerRequest<T>(method: string, path: string, body?: unknown): Promise<ApiResponse<T>> {
   return rawRequest<T>(method, `${WORKER_ORIGIN}${path}`, body);
+}
+
+export function queryLiteratureCatalogView(
+  body: LiteratureCatalogViewRequest,
+): Promise<ApiResponse<LiteratureCatalogViewResponse>> {
+  return workerRequest<LiteratureCatalogViewResponse>('POST', '/api/literature/catalog-view', body);
 }
 
 async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResponse<T>> {
