@@ -34,7 +34,13 @@ test('primary D1 remains FTS-free and deployment verifies that boundary',()=>{
   assert.match(deploy,/primary D1 must remain free of literature FTS tables/);
 });
 
-test('shadow sync follows successful Worker and Pages deployments without public read cutover',()=>{
+test('public view code exists while production remains explicitly read-disabled',()=>{
+  assert.ok(worker.includes('/api/literature/catalog-view'));
+  assert.match(deploy,/LITERATURE_CATALOG_INDEX_READ_ENABLED = "0"/);
+  assert.ok(!deploy.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "1"'));
+});
+
+test('shadow sync follows successful Worker and Pages deployments without frontend read cutover',()=>{
   assert.match(shadow,/Deploy Worker frontend assets/);
   assert.match(shadow,/Deploy GitHub Pages frontend/);
   assert.match(shadow,/sync-literature-catalog-index-shadow\.mjs/);

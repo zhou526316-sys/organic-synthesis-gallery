@@ -48,6 +48,7 @@ import {
   literatureCatalogIndexShadowEnabled,
   queryLiteratureCatalogIndex,
   queryLiteratureCatalogView,
+  queryPublishedLiteratureCatalogView,
 } from './literature-catalog-index.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus } from './user-library-shadow.js';
@@ -100,6 +101,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/paper-titles/resolve',
   '/api/title-translations/zh',
   '/api/literature/supplement',
+  '/api/literature/catalog-view',
   '/api/toc',
   '/api/article-figures',
   '/api/article-figures/staged',
@@ -243,7 +245,12 @@ async function handleApi(request, env, ctx) {
       scheduledHandoffIndexReadEnabled: String(env.SCHEDULED_HANDOFF_INDEX_READ_ENABLED || '') === '1',
       literatureCatalogIndexShadowEnabled: literatureCatalogIndexShadowEnabled(env),
       literatureCatalogIndexReadEnabled: literatureCatalogIndexReadEnabled(env),
-      literatureCatalogIndexReadPathActive: false,
+      literatureCatalogIndexReadPathConfigured: literatureCatalogIndexReadEnabled(env)
+        && literatureCatalogIndexShadowEnabled(env)
+        && Boolean(env.LITERATURE_INDEX_DB),
+      literatureCatalogIndexReadPathActive: literatureCatalogIndexReadEnabled(env)
+        && literatureCatalogIndexShadowEnabled(env)
+        && Boolean(env.LITERATURE_INDEX_DB),
       literatureCatalogIndexDb: Boolean(env.LITERATURE_INDEX_DB),
       userLibraryRowShadowEnabled: String(env.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1',
       userLibraryRowReadEnabled: String(env.USER_LIBRARY_ROW_READ_ENABLED || '') === '1',
@@ -350,6 +357,10 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await compareSummaryReviewCandidateShadow(env, {
       preferredDoi: String(body?.preferredDoi || ''),
     }));
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/literature/catalog-view') {
+    return resultResponse(await queryPublishedLiteratureCatalogView(env, await readJson(request)), cors);
   }
 
   if (request.method === 'GET' && url.pathname === '/api/admin/literature-catalog-index/status') {

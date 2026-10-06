@@ -11,6 +11,7 @@ import {
   LITERATURE_INDEX_IMPORT_BATCH_MAX,
   queryLiteratureCatalogIndex,
   queryLiteratureCatalogView,
+  queryPublishedLiteratureCatalogView,
 } from '../src/literature-catalog-index.js';
 
 class Statement {
@@ -437,6 +438,55 @@ test('batch preflight rejects duplicate and overflow rows before changing genera
   assert.equal(statusAfterOverflow.body.generations[0].importedRows,0);
 });
 
+test('public literature view is hard-gated by read flag and ready catalog generation',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const g=generation();
+  const shadowEnv={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
+  await importLiteratureCatalogIndexBatch(shadowEnv,{generation:g,rows:rows()});
+  await finalizeLiteratureCatalogGeneration(shadowEnv,g.catalogId);
+
+  const disabled=await queryPublishedLiteratureCatalogView(shadowEnv,{
+    catalogId:g.catalogId,query:'nickel',limit:60,
+  });
+  assert.equal(disabled.status,503);
+  assert.equal(disabled.body.error,'literature_catalog_index_read_disabled');
+  assert.equal(disabled.body.readPathActive,false);
+
+  const readEnv={...shadowEnv,LITERATURE_CATALOG_INDEX_READ_ENABLED:'1'};
+  const enabled=await queryPublishedLiteratureCatalogView(readEnv,{
+    catalogId:g.catalogId,query:'nickel',limit:60,
+  });
+  assert.equal(enabled.status,200);
+  assert.equal(enabled.body.readPathActive,true);
+  assert.equal(enabled.body.matched,1);
+  assert.equal(enabled.body.items[0].doi,'10.1234/archive');
+  const status=await getLiteratureCatalogIndexStatus(readEnv);
+  assert.equal(status.status,200);
+  assert.equal(status.body.readConfigured,true);
+  assert.equal(status.body.readPathActive,true);
+
+  const short=await queryPublishedLiteratureCatalogView(readEnv,{
+    catalogId:g.catalogId,query:'Ni',limit:60,
+  });
+  assert.equal(short.status,422);
+  assert.equal(short.body.error,'literature_catalog_short_query_requires_compatibility');
+  assert.equal(short.body.readPathActive,false);
+
+  const readers=await queryPublishedLiteratureCatalogView(readEnv,{
+    catalogId:g.catalogId,sort:'readers',limit:60,
+  });
+  assert.equal(readers.status,422);
+  assert.equal(readers.body.error,'literature_catalog_reader_sort_requires_compatibility');
+  assert.equal(readers.body.readPathActive,false);
+
+  const wrongGeneration=await queryPublishedLiteratureCatalogView(readEnv,{
+    catalogId:'9'.repeat(64),query:'nickel',limit:60,
+  });
+  assert.equal(wrongGeneration.status,409);
+  assert.equal(wrongGeneration.body.error,'literature_catalog_generation_not_ready');
+  assert.equal(wrongGeneration.body.readPathActive,false);
+});
+
 test('read flag is independently visible but cannot activate the dormant read path',async t=>{
   const db=new D1();t.after(()=>db.close());
   const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1',LITERATURE_CATALOG_INDEX_READ_ENABLED:'1'};
@@ -448,11 +498,13 @@ test('read flag is independently visible but cannot activate the dormant read pa
   assert.equal(status.body.readPathActive,false);
 });
 
-test('shadow activation remains admin-only, dedicated-DB and read-inactive',()=>{
+test('public read route exists but production deployment remains read-inactive',()=>{
   const source=readFileSync(new URL('../src/index.js',import.meta.url),'utf8');
   assert.ok(source.includes('/api/admin/literature-catalog-index/query'));
   assert.ok(source.includes('/api/admin/literature-catalog-index/rows'));
   assert.ok(source.includes('/api/admin/literature-catalog-index/view'));
+  assert.ok(source.includes('/api/literature/catalog-view'));
+  assert.ok(source.split('/api/literature/catalog-view').length - 1 >= 2,'public path must be both CORS-readable and routed');
   assert.ok(!source.includes('/api/literature/catalog-search'));
   assert.ok(!source.includes('/api/user-ui/literature-search'));
 
