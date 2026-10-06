@@ -64,8 +64,10 @@ jobs:
 
       - name: Verify Chem RSC CCS adapters and PDF cutoff
         run: |
-          node tests/tm-target-journals-browser.mjs
-          node tests/private-pdf-capture-browser.mjs
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/target-journals"
+          node tests/tm-target-journals-browser.mjs | tee "$RUNNER_TEMP/target-journals/target-journal-tests.txt"
+          node tests/private-pdf-capture-browser.mjs | tee "$RUNNER_TEMP/target-journals/private-pdf-tests.txt"
 
       - name: Build and validate canonical compatible installer
         env:
