@@ -1,37 +1,42 @@
-# 2026-10-06 WeChat pre-draft review — final narrative/image placement pass
+# 2026-10-06 WeChat pre-draft review — complete figure/text audit
 
-Status: **TEXT PASS / IMAGE PASS / TRANSPORT PENDING**
+Status: **TEXT PASS / FIGURE-MAP PASS / RASTER COMPLETION PENDING**
 
-This review supersedes all earlier Oct-6 layout approvals.
+## Sentence-level prose review
 
-## Text review — PASS
+- Removed vague transitions such as “后续 Fig. 4 和 Fig. 5 很重要” and other meta-commentary that does not advance the scientific argument.
+- Every section now states what the cited experiment establishes before moving to interpretation.
+- Nature Chemistry follows: transient-radical problem → Fig. 1 design → alternating polarity → Fig. 2 redox/speciation → Fig. 3 electrode/mechanism → Table 1 cross-coupling scope → Fig. 4 synthetic extensions → limitations.
+- Hyster follows: Fig. 1 PLP photochemical context/FRET analogy/current reaction → Fig. 2 model/evolution/active site/lysate → Fig. 3 scope → Fig. 4 two FRET channels → Fig. 5 photophysics/controls/mechanism/application → peer-review and method boundaries.
+- Mechanistic claims retain evidence boundaries: correlations are not rewritten as unique causal proof.
 
-- Both articles are optimized from the existing drafts, not rewritten from zero.
-- The narrative follows each paper progressively: problem → design/engineering → mechanistic evidence → substrate scope → synthetic/application value → limitations.
-- Nature Chemistry no longer concentrates on a single mechanism point: alternating-polarity electrolysis, redox/speciation matching, electrode effects, mechanism, substrate scope, hydroboration feedstock entry and downstream diversification are all represented.
-- Hyster balances PLP photochemistry, directed evolution, active-site remodeling, substrate scope, external and intra-enzyme FRET, radical-pair mechanism, excited-state lifetime, peer-review boundaries and Lenacapavir application.
-- Interpretive comments are kept separate from direct evidence and do not strengthen causal claims beyond the paper.
+## Figure completeness
 
-## Image review — PASS
+### Nature Chemistry
+- Fig. 1e remains the explicit opening exception, before “先看反应本身”; adjacent text calls it “上图（原文 Fig. 1e）”.
+- Fig. 1a–d context is included after its explanatory paragraph.
+- Fig. 2a, 2b, 2c and 2d–f are mapped to standard conditions, speciation/source/water and electroanalytical evidence.
+- Fig. 3a, 3b–c and 3d are mapped to electrode material, alternating-polarity/passivation and overall mechanism.
+- Table 1 is split into readable upper/lower scope blocks so the actual carboxylic-acid/boronic-acid cross-coupling scope is not confused with Fig. 4a homocoupling.
+- Fig. 4a, Table 1 hydroboration entry, and Fig. 4b cover homocoupling, alkene-to-boronic-acid feedstock logic and downstream Suzuki/Buchwald–Hartwig diversification.
+- SI Fig. 6, SI Table 5, SI Fig. 7 and SI Table 6 are added only for radical trapping, water effect/Bpin formation and ICP–MS, where main-text figures do not show the evidence directly.
 
-- All production body figures are materialized WYSIWYG PNG/JPEG assets; no production body figure uses runtime `crop_frac`.
-- Nature Chemistry Fig. 1e is the first scientific image, before “先看反应本身”.
-- The alternating-polarity section has its own Fig. 3b–c image immediately after the paragraph discussing scan-to-scan passivation/recovery.
-- Electrode material uses its own compact Fig. 3a image; it is not stretched full width.
-- Fig. 2 speciation/CV evidence, Fig. 3 mechanism, Fig. 4 substrate scope, hydroboration entry and downstream diversification are shown next to the exact paragraphs they explain.
-- Hyster covers every main-text figure family used in the narrative: Fig. 1 overview; Fig. 2 evolution and active-site remodeling; Fig. 3 two scope blocks; Fig. 4 external/intra-enzyme FRET evidence; Fig. 5 lifetime, mechanism and Lenacapavir application.
-- Low-information panels are deliberately narrower: evolution 72%, lifetime 70%, Lenacapavir 58%, electrode-material 68%; the active-site panel is 82%. Dense scope/mechanistic figures remain wide.
-- Crops with neighbouring-panel leakage or clipped chemistry are excluded from production.
-- The user-confirmed blue Hyster cover remains unchanged.
+### Hyster / Nature
+- Fig. 1a, Fig. 1b and Fig. 1c are all represented.
+- Fig. 2a–d are all represented: model reaction, evolution, active-site remodeling and cell-free lysate.
+- Fig. 3 scope is split into readable pyrimidine and pyridine blocks.
+- Fig. 4a, Fig. 4b–c and Fig. 4d–e are all represented.
+- Fig. 5a, b, c, d, e, f and g are all represented with separate readable crops where appropriate.
+- SI Fig. 11 supplements the negative result for direct excitation of natural amino-acid-derived quinonoids.
 
-## Placement review — PASS
+## Placement and sizing
 
-The publisher supports `figures_after_paragraph`: evidence appears after the paragraph it substantiates rather than being dumped at section ends. This is now the default narrative rule for these two articles.
+- Section figures are paragraph-bound through `figures_after_paragraph`; final publishing is fail-closed if a used section figure lacks a paragraph mapping.
+- Every used scientific image caption must contain an explicit Fig./Table/SI identifier.
+- Low-density panels remain centered and narrower; dense substrate-scope and mechanistic panels remain wide enough to read.
+- All production images must be materialized WYSIWYG rasters before the gate can be closed.
 
-## Main-text / SI policy
+## Decision
 
-Main-text figures take priority and should be shown wherever they materially advance the paper's argument. SI figures may be added selectively for claims that the main figures do not directly visualize—such as water effects, negative controls or failed substrates—but not merely to increase image count or interrupt the narrative.
-
-## Gate decision
-
-**PASS.** The current manifests and pinned assets may be written to WeChat after their exact blob fingerprints are recorded in the review gate. Final acceptance requires `draft/get` readback.
+Text and figure mapping: **PASS**.
+Final image gate remains **PENDING** only until the latest crop-materialization job has produced and the model has visually checked every newly added raster. No WeChat write is allowed before that.
