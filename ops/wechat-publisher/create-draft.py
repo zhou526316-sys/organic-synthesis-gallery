@@ -785,6 +785,57 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
                 fill="#98a2b3",
             )
 
+        elif layout == "retrospective_figure_square":
+            # Secondary WeChat card without a portrait: use a real paper scheme
+            # as the visual anchor, but reserve a large title band that remains
+            # readable in both square and centered-card crops.
+            canvas = Image.new("RGB", (width, height), "#0d2946")
+            draw = ImageDraw.Draw(canvas)
+
+            kicker = str(cover.get("thumb_kicker") or "往期精选")
+            title_text = str(cover.get("thumb_title") or "")
+            meta = str(cover.get("thumb_meta") or "")
+            chemistry = str(cover.get("thumb_footer") or "")
+
+            kicker_font = choose_font(max(34, int(width * 0.045)), True)
+            title_font = choose_font(max(52, int(width * 0.066)), True)
+            meta_font = choose_font(max(28, int(width * 0.036)), True)
+            footer_font = choose_font(max(25, int(width * 0.031)), False)
+
+            # Original paper visual fills the lower 58% and is cropped, never redrawn.
+            visual_top = int(height * 0.42)
+            fitted = ImageOps.fit(
+                image,
+                (width, height - visual_top),
+                method=Image.Resampling.LANCZOS,
+                centering=(0.50, 0.52),
+            )
+            canvas.paste(fitted, (0, visual_top))
+
+            # Opaque editorial header keeps the tiny card legible.
+            draw.rectangle((0, 0, width, visual_top), fill="#0d2946")
+            draw.rectangle((0, visual_top - max(4,int(height*0.006)), width, visual_top), fill="#d7b56d")
+
+            left = int(width * 0.065)
+            right = int(width * 0.94)
+            draw.text((left, int(height * 0.06)), kicker, font=kicker_font, fill="#e9c978")
+            if meta:
+                mbox = draw.textbbox((0,0),meta,font=meta_font)
+                draw.text((right-(mbox[2]-mbox[0]), int(height*0.07)), meta, font=meta_font, fill="#dce7f2")
+
+            y = int(height * 0.15)
+            for line in wrap_text(draw, title_text, title_font, int(width*0.86), 3):
+                draw.text((left, y), line, font=title_font, fill="#ffffff")
+                y += int(height * 0.075)
+
+            if chemistry:
+                draw.rounded_rectangle(
+                    (left, int(height*0.35), right, int(height*0.405)),
+                    radius=max(12,int(width*0.014)),
+                    fill="#173a60",
+                )
+                draw.text((left+18, int(height*0.36)), chemistry, font=footer_font, fill="#dce7f2")
+
         elif layout == "retrospective_square":
             # Full square editorial cover for the secondary WeChat card.
             # Portrait-led, dense blue/gold composition; all essential text
