@@ -18,12 +18,12 @@ function harness(text=source,opt={}) {
     setTimeout:(f,ms)=>{timers.set(++id,{f,ms});return id;},clearTimeout:i=>timers.delete(i),setInterval:()=>++id,clearInterval(){},
     __badge:t=>badges.push(t),
     __sleep:async ms=>{now+=ms;for(const h of opened)if(h.closeRequested&&!opt.neverClose)h.closed=true;await opt.onSleep?.(ms,ctx);},
-    __getJson:async url=>{await opt.onFetch?.(url,ctx,menus,store);return url.includes('capture-capabilities')?{captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',evidenceSchemaVersion:'article-evidence-v2',evidenceCaptureMinControllerRevision:'2.2.35',mediaControllerRevision:'2.2.35'}:url.includes('toc-demand')?{generatedAt:'2026-09-22T16:30:47.570Z',latestAddedDate:'2026-09-22',mediaGeneration:1790082000000,webpageDoiCount:c.__jobs.length,articles:c.__jobs}:{items:{}};},
+    __getJson:async url=>{await opt.onFetch?.(url,ctx,menus,store);return url.includes('capture-capabilities')?{captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',evidenceSchemaVersion:'article-evidence-v2',evidenceCaptureMinControllerRevision:'2.2.35',mediaControllerRevision:'2.2.41'}:url.includes('toc-demand')?{generatedAt:'2026-09-22T16:30:47.570Z',latestAddedDate:'2026-09-22',mediaGeneration:1790082000000,webpageDoiCount:c.__jobs.length,articles:c.__jobs}:{items:{}};},
     GM_openInTab:(url,options)=>{
       const job=store.get('osg-toc-v6:active-job');
       const h={url,options,closed:false,closeRequested:false,close(){this.closeRequested=true;}};
       opened.push(h);maxLive=Math.max(maxLive,opened.filter(h=>!h.closed).length);
-      set(ctx.T.resultKey(job.doi),{doi:job.doi,jobId:job.jobId,version:'6.2.20',controllerRevision:'2.2.35',status:'success',finishedAt:new Clock().toISOString(),toc:{status:'stored',productionTocStored:true},figures:{status:'staged',discovered:2,stored:2,failed:0,items:[]},fulltext:{status:'stored',evidenceLevel:'complete'},figuresStaged:2});
+      set(ctx.T.resultKey(job.doi),{doi:job.doi,jobId:job.jobId,version:'6.2.20',controllerRevision:'2.2.41',status:'success',finishedAt:new Clock().toISOString(),toc:{status:'stored',productionTocStored:true},figures:{status:'staged',discovered:2,stored:2,failed:0,items:[]},fulltext:{status:'stored',evidenceLevel:'complete'},figuresStaged:2});
       opt.onOpen?.(job,ctx,store);
       return opt.promiseHandle?Promise.resolve(h):h;
     },
