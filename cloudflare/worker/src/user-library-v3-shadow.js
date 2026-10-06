@@ -28,8 +28,9 @@ async function runStatements(env, statements) {
 }
 
 export function userLibraryV3ShadowEnabled(env) {
-  return flag(env?.USER_LIBRARY_V3_SHADOW_ENABLED)
-    && !flag(env?.USER_LIBRARY_V3_WRITE_ENABLED);
+  const publicWriteActive = flag(env?.USER_LIBRARY_V3_WRITE_ENABLED)
+    && !flag(env?.USER_LIBRARY_V3_WRITE_CANARY_ONLY);
+  return flag(env?.USER_LIBRARY_V3_SHADOW_ENABLED) && !publicWriteActive;
 }
 
 async function sourceMeta(env, userId) {
@@ -401,7 +402,9 @@ export async function getUserLibraryV3ShadowStatus(env) {
     configured:flag(env.USER_LIBRARY_V3_SHADOW_ENABLED),
     enabled:userLibraryV3ShadowEnabled(env),
     readEnabled:flag(env.USER_LIBRARY_V3_READ_ENABLED),
-    writeEnabled:flag(env.USER_LIBRARY_V3_WRITE_ENABLED),
+    writeConfigured:flag(env.USER_LIBRARY_V3_WRITE_ENABLED),
+    writeCanaryOnly:flag(env.USER_LIBRARY_V3_WRITE_CANARY_ONLY),
+    writeEnabled:flag(env.USER_LIBRARY_V3_WRITE_ENABLED) && !flag(env.USER_LIBRARY_V3_WRITE_CANARY_ONLY),
     legacyUsers:Number(legacy?.count || 0),
     legacyDocuments:Number(legacyDocuments?.count || 0),
     staleLegacyDocuments:Number(staleLegacyDocuments?.count || 0),
