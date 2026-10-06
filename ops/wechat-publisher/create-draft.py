@@ -2624,6 +2624,9 @@ def main() -> int:
         return 0
 
     required_review_sources = []
+    edition_path = EDITION_DIR / f"{publication_date}.json"
+    if edition_path.exists():
+        required_review_sources.append(edition_path)
     if featured:
         required_review_sources.append(FEATURED_DIR / f"{publication_date}.json")
     if retrospective_slug:
