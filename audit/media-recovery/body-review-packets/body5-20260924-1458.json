@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260924-1458",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-24T06:58:16Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10794591083,
+  "evidenceArchiveSha256": "1ecedf73164595b8fff783f8f67802d4d92c3ff5f74558bbd3a2f537579d5729",
+  "evidenceRunId": 35966705081,
+  "approvedCount": 22,
+  "reviewMethod": "All 22 selected stored files across five newest eligible current-corpus ACS articles were independently rehashed against the fresh read-only GitHub evidence artifact and checked for exact task/page/article/source DOI identity, original Figure/Scheme identity and independent caption, captureVersion 6.2.20, job identity, fixed media generation 1790082000000, content-addressed R2 key, actual byte length/type/dimensions, duplicate source/hash ownership, frozen public same-ID state and existing official TOC separation. Twenty-one SVG files were rendered and checked for active/external content; the PNG was decoded and dimension-checked. Every image was visually reviewed against its owning caption and article theme for body-image role, unrelated/recommendation contamination, duplicate risk and legibility. Capture success and transport checkpoints were treated only as provenance evidence. No publisher request, R2/D1 write, direct import/repair, literature/card/title/scope mutation, userscript change or media-generation change was performed.",
+  "quality": "The 22 files are exact stored bytes (21 self-contained SVG and 1 PNG), all within configured size bounds, with unique selected full SHA256 and source identities. Frozen public media-index records contain no same-ID body figures for these five DOI; each article has a distinct existing official TOC which remains untouched. Figure 1 is body-only and is not a TOC substitution. Final article reports state 5/5, 4/4, 6/6, 3/3 and 4/4 captured respectively. Earlier transport or format checkpoints are retained as provenance and are not attributed to VPN, R2, quota or another cause without evidence.",
+  "decisions": [
+    {
+      "doi": "10.1021/acs.joc.6c01866",
+      "images": [
+        ["next-001", "figure-1", "Viewed representative biologically active sulfone-containing molecules; the medicinal sulfone examples match Figure 1 and the paper’s sulfonylated coumarin context."],
+        ["next-021", "scheme-1", "Viewed the photosensitizer-free cascade sulfonylation/cyclization reaction and product scope summary for fused coumarins; content matches Scheme 1."],
+        ["next-022", "scheme-2", "Viewed the gram-scale reaction and natural-sunlight experiment comparing lamp and sunlight conditions; content matches Scheme 2."],
+        ["next-023", "scheme-3", "Viewed control experiments and photophysical/kinetic plots used to probe the light-driven cascade; content matches Scheme 3."],
+        ["next-024", "scheme-4", "Viewed the proposed photoinduced sulfonyl-radical addition and cascade cyclization pathway; content matches Scheme 4 and the article mechanism."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03166",
+      "images": [
+        ["next-002", "figure-1", "Viewed the three polyglucuronic-acid assembly strategies, including the iron(III)-porphyrin glycal-epoxide route of this work; content matches Figure 1."],
+        ["next-025", "figure-2", "Viewed catalyst discovery and condition comparison for iron(III) porphyrin sulfonate-catalyzed glucuronal glycosylation; content matches Figure 2."],
+        ["next-026", "figure-3", "Viewed the glucuronic-acid disaccharide substrate scope with yields and stereoselectivities; content matches Figure 3."],
+        ["next-027", "scheme-1", "Viewed iterative iron-catalyzed stereospecific glycosylations used to assemble PGA tetra- and octasaccharides; content matches Scheme 1."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03301",
+      "images": [
+        ["next-003", "scheme-1", "Viewed the site-selective arene C–H arylation concept using diaryl disulfides and the selectivity map relative to prior arylating reagents; content matches Scheme 1."],
+        ["next-028", "scheme-2", "Viewed the simple-arene scope with major regioisomers, yields and selectivity ratios under Pd catalysis; content matches Scheme 2."],
+        ["next-029", "scheme-3", "Viewed the diaryl-disulfide scope across substituted aryl partners and arene classes; content matches Scheme 3."],
+        ["next-030", "scheme-4", "Viewed the gram-scale transformation of diphenyl disulfide and toluene to the biaryl product; content matches Scheme 4."],
+        ["next-031", "scheme-5", "Viewed mechanistic control experiments including sulfonyl intermediates, isotope effects and competitive substrates; content matches Scheme 5."],
+        ["next-032", "scheme-6", "Viewed the proposed Pd catalytic pathway linking diaryl disulfide oxidation, electrophilic arene activation and C–C bond formation; content matches Scheme 6."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03574",
+      "images": [
+        ["next-004", "scheme-1", "Viewed prior strain-release cascade concepts, the dearomative spirocyclization hypothesis, bioactive sulfonamide motifs and this work’s tandem design; content matches Scheme 1."],
+        ["next-033", "scheme-2", "Viewed the dearomative spirocyclic substrate scope for sulfonyl oxime and sulfonamide variants, including complex-molecule examples; content matches Scheme 2."],
+        ["next-034", "scheme-3", "Viewed postsynthetic transformations, radical trapping/light on-off studies and the plausible photocatalytic mechanism; content matches Scheme 3."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03732",
+      "images": [
+        ["next-005", "scheme-1", "Viewed representative CF3-containing bioactive molecules and prior/current strategies for allylic trifluoromethyl terminal alkenes; content matches Scheme 1."],
+        ["next-035", "scheme-2", "Viewed preparation of trifluoroallyl sulfonium salts, including multigram synthesis and structural characterization; content matches Scheme 2."],
+        ["next-036", "scheme-3", "Viewed Cu-catalyzed cross-coupling scope of organozinc reagents with trifluoroallyl sulfonium salt 1a; content matches Scheme 3."],
+        ["next-037", "scheme-4", "Viewed downstream transformations of the allylic trifluoromethyl terminal alkene by oxidation, hydroboration, hydrogenation and cycloaddition; content matches Scheme 4."]
+      ]
+    }
+  ]
+}
