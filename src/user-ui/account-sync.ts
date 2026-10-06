@@ -660,6 +660,27 @@ async function persistLegacyDesired(desired:UserUiState,keys:string[],globalWasD
   }
 
   if(response.status===409&&response.body.error==='user_library_client_upgrade_required'&&allowRecovery){
+    const currentRevision=safeInteger(response.body.currentRevision);
+    if(currentRevision!==null&&currentRevision===revision&&syncedState){
+      const probe=await request('account-v3-head');
+      if(probe.status===401)return {kind:'unauthorized'};
+      const account=probe.body.account;
+      const head=account?v3Head(account):null;
+      const probeUserId=validUserId(account?.userId);
+      if(probe.ok&&account?.readPath==='v3-head'&&account.writeEnabled===true
+        &&head?.revision===revision&&probeUserId&&(!activeUserId||probeUserId===activeUserId)){
+        v3WriteActive=true;
+        v3AuthorityActive=account.writeAuthority==='v3';
+        setWriteDiagnostic('v3');
+        return persistV3Desired(
+          desired,
+          keys.filter(key=>Boolean(mutationOperation(syncedState!,desired,key))),
+          globalWasDirty&&!sameJson(globalStateOf(syncedState),globalStateOf(desired)),
+          false,
+        );
+      }
+    }
+
     const recovery=await recoveryPull();
     if(recovery.status===401)return {kind:'unauthorized'};
     if(!recovery.account||!recovery.account.writeEnabled)return {kind:'failure'};
