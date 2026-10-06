@@ -23,12 +23,6 @@
   ],
   "figures": [
     {
-      "id": "cover_art",
-      "body": false,
-      "caption": "",
-      "repo_path": "public/wechat-retrospective/assets/hyster-plp-photoenzyme-cover.jpg"
-    },
-    {
       "id": "fig1",
       "caption": "原文 Fig. 1c（只裁当前反应）｜先不谈复杂光物理，只看反应本身：杂芳基甲胺与吡啶鎓自由基前体，在 TmLTA、PLP、罗丹明 6G 和 470 nm 光下偶联，直接得到手性伯胺。",
       "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig1_HTML.png",
@@ -254,12 +248,15 @@
   "takehome_heading": "读到最后，最值得带走的三个判断",
   "ai_notice": "本文由“化之岛”基于 Nature 最终正文、Supporting Information 与公开同行评审文件整理，AI 辅助资料归纳与文字校核，最终内容经人工审核。化学结构与数据均来自论文原文，不使用生成模型重绘。",
   "cover": {
-    "source_figure_id": "cover_art",
+    "source_figure_id": "fig1",
+    "layout": "hyster_fret_abstract",
     "canvas": {
       "width": 1000,
       "height": 1000,
-      "background": "#0b2d52"
+      "background": "#082a4d"
     },
+    "thumb_kicker": "往期精选｜Nature｜Hyster",
+    "thumb_title": "磷酸吡哆醛光酶催化不对称自由基–自由基交叉偶联",
     "crop_235_1": "0_0.287234_1_0.712766",
     "crop_1_1": "0_0_1_1",
     "preserve_existing_thumb": false
