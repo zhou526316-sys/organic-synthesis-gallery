@@ -2292,7 +2292,7 @@ function embeddedJobDois(value) {
 
   function collectCandidates(job, trace, root, baseUrl, sourceName, quiet) {
     var scope = root || document, rows = [], seen = new Set();
-    function add(row) { if (!seen.has(row.url) && candidateBelongsToJob(row.url,job) && !reject(row.text,row.url)) { seen.add(row.url); rows.push(row); } }
+    function add(row) { if (job.publisher==='rsc'&&isRscPdfPagePreviewUrl(row&&row.url)) return; if (!seen.has(row.url) && candidateBelongsToJob(row.url,job) && !reject(row.text,row.url)) { seen.add(row.url); rows.push(row); } }
     scope.querySelectorAll('img,object[type^="image"]').forEach(function(node) {
       var context=visualScope(node);
       if (!context) return;
