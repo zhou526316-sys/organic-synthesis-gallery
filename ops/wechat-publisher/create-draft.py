@@ -40,6 +40,7 @@ DEFAULT_PREVIEW_BASE_URL = "https://relay.gczhouwld.com/wechat-preview"
 DEFAULT_BODY_IMAGE_CACHE = Path("/var/lib/osg-wechat-publisher/body-images.json")
 DEFAULT_PDF_CACHE_DIR = Path("/var/lib/osg-wechat-publisher/source-pdfs")
 DEFAULT_SOURCE_IMAGE_CACHE_DIR = Path("/var/lib/osg-wechat-publisher/source-images")
+EDITORIAL_GATE_DIR = ROOT / "audit" / "wechat-working"
 FEATURED_DIR = ROOT / "public" / "wechat-featured"
 EDITION_DIR = ROOT / "public" / "wechat-editions"
 DEFAULT_SOURCE_URL = "https://gallery.gczhouwld.com/"
@@ -283,6 +284,74 @@ def load_edition(date: str) -> dict:
     if not isinstance(data, dict):
         raise RuntimeError(f"invalid WeChat edition data: {path}")
     return data
+
+
+def git_blob_sha(path: Path) -> str:
+    payload = path.read_bytes()
+    header = f"blob {len(payload)}\0".encode("utf-8")
+    return hashlib.sha1(header + payload).hexdigest()
+
+
+def require_editorial_review_gate(
+    gate_path: Path,
+    required_sources: list[Path],
+) -> dict:
+    if not gate_path.exists():
+        raise RuntimeError(
+            f"WeChat editorial review gate missing: {gate_path.relative_to(ROOT)}"
+        )
+    gate = json.loads(gate_path.read_text(encoding="utf-8"))
+    if not isinstance(gate, dict):
+        raise RuntimeError(f"invalid WeChat editorial review gate: {gate_path}")
+
+    text_review = str(gate.get("textReview") or "").strip().lower()
+    image_review = str(gate.get("imageReview") or "").strip().lower()
+    if text_review != "pass" or image_review != "pass":
+        raise RuntimeError(
+            "WeChat editorial review gate not approved: "
+            + json.dumps(
+                {"textReview": text_review, "imageReview": image_review},
+                ensure_ascii=False,
+            )
+        )
+
+    artifacts = gate.get("artifacts") if isinstance(gate.get("artifacts"), dict) else {}
+    for key in ("textOnly", "imagesOnly"):
+        rel = str(artifacts.get(key) or "").strip()
+        if not rel:
+            raise RuntimeError(f"WeChat review gate missing artifact: {key}")
+        artifact = (ROOT / rel).resolve()
+        try:
+            artifact.relative_to(ROOT.resolve())
+        except ValueError as exc:
+            raise RuntimeError(f"WeChat review artifact escapes repository: {rel}") from exc
+        if not artifact.exists() or artifact.stat().st_size <= 0:
+            raise RuntimeError(f"WeChat review artifact missing or empty: {rel}")
+
+    source_rows = gate.get("sources") if isinstance(gate.get("sources"), list) else []
+    indexed = {
+        str(row.get("path") or "").strip(): row
+        for row in source_rows
+        if isinstance(row, dict) and str(row.get("path") or "").strip()
+    }
+    for source in required_sources:
+        source = source.resolve()
+        try:
+            rel = str(source.relative_to(ROOT.resolve())).replace("\\", "/")
+        except ValueError as exc:
+            raise RuntimeError(f"WeChat reviewed source escapes repository: {source}") from exc
+        if not source.exists():
+            raise RuntimeError(f"WeChat reviewed source missing: {rel}")
+        row = indexed.get(rel)
+        if not row:
+            raise RuntimeError(f"WeChat review gate does not cover source: {rel}")
+        expected = str(row.get("blobSha") or "").strip().lower()
+        actual = git_blob_sha(source)
+        if not expected or expected != actual:
+            raise RuntimeError(
+                f"WeChat review gate stale for {rel}: expected {expected or 'missing'}, actual {actual}"
+            )
+    return gate
 
 
 def load_retrospective_slug(slug: str) -> dict | None:
@@ -1202,7 +1271,7 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
         format="JPEG",
         quality=95,
         optimize=True,
-        progressive=True,
+        progressive=False,
         dpi=(300, 300),
     )
     return target
@@ -1451,6 +1520,16 @@ def prepare_featured_local_images(featured: dict | None, override_pdf: str = "")
                 raise RuntimeError(f"featured repo_path escapes repository: {repo_image}") from exc
             if not local.exists():
                 raise RuntimeError(f"featured repository image is missing: {repo_image}")
+            try:
+                from PIL import Image, UnidentifiedImageError
+                with Image.open(local) as image:
+                    image.load()
+            except ImportError as exc:
+                raise RuntimeError("local image validation requires Pillow") from exc
+            except (UnidentifiedImageError, OSError, ValueError) as exc:
+                raise RuntimeError(
+                    f"featured repository image is not a decodable raster: {repo_image}"
+                ) from exc
             prepared[fig_id] = local
             continue
         if isinstance(fig.get("pdf_render"), dict):
@@ -2419,6 +2498,11 @@ def main() -> int:
             }, ensure_ascii=False))
             return 0
 
+        require_editorial_review_gate(
+            EDITORIAL_GATE_DIR / f"retrospective-{slug}-review-gate.json",
+            [RETROSPECTIVE_DIR / f"{slug}.json"],
+        )
+
         load_env(Path(args.env_file))
         token = get_access_token()
         uploaded_urls, local_images = upload_featured_images(token, data, args.featured_pdf)
@@ -2538,6 +2622,16 @@ def main() -> int:
             "note": "No preview URL is created before the WeChat draft is written.",
         }, ensure_ascii=False))
         return 0
+
+    required_review_sources = []
+    if featured:
+        required_review_sources.append(FEATURED_DIR / f"{publication_date}.json")
+    if retrospective_slug:
+        required_review_sources.append(RETROSPECTIVE_DIR / f"{retrospective_slug}.json")
+    require_editorial_review_gate(
+        EDITORIAL_GATE_DIR / f"{publication_date}-review-gate.json",
+        required_review_sources,
+    )
 
     load_env(Path(args.env_file))
     token = get_access_token()
