@@ -1,19 +1,22 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-28T08:26:00+08:00",
-  "publicationSlot": "2026-09-28T08:00:00+08:00",
-  "releaseCommit": "c4e2a4c713b9c51d078cde3fbf32ae6629ae748c",
-  "baselineMain": "07f241e37b9519a06a8c1de02b7b67d60bc639e7",
-  "postReleaseAuditRunId": 36361078748,
-  "postReleaseAuditGeneratedAt": "2026-09-28T00:09:15.196Z",
-  "expectedProductionCards": 633,
+  "requestedAt": "2026-10-06T00:14:30.000Z",
+  "publicationSlot": "2026-10-06T08:00:00+08:00",
+  "releaseCommit": "7c0d44301d61477760a7216318041749f01eccca",
+  "baselineMain": "f3268f2d2438cb3e2837262a6e59f370ccb351b5",
+  "postReleaseAuditRunId": 37392330365,
+  "postReleaseAuditGeneratedAt": "2026-10-06T00:09:15.300Z",
+  "expectedProductionCards": 826,
   "expectedDeferredDois": [
+    "10.1021/acscatal.6c06578",
+    "10.31635/ccschem.026.202608090",
+    "10.31635/ccschem.026.202607590",
+    "10.31635/ccschem.026.202607612",
     "10.31635/ccschem.026.202608472",
-    "10.1002/anie.8666577",
     "10.31635/ccschem.026.202608262"
   ],
-  "observedUnresolvedCount": 3,
-  "purpose": "Post-deployment quality validation for the authorized 2026-09-28 08:00 per-DOI slot after TOC refresh and successful Pages deployment; no new literature admission.",
-  "pagesRunId": 36361857173,
-  "deploymentRetryCommit": "07f241e37b9519a06a8c1de02b7b67d60bc639e7"
+  "observedUnresolvedCount": 7,
+  "purpose": "Post-deployment quality validation for the authorized 2026-10-06 08:00 per-DOI slot after successful Pages delivery. Validate the deployed 826-card set against the fresh post-release DOI-union audit; do not admit new literature off-slot.",
+  "pagesRunId": 37391639821,
+  "deploymentRetryCommit": "fbf3e2fd0873831a626eca2867f8a5ee0aa99418"
 }
