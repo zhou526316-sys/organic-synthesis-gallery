@@ -1,0 +1,118 @@
+name: WeChat Reviewed Materials Import
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/wechat-working/material-import-request.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-reviewed-materials-import
+  cancel-in-progress: false
+
+jobs:
+  import-reviewed-materials:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Download and validate the exact editorial package
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, io, json, pathlib, urllib.parse, urllib.request, zipfile
+          request = json.loads(pathlib.Path('audit/wechat-working/material-import-request.json').read_text())
+          if request.get('action') != 'import_reviewed_materials_only':
+              raise SystemExit('Wrong action: this workflow never writes or publishes a WeChat draft')
+          url = request['packageUrl']
+          if urllib.parse.urlsplit(url).hostname != 'at.adobe.com':
+              raise SystemExit('Unapproved package source')
+          with urllib.request.urlopen(url, timeout=35) as response:
+              payload = response.read(12 * 1024 * 1024 + 1)
+          if len(payload) > 12 * 1024 * 1024:
+              raise SystemExit('Package exceeds limit')
+          if hashlib.sha256(payload).hexdigest() != request['packageSha256']:
+              raise SystemExit('Package fingerprint mismatch')
+          allowed = set(request['expectedPaths'])
+          if not 1 <= len(allowed) <= 60:
+              raise SystemExit('Invalid package entry count')
+          staged = pathlib.Path('/tmp/wechat-reviewed-import')
+          staged.mkdir()
+          with zipfile.ZipFile(io.BytesIO(payload)) as archive:
+              infos = archive.infolist()
+              if len(infos) != len(allowed) or {i.filename for i in infos} != allowed:
+                  raise SystemExit('Archive file list mismatch')
+              if sum(i.file_size for i in infos) > 35 * 1024 * 1024:
+                  raise SystemExit('Uncompressed package exceeds limit')
+              for info in infos:
+                  name = info.filename
+                  safe = pathlib.PurePosixPath(name)
+                  if safe.is_absolute() or '..' in safe.parts:
+                      raise SystemExit('Unsafe path')
+                  ok = (
+                      name.startswith('public/wechat-assets/reviewed/2026-10-07-r7/') and name.endswith('.png')
+                      or name.startswith('audit/wechat-working/2026-10-07-r7-') and name.endswith(('.md','.json'))
+                      or name == 'public/wechat-featured/2026-10-07.json'
+                  )
+                  if not ok:
+                      raise SystemExit('Out-of-scope path: ' + name)
+                  data = archive.read(info)
+                  if name.endswith('.png') and not data.startswith(b'\x89PNG\r\n\x1a\n'):
+                      raise SystemExit('Invalid PNG signature: ' + name)
+                  if name.endswith(('.md','.json')):
+                      data.decode('utf-8')
+                  if name.endswith('.json'):
+                      json.loads(data)
+                  dest = staged / name
+                  dest.parent.mkdir(parents=True, exist_ok=True)
+                  dest.write_bytes(data)
+          pathlib.Path('/tmp/wechat-reviewed-request.json').write_text(json.dumps(request))
+          print(json.dumps({'stage':'package_verified','fileCount':len(allowed),'packageSha256':request['packageSha256'],'draftWritten':False}))
+          PY
+      - name: Persist owned files without overwriting concurrent work
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch --depth=1 origin main
+            git reset --hard origin/main
+            python3 - <<'PY'
+          import datetime, hashlib, json, pathlib
+          saved=json.loads(pathlib.Path('/tmp/wechat-reviewed-request.json').read_text())
+          current=json.loads(pathlib.Path('audit/wechat-working/material-import-request.json').read_text())
+          if current['requestId'] != saved['requestId']:
+              raise SystemExit('Superseded import; no files applied')
+          staged=pathlib.Path('/tmp/wechat-reviewed-import')
+          fingerprints=[]
+          for name in saved['expectedPaths']:
+              data=(staged/name).read_bytes()
+              target=pathlib.Path(name)
+              if target.exists() and target.read_bytes()!=data:
+                  raise SystemExit('Concurrent or existing content differs; refusing overwrite: '+name)
+          for name in saved['expectedPaths']:
+              data=(staged/name).read_bytes(); target=pathlib.Path(name)
+              target.parent.mkdir(parents=True,exist_ok=True); target.write_bytes(data)
+              fingerprints.append({'path':name,'sha256':hashlib.sha256(data).hexdigest(),'blobSha':hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()})
+          receipt={'requestId':saved['requestId'],'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'materials_pinned','packageSha256':saved['packageSha256'],'files':fingerprints,'rasterAssetCount':sum(x['path'].endswith('.png') for x in fingerprints),'draftWritten':False,'publisherTriggered':False,'notes':'Only reviewed editorial source and raster bytes are imported. No article PDF, complete SI, secret, production literature data or publisher gate is included.'}
+          pathlib.Path('audit/wechat-working/2026-10-07-r7-material-import-receipt.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+          PY
+            python3 - <<'PY'
+          import json,pathlib,subprocess
+          r=json.loads(pathlib.Path('/tmp/wechat-reviewed-request.json').read_text())
+          subprocess.run(['git','add','--',*r['expectedPaths'],'audit/wechat-working/2026-10-07-r7-material-import-receipt.json'],check=True)
+          PY
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'editorial: pin source-locked Angew r7 text and image bytes'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          echo 'Concurrent update prevented import persistence' >&2
+          exit 1
