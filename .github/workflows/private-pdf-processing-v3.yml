@@ -1,0 +1,51 @@
+name: Private PDF readable processing v3
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17,47 * * * *'
+  workflow_run:
+    workflows: ['Deploy Worker frontend assets']
+    types: [completed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: private-pdf-readable-processing-v3
+  cancel-in-progress: false
+
+jobs:
+  process:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+      PRIVATE_PDF_PROCESSING_API_BASE: https://api.gczhouwld.com
+      PRIVATE_PDF_PROCESS_MAX_DOCUMENTS: '200'
+      PRIVATE_PDF_PROCESS_BATCH_SIZE: '8'
+      PRIVATE_PDF_PROCESSING_OUTPUT: ${{ runner.temp }}/private-pdf-processing/summary.json
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || 'main' }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install pinned PDF parser
+        run: npm install --no-audit --no-fund
+      - name: Verify readable identity processor contracts
+        run: |
+          node --test scripts/test-private-pdf-verifier.mjs
+          node --test cloudflare/worker/scripts/test-private-pdf-processing.mjs
+      - name: Process bounded private PDF backlog
+        run: node scripts/process-private-pdf-v3.mjs
+      - name: Preserve processing evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: private-pdf-readable-processing-${{ github.run_id }}
+          path: ${{ runner.temp }}/private-pdf-processing/summary.json
+          if-no-files-found: error
+          retention-days: 30

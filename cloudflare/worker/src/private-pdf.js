@@ -42,7 +42,7 @@ async function selectedDocument(env, doi) {
     return await env.DB.prepare(
       `SELECT id, doi, version_kind, content_hash, r2_key, byte_length, captured_at, processing_state
          FROM private_pdf_documents
-        WHERE doi = ? AND active = 1
+        WHERE doi = ? AND active = 1 AND processing_state = 'ready'
         ORDER BY CASE version_kind WHEN 'version_of_record' THEN 4 WHEN 'accepted_manuscript' THEN 3 WHEN 'preprint' THEN 2 ELSE 1 END DESC,
                  captured_at DESC
         LIMIT 1`
@@ -119,7 +119,7 @@ export async function servePrivatePdf(request, env, cors = {}) {
   const row = await env.DB.prepare(
     `SELECT t.user_id, t.expires_at, d.doi, d.r2_key, d.byte_length
        FROM private_pdf_access_tokens t
-       JOIN private_pdf_documents d ON d.id = t.document_id AND d.active = 1
+       JOIN private_pdf_documents d ON d.id = t.document_id AND d.active = 1 AND d.processing_state = 'ready'
        JOIN user_capabilities c ON c.user_id = t.user_id AND c.capability = ?
       WHERE t.token_hash = ? LIMIT 1`
   ).bind(READ_CAPABILITY, tokenHash).first();

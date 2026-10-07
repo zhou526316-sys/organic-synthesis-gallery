@@ -36,7 +36,7 @@ jobs:
         run: |
           set -euo pipefail
           grep -F 'PRIVATE_PDF_CAPTURE_ENABLED = "1"' .github/workflows/deploy-worker-frontend.yml
-          grep -F 'PRIVATE_PDF_PROCESSING_ENABLED = "0"' .github/workflows/deploy-worker-frontend.yml
+          grep -F 'PRIVATE_PDF_PROCESSING_ENABLED = "1"' .github/workflows/deploy-worker-frontend.yml
           grep -F "if (!await hasCapability(env, userId, CAPTURE_CAPABILITY))" cloudflare/worker/src/private-pdf.js
           grep -F "const lease = await captureLeaseRow(request, env);" cloudflare/worker/src/private-pdf.js
           grep -F "PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-bundle-v6'" public/toc-mainline.user.js

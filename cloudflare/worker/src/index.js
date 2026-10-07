@@ -101,6 +101,7 @@ import {
   wechatNotify,
 } from './integrations.js';
 import { bootstrapPrivatePdfOwner, importPrivatePdf, issuePrivatePdfCaptureLease, openPrivatePdf, privatePdfStatus, revokePrivatePdfCaptureLeases, servePrivatePdf } from './private-pdf.js';
+import { applyPrivatePdfVerification, listPrivatePdfProcessingQueue, privatePdfProcessingStatus, servePrivatePdfProcessingFile } from './private-pdf-processing.js';
 import { readPdfVaultQueue, mutatePdfVaultQueue } from './pdf-vault-queue.js';
 
 const json = (value, init = {}) => new Response(JSON.stringify(value), {
@@ -571,6 +572,27 @@ async function handleApi(request, env, ctx) {
     if (request.method === 'POST') return resultResponse(await mutatePdfVaultQueue(request, env), queueHeaders);
     return resultResponse({ status: 405, body: { error: 'method_not_allowed' } }, queueHeaders);
   }
+  if (url.pathname === '/api/admin/private-pdf/processing/status' && request.method === 'GET') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await privatePdfProcessingStatus(env));
+  }
+  if (url.pathname === '/api/admin/private-pdf/processing/queue' && request.method === 'GET') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await listPrivatePdfProcessingQueue(request, env));
+  }
+  if (url.pathname === '/api/admin/private-pdf/processing/file' && (request.method === 'GET' || request.method === 'HEAD')) {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return servePrivatePdfProcessingFile(request, env);
+  }
+  if (url.pathname === '/api/admin/private-pdf/processing/decision' && request.method === 'POST') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await applyPrivatePdfVerification(request, env));
+  }
+
   if (request.method === 'GET' && url.pathname === '/api/user-ui/private-pdf/status') {
     return resultResponse(await privatePdfStatus(request, env), cors);
   }

@@ -93,7 +93,7 @@ await test('owner without stored PDF still falls back normally',async()=>{
 });
 const pdf=Buffer.from('%PDF-1.7\nprivate fixture\n%%EOF');
 bucket.put('private-pdf/fixture.pdf',pdf);
-db.documents.set('pdf1',{id:'pdf1',doi:'10.1021/jacs.6c12345',version_kind:'version_of_record',content_hash:'a'.repeat(64),r2_key:'private-pdf/fixture.pdf',byte_length:pdf.length,captured_at:now,processing_state:'raw',active:1});
+db.documents.set('pdf1',{id:'pdf1',doi:'10.1021/jacs.6c12345',version_kind:'version_of_record',content_hash:'a'.repeat(64),r2_key:'private-pdf/fixture.pdf',byte_length:pdf.length,captured_at:now,processing_state:'ready',active:1});
 await test('status exposes metadata but never the private R2 key',async()=>{
   const r=await privatePdfStatus(await authRequest('/api/user-ui/private-pdf/status?doi=10.1021/jacs.6c12345'),env);
   assert.equal(r.body.available,true);assert.ok(!JSON.stringify(r.body).includes('private-pdf/fixture.pdf'));

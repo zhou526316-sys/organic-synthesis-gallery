@@ -1,6 +1,6 @@
 # Private PDF -> Editorial Evidence -> Daily WeChat Selected Article
 
-Status: phase 2 capture implementation deployed; owner activation pending. Raw capture may be enabled only for entitled owner sessions; PDF processing/activation remains disabled until phase 3.
+Status: phase 2 capture is deployed. Phase 3a owner-readable identity verification is enabled through a bounded private processor; deeper editorial-evidence extraction remains a later phase. Raw captures are still inactive until Readable Identity v1 verifies them.
 
 ## Non-negotiable separation
 
@@ -49,7 +49,15 @@ The browser verifies PDF magic/size and source host. Worker re-verifies lease, D
 
 ## Processing / verification contract
 
-The private processor is responsible for activating a document. It should:
+Phase 3 is split so owner reading is not blocked on the later editorial pipeline.
+
+### Phase 3a — Readable Identity v1
+
+The bounded processor reads raw bytes only through an admin-authenticated Worker route. It verifies the stored SHA-256/byte length, parses the PDF with the repository-pinned PDF.js, requires the captured DOI to occur in parsed text/metadata, compares the Gallery catalog title, and rejects strong Supporting/Supplementary Information markers on the first page. Only that trusted processor may write `processing_state=ready, active=1`. Failed identity remains private/inactive with a bounded reason code. Extracted full text is not written to D1 or public storage.
+
+### Phase 3b — Editorial Evidence (later)
+
+The editorial processor is responsible for the richer evidence bundle. It should:
 
 1. extract PDF metadata and text;
 2. verify the DOI/title/authors against the Gallery paper record;
