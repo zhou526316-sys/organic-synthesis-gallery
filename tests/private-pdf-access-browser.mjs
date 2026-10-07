@@ -230,9 +230,9 @@ try{
   assert.equal(state.privateCalls,0);await publisherPage.close();
   const target=await popup(page,pdf);assert.match(target.url(),/\/pdf\/?\?doi=/);
   await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:7000});
-  const source=await target.locator('#pdf-frame').getAttribute('src');
-  assert.match(source||'',/^blob:/);
-  assert.equal(await target.locator('#pdf-frame').isVisible(),true);
+  const rendered=await target.locator('#pdf-canvas').evaluate(canvas=>({page:canvas.dataset.renderedPage,width:canvas.width,height:canvas.height}));
+  assert.equal(rendered.page,'1');assert.ok(rendered.width>0&&rendered.height>0);
+  assert.equal(await target.locator('#download').isVisible(),true);
   assert.equal(state.privateCalls,1);assert.equal(state.privateFileCalls,1);
  });
  for(const capabilities of [[],['private_pdf_owner','private_pdf_capture']]){

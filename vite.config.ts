@@ -16,6 +16,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         gallery: 'index.html',
+        ownerPdf: 'pdf/index.html',
         pdfVault: 'pdf-vault/index.html',
       },
       maxParallelFileOps: 128,
