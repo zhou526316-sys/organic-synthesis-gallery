@@ -2,13 +2,14 @@ name: Tampermonkey manual resume regression
 
 on:
   push:
-    branches: [fix/tm-manual-resume-20261007]
+    branches: [fix/tm-manual-resume-20261007, main]
     paths:
       - public/toc-mainline.user.js
       - cloudflare/scripts/build-bridge-loader.mjs
       - scripts/validate-tm220-artifacts.mjs
       - tests/tm-manual-resume.test.mjs
       - tests/tm-manual-resume-browser.mjs
+      - tests/tm-newest-retry.test.mjs
       - .github/workflows/tm-manual-resume-regression.yml
 
 permissions:
@@ -19,7 +20,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  scheduler_contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify shared scheduler and retry contracts
+        run: |
+          node scripts/finalize-tm-queue-priority.mjs
+          node tests/tm-newest-retry.test.mjs
+          node tests/tm-manual-resume.test.mjs
   verify:
+    if: github.ref == 'refs/heads/fix/tm-manual-resume-20261007'
+    needs: scheduler_contract
     runs-on: ubuntu-latest
     timeout-minutes: 6
     steps:
