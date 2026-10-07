@@ -4,6 +4,7 @@ import { hydrateStatusImages, statusImageError, statusImageTag, viewStatusImage 
 
 const NAME = 'gallery-user-shell';
 const SESSION_KEY = 'organic-gallery-session-v1';
+const SESSION_USER_KEY = 'organic-gallery-session-user-v1';
 type Tab = 'saved' | 'notes' | 'followed' | 'settings' | 'login';
 type Provider = 'google' | 'wechat' | 'qq' | 'email';
 interface IntegrationStatus { auth: Record<Provider | 'local', boolean>; }
@@ -20,8 +21,26 @@ function styleRow(style: StyleDef, prefix: string, label: string): string {
   return `<div class='style-row'><span class='style-preview shape-${style.imageCrop?.recipe.mode === 'circle' ? 'circle' : style.shape}${style.imageOriginal ? ' status-original-preview' : ''}' data-style-preview='${prefix}' style='${styleVars(style)}'>${preview}</span><strong>${escapeHtml(label)}</strong><label>RGB <input type='color' data-color='${prefix}' value='${rgbToHex(style.rgb)}'></label><label>Shape <select data-shape='${prefix}'>${SHAPES.map(shape => `<option value='${shape}' ${style.shape === shape ? 'selected' : ''}>${shape}</option>`).join('')}</select></label><label class='upload'>Image <input type='file' accept='${prefix.startsWith('status:') ? 'image/png,image/jpeg,image/webp,image/gif' : 'image/png,image/jpeg,image/webp'}' data-image='${prefix}'></label>${style.imageData ? `<button class='link danger' type='button' data-action='clear-image:${prefix}'>× image</button>` : ''}${prefix.startsWith('status:') ? `<label><input type='checkbox' data-image-crop='${prefix}'>静态裁切 / Static crop</label>${style.imageData ? `<button class='secondary' type='button' data-action='crop-image:${prefix}'>裁切 / 抠图 / Crop</button><button class='link' type='button' data-action='view-image:${prefix}'>查看图片 / View image</button>${style.imageCrop ? `<button class='link' type='button' data-action='restore-image:${prefix}'>恢复原图 / Restore</button>` : ''}` : ''}` : ''}</div>`;
 }
 function sessionToken(): string { try { return localStorage.getItem(SESSION_KEY) || ''; } catch { return ''; } }
-function saveSessionToken(value: string): void {
-  try { if (value) localStorage.setItem(SESSION_KEY, value); else localStorage.removeItem(SESSION_KEY); } catch { /* optional */ }
+function cachedSessionUser(): AuthUser | null {
+  if (!sessionToken()) return null;
+  try {
+    const parsed = JSON.parse(localStorage.getItem(SESSION_USER_KEY) || 'null') as AuthUser | null;
+    return parsed && typeof parsed.id === 'string' && parsed.id ? parsed : null;
+  } catch { return null; }
+}
+function cacheSessionUser(user: AuthUser | null): void {
+  try {
+    if (user?.id) localStorage.setItem(SESSION_USER_KEY, JSON.stringify(user));
+    else localStorage.removeItem(SESSION_USER_KEY);
+  } catch { /* optional */ }
+}
+function saveSessionToken(value: string, user: AuthUser | null = null): void {
+  try {
+    if (value) localStorage.setItem(SESSION_KEY, value);
+    else localStorage.removeItem(SESSION_KEY);
+  } catch { /* optional */ }
+  if (value && user) cacheSessionUser(user);
+  if (!value) cacheSessionUser(null);
   window.dispatchEvent(new Event('gallery-auth-session-changed'));
 }
 function returnUrl(): string { const url = new URL(location.href); url.hash = ''; return url.toString(); }
@@ -34,7 +53,7 @@ export class GalleryUserShell extends HTMLElement {
   private imageMessage = '';
   private cropBusy = false;
   private integrations: IntegrationStatus | null = null;
-  private authUser: AuthUser | null = null;
+  private authUser: AuthUser | null = cachedSessionUser();
   private authMode: 'login' | 'register' = 'login';
   private authFlow: 'credentials' | 'register-code' | 'forgot-email' | 'reset-code' = 'credentials';
   private registerChallengeId = '';
@@ -44,6 +63,16 @@ export class GalleryUserShell extends HTMLElement {
   private verifyChallengeId = '';
   private readonly rerender = (): void => this.render();
   private readonly reposition = (): void => { if (this.open) this.positionPanel(); };
+  private readonly restoreSession = (): void => {
+    if (!sessionToken()) {
+      if (this.authUser) { this.authUser = null; this.render(); }
+      return;
+    }
+    void this.refreshSession().finally(() => this.render());
+  };
+  private readonly restoreVisibleSession = (): void => {
+    if (document.visibilityState === 'visible') this.restoreSession();
+  };
   private readonly outside = (event: PointerEvent): void => {
     const target = event.target instanceof Element ? event.target : null;
     if (target?.closest('[data-gallery-user-cropper]')) return;
@@ -54,14 +83,19 @@ export class GalleryUserShell extends HTMLElement {
   connectedCallback(): void {
     document.addEventListener('pointerdown', this.outside);
     window.addEventListener('resize', this.reposition);
+    window.addEventListener('pageshow', this.restoreSession);
+    document.addEventListener('visibilitychange', this.restoreVisibleSession);
     store.addEventListener('change', this.rerender);
     this.render();
+    this.restoreSession();
     void this.refreshIntegrations();
     void this.consumeAuthHash();
   }
   disconnectedCallback(): void {
     document.removeEventListener('pointerdown', this.outside);
     window.removeEventListener('resize', this.reposition);
+    window.removeEventListener('pageshow', this.restoreSession);
+    document.removeEventListener('visibilitychange', this.restoreVisibleSession);
     store.removeEventListener('change', this.rerender);
   }
   attributeChangedCallback(): void { if (this.isConnected) this.render(); }
@@ -324,28 +358,40 @@ export class GalleryUserShell extends HTMLElement {
   private async refreshIntegrations(): Promise<void> {
     try { this.integrations = await this.api<IntegrationStatus>('/api/user-ui/integrations'); }
     catch { this.integrations = null; }
-    if (sessionToken()) await this.refreshSession();
     this.render();
   }
 
   private async refreshSession(): Promise<void> {
     const token = sessionToken();
     if (!token) { this.authUser = null; return; }
-    // Returning from a PDF viewer can race an edge/network transition. One
-    // negative session read is not enough to destroy a 30-day browser token.
-    // Confirm twice and leave storage intact; explicit logout is the only
-    // client action that clears the persistent token.
-    for (let attempt = 0; attempt < 2; attempt += 1) {
+    // Returning from the PDF reader may restore from BFCache or race an edge
+    // transition. Restore the last verified identity immediately, then confirm
+    // the server session independently. Only three explicit negative reads
+    // clear the cached identity; transport failures keep the prior UI state.
+    if (!this.authUser) this.authUser = cachedSessionUser();
+    let negativeReads = 0;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
       try {
         const result = await this.api<{ authenticated: boolean; user: AuthUser | null }>('/api/user-ui/auth/session');
         if (sessionToken() !== token) return;
-        if (result.authenticated && result.user) { this.authUser = result.user; return; }
+        if (result.authenticated && result.user) {
+          this.authUser = result.user;
+          cacheSessionUser(result.user);
+          return;
+        }
+        negativeReads += 1;
       } catch {
         if (sessionToken() !== token) return;
       }
-      if (attempt === 0) await new Promise(resolve => window.setTimeout(resolve, 180));
+      if (attempt < 2) await new Promise(resolve => window.setTimeout(resolve, attempt === 0 ? 180 : 650));
     }
-    if (sessionToken() === token) this.authUser = null;
+    if (sessionToken() !== token) return;
+    if (negativeReads === 3) {
+      this.authUser = null;
+      cacheSessionUser(null);
+    } else if (!this.authUser) {
+      this.authUser = cachedSessionUser();
+    }
   }
 
   private async consumeAuthHash(): Promise<void> {
@@ -361,7 +407,7 @@ export class GalleryUserShell extends HTMLElement {
     if (!code) return;
     try {
       const result = await this.api<{ token: string; user: AuthUser }>('/api/user-ui/auth/exchange', { method: 'POST', body: JSON.stringify({ code }) });
-      saveSessionToken(result.token);
+      saveSessionToken(result.token, result.user);
       this.authUser = result.user;
       this.integrationMessage = this.tr('登录成功。', 'Signed in.');
     } catch {
@@ -431,7 +477,7 @@ export class GalleryUserShell extends HTMLElement {
         method: 'POST',
         body: JSON.stringify({ email, password }),
       });
-      saveSessionToken(result.token);
+      saveSessionToken(result.token, result.user);
       this.authUser = result.user;
       this.integrationMessage = this.tr('登录成功。', 'Signed in.');
       this.render();
@@ -464,7 +510,7 @@ export class GalleryUserShell extends HTMLElement {
         method: 'POST',
         body: JSON.stringify({ challengeId: this.registerChallengeId, code }),
       });
-      saveSessionToken(result.token);
+      saveSessionToken(result.token, result.user);
       this.authUser = result.user;
       this.registerChallengeId = '';
       this.registerEmail = '';
@@ -603,7 +649,7 @@ export class GalleryUserShell extends HTMLElement {
         method: 'POST',
         body: JSON.stringify({ currentPassword, newPassword }),
       });
-      saveSessionToken(result.token);
+      saveSessionToken(result.token, result.user);
       this.authUser = result.user;
       this.integrationMessage = this.tr('密码已修改，其他旧登录会话已失效。', 'Password changed. Older sessions are no longer valid.');
       this.render();

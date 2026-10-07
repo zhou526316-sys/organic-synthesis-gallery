@@ -76,13 +76,13 @@ function options(data) {
     wasmUrl: `${ASSET_BASE}wasm/`,
     iccUrl: `${ASSET_BASE}iccs/`,
     useWorkerFetch: false,
-    useSystemFonts: false,
+    useSystemFonts: true,
     isEvalSupported: false,
     enableXfa: false,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
-    stopAtErrors: true,
+    stopAtErrors: false,
     canvasMaxAreaInBytes: 32 * 1024 * 1024,
     verbosity: 0,
   };
@@ -108,7 +108,11 @@ async function render() {
   canvas.style.height = `${Math.round(cssHeight)}px`;
   const task = page.render({ canvas, viewport, annotationMode: AnnotationMode.ENABLE });
   renderTask = task;
-  await task.promise;
+  try {
+    await task.promise;
+  } finally {
+    if (renderTask === task) renderTask = null;
+  }
   if (seq !== renderSequence || destroyed) return;
   canvas.dataset.renderedPage = String(pageNumber);
   status.hidden = true;
