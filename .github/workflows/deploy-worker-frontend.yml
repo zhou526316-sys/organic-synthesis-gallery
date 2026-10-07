@@ -664,7 +664,7 @@ jobs:
           const base=process.env.WORKER_URL;
           const token=process.env.BRIDGE_WRITE_TOKEN;
           const reportPath='/tmp/site-analytics-snapshot-shadow-report.json';
-          const report={schemaVersion:1,phase:'D4c-site-analytics-public-snapshot-shadow',ok:false,readPathActive:false,startedAt:new Date().toISOString()};
+          const report={schemaVersion:1,phase:'D4c-site-analytics-public-snapshot-shadow',ok:false,readPathActive:false,startedAt:new Date().toISOString(),attempts:[]};
           const save=()=>fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
           save();
           if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for analytics snapshot shadow');
@@ -680,12 +680,16 @@ jobs:
               if(!refresh.ok){
                 if(refresh.status===409&&refresh.body?.error==='analytics_public_snapshot_source_not_ready'){
                   const repair=await call('/api/admin/site-analytics-materialized/backfill?limit=50',{method:'POST'});
+                  report.attempts.push({attempt,stage:'repair',status:repair.status,error:String(repair.body?.error||''),body:repair.body});
+                  save();
                   console.log(JSON.stringify({siteAnalyticsSnapshotRepairAttempt:attempt,status:repair.status,error:repair.body?.error||''}));
                   if(!repair.ok) throw new Error('snapshot materialized repair failed: '+repair.status+' '+repair.text.slice(0,700));
                   await new Promise(resolve=>setTimeout(resolve,500));
                   continue;
                 }
                 if(refresh.status===409&&refresh.body?.error==='analytics_public_snapshot_source_changed'){
+                  report.attempts.push({attempt,stage:'refresh',status:refresh.status,error:String(refresh.body?.error||''),body:refresh.body});
+                  save();
                   await new Promise(resolve=>setTimeout(resolve,500));
                   continue;
                 }
@@ -698,8 +702,10 @@ jobs:
                 (comparison.body?.comparable===true&&comparison.body?.same===true&&comparison.body?.sourceStable===true)
                 ||(comparison.body?.comparable===false&&comparison.body?.reason==='source_advanced_since_snapshot')
               );
-              console.log(JSON.stringify({siteAnalyticsSnapshotAttempt:attempt,parityProven,sameGeneration,
-                refresh:refresh.body,comparison:comparison.body,status:status.body}));
+              const attemptReport={attempt,stage:'compare',parityProven,sameGeneration,
+                refresh:refresh.body,comparison:comparison.body,status:status.body};
+              report.attempts.push(attemptReport);save();
+              console.log(JSON.stringify({siteAnalyticsSnapshotAttempt:attempt,...attemptReport}));
               if(parityProven&&sameGeneration
                 &&status.ok&&status.body?.shadowEnabled===true
                 &&status.body?.exists===true&&status.body?.valid===true&&status.body?.fresh===true){
