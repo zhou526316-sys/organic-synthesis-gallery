@@ -1,11 +1,11 @@
 {
-  "requestId": "wechat-r9-20261007-covers-electron-cage-review",
+  "requestId": "wechat-r9-20261007-covers-electron-cage-review-current-renderer",
   "revision": "2026-10-07-r9",
   "action": "apply_editorial_revision_only",
-  "packageUrl": "https://at.adobe.com/hZTv4DGD5Be5luhu",
-  "packageSha256": "01d23a864c2726acea82b741f574c76b26a3e97e4d0bf22289da96ae322396bb",
+  "packageUrl": "https://at.adobe.com/dtn0MIiQ8gfqBtMj",
+  "packageSha256": "2d92fba2e55f5785eb37cb76a6a1b03c8bea2c362750b656ac7a54991645e2b1",
   "expectedDois": ["10.1002/anie.3699223", "10.1038/s41929-026-01593-w"],
   "draftOnly": true,
   "publisherTriggerAllowed": false,
-  "reason": "User explicitly requested enlarged Angew cover chemistry, the entire approved phoenix artwork, conventional SET and solvent-cage versus solvated-electron explanation, stronger original electron evidence and actual peer-review discussion. Stage exact edits, assemble with existing renderer and retain visual-review hold before updating the actual WeChat draft."
+  "reason": "Previous import failed closed before source edits because renderer fingerprint referred to the older file. Current renderer 37ae9d529de1f10b31bdd6e306c4c49f065b1645 includes no-referrer handling and re import; preserve these fixes. All requested editorial text and all four reviewed image files are unchanged. Stage and visually review before one actual draft update."
 }
