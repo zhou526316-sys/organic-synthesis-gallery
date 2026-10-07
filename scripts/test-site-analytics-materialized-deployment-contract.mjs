@@ -125,7 +125,7 @@ test('D4c snapshot schema remains installed for the D4d public read cutover',()=
   assert.ok(schema.includes('site_analytics_public_snapshot_v1'));
   assert.ok(deploy.includes('Apply public analytics snapshot D1 migration'));
   assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED = "1"'));
-  assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED = "1"'));
+  assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED = "0"'));
   assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_MAX_AGE_MS = "1200000"'));
   assert.ok(deploy.includes('crons = ["*/15 * * * *"]'));
   assert.ok(snapshot.includes('refreshSiteAnalyticsPublicSnapshot'));
@@ -133,15 +133,18 @@ test('D4c snapshot schema remains installed for the D4d public read cutover',()=
   assert.ok(snapshot.includes('source_reader_rows'));
 });
 
-test('D4c deployment proves stable snapshot parity independently of the D4d public route',()=>{
+test('D4c deployment proves stable snapshot parity independently of D4d activation state',()=>{
   const block=section(deploy,'- name: Refresh and verify public analytics snapshot shadow','- name: Backfill and verify user library row read path');
   assert.ok(block.includes('continue-on-error: true'));
   assert.ok(block.includes('/api/admin/site-analytics-snapshot/refresh'));
+  assert.ok(block.includes('report.attempts.push'));
+  assert.ok(block.includes("stage:'refresh'"));
+  assert.ok(block.includes("stage:'live-proof'"));
   assert.ok(block.includes('/api/admin/site-analytics-snapshot/compare'));
   assert.ok(block.includes('/api/admin/site-analytics-snapshot/status'));
   assert.ok(block.includes("comparison.body?.same===true"));
   assert.ok(block.includes("comparison.body?.sourceStable===true"));
-  assert.ok(block.includes("status.body?.readConfigured===true"));
+  assert.ok(!block.includes("status.body?.readConfigured===true") || block.includes('passed.status.readConfigured'));
   const route=section(index,"if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats')","if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark')");
   assert.ok(route.includes('readSiteAnalyticsPublicSnapshot(env)'));
   assert.ok(route.includes("readPath: 'materialized'"));
@@ -158,7 +161,7 @@ test('D4c snapshot public read is bounded to the singleton snapshot row',()=>{
   assert.ok(!block.includes('materializedSiteAnalyticsStats'));
 });
 
-test('D4d snapshot read branch is fail-closed and production activation is requested',()=>{
+test('D4d snapshot read branch is fail-closed while production activation is paused',()=>{
   const route=section(index,"if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats')","if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark')");
   const snapshotGate=route.indexOf('siteAnalyticsPublicSnapshotReadEnabled(env)');
   const materializedGate=route.indexOf('siteAnalyticsMaterializedReadEnabled(env)');
@@ -168,7 +171,7 @@ test('D4d snapshot read branch is fail-closed and production activation is reque
   assert.ok(snapshotBranch.includes("error: 'analytics_public_snapshot_read_error'"));
   assert.ok(!snapshotBranch.includes('siteAnalyticsStats(env)'));
   assert.ok(!snapshotBranch.includes('materializedSiteAnalyticsStats(env)'));
-  assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED = "1"'));
+  assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED = "0"'));
 });
 
 test('D4d canonical deploy has snapshot activation canary and automatic rollback',()=>{
@@ -187,7 +190,11 @@ test('D4d canonical deploy has snapshot activation canary and automatic rollback
   assert.ok(block.includes("siteAnalyticsPublicSnapshotReadEnabled===true"));
   assert.ok(block.includes('- name: Roll back public analytics snapshot read on activation failure'));
   assert.ok(block.includes("SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED = \"0\""));
-  assert.ok(block.includes("live?.readPath!=='snapshot'"));
+  assert.ok(block.includes("live.body?.readPath==='materialized'"));
+  assert.ok(block.includes("live.body?.generation==='site-pageview-v2'"));
+  assert.ok(block.includes('/api/admin/site-analytics-materialized/backfill?limit=50'));
+  assert.ok(block.includes('/api/admin/site-analytics-materialized/compare'));
+  assert.ok(block.includes('rollbackRepairPages'));
   assert.ok(block.includes('rolledBack=true'));
   assert.ok(block.includes('- name: Preserve public analytics snapshot activation report'));
 });

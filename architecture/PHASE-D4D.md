@@ -1,7 +1,7 @@
 # Phase D4d — dormant fail-closed snapshot read branch
 
 Date: 2026-10-07 Asia/Shanghai.
-Status: production snapshot read activation requested through canonical canary/rollback.
+Status: first production snapshot-read activation safely rolled back; activation paused for source-readiness repair.
 
 ## Route order
 
@@ -26,7 +26,7 @@ This prevents a stale snapshot from silently recreating the unbounded public-rea
 
 ## Current production state
 
-`SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED=1` in the canonical deployment configuration.
+`SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED=0` in the canonical deployment configuration after the guarded rollback.
 
 Activation is not considered complete merely because the flag is set. The canonical D4d canary must prove live snapshot routing, freshness, parity and health. Any failure automatically redeploys with the flag returned to 0.
 
@@ -64,3 +64,18 @@ Prerequisites satisfied before requesting activation:
 - Worker deployment authority regression: passed.
 
 The production flag is now requested at 1. Final activation authority comes from the live D4d canary result, not from this source change alone.
+
+## First activation result
+
+The first guarded D4d activation attempt deployed snapshot reads, then failed its stable-live-proof canary and automatically rolled back.
+
+Rollback verified the snapshot flag returned to 0. The first rollback accepted a non-snapshot public route and observed `legacy_raw_fallback`; that acceptance criterion was too weak for the scale-safety contract.
+
+The canonical rollback is now hardened: it must repair D4b materialized readiness through the authorized bounded backfill endpoint, prove materialized/raw parity, prove the materialized compare endpoint is equal, and require the public route to return exactly:
+
+- `readPath=materialized`;
+- `generation=site-pageview-v2`.
+
+Activation diagnostics now persist each refresh/live-proof attempt so a repeated source-race can be distinguished from a route or freshness failure.
+
+No second activation may be attempted until the source-0 deployment proves D4b materialized recovery and D4c snapshot parity again.
