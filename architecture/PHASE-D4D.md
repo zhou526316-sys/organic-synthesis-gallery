@@ -110,3 +110,9 @@ This retry does not weaken rollback or freshness requirements.
 D4d no longer requires a second strict source-stability window after D4c has generated a fenced snapshot. The D4c proof records `generationFenced=true`; activation verifies exact snapshot generation propagation and freshness.
 
 Rollback is considered verified when snapshot reads are disabled at the edge and the public stats endpoint is bounded: strict materialized, fresh snapshot fallback, or explicit bounded-unavailable. Rollback must never re-enter the legacy raw-history path.
+
+## Diagnostic pause after retry #3
+
+Snapshot primary-read activation is temporarily paused back to 0 while D4c source readiness is diagnosed. This is deliberate: D4c shadow continues to run and now persists the exact source-not-ready readiness vector and the post-repair materialized status.
+
+D4b proof no longer requires the public site-stats route itself to be materialized. D4b is a source-integrity proof; when D4d is active, the public route is expected to be snapshot-first, so using the public route as a D4b authority assertion was a false dependency.

@@ -304,7 +304,7 @@ jobs:
           SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED = "1"
           SITE_ANALYTICS_MATERIALIZED_READ_ENABLED = "1"
           SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED = "1"
-          SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED = "1"
+          SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED = "0"
           SITE_ANALYTICS_PUBLIC_SNAPSHOT_MAX_AGE_MS = "1200000"
           LITERATURE_CATALOG_INDEX_SHADOW_ENABLED = "1"
           LITERATURE_CATALOG_INDEX_READ_ENABLED = "1"
@@ -628,16 +628,15 @@ jobs:
           status=await call('/api/admin/site-analytics-materialized/status');
           if(status.readPathActive!==true) throw new Error('site analytics materialized read path is not active: '+JSON.stringify(status));
           const live=await call('/api/user-ui/site-stats');
-          if(live.readPath!=='materialized'||live.generation!=='site-pageview-v2'){
-            throw new Error('live site-stats is not using materialized read path: '+JSON.stringify(live));
-          }
           const report={
             schemaVersion:1,phase:'D4b-site-analytics-materialized-read-live',ok:true,readPathActive:true,
             rawEvents:Number(status.rawEvents||0),materializedEvents:Number(status.materializedEvents||0),
             globalPv:Number(status.globalPv||0),globalUv:Number(status.globalUv||0),
             backfillComplete:status.backfill?.complete===true,backfillPagesThisRun:pages,
-            stableParityPasses:passes.length,liveReadPath:live.readPath,
-            liveGeneration:live.generation,verifiedAt:new Date().toISOString(),
+            stableParityPasses:passes.length,
+            liveReadPath:String(live?.readPath||''),liveGeneration:String(live?.generation||''),
+            publicRouteAuthoritative:false,
+            verifiedAt:new Date().toISOString(),
           };
           fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
           console.log('SITE_ANALYTICS_MATERIALIZED_SHADOW '+JSON.stringify(report));
@@ -679,10 +678,15 @@ jobs:
               const refresh=await call('/api/admin/site-analytics-snapshot/refresh',{method:'POST'});
               if(!refresh.ok){
                 if(refresh.status===409&&refresh.body?.error==='analytics_public_snapshot_source_not_ready'){
-                  const repair=await call('/api/admin/site-analytics-materialized/backfill?limit=50',{method:'POST'});
-                  report.attempts.push({attempt,stage:'repair',status:repair.status,error:String(repair.body?.error||''),body:repair.body});
+                  report.attempts.push({attempt,stage:'source-not-ready',status:refresh.status,error:String(refresh.body?.error||''),body:refresh.body});
                   save();
-                  console.log(JSON.stringify({siteAnalyticsSnapshotRepairAttempt:attempt,status:repair.status,error:repair.body?.error||''}));
+                  const repair=await call('/api/admin/site-analytics-materialized/backfill?limit=50',{method:'POST'});
+                  const postRepairStatus=await call('/api/admin/site-analytics-materialized/status');
+                  report.attempts.push({attempt,stage:'repair',status:repair.status,error:String(repair.body?.error||''),
+                    body:repair.body,postRepairStatus:postRepairStatus.body});
+                  save();
+                  console.log(JSON.stringify({siteAnalyticsSnapshotRepairAttempt:attempt,status:repair.status,
+                    error:repair.body?.error||'',source:refresh.body,postRepairStatus:postRepairStatus.body}));
                   if(!repair.ok) throw new Error('snapshot materialized repair failed: '+repair.status+' '+repair.text.slice(0,700));
                   await new Promise(resolve=>setTimeout(resolve,500));
                   continue;

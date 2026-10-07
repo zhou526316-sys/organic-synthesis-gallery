@@ -95,7 +95,8 @@ test('D4b deployment activates materialized reads only after backfill and stable
   assert.ok(block.includes('comparison.readPathActive===true'));
   assert.ok(block.includes('after.readPathActive===true'));
   assert.ok(block.includes('/api/user-ui/site-stats'));
-  assert.ok(block.includes("live.readPath!=='materialized'"));
+  assert.ok(block.includes('publicRouteAuthoritative:false'));
+  assert.ok(!block.includes("live.readPath!=='materialized'"));
   const preserve=section(
     deploy,
     '- name: Preserve materialized site analytics shadow report',
@@ -125,13 +126,14 @@ test('D4c snapshot schema remains installed for the D4d public read cutover',()=
   assert.ok(schema.includes('site_analytics_public_snapshot_v1'));
   assert.ok(deploy.includes('Apply public analytics snapshot D1 migration'));
   assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED = "1"'));
-  assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED = "1"'));
+  assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED = "0"'));
   assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_MAX_AGE_MS = "1200000"'));
   assert.ok(deploy.includes('crons = ["*/15 * * * *"]'));
   assert.ok(snapshot.includes('refreshSiteAnalyticsPublicSnapshot'));
   assert.ok(snapshot.includes('analytics_public_snapshot_source_changed'));
   assert.ok(snapshot.includes('source_reader_rows'));
   assert.ok(snapshot.includes('source_advanced_since_snapshot'));
+  assert.ok(snapshot.includes('pendingRawEvents'));
 });
 
 test('D4c deployment proves stable snapshot parity independently of D4d activation state',()=>{
@@ -216,6 +218,8 @@ test('D4c shadow and D4d activation can self-heal and wait for edge propagation'
   const block=section(deploy,'- name: Refresh and verify public analytics snapshot shadow','- name: Backfill and verify user library row read path');
   assert.ok(block.includes('/api/admin/site-analytics-materialized/backfill?limit=50'));
   assert.ok(block.includes('siteAnalyticsSnapshotRepairAttempt'));
+  assert.ok(block.includes("stage:'source-not-ready'"));
+  assert.ok(block.includes('postRepairStatus'));
   assert.ok(block.includes('propagationPasses<2'));
   assert.ok(block.includes('probe<=20'));
   assert.ok(block.includes("stage:'propagation'"));

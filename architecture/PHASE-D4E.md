@@ -18,3 +18,9 @@ A materialized analytics source can be a valid snapshot source even when the his
 Snapshot comparison distinguishes corruption from normal source advancement. If the source watermark has advanced after a successfully fenced snapshot was generated, comparison returns `comparable=false` with `reason=source_advanced_since_snapshot`; this is not treated as parity failure.
 
 Rollback safety is now defined by bounded public behavior, not immediate D4b authority. After snapshot read is disabled, `materialized`, fresh `snapshot_fallback`, or explicit `bounded_unavailable` are safe rollback outcomes. `legacy_raw_fallback` and `site-pageview-v1` are forbidden.
+
+## Readiness-vector diagnostics
+
+When snapshot refresh rejects a materialized source, the admin response now exposes bounded readiness fields: raw/materialized/backfill max ids, global PV, scanned/materialized/duplicate/failed counts, pending raw events, timestamps, last error, and strict/snapshot readiness flags. The canonical D4c workflow stores that response together with the post-repair status in its artifact.
+
+This diagnostic pass runs with primary snapshot reads paused; it does not re-enable raw public fallback.

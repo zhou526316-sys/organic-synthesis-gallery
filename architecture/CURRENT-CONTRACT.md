@@ -161,3 +161,6 @@ These priorities are scale-safety work. They do not alter the Tampermonkey acqui
 
 
 D4d activation retry #2 is requested after the D4c parity-proof reuse fix; automatic rollback remains mandatory.
+
+
+D4d primary snapshot activation is temporarily paused while D4c persists exact source-readiness diagnostics; public analytics remains bounded and raw-history fallback remains forbidden.
