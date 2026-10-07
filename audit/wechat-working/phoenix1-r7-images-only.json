@@ -1,0 +1,454 @@
+{
+  "figures": [
+    {
+      "id": "nc01-model",
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/nc01-model.png",
+      "caption": "原文 Fig. 2｜模型反应、候选光催化剂，以及从反应混合物中分离出的10和phoenix1。保留原文结构与编号；筛选收率见相邻正文。",
+      "display_width_pct": 100
+    },
+    {
+      "id": "nc02-design",
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/nc02-design.png",
+      "caption": "原文 Fig. 1a–d｜传统氧化/还原淬灭、连续光诱导电子转移与作者提出的双模态两光子反应框架。球形图标是原文概念示意，不代表另行鉴定的分子结构。",
+      "display_width_pct": 100
+    },
+    {
+      "id": "nc03-spectroscopy",
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/nc03-spectroscopy.png",
+      "caption": "原文 Fig. 3a–b｜瞬态吸收、电子顺磁共振和氧化方向的光谱电化学证据。>600 nm宽带与520 nm信号的归属不同；捕获及清除剂实验是补充证据。",
+      "display_width_pct": 100
+    },
+    {
+      "id": "nc04-quenching",
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/nc04-quenching.png",
+      "caption": "原文 Fig. 3c–d｜5在底物2存在时的瞬态吸收、5/phoenix1转化的光谱电化学，以及晶体/计算展示。原文图中的计算图像不能替代激发态解离的完整能量证据。",
+      "display_width_pct": 100
+    },
+    {
+      "id": "nc05-cycle",
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/nc05-cycle.png",
+      "caption": "原文 Fig. 3e｜作者提出的动态光催化循环：溶剂化电子还原1，受光激发的5氧化2，12与13偶联，两个11重组再生phoenix1。电位参比为SCE。",
+      "display_width_pct": 100
+    },
+    {
+      "id": "nc06-reversible",
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/nc06-reversible.png",
+      "caption": "原文 Fig. 4｜11的几种可能组合产物及计算自由能。14未被检测到；10已被分离表征；产物3被作者描述为不再参与该波段光过程的最终汇聚产物。",
+      "display_width_pct": 100
+    },
+    {
+      "id": "nc07-kinetics",
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/nc07-kinetics.png",
+      "caption": "原文 Fig. 5a｜含氟底物体系的¹⁹F NMR时间进程。16先积累后消失，17随后加速累积；18仍保留为约33%的同源偶联副产物。",
+      "display_width_pct": 100
+    },
+    {
+      "id": "nc08-network",
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/nc08-network.png",
+      "caption": "原文 Fig. 5b｜包含苄基化二氢吖啶10的完整机制提案。10参与的途径与phoenix1直接再生途径相互连接，不是两个互不相关的独立体系。",
+      "display_width_pct": 100
+    },
+    {
+      "id": "nc09-scope",
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/nc09-scope.png",
+      "caption": "原文 Fig. 6（上半部分）｜α-氯化前体与硅烷的底物范围，覆盖3、17、19–33。括号内为核磁收率；29–31的既有手性保留与新生成中心的1:1 dr须分开理解。",
+      "display_width_pct": 100
+    },
+    {
+      "id": "nc10-alternative",
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/nc10-alternative.png",
+      "caption": "原文 Fig. 6（下半部分）｜偕二氟产物34–37与保留硼酸酯基团的产物39–42。38这一组活化的是C–Br键，不能误读为该组产物通过断裂C–B键获得。",
+      "display_width_pct": 100
+    },
+    {
+      "id": "nc11-ultrafast",
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/nc11-ultrafast.png",
+      "caption": "SI Supplementary Fig. 68｜超快瞬态谱及650、520 nm动力学。该图与SI动力学模型对应；不能将拟合时间常数称作直接测得的荧光寿命。",
+      "display_width_pct": 100
+    },
+    {
+      "id": "nc12-electron-control",
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/nc12-electron-control.png",
+      "caption": "SI Supplementary Fig. 70｜650 nm动力学对照：不加1时后续信号继续增长；加入1后转为衰减。作者以此进一步支持溶剂化电子信号的归属和其被底物截获。",
+      "display_width_pct": 94
+    },
+    {
+      "id": "nc13-parallel",
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/nc13-parallel.png",
+      "caption": "SI Supplementary Fig. 71｜加入受体1后，归属于自由基11的520 nm信号衰减加快。这是作者进一步考察11与1直接反应、讨论并行SET/XAT路径的实验出发点。",
+      "display_width_pct": 78
+    },
+    {
+      "id": "nc14-parallel-calculation",
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/nc14-parallel-calculation.png",
+      "caption": "SI Supplementary Fig. 72｜作者对自由基11与受体1之间SET与XAT路径的计算分析。它是对并行反应可能性的计算支持，不是独立的反应中间体观测。",
+      "display_width_pct": 100
+    },
+    {
+      "id": "cover_final",
+      "body": false,
+      "repo_path": "public/wechat-assets/reviewed/phoenix1-r7/phoenix-cover-approved.png",
+      "caption": ""
+    }
+  ],
+  "crop_provenance": [
+    {
+      "id": "nc01-model",
+      "source": "main",
+      "file_page": 3,
+      "reference_canvas": [
+        768,
+        1024
+      ],
+      "crop_box": [
+        45,
+        60,
+        741,
+        329
+      ],
+      "operation": "original PDF raster crop, 240 dpi, 12px external white margin; no redrawing",
+      "sha256": "98dd170df1820188e83b5de81c72589e3906ebcc2373aeebfbc4ec6fb75627f0",
+      "width": 1823,
+      "height": 717
+    },
+    {
+      "id": "nc02-design",
+      "source": "main",
+      "file_page": 2,
+      "reference_canvas": [
+        768,
+        1024
+      ],
+      "crop_box": [
+        57,
+        62,
+        736,
+        525
+      ],
+      "operation": "original PDF raster crop, 240 dpi, 12px external white margin; no redrawing",
+      "sha256": "f1d00dfdf6e718e6e014f291bea1f06b14068bc0c49c57d3d331a433f2e82faa",
+      "width": 1779,
+      "height": 1217
+    },
+    {
+      "id": "nc03-spectroscopy",
+      "source": "main",
+      "file_page": 5,
+      "reference_canvas": [
+        768,
+        1024
+      ],
+      "crop_box": [
+        54,
+        63,
+        734,
+        464
+      ],
+      "operation": "original PDF raster crop, 240 dpi, 12px external white margin; no redrawing",
+      "sha256": "5cc4e301f982582e46bd569b746657fa06e2cc1680a3340491258b21979bec1c",
+      "width": 1782,
+      "height": 1057
+    },
+    {
+      "id": "nc04-quenching",
+      "source": "main",
+      "file_page": 5,
+      "reference_canvas": [
+        768,
+        1024
+      ],
+      "crop_box": [
+        54,
+        468,
+        360,
+        860
+      ],
+      "operation": "original PDF raster crop, 240 dpi, 12px external white margin; no redrawing",
+      "sha256": "1c4fba92b9c076134f2f974a97926958400c2d19075dfda95dd72c218a025e18",
+      "width": 816,
+      "height": 1035
+    },
+    {
+      "id": "nc05-cycle",
+      "source": "main",
+      "file_page": 5,
+      "reference_canvas": [
+        768,
+        1024
+      ],
+      "crop_box": [
+        360,
+        468,
+        738,
+        877
+      ],
+      "operation": "original PDF raster crop, 240 dpi, 12px external white margin; no redrawing",
+      "sha256": "beee7dc0402a9114c6319abf5fc6941520297670d33fedb551063051964a24e1",
+      "width": 1001,
+      "height": 1078
+    },
+    {
+      "id": "nc06-reversible",
+      "source": "main",
+      "file_page": 6,
+      "reference_canvas": [
+        768,
+        1024
+      ],
+      "crop_box": [
+        143,
+        59,
+        651,
+        429
+      ],
+      "operation": "original PDF raster crop, 240 dpi, 12px external white margin; no redrawing",
+      "sha256": "fed131ffe738ad08b60f6beb9de8a2d3d9da5d9300e0a4db1151fd686d17c8a5",
+      "width": 1337,
+      "height": 978
+    },
+    {
+      "id": "nc07-kinetics",
+      "source": "main",
+      "file_page": 7,
+      "reference_canvas": [
+        768,
+        1024
+      ],
+      "crop_box": [
+        82,
+        61,
+        714,
+        294
+      ],
+      "operation": "original PDF raster crop, 240 dpi, 12px external white margin; no redrawing",
+      "sha256": "a3df633a72921e8abf503dc5f21b5f45e855dbf3957cfbd9247ef7c62555881c",
+      "width": 1658,
+      "height": 624
+    },
+    {
+      "id": "nc08-network",
+      "source": "main",
+      "file_page": 7,
+      "reference_canvas": [
+        768,
+        1024
+      ],
+      "crop_box": [
+        183,
+        295,
+        668,
+        702
+      ],
+      "operation": "original PDF raster crop, 240 dpi, 12px external white margin; no redrawing",
+      "sha256": "ccd3fef31986e1d441ef129bd7ab7d22a3a76b36178295553bb78f54c33c6dbd",
+      "width": 1278,
+      "height": 1073
+    },
+    {
+      "id": "nc09-scope",
+      "source": "main",
+      "file_page": 8,
+      "reference_canvas": [
+        768,
+        1024
+      ],
+      "crop_box": [
+        79,
+        60,
+        724,
+        534
+      ],
+      "operation": "original PDF raster crop, 240 dpi, 12px external white margin; no redrawing",
+      "sha256": "9eed74bc53c07e9d0f23d35760bf1fe036dfe47e10e6ef9691f46b2a9dbb368c",
+      "width": 1691,
+      "height": 1245
+    },
+    {
+      "id": "nc10-alternative",
+      "source": "main",
+      "file_page": 8,
+      "reference_canvas": [
+        768,
+        1024
+      ],
+      "crop_box": [
+        78,
+        535,
+        724,
+        796
+      ],
+      "operation": "original PDF raster crop, 240 dpi, 12px external white margin; no redrawing",
+      "sha256": "1023b1d321ae6ffae3c34c3510373e42099b51d48d7b71af7f4f243c24d842ef",
+      "width": 1694,
+      "height": 697
+    },
+    {
+      "id": "nc11-ultrafast",
+      "source": "si",
+      "file_page": 97,
+      "reference_canvas": [
+        685,
+        969
+      ],
+      "crop_box": [
+        32,
+        575,
+        644,
+        748
+      ],
+      "operation": "original PDF raster crop, 240 dpi, 12px external white margin; no redrawing",
+      "sha256": "4034c380a211649419bf4ac6c84d7f5d0e91f209e7e1cff4e259d14616ad5c8f",
+      "width": 1798,
+      "height": 526
+    },
+    {
+      "id": "nc12-electron-control",
+      "source": "si",
+      "file_page": 100,
+      "reference_canvas": [
+        685,
+        969
+      ],
+      "crop_box": [
+        120,
+        424,
+        560,
+        608
+      ],
+      "operation": "original PDF raster crop, 240 dpi, 12px external white margin; no redrawing",
+      "sha256": "57db0fec467e547f812b22cb9f25115f42e44b34a7f39486c1b2678674ec174a",
+      "width": 1300,
+      "height": 558
+    },
+    {
+      "id": "nc13-parallel",
+      "source": "si",
+      "file_page": 101,
+      "reference_canvas": [
+        685,
+        969
+      ],
+      "crop_box": [
+        185,
+        265,
+        462,
+        480
+      ],
+      "operation": "original PDF raster crop, 240 dpi, 12px external white margin; no redrawing",
+      "sha256": "94994716ff7e7a7403f765fd1cedeb576f7aeae398e30d661697690136fd79e7",
+      "width": 828,
+      "height": 648
+    },
+    {
+      "id": "nc14-parallel-calculation",
+      "source": "si",
+      "file_page": 102,
+      "reference_canvas": [
+        685,
+        969
+      ],
+      "crop_box": [
+        140,
+        67,
+        552,
+        438
+      ],
+      "operation": "original PDF raster crop, 240 dpi, 12px external white margin; no redrawing",
+      "sha256": "89a12ea83540d7d59679cbd3e3d3b974749b96f42e3d7ebe28dad6004812a448",
+      "width": 1219,
+      "height": 1099
+    }
+  ],
+  "paragraph_binding": [
+    {
+      "heading": "一套体系，怎样同时完成困难的还原与氧化？",
+      "figures_after_paragraph": {
+        "3": [
+          "nc02-design"
+        ]
+      }
+    },
+    {
+      "heading": "phoenix1不是假定的活性物种，而是从反应混合物里找到的",
+      "figures_after_paragraph": {}
+    },
+    {
+      "heading": "首先要辨认：电子是从哪里来的？",
+      "figures_after_paragraph": {
+        "2": [
+          "nc03-spectroscopy"
+        ]
+      }
+    },
+    {
+      "heading": "超快数据增强了归属，但时间常数仍要按出处阅读",
+      "figures_after_paragraph": {
+        "1": [
+          "nc11-ultrafast"
+        ],
+        "3": [
+          "nc12-electron-control"
+        ]
+      }
+    },
+    {
+      "heading": "第二次受光，怎样把氧化端接上？",
+      "figures_after_paragraph": {
+        "2": [
+          "nc04-quenching"
+        ],
+        "3": [
+          "nc05-cycle"
+        ]
+      }
+    },
+    {
+      "heading": "自由基这么多，为什么仍然能交叉偶联？",
+      "figures_after_paragraph": {
+        "2": [
+          "nc06-reversible"
+        ]
+      }
+    },
+    {
+      "heading": "10并非纯粹副产物：它参与了另一条生产性途径",
+      "figures_after_paragraph": {
+        "1": [
+          "nc07-kinetics"
+        ],
+        "3": [
+          "nc08-network"
+        ]
+      }
+    },
+    {
+      "heading": "是否所有还原都由溶剂化电子完成？原文没有排除并行过程",
+      "figures_after_paragraph": {
+        "1": [
+          "nc13-parallel",
+          "nc14-parallel-calculation"
+        ]
+      }
+    },
+    {
+      "heading": "底物范围买到了什么合成能力？",
+      "figures_after_paragraph": {
+        "1": [
+          "nc09-scope"
+        ],
+        "2": [
+          "nc10-alternative"
+        ]
+      }
+    },
+    {
+      "heading": "从这项工作中应当带走的结论",
+      "figures_after_paragraph": {}
+    },
+    {
+      "heading": "论文与图像来源",
+      "figures_after_paragraph": {}
+    }
+  ],
+  "lead_exception": "nc01-model placed before quick_points; immediately following text explicitly says 上图（原文 Fig. 2）"
+}

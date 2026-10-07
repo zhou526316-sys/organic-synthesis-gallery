@@ -1,0 +1,134 @@
+{
+  "revision": "phoenix1-r7",
+  "reviewedAt": "2026-10-07T12:23:58.559470+08:00",
+  "scope": "Retrospective only; not a review of the Angew daily bundle",
+  "textReview": "pass",
+  "imageReview": "pass",
+  "reviewer": "AI source-based editorial self-review",
+  "artifacts": {
+    "textOnly": "audit/wechat-working/phoenix1-r7-text-only.md",
+    "imagesOnly": "audit/wechat-working/phoenix1-r7-images-only.json"
+  },
+  "sources": [
+    {
+      "path": "public/wechat-retrospective/phoenix1-bimodal-structural-regeneration.json",
+      "blobSha": "2a87b1bcf99963de6e2dce69eead9eaedf096af5"
+    }
+  ],
+  "assets": [
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/nc01-model.png",
+      "blobSha": "1f4cf0b856c0fdb87b7908fcbece49d8fa97d255",
+      "sha256": "98dd170df1820188e83b5de81c72589e3906ebcc2373aeebfbc4ec6fb75627f0",
+      "width": 1823,
+      "height": 717
+    },
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/nc02-design.png",
+      "blobSha": "d12bcecd8d1c1076f0705eccb126256f7d6ffc95",
+      "sha256": "f1d00dfdf6e718e6e014f291bea1f06b14068bc0c49c57d3d331a433f2e82faa",
+      "width": 1779,
+      "height": 1217
+    },
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/nc03-spectroscopy.png",
+      "blobSha": "3994f7efcb638ccea83a1edfa991f46962f9f6ba",
+      "sha256": "5cc4e301f982582e46bd569b746657fa06e2cc1680a3340491258b21979bec1c",
+      "width": 1782,
+      "height": 1057
+    },
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/nc04-quenching.png",
+      "blobSha": "8e906b9201cfc3ea1fdcdcf38a8218c471badb15",
+      "sha256": "1c4fba92b9c076134f2f974a97926958400c2d19075dfda95dd72c218a025e18",
+      "width": 816,
+      "height": 1035
+    },
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/nc05-cycle.png",
+      "blobSha": "1a56202f6df25f675c208bb3caf15d15709b41eb",
+      "sha256": "beee7dc0402a9114c6319abf5fc6941520297670d33fedb551063051964a24e1",
+      "width": 1001,
+      "height": 1078
+    },
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/nc06-reversible.png",
+      "blobSha": "a6e6fb4f83b883409de7b7f5d0e48ac474c72bc2",
+      "sha256": "fed131ffe738ad08b60f6beb9de8a2d3d9da5d9300e0a4db1151fd686d17c8a5",
+      "width": 1337,
+      "height": 978
+    },
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/nc07-kinetics.png",
+      "blobSha": "703097fea4fc397bdbb6c709db469f64328a974c",
+      "sha256": "a3df633a72921e8abf503dc5f21b5f45e855dbf3957cfbd9247ef7c62555881c",
+      "width": 1658,
+      "height": 624
+    },
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/nc08-network.png",
+      "blobSha": "feb39075f89d93784968c1effa5de0476cca422b",
+      "sha256": "ccd3fef31986e1d441ef129bd7ab7d22a3a76b36178295553bb78f54c33c6dbd",
+      "width": 1278,
+      "height": 1073
+    },
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/nc09-scope.png",
+      "blobSha": "66d710e8def035e3a82078010cc082336ed492db",
+      "sha256": "9eed74bc53c07e9d0f23d35760bf1fe036dfe47e10e6ef9691f46b2a9dbb368c",
+      "width": 1691,
+      "height": 1245
+    },
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/nc10-alternative.png",
+      "blobSha": "7a38a47ea3140eb8212a217a3b209d2a1a88cc92",
+      "sha256": "1023b1d321ae6ffae3c34c3510373e42099b51d48d7b71af7f4f243c24d842ef",
+      "width": 1694,
+      "height": 697
+    },
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/nc11-ultrafast.png",
+      "blobSha": "d98e70a5b0d747219aa2913be3593514dbe9883e",
+      "sha256": "4034c380a211649419bf4ac6c84d7f5d0e91f209e7e1cff4e259d14616ad5c8f",
+      "width": 1798,
+      "height": 526
+    },
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/nc12-electron-control.png",
+      "blobSha": "a0092753602aa4354e1cde616fde34b7ad59bad3",
+      "sha256": "57db0fec467e547f812b22cb9f25115f42e44b34a7f39486c1b2678674ec174a",
+      "width": 1300,
+      "height": 558
+    },
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/nc13-parallel.png",
+      "blobSha": "586dd947eccab40763c64503095863a9e161727d",
+      "sha256": "94994716ff7e7a7403f765fd1cedeb576f7aeae398e30d661697690136fd79e7",
+      "width": 828,
+      "height": 648
+    },
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/nc14-parallel-calculation.png",
+      "blobSha": "ea98e7c8e8a5a797d3019eedbefcb8056d983206",
+      "sha256": "89a12ea83540d7d59679cbd3e3d3b974749b96f42e3d7ebe28dad6004812a448",
+      "width": 1219,
+      "height": 1099
+    },
+    {
+      "path": "public/wechat-assets/reviewed/phoenix1-r7/phoenix-cover-approved.png",
+      "blobSha": "24285702b9fad360acb3b328713c11e11c86d313",
+      "sha256": "6cb0d372533491151a64143187289123bb8bd76a605ce257ef8f4d85e22457f1",
+      "width": 1070,
+      "height": 1070
+    }
+  ],
+  "materializedCropReviewRequired": true,
+  "strictFigurePlacement": true,
+  "draftWriteAllowed": false,
+  "releaseHold": "No current writable publishing route; combined-template QA and live WeChat readback remain outstanding.",
+  "notes": [
+    "Text-only export includes digest, all narrative and every caption in final order.",
+    "Visual source crops checked in contact sheets; corrected clipped axis/labels before freezing final rasters.",
+    "This gate is an offline editorial checkpoint, not a claim that WeChat was updated. No publisher trigger accompanies this package."
+  ]
+}
