@@ -94,7 +94,7 @@ export async function verifyPdfVaultLive({ browser, manifest, fetchImpl = fetch,
           if (response.status !== 200) { await response.body?.cancel().catch(() => {}); throw new Error('http_status_' + response.status); }
           const bytes = await readBounded(response, maxBytes);
           const result = verify(bytes);
-          return { ...result, attempts: attempt };
+          return { ...result, contentType: response.headers.get('content-type') || null, attempts: attempt };
         } catch (error) { lastError = error; }
         finally { activeRequests--; }
         if (attempt < ATTEMPTS && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, Math.min(250 * attempt, Math.max(0, deadline - Date.now()))));
