@@ -1,0 +1,64 @@
+name: Tampermonkey metadata read regression
+
+on:
+  push:
+    branches: [fix/tm-read-latency-20261007]
+    paths:
+      - public/toc-mainline.user.js
+      - cloudflare/scripts/build-bridge-loader.mjs
+      - scripts/validate-tm220-artifacts.mjs
+      - scripts/test-tm221-window-guard.mjs
+      - tests/tm-controller-read-transport.test.mjs
+      - tests/tm-manual-resume.test.mjs
+      - .github/workflows/tm-controller-read-regression.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tm-controller-read-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify metadata transport, ownership, pause and existing capture contracts
+        run: |
+          node scripts/finalize-tm-queue-priority.mjs
+          node --check public/toc-mainline.user.js
+          node tests/tm-controller-read-transport.test.mjs
+          node tests/tm-manual-resume.test.mjs
+          node tests/tm-immediate-restart.test.mjs
+          node tests/tm-controller-recovery.test.mjs
+          node tests/tm-queue-coverage.test.mjs
+          node tests/tm-newest-retry.test.mjs
+          node tests/tm-missing-only.test.mjs
+          node scripts/test-tm221-window-guard.mjs
+          node scripts/test-tm220-release.mjs
+          node scripts/test-tm223-upload.mjs
+          node scripts/validate-tm220-artifacts.mjs source
+          git diff --check
+      - name: Build and fingerprint the updated installable Bridge
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+          sha256sum public/gallery-vpn-bridge.user.js > "$RUNNER_TEMP/tm-read-installer.sha256"
+          sha256sum public/toc-mainline.user.js > "$RUNNER_TEMP/tm-read-source.sha256"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-controller-read-evidence
+          path: ${{ runner.temp }}/tm-read-*.sha256
+          retention-days: 7
