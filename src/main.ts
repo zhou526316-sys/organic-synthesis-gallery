@@ -1579,12 +1579,14 @@ async function loadIndexedViewPage(
   if (architectureClient !== client) return false;
   const indexedPapers = normalizeArchitectureRows(await client.resolveIndexed(response.items));
   if (indexedPapers.length !== response.items.length) throw new Error('literature_catalog_view_excluded_member');
+  const pageCursors = [...cursors];
+  if (response.hasMore && response.nextCursor) pageCursors[page] = response.nextCursor;
   indexedViewState = {
     requestKey,
     matched: response.matched,
     page,
     limit: response.limit,
-    cursors,
+    cursors: pageCursors,
     hasMore: response.hasMore,
     nextCursor: response.nextCursor,
     papers: indexedPapers,
