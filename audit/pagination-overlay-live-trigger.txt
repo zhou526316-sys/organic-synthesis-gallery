@@ -1,0 +1,5 @@
+2026-10-07 Beijing time: post-publication read-only mobile pagination verification.
+Approved UI merge: 9e12536c73722b52924a2a4d41ed23a03d9fbe91 (PR #390).
+Pages run 37588737678: deploy and canonical verification completed successfully.
+Worker sync 37588737571: completed successfully.
+Run the existing isolated Chromium/WebKit probe on the canonical site at 320/390/680px; preserve actual floating launchers, native first/last page clicks, screenshot and JSON evidence. No production state writes or runtime changes. Do not restart or cancel publication/media workflows.
