@@ -245,6 +245,26 @@ test('D3c2 production deploy keeps full parity while bounded reads are enabled a
   assert.ok(block.includes('user-library-v3-shadow-'));
 });
 
+test('D3c4c production deploy fail-closes on rollout preflight health',()=>{
+  const block=section(
+    deploy,
+    '- name: Backfill and verify user library V3 shadow parity and bounded reads',
+    '- name: Advance and reconcile Evidence Index shadow',
+  );
+  assert.ok(block.includes("phase:'D3c4c-user-library-v3-rollout-preflight'"));
+  assert.ok(block.includes('rollout.preflightReady===true'));
+  assert.ok(block.includes('authorityHeadMismatches'));
+  assert.ok(block.includes('compatibilityHeadMismatches'));
+  assert.ok(block.includes('staleLegacyDocuments'));
+  assert.ok(block.includes('- name: Enforce user library V3 rollout preflight'));
+  assert.ok(block.includes('V3 rollout preflight report missing'));
+  assert.ok(block.includes('preflight_not_ready'));
+  assert.ok(block.includes('authority_head_mismatch'));
+  assert.ok(block.includes('compatibility_head_mismatch'));
+  assert.ok(block.includes('stale_legacy_document'));
+  assert.ok(block.includes('USER_LIBRARY_V3_ROLLOUT_PREFLIGHT_PASS'));
+});
+
 test('D3c through D3c4a regression suites are part of the site quality gate',()=>{
   assert.equal(packageJson.scripts['test:user-library-v3'],'node scripts/test-user-library-v3.mjs');
   assert.equal(packageJson.scripts['test:user-library-v3-shadow'],'node scripts/test-user-library-v3-shadow.mjs');

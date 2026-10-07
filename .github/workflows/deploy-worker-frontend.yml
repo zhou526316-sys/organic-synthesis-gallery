@@ -837,15 +837,35 @@ jobs:
           if(passes.length<2) throw new Error('user library V3 shadow could not obtain two stable full parity passes');
 
           const finalStatus=await call('/api/admin/user-library-v3/status');
-          if(finalStatus.readEnabled!==true||finalStatus.writeEnabled!==false||finalStatus.revisionMismatches!==0){
-            throw new Error('user library V3 shadow final state invalid: '+JSON.stringify(finalStatus));
+          const rollout=finalStatus.rollout||{};
+          const rolloutHealthy=rollout.preflightReady===true
+            &&Number(finalStatus.revisionMismatches||0)===0
+            &&Number(finalStatus.authorityHeadMismatches||0)===0
+            &&Number(finalStatus.compatibilityHeadMismatches||0)===0
+            &&Number(finalStatus.staleLegacyDocuments||0)===0
+            &&rollout.seedConfigured===true
+            &&rollout.canaryConfigured===true;
+          if(finalStatus.readEnabled!==true||finalStatus.writeEnabled!==false||!rolloutHealthy){
+            throw new Error('user library V3 rollout preflight invalid: '+JSON.stringify(finalStatus));
           }
           const report={
-            schemaVersion:1,phase:'D3c2-user-library-v3-bounded-read',ok:true,
-            shadowEnabled:true,boundedReadEnabled:true,accountPullCutover:false,writePathActive:false,
+            schemaVersion:1,phase:'D3c4c-user-library-v3-rollout-preflight',ok:true,
+            shadowEnabled:true,boundedReadEnabled:true,accountPullCutover:false,
+            globalWriteEnabled:false,
+            rolloutBasisPoints:Number(rollout.basisPoints||0),
+            rolloutPercent:Number(rollout.percent||0),
+            rolloutActive:rollout.active===true,
+            rolloutPreflightReady:rollout.preflightReady===true,
+            rolloutSeedConfigured:rollout.seedConfigured===true,
+            rolloutCanaryConfigured:rollout.canaryConfigured===true,
             legacyUsers:Number(finalStatus.legacyUsers||0),
+            legacyDocuments:Number(finalStatus.legacyDocuments||0),
+            staleLegacyDocuments:Number(finalStatus.staleLegacyDocuments||0),
             v3Heads:Number(finalStatus.v3Heads||0),
+            v3AuthorityUsers:Number(finalStatus.v3AuthorityUsers||0),
             revisionMismatches:Number(finalStatus.revisionMismatches||0),
+            authorityHeadMismatches:Number(finalStatus.authorityHeadMismatches||0),
+            compatibilityHeadMismatches:Number(finalStatus.compatibilityHeadMismatches||0),
             backfillComplete:finalStatus.backfill?.complete===true,
             backfillPagesThisRun:backfillPages,
             reconcilePagesThisRun:reconcilePages,
@@ -865,6 +885,37 @@ jobs:
           path: /tmp/user-library-v3-shadow-report.json
           if-no-files-found: error
           retention-days: 7
+
+      - name: Enforce user library V3 rollout preflight
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('fs');
+          const path='/tmp/user-library-v3-shadow-report.json';
+          if(!fs.existsSync(path)) throw new Error('V3 rollout preflight report missing');
+          const report=JSON.parse(fs.readFileSync(path,'utf8'));
+          const errors=[];
+          if(report.ok!==true) errors.push('report_not_ok');
+          if(report.rolloutPreflightReady!==true) errors.push('preflight_not_ready');
+          if(report.rolloutSeedConfigured!==true) errors.push('seed_not_configured');
+          if(report.rolloutCanaryConfigured!==true) errors.push('canary_not_configured');
+          if(Number(report.revisionMismatches||0)!==0) errors.push('revision_mismatch');
+          if(Number(report.authorityHeadMismatches||0)!==0) errors.push('authority_head_mismatch');
+          if(Number(report.compatibilityHeadMismatches||0)!==0) errors.push('compatibility_head_mismatch');
+          if(Number(report.staleLegacyDocuments||0)!==0) errors.push('stale_legacy_document');
+          if(report.backfillComplete!==true) errors.push('backfill_incomplete');
+          if(Number(report.semanticMismatches||0)!==0) errors.push('semantic_mismatch');
+          if(errors.length) throw new Error('V3 rollout preflight failed: '+errors.join(',')+' '+JSON.stringify(report));
+          console.log('USER_LIBRARY_V3_ROLLOUT_PREFLIGHT_PASS '+JSON.stringify({
+            rolloutBasisPoints:Number(report.rolloutBasisPoints||0),
+            rolloutPercent:Number(report.rolloutPercent||0),
+            v3AuthorityUsers:Number(report.v3AuthorityUsers||0),
+            legacyUsers:Number(report.legacyUsers||0),
+            v3Heads:Number(report.v3Heads||0),
+          }));
+          NODE
 
       - name: Advance and reconcile Evidence Index shadow
         id: evidence_index_shadow

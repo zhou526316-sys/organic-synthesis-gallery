@@ -73,3 +73,22 @@ The existing authenticated admin status surface is also the rollout preflight su
 These checks are D1 aggregate reads. They do not add writes to the user mutation path and they do not change rollout eligibility.
 
 Current rollout remains **0 bp / 0%**.
+
+## Deployment promotion gate
+
+The Worker deployment now preserves the V3 rollout report even if the comparison step fails, then executes a separate fail-closed enforcement step.
+
+A deployment may continue only when:
+
+- rollout `preflightReady=true`;
+- the fixed rollout seed and isolated canary are both configured;
+- historical V3 backfill is complete;
+- semantic comparison has zero mismatches;
+- legacy/V3 revision mismatches are zero;
+- stale legacy documents behind V3 authority are zero;
+- V3 authority-to-head mismatches are zero;
+- V3-to-D3b compatibility-head mismatches are zero.
+
+The gate records rollout basis points, rollout percentage, V3-authority user count, legacy-authoritative user count and V3 head count in the deployment evidence. It does not change rollout eligibility.
+
+Normal-user rollout remains **0 bp / 0%**.
