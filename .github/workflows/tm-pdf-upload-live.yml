@@ -1,0 +1,36 @@
+name: Verify PDF upload installer live
+
+on:
+  push:
+    branches: [fix/tm-pdf-upload-20261007]
+    paths:
+      - .github/workflows/tm-pdf-upload-live.yml
+      - scripts/verify-tm-pdf-live.mjs
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tm-pdf-upload-live-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/fix/tm-pdf-upload-20261007'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify exact API, Worker and Gallery installer bytes without production writes
+        run: node scripts/verify-tm-pdf-live.mjs
+      - name: Preserve bounded verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tm-pdf-upload-live
+          path: ${{ runner.temp }}/tm-pdf-live.json
+          if-no-files-found: warn
+          retention-days: 7
