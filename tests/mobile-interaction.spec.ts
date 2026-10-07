@@ -836,8 +836,18 @@ test('search highlights results, picker closes outside, feedback drags and submi
   expect(removedAfterFirstSearch).toBeGreaterThanOrEqual(0);
   expect(removedAfterFirstSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
 
-  await search.fill('光催化');
-  await expect(search).toHaveValue('光催化');
+  await search.fill('');
+  await expect(page.locator('#resultCount')).toHaveText(String(initialTotal));
+  const chineseQuery = await page.locator('#gallery > .card .title').evaluateAll(nodes => {
+    for (const node of nodes) {
+      const match = (node.textContent || '').match(/[\u3400-\u9fff]{2,}/);
+      if (match) return match[0].slice(0, 2);
+    }
+    return '';
+  });
+  expect(chineseQuery.length).toBeGreaterThanOrEqual(2);
+  await search.fill(chineseQuery);
+  await expect(search).toHaveValue(chineseQuery);
   await expect.poll(async () => page.locator('.card:visible').count()).toBeGreaterThan(0);
   expect(await page.locator('#gallery > .card:visible').count()).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
   expect(Number(await page.locator('#resultCount').textContent())).toBeLessThan(initialTotal);
