@@ -410,6 +410,12 @@ try{
    await context.close();
   }
  });
+ // The owner/capability cases above create many full-page contexts and PDF.js
+ // workers. Start the local-vault integration cases with a fresh headless
+ // browser process; assertions remain unchanged and the P1 suite independently
+ // exercises the same real IndexedDB/OPFS path.
+ await browser.close();
+ browser=await chromium.launch({headless:true});
  await test('real local import updates another tab and missing or expired evidence downgrades cards',async()=>{
   const {context,state}=await contextWith([],undefined,{locale:'zh-CN'});const page=await gallery(context,false);
   const card=page.locator('.card').first(),doi=await card.getAttribute('data-doi');
