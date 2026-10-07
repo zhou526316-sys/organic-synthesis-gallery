@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-10-07T00:13:30.163Z",
+  "generatedAt": "2026-10-07T01:52:50.507Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-with-catchup",
   "lookbackDays": 3,
@@ -169,17 +169,17 @@
   ],
   "summary": {
     "galleryDois": 859,
-    "sourceRecords": 1962,
-    "rawMissingFromGallery": 1579,
+    "sourceRecords": 1964,
+    "rawMissingFromGallery": 1581,
     "previouslyReviewedExcluded": 1572,
-    "missingFromGallery": 7,
+    "missingFromGallery": 9,
     "potentialGaps": 6,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 4,
     "closureCoverageAnomalies": 6,
     "historicalCoverageLosses": 0,
-    "unresolved": 7,
+    "unresolved": 9,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
@@ -230,12 +230,12 @@
         "crossrefHealthy": true,
         "openAlexHealthy": true,
         "queryStart": "2026-09-19",
-        "rawCrossrefCandidateRecords": 457,
+        "rawCrossrefCandidateRecords": 458,
         "rawOpenAlexCandidateRecords": 431,
-        "rawUnionCandidateRecords": 459,
+        "rawUnionCandidateRecords": 460,
         "rawToUnionCollapse": false,
-        "unionCandidateRecords": 459,
-        "crossrefCandidateRecords": 457,
+        "unionCandidateRecords": 460,
+        "crossrefCandidateRecords": 458,
         "openAlexCandidateRecords": 431,
         "multiSourceCandidateRecords": 429,
         "closureUnionRecords": 31,
@@ -747,6 +747,21 @@
         "Angew": 12
       }
     },
+    "2026-10-07": {
+      "sourceRecords": 5,
+      "crossrefOnly": 5,
+      "openAlexOnly": 0,
+      "multiSource": 0,
+      "coveredByGallery": 3,
+      "rawMissingFromGallery": 2,
+      "previouslyReviewedExcluded": 0,
+      "missingFromGallery": 2,
+      "potentialGaps": 1,
+      "byJournal": {
+        "Nature Communications": 1,
+        "JOC": 4
+      }
+    },
     "2026-09-27": {
       "sourceRecords": 18,
       "crossrefOnly": 0,
@@ -834,20 +849,6 @@
       "potentialGaps": 0,
       "byJournal": {
         "ACS Catalysis": 1
-      }
-    },
-    "2026-10-07": {
-      "sourceRecords": 4,
-      "crossrefOnly": 4,
-      "openAlexOnly": 0,
-      "multiSource": 0,
-      "coveredByGallery": 3,
-      "rawMissingFromGallery": 1,
-      "previouslyReviewedExcluded": 0,
-      "missingFromGallery": 1,
-      "potentialGaps": 1,
-      "byJournal": {
-        "JOC": 4
       }
     }
   },
@@ -941,17 +942,17 @@
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
       "queryStart": "2026-09-19",
-      "rawSourceRecords": 459,
-      "sourceRecords": 459,
-      "crossrefOnly": 28,
+      "rawSourceRecords": 460,
+      "sourceRecords": 460,
+      "crossrefOnly": 29,
       "openAlexOnly": 2,
       "multiSource": 429,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 10,
-      "rawMissingFromGallery": 449,
+      "rawMissingFromGallery": 450,
       "previouslyReviewedExcluded": 449,
-      "missingFromGallery": 0,
+      "missingFromGallery": 1,
       "potentialGaps": 0
     },
     "JACS": {
@@ -1094,17 +1095,17 @@
       "activeFrom": "2026-10-01",
       "effectiveStart": "2026-10-01",
       "queryStart": "2026-10-01",
-      "rawSourceRecords": 20,
-      "sourceRecords": 20,
-      "crossrefOnly": 20,
+      "rawSourceRecords": 21,
+      "sourceRecords": 21,
+      "crossrefOnly": 21,
       "openAlexOnly": 0,
       "multiSource": 0,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 6,
-      "rawMissingFromGallery": 14,
+      "rawMissingFromGallery": 15,
       "previouslyReviewedExcluded": 14,
-      "missingFromGallery": 0,
+      "missingFromGallery": 1,
       "potentialGaps": 0
     },
     "JOC": {
@@ -1261,12 +1262,12 @@
       "crossrefHealthy": true,
       "openAlexHealthy": true,
       "queryStart": "2026-09-19",
-      "rawCrossrefCandidateRecords": 457,
+      "rawCrossrefCandidateRecords": 458,
       "rawOpenAlexCandidateRecords": 431,
-      "rawUnionCandidateRecords": 459,
+      "rawUnionCandidateRecords": 460,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 459,
-      "crossrefCandidateRecords": 457,
+      "unionCandidateRecords": 460,
+      "crossrefCandidateRecords": 458,
       "openAlexCandidateRecords": 431,
       "multiSourceCandidateRecords": 429,
       "closureUnionRecords": 31,
@@ -1486,12 +1487,12 @@
       "crossrefHealthy": true,
       "openAlexHealthy": true,
       "queryStart": "2026-10-01",
-      "rawCrossrefCandidateRecords": 20,
+      "rawCrossrefCandidateRecords": 21,
       "rawOpenAlexCandidateRecords": 0,
-      "rawUnionCandidateRecords": 20,
+      "rawUnionCandidateRecords": 21,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 20,
-      "crossrefCandidateRecords": 20,
+      "unionCandidateRecords": 21,
+      "crossrefCandidateRecords": 21,
       "openAlexCandidateRecords": 0,
       "multiSourceCandidateRecords": 0,
       "closureUnionRecords": 0,
@@ -1618,12 +1619,12 @@
       "crossrefHealthy": true,
       "openAlexHealthy": true,
       "queryStart": "2026-10-01",
-      "rawCrossrefCandidateRecords": 20,
+      "rawCrossrefCandidateRecords": 21,
       "rawOpenAlexCandidateRecords": 0,
-      "rawUnionCandidateRecords": 20,
+      "rawUnionCandidateRecords": 21,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 20,
-      "crossrefCandidateRecords": 20,
+      "unionCandidateRecords": 21,
+      "crossrefCandidateRecords": 21,
       "openAlexCandidateRecords": 0,
       "multiSourceCandidateRecords": 0,
       "closureUnionRecords": 0,
@@ -1672,12 +1673,12 @@
       "crossrefHealthy": true,
       "openAlexHealthy": true,
       "queryStart": "2026-09-19",
-      "rawCrossrefCandidateRecords": 457,
+      "rawCrossrefCandidateRecords": 458,
       "rawOpenAlexCandidateRecords": 431,
-      "rawUnionCandidateRecords": 459,
+      "rawUnionCandidateRecords": 460,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 459,
-      "crossrefCandidateRecords": 457,
+      "unionCandidateRecords": 460,
+      "crossrefCandidateRecords": 458,
       "openAlexCandidateRecords": 431,
       "multiSourceCandidateRecords": 429,
       "closureUnionRecords": 31,
@@ -2081,7 +2082,7 @@
       "mode": "online",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 457,
+      "count": 458,
       "note": ""
     },
     {
@@ -2091,7 +2092,7 @@
       "mode": "published",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 457,
+      "count": 458,
       "note": ""
     },
     {
@@ -2101,7 +2102,7 @@
       "mode": "created",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 456,
+      "count": 457,
       "note": ""
     },
     {
@@ -2563,7 +2564,7 @@
       "mode": "created",
       "queryStart": "2026-10-01",
       "ok": true,
-      "count": 20,
+      "count": 21,
       "note": ""
     },
     {
@@ -2593,7 +2594,7 @@
       "mode": "created",
       "queryStart": "2026-10-01",
       "ok": true,
-      "count": 20,
+      "count": 21,
       "note": ""
     },
     {
@@ -2706,6 +2707,51 @@
       "lateIndexed": false,
       "safetyTail": false,
       "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1038/s41467-026-78216-2",
+      "journal": "Nature Communications",
+      "title": "Neonatal overfeeding accelerates age-related sarcopenia and metabolic disorders through lifelong gut mucosa and microbiota programming in mice",
+      "abstract": "",
+      "date": "2026-10-07",
+      "onlineDate": "2026-10-07",
+      "publishedDate": "2026-10-07",
+      "createdDate": "2026-10-07",
+      "onlineDatePrecision": "day",
+      "publishedDatePrecision": "day",
+      "createdDatePrecision": "day",
+      "type": "journal-article",
+      "authors": [
+        "Yeyu Song",
+        "Jingyi Xu",
+        "Jingjie Zhao",
+        "Rong Yang",
+        "Yuandi Ma",
+        "Yi-Ming Hou",
+        "Yutang Cao",
+        "Jiaqi Li",
+        "Shuwu Yu",
+        "Xinyu Liang",
+        "Yongxin Zhang",
+        "Kanglong Wang",
+        "Lijuan An",
+        "Yameng Liu",
+        "Zhuo-Xian Meng",
+        "Jian-Gao Fan",
+        "Cen Xie"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "dateConflict": "",
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
     },
     {
       "doi": "10.1021/acscatal.6c06578",
@@ -2919,6 +2965,36 @@
       "lateIndexed": false,
       "safetyTail": false,
       "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1039/d6gc04458a",
+      "journal": "Green Chemistry",
+      "title": "Continuous-Flow Hydrogenative Conversion of Biomass-Derived Lactone to Cyclic Ether by Pt Catalysts on Zr-Doped Silicoaluminophosphate",
+      "abstract": "A novel, highly selective supported platinum catalyst has been developed that enables the hydrogenative deoxygenation of biomass-derived δ-valerolactone to tetrahydropyran (THP). The utilization of silicoaluminophosphate (SAPO) supports incorporating zirconium into...",
+      "date": "",
+      "onlineDate": "",
+      "publishedDate": "",
+      "createdDate": "2026-10-07",
+      "onlineDatePrecision": "year",
+      "publishedDatePrecision": "year",
+      "createdDatePrecision": "day",
+      "type": "journal-article",
+      "authors": [
+        "Takashi Uemura",
+        "Haruro Ishitani",
+        "Shu Kobayashi"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1463-9262:created",
+        "crossref:1463-9270:created"
+      ],
+      "activeFrom": "2026-10-01",
+      "dateUnverified": true,
+      "dateConflict": "",
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
     }
   ],
   "potentialGaps": [
