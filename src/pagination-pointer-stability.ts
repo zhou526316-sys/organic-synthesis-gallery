@@ -1,11 +1,14 @@
-// Recover a pagination click only when a stationary mouse completed a real
-// press/release but late layout moved the button away before the click. WebKit
-// does not reliably retarget compatibility clicks with pointer capture alone.
-// Never activate on pointerdown or pointerup; touch and keyboard stay native.
+// Preserve a completed mouse click when late card layout moves its native hit
+// target. Trust the browser's pointerdown target: measuring its rectangle can
+// itself finish lazy layout, so a post-hit rectangle is not the hit-test truth.
+// Touch, keyboard and native clicks on the original button stay untouched.
 export function installPaginationPointerStability(): () => void {
   const controller = new AbortController();
   const options = { capture: true, signal: controller.signal };
-  type Press = { id: number; button: HTMLButtonElement; rect: DOMRect };
+  type Press = {
+    id: number; button: HTMLButtonElement; rect: DOMRect;
+    x: number; y: number; hitMoved: boolean;
+  };
   let press: Press | null = null;
   let released: (Press & { at: number }) | null = null;
 
@@ -20,17 +23,20 @@ export function installPaginationPointerStability(): () => void {
     if (event.pointerType !== 'mouse' || !event.isPrimary || event.button !== 0) return;
     const button = buttonFor(event.target);
     if (!button || button.disabled) return;
-    press = { id: event.pointerId, button, rect: button.getBoundingClientRect() };
+    const rect = button.getBoundingClientRect();
+    const x = event.clientX, y = event.clientY;
+    press = { id: event.pointerId, button, rect, x, y,
+      hitMoved: x < rect.left || x > rect.right || y < rect.top || y > rect.bottom };
   }, options);
 
   document.addEventListener('pointerup', event => {
     if (!press || press.id !== event.pointerId) return;
     const completed = press;
     press = null;
-    const { button, rect } = completed;
-    // A real drag outside the original button must not turn into navigation.
-    if (!button.isConnected || button.disabled || event.clientX < rect.left || event.clientX > rect.right
-      || event.clientY < rect.top || event.clientY > rect.bottom) return;
+    // Reconcile only a stationary click. A drag away from its real down point
+    // must not navigate even when the footer moves in the opposite direction.
+    if (!completed.button.isConnected || completed.button.disabled
+      || Math.hypot(event.clientX - completed.x, event.clientY - completed.y) > 6) return;
     released = { ...completed, at: performance.now() };
   }, options);
 
@@ -43,13 +49,12 @@ export function installPaginationPointerStability(): () => void {
     const completed = released;
     released = null;
     if (!completed || event.detail === 0 || event.button !== 0 || performance.now() - completed.at > 750) return;
-    const { button, rect } = completed;
+    const { button, rect, hitMoved } = completed;
     if (!button.isConnected || button.disabled || buttonFor(event.target) === button) return;
     if (button.closest('[hidden], [inert]') || !button.getClientRects().length) return;
     const now = button.getBoundingClientRect();
-    if (Math.abs(now.left - rect.left) < 2 && Math.abs(now.top - rect.top) < 2) return;
-    // The original click would otherwise land on the common ancestor or the
-    // newly exposed card. Consume it before forwarding exactly once.
+    if (!hitMoved && Math.abs(now.left - rect.left) < 2 && Math.abs(now.top - rect.top) < 2) return;
+    // Consume the retargeted ancestor/card click and forward exactly once.
     event.preventDefault();
     event.stopImmediatePropagation();
     button.click();

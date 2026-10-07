@@ -9,6 +9,19 @@ async function observe(page: Page, info: TestInfo, exercise: () => Promise<void>
   page.on('console', message => { if (message.type() === 'error') evidence.consoleErrors.push(message.text()); });
   page.on('requestfailed', request => evidence.failures.push({ url: request.url(), error: request.failure()?.errorText }));
   page.on('response', response => { if (response.url().includes('/api/')) evidence.responses.push({ url: response.url(), status: response.status() }); });
+  await page.addInitScript(() => {
+    const events: unknown[] = [];
+    (window as any).__paginationPointerEvents = events;
+    document.addEventListener('pointerdown', event => {
+      const button = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('#resultWindowControls button') : null;
+      (window as any).__paginationDownPage = button?.dataset.resultPage || '';
+      events.push({ type: 'pointerdown', page: button?.dataset.resultPage, x: event.clientX, y: event.clientY, pointerType: event.pointerType });
+    }, true);
+    document.addEventListener('click', event => {
+      const button = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('#resultWindowControls button') : null;
+      events.push({ type: 'click', page: button?.dataset.resultPage, detail: event.detail });
+    }, true);
+  });
   await page.route('**/api/**', async route => {
     const path = new URL(route.request().url()).pathname;
     let body: unknown = {};
@@ -22,9 +35,20 @@ async function observe(page: Page, info: TestInfo, exercise: () => Promise<void>
     await exercise();
     expect(evidence.errors).toEqual([]);
   } finally {
-    await info.attach('pointer-browser-evidence', { body: JSON.stringify(evidence, null, 2), contentType: 'application/json' });
+    const pointerEvents = await page.evaluate(() => (window as any).__paginationPointerEvents || []).catch(() => []);
+    await info.attach('pointer-browser-evidence', { body: JSON.stringify({ ...evidence, pointerEvents }, null, 2), contentType: 'application/json' });
     if (info.status !== info.expectedStatus) await page.screenshot({ path: info.outputPath('failure.png') }).catch(() => {});
   }
+}
+
+async function pressSecondPage(page: Page): Promise<void> {
+  const button = page.locator('#resultPageNumbers [data-result-page="2"]');
+  await expect(button).toBeVisible({ timeout: 30000 });
+  // hover() performs native actionability/scrolling. A rectangle read right
+  // after scrollIntoView can still be outside the viewport during lazy layout.
+  await button.hover();
+  await page.mouse.down();
+  expect(await page.evaluate(() => (window as any).__paginationDownPage), 'real press must hit page 2, not offscreen HTML').toBe('2');
 }
 
 for (const width of [320, 1280]) {
@@ -32,13 +56,7 @@ for (const width of [320, 1280]) {
     await observe(page, info, async () => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(base, { waitUntil: 'domcontentloaded' });
-      const button = page.locator('#resultPageNumbers [data-result-page="2"]');
-      await expect(button).toBeVisible({ timeout: 30000 });
-      await button.scrollIntoViewIfNeeded();
-      const box = await button.boundingBox();
-      if (!box) throw new Error('page button has no hit target');
-      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-      await page.mouse.down();
+      await pressSecondPage(page);
       await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )1\//);
       await page.locator('#resultWindowControls').evaluate(element => { element.style.transform = 'translateY(120px)'; });
       await page.mouse.up();
@@ -51,17 +69,11 @@ test('dragging away cancels mouse activation while Enter remains usable', async 
   await observe(page, info, async () => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(base, { waitUntil: 'domcontentloaded' });
-    const button = page.locator('#resultPageNumbers [data-result-page="2"]');
-    await expect(button).toBeVisible({ timeout: 30000 });
-    await button.scrollIntoViewIfNeeded();
-    const box = await button.boundingBox();
-    if (!box) throw new Error('page button has no hit target');
-    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-    await page.mouse.down();
+    await pressSecondPage(page);
     await page.mouse.move(2, 2);
     await page.mouse.up();
     await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )1\//);
-    await button.focus();
+    await page.locator('#resultPageNumbers [data-result-page="2"]').focus();
     await page.keyboard.press('Enter');
     await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )2\//);
   });
