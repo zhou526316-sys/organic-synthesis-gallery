@@ -288,11 +288,13 @@
     "Text-only and images-only review files regenerated. Source preview and independent visual review must pass before one same-draft update.",
     "Timeout preflight: reuse bounded known review workflow, narrow status polling, small screenshot artifacts, no cancellation or repeated publisher starts.",
     "Draft-only authorization; no public sending.",
-    "Root inspected the exact source cover and current-title/four-line overlays; all white title glyphs are confined to the independent blue band, outside the unmodified original TOC. Both390/690px previews and source fingerprints passed."
+    "Root inspected the exact source cover and current-title/four-line overlays; all white title glyphs are confined to the independent blue band, outside the unmodified original TOC. Both390/690px previews and source fingerprints passed.",
+    "Same-draft update and draft/get succeeded. Actual returned1280x544 cover retains original white-background TOC above the blue band. Root inspected current-title/four-line mobile simulations: no title overlap with TOC; minimum white contrast after transport10.098:1.",
+    "Actual read-only QA passed at390/690px:2articles,15/19loaded body images, all paragraphs/captions present, no broken images or page errors. Overlay screenshots are simulations on the actual returned cover, not native WeChat-client screenshots."
   ],
-  "draftReadback": "pending",
+  "draftReadback": "ok",
   "publicSendAuthorized": false,
-  "finalTransportReview": "pending",
+  "finalTransportReview": "pass",
   "priorCompletedRevision": {
     "revision": "2026-10-07-r11",
     "previewUrl": "https://relay.gczhouwld.com/wechat-preview/395eae43f63c4452e3d05f53.html"
@@ -360,5 +362,9 @@
       "angew-four-line-overlay-390.png",
       "angew-cover-690.png"
     ]
-  }
+  },
+  "completedAt": "2026-10-07T07:31:35Z",
+  "actualDraftPreviewUrl": "https://relay.gczhouwld.com/wechat-preview/adde015c537d4f24bc0c7789.html",
+  "actualDraftQa": "audit/wechat-working/2026-10-07-r12-real-draft-qa.json",
+  "actualDraftQaRunId": "37587674824"
 }

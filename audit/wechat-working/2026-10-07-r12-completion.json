@@ -1,0 +1,58 @@
+{
+  "revision": "2026-10-07-r12",
+  "completedAt": "2026-10-07T07:31:35Z",
+  "status": "complete",
+  "request": "现在的封面又有点被文字挡住了而且不要改变封面的背景色，只要在文字端加个蓝条就好了，然后把toc放小一点",
+  "sourceCommit": "5824530e2b79dd42be5743db9f7441167533a4f6",
+  "sourceSnapshot": "302ad1b5629186dea571610ecfae678b840cf43adb8d0df00ff90356ab86b06d",
+  "sourceQaRunId": "37587335626",
+  "sourceQaArtifactId": 11466618882,
+  "publisherCommit": "a0863fa2def22e3bb6d7211173b1bfe551cdbcd1",
+  "publisherRunId": "37587590685",
+  "actualQaCommit": "26fdb0794731e5496090415166897c16bab523e0",
+  "actualQaRunId": "37587674824",
+  "actualQaArtifact": {
+    "id": 11467316797,
+    "name": "wechat-r12-review-37587674824",
+    "sha256": "11b6adf504607f2834c3a39e2b5947123958346ce645ff24b99342cc62ef3b36"
+  },
+  "receipt": {
+    "generatedAt": "2026-10-07T07:29:22.951511Z",
+    "status": "ok",
+    "stage": "draft_update",
+    "mode": "daily",
+    "slug": null,
+    "title": null,
+    "publicationSlot": "2026-10-07T08:00:00+08:00",
+    "media_id": "KhELYUzvwADwB_l1xH1SWDVcSTXYXLPAONVlEJoVvQlIJ8kwU1cYTCnMr3d7KQKl",
+    "paper_count": 33,
+    "draft_readback": "ok",
+    "preview_url": "https://relay.gczhouwld.com/wechat-preview/adde015c537d4f24bc0c7789.html",
+    "publish_id": null,
+    "publish_status": null,
+    "article_id": null,
+    "article_url": null,
+    "content_source_url": "https://gallery.gczhouwld.com/?edition=2026-10-07"
+  },
+  "coverAsset": "public/wechat-assets/reviewed/2026-10-07-r12/an-cover-white-toc-blue-band-r12.png",
+  "originalTocPixelDifference": 0,
+  "tocBounds": [
+    690,
+    18,
+    1190,
+    265
+  ],
+  "blueTitleBand": [
+    0,
+    288,
+    1880,
+    800
+  ],
+  "originalBackgroundAndPalettePreserved": true,
+  "titleTocOverlap": false,
+  "titleVerificationScope": "current-title and four-line QA simulations on actual draft/get returned cover",
+  "actualQa": "audit/wechat-working/2026-10-07-r12-real-draft-qa.json",
+  "publicSendAuthorized": false,
+  "publicSendPerformed": false,
+  "finalResponsePath": "audit/gpt-responses/2026-10-07/153135-wechat-r12-complete.md"
+}
