@@ -1,34 +1,34 @@
 {
   "publicationDate": "2026-10-07",
-  "editorialRevision": "2026-10-07-r13",
-  "reviewedAt": "2026-10-07T07:38:16Z",
+  "editorialRevision": "2026-10-07-r14",
+  "reviewedAt": "2026-10-07T07:48:06.186344+00:00",
   "reviewer": "AI source-grounded editorial review; no claim of human review",
   "textReview": "pass",
-  "imageReview": "pass",
+  "imageReview": "pending",
   "individualImageReview": "pass",
-  "combinedVisualReview": "pass",
+  "combinedVisualReview": "pending",
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-07-r13-angew-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-07-r13-angew-images-only.md",
+    "textOnly": "audit/wechat-working/2026-10-07-r14-angew-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-07-r14-angew-images-only.md",
     "additionalTextOnly": [
-      "audit/wechat-working/2026-10-07-r13-natcat-text-only.md"
+      "audit/wechat-working/2026-10-07-r14-natcat-text-only.md"
     ],
     "additionalImagesOnly": [
-      "audit/wechat-working/2026-10-07-r13-natcat-images-only.md"
+      "audit/wechat-working/2026-10-07-r14-natcat-images-only.md"
     ]
   },
   "sources": [
     {
       "path": "public/wechat-editions/2026-10-07.json",
-      "blobSha": "900989a5c81053fc5352c2127dac0696530563e3"
+      "blobSha": "615477f8e2156d5e3d7b47823779355ad0481bd3"
     },
     {
       "path": "public/wechat-featured/2026-10-07.json",
-      "blobSha": "e63690685add599b9e1ae323d161dc70615962fe"
+      "blobSha": "f9a89cd23d4f30ca4e95f91c3b66248579696043"
     },
     {
       "path": "public/wechat-retrospective/phoenix1-structural-regeneration.json",
-      "blobSha": "ff7416a810cac8f0b4287becdfbd913a264a5647"
+      "blobSha": "79bab273c9581bcb7e0de1ce5084c15dc0433d67"
     }
   ],
   "assets": [
@@ -131,9 +131,9 @@
       "height": 708
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-07-r13/an-cover-white-toc-fitted-band-r13.png",
-      "blobSha": "7c1ca69b8bf44f3dcd743170e5c8d20a63b3b3cd",
-      "sha256": "cdcff8eade96eabb869923bd013c095964320f332e20ffd4c63f3d41209a728a",
+      "path": "public/wechat-assets/reviewed/2026-10-07-r14/an-cover-white-toc-fitted-band-r14.png",
+      "blobSha": "36dda55add29f6844c354b573b4f32d62d91da60",
+      "sha256": "063b1e76471ebfe30de5b27d56273b586f2af596aa62de8788e42593696150c5",
       "width": 1880,
       "height": 800
     },
@@ -281,76 +281,19 @@
   "materializedCropReviewRequired": true,
   "strictFigurePlacement": true,
   "reviewNotes": [
-    "User states the blue band is too tall and the TOC too small; clarified the band should only cover actual white title lettering.",
-    "Band is fitted to the existing full title at its observed3-line mobile QA layout, not an artificially forced4-line stress layout. This scope is title-specific and must be recalculated for future titles.",
-    "Original TOC source bytes/background/palette retained. Layout changes only: TOC700x345.8 at590,12; band starts370 with430px height. TOC width/height increase40%; band height decreases16.02%.",
-    "Current title and all editorial text, captions, body figures and retrospective cover are unchanged. Text-only/images-only review package regenerated.",
-    "Timeout preflight: reuse bounded source and actual review stages with narrow status/artifact reads; one terminal same-draft write only.",
-    "Source combined review pending; no public sending.",
-    "Root inspected source screenshots: enlarged original TOC is complete above the fitted band; the current full title renders3lines at390px with5.79px clearance to the band top. User's actual-title-only allocation is respected.",
-    "Same-draft update and draft/get succeeded. Root inspected actual returned cover and current full-title overlay: enlarged TOC remains complete on original white background, band is lower, no title/TOC overlap. Mobile current-title clearance5.79px; post-compression minimum white contrast10.073:1.",
-    "Actual read-only QA passed at390/690px:2articles,15/19loaded images and all paragraphs/captions present; no broken images or page errors. Layout check is a simulation on actual returned cover for the current title, not a native WeChat-client screenshot or arbitrary4-line guarantee."
+    "User repeatedly requested the blue strip to just back visible white lettering, not occupy the middle of the cover.",
+    "Prior3-line overlay was a constructed simulation, not the actual relay page or verified native client. The actual relay page put black title below image and showed blue as unused blank middle space. This root cause is corrected in the preview renderer.",
+    "TOC1160x573.04 at360,12, original source bytes/background/palette preserved. Thin blue strip is bottom25%:y600,h200. White gap14.96px. User-requested large TOC and visibly thin strip are primary layout criteria.",
+    "Relay is explicitly labeled a cover-layout illustration. Its visible card title uses proportional two-line CSS clipping within the strip; full title remains in DOM, accessibility/title attributes, draft title field and article h1. This does not assert native WeChat clients always show two lines.",
+    "All article titles, narrative, captions, body figures and retrospective cover remain unchanged. Separate source text/image exports regenerated.",
+    "Source and real readback checks must distinguish actual returned data from our controlled layout illustration; no claim of native-client screenshot verification.",
+    "Timeout preflight: bounded known source/actual workflow, narrow status/artifact reads; one terminal same-draft update, no public sending."
   ],
-  "draftReadback": "ok",
+  "draftReadback": "pending",
   "publicSendAuthorized": false,
-  "finalTransportReview": "pass",
+  "finalTransportReview": "pending",
   "priorCompletedRevision": {
-    "revision": "2026-10-07-r12",
-    "previewUrl": "https://relay.gczhouwld.com/wechat-preview/adde015c537d4f24bc0c7789.html"
-  },
-  "finalSourcePreview": {
-    "status": "pass",
     "revision": "2026-10-07-r13",
-    "sourceSnapshot": "31be7c426559653f2327f6b75b4999b1671dfecb11057db44c39d4bb9c8f3821",
-    "runId": "37588405325",
-    "artifactId": 11467164739,
-    "artifactSha256": "ec7cb97d9376117b1ae0ae63df815c3ee7703eb3e13bf77414748b5475a344f8",
-    "viewports": [
-      390,
-      690
-    ],
-    "assetsVerified": 35,
-    "bodyImages": {
-      "angew": 14,
-      "natcat": 19
-    },
-    "nativeTitleOverlayChecks": [
-      {
-        "viewport": 390,
-        "scenario": "current-title",
-        "fontSize": 18,
-        "lineHeight": 22,
-        "titleClearancePx": 5.786569148936167,
-        "minimumWhiteContrast": 10.21482492693778,
-        "coverSource": "locked source cover",
-        "blueBandStartRatio": 0.4625,
-        "minimumTitleClearancePx": 4,
-        "renderedTitle": "有机合成文献日报｜10.07｜今日精选｜Angew：用于自由基交叉偶联的氧化还原可调NHC–三芳胺杂化有机光催化剂",
-        "renderedLineCount": 3,
-        "scope": "QA simulation of the current pinned title at 18px/22px only; a future title requires a fresh layout review; no four-line guarantee; title is not baked into published cover"
-      },
-      {
-        "viewport": 690,
-        "scenario": "current-title",
-        "fontSize": 18,
-        "lineHeight": 22,
-        "titleClearancePx": 90.92054521276594,
-        "minimumWhiteContrast": 10.21482492693778,
-        "coverSource": "locked source cover",
-        "blueBandStartRatio": 0.4625,
-        "minimumTitleClearancePx": 4,
-        "renderedTitle": "有机合成文献日报｜10.07｜今日精选｜Angew：用于自由基交叉偶联的氧化还原可调NHC–三芳胺杂化有机光催化剂",
-        "renderedLineCount": 2,
-        "scope": "QA simulation of the current pinned title at 18px/22px only; a future title requires a fresh layout review; no four-line guarantee; title is not baked into published cover"
-      }
-    ],
-    "reviewedScreenshots": [
-      "angew-current-title-overlay-390.png",
-      "angew-cover-690.png"
-    ]
-  },
-  "completedAt": "2026-10-07T07:41:10Z",
-  "actualDraftPreviewUrl": "https://relay.gczhouwld.com/wechat-preview/250a24b78552d06de7b61cc8.html",
-  "actualDraftQa": "audit/wechat-working/2026-10-07-r13-real-draft-qa.json",
-  "actualDraftQaRunId": "37588651177"
+    "previewUrl": "https://relay.gczhouwld.com/wechat-preview/250a24b78552d06de7b61cc8.html"
+  }
 }

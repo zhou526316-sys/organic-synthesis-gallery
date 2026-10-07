@@ -2519,11 +2519,14 @@ def render_wechat_draft_preview(draft: dict, *, media_id: str) -> str:
         anchor = f"article-{idx + 1}"
         if idx == 0:
             card_nav.append(
-                "<a class='push-card push-card-main' href='#" + anchor + "'>"
+                "<a class='push-card push-card-main' href='#" + anchor
+                + "' aria-label='" + html.escape(item_title, quote=True) + "'>"
+                + "<span class='cover-frame'>"
                 + (f"<img src='{html.escape(thumb_url, quote=True)}'/>" if thumb_url else "")
-                + "<span><b>" + html.escape(item_title) + "</b>"
-                + (f"<small>{html.escape(digest)}</small>" if digest else "")
-                + "</span></a>"
+                + "<b class='cover-title' title='" + html.escape(item_title, quote=True)
+                + "'>" + html.escape(item_title) + "</b></span>"
+                + (f"<small class='cover-digest'>{html.escape(digest)}</small>" if digest else "")
+                + "</a>"
             )
         else:
             card_nav.append(
@@ -2566,9 +2569,9 @@ body{{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC
 .push-card{{text-decoration:none;color:#222}}
 .push-card-main{{display:block;padding:0 0 12px}}
 .push-card-main img{{display:block;width:100%;aspect-ratio:2.35/1;object-fit:cover;border-radius:8px;background:#eee}}
-.push-card-main span{{display:block;padding:10px 2px 0}}
-.push-card-main b{{display:block;font-size:16px;line-height:1.45}}
-.push-card-main small{{display:block;color:#888;font-size:11px;line-height:1.45;margin-top:4px}}
+.push-card-main .cover-frame{{display:block;position:relative;container-type:inline-size;padding:0;overflow:hidden;border-radius:8px}}
+.push-card-main .cover-title{{position:absolute;left:3.5%;right:3.5%;bottom:1.5%;margin:0;padding:0;color:#fff;font-weight:500;font-family:"Noto Sans CJK SC",Arial,sans-serif;font-size:clamp(12px,4.1vw,28px);font-size:4.4198895cqw;line-height:1.0625;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;max-height:2.125em;word-break:break-all}}
+.push-card-main .cover-digest{{display:block;color:#888;font-size:11px;line-height:1.45;margin:6px 2px 0}}
 .push-card-sub{{display:flex;gap:12px;align-items:center;padding:12px 0 0;border-top:1px solid #eee}}
 .push-card-sub span{{display:block;min-width:0;flex:1}}
 .push-card-sub b{{display:block;font-size:14px;line-height:1.45}}
@@ -2588,7 +2591,7 @@ h1{{font-size:22px;line-height:1.45;font-weight:700;margin:0 0 12px}}
 <body>
 <main class="bundle">
 <section class="bundle-head">
-<p>WECHAT PUSH PREVIEW · 共 {len(items)} 篇</p>
+<p>封面排版示意 · 共 {len(items)} 篇</p>
 {''.join(card_nav)}
 </section>
 {''.join(rendered)}
