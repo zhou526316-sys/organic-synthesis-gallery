@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 
-export const PRIVATE_PDF_PROCESSOR_REVISION = 'private-pdf-readable-v1';
+export const PRIVATE_PDF_PROCESSOR_REVISION = 'private-pdf-readable-v2';
 const STOP = new Set(['the','and','for','with','from','into','via','using','based','toward','towards','through','over','under','between','their','this','that','these','those','study','new','novel','highly']);
 
 export function normalizeVerifierDoi(value) {
@@ -32,9 +32,14 @@ function containsTargetDoi(text, doi) {
   if (!target) return false;
   return String(text || '').toLowerCase().replace(/\s+/g, '').includes(target);
 }
-function hasSupplementMarker(firstPage) {
-  const start = normalizeWords(firstPage).slice(0, 2600);
-  return /\b(?:supporting information|supplementary information|electronic supplementary information|supplementary material)\b/.test(start);
+function hasSupplementMarker(firstPage, metadataTitle, sourceKind) {
+  if (sourceKind === 'supplement') return true;
+  const metadata = normalizeWords(metadataTitle);
+  if (/^(?:supporting information|supplementary information|electronic supplementary information|supplementary material)\b/.test(metadata)) return true;
+  if (sourceKind === 'article') return false;
+  const start = normalizeWords(firstPage).slice(0, 500);
+  const marker = /\b(?:supporting information|supplementary information|electronic supplementary information|supplementary material)\b/.exec(start);
+  return Boolean(marker && marker.index <= 80);
 }
 export function sha256Hex(bytes) { return createHash('sha256').update(bytes).digest('hex'); }
 
@@ -74,12 +79,15 @@ export async function verifyPrivatePdfBytes(bytes, item, { maxPages = 12, maxCha
     base.doiMatch = containsTargetDoi(combined, item.doi);
     base.titleScoreMilli = titleScoreMilli(catalog.title, text);
     base.metadataTitleScoreMilli = titleScoreMilli(catalog.title, metadataTitle);
-    base.supplementMarker = hasSupplementMarker(firstPage);
+    base.supplementMarker = hasSupplementMarker(firstPage, metadataTitle, item.sourceKind);
     const bodyWords = new Set(tokens(firstPage + ' ' + (pages[1] || '')));
     base.authorMatches = (catalog.authors || []).slice(0, 12).map(authorSurname).filter(Boolean).filter(surname => bodyWords.has(surname)).length;
     if (base.supplementMarker) return { decision: 'failed', evidence: { ...base, reason: 'supplement_detected' } };
-    if (!base.doiMatch) return { decision: 'failed', evidence: { ...base, reason: 'doi_missing' } };
-    if (Math.max(base.titleScoreMilli, base.metadataTitleScoreMilli) < 450) return { decision: 'failed', evidence: { ...base, reason: 'title_mismatch' } };
+    const bestTitleScore = Math.max(base.titleScoreMilli, base.metadataTitleScoreMilli);
+    if (!base.doiMatch && !(item.sourceKind === 'article' && bestTitleScore >= 900)) {
+      return { decision: 'failed', evidence: { ...base, reason: 'doi_missing' } };
+    }
+    if (bestTitleScore < 450) return { decision: 'failed', evidence: { ...base, reason: 'title_mismatch' } };
     if (base.textChars < 64) return { decision: 'failed', evidence: { ...base, reason: 'pdf_invalid' } };
     return { decision: 'verified', evidence: { ...base, reason: 'verified_identity' } };
   } catch (error) {

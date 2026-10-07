@@ -1,6 +1,6 @@
 # Private PDF -> Editorial Evidence -> Daily WeChat Selected Article
 
-Status: phase 2 capture is deployed. Phase 3a owner-readable identity verification is enabled through a bounded private processor; deeper editorial-evidence extraction remains a later phase. Raw captures are still inactive until Readable Identity v1 verifies them.
+Status: phase 2 capture is deployed. Phase 3a owner-readable identity verification is enabled through a bounded private processor; deeper editorial-evidence extraction remains a later phase. Raw captures are still inactive until Readable Identity v2 verifies them.
 
 ## Non-negotiable separation
 
@@ -51,9 +51,9 @@ The browser verifies PDF magic/size and source host. Worker re-verifies lease, D
 
 Phase 3 is split so owner reading is not blocked on the later editorial pipeline.
 
-### Phase 3a — Readable Identity v1
+### Phase 3a — Readable Identity v2
 
-The bounded processor reads raw bytes only through an admin-authenticated Worker route. It verifies the stored SHA-256/byte length, parses the PDF with the repository-pinned PDF.js, requires the captured DOI to occur in parsed text/metadata, compares the Gallery catalog title, and rejects strong Supporting/Supplementary Information markers on the first page. Only that trusted processor may write `processing_state=ready, active=1`. Failed identity remains private/inactive with a bounded reason code. Extracted full text is not written to D1 or public storage.
+The bounded processor reads raw bytes only through an admin-authenticated Worker route. It verifies the stored SHA-256/byte length, parses the PDF with the repository-pinned PDF.js, compares the DOI/title against the Gallery record, and independently classifies the stored publisher source URL as article/supplement/unknown. A trusted article-PDF source plus a very strong title match may recover the small set of publisher PDFs whose extracted text omits the DOI. Merely mentioning “Supporting Information” inside an article is not enough to classify it as SI; supplement source paths or document-level/leading SI identity remain blocking. Only that trusted processor may write `processing_state=ready, active=1`. Failed identity remains private/inactive with a bounded reason code. Extracted full text is not written to D1 or public storage.
 
 ### Phase 3b — Editorial Evidence (later)
 

@@ -1,4 +1,4 @@
-const PROCESSOR_REVISION = 'private-pdf-readable-v1';
+const PROCESSOR_REVISION = 'private-pdf-readable-v2';
 const MAX_FILE_BYTES = 60 * 1024 * 1024;
 const MAX_QUEUE_LIMIT = 12;
 const ALLOWED_FAILURES = new Set([
@@ -33,6 +33,22 @@ function boundedInt(value, min, max) {
   return Number.isSafeInteger(value) && value >= min && value <= max ? value : null;
 }
 function result(status, body) { return { status, body }; }
+
+function sourceClassForPdf(publisher, value) {
+  let url;
+  try { url = new URL(String(value || '')); } catch { return 'unknown'; }
+  const path = (url.pathname + url.search).toLowerCase();
+  const supplement = /(?:supporting|supplement|suppl|(?:^|[\/_-])si(?:[\/_\.-]|$)|suppl_file|suppinfo|esm(?:[\/_\.-]|$)|mmc(?:[\/_\.-]|$))/.test(path);
+  if (supplement) return 'supplement';
+  const p = String(publisher || '').toLowerCase();
+  if (p === 'acs' && /\/doi\/(?:pdf|epdf)\//.test(path)) return 'article';
+  if (p === 'wiley' && /\/doi\/(?:pdf|epdf|pdfdirect)\//.test(path)) return 'article';
+  if (p === 'science' && /\/doi\/(?:pdf|epdf)\//.test(path)) return 'article';
+  if (p === 'nature' && /\/articles\/[^/?]+\.pdf(?:$|\?)/.test(path)) return 'article';
+  if (p === 'rsc' && (path.includes('articlepdf') || /\.pdf(?:$|\?)/.test(path))) return 'article';
+  if (['elsevier','ccs'].includes(p) && /\.pdf(?:$|\?)/.test(path)) return 'article';
+  return 'unknown';
+}
 
 async function latestCatalog(env, dois) {
   if (!env?.LITERATURE_INDEX_DB || !dois.length) return new Map();
@@ -109,7 +125,7 @@ export async function listPrivatePdfProcessingQueue(request, env) {
   }
   const states = retryFailed ? "('raw','failed')" : "('raw')";
   const rows = await env.DB.prepare(
-    `SELECT id, doi, publisher, version_kind, content_hash, byte_length, captured_at, processing_state
+    `SELECT id, doi, publisher, source_url, version_kind, content_hash, byte_length, captured_at, processing_state
        FROM private_pdf_documents
       WHERE active = 0 AND processing_state IN ${states}
       ORDER BY captured_at ASC, id ASC
@@ -125,6 +141,7 @@ export async function listPrivatePdfProcessingQueue(request, env) {
       documentId: id,
       doi,
       publisher: String(row.publisher || '').slice(0, 64),
+      sourceKind: sourceClassForPdf(row.publisher, row.source_url),
       versionKind: String(row.version_kind || 'unknown').slice(0, 64),
       contentHash,
       byteLength: Number(row.byte_length || 0),
@@ -204,7 +221,7 @@ async function readDecision(request) {
     return { error: result(400, { error: 'private_pdf_processing_invalid_decision' }) };
   }
   if (decision === 'verified') {
-    if (!doiMatch || supplementMarker || pageCount < 1 || textChars < 64
+    if (supplementMarker || pageCount < 1 || textChars < 64
       || Math.max(titleScoreMilli, metadataTitleScoreMilli) < 450 || reason !== 'verified_identity') {
       return { error: result(400, { error: 'private_pdf_processing_insufficient_identity_evidence' }) };
     }
@@ -222,11 +239,19 @@ export async function applyPrivatePdfVerification(request, env) {
   if (parsed.error) return parsed.error;
   const value = parsed.value;
   const current = await env.DB.prepare(
-    `SELECT id, doi, content_hash, processing_state, active
+    `SELECT id, doi, publisher, source_url, content_hash, processing_state, active
        FROM private_pdf_documents WHERE id = ? LIMIT 1`
   ).bind(value.documentId).first();
   if (!current || current.doi !== value.doi || current.content_hash !== value.contentHash) {
     return result(409, { error: 'private_pdf_processing_identity_conflict' });
+  }
+  const sourceKind = sourceClassForPdf(current.publisher, current.source_url);
+  if (value.decision === 'verified') {
+    const strongTitle = Math.max(value.titleScoreMilli, value.metadataTitleScoreMilli) >= 900;
+    const sourceBackedTitle = sourceKind === 'article' && strongTitle;
+    if (sourceKind === 'supplement' || value.supplementMarker || (!value.doiMatch && !sourceBackedTitle)) {
+      return result(400, { error: 'private_pdf_processing_insufficient_identity_evidence' });
+    }
   }
   if (Number(current.active || 0) === 1 || current.processing_state === 'ready') {
     if (value.decision === 'verified' && Number(current.active || 0) === 1 && current.processing_state === 'ready') {
@@ -271,5 +296,5 @@ export async function applyPrivatePdfVerification(request, env) {
     return result(409, { error: 'private_pdf_processing_commit_conflict' });
   }
   return result(200, { ok: true, idempotent: false, documentId: value.documentId, doi: value.doi,
-    processingState: desiredState, active: active === 1, reason: value.reason });
+    processingState: desiredState, active: active === 1, reason: value.reason, sourceKind });
 }

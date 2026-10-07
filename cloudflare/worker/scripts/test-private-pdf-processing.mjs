@@ -26,7 +26,7 @@ INSERT INTO literature_catalog_generations VALUES('cat',1,2);
 INSERT INTO literature_catalog_index VALUES('cat','10.1021/jacs.6c12345','Fixture Article','["Alice Smith"]','JACS');`);
   t.after(()=>{DB1.close();LIT.close();}); const bucket=new Bucket(), bytes=new TextEncoder().encode('%PDF-1.7\n'+ 'A'.repeat(2000) +'\n%%EOF'), hash='a'.repeat(64);
   DB1.sqlite.prepare('INSERT INTO private_pdf_documents VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)').run('pdf_fixture','10.1021/jacs.6c12345','acs',
-    'https://pubs.acs.org/x','https://pubs.acs.org/y','unknown',hash,'private/raw.pdf',bytes.byteLength,1,'raw',0,1,1);
+    'https://pubs.acs.org/doi/10.1021/jacs.6c12345','https://pubs.acs.org/doi/pdf/10.1021/jacs.6c12345','unknown',hash,'private/raw.pdf',bytes.byteLength,1,'raw',0,1,1);
   bucket.put('private/raw.pdf',bytes,hash); return {DB:DB1,LITERATURE_INDEX_DB:LIT,PDF_PRIVATE:bucket,PRIVATE_PDF_PROCESSING_ENABLED:'1'};
 }
 function request(evidence,decision='verified',overrides={}) { return new Request('https://api.test/decision',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({
@@ -34,7 +34,7 @@ function request(evidence,decision='verified',overrides={}) { return new Request
 const good={pageCount:12,textChars:8000,doiMatch:true,titleScoreMilli:800,metadataTitleScoreMilli:0,authorMatches:1,supplementMarker:false,reason:'verified_identity'};
 
 test('queue exposes bounded catalog metadata but no R2 key',async t=>{const env=envFor(t);const r=await listPrivatePdfProcessingQueue(new Request('https://x/queue?limit=8'),env);
-  assert.equal(r.status,200);assert.equal(r.body.items.length,1);assert.equal(r.body.items[0].catalog.title,'Fixture Article');assert.equal(JSON.stringify(r.body).includes('private/raw.pdf'),false);});
+  assert.equal(r.status,200);assert.equal(r.body.items.length,1);assert.equal(r.body.items[0].catalog.title,'Fixture Article');assert.equal(r.body.items[0].sourceKind,'article');assert.equal(JSON.stringify(r.body).includes('private/raw.pdf'),false);});
 test('processing file requires exact document and hash',async t=>{const env=envFor(t);assert.equal((await servePrivatePdfProcessingFile(new Request('https://x/file?id=pdf_fixture&hash='+ 'b'.repeat(64)),env)).status,404);
   const ok=await servePrivatePdfProcessingFile(new Request('https://x/file?id=pdf_fixture&hash='+ 'a'.repeat(64)),env);assert.equal(ok.status,200);assert.equal(ok.headers.get('cache-control'),'private, no-store');});
 test('insufficient evidence cannot activate',async t=>{const env=envFor(t);const r=await applyPrivatePdfVerification(request({...good,titleScoreMilli:100}),env);assert.equal(r.status,400);assert.equal(env.DB.sqlite.prepare('SELECT active FROM private_pdf_documents').get().active,0);});
@@ -47,3 +47,13 @@ test('ready document cannot be downgraded by a later failure',async t=>{const en
   const r=await applyPrivatePdfVerification(request(failed,'failed'),env);assert.equal(r.status,409);assert.equal(env.DB.sqlite.prepare('SELECT active FROM private_pdf_documents').get().active,1);});
 test('status reports raw and ready separately',async t=>{const env=envFor(t);let r=await privatePdfProcessingStatus(env);assert.equal(r.body.counts.raw,1);assert.equal(r.body.counts.ready,0);
   await applyPrivatePdfVerification(request(good),env);r=await privatePdfProcessingStatus(env);assert.equal(r.body.counts.raw,0);assert.equal(r.body.counts.ready,1);assert.equal(r.body.counts.active,1);});
+
+test('server accepts missing DOI text only for strong title on a classified article source',async t=>{
+  const env=envFor(t);const noDoi={...good,doiMatch:false,titleScoreMilli:950};
+  const r=await applyPrivatePdfVerification(request(noDoi),env);assert.equal(r.status,200);assert.equal(r.body.active,true);assert.equal(r.body.sourceKind,'article');
+});
+test('server rejects a supplement-classified source even if submitted evidence looks verified',async t=>{
+  const env=envFor(t);
+  env.DB.sqlite.prepare("UPDATE private_pdf_documents SET source_url=? WHERE id='pdf_fixture'").run('https://pubs.acs.org/doi/suppl/10.1021/jacs.6c12345/suppl_file/test_si.pdf');
+  const r=await applyPrivatePdfVerification(request(good),env);assert.equal(r.status,400);assert.equal(env.DB.sqlite.prepare('SELECT active FROM private_pdf_documents').get().active,0);
+});

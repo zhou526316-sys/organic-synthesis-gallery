@@ -19,3 +19,14 @@ CREATE TABLE IF NOT EXISTS private_pdf_verifications (
 );
 CREATE INDEX IF NOT EXISTS idx_private_pdf_verifications_status
   ON private_pdf_verifications(status, checked_at DESC);
+
+-- Readable Identity v2 narrows SI detection and adds publisher-source evidence.
+-- Retry only rows rejected by v1; a v2 failure will not be reset on later deploys.
+UPDATE private_pdf_documents
+SET processing_state = 'raw'
+WHERE active = 0
+  AND processing_state = 'failed'
+  AND id IN (
+    SELECT document_id FROM private_pdf_verifications
+    WHERE processor_revision = 'private-pdf-readable-v1'
+  );

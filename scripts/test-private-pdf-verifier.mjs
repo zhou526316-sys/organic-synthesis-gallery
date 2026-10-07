@@ -25,9 +25,9 @@ function makePdf(text, title = '') {
 function item(bytes, overrides = {}) { return { documentId: 'pdf_fixture', doi: '10.1021/jacs.6c12345',
   contentHash: sha256Hex(bytes), byteLength: bytes.byteLength,
   catalog: { title: 'Selective Radical Carbonylation of Alkenes with Visible Light', authors: ['Alice Smith', 'Bob Chen'], journal: 'JACS' },
-  ...overrides }; }
+  sourceKind: 'article', ...overrides }; }
 
-test('revision is pinned', () => assert.equal(PRIVATE_PDF_PROCESSOR_REVISION, 'private-pdf-readable-v1'));
+test('revision is pinned', () => assert.equal(PRIVATE_PDF_PROCESSOR_REVISION, 'private-pdf-readable-v2'));
 test('title matcher tolerates punctuation and spacing', () => assert.ok(titleScoreMilli('Nickel-Catalyzed C–H Coupling', 'Nickel catalyzed C H coupling under mild conditions') >= 750));
 test('real PDF.js parse verifies DOI plus title identity', async () => {
   const bytes = makePdf('Selective Radical Carbonylation of Alkenes with Visible Light Alice Smith Bob Chen DOI 10.1021/jacs.6c12345 body text body text body text body text body text body text');
@@ -35,13 +35,27 @@ test('real PDF.js parse verifies DOI plus title identity', async () => {
 });
 test('supporting-information PDF is rejected even with matching DOI and title', async () => {
   const bytes = makePdf('Supporting Information Selective Radical Carbonylation of Alkenes with Visible Light 10.1021/jacs.6c12345 Alice Smith body body body body body body body');
-  const out = await verifyPrivatePdfBytes(bytes, item(bytes)); assert.equal(out.decision, 'failed'); assert.equal(out.evidence.reason, 'supplement_detected');
+  const out = await verifyPrivatePdfBytes(bytes, item(bytes, { sourceKind: 'supplement' })); assert.equal(out.decision, 'failed'); assert.equal(out.evidence.reason, 'supplement_detected');
 });
 test('wrong DOI is rejected', async () => {
   const bytes = makePdf('Selective Radical Carbonylation of Alkenes with Visible Light 10.1021/jacs.6c99999 Alice Smith body text body text body text body text body text body text');
-  const out = await verifyPrivatePdfBytes(bytes, item(bytes)); assert.equal(out.decision, 'failed'); assert.equal(out.evidence.reason, 'doi_missing');
+  const out = await verifyPrivatePdfBytes(bytes, item(bytes, { sourceKind: 'unknown' })); assert.equal(out.decision, 'failed'); assert.equal(out.evidence.reason, 'doi_missing');
 });
 test('hash mismatch fails before identity activation', async () => {
   const bytes = makePdf('Selective Radical Carbonylation of Alkenes with Visible Light 10.1021/jacs.6c12345 Alice Smith');
   const out = await verifyPrivatePdfBytes(bytes, { ...item(bytes), contentHash: 'a'.repeat(64) }); assert.equal(out.decision, 'failed'); assert.equal(out.evidence.reason, 'object_mismatch');
+});
+
+test('article source is not rejected merely because first page mentions Supporting Information', async () => {
+  const bytes = makePdf('Selective Radical Carbonylation of Alkenes with Visible Light Alice Smith 10.1021/jacs.6c12345 abstract text Supporting Information is available for this article');
+  const out = await verifyPrivatePdfBytes(bytes, item(bytes, { sourceKind: 'article' }));
+  assert.equal(out.decision, 'verified');
+  assert.equal(out.evidence.supplementMarker, false);
+});
+test('strong article source plus exact catalog title can recover a DOI omitted from extracted text', async () => {
+  const bytes = makePdf('Selective Radical Carbonylation of Alkenes with Visible Light Alice Smith Bob Chen full article body without a machine-readable DOI');
+  const out = await verifyPrivatePdfBytes(bytes, item(bytes, { sourceKind: 'article' }));
+  assert.equal(out.decision, 'verified');
+  assert.equal(out.evidence.doiMatch, false);
+  assert.ok(out.evidence.titleScoreMilli >= 900);
 });

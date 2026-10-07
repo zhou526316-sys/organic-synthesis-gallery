@@ -54,9 +54,9 @@ async function processItem(item) {
   if (outcome.decision === 'verified') report.verified += 1;
   else { report.failed += 1; report.failures[outcome.evidence.reason] = Number(report.failures[outcome.evidence.reason] || 0) + 1; }
   report.items.push({ documentId: item.documentId, doi: item.doi, decision: outcome.decision,
-    reason: outcome.evidence.reason, pageCount: outcome.evidence.pageCount, titleScoreMilli: outcome.evidence.titleScoreMilli,
-    metadataTitleScoreMilli: outcome.evidence.metadataTitleScoreMilli, doiMatch: outcome.evidence.doiMatch,
-    supplementMarker: outcome.evidence.supplementMarker });
+    reason: outcome.evidence.reason, sourceKind: item.sourceKind, pageCount: outcome.evidence.pageCount, titleScoreMilli: outcome.evidence.titleScoreMilli,
+    metadataTitleScoreMilli: outcome.evidence.metadataTitleScoreMilli, authorMatches: outcome.evidence.authorMatches,
+    doiMatch: outcome.evidence.doiMatch, supplementMarker: outcome.evidence.supplementMarker });
   save();
 }
 try {
