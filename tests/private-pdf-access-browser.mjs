@@ -85,7 +85,7 @@ const papers=Array.from({length:72},(_,index)=>({
 const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
 async function contextWith(capabilities,openResult={available:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=opaque'},options={}){
  const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900},locale:options.locale||'en-US'});
- const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateFullFileCalls:0,authTokens:[],authSessionChecks:0,pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
+ const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateFullFileCalls:0,authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
  if(options.pendingQueue)state.queueRows.set('fixture-owner',new Map(papers.map(paper=>[paper.doi,{doi:paper.doi,state:'pending',revision:1,createdAt:Date.now(),updatedAt:Date.now()}])));
  await context.addInitScript(fixtureOrigin=>{
   if(location.origin!==fixtureOrigin)return;
@@ -130,8 +130,9 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
   if(url.pathname==='/api/user-ui/auth/session'){
    const token=String(route.request().headers().authorization||'').replace(/^Bearer /,'');
    state.authTokens.push(token);state.authSessionChecks++;
+   if(state.sessionUnavailable)return route.fulfill({status:503,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:'{"error":"temporary_unavailable"}'});
    if(Number(options.transientFalseSessions||0)>=state.authSessionChecks)return reply({authenticated:false,user:null});
-   const allowed=token==='fixture-session'?capabilities:[];
+   const allowed=token==='fixture-session'?state.capabilities:[];
    if(options.holdOwner&&token==='fixture-session'){
     await new Promise(resolve=>state.pendingOwner.push(resolve));state.releasedOwner++;
    }
@@ -271,6 +272,29 @@ try{
   await waitForNode(page,()=>state.authSessionChecks>=3);
   assert.equal(await page.evaluate(()=>localStorage.getItem('organic-gallery-session-v1')),'fixture-session');
   await page.waitForFunction(()=>document.documentElement.dataset.privatePdfRead==='true',undefined,{timeout:7000});
+ });
+ await test('verified owner PDF button survives a transient session endpoint outage',async()=>{
+  const {context,state}=await contextWith(['private_pdf_read']);
+  const first=await gallery(context,true);
+  assert.equal(await first.locator('.card .private-pdf-button:visible').count()>0,true);
+  await first.close();
+  state.sessionUnavailable=true;
+  const page=await context.newPage();await page.goto(base,{waitUntil:'domcontentloaded'});
+  await page.locator('.card a.open').first().waitFor();
+  await page.waitForFunction(()=>document.documentElement.dataset.privatePdfRead==='true',undefined,{timeout:7000});
+  await page.waitForTimeout(250);
+  assert.equal(await page.locator('.card .private-pdf-button:visible').count()>0,true);
+  assert.match(await page.locator('html').getAttribute('data-private-pdf-read-source')||'',/cache/);
+ });
+ await test('explicit server denial clears a cached owner PDF entitlement',async()=>{
+  const {context,state}=await contextWith(['private_pdf_read']);
+  const first=await gallery(context,true);await first.close();
+  state.capabilities=[];
+  const page=await context.newPage();await page.goto(base,{waitUntil:'domcontentloaded'});
+  await page.locator('.card a.open').first().waitFor();
+  await page.waitForFunction(()=>document.documentElement.dataset.privatePdfRead==='false',undefined,{timeout:7000});
+  assert.equal(await page.locator('.card .private-pdf-button:visible').count(),0);
+  assert.equal(await page.locator('html').getAttribute('data-private-pdf-read-source'),'server-denied');
  });
  await test('owner without a verified copy sees viewer and explicit publisher fallback',async()=>{
   const {context}=await contextWith(['private_pdf_read'],{available:false});const page=await gallery(context,true);
