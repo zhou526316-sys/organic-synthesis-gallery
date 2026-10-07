@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "online-date-index",
+  "beijingTime": "2026-10-07 12:05:59 +08:00",
+  "sourceParent": "d0e82a209138aa5559eb7e538d1bc59a64574ac1",
+  "status": "local_verified_deployment_pending",
+  "userDirection": "每一页是一天 online",
+  "changes": {
+    "exactDayPredicate": "catalog_id=? AND first_online_date=?",
+    "sameDayOrdering": "doi ASC",
+    "cursorPredicate": "doi>?",
+    "newSchema": false,
+    "newApiFields": false
+  },
+  "verification": {
+    "literatureCatalogTests": {
+      "pass": 19,
+      "fail": 0
+    },
+    "analyticsRegressionTests": {
+      "pass": 39,
+      "fail": 0
+    },
+    "existingWorkerDeploymentAuthorityGuard": "pass",
+    "queryPlans": {
+      "actualIssuedQueries": true,
+      "count": "catalog/date index seek",
+      "firstWindow": "catalog/date index seek",
+      "continuation": "catalog/date/doi index seek",
+      "fullGenerationScan": false,
+      "temporarySort": false
+    }
+  },
+  "productionGate": {
+    "predeployDateQueryTests": true,
+    "liveExactDayProbeAdded": true,
+    "maximumAdditionalReadRequests": 2,
+    "pendingGenerationDoesNotClaimDayProof": true,
+    "automaticRollbackPreserved": true
+  },
+  "related": {
+    "legacyPagesCommit": "c8f50fbccd36d576954aa5653f4c2570a45f37a2",
+    "legacyPagesAuthorityRun": 37569174371,
+    "legacyPagesAuthorityConclusion": "success"
+  },
+  "frontendDatePage": {
+    "status": "in_progress",
+    "productionActive": false
+  },
+  "concurrentAuditCommitPreserved": true
+}

@@ -22,15 +22,17 @@ class Statement {
     return {success:true,meta:{changes:Number(result.changes||0)},results:[]};
   }
   async first(){
+    this.db.reads.push({sql:this.sql,args:[...this.args]});
     const row=this.db.sqlite.prepare(this.sql).get(...this.args);
     return row===undefined?null:row;
   }
   async all(){
+    this.db.reads.push({sql:this.sql,args:[...this.args]});
     return {success:true,results:this.db.sqlite.prepare(this.sql).all(...this.args),meta:{}};
   }
 }
 class D1 {
-  constructor(){this.sqlite=new DatabaseSync(':memory:');this.batchCalls=0;this.batchStatementCounts=[];}
+  constructor(){this.sqlite=new DatabaseSync(':memory:');this.batchCalls=0;this.batchStatementCounts=[];this.reads=[];}
   prepare(sql){return new Statement(this,sql);}
   async batch(statements){
     this.batchCalls+=1;
@@ -288,6 +290,99 @@ test('filtered view shadow preserves current frontend filters and bounded keyset
   const readersSort=await queryLiteratureCatalogView(env,{catalogId:g.catalogId,sort:'readers'});
   assert.equal(readersSort.status,422);
   assert.equal(readersSort.body.error,'literature_catalog_reader_sort_requires_compatibility');
+});
+
+async function exactOnlineDayFixture(t){
+  const db=new D1();t.after(()=>db.close());
+  const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1',LITERATURE_CATALOG_INDEX_READ_ENABLED:'1'};
+  const day='2026-10-04';
+  const dayRows=Array.from({length:6},(_,index)=>row(`10.1234/day-${index}`,index===3?'Photoredox transformation':'Nickel transformation',{
+    firstOnlineDate:day,journal:index===1?'Angew':index===5?'Chem':'JACS',
+    addedDate:index===4?'2026-10-06':'2026-10-05',revision:String(index+1).repeat(64),
+  }));
+  const allRows=[
+    row('10.1234/day-before','Nickel before',{firstOnlineDate:'2026-10-03'}),
+    ...dayRows,
+    row('10.1234/day-after','Nickel after',{firstOnlineDate:'2026-10-05'}),
+    row('10.1234/day-unknown','Nickel without date',{firstOnlineDate:null,datePrecision:'unknown'}),
+    row('10.1234/leap-before','Nickel before leap day',{firstOnlineDate:'2024-02-28'}),
+    row('10.1234/leap-day','Nickel on leap day',{firstOnlineDate:'2024-02-29'}),
+    row('10.1234/leap-after','Nickel after leap day',{firstOnlineDate:'2024-03-01'}),
+  ];
+  const g=generation({recordCount:allRows.length});
+  for(let start=0;start<allRows.length;start+=LITERATURE_INDEX_IMPORT_BATCH_MAX){
+    const result=await importLiteratureCatalogIndexBatch(env,{generation:g,rows:allRows.slice(start,start+LITERATURE_INDEX_IMPORT_BATCH_MAX)});
+    assert.equal(result.status,200);
+  }
+  assert.equal((await finalizeLiteratureCatalogGeneration(env,g.catalogId)).status,200);
+  const other=generation({catalogId:'e'.repeat(64),recordCount:1});
+  assert.equal((await importLiteratureCatalogIndexBatch(env,{generation:other,rows:[{...dayRows[0],revision:'f'.repeat(64)}]})).status,200);
+  assert.equal((await finalizeLiteratureCatalogGeneration(env,other.catalogId)).status,200);
+  db.reads.length=0;
+  return {db,env,g,day,dayRows};
+}
+
+test('exact online day keeps all same-day papers reachable through bounded cursors and both sort directions',async t=>{
+  const {env,g,day,dayRows}=await exactOnlineDayFixture(t);
+  for(const sort of ['newest','oldest']){
+    let cursor='';
+    const found=[];
+    for(let page=0;page<3;page+=1){
+      const result=await queryPublishedLiteratureCatalogView(env,{catalogId:g.catalogId,dateFrom:day,dateTo:day,sort,limit:2,cursor});
+      assert.equal(result.status,200);assert.equal(result.body.readPathActive,true);
+      assert.equal(result.body.catalogId,g.catalogId);assert.equal(result.body.sort,sort);
+      assert.equal(result.body.matched,6);assert.equal(result.body.count,2);assert.equal(result.body.limit,2);
+      assert.ok(result.body.items.every(item=>item.firstOnlineDate===day));
+      found.push(...result.body.items);
+      assert.equal(result.body.hasMore,page<2);
+      cursor=result.body.nextCursor;
+      assert.equal(Boolean(cursor),page<2);
+    }
+    assert.deepEqual(found.map(item=>[item.doi,item.revision]),dayRows.map(item=>[item.doi,item.revision]));
+    assert.equal(new Set(found.map(item=>item.doi)).size,dayRows.length);
+  }
+});
+
+test('exact online day count and cursor reads seek the existing catalog/date index without history scan or sort',async t=>{
+  const {db,env,g,day}=await exactOnlineDayFixture(t);
+  const first=await queryPublishedLiteratureCatalogView(env,{catalogId:g.catalogId,dateFrom:day,dateTo:day,limit:2});
+  const second=await queryPublishedLiteratureCatalogView(env,{catalogId:g.catalogId,dateFrom:day,dateTo:day,limit:2,cursor:first.body.nextCursor});
+  assert.equal(first.status,200);assert.equal(second.status,200);
+  const reads=db.reads.filter(read=>/FROM literature_catalog_index i\b/.test(read.sql));
+  assert.equal(reads.length,4);
+  for(const read of reads){
+    const plan=db.sqlite.prepare('EXPLAIN QUERY PLAN '+read.sql).all(...read.args).map(item=>item.detail).join('\n');
+    assert.match(plan,/SEARCH i USING (?:COVERING )?INDEX idx_literature_catalog_date \(catalog_id=\? AND first_online_date=\?/);
+    assert.doesNotMatch(plan,/SCAN i\b|TEMP B-TREE/);
+  }
+  const cursorRead=reads.at(-1);
+  const cursorPlan=db.sqlite.prepare('EXPLAIN QUERY PLAN '+cursorRead.sql).all(...cursorRead.args).map(item=>item.detail).join('\n');
+  assert.match(cursorPlan,/doi>\?/);
+});
+
+test('exact online day preserves journal, search, added-date, empty-day and calendar-boundary behavior',async t=>{
+  const {env,g,day}=await exactOnlineDayFixture(t);
+  const options={catalogId:g.catalogId,dateFrom:day,dateTo:day,query:'nickel',
+    selectedJournals:['JACS','Angew'],excludedJournals:['Angew'],addedDate:'2026-10-05',limit:1};
+  const first=await queryPublishedLiteratureCatalogView(env,options);
+  const next=await queryPublishedLiteratureCatalogView(env,{...options,cursor:first.body.nextCursor});
+  assert.equal(first.status,200);assert.equal(first.body.matched,2);
+  assert.deepEqual(first.body.items.map(item=>item.doi),['10.1234/day-0']);
+  assert.deepEqual(next.body.items.map(item=>item.doi),['10.1234/day-2']);
+  assert.equal(next.body.hasMore,false);
+  const wrongDay=await queryPublishedLiteratureCatalogView(env,{...options,dateFrom:'2026-10-05',dateTo:'2026-10-05',cursor:first.body.nextCursor});
+  assert.equal(wrongDay.status,400);assert.equal(wrongDay.body.error,'literature_catalog_view_cursor_scope_mismatch');
+  const empty=await queryPublishedLiteratureCatalogView(env,{catalogId:g.catalogId,dateFrom:'2026-10-02',dateTo:'2026-10-02'});
+  assert.equal(empty.status,200);assert.equal(empty.body.matched,0);assert.equal(empty.body.count,0);
+  assert.equal(empty.body.hasMore,false);assert.equal(empty.body.nextCursor,null);
+  for(const [date,doi] of [['2024-02-28','10.1234/leap-before'],['2024-02-29','10.1234/leap-day'],['2024-03-01','10.1234/leap-after']]){
+    const result=await queryPublishedLiteratureCatalogView(env,{catalogId:g.catalogId,dateFrom:date,dateTo:date});
+    assert.equal(result.status,200);assert.deepEqual(result.body.items.map(item=>item.doi),[doi]);
+  }
+  const range=await queryPublishedLiteratureCatalogView(env,{catalogId:g.catalogId,dateFrom:'2024-02-28',dateTo:'2024-03-01',sort:'oldest'});
+  assert.deepEqual(range.body.items.map(item=>item.doi),['10.1234/leap-before','10.1234/leap-day','10.1234/leap-after']);
+  const shortQuery=await queryPublishedLiteratureCatalogView(env,{catalogId:g.catalogId,dateFrom:day,dateTo:day,query:'Ni'});
+  assert.equal(shortQuery.status,422);assert.equal(shortQuery.body.error,'literature_catalog_short_query_requires_compatibility');
 });
 
 test('admin row reader covers a ready generation with bounded DOI-keyset pages',async t=>{

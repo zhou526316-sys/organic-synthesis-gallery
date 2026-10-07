@@ -14,6 +14,7 @@ on:
       - 'cloudflare/worker/src/**'
       - 'cloudflare/worker/package.json'
       - 'cloudflare/worker/scripts/test-site-analytics-materialized.mjs'
+      - 'cloudflare/worker/scripts/test-literature-catalog-index.mjs'
       - 'cloudflare/site-analytics-v2.sql'
       - 'cloudflare/site-analytics-snapshot-v1.sql'
       - 'cloudflare/user-library-state-v2.sql'
@@ -72,6 +73,10 @@ jobs:
         run: |
           node --test cloudflare/worker/scripts/test-site-analytics-materialized.mjs
           node --test scripts/test-site-analytics-materialized-deployment-contract.mjs
+
+      - name: Verify date-scoped literature queries and cursor integrity
+        timeout-minutes: 2
+        run: node --test cloudflare/worker/scripts/test-literature-catalog-index.mjs
 
       - name: Install frontend dependencies
         run: npm install --no-audit --no-fund
@@ -397,6 +402,7 @@ jobs:
           const report={
             schemaVersion:1,phase:'P1-literature-index-read-activation',
             ok:false,rolledBack:false,startedAt:new Date().toISOString(),
+            exactDayChecked:false,day:null,dateMatched:null,dayCursorChecked:false,
           };
           const save=()=>fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
           save();
@@ -474,6 +480,53 @@ jobs:
                   throw new Error('indexed cursor repeated first-page DOI');
                 }
               }
+              const day=(first.body.items||[]).map(row=>row?.datePrecision==='day'?row.firstOnlineDate:'').find(value=>{
+                if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+                const epoch=Date.parse(value+'T00:00:00Z');
+                return Number.isFinite(epoch)&&new Date(epoch).toISOString().slice(0,10)===value;
+              });
+              if(!day) throw new Error('indexed exact-day candidate date missing');
+              report.day=day;
+              const dayRequest={...request,dateFrom:day,dateTo:day};
+              const validateDayPage=(result,offset,expectedTotal=null)=>{
+                const page=result?.body||{};
+                const items=Array.isArray(page.items)?page.items:[];
+                if(result?.status!==200||page.readPathActive!==true||page.catalogId!==catalogId
+                  ||page.sort!=='newest'||page.limit!==2||!Number.isSafeInteger(page.matched)||page.matched<1
+                  ||!Number.isSafeInteger(page.count)||page.count<1||page.count>2
+                  ||page.count!==items.length||page.count!==Math.min(2,page.matched-offset)
+                  ||expectedTotal!==null&&page.matched!==expectedTotal
+                  ||items.some(row=>row?.firstOnlineDate!==day||row?.datePrecision!=='day'
+                    ||typeof row?.doi!=='string'||!row.doi)){
+                  throw new Error('indexed exact-day page invalid: '+JSON.stringify(result));
+                }
+                const dois=new Set(items.map(row=>row.doi));
+                const cursorValid=page.hasMore===true
+                  ? typeof page.nextCursor==='string'&&page.nextCursor.length>0
+                  : page.nextCursor===null;
+                if(dois.size!==items.length||typeof page.hasMore!=='boolean'
+                  ||page.hasMore!==(offset+page.count<page.matched)||!cursorValid){
+                  throw new Error('indexed exact-day continuation invalid: '+JSON.stringify(result));
+                }
+                return page;
+              };
+              const dayFirst=validateDayPage(await jsonFetch(worker+'/api/literature/catalog-view',{
+                method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(dayRequest),
+              }),0);
+              report.dateMatched=dayFirst.matched;
+              if(dayFirst.hasMore){
+                const daySecond=validateDayPage(await jsonFetch(worker+'/api/literature/catalog-view',{
+                  method:'POST',headers:{'content-type':'application/json'},
+                  body:JSON.stringify({...dayRequest,cursor:dayFirst.nextCursor}),
+                }),dayFirst.count,dayFirst.matched);
+                const firstDayDois=new Set(dayFirst.items.map(row=>row.doi));
+                if(daySecond.items.some(row=>firstDayDois.has(row.doi))
+                  ||daySecond.hasMore&&daySecond.nextCursor===dayFirst.nextCursor){
+                  throw new Error('indexed exact-day cursor repeated prior window');
+                }
+                report.dayCursorChecked=true;
+              }
+              report.exactDayChecked=true;
               report.mode='ready-generation';
             }else{
               if(first?.status!==409||first.body?.error!=='literature_catalog_generation_not_ready'

@@ -435,6 +435,7 @@ export async function queryLiteratureCatalogView(env,{
     return {status:400,body:{error:safe(error?.message||error,160),readPathActive:false}};
   }
 
+  const exactOnlineDate=view.dateFrom&&view.dateFrom===view.dateTo?view.dateFrom:'';
   const joins=[],where=[],args=[];
   if(view.queryText){
     const match=phraseQuery(view.queryText);
@@ -462,8 +463,13 @@ export async function queryLiteratureCatalogView(env,{
     where.push(`i.journal NOT IN (${view.excludedJournals.map(()=>'?').join(',')})`);
     args.push(...view.excludedJournals);
   }
-  if(view.dateFrom){where.push("COALESCE(i.first_online_date,'')>=?");args.push(view.dateFrom);}
-  if(view.dateTo){where.push("COALESCE(i.first_online_date,'')<=?");args.push(view.dateTo);}
+  if(exactOnlineDate){
+    // A day view must seek its catalog/date index instead of filtering the whole generation.
+    where.push('i.first_online_date=?');args.push(exactOnlineDate);
+  }else{
+    if(view.dateFrom){where.push("COALESCE(i.first_online_date,'')>=?");args.push(view.dateFrom);}
+    if(view.dateTo){where.push("COALESCE(i.first_online_date,'')<=?");args.push(view.dateTo);}
+  }
   if(view.addedDate){where.push('i.added_date=?');args.push(view.addedDate);}
 
   const base=`FROM literature_catalog_index i ${joins.join(' ')} WHERE ${where.join(' AND ')}`;
@@ -473,16 +479,22 @@ export async function queryLiteratureCatalogView(env,{
   const cursorArgs=[];
   let cursorClause='';
   if(after){
-    cursorClause=view.sort==='oldest'
-      ? ` AND (${dateExpr}>? OR (${dateExpr}=? AND i.doi>?))`
-      : ` AND (${dateExpr}<? OR (${dateExpr}=? AND i.doi>?))`;
-    cursorArgs.push(after.date,after.date,after.doi);
+    if(exactOnlineDate&&after.date===exactOnlineDate){
+      cursorClause=' AND i.doi>?';
+      cursorArgs.push(after.doi);
+    }else{
+      cursorClause=view.sort==='oldest'
+        ? ` AND (${dateExpr}>? OR (${dateExpr}=? AND i.doi>?))`
+        : ` AND (${dateExpr}<? OR (${dateExpr}=? AND i.doi>?))`;
+      cursorArgs.push(after.date,after.date,after.doi);
+    }
   }
   const direction=view.sort==='oldest'?'ASC':'DESC';
+  const ordering=exactOnlineDate?'i.doi ASC':`${dateExpr} ${direction},i.doi ASC`;
   const sql=`SELECT i.doi,i.revision,i.title,i.title_zh,i.authors_json,i.journal,
       i.first_online_date,i.date_precision,i.added_date,i.synthesis_type
     ${base}${cursorClause}
-    ORDER BY ${dateExpr} ${direction},i.doi ASC LIMIT ?`;
+    ORDER BY ${ordering} LIMIT ?`;
   const result=await env.LITERATURE_INDEX_DB.prepare(sql)
     .bind(...args,...cursorArgs,boundedLimit+1).all();
   const raw=result?.results||[];
