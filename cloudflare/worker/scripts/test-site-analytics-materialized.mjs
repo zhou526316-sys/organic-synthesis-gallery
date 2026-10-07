@@ -14,6 +14,7 @@ import {
 import {
   compareSiteAnalyticsPublicSnapshot,
   getSiteAnalyticsPublicSnapshotStatus,
+  publicSiteAnalyticsStats,
   readSiteAnalyticsPublicSnapshot,
   refreshSiteAnalyticsPublicSnapshot,
 } from '../src/site-analytics-snapshot.js';
@@ -374,7 +375,6 @@ test('backfill maintenance counter drift does not invalidate authoritative analy
   const env=envFor(db,true);
   const now=Date.parse('2026-10-05T02:00:00Z');
   const id=insertRaw(db,{ip:'a',date:'2026-10-05',viewedAt:now});
-  await materializeSitePageViewEvent(env,row(db,id));
   await backfillSiteAnalyticsMaterializedPage(env,100);
   db.sqlite.prepare(`
     UPDATE site_analytics_v2_backfill
@@ -421,7 +421,7 @@ test('D4e snapshot source stays valid across one in-flight raw event',async t=>{
   assert.equal(read.status,200);assert.equal(read.body.allTime.pv,1);
 });
 
-test('D4e snapshot source rejects internally inconsistent materialized counters even with an allowed raw tail',async t=>{
+test('D4e scanned maintenance drift stays diagnostic with an allowed raw tail',async t=>{
   const db=new D1();t.after(()=>db.close());
   const fixedNow=Date.parse('2026-10-05T02:00:00Z');
   const env={...envFor(db,true),SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED:'1',SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED:'0'};
@@ -439,9 +439,143 @@ test('D4e snapshot source rejects internally inconsistent materialized counters 
 
   db.sqlite.prepare('UPDATE site_analytics_v2_backfill SET scanned_events=scanned_events+1 WHERE id=1').run();
   readiness=await getSiteAnalyticsMaterializedReadiness(env);
-  assert.equal(readiness.snapshotSourceReady,false);
+  assert.equal(readiness.snapshotSourceReady,true);
   assert.equal(readiness.countersConsistent,false);
-  assert.equal(readiness.reason,'analytics_materialized_not_fresh');
+  assert.equal(readiness.reason,'analytics_materialized_realtime_lag');
+  assert.equal((await refreshSiteAnalyticsPublicSnapshot(env,fixedNow)).status,200);
+});
+
+test('snapshot refresh rejects a raw history with no initialized materialized source',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const now=Date.parse('2026-10-05T02:00:00Z');
+  const env={...envFor(db,true),SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED:'1'};
+  insertRaw(db,{ip:'a',date:'2026-10-05',viewedAt:now-1000});
+  const readiness=await getSiteAnalyticsMaterializedReadiness(env);
+  assert.equal(readiness.sourceInitialized,false);
+  assert.equal(readiness.snapshotSourceReady,false);
+  assert.equal((await refreshSiteAnalyticsPublicSnapshot(env,now)).status,409);
+});
+
+test('background snapshot proof rejects actual corruption and preserves the last good generation',async t=>{
+  const cases=[
+    ['cursor mismatch','UPDATE site_analytics_v2_backfill SET last_event_id=last_event_id-1','analytics_public_snapshot_source_not_ready'],
+    ['materialization error',"UPDATE site_analytics_v2_backfill SET last_error='write failed'",'analytics_public_snapshot_source_not_ready'],
+    ['missing interior ledger row','DELETE FROM site_analytics_materialized_events_v2 WHERE event_id=2','analytics_public_snapshot_source_inconsistent'],
+    ['wrong global PV','UPDATE site_global_stats_v2 SET pv=pv+1','analytics_public_snapshot_source_inconsistent'],
+    ['equal counts with wrong ledger membership','DELETE FROM site_analytics_materialized_events_v2 WHERE event_id=2; INSERT INTO site_analytics_materialized_events_v2 VALUES(0,1)','analytics_public_snapshot_source_inconsistent'],
+  ];
+  for(const [name,corrupt,error] of cases)await t.test(name,async()=>{
+    const db=new D1();
+    try{
+      const now=Date.parse('2026-10-05T02:00:00Z');
+      const env={...envFor(db,true),SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED:'1'};
+      for(let i=0;i<3;i++)insertRaw(db,{ip:'visitor-'+i,date:'2026-10-05',viewedAt:now-3000+i*1000});
+      await backfillSiteAnalyticsMaterializedPage(env,100);
+      assert.equal((await refreshSiteAnalyticsPublicSnapshot(env,now)).status,200);
+      db.sqlite.exec(corrupt);
+      const result=await refreshSiteAnalyticsPublicSnapshot(env,now+1000);
+      assert.equal(result.status,409);
+      assert.equal(result.body.error,error);
+      const lastGood=await readSiteAnalyticsPublicSnapshot(env,now+1000,{requireEnabled:false});
+      assert.equal(lastGood.body.snapshotGeneratedAt,now);
+      assert.equal(lastGood.body.allTime.pv,3);
+    }finally{db.close();}
+  });
+});
+
+test('background proof counts non-dense event IDs and allows maintenance drift during generation',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const now=Date.parse('2026-10-05T02:00:00Z');
+  const env={...envFor(db,true),SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED:'1'};
+  const discarded=insertRaw(db,{ip:'discarded',date:'2026-10-05',viewedAt:now-2000});
+  db.sqlite.prepare('DELETE FROM site_pageviews_v1 WHERE id=?').run(discarded);
+  const kept=insertRaw(db,{ip:'kept',date:'2026-10-05',viewedAt:now-1000});
+  assert.ok(kept>1);
+  await backfillSiteAnalyticsMaterializedPage(env,100);
+  const prepare=db.prepare.bind(db);
+  let drifted=false;
+  db.prepare=sql=>{
+    if(!drifted&&sql.includes('site_analytics_visitors_v2')&&sql.includes('paper_open=1')){
+      db.sqlite.exec('UPDATE site_analytics_v2_backfill SET scanned_events=scanned_events+1');
+      drifted=true;
+    }
+    return prepare(sql);
+  };
+  assert.equal((await refreshSiteAnalyticsPublicSnapshot(env,now)).status,200);
+  assert.equal(drifted,true);
+  const read=await readSiteAnalyticsPublicSnapshot(env,now,{requireEnabled:false});
+  assert.equal(read.body.allTime.pv,1);
+});
+
+test('a stale unprocessed source tail cannot be hidden by regenerating a fresh snapshot',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const now=Date.parse('2026-10-05T02:00:00Z');
+  const env={...envFor(db,true),SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED:'1',SITE_ANALYTICS_PUBLIC_SNAPSHOT_MAX_AGE_MS:'60000'};
+  insertRaw(db,{ip:'a',date:'2026-10-05',viewedAt:now-2000});
+  await backfillSiteAnalyticsMaterializedPage(env,100);
+  assert.equal((await refreshSiteAnalyticsPublicSnapshot(env,now)).status,200);
+  insertRaw(db,{ip:'pending',date:'2026-10-05',viewedAt:now-1000});
+  assert.equal((await refreshSiteAnalyticsPublicSnapshot(env,now+59000)).status,200);
+  const result=await refreshSiteAnalyticsPublicSnapshot(env,now+59001);
+  assert.equal(result.status,409);
+  assert.equal(result.body.error,'analytics_public_snapshot_source_stale');
+  assert.equal(result.body.sourceIntegrity.pendingAgeMs,60001);
+  const status=await getSiteAnalyticsPublicSnapshotStatus(env,now+59001);
+  assert.equal(status.body.generatedAt,now+59000);
+  assert.equal(status.body.fresh,false);
+  const read=await readSiteAnalyticsPublicSnapshot(env,now+59001,{requireEnabled:false});
+  assert.equal(read.status,503);
+  assert.equal(read.body.error,'analytics_public_snapshot_source_stale');
+  assert.equal(read.body.ageMs,1);
+  // The bounded cron repair uses strict readiness, which is false for this tail.
+  assert.equal((await getSiteAnalyticsMaterializedReadiness(env)).ready,false);
+  assert.equal((await backfillSiteAnalyticsMaterializedPage(env,100)).status,200);
+  assert.equal((await refreshSiteAnalyticsPublicSnapshot(env,now+59001)).status,200);
+  const recovered=await readSiteAnalyticsPublicSnapshot(env,now+59001,{requireEnabled:false});
+  assert.equal(recovered.status,200);
+  assert.equal(recovered.body.allTime.pv,2);
+});
+
+test('public analytics remains one-row bounded in primary, rollback, missing, stale and DB-error states',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const now=Date.parse('2026-10-05T02:00:00Z');
+  const env={...envFor(db,true),SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED:'1',SITE_ANALYTICS_PUBLIC_SNAPSHOT_MAX_AGE_MS:'60000'};
+  insertRaw(db,{ip:'a',date:'2026-10-05',viewedAt:now-1000});
+  await backfillSiteAnalyticsMaterializedPage(env,100);
+  assert.equal((await refreshSiteAnalyticsPublicSnapshot(env,now)).status,200);
+  const prepare=db.prepare.bind(db);
+  let queries=[];
+  db.prepare=sql=>{
+    queries.push(sql);
+    assert.match(sql,/FROM site_analytics_public_snapshot_v1 WHERE id=1/);
+    return prepare(sql);
+  };
+  for(const primary of ['1','0']){
+    queries=[];
+    const active={...env,SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED:primary};
+    const result=await publicSiteAnalyticsStats(active,now+1000);
+    assert.equal(result.status,200);
+    assert.equal(result.body.readPath,primary==='1'?'snapshot':'snapshot_fallback');
+    assert.equal(Object.hasOwn(result.body,'_snapshotSource'),false);
+    assert.equal(queries.length,1);
+    queries=[];
+    const stale=await publicSiteAnalyticsStats(active,now+60001);
+    assert.equal(stale.status,503);
+    assert.equal(stale.body.error,primary==='1'?'analytics_public_snapshot_stale':'analytics_bounded_stats_unavailable');
+    assert.equal(queries.length,1);
+  }
+  db.sqlite.exec('DELETE FROM site_analytics_public_snapshot_v1');
+  queries=[];
+  const missing=await publicSiteAnalyticsStats(env,now);
+  assert.equal(missing.status,503);
+  assert.equal(missing.body.readPath,'bounded_unavailable');
+  assert.equal(queries.length,1);
+  db.sqlite.exec('DROP TABLE site_analytics_public_snapshot_v1');
+  queries=[];
+  const failed=await publicSiteAnalyticsStats(env,now);
+  assert.equal(failed.status,503);
+  assert.equal(failed.body.readPath,'bounded_unavailable');
+  assert.equal(queries.length,1);
 });
 
 console.log('SITE_ANALYTICS_MATERIALIZED_SHADOW_TESTS_READY');

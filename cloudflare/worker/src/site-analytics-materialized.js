@@ -286,13 +286,15 @@ export async function getSiteAnalyticsMaterializedReadiness(env){
     ledgerVsScanned:(materializedEvents+duplicateEvents)-scannedEvents,
     globalPvVsScanned:globalPv-scannedEvents,
   };
-  const snapshotSourceReady=backfillComplete
+  // Backfill counters are maintenance diagnostics: realtime and cursor updates
+  // can interleave after the atomic event/aggregate transaction. Actual prefix
+  // integrity is checked by the background snapshot writer, never a public read.
+  const sourceInitialized=rawMax===0||Boolean(backfill&&global&&materializedMax>0);
+  const snapshotSourceReady=sourceInitialized
     &&lastError===''
     &&materializedMax===lastEventId
     &&materializedMax<=rawMax
-    &&globalLastViewedAt<=rawLastViewedAt
-    &&counterDrift.ledgerVsScanned===0
-    &&counterDrift.globalPvVsScanned===0;
+    &&globalLastViewedAt<=rawLastViewedAt;
   const ready=snapshotSourceReady
     &&backfillComplete
     &&rawMax===materializedMax
@@ -301,6 +303,7 @@ export async function getSiteAnalyticsMaterializedReadiness(env){
   return {
     ready,
     snapshotSourceReady,
+    sourceInitialized,
     reason:ready?'ready':snapshotSourceReady?'analytics_materialized_realtime_lag':'analytics_materialized_not_fresh',
     backfillComplete,
     rawMaxEventId:rawMax,

@@ -39,7 +39,6 @@ function sameMaterializedWatermark(a,b){
     &&safeInt(a.materializedMaxEventId)===safeInt(b.materializedMaxEventId)
     &&safeInt(a.backfillLastEventId)===safeInt(b.backfillLastEventId)
     &&safeInt(a.globalPv)===safeInt(b.globalPv)
-    &&safeInt(a.scannedEvents)===safeInt(b.scannedEvents)
     &&safeInt(a.globalLastViewedAt)===safeInt(b.globalLastViewedAt);
 }
 function sameReaderWatermark(a,b){
@@ -52,6 +51,33 @@ async function snapshotRow(env){
       source_global_pv,source_reader_rows,source_reader_max_opened_at,generated_at,updated_at
     FROM site_analytics_public_snapshot_v1 WHERE id=1
   `).first();
+}
+
+// Background-only proof of the materialized prefix. Maintenance counters and
+// maximum IDs cannot prove ledger membership, especially with non-dense IDs.
+async function materializedSourceIntegrity(env,source,now){
+  const watermark=safeInt(source.materializedMaxEventId);
+  const row=await env.DB.prepare(`
+    SELECT
+      (SELECT COUNT(*) FROM site_pageviews_v1 WHERE id<=?) AS raw_prefix_events,
+      (SELECT COUNT(*) FROM site_analytics_materialized_events_v2 WHERE event_id<=?) AS ledger_events,
+      EXISTS(
+        SELECT 1 FROM site_pageviews_v1 r
+        LEFT JOIN site_analytics_materialized_events_v2 e ON e.event_id=r.id
+        WHERE r.id<=? AND e.event_id IS NULL
+      ) AS missing_ledger_event,
+      (SELECT MIN(viewed_at) FROM site_pageviews_v1 WHERE id>?) AS oldest_pending_at
+  `).bind(watermark,watermark,watermark,watermark).first();
+  const rawPrefixEvents=safeInt(row?.raw_prefix_events),ledgerEvents=safeInt(row?.ledger_events);
+  const globalPv=safeInt(source.globalPv);
+  const oldestPendingAt=safeInt(row?.oldest_pending_at);
+  const pendingAgeMs=oldestPendingAt?Math.max(0,Number(now)-oldestPendingAt):0;
+  return {
+    valid:rawPrefixEvents===ledgerEvents&&ledgerEvents===globalPv&&!Number(row?.missing_ledger_event||0),
+    rawPrefixEvents,ledgerEvents,globalPv,
+    missingLedgerEvent:Boolean(Number(row?.missing_ledger_event||0)),
+    oldestPendingAt,pendingAgeMs,maxAgeMs:maxAgeMs(env),
+  };
 }
 
 export async function refreshSiteAnalyticsPublicSnapshot(env,now=Date.now()){
@@ -86,6 +112,14 @@ export async function refreshSiteAnalyticsPublicSnapshot(env,now=Date.now()){
     lagMs:safeInt(before.lagMs),
   }};
 
+  const integrity=await materializedSourceIntegrity(env,before,now);
+  if(!integrity.valid)return {status:409,body:{
+    error:'analytics_public_snapshot_source_inconsistent',sourceIntegrity:integrity,
+  }};
+  if(integrity.pendingAgeMs>integrity.maxAgeMs)return {status:409,body:{
+    error:'analytics_public_snapshot_source_stale',sourceIntegrity:integrity,
+  }};
+
   const stats=await materializedSiteAnalyticsStats(env,now);
   if(stats.status!==200)return stats;
 
@@ -103,7 +137,9 @@ export async function refreshSiteAnalyticsPublicSnapshot(env,now=Date.now()){
     }};
   }
 
-  const snapshotJson=JSON.stringify(stats.body);
+  const snapshotJson=JSON.stringify({
+    ...stats.body,_snapshotSource:{oldestPendingAt:integrity.oldestPendingAt},
+  });
   const generatedAt=Number(now);
   await env.DB.prepare(`
     INSERT INTO site_analytics_public_snapshot_v1
@@ -140,7 +176,10 @@ export async function getSiteAnalyticsPublicSnapshotStatus(env,now=Date.now()){
   const generatedAt=safeInt(row?.generated_at);
   const ageMs=generatedAt?Math.max(0,Number(now)-generatedAt):null;
   const configuredMaxAgeMs=maxAgeMs(env);
-  const valid=Boolean(row&&parseSnapshot(row.snapshot_json));
+  const body=row?parseSnapshot(row.snapshot_json):null;
+  const valid=Boolean(row&&body);
+  const sourcePendingAt=safeInt(body?._snapshotSource?.oldestPendingAt);
+  const sourcePendingAgeMs=sourcePendingAt?Math.max(0,Number(now)-sourcePendingAt):0;
   return {status:200,body:{
     version:1,
     shadowEnabled:siteAnalyticsPublicSnapshotShadowEnabled(env),
@@ -150,7 +189,8 @@ export async function getSiteAnalyticsPublicSnapshotStatus(env,now=Date.now()){
     generatedAt:generatedAt||null,
     ageMs,
     maxAgeMs:configuredMaxAgeMs,
-    fresh:Boolean(valid&&ageMs!==null&&ageMs<=configuredMaxAgeMs),
+    fresh:Boolean(valid&&ageMs!==null&&ageMs<=configuredMaxAgeMs&&sourcePendingAgeMs<=configuredMaxAgeMs),
+    sourcePendingAgeMs,
     sourceRawMaxEventId:safeInt(row?.source_raw_max_event_id),
     sourceMaterializedMaxEventId:safeInt(row?.source_materialized_max_event_id),
     sourceGlobalPv:safeInt(row?.source_global_pv),
@@ -174,12 +214,37 @@ export async function readSiteAnalyticsPublicSnapshot(env,now=Date.now(),{requir
   if(ageMs>configuredMaxAgeMs){
     return {status:503,body:{error:'analytics_public_snapshot_stale',generatedAt:safeInt(row.generated_at),ageMs,maxAgeMs:configuredMaxAgeMs}};
   }
+  const sourcePendingAt=safeInt(body._snapshotSource?.oldestPendingAt);
+  const sourcePendingAgeMs=sourcePendingAt?Math.max(0,Number(now)-sourcePendingAt):0;
+  if(sourcePendingAgeMs>configuredMaxAgeMs){
+    return {status:503,body:{error:'analytics_public_snapshot_source_stale',generatedAt:safeInt(row.generated_at),
+      ageMs,sourcePendingAgeMs,maxAgeMs:configuredMaxAgeMs}};
+  }
+  const {_snapshotSource,...publicBody}=body;
   return {status:200,body:{
-    ...body,
+    ...publicBody,
     generation:'site-pageview-v3-snapshot',
     readPath:'snapshot',
     snapshotGeneratedAt:safeInt(row.generated_at),
     snapshotAgeMs:ageMs,
+  }};
+}
+
+// Both normal reads and rollback read exactly one snapshot row. Heavy source
+// aggregation belongs only to refresh/compare, regardless of feature flags.
+export async function publicSiteAnalyticsStats(env,now=Date.now()){
+  const primary=siteAnalyticsPublicSnapshotReadEnabled(env);
+  const result=await readSiteAnalyticsPublicSnapshot(env,now,{requireEnabled:primary})
+    .catch(()=>({status:503,body:{error:'analytics_public_snapshot_read_error',readPath:'snapshot'}}));
+  if(primary) return result;
+  const materializedFallbackReason=flag(env?.SITE_ANALYTICS_MATERIALIZED_READ_ENABLED)
+    ?'materialized_background_only':'materialized_read_disabled';
+  if(result.status===200)return {status:200,body:{
+    ...result.body,readPath:'snapshot_fallback',materializedFallbackReason,
+  }};
+  return {status:503,body:{
+    error:'analytics_bounded_stats_unavailable',readPath:'bounded_unavailable',
+    materializedFallbackReason,snapshotFallbackReason:result.body?.error||'snapshot_unavailable',
   }};
 }
 

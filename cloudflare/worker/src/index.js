@@ -63,7 +63,7 @@ import { backfillSiteAnalyticsMaterializedPage, compareSiteAnalyticsBodies, getS
 import {
   compareSiteAnalyticsPublicSnapshot,
   getSiteAnalyticsPublicSnapshotStatus,
-  readSiteAnalyticsPublicSnapshot,
+  publicSiteAnalyticsStats,
   refreshSiteAnalyticsPublicSnapshot,
   siteAnalyticsPublicSnapshotReadEnabled,
   siteAnalyticsPublicSnapshotShadowEnabled,
@@ -538,69 +538,7 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await trackPageView(env, await readJson(request), request, ctx), cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats') {
-    if (siteAnalyticsPublicSnapshotReadEnabled(env)) {
-      try {
-        return resultResponse(await readSiteAnalyticsPublicSnapshot(env), cors);
-      } catch (error) {
-        console.error('SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_FAILED', {
-          message: String(error?.message || error).slice(0, 180),
-        });
-        return resultResponse({
-          status: 503,
-          body: { error: 'analytics_public_snapshot_read_error', readPath: 'snapshot' },
-        }, cors);
-      }
-    }
-    if (siteAnalyticsMaterializedReadEnabled(env)) {
-      let readiness={ready:false,reason:'materialized_unavailable'};
-      try {
-        readiness=await getSiteAnalyticsMaterializedReadiness(env);
-        if (readiness.ready) {
-          const materialized=await materializedSiteAnalyticsStats(env);
-          if (materialized.status===200) {
-            return resultResponse({
-              status:200,
-              body:{...materialized.body,generation:'site-pageview-v2',readPath:'materialized'},
-            },cors);
-          }
-        }
-      } catch (error) {
-        readiness={ready:false,reason:'materialized_read_error'};
-        console.warn('SITE_ANALYTICS_MATERIALIZED_READ_DEGRADED',{
-          message:String(error?.message||error).slice(0,180),
-        });
-      }
-      const snapshotFallback=await readSiteAnalyticsPublicSnapshot(env,Date.now(),{requireEnabled:false})
-        .catch(error=>({status:503,body:{error:String(error?.message||error).slice(0,180)}}));
-      if(snapshotFallback.status===200){
-        return resultResponse({
-          status:200,
-          body:{...snapshotFallback.body,readPath:'snapshot_fallback',
-            materializedFallbackReason:readiness.reason||'materialized_unavailable'},
-        },cors);
-      }
-      return resultResponse({
-        status:503,
-        body:{error:'analytics_bounded_stats_unavailable',readPath:'bounded_unavailable',
-          materializedFallbackReason:readiness.reason||'materialized_unavailable',
-          snapshotFallbackReason:snapshotFallback.body?.error||'snapshot_unavailable'},
-      },cors);
-    }
-    const snapshotFallback=await readSiteAnalyticsPublicSnapshot(env,Date.now(),{requireEnabled:false})
-      .catch(error=>({status:503,body:{error:String(error?.message||error).slice(0,180)}}));
-    if(snapshotFallback.status===200){
-      return resultResponse({
-        status:200,
-        body:{...snapshotFallback.body,readPath:'snapshot_fallback',
-          materializedFallbackReason:'materialized_read_disabled'},
-      },cors);
-    }
-    return resultResponse({
-      status:503,
-      body:{error:'analytics_bounded_stats_unavailable',readPath:'bounded_unavailable',
-        materializedFallbackReason:'materialized_read_disabled',
-        snapshotFallbackReason:snapshotFallback.body?.error||'snapshot_unavailable'},
-    },cors);
+    return resultResponse(await publicSiteAnalyticsStats(env), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark') {
     return resultResponse(await markReader(env, await readJson(request), request, ctx), cors);
@@ -990,7 +928,9 @@ export default {
         try {
           let readiness=await getSiteAnalyticsMaterializedReadiness(env);
           let repairPages=0;
-          while(readiness.snapshotSourceReady!==true&&repairPages<4){
+          // Catch up a coherent pending raw tail too, so an aging source can
+          // recover within the existing bounded background repair budget.
+          while(readiness.ready!==true&&repairPages<4){
             repairPages+=1;
             const repair=await backfillSiteAnalyticsMaterializedPage(env,100);
             if(repair.status!==200) throw new Error('snapshot materialized repair failed: '+JSON.stringify(repair.body||{}));
