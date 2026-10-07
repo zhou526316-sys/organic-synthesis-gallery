@@ -8,6 +8,7 @@ import {
   readUserLibraryV3Delta,
   readUserLibraryV3Head,
   readUserLibraryV3Page,
+  userLibraryV3WriteEnabled,
 } from '../src/user-library-v3.js';
 import { readUserLibraryStateFromRows } from '../src/user-library-shadow.js';
 import { shadowWriteUserLibraryV3FromState } from '../src/user-library-v3-shadow.js';
@@ -79,6 +80,29 @@ const envFor=(db,overrides={})=>({
   ...overrides,
 });
 function addUser(db,id='u1'){db.sqlite.prepare('INSERT INTO users(id) VALUES (?)').run(id);}
+
+test('D3c4c deterministic rollout gate is disabled at zero basis points and stable when enabled',()=>{
+  const base={
+    USER_LIBRARY_V3_WRITE_ENABLED:'0',
+    USER_LIBRARY_V3_WRITE_CANARY_USER_ID:'u-canary',
+    USER_LIBRARY_V3_WRITE_ROLLOUT_BPS:'0',
+    USER_LIBRARY_V3_WRITE_ROLLOUT_SEED:'d3c4c-test',
+  };
+  assert.equal(userLibraryV3WriteEnabled(base,'u-regular'),false);
+  assert.equal(userLibraryV3WriteEnabled(base,'u-canary'),true);
+
+  const cohort={...base,USER_LIBRARY_V3_WRITE_ROLLOUT_BPS:'1000'};
+  const decisions=Array.from({length:400},(_,index)=>userLibraryV3WriteEnabled(cohort,`u-${index}`));
+  assert.ok(decisions.some(Boolean));
+  assert.ok(decisions.some(value=>!value));
+  for(let index=0;index<400;index+=1){
+    assert.equal(userLibraryV3WriteEnabled(cohort,`u-${index}`),decisions[index]);
+  }
+
+  assert.equal(userLibraryV3WriteEnabled({...base,USER_LIBRARY_V3_WRITE_ROLLOUT_BPS:'10000'},'u-any'),true);
+  assert.equal(userLibraryV3WriteEnabled({...base,USER_LIBRARY_V3_WRITE_ROLLOUT_BPS:'100.5'},'u-any'),false);
+  assert.equal(userLibraryV3WriteEnabled({...base,USER_LIBRARY_V3_WRITE_ENABLED:'1'},'u-any'),true);
+});
 
 test('bounded V3 mutation creates revision-fenced head and paged current rows',async t=>{
   const db=new D1();t.after(()=>db.close());addUser(db);

@@ -61,6 +61,8 @@ test('D3c2 enables bounded V3 reads while V3 writes remain explicitly off',()=>{
   assert.ok(config.includes('USER_LIBRARY_V3_READ_ENABLED = "1"'));
   assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "0"'));
   assert.ok(config.includes('USER_LIBRARY_V3_WRITE_CANARY_USER_ID = "__gallery_v3_write_canary__"'));
+  assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ROLLOUT_BPS = "0"'));
+  assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ROLLOUT_SEED = "d3c4c-2026-10-07"'));
   assert.ok(!config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "1"'));
   assert.ok(v3.includes("USER_LIBRARY_V3_WRITE_ENABLED"));
   assert.ok(v3.includes("USER_LIBRARY_V3_WRITE_CANARY_USER_ID"));
@@ -110,6 +112,21 @@ test('D3c4b production canary remains isolated from the global write switch',()=
   assert.ok(v3.includes("if (flag(env?.USER_LIBRARY_V3_WRITE_ENABLED)) return true"));
   assert.ok(v3.includes("env?.USER_LIBRARY_V3_WRITE_CANARY_USER_ID"));
   assert.ok(v3.includes("canaryUserId === userId"));
+});
+
+test('D3c4c rollout gate is deterministic and ships at zero percent',()=>{
+  const config=section(
+    deploy,
+    '- name: Generate frontend deployment configuration',
+    '- name: Deploy frontend assets',
+  );
+  assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "0"'));
+  assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ROLLOUT_BPS = "0"'));
+  assert.ok(v3.includes('rolloutBasisPoints'));
+  assert.ok(v3.includes('rolloutBucket'));
+  assert.ok(v3.includes('USER_LIBRARY_V3_WRITE_ROLLOUT_BPS'));
+  assert.ok(v3.includes('USER_LIBRARY_V3_WRITE_ROLLOUT_SEED'));
+  assert.ok(v3.includes('Math.imul(hash, 16777619)'));
 });
 
 test('D3c2 shadow is revision-fenced, shape-preserving, and emits delta continuity',()=>{

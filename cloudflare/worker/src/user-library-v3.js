@@ -61,11 +61,36 @@ export function userLibraryV3ShadowEnabled(env) {
 export function userLibraryV3ReadEnabled(env) {
   return flag(env?.USER_LIBRARY_V3_READ_ENABLED);
 }
+function rolloutBasisPoints(value) {
+  const number = Number(value);
+  return Number.isSafeInteger(number) && number >= 0 && number <= 10000 ? number : 0;
+}
+
+function rolloutBucket(seedValue, userId) {
+  const seed = safeText(seedValue, 200) || 'd3c4c-v1';
+  const input = `${seed}\n${userId}`;
+  let hash = 2166136261;
+  for (let index = 0; index < input.length; index += 1) {
+    hash ^= input.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0) % 10000;
+}
+
 export function userLibraryV3WriteEnabled(env, userIdValue = '') {
   if (flag(env?.USER_LIBRARY_V3_WRITE_ENABLED)) return true;
-  const canaryUserId = safeText(env?.USER_LIBRARY_V3_WRITE_CANARY_USER_ID, 300);
+
   const userId = safeText(userIdValue, 300);
-  return Boolean(canaryUserId && userId && canaryUserId === userId);
+  if (!userId) return false;
+
+  const canaryUserId = safeText(env?.USER_LIBRARY_V3_WRITE_CANARY_USER_ID, 300);
+  if (canaryUserId && canaryUserId === userId) return true;
+
+  const rolloutBps = rolloutBasisPoints(env?.USER_LIBRARY_V3_WRITE_ROLLOUT_BPS);
+  if (rolloutBps <= 0) return false;
+  if (rolloutBps >= 10000) return true;
+
+  return rolloutBucket(env?.USER_LIBRARY_V3_WRITE_ROLLOUT_SEED, userId) < rolloutBps;
 }
 
 function normalizeOperation(raw) {
