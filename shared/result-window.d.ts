@@ -12,3 +12,10 @@ export declare function resultWindowState(
   hasPrevious: boolean;
   hasNext: boolean;
 };
+
+
+export declare function resultPaginationItems(
+  page: number,
+  pages: number,
+  compact?: boolean,
+): Array<number | 'ellipsis'>;
