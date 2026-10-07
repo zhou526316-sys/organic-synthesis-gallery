@@ -12,6 +12,7 @@ const script=source.slice(0,cut)+`
  getJson=async u=>u.includes('capabilities')?{captureVersion:VERSION,mediaGeneration:1790082000000,mode:'verified-staging',mediaControllerRevision:CONTROLLER_REVISION,evidenceSchemaVersion:EVIDENCE_SCHEMA_VERSION}:u.includes('local-capture-index')?{count:0,items:[]}:u.includes('/staged?')?{schemaVersion:'capture-inventory-v1',complete:true,count:765,items:fixtureArticles.map((a,n)=>({doi:a.doi,expectedFigureCount:n===2?3:2,figures:{}}))}:fq;
  postReadJson=async(u,p)=>({items:fixtureArticles.filter(a=>p.dois.includes(a.doi)).map(a=>({doi:a.doi,tocStored:a.doi!==fixtureArticles[1].doi,figureCount:2,capturedFigures:[ff(a.doi,1),ff(a.doi,2)]}))});
  getPrivateJson=async()=>({count:764,items:fixtureArticles.filter((a,n)=>n!==3).map(a=>({doi:a.doi,available:true,evidenceLevel:'partial'}))});
+ inventoryReadMetadataJson=async(o,p)=>String(o.method||'GET').toUpperCase()==='POST'?postReadJson(o.url,JSON.parse(o.data||'{}')):String(o.url||'').includes('evidence-inventory')?getPrivateJson(o.url):getJson(o.url);
  globalThis.T={forceStartFromHead,finishPairedJob,owner:CONTROLLER_ID,requestControllerPause};
  installManualRestartListener();installMenu();mountCaptureLivePanel();})();`;
 const server=http.createServer((req,res)=>{res.writeHead(200,{'content-type':'text/html; charset=utf-8'});res.end('<!doctype html><html lang="zh"><meta charset="utf-8"><title>Missing-only regression</title><body><h1>缺项补抓：765 篇库存中只调度 1 篇 TOC 缺项</h1></body></html>')});
