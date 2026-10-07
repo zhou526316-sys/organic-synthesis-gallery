@@ -113,6 +113,8 @@ Both “每日精选” and “往期精选” use the same deep-reading standar
 - For a retrospective used as the small secondary WeChat card, build a **dedicated square thumbnail** with only the minimum paper identity and original chemistry visual needed at small size; never shrink a dense wide cover into the square slot.
 - Secondary-card covers must be optimized for the **actual small square/center-cropped WeChat display**. Prefer a large portrait or one simple chemistry motif plus 2–4 short text elements. Do not add unrelated credentials, awards, quotes, slogans, or dates unless the user explicitly requests them.
 
+- When native mobile and official desktop screenshots disagree, identify whether the artwork itself or only title placement differs. Size the cover backing from the supplied native glyph position; record measured bounds and uncertainty. A projection from an earlier native screenshot must be labelled as a projection and must not be reported as a newly observed native-client result.
+
 ## Authorship / disclosure
 
 - Author display: 化之岛.
