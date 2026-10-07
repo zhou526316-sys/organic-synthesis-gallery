@@ -2490,6 +2490,15 @@ def preview_slug(media_id: str, draft: dict | None = None) -> str:
     return digest[:24]
 
 
+def normalize_preview_lazy_images(markup: str) -> str:
+    """Activate stored WeChat lazy image URLs in preview only; do not alter draft data."""
+    def activate(match):
+        tag = match.group(0)
+        if re.search(r"(?<![\w-])src\s*=", tag, re.IGNORECASE):
+            return tag
+        return re.sub(r"\bdata-src(\s*=)", r"src\1", tag, count=1, flags=re.IGNORECASE)
+    return re.sub(r"<img\b[^>]*>", activate, markup, flags=re.IGNORECASE)
+
 def render_wechat_draft_preview(draft: dict, *, media_id: str) -> str:
     items = draft.get("news_item") if isinstance(draft, dict) else None
     if not isinstance(items, list) or not items:
@@ -2504,7 +2513,7 @@ def render_wechat_draft_preview(draft: dict, *, media_id: str) -> str:
         item_title = str(item.get("title") or "")
         author = str(item.get("author") or "")
         digest = str(item.get("digest") or "")
-        content = str(item.get("content") or "")
+        content = normalize_preview_lazy_images(str(item.get("content") or ""))
         source_url = str(item.get("content_source_url") or "")
         thumb_url = str(item.get("thumb_url") or "")
         anchor = f"article-{idx + 1}"
