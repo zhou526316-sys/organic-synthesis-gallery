@@ -250,12 +250,40 @@ async function queryByDois(env, sqlPrefix, dois, { optional = false, label = 'qu
   return rows;
 }
 
+async function duplicateTocHashesForRows(env, tocRows) {
+  const hashes = [...new Set((tocRows || [])
+    .filter(row => Number(row?.available || 0) === 1 && Number(row?.updated_at || 0) >= MEDIA_REBUILD_EPOCH)
+    .map(row => String(row?.content_hash || '').trim())
+    .filter(Boolean))];
+  if (!hashes.length) return new Set();
+
+  const duplicates = new Set();
+  for (let offset = 0; offset < hashes.length; offset += QUERY_CHUNK) {
+    const chunk = hashes.slice(offset, offset + QUERY_CHUNK);
+    const placeholders = chunk.map(() => '?').join(',');
+    const rows = await allRowsOptional(env.DB.prepare(
+      `SELECT content_hash, COUNT(*) AS owners
+       FROM toc_assets
+       WHERE available = 1
+         AND updated_at >= ?
+         AND content_hash IN (${placeholders})
+       GROUP BY content_hash
+       HAVING COUNT(*) > 1`
+    ).bind(MEDIA_REBUILD_EPOCH, ...chunk), 'duplicate_toc_hashes_bounded');
+    for (const row of rows) {
+      const hash = String(row?.content_hash || '').trim();
+      if (hash) duplicates.add(hash);
+    }
+  }
+  return duplicates;
+}
+
 async function loadMediaRows(env, rawDois) {
   if (!env?.DB) throw new Error('D1 binding DB is not configured');
   const dois = [...new Set(rawDois.map(normalizeDoi).filter(Boolean))].slice(0, DOI_LIMIT);
   if (!dois.length) return { dois, tocByDoi: new Map(), figuresByDoi: new Map(), primaryByDoi: new Map(), primaryVariantsByDoi: new Map(), duplicateHashes: new Set() };
 
-  const [tocRows, figureRows, primaryRows, primaryVariantRows, duplicateRows] = await Promise.all([
+  const [tocRows, figureRows, primaryRows, primaryVariantRows] = await Promise.all([
     queryByDois(
       env,
       'SELECT doi, article_url, r2_key, content_hash, reason, available, checked_at, updated_at FROM toc_assets WHERE doi IN',
@@ -278,7 +306,6 @@ async function loadMediaRows(env, rawDois) {
       dois,
       { optional: true, label: 'primary_visual_variants' }
     ),
-    allRowsOptional(env.DB.prepare("SELECT content_hash, COUNT(*) AS owners FROM toc_assets WHERE available = 1 AND updated_at >= ? AND content_hash IS NOT NULL AND content_hash <> '' GROUP BY content_hash HAVING COUNT(*) > 1").bind(MEDIA_REBUILD_EPOCH), 'duplicate_toc_hashes'),
   ]);
 
   tocRows.splice(0, tocRows.length, ...tocRows.filter(row => Number(row.updated_at || 0) >= MEDIA_REBUILD_EPOCH));
@@ -313,7 +340,7 @@ async function loadMediaRows(env, rawDois) {
     group.push(row);
     primaryVariantsByDoi.set(doi, group);
   }
-  const duplicateHashes = new Set(duplicateRows.map(row => row.content_hash).filter(Boolean));
+  const duplicateHashes = await duplicateTocHashesForRows(env, tocRows);
   return { dois, tocByDoi, figuresByDoi, primaryByDoi, primaryVariantsByDoi, duplicateHashes };
 }
 
