@@ -1,4 +1,4 @@
-name: Verify manual resume installer live
+name: Verify API manual resume installer
 
 on:
   push:
@@ -22,8 +22,9 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Compare actual canonical and Worker installer bytes
+      - name: Compare actual API and Worker installer bytes
         env:
+          TM_INSTALLER_DELIVERY_TARGET: api
           # Exact canonical artifact validated by manual resume regression run 37579215313.
           TM_EXPECTED_INSTALLER_SHA256: '954ead8f60a23735946fc89d7ab9059257c140721bfa83e7f701b23ecc104fa3'
         run: node scripts/verify-tm-resume-live.mjs

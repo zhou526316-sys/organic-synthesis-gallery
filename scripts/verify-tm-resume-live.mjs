@@ -80,6 +80,7 @@ export async function verifyLiveInstallers({
   const report = {
     checkedAt: new Date().toISOString(),
     sourceSha: process.env.GITHUB_SHA || null,
+    deliveryTarget: process.env.TM_INSTALLER_DELIVERY_TARGET === 'api' ? 'api' : 'canonical',
     readOnly: true,
     productionWrites: 0,
     publisherRequests: 0,
@@ -93,7 +94,9 @@ export async function verifyLiveInstallers({
     return report;
   }
   const suffix = '?tmResumeLive=' + Date.now();
-  report.probes = await Promise.all(ENDPOINTS.map(([key, url]) =>
+  const endpoints = ENDPOINTS.map(([key, url]) => report.deliveryTarget === 'api' && key === 'canonical'
+    ? ['api', 'https://api.gczhouwld.com/gallery-vpn-bridge.user.js'] : [key, url]);
+  report.probes = await Promise.all(endpoints.map(([key, url]) =>
     probe(key, url, suffix, report.expectedInstallerSha256, fetchImpl)));
   report.sameInstallerBytes = report.probes.every(item => item.sha256) &&
     report.probes[0].sha256 === report.probes[1].sha256;
