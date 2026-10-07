@@ -1,0 +1,269 @@
+{
+  "schema": "catalog-index-maintenance-production-v1",
+  "repairCommit": "a999f73eea47f5aebaf391303744aafaf74edf89",
+  "runId": 37570153555,
+  "runAttempt": 2,
+  "artifact": {
+    "id": 11460634886,
+    "sha256": "20c7305adda3ce3df3ab8c0c4e3e768d36843b27c9933665070b97e92fabaf75"
+  },
+  "scope": "Repair maintenance after read cutover; no read configuration change or literature admission.",
+  "schemaVersion": 1,
+  "phase": "P1-literature-catalog-index-live-shadow",
+  "ok": true,
+  "site": "https://gallery.gczhouwld.com",
+  "worker": "https://organic-synthesis-gallery.zhou526316.workers.dev",
+  "startedAt": "2026-10-07T04:35:36.146Z",
+  "readConfigured": true,
+  "readPathActive": true,
+  "catalogId": "5dd2c1d60bb7320fa811caacd4cc9f8d31d5c953b148b3e209dcc1a2de001b5c",
+  "doiSetHash": "c6c8241946c426649133d6b9db9bcde8675b37def4cb4db2eef1ee4dd3c1e14c",
+  "publicationSlot": "2026-10-07T08:00:00+08:00",
+  "sourceCommit": "c8f50fbccd36d576954aa5653f4c2570a45f37a2",
+  "markerBlobSha": "08c430b9128a00888c193a7bf1bc139b37170e28",
+  "recordCount": 859,
+  "importBatchSize": 8,
+  "importProgress": {
+    "importedBatches": 108,
+    "importedRows": 859,
+    "totalRows": 859,
+    "lastBatchAttempts": 1
+  },
+  "readConfiguredBefore": true,
+  "readPathActiveBefore": true,
+  "readConfigurationUnchanged": true,
+  "completedAt": "2026-10-07T04:36:29.920Z",
+  "importedBatches": 108,
+  "contentReused": false,
+  "alreadyReady": false,
+  "rowParity": {
+    "checked": 859,
+    "mismatched": 0
+  },
+  "searchParity": {
+    "probes": 40,
+    "mismatched": 0,
+    "queries": [
+      {
+        "query": "nickel",
+        "matched": 32
+      },
+      {
+        "query": "photoredox",
+        "matched": 35
+      },
+      {
+        "query": "methodology",
+        "matched": 0
+      },
+      {
+        "query": "JACS",
+        "matched": 151
+      },
+      {
+        "query": "Angew",
+        "matched": 109
+      },
+      {
+        "query": "10.1002/anie.1148889",
+        "matched": 1
+      },
+      {
+        "query": "2026-09-26",
+        "matched": 17
+      },
+      {
+        "query": "Molecularly",
+        "matched": 1
+      },
+      {
+        "query": "MOF压电-光催化原子转移自由基聚合",
+        "matched": 1
+      },
+      {
+        "query": "Bei L",
+        "matched": 1
+      },
+      {
+        "query": "Wanchao",
+        "matched": 1
+      },
+      {
+        "query": "Zhang",
+        "matched": 223
+      },
+      {
+        "query": "Geng",
+        "matched": 3
+      },
+      {
+        "query": "Changli",
+        "matched": 1
+      },
+      {
+        "query": "Junjun",
+        "matched": 2
+      },
+      {
+        "query": "10.1021/acs.orglett.6c02463",
+        "matched": 1
+      },
+      {
+        "query": "2026-07-27",
+        "matched": 6
+      },
+      {
+        "query": "Sulfonamide-Controlled",
+        "matched": 1
+      },
+      {
+        "query": "Alejandro",
+        "matched": 1
+      },
+      {
+        "query": "Jesús",
+        "matched": 2
+      },
+      {
+        "query": "Carlos",
+        "matched": 1
+      },
+      {
+        "query": "Organic",
+        "matched": 337
+      },
+      {
+        "query": "10.1021/acs.orglett.6c03657",
+        "matched": 1
+      },
+      {
+        "query": "2026-09-28",
+        "matched": 35
+      },
+      {
+        "query": "Total",
+        "matched": 51
+      },
+      {
+        "query": "统一铜催化级联策略实现天然吡喃并[3,2-a]咔唑全合成",
+        "matched": 1
+      },
+      {
+        "query": "Blake",
+        "matched": 1
+      },
+      {
+        "query": "Haley",
+        "matched": 1
+      },
+      {
+        "query": "Kapil",
+        "matched": 1
+      },
+      {
+        "query": "Graham",
+        "matched": 2
+      },
+      {
+        "query": "Huck",
+        "matched": 1
+      },
+      {
+        "query": "10.1021/jacs.6c12299",
+        "matched": 1
+      },
+      {
+        "query": "Two-Step",
+        "matched": 1
+      },
+      {
+        "query": "两步合成含多样反应性亲电基团的共价遗传编码肽大环库",
+        "matched": 1
+      },
+      {
+        "query": "James",
+        "matched": 4
+      },
+      {
+        "query": "Arunika",
+        "matched": 1
+      },
+      {
+        "query": "Nichole",
+        "matched": 1
+      },
+      {
+        "query": "Ryan",
+        "matched": 9
+      },
+      {
+        "query": "Peter",
+        "matched": 10
+      },
+      {
+        "query": "Brett",
+        "matched": 2
+      }
+    ]
+  },
+  "viewParity": {
+    "scenarios": 13,
+    "mismatched": 0,
+    "views": [
+      {
+        "name": "all-newest",
+        "matched": 859
+      },
+      {
+        "name": "all-oldest",
+        "matched": 859
+      },
+      {
+        "name": "first-journal",
+        "matched": 63
+      },
+      {
+        "name": "exclude-first-journal",
+        "matched": 796
+      },
+      {
+        "name": "include-two-exclude-one",
+        "matched": 91
+      },
+      {
+        "name": "middle-date-range",
+        "matched": 457
+      },
+      {
+        "name": "latest-added-date",
+        "matched": 33
+      },
+      {
+        "name": "nickel-query",
+        "matched": 32
+      },
+      {
+        "name": "photoredox-query-oldest",
+        "matched": 35
+      },
+      {
+        "name": "wang-query",
+        "matched": 253
+      },
+      {
+        "name": "doi-query",
+        "matched": 1
+      },
+      {
+        "name": "chinese-title-query",
+        "matched": 1
+      },
+      {
+        "name": "journal-and-date",
+        "matched": 1
+      }
+    ]
+  },
+  "shortQueryCompatibility": true,
+  "readerSortCompatibility": true
+}

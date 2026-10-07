@@ -1,0 +1,29 @@
+{
+  "schema": "catalog-index-ready-generation-production-v1",
+  "codeCommit": "a999f73eea47f5aebaf391303744aafaf74edf89",
+  "queryOptimizationCommit": "1c2ab3ffbcc621c2abe8ed486fcd014d8b86e9f9",
+  "runId": 37572176072,
+  "artifact": {
+    "id": 11460837230,
+    "sha256": "224df65d0da2bdd4dcb57c9960c29d2549366f41f1e3442b328ece790e51f283"
+  },
+  "scope": "Public read and exact-date filter canary; the UI continues to paginate by paper count.",
+  "report": {
+    "schemaVersion": 1,
+    "phase": "P1-literature-index-read-activation",
+    "ok": true,
+    "rolledBack": false,
+    "startedAt": "2026-10-07T04:36:47.331Z",
+    "exactDayChecked": true,
+    "day": "2026-10-07",
+    "dateMatched": 3,
+    "dayCursorChecked": true,
+    "mode": "ready-generation",
+    "catalogId": "5dd2c1d60bb7320fa811caacd4cc9f8d31d5c953b148b3e209dcc1a2de001b5c",
+    "productionCards": 859,
+    "currentGenerationReady": true,
+    "readConfigured": true,
+    "readPathActive": true,
+    "completedAt": "2026-10-07T04:36:50.623Z"
+  }
+}
