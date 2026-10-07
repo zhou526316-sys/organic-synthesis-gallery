@@ -1,5 +1,6 @@
 import { installGalleryPerformanceRuntime } from './performance-runtime';
 import { validChineseTitle } from '../shared/chinese-title-overrides.js';
+import './pagination-layout.css';
 
 const ZH_CACHE_KEY = 'organic-gallery-zh-title-cache-v2';
 const cleanupGalleryPerformanceRuntime = installGalleryPerformanceRuntime();
