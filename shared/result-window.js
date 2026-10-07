@@ -38,11 +38,11 @@ export function resultPaginationItems(page, pages, compact = false) {
   const range = (start, end) => Array.from({ length: end - start + 1 }, (_, index) => start + index);
 
   if (!showLeftEllipsis && showRightEllipsis) {
-    const leftCount = 3 + siblingCount * 2;
+    const leftCount = 3 + siblingCount;
     return [...range(1, leftCount), 'ellipsis', pages];
   }
   if (showLeftEllipsis && !showRightEllipsis) {
-    const rightCount = 3 + siblingCount * 2;
+    const rightCount = 3 + siblingCount;
     return [1, 'ellipsis', ...range(pages - rightCount + 1, pages)];
   }
   return [1, 'ellipsis', ...range(leftSibling, rightSibling), 'ellipsis', pages];
