@@ -30,6 +30,7 @@ const harness=[
 "function publisherForDoi(d){d=normalizeDoi(d);if(d.startsWith('10.1021/'))return 'acs';if(d.startsWith('10.1002/'))return 'wiley';if(d.startsWith('10.1039/'))return 'rsc';return 'other'}",
 "function normalizeUrl(v,b){try{return new URL(v,b||location.href).href}catch{return ''}}",
 "function currentCaptureJob(){return true}",
+"function controllerPaused(){return false}",
 "function assertBoundCaptureJob(job){return normalizeDoi(job.doi)}",
 "function captureLiveError(v){return String(v||'').slice(0,180)}",
 "function captureLiveUpdate(){return true};function isAbortRequested(){return false};async function sleep(ms){return new Promise(r=>setTimeout(r,Math.min(Number(ms)||0,25)))}",
