@@ -287,11 +287,12 @@
     "Full original-color TOC1000x494 at440,12 ends506,14px above the blue strip. Original500px source embedded without chemical or palette changes.",
     "Both text-only exports byte-identical to reviewed R15. Full titles, body paragraphs, captions, body figures and retrospective cover unchanged.",
     "Native reference check is a projection using the actual R15 screenshot geometry. No fresh R16 native screenshot is claimed. Relay preview QA remains separately labelled; draft/get data integrity is checked independently.",
-    "Timeout preflight: bounded source QA and actual QA; one terminal same-draft update after source approval. No public sending."
+    "Timeout preflight: bounded source QA and actual QA; one terminal same-draft update after source approval. No public sending.",
+    "R16 same-media draft/update succeeded at 2026-10-07T08:36:49.505363Z; draft/get-derived returned cover/content QA passed. Final native geometry evidence remains the explicitly labelled projection from the supplied R15 App screenshot."
   ],
-  "draftReadback": "pending",
+  "draftReadback": "ok",
   "publicSendAuthorized": false,
-  "finalTransportReview": "pending",
+  "finalTransportReview": "pass",
   "priorCompletedRevision": {
     "revision": "2026-10-07-r15",
     "previewUrl": "https://relay.gczhouwld.com/wechat-preview/91d9bcbc08d8c5ea6d4c093b.html"
@@ -535,5 +536,11 @@
     "visualReview": "pass",
     "nativeClientVerified": false,
     "nativeR16ScreenshotCaptured": false
-  }
+  },
+  "completedAt": "2026-10-07T08:41:01Z",
+  "actualDraftPreviewUrl": "https://relay.gczhouwld.com/wechat-preview/6cc51c56125966dcd405f643.html",
+  "actualDraftQa": "audit/wechat-working/2026-10-07-r16-real-draft-qa.json",
+  "actualDraftQaRunId": "37595197539",
+  "nativeClientVerified": false,
+  "nativeR16ScreenshotCaptured": false
 }
