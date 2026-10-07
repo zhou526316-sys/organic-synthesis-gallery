@@ -1,0 +1,95 @@
+{
+  "revision": "2026-10-07-r9",
+  "reviewedAt": "2026-10-07T06:15:53.413Z",
+  "sourceCommit": "11de1025db6cf6e18d916e0a5975a38cb8da04ec",
+  "sources": [
+    {
+      "path": "public/wechat-editions/2026-10-07.json",
+      "blobSha": "1a26519a4291debd82199a35deb4e3233f380dd9"
+    },
+    {
+      "path": "public/wechat-featured/2026-10-07.json",
+      "blobSha": "8e9357f3efa870f0def106a232eeb560737446e9"
+    },
+    {
+      "path": "public/wechat-retrospective/phoenix1-structural-regeneration.json",
+      "blobSha": "c959865f69591ee05c4393ef8f30386a2241892d"
+    }
+  ],
+  "textReview": "pass",
+  "imageReview": "pass",
+  "combinedVisualReview": "pass",
+  "sourcePreview": {
+    "revision": "2026-10-07-r9",
+    "runId": "37580403663",
+    "checkedAt": "2026-10-07T06:14:43.061917+00:00",
+    "sources": [
+      {
+        "path": "public/wechat-editions/2026-10-07.json",
+        "blobSha": "1a26519a4291debd82199a35deb4e3233f380dd9"
+      },
+      {
+        "path": "public/wechat-featured/2026-10-07.json",
+        "blobSha": "8e9357f3efa870f0def106a232eeb560737446e9"
+      },
+      {
+        "path": "public/wechat-retrospective/phoenix1-structural-regeneration.json",
+        "blobSha": "c959865f69591ee05c4393ef8f30386a2241892d"
+      }
+    ],
+    "assetsVerified": 32,
+    "rows": [
+      {
+        "article": "angew",
+        "width": 390,
+        "images": 15,
+        "broken": 0
+      },
+      {
+        "article": "natcat",
+        "width": 390,
+        "images": 17,
+        "broken": 0
+      }
+    ],
+    "status": "pass",
+    "scope": "source preview only; visual review still required",
+    "draftWritten": false,
+    "publisherTriggered": false
+  },
+  "artifact": {
+    "runId": "37580403663",
+    "artifactId": 11464003893,
+    "artifactSha256": "1a9c3df91ece52396bee35c1e2dc1de5f388845c0227f23cd5434844fc8082db",
+    "viewportWidth": 390,
+    "assetsVerified": 32,
+    "bodyImages": {
+      "angew": 14,
+      "natcat": 16
+    },
+    "reviewedScreenshots": [
+      "angew-opening.png",
+      "angew-full.png",
+      "angew-changed-0.png",
+      "natcat-opening.png",
+      "natcat-full.png",
+      "natcat-changed-0.png",
+      "natcat-changed-1.png"
+    ]
+  },
+  "reviewNotes": [
+    "User-approved targeted revision, not a topic or narrative reset.",
+    "Original Angew Fig.2a enlarged across the upper cover; lower band reserved for WeChat title overlay.",
+    "Full approved source-locked phoenix artwork contained in square, not screenshot or cropped inset.",
+    "Conventional SET and solvent-cage teaching clearly distinguished from source-paper experimental evidence.",
+    "TA formation evidence distinguished from supporting EPR/scavenging and from catalytic dominance.",
+    "No invented Angew peer-review report.",
+    "New original-source EPR plot bounds and all symbols/axes visually checked; no chemical artwork regenerated.",
+    "Final source text independently reviewed; four reader-facing wording/figure-reference edits applied, exports regenerated and all source fingerprints renewed.",
+    "All 32 pinned raster bytes verified by blob SHA, SHA256 and full decoding. No approved cover or body image regenerated.",
+    "Final existing-renderer 390px source preview run 37580403663 inspected: both covers complete in intended slots, all 30 body figures preserved, no broken images or horizontal overflow.",
+    "Angew main/SI prior source review and NatCat SI/peer-review checkpoint retained; new conventional-SET and cage/electron background independently checked against primary publications.",
+    "Only one combined daily draft update authorized. Public sending remains unauthorized."
+  ],
+  "draftWritten": false
+}

@@ -1,12 +1,12 @@
 {
   "publicationDate": "2026-10-07",
   "editorialRevision": "2026-10-07-r9",
-  "reviewedAt": "2026-10-07T05:57:19.698162+00:00",
+  "reviewedAt": "2026-10-07T06:15:53.413Z",
   "reviewer": "AI source-grounded editorial review; no claim of human review",
   "textReview": "pass",
-  "imageReview": "pending",
+  "imageReview": "pass",
   "individualImageReview": "pass",
-  "combinedVisualReview": "pending",
+  "combinedVisualReview": "pass",
   "artifacts": {
     "textOnly": "audit/wechat-working/2026-10-07-r9-angew-text-only.md",
     "imagesOnly": "audit/wechat-working/2026-10-07-r9-angew-images-only.md",
@@ -266,8 +266,33 @@
     "Conventional SET and solvent-cage teaching clearly distinguished from source-paper experimental evidence.",
     "TA formation evidence distinguished from supporting EPR/scavenging and from catalytic dominance.",
     "No invented Angew peer-review report.",
-    "New original-source EPR plot bounds and all symbols/axes visually checked; no chemical artwork regenerated."
+    "New original-source EPR plot bounds and all symbols/axes visually checked; no chemical artwork regenerated.",
+    "Final source text independently reviewed; four reader-facing wording/figure-reference edits applied, exports regenerated and all source fingerprints renewed.",
+    "All 32 pinned raster bytes verified by blob SHA, SHA256 and full decoding. No approved cover or body image regenerated.",
+    "Final existing-renderer 390px source preview run 37580403663 inspected: both covers complete in intended slots, all 30 body figures preserved, no broken images or horizontal overflow.",
+    "Angew main/SI prior source review and NatCat SI/peer-review checkpoint retained; new conventional-SET and cage/electron background independently checked against primary publications.",
+    "Only one combined daily draft update authorized. Public sending remains unauthorized."
   ],
   "draftReadback": "not_run",
-  "publicSendAuthorized": false
+  "publicSendAuthorized": false,
+  "finalSourcePreview": {
+    "runId": "37580403663",
+    "artifactId": 11464003893,
+    "artifactSha256": "1a9c3df91ece52396bee35c1e2dc1de5f388845c0227f23cd5434844fc8082db",
+    "viewportWidth": 390,
+    "assetsVerified": 32,
+    "bodyImages": {
+      "angew": 14,
+      "natcat": 16
+    },
+    "reviewedScreenshots": [
+      "angew-opening.png",
+      "angew-full.png",
+      "angew-changed-0.png",
+      "natcat-opening.png",
+      "natcat-full.png",
+      "natcat-changed-0.png",
+      "natcat-changed-1.png"
+    ]
+  }
 }
