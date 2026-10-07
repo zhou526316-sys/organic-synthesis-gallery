@@ -327,7 +327,7 @@ function scheduleScan(): void {
   requestAnimationFrame(() => void scanGallery());
 }
 
-function suppressLegacyScrollMediaHandlers(): () => void {
+export function suppressLegacyScrollMediaHandlers(): () => void {
   const original = window.addEventListener.bind(window);
   const patched: typeof window.addEventListener = ((type: string, listener: EventListenerOrEventListenerObject | null, options?: boolean | AddEventListenerOptions) => {
     const source = typeof listener === 'function' ? Function.prototype.toString.call(listener) : '';
