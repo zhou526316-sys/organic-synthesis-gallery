@@ -367,7 +367,7 @@ export async function shadowWriteUserLibraryV3FromState(env, userIdValue, state,
 
 export async function getUserLibraryV3ShadowStatus(env) {
   if (!env?.DB) return { status:503, body:{ error:'user_library_v3_shadow_db_missing' } };
-  const [legacy,legacyDocuments,staleLegacyDocuments,heads,sync,authorityCount,revisionMismatch,backfill] = await Promise.all([
+  const [legacy,legacyDocuments,staleLegacyDocuments,heads,sync,authorityCount,revisionMismatch,authorityHeadMismatch,compatHeadMismatch,backfill] = await Promise.all([
     env.DB.prepare(`
       SELECT COUNT(*) AS count
       FROM user_library_state legacy
@@ -394,21 +394,65 @@ export async function getUserLibraryV3ShadowStatus(env) {
          OR sync.source_revision<>legacy.revision
          OR sync.source_updated_at<>legacy.updated_at)
     `).first(),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM user_library_v3_authority authority
+      LEFT JOIN user_library_v3_head head ON head.user_id=authority.user_id
+      WHERE authority.authority='v3'
+        AND (head.user_id IS NULL OR head.revision<authority.activated_revision)
+    `).first(),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM user_library_v3_authority authority
+      INNER JOIN user_library_v3_head v3 ON v3.user_id=authority.user_id
+      LEFT JOIN user_library_head compat ON compat.user_id=authority.user_id
+      WHERE authority.authority='v3'
+        AND (compat.user_id IS NULL OR compat.revision<>v3.revision OR compat.updated_at<>v3.updated_at)
+    `).first(),
     env.DB.prepare('SELECT * FROM user_library_v3_backfill WHERE id=1').first(),
   ]);
+  const rolloutValue=Number(env.USER_LIBRARY_V3_WRITE_ROLLOUT_BPS || 0);
+  const rolloutBasisPoints=Number.isSafeInteger(rolloutValue) && rolloutValue>=0 && rolloutValue<=10000 ? rolloutValue : 0;
+  const globalWriteEnabled=flag(env.USER_LIBRARY_V3_WRITE_ENABLED);
+  const rolloutSeedConfigured=Boolean(safeText(env.USER_LIBRARY_V3_WRITE_ROLLOUT_SEED,200));
+  const canaryConfigured=Boolean(safeText(env.USER_LIBRARY_V3_WRITE_CANARY_USER_ID,300));
+  const legacyCount=Number(legacy?.count || 0);
+  const staleLegacyCount=Number(staleLegacyDocuments?.count || 0);
+  const revisionMismatchCount=Number(revisionMismatch?.count || 0);
+  const authorityHeadMismatchCount=Number(authorityHeadMismatch?.count || 0);
+  const compatHeadMismatchCount=Number(compatHeadMismatch?.count || 0);
+  const backfillComplete=Number(backfill?.complete || 0)===1;
+  const rolloutPreflightReady=flag(env.USER_LIBRARY_V3_READ_ENABLED)
+    && backfillComplete
+    && revisionMismatchCount===0
+    && staleLegacyCount===0
+    && authorityHeadMismatchCount===0
+    && compatHeadMismatchCount===0
+    && rolloutSeedConfigured
+    && canaryConfigured;
   return { status:200, body:{
     ok:true,
     configured:flag(env.USER_LIBRARY_V3_SHADOW_ENABLED),
     enabled:userLibraryV3ShadowEnabled(env),
     readEnabled:flag(env.USER_LIBRARY_V3_READ_ENABLED),
-    writeEnabled:flag(env.USER_LIBRARY_V3_WRITE_ENABLED),
-    legacyUsers:Number(legacy?.count || 0),
+    writeEnabled:globalWriteEnabled,
+    rollout:{
+      basisPoints:rolloutBasisPoints,
+      percent:rolloutBasisPoints/100,
+      active:!globalWriteEnabled && rolloutBasisPoints>0,
+      seedConfigured:rolloutSeedConfigured,
+      canaryConfigured,
+      preflightReady:rolloutPreflightReady,
+    },
+    legacyUsers:legacyCount,
     legacyDocuments:Number(legacyDocuments?.count || 0),
-    staleLegacyDocuments:Number(staleLegacyDocuments?.count || 0),
+    staleLegacyDocuments:staleLegacyCount,
     v3Heads:Number(heads?.count || 0),
     syncedUsers:Number(sync?.count || 0),
     v3AuthorityUsers:Number(authorityCount?.count || 0),
-    revisionMismatches:Number(revisionMismatch?.count || 0),
+    revisionMismatches:revisionMismatchCount,
+    authorityHeadMismatches:authorityHeadMismatchCount,
+    compatibilityHeadMismatches:compatHeadMismatchCount,
     backfill:backfill ? {
       complete:Number(backfill.complete || 0)===1,
       cursorUserId:String(backfill.cursor_user_id || ''),

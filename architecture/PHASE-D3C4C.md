@@ -57,3 +57,19 @@ Emergency full rollback is `USER_LIBRARY_V3_WRITE_ROLLOUT_BPS=0` with `USER_LIBR
 - isolated canary override: enabled only for the reserved canary id;
 - D3c4b production canary: passed;
 - normal user migration caused by D3c4c installation: none.
+
+## Read-only rollout observability
+
+The existing authenticated admin status surface is also the rollout preflight surface. It reports:
+
+- configured rollout basis points and percentage;
+- whether the fixed seed and isolated canary are configured;
+- all-time V3 authority user count;
+- legacy/V3 revision mismatch count;
+- V3 authority rows whose V3 head is missing or behind the activation revision;
+- V3-authoritative users whose D3b compatibility head is missing or not revision/updated-at identical to the V3 head;
+- one `preflightReady` boolean that is true only when reads are enabled, historical backfill is complete, all parity/mirror mismatch counts are zero, and rollout identity configuration is present.
+
+These checks are D1 aggregate reads. They do not add writes to the user mutation path and they do not change rollout eligibility.
+
+Current rollout remains **0 bp / 0%**.

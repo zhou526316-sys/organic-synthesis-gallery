@@ -161,6 +161,41 @@ test('persistent historical backfill advances across pages and reaches semantic 
   assert.equal(compare2.body.complete,true);
 });
 
+test('V3 admin status exposes bounded rollout preflight and authority mirror health',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env={
+    ...envFor(db),
+    USER_LIBRARY_V3_WRITE_ENABLED:'0',
+    USER_LIBRARY_V3_WRITE_CANARY_USER_ID:'__gallery_v3_write_canary__',
+    USER_LIBRARY_V3_WRITE_ROLLOUT_BPS:'0',
+    USER_LIBRARY_V3_WRITE_ROLLOUT_SEED:'d3c4c-2026-10-07',
+  };
+  putLegacy(db,'u1',fixture('status'),1,100);
+  await backfillUserLibraryV3ShadowPage(env,20);
+  await backfillUserLibraryV3ShadowPage(env,20);
+
+  const status=await getUserLibraryV3ShadowStatus(env);
+  assert.equal(status.status,200);
+  assert.deepEqual(status.body.rollout,{
+    basisPoints:0,
+    percent:0,
+    active:false,
+    seedConfigured:true,
+    canaryConfigured:true,
+    preflightReady:true,
+  });
+  assert.equal(status.body.authorityHeadMismatches,0);
+  assert.equal(status.body.compatibilityHeadMismatches,0);
+  assert.equal(status.body.revisionMismatches,0);
+
+  const invalid=await getUserLibraryV3ShadowStatus({
+    ...env,
+    USER_LIBRARY_V3_WRITE_ROLLOUT_BPS:'50.5',
+  });
+  assert.equal(invalid.body.rollout.basisPoints,0);
+  assert.equal(invalid.body.rollout.active,false);
+});
+
 test('reconciliation repairs a user changed after historical cursor passed it',async t=>{
   const db=new D1();t.after(()=>db.close());
   const env=envFor(db);
