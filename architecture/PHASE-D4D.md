@@ -1,7 +1,7 @@
 # Phase D4d — dormant fail-closed snapshot read branch
 
 Date: 2026-10-07 Asia/Shanghai.
-Status: route logic preinstalled; production snapshot read flag remains disabled.
+Status: production snapshot read activation requested through canonical canary/rollback.
 
 ## Route order
 
@@ -26,9 +26,9 @@ This prevents a stale snapshot from silently recreating the unbounded public-rea
 
 ## Current production state
 
-`SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED=0`.
+`SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED=1` in the canonical deployment configuration.
 
-Therefore this commit changes no current public analytics behavior. Activation remains a separate decision after D4c production parity and cron freshness are proven.
+Activation is not considered complete merely because the flag is set. The canonical D4d canary must prove live snapshot routing, freshness, parity and health. Any failure automatically redeploys with the flag returned to 0.
 
 ## Canonical activation and rollback
 
@@ -49,3 +49,18 @@ When the flag is changed to 1 in a future authorized cutover, the same canonical
 Any failure automatically rewrites the deployed config back to 0, redeploys the Worker, and verifies that the public route is no longer on snapshot.
 
 Activation evidence is retained for 30 days.
+
+## Activation request — 2026-10-07
+
+Prerequisites satisfied before requesting activation:
+
+- D4c production snapshot migration: passed;
+- D4c refresh: passed;
+- D4c snapshot/materialized parity: passed;
+- D4c snapshot artifact: preserved;
+- D4d fail-closed public branch: installed;
+- canonical activation canary: installed;
+- automatic rollback: installed;
+- Worker deployment authority regression: passed.
+
+The production flag is now requested at 1. Final activation authority comes from the live D4d canary result, not from this source change alone.
