@@ -28,6 +28,7 @@ catch(error){
  server.close();throw error;
 }
 const SESSION_KEY='organic-gallery-session-v1';
+const TEST_SCOPE=String(process.env.PRIVATE_PDF_BROWSER_SCOPE||'all');
 const API_ROUTE=/^https:\/\/(?:api\.gczhouwld\.com|organic-synthesis-gallery\.zhou526316\.workers\.dev)\//;
 const activeContexts=new Set(),cases=[];
 let passed=0,currentCase=null;
@@ -410,6 +411,7 @@ try{
    await context.close();
   }
  });
+ if(TEST_SCOPE!=='owner'){
  // The owner/capability cases above create many full-page contexts and PDF.js
  // workers. Start the local-vault integration cases with a fresh headless
  // browser process; assertions remain unchanged and the P1 suite independently
@@ -481,6 +483,7 @@ try{
   assert.equal(cleared,true,'logout clears local and queue labels synchronously');
   await page.waitForTimeout(100);await assertPdfHidden(page);await assertNoCardFileIo(page);
  });
+ }
 
 }catch(error){console.error('PRIVATE_PDF_BROWSER_FAIL '+String(error?.stack||error));process.exitCode=1;}
 finally{
