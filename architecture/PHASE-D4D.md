@@ -116,3 +116,24 @@ Rollback is considered verified when snapshot reads are disabled at the edge and
 Snapshot primary-read activation is temporarily paused back to 0 while D4c source readiness is diagnosed. This is deliberate: D4c shadow continues to run and now persists the exact source-not-ready readiness vector and the post-repair materialized status.
 
 D4b proof no longer requires the public site-stats route itself to be materialized. D4b is a source-integrity proof; when D4d is active, the public route is expected to be snapshot-first, so using the public route as a D4b authority assertion was a false dependency.
+
+## Final guarded activation request — 2026-10-07
+
+Activation prerequisites have now been proven on production with primary snapshot reads still disabled:
+
+- D4b materialized proof: `ok=true`, raw/materialized/global PV = 621/621/621;
+- D4b stable parity passes: 2;
+- D4c snapshot proof: `ok=true`;
+- D4c first attempt: `parityProven=true`, `sameGeneration=true`;
+- snapshot/materialized semantic comparison: `same=true`;
+- source stability at proof time: true;
+- snapshot generation fence: true;
+- snapshot age at proof: 764 ms;
+- backfill counter drift is explicitly diagnostic-only;
+- public raw-history fallback is removed;
+- rollback accepts only bounded outcomes and rejects `legacy_raw_fallback` / `site-pageview-v1`.
+
+The canonical deployment source flag is therefore changed to
+`SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED=1`.
+
+Activation is complete only if the same canonical run proves the exact D4c snapshot generation is served by the unauthenticated public site-stats endpoint and the rollback step is skipped. Any failure retains the automatic bounded rollback.

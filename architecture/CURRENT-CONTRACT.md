@@ -163,7 +163,9 @@ These priorities are scale-safety work. They do not alter the Tampermonkey acqui
 D4d activation retry #2 is requested after the D4c parity-proof reuse fix; automatic rollback remains mandatory.
 
 
-D4d primary snapshot activation is temporarily paused while D4c persists exact source-readiness diagnostics; public analytics remains bounded and raw-history fallback remains forbidden.
+D4d final guarded snapshot activation is requested after production D4b/D4c proof. Public analytics remains bounded, raw-history fallback is forbidden, and any failed activation must return to a bounded rollback state.
 
 
 Site-analytics backfill scanned/materialized counters are operational diagnostics, not public-read authority; realtime correctness is fenced by materialized event watermark, cursor, global timestamp, error state and snapshot generation.
+
+Production analytics pre-activation proof (2026-10-07): D4b `ok=true` with 621 raw/materialized events, 621 global PV and two stable parity passes; D4c `ok=true` with one-attempt exact-generation snapshot parity, `same=true`, `sourceStable=true`, and `generationFenced=true`. Snapshot primary read may be considered production-active only after the canonical live activation canary succeeds and rollback is skipped.

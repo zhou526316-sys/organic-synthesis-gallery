@@ -1,7 +1,7 @@
 # Phase D4e — self-healing bounded analytics fallback
 
 Date: 2026-10-07 Asia/Shanghai.
-Status: guarded snapshot activation requested; raw public analytics fallback removed in source.
+Status: final guarded snapshot activation requested after production D4b/D4c proof; raw public analytics fallback removed.
 
 D4e distinguishes strict realtime D4b readiness from snapshotSourceReady, the internally consistent materialized watermark.
 
@@ -39,3 +39,17 @@ Production diagnostics isolated the persistent D4c failure to one non-authoritat
 - backfill scanned/materialized maintenance counters: 620.
 
 The maintenance counters can lag when realtime materialization and cursor maintenance interleave. They are therefore diagnostics, not analytics truth. Snapshot/materialized readiness now uses the atomic materialized event watermark, backfill cursor, global last-view timestamp and error state. Counter drift remains exposed as `counterDrift` / `countersConsistent` for repair and auditing, but it cannot make a complete materialized dataset falsely unavailable.
+
+## Production proof before final activation
+
+With snapshot primary reads disabled, production run `37565010281` proved:
+
+- materialized source: 621 raw rows, 621 materialized rows, global PV 621;
+- backfill complete, no backfill work required in the run;
+- two stable D4b parity passes;
+- one-attempt D4c snapshot generation;
+- exact generation match between refresh and status;
+- snapshot/materialized semantic equality;
+- fresh snapshot with age below one second at proof time.
+
+The historical backfill counters remain allowed to drift as operational diagnostics and no longer affect read authority.
