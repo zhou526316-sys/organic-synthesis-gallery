@@ -1,9 +1,9 @@
 {
-  "requestId": "wechat-daily-2026-10-07-r14-thin-blue-strip-large-toc",
-  "requestedAt": "2026-10-07T07:53:15Z",
+  "requestId": "wechat-daily-2026-10-07-r15-top-glyph-clearance",
+  "requestedAt": "2026-10-07T08:07:34Z",
   "publicationDate": "2026-10-07",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-07-r14",
+  "editorialRevision": "2026-10-07-r15",
   "approvedGate": "audit/wechat-working/2026-10-07-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -12,5 +12,5 @@
   ],
   "draftOnly": true,
   "requireDraftGetReadback": true,
-  "reason": "User repeatedly requests blue only just behind visible white text. Original white background and palette preserved; full TOC enlarged to1160px width; strip200px of800px height. Controlled relay illustration puts two white lines inside strip with about2px top/bottom clearance at mobile width, while full draft/body title remains unchanged. Source text/image QA and screenshot review passed. Same existing two-article draft only; no public sending."
+  "reason": "User reports upper white glyph portions outside prior blue strip. Extend upper edge upward32px on800px canvas (about6.2px atmobile362px cover width); keep title CSS unchanged and original white TOC. Source text identical toR14; all35assets and rendered actual glyph pixels reviewed with8.05px top clearance at390px viewport. Same existing two-article draft update only, with draft/get readback; no public send."
 }

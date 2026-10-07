@@ -1,12 +1,12 @@
 {
   "publicationDate": "2026-10-07",
   "editorialRevision": "2026-10-07-r15",
-  "reviewedAt": "2026-10-07T08:02:06.013820+00:00",
+  "reviewedAt": "2026-10-07T08:07:34Z",
   "reviewer": "AI source-grounded editorial review; no claim of human review",
   "textReview": "pass",
-  "imageReview": "pending",
+  "imageReview": "pass",
   "individualImageReview": "pass",
-  "combinedVisualReview": "pending",
+  "combinedVisualReview": "pass",
   "artifacts": {
     "textOnly": "audit/wechat-working/2026-10-07-r15-angew-text-only.md",
     "imagesOnly": "audit/wechat-working/2026-10-07-r15-angew-images-only.md",
@@ -295,5 +295,199 @@
   "priorCompletedRevision": {
     "revision": "2026-10-07-r14",
     "previewUrl": "https://relay.gczhouwld.com/wechat-preview/cc272ec02c6a2e85a9361381.html"
+  },
+  "finalSourcePreview": {
+    "status": "pass",
+    "revision": "2026-10-07-r15",
+    "sourceSnapshot": "93f95e45f3b7c77d3ed1456a02a96d004f4a92a3bd586ad08987a43e1fa88baa",
+    "sourceCommit": "e628df304622a3027cecb67df4e45e05eef7eee9",
+    "runId": "37591526403",
+    "artifactId": 11469416013,
+    "artifactSha256": "63d962c99c4a26719a077ea07aded0b29aa29f17b46d7ad17912a03296f460a8",
+    "viewports": [
+      390,
+      690
+    ],
+    "assetsVerified": 35,
+    "bodyImages": {
+      "angew": 14,
+      "natcat": 19
+    },
+    "coverLayoutChecks": [
+      {
+        "viewport": 390,
+        "scenario": "labelled relay cover layout demonstration",
+        "fontSize": 15.7348,
+        "lineHeight": 16.7182,
+        "titleClearancePx": 8.258593750000003,
+        "bottomClearancePx": 2.265625,
+        "titleGlyphBounds": {
+          "pixelBounds": [
+            12,
+            116,
+            339,
+            149
+          ],
+          "cssBoundsRelativeToFrame": {
+            "left": 12,
+            "top": 115.6064967105263,
+            "right": 339,
+            "bottom": 148.49455180921052
+          }
+        },
+        "titleGlyphClearancePx": 8.052590460526304,
+        "titleGlyphDiagnostic": {
+          "titleGlyphBounds": {
+            "pixelBounds": [
+              12,
+              116,
+              339,
+              149
+            ],
+            "cssBoundsRelativeToFrame": {
+              "left": 12,
+              "top": 115.6064967105263,
+              "right": 339,
+              "bottom": 148.49455180921052
+            }
+          },
+          "titleGlyphClearancePx": 8.052590460526304,
+          "highestGlyphPixelY": 116,
+          "minimumGlyphClearancePx": 2,
+          "threshold": 32,
+          "edgeGuardPixels": 1,
+          "diagnosticImage": "angew-title-glyph-mask-390.png",
+          "inlineStylesRestored": true,
+          "computedStylesRestored": true,
+          "frameRelativeGeometryRestored": true,
+          "inlineAttributeSerializationChanged": true,
+          "scope": "Black-background full-frame diagnostic of this relay demonstration only; layout and title unchanged; not native WeChat client verification"
+        },
+        "minimumWhiteContrast": 10.21482492693778,
+        "blueBandStartRatio": 0.71,
+        "fullTitleDomVerified": true,
+        "fullTitleAttributesVerified": true,
+        "fullArticleTitleVerified": true,
+        "renderedTitle": "有机合成文献日报｜10.07｜今日精选｜Angew：用于自由基交叉偶联的氧化还原可调NHC–三芳胺杂化有机光催化剂",
+        "visibleLineLimit": 2,
+        "css": {
+          "color": "rgb(255, 255, 255)",
+          "fontSize": 15.7348,
+          "lineHeight": 16.7182,
+          "maxHeight": 33.4365,
+          "lineClamp": "2",
+          "overflow": "hidden",
+          "wordBreak": "break-all",
+          "display": "flow-root",
+          "clientHeight": 33,
+          "scrollHeight": 52
+        },
+        "coverFrameBounds": {
+          "x": 17,
+          "y": 140,
+          "width": 356,
+          "height": 151.484375
+        },
+        "visibleTitleBounds": {
+          "x": 29.453125,
+          "y": 255.8125,
+          "width": 331.09375,
+          "height": 33.40625
+        },
+        "coverImageSha256": "c8821e9e153ca667abff52f660f580041e62a4fde208439ee77712644a6d3019",
+        "coverSource": "locked source cover",
+        "scope": "Our explicitly labelled relay card demonstration only; CSS limits visible text, not the full draft title; no native WeChat client layout claim"
+      },
+      {
+        "viewport": 690,
+        "scenario": "labelled relay cover layout demonstration",
+        "fontSize": 28.4199,
+        "lineHeight": 30.1961,
+        "titleClearancePx": 14.877968750000008,
+        "bottomClearancePx": 4.09375,
+        "titleGlyphBounds": {
+          "pixelBounds": [
+            23,
+            210,
+            613,
+            269
+          ],
+          "cssBoundsRelativeToFrame": {
+            "left": 22.96428571428571,
+            "top": 209.7006158759124,
+            "right": 612.0481366459627,
+            "bottom": 268.6165031934307
+          }
+        },
+        "titleGlyphClearancePx": 15.437959625912413,
+        "titleGlyphDiagnostic": {
+          "titleGlyphBounds": {
+            "pixelBounds": [
+              23,
+              210,
+              613,
+              269
+            ],
+            "cssBoundsRelativeToFrame": {
+              "left": 22.96428571428571,
+              "top": 209.7006158759124,
+              "right": 612.0481366459627,
+              "bottom": 268.6165031934307
+            }
+          },
+          "titleGlyphClearancePx": 15.437959625912413,
+          "highestGlyphPixelY": 210,
+          "minimumGlyphClearancePx": 2,
+          "threshold": 32,
+          "edgeGuardPixels": 1,
+          "diagnosticImage": "angew-title-glyph-mask-690.png",
+          "inlineStylesRestored": true,
+          "computedStylesRestored": true,
+          "frameRelativeGeometryRestored": true,
+          "inlineAttributeSerializationChanged": true,
+          "scope": "Black-background full-frame diagnostic of this relay demonstration only; layout and title unchanged; not native WeChat client verification"
+        },
+        "minimumWhiteContrast": 10.21482492693778,
+        "blueBandStartRatio": 0.71,
+        "fullTitleDomVerified": true,
+        "fullTitleAttributesVerified": true,
+        "fullArticleTitleVerified": true,
+        "renderedTitle": "有机合成文献日报｜10.07｜今日精选｜Angew：用于自由基交叉偶联的氧化还原可调NHC–三芳胺杂化有机光催化剂",
+        "visibleLineLimit": 2,
+        "css": {
+          "color": "rgb(255, 255, 255)",
+          "fontSize": 28.4199,
+          "lineHeight": 30.1961,
+          "maxHeight": 60.3923,
+          "lineClamp": "2",
+          "overflow": "hidden",
+          "wordBreak": "break-all",
+          "display": "flow-root",
+          "clientHeight": 60,
+          "scrollHeight": 95
+        },
+        "coverFrameBounds": {
+          "x": 23.5,
+          "y": 116,
+          "width": 643,
+          "height": 273.609375
+        },
+        "visibleTitleBounds": {
+          "x": 46,
+          "y": 325.140625,
+          "width": 598,
+          "height": 60.375
+        },
+        "coverImageSha256": "c8821e9e153ca667abff52f660f580041e62a4fde208439ee77712644a6d3019",
+        "coverSource": "locked source cover",
+        "scope": "Our explicitly labelled relay card demonstration only; CSS limits visible text, not the full draft title; no native WeChat client layout claim"
+      }
+    ],
+    "reviewedScreenshots": [
+      "angew-cover-layout-demonstration-390.png",
+      "angew-title-glyph-mask-390.png"
+    ],
+    "visualReview": "pass: actual rendered highest title glyph has8.05px blue backing clearance at390px viewport, styles/geometry restored after diagnostic; narrow band has modest top allowance and original-color TOC remains complete.",
+    "nativeClientVerified": false
   }
 }
