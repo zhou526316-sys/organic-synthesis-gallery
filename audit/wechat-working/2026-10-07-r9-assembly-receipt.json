@@ -1,0 +1,41 @@
+{
+  "revision": "2026-10-07-r9",
+  "runId": "37578865292",
+  "stage": "source_revision_and_internal_QA",
+  "completedAt": "2026-10-07T05:57:22.266672+00:00",
+  "sources": [
+    {
+      "path": "public/wechat-editions/2026-10-07.json",
+      "blobSha": "103b188f39b28e8827abfdbbd6bae212ec3919a7"
+    },
+    {
+      "path": "public/wechat-featured/2026-10-07.json",
+      "blobSha": "9f059362f416aaf438c8beb0be6686b65efa16b1"
+    },
+    {
+      "path": "public/wechat-retrospective/phoenix1-structural-regeneration.json",
+      "blobSha": "60377cc360177f440e94f52a0db69b3438c4dbd8"
+    }
+  ],
+  "assetsVerified": 32,
+  "bodyImages": 30,
+  "assemblyChecks": [
+    {
+      "article": "angew",
+      "width": 390,
+      "images": 15,
+      "broken": 0
+    },
+    {
+      "article": "natcat",
+      "width": 390,
+      "images": 17,
+      "broken": 0
+    }
+  ],
+  "textReview": "pass",
+  "individualImageReview": "pass",
+  "combinedVisualReview": "pending",
+  "draftWritten": false,
+  "publisherTriggered": false
+}

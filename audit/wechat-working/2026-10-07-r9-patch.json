@@ -1,0 +1,199 @@
+{
+  "revision": "2026-10-07-r9",
+  "expected": {
+    "public/wechat-featured/2026-10-07.json": "3a0cae9403c03b43e9f083d6098dbf7a2a83034c",
+    "public/wechat-retrospective/phoenix1-structural-regeneration.json": "8b1c61af3aa684fbe16be73240a1f461ec72fe4d",
+    "public/wechat-editions/2026-10-07.json": "103b188f39b28e8827abfdbbd6bae212ec3919a7",
+    "audit/wechat-working/2026-10-07-review-gate.json": "511b44dd039b2780bc2a50feff79aa4328b0e238",
+    "ops/wechat-publisher/create-draft.py": "37ae9d529de1f10b31bdd6e306c4c49f065b1645"
+  },
+  "angew": {
+    "insertBefore": "这项设计真正买到了什么合成能力",
+    "section": {
+      "heading": "证据追问：哪些结论已经建立，哪些仍要分开看",
+      "paragraphs": [
+        "本次提供的Angew材料只有正文和Supporting Information，没有对应的原始审稿意见。以下是基于原文的编辑分析，不写成“审稿人要求作者做了什么”，也不把Nature Catalysis的审稿经历套到这一篇。",
+        "第一，结构可调是否真正落实为反应差异？Fig. 2的电位和轨道趋势与Table 1、Fig. 5的催化剂偏好相互呼应，支持结构—性质—活性联系；但筛选收率不是单一步骤电子转移速率的直接测量，不能只用一个电位解释全部差异。",
+        "第二，两个自由基相关吸收意味着什么？Fig. 4c与SI Fig. S35支持作者提出的分子内电荷迁移激发态；它不等于已观察到两个底物严格同时接受/给出电子，更不是溶剂化电子的证据。第三，高dr在哪里形成？前文SI Fig. S37–S38已说明产物形成后比例仍可变化，S39给出的是对此的可能机制；不能把最终dr全部归因于最初成键时的选择性。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    },
+    "coverPath": "public/wechat-assets/reviewed/2026-10-07-r9/an-cover-r9.png"
+  },
+  "natcat": {
+    "insertAfter": [
+      {
+        "heading": "难在哪里：两边都要活化，催化剂还不能互相消耗",
+        "sections": [
+          {
+            "heading": "补充背景：常规光氧化还原怎样传递电子",
+            "paragraphs": [
+              "先把原文 Fig. 1a–b中的两类淬灭循环说清楚。以下用初始电中性的光催化剂PC、电子给体D和电子受体A作简化记号；实际带电催化剂应相应调整电荷。“氧化淬灭/还原淬灭”说的是激发态催化剂在首次电子转移中被氧化还是被还原，并不是直接按最终产物被氧化或还原命名。",
+              "氧化淬灭：PC*把电子交给A，形成PC•⁺与A•⁻；随后D向PC•⁺供电子，使催化剂回到PC。还原淬灭：PC*先从D接受电子，形成PC•⁻与D•⁺；再由PC•⁻把电子交给A并恢复PC。两种路径都能把供电子端与受电子端接入循环，但先被活化的伙伴和承担后续转移的催化剂状态不同。",
+              "原文 Fig. 1c讨论的连续光诱导电子转移（conPET）进一步让还原后的催化剂再次吸光，以获得更强的分子光还原能力；这仍不能仅凭“两次吸光”判断是否生成了溶剂化电子。能量转移主要传递激发能，不等于净电子转移；质子耦合电子转移（PCET）则把质子与电子过程耦合。不能把不同活化模式都压缩成同一个SET箭头。",
+              "这一背景有助于定位phoenix1的差别：作者不是简单给固定染料增加一个更强的激发态，而是提出先光电离、再由生成的5受光完成氧化端，最终通过结构重组再生。5*氧化底物2这一段仍属于分子间SET；本体系不是所有步骤都由溶剂化电子包办。"
+            ],
+            "figures": [],
+            "figures_after_paragraph": {}
+          },
+          {
+            "heading": "溶剂笼与溶剂化电子：不要把空间关系当成同一种物种",
+            "paragraphs": [
+              "【延伸辨析，非本文新增实验】常规分子间SET后，氧化态给体与还原态受体常暂时相邻，处在同一“溶剂笼”内。例如还原淬灭可先形成[PC•⁻···D•⁺]。这里电子已进入PC的分子电子态；后续的笼逃逸是两个反应伙伴分开，不是电子从PC中逸出。笼内反向电子转移会消耗这对物种，所以发光被淬灭并不自动等于有效产物形成。[扩展1]",
+              "溶剂化电子e⁻solv则是另一层概念：电子离开原先分子束缚的电子态，由周围溶剂环境稳定，形成可以被光谱追踪并参与还原的电子态。它不是“被溶剂包围的分子自由基负离子”的别名，也不是完全不受环境影响的裸电子。其光谱、存活时间与反应行为依赖具体溶剂和条件。[扩展2]",
+              "因此，不能简单画成“常规光催化在笼内，溶剂化电子在笼外”。前者强调伙伴的空间关联，后者强调电子态的性质；光电离生成的电子也可能返回其正电荷伙伴而复合。回到本文，作者正是用电子信号消失、11信号增加以及有无受体1的对照，讨论电子被5重新捕获或被底物截获的竞争，而非声称复合问题已消失。",
+              "判断的关键不是“有没有溶剂参与”，而是是否存在区别于分子自由基离子的电子信号，以及它对受体加入的动力学响应。4CzIPN/4DPAIPN的特定还原态受光体系也曾被报道产生溶剂化电子[扩展2]，因此应比较具体条件和证据，不能按催化剂名字将两类机制永久分箱。"
+            ],
+            "figures": [],
+            "figures_after_paragraph": {}
+          }
+        ]
+      },
+      {
+        "heading": "捕获、光谱电化学与计算分别补上什么",
+        "sections": [
+          {
+            "heading": "换成反应所用的光源，电子相关线索还在吗",
+            "paragraphs": [
+              "SI Fig. S79是355 nm激光照射的捕获对照。加入硝酸钾后，作者归属于电子相关捕获物的九线特征不再出现，而碳自由基相关六线组分仍有残留。正文另报告，在催化反应中加入这一清除剂，核磁收率由61%降至13%。这些结果说明清除剂明显干扰了反应中的还原过程，但不能单独排除它也淬灭其他强SET还原物种。",
+              "SI Fig. S80–S81进一步使用400 nm持续光照，而不只是高峰值功率激光脉冲。作者观察到3小时主要出现碳自由基相关捕获谱，6小时后发展出较弱、与电子相关捕获物相符的组分，并在过夜样品中用模拟作比较。这是连接光谱探测条件与合成光源的重要补充；小时尺度反映捕获加合物的积累，绝不意味着一个溶剂化电子存活了数小时。",
+              "证据应按它实际回答的问题分层：超快瞬态吸收及受体响应是电子态归属的核心；EPR、清除剂和蒽还原是补充支持；SEC主要支持催化剂结构转化。只有把这些层次分开，才能理解为什么作者用了相当篇幅证明电子形成，却仍需要另行讨论它对生产性还原的贡献。"
+            ],
+            "figures": [
+              "nc15",
+              "nc16"
+            ],
+            "figures_after_paragraph": {
+              "1": [
+                "nc15"
+              ],
+              "2": [
+                "nc16"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "replaceSections": {
+      "第一束光之后，观察到的是哪些物种": {
+        "heading": "第一束光之后，观察到的是哪些物种",
+        "paragraphs": [
+          "原文 Fig. 3a的飞秒瞬态吸收同时出现两组不同信号：520 nm附近的特征归属于吖啶基自由基11；600 nm以上的宽吸收被作者归属于异丙醇中的溶剂化电子。这里实际观察的是预期近红外宽带的短波侧，不是完整测到了电子吸收带的峰顶。作者在审稿回复中据此强调，必须把谱形、时间演化和受体对照一起用于归属。",
+          "纳秒激光闪光光解进一步追踪两者的去向。不加受体1时，10 ns附近仍能看到355/520 nm的11信号和更长波宽吸收；随后约500 ns内，长波信号消失，520 nm信号略增。作者将其解释为部分电子与5复合，再生成11。加入1后，电子信号减少而5的特征积累，支持电子被受体截获的图景。它把“生成了什么”和“生成后怎样被消耗”接起来，但没有直接给出全部产物形成中各路径的份额。",
+          "原文还报告多种激发波长、甚至77 K下未观察到phoenix1发射，并以极快光电离解释这一现象。未观察到发射与瞬态吸收中的超快动力学是两类不同证据，不能合写成一个直接测得的飞秒荧光寿命，更不能只凭“无荧光”四个字完成溶剂化电子鉴定。"
+        ],
+        "figures": [
+          "nc03"
+        ],
+        "figures_after_paragraph": {
+          "2": [
+            "nc03"
+          ]
+        }
+      },
+      "捕获、光谱电化学与计算分别补上什么": {
+        "heading": "捕获、光谱电化学与计算分别补上什么",
+        "paragraphs": [
+          "原文 Fig. 3b的EPR测到的是DMPO捕获后生成的顺磁加合物，不是把游离电子原样保存下来。作者将其中九线组分归为电子捕获后质子化形成的DMPO–H相关信号，六线组分则与碳自由基11的捕获相容；光谱模拟用于区分混合组分。这样的归属为瞬态吸收提供支持，但仍需检查其他还原剂能否产生类似捕获结果。",
+          "原文 Fig. 3c–d把问题推进到催化剂转化与再生：5与底物2受光作用后形成11相关光谱；电位切换和光谱电化学（SEC）支持5经还原回到phoenix1。轨道与计算结果则支持连接键在激发后成键作用减弱的解释。SEC并不是对溶剂化电子本身的检测，计算图像也不能代替全部反应中间体与动力学的实验观测。"
+        ],
+        "figures": [
+          "nc04",
+          "nc05"
+        ],
+        "figures_after_paragraph": {
+          "1": [
+            "nc04"
+          ],
+          "2": [
+            "nc05"
+          ]
+        }
+      },
+      "审稿后的结论应当更清楚，而不是更夸张": {
+        "heading": "审稿人究竟追问了什么，作者又补了什么",
+        "paragraphs": [
+          "Nature Catalysis公开的Peer Review File不是一份额外实验SI。审稿人1最初主要质疑的是鉴定的特异性：蒽相对容易还原，也可能通过其他途径氢化；硝酸钾可清除其他强SET还原剂；DMPO捕获结果同样不必然只来自溶剂化电子。因此，“几项实验都相容”不能直接改写为“几项实验各自独立证明”。",
+          "作者针对这一核心问题补充400 nm泵浦的超快瞬态吸收，以及受体1对650 nm信号后续演化的影响，形成前文原文 Fig. 3a和SI Fig. S68、S70的证据主线。在回复中，作者明确将超快数据设为核心依据，将EPR、清除剂和反应性测试降为补充支持；并区分电子信号形成的光谱观测与这些物种在完整催化网络中作用的综合推断。",
+          "审稿人2还追问催化剂演化能否与产物形成联系起来，作者补充的含氟底物¹⁹F NMR时间进程对应前文Fig. 5a；审稿人3则要求排除激发态优化中的数值伪象、补充沿C–C坐标的势能分析与轨道说明。作者在回复中报告加入松弛扫描、气相对照及更多计算细节。这些争论分别推动动力学和计算证据变得更具体，不是用计算替代光谱。",
+          "最终一轮，审稿人1接受新增TA数据足以支持这些条件下可能形成一定量溶剂化电子，但仍不确定它们对实际合成反应的贡献程度；审稿人3认可作者补充的计算说明。应保留的结论是：电子形成的证据得到加强，贡献比例和并行机制没有因论文被接受就自动变成定论。",
+          "这篇工作的核心仍是把可逆结构变化变成催化功能：不同物种相继承担任务，再生母体；原位形成的10又参与自由基暂存与生产性转移。不能把它概括为一支“任何键都能断”的超级催化剂。",
+          "实验条件注：Fig. 6与SI装置说明采用约30 °C，正文Methods写风冷下通常23–26 °C；两处记载不完全相同。反应按原文标注为400 nm、50 W光源、氮气、异丙醇和通常16小时，不将不同章节条件静默合并。"
+        ],
+        "figures": [],
+        "figures_after_paragraph": {}
+      }
+    },
+    "appendSection": {
+      "heading": "原始资料与延伸阅读",
+      "paragraphs": [
+        "本文实验、结构、数据与审稿讨论分别依据Rosso等的正文（DOI：10.1038/s41929-026-01593-w）、Supporting Information和公开Peer Review File；匿名审稿意见以Anonymous Referee及该文件为来源。",
+        "【扩展1】Wang, C.; Li, H.; Bürgin, T. H.; Wenger, O. S. Cage escape governs photoredox reaction rates and quantum yields. Nature Chemistry 2024, 16, 1151–1159. DOI：10.1038/s41557-024-01482-4。仅用于解释分子SET后的溶剂笼、反向电子转移与笼逃逸，不冒充phoenix1的实验。",
+        "【扩展2】Villa, M. 等. Organic super-reducing photocatalysts generate solvated electrons via two consecutive photon induced processes. Chemical Science 2024, 15, 14739–14745. DOI：10.1039/D4SC04518A。仅用于说明分子自由基离子与溶剂化电子的区别及条件依赖性，不将乙腈中的光谱峰或寿命移植到本文异丙醇体系。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    },
+    "coverPath": "public/wechat-assets/reviewed/2026-10-07-r9/nc-cover-full-r9.png",
+    "newFigures": [
+      {
+        "id": "nc15",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-07-r9/nc15-si79.png",
+        "caption": "SI Fig. S79｜355 nm激光照射下的DMPO捕获与硝酸钾对照。星号标注有助于区分电子相关捕获物的九线特征；这是捕获后的谱图，不是自由电子浓度曲线。",
+        "display_width_pct": 100,
+        "source_figure": "SI Fig. S79",
+        "source_doi": "10.1038/s41929-026-01593-w"
+      },
+      {
+        "id": "nc16",
+        "repo_path": "public/wechat-assets/reviewed/2026-10-07-r9/nc16-si80-81.png",
+        "caption": "SI Fig. S80–S81｜上：400 nm持续光照下不同时间的捕获谱；下：过夜样品与模拟的叠加。小时标记对应捕获加合物演化，不能当成溶剂化电子寿命。",
+        "display_width_pct": 100,
+        "source_figure": "SI Fig. S80–S81",
+        "source_doi": "10.1038/s41929-026-01593-w"
+      }
+    ]
+  },
+  "newAssets": [
+    {
+      "file": "an-cover-r9.png",
+      "path": "public/wechat-assets/reviewed/2026-10-07-r9/an-cover-r9.png",
+      "sha256": "ce91f3084a7fb5746e1710268656cd0bae39cd3120559266d5536e7651feac0a",
+      "width": 1880,
+      "height": 800
+    },
+    {
+      "file": "nc-cover-full-r9.png",
+      "path": "public/wechat-assets/reviewed/2026-10-07-r9/nc-cover-full-r9.png",
+      "sha256": "9fde3dd169ea4fdee9f494f097d89c965715752033d0ffded2b95b28ca50484f",
+      "width": 1334,
+      "height": 1334
+    },
+    {
+      "file": "nc15-si79.png",
+      "path": "public/wechat-assets/reviewed/2026-10-07-r9/nc15-si79.png",
+      "sha256": "a3d51375630d1442fcf03a95785a95941963fec1e8f12ef5ba15c34b0b6fda42",
+      "width": 1143,
+      "height": 717
+    },
+    {
+      "file": "nc16-si80-81.png",
+      "path": "public/wechat-assets/reviewed/2026-10-07-r9/nc16-si80-81.png",
+      "sha256": "2dd0a9c3fbd827c4164e9ca959e6e939e6f09e4571baf986d189415cf3ef8543",
+      "width": 1158,
+      "height": 1338
+    }
+  ],
+  "reviewNotes": [
+    "User-approved targeted revision, not a topic or narrative reset.",
+    "Original Angew Fig.2a enlarged across the upper cover; lower band reserved for WeChat title overlay.",
+    "Full approved source-locked phoenix artwork contained in square, not screenshot or cropped inset.",
+    "Conventional SET and solvent-cage teaching clearly distinguished from source-paper experimental evidence.",
+    "TA formation evidence distinguished from supporting EPR/scavenging and from catalytic dominance.",
+    "No invented Angew peer-review report.",
+    "New original-source EPR plot bounds and all symbols/axes visually checked; no chemical artwork regenerated."
+  ],
+  "publicSendAuthorized": false
+}

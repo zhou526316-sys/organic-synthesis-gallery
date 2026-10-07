@@ -1,70 +1,272 @@
 {
   "publicationDate": "2026-10-07",
-  "editorialRevision": "2026-10-07-r7",
-  "reviewedAt": "2026-10-07T04:41:37.156032+00:00",
-  "reviewer": "AI editorial self-review; not a claim of human review",
+  "editorialRevision": "2026-10-07-r9",
+  "reviewedAt": "2026-10-07T05:57:19.698162+00:00",
+  "reviewer": "AI source-grounded editorial review; no claim of human review",
   "textReview": "pass",
-  "imageReview": "pass",
+  "imageReview": "pending",
+  "individualImageReview": "pass",
+  "combinedVisualReview": "pending",
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-07-r7-angew-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-07-r7-angew-images-only.md",
-    "additionalTextOnly": ["audit/wechat-working/2026-10-07-r7-natcat-text-only.md"],
-    "additionalImagesOnly": ["audit/wechat-working/2026-10-07-r7-natcat-images-only.md"]
+    "textOnly": "audit/wechat-working/2026-10-07-r9-angew-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-07-r9-angew-images-only.md",
+    "additionalTextOnly": [
+      "audit/wechat-working/2026-10-07-r9-natcat-text-only.md"
+    ],
+    "additionalImagesOnly": [
+      "audit/wechat-working/2026-10-07-r9-natcat-images-only.md"
+    ]
   },
-  "articleReviews": [
-    {"doi":"10.1002/anie.3699223","textReview":"pass","imageReview":"pass","textOnly":"audit/wechat-working/2026-10-07-r7-angew-text-only.md","imagesOnly":"audit/wechat-working/2026-10-07-r7-angew-images-only.md","mainFigureCount":6,"mainTableCount":1,"bodyRasterCount":14},
-    {"doi":"10.1038/s41929-026-01593-w","textReview":"pass","imageReview":"pass","textOnly":"audit/wechat-working/2026-10-07-r7-natcat-text-only.md","imagesOnly":"audit/wechat-working/2026-10-07-r7-natcat-images-only.md","mainFigureCount":6,"bodyRasterCount":14}
-  ],
   "sources": [
-    {"path":"public/wechat-editions/2026-10-07.json","blobSha":"103b188f39b28e8827abfdbbd6bae212ec3919a7"},
-    {"path":"public/wechat-featured/2026-10-07.json","blobSha":"3a0cae9403c03b43e9f083d6098dbf7a2a83034c"},
-    {"path":"public/wechat-retrospective/phoenix1-structural-regeneration.json","blobSha":"8b1c61af3aa684fbe16be73240a1f461ec72fe4d"}
+    {
+      "path": "public/wechat-editions/2026-10-07.json",
+      "blobSha": "103b188f39b28e8827abfdbbd6bae212ec3919a7"
+    },
+    {
+      "path": "public/wechat-featured/2026-10-07.json",
+      "blobSha": "9f059362f416aaf438c8beb0be6686b65efa16b1"
+    },
+    {
+      "path": "public/wechat-retrospective/phoenix1-structural-regeneration.json",
+      "blobSha": "60377cc360177f440e94f52a0db69b3438c4dbd8"
+    }
   ],
   "assets": [
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an-cover.png","blobSha":"cd6f27948bb83145c3e9dff2ea624290f3b0356d"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an01.png","blobSha":"50551b91c6f8dce46e3494d5c7f18386bda4595e"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an02.png","blobSha":"1ea9ddb79c1793e2c87f7bec71be7469eb7e20db"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an03.png","blobSha":"774923556313f1d344d38fe65c09a6d1ee0eec06"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an04.png","blobSha":"5c6f1453808b035c3a2eb15e7801c96d8e1446a5"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an05.png","blobSha":"e48e061d6a442e09f2f08c8deb7047e4f133ea6a"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an06.png","blobSha":"59cde1ece6b7838540d70314240310d3df47e4a5"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an07.png","blobSha":"1229eb83f4b8e389978f41233c079f77bbe46386"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an08.png","blobSha":"4c188a8129a9de54f1a815a1f26c801a365f02f8"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an09.png","blobSha":"d40c57c34fb797b768496a8b6c7dd71a525ef552"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an10.png","blobSha":"154232bd8bb316f907dd9b8586c1b5dbfce870fd"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an11.png","blobSha":"f7bfbc179bb81b36b365b21b1940f853bc0abe0c"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an12.png","blobSha":"7fb883e10f9ec6dc51e13652032beef666e68d20"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an13.png","blobSha":"46aa2c38abb1f6a3075439be376f3b491db1877a"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/an14.png","blobSha":"793cfba380f07c4a0a3d8ad306bd0af22e21e618"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc-cover.png","blobSha":"24285702b9fad360acb3b328713c11e11c86d313"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc01.png","blobSha":"244c03bb77e30e1d9ce2aec3a2b493297065394a"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc02.png","blobSha":"9f2e48e73de21bf11190a69fb6b50da8dc4da8a7"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc03.png","blobSha":"02dadf44ecef7ed7f7dcdb3ce2ee469a835643a3"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc04.png","blobSha":"9b9ca3a05fa7a17b34bae70a314df4cbee9f20d0"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc05.png","blobSha":"e34a1e358a85eaf96c667c6b83e44cbef92011c9"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc06.png","blobSha":"5281bd55cd8e97f5de3a58c4d82c3bcfacc5f54c"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc07.png","blobSha":"caa8b94ca26d22547dad14a41359f661665a79e7"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc08.png","blobSha":"30d19facb5577b87374c7f4d6c60dd0620f35c10"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc09.png","blobSha":"41e235fcae0413ab928484218e4ecc87b63c24f7"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc10.png","blobSha":"5e840861bf78d3d91935ecd83a46e62fe7c5a9c3"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc11.png","blobSha":"8c120af28c800865eed373c48eed012387b91560"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc12.png","blobSha":"fdbaf4fdd00615bc20e7eeee3d6dedc79da0a016"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc13.png","blobSha":"ecbea4f708feae5586d98f709a694a891208ec9f"},
-    {"path":"public/wechat-assets/reviewed/2026-10-07-r7/nc14.png","blobSha":"ed1e05922adc3229c49b2c72b34ce9cb8b34e299"}
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/an01.png",
+      "blobSha": "50551b91c6f8dce46e3494d5c7f18386bda4595e",
+      "sha256": "c01a54d3dc0fe66cffa46936db4114d70e24d24b310f566d8c74c8e8375e7e68",
+      "width": 1566,
+      "height": 493
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/an02.png",
+      "blobSha": "1ea9ddb79c1793e2c87f7bec71be7469eb7e20db",
+      "sha256": "f80435a3da27ff500d47247554a5a328c087bb253d08c07d4ffd816543be1048",
+      "width": 1566,
+      "height": 1035
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/an03.png",
+      "blobSha": "774923556313f1d344d38fe65c09a6d1ee0eec06",
+      "sha256": "ef2e50450bd48b8f53dfef4ecfb1f3a8b601c04370517591c6bce0b7c01c60d3",
+      "width": 1558,
+      "height": 436
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/an04.png",
+      "blobSha": "5c6f1453808b035c3a2eb15e7801c96d8e1446a5",
+      "sha256": "1ecc74735911c0f3f32d6e3bde1e8e847a28ae794637926190dab66a34cc94cc",
+      "width": 1558,
+      "height": 672
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/an05.png",
+      "blobSha": "e48e061d6a442e09f2f08c8deb7047e4f133ea6a",
+      "sha256": "a94b54702b7671edaf6dc6507225a2d107149bcbf8b877acbb95c1bf5269e060",
+      "width": 1558,
+      "height": 820
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/an06.png",
+      "blobSha": "59cde1ece6b7838540d70314240310d3df47e4a5",
+      "sha256": "6e9c878819f1308cebeb96f3d35d1b7bfc9b2ca66df5b3bc9ef044c0f158b0a7",
+      "width": 1575,
+      "height": 983
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/an07.png",
+      "blobSha": "1229eb83f4b8e389978f41233c079f77bbe46386",
+      "sha256": "54e50adae6be62faf3a629a184d1bb346c6049bb94e00c359f879b73d1804338",
+      "width": 1315,
+      "height": 848
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/an08.png",
+      "blobSha": "4c188a8129a9de54f1a815a1f26c801a365f02f8",
+      "sha256": "3ab9e92468071cf1e699b63eb32ec0d8f0e33e02cc020bb03e64428056f4d8f5",
+      "width": 1315,
+      "height": 1065
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/an09.png",
+      "blobSha": "d40c57c34fb797b768496a8b6c7dd71a525ef552",
+      "sha256": "d41b9aa5c3e916d46e52b1eb04ee9bf23c36c7affddcfe7051490c8fa6de4d6c",
+      "width": 1558,
+      "height": 1436
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/an10.png",
+      "blobSha": "154232bd8bb316f907dd9b8586c1b5dbfce870fd",
+      "sha256": "1c0261fa03edbe3f371894e55db7679b05585c1d4bf92afbdc05773318250ca2",
+      "width": 1501,
+      "height": 1482
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/an11.png",
+      "blobSha": "f7bfbc179bb81b36b365b21b1940f853bc0abe0c",
+      "sha256": "a676ab7f31d1156457bda8c8b08a76e9b2af4f5f890b91398010581daedec922",
+      "width": 1501,
+      "height": 410
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/an12.png",
+      "blobSha": "7fb883e10f9ec6dc51e13652032beef666e68d20",
+      "sha256": "f464b51e753eb257c93b8baa409d86e90b3f3ec65eaab3f294a05d78a34ef1ad",
+      "width": 1575,
+      "height": 1376
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/an13.png",
+      "blobSha": "46aa2c38abb1f6a3075439be376f3b491db1877a",
+      "sha256": "84a62a35947a169d60c8bf82591213a0ac26de56ada01329878701817ab7e51c",
+      "width": 1324,
+      "height": 1588
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/an14.png",
+      "blobSha": "793cfba380f07c4a0a3d8ad306bd0af22e21e618",
+      "sha256": "fe59c744b7dc0a99db1e2ee6dd5ee30dcbccb417c427b955a33b7522db2bf6c5",
+      "width": 1987,
+      "height": 708
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc01.png",
+      "blobSha": "244c03bb77e30e1d9ce2aec3a2b493297065394a",
+      "sha256": "6da55f5fdb8485913227ed4d3f123fdcab30392c04cd8f432f925bba343cb2d8",
+      "width": 1603,
+      "height": 647
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc02.png",
+      "blobSha": "9f2e48e73de21bf11190a69fb6b50da8dc4da8a7",
+      "sha256": "2c2d133dfbe9c227e38ebb089143eed443ae892f1d4185faf5b69648981353d5",
+      "width": 1531,
+      "height": 1106
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc03.png",
+      "blobSha": "02dadf44ecef7ed7f7dcdb3ce2ee469a835643a3",
+      "sha256": "d0f53a86eb26867e3ea85916555c3c44da9f470c9b984eb7012150cb99528f10",
+      "width": 1593,
+      "height": 530
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc04.png",
+      "blobSha": "9b9ca3a05fa7a17b34bae70a314df4cbee9f20d0",
+      "sha256": "17a44813c5da92bc0ed2fa16bf639de0ed958e5d7839f2f3cfbd5ea100744147",
+      "width": 1593,
+      "height": 440
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc05.png",
+      "blobSha": "e34a1e358a85eaf96c667c6b83e44cbef92011c9",
+      "sha256": "b43cd1cbb7e5abaacc462d1ce3a6ff143adcaf40ed292d3692e662943dd3b32d",
+      "width": 736,
+      "height": 918
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc06.png",
+      "blobSha": "5281bd55cd8e97f5de3a58c4d82c3bcfacc5f54c",
+      "sha256": "bbb6863610429207606e61a0d3ff67f70cfb707b934f95212092868f99120d74",
+      "width": 868,
+      "height": 974
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc07.png",
+      "blobSha": "caa8b94ca26d22547dad14a41359f661665a79e7",
+      "sha256": "3c301ad1dcbac1eecb5fbf86bcd624ced82c473284ee34cf3d8481856f341892",
+      "width": 1055,
+      "height": 886
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc08.png",
+      "blobSha": "30d19facb5577b87374c7f4d6c60dd0620f35c10",
+      "sha256": "e7fbdf3df34f16bd4e7e6890382796b8ba5210c9148486ace633fbb24a698d89",
+      "width": 1331,
+      "height": 552
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc09.png",
+      "blobSha": "41e235fcae0413ab928484218e4ecc87b63c24f7",
+      "sha256": "dec134c12352ffcd1dd2d96e0a070d7c55d8284c6d078f35110424b1f3be35fc",
+      "width": 915,
+      "height": 976
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc10.png",
+      "blobSha": "5e840861bf78d3d91935ecd83a46e62fe7c5a9c3",
+      "sha256": "2dda7064a45a56be26fb3c72f5b755eff393d9e3cb5dc354bcd4ab3c9c27b647",
+      "width": 1489,
+      "height": 1134
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc11.png",
+      "blobSha": "8c120af28c800865eed373c48eed012387b91560",
+      "sha256": "b007279e62e3e0d9069c9b2a27e165e89ce1edd79750e20522ed6d2ac11443c6",
+      "width": 1501,
+      "height": 640
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc12.png",
+      "blobSha": "fdbaf4fdd00615bc20e7eeee3d6dedc79da0a016",
+      "sha256": "a37b50465dd298b700eb9d33cef2c4a2ea0299831b0b579b2383494e4382c446",
+      "width": 1093,
+      "height": 475
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc13.png",
+      "blobSha": "ecbea4f708feae5586d98f709a694a891208ec9f",
+      "sha256": "0fbbae39a4e9832e1d47a935ce3f5ea6d18e8ba7f5edb500863a2f38cb28245d",
+      "width": 1173,
+      "height": 495
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc14.png",
+      "blobSha": "ed1e05922adc3229c49b2c72b34ce9cb8b34e299",
+      "sha256": "6dc6545ccd9f0901e774b1bef4dc68d330a5d37bd3476396b0697a41b2c3cfd5",
+      "width": 1094,
+      "height": 1660
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r9/an-cover-r9.png",
+      "blobSha": "2d260b685dc1edd0b57d20a7e76c654563ae6d0c",
+      "sha256": "ce91f3084a7fb5746e1710268656cd0bae39cd3120559266d5536e7651feac0a",
+      "width": 1880,
+      "height": 800
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r9/nc-cover-full-r9.png",
+      "blobSha": "55517a90d817e52580e2a662fe70dab2a06ab2c3",
+      "sha256": "9fde3dd169ea4fdee9f494f097d89c965715752033d0ffded2b95b28ca50484f",
+      "width": 1334,
+      "height": 1334
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r9/nc15-si79.png",
+      "blobSha": "09d509d707b23171bda2fee76fefc8003ec9d17e",
+      "sha256": "a3d51375630d1442fcf03a95785a95941963fec1e8f12ef5ba15c34b0b6fda42",
+      "width": 1143,
+      "height": 717
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r9/nc16-si80-81.png",
+      "blobSha": "2b8496418f0f1062f886c3544431a702a7a70391",
+      "sha256": "2dd0a9c3fbd827c4164e9ca959e6e939e6f09e4571baf986d189415cf3ef8543",
+      "width": 1158,
+      "height": 1338
+    }
   ],
   "materializedCropReviewRequired": true,
   "strictFigurePlacement": true,
-  "assemblyChecks": {"viewportWidth":390,"documentWidth":390,"bodyImageCount":28,"brokenImages":0,"duplicateBodyImages":0,"figureParagraphMapping":"pass","previewKind":"internal assembly only, not WeChat draft"},
   "reviewNotes": [
-    "Each full article and its captions were reviewed against the supplied main text and SI; Nature Catalysis peer-review file was treated as a separate source.",
-    "All main figures covered with logical complete crops; no claim of 30 original Angew figures. Chemical artwork is original-source raster, not generatively redrawn.",
-    "Angew Fc+/Fc versus SCE, white versus blue LED conditions, unactivated-acid/amine limits and independent 9b re-treatment dr values retained.",
-    "Nature Catalysis main/SI ultrafast numeric differences and temperature differences explicitly retained rather than silently reconciled; no fluorescence lifetime inferred from lack of emission.",
-    "Nature Catalysis solvated-electron formation versus exclusive catalytic dominance distinguished; parallel SET/XAT and the final reviewer caveat retained. No invented biomass/AuPd reaction.",
-    "Figure source pages with rectangles and final raster contact sheets reviewed. Chemistry labels, axes and substrate ranges retained.",
-    "User-approved transparent-background phoenix square reused byte-for-byte; Angew 2.35:1 cover and its central square safe region inspected. The secondary article is intended for 1:1 display.",
-    "Text-before-image placement used including lead after first explanation. Figures S68b-c omit the spectrum already shown in main Fig.3a to avoid duplication.",
-    "This gate authorizes draft transport only. Actual WeChat draft/get and final transport/layout verification still required."
+    "User-approved targeted revision, not a topic or narrative reset.",
+    "Original Angew Fig.2a enlarged across the upper cover; lower band reserved for WeChat title overlay.",
+    "Full approved source-locked phoenix artwork contained in square, not screenshot or cropped inset.",
+    "Conventional SET and solvent-cage teaching clearly distinguished from source-paper experimental evidence.",
+    "TA formation evidence distinguished from supporting EPR/scavenging and from catalytic dominance.",
+    "No invented Angew peer-review report.",
+    "New original-source EPR plot bounds and all symbols/axes visually checked; no chemical artwork regenerated."
   ],
   "draftReadback": "not_run",
   "publicSendAuthorized": false

@@ -168,6 +168,16 @@
       }
     },
     {
+      "heading": "证据追问：哪些结论已经建立，哪些仍要分开看",
+      "paragraphs": [
+        "本次提供的Angew材料只有正文和Supporting Information，没有对应的原始审稿意见。以下是基于原文的编辑分析，不写成“审稿人要求作者做了什么”，也不把Nature Catalysis的审稿经历套到这一篇。",
+        "第一，结构可调是否真正落实为反应差异？Fig. 2的电位和轨道趋势与Table 1、Fig. 5的催化剂偏好相互呼应，支持结构—性质—活性联系；但筛选收率不是单一步骤电子转移速率的直接测量，不能只用一个电位解释全部差异。",
+        "第二，两个自由基相关吸收意味着什么？Fig. 4c与SI Fig. S35支持作者提出的分子内电荷迁移激发态；它不等于已观察到两个底物严格同时接受/给出电子，更不是溶剂化电子的证据。第三，高dr在哪里形成？前文SI Fig. S37–S38已说明产物形成后比例仍可变化，S39给出的是对此的可能机制；不能把最终dr全部归因于最初成键时的选择性。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    },
+    {
       "heading": "这项设计真正买到了什么合成能力",
       "paragraphs": [
         "这篇研究把一族容易修改的杂化骨架、可测量的电子性质和五类偶联表现连接起来。PC1、PC7、PC2、PC5分别成为不同转化的重要选择，而非一支催化剂在完全相同条件下完成所有反应。作者报告94个实例、最高99%收率；具体前体、碱、光源与催化剂仍须配合。",
@@ -306,7 +316,7 @@
     },
     {
       "id": "an-cover",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-07-r7/an-cover.png",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-07-r9/an-cover-r9.png",
       "caption": "",
       "body": false,
       "display_width_pct": 100,
@@ -324,6 +334,8 @@
     },
     "crop_235_1": "0_0_1_1",
     "crop_1_1": "0.287234_0_0.712766_1",
-    "description": "原文Fig.2a结构与原题中文信息，全部核心内容置于居中方形安全区。"
-  }
+    "description": "Original Fig.2a enlarged across the entire upper cover; lower title-overlay band reserved.",
+    "preserve_existing_thumb": false
+  },
+  "editorialRevision": "2026-10-07-r9"
 }
