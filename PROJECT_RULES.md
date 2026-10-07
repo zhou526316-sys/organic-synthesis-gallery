@@ -97,3 +97,14 @@ Mandatory defaults:
 5. Editorial changes are batched in one source revision. Do not repeatedly write partial revisions to WeChat; perform one terminal draft update after text/image review passes, then verify the returned `draft/get` result.
 
 These defaults supplement, and do not weaken, the existing WeChat editorial contract and draft editorial gate.
+
+## WeChat cover background treatment
+
+Effective from the user's 2026-10-07 cover instructions:
+
+1. Daily-feature covers still prefer the paper's authentic TOC/graphical abstract, but large white/near-white background regions may be removed and replaced with a calm low-saturation dark background when this makes the chemistry larger and keeps native white titles readable.
+2. Only background may change. Chemical structures, bonds, arrows, labels, orbital surfaces, coloured blocks, plots, axes, legends and numerical data are immutable foreground.
+3. Dark backgrounds must be comfortable and research-appropriate, adapting to the artwork palette. Avoid pure black, highly saturated blue/purple, glare-inducing contrast and visually oppressive fields.
+4. If background segmentation could damage or visually swallow any coloured/dark foreground, keep the original light background on a light plate/panel or leave the image untouched.
+5. Title bars are optional and must be minimal. If safe compositing still does not produce a clean result, scaling the original artwork down is explicitly preferred over damaging chemistry or making the cover uncomfortable.
+6. Cover QA must therefore check both information preservation and visual comfort, not only title contrast or occupied area.

@@ -1,0 +1,61 @@
+{
+  "publicationDate": "2026-10-08",
+  "type": "retrospective",
+  "status": "prepared-prewechat",
+  "paper": {
+    "doi": "10.1038/s41929-026-01602-y",
+    "journal": "Nature Catalysis",
+    "title": "Harnessing through-space orbital interactions for multicentred organosulfur catalysis",
+    "titleZh": "利用穿空间轨道相互作用实现多中心有机硫催化"
+  },
+  "suppliedSources": {
+    "main": {
+      "sha256": "3d239fa8394048e2c43e4a987c8675a323e712e5fa95a5e3779f7d8710920058"
+    },
+    "si": {
+      "sha256": "6991ab9624bdc18c9d8dd80dd59a5e078b00dc8b62359c905b8ecc65a1070606"
+    },
+    "peerReview": {
+      "supplied": false
+    }
+  },
+  "coreQuestion": "能否不依赖单个主族中心的几何畸变，而通过多个二价硫原子的空间排列与轨道相位，获得同时利于卤鎓捕获与转移的新型催化电子结构？",
+  "editorialStatus": {
+    "mainAndSiDeepRead": true,
+    "editorialPlan": "pass",
+    "evidenceMatrix": "pass",
+    "textOnlyDraft": "prepared locally",
+    "imageMap": "prepared locally",
+    "cover": "prepared locally",
+    "bodyRasterReview": "pass-local",
+    "textReview": "pass-local",
+    "wechatWrite": false,
+    "reasonNoWechatWrite": "Tomorrow's daily-feature article is not yet fixed; preserve one terminal draft/update for the final two-card bundle."
+  },
+  "scienceGuardrails": [
+    "OS6 is the key experimental four-sulfur control separating sulfur count from orbital phase.",
+    "OS7 is in silico only; use computation-level wording.",
+    "OS1+Br HRMS uses low-temperature AgSbF6/pyridinium perbromide conditions, not the standard NBS catalytic mixture.",
+    "VTNA/initial-rate data support the authors' pre-equilibrium/transfer-limiting model but do not uniquely prove the microscopic resting state.",
+    "n(S)->sigma*(S-Br) / three-centre-four-electron assignment is principally computational (DFT/ETS-NOCV).",
+    "Weakly coordinating anion dependence is experimentally supported; tight-ion-pair stabilization remains the authors' mechanistic model.",
+    "Fig.4 is a deliberately selected difficult-substrate benchmark with mixed reported/in-house values; not a universal ranking.",
+    "Fig.5 contains genuine limitations, condition changes and moderate/low-yield cases; do not summarize as one-condition universal scope."
+  ],
+  "localArtifactFingerprints": {
+    "draftSha256": "d220b4535cc3063f9f0e69d0609ea77469ae7b378f9f34ec3ad058d54b3709e8",
+    "coverSha256": "5f807f160a3f3a216ef8037ced364a2382c822fa3936ce45b5ec07337130871d",
+    "packageSha256": "67f0ab6e1148326c59d23f22d5e93e34d566b142712691cb4fdfe64f2380847b",
+    "coverSize": [
+      1280,
+      1280
+    ]
+  },
+  "coverDesign": {
+    "surface": "retrospective square secondary card",
+    "background": "comfortable low-saturation dark blue-gray outer field",
+    "chemistryAnchor": "unaltered crop from original Fig.1c on off-white light panel",
+    "generatedChemicalStructures": false
+  },
+  "preparedAt": "2026-10-07T19:11:00+08:00"
+}
