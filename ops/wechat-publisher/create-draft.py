@@ -14,6 +14,7 @@ import hmac
 import html
 import json
 import mimetypes
+import re
 import tempfile
 import time
 import traceback
@@ -570,13 +571,18 @@ def build_content(
             if lead_html:
                 parts.append(lead_html)
                 rendered_figures.add(lead_figure_id)
-        for point in featured.get("quick_points", []):
+        for point_index, point in enumerate(featured.get("quick_points", []), start=1):
             parts.append(
                 "<section style='background:#f7f8fa;border-radius:8px;padding:11px 13px;margin:9px 0;'>"
                 f"<strong style='font-size:14px;line-height:1.55;'>{esc(point.get('label') or '')}</strong>"
                 f"<p style='font-size:14px;line-height:1.78;margin:4px 0 0;color:#444;text-align:justify;'>{esc(point.get('text') or '')}</p>"
                 "</section>"
             )
+            if lead_figure_id and lead_position == "after_first_quick_point" and point_index == 1:
+                lead_html = figure_html(lead_figure_id, figures, uploaded_urls)
+                if lead_html:
+                    parts.append(lead_html)
+                    rendered_figures.add(lead_figure_id)
         if lead_figure_id and lead_position == "after_quick_points":
             lead_html = figure_html(lead_figure_id, figures, uploaded_urls)
             if lead_html:
