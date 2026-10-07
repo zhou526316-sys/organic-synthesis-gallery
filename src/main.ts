@@ -4,7 +4,7 @@ import './styles.css';
 import { mountUserShell } from './user-shell';
 import { beijingDate, earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
-import { RESULT_WINDOW_SIZE as DESKTOP_RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE, resultWindowState } from '../shared/result-window.js';
+import { RESULT_WINDOW_SIZE as DESKTOP_RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE, resultPaginationItems, resultWindowState } from '../shared/result-window.js';
 import { store } from './user-ui/shared';
 import { PublishedCatalogClient, loadPublishedHotFallback } from '../architecture/published-reader.mjs';
 import {
@@ -680,6 +680,16 @@ function resultScopeIsDefaultRecent(): boolean {
   );
 }
 
+function paginationButtonsMarkup(currentPage: number, totalPages: number, loading: boolean): string {
+  const compact = window.matchMedia('(max-width: 680px)').matches;
+  return resultPaginationItems(currentPage, totalPages, compact).map(item => {
+    if (item === 'ellipsis') return "<span class='result-page-ellipsis' aria-hidden='true'>…</span>";
+    const current = item === currentPage;
+    const label = language === 'zh' ? `第 ${item} 页` : `Page ${item}`;
+    return `<button class='result-page-number${current ? ' current' : ''}' type='button' data-result-page='${item}' aria-label='${escapeHtml(label)}'${current ? " aria-current='page'" : ''}${current || loading ? ' disabled' : ''}>${item}</button>`;
+  }).join('');
+}
+
 function renderCards(): void {
   syncLiteratureDoiRegistry();
   const gallery = document.querySelector<HTMLElement>('#gallery');
@@ -708,19 +718,30 @@ function renderCards(): void {
   const windowStatus = document.querySelector<HTMLElement>('#resultWindowStatus');
   const previousPage = document.querySelector<HTMLButtonElement>('#previousResultPage');
   const nextPage = document.querySelector<HTMLButtonElement>('#nextResultPage');
+  const pageNumbers = document.querySelector<HTMLElement>('#resultPageNumbers');
+  const pageJumpInput = document.querySelector<HTMLInputElement>('#resultPageJumpInput');
+  const pageJumpButton = document.querySelector<HTMLButtonElement>('#resultPageJumpButton');
+  const loadingPage = Boolean(indexed?.loading);
   count.textContent = String(totalMatched);
-  if (windowControls) windowControls.hidden = totalMatched === 0;
+  if (windowControls) windowControls.hidden = totalMatched === 0 || totalPages <= 1;
   if (windowStatus) {
     windowStatus.textContent = language === 'zh'
-      ? `当前显示 ${firstShown}–${endShown} / 共 ${totalMatched} 篇 · 第 ${currentPage}/${totalPages} 页`
-      : `Showing ${firstShown}–${endShown} of ${totalMatched} · Page ${currentPage}/${totalPages}`;
+      ? `第 ${currentPage}/${totalPages} 页 · 当前显示 ${firstShown}–${endShown} / 共 ${totalMatched} 篇`
+      : `Page ${currentPage}/${totalPages} · Showing ${firstShown}–${endShown} of ${totalMatched}`;
   }
+  if (pageNumbers) pageNumbers.innerHTML = paginationButtonsMarkup(currentPage, totalPages, loadingPage);
+  if (pageJumpInput) {
+    pageJumpInput.max = String(totalPages);
+    pageJumpInput.value = String(currentPage);
+    pageJumpInput.disabled = totalPages <= 1 || loadingPage;
+  }
+  if (pageJumpButton) pageJumpButton.disabled = totalPages <= 1 || loadingPage;
   if (previousPage) {
-    previousPage.disabled = indexed ? indexed.loading || !hasPrevious : !hasPrevious;
+    previousPage.disabled = loadingPage || !hasPrevious;
     previousPage.dataset.available = hasPrevious ? 'true' : 'false';
   }
   if (nextPage) {
-    nextPage.disabled = indexed ? indexed.loading || !hasNext : !hasNext;
+    nextPage.disabled = loadingPage || !hasNext;
     nextPage.dataset.available = hasNext ? 'true' : 'false';
   }
   if (scope) {
@@ -773,7 +794,7 @@ function mount(): void {
   const earliest = (architectureClient || architectureFallbackActive) ? architectureEarliestDate : (dates[0] || '');
   const latest = latestCollectionDate || dates[dates.length - 1] || '';
   document.title = t('title');
-  app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='hero-latest'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 && excludedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => { const hidden = excludedJournals.has(journal); return `<div class='journal-option-row${hidden ? ' excluded' : ''}'><label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}${hidden ? ' disabled' : ''}><span>${escapeHtml(journal)}</span></label><button class='journal-exclude${hidden ? ' active' : ''}' data-journal-exclude='${escapeHtml(journal)}' type='button' aria-pressed='${hidden ? 'true' : 'false'}' aria-label='${escapeHtml(`${hidden ? t('restoreJournal') : t('hideJournal')} ${journal}`)}'>${escapeHtml(hidden ? t('restoreJournal') : t('hideJournal'))}</button></div>`; }).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option><option value='readers'${sort === 'readers' ? ' selected' : ''}>${escapeHtml(t('mostRead'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><section class='range-filter' aria-label='${escapeHtml(t('clearFilters'))}'><label class='date-field'><span>${escapeHtml(t('dateFrom'))}</span><input id='dateFrom' type='date' value='${escapeHtml(dateFrom)}'${earliest ? ` min='${escapeHtml(earliest)}'` : ''}${(dateTo || latest) ? ` max='${escapeHtml(dateTo || latest)}'` : ''}></label><label class='date-field'><span>${escapeHtml(t('dateTo'))}</span><input id='dateTo' type='date' value='${escapeHtml(dateTo)}'${(dateFrom || earliest) ? ` min='${escapeHtml(dateFrom || earliest)}'` : ''}${latest ? ` max='${escapeHtml(latest)}'` : ''}></label><button id='clearCustomFilters' class='clear-custom-filters' type='button'${selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo ? ' disabled' : ''}>${escapeHtml(t('clearFilters'))}</button></section><div class='resultline'><div class='result-count'><span id='resultScopeLabel' class='result-scope'>${escapeHtml(resultScopeIsDefaultRecent() ? t('recentScope') : t('currentScope'))}</span><span class='result-separator' aria-hidden='true'>·</span><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div></div>${architectureReadLimited || (architectureBootstrapPending && !resultScopeIsDefaultRecent()) ? `<div class='architecture-read-limited' role='status'>${escapeHtml(t('limitedRead'))}</div>` : ''}<section id='gallery' class='gallery' aria-live='polite'></section><div id='resultWindowControls' class='result-window-controls' hidden><button id='previousResultPage' class='result-page-button' type='button' data-available='false'>${escapeHtml(language === 'zh' ? '上一页' : 'Previous')}</button><span id='resultWindowStatus' class='result-window-status' aria-live='polite'></span><button id='nextResultPage' class='result-page-button' type='button' data-available='false'>${escapeHtml(language === 'zh' ? '下一页' : 'Next')}</button></div><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
+  app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='hero-latest'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 && excludedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => { const hidden = excludedJournals.has(journal); return `<div class='journal-option-row${hidden ? ' excluded' : ''}'><label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}${hidden ? ' disabled' : ''}><span>${escapeHtml(journal)}</span></label><button class='journal-exclude${hidden ? ' active' : ''}' data-journal-exclude='${escapeHtml(journal)}' type='button' aria-pressed='${hidden ? 'true' : 'false'}' aria-label='${escapeHtml(`${hidden ? t('restoreJournal') : t('hideJournal')} ${journal}`)}'>${escapeHtml(hidden ? t('restoreJournal') : t('hideJournal'))}</button></div>`; }).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option><option value='readers'${sort === 'readers' ? ' selected' : ''}>${escapeHtml(t('mostRead'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><section class='range-filter' aria-label='${escapeHtml(t('clearFilters'))}'><label class='date-field'><span>${escapeHtml(t('dateFrom'))}</span><input id='dateFrom' type='date' value='${escapeHtml(dateFrom)}'${earliest ? ` min='${escapeHtml(earliest)}'` : ''}${(dateTo || latest) ? ` max='${escapeHtml(dateTo || latest)}'` : ''}></label><label class='date-field'><span>${escapeHtml(t('dateTo'))}</span><input id='dateTo' type='date' value='${escapeHtml(dateTo)}'${(dateFrom || earliest) ? ` min='${escapeHtml(dateFrom || earliest)}'` : ''}${latest ? ` max='${escapeHtml(latest)}'` : ''}></label><button id='clearCustomFilters' class='clear-custom-filters' type='button'${selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo ? ' disabled' : ''}>${escapeHtml(t('clearFilters'))}</button></section><div class='resultline'><div class='result-count'><span id='resultScopeLabel' class='result-scope'>${escapeHtml(resultScopeIsDefaultRecent() ? t('recentScope') : t('currentScope'))}</span><span class='result-separator' aria-hidden='true'>·</span><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div></div>${architectureReadLimited || (architectureBootstrapPending && !resultScopeIsDefaultRecent()) ? `<div class='architecture-read-limited' role='status'>${escapeHtml(t('limitedRead'))}</div>` : ''}<section id='gallery' class='gallery' aria-live='polite'></section><nav id='resultWindowControls' class='result-window-controls' aria-label='${escapeHtml(language === 'zh' ? '文献分页' : 'Paper pagination')}' hidden><div id='resultWindowStatus' class='result-window-status' aria-live='polite'></div><div class='result-pagination-main'><button id='previousResultPage' class='result-page-button' type='button' data-available='false' aria-label='${escapeHtml(language === 'zh' ? '上一页' : 'Previous page')}'><span class='result-page-arrow' aria-hidden='true'>←</span><span class='result-page-button-label'>${escapeHtml(language === 'zh' ? '上一页' : 'Previous')}</span></button><div id='resultPageNumbers' class='result-page-numbers' role='group' aria-label='${escapeHtml(language === 'zh' ? '选择页码' : 'Choose page')}'></div><button id='nextResultPage' class='result-page-button' type='button' data-available='false' aria-label='${escapeHtml(language === 'zh' ? '下一页' : 'Next page')}'><span class='result-page-button-label'>${escapeHtml(language === 'zh' ? '下一页' : 'Next')}</span><span class='result-page-arrow' aria-hidden='true'>→</span></button></div><form id='resultPageJump' class='result-page-jump'><label for='resultPageJumpInput'>${escapeHtml(language === 'zh' ? '跳至' : 'Go to')} <input id='resultPageJumpInput' class='result-page-jump-input' type='number' min='1' step='1' inputmode='numeric' aria-label='${escapeHtml(language === 'zh' ? '跳转页码' : 'Page number')}'><span>${escapeHtml(language === 'zh' ? '页' : '')}</span></label><button id='resultPageJumpButton' class='result-page-jump-button' type='submit'>${escapeHtml(language === 'zh' ? '前往' : 'Go')}</button></form></nav><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
   mountUserShell(app, language);
 
   document.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach(button => button.addEventListener('click', () => {
@@ -894,21 +915,38 @@ function mount(): void {
     scheduleArchitectureCorpusRefresh(0);
   });
 
-  const moveResultPage = async (delta: number): Promise<void> => {
+  const goToResultPage = async (targetPage: number): Promise<void> => {
+    if (!Number.isSafeInteger(targetPage) || targetPage < 1) return;
     if (indexedViewState) {
-      await moveIndexedResultPage(delta);
+      await goToIndexedResultPage(targetPage);
       return;
     }
-    if (delta > 0 && hotBootstrapTotal > papers.length && resultScopeIsDefaultRecent()) {
+    if (targetPage > 1 && hotBootstrapTotal > papers.length && resultScopeIsDefaultRecent()) {
       try { await ensureFullHotCorpus(); }
       catch { return; }
     }
-    resultWindowPage = Math.max(1, resultWindowPage + delta);
+    const total = filteredPapers().length;
+    const bounded = resultWindowState(total, targetPage, resultWindowSize()).page;
+    resultWindowPage = bounded;
     renderCards();
     document.querySelector<HTMLElement>('#gallery')?.scrollIntoView({ block: 'start', behavior: 'auto' });
   };
+  const moveResultPage = (delta: number): Promise<void> => goToResultPage(
+    (indexedViewState?.page || resultWindowPage) + delta,
+  );
   document.querySelector<HTMLButtonElement>('#previousResultPage')?.addEventListener('click', () => { void moveResultPage(-1); });
   document.querySelector<HTMLButtonElement>('#nextResultPage')?.addEventListener('click', () => { void moveResultPage(1); });
+  document.querySelector<HTMLElement>('#resultPageNumbers')?.addEventListener('click', event => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-result-page]');
+    const targetPage = Number(button?.dataset.resultPage || 0);
+    if (button && Number.isSafeInteger(targetPage) && targetPage > 0) void goToResultPage(targetPage);
+  });
+  document.querySelector<HTMLFormElement>('#resultPageJump')?.addEventListener('submit', event => {
+    event.preventDefault();
+    const input = document.querySelector<HTMLInputElement>('#resultPageJumpInput');
+    const targetPage = Number(input?.value || 0);
+    if (Number.isSafeInteger(targetPage) && targetPage > 0) void goToResultPage(targetPage);
+  });
 
   renderCards();
   scheduleInventory();
@@ -1541,12 +1579,14 @@ async function loadIndexedViewPage(
   if (architectureClient !== client) return false;
   const indexedPapers = normalizeArchitectureRows(await client.resolveIndexed(response.items));
   if (indexedPapers.length !== response.items.length) throw new Error('literature_catalog_view_excluded_member');
+  const pageCursors = [...cursors];
+  if (response.hasMore && response.nextCursor) pageCursors[page] = response.nextCursor;
   indexedViewState = {
     requestKey,
     matched: response.matched,
     page,
     limit: response.limit,
-    cursors,
+    cursors: pageCursors,
     hasMore: response.hasMore,
     nextCursor: response.nextCursor,
     papers: indexedPapers,
@@ -1579,35 +1619,45 @@ async function tryIndexedArchitectureView(serial: number): Promise<boolean> {
   }
 }
 
-async function moveIndexedResultPage(delta: number): Promise<void> {
+async function goToIndexedResultPage(requestedPage: number): Promise<void> {
   const client = architectureClient;
   const state = indexedViewState;
   if (!client || !state || state.loading) return;
-  const targetPage = state.page + delta;
-  if (targetPage < 1) return;
-  let cursor = '';
-  const cursors = [...state.cursors];
-  if (delta > 0) {
-    if (!state.hasMore || !state.nextCursor) return;
-    cursor = state.nextCursor;
-    cursors[targetPage - 1] = cursor;
-  } else {
-    cursor = cursors[targetPage - 1] || '';
-  }
-  const request = indexedViewRequest(cursor);
-  if (!request || indexedViewRequestKey(request) !== state.requestKey) {
-    resetResultWindow();
-    scheduleArchitectureCorpusRefresh(0);
-    return;
-  }
+  const totalPages = Math.max(1, Math.ceil(state.matched / state.limit));
+  const targetPage = Math.max(1, Math.min(requestedPage, totalPages));
+  if (targetPage === state.page) return;
+
   const token = ++indexedViewSerial;
+  const cursors = [...state.cursors];
   indexedViewState = { ...state, loading: true };
   renderCards();
+
   try {
-    const response = await fetchLiteratureCatalogView(request);
-    if (token !== indexedViewSerial || architectureClient !== client) return;
+    let startPage = targetPage;
+    while (startPage > 1 && typeof cursors[startPage - 1] !== 'string') startPage -= 1;
+    let cursor = cursors[startPage - 1] || '';
+    let response: Awaited<ReturnType<typeof fetchLiteratureCatalogView>> | null = null;
+
+    for (let page = startPage; page <= targetPage; page += 1) {
+      const request = indexedViewRequest(cursor);
+      if (!request || indexedViewRequestKey(request) !== state.requestKey) {
+        resetResultWindow();
+        scheduleArchitectureCorpusRefresh(0);
+        return;
+      }
+      response = await fetchLiteratureCatalogView(request);
+      if (token !== indexedViewSerial || architectureClient !== client) return;
+      if (page < targetPage) {
+        if (!response.hasMore || !response.nextCursor) throw new Error('literature_catalog_page_cursor_missing');
+        cursors[page] = response.nextCursor;
+        cursor = response.nextCursor;
+      }
+    }
+
+    if (!response) return;
     const indexedPapers = normalizeArchitectureRows(await client.resolveIndexed(response.items));
     if (indexedPapers.length !== response.items.length) throw new Error('literature_catalog_view_excluded_member');
+    if (response.hasMore && response.nextCursor) cursors[targetPage] = response.nextCursor;
     indexedViewState = {
       requestKey: state.requestKey,
       matched: response.matched,
