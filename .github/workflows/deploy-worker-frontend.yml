@@ -678,6 +678,13 @@ jobs:
             for(let attempt=1;attempt<=6;attempt+=1){
               const refresh=await call('/api/admin/site-analytics-snapshot/refresh',{method:'POST'});
               if(!refresh.ok){
+                if(refresh.status===409&&refresh.body?.error==='analytics_public_snapshot_source_not_ready'){
+                  const repair=await call('/api/admin/site-analytics-materialized/backfill?limit=50',{method:'POST'});
+                  console.log(JSON.stringify({siteAnalyticsSnapshotRepairAttempt:attempt,status:repair.status,error:repair.body?.error||''}));
+                  if(!repair.ok) throw new Error('snapshot materialized repair failed: '+repair.status+' '+repair.text.slice(0,700));
+                  await new Promise(resolve=>setTimeout(resolve,500));
+                  continue;
+                }
                 if(refresh.status===409&&refresh.body?.error==='analytics_public_snapshot_source_changed'){
                   await new Promise(resolve=>setTimeout(resolve,500));
                   continue;
@@ -755,6 +762,18 @@ jobs:
             return {ok:response.ok,status:response.status,body,text};
           }
           try{
+            let propagationPasses=0;
+            for(let probe=1;probe<=20&&propagationPasses<2;probe+=1){
+              const health=await call('/api/_healthcheck?d4d-propagation='+Date.now(),{auth:false});
+              if(health.ok&&health.body?.siteAnalyticsPublicSnapshotReadEnabled===true) propagationPasses+=1;
+              else propagationPasses=0;
+              report.attempts.push({attempt:probe,stage:'propagation',status:health.status,
+                readEnabled:health.body?.siteAnalyticsPublicSnapshotReadEnabled===true,
+                consecutivePasses:propagationPasses});
+              save();
+              if(propagationPasses<2) await new Promise(resolve=>setTimeout(resolve,1000));
+            }
+            if(propagationPasses<2) throw new Error('D4d snapshot activation did not observe stable propagated read flag');
             const proofPath='/tmp/site-analytics-snapshot-shadow-report.json';
             if(!fs.existsSync(proofPath)) throw new Error('D4c snapshot parity proof missing');
             const proof=JSON.parse(fs.readFileSync(proofPath,'utf8'));

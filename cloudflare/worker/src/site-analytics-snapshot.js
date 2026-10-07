@@ -35,11 +35,12 @@ async function readerWatermark(env){
 }
 
 function sameMaterializedWatermark(a,b){
-  return Boolean(a?.ready&&b?.ready)
-    &&safeInt(a.rawMaxEventId)===safeInt(b.rawMaxEventId)
+  return Boolean(a?.snapshotSourceReady&&b?.snapshotSourceReady)
     &&safeInt(a.materializedMaxEventId)===safeInt(b.materializedMaxEventId)
     &&safeInt(a.backfillLastEventId)===safeInt(b.backfillLastEventId)
-    &&safeInt(a.globalPv)===safeInt(b.globalPv);
+    &&safeInt(a.globalPv)===safeInt(b.globalPv)
+    &&safeInt(a.scannedEvents)===safeInt(b.scannedEvents)
+    &&safeInt(a.globalLastViewedAt)===safeInt(b.globalLastViewedAt);
 }
 function sameReaderWatermark(a,b){
   return safeInt(a?.rows)===safeInt(b?.rows)&&safeInt(a?.maxOpenedAt)===safeInt(b?.maxOpenedAt);
@@ -63,7 +64,13 @@ export async function refreshSiteAnalyticsPublicSnapshot(env,now=Date.now()){
     getSiteAnalyticsMaterializedReadiness(env),
     readerWatermark(env),
   ]);
-  if(!before.ready)return {status:409,body:{error:'analytics_public_snapshot_source_not_ready',reason:before.reason||'materialized_not_ready'}};
+  if(!before.snapshotSourceReady)return {status:409,body:{
+    error:'analytics_public_snapshot_source_not_ready',
+    reason:before.reason||'materialized_not_ready',
+    strictRealtimeReady:before.ready===true,
+    lagEvents:safeInt(before.lagEvents),
+    lagMs:safeInt(before.lagMs),
+  }};
 
   const stats=await materializedSiteAnalyticsStats(env,now);
   if(stats.status!==200)return stats;
@@ -135,6 +142,7 @@ export async function getSiteAnalyticsPublicSnapshotStatus(env,now=Date.now()){
     sourceGlobalPv:safeInt(row?.source_global_pv),
     sourceReaderRows:safeInt(row?.source_reader_rows),
     sourceReaderMaxOpenedAt:safeInt(row?.source_reader_max_opened_at),
+    sourceLagEvents:Math.max(0,safeInt(row?.source_raw_max_event_id)-safeInt(row?.source_materialized_max_event_id)),
   }};
 }
 
@@ -172,8 +180,7 @@ export async function compareSiteAnalyticsPublicSnapshot(env,now=Date.now()){
   const comparison=compareSiteAnalyticsBodies(snapshot,materialized.body);
   const readiness=await getSiteAnalyticsMaterializedReadiness(env);
   const reader=await readerWatermark(env);
-  const sourceStable=readiness.ready===true
-    &&safeInt(readiness.rawMaxEventId)===safeInt(row.source_raw_max_event_id)
+  const sourceStable=readiness.snapshotSourceReady===true
     &&safeInt(readiness.materializedMaxEventId)===safeInt(row.source_materialized_max_event_id)
     &&safeInt(readiness.globalPv)===safeInt(row.source_global_pv)
     &&safeInt(reader.rows)===safeInt(row.source_reader_rows)

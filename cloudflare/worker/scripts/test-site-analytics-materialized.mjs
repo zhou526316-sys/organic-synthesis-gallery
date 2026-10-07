@@ -369,4 +369,22 @@ test('D4c snapshot public read fails closed while disabled and when stale',async
   assert.equal(stale.status,503);assert.equal(stale.body.error,'analytics_public_snapshot_stale');
 });
 
+test('D4e snapshot source stays valid across one in-flight raw event',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const fixedNow=Date.parse('2026-10-05T02:00:00Z');
+  const env={...envFor(db,true),SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED:'1',SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED:'0'};
+  const first=insertRaw(db,{ip:'a',date:'2026-10-05',viewedAt:fixedNow-2000});
+  await materializeSitePageViewEvent(env,row(db,first));
+  await backfillSiteAnalyticsMaterializedPage(env,100);
+  insertRaw(db,{ip:'b',date:'2026-10-05',viewedAt:fixedNow-1000});
+  const readiness=await getSiteAnalyticsMaterializedReadiness(env);
+  assert.equal(readiness.ready,false);
+  assert.equal(readiness.snapshotSourceReady,true);
+  assert.equal(readiness.lagEvents,1);
+  assert.equal(readiness.reason,'analytics_materialized_realtime_lag');
+  assert.equal((await refreshSiteAnalyticsPublicSnapshot(env,fixedNow)).status,200);
+  const read=await readSiteAnalyticsPublicSnapshot(env,fixedNow+100,{requireEnabled:false});
+  assert.equal(read.status,200);assert.equal(read.body.allTime.pv,1);
+});
+
 console.log('SITE_ANALYTICS_MATERIALIZED_SHADOW_TESTS_READY');

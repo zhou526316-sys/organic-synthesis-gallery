@@ -540,69 +540,67 @@ async function handleApi(request, env, ctx) {
   if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats') {
     if (siteAnalyticsPublicSnapshotReadEnabled(env)) {
       try {
-        const snapshot = await readSiteAnalyticsPublicSnapshot(env);
-        if (snapshot.status === 200) return resultResponse(snapshot, cors);
-        return resultResponse(snapshot, cors);
+        return resultResponse(await readSiteAnalyticsPublicSnapshot(env), cors);
       } catch (error) {
         console.error('SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_FAILED', {
           message: String(error?.message || error).slice(0, 180),
         });
         return resultResponse({
           status: 503,
-          body: {
-            error: 'analytics_public_snapshot_read_error',
-            readPath: 'snapshot',
-          },
+          body: { error: 'analytics_public_snapshot_read_error', readPath: 'snapshot' },
         }, cors);
       }
     }
     if (siteAnalyticsMaterializedReadEnabled(env)) {
+      let readiness={ready:false,reason:'materialized_unavailable'};
       try {
-        const readiness = await getSiteAnalyticsMaterializedReadiness(env);
+        readiness=await getSiteAnalyticsMaterializedReadiness(env);
         if (readiness.ready) {
-          const materialized = await materializedSiteAnalyticsStats(env);
-          if (materialized.status === 200) {
+          const materialized=await materializedSiteAnalyticsStats(env);
+          if (materialized.status===200) {
             return resultResponse({
-              status: 200,
-              body: {
-                ...materialized.body,
-                generation: 'site-pageview-v2',
-                readPath: 'materialized',
-              },
-            }, cors);
+              status:200,
+              body:{...materialized.body,generation:'site-pageview-v2',readPath:'materialized'},
+            },cors);
           }
         }
-        const legacy = await siteAnalyticsStats(env);
-        if (legacy.status === 200) {
-          return resultResponse({
-            status: 200,
-            body: {
-              ...legacy.body,
-              readPath: 'legacy_raw_fallback',
-              materializedFallbackReason: readiness.reason || 'materialized_unavailable',
-            },
-          }, cors);
-        }
-        return resultResponse(legacy, cors);
       } catch (error) {
-        console.warn('SITE_ANALYTICS_MATERIALIZED_READ_FALLBACK', {
-          message: String(error?.message || error).slice(0, 180),
+        readiness={ready:false,reason:'materialized_read_error'};
+        console.warn('SITE_ANALYTICS_MATERIALIZED_READ_DEGRADED',{
+          message:String(error?.message||error).slice(0,180),
         });
-        const legacy = await siteAnalyticsStats(env);
-        if (legacy.status === 200) {
-          return resultResponse({
-            status: 200,
-            body: {
-              ...legacy.body,
-              readPath: 'legacy_raw_fallback',
-              materializedFallbackReason: 'materialized_read_error',
-            },
-          }, cors);
-        }
-        return resultResponse(legacy, cors);
       }
+      const snapshotFallback=await readSiteAnalyticsPublicSnapshot(env,Date.now(),{requireEnabled:false})
+        .catch(error=>({status:503,body:{error:String(error?.message||error).slice(0,180)}}));
+      if(snapshotFallback.status===200){
+        return resultResponse({
+          status:200,
+          body:{...snapshotFallback.body,readPath:'snapshot_fallback',
+            materializedFallbackReason:readiness.reason||'materialized_unavailable'},
+        },cors);
+      }
+      return resultResponse({
+        status:503,
+        body:{error:'analytics_bounded_stats_unavailable',readPath:'bounded_unavailable',
+          materializedFallbackReason:readiness.reason||'materialized_unavailable',
+          snapshotFallbackReason:snapshotFallback.body?.error||'snapshot_unavailable'},
+      },cors);
     }
-    return resultResponse(await siteAnalyticsStats(env), cors);
+    const snapshotFallback=await readSiteAnalyticsPublicSnapshot(env,Date.now(),{requireEnabled:false})
+      .catch(error=>({status:503,body:{error:String(error?.message||error).slice(0,180)}}));
+    if(snapshotFallback.status===200){
+      return resultResponse({
+        status:200,
+        body:{...snapshotFallback.body,readPath:'snapshot_fallback',
+          materializedFallbackReason:'materialized_read_disabled'},
+      },cors);
+    }
+    return resultResponse({
+      status:503,
+      body:{error:'analytics_bounded_stats_unavailable',readPath:'bounded_unavailable',
+        materializedFallbackReason:'materialized_read_disabled',
+        snapshotFallbackReason:snapshotFallback.body?.error||'snapshot_unavailable'},
+    },cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark') {
     return resultResponse(await markReader(env, await readJson(request), request, ctx), cors);
@@ -990,8 +988,21 @@ export default {
     ctx.waitUntil((async () => {
       if (siteAnalyticsPublicSnapshotShadowEnabled(env)) {
         try {
-          const snapshot = await refreshSiteAnalyticsPublicSnapshot(env, controller.scheduledTime || Date.now());
-          console.log('SITE_ANALYTICS_PUBLIC_SNAPSHOT_CRON', JSON.stringify(snapshot.body || {}));
+          let readiness=await getSiteAnalyticsMaterializedReadiness(env);
+          let repairPages=0;
+          while(readiness.snapshotSourceReady!==true&&repairPages<4){
+            repairPages+=1;
+            const repair=await backfillSiteAnalyticsMaterializedPage(env,100);
+            if(repair.status!==200) throw new Error('snapshot materialized repair failed: '+JSON.stringify(repair.body||{}));
+            readiness=await getSiteAnalyticsMaterializedReadiness(env);
+          }
+          const snapshot=await refreshSiteAnalyticsPublicSnapshot(env,controller.scheduledTime||Date.now());
+          console.log('SITE_ANALYTICS_PUBLIC_SNAPSHOT_CRON',JSON.stringify({
+            ...(snapshot.body||{}),repairPages,
+            strictRealtimeReady:readiness.ready===true,
+            snapshotSourceReady:readiness.snapshotSourceReady===true,
+            lagEvents:Number(readiness.lagEvents||0),
+          }));
         } catch (error) {
           console.error('SITE_ANALYTICS_PUBLIC_SNAPSHOT_CRON_FAILED', error instanceof Error ? error.message : String(error));
         }

@@ -79,3 +79,11 @@ The canonical rollback is now hardened: it must repair D4b materialized readines
 Activation diagnostics now persist each refresh/live-proof attempt so a repeated source-race can be distinguished from a route or freshness failure.
 
 No second activation may be attempted until the source-0 deployment proves D4b materialized recovery and D4c snapshot parity again.
+
+## Realtime-lag correction
+
+D4e separates strict realtime freshness from an internally consistent materialized snapshot source. A newly inserted raw pageview may still be in flight while the materialized tables remain self-consistent at the previous watermark.
+
+Snapshot refresh may publish that stable materialized watermark inside the explicit freshness budget. The 15-minute cron repairs genuinely unhealthy materialized state in at most four 100-event pages. D4c parity can repair source-not-ready in bounded pages. D4d activation waits for two consecutive health observations of the enabled snapshot flag before checking the exact proof generation.
+
+Public site-stats no longer uses legacy raw aggregation fallback. With primary snapshot reads disabled, transient D4b lag uses a fresh singleton snapshot as snapshot_fallback; if neither bounded read is available, the endpoint returns bounded 503.

@@ -32,18 +32,18 @@ test('D4a analytics migration is isolated, canonical and applied before Worker d
   assert.ok(deploy.includes('wrangler d1 execute "$D1_NAME" --remote --file=../site-analytics-v2.sql'));
 });
 
-test('D4b public site-stats is materialized-primary with explicit raw fallback',()=>{
-  const stats=section(userUi,'export async function siteAnalyticsStats','export async function markReader');
-  assert.ok(stats.includes('FROM site_pageviews_v1'));
+test('public site-stats is materialized-primary with bounded snapshot fallback and no raw scan',()=>{
   const route=section(index,"if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats')","if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark')");
   assert.ok(route.includes('siteAnalyticsMaterializedReadEnabled(env)'));
   assert.ok(route.includes('getSiteAnalyticsMaterializedReadiness(env)'));
   assert.ok(route.includes('materializedSiteAnalyticsStats(env)'));
-  assert.ok(route.includes("readPath: 'materialized'"));
-  assert.ok(route.includes("readPath: 'legacy_raw_fallback'"));
-  assert.ok(route.includes('siteAnalyticsStats(env)'));
+  assert.ok(route.includes("readPath:'materialized'"));
+  assert.ok(route.includes('readSiteAnalyticsPublicSnapshot(env,Date.now(),{requireEnabled:false})'));
+  assert.ok(route.includes("readPath:'snapshot_fallback'"));
+  assert.ok(route.includes("error:'analytics_bounded_stats_unavailable'"));
+  assert.ok(!route.includes('siteAnalyticsStats(env)'));
+  assert.ok(!route.includes('legacy_raw_fallback'));
 });
-
 test('raw pageview write remains primary; active materialization is synchronous with raw fallback safety',()=>{
   const track=section(userUi,'export async function trackPageView','export async function siteAnalyticsStats');
   const rawWrite=track.indexOf('INSERT INTO site_pageviews_v1');
@@ -200,6 +200,24 @@ test('D4d canonical deploy has snapshot activation canary and automatic rollback
   assert.ok(block.includes('rollbackRepairPages'));
   assert.ok(block.includes('rolledBack=true'));
   assert.ok(block.includes('- name: Preserve public analytics snapshot activation report'));
+});
+
+test('D4e snapshot cron repairs materialized source in bounded pages before refresh',()=>{
+  const scheduled=section(index,'async scheduled(controller, env, ctx)','ARTICLE_FIGURE_STAGE_PROMOTION_CRON_SKIPPED');
+  assert.ok(scheduled.includes('readiness.snapshotSourceReady!==true'));
+  assert.ok(scheduled.includes('repairPages<4'));
+  assert.ok(scheduled.includes('backfillSiteAnalyticsMaterializedPage(env,100)'));
+  assert.ok(scheduled.includes('refreshSiteAnalyticsPublicSnapshot'));
+});
+
+test('D4c shadow and D4d activation can self-heal and wait for edge propagation',()=>{
+  const block=section(deploy,'- name: Refresh and verify public analytics snapshot shadow','- name: Backfill and verify user library row read path');
+  assert.ok(block.includes('/api/admin/site-analytics-materialized/backfill?limit=50'));
+  assert.ok(block.includes('siteAnalyticsSnapshotRepairAttempt'));
+  assert.ok(block.includes('propagationPasses<2'));
+  assert.ok(block.includes('probe<=20'));
+  assert.ok(block.includes("stage:'propagation'"));
+  assert.ok(block.includes('d4d-propagation='));
 });
 
 console.log('SITE_ANALYTICS_MATERIALIZED_DEPLOYMENT_CONTRACT_PASS');

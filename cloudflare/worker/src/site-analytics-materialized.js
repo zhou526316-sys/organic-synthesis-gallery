@@ -280,20 +280,30 @@ export async function getSiteAnalyticsMaterializedReadiness(env){
   const duplicateEvents=Number(backfill?.duplicate_events||0);
   const failedEvents=Number(backfill?.failed_events||0);
   const lastError=safe(backfill?.last_error,180);
-  const ready=Number(backfill?.complete||0)===1
+  const backfillComplete=Number(backfill?.complete||0)===1;
+  const globalPv=Number(global?.pv||0);
+  const snapshotSourceReady=backfillComplete
     &&lastError===''
+    &&materializedMax===lastEventId
+    &&materializedEvents+duplicateEvents===scannedEvents
+    &&globalPv===scannedEvents;
+  const ready=snapshotSourceReady
     &&rawMax===materializedMax
     &&lastEventId===rawMax
-    &&materializedEvents+duplicateEvents===scannedEvents
-    &&Number(global?.pv||0)===scannedEvents
     &&globalLastViewedAt===rawLastViewedAt;
   return {
     ready,
-    reason:ready?'ready':'analytics_materialized_not_fresh',
+    snapshotSourceReady,
+    reason:ready?'ready':snapshotSourceReady?'analytics_materialized_realtime_lag':'analytics_materialized_not_fresh',
+    backfillComplete,
     rawMaxEventId:rawMax,
     materializedMaxEventId:materializedMax,
     backfillLastEventId:lastEventId,
-    globalPv:Number(global?.pv||0),
+    rawLastViewedAt,
+    globalLastViewedAt,
+    lagEvents:Math.max(0,rawMax-materializedMax),
+    lagMs:Math.max(0,rawLastViewedAt-globalLastViewedAt),
+    globalPv,
     scannedEvents,materializedEvents,duplicateEvents,failedEvents,lastError,
   };
 }
