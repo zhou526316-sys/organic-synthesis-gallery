@@ -342,6 +342,7 @@ jobs:
         timeout-minutes: 5
         env:
           PRIVATE_PDF_BROWSER_OUTPUT: ${{ runner.temp }}/gallery-private-pdf-test-results
+          PRIVATE_PDF_BROWSER_SCOPE: owner
         run: node tests/private-pdf-access-browser.mjs
       - name: Verify local PDF persistence and reader before publication
         timeout-minutes: 5
