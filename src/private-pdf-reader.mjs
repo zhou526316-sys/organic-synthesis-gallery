@@ -30,6 +30,8 @@ let zoom = 1;
 let renderSequence = 0;
 let sourceUrl = '';
 let destroyed = false;
+let phase = 'init';
+const startedAt = performance.now();
 
 function token() {
   try { return localStorage.getItem(SESSION_KEY) || ''; } catch { return ''; }
@@ -49,12 +51,36 @@ function controls() {
   pageCount.textContent = pdf ? `第 ${pageNumber} / ${pdf.numPages} 页` : '—';
   zoomLabel.textContent = `${Math.round(zoom * 100)}%`;
 }
-function fallbackView(message = '该论文暂时无法读取私有 PDF。') {
+function setPhase(next, message = '') {
+  phase = next;
+  document.documentElement.dataset.privatePdfPhase = next;
+  if (message && !status.hidden) status.textContent = message;
+}
+function safeErrorCode(error) {
+  if (error?.notAvailable) return 'not_available';
+  const name = String(error?.name || '');
+  if (['PasswordException','InvalidPDFException','MissingPDFException','UnexpectedResponseException','UnknownErrorException'].includes(name)) return name;
+  const message = String(error?.message || '');
+  if (/^open_http_\d+$/.test(message)) return message;
+  if (['pdf_source_invalid','pdf_page_tree'].includes(message)) return message;
+  return 'reader_error';
+}
+function fallbackView(message = '该论文暂时无法读取私有 PDF。', detail = '') {
   const url = safeFallback();
   status.replaceChildren();
   const text = document.createElement('div');
   text.textContent = message;
   status.appendChild(text);
+  const elapsed = Math.max(0, performance.now() - startedAt);
+  const diagnostic = document.createElement('small');
+  diagnostic.id = 'pdf-diagnostic';
+  diagnostic.textContent = `阶段：${phase} · ${detail || 'unknown'} · ${(elapsed / 1000).toFixed(1)}s`;
+  status.appendChild(diagnostic);
+  const retry = document.createElement('button');
+  retry.type = 'button';
+  retry.textContent = '重新读取';
+  retry.addEventListener('click', () => location.reload());
+  status.appendChild(retry);
   if (url) {
     const link = document.createElement('a');
     link.id = 'publisher-fallback';
@@ -95,6 +121,7 @@ async function render() {
   old?.cancel();
   if (old) await old.promise.catch(() => {});
   if (seq !== renderSequence || destroyed) return;
+  setPhase('render', pageNumber === 1 ? '正在绘制第一页…' : `正在绘制第 ${pageNumber} 页…`);
   const page = await pdf.getPage(pageNumber);
   const base = page.getViewport({ scale: 1 });
   const available = Math.max(180, stage.clientWidth - 12);
@@ -118,6 +145,8 @@ async function render() {
   canvas.dataset.renderedPage = String(pageNumber);
   status.hidden = true;
   document.documentElement.dataset.privatePdfViewer = 'ready';
+  document.documentElement.dataset.privatePdfReadyMs = String(Math.round(performance.now() - startedAt));
+  setPhase('ready');
   stage.parentElement.scrollTop = 0;
   controls();
 }
@@ -146,14 +175,17 @@ async function start() {
   const sessionToken = token();
   if (!sessionToken) { fallbackView('请先在 Gallery 登录后再读取私有 PDF。'); return; }
   try {
+    setPhase('authorize', '正在确认 PDF 权限…');
     sourceUrl = await getPdfSource(sessionToken);
     if (destroyed) return;
+    setPhase('range-load', '正在建立分段读取…');
     download.href = sourceUrl;
     download.removeAttribute('download');
     download.target = '_blank';
     download.rel = 'noopener noreferrer';
     download.hidden = false;
     loadingTask = getDocument(options({ url: sourceUrl }));
+    setPhase('parse', '正在读取 PDF 目录…');
     loadingTask.onProgress = progress => {
       if (destroyed || status.hidden) return;
       const loaded = Number(progress?.loaded || 0);
@@ -168,7 +200,7 @@ async function start() {
     await render();
   } catch (error) {
     if (destroyed) return;
-    const code = String(error?.message || error?.name || 'unknown').slice(0, 96);
+    const code = safeErrorCode(error);
     document.documentElement.dataset.privatePdfError = code;
     const message = error?.notAvailable
       ? '该论文尚无已验证的私有 PDF。'
@@ -177,13 +209,13 @@ async function start() {
         : /^open_http_401|^open_http_403/.test(code)
           ? '登录状态已失效，请返回 Gallery 重新登录后读取。'
           : 'PDF 读取失败，请重试。';
-    fallbackView(message);
+    fallbackView(message, code);
   }
 }
 function update(change) {
   if (!pdf || renderTask || destroyed) return;
   change();
-  void render().catch(() => fallbackView('PDF 页面绘制失败，请稍后重试。'));
+  void render().catch(error => fallbackView('PDF 页面绘制失败，请稍后重试。', safeErrorCode(error)));
 }
 previous.addEventListener('click', () => update(() => { pageNumber = Math.max(1, pageNumber - 1); }));
 next.addEventListener('click', () => update(() => { pageNumber = Math.min(pdf.numPages, pageNumber + 1); }));
