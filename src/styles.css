@@ -1344,3 +1344,22 @@ gallery-paper-actions {
     width: 66px;
   }
 }
+
+@media (max-width: 360px) {
+  .result-pagination-main,
+  .result-page-numbers {
+    gap: 2px;
+  }
+  .result-page-button {
+    min-width: 40px;
+    width: 40px;
+  }
+  .result-page-number {
+    width: 34px;
+    min-height: 38px;
+  }
+  .result-page-ellipsis {
+    width: 12px;
+    min-height: 38px;
+  }
+}
