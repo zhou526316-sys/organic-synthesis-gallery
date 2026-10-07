@@ -1,0 +1,10 @@
+{
+  "revision": "2026-10-07-r15",
+  "runId": 37591218718,
+  "artifact": 11468801383,
+  "digest": "sha256:490f6e317e5b3e76e71759abbc0778d05fd205b53f7284da064c344d527dae65",
+  "error": "Glyph diagnostic did not restore original inline styles",
+  "sourceAssetsUnchanged": true,
+  "draftWritten": false,
+  "resolution": "Prior source-only check stopped on inline-style serialization comparison after a temporary glyph mask. Restore validation now checks computed styles and actual geometry, with normalized absent/empty attributes; mask excludes screenshot rounding border."
+}

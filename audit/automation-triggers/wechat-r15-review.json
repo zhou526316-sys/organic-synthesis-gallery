@@ -1,5 +1,7 @@
 {
   "action": "source_preview_only",
   "revision": "2026-10-07-r15",
-  "reason": "Requested modest blue upper-edge extension and actual glyph-pixel clearance review. Text CSS unchanged; no native-client claim; no draft write."
+  "reason": "Requested modest blue upper-edge extension and actual glyph-pixel clearance review. Text CSS unchanged; no native-client claim; no draft write.",
+  "attempt": 2,
+  "retryReason": "Prior source-only check stopped on inline-style serialization comparison after a temporary glyph mask. Restore validation now checks computed styles and actual geometry, with normalized absent/empty attributes; mask excludes screenshot rounding border."
 }

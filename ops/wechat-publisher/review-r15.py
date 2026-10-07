@@ -281,11 +281,16 @@ def title_glyph_diagnostic(frame, viewport):
     pixels cannot disappear into the original cover background in this diagnostic.
     This checks the relay demonstration, never a native WeChat client.
     """
-    saved = frame.evaluate("""el=>({
-      frame:el.getAttribute('style'),
-      images:Array.from(el.querySelectorAll('img')).map(i=>i.getAttribute('style')),
-      title:el.querySelector('.cover-title').getAttribute('style')
-    })""")
+    snapshot_js = """el=>{
+      const images=Array.from(el.querySelectorAll('img'));
+      const title=el.querySelector('.cover-title');
+      const origin=el.getBoundingClientRect();
+      const nodes=[el,...images,title];
+      return {inline:{frame:el.getAttribute('style'),images:images.map(i=>i.getAttribute('style')),title:title.getAttribute('style')},
+        appearance:nodes.map(n=>{const s=getComputedStyle(n);return Object.fromEntries(Array.from(s).map(k=>[k,s.getPropertyValue(k)]));}),
+        geometry:nodes.map(n=>{const b=n.getBoundingClientRect();return {x:b.x-origin.x,y:b.y-origin.y,width:b.width,height:b.height};})};
+    }"""
+    saved = frame.evaluate(snapshot_js)
     diagnostic_path = OUT / f"angew-title-glyph-mask-{viewport}.png"
     try:
         frame.evaluate("""el=>{
@@ -305,17 +310,39 @@ def title_glyph_diagnostic(frame, viewport):
           restore(el,s.frame);
           Array.from(el.querySelectorAll('img')).forEach((im,i)=>restore(im,s.images[i]));
           restore(el.querySelector('.cover-title'),s.title);
-        }""", saved)
-    restored = frame.evaluate("""el=>({
-      frame:el.getAttribute('style'),
-      images:Array.from(el.querySelectorAll('img')).map(i=>i.getAttribute('style')),
-      title:el.querySelector('.cover-title').getAttribute('style')
-    })""")
-    require(restored == saved, "Glyph diagnostic did not restore original inline styles")
+        }""", saved["inline"])
+    restored = frame.evaluate(snapshot_js)
+    # Attribute serialization may normalize absent style to an empty string.
+    # Verify the real computed presentation and frame-relative geometry instead.
+    style_differences = []
+    for index, (before, after) in enumerate(zip(saved["appearance"], restored["appearance"])):
+        for key in sorted(set(before) | set(after)):
+            if before.get(key) != after.get(key):
+                style_differences.append({"node": index, "property": key,
+                                          "before": before.get(key), "after": after.get(key)})
+                if len(style_differences) == 5:
+                    break
+        if len(style_differences) == 5:
+            break
+    require(restored["appearance"] == saved["appearance"],
+            "Glyph diagnostic changed computed styles after restoration: " +
+            json.dumps({"differences": style_differences,
+                        "nodeCounts": [len(saved["appearance"]), len(restored["appearance"])]}, ensure_ascii=False))
+    require(len(restored["geometry"]) == len(saved["geometry"]) and
+            all(abs(after[key]-before[key]) <= .25
+                for before,after in zip(saved["geometry"],restored["geometry"])
+                for key in ("x","y","width","height")),
+            "Glyph diagnostic changed geometry after restoration")
+    def normalized_inline(row):
+        return {"frame": row["frame"] or "", "images": [v or "" for v in row["images"]], "title": row["title"] or ""}
+    inline_equal = normalized_inline(restored["inline"]) == normalized_inline(saved["inline"])
     with Image.open(diagnostic_path) as raster:
-        mask = raster.convert('L').point(lambda value: 255 if value >= 32 else 0)
-        bounds = mask.getbbox()
         pixel_width, pixel_height = raster.size
+        mask = raster.convert('L').point(lambda value: 255 if value >= 32 else 0)
+        # Whole-pixel screenshot bounds can include a partial page-background
+        # edge. Exclude 1px; title insets keep actual glyphs away from that edge.
+        interior_bounds = mask.crop((1, 1, pixel_width-1, pixel_height-1)).getbbox()
+        bounds = tuple(value + 1 for value in interior_bounds) if interior_bounds else None
     require(bounds is not None, "Glyph diagnostic found no visible title pixels")
     scale_x, scale_y = pixel_width / box['width'], pixel_height / box['height']
     css_bounds = {'left': bounds[0] / scale_x, 'top': bounds[1] / scale_y,
@@ -324,8 +351,10 @@ def title_glyph_diagnostic(frame, viewport):
     require(clearance >= 2, f"Actual title glyphs lack 2px blue-strip clearance: {clearance:.2f}px")
     return {'titleGlyphBounds': {'pixelBounds': list(bounds), 'cssBoundsRelativeToFrame': css_bounds},
             'titleGlyphClearancePx': clearance, 'highestGlyphPixelY': bounds[1],
-            'minimumGlyphClearancePx': 2, 'threshold': 32,
-            'diagnosticImage': diagnostic_path.name, 'inlineStylesRestored': True,
+            'minimumGlyphClearancePx': 2, 'threshold': 32, 'edgeGuardPixels': 1,
+            'diagnosticImage': diagnostic_path.name, 'inlineStylesRestored': inline_equal,
+            'computedStylesRestored': True, 'frameRelativeGeometryRestored': True,
+            'inlineAttributeSerializationChanged': restored['inline'] != saved['inline'],
             'scope': 'Black-background full-frame diagnostic of this relay demonstration only; layout and title unchanged; not native WeChat client verification'}
 
 
