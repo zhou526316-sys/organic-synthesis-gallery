@@ -1,6 +1,11 @@
 name: PDF Vault live delivery verification
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/pdf-vault-live.yml'
+      - 'scripts/verify-pdf-vault-live.mjs'
   workflow_run:
     workflows: [Deploy GitHub Pages frontend]
     types: [completed]
@@ -22,17 +27,19 @@ concurrency:
 jobs:
   verify:
     if: >-
+      github.event_name == 'push' ||
       github.event_name == 'workflow_dispatch' ||
       (github.event.workflow_run.conclusion == 'success' &&
        github.event.workflow_run.head_branch == 'main' &&
        github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 6
-    env:
-      PDF_VAULT_LIVE_OUTPUT: ${{ runner.temp }}/pdf-vault-live/summary.json
     steps:
       - name: Initialize failure evidence before checkout or artifact retrieval
+        env:
+          PDF_VAULT_LIVE_OUTPUT: ${{ runner.temp }}/pdf-vault-live/summary.json
         run: |
+          echo "PDF_VAULT_LIVE_OUTPUT=$PDF_VAULT_LIVE_OUTPUT" >> "$GITHUB_ENV"
           node -e 'const fs=require("node:fs"),p=process.env.PDF_VAULT_LIVE_OUTPUT;fs.mkdirSync(require("node:path").dirname(p),{recursive:true});fs.writeFileSync(p,JSON.stringify({schemaVersion:1,suite:"pdf-vault-live",ok:false,productionMutations:false,error:"verification_setup_not_completed",completedAt:new Date().toISOString()},null,2)+"\n")'
       - name: Checkout trusted verification code
         uses: actions/checkout@v4
