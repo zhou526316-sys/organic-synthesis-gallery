@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.39
+// @version      6.2.40
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -55,7 +55,7 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.39';
+  var INSTALL_REVISION = '6.2.40';
   var STALE_CONTROLLER_TAKEOVER_REVISION = '20261006-stale-controller-takeover-v1';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
@@ -4231,7 +4231,12 @@ function embeddedJobDois(value) {
     row.job=coverageJobNeeds(next);
     if(!coverageHasNeeds(next)){row.state='resolved';row.retryAt=0;return;}
     var retryAfter=Math.max(0,Number(result.retryAfterMs||0));
-    if(result.status==='aborted'){row.state='paused';return;}
+    if(result.status==='aborted'){
+      // A single publisher-tab abort must not terminate an explicit missing-only pass.
+      // Real Pause is represented by controllerPaused(); otherwise quarantine this DOI
+      // for the rest of the current pass and continue with the remaining articles.
+      row.state=controllerPaused()?'paused':'blocked';row.retryAt=0;return;
+    }
     if(job.capturePrivatePdf && result.privatePdf && !privatePdfCompletedStatus(pdfStatus)){
       // Keep the PDF gap visible and unresolved, but skip this DOI for the rest
       // of the current pass. A new explicit Start may retry immediately.
@@ -4346,7 +4351,7 @@ function embeddedJobDois(value) {
         if(row.state==='resolved')GM_setValue(attemptKey(job.doi,VERSION+':paired:1790082000000','figures'),result);
         if(!result.toc)enqueueCaptureReport(job,[{stage:'controller',event:'coverage_capture_result',status:result.status,message:result.reason,at:nowIso()}],result.status,result.reason,true,'');
         coverageStats(run);manualSummary(run);
-        if(controllerPaused()||result.status==='aborted')break;
+        if(controllerPaused())break;
         await coverageWait(run,Date.now()+3500);
         if(!manualExecutionCurrent(run)||controllerPaused())break;
         if(Date.now()-checkedAt>=60000){queue=await getJson(QUEUE_URL+'?ts='+Date.now());if(!await refresh())return;}
