@@ -164,3 +164,6 @@ D4d activation retry #2 is requested after the D4c parity-proof reuse fix; autom
 
 
 D4d primary snapshot activation is temporarily paused while D4c persists exact source-readiness diagnostics; public analytics remains bounded and raw-history fallback remains forbidden.
+
+
+Site-analytics backfill scanned/materialized counters are operational diagnostics, not public-read authority; realtime correctness is fenced by materialized event watermark, cursor, global timestamp, error state and snapshot generation.

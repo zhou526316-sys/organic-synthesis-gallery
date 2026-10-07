@@ -110,13 +110,17 @@ jobs:
             timestampsEqual:n('global_last_viewed_at')===n('raw_last_viewed_at'),
           };
           const snapshotSourceReady=checks.noLastError&&checks.materializedMaxEqualsBackfillLast
-            &&checks.ledgerCountEqualsScanned&&checks.globalPvEqualsScanned
             &&checks.materializedMaxNotAheadOfRaw&&checks.materializedTimeNotAheadOfRaw;
           const strictReady=snapshotSourceReady&&checks.backfillComplete&&checks.rawMaxEqualsMaterializedMax
             &&checks.backfillLastEqualsRawMax&&checks.timestampsEqual;
           const report={
             schemaVersion:1,phase:'D4e-readiness-diagnostic',generatedAt:new Date().toISOString(),
-            row,checks,snapshotSourceReady,strictReady,
+            row,checks,
+            advisoryCounterChecks:{
+              ledgerCountEqualsScanned:checks.ledgerCountEqualsScanned,
+              globalPvEqualsScanned:checks.globalPvEqualsScanned,
+            },
+            snapshotSourceReady,strictReady,
             derived:{
               rawIdGap:n('raw_max_event_id')-n('raw_events'),
               materializedIdGap:n('materialized_max_event_id')-n('materialized_events_count'),

@@ -369,6 +369,26 @@ test('D4c snapshot public read fails closed while disabled and when stale',async
   assert.equal(stale.status,503);assert.equal(stale.body.error,'analytics_public_snapshot_stale');
 });
 
+test('backfill maintenance counter drift does not invalidate authoritative analytics watermarks',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env=envFor(db,true);
+  const now=Date.parse('2026-10-05T02:00:00Z');
+  const id=insertRaw(db,{ip:'a',date:'2026-10-05',viewedAt:now});
+  await materializeSitePageViewEvent(env,row(db,id));
+  await backfillSiteAnalyticsMaterializedPage(env,100);
+  db.sqlite.prepare(`
+    UPDATE site_analytics_v2_backfill
+    SET scanned_events=MAX(0,scanned_events-1),materialized_events=MAX(0,materialized_events-1)
+    WHERE id=1
+  `).run();
+  const readiness=await getSiteAnalyticsMaterializedReadiness(env);
+  assert.equal(readiness.ready,true);
+  assert.equal(readiness.snapshotSourceReady,true);
+  assert.equal(readiness.countersConsistent,false);
+  assert.equal(readiness.counterDrift.globalPvVsScanned,1);
+  assert.equal(readiness.counterDrift.ledgerVsScanned,0);
+});
+
 test('D4e snapshot source can remain coherent while backfill complete flag is false',async t=>{
   const db=new D1();t.after(()=>db.close());
   const env={...envFor(db,true),SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED:'1'};

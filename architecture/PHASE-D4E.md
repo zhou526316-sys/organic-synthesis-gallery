@@ -24,3 +24,18 @@ Rollback safety is now defined by bounded public behavior, not immediate D4b aut
 When snapshot refresh rejects a materialized source, the admin response now exposes bounded readiness fields: raw/materialized/backfill max ids, global PV, scanned/materialized/duplicate/failed counts, pending raw events, timestamps, last error, and strict/snapshot readiness flags. The canonical D4c workflow stores that response together with the post-repair status in its artifact.
 
 This diagnostic pass runs with primary snapshot reads paused; it does not re-enable raw public fallback.
+
+## Backfill-counter authority correction
+
+Production diagnostics isolated the persistent D4c failure to one non-authoritative field:
+
+- raw rows: 621;
+- materialized event ledger rows: 621;
+- global PV: 621;
+- raw/materialized/backfill max event id: 621;
+- raw/global last-view timestamps: identical;
+- backfill complete: true;
+- last error: empty;
+- backfill scanned/materialized maintenance counters: 620.
+
+The maintenance counters can lag when realtime materialization and cursor maintenance interleave. They are therefore diagnostics, not analytics truth. Snapshot/materialized readiness now uses the atomic materialized event watermark, backfill cursor, global last-view timestamp and error state. Counter drift remains exposed as `counterDrift` / `countersConsistent` for repair and auditing, but it cannot make a complete materialized dataset falsely unavailable.

@@ -282,10 +282,12 @@ export async function getSiteAnalyticsMaterializedReadiness(env){
   const lastError=safe(backfill?.last_error,180);
   const backfillComplete=Number(backfill?.complete||0)===1;
   const globalPv=Number(global?.pv||0);
+  const counterDrift={
+    ledgerVsScanned:(materializedEvents+duplicateEvents)-scannedEvents,
+    globalPvVsScanned:globalPv-scannedEvents,
+  };
   const snapshotSourceReady=lastError===''
     &&materializedMax===lastEventId
-    &&materializedEvents+duplicateEvents===scannedEvents
-    &&globalPv===scannedEvents
     &&materializedMax<=rawMax
     &&globalLastViewedAt<=rawLastViewedAt;
   const ready=snapshotSourceReady
@@ -306,6 +308,8 @@ export async function getSiteAnalyticsMaterializedReadiness(env){
     lagEvents:Math.max(0,rawMax-materializedMax),
     lagMs:Math.max(0,rawLastViewedAt-globalLastViewedAt),
     pendingRawEvents:Math.max(0,rawMax-lastEventId),
+    counterDrift,
+    countersConsistent:counterDrift.ledgerVsScanned===0&&counterDrift.globalPvVsScanned===0,
     globalPv,
     scannedEvents,materializedEvents,duplicateEvents,failedEvents,lastError,
   };
