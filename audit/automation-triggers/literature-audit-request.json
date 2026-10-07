@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-07T00:07:30.000Z",
-  "requestedBy": "post-release-20261007-0800",
-  "publicationSlot": "2026-10-07T08:00:00+08:00",
-  "baselineMainSha": "f733a75376c3ecffa4528d441338852906135a31",
-  "reason": "Run the canonical post-release DOI-union audit against the successfully deployed 859-card 2026-10-07 08:00 release. Preserve the three-calendar-day review window, seven-day machine safety tail, multi-ISSN Crossref online/published/created union, OpenAlex, created/deposit rescue, verifiedThrough catch-up and canonical activeFrom rules. Persist paired latest/compact snapshots only; do not mutate production literature or media, do not admit any late candidate off-slot, and preserve the six formal deferred DOI for next-slot review."
+  "requestedAt": "2026-10-07T23:07:00.000Z",
+  "requestedBy": "prepublish-primary-20261008-0800",
+  "publicationSlot": "2026-10-08T08:00:00+08:00",
+  "baselineMainSha": "10ed73d1735d0b9a7247135dae3f8d07d8633ddb",
+  "reason": "The scheduled prepublish primary review found no fresh 06:55 snapshot for the 2026-10-08 08:00 slot. Run the canonical DOI-union audit once for this publicationSlot and input baseline. Preserve the Asia/Shanghai three-calendar-day review window, seven-day machine safety tail, multi-ISSN Crossref online/published/created union, OpenAlex, created/deposit rescue, verifiedThrough catch-up and canonical activeFrom rules. Persist paired latest/compact snapshots only; do not mutate production literature or media, do not admit candidates, and preserve the durable pending backlog for semantic review."
 }
