@@ -158,4 +158,17 @@ test('D4c snapshot public read is bounded to the singleton snapshot row',()=>{
   assert.ok(!block.includes('materializedSiteAnalyticsStats'));
 });
 
+test('D4d snapshot read branch is preinstalled fail-closed but production flag stays off',()=>{
+  const route=section(index,"if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats')","if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark')");
+  const snapshotGate=route.indexOf('siteAnalyticsPublicSnapshotReadEnabled(env)');
+  const materializedGate=route.indexOf('siteAnalyticsMaterializedReadEnabled(env)');
+  assert.ok(snapshotGate>=0&&materializedGate>snapshotGate);
+  const snapshotBranch=route.slice(snapshotGate,materializedGate);
+  assert.ok(snapshotBranch.includes('readSiteAnalyticsPublicSnapshot(env)'));
+  assert.ok(snapshotBranch.includes("error: 'analytics_public_snapshot_read_error'"));
+  assert.ok(!snapshotBranch.includes('siteAnalyticsStats(env)'));
+  assert.ok(!snapshotBranch.includes('materializedSiteAnalyticsStats(env)'));
+  assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED = "0"'));
+});
+
 console.log('SITE_ANALYTICS_MATERIALIZED_DEPLOYMENT_CONTRACT_PASS');

@@ -63,6 +63,7 @@ import { backfillSiteAnalyticsMaterializedPage, compareSiteAnalyticsBodies, getS
 import {
   compareSiteAnalyticsPublicSnapshot,
   getSiteAnalyticsPublicSnapshotStatus,
+  readSiteAnalyticsPublicSnapshot,
   refreshSiteAnalyticsPublicSnapshot,
   siteAnalyticsPublicSnapshotReadEnabled,
   siteAnalyticsPublicSnapshotShadowEnabled,
@@ -537,6 +538,24 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await trackPageView(env, await readJson(request), request, ctx), cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats') {
+    if (siteAnalyticsPublicSnapshotReadEnabled(env)) {
+      try {
+        const snapshot = await readSiteAnalyticsPublicSnapshot(env);
+        if (snapshot.status === 200) return resultResponse(snapshot, cors);
+        return resultResponse(snapshot, cors);
+      } catch (error) {
+        console.error('SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_FAILED', {
+          message: String(error?.message || error).slice(0, 180),
+        });
+        return resultResponse({
+          status: 503,
+          body: {
+            error: 'analytics_public_snapshot_read_error',
+            readPath: 'snapshot',
+          },
+        }, cors);
+      }
+    }
     if (siteAnalyticsMaterializedReadEnabled(env)) {
       try {
         const readiness = await getSiteAnalyticsMaterializedReadiness(env);
