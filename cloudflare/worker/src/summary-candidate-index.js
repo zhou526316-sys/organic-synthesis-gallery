@@ -248,6 +248,130 @@ export async function selectCandidateFromIndexedRows({evidenceRows=[],jobRows=[]
   };
 }
 
+export const SUMMARY_CANDIDATE_BOUNDED_PAGE_SIZE = 64;
+export const SUMMARY_CANDIDATE_BOUNDED_MAX_PAGES = 4;
+export const SUMMARY_CANDIDATE_BOUNDED_MAX_ROWS =
+  SUMMARY_CANDIDATE_BOUNDED_PAGE_SIZE * SUMMARY_CANDIDATE_BOUNDED_MAX_PAGES;
+
+function candidateFromJoinedRow(env,row,now){
+  const doi=normalizeDoi(row?.doi);
+  const evidencePacketHash=hash64(row?.evidence_packet_hash);
+  const sourceHash=hash64(row?.source_hash);
+  if(!doi||!evidencePacketHash||!sourceHash) return {candidate:null,invalid:true};
+  const policy=String(row?.text_processing_policy||'unknown');
+  if(!policyAllowsExternalAi(env,policy)) return {candidate:null,blockedPolicy:policy};
+  const jobHash=hash64(row?.job_evidence_packet_hash);
+  if(jobHash&&jobHash===evidencePacketHash){
+    const state=String(row?.job_state||'');
+    if(['published','needs_manual_review','rejected'].includes(state)) return {candidate:null,blockedState:state};
+    if(state==='processing'&&integer(row?.job_lease_expires_at)>now) return {candidate:null,blockedState:'processing_lease'};
+    if(state==='retry_wait'&&integer(row?.job_next_retry_at)>now) return {candidate:null,blockedState:'retry_wait'};
+  }
+  return {candidate:{
+    doi,
+    evidenceKey:String(row?.evidence_r2_key||''),
+    evidencePacketHash,
+    sourceHash,
+    evidenceLevel:String(row?.evidence_level||'unknown'),
+    textProcessingPolicy:policy,
+    capturedAt:String(row?.captured_at||''),
+    existingJobKey:String(row?.job_r2_key||''),
+  }};
+}
+
+const BOUNDED_CANDIDATE_SELECT = `
+  SELECT
+    e.doi,e.evidence_r2_key,e.evidence_packet_hash,e.source_hash,e.evidence_level,
+    e.text_processing_policy,e.captured_at,
+    j.job_r2_key,
+    j.evidence_packet_hash AS job_evidence_packet_hash,
+    j.state AS job_state,
+    j.next_retry_at AS job_next_retry_at,
+    j.lease_expires_at AS job_lease_expires_at
+  FROM article_evidence_index e
+  LEFT JOIN summary_review_job_index j ON j.doi=e.doi
+`;
+
+async function recentPublishedCountFromIndex(env,now){
+  const row=await env.DB.prepare(
+    "SELECT COUNT(*) AS c FROM summary_review_job_index WHERE state='published' AND published_at>=?"
+  ).bind(now-86400000).first();
+  return Number(row?.c||0);
+}
+
+export async function selectBoundedSummaryCandidateFromIndex(env, now=Date.now(), preferredDoi='') {
+  if(!summaryCandidateIndexShadowEnabled(env)) return {status:409,body:{error:'summary_candidate_index_shadow_disabled'}};
+  if(!env?.DB) return {status:503,body:{error:'summary_candidate_index_db_missing'}};
+  await ensureSummaryCandidateIndexSchema(env);
+  const evidenceBackfill=await env.DB.prepare('SELECT complete FROM article_evidence_index_backfill WHERE id=1').first();
+  const jobBackfill=await env.DB.prepare('SELECT complete FROM summary_review_job_index_backfill WHERE id=1').first();
+  if(Number(evidenceBackfill?.complete||0)!==1||Number(jobBackfill?.complete||0)!==1){
+    return {status:409,body:{error:'summary_candidate_index_backfill_incomplete',
+      evidenceBackfillComplete:Number(evidenceBackfill?.complete||0)===1,
+      jobBackfillComplete:Number(jobBackfill?.complete||0)===1}};
+  }
+
+  const preferred=normalizeDoi(preferredDoi)||'';
+  const policyEnv={SUMMARY_ALLOW_UNKNOWN_POLICY:String(env?.SUMMARY_ALLOW_UNKNOWN_POLICY||'')==='1'?'1':'0'};
+  const recentPublishedCount=await recentPublishedCountFromIndex(env,now);
+
+  if(preferred){
+    const row=await env.DB.prepare(BOUNDED_CANDIDATE_SELECT+`
+      WHERE e.doi=?
+      LIMIT 1
+    `).bind(preferred).first();
+    const evaluated=row?candidateFromJoinedRow(policyEnv,row,now):{candidate:null};
+    return {status:200,body:{
+      version:2,schemaVersion:SUMMARY_CANDIDATE_INDEX_SCHEMA_VERSION,
+      readPathActive:false,bounded:true,definitive:true,windowExhausted:false,
+      scannedEvidence:row?1:0,maxScanRows:SUMMARY_CANDIDATE_BOUNDED_MAX_ROWS,
+      preferredDoi:preferred,preferredEligible:Boolean(evaluated.candidate),
+      recentPublishedCount,candidate:evaluated.candidate||null,
+    }};
+  }
+
+  let scannedEvidence=0;
+  for(let page=0;page<SUMMARY_CANDIDATE_BOUNDED_MAX_PAGES;page+=1){
+    const rows=await env.DB.prepare(BOUNDED_CANDIDATE_SELECT+`
+      ORDER BY e.captured_at DESC,
+        CASE e.evidence_level WHEN 'complete' THEN 0 WHEN 'partial' THEN 1 ELSE 2 END ASC,
+        e.doi ASC
+      LIMIT ? OFFSET ?
+    `).bind(SUMMARY_CANDIDATE_BOUNDED_PAGE_SIZE,page*SUMMARY_CANDIDATE_BOUNDED_PAGE_SIZE).all();
+    const pageRows=rows?.results||[];
+    scannedEvidence+=pageRows.length;
+    for(const row of pageRows){
+      const evaluated=candidateFromJoinedRow(policyEnv,row,now);
+      if(evaluated.candidate){
+        return {status:200,body:{
+          version:2,schemaVersion:SUMMARY_CANDIDATE_INDEX_SCHEMA_VERSION,
+          readPathActive:false,bounded:true,definitive:true,windowExhausted:false,
+          scannedEvidence,maxScanRows:SUMMARY_CANDIDATE_BOUNDED_MAX_ROWS,
+          preferredDoi:'',preferredEligible:null,
+          recentPublishedCount,candidate:evaluated.candidate,
+        }};
+      }
+    }
+    if(pageRows.length<SUMMARY_CANDIDATE_BOUNDED_PAGE_SIZE){
+      return {status:200,body:{
+        version:2,schemaVersion:SUMMARY_CANDIDATE_INDEX_SCHEMA_VERSION,
+        readPathActive:false,bounded:true,definitive:true,windowExhausted:false,
+        scannedEvidence,maxScanRows:SUMMARY_CANDIDATE_BOUNDED_MAX_ROWS,
+        preferredDoi:'',preferredEligible:null,
+        recentPublishedCount,candidate:null,
+      }};
+    }
+  }
+
+  return {status:409,body:{
+    error:'summary_candidate_bounded_window_exhausted',
+    version:2,schemaVersion:SUMMARY_CANDIDATE_INDEX_SCHEMA_VERSION,
+    readPathActive:false,bounded:true,definitive:false,windowExhausted:true,
+    scannedEvidence,maxScanRows:SUMMARY_CANDIDATE_BOUNDED_MAX_ROWS,
+    preferredDoi:'',preferredEligible:null,recentPublishedCount,candidate:null,
+  }};
+}
+
 export async function selectSummaryCandidateFromIndex(env, now=Date.now(), preferredDoi='') {
   if(!summaryCandidateIndexShadowEnabled(env)) return {status:409,body:{error:'summary_candidate_index_shadow_disabled'}};
   if(!env?.DB) return {status:503,body:{error:'summary_candidate_index_db_missing'}};
@@ -309,6 +433,7 @@ export async function getSummaryCandidateIndexStatus(env) {
   const state=await env.DB.prepare('SELECT cursor,complete,scanned_objects,indexed_rows,skipped_invalid,started_at,updated_at,last_error FROM summary_review_job_index_backfill WHERE id=1').first();
   return {status:200,body:{version:1,schemaVersion:SUMMARY_CANDIDATE_INDEX_SCHEMA_VERSION,enabled:true,readPathActive:false,
     jobCount:Number(counts?.job_count||0),publishedCount:Number(counts?.published_count||0),latestUpdatedAt:Number(counts?.latest_updated_at||0),
+    boundedSelector:{pageSize:SUMMARY_CANDIDATE_BOUNDED_PAGE_SIZE,maxPages:SUMMARY_CANDIDATE_BOUNDED_MAX_PAGES,maxRows:SUMMARY_CANDIDATE_BOUNDED_MAX_ROWS},
     backfill:state?{complete:Number(state.complete||0)===1,cursor:safe(state.cursor,1000)||null,
       scannedObjects:Number(state.scanned_objects||0),indexedRows:Number(state.indexed_rows||0),skippedInvalid:Number(state.skipped_invalid||0),
       startedAt:Number(state.started_at||0),updatedAt:Number(state.updated_at||0),lastError:safe(state.last_error,180)}

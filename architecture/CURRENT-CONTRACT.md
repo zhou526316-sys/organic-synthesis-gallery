@@ -96,6 +96,8 @@ Captured is not automatically published. Published is not automatically complete
 
 ## 9. Evidence and summary-discovery rule
 
+- Summary candidate discovery must have a bounded selector path: normal D1 selection may scan at most a fixed evidence window and must return an explicit non-definitive/window-exhausted result rather than fabricate an empty candidate set. Exact preferred-DOI selection remains one-row addressable. The legacy/full-set selector may remain only for shadow parity until a separately proven cutover.
+
 Large Evidence/handoff inventories must be discovered through durable indexed metadata with persistent cursors rather than correctness-limited prefix scans.
 
 R2 remains the durable byte source for Evidence and encrypted handoff payloads. D1/index rows contain bounded metadata only. Backfill progress must survive invocations; fixed page-loop ceilings are not correctness boundaries. A D1/index read may become authoritative only after parity/freshness gates and must retain a safe legacy fallback until rollback has been proven.

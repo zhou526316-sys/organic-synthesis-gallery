@@ -7,6 +7,7 @@ import {
   compareCandidateSelections,
   ensureSummaryCandidateIndexSchema,
   getSummaryCandidateIndexStatus,
+  selectBoundedSummaryCandidateFromIndex,
   selectCandidateFromIndexedRows,
   selectSummaryCandidateFromIndex,
   shadowIndexSummaryJob,
@@ -182,6 +183,65 @@ test('pure indexed selector reproduces policy, state, lease, retry and ordering 
   assert.deepEqual(s.blockedPolicies,{no_external_ai:1});
   const preferred=await selectCandidateFromIndexedRows({evidenceRows,jobRows:jobs,now,preferredDoi:'10.1234/d'});
   assert.equal(preferred.candidate.doi,'10.1234/d');assert.equal(preferred.preferredEligible,true);
+});
+
+test('bounded indexed selector finds the first eligible candidate without loading the full index',async t=>{
+  const now=Date.parse('2026-10-04T12:00:00Z');
+  const objects=[];
+  for(let index=0;index<90;index+=1){
+    const doi='10.1234/bounded'+String(index).padStart(3,'0');
+    const capturedAt=new Date(now-index*1000).toISOString();
+    objects.push(evidenceObject(doi,(index%8)+1,{capturedAt}));
+    if(index<70){
+      objects.push(jobObject(doi,(index%8)+1,{hash:H((index%8)+1),state:'published',publishedAt:now-500,updatedAt:now-500}));
+    }
+  }
+  const env=await indexedEnv(objects);t.after(()=>env.DB.close());
+  const result=await selectBoundedSummaryCandidateFromIndex(env,now,'');
+  assert.equal(result.status,200);
+  assert.equal(result.body.bounded,true);
+  assert.equal(result.body.definitive,true);
+  assert.equal(result.body.windowExhausted,false);
+  assert.equal(result.body.candidate.doi,'10.1234/bounded070');
+  assert.ok(result.body.scannedEvidence<=128);
+});
+
+test('bounded indexed selector fails closed instead of returning false empty after its scan window',async t=>{
+  const now=Date.parse('2026-10-04T12:00:00Z');
+  const objects=[];
+  for(let index=0;index<300;index+=1){
+    const doi='10.1234/exhaust'+String(index).padStart(3,'0');
+    const capturedAt=new Date(now-index*1000).toISOString();
+    objects.push(evidenceObject(doi,(index%8)+1,{capturedAt}));
+    objects.push(jobObject(doi,(index%8)+1,{hash:H((index%8)+1),state:'published',publishedAt:now-500,updatedAt:now-500}));
+  }
+  const env=await indexedEnv(objects);t.after(()=>env.DB.close());
+  const result=await selectBoundedSummaryCandidateFromIndex(env,now,'');
+  assert.equal(result.status,409);
+  assert.equal(result.body.error,'summary_candidate_bounded_window_exhausted');
+  assert.equal(result.body.definitive,false);
+  assert.equal(result.body.windowExhausted,true);
+  assert.equal(result.body.scannedEvidence,256);
+  assert.equal(result.body.candidate,null);
+});
+
+test('bounded indexed selector resolves a preferred DOI exactly even outside the normal scan window',async t=>{
+  const now=Date.parse('2026-10-04T12:00:00Z');
+  const objects=[];
+  for(let index=0;index<300;index+=1){
+    const doi='10.1234/preferred'+String(index).padStart(3,'0');
+    const capturedAt=new Date(now-index*1000).toISOString();
+    objects.push(evidenceObject(doi,(index%8)+1,{capturedAt}));
+    if(index<299) objects.push(jobObject(doi,(index%8)+1,{hash:H((index%8)+1),state:'published',publishedAt:now-500,updatedAt:now-500}));
+  }
+  const env=await indexedEnv(objects);t.after(()=>env.DB.close());
+  const target='10.1234/preferred299';
+  const result=await selectBoundedSummaryCandidateFromIndex(env,now,target);
+  assert.equal(result.status,200);
+  assert.equal(result.body.definitive,true);
+  assert.equal(result.body.preferredEligible,true);
+  assert.equal(result.body.candidate.doi,target);
+  assert.equal(result.body.scannedEvidence,1);
 });
 
 test('real legacy R2 selector and indexed D1 selector compare equal on the same metadata snapshot',async t=>{
