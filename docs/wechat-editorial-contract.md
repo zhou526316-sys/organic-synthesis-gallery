@@ -106,6 +106,7 @@ Both “每日精选” and “往期精选” use the same deep-reading standar
 - Avoid long uninterrupted text blocks; alternate figures and explanation.
 - Daily-feature covers should preferentially use the selected paper’s verified original TOC/graphical abstract. Preserve the complete reaction/concept and distinguish official TOCs from body-figure fallbacks; do not substitute a catalyst structure matrix when an authentic TOC is available. Use an original high-resolution raster or render the same graphic from the supplied final PDF, retaining readable symbols in the actual WeChat cover.
 - Background/extension passages may include relevant high-resolution figures from other primary publications or original concept diagrams when this makes the explanation easier to follow. Place each next to its explanatory paragraph and identify its source and role. Original concept diagrams must be explicitly labeled as such, with separately identified numbering; never present them as the featured paper’s experimental evidence. Use exact vector/code drawing for scientific symbols and arrows, and inspect charge signs, direction, legends, and readability at mobile width.
+- Preserve the original TOC background and palette. For native white titles, use a separate blue title band and scale/position the complete TOC above it with visible clearance. Do not recolor or darken the whole TOC or allow title glyphs to cover its content.
 - Verify the final cover with the actual article title overlaid in native white text at mobile size. Reserve a sufficiently dark, separate area for the required number of lines and check the highest glyph pixels, padding, and contrast. A bare cover image or a preview showing black title text below the image does not validate native title-overlay readability. Determine the reserved area for each title rather than imposing one universal percentage.
 - Cover must communicate the paper's central reaction or concept at a glance and must not be an arbitrary cropped page.
 - Editorial logic must come from the paper's actual experimental design, evidence chain, scope, comparison, or author/reviewer argument. Do not manufacture a relationship merely to make two facts sound "smart", and avoid generic labels such as "最聪明的地方" unless the paper itself supplies a defensible causal reason.
@@ -159,4 +160,3 @@ Publisher runs are serialized by editorial revision. A newer requested revision 
 
 The detailed 2026-10-05 lessons and automation graduation criteria live in:
 `audit/wechat-postmortem/2026-10-05.md`.
-
