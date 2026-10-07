@@ -1,9 +1,9 @@
 {
-  "requestId": "wechat-daily-2026-10-07-r13-fit-blue-band-to-title",
-  "requestedAt": "2026-10-07T07:38:16Z",
+  "requestId": "wechat-daily-2026-10-07-r14-thin-blue-strip-large-toc",
+  "requestedAt": "2026-10-07T07:53:15Z",
   "publicationDate": "2026-10-07",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-07-r13",
+  "editorialRevision": "2026-10-07-r14",
   "approvedGate": "audit/wechat-working/2026-10-07-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -12,5 +12,5 @@
   ],
   "draftOnly": true,
   "requireDraftGetReadback": true,
-  "reason": "User clarified blue band should only cover actual white title. Band reduced to430px, TOC enlarged40%, original white background and palette preserved. Current full-title source overlay passes with5.79px top clearance. Same existing two-article draft only; no public sending."
+  "reason": "User repeatedly requests blue only just behind visible white text. Original white background and palette preserved; full TOC enlarged to1160px width; strip200px of800px height. Controlled relay illustration puts two white lines inside strip with about2px top/bottom clearance at mobile width, while full draft/body title remains unchanged. Source text/image QA and screenshot review passed. Same existing two-article draft only; no public sending."
 }

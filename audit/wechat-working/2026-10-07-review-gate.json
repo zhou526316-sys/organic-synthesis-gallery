@@ -1,12 +1,12 @@
 {
   "publicationDate": "2026-10-07",
   "editorialRevision": "2026-10-07-r14",
-  "reviewedAt": "2026-10-07T07:48:06.186344+00:00",
+  "reviewedAt": "2026-10-07T07:53:15Z",
   "reviewer": "AI source-grounded editorial review; no claim of human review",
   "textReview": "pass",
-  "imageReview": "pending",
+  "imageReview": "pass",
   "individualImageReview": "pass",
-  "combinedVisualReview": "pending",
+  "combinedVisualReview": "pass",
   "artifacts": {
     "textOnly": "audit/wechat-working/2026-10-07-r14-angew-text-only.md",
     "imagesOnly": "audit/wechat-working/2026-10-07-r14-angew-images-only.md",
@@ -295,5 +295,116 @@
   "priorCompletedRevision": {
     "revision": "2026-10-07-r13",
     "previewUrl": "https://relay.gczhouwld.com/wechat-preview/250a24b78552d06de7b61cc8.html"
+  },
+  "finalSourcePreview": {
+    "status": "pass",
+    "revision": "2026-10-07-r14",
+    "sourceSnapshot": "bf1d9a2565c2d81ac125b0d2411e9027d4cd0066af7e1040e17365af5c733c8d",
+    "sourceCommit": "78b59356666bb0e7e71e4a923e23b7d132fe9010",
+    "runId": "37589942320",
+    "artifactId": 11467868607,
+    "artifactSha256": "633ba0da5068cc44b6bf82945c4602b26167e0faec828878671383156d29286d",
+    "viewports": [
+      390,
+      690
+    ],
+    "assetsVerified": 35,
+    "bodyImages": {
+      "angew": 14,
+      "natcat": 19
+    },
+    "coverLayoutChecks": [
+      {
+        "viewport": 390,
+        "scenario": "labelled relay cover layout demonstration",
+        "fontSize": 15.7348,
+        "lineHeight": 16.7182,
+        "titleClearancePx": 2.19921875,
+        "bottomClearancePx": 2.265625,
+        "minimumWhiteContrast": 10.21482492693778,
+        "blueBandStartRatio": 0.75,
+        "fullTitleDomVerified": true,
+        "fullTitleAttributesVerified": true,
+        "fullArticleTitleVerified": true,
+        "renderedTitle": "有机合成文献日报｜10.07｜今日精选｜Angew：用于自由基交叉偶联的氧化还原可调NHC–三芳胺杂化有机光催化剂",
+        "visibleLineLimit": 2,
+        "css": {
+          "color": "rgb(255, 255, 255)",
+          "fontSize": 15.7348,
+          "lineHeight": 16.7182,
+          "maxHeight": 33.4365,
+          "lineClamp": "2",
+          "overflow": "hidden",
+          "wordBreak": "break-all",
+          "display": "flow-root",
+          "clientHeight": 33,
+          "scrollHeight": 52
+        },
+        "coverFrameBounds": {
+          "x": 17,
+          "y": 140,
+          "width": 356,
+          "height": 151.484375
+        },
+        "visibleTitleBounds": {
+          "x": 29.453125,
+          "y": 255.8125,
+          "width": 331.09375,
+          "height": 33.40625
+        },
+        "coverImageSha256": "063b1e76471ebfe30de5b27d56273b586f2af596aa62de8788e42593696150c5",
+        "coverSource": "locked source cover",
+        "scope": "Our explicitly labelled relay card demonstration only; CSS limits visible text, not the full draft title; no native WeChat client layout claim"
+      },
+      {
+        "viewport": 690,
+        "scenario": "labelled relay cover layout demonstration",
+        "fontSize": 28.4199,
+        "lineHeight": 30.1961,
+        "titleClearancePx": 3.93359375,
+        "bottomClearancePx": 4.09375,
+        "minimumWhiteContrast": 10.21482492693778,
+        "blueBandStartRatio": 0.75,
+        "fullTitleDomVerified": true,
+        "fullTitleAttributesVerified": true,
+        "fullArticleTitleVerified": true,
+        "renderedTitle": "有机合成文献日报｜10.07｜今日精选｜Angew：用于自由基交叉偶联的氧化还原可调NHC–三芳胺杂化有机光催化剂",
+        "visibleLineLimit": 2,
+        "css": {
+          "color": "rgb(255, 255, 255)",
+          "fontSize": 28.4199,
+          "lineHeight": 30.1961,
+          "maxHeight": 60.3923,
+          "lineClamp": "2",
+          "overflow": "hidden",
+          "wordBreak": "break-all",
+          "display": "flow-root",
+          "clientHeight": 60,
+          "scrollHeight": 95
+        },
+        "coverFrameBounds": {
+          "x": 23.5,
+          "y": 116,
+          "width": 643,
+          "height": 273.609375
+        },
+        "visibleTitleBounds": {
+          "x": 46,
+          "y": 325.140625,
+          "width": 598,
+          "height": 60.375
+        },
+        "coverImageSha256": "063b1e76471ebfe30de5b27d56273b586f2af596aa62de8788e42593696150c5",
+        "coverSource": "locked source cover",
+        "scope": "Our explicitly labelled relay card demonstration only; CSS limits visible text, not the full draft title; no native WeChat client layout claim"
+      }
+    ],
+    "reviewedScreenshots": [
+      "angew-cover-layout-demonstration-390.png",
+      "angew-cover-layout-demonstration-690.png"
+    ],
+    "visualReview": "pass: original white TOC is large; narrow blue strip closely backs two white lines with about 2px top/bottom clearance at 390px viewport.",
+    "nativeClientVerified": false,
+    "scope": "Labelled relay cover layout demonstration. Full title stays in actual draft and body; no native client screenshot claim."
   }
 }
