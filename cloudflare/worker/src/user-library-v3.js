@@ -66,7 +66,9 @@ function rolloutBasisPoints(value) {
   return Number.isSafeInteger(number) && number >= 0 && number <= 10000 ? number : 0;
 }
 
-function rolloutBucket(seedValue, userId) {
+export function userLibraryV3RolloutBucket(seedValue, userIdValue = '') {
+  const userId = safeText(userIdValue, 300);
+  if (!userId) return null;
   const seed = safeText(seedValue, 200) || 'd3c4c-v1';
   const input = `${seed}\n${userId}`;
   let hash = 2166136261;
@@ -90,7 +92,8 @@ export function userLibraryV3WriteEnabled(env, userIdValue = '') {
   if (rolloutBps <= 0) return false;
   if (rolloutBps >= 10000) return true;
 
-  return rolloutBucket(env?.USER_LIBRARY_V3_WRITE_ROLLOUT_SEED, userId) < rolloutBps;
+  const bucket = userLibraryV3RolloutBucket(env?.USER_LIBRARY_V3_WRITE_ROLLOUT_SEED, userId);
+  return bucket !== null && bucket < rolloutBps;
 }
 
 function normalizeOperation(raw) {

@@ -1,0 +1,79 @@
+name: User library V3 rollout cohort forecast
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'D3C4C_FORECAST_REQUEST'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: user-library-v3-rollout-forecast
+  cancel-in-progress: true
+
+jobs:
+  forecast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      D1_NAME: organic-synthesis-gallery
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Install Worker dependencies
+        working-directory: cloudflare/worker
+        run: npm install --no-audit --no-fund
+
+      - name: Resolve deployed rollout configuration
+        id: config
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE' >> "$GITHUB_OUTPUT"
+          import fs from 'node:fs';
+          const text=fs.readFileSync('.github/workflows/deploy-worker-frontend.yml','utf8');
+          const get=name=>{
+            const match=text.match(new RegExp(name+' = "([^"]*)"'));
+            if(!match) throw new Error('missing '+name);
+            return match[1];
+          };
+          console.log('rollout_seed='+get('USER_LIBRARY_V3_WRITE_ROLLOUT_SEED'));
+          console.log('rollout_bps='+get('USER_LIBRARY_V3_WRITE_ROLLOUT_BPS'));
+          console.log('canary_user_id='+get('USER_LIBRARY_V3_WRITE_CANARY_USER_ID'));
+          NODE
+
+      - name: Read production account ids without logging them
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT id FROM users ORDER BY id;" --json > "$RUNNER_TEMP/d3c4c-user-ids.json"
+
+      - name: Compute aggregate deterministic cohort forecast
+        working-directory: cloudflare/worker
+        env:
+          ROLLOUT_SEED: ${{ steps.config.outputs.rollout_seed }}
+          CURRENT_ROLLOUT_BPS: ${{ steps.config.outputs.rollout_bps }}
+          CANARY_USER_ID: ${{ steps.config.outputs.canary_user_id }}
+        run: |
+          node scripts/forecast-user-library-v3-rollout.mjs \
+            "$RUNNER_TEMP/d3c4c-user-ids.json" \
+            "$RUNNER_TEMP/d3c4c-rollout-forecast.json"
+
+      - name: Preserve aggregate forecast only
+        uses: actions/upload-artifact@v4
+        with:
+          name: user-library-v3-rollout-forecast-${{ github.run_id }}
+          path: ${{ runner.temp }}/d3c4c-rollout-forecast.json
+          if-no-files-found: error
+          retention-days: 30

@@ -8,6 +8,7 @@ import {
   readUserLibraryV3Delta,
   readUserLibraryV3Head,
   readUserLibraryV3Page,
+  userLibraryV3RolloutBucket,
   userLibraryV3WriteEnabled,
 } from '../src/user-library-v3.js';
 import { readUserLibraryStateFromRows } from '../src/user-library-shadow.js';
@@ -80,6 +81,14 @@ const envFor=(db,overrides={})=>({
   ...overrides,
 });
 function addUser(db,id='u1'){db.sqlite.prepare('INSERT INTO users(id) VALUES (?)').run(id);}
+
+test('D3c4c rollout bucket primitive is stable and bounded',()=>{
+  const first=userLibraryV3RolloutBucket('d3c4c-2026-10-07','user-a');
+  const second=userLibraryV3RolloutBucket('d3c4c-2026-10-07','user-a');
+  assert.equal(first,second);
+  assert.ok(Number.isInteger(first)&&first>=0&&first<10000);
+  assert.equal(userLibraryV3RolloutBucket('d3c4c-2026-10-07',''),null);
+});
 
 test('D3c4c deterministic rollout gate is disabled at zero basis points and stable when enabled',()=>{
   const base={

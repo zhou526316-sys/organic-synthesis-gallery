@@ -130,6 +130,7 @@ jobs:
           node scripts/test-user-library-shadow-deployment-contract.mjs
           node scripts/test-user-library-v3-deployment-contract.mjs
           node scripts/test-user-library-v3-write-canary-contract.mjs
+          node scripts/test-user-library-v3-rollout-forecast-contract.mjs
           node scripts/test-site-analytics-materialized-deployment-contract.mjs
 
       - name: Test scheduled encrypted handoff

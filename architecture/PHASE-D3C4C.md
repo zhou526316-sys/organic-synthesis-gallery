@@ -137,3 +137,19 @@ A future 50 bp rollout decision must be a separate production change. It is allo
 8. rollback remains `rollout bps -> 0`, with existing per-user V3 authority preserved fail-safe.
 
 Current normal-user rollout remains **0 bp / 0%**.
+
+## Cohort-size forecast gate
+
+Percentage thresholds are not meaningful when the active account population is very small. Before any non-zero rollout, an operator must forecast the deterministic cohort using the exact production bucket function and the current production account set.
+
+The forecast is read-only:
+
+- D1 is queried only for account ids;
+- ids remain inside the ephemeral GitHub runner;
+- no raw-id file is uploaded as an artifact;
+- only aggregate counts by rollout threshold are printed and retained;
+- the workflow contains no D1 mutation and no Worker deployment.
+
+For the standard thresholds 50, 100, 500, 1000, 2500, 5000 and 10000 bp the report records the number of normal accounts selected. It also reports the smallest standard threshold that selects at least one normal account.
+
+A nominal 50 bp rollout that selects zero accounts must **not** be treated as a production canary. In that case, keep production at 0 bp and choose the next separately approved threshold only after reviewing this forecast.
