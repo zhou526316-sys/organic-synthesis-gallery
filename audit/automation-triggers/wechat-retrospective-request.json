@@ -1,6 +1,13 @@
 {
-  "requestId": "retrospective-missing-2026-10-05",
-  "requestedAt": "2026-10-05T02:21:00Z",
-  "action": "retrospective_missing",
-  "reason": "No eligible non-repeating retrospective item is available today; do not reuse yesterday's MacMillan retrospective."
+  "requestId": "retrospective-phoenix1-r7-release-r8-20261007",
+  "requestedAt": "2026-10-07T04:51:00Z",
+  "action": "sync_retrospective_draft",
+  "slug": "phoenix1-bimodal-structural-regeneration",
+  "manifest": "public/wechat-retrospective/phoenix1-bimodal-structural-regeneration.json",
+  "reviewGate": "audit/wechat-working/retrospective-phoenix1-bimodal-structural-regeneration-review-gate.json",
+  "selectedDoi": "10.1038/s41929-026-01593-w",
+  "expectedManifestBlobSha": "2a87b1bcf99963de6e2dce69eead9eaedf096af5",
+  "reason": "User explicitly requested completion of the selected drafts and a real draft/get preview. Phoenix retrospective is completed independently; Angew daily is not replaced or claimed complete.",
+  "draftOnly": true,
+  "publicSendAuthorized": false
 }
