@@ -20,7 +20,7 @@ const harness=[
   "function articleFigureImageUrls(node,base){const out=[];const add=v=>{try{if(v){const u=new URL(v,base).href;if(!out.includes(u))out.push(u)}}catch{}};['data-full-src','data-full','data-lg-src','data-hi-res-src','data-src-large','data-original','data-src','data-lazy-src','src'].forEach(k=>add(node.getAttribute&&node.getAttribute(k)));if(node.getAttribute){String(node.getAttribute('srcset')||'').split(',').forEach(x=>add(x.trim().split(/\\s+/)[0]));}return out}",
   "function contextFor(node){let out=[];[node.alt,node.title,node.getAttribute&&node.getAttribute('aria-label')].forEach(v=>{if(v)out.push(v)});let root=node.parentElement;for(let d=0;root&&d<4;d++,root=root.parentElement){out.push(String(root.className||''),String(root.id||''),String(root.textContent||'').slice(0,600));}return out.join(' ')}",
   adapters,
-  "globalThis.T={rscRouteParts,rscArticleHtmlUrl,rscPdfPreviewUrl,rscBodyFigureContext,rscGraphicalAbstractCandidates,rscIssuePageUrls,rscIssueTocCandidatesFromDocument,elsevierGraphicalAbstractCandidates,ccsAssetFigureLabel,ccsTocIndexUrlFromCrossrefPayload,ccsTocIndexUrls,ccsTocIndexCandidatesFromDocument};",
+  "globalThis.T={rscRouteParts,rscArticleHtmlUrl,rscPdfPreviewUrl,rscBodyFigureContext,rscGraphicalAbstractCandidates,rscSearchResultUrl,rscIssuePageUrls,rscIssueTocCandidatesFromDocument,elsevierGraphicalAbstractCandidates,ccsAssetFigureLabel,ccsTocIndexUrlFromCrossrefPayload,ccsTocIndexUrls,ccsTocIndexCandidatesFromDocument};",
   '})();'
 ].join('\n');
 await page.addScriptTag({content:harness});
@@ -74,6 +74,26 @@ try{
     assert.ok(!result.candidates.some(url=>/\.pdf\.gif(?:$|[?#])/i.test(url)));
     assert.ok(source.includes("stage:'rsc_toc_candidate',event:'pdf_preview_rejected'"));
     assert.ok(source.includes("stage:'rsc_figure_candidate',event:'pdf_preview_rejected'"));
+  });
+
+  await tc('RSC exact-DOI search page can recover a non-preview article visual',async()=>{
+    const result=await page.evaluate(()=>{
+      const root=document.querySelector('#fixture');
+      root.innerHTML='<section class="search-result"><a href="/gc/article/doi/10.1039/D6GC03161G/1364936">10.1039/D6GC03161G</a>'+
+        '<img alt="Graphical abstract" src="https://rscj.silverchair-cdn.com/rscj/content_public/journal/gc/pap/10.1039_d6gc03161g/1/d6gc03161g-ga.png">'+
+        '<img alt="Article PDF first page preview" src="https://rscj.silverchair-cdn.com/rscj/content_public/journal/gc/jam/10.1039_d6gc03161g/1/d6gc03161g.pdf.gif"></section>'+
+        '<section class="search-result"><a href="/gc/article/doi/10.1039/D6GC00000A/1">10.1039/D6GC00000A</a><img src="/other.png"></section>';
+      return {
+        searchUrl:T.rscSearchResultUrl({doi:'10.1039/d6gc03161g',publisher:'rsc'}),
+        rows:T.rscIssueTocCandidatesFromDocument({doi:'10.1039/d6gc03161g',publisher:'rsc'},root,'https://pubs.rsc.org/en/results?searchtext=10.1039%2Fd6gc03161g')
+          .map(x=>({url:x.url,kind:x.kind,source:x.source}))
+      };
+    });
+    assert.match(result.searchUrl,/\/en\/results\?searchtext=10\.1039%2Fd6gc03161g$/i);
+    assert.equal(result.rows.length,1);
+    assert.equal(result.rows[0].kind,'official');
+    assert.match(result.rows[0].url,/d6gc03161g-ga\.png/);
+    assert.doesNotMatch(result.rows[0].url,/pdf\.gif/);
   });
 
   await tc('RSC issue page binds one non-preview visual to the target DOI',async()=>{
