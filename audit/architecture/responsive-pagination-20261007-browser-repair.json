@@ -1,0 +1,61 @@
+{
+  "schema": "architecture-batch2-repair-v1",
+  "createdAt": "2026-10-07T04:34:35Z",
+  "requestedPagination": {
+    "desktop": 24,
+    "mobile": 12,
+    "breakpointPx": 680,
+    "mode": "paper-count",
+    "onlineDayPrototypePublished": false
+  },
+  "responsiveCommit": "0b206f1144d397ab139775e043fa704a9652cf45",
+  "priorFrontendGate": {
+    "runId": 37570794380,
+    "jobId": 112628789474,
+    "tests": 16,
+    "passed": 15,
+    "failed": 1,
+    "publication": "blocked_before_pages_artifact_upload",
+    "failedTest": "verified Hot fallback stays bounded when full membership verification fails",
+    "artifactId": 11461395497
+  },
+  "browserRepair": {
+    "path": "src/main.ts",
+    "sourceBlobSha": "361bc8274ad39d4454b4dc0bef6e63251a8c27ea",
+    "change": "Always remount after background catalog initialization fails so the existing limited-read notice is visible on the unfiltered landing page.",
+    "testAssertionsUnchanged": true
+  },
+  "indexMaintenanceRepair": {
+    "path": "scripts/sync-literature-catalog-index-shadow.mjs",
+    "sourceBlobSha": "cb037564717e33291215f3474ac2300ea19f14ea",
+    "failedRunId": 37570153555,
+    "error": "shadow_runtime_configuration_invalid",
+    "cause": "Retired pre-cutover assumption required the public index read configuration to remain disabled.",
+    "change": "Accept internally coherent current configuration; require unchanged configuration and the exact ready target generation after import.",
+    "adminProbeReadPathStillInactive": true,
+    "importBatchSize": 8,
+    "behaviorCases": 42
+  },
+  "localValidation": {
+    "command": "node --test scripts/test-literature-catalog-index-shadow-sync-contract.mjs scripts/test-result-window.mjs architecture/tests/published-reader.test.mjs cloudflare/worker/scripts/test-literature-catalog-index.mjs",
+    "tests": 46,
+    "passed": 46,
+    "failed": 0
+  },
+  "productionValidation": {
+    "frontend": "pending_new_canonical_pages_run",
+    "indexMaintenance": "pending_retry_after_commit",
+    "priorExactDayPublicCanary": "not_executed_pending_generation_safe_fallback"
+  },
+  "evidence": [
+    "2026-10-07T04:24:49.2067185Z Running 16 tests using 1 worker",
+    "2026-10-07T04:25:16.5906076Z [10/16] tests/architecture-frontend.spec.ts:516:1 › verified Hot fallback stays bounded when full membership verification fails",
+    "2026-10-07T04:25:54.6909387Z   1) tests/architecture-frontend.spec.ts:516:1 › verified Hot fallback stays bounded when full membership verification fails ",
+    "2026-10-07T04:26:04.7311583Z [14/16] tests/architecture-frontend.spec.ts:615:1 › mobile shows 12 papers per page and keeps next/previous pagination complete",
+    "2026-10-07T04:26:07.3245633Z [15/16] tests/architecture-frontend.spec.ts:642:1 › the existing 680px breakpoint switches between mobile 12 and desktop 24",
+    "2026-10-07T04:26:09.0466059Z [16/16] tests/architecture-frontend.spec.ts:658:1 › mobile D1 catalog search sends limit 12 and keeps its cursor when moving forward",
+    "2026-10-07T04:26:11.3475875Z   1 failed",
+    "2026-10-07T04:26:11.3477313Z     tests/architecture-frontend.spec.ts:516:1 › verified Hot fallback stays bounded when full membership verification fails ",
+    "2026-10-07T04:26:11.3477989Z   15 passed (1.4m)"
+  ]
+}

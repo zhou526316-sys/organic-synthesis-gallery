@@ -271,7 +271,8 @@ async function main() {
     site: SITE.origin,
     worker: WORKER.origin,
     startedAt: new Date().toISOString(),
-    readPathActive: false,
+    readConfigured: null,
+    readPathActive: null,
   };
   try {
     const deliveryRead = await fetchJson(new URL('release-delivery.json', SITE), { maxBytes: 4 * 1024 * 1024 });
@@ -360,8 +361,16 @@ async function main() {
     await writeFile(REPORT, jsonText(report));
 
     const statusBefore = await api('/api/admin/literature-catalog-index/status');
-    assert(statusBefore.body.enabled === true && statusBefore.body.readConfigured === false
-      && statusBefore.body.readPathActive === false, 'shadow_runtime_configuration_invalid');
+    Object.assign(report, {
+      readConfiguredBefore: statusBefore.body.readConfigured,
+      readConfigured: statusBefore.body.readConfigured,
+      readPathActiveBefore: statusBefore.body.readPathActive,
+      readPathActive: statusBefore.body.readPathActive,
+    });
+    assert(statusBefore.body.enabled === true && typeof statusBefore.body.readConfigured === 'boolean'
+      && Array.isArray(statusBefore.body.generations)
+      && statusBefore.body.readPathActive === (statusBefore.body.readConfigured
+        && statusBefore.body.generations.some(row => row.ready === true)), 'shadow_runtime_configuration_invalid');
 
     const begin = await api('/api/admin/literature-catalog-index/begin', { method: 'POST', body: generation });
     let importedBatches = 0;
@@ -445,11 +454,19 @@ async function main() {
       'reader_sort_compatibility_missing');
 
     const statusAfter = await api('/api/admin/literature-catalog-index/status');
+    Object.assign(report, {
+      readConfigured: statusAfter.body.readConfigured,
+      readPathActive: statusAfter.body.readPathActive,
+      readConfigurationUnchanged: statusAfter.body.enabled === true
+        && statusAfter.body.readConfigured === statusBefore.body.readConfigured,
+    });
     const ready = (statusAfter.body.generations || []).find(row => row.catalogId === generation.catalogId);
     assert(ready?.ready === true && ready.recordCount === generation.recordCount
       && ready.importedRows === generation.recordCount, 'shadow_status_not_ready');
-    assert(statusAfter.body.readConfigured === false && statusAfter.body.readPathActive === false,
-      'shadow_read_path_accidentally_active');
+    assert(report.readConfigurationUnchanged, 'shadow_read_configuration_changed');
+    // The first ready generation may activate an already configured read path.
+    assert(statusAfter.body.readPathActive === statusAfter.body.readConfigured,
+      'shadow_read_path_state_invalid');
 
     Object.assign(report, {
       ok: true,
@@ -469,7 +486,8 @@ async function main() {
       viewParity: { scenarios:viewParity.length,mismatched:0,views:viewParity },
       shortQueryCompatibility: true,
       readerSortCompatibility: true,
-      readPathActive: false,
+      readConfigured: statusAfter.body.readConfigured,
+      readPathActive: statusAfter.body.readPathActive,
     });
     await writeFile(REPORT, jsonText(report));
     console.log('LITERATURE_CATALOG_INDEX_SHADOW_READY ' + JSON.stringify(report));

@@ -1373,7 +1373,7 @@ async function activateArchitectureClientInBackground(siteBase: string): Promise
     architectureReadLimited = true;
     document.documentElement.dataset.catalogRead = 'architecture-hot-fallback';
     console.warn('architecture-v1 background initialization unavailable; retaining verified Hot landing', error);
-    if (query.trim() || dateFrom || dateTo) mount();
+    mount();
   }
 }
 
