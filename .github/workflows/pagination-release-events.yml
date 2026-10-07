@@ -1,0 +1,95 @@
+name: Pagination release event diagnostics
+on:
+  push:
+    branches: [diagnose/pagination-release-events-20261007]
+    paths: [.github/workflows/pagination-release-events.yml]
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install and build the verified archive fixture
+        run: |
+          mkdir -p click-diagnostic
+          npm install --no-audit --no-fund > click-diagnostic/setup.log 2>&1
+          npm install --no-save --no-package-lock @playwright/test@1.55.1 >> click-diagnostic/setup.log 2>&1
+          npx playwright install --with-deps webkit >> click-diagnostic/setup.log 2>&1
+          node cloudflare/scripts/merge-curated-pages.mjs >> click-diagnostic/setup.log 2>&1
+          node scripts/build-gallery-architecture-public.mjs >> click-diagnostic/setup.log 2>&1
+          npm run build >> click-diagnostic/setup.log 2>&1
+          node scripts/pages-release-delivery.mjs build dist >> click-diagnostic/setup.log 2>&1
+      - name: Instrument native events only in disposable tests
+        run: |
+          cat > /tmp/pagination-events.txt <<'TS'
+
+          test.beforeEach(async ({ page }) => {
+            await page.addInitScript(() => {
+              const events: unknown[] = [];
+              (window as any).__nativePaginationEvents = events;
+              let down: HTMLElement | null = null;
+              const describe = (element: Element | null) => element ? {
+                tag:element.tagName,id:element.id,page:(element as HTMLElement).dataset.resultPage,
+                disabled:(element as HTMLButtonElement).disabled,connected:element.isConnected,
+                rect:element.getBoundingClientRect().toJSON(),hidden:!!element.closest('[hidden], [inert]')
+              } : null;
+              for (const type of ['pointerdown','mousedown','pointerup','mouseup','click','pointercancel']) {
+                document.addEventListener(type, event => {
+                  const e = event as PointerEvent;
+                  const element = e.target instanceof Element ? e.target : null;
+                  if(type==='pointerdown') down=element?.closest<HTMLElement>('#resultWindowControls button') || null;
+                  events.push({type,t:performance.now(),target:describe(element),down:describe(down),
+                    x:e.clientX,y:e.clientY,pointerType:e.pointerType,isPrimary:e.isPrimary,pointerId:e.pointerId,
+                    detail:e.detail,button:e.button,status:document.querySelector('#resultWindowStatus')?.textContent});
+                  if(events.length>70)events.shift();
+                },true);
+              }
+              new MutationObserver(records => {
+                if(records.some(r => r.target instanceof Element && ['resultPageNumbers','resultWindowStatus'].includes(r.target.id))) {
+                  events.push({type:'render',t:performance.now(),down:describe(down),status:document.querySelector('#resultWindowStatus')?.textContent});
+                }
+              }).observe(document.documentElement,{childList:true,subtree:true});
+            });
+          });
+          test.afterEach(async ({ page }, info) => {
+            await info.attach('native-pagination-events',{body:JSON.stringify(await page.evaluate(()=>(window as any).__nativePaginationEvents || []),null,2),contentType:'application/json'});
+          });
+          TS
+          cat /tmp/pagination-events.txt >> tests/pagination-pointer-stability.spec.ts
+          cat /tmp/pagination-events.txt >> tests/architecture-frontend.spec.ts
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 > click-diagnostic/preview.log 2>&1 &
+          for i in {1..20}; do curl --fail --silent http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Run original and shifted-footer failures with all assertions intact
+        env:
+          ARCHITECTURE_PREVIEW_BASE: http://127.0.0.1:4173
+          PAGINATION_PREVIEW_BASE: http://127.0.0.1:4173
+          PLAYWRIGHT_JSON_OUTPUT_FILE: click-diagnostic/report.json
+        run: npx playwright test tests/architecture-frontend.spec.ts tests/pagination-pointer-stability.spec.ts --grep 'result pagination keeps|active D1 catalog view|stationary mouse' --browser=webkit --workers=1 --reporter=line,json --output=click-diagnostic/results
+      - name: Export compact reproducible browser fixture
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import pathlib,zipfile
+          with zipfile.ZipFile('click-diagnostic/browser-fixture.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for p in pathlib.Path('dist').rglob('*'):
+                  if p.is_file() and (p.suffix in ['.js','.css','.html','.json','.b64']):
+                      if not any(s in p.parts for s in ['wechat-editions','media-mirror','support','share']):z.write(p,str(p.relative_to('dist')))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pagination-release-events
+          path: |
+            click-diagnostic/report.json
+            click-diagnostic/results/
+            click-diagnostic/browser-fixture.zip
+          retention-days: 3
