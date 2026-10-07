@@ -9,6 +9,7 @@ on:
       - cloudflare/worker/scripts/test-private-pdf-upload-race.mjs
       - tests/tm-private-pdf-upload-transport.test.mjs
       - scripts/validate-tm220-artifacts.mjs
+      - scripts/test-tm222-auto-report.mjs
       - .github/workflows/tm-pdf-upload-regression.yml
 permissions:
   contents: read
@@ -42,6 +43,7 @@ jobs:
           node scripts/test-tm221-window-guard.mjs
           node scripts/test-tm220-release.mjs
           node scripts/test-tm223-upload.mjs
+          node scripts/test-tm222-auto-report.mjs
           node scripts/validate-tm220-artifacts.mjs source
           git diff --check
       - name: Build and fingerprint installable Bridge
