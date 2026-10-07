@@ -1,17 +1,17 @@
-name: Tampermonkey throughput and result-truth regression
+name: Tampermonkey inventory startup regression
 on:
   push:
-    branches: [fix/tm-throughput-truth-20261007]
+    branches: [fix/tm-inventory-startup-20261007]
     paths:
       - public/toc-mainline.user.js
       - cloudflare/scripts/build-bridge-loader.mjs
       - scripts/validate-tm220-artifacts.mjs
-      - tests/tm-throughput-truth.test.mjs
-      - .github/workflows/tm-throughput-truth.yml
+      - tests/tm-inventory-startup.test.mjs
+      - .github/workflows/tm-inventory-startup.yml
 permissions:
   contents: read
 concurrency:
-  group: tm-throughput-truth
+  group: tm-inventory-startup-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   verify:
@@ -22,17 +22,18 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Verify fallback queue closure and truthful layer status
+      - name: Verify fast startup and retained controller guarantees
         run: |
           set -euo pipefail
           node --check public/toc-mainline.user.js
-          node --test tests/tm-throughput-truth.test.mjs
+          node --test tests/tm-inventory-startup.test.mjs
+          node tests/tm-controller-read-transport.test.mjs
           node tests/tm-manual-resume.test.mjs
           node tests/tm-controller-recovery.test.mjs
           node tests/tm-queue-coverage.test.mjs
           node tests/tm-missing-only.test.mjs
-          node scripts/test-tm220-release.mjs
-          node scripts/test-tm222-auto-report.mjs
+          node --test tests/tm-throughput-truth.test.mjs
+          node scripts/test-tm222-live-progress.mjs
           node scripts/validate-tm220-artifacts.mjs source
           git diff --check
       - name: Build Bridge 2.2.65
@@ -51,7 +52,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: tm-throughput-truth-evidence
+          name: tm-inventory-startup-evidence
           path: |
             public/gallery-vpn-bridge.user.js
             public/toc-mainline.user.js

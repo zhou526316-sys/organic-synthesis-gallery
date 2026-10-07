@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.45
+// @version      6.2.46
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -55,7 +55,7 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.45';
+  var INSTALL_REVISION = '6.2.46';
   var CONTROLLER_READ_REVISION = '20261007-native-metadata-first-v1';
   var MANUAL_RECOVERY_REVISION = '20261007-manual-resume-v1';
   var manualRecoveryBusy = false;
@@ -87,6 +87,11 @@
   var EVIDENCE_INVENTORY_ENDPOINT = WORKER + '/api/article-summary/evidence-inventory';
   var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';
   var P = 'osg-toc-v6:';
+  var INVENTORY_STARTUP_REVISION = '20261007-inventory-warmstart-hedge-v1';
+  var INVENTORY_PLAN_CACHE_KEY = P + 'inventory-plan-cache-v1';
+  var INVENTORY_PLAN_CACHE_TTL_MS = 10 * 60 * 1000;
+  var INVENTORY_HEDGE_DELAY_MS = 900;
+  var INVENTORY_REQUEST_TIMEOUT_MS = 12000;
   var ARCHITECTURE_MEMBERSHIP_STATE_KEY = P + 'architecture-membership-shadow-v1';
   var ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY = P + 'architecture-membership-observer-v1';
   var TOKEN_KEY = P + 'write-token';
@@ -221,6 +226,7 @@
       coverageRevision:summary.queueCoverageRevision||'',fullyResolved:Number(summary.fullyResolved||0),unresolvedCount:Number(summary.unresolvedCount||0),blockedCount:Number(summary.blockedCount||0),attemptCount:Number(summary.attemptCount||0),blockedPreview:summary.blockedPreview||[],
       phase:summary.phase||'',missingOnly:summary.mode==='missing_only',need:active?captureNeedText(active):'—',activeJob:active,
       pendingMissing:Number(summary.pendingMissing||0),remainingNeeds:summary.remainingNeeds||{},inventoryUnknown:Number(summary.inventoryUnknown||0),inventoryErrors:summary.inventoryErrors||[],pendingPreview:summary.pendingPreview||[],
+      inventoryProgress:summary.inventoryProgress||{},inventoryWarmStart:Boolean(summary.inventoryWarmStart),inventoryFreshPending:Boolean(summary.inventoryFreshPending),
       state: state, active: Boolean(active), doi: active ? normalizeDoi(active.doi) : '',
       journal: active ? String(active.journal || '').slice(0, 80) : '',
       row: row, ageSeconds: last ? Math.max(0, Math.floor((now - last) / 1000)) : null,
@@ -235,6 +241,18 @@
       // Summary is committed after each paper. The active row is displayed separately, never added twice.
       publication: '已保存至 R2 暂存；符合站点增量发布规则的新 ACS 正文图会后续发布，当前是否上线以网页与发布账本为准'
     };
+  }
+
+  function inventoryProgressText(progress,warm,pending) {
+    var labels={media:'媒体',toc:'TOC',figures:'正文图',evidence:'全文'};
+    var states={loading:'读取中',cached:'沿用缓存',fallback:'分批回退',done:'完成',error:'失败'};
+    var parts=['media','toc','figures','evidence'].map(function(key){
+      var row=progress&&progress[key]||{},text=labels[key]+'：'+(states[row.state]||'等待');
+      if(Number(row.elapsedMs||0)>0)text+=' '+(Number(row.elapsedMs)/1000).toFixed(1)+'s';
+      return text;
+    });
+    var prefix=warm?(pending?'已用最近库存先生成待办；后台复核中 · ':'本轮由最近库存快速启动；新库存已复核 · '):'库存核对 · ';
+    return prefix+parts.join(' / ');
   }
 
   function captureLiveText(s) {
@@ -264,9 +282,9 @@
       needs:s.need||'—',
       working:s.active?(s.row&&/全文|Abstract|文本/.test(s.row.label)?'文本':s.row&&s.row.label?s.row.label:s.need||'加载文章'):'—',
       evidence:s.activeJob&&(s.activeJob.captureEvidence||s.activeJob.opportunisticEvidence)?'随当前任务顺带抓取文本':s.activeJob&&s.activeJob.existingEvidenceLevel?captureEvidenceLevelText(s.activeJob.existingEvidenceLevel)+'，不作为队列缺项':'—',
-      gaps:s.coverageRevision&&s.phase!=='starting'?'未补齐 '+s.unresolvedCount+' 篇（待执行 '+s.pendingMissing+'／受阻 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0):s.missingOnly?(s.phase==='starting'?'正在读取缺项库存…':'待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)+'（正文图/正文不计入队列）'):'—',
+      gaps:/^(?:starting|inventory_refresh)$/.test(s.phase||'')&&s.total===0?'库存核对中，缺项统计尚未生成':s.coverageRevision&&s.phase!=='starting'?'未补齐 '+s.unresolvedCount+' 篇（待执行 '+s.pendingMissing+'／受阻 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0):s.missingOnly?(s.phase==='starting'?'正在读取缺项库存…':'待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)+'（正文图/正文不计入队列）'):'—',
       blocked:(s.blockedPreview||[]).map(function(r){return r.doi+' · '+r.need+' · '+r.reason;}).join('\n'),
-      inventory:s.inventoryUnknown?'另有 '+s.inventoryUnknown+' 篇存在未确认项，不冒充已齐全或全部缺失'+(s.inventoryErrors.length?'；'+s.inventoryErrors.join('；'):''):'',
+      inventory:inventoryProgressText(s.inventoryProgress,s.inventoryWarmStart,s.inventoryFreshPending)+(s.inventoryUnknown?'；另有 '+s.inventoryUnknown+' 篇存在未确认项，不冒充已齐全或全部缺失':'')+(s.inventoryErrors.length?'；'+s.inventoryErrors.join('；'):''),
       queue:(s.pendingPreview||[]).map(function(j){return j.addedDate+' · '+j.journal+' · '+j.need+'\n'+j.doi;}).join('\n\n'),
       doi: s.doi || '当前没有任务页', journal: s.journal,
       label: r && r.label || '—', toc: toc, pdf: pdf,
@@ -1313,6 +1331,42 @@ function embeddedJobDois(value) {
     // gateway rule permits transport fallback after an actual HTTP response.
     if(shouldNativeRetryUpload(response,options.url))return metadataJson(options,prefix,true);
     return parseMetadataJson(response,prefix);
+  }
+
+  function inventoryReadMetadataJson(options,prefix) {
+    var timeoutMs=Math.max(3000,Math.min(INVENTORY_REQUEST_TIMEOUT_MS,Number(options&&options.timeout||INVENTORY_REQUEST_TIMEOUT_MS)));
+    var nativeAbort=new AbortController(),nativeOptions=Object.assign({},options,{timeout:timeoutMs,signal:nativeAbort.signal});
+    var gmOptions=Object.assign({},options,{timeout:timeoutMs});delete gmOptions.signal;
+    return new Promise(function(resolve,reject){
+      var settled=false,pending=0,gmStarted=false,errors=[],hedgeTimer=null,deadlineTimer=null;
+      function clean(){if(hedgeTimer!==null)clearTimeout(hedgeTimer);if(deadlineTimer!==null)clearTimeout(deadlineTimer);}
+      function succeed(value,transport,started){
+        if(settled)return;settled=true;clean();try{nativeAbort.abort();}catch(_){}
+        try{Object.defineProperty(value,'__inventoryMeta',{value:{transport:transport,elapsedMs:Math.max(0,Date.now()-started)},enumerable:false});}catch(_){}
+        resolve(value);
+      }
+      function definitive(error){var status=Number(error&&error.httpStatus||0);return status>=400&&status<500;}
+      function fail(error){
+        if(settled)return;errors.push(error);pending=Math.max(0,pending-1);
+        if(definitive(error)){settled=true;clean();try{nativeAbort.abort();}catch(_){}reject(error);return;}
+        if(!gmStarted){startGm();return;}
+        if(pending===0){settled=true;clean();reject(errors[errors.length-1]||new Error(prefix+'_inventory_failed'));}
+      }
+      function consume(promise,transport){
+        var started=Date.now();pending++;
+        promise.then(function(response){
+          if(settled)return;
+          try{succeed(parseMetadataJson(response,prefix),transport,started);}catch(error){fail(error);}
+        }).catch(fail);
+      }
+      function startGm(){if(gmStarted||settled)return;gmStarted=true;consume(gmRequest(gmOptions,true),'gm');}
+      consume(nativeControllerRequest(nativeOptions),'browser');
+      hedgeTimer=setTimeout(startGm,INVENTORY_HEDGE_DELAY_MS);
+      deadlineTimer=setTimeout(function(){
+        if(settled)return;settled=true;clean();try{nativeAbort.abort();}catch(_){}
+        reject(errors[errors.length-1]||new Error(prefix+'_inventory_deadline'));
+      },timeoutMs+INVENTORY_HEDGE_DELAY_MS+750);
+    });
   }
   async function getJson(url) {
     return controllerReadMetadataJson({method:'GET',url:url,timeout:45000,headers:{'cache-control':'no-cache',pragma:'no-cache'}},'queue');
@@ -4179,38 +4233,105 @@ function embeddedJobDois(value) {
     if(payload&&Array.isArray(payload.items))payload.items.forEach(function(r){var d=normalizeDoi(r&&r.doi);if(d)out.set(d,r);});
     return out;
   }
+
+  function updateInventoryProgress(run,layer,state,startedAt,detail) {
+    if(!run||!run.summary)return;
+    var progress=Object.assign({},run.summary.inventoryProgress||{}),row=Object.assign({},progress[layer]||{});
+    row.state=state;row.elapsedMs=Math.max(0,Date.now()-Number(startedAt||Date.now()));
+    if(detail)row.detail=String(detail).slice(0,100);
+    progress[layer]=row;run.summary.inventoryProgress=progress;manualSummary(run);
+  }
+  function cachedInventoryPlan(queue,run) {
+    var row=GM_getValue(INVENTORY_PLAN_CACHE_KEY,null),now=Date.now();
+    if(!row||row.revision!==INVENTORY_STARTUP_REVISION||now-Number(row.savedAt||0)>INVENTORY_PLAN_CACHE_TTL_MS
+      ||String(row.queueGeneratedAt||'')!==String(queue&&queue.generatedAt||'')
+      ||Number(row.queueCount||0)!==Number(queue&&queue.articles&&queue.articles.length||0)||!Array.isArray(row.jobs))return null;
+    var allowed=new Set((queue.articles||[]).map(function(x){return normalizeDoi(x.doi);}));
+    var jobs=[];
+    for(var i=0;i<row.jobs.length;i++){
+      var raw=row.jobs[i],doi=normalizeDoi(raw&&raw.doi);
+      if(!doi||!allowed.has(doi))return null;
+      var job=Object.assign({},raw,{doi:doi,manualRunId:run.id});
+      if(coverageHasNeeds(job))jobs.push(job);
+    }
+    return {savedAt:Number(row.savedAt||0),jobs:jobs};
+  }
+  function saveInventoryPlan(queue,jobs) {
+    try{
+      var clean=(jobs||[]).map(function(job){
+        var row=Object.assign({},job);delete row.jobId;delete row.startedAt;delete row.resolvedArticleUrl;return row;
+      });
+      GM_setValue(INVENTORY_PLAN_CACHE_KEY,{revision:INVENTORY_STARTUP_REVISION,savedAt:Date.now(),
+        queueGeneratedAt:String(queue&&queue.generatedAt||''),queueCount:Number(queue&&queue.articles&&queue.articles.length||0),jobs:clean});
+    }catch(_){}
+  }
+  function inventoryComplete(inv) {
+    return Boolean(inv&&inv.media&&inv.tocs&&inv.figures&&inv.evidence&&!(inv.errors||[]).length);
+  }
   async function readMissingCaptureInventory(queue,run) {
-    // These are metadata reads to select work, not a scan of publisher pages or old locks.
-    var errors=[],mediaRows=[];
-    var cache=run?(run.inventoryCache||(run.inventoryCache=new Map())):new Map();
-    async function safe(name,request,valid,key){
-      key=key||name;
-      for(var attempt=0;attempt<2;attempt++){
+    var errors=[],mediaRows=[],cache=run?(run.inventoryCache||(run.inventoryCache=new Map())):new Map();
+    var dois=queue.articles.map(function(x){return normalizeDoi(x.doi);});
+    function meta(payload){return payload&&payload.__inventoryMeta||{};}
+    async function safe(name,layer,request,valid,key,maxAttempts) {
+      key=key||name;var started=Date.now();updateInventoryProgress(run,layer,'loading',started);
+      maxAttempts=Math.max(1,Number(maxAttempts||2));
+      for(var attempt=0;attempt<maxAttempts;attempt++){
         if(run&&(!manualExecutionCurrent(run)||controllerPaused()))return null;
-        try{var x=await request();if(!valid(x))throw new Error('invalid_inventory_shape');cache.set(key,x);return x;}
-        catch(e){
-          if(attempt===0&&coverageTransient(e.message)&&!Number(e.retryAfterMs||0)){await sleep(1500);continue;}
-          errors.push(name+':'+captureLiveError(e.message||e)+(cache.has(key)?'（保留本轮上次有效库存）':''));return cache.get(key)||null;
+        try{
+          var x=await request();if(!valid(x))throw new Error('invalid_inventory_shape');
+          cache.set(key,x);updateInventoryProgress(run,layer,'done',started,(meta(x).transport||'')+(attempt?';retry='+attempt:''));
+          return x;
+        }catch(e){
+          if(attempt+1<maxAttempts&&coverageTransient(e.message)&&!Number(e.retryAfterMs||0)){await sleep(750);continue;}
+          errors.push(name+':'+captureLiveError(e.message||e)+(cache.has(key)?'（保留本轮上次有效库存）':''));
+          var old=cache.get(key)||null;updateInventoryProgress(run,layer,old?'cached':'error',started);
+          return old;
         }
       }
       return null;
     }
-    var dois=queue.articles.map(function(x){return normalizeDoi(x.doi);});
-    var chunks=[];for(var i=0;i<dois.length;i+=250)chunks.push(dois.slice(i,i+250));
+    function mediaValid(x,ds){return x&&Array.isArray(x.items)&&x.items.length===ds.length
+      &&new Set(x.items.map(function(r){return normalizeDoi(r.doi);})).size===ds.length
+      &&x.items.every(function(r){return ds.indexOf(normalizeDoi(r.doi))>=0;});}
+    function mediaRequest(ds){return inventoryReadMetadataJson({method:'POST',url:MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),
+      timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{'content-type':'application/json'},data:JSON.stringify({dois:ds,readOnly:true})},'inventory');}
     async function readMedia(){
-      // Bound concurrency and never exceed the Worker's 1200-DOI cap.
-      for(var i=0;i<chunks.length;i+=2){
-        if(run&&!manualExecutionCurrent(run))return null;
-        var batches=await Promise.all(chunks.slice(i,i+2).map(function(ds){return safe('媒体库存',function(){return postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:ds,readOnly:true});},function(x){return x&&Array.isArray(x.items)&&x.items.length===ds.length&&new Set(x.items.map(function(r){return normalizeDoi(r.doi);})).size===ds.length&&x.items.every(function(r){return ds.indexOf(normalizeDoi(r.doi))>=0;});},'media:'+ds.join('|'));}));
-        batches.forEach(function(x){if(x)mediaRows=mediaRows.concat(x.items);});
+      var started=Date.now();updateInventoryProgress(run,'media','loading',started,dois.length+' DOI');
+      if(dois.length<=1200){
+        try{
+          var all=await mediaRequest(dois);
+          if(!mediaValid(all,dois))throw new Error('invalid_inventory_shape');
+          updateInventoryProgress(run,'media','done',started,(meta(all).transport||'')+';single='+dois.length);return {items:all.items};
+        }catch(error){updateInventoryProgress(run,'media','fallback',started,'单批失败，改分片');}
       }
-      return {items:mediaRows};
+      var chunks=[];for(var i=0;i<dois.length;i+=250)chunks.push(dois.slice(i,i+250));
+      var batches=await Promise.all(chunks.map(async function(ds,index){
+        var key='media:'+index+':'+String(queue.generatedAt||'');
+        for(var attempt=0;attempt<2;attempt++){
+          if(run&&(!manualExecutionCurrent(run)||controllerPaused()))return null;
+          try{var x=await mediaRequest(ds);if(!mediaValid(x,ds))throw new Error('invalid_inventory_shape');cache.set(key,x);return x;}
+          catch(e){
+            if(attempt===0&&coverageTransient(e.message)&&!Number(e.retryAfterMs||0)){await sleep(750);continue;}
+            errors.push('媒体库存分片'+(index+1)+':'+captureLiveError(e.message||e)+(cache.has(key)?'（保留本轮上次有效库存）':''));
+            return cache.get(key)||null;
+          }
+        }
+        return null;
+      }));
+      batches.forEach(function(x){if(x)mediaRows=mediaRows.concat(x.items);});
+      var complete=mediaRows.length===dois.length;
+      updateInventoryProgress(run,'media',complete?'done':'error',started,'chunks='+chunks.length+';rows='+mediaRows.length);
+      return complete?{items:mediaRows}:mediaRows.length?{items:mediaRows}:null;
     }
     var all=await Promise.all([
       readMedia(),
-      safe('TOC库存',function(){return getJson(CAPTURE_INDEX_URL+'?ts='+Date.now());},function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count);}),
-      safe('正文图库存',function(){return getJson(WORKER+'/api/article-figures/staged?inventory=1&ts='+Date.now());},function(x){return x&&x.schemaVersion==='capture-inventory-v1'&&x.complete===true&&Array.isArray(x.items)&&x.items.length===Number(x.count);}),
-      safe('文本库存',function(){return getPrivateJson(EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),writeToken());},function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count)&&x.truncated!==true;})
+      safe('TOC库存','toc',function(){return inventoryReadMetadataJson({method:'GET',url:CAPTURE_INDEX_URL+'?ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{}},'queue');},
+        function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count);},'toc',2),
+      safe('正文图库存','figures',function(){return inventoryReadMetadataJson({method:'GET',url:WORKER+'/api/article-figures/staged?inventory=1&ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{}},'queue');},
+        function(x){return x&&x.schemaVersion==='capture-inventory-v1'&&x.complete===true&&Array.isArray(x.items)&&x.items.length===Number(x.count);},'figures',2),
+      safe('文本库存','evidence',function(){return inventoryReadMetadataJson({method:'GET',url:EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,
+        headers:{authorization:'Bearer '+String(writeToken()||'')}},'private');},
+        function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count)&&x.truncated!==true;},'evidence',2)
     ]);
     return {media:all[0],tocs:all[1],figures:all[2],evidence:all[3],errors:errors,readAt:nowIso()};
   }
@@ -4388,6 +4509,10 @@ function embeddedJobDois(value) {
       next.captureFigures=false;row.done.captureFigures=true;gained++;
     }
     row.job=coverageJobNeeds(next);
+    if(row.freshComplete===true){
+      ['captureToc','captureFigures','captureEvidence','capturePrivatePdf'].forEach(function(k){row.job[k]=false;});
+      row.job=coverageJobNeeds(row.job);row.state='resolved';row.retryAt=0;row.freshComplete=false;return;
+    }
     if(!coverageHasNeeds(next)){row.state='resolved';row.retryAt=0;return;}
     var retryAfter=Math.max(0,Number(result.retryAfterMs||0));
     if(result.status==='aborted'){
@@ -4415,6 +4540,18 @@ function embeddedJobDois(value) {
     return Array.from(run.coverage.values()).filter(function(r){return r.state==='pending'&&coverageHasNeeds(r.job);})
       .sort(function(a,b){return captureBatchDate(b.job).localeCompare(captureBatchDate(a.job))||journalPriority(a.job)-journalPriority(b.job)||Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});
   }
+  function coverageApplyFreshPlan(run,jobs,complete) {
+    var fresh=new Set((jobs||[]).map(function(j){return normalizeDoi(j.doi);}));
+    coverageMergePlan(run,jobs||[]);
+    run.coverage.forEach(function(row,doi){
+      if(fresh.has(doi)){row.freshComplete=false;return;}
+      if(!complete)return;
+      if(row.state==='active'){row.freshComplete=true;return;}
+      ['captureToc','captureFigures','captureEvidence','capturePrivatePdf'].forEach(function(k){row.job[k]=false;});
+      row.job=coverageJobNeeds(row.job);row.state='resolved';row.retryAt=0;row.freshComplete=false;
+    });
+  }
+
   function coverageStats(run) {
     var s=run.summary,rows=Array.from(run.coverage.values()),left=rows.filter(function(r){return coverageHasNeeds(r.job)&&r.state!=='removed';});
     s.total=rows.filter(function(r){return r.state!=='removed';}).length;
@@ -4443,21 +4580,47 @@ function embeddedJobDois(value) {
       var architectureMembership=await observeArchitectureMembership(queue);
       s.architectureMembership=architectureMembership;
       if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.mediaControllerRevision)!==CONTROLLER_REVISION)throw new Error('capture_server_upgrade_pending');
-      var checkedAt=0,endRefresh=false,inventoryRecovery=0;
-      async function refresh(){
-        s.phase='inventory_refresh';manualSummary(run);
-        pairedJobs(queue,{items:{}});
-        var next=await readMissingCaptureInventory(queue,run);
-        if(!manualExecutionCurrent(run)||controllerPaused())return false;
-        run.inventory=next;coverageMergePlan(run,manualCaptureJobs(queue,run));
+      var checkedAt=0,endRefresh=false,inventoryRecovery=0,freshState=null;
+      function queueIdentity(){s.queueGeneratedAt=queue.generatedAt;s.latestAddedDate=queue.latestAddedDate;}
+      function applyCurrentDois(){
         var currentDois=new Set(queue.articles.map(function(a){return normalizeDoi(a.doi);}));
         run.coverage.forEach(function(r,doi){if(!currentDois.has(doi))r.state='removed';});
-        checkedAt=Date.now();s.queueGeneratedAt=queue.generatedAt;s.latestAddedDate=queue.latestAddedDate;
-        s.phase='running';coverageStats(run);manualSummary(run);return true;
       }
-      if(!await refresh())return;s.phase='running';
+      function beginFreshInventory(){
+        if(freshState&&!freshState.applied&&!freshState.done)return freshState;
+        s.phase='inventory_refresh';s.inventoryFreshPending=true;manualSummary(run);
+        var state={done:false,applied:false,value:null,error:null,promise:null};freshState=state;
+        state.promise=readMissingCaptureInventory(queue,run).then(function(next){state.value=next;state.done=true;return next;})
+          .catch(function(error){state.error=error;state.done=true;return null;});
+        return state;
+      }
+      async function applyFreshInventory(force){
+        var state=freshState;if(!state||state.applied)return true;
+        if(force&&!state.done)await state.promise;
+        if(!state.done)return true;
+        if(!manualExecutionCurrent(run)||controllerPaused())return false;
+        state.applied=true;s.inventoryFreshPending=false;
+        if(state.error||!state.value){s.inventoryErrors=(s.inventoryErrors||[]).concat(['库存复核:'+captureLiveError(state.error&&state.error.message||state.error||'failed')]);s.phase='running';manualSummary(run);return true;}
+        run.inventory=state.value;
+        var jobs=manualCaptureJobs(queue,run),complete=inventoryComplete(state.value);
+        coverageApplyFreshPlan(run,jobs,complete);applyCurrentDois();
+        if(complete)saveInventoryPlan(queue,jobs);
+        checkedAt=Date.now();queueIdentity();s.phase='running';coverageStats(run);manualSummary(run);return true;
+      }
+      function warmStart(){
+        var cached=cachedInventoryPlan(queue,run);if(!cached)return false;
+        coverageMergePlan(run,cached.jobs);applyCurrentDois();queueIdentity();
+        s.inventoryWarmStart=true;s.inventoryFreshPending=true;s.inventoryCacheAgeMs=Math.max(0,Date.now()-cached.savedAt);
+        ['media','toc','figures','evidence'].forEach(function(layer){updateInventoryProgress(run,layer,'cached',cached.savedAt,'warm-start');});
+        coverageStats(run);s.phase='running';manualSummary(run);checkedAt=Date.now();beginFreshInventory();return true;
+      }
+      async function blockingFresh(){beginFreshInventory();return applyFreshInventory(true);}
+      pairedJobs(queue,{items:{}});
+      if(!warmStart()){if(!await blockingFresh())return;}
+      s.phase='running';
       while(manualExecutionCurrent(run)&&!controllerPaused()){
         if(!renewManualLease(run))throw new Error('manual_run_superseded');
+        if(!await applyFreshInventory(false))return;
         var candidates=coveragePending(run),row=null;
         for(var i=0;i<candidates.length;i++){
           var candidate=candidates[i],job=candidate.job;
@@ -4472,12 +4635,13 @@ function embeddedJobDois(value) {
             s.phase='retry_wait';coverageStats(run);manualSummary(run);
             await coverageWait(run,Date.now()+1000);continue;
           }
+          if(freshState&&!freshState.applied){if(!await applyFreshInventory(true))return;continue;}
           if(!endRefresh || (s.inventoryErrors||[]).length&&inventoryRecovery<2){
-            if(endRefresh){inventoryRecovery++;s.phase='inventory_retry';manualSummary(run);await coverageWait(run,Date.now()+15000);}
+            if(endRefresh){inventoryRecovery++;s.phase='inventory_retry';manualSummary(run);await coverageWait(run,Date.now()+4000);}
             if(!manualExecutionCurrent(run)||controllerPaused())break;
             s.phase='queue_refresh';manualSummary(run);
-            queue=await getJson(QUEUE_URL+'?ts='+Date.now());
-            if(!await refresh())return;endRefresh=true;continue;
+            queue=await getJson(QUEUE_URL+'?ts='+Date.now());queueIdentity();beginFreshInventory();
+            if(!await applyFreshInventory(true))return;endRefresh=true;continue;
           }
           break;
         }
@@ -4516,7 +4680,9 @@ function embeddedJobDois(value) {
         if(controllerPaused())break;
         await coverageWait(run,Date.now()+3500);
         if(!manualExecutionCurrent(run)||controllerPaused())break;
-        if(Date.now()-checkedAt>=60000){s.phase='queue_refresh';manualSummary(run);queue=await getJson(QUEUE_URL+'?ts='+Date.now());if(!await refresh())return;}
+        if(Date.now()-checkedAt>=60000&&(!freshState||freshState.applied)){
+          s.phase='queue_refresh';manualSummary(run);queue=await getJson(QUEUE_URL+'?ts='+Date.now());queueIdentity();checkedAt=Date.now();beginFreshInventory();s.phase='running';manualSummary(run);
+        }
       }
       if(manualExecutionCurrent(run)){
         coverageStats(run);s.finishedAt=nowIso();s.phase=controllerPaused()?'paused':s.unresolvedCount||s.inventoryUnknown?'blocked_remaining':'all_resolved';manualSummary(run);
