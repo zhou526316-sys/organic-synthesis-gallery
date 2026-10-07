@@ -1,0 +1,36 @@
+name: Verify controller metadata read installer live
+
+on:
+  push:
+    branches: [fix/tm-read-latency-20261007]
+    paths:
+      - .github/workflows/tm-controller-read-live.yml
+      - scripts/verify-tm-read-live.mjs
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tm-controller-read-live-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/fix/tm-read-latency-20261007'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify exact API and Worker installer bytes without production writes
+        run: node scripts/verify-tm-read-live.mjs
+      - name: Preserve bounded verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tm-controller-read-live
+          path: ${{ runner.temp }}/tm-read-live.json
+          if-no-files-found: warn
+          retention-days: 7
