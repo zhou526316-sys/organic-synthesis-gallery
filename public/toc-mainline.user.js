@@ -4321,7 +4321,7 @@ function embeddedJobDois(value) {
       batches.forEach(function(x){if(x)mediaRows=mediaRows.concat(x.items);});
       var complete=mediaRows.length===dois.length;
       updateInventoryProgress(run,'media',complete?'done':'error',started,'chunks='+chunks.length+';rows='+mediaRows.length);
-      return complete?{items:mediaRows}:mediaRows.length?{items:mediaRows}:null;
+      return {items:mediaRows};
     }
     var all=await Promise.all([
       readMedia(),
