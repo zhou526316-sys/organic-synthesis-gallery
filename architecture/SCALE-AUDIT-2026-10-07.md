@@ -15,7 +15,7 @@ This audit found and corrected four additional scale/authority regressions that 
 3. complete all-time DOI membership was reserialized into a hidden DOM JSON node after the architecture reader had already loaded it;
 4. the indexed summary-candidate selector still loaded all Evidence and all summary-job rows into Worker memory.
 
-After the fixes, the highest-priority normal public-read path still known to grow materially with historical/user volume is public site analytics.
+After the D4d/D4e cutover, no known normal public Gallery request in the audited surfaces requires work that grows with the all-time literature corpus or visitor history. Remaining work is compatibility/shadow cutover and cleanup.
 
 ## 1. Frontend literature payload
 
@@ -111,32 +111,11 @@ State: **bounded per user/DOI/document**.
 
 ## 8. Analytics
 
-State: **P2 incomplete — next architecture target**.
+State: **bounded / production active**.
 
-Good:
-- raw pageviews are append-only evidence;
-- realtime materialization and persisted backfill cursor exist;
-- global/daily PV/UV are materialized;
-- readiness is watermark/freshness fenced;
-- active public reads do not rescan raw pageviews.
+D4c/D4d/D4e provide a singleton public analytics snapshot, 15-minute background refresh, source/generation/freshness fencing, D4b materialized parity, snapshot-primary public reads, bounded fallback, and no raw-history public fallback.
 
-Remaining scale leak in `materializedSiteAnalyticsStats()`:
-- all-time visitors-with-paper-open counts growing global visitor rows;
-- today's paper-open count scans today's visitor rows;
-- 30-day referrer UV groups visitor rows in the rolling window;
-- 30-day device UV does the same.
-
-Those are derived-state scans rather than raw-event scans, but public request cost still grows with visitor population.
-
-### Required next design
-Create a background-refreshed public analytics snapshot/rolling aggregate:
-1. snapshot generation runs outside the public request path;
-2. snapshot stores the exact public aggregates/response;
-3. snapshot includes `generatedAt`, source watermark and freshness state;
-4. public stats reads one bounded snapshot plus at most fixed daily rows;
-5. stale/missing snapshot fails closed or serves explicitly stale last-good data — never rescans visitor history inside the public request;
-6. current materialized response remains parity oracle until snapshot output matches exactly;
-7. cutover is separately activatable/reversible.
+Final canonical run `37565390491` proved 621 raw/materialized events, 621 global PV, two D4b parity passes, one-attempt D4c exact-generation semantic parity, two consecutive D4d propagation checks, public `readPath=snapshot`, generation `site-pageview-v3-snapshot`, and rollback skipped. Independent public verification reproduced snapshot-enabled health and the snapshot read path.
 
 ## 9. Background/admin paths
 
@@ -144,9 +123,9 @@ Fixed limits such as 1000/1200 rows are acceptable only when truncation is expli
 
 ## 10. Priority after this audit
 
-1. **Analytics public snapshot/rolling aggregate.**
-2. **Bounded summary-candidate selector parity and production cutover.**
-3. **Revisit all-time membership transport only when membership size itself becomes material; do not reintroduce it into DOM.**
-4. **Continue periodic search for public-request queries containing unbounded `COUNT/GROUP BY/list` over historical tables.**
+1. **Bounded summary-candidate selector parity and production cutover.**
+2. **Revisit all-time membership transport only when membership size itself becomes material; do not reintroduce it into DOM.**
+3. **Continue periodic searches for public-request queries containing unbounded `COUNT/GROUP BY/list` over historical tables.**
+4. **Retire compatibility/shadow paths only after rollback evidence is preserved.**
 
 Hot/Archive lifecycle, media acquisition authority, literature release scope and private-PDF authority are unchanged.

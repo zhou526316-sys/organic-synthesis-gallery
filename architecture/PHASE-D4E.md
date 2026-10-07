@@ -1,7 +1,7 @@
 # Phase D4e — self-healing bounded analytics fallback
 
 Date: 2026-10-07 Asia/Shanghai.
-Status: final guarded snapshot activation requested after production D4b/D4c proof; raw public analytics fallback removed.
+Status: **PRODUCTION ACTIVE** — snapshot-primary public analytics with bounded fallback; raw public analytics fallback removed.
 
 D4e distinguishes strict realtime D4b readiness from snapshotSourceReady, the internally consistent materialized watermark.
 
@@ -9,7 +9,7 @@ The snapshot cron self-heals genuinely unhealthy materialized state in at most f
 
 D4d activation additionally waits for two consecutive propagated health observations before validating the exact snapshot proof generation.
 
-Production desired SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED remains 0.
+Production `SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED=1` after guarded D4d activation.
 
 ## Coherent-watermark correction
 
@@ -53,3 +53,9 @@ With snapshot primary reads disabled, production run `37565010281` proved:
 - fresh snapshot with age below one second at proof time.
 
 The historical backfill counters remain allowed to drift as operational diagnostics and no longer affect read authority.
+
+## Production-active result
+
+Run `37565390491` completed the architecture end to end. D4b proved 621 raw/materialized events and 621 global PV with two stable parity passes. D4c generated an exact-generation, semantically equal fresh snapshot in one attempt. D4d observed the enabled flag on two consecutive propagation checks and the unauthenticated public route served that exact snapshot generation. Rollback was skipped.
+
+Normal public site-stats requests now read the singleton bounded snapshot rather than performing visitor-history aggregation. D4b remains the parity/source layer; raw history is never a public fallback.

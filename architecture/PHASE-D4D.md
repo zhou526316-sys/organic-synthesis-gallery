@@ -1,7 +1,7 @@
 # Phase D4d — dormant fail-closed snapshot read branch
 
 Date: 2026-10-07 Asia/Shanghai.
-Status: first production snapshot-read activation safely rolled back; activation paused for source-readiness repair.
+Status: **PRODUCTION ACTIVE** — bounded snapshot read is the primary public site-stats path.
 
 ## Route order
 
@@ -26,9 +26,11 @@ This prevents a stale snapshot from silently recreating the unbounded public-rea
 
 ## Current production state
 
-`SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED=0` in the canonical deployment configuration after the guarded rollback.
+`SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED=1` in the canonical deployment configuration.
 
-Activation is not considered complete merely because the flag is set. The canonical D4d canary must prove live snapshot routing, freshness, parity and health. Any failure automatically redeploys with the flag returned to 0.
+Production activation is proven by canonical run `37565390491`: D4b and D4c proofs passed, D4d public live proof passed, and rollback was skipped. Independent public verification observed `siteAnalyticsPublicSnapshotReadEnabled=true` and `/api/user-ui/site-stats` serving `readPath=snapshot`, `generation=site-pageview-v3-snapshot`.
+
+The fail-closed rollback remains installed for future deployment failures.
 
 ## Canonical activation and rollback
 
@@ -137,3 +139,20 @@ The canonical deployment source flag is therefore changed to
 `SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED=1`.
 
 Activation is complete only if the same canonical run proves the exact D4c snapshot generation is served by the unauthenticated public site-stats endpoint and the rollback step is skipped. Any failure retains the automatic bounded rollback.
+
+## Final production activation result
+
+Canonical Worker run `37565390491` proved:
+
+- activation requested: true;
+- activation report: `ok=true`;
+- snapshot read active: true;
+- two consecutive edge propagation checks: true;
+- exact D4c proof generation served publicly: true;
+- public route: `readPath=snapshot`;
+- public generation: `site-pageview-v3-snapshot`;
+- snapshot freshness: true;
+- health snapshot-read flag: true;
+- rollback: skipped.
+
+Independent post-canary verification reproduced the same public state. Historical failed attempts above are retained only as audit history and are superseded by this production-active result.
