@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE, resultWindowState } from '../shared/result-window.js';
+import { RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE, resultWindowState, resultPaginationItems } from '../shared/result-window.js';
 
 test('result window never returns more than the fixed size', () => {
   const first = resultWindowState(10000, 1);
@@ -63,4 +63,13 @@ test('mobile pages reach every paper exactly once, including the short final pag
   assert.equal(final.start, 24);
   assert.equal(final.end, total);
   assert.equal(final.returned, 1);
+});
+
+
+test('pagination items keep boundaries, neighbors and ellipses', () => {
+  assert.deepEqual(resultPaginationItems(1, 3), [1, 2, 3]);
+  assert.deepEqual(resultPaginationItems(1, 20), [1, 2, 3, 4, 5, 'ellipsis', 20]);
+  assert.deepEqual(resultPaginationItems(10, 20), [1, 'ellipsis', 8, 9, 10, 11, 12, 'ellipsis', 20]);
+  assert.deepEqual(resultPaginationItems(20, 20), [1, 'ellipsis', 16, 17, 18, 19, 20]);
+  assert.deepEqual(resultPaginationItems(10, 20, true), [1, 'ellipsis', 9, 10, 11, 'ellipsis', 20]);
 });
