@@ -1,14 +1,18 @@
 # PDF Vault P0 implementation contract
 
-Status: implemented foundation; no ordinary-user PDF service or UI is enabled by this batch.
+Status: implemented foundation; control-schema installation completed through existing maintenance; ordinary-user PDF service and UI remain disabled.
 
 This implements the first data and presentation contracts of [China-first PDF Vault v1](../architecture/PDF-VAULT-CHINA-V1.md). It does not complete P1 local storage or P2 publisher capture. The existing owner-only PDF button and `private_pdf_*` subsystem remain separate.
 
 ## Runtime and deployment boundary
 
-The new JavaScript modules are not imported by the production page or Worker. The new SQL migration is not wired into a production deployment workflow. The complete schema includes the new definitions for fresh databases, and the isolated migration is ready for installation when the first actual Vault service is introduced.
+The new JavaScript modules are not imported by the production page or Worker. The complete schema includes the new definitions, and the isolated migration is also available for installations that apply only this subsystem.
 
-The dedicated P0 workflow has read-only repository permission, no deployment credentials and no production mutation step. A successful P0 run proves the executable contracts and SQLite constraints; it does not prove that new tables were installed in production or that ordinary users can save/open PDFs.
+The existing `.github/workflows/cloudflare-user-ui-release.yml` is triggered by changes to `cloudflare/schema.sql` and runs that complete schema against production D1. Implementation commit `34b7ba38febde9329e78ed7295dddb978f1367cb` therefore installed the P0 table definitions through maintenance run [37585399596](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585399596). Its schema application, existing native-account smoke, cleanup and health checks all succeeded. This was not a new ordinary-user PDF endpoint or a Worker code deployment.
+
+An early local note assumed schema installation would wait for P1; the actual workflow fan-out disproved that assumption. This section and the final acceptance report supersede that installation-status assumption. Immutable earlier reply records remain intact.
+
+The dedicated P0 workflow has read-only repository permission, no deployment credentials and no production mutation step. Its `productionMutations: false` field describes only that workflow, not every workflow triggered by the push. Its success proves the executable contracts and SQLite constraints. Production schema application is evidenced separately by the maintenance run; ordinary-user file saving/opening remains unimplemented.
 
 No owner-read grant, cross-user private-PDF reuse, hidden contribution, cloud upload or ordinary-user V3 write rollout is added here.
 
@@ -113,7 +117,7 @@ The CI artifact contains bounded logs, a small summary, the exact checked-out so
 
 P1 must provide a real directory picker and local manifest, OPFS fallback, actual hash/PDF validation, a reader, account/session handling and the desktop-acquisition queue. It must pass actual-browser tests before becoming visible to ordinary users.
 
-Install the P0 migration only as part of a separately verified service integration. That integration must add authenticated, account-scoped endpoints and lifecycle/concurrency controls rather than exposing these tables directly.
+Production schema maintenance has already applied the P0 definitions. A subsequent service integration must still verify its schema prerequisites and add authenticated, account-scoped endpoints and lifecycle/concurrency controls rather than exposing these tables directly. Table installation does not enable a service.
 
 Owner automatic capture verification/activation is a separate existing-subsystem task. The owner button's presence does not mean every raw captured PDF is already readable.
 

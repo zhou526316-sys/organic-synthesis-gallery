@@ -1,0 +1,934 @@
+{
+  "schemaVersion": 1,
+  "phase": "pdf-vault-p0-exact-source-acceptance",
+  "ok": true,
+  "sourceCommit": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+  "sourceTree": "d39ccd5dc1a7a7e13f518564bccde5e5949d32ba",
+  "sourceBlobMatches": {
+    "matched": 11,
+    "total": 11,
+    "sourceBlobs": {
+      "shared/literature-identity.mjs": "bc942b2fc72d3d332d59edfd471c8fa0019c2cbe",
+      "shared/pdf-vault-v1.mjs": "2ecaa01ce7e9db339f653400301e274796afb37d",
+      "shared/pdf-vault-device.mjs": "7f505cf87b5b17e518f1c34260a57411166720f4",
+      "scripts/test-pdf-vault-v1.mjs": "d588dd961ea23b08492ef823c81fa11674fddfc9",
+      "scripts/test-pdf-vault-device.mjs": "554e91ce09457da3807632174702aaa0a4262f89",
+      "scripts/test-pdf-vault-schema.py": "86a8609a43b925c7b75c34686c94968746501452",
+      "cloudflare/pdf-vault-v1.sql": "7b4906469879307fcc466d5d03640a177278f4f0",
+      "cloudflare/pdf-vault-session-consume.sql": "d6d8ebcd41437fc3ac0f33c8d92979881f1a5cd7",
+      "cloudflare/schema.sql": "2b930e0246935bd29b3848300759f224f27f5aad",
+      "docs/pdf-vault-p0-contract.md": "3f1b1968f64509c39a811ec3ca7457785be78c65",
+      ".github/workflows/pdf-vault-p0.yml": "d8bfcb8329be2d816e0419dfe1f16aa6d7d317a0"
+    }
+  },
+  "p0Contracts": {
+    "run": {
+      "id": 37585399538,
+      "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "path": ".github/workflows/pdf-vault-p0.yml",
+      "name": "PDF Vault P0 contracts",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "push",
+      "run_attempt": 1,
+      "created_at": "2026-10-07T07:07:14Z",
+      "updated_at": "2026-10-07T07:07:31Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585399538"
+    },
+    "jobId": 112674237412,
+    "model": {
+      "outcome": "success",
+      "tests": 27,
+      "passed": 27,
+      "failed": 0
+    },
+    "schema": {
+      "outcome": "success",
+      "tests": 21
+    },
+    "summaryCompletedAt": "2026-10-07T07:07:26.954553+00:00",
+    "artifactId": 11466039662,
+    "artifactSizeBytes": 3875,
+    "artifactDigest": "sha256:54bb8d34c3701edd8973335a9ae7e0e680d30840a121f4540ff21588f86032c9",
+    "artifactDigestVerified": true,
+    "productionMutationsInThisWorkflow": false
+  },
+  "ownerPdfCompatibility": {
+    "run": {
+      "id": 37585399588,
+      "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "path": ".github/workflows/private-pdf-access-v1.yml",
+      "name": "Private PDF access v1 regression",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "push",
+      "run_attempt": 1,
+      "created_at": "2026-10-07T07:07:14Z",
+      "updated_at": "2026-10-07T07:08:29Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585399588"
+    },
+    "jobId": 112674238117,
+    "ok": true,
+    "passed": 13,
+    "total": 13,
+    "summaryCompletedAt": "2026-10-07T07:08:19.465Z",
+    "artifactId": 11465239482,
+    "artifactSizeBytes": 788,
+    "artifactDigest": "sha256:9c092912716e3f0cd1be45874d51b751b8b4b9e764a4998e4de487120f30a9c1",
+    "artifactDigestVerified": true
+  },
+  "ownerCaptureV2Compatibility": {
+    "run": {
+      "id": 37585399646,
+      "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "path": ".github/workflows/private-pdf-capture-v2.yml",
+      "name": "Private PDF capture v2 regression",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "push",
+      "run_attempt": 1,
+      "created_at": "2026-10-07T07:07:14Z",
+      "updated_at": "2026-10-07T07:08:10Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585399646"
+    },
+    "jobId": 112674238025,
+    "allRequiredStepsSucceeded": true,
+    "bundleArtifactDownloaded": false
+  },
+  "automaticProductionMaintenance": {
+    "run": {
+      "id": 37585399596,
+      "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "path": ".github/workflows/cloudflare-user-ui-release.yml",
+      "name": "Deploy Worker additions",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "push",
+      "run_attempt": 1,
+      "created_at": "2026-10-07T07:07:14Z",
+      "updated_at": "2026-10-07T07:07:52Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585399596"
+    },
+    "jobs": [
+      {
+        "id": 112674238327,
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Apply idempotent user schema",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Sync configured login and payment secrets",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Seed native registration verification challenge",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Native registration end-to-end smoke",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Clean native registration smoke account",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Verify health and user UI routes",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13
+          }
+        ]
+      }
+    ],
+    "workflowBlob": "dc30fe2940c0b86f691981ec4e08b780e4aa0b45",
+    "fullSchemaApplied": true,
+    "productionMutationsOccurred": true,
+    "workerCodeDeployStep": false,
+    "configuredSecretsSynchronizationSucceeded": true,
+    "registrationSmokeSucceeded": true,
+    "registrationSmokeCleanupSucceeded": true,
+    "healthCheckSucceeded": true,
+    "scopeNote": "Existing schema.sql push maintenance applied the full schema remotely. The P0 contract workflow itself made no production mutation. Successful exact-source maintenance is the installation evidence; no separate direct post-run SQL query was performed."
+  },
+  "scope": {
+    "ordinaryUserPdfUiEnabled": false,
+    "ordinaryUserCaptureEndpointEnabled": false,
+    "ordinaryUserV3WriteRolloutChanged": false,
+    "crossUserPrivatePdfReuseEnabled": false,
+    "hiddenOwnerContributionEnabled": false,
+    "newPdfRuntimeModulesImported": false,
+    "ownerPrivatePdfImplementationChanged": false,
+    "productionSchemaMaintenanceCompleted": true,
+    "allPdfVaultP0P5Complete": false
+  },
+  "observedAt": "2026-10-07T07:10:19.247816+00:00",
+  "rootVerification": {
+    "artifactDigestsVerified": true,
+    "allP0SourceBlobsMatch": true,
+    "p0Summary": {
+      "schemaVersion": 1,
+      "phase": "pdf-vault-p0-contracts",
+      "sourceCommit": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "runId": "37585399538",
+      "ok": true,
+      "model": {
+        "outcome": "success",
+        "tests": 27,
+        "passed": 27,
+        "failed": 0
+      },
+      "schema": {
+        "outcome": "success",
+        "tests": 21
+      },
+      "sourceBlobs": {
+        "shared/literature-identity.mjs": "bc942b2fc72d3d332d59edfd471c8fa0019c2cbe",
+        "shared/pdf-vault-v1.mjs": "2ecaa01ce7e9db339f653400301e274796afb37d",
+        "shared/pdf-vault-device.mjs": "7f505cf87b5b17e518f1c34260a57411166720f4",
+        "scripts/test-pdf-vault-v1.mjs": "d588dd961ea23b08492ef823c81fa11674fddfc9",
+        "scripts/test-pdf-vault-device.mjs": "554e91ce09457da3807632174702aaa0a4262f89",
+        "scripts/test-pdf-vault-schema.py": "86a8609a43b925c7b75c34686c94968746501452",
+        "cloudflare/pdf-vault-v1.sql": "7b4906469879307fcc466d5d03640a177278f4f0",
+        "cloudflare/pdf-vault-session-consume.sql": "d6d8ebcd41437fc3ac0f33c8d92979881f1a5cd7",
+        "cloudflare/schema.sql": "2b930e0246935bd29b3848300759f224f27f5aad",
+        "docs/pdf-vault-p0-contract.md": "3f1b1968f64509c39a811ec3ca7457785be78c65",
+        ".github/workflows/pdf-vault-p0.yml": "d8bfcb8329be2d816e0419dfe1f16aa6d7d317a0"
+      },
+      "productionMutations": false,
+      "publicPdfUiEnabled": false,
+      "crossUserReadGrantsEnabled": false,
+      "completedAt": "2026-10-07T07:07:26.954553+00:00"
+    },
+    "ownerBrowserSummary": {
+      "schemaVersion": 1,
+      "ok": true,
+      "passed": 13,
+      "total": 13,
+      "cases": [
+        {
+          "name": "owner PDF button is independent and original link remains publisher-only",
+          "status": "passed",
+          "durationMs": 1109
+        },
+        {
+          "name": "ordinary account hides PDF button and retains publisher original",
+          "status": "passed",
+          "durationMs": 548
+        },
+        {
+          "name": "capture-only account has no PDF read button or private lookup",
+          "status": "passed",
+          "durationMs": 574
+        },
+        {
+          "name": "owner without a verified copy sees viewer and explicit publisher fallback",
+          "status": "passed",
+          "durationMs": 649
+        },
+        {
+          "name": "new 24-card result pages inherit PDF visibility without per-card requests",
+          "status": "passed",
+          "durationMs": 851
+        },
+        {
+          "name": "new 12-card result pages inherit PDF visibility without per-card requests",
+          "status": "passed",
+          "durationMs": 706
+        },
+        {
+          "name": "logout notification hides all PDF buttons synchronously",
+          "status": "passed",
+          "durationMs": 1346
+        },
+        {
+          "name": "ordinary account switch in another tab revokes owner PDF capability",
+          "status": "passed",
+          "durationMs": 800
+        },
+        {
+          "name": "late owner capability response cannot reopen PDF after account switch",
+          "status": "passed",
+          "durationMs": 1333
+        },
+        {
+          "name": "click and auxclick fence a changed token before the watcher runs",
+          "status": "passed",
+          "durationMs": 914
+        },
+        {
+          "name": "token watcher revokes PDF when a same-tab writer emits no event",
+          "status": "passed",
+          "durationMs": 1196
+        },
+        {
+          "name": "owner setup page shows current account and claims only after explicit confirmation",
+          "status": "passed",
+          "durationMs": 165
+        },
+        {
+          "name": "existing owner can authorize PDF capture without healthcheck CORS preflight",
+          "status": "passed",
+          "durationMs": 199
+        }
+      ],
+      "completedAt": "2026-10-07T07:08:19.465Z"
+    }
+  },
+  "workflowEvidence": {
+    "sourceCommit": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+    "sourceTree": "d39ccd5dc1a7a7e13f518564bccde5e5949d32ba",
+    "sourceBlobs": {
+      "shared/literature-identity.mjs": "bc942b2fc72d3d332d59edfd471c8fa0019c2cbe",
+      "shared/pdf-vault-v1.mjs": "2ecaa01ce7e9db339f653400301e274796afb37d",
+      "shared/pdf-vault-device.mjs": "7f505cf87b5b17e518f1c34260a57411166720f4",
+      "scripts/test-pdf-vault-v1.mjs": "d588dd961ea23b08492ef823c81fa11674fddfc9",
+      "scripts/test-pdf-vault-device.mjs": "554e91ce09457da3807632174702aaa0a4262f89",
+      "scripts/test-pdf-vault-schema.py": "86a8609a43b925c7b75c34686c94968746501452",
+      "cloudflare/pdf-vault-v1.sql": "7b4906469879307fcc466d5d03640a177278f4f0",
+      "cloudflare/pdf-vault-session-consume.sql": "d6d8ebcd41437fc3ac0f33c8d92979881f1a5cd7",
+      "cloudflare/schema.sql": "2b930e0246935bd29b3848300759f224f27f5aad",
+      "docs/pdf-vault-p0-contract.md": "3f1b1968f64509c39a811ec3ca7457785be78c65",
+      ".github/workflows/pdf-vault-p0.yml": "d8bfcb8329be2d816e0419dfe1f16aa6d7d317a0"
+    },
+    "p0": {
+      "run": {
+        "id": 37585399538,
+        "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+        "path": ".github/workflows/pdf-vault-p0.yml",
+        "name": "PDF Vault P0 contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "event": "push",
+        "run_attempt": 1,
+        "created_at": "2026-10-07T07:07:14Z",
+        "updated_at": "2026-10-07T07:07:31Z",
+        "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585399538"
+      },
+      "jobs": [
+        {
+          "id": 112674237412,
+          "name": "contracts",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 37585399538,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout exact source",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Set up Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Prepare bounded evidence directory",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Test account copy states and device identity",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Test schema constraints and single-use session consumption",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Record exact source and contract outcomes",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Preserve small contract verification evidence",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Post Set up Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15
+            },
+            {
+              "name": "Post Checkout exact source",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17
+            }
+          ]
+        }
+      ],
+      "artifact": {
+        "id": 11466039662,
+        "name": "pdf-vault-p0-contracts-37585399538",
+        "size_in_bytes": 3875,
+        "url": "https://api.github.com/repos/zhou526316-sys/organic-synthesis-gallery/actions/artifacts/11466039662",
+        "archive_download_url": "https://api.github.com/repos/zhou526316-sys/organic-synthesis-gallery/actions/artifacts/11466039662/zip",
+        "expired": false,
+        "created_at": "2026-10-07T07:07:27Z",
+        "expires_at": "2026-10-21T07:07:27Z",
+        "updated_at": "2026-10-07T07:07:27Z",
+        "digest": "sha256:54bb8d34c3701edd8973335a9ae7e0e680d30840a121f4540ff21588f86032c9",
+        "workflow_run": {
+          "id": 37585399538,
+          "repository_id": 1372553608,
+          "head_repository_id": 1372553608,
+          "head_branch": "main",
+          "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb"
+        }
+      }
+    },
+    "ownerAccess": {
+      "run": {
+        "id": 37585399588,
+        "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+        "path": ".github/workflows/private-pdf-access-v1.yml",
+        "name": "Private PDF access v1 regression",
+        "status": "completed",
+        "conclusion": "success",
+        "event": "push",
+        "run_attempt": 1,
+        "created_at": "2026-10-07T07:07:14Z",
+        "updated_at": "2026-10-07T07:08:29Z",
+        "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585399588"
+      },
+      "jobs": [
+        {
+          "id": 112674238117,
+          "name": "verify",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 37585399588,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Confirm unrelated literature and release rules are untouched",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Check Worker syntax and private PDF security contracts",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Validate full schema and isolated migration from scratch",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Build and typecheck frontend",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Install isolated Chromium",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Verify owner-only original-link routing and setup page",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Upload private PDF browser verification evidence",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Dry-run Worker bundle without deployment",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 12
+            },
+            {
+              "name": "Post Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 23
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 24
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 25
+            }
+          ]
+        }
+      ],
+      "artifact": {
+        "id": 11465239482,
+        "name": "private-pdf-browser-verification",
+        "size_in_bytes": 788,
+        "url": "https://api.github.com/repos/zhou526316-sys/organic-synthesis-gallery/actions/artifacts/11465239482",
+        "archive_download_url": "https://api.github.com/repos/zhou526316-sys/organic-synthesis-gallery/actions/artifacts/11465239482/zip",
+        "expired": false,
+        "created_at": "2026-10-07T07:08:20Z",
+        "expires_at": "2026-10-21T07:08:19Z",
+        "updated_at": "2026-10-07T07:08:20Z",
+        "digest": "sha256:9c092912716e3f0cd1be45874d51b751b8b4b9e764a4998e4de487120f30a9c1",
+        "workflow_run": {
+          "id": 37585399588,
+          "repository_id": 1372553608,
+          "head_repository_id": 1372553608,
+          "head_branch": "main",
+          "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb"
+        }
+      }
+    },
+    "ownerCaptureV2": {
+      "run": {
+        "id": 37585399646,
+        "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+        "path": ".github/workflows/private-pdf-capture-v2.yml",
+        "name": "Private PDF capture v2 regression",
+        "status": "completed",
+        "conclusion": "success",
+        "event": "push",
+        "run_attempt": 1,
+        "created_at": "2026-10-07T07:07:14Z",
+        "updated_at": "2026-10-07T07:08:10Z",
+        "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585399646"
+      },
+      "jobs": [
+        {
+          "id": 112674238025,
+          "name": "verify",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 37585399646,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Confirm owner-scoped PDF capture enabled and processing disabled",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Check isolated PDF backend and migrations",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Run existing media queue and receipt regressions",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Build frontend",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Install Chromium for PDF side-channel fixture",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Verify explicit PDF discovery and media-status isolation",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Build compatible userscript installer",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Dry-run Worker bundle",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 12
+            },
+            {
+              "name": "Post Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 23
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 24
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 25
+            }
+          ]
+        }
+      ],
+      "largeArtifactNotDownloaded": [
+        {
+          "id": 11466357970,
+          "name": "private-pdf-capture-v2-tested",
+          "size_in_bytes": 330835,
+          "digest": "sha256:a4264a513b9ddd0c7863f53fc2bb8e637f3142a53031bb6f3bef5339b41820a9"
+        }
+      ]
+    },
+    "automaticSchemaMaintenance": {
+      "run": {
+        "id": 37585399596,
+        "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+        "path": ".github/workflows/cloudflare-user-ui-release.yml",
+        "name": "Deploy Worker additions",
+        "status": "completed",
+        "conclusion": "success",
+        "event": "push",
+        "run_attempt": 1,
+        "created_at": "2026-10-07T07:07:14Z",
+        "updated_at": "2026-10-07T07:07:52Z",
+        "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585399596"
+      },
+      "jobs": [
+        {
+          "id": 112674238327,
+          "name": "deploy",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 37585399596,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout main",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Set up Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Validate Cloudflare credentials",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Install Worker dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Resolve existing D1 database",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Generate D1-only maintenance configuration",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Apply idempotent user schema",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Sync configured login and payment secrets",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Seed native registration verification challenge",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Native registration end-to-end smoke",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Clean native registration smoke account",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 12
+            },
+            {
+              "name": "Verify health and user UI routes",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 13
+            },
+            {
+              "name": "Post Set up Node",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 25
+            },
+            {
+              "name": "Post Checkout main",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 26
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 27
+            }
+          ]
+        }
+      ],
+      "workflowBlob": "dc30fe2940c0b86f691981ec4e08b780e4aa0b45",
+      "fullSchemaApplied": true,
+      "productionMutationsOccurred": true,
+      "workerCodeDeployStep": false,
+      "configuredSecretsSynchronizationSucceeded": true,
+      "registrationSmokeSucceeded": true,
+      "registrationSmokeCleanupSucceeded": true,
+      "healthCheckSucceeded": true,
+      "scopeNote": "Existing schema.sql push maintenance applied the full schema remotely. The P0 contract workflow itself made no production mutation. Successful exact-source maintenance is the installation evidence; no separate direct post-run SQL query was performed."
+    },
+    "additionalCompletedRun": {
+      "id": 37585465695,
+      "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "path": ".github/workflows/user-system-production-smoke.yml",
+      "name": "User system production smoke",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "workflow_run",
+      "run_attempt": 1,
+      "created_at": "2026-10-07T07:07:54Z",
+      "updated_at": "2026-10-07T07:08:03Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585465695"
+    },
+    "boundary": {
+      "ordinaryUserPdfUiEnabled": false,
+      "pdfCaptureEndpointAdded": false,
+      "crossUserReadGrantsEnabled": false,
+      "localFolderOpfsReaderIntegrated": false,
+      "newV3RolloutEnabled": false,
+      "notes": "No new deploy code or migration was invoked manually by this reviewer. The schema.sql push automatically triggered the existing production maintenance workflow. Documentation correction is required outside the tested source for an accurate whole-push description."
+    }
+  },
+  "installationCorrection": {
+    "earlyAssumption": "P0 schema installation would wait for P1",
+    "observed": "Existing schema.sql push maintenance applied the complete schema remotely.",
+    "maintenanceRun": 37585399596,
+    "dedicatedWorkflowProductionMutationsFieldScope": "The P0 contract workflow only, not the entire push.",
+    "newTablesProductionRowCountsMeasured": false,
+    "immutableEarlyReplyPreserved": true,
+    "documentationCorrected": true
+  },
+  "subsequentWorkflowsObserved": [
+    {
+      "id": 37585545464,
+      "path": ".github/workflows/literature-catalog-index-shadow.yml",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "created_at": "2026-10-07T07:08:42Z",
+      "updated_at": "2026-10-07T07:09:16Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585545464"
+    },
+    {
+      "id": 37585545632,
+      "path": ".github/workflows/tm-20261001-live-acceptance.yml",
+      "status": "in_progress",
+      "conclusion": null,
+      "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "created_at": "2026-10-07T07:08:42Z",
+      "updated_at": "2026-10-07T07:08:46Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585545632"
+    },
+    {
+      "id": 37585545580,
+      "path": ".github/workflows/tm220-live-validation.yml",
+      "status": "in_progress",
+      "conclusion": null,
+      "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "created_at": "2026-10-07T07:08:42Z",
+      "updated_at": "2026-10-07T07:08:46Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585545580"
+    },
+    {
+      "id": 37585545461,
+      "path": ".github/workflows/tm-night-live-acceptance.yml",
+      "status": "in_progress",
+      "conclusion": null,
+      "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "created_at": "2026-10-07T07:08:42Z",
+      "updated_at": "2026-10-07T07:08:46Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585545461"
+    },
+    {
+      "id": 37585465695,
+      "path": ".github/workflows/user-system-production-smoke.yml",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "created_at": "2026-10-07T07:07:54Z",
+      "updated_at": "2026-10-07T07:08:03Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585465695"
+    },
+    {
+      "id": 37585399538,
+      "path": ".github/workflows/pdf-vault-p0.yml",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "created_at": "2026-10-07T07:07:14Z",
+      "updated_at": "2026-10-07T07:07:31Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585399538"
+    },
+    {
+      "id": 37585399596,
+      "path": ".github/workflows/cloudflare-user-ui-release.yml",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "created_at": "2026-10-07T07:07:14Z",
+      "updated_at": "2026-10-07T07:07:52Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585399596"
+    },
+    {
+      "id": 37585399646,
+      "path": ".github/workflows/private-pdf-capture-v2.yml",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "created_at": "2026-10-07T07:07:14Z",
+      "updated_at": "2026-10-07T07:08:10Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585399646"
+    },
+    {
+      "id": 37585399588,
+      "path": ".github/workflows/private-pdf-access-v1.yml",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "34b7ba38febde9329e78ed7295dddb978f1367cb",
+      "created_at": "2026-10-07T07:07:14Z",
+      "updated_at": "2026-10-07T07:08:29Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37585399588"
+    }
+  ]
+}
