@@ -1,0 +1,26 @@
+name: WeChat R10 TOC Source
+on:
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/wechat-r10-toc-source.json']
+permissions:
+  contents: read
+concurrency:
+  group: wechat-r10-toc-source
+  cancel-in-progress: false
+jobs:
+  fetch-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install image decoder
+        run: python3 -m pip install --quiet 'Pillow>=10,<13'
+      - name: Read selected DOI TOC sources
+        run: python3 ops/wechat-publisher/fetch-featured-toc-r10.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wechat-r10-toc-source
+          path: r10-toc-source/
+          retention-days: 7
