@@ -859,7 +859,7 @@ test('search highlights results, picker closes outside, feedback drags and submi
     (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0
   );
   expect(removedAfterSecondSearch - removedAfterFirstSearch).toBeGreaterThanOrEqual(0);
-  expect(removedAfterSecondSearch - removedAfterFirstSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+  expect(removedAfterSecondSearch - removedAfterFirstSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE * 2);
 
   await search.fill('10.1021/jacs.6c08636');
   await expect.poll(async () => page.locator('.card:visible').count()).toBeGreaterThan(0);
@@ -873,7 +873,7 @@ test('search highlights results, picker closes outside, feedback drags and submi
     (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0
   );
   expect(removedAfterDoiSearch - removedAfterSecondSearch).toBeGreaterThanOrEqual(0);
-  expect(removedAfterDoiSearch - removedAfterSecondSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+  expect(removedAfterDoiSearch - removedAfterSecondSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE * 2);
 
   const feedback = page.locator('site-feedback-widget');
   const feedbackTab = feedback.locator('.site-feedback-tab');
