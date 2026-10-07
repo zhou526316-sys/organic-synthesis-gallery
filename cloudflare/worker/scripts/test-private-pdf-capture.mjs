@@ -50,6 +50,20 @@ function upload(token=lease,query='',bytes=pdf,type='application/pdf'){
 }
 await t('stale controller cannot upload a private PDF',async()=>{const r=await importPrivatePdf(upload(lease,'&controllerRevision=2.2.40'),env);assert.equal(r.status,409);assert.equal(r.body.error,'stale_controller_revision')});
 await t('valid publisher PDF stores privately but remains inactive pending verification',async()=>{const r=await importPrivatePdf(upload(),env);assert.equal(r.status,201);assert.equal(r.body.stored,true);assert.equal(r.body.active,false);assert.equal(r.body.requiresVerification,true);assert.equal(bucket.map.size,1);assert.ok([...bucket.map.keys()][0].startsWith('private-pdf/raw/'));assert.ok(!JSON.stringify(r.body).includes('private-pdf/raw/'))});
+await t('RSC Silverchair CDN PDF is accepted as publisher-bound source',async()=>{
+  const req=new Request(
+    'https://api.gczhouwld.com/api/private-pdf/import?doi=10.1039%2Fd6gc04471a&publisher=rsc'
+    +'&articleUrl='+encodeURIComponent('https://pubs.rsc.org/gc/article/doi/10.1039/D6GC04471A/14832575')
+    +'&sourceUrl='+encodeURIComponent('https://rscj.silverchair-cdn.com/rscj/content_public/journal/gc/pap/10.1039_d6gc04471a/1/d6gc04471a.pdf')
+    +'&versionKind=unknown&controllerRevision=2.2.41',
+    {method:'POST',headers:{authorization:'Bearer '+lease,'content-type':'application/pdf'},body:pdf}
+  );
+  const r=await importPrivatePdf(req,env);
+  assert.equal(r.status,201);assert.equal(r.body.stored,true);assert.equal(r.body.active,false);
+  const doc=[...db.docs.values()].find(x=>x.doi==='10.1039/d6gc04471a');
+  assert.ok(doc);assert.equal(new URL(doc.source_url).hostname,'rscj.silverchair-cdn.com');
+});
+
 await t('same DOI and hash is idempotent',async()=>{const r=await importPrivatePdf(upload(),env);assert.equal(r.status,200);assert.equal(r.body.duplicate,true);assert.equal(bucket.map.size,1)});
 await t('HTML/login page cannot masquerade as PDF',async()=>{const b=Buffer.from('<html>'+('x'.repeat(5000))+'</html>');const r=await importPrivatePdf(upload(lease,'',b),env);assert.equal(r.status,422)});
 await t('wrong content type is rejected before storage',async()=>{const r=await importPrivatePdf(upload(lease,'',pdf,'text/html'),env);assert.equal(r.status,415)});
