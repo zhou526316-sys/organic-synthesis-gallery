@@ -28,7 +28,7 @@ let renderTask = null;
 let pageNumber = 1;
 let zoom = 1;
 let renderSequence = 0;
-let fileUrl = '';
+let sourceUrl = '';
 let destroyed = false;
 
 function token() {
@@ -67,9 +67,9 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。') {
   status.hidden = false;
   document.documentElement.dataset.privatePdfViewer = 'error';
 }
-function options(data) {
+function options(source) {
   return {
-    data,
+    ...source,
     cMapUrl: `${ASSET_BASE}cmaps/`,
     cMapPacked: true,
     standardFontDataUrl: `${ASSET_BASE}standard_fonts/`,
@@ -79,9 +79,10 @@ function options(data) {
     useSystemFonts: true,
     isEvalSupported: false,
     enableXfa: false,
-    disableAutoFetch: true,
-    disableRange: true,
+    disableAutoFetch: false,
+    disableRange: false,
     disableStream: true,
+    rangeChunkSize: 128 * 1024,
     stopAtErrors: false,
     canvasMaxAreaInBytes: 32 * 1024 * 1024,
     verbosity: 0,
@@ -120,7 +121,7 @@ async function render() {
   stage.parentElement.scrollTop = 0;
   controls();
 }
-async function getPdfBytes(sessionToken) {
+async function getPdfSource(sessionToken) {
   const openUrl = new URL('/api/user-ui/private-pdf/open', API_BASE);
   openUrl.searchParams.set('doi', doi);
   const opened = await fetch(openUrl, {
@@ -136,46 +137,46 @@ async function getPdfBytes(sessionToken) {
     error.notAvailable = true;
     throw error;
   }
-  const response = await fetch(data.url, {
-    method: 'GET',
-    cache: 'no-store',
-    credentials: 'omit',
-    redirect: 'error',
-    signal: AbortSignal.timeout(45000),
-  });
-  if (!response.ok) throw new Error('pdf_http_' + response.status);
-  const type = String(response.headers.get('content-type') || '').toLowerCase();
-  if (!type.startsWith('application/pdf')) throw new Error('pdf_content_type');
-  const declared = Number(response.headers.get('content-length') || 0);
-  if (declared > MAX_PDF_BYTES) throw new Error('pdf_too_large');
-  const bytes = new Uint8Array(await response.arrayBuffer());
-  if (bytes.byteLength < 1024 || bytes.byteLength > MAX_PDF_BYTES) throw new Error('pdf_size');
-  if (String.fromCharCode(...bytes.slice(0, 5)) !== '%PDF-') throw new Error('pdf_magic');
-  return bytes;
+  const url = new URL(data.url, API_BASE);
+  if (url.origin !== API_BASE || url.pathname !== '/api/user-ui/private-pdf/file') throw new Error('pdf_source_invalid');
+  return url.toString();
 }
 async function start() {
   if (!/^10\.\d{4,9}\/.+/.test(doi)) { fallbackView('DOI 无效。'); return; }
   const sessionToken = token();
   if (!sessionToken) { fallbackView('请先在 Gallery 登录后再读取私有 PDF。'); return; }
   try {
-    const bytes = await getPdfBytes(sessionToken);
+    sourceUrl = await getPdfSource(sessionToken);
     if (destroyed) return;
-    fileUrl = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
-    download.href = fileUrl;
-    download.download = doi.replace(/[^a-z0-9._-]+/gi, '_') + '.pdf';
+    download.href = sourceUrl;
+    download.removeAttribute('download');
+    download.target = '_blank';
+    download.rel = 'noopener noreferrer';
     download.hidden = false;
-    loadingTask = getDocument(options(bytes));
+    loadingTask = getDocument(options({ url: sourceUrl }));
+    loadingTask.onProgress = progress => {
+      if (destroyed || status.hidden) return;
+      const loaded = Number(progress?.loaded || 0);
+      const total = Number(progress?.total || 0);
+      status.textContent = total > 0
+        ? `正在读取 PDF… ${Math.min(99, Math.round(loaded / total * 100))}%`
+        : '正在读取 PDF…';
+    };
     pdf = await loadingTask.promise;
     if (!Number.isSafeInteger(pdf.numPages) || pdf.numPages < 1) throw new Error('pdf_page_tree');
     controls();
     await render();
   } catch (error) {
     if (destroyed) return;
+    const code = String(error?.message || error?.name || 'unknown').slice(0, 96);
+    document.documentElement.dataset.privatePdfError = code;
     const message = error?.notAvailable
       ? '该论文尚无已验证的私有 PDF。'
       : error?.name === 'PasswordException'
         ? '这份 PDF 需要密码，暂时无法在网页内阅读。'
-        : 'PDF 读取失败，请稍后重试。';
+        : /^open_http_401|^open_http_403/.test(code)
+          ? '登录状态已失效，请返回 Gallery 重新登录后读取。'
+          : 'PDF 读取失败，请重试。';
     fallbackView(message);
   }
 }
@@ -196,8 +197,7 @@ function destroy() {
   renderTask = null;
   canvas.width = 0;
   canvas.height = 0;
-  if (fileUrl) URL.revokeObjectURL(fileUrl);
-  fileUrl = '';
+  sourceUrl = '';
   try { loadingTask?.destroy(); } catch {}
   loadingTask = null;
   pdf = null;

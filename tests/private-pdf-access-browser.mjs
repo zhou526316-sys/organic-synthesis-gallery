@@ -85,7 +85,7 @@ const papers=Array.from({length:72},(_,index)=>({
 const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
 async function contextWith(capabilities,openResult={available:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=opaque'},options={}){
  const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900},locale:options.locale||'en-US'});
- const state={privateCalls:0,privateFileCalls:0,authTokens:[],authSessionChecks:0,pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
+ const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateFullFileCalls:0,authTokens:[],authSessionChecks:0,pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
  if(options.pendingQueue)state.queueRows.set('fixture-owner',new Map(papers.map(paper=>[paper.doi,{doi:paper.doi,state:'pending',revision:1,createdAt:Date.now(),updatedAt:Date.now()}])));
  await context.addInitScript(fixtureOrigin=>{
   if(location.origin!==fixtureOrigin)return;
@@ -162,7 +162,17 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
   }
   if(url.pathname==='/api/user-ui/private-pdf/file'){
    state.privateFileCalls++;
-   return route.fulfill({status:200,contentType:'application/pdf',headers:{'access-control-allow-origin':'*','cache-control':'private, no-store'},body:cardPdf});
+   const range=String(route.request().headers().range||'');
+   const common={'access-control-allow-origin':'*','access-control-expose-headers':'content-length, content-range, accept-ranges, content-type','accept-ranges':'bytes','cache-control':'private, no-store'};
+   if(range){
+    state.privateRangeCalls++;
+    const match=/^bytes=(\d+)-(\d*)$/.exec(range);
+    const start=match?Number(match[1]):0,end=match&&match[2]?Math.min(Number(match[2]),cardPdf.length-1):cardPdf.length-1;
+    const body=cardPdf.subarray(start,end+1);
+    return route.fulfill({status:206,contentType:'application/pdf',headers:{...common,'content-range':`bytes ${start}-${end}/${cardPdf.length}`,'content-length':String(body.length)},body});
+   }
+   state.privateFullFileCalls++;
+   return route.fulfill({status:200,contentType:'application/pdf',headers:{...common,'content-length':String(cardPdf.length)},body:cardPdf});
   }
   if(url.pathname.startsWith('/api/user-ui/private-pdf/')){state.privateCalls++;return reply(openResult);}
   if(url.pathname==='/api/user-ui/integrations')return reply({auth:{local:true,google:false,wechat:false,qq:false,email:false},payments:{wechat:false,alipay:false}});
@@ -199,7 +209,7 @@ async function replaceToken(page,value,event=true){
  },{value,event,key:SESSION_KEY});
 }
 function localCardPdf(){
- const stream='q 0.2 0.5 0.8 rg 20 20 180 180 re f Q\n';
+ const stream='q 0.2 0.5 0.8 rg 20 20 180 180 re f Q\n' + ('% range-stream-padding 0123456789abcdef\n'.repeat(6000));
  const objects=['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Kids [3 0 R] /Count 1 >>','<< /Type /Page /Parent 2 0 R /MediaBox [0 0 240 240] /Resources << >> /Contents 4 0 R >>','<< /Length '+Buffer.byteLength(stream)+' >>\nstream\n'+stream+'endstream'];
  let body='%PDF-1.7\n% Gallery self-generated card fixture.\n% '+('fixture-padding '.repeat(80))+'\n';const offsets=[];
  for(let index=0;index<objects.length;index++){offsets.push(Buffer.byteLength(body));body+=(index+1)+' 0 obj\n'+objects[index]+'\nendobj\n';}
@@ -236,7 +246,10 @@ try{
   assert.equal(await target.locator('#download').isVisible(),true);
   await target.locator('#zoom-in').click();
   await target.waitForFunction(()=>document.querySelector('#zoom')?.textContent==='125%',undefined,{timeout:7000});
-  assert.equal(state.privateCalls,1);assert.equal(state.privateFileCalls,1);
+  assert.equal(state.privateCalls,1);
+  assert.ok(state.privateFileCalls>=1);
+  assert.ok(state.privateRangeCalls>=1,'owner reader must use HTTP Range instead of waiting for a whole-file arrayBuffer');
+  assert.equal(state.privateFullFileCalls,0,'owner reader must not download the entire PDF before first render');
  });
  for(const capabilities of [[],['private_pdf_owner','private_pdf_capture']]){
   await test(capabilities.length?'capture-only account has no PDF read button or private lookup':'ordinary account hides PDF button and retains publisher original',async()=>{

@@ -199,10 +199,10 @@ function browserCorsHeaders(request) {
   const origin = request.headers.get('origin') || '';
   return {
     'access-control-allow-origin': browserCorsOriginAllowed(origin) ? origin : 'https://zhou526316-sys.github.io',
-    'access-control-allow-methods': 'GET, POST, OPTIONS',
-    'access-control-allow-headers': 'content-type, authorization',
+    'access-control-allow-methods': 'GET, HEAD, POST, OPTIONS',
+    'access-control-allow-headers': 'content-type, authorization, range',
     'access-control-max-age': '86400',
-    'access-control-expose-headers': 'retry-after, cf-ray, content-type',
+    'access-control-expose-headers': 'retry-after, cf-ray, content-type, content-length, content-range, accept-ranges',
     'vary': 'Origin',
   };
 }
