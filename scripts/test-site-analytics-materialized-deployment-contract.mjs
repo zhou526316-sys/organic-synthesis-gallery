@@ -171,4 +171,25 @@ test('D4d snapshot read branch is preinstalled fail-closed but production flag s
   assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED = "0"'));
 });
 
+test('D4d canonical deploy has snapshot activation canary and automatic rollback',()=>{
+  const block=section(
+    deploy,
+    '- name: Verify public analytics snapshot activation',
+    '- name: Backfill and verify user library row read path',
+  );
+  assert.ok(block.includes('continue-on-error: true'));
+  assert.ok(block.includes('snapshot_read_flag_disabled'));
+  assert.ok(block.includes('/api/admin/site-analytics-snapshot/refresh'));
+  assert.ok(block.includes('/api/admin/site-analytics-snapshot/compare'));
+  assert.ok(block.includes('/api/user-ui/site-stats'));
+  assert.ok(block.includes("live.body?.readPath==='snapshot'"));
+  assert.ok(block.includes("live.body?.generation==='site-pageview-v3-snapshot'"));
+  assert.ok(block.includes("siteAnalyticsPublicSnapshotReadEnabled===true"));
+  assert.ok(block.includes('- name: Roll back public analytics snapshot read on activation failure'));
+  assert.ok(block.includes("SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED = \"0\""));
+  assert.ok(block.includes("live?.readPath!=='snapshot'"));
+  assert.ok(block.includes('rolledBack=true'));
+  assert.ok(block.includes('- name: Preserve public analytics snapshot activation report'));
+});
+
 console.log('SITE_ANALYTICS_MATERIALIZED_DEPLOYMENT_CONTRACT_PASS');

@@ -29,3 +29,23 @@ This prevents a stale snapshot from silently recreating the unbounded public-rea
 `SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED=0`.
 
 Therefore this commit changes no current public analytics behavior. Activation remains a separate decision after D4c production parity and cron freshness are proven.
+
+## Canonical activation and rollback
+
+The sole production Worker deployment workflow now owns D4d activation safety.
+
+When the generated Worker config still has `SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED=0`, the activation canary records an explicit skipped-success result.
+
+When the flag is changed to 1 in a future authorized cutover, the same canonical deployment must:
+
+1. refresh a new snapshot;
+2. prove snapshot/materialized semantic parity;
+3. prove the source watermark remained stable;
+4. prove snapshot freshness;
+5. call the public `/api/user-ui/site-stats` route without admin credentials;
+6. require `readPath=snapshot` and `generation=site-pageview-v3-snapshot`;
+7. require healthcheck to report snapshot read enabled.
+
+Any failure automatically rewrites the deployed config back to 0, redeploys the Worker, and verifies that the public route is no longer on snapshot.
+
+Activation evidence is retained for 30 days.
