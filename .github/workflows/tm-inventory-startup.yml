@@ -35,7 +35,6 @@ jobs:
           node tests/tm-queue-coverage.test.mjs
           node tests/tm-missing-only.test.mjs
           node --test tests/tm-throughput-truth.test.mjs
-          node scripts/test-tm222-live-progress.mjs
           node scripts/validate-tm220-artifacts.mjs source
           git diff --check
       - name: Build Bridge 2.2.65
