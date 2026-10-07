@@ -130,7 +130,6 @@ const copy = {
     totalSynthesis: '全合成',
     formalSynthesis: '形式全合成',
     figures: '正文图片',
-    figuresPending: '正文图片待抓取',
     fetching: '正在获取原始 TOC / Figure',
     articleGraphic: '文章图',
     toc: '文章图 / TOC',
@@ -170,7 +169,6 @@ const copy = {
     totalSynthesis: 'Total synthesis',
     formalSynthesis: 'Formal total synthesis',
     figures: 'Article figures',
-    figuresPending: 'Article figures pending',
     fetching: 'Fetching original TOC / Figure',
     articleGraphic: 'Article graphic',
     toc: 'Article graphic / TOC',
@@ -1087,18 +1085,14 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
 
 function renderFigures(slot: HTMLElement, result: FigureResponse): void {
   if (!result.available || !result.figures.length) {
-    const heading = document.createElement('div');
-    heading.className = 'figure-strip-heading';
-    heading.textContent = t('figures');
-    const pending = document.createElement('div');
-    pending.className = 'figure-strip-empty';
-    pending.textContent = t('figuresPending');
-    slot.replaceChildren(heading, pending);
+    slot.replaceChildren();
+    slot.hidden = true;
     slot.classList.remove('generated');
     slot.classList.add('loaded');
     slot.dataset.state = 'missing';
     return;
   }
+  slot.hidden = false;
   const heading = document.createElement('div');
   heading.className = 'figure-strip-heading';
   heading.textContent = t('figures');
