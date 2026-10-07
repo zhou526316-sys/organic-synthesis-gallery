@@ -1,0 +1,74 @@
+name: WeChat Publisher Import Repair
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/wechat-publisher-import-repair.yml']
+permissions:
+  contents: write
+concurrency:
+  group: wechat-publisher-import-repair
+  cancel-in-progress: false
+jobs:
+  repair-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Apply single import and exercise the actual strict gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch --depth=1 origin main
+            git reset --hard origin/main
+            python3 - <<'PY'
+          import ast, datetime, hashlib, importlib.util, json, pathlib, re
+          root=pathlib.Path.cwd()
+          path=root/'ops/wechat-publisher/create-draft.py'
+          data=path.read_bytes()
+          oldsha=hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()
+          source=data.decode('utf-8')
+          if '\nimport re\n' not in source:
+              if oldsha!='9d42d90cd534cd4bddfb8e224d9d91c8625207cc':
+                  raise SystemExit('Publisher changed concurrently; manual reconciliation required')
+              anchor='import mimetypes\n'
+              if source.count(anchor)!=1:
+                  raise SystemExit('Unique import anchor missing')
+              source=source.replace(anchor,anchor+'import re\n',1)
+              ast.parse(source)
+              path.write_text(source,encoding='utf-8')
+          spec=importlib.util.spec_from_file_location('reviewed_wechat_publisher',path)
+          mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+          required=[root/'public/wechat-editions/2026-10-07.json',root/'public/wechat-featured/2026-10-07.json',root/'public/wechat-retrospective/phoenix1-structural-regeneration.json']
+          gate=mod.require_editorial_review_gate(root/'audit/wechat-working/2026-10-07-review-gate.json',required)
+          for row in gate['articleReviews']:
+              assert (root/row['textOnly']).stat().st_size>0
+              assert (root/row['imagesOnly']).stat().st_size>0
+          slot,papers=mod.load_latest_release()
+          assert slot=='2026-10-07T08:00:00+08:00',slot
+          an=mod.load_featured('2026-10-07');nc=mod.load_retrospective_slug('phoenix1-structural-regeneration')
+          assert an['paper']['doi']=='10.1002/anie.3699223'
+          assert nc['paper']['doi']=='10.1038/s41929-026-01593-w'
+          counts=[]
+          for obj,build in [(an,lambda x,u:mod.build_content(slot,papers,x,u)),(nc,mod.build_retrospective_content)]:
+              urls={f['id']:'https://review.invalid/'+f['id']+'.png' for f in obj['figures']}
+              content=build(obj,urls)
+              imgs=re.findall(r'<img\b',content)
+              assert len(imgs)==14,(obj['paper']['doi'],len(imgs))
+              counts.append({'doi':obj['paper']['doi'],'bodyImages':len(imgs),'htmlBytes':len(content.encode())})
+          receipt={'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'pass','repair':'add import re; retain strict figure gate','publisherOldBlobSha':oldsha,'publisherNewBlobSha':mod.git_blob_sha(path),'reviewedAssetCount':len(gate['assets']),'publicationSlot':slot,'paperCount':len(papers),'articleChecks':counts,'wechatApiCalled':False,'draftWritten':False}
+          out=root/'audit/wechat-working/2026-10-07-r7-publisher-preflight.json'
+          out.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(receipt,ensure_ascii=False))
+          PY
+            git add ops/wechat-publisher/create-draft.py audit/wechat-working/2026-10-07-r7-publisher-preflight.json
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'fix: import re and validate both reviewed WeChat articles'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
