@@ -273,7 +273,7 @@
     "Angew main/SI prior source review and NatCat SI/peer-review checkpoint retained; new conventional-SET and cage/electron background independently checked against primary publications.",
     "Only one combined daily draft update authorized. Public sending remains unauthorized."
   ],
-  "draftReadback": "not_run",
+  "draftReadback": "ok",
   "publicSendAuthorized": false,
   "finalSourcePreview": {
     "runId": "37580403663",
@@ -294,5 +294,10 @@
       "natcat-changed-0.png",
       "natcat-changed-1.png"
     ]
-  }
+  },
+  "finalTransportReview": "pass",
+  "completedAt": "2026-10-07T06:19:52.621Z",
+  "actualDraftPreviewUrl": "https://relay.gczhouwld.com/wechat-preview/228abccce0c01fc9db3cee87.html",
+  "actualDraftQa": "audit/wechat-working/2026-10-07-r9-real-draft-qa.json",
+  "actualDraftQaRunId": "37580696965"
 }
