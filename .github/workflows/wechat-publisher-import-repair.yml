@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Apply single import and exercise the actual strict gate
+      - name: Apply bounded fixes and exercise the actual strict gate and renderer
         shell: bash
         run: |
           set -euo pipefail
@@ -39,8 +39,23 @@ jobs:
               if source.count(anchor)!=1:
                   raise SystemExit('Unique import anchor missing')
               source=source.replace(anchor,anchor+'import re\n',1)
-              ast.parse(source)
-              path.write_text(source,encoding='utf-8')
+          loop='        for point in featured.get("quick_points", []):'
+          if loop in source:
+              assert source.count(loop)==1
+              source=source.replace(loop,'        for point_index, point in enumerate(featured.get("quick_points", []), start=1):',1)
+              anchor='        if lead_figure_id and lead_position == "after_quick_points":'
+              assert source.count(anchor)==1
+              inline='\n'.join([
+                  '            if lead_figure_id and lead_position == "after_first_quick_point" and point_index == 1:',
+                  '                lead_html = figure_html(lead_figure_id, figures, uploaded_urls)',
+                  '                if lead_html:',
+                  '                    parts.append(lead_html)',
+                  '                    rendered_figures.add(lead_figure_id)',
+                  '',
+              ])
+              source=source.replace(anchor,inline+anchor,1)
+          ast.parse(source)
+          path.write_text(source,encoding='utf-8')
           spec=importlib.util.spec_from_file_location('reviewed_wechat_publisher',path)
           mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
           required=[root/'public/wechat-editions/2026-10-07.json',root/'public/wechat-featured/2026-10-07.json',root/'public/wechat-retrospective/phoenix1-structural-regeneration.json']
@@ -59,15 +74,20 @@ jobs:
               content=build(obj,urls)
               imgs=re.findall(r'<img\b',content)
               assert len(imgs)==14,(obj['paper']['doi'],len(imgs))
-              counts.append({'doi':obj['paper']['doi'],'bodyImages':len(imgs),'htmlBytes':len(content.encode())})
-          receipt={'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'pass','repair':'add import re; retain strict figure gate','publisherOldBlobSha':oldsha,'publisherNewBlobSha':mod.git_blob_sha(path),'reviewedAssetCount':len(gate['assets']),'publicationSlot':slot,'paperCount':len(papers),'articleChecks':counts,'wechatApiCalled':False,'draftWritten':False}
+              lead=urls[obj['lead_figure_id']]
+              first=mod.esc(obj['quick_points'][0]['text'])
+              second=mod.esc(obj['quick_points'][1]['label'])
+              assert content.index(first)<content.index(lead)<content.index(second)
+              assert content.count(lead)==1
+              counts.append({'doi':obj['paper']['doi'],'bodyImages':len(imgs),'leadPlacement':'after_first_explanation','htmlBytes':len(content.encode())})
+          receipt={'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'pass','repair':'add import re and implement daily after_first_quick_point; retain strict figure gate','publisherOldBlobSha':oldsha,'publisherNewBlobSha':mod.git_blob_sha(path),'reviewedAssetCount':len(gate['assets']),'publicationSlot':slot,'paperCount':len(papers),'articleChecks':counts,'wechatApiCalled':False,'draftWritten':False}
           out=root/'audit/wechat-working/2026-10-07-r7-publisher-preflight.json'
           out.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           print(json.dumps(receipt,ensure_ascii=False))
           PY
             git add ops/wechat-publisher/create-draft.py audit/wechat-working/2026-10-07-r7-publisher-preflight.json
             if git diff --cached --quiet; then exit 0; fi
-            git commit -m 'fix: import re and validate both reviewed WeChat articles'
+            git commit -m 'fix: regex import and daily lead placement with actual renderer checks'
             if git push origin HEAD:main; then exit 0; fi
             sleep 2
           done
