@@ -1,0 +1,657 @@
+{
+  "schemaVersion": 1,
+  "phase": "D4f",
+  "status": "production_active",
+  "verifiedAtBeijing": "2026-10-07T11:41:38.663991+08:00",
+  "commit": "c8b0bab821fec51292d917dbcdc60707b2e3de05",
+  "canonicalRunId": 37567501285,
+  "canonicalRunResult": "success",
+  "localTests": {
+    "passed": 39,
+    "failed": 0
+  },
+  "canonicalRegressionGate": "success",
+  "workerDryRun": "success",
+  "workerDeploy": "success",
+  "rollback": "skipped",
+  "activationArtifactSha256": "5ca57f44daae7b32b86fca1ab047165aa99f31b5e471104fc32a2ff1155a6bfd",
+  "snapshotArtifactSha256": "98a3cddf410394c499ef8acf36f80d89ac2af9894ce2918d6d5550df7d1b9079",
+  "proofs": {
+    "activation": {
+      "schemaVersion": 1,
+      "phase": "D4d-site-analytics-public-snapshot-activation",
+      "ok": true,
+      "activationRequested": true,
+      "readPathActive": true,
+      "startedAt": "2026-10-07T03:37:43.431Z",
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "propagation",
+          "status": 200,
+          "readEnabled": true,
+          "consecutivePasses": 1
+        },
+        {
+          "attempt": 2,
+          "stage": "propagation",
+          "status": 200,
+          "readEnabled": true,
+          "consecutivePasses": 2
+        },
+        {
+          "attempt": 1,
+          "stage": "live-proof",
+          "healthy": true,
+          "sameGeneration": true,
+          "proofGeneratedAt": 1791344262080,
+          "statusCode": 200,
+          "fresh": true,
+          "readConfigured": true,
+          "statusGeneratedAt": 1791344262080,
+          "liveStatus": 200,
+          "liveReadPath": "snapshot",
+          "liveGeneration": "site-pageview-v3-snapshot",
+          "liveGeneratedAt": 1791344262080,
+          "snapshotAgeMs": 2579,
+          "healthStatus": 200,
+          "healthReadEnabled": true
+        }
+      ],
+      "same": true,
+      "sourceStable": true,
+      "snapshotGeneratedAt": 1791344262080,
+      "snapshotAgeMs": 2579,
+      "sourceRawMaxEventId": 621,
+      "sourceGlobalPv": 621,
+      "liveGeneration": "site-pageview-v3-snapshot",
+      "completedAt": "2026-10-07T03:37:44.721Z"
+    },
+    "snapshot": {
+      "schemaVersion": 1,
+      "phase": "D4c-site-analytics-public-snapshot-shadow",
+      "ok": true,
+      "readPathActive": false,
+      "startedAt": "2026-10-07T03:37:41.969Z",
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "compare",
+          "parityProven": true,
+          "sameGeneration": true,
+          "refresh": {
+            "ok": true,
+            "generatedAt": 1791344262080,
+            "sourceRawMaxEventId": 621,
+            "sourceMaterializedMaxEventId": 621,
+            "sourceGlobalPv": 621,
+            "sourceReaderRows": 470,
+            "sourceReaderMaxOpenedAt": 1791340666240
+          },
+          "comparison": {
+            "version": 1,
+            "comparable": true,
+            "same": true,
+            "sourceStable": true,
+            "snapshotGeneratedAt": 1791344262080,
+            "snapshot": {
+              "timeZone": "Asia/Shanghai",
+              "trackingStartedAt": 1790065412681,
+              "lastPageViewAt": 1791341822353,
+              "allTime": {
+                "pv": 621,
+                "uv": 173,
+                "visitorsWithPaperOpen": 56,
+                "visitorsWithoutPaperOpen": 117
+              },
+              "today": {
+                "date": "2026-10-07",
+                "pv": 16,
+                "uv": 4,
+                "visitorsWithPaperOpen": 4,
+                "visitorsWithoutPaperOpen": 0
+              },
+              "last7Days": [
+                {
+                  "date": "2026-10-01",
+                  "pv": 21,
+                  "uv": 6
+                },
+                {
+                  "date": "2026-10-02",
+                  "pv": 30,
+                  "uv": 17
+                },
+                {
+                  "date": "2026-10-03",
+                  "pv": 8,
+                  "uv": 8
+                },
+                {
+                  "date": "2026-10-04",
+                  "pv": 29,
+                  "uv": 6
+                },
+                {
+                  "date": "2026-10-05",
+                  "pv": 35,
+                  "uv": 13
+                },
+                {
+                  "date": "2026-10-06",
+                  "pv": 18,
+                  "uv": 8
+                },
+                {
+                  "date": "2026-10-07",
+                  "pv": 16,
+                  "uv": 4
+                }
+              ],
+              "last30Days": [
+                {
+                  "date": "2026-09-08",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-09",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-10",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-11",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-12",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-13",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-14",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-15",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-16",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-17",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-18",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-19",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-20",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-21",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-22",
+                  "pv": 57,
+                  "uv": 20
+                },
+                {
+                  "date": "2026-09-23",
+                  "pv": 92,
+                  "uv": 25
+                },
+                {
+                  "date": "2026-09-24",
+                  "pv": 103,
+                  "uv": 46
+                },
+                {
+                  "date": "2026-09-25",
+                  "pv": 36,
+                  "uv": 12
+                },
+                {
+                  "date": "2026-09-26",
+                  "pv": 31,
+                  "uv": 7
+                },
+                {
+                  "date": "2026-09-27",
+                  "pv": 26,
+                  "uv": 7
+                },
+                {
+                  "date": "2026-09-28",
+                  "pv": 48,
+                  "uv": 9
+                },
+                {
+                  "date": "2026-09-29",
+                  "pv": 24,
+                  "uv": 11
+                },
+                {
+                  "date": "2026-09-30",
+                  "pv": 47,
+                  "uv": 20
+                },
+                {
+                  "date": "2026-10-01",
+                  "pv": 21,
+                  "uv": 6
+                },
+                {
+                  "date": "2026-10-02",
+                  "pv": 30,
+                  "uv": 17
+                },
+                {
+                  "date": "2026-10-03",
+                  "pv": 8,
+                  "uv": 8
+                },
+                {
+                  "date": "2026-10-04",
+                  "pv": 29,
+                  "uv": 6
+                },
+                {
+                  "date": "2026-10-05",
+                  "pv": 35,
+                  "uv": 13
+                },
+                {
+                  "date": "2026-10-06",
+                  "pv": 18,
+                  "uv": 8
+                },
+                {
+                  "date": "2026-10-07",
+                  "pv": 16,
+                  "uv": 4
+                }
+              ],
+              "topReferrers30Days": [
+                {
+                  "source": "(direct)",
+                  "pv": 455,
+                  "uv": 121
+                },
+                {
+                  "source": "weixin110.qq.com",
+                  "pv": 144,
+                  "uv": 58
+                },
+                {
+                  "source": "ntp.msn.cn",
+                  "pv": 15,
+                  "uv": 5
+                },
+                {
+                  "source": "ai-gu7t1h.v2.appdeploy.ai",
+                  "pv": 3,
+                  "uv": 1
+                },
+                {
+                  "source": "gallery.gczhouwld.com",
+                  "pv": 2,
+                  "uv": 1
+                },
+                {
+                  "source": "bing.com",
+                  "pv": 1,
+                  "uv": 1
+                },
+                {
+                  "source": "mp.weixin.qq.com",
+                  "pv": 1,
+                  "uv": 1
+                }
+              ],
+              "devices30Days": [
+                {
+                  "device": "desktop",
+                  "pv": 434,
+                  "uv": 87
+                },
+                {
+                  "device": "mobile",
+                  "pv": 187,
+                  "uv": 88
+                }
+              ]
+            },
+            "materialized": {
+              "timeZone": "Asia/Shanghai",
+              "trackingStartedAt": 1790065412681,
+              "lastPageViewAt": 1791341822353,
+              "allTime": {
+                "pv": 621,
+                "uv": 173,
+                "visitorsWithPaperOpen": 56,
+                "visitorsWithoutPaperOpen": 117
+              },
+              "today": {
+                "date": "2026-10-07",
+                "pv": 16,
+                "uv": 4,
+                "visitorsWithPaperOpen": 4,
+                "visitorsWithoutPaperOpen": 0
+              },
+              "last7Days": [
+                {
+                  "date": "2026-10-01",
+                  "pv": 21,
+                  "uv": 6
+                },
+                {
+                  "date": "2026-10-02",
+                  "pv": 30,
+                  "uv": 17
+                },
+                {
+                  "date": "2026-10-03",
+                  "pv": 8,
+                  "uv": 8
+                },
+                {
+                  "date": "2026-10-04",
+                  "pv": 29,
+                  "uv": 6
+                },
+                {
+                  "date": "2026-10-05",
+                  "pv": 35,
+                  "uv": 13
+                },
+                {
+                  "date": "2026-10-06",
+                  "pv": 18,
+                  "uv": 8
+                },
+                {
+                  "date": "2026-10-07",
+                  "pv": 16,
+                  "uv": 4
+                }
+              ],
+              "last30Days": [
+                {
+                  "date": "2026-09-08",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-09",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-10",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-11",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-12",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-13",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-14",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-15",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-16",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-17",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-18",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-19",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-20",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-21",
+                  "pv": 0,
+                  "uv": 0
+                },
+                {
+                  "date": "2026-09-22",
+                  "pv": 57,
+                  "uv": 20
+                },
+                {
+                  "date": "2026-09-23",
+                  "pv": 92,
+                  "uv": 25
+                },
+                {
+                  "date": "2026-09-24",
+                  "pv": 103,
+                  "uv": 46
+                },
+                {
+                  "date": "2026-09-25",
+                  "pv": 36,
+                  "uv": 12
+                },
+                {
+                  "date": "2026-09-26",
+                  "pv": 31,
+                  "uv": 7
+                },
+                {
+                  "date": "2026-09-27",
+                  "pv": 26,
+                  "uv": 7
+                },
+                {
+                  "date": "2026-09-28",
+                  "pv": 48,
+                  "uv": 9
+                },
+                {
+                  "date": "2026-09-29",
+                  "pv": 24,
+                  "uv": 11
+                },
+                {
+                  "date": "2026-09-30",
+                  "pv": 47,
+                  "uv": 20
+                },
+                {
+                  "date": "2026-10-01",
+                  "pv": 21,
+                  "uv": 6
+                },
+                {
+                  "date": "2026-10-02",
+                  "pv": 30,
+                  "uv": 17
+                },
+                {
+                  "date": "2026-10-03",
+                  "pv": 8,
+                  "uv": 8
+                },
+                {
+                  "date": "2026-10-04",
+                  "pv": 29,
+                  "uv": 6
+                },
+                {
+                  "date": "2026-10-05",
+                  "pv": 35,
+                  "uv": 13
+                },
+                {
+                  "date": "2026-10-06",
+                  "pv": 18,
+                  "uv": 8
+                },
+                {
+                  "date": "2026-10-07",
+                  "pv": 16,
+                  "uv": 4
+                }
+              ],
+              "topReferrers30Days": [
+                {
+                  "source": "(direct)",
+                  "pv": 455,
+                  "uv": 121
+                },
+                {
+                  "source": "weixin110.qq.com",
+                  "pv": 144,
+                  "uv": 58
+                },
+                {
+                  "source": "ntp.msn.cn",
+                  "pv": 15,
+                  "uv": 5
+                },
+                {
+                  "source": "ai-gu7t1h.v2.appdeploy.ai",
+                  "pv": 3,
+                  "uv": 1
+                },
+                {
+                  "source": "gallery.gczhouwld.com",
+                  "pv": 2,
+                  "uv": 1
+                },
+                {
+                  "source": "bing.com",
+                  "pv": 1,
+                  "uv": 1
+                },
+                {
+                  "source": "mp.weixin.qq.com",
+                  "pv": 1,
+                  "uv": 1
+                }
+              ],
+              "devices30Days": [
+                {
+                  "device": "desktop",
+                  "pv": 434,
+                  "uv": 87
+                },
+                {
+                  "device": "mobile",
+                  "pv": 187,
+                  "uv": 88
+                }
+              ]
+            }
+          },
+          "status": {
+            "version": 1,
+            "shadowEnabled": true,
+            "readConfigured": true,
+            "exists": true,
+            "valid": true,
+            "generatedAt": 1791344262080,
+            "ageMs": 299,
+            "maxAgeMs": 1200000,
+            "fresh": true,
+            "sourcePendingAgeMs": 0,
+            "sourceRawMaxEventId": 621,
+            "sourceMaterializedMaxEventId": 621,
+            "sourceGlobalPv": 621,
+            "sourceReaderRows": 470,
+            "sourceReaderMaxOpenedAt": 1791340666240,
+            "sourceLagEvents": 0
+          }
+        }
+      ],
+      "snapshotGeneratedAt": 1791344262080,
+      "snapshotAgeMs": 299,
+      "sourceRawMaxEventId": 621,
+      "sourceMaterializedMaxEventId": 621,
+      "sourceGlobalPv": 621,
+      "sourceReaderRows": 470,
+      "generationFenced": true,
+      "comparisonComparable": true,
+      "same": true,
+      "sourceStable": true,
+      "sourceAdvancedAfterGeneration": false,
+      "readConfigured": true,
+      "completedAt": "2026-10-07T03:37:42.402Z"
+    }
+  },
+  "separateOutstandingMirror": {
+    "runId": 37567501290,
+    "jobId": 112618466267,
+    "status": "failed",
+    "step": "Deploy Pages browser API mirror",
+    "error": "Cloudflare Authentication error [code: 10000]",
+    "scope": "Pages project token permission/account scope and remaining compatibility callers require a separate review",
+    "tokenModified": false,
+    "retried": false
+  },
+  "nextArchitectureTask": "D2b2 bounded summary-candidate parity and production cutover",
+  "normalUserV3RolloutBps": 0
+}

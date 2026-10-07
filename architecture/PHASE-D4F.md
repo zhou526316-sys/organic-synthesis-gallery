@@ -1,7 +1,7 @@
 # D4f — analytics source integrity and bounded rollback
 
 Date: 2026-10-07 Asia/Shanghai.
-Status: locally verified; canonical deployment proof pending.
+Status: PRODUCTION ACTIVE — canonical run `37567501285` completed successfully for commit `c8b0bab821fec51292d917dbcdc60707b2e3de05`.
 
 ## Problem
 
@@ -27,3 +27,9 @@ The public rollback branch also called `materializedSiteAnalyticsStats()`, which
 - Existing production snapshot flag and 15-minute schedule remain configured; completion requires the canonical live activation proof and a skipped rollback.
 
 Background parity checks still scale with event history. They are deliberately outside the public request path. This change does not modify literature admission, media acquisition, private PDF capture, or user-library rollout.
+
+## Production acceptance
+
+Canonical run `37567501285` passed the 39-test pre-deployment gate, Worker dry-run, deployment, D4b source proof, D4c semantic/generation proof, D4d public activation, indexed search activation and V3 rollout preflight. Both analytics and indexed-search rollback were skipped. Public HTTP status was 200, readPath was `snapshot`, generation was `site-pageview-v3-snapshot`, and the proof/live generatedAt values matched. The source raw prefix, materialized watermark and global PV were all 621. Durable evidence: `audit/architecture/d4f-20261007-production.json`.
+
+The separate Pages browser API mirror run `37567501290` failed with Cloudflare Authentication error 10000. This does not invalidate the successful canonical Worker deployment. The mirror still has legacy compatibility references; its token/account scope and callers remain a separate checkpoint. No token change or retry was attempted.
