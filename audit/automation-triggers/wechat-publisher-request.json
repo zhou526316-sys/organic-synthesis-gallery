@@ -1,9 +1,9 @@
 {
-  "requestId": "wechat-daily-2026-10-07-r12-original-white-toc-blue-title-band",
-  "requestedAt": "2026-10-07T07:28:57Z",
+  "requestId": "wechat-daily-2026-10-07-r13-fit-blue-band-to-title",
+  "requestedAt": "2026-10-07T07:38:16Z",
   "publicationDate": "2026-10-07",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-07-r12",
+  "editorialRevision": "2026-10-07-r13",
   "approvedGate": "audit/wechat-working/2026-10-07-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -12,5 +12,5 @@
   ],
   "draftOnly": true,
   "requireDraftGetReadback": true,
-  "reason": "User explicitly requested original white TOC background, reduced TOC and independent blue title bar. Exact original pixels and source current-title/four-line overlay checks passed; update the same existing two-article draft once. No public sending."
+  "reason": "User clarified blue band should only cover actual white title. Band reduced to430px, TOC enlarged40%, original white background and palette preserved. Current full-title source overlay passes with5.79px top clearance. Same existing two-article draft only; no public sending."
 }

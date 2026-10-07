@@ -1,12 +1,12 @@
 {
   "publicationDate": "2026-10-07",
   "editorialRevision": "2026-10-07-r13",
-  "reviewedAt": "2026-10-07T07:35:44.743927+00:00",
+  "reviewedAt": "2026-10-07T07:38:16Z",
   "reviewer": "AI source-grounded editorial review; no claim of human review",
   "textReview": "pass",
-  "imageReview": "pending",
+  "imageReview": "pass",
   "individualImageReview": "pass",
-  "combinedVisualReview": "pending",
+  "combinedVisualReview": "pass",
   "artifacts": {
     "textOnly": "audit/wechat-working/2026-10-07-r13-angew-text-only.md",
     "imagesOnly": "audit/wechat-working/2026-10-07-r13-angew-images-only.md",
@@ -286,7 +286,8 @@
     "Original TOC source bytes/background/palette retained. Layout changes only: TOC700x345.8 at590,12; band starts370 with430px height. TOC width/height increase40%; band height decreases16.02%.",
     "Current title and all editorial text, captions, body figures and retrospective cover are unchanged. Text-only/images-only review package regenerated.",
     "Timeout preflight: reuse bounded source and actual review stages with narrow status/artifact reads; one terminal same-draft write only.",
-    "Source combined review pending; no public sending."
+    "Source combined review pending; no public sending.",
+    "Root inspected source screenshots: enlarged original TOC is complete above the fitted band; the current full title renders3lines at390px with5.79px clearance to the band top. User's actual-title-only allocation is respected."
   ],
   "draftReadback": "pending",
   "publicSendAuthorized": false,
@@ -294,5 +295,56 @@
   "priorCompletedRevision": {
     "revision": "2026-10-07-r12",
     "previewUrl": "https://relay.gczhouwld.com/wechat-preview/adde015c537d4f24bc0c7789.html"
+  },
+  "finalSourcePreview": {
+    "status": "pass",
+    "revision": "2026-10-07-r13",
+    "sourceSnapshot": "31be7c426559653f2327f6b75b4999b1671dfecb11057db44c39d4bb9c8f3821",
+    "runId": "37588405325",
+    "artifactId": 11467164739,
+    "artifactSha256": "ec7cb97d9376117b1ae0ae63df815c3ee7703eb3e13bf77414748b5475a344f8",
+    "viewports": [
+      390,
+      690
+    ],
+    "assetsVerified": 35,
+    "bodyImages": {
+      "angew": 14,
+      "natcat": 19
+    },
+    "nativeTitleOverlayChecks": [
+      {
+        "viewport": 390,
+        "scenario": "current-title",
+        "fontSize": 18,
+        "lineHeight": 22,
+        "titleClearancePx": 5.786569148936167,
+        "minimumWhiteContrast": 10.21482492693778,
+        "coverSource": "locked source cover",
+        "blueBandStartRatio": 0.4625,
+        "minimumTitleClearancePx": 4,
+        "renderedTitle": "有机合成文献日报｜10.07｜今日精选｜Angew：用于自由基交叉偶联的氧化还原可调NHC–三芳胺杂化有机光催化剂",
+        "renderedLineCount": 3,
+        "scope": "QA simulation of the current pinned title at 18px/22px only; a future title requires a fresh layout review; no four-line guarantee; title is not baked into published cover"
+      },
+      {
+        "viewport": 690,
+        "scenario": "current-title",
+        "fontSize": 18,
+        "lineHeight": 22,
+        "titleClearancePx": 90.92054521276594,
+        "minimumWhiteContrast": 10.21482492693778,
+        "coverSource": "locked source cover",
+        "blueBandStartRatio": 0.4625,
+        "minimumTitleClearancePx": 4,
+        "renderedTitle": "有机合成文献日报｜10.07｜今日精选｜Angew：用于自由基交叉偶联的氧化还原可调NHC–三芳胺杂化有机光催化剂",
+        "renderedLineCount": 2,
+        "scope": "QA simulation of the current pinned title at 18px/22px only; a future title requires a fresh layout review; no four-line guarantee; title is not baked into published cover"
+      }
+    ],
+    "reviewedScreenshots": [
+      "angew-current-title-overlay-390.png",
+      "angew-cover-690.png"
+    ]
   }
 }
