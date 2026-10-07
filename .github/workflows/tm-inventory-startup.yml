@@ -9,6 +9,7 @@ on:
       - tests/tm-inventory-startup.test.mjs
       - tests/tm-queue-coverage.test.mjs
       - tests/tm-missing-only.test.mjs
+      - tests/private-pdf-capture-browser.mjs
       - .github/workflows/tm-inventory-startup.yml
 permissions:
   contents: read
@@ -35,6 +36,7 @@ jobs:
           node tests/tm-queue-coverage.test.mjs
           node tests/tm-missing-only.test.mjs
           node --test tests/tm-throughput-truth.test.mjs
+          node --check tests/private-pdf-capture-browser.mjs
           node scripts/validate-tm220-artifacts.mjs source
           git diff --check
       - name: Build Bridge 2.2.65
