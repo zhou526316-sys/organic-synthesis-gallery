@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "batch": "PDF Vault P1b — account queue and truthful main-card state",
-  "status": "implementation-complete-production-acceptance-pending",
+  "status": "accepted-and-deployed",
   "repository": "zhou526316-sys/organic-synthesis-gallery",
   "date": "2026-10-07",
   "timeZone": "Asia/Shanghai",
@@ -542,8 +542,304 @@
     },
     "canonicalPages": {
       "runId": 37594651811,
-      "status": "in_progress",
-      "frozenSourceCommit": "15e29d86f3ce0082db344eb5c40981b9654ae24c"
+      "status": "completed",
+      "frozenSourceCommit": "15e29d86f3ce0082db344eb5c40981b9654ae24c",
+      "sourceCommit": "15e29d86f3ce0082db344eb5c40981b9654ae24c",
+      "localBrowser": {
+        "schemaVersion": 1,
+        "suite": "pdf-vault-local-browser",
+        "ok": true,
+        "passed": 21,
+        "total": 21,
+        "completedAt": "2026-10-07T08:48:49.628Z",
+        "browser": "chromium",
+        "realStorage": [
+          "IndexedDB",
+          "OPFS",
+          "FileSystemHandle structured clone"
+        ],
+        "syntheticDirectoryPicker": true,
+        "nativeWindowsPermissionPromptTested": false,
+        "publisherContentUsed": false,
+        "productionMutations": false,
+        "deliveryFiles": [
+          {
+            "path": "assets/pdf.worker.min-Dkey6ZUl.mjs",
+            "sha256": "145d2dd3ab0c86151011dba95acfa2d5336e2accd59388ea43dbee0efddaaec6",
+            "bytes": 1321307
+          },
+          {
+            "path": "assets/pdfVault-BvyRwQog.css",
+            "sha256": "2cc244f186b9ab60ee22cdf1d2a7b37bb49800a04c9cb5f74090cedf5fad7746",
+            "bytes": 12602
+          },
+          {
+            "path": "assets/pdfVault-DH9-pVt5.js",
+            "sha256": "39850363aa324031f399dd7091f9a3b9f2b076aa24388d4cf1f6743a52f12f37",
+            "bytes": 18912
+          },
+          {
+            "path": "assets/preload-helper-mg6Z-sIv.js",
+            "sha256": "c15b3e77806e8ca53cfcfa5fc556049bf83ce608d9de20f06f4f3c09383c7f11",
+            "bytes": 1976
+          },
+          {
+            "path": "assets/queue-client-DGqsHvKQ.js",
+            "sha256": "ffefd8375fe68c9816335eaf9a93d74faf6ad6f685b5d4f5d26e7bb21be5ce28",
+            "bytes": 25828
+          },
+          {
+            "path": "assets/reader-CT4qGpe6.js",
+            "sha256": "7b4403e6cadb72297aa1eff63382a0dc861d6dc68ac2b968adadd1da1307dd56",
+            "bytes": 545963
+          },
+          {
+            "path": "pdf-vault-assets/6.4.299/standard_fonts/LiberationSans-Regular.ttf",
+            "sha256": "f8ace1f892b2bd9dc1792ba7f097fa7588f84fed48321480e04de5390828221f",
+            "bytes": 139512
+          },
+          {
+            "path": "pdf-vault/index.html",
+            "sha256": "a5dffa901f5e996e3298ec68ea8602a60c43dbe28dc4bf33c67430d8a907ab94",
+            "bytes": 9249
+          }
+        ],
+        "expectedHttpErrors": 3,
+        "expectedRequestCancellations": 2,
+        "unexpectedRequestFailures": 0,
+        "uncaughtErrors": 0,
+        "consoleErrors": 0,
+        "unexpectedNetworkRequests": 0,
+        "cases": [
+          {
+            "name": "real OPFS import is read back and reopened after reload",
+            "status": "passed",
+            "durationMs": 1475
+          },
+          {
+            "name": "directory adapter persists a real file handle and reopens it",
+            "status": "passed",
+            "durationMs": 1156
+          },
+          {
+            "name": "PDF.js renders both pages and closes without retaining pixels",
+            "status": "passed",
+            "durationMs": 972
+          },
+          {
+            "name": "changed same-size PDF cannot reuse a prior readability result",
+            "status": "passed",
+            "durationMs": 571
+          },
+          {
+            "name": "removed file is unavailable even though its manifest persists",
+            "status": "passed",
+            "durationMs": 580
+          },
+          {
+            "name": "two accounts keep independent same-DOI copies and namespaces",
+            "status": "passed",
+            "durationMs": 1090
+          },
+          {
+            "name": "logout synchronously hides the reader and discards rendered pixels",
+            "status": "passed",
+            "durationMs": 794
+          },
+          {
+            "name": "storage events revoke an old account reader in another tab",
+            "status": "passed",
+            "durationMs": 969
+          },
+          {
+            "name": "watcher catches a token change without an explicit auth event",
+            "status": "passed",
+            "durationMs": 909
+          },
+          {
+            "name": "late account response cannot expose an earlier account library",
+            "status": "passed",
+            "durationMs": 697
+          },
+          {
+            "name": "logout while writing cannot commit a successful old-account import",
+            "status": "passed",
+            "durationMs": 606
+          },
+          {
+            "name": "HTML and a forged PDF header never become successful imports",
+            "status": "passed",
+            "durationMs": 966
+          },
+          {
+            "name": "oversized file is rejected before any local writable is opened",
+            "status": "passed",
+            "durationMs": 284
+          },
+          {
+            "name": "cancelled or denied folder picker never silently selects OPFS",
+            "status": "passed",
+            "durationMs": 1216
+          },
+          {
+            "name": "revoked folder permission blocks old copies until explicit restore",
+            "status": "passed",
+            "durationMs": 961
+          },
+          {
+            "name": "write failure never creates an available copy or claims saved",
+            "status": "passed",
+            "durationMs": 486
+          },
+          {
+            "name": "390px local library and PDF reader fit the mobile viewport",
+            "status": "passed",
+            "durationMs": 750
+          },
+          {
+            "name": "phone queue without IndexedDB reaches a separate desktop and requires explicit completion",
+            "status": "passed",
+            "durationMs": 830
+          },
+          {
+            "name": "late queue responses and the same DOI cannot cross account or logout boundaries",
+            "status": "passed",
+            "durationMs": 455
+          },
+          {
+            "name": "queue 503 is not reported as synced and does not disable real local PDF saving",
+            "status": "passed",
+            "durationMs": 661
+          },
+          {
+            "name": "stale queue revision cannot cancel a newer task and retry keeps one row",
+            "status": "passed",
+            "durationMs": 930
+          }
+        ]
+      },
+      "privateCardBrowser": {
+        "schemaVersion": 1,
+        "ok": true,
+        "passed": 16,
+        "total": 16,
+        "cases": [
+          {
+            "name": "owner PDF button is independent and original link remains publisher-only",
+            "status": "passed",
+            "durationMs": 1101
+          },
+          {
+            "name": "ordinary account hides PDF button and retains publisher original",
+            "status": "passed",
+            "durationMs": 627
+          },
+          {
+            "name": "capture-only account has no PDF read button or private lookup",
+            "status": "passed",
+            "durationMs": 564
+          },
+          {
+            "name": "owner without a verified copy sees viewer and explicit publisher fallback",
+            "status": "passed",
+            "durationMs": 565
+          },
+          {
+            "name": "new 24-card result pages inherit PDF visibility without per-card requests",
+            "status": "passed",
+            "durationMs": 720
+          },
+          {
+            "name": "new 12-card result pages inherit PDF visibility without per-card requests",
+            "status": "passed",
+            "durationMs": 621
+          },
+          {
+            "name": "logout notification hides all PDF buttons synchronously",
+            "status": "passed",
+            "durationMs": 1373
+          },
+          {
+            "name": "ordinary account switch in another tab revokes owner PDF capability",
+            "status": "passed",
+            "durationMs": 973
+          },
+          {
+            "name": "late owner capability response cannot reopen PDF after account switch",
+            "status": "passed",
+            "durationMs": 1379
+          },
+          {
+            "name": "click and auxclick fence a changed token before the watcher runs",
+            "status": "passed",
+            "durationMs": 1383
+          },
+          {
+            "name": "token watcher revokes PDF when a same-tab writer emits no event",
+            "status": "passed",
+            "durationMs": 1209
+          },
+          {
+            "name": "owner setup page shows current account and claims only after explicit confirmation",
+            "status": "passed",
+            "durationMs": 149
+          },
+          {
+            "name": "existing owner can authorize PDF capture without healthcheck CORS preflight",
+            "status": "passed",
+            "durationMs": 151
+          },
+          {
+            "name": "ordinary 24 and 12 card pages use one queue batch and no local file reads",
+            "status": "passed",
+            "durationMs": 2357
+          },
+          {
+            "name": "real local import updates another tab and missing or expired evidence downgrades cards",
+            "status": "passed",
+            "durationMs": 1898
+          },
+          {
+            "name": "late ordinary-account queue response cannot relabel cards after switch or logout",
+            "status": "passed",
+            "durationMs": 799
+          }
+        ],
+        "completedAt": "2026-10-07T08:48:31.468Z"
+      },
+      "deliveryManifest": {
+        "sourceCommit": "15e29d86f3ce0082db344eb5c40981b9654ae24c",
+        "files": {
+          "papers.gz.b64": "62b7dc5e53df9089f922fa5ccc6e7c04e4f602d71a9d460a785949f15851aaba",
+          "total-synthesis.json": "57624659efbf7392fe7f58209528484d0c7a999216b492a276c61348c170a792",
+          "manual-supplement.json": "1a288a432d1bf02a48f80498955a064d4f1cb1310c932b91e56b383c0b5298da",
+          "final-audit-supplement.json": "5764c7ef4925a525ab4cbb1594b5645d35c589c0abb7b808fbf2715a93c98fba",
+          "curated-supplement.json": "6a74c312ba4a264d9f67a2786db43acb7ef0af331e925d135844bcb602a16686",
+          "automation-supplement.json": "065179fa32b4b076224a78be3e4c01f3d8d13b2a88e5b39ebd54769b89027650",
+          "rolling-supplement.json": "2abb473b14a64e1c8f68466daef41927a25160ff8b97b75dfd772969ebef09aa",
+          "literature-supplement.json": "14a4044e956bef73f78faa360b6369028a494816dc5d381066ece75b401fc404",
+          "title-translations-zh.json": "3e57fa0e53b05caa135334aa53b5984534dade1666853498e47fca79d6df1bce",
+          "index.html": "a6ec2a3a23fe3d8111209d5ed9a93222430c3c67f4f6a5119b25834c574847e1",
+          "architecture-v1/release.json": "dc9e56c37d38563442fc56c01a88b3eebc2d62a96c97fff7db3ea9883397868f"
+        }
+      },
+      "conclusion": "success",
+      "workflow": {
+        "id": 37594651811,
+        "name": "Deploy GitHub Pages frontend",
+        "path": ".github/workflows/github-pages.yml",
+        "head_sha": "d876ab867a6a88d2a0fb390a37f00b2aee84c11f",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-10-07T08:34:21Z",
+        "updated_at": "2026-10-07T08:50:16Z",
+        "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37594651811"
+      },
+      "artifactIds": {
+        "manifest": 11470698657,
+        "localBrowser": 11470384405,
+        "privateCardBrowser": 11470753584
+      }
     },
     "p0": {
       "runId": 37594651801,
@@ -604,7 +900,128 @@
       "completedAt": "2026-10-07T08:37:01.565Z"
     },
     "liveDelivery": {
-      "pending": true
+      "schemaVersion": 1,
+      "suite": "pdf-vault-live",
+      "ok": true,
+      "applicable": true,
+      "productionMutations": false,
+      "pagesRunId": 37594651811,
+      "origin": "https://gallery.gczhouwld.com",
+      "startedAt": "2026-10-07T08:50:33.716Z",
+      "method": "GET",
+      "maxConcurrency": 3,
+      "maxAttempts": 3,
+      "timeBudgetMs": 150000,
+      "files": [
+        {
+          "path": "assets/pdf.worker.min-Dkey6ZUl.mjs",
+          "requestedPath": "/assets/pdf.worker.min-Dkey6ZUl.mjs",
+          "ok": true,
+          "expectedSha256": "145d2dd3ab0c86151011dba95acfa2d5336e2accd59388ea43dbee0efddaaec6",
+          "expectedBytes": 1321307,
+          "actualSha256": "145d2dd3ab0c86151011dba95acfa2d5336e2accd59388ea43dbee0efddaaec6",
+          "actualBytes": 1321307,
+          "contentType": "text/javascript; charset=utf-8",
+          "attempts": 1
+        },
+        {
+          "path": "assets/pdfVault-BvyRwQog.css",
+          "requestedPath": "/assets/pdfVault-BvyRwQog.css",
+          "ok": true,
+          "expectedSha256": "2cc244f186b9ab60ee22cdf1d2a7b37bb49800a04c9cb5f74090cedf5fad7746",
+          "expectedBytes": 12602,
+          "actualSha256": "2cc244f186b9ab60ee22cdf1d2a7b37bb49800a04c9cb5f74090cedf5fad7746",
+          "actualBytes": 12602,
+          "contentType": "text/css; charset=utf-8",
+          "attempts": 1
+        },
+        {
+          "path": "assets/pdfVault-DH9-pVt5.js",
+          "requestedPath": "/assets/pdfVault-DH9-pVt5.js",
+          "ok": true,
+          "expectedSha256": "39850363aa324031f399dd7091f9a3b9f2b076aa24388d4cf1f6743a52f12f37",
+          "expectedBytes": 18912,
+          "actualSha256": "39850363aa324031f399dd7091f9a3b9f2b076aa24388d4cf1f6743a52f12f37",
+          "actualBytes": 18912,
+          "contentType": "application/javascript; charset=utf-8",
+          "attempts": 1
+        },
+        {
+          "path": "assets/preload-helper-mg6Z-sIv.js",
+          "requestedPath": "/assets/preload-helper-mg6Z-sIv.js",
+          "ok": true,
+          "expectedSha256": "c15b3e77806e8ca53cfcfa5fc556049bf83ce608d9de20f06f4f3c09383c7f11",
+          "expectedBytes": 1976,
+          "actualSha256": "c15b3e77806e8ca53cfcfa5fc556049bf83ce608d9de20f06f4f3c09383c7f11",
+          "actualBytes": 1976,
+          "contentType": "application/javascript; charset=utf-8",
+          "attempts": 1
+        },
+        {
+          "path": "assets/queue-client-DGqsHvKQ.js",
+          "requestedPath": "/assets/queue-client-DGqsHvKQ.js",
+          "ok": true,
+          "expectedSha256": "ffefd8375fe68c9816335eaf9a93d74faf6ad6f685b5d4f5d26e7bb21be5ce28",
+          "expectedBytes": 25828,
+          "actualSha256": "ffefd8375fe68c9816335eaf9a93d74faf6ad6f685b5d4f5d26e7bb21be5ce28",
+          "actualBytes": 25828,
+          "contentType": "application/javascript; charset=utf-8",
+          "attempts": 1
+        },
+        {
+          "path": "assets/reader-CT4qGpe6.js",
+          "requestedPath": "/assets/reader-CT4qGpe6.js",
+          "ok": true,
+          "expectedSha256": "7b4403e6cadb72297aa1eff63382a0dc861d6dc68ac2b968adadd1da1307dd56",
+          "expectedBytes": 545963,
+          "actualSha256": "7b4403e6cadb72297aa1eff63382a0dc861d6dc68ac2b968adadd1da1307dd56",
+          "actualBytes": 545963,
+          "contentType": "application/javascript; charset=utf-8",
+          "attempts": 1
+        },
+        {
+          "path": "pdf-vault-assets/6.4.299/standard_fonts/LiberationSans-Regular.ttf",
+          "requestedPath": "/pdf-vault-assets/6.4.299/standard_fonts/LiberationSans-Regular.ttf",
+          "ok": true,
+          "expectedSha256": "f8ace1f892b2bd9dc1792ba7f097fa7588f84fed48321480e04de5390828221f",
+          "expectedBytes": 139512,
+          "actualSha256": "f8ace1f892b2bd9dc1792ba7f097fa7588f84fed48321480e04de5390828221f",
+          "actualBytes": 139512,
+          "contentType": "font/ttf",
+          "attempts": 1
+        },
+        {
+          "path": "pdf-vault/index.html",
+          "requestedPath": "/pdf-vault/",
+          "ok": true,
+          "expectedSha256": "a5dffa901f5e996e3298ec68ea8602a60c43dbe28dc4bf33c67430d8a907ab94",
+          "expectedBytes": 9249,
+          "actualSha256": "a5dffa901f5e996e3298ec68ea8602a60c43dbe28dc4bf33c67430d8a907ab94",
+          "actualBytes": 9249,
+          "contentType": "text/html; charset=utf-8",
+          "attempts": 1
+        }
+      ],
+      "expectedSourceCommit": "15e29d86f3ce0082db344eb5c40981b9654ae24c",
+      "browserCasesPassed": 21,
+      "expectedFileCount": 8,
+      "before": {
+        "sourceCommit": "15e29d86f3ce0082db344eb5c40981b9654ae24c",
+        "bytes": 43661,
+        "sha256": "ec933c0ebd73f7689c7133c21fd21ea76db87c3f957d9ee3c51593b49af1fa1a",
+        "contentType": "application/json; charset=utf-8",
+        "attempts": 1
+      },
+      "after": {
+        "sourceCommit": "15e29d86f3ce0082db344eb5c40981b9654ae24c",
+        "bytes": 43661,
+        "sha256": "ec933c0ebd73f7689c7133c21fd21ea76db87c3f957d9ee3c51593b49af1fa1a",
+        "contentType": "application/json; charset=utf-8",
+        "attempts": 1
+      },
+      "completedAt": "2026-10-07T08:50:34.257Z",
+      "durationMs": 541,
+      "peakConcurrency": 3
     },
     "standaloneContracts": {
       "schemaVersion": 1,
@@ -712,6 +1129,28 @@
       "exactMatches": 19,
       "mismatches": [],
       "truncated": false
+    },
+    "liveDeliveryWorkflow": {
+      "id": 37596448810,
+      "name": "PDF Vault live delivery verification",
+      "path": ".github/workflows/pdf-vault-live.yml",
+      "head_sha": "5cb65c06fb7725bf910f728871943e9b70a36d44",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-07T08:50:19Z",
+      "updated_at": "2026-10-07T08:50:38Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37596448810"
+    },
+    "liveDeliveryArtifact": {
+      "id": 11470753935
+    },
+    "excludedPriorPagesRun": {
+      "runId": 37594578752,
+      "eventHead": "1e0b47722580e21c947c67155939116562c42f8f",
+      "sourceCommit": "80424e3b9b712ab1afa1da426153f83f5cc9449e",
+      "localBrowserPassed": 17,
+      "ownerBrowserPassed": 13,
+      "reason": "Earlier P1 build; not P1b acceptance"
     }
   },
   "correctedFailures": [
@@ -735,8 +1174,11 @@
   ],
   "limitations": [
     "Native Windows system picker prompt requires real-user/device acceptance; automated picker uses genuine OPFS handles.",
-    "Browser queue tests use authenticated API fixtures; real API acceptance is separate and must pass.",
+    "Browser queue checks use authenticated fixtures; separate live API six-case acceptance also passed, including exact synthetic-account cleanup.",
     "P2 one-time publisher-bound capture session integration, cross-device PDF copy synchronization, optional cloud backup, full text/MCP/model integrations remain later phases.",
     "A queue item or completed task never proves PDF availability, publisher access, or a cross-account grant."
-  ]
+  ],
+  "acceptedAt": "2026-10-07T08:50:34.257Z",
+  "verificationComplete": true,
+  "finalResponseLog": "audit/gpt-responses/2026-10-07/165440-pdf-vault-p1b-complete.md"
 }

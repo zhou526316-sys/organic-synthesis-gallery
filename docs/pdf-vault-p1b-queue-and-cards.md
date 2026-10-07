@@ -2,7 +2,7 @@
 
 本批接续 [P1 本地保存与阅读](./pdf-vault-p1-local.md)，实现同一账号的待电脑获取队列，并把本机副本的短时检查结果接到主站卡片。前一批文档中将这两项列为后续工作的说明，由本文更新。
 
-**状态：实现和本地回归已完成；6 项正式 API 验收及本批实际线上交付证据仍待确认。** 本文不表示生产验收已经通过，最终运行和提交证据另行补充。
+**状态：实现、正式回归、Worker 发布和主域名交付均已验收完成。** 线上队列 6/6 通过，精确合成账号清理残留为 0；主域名 8 个实际加载文件的大小、SHA-256 和类型均核对通过。验收完成于 2026-10-07 16:50:34（北京时间）。
 
 ## 用户流程与保存边界
 
@@ -88,6 +88,25 @@ node tests/pdf-vault-local-browser.mjs
 node tests/private-pdf-access-browser.mjs
 ```
 
-正式 API 的 [6 项验收脚本](../cloudflare/worker/scripts/verify-pdf-vault-queue-live.mjs) 检查认证/CORS、同账号不同会话、账号隔离、CAS、独立 revision 和拒绝伪造身份。该脚本会创建独立合成账号、会话和队列，结束时清理并核对零残留，属于有界生产写入；**尚待正式运行结果确认，不能以本地 fixture 成功替代。**
+正式 API 的 [6 项验收脚本](../cloudflare/worker/scripts/verify-pdf-vault-queue-live.mjs) 检查认证/CORS、同账号不同会话、账号隔离、CAS、独立 revision 和拒绝伪造身份。该脚本会创建独立合成账号、会话和队列，结束时清理并核对零残留，属于有界生产写入；本批已在正式 Worker run 37594670214 完成 6/6 验收，并用独立 SELECT 核对本轮及前次失败轮的 4 个精确合成账号相关记录残留为 0；报告包含 `cleanupVerified: true, cleanupRemaining: 0`。
 
-前端仍由正式 Pages 工作流发布；浏览器小型报告记录实际加载文件的大小和 SHA-256，随后由既有只读主域名核验确认交付。API 验收、合成数据清理、发布源码与主域名静态文件核验应分别记录。本文不提前填写成功 run、上线时间或生产验收结论。
+前端仍由正式 Pages 工作流发布；浏览器小型报告记录实际加载文件的大小和 SHA-256，随后由既有只读主域名核验确认交付。API 验收、合成数据清理、发布源码与主域名静态文件核验应分别记录。本批完整证据记录在下节和独立验收 JSON 中。
+
+
+## 正式发布回执（2026-10-07）
+
+实现提交：[d876ab867a6a88d2a0fb390a37f00b2aee84c11f](https://github.com/zhou526316-sys/organic-synthesis-gallery/commit/d876ab867a6a88d2a0fb390a37f00b2aee84c11f)。正式 Pages 冻结并部署后续主分支提交 `15e29d86f3ce0082db344eb5c40981b9654ae24c`；19 个本批实现、测试和说明文件的 Git blob 均与实现提交完全相同，后续其他会话的审计记录得到保留。
+
+| 验收 | 正式运行 | 结果 |
+| --- | --- | --- |
+| P0 模型及 schema | [37594651801](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37594651801) | 模型 27/27、schema 21/21；精确执行修复后的迁移测试 |
+| P1 独立回归 | [37594651815](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37594651815) | Node 契约、构建及真实浏览器 21/21 成功；76 项 Node 数量同时由本地完整报告记录 |
+| 正式 Worker | [37594670214](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37594670214) | 整体成功；队列线上 6/6、清理 0 残留，最终运行/绑定检查通过 |
+| 正式 Pages | [37594651811](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37594651811) | 构建、浏览器、部署及交付成功；本地 PDF 21/21、站长/普通卡片 16/16 |
+| PDF 主域名只读核验 | [37596448810](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37596448810) | 8/8 实际加载文件首次核验即通过；发布 manifest 前后相同，源码对应上述冻结提交 |
+
+最后一项实际请求 `https://gallery.gczhouwld.com/pdf-vault/` 及其脚本、样式、worker 和字体，逐个核对内容类型、字节数和 SHA-256。它本身只有只读 GET；正式发布流程仍执行既有 D1 迁移、运行配置同步和维护步骤，不能把整个部署描述成没有生产写入。
+
+首次 Worker 验收 run 37593331980 的脚本把 Wrangler 远程 `--file` 导入输出当作查询 JSON，并试图从导入统计读取清理 SELECT 结果。本批修正为小型合成数据走 `--command` 查询路径、删除后独立计数、错误诊断仅输出阶段/分类/字节数；旧轮精确 ID 已在成功验收中补充核实清理。首次 P0 比较失败则通过精确去除 P0 BEGIN/END 区块修复，原完整 schema 签名和归属断言没有削弱。
+
+完整小型证据：[pdf-vault-p1b-20261007.json](../audit/architecture/pdf-vault-p1b-20261007.json)。后续阶段仍包括 P2 一次性 DOI/出版社绑定捕获接入、跨设备 PDF 副本同步、可选云备份、全文与 MCP/模型接口；队列状态不替代这些能力。
