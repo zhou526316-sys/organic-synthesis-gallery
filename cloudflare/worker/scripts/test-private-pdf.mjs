@@ -47,8 +47,13 @@ class FakeStatement {
   }
 }
 class FakeDB {
-  constructor(){this.sessions=new Map();this.verified=new Set();this.capabilities=new Map();this.documents=new Map();this.tokens=new Map();}
-  prepare(sql){return new FakeStatement(this,sql);}
+  constructor(){this.sessions=new Map();this.verified=new Set();this.capabilities=new Map();this.documents=new Map();this.tokens=new Map();this.firstCalls=0;}
+  prepare(sql){
+    const stmt=new FakeStatement(this,sql);
+    const original=stmt.first.bind(stmt);
+    stmt.first=async()=>{this.firstCalls++;return original();};
+    return stmt;
+  }
 }
 class FakeBucket {
   constructor(){this.objects=new Map();this.headCalls=0;this.getCalls=0;}
@@ -68,7 +73,7 @@ db.sessions.set(await sha256('owner-token'),{token_hash:await sha256('owner-toke
 db.sessions.set(await sha256('other-token'),{token_hash:await sha256('other-token'),user_id:'other',expires_at:now+86400000});
 db.verified.add('owner');db.verified.add('other');
 const fixtureClaim='fixture-owner-claim-not-production';
-const env={DB:db,PDF_PRIVATE:bucket,PRIVATE_PDF_READ_ENABLED:'1',PRIVATE_PDF_CAPTURE_ENABLED:'0',PRIVATE_PDF_PROCESSING_ENABLED:'0',PRIVATE_PDF_OWNER_BOOTSTRAP_HASH:await sha256(fixtureClaim)};
+const env={DB:db,PDF_PRIVATE:bucket,BRIDGE_WRITE_TOKEN:'fixture-fast-ticket-secret',PRIVATE_PDF_READ_ENABLED:'1',PRIVATE_PDF_CAPTURE_ENABLED:'0',PRIVATE_PDF_PROCESSING_ENABLED:'0',PRIVATE_PDF_OWNER_BOOTSTRAP_HASH:await sha256(fixtureClaim)};
 let passed=0;async function test(name,fn){await fn();passed++;console.log('PRIVATE_PDF_PASS '+name);}
 
 await test('anonymous status is fail-open to publisher behavior',async()=>{
@@ -101,18 +106,18 @@ await test('status exposes metadata but never the private R2 key',async()=>{
 let accessUrl='';
 await test('owner open returns only a short-lived opaque file URL',async()=>{
   const r=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','owner-token',{method:'POST'}),env);
-  assert.equal(r.status,200);assert.equal(r.body.available,true);accessUrl=r.body.url;assert.ok(/token=/.test(accessUrl));assert.ok(!accessUrl.includes('fixture.pdf'));
+  assert.equal(r.status,200);assert.equal(r.body.available,true);accessUrl=r.body.url;assert.ok(/token=v2\./.test(accessUrl));assert.equal(r.body.ticketMode,'stateless-v2');assert.ok(!accessUrl.includes('fixture.pdf'));
 });
 await test('temporary URL serves inline PDF bytes with no-store',async()=>{
   const res=await servePrivatePdf(new Request(accessUrl),env,{});
   assert.equal(res.status,200);assert.equal(res.headers.get('content-type'),'application/pdf');assert.match(res.headers.get('content-disposition'),/^inline/);assert.equal(res.headers.get('cache-control'),'private, no-store');
   assert.equal(Buffer.from(await res.arrayBuffer()).toString(),pdf.toString());
 });
-await test('single byte range is honored without a redundant R2 HEAD',async()=>{
-  const beforeHead=bucket.headCalls,beforeGet=bucket.getCalls;
+await test('fast ticket range is honored without D1 or redundant R2 HEAD',async()=>{
+  const beforeHead=bucket.headCalls,beforeGet=bucket.getCalls,beforeDb=db.firstCalls;
   const res=await servePrivatePdf(new Request(accessUrl,{headers:{range:'bytes=0-7'}}),env,{});
   assert.equal(res.status,206);assert.equal(res.headers.get('content-range'),`bytes 0-7/${pdf.length}`);assert.equal(Buffer.from(await res.arrayBuffer()).length,8);
-  assert.equal(bucket.headCalls,beforeHead);assert.equal(bucket.getCalls,beforeGet+1);
+  assert.equal(bucket.headCalls,beforeHead);assert.equal(bucket.getCalls,beforeGet+1);assert.equal(db.firstCalls,beforeDb);
 });
 await test('HEAD establishes PDF size without reading R2 object bytes',async()=>{
   const beforeHead=bucket.headCalls,beforeGet=bucket.getCalls;
@@ -126,9 +131,19 @@ await test('ordinary account never receives private document existence or bytes'
   const o=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','other-token',{method:'POST'}),env);
   assert.equal(o.status,403);
 });
-await test('revocation invalidates already minted access token',async()=>{
+await test('fast ticket stays independent of D1 until its short expiry',async()=>{
+  const beforeDb=db.firstCalls;
   db.capabilities.delete('owner|private_pdf_read');
-  const res=await servePrivatePdf(new Request(accessUrl),env,{});
+  const res=await servePrivatePdf(new Request(accessUrl,{headers:{range:'bytes=0-7'}}),env,{});
+  assert.equal(res.status,206);assert.equal(db.firstCalls,beforeDb);
+  db.capabilities.set('owner|private_pdf_read',{});
+});
+await test('legacy opaque ticket still supports immediate capability revocation',async()=>{
+  const legacyEnv={...env,BRIDGE_WRITE_TOKEN:'',PRIVATE_PDF_TICKET_SECRET:''};
+  const opened=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','owner-token',{method:'POST'}),legacyEnv);
+  assert.equal(opened.body.ticketMode,'legacy-d1');
+  db.capabilities.delete('owner|private_pdf_read');
+  const res=await servePrivatePdf(new Request(opened.body.url),legacyEnv,{});
   assert.equal(res.status,401);
   db.capabilities.set('owner|private_pdf_read',{});
 });

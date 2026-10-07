@@ -10,6 +10,7 @@ GlobalWorkerOptions.workerSrc = workerUrl;
 const params = new URLSearchParams(location.search);
 const doi = String(params.get('doi') || '').trim().toLowerCase();
 const fallback = params.get('fallback') || '';
+const compatibilityMode = params.get('compat') === '1';
 const canvas = document.querySelector('#pdf-canvas');
 const stage = document.querySelector('#stage');
 const status = document.querySelector('#status');
@@ -19,6 +20,8 @@ const zoomOut = document.querySelector('#zoom-out');
 const zoomIn = document.querySelector('#zoom-in');
 const zoomLabel = document.querySelector('#zoom');
 const pageCount = document.querySelector('#page-count');
+const nativeFrame = document.querySelector('#native-pdf-frame');
+const compatibility = document.querySelector('#compatibility');
 const download = document.querySelector('#download');
 document.querySelector('#doi').textContent = doi;
 
@@ -41,6 +44,11 @@ function safeFallback() {
     const url = new URL(fallback, location.origin);
     return /^https?:$/.test(url.protocol) ? url.href : '';
   } catch { return ''; }
+}
+function compatibilityHref() {
+  const url = new URL(location.href);
+  url.searchParams.set('compat', '1');
+  return url.toString();
 }
 function controls() {
   const ready = Boolean(pdf) && !destroyed;
@@ -187,8 +195,24 @@ async function start() {
     download.target = '_blank';
     download.rel = 'noopener noreferrer';
     download.hidden = false;
+    compatibility.href = compatibilityHref();
+    compatibility.hidden = compatibilityMode;
+    if (!compatibilityMode) {
+      document.documentElement.dataset.privatePdfMode = 'native';
+      document.documentElement.dataset.privatePdfViewer = 'native';
+      document.documentElement.dataset.privatePdfReadyMs = String(Math.round(performance.now() - startedAt));
+      stage.hidden = true;
+      nativeFrame.hidden = false;
+      nativeFrame.src = sourceUrl + '#page=1&zoom=page-width';
+      status.hidden = true;
+      controls();
+      return;
+    }
+    document.documentElement.dataset.privatePdfMode = 'compat';
+    nativeFrame.hidden = true;
+    stage.hidden = false;
     loadingTask = getDocument(options({ url: sourceUrl }));
-    setPhase('parse', '正在读取 PDF 目录…');
+    setPhase('parse', '兼容模式：正在读取 PDF 目录…');
     loadingTask.onProgress = progress => {
       if (destroyed || status.hidden) return;
       const loaded = Number(progress?.loaded || 0);

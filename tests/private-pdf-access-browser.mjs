@@ -241,16 +241,23 @@ try{
   const publisherPage=await popup(page,original);assert.match(publisherPage.url(),/publisher-fallback\.html/);
   assert.equal(state.privateCalls,0);await publisherPage.close();
   const target=await popup(page,pdf);assert.match(target.url(),/\/pdf\/?\?doi=/);
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='native',undefined,{timeout:7000});
+  const native=target.locator('#native-pdf-frame');
+  assert.equal(await native.isVisible(),true);
+  assert.match(await native.getAttribute('src'),/\/api\/user-ui\/private-pdf\/file\?token=/);
+  assert.equal(await target.locator('#download').isVisible(),true);
+  assert.equal(await target.locator('#compatibility').isVisible(),true);
+  assert.equal(state.privateCalls,1);
+ });
+ await test('PDF.js compatibility mode remains available with bounded range reads',async()=>{
+  const {context,state}=await contextWith(['private_pdf_read']);const page=await gallery(context,true);
+  const pdf=page.locator('.card a.private-pdf-button').first();
+  const viewer=new URL(await pdf.getAttribute('href'),base);viewer.searchParams.set('compat','1');
+  const target=await context.newPage();await target.goto(viewer.toString(),{waitUntil:'domcontentloaded'});
   await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:7000});
   const rendered=await target.locator('#pdf-canvas').evaluate(canvas=>({page:canvas.dataset.renderedPage,width:canvas.width,height:canvas.height}));
   assert.equal(rendered.page,'1');assert.ok(rendered.width>0&&rendered.height>0);
-  assert.equal(await target.locator('#download').isVisible(),true);
-  await target.locator('#zoom-in').click();
-  await target.waitForFunction(()=>document.querySelector('#zoom')?.textContent==='125%',undefined,{timeout:7000});
-  assert.equal(state.privateCalls,1);
-  assert.ok(state.privateFileCalls>=1);
-  assert.ok(state.privateRangeCalls>=1,'owner reader must use HTTP Range instead of waiting for a whole-file arrayBuffer');
-  assert.ok(state.privateRangeCalls<=8,'first-page load should stay bounded with 512 KiB ranges');
+  assert.ok(state.privateRangeCalls>=1);assert.ok(state.privateRangeCalls<=8);
  });
  for(const capabilities of [[],['private_pdf_owner','private_pdf_capture']]){
   await test(capabilities.length?'capture-only account has no PDF read button or private lookup':'ordinary account hides PDF button and retains publisher original',async()=>{

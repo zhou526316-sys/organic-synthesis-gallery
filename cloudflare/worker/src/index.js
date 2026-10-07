@@ -254,6 +254,7 @@ async function handleApi(request, env, ctx) {
         readEnabled: String(env.PRIVATE_PDF_READ_ENABLED || '') === '1',
         captureEnabled: String(env.PRIVATE_PDF_CAPTURE_ENABLED || '') === '1',
         processingEnabled: String(env.PRIVATE_PDF_PROCESSING_ENABLED || '') === '1',
+        fastTicketEnabled: Boolean(env.PRIVATE_PDF_TICKET_SECRET || env.BRIDGE_WRITE_TOKEN),
       },
       ai: Boolean(env.AI),
       summaryMode: 'scheduled_chatgpt_daily_no_api',

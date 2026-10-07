@@ -4,6 +4,9 @@ const READ_CAPABILITY = 'private_pdf_read';
 const OWNER_CAPABILITY = 'private_pdf_owner';
 const BOOTSTRAP_HASH = '7d06423d6dec5593c6ced3cf94d7dcea652600bf0eae59e06f0921108e75e819';
 const ACCESS_TTL_MS = 5 * 60 * 1000;
+const FAST_TICKET_VERSION = 'v2';
+const textEncoder = new TextEncoder();
+const textDecoder = new TextDecoder();
 
 function normalizeDoi(value) {
   const raw = String(value || '').trim().toLowerCase()
@@ -14,8 +17,55 @@ function normalizeDoi(value) {
   return /^10\.\d{4,9}\/\S+$/.test(raw) ? raw : '';
 }
 async function sha256Hex(value) {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(String(value || '')));
+  const digest = await crypto.subtle.digest('SHA-256', textEncoder.encode(String(value || '')));
   return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
+}
+function bytesToBase64Url(bytes) {
+  let binary = '';
+  for (let offset = 0; offset < bytes.length; offset += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(offset, Math.min(bytes.length, offset + 0x8000)));
+  }
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+function base64UrlToBytes(value) {
+  const normalized = String(value || '').replace(/-/g, '+').replace(/_/g, '/');
+  const padded = normalized + '='.repeat((4 - normalized.length % 4) % 4);
+  const binary = atob(padded);
+  return Uint8Array.from(binary, char => char.charCodeAt(0));
+}
+async function privatePdfTicketKey(env) {
+  const secret = String(env?.PRIVATE_PDF_TICKET_SECRET || env?.BRIDGE_WRITE_TOKEN || '').trim();
+  if (!secret) return null;
+  const raw = await crypto.subtle.digest('SHA-256', textEncoder.encode('organic-gallery-private-pdf-fast-ticket-v2\0' + secret));
+  return crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+}
+async function makeFastTicket(env, payload) {
+  const key = await privatePdfTicketKey(env);
+  if (!key) return '';
+  const iv = new Uint8Array(12);
+  crypto.getRandomValues(iv);
+  const plaintext = textEncoder.encode(JSON.stringify(payload));
+  const ciphertext = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, plaintext));
+  return FAST_TICKET_VERSION + '.' + bytesToBase64Url(iv) + '.' + bytesToBase64Url(ciphertext);
+}
+async function readFastTicket(env, token) {
+  if (!String(token || '').startsWith(FAST_TICKET_VERSION + '.')) return null;
+  const key = await privatePdfTicketKey(env);
+  if (!key) return null;
+  try {
+    const [, ivRaw, cipherRaw] = String(token).split('.');
+    const iv = base64UrlToBytes(ivRaw);
+    const ciphertext = base64UrlToBytes(cipherRaw);
+    if (iv.byteLength !== 12 || ciphertext.byteLength < 17) return null;
+    const plaintext = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext);
+    const payload = JSON.parse(textDecoder.decode(plaintext));
+    if (payload?.v !== 2 || typeof payload?.doi !== 'string' || typeof payload?.r2Key !== 'string') return null;
+    if (!payload.r2Key.startsWith('private-pdf/') || !Number.isSafeInteger(payload.size) || payload.size < 1) return null;
+    if (!Number.isSafeInteger(payload.exp) || payload.exp < Date.now()) return null;
+    return payload;
+  } catch {
+    return null;
+  }
 }
 function randomToken(size = 32) {
   const bytes = new Uint8Array(size); crypto.getRandomValues(bytes);
@@ -94,12 +144,27 @@ export async function openPrivatePdf(request, env) {
   if (!await hasCapability(env, userId, READ_CAPABILITY)) return { status: 403, body: { error: 'private_pdf_not_entitled' } };
   const doc = await selectedDocument(env, doi);
   if (!doc) return { status: 200, body: { available: false, doi, reason: 'pdf_not_stored' } };
-  const token = randomToken(32), tokenHash = await sha256Hex(token), now = Date.now(), expiresAt = now + ACCESS_TTL_MS;
-  await env.DB.prepare(
-    'INSERT INTO private_pdf_access_tokens (token_hash, user_id, document_id, created_at, expires_at) VALUES (?, ?, ?, ?, ?)'
-  ).bind(tokenHash, userId, doc.id, now, expiresAt).run();
-  const url = new URL('/api/user-ui/private-pdf/file', request.url); url.searchParams.set('token', token);
-  return { status: 200, body: { available: true, doi, url: url.toString(), expiresAt, versionKind: doc.version_kind } };
+  const now = Date.now(), expiresAt = now + ACCESS_TTL_MS;
+  const fastToken = await makeFastTicket(env, {
+    v: 2,
+    uid: userId,
+    doi: doc.doi,
+    r2Key: doc.r2_key,
+    size: Number(doc.byte_length || 0),
+    exp: expiresAt,
+  });
+  let token = fastToken, ticketMode = 'stateless-v2';
+  if (!token) {
+    token = randomToken(32);
+    const tokenHash = await sha256Hex(token);
+    await env.DB.prepare(
+      'INSERT INTO private_pdf_access_tokens (token_hash, user_id, document_id, created_at, expires_at) VALUES (?, ?, ?, ?, ?)'
+    ).bind(tokenHash, userId, doc.id, now, expiresAt).run();
+    ticketMode = 'legacy-d1';
+  }
+  const url = new URL('/api/user-ui/private-pdf/file', request.url);
+  url.searchParams.set('token', token);
+  return { status: 200, body: { available: true, doi, url: url.toString(), expiresAt, versionKind: doc.version_kind, ticketMode } };
 }
 function parseRange(header, size) {
   const match = /^bytes=(\d*)-(\d*)$/.exec(String(header || '').trim());
@@ -112,20 +177,31 @@ function parseRange(header, size) {
   return { start, end, length: end - start + 1 };
 }
 export async function servePrivatePdf(request, env, cors = {}) {
-  if (!enabled(env, 'PRIVATE_PDF_READ_ENABLED') || !env?.DB || !env?.PDF_PRIVATE) return new Response('Not available', { status: 404 });
+  if (!enabled(env, 'PRIVATE_PDF_READ_ENABLED') || !env?.PDF_PRIVATE) return new Response('Not available', { status: 404 });
   const token = new URL(request.url).searchParams.get('token') || '';
   if (token.length < 32) return new Response('Unauthorized', { status: 401 });
-  const tokenHash = await sha256Hex(token);
-  const row = await env.DB.prepare(
-    `SELECT t.user_id, t.expires_at, d.doi, d.r2_key, d.byte_length
-       FROM private_pdf_access_tokens t
-       JOIN private_pdf_documents d ON d.id = t.document_id AND d.active = 1 AND d.processing_state = 'ready'
-       JOIN user_capabilities c ON c.user_id = t.user_id AND c.capability = ?
-      WHERE t.token_hash = ? LIMIT 1`
-  ).bind(READ_CAPABILITY, tokenHash).first();
-  if (!row || Number(row.expires_at || 0) < Date.now()) {
-    if (row) await env.DB.prepare('DELETE FROM private_pdf_access_tokens WHERE token_hash = ?').bind(tokenHash).run().catch(() => {});
-    return new Response('Unauthorized', { status: 401 });
+  const fast = await readFastTicket(env, token);
+  let row = fast ? {
+    user_id: fast.uid,
+    expires_at: fast.exp,
+    doi: fast.doi,
+    r2_key: fast.r2Key,
+    byte_length: fast.size,
+  } : null;
+  if (!row) {
+    if (!env?.DB) return new Response('Unauthorized', { status: 401 });
+    const tokenHash = await sha256Hex(token);
+    row = await env.DB.prepare(
+      `SELECT t.user_id, t.expires_at, d.doi, d.r2_key, d.byte_length
+         FROM private_pdf_access_tokens t
+         JOIN private_pdf_documents d ON d.id = t.document_id AND d.active = 1 AND d.processing_state = 'ready'
+         JOIN user_capabilities c ON c.user_id = t.user_id AND c.capability = ?
+        WHERE t.token_hash = ? LIMIT 1`
+    ).bind(READ_CAPABILITY, tokenHash).first();
+    if (!row || Number(row.expires_at || 0) < Date.now()) {
+      if (row) await env.DB.prepare('DELETE FROM private_pdf_access_tokens WHERE token_hash = ?').bind(tokenHash).run().catch(() => {});
+      return new Response('Unauthorized', { status: 401 });
+    }
   }
   const size = Number(row.byte_length || 0);
   if (!Number.isSafeInteger(size) || size < 1) return new Response('Not found', { status: 404 });
