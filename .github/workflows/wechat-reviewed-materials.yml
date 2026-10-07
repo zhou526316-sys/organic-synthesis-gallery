@@ -58,7 +58,7 @@ jobs:
                   ok = (
                       name.startswith('public/wechat-assets/reviewed/2026-10-07-r7/') and name.endswith('.png')
                       or name.startswith('audit/wechat-working/2026-10-07-r7-') and name.endswith(('.md','.json'))
-                      or name == 'public/wechat-featured/2026-10-07.json'
+                      or name in ('public/wechat-featured/2026-10-07.json', 'public/wechat-retrospective/phoenix1-structural-regeneration.json')
                   )
                   if not ok:
                       raise SystemExit('Out-of-scope path: ' + name)
@@ -101,7 +101,9 @@ jobs:
               data=(staged/name).read_bytes(); target=pathlib.Path(name)
               target.parent.mkdir(parents=True,exist_ok=True); target.write_bytes(data)
               fingerprints.append({'path':name,'sha256':hashlib.sha256(data).hexdigest(),'blobSha':hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()})
-          receipt={'requestId':saved['requestId'],'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'materials_pinned','packageSha256':saved['packageSha256'],'files':fingerprints,'rasterAssetCount':sum(x['path'].endswith('.png') for x in fingerprints),'draftWritten':False,'publisherTriggered':False,'notes':'Only reviewed editorial source and raster bytes are imported. No article PDF, complete SI, secret, production literature data or publisher gate is included.'}
+          state=json.loads(pathlib.Path('audit/literature-update-state.json').read_text())
+          publication=state.get('lastPublication') or {}
+          receipt={'requestId':saved['requestId'],'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'materials_pinned','packageSha256':saved['packageSha256'],'files':fingerprints,'rasterAssetCount':sum(x['path'].endswith('.png') for x in fingerprints),'publicationSlot':publication.get('publicationSlot'),'publishedDoiCount':len(publication.get('publishedDois') or []),'draftWritten':False,'publisherTriggered':False,'notes':'Only reviewed editorial source and raster bytes are imported. No article PDF, complete SI, secret, production literature data or publisher gate is included.'}
           pathlib.Path('audit/wechat-working/2026-10-07-r7-material-import-receipt.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
           PY
             python3 - <<'PY'
@@ -110,7 +112,7 @@ jobs:
           subprocess.run(['git','add','--',*r['expectedPaths'],'audit/wechat-working/2026-10-07-r7-material-import-receipt.json'],check=True)
           PY
             if git diff --cached --quiet; then exit 0; fi
-            git commit -m 'editorial: pin source-locked Angew r7 text and image bytes'
+            git commit -m 'editorial: pin source-locked r7 text and image bytes'
             if git push origin HEAD:main; then exit 0; fi
             sleep 2
           done
