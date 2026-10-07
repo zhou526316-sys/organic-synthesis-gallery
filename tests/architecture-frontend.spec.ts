@@ -201,17 +201,28 @@ test('result pagination keeps DOM cardinality bounded across pages', async ({ pa
   if (data.hotCount > RESULT_WINDOW_SIZE) {
     const next = page.locator('#nextResultPage');
     await expect(next).toBeEnabled();
-    await next.scrollIntoViewIfNeeded();
-    await expect(next).toBeVisible();
-    await next.click();
+    await expect(page.locator('#resultPageNumbers [data-result-page="1"]')).toHaveAttribute('aria-current', 'page');
+    await expect(page.locator('#resultPageNumbers [data-result-page="2"]')).toBeVisible();
+    await page.locator('#resultPageNumbers [data-result-page="2"]').click();
     await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )2\//);
     await expect(page.locator('#previousResultPage')).toBeEnabled();
+    await expect(page.locator('#resultPageNumbers [data-result-page="2"]')).toHaveAttribute('aria-current', 'page');
+    await expect(page.locator('#resultPageJumpInput')).toHaveValue('2');
     await expect.poll(async () => page.locator('#gallery > .card').count())
       .toBe(Math.min(RESULT_WINDOW_SIZE, data.hotCount - RESULT_WINDOW_SIZE));
     await expect.poll(async () => page.locator('#gallery > .card').first().getAttribute('data-doi'))
       .not.toBe(firstDoi);
+
+    const lastPage = Math.ceil(data.hotCount / RESULT_WINDOW_SIZE);
+    if (lastPage > 2) {
+      await page.locator('#resultPageJumpInput').fill(String(lastPage));
+      await page.locator('#resultPageJumpButton').click();
+      await expect(page.locator('#resultWindowStatus')).toContainText(new RegExp(`(?:第 |Page )${lastPage}\\/`));
+      await expect(page.locator('#resultPageNumbers [aria-current="page"]')).toHaveText(String(lastPage));
+      await expect(page.locator('#nextResultPage')).toBeDisabled();
+    }
   } else {
-    await expect(page.locator('#nextResultPage')).toBeDisabled();
+    await expect(page.locator('#resultWindowControls')).toBeHidden();
   }
 });
 
@@ -286,9 +297,8 @@ test('active D1 catalog view keeps all-time search server-paged and avoids stati
 
   if (data.memberCount > RESULT_WINDOW_SIZE) {
     const firstDoi = await page.locator('#gallery > .card').first().getAttribute('data-doi');
-    const next = page.locator('#nextResultPage');
-    await next.scrollIntoViewIfNeeded();
-    await next.click();
+    await expect(page.locator('#resultPageNumbers [data-result-page="2"]')).toBeVisible();
+    await page.locator('#resultPageNumbers [data-result-page="2"]').click();
     await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )2\//);
     await expect(page.locator('#previousResultPage')).toBeEnabled();
     await expect.poll(async () => page.locator('#gallery > .card').first().getAttribute('data-doi')).not.toBe(firstDoi);
@@ -296,10 +306,16 @@ test('active D1 catalog view keeps all-time search server-paged and avoids stati
     expect(viewRequests.at(-1).cursor).toBe(`fixture:${RESULT_WINDOW_SIZE}`);
     expect(staticSearchRequests).toBe(0);
 
-    await page.locator('#previousResultPage').scrollIntoViewIfNeeded();
-    await page.locator('#previousResultPage').click();
+    if (data.memberCount > RESULT_WINDOW_SIZE * 2) {
+      await page.locator('#resultPageJumpInput').fill('3');
+      await page.locator('#resultPageJumpButton').click();
+      await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )3\//);
+      expect(viewRequests.at(-1).cursor).toBe(`fixture:${RESULT_WINDOW_SIZE * 2}`);
+    }
+
+    await page.locator('#resultPageJumpInput').fill('1');
+    await page.locator('#resultPageJumpButton').click();
     await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )1\//);
-    expect(viewRequests.length).toBe(requestsAfterFirstPage + 2);
     expect(viewRequests.at(-1).cursor || '').toBe('');
   }
 });
