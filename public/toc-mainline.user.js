@@ -1334,7 +1334,10 @@ function embeddedJobDois(value) {
   }
 
   function inventoryReadMetadataJson(options,prefix) {
-    if(typeof isGalleryPage==='function'&&!isGalleryPage())return metadataJson(options,prefix,true);
+    var inventoryHost=String(location&&location.hostname||'').toLowerCase(),inventoryPath=String(location&&location.pathname||'/');
+    var inventoryControlPage=inventoryHost===GALLERY_HOST||inventoryHost===PAGES_GALLERY_HOST
+      || inventoryHost===LEGACY_GALLERY_HOST&&inventoryPath.indexOf(LEGACY_GALLERY_PATH)===0;
+    if(!inventoryControlPage)return metadataJson(options,prefix,true);
     var timeoutMs=Math.max(3000,Math.min(INVENTORY_REQUEST_TIMEOUT_MS,Number(options&&options.timeout||INVENTORY_REQUEST_TIMEOUT_MS)));
     var nativeAbort=new AbortController(),nativeOptions=Object.assign({},options,{timeout:timeoutMs,signal:nativeAbort.signal});
     var gmOptions=Object.assign({},options,{timeout:timeoutMs});delete gmOptions.signal;
