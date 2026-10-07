@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "phase": "Private PDF Phase 3a Readable Identity v2",
+  "date": "2026-10-07",
+  "timezone": "Asia/Shanghai",
+  "status": "production-active",
+  "implementationCommits": [
+    "82e569eb6bed5f19e68a9804370de0ba802f53ee",
+    "7e6e13b3895e2644ac53538303c35298ebb50bad",
+    "e85107fcb7f5d2aa6291bbc2e964099f2457ac0a",
+    "0f771b9577b8fbc68b768a9a4dbefebc35c9f361"
+  ],
+  "canonicalWorkerRun": {
+    "id": 37613929158,
+    "conclusion": "success",
+    "url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37613929158"
+  },
+  "firstPass": {
+    "runId": 37613060773,
+    "processed": 153,
+    "verified": 50,
+    "failed": 103,
+    "failures": {
+      "supplement_detected": 98,
+      "doi_missing": 5
+    },
+    "remainingRaw": 0,
+    "conclusion": "success",
+    "diagnosis": "v1 SI heuristic was too broad because article PDFs may mention Supporting Information on page 1"
+  },
+  "secondPass": {
+    "runId": 37614880671,
+    "artifactId": 11479473635,
+    "processorRevision": "private-pdf-readable-v2",
+    "processed": 104,
+    "verified": 104,
+    "failed": 0,
+    "failures": {},
+    "before": {
+      "raw": 104,
+      "ready": 50,
+      "failed": 0,
+      "active": 50,
+      "total": 154,
+      "verificationVerified": 50,
+      "verificationFailed": 103
+    },
+    "after": {
+      "raw": 0,
+      "ready": 154,
+      "failed": 0,
+      "active": 154,
+      "total": 154,
+      "verificationVerified": 154,
+      "verificationFailed": 0
+    },
+    "conclusion": "success",
+    "url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37614880671"
+  },
+  "currentInventory": {
+    "capturedDocuments": 154,
+    "verifiedReadableDocuments": 154,
+    "rawDocuments": 0,
+    "failedDocuments": 0,
+    "targetDocumentsObservedByUserPanel": 163,
+    "captureGapObservedByUserPanel": 9
+  },
+  "verifier": {
+    "byteLengthAndStoredHashChecked": true,
+    "pdfParsedWithPinnedPdfJs": true,
+    "catalogTitleCompared": true,
+    "doiChecked": true,
+    "publisherSourceClassified": true,
+    "supplementMisclassificationFixed": true,
+    "publicMediaWritten": false,
+    "extractedFullTextPersisted": false,
+    "rawDirectlyActivated": false
+  },
+  "readerGate": "private_pdf_documents.active=1 AND processing_state='ready'",
+  "notes": [
+    "The 9 remaining PDFs in the capture panel are capture gaps, not verification gaps.",
+    "A newly captured PDF remains raw until the bounded processor verifies it.",
+    "Phase 3b Editorial Evidence extraction remains separate and is not required for owner reading."
+  ]
+}

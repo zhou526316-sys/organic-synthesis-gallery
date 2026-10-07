@@ -127,3 +127,13 @@ A PDF-derived image still passes the current DOI, label, hash, decode, dimension
 - All derived bundles are content-addressed and become stale when the selected PDF hash changes.
 
 This design makes PDF a high-confidence evidence source for deep reading and selected WeChat posts without making the existing Gallery dependent on PDF availability.
+
+## Production acceptance — Readable Identity v2 (2026-10-07)
+
+The owner-readable processor is now production-active. Canonical Worker run [37613929158](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37613929158) deployed the v2 control plane and D1 verification schema.
+
+The first real backlog pass processed 153 raw objects and exposed an over-broad Supporting Information heuristic: 50 verified, 98 were incorrectly classified from ordinary article-page SI mentions, and 5 lacked extracted DOI evidence. Readable Identity v2 narrowed SI detection to document/source identity and permits trusted article-PDF source evidence plus a very strong title match for publisher PDFs whose text extraction omits the DOI.
+
+The production retry run [37614880671](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37614880671) processed 104 rows and verified all 104 with zero failures. Final production state was **154 ready / 154 active / 0 raw / 0 failed**. Owner reading still requires both `active=1` and `processing_state='ready'`.
+
+This phase does not persist extracted PDF full text, does not publish PDF bytes or derived media, and does not replace the later Editorial Evidence phase.
