@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.38
+// @version      6.2.39
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -50,12 +50,12 @@
   var IMMEDIATE_RESTART_REVISION = '20261001-immediate-restart-v3';
   var MISSING_CAPTURE_REVISION = '20261006-oct1-bundle-v7';
   var QUEUE_COVERAGE_REVISION = '20261006-queue-coverage-v9';
-  var PUBLISHER_MEDIA_REVISION = '20261007-rsc-issue-pdf-v13';
+  var PUBLISHER_MEDIA_REVISION = '20261007-rsc-search-fallback-v14';
   var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.38';
+  var INSTALL_REVISION = '6.2.39';
   var STALE_CONTROLLER_TAKEOVER_REVISION = '20261006-stale-controller-takeover-v1';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
@@ -2137,6 +2137,12 @@ function embeddedJobDois(value) {
     return match?normalizeDoi(match[0]):'';
   }
 
+  function rscSearchResultUrl(job) {
+    var doi=normalizeDoi(job&&job.doi);
+    if(String(job&&job.publisher||publisherForDoi(doi))!=='rsc'||!doi)return '';
+    return 'https://pubs.rsc.org/en/results?searchtext='+encodeURIComponent(doi);
+  }
+
   function rscIssuePageUrls(job,doc,baseUrl) {
     if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='rsc')return [];
     var scope=doc||document,parts=rscRouteParts(job),urls=[];
@@ -2535,13 +2541,14 @@ function embeddedJobDois(value) {
                   }
                 });
               }
+              var rscListing = job.publisher === 'rsc' && /(?:\/results(?:[/?#]|$)|\/issue\/|\/journals\/journalissues\/)/i.test(current);
               var discovered = job.publisher === 'ccs'
                 ? ccsTocIndexCandidatesFromDocument(job,doc,current)
-                : job.publisher === 'rsc' && /(?:\/issue\/|\/journals\/journalissues\/)/i.test(current)
+                : rscListing
                   ? rscIssueTocCandidatesFromDocument(job,doc,current)
                   : collectCandidates(job, trace, doc, current, 'iframe_dom', true);
               if(job.publisher==='ccs')pushTrace(trace,{stage:'ccs_toc_index',event:'scan',status:discovered.length?'found':'none',url:current,message:'doi='+normalizeDoi(job.doi)+';key_images='+String(discovered.length)});
-              if(job.publisher==='rsc'&&/(?:\/issue\/|\/journals\/journalissues\/)/i.test(current))pushTrace(trace,{stage:'rsc_issue_toc',event:'scan',status:discovered.length?'found':'none',url:current,message:'doi='+normalizeDoi(job.doi)+';visuals='+String(discovered.length)});
+              if(rscListing)pushTrace(trace,{stage:/\/results(?:[/?#]|$)/i.test(current)?'rsc_search_toc':'rsc_issue_toc',event:'scan',status:discovered.length?'found':'none',url:current,message:'doi='+normalizeDoi(job.doi)+';visuals='+String(discovered.length)});
               if (discovered.length) {
                 var merged = new Map();
                 bestRows.concat(discovered).forEach(function (row) {

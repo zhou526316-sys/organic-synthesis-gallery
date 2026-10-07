@@ -66,6 +66,12 @@
     return match?normalizeDoi(match[0]):'';
   }
 
+  function rscSearchResultUrl(job) {
+    var doi=normalizeDoi(job&&job.doi);
+    if(String(job&&job.publisher||publisherForDoi(doi))!=='rsc'||!doi)return '';
+    return 'https://pubs.rsc.org/en/results?searchtext='+encodeURIComponent(doi);
+  }
+
   function rscIssuePageUrls(job,doc,baseUrl) {
     if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='rsc')return [];
     var scope=doc||document,parts=rscRouteParts(job),urls=[];
