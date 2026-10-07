@@ -432,6 +432,9 @@
     "reviewFile": "audit/prepublish-review-2026-10-08-0800.json",
     "reviewCommitSha": "da0c0de5cef62cd27b30d5c33361779b84fa1fab",
     "reviewBlobSha": "a40fc30382a05586633cb0605d451f7dd2fa611b",
+    "prepublishGateRunId": 37701422190,
+    "prepublishGateConclusion": "failure",
+    "prepublishGateFailure": "historicalCoverageLosses=1",
     "reviewed": 214,
     "accepted": 27,
     "rejected": 180,
@@ -2468,9 +2471,10 @@
     "publicationChecksPassed": false,
     "reviewCommitSha": "da0c0de5cef62cd27b30d5c33361779b84fa1fab",
     "reviewBlobSha": "a40fc30382a05586633cb0605d451f7dd2fa611b",
-    "gateRunId": null,
-    "gateJobId": null,
-    "gateConclusion": "not_run"
+    "gateRunId": 37701422190,
+    "gateJobId": 113065511998,
+    "gateConclusion": "failure",
+    "gateFailure": "Both --allow-deferred --require-ready checks were executed; record validation stopped only on historicalCoverageLosses=1."
   },
   "discoveryCoverageRepair": {
     "id": "rsc-chem-crossref-partial-date-20261004",
