@@ -58,16 +58,31 @@ async function seedSession(page: import('@playwright/test').Page, state?: object
 }
 
 async function stubCommonApi(page: import('@playwright/test').Page) {
-  await page.route('https://api.gczhouwld.com/api/user-ui/integrations', route =>
-    route.fulfill({
+  const origins = new Set(['https://api.gczhouwld.com', 'https://organic-synthesis-gallery.zhou526316.workers.dev']);
+  const paths = new Set(['/api/user-ui/integrations', '/api/user-ui/auth/session', '/api/user-ui/pageview']);
+  // The built app also starts authentication and analytics. Keep those requests
+  // inside the fixture so page-error assertions test sync, not external CORS.
+  await page.route(url => origins.has(url.origin) && paths.has(url.pathname), route => {
+    const path = new URL(route.request().url()).pathname;
+    const body = path === '/api/user-ui/auth/session'
+      ? { authenticated: true, user: { id: 'account-sync-test-user', displayName: 'Account sync test', capabilities: [] } }
+      : path === '/api/user-ui/pageview'
+        ? { ok: true }
+        : {
+            auth: { google: false, wechat: false, qq: false, email: false },
+            payments: { wechat: false, alipay: false },
+          };
+    return route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({
-        auth: { google: false, wechat: false, qq: false, email: false },
-        payments: { wechat: false, alipay: false },
-      }),
-    })
-  );
+      headers: {
+        'access-control-allow-origin': '*',
+        'access-control-allow-methods': 'GET, POST, OPTIONS',
+        'access-control-allow-headers': 'authorization, content-type',
+      },
+      body: JSON.stringify(body),
+    });
+  });
 }
 
 async function mutableV3Account(page: import('@playwright/test').Page, state: any, writeEnabled: boolean) {

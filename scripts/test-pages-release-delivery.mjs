@@ -77,3 +77,18 @@ test('main media reuse retains caller event without misclassifying it as a write
   assert.equal(isDirectReleaseHandoff('push', 'Deploy GitHub Pages frontend'), false);
   assert.equal(isDirectReleaseHandoff('schedule', 'Publish validated new body figures'), false);
 });
+
+test('canonical Pages requires owner PDF button browser verification on the built artifact', () => {
+  const workflow = readFileSync('.github/workflows/github-pages.yml', 'utf8');
+  const build = workflow.indexOf('run: npm run build');
+  const gate = workflow.indexOf('- name: Verify owner PDF button and account isolation before publication');
+  const upload = workflow.indexOf('- name: Upload Pages artifact');
+  assert.ok(build >= 0 && gate > build && upload > gate);
+  const step = workflow.slice(gate, workflow.indexOf('\n      - name:', gate + 1));
+  assert.match(step, /timeout-minutes: 5/);
+  assert.match(step, /PRIVATE_PDF_BROWSER_OUTPUT:.*gallery-private-pdf-test-results/);
+  assert.match(step, /run: node tests\/private-pdf-access-browser\.mjs/);
+  assert.doesNotMatch(step, /continue-on-error|if:/);
+  assert.ok(workflow.includes("- 'tests/private-pdf-access-browser.mjs'"));
+  assert.match(workflow, /name: pages-owner-pdf-browser-/);
+});

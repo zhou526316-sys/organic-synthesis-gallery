@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "phase": "owner-private-pdf-button",
+  "createdAt": "2026-10-07 06:12:10 UTC",
+  "baselineCommit": "c9d1506ad4a457b587dd3fa5f41b13c5e835be05",
+  "relatedControlLayerCommit": "6efc8144a58312635ceca335cb93670e1d7bfdf6",
+  "implementation": {
+    "separateCardButton": "a.private-pdf-button",
+    "visibilityCapability": "private_pdf_read",
+    "entry": "/pdf/?doi=...&fallback=...",
+    "tokenInCardUrl": false,
+    "originalLink": "publisher",
+    "sessionChange": "synchronous revocation with token-bound asynchronous capability checks",
+    "pageSizes": {
+      "desktop": 24,
+      "mobile": 12,
+      "mobileBreakpointPx": 680
+    }
+  },
+  "storage": {
+    "ownerCapturedPdfBytes": "R2 PDF_PRIVATE",
+    "metadata": "D1 private_pdf_documents",
+    "repository": "source, deployment configuration, documentation and audit evidence",
+    "captureState": {
+      "processing_state": "raw",
+      "active": 0
+    },
+    "readerRequires": {
+      "active": 1
+    },
+    "captureVerificationProcessingChanged": false
+  },
+  "localChecks": {
+    "pagesDeliveryContracts": {
+      "passed": 21,
+      "failed": 0
+    },
+    "typescriptSyntax": [
+      "src/main.ts",
+      "src/private-pdf-access.ts",
+      "src/user-ui/library-shell.ts",
+      "tests/account-sync-v3.spec.ts"
+    ],
+    "browserScriptSyntax": true,
+    "sourceBasedPermissionRaceProbe": "passed",
+    "independentReview": "passed"
+  },
+  "requiredCanonicalBrowserGates": {
+    "architectureWebKit": 16,
+    "accountSyncWebKit": 10,
+    "ownerPdfChromium": 13,
+    "status": "pending",
+    "ownerTestUsesMockedAuthorization": true
+  },
+  "previousPagesBlock": {
+    "runId": 37578434074,
+    "sourceCommit": "6efc8144a58312635ceca335cb93670e1d7bfdf6",
+    "actualBuildSourceVerified": true,
+    "failedRecoveryCases": 2,
+    "reason": "Auth/session and pageview requests escaped common test fixtures; zero-page-error assertions failed.",
+    "repair": "Mock the configured canonical and fallback API origins; preserve business and zero-error assertions.",
+    "productionAccountSyncCodeChanged": false
+  },
+  "sourceChanges": [
+    {
+      "path": "src/main.ts",
+      "originalSha": "a07321634dc57e4405254e554e2fa1943c18b5c6",
+      "sha": "bb8e81c4ad4386638910b4d2ae25d62a0a7a19ab"
+    },
+    {
+      "path": "src/styles.css",
+      "originalSha": "32cb524e8c366e455dd7fa26717e39a9c36b698d",
+      "sha": "87e4fbb3bbaaeefd1a3edd50e5c0214fa217175c"
+    },
+    {
+      "path": "src/private-pdf-access.ts",
+      "originalSha": "595bbf2a6dae21696fbf9aebdef3aca35289e15a",
+      "sha": "39848bb45de8842c0e6464568d91c2fa1555cea8"
+    },
+    {
+      "path": "src/user-ui/library-shell.ts",
+      "originalSha": "643e21f4cce2db6bfc7576d797d7f038f1f75d21",
+      "sha": "6be6ff4d9b04a84f96dc944807e3dce248bfacc4"
+    },
+    {
+      "path": "tests/account-sync-v3.spec.ts",
+      "originalSha": "a718c16a0995df4f956e5549d63f218fd78cec70",
+      "sha": "92dfbb6ed996840790b9c939e4f2386fc96e73fe"
+    },
+    {
+      "path": ".github/workflows/github-pages.yml",
+      "originalSha": "f135f90a127ad688d43b83ae2c8b763c9367319a",
+      "sha": "6be16977792f86e341c96f451118826196eae629"
+    },
+    {
+      "path": "scripts/test-pages-release-delivery.mjs",
+      "originalSha": "74635c64faaeb0313b79ad0e8970c211c4b15ba8",
+      "sha": "42e8b72bc13ebb021723422999d117f7a21227fe"
+    },
+    {
+      "path": "tests/private-pdf-access-browser.mjs",
+      "originalSha": "59d891ad72773148ea44c6be76f226c03d86d83c",
+      "sha": "cdc2067e27ddba381337faf173b60b66e40bb574"
+    }
+  ],
+  "scope": {
+    "ownerBackendStorageUnchanged": true,
+    "ordinaryWriteRolloutBasisPoints": 0,
+    "multiUserPdfVaultP0P5Implemented": false
+  }
+}

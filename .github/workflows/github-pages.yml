@@ -26,6 +26,7 @@ on:
       - 'tests/architecture-frontend.spec.ts'
       - 'tests/account-sync-v3.spec.ts'
       - 'scripts/test-account-sync-recovery.mjs'
+      - 'tests/private-pdf-access-browser.mjs'
       - 'shared/literature-lifecycle.mjs'
       - 'shared/literature-identity.mjs'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
@@ -332,6 +333,19 @@ jobs:
           test -s tests/account-sync-v3.spec.ts
           node --test scripts/test-account-sync-recovery.mjs
           npx playwright test tests/account-sync-v3.spec.ts --config "$RUNNER_TEMP/gallery-architecture-playwright.config.cjs" --reporter=line --workers=1
+      - name: Verify owner PDF button and account isolation before publication
+        timeout-minutes: 5
+        env:
+          PRIVATE_PDF_BROWSER_OUTPUT: ${{ runner.temp }}/gallery-private-pdf-test-results
+        run: node tests/private-pdf-access-browser.mjs
+      - name: Preserve owner PDF browser verification
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-owner-pdf-browser-${{ github.run_id }}
+          path: ${{ runner.temp }}/gallery-private-pdf-test-results
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Preserve architecture browser failure evidence
         if: failure()
         uses: actions/upload-artifact@v4

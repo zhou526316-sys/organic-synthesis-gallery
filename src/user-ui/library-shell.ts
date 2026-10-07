@@ -20,7 +20,10 @@ function styleRow(style: StyleDef, prefix: string, label: string): string {
   return `<div class='style-row'><span class='style-preview shape-${style.imageCrop?.recipe.mode === 'circle' ? 'circle' : style.shape}${style.imageOriginal ? ' status-original-preview' : ''}' data-style-preview='${prefix}' style='${styleVars(style)}'>${preview}</span><strong>${escapeHtml(label)}</strong><label>RGB <input type='color' data-color='${prefix}' value='${rgbToHex(style.rgb)}'></label><label>Shape <select data-shape='${prefix}'>${SHAPES.map(shape => `<option value='${shape}' ${style.shape === shape ? 'selected' : ''}>${shape}</option>`).join('')}</select></label><label class='upload'>Image <input type='file' accept='${prefix.startsWith('status:') ? 'image/png,image/jpeg,image/webp,image/gif' : 'image/png,image/jpeg,image/webp'}' data-image='${prefix}'></label>${style.imageData ? `<button class='link danger' type='button' data-action='clear-image:${prefix}'>× image</button>` : ''}${prefix.startsWith('status:') ? `<label><input type='checkbox' data-image-crop='${prefix}'>静态裁切 / Static crop</label>${style.imageData ? `<button class='secondary' type='button' data-action='crop-image:${prefix}'>裁切 / 抠图 / Crop</button><button class='link' type='button' data-action='view-image:${prefix}'>查看图片 / View image</button>${style.imageCrop ? `<button class='link' type='button' data-action='restore-image:${prefix}'>恢复原图 / Restore</button>` : ''}` : ''}` : ''}</div>`;
 }
 function sessionToken(): string { try { return localStorage.getItem(SESSION_KEY) || ''; } catch { return ''; } }
-function saveSessionToken(value: string): void { try { if (value) localStorage.setItem(SESSION_KEY, value); else localStorage.removeItem(SESSION_KEY); } catch { /* optional */ } }
+function saveSessionToken(value: string): void {
+  try { if (value) localStorage.setItem(SESSION_KEY, value); else localStorage.removeItem(SESSION_KEY); } catch { /* optional */ }
+  window.dispatchEvent(new Event('gallery-auth-session-changed'));
+}
 function returnUrl(): string { const url = new URL(location.href); url.hash = ''; return url.toString(); }
 
 export class GalleryUserShell extends HTMLElement {

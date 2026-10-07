@@ -1,0 +1,1218 @@
+{
+  "schemaVersion": 1,
+  "phase": "control-layer-production-and-seeded-migration-acceptance",
+  "sourceCommit": "6efc8144a58312635ceca335cb93670e1d7bfdf6",
+  "localRegression": {
+    "tests": 116,
+    "passed": 116,
+    "failed": 0
+  },
+  "worker": {
+    "headSha": "6efc8144a58312635ceca335cb93670e1d7bfdf6",
+    "observedAt": "2026-10-07T06:00:06.149654+00:00",
+    "canonicalWorkflowPath": ".github/workflows/deploy-worker-frontend.yml",
+    "concurrencyGroup": "cloudflare-worker-production",
+    "cancelInProgress": false,
+    "testGate": {
+      "stepName": "Verify user library migration and deployment contracts",
+      "expectedTests": 92,
+      "remoteEvidence": "Step 6 success for both runs; raw job logs not downloaded."
+    },
+    "runs": [
+      {
+        "run": {
+          "id": 37578434279,
+          "run_number": 381,
+          "event": "push",
+          "path": ".github/workflows/deploy-worker-frontend.yml",
+          "head_sha": "6efc8144a58312635ceca335cb93670e1d7bfdf6",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37578434279",
+          "created_at": "2026-10-07T05:51:50Z",
+          "updated_at": "2026-10-07T05:54:18Z"
+        },
+        "jobs": [
+          {
+            "id": 112652443420,
+            "name": "deploy",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout main",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Set up Node",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3
+              },
+              {
+                "name": "Verify analytics source integrity and bounded public reads",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4
+              },
+              {
+                "name": "Verify date-scoped literature queries and cursor integrity",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5
+              },
+              {
+                "name": "Verify user library migration and deployment contracts",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6
+              },
+              {
+                "name": "Install frontend dependencies",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 7
+              },
+              {
+                "name": "Generate primary custom-domain Bridge installer",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 8
+              },
+              {
+                "name": "Build current frontend assets",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 9
+              },
+              {
+                "name": "Install Worker dependencies",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 10
+              },
+              {
+                "name": "Validate literature index shadow deployment contract",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 11
+              },
+              {
+                "name": "Resolve existing Cloudflare bindings",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 12
+              },
+              {
+                "name": "Apply isolated private PDF D1 migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 13
+              },
+              {
+                "name": "Apply materialized site analytics D1 migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 14
+              },
+              {
+                "name": "Apply public analytics snapshot D1 migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 15
+              },
+              {
+                "name": "Apply user library row-shadow D1 migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 16
+              },
+              {
+                "name": "Apply user library V3 foundation migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 17
+              },
+              {
+                "name": "Apply Evidence Index D1 migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 18
+              },
+              {
+                "name": "Apply summary candidate index D1 migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 19
+              },
+              {
+                "name": "Apply dedicated literature search index migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 20
+              },
+              {
+                "name": "Generate frontend deployment configuration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 21
+              },
+              {
+                "name": "Dry-run frontend Worker bundle",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 22
+              },
+              {
+                "name": "Deploy frontend assets",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 23
+              },
+              {
+                "name": "Sync configured runtime secrets",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 24
+              },
+              {
+                "name": "Verify literature indexed read activation",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 25
+              },
+              {
+                "name": "Roll back literature indexed read on canary failure",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 26
+              },
+              {
+                "name": "Preserve literature indexed read activation report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 27
+              },
+              {
+                "name": "Fail deployment after safe indexed-read rollback",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 28
+              },
+              {
+                "name": "Backfill and verify materialized site analytics read path",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 29
+              },
+              {
+                "name": "Preserve materialized site analytics shadow report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 30
+              },
+              {
+                "name": "Refresh and verify public analytics snapshot shadow",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 31
+              },
+              {
+                "name": "Preserve public analytics snapshot shadow report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 32
+              },
+              {
+                "name": "Verify public analytics snapshot activation",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 33
+              },
+              {
+                "name": "Roll back public analytics snapshot read on activation failure",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 34
+              },
+              {
+                "name": "Preserve public analytics snapshot activation report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 35
+              },
+              {
+                "name": "Backfill and verify user library row read path",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 36
+              },
+              {
+                "name": "Preserve user library row shadow report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 37
+              },
+              {
+                "name": "Backfill and verify user library V3 shadow parity and bounded reads",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 38
+              },
+              {
+                "name": "Preserve user library V3 shadow report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 39
+              },
+              {
+                "name": "Enforce user library V3 rollout preflight",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 40
+              },
+              {
+                "name": "Advance and reconcile Evidence Index shadow",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 41
+              },
+              {
+                "name": "Backfill and verify scheduled handoff D1 read path",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 42
+              },
+              {
+                "name": "Preserve scheduled handoff readiness shadow report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 43
+              },
+              {
+                "name": "Backfill and compare summary candidate index shadow",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 44
+              },
+              {
+                "name": "Preserve summary candidate shadow report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 45
+              },
+              {
+                "name": "Promote verified official TOCs into production",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 46
+              },
+              {
+                "name": "Promote Nature Science staged Figure 1 fallbacks",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 47
+              },
+              {
+                "name": "Backfill encrypted daily-summary handoff",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 48
+              },
+              {
+                "name": "Verify WeChat MP domain file",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 49
+              },
+              {
+                "name": "Verify fixed-egress WeChat relay directly",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 50
+              },
+              {
+                "name": "Verify WeChat JS-SDK signature endpoint",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 51
+              },
+              {
+                "name": "Probe configured email delivery",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 52
+              },
+              {
+                "name": "Verify feedback runtime routes without D1 reads",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 53
+              },
+              {
+                "name": "Verify canonical Worker bindings survived deployment and secret sync",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 54
+              },
+              {
+                "name": "Verify deployed search filtering CSS",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 55
+              },
+              {
+                "name": "Post Set up Node",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 109
+              },
+              {
+                "name": "Post Checkout main",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 110
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 111
+              }
+            ]
+          }
+        ],
+        "artifacts": [
+          {
+            "id": 11463935350,
+            "name": "user-library-row-shadow-37578434279",
+            "size_in_bytes": 425,
+            "digest": "sha256:72d72ce2c1ca072b5a955ad0bd14dfe7cf423242daf8af24de2e6832c9d689e2",
+            "head_sha": "6efc8144a58312635ceca335cb93670e1d7bfdf6",
+            "created_at": "2026-10-07T05:53:31Z",
+            "verifiedAt": "2026-10-07T05:53:30.461Z",
+            "report": {
+              "schemaVersion": 1,
+              "phase": "D3b-user-library-row-read-live",
+              "ok": true,
+              "readPathActive": true,
+              "legacyUsers": 4,
+              "shadowHeads": 4,
+              "legacyShadowHeads": 4,
+              "v3CompatHeads": 0,
+              "paperRows": 2601,
+              "revisionMismatches": 0,
+              "backfillComplete": true,
+              "backfillPagesThisRun": 0,
+              "stableParityPasses": 2,
+              "semanticMismatches": 0,
+              "verifiedAt": "2026-10-07T05:53:30.461Z"
+            }
+          },
+          {
+            "id": 11463910376,
+            "name": "user-library-v3-shadow-37578434279",
+            "size_in_bytes": 588,
+            "digest": "sha256:256965993683972c96ddbfd3dbed9a90db4939d40ef5bb435c074f3fe63b763f",
+            "head_sha": "6efc8144a58312635ceca335cb93670e1d7bfdf6",
+            "created_at": "2026-10-07T05:53:34Z",
+            "verifiedAt": "2026-10-07T05:53:33.938Z",
+            "report": {
+              "schemaVersion": 1,
+              "phase": "D3c4c-user-library-v3-rollout-preflight",
+              "ok": true,
+              "shadowEnabled": true,
+              "boundedReadEnabled": true,
+              "accountPullCutover": false,
+              "globalWriteEnabled": false,
+              "rolloutBasisPoints": 0,
+              "rolloutPercent": 0,
+              "rolloutActive": false,
+              "rolloutPreflightReady": true,
+              "rolloutSeedConfigured": true,
+              "rolloutCanaryConfigured": true,
+              "legacyUsers": 4,
+              "legacyDocuments": 4,
+              "staleLegacyDocuments": 0,
+              "v3Heads": 4,
+              "legacyV3Heads": 4,
+              "v3AuthorityHeads": 0,
+              "orphanV3Heads": 0,
+              "v3AuthorityUsers": 0,
+              "compatibilityReadEnabled": true,
+              "revisionMismatches": 0,
+              "legacyHeadMismatches": 0,
+              "legacyCompatibilityHeadMismatches": 0,
+              "pendingLegacyCompatibilityHeads": 0,
+              "authorityHeadMismatches": 0,
+              "compatibilityHeadMismatches": 0,
+              "backfillComplete": true,
+              "backfillPagesThisRun": 0,
+              "reconcilePagesThisRun": 0,
+              "stableParityPasses": 2,
+              "semanticMismatches": 0,
+              "verifiedAt": "2026-10-07T05:53:33.938Z"
+            }
+          }
+        ]
+      },
+      {
+        "run": {
+          "id": 37578440646,
+          "run_number": 382,
+          "event": "workflow_dispatch",
+          "path": ".github/workflows/deploy-worker-frontend.yml",
+          "head_sha": "6efc8144a58312635ceca335cb93670e1d7bfdf6",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37578440646",
+          "created_at": "2026-10-07T05:51:55Z",
+          "updated_at": "2026-10-07T05:59:32Z"
+        },
+        "jobs": [
+          {
+            "id": 112653075671,
+            "name": "deploy",
+            "status": "completed",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout main",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Set up Node",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3
+              },
+              {
+                "name": "Verify analytics source integrity and bounded public reads",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4
+              },
+              {
+                "name": "Verify date-scoped literature queries and cursor integrity",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5
+              },
+              {
+                "name": "Verify user library migration and deployment contracts",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6
+              },
+              {
+                "name": "Install frontend dependencies",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 7
+              },
+              {
+                "name": "Generate primary custom-domain Bridge installer",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 8
+              },
+              {
+                "name": "Build current frontend assets",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 9
+              },
+              {
+                "name": "Install Worker dependencies",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 10
+              },
+              {
+                "name": "Validate literature index shadow deployment contract",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 11
+              },
+              {
+                "name": "Resolve existing Cloudflare bindings",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 12
+              },
+              {
+                "name": "Apply isolated private PDF D1 migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 13
+              },
+              {
+                "name": "Apply materialized site analytics D1 migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 14
+              },
+              {
+                "name": "Apply public analytics snapshot D1 migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 15
+              },
+              {
+                "name": "Apply user library row-shadow D1 migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 16
+              },
+              {
+                "name": "Apply user library V3 foundation migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 17
+              },
+              {
+                "name": "Apply Evidence Index D1 migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 18
+              },
+              {
+                "name": "Apply summary candidate index D1 migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 19
+              },
+              {
+                "name": "Apply dedicated literature search index migration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 20
+              },
+              {
+                "name": "Generate frontend deployment configuration",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 21
+              },
+              {
+                "name": "Dry-run frontend Worker bundle",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 22
+              },
+              {
+                "name": "Deploy frontend assets",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 23
+              },
+              {
+                "name": "Sync configured runtime secrets",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 24
+              },
+              {
+                "name": "Verify literature indexed read activation",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 25
+              },
+              {
+                "name": "Roll back literature indexed read on canary failure",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 26
+              },
+              {
+                "name": "Preserve literature indexed read activation report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 27
+              },
+              {
+                "name": "Fail deployment after safe indexed-read rollback",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 28
+              },
+              {
+                "name": "Backfill and verify materialized site analytics read path",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 29
+              },
+              {
+                "name": "Preserve materialized site analytics shadow report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 30
+              },
+              {
+                "name": "Refresh and verify public analytics snapshot shadow",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 31
+              },
+              {
+                "name": "Preserve public analytics snapshot shadow report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 32
+              },
+              {
+                "name": "Verify public analytics snapshot activation",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 33
+              },
+              {
+                "name": "Roll back public analytics snapshot read on activation failure",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 34
+              },
+              {
+                "name": "Preserve public analytics snapshot activation report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 35
+              },
+              {
+                "name": "Backfill and verify user library row read path",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 36
+              },
+              {
+                "name": "Preserve user library row shadow report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 37
+              },
+              {
+                "name": "Backfill and verify user library V3 shadow parity and bounded reads",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 38
+              },
+              {
+                "name": "Preserve user library V3 shadow report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 39
+              },
+              {
+                "name": "Enforce user library V3 rollout preflight",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 40
+              },
+              {
+                "name": "Advance and reconcile Evidence Index shadow",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 41
+              },
+              {
+                "name": "Backfill and verify scheduled handoff D1 read path",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 42
+              },
+              {
+                "name": "Preserve scheduled handoff readiness shadow report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 43
+              },
+              {
+                "name": "Backfill and compare summary candidate index shadow",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 44
+              },
+              {
+                "name": "Preserve summary candidate shadow report",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 45
+              },
+              {
+                "name": "Promote verified official TOCs into production",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 46
+              },
+              {
+                "name": "Promote Nature Science staged Figure 1 fallbacks",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 47
+              },
+              {
+                "name": "Backfill encrypted daily-summary handoff",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 48
+              },
+              {
+                "name": "Verify WeChat MP domain file",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 49
+              },
+              {
+                "name": "Verify fixed-egress WeChat relay directly",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 50
+              },
+              {
+                "name": "Verify WeChat JS-SDK signature endpoint",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 51
+              },
+              {
+                "name": "Probe configured email delivery",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 52
+              },
+              {
+                "name": "Verify feedback runtime routes without D1 reads",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 53
+              },
+              {
+                "name": "Verify canonical Worker bindings survived deployment and secret sync",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 54
+              },
+              {
+                "name": "Verify deployed search filtering CSS",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 55
+              },
+              {
+                "name": "Post Set up Node",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 109
+              },
+              {
+                "name": "Post Checkout main",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 110
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 111
+              }
+            ]
+          }
+        ],
+        "artifacts": [
+          {
+            "id": 11463672508,
+            "name": "user-library-row-shadow-37578440646",
+            "size_in_bytes": 425,
+            "digest": "sha256:f860e6b6afa7ef4f964b5963d86ca8d97215fb6112e5be07f538476a733ad6bd",
+            "head_sha": "6efc8144a58312635ceca335cb93670e1d7bfdf6",
+            "created_at": "2026-10-07T05:56:03Z",
+            "verifiedAt": "2026-10-07T05:56:03.310Z",
+            "report": {
+              "schemaVersion": 1,
+              "phase": "D3b-user-library-row-read-live",
+              "ok": true,
+              "readPathActive": true,
+              "legacyUsers": 4,
+              "shadowHeads": 4,
+              "legacyShadowHeads": 4,
+              "v3CompatHeads": 0,
+              "paperRows": 2601,
+              "revisionMismatches": 0,
+              "backfillComplete": true,
+              "backfillPagesThisRun": 0,
+              "stableParityPasses": 2,
+              "semanticMismatches": 0,
+              "verifiedAt": "2026-10-07T05:56:03.310Z"
+            }
+          },
+          {
+            "id": 11463582891,
+            "name": "user-library-v3-shadow-37578440646",
+            "size_in_bytes": 588,
+            "digest": "sha256:0619f01228b4ead54a08716f2dd5ad22c4ce5b6a497de174824edef8381b1aae",
+            "head_sha": "6efc8144a58312635ceca335cb93670e1d7bfdf6",
+            "created_at": "2026-10-07T05:56:15Z",
+            "verifiedAt": "2026-10-07T05:56:14.606Z",
+            "report": {
+              "schemaVersion": 1,
+              "phase": "D3c4c-user-library-v3-rollout-preflight",
+              "ok": true,
+              "shadowEnabled": true,
+              "boundedReadEnabled": true,
+              "accountPullCutover": false,
+              "globalWriteEnabled": false,
+              "rolloutBasisPoints": 0,
+              "rolloutPercent": 0,
+              "rolloutActive": false,
+              "rolloutPreflightReady": true,
+              "rolloutSeedConfigured": true,
+              "rolloutCanaryConfigured": true,
+              "legacyUsers": 4,
+              "legacyDocuments": 4,
+              "staleLegacyDocuments": 0,
+              "v3Heads": 4,
+              "legacyV3Heads": 4,
+              "v3AuthorityHeads": 0,
+              "orphanV3Heads": 0,
+              "v3AuthorityUsers": 0,
+              "compatibilityReadEnabled": true,
+              "revisionMismatches": 0,
+              "legacyHeadMismatches": 0,
+              "legacyCompatibilityHeadMismatches": 0,
+              "pendingLegacyCompatibilityHeads": 0,
+              "authorityHeadMismatches": 0,
+              "compatibilityHeadMismatches": 0,
+              "backfillComplete": true,
+              "backfillPagesThisRun": 0,
+              "reconcilePagesThisRun": 0,
+              "stableParityPasses": 2,
+              "semanticMismatches": 0,
+              "verifiedAt": "2026-10-07T05:56:14.606Z"
+            }
+          }
+        ]
+      }
+    ],
+    "productionWritesActivated": false,
+    "latestCanonicalSuccessfulRun": 37578440646,
+    "allMonitoredRunsSucceeded": true
+  },
+  "syntheticCanary": {
+    "schemaVersion": 1,
+    "phase": "user-library-v3-seeded-migration-acceptance",
+    "observedAt": "2026-10-07 06:06:59 UTC",
+    "outcome": "success",
+    "requestedWorkerSourceCommit": "6efc8144a58312635ceca335cb93670e1d7bfdf6",
+    "deployedWorkerEvidence": {
+      "runIds": [
+        37578434279,
+        37578440646
+      ],
+      "latestCanonicalSuccessfulRun": 37578440646,
+      "sourceCommit": "6efc8144a58312635ceca335cb93670e1d7bfdf6"
+    },
+    "canaryRun": {
+      "id": 37579535146,
+      "name": "User library V3 production write canary",
+      "path": ".github/workflows/user-library-v3-write-canary.yml",
+      "head_sha": "73838b26978308dc9c6c3bd9d0f7e89988ae769e",
+      "event": "workflow_dispatch",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-07T06:04:23Z",
+      "updated_at": "2026-10-07T06:05:04Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37579535146"
+    },
+    "jobs": [
+      {
+        "id": 112655809066,
+        "name": "canary",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 37579535146,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout main",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Set up Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Validate D3c4b canary contract",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Install Worker dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Prepare isolated canary account",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Execute isolated V3 write canary",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Verify seeded canary migration and unchanged normal-account count",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Clean up isolated canary account",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Preserve D3c4b production canary evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Post Set up Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 19
+          },
+          {
+            "name": "Post Checkout main",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 20
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 21
+          }
+        ]
+      }
+    ],
+    "sourceIdentity": {
+      "executionHeadSha": "73838b26978308dc9c6c3bd9d0f7e89988ae769e",
+      "requestedWorkerSourceCommit": "6efc8144a58312635ceca335cb93670e1d7bfdf6",
+      "checkedBlobCount": 9,
+      "allMatch": true,
+      "blobs": [
+        {
+          "path": "cloudflare/worker/src/index.js",
+          "sha": "911a5ff24e95c2ac003f51e6012896f308e8fc37",
+          "executionSha": "911a5ff24e95c2ac003f51e6012896f308e8fc37",
+          "match": true
+        },
+        {
+          "path": "cloudflare/worker/src/user-library-shadow.js",
+          "sha": "de19b82e5afdba6f9da346968c6e134470b15ced",
+          "executionSha": "de19b82e5afdba6f9da346968c6e134470b15ced",
+          "match": true
+        },
+        {
+          "path": "cloudflare/worker/src/user-library-v3-shadow.js",
+          "sha": "a220dd3b8ba82f17dfead71093ebb2c10afafd88",
+          "executionSha": "a220dd3b8ba82f17dfead71093ebb2c10afafd88",
+          "match": true
+        },
+        {
+          "path": "cloudflare/worker/src/user-library-v3.js",
+          "sha": "55a0d4b2db4cd8d666c8f5105fbe2eca1be3740a",
+          "executionSha": "55a0d4b2db4cd8d666c8f5105fbe2eca1be3740a",
+          "match": true
+        },
+        {
+          "path": "cloudflare/worker/src/user-ui.js",
+          "sha": "0d8e70a368162d4abc1210a8573fbeade85e1c0d",
+          "executionSha": "0d8e70a368162d4abc1210a8573fbeade85e1c0d",
+          "match": true
+        },
+        {
+          "path": "src/user-ui/account-sync.ts",
+          "sha": "55e218107ffc90961dadab9d77d1499d4c8c3548",
+          "executionSha": "55e218107ffc90961dadab9d77d1499d4c8c3548",
+          "match": true
+        },
+        {
+          "path": "cloudflare/user-library-state-v2.sql",
+          "sha": "be84c20308046313eb3b69c35d600d0abd68cfe0",
+          "executionSha": "be84c20308046313eb3b69c35d600d0abd68cfe0",
+          "match": true
+        },
+        {
+          "path": "cloudflare/user-library-state-v3.sql",
+          "sha": "d8f6f8434c309a61899e9f411907870fa5274b0a",
+          "executionSha": "d8f6f8434c309a61899e9f411907870fa5274b0a",
+          "match": true
+        },
+        {
+          "path": ".github/workflows/user-library-v3-write-canary.yml",
+          "sha": "de53b3a77c7956cb51392ddf255e6090e5695452",
+          "executionSha": "de53b3a77c7956cb51392ddf255e6090e5695452",
+          "match": true
+        }
+      ],
+      "meaning": "The actual canary execution head has the same 9 critical source blobs as the accepted Worker source; the canary API report does not independently expose the live Worker deployment ID."
+    },
+    "artifact": {
+      "id": 11463797908,
+      "name": "user-library-v3-write-canary-37579535146",
+      "size_in_bytes": 670,
+      "digest": "sha256:d21cd79dcb8e154b3c06ec199de2bd595fdf8600c3fe3a7018bbdfbf2b08b0cc",
+      "created_at": "2026-10-07T06:05:02Z",
+      "expired": false,
+      "downloadedSha256": "d21cd79dcb8e154b3c06ec199de2bd595fdf8600c3fe3a7018bbdfbf2b08b0cc",
+      "digestVerified": true
+    },
+    "verification": {
+      "requiredTrueFields": [
+        "ok",
+        "apiChecksPassed",
+        "cleanupVerified",
+        "checks.initialHead",
+        "checks.mutation",
+        "checks.unchangedRowPreserved",
+        "checks.deltaRead",
+        "checks.compatibilityRead",
+        "checks.legacyDocumentRemoved",
+        "checks.mixedAuthorityStatus",
+        "checks.normalAccountsUnchanged"
+      ],
+      "allRequiredTrue": true,
+      "allApiChecksTrue": true,
+      "cohortRelations": {
+        "authorityPlusOne": true,
+        "legacyMinusOne": true,
+        "v3HeadsUnchanged": true
+      }
+    },
+    "report": {
+      "schemaVersion": 1,
+      "phase": "D3c4b-user-library-v3-production-write-canary",
+      "ok": true,
+      "globalWriteEnabled": false,
+      "canaryUserId": "__gallery_v3_write_canary__",
+      "startedAt": "2026-10-07T06:04:45.125Z",
+      "checks": {
+        "parity": true,
+        "frontend": true,
+        "initialHead": true,
+        "mutation": true,
+        "headRead": true,
+        "unchangedRowPreserved": true,
+        "pageRead": true,
+        "deltaRead": true,
+        "compatibilityRead": true,
+        "revisionConflict": true,
+        "legacyWriteFence": true,
+        "mixedAuthorityStatus": true,
+        "legacyDocumentRemoved": true,
+        "normalAccountsUnchanged": true
+      },
+      "cohorts": {
+        "before": {
+          "legacyUsers": 5,
+          "legacyV3Heads": 5,
+          "v3AuthorityUsers": 0,
+          "v3AuthorityHeads": 0,
+          "v3Heads": 5
+        },
+        "after": {
+          "legacyUsers": 4,
+          "legacyV3Heads": 4,
+          "v3AuthorityUsers": 1,
+          "v3AuthorityHeads": 1,
+          "v3Heads": 5
+        }
+      },
+      "apiChecksPassed": true,
+      "apiCompletedAt": "2026-10-07T06:04:55.494Z",
+      "normalAccounts": 4,
+      "completedAt": "2026-10-07T06:04:57.058Z",
+      "cleanupVerified": true,
+      "cleanupCascadeChanges": 16,
+      "cleanupVerifiedAt": "2026-10-07T06:05:01.717Z"
+    },
+    "cleanupInterpretation": {
+      "reservedAccountRootCount": 0,
+      "foreignKeyViolations": 0,
+      "cascadeChanges": 16,
+      "verifiedAt": "2026-10-07T06:05:01.717Z",
+      "evidence": "Successful workflow cleanup step and cleanupVerified report flag require zero reserved user roots, empty PRAGMA foreign_key_check, and positive cascade count."
+    },
+    "closure": {
+      "ordinaryAccountCount": 4,
+      "ordinaryAccountsUnchanged": true,
+      "globalWriteEnabled": false,
+      "ordinaryRolloutBasisPointsFromLatestPreCanaryWorkerReport": 0,
+      "postCleanupAdminPreflightObtained": false,
+      "postCleanupAdminPreflightRequested": false,
+      "cohortsAfterAreBeforeCleanup": true,
+      "reason": "Existing successful same-source Worker preflight reports predate cleanup. Scope closes with reserved root zero, clean FK integrity and positive cascade changes, without an additional production validation loop."
+    }
+  },
+  "frontend": {
+    "initialRun": {
+      "id": 37578434074,
+      "name": "Deploy GitHub Pages frontend",
+      "path": ".github/workflows/github-pages.yml",
+      "head_sha": "6efc8144a58312635ceca335cb93670e1d7bfdf6",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-07T05:51:50Z",
+      "updated_at": "2026-10-07T05:59:41Z",
+      "html_url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37578434074"
+    },
+    "actualBuildSourceCommit": "6efc8144a58312635ceca335cb93670e1d7bfdf6",
+    "architectureWebKitPassed": true,
+    "accountSyncWebKitPassed": false,
+    "blockedBeforeUpload": true,
+    "failure": "Two recovery cases reached their business assertions but failed strict zero-page-error checks because auth/session and pageview were not mocked. A targeted fixture repair preserves all strict assertions; its canonical rerun is pending."
+  },
+  "rollout": {
+    "ordinaryWriteBasisPoints": 0,
+    "ordinaryAccountsUnchanged": true,
+    "pdfVaultP0P5Implemented": false
+  },
+  "note": "This closes Worker and reserved synthetic-account acceptance. It does not claim a post-cleanup admin preflight or publication of the frontend candidate."
+}
