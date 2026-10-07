@@ -51,10 +51,10 @@ class FakeDB {
   prepare(sql){return new FakeStatement(this,sql);}
 }
 class FakeBucket {
-  constructor(){this.objects=new Map();}
+  constructor(){this.objects=new Map();this.headCalls=0;this.getCalls=0;}
   put(key,bytes){this.objects.set(key,bytes);}
-  async head(key){const b=this.objects.get(key);return b?{size:b.length}:null;}
-  async get(key,opt){const b=this.objects.get(key);if(!b)return null;let out=b;
+  async head(key){this.headCalls++;const b=this.objects.get(key);return b?{size:b.length}:null;}
+  async get(key,opt){this.getCalls++;const b=this.objects.get(key);if(!b)return null;let out=b;
     if(opt?.range){out=b.slice(opt.range.offset,opt.range.offset+opt.range.length);}
     return {body:out};
   }
@@ -108,9 +108,17 @@ await test('temporary URL serves inline PDF bytes with no-store',async()=>{
   assert.equal(res.status,200);assert.equal(res.headers.get('content-type'),'application/pdf');assert.match(res.headers.get('content-disposition'),/^inline/);assert.equal(res.headers.get('cache-control'),'private, no-store');
   assert.equal(Buffer.from(await res.arrayBuffer()).toString(),pdf.toString());
 });
-await test('single byte range is honored for native PDF viewers',async()=>{
+await test('single byte range is honored without a redundant R2 HEAD',async()=>{
+  const beforeHead=bucket.headCalls,beforeGet=bucket.getCalls;
   const res=await servePrivatePdf(new Request(accessUrl,{headers:{range:'bytes=0-7'}}),env,{});
   assert.equal(res.status,206);assert.equal(res.headers.get('content-range'),`bytes 0-7/${pdf.length}`);assert.equal(Buffer.from(await res.arrayBuffer()).length,8);
+  assert.equal(bucket.headCalls,beforeHead);assert.equal(bucket.getCalls,beforeGet+1);
+});
+await test('HEAD establishes PDF size without reading R2 object bytes',async()=>{
+  const beforeHead=bucket.headCalls,beforeGet=bucket.getCalls;
+  const res=await servePrivatePdf(new Request(accessUrl,{method:'HEAD'}),env,{});
+  assert.equal(res.status,200);assert.equal(res.headers.get('content-length'),String(pdf.length));assert.equal(res.headers.get('accept-ranges'),'bytes');
+  assert.equal(bucket.headCalls,beforeHead);assert.equal(bucket.getCalls,beforeGet);
 });
 await test('ordinary account never receives private document existence or bytes',async()=>{
   const s=await privatePdfStatus(await authRequest('/api/user-ui/private-pdf/status?doi=10.1021/jacs.6c12345','other-token'),env);

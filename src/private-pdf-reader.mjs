@@ -105,10 +105,13 @@ function options(source) {
     useSystemFonts: true,
     isEvalSupported: false,
     enableXfa: false,
-    disableAutoFetch: false,
+    // Prioritize time-to-first-page. Fetch only ranges that PDF.js actually
+    // needs instead of filling the rest of a multi-megabyte article in the
+    // background before the user can read anything.
+    disableAutoFetch: true,
     disableRange: false,
     disableStream: true,
-    rangeChunkSize: 64 * 1024,
+    rangeChunkSize: 512 * 1024,
     stopAtErrors: false,
     canvasMaxAreaInBytes: 32 * 1024 * 1024,
     verbosity: 0,
@@ -190,9 +193,10 @@ async function start() {
       if (destroyed || status.hidden) return;
       const loaded = Number(progress?.loaded || 0);
       const total = Number(progress?.total || 0);
+      const loadedMb = loaded > 0 ? (loaded / 1024 / 1024).toFixed(1) : '0.0';
       status.textContent = total > 0
-        ? `正在读取 PDF… ${Math.min(99, Math.round(loaded / total * 100))}%`
-        : '正在读取 PDF…';
+        ? `正在准备第一页… 已按需读取 ${loadedMb} MB`
+        : '正在准备第一页…';
     };
     pdf = await loadingTask.promise;
     if (!Number.isSafeInteger(pdf.numPages) || pdf.numPages < 1) throw new Error('pdf_page_tree');

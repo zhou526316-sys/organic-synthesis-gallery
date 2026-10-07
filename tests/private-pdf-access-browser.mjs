@@ -210,7 +210,7 @@ async function replaceToken(page,value,event=true){
  },{value,event,key:SESSION_KEY});
 }
 function localCardPdf(){
- const stream='q 0.2 0.5 0.8 rg 20 20 180 180 re f Q\n' + ('% range-stream-padding 0123456789abcdef\n'.repeat(14000));
+ const stream='q 0.2 0.5 0.8 rg 20 20 180 180 re f Q\n' + ('% range-stream-padding 0123456789abcdef\n'.repeat(42000));
  const objects=['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Kids [3 0 R] /Count 1 >>','<< /Type /Page /Parent 2 0 R /MediaBox [0 0 240 240] /Resources << >> /Contents 4 0 R >>','<< /Length '+Buffer.byteLength(stream)+' >>\nstream\n'+stream+'endstream'];
  let body='%PDF-1.7\n% Gallery self-generated card fixture.\n% '+('fixture-padding '.repeat(80))+'\n';const offsets=[];
  for(let index=0;index<objects.length;index++){offsets.push(Buffer.byteLength(body));body+=(index+1)+' 0 obj\n'+objects[index]+'\nendobj\n';}
@@ -250,6 +250,7 @@ try{
   assert.equal(state.privateCalls,1);
   assert.ok(state.privateFileCalls>=1);
   assert.ok(state.privateRangeCalls>=1,'owner reader must use HTTP Range instead of waiting for a whole-file arrayBuffer');
+  assert.ok(state.privateRangeCalls<=8,'first-page load should stay bounded with 512 KiB ranges');
  });
  for(const capabilities of [[],['private_pdf_owner','private_pdf_capture']]){
   await test(capabilities.length?'capture-only account has no PDF read button or private lookup':'ordinary account hides PDF button and retains publisher original',async()=>{

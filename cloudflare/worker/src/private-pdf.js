@@ -127,21 +127,28 @@ export async function servePrivatePdf(request, env, cors = {}) {
     if (row) await env.DB.prepare('DELETE FROM private_pdf_access_tokens WHERE token_hash = ?').bind(tokenHash).run().catch(() => {});
     return new Response('Unauthorized', { status: 401 });
   }
-  const head = await env.PDF_PRIVATE.head(row.r2_key);
-  if (!head) return new Response('Not found', { status: 404 });
-  const range = parseRange(request.headers.get('range'), Number(head.size || row.byte_length || 0));
-  if (range?.invalid) return new Response(null, { status: 416, headers: { 'content-range': `bytes */${head.size}`, ...cors } });
-  const object = await env.PDF_PRIVATE.get(row.r2_key, range ? { range: { offset: range.start, length: range.length } } : undefined);
-  if (!object) return new Response('Not found', { status: 404 });
+  const size = Number(row.byte_length || 0);
+  if (!Number.isSafeInteger(size) || size < 1) return new Response('Not found', { status: 404 });
+  const range = parseRange(request.headers.get('range'), size);
+  if (range?.invalid) return new Response(null, { status: 416, headers: { 'content-range': `bytes */${size}`, ...cors } });
   const headers = new Headers(cors);
   headers.set('content-type', 'application/pdf');
   headers.set('content-disposition', `inline; filename*=UTF-8''${encodeURIComponent(row.doi + '.pdf')}`);
   headers.set('cache-control', 'private, no-store');
   headers.set('accept-ranges', 'bytes');
   headers.set('x-content-type-options', 'nosniff');
-  if (range) { headers.set('content-range', `bytes ${range.start}-${range.end}/${head.size}`); headers.set('content-length', String(range.length)); }
-  else headers.set('content-length', String(head.size));
-  return new Response(request.method === 'HEAD' ? null : object.body, { status: range ? 206 : 200, headers });
+  if (range) {
+    headers.set('content-range', `bytes ${range.start}-${range.end}/${size}`);
+    headers.set('content-length', String(range.length));
+  } else {
+    headers.set('content-length', String(size));
+  }
+  // HEAD is used only to establish document length/range support. Do not touch
+  // R2 at all for it; verified D1 metadata already carries the exact byte size.
+  if (request.method === 'HEAD') return new Response(null, { status: range ? 206 : 200, headers });
+  const object = await env.PDF_PRIVATE.get(row.r2_key, range ? { range: { offset: range.start, length: range.length } } : undefined);
+  if (!object) return new Response('Not found', { status: 404 });
+  return new Response(object.body, { status: range ? 206 : 200, headers });
 }
 
 
