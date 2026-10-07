@@ -92,3 +92,48 @@ A deployment may continue only when:
 The gate records rollout basis points, rollout percentage, V3-authority user count, legacy-authoritative user count and V3 head count in the deployment evidence. It does not change rollout eligibility.
 
 Normal-user rollout remains **0 bp / 0%**.
+
+## Production preflight evidence — 2026-10-07
+
+Worker deployment run `37556296646` passed the fail-closed D3c4c preflight.
+
+Observed production state:
+
+- rollout basis points: 0;
+- rollout percent: 0%;
+- rollout active: false;
+- rollout preflight ready: true;
+- fixed rollout seed configured: true;
+- isolated canary configured: true;
+- legacy-authoritative users: 4;
+- legacy documents: 4;
+- V3 heads: 4;
+- V3 authority users: 0;
+- stale legacy documents behind V3 authority: 0;
+- legacy/V3 revision mismatches: 0;
+- authority-to-V3-head mismatches: 0;
+- V3-to-D3b compatibility-head mismatches: 0;
+- semantic comparison mismatches: 0;
+- historical backfill complete: true;
+- stable full-parity passes: 2.
+
+The deployment emitted:
+
+`USER_LIBRARY_V3_ROLLOUT_PREFLIGHT_PASS {"rolloutBasisPoints":0,"rolloutPercent":0,"v3AuthorityUsers":0,"legacyUsers":4,"v3Heads":4}`
+
+No normal account has crossed the V3 authority boundary yet.
+
+## 0.5% entry gate
+
+A future 50 bp rollout decision must be a separate production change. It is allowed only while all of the following remain true immediately before activation:
+
+1. global V3 write switch remains disabled;
+2. D3c4b production canary evidence remains valid;
+3. `preflightReady=true`;
+4. historical backfill remains complete;
+5. semantic, revision, authority-head, compatibility-head and stale-legacy mismatch counts remain zero;
+6. rollout seed is unchanged;
+7. the isolated canary remains configured;
+8. rollback remains `rollout bps -> 0`, with existing per-user V3 authority preserved fail-safe.
+
+Current normal-user rollout remains **0 bp / 0%**.
