@@ -20,13 +20,13 @@ export function resultWindowState(total, page = 1, size = RESULT_WINDOW_SIZE) {
   };
 }
 
-
 export function resultPaginationItems(page, pages, compact = false) {
   if (!Number.isSafeInteger(page) || page < 1) throw new Error('invalid_result_page');
   if (!Number.isSafeInteger(pages) || pages < 1) throw new Error('invalid_result_pages');
   const current = Math.min(page, pages);
   const siblingCount = compact ? 1 : 2;
-  const visibleWithoutEllipses = siblingCount * 2 + 5;
+  // Keep at most five numeric touch targets on phones, including small totals.
+  const visibleWithoutEllipses = compact ? 5 : 9;
   if (pages <= visibleWithoutEllipses) {
     return Array.from({ length: pages }, (_, index) => index + 1);
   }
