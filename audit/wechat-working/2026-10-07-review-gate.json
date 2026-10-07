@@ -1,12 +1,12 @@
 {
   "publicationDate": "2026-10-07",
   "editorialRevision": "2026-10-07-r10",
-  "reviewedAt": "2026-10-07T06:42:16.675421+00:00",
+  "reviewedAt": "2026-10-07T06:46:06.733823+00:00",
   "reviewer": "AI source-grounded editorial review; no claim of human review",
   "textReview": "pass",
-  "imageReview": "pending",
+  "imageReview": "pass",
   "individualImageReview": "pass",
-  "combinedVisualReview": "pending",
+  "combinedVisualReview": "pass",
   "artifacts": {
     "textOnly": "audit/wechat-working/2026-10-07-r10-angew-text-only.md",
     "imagesOnly": "audit/wechat-working/2026-10-07-r10-angew-images-only.md",
@@ -286,8 +286,9 @@
     "Three original code/vector concept diagrams, 2000 px wide, checked independently at 390 px: charge conservation, electron direction, solvent legends, molecular versus solvated electron state; no experimental data generated.",
     "Concept captions are explicitly labeled self-made Fig. E1–E3 and cite primary background sources; not original-paper figure numbers or experimental evidence.",
     "All prior original body figures and full approved phoenix artwork retained; text limited to adjacent figure references and disclosure.",
-    "Text-only and images-only exports regenerated; source combined preview remains pending.",
-    "Same two-article daily draft only; no public sending authorized."
+    "Text-only and images-only exports regenerated; source combined preview passed at 390/690 px, with all paragraphs/captions and 33 body figures retained.",
+    "Same two-article daily draft only; no public sending authorized.",
+    "Root visually inspected all new concepts at actual source mobile width and adjacent explanations, plus full TOC and approved phoenix covers; charge signs and arrows correct; no overlap or clipped figures. Actual WeChat transport/layout remains pending."
   ],
   "draftReadback": "pending",
   "publicSendAuthorized": false,
@@ -295,5 +296,32 @@
   "priorCompletedRevision": {
     "revision": "2026-10-07-r9",
     "previewUrl": "https://relay.gczhouwld.com/wechat-preview/228abccce0c01fc9db3cee87.html"
+  },
+  "finalSourcePreview": {
+    "status": "pass",
+    "revision": "2026-10-07-r10",
+    "sourceSnapshot": "39c0fb20628ff08d96ce61d1ae785b0bc6370a6af732611d26cc9b820b3b1717",
+    "runId": "37583160401",
+    "artifactId": 11466045824,
+    "artifactSha256": "ce990220c2a44528fbd14e6aa57dcd975befe21c306fbf5b8b3c8368b7ead42f",
+    "viewports": [
+      390,
+      690
+    ],
+    "assetsVerified": 35,
+    "bodyImages": {
+      "angew": 14,
+      "natcat": 19
+    },
+    "reviewedScreenshots": [
+      "angew-cover-390.png",
+      "angew-cover-690.png",
+      "natcat-cover-390.png",
+      "ncx1-390-adjacent.png",
+      "ncx2-390-image.png",
+      "ncx2-390-adjacent.png",
+      "ncx3-390-image.png",
+      "ncx3-390-adjacent.png"
+    ]
   }
 }
