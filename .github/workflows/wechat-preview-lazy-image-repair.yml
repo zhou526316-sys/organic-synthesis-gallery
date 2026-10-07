@@ -1,0 +1,81 @@
+name: WeChat Preview Lazy Image Repair
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/wechat-preview-lazy-image-repair.yml']
+permissions:
+  contents: write
+concurrency:
+  group: wechat-preview-lazy-image-repair
+  cancel-in-progress: false
+jobs:
+  repair-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Fix only preview image attributes and verify exact stored URLs survive
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch --depth=1 origin main
+            git reset --hard origin/main
+            python3 - <<'PY'
+          import ast, datetime, hashlib, importlib.util, json, pathlib, re, urllib.request
+          root=pathlib.Path.cwd(); path=root/'ops/wechat-publisher/create-draft.py'
+          data=path.read_bytes(); oldsha=hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()
+          source=data.decode('utf-8')
+          if 'def normalize_preview_lazy_images(' not in source:
+              if oldsha!='29c21666a58b42a3efe42cd4c7a0c20c3710a81d':
+                  raise SystemExit('Concurrent publisher edit: reconciliation required')
+              marker='def render_wechat_draft_preview('
+              helper='\n'.join([
+                  'def normalize_preview_lazy_images(markup: str) -> str:',
+                  '    """Activate stored WeChat lazy image URLs in preview only; do not alter draft data."""',
+                  '    def activate(match):',
+                  '        tag = match.group(0)',
+                  '        if re.search(r"(?<![\\w-])src\\s*=", tag, re.IGNORECASE):',
+                  '            return tag',
+                  '        return re.sub(r"\\bdata-src(\\s*=)", r"src\\1", tag, count=1, flags=re.IGNORECASE)',
+                  '    return re.sub(r"<img\\b[^>]*>", activate, markup, flags=re.IGNORECASE)',
+                  '', '',
+              ])
+              assert source.count(marker)==1
+              source=source.replace(marker,helper+marker,1)
+              lo=source.index(marker); hi=source.index('\ndef write_draft_preview(',lo)
+              block=source[lo:hi]; old='        content = str(item.get("content") or "")'
+              assert block.count(old)==1
+              block=block.replace(old,'        content = normalize_preview_lazy_images(str(item.get("content") or ""))',1)
+              source=source[:lo]+block+source[hi:]
+              ast.parse(source); path.write_text(source,encoding='utf-8')
+          spec=importlib.util.spec_from_file_location('wx_preview',path)
+          mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+          sample='<p>keep</p><img data-src="https://example.invalid/a.png" style="width:80%"><img src="b" data-src="c">'
+          expected='<p>keep</p><img src="https://example.invalid/a.png" style="width:80%"><img src="b" data-src="c">'
+          assert mod.normalize_preview_lazy_images(sample)==expected
+          receipt=json.loads((root/'audit/wechat-publisher/latest.json').read_text())
+          url=receipt['preview_url']
+          assert url=='https://relay.gczhouwld.com/wechat-preview/996cb9dd18c792fe056e2760.html'
+          with urllib.request.urlopen(url,timeout=15) as response: raw=response.read(150000).decode('utf-8')
+          fixed=mod.normalize_preview_lazy_images(raw)
+          urls=re.findall(r'<img\b[^>]*\bdata-src=[\"\x27]([^\"\x27]+)',raw,re.IGNORECASE)
+          assert len(urls)==29,len(urls)
+          assert all(u in fixed for u in urls)
+          assert len(re.findall(r'<img\b[^>]*\bdata-src=',fixed,re.IGNORECASE))==0
+          gate=mod.require_editorial_review_gate(root/'audit/wechat-working/2026-10-07-review-gate.json',[root/'public/wechat-editions/2026-10-07.json',root/'public/wechat-featured/2026-10-07.json',root/'public/wechat-retrospective/phoenix1-structural-regeneration.json'])
+          result={'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'pass','scope':'draft/get preview rendering only','activatedImageCount':len(urls),'allOriginalImageUrlsPreserved':True,'editorialGate':'pass','publisherOldBlobSha':oldsha,'publisherNewBlobSha':mod.git_blob_sha(path),'draftContentChanged':False,'wechatApiCalled':False}
+          (root/'audit/wechat-working/2026-10-07-r7-preview-image-repair.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(result,ensure_ascii=False))
+          PY
+            git add ops/wechat-publisher/create-draft.py audit/wechat-working/2026-10-07-r7-preview-image-repair.json
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'fix: activate exact WeChat lazy image URLs in readback preview'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
