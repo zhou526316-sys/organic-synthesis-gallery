@@ -153,3 +153,33 @@ The forecast is read-only:
 For the standard thresholds 50, 100, 500, 1000, 2500, 5000 and 10000 bp the report records the number of normal accounts selected. It also reports the smallest standard threshold that selects at least one normal account.
 
 A nominal 50 bp rollout that selects zero accounts must **not** be treated as a production canary. In that case, keep production at 0 bp and choose the next separately approved threshold only after reviewing this forecast.
+
+## Production cohort forecast evidence — 2026-10-07
+
+Read-only forecast run `37558007422` completed successfully against the current production account set.
+
+Observed aggregate cohort sizes:
+
+| Threshold | Nominal rollout | Selected normal accounts |
+| ---: | ---: | ---: |
+| 50 bp | 0.5% | 0 |
+| 100 bp | 1% | 0 |
+| 500 bp | 5% | 0 |
+| 1000 bp | 10% | 1 |
+| 2500 bp | 25% | 1 |
+| 5000 bp | 50% | 2 |
+| 10000 bp | 100% | 4 |
+
+Current normal accounts: 4. Current selected cohort at 0 bp: 0. The reserved synthetic canary account was not present in the normal account set.
+
+The first non-empty standard threshold is 1000 bp, but with only four normal accounts that threshold selects one account, which is 25% of the current real population. Therefore the nominal percentage no longer represents a small production cohort at the present population size.
+
+### Small-population rule
+
+Normal-user percentage rollout must remain at 0 bp while the account population is too small for the intended first-stage percentage to produce a meaningful cohort.
+
+For the planned 50 bp / 0.5% first stage, an expected cohort size of one account requires approximately 200 normal accounts. Before that point, percentage rollout is too coarse to be treated as a controlled 0.5% experiment.
+
+Until the population is large enough, the only acceptable next production step is a separately designed, explicitly authorized real-user pilot. That pilot must be distinct from the synthetic D3c4b canary and must not be inferred from the percentage bucket.
+
+Current decision: **keep normal-user rollout at 0 bp**.
