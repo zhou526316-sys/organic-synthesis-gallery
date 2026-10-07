@@ -1,0 +1,366 @@
+{
+  "kind": "read-only-capture-latency-diagnosis",
+  "checkedAt": "2026-10-07T08:11:06.831Z",
+  "timezone": "Asia/Shanghai",
+  "userQuestionAt": "2026-10-07T16:06:22+08:00",
+  "userQuestion": "为什么现在抓去这么慢",
+  "sourceMainCommit": "19ddea046bfd856f46c2ec61cee569eec29307b0",
+  "sourceBlobSha": "4032ba45ee66fae8b4ac2cbb02c9c91e140236d9",
+  "releaseCommit": "7da30f3da331b91bc31fc42391f8d08f1f29790a",
+  "bridgeVersion": "2.2.62",
+  "observedInstallRevision": "6.2.43",
+  "checks": {
+    "productionWrites": 0,
+    "publisherRequests": 0,
+    "taskRestarts": 0,
+    "newCodeChanges": 0
+  },
+  "localControllerSnapshot": {
+    "uploadedAt": "2026-10-07T06:37:06.747Z",
+    "staleForCurrentInvestigation": true
+  },
+  "sourceMechanism": {
+    "uploadPrivatePdf": "POST /api/private-pdf/import via gmRequest, timeout 90000 ms; ArrayBuffer request body, no non-text responseType.",
+    "gmRequest": "Owned API transport errors/timeouts invoke nativeControllerRequest with the original 90000 ms timeout; nominal combined wait up to 180000 ms per upload attempt before browser scheduling overhead.",
+    "maybeCapturePrivatePdf": "Each outer candidate shares one try/catch for download and upload. An upload transport failure falls through to another candidate. Each candidate gets a new Set(), so equivalent resolved PDF URLs are not deduplicated across outer candidates.",
+    "uploadTraceLimitation": "captureLiveUpdate records upload phase, but persisted trace adds private_pdf_upload only on successful receipt. No upload-start/error timestamp is retained by this function.",
+    "existingFixScope": "6.2.43 native-first change applies to selected Gallery read-only metadata, not publisher-page PDF uploads.",
+    "interval": "Manual jobs are serial. Fixed inter-job sleep is 3500 ms; queue/inventory refresh is triggered once prior inventory check is older than 60000 ms."
+  },
+  "samples": [
+    {
+      "doi": "10.1039/d6gc04772f",
+      "jobId": "d522cee5-6eee-4595-83a2-8b527974ac94",
+      "attemptId": "1791360403687-8f5b2762",
+      "installRevision": "6.2.43",
+      "startedAt": "2026-10-07T07:59:44.348Z",
+      "finishedAt": "2026-10-07T08:06:15.784Z",
+      "totalSeconds": 391.436,
+      "latestServerReceivedAt": "2026-10-07T08:06:43.687Z",
+      "status": "failed",
+      "reason": "combined_capture;toc=not_found;figures=0/0;evidence=failed;published=0;pdf=gm_then_fetch_failed:gm_request_error:Failed to fetch;fetch:signal is aborted without reason",
+      "privatePdfStatus": "failed",
+      "source": "https://api.gczhouwld.com/api/media/tampermonkey-reports?doi=10.1039%2Fd6gc04772f",
+      "selectedEvents": [
+        {
+          "at": "2026-10-07T08:06:15.784Z",
+          "stage": "diagnostic_context",
+          "event": "final_result",
+          "status": "info",
+          "url": "https://pubs.rsc.org/gc/article/doi/10.1039/D6GC04772F/1365543/Catalyst-free-divergent-3-1-2-annulation-for-the"
+        },
+        {
+          "at": "2026-10-07T08:00:57.762Z",
+          "stage": "evidence_capture",
+          "event": "failed",
+          "status": "failed",
+          "url": "https://pubs.rsc.org/gc/article/doi/10.1039/D6GC04772F/1365543/Catalyst-free-divergent-3-1-2-annulation-for-the",
+          "message": "label=;cause=request_timeout_or_abort;gm_then_fetch_failed:gm_request_timeout;fetch:signal is aborted without reason"
+        },
+        {
+          "at": "2026-10-07T08:00:13.780Z",
+          "stage": "iframe_dom_scan",
+          "event": "load_start",
+          "status": "start",
+          "url": "https://pubs.rsc.org/en/content/articlelanding/2026/gc/d6gc04772f"
+        },
+        {
+          "at": "2026-10-07T08:00:29.784Z",
+          "stage": "iframe_dom_scan",
+          "event": "complete",
+          "status": "none",
+          "url": "https://pubs.rsc.org/en/content/articlelanding/2026/gc/d6gc04772f"
+        },
+        {
+          "at": "2026-10-07T08:00:29.785Z",
+          "stage": "iframe_dom_scan",
+          "event": "load_start",
+          "status": "start",
+          "url": "https://pubs.rsc.org/en/content/articlehtml/2026/gc/d6gc04772f"
+        },
+        {
+          "at": "2026-10-07T08:00:45.775Z",
+          "stage": "iframe_dom_scan",
+          "event": "complete",
+          "status": "none",
+          "url": "https://pubs.rsc.org/en/content/articlehtml/2026/gc/d6gc04772f"
+        },
+        {
+          "at": "2026-10-07T08:00:57.786Z",
+          "stage": "paired_result",
+          "event": "complete",
+          "status": "failed",
+          "message": "combined_capture;toc=not_found;figures=0/0;evidence=failed;published=0"
+        },
+        {
+          "at": "2026-10-07T08:00:57.790Z",
+          "stage": "private_pdf_lease",
+          "event": "active",
+          "status": "ok",
+          "message": "expiresAt=1791944481969;revision=20261006-private-pdf-bundle-v6"
+        },
+        {
+          "at": "2026-10-07T08:00:57.800Z",
+          "stage": "private_pdf_discovery",
+          "event": "complete",
+          "status": "found",
+          "message": "explicit_candidates=2;waitedMs=9"
+        },
+        {
+          "at": "2026-10-07T08:00:58.855Z",
+          "stage": "private_pdf_fetch",
+          "event": "browser_failed",
+          "status": "fallback",
+          "url": "https://pubs.rsc.org/en/content/articlepdf/2026/gc/d6gc04772f",
+          "message": "transport=browser_session;Failed to fetch"
+        },
+        {
+          "at": "2026-10-07T08:01:01.768Z",
+          "stage": "private_pdf_fetch",
+          "event": "response",
+          "status": "ok",
+          "httpStatus": 200,
+          "url": "https://rscj.silverchair-cdn.com/rscj/content_public/journal/gc/jam/10.1039_d6gc04772f/1/d6gc04772f.pdf",
+          "byteLength": 1836636,
+          "message": "transport=gm;contentType=application/pdf;durationMs=2911"
+        },
+        {
+          "at": "2026-10-07T08:04:04.482Z",
+          "stage": "private_pdf_fetch",
+          "event": "browser_failed",
+          "status": "fallback",
+          "url": "https://pubs.rsc.org/gc/article-pdf/doi/10.1039/D6GC04772F/14827941/d6gc04772f.pdf",
+          "message": "transport=browser_session;Failed to fetch"
+        },
+        {
+          "at": "2026-10-07T08:04:06.761Z",
+          "stage": "private_pdf_fetch",
+          "event": "response",
+          "status": "ok",
+          "httpStatus": 200,
+          "url": "https://rscj.silverchair-cdn.com/rscj/content_public/journal/gc/jam/10.1039_d6gc04772f/1/d6gc04772f.pdf",
+          "byteLength": 1836636,
+          "message": "transport=gm;contentType=application/pdf;durationMs=2276"
+        }
+      ]
+    },
+    {
+      "doi": "10.1039/d6gc04471a",
+      "jobId": "dc411143-0e77-4871-9006-ed9d1e4ad304",
+      "attemptId": "1791359941430-010c15d9",
+      "installRevision": "6.2.43",
+      "startedAt": "2026-10-07T07:51:58.439Z",
+      "finishedAt": "2026-10-07T07:55:30.785Z",
+      "totalSeconds": 212.346,
+      "latestServerReceivedAt": "2026-10-07T07:59:01.430Z",
+      "status": "partial",
+      "reason": "combined_capture;toc=already_available;figures=0/0;evidence=not_requested;published=0;pdf=gm_then_fetch_failed:gm_request_timeout;fetch:signal is aborted without reason",
+      "privatePdfStatus": "failed",
+      "source": "https://api.gczhouwld.com/api/media/tampermonkey-reports?doi=10.1039%2Fd6gc04471a",
+      "selectedEvents": [
+        {
+          "at": "2026-10-07T07:55:30.785Z",
+          "stage": "diagnostic_context",
+          "event": "final_result",
+          "status": "info",
+          "url": "https://pubs.rsc.org/gc/article/doi/10.1039/d6gc04471a/1365905/A-recyclable-Ni-ii-anchored-covalent-organic"
+        },
+        {
+          "at": "2026-10-07T07:52:25.769Z",
+          "stage": "private_pdf_fetch",
+          "event": "response",
+          "status": "http_error",
+          "httpStatus": 403,
+          "url": "https://pubs.rsc.org/en/content/articlepdf/2026/gc/d6gc04471a",
+          "byteLength": 6248,
+          "message": "label=;cause=access_denied_http_403;transport=gm;contentType=text/html; charset=UTF-8;durationMs=1808"
+        },
+        {
+          "at": "2026-10-07T07:52:25.792Z",
+          "stage": "private_pdf_fetch",
+          "event": "failed",
+          "status": "failed",
+          "httpStatus": 403,
+          "url": "https://pubs.rsc.org/en/content/articlepdf/2026/gc/d6gc04471a",
+          "message": "label=;cause=access_denied_http_403;transport=gm;private_pdf_http_403"
+        },
+        {
+          "at": "2026-10-07T07:52:22.779Z",
+          "stage": "paired_result",
+          "event": "complete",
+          "status": "success",
+          "message": "combined_capture;toc=already_available;figures=0/0;evidence=not_requested;published=0"
+        },
+        {
+          "at": "2026-10-07T07:52:22.782Z",
+          "stage": "private_pdf_lease",
+          "event": "active",
+          "status": "ok",
+          "message": "expiresAt=1791944481969;revision=20261006-private-pdf-bundle-v6"
+        },
+        {
+          "at": "2026-10-07T07:52:22.795Z",
+          "stage": "private_pdf_discovery",
+          "event": "complete",
+          "status": "found",
+          "message": "explicit_candidates=2;waitedMs=13"
+        },
+        {
+          "at": "2026-10-07T07:52:23.958Z",
+          "stage": "private_pdf_fetch",
+          "event": "browser_failed",
+          "status": "fallback",
+          "url": "https://pubs.rsc.org/en/content/articlepdf/2026/gc/d6gc04471a",
+          "message": "transport=browser_session;Failed to fetch"
+        },
+        {
+          "at": "2026-10-07T07:52:26.385Z",
+          "stage": "private_pdf_fetch",
+          "event": "browser_failed",
+          "status": "fallback",
+          "url": "https://pubs.rsc.org/gc/article-pdf/doi/10.1039/d6gc04471a/14832575/d6gc04471a.pdf",
+          "message": "transport=browser_session;Failed to fetch"
+        },
+        {
+          "at": "2026-10-07T07:52:28.771Z",
+          "stage": "private_pdf_fetch",
+          "event": "response",
+          "status": "ok",
+          "httpStatus": 200,
+          "url": "https://rscj.silverchair-cdn.com/rscj/content_public/journal/gc/pap/10.1039_d6gc04471a/1/d6gc04471a.pdf",
+          "byteLength": 2908296,
+          "message": "transport=gm;contentType=application/pdf;durationMs=2383"
+        }
+      ]
+    },
+    {
+      "doi": "10.1039/d6gc04421b",
+      "jobId": "4b3d9e79-7b21-414b-aa1d-351f69f27c4a",
+      "attemptId": "1791359252871-5d29500a",
+      "installRevision": "6.2.43",
+      "startedAt": "2026-10-07T07:46:09.155Z",
+      "finishedAt": "2026-10-07T07:46:37.816Z",
+      "totalSeconds": 28.661,
+      "latestServerReceivedAt": "2026-10-07T07:47:32.871Z",
+      "status": "partial",
+      "reason": "combined_capture;toc=already_available;figures=0/0;evidence=not_requested;published=0;pdf=private_pdf_http_403",
+      "privatePdfStatus": "failed",
+      "source": "https://api.gczhouwld.com/api/media/tampermonkey-reports?doi=10.1039%2Fd6gc04421b",
+      "selectedEvents": [
+        {
+          "at": "2026-10-07T07:46:37.816Z",
+          "stage": "diagnostic_context",
+          "event": "final_result",
+          "status": "info",
+          "url": "https://pubs.rsc.org/gc/article/doi/10.1039/d6gc04421b/1365539/Mix-and-mature-solvent-free-Fischer-esterification"
+        },
+        {
+          "at": "2026-10-07T07:46:35.770Z",
+          "stage": "private_pdf_fetch",
+          "event": "response",
+          "status": "http_error",
+          "httpStatus": 403,
+          "url": "https://pubs.rsc.org/en/content/articlepdf/2026/gc/d6gc04421b",
+          "byteLength": 6248,
+          "message": "label=;cause=access_denied_http_403;transport=gm;contentType=text/html; charset=UTF-8;durationMs=984"
+        },
+        {
+          "at": "2026-10-07T07:46:35.792Z",
+          "stage": "private_pdf_fetch",
+          "event": "failed",
+          "status": "failed",
+          "httpStatus": 403,
+          "url": "https://pubs.rsc.org/en/content/articlepdf/2026/gc/d6gc04421b",
+          "message": "label=;cause=access_denied_http_403;transport=gm;private_pdf_http_403"
+        },
+        {
+          "at": "2026-10-07T07:46:37.760Z",
+          "stage": "private_pdf_fetch",
+          "event": "response",
+          "status": "http_error",
+          "httpStatus": 403,
+          "url": "https://pubs.rsc.org/gc/article-pdf/doi/10.1039/d6gc04421b/14827894/d6gc04421b.pdf",
+          "byteLength": 6332,
+          "message": "label=;cause=access_denied_http_403;transport=gm;contentType=text/html; charset=UTF-8;durationMs=1113"
+        },
+        {
+          "at": "2026-10-07T07:46:37.779Z",
+          "stage": "private_pdf_fetch",
+          "event": "failed",
+          "status": "failed",
+          "httpStatus": 403,
+          "url": "https://pubs.rsc.org/gc/article-pdf/doi/10.1039/d6gc04421b/14827894/d6gc04421b.pdf",
+          "message": "label=;cause=access_denied_http_403;transport=gm;private_pdf_http_403"
+        },
+        {
+          "at": "2026-10-07T07:46:33.780Z",
+          "stage": "paired_result",
+          "event": "complete",
+          "status": "success",
+          "message": "combined_capture;toc=already_available;figures=0/0;evidence=not_requested;published=0"
+        },
+        {
+          "at": "2026-10-07T07:46:33.783Z",
+          "stage": "private_pdf_lease",
+          "event": "active",
+          "status": "ok",
+          "message": "expiresAt=1791944481969;revision=20261006-private-pdf-bundle-v6"
+        },
+        {
+          "at": "2026-10-07T07:46:33.797Z",
+          "stage": "private_pdf_discovery",
+          "event": "complete",
+          "status": "found",
+          "message": "explicit_candidates=2;waitedMs=13"
+        },
+        {
+          "at": "2026-10-07T07:46:34.785Z",
+          "stage": "private_pdf_fetch",
+          "event": "browser_failed",
+          "status": "fallback",
+          "url": "https://pubs.rsc.org/en/content/articlepdf/2026/gc/d6gc04421b",
+          "message": "transport=browser_session;Failed to fetch"
+        },
+        {
+          "at": "2026-10-07T07:46:36.646Z",
+          "stage": "private_pdf_fetch",
+          "event": "browser_failed",
+          "status": "fallback",
+          "url": "https://pubs.rsc.org/gc/article-pdf/doi/10.1039/d6gc04421b/14827894/d6gc04421b.pdf",
+          "message": "transport=browser_session;Failed to fetch"
+        }
+      ]
+    }
+  ],
+  "interJobGaps": [
+    {
+      "previousDoi": "10.1039/d6gc04421b",
+      "nextDoi": "10.1039/d6gc04471a",
+      "from": "2026-10-07T07:46:37.816Z",
+      "to": "2026-10-07T07:51:58.439Z",
+      "seconds": 320.623,
+      "cause": "Not attributable from available publisher traces; fresh Gallery controller snapshot required to separate metadata refresh, result receipt and task navigation."
+    },
+    {
+      "previousDoi": "10.1039/d6gc04471a",
+      "nextDoi": "10.1039/d6gc04772f",
+      "from": "2026-10-07T07:55:30.785Z",
+      "to": "2026-10-07T07:59:44.348Z",
+      "seconds": 253.563,
+      "cause": "Not attributable from available publisher traces; fresh Gallery controller snapshot required to separate metadata refresh, result receipt and task navigation."
+    }
+  ],
+  "findings": [
+    "All three current publisher traces identify installation 6.2.43; another reinstall is not a supported remedy.",
+    "D6GC04471A PDF downloaded HTTP 200 in 2383 ms (2908296 bytes) at 07:52:28.771Z, then final upload transport timeout at 07:55:30.785Z: 182.014 seconds after download.",
+    "D6GC04772F downloaded HTTP 200 at 08:01:01.768Z and again at 08:04:06.761Z; both resolved to the same official PDF URL with 1836636 bytes. Binary equality was not tested. Final failed at 08:06:15.784Z, after 391.436 seconds total.",
+    "This supports long PDF upload/fallback waits and repeated candidate downloads as a demonstrated current bottleneck. Root cause of upload network failure (extension, proxy, native CORS/network, server response path) is not established.",
+    "D6GC04421B received publisher PDF HTTP 403 and finished in 28.661 seconds; this is a distinct access failure, not the 3-minute upload stall.",
+    "Server received timestamps and repeated report attempts are not counted as new publisher executions."
+  ],
+  "proposedRepair": {
+    "scope": "Separate publisher download/candidate failures from private API upload failures; preserve a validated downloaded buffer during bounded upload recovery; add explicit upload start/fallback/failure duration events; continue later DOI after exhausted upload budget.",
+    "tradeoff": "A shorter wait can defer a legitimately slow upload, so budget selection must consider PDF size and retain incomplete status until a valid receipt; no stored success without proof.",
+    "state": "Proposed only; not implemented or deployed in this diagnostic turn."
+  }
+}
