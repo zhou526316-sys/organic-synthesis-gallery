@@ -2137,6 +2137,12 @@ function embeddedJobDois(value) {
     return match?normalizeDoi(match[0]):'';
   }
 
+  function rscSearchResultUrl(job) {
+    var doi=normalizeDoi(job&&job.doi);
+    if(String(job&&job.publisher||publisherForDoi(doi))!=='rsc'||!doi)return '';
+    return 'https://pubs.rsc.org/en/results?searchtext='+encodeURIComponent(doi);
+  }
+
   function rscIssuePageUrls(job,doc,baseUrl) {
     if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='rsc')return [];
     var scope=doc||document,parts=rscRouteParts(job),urls=[];
@@ -2535,13 +2541,14 @@ function embeddedJobDois(value) {
                   }
                 });
               }
+              var rscListing = job.publisher === 'rsc' && /(?:\/results(?:[/?#]|$)|\/issue\/|\/journals\/journalissues\/)/i.test(current);
               var discovered = job.publisher === 'ccs'
                 ? ccsTocIndexCandidatesFromDocument(job,doc,current)
-                : job.publisher === 'rsc' && /(?:\/issue\/|\/journals\/journalissues\/)/i.test(current)
+                : rscListing
                   ? rscIssueTocCandidatesFromDocument(job,doc,current)
                   : collectCandidates(job, trace, doc, current, 'iframe_dom', true);
               if(job.publisher==='ccs')pushTrace(trace,{stage:'ccs_toc_index',event:'scan',status:discovered.length?'found':'none',url:current,message:'doi='+normalizeDoi(job.doi)+';key_images='+String(discovered.length)});
-              if(job.publisher==='rsc'&&/(?:\/issue\/|\/journals\/journalissues\/)/i.test(current))pushTrace(trace,{stage:'rsc_issue_toc',event:'scan',status:discovered.length?'found':'none',url:current,message:'doi='+normalizeDoi(job.doi)+';visuals='+String(discovered.length)});
+              if(rscListing)pushTrace(trace,{stage:/\/results(?:[/?#]|$)/i.test(current)?'rsc_search_toc':'rsc_issue_toc',event:'scan',status:discovered.length?'found':'none',url:current,message:'doi='+normalizeDoi(job.doi)+';visuals='+String(discovered.length)});
               if (discovered.length) {
                 var merged = new Map();
                 bestRows.concat(discovered).forEach(function (row) {
