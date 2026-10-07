@@ -25,8 +25,8 @@ function context({native,gm,hedge=8,timeout=45}={}) {
     AbortController,setTimeout,clearTimeout,Date,Promise,Object,Number,Math,Error,JSON,
     INVENTORY_REQUEST_TIMEOUT_MS:timeout,
     INVENTORY_HEDGE_DELAY_MS:hedge,
-    nativeControllerRequest:native||async()=>({status:200,responseText:'{"ok":true}'}),
-    gmRequest:gm||async()=>({status:200,responseText:'{"ok":true}'}),
+    nativeControllerRequest:native||(async()=>({status:200,responseText:'{"ok":true}'})),
+    gmRequest:gm||(async()=>({status:200,responseText:'{"ok":true}'})),
     parseMetadataJson(response,prefix){
       const status=Number(response.status||0);
       if(status<200||status>=300){const error=new Error(prefix+'_http_'+status);error.httpStatus=status;throw error;}
