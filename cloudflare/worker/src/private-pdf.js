@@ -296,7 +296,21 @@ export async function importPrivatePdf(request, env) {
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'raw', 0, ?, ?)`
     ).bind(id, doi, publisher, articleUrl.href, sourceUrl.href, versionKind, contentHash, r2Key, buffer.byteLength, now, now, now).run();
   } catch (error) {
-    await env.PDF_PRIVATE.delete(r2Key).catch(() => {});
+    // An identical upload may have committed first, or this INSERT may have
+    // committed despite a lost acknowledgement. Return its existing receipt.
+    let committed = null;
+    try {
+      committed = await env.DB.prepare(
+        'SELECT id, processing_state, active, byte_length FROM private_pdf_documents WHERE doi = ? AND content_hash = ? LIMIT 1'
+      ).bind(doi, contentHash).first();
+    } catch {}
+    if (committed) {
+      return { status: 200, body: { stored: true, duplicate: true, doi, documentId: committed.id,
+        contentHash, byteLength: Number(committed.byte_length || buffer.byteLength), processingState: committed.processing_state, active: Boolean(committed.active) } };
+    }
+    // This content-addressed key is shared by concurrent imports. Even an empty
+    // lookup cannot rule out a pending INSERT, so deleting it here is unsafe.
+    // Preserve private bytes for a retry and retain the original database error.
     throw error;
   }
   return { status: 201, body: { stored: true, duplicate: false, doi, documentId: id, contentHash,

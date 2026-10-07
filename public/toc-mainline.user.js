@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.43
+// @version      6.2.44
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -55,7 +55,7 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.43';
+  var INSTALL_REVISION = '6.2.44';
   var CONTROLLER_READ_REVISION = '20261007-native-metadata-first-v1';
   var MANUAL_RECOVERY_REVISION = '20261007-manual-resume-v1';
   var manualRecoveryBusy = false;
@@ -1184,6 +1184,9 @@ function embeddedJobDois(value) {
     var abort = new AbortController();
     var timeoutMs = Math.max(1000, Number(options && options.timeout || 45000));
     var timer = setTimeout(function () { abort.abort(); }, timeoutMs);
+    var outerSignal=options&&options.signal;
+    function cancelNative(){abort.abort();}
+    if(outerSignal){if(outerSignal.aborted)abort.abort();else outerSignal.addEventListener('abort',cancelNative,{once:true});}
     try {
       var method = String(options && options.method || 'GET').toUpperCase();
       var headers = Object.assign({}, options && options.headers || {});
@@ -1219,6 +1222,7 @@ function embeddedJobDois(value) {
       };
     } finally {
       clearTimeout(timer);
+      if(outerSignal)outerSignal.removeEventListener('abort',cancelNative);
     }
   }
 
@@ -5154,6 +5158,7 @@ function embeddedJobDois(value) {
   // Private PDF capture is an optional owner-only side channel. It never
   // determines TOC/body/fulltext task success and can be disabled independently.
   var PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-bundle-v6';
+  var PRIVATE_PDF_UPLOAD_REVISION = '20261007-pdf-upload-budget-v1';
   var PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01';
   var PRIVATE_PDF_CAPTURE_ENDPOINT = WORKER + '/api/private-pdf/import';
   var PRIVATE_PDF_LEASE_KEY = P + 'private-pdf-capture-lease-v1';
@@ -5440,6 +5445,68 @@ function embeddedJobDois(value) {
     }
   }
 
+  function privatePdfUploadRequest(job,options,trace) {
+    assertBoundCaptureJob(job);
+    if(controllerPaused())return Promise.reject(new Error('private_pdf_upload_cancelled'));
+    var target=new URL(String(options&&options.url||''));
+    if(target.origin+target.pathname!==PRIVATE_PDF_CAPTURE_ENDPOINT||String(options.method||'').toUpperCase()!=='POST')return Promise.reject(new Error('private_pdf_upload_target_invalid'));
+    var started=Date.now(),bytes=Number(options.data&&options.data.byteLength||0);
+    // One budget covers both transports; large files get extra time. A download
+    // that already consumed the capture deadline cannot start a new long upload.
+    var budget=Math.min(150000,90000+Math.ceil(Math.max(0,bytes-5*1024*1024)/(1024*1024))*1000);
+    if(Number(job.captureDeadline)>0)budget=Math.min(budget,Number(job.captureDeadline)-started);
+    if(budget<=0)return Promise.reject(new Error('private_pdf_upload_deadline'));
+    return new Promise(function(resolve,reject){
+      var settled=false,transport='gm',gmHandle=null,nativeAbort=null,firstTimer=null,totalTimer=null,bindingTimer=null;
+      var transportStarted=started;
+      function record(event,status,error,response){
+        pushTrace(trace,{stage:'private_pdf_upload',event:event,status:status,url:PRIVATE_PDF_CAPTURE_ENDPOINT,
+          httpStatus:Number(response&&response.status||0),byteLength:bytes,
+          message:'revision='+PRIVATE_PDF_UPLOAD_REVISION+';transport='+transport+';durationMs='+(Date.now()-transportStarted)+';totalMs='+(Date.now()-started)+';budgetMs='+budget+(error?';cause='+captureLiveError(error.message||error):'')});
+      }
+      function abortGm(){var h=gmHandle;gmHandle=null;try{if(h&&typeof h.abort==='function')h.abort();}catch(_){}}
+      function stop(){clearTimeout(firstTimer);clearTimeout(totalTimer);clearInterval(bindingTimer);}
+      function finish(error,response){
+        if(settled)return;
+        if(!error){try{assertBoundCaptureJob(job);if(controllerPaused())throw new Error('private_pdf_upload_cancelled');}catch(e){error=e;}}
+        settled=true;stop();
+        if(error){abortGm();if(nativeAbort)nativeAbort.abort();record(/cancelled|stale|unbound|mismatch/.test(error.message||'')?'cancelled':'failed','failed',error);reject(error);}
+        else{record('transport_response',Number(response&&response.status)>=200&&Number(response&&response.status)<300?'ok':'http_error',null,response);resolve(response);}
+      }
+      function fallback(error){
+        if(settled||transport!=='gm')return;
+        record('transport_failed','failed',error);
+        if(/Request was blocked by the user|Refused to connect.*blocked/i.test(String(error&&error.message||''))){finish(error);return;}
+        if(!currentCaptureJob(job)||controllerPaused()){finish(new Error('private_pdf_upload_cancelled'));return;}
+        var remaining=budget-(Date.now()-started);
+        if(remaining<=0){finish(new Error('private_pdf_upload_budget_exhausted'));return;}
+        // Set the state before abort: abort callbacks may be synchronous.
+        transport='native';clearTimeout(firstTimer);abortGm();transportStarted=Date.now();
+        nativeAbort=new AbortController();record('fallback','start',error);record('transport_start','start');
+        nativeControllerRequest(Object.assign({},options,{timeout:remaining,signal:nativeAbort.signal})).then(function(response){finish(null,response);}).catch(function(fetchError){
+          if(settled)return;
+          record('transport_failed','failed',fetchError);
+          var failure=new Error('private_pdf_upload_transport_failed:gm='+captureLiveError(error&&error.message||error)+';native='+captureLiveError(fetchError&&fetchError.message||fetchError));
+          failure.controllerFallbackTried=true;finish(failure);
+        });
+      }
+      record('start','start');record('transport_start','start');
+      totalTimer=setTimeout(function(){finish(new Error('private_pdf_upload_budget_exhausted'));},budget);
+      bindingTimer=setInterval(function(){if(!currentCaptureJob(job)||controllerPaused())finish(new Error('private_pdf_upload_cancelled'));},500);
+      var firstBudget=Math.max(1,Math.floor(budget/2));
+      firstTimer=setTimeout(function(){fallback(new Error('gm_request_timeout'));},firstBudget);
+      try{
+        gmHandle=GM_xmlhttpRequest(Object.assign({},options,{timeout:firstBudget,
+          onload:function(response){if(!settled&&transport==='gm')finish(null,response);},
+          onerror:function(error){if(!settled&&transport==='gm')fallback(new Error('gm_request_error:'+captureLiveError(error&&(error.error||error.statusText||error.status)||'unknown')));},
+          ontimeout:function(){fallback(new Error('gm_request_timeout'));},
+          onabort:function(){if(!settled&&transport==='gm')finish(new Error('gm_request_aborted'));}
+        }));
+        if(settled||transport!=='gm')abortGm();
+      }catch(error){fallback(new Error('gm_request_exception:'+captureLiveError(error&&error.message||error)));}
+    });
+  }
+
   async function uploadPrivatePdf(job,pdf,lease,trace) {
     assertBoundCaptureJob(job);
     captureLiveUpdate(job,'private_pdf_upload',{pdfStatus:'uploading',pdfStage:'上传私有 PDF',pdfBytes:Number(pdf&&pdf.byteLength||0)});
@@ -5450,8 +5517,9 @@ function embeddedJobDois(value) {
     u.searchParams.set('sourceUrl',pdf.sourceUrl);
     u.searchParams.set('versionKind','unknown');
     u.searchParams.set('controllerRevision',CONTROLLER_REVISION);
-    var response=await gmRequest({method:'POST',url:u.toString(),timeout:90000,
-      headers:{'content-type':'application/pdf',authorization:'Bearer '+lease.token},data:pdf.buffer});
+    var response=await privatePdfUploadRequest(job,{method:'POST',url:u.toString(),timeout:90000,
+      headers:{'content-type':'application/pdf',authorization:'Bearer '+lease.token},data:pdf.buffer},trace);
+    assertBoundCaptureJob(job);
     var status=Number(response.status||0),raw=String(response.responseText||''),body={};
     try{body=JSON.parse(raw||'{}');}catch(_){}
     if(status<200||status>=300){
@@ -5490,25 +5558,46 @@ function embeddedJobDois(value) {
       return {status:'not_found_cached'};
     }
     var candidates=await waitForPrivatePdfCandidates(job,trace);
+    assertBoundCaptureJob(job);
+    if(controllerPaused())throw new Error('private_pdf_upload_cancelled');
     if(!candidates.length){
       GM_setValue(key,{status:'not_found',at:Date.now(),revision:PRIVATE_PDF_CAPTURE_REVISION});
       return {status:'not_found'};
     }
-    var lastError=null;
+    var lastError=null,pdf=null;
     for(var i=0;i<Math.min(4,candidates.length);i+=1){
       try{
-        var pdf=await fetchExplicitPdf(job,candidates[i],trace,new Set(),0);
-        var receipt=await uploadPrivatePdf(job,pdf,lease,trace);
-        var saved={status:'stored',at:Date.now(),documentId:String(receipt.documentId||''),contentHash:String(receipt.contentHash||''),byteLength:Number(receipt.byteLength||pdf.byteLength||0),active:Boolean(receipt.active),revision:PRIVATE_PDF_CAPTURE_REVISION};
-        GM_setValue(key,saved);return saved;
+        if(Number(job.captureDeadline)>0&&Date.now()>=job.captureDeadline)throw new Error('private_pdf_upload_deadline');
+        pdf=await fetchExplicitPdf(job,candidates[i],trace,new Set(),0);
+        break;
       }catch(error){
         lastError=error;
+        if(!currentCaptureJob(job)||controllerPaused())throw error;
+        if(error&&error.message==='private_pdf_upload_deadline')break;
         var code=Number(error&&error.httpStatus||0);
-        if(code===401){GM_deleteValue(PRIVATE_PDF_LEASE_KEY);break;}
+        // A publisher 401 is not a rejection of the separate private API lease.
+        if(code===401)break;
         if(code===429)break;
         if(code===403&&String(job.publisher||publisherForDoi(doi))!=='rsc')break;
       }
     }
+    // A valid PDF is independent of the upload route. Retry its same bytes in
+    // the upload helper; an API failure must not restart publisher downloads.
+    if(pdf){
+      try{
+        var receipt=await uploadPrivatePdf(job,pdf,lease,trace);
+        assertBoundCaptureJob(job);
+        if(controllerPaused())throw new Error('private_pdf_upload_cancelled');
+        var saved={status:'stored',at:Date.now(),documentId:String(receipt.documentId||''),contentHash:String(receipt.contentHash||''),byteLength:Number(receipt.byteLength||pdf.byteLength||0),active:Boolean(receipt.active),revision:PRIVATE_PDF_CAPTURE_REVISION};
+        GM_setValue(key,saved);return saved;
+      }catch(error){
+        lastError=error;
+        if(Number(error&&error.httpStatus||0)===401)GM_deleteValue(PRIVATE_PDF_LEASE_KEY);
+        pushTrace(trace,{stage:'private_pdf_upload',event:'receipt_failed',status:'failed',httpStatus:Number(error&&error.httpStatus||0),url:PRIVATE_PDF_CAPTURE_ENDPOINT,byteLength:pdf.byteLength,message:captureLiveError(error&&error.message||error)});
+      }
+    }
+    assertBoundCaptureJob(job);
+    if(controllerPaused())throw new Error('private_pdf_upload_cancelled');
     var failed={status:'failed',at:Date.now(),reason:captureLiveError(lastError&&lastError.message||lastError||'unknown'),revision:PRIVATE_PDF_CAPTURE_REVISION};
     GM_setValue(key,failed);
     captureLiveUpdate(job,'private_pdf_failed',{pdfStatus:'failed',pdfStage:'PDF 抓取失败',pdfError:failed.reason});
@@ -5539,6 +5628,7 @@ function embeddedJobDois(value) {
       if(typeof captureLiveUpdate==='function')captureLiveUpdate(job,'private_pdf_failed',{pdfStatus:'failed',pdfStage:'PDF 抓取异常',pdfError:privatePdfReason});
       if(typeof pushTrace==='function')pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:privatePdfReason});
     }
+    if(!currentCaptureJob(job)||controllerPaused())return Object.assign({},result,{status:'aborted',reason:'manual_run_superseded'});
     if(job.missingOnly&&result.figures&&result.figures.discovered>0){var cp=readCheckpoint(job.doi);cp.figureCoverage={expected:Math.max(Number(cp.figureCoverage&&cp.figureCoverage.expected||0),Number(result.figures.discovered)),observedAt:Date.now()};saveCheckpoint(job.doi,cp,job);}
     result.retryAfterMs=Math.max(Number(result.retryAfterMs||0),Number((result.fulltext||{}).retryAfterMs||0));
     result.doi=job.doi;result.jobId=job.jobId;result.version=VERSION;result.controllerRevision=CONTROLLER_REVISION;result.finishedAt=nowIso();
