@@ -287,11 +287,13 @@
     "Current title and all editorial text, captions, body figures and retrospective cover are unchanged. Text-only/images-only review package regenerated.",
     "Timeout preflight: reuse bounded source and actual review stages with narrow status/artifact reads; one terminal same-draft write only.",
     "Source combined review pending; no public sending.",
-    "Root inspected source screenshots: enlarged original TOC is complete above the fitted band; the current full title renders3lines at390px with5.79px clearance to the band top. User's actual-title-only allocation is respected."
+    "Root inspected source screenshots: enlarged original TOC is complete above the fitted band; the current full title renders3lines at390px with5.79px clearance to the band top. User's actual-title-only allocation is respected.",
+    "Same-draft update and draft/get succeeded. Root inspected actual returned cover and current full-title overlay: enlarged TOC remains complete on original white background, band is lower, no title/TOC overlap. Mobile current-title clearance5.79px; post-compression minimum white contrast10.073:1.",
+    "Actual read-only QA passed at390/690px:2articles,15/19loaded images and all paragraphs/captions present; no broken images or page errors. Layout check is a simulation on actual returned cover for the current title, not a native WeChat-client screenshot or arbitrary4-line guarantee."
   ],
-  "draftReadback": "pending",
+  "draftReadback": "ok",
   "publicSendAuthorized": false,
-  "finalTransportReview": "pending",
+  "finalTransportReview": "pass",
   "priorCompletedRevision": {
     "revision": "2026-10-07-r12",
     "previewUrl": "https://relay.gczhouwld.com/wechat-preview/adde015c537d4f24bc0c7789.html"
@@ -346,5 +348,9 @@
       "angew-current-title-overlay-390.png",
       "angew-cover-690.png"
     ]
-  }
+  },
+  "completedAt": "2026-10-07T07:41:10Z",
+  "actualDraftPreviewUrl": "https://relay.gczhouwld.com/wechat-preview/250a24b78552d06de7b61cc8.html",
+  "actualDraftQa": "audit/wechat-working/2026-10-07-r13-real-draft-qa.json",
+  "actualDraftQaRunId": "37588651177"
 }

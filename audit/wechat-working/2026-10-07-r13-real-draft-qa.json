@@ -1,0 +1,1231 @@
+{
+  "revision": "2026-10-07-r13",
+  "action": "verify_actual_draft_readonly",
+  "checkedAt": "2026-10-07T07:40:07.653977+00:00",
+  "runId": "37588651177",
+  "commit": "d46bb5ae8b4a700dc19818eec148a44a24a7b770",
+  "status": "pass",
+  "sourceSnapshot": "31be7c426559653f2327f6b75b4999b1671dfecb11057db44c39d4bb9c8f3821",
+  "sources": [
+    {
+      "path": "public/wechat-editions/2026-10-07.json",
+      "blobSha": "900989a5c81053fc5352c2127dac0696530563e3"
+    },
+    {
+      "path": "public/wechat-featured/2026-10-07.json",
+      "blobSha": "e63690685add599b9e1ae323d161dc70615962fe"
+    },
+    {
+      "path": "public/wechat-retrospective/phoenix1-structural-regeneration.json",
+      "blobSha": "ff7416a810cac8f0b4287becdfbd913a264a5647"
+    }
+  ],
+  "assetsVerified": 35,
+  "viewports": [
+    390,
+    690
+  ],
+  "rows": [
+    {
+      "article": "angew",
+      "doi": "10.1002/anie.3699223",
+      "viewportWidth": 390,
+      "allParagraphsAndCaptionsPresent": true,
+      "expectedImages": 15,
+      "loadedImages": 15,
+      "brokenImages": 0,
+      "images": [
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyG60qVD3w74pCEq8vkzILAibuC2ovyKnC64c52CAwnKxBMyq6rd6Vq3aZqHWibVYOxeNzDu0CKyKvCs92dC2EhD1uXWkKX6Wwqk/640?from=appmsg",
+          "naturalWidth": 520,
+          "naturalHeight": 520,
+          "loaded": true,
+          "displayWidth": 91.203125
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzLibQiaiaeONQ1vr1EDfN7MvccoDqMq8vnqCnqXQ9tLyk7rNibx6LnW3I2chdia0cMA0wIE89UicLHoibqKFvmrjypUpnabMyBblkGpw/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 340,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGztrH4haLveohnOpPWtfxjo49fZ9F38rJ9nUHdeMvmfCsRic6zEyHWuced7aoYMxWFaJqtymj4AjjJ2vlj9zqtlUZDicqzN2iaLDM/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 714,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwiaic1MrNK4iac60ZksAam0JqSEON34G6JKo4BQVEEkuqJq8dqXliacCSZE4V3XAAiaSTONgibpuNseja48qvCicjjMuXjIKeVKqXPzU/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 302,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGxXLdthdLJIeyuKhDyPot84ekmsB4uCABsWwgN1hEC2QK0ibJ9LO3FWM1frPLHkD4F6PIFFMh7CN9G7ib0apT2a0OnNLicpjRIBho/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 466,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyIesNQXjznGfsoABWLcjumOMDIETrIfAn4cBECCCSiclT7rjrarSrwicrW1g3cXgAVqT8QnuUae6WegPZhoichOjHsEibCibyfFeA8/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 568,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwpzFiaLWxoYClJB01LYAxcZibnhfPzCZfMWy0V7IhTaRic1paXOrRLtrL9wvRmknezfYjsUFTvqfz6X0LHe1WxkqaFtNpym7YIk4/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 674,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGyvl2fAUO3MMUdnyIbdPk2yNLsIwfUA5A6mwvjrKOJrWibtuTrWa4O0DJxQUI0BVeicKB5ib0BpHT8xobZ5a833Xbp9DoEXxPhDpY/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 696,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwz65cy0nL5edrIVNYSCk9OZsfaGafk2p3jDm1Tvgwp37c511VriakCW8hgL7D5YKObDzEaT93pIOhIL3J81JKNiccibVeQSqlAZw/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 875,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzY6D4we96tIkCPKX7JQ1mdZicLAFx6m29DHw2h7qQav3VQHRnzYMibTJnfO3zI4UJEQcJHgz1GdhlQicFDZwJgxDM3hPsVzZycn0/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 995,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzXZV1Sic5obrmNZ3ySJhEl27EIp13rK4ribosf6YCbFQeynE3NKWadzccBKsm4czkVciakVzVXEv9MZfADGSWN7LD9zTucSadGwA/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1066,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGyvKq9DpjzYIrUgJDp1eTzZibNq20olBXibjU3WsGricO2qiaswiaGUECKScOOYJ6aCf7WP3EDoib6rZdqOwtIx1urmW49E4cMUIQMcg/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 295,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyvYmBJ4NYrmTO901duTslw3mYJ0WwSMmDD4MickibPPNcVkibeBu9JuOMicq8dWFxu2y51C8FVBsZTicAtHEuFEUKicPmlgkIdA97icU/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 944,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGzkribRaP1GhW9sG9U8CkeIYFuyQuSXKsics9V77zWk2icCJFHLsj2SWLTrmpvdXcHibvcDfQIuvSNLibnJiapktCOM2LHb8ShuDb8jQ/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1295,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwvZtUEqUb0wEtoRkWtGRXQa7gZjP2nz3SmiacqqxYQVXL1xqvlCEicnTicbEcLHsGGuibxqu0Z49vDNicKONY8n3uXFI7Vk7b8sEd8/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 385,
+          "loaded": true,
+          "displayWidth": 356
+        }
+      ],
+      "figureImageMap": [
+        {
+          "id": "an01",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzLibQiaiaeONQ1vr1EDfN7MvccoDqMq8vnqCnqXQ9tLyk7rNibx6LnW3I2chdia0cMA0wIE89UicLHoibqKFvmrjypUpnabMyBblkGpw/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 340,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "an02",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGztrH4haLveohnOpPWtfxjo49fZ9F38rJ9nUHdeMvmfCsRic6zEyHWuced7aoYMxWFaJqtymj4AjjJ2vlj9zqtlUZDicqzN2iaLDM/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 714,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "an03",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwiaic1MrNK4iac60ZksAam0JqSEON34G6JKo4BQVEEkuqJq8dqXliacCSZE4V3XAAiaSTONgibpuNseja48qvCicjjMuXjIKeVKqXPzU/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 302,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "an04",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGxXLdthdLJIeyuKhDyPot84ekmsB4uCABsWwgN1hEC2QK0ibJ9LO3FWM1frPLHkD4F6PIFFMh7CN9G7ib0apT2a0OnNLicpjRIBho/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 466,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "an05",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyIesNQXjznGfsoABWLcjumOMDIETrIfAn4cBECCCSiclT7rjrarSrwicrW1g3cXgAVqT8QnuUae6WegPZhoichOjHsEibCibyfFeA8/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 568,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "an06",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwpzFiaLWxoYClJB01LYAxcZibnhfPzCZfMWy0V7IhTaRic1paXOrRLtrL9wvRmknezfYjsUFTvqfz6X0LHe1WxkqaFtNpym7YIk4/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 674,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "an07",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGyvl2fAUO3MMUdnyIbdPk2yNLsIwfUA5A6mwvjrKOJrWibtuTrWa4O0DJxQUI0BVeicKB5ib0BpHT8xobZ5a833Xbp9DoEXxPhDpY/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 696,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "an08",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwz65cy0nL5edrIVNYSCk9OZsfaGafk2p3jDm1Tvgwp37c511VriakCW8hgL7D5YKObDzEaT93pIOhIL3J81JKNiccibVeQSqlAZw/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 875,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "an09",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzY6D4we96tIkCPKX7JQ1mdZicLAFx6m29DHw2h7qQav3VQHRnzYMibTJnfO3zI4UJEQcJHgz1GdhlQicFDZwJgxDM3hPsVzZycn0/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 995,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "an10",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzXZV1Sic5obrmNZ3ySJhEl27EIp13rK4ribosf6YCbFQeynE3NKWadzccBKsm4czkVciakVzVXEv9MZfADGSWN7LD9zTucSadGwA/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1066,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "an11",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGyvKq9DpjzYIrUgJDp1eTzZibNq20olBXibjU3WsGricO2qiaswiaGUECKScOOYJ6aCf7WP3EDoib6rZdqOwtIx1urmW49E4cMUIQMcg/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 295,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "an12",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyvYmBJ4NYrmTO901duTslw3mYJ0WwSMmDD4MickibPPNcVkibeBu9JuOMicq8dWFxu2y51C8FVBsZTicAtHEuFEUKicPmlgkIdA97icU/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 944,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "an13",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGzkribRaP1GhW9sG9U8CkeIYFuyQuSXKsics9V77zWk2icCJFHLsj2SWLTrmpvdXcHibvcDfQIuvSNLibnJiapktCOM2LHb8ShuDb8jQ/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1295,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "an14",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwvZtUEqUb0wEtoRkWtGRXQa7gZjP2nz3SmiacqqxYQVXL1xqvlCEicnTicbEcLHsGGuibxqu0Z49vDNicKONY8n3uXFI7Vk7b8sEd8/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 385,
+          "loaded": true,
+          "displayWidth": 356
+        }
+      ],
+      "concepts": []
+    },
+    {
+      "article": "natcat",
+      "doi": "10.1038/s41929-026-01593-w",
+      "viewportWidth": 390,
+      "allParagraphsAndCaptionsPresent": true,
+      "expectedImages": 19,
+      "loadedImages": 19,
+      "brokenImages": 0,
+      "images": [
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzianNyaNBpzickFhzLtEMURmRpIAVEyXRosGIFBCK3cnWibxHhqUG6RUWQGjyUCTqaBNNQedL5mqdic1oTrsbx7MPAT9Qq3OzGVZM/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 436,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzSmvkKoJT9xvtLNNJ28picugLt3mn0EUf1IbbDk14wgWL6z7IMOuT54AOXSn2KxbWfF6SJkakcOCYZb84z1pSzpAZUYzibygUmQ/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 780,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyZeiccLA2u88vogbo27D29biabaBMqZ4kezhju070SHpj0Htkl0icwrMudzfywV3ouN42oWL0BpqekTEPTaH70KQDJQD2KzDBwzs/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1307,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwAgKI6VTQ4rekovNHL6nqxVPsVBNIhcf1VFsN644tvibRX4pvSxzUicI35ibAzjkNCUZy8NEpDRlM1QT0y3DxghVtJZVO62ob3ics/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1134,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyQicTSRqwYzr7Nr4vs4bRlJ6ZFrwJzGcjiagCHUictGFAZrULOlslPPC5xeyX5hvfgn8x1RatAZibHrSiaSkCDrPzTMexdRu2fDibkw/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1253,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzm3KFxFia6wjo060zTv4sTJROs4TZnj1pkl9VIjtUeP9MDXTicrIEIpynW8EJYhHftFAuUOIeYPjgC1Ytq6J57nwp4PwbLUkzXA/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 359,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGy5cjgibQhaOicNcxvh2RAAnuLjm0iaeMpEQmu8dQ76aydlFWRhwdDAicDiayvptdBZPGa4icmRKjufL1Er0ku9fvZJRjGseQZfK0D1k/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 469,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwpAKf8sb1v6ewfzsAqaoUXmlM85JSicUJaOJvKQtZGmII4qia39XJOMuEmzLKDkeomJNClVtuvMyldCKSrKpIOvaZicWjiagynx8Y/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 456,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzibuVPwY0ssPOlfBo2OHAFo7I3HLOTak7sOpVpxnwJu2X35M7BXojw6HB0A9fJBnLVcIZX1WkLG4Jz2qzwV7iajpyWYDULLaAKA/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 298,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGz0sZpo5N3XuD8DsUhHoFsPBoJGKTpv2NFEqnXva7nBczQLWPKZEKGbNSdeBG7b4Jxf9IFkwiaiaib4TU7ybfZl2AlTJqCfDiaNWJE/640?from=appmsg",
+          "naturalWidth": 736,
+          "naturalHeight": 918,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwAf6U6n2bFdbJqgQJIB7Tn09D8HsfF11t1Ficm3P3bMEluAdkoGlUfvvZawRCicLSw51wRMpQkpygTDlfGZXrOMwgxfibRXXoXWo/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 677,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGxNGBMkFewS87jyhUTdgmQdsSWaxWGpWEOIR8ulXTu0Fnj3FibNx4VYew0CvfOlibT3CibblOW1ImuQXkLy5tnQwDbTW2Zicia9lJHY/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1248,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGzTqeIBytuPBCWSdE0GoWcG2xsVm1FfsuQ6SroKg6AWrzWLxKia6JWicdO1ibIEsEcSzX9bmJcJ6uAj5E5AiczH6pbgPKjzE7V5cJ0/640?from=appmsg",
+          "naturalWidth": 868,
+          "naturalHeight": 974,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGz2OR1MBe2UOBAd5ujsXDib01sa0JYS2fZ8ctLIlsfxWUf5eQXw0PDfczsZhl19mibGGqeIdTakX3F5ZGcmecg9FTWAD0k6xjIJM/640?from=appmsg",
+          "naturalWidth": 1055,
+          "naturalHeight": 886,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzxWCFWmJp4Viae2Qqf34ZOOqica3Dknvibsc4q3OS6lGrWJcFyro0F7XNApOdqOtLmKpcuic1pUTyfj45T8wWSlcPo3tOnIKICwZY/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 448,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGxIWia4TW6RNicTpcm3xf6kU0w4dVHL1iabYHGZ7L6InXH6HvYNT2PACqelfz37uvDoD7tp7qibeutxh23CBibLSic0TwBBialDEPibDf8/640?from=appmsg",
+          "naturalWidth": 915,
+          "naturalHeight": 976,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGxdtlRqIUNq0rYzTqy78xW7odCLk0qTia7b2NDWvBdk0E5EvZqcojVAhfPwMEgoTARblMQaMJeXR4HBAITibSAEESqn28hOR8EL0/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1639,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwpQSwJuMe2uUR3iaO2cH6jX9kDVfWuYib5fb0HLJ1v3qk9KTckaVVdAWp9icuibx8GVCrgickwlLKEKDzalADFl9zGfDJicGwAnPBlM/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 823,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzONYRBBDeNCsU0mxfzorCb7X6gIiaBJ9yKqayp7mD1rvGTmuicU9aCunc6YxQdTwbq6NZvq8OQxjdOPfxo9xgE9fe0PLwGS4QFQ/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 460,
+          "loaded": true,
+          "displayWidth": 356
+        }
+      ],
+      "figureImageMap": [
+        {
+          "id": "nc01",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzianNyaNBpzickFhzLtEMURmRpIAVEyXRosGIFBCK3cnWibxHhqUG6RUWQGjyUCTqaBNNQedL5mqdic1oTrsbx7MPAT9Qq3OzGVZM/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 436,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc02",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzSmvkKoJT9xvtLNNJ28picugLt3mn0EUf1IbbDk14wgWL6z7IMOuT54AOXSn2KxbWfF6SJkakcOCYZb84z1pSzpAZUYzibygUmQ/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 780,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc03",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzm3KFxFia6wjo060zTv4sTJROs4TZnj1pkl9VIjtUeP9MDXTicrIEIpynW8EJYhHftFAuUOIeYPjgC1Ytq6J57nwp4PwbLUkzXA/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 359,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc04",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzibuVPwY0ssPOlfBo2OHAFo7I3HLOTak7sOpVpxnwJu2X35M7BXojw6HB0A9fJBnLVcIZX1WkLG4Jz2qzwV7iajpyWYDULLaAKA/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 298,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc05",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGz0sZpo5N3XuD8DsUhHoFsPBoJGKTpv2NFEqnXva7nBczQLWPKZEKGbNSdeBG7b4Jxf9IFkwiaiaib4TU7ybfZl2AlTJqCfDiaNWJE/640?from=appmsg",
+          "naturalWidth": 736,
+          "naturalHeight": 918,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc06",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGzTqeIBytuPBCWSdE0GoWcG2xsVm1FfsuQ6SroKg6AWrzWLxKia6JWicdO1ibIEsEcSzX9bmJcJ6uAj5E5AiczH6pbgPKjzE7V5cJ0/640?from=appmsg",
+          "naturalWidth": 868,
+          "naturalHeight": 974,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc07",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGz2OR1MBe2UOBAd5ujsXDib01sa0JYS2fZ8ctLIlsfxWUf5eQXw0PDfczsZhl19mibGGqeIdTakX3F5ZGcmecg9FTWAD0k6xjIJM/640?from=appmsg",
+          "naturalWidth": 1055,
+          "naturalHeight": 886,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc08",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzxWCFWmJp4Viae2Qqf34ZOOqica3Dknvibsc4q3OS6lGrWJcFyro0F7XNApOdqOtLmKpcuic1pUTyfj45T8wWSlcPo3tOnIKICwZY/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 448,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc09",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGxIWia4TW6RNicTpcm3xf6kU0w4dVHL1iabYHGZ7L6InXH6HvYNT2PACqelfz37uvDoD7tp7qibeutxh23CBibLSic0TwBBialDEPibDf8/640?from=appmsg",
+          "naturalWidth": 915,
+          "naturalHeight": 976,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc10",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwpQSwJuMe2uUR3iaO2cH6jX9kDVfWuYib5fb0HLJ1v3qk9KTckaVVdAWp9icuibx8GVCrgickwlLKEKDzalADFl9zGfDJicGwAnPBlM/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 823,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc11",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzONYRBBDeNCsU0mxfzorCb7X6gIiaBJ9yKqayp7mD1rvGTmuicU9aCunc6YxQdTwbq6NZvq8OQxjdOPfxo9xgE9fe0PLwGS4QFQ/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 460,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc12",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGy5cjgibQhaOicNcxvh2RAAnuLjm0iaeMpEQmu8dQ76aydlFWRhwdDAicDiayvptdBZPGa4icmRKjufL1Er0ku9fvZJRjGseQZfK0D1k/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 469,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc13",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwpAKf8sb1v6ewfzsAqaoUXmlM85JSicUJaOJvKQtZGmII4qia39XJOMuEmzLKDkeomJNClVtuvMyldCKSrKpIOvaZicWjiagynx8Y/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 456,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc14",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGxdtlRqIUNq0rYzTqy78xW7odCLk0qTia7b2NDWvBdk0E5EvZqcojVAhfPwMEgoTARblMQaMJeXR4HBAITibSAEESqn28hOR8EL0/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1639,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc15",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwAf6U6n2bFdbJqgQJIB7Tn09D8HsfF11t1Ficm3P3bMEluAdkoGlUfvvZawRCicLSw51wRMpQkpygTDlfGZXrOMwgxfibRXXoXWo/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 677,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "nc16",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGxNGBMkFewS87jyhUTdgmQdsSWaxWGpWEOIR8ulXTu0Fnj3FibNx4VYew0CvfOlibT3CibblOW1ImuQXkLy5tnQwDbTW2Zicia9lJHY/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1248,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "ncx1",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyZeiccLA2u88vogbo27D29biabaBMqZ4kezhju070SHpj0Htkl0icwrMudzfywV3ouN42oWL0BpqekTEPTaH70KQDJQD2KzDBwzs/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1307,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "ncx2",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwAgKI6VTQ4rekovNHL6nqxVPsVBNIhcf1VFsN644tvibRX4pvSxzUicI35ibAzjkNCUZy8NEpDRlM1QT0y3DxghVtJZVO62ob3ics/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1134,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "ncx3",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyQicTSRqwYzr7Nr4vs4bRlJ6ZFrwJzGcjiagCHUictGFAZrULOlslPPC5xeyX5hvfgn8x1RatAZibHrSiaSkCDrPzTMexdRu2fDibkw/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1253,
+          "loaded": true,
+          "displayWidth": 356
+        }
+      ],
+      "concepts": [
+        {
+          "id": "ncx1",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyZeiccLA2u88vogbo27D29biabaBMqZ4kezhju070SHpj0Htkl0icwrMudzfywV3ouN42oWL0BpqekTEPTaH70KQDJQD2KzDBwzs/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1307,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "ncx2",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwAgKI6VTQ4rekovNHL6nqxVPsVBNIhcf1VFsN644tvibRX4pvSxzUicI35ibAzjkNCUZy8NEpDRlM1QT0y3DxghVtJZVO62ob3ics/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1134,
+          "loaded": true,
+          "displayWidth": 356
+        },
+        {
+          "id": "ncx3",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyQicTSRqwYzr7Nr4vs4bRlJ6ZFrwJzGcjiagCHUictGFAZrULOlslPPC5xeyX5hvfgn8x1RatAZibHrSiaSkCDrPzTMexdRu2fDibkw/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1253,
+          "loaded": true,
+          "displayWidth": 356
+        }
+      ]
+    },
+    {
+      "article": "angew",
+      "doi": "10.1002/anie.3699223",
+      "viewportWidth": 690,
+      "allParagraphsAndCaptionsPresent": true,
+      "expectedImages": 15,
+      "loadedImages": 15,
+      "brokenImages": 0,
+      "images": [
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyG60qVD3w74pCEq8vkzILAibuC2ovyKnC64c52CAwnKxBMyq6rd6Vq3aZqHWibVYOxeNzDu0CKyKvCs92dC2EhD1uXWkKX6Wwqk/640?from=appmsg",
+          "naturalWidth": 520,
+          "naturalHeight": 520,
+          "loaded": true,
+          "displayWidth": 132
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzLibQiaiaeONQ1vr1EDfN7MvccoDqMq8vnqCnqXQ9tLyk7rNibx6LnW3I2chdia0cMA0wIE89UicLHoibqKFvmrjypUpnabMyBblkGpw/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 340,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGztrH4haLveohnOpPWtfxjo49fZ9F38rJ9nUHdeMvmfCsRic6zEyHWuced7aoYMxWFaJqtymj4AjjJ2vlj9zqtlUZDicqzN2iaLDM/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 714,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwiaic1MrNK4iac60ZksAam0JqSEON34G6JKo4BQVEEkuqJq8dqXliacCSZE4V3XAAiaSTONgibpuNseja48qvCicjjMuXjIKeVKqXPzU/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 302,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGxXLdthdLJIeyuKhDyPot84ekmsB4uCABsWwgN1hEC2QK0ibJ9LO3FWM1frPLHkD4F6PIFFMh7CN9G7ib0apT2a0OnNLicpjRIBho/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 466,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyIesNQXjznGfsoABWLcjumOMDIETrIfAn4cBECCCSiclT7rjrarSrwicrW1g3cXgAVqT8QnuUae6WegPZhoichOjHsEibCibyfFeA8/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 568,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwpzFiaLWxoYClJB01LYAxcZibnhfPzCZfMWy0V7IhTaRic1paXOrRLtrL9wvRmknezfYjsUFTvqfz6X0LHe1WxkqaFtNpym7YIk4/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 674,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGyvl2fAUO3MMUdnyIbdPk2yNLsIwfUA5A6mwvjrKOJrWibtuTrWa4O0DJxQUI0BVeicKB5ib0BpHT8xobZ5a833Xbp9DoEXxPhDpY/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 696,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwz65cy0nL5edrIVNYSCk9OZsfaGafk2p3jDm1Tvgwp37c511VriakCW8hgL7D5YKObDzEaT93pIOhIL3J81JKNiccibVeQSqlAZw/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 875,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzY6D4we96tIkCPKX7JQ1mdZicLAFx6m29DHw2h7qQav3VQHRnzYMibTJnfO3zI4UJEQcJHgz1GdhlQicFDZwJgxDM3hPsVzZycn0/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 995,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzXZV1Sic5obrmNZ3ySJhEl27EIp13rK4ribosf6YCbFQeynE3NKWadzccBKsm4czkVciakVzVXEv9MZfADGSWN7LD9zTucSadGwA/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1066,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGyvKq9DpjzYIrUgJDp1eTzZibNq20olBXibjU3WsGricO2qiaswiaGUECKScOOYJ6aCf7WP3EDoib6rZdqOwtIx1urmW49E4cMUIQMcg/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 295,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyvYmBJ4NYrmTO901duTslw3mYJ0WwSMmDD4MickibPPNcVkibeBu9JuOMicq8dWFxu2y51C8FVBsZTicAtHEuFEUKicPmlgkIdA97icU/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 944,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGzkribRaP1GhW9sG9U8CkeIYFuyQuSXKsics9V77zWk2icCJFHLsj2SWLTrmpvdXcHibvcDfQIuvSNLibnJiapktCOM2LHb8ShuDb8jQ/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1295,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwvZtUEqUb0wEtoRkWtGRXQa7gZjP2nz3SmiacqqxYQVXL1xqvlCEicnTicbEcLHsGGuibxqu0Z49vDNicKONY8n3uXFI7Vk7b8sEd8/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 385,
+          "loaded": true,
+          "displayWidth": 626
+        }
+      ],
+      "figureImageMap": [
+        {
+          "id": "an01",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzLibQiaiaeONQ1vr1EDfN7MvccoDqMq8vnqCnqXQ9tLyk7rNibx6LnW3I2chdia0cMA0wIE89UicLHoibqKFvmrjypUpnabMyBblkGpw/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 340,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "an02",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGztrH4haLveohnOpPWtfxjo49fZ9F38rJ9nUHdeMvmfCsRic6zEyHWuced7aoYMxWFaJqtymj4AjjJ2vlj9zqtlUZDicqzN2iaLDM/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 714,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "an03",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwiaic1MrNK4iac60ZksAam0JqSEON34G6JKo4BQVEEkuqJq8dqXliacCSZE4V3XAAiaSTONgibpuNseja48qvCicjjMuXjIKeVKqXPzU/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 302,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "an04",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGxXLdthdLJIeyuKhDyPot84ekmsB4uCABsWwgN1hEC2QK0ibJ9LO3FWM1frPLHkD4F6PIFFMh7CN9G7ib0apT2a0OnNLicpjRIBho/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 466,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "an05",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyIesNQXjznGfsoABWLcjumOMDIETrIfAn4cBECCCSiclT7rjrarSrwicrW1g3cXgAVqT8QnuUae6WegPZhoichOjHsEibCibyfFeA8/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 568,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "an06",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwpzFiaLWxoYClJB01LYAxcZibnhfPzCZfMWy0V7IhTaRic1paXOrRLtrL9wvRmknezfYjsUFTvqfz6X0LHe1WxkqaFtNpym7YIk4/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 674,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "an07",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGyvl2fAUO3MMUdnyIbdPk2yNLsIwfUA5A6mwvjrKOJrWibtuTrWa4O0DJxQUI0BVeicKB5ib0BpHT8xobZ5a833Xbp9DoEXxPhDpY/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 696,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "an08",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwz65cy0nL5edrIVNYSCk9OZsfaGafk2p3jDm1Tvgwp37c511VriakCW8hgL7D5YKObDzEaT93pIOhIL3J81JKNiccibVeQSqlAZw/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 875,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "an09",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzY6D4we96tIkCPKX7JQ1mdZicLAFx6m29DHw2h7qQav3VQHRnzYMibTJnfO3zI4UJEQcJHgz1GdhlQicFDZwJgxDM3hPsVzZycn0/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 995,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "an10",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzXZV1Sic5obrmNZ3ySJhEl27EIp13rK4ribosf6YCbFQeynE3NKWadzccBKsm4czkVciakVzVXEv9MZfADGSWN7LD9zTucSadGwA/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1066,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "an11",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGyvKq9DpjzYIrUgJDp1eTzZibNq20olBXibjU3WsGricO2qiaswiaGUECKScOOYJ6aCf7WP3EDoib6rZdqOwtIx1urmW49E4cMUIQMcg/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 295,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "an12",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyvYmBJ4NYrmTO901duTslw3mYJ0WwSMmDD4MickibPPNcVkibeBu9JuOMicq8dWFxu2y51C8FVBsZTicAtHEuFEUKicPmlgkIdA97icU/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 944,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "an13",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGzkribRaP1GhW9sG9U8CkeIYFuyQuSXKsics9V77zWk2icCJFHLsj2SWLTrmpvdXcHibvcDfQIuvSNLibnJiapktCOM2LHb8ShuDb8jQ/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1295,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "an14",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwvZtUEqUb0wEtoRkWtGRXQa7gZjP2nz3SmiacqqxYQVXL1xqvlCEicnTicbEcLHsGGuibxqu0Z49vDNicKONY8n3uXFI7Vk7b8sEd8/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 385,
+          "loaded": true,
+          "displayWidth": 626
+        }
+      ],
+      "concepts": []
+    },
+    {
+      "article": "natcat",
+      "doi": "10.1038/s41929-026-01593-w",
+      "viewportWidth": 690,
+      "allParagraphsAndCaptionsPresent": true,
+      "expectedImages": 19,
+      "loadedImages": 19,
+      "brokenImages": 0,
+      "images": [
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzianNyaNBpzickFhzLtEMURmRpIAVEyXRosGIFBCK3cnWibxHhqUG6RUWQGjyUCTqaBNNQedL5mqdic1oTrsbx7MPAT9Qq3OzGVZM/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 436,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzSmvkKoJT9xvtLNNJ28picugLt3mn0EUf1IbbDk14wgWL6z7IMOuT54AOXSn2KxbWfF6SJkakcOCYZb84z1pSzpAZUYzibygUmQ/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 780,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyZeiccLA2u88vogbo27D29biabaBMqZ4kezhju070SHpj0Htkl0icwrMudzfywV3ouN42oWL0BpqekTEPTaH70KQDJQD2KzDBwzs/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1307,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwAgKI6VTQ4rekovNHL6nqxVPsVBNIhcf1VFsN644tvibRX4pvSxzUicI35ibAzjkNCUZy8NEpDRlM1QT0y3DxghVtJZVO62ob3ics/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1134,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyQicTSRqwYzr7Nr4vs4bRlJ6ZFrwJzGcjiagCHUictGFAZrULOlslPPC5xeyX5hvfgn8x1RatAZibHrSiaSkCDrPzTMexdRu2fDibkw/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1253,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzm3KFxFia6wjo060zTv4sTJROs4TZnj1pkl9VIjtUeP9MDXTicrIEIpynW8EJYhHftFAuUOIeYPjgC1Ytq6J57nwp4PwbLUkzXA/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 359,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGy5cjgibQhaOicNcxvh2RAAnuLjm0iaeMpEQmu8dQ76aydlFWRhwdDAicDiayvptdBZPGa4icmRKjufL1Er0ku9fvZJRjGseQZfK0D1k/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 469,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwpAKf8sb1v6ewfzsAqaoUXmlM85JSicUJaOJvKQtZGmII4qia39XJOMuEmzLKDkeomJNClVtuvMyldCKSrKpIOvaZicWjiagynx8Y/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 456,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzibuVPwY0ssPOlfBo2OHAFo7I3HLOTak7sOpVpxnwJu2X35M7BXojw6HB0A9fJBnLVcIZX1WkLG4Jz2qzwV7iajpyWYDULLaAKA/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 298,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGz0sZpo5N3XuD8DsUhHoFsPBoJGKTpv2NFEqnXva7nBczQLWPKZEKGbNSdeBG7b4Jxf9IFkwiaiaib4TU7ybfZl2AlTJqCfDiaNWJE/640?from=appmsg",
+          "naturalWidth": 736,
+          "naturalHeight": 918,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwAf6U6n2bFdbJqgQJIB7Tn09D8HsfF11t1Ficm3P3bMEluAdkoGlUfvvZawRCicLSw51wRMpQkpygTDlfGZXrOMwgxfibRXXoXWo/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 677,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGxNGBMkFewS87jyhUTdgmQdsSWaxWGpWEOIR8ulXTu0Fnj3FibNx4VYew0CvfOlibT3CibblOW1ImuQXkLy5tnQwDbTW2Zicia9lJHY/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1248,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGzTqeIBytuPBCWSdE0GoWcG2xsVm1FfsuQ6SroKg6AWrzWLxKia6JWicdO1ibIEsEcSzX9bmJcJ6uAj5E5AiczH6pbgPKjzE7V5cJ0/640?from=appmsg",
+          "naturalWidth": 868,
+          "naturalHeight": 974,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGz2OR1MBe2UOBAd5ujsXDib01sa0JYS2fZ8ctLIlsfxWUf5eQXw0PDfczsZhl19mibGGqeIdTakX3F5ZGcmecg9FTWAD0k6xjIJM/640?from=appmsg",
+          "naturalWidth": 1055,
+          "naturalHeight": 886,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzxWCFWmJp4Viae2Qqf34ZOOqica3Dknvibsc4q3OS6lGrWJcFyro0F7XNApOdqOtLmKpcuic1pUTyfj45T8wWSlcPo3tOnIKICwZY/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 448,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGxIWia4TW6RNicTpcm3xf6kU0w4dVHL1iabYHGZ7L6InXH6HvYNT2PACqelfz37uvDoD7tp7qibeutxh23CBibLSic0TwBBialDEPibDf8/640?from=appmsg",
+          "naturalWidth": 915,
+          "naturalHeight": 976,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGxdtlRqIUNq0rYzTqy78xW7odCLk0qTia7b2NDWvBdk0E5EvZqcojVAhfPwMEgoTARblMQaMJeXR4HBAITibSAEESqn28hOR8EL0/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1639,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwpQSwJuMe2uUR3iaO2cH6jX9kDVfWuYib5fb0HLJ1v3qk9KTckaVVdAWp9icuibx8GVCrgickwlLKEKDzalADFl9zGfDJicGwAnPBlM/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 823,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzONYRBBDeNCsU0mxfzorCb7X6gIiaBJ9yKqayp7mD1rvGTmuicU9aCunc6YxQdTwbq6NZvq8OQxjdOPfxo9xgE9fe0PLwGS4QFQ/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 460,
+          "loaded": true,
+          "displayWidth": 626
+        }
+      ],
+      "figureImageMap": [
+        {
+          "id": "nc01",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzianNyaNBpzickFhzLtEMURmRpIAVEyXRosGIFBCK3cnWibxHhqUG6RUWQGjyUCTqaBNNQedL5mqdic1oTrsbx7MPAT9Qq3OzGVZM/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 436,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc02",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzSmvkKoJT9xvtLNNJ28picugLt3mn0EUf1IbbDk14wgWL6z7IMOuT54AOXSn2KxbWfF6SJkakcOCYZb84z1pSzpAZUYzibygUmQ/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 780,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc03",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzm3KFxFia6wjo060zTv4sTJROs4TZnj1pkl9VIjtUeP9MDXTicrIEIpynW8EJYhHftFAuUOIeYPjgC1Ytq6J57nwp4PwbLUkzXA/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 359,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc04",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzibuVPwY0ssPOlfBo2OHAFo7I3HLOTak7sOpVpxnwJu2X35M7BXojw6HB0A9fJBnLVcIZX1WkLG4Jz2qzwV7iajpyWYDULLaAKA/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 298,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc05",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGz0sZpo5N3XuD8DsUhHoFsPBoJGKTpv2NFEqnXva7nBczQLWPKZEKGbNSdeBG7b4Jxf9IFkwiaiaib4TU7ybfZl2AlTJqCfDiaNWJE/640?from=appmsg",
+          "naturalWidth": 736,
+          "naturalHeight": 918,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc06",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGzTqeIBytuPBCWSdE0GoWcG2xsVm1FfsuQ6SroKg6AWrzWLxKia6JWicdO1ibIEsEcSzX9bmJcJ6uAj5E5AiczH6pbgPKjzE7V5cJ0/640?from=appmsg",
+          "naturalWidth": 868,
+          "naturalHeight": 974,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc07",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGz2OR1MBe2UOBAd5ujsXDib01sa0JYS2fZ8ctLIlsfxWUf5eQXw0PDfczsZhl19mibGGqeIdTakX3F5ZGcmecg9FTWAD0k6xjIJM/640?from=appmsg",
+          "naturalWidth": 1055,
+          "naturalHeight": 886,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc08",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzxWCFWmJp4Viae2Qqf34ZOOqica3Dknvibsc4q3OS6lGrWJcFyro0F7XNApOdqOtLmKpcuic1pUTyfj45T8wWSlcPo3tOnIKICwZY/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 448,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc09",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGxIWia4TW6RNicTpcm3xf6kU0w4dVHL1iabYHGZ7L6InXH6HvYNT2PACqelfz37uvDoD7tp7qibeutxh23CBibLSic0TwBBialDEPibDf8/640?from=appmsg",
+          "naturalWidth": 915,
+          "naturalHeight": 976,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc10",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwpQSwJuMe2uUR3iaO2cH6jX9kDVfWuYib5fb0HLJ1v3qk9KTckaVVdAWp9icuibx8GVCrgickwlLKEKDzalADFl9zGfDJicGwAnPBlM/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 823,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc11",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGzONYRBBDeNCsU0mxfzorCb7X6gIiaBJ9yKqayp7mD1rvGTmuicU9aCunc6YxQdTwbq6NZvq8OQxjdOPfxo9xgE9fe0PLwGS4QFQ/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 460,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc12",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGy5cjgibQhaOicNcxvh2RAAnuLjm0iaeMpEQmu8dQ76aydlFWRhwdDAicDiayvptdBZPGa4icmRKjufL1Er0ku9fvZJRjGseQZfK0D1k/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 469,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc13",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwpAKf8sb1v6ewfzsAqaoUXmlM85JSicUJaOJvKQtZGmII4qia39XJOMuEmzLKDkeomJNClVtuvMyldCKSrKpIOvaZicWjiagynx8Y/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 456,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc14",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGxdtlRqIUNq0rYzTqy78xW7odCLk0qTia7b2NDWvBdk0E5EvZqcojVAhfPwMEgoTARblMQaMJeXR4HBAITibSAEESqn28hOR8EL0/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1639,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc15",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGwAf6U6n2bFdbJqgQJIB7Tn09D8HsfF11t1Ficm3P3bMEluAdkoGlUfvvZawRCicLSw51wRMpQkpygTDlfGZXrOMwgxfibRXXoXWo/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 677,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "nc16",
+          "src": "https://mmbiz.qpic.cn/mmbiz_png/uSicOxt5gIGxNGBMkFewS87jyhUTdgmQdsSWaxWGpWEOIR8ulXTu0Fnj3FibNx4VYew0CvfOlibT3CibblOW1ImuQXkLy5tnQwDbTW2Zicia9lJHY/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1248,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "ncx1",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyZeiccLA2u88vogbo27D29biabaBMqZ4kezhju070SHpj0Htkl0icwrMudzfywV3ouN42oWL0BpqekTEPTaH70KQDJQD2KzDBwzs/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1307,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "ncx2",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwAgKI6VTQ4rekovNHL6nqxVPsVBNIhcf1VFsN644tvibRX4pvSxzUicI35ibAzjkNCUZy8NEpDRlM1QT0y3DxghVtJZVO62ob3ics/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1134,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "ncx3",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyQicTSRqwYzr7Nr4vs4bRlJ6ZFrwJzGcjiagCHUictGFAZrULOlslPPC5xeyX5hvfgn8x1RatAZibHrSiaSkCDrPzTMexdRu2fDibkw/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1253,
+          "loaded": true,
+          "displayWidth": 626
+        }
+      ],
+      "concepts": [
+        {
+          "id": "ncx1",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyZeiccLA2u88vogbo27D29biabaBMqZ4kezhju070SHpj0Htkl0icwrMudzfywV3ouN42oWL0BpqekTEPTaH70KQDJQD2KzDBwzs/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1307,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "ncx2",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGwAgKI6VTQ4rekovNHL6nqxVPsVBNIhcf1VFsN644tvibRX4pvSxzUicI35ibAzjkNCUZy8NEpDRlM1QT0y3DxghVtJZVO62ob3ics/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1134,
+          "loaded": true,
+          "displayWidth": 626
+        },
+        {
+          "id": "ncx3",
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_png/uSicOxt5gIGyQicTSRqwYzr7Nr4vs4bRlJ6ZFrwJzGcjiagCHUictGFAZrULOlslPPC5xeyX5hvfgn8x1RatAZibHrSiaSkCDrPzTMexdRu2fDibkw/640?from=appmsg",
+          "naturalWidth": 1080,
+          "naturalHeight": 1253,
+          "loaded": true,
+          "displayWidth": 626
+        }
+      ]
+    }
+  ],
+  "covers": [
+    {
+      "viewportWidth": 390,
+      "images": [
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_jpg/uSicOxt5gIGyzJfBhSmyyqnR9g5aSnK51SJBeLMAakWcJJsL7RNtaqyibPyuYsIpuIIVnXcnlPetyuZeLunmroSb7XzBicl79Gt2Hib6mawuAOM/0?wx_fmt=jpeg",
+          "naturalWidth": 1280,
+          "naturalHeight": 544,
+          "loaded": true,
+          "displayWidth": 362
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_jpg/uSicOxt5gIGxxk4yicdeiaIlFb4iaOC5QPem6x9MDibnNORGLricwg8RicNsZnkSrf178nDK0QzLV0YIOTibKibf2oKlsI93fOHNWGib3fiaYBCGKxOqpI/0?wx_fmt=jpeg",
+          "naturalWidth": 1280,
+          "naturalHeight": 1280,
+          "loaded": true,
+          "displayWidth": 88
+        }
+      ]
+    },
+    {
+      "viewportWidth": 690,
+      "images": [
+        {
+          "src": "https://mmbiz.qpic.cn/sz_mmbiz_jpg/uSicOxt5gIGyzJfBhSmyyqnR9g5aSnK51SJBeLMAakWcJJsL7RNtaqyibPyuYsIpuIIVnXcnlPetyuZeLunmroSb7XzBicl79Gt2Hib6mawuAOM/0?wx_fmt=jpeg",
+          "naturalWidth": 1280,
+          "naturalHeight": 544,
+          "loaded": true,
+          "displayWidth": 638
+        },
+        {
+          "src": "https://mmbiz.qpic.cn/mmbiz_jpg/uSicOxt5gIGxxk4yicdeiaIlFb4iaOC5QPem6x9MDibnNORGLricwg8RicNsZnkSrf178nDK0QzLV0YIOTibKibf2oKlsI93fOHNWGib3fiaYBCGKxOqpI/0?wx_fmt=jpeg",
+          "naturalWidth": 1280,
+          "naturalHeight": 1280,
+          "loaded": true,
+          "displayWidth": 88
+        }
+      ]
+    }
+  ],
+  "pageErrors": [],
+  "nativeTitleOverlayChecks": [
+    {
+      "viewport": 390,
+      "scenario": "current-title",
+      "fontSize": 18,
+      "lineHeight": 22,
+      "titleClearancePx": 5.786569148936167,
+      "minimumWhiteContrast": 10.160350885727997,
+      "coverSource": "actual draft/get returned cover",
+      "blueBandStartRatio": 0.4625,
+      "minimumTitleClearancePx": 4,
+      "renderedTitle": "有机合成文献日报｜10.07｜今日精选｜Angew：用于自由基交叉偶联的氧化还原可调NHC–三芳胺杂化有机光催化剂",
+      "renderedLineCount": 3,
+      "scope": "QA simulation of the current pinned title at 18px/22px only; a future title requires a fresh layout review; no four-line guarantee; title is not baked into published cover"
+    },
+    {
+      "viewport": 690,
+      "scenario": "current-title",
+      "fontSize": 18,
+      "lineHeight": 22,
+      "titleClearancePx": 90.92054521276594,
+      "minimumWhiteContrast": 10.073268996599808,
+      "coverSource": "actual draft/get returned cover",
+      "blueBandStartRatio": 0.4625,
+      "minimumTitleClearancePx": 4,
+      "renderedTitle": "有机合成文献日报｜10.07｜今日精选｜Angew：用于自由基交叉偶联的氧化还原可调NHC–三芳胺杂化有机光催化剂",
+      "renderedLineCount": 2,
+      "scope": "QA simulation of the current pinned title at 18px/22px only; a future title requires a fresh layout review; no four-line guarantee; title is not baked into published cover"
+    }
+  ],
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/250a24b78552d06de7b61cc8.html",
+  "mediaId": "KhELYUzvwADwB_l1xH1SWDVcSTXYXLPAONVlEJoVvQlIJ8kwU1cYTCnMr3d7KQKl",
+  "receiptTimestamp": "2026-10-07T07:38:42.197310Z",
+  "scope": "actual draft/get-derived read-only preview",
+  "visualReview": "pass: root inspected actual returned enlarged original-color TOC, reduced blue title band and current-title mobile overlay",
+  "draftWritten": false,
+  "publisherTriggered": false,
+  "repositoryWritten": false,
+  "publicSend": false,
+  "visualReviewCompletedAt": "2026-10-07T07:41:10Z",
+  "reviewedScreenshots": [
+    "angew-current-title-overlay-390.png",
+    "angew-cover-690.png",
+    "actual-cards-390.png"
+  ],
+  "artifact": {
+    "id": 11467950876,
+    "name": "wechat-r13-review-37588651177",
+    "sha256": "20612d73bd1595b69e914d403907736a2f32378bfed1046d805b0f04ad133114"
+  }
+}

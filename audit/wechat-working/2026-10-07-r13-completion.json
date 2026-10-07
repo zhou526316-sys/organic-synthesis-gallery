@@ -1,0 +1,63 @@
+{
+  "revision": "2026-10-07-r13",
+  "completedAt": "2026-10-07T07:41:10Z",
+  "status": "complete",
+  "requests": [
+    "现在的蓝条太高了，toc又太小了",
+    "蓝条只要能覆盖白色字体就行啊"
+  ],
+  "sourceCommit": "255928bf174b215c9016192396acf26b85e55d4e",
+  "sourceSnapshot": "31be7c426559653f2327f6b75b4999b1671dfecb11057db44c39d4bb9c8f3821",
+  "sourceQaRunId": "37588405325",
+  "sourceQaArtifactId": 11467164739,
+  "publisherCommit": "761b0a69d637bf11c81a33e98417025f802cb1d3",
+  "publisherRunId": "37588562145",
+  "actualQaCommit": "d46bb5ae8b4a700dc19818eec148a44a24a7b770",
+  "actualQaRunId": "37588651177",
+  "actualQaArtifact": {
+    "id": 11467950876,
+    "name": "wechat-r13-review-37588651177",
+    "sha256": "20612d73bd1595b69e914d403907736a2f32378bfed1046d805b0f04ad133114"
+  },
+  "receipt": {
+    "generatedAt": "2026-10-07T07:38:42.197310Z",
+    "status": "ok",
+    "stage": "draft_update",
+    "mode": "daily",
+    "slug": null,
+    "title": null,
+    "publicationSlot": "2026-10-07T08:00:00+08:00",
+    "media_id": "KhELYUzvwADwB_l1xH1SWDVcSTXYXLPAONVlEJoVvQlIJ8kwU1cYTCnMr3d7KQKl",
+    "paper_count": 33,
+    "draft_readback": "ok",
+    "preview_url": "https://relay.gczhouwld.com/wechat-preview/250a24b78552d06de7b61cc8.html",
+    "publish_id": null,
+    "publish_status": null,
+    "article_id": null,
+    "article_url": null,
+    "content_source_url": "https://gallery.gczhouwld.com/?edition=2026-10-07"
+  },
+  "coverAsset": "public/wechat-assets/reviewed/2026-10-07-r13/an-cover-white-toc-fitted-band-r13.png",
+  "originalTocSourceBytesUnchanged": true,
+  "tocBounds": [
+    590,
+    12,
+    1290,
+    357.8
+  ],
+  "blueTitleBand": [
+    0,
+    370,
+    1880,
+    800
+  ],
+  "tocScaleComparedWithR12": 1.4,
+  "bandHeightPrevious": 512,
+  "bandHeightCurrent": 430,
+  "titleTocOverlap": false,
+  "titleVerificationScope": "Current pinned full title at18px/22px in QA simulation on actual draft/get returned cover",
+  "actualQa": "audit/wechat-working/2026-10-07-r13-real-draft-qa.json",
+  "publicSendAuthorized": false,
+  "publicSendPerformed": false,
+  "finalResponsePath": "audit/gpt-responses/2026-10-07/154110-wechat-r13-complete.md"
+}
