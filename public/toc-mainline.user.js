@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.41
+// @version      6.2.42
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -55,7 +55,9 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.41';
+  var INSTALL_REVISION = '6.2.42';
+  var MANUAL_RECOVERY_REVISION = '20261007-manual-resume-v1';
+  var manualRecoveryBusy = false;
   var STALE_CONTROLLER_TAKEOVER_REVISION = '20261006-stale-controller-takeover-v1';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
@@ -3839,17 +3841,19 @@ function embeddedJobDois(value) {
     return {retired:true,observed:observed,doi:doi};
   }
 
-  function reconcileActiveJobBeforeDispatch() {
+  function reconcileActiveJobBeforeDispatch(dryRun) {
     var active = GM_getValue(ACTIVE_JOB_KEY,null);
     if (!active) return {busy:false,cleared:false,reason:'none'};
     var doi = normalizeDoi(active.doi);
     if (!doi || !active.jobId) {
+      if(dryRun)return {busy:false,cleared:false,reason:'invalid_active_job'};
       GM_deleteValue(ACTIVE_JOB_KEY);
       return {busy:false,cleared:true,reason:'invalid_active_job'};
     }
 
     var completed = completedPublisherResult(active);
     if (completed) {
+      if(dryRun)return {busy:false,cleared:false,reason:'completed_active_job'};
       GM_deleteValue(ACTIVE_JOB_KEY);
       var completedProgress = GM_getValue(progressKey(doi),null);
       if (!completedProgress || !completedProgress.jobId || completedProgress.jobId===active.jobId) GM_deleteValue(progressKey(doi));
@@ -3874,6 +3878,7 @@ function embeddedJobDois(value) {
     // Normal publisher work is bounded by an 8-minute controller timeout. Give
     // another two minutes of safety margin before treating a job as orphaned.
     if (ageMs >= 10*60*1000) {
+      if(dryRun)return {busy:false,cleared:false,reason:'stale_active_job',doi:doi,ageMs:ageMs};
       GM_deleteValue(ACTIVE_JOB_KEY);
       if (!progress || !progress.jobId || progress.jobId===active.jobId) GM_deleteValue(progressKey(doi));
       if (hb && hb.jobId===active.jobId) GM_deleteValue(HEARTBEAT_KEY);
@@ -4007,16 +4012,77 @@ function embeddedJobDois(value) {
     GM_deleteValue(ABORT_KEY);GM_setValue(ENABLED_KEY,true);
     CONTROLLER_STOP_REASON='';
     GM_setValue(LEASE_KEY,{owner:manualLeaseOwner(run),manualRunId:run.id,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,expiresAt:Date.now()+90000});
+    return startManualCapture(run);
+  }
+
+  function startManualCapture(run) {
     manualExecution=run;
     run.summary={controllerRunId:'manual:'+run.id,lifecycleRevision:IMMEDIATE_RESTART_REVISION,
       controllerRevision:CONTROLLER_REVISION,version:VERSION,mode:'missing_only',missingRevision:MISSING_CAPTURE_REVISION,
       startedAt:run.startedAt,total:0,success:0,partial:0,failed:0,aborted:0,skipped:0,
       tocStored:0,figuresStaged:0,evidenceStored:0,results:[],phase:'starting'};
+    if(run.resumedFromRunId){
+      run.summary.resumedFromRunId=run.resumedFromRunId;
+      run.summary.recoveryRevision=MANUAL_RECOVERY_REVISION;
+    }
     GM_setValue(SUMMARY_KEY,run.summary);
-    badge('已立即重新开始：旧任务已作废，正在生成最新文献缺项队列','#175cd3');
+    badge(run.resumedFromRunId?'已恢复中断任务：保留已有回执，正在重新核对剩余缺项':'已立即重新开始：旧任务已作废，正在生成最新文献缺项队列','#175cd3');
     // No lock wait, cooldown reset, cleanup await, review or grace timer here.
     run.promise=runManualFromHead(run);
     return run.promise;
+  }
+
+  function interruptedManualCandidate() {
+    if(!isGalleryPage()||controllerPaused()||!writeToken()||CONTROLLER_STOP_REASON
+      ||globalThis.__OSG_PAIRED_CONTROLLER_BUSY__||manualExecutionCurrent(manualExecution)
+      ||GM_getValue(RESUME_REQUEST_KEY,null))return null;
+    var manual=GM_getValue(MANUAL_RUN_KEY,null),summary=GM_getValue(SUMMARY_KEY,{})||{};
+    if(!manual||!manual.id||manual.completedAt||summary.controllerRunId!=='manual:'+manual.id
+      ||summary.mode!=='missing_only'||summary.version!==VERSION||summary.controllerRevision!==CONTROLLER_REVISION
+      ||summary.finishedAt||summary.stopReason||!/^(starting|running|retry_wait|inventory_retry)$/.test(summary.phase||''))return null;
+    return manual;
+  }
+
+  async function tryResumeInterruptedManualRun() {
+    if(manualRecoveryBusy)return false;
+    var expected=interruptedManualCandidate();
+    if(!expected)return false;
+    var lease=GM_getValue(LEASE_KEY,null);
+    // Even a same-run lease is owned by the old page until it actually expires.
+    if(lease&&Number(lease.expiresAt||0)>Date.now())return false;
+    // Leave even an expired lease untouched while its publisher is still fresh
+    // or within the existing grace window; a probe must not interrupt renewal.
+    if(reconcileActiveJobBeforeDispatch(true).busy)return false;
+    manualRecoveryBusy=true;
+    try{
+      // Acquire and confirm before any shared active-job cleanup. Two refreshed
+      // control pages must not both turn an expired marker into a new pass.
+      if(!await acquireLease())return false;
+      var current=interruptedManualCandidate();lease=GM_getValue(LEASE_KEY,null);
+      if(!current||current.id!==expected.id||!lease||lease.owner!==CONTROLLER_ID||Number(lease.expiresAt||0)<=Date.now())return false;
+      var oldActive=GM_getValue(ACTIVE_JOB_KEY,null);
+      if(reconcileActiveJobBeforeDispatch().busy)return false;
+      current=interruptedManualCandidate();lease=GM_getValue(LEASE_KEY,null);
+      if(!current||current.id!==expected.id||GM_getValue(ACTIVE_JOB_KEY,null)
+        ||!lease||lease.owner!==CONTROLLER_ID||Number(lease.expiresAt||0)<=Date.now())return false;
+      var run={id:crypto.randomUUID(),owner:CONTROLLER_ID,startedAt:nowIso(),
+        resumedFromRunId:expected.id,replacedJobId:String(oldActive&&oldActive.jobId||''),cancelled:false,tab:null,renewTimer:null};
+      // New generation fences late old-page results. Recovery never clears Pause,
+      // enables a disabled controller, or resets publisher cooldowns/checkpoints.
+      GM_setValue(MANUAL_RUN_KEY,{id:run.id,owner:CONTROLLER_ID,startedAt:run.startedAt,
+        replacedJobId:run.replacedJobId,resumedFromRunId:expected.id,revision:IMMEDIATE_RESTART_REVISION,recoveryRevision:MANUAL_RECOVERY_REVISION});
+      GM_setValue(LEASE_KEY,{owner:manualLeaseOwner(run),manualRunId:run.id,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,expiresAt:Date.now()+90000});
+      return startManualCapture(run);
+    }finally{
+      lease=GM_getValue(LEASE_KEY,null);
+      if(lease&&lease.owner===CONTROLLER_ID)GM_deleteValue(LEASE_KEY);
+      manualRecoveryBusy=false;
+    }
+  }
+
+  function controllerTick() {
+    if(manualRunBlocksAutomatic())return tryResumeInterruptedManualRun();
+    if(!GM_getValue(ACTIVE_JOB_KEY,null))return controllerRun();
   }
 
   function renewManualLease(run) {
@@ -4463,7 +4529,7 @@ function embeddedJobDois(value) {
   }
 
   async function controllerRun() {
-    if(manualRunBlocksAutomatic())return;
+    if(manualRunBlocksAutomatic())return tryResumeInterruptedManualRun();
     if (!isGalleryPage() || globalThis.__OSG_PAIRED_CONTROLLER_BUSY__) return;
     if(CONTROLLER_STOP_REASON){badge('已停止开页：'+CONTROLLER_STOP_REASON,'#991b1b');return;}
     if (GM_getValue(ENABLED_KEY,true)===false||isAbortRequested()) {badge('媒体抓取已暂停','#6b7280');return;}
@@ -5576,10 +5642,8 @@ function embeddedJobDois(value) {
     }else if(location.hash==='#osg-start-from-head'){
       try{history.replaceState(null,'',location.pathname+location.search);}catch(_){}
       forceStartFromHead();
-    }else setTimeout(controllerRun, 1500);
-    setInterval(function () {
-      if (!GM_getValue(ACTIVE_JOB_KEY, null)) controllerRun();
-    }, 60 * 1000);
+    }else setTimeout(controllerTick, 1500);
+    setInterval(controllerTick, 60 * 1000);
   } else {
     publisherBoot();
   }
