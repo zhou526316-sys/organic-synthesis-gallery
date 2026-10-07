@@ -1,12 +1,12 @@
 {
   "publicationDate": "2026-10-07",
   "editorialRevision": "2026-10-07-r12",
-  "reviewedAt": "2026-10-07T07:24:38.025914+00:00",
+  "reviewedAt": "2026-10-07T07:28:57Z",
   "reviewer": "AI source-grounded editorial review; no claim of human review",
   "textReview": "pass",
-  "imageReview": "pending",
+  "imageReview": "pass",
   "individualImageReview": "pass",
-  "combinedVisualReview": "pending",
+  "combinedVisualReview": "pass",
   "artifacts": {
     "textOnly": "audit/wechat-working/2026-10-07-r12-angew-text-only.md",
     "imagesOnly": "audit/wechat-working/2026-10-07-r12-angew-images-only.md",
@@ -287,7 +287,8 @@
     "All titles, digests, narrative, captions, body figures and retrospective cover preserved. Only cover description and accurate disclosure updated.",
     "Text-only and images-only review files regenerated. Source preview and independent visual review must pass before one same-draft update.",
     "Timeout preflight: reuse bounded known review workflow, narrow status polling, small screenshot artifacts, no cancellation or repeated publisher starts.",
-    "Draft-only authorization; no public sending."
+    "Draft-only authorization; no public sending.",
+    "Root inspected the exact source cover and current-title/four-line overlays; all white title glyphs are confined to the independent blue band, outside the unmodified original TOC. Both390/690px previews and source fingerprints passed."
   ],
   "draftReadback": "pending",
   "publicSendAuthorized": false,
@@ -295,5 +296,69 @@
   "priorCompletedRevision": {
     "revision": "2026-10-07-r11",
     "previewUrl": "https://relay.gczhouwld.com/wechat-preview/395eae43f63c4452e3d05f53.html"
+  },
+  "finalSourcePreview": {
+    "status": "pass",
+    "revision": "2026-10-07-r12",
+    "sourceSnapshot": "302ad1b5629186dea571610ecfae678b840cf43adb8d0df00ff90356ab86b06d",
+    "runId": "37587335626",
+    "artifactId": 11466618882,
+    "artifactSha256": "62ae8d37b78dffdaf09fc17d2e3ebec0b398bdb26f8db20251ab4dc951a04ccf",
+    "viewports": [
+      390,
+      690
+    ],
+    "assetsVerified": 35,
+    "bodyImages": {
+      "angew": 14,
+      "natcat": 19
+    },
+    "nativeTitleOverlayChecks": [
+      {
+        "viewport": 390,
+        "scenario": "current-title",
+        "fontSize": 18,
+        "lineHeight": 22,
+        "titleClearancePx": 21.57593085106383,
+        "minimumWhiteContrast": 10.21482492693778,
+        "coverSource": "locked source cover",
+        "scope": "QA simulation; title is not baked into published cover"
+      },
+      {
+        "viewport": 390,
+        "scenario": "four-line",
+        "fontSize": 16,
+        "lineHeight": 20,
+        "titleClearancePx": 7.575930851063831,
+        "minimumWhiteContrast": 10.21482492693778,
+        "coverSource": "locked source cover",
+        "scope": "QA simulation; title is not baked into published cover"
+      },
+      {
+        "viewport": 690,
+        "scenario": "current-title",
+        "fontSize": 18,
+        "lineHeight": 22,
+        "titleClearancePx": 118.74820478723404,
+        "minimumWhiteContrast": 10.21482492693778,
+        "coverSource": "locked source cover",
+        "scope": "QA simulation; title is not baked into published cover"
+      },
+      {
+        "viewport": 690,
+        "scenario": "four-line",
+        "fontSize": 16,
+        "lineHeight": 20,
+        "titleClearancePx": 82.74820478723404,
+        "minimumWhiteContrast": 10.21482492693778,
+        "coverSource": "locked source cover",
+        "scope": "QA simulation; title is not baked into published cover"
+      }
+    ],
+    "reviewedScreenshots": [
+      "angew-current-title-overlay-390.png",
+      "angew-four-line-overlay-390.png",
+      "angew-cover-690.png"
+    ]
   }
 }

@@ -1,9 +1,9 @@
 {
-  "requestId": "wechat-daily-2026-10-07-r11-white-title-contrast",
-  "requestedAt": "2026-10-07T07:13:18.591959+00:00",
+  "requestId": "wechat-daily-2026-10-07-r12-original-white-toc-blue-title-band",
+  "requestedAt": "2026-10-07T07:28:57Z",
   "publicationDate": "2026-10-07",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-07-r11",
+  "editorialRevision": "2026-10-07-r12",
   "approvedGate": "audit/wechat-working/2026-10-07-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -12,5 +12,5 @@
   ],
   "draftOnly": true,
   "requireDraftGetReadback": true,
-  "reason": "User explicitly requested final cover fix for white native title on white TOC. Final dark-adapted original TOC passed text/image review and browser white-title contrast/overlap checks. Update same existing two-article draft once. Preserve narrative, body figures and retrospective cover; cover disclosure updated. No public sending."
+  "reason": "User explicitly requested original white TOC background, reduced TOC and independent blue title bar. Exact original pixels and source current-title/four-line overlay checks passed; update the same existing two-article draft once. No public sending."
 }
