@@ -81,3 +81,19 @@ Effective from the user's 2026-10-06 instruction: **before starting any long-run
 4. Persist meaningful progress to Git after each bounded repair or milestone whenever repository writes are part of the task, so an interrupted chat does not lose completed work.
 5. Only use a direct long-running path when the preflight indicates timeout risk is acceptably low or when no safer equivalent exists. If the safer path changes execution semantics, preserve correctness over speed.
 6. This rule applies project-wide to GitHub, Tampermonkey/media capture, deployments, literature audits, website architecture, WeChat workflows, and other multi-step remote work.
+
+## WeChat editorial production defaults
+
+Effective from the user's 2026-10-07 instruction to consolidate repeated editorial lessons, every current and future project chat that constructs a WeChat article must use the canonical operational playbook:
+
+`docs/wechat-editorial-production-playbook.md`
+
+Mandatory defaults:
+
+1. Before prose generation, build a paper-specific internal editorial plan containing the core question, 30-second result, actual bottleneck, design logic, evidence matrix, figure map, failure boundary and background-necessity gate.
+2. The default audience is research-level organic chemistry. Textbook background such as generic oxidative/reductive quenching cycles or basic SET definitions is excluded unless it is specifically required to understand this paper's evidence or mechanistic distinction.
+3. Material main-text figures have priority. Adjacent prose must explicitly identify the relevant Fig./Table/SI number. Except for one documented opening lead-image exception, the stable order is explanation first, then figure, then caption.
+4. Claims must remain within their evidence level; author models, compatible observations and computations are never silently upgraded to direct proof.
+5. Editorial changes are batched in one source revision. Do not repeatedly write partial revisions to WeChat; perform one terminal draft update after text/image review passes, then verify the returned `draft/get` result.
+
+These defaults supplement, and do not weaken, the existing WeChat editorial contract and draft editorial gate.

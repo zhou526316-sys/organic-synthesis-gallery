@@ -66,9 +66,39 @@
 ~~~
 只基于今天已经正式发布到 Gallery 的文献写公众号。
 今日精选 DOI：<DOI>。
-精选先读主文和 SI；证据不足就停止深度机理写作。
-正文中文优先；图片只使用论文/SI真实图片或明确标注的概念示意图，绝不把 AI 重画结构冒充原图。
-完成后做科学事实、术语、图片重复、裁切、图文对应、封面小卡 QA。
+往期精选 DOI：<DOI，可空>。
+
+先读取 wechat-editorial-contract、wechat-draft-editorial-gate 和 wechat-editorial-production-playbook。
+不要直接写正文。先在内部完成每篇 paper-specific editorial plan：
+- core question
+- 30 秒结果
+- 真正瓶颈
+- 设计逻辑
+- evidence matrix（observed / supports / compatible / computation / author_model / unresolved）
+- figure map（每张图只承担一个主要论证）
+- 主文图覆盖情况
+- 失败边界
+- background gate
+
+精选必须先读主文和 SI；有 peer-review 文件时单独读取。证据不足就停止深度机理写作。
+
+默认读者是有机化学科研读者。不要加入普通氧化/还原淬灭、SET 定义等教材式背景，除非它直接决定本文某个机理证据的理解。
+
+图片规则：
+1. 主文关键图优先，SI 只作真正有用的补充；
+2. 每段涉及图片时明确写原文 Fig./Table/SI 编号；
+3. 除开篇核心 lead image 外，统一“解释文字 → 图片 → 图注”；
+4. 多面板大图按论证拆分，但不能裁掉结构、坐标、箭头、条件、图例或关键 panel；
+5. 不重复插入同一图片，后文需要时用“前文原文 Fig. X”引用；
+6. 绝不把 AI 重画结构、谱图或数据冒充原图。
+
+文字规则：
+- 开头三块形成“结果 → 瓶颈 → 值得深读的科学问题”；
+- 删除“后续 Fig. X 很重要”“非常巧妙”“值得注意的是”这类没有具体因果内容的句子；
+- 机理结论不得超过 evidence matrix 的证据等级；
+- scope 同时写成功空间与失败边界。
+
+先生成 text-only 与 images-only 审阅包并分别通过，再合成；一轮 revision 只触发一次 draft/update。最后必须 draft/get 回读，检查两篇文章顺序、封面、390/690px 图文、图号、裁图和缺图。
 ~~~
 
 ## P8 接公众号 API

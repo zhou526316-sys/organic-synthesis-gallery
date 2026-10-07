@@ -162,3 +162,19 @@ Publisher runs are serialized by editorial revision. A newer requested revision 
 
 The detailed 2026-10-05 lessons and automation graduation criteria live in:
 `audit/wechat-postmortem/2026-10-05.md`.
+
+## Canonical production playbook
+
+Effective from 2026-10-07, all daily-feature and retrospective construction also follows:
+`docs/wechat-editorial-production-playbook.md`.
+
+This operational playbook is the default for future issues and captures repeated corrections from the 2026-10-05 to 2026-10-07 production cycle:
+
+- build a paper-specific editorial plan, evidence matrix and figure map before prose;
+- default to an expert organic-chemistry audience and exclude textbook-level background unless it is necessary to distinguish the paper's own logic or evidence;
+- prioritize materially relevant main-text figures, explicitly name the exact Fig./Table/SI reference in adjacent prose, and use a consistent explanation → figure → caption order except for one documented lead-image exception;
+- treat every image as one evidentiary job, split dense multi-panel figures when needed, and never silently omit the part of a main-text figure that carries the argument;
+- classify mechanistic claims internally as direct observation / support / compatible evidence / computation / author model / unresolved, and keep the public wording within that evidence ceiling;
+- batch editorial changes in the source revision, then perform one terminal WeChat draft update followed by `draft/get`, instead of repeatedly writing partial revisions.
+
+The playbook's background gate is binding for the current readership: ordinary photoredox quenching cycles, generic SET definitions and similar textbook material are omitted by default unless the specific paper genuinely requires that distinction.
