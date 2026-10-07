@@ -1,9 +1,9 @@
 {
-  "requestId": "wechat-daily-2026-10-07-r15-top-glyph-clearance",
-  "requestedAt": "2026-10-07T08:07:34Z",
+  "requestId": "wechat-daily-2026-10-07-r16-observed-native-title-fit",
+  "requestedAt": "2026-10-07T08:36:24Z",
   "publicationDate": "2026-10-07",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-07-r15",
+  "editorialRevision": "2026-10-07-r16",
   "approvedGate": "audit/wechat-working/2026-10-07-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -12,5 +12,5 @@
   ],
   "draftOnly": true,
   "requireDraftGetReadback": true,
-  "reason": "User reports upper white glyph portions outside prior blue strip. Extend upper edge upward32px on800px canvas (about6.2px atmobile362px cover width); keep title CSS unchanged and original white TOC. Source text identical toR14; all35assets and rendered actual glyph pixels reviewed with8.05px top clearance at390px viewport. Same existing two-article draft update only, with draft/get readback; no public send."
+  "reason": "User supplied native mobile and official desktop screenshots, showing R15 artwork already present but native title begins above blue band. Fit R16 upper edge to this measured native geometry, preserving complete original-color TOC. Source text byte-identical toR15; source/glyph/native-reference projection reviewed. Same two-article draft only with draft/get readback; no public sending."
 }
