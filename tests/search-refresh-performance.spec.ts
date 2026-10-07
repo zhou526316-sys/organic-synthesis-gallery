@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { open, state, KEY } from './status-image-fixtures';
+import { MOBILE_RESULT_WINDOW_SIZE, RESULT_WINDOW_SIZE } from '../shared/result-window.js';
 
 test.use({ serviceWorkers: 'block' });
 async function measure(page: Page): Promise<{ reads: string[][]; errors: string[]; marks: string[] }> {
@@ -32,8 +33,8 @@ for (const width of [390,1280]) {
     await frames(page);
     const count = await page.locator('#gallery .card').count();
     const initialWrites = await writes(page);
-    expect(count).toBeGreaterThan(30);
-    // Includes every initial card registration, not just a small fixture.
+    expect(count).toBe(width <= 680 ? MOBILE_RESULT_WINDOW_SIZE : RESULT_WINDOW_SIZE);
+    // The refresh-cost test follows the intentionally bounded visible result window.
     expect(initialWrites).toBeLessThan(16);
     const beforeReads = metrics.reads.length;
     const beforeWrites = await writes(page);
