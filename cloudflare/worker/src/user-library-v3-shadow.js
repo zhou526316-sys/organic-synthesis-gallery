@@ -367,7 +367,7 @@ export async function shadowWriteUserLibraryV3FromState(env, userIdValue, state,
 
 export async function getUserLibraryV3ShadowStatus(env) {
   if (!env?.DB) return { status:503, body:{ error:'user_library_v3_shadow_db_missing' } };
-  const [legacy,legacyDocuments,staleLegacyDocuments,heads,sync,authorityCount,revisionMismatch,authorityHeadMismatch,compatHeadMismatch,backfill] = await Promise.all([
+  const [legacy,legacyDocuments,staleLegacyDocuments,heads,sync,authorityCount,revisionMismatch,legacyHeadMismatch,legacyCompatHealth,authorityHeadMismatch,compatHeadMismatch,backfill] = await Promise.all([
     env.DB.prepare(`
       SELECT COUNT(*) AS count
       FROM user_library_state legacy
@@ -381,7 +381,15 @@ export async function getUserLibraryV3ShadowStatus(env) {
       INNER JOIN user_library_v3_authority authority ON authority.user_id=legacy.user_id
       WHERE authority.authority='v3'
     `).first(),
-    env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_v3_head').first(),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count,
+        COALESCE(SUM(CASE WHEN legacy.user_id IS NOT NULL AND authority.user_id IS NULL THEN 1 ELSE 0 END),0) AS legacy_count,
+        COALESCE(SUM(CASE WHEN authority.authority='v3' THEN 1 ELSE 0 END),0) AS authority_count,
+        COALESCE(SUM(CASE WHEN legacy.user_id IS NULL AND authority.user_id IS NULL THEN 1 ELSE 0 END),0) AS orphan_count
+      FROM user_library_v3_head head
+      LEFT JOIN user_library_state legacy ON legacy.user_id=head.user_id
+      LEFT JOIN user_library_v3_authority authority ON authority.user_id=head.user_id
+    `).first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_v3_shadow_sync').first(),
     env.DB.prepare("SELECT COUNT(*) AS count FROM user_library_v3_authority WHERE authority='v3'").first(),
     env.DB.prepare(`
@@ -396,18 +404,54 @@ export async function getUserLibraryV3ShadowStatus(env) {
     `).first(),
     env.DB.prepare(`
       SELECT COUNT(*) AS count
+      FROM user_library_state legacy
+      LEFT JOIN user_library_v3_authority authority ON authority.user_id=legacy.user_id
+      LEFT JOIN user_library_v3_head head ON head.user_id=legacy.user_id
+      LEFT JOIN user_library_v3_shape shape ON shape.user_id=legacy.user_id
+      WHERE authority.user_id IS NULL
+        AND (head.user_id IS NULL OR shape.user_id IS NULL
+         OR head.revision<>legacy.revision OR head.updated_at<>legacy.updated_at
+         OR shape.revision<>head.revision)
+    `).first(),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count,
+        COALESCE(SUM(CASE WHEN compat.shadow_version=0 THEN 1 ELSE 0 END),0) AS pending_count
+      FROM user_library_state legacy
+      LEFT JOIN user_library_v3_authority authority ON authority.user_id=legacy.user_id
+      LEFT JOIN user_library_head compat ON compat.user_id=legacy.user_id
+      LEFT JOIN user_library_v3_head v3 ON v3.user_id=legacy.user_id
+      LEFT JOIN user_library_v3_shape shape ON shape.user_id=legacy.user_id
+      LEFT JOIN user_library_v3_shadow_sync sync ON sync.user_id=legacy.user_id
+      WHERE authority.user_id IS NULL
+        AND (compat.user_id IS NULL OR v3.user_id IS NULL OR shape.user_id IS NULL OR sync.user_id IS NULL
+         OR compat.shadow_version<>1 OR compat.revision<>legacy.revision OR compat.updated_at<>legacy.updated_at
+         OR compat.global_json<>v3.global_json
+         OR compat.paper_count<>v3.paper_count OR compat.metadata_count<>v3.metadata_count
+         OR compat.papers_split<>shape.papers_split OR compat.metadata_split<>shape.metadata_split
+         OR compat.source_state_hash<>sync.source_state_hash)
+    `).first(),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
       FROM user_library_v3_authority authority
       LEFT JOIN user_library_v3_head head ON head.user_id=authority.user_id
+      LEFT JOIN user_library_v3_shape shape ON shape.user_id=authority.user_id
       WHERE authority.authority='v3'
-        AND (head.user_id IS NULL OR head.revision<authority.activated_revision)
+        AND (head.user_id IS NULL OR shape.user_id IS NULL
+         OR head.revision<authority.activated_revision OR shape.revision<>head.revision)
     `).first(),
     env.DB.prepare(`
       SELECT COUNT(*) AS count
       FROM user_library_v3_authority authority
       INNER JOIN user_library_v3_head v3 ON v3.user_id=authority.user_id
       LEFT JOIN user_library_head compat ON compat.user_id=authority.user_id
+      LEFT JOIN user_library_v3_shape shape ON shape.user_id=authority.user_id
       WHERE authority.authority='v3'
-        AND (compat.user_id IS NULL OR compat.revision<>v3.revision OR compat.updated_at<>v3.updated_at)
+        AND (compat.user_id IS NULL OR shape.user_id IS NULL
+         OR compat.shadow_version<>2 OR compat.revision<>v3.revision OR compat.updated_at<>v3.updated_at
+         OR compat.global_json<>v3.global_json
+         OR compat.paper_count<>v3.paper_count OR compat.metadata_count<>v3.metadata_count
+         OR compat.papers_split<>shape.papers_split OR compat.metadata_split<>shape.metadata_split
+         OR compat.source_state_hash<>('v3-authority:' || v3.revision))
     `).first(),
     env.DB.prepare('SELECT * FROM user_library_v3_backfill WHERE id=1').first(),
   ]);
@@ -416,15 +460,29 @@ export async function getUserLibraryV3ShadowStatus(env) {
   const globalWriteEnabled=flag(env.USER_LIBRARY_V3_WRITE_ENABLED);
   const rolloutSeedConfigured=Boolean(safeText(env.USER_LIBRARY_V3_WRITE_ROLLOUT_SEED,200));
   const canaryConfigured=Boolean(safeText(env.USER_LIBRARY_V3_WRITE_CANARY_USER_ID,300));
+  const compatibilityReadEnabled=flag(env.USER_LIBRARY_ROW_READ_ENABLED);
   const legacyCount=Number(legacy?.count || 0);
+  const legacyV3Heads=Number(heads?.legacy_count || 0);
+  const v3AuthorityHeads=Number(heads?.authority_count || 0);
+  const orphanV3Heads=Number(heads?.orphan_count || 0);
+  const v3AuthorityUsers=Number(authorityCount?.count || 0);
   const staleLegacyCount=Number(staleLegacyDocuments?.count || 0);
   const revisionMismatchCount=Number(revisionMismatch?.count || 0);
+  const legacyHeadMismatchCount=Number(legacyHeadMismatch?.count || 0);
+  const legacyCompatHeadMismatchCount=Number(legacyCompatHealth?.count || 0);
+  const pendingLegacyCompatibilityHeads=Number(legacyCompatHealth?.pending_count || 0);
   const authorityHeadMismatchCount=Number(authorityHeadMismatch?.count || 0);
   const compatHeadMismatchCount=Number(compatHeadMismatch?.count || 0);
   const backfillComplete=Number(backfill?.complete || 0)===1;
   const rolloutPreflightReady=flag(env.USER_LIBRARY_V3_READ_ENABLED)
+    && compatibilityReadEnabled
     && backfillComplete
+    && legacyCount===legacyV3Heads
+    && v3AuthorityUsers===v3AuthorityHeads
+    && orphanV3Heads===0
     && revisionMismatchCount===0
+    && legacyHeadMismatchCount===0
+    && legacyCompatHeadMismatchCount===0
     && staleLegacyCount===0
     && authorityHeadMismatchCount===0
     && compatHeadMismatchCount===0
@@ -435,6 +493,7 @@ export async function getUserLibraryV3ShadowStatus(env) {
     configured:flag(env.USER_LIBRARY_V3_SHADOW_ENABLED),
     enabled:userLibraryV3ShadowEnabled(env),
     readEnabled:flag(env.USER_LIBRARY_V3_READ_ENABLED),
+    compatibilityReadEnabled,
     writeEnabled:globalWriteEnabled,
     rollout:{
       basisPoints:rolloutBasisPoints,
@@ -448,9 +507,15 @@ export async function getUserLibraryV3ShadowStatus(env) {
     legacyDocuments:Number(legacyDocuments?.count || 0),
     staleLegacyDocuments:staleLegacyCount,
     v3Heads:Number(heads?.count || 0),
+    legacyV3Heads,
+    v3AuthorityHeads,
+    orphanV3Heads,
     syncedUsers:Number(sync?.count || 0),
-    v3AuthorityUsers:Number(authorityCount?.count || 0),
+    v3AuthorityUsers,
     revisionMismatches:revisionMismatchCount,
+    legacyHeadMismatches:legacyHeadMismatchCount,
+    legacyCompatibilityHeadMismatches:legacyCompatHeadMismatchCount,
+    pendingLegacyCompatibilityHeads,
     authorityHeadMismatches:authorityHeadMismatchCount,
     compatibilityHeadMismatches:compatHeadMismatchCount,
     backfill:backfill ? {

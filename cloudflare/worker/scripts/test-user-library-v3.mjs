@@ -11,7 +11,7 @@ import {
   userLibraryV3RolloutBucket,
   userLibraryV3WriteEnabled,
 } from '../src/user-library-v3.js';
-import { readUserLibraryStateFromRows } from '../src/user-library-shadow.js';
+import { readUserLibraryStateFromRows, shadowWriteUserLibraryState } from '../src/user-library-shadow.js';
 import { shadowWriteUserLibraryV3FromState } from '../src/user-library-v3-shadow.js';
 import { readerCounts } from '../src/user-ui.js';
 
@@ -19,14 +19,17 @@ class Statement {
   constructor(db,sql){this.db=db;this.sql=sql;this.args=[];}
   bind(...args){this.args=args;return this;}
   async run(){
+    if(typeof this.db.beforeStatement==='function')await this.db.beforeStatement(this);
     const result=this.db.sqlite.prepare(this.sql).run(...this.args);
     return {success:true,meta:{changes:Number(result.changes||0)},results:[]};
   }
   async first(){
+    if(typeof this.db.beforeFirst==='function')await this.db.beforeFirst(this);
     const row=this.db.sqlite.prepare(this.sql).get(...this.args);
     return row===undefined?null:row;
   }
   async all(){
+    if(typeof this.db.beforeAll==='function')await this.db.beforeAll(this);
     return {success:true,results:this.db.sqlite.prepare(this.sql).all(...this.args),meta:{}};
   }
 }
@@ -58,7 +61,7 @@ class D1 {
   async batch(statements){
     const hook=this.beforeBatch;
     this.beforeBatch=null;
-    if(typeof hook==='function')hook();
+    if(typeof hook==='function')await hook();
     const out=[];
     this.sqlite.exec('BEGIN IMMEDIATE');
     try{
@@ -78,6 +81,7 @@ const envFor=(db,overrides={})=>({
   USER_LIBRARY_V3_READ_ENABLED:'1',
   USER_LIBRARY_V3_WRITE_ENABLED:'1',
   USER_LIBRARY_ROW_READ_ENABLED:'1',
+  USER_LIBRARY_ROW_SHADOW_ENABLED:'1',
   ...overrides,
 });
 function addUser(db,id='u1'){db.sqlite.prepare('INSERT INTO users(id) VALUES (?)').run(id);}
@@ -169,6 +173,7 @@ test('first V3 migration requires an exactly fresh legacy shadow and removes leg
     VALUES('u-migrate',?,1,100)
   `).run(JSON.stringify(state));
   const shadowEnv=envFor(db,{USER_LIBRARY_V3_WRITE_ENABLED:'0'});
+  await shadowWriteUserLibraryState(shadowEnv,'u-migrate',state,1,100);
   const shadow=await shadowWriteUserLibraryV3FromState(shadowEnv,'u-migrate',state,1,100,150);
   assert.equal(shadow.written,true);
 
@@ -201,6 +206,7 @@ test('stale legacy revision blocks first V3 migration without deleting or changi
     VALUES('u-stale',?,1,100)
   `).run(JSON.stringify(state));
   const shadowEnv=envFor(db,{USER_LIBRARY_V3_WRITE_ENABLED:'0'});
+  await shadowWriteUserLibraryState(shadowEnv,'u-stale',state,1,100);
   await shadowWriteUserLibraryV3FromState(shadowEnv,'u-stale',state,1,100,150);
 
   const newer={...state,papers:{a:{favorite:true,note:'r2',updatedAt:20}}};
@@ -236,6 +242,7 @@ test('atomic first-migration guard catches a legacy write racing after freshness
     VALUES('u-race-freshness',?,1,100)
   `).run(JSON.stringify(state));
   const shadowEnv=envFor(db,{USER_LIBRARY_V3_WRITE_ENABLED:'0'});
+  await shadowWriteUserLibraryState(shadowEnv,'u-race-freshness',state,1,100);
   await shadowWriteUserLibraryV3FromState(shadowEnv,'u-race-freshness',state,1,100,150);
 
   db.beforeBatch=()=>{
@@ -698,7 +705,7 @@ test('per-user V3 authority survives global write rollback without reviving lega
   db.sqlite.prepare(`
     INSERT INTO user_library_head
       (user_id,revision,updated_at,global_json,papers_split,metadata_split,paper_count,metadata_count,source_state_hash,shadow_version)
-    VALUES ('u-rollback',1,1000,?,1,1,1,1,'legacy-shadow',1)
+    VALUES ('u-rollback',1,1000,?,1,1,1,1,'rollback-shadow',1)
   `).run(globalJson);
   db.sqlite.prepare(`
     INSERT INTO user_paper_state
@@ -760,6 +767,173 @@ test('V3 writes are independently disabled and require an atomic D1 batch',async
     applyUserLibraryV3Mutation(noBatch,'u1',{expectedRevision:0,globalState:{hideRead:false}},1000),
     /user_library_v3_atomic_batch_required/,
   );
+});
+
+function migrationFixture(count=2,note='legacy'){
+  const keys=Array.from({length:count},(_,index)=>`paper-${String(index).padStart(3,'0')}`);
+  return {
+    hideRead:false,
+    papers:Object.fromEntries(keys.map(key=>[key,{favorite:true,note}])),
+    metadata:Object.fromEntries(keys.map(key=>[key,{title:key}])),
+  };
+}
+async function seedMigration(db,state,revision=1,compat=true){
+  db.sqlite.prepare(`
+    INSERT INTO user_library_state(user_id,state_json,revision,updated_at) VALUES('u1',?,?,?)
+    ON CONFLICT(user_id) DO UPDATE SET state_json=excluded.state_json,
+      revision=excluded.revision,updated_at=excluded.updated_at
+  `).run(JSON.stringify(state),revision,revision*100);
+  const shadow=envFor(db,{USER_LIBRARY_V3_WRITE_ENABLED:'0'});
+  if(compat)await shadowWriteUserLibraryState(shadow,'u1',state,revision,revision*100);
+  await shadowWriteUserLibraryV3FromState(shadow,'u1',state,revision,revision*100,revision*100+50);
+  return shadow;
+}
+const migrationOperation={paperKey:'paper-000',paperState:{favorite:true,note:'v3'},metadata:{title:'paper-000'}};
+
+test('empty-account activation atomically rejects a first legacy save after its pre-read',async t=>{
+  const db=new D1();t.after(()=>db.close());addUser(db);
+  const saved=migrationFixture();
+  db.beforeBatch=()=>db.sqlite.prepare(`
+    INSERT INTO user_library_state(user_id,state_json,revision,updated_at) VALUES('u1',?,1,100)
+  `).run(JSON.stringify(saved));
+  const result=await applyUserLibraryV3Mutation(envFor(db),'u1',{
+    expectedRevision:0,operations:[migrationOperation],
+  },200);
+  assert.equal(result.conflict,true);
+  assert.equal(result.reason,'user_library_v3_shadow_not_fresh');
+  assert.deepEqual(JSON.parse(db.sqlite.prepare("SELECT state_json FROM user_library_state WHERE user_id='u1'").get().state_json),saved);
+  assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS c FROM user_library_v3_authority').get().c,0);
+  assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS c FROM user_library_v3_commits').get().c,0);
+  assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS c FROM user_library_v3_rows').get().c,0);
+});
+
+test('first migration preserves legacy when compatibility head, rows, or row content are untrusted',async t=>{
+  for(const damage of ['missing-head','missing-row','same-count-stale-content','inflight']){
+    await t.test(damage,async()=>{
+      const db=new D1();try{
+        addUser(db);const state=migrationFixture();
+        await seedMigration(db,state,1,damage!=='missing-head');
+        if(damage==='missing-row')db.sqlite.prepare("DELETE FROM user_paper_state WHERE user_id='u1' AND paper_key='paper-001'").run();
+        if(damage==='same-count-stale-content')db.sqlite.prepare("UPDATE user_paper_state SET paper_state_json=? WHERE user_id='u1' AND paper_key='paper-001'").run(JSON.stringify({favorite:true,note:'stale'}));
+        if(damage==='inflight')db.sqlite.prepare("UPDATE user_library_head SET shadow_version=0 WHERE user_id='u1'").run();
+        const result=await applyUserLibraryV3Mutation(envFor(db),'u1',{
+          expectedRevision:1,operations:[migrationOperation],
+        },200);
+        assert.equal(result.conflict,true);
+        assert.equal(result.reason,'user_library_v3_shadow_not_fresh');
+        assert.equal(db.sqlite.prepare("SELECT revision FROM user_library_state WHERE user_id='u1'").get().revision,1);
+        assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS c FROM user_library_v3_authority').get().c,0);
+        assert.equal(db.sqlite.prepare("SELECT revision FROM user_library_v3_head WHERE user_id='u1'").get().revision,1);
+      }finally{db.close();}
+    });
+  }
+});
+
+test('compatibility readiness is checked again inside the migration transaction',async t=>{
+  const db=new D1();t.after(()=>db.close());addUser(db);
+  await seedMigration(db,migrationFixture());
+  db.beforeBatch=()=>db.sqlite.prepare("UPDATE user_library_head SET shadow_version=0,source_state_hash='inflight:test' WHERE user_id='u1'").run();
+  const result=await applyUserLibraryV3Mutation(envFor(db),'u1',{
+    expectedRevision:1,operations:[migrationOperation],
+  },200);
+  assert.equal(result.conflict,true);
+  assert.equal(db.sqlite.prepare("SELECT revision FROM user_library_state WHERE user_id='u1'").get().revision,1);
+  assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS c FROM user_library_v3_authority').get().c,0);
+  assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS c FROM user_library_v3_commits WHERE revision=2').get().c,0);
+});
+
+test('first migration cannot cross a D3b DELETE or either side of a row batch boundary',async t=>{
+  for(const pause of ['delete','first-batch','second-batch']){
+    await t.test(pause,async()=>{
+      const db=new D1();try{
+        addUser(db);await seedMigration(db,migrationFixture(42,'r1'));
+        const state=migrationFixture(42,'r2');
+        const shadow=await seedMigration(db,state,2,false);
+        let blocked=null;
+        db.beforeStatement=async statement=>{
+          const target=pause==='delete'
+            ? /^DELETE FROM user_paper_state/.test(statement.sql.trim())
+            : /INSERT INTO user_paper_state/.test(statement.sql)
+              && statement.args[1]===(pause==='first-batch'?'paper-000':'paper-040');
+          if(!target)return;
+          db.beforeStatement=null;
+          blocked=await applyUserLibraryV3Mutation(envFor(db),'u1',{
+            expectedRevision:2,operations:[migrationOperation],
+          },300);
+          assert.equal(blocked.conflict,true);
+          assert.equal(db.sqlite.prepare("SELECT revision FROM user_library_state WHERE user_id='u1'").get().revision,2);
+        };
+        const completed=await shadowWriteUserLibraryState(shadow,'u1',state,2,200);
+        assert.equal(completed.written,true);
+        assert.equal(blocked?.conflict,true);
+        const migrated=await applyUserLibraryV3Mutation(envFor(db),'u1',{
+          expectedRevision:2,operations:[migrationOperation],
+        },300);
+        assert.equal(migrated.ok,true);
+        const compat=await readUserLibraryStateFromRows(envFor(db),'u1',{revision:3,updated_at:300});
+        assert.equal(compat.ready,true);
+        assert.equal(compat.state.papers['paper-000'].note,'v3');
+        assert.equal(Object.keys(compat.state.papers).length,42);
+      }finally{db.close();}
+    });
+  }
+});
+
+test('compatibility reads reject a same-count V3 commit between reading the head and rows',async t=>{
+  const db=new D1();t.after(()=>db.close());addUser(db);const env=envFor(db);
+  await applyUserLibraryV3Mutation(env,'u1',{
+    expectedRevision:0,operations:[{...migrationOperation,paperState:{favorite:true,note:'r1'}}],
+  },100);
+  let changed=false;
+  db.beforeAll=async statement=>{
+    if(!/FROM user_paper_state/.test(statement.sql))return;
+    db.beforeAll=null;
+    const update=await applyUserLibraryV3Mutation(env,'u1',{
+      expectedRevision:1,operations:[{...migrationOperation,paperState:{favorite:true,note:'r2'}}],
+    },200);
+    assert.equal(update.ok,true);changed=true;
+  };
+  const crossed=await readUserLibraryStateFromRows(env,'u1',{revision:1,updated_at:100});
+  assert.equal(changed,true);
+  assert.equal(crossed.ready,false);
+  assert.equal(crossed.reason,'row_revision_changed');
+  const fresh=await readUserLibraryStateFromRows(env,'u1',{revision:2,updated_at:200});
+  assert.equal(fresh.ready,true);
+  assert.equal(fresh.revision,2);
+  assert.equal(fresh.state.papers['paper-000'].note,'r2');
+});
+
+test('account-pull rejects the legacy fallback if first migration changed authority during the read',async t=>{
+  const db=new D1();t.after(()=>db.close());addUser(db);const env=envFor(db);
+  await seedMigration(db,migrationFixture());
+  const token='synthetic-authority-read-race';
+  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token));
+  const tokenHash=[...new Uint8Array(digest)].map(value=>value.toString(16).padStart(2,'0')).join('');
+  db.sqlite.prepare('INSERT INTO user_sessions(token_hash,user_id,expires_at) VALUES(?,?,?)')
+    .run(tokenHash,'u1',Date.now()+60_000);
+  let migrated=false;
+  db.beforeFirst=async statement=>{
+    if(statement.sql.trim()!=='SELECT revision, updated_at FROM user_library_state WHERE user_id = ?')return;
+    db.beforeFirst=null;
+    const result=await applyUserLibraryV3Mutation(env,'u1',{
+      expectedRevision:1,operations:[migrationOperation],
+    },200);
+    assert.equal(result.ok,true);migrated=true;
+  };
+  const crossed=await readerCounts(env,{mode:'account-pull',sessionToken:token});
+  assert.equal(migrated,true);
+  assert.equal(crossed.status,503);
+  assert.equal(crossed.body.error,'user_library_compat_read_unavailable');
+  assert.equal(crossed.body.reason,'user_library_authority_changed');
+  assert.equal(Object.prototype.hasOwnProperty.call(crossed.body,'account'),false);
+  const retry=await readerCounts(env,{mode:'account-pull',sessionToken:token});
+  assert.equal(retry.status,200);
+  assert.equal(retry.body.account.revision,2);
+  assert.equal(retry.body.account.writeAuthority,'v3');
+  assert.equal(retry.body.account.readPath,'rows-v3-compat');
+  assert.equal(Object.keys(retry.body.account.state.papers).length,2);
+  assert.equal(retry.body.account.state.papers['paper-000'].note,'v3');
+  assert.equal(retry.body.account.state.papers['paper-001'].note,'legacy');
 });
 
 console.log('USER_LIBRARY_V3_TESTS_READY');

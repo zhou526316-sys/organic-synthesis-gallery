@@ -16,7 +16,7 @@ import {
 class Statement {
   constructor(db,sql){this.db=db;this.sql=sql;this.args=[];}
   bind(...args){this.args=args;return this;}
-  async run(){const r=this.db.sqlite.prepare(this.sql).run(...this.args);return {success:true,meta:{changes:Number(r.changes||0)},results:[]};}
+  async run(){if(typeof this.db.beforeStatement==='function')await this.db.beforeStatement(this);const r=this.db.sqlite.prepare(this.sql).run(...this.args);return {success:true,meta:{changes:Number(r.changes||0)},results:[]};}
   async first(){const row=this.db.sqlite.prepare(this.sql).get(...this.args);return row===undefined?null:row;}
   async all(){return {success:true,results:this.db.sqlite.prepare(this.sql).all(...this.args),meta:{}};}
 }
@@ -83,7 +83,7 @@ class D1 {
     `);
   }
   prepare(sql){return new Statement(this,sql);}
-  async batch(statements){const out=[];for(const s of statements)out.push(await s.run());return out;}
+  async batch(statements){if(typeof this.beforeBatch==='function')await this.beforeBatch(statements);const out=[];for(const s of statements)out.push(await s.run());return out;}
   close(){this.sqlite.close();}
 }
 const envFor=db=>({DB:db,USER_LIBRARY_ROW_SHADOW_ENABLED:'1',USER_LIBRARY_ROW_READ_ENABLED:'1'});
@@ -320,6 +320,74 @@ test('real account-pull API uses rows when fresh and legacy fallback when row re
   assert.equal(fallback.body.account.readPath,'legacy_fallback');
   assert.equal(fallback.body.account.revision,5);
   assert.equal(stableStateJson(fallback.body.account.state),stableStateJson(state));
+});
+
+function batchFixture(note){
+  const keys=Array.from({length:42},(_,index)=>`paper-${String(index).padStart(3,'0')}`);
+  return {
+    papers:Object.fromEntries(keys.map(key=>[key,{note}])),
+    metadata:Object.fromEntries(keys.map(key=>[key,{title:key}])),
+  };
+}
+
+test('a newer revision or same-revision retry fences every remaining old shadow batch',async t=>{
+  for(const replacementRevision of [2,3]){
+    await t.test(`replacement revision ${replacementRevision}`,async()=>{
+      const db=new D1();try{
+        const env=envFor(db),oldState=batchFixture('r2');
+        await shadowWriteUserLibraryState(env,'u1',batchFixture('r1'),1,100);
+        const replacement=replacementRevision===2?oldState:batchFixture('r3');
+        let takeover=null;
+        db.beforeBatch=async statements=>{
+          if(statements[0]?.args[1]!=='paper-040')return;
+          db.beforeBatch=null;
+          takeover=await shadowWriteUserLibraryState(env,'u1',replacement,replacementRevision,replacementRevision*100);
+        };
+        const old=await shadowWriteUserLibraryState(env,'u1',oldState,2,200);
+        assert.equal(takeover?.written,true);
+        assert.equal(old.written,false);
+        assert.equal(old.skippedStale,true);
+        const read=await readUserLibraryStateFromRows(env,'u1',{
+          revision:replacementRevision,updated_at:replacementRevision*100,
+        });
+        assert.equal(read.ready,true);
+        assert.equal(stableStateJson(read.state),stableStateJson(replacement));
+        assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS c FROM user_paper_state').get().c,42);
+        assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS c FROM user_paper_state WHERE revision<>?').get(replacementRevision).c,0);
+      }finally{db.close();}
+    });
+  }
+});
+
+test('an interrupted shadow remains unreadable until a same-revision retry completes all rows',async t=>{
+  const db=new D1();t.after(()=>db.close());const env=envFor(db),state=batchFixture('retry');
+  db.beforeBatch=async statements=>{
+    if(statements[0]?.args[1]!=='paper-040')return;
+    db.beforeBatch=null;
+    throw new Error('synthetic_batch_interruption');
+  };
+  await assert.rejects(shadowWriteUserLibraryState(env,'u1',state,1,100),/synthetic_batch_interruption/);
+  const pending=await readUserLibraryStateFromRows(env,'u1',{revision:1,updated_at:100});
+  assert.equal(pending.ready,false);
+  assert.equal(pending.reason,'row_shadow_inflight');
+  const retry=await shadowWriteUserLibraryState(env,'u1',state,1,100);
+  assert.equal(retry.written,true);
+  const ready=await readUserLibraryStateFromRows(env,'u1',{revision:1,updated_at:100});
+  assert.equal(ready.ready,true);
+  assert.equal(stableStateJson(ready.state),stableStateJson(state));
+});
+
+test('a per-user V3 authority blocks legacy shadow writes even while global writes remain disabled',async t=>{
+  const db=new D1();t.after(()=>db.close());const env=envFor(db),state=batchFixture('compat');
+  await shadowWriteUserLibraryState(env,'u1',state,1,100);
+  db.sqlite.prepare("INSERT INTO user_library_v3_authority(user_id,authority,activated_revision,activated_at) VALUES('u1','v3',1,100)").run();
+  db.sqlite.prepare("UPDATE user_library_head SET shadow_version=2,source_state_hash='v3-authority:1' WHERE user_id='u1'").run();
+  const blocked=await shadowWriteUserLibraryState({...env,USER_LIBRARY_V3_WRITE_ENABLED:'0'},'u1',batchFixture('must-not-write'),2,200);
+  assert.equal(blocked.written,false);
+  const read=await readUserLibraryStateFromRows(env,'u1',{revision:1,updated_at:100});
+  assert.equal(read.ready,true);
+  assert.equal(stableStateJson(read.state),stableStateJson(state));
+  assert.equal(read.compatibilityAuthority,'v3');
 });
 
 console.log('USER_LIBRARY_ROW_SHADOW_TESTS_READY');

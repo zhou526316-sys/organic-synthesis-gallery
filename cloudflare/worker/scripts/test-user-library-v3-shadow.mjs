@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import { test } from 'node:test';
 import { DatabaseSync } from 'node:sqlite';
 import { readerCounts } from '../src/user-ui.js';
+import { shadowWriteUserLibraryState } from '../src/user-library-shadow.js';
 import {
   backfillUserLibraryV3ShadowPage,
   compareUserLibraryV3ShadowPage,
@@ -11,6 +12,7 @@ import {
   shadowWriteUserLibraryV3FromState,
 } from '../src/user-library-v3-shadow.js';
 import {
+  applyUserLibraryV3Mutation,
   readUserLibraryV3Delta,
   readUserLibraryV3Head,
   readUserLibraryV3Page,
@@ -50,6 +52,7 @@ class D1 {
         updated_at INTEGER NOT NULL
       );
     `);
+    this.sqlite.exec(fs.readFileSync(new URL('../../user-library-state-v2.sql',import.meta.url),'utf8'));
     this.sqlite.exec(fs.readFileSync(new URL('../../user-library-state-v3.sql',import.meta.url),'utf8'));
   }
   prepare(sql){return new Statement(this,sql);}
@@ -69,6 +72,8 @@ class D1 {
 }
 const envFor=db=>({
   DB:db,
+  USER_LIBRARY_ROW_SHADOW_ENABLED:'1',
+  USER_LIBRARY_ROW_READ_ENABLED:'1',
   USER_LIBRARY_V3_SHADOW_ENABLED:'1',
   USER_LIBRARY_V3_READ_ENABLED:'0',
   USER_LIBRARY_V3_WRITE_ENABLED:'0',
@@ -95,6 +100,33 @@ function fixture(note='hello'){
     searchHistory:[],
     hideRead:false,
   };
+}
+
+const rolloutEnv=db=>({
+  ...envFor(db),
+  USER_LIBRARY_V3_READ_ENABLED:'1',
+  USER_LIBRARY_V3_WRITE_CANARY_USER_ID:'__gallery_v3_write_canary__',
+  USER_LIBRARY_V3_WRITE_ROLLOUT_BPS:'0',
+  USER_LIBRARY_V3_WRITE_ROLLOUT_SEED:'d3c4c-2026-10-07',
+});
+async function healthyMixedAuthorityFixture(db,migratedUsers=0){
+  const env=rolloutEnv(db);
+  for(const userId of ['u-cohort-0','u-cohort-1']){
+    const state=fixture(userId);
+    putLegacy(db,userId,state,1,100);
+    const compat=await shadowWriteUserLibraryState(env,userId,state,1,100);
+    assert.equal(compat.written,true);
+  }
+  await backfillUserLibraryV3ShadowPage(env,20);
+  for(let index=0;index<migratedUsers;index+=1){
+    const userId='u-cohort-'+index;
+    const result=await applyUserLibraryV3Mutation(
+      {...env,USER_LIBRARY_V3_WRITE_CANARY_USER_ID:userId},
+      userId,{expectedRevision:1,globalState:{hideRead:true},operations:[]},200,
+    );
+    assert.equal(result.ok,true,JSON.stringify(result));
+  }
+  return env;
 }
 
 test('D3c1 shadow preserves empty papers/metadata object shape exactly',async t=>{
@@ -163,14 +195,9 @@ test('persistent historical backfill advances across pages and reaches semantic 
 
 test('V3 admin status exposes bounded rollout preflight and authority mirror health',async t=>{
   const db=new D1();t.after(()=>db.close());
-  const env={
-    ...envFor(db),
-    USER_LIBRARY_V3_WRITE_ENABLED:'0',
-    USER_LIBRARY_V3_WRITE_CANARY_USER_ID:'__gallery_v3_write_canary__',
-    USER_LIBRARY_V3_WRITE_ROLLOUT_BPS:'0',
-    USER_LIBRARY_V3_WRITE_ROLLOUT_SEED:'d3c4c-2026-10-07',
-  };
+  const env=rolloutEnv(db);
   putLegacy(db,'u1',fixture('status'),1,100);
+  await shadowWriteUserLibraryState(env,'u1',fixture('status'),1,100);
   await backfillUserLibraryV3ShadowPage(env,20);
   await backfillUserLibraryV3ShadowPage(env,20);
 
@@ -194,6 +221,81 @@ test('V3 admin status exposes bounded rollout preflight and authority mirror hea
   });
   assert.equal(invalid.body.rollout.basisPoints,0);
   assert.equal(invalid.body.rollout.active,false);
+});
+
+for(const migratedUsers of [0,1,2]){
+  test(`rollout preflight preserves separate authority cohorts with ${migratedUsers} of 2 users migrated`,async t=>{
+    const db=new D1();t.after(()=>db.close());
+    const env=await healthyMixedAuthorityFixture(db,migratedUsers);
+    const {body}=await getUserLibraryV3ShadowStatus(env);
+    assert.equal(body.rollout.preflightReady,true);
+    assert.equal(body.compatibilityReadEnabled,true);
+    assert.equal(body.legacyUsers,2-migratedUsers);
+    assert.equal(body.legacyV3Heads,2-migratedUsers);
+    assert.equal(body.v3AuthorityUsers,migratedUsers);
+    assert.equal(body.v3AuthorityHeads,migratedUsers);
+    assert.equal(body.v3Heads,body.legacyV3Heads+body.v3AuthorityHeads);
+    for(const key of ['orphanV3Heads','legacyHeadMismatches','legacyCompatibilityHeadMismatches',
+      'pendingLegacyCompatibilityHeads','authorityHeadMismatches','compatibilityHeadMismatches',
+      'staleLegacyDocuments','revisionMismatches']) assert.equal(body[key],0,key);
+    const comparison=await compareUserLibraryV3ShadowPage(env,0,20);
+    assert.equal(comparison.body.checked,2-migratedUsers);
+    assert.equal(comparison.body.mismatched,0);
+    assert.equal(comparison.body.complete,true);
+  });
+}
+
+test('rollout preflight rejects missing legacy or authoritative heads and orphan V3 heads',async t=>{
+  for(const scenario of [
+    {name:'missing legacy head',migrated:0,sql:"DELETE FROM user_library_v3_head WHERE user_id='u-cohort-0'",metric:'legacyHeadMismatches'},
+    {name:'missing legacy shape',migrated:0,sql:"DELETE FROM user_library_v3_shape WHERE user_id='u-cohort-0'",metric:'legacyHeadMismatches'},
+    {name:'missing authoritative head',migrated:1,sql:"DELETE FROM user_library_v3_head WHERE user_id='u-cohort-0'",metric:'authorityHeadMismatches'},
+    {name:'missing authoritative shape',migrated:1,sql:"DELETE FROM user_library_v3_shape WHERE user_id='u-cohort-0'",metric:'authorityHeadMismatches'},
+    {name:'orphan V3 head',migrated:0,sql:"INSERT INTO users(id) VALUES('u-orphan'); INSERT INTO user_library_v3_head(user_id) VALUES('u-orphan')",metric:'orphanV3Heads'},
+  ]){
+    await t.test(scenario.name,async t=>{
+      const db=new D1();t.after(()=>db.close());
+      const env=await healthyMixedAuthorityFixture(db,scenario.migrated);
+      db.sqlite.exec(scenario.sql);
+      const {body}=await getUserLibraryV3ShadowStatus(env);
+      assert.equal(body[scenario.metric],1);
+      assert.equal(body.revisionMismatches,0,'fresh shadow-sync metadata cannot hide a missing head');
+      assert.equal(body.rollout.preflightReady,false);
+    });
+  }
+});
+
+test('rollout preflight requires compatibility reads and completed legacy compatibility heads',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env=await healthyMixedAuthorityFixture(db);
+  for(const disabledFlag of ['USER_LIBRARY_V3_READ_ENABLED','USER_LIBRARY_ROW_READ_ENABLED']){
+    const {body}=await getUserLibraryV3ShadowStatus({...env,[disabledFlag]:'0'});
+    assert.equal(body.rollout.preflightReady,false,disabledFlag);
+  }
+  db.sqlite.prepare("UPDATE user_library_head SET shadow_version=0 WHERE user_id='u-cohort-0'").run();
+  const {body}=await getUserLibraryV3ShadowStatus(env);
+  assert.equal(body.pendingLegacyCompatibilityHeads,1);
+  assert.equal(body.legacyCompatibilityHeadMismatches,1);
+  assert.equal(body.rollout.preflightReady,false);
+});
+
+test('rollout preflight rejects absent or incompatible D3b mirrors after migration',async t=>{
+  for(const mutation of [
+    "DELETE FROM user_library_head WHERE user_id='u-cohort-0'",
+    "UPDATE user_library_head SET shadow_version=1 WHERE user_id='u-cohort-0'",
+    "UPDATE user_library_head SET paper_count=paper_count+1 WHERE user_id='u-cohort-0'",
+    "UPDATE user_library_head SET global_json='{}' WHERE user_id='u-cohort-0'",
+    "UPDATE user_library_head SET papers_split=1-papers_split WHERE user_id='u-cohort-0'",
+  ]){
+    const db=new D1();
+    try{
+      const env=await healthyMixedAuthorityFixture(db,1);
+      db.sqlite.exec(mutation);
+      const {body}=await getUserLibraryV3ShadowStatus(env);
+      assert.equal(body.compatibilityHeadMismatches,1,mutation);
+      assert.equal(body.rollout.preflightReady,false,mutation);
+    }finally{db.close();}
+  }
 });
 
 test('reconciliation repairs a user changed after historical cursor passed it',async t=>{

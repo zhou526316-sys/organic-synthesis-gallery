@@ -97,18 +97,28 @@ export function rebuildUserLibraryState(head, rows = []) {
   return state;
 }
 
-async function writeRows(env, userId, split, revision, updatedAt) {
-  await env.DB.prepare('DELETE FROM user_paper_state WHERE user_id = ?').bind(userId).run();
+const SHADOW_WRITE_CLAIM = `EXISTS (
+  SELECT 1 FROM user_library_head
+  WHERE user_id=? AND revision=? AND source_state_hash=? AND shadow_version=0
+) AND NOT EXISTS (
+  SELECT 1 FROM user_library_v3_authority WHERE user_id=? AND authority='v3'
+)`;
+
+async function writeRows(env, userId, split, revision, updatedAt, claim) {
+  const claimArgs = [userId, revision, claim, userId];
+  await env.DB.prepare(`DELETE FROM user_paper_state WHERE user_id=? AND ${SHADOW_WRITE_CLAIM}`)
+    .bind(userId, ...claimArgs).run();
   const rows = split.rows || [];
   for (let offset = 0; offset < rows.length; offset += 40) {
     const chunk = rows.slice(offset, offset + 40);
     const statements = chunk.map(row => env.DB.prepare(`
       INSERT INTO user_paper_state
         (user_id,paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,revision,updated_at)
-      VALUES (?,?,?,?,?,?,?,?,?)
+      SELECT ?,?,?,?,?,?,?,?,?
+      WHERE ${SHADOW_WRITE_CLAIM}
     `).bind(
       userId,row.paperKey,row.doi,row.paperPresent?1:0,row.paperStateJson,
-      row.metadataPresent?1:0,row.metadataJson,revision,updatedAt,
+      row.metadataPresent?1:0,row.metadataJson,revision,updatedAt,...claimArgs,
     ));
     if (typeof env.DB.batch === 'function') await env.DB.batch(statements);
     else for (const statement of statements) await statement.run();
@@ -150,21 +160,54 @@ export async function shadowWriteUserLibraryState(env, userId, state, revision, 
     }
   }
 
-  await writeRows(env, normalizedUserId, split, rev, updated);
-  await env.DB.prepare(`
+  // Publish an incomplete head before touching rows. A newer revision can take
+  // this claim, but every old batch then becomes a no-op. Migration requires a
+  // completed head, so it cannot cross the gap between DELETE and INSERT.
+  const claimPrefix = `inflight:${split.sourceStateHash}:`;
+  const claim = `${claimPrefix}${crypto.randomUUID()}`;
+  const claimResult = await env.DB.prepare(`
     INSERT INTO user_library_head
       (user_id,revision,updated_at,global_json,papers_split,metadata_split,paper_count,metadata_count,source_state_hash,shadow_version)
-    VALUES (?,?,?,?,?,?,?,?,?,?)
+    SELECT ?,?,?,?,?,?,?,?,?,0
+    WHERE NOT EXISTS (
+      SELECT 1 FROM user_library_v3_authority WHERE user_id=? AND authority='v3'
+    )
     ON CONFLICT(user_id) DO UPDATE SET
       revision=excluded.revision,updated_at=excluded.updated_at,global_json=excluded.global_json,
       papers_split=excluded.papers_split,metadata_split=excluded.metadata_split,
       paper_count=excluded.paper_count,metadata_count=excluded.metadata_count,
       source_state_hash=excluded.source_state_hash,shadow_version=excluded.shadow_version
-    WHERE user_library_head.revision <= excluded.revision
+    WHERE user_library_head.shadow_version<2
+      AND (
+        user_library_head.revision<excluded.revision
+        OR (user_library_head.revision=excluded.revision
+          AND user_library_head.updated_at=excluded.updated_at
+          AND (user_library_head.source_state_hash=?
+            OR substr(user_library_head.source_state_hash,1,?)=?))
+      )
+      AND NOT EXISTS (
+        SELECT 1 FROM user_library_v3_authority WHERE user_id=? AND authority='v3'
+      )
   `).bind(
     normalizedUserId,rev,updated,split.globalJson,split.papersSplit?1:0,split.metadataSplit?1:0,
-    split.paperCount,split.metadataCount,split.sourceStateHash,SHADOW_VERSION,
+    split.paperCount,split.metadataCount,claim,normalizedUserId,
+    split.sourceStateHash,claimPrefix.length,claimPrefix,normalizedUserId,
   ).run();
+
+  if (Number(claimResult?.meta?.changes || 0) !== 1) {
+    return { enabled:true,written:false,skippedStale:true,revision:rev };
+  }
+  await writeRows(env, normalizedUserId, split, rev, updated, claim);
+  const completed = await env.DB.prepare(`
+    UPDATE user_library_head SET source_state_hash=?,shadow_version=?
+    WHERE user_id=? AND ${SHADOW_WRITE_CLAIM}
+  `).bind(
+    split.sourceStateHash,SHADOW_VERSION,normalizedUserId,
+    normalizedUserId,rev,claim,normalizedUserId,
+  ).run();
+  if (Number(completed?.meta?.changes || 0) !== 1) {
+    return { enabled:true,written:false,skippedStale:true,revision:rev };
+  }
 
   return {
     enabled:true,written:true,revision:rev,rowCount:split.rows.length,
@@ -193,6 +236,7 @@ export async function readUserLibraryStateFromRows(env, userId, authorityMeta = 
   }
   if (!authority) return { ready:false, reason:'row_authority_missing' };
   if (!head) return { ready:false, reason:'row_head_missing' };
+  if (Number(head.shadow_version) === 0) return { ready:false, reason:'row_shadow_inflight' };
   if (Number(head.revision || 0) !== Number(authority.revision || 0)
       || Number(head.updated_at || 0) !== Number(authority.updated_at || 0)) {
     return { ready:false, reason:'row_revision_stale' };
@@ -219,6 +263,18 @@ export async function readUserLibraryStateFromRows(env, userId, authorityMeta = 
     if (rebuiltHash !== String(head.source_state_hash || '')) {
       return { ready:false, reason:'row_source_hash_mismatch' };
     }
+  }
+  // Head and row reads are separate D1 statements. A same-count V3 mutation
+  // between them must not return new rows stamped with the previous revision.
+  const after = await env.DB.prepare(`
+    SELECT revision,updated_at,source_state_hash,shadow_version
+    FROM user_library_head WHERE user_id=?
+  `).bind(normalizedUserId).first();
+  if (!after || Number(after.revision)!==Number(head.revision)
+      || Number(after.updated_at)!==Number(head.updated_at)
+      || String(after.source_state_hash)!==String(head.source_state_hash)
+      || Number(after.shadow_version)!==Number(head.shadow_version)) {
+    return { ready:false, reason:'row_revision_changed' };
   }
   return {
     ready:true,

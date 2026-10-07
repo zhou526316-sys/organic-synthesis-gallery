@@ -52,23 +52,61 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          node --input-type=module <<'NODE' > "$RUNNER_TEMP/user-library-v3-canary-credentials.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
           import { randomBytes, createHash } from 'node:crypto';
+          import { splitUserLibraryState } from './src/user-library-shadow.js';
+          const userId=String(process.env.CANARY_USER_ID||'');
+          if(userId!=='__gallery_v3_write_canary__')throw new Error('reserved canary identity required');
+          const temp=process.env.RUNNER_TEMP;
+          const now=Date.now();
           const token=randomBytes(32).toString('base64url');
           const tokenHash=createHash('sha256').update(token).digest('hex');
-          process.stdout.write(JSON.stringify({token,tokenHash}));
+          const state={
+            statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},
+            followedSearches:[],searchHistory:[],hideRead:false,
+            papers:{
+              'd3c4b-canary-paper':{favorite:false,note:'before migration',updatedAt:now},
+              'd3c4b-canary-unchanged':{favorite:true,note:"unchanged canary's note",tags:['keep'],updatedAt:now},
+            },
+            metadata:{
+              'd3c4b-canary-paper':{doi:'10.9999/gallery-d3c4b-canary',title:'Gallery D3c4b production canary'},
+              'd3c4b-canary-unchanged':{doi:'10.9999/gallery-d3c4b-unchanged',title:'Unchanged canary metadata'},
+            },
+          };
+          const split=await splitUserLibraryState(state);
+          if(split.rows.length!==2)throw new Error('canary seed must contain exactly two rows');
+          const literal=value=>value===null?'NULL':typeof value==='number'?String(value):"'"+String(value).replaceAll("'","''")+"'";
+          const statements=['DELETE FROM users WHERE id='+literal(userId)+';'];
+          const insert=(table,columns,values)=>statements.push('INSERT INTO '+table+'('+columns+') VALUES('+values.map(literal).join(',')+');');
+          insert('users','id,display_name,email,avatar_url,created_at,updated_at',[userId,'D3c4b production canary',null,null,now,now]);
+          insert('user_sessions','token_hash,user_id,created_at,expires_at',[tokenHash,userId,now,now+600000]);
+          insert('user_library_state','user_id,state_json,revision,updated_at',[userId,JSON.stringify(state),1,now]);
+          insert('user_library_head','user_id,revision,updated_at,global_json,papers_split,metadata_split,paper_count,metadata_count,source_state_hash,shadow_version',
+            [userId,1,now,split.globalJson,1,1,2,2,split.sourceStateHash,1]);
+          insert('user_library_v3_head','user_id,revision,updated_at,global_json,global_revision,paper_count,metadata_count,change_floor_revision,schema_version',
+            [userId,1,now,split.globalJson,1,2,2,1,1]);
+          insert('user_library_v3_shape','user_id,papers_split,metadata_split,revision',[userId,1,1,1]);
+          insert('user_library_v3_shadow_sync','user_id,source_revision,source_updated_at,source_state_hash,inflight_revision,inflight_started_at,synced_at,last_error',
+            [userId,1,now,split.sourceStateHash,0,0,now,'']);
+          insert('user_library_v3_commits','user_id,revision,expected_revision,updated_at',[userId,1,0,now]);
+          split.rows.forEach((row,seq)=>{
+            const values=[userId,row.paperKey,row.doi,row.paperPresent?1:0,row.paperStateJson,row.metadataPresent?1:0,row.metadataJson];
+            insert('user_paper_state','user_id,paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,revision,updated_at',[...values,1,now]);
+            insert('user_library_v3_rows','user_id,paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,deleted,revision,updated_at',[...values,0,1,now]);
+            insert('user_library_v3_changes','user_id,revision,seq,paper_key,op,doi,paper_present,paper_state_json,metadata_present,metadata_json,updated_at',
+              [userId,1,seq,row.paperKey,'upsert',row.doi,row.paperPresent?1:0,row.paperStateJson,row.metadataPresent?1:0,row.metadataJson,now]);
+          });
+          const sql=statements.join('\n')+'\n';
+          if(Buffer.byteLength(sql)>32768)throw new Error('canary seed exceeds bounded SQL size');
+          fs.writeFileSync(temp+'/user-library-v3-canary-seed.sql',sql);
+          fs.writeFileSync(temp+'/user-library-v3-canary-fixture.json',JSON.stringify({state,revision:1,updatedAt:now,sourceStateHash:split.sourceStateHash}));
+          fs.writeFileSync(temp+'/user-library-v3-canary-credentials.json',JSON.stringify({token,tokenHash}));
           NODE
           CANARY_TOKEN="$(node -e "const x=require(process.env.RUNNER_TEMP+'/user-library-v3-canary-credentials.json');process.stdout.write(x.token)")"
-          TOKEN_HASH="$(node -e "const x=require(process.env.RUNNER_TEMP+'/user-library-v3-canary-credentials.json');process.stdout.write(x.tokenHash)")"
           echo "::add-mask::$CANARY_TOKEN"
-          NOW_MS="$(node -p 'Date.now()')"
-          EXPIRES_MS="$((NOW_MS + 600000))"
-
-          # users is the FK root for every canary-owned user-library/session row.
-          # One root delete is safer than maintaining a hand-ordered child-table list.
-          npx wrangler d1 execute "$D1_NAME" --remote --command "DELETE FROM users WHERE id='$CANARY_USER_ID';" --json | tee /tmp/user-library-v3-canary-preclean.json
-          npx wrangler d1 execute "$D1_NAME" --remote --command "INSERT INTO users(id,display_name,email,avatar_url,created_at,updated_at) VALUES('$CANARY_USER_ID','D3c4b production canary',NULL,NULL,$NOW_MS,$NOW_MS);" >/tmp/user-library-v3-canary-user.txt
-          npx wrangler d1 execute "$D1_NAME" --remote --command "INSERT INTO user_sessions(token_hash,user_id,created_at,expires_at) VALUES('$TOKEN_HASH','$CANARY_USER_ID',$NOW_MS,$EXPIRES_MS);" >/tmp/user-library-v3-canary-session.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT COUNT(*) AS normalAccounts FROM users WHERE id<>'$CANARY_USER_ID';" --json > "$RUNNER_TEMP/user-library-v3-canary-before-count.json"
+          npx wrangler d1 execute "$D1_NAME" --remote --file="$RUNNER_TEMP/user-library-v3-canary-seed.sql" >/tmp/user-library-v3-canary-seed.txt
 
       - name: Execute isolated V3 write canary
         id: v3_canary
@@ -82,6 +120,7 @@ jobs:
           const bridge=String(process.env.BRIDGE_WRITE_TOKEN||'');
           const userId=String(process.env.CANARY_USER_ID||'');
           const {token}=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/user-library-v3-canary-credentials.json','utf8'));
+          const fixture=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/user-library-v3-canary-fixture.json','utf8'));
           const report={
             schemaVersion:1,
             phase:'D3c4b-user-library-v3-production-write-canary',
@@ -94,6 +133,19 @@ jobs:
           const save=()=>fs.writeFileSync(process.env.REPORT_PATH,JSON.stringify(report,null,2)+'\n');
           save();
           const assert=(condition,message)=>{if(!condition)throw new Error(message);};
+
+          function v3CohortsHealthy(status){
+            const counts=['legacyUsers','legacyV3Heads','v3Heads','v3AuthorityUsers','v3AuthorityHeads',
+              'orphanV3Heads','legacyHeadMismatches','legacyCompatibilityHeadMismatches',
+              'pendingLegacyCompatibilityHeads','revisionMismatches','authorityHeadMismatches',
+              'compatibilityHeadMismatches','staleLegacyDocuments'];
+            if(!counts.every(key=>Number.isSafeInteger(status[key])&&status[key]>=0))return false;
+            return status.compatibilityReadEnabled===true
+              &&status.legacyUsers===status.legacyV3Heads
+              &&status.v3AuthorityUsers===status.v3AuthorityHeads
+              &&status.v3Heads===status.legacyV3Heads+status.v3AuthorityHeads
+              &&counts.slice(5).every(key=>status[key]===0);
+          }
 
           async function jsonFetch(url,options={}){
             const response=await fetch(url,{...options,signal:AbortSignal.timeout(30000)});
@@ -118,8 +170,8 @@ jobs:
             assert(status.body?.enabled===true,'V3 shadow is not enabled');
             assert(status.body?.readEnabled===true,'V3 reads are not enabled');
             assert(status.body?.writeEnabled===false,'global V3 writes must remain disabled during canary');
-            assert(Number(status.body?.revisionMismatches||0)===0,'V3 parity has revision mismatches');
-            assert(Number(status.body?.legacyUsers||0)===Number(status.body?.v3Heads||0),'V3 parity count mismatch');
+            assert(v3CohortsHealthy(status.body),'V3 authority cohorts or compatibility mirrors are unhealthy');
+            assert(status.body?.rollout?.preflightReady===true,'V3 rollout preflight is not ready');
             assert(status.body?.backfill?.complete===true,'V3 backfill is not complete');
             report.checks.parity=true;
 
@@ -151,7 +203,8 @@ jobs:
 
             const head0=await account({mode:'account-v3-head'});
             assert(head0.status===200,'initial V3 head failed: '+head0.status+' '+head0.text.slice(0,500));
-            assert(head0.body?.account?.revision===0,'initial V3 revision must be zero');
+            assert(head0.body?.account?.revision===1,'seeded V3 revision must be one');
+            assert(head0.body?.account?.paperCount===2,'seeded canary must retain both legacy papers');
             assert(head0.body?.account?.writeEnabled===true,'reserved canary user is not write-enabled');
             assert(head0.body?.account?.writeAuthority==='legacy','new canary must begin legacy-authoritative');
             report.checks.initialHead=true;
@@ -172,19 +225,19 @@ jobs:
             };
             const mutate=await account({
               mode:'account-v3-mutate',
-              expectedRevision:0,
+              expectedRevision:1,
               globalState,
               operations:[operation],
             });
             assert(mutate.status===200,'V3 canary mutation failed: '+mutate.status+' '+mutate.text.slice(0,700));
-            assert(mutate.body?.account?.revision===1,'V3 mutation did not advance revision to 1');
+            assert(mutate.body?.account?.revision===2,'V3 mutation did not advance revision to 2');
             assert(mutate.body?.account?.writeAuthority==='v3','V3 authority was not claimed');
-            assert(mutate.body?.account?.paperCount===1,'V3 paper count mismatch');
-            assert(mutate.body?.account?.metadataCount===1,'V3 metadata count mismatch');
+            assert(mutate.body?.account?.paperCount===2,'V3 paper count mismatch');
+            assert(mutate.body?.account?.metadataCount===2,'V3 metadata count mismatch');
             report.checks.mutation=true;
 
             const head1=await account({mode:'account-v3-head'});
-            assert(head1.status===200&&head1.body?.account?.revision===1,'post-write V3 head invalid');
+            assert(head1.status===200&&head1.body?.account?.revision===2,'post-write V3 head invalid');
             assert(head1.body?.account?.writeAuthority==='v3','post-write authority is not V3');
             assert(head1.body?.account?.globalState?.hideRead===true,'V3 global state was not persisted');
             report.checks.headRead=true;
@@ -194,51 +247,101 @@ jobs:
             assert(page.status===200&&row,'V3 page did not return canary row');
             assert(row.paperState?.favorite===true,'V3 page paper state mismatch');
             assert(row.metadata?.doi==='10.9999/gallery-d3c4b-canary','V3 page metadata mismatch');
+            const unchanged=(page.body?.account?.rows||[]).find(item=>item?.paperKey==='d3c4b-canary-unchanged');
+            assert(unchanged&&JSON.stringify(unchanged.paperState)===JSON.stringify(fixture.state.papers['d3c4b-canary-unchanged']),'untouched legacy paper was not preserved');
+            assert(JSON.stringify(unchanged.metadata)===JSON.stringify(fixture.state.metadata['d3c4b-canary-unchanged']),'untouched legacy metadata was not preserved');
+            report.checks.unchangedRowPreserved=true;
             report.checks.pageRead=true;
 
-            const delta=await account({mode:'account-v3-delta',sinceRevision:0,limit:10});
+            const delta=await account({mode:'account-v3-delta',sinceRevision:1,limit:10});
             const change=(delta.body?.account?.changes||[]).find(item=>item?.paperKey==='d3c4b-canary-paper');
             assert(delta.status===200&&change,'V3 delta did not return canary change');
             assert(change.op==='upsert','V3 delta operation mismatch');
+            assert(!(delta.body?.account?.changes||[]).some(item=>item?.paperKey==='d3c4b-canary-unchanged'),'untouched paper was unnecessarily rewritten');
             report.checks.deltaRead=true;
 
             const compat=await account({mode:'account-pull'});
             assert(compat.status===200,'D3b compatibility pull failed: '+compat.status+' '+compat.text.slice(0,700));
-            assert(compat.body?.account?.revision===1,'compatibility revision mismatch');
+            assert(compat.body?.account?.revision===2,'compatibility revision mismatch');
             assert(compat.body?.account?.readPath==='rows-v3-compat','compatibility path did not use V3 row mirror');
             assert(compat.body?.account?.state?.papers?.['d3c4b-canary-paper']?.favorite===true,'compatibility paper state mismatch');
             assert(compat.body?.account?.state?.hideRead===true,'compatibility global state mismatch');
+            assert(JSON.stringify(compat.body?.account?.state?.papers?.['d3c4b-canary-unchanged'])===JSON.stringify(fixture.state.papers['d3c4b-canary-unchanged']),'compatibility untouched paper mismatch');
+            assert(JSON.stringify(compat.body?.account?.state?.metadata?.['d3c4b-canary-unchanged'])===JSON.stringify(fixture.state.metadata['d3c4b-canary-unchanged']),'compatibility untouched metadata mismatch');
             report.checks.compatibilityRead=true;
 
             const conflict=await account({
               mode:'account-v3-mutate',
-              expectedRevision:0,
+              expectedRevision:1,
               operations:[{...operation,paperState:{...operation.paperState,note:'stale write'}}],
             });
             assert(conflict.status===409,'stale V3 write did not return 409');
             assert(conflict.body?.error==='user_library_v3_revision_conflict','unexpected V3 conflict reason');
-            assert(Number(conflict.body?.currentRevision||0)===1,'V3 conflict current revision mismatch');
+            assert(Number(conflict.body?.currentRevision||0)===2,'V3 conflict current revision mismatch');
             report.checks.revisionConflict=true;
 
             const legacySave=await account({
               mode:'account-save',
-              revision:1,
+              revision:2,
               state:{...globalState,papers:{},metadata:{}},
             });
             assert(legacySave.status===409,'legacy write was not blocked after V3 authority claim');
             assert(legacySave.body?.error==='user_library_client_upgrade_required','unexpected legacy-write fence result');
             report.checks.legacyWriteFence=true;
 
-            report.ok=true;
-            report.completedAt=new Date().toISOString();
+            const after=await jsonFetch(base+'/api/admin/user-library-v3/status?d3c4b-after='+Date.now(),{
+              headers:{authorization:'Bearer '+bridge,'cache-control':'no-cache',pragma:'no-cache'},
+            });
+            assert(after.ok&&v3CohortsHealthy(after.body),'post-migration authority cohorts are unhealthy');
+            assert(after.body?.rollout?.preflightReady===true,'post-migration preflight is not ready');
+            assert(after.body.v3AuthorityUsers===status.body.v3AuthorityUsers+1,'canary must add exactly one V3 authority');
+            assert(after.body.legacyUsers===status.body.legacyUsers-1,'canary legacy authority was not removed');
+            assert(after.body.v3Heads===status.body.v3Heads,'migration changed the total head count');
+            const cohortCounts=value=>({
+              legacyUsers:value.legacyUsers,legacyV3Heads:value.legacyV3Heads,
+              v3AuthorityUsers:value.v3AuthorityUsers,v3AuthorityHeads:value.v3AuthorityHeads,v3Heads:value.v3Heads,
+            });
+            report.cohorts={before:cohortCounts(status.body),after:cohortCounts(after.body)};
+            report.checks.mixedAuthorityStatus=true;
+            report.apiChecksPassed=true;
+            report.apiCompletedAt=new Date().toISOString();
             save();
-            console.log('USER_LIBRARY_V3_WRITE_CANARY '+JSON.stringify(report));
+            console.log('USER_LIBRARY_V3_CANARY_API_CHECKS '+JSON.stringify(report));
           }catch(error){
             report.error=String(error?.message||error);
             report.failedAt=new Date().toISOString();
             save();
             throw error;
           }
+          NODE
+
+      - name: Verify seeded canary migration and unchanged normal-account count
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT (SELECT COUNT(*) FROM users WHERE id<>'$CANARY_USER_ID') AS normalAccounts, (SELECT COUNT(*) FROM user_library_state WHERE user_id='$CANARY_USER_ID') AS legacyDocuments, (SELECT revision FROM user_library_v3_rows WHERE user_id='$CANARY_USER_ID' AND paper_key='d3c4b-canary-unchanged') AS unchangedV3Revision, (SELECT revision FROM user_paper_state WHERE user_id='$CANARY_USER_ID' AND paper_key='d3c4b-canary-unchanged') AS unchangedCompatibilityRevision;" --json > "$RUNNER_TEMP/user-library-v3-canary-after-count.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const unpack=file=>{
+            const value=JSON.parse(fs.readFileSync(file,'utf8'));
+            return (Array.isArray(value)?value.flatMap(item=>item.results||[]):value.results||[])[0];
+          };
+          const before=unpack(process.env.RUNNER_TEMP+'/user-library-v3-canary-before-count.json');
+          const after=unpack(process.env.RUNNER_TEMP+'/user-library-v3-canary-after-count.json');
+          if(!Number.isSafeInteger(before?.normalAccounts)||after?.normalAccounts!==before.normalAccounts)throw new Error('normal account count changed');
+          if(after?.legacyDocuments!==0)throw new Error('migrated canary legacy document still exists');
+          if(after?.unchangedV3Revision!==1||after?.unchangedCompatibilityRevision!==1)throw new Error('unchanged canary row revision changed');
+          const path='/tmp/user-library-v3-write-canary-report.json';
+          const report=JSON.parse(fs.readFileSync(path,'utf8'));
+          if(report.apiChecksPassed!==true)throw new Error('canary API checks incomplete');
+          report.checks.legacyDocumentRemoved=true;
+          report.checks.normalAccountsUnchanged=true;
+          report.normalAccounts=after.normalAccounts;
+          report.ok=true;
+          report.completedAt=new Date().toISOString();
+          fs.writeFileSync(path,JSON.stringify(report,null,2)+'\n');
+          console.log('USER_LIBRARY_V3_WRITE_CANARY '+JSON.stringify(report));
           NODE
 
       - name: Clean up isolated canary account

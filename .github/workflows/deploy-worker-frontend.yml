@@ -15,6 +15,9 @@ on:
       - 'cloudflare/worker/package.json'
       - 'cloudflare/worker/scripts/test-site-analytics-materialized.mjs'
       - 'cloudflare/worker/scripts/test-literature-catalog-index.mjs'
+      - 'cloudflare/worker/scripts/test-user-library-v3.mjs'
+      - 'cloudflare/worker/scripts/test-user-library-shadow.mjs'
+      - 'cloudflare/worker/scripts/test-user-library-v3-shadow.mjs'
       - 'cloudflare/site-analytics-v2.sql'
       - 'cloudflare/site-analytics-snapshot-v1.sql'
       - 'cloudflare/user-library-state-v2.sql'
@@ -27,6 +30,7 @@ on:
       - 'scripts/test-scheduled-handoff-shadow-deployment-contract.mjs'
       - 'scripts/test-user-library-shadow-deployment-contract.mjs'
       - 'scripts/test-user-library-v3-deployment-contract.mjs'
+      - 'scripts/test-user-library-v3-write-canary-contract.mjs'
       - 'scripts/test-site-analytics-materialized-deployment-contract.mjs'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-bridge-loader.mjs'
@@ -77,6 +81,17 @@ jobs:
       - name: Verify date-scoped literature queries and cursor integrity
         timeout-minutes: 2
         run: node --test cloudflare/worker/scripts/test-literature-catalog-index.mjs
+
+      - name: Verify user library migration and deployment contracts
+        timeout-minutes: 2
+        run: |
+          node --test \
+            cloudflare/worker/scripts/test-user-library-v3.mjs \
+            cloudflare/worker/scripts/test-user-library-shadow.mjs \
+            cloudflare/worker/scripts/test-user-library-v3-shadow.mjs \
+            scripts/test-user-library-v3-deployment-contract.mjs \
+            scripts/test-user-library-shadow-deployment-contract.mjs \
+            scripts/test-user-library-v3-write-canary-contract.mjs
 
       - name: Install frontend dependencies
         run: npm install --no-audit --no-fund
@@ -1040,7 +1055,7 @@ jobs:
           const passes=[];
           for(let attempt=1;attempt<=4&&passes.length<2;attempt+=1){
             status=await call('/api/admin/user-library-shadow/status');
-            if(status.legacyUsers!==status.shadowHeads||status.revisionMismatches!==0){
+            if(status.legacyUsers!==status.legacyShadowHeads||status.revisionMismatches!==0){
               await new Promise(resolve=>setTimeout(resolve,750));
               continue;
             }
@@ -1060,10 +1075,12 @@ jobs:
             }
             const after=await call('/api/admin/user-library-shadow/status');
             const stable=status.legacyUsers===after.legacyUsers
-              &&status.shadowHeads===after.shadowHeads
+              &&status.legacyShadowHeads===after.legacyShadowHeads
+              &&after.legacyUsers===after.legacyShadowHeads
               &&after.revisionMismatches===0
               &&after.readPathActive===true;
-            const pass={stable,checked,mismatched,reasons,legacyUsers:after.legacyUsers,shadowHeads:after.shadowHeads,paperRows:after.paperRows};
+            const pass={stable,checked,mismatched,reasons,legacyUsers:after.legacyUsers,shadowHeads:after.shadowHeads,
+              legacyShadowHeads:after.legacyShadowHeads,v3CompatHeads:after.v3CompatHeads,paperRows:after.paperRows};
             console.log(JSON.stringify({userLibraryShadowComparisonAttempt:attempt,...pass}));
             if(stable&&mismatched===0&&checked===after.legacyUsers) passes.push(pass);
             if(passes.length<2) await new Promise(resolve=>setTimeout(resolve,750));
@@ -1078,6 +1095,8 @@ jobs:
             schemaVersion:1,phase:'D3b-user-library-row-read-live',ok:true,readPathActive:true,
             legacyUsers:Number(finalStatus.legacyUsers||0),
             shadowHeads:Number(finalStatus.shadowHeads||0),
+            legacyShadowHeads:Number(finalStatus.legacyShadowHeads),
+            v3CompatHeads:Number(finalStatus.v3CompatHeads),
             paperRows:Number(finalStatus.paperRows||0),
             revisionMismatches:Number(finalStatus.revisionMismatches||0),
             backfillComplete:finalStatus.backfill?.complete===true,
@@ -1129,6 +1148,19 @@ jobs:
             return body;
           }
 
+          function v3CohortsHealthy(status){
+            const counts=['legacyUsers','legacyV3Heads','v3Heads','v3AuthorityUsers','v3AuthorityHeads',
+              'orphanV3Heads','legacyHeadMismatches','legacyCompatibilityHeadMismatches',
+              'pendingLegacyCompatibilityHeads','revisionMismatches','authorityHeadMismatches',
+              'compatibilityHeadMismatches','staleLegacyDocuments'];
+            if(!counts.every(key=>Number.isSafeInteger(status[key])&&status[key]>=0))return false;
+            return status.compatibilityReadEnabled===true
+              &&status.legacyUsers===status.legacyV3Heads
+              &&status.v3AuthorityUsers===status.v3AuthorityHeads
+              &&status.v3Heads===status.legacyV3Heads+status.v3AuthorityHeads
+              &&counts.slice(5).every(key=>status[key]===0);
+          }
+
           let status=await call('/api/admin/user-library-v3/status');
           if(status.enabled!==true||status.readEnabled!==true||status.writeEnabled!==false){
             throw new Error('user library V3 shadow configuration invalid: '+JSON.stringify(status));
@@ -1160,8 +1192,12 @@ jobs:
             if(before.enabled!==true||before.readEnabled!==true||before.writeEnabled!==false){
               throw new Error('user library V3 authority changed unexpectedly: '+JSON.stringify(before));
             }
-            if(before.revisionMismatches!==0||before.legacyUsers!==before.v3Heads){
+            if(before.revisionMismatches!==0){
               await call('/api/admin/user-library-v3/reconcile?limit=20',{method:'POST'});
+              await new Promise(resolve=>setTimeout(resolve,500));
+              continue;
+            }
+            if(!v3CohortsHealthy(before)){
               await new Promise(resolve=>setTimeout(resolve,500));
               continue;
             }
@@ -1183,11 +1219,14 @@ jobs:
             const after=await call('/api/admin/user-library-v3/status');
             const stable=before.legacyUsers===after.legacyUsers
               &&before.v3Heads===after.v3Heads
-              &&after.legacyUsers===after.v3Heads
-              &&after.revisionMismatches===0
+              &&before.legacyV3Heads===after.legacyV3Heads
+              &&before.v3AuthorityUsers===after.v3AuthorityUsers
+              &&before.v3AuthorityHeads===after.v3AuthorityHeads
+              &&v3CohortsHealthy(after)
               &&after.readEnabled===true
               &&after.writeEnabled===false;
-            const pass={stable,checked,mismatched,reasons,legacyUsers:after.legacyUsers,v3Heads:after.v3Heads};
+            const pass={stable,checked,mismatched,reasons,legacyUsers:after.legacyUsers,v3Heads:after.v3Heads,
+              legacyV3Heads:after.legacyV3Heads,v3AuthorityUsers:after.v3AuthorityUsers,v3AuthorityHeads:after.v3AuthorityHeads};
             console.log(JSON.stringify({userLibraryV3ComparisonAttempt:attempt,...pass}));
             if(stable&&mismatched===0&&checked===after.legacyUsers) passes.push(pass);
             if(passes.length<2) await new Promise(resolve=>setTimeout(resolve,750));
@@ -1197,6 +1236,7 @@ jobs:
           const finalStatus=await call('/api/admin/user-library-v3/status');
           const rollout=finalStatus.rollout||{};
           const rolloutHealthy=rollout.preflightReady===true
+            &&v3CohortsHealthy(finalStatus)
             &&Number(finalStatus.revisionMismatches||0)===0
             &&Number(finalStatus.authorityHeadMismatches||0)===0
             &&Number(finalStatus.compatibilityHeadMismatches||0)===0
@@ -1220,8 +1260,15 @@ jobs:
             legacyDocuments:Number(finalStatus.legacyDocuments||0),
             staleLegacyDocuments:Number(finalStatus.staleLegacyDocuments||0),
             v3Heads:Number(finalStatus.v3Heads||0),
+            legacyV3Heads:finalStatus.legacyV3Heads,
+            v3AuthorityHeads:finalStatus.v3AuthorityHeads,
+            orphanV3Heads:finalStatus.orphanV3Heads,
             v3AuthorityUsers:Number(finalStatus.v3AuthorityUsers||0),
+            compatibilityReadEnabled:finalStatus.compatibilityReadEnabled,
             revisionMismatches:Number(finalStatus.revisionMismatches||0),
+            legacyHeadMismatches:finalStatus.legacyHeadMismatches,
+            legacyCompatibilityHeadMismatches:finalStatus.legacyCompatibilityHeadMismatches,
+            pendingLegacyCompatibilityHeads:finalStatus.pendingLegacyCompatibilityHeads,
             authorityHeadMismatches:Number(finalStatus.authorityHeadMismatches||0),
             compatibilityHeadMismatches:Number(finalStatus.compatibilityHeadMismatches||0),
             backfillComplete:finalStatus.backfill?.complete===true,
@@ -1259,6 +1306,21 @@ jobs:
           if(report.rolloutPreflightReady!==true) errors.push('preflight_not_ready');
           if(report.rolloutSeedConfigured!==true) errors.push('seed_not_configured');
           if(report.rolloutCanaryConfigured!==true) errors.push('canary_not_configured');
+          if(report.compatibilityReadEnabled!==true) errors.push('compatibility_read_disabled');
+          const counts=['legacyUsers','legacyV3Heads','v3Heads','v3AuthorityUsers','v3AuthorityHeads',
+            'orphanV3Heads','legacyHeadMismatches','legacyCompatibilityHeadMismatches',
+            'pendingLegacyCompatibilityHeads','revisionMismatches','authorityHeadMismatches',
+            'compatibilityHeadMismatches','staleLegacyDocuments'];
+          for(const key of counts){
+            if(!Number.isSafeInteger(report[key])||report[key]<0)errors.push('invalid_'+key);
+          }
+          if(report.legacyUsers!==report.legacyV3Heads) errors.push('legacy_head_count_mismatch');
+          if(report.v3AuthorityUsers!==report.v3AuthorityHeads) errors.push('authority_head_count_mismatch');
+          if(report.v3Heads!==report.legacyV3Heads+report.v3AuthorityHeads) errors.push('unclassified_v3_head');
+          if(report.orphanV3Heads!==0) errors.push('orphan_v3_head');
+          if(report.legacyHeadMismatches!==0) errors.push('legacy_head_mismatch');
+          if(report.legacyCompatibilityHeadMismatches!==0) errors.push('legacy_compatibility_head_mismatch');
+          if(report.pendingLegacyCompatibilityHeads!==0) errors.push('legacy_compatibility_pending');
           if(Number(report.revisionMismatches||0)!==0) errors.push('revision_mismatch');
           if(Number(report.authorityHeadMismatches||0)!==0) errors.push('authority_head_mismatch');
           if(Number(report.compatibilityHeadMismatches||0)!==0) errors.push('compatibility_head_mismatch');
@@ -1272,6 +1334,9 @@ jobs:
             v3AuthorityUsers:Number(report.v3AuthorityUsers||0),
             legacyUsers:Number(report.legacyUsers||0),
             v3Heads:Number(report.v3Heads||0),
+            legacyV3Heads:report.legacyV3Heads,
+            v3AuthorityHeads:report.v3AuthorityHeads,
+            orphanV3Heads:report.orphanV3Heads,
           }));
           NODE
 

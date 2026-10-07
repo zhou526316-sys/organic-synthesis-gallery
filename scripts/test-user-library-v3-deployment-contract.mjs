@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const deploy=readFileSync('.github/workflows/deploy-worker-frontend.yml','utf8');
+const canary=readFileSync('.github/workflows/user-library-v3-write-canary.yml','utf8');
 const schema=readFileSync('cloudflare/schema.sql','utf8');
 const migration=readFileSync('cloudflare/user-library-state-v3.sql','utf8');
 const v3=readFileSync('cloudflare/worker/src/user-library-v3.js','utf8');
@@ -19,6 +20,25 @@ function section(source,start,end){
   assert.ok(a>=0&&b>a,'missing section: '+start);
   return source.slice(a,b);
 }
+
+test('canonical deployment requires user-library regressions before any remote binding or schema mutation',()=>{
+  const name='- name: Verify user library migration and deployment contracts';
+  const block=section(deploy,name,'- name: Install frontend dependencies');
+  assert.ok(deploy.indexOf(name)<deploy.indexOf('- name: Resolve existing Cloudflare bindings'));
+  assert.ok(deploy.indexOf(name)<deploy.indexOf('npx wrangler d1 create'));
+  assert.ok(deploy.indexOf(name)<deploy.indexOf('npx wrangler d1 execute'));
+  assert.ok(block.includes('timeout-minutes: 2'));
+  assert.ok(block.includes('node --test'));
+  assert.ok(!block.includes('continue-on-error'));
+  for(const path of [
+    'cloudflare/worker/scripts/test-user-library-v3.mjs',
+    'cloudflare/worker/scripts/test-user-library-shadow.mjs',
+    'cloudflare/worker/scripts/test-user-library-v3-shadow.mjs',
+    'scripts/test-user-library-v3-deployment-contract.mjs',
+    'scripts/test-user-library-shadow-deployment-contract.mjs',
+    'scripts/test-user-library-v3-write-canary-contract.mjs',
+  ])assert.ok(block.includes(path),path);
+});
 
 test('D3c V3 schema is isolated, additive and applied before Worker deployment',()=>{
   for(const table of [
@@ -123,7 +143,7 @@ test('D3c4c rollout gate is deterministic and ships at zero percent',()=>{
   assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "0"'));
   assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ROLLOUT_BPS = "0"'));
   assert.ok(v3.includes('rolloutBasisPoints'));
-  assert.ok(v3.includes('rolloutBucket'));
+  assert.ok(v3.includes('userLibraryV3RolloutBucket'));
   assert.ok(v3.includes('USER_LIBRARY_V3_WRITE_ROLLOUT_BPS'));
   assert.ok(v3.includes('USER_LIBRARY_V3_WRITE_ROLLOUT_SEED'));
   assert.ok(v3.includes('Math.imul(hash, 16777619)'));
@@ -263,6 +283,41 @@ test('D3c4c production deploy fail-closes on rollout preflight health',()=>{
   assert.ok(block.includes('compatibility_head_mismatch'));
   assert.ok(block.includes('stale_legacy_document'));
   assert.ok(block.includes('USER_LIBRARY_V3_ROLLOUT_PREFLIGHT_PASS'));
+  assert.ok(block.includes('compatibility_read_disabled'));
+  assert.ok(block.includes('legacy_head_count_mismatch'));
+  assert.ok(block.includes('authority_head_count_mismatch'));
+  assert.ok(block.includes('orphan_v3_head'));
+  assert.ok(block.includes('legacy_compatibility_pending'));
+});
+
+test('deployment and canary gates accept mixed authority cohorts and reject missing or unhealthy metadata',()=>{
+  const gateSource=source=>{
+    const match=source.match(/function v3CohortsHealthy\(status\)\{[\s\S]*?\n          \}/);
+    assert.ok(match,'missing executable V3 cohort gate');
+    return match[0];
+  };
+  assert.equal(gateSource(deploy),gateSource(canary),'deployment and canary must evaluate the same cohorts');
+  const healthy=new Function(gateSource(deploy)+'; return v3CohortsHealthy;')();
+  const makeStatus=migrated=>({
+    legacyUsers:4-migrated,legacyV3Heads:4-migrated,v3Heads:4,
+    v3AuthorityUsers:migrated,v3AuthorityHeads:migrated,
+    orphanV3Heads:0,legacyHeadMismatches:0,legacyCompatibilityHeadMismatches:0,
+    pendingLegacyCompatibilityHeads:0,revisionMismatches:0,authorityHeadMismatches:0,
+    compatibilityHeadMismatches:0,staleLegacyDocuments:0,compatibilityReadEnabled:true,
+  });
+  for(const migrated of [0,1,4])assert.equal(healthy(makeStatus(migrated)),true,String(migrated));
+  for(const fault of [
+    {legacyV3Heads:2},{v3AuthorityHeads:0},{v3Heads:5},{orphanV3Heads:1},
+    {legacyHeadMismatches:1},{legacyCompatibilityHeadMismatches:1},{pendingLegacyCompatibilityHeads:1},
+    {authorityHeadMismatches:1},{compatibilityHeadMismatches:1},{staleLegacyDocuments:1},
+    {revisionMismatches:1},{compatibilityReadEnabled:false},{orphanV3Heads:undefined},
+  ])assert.equal(healthy({...makeStatus(1),...fault}),false,JSON.stringify(fault));
+
+  const block=section(deploy,'- name: Backfill and verify user library V3 shadow parity and bounded reads',
+    '- name: Advance and reconcile Evidence Index shadow');
+  assert.ok(block.includes('checked===after.legacyUsers'),'semantic parity remains legacy-scoped');
+  assert.ok(!block.includes('legacyUsers===after.v3Heads'));
+  assert.ok(!block.includes('before.legacyUsers!==before.v3Heads'));
 });
 
 test('D3c through D3c4a regression suites are part of the site quality gate',()=>{

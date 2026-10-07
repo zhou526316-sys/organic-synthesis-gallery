@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "phase": "user-library-control-layer-correctness-predeployment",
-  "recordedAt": "2026-10-07 05:43:58 UTC",
+  "recordedAt": "2026-10-07 05:51:12 UTC",
   "baselineCommit": "b2a8b3fc63998af71a4d093bf9ce33d109bb4f7b",
-  "reviewedConcurrentHead": "2f6c1261992e63332f76612f179ad3c5818e94d6",
+  "reviewedConcurrentHead": "6998f32a6153fdef9d0007e3d3564a2c4a17e87e",
   "ordinaryUserWrites": {
     "global": false,
     "basisPoints": 0,
@@ -17,11 +17,12 @@
     "Compatibility head must be stable across row reads.",
     "Legacy and migrated head counts must be validated as separate cohorts.",
     "Dirty suspended clients must re-probe and recover without replaying acknowledged rows.",
-    "Dropped responses and session changes must preserve the initiating account boundary."
+    "Dropped responses and session changes must preserve the initiating account boundary.",
+    "Account-pull must recheck authority before returning legacy fallback or empty state across a first migration."
   ],
   "localRegression": {
-    "tests": 114,
-    "passed": 114,
+    "tests": 116,
+    "passed": 116,
     "failed": 0,
     "commands": [
       "node --test cloudflare/worker/scripts/test-user-library-v3.mjs cloudflare/worker/scripts/test-user-library-shadow.mjs cloudflare/worker/scripts/test-user-library-v3-shadow.mjs scripts/test-user-library-v3-deployment-contract.mjs scripts/test-user-library-shadow-deployment-contract.mjs scripts/test-user-library-v3-write-canary-contract.mjs scripts/test-pages-release-delivery.mjs scripts/test-account-sync-recovery.mjs"
@@ -44,5 +45,95 @@
     "pagination": "24 desktop / 12 mobile; count-based; 680px breakpoint",
     "ownerPrivatePdf": "independent existing system",
     "pdfDirection": "China-first: local folder > OPFS > personal cloud > optional Gallery backup"
+  },
+  "sourceBlobs": {
+    ".github/workflows/deploy-worker-frontend.yml": {
+      "before": "752fce98884dbecaa54d0839dffc6e87f830bfa9",
+      "after": "002ebe0a9d19a7ad6cf98c1c788a237cc3ab03d2"
+    },
+    ".github/workflows/github-pages.yml": {
+      "before": "8ed130f36092b4300045d3aa28ba1c896436723a",
+      "after": "f135f90a127ad688d43b83ae2c8b763c9367319a"
+    },
+    ".github/workflows/user-library-v3-write-canary.yml": {
+      "before": "aaa9527bb3471d293402c4d52f200b65d00f747e",
+      "after": "de53b3a77c7956cb51392ddf255e6090e5695452"
+    },
+    "architecture/CURRENT-CONTRACT.md": {
+      "before": "b20980711c42ac84094373c38563433b8a2c44b8",
+      "after": "fb415afe4f331090e510a3e643d422ac7c88186c"
+    },
+    "architecture/PDF-VAULT-CHINA-V1.md": {
+      "before": "2a3b6b51217b385cd8764948bcd9b6a5feabf2fe",
+      "after": "4e83343befa3371fcf39d095c824fecdb46fbfd7"
+    },
+    "cloudflare/worker/scripts/test-user-library-shadow.mjs": {
+      "before": "366cb3b1b87cf122466970bcec0d7045f9354bb0",
+      "after": "bca43f687af9566f797171f1f16cb133be84a51f"
+    },
+    "cloudflare/worker/scripts/test-user-library-v3-shadow.mjs": {
+      "before": "bd72a64c7620de4c003e5150c03e31c99751e4f7",
+      "after": "e3c7883d55cea9377b3141335a7fbc94372829bf"
+    },
+    "cloudflare/worker/scripts/test-user-library-v3.mjs": {
+      "before": "b749e18ee309d3393bb6c1f049c6b8a2c5bc3748",
+      "after": "03ddae2a298110c693e42a99751a6197aa61984d"
+    },
+    "cloudflare/worker/src/user-library-shadow.js": {
+      "before": "e8113e9744476b69fddd254d2164d7e987ec4708",
+      "after": "de19b82e5afdba6f9da346968c6e134470b15ced"
+    },
+    "cloudflare/worker/src/user-library-v3-shadow.js": {
+      "before": "ad0f7be6f799981dff217b1f113fc4f4528fe709",
+      "after": "a220dd3b8ba82f17dfead71093ebb2c10afafd88"
+    },
+    "cloudflare/worker/src/user-library-v3.js": {
+      "before": "a38849601b8d16cb0e75e0fa298a6f2d60305a0b",
+      "after": "55a0d4b2db4cd8d666c8f5105fbe2eca1be3740a"
+    },
+    "scripts/test-pages-release-delivery.mjs": {
+      "before": "0b431afd40da66987859121506be70b6c603ffca",
+      "after": "74635c64faaeb0313b79ad0e8970c211c4b15ba8"
+    },
+    "scripts/test-user-library-shadow-deployment-contract.mjs": {
+      "before": "29f4cbf052f808d59ab6d1f4c9a9ad666cdce617",
+      "after": "8384e89d49ebd6b86b8e6d1f6a1b64ae94afc5f9"
+    },
+    "scripts/test-user-library-v3-deployment-contract.mjs": {
+      "before": "eae590cf9b445d80d1899c70392c7380e3e775a7",
+      "after": "373c8b3b7617754603260a93e389b5c7ada5980c"
+    },
+    "scripts/test-user-library-v3-write-canary-contract.mjs": {
+      "before": "6c035821d0c881f3a46274bbc91064817e69333f",
+      "after": "9d9a616e8a7ae623d8f8577fe6f7907bb2ffc7cf"
+    },
+    "src/user-ui/account-sync.ts": {
+      "before": "890944a02b9127dcd58301d4c60db17f9570c4d9",
+      "after": "55e218107ffc90961dadab9d77d1499d4c8c3548"
+    },
+    "tests/account-sync-v3.spec.ts": {
+      "before": "e78a49f6c34273d9099cda3de56a2e154c4c3821",
+      "after": "a718c16a0995df4f956e5549d63f218fd78cec70"
+    },
+    "scripts/test-account-sync-recovery.mjs": {
+      "before": null,
+      "after": "d2ff12c38fb1b804e2986fcb59021e5079cf4410"
+    },
+    "cloudflare/worker/src/user-ui.js": {
+      "before": "45bb5acfd46622529965b5895e2b2965bd0d984e",
+      "after": "0d8e70a368162d4abc1210a8573fbeade85e1c0d"
+    }
+  },
+  "productionCanary": {
+    "status": "prepared and locally executed; remote execution pending",
+    "fixture": "fixed synthetic reserved account, two-paper legacy and complete D3b/V3 mirrors",
+    "acceptance": [
+      "revision 1 to 2 migration",
+      "unchanged row content and revision preserved",
+      "legacy document removed",
+      "healthy mixed authority status",
+      "normal account count unchanged",
+      "always cleanup"
+    ]
   }
 }

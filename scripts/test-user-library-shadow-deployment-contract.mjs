@@ -55,8 +55,13 @@ test('account merge/save dual-write the row shadow without making shadow failure
   assert.ok(userUi.includes('if (ctx?.waitUntil)'));
   assert.ok((userUi.match(/safeShadowLibraryWrite\(/g)||[]).length>=3);
   assert.ok(shadow.includes('if (Number(current?.revision || 0) > rev)'));
-  assert.ok(shadow.includes('DELETE FROM user_paper_state WHERE user_id = ?'));
-  assert.ok(shadow.includes('WHERE user_library_head.revision <= excluded.revision'));
+  assert.ok(shadow.includes('const SHADOW_WRITE_CLAIM'));
+  assert.ok(shadow.includes('DELETE FROM user_paper_state WHERE user_id=? AND ${SHADOW_WRITE_CLAIM}'));
+  assert.ok(shadow.includes('WHERE ${SHADOW_WRITE_CLAIM}'));
+  assert.ok(shadow.includes('source_state_hash=? AND shadow_version=0'));
+  assert.ok(shadow.includes('UPDATE user_library_head SET source_state_hash=?,shadow_version=?'));
+  assert.ok(shadow.includes('AND NOT EXISTS ('));
+  assert.ok(shadow.includes('user_library_v3_authority'));
 });
 
 test('row model preserves stable paper keys and metadata-only rows instead of assuming every key is a DOI',()=>{
@@ -90,6 +95,12 @@ test('D3b production deployment activates row reads only after historical backfi
   assert.ok(block.includes('mismatched===0'));
   assert.ok(block.includes('revisionMismatches'));
   assert.ok(block.includes('semanticMismatches'));
+  assert.ok(block.includes('status.legacyUsers!==status.legacyShadowHeads'));
+  assert.ok(block.includes('after.legacyUsers===after.legacyShadowHeads'));
+  assert.ok(block.includes('checked===after.legacyUsers'));
+  assert.ok(block.includes('legacyShadowHeads:Number(finalStatus.legacyShadowHeads)'));
+  assert.ok(block.includes('v3CompatHeads:Number(finalStatus.v3CompatHeads)'));
+  assert.ok(!block.includes('status.legacyUsers!==status.shadowHeads'));
   const preserve=section(
     deploy,
     '- name: Preserve user library row shadow report',

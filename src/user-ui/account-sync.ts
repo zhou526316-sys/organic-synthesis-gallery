@@ -10,6 +10,7 @@ const V3_PAGE_LIMIT = 100;
 const V3_MAX_PAGES_PER_SYNC = 2000;
 const V3_MUTATION_OP_LIMIT = 32;
 const V3_MUTATION_TARGET_BYTES = 1_500_000;
+const V3_WRITE_PROBE_INTERVAL_MS = 15_000;
 
 type SyncMode =
   | 'account-merge'
@@ -107,12 +108,21 @@ type V3SaveOutcome =
   | { kind:'ok' }
   | { kind:'conflict'; currentRevision:number }
   | { kind:'unauthorized' }
+  | { kind:'stale_session' }
   | { kind:'failure' };
 
 type PersistOutcome =
   | { kind:'ok'; state:UserUiState }
   | { kind:'unauthorized' }
+  | { kind:'stale_session' }
   | { kind:'failure' };
+
+interface SyncIdentity { token:string; userId:string; }
+
+function currentIdentity(identity:SyncIdentity):boolean{
+  return Boolean(identity.token) && identity.token===activeToken
+    && identity.token===sessionToken() && identity.userId===activeUserId;
+}
 
 let activeToken = '';
 let activeUserId = '';
@@ -124,6 +134,7 @@ let queuedSave = false;
 let syncedState: UserUiState | null = null;
 let v3WriteActive = false;
 let v3AuthorityActive = false;
+let lastV3WriteProbeAt = 0;
 let dirtyGlobal = false;
 const dirtyPaperKeys = new Set<string>();
 
@@ -154,6 +165,7 @@ function clearRememberedAccount(): void {
   syncedState = null;
   v3WriteActive = false;
   v3AuthorityActive = false;
+  lastV3WriteProbeAt = 0;
   dirtyGlobal = false;
   dirtyPaperKeys.clear();
   setWriteDiagnostic('none');
@@ -266,6 +278,7 @@ function mergeDirtyState(
   desired:UserUiState,
   keys:string[],
   globalWasDirty:boolean,
+  previous?:UserUiState | null,
 ):UserUiState{
   const merged=cloneState(remote);
   if(globalWasDirty){
@@ -281,10 +294,34 @@ function mergeDirtyState(
   }
   for(const key of keys){
     const desiredRow=rowSnapshotFor(desired,key);
-    if(desiredRow.paperPresent) merged.papers[key]=mergePaper(remote.papers?.[key],desiredRow.paperState,true);
-    else delete merged.papers[key];
-    if(desiredRow.metadataPresent) merged.metadata[key]=structuredClone(desiredRow.metadata!);
-    else delete merged.metadata[key];
+    if(!desiredRow.paperPresent){
+      delete merged.papers[key];
+      delete merged.metadata[key];
+      continue;
+    }
+    const before=previous ? rowSnapshotFor(previous,key) : null;
+    if(before?.paperPresent && remote.papers[key]){
+      // Mutation operations replace a whole row. Rebase only fields changed
+      // locally so a remote metadata/tag update survives an unrelated edit.
+      const paper={...remote.papers[key]} as Record<string,unknown>;
+      const prior=before.paperState as unknown as Record<string,unknown>;
+      const target=desiredRow.paperState as unknown as Record<string,unknown>;
+      for(const field of new Set([...Object.keys(prior),...Object.keys(target)])){
+        if(sameJson(prior[field],target[field]))continue;
+        if(Object.prototype.hasOwnProperty.call(target,field))paper[field]=structuredClone(target[field]);
+        else delete paper[field];
+      }
+      merged.papers[key]=paper as unknown as UserUiState['papers'][string];
+    }else{
+      merged.papers[key]=previous
+        ? structuredClone(desiredRow.paperState!)
+        : mergePaper(remote.papers?.[key],desiredRow.paperState,true);
+    }
+    if(!before || before.metadataPresent!==desiredRow.metadataPresent
+      || !sameJson(before.metadata,desiredRow.metadata)){
+      if(desiredRow.metadataPresent) merged.metadata[key]=structuredClone(desiredRow.metadata!);
+      else delete merged.metadata[key];
+    }
   }
   return merged;
 }
@@ -499,8 +536,10 @@ function stateMatchesHead(state: UserUiState, head: V3Head): boolean {
 async function request(
   mode: SyncMode,
   options: { state?: UserUiState; [key: string]: unknown } = {},
+  identity?:SyncIdentity,
 ): Promise<{ ok: boolean; status: number; body: SyncResponse }> {
-  const token = sessionToken();
+  if(identity&&!currentIdentity(identity))return {ok:false,status:0,body:{error:'account_sync_session_changed'}};
+  const token = identity?.token || sessionToken();
   if (!token) return { ok: false, status: 401, body: { error: 'not_signed_in' } };
   const response = await fetch(`${WORKER_API_BASE}/api/user-ui/reader-counts`, {
     method: 'POST',
@@ -514,6 +553,7 @@ async function request(
     }),
   });
   const body = await response.json().catch(() => ({})) as SyncResponse;
+  if(identity&&!currentIdentity(identity))return {ok:false,status:0,body:{error:'account_sync_session_changed'}};
   return { ok: response.ok, status: response.status, body };
 }
 
@@ -534,8 +574,8 @@ function legacyAccount(result: { ok: boolean; status: number; body: SyncResponse
   };
 }
 
-async function legacyPull(): Promise<{ result: RemoteAccount | null; status: number }> {
-  const response = await request('account-pull');
+async function legacyPull(identity?:SyncIdentity): Promise<{ result: RemoteAccount | null; status: number }> {
+  const response = await request('account-pull',{},identity);
   return { result: legacyAccount(response), status: response.status };
 }
 
@@ -545,6 +585,8 @@ async function saveViaV3(
   keys: string[],
   globalWasDirty: boolean,
 ): Promise<V3SaveOutcome> {
+  const identity={token:activeToken,userId:activeUserId};
+  if(!currentIdentity(identity))return {kind:'stale_session'};
   const operations = keys.map(key=>mutationOperation(base,desired,key))
     .filter((item): item is Record<string,unknown> => Boolean(item));
   const globalChanged = globalWasDirty && !sameJson(globalStateOf(base),globalStateOf(desired));
@@ -558,7 +600,11 @@ async function saveViaV3(
   const expectedUserId = activeUserId;
 
   const send = async (options: Record<string,unknown>): Promise<V3SaveOutcome> => {
-    const response = await request('account-v3-mutate',{expectedRevision,...options});
+    // A dropped response can follow a committed transaction. Recover through a
+    // fresh bounded read instead of assuming the mutation did not happen.
+    const response = await request('account-v3-mutate',{expectedRevision,...options},identity)
+      .catch(()=>({ok:false,status:0,body:{} as SyncResponse}));
+    if(!currentIdentity(identity))return {kind:'stale_session'};
     if(response.status===401)return {kind:'unauthorized'};
     if(response.status===409&&response.body.error==='user_library_v3_revision_conflict'){
       return {kind:'conflict',currentRevision:safeInteger(response.body.currentRevision)||expectedRevision};
@@ -577,11 +623,15 @@ async function saveViaV3(
 
   if(globalChanged){
     const outcome=await send({globalState:globalStateOf(desired),operations:[]});
+    if(!currentIdentity(identity))return {kind:'stale_session'};
     if(outcome.kind!=='ok')return outcome;
+    syncedState=committedSubset(syncedState || base,desired,[],true);
   }
   for(const batch of batches){
     const outcome=await send({operations:batch});
+    if(!currentIdentity(identity))return {kind:'stale_session'};
     if(outcome.kind!=='ok')return outcome;
+    syncedState=committedSubset(syncedState || base,desired,batch.map(item=>String(item.paperKey)),false);
   }
 
   syncedState=committedSubset(base,desired,keys,globalChanged);
@@ -592,11 +642,12 @@ async function saveViaV3(
   return {kind:'ok'};
 }
 
-async function recoveryPull(): Promise<{account:RemoteAccount|null;status:number}> {
-  const v3=await v3FullPull();
+async function recoveryPull(identity?:SyncIdentity): Promise<{account:RemoteAccount|null;status:number}> {
+  const v3=await v3FullPull(identity);
+  if(identity&&!currentIdentity(identity))return {account:null,status:0};
   if(v3.kind==='ok')return {account:v3.account,status:200};
   if(v3.kind==='unauthorized')return {account:null,status:401};
-  const legacy=await legacyPull();
+  const legacy=await legacyPull(identity);
   return {account:legacy.result,status:legacy.status};
 }
 
@@ -613,9 +664,12 @@ async function persistV3Desired(
   globalWasDirty:boolean,
   allowRecovery=true,
 ):Promise<PersistOutcome>{
+  const identity={token:activeToken,userId:activeUserId};
+  if(!currentIdentity(identity))return {kind:'stale_session'};
   let base=syncedState;
   if(!base){
-    const recovery=await recoveryPull();
+    const recovery=await recoveryPull(identity);
+    if(!currentIdentity(identity))return {kind:'stale_session'};
     if(recovery.status===401)return {kind:'unauthorized'};
     if(!recovery.account)return {kind:'failure'};
     acceptRemoteBaseline(recovery.account);
@@ -627,24 +681,30 @@ async function persistV3Desired(
   }
 
   const outcome=await saveViaV3(base,desired,keys,globalWasDirty);
+  if(!currentIdentity(identity) || outcome.kind==='stale_session')return {kind:'stale_session'};
   if(outcome.kind==='ok')return {kind:'ok',state:desired};
   if(outcome.kind==='unauthorized')return {kind:'unauthorized'};
   if(!allowRecovery)return {kind:'failure'};
 
-  const recovery=await recoveryPull();
+  const recovery=await recoveryPull(identity);
+  if(!currentIdentity(identity))return {kind:'stale_session'};
   if(recovery.status===401)return {kind:'unauthorized'};
   if(!recovery.account)return {kind:'failure'};
+  const pendingBase=syncedState;
+  const pendingKeys=[...new Set([...keys,...dirtyPaperKeys])];
+  const pendingGlobal=globalWasDirty || dirtyGlobal;
+  const merged=mergeDirtyState(recovery.account.state,cloneState(store.state),pendingKeys,pendingGlobal,pendingBase);
   acceptRemoteBaseline(recovery.account);
-  const merged=mergeDirtyState(recovery.account.state,desired,keys,globalWasDirty);
   replaceStoreStateWithoutDirty(merged);
   if(!recovery.account.writeEnabled){
     if(recovery.account.writeAuthority==='v3')return {kind:'failure'};
-    return persistLegacyDesired(merged,keys,globalWasDirty,false);
+    return persistLegacyDesired(merged,pendingKeys,pendingGlobal,false);
   }
 
-  const retryKeys=keys.filter(key=>Boolean(mutationOperation(recovery.account!.state,merged,key)));
-  const retryGlobal=globalWasDirty&&!sameJson(globalStateOf(recovery.account.state),globalStateOf(merged));
+  const retryKeys=pendingKeys.filter(key=>Boolean(mutationOperation(recovery.account!.state,merged,key)));
+  const retryGlobal=pendingGlobal&&!sameJson(globalStateOf(recovery.account.state),globalStateOf(merged));
   const retry=await saveViaV3(recovery.account.state,merged,retryKeys,retryGlobal);
+  if(!currentIdentity(identity) || retry.kind==='stale_session')return {kind:'stale_session'};
   if(retry.kind==='ok')return {kind:'ok',state:merged};
   if(retry.kind==='unauthorized')return {kind:'unauthorized'};
   return {kind:'failure'};
@@ -728,7 +788,7 @@ async function persistLegacyDesired(desired:UserUiState,keys:string[],globalWasD
   return {kind:'ok',state:desired};
 }
 
-async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState): Promise<V3Outcome> {
+async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState, identity?:SyncIdentity): Promise<V3Outcome> {
   let next = cloneState(baseState);
   let afterRevision: number | null = null;
   let afterSeq = -1;
@@ -744,7 +804,7 @@ async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState): 
       afterRevision,
       afterSeq,
       limit: V3_PAGE_LIMIT,
-    });
+    },identity);
     if (response.status === 401) return { kind: 'unauthorized' };
     if (!response.ok || !response.body.account) return { kind: 'fallback' };
     const account = response.body.account;
@@ -800,15 +860,16 @@ async function v3DeltaFromState(sinceRevision: number, baseState: UserUiState): 
   return { kind: 'fallback' };
 }
 
-async function v3FullPull(): Promise<V3Outcome> {
-  const headResponse = await request('account-v3-head');
+async function v3FullPull(identity?:SyncIdentity): Promise<V3Outcome> {
+  const headResponse = await request('account-v3-head',{},identity);
   if (headResponse.status === 401) return { kind: 'unauthorized' };
   if (!headResponse.ok || !headResponse.body.account) return { kind: 'fallback' };
   const account = headResponse.body.account;
   const initialUserId = validUserId(account.userId);
   const initialWriteEnabled = account.writeEnabled === true;
   const initialWriteAuthority = account.writeAuthority === 'v3' ? 'v3' : 'legacy';
-  if (account.readPath !== 'v3-head' || !initialUserId) return { kind: 'fallback' };
+  if (account.readPath !== 'v3-head' || !initialUserId
+    || (identity && initialUserId!==identity.userId)) return { kind: 'fallback' };
   const initialHead = v3Head(account);
   if (!initialHead) return { kind: 'fallback' };
 
@@ -817,7 +878,7 @@ async function v3FullPull(): Promise<V3Outcome> {
   let afterKey = '';
 
   for (let pageNo = 0; pageNo < V3_MAX_PAGES_PER_SYNC; pageNo += 1) {
-    const pageResponse = await request('account-v3-page', { afterKey, limit: V3_PAGE_LIMIT });
+    const pageResponse = await request('account-v3-page', { afterKey, limit: V3_PAGE_LIMIT },identity);
     if (pageResponse.status === 401) return { kind: 'unauthorized' };
     if (!pageResponse.ok || !pageResponse.body.account) return { kind: 'fallback' };
     const page = pageResponse.body.account;
@@ -847,7 +908,7 @@ async function v3FullPull(): Promise<V3Outcome> {
     if (pageNo === V3_MAX_PAGES_PER_SYNC - 1) return { kind: 'fallback' };
   }
 
-  const catchup = await v3DeltaFromState(initialHead.revision, state);
+  const catchup = await v3DeltaFromState(initialHead.revision, state,identity);
   if (catchup.kind === 'reset') return { kind: 'fallback' };
   if (catchup.kind !== 'ok' || catchup.account.userId !== initialUserId
     || catchup.account.writeEnabled !== initialWriteEnabled
@@ -924,7 +985,11 @@ async function initialMerge(): Promise<void> {
 }
 
 async function pullRemote(): Promise<void> {
-  if (!activeToken || saving || saveTimer !== undefined || localDirty()) return;
+  if (!activeToken || saving || saveTimer !== undefined) return;
+  if(localDirty()){
+    await saveRemote();
+    return;
+  }
 
   let remote: RemoteAccount | null = null;
   const delta = await v3DeltaFromState(revision, syncedState || store.state);
@@ -966,17 +1031,14 @@ async function pullRemote(): Promise<void> {
 }
 
 async function saveRemote(): Promise<void> {
-  if (!activeToken || applyingRemote || !localDirty()) return;
-  if (v3AuthorityActive && !v3WriteActive) {
-    setWriteDiagnostic('suspended');
-    return;
-  }
+  if (!activeToken || activeToken!==sessionToken() || applyingRemote || !localDirty()) return;
   if (saving) { queuedSave = true; return; }
   saving = true;
-  const desired=cloneState(store.state);
-  const keys=[...dirtyPaperKeys];
-  const globalWasDirty=dirtyGlobal;
   try {
+    if(v3AuthorityActive&&!v3WriteActive && !await resumeSuspendedWrites())return;
+    const desired=cloneState(store.state);
+    const keys=[...dirtyPaperKeys];
+    const globalWasDirty=dirtyGlobal;
     const outcome=v3WriteActive
       ? await persistV3Desired(desired,keys,globalWasDirty)
       : await persistLegacyDesired(desired,keys,globalWasDirty);
@@ -985,10 +1047,40 @@ async function saveRemote(): Promise<void> {
       return;
     }
     if(outcome.kind==='ok')clearSyncedDirty(outcome.state,keys,globalWasDirty);
+  } catch {
+    // Keep the dirty state and its baseline for the next bounded poll/retry.
   } finally {
     saving = false;
     if (queuedSave) { queuedSave = false; void saveRemote(); }
   }
+}
+
+async function resumeSuspendedWrites():Promise<boolean>{
+  setWriteDiagnostic('suspended');
+  if(Date.now()-lastV3WriteProbeAt<V3_WRITE_PROBE_INTERVAL_MS)return false;
+  lastV3WriteProbeAt=Date.now();
+  const token=activeToken;
+  const userId=activeUserId;
+  const identity={token,userId};
+  const probe=await request('account-v3-head',{},identity);
+  if(token!==activeToken || token!==sessionToken())return false;
+  if(probe.status===401){clearRememberedAccount();return false;}
+  const account=probe.body.account;
+  // A permission probe never advances the revision or replaces dirty data.
+  if(!probe.ok || !account || account.readPath!=='v3-head' || !v3Head(account)
+    || validUserId(account.userId)!==userId || account.writeAuthority!=='v3'
+    || account.writeEnabled!==true)return false;
+
+  const full=await v3FullPull(identity);
+  if(token!==activeToken || token!==sessionToken())return false;
+  if(full.kind==='unauthorized'){clearRememberedAccount();return false;}
+  if(full.kind!=='ok' || full.account.userId!==userId
+    || full.account.writeAuthority!=='v3' || !full.account.writeEnabled)return false;
+  const merged=mergeDirtyState(full.account.state,cloneState(store.state),[...dirtyPaperKeys],dirtyGlobal,syncedState);
+  acceptRemoteBaseline(full.account);
+  replaceStoreStateWithoutDirty(merged);
+  setReadDiagnostic('v3');
+  return true;
 }
 
 function scheduleSave(event:Event): void {
@@ -1013,6 +1105,7 @@ async function detectSessionChange(): Promise<void> {
   syncedState=null;
   v3WriteActive=false;
   v3AuthorityActive=false;
+  lastV3WriteProbeAt=0;
   dirtyGlobal=false;
   dirtyPaperKeys.clear();
   setWriteDiagnostic(token?'legacy':'none');

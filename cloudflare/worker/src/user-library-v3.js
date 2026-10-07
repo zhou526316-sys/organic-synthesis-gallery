@@ -192,6 +192,49 @@ function legacyShadowFresh(legacy,current,shape,sync) {
     && Number(sync.source_updated_at || 0)===updatedAt;
 }
 
+// All reads are restricted to the migrating account. The inner LIMIT is one
+// beyond its expected maximum row count, so corrupt extra rows fail closed
+// without scanning an unrelated account or rebuilding a whole library.
+const MIGRATION_SOURCE_CHECK = `
+  SELECT 1
+  FROM user_library_state legacy
+  INNER JOIN user_library_v3_head head ON head.user_id=legacy.user_id
+  INNER JOIN user_library_v3_shape shape ON shape.user_id=legacy.user_id
+  INNER JOIN user_library_v3_shadow_sync sync ON sync.user_id=legacy.user_id
+  INNER JOIN user_library_head compat ON compat.user_id=legacy.user_id
+  WHERE legacy.user_id=? AND legacy.revision=? AND legacy.updated_at=?
+    AND head.revision=legacy.revision AND head.updated_at=legacy.updated_at
+    AND shape.revision=legacy.revision
+    AND sync.source_revision=legacy.revision AND sync.source_updated_at=legacy.updated_at
+    AND compat.revision=legacy.revision AND compat.updated_at=legacy.updated_at
+    AND compat.shadow_version=1 AND compat.source_state_hash=sync.source_state_hash
+    AND compat.global_json=head.global_json
+    AND compat.papers_split=shape.papers_split AND compat.metadata_split=shape.metadata_split
+    AND compat.paper_count=head.paper_count AND compat.metadata_count=head.metadata_count
+    AND EXISTS (
+      SELECT 1 FROM (
+        SELECT COALESCE(SUM(rows.paper_present),0) AS paper_count,
+          COALESCE(SUM(rows.metadata_present),0) AS metadata_count,
+          COALESCE(SUM(CASE WHEN rows.revision=legacy.revision
+            AND rows.paper_present+rows.metadata_present>0
+            AND v3.paper_key IS NOT NULL AND v3.deleted=0
+            AND rows.doi IS v3.doi
+            AND rows.paper_present=v3.paper_present
+            AND rows.paper_state_json IS v3.paper_state_json
+            AND rows.metadata_present=v3.metadata_present
+            AND rows.metadata_json IS v3.metadata_json
+            THEN 0 ELSE 1 END),0) AS mismatches
+        FROM (
+          SELECT paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,revision
+          FROM user_paper_state WHERE user_id=legacy.user_id LIMIT ?
+        ) rows
+        LEFT JOIN user_library_v3_rows v3 ON v3.user_id=legacy.user_id AND v3.paper_key=rows.paper_key
+      ) integrity
+      WHERE integrity.paper_count=head.paper_count
+        AND integrity.metadata_count=head.metadata_count AND integrity.mismatches=0
+    )
+`;
+
 function shadowFreshnessConflict(legacy,currentRevision) {
   return {
     ok:false,
@@ -290,12 +333,20 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
 
   let legacyMeta = null;
   let syncMeta = null;
+  let migrationCheckArgs = null;
   const firstMigration = currentAuthority?.authority !== 'v3';
   if (firstMigration) {
     legacyMeta = await legacyAuthorityMeta(env,userId);
     if (legacyMeta) {
       syncMeta = await shadowSyncMeta(env,userId);
       if (!legacyShadowFresh(legacyMeta,current,currentShape,syncMeta)) {
+        return shadowFreshnessConflict(legacyMeta,currentRevision);
+      }
+      migrationCheckArgs = [
+        userId,Number(legacyMeta.revision),Number(legacyMeta.updated_at),
+        Number(current.paper_count || 0)+Number(current.metadata_count || 0)+1,
+      ];
+      if (!await env.DB.prepare(MIGRATION_SOURCE_CHECK).bind(...migrationCheckArgs).first()) {
         return shadowFreshnessConflict(legacyMeta,currentRevision);
       }
     } else if (currentRevision !== 0 || current || currentShape) {
@@ -330,27 +381,24 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
         INSERT INTO user_library_v3_authority (user_id,authority,activated_revision,activated_at)
         VALUES (
           ?,
-          CASE WHEN EXISTS (
-            SELECT 1
-            FROM user_library_state legacy
-            INNER JOIN user_library_v3_head head ON head.user_id=legacy.user_id
-            INNER JOIN user_library_v3_shape shape ON shape.user_id=legacy.user_id
-            INNER JOIN user_library_v3_shadow_sync sync ON sync.user_id=legacy.user_id
-            WHERE legacy.user_id=?
-              AND legacy.revision=?
-              AND legacy.updated_at=?
-              AND head.revision=legacy.revision
-              AND head.updated_at=legacy.updated_at
-              AND shape.revision=legacy.revision
-              AND sync.source_revision=legacy.revision
-              AND sync.source_updated_at=legacy.updated_at
-          ) THEN 'v3' ELSE 'stale' END,
+          CASE WHEN EXISTS (${MIGRATION_SOURCE_CHECK}) THEN 'v3' ELSE 'stale' END,
           ?,?
         )
         ON CONFLICT(user_id) DO NOTHING
       `).bind(
-        userId,userId,Number(legacyMeta.revision),Number(legacyMeta.updated_at),nextRevision,now,
+        userId,...migrationCheckArgs,nextRevision,now,
       )
+    : firstMigration ? env.DB.prepare(`
+        INSERT INTO user_library_v3_authority (user_id,authority,activated_revision,activated_at)
+        VALUES (?,CASE WHEN NOT EXISTS (
+          SELECT 1 FROM user_library_state WHERE user_id=?
+        ) AND NOT EXISTS (
+          SELECT 1 FROM user_library_v3_head WHERE user_id=?
+        ) AND NOT EXISTS (
+          SELECT 1 FROM user_library_v3_shape WHERE user_id=?
+        ) THEN 'v3' ELSE 'stale' END,?,?)
+        ON CONFLICT(user_id) DO NOTHING
+      `).bind(userId,userId,userId,userId,nextRevision,now)
     : env.DB.prepare(`
         INSERT INTO user_library_v3_authority (user_id,authority,activated_revision,activated_at)
         VALUES (?,'v3',?,?)
@@ -492,6 +540,10 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
       ]);
       if (afterAuthority?.authority !== 'v3') {
         if (afterLegacy && !legacyShadowFresh(afterLegacy,after,afterShape,afterSync)) {
+          return shadowFreshnessConflict(afterLegacy,currentRevision);
+        }
+        if (afterLegacy && migrationCheckArgs
+            && !await env.DB.prepare(MIGRATION_SOURCE_CHECK).bind(...migrationCheckArgs).first()) {
           return shadowFreshnessConflict(afterLegacy,currentRevision);
         }
         if (!afterLegacy && currentRevision !== 0) {

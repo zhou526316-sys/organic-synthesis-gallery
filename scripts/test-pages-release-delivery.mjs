@@ -55,6 +55,22 @@ test('Pages delivery uses event handoff, no added timers, exact snapshot, live v
   assert.ok(workflow.includes('cancel-in-progress: false'));
 });
 
+test('canonical Pages publication gates the exact built artifact on V3 account browser recovery', () => {
+  const workflow = readFileSync('.github/workflows/github-pages.yml', 'utf8');
+  const build = workflow.indexOf('run: npm run build');
+  const gate = workflow.indexOf('- name: Verify V3 account sync and pause recovery before publication');
+  const upload = workflow.indexOf('- name: Upload Pages artifact');
+  assert.ok(build >= 0 && gate > build && upload > gate);
+  const step = workflow.slice(gate, workflow.indexOf('\n      - name:', gate + 1));
+  assert.match(step, /timeout-minutes: 5/);
+  assert.match(step, /ACCOUNT_SYNC_PREVIEW_BASE: http:\/\/127\.0\.0\.1:4174/);
+  assert.match(step, /node --test scripts\/test-account-sync-recovery\.mjs/);
+  assert.match(step, /npx playwright test tests\/account-sync-v3\.spec\.ts .*--workers=1/);
+  assert.doesNotMatch(step, /continue-on-error|if:/);
+  assert.ok(workflow.includes("- 'tests/account-sync-v3.spec.ts'"));
+  assert.match(workflow, /trace: 'retain-on-failure', screenshot: 'only-on-failure'/);
+});
+
 test('main media reuse retains caller event without misclassifying it as a writer handoff', () => {
   assert.equal(isDirectReleaseHandoff('workflow_run', 'Deploy GitHub Pages frontend'), true);
   assert.equal(isDirectReleaseHandoff('workflow_run', 'Publish validated new body figures'), false);

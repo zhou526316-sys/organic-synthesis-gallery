@@ -24,6 +24,8 @@ on:
       - 'shared/result-window.js'
       - 'scripts/test-result-window.mjs'
       - 'tests/architecture-frontend.spec.ts'
+      - 'tests/account-sync-v3.spec.ts'
+      - 'scripts/test-account-sync-recovery.mjs'
       - 'shared/literature-lifecycle.mjs'
       - 'shared/literature-identity.mjs'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
@@ -320,6 +322,16 @@ jobs:
             'module.exports = ' + JSON.stringify(config, null, 2) + ';\n');
           NODE
           npx playwright test tests/architecture-frontend.spec.ts --config "$RUNNER_TEMP/gallery-architecture-playwright.config.cjs" --reporter=line --workers=1
+      - name: Verify V3 account sync and pause recovery before publication
+        timeout-minutes: 5
+        env:
+          ACCOUNT_SYNC_PREVIEW_BASE: http://127.0.0.1:4174
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s tests/account-sync-v3.spec.ts
+          node --test scripts/test-account-sync-recovery.mjs
+          npx playwright test tests/account-sync-v3.spec.ts --config "$RUNNER_TEMP/gallery-architecture-playwright.config.cjs" --reporter=line --workers=1
       - name: Preserve architecture browser failure evidence
         if: failure()
         uses: actions/upload-artifact@v4

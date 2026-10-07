@@ -6,6 +6,7 @@ const SESSION_KEY = 'organic-gallery-session-v1';
 const STATE_KEY = 'organic-gallery-user-ui-v1';
 const REVISION_KEY = 'organic-gallery-account-sync-revision-v1';
 const USER_KEY = 'organic-gallery-account-sync-user-v1';
+const PREVIEW_BASE = process.env.ACCOUNT_SYNC_PREVIEW_BASE || 'http://127.0.0.1:4173';
 
 function globalState(hideRead = false) {
   return {
@@ -67,6 +68,89 @@ async function stubCommonApi(page: import('@playwright/test').Page) {
       }),
     })
   );
+}
+
+async function mutableV3Account(page: import('@playwright/test').Page, state: any, writeEnabled: boolean) {
+  const server = {
+    state: structuredClone(state), revision: 10, writeEnabled,
+    modes: [] as string[], attempts: [] as any[], accepted: [] as any[],
+    pauseAfterPaperBatch: false,
+  };
+  const head = () => ({
+    ready: true, revision: server.revision, updatedAt: server.revision * 100,
+    globalState: Object.fromEntries(Object.entries(server.state).filter(([key]) => key !== 'papers' && key !== 'metadata')),
+    globalRevision: server.revision, paperCount: Object.keys(server.state.papers).length,
+    metadataCount: Object.keys(server.state.metadata).length,
+    changeFloorRevision: 10, papersSplit: true, metadataSplit: true,
+  });
+  const identity = () => ({ userId: 'u-resume', writeEnabled: server.writeEnabled, writeAuthority: 'v3' });
+  await page.route('https://api.gczhouwld.com/api/user-ui/reader-counts', async route => {
+    const body = route.request().postDataJSON() as any;
+    const mode = String(body?.mode || '');
+    const respond = (status: number, value: unknown) => route.fulfill({
+      status, contentType: 'application/json', body: JSON.stringify(value),
+    });
+    if (!mode) { await respond(200, { counts: {} }); return; }
+    server.modes.push(mode);
+    if (mode === 'account-v3-head') {
+      await respond(200, { account: { ...identity(), readPath: 'v3-head', ...head() } });
+      return;
+    }
+    if (mode === 'account-v3-page') {
+      const keys = [...new Set([...Object.keys(server.state.papers), ...Object.keys(server.state.metadata)])]
+        .sort().filter(key => key > String(body.afterKey || ''));
+      const selected = keys.slice(0, Math.min(100, Number(body.limit) || 100));
+      const rows = selected.map(paperKey => ({
+        paperKey, paperPresent: Object.hasOwn(server.state.papers, paperKey),
+        paperState: server.state.papers[paperKey], metadataPresent: Object.hasOwn(server.state.metadata, paperKey),
+        metadata: server.state.metadata[paperKey],
+      }));
+      await respond(200, { account: { ...identity(), readPath: 'v3-page', ready: true,
+        scanStartRevision: server.revision, head: head(), rows, count: rows.length,
+        hasMore: keys.length > selected.length, nextKey: keys.length > selected.length ? selected.at(-1) : null,
+      } });
+      return;
+    }
+    if (mode === 'account-v3-delta') {
+      await respond(200, { account: { ...identity(), readPath: 'v3-delta', ready: true,
+        resetRequired: body.sinceRevision !== server.revision,
+        sinceRevision: body.sinceRevision, targetRevision: server.revision, head: head(),
+        globalRevision: server.revision, count: 0, changes: [], hasMore: false, nextCursor: null,
+      } });
+      return;
+    }
+    if (mode === 'account-v3-mutate') {
+      server.attempts.push(structuredClone(body));
+      if (!server.writeEnabled) {
+        await respond(503, { error: 'user_library_v3_write_suspended', writeAuthority: 'v3', writeEnabled: false });
+        return;
+      }
+      if (body.expectedRevision !== server.revision) {
+        await respond(409, { error: 'user_library_v3_revision_conflict', currentRevision: server.revision });
+        return;
+      }
+      expect(body.operations.length).toBeLessThanOrEqual(32);
+      if (body.globalState) Object.assign(server.state, body.globalState);
+      for (const operation of body.operations) {
+        // Match the real whole-row contract, including omitted metadata.
+        if (operation.delete || !Object.hasOwn(operation, 'paperState')) delete server.state.papers[operation.paperKey];
+        else server.state.papers[operation.paperKey] = structuredClone(operation.paperState);
+        if (operation.delete || !Object.hasOwn(operation, 'metadata')) delete server.state.metadata[operation.paperKey];
+        else server.state.metadata[operation.paperKey] = structuredClone(operation.metadata);
+      }
+      server.revision += 1;
+      server.accepted.push(structuredClone(body));
+      const account = { ...identity(), readPath: 'v3-mutate', ...head(), operationCount: body.operations.length };
+      if (server.pauseAfterPaperBatch && body.operations.length) {
+        server.writeEnabled = false;
+        server.pauseAfterPaperBatch = false;
+      }
+      await respond(200, { account });
+      return;
+    }
+    await respond(500, { error: `unexpected_mode:${mode}` });
+  });
+  return server;
 }
 
 test('account sync assembles V3 head/pages/delta before saving and never calls legacy pull', async ({ page }) => {
@@ -189,7 +273,7 @@ test('account sync assembles V3 head/pages/delta before saving and never calls l
     await route.fulfill({ status: 400, contentType: 'application/json', body: JSON.stringify({ error: 'unexpected_mode' }) });
   });
 
-  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  await page.goto(`${PREVIEW_BASE}/`, { waitUntil: 'domcontentloaded' });
   await expect.poll(() => savedState, { timeout: 30000 }).not.toBeNull();
   await expect.poll(() => page.evaluate(() => document.documentElement.dataset.accountSyncRead || '')).toBe('v3');
 
@@ -288,7 +372,7 @@ test('new account under WRITE=1 migrates directly through V3 without creating a 
     await route.fulfill({status:400,contentType:'application/json',body:'{}'});
   });
 
-  await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded'});
+  await page.goto(`${PREVIEW_BASE}/`,{waitUntil:'domcontentloaded'});
   await expect.poll(()=>mutations.length,{timeout:30000}).toBe(2);
   expect(mutations[0].operations).toEqual([]);
   expect(mutations[0].globalState).toBeTruthy();
@@ -412,7 +496,7 @@ test('V3 write authority batches 65 dirty paper keys as 32/32/1 and never calls 
     await route.fulfill({ status:400,contentType:'application/json',body:'{}' });
   });
 
-  await page.goto('http://127.0.0.1:4173/', { waitUntil:'domcontentloaded' });
+  await page.goto(`${PREVIEW_BASE}/`, { waitUntil:'domcontentloaded' });
   await expect.poll(() => mutations.filter(item=>item.operations?.length>0).length, { timeout:30000 }).toBe(3);
   const paperMutations=mutations.filter(item=>item.operations?.length>0);
   const globalMutations=mutations.filter(item=>item.operations?.length===0 && item.globalState);
@@ -522,7 +606,7 @@ test('live write-authority flip upgrades a dirty paper from legacy save to V3 mu
     await route.fulfill({status:400,contentType:'application/json',body:'{}'});
   });
 
-  await page.goto('http://127.0.0.1:4173/', {waitUntil:'domcontentloaded'});
+  await page.goto(`${PREVIEW_BASE}/`, {waitUntil:'domcontentloaded'});
   await expect.poll(()=>initialLegacySave,{timeout:30000}).not.toBeNull();
   await expect.poll(()=>page.evaluate(()=>document.documentElement.dataset.accountSyncWrite||'')).toBe('legacy');
 
@@ -641,7 +725,7 @@ test('a stale V3 page discards partial V3 state and falls back to the legacy pul
     await route.fulfill({ status: 400, contentType: 'application/json', body: '{}' });
   });
 
-  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  await page.goto(`${PREVIEW_BASE}/`, { waitUntil: 'domcontentloaded' });
   await expect.poll(() => savedState, { timeout: 30000 }).not.toBeNull();
   await expect.poll(() => page.evaluate(() => document.documentElement.dataset.accountSyncRead || '')).toBe('legacy');
 
@@ -738,7 +822,7 @@ test('malformed V3 identity or counts are discarded before any partial state is 
     await route.fulfill({ status: 400, contentType: 'application/json', body: '{}' });
   });
 
-  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  await page.goto(`${PREVIEW_BASE}/`, { waitUntil: 'domcontentloaded' });
   await expect.poll(() => savedState, { timeout: 30000 }).not.toBeNull();
   await expect.poll(() => page.evaluate(() => document.documentElement.dataset.accountSyncRead || '')).toBe('legacy');
   expect(modes).toContain('account-pull');
@@ -818,7 +902,7 @@ test('V3-authoritative account under global write rollback stays suspended and n
     await route.fulfill({status:400,contentType:'application/json',body:'{}'});
   });
 
-  await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded'});
+  await page.goto(`${PREVIEW_BASE}/`,{waitUntil:'domcontentloaded'});
   await expect.poll(()=>page.evaluate(()=>document.documentElement.dataset.accountSyncRead||'')).toBe('v3');
   await expect.poll(()=>page.evaluate(()=>document.documentElement.dataset.accountSyncWrite||'')).toBe('suspended');
   await page.waitForTimeout(1500);
@@ -832,6 +916,114 @@ test('V3-authoritative account under global write rollback stays suspended and n
   const localAfter=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)||'{}'),STATE_KEY);
   expect(localAfter.papers['10.1234/legacy'].note).toBe('local pending');
   expect(await page.evaluate(key=>localStorage.getItem(key),REVISION_KEY)).toBe('2');
+});
+
+test('suspended dirty account resumes on a bounded poll without reload and keeps local edits plus remote metadata', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.clock.install();
+  await seedSession(page, fullState('local pending'));
+  await stubCommonApi(page);
+  const server = await mutableV3Account(page, fullState('remote committed'), false);
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+
+  await page.goto(`${PREVIEW_BASE}/`, { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.accountSyncWrite)).toBe('suspended');
+
+  // Add another dirty row while writes are paused, through the real card UI.
+  const actions = page.locator('gallery-paper-actions').first();
+  await actions.locator('button[data-action="favorite"]').click();
+  await actions.locator('button[data-action="toggle-favorite"]').click();
+  await page.clock.fastForward(1000);
+  await expect.poll(() => server.modes.filter(mode => mode === 'account-v3-head').length).toBe(2);
+  const paused = await page.evaluate(key => JSON.parse(localStorage.getItem(key) || '{}'), STATE_KEY);
+  const addedKey = Object.keys(paused.papers).find(key => key !== '10.1234/legacy')!;
+  expect(addedKey).toBeTruthy();
+  expect(paused.papers[addedKey].favorite).toBe(true);
+  expect(paused.papers['10.1234/legacy'].note).toBe('local pending');
+  expect(server.attempts).toEqual([]);
+  expect(await page.evaluate(key => localStorage.getItem(key), REVISION_KEY)).toBe('10');
+
+  // A newer remote row must not erase an unsent local note. Its metadata and
+  // unrelated tags must survive the full-row operation used to save that note.
+  server.state.papers['10.1234/legacy'].note = 'newer remote note';
+  server.state.papers['10.1234/legacy'].updatedAt = Date.now() + 100_000;
+  server.state.papers['10.1234/legacy'].tags = ['remote-only-tag'];
+  server.state.metadata['10.1234/legacy'].title = 'New remote title';
+  server.state.papers['10.1234/remote-only'] = { favorite: true, collections: [], note: 'remote only', quickTerms: [], tags: [] };
+  server.state.metadata['10.1234/remote-only'] = { id: '10.1234/remote-only', title: 'Remote only', journal: 'JACS' };
+  server.revision += 1;
+  server.writeEnabled = true;
+  await page.clock.fastForward(46_000);
+
+  await expect.poll(() => server.state.papers['10.1234/legacy'].note).toBe('local pending');
+  await expect.poll(() => server.state.papers[addedKey]?.favorite).toBe(true);
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.accountSyncWrite)).toBe('v3');
+  expect(server.accepted[0].expectedRevision).toBe(11);
+  expect(server.state.metadata['10.1234/legacy'].title).toBe('New remote title');
+  expect(server.state.papers['10.1234/legacy'].tags).toEqual(['remote-only-tag']);
+  expect(server.state.papers['10.1234/remote-only'].note).toBe('remote only');
+  expect(server.modes).not.toContain('account-save');
+  expect(server.modes).not.toContain('account-pull');
+  const settledCount = server.accepted.length;
+  await page.clock.fastForward(46_000);
+  await expect.poll(() => page.evaluate(key => localStorage.getItem(key), REVISION_KEY)).toBe(String(server.revision));
+  expect(server.accepted).toHaveLength(settledCount);
+  expect(errors).toEqual([]);
+});
+
+test('a paused multi-batch V3 save resumes the remaining rows without replaying acknowledged rows', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.clock.install();
+  const local = { ...globalState(false), papers: {} as Record<string, any>, metadata: {} as Record<string, any> };
+  for (let index = 0; index < 65; index += 1) {
+    const key = `10.1234/resume-${String(index).padStart(2, '0')}`;
+    local.papers[key] = { favorite: true, collections: [], note: `pending ${index}`, quickTerms: [], tags: [], updatedAt: 100 + index };
+    local.metadata[key] = { id: key, doi: key, title: `Paper ${index}`, journal: 'JACS' };
+  }
+  await seedSession(page, local);
+  await stubCommonApi(page);
+  const server = await mutableV3Account(page, { ...globalState(false), papers: {}, metadata: {} }, true);
+  server.pauseAfterPaperBatch = true;
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+
+  await page.goto(`${PREVIEW_BASE}/`, { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.accountSyncWrite)).toBe('suspended');
+  expect(Object.keys(server.state.papers)).toHaveLength(32);
+  const paused = await page.evaluate(key => JSON.parse(localStorage.getItem(key) || '{}'), STATE_KEY);
+  expect(Object.keys(paused.papers)).toHaveLength(65);
+  expect(paused.papers['10.1234/resume-64'].note).toBe('pending 64');
+  const acknowledged = server.accepted.filter(body => body.operations.length)[0].operations.map((operation: any) => operation.paperKey);
+
+  // Another device changes a row from the acknowledged first batch while this
+  // device still has 33 pending rows. Recovery must not replay its old copy.
+  const firstKey = acknowledged[0];
+  server.state.papers[firstKey].note = 'new remote note after first commit';
+  server.state.metadata[firstKey].title = 'Remote metadata after first commit';
+  server.revision += 1;
+  const resumedRevision = server.revision;
+  server.writeEnabled = true;
+  await page.clock.fastForward(46_000);
+
+  await expect.poll(() => Object.keys(server.state.papers).length).toBe(65);
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.accountSyncWrite)).toBe('v3');
+  const paperBatches = server.accepted.filter(body => body.operations.length);
+  expect(paperBatches.map(body => body.operations.length)).toEqual([32, 32, 1]);
+  expect(paperBatches[1].expectedRevision).toBe(resumedRevision);
+  expect(paperBatches.slice(1).flatMap(body => body.operations.map((operation: any) => operation.paperKey))
+    .some(key => acknowledged.includes(key))).toBe(false);
+  expect(server.state.papers[firstKey].note).toBe('new remote note after first commit');
+  expect(server.state.metadata[firstKey].title).toBe('Remote metadata after first commit');
+  expect(server.state.papers['10.1234/resume-64'].note).toBe('pending 64');
+  expect(server.state.metadata['10.1234/resume-64'].title).toBe('Paper 64');
+  expect(server.modes).not.toContain('account-save');
+  expect(server.modes).not.toContain('account-pull');
+  const settledCount = server.accepted.length;
+  await page.clock.fastForward(46_000);
+  await expect.poll(() => page.evaluate(key => localStorage.getItem(key), REVISION_KEY)).toBe(String(server.revision));
+  expect(server.accepted).toHaveLength(settledCount);
+  expect(errors).toEqual([]);
 });
 
 test('session removal clears remembered account revision and disables account sync', async ({ page }) => {
@@ -869,7 +1061,7 @@ test('session removal clears remembered account revision and disables account sy
     await route.fulfill({ status: 400, contentType: 'application/json', body: '{}' });
   });
 
-  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  await page.goto(`${PREVIEW_BASE}/`, { waitUntil: 'domcontentloaded' });
   await expect.poll(() => page.evaluate(() => localStorage.getItem('organic-gallery-account-sync-revision-v1'))).toBe('3');
 
   await page.evaluate(sessionKey => localStorage.removeItem(sessionKey), SESSION_KEY);

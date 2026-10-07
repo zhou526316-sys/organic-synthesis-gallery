@@ -3,6 +3,16 @@
 Date: 2026-10-06
 Status: architecture decision; no production behavior changed
 
+## Implementation boundary — 2026-10-07
+
+This document is the accepted product/storage direction. Its P0–P5 milestones are not completed by the public-site scale work or the D3c personal-library migration.
+
+The D3c row model supplies part of the user control layer: favorites, reading state, notes and paper metadata. Ordinary-user V3 writes remain disabled while migration correctness and recovery are hardened. This is a prerequisite, not the PDF document/copy model, a local PDF vault, or a completed P0/P1 implementation.
+
+The next PDF implementation batch starts with P0 data identities, authorization boundaries and the copy-aware state machine, then P1 local folder/OPFS storage, reader and desktop-acquisition queue. Existing owner-private PDF storage remains a separate system throughout. Provider integrations, general user cloud storage and knowledge/model access remain later milestones.
+
+Progress must distinguish a committed design, implemented code, verified deployment and user rollout. A card's retained PDF status records the account's known copy locations; it does not assert that Gallery stores the PDF bytes.
+
 ## Decision
 
 Gallery PDF retention is local-first and user-owned. Public literature metadata remains shared, while paywalled PDF bytes and derived full text remain user-scoped.

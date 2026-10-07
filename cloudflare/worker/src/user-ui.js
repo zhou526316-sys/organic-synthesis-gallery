@@ -249,6 +249,20 @@ async function readAccountLibraryState(env, userId) {
   const legacy = await env.DB.prepare(
     'SELECT state_json, revision, updated_at FROM user_library_state WHERE user_id = ?'
   ).bind(userId).first();
+  // First migration deletes legacy in the same transaction that claims V3.
+  // Do not publish an empty/legacy snapshot if authority changed during reads.
+  if (await userLibraryV3Authority(env,userId) === 'v3') {
+    return {
+      exists:true,
+      revision:Number(authorityMeta?.revision || 0),
+      updatedAt:Number(authorityMeta?.updated_at || 0),
+      state:null,
+      readPath:'rows-v3-compat-unavailable',
+      unavailable:true,
+      writeAuthority:'v3',
+      fallbackReason:'user_library_authority_changed',
+    };
+  }
   return {
     exists: Boolean(legacy),
     revision: Number(legacy?.revision || 0),
@@ -1244,4 +1258,3 @@ export async function updateSiteFeedbackStatuses(env, payload) {
     },
   };
 }
-
