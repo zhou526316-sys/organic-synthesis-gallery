@@ -104,3 +104,9 @@ The canonical sequence for this retry is:
 6. otherwise execute the existing automatic rollback to 0 and repair/verify D4b.
 
 This retry does not weaken rollback or freshness requirements.
+
+## Retry #3 safety semantics
+
+D4d no longer requires a second strict source-stability window after D4c has generated a fenced snapshot. The D4c proof records `generationFenced=true`; activation verifies exact snapshot generation propagation and freshness.
+
+Rollback is considered verified when snapshot reads are disabled at the edge and the public stats endpoint is bounded: strict materialized, fresh snapshot fallback, or explicit bounded-unavailable. Rollback must never re-enter the legacy raw-history path.

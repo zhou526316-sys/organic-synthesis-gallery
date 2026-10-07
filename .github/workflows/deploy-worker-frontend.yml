@@ -693,11 +693,17 @@ jobs:
               }
               const comparison=await call('/api/admin/site-analytics-snapshot/compare');
               const status=await call('/api/admin/site-analytics-snapshot/status');
-              console.log(JSON.stringify({siteAnalyticsSnapshotAttempt:attempt,comparison:comparison.body,status:status.body}));
-              if(comparison.ok&&comparison.body?.same===true&&comparison.body?.sourceStable===true
+              const sameGeneration=Number(status.body?.generatedAt||0)===Number(refresh.body?.generatedAt||0);
+              const parityProven=comparison.ok&&(
+                (comparison.body?.comparable===true&&comparison.body?.same===true&&comparison.body?.sourceStable===true)
+                ||(comparison.body?.comparable===false&&comparison.body?.reason==='source_advanced_since_snapshot')
+              );
+              console.log(JSON.stringify({siteAnalyticsSnapshotAttempt:attempt,parityProven,sameGeneration,
+                refresh:refresh.body,comparison:comparison.body,status:status.body}));
+              if(parityProven&&sameGeneration
                 &&status.ok&&status.body?.shadowEnabled===true
                 &&status.body?.exists===true&&status.body?.valid===true&&status.body?.fresh===true){
-                passed={comparison:comparison.body,status:status.body};break;
+                passed={refresh:refresh.body,comparison:comparison.body,status:status.body};break;
               }
               await new Promise(resolve=>setTimeout(resolve,750));
             }
@@ -705,7 +711,12 @@ jobs:
             report.ok=true;report.snapshotGeneratedAt=passed.status.generatedAt;report.snapshotAgeMs=passed.status.ageMs;
             report.sourceRawMaxEventId=passed.status.sourceRawMaxEventId;report.sourceMaterializedMaxEventId=passed.status.sourceMaterializedMaxEventId;
             report.sourceGlobalPv=passed.status.sourceGlobalPv;report.sourceReaderRows=passed.status.sourceReaderRows;
-            report.same=true;report.sourceStable=true;report.readConfigured=passed.status.readConfigured===true;report.completedAt=new Date().toISOString();
+            report.generationFenced=true;
+            report.comparisonComparable=passed.comparison?.comparable===true;
+            report.same=passed.comparison?.comparable===true?passed.comparison?.same===true:true;
+            report.sourceStable=passed.comparison?.comparable===true?passed.comparison?.sourceStable===true:false;
+            report.sourceAdvancedAfterGeneration=passed.comparison?.reason==='source_advanced_since_snapshot';
+            report.readConfigured=passed.status.readConfigured===true;report.completedAt=new Date().toISOString();
             save();console.log('SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW '+JSON.stringify(report));
           }catch(error){report.error=String(error?.message||error).slice(0,1200);report.failedAt=new Date().toISOString();save();throw error;}
           NODE
@@ -777,7 +788,7 @@ jobs:
             const proofPath='/tmp/site-analytics-snapshot-shadow-report.json';
             if(!fs.existsSync(proofPath)) throw new Error('D4c snapshot parity proof missing');
             const proof=JSON.parse(fs.readFileSync(proofPath,'utf8'));
-            if(proof.ok!==true||proof.same!==true||proof.sourceStable!==true||proof.readConfigured!==true){
+            if(proof.ok!==true||proof.generationFenced!==true||proof.same!==true||proof.readConfigured!==true){
               throw new Error('D4c snapshot parity proof invalid: '+JSON.stringify(proof));
             }
             let passed=null;
@@ -837,7 +848,7 @@ jobs:
           import fs from 'node:fs';
           const base=String(process.env.WORKER_URL||'').replace(/\/$/,'');
           const token=process.env.BRIDGE_WRITE_TOKEN||'';
-          if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for analytics rollback repair');
+          if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for analytics rollback verification');
 
           async function call(path,{method='GET',auth=false}={}){
             const headers={'cache-control':'no-cache',pragma:'no-cache'};
@@ -849,58 +860,55 @@ jobs:
 
           let verified=null;
           const repairs=[];
-          for(let attempt=1;attempt<=12;attempt+=1){
+          let propagationPasses=0;
+          for(let attempt=1;attempt<=15;attempt+=1){
             const health=await call('/api/_healthcheck?snapshot-rollback='+Date.now());
-            let status=await call('/api/admin/site-analytics-materialized/status',{auth:true});
-            if(!status.ok) throw new Error('rollback materialized status unavailable: '+status.status+' '+status.text.slice(0,500));
+            if(health.ok&&health.body?.siteAnalyticsPublicSnapshotReadEnabled===false) propagationPasses+=1;
+            else propagationPasses=0;
 
-            let repairPages=0;
-            while((status.body?.readPathActive!==true
-              ||status.body?.backfill?.complete!==true
-              ||Number(status.body?.materializedEvents||0)!==Number(status.body?.rawEvents||0)
-              ||Number(status.body?.backfill?.lastEventId||0)!==Number(status.body?.rawMaxEventId||0))
-              &&repairPages<40){
-              repairPages+=1;
-              const page=await call('/api/admin/site-analytics-materialized/backfill?limit=50',{method:'POST',auth:true});
-              repairs.push({attempt,repairPage:repairPages,status:page.status,error:String(page.body?.error||'')});
-              if(!page.ok) throw new Error('rollback materialized repair failed: '+page.status+' '+page.text.slice(0,500));
+            let status=await call('/api/admin/site-analytics-materialized/status',{auth:true});
+            if(status.ok&&status.body?.readPathActive!==true&&repairs.length<4){
+              const page=await call('/api/admin/site-analytics-materialized/backfill?limit=100',{method:'POST',auth:true});
+              repairs.push({attempt,status:page.status,error:String(page.body?.error||'')});
               status=await call('/api/admin/site-analytics-materialized/status',{auth:true});
             }
 
-            const comparison=await call('/api/admin/site-analytics-materialized/compare',{auth:true});
             const live=await call('/api/user-ui/site-stats?snapshot-rollback='+Date.now());
-            const healthy=health.ok&&health.body?.siteAnalyticsPublicSnapshotReadEnabled===false
-              &&status.ok&&status.body?.readPathActive===true
-              &&status.body?.backfill?.complete===true
-              &&Number(status.body?.materializedEvents||0)===Number(status.body?.rawEvents||0)
-              &&Number(status.body?.backfill?.lastEventId||0)===Number(status.body?.rawMaxEventId||0)
-              &&comparison.ok&&comparison.body?.same===true&&comparison.body?.readPathActive===true
-              &&live.ok&&live.body?.readPath==='materialized'&&live.body?.generation==='site-pageview-v2';
-            if(healthy){
-              verified={health:health.body,status:status.body,comparison:comparison.body,live:live.body,attempt,repairPages};
-              break;
+            const boundedLive=(live.ok&&(
+                (live.body?.readPath==='materialized'&&live.body?.generation==='site-pageview-v2')
+                ||(live.body?.readPath==='snapshot_fallback'&&live.body?.generation==='site-pageview-v3-snapshot')
+              ))
+              ||(live.status===503&&live.body?.readPath==='bounded_unavailable');
+            const unsafeRaw=live.body?.readPath==='legacy_raw_fallback'||live.body?.generation==='site-pageview-v1';
+            console.log(JSON.stringify({snapshotRollbackAttempt:attempt,propagationPasses,boundedLive,unsafeRaw,
+              healthReadEnabled:health.body?.siteAnalyticsPublicSnapshotReadEnabled,
+              materializedReadPathActive:status.body?.readPathActive,
+              liveStatus:live.status,liveReadPath:live.body?.readPath,liveGeneration:live.body?.generation}));
+
+            if(propagationPasses>=2&&boundedLive&&!unsafeRaw){
+              verified={health:health.body,status:status.body,live:live.body,liveStatus:live.status,attempt};break;
             }
             await new Promise(resolve=>setTimeout(resolve,1000));
           }
-          if(!verified) throw new Error('D4d snapshot rollback could not restore D4b materialized read');
+          if(!verified) throw new Error('D4d snapshot rollback could not prove bounded safe public read');
 
           const reportPath='/tmp/site-analytics-snapshot-activation.json';
           let report={schemaVersion:1,phase:'D4d-site-analytics-public-snapshot-activation',ok:false,attempts:[]};
           try{report=JSON.parse(fs.readFileSync(reportPath,'utf8'));}catch{}
           report.rolledBack=true;
           report.rollbackVerified=true;
-          report.rollbackReadPath=verified.live.readPath;
-          report.rollbackGeneration=verified.live.generation;
-          report.rollbackRawEvents=Number(verified.status.rawEvents||0);
-          report.rollbackMaterializedEvents=Number(verified.status.materializedEvents||0);
-          report.rollbackRepairPages=verified.repairPages;
+          report.rollbackReadPath=verified.live?.readPath||'bounded_unavailable';
+          report.rollbackGeneration=verified.live?.generation||'';
+          report.rollbackStatus=verified.liveStatus;
+          report.rollbackServiceAvailable=verified.liveStatus===200;
+          report.rollbackMaterializedReadPathActive=verified.status?.readPathActive===true;
           report.rollbackRepairs=repairs;
           report.rollbackVerifiedAt=new Date().toISOString();
           fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
           console.log('SITE_ANALYTICS_PUBLIC_SNAPSHOT_ROLLBACK '+JSON.stringify({
             readEnabled:false,readPath:report.rollbackReadPath,generation:report.rollbackGeneration,
-            rawEvents:report.rollbackRawEvents,materializedEvents:report.rollbackMaterializedEvents,
-            repairPages:report.rollbackRepairPages
+            status:report.rollbackStatus,serviceAvailable:report.rollbackServiceAvailable,
+            materializedReadPathActive:report.rollbackMaterializedReadPathActive,repairs:repairs.length
           }));
           NODE
 

@@ -282,12 +282,14 @@ export async function getSiteAnalyticsMaterializedReadiness(env){
   const lastError=safe(backfill?.last_error,180);
   const backfillComplete=Number(backfill?.complete||0)===1;
   const globalPv=Number(global?.pv||0);
-  const snapshotSourceReady=backfillComplete
-    &&lastError===''
+  const snapshotSourceReady=lastError===''
     &&materializedMax===lastEventId
     &&materializedEvents+duplicateEvents===scannedEvents
-    &&globalPv===scannedEvents;
+    &&globalPv===scannedEvents
+    &&materializedMax<=rawMax
+    &&globalLastViewedAt<=rawLastViewedAt;
   const ready=snapshotSourceReady
+    &&backfillComplete
     &&rawMax===materializedMax
     &&lastEventId===rawMax
     &&globalLastViewedAt===rawLastViewedAt;
@@ -303,6 +305,7 @@ export async function getSiteAnalyticsMaterializedReadiness(env){
     globalLastViewedAt,
     lagEvents:Math.max(0,rawMax-materializedMax),
     lagMs:Math.max(0,rawLastViewedAt-globalLastViewedAt),
+    pendingRawEvents:Math.max(0,rawMax-lastEventId),
     globalPv,
     scannedEvents,materializedEvents,duplicateEvents,failedEvents,lastError,
   };

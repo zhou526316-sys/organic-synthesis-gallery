@@ -175,9 +175,6 @@ export async function compareSiteAnalyticsPublicSnapshot(env,now=Date.now()){
   if(!row)return {status:409,body:{error:'analytics_public_snapshot_missing'}};
   const snapshot=parseSnapshot(row.snapshot_json);
   if(!snapshot)return {status:409,body:{error:'analytics_public_snapshot_invalid'}};
-  const materialized=await materializedSiteAnalyticsStats(env,safeInt(row.generated_at)||now);
-  if(materialized.status!==200)return materialized;
-  const comparison=compareSiteAnalyticsBodies(snapshot,materialized.body);
   const readiness=await getSiteAnalyticsMaterializedReadiness(env);
   const reader=await readerWatermark(env);
   const sourceStable=readiness.snapshotSourceReady===true
@@ -185,10 +182,22 @@ export async function compareSiteAnalyticsPublicSnapshot(env,now=Date.now()){
     &&safeInt(readiness.globalPv)===safeInt(row.source_global_pv)
     &&safeInt(reader.rows)===safeInt(row.source_reader_rows)
     &&safeInt(reader.maxOpenedAt)===safeInt(row.source_reader_max_opened_at);
+  if(!sourceStable){
+    return {status:200,body:{
+      version:1,comparable:false,same:null,sourceStable:false,
+      reason:'source_advanced_since_snapshot',
+      snapshotGeneratedAt:safeInt(row.generated_at),
+      sourceMaterializedMaxEventId:safeInt(row.source_materialized_max_event_id),
+      currentMaterializedMaxEventId:safeInt(readiness.materializedMaxEventId),
+    }};
+  }
+  const materialized=await materializedSiteAnalyticsStats(env,safeInt(row.generated_at)||now);
+  if(materialized.status!==200)return materialized;
+  const comparison=compareSiteAnalyticsBodies(snapshot,materialized.body);
   return {status:200,body:{
-    version:1,
+    version:1,comparable:true,
     same:comparison.same,
-    sourceStable,
+    sourceStable:true,
     snapshotGeneratedAt:safeInt(row.generated_at),
     snapshot:comparison.legacy,
     materialized:comparison.materialized,

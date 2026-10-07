@@ -369,6 +369,20 @@ test('D4c snapshot public read fails closed while disabled and when stale',async
   assert.equal(stale.status,503);assert.equal(stale.body.error,'analytics_public_snapshot_stale');
 });
 
+test('D4e snapshot source can remain coherent while backfill complete flag is false',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env={...envFor(db,true),SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED:'1'};
+  const now=Date.parse('2026-10-05T02:00:00Z');
+  const first=insertRaw(db,{ip:'a',date:'2026-10-05',viewedAt:now-2000});
+  await materializeSitePageViewEvent(env,row(db,first));
+  await backfillSiteAnalyticsMaterializedPage(env,100);
+  db.sqlite.prepare("UPDATE site_analytics_v2_backfill SET complete=0,last_error='' WHERE id=1").run();
+  const readiness=await getSiteAnalyticsMaterializedReadiness(env);
+  assert.equal(readiness.ready,false);
+  assert.equal(readiness.snapshotSourceReady,true);
+  assert.equal((await refreshSiteAnalyticsPublicSnapshot(env,now)).status,200);
+});
+
 test('D4e snapshot source stays valid across one in-flight raw event',async t=>{
   const db=new D1();t.after(()=>db.close());
   const fixedNow=Date.parse('2026-10-05T02:00:00Z');
