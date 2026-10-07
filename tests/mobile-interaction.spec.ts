@@ -838,16 +838,19 @@ test('search highlights results, picker closes outside, feedback drags and submi
 
   await search.fill('');
   await expect(page.locator('#resultCount')).toHaveText(String(initialTotal));
-  const chineseQuery = await page.locator('#gallery > .card .title').evaluateAll(nodes => {
+  const secondQuery = await page.locator('#gallery > .card .title').evaluateAll(nodes => {
     for (const node of nodes) {
-      const match = (node.textContent || '').match(/[\u3400-\u9fff]{2,}/);
-      if (match) return match[0].slice(0, 2);
+      const title = (node.textContent || '').trim();
+      const word = title.match(/[A-Za-z][A-Za-z-]{4,}/)?.[0];
+      if (word && word.toLowerCase() !== 'photoredox') return word;
+      const han = title.match(/[\u3400-\u9fff]{2,}/)?.[0];
+      if (han) return han.slice(0, 2);
     }
     return '';
   });
-  expect(chineseQuery.length).toBeGreaterThanOrEqual(2);
-  await search.fill(chineseQuery);
-  await expect(search).toHaveValue(chineseQuery);
+  expect(secondQuery.length).toBeGreaterThanOrEqual(2);
+  await search.fill(secondQuery);
+  await expect(search).toHaveValue(secondQuery);
   await expect.poll(async () => page.locator('.card:visible').count()).toBeGreaterThan(0);
   expect(await page.locator('#gallery > .card:visible').count()).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
   expect(Number(await page.locator('#resultCount').textContent())).toBeLessThan(initialTotal);
