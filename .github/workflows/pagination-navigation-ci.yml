@@ -7,9 +7,11 @@ on:
       - 'src/main.ts'
       - 'src/bootstrap.ts'
       - 'src/styles.css'
+      - 'src/pagination-*.ts'
       - 'src/pagination-layout.css'
       - 'shared/result-window*'
-      - 'tests/pagination-navigation.spec.ts'
+      - 'tests/pagination-*.spec.ts'
+      - 'tests/architecture-frontend.spec.ts'
       - 'scripts/test-pagination-layout.mjs'
       - '.github/workflows/pagination-navigation-ci.yml'
   workflow_dispatch:
@@ -58,22 +60,27 @@ jobs:
       - name: Verify layout, direct jump, boundaries and touch targets
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: pagination-report.json
-        run: npx playwright test tests/pagination-navigation.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json
+        run: npx playwright test tests/pagination-navigation.spec.ts tests/pagination-pointer-stability.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json
+      # This existing suite declares browserName=webkit. Run it in the WebKit
+      # job, not a Chromium-only installation mislabeled as a Chromium run.
       - name: Build verified archive test fixture
+        if: matrix.browser == 'webkit'
         run: |
           node cloudflare/scripts/merge-curated-pages.mjs
           node scripts/build-gallery-architecture-public.mjs
           npm run build
           node scripts/pages-release-delivery.mjs build dist
       - name: Verify existing static and indexed pagination contracts
+        if: matrix.browser == 'webkit'
         env:
           ARCHITECTURE_PREVIEW_BASE: http://127.0.0.1:4173
-        run: npx playwright test tests/architecture-frontend.spec.ts --grep 'pagination|active D1 catalog view|mobile D1 catalog search|680px breakpoint' --browser=${{ matrix.browser }} --workers=1 --reporter=line --output=archive-pagination-results
+          PLAYWRIGHT_JSON_OUTPUT_FILE: archive-pagination-report.json
+        run: npx playwright test tests/architecture-frontend.spec.ts --grep 'pagination|active D1 catalog view|mobile D1 catalog search|680px breakpoint' --browser=webkit --workers=1 --reporter=line,json --output=archive-pagination-results
       - name: Record tested revision
         if: always()
         run: |
           git rev-parse HEAD > pagination-tested-commit.txt
-          sha256sum src/main.ts src/bootstrap.ts src/pagination-layout.css shared/result-window.js > pagination-source-sha256.txt
+          sha256sum src/main.ts src/bootstrap.ts src/pagination-layout.css src/pagination-pointer-stability.ts shared/result-window.js > pagination-source-sha256.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -82,6 +89,7 @@ jobs:
             test-results/
             archive-pagination-results/
             pagination-report.json
+            archive-pagination-report.json
             pagination-tested-commit.txt
             pagination-source-sha256.txt
           retention-days: 7

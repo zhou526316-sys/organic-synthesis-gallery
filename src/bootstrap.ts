@@ -1,11 +1,16 @@
 import { installGalleryPerformanceRuntime } from './performance-runtime';
+import { installPaginationPointerStability } from './pagination-pointer-stability';
 import { validChineseTitle } from '../shared/chinese-title-overrides.js';
 import './pagination-layout.css';
 
 const ZH_CACHE_KEY = 'organic-gallery-zh-title-cache-v2';
 const cleanupGalleryPerformanceRuntime = installGalleryPerformanceRuntime();
+const cleanupPaginationPointerStability = installPaginationPointerStability();
 window.addEventListener('pagehide', event => {
-  if (!event.persisted) cleanupGalleryPerformanceRuntime();
+  if (!event.persisted) {
+    cleanupGalleryPerformanceRuntime();
+    cleanupPaginationPointerStability();
+  }
 }, { once: true });
 
 async function preloadChineseTitleCache(): Promise<void> {
