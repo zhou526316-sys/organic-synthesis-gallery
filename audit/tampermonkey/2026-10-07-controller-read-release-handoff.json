@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-10-07 06:52:45 UTC",
+  "task": "Tampermonkey 14:37 diagnostic upload and metadata latency repair",
+  "releaseCommit": "7da30f3da331b91bc31fc42391f8d08f1f29790a",
+  "candidateCommit": "d3934b88d72b2cb583eaf79a43c718b648866416",
+  "versions": {
+    "bridge": "2.2.62",
+    "install": "6.2.43",
+    "protocol": "6.2.20",
+    "controller": "2.2.41"
+  },
+  "verifiedRegression": {
+    "runId": 37583526203,
+    "jobId": 112668372698,
+    "conclusion": "success"
+  },
+  "expectedInstallerSha256": "403abac6bb005c490218160d8f33292a26e83793397284566b9cf115feff131d",
+  "testedSourceSha256": "ee70fb4851cc10b7f88cf483da941171d96e987775f246687d49dfab1ea1684b",
+  "deployment": {
+    "runId": 37583654041,
+    "jobId": 112669427366,
+    "status": "in_progress",
+    "lastObservedStep": "Install frontend dependencies",
+    "notYetLiveVerified": true
+  },
+  "apiInstallerUrl": "https://api.gczhouwld.com/gallery-vpn-bridge.user.js",
+  "canonicalInstallerUrl": "https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js",
+  "pending": [
+    "Read only the exact Worker job step summaries; no duplicate deploy and no cancellation of other project runs.",
+    "Once release deployment is successful, put probeFiles at their exact paths on fix/tm-read-latency-20261007, currently d3934b88d72b2cb583eaf79a43c718b648866416, and push once to trigger the 2-minute read-only probe.",
+    "Read the small tm-controller-read-live artifact. Require both API and Worker HTTP200, versions/markers and exact expected SHA, then give user the verified API installer link.",
+    "Do not claim canonical Gallery is current without separate readback. Do not treat 401/403 publisher failures as repaired.",
+    "Do not repeat already successful source changes/build/regression; retain the user's timeout limit."
+  ],
+  "probeFiles": [
+    {
+      "path": "scripts/verify-tm-read-live.mjs",
+      "content": "import assert from 'node:assert/strict';\nimport { createHash } from 'node:crypto';\nimport { mkdir, writeFile } from 'node:fs/promises';\nimport path from 'node:path';\nimport { fileURLToPath } from 'node:url';\n\nconst INSTALLER_URL = 'https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js';\nconst ENDPOINTS = [\n  ['api', 'https://api.gczhouwld.com/gallery-vpn-bridge.user.js'],\n  ['worker', 'https://organic-synthesis-gallery.zhou526316.workers.dev/gallery-vpn-bridge.user.js'],\n];\nconst EXPECTED = Object.freeze({\n  bridgeVersion: '2.2.62',\n  installRevision: '6.2.43',\n  captureProtocol: '6.2.20',\n  controllerRevision: '2.2.41',\n  manualRecoveryRevision: '20261007-manual-resume-v1',\n  controllerReadRevision: '20261007-native-metadata-first-v1',\n});\nconst EXPECTED_INSTALLER_SHA256 = '403abac6bb005c490218160d8f33292a26e83793397284566b9cf115feff131d';\nconst MAX_BYTES = 4_000_000;\nconst digest = bytes => createHash('sha256').update(bytes).digest('hex');\n\nfunction value(source, name) {\n  return source.match(new RegExp('\\\\b(?:var|let|const)\\\\s+' + name + '\\\\s*=\\\\s*[\\'\\\"]([^\\'\\\"]+)[\\'\\\"]'))?.[1] || '';\n}\n\nasync function probe(key, url, suffix, expectedSha256, fetchImpl) {\n  const result = { key, url, passed: false };\n  try {\n    const response = await fetchImpl(url + suffix, {\n      method: 'GET',\n      redirect: 'error',\n      headers: { 'cache-control': 'no-cache', origin: 'https://gallery.gczhouwld.com' },\n      signal: AbortSignal.timeout(15_000),\n    });\n    result.status = response.status;\n    result.contentType = response.headers.get('content-type') || '';\n    assert.equal(response.status, 200, 'installer_http_' + response.status);\n    const declaredLength = Number(response.headers.get('content-length') || 0);\n    assert.ok(!declaredLength || declaredLength <= MAX_BYTES, 'installer_too_large');\n    const chunks = [];\n    let bytes = 0;\n    for await (const chunk of response.body) {\n      bytes += chunk.byteLength;\n      assert.ok(bytes <= MAX_BYTES, 'installer_too_large');\n      chunks.push(Buffer.from(chunk));\n    }\n    const raw = Buffer.concat(chunks);\n    const source = new TextDecoder('utf-8', { fatal: true }).decode(raw);\n    result.bytes = raw.length;\n    result.sha256 = digest(raw);\n    // build-bridge-loader.mjs embeds plain runtimeBody + tocBody, not base64.\n    // Inspect downloaded JavaScript only; do not eval or execute an installer.\n    const header = source.match(/^\\s*\\/\\/ ==UserScript==\\s*\\r?\\n([\\s\\S]*?)^\\/\\/ ==\\/UserScript==/m)?.[1];\n    assert.ok(header, 'userscript_header_missing');\n    result.bridgeVersion = header.match(/^\\/\\/ @version\\s+(\\S+)\\s*$/m)?.[1] || '';\n    result.updateUrl = header.match(/^\\/\\/ @updateURL\\s+(\\S+)\\s*$/m)?.[1] || '';\n    result.downloadUrl = header.match(/^\\/\\/ @downloadURL\\s+(\\S+)\\s*$/m)?.[1] || '';\n    result.installRevision = value(source, 'INSTALL_REVISION');\n    result.captureProtocol = source.match(/\\bvar\\s+VERSION\\s*=\\s*['\"]([^'\"]+)['\"]/)?.[1] || '';\n    result.controllerRevision = value(source, 'CONTROLLER_REVISION');\n    result.manualRecoveryRevision = value(source, 'MANUAL_RECOVERY_REVISION');\n    result.controllerReadRevision = value(source, 'CONTROLLER_READ_REVISION');\n    for (const [field, expected] of Object.entries(EXPECTED)) {\n      assert.equal(result[field], expected, 'unexpected_' + field);\n    }\n    assert.equal(result.updateUrl, INSTALLER_URL, 'noncanonical_update_url');\n    assert.equal(result.downloadUrl, INSTALLER_URL, 'noncanonical_download_url');\n    result.matchesExpectedSha256 = expectedSha256 ? result.sha256 === expectedSha256 : null;\n    if (expectedSha256) assert.equal(result.matchesExpectedSha256, true, 'tested_installer_sha256_mismatch');\n    result.passed = true;\n  } catch (error) {\n    result.error = String(error?.message || error).slice(0, 240);\n  }\n  return result;\n}\n\nexport async function verifyLiveInstallers({\n  expectedSha256 = EXPECTED_INSTALLER_SHA256,\n  fetchImpl = globalThis.fetch,\n} = {}) {\n  const report = {\n    checkedAt: new Date().toISOString(),\n    verificationSha: process.env.GITHUB_SHA || null,\n    releaseSha: '7da30f3da331b91bc31fc42391f8d08f1f29790a',\n    testedMainlineSha256: 'ee70fb4851cc10b7f88cf483da941171d96e987775f246687d49dfab1ea1684b',\n    deliveryTarget: 'api_and_worker',\n    readOnly: true,\n    productionWrites: 0,\n    publisherRequests: 0,\n    expected: EXPECTED,\n    expectedInstallerSha256: expectedSha256.trim().toLowerCase() || null,\n    passed: false,\n    probes: [],\n  };\n  if (!report.expectedInstallerSha256 || !/^[a-f0-9]{64}$/.test(report.expectedInstallerSha256)) {\n    report.error = 'invalid_expected_installer_sha256';\n    return report;\n  }\n  const suffix = '?tmReadLive=' + Date.now();\n  report.probes = await Promise.all(ENDPOINTS.map(([key, url]) =>\n    probe(key, url, suffix, report.expectedInstallerSha256, fetchImpl)));\n  report.sameInstallerBytes = report.probes.every(item => item.sha256) &&\n    report.probes[0].sha256 === report.probes[1].sha256;\n  report.passed = report.sameInstallerBytes && report.probes.every(item => item.passed);\n  if (!report.passed) report.error = report.sameInstallerBytes ? 'installer_contract_failed' : 'installer_bytes_mismatch_or_unreadable';\n  report.verifiedAt = new Date().toISOString();\n  return report;\n}\n\nif (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {\n  const report = await verifyLiveInstallers();\n  const output = path.join(process.env.RUNNER_TEMP || process.cwd(), 'tm-read-live.json');\n  await mkdir(path.dirname(output), { recursive: true });\n  await writeFile(output, JSON.stringify(report, null, 2) + '\\n');\n  console.log('TM_READ_LIVE ' + JSON.stringify(report));\n  if (!report.passed) process.exitCode = 1;\n}\n"
+    },
+    {
+      "path": ".github/workflows/tm-controller-read-live.yml",
+      "content": "name: Verify controller metadata read installer live\n\non:\n  push:\n    branches: [fix/tm-read-latency-20261007]\n    paths:\n      - .github/workflows/tm-controller-read-live.yml\n      - scripts/verify-tm-read-live.mjs\n\npermissions:\n  contents: read\n\nconcurrency:\n  group: tm-controller-read-live-${{ github.ref }}\n  cancel-in-progress: false\n\njobs:\n  verify:\n    if: github.ref == 'refs/heads/fix/tm-read-latency-20261007'\n    runs-on: ubuntu-latest\n    timeout-minutes: 2\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v5\n        with:\n          node-version: '22'\n      - name: Verify exact API and Worker installer bytes without production writes\n        run: node scripts/verify-tm-read-live.mjs\n      - name: Preserve bounded verification evidence\n        if: always()\n        uses: actions/upload-artifact@v4\n        with:\n          name: tm-controller-read-live\n          path: ${{ runner.temp }}/tm-read-live.json\n          if-no-files-found: warn\n          retention-days: 7\n"
+    }
+  ]
+}
