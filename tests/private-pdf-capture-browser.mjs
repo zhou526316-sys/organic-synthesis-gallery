@@ -31,6 +31,7 @@ const harness=[
 "function normalizeUrl(v,b){try{return new URL(v,b||location.href).href}catch{return ''}}",
 "function currentCaptureJob(){return true}",
 "function controllerPaused(){return false}",
+"function captureResultHasUsefulLayer(result){result=result||{};return String((result.toc||{}).status||'')==='stored'||Number((result.figures||{}).stored||0)>0||String((result.fulltext||{}).status||'')==='stored'||/^(?:stored|already_stored)$/.test(String((result.privatePdf||{}).status||''))}",
 "function assertBoundCaptureJob(job){return normalizeDoi(job.doi)}",
 "function captureLiveError(v){return String(v||'').slice(0,180)}",
 "function captureLiveUpdate(){return true};function isAbortRequested(){return false};async function sleep(ms){return new Promise(r=>setTimeout(r,Math.min(Number(ms)||0,25)))}",
