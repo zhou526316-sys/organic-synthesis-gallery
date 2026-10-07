@@ -1,10 +1,10 @@
 {
   "task": "Tampermonkey PDF upload failure investigation and repair",
-  "updatedAt": "2026-10-07T08:22:56.263Z",
+  "updatedAt": "2026-10-07T08:33:09.180Z",
   "userAuthorization": "2026-10-07 16:13 Asia/Shanghai: 找找失败原因再改",
   "baselineMain": "423fa1078b8c0f350cfe47e72c84c968ab387558",
   "branch": "fix/tm-pdf-upload-20261007",
-  "currentBranchCommit": "27ebd04b9236cbd55dcbc77ed1cd97bbbc08366e",
+  "currentBranchCommit": "49b9956ab5995f6cc5c3557b56e1986dc5dda87e",
   "sourceCheckpointCommit": "a63cd848399f846689aefc563710a66f3b194cac",
   "sourceCheckpointTree": "aa943748e4a2dbbdd93999d72f33ced6f0c7e629",
   "candidateVersion": {
@@ -13,7 +13,7 @@
     "controller": "2.2.41",
     "protocol": "6.2.20"
   },
-  "currentStage": "client regression in progress; source checkpoint is not released",
+  "currentStage": "Released; exact API and Worker installer bytes verified. First user-network upload failure cause remains undetermined.",
   "liveProbe": {
     "run": 37592756284,
     "artifact": 11469423067,
@@ -36,19 +36,10 @@
     "Concurrent DOI/hash INSERT failure could delete shared R2 PDF; deterministic red case docs1 objects0 deletes1"
   ],
   "localVerification": {
-    "existingSuites": 5,
-    "existingPassed": true,
-    "serverRaceTests": 7,
-    "serverRacePassed": true,
-    "serverRaceFixed": {
-      "outcomes": [
-        201,
-        200
-      ],
-      "documents": 1,
-      "objects": 1,
-      "deletes": 0
-    }
+    "clientUploadCases": 18,
+    "serverRaceCases": 7,
+    "reportOrderingCases": 16,
+    "allPassed": true
   },
   "unproven": [
     "Which user-network or service stage causes the original upload transport failure",
@@ -66,11 +57,50 @@
     "Real database failures can leave unreferenced private content-addressed bytes; no unsafe concurrent cleanup",
     "Slow PDF uploads can time out earlier and retain an unresolved gap for a later capture"
   ],
-  "pending": [
-    "Complete new client regression",
-    "Push candidate and run bounded regression/build",
-    "Fresh-main merge preserving concurrent changes",
-    "Worker deployment and live installer verification"
+  "pending": [],
+  "noDeployedChangeYet": false,
+  "releaseMainCommit": "703526ae312b07b2a65fbe16872b46fe64875e19",
+  "fixtureMainCommit": "19d2d329a01032239f6cf276efe113375b1cf257",
+  "regression": {
+    "initialRun": 37593528774,
+    "initialJob": 112700487215,
+    "finalRun": 37594305467,
+    "finalJob": 112703032175,
+    "passed": true
+  },
+  "installerVerification": {
+    "run": 37594126667,
+    "artifact": 11469369835,
+    "verifiedAt": "2026-10-07T08:29:56.228Z",
+    "evidence": "audit/tampermonkey/2026-10-07-pdf-upload-installer-live-verified.json",
+    "commit": "59406e0c49f911bce8a73d26b11b5df1992530e8",
+    "url": "https://api.gczhouwld.com/gallery-vpn-bridge.user.js",
+    "sha256": "201203a5715d19c80fd90c1ac091b8f27a4455f27bffaaa1bec69c054246ff2b",
+    "bytes": 375008,
+    "exactUrlNoQuery": true,
+    "noOriginHeader": true,
+    "canonicalGalleryVerified": false
+  },
+  "deployment": {
+    "workerRun": 37593654216,
+    "workerJob": 112700901888,
+    "assetDeployment": "success",
+    "overallWorkflow": "failure",
+    "unrelatedPostDeployGate": "P1b synthetic PDF queue account setup/cleanup; capture import route not exercised by that failing test",
+    "unrelatedCleanupVerified": false,
+    "pagesRun": 37593654212,
+    "lastObservedPagesBuild": "success",
+    "lastObservedPagesDeploy": "in_progress_at_16:31"
+  },
+  "fixtureRepair": {
+    "originalBlob": "022383eb4139a72cc981ad8bcabc4d2320f0109b",
+    "repairedBlob": "c53cdc2d3efcc7b96d630b53e458f685f8e16066",
+    "cause": "old real-completion VM fixture omitted controllerPaused; actual ReferenceError reproduced; preserve report-ordering assertion and supply no-PDF fixture",
+    "productionCodeChangedForFixture": false
+  },
+  "followUp": [
+    "After user installs 2.2.63, use per-transport upload stages to locate initial local-network failure if it persists; do not claim that user-network upload is verified.",
+    "P1b queue task owns its independent synthetic-account setup/cleanup failure; do not mark cleanup complete."
   ],
-  "noDeployedChangeYet": true
+  "userNetworkUploadVerified": false
 }
