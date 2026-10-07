@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-07",
+  "timezone": "Asia/Shanghai",
+  "doi": "10.1038/s41929-026-01593-w",
+  "task": "Source-grounded abstract phoenix cover",
+  "status": "generation_qa_failed",
+  "approvedCover": null,
+  "imageReview": "fail",
+  "draftWriteAllowed": false,
+  "publisherTriggered": false,
+  "reason": "Returned generated illustrations repeatedly contain chemical structures, unsupported science themes and/or mechanism labels despite the concept-only requirement. None is acceptable as an accurate scientific cover. Do not treat tool output as image approval.",
+  "rejectedGenerationIds": [
+    "601ca00a-a231-40fe-bfd2-93369ea038e4",
+    "3d635865-2ddd-4646-8bed-e9ffc7ffa2c2",
+    "ce69f5c3-a772-4c59-8715-07f7e4d9df18",
+    "7c55abe6-1993-43dd-ac2d-8f4d7f10eb1e",
+    "b59c586b-28f1-4ae1-9e04-6b83c5f8ab2b",
+    "fedb4984-9dc1-46d1-94c3-e4bb060edf48",
+    "1abfd3b4-a2f4-41c7-8ce3-bf1963861838"
+  ],
+  "additionalRejectedFilenames": [
+    "wide_clean_editorial_scientific_illustration_in.png",
+    "a_dramatic_stylized_scientific_infographic_cove.png",
+    "a_stylized_scientific_editorial_cover_illustration.png"
+  ],
+  "sourceLockPath": "audit/wechat-working/phoenix1-cover-source-lock-r3.md",
+  "factualAnchor": "User-supplied main PDF p.4 explicitly explains phoenix1 naming by disruption and regeneration. The paper does not authorize biomass/AuPd/sustainability imagery as its central reaction story.",
+  "nextStep": "Do not continue serial near-identical image retries. Keep generated artwork separate from chemistry. For any scientific inset, use exact original-source crops only; for an abstract phoenix concept, first require a genuinely chemistry-free image before considering composition. Recheck the final raster, not only instructions. No candidate above may enter the WeChat draft."
+}
