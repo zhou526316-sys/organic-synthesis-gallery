@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "phase": "user-library-control-layer-correctness-predeployment",
+  "recordedAt": "2026-10-07 05:43:58 UTC",
+  "baselineCommit": "b2a8b3fc63998af71a4d093bf9ce33d109bb4f7b",
+  "reviewedConcurrentHead": "2f6c1261992e63332f76612f179ad3c5818e94d6",
+  "ordinaryUserWrites": {
+    "global": false,
+    "basisPoints": 0,
+    "activationRequested": false
+  },
+  "scope": "D3c control-layer correctness; PDF Vault P0/P1 is a subsequent implementation track.",
+  "confirmedAndReproduced": [
+    "Empty-account migration must revalidate absence inside the transaction.",
+    "First migration requires complete and exact D3b compatibility data.",
+    "Each legacy shadow batch must be fenced by authority and a unique revision claim.",
+    "Compatibility head must be stable across row reads.",
+    "Legacy and migrated head counts must be validated as separate cohorts.",
+    "Dirty suspended clients must re-probe and recover without replaying acknowledged rows.",
+    "Dropped responses and session changes must preserve the initiating account boundary."
+  ],
+  "localRegression": {
+    "tests": 114,
+    "passed": 114,
+    "failed": 0,
+    "commands": [
+      "node --test cloudflare/worker/scripts/test-user-library-v3.mjs cloudflare/worker/scripts/test-user-library-shadow.mjs cloudflare/worker/scripts/test-user-library-v3-shadow.mjs scripts/test-user-library-v3-deployment-contract.mjs scripts/test-user-library-shadow-deployment-contract.mjs scripts/test-user-library-v3-write-canary-contract.mjs scripts/test-pages-release-delivery.mjs scripts/test-account-sync-recovery.mjs"
+    ]
+  },
+  "browserRegression": {
+    "status": "pending canonical GitHub Pages build",
+    "suite": "tests/account-sync-v3.spec.ts",
+    "scenarios": 10,
+    "engine": "WebKit"
+  },
+  "production": {
+    "status": "not deployed by this batch",
+    "lastVerifiedWorkerRun": 37572176072,
+    "lastVerifiedAt": "2026-10-07T04:37:22.035Z",
+    "legacyUsers": 4,
+    "v3AuthorityUsers": 0
+  },
+  "preserved": {
+    "pagination": "24 desktop / 12 mobile; count-based; 680px breakpoint",
+    "ownerPrivatePdf": "independent existing system",
+    "pdfDirection": "China-first: local folder > OPFS > personal cloud > optional Gallery backup"
+  }
+}
