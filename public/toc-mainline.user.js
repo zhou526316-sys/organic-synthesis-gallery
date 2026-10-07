@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.40
+// @version      6.2.41
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -55,7 +55,7 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.40';
+  var INSTALL_REVISION = '6.2.41';
   var STALE_CONTROLLER_TAKEOVER_REVISION = '20261006-stale-controller-takeover-v1';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
@@ -112,6 +112,7 @@
   var MAX_TRACE = 150;
 
   // BEGIN OSG_LIVE_PROGRESS_V1 -- local telemetry only; never drives capture.
+  var LIVE_PANEL_REVISION = '20261007-progress-truth-v2';
   var LIVE_VIEW_KEY = P + 'live-progress-v1';
   var LIVE_PANEL_KEY = P + 'live-panel-open-v1';
 
@@ -165,28 +166,62 @@
   function captureLiveSnapshot(now) {
     var active = GM_getValue(ACTIVE_JOB_KEY, null);
     var summary = GM_getValue(SUMMARY_KEY, {}) || {};
+    var manual = typeof MANUAL_RUN_KEY === 'string' ? GM_getValue(MANUAL_RUN_KEY, null) : null;
+    var lease = typeof LEASE_KEY === 'string' ? GM_getValue(LEASE_KEY, null) : null;
+    var controllerId = typeof CONTROLLER_ID === 'string' ? CONTROLLER_ID : '';
+    var manualSummaryMatches = !manual || summary.controllerRunId === 'manual:' + manual.id;
+    // A new manual generation can become visible before its summary in another tab.
+    // Never attribute the previous generation's completion or timestamps to it.
+    if (!manualSummaryMatches) summary = {};
+    if (manual && active && (active.manualRunId && active.manualRunId !== manual.id || String(active.controllerId || '').indexOf('manual:') === 0 && active.controllerId !== 'manual:' + manual.id)) active = null;
     var raw = GM_getValue(LIVE_VIEW_KEY, null);
     var matching = Boolean(active && raw && raw.jobId === active.jobId && raw.doi === active.doi);
     var row = matching ? raw : null;
     var paused = GM_getValue(ENABLED_KEY, true) === false || Boolean(GM_getValue(ABORT_KEY, null));
     var progress = active ? GM_getValue(progressKey(active.doi), null) : null;
-    var state = CONTROLLER_STOP_REASON || summary.stopReason || '';
-    if (active) state = paused ? 'pausing' : row ? row.phase : 'awaiting_publisher';
-    else if (paused) state = 'paused';
+    var leaseLive = Boolean(lease && Number(lease.expiresAt || 0) > now);
+    var manualLeaseMatches = Boolean(manual && lease && lease.owner === 'manual:' + manual.id && (!lease.manualRunId || lease.manualRunId === manual.id));
+    var leaseIsThisPage = Boolean(controllerId && lease && (lease.owner === controllerId || manualLeaseMatches && manual.owner === controllerId));
+    var finished = Boolean(summary.finishedAt || manual && manual.completedAt);
+    var localStopApplies = (!leaseLive || leaseIsThisPage) && (!manual || manual.owner === controllerId);
+    var state = (localStopApplies ? CONTROLLER_STOP_REASON : '') || summary.stopReason || '';
+    if (paused) state = active ? 'pausing' : 'paused';
+    else if (active) state = row ? row.phase : 'awaiting_publisher';
+    else if (!state) {
+      if (finished && (!leaseLive || leaseIsThisPage || manualLeaseMatches)) state = /^(all_resolved|blocked_remaining|inventory_partial|paused)$/.test(summary.phase || '') ? summary.phase : 'between_batches';
+      else if (leaseLive) state = leaseIsThisPage ? (/^(starting|retry_wait|inventory_retry)$/.test(summary.phase || '') ? summary.phase : 'between_jobs') : 'other_controller';
+      else if (manual && !finished) state = !manualSummaryMatches && Date.parse(manual.startedAt || '') > now - 15000 ? 'starting' : 'interrupted';
+      else if (/^(all_resolved|blocked_remaining|inventory_partial|paused)$/.test(summary.phase || '')) state = summary.phase;
+      else if (finished) state = 'between_batches';
+      else if (Number(summary.pendingMissing || 0) > 0) state = 'waiting_controller';
+      else state = summary.phase === 'starting' ? 'starting' : 'idle';
+    }
     if(paused&&typeof controllerLifecycleSnapshot==='function'&&controllerLifecycleSnapshot().resumePending)state='resume_wait';
-    else if (!state) state = summary.finishedAt ? 'between_batches' : 'idle';
     // Startup/auth progress is a separate local source; do not fabricate fresh activity.
     if (active && !paused && progress && /^(auth_wait|challenge_wait)$/.test(progress.status) &&
         progress.jobId === active.jobId && (!row || Date.parse(progress.at) > row.at)) state = progress.status;
-    var last = row ? Number(row.at) : active ? Date.parse(active.startedAt || '') : Date.parse(summary.finishedAt || summary.startedAt || '');
+    function eventTime(value) {
+      var at = typeof value === 'number' ? value : Date.parse(value || '');
+      return Number.isFinite(at) && at > 0 && at <= now ? at : 0;
+    }
+    var runStartedAt = eventTime(summary.startedAt || manual && manual.startedAt);
+    var eventTimes = [row && row.at, active && active.startedAt, summary.finishedAt];
+    if (progress && active && progress.jobId === active.jobId) eventTimes.push(progress.at);
+    (summary.results || []).forEach(function(result) {
+      if (!manual || !result.manualRunId || result.manualRunId === manual.id) eventTimes.push(result.finishedAt);
+    });
+    var last = eventTimes.reduce(function(latest, value) {
+      var at = eventTime(value);
+      return at >= runStartedAt ? Math.max(latest, at) : latest;
+    }, 0);
     return {
       coverageRevision:summary.queueCoverageRevision||'',fullyResolved:Number(summary.fullyResolved||0),unresolvedCount:Number(summary.unresolvedCount||0),blockedCount:Number(summary.blockedCount||0),attemptCount:Number(summary.attemptCount||0),blockedPreview:summary.blockedPreview||[],
       phase:summary.phase||'',missingOnly:summary.mode==='missing_only',need:active?captureNeedText(active):'—',activeJob:active,
       pendingMissing:Number(summary.pendingMissing||0),remainingNeeds:summary.remainingNeeds||{},inventoryUnknown:Number(summary.inventoryUnknown||0),inventoryErrors:summary.inventoryErrors||[],pendingPreview:summary.pendingPreview||[],
       state: state, active: Boolean(active), doi: active ? normalizeDoi(active.doi) : '',
       journal: active ? String(active.journal || '').slice(0, 80) : '',
-      row: row, ageSeconds: Number.isFinite(last) ? Math.max(0, Math.floor((now - last) / 1000)) : null,
-      lastAt: Number.isFinite(last) ? last : null,
+      row: row, ageSeconds: last ? Math.max(0, Math.floor((now - last) / 1000)) : null,
+      lastAt: last || null, runStartedAt: runStartedAt || null,
       completed: summary.queueCoverageRevision?Number(summary.visitedCount||0):(summary.results || []).length, total: Math.max(0, Number(summary.total || 0)),
       batchToc: Math.max(0, Number(summary.tocStored || 0)),
       batchStaged: Math.max(0, Number(summary.figuresStaged || 0)),
@@ -201,6 +236,7 @@
 
   function captureLiveText(s) {
     var phaseNames = {
+      starting:'正在生成缺项队列', between_jobs:'本控制页持有任务，等待下一篇', other_controller:'任务由另一控制页持有，等待其继续', interrupted:'上次任务已中断，等待恢复', waiting_controller:'仍有待办，等待控制器继续', inventory_partial:'缺项队列已结束，部分库存未确认',
       retry_wait:'等待必要访问间隔，随后自动继续', inventory_retry:'库存连接恢复中，待办未丢弃', blocked_remaining:'已遍历待办，仍有未补齐或未确认项', all_resolved:'本轮已确认缺项全部补齐', page_loading:'等待出版社页面加载', evidence_capture:'读取文章文本', resume_wait:'等待旧任务收尾后自动恢复', idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
       awaiting_publisher:'已开任务页，等待出版社脚本', discovering:'识别 TOC 和正文图',
       auth_wait:'等待出版社登录', challenge_wait:'等待出版社验证', downloading:'获取图片候选',
@@ -216,12 +252,12 @@
     var quality = {vector:'矢量',vector_mixed:'混合矢量／位图',high:'高分辨率',usable:'可用分辨率',low:'低分辨率'};
     var toc = r ? (tocNames[r.tocStatus] || r.tocStatus) : '等待本篇数据';
     if (r && r.tocStatus === 'stored' && r.tocKind === 'figure1') toc += '（Figure 1 替代图，非官方 TOC）';
-    var pdf = r && (r.pdfStatus || r.pdfStage)
+    var pdf = !s.activeJob ? '等待下一篇' : r && (r.pdfStatus || r.pdfStage)
       ? (pdfNames[r.pdfStatus] || r.pdfStage || r.pdfStatus) + (r.pdfBytes ? ' · ' + Math.round(r.pdfBytes / 1024) + ' KB' : '') + (r.pdfError ? ' · ' + r.pdfError : '')
-      : s.activeJob && s.activeJob.capturePrivatePdf ? '等待开始' : '本篇无需抓取';
+      : s.activeJob.capturePrivatePdf ? '等待开始' : '本篇无需抓取 PDF';
     var lastError = r ? r.lastError : s.lastResult && s.lastResult.status !== 'success' ? captureLiveError(s.lastResult.reason) : '';
     return {
-      state: s.coverageRevision&&!s.active&&phaseNames[s.phase]?phaseNames[s.phase]:s.missingOnly&&!s.active&&s.phase==='starting'?'正在生成缺项队列':s.missingOnly&&!s.active&&s.phase==='inventory_partial'?'缺项队列已结束，部分库存未确认':phaseNames[s.state] || ('已停止：' + captureLiveError(s.state)),
+      state: phaseNames[s.state] || ('已停止：' + captureLiveError(s.state)),
       needs:s.need||'—',
       working:s.active?(s.row&&/全文|Abstract|文本/.test(s.row.label)?'文本':s.row&&s.row.label?s.row.label:s.need||'加载文章'):'—',
       evidence:s.activeJob&&(s.activeJob.captureEvidence||s.activeJob.opportunisticEvidence)?'随当前任务顺带抓取文本':s.activeJob&&s.activeJob.existingEvidenceLevel?captureEvidenceLevelText(s.activeJob.existingEvidenceLevel)+'，不作为队列缺项':'—',
@@ -235,10 +271,20 @@
       receipts: r ? '本次暂存回执 ' + r.stagedReceipts + ' · 断点复用 ' + r.reused : '—',
       quality: r ? (quality[r.quality] || '尚未测量') + (r.width && r.height ? ' · ' + r.width + '×' + r.height : '') : '—',
       batch: s.coverageRevision&&s.phase!=='starting'?'已遍历 '+s.completed+'／'+s.total+' 篇 · 确认补齐 '+s.fullyResolved+' 篇 · 尝试 '+s.attemptCount+' 次 · 新主图 '+s.batchToc+' · 新正文图 '+s.batchStaged:s.missingOnly&&s.phase==='starting'?'正在生成缺项队列…':(s.missingOnly?'缺项任务已结束 ':'已结束 ') + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · 部分完成 ' + Number(s.batchPartial||0) + ' · 失败 ' + s.batchFailed + ' · 跳过 ' + s.batchSkipped,
-      last: s.lastAt ? new Date(s.lastAt).toLocaleTimeString() + ' · ' + s.ageSeconds + ' 秒前' : '尚无进度记录',
+      started: s.runStartedAt ? new Date(s.runStartedAt).toLocaleTimeString() : '尚未开始本轮',
+      last: s.lastAt ? new Date(s.lastAt).toLocaleTimeString() + ' · ' + captureLiveAgeText(s.ageSeconds) : '尚无采集进展',
       stale: s.active && s.ageSeconds >= 45 ? '一段时间没有新进展：可能正在等待网络或页面验证，不等于抓取失败。' : '',
       error: lastError || '无', publication: s.publication, delivery: automaticReportDisplay()
     };
+  }
+
+  function captureLiveAgeText(seconds) {
+    seconds = Math.max(0, Math.floor(Number(seconds) || 0));
+    if (seconds < 60) return seconds + ' 秒前';
+    var minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return minutes + ' 分钟前';
+    var hours = Math.floor(minutes / 60), remaining = minutes % 60;
+    return hours + ' 小时' + (remaining ? ' ' + remaining + ' 分钟' : '') + '前';
   }
 
   function mountCaptureLivePanel() {
@@ -261,7 +307,7 @@
     immediate.addEventListener('click',forceStartFromHead);main.appendChild(immediate);
     var dl = document.createElement('dl');
     var fields = {};
-    [['state','状态'],['doi','当前 DOI'],['journal','期刊'],['needs','本篇缺项'],['working','正在补抓'],['evidence','文本情况'],['label','当前图片'],['toc','主图'],['pdf','PDF'],['figures','正文图片'],['receipts','保存记录'],['quality','清晰度'],['gaps','剩余缺项'],['batch','本轮累计'],['last','最后进展'],['error','最近问题']].forEach(function (pair) {
+    [['state','状态'],['doi','当前 DOI'],['journal','期刊'],['needs','本篇缺项'],['working','正在补抓'],['evidence','文本情况'],['label','当前图片'],['toc','主图'],['pdf','PDF'],['figures','正文图片'],['receipts','保存记录'],['quality','清晰度'],['gaps','剩余缺项'],['batch','本轮累计'],['started','本轮开始'],['last','最近进展'],['error','最近问题']].forEach(function (pair) {
       var dt = document.createElement('dt'), dd = document.createElement('dd');
       dt.textContent = pair[1]; dd.id = pair[0]; fields[pair[0]] = dd; dl.appendChild(dt); dl.appendChild(dd);
     });

@@ -1,0 +1,58 @@
+name: Tampermonkey panel state regression
+
+on:
+  push:
+    branches: [fix/tm-panel-state-20261007]
+    paths:
+      - public/toc-mainline.user.js
+      - cloudflare/scripts/build-bridge-loader.mjs
+      - scripts/test-tm222-live-progress.mjs
+      - scripts/test-tm221-window-guard.mjs
+      - scripts/validate-tm220-artifacts.mjs
+      - .github/workflows/tm-panel-state-regression.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tm-panel-state-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify syntax, task ownership and existing restart behavior
+        run: |
+          node --check public/toc-mainline.user.js
+          node scripts/test-tm221-window-guard.mjs
+          node tests/tm-immediate-restart.test.mjs
+          node scripts/validate-tm220-artifacts.mjs source
+          git diff --check
+      - name: Build and verify installable Bridge
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+      - name: Install bounded Chromium test dependencies
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install chromium
+      - name: Verify actual desktop and mobile panel without publisher visits
+        run: node scripts/test-tm222-live-progress.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-panel-state-screenshots
+          path: ${{ runner.temp }}/tm222-*.png
+          retention-days: 7
