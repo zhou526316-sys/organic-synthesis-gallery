@@ -1,0 +1,33 @@
+name: WeChat R9 Final Source Preview
+on:
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/wechat-r9-final-source-preview.json']
+permissions:
+  contents: read
+concurrency:
+  group: wechat-r9-final-source-preview
+  cancel-in-progress: false
+jobs:
+  review-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 1}
+      - name: Install review dependencies
+        run: |
+          python3 -m pip install --quiet 'Pillow>=10,<13' 'playwright>=1.50,<2'
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          test -x /usr/bin/google-chrome
+      - name: Render pinned sources without calling WeChat
+        run: python3 ops/wechat-publisher/preview-reviewed-r9.py
+      - name: Upload source review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wechat-r9-final-source-preview
+          path: r9-final-source-preview/
+          retention-days: 7
+          if-no-files-found: ignore
