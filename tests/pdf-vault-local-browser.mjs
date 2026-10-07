@@ -70,22 +70,101 @@ async function staticServer() {
   return 'http://127.0.0.1:' + server.address().port;
 }
 
-async function trackedContext({ width = 1280, holdAuth = false, folderPicker = true } = {}) {
+function queueFixture() {
+  const users = new Map();
+  const queue = {
+    users, requests: [], writes: [], holdUser: null, heldReads: [], expectCancellation: false,
+    failureStatus: 0, conflictNext: false,
+    rows(userId) { if (!users.has(userId)) users.set(userId, new Map()); return users.get(userId); },
+    put(userId, doi, state = 'pending') {
+      const old = queue.rows(userId).get(doi), now = Date.now();
+      const row = { doi, state, revision: (old?.revision || 0) + 1, createdAt: old?.createdAt || now, updatedAt: now };
+      queue.rows(userId).set(doi, row); return row;
+    },
+    async respond(route, diagnostic) {
+      const request = route.request(), url = new URL(request.url());
+      const token = String(request.headers().authorization || '').replace(/^Bearer /, '');
+      const userId = token === TOKENS.a ? USERS.a : token === TOKENS.b ? USERS.b : null;
+      queue.requests.push({ userId, method: request.method(), dois: url.searchParams.getAll('doi') });
+      const reply = (status, body) => route.fulfill({ status, contentType: 'application/json', headers: { 'access-control-allow-origin': '*', 'access-control-allow-headers': 'authorization,content-type' }, body: JSON.stringify(body) });
+      if (!userId) return reply(401, { error: 'not_authenticated' });
+      if (queue.failureStatus) {
+        if (!diagnostic.expectedQueueStatuses.includes(queue.failureStatus)) diagnostic.expectedQueueStatuses.push(queue.failureStatus);
+        return reply(queue.failureStatus, { error: 'fixture_queue_unavailable' });
+      }
+      const rows = queue.rows(userId);
+      if (request.method() === 'GET') {
+        const dois = url.searchParams.getAll('doi');
+        if (dois.length > 24 || [...url.searchParams.keys()].some(key => !['doi', 'after', 'limit'].includes(key))) {
+          bounded(diagnostic.unexpectedNetwork, { path: url.pathname, reason: 'invalid_queue_lookup_shape' });
+          return reply(400, { error: 'invalid_lookup' });
+        }
+        let result;
+        if (dois.length === 1) result = { userId, item: rows.get(dois[0]) || null };
+        else if (dois.length > 1) result = { userId, items: dois.flatMap(doi => rows.has(doi) ? [rows.get(doi)] : []) };
+        else {
+          const after = url.searchParams.get('after') || '', limit = Math.min(50, Math.max(1, Number(url.searchParams.get('limit')) || 50));
+          const candidates = [...rows.values()].filter(row => row.state === 'pending' && row.doi > after).sort((a, b) => a.doi < b.doi ? -1 : 1);
+          const items = candidates.slice(0, limit), hasMore = candidates.length > limit;
+          result = { userId, items, hasMore, nextAfter: hasMore ? items.at(-1)?.doi || null : null };
+        }
+        const snapshot = JSON.parse(JSON.stringify(result));
+        if (queue.holdUser === userId) await new Promise(resolve => queue.heldReads.push({ userId, release: resolve }));
+        return reply(200, snapshot);
+      }
+      if (request.method() !== 'POST') return reply(405, { error: 'method_not_allowed' });
+      let body; try { body = JSON.parse(request.postData() || 'null'); } catch { return reply(400, { error: 'invalid_json' }); }
+      if (!body || Object.keys(body).some(key => !['doi', 'action', 'expectedRevision'].includes(key)) || !['queue', 'cancel', 'complete'].includes(body.action) || !Number.isSafeInteger(body.expectedRevision)) {
+        bounded(diagnostic.unexpectedNetwork, { path: url.pathname, reason: 'queue_write_must_be_metadata_allowlist' });
+        return reply(400, { error: 'invalid_mutation' });
+      }
+      const doi = String(body.doi).toLowerCase(); queue.writes.push({ userId, ...body });
+      let current = rows.get(doi) || null;
+      if (queue.conflictNext) {
+        queue.conflictNext = false;
+        current = queue.put(userId, doi, 'pending');
+        diagnostic.expectedQueueStatuses.push(409);
+      }
+      if ((current?.revision || 0) !== body.expectedRevision || (!current && body.action !== 'queue')) return reply(409, { error: 'pdf_vault_queue_revision_conflict', userId, item: current });
+      const state = { queue: 'pending', cancel: 'cancelled', complete: 'completed' }[body.action];
+      return reply(200, { userId, item: queue.put(userId, doi, state) });
+    },
+  };
+  return queue;
+}
+
+async function waitQueueStatus(page, status) {
+  await page.waitForFunction(status => document.querySelector('[data-testid="pdf-vault-queue-status"]')?.dataset.status === status, status);
+}
+const queueAction = (page, action, doi = DOI) => by(page, 'queue-list').locator('button[data-queue-action="' + action + '"][data-queue-doi="' + doi + '"]');
+async function queueReady(page) { await by(page, 'queue-add').waitFor({ state: 'visible' }); await page.waitForFunction(() => !document.querySelector('[data-testid="pdf-vault-queue-add"]')?.disabled); }
+async function pageWaitNoQueue(page) {
+  await page.waitForFunction(() => document.querySelectorAll('[data-testid="pdf-vault-queue-list"] button[data-queue-action="complete"]').length === 0 && document.querySelector('[data-testid="pdf-vault-queue-status"]')?.dataset.status !== 'busy');
+}
+async function queueAdd(page) { await by(page, 'queue-doi').fill(DOI); await by(page, 'queue-add').click(); await waitQueueStatus(page, 'success'); }
+
+async function trackedContext({ width = 1280, holdAuth = false, folderPicker = true, queue = queueFixture(), indexedDb = true } = {}) {
   const context = await browser.newContext({ viewport: { width, height: 900 }, acceptDownloads: true });
   contexts.add(context); context.setDefaultTimeout(7000); context.setDefaultNavigationTimeout(12000);
   await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
   const diagnostic = activeCase;
-  const state = { holdAuth, allowAuthCancellation: false, pendingAuth: [], authCalls: [], requests: [] };
+  const state = { holdAuth, allowAuthCancellation: false, pendingAuth: [], authCalls: [], requests: [], queue };
   context.on('close', () => contexts.delete(context));
   context.on('response', response => {
     try { const url = new URL(response.url()); if (url.origin === base && response.status() === 200 && !url.pathname.startsWith('/api/')) observedStaticPaths.add(url.pathname); } catch {}
   });
   context.on('page', page => {
     page.on('pageerror', error => bounded(diagnostic.pageErrors, String(error)));
-    page.on('console', message => { if (message.type() === 'error') bounded(diagnostic.consoleErrors, message.text()); });
+    page.on('console', message => {
+      if (message.type() !== 'error') return;
+      let pathname = ''; try { pathname = new URL(message.location().url).pathname; } catch {}
+      const expected = pathname === '/api/user-ui/pdf-vault/queue' && diagnostic.expectedQueueStatuses.some(status => message.text().includes(String(status)));
+      bounded(expected ? diagnostic.expectedHttpErrors : diagnostic.consoleErrors, message.text());
+    });
     page.on('requestfailed', request => {
       const reason = request.failure()?.errorText || '';
-      const expected = state.allowAuthCancellation && new URL(request.url()).pathname === '/api/user-ui/auth/session' && request.headers().authorization === 'Bearer ' + TOKENS.a && /(?:net::ERR_ABORTED|NS_BINDING_ABORTED)/.test(reason);
+      const pathname = new URL(request.url()).pathname;
+      const expected = ((state.allowAuthCancellation && pathname === '/api/user-ui/auth/session') || (queue.expectCancellation && pathname === '/api/user-ui/pdf-vault/queue')) && request.headers().authorization === 'Bearer ' + TOKENS.a && /(?:net::ERR_ABORTED|NS_BINDING_ABORTED)/.test(reason);
       bounded(diagnostic.failedRequests, { url: request.url(), reason, expected: Boolean(expected) });
     });
     page.on('response', response => { if (response.url().includes('/api/')) bounded(diagnostic.responses, { url: response.url(), status: response.status() }); });
@@ -97,6 +176,7 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       bounded(diagnostic.privateNetworkLeaks, { url: request.url().slice(0, 300), category: 'private_bytes_hash_name_or_path' });
       return route.fulfill({ status: 503, contentType: 'application/json', body: '{"error":"private_payload_blocked_by_fixture"}' });
     }
+    if (url.pathname === '/api/user-ui/pdf-vault/queue' && [base, 'https://api.gczhouwld.com'].includes(url.origin)) return queue.respond(route, diagnostic);
     if (url.pathname === '/api/user-ui/auth/session' && [base, 'https://api.gczhouwld.com'].includes(url.origin)) {
       if (request.method() !== 'GET' || post || url.search) {
         bounded(diagnostic.unexpectedNetwork, { url: url.origin + url.pathname, method: request.method(), reason: 'session_request_must_contain_no_document_payload' });
@@ -112,13 +192,24 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
     bounded(diagnostic.unexpectedNetwork, { url: request.url(), method: request.method() });
     return route.fulfill({ status: 503, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: '{"error":"unexpected_network_blocked_by_fixture"}' });
   });
-  await context.addInitScript(({ origin, sessionKey, token, folderPicker }) => {
+  await context.addInitScript(({ origin, sessionKey, token, folderPicker, indexedDb }) => {
     if (location.origin !== origin) return;
     if (!localStorage.getItem('gallery-local-vault-fixture-seeded')) {
       localStorage.setItem(sessionKey, token);
       localStorage.setItem('gallery-local-vault-fixture-seeded', '1');
     }
-    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, writesStarted: 0, releaseWrites: [] };
+    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false };
+    const nativeFetch = window.fetch.bind(window);
+    window.fetch = (input, init) => {
+      const pathname = new URL(typeof input === 'string' ? input : input.url, location.href).pathname;
+      // Fault injection for a response whose completion is already queued
+      // when account revocation aborts the request. The real client must still
+      // reject it using its account fence; storage remains entirely real.
+      if (window.__pdfVaultFixture.ignoreQueueCancellation && pathname === '/api/user-ui/pdf-vault/queue' && new Headers(init?.headers).get('authorization') === 'Bearer ' + token) {
+        const options = { ...init }; delete options.signal; return nativeFetch(input, options);
+      }
+      return nativeFetch(input, init);
+    };
     window.showDirectoryPicker = async () => {
       const state = window.__pdfVaultFixture; state.pickerCalls++;
       if (state.pickerMode === 'cancel') throw new DOMException('Fixture picker cancellation', 'AbortError');
@@ -126,6 +217,7 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       return (await navigator.storage.getDirectory()).getDirectoryHandle('picked-directory', { create: true });
     };
     if (!folderPicker) window.showDirectoryPicker = undefined;
+    if (!indexedDb) Object.defineProperty(window, 'indexedDB', { value: undefined, configurable: true });
     const prototype = FileSystemDirectoryHandle.prototype;
     const query = prototype.queryPermission, request = prototype.requestPermission;
     prototype.queryPermission = function (options) { return (this.name === 'picked-directory' || this.name.startsWith('library-')) ? Promise.resolve(window.__pdfVaultFixture.permission) : query.call(this, options); };
@@ -139,7 +231,7 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       }
       return createWritable.call(this, options);
     };
-  }, { origin: base, sessionKey: SESSION_KEY, token: TOKENS.a, folderPicker });
+  }, { origin: base, sessionKey: SESSION_KEY, token: TOKENS.a, folderPicker, indexedDb });
   return { context, state };
 }
 
@@ -230,7 +322,7 @@ async function waitUntil(predicate, description) {
 }
 
 async function test(name, work) {
-  const record = { name, status: 'running', pageErrors: [], consoleErrors: [], failedRequests: [], unexpectedNetwork: [], privateNetworkLeaks: [], responses: [] };
+  const record = { name, status: 'running', pageErrors: [], consoleErrors: [], failedRequests: [], unexpectedNetwork: [], privateNetworkLeaks: [], expectedQueueStatuses: [], expectedHttpErrors: [], responses: [] };
   cases.push(record); activeCase = record; const start = Date.now();
   try {
     await work();
@@ -378,6 +470,64 @@ try {
       const box = await by(page, name).boundingBox(); assert.ok(box && box.width > 0 && box.height > 0 && box.x >= -1 && box.x + box.width <= 391, name + ' fits viewport');
     }
   });
+  await test('phone queue without IndexedDB reaches a separate desktop and requires explicit completion', async () => {
+    const queue = queueFixture();
+    const phone = await trackedContext({ width: 390, folderPicker: false, indexedDb: false, queue });
+    const phonePage = await pageFor(phone.context, { authenticated: false }); await queueReady(phonePage);
+    assert.equal(await phonePage.evaluate(() => typeof indexedDB), 'undefined');
+    await queueAdd(phonePage); assert.equal(queue.rows(USERS.a).get(DOI)?.state, 'pending');
+    assert.match(await by(phonePage, 'queue-status').innerText(), /已加入/);
+    const queueLayout = await phonePage.evaluate(() => ({ width: innerWidth, document: document.documentElement.scrollWidth, body: document.body.scrollWidth }));
+    assert.ok(queueLayout.document <= queueLayout.width + 1 && queueLayout.body <= queueLayout.width + 1, 'pending queue fits the 390px phone viewport');
+    const desktop = await trackedContext({ queue }); const desktopPage = await pageFor(desktop.context); await queueReady(desktopPage);
+    await queueAction(desktopPage, 'complete').waitFor({ state: 'visible' });
+    await importGood(desktopPage); assert.equal((await localCopies(desktopPage)).length, 1);
+    assert.equal(queue.rows(USERS.a).get(DOI)?.state, 'pending', 'a real local save must not claim a cloud PDF or automatically complete the task');
+    assert.equal(queue.writes.filter(item => item.action === 'complete').length, 0);
+    await queueAction(desktopPage, 'complete').click(); await waitQueueStatus(desktopPage, 'success');
+    assert.equal(queue.rows(USERS.a).get(DOI)?.state, 'completed');
+    await by(phonePage, 'queue-refresh').click();
+    await pageWaitNoQueue(phonePage); assert.equal(await queueAction(phonePage, 'complete').count(), 0);
+  });
+  await test('late queue responses and the same DOI cannot cross account or logout boundaries', async () => {
+    const queue = queueFixture(); queue.put(USERS.a, DOI); queue.holdUser = USERS.a; queue.expectCancellation = true;
+    const { context } = await trackedContext({ queue }); const page = await pageFor(context);
+    await waitUntil(() => queue.heldReads.length > 0, 'old-account queue read held');
+    await switchAccount(page, 'b'); await waitAccount(page, 'b'); await queueReady(page);
+    queue.holdUser = null; for (const item of queue.heldReads.splice(0)) item.release();
+    await page.waitForTimeout(100); assert.equal(await queueAction(page, 'cancel').count(), 0);
+    await queueAdd(page); assert.equal(queue.rows(USERS.a).get(DOI)?.revision, 1); assert.equal(queue.rows(USERS.b).get(DOI)?.revision, 1);
+    await switchAccount(page, null);
+    await page.waitForFunction(() => !document.querySelector('[data-testid="pdf-vault-queue-add"]')?.checkVisibility());
+    const requestsAfterLogout = queue.requests.length; await page.waitForTimeout(100);
+    assert.equal(queue.requests.length, requestsAfterLogout); assert.equal(await queueAction(page, 'cancel').count(), 0);
+  });
+  await test('queue 503 is not reported as synced and does not disable real local PDF saving', async () => {
+    const queue = queueFixture(); const { context } = await trackedContext({ queue }); const page = await pageFor(context); await queueReady(page);
+    queue.failureStatus = 503; await by(page, 'queue-add').click(); await waitQueueStatus(page, 'error');
+    assert.doesNotMatch(await by(page, 'queue-status').innerText(), /已加入|已同步|已保存到云/); assert.equal(queue.rows(USERS.a).size, 0);
+    await importGood(page); assert.equal((await localCopies(page)).length, 1); assert.equal(queue.rows(USERS.a).size, 0);
+    queue.failureStatus = 0; await queueAdd(page); assert.equal(queue.rows(USERS.a).get(DOI)?.state, 'pending');
+  });
+  await test('stale queue revision cannot cancel a newer task and retry keeps one row', async () => {
+    const queue = queueFixture(); queue.put(USERS.a, DOI); const { context } = await trackedContext({ queue }); const page = await pageFor(context); await queueReady(page);
+    await queueAction(page, 'cancel').waitFor({ state: 'visible' }); queue.conflictNext = true;
+    await queueAction(page, 'cancel').click(); await waitQueueStatus(page, 'error');
+    assert.equal(queue.rows(USERS.a).get(DOI)?.state, 'pending'); const conflictedRevision = queue.rows(USERS.a).get(DOI).revision;
+    await by(page, 'queue-refresh').click(); await queueAction(page, 'cancel').waitFor({ state: 'visible' });
+    await queueAction(page, 'cancel').click(); await waitQueueStatus(page, 'success');
+    assert.equal(queue.rows(USERS.a).get(DOI)?.state, 'cancelled'); assert.ok(queue.rows(USERS.a).get(DOI).revision > conflictedRevision);
+    await queueAdd(page); assert.equal(queue.rows(USERS.a).get(DOI)?.state, 'pending'); assert.equal(queue.rows(USERS.a).size, 1);
+    queue.conflictNext = true; queue.holdUser = USERS.a;
+    await page.evaluate(() => { window.__pdfVaultFixture.ignoreQueueCancellation = true; });
+    await queueAction(page, 'cancel').click();
+    await waitUntil(() => queue.heldReads.length > 0, 'conflict reload for the previous account is held');
+    await switchAccount(page, 'b'); await waitAccount(page, 'b'); await queueReady(page);
+    queue.holdUser = null; for (const item of queue.heldReads.splice(0)) item.release();
+    await page.waitForTimeout(100);
+    assert.equal(await by(page, 'queue-status').getAttribute('data-status'), 'idle', 'an old conflict reload cannot overwrite the new account status');
+    assert.equal(await queueAction(page, 'cancel').count(), 0); assert.equal(queue.rows(USERS.b).size, 0);
+  });
 } catch (error) { fatalError = error; }
 finally {
   for (const context of [...contexts]) await context.close().catch(() => {});
@@ -394,7 +544,7 @@ finally {
       deliveryFiles.push({ path: path.relative(DIST, file).split(path.sep).join('/'), sha256: createHash('sha256').update(bytes).digest('hex'), bytes: bytes.length });
     } catch (error) { fatalError ||= new Error('Unable to fingerprint an observed delivery resource: ' + pathname + ': ' + error.message); }
   }
-  const summary = { schemaVersion: 1, suite: 'pdf-vault-local-browser', ok: !fatalError, passed: cases.filter(item => item.status === 'passed').length, total: cases.length, completedAt: new Date().toISOString(), browser: 'chromium', realStorage: ['IndexedDB', 'OPFS', 'FileSystemHandle structured clone'], syntheticDirectoryPicker: true, nativeWindowsPermissionPromptTested: false, publisherContentUsed: false, productionMutations: false, deliveryFiles, expectedRequestCancellations: cases.reduce((n, item) => n + item.failedRequests.filter(request => request.expected).length, 0), unexpectedRequestFailures: cases.reduce((n, item) => n + item.failedRequests.filter(request => !request.expected).length, 0), uncaughtErrors: cases.reduce((n, item) => n + item.pageErrors.length, 0), consoleErrors: cases.reduce((n, item) => n + item.consoleErrors.length, 0), unexpectedNetworkRequests: cases.reduce((n, item) => n + item.unexpectedNetwork.length + item.privateNetworkLeaks.length, 0), cases: cases.map(({ name, status, durationMs, error }) => ({ name, status, durationMs, ...(error ? { error } : {}) })), ...(fatalError ? { error: String(fatalError?.stack || fatalError) } : {}) };
+  const summary = { schemaVersion: 1, suite: 'pdf-vault-local-browser', ok: !fatalError, passed: cases.filter(item => item.status === 'passed').length, total: cases.length, completedAt: new Date().toISOString(), browser: 'chromium', realStorage: ['IndexedDB', 'OPFS', 'FileSystemHandle structured clone'], syntheticDirectoryPicker: true, nativeWindowsPermissionPromptTested: false, publisherContentUsed: false, productionMutations: false, deliveryFiles, expectedHttpErrors: cases.reduce((n, item) => n + item.expectedHttpErrors.length, 0), expectedRequestCancellations: cases.reduce((n, item) => n + item.failedRequests.filter(request => request.expected).length, 0), unexpectedRequestFailures: cases.reduce((n, item) => n + item.failedRequests.filter(request => !request.expected).length, 0), uncaughtErrors: cases.reduce((n, item) => n + item.pageErrors.length, 0), consoleErrors: cases.reduce((n, item) => n + item.consoleErrors.length, 0), unexpectedNetworkRequests: cases.reduce((n, item) => n + item.unexpectedNetwork.length + item.privateNetworkLeaks.length, 0), cases: cases.map(({ name, status, durationMs, error }) => ({ name, status, durationMs, ...(error ? { error } : {}) })), ...(fatalError ? { error: String(fatalError?.stack || fatalError) } : {}) };
   await fs.writeFile(path.join(OUTPUT, 'summary.json'), JSON.stringify(summary, null, 2) + '\n');
 }
 if (fatalError) throw fatalError;

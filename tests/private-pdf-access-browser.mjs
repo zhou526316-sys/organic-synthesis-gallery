@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 import { gzipSync } from 'node:zlib';
 
 const root=path.resolve('dist');
-const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp'};
+const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.ttf':'font/ttf','.wasm':'application/wasm'};
 const server=http.createServer(async(req,res)=>{
   const u=new URL(req.url,'http://x');
   if(u.pathname==='/publisher-fallback.html'){res.writeHead(200,{'content-type':'text/html'});res.end('<h1 id="fallback">publisher</h1>');return;}
@@ -83,8 +83,9 @@ const papers=Array.from({length:72},(_,index)=>({
 }));
 const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
 async function contextWith(capabilities,openResult={available:true,url:base+'/private-hit.html?token=opaque'},options={}){
- const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900}});
- const state={privateCalls:0,authTokens:[],pendingOwner:[],releasedOwner:0};
+ const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900},locale:options.locale||'en-US'});
+ const state={privateCalls:0,authTokens:[],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
+ if(options.pendingQueue)state.queueRows.set('fixture-owner',new Map(papers.map(paper=>[paper.doi,{doi:paper.doi,state:'pending',revision:1,createdAt:Date.now(),updatedAt:Date.now()}])));
  await context.addInitScript(fixtureOrigin=>{
   if(location.origin!==fixtureOrigin)return;
   if(localStorage.getItem('private-pdf-browser-fixture-seeded')!=='1'){
@@ -95,6 +96,23 @@ async function contextWith(capabilities,openResult={available:true,url:base+'/pr
   window.addEventListener('gallery-private-pdf-capability',event=>{
    window.__pdfCap=event.detail;window.__pdfCapabilityEvents.push(event.detail?.read);
   });
+  // These counters observe real file APIs; the main card binding must never
+  // probe permissions, read PDF bytes, or hash a file to decorate its buttons.
+  window.__vaultIo={getFile:0,queryPermission:0,arrayBuffer:0,digest:0};
+  if(window.FileSystemFileHandle){
+   const original=FileSystemFileHandle.prototype.getFile;
+   FileSystemFileHandle.prototype.getFile=function(...args){window.__vaultIo.getFile++;return original.apply(this,args);};
+  }
+  if(window.FileSystemHandle?.prototype.queryPermission){
+   const original=FileSystemHandle.prototype.queryPermission;
+   FileSystemHandle.prototype.queryPermission=function(...args){window.__vaultIo.queryPermission++;return original.apply(this,args);};
+  }
+  const arrayBuffer=File.prototype.arrayBuffer;
+  File.prototype.arrayBuffer=function(...args){window.__vaultIo.arrayBuffer++;return arrayBuffer.apply(this,args);};
+  if(window.crypto?.subtle){
+   const digest=crypto.subtle.digest.bind(crypto.subtle);
+   crypto.subtle.digest=(...args)=>{window.__vaultIo.digest++;return digest(...args);};
+  }
  },base);
  await context.route(base+'/**',async route=>{
   const pathname=new URL(route.request().url()).pathname;
@@ -116,6 +134,29 @@ async function contextWith(capabilities,openResult={available:true,url:base+'/pr
     await new Promise(resolve=>state.pendingOwner.push(resolve));state.releasedOwner++;
    }
    return reply({authenticated:Boolean(token),user:token?{id:token==='fixture-session'?'fixture-owner':'fixture-ordinary',email:'fixture@example.invalid',capabilities:allowed}:null});
+  }
+  if(url.pathname==='/api/user-ui/pdf-vault/queue'){
+   const token=String(route.request().headers().authorization||'').replace(/^Bearer /,'');
+   const userId=token==='fixture-session'?'fixture-owner':token?'fixture-ordinary':null;
+   const dois=url.searchParams.getAll('doi');
+   state.queueReads.push({userId,dois,method:route.request().method()});
+   if(!userId)return route.fulfill({status:401,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:'{"error":"not_authenticated"}'});
+   if(route.request().method()!=='GET'||dois.length>24){
+    boundedPush(currentCase.unmockedExternalRequests,'queue card lookup exceeded the read-only fixture contract');
+    return route.fulfill({status:400,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:'{}'});
+   }
+   const rows=state.queueRows.get(userId)||new Map();
+   let result;
+   if(dois.length===1)result={userId,item:rows.get(dois[0])||null};
+   else if(dois.length>1)result={userId,items:dois.flatMap(doi=>rows.has(doi)?[rows.get(doi)]:[])};
+   else result={userId,items:[...rows.values()].filter(row=>row.state==='pending').slice(0,50),hasMore:false,nextAfter:null};
+   // Capture the old user's response before allowing a token switch, so the
+   // late-response case cannot accidentally return the new user's empty list.
+   result=JSON.parse(JSON.stringify(result));
+   if(state.holdQueue&&userId==='fixture-owner'){
+    await new Promise(resolve=>state.pendingQueue.push(resolve));state.releasedQueue++;
+   }
+   return reply(result);
   }
   if(url.pathname.startsWith('/api/user-ui/private-pdf/')){state.privateCalls++;return reply(openResult);}
   if(url.pathname==='/api/user-ui/integrations')return reply({auth:{local:true,google:false,wechat:false,qq:false,email:false},payments:{wechat:false,alipay:false}});
@@ -151,6 +192,26 @@ async function replaceToken(page,value,event=true){
   return document.documentElement.dataset.privatePdfRead;
  },{value,event,key:SESSION_KEY});
 }
+function localCardPdf(){
+ const stream='q 0.2 0.5 0.8 rg 20 20 180 180 re f Q\n';
+ const objects=['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Kids [3 0 R] /Count 1 >>','<< /Type /Page /Parent 2 0 R /MediaBox [0 0 240 240] /Resources << >> /Contents 4 0 R >>','<< /Length '+Buffer.byteLength(stream)+' >>\nstream\n'+stream+'endstream'];
+ let body='%PDF-1.7\n% Gallery self-generated card fixture.\n';const offsets=[];
+ for(let index=0;index<objects.length;index++){offsets.push(Buffer.byteLength(body));body+=(index+1)+' 0 obj\n'+objects[index]+'\nendobj\n';}
+ const start=Buffer.byteLength(body);body+='xref\n0 5\n0000000000 65535 f \n';
+ for(const offset of offsets)body+=String(offset).padStart(10,'0')+' 00000 n \n';
+ return Buffer.from(body+'trailer\n<< /Size 5 /Root 1 0 R >>\nstartxref\n'+start+'\n%%EOF\n');
+}
+const cardPdf=localCardPdf(),vaultBy=(page,name)=>page.getByTestId('pdf-vault-'+name);
+async function waitLocalStatus(page,status){await page.waitForFunction(status=>document.querySelector('[data-testid="pdf-vault-status"]')?.dataset.status===status,status);}
+async function importCardPdf(page,doi){
+ const before=await vaultBy(page,'list').locator('article[data-copy-id]').count();
+ await vaultBy(page,'doi').fill(doi);
+ await vaultBy(page,'file').setInputFiles({name:'card-private-fixture.pdf',mimeType:'application/pdf',buffer:cardPdf});
+ await vaultBy(page,'import').click();await waitLocalStatus(page,'success');
+ assert.equal(await vaultBy(page,'list').locator('article[data-copy-id]').count(),before+1,'a real import creates one account-scoped copy');
+}
+async function waitCardState(page,doi,state){await page.waitForFunction(({doi,state})=>[...document.querySelectorAll('.card')].find(card=>card.dataset.doi===doi)?.querySelector('.local-pdf-button')?.dataset.pdfVaultState===state,{doi,state});}
+async function assertNoCardFileIo(page){assert.deepEqual(await page.evaluate(()=>window.__vaultIo),{getFile:0,queryPermission:0,arrayBuffer:0,digest:0},'main cards use metadata only, with no PDF bytes or permission prompts');}
 try{
  await test('owner PDF button is independent and original link remains publisher-only',async()=>{
   const {context,state}=await contextWith(['private_pdf_read']);const page=await gallery(context,true);
@@ -292,6 +353,111 @@ try{
   assert.equal(leaseCalls,1);
   assert.equal(healthCalls,0);
   await context.close();
+ });
+
+ await test('ordinary 24 and 12 card pages use one queue batch and no local file reads',async()=>{
+  for(const [width,expected] of [[1280,24],[390,12]]){
+   const {context,state}=await contextWith([],undefined,{viewport:{width,height:900},locale:'zh-CN',pendingQueue:true});
+   const page=await gallery(context,false);
+   await page.waitForFunction(count=>document.querySelectorAll('.card .local-pdf-button[data-pdf-vault-state="queue"]').length===count,expected);
+   await assertPdfHidden(page);assert.equal(state.privateCalls,0);
+   assert.equal(await page.locator('.card').count(),expected);
+   const first=await page.locator('.card').first().getAttribute('data-doi');
+   const queueLabel=await page.locator('.card .local-pdf-button').first().textContent();
+   assert.match(queueLabel,/待电脑/);assert.doesNotMatch(queueLabel,/获取中/);
+   assert.equal(state.queueReads.length,1,'the initial visible page uses one DOI batch');
+   assert.equal(state.queueReads[0].dois.length,expected);
+   assert.equal(new Set(state.queueReads[0].dois).size,expected);
+   await page.locator('#nextResultPage').click();
+   await page.waitForFunction(previous=>document.querySelector('.card')?.getAttribute('data-doi')!==previous,first);
+   await page.waitForFunction(count=>document.querySelectorAll('.card .local-pdf-button[data-pdf-vault-state="queue"]').length===count,expected);
+   assert.equal(state.queueReads.length,2,'pagination adds one batch, never one request per card');
+   assert.equal(state.queueReads[1].dois.length,expected);
+   assert.ok(state.authTokens.length<=6,'account checks do not grow with the number of cards');
+   assert.equal(state.privateCalls,0);await assertPdfHidden(page);await assertNoCardFileIo(page);
+   if(width===390){
+    const box=await page.locator('.card').first().boundingBox(),button=await page.locator('.card .local-pdf-button').first().boundingBox();
+    assert.ok(box&&button&&button.x>=box.x-1&&button.x+button.width<=Math.min(width,box.x+box.width)+1,'queued state fits a mobile card');
+   }else{
+    // A queue response captured before a second tab cancels the tasks must not
+    // refill the invalidated cache with those older pending rows.
+    state.holdQueue=true;
+    await page.evaluate(()=>window.dispatchEvent(new Event('gallery-pdf-vault-queue-changed')));
+    await waitForNode(page,()=>state.pendingQueue.length>0);
+    for(const [doi,item] of state.queueRows.get('fixture-owner'))state.queueRows.get('fixture-owner').set(doi,{...item,state:'cancelled',revision:item.revision+1,updatedAt:Date.now()});
+    await page.evaluate(()=>window.dispatchEvent(new Event('gallery-pdf-vault-queue-changed')));
+    state.holdQueue=false;for(const release of state.pendingQueue.splice(0))release();
+    await waitForNode(page,()=>state.queueReads.length>=4);
+    await page.waitForFunction(count=>document.querySelectorAll('.card .local-pdf-button[data-pdf-vault-state="none"]').length===count,expected);
+    await assertNoCardFileIo(page);
+   }
+   await context.close();
+  }
+ });
+ await test('real local import updates another tab and missing or expired evidence downgrades cards',async()=>{
+  const {context,state}=await contextWith([],undefined,{locale:'zh-CN'});const page=await gallery(context,false);
+  const card=page.locator('.card').first(),doi=await card.getAttribute('data-doi');
+  const local=await popup(page,card.locator('a.local-pdf-button'));
+  await local.waitForFunction(()=>document.documentElement.dataset.pdfVaultAuth==='authenticated');
+  assert.equal(await vaultBy(local,'doi').inputValue(),doi,'the card opens its own DOI management page');
+  assert.equal(await vaultBy(local,'reader').isVisible(),false,'card navigation does not read or render a PDF');
+  await vaultBy(local,'opfs').click();await waitLocalStatus(local,'success');
+  await importCardPdf(local,doi);await waitCardState(page,doi,'local');
+  assert.match(await card.locator('.local-pdf-button').textContent(),/PDF · 本机/);
+  await assertNoCardFileIo(page);await assertPdfHidden(page);assert.equal(state.privateCalls,0);
+  const signal=await page.evaluate(()=>localStorage.getItem('gallery-pdf-vault-local-change-v1'));
+  assert.match(signal,/^change_[a-f0-9]+$/,'cross-tab signal carries only an opaque random change marker');
+  state.holdQueue=true;
+  await page.evaluate(()=>window.dispatchEvent(new Event('focus')));
+  await waitForNode(page,()=>state.pendingQueue.length>0);
+  // The row and its FileSystemDirectoryHandle come from actual IndexedDB.
+  // Removing the actual OPFS file leaves the manifest present for the next open.
+  await local.evaluate(async doi=>{
+   const db=await new Promise((resolve,reject)=>{const request=indexedDB.open('gallery-pdf-vault-local-v1',1);request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error);});
+   const rows=await new Promise((resolve,reject)=>{const request=db.transaction('copies','readonly').objectStore('copies').getAll();request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error);});db.close();
+   const row=rows.find(row=>row.user_id==='fixture-owner'&&row.doi===doi);
+   if(!row?.directory_handle)throw new Error('fixture requires a real persisted file handle');
+   await row.directory_handle.removeEntry(row.file_name);
+  },doi);
+  await vaultBy(local,'list').locator('article[data-copy-id]').first().getByTestId('pdf-vault-open').click();
+  await waitLocalStatus(local,'error');
+  await page.waitForFunction(doi=>[...document.querySelectorAll('.card')].find(card=>card.dataset.doi===doi)?.querySelector('.local-pdf-button')?.dataset.pdfVaultState!=='local',doi);
+  await page.evaluate(doi=>{
+   const anchor=[...document.querySelectorAll('.card')].find(card=>card.dataset.doi===doi).querySelector('.local-pdf-button');
+   window.__localStateAfterDenial=[];
+   new MutationObserver(records=>{for(const record of records)window.__localStateAfterDenial.push(record.oldValue,anchor.dataset.pdfVaultState);}).observe(anchor,{attributes:true,attributeFilter:['data-pdf-vault-state'],attributeOldValue:true});
+  },doi);
+  state.holdQueue=false;for(const release of state.pendingQueue.splice(0))release();
+  await waitCardState(page,doi,'check');
+  assert.equal(await page.evaluate(()=>window.__localStateAfterDenial.includes('local')),false,'an older pending queue response cannot repaint a rejected local receipt');
+  assert.equal(await vaultBy(local,'reader').isVisible(),false);await assertNoCardFileIo(page);
+  await importCardPdf(local,doi);await waitCardState(page,doi,'local');
+  // Cross-tab receipts above use the real shared wall clock. Install the
+  // virtual clock only for this bounded expiry check, then refresh metadata
+  // so its expiry timer is created under that clock. The one-second lead
+  // avoids artificial future receipts from separate virtual-clock realms.
+  await page.clock.install({time:new Date(Date.now()+1000)});
+  await page.evaluate(()=>window.dispatchEvent(new Event('focus')));await waitCardState(page,doi,'local');
+  await page.clock.fastForward(61_001);await waitCardState(page,doi,'check');
+  await assertNoCardFileIo(page);await assertPdfHidden(page);assert.equal(state.privateCalls,0);
+ });
+ await test('late ordinary-account queue response cannot relabel cards after switch or logout',async()=>{
+  const {context,state}=await contextWith([],undefined,{pendingQueue:true,holdQueue:true});
+  const page=await gallery(context,false);
+  await waitForNode(page,()=>state.pendingQueue.length>0);
+  await replaceToken(page,'ordinary-session');
+  await waitForNode(page,()=>state.queueReads.some(request=>request.userId==='fixture-ordinary'));
+  state.holdQueue=false;const pending=state.pendingQueue.splice(0);for(const release of pending)release();
+  await waitForNode(page,()=>state.releasedQueue>=pending.length);
+  await page.waitForTimeout(100);
+  assert.equal(await page.locator('.card .local-pdf-button[data-pdf-vault-state="none"]').count(),24,'an old queue receipt never enters the new account');
+  await assertPdfHidden(page);await assertNoCardFileIo(page);assert.equal(state.privateCalls,0);
+  const cleared=await page.evaluate(key=>{
+   localStorage.removeItem(key);window.dispatchEvent(new Event('gallery-auth-session-changed'));
+   return [...document.querySelectorAll('.card .local-pdf-button')].every(anchor=>anchor.dataset.pdfVaultState==='none');
+  },SESSION_KEY);
+  assert.equal(cleared,true,'logout clears local and queue labels synchronously');
+  await page.waitForTimeout(100);await assertPdfHidden(page);await assertNoCardFileIo(page);
  });
 
 }catch(error){console.error('PRIVATE_PDF_BROWSER_FAIL '+String(error?.stack||error));process.exitCode=1;}

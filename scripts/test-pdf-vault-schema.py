@@ -20,7 +20,10 @@ FULL_SCHEMA = (ROOT / "cloudflare/schema.sql").read_text(encoding="utf-8")
 MIGRATION = (ROOT / "cloudflare/pdf-vault-v1.sql").read_text(encoding="utf-8")
 CONSUME = (ROOT / "cloudflare/pdf-vault-session-consume.sql").read_text(encoding="utf-8")
 MARKER = "-- BEGIN PDF Vault P0 (cloudflare/pdf-vault-v1.sql)"
-BASE_SCHEMA = FULL_SCHEMA.split(MARKER, 1)[0]
+END_MARKER = "-- END PDF Vault P0"
+BEFORE_P0, _, P0_AND_LATER = FULL_SCHEMA.partition(MARKER)
+# Remove only P0; independently appended modules must remain in the baseline.
+BASE_SCHEMA = BEFORE_P0 + P0_AND_LATER.partition(END_MARKER)[2]
 NOW = 1_791_353_600_000
 DOI = "10.5555/vault-test"
 OTHER_DOI = "10.5555/another-document"
@@ -99,7 +102,9 @@ class PdfVaultSchemaTests(unittest.TestCase):
         return self.db.execute(CONSUME, params).rowcount
 
     def test_isolated_migration_matches_full_schema_and_is_idempotent(self):
-        self.assertIn(MARKER, FULL_SCHEMA)
+        self.assertEqual(FULL_SCHEMA.count(MARKER), 1)
+        self.assertEqual(FULL_SCHEMA.count(END_MARKER), 1)
+        self.assertLess(FULL_SCHEMA.index(MARKER), FULL_SCHEMA.index(END_MARKER))
         other = sqlite3.connect(":memory:")
         self.addCleanup(other.close)
         other.executescript(BASE_SCHEMA)

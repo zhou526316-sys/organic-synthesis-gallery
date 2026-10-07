@@ -59,12 +59,17 @@ async function seedSession(page: import('@playwright/test').Page, state?: object
 
 async function stubCommonApi(page: import('@playwright/test').Page) {
   const origins = new Set(['https://api.gczhouwld.com', 'https://organic-synthesis-gallery.zhou526316.workers.dev']);
-  const paths = new Set(['/api/user-ui/integrations', '/api/user-ui/auth/session', '/api/user-ui/pageview']);
+  const paths = new Set(['/api/user-ui/integrations', '/api/user-ui/auth/session', '/api/user-ui/pageview', '/api/user-ui/pdf-vault/queue']);
   // The built app also starts authentication and analytics. Keep those requests
   // inside the fixture so page-error assertions test sync, not external CORS.
   await page.route(url => origins.has(url.origin) && paths.has(url.pathname), route => {
     const path = new URL(route.request().url()).pathname;
-    const body = path === '/api/user-ui/auth/session'
+    const queueDois = new URL(route.request().url()).searchParams.getAll('doi');
+    const body = path === '/api/user-ui/pdf-vault/queue'
+      ? queueDois.length === 1
+        ? { userId: 'account-sync-test-user', item: null }
+        : { userId: 'account-sync-test-user', items: [], nextAfter: null, hasMore: false }
+      : path === '/api/user-ui/auth/session'
       ? { authenticated: true, user: { id: 'account-sync-test-user', displayName: 'Account sync test', capabilities: [] } }
       : path === '/api/user-ui/pageview'
         ? { ok: true }

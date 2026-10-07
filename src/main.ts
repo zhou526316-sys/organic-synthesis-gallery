@@ -2,6 +2,7 @@ import { api } from './platform-api';
 import { chineseTitle, validChineseTitle } from '../shared/chinese-title-overrides.js';
 import './styles.css';
 import './pdf-vault/card-entry.css';
+import { refreshPdfVaultCards } from './pdf-vault/cards.mjs';
 import { mountUserShell } from './user-shell';
 import { beijingDate, earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
@@ -774,6 +775,7 @@ function renderCards(): void {
       : '';
     return `<article class='card${editionClass}' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(paper.date)}' data-doi='${escapeHtml(doi || '')}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'>${editionBadge}<span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div><div class='card-actions'><button class='share-card' type='button' data-card-share ${doi ? '' : 'disabled'} aria-label='${escapeHtml(`${t('share')}: ${visibleTitle(paper)}`)}'>${escapeHtml(t('share'))}</button>${localPdfButton}${pdfButton}${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></div></article>`;
   }).join('') : `<div class='empty'>${escapeHtml(t('noResults'))}</div>`;
+  refreshPdfVaultCards(gallery, language);
   restoreMedia();
   scheduleMediaBatch(0);
   if (activeEdition && !editionAutoScrolled) {

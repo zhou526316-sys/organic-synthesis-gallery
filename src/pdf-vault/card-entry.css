@@ -19,3 +19,6 @@
   outline: 2px solid #285d4c;
   outline-offset: 3px;
 }
+.local-pdf-button[data-pdf-vault-state='local'] { color: #236c50; border-color: #a8d5bc; background: #eef8f2; }
+.local-pdf-button[data-pdf-vault-state='queue'] { color: #8b641c; border-color: #e7d0a5; background: #fff9ec; }
+.local-pdf-button[data-pdf-vault-state='check'] { color: #65557d; }

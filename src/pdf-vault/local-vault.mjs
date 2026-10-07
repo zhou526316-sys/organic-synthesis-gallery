@@ -1,9 +1,33 @@
-import { normalizeDoi, toCopyManifest, toDocumentManifest, PDF_VERSION_KINDS } from '../../shared/pdf-vault-v1.mjs';
+import { normalizeDoi, toCopyManifest, toDocumentManifest, PDF_VERSION_KINDS, PDF_PROBE_MAX_AGE_MS } from '../../shared/pdf-vault-v1.mjs';
 
 export const PDF_VAULT_LOCAL_DB = 'gallery-pdf-vault-local-v1';
 export const PDF_VAULT_MAX_BYTES = 50 * 1024 * 1024;
+export const PDF_VAULT_LOCAL_CHANGE_KEY = 'gallery-pdf-vault-local-change-v1';
+export const PDF_VAULT_LOCAL_DENY_BEFORE_KEY = 'gallery-pdf-vault-local-deny-before-v1';
+export const PDF_VAULT_CARD_DOI_LIMIT = 50;
 const TOKEN = /^[A-Za-z0-9_-]{1,128}$/;
 const ROOT_FOLDER = 'Gallery PDF Vault';
+
+/** A device-local, short-lived receipt. This never constructs a read grant or
+ * accepts last_verified_at as a substitute for actually reading the file. */
+export function selectLocalPdfProbe(copy, candidates, { userId, deviceId, now = Date.now(), denyBefore = 0 } = {}) {
+  try { toCopyManifest(copy); } catch { return null; }
+  if (copy.user_id !== userId || copy.device_id !== deviceId || !['local_folder', 'opfs'].includes(copy.storage_kind) ||
+      ['deleted', 'revoked'].includes(copy.state) || !Number.isSafeInteger(now) || now < 0) return null;
+  const valid = (Array.isArray(candidates) ? candidates : []).filter(probe => probe &&
+    probe.user_id === userId && probe.device_id === deviceId && probe.copy_id === copy.id &&
+    normalizeDoi(probe.doi) === copy.doi && probe.content_hash === copy.content_hash &&
+    Number.isSafeInteger(probe.checked_at) && probe.checked_at >= 0 && probe.checked_at <= now &&
+    now - probe.checked_at <= PDF_PROBE_MAX_AGE_MS &&
+    ['readable', 'missing', 'permission_required', 'unavailable'].includes(probe.status));
+  valid.sort((a, b) => b.checked_at - a.checked_at || Number(a.status === 'readable') - Number(b.status === 'readable'));
+  const probe = valid[0];
+  if (!probe || (probe.status === 'readable' && (copy.state !== 'available' || (denyBefore > 0 && probe.checked_at <= denyBefore)))) return null;
+  return {
+    user_id: userId, doi: copy.doi, copy_id: copy.id, content_hash: copy.content_hash,
+    device_id: deviceId, status: probe.status, checked_at: probe.checked_at,
+  };
+}
 
 export class LocalPdfVaultError extends Error {
   constructor(code, message = code, extra = {}) {
@@ -40,6 +64,7 @@ export function createLocalPdfVault(options = {}) {
   const crypto = options.crypto ?? globalThis.crypto;
   const nav = options.navigator ?? globalThis.navigator;
   const picker = options.showDirectoryPicker ?? globalThis.showDirectoryPicker?.bind(globalThis);
+  const eventTarget = options.eventTarget ?? globalThis.window;
   let closed = false;
   let dbPromise;
   let connection;
@@ -47,6 +72,45 @@ export function createLocalPdfVault(options = {}) {
   const transactions = new Set();
   const copiesCache = new Map();
   const probes = new Map();
+  let denyBefore = 0;
+  let positiveProbesDisabled = false;
+
+  function localStorage() {
+    try { return Object.hasOwn(options, 'localStorage') ? options.localStorage : globalThis.localStorage; }
+    catch { return null; }
+  }
+  function probeDenyBefore() {
+    if (positiveProbesDisabled) return Infinity;
+    try {
+      const stored = Number(localStorage()?.getItem(PDF_VAULT_LOCAL_DENY_BEFORE_KEY));
+      if (Number.isSafeInteger(stored) && stored >= 0 && stored <= Date.now()) denyBefore = Math.max(denyBefore, stored);
+    } catch { /* The current controller's denial remains authoritative. */ }
+    return denyBefore;
+  }
+  function publishChange() {
+    check();
+    try { localStorage()?.setItem(PDF_VAULT_LOCAL_CHANGE_KEY, randomId('change_')); } catch { /* Notification only. */ }
+    try { eventTarget?.dispatchEvent(new Event('gallery-pdf-vault-local-changed')); } catch { /* Notification only. */ }
+    check();
+  }
+  function denyUnpersistedReceipt() {
+    const previous = probeDenyBefore();
+    denyBefore = Math.max(Date.now(), Number.isFinite(previous) ? previous : 0);
+    try {
+      const storage = localStorage();
+      if (!storage?.setItem) throw new Error('unavailable');
+      storage.setItem(PDF_VAULT_LOCAL_DENY_BEFORE_KEY, String(denyBefore));
+      if (storage.getItem(PDF_VAULT_LOCAL_DENY_BEFORE_KEY) !== String(denyBefore)) throw new Error('unavailable');
+    } catch { positiveProbesDisabled = true; }
+    // A failure fence only withdraws old positive hints. A later actual probe
+    // is required for a new positive hint; the signal itself grants nothing.
+    publishChange();
+  }
+  function currentProbe(copy) {
+    return selectLocalPdfProbe(copy, [copy.local_probe, probes.get(copy.id)], {
+      userId, deviceId, denyBefore: probeDenyBefore(),
+    });
+  }
 
   function check() {
     if (closed) throw new LocalPdfVaultError('account_changed');
@@ -280,9 +344,8 @@ export function createLocalPdfVault(options = {}) {
     const probe = {
       user_id: userId, doi: copy.doi, copy_id: copy.id,
       content_hash: copy.content_hash, device_id: deviceId,
-      status, checked_at: now(copy.last_verified_at ?? 0),
+      status, checked_at: Date.now(),
     };
-    probes.set(copy.id, probe);
     return probe;
   }
 
@@ -341,7 +404,8 @@ export function createLocalPdfVault(options = {}) {
         state: 'available', acquired_at: timestamp, last_verified_at: timestamp,
         created_at: timestamp, updated_at: timestamp,
       });
-      const local = { ...copy, file_name: name, directory_handle: folder };
+      const probe = receipt(copy, 'readable');
+      const local = { ...copy, file_name: name, directory_handle: folder, local_probe: probe, local_revision: 1 };
       const document = await boundary(transact(['documents', 'copies'], 'readwrite', (tx, result, guarded) => {
         const documents = tx.objectStore('documents');
         const request = documents.get([userId, doi]);
@@ -362,7 +426,46 @@ export function createLocalPdfVault(options = {}) {
       if (retained.content_hash !== copy.content_hash || !retained.directory_handle) {
         throw new LocalPdfVaultError('persistence_failed');
       }
-      return { copy: toCopyManifest(retained), document, probe: receipt(copy, 'readable') };
+      probes.set(id, probe);
+      publishChange();
+      return { copy: toCopyManifest(retained), document, probe: currentProbe(retained) };
+    });
+  }
+
+  /** Home-card metadata query: bounded visible DOI lookups in one read-only
+   * transaction. Never opens a PDF, probes permission, hashes bytes, selects a
+   * directory, initialises an account row or makes a network request. */
+  function describeCards({ dois } = {}) {
+    return operation(async () => {
+      if (!Array.isArray(dois) || dois.length > PDF_VAULT_CARD_DOI_LIMIT) throw new LocalPdfVaultError('invalid_doi_batch');
+      const normalized = dois.map(normalizeDoi);
+      if (normalized.some(doi => !doi || doi.length > 512)) throw new LocalPdfVaultError('invalid_doi');
+      const unique = [...new Set(normalized)];
+      if (!unique.length) return { copies: [], probes: [] };
+      return transact(['copies'], 'readonly', (tx, result, guarded) => {
+        const index = tx.objectStore('copies').index('by_document');
+        const copies = [], receipts = [];
+        let remaining = unique.length;
+        for (const doi of unique) {
+          // Bound pathological repeat imports too. Incomplete metadata must
+          // fail closed, never silently claim that there are no other copies.
+          const request = index.getAll([userId, doi], 65);
+          request.onsuccess = guarded(() => {
+            if (request.result.length > 64) throw new LocalPdfVaultError('card_metadata_limit');
+            for (const value of request.result) {
+              if (value.user_id !== userId || value.device_id !== deviceId || normalizeDoi(value.doi) !== doi) continue;
+              try {
+                const manifest = toCopyManifest(value);
+                copies.push(manifest);
+                const probe = currentProbe(value);
+                if (probe) receipts.push(probe);
+              } catch { /* Malformed rows cannot establish a readable copy. */ }
+            }
+            remaining -= 1;
+            if (!remaining) result({ copies, probes: receipts });
+          });
+        }
+      });
     });
   }
 
@@ -383,7 +486,7 @@ export function createLocalPdfVault(options = {}) {
     });
   }
 
-  async function updateCopy(value, patch) {
+  async function updateCopy(value, patch, probe) {
     return transact(['copies'], 'readwrite', (tx, result, guarded) => {
       const store = tx.objectStore('copies');
       const request = store.get([userId, value.id]);
@@ -391,7 +494,12 @@ export function createLocalPdfVault(options = {}) {
         const old = request.result;
         if (!old || old.device_id !== deviceId || ['deleted', 'revoked'].includes(old.state) ||
             old.content_hash !== value.content_hash) throw new LocalPdfVaultError('copy_not_found');
-        const next = { ...old, ...patch, updated_at: now(old.updated_at) };
+        if ((old.local_revision ?? 0) !== (value.local_revision ?? 0)) {
+          copiesCache.set(old.id, old);
+          throw new LocalPdfVaultError('copy_state_changed');
+        }
+        const next = { ...old, ...patch, updated_at: now(old.updated_at), local_revision: (old.local_revision ?? 0) + 1 };
+        if (probe) next.local_probe = selectLocalPdfProbe(next, [old.local_probe, probe, probes.get(old.id)], { userId, deviceId });
         toCopyManifest(next);
         store.put(next);
         copiesCache.set(next.id, next);
@@ -411,16 +519,34 @@ export function createLocalPdfVault(options = {}) {
         if (inspected.hash !== value.content_hash || inspected.byteLength !== value.byte_length) {
           throw new LocalPdfVaultError('file_changed');
         }
-        const updated = await boundary(updateCopy(value, { state: 'available', last_verified_at: now(value.last_verified_at) }));
-        return { file, copy: toCopyManifest(updated), probe: receipt(updated, 'readable') };
+        const probe = receipt(value, 'readable');
+        const updated = await boundary(updateCopy(value, { state: 'available', last_verified_at: now(value.last_verified_at) }, probe));
+        probes.set(id, updated.local_probe || probe);
+        publishChange();
+        return { file, copy: toCopyManifest(updated), probe: currentProbe(updated) };
       } catch (error) {
         check();
         const mapped = failure(error);
+        if (mapped.code === 'copy_state_changed') {
+          probes.delete(id);
+          publishChange();
+          throw mapped;
+        }
         const missing = ['file_missing', 'file_changed', 'invalid_pdf', 'pdf_too_large'].includes(mapped.code);
         const probe = receipt(value, missing ? 'missing' : mapped.code === 'permission_required' ? 'permission_required' : 'unavailable');
-        if (missing) {
-          try { await boundary(updateCopy(value, { state: 'missing' })); }
-          catch { check(); /* A failed metadata write never creates readability. */ }
+        probes.set(id, probe);
+        try {
+          const updated = await boundary(updateCopy(value, missing ? { state: 'missing' } : {}, probe));
+          probes.set(id, updated.local_probe || probe);
+          publishChange();
+        } catch (persistError) {
+          check();
+          if (persistError?.code === 'copy_state_changed') {
+            // Another transaction recorded a newer observation after this
+            // operation started. Preserve that record instead of overwriting it.
+            probes.delete(id);
+            publishChange();
+          } else denyUnpersistedReceipt();
         }
         mapped.probe = probe;
         throw mapped;
@@ -430,18 +556,20 @@ export function createLocalPdfVault(options = {}) {
 
   function restorePermission(id) {
     return operation(async () => {
-      let value;
-      if (id) value = copiesCache.get(id) || await boundary(readCopy(id));
-      else value = destinationCache || (await boundary(account())).destination;
-      const handle = value?.directory_handle;
-      const kind = value?.storage_kind || value?.kind;
-      if (!handle) throw new LocalPdfVaultError('destination_required');
-      if (kind === 'opfs') return { granted: true };
-      if (typeof handle.requestPermission !== 'function') throw new LocalPdfVaultError('permission_required');
-      const state = await boundary(handle.requestPermission({ mode: 'readwrite' }));
-      if (state !== 'granted') throw new LocalPdfVaultError('permission_required');
-      // A permission grant is not a file-readability probe. openPdf rechecks bytes.
-      return { granted: true };
+      try {
+        let value;
+        if (id) value = copiesCache.get(id) || await boundary(readCopy(id));
+        else value = destinationCache || (await boundary(account())).destination;
+        const handle = value?.directory_handle;
+        const kind = value?.storage_kind || value?.kind;
+        if (!handle) throw new LocalPdfVaultError('destination_required');
+        if (kind === 'opfs') return { granted: true };
+        if (typeof handle.requestPermission !== 'function') throw new LocalPdfVaultError('permission_required');
+        const state = await boundary(handle.requestPermission({ mode: 'readwrite' }));
+        if (state !== 'granted') throw new LocalPdfVaultError('permission_required');
+        // A permission grant is not a file-readability probe. openPdf rechecks bytes.
+        return { granted: true };
+      } finally { publishChange(); }
     });
   }
 
@@ -449,7 +577,10 @@ export function createLocalPdfVault(options = {}) {
     return operation(async () => {
       const destination = await boundary(getDestination());
       const copies = await boundary(listCopies(filter));
-      return { destination, copies, probes: copies.flatMap(copy => probes.has(copy.id) ? [probes.get(copy.id)] : []) };
+      return { destination, copies, probes: copies.flatMap(copy => {
+        const probe = currentProbe(copiesCache.get(copy.id) || copy);
+        return probe ? [probe] : [];
+      }) };
     });
   }
 
@@ -469,7 +600,7 @@ export function createLocalPdfVault(options = {}) {
       indexedDB: typeof idb?.open === 'function', crypto: Boolean(crypto?.subtle?.digest && crypto?.getRandomValues),
       maxBytes: PDF_VAULT_MAX_BYTES,
     }),
-    selectDirectory, useOpfs, getDestination, importPdf, listCopies, describe,
+    selectDirectory, useOpfs, getDestination, importPdf, listCopies, describe, describeCards,
     openPdf, exportFile: openPdf, restorePermission, close,
   });
 }

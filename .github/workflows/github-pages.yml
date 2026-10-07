@@ -349,7 +349,7 @@ jobs:
           PDF_VAULT_BASE_URL: http://127.0.0.1:4174
           PDF_VAULT_BROWSER_OUTPUT: ${{ runner.temp }}/gallery-local-pdf-test-results
         run: |
-          node --test scripts/test-pdf-vault-v1.mjs scripts/test-pdf-vault-device.mjs scripts/test-pdf-vault-local.mjs
+          node --test scripts/test-pdf-vault-v1.mjs scripts/test-pdf-vault-device.mjs scripts/test-pdf-vault-local.mjs scripts/test-pdf-vault-queue-client.mjs cloudflare/worker/scripts/test-pdf-vault-queue.mjs
           node tests/pdf-vault-local-browser.mjs
       - name: Preserve local PDF browser verification
         if: always()

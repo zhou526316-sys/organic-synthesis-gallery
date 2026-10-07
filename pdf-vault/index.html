@@ -30,6 +30,16 @@
 
       <p class="global-status" data-testid="pdf-vault-status" data-status="idle" role="status" aria-live="polite"></p>
 
+      <section id="pdf-queue-panel" class="panel queue-panel" aria-labelledby="queue-heading" hidden>
+        <div class="library-heading"><div><p class="eyebrow">手机标记，电脑继续</p><h2 id="queue-heading">待电脑获取</h2></div><button type="button" class="quiet-button" data-testid="pdf-vault-queue-refresh">刷新队列</button></div>
+        <p class="list-help">将 DOI 加入账户队列。在电脑登录同一账号、取得出版社访问权限后，下载并导入 PDF。队列只同步 DOI 和任务状态。</p>
+        <div class="queue-add-form"><label class="field"><span>待获取的文献 DOI</span><input type="text" data-testid="pdf-vault-queue-doi" placeholder="例如 10.1021/jacs.6c01234" maxlength="512" autocomplete="off" spellcheck="false" inputmode="url" /></label><button type="button" data-testid="pdf-vault-queue-add">加入待电脑获取</button></div>
+        <p class="queue-status" data-testid="pdf-vault-queue-status" data-status="idle" role="status" aria-live="polite"></p>
+        <div class="queue-list" data-testid="pdf-vault-queue-list"></div>
+        <button type="button" class="secondary more-button" data-testid="pdf-vault-queue-more" hidden>显示更多待获取文献</button>
+        <p class="storage-help">“标为已处理”只会更新任务，不会把 PDF 上传，也不表示另一台设备已经可以打开文件。</p>
+      </section>
+
       <div id="vault-workspace" hidden>
         <section class="panel storage-panel" aria-labelledby="storage-heading">
           <div class="section-heading"><span class="step">01</span><div><h2 id="storage-heading">选择保存位置</h2><p>PDF 文件和本地路径不会上传。账号验证需要联网。</p></div></div>

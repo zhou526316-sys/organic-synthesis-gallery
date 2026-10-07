@@ -1,6 +1,7 @@
 import { createLocalPdfVault, LocalPdfVaultError } from './local-vault.mjs';
 import { getPdfVaultDeviceIdentity } from '../../shared/pdf-vault-device.mjs';
 import { normalizeDoi, resolvePdfCardState, PDF_PROBE_MAX_AGE_MS } from '../../shared/pdf-vault-v1.mjs';
+import { mountPdfQueuePanel } from './queue-panel.mjs';
 
 const SESSION_KEY = 'organic-gallery-session-v1';
 const SESSION_PATH = '/api/user-ui/auth/session';
@@ -30,6 +31,7 @@ let reader = null;
 let visibleCopies = 30;
 let lastVerified = 0;
 let probeExpiryTimer = null;
+let queuePanel = null;
 let snapshot = { destination: null, copies: [], probes: [] };
 const downloadUrls = new Set();
 
@@ -63,6 +65,8 @@ function clearDownloads() {
 
 function revokeCurrent() {
   generation += 1;
+  queuePanel?.close();
+  queuePanel = null;
   authController?.abort();
   authController = null;
   active?.abortController.abort();
@@ -349,6 +353,20 @@ async function verifySession() {
       $('#sign-in-link').hidden = false;
       return;
     }
+    queuePanel = mountPdfQueuePanel({
+      userId: user.id, token, initialDoi: doiInput.value,
+      assertCurrent: () => {
+        if (checkGeneration !== generation || token !== sessionToken()) throw new LocalPdfVaultError('account_changed');
+        return true;
+      },
+      onImport: doi => {
+        doiInput.value = doi;
+        setControlState();
+        if (workspace.hidden) { showStatus('此设备的本地存储暂不可用。请在支持的电脑浏览器中导入 PDF。', 'error'); return; }
+        doiInput.focus();
+        $('#import-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      },
+    });
     const identity = getPdfVaultDeviceIdentity();
     if (!identity.device_id || identity.persistence !== 'persistent') {
       throw new LocalPdfVaultError('persistence_failed');
@@ -359,7 +377,7 @@ async function verifySession() {
     context.capabilities = context.vault.capabilities();
     if (!context.capabilities.indexedDB || !context.capabilities.crypto) throw new LocalPdfVaultError('storage_unavailable');
     accountLabel.textContent = `${user.displayName || user.email || 'Gallery 用户'} · 账号已验证`;
-    $('#account-help').textContent = '只显示此账号在当前浏览器保存的文献。切换账号后会重新验证。';
+    $('#account-help').textContent = '本地 PDF 保存在此设备；待电脑获取队列同步到同一账号。切换账号后会重新验证。';
     $('#directory-support').textContent = context.capabilities.directoryPicker ? '' : '此浏览器暂不支持选择真实目录，可明确选择浏览器内存储。';
     $('#opfs-support').textContent = context.capabilities.opfs ? '' : '此浏览器不支持浏览器内文件存储。';
     $('#file-limit').textContent = `每次导入一份 PDF，最大 ${Math.floor(context.capabilities.maxBytes / 1024 / 1024)} MB。`;
@@ -377,8 +395,8 @@ async function verifySession() {
     list.replaceChildren();
     workspace.hidden = true;
     document.documentElement.dataset.pdfVaultAuth = 'error';
-    accountLabel.textContent = '暂时无法打开本地文献库';
-    $('#account-help').textContent = '已有磁盘文件不受影响，请检查网络或浏览器设置后重试。';
+    accountLabel.textContent = queuePanel ? '账号已验证 · 本地存储暂不可用' : '暂时无法打开本地文献库';
+    $('#account-help').textContent = queuePanel ? '仍可使用待电脑获取队列。已有磁盘文件不受影响，请在支持的浏览器中导入和阅读。' : '已有磁盘文件不受影响，请检查网络或浏览器设置后重试。';
     showStatus(error instanceof LocalPdfVaultError ? errorMessage(error) : '账号验证未完成。请检查网络后点击“重新验证账号”。', 'error');
   } finally {
     clearTimeout(timeout);
@@ -397,7 +415,7 @@ byTestId('directory').addEventListener('click', () => void action('请选择文�
 byTestId('opfs').addEventListener('click', () => void action('正在准备浏览器内存储…', context => context.vault.useOpfs(), '已选择浏览器内存储。清除网站数据可能丢失文件，请及时导出备份。'));
 byTestId('restore').addEventListener('click', () => void action('正在恢复文件夹权限…', context => context.vault.restorePermission(), '权限已恢复。打开文献时仍会重新检查文件。'));
 byTestId('refresh').addEventListener('click', () => void action('正在刷新文献记录…', async () => {}, '文献列表已刷新。'));
-doiInput.addEventListener('input', setControlState);
+doiInput.addEventListener('input', () => { setControlState(); queuePanel?.setDoi(doiInput.value); });
 fileInput.addEventListener('change', setControlState);
 $('#import-form').addEventListener('submit', event => {
   event.preventDefault();
