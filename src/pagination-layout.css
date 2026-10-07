@@ -85,7 +85,14 @@
   }
 }
 @media (max-width: 680px) {
-  #resultWindowControls { padding-inline: 0; gap: 12px; }
+  #resultWindowControls {
+    padding-inline: 0;
+    gap: 12px;
+    /* Leave the normal fixed feedback/navigation tools below the pager at
+       the end of the document. Do not hide tools or alter saved positions. */
+    margin-bottom: calc(148px + env(safe-area-inset-bottom, 0px));
+    scroll-margin-block-end: calc(148px + env(safe-area-inset-bottom, 0px));
+  }
   #resultWindowControls .result-page-numbers { gap: 4px; }
   #resultWindowControls .result-page-number { min-width: 44px; min-height: 44px; padding: 0 6px; }
   #resultWindowControls .result-page-ellipsis { flex-basis: 12px; width: 12px; }

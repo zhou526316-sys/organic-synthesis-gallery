@@ -79,6 +79,30 @@ for (const width of [320, 390, 680, 681, 1280]) {
         await page.locator('[data-result-page="1"]').click();
         await expect(page.locator('#gallery > .card').first()).toHaveAttribute('data-doi', firstDoi || '');
         await expect(page.locator('#resultPageJumpInput')).toHaveValue('1');
+        if (width <= 680) {
+          // Keep the real launchers visible: hiding widgets in a test would
+          // conceal the production overlap rather than verify the fix.
+          await expect(page.locator('gallery-page-navigation')).toBeVisible();
+          await expect(page.locator('site-feedback-widget .site-feedback-tab')).toBeVisible();
+          await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+          await expect.poll(() => controls.evaluate(element => {
+            const bounds = element.getBoundingClientRect();
+            if (bounds.top < 0 || bounds.bottom > innerHeight + 1) return ['pager-outside-viewport'];
+            const obstacles = [document.querySelector('gallery-page-navigation'), document.querySelector('site-feedback-widget .site-feedback-tab')]
+              .filter((node): node is Element => Boolean(node)).map(node => node.getBoundingClientRect());
+            return [...element.querySelectorAll<HTMLElement>('button,input')].filter(node => {
+              const box = node.getBoundingClientRect();
+              return obstacles.some(other => Math.min(box.right, other.right) > Math.max(box.left, other.left)
+                && Math.min(box.bottom, other.bottom) > Math.max(box.top, other.top));
+            }).map(node => node.id || node.dataset.resultPage || 'occluded-control');
+          })).toEqual([]);
+        }
+        // The numeric last-page button must work too, not merely the jump form.
+        await page.locator(`[data-result-page="${last}"]`).click();
+        await expect(page.locator('#resultPageNumbers [aria-current="page"]')).toHaveText(String(last));
+        await expect(page.locator('#nextResultPage')).toBeDisabled();
+        await page.locator('[data-result-page="1"]').click();
+        await expect(page.locator('#resultPageJumpInput')).toHaveValue('1');
         await controls.scrollIntoViewIfNeeded();
         await controls.screenshot({ path: info.outputPath(`pagination-${width}-${language}.png`) });
         expect(errors).toEqual([]);
