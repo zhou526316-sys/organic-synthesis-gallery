@@ -2,10 +2,10 @@ name: Capture queue coverage regression
 on:
   push:
     branches: [fix/tm-queue-coverage-20261003, main]
-    paths: [public/toc-mainline.user.js, scripts/apply-tm-queue-coverage.py, scripts/tm-queue-coverage.inc.js, scripts/finalize-tm-queue-priority.mjs, tests/tm-queue-coverage.test.mjs, tests/tm-queue-coverage-browser.mjs, .github/workflows/tm-queue-coverage.yml]
+    paths: [public/toc-mainline.user.js, scripts/apply-tm-queue-coverage.py, scripts/tm-queue-coverage.inc.js, scripts/finalize-tm-queue-priority.mjs, tests/tm-queue-coverage.test.mjs, tests/tm-queue-coverage-browser.mjs, tests/tm-missing-only-browser.mjs, .github/workflows/tm-queue-coverage.yml]
   pull_request:
     branches: [main]
-    paths: [public/toc-mainline.user.js, scripts/finalize-tm-queue-priority.mjs, tests/tm-queue-coverage.test.mjs, tests/tm-queue-coverage-browser.mjs, .github/workflows/tm-queue-coverage.yml]
+    paths: [public/toc-mainline.user.js, scripts/finalize-tm-queue-priority.mjs, tests/tm-queue-coverage.test.mjs, tests/tm-queue-coverage-browser.mjs, tests/tm-missing-only-browser.mjs, .github/workflows/tm-queue-coverage.yml]
 permissions:
   contents: read
 concurrency:
