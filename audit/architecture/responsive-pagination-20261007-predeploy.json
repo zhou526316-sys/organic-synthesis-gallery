@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "beijingTime": "2026-10-07 12:17:42 +08:00",
+  "sourceParent": "e6b5269b660c3ba257413bc55922ec4d87d26cd9",
+  "status": "local_verified_publication_pending",
+  "userDirection": {
+    "latestAt": "2026-10-07T12:10:24+08:00",
+    "desktopPerPage": 24,
+    "mobilePerPage": 12,
+    "mobileMaxWidthPx": 680,
+    "pagination": "paper-count",
+    "onlineDatePageProposal": "withdrawn_before_frontend_publication"
+  },
+  "sourceChanges": [
+    {
+      "path": "src/main.ts",
+      "originalSha": "a366640d56fd838dce783e6d4e94be501f339e54",
+      "sha256": "a037239633dc8cefaf53a9bcdafb7a6bc037e0c4f4063bc76afbdfd5fa75cfd5"
+    },
+    {
+      "path": "shared/result-window.js",
+      "originalSha": "8e8cae5ec582aa28f10be74a06f4856294a9b1a5",
+      "sha256": "e2625916d32c4c41bd456591988c4a928f198514686a7619477cbfbb375bedb9"
+    },
+    {
+      "path": "scripts/test-result-window.mjs",
+      "originalSha": "d13ba594583a322a3c42fe4029a4f0d92d985ebb",
+      "sha256": "8c843e5138202fd33852e6fab080a299cf36d4bba3e371cddaace26980e55df1"
+    },
+    {
+      "path": "tests/architecture-frontend.spec.ts",
+      "originalSha": "1ed07a444cbe615b471d1bfae096802a11ff7152",
+      "sha256": "a4a378c49786bf9769ccd4183a2039721615c49042995dccff1e50dd08d96d21"
+    }
+  ],
+  "cancelledFilesExcluded": true,
+  "restoredFiles": [
+    {
+      "path": "src/styles.css",
+      "expectedSha": "32cb524e8c366e455dd7fa26717e39a9c36b698d",
+      "actualSha": "32cb524e8c366e455dd7fa26717e39a9c36b698d",
+      "matchesMain": true
+    },
+    {
+      "path": "src/user-ui/search-controller.ts",
+      "expectedSha": "5170dc1b628e238eec82820d536fb4141e802a63",
+      "actualSha": "5170dc1b628e238eec82820d536fb4141e802a63",
+      "matchesMain": true
+    },
+    {
+      "path": "src/literature-catalog-view.ts",
+      "expectedSha": "a2f0f29fa80be151aa306eb0216b2620cede3df4",
+      "actualSha": "a2f0f29fa80be151aa306eb0216b2620cede3df4",
+      "matchesMain": true
+    },
+    {
+      "path": "architecture/published-reader.mjs",
+      "expectedSha": "658dfb2bf0cda2294defc1165e49196be1671b03",
+      "actualSha": "658dfb2bf0cda2294defc1165e49196be1671b03",
+      "matchesMain": true
+    },
+    {
+      "path": "architecture/tests/published-reader.test.mjs",
+      "expectedSha": "e7c2950626b78379dcdf2bc1c8a2e3579e851438",
+      "actualSha": "e7c2950626b78379dcdf2bc1c8a2e3579e851438",
+      "matchesMain": true
+    },
+    {
+      "path": "architecture/browser-acceptance.mjs",
+      "expectedSha": "955b162bf86a597f72784e882bff0fca908a8c68",
+      "actualSha": "955b162bf86a597f72784e882bff0fca908a8c68",
+      "matchesMain": true
+    }
+  ],
+  "tests": {
+    "node": {
+      "pass": 17,
+      "fail": 0
+    },
+    "typescriptSyntax": "pass",
+    "workflowYamlAndBash": "pass",
+    "browser": "canonical pre-publication WebKit gate"
+  },
+  "related": {
+    "legacyPagesCommit": "c8f50fbccd36d576954aa5653f4c2570a45f37a2",
+    "legacyPagesAuthorityRun": 37569174371,
+    "backendCommit": "1c2ab3ffbcc621c2abe8ed486fcd014d8b86e9f9",
+    "backendDeployRun": 37569892275,
+    "backendDeployConclusion": "success",
+    "backendCanaryMode": "pending-generation-safe-fallback",
+    "backendExactDayChecked": false,
+    "indexMaintenanceStaleReadStateGuard": "identified; separate corrective checkpoint in progress"
+  }
+}

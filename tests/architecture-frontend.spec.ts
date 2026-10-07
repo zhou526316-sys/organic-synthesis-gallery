@@ -1,7 +1,7 @@
 import { test, expect, devices } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
-import { RESULT_WINDOW_SIZE } from '../shared/result-window.js';
+import { RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE } from '../shared/result-window.js';
 
 test.use({
   browserName: 'webkit',
@@ -591,4 +591,100 @@ test('historical date filter loads matching Archive month on demand', async ({ p
   await expect.poll(async () => page.locator(`#gallery > .card[data-doi="${data.archiveDoi}"]:not([hidden])`).count(), { timeout: 30000 })
     .toBe(1);
   await expect(page.locator('#resultScopeLabel')).toHaveText(/当前筛选|Current filter/);
+});
+
+
+async function observeResponsiveBrowser(
+  page: import('@playwright/test').Page,
+  info: import('@playwright/test').TestInfo,
+  exercise: () => Promise<void>,
+): Promise<void> {
+  const evidence = { pageErrors: [] as string[], consoleErrors: [] as string[], failedRequests: [] as unknown[], apiResponses: [] as unknown[] };
+  page.on('pageerror', error => evidence.pageErrors.push(error.message));
+  page.on('console', message => { if (message.type() === 'error') evidence.consoleErrors.push(message.text()); });
+  page.on('requestfailed', request => evidence.failedRequests.push({ url: request.url(), error: request.failure()?.errorText }));
+  page.on('response', response => { if (response.url().includes('/api/')) evidence.apiResponses.push({ url: response.url(), status: response.status() }); });
+  try {
+    await exercise();
+    expect(evidence.pageErrors, 'uncaught browser errors').toEqual([]);
+  } finally {
+    await info.attach('responsive-pagination-browser-evidence', { body: JSON.stringify(evidence, null, 2), contentType: 'application/json' });
+  }
+}
+
+test('mobile shows 12 papers per page and keeps next/previous pagination complete', async ({ page }, info) => {
+  await observeResponsiveBrowser(page, info, async () => {
+    const data = fixture();
+    expect(data.hotCount).toBeGreaterThan(MOBILE_RESULT_WINDOW_SIZE);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await stubOptionalApi(page);
+    await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 }).toBe('architecture-v1');
+    await expect(page.locator('#gallery > .card')).toHaveCount(MOBILE_RESULT_WINDOW_SIZE);
+    await expect(page.locator('#resultCount')).toHaveText(String(data.hotCount));
+    await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )1\//);
+    const first = await page.locator('#gallery > .card').first().getAttribute('data-doi');
+    const firstDois = await page.locator('#gallery > .card').evaluateAll(cards => cards.map(card => card.getAttribute('data-doi')));
+    await page.locator('#nextResultPage').scrollIntoViewIfNeeded();
+    await page.locator('#nextResultPage').click();
+    await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )2\//);
+    await expect(page.locator('#gallery > .card')).toHaveCount(Math.min(MOBILE_RESULT_WINDOW_SIZE, data.hotCount - MOBILE_RESULT_WINDOW_SIZE));
+    const secondDois = await page.locator('#gallery > .card').evaluateAll(cards => cards.map(card => card.getAttribute('data-doi')));
+    expect(secondDois.some(doi => firstDois.includes(doi))).toBe(false);
+    await page.locator('#previousResultPage').scrollIntoViewIfNeeded();
+    await page.locator('#previousResultPage').click();
+    await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )1\//);
+    await expect(page.locator('#gallery > .card')).toHaveCount(MOBILE_RESULT_WINDOW_SIZE);
+    await expect(page.locator('#gallery > .card').first()).toHaveAttribute('data-doi', first || '');
+  });
+});
+
+test('the existing 680px breakpoint switches between mobile 12 and desktop 24', async ({ page }, info) => {
+  await observeResponsiveBrowser(page, info, async () => {
+    const data = fixture();
+    await page.setViewportSize({ width: 680, height: 900 });
+    await stubOptionalApi(page);
+    await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('#gallery > .card')).toHaveCount(Math.min(data.hotCount, MOBILE_RESULT_WINDOW_SIZE));
+    await page.setViewportSize({ width: 681, height: 900 });
+    await expect(page.locator('#gallery > .card')).toHaveCount(Math.min(data.hotCount, RESULT_WINDOW_SIZE));
+    await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )1\//);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(page.locator('#gallery > .card')).toHaveCount(Math.min(data.hotCount, MOBILE_RESULT_WINDOW_SIZE));
+    await expect(page.locator('#resultCount')).toHaveText(String(data.hotCount));
+  });
+});
+
+test('mobile D1 catalog search sends limit 12 and keeps its cursor when moving forward', async ({ page }, info) => {
+  await observeResponsiveBrowser(page, info, async () => {
+    const data = fixture(), requests: any[] = [];
+    await page.setViewportSize({ width: 390, height: 844 });
+    await stubOptionalApi(page);
+    await page.route('**/api/_healthcheck', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+      literatureCatalogIndexShadowEnabled: true, literatureCatalogIndexReadEnabled: true,
+      literatureCatalogIndexReadPathConfigured: true, literatureCatalogIndexReadPathActive: true, literatureCatalogIndexDb: true,
+    }) }));
+    await page.route('**/api/literature/catalog-view', async route => {
+      const body = route.request().postDataJSON(); requests.push(body);
+      expect(body.catalogId).toBe(data.catalogId);
+      expect(body.limit).toBe(MOBILE_RESULT_WINDOW_SIZE);
+      const offset = body.cursor ? Number(String(body.cursor).replace(/^mobile:/, '')) : 0;
+      const items = data.indexedItems.slice(offset, offset + MOBILE_RESULT_WINDOW_SIZE);
+      const next = offset + items.length, hasMore = next < data.memberCount;
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+        version: 1, schemaVersion: 'literature-catalog-index-v1', enabled: true, readPathActive: true,
+        catalogId: data.catalogId, matched: data.memberCount, count: items.length, limit: MOBILE_RESULT_WINDOW_SIZE,
+        hasMore, nextCursor: hasMore ? `mobile:${next}` : null, sort: 'newest', items,
+      }) });
+    });
+    await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+    await page.locator('#search').fill('10.');
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''), { timeout: 30000 }).toBe('d1-index');
+    await expect(page.locator('#gallery > .card')).toHaveCount(MOBILE_RESULT_WINDOW_SIZE);
+    await page.locator('#nextResultPage').scrollIntoViewIfNeeded();
+    await page.locator('#nextResultPage').click();
+    await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )2\//);
+    await expect(page.locator('#gallery > .card')).toHaveCount(MOBILE_RESULT_WINDOW_SIZE);
+    expect(requests.at(-1).cursor).toBe(`mobile:${MOBILE_RESULT_WINDOW_SIZE}`);
+  });
 });

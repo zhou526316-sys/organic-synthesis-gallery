@@ -32,6 +32,13 @@ jobs:
       - name: Type-check frontend
         run: npx tsc --noEmit
 
+      - name: Test responsive result pagination and verified reader
+        timeout-minutes: 2
+        run: |
+          test -s scripts/test-result-window.mjs
+          test -s architecture/tests/published-reader.test.mjs
+          node --test scripts/test-result-window.mjs architecture/tests/published-reader.test.mjs
+
       - name: Test Tampermonkey architecture membership observer
         run: node --test scripts/test-tm-architecture-membership.mjs
 
@@ -159,7 +166,7 @@ jobs:
 
       - name: Install Playwright WebKit
         run: |
-          npm install --no-save --no-package-lock @playwright/test@1.55.0
+          npm install --no-save --no-package-lock @playwright/test@1.55.1
           npx playwright install --with-deps webkit
 
       - name: Build legacy interaction fixture

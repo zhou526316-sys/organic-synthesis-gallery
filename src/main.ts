@@ -4,7 +4,7 @@ import './styles.css';
 import { mountUserShell } from './user-shell';
 import { beijingDate, earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
-import { resultWindowState } from '../shared/result-window.js';
+import { RESULT_WINDOW_SIZE as DESKTOP_RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE, resultWindowState } from '../shared/result-window.js';
 import { store } from './user-ui/shared';
 import { PublishedCatalogClient, loadPublishedHotFallback } from '../architecture/published-reader.mjs';
 import {
@@ -227,8 +227,6 @@ let architectureEarliestDate = '';
 let latestCollectionDate = '';
 let architectureRefreshTimer: number | null = null;
 let architectureRefreshSerial = 0;
-const DESKTOP_RESULT_WINDOW_SIZE = 24;
-const MOBILE_RESULT_WINDOW_SIZE = 2;
 
 function resultWindowSize(): number {
   return window.matchMedia('(max-width: 680px)').matches
