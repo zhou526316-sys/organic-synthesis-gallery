@@ -289,9 +289,9 @@
     "Source and real readback checks must distinguish actual returned data from our controlled layout illustration; no claim of native-client screenshot verification.",
     "Timeout preflight: bounded known source/actual workflow, narrow status/artifact reads; one terminal same-draft update, no public sending."
   ],
-  "draftReadback": "pending",
+  "draftReadback": "ok",
   "publicSendAuthorized": false,
-  "finalTransportReview": "pending",
+  "finalTransportReview": "pass",
   "priorCompletedRevision": {
     "revision": "2026-10-07-r13",
     "previewUrl": "https://relay.gczhouwld.com/wechat-preview/250a24b78552d06de7b61cc8.html"
@@ -406,5 +406,9 @@
     "visualReview": "pass: original white TOC is large; narrow blue strip closely backs two white lines with about 2px top/bottom clearance at 390px viewport.",
     "nativeClientVerified": false,
     "scope": "Labelled relay cover layout demonstration. Full title stays in actual draft and body; no native client screenshot claim."
-  }
+  },
+  "completedAt": "2026-10-07T07:56:29Z",
+  "actualDraftPreviewUrl": "https://relay.gczhouwld.com/wechat-preview/cc272ec02c6a2e85a9361381.html",
+  "actualDraftQa": "audit/wechat-working/2026-10-07-r14-real-draft-qa.json",
+  "actualDraftQaRunId": "37590259781"
 }
