@@ -688,7 +688,7 @@ jobs:
               const status=await call('/api/admin/site-analytics-snapshot/status');
               console.log(JSON.stringify({siteAnalyticsSnapshotAttempt:attempt,comparison:comparison.body,status:status.body}));
               if(comparison.ok&&comparison.body?.same===true&&comparison.body?.sourceStable===true
-                &&status.ok&&status.body?.shadowEnabled===true&&status.body?.readConfigured===false
+                &&status.ok&&status.body?.shadowEnabled===true&&status.body?.readConfigured===true
                 &&status.body?.exists===true&&status.body?.valid===true&&status.body?.fresh===true){
                 passed={comparison:comparison.body,status:status.body};break;
               }
@@ -698,7 +698,7 @@ jobs:
             report.ok=true;report.snapshotGeneratedAt=passed.status.generatedAt;report.snapshotAgeMs=passed.status.ageMs;
             report.sourceRawMaxEventId=passed.status.sourceRawMaxEventId;report.sourceMaterializedMaxEventId=passed.status.sourceMaterializedMaxEventId;
             report.sourceGlobalPv=passed.status.sourceGlobalPv;report.sourceReaderRows=passed.status.sourceReaderRows;
-            report.same=true;report.sourceStable=true;report.readConfigured=false;report.completedAt=new Date().toISOString();
+            report.same=true;report.sourceStable=true;report.readConfigured=true;report.completedAt=new Date().toISOString();
             save();console.log('SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW '+JSON.stringify(report));
           }catch(error){report.error=String(error?.message||error).slice(0,1200);report.failedAt=new Date().toISOString();save();throw error;}
           NODE

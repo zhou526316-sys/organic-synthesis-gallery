@@ -133,7 +133,7 @@ test('D4c snapshot schema remains installed for the D4d public read cutover',()=
   assert.ok(snapshot.includes('source_reader_rows'));
 });
 
-test('D4c deployment proves stable snapshot parity but leaves public site-stats on D4b',()=>{
+test('D4c deployment proves stable snapshot parity independently of the D4d public route',()=>{
   const block=section(deploy,'- name: Refresh and verify public analytics snapshot shadow','- name: Backfill and verify user library row read path');
   assert.ok(block.includes('continue-on-error: true'));
   assert.ok(block.includes('/api/admin/site-analytics-snapshot/refresh'));
@@ -141,10 +141,10 @@ test('D4c deployment proves stable snapshot parity but leaves public site-stats 
   assert.ok(block.includes('/api/admin/site-analytics-snapshot/status'));
   assert.ok(block.includes("comparison.body?.same===true"));
   assert.ok(block.includes("comparison.body?.sourceStable===true"));
-  assert.ok(block.includes("status.body?.readConfigured===false"));
+  assert.ok(block.includes("status.body?.readConfigured===true"));
   const route=section(index,"if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats')","if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark')");
+  assert.ok(route.includes('readSiteAnalyticsPublicSnapshot(env)'));
   assert.ok(route.includes("readPath: 'materialized'"));
-  assert.ok(!route.includes('readSiteAnalyticsPublicSnapshot'));
 });
 
 test('D4c snapshot public read is bounded to the singleton snapshot row',()=>{
