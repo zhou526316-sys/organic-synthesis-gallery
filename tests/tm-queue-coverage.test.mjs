@@ -40,7 +40,9 @@ await test('40 attempts with27partial11failed2blocked does not report0remaining'
   x.T.coverageRemaining(r,v.job,result);r.summary.results.push(result);
  }
  x.T.coverageStats(r);assert.equal(r.summary.unresolvedCount,40);assert.equal(r.summary.fullyResolved,0);assert.equal(r.summary.blockedCount,40);
- const t=x.T.captureLiveText({coverageRevision:'v6',phase:'blocked_remaining',unresolvedCount:40,pendingMissing:0,blockedCount:40,remainingNeeds:r.summary.remainingNeeds,inventoryErrors:[]});
+ x.store.set(P+'last-run-summary',{...r.summary,queueCoverageRevision:'v6',phase:'blocked_remaining'});
+ const snapshot=x.T.captureLiveSnapshot(x.ctx.Date.now());assert.equal(snapshot.state,'blocked_remaining');
+ const t=x.T.captureLiveText(snapshot);
  assert.match(t.gaps,/未补齐 40/);assert.match(t.state,/未补齐/);
 });
 await test('new valid partial receipt requeues only remaining layer',()=>{
