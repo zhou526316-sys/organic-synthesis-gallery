@@ -1,0 +1,54 @@
+{
+  "revision": "phoenix1-r7-release-r8",
+  "reviewedAt": "2026-10-07T04:50:30.335231+00:00",
+  "scope": "User-selected phoenix1 retrospective only; separate draft, no public sending.",
+  "textReview": "pass",
+  "imageReview": "pass",
+  "reviewer": "AI source-based editorial self-review",
+  "artifacts": {
+    "textOnly": "audit/wechat-working/phoenix1-r7-text-only.md",
+    "imagesOnly": "audit/wechat-working/phoenix1-r7-images-only.json"
+  },
+  "sources": [
+    {"path": "public/wechat-retrospective/phoenix1-bimodal-structural-regeneration.json", "blobSha": "2a87b1bcf99963de6e2dce69eead9eaedf096af5"}
+  ],
+  "assets": [
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/nc01-model.png", "blobSha": "1f4cf0b856c0fdb87b7908fcbece49d8fa97d255"},
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/nc02-design.png", "blobSha": "d12bcecd8d1c1076f0705eccb126256f7d6ffc95"},
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/nc03-spectroscopy.png", "blobSha": "3994f7efcb638ccea83a1edfa991f46962f9f6ba"},
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/nc04-quenching.png", "blobSha": "8e906b9201cfc3ea1fdcdcf38a8218c471badb15"},
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/nc05-cycle.png", "blobSha": "1a56202f6df25f675c208bb3caf15d15709b41eb"},
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/nc06-reversible.png", "blobSha": "a6e6fb4f83b883409de7b7f5d0e48ac474c72bc2"},
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/nc07-kinetics.png", "blobSha": "703097fea4fc397bdbb6c709db469f64328a974c"},
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/nc08-network.png", "blobSha": "feb39075f89d93784968c1effa5de0476cca422b"},
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/nc09-scope.png", "blobSha": "66d710e8def035e3a82078010cc082336ed492db"},
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/nc10-alternative.png", "blobSha": "7a38a47ea3140eb8212a217a3b209d2a1a88cc92"},
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/nc11-ultrafast.png", "blobSha": "d98e70a5b0d747219aa2913be3593514dbe9883e"},
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/nc12-electron-control.png", "blobSha": "a0092753602aa4354e1cde616fde34b7ad59bad3"},
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/nc13-parallel.png", "blobSha": "586dd947eccab40763c64503095863a9e161727d"},
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/nc14-parallel-calculation.png", "blobSha": "ea98e7c8e8a5a797d3019eedbefcb8056d983206"},
+    {"path": "public/wechat-assets/reviewed/phoenix1-r7/phoenix-cover-approved.png", "blobSha": "24285702b9fad360acb3b328713c11e11c86d313"}
+  ],
+  "materializedCropReviewRequired": true,
+  "strictFigurePlacement": true,
+  "draftWriteAllowed": true,
+  "releaseHold": null,
+  "notes": [
+    "Exact R7 manifest and 15 raster assets imported and hash-verified by run 37572937149.",
+    "Full text re-read against supplied main text, SI and peer review; author interpretations remain labelled.",
+    "All 14 body-image sources inspected in four contact sheets; approved source-locked square cover unchanged.",
+    "Current publisher assembly passes all paragraphs/captions and exact image order.",
+    "Local mobile layout mirror of inspected publisher template rendered at 390px; all 14 images loaded, no horizontal overflow. Opening/mechanism/scope screenshots visually inspected.",
+    "This gate authorizes draft creation only. WeChat draft/get readback and transport review are required before final delivery."
+  ],
+  "templateReview": {
+    "sourceRendererBlobSha": "9d42d90cd534cd4bddfb8e224d9d91c8625207cc",
+    "deterministicAssembly": "pass",
+    "mobileViewportWidth": 390,
+    "imagesLoaded": 14,
+    "horizontalOverflow": false,
+    "visualSamples": ["opening", "mechanism", "scope"],
+    "status": "pass",
+    "realWeChatReadback": "pending"
+  }
+}
