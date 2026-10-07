@@ -1,0 +1,58 @@
+name: Tampermonkey throughput and result-truth regression
+on:
+  push:
+    branches: [fix/tm-throughput-truth-20261007]
+    paths:
+      - public/toc-mainline.user.js
+      - cloudflare/scripts/build-bridge-loader.mjs
+      - scripts/validate-tm220-artifacts.mjs
+      - tests/tm-throughput-truth.test.mjs
+      - .github/workflows/tm-throughput-truth.yml
+permissions:
+  contents: read
+concurrency:
+  group: tm-throughput-truth
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify fallback queue closure and truthful layer status
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node --test tests/tm-throughput-truth.test.mjs
+          node tests/tm-manual-resume.test.mjs
+          node tests/tm-controller-recovery.test.mjs
+          node tests/tm-queue-coverage.test.mjs
+          node tests/tm-missing-only.test.mjs
+          node scripts/test-tm220-release.mjs
+          node scripts/test-tm222-auto-report.mjs
+          node scripts/validate-tm220-artifacts.mjs source
+          git diff --check
+      - name: Build Bridge 2.2.64
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F '// @version      2.2.64' public/gallery-vpn-bridge.user.js
+          grep -F "var INSTALL_REVISION = '6.2.45';" public/gallery-vpn-bridge.user.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-throughput-truth-evidence
+          path: |
+            public/gallery-vpn-bridge.user.js
+            public/toc-mainline.user.js
+          retention-days: 7

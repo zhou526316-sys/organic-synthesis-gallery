@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.44
+// @version      6.2.45
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -55,7 +55,7 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.44';
+  var INSTALL_REVISION = '6.2.45';
   var CONTROLLER_READ_REVISION = '20261007-native-metadata-first-v1';
   var MANUAL_RECOVERY_REVISION = '20261007-manual-resume-v1';
   var manualRecoveryBusy = false;
@@ -1044,10 +1044,14 @@ function embeddedJobDois(value) {
     return 7;
   }
 
+  var FIGURE_ONE_QUEUE_POLICY_REVISION = '20261007-nature-science-figure1-complete-v1';
   function isNatureScienceFamilyJob(job) {
     var journal = String(job && job.journal || '').trim();
     return journal === 'Nature' || journal === 'Science'
       || /^Nature\s+/i.test(journal) || /^Science\s+/i.test(journal);
+  }
+  function natureScienceFigureOneSatisfiesQueue(job, hasFigureOne) {
+    return Boolean(hasFigureOne && isNatureScienceFamilyJob(job));
   }
 
   function captureQueueTier(job, latestAddedDate) {
@@ -3685,6 +3689,7 @@ function embeddedJobDois(value) {
       // downgrades successful TOC/body capture, but a visit with missing evidence must
       // attempt it before the tab closes.
       result.fulltext=await tryCaptureArticleEvidence(job,trace,token,wantsEvidence?5000:0);
+      if(result.status==='failed'&&captureResultHasUsefulLayer(result))result.status='partial';
       result.reason='combined_capture;toc='+result.toc.status
         +';figures='+(wantsFigures?(result.figures.stored+'/'+result.figures.discovered):'not_requested')
         +';evidence='+(wantsEvidence?String(result.fulltext.status||'failed'):'not_requested')+';published=0';
@@ -4246,7 +4251,11 @@ function embeddedJobDois(value) {
     if(!tocKnown)unknown.push('TOC');
     if(!figureKnown)nonQueueUnknown.push('正文图完整度');
     if(!inventory.evidenceKnown&&!textLevel)nonQueueUnknown.push('文本');
-    var tocNeeded=tocKnown&&!productionOfficial;
+    // Nature/Science-family articles commonly have no separate publisher TOC graphic.
+    // Once a verified Figure 1 fallback is already stored, do not keep reopening the
+    // publisher page solely to search for a non-existent official TOC.
+    var figureOneCompletesQueue=natureScienceFigureOneSatisfiesQueue(raw,fallback);
+    var tocNeeded=tocKnown&&!productionOfficial&&!figureOneCompletesQueue;
     var pdfNeeded=privatePdfQueueNeeded(raw,Date.now(),true);
     var bundleVisit=Boolean(recentFullCaptureEligible(raw)&&(tocNeeded||pdfNeeded));
     var job=Object.assign({},raw,{doi:doi,publisher:publisherForDoi(doi),missingOnly:true,recaptureFromHead:false,
@@ -4322,12 +4331,20 @@ function embeddedJobDois(value) {
       && !/doi_mismatch|receipt_invalid|unbound|401|403|429|blocked by the user|Refused to connect|auth_|challenge_|access_gate/i.test(String(reason||''));
   }
   function privatePdfCompletedStatus(status) { return /^(?:stored|already_stored)$/.test(String(status || '')); }
+  function captureResultHasUsefulLayer(result) {
+    result=result||{};
+    return String((result.toc||{}).status||'')==='stored'
+      || Number((result.figures||{}).stored||0)>0
+      || String((result.fulltext||{}).status||'')==='stored'
+      || privatePdfCompletedStatus((result.privatePdf||{}).status);
+  }
   function coverageReason(result) {
     var pdf=result.privatePdf||{},reasons=[result.reason,(result.toc||{}).reason,(result.fulltext||{}).reason,pdf.reason];
     if(pdf.status&&!privatePdfCompletedStatus(pdf.status))reasons.push('private_pdf_'+String(pdf.status));
     return reasons.concat(((result.figures||{}).items||[]).filter(function(f){return f.status==='failed';}).map(function(f){return f.reason;})).filter(Boolean).join(';');
   }
   function coverageJobNeeds(job) {
+    if(job&&job.captureToc===true&&natureScienceFigureOneSatisfiesQueue(job,job.existingTocKind==='figure1'))job.captureToc=false;
     job.mediaNeed=[job.captureToc?'toc':'',job.capturePrivatePdf?'pdf':''].filter(Boolean).join('+');
     return job;
   }
@@ -5628,6 +5645,7 @@ function embeddedJobDois(value) {
       if(typeof captureLiveUpdate==='function')captureLiveUpdate(job,'private_pdf_failed',{pdfStatus:'failed',pdfStage:'PDF 抓取异常',pdfError:privatePdfReason});
       if(typeof pushTrace==='function')pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:privatePdfReason});
     }
+    if(result.status==='failed'&&captureResultHasUsefulLayer(result))result.status='partial';
     if(!currentCaptureJob(job)||controllerPaused())return Object.assign({},result,{status:'aborted',reason:'manual_run_superseded'});
     if(job.missingOnly&&result.figures&&result.figures.discovered>0){var cp=readCheckpoint(job.doi);cp.figureCoverage={expected:Math.max(Number(cp.figureCoverage&&cp.figureCoverage.expected||0),Number(result.figures.discovered)),observedAt:Date.now()};saveCheckpoint(job.doi,cp,job);}
     result.retryAfterMs=Math.max(Number(result.retryAfterMs||0),Number((result.fulltext||{}).retryAfterMs||0));
