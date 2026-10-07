@@ -286,10 +286,13 @@ export async function getSiteAnalyticsMaterializedReadiness(env){
     ledgerVsScanned:(materializedEvents+duplicateEvents)-scannedEvents,
     globalPvVsScanned:globalPv-scannedEvents,
   };
-  const snapshotSourceReady=lastError===''
+  const snapshotSourceReady=backfillComplete
+    &&lastError===''
     &&materializedMax===lastEventId
     &&materializedMax<=rawMax
-    &&globalLastViewedAt<=rawLastViewedAt;
+    &&globalLastViewedAt<=rawLastViewedAt
+    &&counterDrift.ledgerVsScanned===0
+    &&counterDrift.globalPvVsScanned===0;
   const ready=snapshotSourceReady
     &&backfillComplete
     &&rawMax===materializedMax
