@@ -2554,6 +2554,7 @@ def render_wechat_draft_preview(draft: dict, *, media_id: str) -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
 <title>{html.escape(title)}</title>
 <style>
 *{{box-sizing:border-box}}
