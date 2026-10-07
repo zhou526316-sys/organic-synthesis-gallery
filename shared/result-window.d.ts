@@ -1,4 +1,5 @@
 export declare const RESULT_WINDOW_SIZE: number;
+export declare const MOBILE_RESULT_WINDOW_SIZE: number;
 export declare function resultWindowState(
   total: number,
   page?: number,
@@ -12,3 +13,10 @@ export declare function resultWindowState(
   hasPrevious: boolean;
   hasNext: boolean;
 };
+
+
+export declare function resultPaginationItems(
+  page: number,
+  pages: number,
+  compact?: boolean,
+): Array<number | 'ellipsis'>;

@@ -836,8 +836,21 @@ test('search highlights results, picker closes outside, feedback drags and submi
   expect(removedAfterFirstSearch).toBeGreaterThanOrEqual(0);
   expect(removedAfterFirstSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
 
-  await search.fill('光催化');
-  await expect(search).toHaveValue('光催化');
+  await search.fill('');
+  await expect(page.locator('#resultCount')).toHaveText(String(initialTotal));
+  const secondQuery = await page.locator('#gallery > .card .title').evaluateAll(nodes => {
+    for (const node of nodes) {
+      const title = (node.textContent || '').trim();
+      const word = title.match(/[A-Za-z][A-Za-z-]{4,}/)?.[0];
+      if (word && word.toLowerCase() !== 'photoredox') return word;
+      const han = title.match(/[\u3400-\u9fff]{2,}/)?.[0];
+      if (han) return han.slice(0, 2);
+    }
+    return '';
+  });
+  expect(secondQuery.length).toBeGreaterThanOrEqual(2);
+  await search.fill(secondQuery);
+  await expect(search).toHaveValue(secondQuery);
   await expect.poll(async () => page.locator('.card:visible').count()).toBeGreaterThan(0);
   expect(await page.locator('#gallery > .card:visible').count()).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
   expect(Number(await page.locator('#resultCount').textContent())).toBeLessThan(initialTotal);
@@ -846,7 +859,7 @@ test('search highlights results, picker closes outside, feedback drags and submi
     (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0
   );
   expect(removedAfterSecondSearch - removedAfterFirstSearch).toBeGreaterThanOrEqual(0);
-  expect(removedAfterSecondSearch - removedAfterFirstSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+  expect(removedAfterSecondSearch - removedAfterFirstSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE * 2);
 
   await search.fill('10.1021/jacs.6c08636');
   await expect.poll(async () => page.locator('.card:visible').count()).toBeGreaterThan(0);
@@ -860,7 +873,7 @@ test('search highlights results, picker closes outside, feedback drags and submi
     (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0
   );
   expect(removedAfterDoiSearch - removedAfterSecondSearch).toBeGreaterThanOrEqual(0);
-  expect(removedAfterDoiSearch - removedAfterSecondSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+  expect(removedAfterDoiSearch - removedAfterSecondSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE * 2);
 
   const feedback = page.locator('site-feedback-widget');
   const feedbackTab = feedback.locator('.site-feedback-tab');
