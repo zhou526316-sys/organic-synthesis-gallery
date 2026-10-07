@@ -1,7 +1,13 @@
 {
-  "requestId": "wechat-daily-2026-10-06-complete-final-v10",
-  "requestedAt": "2026-10-06T10:34:00Z",
-  "publicationDate": "2026-10-06",
+  "requestId": "wechat-daily-2026-10-07-r7-source-locked-final",
+  "requestedAt": "2026-10-07T04:43:00Z",
+  "publicationDate": "2026-10-07",
   "action": "sync_daily_draft",
-  "reason": "Terminal rerun of the exact reviewed final source state after fixing review-gate handling for the non-figure edition manifest. Article content and approved assets are unchanged. Require draft/get readback."
+  "editorialRevision": "2026-10-07-r7",
+  "approvedGate": "audit/wechat-working/2026-10-07-review-gate.json",
+  "expectedArticleCount": 2,
+  "expectedDois": ["10.1002/anie.3699223", "10.1038/s41929-026-01593-w"],
+  "draftOnly": true,
+  "requireDraftGetReadback": true,
+  "reason": "User explicitly requested completion and self-review of the real two-article draft. Both independent text and image reviews passed; all original-source raster bytes and the approved no-white-background phoenix square are pinned. Do not publicly send. Return the actual draft/get-derived preview for final transport review."
 }
