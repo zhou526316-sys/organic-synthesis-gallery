@@ -1,9 +1,9 @@
 {
-  "requestId": "wechat-daily-2026-10-07-r16-observed-native-title-fit",
-  "requestedAt": "2026-10-07T08:36:24Z",
+  "requestId": "wechat-daily-2026-10-07-r17-remove-basic-background",
+  "requestedAt": "2026-10-07T08:53:47Z",
   "publicationDate": "2026-10-07",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-07-r16",
+  "editorialRevision": "2026-10-07-r17",
   "approvedGate": "audit/wechat-working/2026-10-07-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -12,5 +12,5 @@
   ],
   "draftOnly": true,
   "requireDraftGetReadback": true,
-  "reason": "User supplied native mobile and official desktop screenshots, showing R15 artwork already present but native title begins above blue band. Fit R16 upper edge to this measured native geometry, preserving complete original-color TOC. Source text byte-identical toR15; source/glyph/native-reference projection reviewed. Same two-article draft only with draft/get readback; no public sending."
+  "reason": "User explicitly requested deletion of the screenshot's shallow supplementary background. Remove full four-paragraph quenching-cycle section, ncx1 image/caption; tidy remaining concept numbering and local term definitions. Independent text/image review and source preview pass; both covers and original-paper figures unchanged. Update same two-article draft and read back, no public sending."
 }
