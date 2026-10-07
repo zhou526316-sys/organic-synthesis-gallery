@@ -77,5 +77,16 @@ PDF 通过本地 `Uint8Array` 交给解析器；不用第三方在线 viewer，�
 - `tests/private-pdf-access-browser.mjs` 保留站长按钮回归，并检查普通用户本地入口、DOI URL 和手机布局。
 - 新独立工作流 `.github/workflows/pdf-vault-p1.yml` 运行本地流程回归。正式发布仍由 `.github/workflows/github-pages.yml` 执行，新增本地 PDF 门禁位于 Pages artifact 上传之前。
 - 浏览器小型 `summary.json` 记录用例结果与实际加载静态文件的 SHA-256，供部署后核对主站交付；失败才保留截图、trace 和诊断。
+- `.github/workflows/pdf-vault-live.yml` 在正式 Pages 成功后、或其自身两项核验文件改变时只读下载该 run 的浏览器报告及发布 manifest，再核对主域名上实际入口、阅读器、Worker、字体等文件的字节和 hash。前后发布 manifest 必须一致；旧版发布若没有 P1 报告，明确记录为不适用，不算线上验证成功。
 
 本地测试、GitHub Actions 与真实线上交付应分别记录，不用一次本地成功代替生产验收。本批最终证据写入 `audit/architecture/pdf-vault-p1-local-20261007.json`。
+
+## 2026-10-07 首批交付结果
+
+实施提交：[`db0ccce1e817c638b12a482fcc1abebb1a23d2c7`](https://github.com/zhou526316-sys/organic-synthesis-gallery/commit/db0ccce1e817c638b12a482fcc1abebb1a23d2c7)。[正式 Pages 发布 37588737678](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37588737678) 已成功，实际部署源码为 `a8f7fc7b45e2f1294ff4adf47ea3d949a00bdb95`；16 个首批实现文件的 Git blob 均与实施提交一致。发布前通过 42 项 Node 检查、17 项本地 PDF 浏览器检查和 13 项站长 PDF 回归。
+
+[主域名只读交付核验 37590774083](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37590774083) 于北京时间 **2026-10-07 15:59:27** 通过：`/pdf-vault/` 与实际浏览器加载的其他 7 个文件，大小、SHA-256 和响应类型均符合预期；核验前后发布 manifest 保持一致。新核验工作流的 runner 上下文位置错误已在 `23126dc36dcd8492818d1ba9240f50927699acac` 修复，并由该真实运行证明可执行。
+
+本批未修改 Worker 代码或迁移定义；现有前端同步机制自动执行了[正式 Worker 部署 37588865250](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37588865250)，其中既有 D1 迁移/回填、运行配置同步和媒体维护仍然执行，最终绑定与健康门禁成功。普通用户 V3 全局写入仍为关闭，放量为 0。不能把本批所有发布动作描述为没有生产写入；只有本地 PDF 流程与新增线上文件核验本身不上传用户 PDF、路径或内容 hash。
+
+入口：[我的 PDF 文献库](https://gallery.gczhouwld.com/pdf-vault/)。完整证据见 [首批验收记录](../audit/architecture/pdf-vault-p1-local-20261007.json)。

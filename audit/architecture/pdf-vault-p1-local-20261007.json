@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "phase": "PDF Vault P1 local storage and reader first batch",
-  "recordedAt": "2026-10-07 07:36:12 UTC",
+  "recordedAt": "2026-10-07T16:01:00+08:00",
   "baselineSource": "5cc7c0e772068f10bc43000824aef3b8258690e4",
   "promotionParent": "255928bf174b215c9016192396acf26b85e55d4e",
-  "status": "local_verified_waiting_canonical_ci",
+  "status": "deployed_and_exact_live_delivery_verified",
   "files": [
     {
       "path": "src/main.ts",
@@ -345,11 +345,437 @@
   ],
   "fixesVerified": [
     "PDF.js 6.4.299 official legacy build renders in Chromium 140",
-    "390px mobile copy actions fit the viewport"
+    "390px mobile copy actions fit the viewport",
+    "Live delivery workflow runner context repaired and full 8-file actual-origin check passed"
   ],
   "production": {
-    "deployment": "pending",
+    "deployment": "success",
     "canonicalOrigin": "https://gallery.gczhouwld.com",
-    "exactPdfVaultDelivery": "pending"
-  }
+    "entry": "https://gallery.gczhouwld.com/pdf-vault/",
+    "exactPdfVaultDelivery": "verified",
+    "liveVerification": {
+      "runId": 37590774083,
+      "conclusion": "success",
+      "sourceCommit": "23126dc36dcd8492818d1ba9240f50927699acac",
+      "artifact": {
+        "id": 11468351658,
+        "name": "pdf-vault-live-37590774083-1",
+        "zipSha256": "e5f62d45657d265161673a7d5767e30a06281e221bca50f5089d934b84863bae",
+        "downloadDigestVerified": true
+      },
+      "summary": {
+        "schemaVersion": 1,
+        "suite": "pdf-vault-live",
+        "ok": true,
+        "applicable": true,
+        "productionMutations": false,
+        "pagesRunId": 37588737678,
+        "origin": "https://gallery.gczhouwld.com",
+        "startedAt": "2026-10-07T07:59:27.248Z",
+        "method": "GET",
+        "maxConcurrency": 3,
+        "maxAttempts": 3,
+        "timeBudgetMs": 150000,
+        "files": [
+          {
+            "path": "assets/literature-identity-Bhdetfc7.js",
+            "requestedPath": "/assets/literature-identity-Bhdetfc7.js",
+            "ok": true,
+            "expectedSha256": "cd2973dac3f1c18000998a5a191c0fd0af780b4b320cd18e461be2ba9df2e0b0",
+            "expectedBytes": 386,
+            "actualSha256": "cd2973dac3f1c18000998a5a191c0fd0af780b4b320cd18e461be2ba9df2e0b0",
+            "actualBytes": 386,
+            "contentType": "application/javascript; charset=utf-8",
+            "attempts": 1
+          },
+          {
+            "path": "assets/pdf.worker.min-Dkey6ZUl.mjs",
+            "requestedPath": "/assets/pdf.worker.min-Dkey6ZUl.mjs",
+            "ok": true,
+            "expectedSha256": "145d2dd3ab0c86151011dba95acfa2d5336e2accd59388ea43dbee0efddaaec6",
+            "expectedBytes": 1321307,
+            "actualSha256": "145d2dd3ab0c86151011dba95acfa2d5336e2accd59388ea43dbee0efddaaec6",
+            "actualBytes": 1321307,
+            "contentType": "text/javascript; charset=utf-8",
+            "attempts": 1
+          },
+          {
+            "path": "assets/pdfVault-BjEtoq1C.css",
+            "requestedPath": "/assets/pdfVault-BjEtoq1C.css",
+            "ok": true,
+            "expectedSha256": "8e6918311bf192838c30aae6af78999fd4a063e550faaeb0303099bd535e0e55",
+            "expectedBytes": 11540,
+            "actualSha256": "8e6918311bf192838c30aae6af78999fd4a063e550faaeb0303099bd535e0e55",
+            "actualBytes": 11540,
+            "contentType": "text/css; charset=utf-8",
+            "attempts": 1
+          },
+          {
+            "path": "assets/pdfVault-BrTgOnt7.js",
+            "requestedPath": "/assets/pdfVault-BrTgOnt7.js",
+            "ok": true,
+            "expectedSha256": "8d6f46945b7b5a5a1f2dc9fb45482950f0cd1a043d42011e72bce7251aab065e",
+            "expectedBytes": 32162,
+            "actualSha256": "8d6f46945b7b5a5a1f2dc9fb45482950f0cd1a043d42011e72bce7251aab065e",
+            "actualBytes": 32162,
+            "contentType": "application/javascript; charset=utf-8",
+            "attempts": 1
+          },
+          {
+            "path": "assets/preload-helper-mg6Z-sIv.js",
+            "requestedPath": "/assets/preload-helper-mg6Z-sIv.js",
+            "ok": true,
+            "expectedSha256": "c15b3e77806e8ca53cfcfa5fc556049bf83ce608d9de20f06f4f3c09383c7f11",
+            "expectedBytes": 1976,
+            "actualSha256": "c15b3e77806e8ca53cfcfa5fc556049bf83ce608d9de20f06f4f3c09383c7f11",
+            "actualBytes": 1976,
+            "contentType": "application/javascript; charset=utf-8",
+            "attempts": 1
+          },
+          {
+            "path": "assets/reader-CT4qGpe6.js",
+            "requestedPath": "/assets/reader-CT4qGpe6.js",
+            "ok": true,
+            "expectedSha256": "7b4403e6cadb72297aa1eff63382a0dc861d6dc68ac2b968adadd1da1307dd56",
+            "expectedBytes": 545963,
+            "actualSha256": "7b4403e6cadb72297aa1eff63382a0dc861d6dc68ac2b968adadd1da1307dd56",
+            "actualBytes": 545963,
+            "contentType": "application/javascript; charset=utf-8",
+            "attempts": 1
+          },
+          {
+            "path": "pdf-vault-assets/6.4.299/standard_fonts/LiberationSans-Regular.ttf",
+            "requestedPath": "/pdf-vault-assets/6.4.299/standard_fonts/LiberationSans-Regular.ttf",
+            "ok": true,
+            "expectedSha256": "f8ace1f892b2bd9dc1792ba7f097fa7588f84fed48321480e04de5390828221f",
+            "expectedBytes": 139512,
+            "actualSha256": "f8ace1f892b2bd9dc1792ba7f097fa7588f84fed48321480e04de5390828221f",
+            "actualBytes": 139512,
+            "contentType": "font/ttf",
+            "attempts": 1
+          },
+          {
+            "path": "pdf-vault/index.html",
+            "requestedPath": "/pdf-vault/",
+            "ok": true,
+            "expectedSha256": "36b000a543f6f5ed63d10ef2932870f4da389cf28fa908bb08890d2d2ce01a78",
+            "expectedBytes": 7845,
+            "actualSha256": "36b000a543f6f5ed63d10ef2932870f4da389cf28fa908bb08890d2d2ce01a78",
+            "actualBytes": 7845,
+            "contentType": "text/html; charset=utf-8",
+            "attempts": 1
+          }
+        ],
+        "expectedSourceCommit": "a8f7fc7b45e2f1294ff4adf47ea3d949a00bdb95",
+        "browserCasesPassed": 17,
+        "expectedFileCount": 8,
+        "before": {
+          "sourceCommit": "a8f7fc7b45e2f1294ff4adf47ea3d949a00bdb95",
+          "bytes": 43661,
+          "sha256": "6ab55ae3c21e59be133040dbd6faa8fed48841e037e885fa5464afbd5312b57a",
+          "contentType": "application/json; charset=utf-8",
+          "attempts": 1
+        },
+        "after": {
+          "sourceCommit": "a8f7fc7b45e2f1294ff4adf47ea3d949a00bdb95",
+          "bytes": 43661,
+          "sha256": "6ab55ae3c21e59be133040dbd6faa8fed48841e037e885fa5464afbd5312b57a",
+          "contentType": "application/json; charset=utf-8",
+          "attempts": 1
+        },
+        "completedAt": "2026-10-07T07:59:27.888Z",
+        "durationMs": 640,
+        "peakConcurrency": 3
+      }
+    },
+    "worker": {
+      "runId": 37588865250,
+      "sourceCommit": "eebf1acc21d5355c0eafb3355ed98e03e14160bf",
+      "conclusion": "success",
+      "syncRunId": 37588737571,
+      "syncConclusion": "success",
+      "newWorkerCodeOrMigrationsInBatch": false,
+      "configuredControls": {
+        "privatePdfR2Bucket": "organic-synthesis-gallery-private-pdf",
+        "privatePdfBinding": "PDF_PRIVATE",
+        "privatePdfReadEnabled": true,
+        "privatePdfCaptureEnabled": true,
+        "privatePdfProcessingEnabled": false,
+        "globalV3WriteEnabled": false,
+        "rolloutBasisPoints": 0,
+        "capabilityGrantInsertionInPrivatePdfMigrations": false
+      },
+      "d3bReport": {
+        "schemaVersion": 1,
+        "phase": "D3b-user-library-row-read-live",
+        "ok": true,
+        "readPathActive": true,
+        "legacyUsers": 4,
+        "shadowHeads": 4,
+        "legacyShadowHeads": 4,
+        "v3CompatHeads": 0,
+        "paperRows": 2601,
+        "revisionMismatches": 0,
+        "backfillComplete": true,
+        "backfillPagesThisRun": 0,
+        "stableParityPasses": 2,
+        "semanticMismatches": 0,
+        "verifiedAt": "2026-10-07T07:44:35.136Z"
+      },
+      "v3Report": {
+        "schemaVersion": 1,
+        "phase": "D3c4c-user-library-v3-rollout-preflight",
+        "ok": true,
+        "shadowEnabled": true,
+        "boundedReadEnabled": true,
+        "accountPullCutover": false,
+        "globalWriteEnabled": false,
+        "rolloutBasisPoints": 0,
+        "rolloutPercent": 0,
+        "rolloutActive": false,
+        "rolloutPreflightReady": true,
+        "rolloutSeedConfigured": true,
+        "rolloutCanaryConfigured": true,
+        "legacyUsers": 4,
+        "legacyDocuments": 4,
+        "staleLegacyDocuments": 0,
+        "v3Heads": 4,
+        "legacyV3Heads": 4,
+        "v3AuthorityHeads": 0,
+        "orphanV3Heads": 0,
+        "v3AuthorityUsers": 0,
+        "compatibilityReadEnabled": true,
+        "revisionMismatches": 0,
+        "legacyHeadMismatches": 0,
+        "legacyCompatibilityHeadMismatches": 0,
+        "pendingLegacyCompatibilityHeads": 0,
+        "authorityHeadMismatches": 0,
+        "compatibilityHeadMismatches": 0,
+        "backfillComplete": true,
+        "backfillPagesThisRun": 0,
+        "reconcilePagesThisRun": 0,
+        "stableParityPasses": 2,
+        "semanticMismatches": 0,
+        "verifiedAt": "2026-10-07T07:44:46.959Z"
+      },
+      "evidenceArtifacts": [
+        {
+          "id": 11467941819,
+          "name": "user-library-row-shadow-37588865250",
+          "digest": "sha256:ce79487878d519548d0b4d152767903e185bed281d7161e380508aadc1ea6f7c",
+          "downloadedZipDigestVerified": true
+        },
+        {
+          "id": 11467916947,
+          "name": "user-library-v3-shadow-37588865250",
+          "digest": "sha256:0754dcebef0ee9b08e7e45ced4f27e205be7e2dea9c42959d78466760717385a",
+          "downloadedZipDigestVerified": true
+        }
+      ],
+      "existingProductionOperations": [
+        "canonical Worker deploy",
+        "existing D1 migrations/backfills",
+        "configured runtime secret synchronization",
+        "existing media maintenance"
+      ],
+      "finalHealthGate": {
+        "name": "Verify canonical Worker bindings survived deployment and secret sync",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 54
+      }
+    }
+  },
+  "implementationCommit": "db0ccce1e817c638b12a482fcc1abebb1a23d2c7",
+  "acceptanceBoundary": "P1 local storage and reader first usable batch; not complete P1 or complete architecture",
+  "followupCommits": {
+    "liveVerifier": "206492edc85ef41971e4495726469ca17490d575",
+    "contentTypeEvidence": "7888046b2c094ae61f949f98f296e5c0ae7387ae",
+    "validRunnerContext": "23126dc36dcd8492818d1ba9240f50927699acac"
+  },
+  "ci": {
+    "standalone": {
+      "runId": 37588475492,
+      "conclusion": "success",
+      "sourceCommit": "db0ccce1e817c638b12a482fcc1abebb1a23d2c7",
+      "artifact": {
+        "id": 11467676813,
+        "name": "pdf-vault-local-browser-37588475492",
+        "zipSha256": "425551865b895eb3074d212938695856112b0b37226aaecd4293b0f74374d3d4",
+        "downloadDigestVerified": true
+      },
+      "passed": 17,
+      "total": 17
+    },
+    "owner": {
+      "runId": 37588475453,
+      "conclusion": "success",
+      "artifact": {
+        "id": 11467038369,
+        "zipSha256": "8bf845369cee3fde51c5554fb51a8739663349246096c7e7981c5404af8195f8",
+        "downloadDigestVerified": true
+      },
+      "passed": 13,
+      "total": 13
+    },
+    "canonicalPages": {
+      "runId": 37588737678,
+      "conclusion": "success",
+      "eventCommit": "9e12536c73722b52924a2a4d41ed23a03d9fbe91",
+      "sourceCommit": "a8f7fc7b45e2f1294ff4adf47ea3d949a00bdb95",
+      "sourceBlobComparison": [
+        {
+          "path": "src/main.ts",
+          "sha": "7f9a29ee2723282bf50a20020ac12b815bebe127",
+          "actual": "7f9a29ee2723282bf50a20020ac12b815bebe127",
+          "match": true
+        },
+        {
+          "path": "src/pdf-vault/card-entry.css",
+          "sha": "7f8d9498e38fa9c0b6105b478b0037c7048fe528",
+          "actual": "7f8d9498e38fa9c0b6105b478b0037c7048fe528",
+          "match": true
+        },
+        {
+          "path": "src/pdf-vault/local-vault.mjs",
+          "sha": "84e66c920e524f2a264a61cd2fb580178900b7a8",
+          "actual": "84e66c920e524f2a264a61cd2fb580178900b7a8",
+          "match": true
+        },
+        {
+          "path": "src/pdf-vault/page.mjs",
+          "sha": "baca8fa46c85f450eeb95b51a60ba9cae4b26e34",
+          "actual": "baca8fa46c85f450eeb95b51a60ba9cae4b26e34",
+          "match": true
+        },
+        {
+          "path": "src/pdf-vault/reader.mjs",
+          "sha": "e2d33c82c452b995784c96442eb894fbd8c91242",
+          "actual": "e2d33c82c452b995784c96442eb894fbd8c91242",
+          "match": true
+        },
+        {
+          "path": "src/pdf-vault/page.css",
+          "sha": "af53370756ee84630c94fc22d3e53106446eadef",
+          "actual": "af53370756ee84630c94fc22d3e53106446eadef",
+          "match": true
+        },
+        {
+          "path": "pdf-vault/index.html",
+          "sha": "0fb4fa6de0ea65728774896b2f79496aba60eabd",
+          "actual": "0fb4fa6de0ea65728774896b2f79496aba60eabd",
+          "match": true
+        },
+        {
+          "path": "vite.config.ts",
+          "sha": "9918999709854663f428ac15e79c2bd698a9fbb9",
+          "actual": "9918999709854663f428ac15e79c2bd698a9fbb9",
+          "match": true
+        },
+        {
+          "path": "package.json",
+          "sha": "1249a104318897070979ff5db7baf0e2f4467ecd",
+          "actual": "1249a104318897070979ff5db7baf0e2f4467ecd",
+          "match": true
+        },
+        {
+          "path": "scripts/pdf-vault-assets.mjs",
+          "sha": "9f242ceb4ff808f563eb23d8412ea0572efa7bc2",
+          "actual": "9f242ceb4ff808f563eb23d8412ea0572efa7bc2",
+          "match": true
+        },
+        {
+          "path": "scripts/test-pdf-vault-local.mjs",
+          "sha": "e677c07f3b05492f5b2267f55f1f2eb967903515",
+          "actual": "e677c07f3b05492f5b2267f55f1f2eb967903515",
+          "match": true
+        },
+        {
+          "path": "tests/pdf-vault-local-browser.mjs",
+          "sha": "af26c706bb72470aa4c468b03abd48f68c363a42",
+          "actual": "af26c706bb72470aa4c468b03abd48f68c363a42",
+          "match": true
+        },
+        {
+          "path": "tests/private-pdf-access-browser.mjs",
+          "sha": "d173c179458b91bb24c917ed1db25480e9caa9f7",
+          "actual": "d173c179458b91bb24c917ed1db25480e9caa9f7",
+          "match": true
+        },
+        {
+          "path": ".github/workflows/pdf-vault-p1.yml",
+          "sha": "c6ff09b5891d01f9f40e4b376da6afcf8649c6e0",
+          "actual": "c6ff09b5891d01f9f40e4b376da6afcf8649c6e0",
+          "match": true
+        },
+        {
+          "path": ".github/workflows/github-pages.yml",
+          "sha": "23dd58107916944e8aa34d6b86bec801a27568d2",
+          "actual": "23dd58107916944e8aa34d6b86bec801a27568d2",
+          "match": true
+        },
+        {
+          "path": "docs/pdf-vault-p1-local.md",
+          "sha": "457bb195f5193c019bc1315a764f92c096df6340",
+          "actual": "457bb195f5193c019bc1315a764f92c096df6340",
+          "match": true
+        }
+      ],
+      "browser": {
+        "passed": 17,
+        "total": 17,
+        "completedAt": "2026-10-07T07:51:05.313Z",
+        "artifactId": 11468117290,
+        "zipSha256": "d75a74d51139b020caca6594d077274bab902b2e8846b880a2b0d43a0502070a",
+        "downloadDigestVerified": true
+      },
+      "owner": {
+        "passed": 13,
+        "total": 13,
+        "completedAt": "2026-10-07T07:50:48.337Z",
+        "artifactId": 11468022908,
+        "zipSha256": "a641f8ec5669a910ea48f849f9c75056c165876ed11744015607c5a2773792ff",
+        "downloadDigestVerified": true
+      },
+      "prepublishGates": [
+        "responsive pagination and Hot Archive",
+        "V3 account sync and pause recovery",
+        "owner PDF and account isolation",
+        "42 P0/P1 Node cases and 17 local PDF browser cases"
+      ],
+      "productionDelivery": {
+        "ok": true,
+        "sourceCommit": "a8f7fc7b45e2f1294ff4adf47ea3d949a00bdb95",
+        "verifiedAt": "2026-10-07T07:53:13.901Z",
+        "artifactId": 11468048204,
+        "zipSha256": "dfad9424c8fe132deef9d2a8b0e578c19a9680a80da97eda2da515a85e6ade21",
+        "downloadDigestVerified": true,
+        "canonicalOrigin": "https://gallery.gczhouwld.com",
+        "datasetSha256": "19456a41ab328b0ba8e1b104834bedfbc85f2109cf2c84a55662d753629a712f"
+      }
+    }
+  },
+  "ciConfigurationRepair": {
+    "originalFailureRun": 37590258199,
+    "cause": "runner.temp was referenced in jobs.verify.env, where the runner context is unavailable",
+    "fix": "initialize the output path in the first step env and export it through GITHUB_ENV; add a main push trigger restricted to the two read-only verifier files",
+    "verifiedRun": 37590774083,
+    "verifiedJob": 112691461684,
+    "conclusion": "success",
+    "originalAnnotationRead": false,
+    "noFrontendOrWorkerDeploymentTriggeredByRepair": true
+  },
+  "limitations": [
+    "Native Windows permission prompt manual acceptance",
+    "offline account verification",
+    "desktop acquisition queue",
+    "publisher capture endpoint",
+    "cross-device manifest sync",
+    "personal or Gallery cloud PDF upload",
+    "Directory picker tests return a real OPFS directory handle; native Windows prompt not manually tested",
+    "390px mobile layout tests run in Chromium, not a real WeChat WebView or handset",
+    "Import parser checks page tree and first page, not full-document integrity, DOI ownership, or licence",
+    "Account isolation is an app boundary, not encryption against someone with direct disk/browser access",
+    "Main-domain byte acceptance is an observed snapshot at 2026-10-07T15:59:27.888+08:00; independent windows may deploy newer main sources"
+  ]
 }
