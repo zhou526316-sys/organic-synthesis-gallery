@@ -1,34 +1,34 @@
 {
   "publicationDate": "2026-10-07",
-  "editorialRevision": "2026-10-07-r12",
-  "reviewedAt": "2026-10-07T07:28:57Z",
+  "editorialRevision": "2026-10-07-r13",
+  "reviewedAt": "2026-10-07T07:35:44.743927+00:00",
   "reviewer": "AI source-grounded editorial review; no claim of human review",
   "textReview": "pass",
-  "imageReview": "pass",
+  "imageReview": "pending",
   "individualImageReview": "pass",
-  "combinedVisualReview": "pass",
+  "combinedVisualReview": "pending",
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-07-r12-angew-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-07-r12-angew-images-only.md",
+    "textOnly": "audit/wechat-working/2026-10-07-r13-angew-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-07-r13-angew-images-only.md",
     "additionalTextOnly": [
-      "audit/wechat-working/2026-10-07-r12-natcat-text-only.md"
+      "audit/wechat-working/2026-10-07-r13-natcat-text-only.md"
     ],
     "additionalImagesOnly": [
-      "audit/wechat-working/2026-10-07-r12-natcat-images-only.md"
+      "audit/wechat-working/2026-10-07-r13-natcat-images-only.md"
     ]
   },
   "sources": [
     {
       "path": "public/wechat-editions/2026-10-07.json",
-      "blobSha": "2307508c49e6c1090146d56bc0e6b716cdcf2036"
+      "blobSha": "900989a5c81053fc5352c2127dac0696530563e3"
     },
     {
       "path": "public/wechat-featured/2026-10-07.json",
-      "blobSha": "894c375c14e262a2aa5262ad9958b8297bc043e9"
+      "blobSha": "e63690685add599b9e1ae323d161dc70615962fe"
     },
     {
       "path": "public/wechat-retrospective/phoenix1-structural-regeneration.json",
-      "blobSha": "40bfe261a369672283aff4cd1a11fc52a93e3f69"
+      "blobSha": "ff7416a810cac8f0b4287becdfbd913a264a5647"
     }
   ],
   "assets": [
@@ -131,9 +131,9 @@
       "height": 708
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-07-r12/an-cover-white-toc-blue-band-r12.png",
-      "blobSha": "f2bee6ff65cbed4e6d82bb33e56964c1d9748702",
-      "sha256": "4f8ffdbc3df3ad31dd2f123386d14c89ce98741d74be34efd267e56cb15f57a3",
+      "path": "public/wechat-assets/reviewed/2026-10-07-r13/an-cover-white-toc-fitted-band-r13.png",
+      "blobSha": "7c1ca69b8bf44f3dcd743170e5c8d20a63b3b3cd",
+      "sha256": "cdcff8eade96eabb869923bd013c095964320f332e20ffd4c63f3d41209a728a",
       "width": 1880,
       "height": 800
     },
@@ -281,90 +281,18 @@
   "materializedCropReviewRequired": true,
   "strictFigurePlacement": true,
   "reviewNotes": [
-    "User explicitly rejected full-cover recoloring and title over TOC; requested original background, a blue strip only under the title, and a smaller TOC.",
-    "Original500x247 TOC placed unchanged at690,18 on1880x800 white canvas; separate blue title band at y288. Source pixel comparison is exact; no recoloring, masking, redrawing or title baking.",
-    "Original TOC bottom at265 leaves23px white gap above the title band. Full chemistry visual is outside the title area.",
-    "All titles, digests, narrative, captions, body figures and retrospective cover preserved. Only cover description and accurate disclosure updated.",
-    "Text-only and images-only review files regenerated. Source preview and independent visual review must pass before one same-draft update.",
-    "Timeout preflight: reuse bounded known review workflow, narrow status polling, small screenshot artifacts, no cancellation or repeated publisher starts.",
-    "Draft-only authorization; no public sending.",
-    "Root inspected the exact source cover and current-title/four-line overlays; all white title glyphs are confined to the independent blue band, outside the unmodified original TOC. Both390/690px previews and source fingerprints passed.",
-    "Same-draft update and draft/get succeeded. Actual returned1280x544 cover retains original white-background TOC above the blue band. Root inspected current-title/four-line mobile simulations: no title overlap with TOC; minimum white contrast after transport10.098:1.",
-    "Actual read-only QA passed at390/690px:2articles,15/19loaded body images, all paragraphs/captions present, no broken images or page errors. Overlay screenshots are simulations on the actual returned cover, not native WeChat-client screenshots."
+    "User states the blue band is too tall and the TOC too small; clarified the band should only cover actual white title lettering.",
+    "Band is fitted to the existing full title at its observed3-line mobile QA layout, not an artificially forced4-line stress layout. This scope is title-specific and must be recalculated for future titles.",
+    "Original TOC source bytes/background/palette retained. Layout changes only: TOC700x345.8 at590,12; band starts370 with430px height. TOC width/height increase40%; band height decreases16.02%.",
+    "Current title and all editorial text, captions, body figures and retrospective cover are unchanged. Text-only/images-only review package regenerated.",
+    "Timeout preflight: reuse bounded source and actual review stages with narrow status/artifact reads; one terminal same-draft write only.",
+    "Source combined review pending; no public sending."
   ],
-  "draftReadback": "ok",
+  "draftReadback": "pending",
   "publicSendAuthorized": false,
-  "finalTransportReview": "pass",
+  "finalTransportReview": "pending",
   "priorCompletedRevision": {
-    "revision": "2026-10-07-r11",
-    "previewUrl": "https://relay.gczhouwld.com/wechat-preview/395eae43f63c4452e3d05f53.html"
-  },
-  "finalSourcePreview": {
-    "status": "pass",
     "revision": "2026-10-07-r12",
-    "sourceSnapshot": "302ad1b5629186dea571610ecfae678b840cf43adb8d0df00ff90356ab86b06d",
-    "runId": "37587335626",
-    "artifactId": 11466618882,
-    "artifactSha256": "62ae8d37b78dffdaf09fc17d2e3ebec0b398bdb26f8db20251ab4dc951a04ccf",
-    "viewports": [
-      390,
-      690
-    ],
-    "assetsVerified": 35,
-    "bodyImages": {
-      "angew": 14,
-      "natcat": 19
-    },
-    "nativeTitleOverlayChecks": [
-      {
-        "viewport": 390,
-        "scenario": "current-title",
-        "fontSize": 18,
-        "lineHeight": 22,
-        "titleClearancePx": 21.57593085106383,
-        "minimumWhiteContrast": 10.21482492693778,
-        "coverSource": "locked source cover",
-        "scope": "QA simulation; title is not baked into published cover"
-      },
-      {
-        "viewport": 390,
-        "scenario": "four-line",
-        "fontSize": 16,
-        "lineHeight": 20,
-        "titleClearancePx": 7.575930851063831,
-        "minimumWhiteContrast": 10.21482492693778,
-        "coverSource": "locked source cover",
-        "scope": "QA simulation; title is not baked into published cover"
-      },
-      {
-        "viewport": 690,
-        "scenario": "current-title",
-        "fontSize": 18,
-        "lineHeight": 22,
-        "titleClearancePx": 118.74820478723404,
-        "minimumWhiteContrast": 10.21482492693778,
-        "coverSource": "locked source cover",
-        "scope": "QA simulation; title is not baked into published cover"
-      },
-      {
-        "viewport": 690,
-        "scenario": "four-line",
-        "fontSize": 16,
-        "lineHeight": 20,
-        "titleClearancePx": 82.74820478723404,
-        "minimumWhiteContrast": 10.21482492693778,
-        "coverSource": "locked source cover",
-        "scope": "QA simulation; title is not baked into published cover"
-      }
-    ],
-    "reviewedScreenshots": [
-      "angew-current-title-overlay-390.png",
-      "angew-four-line-overlay-390.png",
-      "angew-cover-690.png"
-    ]
-  },
-  "completedAt": "2026-10-07T07:31:35Z",
-  "actualDraftPreviewUrl": "https://relay.gczhouwld.com/wechat-preview/adde015c537d4f24bc0c7789.html",
-  "actualDraftQa": "audit/wechat-working/2026-10-07-r12-real-draft-qa.json",
-  "actualDraftQaRunId": "37587674824"
+    "previewUrl": "https://relay.gczhouwld.com/wechat-preview/adde015c537d4f24bc0c7789.html"
+  }
 }
