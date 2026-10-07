@@ -44,6 +44,22 @@ await test('same page mid-network restart does not wait on old unresolved reques
 await test('second control page invalidates first run without waiting for its lease',async()=>{const store=new Map(),listeners=[],clock={now:1790827200000},gate=defer();const a=h({store,listeners,clock,fetch:()=>gate.promise}),b=h({store,listeners,clock});const ap=a.T.forceStartFromHead();await b.T.forceStartFromHead();gate.resolve(queue);await ap;assert.equal(a.opened.length,0);assert.equal(b.opened.length,3);assert.equal(store.get(MK).owner,b.T.owner);});
 await test('old in-flight result cannot overwrite the new session result or checkpoint',async()=>{const x=h();const gate=defer();x.put(P+'active-job',{doi:articles[0].doi,jobId:'old'});const old={doi:articles[0].doi,jobId:'old'};await x.T.forceStartFromHead();const before=structuredClone(x.store.get(P+'last-run-summary'));const r=await x.T.finishPairedJob(old,{status:'success'},[],'');assert.equal(r.reason,'manual_run_superseded');assert.equal(x.T.saveCheckpoint(old.doi,{figures:{evil:1}},old),false);assert.deepEqual(x.store.get(P+'last-run-summary'),before);});
 await test('click does not delete credentials, existing figures or pending diagnostics',async()=>{const x=h();const retained=['organicGalleryCloudflareBridgeWriteToken',x.T.checkpointKey(articles[1].doi),P+'auto-report-v1:old'];retained.forEach(k=>x.put(k,{original:true}));await x.T.forceStartFromHead();retained.forEach(k=>assert.deepEqual(x.store.get(k),{original:true}));});
+await test('single user_aborted article does not terminate the manual pass',async()=>{
+  let first=true;
+  const x=h({noResult:true,open:(j,c)=>{
+    const result=first
+      ? {doi:j.doi,jobId:j.jobId,version:'6.2.20',status:'aborted',reason:'user_aborted',finishedAt:new Date(c.Date.now()).toISOString(),toc:{status:'not_requested'},figures:{discovered:0,stored:0,failed:0,items:[]},fulltext:{status:'not_requested'}}
+      : {doi:j.doi,jobId:j.jobId,version:'6.2.20',status:'success',finishedAt:new Date(c.Date.now()).toISOString(),toc:{status:'stored',kind:'official'},figures:{discovered:1,stored:1,failed:0,items:[]},figuresStaged:1,fulltext:{status:'stored'}};
+    first=false;
+    c.GM_setValue(P+'result:'+j.doi,result);
+  }});
+  await x.T.forceStartFromHead();
+  assert.equal(x.opened.length,3);
+  const summary=x.store.get(P+'last-run-summary');
+  assert.equal(summary.aborted,1);
+  assert.equal(summary.success,2);
+  assert.notEqual(summary.phase,'paused');
+});
 await test('unavailable page does not stop subsequent articles',async()=>{const x=h({open:(job,c)=>{if(job.doi===articles[1].doi)throw Error('open failed');}});await x.T.forceStartFromHead();assert.equal(x.store.get(P+'last-run-summary').failed,1);assert.equal(x.store.get(P+'last-run-summary').success,2);});
 await test('publisher access rate limits remain intact and do not occupy controller waits',async()=>{const x=h();x.put(P+'publisher-access-cooldown:acs',{until:x.clock.now+30*60000});await x.T.forceStartFromHead();assert.equal(x.opened.length,2);assert.equal(x.store.get(P+'last-run-summary').skipped,1);});
 await test('old failed-paper cooldown never blocks an explicit new pass',async()=>{const x=h();x.put(x.T.attemptKey(articles[1].doi,'6.2.20:paired:1790082000000','figures'),{status:'failed',reason:'controller_timeout',retryCount:9,finishedAt:new Date(x.clock.now).toISOString()});await x.T.forceStartFromHead();assert.equal(x.opened[0].j.doi,articles[1].doi);});
