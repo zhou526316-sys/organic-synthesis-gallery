@@ -105,7 +105,16 @@ jobs:
           npm install --no-save --no-package-lock playwright
           npx playwright install --with-deps chromium
       - name: Verify owner-only original-link routing and setup page
+        env:
+          PRIVATE_PDF_BROWSER_OUTPUT: ${{ runner.temp }}/gallery-private-pdf-test-results
         run: node tests/private-pdf-access-browser.mjs
+      - name: Upload private PDF browser verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: private-pdf-browser-verification
+          path: ${{ runner.temp }}/gallery-private-pdf-test-results
+          retention-days: 14
       - name: Dry-run Worker bundle without deployment
         working-directory: cloudflare/worker
         run: |
