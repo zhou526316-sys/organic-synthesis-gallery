@@ -1,0 +1,100 @@
+{
+  "revision": "2026-10-07-r17",
+  "reviewedAt": "2026-10-07 08:51:35 UTC",
+  "reviewer": "/root/r17_text_review",
+  "reviewMode": "independent_source_text_and_image_mapping",
+  "status": "pass",
+  "textReview": {
+    "status": "pass",
+    "scope": "Exact comparison with retained pre-edit manifest plus separate text-only exports; no new scientific content reviewed or introduced.",
+    "retrospectiveExactExpected": true,
+    "dailyRevisionOnly": true,
+    "removedHeading": "补充背景：常规光氧化还原怎样传递电子",
+    "deletedParagraphs": 4,
+    "deletedFigureId": "ncx1",
+    "retainedConceptFigureIds": [
+      "ncx2",
+      "ncx3"
+    ],
+    "renumberedVisibleFigures": {
+      "ncx2": "Fig. E1",
+      "ncx3": "Fig. E2"
+    },
+    "otherScienceParagraphsUnchanged": true,
+    "otherFiguresAndCoversUnchanged": true,
+    "remainingTermDefinitionsComplete": true,
+    "noDanglingTransitions": true,
+    "noRemovedSectionOrNcx1OrVisibleE3InManifestAndExports": true,
+    "aiNoticeRange": "E1–E2",
+    "retrospectiveSections": 14,
+    "dailySections": 10,
+    "textExportsComplete": true
+  },
+  "imageReview": {
+    "status": "pass",
+    "scope": "Separate image-only exports and all placement mappings checked against manifests. The two retained concept images were visually inspected and their original bytes match the R17 gate. Existing original-paper figures and covers are unchanged in the exact manifest diff; no new phone-client render is claimed.",
+    "removedImageId": "ncx1",
+    "removedImageHeading": "两种淬灭循环",
+    "allBodyImagesPlacedExactlyOnce": true,
+    "allParagraphAnchorsValid": true,
+    "imageExportsExactlyMatchManifestFieldsAndPlacements": true,
+    "remainingConceptNumbersMatchParagraphCaptionAndSourceFigure": true,
+    "retainedImagesHaveNoEmbeddedOldENumbers": true,
+    "sourceBodyImageCounts": {
+      "angew": 14,
+      "natcat": 18
+    },
+    "concepts": [
+      {
+        "id": "ncx2",
+        "visibleLabel": "自制拓展图1（Fig. E1）",
+        "repoPath": "public/wechat-assets/reviewed/2026-10-07-r10/ncx2-cage-competition.png",
+        "blobSha": "196425ef636735d18b4d3abbd9591cd977fb232b",
+        "sha256": "efb1e095706bfc93d7b80db684b382063e11053b78a331bf8ab1b4df523cf4a2",
+        "width": 2000,
+        "height": 2100,
+        "visuallyReviewed": true,
+        "gateBytesMatch": true
+      },
+      {
+        "id": "ncx3",
+        "visibleLabel": "自制拓展图2（Fig. E2）",
+        "repoPath": "public/wechat-assets/reviewed/2026-10-07-r10/ncx3-electronic-states.png",
+        "blobSha": "c27206e34d154889cb8bf5cecd7b95ab35ad73ed",
+        "sha256": "152fae01009b760c5655cbebba6bd822f1644e5a683394aa6bd2fb7675b8e2ab",
+        "width": 2000,
+        "height": 2320,
+        "visuallyReviewed": true,
+        "gateBytesMatch": true
+      }
+    ]
+  },
+  "sourceBlobs": {
+    "public/wechat-retrospective/phoenix1-structural-regeneration.json": {
+      "blobSha": "007ec9adf723dbcbe27bffeb33e1c03dbe2e5654",
+      "sha256": "3fed79026591af1cffa95b26a244c7438e48baf213d8bcbe139e93dc0e3eac5e"
+    },
+    "public/wechat-featured/2026-10-07.json": {
+      "blobSha": "7c1749003e2e629bde13f5979fc755bfeea01888",
+      "sha256": "e6e4b7eebeb747c9b125246d061bbfd5a83ac16eae45c98af904abee221aa8a5"
+    },
+    "public/wechat-editions/2026-10-07.json": {
+      "blobSha": "443f1ab9582e7453161e2fd62dfb76de4012a786",
+      "sha256": "9297dad79f4db9a8e3299c431d7e960e8d7c4079e3607972df7fab6e92b03336"
+    }
+  },
+  "baselineSha256": {
+    "public/wechat-retrospective/phoenix1-structural-regeneration.json": "706cb9cb916f0d504c72fcb3a3cd7aeb5e519a1f1223d45fd857b53d4bec483a",
+    "public/wechat-featured/2026-10-07.json": "f359b5ed0c9d365d2012e8d0f6d13945580fd16cf4e41254e861127c6fd686a9"
+  },
+  "exportSha256": {
+    "audit/wechat-working/2026-10-07-r17-angew-text-only.md": "4776e07eaed6dfe043c49f518657876b21f059b99dd6b9f16650ba4da2f02270",
+    "audit/wechat-working/2026-10-07-r17-angew-images-only.md": "9bb79c7012edf8c3f464a54600c34d18bbaff27db272a3ed9323bfd2ab90ae0d",
+    "audit/wechat-working/2026-10-07-r17-natcat-text-only.md": "82a3423ed53183f1b83e315bbaee2307a79f4f95c210c00727b6c52885678a5a",
+    "audit/wechat-working/2026-10-07-r17-natcat-images-only.md": "4b6c7066b86d5081d2af049b7a841ee40f0796696a58e6d34656accc55e4578f"
+  },
+  "sourceApprovalOnly": true,
+  "realDraftReadbackVerified": false,
+  "nativeClientVerified": false,
+  "issues": []
+}

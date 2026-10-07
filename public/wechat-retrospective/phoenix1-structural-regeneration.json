@@ -44,28 +44,11 @@
       }
     },
     {
-      "heading": "补充背景：常规光氧化还原怎样传递电子",
-      "paragraphs": [
-        "先把前文原文 Fig. 1a–b中的两类淬灭循环说清楚。以下用初始电中性的光催化剂PC、电子给体D和电子受体A作简化记号；实际带电催化剂应相应调整电荷。“氧化淬灭/还原淬灭”说的是激发态催化剂在首次电子转移中被氧化还是被还原，并不是直接按最终产物被氧化或还原命名。",
-        "氧化淬灭：PC*把电子交给A，形成PC•⁺与A•⁻；随后D向PC•⁺供电子，使催化剂回到PC。还原淬灭：PC*先从D接受电子，形成PC•⁻与D•⁺；再由PC•⁻把电子交给A并恢复PC。两种路径都能把供电子端与受电子端接入循环，但先被活化的伙伴和承担后续转移的催化剂状态不同。自制拓展图1（Fig. E1）将两条路径并列，橙色文字标出每一步电子的去向。",
-        "前文原文 Fig. 1c讨论的连续光诱导电子转移（conPET）进一步让还原后的催化剂再次吸光，以获得更强的分子光还原能力；这仍不能仅凭“两次吸光”判断是否生成了溶剂化电子。能量转移主要传递激发能，不等于净电子转移；质子耦合电子转移（PCET）则把质子与电子过程耦合。不能把不同活化模式都压缩成同一个SET箭头。",
-        "这一背景有助于定位phoenix1的差别：作者不是简单给固定染料增加一个更强的激发态，而是提出先光电离、再由生成的5受光完成氧化端，最终通过结构重组再生。5*氧化底物2这一段仍属于分子间SET；本体系不是所有步骤都由溶剂化电子包办。"
-      ],
-      "figures": [
-        "ncx1"
-      ],
-      "figures_after_paragraph": {
-        "2": [
-          "ncx1"
-        ]
-      }
-    },
-    {
       "heading": "溶剂笼与溶剂化电子：不要把空间关系当成同一种物种",
       "paragraphs": [
-        "【延伸辨析，非本文新增实验】常规分子间SET后，氧化态给体与还原态受体常暂时相邻，处在同一“溶剂笼”内。例如还原淬灭可先形成[PC•⁻···D•⁺]。这里电子已进入PC的分子电子态；后续的笼逃逸是两个反应伙伴分开，不是电子从PC中逸出。笼内反向电子转移会消耗这对物种，所以发光被淬灭并不自动等于有效产物形成。[扩展1]自制拓展图2（Fig. E2）把反向电子转移与伙伴分离这两种竞争去向分开展示。",
+        "【延伸辨析，非本文新增实验】常规分子间单电子转移（SET）后，氧化态给体与还原态受体常暂时相邻，处在同一“溶剂笼”内。例如还原淬灭可先形成[PC•⁻···D•⁺]（PC为光催化剂，D为电子给体）。这里电子已进入PC的分子电子态；后续的笼逃逸是两个反应伙伴分开，不是电子从PC中逸出。笼内反向电子转移会消耗这对物种，所以发光被淬灭并不自动等于有效产物形成。[扩展1]自制拓展图1（Fig. E1）把反向电子转移与伙伴分离这两种竞争去向分开展示。",
         "溶剂化电子e⁻solv则是另一层概念：电子离开原先分子束缚的电子态，由周围溶剂环境稳定，形成可以被光谱追踪并参与还原的电子态。它不是“被溶剂包围的分子自由基负离子”的别名，也不是完全不受环境影响的裸电子。其光谱、存活时间与反应行为依赖具体溶剂和条件。[扩展2]",
-        "“溶剂笼”描述反应伙伴的空间关联，“溶剂化电子”描述电子态的性质，两者并不互相排斥。光电离生成的电子仍可能返回其正电荷伙伴而复合。本文关于复合与底物截获竞争的证据，将结合后文原文 Fig. 3a具体讨论。自制拓展图3（Fig. E3）对照两种电子态：上下两幅各自说明一种状态，不表示它们会自动相互转化。",
+        "“溶剂笼”描述反应伙伴的空间关联，“溶剂化电子”描述电子态的性质，两者并不互相排斥。光电离生成的电子仍可能返回其正电荷伙伴而复合。本文关于复合与底物截获竞争的证据，将结合后文原文 Fig. 3a具体讨论。自制拓展图2（Fig. E2）对照两种电子态：上下两幅各自说明一种状态，不表示它们会自动相互转化。",
         "判断的关键不是“有没有溶剂参与”，而是是否存在区别于分子自由基离子的电子信号，以及它对受体加入的动力学响应。4CzIPN/4DPAIPN的特定还原态受光体系也曾被报道产生溶剂化电子[扩展2]，因此应比较具体条件和证据，不能按催化剂名字将两类机制永久分箱。"
       ],
       "figures": [
@@ -410,21 +393,10 @@
       "source_doi": "10.1038/s41929-026-01593-w"
     },
     {
-      "id": "ncx1",
-      "source_doi": "10.1038/s41929-026-01593-w",
-      "source_figure": "Original educational concept Fig. E1; background: source-paper Fig. 1a–b",
-      "caption": "自制拓展图1（Fig. E1）｜氧化淬灭与还原淬灭的简化循环。以初始电中性的PC、D、A为记号，逐步标出电子方向；依据原文 Fig. 1a–b及通用光氧化还原循环整理，不表示phoenix1的完整反应网络。",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-07-r10/ncx1-quenching-cycles.png",
-      "body": true,
-      "display_width_pct": 100,
-      "source_kind": "original_concept_diagram",
-      "vector_source_path": "public/wechat-assets/reviewed/2026-10-07-r10/ncx1-quenching-cycles.svg"
-    },
-    {
       "id": "ncx2",
       "source_doi": "10.1038/s41557-024-01482-4",
-      "source_figure": "Original educational concept Fig. E2; background: Wang et al., Nature Chemistry 2024, Fig. 1a",
-      "caption": "自制拓展图2（Fig. E2）｜同一溶剂笼内的反向电子转移与笼逃逸竞争。笼逃逸使反应伙伴分开，不代表电子从PC中逸出，也不保证最终生成产物。S表示溶剂；背景依据Wang等，Nature Chemistry 2024，DOI 10.1038/s41557-024-01482-4，Fig. 1a。此图不是phoenix1的实测数据。",
+      "source_figure": "Original educational concept Fig. E1; background: Wang et al., Nature Chemistry 2024, Fig. 1a",
+      "caption": "自制拓展图1（Fig. E1）｜同一溶剂笼内的反向电子转移与笼逃逸竞争。笼逃逸使反应伙伴分开，不代表电子从PC中逸出，也不保证最终生成产物。S表示溶剂；背景依据Wang等，Nature Chemistry 2024，DOI 10.1038/s41557-024-01482-4，Fig. 1a。此图不是phoenix1的实测数据。",
       "repo_path": "public/wechat-assets/reviewed/2026-10-07-r10/ncx2-cage-competition.png",
       "body": true,
       "display_width_pct": 100,
@@ -434,8 +406,8 @@
     {
       "id": "ncx3",
       "source_doi": "10.1039/D4SC04518A",
-      "source_figure": "Original educational concept Fig. E3; background: Villa et al., Chemical Science 2024",
-      "caption": "自制拓展图3（Fig. E3）｜分子自由基负离子与溶剂化电子的电子态对照。两者均受溶剂环境影响；蓝色区域为示意，不是实测电子密度，也不指定固定空腔或溶剂分子数。背景依据Villa等，Chemical Science 2024，DOI 10.1039/D4SC04518A；不将其乙腈体系的峰位或寿命移植到phoenix1。",
+      "source_figure": "Original educational concept Fig. E2; background: Villa et al., Chemical Science 2024",
+      "caption": "自制拓展图2（Fig. E2）｜分子自由基负离子与溶剂化电子的电子态对照。两者均受溶剂环境影响；蓝色区域为示意，不是实测电子密度，也不指定固定空腔或溶剂分子数。背景依据Villa等，Chemical Science 2024，DOI 10.1039/D4SC04518A；不将其乙腈体系的峰位或寿命移植到phoenix1。",
       "repo_path": "public/wechat-assets/reviewed/2026-10-07-r10/ncx3-electronic-states.png",
       "body": true,
       "display_width_pct": 100,
@@ -455,6 +427,6 @@
     "description": "Entire approved transparent-background phoenix artwork; contained without cropping any artwork, not a screenshot or inset.",
     "preserve_existing_thumb": false
   },
-  "ai_notice": "本文由“化之岛”基于用户提供的论文正文、Supporting Information及独立同行评议文件整理，AI辅助归纳、图文编排与文字校核；正式发布前由运营者复核。原始论文图像依据CC BY 4.0使用，来源为Rosso等，DOI 10.1038/s41929-026-01593-w；图像仅作裁切和排版，结构与数据不重绘。凤凰为艺术意象，并非官方期刊封面。许可：https://creativecommons.org/licenses/by/4.0/。 自制拓展图E1–E3为依据所列原始文献整理的概念示意，不属于原文实验图；电子态、符号和箭头均经逐项校核。",
-  "editorialRevision": "2026-10-07-r16"
+  "ai_notice": "本文由“化之岛”基于用户提供的论文正文、Supporting Information及独立同行评议文件整理，AI辅助归纳、图文编排与文字校核；正式发布前由运营者复核。原始论文图像依据CC BY 4.0使用，来源为Rosso等，DOI 10.1038/s41929-026-01593-w；图像仅作裁切和排版，结构与数据不重绘。凤凰为艺术意象，并非官方期刊封面。许可：https://creativecommons.org/licenses/by/4.0/。 自制拓展图E1–E2为依据所列原始文献整理的概念示意，不属于原文实验图；电子态、符号和箭头均经逐项校核。",
+  "editorialRevision": "2026-10-07-r17"
 }
