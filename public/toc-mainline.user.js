@@ -4231,7 +4231,12 @@ function embeddedJobDois(value) {
     row.job=coverageJobNeeds(next);
     if(!coverageHasNeeds(next)){row.state='resolved';row.retryAt=0;return;}
     var retryAfter=Math.max(0,Number(result.retryAfterMs||0));
-    if(result.status==='aborted'){row.state='paused';return;}
+    if(result.status==='aborted'){
+      // A single publisher-tab abort must not terminate an explicit missing-only pass.
+      // Real Pause is represented by controllerPaused(); otherwise quarantine this DOI
+      // for the rest of the current pass and continue with the remaining articles.
+      row.state=controllerPaused()?'paused':'blocked';row.retryAt=0;return;
+    }
     if(job.capturePrivatePdf && result.privatePdf && !privatePdfCompletedStatus(pdfStatus)){
       // Keep the PDF gap visible and unresolved, but skip this DOI for the rest
       // of the current pass. A new explicit Start may retry immediately.
@@ -4346,7 +4351,7 @@ function embeddedJobDois(value) {
         if(row.state==='resolved')GM_setValue(attemptKey(job.doi,VERSION+':paired:1790082000000','figures'),result);
         if(!result.toc)enqueueCaptureReport(job,[{stage:'controller',event:'coverage_capture_result',status:result.status,message:result.reason,at:nowIso()}],result.status,result.reason,true,'');
         coverageStats(run);manualSummary(run);
-        if(controllerPaused()||result.status==='aborted')break;
+        if(controllerPaused())break;
         await coverageWait(run,Date.now()+3500);
         if(!manualExecutionCurrent(run)||controllerPaused())break;
         if(Date.now()-checkedAt>=60000){queue=await getJson(QUEUE_URL+'?ts='+Date.now());if(!await refresh())return;}
