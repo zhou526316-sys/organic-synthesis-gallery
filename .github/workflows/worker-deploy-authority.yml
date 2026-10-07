@@ -75,7 +75,7 @@ jobs:
             'binding = "PDF_PRIVATE"',
             'PRIVATE_PDF_READ_ENABLED = "1"',
             'PRIVATE_PDF_CAPTURE_ENABLED = "1"',
-            'PRIVATE_PDF_PROCESSING_ENABLED = "0"',
+            'PRIVATE_PDF_PROCESSING_ENABLED = "1"',
             'EVIDENCE_INDEX_SHADOW_ENABLED = "1"',
             'Advance and reconcile Evidence Index shadow',
             "readPathActive!==false",

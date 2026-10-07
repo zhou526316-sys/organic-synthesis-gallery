@@ -1,12 +1,14 @@
 name: Private PDF readable processing v3
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: {}
   schedule:
     - cron: '17,47 * * * *'
   workflow_run:
-    workflows: ['Deploy Worker frontend assets']
-    types: [completed]
+    workflows:
+      - Deploy Worker frontend assets
+    types:
+      - completed
 
 permissions:
   contents: read
@@ -17,7 +19,7 @@ concurrency:
 
 jobs:
   process:
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -29,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || 'main' }}
+          ref: main
       - uses: actions/setup-node@v5
         with:
           node-version: '22'

@@ -4,6 +4,7 @@ import { PRIVATE_PDF_PROCESSOR_REVISION, sha256Hex, titleScoreMilli, verifyPriva
 
 function escapePdf(value) { return String(value).replace(/([\\()])/g, '\\$1').replace(/[\r\n]+/g, ' '); }
 function makePdf(text, title = '') {
+  text = String(text) + ' ' + 'validation filler '.repeat(80);
   const stream = `BT /F1 10 Tf 50 740 Td (${escapePdf(text)}) Tj ET`;
   const objects = [
     '1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n',
