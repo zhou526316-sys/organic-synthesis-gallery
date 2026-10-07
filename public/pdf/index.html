@@ -28,7 +28,10 @@
       const fallback=params.get('fallback')||'';
       const status=document.getElementById('status');
       const frame=document.getElementById('pdf-frame');
+      let objectUrl='';
       document.getElementById('doi').textContent=doi;
+      const releaseObjectUrl=()=>{if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl='';}};
+      window.addEventListener('pagehide',releaseObjectUrl,{once:true});
       const safeFallback=()=>{try{const u=new URL(fallback,location.origin);return /^https?:$/.test(u.protocol)?u.href:'';}catch{return ''}};
       const showFallback=()=>{
         const url=safeFallback();
@@ -52,11 +55,31 @@
       const url=new URL('/api/user-ui/private-pdf/open',API_BASE);url.searchParams.set('doi',doi);
       fetch(url,{method:'POST',headers:{authorization:'Bearer '+token},cache:'no-store'})
         .then(async response=>response.ok?response.json():null)
-        .then(data=>{
+        .then(async data=>{
           if(!data||data.available!==true||typeof data.url!=='string'){showFallback();return;}
-          frame.src=data.url;frame.hidden=false;status.hidden=true;
+          const response=await fetch(data.url,{
+            method:'GET',
+            cache:'no-store',
+            credentials:'omit',
+            redirect:'error',
+            signal:AbortSignal.timeout(45000),
+          });
+          if(!response.ok)throw new Error('pdf_http_'+response.status);
+          const type=String(response.headers.get('content-type')||'').toLowerCase();
+          if(!type.startsWith('application/pdf'))throw new Error('pdf_content_type');
+          const bytes=new Uint8Array(await response.arrayBuffer());
+          if(bytes.length<5||String.fromCharCode(...bytes.slice(0,5))!=='%PDF-')throw new Error('pdf_magic');
+          releaseObjectUrl();
+          objectUrl=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
+          frame.src=objectUrl;
+          frame.hidden=false;
+          status.hidden=true;
+          document.documentElement.dataset.privatePdfViewer='ready';
         })
-        .catch(showFallback);
+        .catch(()=>{
+          document.documentElement.dataset.privatePdfViewer='error';
+          showFallback();
+        });
     })();
   </script>
 </body>

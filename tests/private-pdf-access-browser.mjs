@@ -82,9 +82,9 @@ const papers=Array.from({length:72},(_,index)=>({
  date:today,addedDate:today,new:true,url:null,authors:['Fixture Author'],
 }));
 const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
-async function contextWith(capabilities,openResult={available:true,url:base+'/private-hit.html?token=opaque'},options={}){
+async function contextWith(capabilities,openResult={available:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=opaque'},options={}){
  const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900},locale:options.locale||'en-US'});
- const state={privateCalls:0,authTokens:[],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
+ const state={privateCalls:0,privateFileCalls:0,authTokens:[],authSessionChecks:0,pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
  if(options.pendingQueue)state.queueRows.set('fixture-owner',new Map(papers.map(paper=>[paper.doi,{doi:paper.doi,state:'pending',revision:1,createdAt:Date.now(),updatedAt:Date.now()}])));
  await context.addInitScript(fixtureOrigin=>{
   if(location.origin!==fixtureOrigin)return;
@@ -128,7 +128,8 @@ async function contextWith(capabilities,openResult={available:true,url:base+'/pr
   const reply=body=>route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify(body)});
   if(url.pathname==='/api/user-ui/auth/session'){
    const token=String(route.request().headers().authorization||'').replace(/^Bearer /,'');
-   state.authTokens.push(token);
+   state.authTokens.push(token);state.authSessionChecks++;
+   if(Number(options.transientFalseSessions||0)>=state.authSessionChecks)return reply({authenticated:false,user:null});
    const allowed=token==='fixture-session'?capabilities:[];
    if(options.holdOwner&&token==='fixture-session'){
     await new Promise(resolve=>state.pendingOwner.push(resolve));state.releasedOwner++;
@@ -157,6 +158,10 @@ async function contextWith(capabilities,openResult={available:true,url:base+'/pr
     await new Promise(resolve=>state.pendingQueue.push(resolve));state.releasedQueue++;
    }
    return reply(result);
+  }
+  if(url.pathname==='/api/user-ui/private-pdf/file'){
+   state.privateFileCalls++;
+   return route.fulfill({status:200,contentType:'application/pdf',headers:{'access-control-allow-origin':'*','cache-control':'private, no-store'},body:cardPdf});
   }
   if(url.pathname.startsWith('/api/user-ui/private-pdf/')){state.privateCalls++;return reply(openResult);}
   if(url.pathname==='/api/user-ui/integrations')return reply({auth:{local:true,google:false,wechat:false,qq:false,email:false},payments:{wechat:false,alipay:false}});
@@ -224,8 +229,11 @@ try{
   const publisherPage=await popup(page,original);assert.match(publisherPage.url(),/publisher-fallback\.html/);
   assert.equal(state.privateCalls,0);await publisherPage.close();
   const target=await popup(page,pdf);assert.match(target.url(),/\/pdf\/?\?doi=/);
-  await target.waitForFunction(()=>document.querySelector('#pdf-frame')?.getAttribute('src')?.includes('/private-hit.html'),undefined,{timeout:7000});
-  assert.equal(state.privateCalls,1);
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:7000});
+  const source=await target.locator('#pdf-frame').getAttribute('src');
+  assert.match(source||'',/^blob:/);
+  assert.equal(await target.locator('#pdf-frame').isVisible(),true);
+  assert.equal(state.privateCalls,1);assert.equal(state.privateFileCalls,1);
  });
  for(const capabilities of [[],['private_pdf_owner','private_pdf_capture']]){
   await test(capabilities.length?'capture-only account has no PDF read button or private lookup':'ordinary account hides PDF button and retains publisher original',async()=>{
@@ -241,6 +249,14 @@ try{
    const target=await popup(page,original);assert.match(target.url(),/publisher-fallback\.html/);assert.equal(state.privateCalls,0);
   });
  }
+ await test('transient session negatives after PDF navigation never erase the stored login token',async()=>{
+  const {context,state}=await contextWith(['private_pdf_read'],undefined,{transientFalseSessions:2});
+  const page=await context.newPage();await page.goto(base,{waitUntil:'domcontentloaded'});
+  await page.locator('.card a.open').first().waitFor();
+  await waitForNode(page,()=>state.authSessionChecks>=3);
+  assert.equal(await page.evaluate(()=>localStorage.getItem('organic-gallery-session-v1')),'fixture-session');
+  await page.waitForFunction(()=>document.documentElement.dataset.privatePdfRead==='true',undefined,{timeout:7000});
+ });
  await test('owner without a verified copy sees viewer and explicit publisher fallback',async()=>{
   const {context}=await contextWith(['private_pdf_read'],{available:false});const page=await gallery(context,true);
   const pdf=page.locator('.card a.private-pdf-button').first();

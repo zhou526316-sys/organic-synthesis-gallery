@@ -329,11 +329,23 @@ export class GalleryUserShell extends HTMLElement {
   }
 
   private async refreshSession(): Promise<void> {
-    try {
-      const result = await this.api<{ authenticated: boolean; user: AuthUser | null }>('/api/user-ui/auth/session');
-      this.authUser = result.authenticated ? result.user : null;
-      if (!result.authenticated) saveSessionToken('');
-    } catch { this.authUser = null; }
+    const token = sessionToken();
+    if (!token) { this.authUser = null; return; }
+    // Returning from a PDF viewer can race an edge/network transition. One
+    // negative session read is not enough to destroy a 30-day browser token.
+    // Confirm twice and leave storage intact; explicit logout is the only
+    // client action that clears the persistent token.
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const result = await this.api<{ authenticated: boolean; user: AuthUser | null }>('/api/user-ui/auth/session');
+        if (sessionToken() !== token) return;
+        if (result.authenticated && result.user) { this.authUser = result.user; return; }
+      } catch {
+        if (sessionToken() !== token) return;
+      }
+      if (attempt === 0) await new Promise(resolve => window.setTimeout(resolve, 180));
+    }
+    if (sessionToken() === token) this.authUser = null;
   }
 
   private async consumeAuthHash(): Promise<void> {
