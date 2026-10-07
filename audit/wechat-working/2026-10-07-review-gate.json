@@ -1,34 +1,34 @@
 {
   "publicationDate": "2026-10-07",
-  "editorialRevision": "2026-10-07-r10",
-  "reviewedAt": "2026-10-07T06:46:06.733823+00:00",
+  "editorialRevision": "2026-10-07-r11",
+  "reviewedAt": "2026-10-07T07:03:53.915190+00:00",
   "reviewer": "AI source-grounded editorial review; no claim of human review",
   "textReview": "pass",
-  "imageReview": "pass",
+  "imageReview": "pending",
   "individualImageReview": "pass",
-  "combinedVisualReview": "pass",
+  "combinedVisualReview": "pending",
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-07-r10-angew-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-07-r10-angew-images-only.md",
+    "textOnly": "audit/wechat-working/2026-10-07-r11-angew-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-07-r11-angew-images-only.md",
     "additionalTextOnly": [
-      "audit/wechat-working/2026-10-07-r10-natcat-text-only.md"
+      "audit/wechat-working/2026-10-07-r11-natcat-text-only.md"
     ],
     "additionalImagesOnly": [
-      "audit/wechat-working/2026-10-07-r10-natcat-images-only.md"
+      "audit/wechat-working/2026-10-07-r11-natcat-images-only.md"
     ]
   },
   "sources": [
     {
       "path": "public/wechat-editions/2026-10-07.json",
-      "blobSha": "ad5893b8c3359ce3abb46372a311578a8bc82220"
+      "blobSha": "50397ae0da5b7940dd85238c7bc046f716965e44"
     },
     {
       "path": "public/wechat-featured/2026-10-07.json",
-      "blobSha": "cf6c95f354f680c08f122cd22c9f0a512d0c65ad"
+      "blobSha": "0320c051611f2c1e681e193003acc52194bf911a"
     },
     {
       "path": "public/wechat-retrospective/phoenix1-structural-regeneration.json",
-      "blobSha": "ca9678cb1ca08f9572f45a15057d2bc1e8abfb25"
+      "blobSha": "127b7beb03f72d2fc062c71021212b81a96b040a"
     }
   ],
   "assets": [
@@ -131,9 +131,9 @@
       "height": 708
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-07-r10/an-cover-toc-r10.png",
-      "blobSha": "35725fff5e93f3536d5a40c303fe633f6da0da06",
-      "sha256": "ecdb68167cdd88405351d825241dd6f9d01684c979ba4fdf4c1d391849431689",
+      "path": "public/wechat-assets/reviewed/2026-10-07-r11/an-cover-title-safe-r11.png",
+      "blobSha": "560cc2037443fbbfe8a1cc5a1f89908240054954",
+      "sha256": "51f5f967259b95827d0bc65c2011586ef50944d122a50144ec3cf98dc3479855",
       "width": 1880,
       "height": 800
     },
@@ -281,52 +281,17 @@
   "materializedCropReviewRequired": true,
   "strictFigurePlacement": true,
   "reviewNotes": [
-    "User requested authentic TOC as daily cover and high-resolution explanatory visuals in retrospective extensions.",
-    "Original TOC identity verified against exact-title publisher image link, established paper content and existing DOI-bound imported cache. Native original is 500x247; cover resampling is layout only, not claimed as new scientific detail or recovered high resolution. Full artwork preserved above title band.",
-    "Three original code/vector concept diagrams, 2000 px wide, checked independently at 390 px: charge conservation, electron direction, solvent legends, molecular versus solvated electron state; no experimental data generated.",
-    "Concept captions are explicitly labeled self-made Fig. E1–E3 and cite primary background sources; not original-paper figure numbers or experimental evidence.",
-    "All prior original body figures and full approved phoenix artwork retained; text limited to adjacent figure references and disclosure.",
-    "Text-only and images-only exports regenerated; source combined preview passed at 390/690 px, with all paragraphs/captions and 33 body figures retained.",
-    "Same two-article daily draft only; no public sending authorized.",
-    "Root visually inspected all new concepts at actual source mobile width and adjacent explanations, plus full TOC and approved phoenix covers; charge signs and arrows correct; no overlap or clipped figures. Actual WeChat transport/layout passed in run 37583704475 with separate root visual inspection.",
-    "Same existing media_id updated once in publisher run 37583382359, receipt 2026-10-07T06:46:53.932916Z. Actual 2-card order correct, 15 daily images including Gallery card and 19 retrospective images loaded; all paragraphs/captions preserved. Three 2000px concept masters delivered by WeChat as 1080px body renditions and visually inspected at 390/690px. Both covers loaded. No public send."
+    "User explicitly requested final cover adjustment so white native title cannot overlap the white TOC background.",
+    "Cover-only visual change. Complete original TOC remains proportionally contained in upper36%; lower64% solid navy reserved for native title. No title text baked in.",
+    "Daily/retrospective titles, digest, narrative, captions and all33body figures are byte-equivalent to R10 content; metadata revision updated consistently.",
+    "Pure text and images-only reviews regenerated. Local title-overlay checks cover current57-character title, four-line stress case and a332px narrow card. New combined source preview pending.",
+    "Only same two-article draft update authorized. No public sending."
   ],
-  "draftReadback": "ok",
+  "draftReadback": "pending",
   "publicSendAuthorized": false,
-  "finalTransportReview": "pass",
+  "finalTransportReview": "pending",
   "priorCompletedRevision": {
-    "revision": "2026-10-07-r9",
-    "previewUrl": "https://relay.gczhouwld.com/wechat-preview/228abccce0c01fc9db3cee87.html"
-  },
-  "finalSourcePreview": {
-    "status": "pass",
     "revision": "2026-10-07-r10",
-    "sourceSnapshot": "39c0fb20628ff08d96ce61d1ae785b0bc6370a6af732611d26cc9b820b3b1717",
-    "runId": "37583160401",
-    "artifactId": 11466045824,
-    "artifactSha256": "ce990220c2a44528fbd14e6aa57dcd975befe21c306fbf5b8b3c8368b7ead42f",
-    "viewports": [
-      390,
-      690
-    ],
-    "assetsVerified": 35,
-    "bodyImages": {
-      "angew": 14,
-      "natcat": 19
-    },
-    "reviewedScreenshots": [
-      "angew-cover-390.png",
-      "angew-cover-690.png",
-      "natcat-cover-390.png",
-      "ncx1-390-adjacent.png",
-      "ncx2-390-image.png",
-      "ncx2-390-adjacent.png",
-      "ncx3-390-image.png",
-      "ncx3-390-adjacent.png"
-    ]
-  },
-  "completedAt": "2026-10-07T06:51:46Z",
-  "actualDraftPreviewUrl": "https://relay.gczhouwld.com/wechat-preview/084492b0e33933ac04021558.html",
-  "actualDraftQa": "audit/wechat-working/2026-10-07-r10-real-draft-qa.json",
-  "actualDraftQaRunId": "37583704475"
+    "previewUrl": "https://relay.gczhouwld.com/wechat-preview/084492b0e33933ac04021558.html"
+  }
 }

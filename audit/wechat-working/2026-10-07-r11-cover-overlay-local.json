@@ -1,0 +1,55 @@
+{
+  "status": "pass",
+  "kind": "source_overlay_simulation_not_native_screen",
+  "checks": [
+    {
+      "label": "current-title",
+      "width": 362,
+      "height": 154.04255319148936,
+      "fontSize": 18,
+      "lineHeight": 22,
+      "lines": [
+        "有机合成文献日报｜10.07｜今日精选｜A",
+        "ngew：用于自由基交叉偶联的氧化还原可",
+        "调NHC–三芳胺杂化有机光催化剂"
+      ],
+      "textTop": 77.04255319148936,
+      "darkAreaTop": 55.45531914893617,
+      "topClearance": 21.58723404255319
+    },
+    {
+      "label": "four-line-stress",
+      "width": 362,
+      "height": 154.04255319148936,
+      "fontSize": 16,
+      "lineHeight": 20,
+      "lines": [
+        "有机合成文献日报｜10.07｜",
+        "今日精选｜Angew：用于自由",
+        "基交叉偶联的氧化还原可调NHC",
+        "–三芳胺杂化有机光催化剂"
+      ],
+      "textTop": 63.04255319148936,
+      "darkAreaTop": 55.45531914893617,
+      "topClearance": 7.587234042553192
+    },
+    {
+      "label": "narrow-card",
+      "width": 332,
+      "height": 141.27659574468086,
+      "fontSize": 17,
+      "lineHeight": 21,
+      "lines": [
+        "有机合成文献日报｜10.07｜今日精选｜",
+        "Angew：用于自由基交叉偶联的氧化还",
+        "原可调NHC–三芳胺杂化有机光催化剂"
+      ],
+      "textTop": 67.27659574468086,
+      "darkAreaTop": 50.85957446808511,
+      "topClearance": 16.417021276595754
+    }
+  ],
+  "originalToc": "public/wechat-assets/reviewed/2026-10-07-r10/an-toc-original-500.png",
+  "newCover": "public/wechat-assets/reviewed/2026-10-07-r11/an-cover-title-safe-r11.png",
+  "noBodyOrCaptionChanges": true
+}
