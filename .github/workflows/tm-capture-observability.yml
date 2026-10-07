@@ -1,17 +1,17 @@
-name: Tampermonkey throughput and result-truth regression
+name: Tampermonkey capture observability regression
 on:
   push:
-    branches: [fix/tm-throughput-truth-20261007]
+    branches: [fix/tm-capture-observability-20261007]
     paths:
       - public/toc-mainline.user.js
       - cloudflare/scripts/build-bridge-loader.mjs
       - scripts/validate-tm220-artifacts.mjs
-      - tests/tm-throughput-truth.test.mjs
-      - .github/workflows/tm-throughput-truth.yml
+      - tests/tm-capture-observability.test.mjs
+      - .github/workflows/tm-capture-observability.yml
 permissions:
   contents: read
 concurrency:
-  group: tm-throughput-truth
+  group: tm-capture-observability-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   verify:
@@ -22,17 +22,17 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Verify fallback queue closure and truthful layer status
+      - name: Verify diagnostic coverage without changing capture scope
         run: |
           set -euo pipefail
           node --check public/toc-mainline.user.js
-          node --test tests/tm-throughput-truth.test.mjs
-          node tests/tm-manual-resume.test.mjs
-          node tests/tm-controller-recovery.test.mjs
+          node --test tests/tm-capture-observability.test.mjs
           node tests/tm-queue-coverage.test.mjs
           node tests/tm-missing-only.test.mjs
-          node scripts/test-tm220-release.mjs
-          node scripts/test-tm222-auto-report.mjs
+          node tests/tm-controller-recovery.test.mjs
+          node tests/tm-manual-resume.test.mjs
+          node --test tests/tm-throughput-truth.test.mjs
+          node --test tests/tm-inventory-startup.test.mjs
           node scripts/validate-tm220-artifacts.mjs source
           git diff --check
       - name: Build Bridge 2.2.66
@@ -48,10 +48,11 @@ jobs:
           node scripts/validate-tm220-artifacts.mjs public
           grep -F '// @version      2.2.66' public/gallery-vpn-bridge.user.js
           grep -F "var INSTALL_REVISION = '6.2.47';" public/gallery-vpn-bridge.user.js
+          grep -F "CAPTURE_OBSERVABILITY_REVISION = '20261007-capture-observability-v1'" public/gallery-vpn-bridge.user.js
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: tm-throughput-truth-evidence
+          name: tm-capture-observability-evidence
           path: |
             public/gallery-vpn-bridge.user.js
             public/toc-mainline.user.js

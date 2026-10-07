@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.46
+// @version      6.2.47
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -55,7 +55,8 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.46';
+  var INSTALL_REVISION = '6.2.47';
+  var CAPTURE_OBSERVABILITY_REVISION = '20261007-capture-observability-v1';
   var CONTROLLER_READ_REVISION = '20261007-native-metadata-first-v1';
   var MANUAL_RECOVERY_REVISION = '20261007-manual-resume-v1';
   var manualRecoveryBusy = false;
@@ -414,7 +415,7 @@
       var seen=new Set();var events=important.concat(recent).filter(function(e){var k=e.at+'|'+e.stage+'|'+e.event+'|'+e.url;if(seen.has(k))return false;seen.add(k);return true;});
       var page=autoReportUrl(actualPageUrl===undefined?location.href:actualPageUrl);
       var last=important.length?important[important.length-1]:recent[recent.length-1]||{};
-      var metadata={eventId:job.jobId+(final?':final':':checkpoint')+':'+revision,jobId:job.jobId,installRevision:typeof INSTALL_REVISION==='string'?INSTALL_REVISION:'',controllerRevision:CONTROLLER_REVISION,architectureMembershipRevision:typeof ARCHITECTURE_MEMBERSHIP_REVISION==='string'?ARCHITECTURE_MEMBERSHIP_REVISION:'',publisherMediaRevision:typeof PUBLISHER_MEDIA_REVISION==='string'?PUBLISHER_MEDIA_REVISION:'',queueCoverageRevision:typeof QUEUE_COVERAGE_REVISION==='string'?QUEUE_COVERAGE_REVISION:'',missingRevision:typeof MISSING_CAPTURE_REVISION==='string'?MISSING_CAPTURE_REVISION:'',requestedNeeds:typeof captureNeedText==='function'?captureNeedText(job):'',lifecycleRevision:typeof CONTROLLER_LIFECYCLE_REVISION==='string'?CONTROLLER_LIFECYCLE_REVISION:'',controllerState:typeof controllerLifecycleSnapshot==='function'?controllerLifecycleSnapshot():null,captureVersion:VERSION,kind:final?'final_result':'failure_checkpoint',retryCount:Number(job.retryCount||0),pageDois:embeddedJobDois(page),httpStatusKnown:Number(last.httpStatus||0)>0};
+      var metadata={eventId:job.jobId+(final?':final':':checkpoint')+':'+revision,jobId:job.jobId,installRevision:typeof INSTALL_REVISION==='string'?INSTALL_REVISION:'',captureObservabilityRevision:typeof CAPTURE_OBSERVABILITY_REVISION==='string'?CAPTURE_OBSERVABILITY_REVISION:'',controllerRevision:CONTROLLER_REVISION,architectureMembershipRevision:typeof ARCHITECTURE_MEMBERSHIP_REVISION==='string'?ARCHITECTURE_MEMBERSHIP_REVISION:'',publisherMediaRevision:typeof PUBLISHER_MEDIA_REVISION==='string'?PUBLISHER_MEDIA_REVISION:'',queueCoverageRevision:typeof QUEUE_COVERAGE_REVISION==='string'?QUEUE_COVERAGE_REVISION:'',missingRevision:typeof MISSING_CAPTURE_REVISION==='string'?MISSING_CAPTURE_REVISION:'',requestedNeeds:typeof captureNeedText==='function'?captureNeedText(job):'',routePlan:job&&job.routePlan?job.routePlan:null,lifecycleRevision:typeof CONTROLLER_LIFECYCLE_REVISION==='string'?CONTROLLER_LIFECYCLE_REVISION:'',controllerState:typeof controllerLifecycleSnapshot==='function'?controllerLifecycleSnapshot():null,captureVersion:VERSION,kind:final?'final_result':'failure_checkpoint',retryCount:Number(job.retryCount||0),pageDois:embeddedJobDois(page),httpStatusKnown:Number(last.httpStatus||0)>0};
       var context={at:nowIso(),seq:0,stage:'diagnostic_context',event:final?'final_result':'failure_checkpoint',status:'info',url:page,message:JSON.stringify(metadata)};
       var architectureState=typeof ARCHITECTURE_MEMBERSHIP_STATE_KEY==='string'?GM_getValue(ARCHITECTURE_MEMBERSHIP_STATE_KEY,null):null;
       var architectureEvent=null;
@@ -703,6 +704,29 @@ function embeddedJobDois(value) {
     var url = new URL(String(value || ''), location.href);
     url.hash = 'osg-job=' + encodeURIComponent(String(jobId || ''));
     return url.href;
+  }
+
+  function captureRouteClass(value) {
+    try {
+      var u=new URL(String(value||''),location.href),h=u.hostname.toLowerCase(),p=u.pathname.toLowerCase();
+      if(h.endsWith('pubs.rsc.org'))return p.indexOf('/articlehtml/')>=0?'rsc_articlehtml':p.indexOf('/articlelanding/')>=0?'rsc_articlelanding':'rsc_other';
+      if(h.endsWith('pubs.acs.org'))return p.indexOf('/doi/full/')>=0?'acs_full':'acs_landing';
+      if(h.endsWith('onlinelibrary.wiley.com'))return p.indexOf('/doi/full/')>=0?'wiley_full':'wiley_landing';
+      if(h.endsWith('science.org'))return p.indexOf('/doi/full/')>=0?'science_full':'science_landing';
+      if(h.endsWith('nature.com'))return 'nature_article';
+      if(h.endsWith('sciencedirect.com'))return 'elsevier_sciencedirect';
+      if(h.endsWith('cell.com'))return 'elsevier_cell';
+      if(h.endsWith('chinesechemsoc.org')||h.endsWith('ccspublishing.org.cn'))return p.indexOf('/doi/full/')>=0?'ccs_full':'ccs_landing';
+      if(h==='doi.org')return 'doi_redirect';
+      return h||'unknown';
+    } catch (_) { return 'invalid_url'; }
+  }
+  function captureRoutePlan(job,base,resolved) {
+    return {revision:CAPTURE_OBSERVABILITY_REVISION,baseRoute:captureRouteClass(base),resolvedRoute:captureRouteClass(resolved),
+      baseUrl:autoReportUrl(base),resolvedUrl:autoReportUrl(resolved),captureToc:job&&job.captureToc===true,
+      captureFigures:job&&job.captureFigures===true,opportunisticFigures:job&&job.opportunisticFigures===true,
+      captureEvidence:job&&job.captureEvidence===true,opportunisticEvidence:job&&job.opportunisticEvidence===true,
+      capturePrivatePdf:job&&job.capturePrivatePdf===true,mediaNeed:String(job&&job.mediaNeed||'')};
   }
 
   function elsevierResolvedPublisherUrl(response) {
@@ -1996,15 +2020,17 @@ function embeddedJobDois(value) {
 
   function collectArticleFigureCandidates(job, trace, root, baseUrl, sourceName) {
     var scope = root || document, rows = [], seen = new Set();
+    var diag={nodes:0,noContext:0,official:0,pdfPreview:0,noLabel:0,duplicate:0,doiMismatch:0,rejected:0,accepted:0};
     scope.querySelectorAll('img,object[type^="image"]').forEach(function (node) {
+      diag.nodes++;
       var context = visualScope(node);
       if(job.publisher==='wiley')context=wileyBodyFigureContext(node,context);
       if(job.publisher==='rsc')context=rscBodyFigureContext(node,context);
-      if (!context || context.official) return;
+      if(!context){diag.noContext++;return;}
+      if(context.official){diag.official++;return;}
       visualUrls(node, context.block, baseUrl || location.href).forEach(function (url, rank) {
         if(job.publisher==='rsc'&&rscPdfPreviewUrl(url)){
-          pushTrace(trace,{stage:'rsc_figure_candidate',event:'pdf_preview_rejected',status:'rejected',url:url,message:'page-preview asset cannot be a numbered body figure'});
-          return;
+          diag.pdfPreview++;pushTrace(trace,{stage:'rsc_figure_candidate',event:'pdf_preview_rejected',status:'rejected',url:url,message:'page-preview asset cannot be a numbered body figure'});return;
         }
         var label=context.label||'';
         if(job.publisher==='ccs'){
@@ -2015,10 +2041,12 @@ function embeddedJobDois(value) {
           }
           if(!label&&assetLabel)label=assetLabel;
         }
-        if(!label)return;
+        if(!label){diag.noLabel++;return;}
         var key = label + '|' + url;
-        if (seen.has(key) || reject(context.caption, url) || !candidateBelongsToJob(url, job)) return;
-        seen.add(key);
+        if(seen.has(key)){diag.duplicate++;return;}
+        if(reject(context.caption,url)){diag.rejected++;return;}
+        if(!candidateBelongsToJob(url,job)){diag.doiMismatch++;return;}
+        seen.add(key);diag.accepted++;
         rows.push({url:url,kind:'article_figure',assetType:'article_figure',label:label,text:context.caption||label,source:job.publisher==='ccs'?'ccs_caption_asset_bound':'isolated_figure_caption',score:100-rank,element:node.tagName.toLowerCase()==='img'?node:null});
       });
     });
@@ -2026,6 +2054,7 @@ function embeddedJobDois(value) {
     // wrongly moves every Figure before every Scheme and changes the representative
     // first body graphic. Preserve DOM order for CCS; retain legacy ordering elsewhere.
     if(job.publisher!=='ccs')rows.sort(function (a,b) { return String(a.label).localeCompare(String(b.label),undefined,{numeric:true}) || b.score-a.score; });
+    job._figureCandidateStats=diag;
     pushTrace(trace,{stage:'figure_discovery',event:'scan_complete',status:rows.length?'found':'none',message:'isolated_labels='+new Set(rows.map(function(r){return r.label;})).size+';variants='+rows.length+(job.publisher==='ccs'?';order=dom':'')});
     if(job.publisher==='wiley'&&!rows.length)pushTrace(trace,{stage:'figure_discovery',event:'wiley_dom_shape',status:'none',message:'images='+scope.querySelectorAll('img,object[type^="image"]').length+';figureBlocks='+scope.querySelectorAll('figure,[role="figure"],.article-section__figure').length+';numberedHeadings='+Array.from(scope.querySelectorAll('h1,h2,h3,h4,h5,h6,[role="heading"]')).filter(function(n){return /^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*\d+[a-z]?\b/i.test(String(n.textContent||'').trim());}).length});
     return rows;
@@ -2513,21 +2542,54 @@ function embeddedJobDois(value) {
     });
   }
 
+  function publisherDomSnapshot(job, root, baseUrl) {
+    var scope=root||document,base=baseUrl||location.href;
+    function count(selector){try{return scope.querySelectorAll(selector).length;}catch(_){return 0;}}
+    var numbered=0,labels=[];
+    try{Array.prototype.slice.call(scope.querySelectorAll('figcaption,.caption,[class*="caption" i],h1,h2,h3,h4,h5,h6')).slice(0,500).forEach(function(node){
+      var t=String(node.textContent||'').replace(/\s+/g,' ').trim();
+      if(/\b(?:Figure|Fig\.?|Scheme|Chart)\s*[A-Za-z]?\d+[A-Za-z]?\b/i.test(t)){numbered++;if(labels.length<6)labels.push(t.slice(0,90));}
+    });}catch(_){}
+    var assets=[],seen=new Set();
+    try{Array.prototype.slice.call(scope.querySelectorAll('img,object[type^="image"],source')).slice(0,300).forEach(function(node){
+      var vals=[];if(node.tagName&&node.tagName.toLowerCase()==='object')vals.push(node.getAttribute('data'));
+      else vals.push(node.currentSrc,node.getAttribute&&node.getAttribute('src'),node.getAttribute&&node.getAttribute('data-src'),node.getAttribute&&node.getAttribute('data-lazy-src'));
+      vals.filter(Boolean).forEach(function(v){var u=normalizeUrl(v,base);if(u&&!seen.has(u)){seen.add(u);if(assets.length<6)assets.push(u);}});
+    });}catch(_){}
+    return {route:captureRouteClass(base),textLength:String(scope.body&&scope.body.innerText||'').length,
+      images:count('img'),pictures:count('picture'),objects:count('object[type^="image"]'),figures:count('figure,[role="figure"]'),
+      figcaptions:count('figcaption'),numbered:numbered,metaVisual:count('meta[name="citation_graphical_abstract"],meta[name="citation_visual_abstract"],meta[name="citation_toc_graphic"],meta[name="citation_abstract_image"]'),
+      iframes:count('iframe'),pdfLinks:count('a[href*=".pdf" i],a[href*="/pdf/" i],a[href*="/epdf/" i]'),labels:labels,assets:assets};
+  }
+  function tracePublisherDomSnapshot(job,trace,event,root,baseUrl) {
+    var snap=publisherDomSnapshot(job,root,baseUrl);
+    pushTrace(trace,{stage:'dom_snapshot',event:event,status:'info',url:baseUrl||location.href,
+      message:'route='+snap.route+';text='+snap.textLength+';img='+snap.images+';picture='+snap.pictures+';object='+snap.objects+';figure='+snap.figures+';figcaption='+snap.figcaptions+';numbered='+snap.numbered+';metaVisual='+snap.metaVisual+';iframe='+snap.iframes+';pdfLinks='+snap.pdfLinks});
+    snap.labels.slice(0,3).forEach(function(label){pushTrace(trace,{stage:'dom_label_sample',event:event,status:'info',message:label});});
+    snap.assets.slice(0,5).forEach(function(url){pushTrace(trace,{stage:'dom_asset_sample',event:event,status:'info',url:url,candidateSource:'publisher_dom_sample'});});
+    return snap;
+  }
+
   function collectCandidates(job, trace, root, baseUrl, sourceName, quiet) {
     var scope = root || document, rows = [], seen = new Set();
+    var diag={nodes:0,noContext:0,noKind:0,noUrl:0,pdfPreview:0,duplicate:0,doiMismatch:0,rejected:0,accepted:0};
     function add(row) {
       if (String(job && job.publisher || '') === 'rsc' && rscPdfPreviewUrl(row && row.url)) {
-        pushTrace(trace,{stage:'rsc_toc_candidate',event:'pdf_preview_rejected',status:'rejected',url:row&&row.url||'',message:'page-preview asset cannot be an official TOC'});
-        return;
+        diag.pdfPreview++;pushTrace(trace,{stage:'rsc_toc_candidate',event:'pdf_preview_rejected',status:'rejected',url:row&&row.url||'',message:'page-preview asset cannot be an official TOC'});return;
       }
-      if (!seen.has(row.url) && candidateBelongsToJob(row.url,job) && !reject(row.text,row.url)) { seen.add(row.url); rows.push(row); }
+      if(seen.has(row.url)){diag.duplicate++;return;}
+      if(!candidateBelongsToJob(row.url,job)){diag.doiMismatch++;return;}
+      if(reject(row.text,row.url)){diag.rejected++;return;}
+      seen.add(row.url);rows.push(row);diag.accepted++;
     }
     scope.querySelectorAll('img,object[type^="image"]').forEach(function(node) {
+      diag.nodes++;
       var context=visualScope(node);
-      if (!context) return;
+      if (!context){diag.noContext++;return;}
       var kind=context.official?'official':context.label==='Figure 1' && job.allowFigureOne!==false?'figure1':'';
-      if (!kind) return;
-      visualUrls(node,context.block,baseUrl||location.href).forEach(function(url,rank) {
+      if (!kind){diag.noKind++;return;}
+      var urls=visualUrls(node,context.block,baseUrl||location.href);if(!urls.length)diag.noUrl++;
+      urls.forEach(function(url,rank) {
         add({url:url,kind:kind,assetType:kind==='official'?'graphical_abstract':'figure1_fallback',score:(kind==='official'?600:150)-rank,text:context.caption,source:'isolated_visual_caption',element:node.tagName.toLowerCase()==='img'?node:null});
       });
     });
@@ -2549,6 +2611,7 @@ function embeddedJobDois(value) {
     }
     // No whole-page semantic windows: adjacent Scheme images must not inherit a TOC heading.
     rows.sort(function(a,b){return b.score-a.score;});
+    job._tocCandidateStats=diag;
     if (!quiet) pushTrace(trace,{stage:'candidate_discovery',event:'scan_complete',status:rows.length?'found':'none',message:'strict_scope_candidates='+rows.length});
     return rows;
   }
@@ -2659,6 +2722,7 @@ function embeddedJobDois(value) {
               var win = frame.contentWindow;
               if (!doc || !doc.body) return;
               var current = String(frame.src || url);
+              if(!frame.__osgDiagLogged){frame.__osgDiagLogged=true;tracePublisherDomSnapshot(job,trace,'iframe',doc,current);}
               if (job.publisher === 'acs') {
                 var doiNeedle = normalizeDoi(job.doi);
                 var suffixNeedle = doiNeedle.split('/').pop() || doiNeedle;
@@ -3654,9 +3718,11 @@ function embeddedJobDois(value) {
     var wantsEvidence=evidenceCaptureEligible(job);
     var result={status:'failed',reason:'',toc:{status:wantsToc?'pending':'already_available'},figures:{status:wantsFigures?'pending':'not_requested',discovered:0,stored:0,failed:0,items:[]},fulltext:{status:wantsEvidence?'pending':'not_requested'},figuresImported:0,figuresStaged:0,published:false};
     job._liveResult=result;
+    job._captureTiming={startedAtMs:Date.now(),discoveryMs:0,evidenceMs:0,pdfMs:0};
     autoReportJob=job;
     captureLiveUpdate(job,'discovering');
-    pushTrace(trace,{stage:'job',event:'start',status:'running',url:location.href,message:'v'+VERSION+';paired_capture=1;need='+String(job.mediaNeed)});
+    pushTrace(trace,{stage:'job',event:'start',status:'running',url:location.href,message:'v'+VERSION+';paired_capture=1;need='+String(job.mediaNeed)+';observability='+CAPTURE_OBSERVABILITY_REVISION});
+    if(job.routePlan)pushTrace(trace,{stage:'route_plan',event:'resolved',status:'info',url:job.routePlan.resolvedUrl||location.href,message:JSON.stringify(job.routePlan)});
     try {
       if (!token) throw new Error('write_token_missing');
       if(!wantsToc && !wantsFigures && !wantsEvidence && job.capturePrivatePdf===true){
@@ -3668,14 +3734,18 @@ function embeddedJobDois(value) {
       if(!wantsToc && !wantsFigures && wantsEvidence){
         result.toc={status:'not_requested'};
         result.figures.status='not_requested';
+        var evidenceOnlyStarted=Date.now();
         result.fulltext=await tryCaptureArticleEvidence(job,trace,token,8000);
+        job._captureTiming.evidenceMs=Math.max(0,Date.now()-evidenceOnlyStarted);
         result.status=result.fulltext.status==='stored'?'success':/^(?:empty|invalid)$/.test(String(result.fulltext.status||''))?'partial':'failed';
         result.reason='evidence_capture;fulltext='+String(result.fulltext.status||'failed')+';published=0';
         pushTrace(trace,{stage:'evidence_result',event:'complete',status:result.status,message:result.reason});
         captureLiveUpdate(job,'finished',{error:result.status==='failed'?result.reason:''});
         return finishPairedJob(job,result,trace,token);
       }
+      var discoveryStartedAt=Date.now();
       var discovered=await waitForPairedVisuals(job,trace);
+      job._captureTiming.discoveryMs=Math.max(0,Date.now()-discoveryStartedAt);
       job._liveDiscoveryDone=true;
       result.figures.discovered=new Set(discovered.figures.map(function(c){return c.label;})).size;
       captureLiveUpdate(job,'discovering');
@@ -3746,7 +3816,9 @@ function embeddedJobDois(value) {
       // Evidence capture is downstream of media and opportunistic. Its failure never
       // downgrades successful TOC/body capture, but a visit with missing evidence must
       // attempt it before the tab closes.
+      var evidenceStartedAt=Date.now();
       result.fulltext=await tryCaptureArticleEvidence(job,trace,token,wantsEvidence?5000:0);
+      job._captureTiming.evidenceMs=Math.max(0,Date.now()-evidenceStartedAt);
       if(result.status==='failed'&&captureResultHasUsefulLayer(result))result.status='partial';
       result.reason='combined_capture;toc='+result.toc.status
         +';figures='+(wantsFigures?(result.figures.stored+'/'+result.figures.discovered):'not_requested')
@@ -4657,9 +4729,11 @@ function embeddedJobDois(value) {
         badge('连续补缺 · '+captureNeedText(job)+'：'+job.doi,'#175cd3');
         var result;
         try{
+          var baseTaskUrl=articleUrl(job);
           var manualTaskUrl=await resolvePublisherTaskUrl(job);
           if(!manualExecutionCurrent(run)||controllerPaused())return;
           job.resolvedArticleUrl=manualTaskUrl;
+          job.routePlan=captureRoutePlan(job,baseTaskUrl,manualTaskUrl);
           GM_setValue(ACTIVE_JOB_KEY,job);
           run.tab=await Promise.resolve(GM_openInTab(boundPublisherJobUrl(manualTaskUrl,job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
           if(!manualExecutionCurrent(run))return;
@@ -5276,7 +5350,7 @@ function embeddedJobDois(value) {
   }
 
   async function waitForPairedVisuals(job,trace) {
-    var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started,iframeAttempted=false,accessGateStarted=0;
+    var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started,iframeAttempted=false,accessGateStarted=0,initialDomLogged=false;
     var toc=[],figures=[],recoveredOfficialToc=[];
     while (Date.now()-started<90000 && Date.now()<job.captureDeadline) {
       if (isAbortRequested()) throw new Error('user_aborted');
@@ -5305,6 +5379,12 @@ function embeddedJobDois(value) {
       var wantsFigures = Boolean(job&&job.opportunisticFigures===true) || (job && typeof job.captureFigures === 'boolean'
         ? job.captureFigures
         : String(job.mediaNeed || '').indexOf('figures') >= 0);
+      if(!initialDomLogged){
+        initialDomLogged=true;
+        pushTrace(trace,{stage:'capture_plan',event:'publisher_page',status:'info',url:location.href,
+          message:'route='+captureRouteClass(location.href)+';toc='+Number(wantsToc)+';figures='+Number(wantsFigures)+';evidence='+Number(evidenceCaptureEligible(job))+';pdf='+Number(job.capturePrivatePdf===true)+';captureFigures='+Number(job.captureFigures===true)+';oppFigures='+Number(job.opportunisticFigures===true)+';captureEvidence='+Number(job.captureEvidence===true)+';oppEvidence='+Number(job.opportunisticEvidence===true)+';mediaNeed='+String(job.mediaNeed||'')});
+        tracePublisherDomSnapshot(job,trace,'initial',document,location.href);
+      }
       toc=wantsToc?collectCandidates(job,trace,document,location.href,'paired_dom',true):[];
       if(wantsToc&&!toc.length&&recoveredOfficialToc.length)toc=recoveredOfficialToc.slice();
       figures=wantsFigures?collectArticleFigureCandidates(job,trace,document,location.href,'paired_dom'):[];
@@ -5339,6 +5419,11 @@ function embeddedJobDois(value) {
       }
       await sleep(800);
     }
+    tracePublisherDomSnapshot(job,trace,'final',document,location.href);
+    pushTrace(trace,{stage:'toc_filter_summary',event:'final',status:toc.length?'found':'none',message:JSON.stringify(job._tocCandidateStats||{})});
+    pushTrace(trace,{stage:'figure_filter_summary',event:'final',status:figures.length?'found':'none',message:JSON.stringify(job._figureCandidateStats||{})});
+    pushTrace(trace,{stage:'discovery_summary',event:'final',status:(toc.length||figures.length)?'found':'none',
+      message:'elapsedMs='+(Date.now()-started)+';toc='+toc.length+';figureLabels='+new Set(figures.map(function(x){return x.label;})).size+';figureVariants='+figures.length+';iframeAttempted='+Number(iframeAttempted)});
     return {toc:toc,figures:figures};
   }
 
@@ -5794,7 +5879,9 @@ function embeddedJobDois(value) {
   async function finishPairedJob(job,result,trace,token) {
     if(!currentCaptureJob(job))return Object.assign({},result,{status:'aborted',reason:'manual_run_superseded'});
     try {
+      var pdfStartedAt=Date.now();
       var privatePdfResult=await maybeCapturePrivatePdf(job,trace);
+      if(job._captureTiming)job._captureTiming.pdfMs=Math.max(0,Date.now()-pdfStartedAt);
       if(privatePdfResult)result.privatePdf=privatePdfResult;
       var pdfOnly=job.capturePrivatePdf===true&&job.captureToc!==true&&job.captureFigures!==true&&job.captureEvidence!==true&&job.opportunisticEvidence!==true&&job.opportunisticFigures!==true;
       if(job.capturePrivatePdf===true&&privatePdfResult&&!/^(?:stored|already_stored)$/.test(String(privatePdfResult.status||''))){
@@ -5819,6 +5906,8 @@ function embeddedJobDois(value) {
     if(!currentCaptureJob(job)||controllerPaused())return Object.assign({},result,{status:'aborted',reason:'manual_run_superseded'});
     if(job.missingOnly&&result.figures&&result.figures.discovered>0){var cp=readCheckpoint(job.doi);cp.figureCoverage={expected:Math.max(Number(cp.figureCoverage&&cp.figureCoverage.expected||0),Number(result.figures.discovered)),observedAt:Date.now()};saveCheckpoint(job.doi,cp,job);}
     result.retryAfterMs=Math.max(Number(result.retryAfterMs||0),Number((result.fulltext||{}).retryAfterMs||0));
+    if(job._captureTiming)pushTrace(trace,{stage:'capture_timing',event:'final',status:'info',
+      message:'totalMs='+Math.max(0,Date.now()-Number(job._captureTiming.startedAtMs||Date.now()))+';discoveryMs='+Number(job._captureTiming.discoveryMs||0)+';evidenceMs='+Number(job._captureTiming.evidenceMs||0)+';pdfMs='+Number(job._captureTiming.pdfMs||0)});
     result.doi=job.doi;result.jobId=job.jobId;result.version=VERSION;result.controllerRevision=CONTROLLER_REVISION;result.finishedAt=nowIso();
     GM_setValue(traceKey(job.doi),{doi:job.doi,jobId:job.jobId,status:result.status,trace:trace,finishedAt:result.finishedAt});
     enqueueCaptureReport(job,trace,result.status,result.reason,true);

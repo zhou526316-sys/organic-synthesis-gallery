@@ -39,7 +39,7 @@ jobs:
           node --check tests/private-pdf-capture-browser.mjs
           node scripts/validate-tm220-artifacts.mjs source
           git diff --check
-      - name: Build Bridge 2.2.65
+      - name: Build Bridge 2.2.66
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
@@ -50,8 +50,8 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.65' public/gallery-vpn-bridge.user.js
-          grep -F "var INSTALL_REVISION = '6.2.46';" public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.66' public/gallery-vpn-bridge.user.js
+          grep -F "var INSTALL_REVISION = '6.2.47';" public/gallery-vpn-bridge.user.js
       - uses: actions/upload-artifact@v4
         if: always()
         with:
