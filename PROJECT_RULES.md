@@ -108,3 +108,13 @@ Effective from the user's 2026-10-07 cover instructions:
 4. If background segmentation could damage or visually swallow any coloured/dark foreground, keep the original light background on a light plate/panel or leave the image untouched.
 5. Title bars are optional and must be minimal. If safe compositing still does not produce a clean result, scaling the original artwork down is explicitly preferred over damaging chemistry or making the cover uncomfortable.
 6. Cover QA must therefore check both information preservation and visual comfort, not only title contrast or occupied area.
+
+## WeChat master-level explanatory standard
+
+Effective from the user's 2026-10-07 instruction, featured WeChat articles must do more than improve fluency. They should read like a strong organic-chemistry mentor guiding readers at three levels: cross-domain understanding, field-specific evidence, and transferable design insight.
+
+1. Each article must make the core scientific constraint legible to a reader outside the exact subfield without adding textbook detours.
+2. Each article must preserve enough chemical detail for an organic chemist to audit the argument: structures, conditions, evidence hierarchy, scope and failure boundaries.
+3. Each article must extract 1–3 transferable design principles for method/catalyst development, but every high-level insight must be traceable to specific evidence in the paper and must state its extrapolation limit.
+4. “High-level” must never mean grandiose. Repetitive model-like rhetoric (for example frequent “真正…”, “最…”, “不是A而是B”, “值得注意的是…”) should be actively removed during the human-language pass.
+5. Every featured text receives three separate reviews before textReview=pass: scientific-evidence review, anti-AI/natural-language review, and cross-domain/transferable-insight review.
