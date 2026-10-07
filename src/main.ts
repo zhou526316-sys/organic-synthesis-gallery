@@ -726,8 +726,8 @@ function renderCards(): void {
   if (windowControls) windowControls.hidden = totalMatched === 0 || totalPages <= 1;
   if (windowStatus) {
     windowStatus.textContent = language === 'zh'
-      ? `第 ${currentPage} / ${totalPages} 页 · 当前显示 ${firstShown}–${endShown} / 共 ${totalMatched} 篇`
-      : `Page ${currentPage} of ${totalPages} · Showing ${firstShown}–${endShown} of ${totalMatched}`;
+      ? `第 ${currentPage}/${totalPages} 页 · 当前显示 ${firstShown}–${endShown} / 共 ${totalMatched} 篇`
+      : `Page ${currentPage}/${totalPages} · Showing ${firstShown}–${endShown} of ${totalMatched}`;
   }
   if (pageNumbers) pageNumbers.innerHTML = paginationButtonsMarkup(currentPage, totalPages, loadingPage);
   if (pageJumpInput) {
