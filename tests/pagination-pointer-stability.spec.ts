@@ -12,6 +12,9 @@ async function observe(page: Page, info: TestInfo, exercise: () => Promise<void>
   await page.addInitScript(() => {
     const events: unknown[] = [];
     (window as any).__paginationPointerEvents = events;
+    document.addEventListener('pointermove', event => {
+      (window as any).__paginationMousePoint = { x: event.clientX, y: event.clientY };
+    }, true);
     document.addEventListener('pointerdown', event => {
       const button = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('#resultWindowControls button') : null;
       (window as any).__paginationDownPage = button?.dataset.resultPage || '';
@@ -44,9 +47,18 @@ async function observe(page: Page, info: TestInfo, exercise: () => Promise<void>
 async function pressSecondPage(page: Page): Promise<void> {
   const button = page.locator('#resultPageNumbers [data-result-page="2"]');
   await expect(button).toBeVisible({ timeout: 30000 });
-  // hover() performs native actionability/scrolling. A rectangle read right
-  // after scrollIntoView can still be outside the viewport during lazy layout.
-  await button.hover();
+  // Finish lazy layout before choosing the down point. Only hovering is
+  // retried; the test still performs exactly one real press and release.
+  await expect.poll(async () => {
+    await button.hover({ timeout: 5000 });
+    return button.evaluate(element => {
+      const rect = element.getBoundingClientRect();
+      const point = (window as any).__paginationMousePoint;
+      return Boolean(point && point.x >= rect.left && point.x <= rect.right
+        && point.y >= rect.top && point.y <= rect.bottom
+        && document.elementFromPoint(point.x, point.y)?.closest('button') === element);
+    });
+  }, { timeout: 10000, message: 'mouse must hit the settled page button before the single press' }).toBe(true);
   await page.mouse.down();
   expect(await page.evaluate(() => (window as any).__paginationDownPage), 'real press must hit page 2, not offscreen HTML').toBe('2');
 }
