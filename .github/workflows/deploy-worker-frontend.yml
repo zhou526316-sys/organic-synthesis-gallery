@@ -18,6 +18,9 @@ on:
       - 'cloudflare/worker/scripts/test-user-library-v3.mjs'
       - 'cloudflare/worker/scripts/test-user-library-shadow.mjs'
       - 'cloudflare/worker/scripts/test-user-library-v3-shadow.mjs'
+      - 'cloudflare/worker/scripts/test-pdf-vault-queue.mjs'
+      - 'cloudflare/worker/scripts/verify-pdf-vault-queue-live.mjs'
+      - 'cloudflare/pdf-vault-queue.sql'
       - 'cloudflare/site-analytics-v2.sql'
       - 'cloudflare/site-analytics-snapshot-v1.sql'
       - 'cloudflare/user-library-state-v2.sql'
@@ -92,6 +95,10 @@ jobs:
             scripts/test-user-library-v3-deployment-contract.mjs \
             scripts/test-user-library-shadow-deployment-contract.mjs \
             scripts/test-user-library-v3-write-canary-contract.mjs
+
+      - name: Verify account-scoped PDF acquisition queue
+        timeout-minutes: 2
+        run: node --test cloudflare/worker/scripts/test-pdf-vault-queue.mjs
 
       - name: Install frontend dependencies
         run: npm install --no-audit --no-fund
@@ -173,6 +180,13 @@ jobs:
           if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('private PDF schema migration incomplete: '+JSON.stringify(names));
           console.log(JSON.stringify({privatePdfSchemaReady:true,tables:names}));
           NODE
+
+      - name: Apply isolated PDF acquisition queue migration
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$D1_NAME" --remote --file=../pdf-vault-queue.sql >/tmp/pdf-vault-queue-migration.txt
 
       - name: Apply materialized site analytics D1 migration
         working-directory: cloudflare/worker
@@ -378,6 +392,23 @@ jobs:
         id: deploy_worker
         working-directory: cloudflare/worker
         run: npx wrangler deploy --config wrangler.frontend.toml
+
+      - name: Verify live PDF queue account boundaries and cleanup
+        if: success()
+        working-directory: cloudflare/worker
+        timeout-minutes: 5
+        env:
+          PDF_QUEUE_LIVE_OUTPUT: ${{ runner.temp }}/pdf-vault-queue-live/summary.json
+        run: node scripts/verify-pdf-vault-queue-live.mjs
+
+      - name: Preserve PDF queue live acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-vault-queue-live-${{ github.run_id }}
+          path: ${{ runner.temp }}/pdf-vault-queue-live/summary.json
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Sync configured runtime secrets
         working-directory: cloudflare/worker

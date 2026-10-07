@@ -101,6 +101,7 @@ import {
   wechatNotify,
 } from './integrations.js';
 import { bootstrapPrivatePdfOwner, importPrivatePdf, issuePrivatePdfCaptureLease, openPrivatePdf, privatePdfStatus, revokePrivatePdfCaptureLeases, servePrivatePdf } from './private-pdf.js';
+import { readPdfVaultQueue, mutatePdfVaultQueue } from './pdf-vault-queue.js';
 
 const json = (value, init = {}) => new Response(JSON.stringify(value), {
   ...init,
@@ -563,6 +564,12 @@ async function handleApi(request, env, ctx) {
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/integrations') {
     return resultResponse(integrationStatus(env), cors);
+  }
+  if (url.pathname === '/api/user-ui/pdf-vault/queue') {
+    const queueHeaders = { ...cors, 'cache-control': 'private, no-store', vary: 'Origin, Authorization' };
+    if (request.method === 'GET') return resultResponse(await readPdfVaultQueue(request, env), queueHeaders);
+    if (request.method === 'POST') return resultResponse(await mutatePdfVaultQueue(request, env), queueHeaders);
+    return resultResponse({ status: 405, body: { error: 'method_not_allowed' } }, queueHeaders);
   }
   if (request.method === 'GET' && url.pathname === '/api/user-ui/private-pdf/status') {
     return resultResponse(await privatePdfStatus(request, env), cors);
