@@ -20,19 +20,13 @@
   "deployment": {
     "runId": 37583654041,
     "jobId": 112669427366,
-    "status": "in_progress",
-    "lastObservedStep": "Install frontend dependencies",
-    "notYetLiveVerified": true
+    "status": "completed",
+    "conclusion": "success",
+    "notYetLiveVerified": false
   },
   "apiInstallerUrl": "https://api.gczhouwld.com/gallery-vpn-bridge.user.js",
   "canonicalInstallerUrl": "https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js",
-  "pending": [
-    "Read only the exact Worker job step summaries; no duplicate deploy and no cancellation of other project runs.",
-    "Once release deployment is successful, put probeFiles at their exact paths on fix/tm-read-latency-20261007, currently d3934b88d72b2cb583eaf79a43c718b648866416, and push once to trigger the 2-minute read-only probe.",
-    "Read the small tm-controller-read-live artifact. Require both API and Worker HTTP200, versions/markers and exact expected SHA, then give user the verified API installer link.",
-    "Do not claim canonical Gallery is current without separate readback. Do not treat 401/403 publisher failures as repaired.",
-    "Do not repeat already successful source changes/build/regression; retain the user's timeout limit."
-  ],
+  "pending": [],
   "probeFiles": [
     {
       "path": "scripts/verify-tm-read-live.mjs",
@@ -42,5 +36,16 @@
       "path": ".github/workflows/tm-controller-read-live.yml",
       "content": "name: Verify controller metadata read installer live\n\non:\n  push:\n    branches: [fix/tm-read-latency-20261007]\n    paths:\n      - .github/workflows/tm-controller-read-live.yml\n      - scripts/verify-tm-read-live.mjs\n\npermissions:\n  contents: read\n\nconcurrency:\n  group: tm-controller-read-live-${{ github.ref }}\n  cancel-in-progress: false\n\njobs:\n  verify:\n    if: github.ref == 'refs/heads/fix/tm-read-latency-20261007'\n    runs-on: ubuntu-latest\n    timeout-minutes: 2\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v5\n        with:\n          node-version: '22'\n      - name: Verify exact API and Worker installer bytes without production writes\n        run: node scripts/verify-tm-read-live.mjs\n      - name: Preserve bounded verification evidence\n        if: always()\n        uses: actions/upload-artifact@v4\n        with:\n          name: tm-controller-read-live\n          path: ${{ runner.temp }}/tm-read-live.json\n          if-no-files-found: warn\n          retention-days: 7\n"
     }
-  ]
+  ],
+  "liveVerification": {
+    "runId": 37584363547,
+    "jobId": 112671013332,
+    "conclusion": "success",
+    "verifiedAt": "2026-10-07T06:57:04.161Z",
+    "evidencePath": "audit/tampermonkey/2026-10-07-controller-read-installer-live-verified.json",
+    "installerSha256": "403abac6bb005c490218160d8f33292a26e83793397284566b9cf115feff131d",
+    "apiAndWorkerMatch": true,
+    "canonicalGalleryVerified": false
+  },
+  "userNetworkPerformanceVerified": false
 }
