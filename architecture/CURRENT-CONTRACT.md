@@ -82,6 +82,8 @@ The current full legacy-corpus fallback is a temporary migration safety net. It 
 
 ## 8. Asset-state rule
 
+- Public media inventory is display-window bounded: the browser may inspect only DOI keys already rendered in the current result window, and public inventory requests are read-only. Creating/updating media repair rows through the inventory route requires authenticated write authorization.
+
 For each DOI, keep these facts distinct:
 
 1. captured bytes exist;

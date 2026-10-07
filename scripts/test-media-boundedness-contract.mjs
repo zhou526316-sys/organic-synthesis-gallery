@@ -27,3 +27,23 @@ test('duplicate TOC detection remains globally correct for only the requested ha
 });
 
 console.log('MEDIA_BOUNDED_DUPLICATE_HASH_CONTRACT_PASS');
+
+
+test('public Gallery inventory is DOM-window bounded and explicitly read-only',()=>{
+  const main=readFileSync('src/main.ts','utf8');
+  assert.ok(main.includes("querySelectorAll<HTMLElement>('#gallery .toc-slot[data-doi]')"));
+  assert.ok(main.includes('.slice(0, DESKTOP_RESULT_WINDOW_SIZE)'));
+  assert.ok(main.includes("api.post('/api/media/inventory', { dois, readOnly: true })"));
+  assert.ok(!main.includes("api.post('/api/media/inventory', { dois })"));
+});
+
+test('mutating media inventory requires Worker write authorization',()=>{
+  const index=readFileSync('cloudflare/worker/src/index.js','utf8');
+  const start=index.indexOf("url.pathname === '/api/media/inventory'");
+  const end=index.indexOf("url.pathname === '/api/media/bridge-queue'",start);
+  assert.ok(start>=0&&end>start);
+  const block=index.slice(start,end);
+  assert.ok(block.includes('payload?.readOnly !== true'));
+  assert.ok(block.includes('requireWriteAuthorization(request, env)'));
+  assert.ok(block.includes('mediaInventory(request, env, payload)'));
+});

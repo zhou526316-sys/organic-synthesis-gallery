@@ -732,7 +732,12 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await mediaBatch(request, env, await readJson(request)), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/media/inventory') {
-    return resultResponse(await mediaInventory(request, env, await readJson(request)), cors);
+    const payload = await readJson(request);
+    if (payload?.readOnly !== true) {
+      const denied = requireWriteAuthorization(request, env);
+      if (denied) return denied;
+    }
+    return resultResponse(await mediaInventory(request, env, payload), cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/media/bridge-queue') {
     return resultResponse(await bridgeQueue(request, env), cors);

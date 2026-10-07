@@ -1167,11 +1167,16 @@ function scheduleInventory(delay = 4500): void {
   if (inventoryTimer !== null) window.clearTimeout(inventoryTimer);
   inventoryTimer = window.setTimeout(() => {
     inventoryTimer = null;
-    const dois = [...new Set(papers.map(paperDoi).filter((doi): doi is string => Boolean(doi)).map(doi => doi.toLowerCase()))].sort();
+    const dois = [...new Set(
+      [...document.querySelectorAll<HTMLElement>('#gallery .toc-slot[data-doi]')]
+        .map(slot => normalizeDoi(slot.dataset.doi))
+        .filter((doi): doi is string => Boolean(doi))
+        .map(doi => doi.toLowerCase())
+    )].slice(0, DESKTOP_RESULT_WINDOW_SIZE).sort();
     const fingerprint = dois.join('|');
     if (!dois.length || fingerprint === inventoryFingerprint) return;
     inventoryFingerprint = fingerprint;
-    void api.post('/api/media/inventory', { dois }).then(response => {
+    void api.post('/api/media/inventory', { dois, readOnly: true }).then(response => {
       const inventory = response.data as MediaInventoryResponse;
       stageBridgeGaps(inventory);
     }).catch(() => {
