@@ -63,6 +63,8 @@ await t('RSC Silverchair CDN PDF is accepted as publisher-bound source',async()=
   assert.equal(r.status,201);assert.equal(r.body.stored,true);assert.equal(r.body.active,false);
   const doc=[...db.docs.values()].find(x=>x.doi==='10.1039/d6gc04471a');
   assert.ok(doc);assert.equal(new URL(doc.source_url).hostname,'rscj.silverchair-cdn.com');
+  bucket.map.delete(doc.r2_key);
+  db.docs.delete(doc.id);
 });
 
 await t('same DOI and hash is idempotent',async()=>{const r=await importPrivatePdf(upload(),env);assert.equal(r.status,200);assert.equal(r.body.duplicate,true);assert.equal(bucket.map.size,1)});
