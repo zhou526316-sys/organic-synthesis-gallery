@@ -23,10 +23,19 @@ const fnSource=source.slice(fnStart,fnEnd);
 function context({native,gm,hedge=8,timeout=45}={}) {
   const ctx=vm.createContext({
     AbortController,setTimeout,clearTimeout,Date,Promise,Object,Number,Math,Error,JSON,
+    location:{hostname:'gallery.gczhouwld.com',pathname:'/'},
+    GALLERY_HOST:'gallery.gczhouwld.com',PAGES_GALLERY_HOST:'organic-synthesis-gallery-public.pages.dev',
+    LEGACY_GALLERY_HOST:'zhou526316-sys.github.io',LEGACY_GALLERY_PATH:'/organic-synthesis-gallery/',
     INVENTORY_REQUEST_TIMEOUT_MS:timeout,
     INVENTORY_HEDGE_DELAY_MS:hedge,
     nativeControllerRequest:native||(async()=>({status:200,responseText:'{"ok":true}'})),
     gmRequest:gm||(async()=>({status:200,responseText:'{"ok":true}'})),
+    async metadataJson(options,prefix){
+      const response=await (gm||(async()=>({status:200,responseText:'{"ok":true}'})))(options);
+      const status=Number(response.status||0);
+      if(status<200||status>=300){const error=new Error(prefix+'_http_'+status);error.httpStatus=status;throw error;}
+      return JSON.parse(String(response.responseText||'{}'));
+    },
     parseMetadataJson(response,prefix){
       const status=Number(response.status||0);
       if(status<200||status>=300){const error=new Error(prefix+'_http_'+status);error.httpStatus=status;throw error;}
@@ -77,6 +86,19 @@ test('definitive 401 does not launch a duplicate GM read',async()=>{
   assert.equal(gmCalls,0);
 });
 
+test('localhost fixture never launches browser-native inventory hedge',async()=>{
+  let nativeCalls=0,gmCalls=0;
+  const ctx=context({
+    native:async()=>{nativeCalls++;return {status:200,responseText:'{"path":"browser"}'};},
+    gm:async()=>{gmCalls++;return {status:200,responseText:'{"path":"gm"}'};}
+  });
+  ctx.location={hostname:'127.0.0.1',pathname:'/'};
+  const value=await vm.runInContext('inventoryReadMetadataJson',ctx)({method:'GET',url:'https://api.test/inventory',timeout:45},'inventory');
+  assert.equal(value.path,'gm');
+  assert.equal(nativeCalls,0);
+  assert.equal(gmCalls,1);
+});
+
 test('warm plan is scoped to exact queue generation and article count',()=>{
   const start=source.indexOf('  function cachedInventoryPlan(');
   const end=source.indexOf('\n  function saveInventoryPlan(',start);
@@ -96,4 +118,4 @@ test('fresh inventory is required before all-resolved path can finish',()=>{
   assert.match(body,/coverageApplyFreshPlan\(run,jobs,complete\)/);
 });
 
-console.log('TM_INVENTORY_STARTUP_TEST_SUMMARY '+JSON.stringify({passed:5,productionWrites:0,publisherRequests:0}));
+console.log('TM_INVENTORY_STARTUP_TEST_SUMMARY '+JSON.stringify({passed:6,productionWrites:0,publisherRequests:0}));
