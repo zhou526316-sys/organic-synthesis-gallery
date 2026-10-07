@@ -1,0 +1,15 @@
+{
+  "revision": "2026-10-07-r10",
+  "checkedAt": "2026-10-07T06:48:18.331576+00:00",
+  "runId": "37583473584",
+  "status": "fail",
+  "error": "ncx1: actual naturalWidth 1080 is below 1200",
+  "visualReview": "not approved",
+  "draftWritten": false,
+  "publisherTriggered": false,
+  "repositoryWritten": false,
+  "publicSend": false,
+  "artifactId": 11465316738,
+  "artifactSha256": "14d3b5b9acdabcbfefa7a05ea9abb9ac275323dac571f4c333782470c1f467c9",
+  "finding": "The real WeChat image rendition is 1080px, below the review script's unsupported 1200px transport assumption; original masters are verified 2000px. Keep source threshold and every content/gate check; separately check provider dimensions and actual legibility before final acceptance."
+}

@@ -35,6 +35,10 @@ DOIS = {"angew": "10.1002/anie.3699223", "natcat": "10.1038/s41929-026-01593-w"}
 CONCEPTS = ("ncx1", "ncx2", "ncx3")
 VIEWPORTS = (390, 690)
 MIN_CONCEPT_WIDTH = 1200
+# The actual R10 draft/get image service returns 1080 px body renditions from
+# the pinned 2000 px masters (observed run 37583473584). Keep source quality
+# separate from provider transport dimensions; visual inspection is mandatory.
+MIN_ACTUAL_CONCEPT_WIDTH = 1080
 
 
 def require(value, message):
@@ -223,9 +227,11 @@ def check_article(page, article, manifest, label, width, actual):
             figure = index[figure_id]
             image = caption_image(article, figure)
             row = dimensions(image)[0]
-            require(row["loaded"] and row["naturalWidth"] >= MIN_CONCEPT_WIDTH,
-                    f"{figure_id}: actual naturalWidth {row['naturalWidth']} is below {MIN_CONCEPT_WIDTH}")
             image.screenshot(path=str(OUT / f"{figure_id}-{width}-image.png"))
+            (OUT / f"{figure_id}-{width}-dimensions.json").write_text(json.dumps(row, ensure_ascii=False, indent=2))
+            min_width = MIN_ACTUAL_CONCEPT_WIDTH if actual else MIN_CONCEPT_WIDTH
+            require(row["loaded"] and row["naturalWidth"] >= min_width,
+                    f"{figure_id}: naturalWidth {row['naturalWidth']} is below {min_width}")
             section = next((s for s in manifest["sections"] if figure_id in s.get("figures", [])
                             or any(figure_id in values for values in s.get("figures_after_paragraph", {}).values())), None)
             require(section is not None, "Concept has no section placement: " + figure_id)
