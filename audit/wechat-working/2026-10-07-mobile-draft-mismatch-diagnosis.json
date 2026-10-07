@@ -1,0 +1,27 @@
+{
+  "task": "WeChat mobile draft mismatch diagnosis",
+  "userClient": "订阅号助手 App",
+  "readOnly": true,
+  "checkedSources": [
+    "audit/wechat-publisher/latest.json",
+    "audit/wechat-working/2026-10-07-r14-real-draft-qa.json",
+    "audit/wechat-working/2026-10-07-r15-real-draft-qa.json",
+    "ops/wechat-publisher/create-draft.py"
+  ],
+  "sameDraftMediaId": true,
+  "latestWriteAt": "2026-10-07T08:08:01.632880Z",
+  "latestReadbackQaAt": "2026-10-07T08:09:23.815945+00:00",
+  "previousCoverSha256": "008e6a3821568bbc61019683c020d34bb2fee9e2d1350856dfc98ad4b14d082d",
+  "currentCoverSha256": "83150f1b64aa3a7fa1c87e60e44502a72e1d911c2162858880e265ec4736bc60",
+  "coverUrlChanged": true,
+  "findings": [
+    "Recorded R15 draft/get returned a changed cover URL and bytes for the same draft.",
+    "Web preview title overlay is controlled relay CSS and is not part of draft/update data.",
+    "Mobile old editing state/cache/different duplicate draft remain unverified hypotheses.",
+    "This turn inspected existing write/readback evidence, not a new authenticated live draft/get call.",
+    "No mobile screenshot obtained; no native-client synchronization completion claim."
+  ],
+  "draftWrittenThisTurn": false,
+  "publicSend": false,
+  "checkedAt": "2026-10-07T08:19:59Z"
+}
