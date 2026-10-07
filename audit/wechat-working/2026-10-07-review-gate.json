@@ -1,34 +1,34 @@
 {
   "publicationDate": "2026-10-07",
-  "editorialRevision": "2026-10-07-r9",
-  "reviewedAt": "2026-10-07T06:15:53.413Z",
+  "editorialRevision": "2026-10-07-r10",
+  "reviewedAt": "2026-10-07T06:42:16.675421+00:00",
   "reviewer": "AI source-grounded editorial review; no claim of human review",
   "textReview": "pass",
-  "imageReview": "pass",
+  "imageReview": "pending",
   "individualImageReview": "pass",
-  "combinedVisualReview": "pass",
+  "combinedVisualReview": "pending",
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-07-r9-angew-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-07-r9-angew-images-only.md",
+    "textOnly": "audit/wechat-working/2026-10-07-r10-angew-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-07-r10-angew-images-only.md",
     "additionalTextOnly": [
-      "audit/wechat-working/2026-10-07-r9-natcat-text-only.md"
+      "audit/wechat-working/2026-10-07-r10-natcat-text-only.md"
     ],
     "additionalImagesOnly": [
-      "audit/wechat-working/2026-10-07-r9-natcat-images-only.md"
+      "audit/wechat-working/2026-10-07-r10-natcat-images-only.md"
     ]
   },
   "sources": [
     {
       "path": "public/wechat-editions/2026-10-07.json",
-      "blobSha": "1a26519a4291debd82199a35deb4e3233f380dd9"
+      "blobSha": "ad5893b8c3359ce3abb46372a311578a8bc82220"
     },
     {
       "path": "public/wechat-featured/2026-10-07.json",
-      "blobSha": "8e9357f3efa870f0def106a232eeb560737446e9"
+      "blobSha": "cf6c95f354f680c08f122cd22c9f0a512d0c65ad"
     },
     {
       "path": "public/wechat-retrospective/phoenix1-structural-regeneration.json",
-      "blobSha": "c959865f69591ee05c4393ef8f30386a2241892d"
+      "blobSha": "ca9678cb1ca08f9572f45a15057d2bc1e8abfb25"
     }
   ],
   "assets": [
@@ -131,6 +131,13 @@
       "height": 708
     },
     {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r10/an-cover-toc-r10.png",
+      "blobSha": "35725fff5e93f3536d5a40c303fe633f6da0da06",
+      "sha256": "ecdb68167cdd88405351d825241dd6f9d01684c979ba4fdf4c1d391849431689",
+      "width": 1880,
+      "height": 800
+    },
+    {
       "path": "public/wechat-assets/reviewed/2026-10-07-r7/nc01.png",
       "blobSha": "244c03bb77e30e1d9ce2aec3a2b493297065394a",
       "sha256": "6da55f5fdb8485913227ed4d3f123fdcab30392c04cd8f432f925bba343cb2d8",
@@ -229,13 +236,6 @@
       "height": 1660
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-07-r9/an-cover-r9.png",
-      "blobSha": "2d260b685dc1edd0b57d20a7e76c654563ae6d0c",
-      "sha256": "ce91f3084a7fb5746e1710268656cd0bae39cd3120559266d5536e7651feac0a",
-      "width": 1880,
-      "height": 800
-    },
-    {
       "path": "public/wechat-assets/reviewed/2026-10-07-r9/nc-cover-full-r9.png",
       "blobSha": "55517a90d817e52580e2a662fe70dab2a06ab2c3",
       "sha256": "9fde3dd169ea4fdee9f494f097d89c965715752033d0ffded2b95b28ca50484f",
@@ -255,49 +255,45 @@
       "sha256": "2dd0a9c3fbd827c4164e9ca959e6e939e6f09e4571baf986d189415cf3ef8543",
       "width": 1158,
       "height": 1338
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r10/ncx1-quenching-cycles.png",
+      "blobSha": "ddb279ffdde38a9e4ea03b4ec8c91b5924a918d6",
+      "sha256": "b20d6e5b767717e8485fa5fe5ecdd7255604a87bb860e7ba326c3a087fab527b",
+      "width": 2000,
+      "height": 2420
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r10/ncx2-cage-competition.png",
+      "blobSha": "196425ef636735d18b4d3abbd9591cd977fb232b",
+      "sha256": "efb1e095706bfc93d7b80db684b382063e11053b78a331bf8ab1b4df523cf4a2",
+      "width": 2000,
+      "height": 2100
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-07-r10/ncx3-electronic-states.png",
+      "blobSha": "c27206e34d154889cb8bf5cecd7b95ab35ad73ed",
+      "sha256": "152fae01009b760c5655cbebba6bd822f1644e5a683394aa6bd2fb7675b8e2ab",
+      "width": 2000,
+      "height": 2320
     }
   ],
   "materializedCropReviewRequired": true,
   "strictFigurePlacement": true,
   "reviewNotes": [
-    "User-approved targeted revision, not a topic or narrative reset.",
-    "Original Angew Fig.2a enlarged across the upper cover; lower band reserved for WeChat title overlay.",
-    "Full approved source-locked phoenix artwork contained in square, not screenshot or cropped inset.",
-    "Conventional SET and solvent-cage teaching clearly distinguished from source-paper experimental evidence.",
-    "TA formation evidence distinguished from supporting EPR/scavenging and from catalytic dominance.",
-    "No invented Angew peer-review report.",
-    "New original-source EPR plot bounds and all symbols/axes visually checked; no chemical artwork regenerated.",
-    "Final source text independently reviewed; four reader-facing wording/figure-reference edits applied, exports regenerated and all source fingerprints renewed.",
-    "All 32 pinned raster bytes verified by blob SHA, SHA256 and full decoding. No approved cover or body image regenerated.",
-    "Final existing-renderer 390px source preview run 37580403663 inspected: both covers complete in intended slots, all 30 body figures preserved, no broken images or horizontal overflow.",
-    "Angew main/SI prior source review and NatCat SI/peer-review checkpoint retained; new conventional-SET and cage/electron background independently checked against primary publications.",
-    "Only one combined daily draft update authorized. Public sending remains unauthorized."
+    "User requested authentic TOC as daily cover and high-resolution explanatory visuals in retrospective extensions.",
+    "Original TOC identity verified against exact-title publisher image link, established paper content and existing DOI-bound imported cache. Native original is 500x247; cover resampling is layout only, not claimed as new scientific detail or recovered high resolution. Full artwork preserved above title band.",
+    "Three original code/vector concept diagrams, 2000 px wide, checked independently at 390 px: charge conservation, electron direction, solvent legends, molecular versus solvated electron state; no experimental data generated.",
+    "Concept captions are explicitly labeled self-made Fig. E1–E3 and cite primary background sources; not original-paper figure numbers or experimental evidence.",
+    "All prior original body figures and full approved phoenix artwork retained; text limited to adjacent figure references and disclosure.",
+    "Text-only and images-only exports regenerated; source combined preview remains pending.",
+    "Same two-article daily draft only; no public sending authorized."
   ],
-  "draftReadback": "ok",
+  "draftReadback": "pending",
   "publicSendAuthorized": false,
-  "finalSourcePreview": {
-    "runId": "37580403663",
-    "artifactId": 11464003893,
-    "artifactSha256": "1a9c3df91ece52396bee35c1e2dc1de5f388845c0227f23cd5434844fc8082db",
-    "viewportWidth": 390,
-    "assetsVerified": 32,
-    "bodyImages": {
-      "angew": 14,
-      "natcat": 16
-    },
-    "reviewedScreenshots": [
-      "angew-opening.png",
-      "angew-full.png",
-      "angew-changed-0.png",
-      "natcat-opening.png",
-      "natcat-full.png",
-      "natcat-changed-0.png",
-      "natcat-changed-1.png"
-    ]
-  },
-  "finalTransportReview": "pass",
-  "completedAt": "2026-10-07T06:19:52.621Z",
-  "actualDraftPreviewUrl": "https://relay.gczhouwld.com/wechat-preview/228abccce0c01fc9db3cee87.html",
-  "actualDraftQa": "audit/wechat-working/2026-10-07-r9-real-draft-qa.json",
-  "actualDraftQaRunId": "37580696965"
+  "finalTransportReview": "pending",
+  "priorCompletedRevision": {
+    "revision": "2026-10-07-r9",
+    "previewUrl": "https://relay.gczhouwld.com/wechat-preview/228abccce0c01fc9db3cee87.html"
+  }
 }

@@ -1,6 +1,6 @@
 # WeChat Editorial Contract
 
-Updated: 2026-10-05
+Updated: 2026-10-07
 Status: active
 
 ## Daily publication shape
@@ -104,6 +104,8 @@ Both “每日精选” and “往期精选” use the same deep-reading standar
 - Prefer original paper figures and SI figures; never AI-redraw chemical structures.
 - Maintain high-resolution rendering and WeChat-compatible image formats.
 - Avoid long uninterrupted text blocks; alternate figures and explanation.
+- Daily-feature covers should preferentially use the selected paper’s verified original TOC/graphical abstract. Preserve the complete reaction/concept and distinguish official TOCs from body-figure fallbacks; do not substitute a catalyst structure matrix when an authentic TOC is available. Use an original high-resolution raster or render the same graphic from the supplied final PDF, retaining readable symbols in the actual WeChat cover.
+- Background/extension passages may include relevant high-resolution figures from other primary publications or original concept diagrams when this makes the explanation easier to follow. Place each next to its explanatory paragraph and identify its source and role. Original concept diagrams must be explicitly labeled as such, with separately identified numbering; never present them as the featured paper’s experimental evidence. Use exact vector/code drawing for scientific symbols and arrows, and inspect charge signs, direction, legends, and readability at mobile width.
 - Cover must communicate the paper's central reaction or concept at a glance and must not be an arbitrary cropped page.
 - Editorial logic must come from the paper's actual experimental design, evidence chain, scope, comparison, or author/reviewer argument. Do not manufacture a relationship merely to make two facts sound "smart", and avoid generic labels such as "最聪明的地方" unless the paper itself supplies a defensible causal reason.
 - For a retrospective used as the small secondary WeChat card, build a **dedicated square thumbnail** with only the minimum paper identity and original chemistry visual needed at small size; never shrink a dense wide cover into the square slot.
@@ -121,7 +123,7 @@ Both “每日精选” and “往期精选” use the same deep-reading standar
 - Use the previous successfully published featured article as the structural baseline: result first, then why the chemistry is difficult, the decisive design/optimization, scope, synthetic application, mechanism, practical limitations, and a concise take-home.
 - The three opening boxes must form one causal reading path rather than three generic selling points: **what was achieved -> what bottleneck was actually solved -> why the paper is worth studying as a method/mechanism story**.
 - The first paper figure belongs immediately above the opening “做了什么” block.
-- Every body figure must be a clean crop from the final paper or SI: no journal header, footer, page number, neighbouring paragraph, half-cut caption, or unrelated panel unless that context is explicitly needed.
+- Every original-paper body figure must be a clean crop from the final paper or SI; separately labeled educational concept diagrams follow the visual standard above: no journal header, footer, page number, neighbouring paragraph, half-cut caption, or unrelated panel unless that context is explicitly needed.
 - Prefer final-PDF crops over screenshots. Render at high resolution before cropping; do not enlarge a low-resolution screenshot.
 - Do not include spectra merely because they are present in SI. A spectrum is used only when the article text explicitly teaches the reader what feature in that spectrum is evidence for the claim. Otherwise explain the conclusion in prose or use a more interpretable table/scheme.
 - Never reuse one figure for two different claims. Each image must have one clear evidentiary role and its explanation goes below the image.

@@ -1,0 +1,35 @@
+name: WeChat R10 source and actual draft review
+on:
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/wechat-r10-review.json']
+permissions:
+  contents: read
+concurrency:
+  group: wechat-r10-review
+  cancel-in-progress: false
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Install rendering support
+        run: |
+          python3 -m pip install --quiet 'Pillow>=10,<13' 'playwright>=1.50,<2'
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          test -x /usr/bin/google-chrome
+      - name: Review requested mode without writing WeChat or Git
+        run: python3 ops/wechat-publisher/review-r10.py
+      - name: Upload review evidence for separate visual inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wechat-r10-review-${{ github.run_id }}
+          path: r10-review/
+          retention-days: 7
+          if-no-files-found: error
