@@ -1,0 +1,165 @@
+name: Deployed pagination acceptance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/pagination-production-acceptance.yml'
+      - 'audit/pagination-live-trigger.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pagination-production-acceptance
+  cancel-in-progress: false
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install isolated browser probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/pagination-live"
+          cd "$RUNNER_TEMP/pagination-live"
+          npm install --no-package-lock --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Test real deployed UI and preserve screenshots
+        env:
+          LIVE_BROWSER: ${{ matrix.browser }}
+          LIVE_OUTPUT: ${{ runner.temp }}/pagination-live-evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/pagination-live"
+          cat > verify.mjs <<'NODE'
+          import { chromium, webkit } from 'playwright';
+          import assert from 'node:assert/strict';
+          import { mkdir, writeFile } from 'node:fs/promises';
+          import { createHash } from 'node:crypto';
+          const base = 'https://gallery.gczhouwld.com/';
+          const out = process.env.LIVE_OUTPUT;
+          const browserName = process.env.LIVE_BROWSER;
+          await mkdir(out, { recursive: true });
+          const report = { schemaVersion: 1, site: base, browser: browserName, checkedAt: new Date().toISOString(), workflowCommit: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, productionWritesAllowed: false, results: [] };
+          const browser = await ({ chromium, webkit }[browserName]).launch();
+          let failures = 0;
+          for (const width of [1280, 320]) {
+            const result = { width, ok: false, checks: [], pageErrors: [], consoleErrors: [], failedRequests: [], apiResponses: [], suppressedWrites: [] };
+            const context = await browser.newContext({ viewport: { width, height: 900 }, locale: 'zh-CN', timezoneId: 'Asia/Shanghai', serviceWorkers: 'block' });
+            const page = await context.newPage();
+            page.setDefaultTimeout(20000);
+            // Suppress analytics/account writes, but use the real read-only catalog POST.
+            // Do not replace catalog, media, HTML, JavaScript or CSS responses with mocks.
+            await context.route('**/*', async route => {
+              const req = route.request(), url = new URL(req.url());
+              if (!['GET', 'HEAD', 'OPTIONS'].includes(req.method()) && url.pathname !== '/api/literature/catalog-view') {
+                result.suppressedWrites.push({ method: req.method(), path: url.pathname });
+                return route.abort('blockedbyclient');
+              }
+              return route.continue();
+            });
+            page.on('pageerror', e => result.pageErrors.push(e.message));
+            page.on('console', m => { if (m.type() === 'error') result.consoleErrors.push(m.text()); });
+            page.on('requestfailed', r => result.failedRequests.push({ path: new URL(r.url()).pathname, error: r.failure()?.errorText }));
+            page.on('response', r => { if (r.url().includes('/api/')) result.apiResponses.push({ path: new URL(r.url()).pathname, status: r.status() }); });
+            const current = async n => page.locator(`#resultPageNumbers [data-result-page="${n}"][aria-current="page"]`).waitFor({ state: 'visible' });
+            const dois = () => page.locator('#gallery > .card').evaluateAll(cards => cards.map(c => c.getAttribute('data-doi')));
+            try {
+              const response = await page.goto(base + '?pagination-acceptance=' + process.env.GITHUB_RUN_ID, { waitUntil: 'domcontentloaded', timeout: 30000 });
+              assert.equal(response?.status(), 200);
+              assert.equal(new URL(page.url()).hostname, 'gallery.gczhouwld.com');
+              await page.locator('#gallery > .card').first().waitFor({ state: 'visible', timeout: 35000 });
+              await page.locator('[data-lang="zh"]').click();
+              await page.locator('#resultPageJumpInput').waitFor({ state: 'visible' });
+              await current(1);
+              result.deployedScripts = await page.locator('script[src]').evaluateAll(nodes => nodes.map(n => n.getAttribute('src')));
+              const releaseResponse = await context.request.get(base + 'release-delivery.json?pagination-acceptance=' + process.env.GITHUB_RUN_ID, { timeout: 15000 });
+              result.releaseManifestStatus = releaseResponse.status();
+              if (releaseResponse.ok() && (releaseResponse.headers()['content-type'] || '').includes('json')) result.releaseManifest = await releaseResponse.json();
+              const control = page.locator('#resultWindowControls');
+              await control.scrollIntoViewIfNeeded();
+              result.layout = await control.evaluate(element => {
+                const rect = element.getBoundingClientRect();
+                return { center: rect.left + rect.width / 2, viewport: innerWidth, overflow: document.documentElement.scrollWidth - innerWidth,
+                  sizes: [...element.querySelectorAll('button,input')].map(n => { const b = n.getBoundingClientRect(); return { id: n.id || n.dataset.resultPage, width: b.width, height: b.height }; }) };
+              });
+              assert.ok(Math.abs(result.layout.center - width / 2) <= 2, 'pagination must be centered');
+              assert.ok(result.layout.overflow <= 1, 'no horizontal overflow');
+              for (const box of result.layout.sizes) assert.ok(box.width >= 44 && box.height >= 44, '44px minimum target: ' + box.id);
+              result.checks.push('centered', 'no-horizontal-overflow', '44px-touch-targets');
+              assert.equal(await page.locator('#previousResultPage').isDisabled(), true);
+              const first = await dois();
+              assert.ok(first.length > 0 && first.length <= (width <= 680 ? 12 : 24));
+              await page.locator('#nextResultPage').click();
+              await current(2);
+              const second = await dois();
+              assert.ok(second.length > 0 && second.every(doi => !first.includes(doi)), 'page two must contain different papers');
+              result.checks.push('real-next-page-distinct-dois');
+              await page.locator('#resultPageJumpInput').fill('3');
+              await page.locator('#resultPageJumpInput').press('Enter');
+              await current(3);
+              result.checks.push('enter-direct-page-jump');
+              await page.locator('#resultPageJumpInput').fill('0');
+              await page.locator('#resultPageJumpButton').click();
+              await current(3);
+              result.checks.push('invalid-page-does-not-navigate');
+              await page.locator('#resultPageNumbers [data-result-page="1"]').click();
+              await current(1);
+              assert.deepEqual(await dois(), first);
+              result.checks.push('numbered-page-return-preserves-dois');
+              await control.scrollIntoViewIfNeeded();
+              await control.screenshot({ path: `${out}/${browserName}-${width}-live-pagination.png` });
+              // Exercise the live filtered reader rather than only the default landing page.
+              await page.locator('#search').fill('10.');
+              await page.waitForFunction(() => /当前筛选|Current filter/.test(document.querySelector('#resultScopeLabel')?.textContent || ''));
+              await current(1);
+              await page.locator('#nextResultPage').click();
+              await current(2);
+              result.filteredReadPath = await page.evaluate(() => document.documentElement.dataset.catalogQueryRead || '');
+              await page.locator('#resultPageJumpInput').fill('1');
+              await page.locator('#resultPageJumpInput').press('Enter');
+              await current(1);
+              result.checks.push('live-filter-next-and-jump-back');
+              assert.deepEqual(result.pageErrors, [], 'no uncaught browser exceptions');
+              result.status = await page.locator('#resultWindowStatus').textContent();
+              result.ok = true;
+            } catch (error) {
+              failures++;
+              result.error = String(error?.stack || error);
+              await page.screenshot({ path: `${out}/${browserName}-${width}-failure.png` }).catch(() => {});
+            } finally {
+              report.results.push(result);
+              await writeFile(`${out}/report-${browserName}.json`, JSON.stringify(report, null, 2));
+              await context.close();
+            }
+          }
+          await browser.close();
+          report.ok = failures === 0;
+          report.completedAt = new Date().toISOString();
+          const text = JSON.stringify(report, null, 2);
+          await writeFile(`${out}/report-${browserName}.json`, text);
+          await writeFile(`${out}/report-${browserName}.sha256`, createHash('sha256').update(text).digest('hex') + '\n');
+          console.log(JSON.stringify({ site: base, browser: browserName, ok: report.ok, results: report.results.map(r => ({ width: r.width, ok: r.ok, checks: r.checks, error: r.error })) }));
+          if (failures) process.exitCode = 1;
+          NODE
+          node verify.mjs
+      - name: Preserve small live acceptance report and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployed-pagination-${{ matrix.browser }}
+          path: ${{ runner.temp }}/pagination-live-evidence/
+          if-no-files-found: warn
+          retention-days: 7
