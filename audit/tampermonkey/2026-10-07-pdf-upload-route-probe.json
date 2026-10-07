@@ -1,0 +1,121 @@
+{
+  "checkedAt": "2026-10-07T08:17:25.266Z",
+  "checkedSha": "27ebd04b9236cbd55dcbc77ed1cd97bbbc08366e",
+  "productionWrites": 0,
+  "publisherRequests": 0,
+  "validCredentialsUsed": false,
+  "note": "No PDF bytes sent. Invalid lease POST must fail before body processing or storage. This does not exercise an authenticated PDF upload or the user network.",
+  "results": [
+    {
+      "base": "https://api.gczhouwld.com",
+      "name": "health",
+      "method": "GET",
+      "durationMs": 201,
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-origin": "https://zhou526316-sys.github.io",
+        "access-control-allow-headers": "content-type, authorization",
+        "access-control-allow-methods": "GET, POST, OPTIONS",
+        "cf-ray": "a46b78243a2d8bdc-MSP",
+        "retry-after": null
+      },
+      "privatePdf": {
+        "bucket": true,
+        "readEnabled": true,
+        "captureEnabled": true,
+        "processingEnabled": false
+      },
+      "passed": true
+    },
+    {
+      "base": "https://api.gczhouwld.com",
+      "name": "rsc_preflight",
+      "method": "OPTIONS",
+      "durationMs": 152,
+      "status": 204,
+      "headers": {
+        "content-type": null,
+        "access-control-allow-origin": "https://pubs.rsc.org",
+        "access-control-allow-headers": "content-type, authorization",
+        "access-control-allow-methods": "GET, POST, OPTIONS",
+        "cf-ray": "a46b78243eb5348b-MSP",
+        "retry-after": null
+      },
+      "passed": true
+    },
+    {
+      "base": "https://api.gczhouwld.com",
+      "name": "rsc_invalid_lease",
+      "method": "POST",
+      "durationMs": 195,
+      "status": 401,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-origin": "https://pubs.rsc.org",
+        "access-control-allow-headers": "content-type, authorization",
+        "access-control-allow-methods": "GET, POST, OPTIONS",
+        "cf-ray": "a46b78245a304cbc-MSP",
+        "retry-after": null
+      },
+      "error": "private_pdf_capture_lease_invalid",
+      "passed": true
+    },
+    {
+      "base": "https://organic-synthesis-gallery.zhou526316.workers.dev",
+      "name": "health",
+      "method": "GET",
+      "durationMs": 159,
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-origin": "https://zhou526316-sys.github.io",
+        "access-control-allow-headers": "content-type, authorization",
+        "access-control-allow-methods": "GET, POST, OPTIONS",
+        "cf-ray": "a46b78246f73a20d-MSP",
+        "retry-after": null
+      },
+      "privatePdf": {
+        "bucket": true,
+        "readEnabled": true,
+        "captureEnabled": true,
+        "processingEnabled": false
+      },
+      "passed": true
+    },
+    {
+      "base": "https://organic-synthesis-gallery.zhou526316.workers.dev",
+      "name": "rsc_preflight",
+      "method": "OPTIONS",
+      "durationMs": 165,
+      "status": 204,
+      "headers": {
+        "content-type": null,
+        "access-control-allow-origin": "https://pubs.rsc.org",
+        "access-control-allow-headers": "content-type, authorization",
+        "access-control-allow-methods": "GET, POST, OPTIONS",
+        "cf-ray": "a46b78247fff113f-ORD",
+        "retry-after": null
+      },
+      "passed": true
+    },
+    {
+      "base": "https://organic-synthesis-gallery.zhou526316.workers.dev",
+      "name": "rsc_invalid_lease",
+      "method": "POST",
+      "durationMs": 217,
+      "status": 401,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-origin": "https://pubs.rsc.org",
+        "access-control-allow-headers": "content-type, authorization",
+        "access-control-allow-methods": "GET, POST, OPTIONS",
+        "cf-ray": "a46b782468185113-MSP",
+        "retry-after": null
+      },
+      "error": "private_pdf_capture_lease_invalid",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

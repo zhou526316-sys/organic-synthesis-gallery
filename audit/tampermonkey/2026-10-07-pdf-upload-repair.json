@@ -1,0 +1,50 @@
+{
+  "baselineMain": "423fa1078b8c0f350cfe47e72c84c968ab387558",
+  "bridgeVersion": "2.2.63",
+  "installRevision": "6.2.44",
+  "pdfUploadRevision": "20261007-pdf-upload-budget-v1",
+  "userAuthorization": "2026-10-07 16:13 Asia/Shanghai: 找找失败原因再改",
+  "localTests": {
+    "clientUpload": 18,
+    "serverRace": 7,
+    "controllerRead": 23,
+    "manualResume": 19,
+    "controllerRecovery": 25,
+    "immediateRestart": 19,
+    "queueCoverage": 18
+  },
+  "liveProbeRun": 37592756284,
+  "liveProbePassed": true,
+  "productionWritesDuringInvestigation": 0,
+  "publisherRequestsDuringInvestigation": 0,
+  "confirmed": [
+    "upload failure triggered another download candidate",
+    "upload recovery had two independent 90s timeouts",
+    "late PDF receipts could survive generation cutover",
+    "publisher download401 erased unrelated private API lease",
+    "concurrent INSERT failure deleted the shared R2 PDF object"
+  ],
+  "serverRaceBefore": {
+    "documents": 1,
+    "objects": 0,
+    "deletes": 1
+  },
+  "serverRaceAfter": {
+    "outcomes": [
+      201,
+      200
+    ],
+    "documents": 1,
+    "objects": 1,
+    "deletes": 0
+  },
+  "remainingUncertainty": [
+    "user network/extension/server phase responsible for the initial upload timeout",
+    "current inter-job controller phase not present in old local snapshot"
+  ],
+  "tradeoffs": [
+    "small PDFs share90s upload budget; larger files up to150s and never beyond remaining job deadline",
+    "uncertain DB insertion may leave unreferenced private bytes rather than delete shared bytes"
+  ],
+  "releaseState": "candidate, pending CI and production deployment"
+}
