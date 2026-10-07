@@ -30,7 +30,7 @@ function h(opt={}){
  c=vm.createContext(env);const cut=source.lastIndexOf('  installManualRestartListener();');assert.ok(cut>0);
  vm.runInContext(source.slice(0,cut)+`
  readMissingCaptureInventory=async(q)=>({media:{items:q.articles.map(a=>({doi:a.doi,figureCount:0,tocStored:false,capturedFigures:[]}))},tocs:{items:[],count:0},figures:{complete:true,items:[]},evidence:{items:[],count:0},errors:[]});isGalleryPage=()=>true;badge=__badge;sleep=__sleep;writeToken=__token;getJson=__getJson;enqueueCaptureReport=__enqueue;
- globalThis.T={tryResumeInterruptedManualRun,controllerTick,acquireLease,setInventory:(value)=>{readMissingCaptureInventory=async()=>value;},forceStartFromHead,manualCaptureJobs,manualExecutionCurrent,manualRunBlocksAutomatic,renewLease,currentCaptureJob,finishPairedJob,saveCheckpoint,checkpointKey,attemptKey,completedPublisherResult,controllerRun,requestControllerPause,owner:CONTROLLER_ID};
+ globalThis.T={snapshot:controllerLifecycleSnapshot,captureLiveSnapshot,setResolver:(fn)=>{resolvePublisherTaskUrl=fn;},tryResumeInterruptedManualRun,controllerTick,acquireLease,setInventory:(value)=>{readMissingCaptureInventory=async()=>value;},forceStartFromHead,manualCaptureJobs,manualExecutionCurrent,manualRunBlocksAutomatic,renewLease,currentCaptureJob,finishPairedJob,saveCheckpoint,checkpointKey,attemptKey,completedPublisherResult,controllerRun,requestControllerPause,owner:CONTROLLER_ID};
  installManualRestartListener();installMenu();})();`,c);
  return {T:c.T,c,store,put,badges,opened,requests,timers,reports,clock,listeners};
 }
@@ -120,5 +120,31 @@ await test('old controller completion during confirmation cancels automatic reco
  const gate=defer(),x=orphan(h({sleep:()=>gate.promise}));const p=x.T.tryResumeInterruptedManualRun();await tick();
  x.put(P+'last-run-summary',{...x.store.get(P+'last-run-summary'),finishedAt:new Date(x.clock.now).toISOString(),phase:'all_resolved'});
  gate.resolve();assert.equal(await p,false);assert.equal(x.store.get(MK).id,'abandoned-run');assert.equal(x.requests.length,0);
+});
+await test('manual inventory waits report the real local owner and renewed lease',async()=>{
+ const x=h();let finish;
+ x.T.setInventory(new Promise(resolve=>{finish=resolve;}));
+ const running=x.T.forceStartFromHead();await tick();
+ assert.equal(x.store.get(P+'last-run-summary').phase,'inventory_refresh');
+ assert.equal(x.T.snapshot().localBusy,true);
+ assert.equal(x.T.snapshot().ownerIsThisPage,true);
+ assert.equal(x.T.captureLiveSnapshot(x.clock.now).state,'inventory_refresh');
+ x.clock.now+=15000;for(const timer of x.timers.values())if(timer.interval&&timer.ms===15000)timer.cb();
+ assert.equal(x.T.snapshot().renewedAt,x.clock.now);
+ x.T.requestControllerPause();finish({});await running;
+ assert.equal(x.opened.length,0);
+});
+await test('interrupted queue and inventory reads remain eligible for guarded recovery',async()=>{
+ for(const phase of ['queue_refresh','inventory_refresh']){const x=orphan(h(),{phase});await x.T.tryResumeInterruptedManualRun();assert.equal(x.opened.length,3);}
+});
+await test('pause during publisher URL resolution opens no late task page',async()=>{
+ const x=h();let finish;
+ x.T.setResolver(()=>new Promise(resolve=>{finish=resolve;}));
+ const running=x.T.forceStartFromHead();await tick();
+ for(let i=0;i<10&&typeof finish!=='function';i++)await tick();
+ assert.equal(typeof finish,'function');
+ x.T.requestControllerPause();finish('https://pubs.acs.org/doi/10.1021/jacs.6c10001');await running;
+ assert.equal(x.opened.length,0);
+ assert.equal(x.store.get(P+'enabled'),false);
 });
 console.log(JSON.stringify({passed,revision:'20261007-manual-resume-v1',productionWrites:0,publisherNetworkRequests:0}));

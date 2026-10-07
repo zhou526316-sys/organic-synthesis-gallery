@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-07T06:47:30Z",
+  "userReportAt": "2026-10-07T06:32:38Z",
+  "userConfirmedForeground": true,
+  "readOnlyDiagnosis": true,
+  "productionWrites": 0,
+  "evidence": {
+    "localUploadedAt": "2026-10-07T06:37:06.747Z",
+    "summaryStartedAt": "2026-10-07T06:13:40.745Z",
+    "phase": "running",
+    "visited": 2,
+    "total": 163,
+    "attempts": 4,
+    "inventoryReadAt": "2026-10-07T06:33:21.087Z",
+    "activeJob": null,
+    "controllerState": {
+      "revision": "20261001-controller-recovery-v2",
+      "paused": false,
+      "localBusy": false,
+      "ownerIsThisPage": false,
+      "leaseSeconds": 77,
+      "renewedAt": 0,
+      "activeDoi": "",
+      "resumePending": false
+    },
+    "results": [
+      {
+        "doi": "10.1038/s41467-026-78282-6",
+        "jobId": "729fcd90-17df-4515-9e74-f2fc3bb882e7",
+        "finishedAt": "2026-10-07T06:17:49.776Z",
+        "status": "failed",
+        "reason": "combined_capture;toc=not_found;figures=0/0;evidence=stored;published=0"
+      },
+      {
+        "doi": "10.1038/s41467-026-78282-6",
+        "jobId": "74ae16f9-21a3-499d-b275-fdafc61ef5bd",
+        "finishedAt": "2026-10-07T06:23:13.803Z",
+        "status": "failed",
+        "reason": "combined_capture;toc=not_found;figures=0/0;evidence=failed;published=0"
+      },
+      {
+        "doi": "10.1038/s41467-026-78282-6",
+        "jobId": "89001083-b2fc-468a-9e7f-159ffdb509cf",
+        "finishedAt": "2026-10-07T06:28:29.627Z",
+        "status": "failed",
+        "reason": "combined_capture;toc=not_found;figures=0/0;evidence=stored;published=0"
+      },
+      {
+        "doi": "10.1039/d6gc04087j",
+        "jobId": "0941f273-4a49-4ad8-958b-4ec4698cde8b",
+        "finishedAt": "2026-10-07T06:34:44.809Z",
+        "status": "failed",
+        "reason": "combined_capture;toc=not_found;figures=0/0;evidence=failed;published=0;pdf=private_pdf_http_403"
+      }
+    ]
+  },
+  "findings": [
+    "Recent work continued through 14:34:44 Beijing; this was a severe delay rather than proven total deadlock.",
+    "Completed metadata reads can be separated by GM timeout then fetch fallback; per-attempt full inventory refresh can compound these waits.",
+    "Manual busy/owner/renewal telemetry previously excluded the manual execution path.",
+    "Exact pending request at snapshot time is not exported by the prior version; no claim of proving which individual request blocked."
+  ],
+  "change": [
+    "Native-first for Gallery-owned read-only metadata, with one GM backup and no fallback loop.",
+    "Keep authentication and Retry-After errors; publisher requests and uploads retain original transport.",
+    "Expose queue/inventory refresh states, fix manual ownership telemetry, retain phase recovery eligibility.",
+    "Fence a cancelled/superseded run after publisher URL resolution."
+  ],
+  "versions": {
+    "bridge": "2.2.62",
+    "install": "6.2.43",
+    "protocol": "6.2.20",
+    "controller": "2.2.41"
+  },
+  "localValidation": {
+    "transport": 23,
+    "manualResume": 19,
+    "controller": 25,
+    "immediateRestart": 19,
+    "queue": 18,
+    "panel": 31,
+    "externalNetworkRequests": 0
+  },
+  "deliveryStatus": "candidate_pending_remote_build_and_public_installer_verification",
+  "limitations": [
+    "User-network latency reduction still needs post-install verification.",
+    "Publisher TOC misses, fulltext failures and HTTP 403 PDF access are independent and not declared fixed."
+  ]
+}

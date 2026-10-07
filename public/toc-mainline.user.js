@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.42
+// @version      6.2.43
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -55,7 +55,8 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.42';
+  var INSTALL_REVISION = '6.2.43';
+  var CONTROLLER_READ_REVISION = '20261007-native-metadata-first-v1';
   var MANUAL_RECOVERY_REVISION = '20261007-manual-resume-v1';
   var manualRecoveryBusy = false;
   var STALE_CONTROLLER_TAKEOVER_REVISION = '20261006-stale-controller-takeover-v1';
@@ -191,7 +192,7 @@
     else if (active) state = row ? row.phase : 'awaiting_publisher';
     else if (!state) {
       if (finished && (!leaseLive || leaseIsThisPage || manualLeaseMatches)) state = /^(all_resolved|blocked_remaining|inventory_partial|paused)$/.test(summary.phase || '') ? summary.phase : 'between_batches';
-      else if (leaseLive) state = leaseIsThisPage ? (/^(starting|retry_wait|inventory_retry)$/.test(summary.phase || '') ? summary.phase : 'between_jobs') : 'other_controller';
+      else if (leaseLive) state = leaseIsThisPage ? (/^(starting|retry_wait|inventory_retry|queue_refresh|inventory_refresh)$/.test(summary.phase || '') ? summary.phase : 'between_jobs') : 'other_controller';
       else if (manual && !finished) state = !manualSummaryMatches && Date.parse(manual.startedAt || '') > now - 15000 ? 'starting' : 'interrupted';
       else if (/^(all_resolved|blocked_remaining|inventory_partial|paused)$/.test(summary.phase || '')) state = summary.phase;
       else if (finished) state = 'between_batches';
@@ -239,7 +240,7 @@
   function captureLiveText(s) {
     var phaseNames = {
       starting:'正在生成缺项队列', between_jobs:'本控制页持有任务，等待下一篇', other_controller:'任务由另一控制页持有，等待其继续', interrupted:'上次任务已中断，等待恢复', waiting_controller:'仍有待办，等待控制器继续', inventory_partial:'缺项队列已结束，部分库存未确认',
-      retry_wait:'等待必要访问间隔，随后自动继续', inventory_retry:'库存连接恢复中，待办未丢弃', blocked_remaining:'已遍历待办，仍有未补齐或未确认项', all_resolved:'本轮已确认缺项全部补齐', page_loading:'等待出版社页面加载', evidence_capture:'读取文章文本', resume_wait:'等待旧任务收尾后自动恢复', idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
+      retry_wait:'等待必要访问间隔，随后自动继续', queue_refresh:'正在读取最新文献队列', inventory_refresh:'正在核对已有图片、全文和 PDF 库存', inventory_retry:'库存连接恢复中，待办未丢弃', blocked_remaining:'已遍历待办，仍有未补齐或未确认项', all_resolved:'本轮已确认缺项全部补齐', page_loading:'等待出版社页面加载', evidence_capture:'读取文章文本', resume_wait:'等待旧任务收尾后自动恢复', idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
       awaiting_publisher:'已开任务页，等待出版社脚本', discovering:'识别 TOC 和正文图',
       auth_wait:'等待出版社登录', challenge_wait:'等待出版社验证', downloading:'获取图片候选',
       comparing:'比较清晰度／矢量结构', uploading:'上传并等待存储回执', saved:'已收到存储回执',
@@ -1221,7 +1222,7 @@ function embeddedJobDois(value) {
     }
   }
 
-  function gmRequest(options) {
+  function gmRequest(options, skipNativeFallback) {
     return new Promise(function (resolve, reject) {
       var settled = false;
       function rejectOnce(error) {
@@ -1237,7 +1238,7 @@ function embeddedJobDois(value) {
       function fallbackOrReject(gmError) {
         if (settled) return;
         if (/Request was blocked by the user|Refused to connect.*blocked/i.test(String(gmError && gmError.message || ''))) { rejectOnce(gmError); return; }
-        var canFallback = controllerTransportUrl(options && options.url)
+        var canFallback = !skipNativeFallback && controllerTransportUrl(options && options.url)
           && !(options && options.responseType && options.responseType !== 'text');
         if (!canFallback) {
           rejectOnce(gmError);
@@ -1270,9 +1271,7 @@ function embeddedJobDois(value) {
     });
   }
 
-  async function metadataJson(options,prefix) {
-    var response=await gmRequest(options);
-    if(shouldNativeRetryUpload(response,options.url))response=await nativeControllerRequest(options);
+  function parseMetadataJson(response,prefix) {
     var status=Number(response.status||0);
     if(status<200||status>=300){
       var error=new Error(prefix+'_http_'+status);error.httpStatus=status;
@@ -1282,8 +1281,33 @@ function embeddedJobDois(value) {
     }
     return JSON.parse(String(response.responseText||'{}'));
   }
+  async function metadataJson(options,prefix,skipNativeFallback) {
+    var response=await gmRequest(options,skipNativeFallback);
+    if(!skipNativeFallback&&shouldNativeRetryUpload(response,options.url))response=await nativeControllerRequest(options);
+    return parseMetadataJson(response,prefix);
+  }
+  async function controllerReadMetadataJson(options,prefix) {
+    var method=String(options&&options.method||'GET').toUpperCase(),eligible=false;
+    try {
+      var url=new URL(String(options.url),location.href);
+      eligible=isGalleryPage()&&url.protocol==='https:'&&controllerTransportUrl(url.href)&&method==='GET';
+      if(isGalleryPage()&&method==='POST'&&url.origin+url.pathname===MEDIA_INVENTORY_ENDPOINT){
+        eligible=JSON.parse(String(options.data||'{}')).readOnly===true;
+      }
+    }catch(_){}
+    if(!eligible)return metadataJson(options,prefix);
+    // Same-site metadata can use browser networking directly. A slow extension
+    // transport must not add a full timeout before every successful inventory read.
+    var response;
+    try{response=await nativeControllerRequest(options);}
+    catch(_){return metadataJson(options,prefix,true);}
+    // Preserve authentication/rate-limit errors. Only the existing transient
+    // gateway rule permits transport fallback after an actual HTTP response.
+    if(shouldNativeRetryUpload(response,options.url))return metadataJson(options,prefix,true);
+    return parseMetadataJson(response,prefix);
+  }
   async function getJson(url) {
-    return metadataJson({method:'GET',url:url,timeout:45000,headers:{'cache-control':'no-cache',pragma:'no-cache'}},'queue');
+    return controllerReadMetadataJson({method:'GET',url:url,timeout:45000,headers:{'cache-control':'no-cache',pragma:'no-cache'}},'queue');
   }
 
   // BEGIN ARCHITECTURE MEMBERSHIP CORE v1
@@ -1413,10 +1437,10 @@ function embeddedJobDois(value) {
     }
   }
   async function getPrivateJson(url,token) {
-    return metadataJson({method:'GET',url:url,timeout:30000,headers:{'cache-control':'no-cache',pragma:'no-cache',authorization:'Bearer '+String(token||'')}},'private');
+    return controllerReadMetadataJson({method:'GET',url:url,timeout:30000,headers:{'cache-control':'no-cache',pragma:'no-cache',authorization:'Bearer '+String(token||'')}},'private');
   }
   async function postReadJson(url,payload) {
-    return metadataJson({method:'POST',url:url,timeout:45000,headers:{'content-type':'application/json','cache-control':'no-cache',pragma:'no-cache'},data:JSON.stringify(payload||{})},'inventory');
+    return controllerReadMetadataJson({method:'POST',url:url,timeout:45000,headers:{'content-type':'application/json','cache-control':'no-cache',pragma:'no-cache'},data:JSON.stringify(payload||{})},'inventory');
   }
 
   function productionMediaSnapshot(inventory) {
@@ -3707,9 +3731,10 @@ function embeddedJobDois(value) {
   function controllerLifecycleSnapshot() {
     var lease=GM_getValue(LEASE_KEY,null),active=GM_getValue(ACTIVE_JOB_KEY,null);
     var request=GM_getValue(RESUME_REQUEST_KEY,null);
+    var localManual=typeof manualExecution!=='undefined'&&manualExecutionCurrent(manualExecution);
     return {revision:CONTROLLER_LIFECYCLE_REVISION,paused:controllerPaused(),
-      localBusy:Boolean(globalThis.__OSG_PAIRED_CONTROLLER_BUSY__),
-      ownerIsThisPage:Boolean(lease&&lease.owner===CONTROLLER_ID),
+      localBusy:Boolean(globalThis.__OSG_PAIRED_CONTROLLER_BUSY__||localManual),
+      ownerIsThisPage:Boolean(lease&&(lease.owner===CONTROLLER_ID||localManual&&lease.owner===manualLeaseOwner(manualExecution))),
       leaseSeconds:Math.max(0,Math.ceil((Number(lease&&lease.expiresAt||0)-Date.now())/1000)),
       renewedAt:Number(lease&&lease.renewedAt||0),activeDoi:normalizeDoi(active&&active.doi),
       resumePending:Boolean(request&&request.requester===CONTROLLER_ID)};
@@ -4039,7 +4064,7 @@ function embeddedJobDois(value) {
     var manual=GM_getValue(MANUAL_RUN_KEY,null),summary=GM_getValue(SUMMARY_KEY,{})||{};
     if(!manual||!manual.id||manual.completedAt||summary.controllerRunId!=='manual:'+manual.id
       ||summary.mode!=='missing_only'||summary.version!==VERSION||summary.controllerRevision!==CONTROLLER_REVISION
-      ||summary.finishedAt||summary.stopReason||!/^(starting|running|retry_wait|inventory_retry)$/.test(summary.phase||''))return null;
+      ||summary.finishedAt||summary.stopReason||!/^(starting|running|retry_wait|inventory_retry|queue_refresh|inventory_refresh)$/.test(summary.phase||''))return null;
     return manual;
   }
 
@@ -4089,7 +4114,8 @@ function embeddedJobDois(value) {
     if(!manualExecutionCurrent(run)||controllerPaused())return false;
     var lease=GM_getValue(LEASE_KEY,null);
     if(!lease||lease.owner!==manualLeaseOwner(run))return false;
-    GM_setValue(LEASE_KEY,{owner:manualLeaseOwner(run),manualRunId:run.id,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,expiresAt:Date.now()+90000});
+    var now=Date.now();
+    GM_setValue(LEASE_KEY,{owner:manualLeaseOwner(run),manualRunId:run.id,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,expiresAt:now+90000,renewedAt:now});
     return true;
   }
 
@@ -4398,6 +4424,7 @@ function embeddedJobDois(value) {
       if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.mediaControllerRevision)!==CONTROLLER_REVISION)throw new Error('capture_server_upgrade_pending');
       var checkedAt=0,endRefresh=false,inventoryRecovery=0;
       async function refresh(){
+        s.phase='inventory_refresh';manualSummary(run);
         pairedJobs(queue,{items:{}});
         var next=await readMissingCaptureInventory(queue,run);
         if(!manualExecutionCurrent(run)||controllerPaused())return false;
@@ -4405,7 +4432,7 @@ function embeddedJobDois(value) {
         var currentDois=new Set(queue.articles.map(function(a){return normalizeDoi(a.doi);}));
         run.coverage.forEach(function(r,doi){if(!currentDois.has(doi))r.state='removed';});
         checkedAt=Date.now();s.queueGeneratedAt=queue.generatedAt;s.latestAddedDate=queue.latestAddedDate;
-        coverageStats(run);manualSummary(run);return true;
+        s.phase='running';coverageStats(run);manualSummary(run);return true;
       }
       if(!await refresh())return;s.phase='running';
       while(manualExecutionCurrent(run)&&!controllerPaused()){
@@ -4427,6 +4454,7 @@ function embeddedJobDois(value) {
           if(!endRefresh || (s.inventoryErrors||[]).length&&inventoryRecovery<2){
             if(endRefresh){inventoryRecovery++;s.phase='inventory_retry';manualSummary(run);await coverageWait(run,Date.now()+15000);}
             if(!manualExecutionCurrent(run)||controllerPaused())break;
+            s.phase='queue_refresh';manualSummary(run);
             queue=await getJson(QUEUE_URL+'?ts='+Date.now());
             if(!await refresh())return;endRefresh=true;continue;
           }
@@ -4441,6 +4469,7 @@ function embeddedJobDois(value) {
         var result;
         try{
           var manualTaskUrl=await resolvePublisherTaskUrl(job);
+          if(!manualExecutionCurrent(run)||controllerPaused())return;
           job.resolvedArticleUrl=manualTaskUrl;
           GM_setValue(ACTIVE_JOB_KEY,job);
           run.tab=await Promise.resolve(GM_openInTab(boundPublisherJobUrl(manualTaskUrl,job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
@@ -4466,7 +4495,7 @@ function embeddedJobDois(value) {
         if(controllerPaused())break;
         await coverageWait(run,Date.now()+3500);
         if(!manualExecutionCurrent(run)||controllerPaused())break;
-        if(Date.now()-checkedAt>=60000){queue=await getJson(QUEUE_URL+'?ts='+Date.now());if(!await refresh())return;}
+        if(Date.now()-checkedAt>=60000){s.phase='queue_refresh';manualSummary(run);queue=await getJson(QUEUE_URL+'?ts='+Date.now());if(!await refresh())return;}
       }
       if(manualExecutionCurrent(run)){
         coverageStats(run);s.finishedAt=nowIso();s.phase=controllerPaused()?'paused':s.unresolvedCount||s.inventoryUnknown?'blocked_remaining':'all_resolved';manualSummary(run);
