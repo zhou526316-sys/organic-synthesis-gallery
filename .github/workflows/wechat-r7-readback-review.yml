@@ -16,10 +16,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Prepare bounded browser inspection
+      - name: Prepare bounded browser inspection and Chinese fonts
         run: |
           python3 -m venv /tmp/wx-review-env
           /tmp/wx-review-env/bin/pip -q --disable-pip-version-check install playwright pillow
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
       - name: Inspect the exact draft-get preview and capture mobile screenshots
         shell: bash
         run: |
@@ -49,6 +51,7 @@ jobs:
               page.wait_for_function("Array.from(document.images).every(i=>i.complete)",timeout=35000)
               html=page.content(); (out/'real-draft-preview.html').write_text(html)
               assert 'Preview source: WeChat draft/get' in html
+              assert page.locator('meta[name=referrer]').get_attribute('content')=='no-referrer'
               articles=page.locator('article.article-block'); assert articles.count()==2
               broken=page.evaluate("Array.from(document.images).filter(i=>!i.naturalWidth).map(i=>i.src)")
               assert not broken,broken
@@ -74,6 +77,7 @@ jobs:
                       info=image.evaluate('(i)=>({src:i.src,w:i.naturalWidth,h:i.naturalHeight})')
                       expected=Image.open(root/fig['repo_path']).size
                       assert abs(info['w']/info['h']-expected[0]/expected[1])<0.025,(fig['id'],info,expected)
+                      assert info['w']>140 and info['h']>100,(fig['id'],'possible CDN placeholder',info)
                       assert urllib.parse.urlsplit(info['src']).hostname.endswith(('qpic.cn','qq.com')),info['src']
                       figchecks.append({'id':fig['id'],'width':info['w'],'height':info['h'],'caption':'present','aspectRatio':'pass'})
                   assert len(figchecks)==14
