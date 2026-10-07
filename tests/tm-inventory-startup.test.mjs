@@ -30,6 +30,12 @@ function context({native,gm,hedge=8,timeout=45}={}) {
     INVENTORY_HEDGE_DELAY_MS:hedge,
     nativeControllerRequest:native||(async()=>({status:200,responseText:'{"ok":true}'})),
     gmRequest:gm||(async()=>({status:200,responseText:'{"ok":true}'})),
+    async metadataJson(options,prefix){
+      const response=await (gm||(async()=>({status:200,responseText:'{"ok":true}'})))(options);
+      const status=Number(response.status||0);
+      if(status<200||status>=300){const error=new Error(prefix+'_http_'+status);error.httpStatus=status;throw error;}
+      return JSON.parse(String(response.responseText||'{}'));
+    },
     parseMetadataJson(response,prefix){
       const status=Number(response.status||0);
       if(status<200||status>=300){const error=new Error(prefix+'_http_'+status);error.httpStatus=status;throw error;}
