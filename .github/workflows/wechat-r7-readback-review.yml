@@ -1,0 +1,110 @@
+name: WeChat R7 Readback Review
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/wechat-r7-readback-review.yml']
+permissions:
+  contents: write
+concurrency:
+  group: wechat-r7-readback-review
+  cancel-in-progress: false
+jobs:
+  inspect-real-draft:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Prepare bounded browser inspection
+        run: |
+          python3 -m venv /tmp/wx-review-env
+          /tmp/wx-review-env/bin/pip -q --disable-pip-version-check install playwright pillow
+      - name: Inspect the exact draft-get preview and capture mobile screenshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          /tmp/wx-review-env/bin/python - <<'PY'
+          import datetime, hashlib, json, pathlib, re, shutil, urllib.parse
+          from PIL import Image
+          from playwright.sync_api import sync_playwright
+          root=pathlib.Path.cwd(); out=pathlib.Path('/tmp/wechat-r7-readback'); out.mkdir()
+          receipt=json.loads((root/'audit/wechat-publisher/latest.json').read_text())
+          url=receipt['preview_url']
+          assert receipt['draft_readback']=='ok'
+          assert receipt['publicationSlot']=='2026-10-07T08:00:00+08:00'
+          assert url=='https://relay.gczhouwld.com/wechat-preview/996cb9dd18c792fe056e2760.html'
+          specs=[json.loads((root/'public/wechat-featured/2026-10-07.json').read_text()),json.loads((root/'public/wechat-retrospective/phoenix1-structural-regeneration.json').read_text())]
+          edition=json.loads((root/'public/wechat-editions/2026-10-07.json').read_text())
+          normalize=lambda s:re.sub(r'\s+','',s)
+          errors=[]; checks=[]
+          browser_path=shutil.which('google-chrome') or shutil.which('chromium') or shutil.which('chromium-browser')
+          if not browser_path: raise SystemExit('No deterministic Chromium executable on runner')
+          with sync_playwright() as p:
+              browser=p.chromium.launch(executable_path=browser_path,headless=True,args=['--no-sandbox'])
+              page=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=1)
+              page.on('pageerror',lambda e:errors.append(str(e)))
+              response=page.goto(url,wait_until='domcontentloaded',timeout=25000)
+              assert response and response.status==200
+              page.wait_for_function("Array.from(document.images).every(i=>i.complete)",timeout=35000)
+              html=page.content(); (out/'real-draft-preview.html').write_text(html)
+              assert 'Preview source: WeChat draft/get' in html
+              articles=page.locator('article.article-block'); assert articles.count()==2
+              broken=page.evaluate("Array.from(document.images).filter(i=>!i.naturalWidth).map(i=>i.src)")
+              assert not broken,broken
+              assert page.evaluate('document.documentElement.scrollWidth')<=390
+              assert not errors,errors
+              page.screenshot(path=str(out/'00-two-card-preview.png'))
+              for idx,obj in enumerate(specs):
+                  article=articles.nth(idx); content=article.locator('.wx-content')
+                  txt=normalize(content.inner_text())
+                  expected_title=edition['title'] if idx==0 else obj['title']
+                  assert article.locator('h1').inner_text()==expected_title
+                  assert obj['paper']['doi'] in txt
+                  prose=[x['text'] for x in obj.get('quick_points',[])]
+                  for section in obj.get('sections',[]):
+                      prose+=section.get('paragraphs',[])
+                  assert all(normalize(s) in txt for s in prose),'Prose missing after transport'
+                  figchecks=[]
+                  for fig in obj['figures']:
+                      if fig.get('body') is False: continue
+                      caption=fig['caption']; assert normalize(caption) in txt,fig['id']
+                      image=content.locator('p').filter(has_text=caption).first.locator('xpath=preceding-sibling::img[1]')
+                      assert image.count()==1,fig['id']
+                      info=image.evaluate('(i)=>({src:i.src,w:i.naturalWidth,h:i.naturalHeight})')
+                      expected=Image.open(root/fig['repo_path']).size
+                      assert abs(info['w']/info['h']-expected[0]/expected[1])<0.025,(fig['id'],info,expected)
+                      assert urllib.parse.urlsplit(info['src']).hostname.endswith(('qpic.cn','qq.com')),info['src']
+                      figchecks.append({'id':fig['id'],'width':info['w'],'height':info['h'],'caption':'present','aspectRatio':'pass'})
+                  assert len(figchecks)==14
+                  article.scroll_into_view_if_needed(); article.screenshot(path=str(out/f'{idx+1:02d}-article-full.png'))
+                  article.locator('h1').scroll_into_view_if_needed(); page.screenshot(path=str(out/f'{idx+1:02d}-article-opening.png'))
+                  checks.append({'doi':obj['paper']['doi'],'title':expected_title,'paragraphsChecked':len(prose),'bodyFigureCount':len(figchecks),'figures':figchecks})
+              result={'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'pass','previewUrl':url,'previewSha256':hashlib.sha256(html.encode()).hexdigest(),'source':'actual WeChat draft/get-derived relay preview','articleCount':2,'brokenImages':0,'viewportWidth':390,'documentWidth':390,'pageErrors':errors,'articleChecks':checks,'draftModifiedByThisCheck':False,'publicSendPerformed':False,'visualReview':'screenshots captured; awaiting assistant inspection'}
+              (out/'transport-review.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+              browser.close()
+          PY
+      - name: Keep exact readback screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wechat-r7-real-draft-readback
+          path: /tmp/wechat-r7-readback/
+          retention-days: 7
+      - name: Persist compact transport receipt only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch --depth=1 origin main
+            git reset --hard origin/main
+            cp /tmp/wechat-r7-readback/transport-review.json audit/wechat-working/2026-10-07-r7-transport-review.json
+            git add audit/wechat-working/2026-10-07-r7-transport-review.json
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'audit: verify actual two-article WeChat draft readback'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
