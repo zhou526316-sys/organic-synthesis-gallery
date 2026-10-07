@@ -8,6 +8,11 @@ on:
       - '.github/workflows/deploy-worker-frontend.yml'
       - '.github/workflows/cloudflare-staging-deploy.yml'
       - '.github/workflows/worker-deploy-authority.yml'
+      - '.github/workflows/cloudflare-pages-static.yml'
+      - '.github/workflows/cloudflare-pages-browser-api.yml'
+      - '.github/workflows/legacy-pages-mirror-readonly.yml'
+      - 'scripts/inspect-legacy-pages-mirror.mjs'
+      - 'scripts/test-legacy-pages-readonly.mjs'
   pull_request:
     branches: [main]
     paths:
@@ -15,6 +20,11 @@ on:
       - '.github/workflows/deploy-worker-frontend.yml'
       - '.github/workflows/cloudflare-staging-deploy.yml'
       - '.github/workflows/worker-deploy-authority.yml'
+      - '.github/workflows/cloudflare-pages-static.yml'
+      - '.github/workflows/cloudflare-pages-browser-api.yml'
+      - '.github/workflows/legacy-pages-mirror-readonly.yml'
+      - 'scripts/inspect-legacy-pages-mirror.mjs'
+      - 'scripts/test-legacy-pages-readonly.mjs'
 
 permissions:
   contents: read
@@ -28,6 +38,9 @@ jobs:
         with: {fetch-depth: 0}
       - uses: actions/setup-node@v5
         with: {node-version: 22}
+
+      - name: Verify legacy Pages entries cannot write or deploy
+        run: node --test scripts/test-legacy-pages-readonly.mjs
 
       - name: Verify maintenance workflow cannot deploy a partial Worker
         run: |

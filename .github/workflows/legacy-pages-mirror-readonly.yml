@@ -1,0 +1,41 @@
+name: Inspect legacy Pages mirror (read only)
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    secrets:
+      CLOUDFLARE_API_TOKEN:
+        required: false
+      CLOUDFLARE_ACCOUNT_ID:
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: legacy-pages-mirror-readonly
+  cancel-in-progress: false
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Read legacy Pages project metadata
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PAGES_PROJECT: organic-synthesis-gallery-public
+        run: node scripts/inspect-legacy-pages-mirror.mjs --report artifacts/legacy-pages-mirror-inspection.json
+      - name: Preserve sanitized inspection report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: legacy-pages-mirror-inspection-${{ github.run_id }}
+          path: artifacts/legacy-pages-mirror-inspection.json
+          if-no-files-found: error
+          retention-days: 14
