@@ -1,0 +1,171 @@
+name: Deployed mobile pagination clearance
+
+on:
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend']
+    branches: [main]
+    types: [completed]
+  push:
+    branches: [main]
+    paths: ['audit/pagination-overlay-live-trigger.txt']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pagination-overlay-production-acceptance
+  cancel-in-progress: false
+
+jobs:
+  live:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install isolated browser probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/pager-overlay-live"
+          cd "$RUNNER_TEMP/pager-overlay-live"
+          npm install --no-package-lock --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Verify real floating controls and native first-last clicks
+        env:
+          LIVE_BROWSER: ${{ matrix.browser }}
+          LIVE_OUTPUT: ${{ runner.temp }}/pager-overlay-evidence
+          PUBLICATION_RUN: ${{ github.event.workflow_run.id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/pager-overlay-live"
+          cat > verify.mjs <<'NODE'
+          import { chromium, webkit } from 'playwright';
+          import assert from 'node:assert/strict';
+          import { mkdir, writeFile } from 'node:fs/promises';
+          import { createHash } from 'node:crypto';
+          const site = 'https://gallery.gczhouwld.com/';
+          const name = process.env.LIVE_BROWSER, out = process.env.LIVE_OUTPUT;
+          await mkdir(out, { recursive: true });
+          const report = { schemaVersion: 1, site, browser: name, scope: 'default-floating-launchers-at-mobile-page-end', checkedAt: new Date().toISOString(), workflowCommit: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, publicationRun: process.env.PUBLICATION_RUN || null, productionWritesAllowed: false, results: [] };
+          const browser = await ({ chromium, webkit }[name]).launch();
+          for (const width of [320, 390, 680]) {
+            const result = { width, ok: false, checks: [], pageErrors: [], consoleErrors: [], failedRequests: [], apiResponses: [], suppressedWrites: [] };
+            const context = await browser.newContext({ viewport: { width, height: 900 }, locale: 'zh-CN', timezoneId: 'Asia/Shanghai', serviceWorkers: 'block' });
+            const page = await context.newPage();
+            page.setDefaultTimeout(15000);
+            await context.route('**/*', async route => {
+              const request = route.request(), url = new URL(request.url());
+              if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method()) && url.pathname !== '/api/literature/catalog-view') {
+                result.suppressedWrites.push({ path: url.pathname, method: request.method() });
+                return route.abort('blockedbyclient');
+              }
+              return route.continue();
+            });
+            page.on('pageerror', error => result.pageErrors.push(error.message));
+            page.on('console', message => { if (message.type() === 'error') result.consoleErrors.push(message.text()); });
+            page.on('requestfailed', request => result.failedRequests.push({ path: new URL(request.url()).pathname, error: request.failure()?.errorText }));
+            page.on('response', response => { if (response.url().includes('/api/')) result.apiResponses.push({ path: new URL(response.url()).pathname, status: response.status() }); });
+            const current = n => page.locator(`#resultPageNumbers [data-result-page="${n}"][aria-current="page"]`).waitFor({ state: 'visible' });
+            const dois = () => page.locator('#gallery > .card').evaluateAll(cards => cards.map(card => card.getAttribute('data-doi')));
+            try {
+              const response = await page.goto(site + '?pager-clearance=' + process.env.GITHUB_RUN_ID, { waitUntil: 'domcontentloaded', timeout: 30000 });
+              assert.equal(response?.status(), 200);
+              assert.equal(new URL(page.url()).hostname, 'gallery.gczhouwld.com');
+              await page.locator('#gallery > .card').first().waitFor({ state: 'visible', timeout: 35000 });
+              await page.locator('[data-lang="zh"]').click();
+              await current(1);
+              const controls = page.locator('#resultWindowControls');
+              await page.locator('gallery-page-navigation').waitFor({ state: 'visible' });
+              await page.locator('site-feedback-widget .site-feedback-tab').waitFor({ state: 'visible' });
+              await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+              await page.waitForFunction(() => {
+                const pager = document.querySelector('#resultWindowControls');
+                if (!pager) return false;
+                const box = pager.getBoundingClientRect();
+                return box.top >= 0 && box.bottom <= innerHeight + 1;
+              });
+              result.layout = await controls.evaluate(element => {
+                const rect = element.getBoundingClientRect();
+                const obstacles = [document.querySelector('gallery-page-navigation'), document.querySelector('site-feedback-widget .site-feedback-tab')].filter(Boolean).map(node => {
+                  const box = node.getBoundingClientRect(), style = getComputedStyle(node);
+                  return { tag: node.tagName, left: box.left, right: box.right, top: box.top, bottom: box.bottom, visible: box.width > 0 && box.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' };
+                });
+                const targets = [...element.querySelectorAll('button,input')].map(node => {
+                  const box = node.getBoundingClientRect();
+                  return { id: node.id || node.dataset.resultPage, width: box.width, height: box.height, overlaps: obstacles.filter(other => Math.min(box.right, other.right) > Math.max(box.left, other.left) && Math.min(box.bottom, other.bottom) > Math.max(box.top, other.top)).map(other => other.tag) };
+                });
+                return { center: rect.left + rect.width / 2, top: rect.top, bottom: rect.bottom, viewportHeight: innerHeight, overflow: document.documentElement.scrollWidth - innerWidth, marginBottom: parseFloat(getComputedStyle(element).marginBottom), obstacles, targets };
+              });
+              assert.ok(result.layout.marginBottom >= 148, 'new mobile clearance CSS must be deployed');
+              assert.ok(Math.abs(result.layout.center - width / 2) <= 2, 'pager centered');
+              assert.ok(result.layout.overflow <= 1, 'no horizontal overflow');
+              assert.equal(result.layout.obstacles.length, 2);
+              assert.ok(result.layout.obstacles.every(obstacle => obstacle.visible), 'real floating launchers must stay visible');
+              for (const target of result.layout.targets) {
+                assert.ok(target.width >= 44 && target.height >= 44, 'touch target ' + target.id);
+                assert.deepEqual(target.overlaps, [], 'floating launcher overlaps ' + target.id);
+              }
+              result.checks.push('deployed-148px-clearance', 'centered', '44px-targets', 'both-floating-launchers-visible', 'no-page-end-control-overlap');
+              await page.screenshot({ path: `${out}/${name}-${width}-clearance.png` });
+              const first = await dois();
+              const last = Number(await page.locator('#resultPageJumpInput').getAttribute('max'));
+              assert.ok(Number.isSafeInteger(last) && last > 1);
+              assert.ok(first.length > 0 && first.length <= 12);
+              await page.locator(`#resultPageNumbers [data-result-page="${last}"]`).click();
+              await current(last);
+              assert.equal(await page.locator('#nextResultPage').isDisabled(), true);
+              const end = await dois();
+              assert.ok(end.length > 0 && end.length <= 12 && end.every(doi => !first.includes(doi)));
+              await page.locator('#resultPageNumbers [data-result-page="1"]').click();
+              await current(1);
+              assert.deepEqual(await dois(), first);
+              assert.equal(await page.locator('#previousResultPage').isDisabled(), true);
+              await page.locator('#resultPageJumpInput').fill('2');
+              await page.locator('#resultPageJumpInput').press('Enter');
+              await current(2);
+              await page.locator('#resultPageJumpInput').fill('1');
+              await page.locator('#resultPageJumpInput').press('Enter');
+              await current(1);
+              result.checks.push('native-last-page-click', 'native-first-page-click', 'distinct-last-page-dois', 'enter-page-jump', '12-paper-limit');
+              assert.deepEqual(result.pageErrors, [], 'no uncaught exceptions');
+              const manifest = await context.request.get(site + 'release-delivery.json?pager-clearance=' + process.env.GITHUB_RUN_ID, { timeout: 15000 });
+              result.releaseManifestStatus = manifest.status();
+              if (manifest.ok() && (manifest.headers()['content-type'] || '').includes('json')) result.releaseManifest = await manifest.json();
+              result.deployedScripts = await page.locator('script[src]').evaluateAll(nodes => nodes.map(node => node.getAttribute('src')));
+              result.ok = true;
+            } catch (error) {
+              result.error = String(error?.stack || error);
+              await page.screenshot({ path: `${out}/${name}-${width}-failure.png` }).catch(() => {});
+            } finally {
+              report.results.push(result);
+              await writeFile(`${out}/report-${name}.json`, JSON.stringify(report, null, 2));
+              await context.close();
+            }
+          }
+          await browser.close();
+          report.ok = report.results.every(result => result.ok);
+          report.completedAt = new Date().toISOString();
+          const text = JSON.stringify(report, null, 2);
+          await writeFile(`${out}/report-${name}.json`, text);
+          await writeFile(`${out}/report-${name}.sha256`, createHash('sha256').update(text).digest('hex') + '\n');
+          console.log(JSON.stringify({ site, browser: name, ok: report.ok, results: report.results.map(({ width, ok, checks, error }) => ({ width, ok, checks, error })) }));
+          if (!report.ok) process.exitCode = 1;
+          NODE
+          node verify.mjs
+      - name: Preserve real-site evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pager-clearance-${{ matrix.browser }}
+          path: ${{ runner.temp }}/pager-overlay-evidence/
+          if-no-files-found: warn
+          retention-days: 7
