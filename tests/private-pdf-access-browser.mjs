@@ -85,7 +85,8 @@ const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
 async function contextWith(capabilities,openResult={available:true,url:base+'/private-hit.html?token=opaque'},options={}){
  const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900}});
  const state={privateCalls:0,authTokens:[],pendingOwner:[],releasedOwner:0};
- await context.addInitScript(()=>{
+ await context.addInitScript(fixtureOrigin=>{
+  if(location.origin!==fixtureOrigin)return;
   if(localStorage.getItem('private-pdf-browser-fixture-seeded')!=='1'){
    localStorage.setItem('organic-gallery-session-v1','fixture-session');
    localStorage.setItem('private-pdf-browser-fixture-seeded','1');
@@ -94,7 +95,7 @@ async function contextWith(capabilities,openResult={available:true,url:base+'/pr
   window.addEventListener('gallery-private-pdf-capability',event=>{
    window.__pdfCap=event.detail;window.__pdfCapabilityEvents.push(event.detail?.read);
   });
- });
+ },base);
  await context.route(base+'/**',async route=>{
   const pathname=new URL(route.request().url()).pathname;
   if(pathname==='/release-delivery.json')return route.fulfill({status:404,body:'fixture selects local legacy catalog'});
@@ -247,13 +248,17 @@ try{
   await assertPdfHidden(page);assert.equal(state.privateCalls,0);
  });
  await test('owner setup page shows current account and claims only after explicit confirmation',async()=>{
-  const context=await newTrackedContext();await context.addInitScript(()=>localStorage.setItem('organic-gallery-session-v1','fixture-session'));let claim=0;
+  const context=await newTrackedContext();await context.addInitScript(fixtureOrigin=>{
+   if(location.origin!==fixtureOrigin)return;
+   localStorage.setItem('organic-gallery-session-v1','fixture-session');
+  },base);let claim=0;
   await context.route(API_ROUTE,async route=>{const u=new URL(route.request().url());if(u.pathname==='/api/user-ui/auth/session')return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify({authenticated:true,user:{id:'u1',email:'owner@example.invalid',capabilities:[]}})});if(u.pathname==='/api/user-ui/private-pdf/bootstrap-owner'){claim++;return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify({claimed:true,capabilities:['private_pdf_owner','private_pdf_read']})});}return route.fulfill({status:404,headers:{'access-control-allow-origin':'*'},body:'{}'});});
   const page=await context.newPage();await page.goto(base+'/private-pdf-owner-setup.html#code=fixture-secret');await page.locator('#claim:not([disabled])').waitFor();assert.equal(await page.locator('#account').textContent(),'owner@example.invalid');assert.equal(claim,0);await page.locator('#claim').click();await page.locator('#status.ok').waitFor();assert.equal(claim,1);await context.close();
  });
  await test('existing owner can authorize PDF capture without healthcheck CORS preflight',async()=>{
   const context=await newTrackedContext();
-  await context.addInitScript(()=>{
+  await context.addInitScript(fixtureOrigin=>{
+    if(location.origin!==fixtureOrigin)return;
     localStorage.setItem('organic-gallery-session-v1','fixture-session');
     window.addEventListener('message',event=>{
       if(event.origin!==location.origin||event.data?.type!=='osg-private-pdf-capture-lease-v1')return;
@@ -262,7 +267,7 @@ try{
         expiresAt:event.data.expiresAt,
       },location.origin);
     });
-  });
+  },base);
   let healthCalls=0,leaseCalls=0;
   await context.route(API_ROUTE,async route=>{
     const u=new URL(route.request().url());

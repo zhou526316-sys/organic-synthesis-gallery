@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-07 06:20:14 UTC",
+  "implementationCommit": "8e032f570e5bb5d49452fd337287a6e92b3c7b4c",
+  "diagnosticRunId": 37580677890,
+  "diagnosticArtifactId": 11463799987,
+  "failedCase": "owner PDF button is independent and original link remains publisher-only",
+  "pageErrors": {
+    "count": 5,
+    "allEqual": "SecurityError: Failed to read the 'localStorage' property from 'Window': Access is denied for this document."
+  },
+  "failedRequests": 0,
+  "unmockedExternalRequests": 0,
+  "firstErrorTrace": {
+    "newPageStartMs": 701.917,
+    "errorMs": 739.903,
+    "firstGotoMs": 751.371
+  },
+  "cause": "Session fixture initializer ran in opaque initial popup documents before navigation to the application.",
+  "correction": "Execute the three session initialization scripts only for the fixture's own origin; retain strict zero-error and zero-unmocked-request assertions.",
+  "originalFixtureBlob": "cdc2067e27ddba381337faf173b60b66e40bb574",
+  "correctedFixtureBlob": "4d754da4ae034267f7010b237805a2b3021bee00",
+  "productionCodeChanged": false,
+  "syntaxCheckPassed": true,
+  "independentReviewPassed": true,
+  "realBrowserRerun": "pending"
+}
