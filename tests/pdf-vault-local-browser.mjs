@@ -361,6 +361,42 @@ try {
     assert.equal(createHash('sha256').update(Buffer.concat(chunks)).digest('hex'), PDF_HASH, 'export is the actual retained PDF');
     assert.match(download.suggestedFilename(), /\.pdf$/i);
   });
+  await test('saved DOI quick link opens the actual file without a second browser file read', async () => {
+    const { context } = await trackedContext();
+    const page = await pageFor(context);
+    await importGood(page);
+    await page.addInitScript(() => {
+      const original = File.prototype.arrayBuffer;
+      window.__quickOpenFileReads = 0;
+      File.prototype.arrayBuffer = function (...args) {
+        window.__quickOpenFileReads += 1;
+        return original.apply(this, args);
+      };
+    });
+    await page.goto(base + '/pdf-vault/?doi=' + encodeURIComponent(DOI) + '&open=1', { waitUntil: 'domcontentloaded' });
+    await waitAccount(page, 'a');
+    await by(page, 'reader').waitFor({ state: 'visible' });
+    await assertRendered(page);
+    assert.equal(await page.evaluate(() => window.__quickOpenFileReads), 1, 'reopened file must be read once for verified bytes then directly handed to PDF.js');
+    assert.equal((await localCopies(page)).length, 1, 'quick open is read-only and must not import another file');
+  });
+  await test('background revalidation does not close an already open local PDF', async () => {
+    const { context, state } = await trackedContext();
+    const page = await pageFor(context);
+    await importGood(page);
+    await openFirst(page);
+    const authChecks = state.authCalls.length;
+    await page.evaluate(() => {
+      const observed = Date.now();
+      Date.now = () => observed + 6 * 60_000;
+      window.dispatchEvent(new Event('focus'));
+    });
+    await waitUntil(() => state.authCalls.length > authChecks, 'stale same-account session must be revalidated');
+    await page.waitForTimeout(200);
+    assert.equal(await by(page, 'reader').isVisible(), true, 'silent same-account revalidation must keep the reader open');
+    await assertRendered(page);
+    assert.equal(await copyRows(page).count(), 1);
+  });
   await test('directory adapter persists a real file handle and reopens it', async () => {
     const { context } = await trackedContext(); const page = await pageFor(context); await importGood(page, { destination: 'directory' });
     assert.equal(await page.evaluate(() => window.__pdfVaultFixture.pickerCalls), 1);

@@ -523,7 +523,9 @@ export function createLocalPdfVault(options = {}) {
         const updated = await boundary(updateCopy(value, { state: 'available', last_verified_at: now(value.last_verified_at) }, probe));
         probes.set(id, updated.local_probe || probe);
         publishChange();
-        return { file, copy: toCopyManifest(updated), probe: currentProbe(updated) };
+        // The validated byte buffer is intentionally ephemeral: it is passed
+        // directly to the on-device reader, never persisted or sent upstream.
+        return { file, bytes: inspected.bytes, copy: toCopyManifest(updated), probe: currentProbe(updated) };
       } catch (error) {
         check();
         const mapped = failure(error);

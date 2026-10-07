@@ -18,7 +18,9 @@ const versionInput = byTestId('version');
 const sessionRefresh = byTestId('session-refresh');
 const list = byTestId('list');
 const readerDialog = byTestId('reader');
-const initialDoi = normalizeDoi(new URLSearchParams(location.search).get('doi')) || '';
+const initialParams = new URLSearchParams(location.search);
+const initialDoi = normalizeDoi(initialParams.get('doi')) || '';
+const quickOpenRequested = initialParams.get('open') === '1';
 const versionNames = { unknown: '版本待确认', publisher: '出版社正式版', accepted_manuscript: '作者接受稿', preprint: '预印本' };
 
 let generation = 0;
@@ -30,6 +32,7 @@ let authController = null;
 let reader = null;
 let visibleCopies = 30;
 let lastVerified = 0;
+let quickOpenHandled = false;
 let probeExpiryTimer = null;
 let queuePanel = null;
 let snapshot = { destination: null, copies: [], probes: [] };
@@ -303,9 +306,23 @@ function copyAction(name, copyId) {
       onExport: () => { if (current(context)) void copyAction('export', copyId); },
       onClose: () => { /* The reader owns synchronous canvas clearing. */ },
     });
-    await reader.open(result.file, result.copy.doi);
+    // The vault has just hashed these exact bytes. Reuse them for PDF.js
+    // instead of reading the same PDF into memory a second time.
+    await reader.open(result.file, result.copy.doi, result.bytes);
     requireCurrent(context);
   });
+}
+
+function openRequestedCopy(context) {
+  if (!quickOpenRequested || quickOpenHandled || !current(context) || workspace.hidden) return;
+  quickOpenHandled = true;
+  const available = snapshot.copies.filter(copy => copy.doi === initialDoi && copy.state === 'available');
+  available.sort((a, b) => b.created_at - a.created_at);
+  if (available.length) {
+    void copyAction('open', available[0].id);
+  } else {
+    showStatus('本机没有这篇文献的可用副本。可以在下方导入已下载的 PDF。', 'idle');
+  }
 }
 
 async function readSession(token, controller) {
@@ -319,6 +336,42 @@ async function readSession(token, controller) {
   if (data?.authenticated !== true) return null;
   if (typeof data?.user?.id !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(data.user.id)) throw new Error('session_unavailable');
   return data.user;
+}
+
+// Revalidate the *same* session without destroying an open local document.
+ // Token changes and explicit logout still use verifySession's immediate
+ // revocation path. Temporary network outages are not evidence of logout.
+async function revalidateCurrentSession() {
+  const context = active;
+  if (!context || !current(context) || verifying) return;
+  const stamp = generation;
+  verifying = true;
+  sessionRefresh.disabled = true;
+  const controller = new AbortController();
+  authController = controller;
+  const timeout = window.setTimeout(() => controller.abort(), 12_000);
+  try {
+    const user = await readSession(context.token, controller);
+    if (!current(context) || stamp !== generation) return;
+    if (!user || user.id !== context.user.id) {
+      void verifySession();
+      return;
+    }
+    context.user = user;
+    lastVerified = Date.now();
+    accountLabel.textContent = `${user.displayName || user.email || 'Gallery 用户'} · 账号已验证`;
+  } catch {
+    if (current(context) && stamp === generation) {
+      $('#account-help').textContent = '网络暂时无法重新确认账号，现有本地阅读不受影响；账号切换时仍会立即关闭。';
+    }
+  } finally {
+    clearTimeout(timeout);
+    if (stamp === generation) {
+      verifying = false;
+      authController = null;
+      setControlState();
+    }
+  }
 }
 
 async function verifySession() {
@@ -387,6 +440,7 @@ async function verifySession() {
     workspace.hidden = false;
     document.documentElement.dataset.pdfVaultAuth = 'authenticated';
     showStatus('');
+    openRequestedCopy(context);
   } catch (error) {
     if (checkGeneration !== generation || token !== sessionToken()) return;
     active?.abortController.abort();
@@ -455,7 +509,8 @@ window.setInterval(() => {
 }, TOKEN_WATCH_MS);
 window.addEventListener('focus', () => {
   if (active && current(active) && !workspace.hidden) { renderList(); setControlState(); }
-  if (sessionToken() !== observedToken || (!verifying && Date.now() - lastVerified > 5 * 60_000)) void verifySession();
+  if (sessionToken() !== observedToken) void verifySession();
+  else if (!verifying && Date.now() - lastVerified > 5 * 60_000) void revalidateCurrentSession();
 });
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible' && active && current(active) && !workspace.hidden) { renderList(); setControlState(); }
@@ -463,5 +518,9 @@ document.addEventListener('visibilitychange', () => {
 window.addEventListener('pagehide', () => {
   revokeCurrent();
 });
-window.addEventListener('pageshow', event => { if (event.persisted) void verifySession(); });
+window.addEventListener('pageshow', event => {
+  if (!event.persisted) return;
+  if (active && current(active)) void revalidateCurrentSession();
+  else void verifySession();
+});
 void verifySession();

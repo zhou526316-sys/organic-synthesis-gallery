@@ -474,6 +474,11 @@ try{
   await vaultBy(local,'opfs').click();await waitLocalStatus(local,'success');
   await importCardPdf(local,doi);await waitCardState(page,doi,'local');
   assert.match(await card.locator('.local-pdf-button').textContent(),/PDF · 本机/);
+  assert.equal(new URL(await card.locator('.local-pdf-button').getAttribute('href'),base).searchParams.get('open'),'1','readable local copies deep-link directly to the reader');
+  const quick=await popup(page,card.locator('.local-pdf-button'));
+  await quick.waitForFunction(()=>document.querySelector('[data-testid="pdf-vault-reader"]')?.open === true,undefined,{timeout:7000});
+  await quick.waitForFunction(()=>document.querySelector('[data-testid="pdf-vault-reader-canvas"]')?.dataset.renderedPage === '1',undefined,{timeout:7000});
+  await quick.close();
   await assertNoCardFileIo(page);await assertPdfHidden(page);assert.equal(state.privateCalls,0);
   const signal=await page.evaluate(()=>localStorage.getItem('gallery-pdf-vault-local-change-v1'));
   assert.match(signal,/^change_[a-f0-9]+$/,'cross-tab signal carries only an opaque random change marker');
@@ -499,6 +504,7 @@ try{
   },doi);
   state.holdQueue=false;for(const release of state.pendingQueue.splice(0))release();
   await waitCardState(page,doi,'check');
+  assert.equal(new URL(await card.locator('.local-pdf-button').getAttribute('href'),base).searchParams.has('open'),false,'unverified local copies never keep the quick-open hint');
   assert.equal(await page.evaluate(()=>window.__localStateAfterDenial.includes('local')),false,'an older pending queue response cannot repaint a rejected local receipt');
   assert.equal(await vaultBy(local,'reader').isVisible(),false);await assertNoCardFileIo(page);
   await importCardPdf(local,doi);await waitCardState(page,doi,'local');

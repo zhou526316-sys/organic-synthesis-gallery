@@ -21,7 +21,7 @@ function options(data) {
     wasmUrl: `${ASSET_BASE}wasm/`,
     iccUrl: `${ASSET_BASE}iccs/`,
     useWorkerFetch: false,
-    useSystemFonts: false,
+    useSystemFonts: true,
     // Current PDF.js no longer exposes an eval branch; also keep this false
     // for compatible implementations. The page CSP disallows JavaScript eval.
     isEvalSupported: false,
@@ -29,7 +29,9 @@ function options(data) {
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
-    stopAtErrors: true,
+    // Some otherwise readable publisher PDFs contain recoverable malformed
+    // objects. Do not reject an intact, renderable page for those warnings.
+    stopAtErrors: false,
     canvasMaxAreaInBytes: 32 * 1024 * 1024,
     verbosity: 0,
   };
@@ -234,7 +236,7 @@ export function createLocalPdfReader({ dialog, assertCurrent = () => true, signa
   }
 
   return {
-    async open(file, title) {
+    async open(file, title, validatedBytes = null) {
       check();
       loading = true;
       controls();
@@ -242,7 +244,9 @@ export function createLocalPdfReader({ dialog, assertCurrent = () => true, signa
       readerStatus('正在打开本地 PDF…', 'busy');
       if (!dialog.open) dialog.showModal();
       try {
-        const data = new Uint8Array(await file.arrayBuffer());
+        const data = validatedBytes instanceof Uint8Array && validatedBytes.byteLength === file.size
+          ? validatedBytes
+          : new Uint8Array(await file.arrayBuffer());
         check();
         task = getDocument(options(data));
         pdf = await task.promise;

@@ -13,6 +13,14 @@ const anchors = () => root ? [...root.querySelectorAll('a.local-pdf-button')] : 
 function setLabel(anchor, state, zh, en, titleZh, titleEn) {
   const text = language === 'zh' ? zh : en;
   anchor.textContent = text; anchor.dataset.pdfVaultState = state;
+  // A verified this-device copy should open from the literature card in one
+  // action. Unknown/missing copies still go to the management/import page.
+  const target = new URL(anchor.getAttribute('href') || '/pdf-vault/', location.origin);
+  if (target.origin === location.origin && target.pathname === '/pdf-vault/') {
+    if (state === 'local') target.searchParams.set('open', '1');
+    else target.searchParams.delete('open');
+    anchor.setAttribute('href', target.pathname + target.search + target.hash);
+  }
   anchor.title = language === 'zh' ? titleZh : titleEn;
   anchor.setAttribute('aria-label', `${text}: ${anchor.closest('.card')?.querySelector('.title')?.textContent || ''}`);
 }
