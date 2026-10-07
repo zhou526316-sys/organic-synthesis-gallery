@@ -1,0 +1,83 @@
+{
+  "revision": "2026-10-07-r11",
+  "completedAt": "2026-10-07T07:18:17Z",
+  "status": "complete",
+  "request": "最后再适当调整一下封面，不要让白色的标题文字和toc白色背景重叠导致文字看不清，想办法解决",
+  "scope": "Daily Angew cover contrast repair on the same two-article WeChat draft",
+  "sourceCommit": "e1e6c8ece81ef5ca83b4d9fb45bab6ff4703cf1a",
+  "sourceSnapshot": "f593b7500284862ae29c0fdffdc910bb65e68dff4c042b64c0ee2cdde4c26dbe",
+  "publisherCommit": "a0da509d93185e9f777835382d701aa3184368d5",
+  "publisherRunId": "37586010637",
+  "actualQaCommit": "12392e00ab6a5af20ca850e0fdce950e1835396a",
+  "actualQaRunId": "37586147146",
+  "actualQaArtifact": {
+    "id": 11466377834,
+    "name": "wechat-r11-review-37586147146",
+    "sha256": "a976c36f3ce6bd8dbecf3103d48194a7001494a5098cbf7ccc34ac5470761aee"
+  },
+  "receipt": {
+    "generatedAt": "2026-10-07T07:13:43.452351Z",
+    "status": "ok",
+    "stage": "draft_update",
+    "mode": "daily",
+    "slug": null,
+    "title": null,
+    "publicationSlot": "2026-10-07T08:00:00+08:00",
+    "media_id": "KhELYUzvwADwB_l1xH1SWDVcSTXYXLPAONVlEJoVvQlIJ8kwU1cYTCnMr3d7KQKl",
+    "paper_count": 33,
+    "draft_readback": "ok",
+    "preview_url": "https://relay.gczhouwld.com/wechat-preview/395eae43f63c4452e3d05f53.html",
+    "publish_id": null,
+    "publish_status": null,
+    "article_id": null,
+    "article_url": null,
+    "content_source_url": "https://gallery.gczhouwld.com/?edition=2026-10-07"
+  },
+  "coverAsset": "public/wechat-assets/reviewed/2026-10-07-r11/an-cover-dark-toc-r11.png",
+  "actualQa": "audit/wechat-working/2026-10-07-r11-real-draft-qa.json",
+  "nativeTitleOverlayChecks": [
+    {
+      "viewport": 390,
+      "scenario": "current-title",
+      "fontSize": 18,
+      "lineHeight": 22,
+      "titleClearancePx": 21.57593085106383,
+      "minimumWhiteContrast": 8.791600605644668,
+      "coverSource": "actual draft/get returned cover",
+      "scope": "QA simulation; title is not baked into published cover"
+    },
+    {
+      "viewport": 390,
+      "scenario": "four-line",
+      "fontSize": 16,
+      "lineHeight": 20,
+      "titleClearancePx": 7.575930851063831,
+      "minimumWhiteContrast": 8.791600605644668,
+      "coverSource": "actual draft/get returned cover",
+      "scope": "QA simulation; title is not baked into published cover"
+    },
+    {
+      "viewport": 690,
+      "scenario": "current-title",
+      "fontSize": 18,
+      "lineHeight": 22,
+      "titleClearancePx": 118.74820478723404,
+      "minimumWhiteContrast": 8.388625082530885,
+      "coverSource": "actual draft/get returned cover",
+      "scope": "QA simulation; title is not baked into published cover"
+    },
+    {
+      "viewport": 690,
+      "scenario": "four-line",
+      "fontSize": 16,
+      "lineHeight": 20,
+      "titleClearancePx": 82.74820478723404,
+      "minimumWhiteContrast": 8.388625082530885,
+      "coverSource": "actual draft/get returned cover",
+      "scope": "QA simulation; title is not baked into published cover"
+    }
+  ],
+  "publicSendAuthorized": false,
+  "publicSendPerformed": false,
+  "finalResponsePath": "audit/gpt-responses/2026-10-07/151817-wechat-r11-complete.md"
+}

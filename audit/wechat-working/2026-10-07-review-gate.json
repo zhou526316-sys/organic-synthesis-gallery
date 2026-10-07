@@ -288,11 +288,13 @@
     "Daily/retrospective titles, digests, narrative, figure captions and all33body figures remain unchanged; only cover disclosure adds background/color/tone adaptation.",
     "Pure text and images-only reviews regenerated; final combined source preview passed with current title/four-line simulations and worst-pixel white contrast above8.5:1 at390/690px.",
     "Same two-article draft only, once after final review. No public sending.",
-    "Root inspected final browser-rendered cover and both mobile title-overlay simulations. TOC remains the original pixel geometry with documented color/tone treatment. No source changes after review."
+    "Root inspected final browser-rendered cover and both mobile title-overlay simulations. TOC remains the original pixel geometry with documented color/tone treatment. No source changes after review.",
+    "Final same-draft update succeeded; draft/get returned the new dark TOC cover. Actual read-only QA passed at390/690px, with2articles and15/19 loaded body images, no broken images, missing captions or page errors.",
+    "Root reviewed actual returned cover and current-title/four-line mobile overlay screenshots. Worst sampled white contrast after WeChat compression was8.3886:1. Overlays are QA simulations on the actual returned cover, not screenshots of a native WeChat client."
   ],
-  "draftReadback": "pending",
+  "draftReadback": "ok",
   "publicSendAuthorized": false,
-  "finalTransportReview": "pending",
+  "finalTransportReview": "pass",
   "priorCompletedRevision": {
     "revision": "2026-10-07-r10",
     "previewUrl": "https://relay.gczhouwld.com/wechat-preview/084492b0e33933ac04021558.html"
@@ -360,5 +362,9 @@
       "angew-four-line-overlay-390.png",
       "angew-cover-690.png"
     ]
-  }
+  },
+  "completedAt": "2026-10-07T07:18:17Z",
+  "actualDraftPreviewUrl": "https://relay.gczhouwld.com/wechat-preview/395eae43f63c4452e3d05f53.html",
+  "actualDraftQa": "audit/wechat-working/2026-10-07-r11-real-draft-qa.json",
+  "actualDraftQaRunId": "37586147146"
 }
