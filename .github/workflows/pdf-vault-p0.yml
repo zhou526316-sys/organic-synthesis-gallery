@@ -1,0 +1,114 @@
+name: PDF Vault P0 contracts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'shared/literature-identity.mjs'
+      - 'shared/pdf-vault-v1.mjs'
+      - 'shared/pdf-vault-device.mjs'
+      - 'scripts/test-pdf-vault-v1.mjs'
+      - 'scripts/test-pdf-vault-device.mjs'
+      - 'scripts/test-pdf-vault-schema.py'
+      - 'cloudflare/pdf-vault-v1.sql'
+      - 'cloudflare/pdf-vault-session-consume.sql'
+      - 'cloudflare/schema.sql'
+      - 'docs/pdf-vault-p0-contract.md'
+      - '.github/workflows/pdf-vault-p0.yml'
+  pull_request:
+    paths:
+      - 'shared/literature-identity.mjs'
+      - 'shared/pdf-vault-*.mjs'
+      - 'scripts/test-pdf-vault-*'
+      - 'cloudflare/pdf-vault-*.sql'
+      - 'cloudflare/schema.sql'
+      - 'docs/pdf-vault-p0-contract.md'
+      - '.github/workflows/pdf-vault-p0.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Prepare bounded evidence directory
+        run: mkdir -p "$RUNNER_TEMP/pdf-vault-p0"
+
+      - name: Test account copy states and device identity
+        id: model
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test --test-reporter=tap scripts/test-pdf-vault-v1.mjs scripts/test-pdf-vault-device.mjs 2>&1 | tee "$RUNNER_TEMP/pdf-vault-p0/model.tap"
+
+      - name: Test schema constraints and single-use session consumption
+        id: schema
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/test-pdf-vault-schema.py -v 2>&1 | tee "$RUNNER_TEMP/pdf-vault-p0/schema.log"
+
+      - name: Record exact source and contract outcomes
+        if: always()
+        env:
+          MODEL_OUTCOME: ${{ steps.model.outcome }}
+          SCHEMA_OUTCOME: ${{ steps.schema.outcome }}
+        run: |
+          python3 - <<'PY'
+          import datetime, json, os, pathlib, re, subprocess
+          evidence = pathlib.Path(os.environ["RUNNER_TEMP"]) / "pdf-vault-p0"
+          evidence.mkdir(parents=True, exist_ok=True)
+          tap = (evidence / "model.tap").read_text() if (evidence / "model.tap").exists() else ""
+          sql = (evidence / "schema.log").read_text() if (evidence / "schema.log").exists() else ""
+          def tap_count(key):
+              match = re.search(r"^# " + key + r" (\d+)\s*$", tap, re.M)
+              return int(match.group(1)) if match else None
+          schema_count = re.search(r"Ran (\d+) tests? in ", sql)
+          paths = [
+              "shared/literature-identity.mjs",
+              "shared/pdf-vault-v1.mjs", "shared/pdf-vault-device.mjs",
+              "scripts/test-pdf-vault-v1.mjs", "scripts/test-pdf-vault-device.mjs",
+              "scripts/test-pdf-vault-schema.py", "cloudflare/pdf-vault-v1.sql",
+              "cloudflare/pdf-vault-session-consume.sql", "cloudflare/schema.sql",
+              "docs/pdf-vault-p0-contract.md", ".github/workflows/pdf-vault-p0.yml",
+          ]
+          summary = {
+              "schemaVersion": 1,
+              "phase": "pdf-vault-p0-contracts",
+              "sourceCommit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "runId": os.environ["GITHUB_RUN_ID"],
+              "ok": os.environ.get("MODEL_OUTCOME") == "success" and os.environ.get("SCHEMA_OUTCOME") == "success",
+              "model": {"outcome": os.environ.get("MODEL_OUTCOME"), "tests": tap_count("tests"), "passed": tap_count("pass"), "failed": tap_count("fail")},
+              "schema": {"outcome": os.environ.get("SCHEMA_OUTCOME"), "tests": int(schema_count.group(1)) if schema_count else None},
+              "sourceBlobs": {path: subprocess.check_output(["git", "rev-parse", "HEAD:" + path], text=True).strip() for path in paths},
+              "productionMutations": False,
+              "publicPdfUiEnabled": False,
+              "crossUserReadGrantsEnabled": False,
+              "completedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+          }
+          (evidence / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
+          print(json.dumps(summary, indent=2))
+          PY
+
+      - name: Preserve small contract verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-vault-p0-contracts-${{ github.run_id }}
+          path: ${{ runner.temp }}/pdf-vault-p0
+          retention-days: 14
+          if-no-files-found: error
