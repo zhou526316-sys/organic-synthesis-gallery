@@ -1,0 +1,181 @@
+name: WeChat Editorial Package Import
+
+on:
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/wechat-editorial-package-import.json']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-editorial-package-import
+  cancel-in-progress: false
+
+jobs:
+  import-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Decode dependency
+        run: python3 -m pip install --quiet 'Pillow>=10,<13'
+      - name: Import exact reviewed package without publishing
+        env:
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, html, importlib.util, io, json, os, re, stat, subprocess, tempfile, time, urllib.parse, urllib.request, zipfile
+          from collections import Counter
+          from datetime import datetime, timezone
+          from html.parser import HTMLParser
+          from pathlib import Path, PurePosixPath
+          from PIL import Image
+
+          root = Path.cwd()
+          request_path = 'audit/automation-triggers/wechat-editorial-package-import.json'
+          req = json.loads((root / request_path).read_text())
+          revision = str(req['revision'])
+          if not re.fullmatch(r'[a-z0-9][a-z0-9-]{1,80}', revision):
+              raise RuntimeError('Invalid revision')
+          if req.get('action') != 'import_reviewed_editorial_package':
+              raise RuntimeError('Import-only action required')
+          url = str(req['packageUrl'])
+          if urllib.parse.urlparse(url).scheme != 'https' or urllib.parse.urlparse(url).hostname != 'at.adobe.com':
+              raise RuntimeError('Unsupported package source')
+          expected = str(req['packageSha256'])
+          if not re.fullmatch(r'[a-f0-9]{64}', expected):
+              raise RuntimeError('Package fingerprint required')
+          with urllib.request.urlopen(url, timeout=30) as response:
+              raw = response.read(20_000_001)
+          if len(raw) > 20_000_000 or hashlib.sha256(raw).hexdigest() != expected:
+              raise RuntimeError('Package size/fingerprint mismatch')
+          gate_rel = str(req['gatePath'])
+          manifest_rel = str(req['manifestPath'])
+          if not gate_rel.startswith('audit/wechat-working/') or not manifest_rel.startswith('public/wechat-retrospective/'):
+              raise RuntimeError('Unsupported editorial destination')
+          staged = Path(tempfile.mkdtemp(prefix='wechat-import-'))
+          written = []
+          with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+              names = archive.namelist()
+              if len(names) > 100 or len(names) != len(set(names)) or sum(x.file_size for x in archive.infolist()) > 30_000_000:
+                  raise RuntimeError('Unsafe package size or duplicate entries')
+              gate = json.loads(archive.read(gate_rel))
+              if gate.get('textReview') != 'pass' or gate.get('imageReview') != 'pass':
+                  raise RuntimeError('Editorial reviews not passed')
+              required = {manifest_rel, gate_rel}
+              required.update(gate['artifacts'].values())
+              required.update(x['path'] for x in gate['assets'])
+              source_rows = {x['path']: x for x in gate['sources']}
+              if manifest_rel not in source_rows:
+                  raise RuntimeError('Manifest not covered by review')
+              for rel in sorted(required):
+                  p = PurePosixPath(rel)
+                  if p.is_absolute() or '..' in p.parts or '\\' in rel:
+                      raise RuntimeError('Unsafe package path')
+                  allowed = (rel == manifest_rel or rel.startswith('audit/wechat-working/') or rel.startswith('public/wechat-assets/reviewed/'))
+                  if not allowed or p.suffix not in {'.png', '.jpg', '.jpeg', '.json', '.md'}:
+                      raise RuntimeError('Non-editorial package content')
+                  item = archive.getinfo(rel)
+                  if stat.S_ISLNK(item.external_attr >> 16):
+                      raise RuntimeError('Symlink not permitted')
+                  payload = archive.read(item)
+                  target = staged / rel
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  target.write_bytes(payload)
+                  written.append(rel)
+          def blob(payload):
+              return hashlib.sha1(f'blob {len(payload)}\0'.encode() + payload).hexdigest()
+          for row in gate['sources'] + gate['assets']:
+              payload = (staged / row['path']).read_bytes()
+              if blob(payload) != row['blobSha']:
+                  raise RuntimeError('Reviewed file fingerprint mismatch: ' + row['path'])
+              if row.get('sha256') and hashlib.sha256(payload).hexdigest() != row['sha256']:
+                  raise RuntimeError('Asset SHA256 mismatch')
+              if row['path'].lower().endswith(('.png', '.jpg', '.jpeg')):
+                  with Image.open(io.BytesIO(payload)) as image:
+                      image.load()
+                      if image.width != row['width'] or image.height != row['height']:
+                          raise RuntimeError('Reviewed image dimensions changed')
+          manifest = json.loads((staged / manifest_rel).read_text())
+          if manifest.get('paper', {}).get('doi') != req['doi']:
+              raise RuntimeError('Selected DOI mismatch')
+          figures = {x['id']: x for x in manifest['figures']}
+          assets = {x['path'] for x in gate['assets']}
+          expected_order = []
+          if manifest.get('lead_figure_id'):
+              expected_order.append(manifest['lead_figure_id'])
+          for section in manifest['sections']:
+              positions = section.get('figures_after_paragraph', {})
+              placed = []
+              for index, paragraph in enumerate(section.get('paragraphs', []), 1):
+                  ids = positions.get(str(index), [])
+                  placed.extend([ids] if isinstance(ids, str) else ids)
+              if set(placed) != set(section.get('figures', [])):
+                  raise RuntimeError('Paragraph-image mapping incomplete')
+              expected_order.extend(placed)
+          body_ids = [x['id'] for x in manifest['figures'] if x.get('body') is not False]
+          if Counter(expected_order) != Counter(body_ids) or len(set(expected_order)) != len(expected_order):
+              raise RuntimeError('Missing/repeated body image')
+          for figure in figures.values():
+              if figure.get('crop_frac') or figure.get('repo_path') not in assets:
+                  raise RuntimeError('Unpinned or runtime-cropped figure')
+          # Assemble with the existing publisher, without tokens or network writes.
+          publisher = root / 'ops/wechat-publisher/create-draft.py'
+          spec = importlib.util.spec_from_file_location('wechat_import_renderer', publisher)
+          renderer = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(renderer)
+          urls = {key: 'https://editorial.invalid/' + key + '.png' for key in figures}
+          content = renderer.build_retrospective_content(manifest, urls)
+          class CheckHTML(HTMLParser):
+              def __init__(self):
+                  super().__init__(); self.images=[]; self.text=[]
+              def handle_starttag(self, tag, attrs):
+                  if tag == 'img': self.images.append(dict(attrs).get('src'))
+              def handle_data(self, data): self.text.append(data)
+          parsed = CheckHTML(); parsed.feed(content)
+          if parsed.images != [urls[key] for key in expected_order]:
+              raise RuntimeError('Publisher assembled a different image order')
+          joined = ''.join(parsed.text)
+          for section in manifest['sections']:
+              for paragraph in section.get('paragraphs', []):
+                  if paragraph not in joined: raise RuntimeError('Publisher omitted paragraph')
+          for key in body_ids:
+              if figures[key]['caption'] not in joined: raise RuntimeError('Publisher omitted caption')
+          receipt_rel = f'audit/wechat-working/{revision}-import-receipt.json'
+          receipt = {'revision':revision, 'runId':os.environ['RUN_ID'], 'completedAt':datetime.now(timezone.utc).isoformat(),
+              'packageSha256':expected, 'doi':req['doi'], 'manifestPath':manifest_rel,
+              'manifestBlobSha':blob((staged/manifest_rel).read_bytes()), 'rendererBlobSha':blob(publisher.read_bytes()),
+              'bodyImages':len(body_ids), 'assetsVerified':len(assets), 'exactAssetFingerprints':'pass',
+              'templateAssembly':'pass', 'paragraphsAndCaptionsPresent':'pass', 'imageOrder':'pass',
+              'visualTemplateReview':'pending', 'draftWritten':False, 'draftReadback':'not_run',
+              'publisherTriggered':False, 'note':'Import and deterministic assembly only. Original editorial hold retained.'}
+          (staged/receipt_rel).parent.mkdir(parents=True, exist_ok=True)
+          (staged/receipt_rel).write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+          written.append(receipt_rel)
+          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
+          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+          for attempt in range(3):
+              subprocess.run(['git','fetch','origin','main'],check=True)
+              subprocess.run(['git','reset','--hard','origin/main'],check=True)
+              current=json.loads((root/request_path).read_text())
+              if current.get('requestId') != req.get('requestId'):
+                  raise RuntimeError('Import superseded by a newer request')
+              for rel in written:
+                  target=root/rel; payload=(staged/rel).read_bytes()
+                  if target.exists() and target.read_bytes()!=payload:
+                      raise RuntimeError('Refusing to replace different existing content: '+rel)
+                  target.parent.mkdir(parents=True,exist_ok=True); target.write_bytes(payload)
+              subprocess.run(['git','add','--',*written],check=True)
+              if subprocess.run(['git','diff','--cached','--quiet']).returncode==0: break
+              subprocess.run(['git','commit','-m','editorial: import reviewed '+revision+' assets without publishing'],check=True)
+              if subprocess.run(['git','push','origin','HEAD:main']).returncode==0: break
+              time.sleep(2)
+          else:
+              raise RuntimeError('Concurrent main changes; import not committed')
+          print(json.dumps(receipt,ensure_ascii=False))
+          PY
