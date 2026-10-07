@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-07T00:12:00.000Z",
+  "timeZone": "Asia/Shanghai",
+  "type": "postrelease-late-candidate-review",
+  "discoveryGeneratedAt": "2026-10-07T00:08:30.612Z",
+  "handoffFile": "audit/unresolved-latest.json",
+  "handoffBlobSha": "592c1bc5d4c322608d8884782c08d0ac24a01f90",
+  "scopeRulesVersion": "scope-2026-10-02-v1",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "cdb36d329454d0e836eef4774c01cfc148e6fdb1",
+  "sourcePublicationSlot": "2026-10-07T08:00:00+08:00",
+  "nextPublicationSlot": "2026-10-08T08:00:00+08:00",
+  "summary": {
+    "reviewed": 1,
+    "accepted": 1,
+    "rejected": 0,
+    "pending": 0
+  },
+  "accepted": [
+    {
+      "doi": "10.1021/acs.joc.6c01708",
+      "journal": "JOC",
+      "date": "2026-10-07",
+      "originalDate": "2026-10-07",
+      "title": "Ru(II)-Catalyzed C–H/O–H Annulation of Benzoic Acids with Trifluoromethyl-Imidoyl Sulfoxonium Ylides: Rapid Synthesis of Dihydroisocoumarin Scaffolds",
+      "titleZh": "Ru(II)催化苯甲酸与三氟甲基亚胺酰基硫氧鎓叶立德C–H/O–H环合：快速合成二氢异香豆素骨架",
+      "decision": "include",
+      "status": "ready_for_next_slot",
+      "reviewPriority": "high",
+      "reason": "该文建立Ru(II)催化苯甲酸与三氟甲基亚胺酰基硫氧鎓叶立德的C–H活化/环化制备方法，直接形成三氟甲基官能化异香豆素类骨架，属于通用有机制备方法。",
+      "evidenceBasis": "2026-10-07发布后fresh DOI-union compact收录Crossref摘要：该反应首次开发Ru催化苯甲酸与三氟甲基亚胺酰基硫氧鎓叶立德的C–H activation/cyclization，可在十分钟内获得多种三氟甲基官能化3,3-二取代异香豆素衍生物，摘要明确报告温和条件、较宽底物范围、良好区域选择性以及中等至良好收率。",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "challengeReason": "反向挑战其是否只是C–H活化机理或单一骨架展示；摘要明确说明形成多种产物、具有较宽底物范围和制备收率，并把快速合成异香豆素骨架作为方法学目标，因此主要贡献是可迁移的制备转化而非机理研究。",
+      "evidenceSource": "postrelease_fresh_compact_crossref_abstract",
+      "sourceEvidence": [
+        "audit/unresolved-latest.json@592c1bc5d4c322608d8884782c08d0ac24a01f90",
+        "Crossref abstract in post-release compact"
+      ],
+      "scopeAssessment": {
+        "primaryContribution": "Ru(II)催化苯甲酸与三氟甲基亚胺酰基硫氧鎓叶立德的C–H/O–H环合方法，用于快速构建三氟甲基官能化异香豆素骨架。",
+        "preparativeTransformation": "苯甲酸与三氟甲基亚胺酰基硫氧鎓叶立德经Ru(II)催化C–H活化/环化形成3,3-二取代异香豆素类产物。",
+        "generalityEvidence": "fresh摘要明确称可获得多种产物，具有较宽底物范围、良好区域选择性、十分钟反应时间及中等至良好收率；不外推未公开的具体底物数量或单项收率。",
+        "sourceEvidence": "2026-10-07T00:08:30.612Z post-release fresh compact中的Crossref摘要与题名元数据。",
+        "boundaryChallenge": "虽然涉及C–H活化与Ru催化，摘要的中心不是催化机理表征，而是开发快速环合制备法，并明确给出多种产物、底物范围和收率层面的制备证据，因此满足一般有机制备贡献边界。"
+      },
+      "sourceReviewFile": "audit/review-2026-10-07-postrelease-late-0800.json",
+      "nextPublicationSlot": "2026-10-08T08:00:00+08:00"
+    }
+  ],
+  "rejected": [],
+  "pending": [],
+  "qualityControl": {
+    "secondPassCompleted": true,
+    "unresolvedDisagreements": 0,
+    "allCandidatesReviewed": true,
+    "offSlotProductionWrites": 0,
+    "titleZhChecked": true,
+    "scopeAssessmentComplete": true,
+    "note": "08:08发布后新入索引的JOC候选已完成两遍文章特定审核；判定为include但仅进入下一授权固定槽carryover，本轮不修改生产集合。"
+  }
+}
