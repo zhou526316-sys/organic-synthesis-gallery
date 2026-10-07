@@ -1,60 +1,63 @@
-// Keep a native mouse click attached to the pressed pagination button when
-// lazy card layout moves the footer between pointerdown and pointerup.
-// Activation still happens on click, never on pointerdown. Touch scrolling and
-// keyboard activation retain their native behavior.
+// Recover a pagination click only when a stationary mouse completed a real
+// press/release but late layout moved the button away before the click. WebKit
+// does not reliably retarget compatibility clicks with pointer capture alone.
+// Never activate on pointerdown or pointerup; touch and keyboard stay native.
 export function installPaginationPointerStability(): () => void {
   const controller = new AbortController();
   const options = { capture: true, signal: controller.signal };
-  const cancelled = new WeakSet<HTMLButtonElement>();
-  let press: { id: number; button: HTMLButtonElement; rect: DOMRect } | null = null;
+  type Press = { id: number; button: HTMLButtonElement; rect: DOMRect };
+  let press: Press | null = null;
+  let released: (Press & { at: number }) | null = null;
 
   const buttonFor = (target: EventTarget | null): HTMLButtonElement | null => {
     if (!(target instanceof Element)) return null;
-    const button = target.closest<HTMLButtonElement>('#resultWindowControls button');
-    return button && !button.disabled ? button : null;
+    return target.closest<HTMLButtonElement>('#resultWindowControls button');
   };
 
   document.addEventListener('pointerdown', event => {
+    press = null;
+    released = null;
     if (event.pointerType !== 'mouse' || !event.isPrimary || event.button !== 0) return;
     const button = buttonFor(event.target);
-    if (!button) return;
-    cancelled.delete(button);
-    const rect = button.getBoundingClientRect();
-    try {
-      button.setPointerCapture(event.pointerId);
-      press = { id: event.pointerId, button, rect };
-    } catch {
-      press = null;
-    }
+    if (!button || button.disabled) return;
+    press = { id: event.pointerId, button, rect: button.getBoundingClientRect() };
   }, options);
 
   document.addEventListener('pointerup', event => {
     if (!press || press.id !== event.pointerId) return;
-    const { button, rect } = press;
+    const completed = press;
     press = null;
-    // Preserve drag-away cancellation against the original mouse hit target,
-    // not a footer that may have moved underneath a stationary pointer.
-    if (!button.isConnected || event.clientX < rect.left || event.clientX > rect.right
-      || event.clientY < rect.top || event.clientY > rect.bottom) cancelled.add(button);
+    const { button, rect } = completed;
+    // A real drag outside the original button must not turn into navigation.
+    if (!button.isConnected || button.disabled || event.clientX < rect.left || event.clientX > rect.right
+      || event.clientY < rect.top || event.clientY > rect.bottom) return;
+    released = { ...completed, at: performance.now() };
   }, options);
 
-  document.addEventListener('pointercancel', event => {
-    if (!press || press.id !== event.pointerId) return;
-    cancelled.add(press.button);
+  document.addEventListener('pointercancel', () => {
     press = null;
+    released = null;
   }, options);
 
   document.addEventListener('click', event => {
-    const button = buttonFor(event.target);
-    if (!button || event.detail === 0 || !cancelled.has(button)) return;
-    cancelled.delete(button);
+    const completed = released;
+    released = null;
+    if (!completed || event.detail === 0 || event.button !== 0 || performance.now() - completed.at > 750) return;
+    const { button, rect } = completed;
+    if (!button.isConnected || button.disabled || buttonFor(event.target) === button) return;
+    if (button.closest('[hidden], [inert]') || !button.getClientRects().length) return;
+    const now = button.getBoundingClientRect();
+    if (Math.abs(now.left - rect.left) < 2 && Math.abs(now.top - rect.top) < 2) return;
+    // The original click would otherwise land on the common ancestor or the
+    // newly exposed card. Consume it before forwarding exactly once.
     event.preventDefault();
     event.stopImmediatePropagation();
+    button.click();
   }, options);
 
   return () => {
     controller.abort();
-    if (press?.button.hasPointerCapture(press.id)) press.button.releasePointerCapture(press.id);
     press = null;
+    released = null;
   };
 }
