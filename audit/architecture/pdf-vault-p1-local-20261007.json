@@ -1,0 +1,355 @@
+{
+  "schemaVersion": 1,
+  "phase": "PDF Vault P1 local storage and reader first batch",
+  "recordedAt": "2026-10-07 07:36:12 UTC",
+  "baselineSource": "5cc7c0e772068f10bc43000824aef3b8258690e4",
+  "promotionParent": "255928bf174b215c9016192396acf26b85e55d4e",
+  "status": "local_verified_waiting_canonical_ci",
+  "files": [
+    {
+      "path": "src/main.ts",
+      "gitBlob": "7f9a29ee2723282bf50a20020ac12b815bebe127",
+      "bytes": 82196
+    },
+    {
+      "path": "src/pdf-vault/card-entry.css",
+      "gitBlob": "7f8d9498e38fa9c0b6105b478b0037c7048fe528",
+      "bytes": 516
+    },
+    {
+      "path": "src/pdf-vault/local-vault.mjs",
+      "gitBlob": "84e66c920e524f2a264a61cd2fb580178900b7a8",
+      "bytes": 20229
+    },
+    {
+      "path": "src/pdf-vault/page.mjs",
+      "gitBlob": "baca8fa46c85f450eeb95b51a60ba9cae4b26e34",
+      "bytes": 21931
+    },
+    {
+      "path": "src/pdf-vault/reader.mjs",
+      "gitBlob": "e2d33c82c452b995784c96442eb894fbd8c91242",
+      "bytes": 10117
+    },
+    {
+      "path": "src/pdf-vault/page.css",
+      "gitBlob": "af53370756ee84630c94fc22d3e53106446eadef",
+      "bytes": 11475
+    },
+    {
+      "path": "pdf-vault/index.html",
+      "gitBlob": "0fb4fa6de0ea65728774896b2f79496aba60eabd",
+      "bytes": 7629
+    },
+    {
+      "path": "vite.config.ts",
+      "gitBlob": "9918999709854663f428ac15e79c2bd698a9fbb9",
+      "bytes": 703
+    },
+    {
+      "path": "package.json",
+      "gitBlob": "1249a104318897070979ff5db7baf0e2f4467ecd",
+      "bytes": 570
+    },
+    {
+      "path": "scripts/pdf-vault-assets.mjs",
+      "gitBlob": "9f242ceb4ff808f563eb23d8412ea0572efa7bc2",
+      "bytes": 1790
+    },
+    {
+      "path": "scripts/test-pdf-vault-local.mjs",
+      "gitBlob": "e677c07f3b05492f5b2267f55f1f2eb967903515",
+      "bytes": 7173
+    },
+    {
+      "path": "tests/pdf-vault-local-browser.mjs",
+      "gitBlob": "af26c706bb72470aa4c468b03abd48f68c363a42",
+      "bytes": 34967
+    },
+    {
+      "path": "tests/private-pdf-access-browser.mjs",
+      "gitBlob": "d173c179458b91bb24c917ed1db25480e9caa9f7",
+      "bytes": 21623
+    },
+    {
+      "path": ".github/workflows/pdf-vault-p1.yml",
+      "gitBlob": "c6ff09b5891d01f9f40e4b376da6afcf8649c6e0",
+      "bytes": 2147
+    },
+    {
+      "path": ".github/workflows/github-pages.yml",
+      "gitBlob": "23dd58107916944e8aa34d6b86bec801a27568d2",
+      "bytes": 22184
+    },
+    {
+      "path": "docs/pdf-vault-p1-local.md",
+      "gitBlob": "457bb195f5193c019bc1315a764f92c096df6340",
+      "bytes": 8109
+    }
+  ],
+  "node": {
+    "passed": 42,
+    "total": 42,
+    "p0ContractAndDevice": 27,
+    "localBoundaries": 15
+  },
+  "localBrowser": {
+    "schemaVersion": 1,
+    "suite": "pdf-vault-local-browser",
+    "ok": true,
+    "passed": 17,
+    "total": 17,
+    "completedAt": "2026-10-07T07:35:25.405Z",
+    "browser": "chromium",
+    "realStorage": [
+      "IndexedDB",
+      "OPFS",
+      "FileSystemHandle structured clone"
+    ],
+    "syntheticDirectoryPicker": true,
+    "nativeWindowsPermissionPromptTested": false,
+    "publisherContentUsed": false,
+    "productionMutations": false,
+    "deliveryFiles": [
+      {
+        "path": "assets/literature-identity-Bhdetfc7.js",
+        "sha256": "cd2973dac3f1c18000998a5a191c0fd0af780b4b320cd18e461be2ba9df2e0b0",
+        "bytes": 386
+      },
+      {
+        "path": "assets/pdf.worker.min-Dkey6ZUl.mjs",
+        "sha256": "145d2dd3ab0c86151011dba95acfa2d5336e2accd59388ea43dbee0efddaaec6",
+        "bytes": 1321307
+      },
+      {
+        "path": "assets/pdfVault-BjEtoq1C.css",
+        "sha256": "8e6918311bf192838c30aae6af78999fd4a063e550faaeb0303099bd535e0e55",
+        "bytes": 11540
+      },
+      {
+        "path": "assets/pdfVault-BrTgOnt7.js",
+        "sha256": "8d6f46945b7b5a5a1f2dc9fb45482950f0cd1a043d42011e72bce7251aab065e",
+        "bytes": 32162
+      },
+      {
+        "path": "assets/preload-helper-mg6Z-sIv.js",
+        "sha256": "c15b3e77806e8ca53cfcfa5fc556049bf83ce608d9de20f06f4f3c09383c7f11",
+        "bytes": 1976
+      },
+      {
+        "path": "assets/reader-CT4qGpe6.js",
+        "sha256": "7b4403e6cadb72297aa1eff63382a0dc861d6dc68ac2b968adadd1da1307dd56",
+        "bytes": 545963
+      },
+      {
+        "path": "pdf-vault-assets/6.4.299/standard_fonts/LiberationSans-Regular.ttf",
+        "sha256": "f8ace1f892b2bd9dc1792ba7f097fa7588f84fed48321480e04de5390828221f",
+        "bytes": 139512
+      },
+      {
+        "path": "pdf-vault/index.html",
+        "sha256": "36b000a543f6f5ed63d10ef2932870f4da389cf28fa908bb08890d2d2ce01a78",
+        "bytes": 7845
+      }
+    ],
+    "expectedRequestCancellations": 1,
+    "unexpectedRequestFailures": 0,
+    "uncaughtErrors": 0,
+    "consoleErrors": 0,
+    "unexpectedNetworkRequests": 0,
+    "cases": [
+      {
+        "name": "real OPFS import is read back and reopened after reload",
+        "status": "passed",
+        "durationMs": 1354
+      },
+      {
+        "name": "directory adapter persists a real file handle and reopens it",
+        "status": "passed",
+        "durationMs": 786
+      },
+      {
+        "name": "PDF.js renders both pages and closes without retaining pixels",
+        "status": "passed",
+        "durationMs": 856
+      },
+      {
+        "name": "changed same-size PDF cannot reuse a prior readability result",
+        "status": "passed",
+        "durationMs": 520
+      },
+      {
+        "name": "removed file is unavailable even though its manifest persists",
+        "status": "passed",
+        "durationMs": 515
+      },
+      {
+        "name": "two accounts keep independent same-DOI copies and namespaces",
+        "status": "passed",
+        "durationMs": 976
+      },
+      {
+        "name": "logout synchronously hides the reader and discards rendered pixels",
+        "status": "passed",
+        "durationMs": 651
+      },
+      {
+        "name": "storage events revoke an old account reader in another tab",
+        "status": "passed",
+        "durationMs": 816
+      },
+      {
+        "name": "watcher catches a token change without an explicit auth event",
+        "status": "passed",
+        "durationMs": 878
+      },
+      {
+        "name": "late account response cannot expose an earlier account library",
+        "status": "passed",
+        "durationMs": 677
+      },
+      {
+        "name": "logout while writing cannot commit a successful old-account import",
+        "status": "passed",
+        "durationMs": 570
+      },
+      {
+        "name": "HTML and a forged PDF header never become successful imports",
+        "status": "passed",
+        "durationMs": 842
+      },
+      {
+        "name": "oversized file is rejected before any local writable is opened",
+        "status": "passed",
+        "durationMs": 281
+      },
+      {
+        "name": "cancelled or denied folder picker never silently selects OPFS",
+        "status": "passed",
+        "durationMs": 1078
+      },
+      {
+        "name": "revoked folder permission blocks old copies until explicit restore",
+        "status": "passed",
+        "durationMs": 837
+      },
+      {
+        "name": "write failure never creates an available copy or claims saved",
+        "status": "passed",
+        "durationMs": 427
+      },
+      {
+        "name": "390px local library and PDF reader fit the mobile viewport",
+        "status": "passed",
+        "durationMs": 802
+      }
+    ]
+  },
+  "ownerBrowser": {
+    "schemaVersion": 1,
+    "ok": true,
+    "passed": 13,
+    "total": 13,
+    "cases": [
+      {
+        "name": "owner PDF button is independent and original link remains publisher-only",
+        "status": "passed",
+        "durationMs": 835
+      },
+      {
+        "name": "ordinary account hides PDF button and retains publisher original",
+        "status": "passed",
+        "durationMs": 456
+      },
+      {
+        "name": "capture-only account has no PDF read button or private lookup",
+        "status": "passed",
+        "durationMs": 431
+      },
+      {
+        "name": "owner without a verified copy sees viewer and explicit publisher fallback",
+        "status": "passed",
+        "durationMs": 407
+      },
+      {
+        "name": "new 24-card result pages inherit PDF visibility without per-card requests",
+        "status": "passed",
+        "durationMs": 649
+      },
+      {
+        "name": "new 12-card result pages inherit PDF visibility without per-card requests",
+        "status": "passed",
+        "durationMs": 527
+      },
+      {
+        "name": "logout notification hides all PDF buttons synchronously",
+        "status": "passed",
+        "durationMs": 1303
+      },
+      {
+        "name": "ordinary account switch in another tab revokes owner PDF capability",
+        "status": "passed",
+        "durationMs": 586
+      },
+      {
+        "name": "late owner capability response cannot reopen PDF after account switch",
+        "status": "passed",
+        "durationMs": 1218
+      },
+      {
+        "name": "click and auxclick fence a changed token before the watcher runs",
+        "status": "passed",
+        "durationMs": 678
+      },
+      {
+        "name": "token watcher revokes PDF when a same-tab writer emits no event",
+        "status": "passed",
+        "durationMs": 1118
+      },
+      {
+        "name": "owner setup page shows current account and claims only after explicit confirmation",
+        "status": "passed",
+        "durationMs": 133
+      },
+      {
+        "name": "existing owner can authorize PDF capture without healthcheck CORS preflight",
+        "status": "passed",
+        "durationMs": 135
+      }
+    ],
+    "completedAt": "2026-10-07T07:32:55.134Z"
+  },
+  "scope": {
+    "newCardEntry": true,
+    "realLocalFolder": true,
+    "explicitOpfs": true,
+    "localPdfJsReader": true,
+    "accountScopedIndexedDb": true,
+    "bytesOrPathsUploaded": false,
+    "changedD1Schema": false,
+    "changedWorker": false,
+    "changedOwnerPrivatePdfStorage": false,
+    "changedOrdinaryV3WriteRollout": false,
+    "changedPublicationSlots": false,
+    "desktopCards": 24,
+    "mobileCards": 12,
+    "calendarDayPagination": false
+  },
+  "notDelivered": [
+    "Native Windows permission prompt manual acceptance",
+    "offline account verification",
+    "desktop acquisition queue",
+    "publisher capture endpoint",
+    "cross-device manifest sync",
+    "personal or Gallery cloud PDF upload"
+  ],
+  "fixesVerified": [
+    "PDF.js 6.4.299 official legacy build renders in Chromium 140",
+    "390px mobile copy actions fit the viewport"
+  ],
+  "production": {
+    "deployment": "pending",
+    "canonicalOrigin": "https://gallery.gczhouwld.com",
+    "exactPdfVaultDelivery": "pending"
+  }
+}

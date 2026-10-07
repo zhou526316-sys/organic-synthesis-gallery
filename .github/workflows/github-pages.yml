@@ -27,6 +27,11 @@ on:
       - 'tests/account-sync-v3.spec.ts'
       - 'scripts/test-account-sync-recovery.mjs'
       - 'tests/private-pdf-access-browser.mjs'
+      - 'tests/pdf-vault-local-browser.mjs'
+      - 'scripts/test-pdf-vault-local.mjs'
+      - 'scripts/pdf-vault-assets.mjs'
+      - 'shared/pdf-vault-*.mjs'
+      - 'pdf-vault/**'
       - 'shared/literature-lifecycle.mjs'
       - 'shared/literature-identity.mjs'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
@@ -338,6 +343,22 @@ jobs:
         env:
           PRIVATE_PDF_BROWSER_OUTPUT: ${{ runner.temp }}/gallery-private-pdf-test-results
         run: node tests/private-pdf-access-browser.mjs
+      - name: Verify local PDF persistence and reader before publication
+        timeout-minutes: 5
+        env:
+          PDF_VAULT_BASE_URL: http://127.0.0.1:4174
+          PDF_VAULT_BROWSER_OUTPUT: ${{ runner.temp }}/gallery-local-pdf-test-results
+        run: |
+          node --test scripts/test-pdf-vault-v1.mjs scripts/test-pdf-vault-device.mjs scripts/test-pdf-vault-local.mjs
+          node tests/pdf-vault-local-browser.mjs
+      - name: Preserve local PDF browser verification
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-local-pdf-browser-${{ github.run_id }}
+          path: ${{ runner.temp }}/gallery-local-pdf-test-results
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Preserve owner PDF browser verification
         if: always()
         uses: actions/upload-artifact@v4

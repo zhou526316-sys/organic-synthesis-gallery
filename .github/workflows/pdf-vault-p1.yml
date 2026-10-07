@@ -1,0 +1,63 @@
+name: PDF Vault P1 local storage and reader
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/pdf-vault/**'
+      - 'pdf-vault/**'
+      - 'shared/pdf-vault-*.mjs'
+      - 'scripts/test-pdf-vault-local.mjs'
+      - 'scripts/pdf-vault-assets.mjs'
+      - 'tests/pdf-vault-local-browser.mjs'
+      - 'package.json'
+      - 'vite.config.ts'
+      - '.github/workflows/pdf-vault-p1.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/pdf-vault/**'
+      - 'pdf-vault/**'
+      - 'shared/pdf-vault-*.mjs'
+      - 'scripts/test-pdf-vault-local.mjs'
+      - 'scripts/pdf-vault-assets.mjs'
+      - 'tests/pdf-vault-local-browser.mjs'
+      - 'package.json'
+      - 'vite.config.ts'
+      - '.github/workflows/pdf-vault-p1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Verify local contracts and account boundaries
+        run: node --test scripts/test-pdf-vault-v1.mjs scripts/test-pdf-vault-device.mjs scripts/test-pdf-vault-local.mjs
+      - name: Install fixed reader and browser dependencies
+        run: |
+          npm install --no-audit --no-fund --package-lock=false
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1 @playwright/test@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Build repository frontend sources
+        run: npx vite build
+      - name: Verify real IndexedDB OPFS and PDF.js behavior
+        timeout-minutes: 5
+        env:
+          PDF_VAULT_BROWSER_OUTPUT: ${{ runner.temp }}/gallery-local-pdf-test-results
+        run: node tests/pdf-vault-local-browser.mjs
+      - name: Preserve bounded verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-vault-local-browser-${{ github.run_id }}
+          path: ${{ runner.temp }}/gallery-local-pdf-test-results
+          if-no-files-found: warn
+          retention-days: 7

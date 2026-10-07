@@ -170,6 +170,12 @@ try{
   await test(capabilities.length?'capture-only account has no PDF read button or private lookup':'ordinary account hides PDF button and retains publisher original',async()=>{
    const {context,state}=await contextWith(capabilities);const page=await gallery(context,false);
    await assertPdfHidden(page);
+   const card=page.locator('.card').first(),local=card.locator('a.local-pdf-button');
+   assert.equal(await local.isVisible(),true,'ordinary users can manage their own local PDF');
+   const localUrl=new URL(await local.getAttribute('href'),base);
+   assert.equal(localUrl.pathname,'/pdf-vault/');
+   assert.equal(localUrl.searchParams.get('doi'),await card.getAttribute('data-doi'));
+   assert.deepEqual([...localUrl.searchParams.keys()],['doi'],'the card URL must contain no session or file data');
    const original=page.locator('.card a.open').first();await original.evaluate(anchor=>{anchor.href='/publisher-fallback.html';});
    const target=await popup(page,original);assert.match(target.url(),/publisher-fallback\.html/);assert.equal(state.privateCalls,0);
   });
@@ -190,7 +196,7 @@ try{
    if(width===390){
     const card=page.locator('.card').first(),box=await card.boundingBox();
     assert.ok(box&&box.width>0&&box.height>0);
-    for(const selector of ['a.private-pdf-button','a.open']){
+    for(const selector of ['a.local-pdf-button','a.private-pdf-button','a.open']){
      const button=await card.locator(selector).boundingBox();
      assert.ok(button&&button.width>0&&button.height>0,selector+' has a visible box');
      assert.ok(button.x>=box.x-1&&button.x+button.width<=Math.min(width,box.x+box.width)+1,selector+' fits the card and viewport');

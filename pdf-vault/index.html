@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN" data-pdf-vault-auth="checking">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api.gczhouwld.com; img-src 'self' blob: data:; font-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'" />
+    <meta name="description" content="把已有 PDF 保存在自己的设备，按文献整理，继续阅读。" />
+    <title>我的 PDF 文献库 · Organic Synthesis Gallery</title>
+    <link rel="stylesheet" href="/src/pdf-vault/page.css" />
+  </head>
+  <body>
+    <header class="vault-header">
+      <a class="brand" href="/" aria-label="返回 Organic Synthesis Gallery"><span class="brand-mark" aria-hidden="true">G</span><span>Organic Synthesis<br /><strong>Gallery</strong></span></a>
+      <a class="back-link" href="/">返回文献卡片 <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main class="vault-main">
+      <section class="intro" aria-labelledby="vault-title">
+        <p class="eyebrow">个人文献 · 本地保存</p>
+        <h1 id="vault-title">我的 PDF 文献库</h1>
+        <p class="intro-copy">把已下载的文献留在自己的设备，随时继续阅读。</p>
+      </section>
+
+      <section class="account-panel" aria-label="当前账号">
+        <span class="account-dot" aria-hidden="true"></span>
+        <div class="account-copy"><strong data-testid="pdf-vault-account">正在验证登录账号…</strong><p id="account-help">验证完成后，可查看此账号在当前浏览器保存的文献。</p></div>
+        <div class="account-actions"><button type="button" class="quiet-button" data-testid="pdf-vault-session-refresh">重新验证账号</button><a href="/" id="sign-in-link" hidden>返回主站登录</a></div>
+      </section>
+
+      <p class="global-status" data-testid="pdf-vault-status" data-status="idle" role="status" aria-live="polite"></p>
+
+      <div id="vault-workspace" hidden>
+        <section class="panel storage-panel" aria-labelledby="storage-heading">
+          <div class="section-heading"><span class="step">01</span><div><h2 id="storage-heading">选择保存位置</h2><p>PDF 文件和本地路径不会上传。账号验证需要联网。</p></div></div>
+          <div class="destination-options">
+            <div class="destination-option" data-destination="local_folder"><div><span class="option-tag">桌面推荐</span><h3>真实文献文件夹</h3><p>文件保存在你选择的目录，其他本地软件也能直接使用。</p></div><button type="button" data-testid="pdf-vault-directory">选择文献文件夹</button><small id="directory-support"></small></div>
+            <div class="destination-option" data-destination="opfs"><div><span class="option-tag neutral">浏览器内</span><h3>浏览器本地存储</h3><p>清除网站数据或浏览器回收空间可能丢失文件，请及时导出备份。</p></div><button type="button" class="secondary" data-testid="pdf-vault-opfs">使用浏览器内存储</button><small id="opfs-support"></small></div>
+          </div>
+          <div class="destination-summary"><p data-testid="pdf-vault-destination">尚未选择保存位置</p><button type="button" class="quiet-button" data-testid="pdf-vault-restore" hidden>恢复文件夹权限</button></div>
+          <p class="storage-help">更换保存位置只影响后续导入，已有文件保留在原来的位置。此浏览器的文献记录尚未同步到其他设备。</p>
+        </section>
+
+        <section class="panel" aria-labelledby="import-heading">
+          <div class="section-heading"><span class="step">02</span><div><h2 id="import-heading">导入已有 PDF</h2><p>请核对 DOI 与所选文献一致，再保存到刚才选择的位置。</p></div></div>
+          <form id="import-form" novalidate>
+            <div class="import-fields"><label class="field doi-field"><span>文献 DOI</span><input type="text" data-testid="pdf-vault-doi" name="doi" placeholder="例如 10.1021/jacs.6c01234" autocomplete="off" spellcheck="false" maxlength="512" inputmode="url" /></label><label class="field version-field"><span>文献版本</span><select data-testid="pdf-vault-version" name="version"><option value="unknown">暂不确定</option><option value="publisher">出版社正式版</option><option value="accepted_manuscript">作者接受稿</option><option value="preprint">预印本</option></select></label></div>
+            <label class="file-field"><span>选择已下载的 PDF 文件</span><input type="file" data-testid="pdf-vault-file" accept="application/pdf,.pdf" /><small id="file-limit">每次导入一份 PDF。</small></label>
+            <div class="import-actions"><button type="submit" data-testid="pdf-vault-import" disabled>保存到文献库</button><span id="import-hint">先选择保存位置，再选择 PDF 文件。</span></div>
+          </form>
+        </section>
+
+        <section class="panel library-panel" aria-labelledby="library-heading">
+          <div class="library-heading"><div><p class="eyebrow">继续阅读</p><h2 id="library-heading">此设备的文献</h2></div><button type="button" class="quiet-button" data-testid="pdf-vault-refresh">刷新列表</button></div>
+          <p class="list-help">打开时会重新检查文件。若文件被移动、删除或权限失效，页面会提示你处理。</p>
+          <div class="copy-list" data-testid="pdf-vault-list"></div>
+          <button type="button" class="secondary more-button" id="load-more" hidden>显示更多文献</button>
+        </section>
+      </div>
+      <noscript><p class="global-status" data-status="error">请启用 JavaScript 后使用本地 PDF 文献库。</p></noscript>
+    </main>
+
+    <footer class="vault-footer">文件由你保管，阅读从这里继续。</footer>
+
+    <dialog class="reader-dialog" data-testid="pdf-vault-reader" aria-labelledby="reader-title">
+      <div class="reader-heading"><div><span class="eyebrow">本地阅读</span><h2 id="reader-title">PDF 阅读器</h2></div><button type="button" class="quiet-button" data-testid="pdf-vault-reader-close" aria-label="关闭 PDF 阅读器">关闭</button></div>
+      <div class="reader-toolbar" aria-label="阅读工具"><div class="reader-paging"><button type="button" class="secondary" data-testid="pdf-vault-reader-previous" aria-label="上一页">上一页</button><span data-testid="pdf-vault-reader-pagecount" aria-live="polite">正在载入…</span><button type="button" class="secondary" data-testid="pdf-vault-reader-next" aria-label="下一页">下一页</button></div><div class="reader-zoom"><button type="button" class="quiet-button" data-testid="pdf-vault-reader-zoom-out" aria-label="缩小">−</button><span id="reader-zoom-value">100%</span><button type="button" class="quiet-button" data-testid="pdf-vault-reader-zoom-in" aria-label="放大">＋</button><button type="button" class="quiet-button" data-testid="pdf-vault-reader-export">导出 PDF</button></div></div>
+      <p class="reader-status" data-testid="pdf-vault-reader-status" role="status" aria-live="polite"></p>
+      <div class="reader-stage"><canvas data-testid="pdf-vault-reader-canvas" aria-label="PDF 页面" width="0" height="0"></canvas></div>
+    </dialog>
+    <script type="module" src="/src/pdf-vault/page.mjs"></script>
+  </body>
+</html>
