@@ -30,6 +30,7 @@ The browser-visible working set, rendered-card count, media hydration set, mutab
 - Exact `?doi=` links and edition DOI lists resolve individual Archive records on demand.
 - Historical date filters load only the necessary date/search segments.
 - All-time published membership remains separate from the visible card set and is generation/hash bound.
+- The browser may keep complete all-time membership inside the verified architecture reader for correctness, but it must not reserialize that full DOI membership into DOM nodes, hidden JSON scripts, public diagnostics, or other page payloads. DOM diagnostics may expose only bounded summaries such as scope, completeness and count.
 - A verification, generation or partial-search failure must never be presented as a definitive empty result.
 
 ## 4. Result-window rule

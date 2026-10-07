@@ -635,14 +635,16 @@ function figureMarkup(paper: Paper): string {
 }
 
 function syncLiteratureDoiRegistry(): void {
-  const dois = architectureMemberDois
-    ? [...architectureMemberDois]
-    : [...new Set(
+  const complete = Boolean(architectureMemberDois);
+  const fallbackCount = architectureFallbackActive && hotBootstrapTotal > 0
+    ? hotBootstrapTotal
+    : new Set(
         papers
           .map(paperDoi)
           .filter((doi): doi is string => Boolean(doi))
           .map(doi => doi.toLowerCase())
-      )].sort();
+      ).size;
+  const count = architectureMemberDois ? architectureMemberDois.length : fallbackCount;
   let node = document.getElementById('gallery-literature-doi-registry') as HTMLScriptElement | null;
   if (!node) {
     node = document.createElement('script');
@@ -651,11 +653,12 @@ function syncLiteratureDoiRegistry(): void {
     document.body.appendChild(node);
   }
   node.textContent = JSON.stringify({
+    schemaVersion: 2,
     updatedAt: new Date().toISOString(),
     scope: architectureMemberDois ? 'all-time' : (architectureFallbackActive ? 'hot-fallback' : 'current-corpus'),
-    complete: Boolean(architectureMemberDois),
-    count: dois.length,
-    dois,
+    complete,
+    count,
+    materializedDois: false,
   });
 }
 

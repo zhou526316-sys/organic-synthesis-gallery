@@ -138,8 +138,10 @@ test('architecture-v1 landing is Hot-only while all-time membership stays comple
   await expect(page.locator('#resultScopeLabel')).toHaveAttribute('title', /滚动近三个月|rolling three-calendar-month/);
 
   const registry = await page.locator('#gallery-literature-doi-registry').evaluate(node => JSON.parse(node.textContent || '{}'));
+  expect(registry.schemaVersion).toBe(2);
   expect(registry.count).toBe(data.memberCount);
-  expect(registry.dois).toContain(data.archiveDoi);
+  expect(registry.materializedDois).toBe(false);
+  expect(registry.dois).toBeUndefined();
   expect(data.hotCount).toBeLessThan(data.memberCount);
 });
 
@@ -168,6 +170,8 @@ test('verified Hot bootstrap renders before all-time membership finishes', async
     .evaluate(node => JSON.parse(node.textContent || '{}'));
   expect(bootstrapRegistry.complete).toBe(false);
   expect(bootstrapRegistry.scope).toBe('hot-fallback');
+  expect(bootstrapRegistry.materializedDois).toBe(false);
+  expect(bootstrapRegistry.dois).toBeUndefined();
   expect(membershipRequests).toBeGreaterThan(0);
 
   releaseMembership();
@@ -177,8 +181,10 @@ test('verified Hot bootstrap renders before all-time membership finishes', async
   const fullRegistry = await page.locator('#gallery-literature-doi-registry')
     .evaluate(node => JSON.parse(node.textContent || '{}'));
   expect(fullRegistry.complete).toBe(true);
+  expect(fullRegistry.schemaVersion).toBe(2);
   expect(fullRegistry.count).toBe(data.memberCount);
-  expect(fullRegistry.dois).toContain(data.archiveDoi);
+  expect(fullRegistry.materializedDois).toBe(false);
+  expect(fullRegistry.dois).toBeUndefined();
 });
 
 test('result pagination keeps DOM cardinality bounded across pages', async ({ page }) => {
@@ -532,8 +538,10 @@ test('verified Hot fallback stays bounded when full membership verification fail
   const registry = await page.locator('#gallery-literature-doi-registry').evaluate(node => JSON.parse(node.textContent || '{}'));
   expect(registry.scope).toBe('hot-fallback');
   expect(registry.complete).toBe(false);
+  expect(registry.schemaVersion).toBe(2);
   expect(registry.count).toBe(data.hotCount);
-  expect(registry.dois).not.toContain(data.archiveDoi);
+  expect(registry.materializedDois).toBe(false);
+  expect(registry.dois).toBeUndefined();
   expect(legacyCorpusRequests).toBe(0);
 });
 
