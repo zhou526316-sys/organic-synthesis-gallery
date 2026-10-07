@@ -143,6 +143,11 @@ function refreshSoon(): void {
       // This only controls visibility; /private-pdf/open still checks the live
       // bearer session and server-side private_pdf_read capability.
       grantLocalCapability(token, 'session-cache');
+    } else {
+      // Preserve an explicit unresolved=false state for race protection and
+      // tests, without revoking a previously verified positive entitlement.
+      capabilitySource = 'checking';
+      publishCapabilityState();
     }
   }
 
