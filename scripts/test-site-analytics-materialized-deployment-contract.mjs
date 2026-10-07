@@ -182,8 +182,11 @@ test('D4d canonical deploy has snapshot activation canary and automatic rollback
   );
   assert.ok(block.includes('continue-on-error: true'));
   assert.ok(block.includes('snapshot_read_flag_disabled'));
-  assert.ok(block.includes('/api/admin/site-analytics-snapshot/refresh'));
-  assert.ok(block.includes('/api/admin/site-analytics-snapshot/compare'));
+  assert.ok(block.includes('D4c snapshot parity proof missing'));
+  assert.ok(block.includes("proof.ok!==true||proof.same!==true||proof.sourceStable!==true"));
+  assert.ok(block.includes('sameGeneration'));
+  assert.ok(!block.includes("const refresh=await call('/api/admin/site-analytics-snapshot/refresh'"));
+  assert.ok(!block.includes("const comparison=await call('/api/admin/site-analytics-snapshot/compare'"));
   assert.ok(block.includes('/api/user-ui/site-stats'));
   assert.ok(block.includes("live.body?.readPath==='snapshot'"));
   assert.ok(block.includes("live.body?.generation==='site-pageview-v3-snapshot'"));
