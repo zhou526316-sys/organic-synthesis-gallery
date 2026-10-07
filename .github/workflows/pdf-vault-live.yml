@@ -1,0 +1,102 @@
+name: PDF Vault live delivery verification
+
+on:
+  workflow_run:
+    workflows: [Deploy GitHub Pages frontend]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      pages_run_id:
+        description: 'Successful canonical Pages run ID; empty selects latest successful main run'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: pdf-vault-live-${{ github.event.workflow_run.id || inputs.pages_run_id || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      PDF_VAULT_LIVE_OUTPUT: ${{ runner.temp }}/pdf-vault-live/summary.json
+    steps:
+      - name: Initialize failure evidence before checkout or artifact retrieval
+        run: |
+          node -e 'const fs=require("node:fs"),p=process.env.PDF_VAULT_LIVE_OUTPUT;fs.mkdirSync(require("node:path").dirname(p),{recursive:true});fs.writeFileSync(p,JSON.stringify({schemaVersion:1,suite:"pdf-vault-live",ok:false,productionMutations:false,error:"verification_setup_not_completed",completedAt:new Date().toISOString()},null,2)+"\n")'
+      - name: Checkout trusted verification code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Resolve and validate canonical successful Pages run
+        id: pages
+        uses: actions/github-script@v7
+        env:
+          INPUT_PAGES_RUN_ID: ${{ inputs.pages_run_id }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            let requested = context.eventName === 'workflow_run' ? String(context.payload.workflow_run.id) : String(process.env.INPUT_PAGES_RUN_ID || '').trim();
+            if (!requested) {
+              const response = await github.rest.actions.listWorkflowRuns({ owner, repo, workflow_id: 'github-pages.yml', branch: 'main', status: 'success', per_page: 10 });
+              const latest = response.data.workflow_runs.find(run => run.head_branch === 'main' && run.conclusion === 'success');
+              if (!latest) throw new Error('No successful canonical main Pages run');
+              requested = String(latest.id);
+            }
+            if (!/^\d{1,20}$/.test(requested) || !Number.isSafeInteger(Number(requested))) throw new Error('Invalid Pages run ID');
+            const { data: run } = await github.rest.actions.getWorkflowRun({ owner, repo, run_id: Number(requested) });
+            if (run.path !== '.github/workflows/github-pages.yml' || run.head_branch !== 'main' || run.status !== 'completed' || run.conclusion !== 'success' || run.head_repository?.full_name !== `${owner}/${repo}`) throw new Error('Run is not a successful canonical Pages deployment from this repository main');
+            core.setOutput('run_id', requested);
+            const artifacts = await github.paginate(github.rest.actions.listWorkflowRunArtifacts, { owner, repo, run_id: Number(requested), per_page: 100 });
+            const hasBrowser = artifacts.some(item => !item.expired && item.name === `pages-local-pdf-browser-${requested}`);
+            core.setOutput('applicable', String(hasBrowser));
+            if (!hasBrowser) {
+              const fs = require('node:fs');
+              fs.writeFileSync(process.env.PDF_VAULT_LIVE_OUTPUT, JSON.stringify({ schemaVersion: 1, suite: 'pdf-vault-live', ok: false, applicable: false, status: 'not_applicable', pagesRunId: Number(requested), productionMutations: false, reason: 'canonical_run_has_no_local_pdf_browser_artifact', completedAt: new Date().toISOString() }, null, 2) + '\n');
+              core.notice('This canonical run has no usable P1 browser artifact; it is not applicable and no PDF live-verification success is claimed.');
+            }
+      - name: Download browser-verified PDF delivery fingerprints
+        if: steps.pages.outputs.applicable == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: pages-local-pdf-browser-${{ steps.pages.outputs.run_id }}
+          path: ${{ runner.temp }}/pdf-vault-live/browser
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.pages.outputs.run_id }}
+      - name: Download that deployment's expected release manifest
+        if: steps.pages.outputs.applicable == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: pages-delivery-manifest
+          path: ${{ runner.temp }}/pdf-vault-live/release
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.pages.outputs.run_id }}
+      - name: Verify canonical source and every browser-tested PDF resource
+        if: always() && steps.pages.outputs.applicable != 'false'
+        timeout-minutes: 3
+        env:
+          PDF_VAULT_PAGES_RUN_ID: ${{ steps.pages.outputs.run_id }}
+        run: node scripts/verify-pdf-vault-live.mjs "$RUNNER_TEMP/pdf-vault-live/browser/summary.json" "$RUNNER_TEMP/pdf-vault-live/release/release-delivery.json" "$PDF_VAULT_LIVE_OUTPUT"
+      - name: Preserve bounded live verification summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-vault-live-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.PDF_VAULT_LIVE_OUTPUT }}
+          if-no-files-found: error
+          retention-days: 14
