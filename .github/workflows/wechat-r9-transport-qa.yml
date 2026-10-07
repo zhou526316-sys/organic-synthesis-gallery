@@ -1,0 +1,102 @@
+name: WeChat R9 Real Draft QA
+on:
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/wechat-r9-transport-qa.json']
+permissions:
+  contents: write
+concurrency:
+  group: wechat-r9-transport-qa
+  cancel-in-progress: false
+jobs:
+  check-real-draft:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 1}
+      - name: Install browser support
+        run: |
+          python3 -m pip install --quiet 'playwright>=1.50,<2'
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+      - name: Verify actual draft-derived page without changing WeChat
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os,re,subprocess
+          from datetime import datetime,timezone
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          root=Path.cwd();out=root/'r9-real-draft-qa';out.mkdir(exist_ok=True)
+          req=json.loads((root/'audit/automation-triggers/wechat-r9-transport-qa.json').read_text())
+          receipt=json.loads((root/'audit/wechat-publisher/latest.json').read_text())
+          gate=json.loads((root/'audit/wechat-working/2026-10-07-review-gate.json').read_text())
+          url=receipt.get('preview_url','')
+          assert req['action']=='verify_actual_draft_readonly'
+          assert receipt.get('draft_readback')=='ok' and receipt.get('media_id')==req['mediaId']
+          assert url==req['previewUrl'] and re.fullmatch(r'https://relay\.gczhouwld\.com/wechat-preview/[a-f0-9]{24}\.html',url)
+          assert gate['editorialRevision']=='2026-10-07-r9' and gate['textReview']=='pass' and gate['imageReview']=='pass'
+          paths=['public/wechat-featured/2026-10-07.json','public/wechat-retrospective/phoenix1-structural-regeneration.json']
+          manifests=[json.loads((root/p).read_text()) for p in paths]
+          rows=[];errors=[]
+          norm=lambda s:re.sub(r'\s+','',s)
+          with sync_playwright() as pw:
+              b=pw.chromium.launch(executable_path='/usr/bin/google-chrome',args=['--no-sandbox'])
+              p=b.new_page(viewport={'width':390,'height':900},device_scale_factor=1)
+              p.on('pageerror',lambda err:errors.append(str(err)))
+              resp=p.goto(url,wait_until='load',timeout=45000)
+              assert resp and resp.status==200
+              p.evaluate('document.fonts.ready')
+              p.wait_for_function('Array.from(document.images).every(i=>i.complete)',timeout=30000)
+              assert p.locator('.article-block').count()==2
+              p.screenshot(path=str(out/'real-cards.png'))
+              for index,(manifest,label) in enumerate(zip(manifests,['angew','natcat'])):
+                  article=p.locator('.article-block').nth(index)
+                  stored=norm(article.inner_text())
+                  missing=[s['heading'] for s in manifest['sections'] if norm(s['heading']) not in stored]
+                  for s in manifest['sections']:
+                      missing += [s['heading']+' / paragraph' for paragraph in s.get('paragraphs',[]) if norm(paragraph) not in stored]
+                  for f in manifest['figures']:
+                      if f.get('body') is not False and norm(f.get('caption','')) not in stored:missing.append(f['id']+' / caption')
+                  assert not missing, str(missing)
+                  bad=article.locator('img').evaluate_all('(a)=>a.filter(i=>!i.complete||!i.naturalWidth).map(i=>i.src)')
+                  assert not bad
+                  body_count=article.locator('img').count()
+                  if label=='natcat':assert body_count==16, body_count
+                  article.scroll_into_view_if_needed();p.evaluate('(y)=>window.scrollBy(0,y-10)',article.bounding_box()['y'])
+                  p.screenshot(path=str(out/(label+'-opening.png')))
+                  headings=['证据追问：哪些结论已经建立，哪些仍要分开看'] if label=='angew' else ['溶剂笼与溶剂化电子：不要把空间关系当成同一种物种','换成反应所用的光源，电子相关线索还在吗','审稿人究竟追问了什么，作者又补了什么']
+                  for n,h in enumerate(headings):
+                      loc=article.get_by_role('heading',name=h,exact=True);loc.scroll_into_view_if_needed()
+                      p.evaluate('(y)=>window.scrollBy(0,y-20)',loc.bounding_box()['y'])
+                      p.screenshot(path=str(out/(label+'-section-'+str(n)+'.png')))
+                  rows.append({'doi':manifest['paper']['doi'],'allParagraphsAndCaptionsPresent':True,'loadedImages':body_count,'brokenImages':0})
+              width=p.evaluate('document.documentElement.scrollWidth')
+              assert width<=390 and not errors
+              covers=p.locator('.push-card img').evaluate_all('(a)=>a.map(i=>({src:i.src,width:i.naturalWidth,height:i.naturalHeight,loaded:i.complete&&i.naturalWidth>0}))')
+              assert len(covers)==2 and all(x['loaded'] for x in covers)
+              result={'revision':'2026-10-07-r9','checkedAt':datetime.now(timezone.utc).isoformat(),'runId':os.environ['GITHUB_RUN_ID'],'previewUrl':url,'mediaId':receipt['media_id'],'source':'actual WeChat draft/get-derived preview','httpStatus':200,'articleCount':2,'articles':rows,'viewportWidth':390,'documentWidth':width,'covers':covers,'pageErrors':errors,'status':'pass','publicSend':False}
+              b.close()
+          payload=json.dumps(result,ensure_ascii=False,indent=2)+'\n';(out/'result.json').write_text(payload)
+          target='audit/wechat-working/2026-10-07-r9-real-draft-qa.json'
+          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
+          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+          for attempt in range(3):
+              subprocess.run(['git','fetch','origin','main'],check=True,timeout=30)
+              subprocess.run(['git','reset','--hard','origin/main'],check=True,timeout=30)
+              if json.loads((root/'audit/wechat-publisher/latest.json').read_text()).get('preview_url')!=url:raise RuntimeError('Draft superseded')
+              (root/target).write_text(payload)
+              subprocess.run(['git','add',target],check=True)
+              subprocess.run(['git','commit','-m','audit: verify real r9 WeChat draft paragraphs images and mobile layout'],check=True)
+              if subprocess.run(['git','push','origin','HEAD:main'],timeout=40).returncode==0:break
+          else:raise RuntimeError('Could not persist QA')
+          print(payload)
+          PY
+      - name: Upload real-page screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wechat-r9-real-draft-qa
+          path: r9-real-draft-qa/
+          retention-days: 7
+          if-no-files-found: ignore
