@@ -55,7 +55,7 @@ jobs:
           const site = 'https://gallery.gczhouwld.com/';
           const name = process.env.LIVE_BROWSER, out = process.env.LIVE_OUTPUT;
           await mkdir(out, { recursive: true });
-          const report = { schemaVersion: 1, site, browser: name, scope: 'default-floating-launchers-at-mobile-page-end', checkedAt: new Date().toISOString(), workflowCommit: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, publicationRun: process.env.PUBLICATION_RUN || null, productionWritesAllowed: false, results: [] };
+          const report = { schemaVersion: 2, site, browser: name, scope: 'default-floating-launchers-at-mobile-page-end', checkedAt: new Date().toISOString(), workflowCommit: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID, publicationRun: process.env.PUBLICATION_RUN || null, productionWritesAllowed: false, results: [] };
           const browser = await ({ chromium, webkit }[name]).launch();
           for (const width of [320, 390, 680]) {
             const result = { width, ok: false, checks: [], pageErrors: [], consoleErrors: [], failedRequests: [], apiResponses: [], suppressedWrites: [] };
@@ -86,35 +86,49 @@ jobs:
               const controls = page.locator('#resultWindowControls');
               await page.locator('gallery-page-navigation').waitFor({ state: 'visible' });
               await page.locator('site-feedback-widget .site-feedback-tab').waitFor({ state: 'visible' });
-              await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
-              await page.waitForFunction(() => {
-                const pager = document.querySelector('#resultWindowControls');
-                if (!pager) return false;
-                const box = pager.getBoundingClientRect();
-                return box.top >= 0 && box.bottom <= innerHeight + 1;
+              // Reach the actual document end after lazy layout. A separate earlier
+              // wait is insufficient: its viewport geometry can become stale.
+              // Only scroll/settle preconditions are retried, never collision assertions.
+              result.layout = await controls.evaluate(async element => {
+                const samples = [];
+                let previousTop = null, stable = 0;
+                const deadline = performance.now() + 5000;
+                while (performance.now() < deadline) {
+                  const scroller = document.scrollingElement || document.documentElement;
+                  window.scrollTo({ top: scroller.scrollHeight, behavior: 'instant' });
+                  await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+                  const obstacles = [document.querySelector('gallery-page-navigation'), document.querySelector('site-feedback-widget .site-feedback-tab')].filter(Boolean).map(node => {
+                    const box = node.getBoundingClientRect(), style = getComputedStyle(node);
+                    return { tag: node.tagName, left: box.left, right: box.right, top: box.top, bottom: box.bottom, visible: box.width > 0 && box.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' };
+                  });
+                  const targets = [...element.querySelectorAll('button,input')].map(node => {
+                    const box = node.getBoundingClientRect();
+                    return { id: node.id || node.dataset.resultPage, left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: box.width, height: box.height, overlaps: obstacles.filter(other => Math.min(box.right, other.right) > Math.max(box.left, other.left) && Math.min(box.bottom, other.bottom) > Math.max(box.top, other.top)).map(other => other.tag) };
+                  });
+                  const rect = element.getBoundingClientRect();
+                  const endDistance = Math.abs(scroller.scrollHeight - scroller.clientHeight - scroller.scrollTop);
+                  const visible = rect.top >= 0 && rect.bottom <= innerHeight + 1 && targets.every(target => target.top >= 0 && target.bottom <= innerHeight + 1);
+                  samples.push({ top: rect.top, bottom: rect.bottom, endDistance, visible });
+                  stable = visible && endDistance <= 2 && previousTop !== null && Math.abs(rect.top - previousTop) < 1 ? stable + 1 : 0;
+                  if (stable >= 3) return { center: rect.left + rect.width / 2, top: rect.top, bottom: rect.bottom, viewportHeight: innerHeight, overflow: document.documentElement.scrollWidth - innerWidth, marginBottom: parseFloat(getComputedStyle(element).marginBottom), endDistance, obstacles, targets, scrollPreparation: samples };
+                  previousTop = rect.top;
+                  await new Promise(resolve => setTimeout(resolve, 80));
+                }
+                throw new Error('pager_scroll_precondition_not_settled: ' + JSON.stringify(samples.slice(-8)));
               });
-              result.layout = await controls.evaluate(element => {
-                const rect = element.getBoundingClientRect();
-                const obstacles = [document.querySelector('gallery-page-navigation'), document.querySelector('site-feedback-widget .site-feedback-tab')].filter(Boolean).map(node => {
-                  const box = node.getBoundingClientRect(), style = getComputedStyle(node);
-                  return { tag: node.tagName, left: box.left, right: box.right, top: box.top, bottom: box.bottom, visible: box.width > 0 && box.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' };
-                });
-                const targets = [...element.querySelectorAll('button,input')].map(node => {
-                  const box = node.getBoundingClientRect();
-                  return { id: node.id || node.dataset.resultPage, width: box.width, height: box.height, overlaps: obstacles.filter(other => Math.min(box.right, other.right) > Math.max(box.left, other.left) && Math.min(box.bottom, other.bottom) > Math.max(box.top, other.top)).map(other => other.tag) };
-                });
-                return { center: rect.left + rect.width / 2, top: rect.top, bottom: rect.bottom, viewportHeight: innerHeight, overflow: document.documentElement.scrollWidth - innerWidth, marginBottom: parseFloat(getComputedStyle(element).marginBottom), obstacles, targets };
-              });
+              assert.ok(result.layout.top >= 0 && result.layout.bottom <= result.layout.viewportHeight + 1, 'entire measured pager must be in the viewport');
+              assert.ok(result.layout.endDistance <= 2, 'measurement must be at the real document end');
               assert.ok(result.layout.marginBottom >= 148, 'new mobile clearance CSS must be deployed');
               assert.ok(Math.abs(result.layout.center - width / 2) <= 2, 'pager centered');
               assert.ok(result.layout.overflow <= 1, 'no horizontal overflow');
               assert.equal(result.layout.obstacles.length, 2);
               assert.ok(result.layout.obstacles.every(obstacle => obstacle.visible), 'real floating launchers must stay visible');
               for (const target of result.layout.targets) {
+                assert.ok(target.top >= 0 && target.bottom <= result.layout.viewportHeight + 1, 'target in viewport: ' + target.id);
                 assert.ok(target.width >= 44 && target.height >= 44, 'touch target ' + target.id);
                 assert.deepEqual(target.overlaps, [], 'floating launcher overlaps ' + target.id);
               }
-              result.checks.push('deployed-148px-clearance', 'centered', '44px-targets', 'both-floating-launchers-visible', 'no-page-end-control-overlap');
+              result.checks.push('settled-visible-pager-at-document-end', 'deployed-148px-clearance', 'centered', '44px-targets', 'both-floating-launchers-visible', 'no-page-end-control-overlap');
               await page.screenshot({ path: `${out}/${name}-${width}-clearance.png` });
               const first = await dois();
               const last = Number(await page.locator('#resultPageJumpInput').getAttribute('max'));
