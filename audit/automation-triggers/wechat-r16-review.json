@@ -1,5 +1,10 @@
 {
-  "action": "source_preview_only",
+  "requestId": "wechat-r16-actual-readback-20261007T083900Z",
   "revision": "2026-10-07-r16",
-  "reason": "Verify R16 against the supplied native mobile title geometry, preserve original TOC, and independently inspect locked source and relay glyph layout. No draft write."
+  "action": "verify_actual_draft_readonly",
+  "requestedAt": "2026-10-07T08:39:00Z",
+  "receiptTimestamp": "2026-10-07T08:36:49.505363Z",
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/6cc51c56125966dcd405f643.html",
+  "mediaId": "KhELYUzvwADwB_l1xH1SWDVcSTXYXLPAONVlEJoVvQlIJ8kwU1cYTCnMr3d7KQKl",
+  "reason": "Verify exact R16 returned image/content and observed-native geometry projection separately from relay illustration; read-only; no fresh native R16 screenshot claim."
 }
