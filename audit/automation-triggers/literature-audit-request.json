@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-06T23:05:00.000Z",
-  "requestedBy": "prepublish-primary-20261007-0800",
+  "requestedAt": "2026-10-07T00:07:30.000Z",
+  "requestedBy": "post-release-20261007-0800",
   "publicationSlot": "2026-10-07T08:00:00+08:00",
-  "baselineMainSha": "5b6a81b799d8d15749cac6490653a81a5235d9b2",
-  "reason": "The scheduled 06:55 Asia/Shanghai literature audit did not appear in the Actions queue and the paired main snapshot still ends on 2026-10-06. Run the canonical 2026-10-07 prepublish DOI-union audit now, preserving the three-calendar-day review window, seven-day machine safety tail, multi-ISSN Crossref online/published/created union, OpenAlex, created/deposit rescue, verifiedThrough catch-up and canonical activeFrom rules. Persist paired latest/compact snapshots only; do not mutate production literature or media."
+  "baselineMainSha": "f733a75376c3ecffa4528d441338852906135a31",
+  "reason": "Run the canonical post-release DOI-union audit against the successfully deployed 859-card 2026-10-07 08:00 release. Preserve the three-calendar-day review window, seven-day machine safety tail, multi-ISSN Crossref online/published/created union, OpenAlex, created/deposit rescue, verifiedThrough catch-up and canonical activeFrom rules. Persist paired latest/compact snapshots only; do not mutate production literature or media, do not admit any late candidate off-slot, and preserve the six formal deferred DOI for next-slot review."
 }
