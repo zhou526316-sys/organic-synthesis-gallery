@@ -82,7 +82,7 @@ function options(source) {
     disableAutoFetch: false,
     disableRange: false,
     disableStream: true,
-    rangeChunkSize: 128 * 1024,
+    rangeChunkSize: 64 * 1024,
     stopAtErrors: false,
     canvasMaxAreaInBytes: 32 * 1024 * 1024,
     verbosity: 0,
