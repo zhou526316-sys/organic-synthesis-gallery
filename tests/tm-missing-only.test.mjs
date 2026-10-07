@@ -22,7 +22,7 @@ function h(q=queue([]),inventory=inv([]),opts={}){
  });
  const cut=source.lastIndexOf('  installManualRestartListener();');
  vm.runInContext(source.slice(0,cut)+`
- isGalleryPage=()=>true;writeToken=()=> 'fixture';badge=()=>{};sleep=__sleep;getJson=__get;postReadJson=__post;getPrivateJson=__private;enqueueCaptureReport=()=>true;
+ isGalleryPage=()=>true;writeToken=()=> 'fixture';badge=()=>{};sleep=__sleep;getJson=__get;postReadJson=__post;getPrivateJson=__private;inventoryReadMetadataJson=async(o,p)=>String(o.method||'GET').toUpperCase()==='POST'?__post(o.url,JSON.parse(o.data||'{}')):String(o.url||'').includes('evidence-inventory')?__private(o.url):__get(o.url);enqueueCaptureReport=()=>true;
  globalThis.shellFixture=()=>{assertBoundCaptureJob=()=>true;pageState=()=>({shell:true,auth:false,challenge:false});collectCandidates=()=>[];collectArticleFigureCandidates=()=>[];captureLiveUpdate=()=>true;};
  globalThis.bodyFixture=()=>{assertBoundCaptureJob=()=>true;captureLiveUpdate=()=>true;pushTrace=()=>true;waitForPairedVisuals=async()=>({toc:[],figures:__figs});globalThis.__downloads=0;acquireBestVisual=async(j,c)=>{__downloads++;return{candidate:c[0],image:{width:1000,height:500},quality:{quality:'high'}}};uploadArticleFigure=async()=>({contentHash:'a'.repeat(32)});tryCaptureArticleEvidence=async()=>({status:'not_requested'});finishPairedJob=async(j,r)=>r;};
  globalThis.T={buildMissingCaptureJobs,captureNeedText,captureLiveText,captureLiveSnapshot,forceStartFromHead,manualRunBlocksAutomatic,readMissingCaptureInventory,checkpointKey,waitForPairedVisuals,runPublisherJob};
