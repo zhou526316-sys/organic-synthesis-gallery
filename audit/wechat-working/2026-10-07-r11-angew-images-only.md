@@ -9,7 +9,7 @@
   },
   "crop_235_1": "0_0_1_1",
   "crop_1_1": "0.287234_0_0.712766_1",
-  "description": "Complete original TOC contained in upper36%; lower64% is solid navy for multiline native white title. No title is baked into the cover; no source figure redraw.",
+  "description": "Large complete original TOC with deterministic dark-background and ink-tone adaptation; bottom64% receives80% navy veil for native white title. No title baked into cover; no chemical redraw.",
   "preserve_existing_thumb": false
 }
 
@@ -264,12 +264,13 @@
 
 {
   "id": "an-cover",
-  "repo_path": "public/wechat-assets/reviewed/2026-10-07-r11/an-cover-title-safe-r11.png",
+  "repo_path": "public/wechat-assets/reviewed/2026-10-07-r11/an-cover-dark-toc-r11.png",
   "caption": "",
   "body": false,
   "display_width_pct": 100,
   "source_figure": "Original paper TOC (Graphical Abstract)",
   "source_doi": "10.1002/anie.3699223",
   "source_kind": "official_toc",
+  "source_adjustment": "Deterministic per-pixel dark-background/ink-tone mapping and lower-title-region dimming; original geometry, labels and bonds retained. Unmodified TOC kept separately.",
   "placement": "cover"
 }

@@ -286,7 +286,7 @@ def native_title_overlay_review(page, cover, viewport, actual):
         frame.locator("img").evaluate("i=>i.decode()")
         bounds = frame.bounding_box(); text_bounds = page.locator("#r11-white-title").bounding_box()
         clearance = text_bounds["y"] - bounds["y"] - height*.36
-        require(clearance >= 4, f"White title touches TOC background: {label}, {clearance:.2f}px")
+        require(clearance >= 4, f"White title leaves reserved dark area: {label}, {clearance:.2f}px")
         frame.screenshot(path=str(OUT/f"angew-{label}-overlay-{viewport}.png"))
         rows.append({"viewport":viewport,"scenario":label,"fontSize":size,"lineHeight":leading,"titleClearancePx":clearance,"minimumWhiteContrast":contrast,"coverSource":"actual draft/get returned cover" if actual else "locked source cover","scope":"QA simulation; title is not baked into published cover"})
         frame.evaluate("e=>e.remove()")

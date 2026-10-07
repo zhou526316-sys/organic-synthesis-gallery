@@ -24,7 +24,7 @@
     },
     {
       "path": "public/wechat-featured/2026-10-07.json",
-      "blobSha": "0320c051611f2c1e681e193003acc52194bf911a"
+      "blobSha": "db8dd245f821ccf50583143eef01518531530f6a"
     },
     {
       "path": "public/wechat-retrospective/phoenix1-structural-regeneration.json",
@@ -131,9 +131,9 @@
       "height": 708
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-07-r11/an-cover-title-safe-r11.png",
-      "blobSha": "560cc2037443fbbfe8a1cc5a1f89908240054954",
-      "sha256": "51f5f967259b95827d0bc65c2011586ef50944d122a50144ec3cf98dc3479855",
+      "path": "public/wechat-assets/reviewed/2026-10-07-r11/an-cover-dark-toc-r11.png",
+      "blobSha": "ffda882691e1042deb53b80b8d25eb51d177f634",
+      "sha256": "37c7b3b2d9b1abd1306a44e51b61bbd3baa486450dfe9417580aad060a44cd10",
       "width": 1880,
       "height": 800
     },
@@ -281,11 +281,13 @@
   "materializedCropReviewRequired": true,
   "strictFigurePlacement": true,
   "reviewNotes": [
-    "User explicitly requested final cover adjustment so white native title cannot overlap the white TOC background.",
-    "Cover-only visual change. Complete original TOC remains proportionally contained in upper36%; lower64% solid navy reserved for native title. No title text baked in.",
-    "Daily/retrospective titles, digest, narrative, captions and all33body figures are byte-equivalent to R10 content; metadata revision updated consistently.",
-    "Pure text and images-only reviews regenerated. Local title-overlay checks cover current57-character title, four-line stress case and a332px narrow card. New combined source preview pending.",
-    "Only same two-article draft update authorized. No public sending."
+    "User explicitly requested cover adjustment to make white native title legible over the TOC.",
+    "Final cover candidate keeps the TOC large, using exact per-pixel background and ink-tone mapping, then darkens the lower title area. Original glyph/bond/arrow geometry retained; original unmodified TOC separately preserved. No generative model or redraw.",
+    "The earlier small white-inset candidate was superseded before any draft write. It met contrast but made the TOC too small.",
+    "Independent final visual check passed: minimum white contrast across lower64% is8.286:1; source geometry and labels match. Darkened lower TOC serves as cover background, not as a substitute for a readable body figure.",
+    "Daily/retrospective titles, digests, narrative, figure captions and all33body figures remain unchanged; only cover disclosure adds background/color/tone adaptation.",
+    "Pure text and images-only reviews regenerated; new combined source preview pending.",
+    "Same two-article draft only, once after final review. No public sending."
   ],
   "draftReadback": "pending",
   "publicSendAuthorized": false,
