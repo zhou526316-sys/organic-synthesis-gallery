@@ -8,6 +8,7 @@ on:
       - scripts/validate-tm220-artifacts.mjs
       - tests/tm-inventory-startup.test.mjs
       - tests/tm-queue-coverage.test.mjs
+      - tests/tm-missing-only.test.mjs
       - .github/workflows/tm-inventory-startup.yml
 permissions:
   contents: read
