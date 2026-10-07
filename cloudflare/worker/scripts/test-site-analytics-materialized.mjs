@@ -11,6 +11,12 @@ import {
   materializeSitePageViewForActiveRead,
   materializedSiteAnalyticsStats,
 } from '../src/site-analytics-materialized.js';
+import {
+  compareSiteAnalyticsPublicSnapshot,
+  getSiteAnalyticsPublicSnapshotStatus,
+  readSiteAnalyticsPublicSnapshot,
+  refreshSiteAnalyticsPublicSnapshot,
+} from '../src/site-analytics-snapshot.js';
 import { siteAnalyticsStats } from '../src/user-ui.js';
 
 class Statement {
@@ -66,6 +72,15 @@ class D1 {
         scanned_events INTEGER NOT NULL DEFAULT 0,materialized_events INTEGER NOT NULL DEFAULT 0,
         duplicate_events INTEGER NOT NULL DEFAULT 0,failed_events INTEGER NOT NULL DEFAULT 0,
         started_at INTEGER NOT NULL,updated_at INTEGER NOT NULL,last_error TEXT NOT NULL DEFAULT ''
+      );
+      CREATE TABLE site_analytics_public_snapshot_v1 (
+        id INTEGER PRIMARY KEY CHECK(id=1),snapshot_json TEXT NOT NULL,
+        source_raw_max_event_id INTEGER NOT NULL DEFAULT 0,
+        source_materialized_max_event_id INTEGER NOT NULL DEFAULT 0,
+        source_global_pv INTEGER NOT NULL DEFAULT 0,
+        source_reader_rows INTEGER NOT NULL DEFAULT 0,
+        source_reader_max_opened_at INTEGER NOT NULL DEFAULT 0,
+        generated_at INTEGER NOT NULL,updated_at INTEGER NOT NULL
       );
     `);
   }
@@ -311,6 +326,47 @@ test('active materialization failure disables fast reads until backfill repair',
   assert.equal(recovered.ready,true);
   assert.equal(recovered.lastError,'');
   assert.equal(recovered.failedEvents,1);
+});
+
+test('D4c public snapshot refresh preserves materialized semantics and reads one bounded row',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env={...envFor(db,true),SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED:'1',SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED:'0'};
+  const fixedNow=Date.parse('2026-10-05T02:00:00Z');
+  for(const event of [
+    {ip:'a',ref:'google.com',device:'desktop',date:'2026-10-05',viewedAt:fixedNow-3000},
+    {ip:'b',ref:'',device:'mobile',date:'2026-10-05',viewedAt:fixedNow-2000},
+  ]){
+    const id=insertRaw(db,event);
+    await materializeSitePageViewEvent(env,row(db,id));
+  }
+  const backfill=await backfillSiteAnalyticsMaterializedPage(env,100);
+  assert.equal(backfill.body.complete,true);
+  const refreshed=await refreshSiteAnalyticsPublicSnapshot(env,fixedNow);
+  assert.equal(refreshed.status,200);
+  const status=await getSiteAnalyticsPublicSnapshotStatus(env,fixedNow+1000);
+  assert.equal(status.body.exists,true);assert.equal(status.body.valid,true);assert.equal(status.body.fresh,true);
+  assert.equal(status.body.readConfigured,false);
+  const shadowRead=await readSiteAnalyticsPublicSnapshot(env,fixedNow+1000,{requireEnabled:false});
+  assert.equal(shadowRead.status,200);assert.equal(shadowRead.body.readPath,'snapshot');
+  assert.equal(shadowRead.body.generation,'site-pageview-v3-snapshot');assert.equal(shadowRead.body.allTime.pv,2);
+  const compare=await compareSiteAnalyticsPublicSnapshot(env,fixedNow);
+  assert.equal(compare.status,200);assert.equal(compare.body.same,true);assert.equal(compare.body.sourceStable,true);
+});
+
+test('D4c snapshot public read fails closed while disabled and when stale',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const fixedNow=Date.parse('2026-10-05T02:00:00Z');
+  const env={...envFor(db,true),SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED:'1',
+    SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED:'0',SITE_ANALYTICS_PUBLIC_SNAPSHOT_MAX_AGE_MS:'60000'};
+  const id=insertRaw(db,{ip:'a',date:'2026-10-05',viewedAt:fixedNow-1000});
+  await materializeSitePageViewEvent(env,row(db,id));
+  await backfillSiteAnalyticsMaterializedPage(env,100);
+  assert.equal((await refreshSiteAnalyticsPublicSnapshot(env,fixedNow)).status,200);
+  const disabled=await readSiteAnalyticsPublicSnapshot(env,fixedNow+1000);
+  assert.equal(disabled.status,503);assert.equal(disabled.body.error,'analytics_public_snapshot_read_disabled');
+  const enabled={...env,SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED:'1'};
+  const stale=await readSiteAnalyticsPublicSnapshot(enabled,fixedNow+61001);
+  assert.equal(stale.status,503);assert.equal(stale.body.error,'analytics_public_snapshot_stale');
 });
 
 console.log('SITE_ANALYTICS_MATERIALIZED_SHADOW_TESTS_READY');

@@ -60,6 +60,13 @@ import {
   userLibraryV3ShadowEnabled,
 } from './user-library-v3-shadow.js';
 import { backfillSiteAnalyticsMaterializedPage, compareSiteAnalyticsBodies, getSiteAnalyticsMaterializedReadiness, getSiteAnalyticsMaterializedStatus, materializedSiteAnalyticsStats, siteAnalyticsMaterializedReadEnabled } from './site-analytics-materialized.js';
+import {
+  compareSiteAnalyticsPublicSnapshot,
+  getSiteAnalyticsPublicSnapshotStatus,
+  refreshSiteAnalyticsPublicSnapshot,
+  siteAnalyticsPublicSnapshotReadEnabled,
+  siteAnalyticsPublicSnapshotShadowEnabled,
+} from './site-analytics-snapshot.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
   alipayNotify,
@@ -267,6 +274,8 @@ async function handleApi(request, env, ctx) {
       userLibraryV3WriteEnabled: String(env.USER_LIBRARY_V3_WRITE_ENABLED || '') === '1',
       siteAnalyticsMaterializedShadowEnabled: String(env.SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED || '') === '1',
       siteAnalyticsMaterializedReadEnabled: siteAnalyticsMaterializedReadEnabled(env),
+      siteAnalyticsPublicSnapshotShadowEnabled: siteAnalyticsPublicSnapshotShadowEnabled(env),
+      siteAnalyticsPublicSnapshotReadEnabled: siteAnalyticsPublicSnapshotReadEnabled(env),
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
       wechatJsSdk: Boolean(env.WECHAT_MP_APP_ID && env.WECHAT_MP_APP_SECRET),
@@ -497,6 +506,22 @@ async function handleApi(request, env, ctx) {
       legacy: comparison.legacy,
       materialized: comparison.materialized,
     });
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/admin/site-analytics-snapshot/status') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await getSiteAnalyticsPublicSnapshotStatus(env));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/site-analytics-snapshot/refresh') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await refreshSiteAnalyticsPublicSnapshot(env));
+  }
+  if (request.method === 'GET' && url.pathname === '/api/admin/site-analytics-snapshot/compare') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await compareSiteAnalyticsPublicSnapshot(env));
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
@@ -942,9 +967,17 @@ export default {
     const scheduledAt = new Date(controller.scheduledTime || Date.now());
     const hour = scheduledAt.getUTCHours();
     const minute = scheduledAt.getUTCMinutes();
-    const runMediaMaintenance = minute === 0 && hour % 6 === 0;
+    const runSixHourMaintenance = minute === 0 && hour % 6 === 0;
     ctx.waitUntil((async () => {
-      if (runMediaMaintenance) {
+      if (siteAnalyticsPublicSnapshotShadowEnabled(env)) {
+        try {
+          const snapshot = await refreshSiteAnalyticsPublicSnapshot(env, controller.scheduledTime || Date.now());
+          console.log('SITE_ANALYTICS_PUBLIC_SNAPSHOT_CRON', JSON.stringify(snapshot.body || {}));
+        } catch (error) {
+          console.error('SITE_ANALYTICS_PUBLIC_SNAPSHOT_CRON_FAILED', error instanceof Error ? error.message : String(error));
+        }
+      }
+      if (runSixHourMaintenance) {
         try {
           const [databaseSweep, localSweep] = await Promise.all([
             purgeCrossDoiMedia(env, { dryRun: false }),
@@ -969,11 +1002,15 @@ export default {
         reason: 'scheduled_chatgpt_daily_no_api',
         publicationTime: '12:00 Asia/Shanghai',
       }));
-      try {
-        const handoff = await backfillScheduledEvidenceHandoffs(env, 4);
-        console.log('SUMMARY_HANDOFF_BACKFILL_CRON', JSON.stringify(handoff.body || {}));
-      } catch (error) {
-        console.error('SUMMARY_HANDOFF_BACKFILL_CRON_FAILED', error instanceof Error ? error.message : String(error));
+      if (runSixHourMaintenance) {
+        try {
+          const handoff = await backfillScheduledEvidenceHandoffs(env, 4);
+          console.log('SUMMARY_HANDOFF_BACKFILL_CRON', JSON.stringify(handoff.body || {}));
+        } catch (error) {
+          console.error('SUMMARY_HANDOFF_BACKFILL_CRON_FAILED', error instanceof Error ? error.message : String(error));
+        }
+      } else {
+        console.log('SUMMARY_HANDOFF_BACKFILL_CRON_SKIPPED', JSON.stringify({ reason: 'six_hour_cadence' }));
       }
     })());
     console.log('ARTICLE_FIGURE_STAGE_PROMOTION_CRON_SKIPPED', 'verified_staging_release;retain_original_objects');

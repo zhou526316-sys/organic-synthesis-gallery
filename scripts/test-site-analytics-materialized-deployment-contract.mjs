@@ -8,6 +8,8 @@ const materialized=readFileSync('cloudflare/worker/src/site-analytics-materializ
 const index=readFileSync('cloudflare/worker/src/index.js','utf8');
 const schema=readFileSync('cloudflare/schema.sql','utf8');
 const migration=readFileSync('cloudflare/site-analytics-v2.sql','utf8');
+const snapshotMigration=readFileSync('cloudflare/site-analytics-snapshot-v1.sql','utf8');
+const snapshot=readFileSync('cloudflare/worker/src/site-analytics-snapshot.js','utf8');
 
 function section(source,start,end){
   const a=source.indexOf(start),b=end?source.indexOf(end,a+start.length):source.length;
@@ -116,6 +118,44 @@ test('admin routes and health expose analytics materialized read activation',()=
   assert.ok(materialized.includes('analytics_materialized_not_fresh'));
   assert.ok(materialized.includes('reconcileMaterializedPaperOpenFlags'));
   assert.ok(materialized.includes("complete?'':lastError"));
+});
+
+test('D4c snapshot schema and shadow flags are deployed without public read cutover',()=>{
+  assert.ok(snapshotMigration.includes('site_analytics_public_snapshot_v1'));
+  assert.ok(schema.includes('site_analytics_public_snapshot_v1'));
+  assert.ok(deploy.includes('Apply public analytics snapshot D1 migration'));
+  assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_SHADOW_ENABLED = "1"'));
+  assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_READ_ENABLED = "0"'));
+  assert.ok(deploy.includes('SITE_ANALYTICS_PUBLIC_SNAPSHOT_MAX_AGE_MS = "1200000"'));
+  assert.ok(deploy.includes('crons = ["*/15 * * * *"]'));
+  assert.ok(snapshot.includes('refreshSiteAnalyticsPublicSnapshot'));
+  assert.ok(snapshot.includes('analytics_public_snapshot_source_changed'));
+  assert.ok(snapshot.includes('source_reader_rows'));
+});
+
+test('D4c deployment proves stable snapshot parity but leaves public site-stats on D4b',()=>{
+  const block=section(deploy,'- name: Refresh and verify public analytics snapshot shadow','- name: Backfill and verify user library row read path');
+  assert.ok(block.includes('continue-on-error: true'));
+  assert.ok(block.includes('/api/admin/site-analytics-snapshot/refresh'));
+  assert.ok(block.includes('/api/admin/site-analytics-snapshot/compare'));
+  assert.ok(block.includes('/api/admin/site-analytics-snapshot/status'));
+  assert.ok(block.includes("comparison.body?.same===true"));
+  assert.ok(block.includes("comparison.body?.sourceStable===true"));
+  assert.ok(block.includes("status.body?.readConfigured===false"));
+  const route=section(index,"if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats')","if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark')");
+  assert.ok(route.includes("readPath: 'materialized'"));
+  assert.ok(!route.includes('readSiteAnalyticsPublicSnapshot'));
+});
+
+test('D4c snapshot public read is bounded to the singleton snapshot row',()=>{
+  const start=snapshot.indexOf('export async function readSiteAnalyticsPublicSnapshot');
+  const end=snapshot.indexOf('export async function compareSiteAnalyticsPublicSnapshot',start);
+  assert.ok(start>=0&&end>start);
+  const block=snapshot.slice(start,end);
+  assert.ok(block.includes('snapshotRow(env)'));
+  assert.ok(!block.includes('site_analytics_visitors_v2'));
+  assert.ok(!block.includes('site_pageviews_v1'));
+  assert.ok(!block.includes('materializedSiteAnalyticsStats'));
 });
 
 console.log('SITE_ANALYTICS_MATERIALIZED_DEPLOYMENT_CONTRACT_PASS');
