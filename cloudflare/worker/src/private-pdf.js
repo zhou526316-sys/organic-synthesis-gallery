@@ -213,7 +213,7 @@ function trustedPdfHost(publisher, hostname) {
   if (publisher === 'wiley') return sub('onlinelibrary.wiley.com');
   if (publisher === 'nature') return sub('nature.com');
   if (publisher === 'science') return sub('science.org');
-  if (publisher === 'rsc') return sub('pubs.rsc.org');
+  if (publisher === 'rsc') return sub('pubs.rsc.org') || sub('rscj.silverchair-cdn.com');
   if (publisher === 'elsevier') return sub('sciencedirect.com') || sub('sciencedirectassets.com') || sub('cell.com');
   if (publisher === 'ccs') return sub('chinesechemsoc.org') || sub('ccspublishing.org.cn');
   return false;
