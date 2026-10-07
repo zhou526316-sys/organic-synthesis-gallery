@@ -21,7 +21,7 @@ function h(q=queue([]),inventory=inv([]),opts={}){
  });
  const cut=source.lastIndexOf('  installManualRestartListener();');
  vm.runInContext(source.slice(0,cut)+`
- isGalleryPage=()=>true;writeToken=()=> 'fixture';badge=()=>{};sleep=__sleep;getJson=__get;postReadJson=__post;getPrivateJson=__private;enqueueCaptureReport=()=>true;
+ isGalleryPage=()=>true;writeToken=()=> 'fixture';badge=()=>{};sleep=__sleep;getJson=__get;postReadJson=__post;getPrivateJson=__private;inventoryReadMetadataJson=async(o,p)=>String(o.method||'GET').toUpperCase()==='POST'?__post(o.url,JSON.parse(o.data||'{}')):String(o.url||'').includes('evidence-inventory')?__private(o.url):__get(o.url);enqueueCaptureReport=()=>true;
  globalThis.T={coverageStats,coveragePending,coverageMergePlan,coverageRemaining,metadataJson,metadataTransport:(g,n)=>{gmRequest=g;nativeControllerRequest=n;},buildMissingCaptureJobs,captureNeedText,captureLiveText,captureLiveSnapshot,forceStartFromHead,manualRunBlocksAutomatic,readMissingCaptureInventory,checkpointKey};
  })();`,ctx);
  return {T:ctx.T,ctx,store,opened,calls,timers,plan:(ar=q.articles,i=inventory)=>{const run={id:'test',summary:{results:[]}};return {jobs:Array.from(ctx.T.buildMissingCaptureJobs(queue(ar),run,i)),summary:run.summary};}};
