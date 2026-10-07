@@ -1,0 +1,46 @@
+{
+  "reviewedAt": "2026-10-07T13:08:20+08:00",
+  "editorialRevision": "2026-10-07-r7",
+  "status": "ready_for_user_draft_review",
+  "reviewer": "AI self-review; no claim of human review",
+  "draftReadback": "ok",
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/996cb9dd18c792fe056e2760.html",
+  "previewSha256": "a66af44685961c4dbba453958eff93a9b7511e4aae9e964310ae8c02e30efb7c",
+  "media_id": "KhELYUzvwADwB_l1xH1SWDVcSTXYXLPAONVlEJoVvQlIJ8kwU1cYTCnMr3d7KQKl",
+  "publisherRunId": 37572845923,
+  "transportReviewRunId": 37574532699,
+  "transportArtifactId": 11462141122,
+  "articleCount": 2,
+  "articleOrder": [
+    {"column":"今日精选","journal":"Angew","doi":"10.1002/anie.3699223","bodyParagraphsChecked":23,"bodyImagePlacements":14,"originalMainFigures":6,"originalMainTables":1},
+    {"column":"往期精选","journal":"Nature Catalysis","doi":"10.1038/s41929-026-01593-w","bodyParagraphsChecked":29,"bodyImagePlacements":14,"originalMainFigures":6}
+  ],
+  "textIntegrity": "All 52 opening/body paragraphs and all 28 figure captions present in actual WeChat readback; source facts previously independently reviewed against uploaded main text/SI/peer review.",
+  "imageIntegrity": "All 28 original-source body images loaded from actual WeChat media URLs. Natural aspect ratios match reviewed repository assets; CDN placeholder images rejected by dimension/aspect checks.",
+  "visualReview": "pass",
+  "visuallyInspected": [
+    {"file":"00-two-card-preview.png","sha256":"51fefacbd578083f5527e6be83a161ff49bdcd4f56289e367529cc939a3621a8","check":"correct two-card order, readable Chinese, Angew wide cover and approved phoenix square visible"},
+    {"file":"01-article-full.png","sha256":"71779dd0bce63391d2851de0854b346200832d8cd75cfa942af30d9e36c24aec","check":"entire actual Angew draft inspected in consecutive screenshot strips; all main figure/table groups and SI placements present"},
+    {"file":"02-article-full.png","sha256":"621b6f850f1472404c2672d29ab6b3e4e1ff14fe175e1ae6207e324d92d2e981","check":"entire actual Nature Catalysis draft inspected in consecutive screenshot strips; source-numbered figures, mechanistic boundaries and full scope retained"}
+  ],
+  "mobileViewportWidth": 390,
+  "mobileDocumentWidth": 390,
+  "brokenImages": 0,
+  "pageErrors": 0,
+  "retrospectiveCover": {
+    "repoPath":"public/wechat-assets/reviewed/2026-10-07-r7/nc-cover.png",
+    "sha256":"6cb0d372533491151a64143187289123bb8bd76a605ce257ef8f4d85e22457f1",
+    "byteIdenticalToUserApprovedR5Square":true,
+    "whiteBackgroundRemoved":true,
+    "chemicalStructuresRegenerated":false
+  },
+  "transportRepairs": [
+    "Missing import re repaired without relaxing the editorial gate.",
+    "Daily first-explanation lead image placement implemented and tested, preventing the opening figure from being omitted.",
+    "WeChat data-src image URLs activated only in the external readback preview; original stored draft content not rewritten by normalization.",
+    "Preview no-referrer policy makes the user's WeChat-uploaded images display rather than CDN placeholders; no substitute body images or independent article preview authored."
+  ],
+  "sourceManifestsChangedDuringTransportRepairs": false,
+  "publicSendPerformed": false,
+  "notes": "This is a completed draft creation/readback/inspection receipt, not a public publication receipt. The preview is generated from the actual WeChat draft/get data."
+}
