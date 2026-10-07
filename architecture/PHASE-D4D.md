@@ -87,3 +87,20 @@ D4e separates strict realtime freshness from an internally consistent materializ
 Snapshot refresh may publish that stable materialized watermark inside the explicit freshness budget. The 15-minute cron repairs genuinely unhealthy materialized state in at most four 100-event pages. D4c parity can repair source-not-ready in bounded pages. D4d activation waits for two consecutive health observations of the enabled snapshot flag before checking the exact proof generation.
 
 Public site-stats no longer uses legacy raw aggregation fallback. With primary snapshot reads disabled, transient D4b lag uses a fresh singleton snapshot as snapshot_fallback; if neither bounded read is available, the endpoint returns bounded 503.
+
+## Activation retry #2 — D4c proof reuse
+
+The first guarded activation attempts rolled back safely. Source history shows that commit `1a5d08df` deliberately paused the source flag back to 0 after those failures. The later D4c-proof-reuse fix therefore ran with the source flag still at 0 and could only produce a skipped activation result.
+
+Retry #2 explicitly changes the canonical source flag back to 1 **after** the proof-race fix is present.
+
+The canonical sequence for this retry is:
+
+1. repair/prove D4b materialized freshness;
+2. generate and prove one D4c snapshot;
+3. reuse that exact D4c parity report and `snapshotGeneratedAt`;
+4. verify the public unauthenticated route serves that same generation;
+5. keep the snapshot read only if health/freshness/live routing all pass;
+6. otherwise execute the existing automatic rollback to 0 and repair/verify D4b.
+
+This retry does not weaken rollback or freshness requirements.

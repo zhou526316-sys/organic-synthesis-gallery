@@ -158,3 +158,6 @@ Architecture changes must test at least:
 8. **P3 — continue scale audit only where a normal request can still grow with global history.** Backfill/reconciliation/admin maintenance may be cursor-based background work, but no public display, search, media, account or analytics request may regain corpus-wide behavior.
 
 These priorities are scale-safety work. They do not alter the Tampermonkey acquisition workflow in this architecture task.
+
+
+D4d activation retry #2 is requested after the D4c parity-proof reuse fix; automatic rollback remains mandatory.
