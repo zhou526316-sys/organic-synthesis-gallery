@@ -314,7 +314,7 @@
       started: s.runStartedAt ? new Date(s.runStartedAt).toLocaleTimeString() : '尚未开始本轮',
       last: s.lastAt ? new Date(s.lastAt).toLocaleTimeString() + ' · ' + captureLiveAgeText(s.ageSeconds) : '尚无采集进展',
       stale: s.active && s.ageSeconds >= 45 ? '一段时间没有新进展：可能正在等待网络或页面验证，不等于抓取失败。' : '',
-      error: lastError || '无', publication: s.publication, delivery: automaticReportDisplay()
+      error: lastError || '无', publication: s.publication, delivery: automaticReportDisplay()+(pendingImageTransferKeys().length?' · 待补传图片 '+pendingImageTransferKeys().length+' 张':'')
     };
   }
 
@@ -1920,8 +1920,9 @@ function embeddedJobDois(value) {
         // An aborted/timeout request may have written successfully upstream.
         // Do not launch a second concurrent write without a receipt.
         if(/timeout|abort|budget_exhausted/i.test(ms)||attempt>=1||!retryableImageUpload(error)||wait>3000||Date.now()+wait+1500>=deadline){
+          var retained=retainImageForGalleryUpload(job,endpoint,payload,stage,error);
           pushTrace(trace,{stage:stage,event:'upload_deferred',status:'deferred',url:endpoint,
-            message:'budgetMs='+allowedBudget+';elapsedMs='+(Date.now()-started)+';gap_preserved=1;retryAfterMs='+Number(error&&error.retryAfterMs||0)});
+            message:'budgetMs='+allowedBudget+';elapsedMs='+(Date.now()-started)+';gap_preserved=1;galleryReplayQueued='+Number(retained)+';retryAfterMs='+Number(error&&error.retryAfterMs||0)});
           throw error;
         }
         pushTrace(trace,{stage:stage,event:'upload_retry_wait',status:'retrying',url:endpoint,httpStatus:Number(error&&error.httpStatus||0),
@@ -1929,6 +1930,7 @@ function embeddedJobDois(value) {
         await sleep(wait);
       }
     }
+    if(lastError)retainImageForGalleryUpload(job,endpoint,payload,stage,lastError);
     throw lastError||new Error('image_upload_budget_exhausted');
   }
   // END OSG_UPLOAD_EVIDENCE_V1
@@ -5746,6 +5748,10 @@ function embeddedJobDois(value) {
       window.alert('已请求中止当前媒体抓取批次。正在运行的出版社标签页会由控制器关闭；人工中止不会计入失败或失败冷却。');
     });
     GM_registerMenuCommand('继续媒体抓取主线', requestControllerStart);
+    GM_registerMenuCommand('补传已获取但未保存的图片', function () {
+      replayOneDeferredImage().catch(function(){});
+      window.alert('已检查待补传图片。只有原 DOI 与存储回执符合要求时才会清除本地暂存。');
+    });
     GM_registerMenuCommand('上传本地 TOC 日志', function () {
       uploadLocalDiagnostics().catch(function () {});
     });
@@ -6659,6 +6665,7 @@ function embeddedJobDois(value) {
   if (isGalleryPage()) {
     mountCaptureLivePanel();
     startAutomaticCaptureReports();
+    startImageOutboxSender();
     var staleTakeover=retireStaleControllerState();
     if(staleTakeover.retired&&!controllerPaused()){
       badge('已自动淘汰旧 controller '+staleTakeover.observed+'；正在按最新规则重新生成缺项队列','#175cd3');
