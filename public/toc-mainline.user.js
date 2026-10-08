@@ -55,7 +55,8 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.49';
+  var INSTALL_REVISION = '6.2.50';
+  var RSC_BODY_FIGURE_REVISION = '20261008-rsc-caption-association-v1';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
   var GAP_RECOVERY_REVISION = '20261008-gap-recovery-v1';
@@ -2064,8 +2065,8 @@ function embeddedJobDois(value) {
   }
 
   function collectArticleFigureCandidates(job, trace, root, baseUrl, sourceName) {
-    var scope = root || document, rows = [], seen = new Set();
-    var diag={nodes:0,noContext:0,official:0,pdfPreview:0,noLabel:0,duplicate:0,doiMismatch:0,rejected:0,accepted:0};
+    var scope = root || document, rows = [], seen = new Set(), unlabelledNodes = new Set();
+    var diag={nodes:0,noContext:0,official:0,pdfPreview:0,noLabel:0,duplicate:0,doiMismatch:0,rejected:0,accepted:0,rscNoLabelSamples:[]};
     scope.querySelectorAll('img,object[type^="image"]').forEach(function (node) {
       diag.nodes++;
       var context = visualScope(node);
@@ -2086,7 +2087,22 @@ function embeddedJobDois(value) {
           }
           if(!label&&assetLabel)label=assetLabel;
         }
-        if(!label){diag.noLabel++;return;}
+        if(!label){
+          diag.noLabel++;
+          if(job.publisher==='rsc'&&diag.rscNoLabelSamples.length<3&&!unlabelledNodes.has(node)){
+            unlabelledNodes.add(node);
+            var ancestor=node.parentElement, shape=[];
+            for(var depth=0;ancestor&&depth<4;depth++,ancestor=ancestor.parentElement){
+              if(ancestor.matches&&ancestor.matches('main,article,body,[role="main"]'))break;
+              var cls=String(ancestor.className||'').replace(/\s+/g,'.').slice(0,64);
+              var capCount=ancestor.querySelectorAll('figcaption,.caption,[class*="caption" i],.image_title,.figure-title,[role="heading"],h3,h4,h5,h6').length;
+              var imgCount=ancestor.querySelectorAll('img,object[type^="image"]').length;
+              shape.push(String(ancestor.tagName||'').toLowerCase()+'.'+cls+':i'+imgCount+'/c'+capCount);
+            }
+            diag.rscNoLabelSamples.push(shape.join(' > ').slice(0,320));
+          }
+          return;
+        }
         var key = label + '|' + url;
         if(seen.has(key)){diag.duplicate++;return;}
         if(reject(context.caption,url)){diag.rejected++;return;}
@@ -2302,18 +2318,43 @@ function embeddedJobDois(value) {
     if(!node||!node.closest)return original;
     if(original&&(original.label||original.official))return original;
     if(node.closest('aside,nav,header,footer,[class*="recommend" i],[class*="related" i],[class*="reference" i],[class*="citation" i]'))return null;
-    var block=node.closest('.image_table,.image-table,.img-tbl,.article-figure,.figure,figure,[class*="figure-container" i]');
-    if(!block)return original;
-    var texts=Array.from(block.querySelectorAll(
-      '.image_title,.image-title,.figure-title,figcaption,.caption,[class*="caption" i]'
-    )).map(function(n){return String(n.textContent||'').replace(/\s+/g,' ').trim();}).filter(Boolean);
-    var numbered=texts.filter(function(t){return /^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*\d+[a-z]?\b/i.test(t);});
+    var numberedPattern=/^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*\d+[a-z]?\b/i;
+    var captionSelector='.image_title,.image-title,.figure-title,.figure__title,.figcaption-title,.figcaption-figurepart-title,figcaption,.caption,[class*="caption" i],[role="heading"],h3,h4,h5,h6';
     var own=[node.getAttribute&&node.getAttribute('alt'),node.getAttribute&&node.getAttribute('title'),node.getAttribute&&node.getAttribute('aria-label')]
       .filter(Boolean).join(' ');
-    if(/^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*\d+[a-z]?\b/i.test(own))numbered.push(own);
-    var labels=Array.from(new Set(numbered.map(function(t){return articleFigureLabel(t,0);})));
-    if(labels.length!==1)return original||null;
-    return {block:block,label:labels[0],caption:(numbered[0]||texts[0]||own).slice(0,600),official:false};
+    function isolatedCaption(block) {
+      if(!block||!block.contains(node))return null;
+      var captions=Array.from(block.querySelectorAll(captionSelector));
+      [node,block].forEach(function(el){
+        ['aria-labelledby','aria-describedby'].forEach(function(attr){
+          String(el.getAttribute&&el.getAttribute(attr)||'').split(/\s+/).filter(Boolean).forEach(function(id){
+            var target=el.ownerDocument&&el.ownerDocument.getElementById(id);
+            if(target&&block.contains(target)&&captions.indexOf(target)<0)captions.push(target);
+          });
+        });
+      });
+      var texts=captions.map(function(n){return String(n.textContent||'').replace(/\s+/g,' ').trim();}).filter(Boolean);
+      var numbered=texts.concat(own).filter(function(t){return numberedPattern.test(t);});
+      var labels=Array.from(new Set(numbered.map(function(t){return articleFigureLabel(t,0);}).filter(Boolean)));
+      if(labels.length!==1)return null;
+      return {block:block,label:labels[0],caption:(numbered[0]||texts[0]||own).slice(0,600),official:false};
+    }
+    // First preserve the publisher's own isolated figure block when it supplies a number.
+    var block=original&&original.block||node.closest('.image_table,.image-table,.img-tbl,.article-figure,.figure,.fig,figure,[role="figure"],[class*="figure-container" i]');
+    var direct=isolatedCaption(block);
+    if(direct)return direct;
+    // RSC/Silverchair layouts can put a numbered caption beside, rather than
+    // inside, an image wrapper. Only borrow that caption from a nearby ancestor
+    // that contains exactly one image, never a multi-figure section or article.
+    var parent=node.parentElement;
+    for(var depth=0;parent&&depth<5;depth++,parent=parent.parentElement){
+      if(parent.matches&&parent.matches('main,article,body,[role="main"]'))break;
+      if(parent.closest&&parent.closest('[class*="graphical-abstract" i],[class*="visual-abstract" i]'))break;
+      if(parent.querySelectorAll('img,object[type^="image"]').length!==1)break;
+      var associated=isolatedCaption(parent);
+      if(associated)return associated;
+    }
+    return original||null;
   }
 
   function rscGraphicalAbstractCandidates(job, root, baseUrl) {
