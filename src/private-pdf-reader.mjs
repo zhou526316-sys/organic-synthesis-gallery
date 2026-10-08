@@ -516,8 +516,8 @@ async function start() {
     }
     // Small documents are more reliable with one full fetch. Large PDFs
     // must NOT block the first page on a complete China-to-Cloudflare transfer.
-    const rangeMode = compatibilityMode ||
-      (!forceFull && declaredPdfBytes > ADAPTIVE_RANGE_THRESHOLD_BYTES);
+    const rangeMode = declaredPdfBytes > 0 && (compatibilityMode ||
+      (!forceFull && declaredPdfBytes > ADAPTIVE_RANGE_THRESHOLD_BYTES));
     const buffered = !rangeMode;
     fullOpen.hidden = !rangeMode;
     compatibility.hidden = rangeMode || downloadOnOpen;

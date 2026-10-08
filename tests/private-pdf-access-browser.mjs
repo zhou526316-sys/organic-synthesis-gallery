@@ -191,7 +191,8 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    const source=new URL(openResult.url);
    if(mode==='download')source.searchParams.set('download','1');
    else source.searchParams.delete('download');
-   return reply({...openResult,mode,url:source.toString(),byteLength:filePdf.length});
+   return reply({...openResult,mode,url:source.toString(),
+     ...(options.omitByteLength?{}:{byteLength:filePdf.length})});
   }
   if(url.pathname.startsWith('/api/user-ui/private-pdf/')){state.privateCalls++;return reply(openResult);}
   if(url.pathname==='/api/user-ui/integrations')return reply({auth:{local:true,google:false,wechat:false,qq:false,email:false},payments:{wechat:false,alipay:false}});
@@ -332,6 +333,18 @@ try{
   assert.match(await target.locator('#full-open').getAttribute('href'),/full=1/);
   await target.locator('#next').click();
   await target.waitForFunction(()=>document.querySelector('#pdf-canvas')?.dataset.renderedPage==='2',undefined,{timeout:15000});
+ });
+ await test('older Worker without byteLength preserves readable single-transfer fallback',async()=>{
+  const original={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=old-worker'};
+  const {context,state}=await contextWith(['private_pdf_read'],original,{omitByteLength:true});
+  const page=await gallery(context,true);
+  const viewer=new URL(await page.locator('.card a.private-pdf-button').first().getAttribute('href'),base);
+  viewer.searchParams.set('compat','1');
+  const target=await context.newPage();
+  await target.goto(viewer.toString(),{waitUntil:'domcontentloaded'});
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:12000});
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-mode'),'single-transfer');
+  assert.equal(state.privateFullFileCalls,1);
  });
  await test('explicit browser-native mode remains available for large or unusual PDFs',async()=>{
   const {context,state}=await contextWith(['private_pdf_read']);
