@@ -711,7 +711,7 @@ test('mobile title entry stays in Gallery and opens the summary before publisher
 });
 
 
-test('mobile TOC hydrates the first visible cards before the rest of the near-screen batch', async ({ page }) => {
+test('mobile TOC hydrates a small near-screen batch with first visible cards prioritized', async ({ page }) => {
   test.setTimeout(60_000);
   await page.setViewportSize({ width: 390, height: 844 });
   const batchSizes: number[] = [];
