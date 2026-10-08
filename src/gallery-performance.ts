@@ -47,15 +47,6 @@ function installPerformanceStyles(): void {
       content-visibility: auto;
       contain-intrinsic-size: auto 500px;
     }
-    /* #42: offscreen-card paint containment must not clip an OPEN management
-       menu. Release containment for this card only; keep all other cards lazy. */
-    .gallery .card.user-action-open {
-      content-visibility: visible !important;
-      contain: none !important;
-      overflow: visible !important;
-      position: relative;
-      z-index: 40;
-    }
     .gallery .figure-strip-slot {
       content-visibility: auto;
       contain-intrinsic-size: auto 100px;
