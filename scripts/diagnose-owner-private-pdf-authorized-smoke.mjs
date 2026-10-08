@@ -77,7 +77,7 @@ if(process.argv[2]==='--cleanup') {
       throw new Error('signed_file_url_invalid');
     }
     const response=await fetch(signedUrl, {
-      method:'GET',headers:full?{}:{range:'bytes=0-15'},
+      method:'GET',headers:full?{origin}:{origin,range:'bytes=0-15'},
       redirect:'error',cache:'no-store',signal:AbortSignal.timeout(25000),
     });
     const responseMs=elapsed(begin);
@@ -143,7 +143,7 @@ if(process.argv[2]==='--cleanup') {
     mark('canonical_full_download',{http:200,totalMs:full.totalMs,
       networkMs:full.networkMs,bytes:full.bytes.length});
     const {rows}=sql('SELECT byte_length,content_hash FROM private_pdf_documents WHERE doi='+
-      quote(doi)+" AND active=1 AND processing_state='ready' ORDER BY captured_at DESC LIMIT 1;",
+      quote(doi)+" AND active=1 AND processing_state='ready' ORDER BY CASE version_kind WHEN 'version_of_record' THEN 4 WHEN 'accepted_manuscript' THEN 3 WHEN 'preprint' THEN 2 ELSE 1 END DESC, captured_at DESC LIMIT 1;",
       'metadata_compare');
     const expected=rows[0]||null;
     if(!expected || Number(expected.byte_length)!==full.bytes.length ||
