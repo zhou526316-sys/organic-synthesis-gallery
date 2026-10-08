@@ -43,9 +43,21 @@ export function tmUniqueReportHistory(item, limit = 1000) {
     const old = byKey.get(key);
     if (!old || Number(row.updatedAt || 0) > Number(old.updatedAt || 0)) byKey.set(key, row);
   }
-  return [...byKey.values()]
-    .sort((a,b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0))
-    .slice(0, Math.max(1, Number(limit) || 1));
+  const ordered = [...byKey.values()]
+    .sort((a,b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
+  const cap = Math.max(1, Number(limit) || 1);
+  const recent = ordered.slice(0, cap);
+  // Preserve up to two immutable terminal reports even if many later distinct
+  // checkpoints from the same job arrive. Without this, a 12-entry history
+  // silently evicts final and makes an older progress snapshot authoritative.
+  const pinned = ordered.filter(row => row.final === true)
+    .slice(0, Math.min(2, Math.floor(cap / 6)));
+  for (const final of pinned) {
+    if (recent.some(row => row.reportKey === final.reportKey)) continue;
+    const replaceAt = recent.findLastIndex(row => row.final !== true);
+    if (replaceAt >= 0) recent[replaceAt] = final;
+  }
+  return recent.sort((a,b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
 }
 
 export function tmEffectiveReport(item) {
