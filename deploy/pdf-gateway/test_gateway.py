@@ -58,7 +58,7 @@ class Backend:
             else:
                 typ = "application/pdf"
                 reply = PDF
-                if headers.get("range") == "bytes=0-15":
+                if (headers.get("range") or headers.get("Range")) == "bytes=0-15":
                     status, reply = 206, PDF[:16]
                     extra["content-range"] = "bytes 0-15/" + str(len(PDF))
                 extra.update({"accept-ranges": "bytes",
