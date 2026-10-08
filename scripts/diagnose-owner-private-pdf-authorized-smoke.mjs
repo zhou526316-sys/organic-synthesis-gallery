@@ -7,7 +7,9 @@
 import { spawnSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
-const doi = '10.1021/acs.orglett.6c03725';
+const doi = String(process.env.PDF_TEST_DOI||'10.1021/acs.orglett.6c03725').trim().toLowerCase();
+if(!/^10\.\d{4,9}\/\S+$/.test(doi)||doi.length>300)throw Error('test_doi_invalid');
+const expectedMissing=process.env.PDF_EXPECT_MISSING==='1';
 const db = 'organic-synthesis-gallery';
 const workerCwd = 'cloudflare/worker';
 const wrangler = workerCwd + '/node_modules/.bin/wrangler';
@@ -191,6 +193,18 @@ if(process.argv[2]==='--cleanup') {
     inserted=true;
     mark('synthetic_setup',{ok:true,ttlSeconds:120});
 
+    if(expectedMissing){
+      const since=performance.now();
+      const response=await fetch(urls[0]+'/api/user-ui/private-pdf/open?doi='+encodeURIComponent(doi)+'&mode=view',{
+        method:'POST',headers:{origin,authorization:'Bearer '+ownerToken},
+        cache:'no-store',redirect:'error',signal:AbortSignal.timeout(16000),
+      });
+      const body=await response.json();
+      if(response.status!==200||body.available!==false||body.url)
+        throw Error('expected_absent_pdf_not_confirmed');
+      mark('expected_missing_pdf_not_stored',{http:200,available:false,networkMs:elapsed(since),
+        reason:String(body.reason||'unavailable').replace(/[^a-z0-9_]/gi,'').slice(0,60)});
+    }else{
     const sources=[];
     for(let i=0;i<urls.length;i++){
       const label=i?'alternate':'canonical';
@@ -220,6 +234,7 @@ if(process.argv[2]==='--cleanup') {
       await pg.getTextContent();
       mark('pdfjs_first_page',{ok:true,pageCount:document.numPages,parseMs:elapsed(started)});
     } finally {try {await task?.destroy()} catch {}}
+    } // end expected-ready read and browser test
   } catch(err) {
     report.failure=String(err?.message||'unknown').replace(/[^a-z0-9_]/gi,'_').slice(0,120);
     process.exitCode=1;
@@ -228,7 +243,7 @@ if(process.argv[2]==='--cleanup') {
     try { cleanup(); }
     catch { report.cleanupVerified=false;process.exitCode=1; }
     report.ok=!report.failure&&report.cleanupVerified&&report.tests.length >=
-      (process.env.RUN_GALLERY_BROWSER==='1'?8:6);
+      (expectedMissing?2:(process.env.RUN_GALLERY_BROWSER==='1'?8:6));
     if(!report.ok)process.exitCode=1;
     console.log('PRIVATE_PDF_AUTHORIZED_RESULT '+JSON.stringify(report));
   }
