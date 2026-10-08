@@ -4653,7 +4653,9 @@ function embeddedJobDois(value) {
     // Acquisition and publication are separate layers. A local/R2 official receipt
     // must not hide a production TOC gap; reopening it lets /local-capture/import
     // perform the mandatory production promotion and replace an old fallback.
-    var tocKnown=Boolean(media)||localOfficial||localFigureOne||Boolean(inventory.tocsKnown);
+    // Only a current production media record proves whether the card visual is
+    // absent. A complete local-capture list cannot substitute for a failed D1 read.
+    var tocKnown=Boolean(media);
     var figureKnown=expected>0||Boolean(media&&inventory.figuresKnown);
     var inspectFigures=Boolean(figureKnown&&expected===0&&knownCount>0);
     // A nonzero figure count alone is NOT proof that all body figures were captured.
