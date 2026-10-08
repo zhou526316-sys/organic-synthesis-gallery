@@ -61,7 +61,7 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.70' public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.71' public/gallery-vpn-bridge.user.js
           grep -F "var VERSION = '6.2.20';" public/gallery-vpn-bridge.user.js
           grep -F "var CONTROLLER_REVISION = '2.2.41';" public/gallery-vpn-bridge.user.js
           grep -F 'controllerFailureDisposition' public/gallery-vpn-bridge.user.js
