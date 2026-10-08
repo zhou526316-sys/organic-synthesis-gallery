@@ -59,7 +59,10 @@ export async function validateLocalPdf(file, { assertCurrent = () => true, signa
     if (!file || typeof file.arrayBuffer !== 'function' || file.size < 8) throw pdfError('invalid_pdf');
     const data = new Uint8Array(await file.arrayBuffer());
     check();
-    task = getDocument(options(data));
+    // PDF.js can transfer ownership of its input to the worker. Give it a
+    // separate copy so the validated original remains available to the local
+    // write/hash stage; it is never uploaded or retained in a manifest.
+    task = getDocument(options(data.slice()));
     const pdf = await task.promise;
     check();
     if (!Number.isSafeInteger(pdf.numPages) || pdf.numPages < 1) throw pdfError('invalid_pdf');
@@ -67,7 +70,7 @@ export async function validateLocalPdf(file, { assertCurrent = () => true, signa
     check();
     const viewport = page.getViewport({ scale: 1 });
     if (!(viewport.width > 0 && viewport.height > 0 && Number.isFinite(viewport.width) && Number.isFinite(viewport.height))) throw pdfError('invalid_pdf');
-    return { pageCount: pdf.numPages };
+    return { pageCount: pdf.numPages, bytes: data };
   } catch (error) {
     check();
     if (error?.name === 'PasswordException') throw pdfError('pdf_password');

@@ -397,6 +397,44 @@ try {
     await assertRendered(page);
     assert.equal(await copyRows(page).count(), 1);
   });
+  await test('import parses the original file once and independently rechecks the saved bytes', async () => {
+    const { context } = await trackedContext();
+    const page = await pageFor(context);
+    await page.evaluate(() => {
+      const original = File.prototype.arrayBuffer;
+      window.__importFileReads = 0;
+      File.prototype.arrayBuffer = function (...args) {
+        window.__importFileReads += 1;
+        return original.apply(this, args);
+      };
+    });
+    await selectDestination(page);
+    await importFile(page);
+    await waitStatus(page, 'success');
+    assert.equal(await page.evaluate(() => window.__importFileReads), 2,
+      'one read for parser and hash, one independent saved-file readback');
+    assert.equal((await localCopies(page)).length, 1);
+    await openFirst(page);
+    await assertRendered(page);
+  });
+  await test('same-token notification preserves reading and manual refresh preserves the library', async () => {
+    const { context } = await trackedContext();
+    const page = await pageFor(context);
+    await importGood(page);
+    await openFirst(page);
+    // The reader is a modal dialog. A pointer cannot reach account controls
+    // behind it, but an auth notification can still arrive asynchronously.
+    await page.evaluate(() => window.dispatchEvent(new Event('gallery-auth-session-changed')));
+    await page.waitForTimeout(200);
+    assert.equal(await by(page, 'reader').isVisible(), true);
+    await assertRendered(page);
+    await by(page, 'reader-close').click();
+    await by(page, 'session-refresh').click();
+    await page.waitForFunction(() => !document.querySelector('[data-testid="pdf-vault-session-refresh"]')?.disabled);
+    assert.equal(await copyRows(page).count(), 1);
+    await openFirst(page);
+    await assertRendered(page);
+  });
   await test('directory adapter persists a real file handle and reopens it', async () => {
     const { context } = await trackedContext(); const page = await pageFor(context); await importGood(page, { destination: 'directory' });
     assert.equal(await page.evaluate(() => window.__pdfVaultFixture.pickerCalls), 1);

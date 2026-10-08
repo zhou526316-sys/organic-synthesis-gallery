@@ -15,14 +15,16 @@ function setLabel(anchor, state, zh, en, titleZh, titleEn) {
   anchor.textContent = text; anchor.dataset.pdfVaultState = state;
   // A verified this-device copy should open from the literature card in one
   // action. Unknown/missing copies still go to the management/import page.
-  const target = new URL(anchor.getAttribute('href') || '/pdf-vault/', location.origin);
-  if (target.origin === location.origin && target.pathname === '/pdf-vault/') {
-    if (state === 'local') target.searchParams.set('open', '1');
-    else target.searchParams.delete('open');
-    anchor.setAttribute('href', target.pathname + target.search + target.hash);
-  }
+  setQuickOpen(anchor, state === 'local');
   anchor.title = language === 'zh' ? titleZh : titleEn;
   anchor.setAttribute('aria-label', `${text}: ${anchor.closest('.card')?.querySelector('.title')?.textContent || ''}`);
+}
+function setQuickOpen(anchor, enabled) {
+  const target = new URL(anchor.getAttribute('href') || '/pdf-vault/', location.origin);
+  if (target.origin !== location.origin || target.pathname !== '/pdf-vault/') return;
+  if (enabled) target.searchParams.set('open', '1');
+  else target.searchParams.delete('open');
+  anchor.setAttribute('href', target.pathname + target.search + target.hash);
 }
 function resetLabels() {
   for (const anchor of anchors()) setLabel(anchor, 'none', '本地 PDF', 'Local PDF', '打开本地 PDF 文献库', 'Open your local PDF library');
@@ -78,7 +80,14 @@ function present(context, snapshot) {
       setLabel(anchor, 'local', 'PDF · 本机', 'PDF · This device', '最近已检查本机文件；打开时会再次核对', 'Recently checked on this device; opening verifies it again');
       for (const probe of probes) if (probe.status === 'readable' && probe.checked_at + PDF_PROBE_MAX_AGE_MS + 1 > now) expirations.push(probe.checked_at + PDF_PROBE_MAX_AGE_MS + 1);
     } else if (copies.length) {
-      setLabel(anchor, 'check', 'PDF · 待检查', 'PDF · Check copy', '此设备有保存记录，请打开文献库检查文件或恢复权限', 'A local record exists; check the file or restore its permission');
+      setLabel(anchor, 'check', 'PDF · 待检查', 'PDF · Check copy', '点击后核对并尝试打开本机文件；权限失效时可在文献库恢复', 'Check and try to open the file; restore permission in the library if needed');
+      // Expired positive receipts must not prevent one-click reopening. This
+      // is only a navigation hint; the vault rechecks all file bytes and
+      // permissions before it creates a reader. Respect recent negative proof.
+      const freshDenied = probes.some(probe => ['missing', 'permission_required', 'unavailable'].includes(probe.status)
+        && Number.isSafeInteger(probe.checked_at) && probe.checked_at <= now
+        && now - probe.checked_at <= PDF_PROBE_MAX_AGE_MS);
+      if (!freshDenied && copies.some(copy => copy.state === 'available')) setQuickOpen(anchor, true);
     } else if (context.queueItems.get(doi)?.state === 'pending' && now - (context.queueChecked.get(doi) || 0) <= 30_000) {
       setLabel(anchor, 'queue', 'PDF · 待电脑', 'PDF · Queued', '已加入此账号的待电脑获取队列', 'In this account’s desktop acquisition queue');
       expirations.push(context.queueChecked.get(doi) + 30_001);

@@ -339,7 +339,7 @@ async function readSession(token, controller) {
 }
 
 // Revalidate the *same* session without destroying an open local document.
- // Token changes and explicit logout still use verifySession's immediate
+// Token changes and explicit logout still use verifySession's immediate
  // revocation path. Temporary network outages are not evidence of logout.
 async function revalidateCurrentSession() {
   const context = active;
@@ -354,7 +354,7 @@ async function revalidateCurrentSession() {
     const user = await readSession(context.token, controller);
     if (!current(context) || stamp !== generation) return;
     if (!user || user.id !== context.user.id) {
-      void verifySession();
+      void verifySession({ force: true });
       return;
     }
     context.user = user;
@@ -374,8 +374,13 @@ async function revalidateCurrentSession() {
   }
 }
 
-async function verifySession() {
+async function verifySession({ force = false } = {}) {
   const token = sessionToken();
+  // Preserve a live reader for a same-token session refresh. Token changes
+  // and explicit negative server results still revoke the old controller.
+  if (!force && token && token === observedToken && active && current(active)) {
+    return revalidateCurrentSession();
+  }
   observedToken = token;
   revokeCurrent();
   const checkGeneration = generation;
@@ -482,9 +487,9 @@ $('#import-form').addEventListener('submit', event => {
     if (file.size > context.capabilities.maxBytes) throw new LocalPdfVaultError('pdf_too_large');
     const module = await import('./reader.mjs');
     requireCurrent(context);
-    await module.validateLocalPdf(file, { assertCurrent: () => requireCurrent(context), signal: context.abortController.signal });
+    const validated = await module.validateLocalPdf(file, { assertCurrent: () => requireCurrent(context), signal: context.abortController.signal });
     requireCurrent(context);
-    await context.vault.importPdf({ doi, file, versionKind });
+    await context.vault.importPdf({ doi, file, versionKind, validatedBytes: validated.bytes });
     requireCurrent(context);
     fileInput.value = '';
     doiInput.value = doi;
