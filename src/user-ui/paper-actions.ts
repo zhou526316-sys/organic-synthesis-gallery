@@ -167,8 +167,8 @@ export class GalleryPaperActions extends HTMLElement {
     const gap = 6;
     const cap = viewportWidth <= 680 ? 520 : 560;
 
-    // Measure the unconstrained drawer, then fit it to the *visible* viewport.
-    // In particular, do not give the lower side priority just because it has 220px.
+    // Recalculate constraints from the *visible* viewport, not the page layout.
+    // Do not give the lower side priority merely because it has 220px left.
     drawer.style.left = '0px';
     drawer.style.top = '0px';
     drawer.style.maxHeight = 'none';
@@ -176,7 +176,6 @@ export class GalleryPaperActions extends HTMLElement {
 
     const anchorRect = anchor.getBoundingClientRect();
     const hostRect = this.getBoundingClientRect();
-    const initialRect = drawer.getBoundingClientRect();
     const leftEdge = viewportLeft + margin;
     const rightEdge = viewportLeft + viewportWidth - margin;
     const bottomEdge = viewportTop + viewportHeight - margin;
