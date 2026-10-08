@@ -5,6 +5,7 @@ import './pdf-vault/card-entry.css';
 import { mountUserShell } from './user-shell';
 import { beijingDate, earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
+import { compareDailyGalleryCards } from '../shared/daily-gallery-order.mjs';
 import { RESULT_WINDOW_SIZE as DESKTOP_RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE, resultPaginationItems, resultWindowState } from '../shared/result-window.js';
 import { store } from './user-ui/shared';
 import { PublishedCatalogClient, loadPublishedHotFallback } from '../architecture/published-reader.mjs';
@@ -640,7 +641,11 @@ function filteredPapers(): Paper[] {
         if (!aKnown && !bKnown) return sortableDate(b).localeCompare(sortableDate(a));
         return Number(bRaw) - Number(aRaw) || sortableDate(b).localeCompare(sortableDate(a));
       }
-      return sortableDate(b).localeCompare(sortableDate(a));
+      // In the default newest view, group by the actual Gallery admission
+      // date, then show Nature/Science, their sister journals, JACS/Angew/Chem,
+      // ACS Catalysis, and the remaining journals. Publication dates displayed
+      // on cards remain untouched.
+      return compareDailyGalleryCards(a, b);
     });
 
   if (activeEdition?.dois.length) {
