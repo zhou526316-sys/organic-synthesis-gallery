@@ -228,7 +228,7 @@
       return at >= runStartedAt ? Math.max(latest, at) : latest;
     }, 0);
     return {
-      coverageRevision:summary.queueCoverageRevision||'',scopeRevision:summary.scopeRevision||'',scopeCount:Number(summary.scopeCount||0),ownerPdfInventory:summary.ownerPdfInventory||{},fullyResolved:Number(summary.fullyResolved||0),unresolvedCount:Number(summary.unresolvedCount||0),blockedCount:Number(summary.blockedCount||0),deferredCount:Number(summary.deferredCount||0),deferredNextAt:Number(summary.deferredNextAt||0),deferredPreview:summary.deferredPreview||[],attemptCount:Number(summary.attemptCount||0),blockedPreview:summary.blockedPreview||[],
+      coverageRevision:summary.queueCoverageRevision||'',scopeRevision:summary.scopeRevision||'',scopeCount:Number(summary.scopeCount||0),ownerPdfInventory:summary.ownerPdfInventory||{},ownerPdfInventoryState:String(summary.ownerPdfInventoryState||'checking'),fullyResolved:Number(summary.fullyResolved||0),unresolvedCount:Number(summary.unresolvedCount||0),blockedCount:Number(summary.blockedCount||0),deferredCount:Number(summary.deferredCount||0),deferredNextAt:Number(summary.deferredNextAt||0),deferredPreview:summary.deferredPreview||[],attemptCount:Number(summary.attemptCount||0),blockedPreview:summary.blockedPreview||[],
       phase:summary.phase||'',missingOnly:summary.mode==='missing_only',need:active?captureNeedText(active):'—',activeJob:active,
       pendingMissing:Number(summary.pendingMissing||0),remainingNeeds:summary.remainingNeeds||{},inventoryUnknown:Number(summary.inventoryUnknown||0),inventoryErrors:summary.inventoryErrors||[],pendingPreview:summary.pendingPreview||[],
       inventoryProgress:summary.inventoryProgress||{},inventoryWarmStart:Boolean(summary.inventoryWarmStart),inventoryFreshPending:Boolean(summary.inventoryFreshPending),
@@ -282,6 +282,13 @@
       ? (pdfNames[r.pdfStatus] || r.pdfStage || r.pdfStatus) + (r.pdfBytes ? ' · ' + Math.round(r.pdfBytes / 1024) + ' KB' : '') + (r.pdfError ? ' · ' + r.pdfError : '')
       : s.activeJob.capturePrivatePdf ? '等待开始' : '本篇无需抓取 PDF';
     var lastError = r ? r.lastError : s.lastResult && s.lastResult.status !== 'success' ? captureLiveError(s.lastResult.reason) : '';
+    var pdfInventoryNotice=({
+      verified:'云端库存已核验（只对确实缺失的 PDF 派发下载）',
+      owner_lease_missing:'本浏览器尚未取得 owner PDF 捕获授权；请在私有 PDF owner 页面授权本浏览器（7 天），未知不等于缺失',
+      owner_lease_expired:'本浏览器的 owner PDF 捕获授权已失效；请重新授权，已有 PDF 不会删除',
+      read_failed:'云端 PDF 库存请求失败或不完整；禁止将未知视为缺失、禁止盲目重抓',
+      checking:'云端 PDF 库存尚未核验'
+    })[s.ownerPdfInventoryState]||'云端 PDF 库存尚未核验';
     return {
       state: phaseNames[s.state] || ('已停止：' + captureLiveError(s.state)),
       needs:s.need||'—',
@@ -290,7 +297,7 @@
       gaps:s.scopeRevision!==OCT1_SCOPE_QUEUE_REVISION&&s.coverageRevision?'旧版全量统计已停用；请重新按 10 月 1 日起生成缺项队列。':/^(?:starting|inventory_refresh)$/.test(s.phase||'')&&s.total===0?'仅处理 10 月 1 日之后收录文献；正在核对库存…':s.coverageRevision&&s.phase!=='starting'?'10.1起 '+s.scopeCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇（待执行 '+Math.max(0,s.pendingMissing-s.deferredCount)+'／冷却等待 '+s.deferredCount+'／访问受阻 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／确实缺PDF '+Number(s.remainingNeeds.pdf||0)+'；PDF云端 已齐 '+Number(s.ownerPdfInventory.ready||0)+'／待验证 '+(Number(s.ownerPdfInventory.pending||0)+Number(s.ownerPdfInventory.failed||0))+'／未知 '+Number(s.ownerPdfInventory.unknown||0):s.missingOnly?(s.phase==='starting'?'正在核对10.1以后文献…':'仅10.1以后 '+s.scopeCount+' 篇 · 待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)):'—',
       blocked:(s.deferredPreview||[]).map(function(r){return r.doi+' · '+r.need+' · '+String(r.publisher||'')+' 冷却至 '+new Date(r.until).toLocaleTimeString()+'（尚未访问）';})
         .concat((s.blockedPreview||[]).map(function(r){return r.doi+' · '+r.need+' · 已访问受阻 · '+r.reason;})).join('\n'),
-      inventory:inventoryProgressText(s.inventoryProgress,s.inventoryWarmStart,s.inventoryFreshPending)+(s.inventoryUnknown?'；另有 '+s.inventoryUnknown+' 篇存在未确认项，不冒充已齐全或全部缺失':'')+(s.inventoryErrors.length?'；'+s.inventoryErrors.join('；'):''),
+      inventory:inventoryProgressText(s.inventoryProgress,s.inventoryWarmStart,s.inventoryFreshPending)+'；PDF核对：'+pdfInventoryNotice+(s.inventoryUnknown?'；另有 '+s.inventoryUnknown+' 篇存在未确认项，不冒充已齐全或全部缺失':'')+(s.inventoryErrors.length?'；'+s.inventoryErrors.join('；'):''),
       queue:(s.pendingPreview||[]).map(function(j){return j.addedDate+' · '+j.journal+' · '+j.need+'\n'+j.doi;}).join('\n\n'),
       doi: s.doi || '当前没有任务页', journal: s.journal,
       label: r && r.label || '—', toc: toc, pdf: pdf,
@@ -4532,9 +4539,13 @@ function embeddedJobDois(value) {
   async function readOwnerPdfInventory(articles,run) {
     var eligible=(articles||[]).filter(recentFullCaptureEligible),started=Date.now();
     var dois=eligible.map(function(x){return normalizeDoi(x.doi);}).filter(Boolean);
-    var lease=privatePdfLease();
+    var priorLease=GM_getValue(PRIVATE_PDF_LEASE_KEY,null),lease=privatePdfLease();
     if(!dois.length){updateInventoryProgress(run,'pdf','done',started,'scope_empty');return {schemaVersion:'private-pdf-capture-inventory-v1',complete:true,count:0,items:[],unknown:0};}
-    if(!lease){updateInventoryProgress(run,'pdf','error',started,'owner_lease_missing');return {complete:false,items:[],unknown:dois.length,reason:'owner_lease_missing'};}
+    if(!lease){
+      var reason=priorLease?'owner_lease_expired':'owner_lease_missing';
+      updateInventoryProgress(run,'pdf','error',started,reason);
+      return {complete:false,items:[],unknown:dois.length,reason:reason};
+    }
     updateInventoryProgress(run,'pdf','loading',started,'read_only;scope='+dois.length);
     var batches=[];for(var i=0;i<dois.length;i+=75)batches.push(dois.slice(i,i+75));
     var all=await Promise.all(batches.map(async function(batch){
@@ -4630,7 +4641,7 @@ function embeddedJobDois(value) {
         function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count)&&x.truncated!==true;},'evidence',2),
       readOwnerPdfInventory(queue.articles,run)
     ]);
-    if(!all[4].complete&&all[4].reason&&all[4].reason!=='owner_lease_missing')errors.push(all[4].reason);
+    if(!all[4].complete&&all[4].reason&&!/^owner_lease_/.test(all[4].reason))errors.push(all[4].reason);
     return {media:all[0],tocs:all[1],figures:all[2],evidence:all[3],pdf:all[4],errors:errors,readAt:nowIso()};
   }
   function missingCaptureDecision(raw,inventory) {
@@ -4718,6 +4729,8 @@ function embeddedJobDois(value) {
       var statuses=rows.reduce(function(stats,row){var status=privatePdfServerStatus(inventory.pdfMap,row.doi);stats[status]++;return stats;},
         {ready:0,pending:0,failed:0,missing:0,unknown:0});
       run.summary.scopeCount=rows.length;run.summary.ownerPdfInventory=statuses;
+      run.summary.ownerPdfInventoryState=inv.pdf&&inv.pdf.complete===true?'verified'
+        :/^owner_lease_/.test(String(inv.pdf&&inv.pdf.reason||''))?String(inv.pdf.reason):'read_failed';
       run.summary.inventoryUnknown=unknownDois;run.summary.inventoryUnknownLayers=unknownLayers;
       run.summary.inventoryErrors=(inv.errors||[]).slice();run.summary.inventoryReadAt=inv.readAt||'';
     }
@@ -5191,6 +5204,7 @@ function embeddedJobDois(value) {
       var available=availableJobs(),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
       summary={controllerRunId:CONTROLLER_ID+':'+Date.now(),scopeRevision:OCT1_SCOPE_QUEUE_REVISION,scopeCount:scopedArticles.length,
         ownerPdfInventory:scopedArticles.reduce(function(stats,item){stats[privatePdfServerStatus(ownerPdfMap,item.doi)]++;return stats;},{ready:0,pending:0,failed:0,missing:0,unknown:0}),
+        ownerPdfInventoryState:pdfInventory.complete===true?'verified':/^owner_lease_/.test(String(pdfInventory.reason||''))?String(pdfInventory.reason):'read_failed',
         lifecycleRevision:CONTROLLER_LIFECYCLE_REVISION,architectureMembershipRevision:ARCHITECTURE_MEMBERSHIP_REVISION,architectureMembership:architectureMembership,version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+pdfJobs.length,evidenceBacklog:0,privatePdfBacklog:pdfJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
       persistControllerSummary(summary,true);
       for (var i=0;i<batch.length;i+=1) {
