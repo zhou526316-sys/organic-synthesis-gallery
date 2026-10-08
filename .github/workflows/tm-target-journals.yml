@@ -39,12 +39,15 @@ jobs:
             public/papers.gz.b64 public/rolling-supplement.json \
             .github/workflows/literature-audit.yml .github/workflows/prepublish-review-gate.yml \
             .github/workflows/new-body-continuous.yml audit/media-auto-policy.json \
-            cloudflare/worker/src/media.js cloudflare/worker/src/local-captures.js
+            cloudflare/worker/src/media.js
 
       - name: Verify source syntax and existing queue/controller protections
         run: |
           set -euo pipefail
           node --check public/toc-mainline.user.js
+          node --check cloudflare/worker/src/local-captures.js
+          node --test tests/tm-report-order-20261008.test.mjs
+          node cloudflare/worker/scripts/test-tampermonkey-report-history.mjs
           node tests/tm-queue-coverage.test.mjs
           node tests/tm-missing-only.test.mjs
           node tests/tm-immediate-restart.test.mjs
