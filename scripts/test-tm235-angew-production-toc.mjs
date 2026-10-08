@@ -37,7 +37,7 @@ test('Wiley gets one post-upgrade retry before legacy overnight retry gates',
     source.indexOf("if (prior && prior.version===VERSION && prior.status==='success')"));
 
 test('paired Wiley capture can recover TOC through authenticated iframe routes',
-  source.includes("var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started,iframeAttempted=false,accessGateStarted=0;") &&
+  source.includes("var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started,iframeAttempted=false,accessGateStarted=0,initialDomLogged=false;") &&
   source.includes("var iframeRows=await iframeCandidates(job,trace);") &&
   source.includes("stage:'paired_toc_fallback'"));
 
