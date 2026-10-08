@@ -36,7 +36,7 @@ preflight(){
  echo "[CHECK] WeChat vhost SHA: $(we_chat_hash)"
  free -h; df -h /
  local a p
- a="$(ip_of "$RELAY")";p="$(ip_of "$HOST")"
+ a="$(ip_of "$RELAY" || true)";p="$(ip_of "$HOST" || true)"
  echo "[CHECK] relay A: $a / pdf A: $p"
  [[ -n "$a" ]] || abort 'relay A missing'
  [[ -z "$p" || "$a" == "$p" ]] ||
