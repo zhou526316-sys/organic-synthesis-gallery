@@ -123,6 +123,7 @@ class Reader(BaseHTTPRequestHandler):
         self.send_header("Vary", "Origin")
 
     def error_response(self, status, code):
+        self.close_connection = True
         body = json.dumps({"error": code}, separators=(",", ":")).encode()
         try:
             self.send_response(status)
@@ -142,6 +143,8 @@ class Reader(BaseHTTPRequestHandler):
             if (not self.path.startswith("/") or uri.fragment or len(self.path) > 4000
                     or uri.path not in ALLOWED and uri.path != "/_pdf_gateway_health"):
                 return self.error_response(404, "not_found")
+            if self.headers.get("Transfer-Encoding"):
+                return self.error_response(400, "chunked_body_not_allowed")
             if self.headers.get("Host", "") not in (
                     PUBLIC_HOST, "127.0.0.1:18867", "localhost:18867"):
                 return self.error_response(421, "host_invalid")
@@ -225,7 +228,7 @@ class Reader(BaseHTTPRequestHandler):
                 if not re.fullmatch(r"\d{1,9}", raw_length):
                     return self.error_response(502, "file_length_invalid")
                 length = int(raw_length)
-                if not reserve_bytes(length):
+                if not reserve_bytes(0 if method == "HEAD" else length):
                     return self.error_response(429, "gateway_transfer_quota_exhausted")
                 self.send_response(response.status)
                 self.common_headers()
@@ -274,8 +277,12 @@ class Reader(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    ThreadingHTTPServer.allow_reuse_address = True
-    server = ThreadingHTTPServer(LISTEN, Reader)
+    class QuietServer(ThreadingHTTPServer):
+        allow_reuse_address = True
+        def handle_error(self, *_):
+            # No traceback lines with signed query strings in systemd logs.
+            pass
+    server = QuietServer(LISTEN, Reader)
     server.daemon_threads = True
     try:
         server.serve_forever(poll_interval=.5)
