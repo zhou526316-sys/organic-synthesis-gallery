@@ -1,0 +1,823 @@
+{
+  "schemaVersion": "pdf-cross-journal-reading-qa-v1",
+  "generatedAt": "2026-10-08T16:39:05.634+08:00",
+  "repository": "zhou526316-sys/organic-synthesis-gallery",
+  "authoritativeInputs": {
+    "journalRegistry": "shared/literature-journals.js",
+    "catalogIndexGeneration": "f6d33a77e3a6abf065db7aec024f2c1fce1537d06aa674e857979b48fa337705",
+    "catalogPublicationSlot": "2026-10-08T08:00:00+08:00",
+    "privatePdfReadyDefinition": "active=1 AND processing_state=ready",
+    "addedDateCutoff": "2026-10-01"
+  },
+  "scope": "One-time isolated GitHub Actions end-to-end synthetic-account checks; main production code unchanged; owner privileges not granted; browser test from GitHub US runner does not verify user domestic Edge/Clash/VPN access.",
+  "run": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37750441368",
+  "inventoryRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37751092400",
+  "stats": {
+    "requestedJournals": 16,
+    "discoveredCatalogRows": 887,
+    "readyStoredDois": 163,
+    "allSampleDois": 47,
+    "readablePassing": 36,
+    "missingStorageNegativeCases": 11,
+    "storedPdfFailures": 0,
+    "medianFirstPageReadyMs": 809,
+    "p90FirstPageReadyMs": 1158,
+    "maxFirstPageReadyMs": 1806,
+    "medianAuthorizationMs": 296,
+    "allCleanupVerified": true,
+    "publishedSinceOct1": 177,
+    "readySinceOct1": 163,
+    "missingSinceOct1": 14
+  },
+  "perJournal": [
+    {
+      "journal": "Nature",
+      "addedSinceOct1": 1,
+      "storedSinceOct1": 1,
+      "missingSinceOct1": 0,
+      "publishedCards": 11,
+      "storedAmongPublished": 1,
+      "attempted": 3,
+      "testedReadable": 1,
+      "testedNotStored": 2,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1038/s41586-026-11108-z",
+          "status": "readable",
+          "addedDate": "2026-10-01",
+          "fileBytes": 1186179,
+          "authMs": 472,
+          "firstPageReadyMs": 993,
+          "pdfjsPages": 9,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1038/s41586-026-11169-0",
+          "status": "not_stored",
+          "addedDate": "2026-09-24",
+          "fileBytes": 0,
+          "authMs": null,
+          "firstPageReadyMs": null,
+          "pdfjsPages": null,
+          "fullyDownloaded": false,
+          "hashVerified": false
+        },
+        {
+          "doi": "10.1038/s41586-026-10897-7",
+          "status": "not_stored",
+          "addedDate": "",
+          "fileBytes": 0,
+          "authMs": null,
+          "firstPageReadyMs": null,
+          "pdfjsPages": null,
+          "fullyDownloaded": false,
+          "hashVerified": false
+        }
+      ],
+      "missingSinceOct1Dois": []
+    },
+    {
+      "journal": "Science",
+      "addedSinceOct1": 2,
+      "storedSinceOct1": 2,
+      "missingSinceOct1": 0,
+      "publishedCards": 7,
+      "storedAmongPublished": 2,
+      "attempted": 3,
+      "testedReadable": 2,
+      "testedNotStored": 1,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1126/science.aef5175",
+          "status": "readable",
+          "addedDate": "2026-10-02",
+          "fileBytes": 3438009,
+          "authMs": 331,
+          "firstPageReadyMs": 948,
+          "pdfjsPages": 7,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1126/science.aeg5583",
+          "status": "readable",
+          "addedDate": "2026-10-02",
+          "fileBytes": 6206079,
+          "authMs": 332,
+          "firstPageReadyMs": 1064,
+          "pdfjsPages": 9,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1126/science.aef3511",
+          "status": "not_stored",
+          "addedDate": "2026-09-25",
+          "fileBytes": 0,
+          "authMs": null,
+          "firstPageReadyMs": null,
+          "pdfjsPages": null,
+          "fullyDownloaded": false,
+          "hashVerified": false
+        }
+      ],
+      "missingSinceOct1Dois": []
+    },
+    {
+      "journal": "Nature Catalysis",
+      "addedSinceOct1": 0,
+      "storedSinceOct1": 0,
+      "missingSinceOct1": 0,
+      "publishedCards": 13,
+      "storedAmongPublished": 0,
+      "attempted": 3,
+      "testedReadable": 0,
+      "testedNotStored": 3,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1038/s41929-026-01616-6",
+          "status": "not_stored",
+          "addedDate": "2026-09-30",
+          "fileBytes": 0,
+          "authMs": null,
+          "firstPageReadyMs": null,
+          "pdfjsPages": null,
+          "fullyDownloaded": false,
+          "hashVerified": false
+        },
+        {
+          "doi": "10.1038/s41929-026-01557-0",
+          "status": "not_stored",
+          "addedDate": "",
+          "fileBytes": 0,
+          "authMs": null,
+          "firstPageReadyMs": null,
+          "pdfjsPages": null,
+          "fullyDownloaded": false,
+          "hashVerified": false
+        },
+        {
+          "doi": "10.1038/s41929-026-01560-5",
+          "status": "not_stored",
+          "addedDate": "",
+          "fileBytes": 0,
+          "authMs": null,
+          "firstPageReadyMs": null,
+          "pdfjsPages": null,
+          "fullyDownloaded": false,
+          "hashVerified": false
+        }
+      ],
+      "missingSinceOct1Dois": []
+    },
+    {
+      "journal": "Nature Synthesis",
+      "addedSinceOct1": 2,
+      "storedSinceOct1": 2,
+      "missingSinceOct1": 0,
+      "publishedCards": 19,
+      "storedAmongPublished": 2,
+      "attempted": 3,
+      "testedReadable": 2,
+      "testedNotStored": 1,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1038/s44160-026-01162-w",
+          "status": "readable",
+          "addedDate": "2026-10-03",
+          "fileBytes": 1841621,
+          "authMs": 388,
+          "firstPageReadyMs": 1095,
+          "pdfjsPages": 13,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1038/s44160-026-01168-4",
+          "status": "readable",
+          "addedDate": "2026-10-02",
+          "fileBytes": 2270691,
+          "authMs": 394,
+          "firstPageReadyMs": 1168,
+          "pdfjsPages": 11,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1038/s44160-026-01161-x",
+          "status": "not_stored",
+          "addedDate": "2026-09-25",
+          "fileBytes": 0,
+          "authMs": null,
+          "firstPageReadyMs": null,
+          "pdfjsPages": null,
+          "fullyDownloaded": false,
+          "hashVerified": false
+        }
+      ],
+      "missingSinceOct1Dois": []
+    },
+    {
+      "journal": "Nature Chemistry",
+      "addedSinceOct1": 2,
+      "storedSinceOct1": 2,
+      "missingSinceOct1": 0,
+      "publishedCards": 15,
+      "storedAmongPublished": 2,
+      "attempted": 3,
+      "testedReadable": 2,
+      "testedNotStored": 1,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1038/s41557-026-02263-x",
+          "status": "readable",
+          "addedDate": "2026-10-08",
+          "fileBytes": 3869548,
+          "authMs": 398,
+          "firstPageReadyMs": 1806,
+          "pdfjsPages": 18,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1038/s41557-026-02237-z",
+          "status": "readable",
+          "addedDate": "2026-10-06",
+          "fileBytes": 1528598,
+          "authMs": 341,
+          "firstPageReadyMs": 781,
+          "pdfjsPages": 10,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1038/s41557-026-02247-x",
+          "status": "not_stored",
+          "addedDate": "2026-09-24",
+          "fileBytes": 0,
+          "authMs": null,
+          "firstPageReadyMs": null,
+          "pdfjsPages": null,
+          "fullyDownloaded": false,
+          "hashVerified": false
+        }
+      ],
+      "missingSinceOct1Dois": []
+    },
+    {
+      "journal": "Nature Communications",
+      "addedSinceOct1": 7,
+      "storedSinceOct1": 7,
+      "missingSinceOct1": 0,
+      "publishedCards": 57,
+      "storedAmongPublished": 7,
+      "attempted": 3,
+      "testedReadable": 3,
+      "testedNotStored": 0,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1038/s41467-026-78459-z",
+          "status": "readable",
+          "addedDate": "2026-10-08",
+          "fileBytes": 1901073,
+          "authMs": 342,
+          "firstPageReadyMs": 847,
+          "pdfjsPages": 9,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1038/s41467-026-77959-2",
+          "status": "readable",
+          "addedDate": "2026-10-06",
+          "fileBytes": 10603879,
+          "authMs": 275,
+          "firstPageReadyMs": 809,
+          "pdfjsPages": 25,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1038/s41467-026-77740-5",
+          "status": "readable",
+          "addedDate": "2026-10-03",
+          "fileBytes": 4322130,
+          "authMs": 313,
+          "firstPageReadyMs": 792,
+          "pdfjsPages": 19,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        }
+      ],
+      "missingSinceOct1Dois": []
+    },
+    {
+      "journal": "JACS",
+      "addedSinceOct1": 16,
+      "storedSinceOct1": 15,
+      "missingSinceOct1": 1,
+      "publishedCards": 152,
+      "storedAmongPublished": 15,
+      "attempted": 3,
+      "testedReadable": 3,
+      "testedNotStored": 0,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1021/jacs.6c11144",
+          "status": "readable",
+          "addedDate": "2026-10-07",
+          "fileBytes": 5775250,
+          "authMs": 356,
+          "firstPageReadyMs": 1158,
+          "pdfjsPages": 9,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1021/jacs.6c17350",
+          "status": "readable",
+          "addedDate": "2026-10-02",
+          "fileBytes": 7061706,
+          "authMs": 332,
+          "firstPageReadyMs": 971,
+          "pdfjsPages": 11,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1021/jacs.6c12059",
+          "status": "readable",
+          "addedDate": "2026-10-02",
+          "fileBytes": 3513433,
+          "authMs": 304,
+          "firstPageReadyMs": 1277,
+          "pdfjsPages": 8,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        }
+      ],
+      "missingSinceOct1Dois": [
+        "10.1021/jacs.6c14748"
+      ]
+    },
+    {
+      "journal": "Angew",
+      "addedSinceOct1": 23,
+      "storedSinceOct1": 23,
+      "missingSinceOct1": 0,
+      "publishedCards": 109,
+      "storedAmongPublished": 23,
+      "attempted": 3,
+      "testedReadable": 3,
+      "testedNotStored": 0,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1002/anie.3699223",
+          "status": "readable",
+          "addedDate": "2026-10-07",
+          "fileBytes": 2037727,
+          "authMs": 354,
+          "firstPageReadyMs": 865,
+          "pdfjsPages": 12,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1002/anie.4613575",
+          "status": "readable",
+          "addedDate": "2026-10-02",
+          "fileBytes": 6952701,
+          "authMs": 286,
+          "firstPageReadyMs": 1119,
+          "pdfjsPages": 14,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1002/anie.1701592",
+          "status": "readable",
+          "addedDate": "2026-10-02",
+          "fileBytes": 1522443,
+          "authMs": 333,
+          "firstPageReadyMs": 746,
+          "pdfjsPages": 8,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        }
+      ],
+      "missingSinceOct1Dois": []
+    },
+    {
+      "journal": "ACS Catalysis",
+      "addedSinceOct1": 16,
+      "storedSinceOct1": 12,
+      "missingSinceOct1": 4,
+      "publishedCards": 67,
+      "storedAmongPublished": 12,
+      "attempted": 3,
+      "testedReadable": 3,
+      "testedNotStored": 0,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1021/acscatal.6c04942",
+          "status": "readable",
+          "addedDate": "2026-10-07",
+          "fileBytes": 3050702,
+          "authMs": 385,
+          "firstPageReadyMs": 1380,
+          "pdfjsPages": 14,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1021/acscatal.6c05520",
+          "status": "readable",
+          "addedDate": "2026-10-02",
+          "fileBytes": 11787626,
+          "authMs": 263,
+          "firstPageReadyMs": 945,
+          "pdfjsPages": 12,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1021/acscatal.6c06078",
+          "status": "readable",
+          "addedDate": "2026-10-01",
+          "fileBytes": 1732817,
+          "authMs": 215,
+          "firstPageReadyMs": 794,
+          "pdfjsPages": 9,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        }
+      ],
+      "missingSinceOct1Dois": [
+        "10.1021/acscatal.6c04987",
+        "10.1021/acscatal.6c05658",
+        "10.1021/acscatal.6c06183",
+        "10.1021/acscatal.6c06279"
+      ]
+    },
+    {
+      "journal": "Organic Letters",
+      "addedSinceOct1": 47,
+      "storedSinceOct1": 43,
+      "missingSinceOct1": 4,
+      "publishedCards": 336,
+      "storedAmongPublished": 43,
+      "attempted": 3,
+      "testedReadable": 3,
+      "testedNotStored": 0,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1021/acs.orglett.6c02255",
+          "status": "readable",
+          "addedDate": "2026-10-08",
+          "fileBytes": 1892733,
+          "authMs": 236,
+          "firstPageReadyMs": 1096,
+          "pdfjsPages": 5,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1021/acs.orglett.6c03748",
+          "status": "readable",
+          "addedDate": "2026-10-04",
+          "fileBytes": 3977110,
+          "authMs": 276,
+          "firstPageReadyMs": 967,
+          "pdfjsPages": 7,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1021/acs.orglett.6c03702",
+          "status": "readable",
+          "addedDate": "2026-10-01",
+          "fileBytes": 1740763,
+          "authMs": 238,
+          "firstPageReadyMs": 692,
+          "pdfjsPages": 6,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        }
+      ],
+      "missingSinceOct1Dois": [
+        "10.1021/acs.orglett.6c03611",
+        "10.1021/acs.orglett.6c03640",
+        "10.1021/acs.orglett.6c03936",
+        "10.1021/acs.orglett.6c03955"
+      ]
+    },
+    {
+      "journal": "Chem",
+      "addedSinceOct1": 2,
+      "storedSinceOct1": 0,
+      "missingSinceOct1": 2,
+      "publishedCards": 2,
+      "storedAmongPublished": 0,
+      "attempted": 2,
+      "testedReadable": 0,
+      "testedNotStored": 2,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1016/j.chempr.2026.103220",
+          "status": "not_stored",
+          "addedDate": "2026-10-05",
+          "fileBytes": 0,
+          "authMs": null,
+          "firstPageReadyMs": null,
+          "pdfjsPages": null,
+          "fullyDownloaded": false,
+          "hashVerified": false
+        },
+        {
+          "doi": "10.1016/j.chempr.2026.103282",
+          "status": "not_stored",
+          "addedDate": "2026-10-02",
+          "fileBytes": 0,
+          "authMs": null,
+          "firstPageReadyMs": null,
+          "pdfjsPages": null,
+          "fullyDownloaded": false,
+          "hashVerified": false
+        }
+      ],
+      "missingSinceOct1Dois": [
+        "10.1016/j.chempr.2026.103220",
+        "10.1016/j.chempr.2026.103282"
+      ]
+    },
+    {
+      "journal": "Chemical Science",
+      "addedSinceOct1": 11,
+      "storedSinceOct1": 10,
+      "missingSinceOct1": 1,
+      "publishedCards": 11,
+      "storedAmongPublished": 10,
+      "attempted": 3,
+      "testedReadable": 3,
+      "testedNotStored": 0,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1039/d6sc05041g",
+          "status": "readable",
+          "addedDate": "2026-10-08",
+          "fileBytes": 1141653,
+          "authMs": 264,
+          "firstPageReadyMs": 623,
+          "pdfjsPages": 11,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1039/d6sc05561c",
+          "status": "readable",
+          "addedDate": "2026-10-07",
+          "fileBytes": 2637253,
+          "authMs": 245,
+          "firstPageReadyMs": 691,
+          "pdfjsPages": 16,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1039/d6sc05973b",
+          "status": "readable",
+          "addedDate": "2026-10-05",
+          "fileBytes": 1162511,
+          "authMs": 296,
+          "firstPageReadyMs": 657,
+          "pdfjsPages": 11,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        }
+      ],
+      "missingSinceOct1Dois": [
+        "10.1039/d6sc03717h"
+      ]
+    },
+    {
+      "journal": "CCS Chemistry",
+      "addedSinceOct1": 9,
+      "storedSinceOct1": 9,
+      "missingSinceOct1": 0,
+      "publishedCards": 10,
+      "storedAmongPublished": 9,
+      "attempted": 3,
+      "testedReadable": 3,
+      "testedNotStored": 0,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.31635/ccschem.026.202607659",
+          "status": "readable",
+          "addedDate": "2026-10-04",
+          "fileBytes": 3576777,
+          "authMs": 263,
+          "firstPageReadyMs": 690,
+          "pdfjsPages": 15,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.31635/ccschem.026.202608407",
+          "status": "readable",
+          "addedDate": "2026-10-04",
+          "fileBytes": 4859006,
+          "authMs": 358,
+          "firstPageReadyMs": 641,
+          "pdfjsPages": 12,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.31635/ccschem.026.202507094",
+          "status": "readable",
+          "addedDate": "2026-10-01",
+          "fileBytes": 2501788,
+          "authMs": 334,
+          "firstPageReadyMs": 673,
+          "pdfjsPages": 15,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        }
+      ],
+      "missingSinceOct1Dois": []
+    },
+    {
+      "journal": "Science Advances",
+      "addedSinceOct1": 2,
+      "storedSinceOct1": 2,
+      "missingSinceOct1": 0,
+      "publishedCards": 3,
+      "storedAmongPublished": 2,
+      "attempted": 3,
+      "testedReadable": 2,
+      "testedNotStored": 1,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1126/sciadv.aed4187",
+          "status": "readable",
+          "addedDate": "2026-10-08",
+          "fileBytes": 2904746,
+          "authMs": 263,
+          "firstPageReadyMs": 681,
+          "pdfjsPages": 9,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1126/sciadv.aej5227",
+          "status": "readable",
+          "addedDate": "2026-10-02",
+          "fileBytes": 2087551,
+          "authMs": 293,
+          "firstPageReadyMs": 712,
+          "pdfjsPages": 11,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1126/sciadv.aeg4594",
+          "status": "not_stored",
+          "addedDate": "2026-09-26",
+          "fileBytes": 0,
+          "authMs": null,
+          "firstPageReadyMs": null,
+          "pdfjsPages": null,
+          "fullyDownloaded": false,
+          "hashVerified": false
+        }
+      ],
+      "missingSinceOct1Dois": []
+    },
+    {
+      "journal": "Green Chemistry",
+      "addedSinceOct1": 8,
+      "storedSinceOct1": 6,
+      "missingSinceOct1": 2,
+      "publishedCards": 8,
+      "storedAmongPublished": 6,
+      "attempted": 3,
+      "testedReadable": 3,
+      "testedNotStored": 0,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1039/d6gc04087j",
+          "status": "readable",
+          "addedDate": "2026-10-07",
+          "fileBytes": 2462403,
+          "authMs": 289,
+          "firstPageReadyMs": 893,
+          "pdfjsPages": 19,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1039/d6gc04471a",
+          "status": "readable",
+          "addedDate": "2026-10-07",
+          "fileBytes": 2908296,
+          "authMs": 228,
+          "firstPageReadyMs": 669,
+          "pdfjsPages": 14,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1039/d6gc03816f",
+          "status": "readable",
+          "addedDate": "2026-10-05",
+          "fileBytes": 1448882,
+          "authMs": 262,
+          "firstPageReadyMs": 758,
+          "pdfjsPages": 6,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        }
+      ],
+      "missingSinceOct1Dois": [
+        "10.1039/d6gc04458a",
+        "10.1039/d6gc05783g"
+      ]
+    },
+    {
+      "journal": "JOC",
+      "addedSinceOct1": 29,
+      "storedSinceOct1": 29,
+      "missingSinceOct1": 0,
+      "publishedCards": 67,
+      "storedAmongPublished": 29,
+      "attempted": 3,
+      "testedReadable": 3,
+      "testedNotStored": 0,
+      "storedTestFailures": 0,
+      "sampleDois": [
+        {
+          "doi": "10.1021/acs.joc.6c01435",
+          "status": "readable",
+          "addedDate": "2026-10-08",
+          "fileBytes": 794363,
+          "authMs": 474,
+          "firstPageReadyMs": 659,
+          "pdfjsPages": 6,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1021/acs.joc.6c01732",
+          "status": "readable",
+          "addedDate": "2026-10-02",
+          "fileBytes": 3684410,
+          "authMs": 223,
+          "firstPageReadyMs": 868,
+          "pdfjsPages": 8,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        },
+        {
+          "doi": "10.1021/acs.joc.6c01127",
+          "status": "readable",
+          "addedDate": "2026-10-01",
+          "fileBytes": 3483583,
+          "authMs": 258,
+          "firstPageReadyMs": 667,
+          "pdfjsPages": 8,
+          "fullyDownloaded": true,
+          "hashVerified": true
+        }
+      ],
+      "missingSinceOct1Dois": []
+    }
+  ],
+  "security": {
+    "allSyntheticAccountsCleaned": true,
+    "rawTokensLogged": false,
+    "rawR2KeysLogged": false,
+    "privateBytesPublished": false
+  },
+  "interpretation": {
+    "confirmed": "Every sampled active+ready PDF in this test opened and rendered first page in GitHub Chromium after full signed download and SHA256 verification.",
+    "notConfirmed": "No measurement of the user's personal Edge/login/proxy/VPN path; successful sampled PDFs do not prove all 163 ready records are readable.",
+    "captureGaps": "The 14 missing DOIs have no active+ready private PDF record since 2026-10-01; do not classify pre-October-1 missing PDFs as new-scope capture failures.",
+    "browserPage2": "These live DOI tests verified rendered first pages and complete PDF bytes, but did not interactively validate page 2."
+  }
+}
