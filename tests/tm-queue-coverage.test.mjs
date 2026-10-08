@@ -16,7 +16,7 @@ function h(q=queue([]),inventory=inv([]),opts={}){
  const ctx=vm.createContext({console,Date:D,URL,Map,Set,document:{},crypto:{randomUUID},location:{hostname:'gallery.gczhouwld.com',pathname:'/',href:'https://gallery.gczhouwld.com/',hash:''},window:{open(){},close(){},alert(){},prompt(){return null}},
  GM_getValue:(k,d)=>store.has(k)?structuredClone(store.get(k)):d,GM_setValue:(k,v)=>store.set(k,structuredClone(v)),GM_deleteValue:k=>store.delete(k),GM_listValues:()=>[...store.keys()],GM_registerMenuCommand(){},
  setTimeout:(f,ms)=>{timers.set(++id,{f,ms});return id},clearTimeout:i=>timers.delete(i),setInterval:(f,ms)=>{timers.set(++id,{f,ms,interval:true});return id},clearInterval:i=>timers.delete(i),
- __get:async u=>opts.get?opts.get(u,get):get(u),__post:async(u,p)=>{calls.push(u);if(opts.post)return opts.post(u,p);return {items:inventory.media.items.filter(x=>p.dois.includes(x.doi))}},__private:async()=>{if(opts.evidenceError)throw Error('private_http_401');return inventory.evidence},__sleep:async ms=>{now+=ms},
+ __get:async u=>opts.get?opts.get(u,get):get(u),__post:async(u,p)=>{calls.push(u);if(opts.post)return opts.post(u,p);return {items:inventory.media.items.filter(x=>p.dois.includes(x.doi))}},__private:async()=>{if(opts.evidenceError)throw Error('private_http_401');return inventory.evidence},__sleep:async ms=>{if(opts.sleep)await opts.sleep(ms,advance=>{now+=advance});else now+=ms},
  GM_openInTab:u=>{const j=store.get(P+'active-job');opened.push(structuredClone(j));if(!opts.noResult)store.set(P+'result:'+j.doi,Object.assign({doi:j.doi,jobId:j.jobId,version:'6.2.20',finishedAt:new D().toISOString(),status:'success',toc:{status:j.captureToc?'stored':'already_available'},privatePdf:j.capturePrivatePdf?{status:'stored'}:null,fulltext:{status:opts.failText?'failed':(j.captureEvidence||j.opportunisticEvidence)?'stored':'not_requested'}},opts.result?opts.result(j,opened.length,store):{}));return {closed:false,close(){this.closed=true}};}
  });
  const cut=source.lastIndexOf('  installManualRestartListener();');
@@ -103,10 +103,77 @@ await test('Retry-After on HTML503 is preserved, not bypassed',async()=>{
  await assert.rejects(x.T.metadataJson({url:'https://api.gczhouwld.com/api/media/inventory'},'inventory'),e=>e.retryAfterMs===30000);assert.equal(n,0);
 });
 await test('private evidence inventory401 does not block the queue',async()=>{
- const ar=[article(1)],x=h(queue(ar),inv(ar),{evidenceError:true});await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(s.inventoryUnknown,0);assert.equal(s.phase,'all_resolved');assert.equal(x.opened.length,0);
+ const ar=[article(1)],x=h(queue(ar),inv(ar),{evidenceError:true});await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(s.inventoryUnknown,0);assert.equal(s.ownerPdfInventoryState,'owner_lease_missing');assert.equal(s.phase,'inventory_partial');assert.equal(x.opened.length,0);
 });
 await test('existing TOC gap opens once and captures the incomplete body figures in that visit',async()=>{
  const ar=[article(1)],i=inv(ar);i.media.items[0].tocStored=false;i.figures.items[0].expectedFigureCount=3;let n=0;
  const x=h(queue(ar),i,{result:j=>{n++;return {status:'success',toc:{status:'stored',kind:'official'},figures:{discovered:3,stored:3,failed:0,items:[{...fig(j.doi,3),status:'staged'}]},fulltext:{status:'not_requested'}}}});await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(n,1);assert.equal(s.total,1);assert.equal(s.fullyResolved,1);assert.equal(s.unresolvedCount,0);
 });
-console.log(JSON.stringify({passed,revision:'20261005-queue-coverage-v7',realPublisherRequests:0,productionWrites:0}));
+
+await test('23 publisher cooldown items remain deferred with zero fabricated visits and retry safely',async()=>{
+ const ar=Array.from({length:23},(_,n)=>article(n)),i=inv(ar);i.media.items.forEach(x=>x.tocStored=false);
+ let release;const barrier=new Promise(resolve=>{release=resolve;});
+ const x=h(queue(ar),i,{sleep:async(ms,advance)=>{await barrier;advance(ms);}});
+ const until=x.ctx.Date.now()+2500;
+ x.store.set(P+'publisher-access-cooldown:acs',{publisher:'acs',doi:ar[0].doi,
+   reason:'publisher_access_gate',at:x.ctx.Date.now(),until});
+ const running=x.T.forceStartFromHead();
+ let snap=null;
+ for(let n=0;n<100;n++){
+   await new Promise(resolve=>setImmediate(resolve));
+   snap=x.store.get(P+'last-run-summary');
+   if(snap&&snap.phase==='cooldown_wait')break;
+ }
+ try{
+   assert.equal(snap.phase,'cooldown_wait');
+   assert.equal(snap.total,23);assert.equal(snap.visitedCount,0);assert.equal(snap.attemptCount,0);
+   assert.equal(snap.blockedCount,0);assert.equal(snap.deferredCount,23);
+   assert.equal(snap.deferredNextAt,until);assert.equal(x.opened.length,0);
+   const text=x.T.captureLiveText(x.T.captureLiveSnapshot(x.ctx.Date.now()));
+   assert.match(text.batch,/实际访问 0／23/);
+   assert.match(text.gaps,/冷却等待 23/);
+   assert.doesNotMatch(text.state,/已遍历全部/);
+ }finally{release();}
+ await running;
+ const final=x.store.get(P+'last-run-summary');
+ assert.equal(x.opened.length,23);assert.equal(final.visitedCount,23);
+ assert.equal(final.attemptCount,23);assert.equal(final.deferredCount,0);
+ assert.equal(final.fullyResolved,23);
+});
+await test('unaffected publisher runs during another publisher cooldown',async()=>{
+ const ar=[article(1),article(2,{doi:'10.1039/d6sc00001a',journal:'Chemical Science',publisher:'rsc'})],i=inv(ar);
+ i.media.items.forEach(x=>x.tocStored=false);
+ const x=h(queue(ar),i);
+ x.store.set(P+'publisher-access-cooldown:acs',{publisher:'acs',reason:'publisher_access_gate',until:x.ctx.Date.now()+3000});
+ await x.T.forceStartFromHead();
+ assert.deepEqual(x.opened.map(j=>j.publisher),['rsc','acs']);
+ assert.equal(x.store.get(P+'last-run-summary').attemptCount,2);
+});
+await test('owner PDF missing, expired, and unreadable inventory remain distinct from missing PDF',async()=>{
+ const ar=[article(7)],i=inv(ar),x=h(queue(ar),i),q=queue(ar);
+ const first=await x.T.readMissingCaptureInventory(q);
+ assert.equal(first.pdf.reason,'owner_lease_missing');
+ const state={id:'fixture',summary:{results:[]}};
+ x.T.buildMissingCaptureJobs(q,state,first);
+ assert.equal(state.summary.ownerPdfInventoryState,'owner_lease_missing');
+ x.store.set(P+'private-pdf-capture-lease-v1',{scope:'private_pdf_capture',token:'placeholder',
+   expiresAt:x.ctx.Date.now()-1000});
+ const expired=await x.T.readMissingCaptureInventory(q);
+ assert.equal(expired.pdf.reason,'owner_lease_expired');
+ const failed=h(q,i,{post:(url,p)=>{
+   if(url.includes('/private-pdf/capture-inventory'))throw Error('inventory_http_503');
+   return {items:i.media.items.filter(v=>p.dois.includes(v.doi))};
+ }});
+ failed.store.set(P+'private-pdf-capture-lease-v1',{scope:'private_pdf_capture',token:'placeholder',
+   expiresAt:failed.ctx.Date.now()+3600000});
+ const unreadable=await failed.T.readMissingCaptureInventory(q);
+ assert.equal(unreadable.pdf.complete,false);
+ assert.match(unreadable.pdf.reason,/503/);
+ const failState={id:'fixture',summary:{results:[]}};
+ failed.T.buildMissingCaptureJobs(q,failState,unreadable);
+ assert.equal(failState.summary.ownerPdfInventoryState,'read_failed');
+ assert.equal(failState.summary.ownerPdfInventory.missing,0);
+ assert.equal(failState.summary.ownerPdfInventory.unknown,1);
+});
+
+console.log(JSON.stringify({passed,revision:'20261008-cooldown-deferred-v1',realPublisherRequests:0,productionWrites:0}));
