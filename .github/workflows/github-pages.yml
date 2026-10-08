@@ -20,6 +20,8 @@ on:
       - 'scripts/test-pages-release-delivery.mjs'
       - 'scripts/build-gallery-architecture-public.mjs'
       - 'scripts/test-gallery-architecture-public.mjs'
+      - 'scripts/test-daily-gallery-order.mjs'
+      - 'shared/daily-gallery-order.mjs'
       - 'architecture/**'
       - 'shared/result-window.js'
       - 'scripts/test-result-window.mjs'
@@ -108,13 +110,13 @@ jobs:
         with:
           node-version: '22'
       - name: Test release delivery regression cases
-        run: node --test scripts/test-pages-release-delivery.mjs scripts/test-gallery-architecture-public.mjs
+        run: node --test scripts/test-pages-release-delivery.mjs scripts/test-gallery-architecture-public.mjs scripts/test-daily-gallery-order.mjs
       - name: Test responsive result pagination and verified reader
         timeout-minutes: 2
         run: |
           test -s scripts/test-result-window.mjs
           test -s architecture/tests/published-reader.test.mjs
-          node --test scripts/test-result-window.mjs architecture/tests/published-reader.test.mjs
+          node --test scripts/test-result-window.mjs scripts/test-daily-gallery-order.mjs architecture/tests/published-reader.test.mjs
       - name: Resolve trusted main deployment snapshot
         id: resolve
         run: node scripts/pages-release-delivery.mjs resolve
