@@ -105,6 +105,9 @@ test('recently admitted undated and future-dated papers appear without changing 
   assert.ok(builder.includes('bundle.partitions.date_unknown'));
   assert.ok(builder.includes('isHotLandingEligible(row, asOfDate)'));
   assert.ok(reader.includes('isHotLandingEligible(row, asOfDate)'));
+  const fullReader = readFileSync('architecture/reader.mjs','utf8');
+  assert.ok(fullReader.includes('isHotLandingEligible(row, asOfDate)'));
+  assert.ok(fullReader.includes("v.month === 'undated'"));
   assert.ok(reader.includes('isHotLandingEligible(bucket, asOfDate)'));
   assert.ok(frontend.includes('发表日期待核实'));
   assert.ok(frontend.includes('dateUnverified: paper.dateUnverified === true'));

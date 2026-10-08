@@ -1,5 +1,6 @@
 import { normalizeDoi } from '../shared/literature-identity.mjs';
 import { cutoffFor, classifyDate } from '../shared/literature-lifecycle.mjs';
+import { isHotLandingEligible } from '../shared/literature-landing.mjs';
 const SCHEMA = 'gallery-shadow-catalog-v1';
 const assert = (ok, message) => { if (!ok) throw new Error(message); };
 async function hash(bytes) {
@@ -71,9 +72,15 @@ export class CatalogReader {
   }
   async hot(asOfDate, signal) {
     const cutoff = cutoffFor(asOfDate), c = await this.open(signal), result = [];
-    for (const ref of c.shards.filter(v => v.month >= cutoff.slice(0, 7) && v.month <= asOfDate.slice(0, 7))) {
+    const cutoffMonth = cutoff.slice(0, 7), currentMonth = asOfDate.slice(0, 7);
+    // The all-time catalog retains date-unknown records in an 'undated' shard.
+    // Recently admitted reviewed papers from that shard (or future issue-dated
+    // shards) must stay visible on the Hot landing without inventing online dates.
+    for (const ref of c.shards.filter(v =>
+      (v.month >= cutoffMonth && v.month <= currentMonth)
+      || v.month === 'undated' || v.month > currentMonth)) {
       const rows = (await this.read(ref, signal)).records;
-      result.push(...rows.filter(r => classifyDate(r.firstOnlineDate, asOfDate, r.datePrecision) === 'hot'));
+      result.push(...rows.filter(row => isHotLandingEligible(row, asOfDate)));
     }
     return structuredClone(result);
   }
