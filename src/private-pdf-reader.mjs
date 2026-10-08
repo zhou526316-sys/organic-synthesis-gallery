@@ -433,7 +433,7 @@ async function getPdfSource(sessionToken, mode = 'view', preferTencent = false) 
           // Never route around an explicit permission denial or a verified
           // absence of a private file. Both endpoints enforce the same policy.
           const explicitDenial = error?.notAvailable ||
-            /^open_http_(401|403)$/.test(error?.message || '') ||
+            /^open_http_(401|403|429)$/.test(error?.message || '') ||
             error?.message === 'pdf_source_invalid';
           // The canonical endpoint is authoritative. A secondary gateway
           // may be temporarily out of sync: never let its denial cancel a
@@ -874,7 +874,7 @@ async function beginDownload() {
         await checkPdfHeader(downloadUrl);
       } catch (error) {
         if (error?.notAvailable ||
-            /^(?:open|file)_http_(401|403)$/.test(String(error?.message || ''))) throw error;
+            /^(?:open|file)_http_(401|403|429)$/.test(String(error?.message || ''))) throw error;
         downloadUrl = await verifiedPdfSource(sessionToken, 'download');
       }
     } else {
@@ -997,7 +997,7 @@ async function start(preferTencent = false) {
     const fileRouteFailure = phase === 'transfer' || phase === 'range' ||
       phase === 'parse';
     const transientFileFailure =
-      /^file_http_(408|429|5\d\d)$/.test(code) ||
+      /^file_http_(408|5\d\d)$/.test(code) ||
       ['pdf_transfer_timeout', 'pdf_incomplete_bytes',
        'pdf_first_page_timeout', 'pdf_range_unavailable'].includes(code) ||
       terminal?.name === 'TypeError';
