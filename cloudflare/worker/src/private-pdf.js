@@ -393,6 +393,49 @@ export async function issuePrivatePdfCaptureLease(request, env) {
   return { status: 200, body: { token, expiresAt, scope: 'private_pdf_capture', ttlSeconds: Math.floor(CAPTURE_LEASE_TTL_MS / 1000) } };
 }
 
+// Owner-lease-authorized, read-only inventory. This returns no PDF data, R2 keys,
+// hashes, signed URLs, user IDs or authentication details.
+export async function privatePdfCaptureInventory(request, env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  if (!enabled(env, 'PRIVATE_PDF_CAPTURE_ENABLED')) return { status: 503, body: { error: 'private_pdf_capture_disabled' } };
+  if (!await captureLeaseRow(request, env)) return { status: 401, body: { error: 'private_pdf_capture_lease_invalid' } };
+  const raw = Array.isArray(payload?.dois) ? payload.dois : null;
+  if (!raw || raw.length < 1 || raw.length > 80) return { status: 400, body: { error: 'invalid_private_pdf_inventory_batch' } };
+  const dois = raw.map(normalizeDoi);
+  if (dois.some(doi => !doi) || new Set(dois).size !== dois.length) {
+    return { status: 400, body: { error: 'invalid_or_duplicate_doi' } };
+  }
+  const slots = dois.map(() => '?').join(',');
+  const rows = await env.DB.prepare(
+    'SELECT doi, processing_state, active, byte_length FROM private_pdf_documents WHERE doi IN (' + slots + ')'
+  ).bind(...dois).all();
+  const status = new Map(dois.map(doi => [doi, 'missing']));
+  const score = { missing: 0, failed: 1, pending: 2, ready: 3 };
+  for (const row of rows.results || []) {
+    const doi = normalizeDoi(row.doi);
+    if (!status.has(doi)) continue;
+    const kind = String(row.processing_state || '');
+    const stored = Number(row.byte_length || 0) >= 1024;
+    const next = !stored ? 'pending' : kind === 'ready' && Number(row.active) === 1
+      ? 'ready' : kind === 'failed' ? 'failed' : 'pending';
+    if (score[next] > score[status.get(doi)]) status.set(doi, next);
+  }
+  const items = dois.map(doi => ({ doi, status: status.get(doi) }));
+  return {
+    status: 200,
+    body: {
+      schemaVersion: 'private-pdf-capture-inventory-v1', complete: true,
+      count: items.length, items,
+      summary: {
+        ready: items.filter(row => row.status === 'ready').length,
+        pending: items.filter(row => row.status === 'pending').length,
+        failed: items.filter(row => row.status === 'failed').length,
+        missing: items.filter(row => row.status === 'missing').length,
+      },
+    },
+  };
+}
+
 export async function revokePrivatePdfCaptureLeases(request, env) {
   if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
   const userId = await authenticatedSessionUserId(request, env);
