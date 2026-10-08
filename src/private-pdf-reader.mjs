@@ -50,6 +50,8 @@ let renderSequence = 0;
 let sourceUrl = '';
 let declaredPdfBytes = 0;
 let transferController = null;
+let activeRangeTransport = null;
+let rangeFailure = null;
 let destroyed = false;
 let phase = 'init';
 const startedAt = performance.now();
@@ -253,6 +255,103 @@ async function checkPdfHeader(fileUrl) {
   const head = new TextDecoder().decode(bytes.subarray(0, 5));
   if (head !== '%PDF-') throw new Error('pdf_invalid_bytes');
 }
+function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionToken) {
+  // PDF.js's URL transport always starts with a regular GET, which can
+  // force a full transfer before its first Range request. The dedicated
+  // transport never issues that initial unbounded request.
+  class AuthenticatedRangeTransport extends engine.PDFDataRangeTransport {
+    constructor() {
+      super(byteLength, null, true);
+      this.fileUrl = fileUrl;
+      this.controllers = new Set();
+      this.refreshPromise = null;
+      this.totalFetched = 0;
+    }
+    async refreshUrl() {
+      if (!this.refreshPromise) {
+        this.refreshPromise = getPdfSource(sessionToken, 'view').then(source => {
+          if (declaredPdfBytes !== byteLength) throw new Error('pdf_incomplete_bytes');
+          this.fileUrl = source.url;
+          return this.fileUrl;
+        }).finally(() => { this.refreshPromise = null; });
+      }
+      return this.refreshPromise;
+    }
+    requestDataRange(begin, end) {
+      if (destroyed || sessionToken !== token()) return;
+      if (!Number.isSafeInteger(begin) || !Number.isSafeInteger(end) ||
+          begin < 0 || end <= begin || end > byteLength) {
+        this.fail(new Error('pdf_range_unavailable'));
+        return;
+      }
+      const controller = new AbortController();
+      this.controllers.add(controller);
+      void this.fetchRange(begin, end, controller).catch(error => {
+        if (!controller.signal.aborted && !destroyed) this.fail(error);
+      }).finally(() => this.controllers.delete(controller));
+    }
+    async fetchRange(begin, end, controller) {
+      let lastError = null;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        if (controller.signal.aborted || destroyed || token() !== sessionToken) return;
+        const kill = window.setTimeout(() => controller.abort('range_timeout'), 30000);
+        try {
+          const response = await fetch(this.fileUrl, {
+            headers: { range: `bytes=${begin}-${end-1}` },
+            credentials: 'include',
+            cache: 'no-store',
+            signal: controller.signal,
+          });
+          if (response.status === 401 && attempt === 0) {
+            await this.refreshUrl();
+            continue;
+          }
+          if (!response.ok) throw new Error('file_http_' + response.status);
+          if (response.status !== 206) throw new Error('pdf_range_unavailable');
+          if (!/^application\/pdf(?:\s*;|$)/i.test(response.headers.get('content-type') || '')) {
+            throw new Error('pdf_wrong_content_type');
+          }
+          const match = /^bytes (\d+)-(\d+)\/(\d+)$/.exec(response.headers.get('content-range') || '');
+          if (!match || Number(match[1]) !== begin || Number(match[2]) !== end-1 ||
+              Number(match[3]) !== byteLength) {
+            throw new Error('pdf_range_unavailable');
+          }
+          const chunk = new Uint8Array(await response.arrayBuffer());
+          if (chunk.byteLength !== end-begin) throw new Error('pdf_incomplete_bytes');
+          if (controller.signal.aborted || destroyed || token() !== sessionToken) return;
+          this.totalFetched += chunk.byteLength;
+          setPhase('range', `正在按需读取第一页… 已取 ${(this.totalFetched / 1048576).toFixed(1)} MB`);
+          this.onDataRange(begin, chunk);
+          return;
+        } catch (error) {
+          lastError = error;
+          if (controller.signal.aborted) break;
+          // Retry one failed transport request without forgetting previously
+          // delivered ranges. A 403 is an authorization failure, not a retry.
+          if (attempt === 0 && !/^(?:file_http_(401|403|404)|pdf_range_unavailable|pdf_wrong_content_type)$/.test(error?.message || '')) {
+            continue;
+          }
+          break;
+        } finally {
+          window.clearTimeout(kill);
+        }
+      }
+      if (!controller.signal.aborted && !destroyed) throw lastError || new Error('pdf_transfer_timeout');
+      if (controller.signal.aborted && !destroyed) throw new Error('pdf_transfer_timeout');
+    }
+    fail(error) {
+      if (rangeFailure || destroyed) return;
+      rangeFailure = error;
+      void loadingTask?.destroy().catch(() => {});
+      this.abort();
+    }
+    abort() {
+      for (const controller of this.controllers) controller.abort();
+      this.controllers.clear();
+    }
+  }
+  return new AuthenticatedRangeTransport();
+}
 async function fetchPdfSingleTransfer(fileUrl, sessionToken) {
   const started = performance.now();
   const controller = new AbortController();
@@ -428,10 +527,13 @@ async function start() {
       : [await loadPdfEngine(), null];
     const [engine, bytes] = loaded;
     if (destroyed || token() !== sessionToken) return;
+    rangeFailure = null;
+    activeRangeTransport = buffered ? null :
+      makeAuthenticatedRangeTransport(engine, sourceUrl, declaredPdfBytes, sessionToken);
     loadingTask = buffered
       ? engine.getDocument(options({ data: bytes, disableRange: true, disableStream: true }))
       : engine.getDocument(options({
-          url: sourceUrl, withCredentials: true,
+          range: activeRangeTransport,
           disableRange: false, disableAutoFetch: true, disableStream: true,
           rangeChunkSize: 1024 * 1024,
         }));
@@ -470,7 +572,7 @@ async function start() {
       try { void loadingTask?.destroy(); } catch {}
       loadingTask = null;
     }
-    showReaderError(error);
+    showReaderError(rangeFailure || error);
   }
 }
 download.addEventListener('click', () => { void beginDownload(); });
@@ -491,6 +593,8 @@ function destroy() {
   renderTask = null;
   transferController?.abort();
   transferController = null;
+  activeRangeTransport?.abort();
+  activeRangeTransport = null;
   canvas.width = 0;
   canvas.height = 0;
   sourceUrl = '';
