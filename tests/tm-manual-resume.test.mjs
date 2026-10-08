@@ -25,7 +25,7 @@ function h(opt={}){
  __getJson:async url=>{requests.push(url);if(opt.fetch)return opt.fetch(url,c);return url.includes('capture-capabilities')?caps:queue;},
  __enqueue:(...args)=>reports.push(args),
  GM_openInTab:url=>{const j=store.get(P+'active-job');const tab={url,closed:false,close(){this.closed=true;}};opened.push({j:clone(j),tab,at:clock.now});opt.open?.(j,c,tab);
-  if(!opt.noResult)put(P+'result:'+j.doi,{doi:j.doi,jobId:j.jobId,version:'6.2.20',status:'success',finishedAt:new D().toISOString(),toc:{status:'stored',kind:'official'},figures:{discovered:1,stored:1,failed:0,items:[]},figuresStaged:1,fulltext:{status:'stored'}});return tab;},
+  if(!opt.noResult)put(P+'result:'+j.doi,{doi:j.doi,jobId:j.jobId,version:'6.2.20',status:'success',finishedAt:new D().toISOString(),toc:{status:'stored',kind:'official'},figures:{discovered:1,stored:1,failed:0,items:[{label:'Figure 1',sourceUrl:'https://pubs.acs.org/'+j.doi+'/f1.png',contentHash:'a'.repeat(32),width:1000,height:500,quality:'high',status:'staged'}]},figuresStaged:1,fulltext:{status:'stored'}});return tab;},
  };
  c=vm.createContext(env);const cut=source.lastIndexOf('  installManualRestartListener();');assert.ok(cut>0);
  vm.runInContext(source.slice(0,cut)+`
