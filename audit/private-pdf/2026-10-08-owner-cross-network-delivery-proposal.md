@@ -1,6 +1,7 @@
 # Owner-only PDF: cross-network availability architecture proposal
 
-Status: **read-only analysis; awaiting explicit user approval for this implementation**.
+Status: **read-only analysis; awaiting explicit user approval for implementation**.
+**Budget authority: 2026-10-08 owner decision — incremental paid cost MUST be ¥0. No new VPS, paid CDN, paid API, paid trial, metered overage, domain purchase or subscription. Stop if an existing-service quota would incur additional charges. This is a hard requirement, not a target or a negotiable ¥50/month cap.**
 Date: 2026-10-08, Asia/Shanghai.
 Scope: Organic Synthesis Gallery, main baseline; no changes to literature publishing, public PDF rights, WeChat relay or Tampermonkey acquisition.
 
@@ -16,11 +17,11 @@ For the same properly authenticated account holding private_pdf_read, any privat
 4. 2026-10-01 onward: 177 currently published cards, 163 owner-private PDF ready records, 14 missing storage records. Media acquisition gaps are **not** reader failures and must remain a separate workflow.
 5. Read-only public checks: https://gallery.gczhouwld.com/api/_healthcheck returns 404, so there is no Gallery same-origin API today. The public https://api.gczhouwld.com/api/_healthcheck works. Gallery's capability refresh in src/private-pdf-access.ts also calls canonical API only; a blocked API may hide owner actions even before opening.
 6. The user has an existing Tencent Cloud Ubuntu instance used for relay.gczhouwld.com and WeChat JS-SDK/access_token/jsapi_ticket/publishing relay. Do not modify or restart it without verified isolation and specific permission. Region, capacity, TLS ingress and cost have not yet been checked. Public root URL returning 404 is not evidence of failure.
-7. Official background: Cloudflare recommends a production custom domain/route rather than workers.dev as business-critical primary; EdgeOne China mainland nodes require ICP filing, and its premium cross-border optimization is Enterprise plan. Tencent previously published HK Linux Lighthouse 2vCPU/2GB/40GB 500GB/month at ¥38/month; current availability/renewal must be checked, with user's cap of ¥50/month.
+7. Cost feasibility: existing Cloudflare Worker, Cloudflare DNS/routing, and the owner's existing Tencent relay may be considered **only within their current paid/free allocations with zero incremental billing**. A subdomain is not by itself evidence that TLS/routing/bandwidth is free. Do not propose an additional HK Lighthouse instance, extra storage, paid mainland CDN, or a paid proxy.
 
 ## Proposed solution, after approval
 
-**Stage A, read-only feasibility.** Determine existing Tencent instance region, occupancy, ingress proxy ownership, TLS, available CPU/RAM/bandwidth and *server-to-server* reachability to api.gczhouwld.com and R2. Inspect live relay config read-only; do not restart, patch or share port ownership at this stage. Check actual mainland ISP access from neutral probes. If instance lacks safe isolation or region unsuitable, evaluate a **separate** Hong Kong Linux instance within explicit recurring <= ¥50 monthly authorization before buying; no purchase automatically.
+**Stage A, read-only feasibility.** Determine existing Tencent instance region, occupancy, ingress proxy ownership, TLS, available CPU/RAM/bandwidth and *server-to-server* reachability to api.gczhouwld.com and R2. Inspect live relay config read-only; do not restart, patch or share port ownership at this stage. Check actual mainland ISP access from neutral probes. If this existing instance cannot support safe isolation **without new charges**, return a no-cost feasibility blocker and design alternatives using only current resources; do not purchase or suggest upgrading to an additional paid server.
 
 **Stage B, independent browser ingress gateway.** Create a strictly owner-only HTTPS endpoint (working hostname suggestion: pdf.gczhouwld.com) on a different provider/route, with isolated process/credentials/virtual host. This is independent client-to-service ingress, but initially shares existing Cloudflare D1/R2 as authoritative backend. It must not intercept the existing WeChat relay hostname, path or 80/443 traffic unless proven safely possible and explicitly approved. No public private-PDF bucket/copy.
 - Auth paths: securely proxy only required owner account login, session/capability check, /api/user-ui/private-pdf/open and /file (GET, HEAD, Range 206). Existing account remains the source of truth; no IP/VPN binding or alternate public download path.
@@ -31,13 +32,13 @@ For the same properly authenticated account holding private_pdf_read, any privat
 
 **Stage C, robust acceptance and measured cutover.** Validate owner login -> session/capability -> PDF open -> first/second page -> download and re-open across real mainland China network probes (multiple mobile/campus/carrier and overseas) and papers representing all 16 current target journals. Record p50/p95, error code and chosen gateway; never log PDF tickets. Only cut over after tests are actually performed, with rollback to existing Cloudflare route. Do not call GitHub Actions US tests evidence of China success.
 
-**Stage D, optional resilience if the upstream itself fails.** If required after Stage C, consider an independent *private* encrypted copy in a second storage provider with short-lived owner entitlement and valid licensing; this is new private storage and identity risk and requires separate approval. Stage B alone fixes independent client-to-Cloudflare route, not total Cloudflare outage.
+**Stage D, only if achievable within existing zero-cost quotas.** A second private copy or offline encrypted cache is out of scope unless implemented strictly within existing included storage/transfer allocation and separately approved for privacy and licensing. Stage B diversifies browser ingress but cannot defeat complete upstream outages; never silently add another paid storage service.
 
 ## Security and constraints
 
 - Preserve owner-only access and real user server-side capability checks. A same-account claim cannot waive authentication.
 - No token, API key, R2 path or signed PDF URL in logs or public artifacts.
-- No changes to existing WeChat relay, no downtime or restart, no additional host charges without budget approval.
+- No changes to existing WeChat relay, no downtime or restart, and **no new charge even with additional budget approval**: owner explicitly prohibits incremental paid services. Any overage, usage-based fee or extra recurring billing is a stop condition.
 - No alteration to formal 08:00 literature publishing or owner PDF capture responsibility.
 - Do not promise 100% from networks with no usable Internet, hostile firewall or during global upstream outages.
 - The proposal does not authorize implementation until the user approves the specific gateway architecture, its isolated hosting choice and allowable cost.
