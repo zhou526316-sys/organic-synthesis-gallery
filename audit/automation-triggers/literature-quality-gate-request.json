@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-08T00:56:22.189Z",
+  "requestedAt": "2026-10-08T01:29:19.586Z",
   "publicationSlot": "2026-10-08T08:00:00+08:00",
   "releaseCommit": "3d4bd44146d9b2cab2bda35e09b159161b0b7195",
-  "baselineMain": "5ddbd95723cf6e448e141c4b9ce542cdb52ca3d3",
+  "baselineMain": "ff40455d55ac408e46baba1fcfc189114abdad5b",
   "postReleaseAuditRunId": 37709307724,
   "postReleaseAuditGeneratedAt": "2026-10-08T00:45:14.247Z",
   "expectedProductionCards": 887,
@@ -17,7 +17,6 @@
     "10.31635/ccschem.026.202608262"
   ],
   "observedUnresolvedCount": 7,
-  "purpose": "Read-only post-deployment quality gate for genuinely delivered Oct-08 887-card per-DOI release; assert exact repository/deployed DOI union and seven pending; no additional literature additions or legacy snapshot replay.",
-  "pagesRunId": 37709096134,
-  "deploymentReceiptBlobSha": "2e7155ca0f2fdd86b8512cba0c7fdd2ac21b4d25"
+  "pagesRunId": 37711099940,
+  "purpose": "Post-delivery quality validation of real 887 DOI live union and 28 Oct-08 admitted DOI, with exactly seven durable evidence-scoped pending. Read-only quality check; no production admissions, deletions, workflow schedule changes, or bypass."
 }
