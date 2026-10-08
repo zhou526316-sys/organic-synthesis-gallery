@@ -1,0 +1,7316 @@
+// ==UserScript==
+// @name         Organic Synthesis Gallery VPN Literature Bridge
+// @namespace    organic-synthesis-gallery
+// @version      2.2.70.99
+// @description  2026-10-08 preview for authenticated validation of publisher cooldown and PDF inventory states. No automatic update; replace with approved production later.
+// @match        https://gallery.gczhouwld.com/*
+// @match        https://organic-synthesis-gallery-public.pages.dev/*
+// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
+// @match        https://pubs.acs.org/*
+// @match        https://onlinelibrary.wiley.com/*
+// @match        https://*.onlinelibrary.wiley.com/*
+// @match        https://pubs.rsc.org/*
+// @match        https://www.nature.com/*
+// @match        https://www.science.org/*
+// @match        https://www.sciencedirect.com/*
+// @match        https://*.sciencedirect.com/*
+// @match        https://www.cell.com/*
+// @match        https://*.cell.com/*
+// @match        https://www.chinesechemsoc.org/*
+// @match        https://chinesechemsoc.org/*
+// @match        https://www.ccspublishing.org.cn/*
+// @match        https://*.ccspublishing.org.cn/*
+// @match        https://doi.org/*
+// @grant        GM_xmlhttpRequest
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_deleteValue
+// @grant        GM_addValueChangeListener
+// @grant        GM_listValues
+// @grant        GM_registerMenuCommand
+// @grant        GM_openInTab
+// @connect      *
+// @connect      acs.silverchair-cdn.com
+// @connect      media.springernature.com
+// @run-at       document-idle
+// @noframes
+// ==/UserScript==
+
+globalThis.__OSG_TOC_BROWSER_MAINLINE__ = true;
+
+(() => {
+  'use strict';
+  if (!(location.hostname === 'gallery.gczhouwld.com' || location.hostname === 'organic-synthesis-gallery-public.pages.dev' || location.hostname === 'zhou526316-sys.github.io')) return;
+
+  const DIAGNOSTIC_ID = 'vpn-lit-bridge-loader-status';
+  let node = document.getElementById(DIAGNOSTIC_ID);
+  if (!node) {
+    node = document.createElement('button');
+    node.id = DIAGNOSTIC_ID;
+    node.type = 'button';
+    Object.assign(node.style, {
+      position: 'fixed', right: '14px', bottom: '14px', zIndex: '2147483647',
+      border: '1px solid #84adff', borderRadius: '999px', padding: '8px 12px',
+      background: 'rgba(255,255,255,.98)', color: '#175cd3', font: '12px/1.25 system-ui,sans-serif',
+      boxShadow: '0 4px 18px rgba(16,24,40,.14)', cursor: 'default'
+    });
+    (document.documentElement || document.body).appendChild(node);
+  }
+  node.textContent = 'VPN Bridge 2.2.70 · 正在启动 Runtime…';
+  node.title = 'Tampermonkey 脚本已执行；正在启动内置 Runtime。';
+
+  setTimeout(() => {
+    const runtimeNode = document.getElementById('vpn-lit-bridge-status');
+    const diagnosticNode = document.getElementById(DIAGNOSTIC_ID);
+    if (!diagnosticNode) return;
+    if (runtimeNode) {
+      diagnosticNode.remove();
+      return;
+    }
+    diagnosticNode.textContent = 'VPN Bridge 2.2.70 · Runtime 未启动';
+    diagnosticNode.title = 'Tampermonkey 已执行 Loader，但 Runtime 没有创建状态控件。';
+    diagnosticNode.style.borderColor = '#f04438';
+    diagnosticNode.style.color = '#b42318';
+  }, 1500);
+})();
+
+if (location.hostname === 'gallery.gczhouwld.com' || location.hostname === 'organic-synthesis-gallery-public.pages.dev' || location.hostname === 'zhou526316-sys.github.io') {
+(() => {
+  'use strict';
+
+  const VERSION = '1.2.0';
+  const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';
+  const WRITE_TOKEN_KEY = 'organicGalleryCloudflareBridgeWriteToken';
+  const COOLDOWN_KEY = 'organicGalleryBridgeCooldownsV3';
+  const ARTICLE_CONCURRENCY = 4;
+  const IMAGE_CONCURRENCY = 3;
+  const MAX_FIGURES = 8;
+  const REQUEST_TIMEOUT = 35000;
+  const VIEWPORT_MARGIN = 1800;
+  const BRIDGE_BURST_LIMIT = 20;
+  const BRIDGE_RETRY_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+  const BRIDGE_QUEUE_REFRESH_MS = 2500;
+
+  const articleQueue = [];
+  const articleStates = new Map();
+  const suspectTocDois = new Set();
+  const suspectFigureDois = new Set();
+  const bridgeRecentlyProcessed = new Map();
+  let activeArticles = 0;
+  let scanTimer = null;
+  let bridgeQueueTimer = null;
+  let auditSent = false;
+
+  const stats = { tocNew: 0, tocReplaced: 0, figures: 0, papersDone: 0, failed: 0 };
+
+  function bridgeError(stage, message, url = '') {
+    const error = new Error(message);
+    error.bridgeStage = stage;
+    error.bridgeUrl = url;
+    return error;
+  }
+
+  function gmRequest(options) {
+    return new Promise((resolve, reject) => {
+      GM_xmlhttpRequest({
+        timeout: REQUEST_TIMEOUT,
+        anonymous: false,
+        ...options,
+        onload(response) {
+          if (response.status >= 200 && response.status < 300) resolve(response);
+          else reject(bridgeError('http', `HTTP ${response.status}`, options.url));
+        },
+        onerror() { reject(bridgeError('network', 'Network error', options.url)); },
+        ontimeout() { reject(bridgeError('timeout', 'Request timeout', options.url)); },
+      });
+    });
+  }
+
+  function safeJson(text) {
+    try { return JSON.parse(text); } catch { return null; }
+  }
+
+  function validDoi(doi) {
+    return typeof doi === 'string' && /^10\.\d{4,9}\/\S+$/i.test(doi.trim());
+  }
+
+  function supportedDoi(doi) {
+    return validDoi(doi);
+  }
+
+  function articleUrlsForDoi(doi) {
+    const lower = doi.toLowerCase();
+    const urls = [];
+    const add = url => { if (url && !urls.includes(url)) urls.push(url); };
+    if (lower.startsWith('10.1021/')) {
+      add(`https://pubs.acs.org/doi/${doi}`);
+      add(`https://pubs.acs.org/doi/full/${doi}`);
+    } else if (lower.startsWith('10.1002/')) {
+      add(`https://onlinelibrary.wiley.com/doi/${doi}`);
+      add(`https://onlinelibrary.wiley.com/doi/full/${doi}`);
+    } else if (lower.startsWith('10.1038/')) {
+      add(`https://www.nature.com/articles/${doi.split('/')[1]}`);
+    } else if (lower.startsWith('10.1126/')) {
+      add(`https://www.science.org/doi/${doi}`);
+      add(`https://www.science.org/doi/full/${doi}`);
+    }
+    add(`https://doi.org/${doi}`);
+    return urls;
+  }
+
+  function normalizeUrl(raw, base) {
+    if (!raw) return null;
+    try {
+      const cleaned = String(raw).trim().replace(/&amp;/gi, '&').replace(/\\u002f/gi, '/').replace(/\\\//g, '/');
+      const url = new URL(cleaned, base);
+      return /^https?:$/.test(url.protocol) ? url.href : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function isLikelyImageUrl(url) {
+    return Boolean(url && (/\.(?:png|jpe?g|gif|webp|avif|svg)(?:[?#]|$)/i.test(url) || /silverchair-cdn|mediaobjects|asset\/images|imageView/i.test(url)));
+  }
+
+  function isForbiddenImageContext(url, context) {
+    const text = `${url} ${context}`.toLowerCase();
+    return /journal[\s_-]*cover|cover[\s_-]*image|issue[\s_-]*cover|masthead|logo|icon|avatar|author-photo|advert|banner|spinner|loading|favicon|tracking|pixel/.test(text);
+  }
+
+  function parseSrcset(srcset, base) {
+    if (!srcset) return [];
+    return srcset
+      .split(',')
+      .map(item => item.trim())
+      .filter(Boolean)
+      .map(item => {
+        const parts = item.split(/\s+/);
+        const descriptor = parts[1] || '';
+        let rank = Number.parseFloat(descriptor) || 0;
+        if (/w$/i.test(descriptor)) rank *= 10;
+        return { url: normalizeUrl(parts[0], base), rank };
+      })
+      .filter(item => item.url)
+      .sort((a, b) => b.rank - a.rank);
+  }
+
+  function imageSources(img, base) {
+    const results = [];
+    const add = (value, trusted = false) => {
+      const url = normalizeUrl(value, base);
+      if (url && (trusted || isLikelyImageUrl(url)) && !results.includes(url)) results.push(url);
+    };
+    const anchor = img.closest('a[href]');
+    if (anchor) add(anchor.getAttribute('href'), false);
+    const picture = img.closest('picture');
+    if (picture) {
+      for (const source of picture.querySelectorAll('source[srcset],source[data-srcset]')) {
+        const sourceSet = source.getAttribute('srcset') || source.getAttribute('data-srcset');
+        for (const item of parseSrcset(sourceSet, base)) add(item.url, true);
+      }
+    }
+    for (const item of parseSrcset(img.getAttribute('data-srcset'), base)) add(item.url, true);
+    for (const item of parseSrcset(img.getAttribute('srcset'), base)) add(item.url, true);
+    for (const attribute of ['data-lg-src', 'data-full-src', 'data-full', 'data-original', 'data-src', 'data-lazy-src', 'data-image', 'data-url', 'src']) add(img.getAttribute(attribute), true);
+    return [...new Set(results)];
+  }
+
+  function captionText(container) {
+    if (!container) return '';
+    const direct = container.querySelector('figcaption,.caption,[class*="caption"],[data-figure-caption]');
+    return (direct?.textContent || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function preciseFigureLabel(caption, container, index) {
+    const source = `${caption} ${container?.getAttribute?.('id') || ''}`.replace(/\s+/g, ' ').trim();
+    let match = /(?:^|\b)Scheme\s*([A-Z]?\d+[A-Z]?)(?=\b|[:.])/i.exec(source);
+    if (match) return `Scheme ${match[1]}`;
+    match = /(?:^|\b)Figure\s*([A-Z]?\d+[A-Z]?)(?=\b|[:.])/i.exec(source);
+    if (match) return `Figure ${match[1]}`;
+    match = /(?:^|\b)Fig\.?\s*([A-Z]?\d+[A-Z]?)(?=\b|[:.])/i.exec(source);
+    if (match) return `Figure ${match[1]}`;
+    match = /(?:^|\b)Chart\s*([A-Z]?\d+[A-Z]?)(?=\b|[:.])/i.exec(source);
+    if (match) return `Chart ${match[1]}`;
+    if (/substrate\s+scope|reaction\s+scope|scope\s+of/i.test(source)) return 'Scope';
+    if (/mechanis|catalytic\s+cycle|proposed\s+pathway/i.test(source)) return 'Mechanism';
+    if (/optimization|reaction\s+conditions/i.test(source)) return 'Optimization';
+    return `Figure ${index + 1}`;
+  }
+
+  function semanticFigureKey(label) {
+    return label.toLowerCase().replace(/fig\./g, 'figure').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'figure';
+  }
+
+  function figurePriority(label) {
+    const key = semanticFigureKey(label);
+    const match = /^(figure|scheme|chart)-(\d+)/.exec(key);
+    if (match) {
+      const number = Number(match[2]);
+      return number === 1 ? 0 : 10 + number;
+    }
+    if (key === 'scope') return 50;
+    if (key === 'mechanism') return 51;
+    if (key === 'optimization') return 52;
+    return 80;
+  }
+
+  function imageUrlsFromFragment(fragment, base) {
+    const urls = [];
+    const add = (raw, trusted = false) => {
+      const url = normalizeUrl(raw, base);
+      if (url && (trusted || isLikelyImageUrl(url)) && !urls.includes(url)) urls.push(url);
+    };
+    const direct = /https?:\\?\/\\?\/[^\s"'<>\\]+?\.(?:png|jpe?g|gif|webp|avif|svg)(?:\?[^\s"'<>\\]*)?/gi;
+    let match;
+    while ((match = direct.exec(fragment))) add(match[0].replace(/\\\//g, '/'));
+    const tags = fragment.match(/<img\b[^>]*>/gi) || [];
+    for (const tag of tags) {
+      for (const attr of tag.matchAll(/(?:data-lg-src|data-full-src|data-full|data-original|data-src|data-lazy-src|data-image|data-url|src)\s*=\s*["']([^"']+)["']/gi)) add(attr[1], true);
+      const srcset = /(?:data-srcset|srcset)\s*=\s*["']([^"']+)["']/i.exec(tag)?.[1];
+      for (const item of parseSrcset(srcset, base)) add(item.url, true);
+    }
+    return urls;
+  }
+
+  function extractSemanticTocCandidates(doc, html, articleUrl) {
+    const candidates = new Map();
+    const add = (raw, score, context = '', trusted = false) => {
+      const url = normalizeUrl(raw, articleUrl);
+      if (!url || (!trusted && !isLikelyImageUrl(url)) || isForbiddenImageContext(url, context)) return;
+      const previous = candidates.get(url);
+      if (!previous || score > previous.score) candidates.set(url, { url, score, context });
+    };
+    for (const meta of doc.querySelectorAll('meta')) {
+      const key = (meta.getAttribute('name') || meta.getAttribute('property') || '').toLowerCase();
+      const value = meta.getAttribute('content');
+      if (value && (key === 'citation_graphical_abstract' || key === 'citation_toc_graphic' || key === 'citation_abstract_image')) add(value, 3000, key, true);
+    }
+    const semanticPattern = /visual\s*abstract|graphical\s*abstract|abstract\s*image|toc\s*(?:graphic|image)|table\s*of\s*contents/i;
+    const nodes = [...doc.querySelectorAll('h1,h2,h3,h4,h5,h6,[role="heading"],[class*="visual-abstract"],[class*="graphical-abstract"],[class*="abstract-image"],[id*="visual-abstract"],[id*="graphical-abstract"],[id*="abstract-image"]')];
+    for (const node of nodes) {
+      const headingText = (node.textContent || '').replace(/\s+/g, ' ').trim();
+      const marker = `${headingText} ${node.getAttribute('class') || ''} ${node.getAttribute('id') || ''}`;
+      if (!semanticPattern.test(marker)) continue;
+      const regions = [node];
+      if (node.parentElement) regions.push(node.parentElement);
+      let sibling = node.nextElementSibling;
+      for (let i = 0; i < 3 && sibling; i += 1, sibling = sibling.nextElementSibling) regions.push(sibling);
+      for (const region of regions) {
+        const images = region.matches?.('img') ? [region] : [...(region.querySelectorAll?.('img') || [])];
+        for (const image of images) imageSources(image, articleUrl).forEach((url, index) => add(url, 2600 - index * 40, marker, true));
+        for (const anchor of region.querySelectorAll?.('a[href]') || []) {
+          const href = normalizeUrl(anchor.getAttribute('href'), articleUrl);
+          if (href && isLikelyImageUrl(href)) add(href, 2550, marker);
+        }
+      }
+    }
+    for (const image of doc.querySelectorAll('img')) {
+      const parent = image.closest('figure,section,div');
+      const marker = `${image.alt || ''} ${image.title || ''} ${image.getAttribute('aria-label') || ''} ${image.className || ''} ${parent?.getAttribute?.('class') || ''} ${parent?.getAttribute?.('id') || ''}`;
+      if (!semanticPattern.test(marker)) continue;
+      imageSources(image, articleUrl).forEach((url, index) => add(url, 2450 - index * 40, marker, true));
+    }
+    return [...candidates.values()].sort((a, b) => b.score - a.score).slice(0, 5);
+  }
+
+  function extractFigureCandidates(doc, articleUrl, html) {
+    const grouped = new Map();
+    const containers = [...doc.querySelectorAll('figure,[data-figure-id],[class*="figure"],[class^="fig"],[class*=" fig"],[id^="fig"],[id^="scheme"]')];
+    containers.forEach((container, index) => {
+      const caption = captionText(container);
+      const idText = container.getAttribute('id') || '';
+      if (!/scheme\s*\d|figure\s*\d|fig\.?\s*\d|chart\s*\d|substrate\s+scope|reaction\s+scope|mechanis|catalytic\s+cycle|optimization/i.test(`${caption} ${idText}`)) return;
+      if (/visual\s*abstract|graphical\s*abstract|abstract\s*image|toc\s*(graphic|image)/i.test(`${caption} ${idText}`)) return;
+      const label = preciseFigureLabel(caption, container, index);
+      const key = semanticFigureKey(label);
+      const urls = [];
+      for (const image of container.querySelectorAll('img')) {
+        for (const url of imageSources(image, articleUrl)) if (!isForbiddenImageContext(url, `${caption} ${idText}`) && !urls.includes(url)) urls.push(url);
+      }
+      for (const anchor of container.querySelectorAll('a[href]')) {
+        const href = normalizeUrl(anchor.getAttribute('href'), articleUrl);
+        if (href && isLikelyImageUrl(href) && !isForbiddenImageContext(href, caption) && !urls.includes(href)) urls.unshift(href);
+      }
+      if (!urls.length) return;
+      const candidate = { key, label, caption: caption.slice(0, 520), url: urls[0], priority: figurePriority(label), order: index };
+      const existing = grouped.get(key);
+      if (!existing || candidate.priority < existing.priority || (candidate.priority === existing.priority && candidate.order < existing.order)) grouped.set(key, candidate);
+    });
+    const figureToken = /\b(Figure|Fig\.?|Scheme|Chart)\s*([A-Z]?\d+[A-Z]?)/gi;
+    let token;
+    let fallbackOrder = containers.length;
+    while ((token = figureToken.exec(html))) {
+      const label = `${/^fig/i.test(token[1]) ? 'Figure' : token[1]} ${token[2]}`;
+      const key = semanticFigureKey(label);
+      if (grouped.has(key)) continue;
+      const fragment = html.slice(Math.max(0, token.index - 1200), Math.min(html.length, figureToken.lastIndex + 4200));
+      const urls = imageUrlsFromFragment(fragment, articleUrl).filter(url => !isForbiddenImageContext(url, fragment));
+      if (!urls.length) continue;
+      grouped.set(key, { key, label, caption: fragment.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 520), url: urls[0], priority: figurePriority(label), order: fallbackOrder++ });
+    }
+    return [...grouped.values()].sort((a, b) => a.priority - b.priority || a.order - b.order).slice(0, MAX_FIGURES);
+  }
+
+  function getHeader(headers, name) {
+    const match = new RegExp(`^${name}:\\s*([^\\r\\n]+)`, 'im').exec(headers || '');
+    return match ? match[1].trim() : '';
+  }
+
+  function sniffImageMime(buffer) {
+    const bytes = new Uint8Array(buffer);
+    if (bytes.length >= 8 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47 && bytes[4] === 0x0d && bytes[5] === 0x0a && bytes[6] === 0x1a && bytes[7] === 0x0a) return 'image/png';
+    if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return 'image/jpeg';
+    if (bytes.length >= 6) {
+      const head6 = String.fromCharCode(...bytes.slice(0, 6));
+      if (head6 === 'GIF87a' || head6 === 'GIF89a') return 'image/gif';
+    }
+    if (bytes.length >= 12) {
+      const riff = String.fromCharCode(...bytes.slice(0, 4));
+      const webp = String.fromCharCode(...bytes.slice(8, 12));
+      if (riff === 'RIFF' && webp === 'WEBP') return 'image/webp';
+      const isoHead = String.fromCharCode(...bytes.slice(4, Math.min(bytes.length, 48))).toLowerCase();
+      if (isoHead.startsWith('ftyp') && (isoHead.includes('avif') || isoHead.includes('avis'))) return 'image/avif';
+    }
+    try {
+      const text = new TextDecoder('utf-8').decode(bytes.slice(0, Math.min(bytes.length, 4096))).replace(/^\uFEFF/, '');
+      if (/^\s*(?:<\?xml[^>]*>\s*)?<svg(?:\s|>)/i.test(text)) return 'image/svg+xml';
+    } catch {}
+    return '';
+  }
+
+  async function fetchImage(url, articleUrl) {
+    const response = await gmRequest({ method: 'GET', url, responseType: 'arraybuffer', headers: { Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8', Referer: articleUrl } });
+    const declaredMime = getHeader(response.responseHeaders, 'content-type').split(';')[0].trim().toLowerCase();
+    const buffer = response.response;
+    if (!(buffer instanceof ArrayBuffer) || buffer.byteLength < 100) throw bridgeError('image-empty', 'Empty image response', url);
+    const mime = sniffImageMime(buffer);
+    if (!mime) throw bridgeError('image-mime', `Unrecognized image bytes; declared MIME ${declaredMime || 'unknown'}`, url);
+    let width = 0;
+    let height = 0;
+    try {
+      const bitmap = await createImageBitmap(new Blob([buffer], { type: mime }));
+      width = bitmap.width;
+      height = bitmap.height;
+      bitmap.close();
+    } catch {}
+    return { url, mime, declaredMime, buffer, width, height };
+  }
+
+  async function mapConcurrent(items, concurrency, worker) {
+    let cursor = 0;
+    await Promise.all(Array.from({ length: Math.min(concurrency, items.length) }, async () => {
+      while (cursor < items.length) {
+        const index = cursor++;
+        await worker(items[index], index);
+      }
+    }));
+  }
+
+  function bufferToDataUrl(buffer, mime) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(bridgeError('file-reader', 'FileReader failed'));
+      reader.readAsDataURL(new Blob([buffer], { type: mime }));
+    });
+  }
+
+  async function rasterizeImageToJpeg(image) {
+    const blob = new Blob([image.buffer], { type: image.mime });
+    let drawable;
+    let width = 0;
+    let height = 0;
+    let objectUrl = '';
+    let bitmap = null;
+    try {
+      bitmap = await createImageBitmap(blob);
+      drawable = bitmap;
+      width = bitmap.width;
+      height = bitmap.height;
+    } catch {
+      objectUrl = URL.createObjectURL(blob);
+      const element = new Image();
+      await new Promise((resolve, reject) => {
+        element.onload = resolve;
+        element.onerror = () => reject(bridgeError('image-decode', `Unable to decode ${image.mime}`, image.url));
+        element.src = objectUrl;
+      });
+      drawable = element;
+      width = element.naturalWidth;
+      height = element.naturalHeight;
+    }
+    if (!width || !height) throw bridgeError('image-decode', 'Decoded image has no dimensions', image.url);
+    const scale = Math.min(1, 2800 / width, 2000 / height);
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(width * scale));
+    canvas.height = Math.max(1, Math.round(height * scale));
+    const context = canvas.getContext('2d');
+    if (!context) throw bridgeError('image-canvas', 'Canvas context unavailable', image.url);
+    context.fillStyle = '#fff';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(drawable, 0, 0, canvas.width, canvas.height);
+    bitmap?.close();
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    let dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+    if (dataUrl.length > 4800000) dataUrl = canvas.toDataURL('image/jpeg', 0.84);
+    return dataUrl;
+  }
+
+  async function imageToDataUrl(image) {
+    const requiresRasterization = image.mime === 'image/svg+xml' || image.mime === 'image/avif';
+    if (!requiresRasterization && image.buffer.byteLength <= 3800000) return bufferToDataUrl(image.buffer, image.mime);
+    return rasterizeImageToJpeg(image);
+  }
+
+  function bridgeWriteToken() {
+    const value = typeof GM_getValue === 'function' ? GM_getValue(WRITE_TOKEN_KEY, '') : '';
+    return typeof value === 'string' ? value.trim() : '';
+  }
+
+  function configureBridgeWriteToken() {
+    const current = bridgeWriteToken();
+    const next = window.prompt('请输入 Cloudflare Gallery Bridge 写入密钥。该值只保存在 Tampermonkey 私有存储中。', current);
+    if (next === null) return;
+    const cleaned = next.trim();
+    if (typeof GM_setValue === 'function') GM_setValue(WRITE_TOKEN_KEY, cleaned);
+    updateStatus();
+    if (cleaned) {
+      for (const [key, state] of articleStates.entries()) {
+        if (state?.state === 'failed') articleStates.delete(key);
+      }
+      scheduleBridgeQueueRefresh(0);
+      scheduleScan(0);
+    }
+  }
+
+  if (typeof GM_registerMenuCommand === 'function') {
+    GM_registerMenuCommand('设置 / 更换 Gallery Bridge 写入密钥', configureBridgeWriteToken);
+  }
+
+  async function apiGet(path) {
+    const response = await gmRequest({ method: 'GET', url: `${API_BASE}${path}` });
+    return safeJson(response.responseText) || {};
+  }
+
+  async function apiPost(path, body) {
+    const token = bridgeWriteToken();
+    if (!token) throw bridgeError('auth', 'Cloudflare Bridge write token is not configured', `${API_BASE}${path}`);
+    const response = await gmRequest({
+      method: 'POST',
+      url: `${API_BASE}${path}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      data: JSON.stringify(body),
+    });
+    return safeJson(response.responseText) || {};
+  }
+
+  function readBridgeCooldowns() {
+    try {
+      const raw = typeof GM_getValue === 'function' ? GM_getValue(COOLDOWN_KEY, '{}') : '{}';
+      const parsed = typeof raw === 'string' ? JSON.parse(raw || '{}') : raw;
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function writeBridgeCooldowns(value) {
+    try {
+      if (typeof GM_setValue === 'function') GM_setValue(COOLDOWN_KEY, JSON.stringify(value));
+    } catch {}
+  }
+
+  function bridgeCooldown(doi) {
+    const key = String(doi || '').toLowerCase();
+    if (!key) return null;
+    const cooldowns = readBridgeCooldowns();
+    const record = cooldowns[key];
+    if (!record || Number(record.until || 0) <= Date.now()) {
+      if (record) { delete cooldowns[key]; writeBridgeCooldowns(cooldowns); }
+      return null;
+    }
+    return record;
+  }
+
+  function setBridgeCooldown(doi, reason, durationMs) {
+    const key = String(doi || '').toLowerCase();
+    if (!key) return;
+    const cooldowns = readBridgeCooldowns();
+    cooldowns[key] = { until: Date.now() + Math.max(60_000, Number(durationMs || 0)), reason: String(reason || 'retry_later').slice(0, 120) };
+    const entries = Object.entries(cooldowns).sort((a, b) => Number(b[1]?.until || 0) - Number(a[1]?.until || 0)).slice(0, 600);
+    writeBridgeCooldowns(Object.fromEntries(entries));
+  }
+
+  function clearBridgeCooldown(doi) {
+    const key = String(doi || '').toLowerCase();
+    const cooldowns = readBridgeCooldowns();
+    if (!(key in cooldowns)) return;
+    delete cooldowns[key];
+    writeBridgeCooldowns(cooldowns);
+  }
+
+  async function reportBridgeAttempt(doi, stage, outcome, rootCause, url = '') {
+    try {
+      await apiPost('/api/media/attempt', { doi, source: 'vpn-bridge', stage, outcome, rootCause, url });
+    } catch {}
+  }
+
+  async function recordBridgeFailure(doi, error, stage, url = '') {
+    const message = String(error?.message || error || 'Bridge failure');
+    const failingUrl = String(error?.bridgeUrl || url || '');
+    let rootCause = 'bridge_request_failed';
+    let cooldownMs = 6 * 60 * 60 * 1000;
+    if (/HTTP\s*403|captcha|challenge|security verification|access denied/i.test(message)) {
+      rootCause = 'publisher_access_blocked';
+      cooldownMs = 24 * 60 * 60 * 1000;
+    } else if (/HTTP\s*429|too many requests|rate limit/i.test(message)) {
+      rootCause = 'publisher_rate_limited';
+      cooldownMs = 24 * 60 * 60 * 1000;
+    } else if (/timeout/i.test(message)) {
+      rootCause = 'publisher_timeout';
+      cooldownMs = 8 * 60 * 60 * 1000;
+    } else if (stage === 'publisher-html' || /network/i.test(message)) {
+      rootCause = 'publisher_html_unreachable';
+      cooldownMs = 12 * 60 * 60 * 1000;
+    } else if (stage === 'auth' || (/HTTP\s*401/.test(message) && failingUrl.startsWith(API_BASE))) {
+      rootCause = 'bridge_auth';
+      cooldownMs = 30 * 60 * 1000;
+    }
+    setBridgeCooldown(doi, rootCause, cooldownMs);
+    await reportBridgeAttempt(doi, stage, 'failed', rootCause, failingUrl);
+  }
+
+  async function fetchArticleHtml(articleUrl) {
+    const response = await gmRequest({ method: 'GET', url: articleUrl, headers: { Accept: 'text/html,application/xhtml+xml', 'Accept-Language': 'en-US,en;q=0.9' } });
+    const finalUrl = typeof response.finalUrl === 'string' && /^https?:\/\//i.test(response.finalUrl) ? response.finalUrl : articleUrl;
+    return { html: response.responseText || '', finalUrl };
+  }
+
+  async function collectArticlePages(doi, needToc, needFigures) {
+    const pages = [];
+    let lastError = null;
+    for (const articleUrl of articleUrlsForDoi(doi)) {
+      try {
+        const pageResponse = await fetchArticleHtml(articleUrl);
+        const html = pageResponse.html;
+        const resolvedArticleUrl = pageResponse.finalUrl || articleUrl;
+        if (html.length < 300) continue;
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const tocCandidates = needToc ? extractSemanticTocCandidates(doc, html, resolvedArticleUrl) : [];
+        const figureCandidates = needFigures ? extractFigureCandidates(doc, resolvedArticleUrl, html) : [];
+        pages.push({ articleUrl: resolvedArticleUrl, requestedUrl: articleUrl, html, doc, tocCandidates, figureCandidates });
+      } catch (error) {
+        lastError = error;
+        console.warn('[VPN LIT BRIDGE][PAGE FAIL]', { doi, url: articleUrl, error: error.message || String(error) });
+      }
+    }
+    if (!pages.length) throw lastError || bridgeError('publisher-html', 'No usable publisher/full-text HTML', articleUrlsForDoi(doi)[0] || '');
+    return pages;
+  }
+
+  function mergePageTocCandidates(pages) {
+    const byUrl = new Map();
+    for (const page of pages) {
+      for (const candidate of page.tocCandidates || []) {
+        if (!candidate?.url) continue;
+        const next = { ...candidate, articleUrl: page.articleUrl };
+        const existing = byUrl.get(candidate.url);
+        if (!existing || Number(next.score || 0) > Number(existing.score || 0)) byUrl.set(candidate.url, next);
+      }
+    }
+    return [...byUrl.values()].sort((a, b) => Number(b.score || 0) - Number(a.score || 0)).slice(0, 10);
+  }
+
+  function mergePageFigureCandidates(pages) {
+    const byUrl = new Map();
+    for (const page of pages) {
+      for (const candidate of page.figureCandidates || []) {
+        if (!candidate?.url || !candidate?.key) continue;
+        const next = { ...candidate, articleUrl: page.articleUrl };
+        const existing = byUrl.get(candidate.url);
+        if (!existing || next.priority < existing.priority || (next.priority === existing.priority && next.order < existing.order)) byUrl.set(candidate.url, next);
+      }
+    }
+    const variants = new Map();
+    for (const candidate of [...byUrl.values()].sort((a, b) => a.priority - b.priority || a.order - b.order)) {
+      const group = variants.get(candidate.key) || [];
+      group.push(candidate);
+      variants.set(candidate.key, group);
+    }
+    const orderedKeys = [...variants.keys()].sort((a, b) => {
+      const left = variants.get(a)[0];
+      const right = variants.get(b)[0];
+      return left.priority - right.priority || left.order - right.order;
+    });
+    const merged = [];
+    for (let round = 0; merged.length < MAX_FIGURES * 2; round += 1) {
+      let added = false;
+      for (const key of orderedKeys) {
+        const candidate = variants.get(key)?.[round];
+        if (!candidate) continue;
+        merged.push(candidate);
+        added = true;
+        if (merged.length >= MAX_FIGURES * 2) break;
+      }
+      if (!added) break;
+    }
+    return merged;
+  }
+
+  function notifyGallery(doi) {
+    window.dispatchEvent(new CustomEvent('gallery-assets-updated', { detail: { doi } }));
+  }
+
+  async function refreshAuditSuspects() {
+    try {
+      const audit = await apiGet('/api/media-audit');
+      const issues = Array.isArray(audit?.issues) ? audit.issues : [];
+      for (const issue of issues) {
+        if (!issue || typeof issue !== 'object') continue;
+        if (issue.type === 'duplicate_toc_hash' && Array.isArray(issue.dois)) {
+          for (const doi of issue.dois) if (typeof doi === 'string') suspectTocDois.add(doi.toLowerCase());
+          continue;
+        }
+        if (issue.type === 'toc_matches_nonfigure1' && typeof issue.doi === 'string') {
+          suspectTocDois.add(issue.doi.toLowerCase());
+          continue;
+        }
+        if (issue.type === 'no_valid_toc_or_figure1' && typeof issue.doi === 'string') {
+          suspectFigureDois.add(issue.doi.toLowerCase());
+        }
+      }
+      for (const key of [...suspectTocDois, ...suspectFigureDois]) {
+        if (articleStates.get(key)?.state === 'done') articleStates.delete(key);
+      }
+      scheduleScan(0);
+      return audit;
+    } catch (error) {
+      console.warn('[VPN LIT BRIDGE][AUDIT FAIL]', { error: error.message || String(error) });
+      return null;
+    }
+  }
+
+  async function chooseSemanticToc(candidates, articleUrl) {
+    const downloaded = [];
+    await mapConcurrent(candidates, IMAGE_CONCURRENCY, async candidate => {
+      try {
+        const image = await fetchImage(candidate.url, candidate.articleUrl || articleUrl);
+        if (image.width && image.height) {
+          const ratio = image.width / image.height;
+          const explicitPublisherGraphic = candidate.score >= 2950;
+          if (ratio < 0.72 || (!explicitPublisherGraphic && ratio < 1.05)) return;
+        }
+        let quality = candidate.score;
+        if (image.width && image.height) {
+          quality += Math.min(image.width, 2200) * 0.16 + Math.min(image.height, 1400) * 0.05;
+          if (image.width < 420 || image.height < 100) quality -= 500;
+        }
+        downloaded.push({ ...candidate, ...image, quality });
+      } catch (error) {
+        console.warn('[VPN LIT BRIDGE][IMAGE FAIL]', { stage: error.bridgeStage || 'toc-download', url: error.bridgeUrl || candidate.url, error: error.message || String(error) });
+      }
+    });
+    downloaded.sort((a, b) => b.quality - a.quality);
+    console.log('[VPN LIT BRIDGE][TOC QUALITY]', downloaded.map(item => ({ width: item.width, height: item.height, score: Math.round(item.quality), url: item.url })));
+    return downloaded[0] || null;
+  }
+
+  async function rebuildFigures(doi, articleUrl, candidates) {
+    if (!supportedDoi(doi)) return 0;
+    if (!candidates.length) {
+      console.warn('[VPN LIT BRIDGE][NO FIGURES]', { doi, articleUrl, reason: 'No captioned figure/scheme candidates found' });
+      return 0;
+    }
+    let imported = 0;
+    const persistedKeys = new Set();
+    const candidateBatches = [];
+    for (let start = 0; start < Math.min(candidates.length, MAX_FIGURES * 2); start += 4) candidateBatches.push(candidates.slice(start, start + 4));
+    for (const candidateBatch of candidateBatches) {
+      const downloaded = [];
+      await mapConcurrent(candidateBatch, IMAGE_CONCURRENCY, async candidate => {
+        try {
+          const image = await fetchImage(candidate.url, candidate.articleUrl || articleUrl);
+          if (image.width && image.height && (image.width < 260 || image.height < 95 || image.width * image.height < 60000)) return;
+          downloaded.push({ ...candidate, ...image });
+        } catch (error) {
+          console.warn('[VPN LIT BRIDGE][FIG FAIL]', { doi, stage: error.bridgeStage || 'figure-download', url: error.bridgeUrl || candidate.url, error: error.message || String(error) });
+        }
+      });
+      downloaded.sort((a, b) => a.priority - b.priority || a.order - b.order);
+      if (!downloaded.length) continue;
+      for (let batchIndex = 0; batchIndex < downloaded.length; batchIndex += 1) {
+        const item = downloaded[batchIndex];
+        if (persistedKeys.has(item.key) || imported >= MAX_FIGURES) continue;
+        try {
+          const candidateIndex = candidates.findIndex(candidate => candidate.key === item.key && candidate.url === item.url);
+          const globalIndex = candidateIndex >= 0 ? candidateIndex : batchIndex;
+          const imageData = await imageToDataUrl(item);
+          await apiPost('/api/article-figures/import', { doi, articleUrl: item.articleUrl || articleUrl, id: item.key, label: item.label, caption: item.caption, order: globalIndex, width: item.width, height: item.height, imageData });
+          persistedKeys.add(item.key);
+          imported += 1;
+          console.log('[VPN LIT BRIDGE][FIG OK]', { doi, label: item.label, width: item.width, height: item.height, url: item.url });
+        } catch (error) {
+          console.warn('[VPN LIT BRIDGE][FIG FAIL]', { doi, stage: error.bridgeStage || 'figure-upload', url: error.bridgeUrl || item.url, error: error.message || String(error) });
+        }
+      }
+      if (imported) notifyGallery(doi);
+    }
+    if (!imported) console.warn('[VPN LIT BRIDGE][NO FIGURES]', { doi, articleUrl, reason: 'Captioned candidates existed but none passed image checks' });
+    return imported;
+  }
+
+  async function processArticle(doi) {
+    if (!supportedDoi(doi)) return;
+    const key = doi.toLowerCase();
+    let stage = 'cache';
+    let currentUrl = '';
+    try {
+      const [cachedToc, cachedFigures] = await Promise.all([apiGet(`/api/toc?doi=${encodeURIComponent(doi)}`), apiGet(`/api/article-figures?doi=${encodeURIComponent(doi)}`)]);
+      const tocSuspect = suspectTocDois.has(key);
+      const figuresSuspect = suspectFigureDois.has(key);
+      const cachedFigureItems = Array.isArray(cachedFigures?.figures) ? cachedFigures.figures : [];
+      const hasFigureOne = cachedFigureItems.some(item => typeof item?.label === 'string' && /^fig(?:ure)?\.?\s*1$/i.test(item.label.trim()));
+      const needToc = !cachedToc?.available || cachedToc?.reason === 'figure1_fallback' || tocSuspect;
+      const needFigures = !cachedFigures?.available || cachedFigureItems.length === 0 || figuresSuspect || (!cachedToc?.available && !hasFigureOne);
+      if (!needToc && !needFigures) {
+        articleStates.set(key, { state: 'done', at: Date.now() });
+        stats.papersDone += 1;
+        return;
+      }
+      stage = 'publisher-html';
+      const pages = await collectArticlePages(doi, needToc, needFigures);
+      const articleUrl = pages[0].articleUrl;
+      const tocCandidates = needToc ? mergePageTocCandidates(pages) : [];
+      const figureCandidates = needFigures ? mergePageFigureCandidates(pages) : [];
+      currentUrl = articleUrl;
+      if (needToc) {
+        stage = 'toc-extract';
+        let verifiedToc = false;
+        if (tocCandidates.length) {
+          stage = 'toc-select';
+          const selected = await chooseSemanticToc(tocCandidates, articleUrl);
+          if (selected) {
+            stage = 'toc-upload';
+            const imageData = await imageToDataUrl(selected);
+            const replacing = Boolean(cachedToc?.available && cachedToc?.reason !== 'figure1_fallback');
+            await apiPost('/api/toc/import', { doi, articleUrl: selected.articleUrl || articleUrl, imageData, replace: replacing });
+            if (replacing) stats.tocReplaced += 1;
+            else stats.tocNew += 1;
+            verifiedToc = true;
+            clearBridgeCooldown(doi);
+            suspectTocDois.delete(key);
+            notifyGallery(doi);
+            console.log('[VPN LIT BRIDGE][TOC OK]', { doi, replaced: replacing, width: selected.width, height: selected.height, url: selected.url });
+          }
+        }
+        if (!verifiedToc) {
+          if (tocSuspect && cachedToc?.available && cachedToc?.reason !== 'figure1_fallback') {
+            await apiPost('/api/toc/quarantine', { doi, reason: 'bridge_no_verified_semantic_toc' });
+            notifyGallery(doi);
+          }
+          suspectTocDois.delete(key);
+          setBridgeCooldown(doi, 'semantic_toc_not_found', 72 * 60 * 60 * 1000);
+          await reportBridgeAttempt(doi, 'toc-extract', 'partial', 'semantic_toc_not_found', articleUrl);
+          console.warn('[VPN LIT BRIDGE][NO TOC]', { doi, articleUrl, reason: 'No verified Visual/Graphical Abstract, Abstract Image, or TOC Graphic across publisher/full-text pages; Figure 1 will be used when available' });
+        }
+      }
+      if (needFigures) {
+        stage = 'figure-extract';
+        const imported = await rebuildFigures(doi, articleUrl, figureCandidates);
+        if (imported > 0) {
+          stats.figures += imported;
+          suspectFigureDois.delete(key);
+        }
+      }
+      articleStates.set(key, { state: 'done', at: Date.now() });
+      stats.papersDone += 1;
+    } catch (error) {
+      articleStates.set(key, { state: 'failed', at: Date.now() });
+      stats.failed += 1;
+      await recordBridgeFailure(doi, error, error.bridgeStage || stage, error.bridgeUrl || currentUrl);
+      console.warn('[VPN LIT BRIDGE][PAPER FAIL]', { doi, stage: error.bridgeStage || stage, url: error.bridgeUrl || currentUrl, error: error.message || String(error) });
+    } finally {
+      bridgeRecentlyProcessed.set(key, Date.now());
+      updateStatus();
+    }
+  }
+
+  function isNearViewport(card) {
+    const rect = card.getBoundingClientRect();
+    return rect.bottom >= -VIEWPORT_MARGIN && rect.top <= innerHeight + VIEWPORT_MARGIN;
+  }
+
+  function queueDoi(doi, priority = false) {
+    if (globalThis.__OSG_TOC_BROWSER_MAINLINE__) return;
+    if (!supportedDoi(doi)) return;
+    const key = doi.toLowerCase();
+    if (bridgeCooldown(key)) return;
+    const state = articleStates.get(key);
+    if (state?.state === 'queued' || state?.state === 'processing' || state?.state === 'done') return;
+    if (state?.state === 'failed' && Date.now() - state.at < 45000) return;
+    articleStates.set(key, { state: 'queued', at: Date.now() });
+    if (priority) articleQueue.unshift(doi);
+    else articleQueue.push(doi);
+  }
+
+  function scheduleBridgeQueueRefresh(delay = BRIDGE_QUEUE_REFRESH_MS) {
+    if (bridgeQueueTimer !== null) clearTimeout(bridgeQueueTimer);
+    bridgeQueueTimer = setTimeout(() => {
+      bridgeQueueTimer = null;
+      void refreshServerBridgeQueue();
+    }, delay);
+  }
+
+  async function refreshServerBridgeQueue() {
+    if (globalThis.__OSG_TOC_BROWSER_MAINLINE__) return;
+    if (articleQueue.length + activeArticles >= BRIDGE_BURST_LIMIT) {
+      scheduleBridgeQueueRefresh();
+      return;
+    }
+    try {
+      const payload = await apiGet('/api/media/bridge-queue');
+      const items = Array.isArray(payload?.items) ? payload.items : [];
+      const now = Date.now();
+      let added = 0;
+      for (const item of items) {
+        if (added >= BRIDGE_BURST_LIMIT) break;
+        if (!item || typeof item.doi !== 'string') continue;
+        const doi = item.doi.trim();
+        const key = doi.toLowerCase();
+        if (!supportedDoi(doi)) continue;
+        const lastProcessed = bridgeRecentlyProcessed.get(key) || 0;
+        if (now - lastProcessed < BRIDGE_RETRY_COOLDOWN_MS) continue;
+        if (item.suspiciousToc === true) suspectTocDois.add(key);
+        if (item.status === 'missing' || item.status === 'figures_only' || Number(item.figureCount || 0) < 2) suspectFigureDois.add(key);
+        if (articleStates.get(key)?.state === 'done') articleStates.delete(key);
+        const beforeState = articleStates.get(key)?.state;
+        queueDoi(doi, false);
+        if (beforeState !== 'queued' && articleStates.get(key)?.state === 'queued') added += 1;
+      }
+      if (added > 0) pump();
+    } catch (error) {
+      console.warn('[VPN LIT BRIDGE][QUEUE FAIL]', { error: error.message || String(error) });
+    } finally {
+      scheduleBridgeQueueRefresh(articleQueue.length + activeArticles === 0 ? 1200 : BRIDGE_QUEUE_REFRESH_MS);
+    }
+  }
+
+  function pump() {
+    if (globalThis.__OSG_TOC_BROWSER_MAINLINE__) return;
+    while (activeArticles < ARTICLE_CONCURRENCY && articleQueue.length) {
+      const doi = articleQueue.shift();
+      if (!doi) continue;
+      const key = doi.toLowerCase();
+      if (articleStates.get(key)?.state !== 'queued') continue;
+      articleStates.set(key, { state: 'processing', at: Date.now() });
+      activeArticles += 1;
+      processArticle(doi).finally(() => {
+        activeArticles -= 1;
+        pump();
+      });
+    }
+    updateStatus();
+    if (articleQueue.length === 0 && activeArticles === 0) {
+      auditSent = true;
+      scheduleBridgeQueueRefresh(1200);
+    }
+  }
+
+  function scan() {
+    if (globalThis.__OSG_TOC_BROWSER_MAINLINE__) return;
+    const nearbyCards = [...document.querySelectorAll('.card')]
+      .filter(card => isNearViewport(card))
+      .sort((a, b) => {
+        const center = innerHeight / 2;
+        const aRect = a.getBoundingClientRect();
+        const bRect = b.getBoundingClientRect();
+        return Math.abs((aRect.top + aRect.bottom) / 2 - center) - Math.abs((bRect.top + bRect.bottom) / 2 - center);
+      });
+    for (const card of [...nearbyCards].reverse()) {
+      const slot = card.querySelector('.toc-slot[data-doi]');
+      const doi = (slot?.dataset.doi || '').trim();
+      if (!doi || !supportedDoi(doi)) continue;
+      queueDoi(doi, true);
+    }
+    pump();
+  }
+
+  function scheduleScan(delay = 120) {
+    if (scanTimer) clearTimeout(scanTimer);
+    scanTimer = setTimeout(() => {
+      scanTimer = null;
+      scan();
+    }, delay);
+  }
+
+  function statusNode() {
+    let node = document.getElementById('vpn-lit-bridge-status');
+    if (node) return node;
+    node = document.createElement('button');
+    node.id = 'vpn-lit-bridge-status';
+    node.type = 'button';
+    node.title = 'VPN Literature Bridge；点击重试失败项目';
+    Object.assign(node.style, { position: 'fixed', right: '14px', bottom: '14px', zIndex: '2147483647', border: '1px solid #d0d5dd', borderRadius: '999px', padding: '8px 12px', background: 'rgba(255,255,255,.97)', color: '#475467', font: '12px/1.25 system-ui,sans-serif', boxShadow: '0 4px 18px rgba(16,24,40,.14)', cursor: 'pointer' });
+    node.addEventListener('click', () => {
+      if (!bridgeWriteToken()) {
+        configureBridgeWriteToken();
+        return;
+      }
+      for (const [key, state] of articleStates) if (state.state === 'failed') articleStates.delete(key);
+      stats.failed = 0;
+      scheduleBridgeQueueRefresh(0);
+      scheduleScan(0);
+    });
+    document.documentElement.appendChild(node);
+    return node;
+  }
+
+  function updateStatus() {
+    const pending = articleQueue.length + activeArticles;
+    const node = statusNode();
+    const authText = bridgeWriteToken() ? '' : ' · 写入密钥未设置';
+    node.title = bridgeWriteToken() ? 'VPN Literature Bridge；后台持续补齐 TOC/Figure，点击重试当前会话失败项目' : 'VPN Literature Bridge；点击设置 Cloudflare 写入密钥';
+    const nextText = `VPN Literature ${VERSION} · TOC ${stats.tocNew} new / ${stats.tocReplaced} replaced · Figures ${stats.figures} · Done ${stats.papersDone} · Failed ${stats.failed}` + (pending ? ` · ${pending} pending` : '') + authText;
+    if (node.textContent !== nextText) node.textContent = nextText;
+  }
+
+  statusNode();
+  updateStatus();
+  const observer = new MutationObserver(() => scheduleScan(100));
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+  window.addEventListener('scroll', () => scheduleScan(60), { passive: true });
+  window.addEventListener('focus', () => scheduleScan(40));
+  window.addEventListener('gallery-toc-suspect', event => {
+    const doi = event.detail?.doi;
+    if (typeof doi === 'string') {
+      suspectTocDois.add(doi.toLowerCase());
+      articleStates.delete(doi.toLowerCase());
+      queueDoi(doi, true);
+      pump();
+    }
+  });
+  window.addEventListener('gallery-media-inventory', event => {
+    const items = Array.isArray(event.detail?.items) ? event.detail.items : [];
+    for (const item of items) {
+      if (!item || typeof item.doi !== 'string') continue;
+      const key = item.doi.toLowerCase();
+      if (item.suspiciousToc === true) suspectTocDois.add(key);
+      if (item.status === 'missing' || item.status === 'figures_only') suspectFigureDois.add(key);
+      if ((item.suspiciousToc === true || item.status === 'missing' || item.status === 'figures_only') && articleStates.get(key)?.state === 'done') articleStates.delete(key);
+    }
+    scheduleScan(0);
+  });
+  setTimeout(scan, 300);
+  setTimeout(() => { void refreshServerBridgeQueue(); }, 900);
+  console.log(`[VPN LIT BRIDGE] Started v${VERSION}`);
+})();
+}
+
+(function () {
+  'use strict';
+
+  var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
+  var CONTROLLER_REVISION = '2.2.41';
+  var CAPTURE_HOTFIX_REVISION = '20261001-newest-retry-v1';
+  var CONTROLLER_LIFECYCLE_REVISION = '20261001-controller-recovery-v2';
+  var controllerResumeTimer = null;
+  var IMMEDIATE_RESTART_REVISION = '20261001-immediate-restart-v3';
+  var MISSING_CAPTURE_REVISION = '20261006-oct1-bundle-v7';
+  var QUEUE_COVERAGE_REVISION = '20261006-queue-coverage-v9';
+  var PUBLISHER_MEDIA_REVISION = '20261007-rsc-search-fallback-v14';
+  var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';
+  var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
+  var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
+  var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
+  var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
+  var INSTALL_REVISION = '6.2.51';
+  var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
+  var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
+  var GAP_RECOVERY_REVISION = '20261008-gap-recovery-v1';
+  var CAPTURE_OBSERVABILITY_REVISION = '20261007-capture-observability-v1';
+  var CONTROLLER_READ_REVISION = '20261007-native-metadata-first-v1';
+  var MANUAL_RECOVERY_REVISION = '20261007-manual-resume-v1';
+  var manualRecoveryBusy = false;
+  var STALE_CONTROLLER_TAKEOVER_REVISION = '20261006-stale-controller-takeover-v1';
+  var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
+  var manualExecution = null;
+  var ownedTaskHandle = null;
+  var CONTROLLER_STOP_REASON = '';
+  var GALLERY_HOST = 'gallery.gczhouwld.com';
+  var GALLERY_PATH = '/';
+  var LEGACY_GALLERY_HOST = 'zhou526316-sys.github.io';
+  var LEGACY_GALLERY_PATH = '/organic-synthesis-gallery/';
+  var PAGES_GALLERY_HOST = 'organic-synthesis-gallery-public.pages.dev';
+  // Prefer the canonical custom domains. Some Chrome/Tampermonkey profiles can
+  // fail GM_xmlhttpRequest against workers.dev even while the Gallery and the
+  // same Worker are reachable through the custom domains.
+  var QUEUE_URL = 'https://gallery.gczhouwld.com/toc-demand-live.json';
+  var ARCHITECTURE_DELIVERY_URL = 'https://gallery.gczhouwld.com/release-delivery.json';
+  var ARCHITECTURE_RELEASE_URL = 'https://gallery.gczhouwld.com/architecture-v1/release.json';
+  var WORKER = 'https://api.gczhouwld.com';
+  var CAPTURE_ENDPOINT = WORKER + '/api/media/local-capture/import';
+  var FIGURE_IMPORT_ENDPOINT = WORKER + '/api/article-figures/import';
+  var FIGURE_STAGE_ENDPOINT = WORKER + '/api/article-figures/stage';
+  var CAPTURE_INDEX_URL = WORKER + '/api/media/local-capture-index';
+  var MEDIA_INVENTORY_ENDPOINT = WORKER + '/api/media/inventory';
+  var REPORT_ENDPOINT = WORKER + '/api/media/tampermonkey-report/import';
+  var DIAGNOSTICS_ENDPOINT = WORKER + '/api/media/local-diagnostics/import';
+  var EVIDENCE_ENDPOINT = WORKER + '/api/article-summary/fulltext/import';
+  var EVIDENCE_INVENTORY_ENDPOINT = WORKER + '/api/article-summary/evidence-inventory';
+  var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';
+  var P = 'osg-toc-v6:';
+  var INVENTORY_STARTUP_REVISION = '20261007-inventory-warmstart-hedge-v1';
+  var INVENTORY_PLAN_CACHE_KEY = P + 'inventory-plan-cache-v1';
+  var INVENTORY_PLAN_CACHE_TTL_MS = 10 * 60 * 1000;
+  var INVENTORY_HEDGE_DELAY_MS = 900;
+  var INVENTORY_REQUEST_TIMEOUT_MS = 12000;
+  var ARCHITECTURE_MEMBERSHIP_STATE_KEY = P + 'architecture-membership-shadow-v1';
+  var ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY = P + 'architecture-membership-observer-v1';
+  var TOKEN_KEY = 'organicGalleryCloudflareBridgeWriteToken';
+  var LEGACY_TOKEN_KEY = TOKEN_KEY;
+  var ENABLED_KEY = P + 'enabled';
+  var ACTIVE_JOB_KEY = P + 'active-job';
+  var LEASE_KEY = P + 'controller-lease';
+  var RESUME_REQUEST_KEY = P + 'controller-resume-request-v2';
+  var SUMMARY_KEY = P + 'last-run-summary';
+  var BATCH_SIZE_KEY = P + 'batch-size';
+  var ABORT_KEY = P + 'abort-request';
+  var HEARTBEAT_KEY = P + 'publisher-heartbeat';
+  var PUBLISHER_ACCESS_COOLDOWN_PREFIX = P + 'publisher-access-cooldown:';
+  var PUBLISHER_ACCESS_COOLDOWN_MS = 30 * 60 * 1000;
+  var PUBLISHER_LAST_DISPATCH_PREFIX = P + 'publisher-last-dispatch:';
+  var SCIENCE_MIN_DISPATCH_GAP_MS = 90 * 1000;
+  var FAILURE_COOLDOWN_MS = 6 * 60 * 60 * 1000;
+  var NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000;
+  var SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000;
+  var SUMMARY_EVIDENCE_RETRY_BASE_MS = 5 * 60 * 1000;
+  var FAILURE_ENGINE_REVISION = VERSION + ':20260928-science-access-prevention';
+  var DEFAULT_BATCH_SIZE = 8;
+  var NEXT_BATCH_DELAY_MS = 12000;
+  var nextBatchTimer = null;
+  var CONTROLLER_ID = String(Date.now()) + '-' + Math.random().toString(36).slice(2);
+  var MAX_TRACE = 150;
+
+  // BEGIN OSG_LIVE_PROGRESS_V1 -- local telemetry only; never drives capture.
+  var LIVE_PANEL_REVISION = '20261007-progress-truth-v2';
+  var LIVE_VIEW_KEY = P + 'live-progress-v1';
+  var LIVE_PANEL_KEY = P + 'live-panel-open-v1';
+
+  function captureLiveError(value) {
+    return String(value || '').replace(/https?:\/\/\S+/gi, '[url]')
+      .replace(/(?:Bearer\s+\S+|(?:token|secret|password|cookie|authorization)\s*[:=]\s*[^\s;,]+)/gi, '[redacted]')
+      .replace(/[A-Za-z0-9+/_=-]{40,}/g, '[redacted]').slice(0, 180);
+  }
+
+  function captureLiveUpdate(job, phase, detail) {
+    try {
+      // A retired/foreign tab must not overwrite the current task's telemetry.
+      assertBoundCaptureJob(job);
+      var live = GM_getValue(ACTIVE_JOB_KEY, null);
+      if (!live || live.jobId !== job.jobId || live.doi !== job.doi) return false;
+      var result = job._liveResult || {};
+      var figures = result.figures || {};
+      var prev = GM_getValue(LIVE_VIEW_KEY, null);
+      var same = prev && prev.jobId === job.jobId && prev.doi === job.doi;
+      detail = detail || {};
+      var sameImage = same && prev.label === String(detail.label || job._liveLabel || '');
+      var row = {
+        jobId: job.jobId, doi: normalizeDoi(job.doi), controllerRevision: CONTROLLER_REVISION,
+        lifecycleRevision:typeof CONTROLLER_LIFECYCLE_REVISION==='string'?CONTROLLER_LIFECYCLE_REVISION:'', captureProtocol: VERSION, phase: String(phase || 'working').slice(0, 40),
+        at: Date.now(), startedAt: job.startedAt,
+        label: String(detail.label || job._liveLabel || '').slice(0, 40),
+        tocStatus: String((result.toc || {}).status || 'pending'),
+        tocKind: String((result.toc || {}).kind || ''),
+        discovered: Math.max(0, Number(figures.discovered || 0)),
+        discoveryDone: Boolean(job._liveDiscoveryDone),
+        stored: Math.max(0, Number(figures.stored || 0)),
+        stagedReceipts: Math.max(0, Number(result.figuresStaged || 0)),
+        reused: (figures.items || []).filter(function (x) { return x.status === 'already_staged'; }).length,
+        failed: Math.max(0, Number(figures.failed || 0)),
+        quality: String(detail.quality || (sameImage && prev.quality) || '').slice(0, 30),
+        width: Math.max(0, Number(detail.width || (sameImage && prev.width || 0))), height: Math.max(0, Number(detail.height || (sameImage && prev.height || 0))),
+        pdfStatus: String(detail.pdfStatus || (result.privatePdf || {}).status || (same && prev.pdfStatus) || '').slice(0, 40),
+        pdfStage: String(detail.pdfStage || (same && prev.pdfStage) || '').slice(0, 100),
+        pdfBytes: Math.max(0, Number(detail.pdfBytes || (result.privatePdf || {}).byteLength || (same && prev.pdfBytes) || 0)),
+        pdfError: detail.pdfError ? captureLiveError(detail.pdfError) : String(same && prev.pdfError || ''),
+        lastError: detail.error ? captureLiveError(detail.error) : String(same && prev.lastError || ''),
+        resultStatus: String(result.status || ''),
+        // This release retains the deployed verified-staging protocol.
+        publicationState: 'not_published'
+      };
+      GM_setValue(LIVE_VIEW_KEY, row);
+      return true;
+    } catch (_) { return false; } // Monitoring failure must not fail a capture.
+  }
+
+  function captureLiveSnapshot(now) {
+    var active = GM_getValue(ACTIVE_JOB_KEY, null);
+    var summary = GM_getValue(SUMMARY_KEY, {}) || {};
+    var manual = typeof MANUAL_RUN_KEY === 'string' ? GM_getValue(MANUAL_RUN_KEY, null) : null;
+    var lease = typeof LEASE_KEY === 'string' ? GM_getValue(LEASE_KEY, null) : null;
+    var controllerId = typeof CONTROLLER_ID === 'string' ? CONTROLLER_ID : '';
+    var manualSummaryMatches = !manual || summary.controllerRunId === 'manual:' + manual.id;
+    // A new manual generation can become visible before its summary in another tab.
+    // Never attribute the previous generation's completion or timestamps to it.
+    if (!manualSummaryMatches) summary = {};
+    if (manual && active && (active.manualRunId && active.manualRunId !== manual.id || String(active.controllerId || '').indexOf('manual:') === 0 && active.controllerId !== 'manual:' + manual.id)) active = null;
+    var raw = GM_getValue(LIVE_VIEW_KEY, null);
+    var matching = Boolean(active && raw && raw.jobId === active.jobId && raw.doi === active.doi);
+    var row = matching ? raw : null;
+    var paused = GM_getValue(ENABLED_KEY, true) === false || Boolean(GM_getValue(ABORT_KEY, null));
+    var progress = active ? GM_getValue(progressKey(active.doi), null) : null;
+    var leaseLive = Boolean(lease && Number(lease.expiresAt || 0) > now);
+    var manualLeaseMatches = Boolean(manual && lease && lease.owner === 'manual:' + manual.id && (!lease.manualRunId || lease.manualRunId === manual.id));
+    var leaseIsThisPage = Boolean(controllerId && lease && (lease.owner === controllerId || manualLeaseMatches && manual.owner === controllerId));
+    var finished = Boolean(summary.finishedAt || manual && manual.completedAt);
+    var localStopApplies = (!leaseLive || leaseIsThisPage) && (!manual || manual.owner === controllerId);
+    var state = (localStopApplies ? CONTROLLER_STOP_REASON : '') || summary.stopReason || '';
+    if (paused) state = active ? 'pausing' : 'paused';
+    else if (active) state = row ? row.phase : 'awaiting_publisher';
+    else if (!state) {
+      if (finished && (!leaseLive || leaseIsThisPage || manualLeaseMatches)) state = /^(all_resolved|blocked_remaining|inventory_partial|paused)$/.test(summary.phase || '') ? summary.phase : 'between_batches';
+      else if (leaseLive) state = leaseIsThisPage ? (/^(starting|retry_wait|cooldown_wait|inventory_retry|queue_refresh|inventory_refresh)$/.test(summary.phase || '') ? summary.phase : 'between_jobs') : 'other_controller';
+      else if (manual && !finished) state = !manualSummaryMatches && Date.parse(manual.startedAt || '') > now - 15000 ? 'starting' : 'interrupted';
+      else if (/^(all_resolved|blocked_remaining|inventory_partial|paused)$/.test(summary.phase || '')) state = summary.phase;
+      else if (finished) state = 'between_batches';
+      else if (Number(summary.pendingMissing || 0) > 0) state = 'waiting_controller';
+      else state = summary.phase === 'starting' ? 'starting' : 'idle';
+    }
+    if(paused&&typeof controllerLifecycleSnapshot==='function'&&controllerLifecycleSnapshot().resumePending)state='resume_wait';
+    // Startup/auth progress is a separate local source; do not fabricate fresh activity.
+    if (active && !paused && progress && /^(auth_wait|challenge_wait)$/.test(progress.status) &&
+        progress.jobId === active.jobId && (!row || Date.parse(progress.at) > row.at)) state = progress.status;
+    function eventTime(value) {
+      var at = typeof value === 'number' ? value : Date.parse(value || '');
+      return Number.isFinite(at) && at > 0 && at <= now ? at : 0;
+    }
+    var runStartedAt = eventTime(summary.startedAt || manual && manual.startedAt);
+    var eventTimes = [row && row.at, active && active.startedAt, summary.finishedAt];
+    if (progress && active && progress.jobId === active.jobId) eventTimes.push(progress.at);
+    (summary.results || []).forEach(function(result) {
+      if (!manual || !result.manualRunId || result.manualRunId === manual.id) eventTimes.push(result.finishedAt);
+    });
+    var last = eventTimes.reduce(function(latest, value) {
+      var at = eventTime(value);
+      return at >= runStartedAt ? Math.max(latest, at) : latest;
+    }, 0);
+    return {
+      coverageRevision:summary.queueCoverageRevision||'',scopeRevision:summary.scopeRevision||'',scopeCount:Number(summary.scopeCount||0),ownerPdfInventory:summary.ownerPdfInventory||{},ownerPdfInventoryState:String(summary.ownerPdfInventoryState||'checking'),fullyResolved:Number(summary.fullyResolved||0),unresolvedCount:Number(summary.unresolvedCount||0),blockedCount:Number(summary.blockedCount||0),deferredCount:Number(summary.deferredCount||0),deferredNextAt:Number(summary.deferredNextAt||0),deferredPreview:summary.deferredPreview||[],attemptCount:Number(summary.attemptCount||0),blockedPreview:summary.blockedPreview||[],
+      phase:summary.phase||'',missingOnly:summary.mode==='missing_only',need:active?captureNeedText(active):'—',activeJob:active,
+      pendingMissing:Number(summary.pendingMissing||0),remainingNeeds:summary.remainingNeeds||{},inventoryUnknown:Number(summary.inventoryUnknown||0),inventoryErrors:summary.inventoryErrors||[],pendingPreview:summary.pendingPreview||[],
+      inventoryProgress:summary.inventoryProgress||{},inventoryWarmStart:Boolean(summary.inventoryWarmStart),inventoryFreshPending:Boolean(summary.inventoryFreshPending),
+      state: state, active: Boolean(active), doi: active ? normalizeDoi(active.doi) : '',
+      journal: active ? String(active.journal || '').slice(0, 80) : '',
+      row: row, ageSeconds: last ? Math.max(0, Math.floor((now - last) / 1000)) : null,
+      lastAt: last || null, runStartedAt: runStartedAt || null,
+      completed: summary.queueCoverageRevision?Number(summary.visitedCount||0):(summary.results || []).length, total: Math.max(0, Number(summary.total || 0)),
+      batchToc: Math.max(0, Number(summary.tocStored || 0)),
+      batchStaged: Math.max(0, Number(summary.figuresStaged || 0)),
+      batchFailed: Math.max(0, Number(summary.failed || 0)),
+      batchSkipped: Math.max(0, Number(summary.skipped || 0)),
+      batchPartial: Math.max(0, Number(summary.partial || 0)),
+      lastResult: (summary.results || []).length ? summary.results[summary.results.length - 1] : null,
+      // Summary is committed after each paper. The active row is displayed separately, never added twice.
+      publication: '已保存至 R2 暂存；符合站点增量发布规则的新 ACS 正文图会后续发布，当前是否上线以网页与发布账本为准'
+    };
+  }
+
+  function inventoryProgressText(progress,warm,pending) {
+    var labels={media:'媒体',toc:'TOC',figures:'正文图',evidence:'全文',pdf:'云端PDF'};
+    var states={loading:'读取中',cached:'沿用缓存',fallback:'分批回退',done:'完成',error:'失败'};
+    var parts=['media','toc','figures','evidence','pdf'].map(function(key){
+      var row=progress&&progress[key]||{},text=labels[key]+'：'+(states[row.state]||'等待');
+      if(Number(row.elapsedMs||0)>0)text+=' '+(Number(row.elapsedMs)/1000).toFixed(1)+'s';
+      return text;
+    });
+    var prefix=warm?(pending?'已用最近库存先生成待办；后台复核中 · ':'本轮由最近库存快速启动；新库存已复核 · '):'库存核对 · ';
+    return prefix+parts.join(' / ');
+  }
+
+  function captureLiveText(s) {
+    var phaseNames = {
+      starting:'正在生成缺项队列', between_jobs:'本控制页持有任务，等待下一篇', other_controller:'任务由另一控制页持有，等待其继续', interrupted:'上次任务已中断，等待恢复', waiting_controller:'仍有待办，等待控制器继续', inventory_partial:'缺项队列已结束，部分库存未确认',
+      retry_wait:'等待必要访问间隔，随后自动继续', cooldown_wait:'出版社访问受限，保留待办并等待冷却结束后安全重试', queue_refresh:'正在读取最新文献队列', inventory_refresh:'正在核对已有图片、全文和 PDF 库存', inventory_retry:'库存连接恢复中，待办未丢弃', blocked_remaining:'仍有未补齐或未确认项（请核对实际尝试次数和受阻原因）', all_resolved:'本轮已确认缺项全部补齐', page_loading:'等待出版社页面加载', evidence_capture:'读取文章文本', resume_wait:'等待旧任务收尾后自动恢复', idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
+      awaiting_publisher:'已开任务页，等待出版社脚本', discovering:'识别 TOC 和正文图',
+      auth_wait:'等待出版社登录', challenge_wait:'等待出版社验证', downloading:'获取图片候选',
+      comparing:'比较清晰度／矢量结构', uploading:'上传并等待存储回执', saved:'已收到存储回执',
+      reused:'复用已保存图片', image_failed:'该图片失败，保留其他结果', finished:'本篇处理结束',
+      private_pdf_wait:'PDF：等待页面与动态控件', private_pdf_discovery:'PDF：查找入口', private_pdf_browser:'PDF：浏览器会话下载',
+      private_pdf_gm:'PDF：备用下载', private_pdf_validation:'PDF：校验文件', private_pdf_upload:'PDF：上传私有存储',
+      private_pdf_saved:'PDF：已存储', private_pdf_not_found:'PDF：未找到', private_pdf_failed:'PDF：失败', private_pdf_no_lease:'PDF：未授权'
+    };
+    var tocNames = {pending:'待处理',already_available:'保留已有 TOC',stored:'已保存',not_found:'未找到可用主图',not_requested:'本次无需补抓',failed:'失败'};
+    var pdfNames = {waiting_page:'等待页面/动态控件',searching:'查找 PDF 入口',browser_download:'浏览器会话下载',gm_download:'备用下载',validating:'校验 PDF',uploading:'上传私有存储',stored:'已存储',already_stored:'已存储（复用回执）',not_found:'未找到 PDF',not_found_cached:'未找到 PDF（冷却记录）',failed:'失败',skipped:'未授权'};
+    var r = s.row;
+    var quality = {vector:'矢量',vector_mixed:'混合矢量／位图',high:'高分辨率',usable:'可用分辨率',low:'低分辨率'};
+    var toc = r ? (tocNames[r.tocStatus] || r.tocStatus) : '等待本篇数据';
+    if (r && r.tocStatus === 'stored' && r.tocKind === 'figure1') toc += '（Figure 1 替代图，非官方 TOC）';
+    var pdf = !s.activeJob ? '等待下一篇' : r && (r.pdfStatus || r.pdfStage)
+      ? (pdfNames[r.pdfStatus] || r.pdfStage || r.pdfStatus) + (r.pdfBytes ? ' · ' + Math.round(r.pdfBytes / 1024) + ' KB' : '') + (r.pdfError ? ' · ' + r.pdfError : '')
+      : s.activeJob.capturePrivatePdf ? '等待开始' : '本篇无需抓取 PDF';
+    var lastError = r ? r.lastError : s.lastResult && s.lastResult.status !== 'success' ? captureLiveError(s.lastResult.reason) : '';
+    var pdfInventoryNotice=({
+      verified:'云端库存已核验（只对确实缺失的 PDF 派发下载）',
+      owner_lease_missing:'本浏览器尚未取得 owner PDF 捕获授权；请在私有 PDF owner 页面授权本浏览器（7 天），未知不等于缺失',
+      owner_lease_expired:'本浏览器的 owner PDF 捕获授权已失效；请重新授权，已有 PDF 不会删除',
+      read_failed:'云端 PDF 库存请求失败或不完整；禁止将未知视为缺失、禁止盲目重抓',
+      checking:'云端 PDF 库存尚未核验'
+    })[s.ownerPdfInventoryState]||'云端 PDF 库存尚未核验';
+    return {
+      state: phaseNames[s.state] || ('已停止：' + captureLiveError(s.state)),
+      needs:s.need||'—',
+      working:s.active?(s.row&&/全文|Abstract|文本/.test(s.row.label)?'文本':s.row&&s.row.label?s.row.label:s.need||'加载文章'):'—',
+      evidence:s.activeJob&&(s.activeJob.captureEvidence||s.activeJob.opportunisticEvidence)?'随当前任务顺带抓取文本':s.activeJob&&s.activeJob.existingEvidenceLevel?captureEvidenceLevelText(s.activeJob.existingEvidenceLevel)+'，不作为队列缺项':'—',
+      gaps:s.scopeRevision!==OCT1_SCOPE_QUEUE_REVISION&&s.coverageRevision?'旧版全量统计已停用；请重新按 10 月 1 日起生成缺项队列。':/^(?:starting|inventory_refresh)$/.test(s.phase||'')&&s.total===0?'仅处理 10 月 1 日之后收录文献；正在核对库存…':s.coverageRevision&&s.phase!=='starting'?'10.1起 '+s.scopeCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇（待执行 '+Math.max(0,s.pendingMissing-s.deferredCount)+'／冷却等待 '+s.deferredCount+'／访问受阻 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／确实缺PDF '+Number(s.remainingNeeds.pdf||0)+'；PDF云端 已齐 '+Number(s.ownerPdfInventory.ready||0)+'／待验证 '+(Number(s.ownerPdfInventory.pending||0)+Number(s.ownerPdfInventory.failed||0))+'／未知 '+Number(s.ownerPdfInventory.unknown||0):s.missingOnly?(s.phase==='starting'?'正在核对10.1以后文献…':'仅10.1以后 '+s.scopeCount+' 篇 · 待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)):'—',
+      blocked:(s.deferredPreview||[]).map(function(r){return r.doi+' · '+r.need+' · '+String(r.publisher||'')+' 冷却至 '+new Date(r.until).toLocaleTimeString()+'（尚未访问）';})
+        .concat((s.blockedPreview||[]).map(function(r){return r.doi+' · '+r.need+' · 已访问受阻 · '+r.reason;})).join('\n'),
+      inventory:inventoryProgressText(s.inventoryProgress,s.inventoryWarmStart,s.inventoryFreshPending)+'；PDF核对：'+pdfInventoryNotice+(s.inventoryUnknown?'；另有 '+s.inventoryUnknown+' 篇存在未确认项，不冒充已齐全或全部缺失':'')+(s.inventoryErrors.length?'；'+s.inventoryErrors.join('；'):''),
+      queue:(s.pendingPreview||[]).map(function(j){return j.addedDate+' · '+j.journal+' · '+j.need+'\n'+j.doi;}).join('\n\n'),
+      doi: s.doi || '当前没有任务页', journal: s.journal,
+      label: r && r.label || '—', toc: toc, pdf: pdf,
+      figures: r ? '已保存 ' + r.stored + '／' + (r.discoveryDone ? r.discovered : '识别中') + ' · 失败 ' + r.failed : '等待本篇数据',
+      receipts: r ? '本次暂存回执 ' + r.stagedReceipts + ' · 断点复用 ' + r.reused : '—',
+      quality: r ? (quality[r.quality] || '尚未测量') + (r.width && r.height ? ' · ' + r.width + '×' + r.height : '') : '—',
+      batch: s.coverageRevision&&s.phase!=='starting'?'实际访问 '+s.completed+'／'+s.total+' 篇 · 冷却等待 '+s.deferredCount+' · 确认补齐 '+s.fullyResolved+' 篇 · 尝试 '+s.attemptCount+' 次 · 新主图 '+s.batchToc+' · 新正文图 '+s.batchStaged:s.missingOnly&&s.phase==='starting'?'正在生成缺项队列…':(s.missingOnly?'缺项任务已结束 ':'已结束 ') + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · 部分完成 ' + Number(s.batchPartial||0) + ' · 失败 ' + s.batchFailed + ' · 跳过 ' + s.batchSkipped,
+      started: s.runStartedAt ? new Date(s.runStartedAt).toLocaleTimeString() : '尚未开始本轮',
+      last: s.lastAt ? new Date(s.lastAt).toLocaleTimeString() + ' · ' + captureLiveAgeText(s.ageSeconds) : '尚无采集进展',
+      stale: s.active && s.ageSeconds >= 45 ? '一段时间没有新进展：可能正在等待网络或页面验证，不等于抓取失败。' : '',
+      error: lastError || '无', publication: s.publication, delivery: automaticReportDisplay()
+    };
+  }
+
+  function captureLiveAgeText(seconds) {
+    seconds = Math.max(0, Math.floor(Number(seconds) || 0));
+    if (seconds < 60) return seconds + ' 秒前';
+    var minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return minutes + ' 分钟前';
+    var hours = Math.floor(minutes / 60), remaining = minutes % 60;
+    return hours + ' 小时' + (remaining ? ' ' + remaining + ' 分钟' : '') + '前';
+  }
+
+  function mountCaptureLivePanel() {
+    if (!isGalleryPage() || globalThis.__OSG_CAPTURE_LIVE_PANEL__) return;
+    var host = document.createElement('section');
+    host.id = 'osg-capture-live-panel';
+    host.style.cssText = 'position:fixed;right:14px;bottom:112px;z-index:2147483646;max-width:calc(100vw - 28px);width:365px';
+    var root = host.attachShadow({ mode: 'open' });
+    var style = document.createElement('style');
+    style.textContent = ':host{font:12px/1.5 system-ui,sans-serif;color:#172b4d}details{background:#fff;border:1px solid #bac8db;border-radius:10px;box-shadow:0 5px 24px #0002;overflow:hidden}summary{padding:9px 12px;font-weight:650;cursor:pointer;background:#edf3fa}main{padding:10px 12px;max-height:50vh;overflow:auto}dl{display:grid;grid-template-columns:64px minmax(0,1fr);gap:6px 10px;margin:0}dt{color:#5a687b}dd{margin:0;overflow-wrap:anywhere;white-space:pre-wrap}p{margin:9px 0 0;color:#53627a}#stale,#error:not([data-empty]){color:#9a3412}button{margin-top:10px;border:1px solid #9bb0c9;border-radius:6px;background:#f3f6fa;padding:5px 10px;cursor:pointer}small{display:block;margin-top:8px;color:#64748b}';
+    root.appendChild(style);
+    var details = document.createElement('details');
+    details.open = GM_getValue(LIVE_PANEL_KEY, true) !== false;
+    var heading = document.createElement('summary');
+    heading.textContent = '抓取实时进度 · ' + CONTROLLER_REVISION + ' · 全队列补缺6 · 图源适配7';
+    details.appendChild(heading);
+    var main = document.createElement('main');
+    var immediate = document.createElement('button');
+    immediate.id='osg-immediate-start';immediate.textContent='立即开始任务（只补缺项）';
+    immediate.addEventListener('click',forceStartFromHead);main.appendChild(immediate);
+    var dl = document.createElement('dl');
+    var fields = {};
+    [['state','状态'],['doi','当前 DOI'],['journal','期刊'],['needs','本篇缺项'],['working','正在补抓'],['evidence','文本情况'],['label','当前图片'],['toc','主图'],['pdf','PDF'],['figures','正文图片'],['receipts','保存记录'],['quality','清晰度'],['gaps','剩余缺项'],['batch','本轮累计'],['started','本轮开始'],['last','最近进展'],['error','最近问题']].forEach(function (pair) {
+      var dt = document.createElement('dt'), dd = document.createElement('dd');
+      dt.textContent = pair[1]; dd.id = pair[0]; fields[pair[0]] = dd; dl.appendChild(dt); dl.appendChild(dd);
+    });
+    main.appendChild(dl);
+    ['stale','inventory','blocked','publication','delivery'].forEach(function (key) { var p = document.createElement('p'); p.id = key; fields[key] = p; main.appendChild(p); });
+    var queueDetails=document.createElement('details'),queueTitle=document.createElement('summary'),queueText=document.createElement('p');
+    queueTitle.textContent='接下来补什么（最多显示 12 篇）';queueText.style.whiteSpace='pre-wrap';queueText.id='queue';fields.queue=queueText;
+    queueDetails.appendChild(queueTitle);queueDetails.appendChild(queueText);main.appendChild(queueDetails);
+    var note = document.createElement('small');
+    note.textContent = '仅处理 Gallery addedDate 不早于 2026-10-01 的文献。已入库PDF不重新下载；待验证/库存未知不计为缺失。官方TOC或已验证Figure 1主图均可闭环；正文图与全文只随真实缺项访问顺带抓取。';
+    main.appendChild(note);
+    details.appendChild(main); root.appendChild(details);
+    (document.body || document.documentElement).appendChild(host);
+    details.addEventListener('toggle', function () { try { GM_setValue(LIVE_PANEL_KEY, details.open); } catch (_) {} });
+    function render() {
+      try {
+        var text = captureLiveText(captureLiveSnapshot(Date.now()));
+        Object.keys(fields).forEach(function (key) { if (fields[key].textContent !== text[key]) fields[key].textContent = text[key]; });
+        fields.stale.hidden = !text.stale;
+        fields.error.toggleAttribute('data-empty', text.error === '无');
+      } catch (_) { fields.state.textContent = '读取本机进度失败；抓取逻辑不受影响'; }
+    }
+    render();
+    var timer = setInterval(render, 1000);
+    globalThis.__OSG_CAPTURE_LIVE_PANEL__ = { show: function () { details.open = true; render(); }, stop: function () { clearInterval(timer); } };
+    window.addEventListener('pagehide', function (event) { if (!event.persisted) clearInterval(timer); });
+  }
+  // END OSG_LIVE_PROGRESS_V1
+
+  // BEGIN OSG_AUTO_REPORT_V1 -- diagnostic writes only; never authorizes media.
+  var AUTO_REPORT_PREFIX=P+'auto-report-v1:';
+  var AUTO_REPORT_ACK=P+'auto-report-ack-v1';
+  var AUTO_REPORT_LOCK=P+'auto-report-lock-v1';
+  var autoReportBusy=false, autoReportJob=null;
+
+  function autoReportUrl(value) {
+    try {var u=new URL(String(value||''));if(!/^https?:$/.test(u.protocol))return '';u.username='';u.password='';u.search='';u.hash='';return u.href.slice(0,1200);}catch(_){return '';}
+  }
+  function autoReportText(value) {
+    return String(value||'').replace(/https?:\/\/[^\s"'<>]+/gi,function(v){return autoReportUrl(v);})
+      .replace(/Bearer\s+\S+|(?:token|secret|password|cookie|authorization)\s*[:=]\s*[^\s;,]+/gi,'[redacted]').slice(0,450);
+  }
+  function autoReportCause(event) {
+    var m=String(event.message||'');var status=Number(event.httpStatus||0);
+    if(/doi_mismatch|tab_job_mismatch|stale_or_unbound/.test(m))return 'identity_rejected';
+    if(/Request was blocked by the user|Refused to connect.*blocked/i.test(m))return 'extension_connection_denied';
+    if(status===401)return 'authentication_http_401';
+    if(status===403)return 'access_denied_http_403';
+    if(status===429)return 'rate_limited_http_429';
+    if(status===503&&/lockdown/.test(m))return 'server_recovery_lockdown';
+    if(status>=500)return 'server_http_5xx';
+    if(status>=400)return 'http_error';
+    if(/timeout|TimeoutError|AbortError/.test(m))return 'request_timeout_or_abort';
+    if(/not_image|image_type|unsupported|svg/.test(m))return 'format_or_content_rejected';
+    if(event.status==='low'||/resolution|no_usable/.test(m))return 'quality_or_candidates_insufficient';
+    if(/lease|heartbeat|tab_handle|task_tab/.test(m))return 'controller_or_page_startup';
+    if(/fetch_failed|Failed to fetch|gm_request_error|NetworkError/.test(m))return 'transport_error_cause_unverified';
+    return 'inspect_stage_evidence';
+  }
+  function autoReportEvent(e) {
+    return {seq:Number(e.seq||0),at:String(e.at||nowIso()),stage:String(e.stage||'').slice(0,60),event:String(e.event||'').slice(0,80),status:String(e.status||'').slice(0,40),httpStatus:Number(e.httpStatus||0),contentType:String(e.contentType||'').slice(0,80),url:autoReportUrl(e.url),message:autoReportText(e.message),candidateKind:String(e.candidateKind||'').slice(0,40),candidateSource:String(e.candidateSource||'').slice(0,80),imageWidth:Number(e.imageWidth||0),imageHeight:Number(e.imageHeight||0),byteLength:Number(e.byteLength||0)};
+  }
+  function autoReportKeys() {
+    try{return GM_listValues().filter(function(k){return String(k).indexOf(AUTO_REPORT_PREFIX)===0;});}catch(_){return [];}
+  }
+  function pruneStaleAutomaticReports() {
+    try{
+      autoReportKeys().forEach(function(k){
+        var row=GM_getValue(k,null),revision=String(row&&row.payload&&row.payload.controllerRevision||'');
+        if(revision&&revision!==CONTROLLER_REVISION)GM_deleteValue(k);
+      });
+    }catch(_){}
+  }
+  function enqueueCaptureReport(job,trace,status,reason,final,actualPageUrl) {
+    try {
+      var doi=normalizeDoi(job&&job.doi);if(!doi||!job.jobId)return false;
+      var key=AUTO_REPORT_PREFIX+job.jobId+(final?':final':':checkpoint');
+      var prior=GM_getValue(key,null), keys=autoReportKeys();
+      if(!prior&&keys.length>=200){GM_setValue(AUTO_REPORT_ACK,{at:Date.now(),state:'outbox_full',pending:keys.length,error:'本机诊断队列已满；保留现有记录，停止新增自动报告'});return false;}
+      var revision=Number(prior&&prior.revision||0)+1;
+      var important=(job._diagnosticFailures||[]).slice(-48);
+      var recent=(trace||[]).slice(-32).map(autoReportEvent);
+      var seen=new Set();var events=important.concat(recent).filter(function(e){var k=e.at+'|'+e.stage+'|'+e.event+'|'+e.url;if(seen.has(k))return false;seen.add(k);return true;});
+      var page=autoReportUrl(actualPageUrl===undefined?location.href:actualPageUrl);
+      var last=important.length?important[important.length-1]:recent[recent.length-1]||{};
+      var metadata={eventId:job.jobId+(final?':final':':checkpoint')+':'+revision,jobId:job.jobId,installRevision:typeof INSTALL_REVISION==='string'?INSTALL_REVISION:'',captureObservabilityRevision:typeof CAPTURE_OBSERVABILITY_REVISION==='string'?CAPTURE_OBSERVABILITY_REVISION:'',controllerRevision:CONTROLLER_REVISION,architectureMembershipRevision:typeof ARCHITECTURE_MEMBERSHIP_REVISION==='string'?ARCHITECTURE_MEMBERSHIP_REVISION:'',publisherMediaRevision:typeof PUBLISHER_MEDIA_REVISION==='string'?PUBLISHER_MEDIA_REVISION:'',queueCoverageRevision:typeof QUEUE_COVERAGE_REVISION==='string'?QUEUE_COVERAGE_REVISION:'',missingRevision:typeof MISSING_CAPTURE_REVISION==='string'?MISSING_CAPTURE_REVISION:'',requestedNeeds:typeof captureNeedText==='function'?captureNeedText(job):'',routePlan:job&&job.routePlan?job.routePlan:null,lifecycleRevision:typeof CONTROLLER_LIFECYCLE_REVISION==='string'?CONTROLLER_LIFECYCLE_REVISION:'',controllerState:typeof controllerLifecycleSnapshot==='function'?controllerLifecycleSnapshot():null,captureVersion:VERSION,kind:final?'final_result':'failure_checkpoint',retryCount:Number(job.retryCount||0),pageDois:embeddedJobDois(page),httpStatusKnown:Number(last.httpStatus||0)>0};
+      var context={at:nowIso(),seq:0,stage:'diagnostic_context',event:final?'final_result':'failure_checkpoint',status:'info',url:page,message:JSON.stringify(metadata)};
+      var architectureState=typeof ARCHITECTURE_MEMBERSHIP_STATE_KEY==='string'?GM_getValue(ARCHITECTURE_MEMBERSHIP_STATE_KEY,null):null;
+      var architectureEvent=null;
+      if(architectureState&&architectureState.revision===ARCHITECTURE_MEMBERSHIP_REVISION&&Number(architectureState.memberCount||0)>0){
+        architectureEvent={at:nowIso(),seq:0,stage:'architecture_membership',event:'verified_snapshot',status:'info',url:'',
+          message:JSON.stringify({revision:architectureState.revision,serial:Number(architectureState.serial||0),
+            publicationSlot:String(architectureState.publicationSlot||''),catalogId:String(architectureState.catalogId||''),
+            membershipSha256:String(architectureState.membershipSha256||''),asOfDate:String(architectureState.asOfDate||''),
+            cutoff:String(architectureState.cutoff||''),memberCount:Number(architectureState.memberCount||0),
+            hotCount:Number(architectureState.hotCount||0),archiveCount:Number(architectureState.archiveCount||0),
+            verifiedAt:Number(architectureState.verifiedAt||0)})};
+      }
+      var observerState=typeof ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY==='string'?GM_getValue(ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY,null):null;
+      var architectureObserverEvent=null;
+      if(observerState&&observerState.revision===ARCHITECTURE_MEMBERSHIP_REVISION){
+        architectureObserverEvent={at:nowIso(),seq:0,stage:'architecture_membership',event:observerState.ok===true?'observer_ok':'verification_failed',
+          status:observerState.ok===true?'info':'failed',url:'',
+          message:JSON.stringify({revision:String(observerState.revision||''),installRevision:String(observerState.installRevision||''),
+            ok:observerState.ok===true,error:captureLiveError(observerState.error||''),attemptedAt:Number(observerState.attemptedAt||0),
+            catalogId:String(observerState.catalogId||''),memberCount:Number(observerState.memberCount||0),
+            hotCount:Number(observerState.hotCount||0),archiveCount:Number(observerState.archiveCount||0),
+            cutoff:String(observerState.cutoff||'')})};
+      }
+      var finalResult=job._liveResult||{};
+      var figureItems=(finalResult.figures&&Array.isArray(finalResult.figures.items)?finalResult.figures.items:[]).filter(function(item){return item&&/^(?:staged|already_staged)$/.test(String(item.status||''));});
+      var payload={doi:doi,jobId:job.jobId,captureVersion:VERSION,controllerRevision:CONTROLLER_REVISION,mediaNeed:String(job.mediaNeed||''),final:Boolean(final),publisher:job.publisher||publisherForDoi(doi),status:final?String(status||'failed'):'progress',reason:final?autoReportText(reason):'failure_checkpoint:'+autoReportCause(last),candidateSource:final?'auto_final_result':'auto_failure_checkpoint',articleUrl:page,sourceUrl:autoReportUrl(last.url),startedAt:job.startedAt||'',finishedAt:final?nowIso():'',queueGeneratedAt:job.queueGeneratedAt||'',tocStatus:String(finalResult.toc&&finalResult.toc.status||''),figuresDiscovered:Math.max(0,Number(finalResult.figures&&finalResult.figures.discovered||0)),figuresStored:Math.max(0,Number(finalResult.figures&&finalResult.figures.stored||0)),figureLabels:figureItems.map(function(item){return String(item.label||'').slice(0,80);}).filter(Boolean).slice(0,20),fulltextStatus:String(finalResult.fulltext&&finalResult.fulltext.status||''),evidenceChars:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.chars||0)),evidenceSections:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.sections||0)),evidenceLevel:String(finalResult.fulltext&&finalResult.fulltext.evidenceLevel||''),privatePdfStatus:String(finalResult.privatePdf&&finalResult.privatePdf.status||''),privatePdfBytes:Math.max(0,Number(finalResult.privatePdf&&finalResult.privatePdf.byteLength||0)),trace:[context].concat(events).concat(architectureEvent?[architectureEvent]:[]).concat(architectureObserverEvent?[architectureObserverEvent]:[])};
+      GM_setValue(key,{revision:revision,payload:payload,createdAt:prior?prior.createdAt:Date.now(),tries:Number(prior&&prior.tries||0),nextAt:Number(prior&&prior.nextAt||0)});
+      if(final)GM_deleteValue(AUTO_REPORT_PREFIX+job.jobId+':checkpoint');
+      return true;
+    }catch(_){return false;}
+  }
+  function captureDiagnosticEvent(trace,row) {
+    try {
+      var job=autoReportJob,active=GM_getValue(ACTIVE_JOB_KEY,null);
+      if(!job||!active||active.jobId!==job.jobId||active.doi!==job.doi)return;
+      if(row.stage==='report_upload')return;
+      if(row.event==='failed'||row.status==='low'||Number(row.httpStatus)>=400) {
+        job._diagnosticFailures=job._diagnosticFailures||[];
+        var event=autoReportEvent(row);
+        event.message=autoReportText('label='+(job._liveLabel||'')+';cause='+autoReportCause(row)+';'+row.message);
+        job._diagnosticFailures.push(event);if(job._diagnosticFailures.length>48)job._diagnosticFailures.shift();
+        enqueueCaptureReport(job,trace,'progress','',false);
+      }
+    }catch(_){}
+  }
+  async function sendAutomaticReport(payload,token) {
+    var response;
+    try {
+      response=await gmRequest({method:'POST',url:REPORT_ENDPOINT,timeout:10000,headers:{'content-type':'application/json',authorization:'Bearer '+token},data:JSON.stringify(payload)});
+    }catch(error){
+      var r=await fetch(REPORT_ENDPOINT,{method:'POST',credentials:'omit',mode:'cors',signal:AbortSignal.timeout(10000),headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify(payload)});
+      response={status:r.status,responseText:await r.text()};
+    }
+    var body={};try{body=JSON.parse(response.responseText||'{}');}catch(_){}
+    if(response.status<200||response.status>=300){var e=new Error('diagnostic_http_'+response.status+':'+autoReportText(body.code||body.error));e.httpStatus=response.status;throw e;}
+    if(body.stored!==true||normalizeDoi(body.doi)!==payload.doi||!body.attemptId)throw new Error('diagnostic_receipt_invalid');
+    return body;
+  }
+  async function drainAutomaticReports() {
+    if(!isGalleryPage()||autoReportBusy||!writeToken())return;
+    autoReportBusy=true;
+    var owner=CONTROLLER_ID+':diagnostics',key='',item=null;
+    try {
+      var lock=GM_getValue(AUTO_REPORT_LOCK,null);
+      if(lock&&lock.owner!==owner&&lock.expiresAt>Date.now())return;
+      GM_setValue(AUTO_REPORT_LOCK,{owner:owner,expiresAt:Date.now()+60000});
+      await sleep(75);
+      if((GM_getValue(AUTO_REPORT_LOCK,{})||{}).owner!==owner)return;
+      var ready=autoReportKeys().map(function(k){return {key:k,value:GM_getValue(k,null)};}).filter(function(x){return x.value&&Number(x.value.nextAt||0)<=Date.now();});
+      ready.sort(function(a,b){return a.value.createdAt-b.value.createdAt;});
+      if(!ready.length)return;key=ready[0].key;item=ready[0].value;
+      var receipt=await sendAutomaticReport(item.payload,writeToken());
+      // A newly queued revision must survive acknowledgement of an earlier snapshot.
+      var current=GM_getValue(key,null);
+      if(current&&current.revision===item.revision)GM_deleteValue(key);
+      GM_setValue(AUTO_REPORT_ACK,{at:Date.now(),state:'delivered',doi:item.payload.doi,attemptId:receipt.attemptId,kind:item.payload.candidateSource,pending:autoReportKeys().length,error:''});
+    }catch(error){
+      if(/stale_controller_revision/i.test(String(error&&error.message||error))){
+        if(key)GM_deleteValue(key);
+        GM_setValue(AUTO_REPORT_ACK,{at:Date.now(),state:'stale_discarded',pending:autoReportKeys().length,error:'旧 controller 回执已丢弃'});
+        return;
+      }
+      if(key&&item){var current=GM_getValue(key,null);if(current){current.tries=Number(current.tries||0)+1;current.nextAt=Date.now()+Math.min(300000,15000*Math.pow(2,Math.min(current.tries,5)));GM_setValue(key,current);}}
+      GM_setValue(AUTO_REPORT_ACK,{at:Date.now(),state:'pending_retry',pending:autoReportKeys().length,error:autoReportText(error&&error.message||error)});
+    }finally{
+      var held=GM_getValue(AUTO_REPORT_LOCK,null);if(held&&held.owner===owner)GM_deleteValue(AUTO_REPORT_LOCK);
+      autoReportBusy=false;
+    }
+  }
+  function startAutomaticCaptureReports() {
+    if(!isGalleryPage()||globalThis.__OSG_AUTO_REPORT_STARTED__)return;
+    globalThis.__OSG_AUTO_REPORT_STARTED__=true;
+    pruneStaleAutomaticReports();
+    // A durable Gallery sender survives publisher-tab closure. One request at a time.
+    setInterval(function(){drainAutomaticReports().catch(function(){});},10000);
+    drainAutomaticReports().catch(function(){});
+  }
+  function automaticReportDisplay() {
+    var ack=GM_getValue(AUTO_REPORT_ACK,null),pending=autoReportKeys().length;
+    if(!ack)return '自动上报已启用；待发送 '+pending+' 份';
+    return (ack.state==='delivered'?'服务器已确认接收':'报告未送达：'+String(ack.error||ack.state))+' · 待发送 '+pending+' · '+new Date(ack.at).toLocaleTimeString();
+  }
+  // END OSG_AUTO_REPORT_V1
+
+  function nowIso() { return new Date().toISOString(); }
+
+  function sleep(ms) {
+    return new Promise(function (resolve) { setTimeout(resolve, ms); });
+  }
+
+  function normalizeDoi(value) {
+    var s = String(value || '').trim().toLowerCase();
+    try { s = decodeURIComponent(s); } catch (_) {}
+    s = s.replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '').replace(/^doi:\s*/i, '').replace(/[?#].*$/, '');
+    return /^10\.\d{4,9}\/\S+$/i.test(s) ? s : '';
+  }
+
+  function embeddedNatureDoi(value) {
+    var decoded = String(value || '');
+    for (var i = 0; i < 2; i += 1) {
+      try {
+        var next = decodeURIComponent(decoded);
+        if (next === decoded) break;
+        decoded = next;
+      } catch (_) {
+        break;
+      }
+    }
+    var match = decoded.match(/10\.1038\/s\d+-\d+-\d+[a-z0-9-]*/i);
+    return match ? normalizeDoi(match[0]) : '';
+  }
+
+function embeddedJobDois(value) {
+  let decoded = String(value || '').split(/[?#]/, 1)[0];
+  for (let i = 0; i < 3; i += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch { break; }
+  }
+  const found = new Set();
+  const pattern = /10\.(1021|1002|1038|1126|1039|1016|31635)[/_]([a-z0-9._()-]+)/ig;
+  for (const match of decoded.matchAll(pattern)) {
+    const doi = normalizeDoi('10.' + match[1] + '/' + match[2]);
+    if (doi) found.add(doi);
+  }
+  try {
+    const url = new URL(decoded);
+    if (/^(?:www\.)?nature\.com$/i.test(url.hostname)) {
+      const match = url.pathname.match(/^\/articles\/(s\d+-\d+-\d+[a-z0-9-]*)/i);
+      if (match) found.add(normalizeDoi('10.1038/' + match[1]));
+    }
+  } catch {}
+  return [...found].filter(Boolean);
+}
+
+  function publisherPageDois() {
+    var ids = embeddedJobDois(location.href);
+    document.querySelectorAll('head meta[name="citation_doi"],head meta[name="dc.Identifier"],head meta[name="DC.Identifier"],head meta[property="citation_doi"],head link[rel="canonical"]').forEach(function (node) {
+      ids = ids.concat(embeddedJobDois(node.getAttribute('content') || node.getAttribute('href') || ''));
+    });
+    return Array.from(new Set(ids));
+  }
+
+  function currentCaptureJob(job) {
+    var active=GM_getValue(ACTIVE_JOB_KEY,null),manual=GM_getValue(MANUAL_RUN_KEY,null);
+    return Boolean(job&&active&&job.jobId===active.jobId&&job.doi===active.doi
+      && (!manual || manual.completedAt || job.manualRunId===manual.id));
+  }
+
+  function assertBoundCaptureJob(job, sourceUrl) {
+    var live = GM_getValue(ACTIVE_JOB_KEY, null);
+    if (!currentCaptureJob(job) || !job.jobId || !live || live.jobId !== job.jobId || live.doi !== job.doi || job.captureVersion !== VERSION) {
+      throw new Error('capture_job_stale_or_unbound');
+    }
+    var binding = '';
+    try { binding = sessionStorage.getItem(P + 'tab-job-binding') || ''; } catch (_) {}
+    if (binding !== job.jobId) throw new Error('capture_tab_job_mismatch');
+    var page = publisherPageDois();
+    if (!page.length) throw new Error('page_doi_unverified');
+    if (page.some(function (doi) { return doi !== normalizeDoi(job.doi); })) throw new Error('page_doi_mismatch');
+    var source = embeddedJobDois(sourceUrl || '');
+    if (source.some(function (doi) { return doi !== normalizeDoi(job.doi); })) throw new Error('media_source_doi_mismatch');
+    return normalizeDoi(job.doi);
+  }
+
+  function publisherBindGraceMs(job) {
+    var publisher=String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)));
+    if(publisher==='elsevier')return 45000;
+    if(publisher==='rsc')return 30000;
+    return 4000;
+  }
+
+  function publisherBindingInterstitial() {
+    var title=String(document.title||'');
+    var text=String(document.body&&document.body.innerText||'').slice(0,4000);
+    return /请稍候|请稍等|正在加载|正在检查|正在验证|please\s+(?:wait|stand\s+by)|just\s+a\s+moment|checking\s+(?:your\s+browser|access)|verifying\s+(?:your\s+browser|access)/i.test(title+'\n'+text);
+  }
+
+  async function bindPublisherCaptureJob(job) {
+    var match = String(location.hash || '').match(/(?:^#|&)osg-job=([a-z0-9-]{16,80})(?:&|$)/i);
+    var binding = '';
+    try {
+      if (match) sessionStorage.setItem(P + 'tab-job-binding', match[1]);
+      binding = sessionStorage.getItem(P + 'tab-job-binding') || '';
+    } catch (_) {}
+    if (!job.jobId || binding !== job.jobId) throw new Error('capture_tab_job_mismatch');
+    var started=Date.now(),deadline=started+publisherBindGraceMs(job),lastError=null;
+    while(Date.now()<deadline){
+      try { return assertBoundCaptureJob(job); }
+      catch (error) {
+        lastError=error;
+        if(String(error.message)!=='page_doi_unverified')throw error;
+        var publisher=String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)));
+        var interstitial=publisherBindingInterstitial();
+        var bodyLength=String(document.body&&document.body.innerText||'').length;
+        if(!interstitial&&Date.now()-started>8000&&bodyLength>1200)throw error;
+        if(publisher==='elsevier'||publisher==='rsc'){
+          writePublisherHeartbeat(job,'publisher_binding_wait');
+          GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:'publisher_binding_wait',at:nowIso(),url:location.href,version:VERSION,host:location.hostname});
+        }
+        await sleep(Math.min(1500,Math.max(250,deadline-Date.now())));
+      }
+    }
+    throw lastError||new Error('page_doi_unverified');
+  }
+
+  function candidateBelongsToJob(url, job) {
+    var doi = normalizeDoi(job && job.doi);
+    return Boolean(doi && embeddedJobDois(url).every(function (value) { return value === doi; }));
+  }
+
+  function publisherForDoi(doi) {
+    if (doi.indexOf('10.1021/') === 0) return 'acs';
+    if (doi.indexOf('10.1002/') === 0) return 'wiley';
+    if (doi.indexOf('10.1038/') === 0) return 'nature';
+    if (doi.indexOf('10.1126/') === 0) return 'science';
+    if (doi.indexOf('10.1039/') === 0) return 'rsc';
+    if (doi.indexOf('10.1016/') === 0) return 'elsevier';
+    if (doi.indexOf('10.31635/') === 0) return 'ccs';
+    return 'other';
+  }
+
+  function articleUrl(job) {
+    var doi = normalizeDoi(job && job.doi);
+    var publisher = String(job && job.publisher || publisherForDoi(doi));
+    var suffix = doi.split('/')[1] || '';
+    var figureJob = Boolean(job && (job.captureFigures === true || job.captureEvidence === true
+      || job.opportunisticFigures === true || job.opportunisticEvidence === true))
+      || String(job && job.mediaNeed || '').indexOf('figures') >= 0
+      || String(job && job.mediaNeed || '').indexOf('evidence') >= 0
+      || String(job && job.state || '') === 'figure_gap';
+    if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + (figureJob ? 'full/' : '') + doi;
+    if (publisher === 'wiley') return 'https://onlinelibrary.wiley.com/doi/' + (figureJob ? 'full/' : '') + doi;
+    if (publisher === 'nature') return 'https://www.nature.com/articles/' + suffix;
+    if (publisher === 'science') {
+      // Missing-TOC work must stay on the public article landing route. The paired
+      // scheduler may opportunistically want figures too, but forcing /doi/full/
+      // for a TOC gap needlessly hits AAAS access control.
+      return 'https://www.science.org/doi/' + (job && job.captureToc === true ? '' : (figureJob ? 'full/' : '')) + doi;
+    }
+    if (publisher === 'ccs') return 'https://www.chinesechemsoc.org/doi/' + (figureJob ? 'full/' : '') + doi;
+    if (publisher === 'rsc') {
+      var rsc = /^([a-z])(\d)([a-z]{2})/i.exec(suffix);
+      if (rsc) {
+        var rscBase='https://pubs.rsc.org/en/content/';
+        return rscBase+(figureJob?'articlehtml/':'articlelanding/')+String(2020 + Number(rsc[2])) + '/' + rsc[3].toLowerCase() + '/' + suffix.toLowerCase();
+      }
+    }
+    return 'https://doi.org/' + doi;
+  }
+
+  function publisherArticleHostAllowed(publisher, value) {
+    try {
+      var host = new URL(value, location.href).hostname.toLowerCase();
+      var sub = function (base) { return host === base || host.endsWith('.' + base); };
+      if (publisher === 'elsevier') return sub('sciencedirect.com') || sub('cell.com');
+      if (publisher === 'rsc') return sub('pubs.rsc.org');
+      if (publisher === 'ccs') return sub('chinesechemsoc.org') || sub('ccspublishing.org.cn');
+      if (publisher === 'acs') return sub('pubs.acs.org');
+      if (publisher === 'wiley') return sub('onlinelibrary.wiley.com');
+      if (publisher === 'nature') return sub('nature.com');
+      if (publisher === 'science') return sub('science.org');
+      return false;
+    } catch (_) { return false; }
+  }
+
+  function boundPublisherJobUrl(value, jobId) {
+    var url = new URL(String(value || ''), location.href);
+    url.hash = 'osg-job=' + encodeURIComponent(String(jobId || ''));
+    return url.href;
+  }
+
+  function captureRouteClass(value) {
+    try {
+      var u=new URL(String(value||''),location.href),h=u.hostname.toLowerCase(),p=u.pathname.toLowerCase();
+      if(h.endsWith('pubs.rsc.org'))return p.indexOf('/articlehtml/')>=0?'rsc_articlehtml':p.indexOf('/articlelanding/')>=0?'rsc_articlelanding':'rsc_other';
+      if(h.endsWith('pubs.acs.org'))return p.indexOf('/doi/full/')>=0?'acs_full':'acs_landing';
+      if(h.endsWith('onlinelibrary.wiley.com'))return p.indexOf('/doi/full/')>=0?'wiley_full':'wiley_landing';
+      if(h.endsWith('science.org'))return p.indexOf('/doi/full/')>=0?'science_full':'science_landing';
+      if(h.endsWith('nature.com'))return 'nature_article';
+      if(h.endsWith('sciencedirect.com'))return 'elsevier_sciencedirect';
+      if(h.endsWith('cell.com'))return 'elsevier_cell';
+      if(h.endsWith('chinesechemsoc.org')||h.endsWith('ccspublishing.org.cn'))return p.indexOf('/doi/full/')>=0?'ccs_full':'ccs_landing';
+      if(h==='doi.org')return 'doi_redirect';
+      return h||'unknown';
+    } catch (_) { return 'invalid_url'; }
+  }
+  function captureRoutePlan(job,base,resolved) {
+    return {revision:CAPTURE_OBSERVABILITY_REVISION,baseRoute:captureRouteClass(base),resolvedRoute:captureRouteClass(resolved),
+      baseUrl:autoReportUrl(base),resolvedUrl:autoReportUrl(resolved),captureToc:job&&job.captureToc===true,
+      captureFigures:job&&job.captureFigures===true,opportunisticFigures:job&&job.opportunisticFigures===true,
+      captureEvidence:job&&job.captureEvidence===true,opportunisticEvidence:job&&job.opportunisticEvidence===true,
+      capturePrivatePdf:job&&job.capturePrivatePdf===true,mediaNeed:String(job&&job.mediaNeed||'')};
+  }
+
+  function elsevierResolvedPublisherUrl(response) {
+    var candidates = [];
+    var finalUrl = String(response && (response.finalUrl || response.responseURL) || '');
+    if (finalUrl) candidates.push(finalUrl);
+    try {
+      var resolvedHost = new URL(finalUrl).hostname.toLowerCase();
+      if (resolvedHost === 'linkinghub.elsevier.com') {
+        var pii = finalUrl.match(/\/pii\/([a-z0-9]+)/i);
+        if (pii) candidates.unshift('https://www.sciencedirect.com/science/article/pii/' + pii[1]);
+      }
+    } catch (_) {}
+    var text = String(response && response.responseText || '').replace(/&amp;/gi, '&');
+    var pattern = /https?:\/\/(?:www\.)?(?:sciencedirect\.com|cell\.com)\/[^"'<>\s]+/ig;
+    var match;
+    while ((match = pattern.exec(text)) && candidates.length < 12) candidates.push(match[0]);
+    for (var i = 0; i < candidates.length; i += 1) {
+      if (publisherArticleHostAllowed('elsevier', candidates[i])) return candidates[i];
+    }
+    return '';
+  }
+
+  async function resolvePublisherTaskUrl(job) {
+    var base = articleUrl(job);
+    var publisher=String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi)));
+    if (publisher === 'elsevier') {
+      try {
+        var response = await gmRequest({
+          method: 'GET', url: base, timeout: 30000,
+          headers: { Accept: 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.1' }
+        });
+        var resolved = elsevierResolvedPublisherUrl(response);
+        if (resolved) return resolved;
+      } catch (_) {}
+      return base;
+    }
+    if (publisher === 'rsc') {
+      var wantsFull=Boolean(job && (job.captureFigures===true||job.captureEvidence===true
+        || job.opportunisticFigures===true||job.opportunisticEvidence===true))
+        || String(job&&job.mediaNeed||'').indexOf('figures')>=0
+        || String(job&&job.mediaNeed||'').indexOf('evidence')>=0;
+      var htmlUrl=wantsFull?rscArticleHtmlUrl(job):'';
+      if(htmlUrl){
+        try{
+          var rscResponse=await gmRequest({method:'GET',url:htmlUrl,timeout:25000,
+            headers:{Accept:'text/html,application/xhtml+xml;q=0.9,*/*;q=0.1'}});
+          var rscFinal=String(rscResponse&&(rscResponse.finalUrl||rscResponse.responseURL)||htmlUrl);
+          var rscText=String(rscResponse&&rscResponse.responseText||'').toLowerCase();
+          var suffix=normalizeDoi(job.doi).split('/').pop();
+          if(Number(rscResponse.status||0)>=200&&Number(rscResponse.status||0)<400
+              && publisherArticleHostAllowed('rsc',rscFinal)
+              && (rscFinal.toLowerCase().indexOf(suffix)>=0||rscText.indexOf(normalizeDoi(job.doi))>=0||rscText.indexOf(suffix)>=0)) return rscFinal;
+        }catch(_){}
+      }
+    }
+    return base;
+  }
+
+  function resultKey(doi) { return P + 'result:' + normalizeDoi(doi); }
+  function progressKey(doi) { return P + 'progress:' + normalizeDoi(doi); }
+  function traceKey(doi) { return P + 'trace:' + normalizeDoi(doi); }
+  function jobKind(job) {
+    var need=String(job && job.mediaNeed || '');
+    if(need==='evidence')return 'evidence';
+    return need === 'figures' || String(job && job.state || '') === 'figure_gap' ? 'figures' : 'toc';
+  }
+  function attemptKey(doi, generatedAt, kind) {
+    var base = P + 'attempt:' + normalizeDoi(doi) + ':' + String(generatedAt || '');
+    if(String(kind||'toc')==='evidence')return base+':evidence';
+    return String(kind || 'toc') === 'figures' ? base + ':figures' : base;
+  }
+  function failureKey(doi, kind) {
+    return String(kind || 'toc') === 'figures'
+      ? P + 'failure:figures:' + normalizeDoi(doi)
+      : P + 'failure:' + normalizeDoi(doi);
+  }
+  function summaryEvidenceUrgencyKey(doi) {
+    return P + 'summary-evidence-urgent:' + normalizeDoi(doi);
+  }
+  function summaryEvidenceUrgency(doi) {
+    var value=GM_getValue(summaryEvidenceUrgencyKey(doi),null);
+    if(!value)return null;
+    if(Number(value.expiresAt||0)<=Date.now()){
+      GM_deleteValue(summaryEvidenceUrgencyKey(doi));
+      return null;
+    }
+    return value;
+  }
+  function markSummaryEvidenceUrgency(doi) {
+    var now=Date.now(), prior=summaryEvidenceUrgency(doi);
+    GM_setValue(summaryEvidenceUrgencyKey(doi),{
+      doi:normalizeDoi(doi),
+      tocCapturedAt:Number(prior&&prior.tocCapturedAt||now),
+      expiresAt:Number(prior&&prior.expiresAt||now+SUMMARY_EVIDENCE_SLA_MS)
+    });
+  }
+  function clearSummaryEvidenceUrgency(doi) {
+    GM_deleteValue(summaryEvidenceUrgencyKey(doi));
+  }
+  function hasActiveSummaryEvidenceUrgency() {
+    try {
+      var prefix=P+'summary-evidence-urgent:';
+      return GM_listValues().some(function(key){
+        key=String(key||'');
+        if(key.indexOf(prefix)!==0)return false;
+        return Boolean(summaryEvidenceUrgency(key.slice(prefix.length)));
+      });
+    } catch (_) {
+      return false;
+    }
+  }
+  function urgentEvidenceRetryEligible(prior, now) {
+    if(!prior)return true;
+    if(prior.status==='success')return false;
+    var elapsed=now-Date.parse(prior.finishedAt||0);
+    var count=Math.max(1,Number(prior.retryCount||1));
+    if(count>=4)return false;
+    return elapsed>=Math.min(20,count*5)*60*1000;
+  }
+  function publisherAccessCooldownKey(publisher) {
+    return PUBLISHER_ACCESS_COOLDOWN_PREFIX + String(publisher || '').toLowerCase();
+  }
+
+  function markPublisherAccessCooldown(job, reason) {
+    var publisher = String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))).toLowerCase();
+    if (!publisher) return null;
+    var row = {
+      publisher: publisher,
+      doi: normalizeDoi(job && job.doi),
+      reason: String(reason || 'publisher_access_gate').slice(0,80),
+      at: Date.now(),
+      until: Date.now() + PUBLISHER_ACCESS_COOLDOWN_MS
+    };
+    GM_setValue(publisherAccessCooldownKey(publisher), row);
+    return row;
+  }
+
+  function publisherAccessCooldownUntil(job) {
+    var publisher = String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))).toLowerCase();
+    if (!publisher) return 0;
+    var key = publisherAccessCooldownKey(publisher);
+    var row = GM_getValue(key, null), until = Number(row && row.until || 0);
+    if (!Number.isFinite(until) || until <= Date.now()) {
+      if (row) GM_deleteValue(key);
+      return 0;
+    }
+    return until;
+  }
+
+  function publisherAccessCooling(job) {
+    return publisherAccessCooldownUntil(job) > 0;
+  }
+
+  function publisherDispatchKey(publisher) {
+    return PUBLISHER_LAST_DISPATCH_PREFIX + String(publisher || '').toLowerCase();
+  }
+
+  function markPublisherDispatch(job) {
+    var publisher = String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))).toLowerCase();
+    if (!publisher) return;
+    GM_setValue(publisherDispatchKey(publisher), { at: Date.now(), doi: normalizeDoi(job && job.doi) });
+  }
+
+  function publisherPacingCooling(job) {
+    var publisher = String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))).toLowerCase();
+    if (publisher !== 'science') return false;
+    var last = GM_getValue(publisherDispatchKey(publisher), null);
+    return Boolean(last && Number(last.at || 0) > 0 && Date.now() - Number(last.at) < SCIENCE_MIN_DISPATCH_GAP_MS);
+  }
+
+  function writeToken() {
+    var current = String(GM_getValue(TOKEN_KEY, '') || '').trim();
+    if (current) return current;
+    var legacy = String(GM_getValue(LEGACY_TOKEN_KEY, '') || '').trim();
+    if (legacy) {
+      GM_setValue(TOKEN_KEY, legacy);
+      return legacy;
+    }
+    return '';
+  }
+  function batchSize() {
+    var value = Number(GM_getValue(BATCH_SIZE_KEY, DEFAULT_BATCH_SIZE));
+    if (!Number.isFinite(value)) value = DEFAULT_BATCH_SIZE;
+    return Math.max(1, Math.min(20, Math.floor(value)));
+  }
+  function isFailureCooling(jobOrDoi) {
+    var job = jobOrDoi && typeof jobOrDoi === 'object' ? jobOrDoi : null;
+    var doi = normalizeDoi(job ? job.doi : jobOrDoi);
+    if(job && job.summaryUrgent===true)return false;
+    var failed = GM_getValue(failureKey(doi, jobKind(job)), null);
+    if (!failed || Number(failed.at || 0) <= 0) return false;
+    if (String(failed.engineRevision || '') !== FAILURE_ENGINE_REVISION) return false;
+    var reason = String(failed.reason || '');
+    var publisher = String(job && job.publisher || publisherForDoi(doi));
+    // 2.2.33 fixes Wiley GA discovery. Do not preserve a stale pre-fix no-TOC cooldown.
+    if (publisher === 'wiley' && jobKind(job) === 'toc' && /(?:no_toc|toc.*not_found|not_found)/i.test(reason)) return false;
+    var cooldown = publisher === 'nature'
+      && jobKind(job) === 'toc'
+      && /^no_toc_candidate_/.test(reason)
+        ? NATURE_NO_TOC_COOLDOWN_MS
+        : FAILURE_COOLDOWN_MS;
+    return Date.now() - Number(failed.at) < cooldown;
+  }
+
+  function abortRequest() {
+    var value = GM_getValue(ABORT_KEY, null);
+    return value && Number(value.at || 0) > 0 ? value : null;
+  }
+
+  function isAbortRequested() {
+    return Boolean(abortRequest());
+  }
+
+  function sanitizeDiagnosticUrl(value) {
+    var raw = String(value || '');
+    if (!raw) return '';
+    try {
+      var url = new URL(raw, location.href);
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') return '';
+      url.search = '';
+      url.hash = '';
+      return url.href;
+    } catch (_) {
+      return raw.replace(/[?#].*$/, '').slice(0, 1200);
+    }
+  }
+
+  function sanitizeLocalTrace(trace) {
+    if (!Array.isArray(trace)) return [];
+    return trace.slice(-160).map(function (entry) {
+      return Object.assign({}, entry || {}, {
+        url: sanitizeDiagnosticUrl(entry && entry.url || ''),
+        message: sanitizeTraceMessage(entry && entry.message || '')
+      });
+    });
+  }
+
+  async function uploadLocalDiagnostics() {
+    var token = writeToken();
+    if (!token) {
+      window.alert('尚未设置写入密钥，无法上传本地日志。');
+      return;
+    }
+    var keys = [];
+    try {
+      if (typeof GM_listValues === 'function') keys = GM_listValues();
+    } catch (_) {}
+    var traces = keys.filter(function (key) {
+      return String(key).indexOf(P + 'trace:') === 0;
+    }).map(function (key) {
+      var item = GM_getValue(key, null);
+      if (!item || !normalizeDoi(item.doi)) return null;
+      return {
+        doi: normalizeDoi(item.doi),
+        status: String(item.status || ''),
+        reason: String(item.reason || '').slice(0, 240),
+        finishedAt: String(item.finishedAt || ''),
+        trace: sanitizeLocalTrace(item.trace)
+      };
+    }).filter(Boolean).sort(function (a, b) {
+      return String(b.finishedAt || '').localeCompare(String(a.finishedAt || ''));
+    }).slice(0, 24);
+
+    var activeJob = GM_getValue(ACTIVE_JOB_KEY, null);
+    var activeDoi = normalizeDoi(activeJob && activeJob.doi);
+    var progress = activeDoi ? GM_getValue(progressKey(activeDoi), null) : null;
+    var payload = {
+      source: 'tampermonkey-toc-mainline',
+      kind: 'manual-local-log-upload',
+      version: VERSION,
+      uploadedReason: 'user_menu',
+      total: traces.length,
+      summary: GM_getValue(SUMMARY_KEY, {}),
+      controllerState:controllerLifecycleSnapshot(),
+      activeJob: activeDoi ? {
+        doi: activeDoi,
+        publisher: String(activeJob.publisher || publisherForDoi(activeDoi)),
+        queueGeneratedAt: String(activeJob.queueGeneratedAt || ''),
+        startedAt: String(activeJob.startedAt || '')
+      } : null,
+      progress: progress ? {
+        status: String(progress.status || ''),
+        at: String(progress.at || ''),
+        url: sanitizeDiagnosticUrl(progress.url || ''),
+        version: String(progress.version || ''),
+        host: String(progress.host || '')
+      } : null,
+      privatePdfCapture: typeof privatePdfLeaseDiagnostics==='function' ? privatePdfLeaseDiagnostics() : {state:'unavailable',present:false,expiresAt:0,receivedAt:0,revision:''},
+      publisherHeartbeat: (function () {
+        var hb = GM_getValue(HEARTBEAT_KEY, null);
+        if (!hb) return null;
+        return {
+          doi: normalizeDoi(hb.doi || ''),
+          publisher: String(hb.publisher || ''),
+          host: String(hb.host || ''),
+          href: sanitizeDiagnosticUrl(hb.href || ''),
+          version: String(hb.version || ''),
+          state: String(hb.state || ''),
+          at: Number(hb.at || 0),
+          atIso: String(hb.atIso || '')
+        };
+      })(),
+      traces: traces
+    };
+    try {
+      var result = await postJson(DIAGNOSTICS_ENDPOINT, payload, token);
+      window.alert('本地日志已上传。trace DOI 数：' + String(traces.length) + '。');
+      return result;
+    } catch (error) {
+      window.alert('本地日志上传失败：' + String(error && error.message || error));
+      throw error;
+    }
+  }
+
+  function writePublisherHeartbeat(job, state) {
+    if (!currentCaptureJob(job)) return null;
+    var doi = normalizeDoi(job && job.doi);
+    var publisher = doi ? String(job.publisher || publisherForDoi(doi)) : publisherForDoi(normalizeDoi(location.href));
+    var row = {
+      doi: doi,
+      jobId: job && job.jobId || '',
+      publisher: publisher || '',
+      host: String(location.hostname || ''),
+      href: sanitizeDiagnosticUrl(location.href),
+      version: VERSION,
+      state: String(state || 'script_loaded'),
+      at: Date.now(),
+      atIso: nowIso()
+    };
+    GM_setValue(HEARTBEAT_KEY, row);
+    return row;
+  }
+
+  function currentPublisherHeartbeat() {
+    var hb = GM_getValue(HEARTBEAT_KEY, null);
+    return hb && Number(hb.at || 0) > 0 ? hb : null;
+  }
+
+  function alreadySucceeded(job, queueGeneratedAt) {
+    var doi = normalizeDoi(job && job.doi);
+    if (!doi) return false;
+    var prior = GM_getValue(attemptKey(doi, queueGeneratedAt || '', jobKind(job)), null);
+    return Boolean(prior && prior.status === 'success');
+  }
+
+  function executableJobs(allJobs, queueGeneratedAt) {
+    return (allJobs || []).filter(function (job) {
+      return !alreadySucceeded(job, queueGeneratedAt) && !isFailureCooling(job);
+    });
+  }
+
+  function journalPriority(job) {
+    var journal = String(job && job.journal || '').trim();
+    if (journal === 'Nature') return 0;
+    if (journal === 'Science') return 1;
+    if (/^Nature\s+/i.test(journal)) return 2;
+    if (/^Science\s+/i.test(journal)) return 3;
+    if (journal === 'JACS') return 4;
+    if (journal === 'Angew') return 5;
+    if (journal === 'Chem') return 6;
+    return 7;
+  }
+
+  var FIGURE_ONE_QUEUE_POLICY_REVISION = '20261008-verified-figure1-complete-v2';
+  function isNatureScienceFamilyJob(job) {
+    var journal = String(job && job.journal || '').trim();
+    return journal === 'Nature' || journal === 'Science'
+      || /^Nature\s+/i.test(journal) || /^Science\s+/i.test(journal);
+  }
+  function verifiedFigureOneSatisfiesQueue(job, hasFigureOne) {
+    return Boolean(hasFigureOne);
+  }
+
+  function captureQueueTier(job, latestAddedDate) {
+    var isLatest = Boolean(latestAddedDate && String(job && job.addedDate || '') === String(latestAddedDate));
+    // Queue obligations are intentionally narrow: TOC first, owner PDF second.
+    // Body-figure/text incompleteness may be handled opportunistically during an
+    // already-required visit, but must never create or prolong a queue entry.
+    if (job && job.captureToc === true) {
+      if (isLatest) return -5;
+      if (isNatureScienceFamilyJob(job)) return -3;
+      return -2;
+    }
+    if (job && job.capturePrivatePdf === true) return isLatest ? -4 : 4;
+    return 5;
+  }
+
+  function queueRegistryChanged(a,b) {
+    if (String(a.latestAddedDate||'')!==String(b.latestAddedDate||'')) return true;
+    function identity(q) {
+      return (q.articles||[]).map(function(x){return normalizeDoi(x.doi)+'|'+String(x.addedDate||'')+'|'+String(x.date||'')+'|'+String(x.journal||'');}).sort().join('\n');
+    }
+    return identity(a)!==identity(b);
+  }
+
+  function compareCaptureJobs(a, b, latestAddedDate) {
+    var tierDelta = captureQueueTier(a, latestAddedDate) - captureQueueTier(b, latestAddedDate);
+    if (tierDelta) return tierDelta;
+    var journalDelta = journalPriority(a) - journalPriority(b);
+    if (journalDelta) return journalDelta;
+    var dateDelta = String(b.date || '').localeCompare(String(a.date || ''));
+    if (dateDelta) return dateDelta;
+    if (captureQueueTier(a, latestAddedDate) === 2 && String(a.state || '') === 'figure_gap' && String(b.state || '') === 'figure_gap') {
+      var figureDelta = Math.max(0, Number(a.figureCount || 0)) - Math.max(0, Number(b.figureCount || 0));
+      if (figureDelta) return figureDelta;
+    }
+    return String(a.doi || '').localeCompare(String(b.doi || ''));
+  }
+
+  function selectBatchJobs(allJobs, limit, latestAddedDate) {
+    var normalized = [];
+    allJobs.forEach(function (raw) {
+      var job = Object.assign({}, raw);
+      job.doi = normalizeDoi(job.doi);
+      if (!job.doi || isFailureCooling(job)) return;
+      job.publisher = String(job.publisher || publisherForDoi(job.doi));
+      if (publisherAccessCooling(job) || publisherPacingCooling(job)) return;
+      normalized.push(job);
+    });
+    normalized.sort(function (a, b) {
+      return compareCaptureJobs(a, b, latestAddedDate);
+    });
+    return normalized.slice(0, Math.max(0, Number(limit || 0)));
+  }
+
+  function stagedFigureJobs() {
+    var jobs = [];
+    var seen = {};
+    Array.prototype.slice.call(document.querySelectorAll('[data-media-need][data-doi], [data-media-need] [data-doi]')).forEach(function (node) {
+      var need = String(node.getAttribute('data-media-need') || node.closest('[data-media-need]') && node.closest('[data-media-need]').getAttribute('data-media-need') || '');
+      if (need.indexOf('figures') < 0) return;
+      var doi = normalizeDoi(node.getAttribute('data-doi'));
+      if (!doi || seen[doi]) return;
+      seen[doi] = true;
+      jobs.push({
+        doi: doi,
+        publisher: publisherForDoi(doi),
+        state: 'figure_gap',
+        mediaNeed: need,
+        existingReason: 'gallery_article_figure_gap'
+      });
+    });
+    return jobs;
+  }
+
+  function selectPriorityBatch(visible, upgrades, limit) {
+    var primary = selectBatchJobs(visible, limit);
+    if (primary.length >= limit) return primary;
+    var selected = new Set(primary.map(function (job) { return normalizeDoi(job.doi); }));
+    var remainingUpgrades = upgrades.filter(function (job) {
+      var doi = normalizeDoi(job && job.doi);
+      return doi && !selected.has(doi);
+    });
+    return primary.concat(selectBatchJobs(remainingUpgrades, limit - primary.length));
+  }
+
+  function sanitizeTraceMessage(value) {
+    var text = String(value == null ? '' : value).slice(0, 1600);
+    text = text.replace(/https?:\/\/[^\s"'<>]+/gi, function (raw) {
+      return sanitizeDiagnosticUrl(raw);
+    });
+    text = text.replace(/(authorization\s*:\s*bearer\s+)[^\s;,]+/ig, '$1[redacted]');
+    text = text.replace(/((?:signature|token|key-pair-id|x-amz-signature|x-amz-credential)=)[^&\s]+/ig, '$1[redacted]');
+    return text.slice(0, 1200);
+  }
+
+  function pushTrace(trace, data) {
+    var row = Object.assign({
+      seq: trace.length + 1,
+      at: nowIso(),
+      stage: '',
+      event: '',
+      status: '',
+      httpStatus: 0,
+      contentType: '',
+      url: '',
+      message: '',
+      candidateKind: '',
+      candidateSource: '',
+      candidateScore: 0,
+      imageWidth: 0,
+      imageHeight: 0,
+      byteLength: 0
+    }, data || {});
+    row.url = sanitizeDiagnosticUrl(row.url || '');
+    row.message = sanitizeTraceMessage(row.message || '');
+    trace.push(row);
+    captureDiagnosticEvent(trace,row);
+    if (trace.length > MAX_TRACE) trace.splice(0, trace.length - MAX_TRACE);
+    try { console.debug('[OSG TOC]', row.stage, row.event, row.status, row.message || ''); } catch (_) {}
+    return row;
+  }
+
+  function controllerTransportUrl(value) {
+    try {
+      var host = new URL(String(value || ''), location.href).hostname.toLowerCase();
+      return host === 'api.gczhouwld.com'
+        || host === 'organic-synthesis-gallery.zhou526316.workers.dev'
+        || host === 'gallery.gczhouwld.com'
+        || host === 'zhou526316-sys.github.io';
+    } catch (_) { return false; }
+  }
+
+  async function nativeControllerRequest(options) {
+    var abort = new AbortController();
+    var timeoutMs = Math.max(1000, Number(options && options.timeout || 45000));
+    var timer = setTimeout(function () { abort.abort(); }, timeoutMs);
+    var outerSignal=options&&options.signal;
+    function cancelNative(){abort.abort();}
+    if(outerSignal){if(outerSignal.aborted)abort.abort();else outerSignal.addEventListener('abort',cancelNative,{once:true});}
+    try {
+      var method = String(options && options.method || 'GET').toUpperCase();
+      var headers = Object.assign({}, options && options.headers || {});
+      // cache-control/pragma are not needed for native fetch (cache:'no-store'
+      // already covers that) and would force a CORS preflight header that the
+      // Worker intentionally does not allow.
+      Object.keys(headers).forEach(function (key) {
+        var lower = String(key).toLowerCase();
+        if (lower === 'cache-control' || lower === 'pragma') delete headers[key];
+      });
+      var init = {
+        method: method,
+        mode: 'cors',
+        credentials: 'omit',
+        cache: 'no-store',
+        signal: abort.signal,
+        headers: headers
+      };
+      if (method !== 'GET' && method !== 'HEAD' && options && options.data != null) init.body = options.data;
+      var response = await fetch(String(options.url), init);
+      var responseText = await response.text();
+      var responseHeaders = '';
+      try {
+        response.headers.forEach(function (value, key) { responseHeaders += key + ': ' + value + '\r\n'; });
+      } catch (_) {}
+      return {
+        status: response.status,
+        statusText: response.statusText,
+        responseText: responseText,
+        response: responseText,
+        responseHeaders: responseHeaders,
+        finalUrl: response.url || String(options.url)
+      };
+    } finally {
+      clearTimeout(timer);
+      if(outerSignal)outerSignal.removeEventListener('abort',cancelNative);
+    }
+  }
+
+  function gmRequest(options, skipNativeFallback) {
+    return new Promise(function (resolve, reject) {
+      var settled = false;
+      function rejectOnce(error) {
+        if (settled) return;
+        settled = true;
+        reject(error);
+      }
+      function resolveOnce(value) {
+        if (settled) return;
+        settled = true;
+        resolve(value);
+      }
+      function fallbackOrReject(gmError) {
+        if (settled) return;
+        if (/Request was blocked by the user|Refused to connect.*blocked/i.test(String(gmError && gmError.message || ''))) { rejectOnce(gmError); return; }
+        var canFallback = !skipNativeFallback && controllerTransportUrl(options && options.url)
+          && !(options && options.responseType && options.responseType !== 'text');
+        if (!canFallback) {
+          rejectOnce(gmError);
+          return;
+        }
+        // Controller/API traffic may use normal fetch when the extension transport
+        // is unavailable. Publisher image acquisition remains GM-only.
+        nativeControllerRequest(options).then(resolveOnce).catch(function (fetchError) {
+          var failure = new Error(
+            'gm_then_fetch_failed:' +
+            String(gmError && gmError.message || gmError || 'gm_unknown') +
+            ';fetch:' + String(fetchError && fetchError.message || fetchError || 'unknown')
+          );
+          failure.controllerFallbackTried=true;
+          rejectOnce(failure);
+        });
+      }
+      try {
+        GM_xmlhttpRequest(Object.assign({}, options, {
+          onload: resolveOnce,
+          onerror: function (error) {
+            fallbackOrReject(new Error('gm_request_error:' + String(error && (error.error || error.statusText || error.status) || 'unknown')));
+          },
+          ontimeout: function () { fallbackOrReject(new Error('gm_request_timeout')); },
+          onabort: function () { rejectOnce(new Error('gm_request_aborted')); }
+        }));
+      } catch (error) {
+        fallbackOrReject(new Error('gm_request_exception:' + String(error && error.message || error || 'unknown')));
+      }
+    });
+  }
+
+  function parseMetadataJson(response,prefix) {
+    var status=Number(response.status||0);
+    if(status<200||status>=300){
+      var error=new Error(prefix+'_http_'+status);error.httpStatus=status;
+      var retryHeader=headerValue(response.responseHeaders,'retry-after');
+      error.retryAfterMs=retryHeader?(Number.isFinite(Number(retryHeader))?Math.max(0,Number(retryHeader)*1000):Math.max(0,Date.parse(retryHeader)-Date.now())||0):0;
+      throw error;
+    }
+    return JSON.parse(String(response.responseText||'{}'));
+  }
+  async function metadataJson(options,prefix,skipNativeFallback) {
+    var response=await gmRequest(options,skipNativeFallback);
+    if(!skipNativeFallback&&shouldNativeRetryUpload(response,options.url))response=await nativeControllerRequest(options);
+    return parseMetadataJson(response,prefix);
+  }
+  async function controllerReadMetadataJson(options,prefix) {
+    var method=String(options&&options.method||'GET').toUpperCase(),eligible=false;
+    try {
+      var url=new URL(String(options.url),location.href);
+      eligible=isGalleryPage()&&url.protocol==='https:'&&controllerTransportUrl(url.href)&&method==='GET';
+      if(isGalleryPage()&&method==='POST'&&url.origin+url.pathname===MEDIA_INVENTORY_ENDPOINT){
+        eligible=JSON.parse(String(options.data||'{}')).readOnly===true;
+      }
+    }catch(_){}
+    if(!eligible)return metadataJson(options,prefix);
+    // Same-site metadata can use browser networking directly. A slow extension
+    // transport must not add a full timeout before every successful inventory read.
+    var response;
+    try{response=await nativeControllerRequest(options);}
+    catch(_){return metadataJson(options,prefix,true);}
+    // Preserve authentication/rate-limit errors. Only the existing transient
+    // gateway rule permits transport fallback after an actual HTTP response.
+    if(shouldNativeRetryUpload(response,options.url))return metadataJson(options,prefix,true);
+    return parseMetadataJson(response,prefix);
+  }
+
+  function inventoryReadMetadataJson(options,prefix) {
+    var inventoryHost=String(location&&location.hostname||'').toLowerCase(),inventoryPath=String(location&&location.pathname||'/');
+    var inventoryControlPage=inventoryHost===GALLERY_HOST||inventoryHost===PAGES_GALLERY_HOST
+      || inventoryHost===LEGACY_GALLERY_HOST&&inventoryPath.indexOf(LEGACY_GALLERY_PATH)===0;
+    if(!inventoryControlPage)return metadataJson(options,prefix,true);
+    var timeoutMs=Math.max(3000,Math.min(INVENTORY_REQUEST_TIMEOUT_MS,Number(options&&options.timeout||INVENTORY_REQUEST_TIMEOUT_MS)));
+    var nativeAbort=new AbortController(),nativeOptions=Object.assign({},options,{timeout:timeoutMs,signal:nativeAbort.signal});
+    var gmOptions=Object.assign({},options,{timeout:timeoutMs});delete gmOptions.signal;
+    return new Promise(function(resolve,reject){
+      var settled=false,pending=0,gmStarted=false,errors=[],hedgeTimer=null,deadlineTimer=null;
+      function clean(){if(hedgeTimer!==null)clearTimeout(hedgeTimer);if(deadlineTimer!==null)clearTimeout(deadlineTimer);}
+      function succeed(value,transport,started){
+        if(settled)return;settled=true;clean();try{nativeAbort.abort();}catch(_){}
+        try{Object.defineProperty(value,'__inventoryMeta',{value:{transport:transport,elapsedMs:Math.max(0,Date.now()-started)},enumerable:false});}catch(_){}
+        resolve(value);
+      }
+      function definitive(error){var status=Number(error&&error.httpStatus||0);return status>=400&&status<500;}
+      function fail(error){
+        if(settled)return;errors.push(error);pending=Math.max(0,pending-1);
+        if(definitive(error)){settled=true;clean();try{nativeAbort.abort();}catch(_){}reject(error);return;}
+        if(!gmStarted){startGm();return;}
+        if(pending===0){settled=true;clean();reject(errors[errors.length-1]||new Error(prefix+'_inventory_failed'));}
+      }
+      function consume(promise,transport){
+        var started=Date.now();pending++;
+        promise.then(function(response){
+          if(settled)return;
+          try{succeed(parseMetadataJson(response,prefix),transport,started);}catch(error){fail(error);}
+        }).catch(fail);
+      }
+      function startGm(){if(gmStarted||settled)return;gmStarted=true;consume(gmRequest(gmOptions,true),'gm');}
+      consume(nativeControllerRequest(nativeOptions),'browser');
+      hedgeTimer=setTimeout(startGm,INVENTORY_HEDGE_DELAY_MS);
+      deadlineTimer=setTimeout(function(){
+        if(settled)return;settled=true;clean();try{nativeAbort.abort();}catch(_){}
+        reject(errors[errors.length-1]||new Error(prefix+'_inventory_deadline'));
+      },timeoutMs+INVENTORY_HEDGE_DELAY_MS+750);
+    });
+  }
+  async function getJson(url) {
+    return controllerReadMetadataJson({method:'GET',url:url,timeout:45000,headers:{'cache-control':'no-cache',pragma:'no-cache'}},'queue');
+  }
+
+  // BEGIN ARCHITECTURE MEMBERSHIP CORE v1
+  function architectureStable(value) {
+    if(value===null||typeof value!=='object')return JSON.stringify(value);
+    if(Array.isArray(value))return '['+value.map(architectureStable).join(',')+']';
+    return '{'+Object.keys(value).sort().map(function(key){return JSON.stringify(key)+':'+architectureStable(value[key]);}).join(',')+'}';
+  }
+  async function architectureSha256(text) {
+    if(!globalThis.crypto||!globalThis.crypto.subtle)throw new Error('architecture_crypto_unavailable');
+    var bytes=new TextEncoder().encode(String(text));
+    var hash=await globalThis.crypto.subtle.digest('SHA-256',bytes);
+    return Array.from(new Uint8Array(hash)).map(function(x){return x.toString(16).padStart(2,'0');}).join('');
+  }
+  function architectureRefValid(ref) {
+    return Boolean(ref&&typeof ref.path==='string'&&/^[A-Za-z0-9_./-]+$/.test(ref.path)&&ref.path.indexOf('..')<0
+      &&/^[a-f0-9]{64}$/.test(String(ref.sha256||''))&&Number.isSafeInteger(Number(ref.bytes))&&Number(ref.bytes)>=0);
+  }
+  function architectureSetEqual(a,b) {
+    if(!Array.isArray(a)||!Array.isArray(b)||a.length!==b.length)return false;
+    var left=new Set(a),right=new Set(b);
+    return left.size===a.length&&right.size===b.length&&a.every(function(x){return right.has(x);});
+  }
+  async function verifyArchitectureMembershipPayload(queue,delivery,releaseText,membershipText,currentText,lifecycleText) {
+    if(!queue||!Array.isArray(queue.articles)||queue.articles.length!==Number(queue.webpageDoiCount))throw new Error('architecture_queue_registry_incomplete');
+    if(!delivery||Number(delivery.schemaVersion)<2||!delivery.files||!delivery.architectureObjects
+      ||typeof delivery.architectureCatalogId!=='string')throw new Error('architecture_delivery_v2_required');
+    var releaseHash=await architectureSha256(releaseText);
+    if(delivery.files['architecture-v1/release.json']!==releaseHash)throw new Error('architecture_release_delivery_hash_mismatch');
+    var release=JSON.parse(releaseText);
+    if(release.schema!=='gallery-architecture-public-v1'||release.productionActivation!==false
+      ||release.sourceCommit!==delivery.sourceCommit||release.publicationSlot!==delivery.publicationSlot
+      ||release.datasetSha256!==delivery.datasetSha256||release.catalogId!==delivery.architectureCatalogId
+      ||release.recordCount!==Number(delivery.productionCards))throw new Error('architecture_release_identity_mismatch');
+    if(!architectureRefValid(release.membership)||!architectureRefValid(release.catalogCurrent))throw new Error('architecture_release_reference_invalid');
+    if(await architectureSha256(membershipText)!==release.membership.sha256
+      ||new TextEncoder().encode(membershipText).byteLength!==Number(release.membership.bytes))throw new Error('architecture_membership_hash_mismatch');
+    if(await architectureSha256(currentText)!==release.catalogCurrent.sha256
+      ||new TextEncoder().encode(currentText).byteLength!==Number(release.catalogCurrent.bytes))throw new Error('architecture_current_hash_mismatch');
+    var membership=JSON.parse(membershipText),current=JSON.parse(currentText);
+    if(membership.schema!=='gallery-published-membership-v1'||membership.scope!=='all-time'||membership.complete!==true
+      ||membership.catalogId!==release.catalogId||membership.doiSetHash!==release.doiSetHash
+      ||membership.publicationSlot!==release.publicationSlot||membership.sourceCommit!==release.sourceCommit
+      ||Number(membership.count)!==release.recordCount||!membership.members||Array.isArray(membership.members))throw new Error('architecture_membership_identity_mismatch');
+    if(current.schema!=='gallery-shadow-catalog-v1'||current.mode!=='shadow'||current.productionActivation!==false
+      ||!architectureRefValid(current.lifecycle))throw new Error('architecture_current_identity_mismatch');
+    if(await architectureSha256(lifecycleText)!==current.lifecycle.sha256
+      ||new TextEncoder().encode(lifecycleText).byteLength!==Number(current.lifecycle.bytes))throw new Error('architecture_lifecycle_hash_mismatch');
+    var lifecycle=JSON.parse(lifecycleText);
+    if(lifecycle.schema!=='gallery-shadow-catalog-v1'||lifecycle.catalog!==current.catalog.path
+      ||typeof lifecycle.asOfDate!=='string'||!lifecycle.partitions)throw new Error('architecture_lifecycle_identity_mismatch');
+    var queueDois=queue.articles.map(function(row){return normalizeDoi(row&&row.doi);});
+    var memberDois=Object.keys(membership.members).map(normalizeDoi);
+    if(queueDois.some(function(x){return !x;})||memberDois.some(function(x){return !x;})
+      ||!architectureSetEqual(queueDois,memberDois))throw new Error('architecture_membership_queue_mismatch');
+    var partitionNames=['hot','archive','date_unknown','date_invalid','future'],partitionDois=[];
+    partitionNames.forEach(function(name){
+      var rows=lifecycle.partitions[name];
+      if(!Array.isArray(rows))throw new Error('architecture_lifecycle_partition_missing:'+name);
+      rows.forEach(function(doi){partitionDois.push(normalizeDoi(doi));});
+    });
+    if(partitionDois.some(function(x){return !x;})||!architectureSetEqual(memberDois,partitionDois))throw new Error('architecture_lifecycle_partition_mismatch');
+    var hot=new Set((lifecycle.partitions.hot||[]).map(normalizeDoi));
+    var archive=new Set((lifecycle.partitions.archive||[]).map(normalizeDoi));
+    return {
+      ok:true,revision:ARCHITECTURE_MEMBERSHIP_REVISION,serial:Number(membership.serial||0),
+      publicationSlot:membership.publicationSlot,catalogId:membership.catalogId,membershipSha256:release.membership.sha256,
+      asOfDate:lifecycle.asOfDate,cutoff:lifecycle.cutoff||'',memberCount:memberDois.length,
+      hotCount:hot.size,archiveCount:archive.size,hotDois:Array.from(hot),archiveDois:Array.from(archive),
+      withdrawn:Array.isArray(membership.withdrawn)?membership.withdrawn.map(normalizeDoi).filter(Boolean):[]
+    };
+  }
+  // END ARCHITECTURE MEMBERSHIP CORE v1
+
+  async function architectureGetText(url,prefix) {
+    var response=await gmRequest({method:'GET',url:url,timeout:30000,headers:{'cache-control':'no-cache',pragma:'no-cache'}});
+    if(shouldNativeRetryUpload(response,url))response=await nativeControllerRequest({method:'GET',url:url,timeout:30000,headers:{'cache-control':'no-cache',pragma:'no-cache'}});
+    var status=Number(response.status||0);
+    if(status<200||status>=300)throw new Error(prefix+'_http_'+status);
+    var finalUrl=String(response.finalUrl||url),host='';
+    try{host=new URL(finalUrl,location.href).hostname.toLowerCase();}catch(_){}
+    if(host!==GALLERY_HOST&&host!==LEGACY_GALLERY_HOST)throw new Error(prefix+'_unexpected_origin');
+    return String(response.responseText||'');
+  }
+  function architectureObjectUrl(pathname) {
+    if(typeof pathname!=='string'||!/^[A-Za-z0-9_./-]+$/.test(pathname)||pathname.indexOf('..')>=0)throw new Error('architecture_object_path_invalid');
+    return 'https://'+GALLERY_HOST+'/architecture-v1/'+pathname;
+  }
+  function rememberArchitectureMembership(result) {
+    var prior=GM_getValue(ARCHITECTURE_MEMBERSHIP_STATE_KEY,null);
+    if(prior&&Number(prior.serial||0)>Number(result.serial||0))throw new Error('architecture_membership_serial_rollback');
+    if(prior&&Number(prior.serial||0)===Number(result.serial||0)
+      && prior.membershipSha256&&prior.membershipSha256!==result.membershipSha256)throw new Error('architecture_membership_serial_conflict');
+    var sticky=new Set((prior&&Array.isArray(prior.withdrawn)?prior.withdrawn:[]).concat(result.withdrawn||[]).map(normalizeDoi).filter(Boolean));
+    (result.hotDois||[]).concat(result.archiveDois||[]).forEach(function(doi){
+      if(sticky.has(doi))throw new Error('architecture_withdrawn_doi_resurrection');
+    });
+    GM_setValue(ARCHITECTURE_MEMBERSHIP_STATE_KEY,{
+      revision:ARCHITECTURE_MEMBERSHIP_REVISION,serial:Number(result.serial||0),publicationSlot:result.publicationSlot||'',
+      catalogId:result.catalogId||'',membershipSha256:result.membershipSha256||'',asOfDate:result.asOfDate||'',
+      memberCount:Number(result.memberCount||0),hotCount:Number(result.hotCount||0),archiveCount:Number(result.archiveCount||0),
+      cutoff:String(result.cutoff||''),withdrawn:Array.from(sticky).sort(),verifiedAt:Date.now()
+    });
+  }
+  async function observeArchitectureMembership(queue) {
+    try {
+      var delivery=await getJson(ARCHITECTURE_DELIVERY_URL+'?architecture-membership='+Date.now());
+      var releaseText=await architectureGetText(ARCHITECTURE_RELEASE_URL+'?architecture-membership='+Date.now(),'architecture_release');
+      var release=JSON.parse(releaseText);
+      if(!architectureRefValid(release.membership)||!architectureRefValid(release.catalogCurrent))throw new Error('architecture_release_reference_invalid');
+      var membershipText=await architectureGetText(architectureObjectUrl(release.membership.path)+'?architecture-membership='+Date.now(),'architecture_membership');
+      var currentText=await architectureGetText(architectureObjectUrl(release.catalogCurrent.path)+'?architecture-membership='+Date.now(),'architecture_current');
+      var current=JSON.parse(currentText);
+      if(!architectureRefValid(current.lifecycle))throw new Error('architecture_lifecycle_reference_invalid');
+      var lifecycleText=await architectureGetText(architectureObjectUrl(current.lifecycle.path)+'?architecture-membership='+Date.now(),'architecture_lifecycle');
+      var result=await verifyArchitectureMembershipPayload(queue,delivery,releaseText,membershipText,currentText,lifecycleText);
+      rememberArchitectureMembership(result);
+      GM_setValue(ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY,{revision:ARCHITECTURE_MEMBERSHIP_REVISION,installRevision:INSTALL_REVISION,ok:true,
+        attemptedAt:Date.now(),catalogId:String(result.catalogId||''),memberCount:Number(result.memberCount||0),
+        hotCount:Number(result.hotCount||0),archiveCount:Number(result.archiveCount||0),cutoff:String(result.cutoff||''),error:''});
+      return result;
+    } catch(error) {
+      var message=captureLiveError(error&&error.message||error);
+      GM_setValue(ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY,{revision:ARCHITECTURE_MEMBERSHIP_REVISION,installRevision:INSTALL_REVISION,ok:false,
+        attemptedAt:Date.now(),catalogId:'',memberCount:0,hotCount:0,archiveCount:0,cutoff:'',error:message});
+      return {ok:false,revision:ARCHITECTURE_MEMBERSHIP_REVISION,error:message};
+    }
+  }
+  async function getPrivateJson(url,token) {
+    return controllerReadMetadataJson({method:'GET',url:url,timeout:30000,headers:{'cache-control':'no-cache',pragma:'no-cache',authorization:'Bearer '+String(token||'')}},'private');
+  }
+  async function postReadJson(url,payload) {
+    return controllerReadMetadataJson({method:'POST',url:url,timeout:45000,headers:{'content-type':'application/json','cache-control':'no-cache',pragma:'no-cache'},data:JSON.stringify(payload||{})},'inventory');
+  }
+
+  function productionMediaSnapshot(inventory) {
+    var items={};
+    (inventory&&Array.isArray(inventory.items)?inventory.items:[]).forEach(function(row){
+      var doi=normalizeDoi(row&&row.doi);
+      if(!doi)return;
+      var primaryKind=String(row&&row.primaryKind||'').toLowerCase();
+      var largeSource=String(row&&row.largeSource||'').toLowerCase();
+      var officialPrimary=primaryKind==='official_visual';
+      // Worker /api/toc serves a verified Nature/Science Figure 1 as the card
+      // fallback even when there is no toc_assets row. Mirror that authority here
+      // so the scheduler does not reopen an already-covered historical paper forever.
+      var figureOneFallback=primaryKind==='figure1'
+        || (Boolean(row&&row.figureOneStored) && largeSource==='figure1');
+      var visualAvailable=Boolean(row&&row.tocStored)||officialPrimary||figureOneFallback;
+      var visualReason=figureOneFallback
+        ? 'figure1_fallback'
+        : officialPrimary
+          ? 'primary_official_visual'
+          : String(row&&row.tocReason||'');
+      items[doi]={
+        doi:doi,
+        toc:{
+          available:visualAvailable,
+          imageUrl:visualAvailable?'production_visual_present':'',
+          reason:visualReason
+        },
+        figures:{available:Number(row&&row.figureCount||0)>0,figures:[]},
+        primaryKind:primaryKind,
+        largeSource:largeSource,
+        inventory:row
+      };
+    });
+    return {version:3,generatedAt:Number(inventory&&inventory.generatedAt||Date.now()),source:'worker_production_inventory',items:items};
+  }
+
+
+  async function readLiveCaptureKinds() {
+    try {
+      var payload = await getJson(CAPTURE_INDEX_URL + '?ts=' + Date.now());
+      var map = new Map();
+      var items = Array.isArray(payload && payload.items) ? payload.items : [];
+      items.forEach(function (item) {
+        var doi = normalizeDoi(item && item.doi);
+        var kind = String(item && item.kind || '').toLowerCase();
+        if (!doi || (kind !== 'official' && kind !== 'figure1')) return;
+        map.set(doi, kind);
+      });
+      return map;
+    } catch (error) {
+      try { console.warn('[OSG TOC] live R2 capture reconciliation unavailable', String(error && error.message || error)); } catch (_) {}
+      return new Map();
+    }
+  }
+
+  function reconcileQueueWithLiveCaptures(visible, upgrades, captureKinds) {
+    var visibleOut = [];
+    var upgradeMap = new Map();
+    (Array.isArray(upgrades) ? upgrades : []).forEach(function (raw) {
+      var doi = normalizeDoi(raw && raw.doi);
+      if (!doi) return;
+      var kind = captureKinds.get(doi) || '';
+      if (kind === 'official') return;
+      upgradeMap.set(doi, Object.assign({}, raw, {
+        doi: doi,
+        state: kind === 'figure1' ? 'fallback_only' : String(raw.state || 'fallback_only'),
+        existingReason: kind === 'figure1' ? 'live_r2_figure1_fallback' : String(raw.existingReason || '')
+      }));
+    });
+    (Array.isArray(visible) ? visible : []).forEach(function (raw) {
+      var doi = normalizeDoi(raw && raw.doi);
+      if (!doi) return;
+      var kind = captureKinds.get(doi) || '';
+      if (kind === 'official') return;
+      if (kind === 'figure1') {
+        if (!upgradeMap.has(doi)) {
+          upgradeMap.set(doi, Object.assign({}, raw, {
+            doi: doi,
+            state: 'fallback_only',
+            existingReason: 'live_r2_figure1_fallback'
+          }));
+        }
+        return;
+      }
+      visibleOut.push(Object.assign({}, raw, { doi: doi }));
+    });
+    return {
+      visible: visibleOut,
+      upgrades: Array.from(upgradeMap.values()),
+      filteredByR2: (Array.isArray(visible) ? visible.length : 0) + (Array.isArray(upgrades) ? upgrades.length : 0) - visibleOut.length - upgradeMap.size
+    };
+  }
+
+  // BEGIN OSG_UPLOAD_EVIDENCE_V1 -- never logs auth or raw response documents.
+  function uploadResponseError(status, body, raw, getHeader, transport) {
+    body = body && typeof body === 'object' ? body : {};
+    var code = autoReportText(body.code || body.detail || body.error || '').slice(0, 240);
+    var type = String(getHeader('content-type') || '').split(';')[0].slice(0, 80);
+    var ray = String(getHeader('cf-ray') || '').replace(/[^a-z0-9-]/gi, '').slice(0, 80);
+    var requestId = String(body.requestId || '').replace(/[^a-z0-9-]/gi, '').slice(0, 80);
+    var responseFormat = /^\s*[\[{]/.test(String(raw || '')) ? 'json' : /^\s*</.test(String(raw || '')) ? 'markup' : 'other';
+    var seconds = Number(getHeader('retry-after'));
+    var retryAfterMs = seconds > 0 ? seconds * 1000 : 0;
+    if (!retryAfterMs && getHeader('retry-after')) retryAfterMs = Math.max(0, Date.parse(getHeader('retry-after')) - Date.now()) || 0;
+    var evidence = {transport: transport, responseContentType: type, responseFormat: responseFormat, responseCharacters: String(raw || '').length,
+      cfRay: ray || null, workerRequestId: requestId || null, workerCode: code || null,
+      storageOperation: String(body.operation || '').replace(/[^a-z_]/gi, '').slice(0, 80),
+      objectStored: body.objectStored === true, retryable: typeof body.retryable === 'boolean' ? body.retryable : null,
+      retryAfterMs: Math.max(retryAfterMs, Number(body.retryAfterMs || 0))};
+    var error = new Error('upload_http_' + String(status || 0) + ':' + (code || 'response_without_worker_error_code') + ';' + JSON.stringify(evidence));
+    error.httpStatus = Number(status || 0); error.responseError = code;
+    error.uploadEvidence = evidence; error.retryable = evidence.retryable; error.retryAfterMs = evidence.retryAfterMs;
+    return error;
+  }
+
+  async function fetchPostJson(url, payload, token, timeoutMs) {
+    var abort = new AbortController();
+    var budget = Math.max(1000, Math.min(45000, Number(timeoutMs||45000)));
+    var timer = setTimeout(function () { abort.abort(); }, budget);
+    try {
+      var response = await fetch(url, {method:'POST',mode:'cors',credentials:'omit',cache:'no-store',signal:abort.signal,
+        headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify(payload)});
+      var raw = await response.text(); var body = {};
+      try { body = JSON.parse(raw || '{}'); } catch (_) {}
+      if (!response.ok) throw uploadResponseError(response.status, body, raw, function (h) { return response.headers.get(h) || ''; }, 'page_fetch');
+      return body;
+    } finally { clearTimeout(timer); }
+  }
+
+  async function postJson(url, payload, token) {
+    var response;
+    try {
+      response = await gmRequest({method:'POST',url:url,timeout:45000,
+        headers:{'content-type':'application/json',authorization:'Bearer '+token},data:JSON.stringify(payload)});
+    } catch (gmError) {
+      if (gmError && gmError.controllerFallbackTried) throw gmError;
+      // Do not route around an explicit extension permission denial.
+      if (/Request was blocked by the user|Refused to connect.*blocked/i.test(String(gmError && gmError.message || ''))) throw gmError;
+      try { return await fetchPostJson(url, payload, token); }
+      catch (fetchError) {
+        var combined = new Error('gm_then_fetch_failed:' + autoReportText(gmError && gmError.message || gmError) + ';' + autoReportText(fetchError && fetchError.message || fetchError));
+        combined.httpStatus = Number(fetchError && fetchError.httpStatus || gmError && gmError.httpStatus || 0);
+        combined.responseError = String(fetchError && fetchError.responseError || '');
+        combined.uploadEvidence = fetchError && fetchError.uploadEvidence;
+        combined.retryable = fetchError && fetchError.retryable;
+        combined.retryAfterMs = Number(fetchError && fetchError.retryAfterMs || 0);
+        throw combined;
+      }
+    }
+    var raw = String(response.responseText || ''); var body = {};
+    try { body = JSON.parse(raw || '{}'); } catch (_) {}
+    var status = Number(response.status || 0);
+    if (shouldNativeRetryUpload(response,url)) {
+      // Same endpoint, same bytes and idempotent receipt validation. Only retry a
+      // gateway markup error; never bypass 401/403/429, JSON errors or Retry-After.
+      return await fetchPostJson(url,payload,token);
+    }
+    if (status < 200 || status >= 300) throw uploadResponseError(status, body, raw, function (h) { return headerValue(response.responseHeaders, h); }, 'gm_request');
+    return body;
+  }
+
+  async function postJsonBudgeted(url,payload,token,budgetMs) {
+    var start=Date.now(),budget=Math.max(1000,Math.min(IMAGE_UPLOAD_TOTAL_BUDGET_MS,Number(budgetMs||IMAGE_UPLOAD_TOTAL_BUDGET_MS)));
+    function left(){return Math.max(0,budget-(Date.now()-start));}
+    var gmOptions={method:'POST',url:url,timeout:Math.max(1000,Math.min(13000,left())),
+      headers:{'content-type':'application/json',authorization:'Bearer '+token},data:JSON.stringify(payload)};
+    var response;
+    try{
+      response=await gmRequest(gmOptions,true);
+      var status=Number(response&&response.status||0),raw=String(response&&response.responseText||''),body={};
+      try{body=JSON.parse(raw||'{}');}catch(_){}
+      if(status>=200&&status<300)return body;
+      var readHeader=function(h){return headerValue(response&&response.responseHeaders,h);};
+      if(!shouldNativeRetryUpload(response,url))throw uploadResponseError(status,body,raw,readHeader,'gm_request');
+    }catch(error){
+      // Never bypass explicit HTTP denials, Retry-After, or a GM timeout:
+      // the upstream may have committed a write even when its reply is delayed.
+      if(Number(error&&error.httpStatus||0)>0||Number(error&&error.retryAfterMs||0)>0
+        ||/gm_request_timeout|gm_request_aborted|blocked by the user|Refused to connect/i.test(String(error&&error.message||error)))throw error;
+      if(!/gm_request_error|gm_request_exception|gm_then_fetch_failed/i.test(String(error&&error.message||error)))throw error;
+    }
+    var remaining=left();
+    if(remaining<1000)throw new Error('image_upload_budget_exhausted');
+    return fetchPostJson(url,payload,token,remaining);
+  }
+
+  function shouldNativeRetryUpload(response,url) {
+    var status=Number(response && response.status || 0);
+    var raw=String(response && response.responseText || '').trim();
+    var target; try { target=new URL(url); } catch (_) { return false; }
+    var owned=target.protocol==='https:' && ['api.gczhouwld.com','organic-synthesis-gallery.zhou526316.workers.dev'].indexOf(target.hostname)>=0;
+    return owned && [502,503,504].indexOf(status)>=0
+      && /^(?:<!doctype\s+html|<html|<head|<body)/i.test(raw)
+      && !headerValue(response.responseHeaders,'retry-after');
+  }
+
+  function retryableImageUpload(error) {
+    var message = String(error && error.message || '');
+    if (/doi_mismatch|receipt_invalid|stale|unbound|user_aborted|Request was blocked by the user|Refused to connect|upgrade_required|binding_missing/i.test(message) || error && error.retryable === false) return false;
+    var status = Number(error && error.httpStatus || 0);
+    if ([408,425,429,500,502,503,504].indexOf(status) >= 0) return true;
+    return !status && /gm_then_fetch_failed|gm_request_error|Failed to fetch|NetworkError|timeout|AbortError/i.test(message);
+  }
+
+  async function postAcquiredImage(job, candidate, image, trace, endpoint, payload, token, stage) {
+    var started=Date.now(),deadline=started+IMAGE_UPLOAD_TOTAL_BUDGET_MS,lastError=null;
+    for(var attempt=0;attempt<2;attempt++){
+      assertBoundCaptureJob(job,candidate.url);
+      var left=Math.max(0,Math.min(deadline-Date.now(),Number(job.captureDeadline||deadline)-Date.now()));
+      if(left<1200)break;
+      try{
+        var receipt=await postJsonBudgeted(endpoint,payload,token,left);
+        pushTrace(trace,{stage:stage,event:'budgeted_upload_complete',status:'ok',url:endpoint,
+          message:'revision='+ACS_MEDIA_RECOVERY_REVISION+';attempt='+(attempt+1)+';elapsedMs='+(Date.now()-started)});
+        return receipt;
+      }catch(error){
+        lastError=error;
+        pushTrace(trace,{stage:stage,event:'failed',status:'failed',url:endpoint,httpStatus:Number(error&&error.httpStatus||0),
+          byteLength:image.byteLength,message:'label='+String(payload.label||payload.kind||'')+';uploadAttempt='+(attempt+1)+';elapsedMs='+(Date.now()-started)+';'+String(error&&error.message||error)});
+        var ms=String(error&&error.message||error),wait=Math.max(900,Number(error&&error.retryAfterMs||0));
+        // An aborted/timeout request may have written successfully upstream.
+        // Do not launch a second concurrent write without a receipt.
+        if(/timeout|abort|budget_exhausted/i.test(ms)||attempt>=1||!retryableImageUpload(error)||wait>3000||Date.now()+wait+1500>=deadline){
+          pushTrace(trace,{stage:stage,event:'upload_deferred',status:'deferred',url:endpoint,
+            message:'budgetMs='+IMAGE_UPLOAD_TOTAL_BUDGET_MS+';elapsedMs='+(Date.now()-started)+';gap_preserved=1;retryAfterMs='+Number(error&&error.retryAfterMs||0)});
+          throw error;
+        }
+        pushTrace(trace,{stage:stage,event:'upload_retry_wait',status:'retrying',url:endpoint,httpStatus:Number(error&&error.httpStatus||0),
+          message:'same_acquired_image;nextAttempt=2;delayMs='+wait+';totalBudgetMs='+IMAGE_UPLOAD_TOTAL_BUDGET_MS+';publisherDownloads=0'});
+        await sleep(wait);
+      }
+    }
+    throw lastError||new Error('image_upload_budget_exhausted');
+  }
+  // END OSG_UPLOAD_EVIDENCE_V1
+
+  function headerValue(headers, name) {
+    var wanted = String(name || '').toLowerCase();
+    var lines = String(headers || '').split(/\r?\n/);
+    for (var i = 0; i < lines.length; i += 1) {
+      var p = lines[i].indexOf(':');
+      if (p < 1) continue;
+      if (lines[i].slice(0, p).trim().toLowerCase() === wanted) return lines[i].slice(p + 1).trim();
+    }
+    return '';
+  }
+
+  function sniffContentType(buffer, declared) {
+    var bytes = new Uint8Array(buffer || new ArrayBuffer(0));
+    var head = '';
+    try { head = new TextDecoder().decode(bytes.slice(0, 1024)).replace(/^\uFEFF/, '').trimStart().toLowerCase(); } catch (_) {}
+    if (bytes.length >= 4 && bytes[0] === 0xff && bytes[1] === 0xfe) {
+      try { head = new TextDecoder('utf-16le').decode(bytes.slice(2, 2048)).trimStart().toLowerCase(); } catch (_) {}
+    } else if (bytes.length >= 4 && bytes[0] === 0xfe && bytes[1] === 0xff) {
+      try { head = new TextDecoder('utf-16be').decode(bytes.slice(2, 2048)).trimStart().toLowerCase(); } catch (_) {}
+    }
+    if (head.indexOf('<?xml') === 0 || head.indexOf('<svg') === 0 || head.indexOf('<svg ') >= 0) return 'image/svg+xml';
+    if (bytes.length >= 8 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) return 'image/png';
+    if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return 'image/jpeg';
+    if (bytes.length >= 12 && String.fromCharCode.apply(null, bytes.slice(0, 4)) === 'RIFF' && String.fromCharCode.apply(null, bytes.slice(8, 12)) === 'WEBP') return 'image/webp';
+    if (bytes.length >= 6) {
+      var gif = String.fromCharCode.apply(null, bytes.slice(0, 6));
+      if (gif === 'GIF87a' || gif === 'GIF89a') return 'image/gif';
+    }
+    // ACS high-resolution download endpoints often return TIFF as application/octet-stream.
+    // Identify it for diagnostics, but never upload TIFF to the current Worker protocol.
+    if (bytes.length >= 4 && ((bytes[0] === 0x49 && bytes[1] === 0x49 && bytes[2] === 0x2a && bytes[3] === 0x00)
+      || (bytes[0] === 0x4d && bytes[1] === 0x4d && bytes[2] === 0x00 && bytes[3] === 0x2a))) return 'image/tiff';
+    var clean = String(declared || '').split(';')[0].trim().toLowerCase().replace('image/jpg', 'image/jpeg');
+    if (clean === 'image/tif') clean = 'image/tiff';
+    return /^image\//.test(clean) ? clean : 'application/octet-stream';
+  }
+
+  function toBase64(buffer) {
+    var bytes = new Uint8Array(buffer);
+    var binary = '';
+    var chunk = 0x8000;
+    for (var i = 0; i < bytes.length; i += chunk) {
+      binary += String.fromCharCode.apply(null, bytes.subarray(i, Math.min(i + chunk, bytes.length)));
+    }
+    return btoa(binary);
+  }
+
+  function normalizeUrl(raw, baseUrl) {
+    try {
+      var url = new URL(String(raw || '').trim(), baseUrl || location.href);
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') return '';
+      url.hash = '';
+      return url.href;
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function mediaUrlIdentity(value, baseUrl) {
+    var url = normalizeUrl(value, baseUrl);
+    if (!url) return '';
+    try {
+      var parsed = new URL(url);
+      parsed.search = '';
+      parsed.hash = '';
+      return parsed.href;
+    } catch (_) {
+      return url.replace(/[?#].*$/, '');
+    }
+  }
+
+  function findLiveImageElement(scope, targetUrl, baseUrl) {
+    if (!scope || !scope.querySelectorAll) return null;
+    var wanted = mediaUrlIdentity(targetUrl, baseUrl);
+    if (!wanted) return null;
+    var nodes = scope.querySelectorAll('img');
+    for (var i = 0; i < nodes.length; i += 1) {
+      var img = nodes[i];
+      var urls = imageUrls(img, baseUrl);
+      for (var j = 0; j < urls.length; j += 1) {
+        if (mediaUrlIdentity(urls[j], baseUrl) === wanted) return img;
+      }
+    }
+    return null;
+  }
+
+  function candidateRequestUrl(candidate) {
+    // A high-resolution candidate must not be silently replaced by element.currentSrc.
+    return normalizeUrl(candidate && candidate.url, location.href);
+  }
+
+  function imageUrls(node, baseUrl) {
+    var values = [];
+    function add(value) {
+      if (!value) return;
+      String(value).split(',').forEach(function (part) {
+        var raw = part.trim().split(/\s+/)[0];
+        var url = normalizeUrl(raw, baseUrl);
+        if (url && values.indexOf(url) < 0) values.push(url);
+      });
+    }
+    if (node instanceof HTMLImageElement) add(node.currentSrc);
+    [
+      'data-srcset','srcset','data-src','data-lazy-src','data-original','data-image',
+      'data-url','data-hi-res-src','data-lg-src','data-src-large','data-full-src',
+      'data-full','data-image-src','data-large','data','href','xlink:href','src'
+    ].forEach(function (name) { add(node.getAttribute && node.getAttribute(name)); });
+    return values;
+  }
+
+  function articleFigureImageUrls(node, baseUrl) {
+    var values = [];
+    function add(raw) {
+      if (!raw) return;
+      var url = normalizeUrl(raw, baseUrl);
+      if (url && values.indexOf(url) < 0) values.push(url);
+    }
+    function addSrcset(raw) {
+      var ranked = String(raw || '').split(',').map(function (part) {
+        var bits = part.trim().split(/\s+/);
+        var descriptor = bits[1] || '';
+        var rank = /w$/i.test(descriptor) ? Number(descriptor.replace(/w$/i, '')) * 10
+          : /x$/i.test(descriptor) ? Number(descriptor.replace(/x$/i, '')) * 10000
+          : 0;
+        return { url: bits[0] || '', rank: Number.isFinite(rank) ? rank : 0 };
+      }).filter(function (item) { return Boolean(item.url); })
+        .sort(function (a, b) { return b.rank - a.rank; });
+      ranked.forEach(function (item) { add(item.url); });
+    }
+
+    [
+      'data-full-src','data-full','data-lg-src','data-hi-res-src','data-src-large',
+      'data-original','data-large','data-image-src','data-image','data-url'
+    ].forEach(function (name) { add(node.getAttribute && node.getAttribute(name)); });
+    addSrcset(node.getAttribute && node.getAttribute('data-srcset'));
+    addSrcset(node.getAttribute && node.getAttribute('srcset'));
+
+    var link = node.closest && node.closest('a[href]');
+    if (link) add(link.getAttribute('href'));
+
+    ['data-src','data-lazy-src'].forEach(function (name) { add(node.getAttribute && node.getAttribute(name)); });
+    if (node instanceof HTMLImageElement) add(node.currentSrc);
+    add(node.getAttribute && node.getAttribute('src'));
+    return values;
+  }
+
+
+  function articleFigureResolution(width, height) {
+    width = Math.max(0, Number(width || 0));
+    height = Math.max(0, Number(height || 0));
+    if (!width || !height) return { quality: 'unknown', usable: false };
+    var maxSide = Math.max(width, height);
+    var minSide = Math.min(width, height);
+    var pixels = width * height;
+    if (maxSide >= 900 && minSide >= 180 && pixels >= 220000) return { quality: 'high', usable: true };
+    if (maxSide >= 600 && minSide >= 140 && pixels >= 120000) return { quality: 'usable', usable: true };
+    return { quality: 'low', usable: false };
+  }
+  function rawTagAttrs(tag) {
+    var out = {};
+    String(tag || '').replace(/([:\w-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>]+))/g, function (_, key, dq, sq, bare) {
+      var value = dq !== undefined ? dq : sq !== undefined ? sq : bare !== undefined ? bare : '';
+      out[String(key || '').toLowerCase()] = String(value || '').replace(/&amp;/g, '&').replace(/&#38;/g, '&');
+      return _;
+    });
+    return out;
+  }
+
+  function rawTagImageUrls(tag, baseUrl) {
+    var attrs = rawTagAttrs(tag);
+    var urls = [];
+    function add(value) {
+      if (!value) return;
+      String(value).split(',').forEach(function (part) {
+        var raw = part.trim().split(/\s+/)[0];
+        var url = normalizeUrl(raw, baseUrl);
+        if (url && urls.indexOf(url) < 0) urls.push(url);
+      });
+    }
+    [
+      'data-lg-src','data-hi-res-src','data-src-large','data-full-src','data-full',
+      'data-original','data-src','data-lazy-src','data-image-src','data-image','data-url'
+    ].forEach(function (key) { add(attrs[key]); });
+    ['data-srcset','srcset'].forEach(function (key) {
+      var parts = String(attrs[key] || '').split(',').map(function (part) { return part.trim(); }).filter(Boolean).reverse();
+      parts.forEach(function (part) { add(part.split(/\s+/)[0]); });
+    });
+    add(attrs.src);
+    return { attrs: attrs, urls: urls };
+  }
+
+  function htmlText(fragment) {
+    try {
+      var node = document.createElement('div');
+      node.innerHTML = String(fragment || '');
+      return String(node.textContent || '').replace(/\s+/g, ' ').trim();
+    } catch (_) {
+      return String(fragment || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+  }
+
+  function contextFor(node) {
+    var out = [];
+    var image = node instanceof HTMLSourceElement ? (node.parentElement && node.parentElement.querySelector('img')) : node;
+    [image && image.alt, image && image.title, node.getAttribute && node.getAttribute('class'), node.getAttribute && node.getAttribute('id')].forEach(function (value) {
+      if (value) out.push(String(value));
+    });
+    var root = node.parentElement;
+    for (var depth = 0; root && depth < 4; depth += 1, root = root.parentElement) {
+      var cls = String(root.className || '');
+      var id = String(root.id || '');
+      var text = String(root.innerText || '').replace(/\s+/g, ' ').trim();
+      if (cls) out.push(cls);
+      if (id) out.push(id);
+      if (text) out.push(text.slice(0, 1400));
+      if (/figure|graphical|visual|abstract|toc/i.test(cls + ' ' + id)) break;
+    }
+    return out.join(' ').replace(/\s+/g, ' ').trim();
+  }
+
+  function officialType(text, url, publisher) {
+    var hay = String(text || '') + ' ' + String(url || '');
+    if (/toc\s*(?:and\s*abstract\s*)?(?:graphic|image)|table\s*of\s*contents\s*(?:graphic|image)/i.test(hay)) return 'toc_graphic';
+    if (/graphical\s*abstract|visual\s*abstract|graphical\s*(?:summary|synopsis)|visual\s*summary|central\s*illustration|summary\s*graphic/i.test(hay)) return 'graphical_abstract';
+    if (/abstract[-_\s]*(?:graphic|image)/i.test(hay)) return 'abstract_image';
+    if (/-gra-0*1(?:[-_.]|$)|(?:^|[\/_-])(?:ga|fx)0*1(?:[-_.]|$)/i.test(hay)) return 'graphical_abstract';
+    if (publisher === 'wiley' && (/first\s+page\s+image/i.test(hay) || /-gra-\d+/i.test(hay))) return 'graphical_abstract';
+    if (publisher === 'acs' && /(?:\/|[_-])toc(?:\/|[_-]|\d|\.)/i.test(hay)) return 'toc_graphic';
+    return '';
+  }
+
+  function isFigureOne(text) {
+    var value = String(text || '');
+    return /(?:^|\b)fig(?:ure)?\.?\s*0*1(?:\b|[:.)-])/i.test(value)
+      || /(?:^|[\/_-])fig(?:ure)?0*1(?:[-_.]|$)|-fig-?0*1(?:[-_.]|$)|_fig0*1_html\.|(?:^|[\/_-])(?:f|gr)0*1(?:[-_.]|$)/i.test(value);
+  }
+
+  function reject(text, url) {
+    return /journal[\s_-]*cover|issue[\s_-]*cover|masthead|site[-_ ]?logo|favicon|avatar|author[-_ ]photo|advert|banner|spinner|loading|tracking|pixel|cookie|placeholder|qr-code/i.test(String(text || '') + ' ' + String(url || ''));
+  }
+
+  function scoreCandidate(node, url, publisher, allowFigureOne, sourceName) {
+    var context = contextFor(node);
+    if (reject(context, url)) return null;
+    var type = officialType(context, url, publisher);
+    var kind = type ? 'official' : '';
+    var score = type === 'toc_graphic' ? 500 : type === 'graphical_abstract' ? 480 : type === 'abstract_image' ? 450 : 0;
+    if (/-gra-\d+/i.test(url)) score += 180;
+    if (/graphical[-_]?abstract|visual[-_]?abstract/i.test(url)) score += 160;
+    if (/(?:\/|[_-])toc(?:\/|[_-]|\d|\.)/i.test(url)) score += 140;
+    if (!kind && allowFigureOne && publisher !== 'ccs' && isFigureOne(context)) {
+      kind = 'figure1';
+      type = 'figure1_fallback';
+      score = 180;
+    }
+    if (!kind) return null;
+    var img = node instanceof HTMLSourceElement ? (node.parentElement && node.parentElement.querySelector('img')) : node;
+    var width = Number(img && (img.naturalWidth || img.width) || 0);
+    var height = Number(img && (img.naturalHeight || img.height) || 0);
+    if (width >= 180 || height >= 100) score += 20;
+    return {
+      url: url,
+      kind: kind,
+      assetType: type,
+      score: score,
+      source: sourceName || 'live_dom',
+      text: context.slice(0, 1000),
+      width: width,
+      height: height,
+      element: img instanceof HTMLImageElement ? img : null
+    };
+  }
+
+  function articleFigureLabel(text, fallbackIndex) {
+    var value = String(text || '').replace(/\s+/g, ' ').trim();
+    var numbered = value.match(/\b(Figure|Fig\.?|Scheme|Chart)\s*([A-Za-z]?\d+[A-Za-z]?)\b/i);
+    if (numbered) {
+      var kind = /^fig/i.test(numbered[1]) ? 'Figure'
+        : numbered[1].charAt(0).toUpperCase() + numbered[1].slice(1).toLowerCase();
+      return kind + ' ' + numbered[2];
+    }
+    if (/substrate\s+scope|reaction\s+scope|scope\s+of/i.test(value)) return 'Scope';
+    if (/mechanis|catalytic\s+cycle|proposed\s+pathway/i.test(value)) return 'Mechanism';
+    if (/optimization|reaction\s+conditions/i.test(value)) return 'Optimization';
+    return 'Figure ' + String(fallbackIndex + 1);
+  }
+
+  function collectArticleFigureCandidates(job, trace, root, baseUrl, sourceName) {
+    var scope = root || document, rows = [], seen = new Set();
+    var diag={nodes:0,noContext:0,official:0,pdfPreview:0,noLabel:0,duplicate:0,doiMismatch:0,rejected:0,accepted:0};
+    scope.querySelectorAll('img,object[type^="image"]').forEach(function (node) {
+      diag.nodes++;
+      var context = visualScope(node);
+      if(job.publisher==='wiley')context=wileyBodyFigureContext(node,context);
+      if(job.publisher==='rsc')context=rscBodyFigureContext(node,context);
+      if(!context){diag.noContext++;return;}
+      if(context.official){diag.official++;return;}
+      visualUrls(node, context.block, baseUrl || location.href).forEach(function (url, rank) {
+        if(job.publisher==='rsc'&&rscPdfPreviewUrl(url)){
+          diag.pdfPreview++;pushTrace(trace,{stage:'rsc_figure_candidate',event:'pdf_preview_rejected',status:'rejected',url:url,message:'page-preview asset cannot be a numbered body figure'});return;
+        }
+        var label=context.label||'';
+        if(job.publisher==='ccs'){
+          var assetLabel=ccsAssetFigureLabel(url);
+          if(assetLabel&&label&&assetLabel!==label){
+            pushTrace(trace,{stage:'ccs_figure_label',event:'conflict',status:'rejected',url:url,message:'caption='+label+';asset='+assetLabel});
+            return;
+          }
+          if(!label&&assetLabel)label=assetLabel;
+        }
+        if(!label){diag.noLabel++;return;}
+        var key = label + '|' + url;
+        if(seen.has(key)){diag.duplicate++;return;}
+        if(reject(context.caption,url)){diag.rejected++;return;}
+        if(!candidateBelongsToJob(url,job)){diag.doiMismatch++;return;}
+        seen.add(key);diag.accepted++;
+        rows.push({url:url,kind:'article_figure',assetType:'article_figure',label:label,text:context.caption||label,source:job.publisher==='ccs'?'ccs_caption_asset_bound':'isolated_figure_caption',score:100-rank,element:node.tagName.toLowerCase()==='img'?node:null});
+      });
+    });
+    // CCS mixes Figure N and Scheme N in article order. Alphabetic label sorting
+    // wrongly moves every Figure before every Scheme and changes the representative
+    // first body graphic. Preserve DOM order for CCS; retain legacy ordering elsewhere.
+    if(job.publisher!=='ccs')rows.sort(function (a,b) { return String(a.label).localeCompare(String(b.label),undefined,{numeric:true}) || b.score-a.score; });
+    job._figureCandidateStats=diag;
+    pushTrace(trace,{stage:'figure_discovery',event:'scan_complete',status:rows.length?'found':'none',message:'isolated_labels='+new Set(rows.map(function(r){return r.label;})).size+';variants='+rows.length+(job.publisher==='ccs'?';order=dom':'')});
+    if(job.publisher==='wiley'&&!rows.length)pushTrace(trace,{stage:'figure_discovery',event:'wiley_dom_shape',status:'none',message:'images='+scope.querySelectorAll('img,object[type^="image"]').length+';figureBlocks='+scope.querySelectorAll('figure,[role="figure"],.article-section__figure').length+';numberedHeadings='+Array.from(scope.querySelectorAll('h1,h2,h3,h4,h5,h6,[role="heading"]')).filter(function(n){return /^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*\d+[a-z]?\b/i.test(String(n.textContent||'').trim());}).length});
+    return rows;
+  }
+
+  async function waitForArticleFigures(job, trace) {
+    var started = Date.now();
+    var scrollStep = 0;
+    while (Date.now() - started < 60000) {
+      if (isAbortRequested()) throw new Error('user_aborted');
+      var rows = collectArticleFigureCandidates(job, trace, document, location.href, 'live_dom');
+      if (rows.length) return rows;
+      var elapsed = Date.now() - started;
+      var thresholds = [2500, 6500, 12000, 20000];
+      if (scrollStep < thresholds.length && elapsed > thresholds[scrollStep]) {
+        try {
+          var height = Math.max(document.documentElement.scrollHeight, document.body && document.body.scrollHeight || 0);
+          window.scrollTo({ top: Math.round(height * ((scrollStep + 1) / (thresholds.length + 1))), behavior: 'instant' });
+        } catch (_) {}
+        scrollStep += 1;
+      }
+      await sleep(1800);
+    }
+    return [];
+  }
+
+  function wileyGaHeadingText(value) {
+    var text = String(value || '').replace(/\s+/g, ' ').trim();
+    return /^(?:graphical|visual)\s+abstract(?:\s*[:\-–—].*)?$/i.test(text)
+      || /^table\s+of\s+contents(?:\s+(?:graphic|image))?(?:\s*[:\-–—].*)?$/i.test(text);
+  }
+
+  function wileyGaUrlSignal(value) {
+    return /-gra-\d+(?:[-_.]|$)|graphical[-_\s]*abstract|visual[-_\s]*abstract|(?:^|[\/_-])(?:ga|fx)0*1(?:[-_.]|$)/i.test(String(value || ''));
+  }
+
+  function wileyAssetHostAllowed(value) {
+    try {
+      var host = new URL(String(value || ''), location.href).hostname.toLowerCase();
+      return host === 'wiley.com' || host.endsWith('.wiley.com')
+        || host === 'wiley.com.cn' || host.endsWith('.wiley.com.cn');
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function wileyGraphicalAbstractCandidates(job, root, baseUrl) {
+    if (String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))) !== 'wiley') return [];
+    var scope = root || document;
+    var base = baseUrl || location.href;
+    var rows = [], seen = new Map();
+
+    function excluded(node) {
+      return Boolean(node && node.closest && node.closest(
+        'aside,nav,header,footer,[class*="recommend" i],[class*="related" i],[id*="related" i],[class*="reference" i],[class*="citation" i],[class*="advert" i]'
+      ));
+    }
+
+    function add(url, node, source, score, text) {
+      url = normalizeUrl(url, base);
+      if (!url || !wileyAssetHostAllowed(url) || !candidateBelongsToJob(url, job) || reject(text, url)) return;
+      var row = {
+        url: url,
+        kind: 'official',
+        assetType: 'graphical_abstract',
+        score: score,
+        text: String(text || 'Graphical Abstract').slice(0, 1000),
+        source: source,
+        element: node && node.tagName && node.tagName.toLowerCase() === 'img' ? node : null
+      };
+      var old = seen.get(mediaUrlIdentity(url, base));
+      if (!old || row.score > old.score) seen.set(mediaUrlIdentity(url, base), row);
+    }
+
+    function urlsFor(node) {
+      return Array.from(new Set(
+        articleFigureImageUrls(node, base).concat(imageUrls(node, base))
+      )).filter(Boolean);
+    }
+
+    function scanExactContainer(container, headingText) {
+      if (!container || excluded(container) || !container.querySelectorAll) return;
+      var nodes = Array.from(container.querySelectorAll('img,source,object[type^="image"]')).filter(function(node) {
+        return !excluded(node);
+      });
+      var strong = [];
+      var all = [];
+      nodes.forEach(function(node) {
+        urlsFor(node).forEach(function(url) {
+          if (!/\.(?:svg|png|jpe?g|webp|gif)(?:[?#]|$)/i.test(url)) return;
+          if (!wileyAssetHostAllowed(url) || !candidateBelongsToJob(url, job)) return;
+          all.push({url:url,node:node});
+          if (wileyGaUrlSignal(url)) strong.push({url:url,node:node});
+        });
+      });
+      if (strong.length) {
+        strong.forEach(function(item, index) {
+          add(item.url, item.node, 'wiley_ga_labeled_section_url', 940 - index, headingText);
+        });
+        return;
+      }
+      var byIdentity = new Map();
+      all.forEach(function(item) {
+        var key = mediaUrlIdentity(item.url, base);
+        if (key && !byIdentity.has(key)) byIdentity.set(key, item);
+      });
+      if (byIdentity.size === 1) {
+        var only = Array.from(byIdentity.values())[0];
+        add(only.url, only.node, 'wiley_ga_labeled_section_single_image', 900, headingText);
+      }
+    }
+
+    if (scope.querySelectorAll) {
+      scope.querySelectorAll('h1,h2,h3,h4,h5,h6,[role="heading"],.article-section__title,.section__title').forEach(function(heading) {
+        var headingText = String(heading.textContent || '').replace(/\s+/g, ' ').trim();
+        if (!wileyGaHeadingText(headingText) || excluded(heading)) return;
+        var container = heading.closest('section,[class*="article-section"],[class*="graphical"],[class*="abstract"]') || heading.parentElement;
+        scanExactContainer(container, headingText);
+        var sibling = heading.nextElementSibling;
+        for (var i = 0; sibling && i < 2; i += 1, sibling = sibling.nextElementSibling) {
+          if (/^H[1-6]$/.test(String(sibling.tagName || ''))) break;
+          scanExactContainer(sibling, headingText);
+        }
+      });
+
+      var articleScope = scope.querySelector('article,[role="main"],main') || scope;
+      if (articleScope && articleScope.querySelectorAll) {
+        articleScope.querySelectorAll('img,source,object[type^="image"]').forEach(function(node) {
+          if (excluded(node)) return;
+          urlsFor(node).forEach(function(url, index) {
+            if (!wileyGaUrlSignal(url)) return;
+            add(url, node, 'wiley_ga_strong_asset_url', 820 - index, 'Graphical Abstract');
+          });
+        });
+      }
+    }
+
+    // Wiley sometimes keeps the GA only in article-scoped embedded JSON rather than
+    // a rendered <img>. Scan only script payloads that also contain the active DOI
+    // (or its suffix), and still require an explicit -gra- / graphical-abstract URL
+    // on an official Wiley host. This avoids inheriting GA images from related cards.
+    var activeDoi = normalizeDoi(job && job.doi);
+    var activeSuffix = activeDoi ? activeDoi.split('/').pop() : '';
+    if (scope.querySelectorAll && activeDoi) {
+      scope.querySelectorAll('script').forEach(function(script) {
+        var raw = String(script.textContent || '');
+        if (!raw || raw.length > 2000000) return;
+        var decoded = raw.replace(/\\u002f/gi,'/').replace(/\\\//g,'/');
+        var lower = decoded.toLowerCase();
+        if (lower.indexOf(activeDoi) < 0 && (!activeSuffix || lower.indexOf(activeSuffix) < 0)) return;
+        var matches = [];
+        var absolutePattern = /https?:\/\/[^"'<>\s]+/gi;
+        var absolute;
+        while ((absolute = absolutePattern.exec(decoded))) {
+          var absoluteUrl = normalizeUrl(absolute[0], base);
+          if (!absoluteUrl || !wileyAssetHostAllowed(absoluteUrl)) continue;
+          try { if (new URL(absoluteUrl).pathname.indexOf('/cms/asset/') < 0) continue; } catch (_) { continue; }
+          matches.push({raw:absolute[0],url:absoluteUrl,index:absolute.index,end:absolutePattern.lastIndex});
+        }
+        var relativePattern = /(?:^|[^A-Za-z0-9._~:\/-])(\/cms\/asset\/[^"'<>\s]+)/gi;
+        var relative;
+        while ((relative = relativePattern.exec(decoded))) {
+          var relativeUrl = normalizeUrl(relative[1], base);
+          if (!relativeUrl || !wileyAssetHostAllowed(relativeUrl)) continue;
+          matches.push({raw:relative[1],url:relativeUrl,index:relative.index,end:relativePattern.lastIndex});
+        }
+        matches.forEach(function(match) {
+          var candidateUrl = match.url;
+          if (!wileyGaUrlSignal(candidateUrl)) return;
+          var context = decoded.slice(Math.max(0, match.index - 2200), Math.min(decoded.length, match.end + 2200));
+          var contextLower = context.toLowerCase();
+          if (contextLower.indexOf(activeDoi) < 0 && (!activeSuffix || contextLower.indexOf(activeSuffix) < 0)) return;
+          add(candidateUrl, null, 'wiley_ga_embedded_article_data', 880, 'Graphical Abstract');
+        });
+      });
+    }
+
+    rows = Array.from(seen.values()).sort(function(a, b) { return b.score - a.score; });
+    return rows;
+  }
+
+  function rscRouteParts(job) {
+    var doi=normalizeDoi(job&&job.doi),suffix=doi.split('/')[1]||'';
+    var match=/^([a-z])(\d)([a-z]{2})/i.exec(suffix);
+    if(!match)return null;
+    return {doi:doi,suffix:suffix.toLowerCase(),year:String(2020+Number(match[2])),code:match[3].toLowerCase()};
+  }
+
+  function rscArticleHtmlUrl(job) {
+    var row=rscRouteParts(job);
+    return row?'https://pubs.rsc.org/en/content/articlehtml/'+row.year+'/'+row.code+'/'+row.suffix:'';
+  }
+
+  function rscPdfPreviewUrl(value) {
+    var raw=String(value||'').split('#',1)[0].split('?',1)[0].toLowerCase();
+    return /(?:^|\/)[^/]+\.pdf\.(?:gif|png|jpe?g|webp)$/.test(raw);
+  }
+
+  function rscBodyFigureContext(node, original) {
+    if(!node||!node.closest)return original;
+    if(original&&(original.label||original.official))return original;
+    if(node.closest('aside,nav,header,footer,[class*="recommend" i],[class*="related" i],[class*="reference" i],[class*="citation" i]'))return null;
+    var block=node.closest('.image_table,.image-table,.img-tbl,.article-figure,.figure,figure,[class*="figure-container" i]');
+    if(!block)return original;
+    var texts=Array.from(block.querySelectorAll(
+      '.image_title,.image-title,.figure-title,figcaption,.caption,[class*="caption" i]'
+    )).map(function(n){return String(n.textContent||'').replace(/\s+/g,' ').trim();}).filter(Boolean);
+    var numbered=texts.filter(function(t){return /^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*\d+[a-z]?\b/i.test(t);});
+    var own=[node.getAttribute&&node.getAttribute('alt'),node.getAttribute&&node.getAttribute('title'),node.getAttribute&&node.getAttribute('aria-label')]
+      .filter(Boolean).join(' ');
+    if(/^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*\d+[a-z]?\b/i.test(own))numbered.push(own);
+    var labels=Array.from(new Set(numbered.map(function(t){return articleFigureLabel(t,0);})));
+    if(labels.length!==1)return original||null;
+    return {block:block,label:labels[0],caption:(numbered[0]||texts[0]||own).slice(0,600),official:false};
+  }
+
+  function rscGraphicalAbstractCandidates(job, root, baseUrl) {
+    if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='rsc')return [];
+    var scope=root||document,base=baseUrl||location.href,rows=[],seen=new Set();
+    function excluded(node){return Boolean(node&&node.closest&&node.closest(
+      'aside,nav,header,footer,[class*="recommend" i],[class*="related" i],[class*="reference" i],[class*="citation" i],[class*="advert" i]'
+    ));}
+    function add(node,score,source,text){
+      articleFigureImageUrls(node,base).forEach(function(url,rank){
+        if(!url||rscPdfPreviewUrl(url)||seen.has(url)||reject(text,url)||!candidateBelongsToJob(url,job))return;
+        seen.add(url);rows.push({url:url,kind:'official',assetType:'graphical_abstract',score:score-rank,
+          text:String(text||'Graphical Abstract').slice(0,1000),source:source,element:node.tagName&&node.tagName.toLowerCase()==='img'?node:null});
+      });
+    }
+    if(!scope.querySelectorAll)return rows;
+    scope.querySelectorAll('img').forEach(function(img){
+      if(excluded(img))return;
+      var own=[img.getAttribute('alt'),img.getAttribute('title'),img.getAttribute('aria-label')].filter(Boolean).join(' ');
+      var context=contextFor(img);
+      if(/\bgraphical\s+abstract\b|\bvisual\s+abstract\b|\btable\s+of\s+contents\s+(?:graphic|image)\b/i.test(own)){
+        add(img,960,'rsc_graphical_abstract_alt',own);return;
+      }
+      if(/\bgraphical\s+abstract\b|\bvisual\s+abstract\b|\btable\s+of\s+contents\s+(?:graphic|image)\b/i.test(context)
+          && !/\bFig(?:ure)?\.?\s*\d+/i.test(context)){
+        add(img,900,'rsc_graphical_abstract_context',context);
+      }
+    });
+    return rows.sort(function(a,b){return b.score-a.score;});
+  }
+  function rscDoiFromTextOrHref(value) {
+    var match=String(value||'').toLowerCase().match(/10\.1039\/[a-z0-9._()+\-]+/i);
+    return match?normalizeDoi(match[0]):'';
+  }
+
+  function rscSearchResultUrl(job) {
+    var doi=normalizeDoi(job&&job.doi);
+    if(String(job&&job.publisher||publisherForDoi(doi))!=='rsc'||!doi)return '';
+    return 'https://pubs.rsc.org/en/results?searchtext='+encodeURIComponent(doi);
+  }
+
+  function rscIssuePageUrls(job,doc,baseUrl) {
+    if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='rsc')return [];
+    var scope=doc||document,parts=rscRouteParts(job),urls=[];
+    function add(raw){
+      var url=normalizeUrl(raw,baseUrl||location.href);
+      if(!url||urls.indexOf(url)>=0)return;
+      try{
+        var u=new URL(url,baseUrl||location.href);
+        if(u.hostname.toLowerCase()!=='pubs.rsc.org')return;
+        if(!/(?:\/issue\/|\/journals\/journalissues\/)/i.test(u.pathname))return;
+      }catch(_){return;}
+      urls.push(url);
+    }
+    if(scope&&scope.querySelectorAll){
+      Array.from(scope.querySelectorAll('a[href],link[href]')).forEach(function(node){add(node.getAttribute('href'));});
+      var volume=String((scope.querySelector('meta[name="citation_volume" i]')||{}).content||'').trim();
+      var issue=String((scope.querySelector('meta[name="citation_issue" i]')||{}).content||'').trim();
+      if(parts&&/^\d+$/.test(volume)&&/^\d+$/.test(issue))add('https://pubs.rsc.org/'+parts.code+'/issue/'+volume+'/'+issue);
+    }
+    return urls;
+  }
+
+  function rscIssueCardForDoiAnchor(anchor,doi) {
+    var node=anchor&&anchor.parentElement;
+    for(var depth=0;node&&depth<9;depth+=1,node=node.parentElement){
+      if(!node.querySelectorAll)continue;
+      var images=node.querySelectorAll('img,picture,source,object[type^="image"]');
+      if(!images.length)continue;
+      var found=new Set();
+      Array.from(node.querySelectorAll('a[href],[data-doi]')).forEach(function(link){
+        var value=rscDoiFromTextOrHref((link.getAttribute&&link.getAttribute('href')||'')+' '+(link.getAttribute&&link.getAttribute('data-doi')||'')+' '+(link.textContent||''));
+        if(value)found.add(value);
+      });
+      if(found.size===1&&found.has(doi))return node;
+      if(found.size>1)return null;
+    }
+    return null;
+  }
+
+  function rscIssueTocCandidatesFromDocument(job,doc,baseUrl) {
+    if(!doc||String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='rsc')return [];
+    var doi=normalizeDoi(job&&job.doi),suffix=doi.split('/')[1]||'',rows=[],seen=new Set();
+    if(!doi||!doc.querySelectorAll)return rows;
+    var anchors=Array.from(doc.querySelectorAll('a[href],[data-doi]')).filter(function(anchor){
+      var raw=(anchor.getAttribute&&anchor.getAttribute('href')||'')+' '+(anchor.getAttribute&&anchor.getAttribute('data-doi')||'')+' '+(anchor.textContent||'');
+      var bound=rscDoiFromTextOrHref(raw);
+      return bound===doi||(!bound&&String(raw).toLowerCase().indexOf(suffix)>=0);
+    });
+    anchors.forEach(function(anchor){
+      var card=rscIssueCardForDoiAnchor(anchor,doi);if(!card)return;
+      var assets=[];
+      Array.from(card.querySelectorAll('img,source,object[type^="image"]')).forEach(function(node){
+        var context=contextFor(node)+' '+String(card.textContent||'').slice(0,1000);
+        articleFigureImageUrls(node,baseUrl||location.href).forEach(function(url,rank){
+          if(!url||rscPdfPreviewUrl(url)||reject(context,url)||seen.has(url))return;
+          if(!candidateBelongsToJob(url,job))return;
+          assets.push({url:url,node:node,rank:rank,context:context});
+        });
+      });
+      var unique=new Map();assets.forEach(function(x){if(!unique.has(x.url))unique.set(x.url,x);});
+      var list=Array.from(unique.values());
+      list.forEach(function(item,index){
+        var strong=/graphical\s+abstract|visual\s+abstract|table\s+of\s+contents|toc\s+(?:graphic|image)|abstract\s+(?:graphic|image)/i.test(item.context);
+        if(!strong&&list.length!==1)return;
+        seen.add(item.url);
+        rows.push({url:item.url,kind:'official',assetType:'graphical_abstract',
+          score:(strong?970:910)-item.rank-index,text:'RSC issue card graphical abstract',
+          source:strong?'rsc_issue_card_graphic':'rsc_issue_card_single_image',
+          element:item.node&&item.node.tagName&&item.node.tagName.toLowerCase()==='img'?item.node:null});
+      });
+    });
+    return rows.sort(function(a,b){return b.score-a.score;});
+  }
+
+
+  function elsevierGraphicalAbstractCandidates(job, root, baseUrl) {
+    if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='elsevier')return [];
+    var scope=root||document,base=baseUrl||location.href,rows=[],seen=new Set();
+    if(!scope.querySelectorAll)return rows;
+    function add(img,text,score){
+      articleFigureImageUrls(img,base).forEach(function(url,rank){
+        if(!url||seen.has(url)||reject(text,url)||!candidateBelongsToJob(url,job))return;
+        seen.add(url);rows.push({url:url,kind:'official',assetType:'graphical_abstract',score:score-rank,
+          text:String(text||'Graphical abstract').slice(0,1000),source:'elsevier_graphical_abstract',element:img});
+      });
+    }
+    scope.querySelectorAll('section,div').forEach(function(block){
+      if(block.closest&&block.closest('aside,nav,header,footer,[class*="recommend" i],[class*="related" i],[class*="reference" i]'))return;
+      var heading=block.querySelector('h1,h2,h3,h4,[role="heading"]');
+      var headingText=String(heading&&heading.textContent||'').replace(/\s+/g,' ').trim();
+      var marker=[block.id,typeof block.className==='string'?block.className:'',headingText].join(' ');
+      if(!/\bgraphical[\s_-]*abstract\b|\bvisual[\s_-]*abstract\b/i.test(marker))return;
+      var images=Array.from(block.querySelectorAll('img'));
+      if(images.length===1)add(images[0],headingText||marker,940);
+      else images.forEach(function(img){var own=[img.alt,img.title,img.getAttribute('aria-label')].filter(Boolean).join(' ');
+        if(/graphical\s+abstract|visual\s+abstract/i.test(own))add(img,own,950);});
+    });
+    return rows.sort(function(a,b){return b.score-a.score;});
+  }
+
+  function ccsAssetFigureLabel(value) {
+    var raw=String(value||'').split(/[?#]/,1)[0].toLowerCase();
+    var match=raw.match(/(?:^|\/)(sf|f)0*(\d+)\.(?:gif|png|jpe?g|webp)$/i);
+    if(!match)return '';
+    return (match[1].toLowerCase()==='sf'?'Scheme ':'Figure ')+String(Number(match[2]));
+  }
+
+  function ccsTocIndexUrlFromCrossrefPayload(job,payload,baseUrl) {
+    if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='ccs')return '';
+    var message=payload&&payload.message&&typeof payload.message==='object'?payload.message:payload||{};
+    var volume=String(message.volume||'').trim();
+    var issue=String(message.issue||message['journal-issue']&&message['journal-issue'].issue||'').trim();
+    if(!/^\d+$/.test(volume)||!/^\d+$/.test(issue))return '';
+    var origin;
+    try{origin=new URL(baseUrl||location.href).origin;}catch(_){origin='https://www.chinesechemsoc.org';}
+    return origin+'/toc/ccschem/'+String(Number(volume))+'/'+String(Number(issue));
+  }
+
+  async function ccsCrossrefTocIndexUrl(job,trace) {
+    if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='ccs')return '';
+    var doi=normalizeDoi(job&&job.doi);if(!doi)return '';
+    var key=P+'ccs-crossref-route-v1:'+doi,now=Date.now(),cached=GM_getValue(key,null);
+    if(cached&&cached.url&&now-Number(cached.at||0)<30*24*60*60*1000){
+      pushTrace(trace,{stage:'ccs_toc_route',event:'crossref_cache',status:'found',url:cached.url,message:'volume='+String(cached.volume||'')+';issue='+String(cached.issue||'')});
+      return String(cached.url);
+    }
+    try{
+      var payload=await metadataJson({method:'GET',url:'https://api.crossref.org/works/'+encodeURIComponent(doi),timeout:20000,headers:{accept:'application/json'}},'ccs_crossref');
+      var url=ccsTocIndexUrlFromCrossrefPayload(job,payload,location.href);
+      var message=payload&&payload.message&&typeof payload.message==='object'?payload.message:payload||{};
+      if(!url){
+        pushTrace(trace,{stage:'ccs_toc_route',event:'crossref_volume_issue',status:'none',message:'volume_or_issue_missing'});
+        return '';
+      }
+      var volume=String(message.volume||'').trim(),issue=String(message.issue||message['journal-issue']&&message['journal-issue'].issue||'').trim();
+      GM_setValue(key,{url:url,volume:volume,issue:issue,at:now,revision:PUBLISHER_MEDIA_REVISION});
+      pushTrace(trace,{stage:'ccs_toc_route',event:'crossref_volume_issue',status:'found',url:url,message:'volume='+volume+';issue='+issue});
+      return url;
+    }catch(error){
+      pushTrace(trace,{stage:'ccs_toc_route',event:'crossref_volume_issue',status:'failed',message:captureLiveError(error&&error.message||error)});
+      return '';
+    }
+  }
+
+  // CCS Chemistry exposes its official per-article "key image" on journal TOC
+  // listings even when the article page exposes only numbered body figures.
+  function ccsTocIndexUrls(job, doc, baseUrl) {
+    if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='ccs')return [];
+    var origin;
+    try{origin=new URL(baseUrl||location.href).origin;}catch(_){origin='https://www.chinesechemsoc.org';}
+    var urls=[origin+'/toc/ccschem/0/0',origin+'/toc/ccschem/0/ja'];
+    try{
+      var scope=doc||document;
+      var volume=String((scope.querySelector('meta[name="citation_volume"]')||{}).content||'').trim();
+      var issue=String((scope.querySelector('meta[name="citation_issue"]')||{}).content||'').trim();
+      if(/^\d+$/.test(volume)&&/^\d+$/.test(issue))urls.push(origin+'/toc/ccschem/'+volume+'/'+issue);
+    }catch(_){}
+    return Array.from(new Set(urls));
+  }
+
+  function ccsDoiFromTextOrHref(value) {
+    var match=String(value||'').toLowerCase().match(/10\.31635\/ccschem\.[a-z0-9.]+/i);
+    return match?normalizeDoi(match[0]):'';
+  }
+
+  function ccsCardForDoiAnchor(anchor,doi) {
+    var node=anchor&&anchor.parentElement;
+    for(var depth=0;node&&depth<8;depth+=1,node=node.parentElement){
+      var images=node.querySelectorAll?node.querySelectorAll('img,picture,source,object[type^="image"]'):[];
+      if(!images.length)continue;
+      var found=new Set();
+      Array.from(node.querySelectorAll('a[href]')).forEach(function(link){
+        var value=ccsDoiFromTextOrHref((link.getAttribute('href')||'')+' '+(link.textContent||''));
+        if(value)found.add(value);
+      });
+      if(found.size===1&&found.has(doi))return node;
+      if(found.size>1)return null;
+    }
+    return null;
+  }
+
+  function ccsKeyImageSignal(node,card) {
+    var values=[],current=node;
+    for(var depth=0;current&&depth<4;depth+=1,current=current.parentElement){
+      if(current.getAttribute){
+        ['alt','title','aria-label','class','id'].forEach(function(name){var value=current.getAttribute(name);if(value)values.push(value);});
+      }
+      if(current!==node){var text=String(current.textContent||'').replace(/\s+/g,' ').trim();if(text)values.push(text.slice(0,320));}
+      if(current===card)break;
+    }
+    return /\bkey\s*image\b|\btable\s+of\s+contents\s*(?:graphic|image)\b|\btoc\s*(?:graphic|image)\b|\bgraphical\s+abstract\b|\bvisual\s+abstract\b/i.test(values.join(' '));
+  }
+
+  function ccsTocIndexCandidatesFromDocument(job,doc,baseUrl) {
+    if(!doc||String(job&&job.publisher||'')!=='ccs')return [];
+    var doi=normalizeDoi(job&&job.doi);if(!doi)return [];
+    var anchors=Array.from(doc.querySelectorAll('a[href]')).filter(function(anchor){
+      return ccsDoiFromTextOrHref((anchor.getAttribute('href')||'')+' '+(anchor.textContent||''))===doi;
+    });
+    var rows=[],seen=new Set();
+    anchors.forEach(function(anchor){
+      var card=ccsCardForDoiAnchor(anchor,doi);if(!card)return;
+      Array.from(card.querySelectorAll('img')).forEach(function(image){
+        if(!ccsKeyImageSignal(image,card))return;
+        articleFigureImageUrls(image,baseUrl||location.href).forEach(function(url,rank){
+          if(!url||seen.has(url)||reject('CCS Chemistry key image',url))return;
+          seen.add(url);rows.push({url:url,kind:'official',assetType:'toc_graphic',score:980-rank,
+            text:'CCS Chemistry key image',source:'ccs_toc_index_key_image',element:null});
+        });
+      });
+    });
+    return rows.sort(function(a,b){return b.score-a.score;});
+  }
+
+  function natureDeterministicFigureOneCandidates(job) {
+    if (String(job && job.publisher || '') !== 'nature' || job.allowFigureOne === false) return [];
+    var doi = normalizeDoi(job && job.doi);
+    var m = /^10\.1038\/s(\d+)-(\d{3})-(\d+)-[a-z0-9]+$/i.exec(doi);
+    if (!m) return [];
+    var journalId = m[1], year = 2000 + Number(m[2]), articleId = String(Number(m[3]));
+    if (!journalId || !year || !articleId) return [];
+    var stem = 'springer-static/image/art%3A10.1038%2F' + encodeURIComponent(doi.split('/')[1])
+      + '/MediaObjects/' + journalId + '_' + year + '_' + articleId + '_Fig1_HTML.png';
+    return [
+      'https://media.springernature.com/lw685/' + stem,
+      'https://media.springernature.com/full/' + stem,
+      'https://media.springernature.com/m685/' + stem
+    ].map(function(url,index){
+      return {url:url,kind:'figure1',assetType:'figure1_fallback',score:145-index,text:'Figure 1',source:'nature_deterministic_figure1',element:null};
+    });
+  }
+
+  function publisherDomSnapshot(job, root, baseUrl) {
+    var scope=root||document,base=baseUrl||location.href;
+    function count(selector){try{return scope.querySelectorAll(selector).length;}catch(_){return 0;}}
+    var numbered=0,labels=[];
+    try{Array.prototype.slice.call(scope.querySelectorAll('figcaption,.caption,[class*="caption" i],h1,h2,h3,h4,h5,h6')).slice(0,500).forEach(function(node){
+      var t=String(node.textContent||'').replace(/\s+/g,' ').trim();
+      if(/\b(?:Figure|Fig\.?|Scheme|Chart)\s*[A-Za-z]?\d+[A-Za-z]?\b/i.test(t)){numbered++;if(labels.length<6)labels.push(t.slice(0,90));}
+    });}catch(_){}
+    var assets=[],seen=new Set();
+    try{Array.prototype.slice.call(scope.querySelectorAll('img,object[type^="image"],source')).slice(0,300).forEach(function(node){
+      var vals=[];if(node.tagName&&node.tagName.toLowerCase()==='object')vals.push(node.getAttribute('data'));
+      else vals.push(node.currentSrc,node.getAttribute&&node.getAttribute('src'),node.getAttribute&&node.getAttribute('data-src'),node.getAttribute&&node.getAttribute('data-lazy-src'));
+      vals.filter(Boolean).forEach(function(v){var u=normalizeUrl(v,base);if(u&&!seen.has(u)){seen.add(u);if(assets.length<6)assets.push(u);}});
+    });}catch(_){}
+    return {route:captureRouteClass(base),textLength:String(scope.body&&scope.body.innerText||'').length,
+      images:count('img'),pictures:count('picture'),objects:count('object[type^="image"]'),figures:count('figure,[role="figure"]'),
+      figcaptions:count('figcaption'),numbered:numbered,metaVisual:count('meta[name="citation_graphical_abstract"],meta[name="citation_visual_abstract"],meta[name="citation_toc_graphic"],meta[name="citation_abstract_image"]'),
+      iframes:count('iframe'),pdfLinks:count('a[href*=".pdf" i],a[href*="/pdf/" i],a[href*="/epdf/" i]'),labels:labels,assets:assets};
+  }
+  function tracePublisherDomSnapshot(job,trace,event,root,baseUrl) {
+    var snap=publisherDomSnapshot(job,root,baseUrl);
+    pushTrace(trace,{stage:'dom_snapshot',event:event,status:'info',url:baseUrl||location.href,
+      message:'route='+snap.route+';text='+snap.textLength+';img='+snap.images+';picture='+snap.pictures+';object='+snap.objects+';figure='+snap.figures+';figcaption='+snap.figcaptions+';numbered='+snap.numbered+';metaVisual='+snap.metaVisual+';iframe='+snap.iframes+';pdfLinks='+snap.pdfLinks});
+    snap.labels.slice(0,3).forEach(function(label){pushTrace(trace,{stage:'dom_label_sample',event:event,status:'info',message:label});});
+    snap.assets.slice(0,5).forEach(function(url){pushTrace(trace,{stage:'dom_asset_sample',event:event,status:'info',url:url,candidateSource:'publisher_dom_sample'});});
+    return snap;
+  }
+
+  function collectCandidates(job, trace, root, baseUrl, sourceName, quiet) {
+    var scope = root || document, rows = [], seen = new Set();
+    var diag={nodes:0,noContext:0,noKind:0,noUrl:0,pdfPreview:0,duplicate:0,doiMismatch:0,rejected:0,accepted:0};
+    function add(row) {
+      if (String(job && job.publisher || '') === 'rsc' && rscPdfPreviewUrl(row && row.url)) {
+        diag.pdfPreview++;pushTrace(trace,{stage:'rsc_toc_candidate',event:'pdf_preview_rejected',status:'rejected',url:row&&row.url||'',message:'page-preview asset cannot be an official TOC'});return;
+      }
+      if(seen.has(row.url)){diag.duplicate++;return;}
+      if(!candidateBelongsToJob(row.url,job)){diag.doiMismatch++;return;}
+      if(reject(row.text,row.url)){diag.rejected++;return;}
+      seen.add(row.url);rows.push(row);diag.accepted++;
+    }
+    scope.querySelectorAll('img,object[type^="image"]').forEach(function(node) {
+      diag.nodes++;
+      var context=visualScope(node);
+      if (!context){diag.noContext++;return;}
+      var kind=context.official?'official':context.label==='Figure 1' && job.allowFigureOne!==false?'figure1':'';
+      if (!kind){diag.noKind++;return;}
+      var urls=visualUrls(node,context.block,baseUrl||location.href);if(!urls.length)diag.noUrl++;
+      urls.forEach(function(url,rank) {
+        add({url:url,kind:kind,assetType:kind==='official'?'graphical_abstract':'figure1_fallback',score:(kind==='official'?600:150)-rank,text:context.caption,source:'isolated_visual_caption',element:node.tagName.toLowerCase()==='img'?node:null});
+      });
+    });
+    scope.querySelectorAll('head meta[name="citation_graphical_abstract"],head meta[name="citation_visual_abstract"],head meta[name="citation_toc_graphic"],head meta[name="citation_abstract_image"]').forEach(function(meta) {
+      var url=normalizeUrl(meta.getAttribute('content'),baseUrl||location.href);
+      if (url) add({url:url,kind:'official',assetType:'graphical_abstract',score:700,text:meta.getAttribute('name'),source:'article_head_metadata',element:null});
+    });
+    if (String(job && job.publisher || '') === 'wiley') {
+      wileyGraphicalAbstractCandidates(job, scope, baseUrl || location.href).forEach(add);
+    }
+    if (String(job && job.publisher || '') === 'rsc') {
+      rscGraphicalAbstractCandidates(job, scope, baseUrl || location.href).forEach(add);
+    }
+    if (String(job && job.publisher || '') === 'elsevier') {
+      elsevierGraphicalAbstractCandidates(job, scope, baseUrl || location.href).forEach(add);
+    }
+    if (String(job && job.publisher || '') === 'nature') {
+      natureDeterministicFigureOneCandidates(job).forEach(add);
+    }
+    // No whole-page semantic windows: adjacent Scheme images must not inherit a TOC heading.
+    rows.sort(function(a,b){return b.score-a.score;});
+    job._tocCandidateStats=diag;
+    if (!quiet) pushTrace(trace,{stage:'candidate_discovery',event:'scan_complete',status:rows.length?'found':'none',message:'strict_scope_candidates='+rows.length});
+    return rows;
+  }
+
+  function waitForDomMutation(timeoutMs) {
+    return new Promise(function (resolve) {
+      if (!document.body || typeof MutationObserver === 'undefined') {
+        setTimeout(resolve, timeoutMs);
+        return;
+      }
+      var done = false;
+      var observer = new MutationObserver(function (mutations) {
+        if (done) return;
+        var useful = mutations.some(function (mutation) {
+          return mutation.addedNodes.length > 0
+            || (mutation.type === 'attributes' && /^(?:src|srcset|data-src|data-lazy-src|data-hi-res-src|data-srcset)$/i.test(String(mutation.attributeName || '')));
+        });
+        if (!useful) return;
+        done = true;
+        observer.disconnect();
+        clearTimeout(timer);
+        resolve();
+      });
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['src','srcset','data-src','data-lazy-src','data-hi-res-src','data-srcset']
+      });
+      var timer = setTimeout(function () {
+        if (done) return;
+        done = true;
+        observer.disconnect();
+        resolve();
+      }, timeoutMs);
+    });
+  }
+
+  function iframeSourceUrls(job) {
+    var doi = normalizeDoi(job && job.doi);
+    var publisher = String(job && job.publisher || publisherForDoi(doi));
+    var urls = [];
+    function add(value) {
+      if (value && urls.indexOf(value) < 0) urls.push(value);
+    }
+    if (publisher === 'acs' && location.hostname.endsWith('pubs.acs.org')) {
+      add(location.origin + '/doi/' + doi);
+      add(location.origin + '/doi/abs/' + doi);
+      add(location.origin + '/doi/full/' + doi);
+      add(location.origin + '/action/doSearch?AllField=' + encodeURIComponent(doi));
+    } else if (publisher === 'wiley' && location.hostname.endsWith('onlinelibrary.wiley.com')) {
+      add(location.origin + '/doi/' + doi);
+      add(location.origin + '/doi/full/' + doi);
+      add(location.origin + '/doi/abs/' + doi);
+    } else if (publisher === 'rsc' && location.hostname.endsWith('pubs.rsc.org')) {
+      var rscParts=rscRouteParts(job);
+      if(rscParts){
+        add('https://pubs.rsc.org/en/content/articlelanding/'+rscParts.year+'/'+rscParts.code+'/'+rscParts.suffix);
+        add('https://pubs.rsc.org/en/content/articlehtml/'+rscParts.year+'/'+rscParts.code+'/'+rscParts.suffix);
+        rscIssuePageUrls(job,document,location.href).forEach(add);
+      }
+    } else if (publisher === 'ccs' && /(?:^|\.)chinesechemsoc\.org$/.test(location.hostname)) {
+      ccsTocIndexUrls(job,document,location.href).forEach(add);
+    } else if (publisher === 'science' && location.hostname.endsWith('science.org')) {
+      // Deliberately no hidden Science iframe fallbacks. They duplicate document
+      // requests and have not recovered TOCs in current diagnostics.
+    }
+    return urls;
+  }
+
+  async function iframeCandidates(job, trace) {
+    var urls = iframeSourceUrls(job);
+    if(job&&job.publisher==='ccs'){
+      var crossrefTocUrl=await ccsCrossrefTocIndexUrl(job,trace);
+      if(crossrefTocUrl&&urls.indexOf(crossrefTocUrl)<0)urls.push(crossrefTocUrl);
+    }
+    if (!urls.length) return [];
+    var best = [];
+    for (var u = 0; u < urls.length; u += 1) {
+      var url = urls[u];
+      pushTrace(trace, { stage: 'iframe_dom_scan', event: 'load_start', status: 'start', url: url });
+      try {
+        var rows = await new Promise(function (resolve) {
+          var frame = document.createElement('iframe');
+          var started = Date.now();
+          var finished = false;
+          var scrolled = false;
+          var bestRows = [];
+          frame.setAttribute('aria-hidden', 'true');
+          frame.setAttribute('tabindex', '-1');
+          frame.style.cssText = 'position:fixed!important;left:-12000px!important;top:0!important;width:1280px!important;height:900px!important;opacity:.001!important;pointer-events:none!important;border:0!important;z-index:-2147483647!important';
+
+          function cleanup() {
+            clearInterval(poll);
+            clearTimeout(timeout);
+            try { frame.remove(); } catch (_) {}
+          }
+          function finish(value) {
+            if (finished) return;
+            finished = true;
+            cleanup();
+            resolve(value || bestRows);
+          }
+          function inspect() {
+            if (finished) return;
+            try {
+              var doc = frame.contentDocument;
+              var win = frame.contentWindow;
+              if (!doc || !doc.body) return;
+              var current = String(frame.src || url);
+              if(!frame.__osgDiagLogged){frame.__osgDiagLogged=true;tracePublisherDomSnapshot(job,trace,'iframe',doc,current);}
+              if (job.publisher === 'acs') {
+                var doiNeedle = normalizeDoi(job.doi);
+                var suffixNeedle = doiNeedle.split('/').pop() || doiNeedle;
+                Array.prototype.slice.call(doc.querySelectorAll('a[href]')).forEach(function (anchor) {
+                  var href = normalizeUrl(anchor.getAttribute('href') || '', current);
+                  if (!href || urls.indexOf(href) >= 0) return;
+                  var low = href.toLowerCase();
+                  if ((low.indexOf('/article/doi/') >= 0 || low.indexOf('/doi/') >= 0) &&
+                      (low.indexOf(doiNeedle) >= 0 || low.indexOf(suffixNeedle) >= 0)) {
+                    urls.push(href);
+                    pushTrace(trace, {
+                      stage: 'acs_route_discovery',
+                      event: 'article_url',
+                      status: 'found',
+                      url: href,
+                      message: 'discovered from authenticated ACS iframe/search DOM'
+                    });
+                  }
+                });
+              }
+              var rscListing = job.publisher === 'rsc' && /(?:\/results(?:[/?#]|$)|\/issue\/|\/journals\/journalissues\/)/i.test(current);
+              var discovered = job.publisher === 'ccs'
+                ? ccsTocIndexCandidatesFromDocument(job,doc,current)
+                : rscListing
+                  ? rscIssueTocCandidatesFromDocument(job,doc,current)
+                  : collectCandidates(job, trace, doc, current, 'iframe_dom', true);
+              if(job.publisher==='ccs')pushTrace(trace,{stage:'ccs_toc_index',event:'scan',status:discovered.length?'found':'none',url:current,message:'doi='+normalizeDoi(job.doi)+';key_images='+String(discovered.length)});
+              if(rscListing)pushTrace(trace,{stage:/\/results(?:[/?#]|$)/i.test(current)?'rsc_search_toc':'rsc_issue_toc',event:'scan',status:discovered.length?'found':'none',url:current,message:'doi='+normalizeDoi(job.doi)+';visuals='+String(discovered.length)});
+              if (discovered.length) {
+                var merged = new Map();
+                bestRows.concat(discovered).forEach(function (row) {
+                  var old = merged.get(row.url);
+                  if (!old || row.score > old.score) merged.set(row.url, row);
+                });
+                bestRows = Array.from(merged.values()).sort(function (a, b) {
+                  if (a.kind !== b.kind) return a.kind === 'official' ? -1 : 1;
+                  return b.score - a.score;
+                });
+              }
+              if (bestRows.some(function (row) { return row.kind === 'official'; })) return finish(bestRows);
+              var elapsed = Date.now() - started;
+              if (!scrolled && elapsed > 3000 && win) {
+                scrolled = true;
+                try { win.scrollTo({ top: Math.min(doc.body.scrollHeight, 2400), behavior: 'auto' }); }
+                catch (_) { try { win.scrollTo(0, 2400); } catch (_) {} }
+              }
+              if (bestRows.length && elapsed > 6000) return finish(bestRows);
+            } catch (error) {
+              pushTrace(trace, {
+                stage: 'iframe_dom_scan',
+                event: 'inspect_failed',
+                status: 'failed',
+                url: url,
+                message: String(error && error.name || '') + ':' + String(error && error.message || error)
+              });
+              if (String(error && error.name || '').toLowerCase().indexOf('security') >= 0) finish(bestRows);
+            }
+          }
+
+          frame.addEventListener('load', function () {
+            setTimeout(inspect, 250);
+            setTimeout(inspect, 1000);
+            setTimeout(inspect, 2600);
+          });
+          frame.addEventListener('error', function () {
+            pushTrace(trace, { stage: 'iframe_dom_scan', event: 'load_error', status: 'failed', url: url });
+            finish(bestRows);
+          });
+          var poll = setInterval(inspect, 650);
+          var timeout = setTimeout(function () { finish(bestRows); }, 15000);
+          document.body.appendChild(frame);
+          frame.src = url;
+        });
+        if (rows.length) {
+          best = rows;
+          pushTrace(trace, {
+            stage: 'iframe_dom_scan',
+            event: 'complete',
+            status: 'found',
+            url: url,
+            message: 'candidates=' + String(rows.length)
+          });
+          if (rows.some(function (row) { return row.kind === 'official'; })) return rows;
+        } else {
+          pushTrace(trace, { stage: 'iframe_dom_scan', event: 'complete', status: 'none', url: url });
+        }
+      } catch (error) {
+        pushTrace(trace, {
+          stage: 'iframe_dom_scan',
+          event: 'failed',
+          status: 'failed',
+          url: url,
+          message: String(error && error.message || error)
+        });
+      }
+    }
+    return best;
+  }
+
+  function pageState(job, trace) {
+    var text = String(document.body && document.body.innerText || '').slice(0, 120000);
+    var title = String(document.title || '');
+    var href = location.href;
+    var citation = String((document.querySelector('meta[name="citation_doi"]') || {}).content || '').toLowerCase();
+    var canonical = String((document.querySelector('link[rel="canonical"]') || {}).href || '').toLowerCase();
+    var doi = normalizeDoi(job.doi);
+    var suffix = doi.split('/').pop() || doi;
+    var doiMatch = citation.indexOf(doi) >= 0 || canonical.indexOf(doi) >= 0 || href.toLowerCase().indexOf(suffix.toLowerCase()) >= 0;
+    var meaningfulArticle = doiMatch && text.length >= 900;
+    var gateText = title + '\n' + text.slice(0, 16000);
+    // Science/AAAS may expose some article text behind an explicit "Check access"
+    // overlay. That gate must win over text length; otherwise the page looks loaded
+    // and the controller repeatedly scans a document that cannot expose its media.
+    var accessGate = /\b(?:check|checking|verify|verifying)\s+(?:your\s+)?access\b|\baccess\s+(?:check|verification)\b|please\s+(?:wait|stand by).{0,80}(?:access|verification)|请稍候|请稍等|正在检查|正在验证/i.test(gateText);
+    // Publisher article pages often retain generic sign-in strings in navigation or
+    // hidden DOM after access is already granted. Only explicit access gates remain
+    // authoritative when a DOI-bound article body is otherwise meaningful.
+    var challengeSignal = accessGate || /captcha|verify you are human|security check|access denied|challenge-platform|just a moment|unusual traffic|checking your browser/i.test(gateText);
+    var authUrl = /(?:login|signin|sign-in|shibboleth|saml|openathens|wayf|\/idp\/)/i.test(href);
+    var authText = /select (?:your )?institution|sign in via (?:your )?institution|log in via (?:your )?institution|access through (?:your )?institution|institutional login/i.test(gateText);
+    var challenge = accessGate || (challengeSignal && !meaningfulArticle);
+    var auth = authUrl || (authText && !meaningfulArticle);
+    var shell = doiMatch && !challenge && !auth && text.length < 500;
+    pushTrace(trace, {
+      stage: 'page',
+      event: 'state',
+      status: challenge ? (accessGate ? 'access_gate' : 'challenge') : auth ? 'auth' : shell ? 'shell' : 'loaded',
+      url: href,
+      message: 'doiMatch=' + String(doiMatch) + ';textLength=' + String(text.length) + ';accessGate=' + String(accessGate)
+    });
+    return { challenge: challenge, accessGate: accessGate, auth: auth, shell: shell, doiMatch: doiMatch, textLength: text.length };
+  }
+
+
+  function evidenceCaptureEligible(job) {
+    if (job && job.opportunisticEvidence === true) return true;
+    if (job && typeof job.captureEvidence === 'boolean') return job.captureEvidence;
+    var need = String(job && job.mediaNeed || '');
+    return need.indexOf('figures') >= 0 || need === 'evidence';
+  }
+
+  function evidenceNormalizeText(value) {
+    return String(value || '')
+      .replace(/\r\n?/g, '\n')
+      .replace(/[ \t]+/g, ' ')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+  }
+
+  function evidenceExcludedHeading(value) {
+    return /^(?:references?|bibliography|acknowledg(?:e)?ments?|author information|associated content|supplementary information|supporting information|funding|conflicts? of interest|data availability)\b/i.test(evidenceNormalizeText(value, 500));
+  }
+
+  function evidenceNodeExcluded(node) {
+    if (!node || node.nodeType !== 1) return false;
+    if (node.closest && node.closest('nav,aside,footer,form,[role="navigation"],[aria-hidden="true"]')) return true;
+    var signature = String((node.id || '') + ' ' + (node.className || '')).toLowerCase();
+    return /\b(?:references?|bibliography|related|recommended|author-info|author_information|metrics|citation|social|share|advert|cookie)\b/.test(signature);
+  }
+
+  function evidenceCleanContainer(container) {
+    if (!container || !container.querySelectorAll) return container;
+    container.querySelectorAll('script,style,noscript,nav,aside,footer,form,[role="navigation"],[aria-hidden="true"]').forEach(function(node){node.remove();});
+    container.querySelectorAll('[id],[class]').forEach(function(node){
+      if (evidenceNodeExcluded(node)) node.remove();
+    });
+    return container;
+  }
+
+  function evidenceNodeText(node, max) {
+    if (!node) return '';
+    var clone = node.cloneNode(true);
+    evidenceCleanContainer(clone);
+    return evidenceNormalizeText(clone.textContent || '', max || 180000);
+  }
+
+  function evidenceSectionType(heading) {
+    var text = evidenceNormalizeText(heading, 300).toLowerCase();
+    if (/\babstract\b/.test(text)) return 'abstract';
+    if (/\bintroduction\b|\bbackground\b/.test(text)) return 'introduction';
+    if (/\boptim(?:i[sz]ation|ized conditions?)\b|\bscreening\b/.test(text)) return 'optimization';
+    if (/\bsubstrate scope\b|\breaction scope\b|\bscope and limitations?\b/.test(text)) return 'scope';
+    if (/\bmechanis(?:m|tic)\b|\bcontrol experiments?\b|\bmechanistic studies\b/.test(text)) return 'mechanism';
+    if (/\bconclusions?\b|\bsummary and outlook\b/.test(text)) return 'conclusion';
+    if (/\bexperimental\b|\bmethods?\b|\bgeneral procedure\b/.test(text)) return 'experimental';
+    if (/\bresults?\b|\bdiscussion\b/.test(text)) return 'results';
+    return 'other';
+  }
+
+  function evidenceArticleRoot() {
+    var selectors = [
+      '.article__body',
+      '.article-body',
+      '.article_content',
+      '.article__content',
+      '.article-content',
+      '.bodymatter',
+      '.c-article-body',
+      '#articleBody',
+      '#pnlArticleContent',
+      '.Body',
+      '#body',
+      'article',
+      'main article',
+      '[role="main"]',
+      'main'
+    ];
+    var seen = new Set(), best = null, bestScore = 0;
+    selectors.forEach(function(selector){
+      document.querySelectorAll(selector).forEach(function(node){
+        if (seen.has(node) || evidenceNodeExcluded(node)) return;
+        seen.add(node);
+        var length = evidenceNodeText(node, 240000).length;
+        var signature = String((node.id || '') + ' ' + (node.className || '')).toLowerCase();
+        var bonus = node.tagName === 'ARTICLE' ? 50000 : /article.?body|c-article-body|pnlarticlecontent/.test(signature) ? 40000 : 0;
+        var score = length + bonus;
+        if (length >= 1000 && score > bestScore) { best = node; bestScore = score; }
+      });
+    });
+    return best;
+  }
+
+  function evidenceRangeText(root, heading, nextHeading) {
+    try {
+      var range = document.createRange();
+      range.setStartAfter(heading);
+      if (nextHeading) range.setEndBefore(nextHeading);
+      else if (root && root.lastChild) range.setEndAfter(root.lastChild);
+      else return '';
+      var holder = document.createElement('div');
+      holder.appendChild(range.cloneContents());
+      evidenceCleanContainer(holder);
+      return evidenceNormalizeText(holder.textContent || '', 180000);
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function evidenceAbstractSection(root) {
+    var scope=root&&root.querySelectorAll?root:document;
+    var nodes = Array.from(scope.querySelectorAll('#abstract,.abstract,.article__abstract,[class*="abstract"]'));
+    var best = null, bestText = '';
+    nodes.forEach(function(node){
+      if (evidenceNodeExcluded(node)) return;
+      var signature = evidenceNormalizeText((node.id || '') + ' ' + (node.className || '')).toLowerCase();
+      if (/graphical|visual/.test(signature)) return;
+      var text = evidenceNodeText(node).replace(/^abstract\s*/i, '').trim();
+      if (text.length > bestText.length) { best = node; bestText = text; }
+    });
+    if(best&&bestText.length>=40)return {type:'abstract',heading:'Abstract',text:bestText,order:0};
+    var meta=document.querySelector('meta[name="citation_abstract"],meta[name="dc.description"],meta[property="og:description"],meta[name="description"]');
+    var metaText=evidenceNormalizeText(meta&&meta.getAttribute('content')||'').replace(/^abstract\s*/i,'').trim();
+    return metaText.length>=40?{type:'abstract',heading:'Abstract',text:metaText,order:0}:null;
+  }
+
+  function evidenceFallbackBodySections(root, seenText) {
+    var paragraphs = Array.from(root.querySelectorAll('p')).filter(function(node){
+      if (evidenceNodeExcluded(node) || node.closest('figure,table')) return false;
+      var parentSection = node.closest('section');
+      var heading = parentSection && parentSection.querySelector('h2,h3,h4');
+      return !(heading && evidenceExcludedHeading(heading.textContent || ''));
+    });
+    var chunks = [], current = '';
+    paragraphs.forEach(function(node){
+      var text = evidenceNodeText(node, 12000);
+      if (text.length < 50) return;
+      if (current && current.length + text.length > 12000) { chunks.push(current); current = ''; }
+      current += (current ? '\n\n' : '') + text;
+    });
+    if (current) chunks.push(current);
+    return chunks.slice(0, 6).filter(function(text){
+      var key = text.slice(0, 500);
+      if (text.length < 300 || seenText.has(key)) return false;
+      seenText.add(key);
+      return true;
+    }).map(function(text,index){return {type:'other',heading:'Article body '+String(index+1),text:text,order:900+index};});
+  }
+
+  function collectArticleEvidenceSections(root) {
+    var sections = [], seenText = new Set();
+    var abstract = evidenceAbstractSection(root);
+    if (abstract) { sections.push(abstract); seenText.add(abstract.text.slice(0,500)); }
+
+    var headings = Array.from(root.querySelectorAll('h2,h3,h4')).filter(function(node){
+      return !evidenceNodeExcluded(node) && !node.closest('figure,table,nav,aside,footer');
+    });
+    headings.forEach(function(heading,index){
+      var title = evidenceNormalizeText(heading.textContent || '', 500);
+      if (!title || evidenceExcludedHeading(title)) return;
+      var text = evidenceRangeText(root, heading, headings[index+1] || null);
+      var key = text.slice(0, 500);
+      if (text.length < 100 || seenText.has(key)) return;
+      seenText.add(key);
+      sections.push({type:evidenceSectionType(title),heading:title,text:text,order:100+index});
+    });
+
+    if (sections.length < 2) {
+      evidenceFallbackBodySections(root, seenText).forEach(function(row){sections.push(row);});
+    }
+    sections.sort(function(a,b){return Number(a.order||0)-Number(b.order||0);});
+    return sections;
+  }
+
+  function collectArticleEvidenceCaptions(root) {
+    var nodes = Array.from(new Set(Array.from(root.querySelectorAll('figure figcaption,figure [class*="caption"],.figure [class*="caption"]'))));
+    var seen = new Set(), rows = [];
+    nodes.forEach(function(node){
+      if (evidenceNodeExcluded(node)) return;
+      var text = evidenceNodeText(node, 12000);
+      if (text.length < 20 || seen.has(text)) return;
+      seen.add(text);
+      var match = text.match(/^(Scheme|Figure|Fig\.?|Equation|Graphical Abstract|Visual Abstract)\s*[A-Za-z0-9().-]*/i);
+      var label = match ? match[0] : '';
+      var type = /^scheme/i.test(label) ? 'scheme' : /abstract/i.test(label) ? 'graphical_abstract' : /^equation/i.test(label) ? 'equation' : 'figure';
+      rows.push({label:label,type:type,text:text});
+    });
+    return rows;
+  }
+
+  function collectArticleEvidenceTables(root) {
+    var rows = [];
+    Array.from(root.querySelectorAll('table')).forEach(function(table,index){
+      if (evidenceNodeExcluded(table)) return;
+      var text = evidenceNodeText(table, 30000);
+      if (text.length < 40) return;
+      var caption = table.querySelector('caption');
+      rows.push({label:'Table '+String(index+1),title:evidenceNormalizeText(caption && caption.textContent || '',500),text:text});
+    });
+    return rows;
+  }
+
+  function evidenceArticleUrl(job) {
+    var publisher=String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)));
+    if(publisher==='elsevier'){
+      var live=evidenceSourceUrl();
+      if(publisherArticleHostAllowed('elsevier',live))return live;
+      var resolved=String(job&&job.resolvedArticleUrl||'').split('#')[0];
+      if(publisherArticleHostAllowed('elsevier',resolved))return resolved;
+    }
+    return articleUrl(job);
+  }
+
+  function evidenceSourceUrl() {
+    try {
+      var url = new URL(location.href);
+      url.hash = '';
+      return url.toString();
+    } catch (_) {
+      return String(location.href || '').split('#')[0];
+    }
+  }
+
+  function buildArticleEvidencePacket(job, trace) {
+    var pageDoi = assertBoundCaptureJob(job);
+    var state = pageState(job, trace || []);
+    if (state.challenge || state.auth || !state.doiMatch) {
+      return {fulltextStatus:'invalid',reason:state.challenge?'challenge_page':state.auth?'auth_page':'page_doi_unverified'};
+    }
+    var root = evidenceArticleRoot();
+    var sections = root ? collectArticleEvidenceSections(root) : [];
+    var globalAbstract=evidenceAbstractSection(document);
+    if(globalAbstract && !sections.some(function(row){return row.type==='abstract';}))sections.unshift(globalAbstract);
+    var captions = root ? collectArticleEvidenceCaptions(root) : [];
+    var tables = root ? collectArticleEvidenceTables(root) : [];
+    if(!sections.length && !captions.length && !tables.length) {
+      return {fulltextStatus:'empty',reason:state.shell?'publisher_shell':root?'evidence_empty':'article_root_not_found',chars:0,sections:0,captions:0,tables:0};
+    }
+    var chars = sections.reduce(function(total,row){return total+String(row.text||'').length;},0)
+      + captions.reduce(function(total,row){return total+String(row.text||'').length;},0)
+      + tables.reduce(function(total,row){return total+String(row.text||'').length;},0);
+    var nonAbstract=sections.filter(function(row){return row.type!=='abstract';});
+    var substantive=sections.filter(function(row){return ['results','scope','mechanism','conclusion','experimental','optimization'].indexOf(row.type)>=0;});
+    var fulltextStatus='partial';
+    if(sections.length===1 && sections[0].type==='abstract' && !captions.length && !tables.length)fulltextStatus='abstract_only';
+    else if(!nonAbstract.length && sections.some(function(row){return row.type==='abstract';}))fulltextStatus='abstract_only';
+    else {
+      var types=new Set(substantive.map(function(row){return row.type;}));
+      var hasCore=types.has('results')||types.has('scope')||types.has('experimental');
+      var hasClose=types.has('conclusion')||types.has('mechanism')||types.has('optimization');
+      fulltextStatus=hasCore&&hasClose?'complete':'partial';
+    }
+    var articleUrl = evidenceArticleUrl(job);
+    var sourceUrl = evidenceSourceUrl();
+    return {
+      schemaVersion:EVIDENCE_SCHEMA_VERSION,
+      doi:pageDoi,
+      pageDoi:pageDoi,
+      title:evidenceNormalizeText(job.title || (document.querySelector('h1')||{}).textContent || document.title || ''),
+      journal:evidenceNormalizeText(job.journal || ''),
+      publisher:job.publisher || publisherForDoi(pageDoi),
+      articleUrl:articleUrl,
+      sourceUrl:sourceUrl,
+      captureVersion:VERSION,
+      controllerRevision:CONTROLLER_REVISION,
+      jobId:job.jobId,
+      queueGeneratedAt:job.queueGeneratedAt || '',
+      capturedAt:nowIso(),
+      fulltextStatus:fulltextStatus,
+      textProcessingPolicy:'unknown',
+      sections:sections,
+      captions:captions,
+      tables:tables,
+      _metrics:{chars:chars,sections:sections.length,captions:captions.length,tables:tables.length}
+    };
+  }
+
+  async function postArticleEvidence(payload, token, timeoutMs) {
+    var outbound = Object.assign({},payload);
+    delete outbound._metrics;
+    var response = await gmRequest({
+      method:'POST',
+      url:EVIDENCE_ENDPOINT,
+      timeout:Math.max(1000,Math.min(15000,Number(timeoutMs||4000))),
+      headers:{'content-type':'application/json',authorization:'Bearer '+token},
+      data:JSON.stringify(outbound)
+    });
+    var raw = String(response.responseText || ''), body = {};
+    try { body = JSON.parse(raw || '{}'); } catch (_) {}
+    var status = Number(response.status || 0);
+    if (status < 200 || status >= 300) throw uploadResponseError(status,body,raw,function(h){return headerValue(response.responseHeaders,h);},'gm_evidence');
+    return body;
+  }
+
+  async function tryCaptureArticleEvidence(job, trace, token, waitMs) {
+    if (!evidenceCaptureEligible(job)) return {status:'not_requested'};
+    try {
+      var deadline=Date.now()+Math.max(0,Math.min(10000,Number(waitMs||0)));
+      captureLiveUpdate(job,'evidence_capture',{label:'文本'});
+      var packet=buildArticleEvidencePacket(job,trace);
+      while((packet.fulltextStatus==='empty') && Date.now()<deadline) {
+        await sleep(800);
+        packet=buildArticleEvidencePacket(job,trace);
+      }
+      if (packet.fulltextStatus === 'invalid' || packet.fulltextStatus === 'empty') {
+        pushTrace(trace,{stage:'evidence_capture',event:'skip',status:packet.fulltextStatus,url:location.href,message:String(packet.reason||'evidence_unavailable')});
+        return {status:packet.fulltextStatus==='invalid'?'invalid':'empty',reason:String(packet.reason||'evidence_unavailable'),chars:Number(packet.chars||0),sections:Number(packet.sections||0)};
+      }
+      captureLiveUpdate(job,'uploading',{label:packet.fulltextStatus==='abstract_only'?'Abstract':'全文证据'});
+      var uploadTimeout=String(job.mediaNeed||'')==='evidence'?10000:4000;
+      var receipt = await postArticleEvidence(packet,token,uploadTimeout);
+      if (!receipt || receipt.stored !== true || receipt.doi !== normalizeDoi(job.doi) || receipt.schemaVersion !== EVIDENCE_SCHEMA_VERSION) {
+        throw new Error('evidence_receipt_invalid');
+      }
+      var level=String(receipt.evidenceLevel||packet.fulltextStatus||'partial');
+      var summaryReviewQueued=receipt.summaryReviewQueued===true;
+      var summaryReviewQueueReason=String(receipt.summaryReviewQueueReason||'');
+      pushTrace(trace,{stage:'evidence_capture',event:'stored',status:'success',url:location.href,message:'level='+level+';chars='+String(receipt.chars||packet._metrics.chars)+';sections='+String(receipt.sections||packet._metrics.sections)+';summaryQueued='+(summaryReviewQueued?'1':'0')+(summaryReviewQueueReason?';summaryReason='+summaryReviewQueueReason:'')});
+      return {status:'stored',evidenceLevel:level,chars:Number(receipt.chars||packet._metrics.chars),sections:Number(receipt.sections||packet._metrics.sections),sourceHash:String(receipt.sourceHash||''),evidencePacketHash:String(receipt.evidencePacketHash||''),summaryReviewQueued:summaryReviewQueued,summaryReviewQueueReason:summaryReviewQueueReason};
+    } catch (error) {
+      pushTrace(trace,{stage:'evidence_capture',event:'failed',status:'failed',url:location.href,httpStatus:Number(error&&error.httpStatus||0),message:String(error&&error.message||error).slice(0,240)});
+      return {status:'failed',reason:String(error&&error.message||error).slice(0,240),retryAfterMs:Number(error&&error.retryAfterMs||0)};
+    }
+  }
+
+  function mergeFallbackCandidates(existing, rows) {
+    var map = new Map();
+    (existing || []).concat(rows || []).forEach(function (row) {
+      if (!row || row.kind !== 'figure1' || !row.url) return;
+      var old = map.get(row.url);
+      if (!old || Number(row.score || 0) > Number(old.score || 0)) map.set(row.url, row);
+    });
+    return Array.from(map.values()).sort(function (a, b) { return Number(b.score || 0) - Number(a.score || 0); });
+  }
+
+  async function waitForCandidates(job, trace) {
+    var maxMs = job.publisher === 'wiley' ? 8 * 60 * 1000 : 90 * 1000;
+    var started = Date.now();
+    var lastWait = 0;
+    var iframeAttempted = false;
+    var mainScrollStep = 0;
+    var fallbackRows = [];
+
+    function acceptRows(rows, sourceLabel) {
+      rows = Array.isArray(rows) ? rows : [];
+      var official = rows.filter(function (row) { return row.kind === 'official'; });
+      fallbackRows = mergeFallbackCandidates(fallbackRows, rows);
+      if (official.length) return official;
+      if (rows.some(function (row) { return row.kind === 'figure1'; })) {
+        pushTrace(trace, {
+          stage: 'fallback_buffer',
+          event: 'figure1_deferred',
+          status: 'waiting_for_official',
+          message: String(sourceLabel || '') + ';buffered=' + String(fallbackRows.length)
+        });
+      }
+      return [];
+    }
+
+    while (Date.now() - started < maxMs) {
+      if (isAbortRequested()) throw new Error('user_aborted');
+      var state = pageState(job, trace);
+      if (state.challenge || state.auth) {
+        if (Date.now() - lastWait > 10000) {
+          lastWait = Date.now();
+          GM_setValue(progressKey(job.doi), {
+            status: state.challenge ? 'challenge_wait' : 'auth_wait',
+            at: nowIso(),
+            url: location.href
+          });
+        }
+        await waitForDomMutation(2500);
+        continue;
+      }
+      if (!state.doiMatch && Date.now() - started > 8000 && state.textLength > 1000) {
+        pushTrace(trace, {
+          stage: 'page',
+          event: 'doi_guard',
+          status: 'mismatch',
+          url: location.href,
+          message: 'refusing capture because loaded page does not match active DOI'
+        });
+        throw new Error('doi_page_mismatch');
+      }
+
+      var candidates = collectCandidates(job, trace, document, location.href, 'live_dom', false);
+      var accepted = acceptRows(candidates, 'live_dom');
+      if (accepted.length) return accepted;
+
+      var elapsed = Date.now() - started;
+      if (job.publisher === 'acs' && mainScrollStep < 3 && elapsed > [2500, 6000, 10500][mainScrollStep]) {
+        var targets = [1200, 3000, 6000];
+        var target = Math.min(Number(document.body && document.body.scrollHeight || targets[mainScrollStep]), targets[mainScrollStep]);
+        mainScrollStep += 1;
+        try { window.scrollTo({ top: target, behavior: 'auto' }); }
+        catch (_) { try { window.scrollTo(0, target); } catch (_) {} }
+        pushTrace(trace, {
+          stage: 'lazy_load_trigger',
+          event: 'scroll',
+          status: 'ok',
+          url: location.href,
+          message: 'acs_main_scroll_top=' + String(target) + ';step=' + String(mainScrollStep)
+        });
+        await waitForDomMutation(900);
+        candidates = collectCandidates(job, trace, document, location.href, 'live_dom_after_scroll', false);
+        accepted = acceptRows(candidates, 'live_dom_after_scroll');
+        if (accepted.length) return accepted;
+      }
+
+      var iframeThreshold = state.shell && job.publisher === 'acs' ? 2500 : 7000;
+      if (!iframeAttempted && elapsed > iframeThreshold && (job.publisher === 'acs' || job.publisher === 'wiley')) {
+        iframeAttempted = true;
+        if (isAbortRequested()) throw new Error('user_aborted');
+        var iframeRows = await iframeCandidates(job, trace);
+        iframeRows.slice(0, 10).forEach(function (row) {
+          pushTrace(trace, {
+            stage: 'candidate_discovery',
+            event: 'candidate',
+            status: row.kind,
+            url: row.url,
+            message: row.assetType,
+            candidateKind: row.kind,
+            candidateSource: row.source,
+            candidateScore: row.score,
+            imageWidth: row.width,
+            imageHeight: row.height
+          });
+        });
+        accepted = acceptRows(iframeRows, 'iframe_dom');
+        if (accepted.length) return accepted;
+      }
+
+      if (elapsed > 22000 && (state.textLength > 2000 || iframeAttempted)) {
+        if (fallbackRows.length) {
+          pushTrace(trace, {
+            stage: 'fallback_buffer',
+            event: 'figure1_release',
+            status: 'fallback',
+            message: 'official TOC search exhausted; releasing Figure 1 fallback'
+          });
+          return fallbackRows;
+        }
+        return [];
+      }
+      await waitForDomMutation(1500);
+    }
+
+    if (fallbackRows.length) {
+      pushTrace(trace, {
+        stage: 'fallback_buffer',
+        event: 'figure1_release',
+        status: 'fallback',
+        message: 'publisher wait timeout reached; releasing Figure 1 fallback'
+      });
+      return fallbackRows;
+    }
+    throw new Error('page_wait_timeout');
+  }
+
+  async function pageFetchCandidate(candidate, trace) {
+    var requestUrl = candidateRequestUrl(candidate);
+    pushTrace(trace, {
+      stage: 'page_fetch',
+      event: 'request_start',
+      status: 'start',
+      url: requestUrl,
+      candidateKind: candidate.kind,
+      candidateSource: candidate.source,
+      candidateScore: candidate.score
+    });
+    var requestStarted=Date.now();
+    try {
+      var response = await fetch(requestUrl, {
+        method: 'GET',
+        credentials: 'include',
+        cache: 'force-cache',
+        signal: AbortSignal.timeout(12000),
+        redirect: 'follow',
+        referrer: location.href
+      });
+      var contentType = String(response.headers.get('content-type') || '');
+      pushTrace(trace, {
+        stage: 'page_fetch',
+        event: 'response',
+        status: response.ok ? 'ok' : 'http_error',
+        httpStatus: response.status,
+        contentType: contentType,
+        url: response.url || requestUrl,
+        message:'durationMs='+(Date.now()-requestStarted)+';retryAfter='+String(response.headers.get('retry-after')||'').slice(0,80)
+      });
+      if (!response.ok) throw new Error('page_fetch_http_' + response.status);
+      var buffer = await response.arrayBuffer();
+      contentType = sniffContentType(buffer, contentType);
+      if (!/^image\//.test(contentType)) throw new Error('page_fetch_not_image:' + contentType);
+      if (buffer.byteLength < 100 || buffer.byteLength > 4000000) throw new Error('page_fetch_size:' + buffer.byteLength);
+      return {
+        imageData: 'data:' + contentType + ';base64,' + toBase64(buffer),
+        contentType: contentType,
+        byteLength: buffer.byteLength,
+        sourceUrl: response.url || requestUrl,
+        method: 'page_fetch'
+      };
+    } catch (error) {
+      pushTrace(trace, {
+        stage: 'page_fetch',
+        event: 'failed',
+        status: 'failed',
+        httpStatus:Number(response&&response.status||0),
+        url: response&&response.url || requestUrl,
+        message: String(error&&error.name||'Error')+':'+String(error && error.message || error)+';durationMs='+(Date.now()-requestStarted)
+      });
+      return null;
+    }
+  }
+
+  async function gmFetchCandidate(candidate, trace) {
+    var requestUrl = candidateRequestUrl(candidate);
+    pushTrace(trace, {
+      stage: 'gm_fetch',
+      event: 'request_start',
+      status: 'start',
+      url: requestUrl,
+      candidateKind: candidate.kind,
+      candidateSource: candidate.source,
+      candidateScore: candidate.score
+    });
+    var requestStarted=Date.now();
+    try {
+      var response = await gmRequest({
+        method: 'GET',
+        url: requestUrl,
+        responseType: 'arraybuffer',
+        timeout: 12000,
+        headers: {
+          Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+          Referer: location.href
+        }
+      });
+      var status = Number(response.status || 0);
+      var buffer = response.response;
+      var contentType = sniffContentType(buffer, headerValue(response.responseHeaders, 'content-type'));
+      var bytes = buffer && buffer.byteLength || 0;
+      pushTrace(trace, {
+        stage: 'gm_fetch',
+        event: 'response',
+        status: status >= 200 && status < 300 ? 'ok' : 'http_error',
+        httpStatus: status,
+        contentType: contentType,
+        url: response.finalUrl || requestUrl,
+        message:'durationMs='+(Date.now()-requestStarted)+';retryAfter='+headerValue(response.responseHeaders,'retry-after').slice(0,80),
+        byteLength: bytes
+      });
+      if (status < 200 || status >= 300) {
+        var httpError = new Error('gm_fetch_http_' + status);
+        httpError.httpStatus = status;
+        throw httpError;
+      }
+      if (!/^image\//.test(contentType)) throw new Error('gm_fetch_not_image:' + contentType);
+      if (bytes < 100 || bytes > 4000000) throw new Error('gm_fetch_size:' + bytes);
+      return {
+        imageData: 'data:' + contentType + ';base64,' + toBase64(buffer),
+        contentType: contentType,
+        byteLength: bytes,
+        sourceUrl: response.finalUrl || requestUrl,
+        method: 'gm_fetch'
+      };
+    } catch (error) {
+      pushTrace(trace, {
+        stage: 'gm_fetch',
+        event: 'failed',
+        status: 'failed',
+        httpStatus: Number(error && error.httpStatus || 0),
+        url: requestUrl,
+        message: String(error && error.message || error)
+      });
+      return null;
+    }
+  }
+
+  async function canvasCandidate(candidate, trace) {
+    var image = candidate.element;
+    if (image && normalizeUrl(image.currentSrc || image.src, location.href) !== candidate.url) return null;
+    if (!image || !image.complete || image.naturalWidth < 1) {
+      pushTrace(trace, {
+        stage: 'rendered_canvas',
+        event: 'unavailable',
+        status: 'unavailable',
+        url: candidate.url,
+        message: image ? 'element_not_loaded' : 'no_live_image_element'
+      });
+      return null;
+    }
+    try {
+      var canvas = document.createElement('canvas');
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(image, 0, 0);
+      var data = canvas.toDataURL('image/png');
+      if (data.length < 200) throw new Error('canvas_empty');
+      pushTrace(trace, {
+        stage: 'rendered_canvas',
+        event: 'complete',
+        status: 'ok',
+        url: candidate.url,
+        contentType: 'image/png',
+        imageWidth: canvas.width,
+        imageHeight: canvas.height,
+        byteLength: Math.floor(data.length * 0.75)
+      });
+      return {
+        imageData: data,
+        contentType: 'image/png',
+        byteLength: Math.floor(data.length * 0.75),
+        sourceUrl: normalizeUrl(image.currentSrc || image.src, location.href),
+        method: 'rendered_canvas'
+      };
+    } catch (error) {
+      pushTrace(trace, {
+        stage: 'rendered_canvas',
+        event: 'failed',
+        status: 'failed',
+        url: candidate.url,
+        message: String(error && error.name || '') + ':' + String(error && error.message || error)
+      });
+      return null;
+    }
+  }
+
+  function measureImageData(imageData) {
+    return new Promise(function (resolve) {
+      try {
+        var probe = new Image();
+        var done = false;
+        var finish = function (width, height) {
+          if (done) return;
+          done = true;
+          resolve({ width: Number(width || 0), height: Number(height || 0) });
+        };
+        probe.onload = function () { finish(probe.naturalWidth, probe.naturalHeight); };
+        probe.onerror = function () { finish(0, 0); };
+        probe.src = imageData;
+        setTimeout(function () { finish(0, 0); }, 5000);
+      } catch (_) {
+        resolve({ width: 0, height: 0 });
+      }
+    });
+  }
+
+  function isAcsImageViewerUrl(value) {
+    try { var u=new URL(value,location.href); return u.hostname==='pubs.acs.org' && /^\/view-large\/figure\//i.test(u.pathname); }
+    catch (_) { return false; }
+  }
+  function acsViewerStem(value) {
+    try{
+      var name=decodeURIComponent(new URL(value,location.href).pathname.split('/').pop()||'');
+      return name.replace(/\.(?:tiff?|png|jpe?g|svg|webp)$/i,'').toLowerCase();
+    }catch(_){return '';}
+  }
+  function acsViewerAssetUrls(viewerUrl,html) {
+    // Only use links actually present in the publisher viewer. Never synthesize
+    // an assumed full-size file name or accept a different figure's asset.
+    var stem=acsViewerStem(viewerUrl),input=String(html||'').replace(/&amp;/gi,'&')
+      .replace(/\\u0026/gi,'&').replace(/\\\//g,'/');
+    if(!stem||input.length>2500000)return [];
+    var out=[],seen=new Set();
+    function add(raw){
+      var url=normalizeUrl(raw,viewerUrl);
+      if(!url||seen.has(url)||url===normalizeUrl(viewerUrl,viewerUrl))return;
+      try{
+        var u=new URL(url),host=u.hostname.toLowerCase(),path=decodeURIComponent(u.pathname+u.search).toLowerCase();
+        if(!(host==='pubs.acs.org'||host==='acs.silverchair-cdn.com'||host.endsWith('.silverchair-cdn.com')))return;
+        if(path.indexOf(stem)<0||!/\.(?:svg|png|jpe?g|webp|gif|tiff?)(?:[?#]|$)/i.test(url))return;
+        seen.add(url);out.push(url);
+      }catch(_){}
+    }
+    var attr=/(?:src|href|content|data-[a-z0-9_-]+)\s*=\s*["']([^"']+)["']/gi,match;
+    while((match=attr.exec(input))&&out.length<20)add(match[1]);
+    var absolute=/(?:https?:)?\/\/[^"'<>\s\\]+/gi;
+    while((match=absolute.exec(input))&&out.length<20)add(match[0]);
+    function score(url){return (/\.svg(?:[?#]|$)/i.test(url)?150:0)+(/content_public/i.test(url)?50:0)
+      +(/\.(?:png|jpe?g|webp)(?:[?#]|$)/i.test(url)?40:0)
+      -(/\/m_[^/]+/i.test(url)?70:0)-(/\.tiff?(?:[?#]|$)/i.test(url)?60:0);}
+    return out.sort(function(a,b){return score(b)-score(a);}).slice(0,5);
+  }
+  async function acsViewerHtml(viewerUrl,trace) {
+    var started=Date.now();
+    try{
+      var response=await fetch(viewerUrl,{method:'GET',credentials:'include',cache:'no-store',
+        redirect:'follow',signal:AbortSignal.timeout(3500),referrer:location.href});
+      var type=String(response.headers.get('content-type')||'');
+      if(response.ok&&/(?:text\/html|application\/xhtml\+xml)/i.test(type)){
+        var html=await response.text();
+        pushTrace(trace,{stage:'acs_viewer_probe',event:'html',status:'ok',url:response.url||viewerUrl,
+          message:'transport=browser;chars='+html.length+';elapsedMs='+(Date.now()-started)});
+        return html;
+      }
+      pushTrace(trace,{stage:'acs_viewer_probe',event:'browser_non_html',status:response.ok?'unsupported':'http_error',
+        url:response.url||viewerUrl,httpStatus:response.status,contentType:type});
+      if(response.status===401||response.status===403||response.status===429)return '';
+    }catch(error){pushTrace(trace,{stage:'acs_viewer_probe',event:'browser_failed',status:'failed',url:viewerUrl,message:String(error&&error.message||error)});}
+    try{
+      var gm=await gmRequest({method:'GET',url:viewerUrl,timeout:4000,
+        headers:{Accept:'text/html,application/xhtml+xml;q=0.9,*/*;q=0.1',Referer:location.href}},true);
+      var ct=headerValue(gm.responseHeaders,'content-type'),raw=String(gm.responseText||'');
+      if(Number(gm.status)>=200&&Number(gm.status)<300&&/(?:text\/html|application\/xhtml\+xml)/i.test(ct)){
+        pushTrace(trace,{stage:'acs_viewer_probe',event:'html',status:'ok',url:gm.finalUrl||viewerUrl,
+          message:'transport=gm;chars='+raw.length+';elapsedMs='+(Date.now()-started)});
+        return raw;
+      }
+      pushTrace(trace,{stage:'acs_viewer_probe',event:'gm_non_html',status:'unsupported',
+        url:gm.finalUrl||viewerUrl,httpStatus:Number(gm.status||0),contentType:ct});
+    }catch(error){pushTrace(trace,{stage:'acs_viewer_probe',event:'gm_failed',status:'failed',url:viewerUrl,message:String(error&&error.message||error)});}
+    return '';
+  }
+  async function acquireAcsViewerImage(candidate,trace) {
+    var html=await acsViewerHtml(candidate.url,trace),urls=acsViewerAssetUrls(candidate.url,html);
+    pushTrace(trace,{stage:'acs_viewer_probe',event:'assets',status:urls.length?'found':'none',
+      url:candidate.url,message:'figureStem='+acsViewerStem(candidate.url)+';sameFigureAssets='+urls.length});
+    for(var i=0;i<urls.length;i++){
+      var nested=Object.assign({},candidate,{url:urls[i],source:'acs_view_large_html_asset',element:null});
+      var image=await pageFetchCandidate(nested,trace);
+      if(!image)image=await gmFetchCandidate(nested,trace);
+      if(!image||image.contentType==='image/tiff')continue;
+      var size=await measureImageData(image.imageData);
+      image.width=Number(size.width||0);image.height=Number(size.height||0);
+      var quality=measuredQuality(image,'figure');
+      pushTrace(trace,{stage:'acs_viewer_probe',event:'asset_measured',status:quality.quality,
+        url:image.sourceUrl||nested.url,imageWidth:image.width,imageHeight:image.height,
+        message:'sameFigure=1;usable='+Number(quality.usable)});
+      if(quality.usable)return image;
+    }
+    return null;
+  }
+
+
+  async function acquireImage(candidate, trace) {
+    if (isAcsImageViewerUrl(candidate && candidate.url)) {
+      pushTrace(trace,{stage:'image_route',event:'inspect_html_viewer',status:'start',url:candidate.url,message:'revision='+ACS_MEDIA_RECOVERY_REVISION});
+      return acquireAcsViewerImage(candidate,trace);
+    }
+    var image = await pageFetchCandidate(candidate, trace);
+    if (image && image.contentType === 'image/tiff') {
+      pushTrace(trace,{stage:'candidate_format',event:'unsupported_tiff',status:'unsupported',url:image.sourceUrl||candidate.url,contentType:'image/tiff',byteLength:image.byteLength,message:'browser/Worker protocol does not accept TIFF; try another variant from the same labelled figure'});
+      image = null;
+      // Do not download the identical TIFF again through GM; move directly to a page-rendered fallback.
+      image = await canvasCandidate(candidate, trace);
+    } else if (!image) {
+      image = await gmFetchCandidate(candidate, trace);
+      if (image && image.contentType === 'image/tiff') {
+        pushTrace(trace,{stage:'candidate_format',event:'unsupported_tiff',status:'unsupported',url:image.sourceUrl||candidate.url,contentType:'image/tiff',byteLength:image.byteLength,message:'browser/Worker protocol does not accept TIFF; try another variant from the same labelled figure'});
+        image = null;
+      }
+      if (!image) image = await canvasCandidate(candidate, trace);
+    }
+    if (!image) return null;
+    var measured = await measureImageData(image.imageData);
+    image.width = Number(measured.width || 0);
+    image.height = Number(measured.height || 0);
+    return image;
+  }
+
+  async function uploadArticleFigure(job, candidate, image, trace, token, order) {
+    // recovery_direct_stage_v1: /import is deliberately locked during recovery.
+    // Store once in R2; a positive staging receipt is not publication completion.
+    var pageDoi = assertBoundCaptureJob(job, candidate.url);
+    captureLiveUpdate(job,'uploading',{label:candidate.label});
+    var payload = {
+      doi: job.doi,
+      jobId: job.jobId,
+      captureVersion: VERSION,
+      pageDoi: pageDoi,
+      articleUrl: location.href,
+      sourceUrl: candidate.url,
+      id: String(candidate.label || ('figure-' + String(order + 1))).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
+      label: candidate.label || ('Figure ' + String(order + 1)),
+      caption: candidate.text || '',
+      order: Number(order || 0),
+      width: Number(image.width || 0) || undefined,
+      height: Number(image.height || 0) || undefined,
+      imageData: image.imageData
+    };
+    pushTrace(trace, {
+      stage: 'figure_stage', event: 'start', status: 'start',
+      url: candidate.url, message: 'recovery_direct_stage:' + payload.label,
+      byteLength: image.byteLength
+    });
+    try {
+      var result = await postAcquiredImage(job, candidate, image, trace, FIGURE_STAGE_ENDPOINT, payload, token, 'figure_stage');
+      if (!result || result.stored !== true || result.staged !== true ||
+          normalizeDoi(result.doi) !== normalizeDoi(job.doi) ||
+          String(result.id || '') !== payload.id) {
+        throw new Error('figure_stage_receipt_invalid');
+      }
+      // A delayed response from the previous task must not complete a new job.
+      assertBoundCaptureJob(job, candidate.url);
+      pushTrace(trace, {
+        stage: 'figure_stage', event: 'complete', status: 'ok',
+        url: result.imageUrl || candidate.url,
+        message: payload.label + ';stored=1;published=0',
+        imageWidth: Number(result.width || image.width || 0),
+        imageHeight: Number(result.height || image.height || 0),
+        byteLength: image.byteLength
+      });
+      return Object.assign({}, result, {
+        staged: true, imported: false, published: false,
+        publicationState: 'pending_verified_promotion'
+      });
+    } catch (error) {
+      pushTrace(trace, {
+        stage: 'figure_stage', event: 'failed', status: 'failed',
+        httpStatus: Number(error && error.httpStatus || 0),
+        url: candidate.url,
+        message: String(error && error.message || error)
+      });
+      throw error;
+    }
+  }
+
+  function rasterizeVerifiedFigureOne(image,trace) {
+    if(!image||image.contentType!=='image/svg+xml')return Promise.resolve(image);
+    var verdict=svgQuality(image);
+    if(!verdict||!verdict.usable)return Promise.reject(new Error('figure1_svg_unsafe_or_invalid'));
+    return new Promise(function(resolve,reject){
+      var probe=new Image(),settled=false;
+      var timer=setTimeout(function(){finish(new Error('figure1_svg_render_timeout'));},3500);
+      function finish(error,value){if(settled)return;settled=true;clearTimeout(timer);probe.onload=null;probe.onerror=null;error?reject(error):resolve(value);}
+      probe.onload=function(){
+        try{
+          var width=Number(probe.naturalWidth||image.width||0),height=Number(probe.naturalHeight||image.height||0);
+          if(width<1||height<1)throw new Error('figure1_svg_dimensions_missing');
+          var scale=Math.min(4,Math.max(1,1200/Math.max(width,height))),canvas=document.createElement('canvas');
+          canvas.width=Math.max(1,Math.round(width*scale));canvas.height=Math.max(1,Math.round(height*scale));
+          var ctx=canvas.getContext('2d');if(!ctx)throw new Error('figure1_svg_canvas_unavailable');
+          ctx.drawImage(probe,0,0,canvas.width,canvas.height);
+          var png=canvas.toDataURL('image/png');
+          if(png.length<200||png.length>5500000)throw new Error('figure1_png_size_invalid');
+          var rendered=Object.assign({},image,{imageData:png,contentType:'image/png',
+            byteLength:Math.floor((png.length-png.indexOf(',')-1)*0.75),width:canvas.width,height:canvas.height,method:'verified_svg_raster'});
+          pushTrace(trace,{stage:'figure1_render',event:'rasterized',status:'ok',url:image.sourceUrl||'',
+            imageWidth:rendered.width,imageHeight:rendered.height,message:'safe_svg_to_png_without_structure_changes'});
+          finish(null,rendered);
+        }catch(error){finish(error);}
+      };
+      probe.onerror=function(){finish(new Error('figure1_svg_render_failed'));};
+      probe.src=image.imageData;
+    });
+  }
+
+  async function uploadCapture(job, candidate, image, trace, token) {
+    assertBoundCaptureJob(job, candidate.url);
+    if(candidate.kind==='figure1')image=await rasterizeVerifiedFigureOne(image,trace);
+    captureLiveUpdate(job,'uploading',{label:candidate.kind==='figure1'?'Figure 1 替代图':'TOC'});
+    pushTrace(trace, {
+      stage: 'r2_upload',
+      event: 'start',
+      status: 'start',
+      url: candidate.url,
+      candidateKind: candidate.kind,
+      candidateSource: candidate.source,
+      byteLength: image.byteLength
+    });
+    try {
+      var result = await postAcquiredImage(job, candidate, image, trace, CAPTURE_ENDPOINT, {
+        doi: job.doi,
+      jobId: job.jobId,
+      captureVersion: VERSION,
+      pageDoi: normalizeDoi(job.doi),
+        kind: candidate.kind,
+        imageData: image.imageData,
+        articleUrl: location.href,
+        sourceUrl: candidate.url,
+        caption: candidate.text || '',
+        width: Number(image.width || 0) || undefined,
+        height: Number(image.height || 0) || undefined,
+        capturedAt: nowIso(),
+        source: 'tampermonkey-toc-mainline'
+      }, token, 'r2_upload');
+      if (!result || result.stored !== true || normalizeDoi(result.doi) !== normalizeDoi(job.doi) || result.kind !== candidate.kind) throw new Error('toc_capture_receipt_invalid');
+      if (candidate.kind === 'official' && result.productionTocStored !== true) throw new Error('toc_production_promotion_missing');
+      if (candidate.kind === 'figure1' && result.productionFallbackStored !== true) throw new Error('figure1_production_fallback_missing');
+      assertBoundCaptureJob(job, candidate.url);
+      pushTrace(trace, {
+        stage: 'r2_upload',
+        event: 'complete',
+        status: 'ok',
+        url: result.imageUrl || '',
+        message: image.method,
+        byteLength: image.byteLength
+      });
+      return result;
+    } catch (error) {
+      pushTrace(trace, {
+        stage: 'r2_upload',
+        event: 'failed',
+        status: 'failed',
+        httpStatus: Number(error && error.httpStatus || 0),
+        url: candidate.url,
+        message: String(error && error.message || error)
+      });
+      throw error;
+    }
+  }
+
+  async function uploadReport(job, trace, status, reason, candidate, token) {
+    GM_setValue(traceKey(job.doi), {
+      doi: job.doi,
+      status: status,
+      reason: reason,
+      trace: trace,
+      finishedAt: nowIso()
+    });
+    try {
+      await postJson(REPORT_ENDPOINT, {
+        doi: job.doi,
+        publisher: job.publisher,
+        status: status,
+        reason: reason,
+        assetType: candidate && candidate.assetType || '',
+        candidateKind: candidate && candidate.kind || '',
+        candidateSource: candidate && candidate.source || '',
+        articleUrl: location.href,
+        sourceUrl: candidate && candidate.url || '',
+        pageTitle: document.title || '',
+        queueGeneratedAt: job.queueGeneratedAt || '',
+        startedAt: job.startedAt || '',
+        finishedAt: nowIso(),
+        trace: trace
+      }, token);
+      return true;
+    } catch (error) {
+      pushTrace(trace, {
+        stage: 'report_upload',
+        event: 'failed',
+        status: 'failed',
+        httpStatus: Number(error && error.httpStatus || 0),
+        message: String(error && error.message || error)
+      });
+      GM_setValue(traceKey(job.doi), {
+        doi: job.doi,
+        status: status,
+        reason: reason,
+        trace: trace,
+        finishedAt: nowIso()
+      });
+      return false;
+    }
+  }
+
+  function failureReason(trace, error) {
+    var rev = trace.slice().reverse();
+    var page = rev.find(function (x) { return x.stage === 'page' && x.event === 'state'; });
+    if (page && page.status === 'challenge') return 'challenge_not_completed';
+    if (page && page.status === 'auth') return 'auth_not_completed';
+    var page403 = rev.find(function (x) { return x.stage === 'page_fetch' && x.httpStatus === 403; });
+    var gm403 = rev.find(function (x) { return x.stage === 'gm_fetch' && x.httpStatus === 403; });
+    var canvasFail = rev.find(function (x) { return x.stage === 'rendered_canvas' && x.event === 'failed'; });
+    var figureNone = rev.find(function (x) { return x.stage === 'figure_discovery' && x.event === 'scan_complete' && x.status === 'none'; });
+    var none = rev.find(function (x) { return x.stage === 'candidate_discovery' && x.event === 'scan_complete' && x.status === 'none'; });
+    if ((page403 || gm403) && canvasFail) return 'image_403_and_rendered_canvas_unreadable';
+    if (page403 || gm403) return 'image_http_403';
+    if (canvasFail) return 'rendered_canvas_unreadable';
+    var iframeSecurity = rev.find(function (x) { return x.stage === 'iframe_dom_scan' && x.event === 'inspect_failed' && /security/i.test(String(x.message || '')); });
+    var iframeNone = rev.find(function (x) { return x.stage === 'iframe_dom_scan' && x.event === 'complete' && x.status === 'none'; });
+    if (iframeSecurity) return 'iframe_cross_origin_or_auth_redirect';
+    if (none && iframeNone) return 'no_toc_candidate_after_live_and_iframe_scan';
+    if (none) return 'no_toc_candidate_in_live_dom';
+    if (figureNone) return 'no_article_figure_candidate_in_live_dom';
+    return String(error && error.message || error || 'unknown_failure').slice(0, 220);
+  }
+
+  async function runPublisherJob(job) {
+    assertBoundCaptureJob(job);
+    var token=writeToken(),trace=[],cache=new Map();
+    var checkpoint=readCheckpoint(job.doi);checkpoint.figures=checkpoint.figures||{};
+    if(job.missingOnly)Object.keys(job.capturedFigures||{}).forEach(function(k){var f=job.capturedFigures[k];if(validReceiptForDoi(f,normalizeDoi(job.doi)))checkpoint.figures[k]=f;});
+    if(!job.recaptureFromHead&&checkpoint.toc&&checkpoint.toc.status==='stored'&&checkpoint.toc.productionTocStored===true&&Date.now()-checkpoint.updatedAt<6*60*60*1000)job.captureToc=false;
+    job.publisher=job.publisher||publisherForDoi(job.doi);
+    job.captureDeadline=Date.now()+6*60*1000;
+    var wantsToc=job.captureToc===true;
+    var wantsFigures=Boolean(job&&job.opportunisticFigures===true)||(job && typeof job.captureFigures==='boolean' ? job.captureFigures : String(job.mediaNeed||'').indexOf('figures')>=0);
+    var wantsEvidence=evidenceCaptureEligible(job);
+    var result={status:'failed',reason:'',toc:{status:wantsToc?'pending':'already_available'},figures:{status:wantsFigures?'pending':'not_requested',discovered:0,stored:0,failed:0,items:[]},fulltext:{status:wantsEvidence?'pending':'not_requested'},figuresImported:0,figuresStaged:0,published:false};
+    job._liveResult=result;
+    job._captureTiming={startedAtMs:Date.now(),discoveryMs:0,evidenceMs:0,pdfMs:0};
+    autoReportJob=job;
+    captureLiveUpdate(job,'discovering');
+    pushTrace(trace,{stage:'job',event:'start',status:'running',url:location.href,message:'v'+VERSION+';paired_capture=1;need='+String(job.mediaNeed)+';observability='+CAPTURE_OBSERVABILITY_REVISION});
+    if(job.routePlan)pushTrace(trace,{stage:'route_plan',event:'resolved',status:'info',url:job.routePlan.resolvedUrl||location.href,message:JSON.stringify(job.routePlan)});
+    try {
+      if (!token) throw new Error('write_token_missing');
+      if(!wantsToc && !wantsFigures && !wantsEvidence && job.capturePrivatePdf===true){
+        result.toc={status:'not_requested'};result.figures.status='not_requested';result.fulltext={status:'not_requested'};
+        result.status='success';result.reason='private_pdf_side_channel;published=0';
+        captureLiveUpdate(job,'finished');
+        return finishPairedJob(job,result,trace,token);
+      }
+      if(!wantsToc && !wantsFigures && wantsEvidence){
+        result.toc={status:'not_requested'};
+        result.figures.status='not_requested';
+        var evidenceOnlyStarted=Date.now();
+        result.fulltext=await tryCaptureArticleEvidence(job,trace,token,8000);
+        job._captureTiming.evidenceMs=Math.max(0,Date.now()-evidenceOnlyStarted);
+        result.status=result.fulltext.status==='stored'?'success':/^(?:empty|invalid)$/.test(String(result.fulltext.status||''))?'partial':'failed';
+        result.reason='evidence_capture;fulltext='+String(result.fulltext.status||'failed')+';published=0';
+        pushTrace(trace,{stage:'evidence_result',event:'complete',status:result.status,message:result.reason});
+        captureLiveUpdate(job,'finished',{error:result.status==='failed'?result.reason:''});
+        return finishPairedJob(job,result,trace,token);
+      }
+      var discoveryStartedAt=Date.now();
+      var discovered=await waitForPairedVisuals(job,trace);
+      job._captureTiming.discoveryMs=Math.max(0,Date.now()-discoveryStartedAt);
+      job._liveDiscoveryDone=true;
+      result.figures.discovered=new Set(discovered.figures.map(function(c){return c.label;})).size;
+      captureLiveUpdate(job,'discovering');
+      if (wantsToc) {
+        try {
+          var officials=discovered.toc.filter(function(c){return c.kind==='official';});
+          var candidates=officials.length?officials:discovered.toc;
+          var best=await acquireBestVisual(job,candidates,trace,cache,'toc');
+          if (best) {
+            var receipt=await uploadCapture(job,best.candidate,best.image,trace,token);
+            result.toc={status:'stored',kind:best.candidate.kind,quality:best.quality.quality,imageUrl:receipt.imageUrl,productionTocStored:best.candidate.kind==='official'?receipt.productionTocStored===true:false,productionFallbackStored:best.candidate.kind==='figure1'?receipt.productionFallbackStored===true:false};
+            checkpoint.toc=result.toc;saveCheckpoint(job.doi,checkpoint,job);
+            captureLiveUpdate(job,'saved',{label:best.candidate.kind==='figure1'?'Figure 1 替代图':'TOC'});
+          } else result.toc={status:'not_found',reason:'no_usable_official_or_figure1'};
+        } catch(error) {
+          if (/doi_mismatch|stale|unbound|user_aborted/.test(String(error.message))) throw error;
+          result.toc={status:'failed',reason:String(error.message)};
+          result.retryAfterMs=Math.max(Number(result.retryAfterMs||0),Number(error.retryAfterMs||0));
+          captureLiveUpdate(job,'image_failed',{label:'TOC',error:error.message});
+        }
+      }
+      var groups=new Map();
+      if(wantsFigures)discovered.figures.forEach(function(c){if(!groups.has(c.label))groups.set(c.label,[]);groups.get(c.label).push(c);});
+      result.figures.discovered=groups.size;
+      var labels=Array.from(groups.keys());
+      // Twenty semantic figures per article, not twenty variants of the same image.
+      var downloadedThisVisit=0;
+      for (var i=0;i<labels.length;i+=1) {
+        if (Date.now()>job.captureDeadline) {result.figures.limitReached=true;break;}
+        var label=labels[i];job._liveLabel=label;
+        var saved=checkpoint.figures[label];
+        if(!job.recaptureFromHead&&saved&&(!job.missingOnly||validReceiptForDoi(saved,normalizeDoi(job.doi)))&&saved.contentHash&&saved.sourceUrl&&groups.get(label).some(function(c){return mediaUrlIdentity(c.url)===mediaUrlIdentity(saved.sourceUrl);})) {
+          result.figures.items.push(Object.assign({},saved,{status:'already_staged'}));result.figures.stored+=1;captureLiveUpdate(job,'reused',{label:label});continue;
+        }
+        if(downloadedThisVisit>=20){result.figures.limitReached=true;break;}
+        downloadedThisVisit+=1;
+        try {
+          var chosen=await acquireBestVisual(job,groups.get(label),trace,cache,'figure');
+          if (!chosen) throw new Error('no_usable_figure_variant');
+          var stored=await uploadArticleFigure(job,chosen.candidate,chosen.image,trace,token,i);
+          result.figures.items.push({label:label,status:'staged',quality:chosen.quality.quality,width:chosen.image.width,height:chosen.image.height,sourceUrl:chosen.candidate.url,contentHash:stored.contentHash});
+          result.figures.stored+=1;result.figuresStaged+=1;
+          checkpoint.figures[label]=result.figures.items[result.figures.items.length-1];saveCheckpoint(job.doi,checkpoint,job);
+          captureLiveUpdate(job,'saved',{label:label,quality:chosen.quality.quality,width:chosen.image.width,height:chosen.image.height});
+        } catch(error) {
+          if (/doi_mismatch|stale|unbound|user_aborted/.test(String(error.message))) throw error;
+          result.figures.failed+=1;
+          result.retryAfterMs=Math.max(Number(result.retryAfterMs||0),Number(error.retryAfterMs||0));
+          result.figures.items.push({label:label,status:'failed',reason:String(error.message)});
+          captureLiveUpdate(job,'image_failed',{label:label,error:error.message});
+        }
+      }
+      if (result.figures.stored+result.figures.failed<labels.length) result.figures.limitReached=true;
+      result.figures.status=!wantsFigures?'not_requested':!labels.length?'not_found':result.figures.failed||result.figures.limitReached?'partial':'staged';
+      var tocOk=!wantsToc||result.toc.status==='stored'||result.toc.status==='already_available';
+      var figuresRequired=job.captureFigures===true;
+      var figuresOk=!figuresRequired||result.figures.status==='staged';
+      // Opportunistic body-figure capture never controls queue completion.
+      // Only an explicit figure obligation may downgrade an otherwise-complete TOC job.
+      if(!figuresRequired){
+        result.status=tocOk?'success':'failed';
+      }else{
+        result.status=tocOk&&figuresOk?'success':tocOk||result.figures.stored?'partial':'failed';
+      }
+      result.reason='combined_capture;toc='+result.toc.status
+        +';figures='+(wantsFigures?(result.figures.stored+'/'+result.figures.discovered):'not_requested')
+        +';evidence='+(wantsEvidence?'pending':'not_requested')+';published=0';
+      // Evidence capture is downstream of media and opportunistic. Its failure never
+      // downgrades successful TOC/body capture, but a visit with missing evidence must
+      // attempt it before the tab closes.
+      var evidenceStartedAt=Date.now();
+      result.fulltext=await tryCaptureArticleEvidence(job,trace,token,wantsEvidence?5000:0);
+      job._captureTiming.evidenceMs=Math.max(0,Date.now()-evidenceStartedAt);
+      if(result.status==='failed'&&captureResultHasUsefulLayer(result))result.status='partial';
+      result.reason='combined_capture;toc='+result.toc.status
+        +';figures='+(wantsFigures?(result.figures.stored+'/'+result.figures.discovered):'not_requested')
+        +';evidence='+(wantsEvidence?String(result.fulltext.status||'failed'):'not_requested')+';published=0';
+    } catch(error) {
+      result.status=String(error.message)==='user_aborted'?'aborted':(result.figures.stored||result.toc.status==='stored'?'partial':'failed');
+      result.reason=String(error.message);
+    }
+    pushTrace(trace,{stage:'paired_result',event:'complete',status:result.status,message:result.reason});
+    captureLiveUpdate(job,'finished',{error:result.status==='failed'?result.reason:''});
+    return finishPairedJob(job,result,trace,token);
+  }
+
+  function isGalleryPage() {
+    var host = String(location.hostname || '').toLowerCase();
+    var path = String(location.pathname || '/');
+    if (host === GALLERY_HOST) return true;
+    if (host === PAGES_GALLERY_HOST) return true;
+    return host === LEGACY_GALLERY_HOST && path.indexOf(LEGACY_GALLERY_PATH) === 0;
+  }
+
+  function badge(text, color) {
+    if (!isGalleryPage()) return;
+    var node = document.getElementById('osg-toc-mainline-status');
+    if (!node) {
+      node = document.createElement('div');
+      node.id = 'osg-toc-mainline-status';
+      node.style.cssText = 'position:fixed;right:14px;bottom:58px;z-index:2147483647;padding:8px 10px;background:#111827;color:#fff;border-radius:8px;font:12px/1.4 system-ui;box-shadow:0 2px 10px #0004;max-width:390px';
+      document.body.appendChild(node);
+    }
+    node.textContent = text;
+    node.style.background = color || '#111827';
+  }
+
+  function controllerPaused() {
+    return GM_getValue(ENABLED_KEY,true)===false || isAbortRequested();
+  }
+
+  function releaseIdlePausedLease() {
+    var lease=GM_getValue(LEASE_KEY,null),active=GM_getValue(ACTIVE_JOB_KEY,null);
+    if (!controllerPaused() || !lease || lease.owner!==CONTROLLER_ID) return false;
+    // Retain ownership while a bound publisher is being stopped. Never erase
+    // another controller's lease or revoke its in-flight capture here.
+    if (active && active.controllerId===CONTROLLER_ID) return false;
+    GM_deleteValue(LEASE_KEY);
+    return true;
+  }
+
+  function controllerLifecycleSnapshot() {
+    var lease=GM_getValue(LEASE_KEY,null),active=GM_getValue(ACTIVE_JOB_KEY,null);
+    var request=GM_getValue(RESUME_REQUEST_KEY,null);
+    var localManual=typeof manualExecution!=='undefined'&&manualExecutionCurrent(manualExecution);
+    return {revision:CONTROLLER_LIFECYCLE_REVISION,paused:controllerPaused(),
+      localBusy:Boolean(globalThis.__OSG_PAIRED_CONTROLLER_BUSY__||localManual),
+      ownerIsThisPage:Boolean(lease&&(lease.owner===CONTROLLER_ID||localManual&&lease.owner===manualLeaseOwner(manualExecution))),
+      leaseSeconds:Math.max(0,Math.ceil((Number(lease&&lease.expiresAt||0)-Date.now())/1000)),
+      renewedAt:Number(lease&&lease.renewedAt||0),activeDoi:normalizeDoi(active&&active.doi),
+      resumePending:Boolean(request&&request.requester===CONTROLLER_ID)};
+  }
+
+  function requestControllerPause() {
+    GM_deleteValue(RESUME_REQUEST_KEY);
+    if(controllerResumeTimer!==null){clearTimeout(controllerResumeTimer);controllerResumeTimer=null;}
+    GM_setValue(ABORT_KEY,{at:Date.now(),reason:'user_aborted'});
+    GM_setValue(ENABLED_KEY,false);
+    if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}
+    releaseIdlePausedLease();
+  }
+
+  async function acquireLease() {
+    var now=Date.now(),lease=GM_getValue(LEASE_KEY,null);
+    if (controllerPaused()) return false;
+    if (lease&&Number(lease.expiresAt||0)>now&&lease.owner!==CONTROLLER_ID) return false;
+    GM_setValue(LEASE_KEY,{owner:CONTROLLER_ID,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,expiresAt:now+90000,renewedAt:now});
+    await sleep(250);
+    if(controllerPaused()){releaseIdlePausedLease();return false;}
+    var confirmed=GM_getValue(LEASE_KEY,null);
+    return Boolean(confirmed&&confirmed.owner===CONTROLLER_ID&&Number(confirmed.expiresAt)>Date.now());
+  }
+
+  function renewLease() {
+    if(manualRunBlocksAutomatic())return false;
+    if(releaseIdlePausedLease())return false;
+    var lease=GM_getValue(LEASE_KEY,null),now=Date.now();
+    // An expired owner must reacquire; waking from suspension cannot resurrect it.
+    if(!lease||lease.owner!==CONTROLLER_ID||Number(lease.expiresAt||0)<=now)return false;
+    GM_setValue(LEASE_KEY,{owner:CONTROLLER_ID,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,expiresAt:now+90000,renewedAt:now});
+    return true;
+  }
+
+  function persistControllerSummary(summary,initial) {
+    if(!summary)return false;
+    var current=GM_getValue(SUMMARY_KEY,null),lease=GM_getValue(LEASE_KEY,null);
+    if(initial){if(!lease||lease.owner!==CONTROLLER_ID||controllerPaused())return false;}
+    else if(current&&current.controllerRunId!==summary.controllerRunId)return false;
+    GM_setValue(SUMMARY_KEY,summary);return true;
+  }
+
+  async function uploadControllerReport(job, reason, progress, reportStatus) {
+    var token = writeToken();
+    if (!token || !job || !normalizeDoi(job.doi)) return false;
+    var status = String(reportStatus || 'failed');
+    var trace = [
+      {
+        seq: 1,
+        at: nowIso(),
+        stage: 'controller',
+        event: status === 'aborted' ? 'job_aborted' : 'job_timeout_or_launch_failure',
+        status: status,
+        httpStatus: 0,
+        contentType: '',
+        url: String(progress && progress.url || articleUrl(job) || ''),
+        message: String(reason || 'controller_failure'),
+        candidateKind: '',
+        candidateSource: '',
+        candidateScore: 0,
+        imageWidth: 0,
+        imageHeight: 0,
+        byteLength: 0
+      }
+    ];
+    if (progress && progress.status) {
+      trace.push({
+        seq: 2,
+        at: String(progress.at || nowIso()),
+        stage: 'controller',
+        event: 'last_progress',
+        status: String(progress.status || ''),
+        httpStatus: 0,
+        contentType: '',
+        url: String(progress.url || ''),
+        message: 'last publisher-page progress visible to Gallery controller',
+        candidateKind: '',
+        candidateSource: '',
+        candidateScore: 0,
+        imageWidth: 0,
+        imageHeight: 0,
+        byteLength: 0
+      });
+    }
+    try {
+      await postJson(REPORT_ENDPOINT, {
+        doi: job.doi,
+        publisher: job.publisher || publisherForDoi(job.doi),
+        status: status,
+        reason: String(reason || 'controller_failure').slice(0, 220),
+        assetType: '',
+        candidateKind: '',
+        candidateSource: 'gallery_controller',
+        articleUrl: String(progress && progress.url || job.resolvedArticleUrl || articleUrl(job) || ''),
+        sourceUrl: '',
+        pageTitle: 'Gallery TOC controller',
+        queueGeneratedAt: job.queueGeneratedAt || '',
+        startedAt: job.startedAt || '',
+        finishedAt: nowIso(),
+        trace: trace
+      }, token);
+      return true;
+    } catch (error) {
+      try { console.warn('[OSG TOC] controller diagnostic upload failed', error); } catch (_) {}
+      return false;
+    }
+  }
+
+  function completedPublisherResult(job) {
+    var result=GM_getValue(resultKey(job.doi),null);
+    return result&&result.jobId===job.jobId&&result.version===VERSION&&result.finishedAt?result:null;
+  }
+
+  function retireStaleControllerState() {
+    var active=GM_getValue(ACTIVE_JOB_KEY,null),lease=GM_getValue(LEASE_KEY,null),summary=GM_getValue(SUMMARY_KEY,{})||{};
+    var observed=String(active&&active.controllerRevision||lease&&lease.controllerRevision||summary.controllerRevision||'');
+    var observedInstall=String(active&&active.installRevision||lease&&lease.installRevision||'');
+    var oldManual=GM_getValue(MANUAL_RUN_KEY,null);
+    var scopeStale=Boolean(oldManual&&!oldManual.completedAt&&summary.controllerRunId==='manual:'+oldManual.id
+      && summary.scopeRevision!==OCT1_SCOPE_QUEUE_REVISION);
+    var installStale=Boolean(observedInstall&&observedInstall!==INSTALL_REVISION);
+    if((!observed||observed===CONTROLLER_REVISION)&&!installStale&&!scopeStale)
+      return {retired:false,observed:observed};
+    // The old controller may still use the same capture protocol/revision but
+    // an earlier install can dispatch all-history tasks. Retire its lease and
+    // bound job once, preserving all published bytes and verified checkpoints.
+    var doi=normalizeDoi(active&&active.doi);
+    if(active)GM_deleteValue(ACTIVE_JOB_KEY);
+    if(doi){
+      var p=GM_getValue(progressKey(doi),null);if(!p||!p.jobId||!active||p.jobId===active.jobId)GM_deleteValue(progressKey(doi));
+    }
+    var hb=currentPublisherHeartbeat();if(!active||!hb||!hb.jobId||hb.jobId===active.jobId)GM_deleteValue(HEARTBEAT_KEY);
+    GM_deleteValue(LEASE_KEY);GM_deleteValue(RESUME_REQUEST_KEY);
+    var manual=GM_getValue(MANUAL_RUN_KEY,null);
+    if(manual&&!manual.completedAt)GM_deleteValue(MANUAL_RUN_KEY);
+    CONTROLLER_STOP_REASON='';
+    return {retired:true,observed:observed,doi:doi};
+  }
+
+  function reconcileActiveJobBeforeDispatch(dryRun) {
+    var active = GM_getValue(ACTIVE_JOB_KEY,null);
+    if (!active) return {busy:false,cleared:false,reason:'none'};
+    var doi = normalizeDoi(active.doi);
+    if (!doi || !active.jobId) {
+      if(dryRun)return {busy:false,cleared:false,reason:'invalid_active_job'};
+      GM_deleteValue(ACTIVE_JOB_KEY);
+      return {busy:false,cleared:true,reason:'invalid_active_job'};
+    }
+
+    var completed = completedPublisherResult(active);
+    if (completed) {
+      if(dryRun)return {busy:false,cleared:false,reason:'completed_active_job'};
+      GM_deleteValue(ACTIVE_JOB_KEY);
+      var completedProgress = GM_getValue(progressKey(doi),null);
+      if (!completedProgress || !completedProgress.jobId || completedProgress.jobId===active.jobId) GM_deleteValue(progressKey(doi));
+      var completedHb = currentPublisherHeartbeat();
+      if (completedHb && completedHb.jobId===active.jobId) GM_deleteValue(HEARTBEAT_KEY);
+      return {busy:false,cleared:true,reason:'completed_active_job'};
+    }
+
+    var now = Date.now();
+    var hb = currentPublisherHeartbeat();
+    var hbFresh = Boolean(hb && hb.jobId===active.jobId && now-Number(hb.at||0) < 60000);
+    var progress = GM_getValue(progressKey(doi),null);
+    var progressAt = progress && progress.jobId===active.jobId ? Date.parse(progress.at||'') : NaN;
+    var progressFresh = Number.isFinite(progressAt) && now-progressAt < 60000;
+    var startedAt = Date.parse(active.startedAt||'');
+    var ageMs = Number.isFinite(startedAt) ? now-startedAt : Infinity;
+
+    if (hbFresh || progressFresh) {
+      return {busy:true,cleared:false,reason:'active_job_fresh',doi:doi,ageMs:ageMs};
+    }
+
+    // Normal publisher work is bounded by an 8-minute controller timeout. Give
+    // another two minutes of safety margin before treating a job as orphaned.
+    if (ageMs >= 10*60*1000) {
+      if(dryRun)return {busy:false,cleared:false,reason:'stale_active_job',doi:doi,ageMs:ageMs};
+      GM_deleteValue(ACTIVE_JOB_KEY);
+      if (!progress || !progress.jobId || progress.jobId===active.jobId) GM_deleteValue(progressKey(doi));
+      if (hb && hb.jobId===active.jobId) GM_deleteValue(HEARTBEAT_KEY);
+      return {busy:false,cleared:true,reason:'stale_active_job',doi:doi,ageMs:ageMs};
+    }
+
+    return {busy:true,cleared:false,reason:'active_job_grace',doi:doi,ageMs:ageMs};
+  }
+
+  function controllerFailureDisposition(reason) {
+    reason=String(reason||'');
+    if(/^(?:controller_lease_lost|capture_server_upgrade_pending)$/.test(reason))return 'stop';
+    if(/^(?:another_task_still_active|task_tab_handle_unavailable|previous_task_tab_not_closed|bound_publisher_heartbeat_missing|controller_timeout|publisher_task_tab_closed)$/.test(reason))return 'skip';
+    return 'record';
+  }
+
+  async function waitForResult(job,tab) {
+    var started=Date.now(), timeoutMs=8*60*1000;
+    while(true) {
+      var completed=completedPublisherResult(job);
+      if(completed)return completed;
+      if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false) return {doi:job.doi,jobId:job.jobId,status:'aborted',reason:'user_aborted',finishedAt:nowIso()};
+      if(!renewLease())throw new Error('controller_lease_lost');
+
+      // publisher final results over controller timeouts: always prefer a completed publisher result first.
+      // Background-tab/browser suspension can advance Date.now() by many minutes
+      // between two controller polls even though the publisher already finished.
+      var result=completedPublisherResult(job);
+      if(result) return result;
+
+      var elapsed=Date.now()-started;
+      if(elapsed>=timeoutMs) {
+        // One short grace window covers a final result racing with controller wake-up.
+        var graceDeadline=Date.now()+1000;
+        for(var grace=0;grace<4&&Date.now()<graceDeadline;grace+=1) {
+          await sleep(250);
+          result=completedPublisherResult(job);
+          if(result) return result;
+        }
+        return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'controller_timeout',finishedAt:nowIso()};
+      }
+
+      if(tab&&tab.closed===true){
+        await sleep(250);
+        result=completedPublisherResult(job);if(result)return result;
+        return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'publisher_task_tab_closed',finishedAt:nowIso()};
+      }
+      var hb=currentPublisherHeartbeat();
+      if(elapsed>60000 && (!hb||hb.jobId!==job.jobId)) {
+        // The publisher may have finished between heartbeat sampling and this branch.
+        result=completedPublisherResult(job);
+        if(result) return result;
+        return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'bound_publisher_heartbeat_missing',finishedAt:nowIso()};
+      }
+      var progress=GM_getValue(progressKey(job.doi),null);
+      if(progress&&/auth_wait|challenge_wait/.test(progress.status))badge('等待出版社验证：'+job.doi,'#92400e');
+      await sleep(1000);
+    }
+  }
+
+  function clearOwnedJob(job) {
+    var live=GM_getValue(ACTIVE_JOB_KEY,null);
+    if(live && live.jobId===job.jobId && live.controllerId===CONTROLLER_ID) GM_deleteValue(ACTIVE_JOB_KEY);
+  }
+
+  async function closeTaskTab(tab) {
+    if(!tab || typeof tab.close!=='function') return false;
+    try { tab.close(); } catch(_) { return false; }
+    var closeDeadline=Date.now()+3000;
+    for(var i=0;i<30&&Date.now()<closeDeadline;i+=1) {
+      if(tab.closed===true) return true;
+      await sleep(100);
+    }
+    return tab.closed===true;
+  }
+
+  // Explicit user control. Unlike graceful Continue, Start invalidates old work
+  // synchronously and creates a fresh, independently fenced article pass.
+  function manualRunBlocksAutomatic() {
+    var m=GM_getValue(MANUAL_RUN_KEY,null);
+    return Boolean(m); // A completed explicit pass must not fall back to the old all-corpus scheduler.
+  }
+
+  function manualExecutionCurrent(run) {
+    var m=GM_getValue(MANUAL_RUN_KEY,null);
+    return Boolean(run&&!run.cancelled&&m&&m.id===run.id&&m.owner===CONTROLLER_ID);
+  }
+
+  function manualLeaseOwner(run) { return 'manual:'+run.id; }
+
+  function cancelManualExecution(run) {
+    if(!run)return;
+    run.cancelled=true;
+    if(run.renewTimer!=null)clearInterval(run.renewTimer);
+    try{if(run.tab&&typeof run.tab.close==='function')run.tab.close();}catch(_){}
+  }
+
+  function installManualRestartListener() {
+    if(typeof GM_addValueChangeListener!=='function')return;
+    GM_addValueChangeListener(MANUAL_RUN_KEY,function(key,oldValue,newValue){
+      if(!newValue||oldValue&&newValue.id===oldValue.id)return;
+      if(manualExecution&&manualExecution.id!==newValue.id)cancelManualExecution(manualExecution);
+      try{if(ownedTaskHandle)ownedTaskHandle.close();}catch(_){}
+      ownedTaskHandle=null;
+      if(!isGalleryPage()){
+        // Close only a script-bound publisher task, never a user's unrelated tab.
+        var bound='';try{bound=sessionStorage.getItem(P+'tab-job-binding')||'';}catch(_){}
+        if(bound&&newValue.replacedJobId===bound){try{window.close();}catch(_){}}
+      }
+    });
+  }
+
+  function forceStartFromHead() {
+    if(!isGalleryPage()){
+      window.open('https://'+GALLERY_HOST+GALLERY_PATH+'#osg-start-from-head','_blank');return;
+    }
+    if(!writeToken()){badge('请先配置原有写入密钥，再立即开始','#991b1b');return;}
+    var old=GM_getValue(ACTIVE_JOB_KEY,null);
+    var run={id:crypto.randomUUID(),owner:CONTROLLER_ID,startedAt:nowIso(),
+      replacedJobId:String(old&&old.jobId||''),cancelled:false,tab:null,renewTimer:null};
+    cancelManualExecution(manualExecution);
+    try{if(ownedTaskHandle)ownedTaskHandle.close();}catch(_){}
+    ownedTaskHandle=null;
+    if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}
+    if(controllerResumeTimer!==null){clearTimeout(controllerResumeTimer);controllerResumeTimer=null;}
+    GM_deleteValue(RESUME_REQUEST_KEY);
+    // The new session is the revocation barrier; an old completion cannot enter it.
+    GM_setValue(MANUAL_RUN_KEY,{id:run.id,owner:CONTROLLER_ID,startedAt:run.startedAt,
+      replacedJobId:run.replacedJobId,revision:IMMEDIATE_RESTART_REVISION});
+    GM_deleteValue(ACTIVE_JOB_KEY);GM_deleteValue(HEARTBEAT_KEY);
+    GM_deleteValue(ABORT_KEY);GM_setValue(ENABLED_KEY,true);
+    CONTROLLER_STOP_REASON='';
+    GM_setValue(LEASE_KEY,{owner:manualLeaseOwner(run),manualRunId:run.id,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,expiresAt:Date.now()+90000});
+    return startManualCapture(run);
+  }
+
+  function startManualCapture(run) {
+    manualExecution=run;
+    run.summary={controllerRunId:'manual:'+run.id,lifecycleRevision:IMMEDIATE_RESTART_REVISION,
+      scopeRevision:OCT1_SCOPE_QUEUE_REVISION,scopeCount:0,
+      controllerRevision:CONTROLLER_REVISION,version:VERSION,mode:'missing_only',missingRevision:MISSING_CAPTURE_REVISION,
+      startedAt:run.startedAt,total:0,success:0,partial:0,failed:0,aborted:0,skipped:0,
+      tocStored:0,figuresStaged:0,evidenceStored:0,results:[],phase:'starting'};
+    if(run.resumedFromRunId){
+      run.summary.resumedFromRunId=run.resumedFromRunId;
+      run.summary.recoveryRevision=MANUAL_RECOVERY_REVISION;
+    }
+    GM_setValue(SUMMARY_KEY,run.summary);
+    badge(run.resumedFromRunId?'已恢复中断任务：保留已有回执，正在重新核对剩余缺项':'已立即重新开始：旧任务已作废，正在生成最新文献缺项队列','#175cd3');
+    // No lock wait, cooldown reset, cleanup await, review or grace timer here.
+    run.promise=runManualFromHead(run);
+    return run.promise;
+  }
+
+  function interruptedManualCandidate() {
+    if(!isGalleryPage()||controllerPaused()||!writeToken()||CONTROLLER_STOP_REASON
+      ||globalThis.__OSG_PAIRED_CONTROLLER_BUSY__||manualExecutionCurrent(manualExecution)
+      ||GM_getValue(RESUME_REQUEST_KEY,null))return null;
+    var manual=GM_getValue(MANUAL_RUN_KEY,null),summary=GM_getValue(SUMMARY_KEY,{})||{};
+    if(!manual||!manual.id||manual.completedAt||summary.controllerRunId!=='manual:'+manual.id
+      ||summary.mode!=='missing_only'||summary.version!==VERSION||summary.controllerRevision!==CONTROLLER_REVISION
+      ||summary.finishedAt||summary.stopReason||!/^(starting|running|retry_wait|inventory_retry|queue_refresh|inventory_refresh)$/.test(summary.phase||''))return null;
+    return manual;
+  }
+
+  async function tryResumeInterruptedManualRun() {
+    if(manualRecoveryBusy)return false;
+    var expected=interruptedManualCandidate();
+    if(!expected)return false;
+    var lease=GM_getValue(LEASE_KEY,null);
+    // Even a same-run lease is owned by the old page until it actually expires.
+    if(lease&&Number(lease.expiresAt||0)>Date.now())return false;
+    // Leave even an expired lease untouched while its publisher is still fresh
+    // or within the existing grace window; a probe must not interrupt renewal.
+    if(reconcileActiveJobBeforeDispatch(true).busy)return false;
+    manualRecoveryBusy=true;
+    try{
+      // Acquire and confirm before any shared active-job cleanup. Two refreshed
+      // control pages must not both turn an expired marker into a new pass.
+      if(!await acquireLease())return false;
+      var current=interruptedManualCandidate();lease=GM_getValue(LEASE_KEY,null);
+      if(!current||current.id!==expected.id||!lease||lease.owner!==CONTROLLER_ID||Number(lease.expiresAt||0)<=Date.now())return false;
+      var oldActive=GM_getValue(ACTIVE_JOB_KEY,null);
+      if(reconcileActiveJobBeforeDispatch().busy)return false;
+      current=interruptedManualCandidate();lease=GM_getValue(LEASE_KEY,null);
+      if(!current||current.id!==expected.id||GM_getValue(ACTIVE_JOB_KEY,null)
+        ||!lease||lease.owner!==CONTROLLER_ID||Number(lease.expiresAt||0)<=Date.now())return false;
+      var run={id:crypto.randomUUID(),owner:CONTROLLER_ID,startedAt:nowIso(),
+        resumedFromRunId:expected.id,replacedJobId:String(oldActive&&oldActive.jobId||''),cancelled:false,tab:null,renewTimer:null};
+      // New generation fences late old-page results. Recovery never clears Pause,
+      // enables a disabled controller, or resets publisher cooldowns/checkpoints.
+      GM_setValue(MANUAL_RUN_KEY,{id:run.id,owner:CONTROLLER_ID,startedAt:run.startedAt,
+        replacedJobId:run.replacedJobId,resumedFromRunId:expected.id,revision:IMMEDIATE_RESTART_REVISION,recoveryRevision:MANUAL_RECOVERY_REVISION});
+      GM_setValue(LEASE_KEY,{owner:manualLeaseOwner(run),manualRunId:run.id,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,expiresAt:Date.now()+90000});
+      return startManualCapture(run);
+    }finally{
+      lease=GM_getValue(LEASE_KEY,null);
+      if(lease&&lease.owner===CONTROLLER_ID)GM_deleteValue(LEASE_KEY);
+      manualRecoveryBusy=false;
+    }
+  }
+
+  function controllerTick() {
+    if(manualRunBlocksAutomatic())return tryResumeInterruptedManualRun();
+    if(!GM_getValue(ACTIVE_JOB_KEY,null))return controllerRun();
+  }
+
+  function renewManualLease(run) {
+    if(!manualExecutionCurrent(run)||controllerPaused())return false;
+    var lease=GM_getValue(LEASE_KEY,null);
+    if(!lease||lease.owner!==manualLeaseOwner(run))return false;
+    var now=Date.now();
+    GM_setValue(LEASE_KEY,{owner:manualLeaseOwner(run),manualRunId:run.id,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,expiresAt:now+90000,renewedAt:now});
+    return true;
+  }
+
+  function manualSummary(run) {
+    if(!manualExecutionCurrent(run))return false;
+    GM_setValue(SUMMARY_KEY,run.summary);return true;
+  }
+
+  // Acquisition inventory, never a publication receipt or a count of the whole corpus.
+  function captureNeedText(job) {
+    if(!job)return '—';
+    var parts=[];
+    if(job.captureToc)parts.push(job.existingTocKind==='figure1'?'官方 TOC（已有 Figure 1）':job.existingTocKind==='official_local'?'官方 TOC（已抓到，待网页同步）':'TOC');
+    if(job.captureFigures||job.opportunisticFigures)parts.push('正文图');
+    if(job.captureEvidence||job.opportunisticEvidence)parts.push('全文');
+    if(job.capturePrivatePdf)parts.push('PDF');
+    return parts.length?parts.join('＋'):'已齐全';
+  }
+  function captureEvidenceLevelText(level) {
+    return ({complete:'完整正文',partial:'部分正文',abstract_only:'仅摘要'})[level]||'已有文本，完整度未确认';
+  }
+  function captureBatchDate(job) {
+    // Site addition date first; original publication date is only the legacy fallback.
+    return String(job.addedDate||job.date||'');
+  }
+  function recentFullCaptureEligible(job) {
+    var added=String(job&&job.addedDate||'').trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(added)&&added>=RECENT_FULL_CAPTURE_CUTOFF;
+  }
+  function captureMediaNeed(job) {
+    return [job&&job.captureToc?'toc':'',
+      job&&(job.captureFigures||job.opportunisticFigures)?'figures':'',
+      job&&(job.captureEvidence||job.opportunisticEvidence)?'evidence':'',
+      job&&job.capturePrivatePdf?'pdf':''].filter(Boolean).join('+');
+  }
+  function compareMissingCaptureJobs(a,b) {
+    return captureBatchDate(b).localeCompare(captureBatchDate(a))
+      ||journalPriority(a)-journalPriority(b)
+      ||String(b.date||'').localeCompare(String(a.date||''))
+      ||String(a.doi).localeCompare(String(b.doi));
+  }
+  function validCapturedFigure(f) {
+    if(!f||!f.label||!f.contentHash||!f.sourceUrl)return false;
+    if(/^(?:high|usable|vector|vector_mixed)$/.test(String(f.quality||'')))return true;
+    return articleFigureResolution(Number(f.width),Number(f.height)).usable;
+  }
+  function validReceiptForDoi(f,doi) {
+    return validCapturedFigure(f)&&embeddedJobDois(f.sourceUrl).every(function(d){return d===doi;});
+  }
+  function mapCaptureRows(payload) {
+    var out=new Map();
+    if(payload&&Array.isArray(payload.items))payload.items.forEach(function(r){var d=normalizeDoi(r&&r.doi);if(d)out.set(d,r);});
+    return out;
+  }
+
+  function updateInventoryProgress(run,layer,state,startedAt,detail) {
+    if(!run||!run.summary)return;
+    var progress=Object.assign({},run.summary.inventoryProgress||{}),row=Object.assign({},progress[layer]||{});
+    row.state=state;row.elapsedMs=Math.max(0,Date.now()-Number(startedAt||Date.now()));
+    if(detail)row.detail=String(detail).slice(0,100);
+    progress[layer]=row;run.summary.inventoryProgress=progress;manualSummary(run);
+  }
+  function cachedInventoryPlan(queue,run) {
+    var row=GM_getValue(INVENTORY_PLAN_CACHE_KEY,null),now=Date.now();
+    if(!row||row.revision!==INVENTORY_STARTUP_REVISION||now-Number(row.savedAt||0)>INVENTORY_PLAN_CACHE_TTL_MS
+      ||String(row.queueGeneratedAt||'')!==String(queue&&queue.generatedAt||'')
+      ||Number(row.queueCount||0)!==Number(queue&&queue.articles&&queue.articles.length||0)||!Array.isArray(row.jobs))return null;
+    var allowed=new Set((queue.articles||[]).filter(recentFullCaptureEligible).map(function(x){return normalizeDoi(x.doi);}));
+    var jobs=[];
+    for(var i=0;i<row.jobs.length;i++){
+      var raw=row.jobs[i],doi=normalizeDoi(raw&&raw.doi);
+      if(!doi||!allowed.has(doi))return null;
+      var job=Object.assign({},raw,{doi:doi,manualRunId:run.id,
+        // Never dispatch PDF from a warm cache before fresh owner inventory.
+        capturePrivatePdf:false,privatePdfServerStatus:'unknown'});
+      if(coverageHasNeeds(job))jobs.push(job);
+    }
+    return {savedAt:Number(row.savedAt||0),jobs:jobs};
+  }
+  function saveInventoryPlan(queue,jobs) {
+    try{
+      var clean=(jobs||[]).map(function(job){
+        var row=Object.assign({},job);delete row.jobId;delete row.startedAt;delete row.resolvedArticleUrl;return row;
+      });
+      GM_setValue(INVENTORY_PLAN_CACHE_KEY,{revision:INVENTORY_STARTUP_REVISION,savedAt:Date.now(),
+        queueGeneratedAt:String(queue&&queue.generatedAt||''),queueCount:Number(queue&&queue.articles&&queue.articles.length||0),jobs:clean});
+    }catch(_){}
+  }
+  function inventoryComplete(inv) {
+    return Boolean(inv&&inv.media&&inv.tocs&&inv.figures&&inv.evidence&&inv.pdf&&inv.pdf.complete===true&&!(inv.errors||[]).length);
+  }
+  function privatePdfServerStatus(map,doi) {
+    var row=map&&map.get(normalizeDoi(doi));
+    return row&&/^(?:ready|pending|failed|missing)$/.test(String(row.status||''))?row.status:'unknown';
+  }
+  async function readOwnerPdfInventory(articles,run) {
+    var eligible=(articles||[]).filter(recentFullCaptureEligible),started=Date.now();
+    var dois=eligible.map(function(x){return normalizeDoi(x.doi);}).filter(Boolean);
+    var priorLease=GM_getValue(PRIVATE_PDF_LEASE_KEY,null),lease=privatePdfLease();
+    if(!dois.length){updateInventoryProgress(run,'pdf','done',started,'scope_empty');return {schemaVersion:'private-pdf-capture-inventory-v1',complete:true,count:0,items:[],unknown:0};}
+    if(!lease){
+      var reason=priorLease?'owner_lease_expired':'owner_lease_missing';
+      updateInventoryProgress(run,'pdf','error',started,reason);
+      return {complete:false,items:[],unknown:dois.length,reason:reason};
+    }
+    updateInventoryProgress(run,'pdf','loading',started,'read_only;scope='+dois.length);
+    var batches=[];for(var i=0;i<dois.length;i+=75)batches.push(dois.slice(i,i+75));
+    var all=await Promise.all(batches.map(async function(batch){
+      try{
+        var response=await inventoryReadMetadataJson({method:'POST',url:PRIVATE_PDF_INVENTORY_ENDPOINT,
+          timeout:16000,headers:{'content-type':'application/json',authorization:'Bearer '+lease.token},
+          data:JSON.stringify({dois:batch})},'owner_pdf_inventory');
+        var items=Array.isArray(response&&response.items)?response.items:[];
+        if(response.schemaVersion!=='private-pdf-capture-inventory-v1'||response.complete!==true
+          ||Number(response.count)!==batch.length||items.length!==batch.length)throw new Error('owner_pdf_inventory_incomplete');
+        var found=new Map(items.map(function(item){return [normalizeDoi(item.doi),item];}));
+        if(found.size!==batch.length||batch.some(function(d){return !found.has(d)
+          ||!(/^(?:ready|pending|failed|missing)$/.test(String(found.get(d).status||'')));}))
+          throw new Error('owner_pdf_inventory_invalid_rows');
+        return {items:items};
+      }catch(error){
+        return {items:[],error:captureLiveError(error&&error.message||error)};
+      }
+    }));
+    var items=[],errors=[];
+    all.forEach(function(part,index){items=items.concat(part.items||[]);
+      if(part.error)errors.push('PDF库存第'+(index+1)+'批:'+part.error);});
+    var complete=errors.length===0&&items.length===dois.length;
+    updateInventoryProgress(run,'pdf',complete?'done':'error',started,'rows='+items.length+'/'+dois.length);
+    return {schemaVersion:'private-pdf-capture-inventory-v1',complete:complete,
+      count:items.length,items:items,unknown:dois.length-items.length,errors:errors,
+      reason:errors[0]||''};
+  }
+  async function readMissingCaptureInventory(queue,run) {
+    var errors=[],mediaRows=[],cache=run?(run.inventoryCache||(run.inventoryCache=new Map())):new Map();
+    var dois=queue.articles.filter(recentFullCaptureEligible).map(function(x){return normalizeDoi(x.doi);});
+    function meta(payload){return payload&&payload.__inventoryMeta||{};}
+    async function safe(name,layer,request,valid,key,maxAttempts) {
+      key=key||name;var started=Date.now();updateInventoryProgress(run,layer,'loading',started);
+      maxAttempts=Math.max(1,Number(maxAttempts||2));
+      for(var attempt=0;attempt<maxAttempts;attempt++){
+        if(run&&(!manualExecutionCurrent(run)||controllerPaused()))return null;
+        try{
+          var x=await request();if(!valid(x))throw new Error('invalid_inventory_shape');
+          cache.set(key,x);updateInventoryProgress(run,layer,'done',started,(meta(x).transport||'')+(attempt?';retry='+attempt:''));
+          return x;
+        }catch(e){
+          if(attempt+1<maxAttempts&&coverageTransient(e.message)&&!Number(e.retryAfterMs||0)){await sleep(750);continue;}
+          errors.push(name+':'+captureLiveError(e.message||e)+(cache.has(key)?'（保留本轮上次有效库存）':''));
+          var old=cache.get(key)||null;updateInventoryProgress(run,layer,old?'cached':'error',started);
+          return old;
+        }
+      }
+      return null;
+    }
+    function mediaValid(x,ds){return x&&Array.isArray(x.items)&&x.items.length===ds.length
+      &&new Set(x.items.map(function(r){return normalizeDoi(r.doi);})).size===ds.length
+      &&x.items.every(function(r){return ds.indexOf(normalizeDoi(r.doi))>=0;});}
+    function mediaRequest(ds){return inventoryReadMetadataJson({method:'POST',url:MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),
+      timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{'content-type':'application/json'},data:JSON.stringify({dois:ds,readOnly:true})},'inventory');}
+    async function readMedia(){
+      var started=Date.now();
+      if(!dois.length){updateInventoryProgress(run,'media','done',started,'scope_empty');return {items:[]};}updateInventoryProgress(run,'media','loading',started,dois.length+' DOI');
+      if(dois.length<=1200){
+        try{
+          var all=await mediaRequest(dois);
+          if(!mediaValid(all,dois))throw new Error('invalid_inventory_shape');
+          updateInventoryProgress(run,'media','done',started,(meta(all).transport||'')+';single='+dois.length);return {items:all.items};
+        }catch(error){updateInventoryProgress(run,'media','fallback',started,'单批失败，改分片');}
+      }
+      var chunks=[];for(var i=0;i<dois.length;i+=250)chunks.push(dois.slice(i,i+250));
+      var batches=await Promise.all(chunks.map(async function(ds,index){
+        var key='media:'+index+':'+String(queue.generatedAt||'');
+        for(var attempt=0;attempt<2;attempt++){
+          if(run&&(!manualExecutionCurrent(run)||controllerPaused()))return null;
+          try{var x=await mediaRequest(ds);if(!mediaValid(x,ds))throw new Error('invalid_inventory_shape');cache.set(key,x);return x;}
+          catch(e){
+            if(attempt===0&&coverageTransient(e.message)&&!Number(e.retryAfterMs||0)){await sleep(750);continue;}
+            errors.push('媒体库存分片'+(index+1)+':'+captureLiveError(e.message||e)+(cache.has(key)?'（保留本轮上次有效库存）':''));
+            return cache.get(key)||null;
+          }
+        }
+        return null;
+      }));
+      batches.forEach(function(x){if(x)mediaRows=mediaRows.concat(x.items);});
+      var complete=mediaRows.length===dois.length;
+      updateInventoryProgress(run,'media',complete?'done':'error',started,'chunks='+chunks.length+';rows='+mediaRows.length);
+      return {items:mediaRows};
+    }
+    var all=await Promise.all([
+      readMedia(),
+      safe('TOC库存','toc',function(){return inventoryReadMetadataJson({method:'GET',url:CAPTURE_INDEX_URL+'?ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{}},'queue');},
+        function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count);},'toc',2),
+      safe('正文图库存','figures',function(){return inventoryReadMetadataJson({method:'GET',url:WORKER+'/api/article-figures/staged?inventory=1&ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{}},'queue');},
+        function(x){return x&&x.schemaVersion==='capture-inventory-v1'&&x.complete===true&&Array.isArray(x.items)&&x.items.length===Number(x.count);},'figures',2),
+      safe('文本库存','evidence',function(){return inventoryReadMetadataJson({method:'GET',url:EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,
+        headers:{authorization:'Bearer '+String(writeToken()||'')}},'private');},
+        function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count)&&x.truncated!==true;},'evidence',2),
+      readOwnerPdfInventory(queue.articles,run)
+    ]);
+    if(!all[4].complete&&all[4].reason&&!/^owner_lease_/.test(all[4].reason))errors.push(all[4].reason);
+    return {media:all[0],tocs:all[1],figures:all[2],evidence:all[3],pdf:all[4],errors:errors,readAt:nowIso()};
+  }
+  function missingCaptureDecision(raw,inventory) {
+    var doi=normalizeDoi(raw.doi),media=inventory.mediaMap.get(doi),stage=inventory.figureMap.get(doi)||{};
+    var cp=readCheckpoint(doi),figs={},unknown=[];
+    var latestLocal=GM_getValue(resultKey(doi),null);
+    var prior=GM_getValue(attemptKey(doi,VERSION+':paired:1790082000000','figures'),null);
+    [cp.figures||{},stage.figures||{},media&&media.capturedFigures||[]].forEach(function(group){Object.keys(group).forEach(function(k){var f=group[k];if(validReceiptForDoi(f,doi))figs[f.label]=f;});});
+    var localResults=[latestLocal,prior].filter(function(r){return r&&r.version===VERSION&&r.doi===doi&&Date.parse(r.finishedAt||'')>=1790082000000;});
+    var expected=Math.max(0,Number(stage.expectedFigureCount||0),Number(cp.figureCoverage&&cp.figureCoverage.expected||0));
+    localResults.forEach(function(r){expected=Math.max(expected,Number(r.figures&&r.figures.discovered||0));});
+    var stagedCount=Object.keys(figs).length;
+    var productionCount=media?Math.max(0,Number(media.figureCount||0)):0;
+    var usableProduction=media?Math.max(0,productionCount-Number(media.lowQualityFigureCount||0)-Number(media.unknownQualityFigureCount||0)):0;
+    var knownCount=stagedCount; // Per-label union, not an invalid sum/max of disjoint inventories.
+    if(!media||!Array.isArray(media.capturedFigures))knownCount=Math.max(knownCount,usableProduction);
+    var tocRows=inventory.tocMap.get(doi)||[];
+    var localOfficial=tocRows.some(function(t){return t.kind==='official'&&t.imageUrl&&t.contentHash;});
+    var productionOfficial=Boolean(media&&((media.tocStored&&!/fallback/i.test(media.tocReason||''))||media.primaryKind==='official_visual'));
+    var official=productionOfficial;
+    // Only a production-backed Figure 1 closes the visual gap. Local-only
+    // receipts remain eligible for promotion; they are not a published card.
+    var localFigureOne=tocRows.some(function(t){return t.kind==='figure1'&&t.imageUrl;});
+    var fallback=Boolean(media&&(media.primaryKind==='figure1'||media.figureOneStored));
+    // Acquisition and publication are separate layers. A local/R2 official receipt
+    // must not hide a production TOC gap; reopening it lets /local-capture/import
+    // perform the mandatory production promotion and replace an old fallback.
+    var tocKnown=Boolean(media)||localOfficial||localFigureOne||Boolean(inventory.tocsKnown);
+    var figureKnown=expected>0||Boolean(media&&inventory.figuresKnown);
+    var inspectFigures=Boolean(figureKnown&&expected===0&&knownCount>0);
+    // A nonzero figure count alone is NOT proof that all body figures were captured.
+    var needFigures=figureKnown&&(expected>0?knownCount<expected:true);
+    var explicitFigureGap=expected>0&&knownCount<expected;
+    var text=inventory.evidenceMap.get(doi);
+    var textLevel=text&&text.available!==false?String(text.evidenceLevel||'unknown'):'';
+    if(!textLevel){
+      var localText=localResults.find(function(r){return r.fulltext&&r.fulltext.status==='stored'&&r.fulltext.evidencePacketHash;});
+      if(localText)textLevel=String(localText.fulltext.evidenceLevel||'unknown');
+    }
+    var nonQueueUnknown=[];
+    if(!tocKnown)unknown.push('TOC');
+    if(!figureKnown)nonQueueUnknown.push('正文图完整度');
+    if(!inventory.evidenceKnown&&!textLevel)nonQueueUnknown.push('文本');
+    // A verified Figure 1 fallback is accepted as the card's primary visual for
+    // every journal; it does not need a later official-TOC replacement.
+    var figureOneCompletesQueue=verifiedFigureOneSatisfiesQueue(raw,fallback);
+    var tocNeeded=tocKnown&&!productionOfficial&&!figureOneCompletesQueue;
+    var ownerPdfStatus=privatePdfServerStatus(inventory.pdfMap,doi);
+    var pdfNeeded=privatePdfQueueNeeded(Object.assign({},raw,{privatePdfServerStatus:ownerPdfStatus}),Date.now(),true);
+    var bundleVisit=Boolean(recentFullCaptureEligible(raw)&&(tocNeeded||pdfNeeded));
+    var job=Object.assign({},raw,{doi:doi,publisher:publisherForDoi(doi),missingOnly:true,recaptureFromHead:false,
+      captureToc:tocNeeded,
+      // From 2026-10-01 onward, once a publisher page is opened for any real
+      // acquisition gap, use that same authenticated visit to collect body
+      // figures and full-text evidence as well. These companion layers do not
+      // create a standalone visit by themselves.
+      // Companion images/text do not create independent publisher visits.
+      captureFigures:false,
+      captureEvidence:false,
+      opportunisticFigures:Boolean(bundleVisit||tocNeeded),
+      opportunisticEvidence:Boolean(bundleVisit&&textLevel!=='complete'),
+      // Only owner-verified cloud absence may generate a PDF download.
+      capturePrivatePdf:Boolean(pdfNeeded),privatePdfServerStatus:ownerPdfStatus,
+      expectedFigureCount:expected,figureCoverageUnconfirmed:Boolean(tocNeeded&&inspectFigures),missingFigureCount:expected>0?Math.max(0,expected-knownCount):0,
+      capturedFigures:figs,existingEvidenceLevel:textLevel,existingTocKind:productionOfficial?'official':localOfficial?'official_local':fallback?'figure1':localFigureOne?'figure1_local':'',
+      unknownNeeds:unknown,nonQueueUnknownNeeds:nonQueueUnknown,allowFigureOne:Boolean(tocNeeded&&!official&&!fallback)});
+    job.mediaNeed=captureMediaNeed(job);
+    job.state=job.captureToc?'no_visual':job.captureFigures?'figure_gap':job.captureEvidence?'evidence_gap':'private_pdf_gap';
+    return job;
+  }
+  function buildMissingCaptureJobs(queue,run,rawInventory) {
+    // Reuse complete registry validation, but don't reuse its historical TOC-first tiers.
+    var rows=pairedJobs(queue,{items:{}}), inv=rawInventory||{};
+    var inventory={mediaMap:mapCaptureRows(inv.media),tocMap:new Map(),figureMap:mapCaptureRows(inv.figures),evidenceMap:mapCaptureRows(inv.evidence),
+      pdfMap:mapCaptureRows(inv.pdf),tocsKnown:Boolean(inv.tocs),
+      figuresKnown:Boolean(inv.figures&&inv.figures.complete),evidenceKnown:Boolean(inv.evidence)};
+    ((inv.tocs||{}).items||[]).forEach(function(t){var d=normalizeDoi(t.doi);if(!d||Number(t.mediaGeneration)!==1790082000000)return;var a=inventory.tocMap.get(d)||[];a.push(t);inventory.tocMap.set(d,a);});
+    var jobs=[],unknownDois=0,unknownLayers={toc:0,figures:0,evidence:0};
+    rows.forEach(function(raw){var job=missingCaptureDecision(raw,inventory);if(job.unknownNeeds.length)unknownDois++;
+      job.unknownNeeds.forEach(function(n){unknownLayers[n==='TOC'?'toc':n==='文本'?'evidence':'figures']++;});
+      if(job.captureToc||job.captureFigures||job.captureEvidence||job.capturePrivatePdf){job.manualRunId=run.id;jobs.push(job);}
+    });
+    jobs.sort(compareMissingCaptureJobs);
+    if(run.summary){
+      var statuses=rows.reduce(function(stats,row){var status=privatePdfServerStatus(inventory.pdfMap,row.doi);stats[status]++;return stats;},
+        {ready:0,pending:0,failed:0,missing:0,unknown:0});
+      run.summary.scopeCount=rows.length;run.summary.ownerPdfInventory=statuses;
+      run.summary.ownerPdfInventoryState=inv.pdf&&inv.pdf.complete===true?'verified'
+        :/^owner_lease_/.test(String(inv.pdf&&inv.pdf.reason||''))?String(inv.pdf.reason):'read_failed';
+      run.summary.inventoryUnknown=unknownDois;run.summary.inventoryUnknownLayers=unknownLayers;
+      run.summary.inventoryErrors=(inv.errors||[]).slice();run.summary.inventoryReadAt=inv.readAt||'';
+    }
+    return jobs;
+  }
+  function updateMissingQueueSummary(run,pending) {
+    var s=run.summary;
+    s.total=s.results.length+pending.length;
+    s.pendingMissing=pending.length;
+    s.remainingNeeds={toc:0,figures:0,evidence:0,pdf:0};
+    pending.forEach(function(j){if(j.captureToc)s.remainingNeeds.toc++;if(j.capturePrivatePdf)s.remainingNeeds.pdf++;});
+    s.pendingPreview=pending.slice(0,12).map(function(j){return {doi:j.doi,journal:j.journal,addedDate:captureBatchDate(j),need:captureNeedText(j)};});
+  }
+
+  function manualCaptureJobs(queue,run) { return buildMissingCaptureJobs(queue,run,run.inventory); }
+
+  async function waitManualResult(job,tab,run) {
+    var deadline=Date.now()+8*60*1000;
+    while(manualExecutionCurrent(run)){
+      var result=completedPublisherResult(job);
+      if(result)return result;
+      if(controllerPaused())return {doi:job.doi,jobId:job.jobId,status:'aborted',reason:'user_aborted',finishedAt:nowIso()};
+      if(!renewManualLease(run))throw new Error('manual_run_superseded');
+      if(tab&&tab.closed===true)return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'publisher_task_tab_closed',finishedAt:nowIso()};
+      var elapsed=Date.now()-Date.parse(job.startedAt);
+      var hb=currentPublisherHeartbeat();
+      if(elapsed>60000&&(!hb||hb.jobId!==job.jobId))return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'bound_publisher_heartbeat_missing',finishedAt:nowIso()};
+      if(Date.now()>=deadline)return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'controller_timeout',finishedAt:nowIso()};
+      await sleep(500);
+    }
+    throw new Error('manual_run_superseded');
+  }
+
+  // Queue coverage is per DOI and per requested layer; an attempt is not completion.
+  function coverageHasNeeds(job) {
+    return Boolean(job && (job.captureToc || job.captureFigures || job.captureEvidence || job.capturePrivatePdf));
+  }
+  function coverageNeedKey(job) {
+    return [Boolean(job.captureToc),Boolean(job.captureFigures),Boolean(job.captureEvidence),Boolean(job.capturePrivatePdf)].join('|');
+  }
+  function coverageTransient(reason) {
+    return /(?:http_50[234]|timeout|page_not_ready|heartbeat_missing|NetworkError|Failed to fetch|gm_request|gm_then_fetch)/i.test(String(reason||''))
+      && !/doi_mismatch|receipt_invalid|unbound|401|403|429|blocked by the user|Refused to connect|auth_|challenge_|access_gate/i.test(String(reason||''));
+  }
+  function privatePdfCompletedStatus(status) { return /^(?:stored|already_stored)$/.test(String(status || '')); }
+  function captureResultHasUsefulLayer(result) {
+    result=result||{};
+    return String((result.toc||{}).status||'')==='stored'
+      || Number((result.figures||{}).stored||0)>0
+      || String((result.fulltext||{}).status||'')==='stored'
+      || privatePdfCompletedStatus((result.privatePdf||{}).status);
+  }
+  function coverageReason(result) {
+    var pdf=result.privatePdf||{},reasons=[result.reason,(result.toc||{}).reason,(result.fulltext||{}).reason,pdf.reason];
+    if(pdf.status&&!privatePdfCompletedStatus(pdf.status))reasons.push('private_pdf_'+String(pdf.status));
+    return reasons.concat(((result.figures||{}).items||[]).filter(function(f){return f.status==='failed';}).map(function(f){return f.reason;})).filter(Boolean).join(';');
+  }
+  function coverageJobNeeds(job) {
+    if(job&&job.captureToc===true&&verifiedFigureOneSatisfiesQueue(job,job.existingTocKind==='figure1'))job.captureToc=false;
+    job.mediaNeed=captureMediaNeed(job);
+    return job;
+  }
+  function coverageMergePlan(run,jobs) {
+    if(!run.coverage)run.coverage=new Map();
+    (jobs||[]).forEach(function(raw){
+      var old=run.coverage.get(raw.doi);
+      if(!old){run.coverage.set(raw.doi,{job:Object.assign({},raw),attempts:0,openedPublisherTab:false,done:{},noProgress:0,state:'pending',retryAt:0});return;}
+      // Retain unresolved obligations on a partial inventory read; never replace
+      // a known gap with a missing response. Positive current receipts still win.
+      var j=Object.assign({},old.job,raw);
+      ['captureToc','captureFigures','captureEvidence','capturePrivatePdf'].forEach(function(k){j[k]=!old.done[k]&&Boolean(old.job[k]||raw[k]);});
+      j.capturedFigures=Object.assign({},old.job.capturedFigures||{},raw.capturedFigures||{});
+      old.job=coverageJobNeeds(j);
+      if(old.state==='resolved'&&coverageHasNeeds(old.job)){old.state='pending';old.retryAt=0;}
+    });
+  }
+  function coverageRemaining(run,job,result) {
+    var row=run.coverage.get(job.doi),next=Object.assign({},job),before=Object.keys(job.capturedFigures||{}).length;
+    row.attempts++;row.lastReason=coverageReason(result);row.lastResult=result;
+    var gained=0,figures=result.figures||{},toc=result.toc||{},text=result.fulltext||{};
+    if(job.captureToc && (toc.status==='already_available'||toc.status==='stored'&&toc.kind!=='figure1')){
+      next.captureToc=false;row.done.captureToc=true;gained++;
+    }
+    if(job.captureEvidence && text.status==='stored'){
+      next.captureEvidence=false;next.existingEvidenceLevel=text.evidenceLevel||'unknown';row.done.captureEvidence=true;gained++;
+    }
+    var pdfStatus=String(result.privatePdf&&result.privatePdf.status||'');
+    if(job.capturePrivatePdf && privatePdfCompletedStatus(pdfStatus)){
+      next.capturePrivatePdf=false;row.done.capturePrivatePdf=true;gained++;
+    }
+    var cp=readCheckpoint(job.doi);next.capturedFigures=Object.assign({},job.capturedFigures||{});
+    Object.keys(cp.figures||{}).forEach(function(label){var f=cp.figures[label];if(validReceiptForDoi(f,job.doi))next.capturedFigures[label]=f;});
+    (figures.items||[]).forEach(function(f){if(validReceiptForDoi(f,job.doi)&&/^(?:staged|already_staged|stored|reused)$/.test(f.status||''))next.capturedFigures[f.label]=f;});
+    next.expectedFigureCount=Math.max(Number(job.expectedFigureCount||0),Number(figures.discovered||0));
+    var saved=Math.max(Object.keys(next.capturedFigures).length,Number(figures.stored||0));
+    next.missingFigureCount=Math.max(0,next.expectedFigureCount-saved);
+    gained+=Math.max(0,Object.keys(next.capturedFigures).length-before);
+    // Only proof of completion clears an image obligation, not partial/failed.
+    if(job.captureFigures && figures.discovered>0 && figures.stored>=figures.discovered && Number(figures.failed||0)===0 && saved>=next.expectedFigureCount){
+      next.captureFigures=false;row.done.captureFigures=true;gained++;
+    }
+    row.job=coverageJobNeeds(next);
+    if(row.freshComplete===true){
+      ['captureToc','captureFigures','captureEvidence','capturePrivatePdf'].forEach(function(k){row.job[k]=false;});
+      row.job=coverageJobNeeds(row.job);row.state='resolved';row.retryAt=0;row.freshComplete=false;return;
+    }
+    if(!coverageHasNeeds(next)){row.state='resolved';row.retryAt=0;return;}
+    var retryAfter=Math.max(0,Number(result.retryAfterMs||0));
+    if(result.status==='aborted'){
+      // A single publisher-tab abort must not terminate an explicit missing-only pass.
+      // Real Pause is represented by controllerPaused(); otherwise quarantine this DOI
+      // for the rest of the current pass and continue with the remaining articles.
+      row.state=controllerPaused()?'paused':'blocked';row.retryAt=0;return;
+    }
+    if(job.capturePrivatePdf && result.privatePdf && !privatePdfCompletedStatus(pdfStatus)){
+      // Keep the PDF gap visible and unresolved, but skip this DOI for the rest
+      // of the current pass. A new explicit Start may retry immediately.
+      row.state='blocked';row.retryAt=0;return;
+    }
+    if(/doi_mismatch|receipt_invalid|stale|unbound|401|403|429|auth_|challenge_|access_gate|permission|blocked by the user|Refused to connect/i.test(row.lastReason)){
+      row.state='blocked';row.retryAt=0;return;
+    }
+    // Positive new receipts permit another continuation in this same run. A
+    // failed figure/source gets only one no-progress transient retry, never a loop.
+    row.noProgress=gained?0:row.noProgress+1;
+    if(gained || coverageTransient(row.lastReason)&&row.noProgress<=1){
+      row.state='pending';row.retryAt=Date.now()+Math.max(retryAfter,gained?3500:15000);
+    }else{row.state='blocked';row.retryAt=0;}
+  }
+  function coveragePending(run) {
+    return Array.from(run.coverage.values()).filter(function(r){return r.state==='pending'&&coverageHasNeeds(r.job);})
+      .sort(function(a,b){return captureBatchDate(b.job).localeCompare(captureBatchDate(a.job))||journalPriority(a.job)-journalPriority(b.job)||Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});
+  }
+  function coverageApplyFreshPlan(run,jobs,complete) {
+    var fresh=new Set((jobs||[]).map(function(j){return normalizeDoi(j.doi);}));
+    coverageMergePlan(run,jobs||[]);
+    run.coverage.forEach(function(row,doi){
+      if(fresh.has(doi)){row.freshComplete=false;return;}
+      if(!complete)return;
+      if(row.state==='active'){row.freshComplete=true;return;}
+      ['captureToc','captureFigures','captureEvidence','capturePrivatePdf'].forEach(function(k){row.job[k]=false;});
+      row.job=coverageJobNeeds(row.job);row.state='resolved';row.retryAt=0;row.freshComplete=false;
+    });
+  }
+
+  function coverageStats(run) {
+    var s=run.summary,rows=Array.from(run.coverage.values()),left=rows.filter(function(r){return coverageHasNeeds(r.job)&&r.state!=='removed';});
+    s.total=rows.filter(function(r){return r.state!=='removed';}).length;
+    s.visitedCount=rows.filter(function(r){return r.openedPublisherTab===true&&r.state!=='removed';}).length;
+    s.attemptCount=s.results.length;s.fullyResolved=rows.filter(function(r){return r.state==='resolved';}).length;
+    s.unresolvedCount=left.length;s.blockedCount=left.filter(function(r){return r.state==='blocked';}).length;
+    s.pendingMissing=left.filter(function(r){return r.state==='pending'||r.state==='active';}).length;
+    var deferred=left.filter(function(r){return r.state==='pending'&&r.deferReason==='publisher_access_cooldown'
+      &&Number(r.deferUntil||0)>Date.now();});
+    s.deferredCount=deferred.length;
+    s.deferredNextAt=deferred.length?Math.min.apply(null,deferred.map(function(r){return r.deferUntil;})):0;
+    s.deferredPreview=deferred.slice(0,12).map(function(r){return {doi:r.job.doi,
+      publisher:r.job.publisher,need:captureNeedText(r.job),until:Number(r.deferUntil||0),
+      reason:'publisher_access_cooldown'};});
+    s.remainingNeeds={toc:0,figures:0,evidence:0,pdf:0};
+    left.forEach(function(r){if(r.job.captureToc)s.remainingNeeds.toc++;if(r.job.captureFigures)s.remainingNeeds.figures++;if(r.job.captureEvidence)s.remainingNeeds.evidence++;if(r.job.capturePrivatePdf)s.remainingNeeds.pdf++;});
+    s.pendingPreview=coveragePending(run).slice(0,12).map(function(r){var j=r.job;return {doi:j.doi,journal:j.journal,addedDate:captureBatchDate(j),need:captureNeedText(j)};});
+    s.blockedPreview=left.filter(function(r){return r.state==='blocked';}).slice(0,12).map(function(r){return {doi:r.job.doi,need:captureNeedText(r.job),reason:captureLiveError(r.lastReason||'本次没有新进展')};});
+    return s;
+  }
+  async function coverageWait(run,until) {
+    while(Date.now()<until&&manualExecutionCurrent(run)&&!controllerPaused()){
+      renewManualLease(run);await sleep(Math.min(1000,Math.max(1,until-Date.now())));
+    }
+  }
+  async function runManualFromHead(run) {
+    var s=run.summary;run.coverage=new Map();s.queueCoverageRevision=QUEUE_COVERAGE_REVISION;
+    run.renewTimer=setInterval(function(){renewManualLease(run);},15000);
+    try{
+      var loaded=await Promise.all([getJson(QUEUE_URL+'?ts='+Date.now()),getJson(WORKER+'/api/media/capture-capabilities')]);
+      if(!manualExecutionCurrent(run)||controllerPaused())return;
+      var queue=loaded[0],caps=loaded[1];
+      var architectureMembership=await observeArchitectureMembership(queue);
+      s.architectureMembership=architectureMembership;
+      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.mediaControllerRevision)!==CONTROLLER_REVISION)throw new Error('capture_server_upgrade_pending');
+      var checkedAt=0,endRefresh=false,inventoryRecovery=0,freshState=null;
+      function queueIdentity(){s.queueGeneratedAt=queue.generatedAt;s.latestAddedDate=queue.latestAddedDate;}
+      function applyCurrentDois(){
+        var currentDois=new Set(queue.articles.map(function(a){return normalizeDoi(a.doi);}));
+        run.coverage.forEach(function(r,doi){if(!currentDois.has(doi))r.state='removed';});
+      }
+      function beginFreshInventory(){
+        if(freshState&&!freshState.applied&&!freshState.done)return freshState;
+        s.phase='inventory_refresh';s.inventoryFreshPending=true;manualSummary(run);
+        var state={done:false,applied:false,value:null,error:null,promise:null};freshState=state;
+        state.promise=readMissingCaptureInventory(queue,run).then(function(next){state.value=next;state.done=true;return next;})
+          .catch(function(error){state.error=error;state.done=true;return null;});
+        return state;
+      }
+      async function applyFreshInventory(force){
+        var state=freshState;if(!state||state.applied)return true;
+        if(force&&!state.done)await state.promise;
+        if(!state.done)return true;
+        if(!manualExecutionCurrent(run)||controllerPaused())return false;
+        state.applied=true;s.inventoryFreshPending=false;
+        if(state.error||!state.value){s.inventoryErrors=(s.inventoryErrors||[]).concat(['库存复核:'+captureLiveError(state.error&&state.error.message||state.error||'failed')]);s.phase='running';manualSummary(run);return true;}
+        run.inventory=state.value;
+        var jobs=manualCaptureJobs(queue,run),complete=inventoryComplete(state.value);
+        coverageApplyFreshPlan(run,jobs,complete);applyCurrentDois();
+        if(complete)saveInventoryPlan(queue,jobs);
+        checkedAt=Date.now();queueIdentity();s.phase='running';coverageStats(run);manualSummary(run);return true;
+      }
+      function warmStart(){
+        var cached=cachedInventoryPlan(queue,run);if(!cached)return false;
+        coverageMergePlan(run,cached.jobs);applyCurrentDois();queueIdentity();
+        s.inventoryWarmStart=true;s.inventoryFreshPending=true;s.inventoryCacheAgeMs=Math.max(0,Date.now()-cached.savedAt);
+        ['media','toc','figures','evidence'].forEach(function(layer){updateInventoryProgress(run,layer,'cached',cached.savedAt,'warm-start');});
+        coverageStats(run);s.phase='running';manualSummary(run);checkedAt=Date.now();beginFreshInventory();return true;
+      }
+      async function blockingFresh(){beginFreshInventory();return applyFreshInventory(true);}
+      pairedJobs(queue,{items:{}});
+      if(!warmStart()){if(!await blockingFresh())return;}
+      s.phase='running';
+      while(manualExecutionCurrent(run)&&!controllerPaused()){
+        if(!renewManualLease(run))throw new Error('manual_run_superseded');
+        if(!await applyFreshInventory(false))return;
+        var candidates=coveragePending(run),row=null;
+        for(var i=0;i<candidates.length;i++){
+          var candidate=candidates[i],job=candidate.job;
+          var cooldownUntil=publisherAccessCooldownUntil(job);
+          if(cooldownUntil){
+            // A publisher-level access gate is neither a DOI visit nor a failed
+            // capture. Preserve the obligation and its exact safe retry time.
+            candidate.deferReason='publisher_access_cooldown';
+            candidate.deferUntil=cooldownUntil;
+            candidate.retryAt=Math.max(Number(candidate.retryAt||0),cooldownUntil);
+            continue;
+          }
+          candidate.deferReason='';candidate.deferUntil=0;
+          if(candidate.retryAt<=Date.now()&&!publisherPacingCooling(job)){row=candidate;break;}
+        }
+        if(!row){
+          candidates=coveragePending(run);
+          if(candidates.length){
+            var current=Date.now(),nextDue=candidates.reduce(function(soon,c){
+              var due=Number(c.retryAt||0);return due>current?Math.min(soon,due):soon;
+            },Number.POSITIVE_INFINITY);
+            s.phase=candidates.some(function(c){return c.deferReason==='publisher_access_cooldown';})
+              ?'cooldown_wait':'retry_wait';
+            coverageStats(run);manualSummary(run);
+            // Remain interruptible and renew the controller lease, while avoiding
+            // one-second inventory/queue polling throughout a 30-minute cooldown.
+            var waitUntil=Number.isFinite(nextDue)?Math.min(current+10000,nextDue):current+1000;
+            await coverageWait(run,Math.max(current+1000,waitUntil));continue;
+          }
+          if(freshState&&!freshState.applied){if(!await applyFreshInventory(true))return;continue;}
+          if(!endRefresh || (s.inventoryErrors||[]).length&&inventoryRecovery<2){
+            if(endRefresh){inventoryRecovery++;s.phase='inventory_retry';manualSummary(run);await coverageWait(run,Date.now()+4000);}
+            if(!manualExecutionCurrent(run)||controllerPaused())break;
+            s.phase='queue_refresh';manualSummary(run);
+            queue=await getJson(QUEUE_URL+'?ts='+Date.now());queueIdentity();beginFreshInventory();
+            if(!await applyFreshInventory(true))return;endRefresh=true;continue;
+          }
+          break;
+        }
+        s.phase='running';row.state='active';
+        if(!recentFullCaptureEligible(row.job)){row.state='removed';coverageStats(run);manualSummary(run);continue;}
+        var job=Object.assign({},row.job,{jobId:crypto.randomUUID(),controllerId:manualLeaseOwner(run),controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:row.attempts+1});
+        coverageStats(run);manualSummary(run);
+        GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);
+        GM_setValue(ACTIVE_JOB_KEY,job);markPublisherDispatch(job);
+        badge('连续补缺 · '+captureNeedText(job)+'：'+job.doi,'#175cd3');
+        var result;
+        try{
+          var baseTaskUrl=articleUrl(job);
+          var manualTaskUrl=await resolvePublisherTaskUrl(job);
+          if(!manualExecutionCurrent(run)||controllerPaused())return;
+          job.resolvedArticleUrl=manualTaskUrl;
+          job.routePlan=captureRoutePlan(job,baseTaskUrl,manualTaskUrl);
+          GM_setValue(ACTIVE_JOB_KEY,job);
+          run.tab=await Promise.resolve(GM_openInTab(boundPublisherJobUrl(manualTaskUrl,job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
+          if(!manualExecutionCurrent(run))return;
+          if(!run.tab||typeof run.tab.close!=='function')throw new Error('task_tab_handle_unavailable');
+          row.openedPublisherTab=true; // Count actual opened publisher task tabs, not failed preflight attempts.
+          result=await waitManualResult(job,run.tab,run);
+        }catch(error){if(!manualExecutionCurrent(run))return;result={doi:job.doi,jobId:job.jobId,status:'failed',reason:String(error.message||error),finishedAt:nowIso()};}
+        finally{
+          var active=GM_getValue(ACTIVE_JOB_KEY,null);
+          if(active&&active.jobId===job.jobId&&active.manualRunId===run.id)GM_deleteValue(ACTIVE_JOB_KEY);
+          try{if(run.tab)run.tab.close();}catch(_){}run.tab=null;
+        }
+        if(!manualExecutionCurrent(run))return;
+        result.version=VERSION;result.controllerRevision=CONTROLLER_REVISION;result.manualRunId=run.id;result.requestedNeeds=captureNeedText(job);
+        coverageRemaining(run,job,result);
+        if(result.status==='success'&&coverageHasNeeds(row.job))result.status='partial';
+        s.results.push(result);s[result.status]=(s[result.status]||0)+1;
+        s.tocStored+=result.toc&&result.toc.status==='stored'?1:0;s.figuresStaged+=Number(result.figuresStaged||0);s.evidenceStored+=result.fulltext&&result.fulltext.status==='stored'?1:0;
+        GM_setValue(attemptKey(job.doi,'manual:'+run.id,'figures'),result);
+        if(row.state==='resolved')GM_setValue(attemptKey(job.doi,VERSION+':paired:1790082000000','figures'),result);
+        if(!result.toc)enqueueCaptureReport(job,[{stage:'controller',event:'coverage_capture_result',status:result.status,message:result.reason,at:nowIso()}],result.status,result.reason,true,'');
+        coverageStats(run);manualSummary(run);
+        if(controllerPaused())break;
+        await coverageWait(run,Date.now()+3500);
+        if(!manualExecutionCurrent(run)||controllerPaused())break;
+        if(Date.now()-checkedAt>=60000&&(!freshState||freshState.applied)){
+          s.phase='queue_refresh';manualSummary(run);queue=await getJson(QUEUE_URL+'?ts='+Date.now());queueIdentity();checkedAt=Date.now();beginFreshInventory();s.phase='running';manualSummary(run);
+        }
+      }
+      if(manualExecutionCurrent(run)){
+        coverageStats(run);s.finishedAt=nowIso();
+        s.phase=controllerPaused()?'paused':s.unresolvedCount?'blocked_remaining'
+          :s.inventoryUnknown||Number(s.ownerPdfInventory&&s.ownerPdfInventory.unknown||0)?'inventory_partial':'all_resolved';
+        manualSummary(run);
+        var stored=GM_getValue(MANUAL_RUN_KEY,null);if(stored&&stored.id===run.id){stored.completedAt=s.finishedAt;GM_setValue(MANUAL_RUN_KEY,stored);}
+        var finishedMessage=controllerPaused()?'已暂停：本轮已访问 '+s.visitedCount+' 篇'
+          :s.attemptCount===0?'没有实际访问论文：待执行 '+s.pendingMissing+' 篇；已访问受阻 '+s.blockedCount+' 篇'
+          :'实际尝试 '+s.attemptCount+' 次；确认补齐 '+s.fullyResolved+' 篇；未补齐 '+s.unresolvedCount+' 篇';
+        badge(finishedMessage,'#374151');
+      }
+    }catch(error){
+      if(manualExecutionCurrent(run)){coverageStats(run);s.finishedAt=nowIso();s.stopReason=String(error.message||error);s.phase='blocked_remaining';manualSummary(run);badge('抓取受阻，未完成项已保留：'+captureLiveError(s.stopReason),'#991b1b');}
+    }finally{
+      clearInterval(run.renewTimer);var lease=GM_getValue(LEASE_KEY,null);
+      if(lease&&lease.owner===manualLeaseOwner(run))GM_deleteValue(LEASE_KEY);
+    }
+  }
+
+  function completeControllerResume() {
+    CONTROLLER_STOP_REASON='';
+    GM_deleteValue(ABORT_KEY);GM_setValue(ENABLED_KEY,true);
+    if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}
+    if(isGalleryPage())controllerRun();
+    else window.open('https://'+GALLERY_HOST+GALLERY_PATH,'_blank');
+  }
+
+  function pollControllerResume() {
+    if(controllerResumeTimer!==null){clearTimeout(controllerResumeTimer);controllerResumeTimer=null;}
+    var request=GM_getValue(RESUME_REQUEST_KEY,null);
+    if(!request||request.requester!==CONTROLLER_ID)return;
+    // A later manual Pause deletes the request. A run resumed elsewhere is not stolen.
+    if(!controllerPaused()){GM_deleteValue(RESUME_REQUEST_KEY);return;}
+    releaseIdlePausedLease();
+    var lease=GM_getValue(LEASE_KEY,null),active=GM_getValue(ACTIVE_JOB_KEY,null);
+    var leased=Boolean(lease&&Number(lease.expiresAt)>Date.now());
+    var busy=Boolean(globalThis.__OSG_PAIRED_CONTROLLER_BUSY__);
+    if(!leased&&!busy&&active){
+      reconcileActiveJobBeforeDispatch();active=GM_getValue(ACTIVE_JOB_KEY,null);
+    }
+    if(leased||busy||active){
+      var seconds=leased?Math.max(0,Math.ceil((lease.expiresAt-Date.now())/1000)):0;
+      badge('已收到继续请求；等待旧控制器/任务收尾'+(seconds?'（锁剩余 '+seconds+' 秒）':'')+'，随后自动恢复','#92400e');
+      controllerResumeTimer=setTimeout(pollControllerResume,1000);return;
+    }
+    if((GM_getValue(RESUME_REQUEST_KEY,{})||{}).requestId!==request.requestId)return;
+    GM_deleteValue(RESUME_REQUEST_KEY);completeControllerResume();
+  }
+
+  function requestControllerStart() {
+    if(GM_getValue(MANUAL_RUN_KEY,null))return forceStartFromHead();
+    var lease=GM_getValue(LEASE_KEY,null),active=GM_getValue(ACTIVE_JOB_KEY,null);
+    var busy=Boolean(globalThis.__OSG_PAIRED_CONTROLLER_BUSY__);
+    var other=Boolean(lease&&lease.owner!==CONTROLLER_ID&&Number(lease.expiresAt)>Date.now());
+    if(controllerPaused()&&(busy||other||active)){
+      // Queue the user's intention instead of clearing a live lease or enabling
+      // the old loop prematurely. Only one requesting control page may resume.
+      if(!isGalleryPage()){window.open('https://'+GALLERY_HOST+GALLERY_PATH,'_blank');return;}
+      GM_setValue(RESUME_REQUEST_KEY,{requester:CONTROLLER_ID,requestId:CONTROLLER_ID+':'+Date.now(),at:Date.now()});
+      pollControllerResume();return;
+    }
+    if(busy){badge('当前批次正在运行，不重复派发','#374151');return;}
+    if(other){badge('另一控制页正在运行'+(active&&active.doi?'：'+active.doi:'，正在准备或收尾')+'；未重复派发','#92400e');return;}
+    completeControllerResume();
+  }
+
+  async function controllerRun() {
+    if(manualRunBlocksAutomatic())return tryResumeInterruptedManualRun();
+    if (!isGalleryPage() || globalThis.__OSG_PAIRED_CONTROLLER_BUSY__) return;
+    if(CONTROLLER_STOP_REASON){badge('已停止开页：'+CONTROLLER_STOP_REASON,'#991b1b');return;}
+    if (GM_getValue(ENABLED_KEY,true)===false||isAbortRequested()) {badge('媒体抓取已暂停','#6b7280');return;}
+    if (!writeToken()) {badge('请保留并配置原有 R2 写入令牌','#991b1b');return;}
+    globalThis.__OSG_PAIRED_CONTROLLER_BUSY__=true;
+    var renew=null,summary=null,stopReason='';
+    try {
+      if(!await acquireLease()) {badge(controllerPaused()?'媒体抓取已暂停':'另一个 Gallery 控制页正在运行','#6b7280');return;}
+      renew=setInterval(renewLease,15000);
+      var caps=await getJson(WORKER+'/api/media/capture-capabilities');
+      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!==CONTROLLER_REVISION)throw new Error('capture_server_upgrade_pending');
+      var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
+      var architectureMembership=await observeArchitectureMembership(queue);
+      var queueCheckedAt=Date.now();
+      var scopedArticles=queue.articles.filter(recentFullCaptureEligible);
+      var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),
+        {dois:scopedArticles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
+      var media=productionMediaSnapshot(productionInventory);
+      var pdfInventory=await readOwnerPdfInventory(scopedArticles,null);
+      var ownerPdfMap=mapCaptureRows(pdfInventory);
+      var evidenceInventory=null,stageInventory=null;
+      try { evidenceInventory=await getPrivateJson(EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),writeToken()); }
+      catch(error){ try{console.warn('[OSG TOC] evidence inventory unavailable; evidence-only backlog paused',String(error&&error.message||error));}catch(_){} }
+      try {
+        var staged=await getJson(WORKER+'/api/article-figures/staged?inventory=1&ts='+Date.now());
+        if(staged&&staged.schemaVersion==='capture-inventory-v1'&&staged.complete===true&&Array.isArray(staged.items)&&staged.items.length===Number(staged.count))stageInventory=staged;
+      } catch(error){ try{console.warn('[OSG TOC] staged figure inventory unavailable; local checkpoints still reused',String(error&&error.message||error));}catch(_){} }
+      var mediaJobs=pairedJobs(queue,media);
+      var evidenceMissing=evidenceInventory?evidenceMissingDois(queue,evidenceInventory):new Set();
+      var pdfJobs=privatePdfBackfillJobs(queue,mapCaptureRows(stageInventory),mapCaptureRows(productionInventory),ownerPdfMap);
+      var evidenceJobs=[]; // Text incompleteness is no longer an independent queue trigger.
+      var generation=VERSION+':paired:'+String(queue.mediaGeneration);
+      var evidenceGeneration=EVIDENCE_SCHEMA_VERSION+':'+CONTROLLER_REVISION+':'+String(queue.latestAddedDate||queue.generatedAt||'');
+      var pdfGeneration=PRIVATE_PDF_QUEUE_REVISION+':'+String(queue.latestAddedDate||queue.generatedAt||'');
+      function eligibleMedia(job) {
+        var prior=GM_getValue(attemptKey(job.doi,generation,'figures'),null);
+        // A scheduler failure is not a failed publisher/article capture.
+        if(prior && prior.reason==='controller_lease_lost')return true;
+        // 2.2.35 switched the authority from the stale static media-index to current
+        // production D1. A Wiley DOI that production still says is missing must get
+        // one immediate post-upgrade retry even if an older controller logged stored/
+        // already_available/not_found and would otherwise be held by overnight retry.
+        if(job.publisher==='wiley'&&job.captureToc===true&&prior&&String(prior.controllerRevision||'')!==CONTROLLER_REVISION)return true;
+        // 2.2.36 changes Nature/Science-family visual semantics: reopen one time so a
+        // verified Figure 1 can become an explicit production fallback when no official
+        // TOC/graphical abstract exists.
+        if(isNatureScienceFamilyJob(job)&&job.captureToc===true&&prior&&String(prior.controllerRevision||'')!==CONTROLLER_REVISION)return true;
+        if (prior && prior.version===VERSION && prior.status==='success') {
+          // 2.2.32 could record a TOC-only visit as media success. Reopen only those
+          // legacy successes that never requested figures; genuine paired successes stay done.
+          if (job.captureFigures===true && (!prior.figures || prior.figures.status==='not_requested')) return true;
+          return false;
+        }
+        if (prior && !overnightRetryEligible(prior,Date.now())) return false;
+        return true;
+      }
+      function eligibleEvidence(job) {
+        var prior=GM_getValue(attemptKey(job.doi,evidenceGeneration,'evidence'),null);
+        if(prior && prior.reason==='controller_lease_lost')return true;
+        if(prior && prior.status==='success'){clearSummaryEvidenceUrgency(job.doi);return false;}
+        if(summaryEvidenceUrgency(job.doi)){
+          job.summaryUrgent=true;
+          var urgentEligible=urgentEvidenceRetryEligible(prior,Date.now());
+          if(!urgentEligible&&prior&&Number(prior.retryCount||1)>=4)clearSummaryEvidenceUrgency(job.doi);
+          return urgentEligible;
+        }
+        if(prior && !overnightRetryEligible(prior,Date.now()))return false;
+        return true;
+      }
+      var latestAddedDate=String(queue.latestAddedDate||'');
+      function availableJobs() {
+        var mediaAvailable=mediaJobs.filter(eligibleMedia);
+        var merged=new Map();
+        mediaAvailable.forEach(function(raw){
+          var job=Object.assign({},raw),doi=normalizeDoi(raw.doi),recent=recentFullCaptureEligible(job);
+          job.privatePdfServerStatus=privatePdfServerStatus(ownerPdfMap,doi);
+          // A 2026-10-01+ visit is a one-page acquisition bundle: TOC when
+          // needed, body figures, missing/incomplete full text and PDF when
+          // not already stored. Older records keep the previous behavior.
+          job.opportunisticFigures=Boolean(job.opportunisticFigures||recent);
+          job.opportunisticEvidence=Boolean(evidenceMissing.has(doi));
+          job.captureEvidence=false;
+          job.capturePrivatePdf=privatePdfQueueNeeded(job,Date.now());
+          job.mediaNeed=captureMediaNeed(job);
+          merged.set(doi,job);
+        });
+        pdfJobs.forEach(function(raw){
+          var doi=normalizeDoi(raw.doi),job=Object.assign({},raw);
+          if(recentFullCaptureEligible(job)){
+            job.opportunisticFigures=true;
+            job.opportunisticEvidence=evidenceMissing.has(doi);
+          }
+          job.mediaNeed=captureMediaNeed(job);
+          if(!merged.has(doi))merged.set(doi,job);
+        });
+        return Array.from(merged.values());
+      }
+      if(controllerPaused())return;
+      if(!renewLease())throw new Error('controller_lease_lost');
+      if(manualRunBlocksAutomatic())return;
+      var available=availableJobs(),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
+      summary={controllerRunId:CONTROLLER_ID+':'+Date.now(),scopeRevision:OCT1_SCOPE_QUEUE_REVISION,scopeCount:scopedArticles.length,
+        ownerPdfInventory:scopedArticles.reduce(function(stats,item){stats[privatePdfServerStatus(ownerPdfMap,item.doi)]++;return stats;},{ready:0,pending:0,failed:0,missing:0,unknown:0}),
+        ownerPdfInventoryState:pdfInventory.complete===true?'verified':/^owner_lease_/.test(String(pdfInventory.reason||''))?String(pdfInventory.reason):'read_failed',
+        lifecycleRevision:CONTROLLER_LIFECYCLE_REVISION,architectureMembershipRevision:ARCHITECTURE_MEMBERSHIP_REVISION,architectureMembership:architectureMembership,version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+pdfJobs.length,evidenceBacklog:0,privatePdfBacklog:pdfJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
+      persistControllerSummary(summary,true);
+      for (var i=0;i<batch.length;i+=1) {
+        if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
+        // Fail before opening any page, and never dispatch after loss of ownership.
+        if(!renewLease()) {stopReason='controller_lease_lost';break;}
+        if (i>0 && Date.now()-queueCheckedAt>=60000) {
+          try {
+            var refreshedQueue=await getJson(QUEUE_URL+'?ts='+Date.now());
+            queueCheckedAt=Date.now();
+            if (!Array.isArray(refreshedQueue.articles) || refreshedQueue.articles.length!==Number(refreshedQueue.webpageDoiCount)
+                || Number(refreshedQueue.mediaGeneration)!==1790082000000) throw new Error('invalid_queue_refresh');
+            if (queueRegistryChanged(queue,refreshedQueue)) {
+              summary.refreshPending=true;
+              badge('检测到文献队列更新；当前篇已保存，重新按最新上架排序','#374151');
+              break;
+            }
+          } catch(queueError) {
+            summary.refreshPending=true;
+            summary.queueRefreshError=String(queueError.message||queueError).slice(0,120);
+            break; // Do not open possibly removed DOI from an unverifiable old registry.
+          }
+        }
+        if (publisherAccessCooling(batch[i])) {
+          summary.skipped+=1;
+          badge('出版社访问验证冷却，已跳过 '+batch[i].doi+'；继续其他来源','#92400e');
+          continue;
+        }
+        var activeState = reconcileActiveJobBeforeDispatch();
+        if(activeState.cleared) {
+          badge('已自动清理旧任务：'+String(activeState.doi||'')+'；继续抓取','#374151');
+        }
+        if(activeState.busy) {
+          stopReason='active_task_wait';
+          badge('已有任务仍在处理：'+String(activeState.doi||'')+'；15 秒后自动复查','#374151');
+          break;
+        }
+        if(manualRunBlocksAutomatic())return;
+        var evidenceOnly=batch[i].captureToc!==true && batch[i].captureFigures!==true && batch[i].captureEvidence===true;
+        var pdfOnly=batch[i].captureToc!==true && batch[i].captureFigures!==true && batch[i].captureEvidence!==true && batch[i].capturePrivatePdf===true;
+        var attemptGeneration=pdfOnly?pdfGeneration:evidenceOnly?evidenceGeneration:generation;
+        var attemptKind=pdfOnly?'pdf':evidenceOnly?'evidence':'figures';
+        var priorAttempt=GM_getValue(attemptKey(batch[i].doi,attemptGeneration,attemptKind),null);
+        if(!recentFullCaptureEligible(batch[i])){summary.skipped+=1;continue;}
+        var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
+        GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
+        markPublisherDispatch(job);
+        var taskParts=[];
+        if(job.captureToc===true)taskParts.push('TOC');
+        if(job.captureFigures===true||job.opportunisticFigures===true)taskParts.push('正文图');
+        if(job.captureEvidence===true||job.opportunisticEvidence===true)taskParts.push('全文');
+        if(job.capturePrivatePdf===true)taskParts.push('PDF');
+        badge((taskParts.join('＋')||'媒体检查')+' '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
+        var tab=null,result=null,closed=true,skipReason='',taskUrl=articleUrl(job);
+        try {
+          if(!renewLease())throw new Error('controller_lease_lost');
+          taskUrl=await resolvePublisherTaskUrl(job);
+          job.resolvedArticleUrl=taskUrl;
+          GM_setValue(ACTIVE_JOB_KEY,job);
+          tab=await Promise.resolve(GM_openInTab(boundPublisherJobUrl(taskUrl,job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
+          if(manualRunBlocksAutomatic()){try{if(tab)tab.close();}catch(_){}return;}
+          ownedTaskHandle=tab;
+          if(!tab || typeof tab.close!=='function')throw new Error('task_tab_handle_unavailable');
+          result=await waitForResult(job,tab);
+        } catch(error) {
+          var controllerReason=String(error&&error.message||error);
+          if(controllerFailureDisposition(controllerReason)==='stop')stopReason=controllerReason;
+          else {
+            if(controllerFailureDisposition(controllerReason)==='skip')skipReason=controllerReason;
+            result={doi:job.doi,jobId:job.jobId,version:VERSION,status:'failed',reason:controllerReason,finishedAt:nowIso()};
+          }
+        } finally {
+          // Invalidate this job before closing. A lingering old tab is harmless because all later writes are bound to the active jobId/DOI.
+          clearOwnedJob(job);
+          releaseIdlePausedLease();
+          if(tab)closed=await closeTaskTab(tab);
+          if(!closed)skipReason=skipReason||'previous_task_tab_not_closed';
+        }
+        if(manualRunBlocksAutomatic())return;
+        if(result && controllerFailureDisposition(result.reason)==='skip')skipReason=skipReason||result.reason;
+        if((result && !result.toc && result.status==='failed') || stopReason || skipReason) {
+          var observed=currentPublisherHeartbeat();
+          var observedUrl=observed&&observed.jobId===job.jobId?observed.href:'';
+          var controllerEvent=stopReason?'stopped':skipReason?'skipped':'failed';
+          var controllerMessage=stopReason||skipReason||(result&&result.reason)||'unknown_controller_failure';
+          enqueueCaptureReport(job,[{at:nowIso(),stage:'controller',event:controllerEvent,status:'failed',message:controllerMessage,url:observedUrl}], 'controller_error',controllerMessage,true,observedUrl);
+        }
+        if(result && !stopReason) {
+          result.version=VERSION;
+          result.retryPolicyRevision=CAPTURE_HOTFIX_REVISION;
+          result.publisherTaskBindingRevision=PUBLISHER_TASK_BINDING_REVISION;
+          result.retryCount=Number(priorAttempt&&priorAttempt.reason!=='controller_lease_lost'&&priorAttempt.retryCount||0)+1;
+          summary.results.push(result);summary[result.status]=(summary[result.status]||0)+1;
+          summary.tocStored+=result.toc&&result.toc.status==='stored'?1:0;
+          summary.figuresStaged+=Number(result.figuresStaged||0);
+          summary.evidenceStored+=result.fulltext&&result.fulltext.status==='stored'?1:0;
+          GM_setValue(attemptKey(job.doi,attemptGeneration,attemptKind),result);
+          if(result.fulltext&&result.fulltext.status==='stored')clearSummaryEvidenceUrgency(job.doi);
+          else clearSummaryEvidenceUrgency(job.doi); // Text gaps no longer schedule independent retries.
+          if(!evidenceOnly&&result.fulltext&&result.fulltext.status==='stored'){
+            GM_setValue(attemptKey(job.doi,evidenceGeneration,'evidence'),{doi:job.doi,status:'success',version:VERSION,controllerRevision:CONTROLLER_REVISION,finishedAt:result.finishedAt||nowIso(),reason:'opportunistic_evidence_stored',retryCount:1});
+          }
+        }
+        if(skipReason) {
+          if(result && result.status!=='failed' && skipReason==='previous_task_tab_not_closed')summary.lifecycleWarnings+=1;
+          else summary.skipped+=1;
+          badge('已跳过 '+job.doi+'：'+skipReason+'；继续下一篇','#92400e');
+        }
+        if(stopReason){summary.stopReason=stopReason;persistControllerSummary(summary,false);break;}
+        persistControllerSummary(summary,false);
+        if(result && result.status==='aborted')break;
+        await sleep(3500);
+      }
+      if(manualRunBlocksAutomatic())return;
+      summary.finishedAt=nowIso();summary.stopReason=stopReason;persistControllerSummary(summary,false);
+      if(stopReason==='active_task_wait') {
+        badge('已有任务仍在处理；15 秒后自动复查，不会永久停止','#374151');
+      } else if(stopReason) {
+        badge('已停止开页：'+stopReason+'；请检查日志后再继续','#991b1b');
+      } else {
+        badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；文字证据 '+summary.evidenceStored+'；完整 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'，跳过 '+summary.skipped+'（媒体暂存不等于发布）','#374151');
+      }
+      var remainingAvailable=!stopReason?availableJobs():[];
+      if(stopReason==='active_task_wait' && !isAbortRequested() && GM_getValue(ENABLED_KEY,true)!==false) {
+        if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
+        nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},15000);
+      } else if(!stopReason&&(summary.refreshPending||remainingAvailable.length>0)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
+        if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
+        var nextDelay=summary.queueRefreshError?60*1000:summary.refreshPending?1500:NEXT_BATCH_DELAY_MS;
+        nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},nextDelay);
+      }
+    } catch(error) {
+      if(manualRunBlocksAutomatic())return;
+      stopReason=String(error.message);
+      if(controllerPaused()){stopReason='user_paused';badge('媒体抓取已暂停','#6b7280');}
+      else if(!renewLease() || /capture_server_upgrade_pending/.test(stopReason))badge('媒体主线已停止：'+stopReason,'#991b1b');
+      else {
+        badge('媒体主线暂缓：'+stopReason+'；60 秒后检查重连','#991b1b');
+        if(!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {clearTimeout(nextBatchTimer);nextBatchTimer=setTimeout(controllerRun,60000);}
+      }
+    } finally {
+      clearInterval(renew);
+      if(!manualRunBlocksAutomatic()&&/controller_lease_lost|capture_server_upgrade_pending/.test(stopReason)){CONTROLLER_STOP_REASON=stopReason;if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}}
+      globalThis.__OSG_PAIRED_CONTROLLER_BUSY__=false;
+      var lease=GM_getValue(LEASE_KEY,null);
+      if(lease&&lease.owner===CONTROLLER_ID)GM_deleteValue(LEASE_KEY);
+    }
+  }
+
+  async function publisherBoot() {
+    if (location.hostname === 'doi.org') return;
+    var job = GM_getValue(ACTIVE_JOB_KEY, null);
+    if (!job || !normalizeDoi(job.doi)) {
+      return;
+    }
+    try {
+      await bindPublisherCaptureJob(job);
+    } catch (error) {
+      // Do not complete or overwrite the active job from an unrelated tab.
+      await uploadReport(job, [{ stage: 'page_doi_guard', event: 'rejected', status: 'failed', url: location.href, message: String(error.message) }], 'failed', String(error.message), null, writeToken());
+      return;
+    }
+    writePublisherHeartbeat(job, 'active_job_seen');
+    var started = Date.parse(job.startedAt || '');
+    if (!Number.isFinite(started) || Date.now() - started > 12 * 60 * 1000) {
+      writePublisherHeartbeat(job, 'active_job_stale');
+      return;
+    }
+    GM_setValue(progressKey(job.doi), {
+      status: 'publisher_script_started',
+      at: nowIso(),
+      url: location.href,
+      version: VERSION,
+      host: location.hostname
+    });
+    writePublisherHeartbeat(job, 'publisher_script_started');
+    await sleep(900);
+    await runPublisherJob(job);
+  }
+
+  function installMenu() {
+    GM_registerMenuCommand('查看实时抓取进度', function () {
+      if(isGalleryPage()){mountCaptureLivePanel();globalThis.__OSG_CAPTURE_LIVE_PANEL__.show();}
+    });
+    GM_registerMenuCommand('设置 R2 写入令牌', function () {
+      var value = window.prompt('输入 BRIDGE_WRITE_TOKEN。只保存在本机 Tampermonkey 存储，不会写入 Git/R2 日志。', '');
+      if (value === null) return;
+      value = String(value || '').trim();
+      if (!value) {
+        GM_deleteValue(TOKEN_KEY);
+        GM_deleteValue(LEGACY_TOKEN_KEY);
+        window.alert('本机写入令牌已清除。');
+      } else {
+        GM_setValue(TOKEN_KEY, value);
+        GM_setValue(LEGACY_TOKEN_KEY, value);
+        window.alert('写入令牌已保存在本机 Tampermonkey。');
+      }
+    });
+    GM_registerMenuCommand('设置每批抓取数量', function () {
+      var current = batchSize();
+      var value = window.prompt('每批处理 1–20 篇。建议 5–8 篇，避免出版社限流。', String(current));
+      if (value === null) return;
+      var parsed = Math.max(1, Math.min(20, Math.floor(Number(value) || current)));
+      GM_setValue(BATCH_SIZE_KEY, parsed);
+      window.alert('每批抓取数量已设为 ' + parsed + '。');
+    });
+    GM_registerMenuCommand('立即开始任务（从头重抓）', forceStartFromHead);
+    GM_registerMenuCommand('立即运行媒体抓取队列', forceStartFromHead);
+    GM_registerMenuCommand('中止当前媒体抓取批次', function () {
+      requestControllerPause();
+      window.alert('已请求中止当前媒体抓取批次。正在运行的出版社标签页会由控制器关闭；人工中止不会计入失败或失败冷却。');
+    });
+    GM_registerMenuCommand('继续媒体抓取主线', requestControllerStart);
+    GM_registerMenuCommand('上传本地 TOC 日志', function () {
+      uploadLocalDiagnostics().catch(function () {});
+    });
+    GM_registerMenuCommand('查看出版社脚本心跳', function () {
+      var hb = currentPublisherHeartbeat();
+      window.alert(hb ? JSON.stringify({
+        doi: normalizeDoi(hb.doi || ''),
+        publisher: String(hb.publisher || ''),
+        host: String(hb.host || ''),
+        version: String(hb.version || ''),
+        state: String(hb.state || ''),
+        atIso: String(hb.atIso || '')
+      }, null, 2) : '尚未收到任何出版社页面脚本心跳。');
+    });
+    GM_registerMenuCommand('暂停/继续 TOC 自动运行', function () {
+      var enabled = GM_getValue(ENABLED_KEY, true) !== false;
+      if(enabled){requestControllerPause();window.alert('媒体抓取主线已暂停。');}
+      else requestControllerStart();
+    });
+    GM_registerMenuCommand('查看最近运行摘要', function () {
+      var summary = GM_getValue(SUMMARY_KEY, {});
+      window.alert(JSON.stringify({ runtimeVersion: VERSION, summaryIsCurrentVersion: summary.version === VERSION, activeJob: GM_getValue(ACTIVE_JOB_KEY, null), summary: summary }, null, 2));
+    });
+    GM_registerMenuCommand('清除 TOC 失败冷却并立即重试', function () {
+      var queueKeys = [];
+      try {
+        if (typeof GM_listValues === 'function') queueKeys = GM_listValues();
+      } catch (_) {}
+      queueKeys.filter(function (key) { return String(key).indexOf(P + 'failure:') === 0; })
+        .forEach(function (key) { try { GM_deleteValue(key); } catch (_) {} });
+      window.alert('已清除当前脚本版本的失败冷却。返回 Gallery 后可立即重新运行媒体抓取队列。');
+    });
+    GM_registerMenuCommand('清除卡住任务/租约', function () {
+      requestControllerPause();
+      var lease=GM_getValue(LEASE_KEY,null);
+      if(lease && Number(lease.expiresAt)>Date.now()) {
+        window.alert('已请求暂停。当前控制器退出后再清理；不会抢占运行中的任务锁。');return;
+      }
+      GM_deleteValue(ACTIVE_JOB_KEY);
+      GM_deleteValue(LEASE_KEY);
+      window.alert('已清除过期任务和租约，保持暂停。关闭旧任务页后可继续。');
+    });
+  }
+
+  // Only a visibly numbered heading within this figure may recover a missing
+  // caption label. No filename-number guessing and no shared-article captions.
+  function wileyBodyFigureContext(node, original) {
+    if (!node || !node.closest || original && (original.label || original.official)) return original;
+    if (node.closest('aside,nav,header,footer,[class*="recommend" i],[class*="related" i],[id*="related" i],[class*="reference" i]')) return null;
+    var block=original&&original.block || node.closest('figure,[role="figure"],.article-section__figure');
+    if(!block || !block.contains(node))return null;
+    var captions=Array.from(block.querySelectorAll('figcaption,.caption,[class*="caption"],.figure-title,.figure__title,[role="heading"],h1,h2,h3,h4,h5,h6'));
+    [node,block].forEach(function(el){
+      ['aria-labelledby','aria-describedby'].forEach(function(attr){
+        String(el.getAttribute(attr)||'').split(/\s+/).filter(Boolean).forEach(function(id){
+          var target=el.ownerDocument.getElementById(id);
+          if(target&&block.contains(target)&&captions.indexOf(target)<0)captions.push(target);
+        });
+      });
+    });
+    var texts=captions.map(function(c){return String(c.textContent||'').replace(/\s+/g,' ').trim();}).filter(Boolean);
+    var own=[node.getAttribute('alt'),node.getAttribute('title'),node.getAttribute('aria-label')].filter(Boolean).join(' ');
+    var numbered=texts.concat(own).filter(function(t){return /^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*\d+[a-z]?\b/i.test(t);});
+    var labels=Array.from(new Set(numbered.map(function(t){return articleFigureLabel(t,0);})));
+    if(labels.length!==1)return null;
+    var descendants=Array.from(block.querySelectorAll('figure,[role="figure"],.article-section__figure'));
+    if(descendants.some(function(other){return other!==block&&!other.contains(node);}))return null;
+    return {block:block,label:labels[0],caption:(numbered[0]+' '+texts.filter(function(t){return t!==numbered[0];}).join(' ')).slice(0,600),official:false};
+  }
+
+  function orderedFigureCandidates(job,candidates,role) {
+    if(job.publisher!=='acs'||role!=='figure')return candidates.slice(0,4);
+    // These are all links already supplied by the same isolated figure DOM.
+    // Prefer real vector files before HTML viewers and preview raster variants.
+    var unique=[],seen=new Set();
+    candidates.forEach(function(c){if(c&&c.url&&!seen.has(c.url)){seen.add(c.url);unique.push(c);}});
+    return unique.map(function(c,i){return {c:c,i:i,vector:/\.svg(?:[?#]|$)/i.test(c.url)&&!isAcsImageViewerUrl(c.url)};})
+      .sort(function(a,b){return Number(b.vector)-Number(a.vector)||a.i-b.i;})
+      .slice(0,6).map(function(x){return x.c;});
+  }
+
+  function visualScope(node) {
+    if (!node || !node.closest) return null;
+    if (node.closest('aside,nav,header,footer,[class*="recommend" i],[class*="related" i],[id*="related" i],[class*="reference" i]')) return null;
+    var block = node.closest('figure,[role="figure"],.fig-section,.figure,.article-figure,.c-article-section__figure,[class*="graphical-abstract"],[class*="visual-abstract"],[id*="graphicalAbstract"]');
+    if (!block) {
+      var parent = node.parentElement;
+      for (var depth = 0; parent && depth < 3; depth += 1, parent = parent.parentElement) {
+        var captions = parent.querySelectorAll('figcaption,.caption,[class*="caption"]');
+        if (captions.length === 1) { block = parent; break; }
+      }
+    }
+    if (!block) return null;
+    var caps = Array.from(block.querySelectorAll('figcaption,.caption,[class*="caption"],.figure-title'));
+    var texts = caps.map(function (c) { return String(c.textContent || '').replace(/\s+/g, ' ').trim(); });
+    var numbered = texts.filter(function (t) { return /^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*\d+[a-z]?\b/i.test(t); });
+    var labels = Array.from(new Set(numbered.map(function (t) { return articleFigureLabel(t, 0); })));
+    if (labels.length > 1) return null; // Refuse a shared ancestor containing multiple Figures.
+    var own = [node.getAttribute('alt'),node.getAttribute('title'),node.getAttribute('aria-label')].filter(Boolean).join(' ');
+    var marker = [block.id, typeof block.className === 'string' ? block.className : '', texts[0] || '', own].join(' ');
+    var label = labels[0] || (/^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*\d+[a-z]?\b/i.test(own) ? articleFigureLabel(own, 0) : '');
+    return { block: block, label: label, caption: (numbered[0] || texts[0] || own).slice(0, 600), official: !label && /graphical[\s_-]*abstract|visual[\s_-]*abstract|toc[\s_-]*(?:graphic|image)|abstract[\s_-]*image/i.test(marker) };
+  }
+
+  function visualUrls(node, block, baseUrl) {
+    var urls = articleFigureImageUrls(node, baseUrl);
+    if (block) {
+      block.querySelectorAll('a[href],source').forEach(function (link) {
+        var href = normalizeUrl(link.getAttribute('href') || '', baseUrl);
+        if (/\.(?:svg|png|jpe?g|webp|gif)(?:\?|$)/i.test(href) && !/\/doi\//i.test(href)) urls.unshift(href);
+        if (link.tagName.toLowerCase() === 'source') urls = articleFigureImageUrls(link, baseUrl).concat(urls);
+      });
+    }
+    return Array.from(new Set(urls.filter(Boolean))).slice(0, 6);
+  }
+
+  function svgQuality(image) {
+    if (image.contentType !== 'image/svg+xml') return null;
+    try {
+      var xml = atob(String(image.imageData).split(',')[1] || '');
+      if (/<!DOCTYPE|<!ENTITY/i.test(xml)) return {usable:false,quality:'unsafe_svg',rank:0};
+      var doc = new DOMParser().parseFromString(xml,'image/svg+xml');
+      if (doc.querySelector('parsererror') || doc.documentElement.localName!=='svg') return {usable:false,quality:'invalid_svg',rank:0};
+      var bad=false;
+      doc.querySelectorAll('*').forEach(function(el) {
+        if (/^(?:script|foreignObject|iframe|object|embed|animate|animateMotion|animateTransform|set)$/i.test(el.localName)) bad=true;
+        Array.from(el.attributes).forEach(function(a) {
+          if (/^on/i.test(a.name)) bad=true;
+          if (/(?:^|:)href$/i.test(a.name) && !/^#/.test(a.value) && !/^data:image\/(?:png|jpe?g|webp|gif);base64,/i.test(a.value)) bad=true;
+        });
+      });
+      if (bad || /@import|url\(\s*["']?\s*(?:https?:|\/\/|data:)/i.test(xml)) return {usable:false,quality:'unsafe_svg',rank:0};
+      var vector=doc.querySelector('path,polygon,polyline,line,rect,circle,ellipse,text,use');
+      var embedded=Boolean(doc.querySelector('image'));
+      if (vector && image.width>0 && image.height>0) return {usable:true,quality:embedded?'vector_mixed':'vector',rank:(embedded?15000000:30000000)+Math.min(image.width*image.height,10000000)};
+      return null; // A raster-only SVG wrapper still has to pass raster thresholds.
+    } catch (_) { return {usable:false,quality:'invalid_svg',rank:0}; }
+  }
+
+  function measuredQuality(image, role) {
+    var svg=svgQuality(image);
+    if (svg) return svg;
+    var q=articleFigureResolution(image.width,image.height);
+    if (role==='toc' && image.width>=200 && image.height>=90 && image.width*image.height>=24000) q={usable:true,quality:q.quality==='high'?'high':'usable'};
+    return {usable:q.usable,quality:q.quality,rank:q.usable?image.width*image.height:0};
+  }
+
+  async function sameFigureCurrentSrcFallback(job, candidates, trace, cache, role) {
+    if (role !== 'figure' || job.publisher !== 'acs') return null;
+    var seenFallback=new Set();
+    for (var i = 0; i < candidates.length; i += 1) {
+      var candidate = candidates[i], element = candidate && candidate.element;
+      if (!(element instanceof HTMLImageElement) || !element.complete || element.naturalWidth < 1) continue;
+      var scope = visualScope(element);
+      if (!scope || scope.official || scope.label !== candidate.label) continue;
+      var current = normalizeUrl(element.currentSrc || element.src, location.href);
+      if (!current || seenFallback.has(candidate.label+'|'+current)) continue;
+      seenFallback.add(candidate.label+'|'+current);
+      var ids = embeddedJobDois(current);
+      if (!ids.length || ids.some(function (doi) { return doi !== normalizeDoi(job.doi); })) continue;
+      assertBoundCaptureJob(job,current);
+      var fallback = Object.assign({},candidate,{url:current,source:'same_figure_current_src',element:element});
+      var image = cache.get(current);
+      if (image === undefined) { image = await acquireImage(fallback,trace); cache.set(current,image); }
+      if (!image) continue;
+      var quality = measuredQuality(image,role);
+      pushTrace(trace,{stage:'same_figure_fallback',event:'measured',status:quality.quality,url:image.sourceUrl||current,
+        imageWidth:image.width,imageHeight:image.height,message:'label='+candidate.label+';method='+image.method+';networkVariantsExhausted=1'});
+      if (!quality.usable) continue;
+      return {candidate:Object.assign({},fallback,{url:image.sourceUrl||current}),image:image,quality:quality};
+    }
+    return null;
+  }
+
+  async function acquireBestVisual(job, candidates, trace, cache, role) {
+    var best=null;
+    candidates=orderedFigureCandidates(job,candidates,role);
+    for (var i=0;i<candidates.length;i+=1) {
+      if (Date.now()>job.captureDeadline) break;
+      if (isAbortRequested()) throw new Error('user_aborted');
+      var candidate=candidates[i];
+      assertBoundCaptureJob(job,candidate.url);
+      captureLiveUpdate(job,'downloading',{label:role==='toc'?'TOC':candidate.label});
+      try {
+        var image=cache.get(candidate.url);
+        if (image===undefined) { image=await acquireImage(candidate,trace); cache.set(candidate.url,image); }
+        if (!image) continue;
+        // Preserve the URL that actually supplied the bytes, including canvas and redirects.
+        var actual=image.sourceUrl||candidate.url;
+        assertBoundCaptureJob(job,actual);
+        var quality=measuredQuality(image,role);
+        captureLiveUpdate(job,'comparing',{label:role==='toc'?'TOC':candidate.label,quality:quality.quality,width:image.width,height:image.height});
+        pushTrace(trace,{stage:'figure_quality',event:'measured',status:quality.quality,url:actual,imageWidth:image.width,imageHeight:image.height,message:role+';label='+(candidate.label||candidate.kind)+';method='+image.method});
+        if (!quality.usable) continue;
+        if (!best || quality.rank>best.quality.rank) best={candidate:Object.assign({},candidate,{url:actual}),image:image,quality:quality};
+        if (quality.quality==='vector') break;
+      } catch(error) {
+        if (/doi_mismatch|job_.*(?:stale|mismatch)|unbound|user_aborted/.test(String(error.message))) throw error;
+        pushTrace(trace,{stage:'quality_candidate',event:'failed',status:'failed',url:candidate.url,message:String(error.message)});
+      }
+    }
+    if (!best) best = await sameFigureCurrentSrcFallback(job,candidates,trace,cache,role);
+    return best;
+  }
+
+  function pairedDiscoveryReady(job, stable, tocCount, figureCount, elapsedMs, figureQuietMs) {
+    if (stable < 2) return false;
+    var wantsFigures = Boolean(job&&job.opportunisticFigures===true) || (job && typeof job.captureFigures === 'boolean'
+      ? job.captureFigures
+      : String(job && job.mediaNeed || '').indexOf('figures') >= 0);
+    if (!wantsFigures) return Boolean(tocCount || elapsedMs >= 18000);
+    // A TOC can appear several seconds before ACS lazy body figures. Do not let it
+    // terminate a body job before the full-page scroll has had time to settle.
+    if (!figureCount) return elapsedMs >= 18000;
+    return elapsedMs >= 8000 && figureQuietMs >= 4000;
+  }
+
+  async function waitForPairedVisuals(job,trace) {
+    var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started,iframeAttempted=false,accessGateStarted=0,initialDomLogged=false;
+    var toc=[],figures=[],recoveredOfficialToc=[];
+    while (Date.now()-started<90000 && Date.now()<job.captureDeadline) {
+      if (isAbortRequested()) throw new Error('user_aborted');
+      assertBoundCaptureJob(job);
+      var state=pageState(job,trace);
+      if (state.auth || state.challenge) {
+        if (!accessGateStarted) accessGateStarted=Date.now();
+        var waitState=state.auth?'auth_wait':'challenge_wait';
+        captureLiveUpdate(job,waitState);
+        GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:waitState,at:nowIso(),url:location.href,version:VERSION,host:location.hostname});
+        if (state.accessGate && Date.now()-accessGateStarted >= 12000) {
+          var cooldown=markPublisherAccessCooldown(job,'publisher_access_gate');
+          pushTrace(trace,{stage:'publisher_access',event:'cooldown',status:'skipped',url:location.href,
+            message:'publisher='+String(job.publisher||'')+';cooldownMs='+String(PUBLISHER_ACCESS_COOLDOWN_MS)+';until='+String(cooldown&&cooldown.until||0)});
+          throw new Error('publisher_access_gate');
+        }
+        await sleep(1500); continue;
+      }
+      accessGateStarted=0;
+      var gateProgress = GM_getValue(progressKey(job.doi),null);
+      if (gateProgress && /^(?:auth_wait|challenge_wait)$/.test(String(gateProgress.status||''))) {
+        GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:'publisher_verified',at:nowIso(),url:location.href,version:VERSION,host:location.hostname});
+        captureLiveUpdate(job,'discovering');
+      }
+      var wantsToc = job.captureToc === true;
+      var wantsFigures = Boolean(job&&job.opportunisticFigures===true) || (job && typeof job.captureFigures === 'boolean'
+        ? job.captureFigures
+        : String(job.mediaNeed || '').indexOf('figures') >= 0);
+      if(!initialDomLogged){
+        initialDomLogged=true;
+        pushTrace(trace,{stage:'capture_plan',event:'publisher_page',status:'info',url:location.href,
+          message:'route='+captureRouteClass(location.href)+';toc='+Number(wantsToc)+';figures='+Number(wantsFigures)+';evidence='+Number(evidenceCaptureEligible(job))+';pdf='+Number(job.capturePrivatePdf===true)+';captureFigures='+Number(job.captureFigures===true)+';oppFigures='+Number(job.opportunisticFigures===true)+';captureEvidence='+Number(job.captureEvidence===true)+';oppEvidence='+Number(job.opportunisticEvidence===true)+';mediaNeed='+String(job.mediaNeed||'')});
+        tracePublisherDomSnapshot(job,trace,'initial',document,location.href);
+      }
+      toc=wantsToc?collectCandidates(job,trace,document,location.href,'paired_dom',true):[];
+      if(wantsToc&&!toc.length&&recoveredOfficialToc.length)toc=recoveredOfficialToc.slice();
+      figures=wantsFigures?collectArticleFigureCandidates(job,trace,document,location.href,'paired_dom'):[];
+      var now=Date.now(),elapsed=now-started;
+      if(state.shell&&!toc.length&&!figures.length){
+        captureLiveUpdate(job,'page_loading');
+        if(elapsed>=30000)throw new Error('publisher_page_not_ready');
+        await sleep(800);continue;
+      }
+      if (wantsToc && !toc.length && !iframeAttempted && elapsed>7000 &&
+          (job.publisher==='acs'||job.publisher==='wiley'||job.publisher==='rsc'||job.publisher==='ccs')) {
+        iframeAttempted=true;
+        var iframeRows=await iframeCandidates(job,trace);
+        var recovered=iframeRows.filter(function(row){return row&&row.kind==='official';});
+        if(recovered.length){
+          recoveredOfficialToc=recovered.slice();
+          toc=recoveredOfficialToc.slice();
+          pushTrace(trace,{stage:'paired_toc_fallback',event:'iframe_recovery',status:'found',message:'official='+String(toc.length)+';persisted=1'});
+        }
+      }
+      var figureSignature=figures.map(function(x){return x.label+'|'+x.url;}).join('|');
+      if (figureSignature!==lastFigureSignature) {lastFigureSignature=figureSignature;figureChangedAt=Date.now();}
+      var signature=toc.map(function(x){return x.url;}).join('|')+'::'+figureSignature;
+      stable=signature===lastSignature?stable+1:0;lastSignature=signature;
+      if (step<5) {
+        var h=Math.max(document.documentElement.scrollHeight,document.body?document.body.scrollHeight:0);
+        try {window.scrollTo(0,Math.floor(h*step/4));}catch(_){}
+        step+=1;stable=0;
+      } else {
+        var figureQuiet=now-figureChangedAt;
+        if (pairedDiscoveryReady(job,stable,toc.length,figures.length,elapsed,figureQuiet)) break;
+      }
+      await sleep(800);
+    }
+    tracePublisherDomSnapshot(job,trace,'final',document,location.href);
+    pushTrace(trace,{stage:'toc_filter_summary',event:'final',status:toc.length?'found':'none',message:JSON.stringify(job._tocCandidateStats||{})});
+    pushTrace(trace,{stage:'figure_filter_summary',event:'final',status:figures.length?'found':'none',message:JSON.stringify(job._figureCandidateStats||{})});
+    pushTrace(trace,{stage:'discovery_summary',event:'final',status:(toc.length||figures.length)?'found':'none',
+      message:'elapsedMs='+(Date.now()-started)+';toc='+toc.length+';figureLabels='+new Set(figures.map(function(x){return x.label;})).size+';figureVariants='+figures.length+';iframeAttempted='+Number(iframeAttempted)});
+    return {toc:toc,figures:figures};
+  }
+
+  // Private PDF capture is an optional owner-only side channel. It never
+  // determines TOC/body/fulltext task success and can be disabled independently.
+  var PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-bundle-v6';
+  var PRIVATE_PDF_UPLOAD_REVISION = '20261007-pdf-upload-budget-v1';
+  var PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01';
+  var PRIVATE_PDF_CAPTURE_ENDPOINT = WORKER + '/api/private-pdf/import';
+  var PRIVATE_PDF_INVENTORY_ENDPOINT = WORKER + '/api/private-pdf/capture-inventory';
+  var PDF_SERVER_INVENTORY_REVISION = '20261008-owner-d1-lease-inventory-v1';
+  var PRIVATE_PDF_LEASE_KEY = P + 'private-pdf-capture-lease-v1';
+  var PRIVATE_PDF_ATTEMPT_PREFIX = P + 'private-pdf-attempt-v2:';
+  var PRIVATE_PDF_MAX_BYTES = 60 * 1024 * 1024;
+  var PRIVATE_PDF_QUEUE_REVISION = '20261006-private-pdf-queue-v3';
+
+  function privatePdfCaptureEligibleByAddedDate(job) {
+    var addedDate=String(job&&job.addedDate||'').trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(addedDate)&&addedDate>=PRIVATE_PDF_ADDED_DATE_CUTOFF;
+  }
+
+  function privatePdfQueueNeeded(job,now,ignoreCooldown) {
+    if(!privatePdfCaptureEligibleByAddedDate(job)||!privatePdfLease())return false;
+    // A stale local stored/missing receipt is not current proof. Only the
+    // owner-authenticated D1 inventory may authorize a fresh PDF download.
+    if(String(job&&job.privatePdfServerStatus||'')!=='missing')return false;
+    var doi=normalizeDoi(job&&job.doi);if(!doi)return false;
+    var prior=GM_getValue(PRIVATE_PDF_ATTEMPT_PREFIX+doi,null),ts=Number(now||Date.now());
+    var age=prior?Math.max(0,ts-Number(prior.at||0)):Number.POSITIVE_INFINITY;
+    if(ignoreCooldown)return true;
+    if(prior&&prior.status==='not_found'&&age<6*60*60*1000)return false;
+    if(prior&&prior.status==='failed'&&age<30*60*1000)return false;
+    return true;
+  }
+
+  function privatePdfBackfillJobs(queue,stageMap,productionMap,ownerPdfMap) {
+    if(!privatePdfLease())return [];
+    stageMap=stageMap||new Map();productionMap=productionMap||new Map();
+    ownerPdfMap=ownerPdfMap||new Map();
+    return (queue&&Array.isArray(queue.articles)?queue.articles:[]).map(function(raw){
+      var doi=normalizeDoi(raw&&raw.doi),status=privatePdfServerStatus(ownerPdfMap,doi);
+      var source=Object.assign({},raw,{privatePdfServerStatus:status});
+      if(!privatePdfQueueNeeded(source,Date.now()))return null;
+      var stage=stageMap.get(doi)||{},production=productionMap.get(doi)||{},figs={};
+      [stage.figures||{},production.capturedFigures||[]].forEach(function(group){
+        Object.keys(group).forEach(function(k){var f=group[k];if(validReceiptForDoi(f,doi))figs[f.label]=f;});
+      });
+      var job=Object.assign({},source,{doi:doi,publisher:publisherForDoi(doi),state:'private_pdf_gap',
+        captureToc:false,captureFigures:false,captureEvidence:false,
+        opportunisticFigures:true,opportunisticEvidence:true,
+        capturePrivatePdf:true,allowFigureOne:false,capturedFigures:figs,
+        expectedFigureCount:Math.max(0,Number(stage.expectedFigureCount||0),Object.keys(figs).length)});
+      job.mediaNeed=captureMediaNeed(job);
+      return job;
+    }).filter(Boolean).sort(compareMissingCaptureJobs);
+  }
+
+  function privatePdfLease() {
+    var lease=GM_getValue(PRIVATE_PDF_LEASE_KEY,null);
+    if(!lease||lease.scope!=='private_pdf_capture'||!lease.token||Number(lease.expiresAt||0)<=Date.now()+60000){
+      if(lease)GM_deleteValue(PRIVATE_PDF_LEASE_KEY);
+      return null;
+    }
+    return lease;
+  }
+
+  function privatePdfLeaseDiagnostics() {
+    var raw=GM_getValue(PRIVATE_PDF_LEASE_KEY,null),valid=privatePdfLease();
+    return {
+      state:valid?'active':raw?'expired_or_invalid':'missing',
+      present:Boolean(valid),
+      expiresAt:Number(valid&&valid.expiresAt||raw&&raw.expiresAt||0),
+      receivedAt:Number(valid&&valid.receivedAt||raw&&raw.receivedAt||0),
+      revision:String(valid&&valid.revision||raw&&raw.revision||'')
+    };
+  }
+
+  function installPrivatePdfLeaseReceiver() {
+    if(!isGalleryPage()||typeof window==='undefined'||typeof window.addEventListener!=='function')return;
+    window.addEventListener('message',function(event){
+      try{
+        if(event.origin!==location.origin)return;
+        var data=event.data||{};
+        if(data.type!=='osg-private-pdf-capture-lease-v1'||data.scope!=='private_pdf_capture')return;
+        var token=String(data.token||''),expiresAt=Number(data.expiresAt||0),receivedAt=Date.now();
+        if(!/^[A-Za-z0-9_-]{32,160}$/.test(token)||expiresAt<=receivedAt+60000)return;
+        GM_setValue(PRIVATE_PDF_LEASE_KEY,{token:token,expiresAt:expiresAt,scope:'private_pdf_capture',receivedAt:receivedAt,revision:PRIVATE_PDF_CAPTURE_REVISION});
+        window.postMessage({type:'osg-private-pdf-capture-lease-ack-v1',expiresAt:expiresAt,receivedAt:receivedAt,revision:PRIVATE_PDF_CAPTURE_REVISION},location.origin);
+      }catch(_){}
+    });
+  }
+
+  function privatePdfHostAllowed(publisher,value) {
+    try{
+      var h=new URL(value,location.href).hostname.toLowerCase();
+      var sub=function(base){return h===base||h.endsWith('.'+base);};
+      if(publisher==='acs')return sub('pubs.acs.org');
+      if(publisher==='wiley')return sub('onlinelibrary.wiley.com');
+      if(publisher==='nature')return sub('nature.com');
+      if(publisher==='science')return sub('science.org');
+      if(publisher==='rsc')return sub('pubs.rsc.org')||sub('rscj.silverchair-cdn.com');
+      if(publisher==='elsevier')return sub('sciencedirect.com')||sub('sciencedirectassets.com')||sub('cell.com');
+      if(publisher==='ccs')return sub('chinesechemsoc.org')||sub('ccspublishing.org.cn');
+      return false;
+    }catch(_){return false;}
+  }
+
+  function privatePdfCandidateScore(node,url,meta) {
+    var text=String((node&&node.textContent)||'')+' '+String(node&&node.getAttribute&&node.getAttribute('title')||'')+' '+String(node&&node.getAttribute&&node.getAttribute('aria-label')||'');
+    var u=String(url||'').toLowerCase(),t=text.toLowerCase(),score=0;
+    if(meta)score+=120;
+    if(node&&String(node.getAttribute&&node.getAttribute('type')||'').toLowerCase()==='application/pdf')score+=80;
+    if(/\b(?:download\s+)?pdf\b/i.test(text))score+=60;
+    if(/\/doi\/(?:pdf|epdf)\//.test(u)||/\/pdfdirect\//.test(u)||/\.pdf(?:[?#]|$)/.test(u))score+=40;
+    if(/support|supplement|supporting|(?:^|[\/_\.-])suppl(?:ement)?(?:[\/_\.?&#-]|$)|(?:^|[\/_\.-])si(?:[\/_\.?&#-]|$)|esm|appendix/.test(t+' '+u))score-=100;
+    return score;
+  }
+
+  function privatePdfUrlLooksStrong(value) {
+    var u=String(value||'').toLowerCase();
+    return /\.pdf(?:[?#]|$)/.test(u)||/\/doi\/(?:pdf|epdf)\//.test(u)||/\/pdfdirect\//.test(u)||/\/article-?pdf\//.test(u)||/[?&](?:file|pdf|pdfurl|url)=[^&#]*\.pdf(?:[&#]|$)/.test(u);
+  }
+
+  function rscDeterministicPdfUrl(job) {
+    var doi=normalizeDoi(job&&job.doi),suffix=doi.split('/')[1]||'';
+    if(String(job&&job.publisher||publisherForDoi(doi))!=='rsc')return '';
+    var match=/^([a-z])(\d)([a-z]{2})/i.exec(suffix);
+    if(!match)return '';
+    return 'https://pubs.rsc.org/en/content/articlepdf/'+String(2020+Number(match[2]))+'/'+match[3].toLowerCase()+'/'+suffix.toLowerCase();
+  }
+
+  function discoverExplicitPdfCandidates(job) {
+    assertBoundCaptureJob(job);
+    var publisher=job.publisher||publisherForDoi(job.doi),seen=new Set(),rows=[];
+    function add(raw,node,meta){
+      var url=normalizeUrl(raw,location.href);
+      if(!url||seen.has(url)||!privatePdfHostAllowed(publisher,url))return;
+      if(node&&node.closest&&node.closest('aside,nav,header,footer,[class*="related" i],[class*="recommend" i],[class*="reference" i]'))return;
+      var score=privatePdfCandidateScore(node,url,meta);
+      if(score<30)return;
+      seen.add(url);rows.push({url:url,score:score,source:meta?'citation_pdf_url':'explicit_pdf_link'});
+    }
+    Array.from(document.querySelectorAll('meta[name="citation_pdf_url" i],meta[property="citation_pdf_url" i]')).forEach(function(m){add(m.getAttribute('content'),m,true);});
+    Array.from(document.querySelectorAll('link[type="application/pdf" i][href],a[href],iframe[src],embed[src],object[data]')).forEach(function(a){
+      var href=a.getAttribute('href')||a.getAttribute('src')||a.getAttribute('data')||'';
+      var text=String(a.textContent||'')+' '+String(a.getAttribute('title')||'')+' '+String(a.getAttribute('aria-label')||'');
+      if(a.tagName==='LINK'||privatePdfUrlLooksStrong(href)||/\bpdf\b/i.test(href+' '+text))add(href,a,false);
+    });
+    if(publisher==='rsc'){
+      var rscUrl=rscDeterministicPdfUrl(job);
+      if(rscUrl&&!seen.has(rscUrl)&&privatePdfHostAllowed('rsc',rscUrl)){
+        seen.add(rscUrl);rows.push({url:rscUrl,score:260,source:'rsc_articlepdf_route'});
+      }
+    }
+    return rows.sort(function(a,b){return b.score-a.score;}).slice(0,6);
+  }
+
+  function privatePdfViewerCandidates(job,html,baseUrl) {
+    var publisher=job.publisher||publisherForDoi(job.doi),seen=new Set(),rows=[];
+    if(!html||String(html).length>3*1024*1024)return rows;
+    function add(raw,source,score){
+      raw=String(raw||'').replace(/&amp;/g,'&').replace(/\\u002[fF]/g,'/').replace(/\\\//g,'/');
+      try{raw=decodeURIComponent(raw);}catch(_){}
+      var url=normalizeUrl(raw,baseUrl||location.href);
+      if(!url||url===normalizeUrl(baseUrl,baseUrl)||seen.has(url)||!privatePdfHostAllowed(publisher,url)||!privatePdfUrlLooksStrong(url))return;
+      if(/support|supplement|supporting|(?:^|[\/_\.-])suppl(?:ement)?(?:[\/_\.?&#-]|$)|(?:^|[\/_\.-])si(?:[\/_\.?&#-]|$)|esm|appendix/i.test(url))return;
+      seen.add(url);rows.push({url:url,score:Number(score||60),source:source||'pdf_viewer_asset'});
+    }
+    try{
+      var doc=new DOMParser().parseFromString(String(html),'text/html');
+      Array.from(doc.querySelectorAll('meta[name="citation_pdf_url" i],meta[property="citation_pdf_url" i]')).forEach(function(n){add(n.getAttribute('content'),'viewer_citation_pdf',140);});
+      Array.from(doc.querySelectorAll('iframe[src],embed[src],object[data],link[href],a[href]')).forEach(function(n){
+        var raw=n.getAttribute('src')||n.getAttribute('data')||n.getAttribute('href')||'';
+        if(privatePdfUrlLooksStrong(raw))add(raw,'viewer_dom_asset',100);
+      });
+    }catch(_){}
+    var normalized=String(html).replace(/\\u002[fF]/g,'/').replace(/\\\//g,'/');
+    var named=/(?:pdfUrl|pdf_url|fileUrl|file_url|downloadUrl|download_url|pdfPath|pdf_path|file)\s*["']?\s*[:=]\s*["']([^"']+)["']/gi,m;
+    while((m=named.exec(normalized))!==null)add(m[1],'viewer_script_named',120);
+    var rawUrls=/(?:https?:\/\/|\/)[^"'<>\\\s]+(?:\.pdf(?:[?#][^"'<>\\\s]*)?|\/doi\/(?:pdf|epdf)\/[^"'<>\\\s]+|\/pdfdirect\/[^"'<>\\\s]+)/gi;
+    while((m=rawUrls.exec(normalized))!==null)add(m[0],'viewer_script_url',80);
+    return rows.sort(function(a,b){return b.score-a.score;}).slice(0,6);
+  }
+
+  function privatePdfBytesValid(buffer) {
+    var bytes=new Uint8Array(buffer||new ArrayBuffer(0));
+    if(bytes.length<1024||bytes.length>PRIVATE_PDF_MAX_BYTES)return false;
+    if(String.fromCharCode.apply(null,bytes.slice(0,5))!=='%PDF-')return false;
+    try{return new TextDecoder('latin1').decode(bytes.slice(Math.max(0,bytes.length-4096))).indexOf('%%EOF')>=0;}catch(_){return false;}
+  }
+
+  function privatePdfHtmlFromBuffer(buffer,contentType) {
+    var bytes=new Uint8Array(buffer||new ArrayBuffer(0));
+    if(!bytes.length||bytes.length>3*1024*1024)return '';
+    var prefix='';try{prefix=new TextDecoder('utf-8').decode(bytes.slice(0,Math.min(bytes.length,2048)));}catch(_){}
+    if(!/html|text|javascript|json/i.test(String(contentType||''))&&!/^\s*</.test(prefix))return '';
+    try{return new TextDecoder('utf-8').decode(bytes);}catch(_){return '';}
+  }
+
+  function privatePdfDiscoveryWaitMs(job) {
+    var publisher=job.publisher||publisherForDoi(job.doi);
+    if(publisher==='ccs')return 20000;
+    if(publisher==='elsevier'||publisher==='rsc')return 15000;
+    return 10000;
+  }
+
+  async function waitForPrivatePdfCandidates(job,trace) {
+    var started=Date.now(),waitMs=privatePdfDiscoveryWaitMs(job),rows=[];
+    captureLiveUpdate(job,'private_pdf_wait',{pdfStatus:'waiting_page',pdfStage:'等待页面和动态 PDF 控件'});
+    while(Date.now()-started<waitMs){
+      if(isAbortRequested())throw new Error('user_aborted');
+      assertBoundCaptureJob(job);
+      rows=discoverExplicitPdfCandidates(job);
+      if(rows.length){
+        captureLiveUpdate(job,'private_pdf_discovery',{pdfStatus:'searching',pdfStage:'已发现 '+rows.length+' 个 PDF 候选'});
+        pushTrace(trace,{stage:'private_pdf_discovery',event:'complete',status:'found',message:'explicit_candidates='+rows.length+';waitedMs='+(Date.now()-started)});
+        return rows;
+      }
+      captureLiveUpdate(job,'private_pdf_discovery',{pdfStatus:'searching',pdfStage:'查找 PDF 入口'});
+      await sleep(750);
+    }
+    pushTrace(trace,{stage:'private_pdf_discovery',event:'complete',status:'none',message:'explicit_candidates=0;waitedMs='+(Date.now()-started)});
+    captureLiveUpdate(job,'private_pdf_not_found',{pdfStatus:'not_found',pdfStage:'等待后仍未找到 PDF 入口'});
+    return [];
+  }
+
+  async function fetchPrivatePdfWithBrowserSession(job,candidate,trace,seen,depth) {
+    assertBoundCaptureJob(job);
+    var target;
+    try{target=new URL(candidate.url,location.href);}catch(_){return null;}
+    if(target.origin!==location.origin)return null;
+    captureLiveUpdate(job,'private_pdf_browser',{pdfStatus:'browser_download',pdfStage:'浏览器会话下载'});
+    var started=Date.now(),abort=new AbortController(),timer=setTimeout(function(){abort.abort();},45000);
+    try{
+      var response=await fetch(target.href,{method:'GET',credentials:'include',cache:'no-store',redirect:'follow',
+        headers:{Accept:'application/pdf,application/octet-stream;q=0.9,text/html;q=0.5,*/*;q=0.1'},signal:abort.signal});
+      var buffer=await response.arrayBuffer(),status=Number(response.status||0),finalUrl=response.url||target.href,contentType=String(response.headers&&response.headers.get&&response.headers.get('content-type')||'');
+      pushTrace(trace,{stage:'private_pdf_fetch',event:'browser_response',status:status>=200&&status<300?'ok':'http_error',
+        httpStatus:status,url:finalUrl,byteLength:buffer&&buffer.byteLength||0,message:'transport=browser_session;contentType='+contentType+';durationMs='+(Date.now()-started)});
+      if(status<200||status>=300){var e=new Error('private_pdf_browser_http_'+status);e.httpStatus=status;throw e;}
+      if(!privatePdfHostAllowed(job.publisher||publisherForDoi(job.doi),finalUrl))throw new Error('private_pdf_redirect_host_mismatch');
+      captureLiveUpdate(job,'private_pdf_validation',{pdfStatus:'validating',pdfStage:'校验下载内容',pdfBytes:buffer&&buffer.byteLength||0});
+      if(privatePdfBytesValid(buffer))return {buffer:buffer,sourceUrl:finalUrl,byteLength:buffer.byteLength,transport:'browser_session'};
+      var html=privatePdfHtmlFromBuffer(buffer,contentType),nested=privatePdfViewerCandidates(job,html,finalUrl);
+      if(nested.length&&Number(depth||0)<2){
+        pushTrace(trace,{stage:'private_pdf_viewer',event:'asset_discovery',status:'found',url:finalUrl,message:'viewer_assets='+nested.length});
+        for(var i=0;i<nested.length;i+=1){
+          try{var resolved=await fetchExplicitPdf(job,nested[i],trace,seen,Number(depth||0)+1);if(resolved)return resolved;}catch(_){}
+        }
+      }
+      throw new Error(html?'private_pdf_viewer_no_valid_pdf':'private_pdf_invalid_bytes');
+    }catch(error){
+      pushTrace(trace,{stage:'private_pdf_fetch',event:'browser_failed',status:'fallback',httpStatus:Number(error&&error.httpStatus||0),
+        url:target.href,message:'transport=browser_session;'+captureLiveError(error&&error.message||error)});
+      return null;
+    }finally{clearTimeout(timer);}
+  }
+
+  async function fetchExplicitPdf(job,candidate,trace,seen,depth) {
+    assertBoundCaptureJob(job);
+    seen=seen||new Set();depth=Number(depth||0);
+    var key=normalizeUrl(candidate&&candidate.url,location.href);
+    if(!key||seen.has(key))throw new Error('private_pdf_viewer_loop');
+    seen.add(key);
+    var browserPdf=await fetchPrivatePdfWithBrowserSession(job,candidate,trace,seen,depth);
+    if(browserPdf)return browserPdf;
+    captureLiveUpdate(job,'private_pdf_gm',{pdfStatus:'gm_download',pdfStage:'备用下载'});
+    var started=Date.now();
+    try{
+      var response=await gmRequest({method:'GET',url:candidate.url,responseType:'arraybuffer',timeout:45000,
+        headers:{Accept:'application/pdf,application/octet-stream;q=0.9,text/html;q=0.5,*/*;q=0.1',Referer:location.href}});
+      var status=Number(response.status||0),buffer=response.response,finalUrl=response.finalUrl||candidate.url;
+      var headers=String(response.responseHeaders||''),contentType=(headers.match(/(?:^|\r?\n)content-type:\s*([^\r\n]+)/i)||[])[1]||'';
+      pushTrace(trace,{stage:'private_pdf_fetch',event:'response',status:status>=200&&status<300?'ok':'http_error',
+        httpStatus:status,url:finalUrl,byteLength:buffer&&buffer.byteLength||0,message:'transport=gm;contentType='+contentType+';durationMs='+(Date.now()-started)});
+      if(status<200||status>=300){var e=new Error('private_pdf_http_'+status);e.httpStatus=status;throw e;}
+      if(!privatePdfHostAllowed(job.publisher||publisherForDoi(job.doi),finalUrl))throw new Error('private_pdf_redirect_host_mismatch');
+      captureLiveUpdate(job,'private_pdf_validation',{pdfStatus:'validating',pdfStage:'校验下载内容',pdfBytes:buffer&&buffer.byteLength||0});
+      if(privatePdfBytesValid(buffer))return {buffer:buffer,sourceUrl:finalUrl,byteLength:buffer.byteLength,transport:'gm'};
+      var html=privatePdfHtmlFromBuffer(buffer,contentType),nested=privatePdfViewerCandidates(job,html,finalUrl);
+      if(nested.length&&depth<2){
+        pushTrace(trace,{stage:'private_pdf_viewer',event:'asset_discovery',status:'found',url:finalUrl,message:'viewer_assets='+nested.length+';transport=gm'});
+        for(var i=0;i<nested.length;i+=1){
+          try{var resolved=await fetchExplicitPdf(job,nested[i],trace,seen,depth+1);if(resolved)return resolved;}catch(_){}
+        }
+      }
+      throw new Error(html?'private_pdf_viewer_no_valid_pdf':'private_pdf_invalid_bytes');
+    }catch(error){
+      pushTrace(trace,{stage:'private_pdf_fetch',event:'failed',status:'failed',httpStatus:Number(error&&error.httpStatus||0),
+        url:candidate.url,message:'transport=gm;'+captureLiveError(error&&error.message||error)});
+      throw error;
+    }
+  }
+
+  function privatePdfUploadRequest(job,options,trace) {
+    assertBoundCaptureJob(job);
+    if(controllerPaused())return Promise.reject(new Error('private_pdf_upload_cancelled'));
+    var target=new URL(String(options&&options.url||''));
+    if(target.origin+target.pathname!==PRIVATE_PDF_CAPTURE_ENDPOINT||String(options.method||'').toUpperCase()!=='POST')return Promise.reject(new Error('private_pdf_upload_target_invalid'));
+    var started=Date.now(),bytes=Number(options.data&&options.data.byteLength||0);
+    // One budget covers both transports; large files get extra time. A download
+    // that already consumed the capture deadline cannot start a new long upload.
+    var budget=Math.min(150000,90000+Math.ceil(Math.max(0,bytes-5*1024*1024)/(1024*1024))*1000);
+    if(Number(job.captureDeadline)>0)budget=Math.min(budget,Number(job.captureDeadline)-started);
+    if(budget<=0)return Promise.reject(new Error('private_pdf_upload_deadline'));
+    return new Promise(function(resolve,reject){
+      var settled=false,transport='gm',gmHandle=null,nativeAbort=null,firstTimer=null,totalTimer=null,bindingTimer=null;
+      var transportStarted=started;
+      function record(event,status,error,response){
+        pushTrace(trace,{stage:'private_pdf_upload',event:event,status:status,url:PRIVATE_PDF_CAPTURE_ENDPOINT,
+          httpStatus:Number(response&&response.status||0),byteLength:bytes,
+          message:'revision='+PRIVATE_PDF_UPLOAD_REVISION+';transport='+transport+';durationMs='+(Date.now()-transportStarted)+';totalMs='+(Date.now()-started)+';budgetMs='+budget+(error?';cause='+captureLiveError(error.message||error):'')});
+      }
+      function abortGm(){var h=gmHandle;gmHandle=null;try{if(h&&typeof h.abort==='function')h.abort();}catch(_){}}
+      function stop(){clearTimeout(firstTimer);clearTimeout(totalTimer);clearInterval(bindingTimer);}
+      function finish(error,response){
+        if(settled)return;
+        if(!error){try{assertBoundCaptureJob(job);if(controllerPaused())throw new Error('private_pdf_upload_cancelled');}catch(e){error=e;}}
+        settled=true;stop();
+        if(error){abortGm();if(nativeAbort)nativeAbort.abort();record(/cancelled|stale|unbound|mismatch/.test(error.message||'')?'cancelled':'failed','failed',error);reject(error);}
+        else{record('transport_response',Number(response&&response.status)>=200&&Number(response&&response.status)<300?'ok':'http_error',null,response);resolve(response);}
+      }
+      function fallback(error){
+        if(settled||transport!=='gm')return;
+        record('transport_failed','failed',error);
+        if(/Request was blocked by the user|Refused to connect.*blocked/i.test(String(error&&error.message||''))){finish(error);return;}
+        if(!currentCaptureJob(job)||controllerPaused()){finish(new Error('private_pdf_upload_cancelled'));return;}
+        var remaining=budget-(Date.now()-started);
+        if(remaining<=0){finish(new Error('private_pdf_upload_budget_exhausted'));return;}
+        // Set the state before abort: abort callbacks may be synchronous.
+        transport='native';clearTimeout(firstTimer);abortGm();transportStarted=Date.now();
+        nativeAbort=new AbortController();record('fallback','start',error);record('transport_start','start');
+        nativeControllerRequest(Object.assign({},options,{timeout:remaining,signal:nativeAbort.signal})).then(function(response){finish(null,response);}).catch(function(fetchError){
+          if(settled)return;
+          record('transport_failed','failed',fetchError);
+          var failure=new Error('private_pdf_upload_transport_failed:gm='+captureLiveError(error&&error.message||error)+';native='+captureLiveError(fetchError&&fetchError.message||fetchError));
+          failure.controllerFallbackTried=true;finish(failure);
+        });
+      }
+      record('start','start');record('transport_start','start');
+      totalTimer=setTimeout(function(){finish(new Error('private_pdf_upload_budget_exhausted'));},budget);
+      bindingTimer=setInterval(function(){if(!currentCaptureJob(job)||controllerPaused())finish(new Error('private_pdf_upload_cancelled'));},500);
+      var firstBudget=Math.max(1,Math.floor(budget/2));
+      firstTimer=setTimeout(function(){fallback(new Error('gm_request_timeout'));},firstBudget);
+      try{
+        gmHandle=GM_xmlhttpRequest(Object.assign({},options,{timeout:firstBudget,
+          onload:function(response){if(!settled&&transport==='gm')finish(null,response);},
+          onerror:function(error){if(!settled&&transport==='gm')fallback(new Error('gm_request_error:'+captureLiveError(error&&(error.error||error.statusText||error.status)||'unknown')));},
+          ontimeout:function(){fallback(new Error('gm_request_timeout'));},
+          onabort:function(){if(!settled&&transport==='gm')finish(new Error('gm_request_aborted'));}
+        }));
+        if(settled||transport!=='gm')abortGm();
+      }catch(error){fallback(new Error('gm_request_exception:'+captureLiveError(error&&error.message||error)));}
+    });
+  }
+
+  async function uploadPrivatePdf(job,pdf,lease,trace) {
+    assertBoundCaptureJob(job);
+    captureLiveUpdate(job,'private_pdf_upload',{pdfStatus:'uploading',pdfStage:'上传私有 PDF',pdfBytes:Number(pdf&&pdf.byteLength||0)});
+    var u=new URL(PRIVATE_PDF_CAPTURE_ENDPOINT);
+    u.searchParams.set('doi',normalizeDoi(job.doi));
+    u.searchParams.set('publisher',job.publisher||publisherForDoi(job.doi));
+    u.searchParams.set('articleUrl',location.href);
+    u.searchParams.set('sourceUrl',pdf.sourceUrl);
+    u.searchParams.set('versionKind','unknown');
+    u.searchParams.set('controllerRevision',CONTROLLER_REVISION);
+    var response=await privatePdfUploadRequest(job,{method:'POST',url:u.toString(),timeout:90000,
+      headers:{'content-type':'application/pdf',authorization:'Bearer '+lease.token},data:pdf.buffer},trace);
+    assertBoundCaptureJob(job);
+    var status=Number(response.status||0),raw=String(response.responseText||''),body={};
+    try{body=JSON.parse(raw||'{}');}catch(_){}
+    if(status<200||status>=300){
+      var error=new Error('private_pdf_upload_http_'+status+':'+String(body.error||'unknown'));
+      error.httpStatus=status;throw error;
+    }
+    if(!body||body.stored!==true||normalizeDoi(body.doi)!==normalizeDoi(job.doi)||!body.contentHash)throw new Error('private_pdf_receipt_invalid');
+    pushTrace(trace,{stage:'private_pdf_upload',event:'complete',status:'ok',url:PRIVATE_PDF_CAPTURE_ENDPOINT,
+      byteLength:Number(body.byteLength||pdf.byteLength||0),message:'stored=1;active='+String(Boolean(body.active))+';verification='+String(Boolean(body.requiresVerification))});
+    captureLiveUpdate(job,'private_pdf_saved',{pdfStatus:'stored',pdfStage:'已收到 stored=1 回执',pdfBytes:Number(body.byteLength||pdf.byteLength||0)});
+    return body;
+  }
+
+  async function maybeCapturePrivatePdf(job,trace) {
+    if(!job||!currentCaptureJob(job)||!privatePdfCaptureEligibleByAddedDate(job))return null;
+    var serverStatus=String(job.privatePdfServerStatus||'unknown');
+    if(serverStatus==='ready'){
+      captureLiveUpdate(job,'private_pdf_saved',{pdfStatus:'already_stored',pdfStage:'云端已验证存在；无需重抓'});
+      return {status:'already_stored',reason:'owner_cloud_inventory_ready'};
+    }
+    if(serverStatus!=='missing'||job.capturePrivatePdf!==true){
+      return {status:'skipped',reason:serverStatus==='pending'||serverStatus==='failed'?'owner_pdf_verification_pending':'owner_pdf_inventory_unknown'};
+    }
+    var lease=privatePdfLease();
+    if(!lease){
+      captureLiveUpdate(job,'private_pdf_no_lease',{pdfStatus:'skipped',pdfStage:'未获得 owner PDF 授权'});
+      pushTrace(trace,{stage:'private_pdf_lease',event:'missing',status:'skipped',message:'eligible_addedDate='+String(job.addedDate||'')+';revision='+PRIVATE_PDF_CAPTURE_REVISION});
+      return {status:'skipped',reason:'capture_lease_missing',revision:PRIVATE_PDF_CAPTURE_REVISION};
+    }
+    pushTrace(trace,{stage:'private_pdf_lease',event:'active',status:'ok',message:'expiresAt='+String(Number(lease.expiresAt||0))+';revision='+String(lease.revision||PRIVATE_PDF_CAPTURE_REVISION)});
+    var doi=normalizeDoi(job.doi),key=PRIVATE_PDF_ATTEMPT_PREFIX+doi,prior=GM_getValue(key,null),now=Date.now();
+    if(prior&&prior.status==='stored'&&serverStatus==='ready'&&now-Number(prior.at||0)<30*24*60*60*1000){
+      if(String(prior.revision||'')!==PRIVATE_PDF_CAPTURE_REVISION){
+        prior=Object.assign({},prior,{revision:PRIVATE_PDF_CAPTURE_REVISION,bundleUpgradedAt:Date.now()});
+        GM_setValue(key,prior);
+      }
+      captureLiveUpdate(job,'private_pdf_saved',{pdfStatus:'already_stored',pdfStage:'复用已存储 PDF 回执',pdfBytes:Number(prior.byteLength||0)});
+      return {status:'already_stored',documentId:prior.documentId||'',byteLength:Number(prior.byteLength||0),revision:PRIVATE_PDF_CAPTURE_REVISION};
+    }
+    // Automatic runs respect a not-found cooldown. An explicit missing-only Start
+    // is a deliberate retry request and must actually rediscover the page.
+    if(prior&&prior.status==='not_found'&&now-Number(prior.at||0)<6*60*60*1000&&!job.missingOnly&&!job.manualRunId){
+      captureLiveUpdate(job,'private_pdf_not_found',{pdfStatus:'not_found_cached',pdfStage:'沿用自动冷却记录'});
+      return {status:'not_found_cached'};
+    }
+    var candidates=await waitForPrivatePdfCandidates(job,trace);
+    assertBoundCaptureJob(job);
+    if(controllerPaused())throw new Error('private_pdf_upload_cancelled');
+    if(!candidates.length){
+      GM_setValue(key,{status:'not_found',at:Date.now(),revision:PRIVATE_PDF_CAPTURE_REVISION});
+      return {status:'not_found'};
+    }
+    var lastError=null,pdf=null;
+    for(var i=0;i<Math.min(4,candidates.length);i+=1){
+      try{
+        if(Number(job.captureDeadline)>0&&Date.now()>=job.captureDeadline)throw new Error('private_pdf_upload_deadline');
+        pdf=await fetchExplicitPdf(job,candidates[i],trace,new Set(),0);
+        break;
+      }catch(error){
+        lastError=error;
+        if(!currentCaptureJob(job)||controllerPaused())throw error;
+        if(error&&error.message==='private_pdf_upload_deadline')break;
+        var code=Number(error&&error.httpStatus||0);
+        // A publisher 401 is not a rejection of the separate private API lease.
+        if(code===401)break;
+        if(code===429)break;
+        if(code===403&&String(job.publisher||publisherForDoi(doi))!=='rsc')break;
+      }
+    }
+    // A valid PDF is independent of the upload route. Retry its same bytes in
+    // the upload helper; an API failure must not restart publisher downloads.
+    if(pdf){
+      try{
+        var receipt=await uploadPrivatePdf(job,pdf,lease,trace);
+        assertBoundCaptureJob(job);
+        if(controllerPaused())throw new Error('private_pdf_upload_cancelled');
+        var saved={status:'stored',at:Date.now(),documentId:String(receipt.documentId||''),contentHash:String(receipt.contentHash||''),byteLength:Number(receipt.byteLength||pdf.byteLength||0),active:Boolean(receipt.active),revision:PRIVATE_PDF_CAPTURE_REVISION};
+        GM_setValue(key,saved);return saved;
+      }catch(error){
+        lastError=error;
+        if(Number(error&&error.httpStatus||0)===401)GM_deleteValue(PRIVATE_PDF_LEASE_KEY);
+        pushTrace(trace,{stage:'private_pdf_upload',event:'receipt_failed',status:'failed',httpStatus:Number(error&&error.httpStatus||0),url:PRIVATE_PDF_CAPTURE_ENDPOINT,byteLength:pdf.byteLength,message:captureLiveError(error&&error.message||error)});
+      }
+    }
+    assertBoundCaptureJob(job);
+    if(controllerPaused())throw new Error('private_pdf_upload_cancelled');
+    var failed={status:'failed',at:Date.now(),reason:captureLiveError(lastError&&lastError.message||lastError||'unknown'),revision:PRIVATE_PDF_CAPTURE_REVISION};
+    GM_setValue(key,failed);
+    captureLiveUpdate(job,'private_pdf_failed',{pdfStatus:'failed',pdfStage:'PDF 抓取失败',pdfError:failed.reason});
+    return failed;
+  }
+
+  async function finishPairedJob(job,result,trace,token) {
+    if(!currentCaptureJob(job))return Object.assign({},result,{status:'aborted',reason:'manual_run_superseded'});
+    try {
+      var pdfStartedAt=Date.now();
+      var privatePdfResult=await maybeCapturePrivatePdf(job,trace);
+      if(job._captureTiming)job._captureTiming.pdfMs=Math.max(0,Date.now()-pdfStartedAt);
+      if(privatePdfResult)result.privatePdf=privatePdfResult;
+      var pdfOnly=job.capturePrivatePdf===true&&job.captureToc!==true&&job.captureFigures!==true&&job.captureEvidence!==true&&job.opportunisticEvidence!==true&&job.opportunisticFigures!==true;
+      if(job.capturePrivatePdf===true&&privatePdfResult&&!/^(?:stored|already_stored)$/.test(String(privatePdfResult.status||''))){
+        var pdfReason=String(privatePdfResult.reason||('private_pdf_'+String(privatePdfResult.status||'failed')));
+        result.status=pdfOnly?'failed':result.status==='success'?'partial':result.status;
+        result.reason=(String(result.reason||'')+(result.reason?';':'')+'pdf='+pdfReason).slice(0,240);
+      }
+    } catch (privatePdfError) {
+      var privatePdfReason=String(privatePdfError&&privatePdfError.message||privatePdfError||'private_pdf_failed')
+        .replace(/https?:\/\/\S+/gi,'[url]')
+        .replace(/[A-Za-z0-9+/_=-]{40,}/g,'[redacted]').slice(0,180);
+      result.privatePdf={status:'failed',reason:privatePdfReason};
+      if(job.capturePrivatePdf===true){
+        var pdfOnlyCatch=job.captureToc!==true&&job.captureFigures!==true&&job.captureEvidence!==true&&job.opportunisticEvidence!==true&&job.opportunisticFigures!==true;
+        result.status=pdfOnlyCatch?'failed':result.status==='success'?'partial':result.status;
+        result.reason=(String(result.reason||'')+(result.reason?';':'')+'pdf='+privatePdfReason).slice(0,240);
+      }
+      if(typeof captureLiveUpdate==='function')captureLiveUpdate(job,'private_pdf_failed',{pdfStatus:'failed',pdfStage:'PDF 抓取异常',pdfError:privatePdfReason});
+      if(typeof pushTrace==='function')pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:privatePdfReason});
+    }
+    if(result.status==='failed'&&captureResultHasUsefulLayer(result))result.status='partial';
+    if(!currentCaptureJob(job)||controllerPaused())return Object.assign({},result,{status:'aborted',reason:'manual_run_superseded'});
+    if(job.missingOnly&&result.figures&&result.figures.discovered>0){var cp=readCheckpoint(job.doi);cp.figureCoverage={expected:Math.max(Number(cp.figureCoverage&&cp.figureCoverage.expected||0),Number(result.figures.discovered)),observedAt:Date.now()};saveCheckpoint(job.doi,cp,job);}
+    result.retryAfterMs=Math.max(Number(result.retryAfterMs||0),Number((result.fulltext||{}).retryAfterMs||0));
+    if(job._captureTiming)pushTrace(trace,{stage:'capture_timing',event:'final',status:'info',
+      message:'totalMs='+Math.max(0,Date.now()-Number(job._captureTiming.startedAtMs||Date.now()))+';discoveryMs='+Number(job._captureTiming.discoveryMs||0)+';evidenceMs='+Number(job._captureTiming.evidenceMs||0)+';pdfMs='+Number(job._captureTiming.pdfMs||0)});
+    result.doi=job.doi;result.jobId=job.jobId;result.version=VERSION;result.controllerRevision=CONTROLLER_REVISION;result.finishedAt=nowIso();
+    GM_setValue(traceKey(job.doi),{doi:job.doi,jobId:job.jobId,status:result.status,trace:trace,finishedAt:result.finishedAt});
+    enqueueCaptureReport(job,trace,result.status,result.reason,true);
+    // Durable local report is queued BEFORE the controller can close this publisher tab.
+    GM_setValue(resultKey(job.doi),result);
+    GM_deleteValue(progressKey(job.doi));
+    // The persistent Gallery sender sends/acknowledges the report independently of this tab.
+    autoReportJob=null;
+    return result;
+  }
+
+
+  function overnightRetryEligible(prior, now) {
+    if (!prior) return true;
+    if (prior.status==='success') return false;
+    var elapsed=now-Date.parse(prior.finishedAt||0);
+    var count=Math.max(1,Number(prior.retryCount||1));
+    var detail=[prior.reason,(prior.toc||{}).reason,(prior.fulltext||{}).reason]
+      .concat(((prior.figures||{}).items||[]).filter(function(x){return x.status==='failed';}).map(function(x){return x.reason;})).join(';');
+    if (/doi_mismatch|receipt_invalid|stale_or_unbound/i.test(detail)) {
+      return elapsed>=Math.max(6*60*60*1000,Number(prior.retryAfterMs||0));
+    }
+    if (/permission|blocked by the user|Refused to connect|(?:http_|status[=:])(401|403|429)|auth_|challenge_|publisher_access_gate/i.test(detail)) {
+      return elapsed>=Math.max(30*60*1000,Number(prior.retryAfterMs||0));
+    }
+    // One immediate retry after an exact publisher-routing repair. This bypasses
+    // only stale pre-fix controller failures; once the new revision has attempted
+    // the DOI, normal bounded backoff applies again.
+    if (String(prior.doi||'').indexOf('10.1016/')===0
+        && /^(?:bound_publisher_heartbeat_missing|capture_tab_job_mismatch)$/.test(String(prior.reason||''))
+        && prior.publisherTaskBindingRevision!==PUBLISHER_TASK_BINDING_REVISION) return true;
+    // One retry of CCS's old missing-injection failure after this exact host fix.
+    if (String(prior.doi||'').indexOf('10.31635/')===0 && prior.reason==='bound_publisher_heartbeat_missing'
+        && prior.retryPolicyRevision!==CAPTURE_HOTFIX_REVISION) return true;
+    if (/gm_request|gm_then_fetch|Failed to fetch|NetworkError|timeout|heartbeat_missing|upload_http_50[234]|queue_http_50[234]|signal is aborted|publisher_page_not_ready/i.test(detail)) {
+      return elapsed>=Math.max([5,15,30,60][Math.min(count-1,3)]*60*1000,Number(prior.retryAfterMs||0));
+    }
+    if (count>=3 && elapsed<12*60*60*1000) return false;
+    if (prior.figures && prior.figures.status==='staged' && (prior.toc||{}).status!=='failed') return elapsed>=6*60*60*1000;
+    return elapsed>=Math.min(count*30,180)*60*1000;
+  }
+  function checkpointKey(doi) { return P+'verified-capture:'+VERSION+':1790082000000:'+normalizeDoi(doi); }
+  function readCheckpoint(doi) {
+    var stored=GM_getValue(checkpointKey(doi),null);
+    return stored&&stored.doi===normalizeDoi(doi)&&stored.version===VERSION?stored:{doi:normalizeDoi(doi),version:VERSION,figures:{}};
+  }
+  function saveCheckpoint(doi, value, job) {
+    if(job&&!currentCaptureJob(job))return false;
+    value.doi=normalizeDoi(doi);value.version=VERSION;value.updatedAt=Date.now();
+    GM_setValue(checkpointKey(doi),value);
+  }
+
+  function pairedJobs(queue,media) {
+    if (!Array.isArray(queue.articles) || queue.articles.length!==Number(queue.webpageDoiCount) || Number(queue.mediaGeneration)!==1790082000000) throw new Error('paired_queue_requires_current_complete_registry');
+    var seen=new Set();
+    var jobs=queue.articles.map(function(raw,index) {
+      var doi=normalizeDoi(raw.doi);
+      if (!doi||seen.has(doi)) throw new Error('paired_queue_invalid_or_duplicate_doi');seen.add(doi);
+      // Keep the complete registry for DOI integrity but schedule only papers
+      // actually added to Gallery on/after October 1, never historical/undated.
+      if(!recentFullCaptureEligible(raw))return null;
+      var record=(media.items||{})[doi]||{};
+      var toc=record.toc||{};
+      var hasVisual=Boolean(toc.available && toc.imageUrl);
+      var official=Boolean(hasVisual && !/fallback/i.test(toc.reason||''));
+      var natureScienceFamily=isNatureScienceFamilyJob(raw);
+      var acceptedFallback=Boolean(hasVisual && /fallback/i.test(toc.reason||''));
+      var visualSatisfied=official||acceptedFallback;
+      var latestAddedDate=String(queue.latestAddedDate||'');
+      var isLatest=Boolean(latestAddedDate && String(raw.addedDate||'')===latestAddedDate);
+      if(visualSatisfied)return null;
+      // Only a missing card visual creates a media queue job. Body figures are
+      // collected opportunistically during this already-required visit, but body
+      // completeness never creates a standalone queue item.
+      return Object.assign({},raw,{
+        doi:doi,
+        publisher:publisherForDoi(doi),
+        mediaNeed:'toc',
+        state:'no_visual',
+        captureToc:true,
+        captureFigures:false,
+        captureEvidence:false,
+        opportunisticFigures:true,
+        opportunisticEvidence:false,
+        capturePrivatePdf:false,
+        allowFigureOne:!official,
+        _queueIndex:index
+      });
+    });
+    // Scheduler tiers: missing TOC first (latest additions, then journal priority),
+    // owner PDF second. Body figures and text never form standalone queue tiers.
+    var latestAddedDate = String(queue.latestAddedDate || '');
+    jobs=jobs.filter(Boolean);
+    jobs.sort(function(a,b) {
+      var delta = compareCaptureJobs(a,b,latestAddedDate);
+      return delta || a._queueIndex-b._queueIndex;
+    });
+    return jobs.map(function(job){delete job._queueIndex;return job;});
+  }
+
+  function evidenceMissingDois(queue,evidenceInventory) {
+    var existing=new Set(),byDoi=new Map();
+    (queue&&Array.isArray(queue.articles)?queue.articles:[]).forEach(function(raw){var doi=normalizeDoi(raw&&raw.doi);if(doi)byDoi.set(doi,raw);});
+    (evidenceInventory&&Array.isArray(evidenceInventory.items)?evidenceInventory.items:[]).forEach(function(row){
+      var doi=normalizeDoi(row&&row.doi),raw=byDoi.get(doi);
+      if(!doi||!row||row.available===false)return;
+      // For Oct-1+ papers, abstract-only/partial evidence is not enough for the
+      // new one-visit bundle; use the open page to try to reach complete text.
+      if(!recentFullCaptureEligible(raw)||String(row.evidenceLevel||'')==='complete')existing.add(doi);
+    });
+    return new Set((queue&&Array.isArray(queue.articles)?queue.articles:[]).map(function(raw){return normalizeDoi(raw&&raw.doi);})
+      .filter(function(doi){return doi&&!existing.has(doi);}));
+  }
+
+  function evidenceBackfillJobs() {
+    // Deliberately disabled: missing/partial article text is not a queue trigger.
+    return [];
+  }
+
+  installPrivatePdfLeaseReceiver();
+  installManualRestartListener();
+  installMenu();
+
+  if (isGalleryPage()) {
+    mountCaptureLivePanel();
+    startAutomaticCaptureReports();
+    var staleTakeover=retireStaleControllerState();
+    if(staleTakeover.retired&&!controllerPaused()){
+      badge('已自动淘汰旧 controller '+staleTakeover.observed+'；正在按最新规则重新生成缺项队列','#175cd3');
+      setTimeout(function(){forceStartFromHead();},250);
+    }else if(location.hash==='#osg-start-from-head'){
+      try{history.replaceState(null,'',location.pathname+location.search);}catch(_){}
+      forceStartFromHead();
+    }else setTimeout(controllerTick, 1500);
+    setInterval(controllerTick, 60 * 1000);
+  } else {
+    publisherBoot();
+  }
+})();
