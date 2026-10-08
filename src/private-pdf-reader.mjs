@@ -202,7 +202,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
       (mode === 'download') !== (url.searchParams.get('download') === '1')) {
     throw new Error('pdf_source_invalid');
   }
-  return url.toString();
+  return { url: url.toString(), headerVerified: data.headerVerified === true };
 }
 async function checkPdfHeader(fileUrl) {
   // Check the actual PDF bytes rather than treating an iframe DOM node or a
@@ -231,11 +231,20 @@ async function checkPdfHeader(fileUrl) {
 async function verifiedPdfSource(sessionToken, mode = 'view') {
   let lastError;
   for (let attempt = 0; attempt < 2; attempt += 1) {
-    const fileUrl = await getPdfSource(sessionToken, mode);
+    const source = await getPdfSource(sessionToken, mode);
+    // The updated Worker has already checked R2 object size, the %PDF-
+    // signature and a self-tested v2 ticket within the authorized POST.
+    // Avoid a second China-to-edge roundtrip. An older Worker or a legacy
+    // opaque ticket must still use the independent 206 file preflight.
+    if (source.headerVerified) {
+      document.documentElement.dataset.privatePdfPreflight = 'edge';
+      return source.url;
+    }
     try {
       setPhase('preflight', mode === 'download' ? '正在确认下载文件…' : '正在确认 PDF 文件响应…');
-      await checkPdfHeader(fileUrl);
-      return fileUrl;
+      await checkPdfHeader(source.url);
+      document.documentElement.dataset.privatePdfPreflight = 'browser';
+      return source.url;
     } catch (error) {
       lastError = error;
       // Refresh a rejected short-lived ticket once, but never loop on 404,

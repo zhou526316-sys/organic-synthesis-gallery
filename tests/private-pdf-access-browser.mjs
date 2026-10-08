@@ -85,7 +85,7 @@ const papers=Array.from({length:72},(_,index)=>({
 const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
 async function contextWith(capabilities,openResult={available:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=opaque'},options={}){
  const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900},locale:options.locale||'en-US'});
- const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,openModes:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
+ const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,openModes:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
  if(options.pendingQueue)state.queueRows.set('fixture-owner',new Map(papers.map(paper=>[paper.doi,{doi:paper.doi,state:'pending',revision:1,createdAt:Date.now(),updatedAt:Date.now()}])));
  await context.addInitScript(fixtureOrigin=>{
   if(location.origin!==fixtureOrigin)return;
@@ -172,6 +172,7 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    }
    if(range){
     state.privateRangeCalls++;
+    if(range==='bytes=0-15')state.privateHeaderProbeCalls++;
     const match=/^bytes=(\d+)-(\d*)$/.exec(range);
     const start=match?Number(match[1]):0,end=match&&match[2]?Math.min(Number(match[2]),cardPdf.length-1):cardPdf.length-1;
     const body=cardPdf.subarray(start,end+1);
@@ -274,6 +275,19 @@ try{
   const optionsMenu=page.locator('.private-pdf-more').first();
   assert.match(await optionsMenu.locator('.private-pdf-download-button').getAttribute('href'),/mode=download/);
   assert.match(await optionsMenu.locator('.private-pdf-compat-button').getAttribute('href'),/compat=1/);
+ });
+ await test('edge-validated PDF fast path skips the redundant browser header probe',async()=>{
+  const verified={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],verified);
+  const page=await gallery(context,true);
+  const opened=page.waitForEvent('popup');
+  await page.locator('.card .private-pdf-button').first().click();
+  const target=await opened;
+  await waitForNode(page,()=>state.privateFileCalls>=1);
+  assert.equal(state.privateCalls,1);
+  assert.equal(state.privateHeaderProbeCalls,0,'edge-verified signed ticket must not fetch bytes 0-15 a second time');
+  assert.deepEqual(state.openModes,['view']);
+  await target.close();
  });
  await test('a rejected PDF header stays in safe Gallery shell rather than navigating to Unauthorized',async()=>{
   const {context,state}=await contextWith(['private_pdf_read'],undefined,{fileStatus:401});
