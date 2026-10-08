@@ -121,3 +121,15 @@ test('read-time projection corrects existing persisted index with late progress 
   assert.equal(overview.body.items[0].status,'failed');
   assert.equal(metrics.writes,0,'read-only reconciliation must not mutate historical R2');
 });
+
+test('terminal report survives more than twelve distinct late checkpoints',()=>{
+  const terminal=summary(data(),100,'final-job');
+  const checkpoints=Array.from({length:25},(_,i)=>summary(
+    data({final:false,status:'progress',tocStatus:'stored',
+      trace:[{stage:'diagnostic_context',message:JSON.stringify({eventId:job+':checkpoint:'+i})}]}),
+    101+i,'checkpoint-'+i));
+  const history=tmUniqueReportHistory({attempts:[...checkpoints,terminal]},12);
+  assert.equal(history.length,12);
+  assert.ok(history.some(item=>item.final===true),'terminal cannot be evicted by progress retries');
+  assert.equal(tmEffectiveReport({attempts:history}).status,'failed');
+});
