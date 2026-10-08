@@ -314,7 +314,7 @@
       started: s.runStartedAt ? new Date(s.runStartedAt).toLocaleTimeString() : '尚未开始本轮',
       last: s.lastAt ? new Date(s.lastAt).toLocaleTimeString() + ' · ' + captureLiveAgeText(s.ageSeconds) : '尚无采集进展',
       stale: s.active && s.ageSeconds >= 45 ? '一段时间没有新进展：可能正在等待网络或页面验证，不等于抓取失败。' : '',
-      error: lastError || '无', publication: s.publication, delivery: automaticReportDisplay()+(pendingImageTransferKeys().length?' · 待补传图片 '+pendingImageTransferKeys().length+' 张':'')+(pendingOwnerPdfKeys().length?' · 待补传私人PDF '+pendingOwnerPdfKeys().length+' 篇':'')
+      error: lastError || '无', publication: s.publication, delivery: automaticReportDisplay()+(typeof pendingImageTransferKeys==='function'&&pendingImageTransferKeys().length?' · 待补传图片 '+pendingImageTransferKeys().length+' 张':'')+(typeof pendingOwnerPdfKeys==='function'&&pendingOwnerPdfKeys().length?' · 待补传私人PDF '+pendingOwnerPdfKeys().length+' 篇':'')
     };
   }
 
