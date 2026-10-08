@@ -18,7 +18,9 @@ async function scenario(name, options = {}) {
   const ctx = vm.createContext({
     sleep: async () => {},
     captureLiveUpdate: () => {}, // The observer has independent ownership/count/privacy tests.
-    VERSION: '6.2.20', location: { href: 'https://pubs.acs.org/doi/' + doi },
+    VERSION: '6.2.20', IMAGE_UPLOAD_TOTAL_BUDGET_MS: 24000,
+    ACS_MEDIA_RECOVERY_REVISION:'20261008-acs-viewer-upload-v1',
+    location: { href: 'https://pubs.acs.org/doi/' + doi },
     FIGURE_STAGE_ENDPOINT: '/api/article-figures/stage',
     normalizeDoi: x => String(x || '').toLowerCase(),
     assertBoundCaptureJob: () => {
@@ -27,7 +29,8 @@ async function scenario(name, options = {}) {
       return doi;
     },
     pushTrace: (list, event) => list.push(event),
-    postJson: async (url, payload) => {
+    // The real stage path now uses the bounded same-bytes upload helper.
+    postJsonBudgeted: async (url, payload) => {
       requests.push({ url, payload });
       if (options.error) throw options.error;
       return options.receipt === undefined ? valid : options.receipt;
