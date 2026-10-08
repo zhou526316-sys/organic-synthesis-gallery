@@ -83,6 +83,29 @@ test('obvious_normal_priority_exclude_can_use_concise_reason_without_detailed_ev
   assert.equal(out.formalReview.rejected[0].reason, 'Out of scope');
   assert.deepEqual(validateFormalPartition(f.staging, out.formalReview, out.markerFields, out.pendingQueue), []);
 });
+test('partial_publisher_date_stays_unknown_with_crossref_created_provenance', () => {
+  const f = fixture();
+  f.handoff.unresolved[0].date = '';
+  f.handoff.unresolved[0].dateUnverified = true;
+  f.handoff.unresolved[0].createdDate = '2026-09-22';
+  f.handoff.unresolved[0].sources = ['crossref:0002-7863:created'];
+  f.staging.decisions[0].date = '';
+  const out = convertPrepublishReview(f.staging, f.handoff, options);
+  assert.equal(out.formalReview.accepted[0].date, '');
+  assert.equal(out.formalReview.accepted[0].dateUnverified, true);
+  assert.equal(out.formalReview.accepted[0].createdDate, '2026-09-22');
+});
+rejected('unverified_date_without_created_provenance_must_fail', f => {
+  f.handoff.unresolved[0].date = '';
+  f.staging.decisions[0].date = '';
+}, /bibliographic_fields_missing/);
+rejected('unknown_date_before_journal_activation_must_fail', f => {
+  f.handoff.unresolved[2].date = '';
+  f.handoff.unresolved[2].dateUnverified = true;
+  f.handoff.unresolved[2].createdDate = '2026-09-18';
+  f.handoff.unresolved[2].sources = ['crossref:2096-5745:created'];
+  f.staging.decisions[2].date = '';
+}, /journal_or_activation_invalid/);
 test('doi_normalization_does_not_drop_a_partition', () => {
   const f = fixture(); f.staging.decisions[0].doi = 'https://doi.org/10.99999/CONVERTER-INCLUDE';
   assert.equal(convertPrepublishReview(f.staging, f.handoff, options).formalReview.accepted[0].doi, '10.99999/converter-include');

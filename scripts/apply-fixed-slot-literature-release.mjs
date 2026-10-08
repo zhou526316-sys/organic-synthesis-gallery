@@ -99,6 +99,9 @@ for (const row of bundle.formalReview.accepted || []) {
   const card = {
     journal: row.journal, title: row.title, doi, date: row.date, url: `https://doi.org/${doi}`,
     new: true, authors: Array.isArray(row.authors) ? row.authors : [], addedDate: slot.slice(0, 10),
+    ...(row.dateUnverified === true && !row.date ? {
+      dateUnverified: true, createdDate: row.createdDate || '',
+    } : {}),
   };
   const old = byDoi.get(doi);
   card.titleZh = chineseTitle({ ...row, titleZh: row.titleZh || old?.titleZh });

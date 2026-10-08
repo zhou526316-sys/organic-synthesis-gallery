@@ -69,11 +69,22 @@ export function convertPrepublishReview(staging, handoff, { generatedAt, sourceS
     requireValue(['include', 'exclude', 'pending'].includes(original.decision), `invalid_decision:${doi}`);
     const row = { ...structuredClone(candidate), ...structuredClone(original), doi };
     for (const key of ['title', 'journal', 'date']) row[key] = text(original[key]) || text(candidate[key]);
-    requireValue(row.title && row.journal && /^\d{4}-\d{2}-\d{2}$/.test(row.date), `bibliographic_fields_missing:${doi}`);
+    const exactPublicationDate = /^\d{4}-\d{2}-\d{2}$/.test(row.date);
+    // Some Crossref deposit records have only partial publication dates.
+    // Preserve unknown publication date instead of inventing created/deposit date as a publication date.
+    const datedDepositEvidence = row.date === '' && candidate.dateUnverified === true
+      && /^\d{4}-\d{2}-\d{2}$/.test(candidate.createdDate || '')
+      && (candidate.sources || []).some(source => /^crossref:.*:created$/.test(source));
+    requireValue(row.title && row.journal && (exactPublicationDate || datedDepositEvidence),
+      `bibliographic_fields_missing:${doi}`);
     requireValue(!text(candidate.journal) || row.journal === candidate.journal, `journal_changed_without_reconciliation:${doi}`);
     requireValue(!text(candidate.date) || row.date === candidate.date, `date_changed_without_reconciliation:${doi}`);
     const journal = registry.get(row.journal);
-    requireValue(journal && (!journal.activeFrom || row.date >= journal.activeFrom), `journal_or_activation_invalid:${doi}`);
+    // createdDate is used only for prospective discovery provenance when the publisher date is unknown,
+    // never copied into row.date; verifiedThrough must remain held for the date-unknown records.
+    const activationEvidenceDate = exactPublicationDate ? row.date : candidate.createdDate;
+    requireValue(journal && (!journal.activeFrom || activationEvidenceDate >= journal.activeFrom),
+      `journal_or_activation_invalid:${doi}`);
     if (candidate.reviewPriority === 'high') row.reviewPriority = 'high';
     row.reason = text(original.reason) || text(original.evidenceBasis);
     const requiresDetailedEvidence = row.decision === 'include' || row.decision === 'pending'
