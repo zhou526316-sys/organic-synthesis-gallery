@@ -97,6 +97,7 @@
   var INVENTORY_PLAN_CACHE_KEY = P + 'inventory-plan-cache-v1';
   var INVENTORY_PLAN_CACHE_TTL_MS = 10 * 60 * 1000;
   var INVENTORY_HEDGE_DELAY_MS = 900;
+  var INVENTORY_TRANSPORT_REPAIR_REVISION = '20261008-bounded-layers-labeled-aborts-v1';
   var INVENTORY_REQUEST_TIMEOUT_MS = 12000;
   var ARCHITECTURE_MEMBERSHIP_STATE_KEY = P + 'architecture-membership-shadow-v1';
   var ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY = P + 'architecture-membership-observer-v1';
@@ -1255,12 +1256,14 @@ function embeddedJobDois(value) {
   }
 
   async function nativeControllerRequest(options) {
-    var abort = new AbortController();
+    var abort = new AbortController(),timeoutTriggered=false,externalCancelled=false;
     var timeoutMs = Math.max(1000, Number(options && options.timeout || 45000));
-    var timer = setTimeout(function () { abort.abort(); }, timeoutMs);
+    var timer = setTimeout(function () {
+      timeoutTriggered=true;abort.abort(new Error('controller_native_timeout'));
+    }, timeoutMs);
     var outerSignal=options&&options.signal;
-    function cancelNative(){abort.abort();}
-    if(outerSignal){if(outerSignal.aborted)abort.abort();else outerSignal.addEventListener('abort',cancelNative,{once:true});}
+    function cancelNative(){externalCancelled=true;abort.abort(new Error('controller_hedge_cancelled'));}
+    if(outerSignal){if(outerSignal.aborted)cancelNative();else outerSignal.addEventListener('abort',cancelNative,{once:true});}
     try {
       var method = String(options && options.method || 'GET').toUpperCase();
       var headers = Object.assign({}, options && options.headers || {});
@@ -1294,6 +1297,12 @@ function embeddedJobDois(value) {
         responseHeaders: responseHeaders,
         finalUrl: response.url || String(options.url)
       };
+    } catch(error) {
+      // Distinguish timeout/hedge cancellation from a publisher HTTP status
+      // without logging URLs, authentication headers or private PDF tokens.
+      if(timeoutTriggered)throw new Error('controller_native_timeout_'+timeoutMs+'ms');
+      if(externalCancelled)throw new Error('controller_native_hedge_cancelled');
+      throw error;
     } finally {
       clearTimeout(timer);
       if(outerSignal)outerSignal.removeEventListener('abort',cancelNative);
@@ -1396,31 +1405,42 @@ function embeddedJobDois(value) {
     return new Promise(function(resolve,reject){
       var settled=false,pending=0,gmStarted=false,errors=[],hedgeTimer=null,deadlineTimer=null;
       function clean(){if(hedgeTimer!==null)clearTimeout(hedgeTimer);if(deadlineTimer!==null)clearTimeout(deadlineTimer);}
+      function failureDetails(){
+        // Keep the layer+transport cause without placing request URLs or tokens
+        // in diagnostics; unknown inventory is never evidence of PDF absence.
+        return errors.map(function(x){return x.transport+':'+captureLiveError(x.error&&x.error.message||x.error);}).join(';');
+      }
+      function combinedFailure(label){
+        var err=new Error(prefix+'_'+label+(errors.length?';'+failureDetails():''));
+        err.retryAfterMs=Math.max(0,...errors.map(function(x){return Number(x.error&&x.error.retryAfterMs||0);}));
+        return err;
+      }
       function succeed(value,transport,started){
-        if(settled)return;settled=true;clean();try{nativeAbort.abort();}catch(_){}
+        if(settled)return;settled=true;clean();
+        if(transport==='gm')try{nativeAbort.abort(new Error('inventory_hedge_winner_gm'));}catch(_){}
         try{Object.defineProperty(value,'__inventoryMeta',{value:{transport:transport,elapsedMs:Math.max(0,Date.now()-started)},enumerable:false});}catch(_){}
         resolve(value);
       }
       function definitive(error){var status=Number(error&&error.httpStatus||0);return status>=400&&status<500;}
-      function fail(error){
-        if(settled)return;errors.push(error);pending=Math.max(0,pending-1);
-        if(definitive(error)){settled=true;clean();try{nativeAbort.abort();}catch(_){}reject(error);return;}
+      function fail(error,transport){
+        if(settled)return;errors.push({error:error,transport:transport});pending=Math.max(0,pending-1);
+        if(definitive(error)){settled=true;clean();try{nativeAbort.abort(new Error('inventory_definitive_http'));}catch(_){}reject(error);return;}
         if(!gmStarted){startGm();return;}
-        if(pending===0){settled=true;clean();reject(errors[errors.length-1]||new Error(prefix+'_inventory_failed'));}
+        if(pending===0){settled=true;clean();reject(combinedFailure('inventory_transport_failed'));}
       }
       function consume(promise,transport){
         var started=Date.now();pending++;
         promise.then(function(response){
           if(settled)return;
-          try{succeed(parseMetadataJson(response,prefix),transport,started);}catch(error){fail(error);}
-        }).catch(fail);
+          try{succeed(parseMetadataJson(response,prefix),transport,started);}catch(error){fail(error,transport);}
+        }).catch(function(error){fail(error,transport);});
       }
       function startGm(){if(gmStarted||settled)return;gmStarted=true;consume(gmRequest(gmOptions,true),'gm');}
       consume(nativeControllerRequest(nativeOptions),'browser');
       hedgeTimer=setTimeout(startGm,INVENTORY_HEDGE_DELAY_MS);
       deadlineTimer=setTimeout(function(){
-        if(settled)return;settled=true;clean();try{nativeAbort.abort();}catch(_){}
-        reject(errors[errors.length-1]||new Error(prefix+'_inventory_deadline'));
+        if(settled)return;settled=true;clean();try{nativeAbort.abort(new Error('inventory_deadline'));}catch(_){}
+        reject(combinedFailure('inventory_deadline'));
       },timeoutMs+INVENTORY_HEDGE_DELAY_MS+750);
     });
   }
@@ -4625,7 +4645,9 @@ function embeddedJobDois(value) {
     }
     updateInventoryProgress(run,'pdf','loading',started,'read_only;scope='+dois.length);
     var batches=[];for(var i=0;i<dois.length;i+=75)batches.push(dois.slice(i,i+75));
-    var all=await Promise.all(batches.map(async function(batch){
+    var all=[];
+    for(var offset=0;offset<batches.length;offset+=2){
+      var pair=await Promise.all(batches.slice(offset,offset+2).map(async function(batch){
       try{
         var response=await inventoryReadMetadataJson({method:'POST',url:PRIVATE_PDF_INVENTORY_ENDPOINT,
           timeout:16000,headers:{'content-type':'application/json',authorization:'Bearer '+lease.token},
@@ -4641,7 +4663,9 @@ function embeddedJobDois(value) {
       }catch(error){
         return {items:[],error:captureLiveError(error&&error.message||error)};
       }
-    }));
+      }));
+      all=all.concat(pair);
+    }
     var items=[],errors=[];
     all.forEach(function(part,index){items=items.concat(part.items||[]);
       if(part.error)errors.push('PDF库存第'+(index+1)+'批:'+part.error);});
@@ -4707,17 +4731,25 @@ function embeddedJobDois(value) {
       updateInventoryProgress(run,'media',complete?'done':'error',started,'chunks='+chunks.length+';rows='+mediaRows.length);
       return {items:mediaRows};
     }
-    var all=await Promise.all([
-      readMedia(),
-      safe('TOC库存','toc',function(){return inventoryReadMetadataJson({method:'GET',url:CAPTURE_INDEX_URL+'?ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{}},'queue');},
-        function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count);},'toc',2),
-      safe('正文图库存','figures',function(){return inventoryReadMetadataJson({method:'GET',url:WORKER+'/api/article-figures/staged?inventory=1&ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{}},'queue');},
-        function(x){return x&&x.schemaVersion==='capture-inventory-v1'&&x.complete===true&&Array.isArray(x.items)&&x.items.length===Number(x.count);},'figures',2),
-      safe('文本库存','evidence',function(){return inventoryReadMetadataJson({method:'GET',url:EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,
+    var tasks=[
+      function(){return readMedia();},
+      function(){return safe('TOC库存','toc',function(){return inventoryReadMetadataJson({method:'GET',url:CAPTURE_INDEX_URL+'?ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{}},'queue');},
+        function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count);},'toc',2);},
+      function(){return safe('正文图库存','figures',function(){return inventoryReadMetadataJson({method:'GET',url:WORKER+'/api/article-figures/staged?inventory=1&ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{}},'queue');},
+        function(x){return x&&x.schemaVersion==='capture-inventory-v1'&&x.complete===true&&Array.isArray(x.items)&&x.items.length===Number(x.count);},'figures',2);},
+      function(){return safe('文本库存','evidence',function(){return inventoryReadMetadataJson({method:'GET',url:EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,
         headers:{authorization:'Bearer '+String(writeToken()||'')}},'private');},
-        function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count)&&x.truncated!==true;},'evidence',2),
-      readOwnerPdfInventory(queue.articles,run)
-    ]);
+        function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count)&&x.truncated!==true;},'evidence',2);},
+      function(){return readOwnerPdfInventory(queue.articles,run);}
+    ];
+    // Limit publisher-browser inventory read pressure: each metadata read
+    // can use a browser + extension hedge, so five simultaneous layers can
+    // create ten or more overlapping requests and obscure true abort causes.
+    var all=new Array(tasks.length);
+    for(var start=0;start<tasks.length;start+=2){
+      var segment=await Promise.all(tasks.slice(start,start+2).map(function(fn){return fn();}));
+      segment.forEach(function(value,index){all[start+index]=value;});
+    }
     if(!all[4].complete&&all[4].reason&&!/^owner_lease_/.test(all[4].reason))errors.push(all[4].reason);
     return {media:all[0],tocs:all[1],figures:all[2],evidence:all[3],pdf:all[4],errors:errors,readAt:nowIso()};
   }
