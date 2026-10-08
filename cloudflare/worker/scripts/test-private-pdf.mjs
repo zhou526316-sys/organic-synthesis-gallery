@@ -73,7 +73,7 @@ db.sessions.set(await sha256('owner-token'),{token_hash:await sha256('owner-toke
 db.sessions.set(await sha256('other-token'),{token_hash:await sha256('other-token'),user_id:'other',expires_at:now+86400000});
 db.verified.add('owner');db.verified.add('other');
 const fixtureClaim='fixture-owner-claim-not-production';
-const env={DB:db,PDF_PRIVATE:bucket,BRIDGE_WRITE_TOKEN:'fixture-fast-ticket-secret',PRIVATE_PDF_READ_ENABLED:'1',PRIVATE_PDF_CAPTURE_ENABLED:'0',PRIVATE_PDF_PROCESSING_ENABLED:'0',PRIVATE_PDF_OWNER_BOOTSTRAP_HASH:await sha256(fixtureClaim)};
+const env={DB:db,PDF_PRIVATE:bucket,BRIDGE_WRITE_TOKEN:'fixture-fast-ticket-secret',PRIVATE_PDF_READ_ENABLED:'1',PRIVATE_PDF_CAPTURE_ENABLED:'0',PRIVATE_PDF_PROCESSING_ENABLED:'0',PRIVATE_PDF_OPEN_TIMING_ENABLED:'1',PRIVATE_PDF_OWNER_BOOTSTRAP_HASH:await sha256(fixtureClaim)};
 let passed=0;async function test(name,fn){await fn();passed++;console.log('PRIVATE_PDF_PASS '+name);}
 
 await test('anonymous status is fail-open to publisher behavior',async()=>{
@@ -131,6 +131,28 @@ await test('owner open returns only a short-lived opaque file URL',async()=>{
   assert.equal(r.status,200);assert.equal(r.body.available,true);accessUrl=r.body.url;assert.ok(/token=v2\./.test(accessUrl));assert.equal(r.body.ticketMode,'stateless-v2');assert.ok(!accessUrl.includes('fixture.pdf'));
   assert.equal(r.body.headerVerified,true,'edge verifies the real PDF header during open');
   assert.equal(bucket.headCalls,0,'initial open does not issue a separate R2 HEAD');
+  const timing=r.headers?.['server-timing']||'';
+  assert.match(timing,/session;dur=\d+/);
+  assert.match(timing,/capability;dur=\d+/);
+  assert.match(timing,/document;dur=\d+/);
+  assert.match(timing,/r2_get;dur=\d+/);
+  assert.match(timing,/ticket_create;dur=\d+/);
+  assert.match(timing,/total;dur=\d+/);
+  assert.doesNotMatch(timing,/fixture|pdf1|owner|token|private-pdf|10\.1021|https/i);
+  assert.ok(!JSON.stringify(r.headers).includes('fixture-token'));
+});
+await test('timing is disabled without diagnostic feature flag',async()=>{
+  env.PRIVATE_PDF_OPEN_TIMING_ENABLED='0';
+  try {
+    const r=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','owner-token',{method:'POST'}),env);
+    assert.equal(r.body.available,true);
+    assert.equal(r.headers?.['server-timing'],undefined);
+  } finally { env.PRIVATE_PDF_OPEN_TIMING_ENABLED='1'; }
+});
+await test('owner PDF timing is not exposed to a denied ordinary account',async()=>{
+  const r=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','other-token',{method:'POST'}),env);
+  assert.equal(r.status,403);
+  assert.equal(r.headers?.['server-timing'],undefined);
 });
 await test('temporary URL serves inline PDF bytes with no-store',async()=>{
   const res=await servePrivatePdf(new Request(accessUrl),env,{});
