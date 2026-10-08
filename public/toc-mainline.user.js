@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.48
+// @version      6.2.49
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -55,7 +55,9 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.48';
+  var INSTALL_REVISION = '6.2.49';
+  var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
+  var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 18000;
   var GAP_RECOVERY_REVISION = '20261008-gap-recovery-v1';
   var CAPTURE_OBSERVABILITY_REVISION = '20261007-capture-observability-v1';
   var CONTROLLER_READ_REVISION = '20261007-native-metadata-first-v1';
@@ -1653,9 +1655,10 @@ function embeddedJobDois(value) {
     return error;
   }
 
-  async function fetchPostJson(url, payload, token) {
+  async function fetchPostJson(url, payload, token, timeoutMs) {
     var abort = new AbortController();
-    var timer = setTimeout(function () { abort.abort(); }, 45000);
+    var budget = Math.max(1000, Math.min(45000, Number(timeoutMs||45000)));
+    var timer = setTimeout(function () { abort.abort(); }, budget);
     try {
       var response = await fetch(url, {method:'POST',mode:'cors',credentials:'omit',cache:'no-store',signal:abort.signal,
         headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify(payload)});
@@ -1698,6 +1701,31 @@ function embeddedJobDois(value) {
     return body;
   }
 
+  async function postJsonBudgeted(url,payload,token,budgetMs) {
+    var start=Date.now(),budget=Math.max(1000,Math.min(IMAGE_UPLOAD_TOTAL_BUDGET_MS,Number(budgetMs||IMAGE_UPLOAD_TOTAL_BUDGET_MS)));
+    function left(){return Math.max(0,budget-(Date.now()-start));}
+    var gmOptions={method:'POST',url:url,timeout:Math.max(1000,Math.min(7500,left())),
+      headers:{'content-type':'application/json',authorization:'Bearer '+token},data:JSON.stringify(payload)};
+    var response;
+    try{
+      response=await gmRequest(gmOptions,true);
+      var status=Number(response&&response.status||0),raw=String(response&&response.responseText||''),body={};
+      try{body=JSON.parse(raw||'{}');}catch(_){}
+      if(status>=200&&status<300)return body;
+      var readHeader=function(h){return headerValue(response&&response.responseHeaders,h);};
+      if(!shouldNativeRetryUpload(response,url))throw uploadResponseError(status,body,raw,readHeader,'gm_request');
+    }catch(error){
+      // Never bypass explicit HTTP denials, Retry-After, or a GM timeout:
+      // the upstream may have committed a write even when its reply is delayed.
+      if(Number(error&&error.httpStatus||0)>0||Number(error&&error.retryAfterMs||0)>0
+        ||/gm_request_timeout|gm_request_aborted|blocked by the user|Refused to connect/i.test(String(error&&error.message||error)))throw error;
+      if(!/gm_request_error|gm_request_exception|gm_then_fetch_failed/i.test(String(error&&error.message||error)))throw error;
+    }
+    var remaining=left();
+    if(remaining<1000)throw new Error('image_upload_budget_exhausted');
+    return fetchPostJson(url,payload,token,remaining);
+  }
+
   function shouldNativeRetryUpload(response,url) {
     var status=Number(response && response.status || 0);
     var raw=String(response && response.responseText || '').trim();
@@ -1717,23 +1745,34 @@ function embeddedJobDois(value) {
   }
 
   async function postAcquiredImage(job, candidate, image, trace, endpoint, payload, token, stage) {
-    for (var attempt = 0; attempt < 3; attempt += 1) {
-      assertBoundCaptureJob(job, candidate.url);
-      try { return await postJson(endpoint, payload, token); }
-      catch (error) {
-        pushTrace(trace,{stage:stage,event:'failed',status:'failed',url:endpoint,httpStatus:Number(error && error.httpStatus || 0),
-          byteLength:image.byteLength,message:'label='+String(payload.label || payload.kind || '')+';uploadAttempt='+(attempt+1)+';'+String(error && error.message || error)});
-        if (attempt >= 2 || !retryableImageUpload(error)) throw error;
-        var delay = Math.max(1500 * Math.pow(2, attempt), Number(error.retryAfterMs || 0));
-        // Do not violate Retry-After or silently outlive the task; leave the failure queued for later.
-        if (delay > 30000 || job.captureDeadline && Date.now() + delay + 1000 >= job.captureDeadline) throw error;
-        pushTrace(trace,{stage:stage,event:'upload_retry_wait',status:'retrying',url:endpoint,httpStatus:Number(error.httpStatus || 0),
-          message:'same_acquired_image;nextAttempt='+(attempt+2)+';delayMs='+delay+';publisherDownloads=0'});
-        captureLiveUpdate(job,'uploading',{label:payload.label || 'TOC',error:'上传暂时失败，保留已下载图片，'+Math.ceil(delay/1000)+'秒后仅重试上传'});
-        await sleep(delay);
+    var started=Date.now(),deadline=started+IMAGE_UPLOAD_TOTAL_BUDGET_MS,lastError=null;
+    for(var attempt=0;attempt<2;attempt++){
+      assertBoundCaptureJob(job,candidate.url);
+      var left=Math.max(0,Math.min(deadline-Date.now(),Number(job.captureDeadline||deadline)-Date.now()));
+      if(left<1200)break;
+      try{
+        var receipt=await postJsonBudgeted(endpoint,payload,token,left);
+        pushTrace(trace,{stage:stage,event:'budgeted_upload_complete',status:'ok',url:endpoint,
+          message:'revision='+ACS_MEDIA_RECOVERY_REVISION+';attempt='+(attempt+1)+';elapsedMs='+(Date.now()-started)});
+        return receipt;
+      }catch(error){
+        lastError=error;
+        pushTrace(trace,{stage:stage,event:'failed',status:'failed',url:endpoint,httpStatus:Number(error&&error.httpStatus||0),
+          byteLength:image.byteLength,message:'label='+String(payload.label||payload.kind||'')+';uploadAttempt='+(attempt+1)+';elapsedMs='+(Date.now()-started)+';'+String(error&&error.message||error)});
+        var ms=String(error&&error.message||error),wait=Math.max(900,Number(error&&error.retryAfterMs||0));
+        // An aborted/timeout request may have written successfully upstream.
+        // Do not launch a second concurrent write without a receipt.
+        if(/timeout|abort|budget_exhausted/i.test(ms)||attempt>=1||!retryableImageUpload(error)||wait>3000||Date.now()+wait+1500>=deadline){
+          pushTrace(trace,{stage:stage,event:'upload_deferred',status:'deferred',url:endpoint,
+            message:'budgetMs='+IMAGE_UPLOAD_TOTAL_BUDGET_MS+';elapsedMs='+(Date.now()-started)+';gap_preserved=1;retryAfterMs='+Number(error&&error.retryAfterMs||0)});
+          throw error;
+        }
+        pushTrace(trace,{stage:stage,event:'upload_retry_wait',status:'retrying',url:endpoint,httpStatus:Number(error&&error.httpStatus||0),
+          message:'same_acquired_image;nextAttempt=2;delayMs='+wait+';totalBudgetMs='+IMAGE_UPLOAD_TOTAL_BUDGET_MS+';publisherDownloads=0'});
+        await sleep(wait);
       }
     }
-    throw new Error('image_upload_attempts_exhausted');
+    throw lastError||new Error('image_upload_budget_exhausted');
   }
   // END OSG_UPLOAD_EVIDENCE_V1
 
