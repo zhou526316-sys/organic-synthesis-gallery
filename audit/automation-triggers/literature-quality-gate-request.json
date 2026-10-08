@@ -1,13 +1,14 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-06T00:14:30.000Z",
-  "publicationSlot": "2026-10-06T08:00:00+08:00",
-  "releaseCommit": "7c0d44301d61477760a7216318041749f01eccca",
-  "baselineMain": "f3268f2d2438cb3e2837262a6e59f370ccb351b5",
-  "postReleaseAuditRunId": 37392330365,
-  "postReleaseAuditGeneratedAt": "2026-10-06T00:09:15.300Z",
-  "expectedProductionCards": 826,
+  "requestedAt": "2026-10-08T00:56:22.189Z",
+  "publicationSlot": "2026-10-08T08:00:00+08:00",
+  "releaseCommit": "3d4bd44146d9b2cab2bda35e09b159161b0b7195",
+  "baselineMain": "5ddbd95723cf6e448e141c4b9ce542cdb52ca3d3",
+  "postReleaseAuditRunId": 37709307724,
+  "postReleaseAuditGeneratedAt": "2026-10-08T00:45:14.247Z",
+  "expectedProductionCards": 887,
   "expectedDeferredDois": [
+    "10.31635/ccschem.026.202608019",
     "10.1021/acscatal.6c06578",
     "10.31635/ccschem.026.202608090",
     "10.31635/ccschem.026.202607590",
@@ -16,7 +17,7 @@
     "10.31635/ccschem.026.202608262"
   ],
   "observedUnresolvedCount": 7,
-  "purpose": "Post-deployment quality validation for the authorized 2026-10-06 08:00 per-DOI slot after successful Pages delivery. Validate the deployed 826-card set against the fresh post-release DOI-union audit; do not admit new literature off-slot.",
-  "pagesRunId": 37391639821,
-  "deploymentRetryCommit": "fbf3e2fd0873831a626eca2867f8a5ee0aa99418"
+  "purpose": "Read-only post-deployment quality gate for genuinely delivered Oct-08 887-card per-DOI release; assert exact repository/deployed DOI union and seven pending; no additional literature additions or legacy snapshot replay.",
+  "pagesRunId": 37709096134,
+  "deploymentReceiptBlobSha": "2e7155ca0f2fdd86b8512cba0c7fdd2ac21b4d25"
 }
