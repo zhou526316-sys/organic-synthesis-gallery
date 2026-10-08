@@ -1,13 +1,28 @@
+const PDF_ENGINE_LOAD_TIMEOUT_MS = 25_000;
 let pdfEngine = null;
 async function loadPdfEngine() {
   if (pdfEngine) return pdfEngine;
-  const [engine, worker] = await Promise.all([
-    import('pdfjs-dist/legacy/build/pdf.mjs'),
-    import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url'),
-  ]);
-  engine.GlobalWorkerOptions.workerSrc = worker.default;
-  pdfEngine = engine;
-  return engine;
+  const started = performance.now();
+  let timeoutId = null;
+  try {
+    const [engine, worker] = await Promise.race([
+      Promise.all([
+        import('pdfjs-dist/legacy/build/pdf.mjs'),
+        import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url'),
+      ]),
+      new Promise((_, reject) => {
+        timeoutId = window.setTimeout(() => reject(new Error('pdf_engine_timeout')),
+          PDF_ENGINE_LOAD_TIMEOUT_MS);
+      }),
+    ]);
+    engine.GlobalWorkerOptions.workerSrc = worker.default;
+    pdfEngine = engine;
+    return engine;
+  } finally {
+    if (timeoutId !== null) window.clearTimeout(timeoutId);
+    document.documentElement.dataset.privatePdfEngineMs =
+      String(Math.round(performance.now() - started));
+  }
 }
 
 const SESSION_KEY = 'organic-gallery-session-v1';
@@ -17,6 +32,17 @@ const MAX_PDF_BYTES = 60 * 1024 * 1024;
 const SINGLE_TRANSFER_TIMEOUT_MS = 90_000;
 const ADAPTIVE_RANGE_THRESHOLD_BYTES = 3 * 1024 * 1024;
 const FIRST_PAGE_TIMEOUT_MS = 45_000;
+const FIRST_PAGE_RANGE_CHUNK_BYTES = 1024 * 1024;
+const RANGE_TIMEOUT_MS = 30_000;
+const PREFETCH_TIMEOUT_MS = 24_000;
+// Small PDFs can stall on one long China-to-edge response.
+// Fetch independent bounded byte ranges concurrently; keep the full-GET
+// fallback if an older endpoint or proxy does not support ranges.
+const SMALL_PDF_PARALLEL_THRESHOLD_BYTES = 512 * 1024;
+const SMALL_PDF_RANGE_CHUNK_BYTES = 384 * 1024;
+const SMALL_PDF_MAX_PARALLEL = 4;
+let privatePdfRangeNetworkCalls = 0;
+let privatePdfRangeNetworkBytes = 0;
 
 
 const params = new URLSearchParams(location.search);
@@ -109,7 +135,8 @@ function safeErrorCode(error) {
   const message = String(error?.message || '');
   if (/^(?:open|file)_http_\d+$/.test(message)) return message;
   if (['pdf_source_invalid','pdf_page_tree','pdf_invalid_bytes','pdf_wrong_content_type',
-       'pdf_range_unavailable','pdf_too_large','pdf_incomplete_bytes','pdf_transfer_timeout','pdf_first_page_timeout'].includes(message)) return message;
+       'pdf_range_unavailable','pdf_too_large','pdf_incomplete_bytes','pdf_transfer_timeout',
+       'pdf_first_page_timeout','pdf_engine_timeout'].includes(message)) return message;
   if (name === 'AbortError' || name === 'TimeoutError') return 'pdf_transfer_timeout';
   return 'reader_error';
 }
@@ -122,7 +149,20 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
   const elapsed = Math.max(0, performance.now() - startedAt);
   const diagnostic = document.createElement('small');
   diagnostic.id = 'pdf-diagnostic';
-  diagnostic.textContent = `阶段：${phase} · ${detail || 'unknown'} · ${(elapsed / 1000).toFixed(1)}s`;
+  const timingDetails = [
+    ['privatePdfAuthorizeMs', '授权', 'ms'],
+    ['privatePdfEngineMs', '阅读组件', 'ms'],
+    ['privatePdfTransferMs', '文件传输', 'ms'],
+    ['privatePdfRangeCalls', '分段请求', '次'],
+    ['privatePdfRangeHeaderMs', '分段响应', 'ms'],
+    ['privatePdfRangeBytes', '已读字节', 'B'],
+    ['privatePdfRangeNetworkBytes', '传输字节', 'B'],
+  ].flatMap(([key, label, unit]) => {
+    const value = document.documentElement.dataset[key] || '';
+    return /^\d{1,12}$/.test(value) ? [`${label}:${value}${unit}`] : [];
+  });
+  diagnostic.textContent = `阶段：${phase} · ${detail || 'unknown'} · ${(elapsed / 1000).toFixed(1)}s` +
+    (timingDetails.length ? ' · ' + timingDetails.join(' · ') : '');
   status.appendChild(diagnostic);
   const retry = document.createElement('button');
   retry.type = 'button';
@@ -255,7 +295,70 @@ async function checkPdfHeader(fileUrl) {
   const head = new TextDecoder().decode(bytes.subarray(0, 5));
   if (head !== '%PDF-') throw new Error('pdf_invalid_bytes');
 }
-function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionToken) {
+async function fetchValidatedPdfRange(fileUrl, byteLength, begin, end, controller) {
+  const requestStarted = performance.now();
+  privatePdfRangeNetworkCalls += 1;
+  document.documentElement.dataset.privatePdfRangeCalls = String(privatePdfRangeNetworkCalls);
+  const response = await fetch(fileUrl, {
+    headers: { range: `bytes=${begin}-${end - 1}` },
+    credentials: 'include',
+    cache: 'no-store',
+    signal: controller.signal,
+  });
+  document.documentElement.dataset.privatePdfRangeHeaderMs =
+    String(Math.round(performance.now() - requestStarted));
+  if (!response.ok) throw new Error('file_http_' + response.status);
+  if (response.status !== 206) throw new Error('pdf_range_unavailable');
+  if (!/^application\/pdf(?:\s*;|$)/i.test(response.headers.get('content-type') || '')) {
+    throw new Error('pdf_wrong_content_type');
+  }
+  const match = /^bytes (\d+)-(\d+)\/(\d+)$/.exec(response.headers.get('content-range') || '');
+  if (!match || Number(match[1]) !== begin || Number(match[2]) !== end - 1 ||
+      Number(match[3]) !== byteLength) {
+    throw new Error('pdf_range_unavailable');
+  }
+  const chunk = new Uint8Array(await response.arrayBuffer());
+  if (chunk.byteLength !== end - begin) throw new Error('pdf_incomplete_bytes');
+  privatePdfRangeNetworkBytes += chunk.byteLength;
+  document.documentElement.dataset.privatePdfRangeNetworkBytes = String(privatePdfRangeNetworkBytes);
+  return chunk;
+}
+function prefetchPdfBoundaryRanges(fileUrl, byteLength) {
+  // Non-linearized PDFs often need their trailer/xref before page one.
+  // Issue the first and last 1 MiB requests together instead of waiting
+  // through two consecutive browser-to-edge round trips. PDF.js only
+  // receives validated ranges it actually requested; unused bytes are
+  // bounded to at most 2 MiB, never persisted to disk or shared.
+  const chunkSize = FIRST_PAGE_RANGE_CHUNK_BYTES;
+  const suffixStart = Math.floor((byteLength - 1) / chunkSize) * chunkSize;
+  const candidates = [[0, Math.min(chunkSize, byteLength)], [suffixStart, byteLength]];
+  const pending = new Map();
+  const controllers = new Set();
+  for (const [begin, end] of candidates) {
+    const key = `${begin}:${end}`;
+    if (pending.has(key)) continue;
+    const controller = new AbortController();
+    controllers.add(controller);
+    const timeoutId = window.setTimeout(() => controller.abort('prefetch_timeout'), PREFETCH_TIMEOUT_MS);
+    const promise = fetchValidatedPdfRange(fileUrl, byteLength, begin, end, controller)
+      .then(chunk => ({ chunk }), error => ({
+        error: controller.signal.aborted ? new Error('pdf_transfer_timeout') : error,
+      }))
+      .finally(() => {
+        window.clearTimeout(timeoutId);
+        controllers.delete(controller);
+      });
+    pending.set(key, promise);
+  }
+  return {
+    consume(begin, end) { return pending.get(`${begin}:${end}`) || null; },
+    abort() {
+      for (const controller of controllers) controller.abort('prefetch_cancelled');
+      controllers.clear();
+    },
+  };
+}
+function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionToken, warmup = null) {
   // PDF.js's URL transport always starts with a regular GET, which can
   // force a full transfer before its first Range request. The dedicated
   // transport never issues that initial unbounded request.
@@ -266,6 +369,11 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
       this.controllers = new Set();
       this.refreshPromise = null;
       this.totalFetched = 0;
+      this.warmup = warmup;
+      // PDF.js sometimes leaves loadingTask.promise unsettled after destroy().
+      // Expose an independent terminal error signal to the page controller.
+      this.failed = new Promise((_, reject) => { this.rejectFailure = reject; });
+      this.failed.catch(() => {}); // protect errors before the reader awaits the race
     }
     async refreshUrl() {
       if (!this.refreshPromise) {
@@ -287,47 +395,44 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
       const controller = new AbortController();
       this.controllers.add(controller);
       void this.fetchRange(begin, end, controller).catch(error => {
-        if (!controller.signal.aborted && !destroyed) this.fail(error);
+        // A transport-owned 30s timeout must fail the reader immediately.
+        // Only lifecycle cancellation (tab closing, navigation, teardown)
+        // should suppress the error; otherwise PDF.js hangs until 45s.
+        const timedOut = controller.signal.aborted && controller.signal.reason === 'range_timeout';
+        if (!destroyed && (!controller.signal.aborted || timedOut)) this.fail(error);
       }).finally(() => this.controllers.delete(controller));
     }
     async fetchRange(begin, end, controller) {
+      const cached = this.warmup?.consume(begin, end);
+      if (cached) {
+        const result = await cached;
+        if (destroyed || controller.signal.aborted || sessionToken !== token()) return;
+        if (result.chunk) {
+          this.acceptRange(begin, result.chunk);
+          return;
+        }
+        // An aborted warmup is a real time budget breach, not a reason
+        // to wait for another 30-second attempt at the same bytes.
+        if (result.error?.message === 'pdf_transfer_timeout') throw result.error;
+      }
       let lastError = null;
       for (let attempt = 0; attempt < 2; attempt++) {
         if (controller.signal.aborted || destroyed || token() !== sessionToken) return;
-        const kill = window.setTimeout(() => controller.abort('range_timeout'), 30000);
+        const kill = window.setTimeout(() => controller.abort('range_timeout'), RANGE_TIMEOUT_MS);
         try {
-          const response = await fetch(this.fileUrl, {
-            headers: { range: `bytes=${begin}-${end-1}` },
-            credentials: 'include',
-            cache: 'no-store',
-            signal: controller.signal,
-          });
-          if (response.status === 401 && attempt === 0) {
-            await this.refreshUrl();
-            continue;
-          }
-          if (!response.ok) throw new Error('file_http_' + response.status);
-          if (response.status !== 206) throw new Error('pdf_range_unavailable');
-          if (!/^application\/pdf(?:\s*;|$)/i.test(response.headers.get('content-type') || '')) {
-            throw new Error('pdf_wrong_content_type');
-          }
-          const match = /^bytes (\d+)-(\d+)\/(\d+)$/.exec(response.headers.get('content-range') || '');
-          if (!match || Number(match[1]) !== begin || Number(match[2]) !== end-1 ||
-              Number(match[3]) !== byteLength) {
-            throw new Error('pdf_range_unavailable');
-          }
-          const chunk = new Uint8Array(await response.arrayBuffer());
-          if (chunk.byteLength !== end-begin) throw new Error('pdf_incomplete_bytes');
+          const chunk = await fetchValidatedPdfRange(this.fileUrl, byteLength, begin, end, controller);
           if (controller.signal.aborted || destroyed || token() !== sessionToken) return;
-          this.totalFetched += chunk.byteLength;
-          setPhase('range', `正在按需读取第一页… 已取 ${(this.totalFetched / 1048576).toFixed(1)} MB`);
-          this.onDataRange(begin, chunk);
+          this.acceptRange(begin, chunk);
           return;
         } catch (error) {
           lastError = error;
           if (controller.signal.aborted) break;
-          // Retry one failed transport request without forgetting previously
-          // delivered ranges. A 403 is an authorization failure, not a retry.
+          if (error?.message === 'file_http_401' && attempt === 0) {
+            await this.refreshUrl();
+            continue;
+          }
+          // Retry one transient transport request. A 403, 404, malformed
+          // Content-Range or HTML instead of a PDF are never retried.
           if (attempt === 0 && !/^(?:file_http_(401|403|404)|pdf_range_unavailable|pdf_wrong_content_type)$/.test(error?.message || '')) {
             continue;
           }
@@ -339,18 +444,97 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
       if (!controller.signal.aborted && !destroyed) throw lastError || new Error('pdf_transfer_timeout');
       if (controller.signal.aborted && !destroyed) throw new Error('pdf_transfer_timeout');
     }
+    acceptRange(begin, chunk) {
+      if (destroyed) return;
+      this.totalFetched += chunk.byteLength;
+      document.documentElement.dataset.privatePdfRangeBytes = String(this.totalFetched);
+      setPhase('range', `正在按需读取第一页… 已取 ${(this.totalFetched / 1048576).toFixed(1)} MB`);
+      this.onDataRange(begin, chunk);
+    }
     fail(error) {
       if (rangeFailure || destroyed) return;
       rangeFailure = error;
+      this.rejectFailure(error);
       void loadingTask?.destroy().catch(() => {});
       this.abort();
     }
     abort() {
+      this.warmup?.abort();
       for (const controller of this.controllers) controller.abort();
       this.controllers.clear();
     }
   }
   return new AuthenticatedRangeTransport();
+}
+async function fetchPdfParallelTransfer(fileUrl, sessionToken, byteLength) {
+  if (!Number.isSafeInteger(byteLength) || byteLength < SMALL_PDF_PARALLEL_THRESHOLD_BYTES ||
+      byteLength > ADAPTIVE_RANGE_THRESHOLD_BYTES) {
+    throw new Error('pdf_source_invalid');
+  }
+  const controller = new AbortController();
+  transferController = controller;
+  const started = performance.now();
+  const deadline = window.setTimeout(() => controller.abort('pdf_transfer_timeout'),
+    SINGLE_TRANSFER_TIMEOUT_MS);
+  const ranges = Math.ceil(byteLength / SMALL_PDF_RANGE_CHUNK_BYTES);
+  const parts = new Array(ranges);
+  let next = 0, loaded = 0;
+  document.documentElement.dataset.privatePdfTransferStrategy = 'parallel-ranges';
+  setPhase('transfer', '正在并行获取 PDF…');
+  try {
+    async function fetchPart() {
+      while (!controller.signal.aborted && !destroyed && sessionToken === token()) {
+        const index = next++;
+        if (index >= ranges) return;
+        const begin = index * SMALL_PDF_RANGE_CHUNK_BYTES;
+        const end = Math.min(byteLength, begin + SMALL_PDF_RANGE_CHUNK_BYTES);
+        const chunk = await fetchValidatedPdfRange(fileUrl, byteLength, begin, end, controller);
+        if (controller.signal.aborted || destroyed || sessionToken !== token()) {
+          throw new Error('pdf_transfer_timeout');
+        }
+        parts[index] = chunk;
+        loaded += chunk.byteLength;
+        setPhase('transfer', `正在并行获取 PDF：${(loaded / 1048576).toFixed(1)} / ${(byteLength / 1048576).toFixed(1)} MB`);
+      }
+      if (controller.signal.aborted || destroyed || sessionToken !== token()) {
+        throw new Error('pdf_transfer_timeout');
+      }
+    }
+    await Promise.all(Array.from({ length: Math.min(SMALL_PDF_MAX_PARALLEL, ranges) },
+      () => fetchPart()));
+    if (loaded !== byteLength || parts.some(part => !part)) {
+      throw new Error('pdf_incomplete_bytes');
+    }
+    const output = new Uint8Array(byteLength);
+    let cursor = 0;
+    for (const part of parts) {
+      output.set(part, cursor);
+      cursor += part.byteLength;
+    }
+    if (String.fromCharCode(...output.subarray(0, 5)) !== '%PDF-') {
+      throw new Error('pdf_invalid_bytes');
+    }
+    document.documentElement.dataset.privatePdfTransferMs =
+      String(Math.round(performance.now() - started));
+    document.documentElement.dataset.privatePdfTransferBytes = String(loaded);
+    return output;
+  } catch (error) {
+    controller.abort('parallel_failed');
+    if (destroyed || sessionToken !== token() ||
+        controller.signal.reason === 'pdf_transfer_timeout') {
+      throw new Error('pdf_transfer_timeout');
+    }
+    // Only fallback for protocol incompatibility, not expired permissions
+    // or an extremely slow data path that would waste another full transfer.
+    if (['pdf_range_unavailable', 'pdf_wrong_content_type'].includes(error?.message)) {
+      document.documentElement.dataset.privatePdfTransferStrategy = 'single-fallback';
+      return await fetchPdfSingleTransfer(fileUrl, sessionToken);
+    }
+    throw error;
+  } finally {
+    window.clearTimeout(deadline);
+    if (transferController === controller) transferController = null;
+  }
 }
 async function fetchPdfSingleTransfer(fileUrl, sessionToken) {
   const started = performance.now();
@@ -461,10 +645,11 @@ function showReaderError(error, prefix = 'PDF 读取失败') {
   else if (code === 'pdf_invalid_bytes' || code === 'pdf_wrong_content_type') message = '文件响应并非有效 PDF，已阻止打开错误页面。';
   else if (code === 'pdf_range_unavailable') message = 'PDF 文件服务不支持分段读取，暂时无法可靠打开。';
   else if (code === 'file_http_404') message = '私有 PDF 文件未找到，下载记录可能需要修复。';
-  else if (code === 'pdf_transfer_timeout') message = '文件传输超时。可点击上方“浏览器阅读”尝试原生模式。';
+  else if (code === 'pdf_transfer_timeout') message = '文件传输超时。可试用上方“整份下载后阅读”或下载 PDF；请记录阶段及耗时。';
   else if (code === 'pdf_too_large') message = '文件较大，建议点击上方“浏览器阅读”以原生模式打开。';
   else if (code === 'pdf_incomplete_bytes') message = '文件传输不完整，请重新读取或尝试浏览器阅读。';
   else if (code === 'pdf_first_page_timeout') message = '按需读取第一页超过45秒。可点击“整份下载后阅读”尝试另一条路径，或使用下载 PDF。';
+  else if (code === 'pdf_engine_timeout') message = 'PDF 阅读组件加载超过25秒，请重新读取或检查网络；也可尝试浏览器阅读。';
   fallbackView(message, code);
 }
 let downloadBusy = false;
@@ -503,9 +688,20 @@ async function start() {
   browserOpen.textContent = '浏览器阅读';
   download.hidden = false;
   if (downloadOnOpen) { await beginDownload(); return; }
+  let rangeWarmup = null;
+  // Importing the public PDF.js reader can overlap with private authorization,
+  // avoiding a second serial request on high-latency networks.
+  const enginePromise = nativeMode ? null : loadPdfEngine();
+  enginePromise?.catch(() => {}); // authorization might fail before we await it
   try {
     setPhase('authorize', '正在确认 PDF 权限…');
-    sourceUrl = await verifiedPdfSource(sessionToken, 'view');
+    const authorizeStarted = performance.now();
+    try {
+      sourceUrl = await verifiedPdfSource(sessionToken, 'view');
+    } finally {
+      document.documentElement.dataset.privatePdfAuthorizeMs =
+        String(Math.round(performance.now() - authorizeStarted));
+    }
     if (destroyed || token() !== sessionToken) return;
     if (nativeMode) {
       document.documentElement.dataset.privatePdfMode = 'native';
@@ -519,23 +715,32 @@ async function start() {
     const rangeMode = declaredPdfBytes > 0 && (compatibilityMode ||
       (!forceFull && declaredPdfBytes > ADAPTIVE_RANGE_THRESHOLD_BYTES));
     const buffered = !rangeMode;
-    fullOpen.hidden = !rangeMode;
+    const parallelSmall = buffered && !forceFull &&
+      declaredPdfBytes >= SMALL_PDF_PARALLEL_THRESHOLD_BYTES &&
+      declaredPdfBytes <= ADAPTIVE_RANGE_THRESHOLD_BYTES;
+    // Warm up the first and last chunks as soon as the edge authorizes the
+    // document; PDF.js parsing then uses these bytes without waiting for a
+    // second serial cross-border round trip.
+    rangeWarmup = rangeMode ? prefetchPdfBoundaryRanges(sourceUrl, declaredPdfBytes) : null;
+    fullOpen.hidden = forceFull || !(rangeMode || parallelSmall);
     compatibility.hidden = rangeMode || downloadOnOpen;
     document.documentElement.dataset.privatePdfMode = buffered ? 'single-transfer' : 'range-first';
     const loaded = buffered
-      ? await Promise.all([loadPdfEngine(), fetchPdfSingleTransfer(sourceUrl, sessionToken)])
-      : [await loadPdfEngine(), null];
+      ? await Promise.all([enginePromise, parallelSmall
+          ? fetchPdfParallelTransfer(sourceUrl, sessionToken, declaredPdfBytes)
+          : fetchPdfSingleTransfer(sourceUrl, sessionToken)])
+      : [await enginePromise, null];
     const [engine, bytes] = loaded;
     if (destroyed || token() !== sessionToken) return;
     rangeFailure = null;
     activeRangeTransport = buffered ? null :
-      makeAuthenticatedRangeTransport(engine, sourceUrl, declaredPdfBytes, sessionToken);
+      makeAuthenticatedRangeTransport(engine, sourceUrl, declaredPdfBytes, sessionToken, rangeWarmup);
     loadingTask = buffered
       ? engine.getDocument(options({ data: bytes, disableRange: true, disableStream: true }))
       : engine.getDocument(options({
           range: activeRangeTransport,
           disableRange: false, disableAutoFetch: true, disableStream: true,
-          rangeChunkSize: 1024 * 1024,
+          rangeChunkSize: FIRST_PAGE_RANGE_CHUNK_BYTES,
         }));
     setPhase('parse', buffered ? '正在本地解析 PDF…' : '正在按需读取目录和第一页…');
     if (rangeMode) {
@@ -554,7 +759,7 @@ async function start() {
         await render();
       })();
       if (rangeMode) {
-        await Promise.race([firstPageJob, new Promise((_,reject)=>{
+        await Promise.race([firstPageJob, activeRangeTransport.failed, new Promise((_,reject)=>{
           firstPageTimer = window.setTimeout(()=>reject(new Error('pdf_first_page_timeout')),FIRST_PAGE_TIMEOUT_MS);
         })]);
       } else {
@@ -564,7 +769,8 @@ async function start() {
       if (firstPageTimer !== null) window.clearTimeout(firstPageTimer);
     }
   } catch (error) {
-    if (error?.message === 'pdf_first_page_timeout') {
+    rangeWarmup?.abort();
+    if (rangeFailure || error?.message === 'pdf_first_page_timeout') {
       renderSequence += 1;
       renderTask?.cancel();
       renderTask = null;
