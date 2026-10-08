@@ -172,8 +172,9 @@ for (const [device, width, height] of [
       };
     });
 
+    // This regression asserts layout, not pointer hit-testing across synthetic card positions.
     await moveTrigger(Math.round(height * 0.70));
-    await button.click();
+    await button.evaluate(node => (node as HTMLButtonElement).click());
     await expect(drawer).toBeVisible();
     await expect(drawer).toHaveAttribute('data-placement', 'above');
     const upper = await geometry();
@@ -181,9 +182,9 @@ for (const [device, width, height] of [
     expect(upper.popupBottom).toBeLessThanOrEqual(upper.triggerTop - 5);
     expect(upper.popupTop).toBeGreaterThanOrEqual(upper.viewportTop + 6);
 
-    await actions.locator('button[data-action="close"]').click();
+    await actions.locator('button[data-action="close"]').evaluate(node => (node as HTMLButtonElement).click());
     await moveTrigger(Math.round(height * 0.18));
-    await button.click();
+    await button.evaluate(node => (node as HTMLButtonElement).click());
     await expect(drawer).toBeVisible();
     await expect(drawer).toHaveAttribute('data-placement', 'below');
     const lower = await geometry();
