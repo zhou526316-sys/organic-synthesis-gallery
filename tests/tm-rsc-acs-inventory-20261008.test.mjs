@@ -90,7 +90,13 @@ test('old RSC hidden iframe retries are omitted on current Silverchair route onl
  vm.runInContext(extract('iframeSourceUrls')+
   '\n globalThis.iframeSourceUrlsForTest=iframeSourceUrls;',c);
  const j={doi:'10.1039/d6gc04458a',publisher:'rsc'};
- assert.equal(c.iframeSourceUrlsForTest(j).length,0);
+ assert.equal(c.iframeSourceUrlsForTest(j).length,0,'no invented publisher issue page');
+ c.rscIssuePageUrls=()=>[
+   'https://pubs.rsc.org/gc/issue/34/8',
+   'https://pubs.rsc.org/gc/issue/34/9'
+ ];
+ assert.deepEqual(Array.from(c.iframeSourceUrlsForTest(j)),['https://pubs.rsc.org/gc/issue/34/8'],
+   'one genuine DOI-verified publisher issue fallback is allowed');
  c.location.href='https://pubs.rsc.org/en/content/articlelanding/2026/gc/d6gc04458a';
  assert.ok(c.iframeSourceUrlsForTest(j).length>=2);
 });
