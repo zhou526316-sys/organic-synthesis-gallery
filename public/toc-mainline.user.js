@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var INSTALL_REVISION = '6.2.49';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
-  var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 18000;
+  var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
   var GAP_RECOVERY_REVISION = '20261008-gap-recovery-v1';
   var CAPTURE_OBSERVABILITY_REVISION = '20261007-capture-observability-v1';
   var CONTROLLER_READ_REVISION = '20261007-native-metadata-first-v1';
@@ -1704,7 +1704,7 @@ function embeddedJobDois(value) {
   async function postJsonBudgeted(url,payload,token,budgetMs) {
     var start=Date.now(),budget=Math.max(1000,Math.min(IMAGE_UPLOAD_TOTAL_BUDGET_MS,Number(budgetMs||IMAGE_UPLOAD_TOTAL_BUDGET_MS)));
     function left(){return Math.max(0,budget-(Date.now()-start));}
-    var gmOptions={method:'POST',url:url,timeout:Math.max(1000,Math.min(7500,left())),
+    var gmOptions={method:'POST',url:url,timeout:Math.max(1000,Math.min(13000,left())),
       headers:{'content-type':'application/json',authorization:'Bearer '+token},data:JSON.stringify(payload)};
     var response;
     try{
