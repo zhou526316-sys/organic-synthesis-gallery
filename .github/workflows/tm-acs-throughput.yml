@@ -1,38 +1,40 @@
-name: Tampermonkey throughput and result-truth regression
+name: Tampermonkey ACS recovery regression
 on:
   push:
-    branches: [fix/tm-throughput-truth-20261007]
+    branches: [fix/tm-acs-throughput-20261008]
     paths:
       - public/toc-mainline.user.js
+      - cloudflare/worker/src/local-captures.js
       - cloudflare/scripts/build-bridge-loader.mjs
       - scripts/validate-tm220-artifacts.mjs
-      - tests/tm-throughput-truth.test.mjs
-      - .github/workflows/tm-throughput-truth.yml
+      - tests/tm-acs-throughput.test.mjs
+      - .github/workflows/tm-acs-throughput.yml
 permissions:
   contents: read
 concurrency:
-  group: tm-throughput-truth
+  group: tm-acs-throughput
   cancel-in-progress: false
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Verify fallback queue closure and truthful layer status
+      - name: Verify bounded ACS acquisition and existing queue guarantees
         run: |
           set -euo pipefail
           node --check public/toc-mainline.user.js
-          node --test tests/tm-throughput-truth.test.mjs
-          node tests/tm-manual-resume.test.mjs
-          node tests/tm-controller-recovery.test.mjs
-          node tests/tm-queue-coverage.test.mjs
+          node --check cloudflare/worker/src/local-captures.js
+          node --test tests/tm-acs-throughput.test.mjs
+          node --test tests/tm-gap-recovery.test.mjs
           node tests/tm-missing-only.test.mjs
-          node scripts/test-tm220-release.mjs
-          node scripts/test-tm222-auto-report.mjs
+          node tests/tm-queue-coverage.test.mjs
+          node tests/tm-immediate-restart.test.mjs
+          node tests/tm-manual-resume.test.mjs
+          node scripts/test-stage-storage.mjs
           node scripts/validate-tm220-artifacts.mjs source
           git diff --check
       - name: Build Bridge 2.2.68
@@ -48,10 +50,11 @@ jobs:
           node scripts/validate-tm220-artifacts.mjs public
           grep -F '// @version      2.2.68' public/gallery-vpn-bridge.user.js
           grep -F "var INSTALL_REVISION = '6.2.49';" public/gallery-vpn-bridge.user.js
+          grep -F "ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1'" public/gallery-vpn-bridge.user.js
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: tm-throughput-truth-evidence
+          name: tm-acs-recovery-evidence
           path: |
             public/gallery-vpn-bridge.user.js
             public/toc-mainline.user.js

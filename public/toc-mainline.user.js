@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.48
+// @version      6.2.49
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -55,7 +55,9 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.48';
+  var INSTALL_REVISION = '6.2.49';
+  var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
+  var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
   var GAP_RECOVERY_REVISION = '20261008-gap-recovery-v1';
   var CAPTURE_OBSERVABILITY_REVISION = '20261007-capture-observability-v1';
   var CONTROLLER_READ_REVISION = '20261007-native-metadata-first-v1';
@@ -1653,9 +1655,10 @@ function embeddedJobDois(value) {
     return error;
   }
 
-  async function fetchPostJson(url, payload, token) {
+  async function fetchPostJson(url, payload, token, timeoutMs) {
     var abort = new AbortController();
-    var timer = setTimeout(function () { abort.abort(); }, 45000);
+    var budget = Math.max(1000, Math.min(45000, Number(timeoutMs||45000)));
+    var timer = setTimeout(function () { abort.abort(); }, budget);
     try {
       var response = await fetch(url, {method:'POST',mode:'cors',credentials:'omit',cache:'no-store',signal:abort.signal,
         headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify(payload)});
@@ -1698,6 +1701,31 @@ function embeddedJobDois(value) {
     return body;
   }
 
+  async function postJsonBudgeted(url,payload,token,budgetMs) {
+    var start=Date.now(),budget=Math.max(1000,Math.min(IMAGE_UPLOAD_TOTAL_BUDGET_MS,Number(budgetMs||IMAGE_UPLOAD_TOTAL_BUDGET_MS)));
+    function left(){return Math.max(0,budget-(Date.now()-start));}
+    var gmOptions={method:'POST',url:url,timeout:Math.max(1000,Math.min(13000,left())),
+      headers:{'content-type':'application/json',authorization:'Bearer '+token},data:JSON.stringify(payload)};
+    var response;
+    try{
+      response=await gmRequest(gmOptions,true);
+      var status=Number(response&&response.status||0),raw=String(response&&response.responseText||''),body={};
+      try{body=JSON.parse(raw||'{}');}catch(_){}
+      if(status>=200&&status<300)return body;
+      var readHeader=function(h){return headerValue(response&&response.responseHeaders,h);};
+      if(!shouldNativeRetryUpload(response,url))throw uploadResponseError(status,body,raw,readHeader,'gm_request');
+    }catch(error){
+      // Never bypass explicit HTTP denials, Retry-After, or a GM timeout:
+      // the upstream may have committed a write even when its reply is delayed.
+      if(Number(error&&error.httpStatus||0)>0||Number(error&&error.retryAfterMs||0)>0
+        ||/gm_request_timeout|gm_request_aborted|blocked by the user|Refused to connect/i.test(String(error&&error.message||error)))throw error;
+      if(!/gm_request_error|gm_request_exception|gm_then_fetch_failed/i.test(String(error&&error.message||error)))throw error;
+    }
+    var remaining=left();
+    if(remaining<1000)throw new Error('image_upload_budget_exhausted');
+    return fetchPostJson(url,payload,token,remaining);
+  }
+
   function shouldNativeRetryUpload(response,url) {
     var status=Number(response && response.status || 0);
     var raw=String(response && response.responseText || '').trim();
@@ -1717,23 +1745,34 @@ function embeddedJobDois(value) {
   }
 
   async function postAcquiredImage(job, candidate, image, trace, endpoint, payload, token, stage) {
-    for (var attempt = 0; attempt < 3; attempt += 1) {
-      assertBoundCaptureJob(job, candidate.url);
-      try { return await postJson(endpoint, payload, token); }
-      catch (error) {
-        pushTrace(trace,{stage:stage,event:'failed',status:'failed',url:endpoint,httpStatus:Number(error && error.httpStatus || 0),
-          byteLength:image.byteLength,message:'label='+String(payload.label || payload.kind || '')+';uploadAttempt='+(attempt+1)+';'+String(error && error.message || error)});
-        if (attempt >= 2 || !retryableImageUpload(error)) throw error;
-        var delay = Math.max(1500 * Math.pow(2, attempt), Number(error.retryAfterMs || 0));
-        // Do not violate Retry-After or silently outlive the task; leave the failure queued for later.
-        if (delay > 30000 || job.captureDeadline && Date.now() + delay + 1000 >= job.captureDeadline) throw error;
-        pushTrace(trace,{stage:stage,event:'upload_retry_wait',status:'retrying',url:endpoint,httpStatus:Number(error.httpStatus || 0),
-          message:'same_acquired_image;nextAttempt='+(attempt+2)+';delayMs='+delay+';publisherDownloads=0'});
-        captureLiveUpdate(job,'uploading',{label:payload.label || 'TOC',error:'上传暂时失败，保留已下载图片，'+Math.ceil(delay/1000)+'秒后仅重试上传'});
-        await sleep(delay);
+    var started=Date.now(),deadline=started+IMAGE_UPLOAD_TOTAL_BUDGET_MS,lastError=null;
+    for(var attempt=0;attempt<2;attempt++){
+      assertBoundCaptureJob(job,candidate.url);
+      var left=Math.max(0,Math.min(deadline-Date.now(),Number(job.captureDeadline||deadline)-Date.now()));
+      if(left<1200)break;
+      try{
+        var receipt=await postJsonBudgeted(endpoint,payload,token,left);
+        pushTrace(trace,{stage:stage,event:'budgeted_upload_complete',status:'ok',url:endpoint,
+          message:'revision='+ACS_MEDIA_RECOVERY_REVISION+';attempt='+(attempt+1)+';elapsedMs='+(Date.now()-started)});
+        return receipt;
+      }catch(error){
+        lastError=error;
+        pushTrace(trace,{stage:stage,event:'failed',status:'failed',url:endpoint,httpStatus:Number(error&&error.httpStatus||0),
+          byteLength:image.byteLength,message:'label='+String(payload.label||payload.kind||'')+';uploadAttempt='+(attempt+1)+';elapsedMs='+(Date.now()-started)+';'+String(error&&error.message||error)});
+        var ms=String(error&&error.message||error),wait=Math.max(900,Number(error&&error.retryAfterMs||0));
+        // An aborted/timeout request may have written successfully upstream.
+        // Do not launch a second concurrent write without a receipt.
+        if(/timeout|abort|budget_exhausted/i.test(ms)||attempt>=1||!retryableImageUpload(error)||wait>3000||Date.now()+wait+1500>=deadline){
+          pushTrace(trace,{stage:stage,event:'upload_deferred',status:'deferred',url:endpoint,
+            message:'budgetMs='+IMAGE_UPLOAD_TOTAL_BUDGET_MS+';elapsedMs='+(Date.now()-started)+';gap_preserved=1;retryAfterMs='+Number(error&&error.retryAfterMs||0)});
+          throw error;
+        }
+        pushTrace(trace,{stage:stage,event:'upload_retry_wait',status:'retrying',url:endpoint,httpStatus:Number(error&&error.httpStatus||0),
+          message:'same_acquired_image;nextAttempt=2;delayMs='+wait+';totalBudgetMs='+IMAGE_UPLOAD_TOTAL_BUDGET_MS+';publisherDownloads=0'});
+        await sleep(wait);
       }
     }
-    throw new Error('image_upload_attempts_exhausted');
+    throw lastError||new Error('image_upload_budget_exhausted');
   }
   // END OSG_UPLOAD_EVIDENCE_V1
 
@@ -3511,11 +3550,93 @@ function embeddedJobDois(value) {
     try { var u=new URL(value,location.href); return u.hostname==='pubs.acs.org' && /^\/view-large\/figure\//i.test(u.pathname); }
     catch (_) { return false; }
   }
+  function acsViewerStem(value) {
+    try{
+      var name=decodeURIComponent(new URL(value,location.href).pathname.split('/').pop()||'');
+      return name.replace(/\.(?:tiff?|png|jpe?g|svg|webp)$/i,'').toLowerCase();
+    }catch(_){return '';}
+  }
+  function acsViewerAssetUrls(viewerUrl,html) {
+    // Only use links actually present in the publisher viewer. Never synthesize
+    // an assumed full-size file name or accept a different figure's asset.
+    var stem=acsViewerStem(viewerUrl),input=String(html||'').replace(/&amp;/gi,'&')
+      .replace(/\\u0026/gi,'&').replace(/\\\//g,'/');
+    if(!stem||input.length>2500000)return [];
+    var out=[],seen=new Set();
+    function add(raw){
+      var url=normalizeUrl(raw,viewerUrl);
+      if(!url||seen.has(url)||url===normalizeUrl(viewerUrl,viewerUrl))return;
+      try{
+        var u=new URL(url),host=u.hostname.toLowerCase(),path=decodeURIComponent(u.pathname+u.search).toLowerCase();
+        if(!(host==='pubs.acs.org'||host==='acs.silverchair-cdn.com'||host.endsWith('.silverchair-cdn.com')))return;
+        if(path.indexOf(stem)<0||!/\.(?:svg|png|jpe?g|webp|gif|tiff?)(?:[?#]|$)/i.test(url))return;
+        seen.add(url);out.push(url);
+      }catch(_){}
+    }
+    var attr=/(?:src|href|content|data-[a-z0-9_-]+)\s*=\s*["']([^"']+)["']/gi,match;
+    while((match=attr.exec(input))&&out.length<20)add(match[1]);
+    var absolute=/(?:https?:)?\/\/[^"'<>\s\\]+/gi;
+    while((match=absolute.exec(input))&&out.length<20)add(match[0]);
+    function score(url){return (/\.svg(?:[?#]|$)/i.test(url)?150:0)+(/content_public/i.test(url)?50:0)
+      +(/\.(?:png|jpe?g|webp)(?:[?#]|$)/i.test(url)?40:0)
+      -(/\/m_[^/]+/i.test(url)?70:0)-(/\.tiff?(?:[?#]|$)/i.test(url)?60:0);}
+    return out.sort(function(a,b){return score(b)-score(a);}).slice(0,5);
+  }
+  async function acsViewerHtml(viewerUrl,trace) {
+    var started=Date.now();
+    try{
+      var response=await fetch(viewerUrl,{method:'GET',credentials:'include',cache:'no-store',
+        redirect:'follow',signal:AbortSignal.timeout(3500),referrer:location.href});
+      var type=String(response.headers.get('content-type')||'');
+      if(response.ok&&/(?:text\/html|application\/xhtml\+xml)/i.test(type)){
+        var html=await response.text();
+        pushTrace(trace,{stage:'acs_viewer_probe',event:'html',status:'ok',url:response.url||viewerUrl,
+          message:'transport=browser;chars='+html.length+';elapsedMs='+(Date.now()-started)});
+        return html;
+      }
+      pushTrace(trace,{stage:'acs_viewer_probe',event:'browser_non_html',status:response.ok?'unsupported':'http_error',
+        url:response.url||viewerUrl,httpStatus:response.status,contentType:type});
+      if(response.status===401||response.status===403||response.status===429)return '';
+    }catch(error){pushTrace(trace,{stage:'acs_viewer_probe',event:'browser_failed',status:'failed',url:viewerUrl,message:String(error&&error.message||error)});}
+    try{
+      var gm=await gmRequest({method:'GET',url:viewerUrl,timeout:4000,
+        headers:{Accept:'text/html,application/xhtml+xml;q=0.9,*/*;q=0.1',Referer:location.href}},true);
+      var ct=headerValue(gm.responseHeaders,'content-type'),raw=String(gm.responseText||'');
+      if(Number(gm.status)>=200&&Number(gm.status)<300&&/(?:text\/html|application\/xhtml\+xml)/i.test(ct)){
+        pushTrace(trace,{stage:'acs_viewer_probe',event:'html',status:'ok',url:gm.finalUrl||viewerUrl,
+          message:'transport=gm;chars='+raw.length+';elapsedMs='+(Date.now()-started)});
+        return raw;
+      }
+      pushTrace(trace,{stage:'acs_viewer_probe',event:'gm_non_html',status:'unsupported',
+        url:gm.finalUrl||viewerUrl,httpStatus:Number(gm.status||0),contentType:ct});
+    }catch(error){pushTrace(trace,{stage:'acs_viewer_probe',event:'gm_failed',status:'failed',url:viewerUrl,message:String(error&&error.message||error)});}
+    return '';
+  }
+  async function acquireAcsViewerImage(candidate,trace) {
+    var html=await acsViewerHtml(candidate.url,trace),urls=acsViewerAssetUrls(candidate.url,html);
+    pushTrace(trace,{stage:'acs_viewer_probe',event:'assets',status:urls.length?'found':'none',
+      url:candidate.url,message:'figureStem='+acsViewerStem(candidate.url)+';sameFigureAssets='+urls.length});
+    for(var i=0;i<urls.length;i++){
+      var nested=Object.assign({},candidate,{url:urls[i],source:'acs_view_large_html_asset',element:null});
+      var image=await pageFetchCandidate(nested,trace);
+      if(!image)image=await gmFetchCandidate(nested,trace);
+      if(!image||image.contentType==='image/tiff')continue;
+      var size=await measureImageData(image.imageData);
+      image.width=Number(size.width||0);image.height=Number(size.height||0);
+      var quality=measuredQuality(image,'figure');
+      pushTrace(trace,{stage:'acs_viewer_probe',event:'asset_measured',status:quality.quality,
+        url:image.sourceUrl||nested.url,imageWidth:image.width,imageHeight:image.height,
+        message:'sameFigure=1;usable='+Number(quality.usable)});
+      if(quality.usable)return image;
+    }
+    return null;
+  }
+
 
   async function acquireImage(candidate, trace) {
     if (isAcsImageViewerUrl(candidate && candidate.url)) {
-      pushTrace(trace,{stage:'image_route',event:'skip_html_viewer',status:'skipped',url:candidate.url,message:'ACS viewer is not image bytes; retain same-figure DOM/CDN candidates'});
-      return null;
+      pushTrace(trace,{stage:'image_route',event:'inspect_html_viewer',status:'start',url:candidate.url,message:'revision='+ACS_MEDIA_RECOVERY_REVISION});
+      return acquireAcsViewerImage(candidate,trace);
     }
     var image = await pageFetchCandidate(candidate, trace);
     if (image && image.contentType === 'image/tiff') {
@@ -3595,8 +3716,39 @@ function embeddedJobDois(value) {
     }
   }
 
+  function rasterizeVerifiedFigureOne(image,trace) {
+    if(!image||image.contentType!=='image/svg+xml')return Promise.resolve(image);
+    var verdict=svgQuality(image);
+    if(!verdict||!verdict.usable)return Promise.reject(new Error('figure1_svg_unsafe_or_invalid'));
+    return new Promise(function(resolve,reject){
+      var probe=new Image(),settled=false;
+      var timer=setTimeout(function(){finish(new Error('figure1_svg_render_timeout'));},3500);
+      function finish(error,value){if(settled)return;settled=true;clearTimeout(timer);probe.onload=null;probe.onerror=null;error?reject(error):resolve(value);}
+      probe.onload=function(){
+        try{
+          var width=Number(probe.naturalWidth||image.width||0),height=Number(probe.naturalHeight||image.height||0);
+          if(width<1||height<1)throw new Error('figure1_svg_dimensions_missing');
+          var scale=Math.min(4,Math.max(1,1200/Math.max(width,height))),canvas=document.createElement('canvas');
+          canvas.width=Math.max(1,Math.round(width*scale));canvas.height=Math.max(1,Math.round(height*scale));
+          var ctx=canvas.getContext('2d');if(!ctx)throw new Error('figure1_svg_canvas_unavailable');
+          ctx.drawImage(probe,0,0,canvas.width,canvas.height);
+          var png=canvas.toDataURL('image/png');
+          if(png.length<200||png.length>5500000)throw new Error('figure1_png_size_invalid');
+          var rendered=Object.assign({},image,{imageData:png,contentType:'image/png',
+            byteLength:Math.floor((png.length-png.indexOf(',')-1)*0.75),width:canvas.width,height:canvas.height,method:'verified_svg_raster'});
+          pushTrace(trace,{stage:'figure1_render',event:'rasterized',status:'ok',url:image.sourceUrl||'',
+            imageWidth:rendered.width,imageHeight:rendered.height,message:'safe_svg_to_png_without_structure_changes'});
+          finish(null,rendered);
+        }catch(error){finish(error);}
+      };
+      probe.onerror=function(){finish(new Error('figure1_svg_render_failed'));};
+      probe.src=image.imageData;
+    });
+  }
+
   async function uploadCapture(job, candidate, image, trace, token) {
     assertBoundCaptureJob(job, candidate.url);
+    if(candidate.kind==='figure1')image=await rasterizeVerifiedFigureOne(image,trace);
     captureLiveUpdate(job,'uploading',{label:candidate.kind==='figure1'?'Figure 1 替代图':'TOC'});
     pushTrace(trace, {
       stage: 'r2_upload',
@@ -3625,7 +3777,7 @@ function embeddedJobDois(value) {
       }, token, 'r2_upload');
       if (!result || result.stored !== true || normalizeDoi(result.doi) !== normalizeDoi(job.doi) || result.kind !== candidate.kind) throw new Error('toc_capture_receipt_invalid');
       if (candidate.kind === 'official' && result.productionTocStored !== true) throw new Error('toc_production_promotion_missing');
-      if (candidate.kind === 'figure1' && isNatureScienceFamilyJob(job) && result.productionFallbackStored !== true) throw new Error('figure1_production_fallback_missing');
+      if (candidate.kind === 'figure1' && result.productionFallbackStored !== true) throw new Error('figure1_production_fallback_missing');
       assertBoundCaptureJob(job, candidate.url);
       pushTrace(trace, {
         stage: 'r2_upload',
@@ -4440,11 +4592,14 @@ function embeddedJobDois(value) {
     var localOfficial=tocRows.some(function(t){return t.kind==='official'&&t.imageUrl&&t.contentHash;});
     var productionOfficial=Boolean(media&&((media.tocStored&&!/fallback/i.test(media.tocReason||''))||media.primaryKind==='official_visual'));
     var official=productionOfficial;
-    var fallback=tocRows.some(function(t){return t.kind==='figure1'&&t.imageUrl;})||Boolean(media&&(media.primaryKind==='figure1'||media.figureOneStored));
+    // Only a production-backed Figure 1 closes the visual gap. Local-only
+    // receipts remain eligible for promotion; they are not a published card.
+    var localFigureOne=tocRows.some(function(t){return t.kind==='figure1'&&t.imageUrl;});
+    var fallback=Boolean(media&&(media.primaryKind==='figure1'||media.figureOneStored));
     // Acquisition and publication are separate layers. A local/R2 official receipt
     // must not hide a production TOC gap; reopening it lets /local-capture/import
     // perform the mandatory production promotion and replace an old fallback.
-    var tocKnown=Boolean(media)||localOfficial||Boolean(inventory.tocsKnown);
+    var tocKnown=Boolean(media)||localOfficial||localFigureOne||Boolean(inventory.tocsKnown);
     var figureKnown=expected>0||Boolean(media&&inventory.figuresKnown);
     var inspectFigures=Boolean(figureKnown&&expected===0&&knownCount>0);
     // A nonzero figure count alone is NOT proof that all body figures were captured.
@@ -4478,8 +4633,8 @@ function embeddedJobDois(value) {
       opportunisticEvidence:Boolean((bundleVisit||(recentFullCaptureEligible(raw)&&explicitFigureGap))&&textLevel!=='complete'||tocNeeded&&inventory.evidenceKnown&&!textLevel),
       capturePrivatePdf:Boolean(pdfNeeded||(bundleVisit&&privatePdfLease())),
       expectedFigureCount:expected,figureCoverageUnconfirmed:Boolean(tocNeeded&&inspectFigures),missingFigureCount:expected>0?Math.max(0,expected-knownCount):0,
-      capturedFigures:figs,existingEvidenceLevel:textLevel,existingTocKind:productionOfficial?'official':localOfficial?'official_local':fallback?'figure1':'',
-      unknownNeeds:unknown,nonQueueUnknownNeeds:nonQueueUnknown,allowFigureOne:Boolean(tocNeeded&&!official&&!fallback&&isNatureScienceFamilyJob(raw))});
+      capturedFigures:figs,existingEvidenceLevel:textLevel,existingTocKind:productionOfficial?'official':localOfficial?'official_local':fallback?'figure1':localFigureOne?'figure1_local':'',
+      unknownNeeds:unknown,nonQueueUnknownNeeds:nonQueueUnknown,allowFigureOne:Boolean(tocNeeded&&!official&&!fallback)});
     job.mediaNeed=captureMediaNeed(job);
     job.state=job.captureToc?'no_visual':job.captureFigures?'figure_gap':job.captureEvidence?'evidence_gap':'private_pdf_gap';
     return job;
@@ -5982,7 +6137,7 @@ function embeddedJobDois(value) {
       var hasVisual=Boolean(toc.available && toc.imageUrl);
       var official=Boolean(hasVisual && !/fallback/i.test(toc.reason||''));
       var natureScienceFamily=isNatureScienceFamilyJob(raw);
-      var acceptedFallback=Boolean(hasVisual && /fallback/i.test(toc.reason||'') && natureScienceFamily);
+      var acceptedFallback=Boolean(hasVisual && /fallback/i.test(toc.reason||''));
       var visualSatisfied=official||acceptedFallback;
       var latestAddedDate=String(queue.latestAddedDate||'');
       var isLatest=Boolean(latestAddedDate && String(raw.addedDate||'')===latestAddedDate);
@@ -6001,7 +6156,7 @@ function embeddedJobDois(value) {
         opportunisticFigures:true,
         opportunisticEvidence:false,
         capturePrivatePdf:false,
-        allowFigureOne:publisherForDoi(doi)!=='ccs'&&!official&&(isLatest||natureScienceFamily),
+        allowFigureOne:!official,
         _queueIndex:index
       });
     });
