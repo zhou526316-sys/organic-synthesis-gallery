@@ -256,6 +256,7 @@ export async function openPrivatePdf(request, env) {
   if (mode === 'download') url.searchParams.set('download', '1');
   return { status: 200, body: { available: true, doi, url: url.toString(), expiresAt,
     versionKind: doc.version_kind, ticketMode, mode,
+    byteLength: Number(doc.byte_length),
     // Only the same-worker self-tested stateless ticket may omit browser
     // preflight. Legacy D1 tokens retain the old per-open verification path.
     headerVerified: ticketMode === 'stateless-v2' } };
