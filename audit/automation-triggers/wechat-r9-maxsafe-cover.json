@@ -1,5 +1,5 @@
 {
-  "requestId": "wechat-2026-10-08-r9-max-toc-dual-crop-qa-calibrated",
+  "requestId": "wechat-2026-10-08-r9-max-toc-dualcrop-main-race-safe",
   "action": "prepare_cover_review_without_wechat_write",
   "sourceRevision": "2026-10-08-r8",
   "revision": "2026-10-08-r9",
@@ -11,5 +11,5 @@
   "publicSendAuthorized": false,
   "visualIntent": "Enlarge source-exact TOC to safe maximum, keep header-free white background and complete native full daily title; self-audit 2.35 and square crops and title collision rather than returning defective draft.",
   "reviewIteration": "measured-safe-area-11.46-percent",
-  "note": "Source-only previous run produced actual 11.46% area increase and complete image proofs, but overstrict acceptance assertion blocked commit. QA threshold corrected; original media unchanged; re-review and commit only if all checks pass."
+  "note": "R9 image+mobile source QA passed, same unchanged exact reviewed artwork; prior Git push conflicted with concurrent unrelated docs update. Retry source-only with explicit safe six-lease Git rebase loop; no draft write before commit."
 }
