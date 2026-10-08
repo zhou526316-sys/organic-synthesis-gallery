@@ -1,0 +1,75 @@
+name: Build isolated Tampermonkey preview link
+on:
+  push:
+    branches:
+      - preview/tm-cooldown-227099-20261008
+    paths:
+      - .github/workflows/tm-preview-227099.yml
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: tm-preview-227099
+  cancel-in-progress: false
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Retrieve exact tested immutable installer
+        uses: actions/download-artifact@v4
+        with:
+          name: queue-coverage-tested
+          run-id: 37737620949
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          path: ${{ runner.temp }}/approved-tm
+      - name: Verify artifact and create update-disabled preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node tests/tm-queue-coverage.test.mjs
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const crypto=require('node:crypto');
+          const path=require('node:path');
+          const original=path.join(process.env.RUNNER_TEMP,'approved-tm','queue-coverage-output','gallery-vpn-bridge.user.js');
+          const destination='public/gallery-vpn-bridge-2.2.70.99-preview.user.js';
+          const src=fs.readFileSync(original,'utf8');
+          const sha=crypto.createHash('sha256').update(src,'utf8').digest('hex');
+          if(sha!=='381d2db10ee45b7e7a626a3ca1055e313af8175be48838c9f3ca22ee9c7433da')
+            throw new Error('trusted tested artifact SHA mismatch: '+sha);
+          if(!/^\/\/ @version\s+2\.2\.70\s*$/m.test(src))throw new Error('unexpected artifact version');
+          let preview=src.replace(/^\/\/ @version\s+2\.2\.70\s*$/m,'// @version      2.2.70.99')
+            .replace(/^\/\/ @description\s+.*$/m,'// @description  2026-10-08 preview for authenticated validation of publisher cooldown and PDF inventory states. No automatic update; replace with approved production later.')
+            .replace(/^\/\/ @updateURL[^\r\n]*\r?\n/gm,'')
+            .replace(/^\/\/ @downloadURL[^\r\n]*\r?\n/gm,'');
+          const delimiter='// ==/UserScript==';
+          if(!preview.startsWith('// ==UserScript==')||preview.includes('// @updateURL')||preview.includes('// @downloadURL'))throw new Error('metadata isolation failed');
+          if(preview.slice(preview.indexOf(delimiter))!==src.slice(src.indexOf(delimiter)))throw new Error('executable code altered');
+          const outsha=crypto.createHash('sha256').update(preview,'utf8').digest('hex');
+          if(outsha!=='558e9be96795767f9c87a1653caf8f24795412602cf28f02f5e7bb91322f601a')
+            throw new Error('preview mismatch against independently reviewed candidate: '+outsha);
+          fs.writeFileSync(destination,preview,'utf8');
+          console.log('TM_PREVIEW_READY '+JSON.stringify({sha256:outsha,bytes:Buffer.byteLength(preview),bodyIdentical:true,autoUpdate:false}));
+          NODE
+          node --check public/gallery-vpn-bridge-2.2.70.99-preview.user.js
+          git diff --check
+      - name: Commit only isolated test installer to preview branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = "refs/heads/preview/tm-cooldown-227099-20261008"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/gallery-vpn-bridge-2.2.70.99-preview.user.js
+          git diff --cached --quiet && exit 1
+          git commit -m "test(tm): host immutable 2.2.70.99 preview installer, no auto-update"
+          git push origin HEAD:preview/tm-cooldown-227099-20261008
