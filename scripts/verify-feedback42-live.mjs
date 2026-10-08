@@ -89,7 +89,7 @@ async function verify(width, height, expectedPlacement) {
     if (!result.error && result.actualPlacement !== expectedPlacement) {
       const assets = await page.evaluate(async () => {
         const scripts = [...document.querySelectorAll('script[src]')].map(el => el.src);
-        const latest = scripts.find(url => /\\/assets\\//.test(url)) || scripts[0] || '';
+        const latest = scripts.find(url => url.includes('/assets/')) || scripts[0] || '';
         try {
           const body = latest ? await fetch(latest, { cache: 'no-store' }).then(r => r.text()) : '';
           return { latestScript: latest, scriptLength: body.length,
