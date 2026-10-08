@@ -3550,11 +3550,93 @@ function embeddedJobDois(value) {
     try { var u=new URL(value,location.href); return u.hostname==='pubs.acs.org' && /^\/view-large\/figure\//i.test(u.pathname); }
     catch (_) { return false; }
   }
+  function acsViewerStem(value) {
+    try{
+      var name=decodeURIComponent(new URL(value,location.href).pathname.split('/').pop()||'');
+      return name.replace(/\.(?:tiff?|png|jpe?g|svg|webp)$/i,'').toLowerCase();
+    }catch(_){return '';}
+  }
+  function acsViewerAssetUrls(viewerUrl,html) {
+    // Only use links actually present in the publisher viewer. Never synthesize
+    // an assumed full-size file name or accept a different figure's asset.
+    var stem=acsViewerStem(viewerUrl),input=String(html||'').replace(/&amp;/gi,'&')
+      .replace(/\\u0026/gi,'&').replace(/\\\//g,'/');
+    if(!stem||input.length>2500000)return [];
+    var out=[],seen=new Set();
+    function add(raw){
+      var url=normalizeUrl(raw,viewerUrl);
+      if(!url||seen.has(url)||url===normalizeUrl(viewerUrl,viewerUrl))return;
+      try{
+        var u=new URL(url),host=u.hostname.toLowerCase(),path=decodeURIComponent(u.pathname+u.search).toLowerCase();
+        if(!(host==='pubs.acs.org'||host==='acs.silverchair-cdn.com'||host.endsWith('.silverchair-cdn.com')))return;
+        if(path.indexOf(stem)<0||!/\.(?:svg|png|jpe?g|webp|gif|tiff?)(?:[?#]|$)/i.test(url))return;
+        seen.add(url);out.push(url);
+      }catch(_){}
+    }
+    var attr=/(?:src|href|content|data-[a-z0-9_-]+)\s*=\s*["']([^"']+)["']/gi,match;
+    while((match=attr.exec(input))&&out.length<20)add(match[1]);
+    var absolute=/(?:https?:)?\/\/[^"'<>\s\\]+/gi;
+    while((match=absolute.exec(input))&&out.length<20)add(match[0]);
+    function score(url){return (/\.svg(?:[?#]|$)/i.test(url)?150:0)+(/content_public/i.test(url)?50:0)
+      +(/\.(?:png|jpe?g|webp)(?:[?#]|$)/i.test(url)?40:0)
+      -(/\/m_[^/]+/i.test(url)?70:0)-(/\.tiff?(?:[?#]|$)/i.test(url)?60:0);}
+    return out.sort(function(a,b){return score(b)-score(a);}).slice(0,5);
+  }
+  async function acsViewerHtml(viewerUrl,trace) {
+    var started=Date.now();
+    try{
+      var response=await fetch(viewerUrl,{method:'GET',credentials:'include',cache:'no-store',
+        redirect:'follow',signal:AbortSignal.timeout(3500),referrer:location.href});
+      var type=String(response.headers.get('content-type')||'');
+      if(response.ok&&/(?:text\/html|application\/xhtml\+xml)/i.test(type)){
+        var html=await response.text();
+        pushTrace(trace,{stage:'acs_viewer_probe',event:'html',status:'ok',url:response.url||viewerUrl,
+          message:'transport=browser;chars='+html.length+';elapsedMs='+(Date.now()-started)});
+        return html;
+      }
+      pushTrace(trace,{stage:'acs_viewer_probe',event:'browser_non_html',status:response.ok?'unsupported':'http_error',
+        url:response.url||viewerUrl,httpStatus:response.status,contentType:type});
+      if(response.status===401||response.status===403||response.status===429)return '';
+    }catch(error){pushTrace(trace,{stage:'acs_viewer_probe',event:'browser_failed',status:'failed',url:viewerUrl,message:String(error&&error.message||error)});}
+    try{
+      var gm=await gmRequest({method:'GET',url:viewerUrl,timeout:4000,
+        headers:{Accept:'text/html,application/xhtml+xml;q=0.9,*/*;q=0.1',Referer:location.href}},true);
+      var ct=headerValue(gm.responseHeaders,'content-type'),raw=String(gm.responseText||'');
+      if(Number(gm.status)>=200&&Number(gm.status)<300&&/(?:text\/html|application\/xhtml\+xml)/i.test(ct)){
+        pushTrace(trace,{stage:'acs_viewer_probe',event:'html',status:'ok',url:gm.finalUrl||viewerUrl,
+          message:'transport=gm;chars='+raw.length+';elapsedMs='+(Date.now()-started)});
+        return raw;
+      }
+      pushTrace(trace,{stage:'acs_viewer_probe',event:'gm_non_html',status:'unsupported',
+        url:gm.finalUrl||viewerUrl,httpStatus:Number(gm.status||0),contentType:ct});
+    }catch(error){pushTrace(trace,{stage:'acs_viewer_probe',event:'gm_failed',status:'failed',url:viewerUrl,message:String(error&&error.message||error)});}
+    return '';
+  }
+  async function acquireAcsViewerImage(candidate,trace) {
+    var html=await acsViewerHtml(candidate.url,trace),urls=acsViewerAssetUrls(candidate.url,html);
+    pushTrace(trace,{stage:'acs_viewer_probe',event:'assets',status:urls.length?'found':'none',
+      url:candidate.url,message:'figureStem='+acsViewerStem(candidate.url)+';sameFigureAssets='+urls.length});
+    for(var i=0;i<urls.length;i++){
+      var nested=Object.assign({},candidate,{url:urls[i],source:'acs_view_large_html_asset',element:null});
+      var image=await pageFetchCandidate(nested,trace);
+      if(!image)image=await gmFetchCandidate(nested,trace);
+      if(!image||image.contentType==='image/tiff')continue;
+      var size=await measureImageData(image.imageData);
+      image.width=Number(size.width||0);image.height=Number(size.height||0);
+      var quality=measuredQuality(image,'figure');
+      pushTrace(trace,{stage:'acs_viewer_probe',event:'asset_measured',status:quality.quality,
+        url:image.sourceUrl||nested.url,imageWidth:image.width,imageHeight:image.height,
+        message:'sameFigure=1;usable='+Number(quality.usable)});
+      if(quality.usable)return image;
+    }
+    return null;
+  }
+
 
   async function acquireImage(candidate, trace) {
     if (isAcsImageViewerUrl(candidate && candidate.url)) {
-      pushTrace(trace,{stage:'image_route',event:'skip_html_viewer',status:'skipped',url:candidate.url,message:'ACS viewer is not image bytes; retain same-figure DOM/CDN candidates'});
-      return null;
+      pushTrace(trace,{stage:'image_route',event:'inspect_html_viewer',status:'start',url:candidate.url,message:'revision='+ACS_MEDIA_RECOVERY_REVISION});
+      return acquireAcsViewerImage(candidate,trace);
     }
     var image = await pageFetchCandidate(candidate, trace);
     if (image && image.contentType === 'image/tiff') {
