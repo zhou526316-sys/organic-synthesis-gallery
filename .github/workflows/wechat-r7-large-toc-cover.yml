@@ -1,0 +1,113 @@
+name: WeChat JACS R7 enlarged original TOC without label
+on:
+  push:
+    branches: [main]
+    paths:
+      - audit/automation-triggers/wechat-r7-large-toc-cover.json
+permissions:
+  contents: write
+concurrency:
+  group: wechat-r7-large-toc-cover
+  cancel-in-progress: false
+jobs:
+  source-only-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Validate exact user-approved draft-only request
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('audit/automation-triggers/wechat-r7-large-toc-cover.json').read_text())
+          assert r['action']=='prepare_reviewed_cover_without_draft_write'
+          assert r['revision']=='2026-10-08-r7'
+          assert r['sourceRevision']=='2026-10-08-r6'
+          assert r['featuredDoi']=='10.1021/jacs.6c14748'
+          assert r['retrospectiveDoi']=='10.1038/s41929-026-01602-y'
+          assert r['draftUpdateAuthorized'] is True
+          assert r['publicSendAuthorized'] is False
+          assert r['sameMediaId']=='KhELYUzvwADwB_l1xH1SWFVYn_-s6bRj39Vw7w-SivoAE1W-c7lb3hzVk5bB-0Tr'
+          PY
+      - name: Install raster dependency
+        run: python3 -m pip install -q 'Pillow>=10,<13'
+      - name: Create reviewed TOC-only source file
+        run: python3 ops/wechat-publisher/prepare-jacs-cover-r7.py
+      - name: Independently verify asset, reviewer hashes, title band and published body invariants
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json, hashlib, io
+          root=Path.cwd()
+          def blob(b): return hashlib.sha1(f'blob {len(b)}\0'.encode()+b).hexdigest()
+          gate=json.loads(Path('audit/wechat-working/2026-10-08-review-gate.json').read_text())
+          feat=json.loads(Path('public/wechat-featured/2026-10-08.json').read_text())
+          edt=json.loads(Path('public/wechat-editions/2026-10-08.json').read_text())
+          qa=json.loads(Path('audit/wechat-working/2026-10-08-r7-mobile-cover-qa.json').read_text())
+          assert gate['revision']=='2026-10-08-r7'
+          assert gate['textReview']==gate['imageReview']=='pass'
+          assert len(gate['assets'])==34 and len(gate['sources'])==5
+          assert gate['selectionDois']==['10.1021/jacs.6c14748','10.1038/s41929-026-01602-y']
+          for row in gate['sources']+gate['assets']:
+            data=(root/row['path']).read_bytes()
+            assert blob(data)==row['blobSha'],row['path']
+            if row.get('sha256'): assert hashlib.sha256(data).hexdigest()==row['sha256']
+            if row['path'].endswith(('.png','.jpg','.jpeg')):
+              with Image.open(io.BytesIO(data)) as im:
+                im.load()
+                if 'width' in row:
+                  assert (im.width,im.height)==(row['width'],row['height']),row['path']
+          assert feat['editorialRevision']==edt['editorialRevision']=='2026-10-08-r7'
+          assert edt['retrospective']=='os1-multicentred-sulfur-20261008'
+          assert edt['publicationMode']=='draft_only_manual_final_send'
+          assert feat['paper']['doi']=='10.1021/jacs.6c14748'
+          assert feat['figures'][-1]['id']=='jacs-cover'
+          assert feat['figures'][-1]['body'] is False
+          assert feat['figures'][-1]['repo_path']=='public/wechat-assets/reviewed/2026-10-08-r7/jacs-cover-toc-large-no-label.png'
+          assert len([x for x in feat['figures'] if x.get('body') is not False])==20
+          assert qa['nativeTitleBackingY']==492 and qa['topColumnTextRemoved']
+          assert qa['artworkRegion']=={'x':560,'y':16,'width':760,'height':460}
+          with Image.open(qa['finalCover']) as im:
+            im.load(); im=im.convert('RGB')
+            assert im.size==(1880,800)
+            assert im.getpixel((100,100))==(255,255,255)
+            assert im.getpixel((100,520))==(36,60,81)
+            assert im.getpixel((100,799))==(36,60,81)
+          assert Path('public/wechat-retrospective/os1-multicentred-sulfur-20261008.json').exists()
+          print('PASS original TOC / 2.35:1 + 1:1 crop / 34 exact assets / unchanged second article / no draft write')
+          PY
+      - name: Commit only reviewed R7 editorial assets (no WeChat write)
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            public/wechat-assets/reviewed/2026-10-08-r7/jacs-cover-toc-large-no-label.png \
+            public/wechat-featured/2026-10-08.json \
+            public/wechat-editions/2026-10-08.json \
+            audit/wechat-working/2026-10-08-review-gate.json \
+            audit/wechat-working/2026-10-08-r7-text-only.md \
+            audit/wechat-working/2026-10-08-r7-images-only.md \
+            audit/wechat-working/2026-10-08-r7-mobile-cover-qa.json
+          git diff --cached --name-only
+          git commit -m 'editorial: remove featured header and enlarge source-true JACS TOC R7'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
+          echo 'R7 REVIEWED ASSETS READY; NOT WRITTEN TO WECHAT'
+      - name: Preserve full-resolution visual proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wechat-r7-original-toc-before-publisher
+          path: |
+            public/wechat-assets/reviewed/2026-10-08-r7/jacs-cover-toc-large-no-label.png
+            audit/wechat-working/2026-10-08-r7-mobile-cover-qa.json
+          retention-days: 7
+          if-no-files-found: ignore
