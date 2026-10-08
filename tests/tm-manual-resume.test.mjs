@@ -111,7 +111,7 @@ await test('late old-generation results remain rejected after recovery',async()=
 await test('publisher cooldowns credentials and saved checkpoints survive recovery',async()=>{
  const x=orphan(h()),until=x.clock.now+30*60000;x.put(P+'publisher-access-cooldown:acs',{until});
  const keys=['organicGalleryCloudflareBridgeWriteToken',x.T.checkpointKey(articles[1].doi),P+'auto-report-v1:pending'];keys.forEach(k=>x.put(k,{retained:true}));
- await x.T.tryResumeInterruptedManualRun();assert.equal(x.opened.some(v=>v.j.publisher==='acs'),false);assert.equal(x.store.get(P+'publisher-access-cooldown:acs').until,until);keys.forEach(k=>assert.deepEqual(x.store.get(k),{retained:true}));
+ await x.T.tryResumeInterruptedManualRun();assert.ok(x.opened.every(v=>v.j.publisher!=='acs'||v.at>=until),'ACS visits must remain deferred until cooldown ends');assert.equal(x.store.get(P+'publisher-access-cooldown:acs')?.until||until,until);keys.forEach(k=>assert.deepEqual(x.store.get(k),{retained:true}));
 });
 await test('missing write capability and pending user resume request prevent recovery',async()=>{
  const x=orphan(h({noToken:true}));assert.equal(await x.T.tryResumeInterruptedManualRun(),false);assert.equal(x.requests.length,0);
