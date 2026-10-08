@@ -13,9 +13,9 @@ from PIL import Image, ImageChops
 
 ROOT = Path(__file__).resolve().parents[2]
 DATE = "2026-10-08"
-REV = "2026-10-08-r4"
+REV = "2026-10-08-r5"
 SOURCE = ROOT / "public/wechat-assets/reviewed/2026-10-08-r3/jacs-cover-original-white.png"
-TARGET_REL = "public/wechat-assets/reviewed/2026-10-08-r4/jacs-cover-native-safe.png"
+TARGET_REL = "public/wechat-assets/reviewed/2026-10-08-r5/jacs-cover-native-safe-clean.png"
 TARGET = ROOT / TARGET_REL
 EXPECTED_SHA = "1cd7a98d013038332724d3ff81cce2d7e97f82a0049c8b481108008cf401fbde"
 
@@ -57,6 +57,11 @@ def main() -> None:
     # Extra source margins keep bond labels/arrows away from all crop edges.
     artbox=(550,93,1330,565)
     art=source.crop(artbox)
+    # Clear only old navy header glyphs carried into the top of R4 crop.
+    # The central oxygen group at source x~970 stays exactly intact.
+    clean=ImageDraw.Draw(art)
+    clean.rectangle((0,0,404,32),fill="#ffffff")
+    clean.rectangle((465,0,art.width,32),fill="#ffffff")
     new_h=339
     new_w=round(art.width*new_h/art.height)
     art=art.resize((new_w,new_h),Image.Resampling.LANCZOS)
@@ -86,14 +91,14 @@ def main() -> None:
     assert featured["paper"]["doi"]=="10.1021/jacs.6c14748"
     assert edition["featured"]==featured["paper"]["doi"]
     assert edition["retrospective"]=="os1-multicentred-sulfur-20261008"
-    assert edition["editorialRevision"]=="2026-10-08-r3"
+    assert edition["editorialRevision"]=="2026-10-08-r4"
     cover_item=[x for x in featured["figures"] if x.get("id")=="jacs-cover"]
     assert len(cover_item)==1
-    assert cover_item[0]["repo_path"]==str(SOURCE.relative_to(ROOT))
+    assert cover_item[0]["repo_path"]=="public/wechat-assets/reviewed/2026-10-08-r4/jacs-cover-native-safe.png"
     cover_item[0]["repo_path"]=TARGET_REL
     cover_item[0]["source_kind"]="original_TOC_uniformly_scaled_native_screenshot_safe"
     cover_item[0]["source_adjustment"]=(
-      "Original R3 chemical artwork preserved through uniform 0.718 scaling, "
+      "Original R3 chemical artwork uniformly rescaled 0.718; old header ghost strips removed outside chemistry, "
       "not generated; header moved down 26px; full chemistry ends at y479; "
       "solid navy native-title backing starts y492, before actual first-line "
       "native white glyphs near y525 in user's WeChat screenshot."
@@ -108,13 +113,13 @@ def main() -> None:
     save_json(featured_rel,featured)
     save_json(edition_rel,edition)
 
-    old_text=ROOT/"audit/wechat-working/2026-10-08-r3-text-only.md"
+    old_text=ROOT/"audit/wechat-working/2026-10-08-r4-text-only.md"
     new_text_rel=f"audit/wechat-working/{REV}-text-only.md"
-    content=old_text.read_text(encoding="utf-8").replace("(R3)","(R4)")
+    content=old_text.read_text(encoding="utf-8").replace("(R4)","(R5)")
     (ROOT/new_text_rel).write_text(content,encoding="utf-8")
-    old_images=ROOT/"audit/wechat-working/2026-10-08-r3-images-only.md"
+    old_images=ROOT/"audit/wechat-working/2026-10-08-r4-images-only.md"
     new_images_rel=f"audit/wechat-working/{REV}-images-only.md"
-    old_source_rel=str(SOURCE.relative_to(ROOT))
+    old_source_rel="public/wechat-assets/reviewed/2026-10-08-r4/jacs-cover-native-safe.png"
     image_text=old_images.read_text(encoding="utf-8")
     assert old_source_rel in image_text
     image_text=image_text.replace(old_source_rel,TARGET_REL)
@@ -123,11 +128,12 @@ def main() -> None:
       "沿用R3审核的原始TOC信息图，经同比例缩放；顶栏下移26像素，"
       "化学信息全在y479以上，深蓝色原生标题底板从y492开始。"
     )
+    image_text += "\nR5独立复核：仅清理前版旧标题在化学裁切上缘的残影；原始化学结构完整保留。\n"
     (ROOT/new_images_rel).write_text(image_text,encoding="utf-8")
 
     gate_rel="audit/wechat-working/2026-10-08-review-gate.json"
     gate=json.loads((ROOT/gate_rel).read_text(encoding="utf-8"))
-    assert gate["revision"]=="2026-10-08-r3"
+    assert gate["revision"]=="2026-10-08-r4"
     assert gate["textReview"]=="pass" and gate["imageReview"]=="pass"
     assert gate["articleCount"]==2
     gate["revision"]=REV
@@ -146,16 +152,16 @@ def main() -> None:
         source_map[path]["blobSha"]=blobsha(payload)
         source_map[path]["sha256"]=sha256(payload)
     gate["sources"]=[row for row in gate["sources"] if row["path"] not in [
-        "audit/wechat-working/2026-10-08-r3-text-only.md",
-        "audit/wechat-working/2026-10-08-r3-images-only.md"]]
+        "audit/wechat-working/2026-10-08-r4-text-only.md",
+        "audit/wechat-working/2026-10-08-r4-images-only.md"]]
     for path in [new_text_rel,new_images_rel]:
         payload=(ROOT/path).read_bytes()
         gate["sources"].append({"path":path,"blobSha":blobsha(payload),"sha256":sha256(payload)})
-    gate["reviewNotesR4"]={
+    gate["reviewNotesR5"]={
       "actualNativeMobileScreenshot":"2026-10-08 user screenshot, R3 visually failed",
       "nativeFirstLineOverWhiteFix":"native glyphs begin near original y525; dark now starts y492",
       "headerSafeMargin":"header moved down 26 original pixels",
-      "chemistry":"uniformly resampled verified original; no generated atoms or bonds",
+      "chemistry":"resampled verified original; top ghost strips removed outside chemistry; no generated bonds",
       "imageReview":"pass: actual output checked for crop, preservation and separated title region",
       "textReview":"pass: article prose and headings are unchanged from reviewed R3",
       "retrospective":"unchanged",
