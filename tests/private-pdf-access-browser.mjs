@@ -225,9 +225,18 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    }
    if(mode==='download')source.searchParams.set('download','1');
    else source.searchParams.delete('download');
-   try { return await reply({...openResult,mode,url:source.toString(),
-     ...(options.omitByteLength?{}:{byteLength:filePdf.length})}); }
-   catch(error) {
+   try {
+    const data={...openResult,mode,url:source.toString(),
+     ...(options.omitByteLength?{}:{byteLength:filePdf.length})};
+    if(options.withOpenTiming){
+     return route.fulfill({status:200,contentType:'application/json',headers:{
+      'access-control-allow-origin':base,
+      'access-control-expose-headers':'server-timing',
+      'server-timing':'session;dur=8, capability;dur=12, document;dur=3, r2_get;dur=146, r2_body;dur=4, total;dur=177',
+     },body:JSON.stringify(data)});
+    }
+    return await reply(data);
+   } catch(error) {
     // Browser may cancel a delayed losing authorization request after the
     // verified secondary gateway has already won.
     if(options.primaryOpenDelayMs && url.origin==='https://api.gczhouwld.com') return;
@@ -379,6 +388,20 @@ try{
   assert.match(await target.locator('#pdf-diagnostic').textContent(),/open_http_403/);
   assert.deepEqual(state.openOrigins,['https://api.gczhouwld.com']);
   assert.equal(state.privateFileCalls,0,'denied accounts never receive PDF bytes');
+ });
+ await test('authenticated owner open displays sanitized D1/R2 stage timings without sensitive values',async()=>{
+  const owner={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-private-opaque'};
+  const {context,state}=await contextWith(['private_pdf_read'],owner,{withOpenTiming:true});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:12000});
+  const stage=await target.locator('html').getAttribute('data-private-pdf-auth-attempts');
+  assert.match(stage||'',/primary:完成/);
+  assert.match(stage||'',/r2_get=146ms/);
+  assert.match(stage||'',/capability=12ms/);
+  assert.doesNotMatch(stage||'',/token|fixture-private|Bearer|owner-token|r2_key|pdf-private/i);
+  assert.equal(state.privateCalls,1);
+  assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
  });
  await test('high-RTT small file uses concurrent ranges and local page turns',async()=>{
   const fast={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
