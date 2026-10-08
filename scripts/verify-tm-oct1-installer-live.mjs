@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import path from 'node:path';
-const VERSION='2.2.71',INSTALL='6.2.52';
+const VERSION='2.2.72',INSTALL='6.2.53';
 const origin='https://api.gczhouwld.com';
 const targets=[['api','https://api.gczhouwld.com/gallery-vpn-bridge.user.js'],
   ['worker','https://organic-synthesis-gallery.zhou526316.workers.dev/gallery-vpn-bridge.user.js']];
