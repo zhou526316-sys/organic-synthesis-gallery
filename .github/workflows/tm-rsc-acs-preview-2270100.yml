@@ -1,0 +1,73 @@
+name: Publish isolated Tampermonkey 2.2.70.100 validation installer
+on:
+  push:
+    branches:
+      - preview/tm-rsc-acs-inventory-2270100-20261008
+    paths:
+      - .github/workflows/tm-rsc-acs-preview-2270100.yml
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: tm-rsc-acs-preview-2270100
+  cancel-in-progress: false
+jobs:
+  immutable-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with: {node-version: '22'}
+      - name: Fetch CI-tested self-contained package from frozen candidate
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 37744975383
+          repository: ${{ github.repository }}
+          github-token: ${{ github.token }}
+          name: queue-coverage-tested
+          path: ${{ runner.temp }}/trusted-ci
+      - name: Confirm immutable runtime and disable test-channel auto-updates
+        run: |
+          set -euo pipefail
+          node --test tests/tm-rsc-acs-inventory-20261008.test.mjs
+          node - <<'NODE'
+          const fs=require('node:fs'),crypto=require('node:crypto'),path=require('node:path');
+          const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
+          const ci=path.join(process.env.RUNNER_TEMP,'trusted-ci','queue-coverage-output');
+          const original=fs.readFileSync(path.join(ci,'gallery-vpn-bridge.user.js'),'utf8');
+          const testedSource=fs.readFileSync(path.join(ci,'toc-mainline.user.js'),'utf8');
+          const repositorySource=fs.readFileSync('public/toc-mainline.user.js','utf8');
+          if(hash(original)!=='f7804957003217d57c21f67d5387b593f6551b788de7812161bccd8cf1d228c1')
+            throw Error('Unexpected CI installer SHA');
+          if(hash(testedSource)!=='144a13491071cc34a0a449d77587830727d1a4e68b5c95c990555dbd117a0b1d'
+              ||hash(repositorySource)!==hash(testedSource))throw Error('CI-tested source differs from preview branch');
+          for(const marker of ['rscSilverchairVisualCandidates','INVENTORY_TRANSPORT_REPAIR_REVISION',
+                'PUBLISHER_ROUTE_REPAIR_REVISION','publisherAccessCooldownUntil'])
+            if(!original.includes(marker))throw Error('Missing approved runtime repair '+marker);
+          if(!/^\/\/ @version\s+2\.2\.70\s*$/m.test(original))throw Error('Unexpected runtime version');
+          const preview=original.replace(/^\/\/ @version\s+2\.2\.70\s*$/m,'// @version      2.2.70.100')
+            .replace(/^\/\/ @description\s+.*$/m,'// @description  Oct-08 authorized validation preview: RSC Silverchair DOI visuals, ACS TOC landing and bounded inventory. Automatic updates disabled.')
+            .replace(/^\/\/ @updateURL[^\r\n]*\r?\n/gm,'')
+            .replace(/^\/\/ @downloadURL[^\r\n]*\r?\n/gm,'');
+          const marker='// ==/UserScript==';
+          if(preview.slice(preview.indexOf(marker))!==original.slice(original.indexOf(marker)))
+            throw Error('Executable runtime changed');
+          if(/\/\/ @(?:updateURL|downloadURL)/.test(preview))throw Error('Automatic update not disabled');
+          if(hash(preview)!=='10b955b48b077cff05e98e27f2d382963b8e86724b0348e7083a55a764aa1010')
+            throw Error('Independently verified preview hash mismatch');
+          fs.writeFileSync('public/gallery-vpn-bridge-2.2.70.100-preview.user.js',preview,'utf8');
+          console.log('TM_PREVIEW_READY '+JSON.stringify({sha256:hash(preview),bytes:Buffer.byteLength(preview),noAutoUpdate:true,executableUnchanged:true}));
+          NODE
+          node --check public/gallery-vpn-bridge-2.2.70.100-preview.user.js
+          git diff --check
+      - name: Commit only the isolated test installer
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = "refs/heads/preview/tm-rsc-acs-inventory-2270100-20261008"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/gallery-vpn-bridge-2.2.70.100-preview.user.js
+          git diff --cached --quiet && { echo 'Test installer not newly generated'; exit 1; }
+          git commit -m "test(tm): publish frozen isolated 2.2.70.100 validation installer"
+          git push origin HEAD:preview/tm-rsc-acs-inventory-2270100-20261008
