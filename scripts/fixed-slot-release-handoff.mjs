@@ -30,7 +30,7 @@ export function slotState(slot, now, publishedSlot) {
   assert(Number.isFinite(now), 'invalid_clock');
   if (Date.parse(publishedSlot || '') >= Date.parse(slot)) return 'already_published_or_superseded';
   const delta = now - Date.parse(slot);
-  if (delta > 20 * 60_000) return 'expired_slot';
+  if (delta > 60 * 60_000) return 'expired_slot';
   assert(delta >= -65 * 60_000, 'slot_not_in_arming_window');
   return delta < 0 ? 'waiting_for_slot' : 'slot_open';
 }

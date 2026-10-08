@@ -35,7 +35,9 @@ test('fork gate rejected', () => assert.throws(() => validateGateRun(run, 'other
 test('65 minute pre-slot arming is read-only waiting', () => assert.equal(slotState(slot, at - 65 * 60_000), 'waiting_for_slot'));
 test('one millisecond before slot never releases', () => assert.equal(slotState(slot, at - 1), 'waiting_for_slot'));
 test('exact slot admits guarded execution', () => assert.equal(slotState(slot, at), 'slot_open'));
-test('expired slot is not replayed', () => assert.equal(slotState(slot, at + 20 * 60_000 + 1), 'expired_slot'));
+test('execution remains open at 59 minutes', () => assert.equal(slotState(slot, at + 59 * 60_000), 'slot_open'));
+test('execution remains open at exactly 60 minutes', () => assert.equal(slotState(slot, at + 60 * 60_000), 'slot_open'));
+test('expired slot is not replayed', () => assert.equal(slotState(slot, at + 60 * 60_000 + 1), 'expired_slot'));
 test('next-day invocation cannot backfill yesterday', () => assert.equal(slotState(slot, at + 24 * 3600_000), 'expired_slot'));
 test('same slot is idempotent', () => assert.equal(slotState(slot, at, slot), 'already_published_or_superseded'));
 test('newer marker is never overwritten', () => assert.equal(slotState(slot, at, '2026-10-03T08:00:00+08:00'), 'already_published_or_superseded'));
@@ -60,7 +62,8 @@ test('writer uses event handoff, not another cron or dispatch', () => {
   assert.match(yaml, /workflow_run:/); assert.match(yaml, /Validate prepublish literature review/);
   assert.doesNotMatch(yaml, /^\s+(schedule|workflow_dispatch):/m);
   assert.match(yaml, /ref: main/); assert.match(yaml, /actions\/download-artifact@v4/);
-  assert.match(yaml, /cancel-in-progress: false/); assert.match(yaml, /fixed-slot-release-handoff.mjs commit-guard/);
+  assert.match(yaml, /cancel-in-progress: false/);
+  assert.match(yaml, /timeout-minutes: 140/, 'Writer timeout must include 65-minute early arming plus 60-minute post-slot window'); assert.match(yaml, /fixed-slot-release-handoff.mjs commit-guard/);
   assert.match(yaml, /needs.release.outputs.did_release == 'true'/);
 });
 const writer = { ...run, name: 'Fixed-slot literature release writer', path: '.github/workflows/literature-fixed-slot-release.yml', event: 'workflow_run' };

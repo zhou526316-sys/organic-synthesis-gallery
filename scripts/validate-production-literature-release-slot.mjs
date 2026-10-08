@@ -8,7 +8,7 @@ const ROOT = process.cwd();
 const MARKER = path.resolve(ROOT, 'audit/publication-release-state.json');
 const BOOTSTRAP_ID = 'fixed-slots-cutover-2026-09-22';
 const BOOTSTRAP_MARKER_COMMIT = '3c9bcd16ab34a24fcbe0efda5a7e1d5905ca71fa';
-const SLOT_GRACE_MINUTES = 20;
+const SLOT_GRACE_MINUTES = 60;
 const SINGLE_DAILY_SLOT_CUTOVER_COMMIT = '0a88cd948049081479d33040b93ea20a80d83ca9';
 
 const marker = JSON.parse(await readFile(MARKER, 'utf8'));
