@@ -1,0 +1,363 @@
+{
+  "slug": "os1-multicentred-sulfur-20261008",
+  "title": "往期精选｜Nature Catalysis：利用穿空间轨道相互作用实现多中心有机硫催化",
+  "headline": "利用穿空间轨道相互作用实现多中心有机硫催化",
+  "kicker": "往期精选｜Nature Catalysis",
+  "digest": "四硫催化剂OS1将轨道相位与空间排列用于电子结构设计，实现晚期芳烃卤化；结合光谱、计算和对照实验说明机制依据与适用边界。",
+  "source_url": "https://gallery.gczhouwld.com/?doi=10.1038/s41929-026-01602-y",
+  "paper": {
+    "doi": "10.1038/s41929-026-01602-y",
+    "title": "Harnessing through-space orbital interactions for multicentred organosulfur catalysis",
+    "journal": "Nature Catalysis",
+    "authors": "Woojin Lee, Jason Kim, Hyunji Lee, Yujeong Hwang, Jiseong Park, Seunghoon Lee, Jongwoo Lim, Seung Youn Hong"
+  },
+  "quick_points": [
+    {
+      "label": "做成了什么",
+      "text": "OS1 以 1 mol% 催化量配合 NBS、NCS 或 NIS，可以完成多类药物、农药和杂芳烃的晚期亲电卤化。以 tebuconazole 为模型，OS1 的溴化收率达到 99%，而二中心 OS2、单中心 thioanisole OS3 以及早期四硫螺环 OS6 的表现都明显更低。"
+    },
+    {
+      "label": "为什么不能把它理解成“硫越多越活泼”",
+      "text": "OS1 的优势并不随硫原子数量简单增加。几个硫怎样靠近、轨道以什么相位相遇，决定了它们能否形成有效的多中心电子结构；而这套结构在催化循环前后承担的任务并不相同。"
+    },
+    {
+      "label": "这项工作的概念推进",
+      "text": "传统问题是“一个原子的轨道怎样调”；本文把问题推进到“多个原子能否通过空间组织形成可利用的集体轨道”。这使空间排列本身成为分子轨道工程的一项设计自由度。"
+    }
+  ],
+  "lead_figure_id": "r01",
+  "lead_figure_position": "after_first_quick_point",
+  "sections": [
+    {
+      "heading": "1｜先把概念讲清楚：什么叫“穿空间轨道相互作用”",
+      "paragraphs": [
+        "这篇文章从一个很基础、也很容易被忽略的问题出发：催化剂的“反应中心”一定只能是一个原子吗？",
+        "过去几十年，主族催化里一条很成功的路线，是强迫一个中心原子偏离它最舒服的几何构型，借此改变前线轨道能量。这个思路在磷、铋等体系里非常有效。但对二价硫来说，沿着同样的方向继续“掰几何”并不自然。Hong课题组换了一个尺度思考：既然单个硫不适合继续这样调，能不能把几个硫放到一个精确的空间关系里，让它们共同组成一个电子反应中心？",
+        "他们给出的答案是 OS1：四个硫围绕一个螺环碳中心排列，彼此并没有靠传统 π 共轭连成一条电子通路，却因为空间距离和轨道相位合适而发生直接耦合。这个设计最终被用在复杂芳烃的晚期卤化中。",
+        "这里改变的是看待催化中心的尺度：四个硫不是四个彼此独立的活性位，而是被组织成一个可以共同调节前线轨道的电子单元。",
+        "如果两个轨道通过连续的共价键体系相互影响，我们通常会想到共轭；而“穿空间”说的是另一种情况：两个轨道在键连关系上并不连续，但因为空间上靠得足够近、方向也合适，仍然可以直接重叠并相互作用。",
+        "所以它首先是一个几何问题，但又不只是“距离近”。轨道有相位，重叠方式不同，结果也不同：可以形成成键、反键，也可能几乎不发生有效相互作用。",
+        "本文的四硫设计正是利用这一点。原文 Fig. 1a–b 把它和传统的单中心几何调控放在一起比较。作者让四个硫在三维空间里以特定方向彼此靠近，把局部几何调控扩展成原子之间的空间组织。设计模型认为，已占据的 p(S) 轨道可以组合成更高能的多中心供体轨道，而部分硫中心受体轨道也随之降低。",
+        "对不做主族化学的读者，可以把它理解成一句话：作者把“多个原子之间如何站位”也纳入了分子轨道工程。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    },
+    {
+      "heading": "2｜四个硫站在一起，并不等于四个硫在合作",
+      "paragraphs": [
+        "如果故事只是“四个硫靠得近，所以更活泼”，这篇文章并不会成立。最关键的对照来自 OS6。",
+        "OS6 和 OS1 都有四个硫连接到同一个中心碳，整体元素组成和局部 C–S 环境很接近；但两者的轨道相位关系不同。SI Fig. 40 显示，OS6 在 HOMO 层面的两个片段近似是非键合关系，计算 HOMO 约为 −7.17 eV；OS1 则形成反键型的四中心 HOMO，能量升到约 −6.86 eV。",
+        "OS1 在模型溴化中给出 99%，OS6 只有 9%。这组数据把问题从“有几个硫”推进到了“这些硫之间是否建立了有效的电子通信”。同样的四硫计数，轨道相位不同，催化表现可以完全不同。",
+        "作者还设计了一个计算对照 OS7，把两个硫换成氧。这样可以检验另一个可能解释：会不会只是几个孤对电子靠得太近，单纯的电子排斥把 HOMO 推高？计算显示 OS7 的硫供体轨道约为 −7.14 eV，明显低于 OS1。这个结果支持“穿空间轨道耦合”比“简单孤对排斥”更能解释 OS1 的高 HOMO，但这里要保留证据边界：OS7 只是计算模型，没有被合成并进入真实催化对照。",
+        "这给多中心催化一个很实用的判断标准：中心的数量只是结构描述，中心之间怎样交换电子信息，才决定它们是否真的构成一个协同反应单元。"
+      ],
+      "figures": [
+        "r02",
+        "r03",
+        "r04"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "r02",
+          "r03"
+        ],
+        "4": [
+          "r04"
+        ]
+      }
+    },
+    {
+      "heading": "3｜轨道模型不能只靠计算图：作者怎样把它拉回实验",
+      "paragraphs": [
+        "原文 Fig. 2c 给出一个很直观的系列：OS3 → OS2 → OS1，对应单中心、二中心、四中心。计算中，硫供体 HOMO 依次从 −7.58、−7.10 抬高到 −6.86 eV；与硫有关的受体轨道也整体向低能移动。",
+        "如果只有这张轨道图，最多只能说明计算模型自洽。作者随后用了两类实验去约束它。",
+        "第一类是 UV–vis。Fig. 2d 中，OS3、OS2、OS1 的长波吸收依次红移；TD-DFT/NTO 把 OS1 的 352 nm 低能吸收主要关联到从高能硫中心 HOMO 出发的跃迁。第二类是 S K-edge XANES。Fig. 2e 中，OS1 的第一前边峰出现在 2472.90 eV，相比 OS2 和 OS3 分别低约 0.4 和 1.0 eV；结合 NEVPT2/NTO 赋值，作者把这个变化与更低能的硫 3p 性质受体态联系起来。",
+        "因此更准确的说法是：计算给出轨道模型，UV–vis 记录到与供体轨道变化一致的光谱后果，元素特异的 XANES 又从另一侧约束硫中心受体态。三种方法彼此独立，却指向同一个电子结构趋势。",
+        "这类证据组合比寻找一个“决定性实验”更可靠：每种方法只回答自己擅长的问题，最后由多条独立证据共同缩小解释空间。"
+      ],
+      "figures": [
+        "r05"
+      ],
+      "figures_after_paragraph": {
+        "3": [
+          "r05"
+        ]
+      }
+    },
+    {
+      "heading": "4｜电子结构到底有没有转化成催化能力",
+      "paragraphs": [
+        "模型反应给出了很干净的答案。",
+        "在 tebuconazole 与 NBS 的体系里，没有 OS1 时背景反应为 0；1 当量 OS1 在室温 5 min 内即可实现定量溴化，同时回收 99% OS1。催化量降到 1 mol% 后，12 h 仍得到 99%。",
+        "更重要的是一组横向对照：OS2 只有 31%，OS3 为 0；即使提高 OS2/OS3 用量，使体系中“硫原子总数”更接近 OS1，也依然追不上。thianthrene OS5 为 0，OS6 只有 9%。",
+        "所以这里已经可以把结构—性质关系说得更具体：决定差异的不是硫元素本身，而是这些硫被组织后形成的电子结构。",
+        "分子设计只有落到反应行为上才完整。轨道能量的变化如果不能改变捕获、转移或周转，就仍只是一个漂亮的电子结构故事。"
+      ],
+      "figures": [
+        "r06"
+      ],
+      "figures_after_paragraph": {
+        "3": [
+          "r06"
+        ]
+      }
+    },
+    {
+      "heading": "5｜一个催化剂其实面对两个相反任务：先抓住卤素，再把卤素放出去",
+      "paragraphs": [
+        "这是本文最有启发性的化学逻辑。",
+        "亲核性更强的硫更容易捕获 Br⁺；但若随后的 S–Br 结合过于稳定，卤素又可能难以交给底物。因此，“抓住卤素”和“放出卤素”是两个不同的电子结构任务。",
+        "OS1 的设计恰好在两个状态下做了不同的事情。",
+        "在硫醚态，高能多中心 HOMO 提高硫的亲核性，有利于形成卤硫鎓物种；到了 OS1+Br 状态，空间上相邻的第二个硫又参与进来。原文 Fig. 3e–f 的计算显示，这个硫的孤对电子可以从侧面向 σ*(S–Br) 供电子，形成三中心四电子型相互作用。",
+        "这里最容易误解的一点是：多了一个供体–受体相互作用，并不意味着 S–Br 被“加固”。电子进入的是 σ* 反键轨道。对整个三原子体系来说，这种电子离域可以是稳定的；但对那一根两中心 S–Br 键来说，反键占据增加，反而降低了它对 Br 的束缚。",
+        "计算上，OS1+Br 的整体 S–Br 相互作用比 OS3+Br 少稳定约 6.0 kcal mol⁻¹，其中轨道项少稳定约 9.2 kcal mol⁻¹；S–Br 距离也由 2.29 Å 增加到 2.33 Å。作者据此提出，OS1 的多中心效应具有两面性：在前半程帮助“抓”，在后半程帮助“放”。",
+        "这里出现了比“高 HOMO = 高活性”更完整的催化设计观：催化剂并不需要在所有状态下都朝同一个方向优化；它需要在循环的不同节点，分别满足不同甚至相反的电子需求。",
+        "这个 n(S)→σ*(S–Br) 图像主要来自 DFT、ETS–NOCV 和能量分解，因此应把它理解为有计算支撑的工作模型，而不是被实验直接成像的电子流。"
+      ],
+      "figures": [
+        "r07"
+      ],
+      "figures_after_paragraph": {
+        "4": [
+          "r07"
+        ]
+      }
+    },
+    {
+      "heading": "6｜动力学和中间体证据把这个循环约束到什么程度",
+      "paragraphs": [
+        "作者用原位 ¹H NMR 做了 VTNA。反应对底物 3 约为 0.8 级，对 NBS 为一级；初速对 OS1 浓度也呈一级关系。作者据此提出：OS1 与 NBS 先可逆形成 1:1 的 OS1+Br，随后向芳烃转移 Br⁺ 的步骤控制主要速率。",
+        "这个解释和数据是相容的，但不能写成“动力学直接看到了静息态”。0.8 级底物本身就提示体系比一个最简单的双分子基元步骤复杂。",
+        "SI Fig. 26 又补了一层证据：在 −40 °C、AgSbF6 与 pyridinium perbromide 的专门捕获条件下，APCI-HRMS 检测到与 OS1+Br 相符的同位素峰型。",
+        "这说明 OS1+Br 确实是一个可访问的化学物种，但仍不能把它等同于标准 NBS 催化条件下被直接定量观察到的唯一静息态。",
+        "这一区分看似保守，其实很重要：机理研究的价值不在于给循环图上每一个箭头都贴上“已证明”，而在于明确哪些箭头受到了什么程度的约束。"
+      ],
+      "figures": [
+        "r08"
+      ],
+      "figures_after_paragraph": {
+        "3": [
+          "r08"
+        ]
+      }
+    },
+    {
+      "heading": "7｜AgSbF6 的作用线索：关键更偏向阴离子环境",
+      "paragraphs": [
+        "部分底物需要加入 1 mol% AgSbF6。若只看条件表，很容易把 Ag⁺ 想成一个额外的共催化中心。SI Table 18 的对照却给出了另一幅图景。",
+        "对 aniracetam，AgSbF6 给 97%，LiSbF6 给 99%，KSbF6 给 89%；换成 AgBF4、AgPF6，仍有 99% 和 80%。相反，换成更强配位的 F⁻、CO₃²⁻、OTf⁻ 时，收率显著下降。",
+        "所以这组实验首先支持的是：弱配位阴离子的重要性高于银离子本身。 作者进一步提出，弱配位阴离子帮助稳定极性的 OS1+Br 离子对并把前平衡推向活性物种。",
+        "前者有直接的条件对照支撑；后者属于作者据此提出的离子对模型。把这两层分开，添加剂实验的信息边界就很清楚。"
+      ],
+      "figures": [
+        "r09"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "r09"
+        ]
+      }
+    },
+    {
+      "heading": "8｜Fig. 4 先定义“什么叫难”，再谈方法通用性",
+      "paragraphs": [
+        "很多 late-stage functionalization 论文会用越来越复杂的分子展示兼容性，但复杂分子本身并不自动意味着方法真的解决了困难问题。",
+        "这篇文章先在 SI Fig. 1 测背景反应，把那些在没有 OS1 时本来就容易卤化的底物排除出去，专门挑背景反应慢或收率低的底物–卤素组合。然后才把 OS1 与文献中的多种催化方法以及 Baran 的化学计量方案放在同一张矩阵里比较。",
+        "在这组预先定义的困难底物中，已有方法往往需要互补使用；tebuconazole、voriconazole 等含氮复杂分子尤其明显。OS1 在九个基准组合中则普遍给出高收率。",
+        "这张图最有方法学意味的地方，是作者先定义检验标准，再比较方法：先问哪些底物足够困难、足够有区分度，再看谁能解决。",
+        "Fig. 4 也不能被当成绝对排行榜。矩阵中有些数字来自文献，有些由作者按文献条件复测，灰格代表未做。它展示的是一组有设计的通用性比较，并非所有方法在完全统一条件下的头对头竞赛。",
+        "5 mmol 的 tebuconazole 溴化给出 89%（1.7 g），说明这种催化行为能够延伸到克级制备，而不只存在于筛选尺度。"
+      ],
+      "figures": [
+        "r10"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "r10"
+        ]
+      }
+    },
+    {
+      "heading": "9｜Fig. 5 更有价值的读法，是看成功、变通和失败同时在哪里出现",
+      "paragraphs": [
+        "Fig. 5 展示药物、农药和杂芳烃的晚期卤化，并把无 OS1 时的背景收率直接写在括号里。这样可以直接看出催化剂在哪些底物上提供了明显增益。",
+        "羟基、磺酰胺、酰胺、羧酸、二氟甲基以及吡啶/嘧啶等位点在至少部分例子中可以兼容；Br、Cl、I 三种卤素也能在同一催化平台上切换。",
+        "但如果只把这张图概括成“底物范围很广”，反而会丢掉最有用的信息。hydroxychloroquine 的溴化只有 29%，sulfadoxin 氯化 50%，sorafenib 氯化 55%；有些例子需要把 OS1 提高到 3 mol%、延长到 36 h、改变温度，或者去掉 AgSbF6。某些底物对一种卤素表现差，换另一种卤素却能工作。",
+        "这些数据勾出了催化窗口的边界：哪些底物可以直接使用标准条件，哪些需要增加催化剂、延长时间或更换卤素。",
+        "pyridine 29 提供了另一类信息：Br、Cl、I 不仅改变收率，还改变 C3/C5 的区域偏好。NBS 约 1:1.9，NCS 约 1:3.7，而 NIS 反向到约 4.9:1。作者把它视为卤素特异区域选择性的一个入口，而不是宣称已经完成高选择性控制。",
+        "对于方法学研究，这类尚未完全解决的选择性问题很有信息量，因为它指出了下一轮分子设计可能真正改变的变量。"
+      ],
+      "figures": [
+        "r11",
+        "r12"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "r11"
+        ],
+        "3": [
+          "r12"
+        ]
+      }
+    },
+    {
+      "heading": "10｜把视野从这一种硫催化剂移开",
+      "paragraphs": [
+        "第一，“催化中心”未必等于一个原子。 当单中心几何调控不再合适时，多个原子可以通过空间组织形成集体电子结构。判断它们是否构成一个真正的多中心反应单元，要看中心之间是否存在可控、可验证的电子通信。",
+        "第二，催化剂优化不能只盯着一个静态性质。 OS1 在硫醚态需要更强的亲核性去捕获卤鎓，在卤硫鎓态又需要降低 S–X 对卤素的束缚。一个完整的设计应考虑催化剂在不同状态之间怎样切换功能，而不是把某一个指标无限推高。",
+        "第三，方法学的说服力来自“解决了什么难题”，不只是 scope 的长度。 本文先筛掉本来就容易反应的底物，再对剩下的困难集合做 benchmark，并把低收率、条件变化和区域选择性不足保留在数据中。这样的比较更能界定方法的能力边界。",
+        "这三点分别对应分子设计、催化循环和方法学评价。即使不做主族化学，也可以从中读到同一个思想：催化剂不是一个孤立的“活性中心”，而是一个会随反应状态改变电子分工的分子系统。空间、电子结构和反应网络应当被一起设计。",
+        "从这个角度看，芳烃卤化是这项设计的第一个落点；更长远的问题，是这种“空间组织多个原子、让不同状态承担不同电子任务”的策略还能否被推广到其他主族元素和其他键活化模式。",
+        "---"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    }
+  ],
+  "figures": [
+    {
+      "id": "r01",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-retro/f1-concept.png",
+      "caption": "原文 Fig. 1｜从单中心几何调控到多硫穿空间轨道设计，并展示所研究的晚期卤化反应",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Fig. 1",
+      "source_doi": "10.1038/s41929-026-01602-y",
+      "source_kind": "original_source_crop"
+    },
+    {
+      "id": "r02",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-retro/f2ab-design-synthesis.png",
+      "caption": "原文 Fig. 2a–b｜轨道相位设计、OS1合成及结构表征",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Fig. 2a–b",
+      "source_doi": "10.1038/s41929-026-01602-y",
+      "source_kind": "original_source_crop"
+    },
+    {
+      "id": "r03",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-retro/si-fig40-os6-control.png",
+      "caption": "SI Fig. 40｜OS6/OS1轨道相位及HOMO差异，说明硫原子数相同不意味着相同电子作用",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "SI Fig. 40",
+      "source_doi": "10.1038/s41929-026-01602-y",
+      "source_kind": "original_source_crop"
+    },
+    {
+      "id": "r04",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-retro/si-fig42-os7-control.png",
+      "caption": "SI Fig. 42｜仅计算的OS7对照，不能冒充催化活性实验",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "SI Fig. 42",
+      "source_doi": "10.1038/s41929-026-01602-y",
+      "source_kind": "original_source_crop"
+    },
+    {
+      "id": "r05",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-retro/f2ce-electronic-structure.png",
+      "caption": "原文 Fig. 2c–e｜计算、紫外可见光谱与硫K边XANES互为电子结构证据",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Fig. 2c–e",
+      "source_doi": "10.1038/s41929-026-01602-y",
+      "source_kind": "original_source_crop"
+    },
+    {
+      "id": "r06",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-retro/f3ad-reactivity-kinetics.png",
+      "caption": "原文 Fig. 3a–d｜OS1与其它硫化物比较、动力学和组分控制",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Fig. 3a–d",
+      "source_doi": "10.1038/s41929-026-01602-y",
+      "source_kind": "original_source_crop"
+    },
+    {
+      "id": "r07",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-retro/f3eg-transfer-mechanism.png",
+      "caption": "原文 Fig. 3e–g｜OS1+Br次级S轨道作用及卤鎓转移模型，主要依赖计算",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Fig. 3e–g",
+      "source_doi": "10.1038/s41929-026-01602-y",
+      "source_kind": "original_source_crop"
+    },
+    {
+      "id": "r08",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-retro/si-fig26-hrms.png",
+      "caption": "SI Fig. 26｜在专门低温捕获条件下检测OS1+Br，非标准催化原位定量",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "SI Fig. 26",
+      "source_doi": "10.1038/s41929-026-01602-y",
+      "source_kind": "original_source_crop"
+    },
+    {
+      "id": "r09",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-retro/si-table18-additives.png",
+      "caption": "SI Table 18｜阴离子与阳离子替换对照，支持弱配位阴离子的重要作用",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "SI Table 18",
+      "source_doi": "10.1038/s41929-026-01602-y",
+      "source_kind": "original_source_crop"
+    },
+    {
+      "id": "r10",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-retro/f4-benchmarking.png",
+      "caption": "原文 Fig. 4｜先筛选背景困难底物，再与文献催化方法比较",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Fig. 4",
+      "source_doi": "10.1038/s41929-026-01602-y",
+      "source_kind": "original_source_crop"
+    },
+    {
+      "id": "r11",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-retro/f5-scope-top.png",
+      "caption": "原文 Fig. 5上半｜复杂芳烃的底物与卤化选择性",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Fig. 5 upper",
+      "source_doi": "10.1038/s41929-026-01602-y",
+      "source_kind": "original_source_crop"
+    },
+    {
+      "id": "r12",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-retro/f5-scope-bottom.png",
+      "caption": "原文 Fig. 5下半｜低收率、反应条件分叉及卤素依赖区域选择性",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Fig. 5 lower",
+      "source_doi": "10.1038/s41929-026-01602-y",
+      "source_kind": "original_source_crop"
+    },
+    {
+      "id": "retro-cover",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-retro/cover-retrospective-concept-exact-chemistry.png",
+      "caption": "",
+      "body": false,
+      "display_width_pct": 100,
+      "source_figure": "Original abstract cover with exact unaltered published chemical figure",
+      "source_doi": "10.1038/s41929-026-01602-y",
+      "source_kind": "editorial_composite_exact_original_chemistry"
+    }
+  ],
+  "cover": {
+    "source_figure_id": "retro-cover",
+    "canvas": {
+      "width": 1280,
+      "height": 1280,
+      "background": "#203648"
+    },
+    "crop_1_1": "0_0_1_1",
+    "crop_235_1": "0_0.287234_1_0.712766",
+    "description": "Abstract restrained orbital-layout and untouched crop of OS1 from authentic source Fig. 1c, not AI-redrawn chemistry"
+  },
+  "ai_notice": "“化之岛”根据Nature Catalysis正文和SI整理，AI辅助图文编排；机制计算和实验对应关系按原文核对。封面为编排概念图，硫结构与轨道来自原文原样裁切。",
+  "editorialRevision": "2026-10-08-r1"
+}
