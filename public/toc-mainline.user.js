@@ -202,7 +202,7 @@
     else if (active) state = row ? row.phase : 'awaiting_publisher';
     else if (!state) {
       if (finished && (!leaseLive || leaseIsThisPage || manualLeaseMatches)) state = /^(all_resolved|blocked_remaining|inventory_partial|paused)$/.test(summary.phase || '') ? summary.phase : 'between_batches';
-      else if (leaseLive) state = leaseIsThisPage ? (/^(starting|retry_wait|inventory_retry|queue_refresh|inventory_refresh)$/.test(summary.phase || '') ? summary.phase : 'between_jobs') : 'other_controller';
+      else if (leaseLive) state = leaseIsThisPage ? (/^(starting|retry_wait|cooldown_wait|inventory_retry|queue_refresh|inventory_refresh)$/.test(summary.phase || '') ? summary.phase : 'between_jobs') : 'other_controller';
       else if (manual && !finished) state = !manualSummaryMatches && Date.parse(manual.startedAt || '') > now - 15000 ? 'starting' : 'interrupted';
       else if (/^(all_resolved|blocked_remaining|inventory_partial|paused)$/.test(summary.phase || '')) state = summary.phase;
       else if (finished) state = 'between_batches';
@@ -228,7 +228,7 @@
       return at >= runStartedAt ? Math.max(latest, at) : latest;
     }, 0);
     return {
-      coverageRevision:summary.queueCoverageRevision||'',scopeRevision:summary.scopeRevision||'',scopeCount:Number(summary.scopeCount||0),ownerPdfInventory:summary.ownerPdfInventory||{},fullyResolved:Number(summary.fullyResolved||0),unresolvedCount:Number(summary.unresolvedCount||0),blockedCount:Number(summary.blockedCount||0),attemptCount:Number(summary.attemptCount||0),blockedPreview:summary.blockedPreview||[],
+      coverageRevision:summary.queueCoverageRevision||'',scopeRevision:summary.scopeRevision||'',scopeCount:Number(summary.scopeCount||0),ownerPdfInventory:summary.ownerPdfInventory||{},ownerPdfInventoryState:String(summary.ownerPdfInventoryState||'checking'),fullyResolved:Number(summary.fullyResolved||0),unresolvedCount:Number(summary.unresolvedCount||0),blockedCount:Number(summary.blockedCount||0),deferredCount:Number(summary.deferredCount||0),deferredNextAt:Number(summary.deferredNextAt||0),deferredPreview:summary.deferredPreview||[],attemptCount:Number(summary.attemptCount||0),blockedPreview:summary.blockedPreview||[],
       phase:summary.phase||'',missingOnly:summary.mode==='missing_only',need:active?captureNeedText(active):'—',activeJob:active,
       pendingMissing:Number(summary.pendingMissing||0),remainingNeeds:summary.remainingNeeds||{},inventoryUnknown:Number(summary.inventoryUnknown||0),inventoryErrors:summary.inventoryErrors||[],pendingPreview:summary.pendingPreview||[],
       inventoryProgress:summary.inventoryProgress||{},inventoryWarmStart:Boolean(summary.inventoryWarmStart),inventoryFreshPending:Boolean(summary.inventoryFreshPending),
@@ -263,7 +263,7 @@
   function captureLiveText(s) {
     var phaseNames = {
       starting:'正在生成缺项队列', between_jobs:'本控制页持有任务，等待下一篇', other_controller:'任务由另一控制页持有，等待其继续', interrupted:'上次任务已中断，等待恢复', waiting_controller:'仍有待办，等待控制器继续', inventory_partial:'缺项队列已结束，部分库存未确认',
-      retry_wait:'等待必要访问间隔，随后自动继续', queue_refresh:'正在读取最新文献队列', inventory_refresh:'正在核对已有图片、全文和 PDF 库存', inventory_retry:'库存连接恢复中，待办未丢弃', blocked_remaining:'已遍历待办，仍有未补齐或未确认项', all_resolved:'本轮已确认缺项全部补齐', page_loading:'等待出版社页面加载', evidence_capture:'读取文章文本', resume_wait:'等待旧任务收尾后自动恢复', idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
+      retry_wait:'等待必要访问间隔，随后自动继续', cooldown_wait:'出版社访问受限，保留待办并等待冷却结束后安全重试', queue_refresh:'正在读取最新文献队列', inventory_refresh:'正在核对已有图片、全文和 PDF 库存', inventory_retry:'库存连接恢复中，待办未丢弃', blocked_remaining:'仍有未补齐或未确认项（请核对实际尝试次数和受阻原因）', all_resolved:'本轮已确认缺项全部补齐', page_loading:'等待出版社页面加载', evidence_capture:'读取文章文本', resume_wait:'等待旧任务收尾后自动恢复', idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
       awaiting_publisher:'已开任务页，等待出版社脚本', discovering:'识别 TOC 和正文图',
       auth_wait:'等待出版社登录', challenge_wait:'等待出版社验证', downloading:'获取图片候选',
       comparing:'比较清晰度／矢量结构', uploading:'上传并等待存储回执', saved:'已收到存储回执',
@@ -282,21 +282,29 @@
       ? (pdfNames[r.pdfStatus] || r.pdfStage || r.pdfStatus) + (r.pdfBytes ? ' · ' + Math.round(r.pdfBytes / 1024) + ' KB' : '') + (r.pdfError ? ' · ' + r.pdfError : '')
       : s.activeJob.capturePrivatePdf ? '等待开始' : '本篇无需抓取 PDF';
     var lastError = r ? r.lastError : s.lastResult && s.lastResult.status !== 'success' ? captureLiveError(s.lastResult.reason) : '';
+    var pdfInventoryNotice=({
+      verified:'云端库存已核验（只对确实缺失的 PDF 派发下载）',
+      owner_lease_missing:'本浏览器尚未取得 owner PDF 捕获授权；请在私有 PDF owner 页面授权本浏览器（7 天），未知不等于缺失',
+      owner_lease_expired:'本浏览器的 owner PDF 捕获授权已失效；请重新授权，已有 PDF 不会删除',
+      read_failed:'云端 PDF 库存请求失败或不完整；禁止将未知视为缺失、禁止盲目重抓',
+      checking:'云端 PDF 库存尚未核验'
+    })[s.ownerPdfInventoryState]||'云端 PDF 库存尚未核验';
     return {
       state: phaseNames[s.state] || ('已停止：' + captureLiveError(s.state)),
       needs:s.need||'—',
       working:s.active?(s.row&&/全文|Abstract|文本/.test(s.row.label)?'文本':s.row&&s.row.label?s.row.label:s.need||'加载文章'):'—',
       evidence:s.activeJob&&(s.activeJob.captureEvidence||s.activeJob.opportunisticEvidence)?'随当前任务顺带抓取文本':s.activeJob&&s.activeJob.existingEvidenceLevel?captureEvidenceLevelText(s.activeJob.existingEvidenceLevel)+'，不作为队列缺项':'—',
-      gaps:s.scopeRevision!==OCT1_SCOPE_QUEUE_REVISION&&s.coverageRevision?'旧版全量统计已停用；请重新按 10 月 1 日起生成缺项队列。':/^(?:starting|inventory_refresh)$/.test(s.phase||'')&&s.total===0?'仅处理 10 月 1 日之后收录文献；正在核对库存…':s.coverageRevision&&s.phase!=='starting'?'10.1起 '+s.scopeCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇（待执行 '+s.pendingMissing+'／受阻 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／确实缺PDF '+Number(s.remainingNeeds.pdf||0)+'；PDF云端 已齐 '+Number(s.ownerPdfInventory.ready||0)+'／待验证 '+(Number(s.ownerPdfInventory.pending||0)+Number(s.ownerPdfInventory.failed||0))+'／未知 '+Number(s.ownerPdfInventory.unknown||0):s.missingOnly?(s.phase==='starting'?'正在核对10.1以后文献…':'仅10.1以后 '+s.scopeCount+' 篇 · 待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)):'—',
-      blocked:(s.blockedPreview||[]).map(function(r){return r.doi+' · '+r.need+' · '+r.reason;}).join('\n'),
-      inventory:inventoryProgressText(s.inventoryProgress,s.inventoryWarmStart,s.inventoryFreshPending)+(s.inventoryUnknown?'；另有 '+s.inventoryUnknown+' 篇存在未确认项，不冒充已齐全或全部缺失':'')+(s.inventoryErrors.length?'；'+s.inventoryErrors.join('；'):''),
+      gaps:s.scopeRevision!==OCT1_SCOPE_QUEUE_REVISION&&s.coverageRevision?'旧版全量统计已停用；请重新按 10 月 1 日起生成缺项队列。':/^(?:starting|inventory_refresh)$/.test(s.phase||'')&&s.total===0?'仅处理 10 月 1 日之后收录文献；正在核对库存…':s.coverageRevision&&s.phase!=='starting'?'10.1起 '+s.scopeCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇（待执行 '+Math.max(0,s.pendingMissing-s.deferredCount)+'／冷却等待 '+s.deferredCount+'／访问受阻 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／确实缺PDF '+Number(s.remainingNeeds.pdf||0)+'；PDF云端 已齐 '+Number(s.ownerPdfInventory.ready||0)+'／待验证 '+(Number(s.ownerPdfInventory.pending||0)+Number(s.ownerPdfInventory.failed||0))+'／未知 '+Number(s.ownerPdfInventory.unknown||0):s.missingOnly?(s.phase==='starting'?'正在核对10.1以后文献…':'仅10.1以后 '+s.scopeCount+' 篇 · 待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)):'—',
+      blocked:(s.deferredPreview||[]).map(function(r){return r.doi+' · '+r.need+' · '+String(r.publisher||'')+' 冷却至 '+new Date(r.until).toLocaleTimeString()+'（尚未访问）';})
+        .concat((s.blockedPreview||[]).map(function(r){return r.doi+' · '+r.need+' · 已访问受阻 · '+r.reason;})).join('\n'),
+      inventory:inventoryProgressText(s.inventoryProgress,s.inventoryWarmStart,s.inventoryFreshPending)+'；PDF核对：'+pdfInventoryNotice+(s.inventoryUnknown?'；另有 '+s.inventoryUnknown+' 篇存在未确认项，不冒充已齐全或全部缺失':'')+(s.inventoryErrors.length?'；'+s.inventoryErrors.join('；'):''),
       queue:(s.pendingPreview||[]).map(function(j){return j.addedDate+' · '+j.journal+' · '+j.need+'\n'+j.doi;}).join('\n\n'),
       doi: s.doi || '当前没有任务页', journal: s.journal,
       label: r && r.label || '—', toc: toc, pdf: pdf,
       figures: r ? '已保存 ' + r.stored + '／' + (r.discoveryDone ? r.discovered : '识别中') + ' · 失败 ' + r.failed : '等待本篇数据',
       receipts: r ? '本次暂存回执 ' + r.stagedReceipts + ' · 断点复用 ' + r.reused : '—',
       quality: r ? (quality[r.quality] || '尚未测量') + (r.width && r.height ? ' · ' + r.width + '×' + r.height : '') : '—',
-      batch: s.coverageRevision&&s.phase!=='starting'?'已遍历 '+s.completed+'／'+s.total+' 篇 · 确认补齐 '+s.fullyResolved+' 篇 · 尝试 '+s.attemptCount+' 次 · 新主图 '+s.batchToc+' · 新正文图 '+s.batchStaged:s.missingOnly&&s.phase==='starting'?'正在生成缺项队列…':(s.missingOnly?'缺项任务已结束 ':'已结束 ') + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · 部分完成 ' + Number(s.batchPartial||0) + ' · 失败 ' + s.batchFailed + ' · 跳过 ' + s.batchSkipped,
+      batch: s.coverageRevision&&s.phase!=='starting'?'实际访问 '+s.completed+'／'+s.total+' 篇 · 冷却等待 '+s.deferredCount+' · 确认补齐 '+s.fullyResolved+' 篇 · 尝试 '+s.attemptCount+' 次 · 新主图 '+s.batchToc+' · 新正文图 '+s.batchStaged:s.missingOnly&&s.phase==='starting'?'正在生成缺项队列…':(s.missingOnly?'缺项任务已结束 ':'已结束 ') + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · 部分完成 ' + Number(s.batchPartial||0) + ' · 失败 ' + s.batchFailed + ' · 跳过 ' + s.batchSkipped,
       started: s.runStartedAt ? new Date(s.runStartedAt).toLocaleTimeString() : '尚未开始本轮',
       last: s.lastAt ? new Date(s.lastAt).toLocaleTimeString() + ' · ' + captureLiveAgeText(s.ageSeconds) : '尚无采集进展',
       stale: s.active && s.ageSeconds >= 45 ? '一段时间没有新进展：可能正在等待网络或页面验证，不等于抓取失败。' : '',
@@ -873,16 +881,20 @@ function embeddedJobDois(value) {
     return row;
   }
 
-  function publisherAccessCooling(job) {
+  function publisherAccessCooldownUntil(job) {
     var publisher = String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))).toLowerCase();
-    if (!publisher) return false;
+    if (!publisher) return 0;
     var key = publisherAccessCooldownKey(publisher);
-    var row = GM_getValue(key, null);
-    if (!row || Number(row.until || 0) <= Date.now()) {
+    var row = GM_getValue(key, null), until = Number(row && row.until || 0);
+    if (!Number.isFinite(until) || until <= Date.now()) {
       if (row) GM_deleteValue(key);
-      return false;
+      return 0;
     }
-    return true;
+    return until;
+  }
+
+  function publisherAccessCooling(job) {
+    return publisherAccessCooldownUntil(job) > 0;
   }
 
   function publisherDispatchKey(publisher) {
@@ -4527,9 +4539,13 @@ function embeddedJobDois(value) {
   async function readOwnerPdfInventory(articles,run) {
     var eligible=(articles||[]).filter(recentFullCaptureEligible),started=Date.now();
     var dois=eligible.map(function(x){return normalizeDoi(x.doi);}).filter(Boolean);
-    var lease=privatePdfLease();
+    var priorLease=GM_getValue(PRIVATE_PDF_LEASE_KEY,null),lease=privatePdfLease();
     if(!dois.length){updateInventoryProgress(run,'pdf','done',started,'scope_empty');return {schemaVersion:'private-pdf-capture-inventory-v1',complete:true,count:0,items:[],unknown:0};}
-    if(!lease){updateInventoryProgress(run,'pdf','error',started,'owner_lease_missing');return {complete:false,items:[],unknown:dois.length,reason:'owner_lease_missing'};}
+    if(!lease){
+      var reason=priorLease?'owner_lease_expired':'owner_lease_missing';
+      updateInventoryProgress(run,'pdf','error',started,reason);
+      return {complete:false,items:[],unknown:dois.length,reason:reason};
+    }
     updateInventoryProgress(run,'pdf','loading',started,'read_only;scope='+dois.length);
     var batches=[];for(var i=0;i<dois.length;i+=75)batches.push(dois.slice(i,i+75));
     var all=await Promise.all(batches.map(async function(batch){
@@ -4625,7 +4641,7 @@ function embeddedJobDois(value) {
         function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count)&&x.truncated!==true;},'evidence',2),
       readOwnerPdfInventory(queue.articles,run)
     ]);
-    if(!all[4].complete&&all[4].reason&&all[4].reason!=='owner_lease_missing')errors.push(all[4].reason);
+    if(!all[4].complete&&all[4].reason&&!/^owner_lease_/.test(all[4].reason))errors.push(all[4].reason);
     return {media:all[0],tocs:all[1],figures:all[2],evidence:all[3],pdf:all[4],errors:errors,readAt:nowIso()};
   }
   function missingCaptureDecision(raw,inventory) {
@@ -4713,6 +4729,8 @@ function embeddedJobDois(value) {
       var statuses=rows.reduce(function(stats,row){var status=privatePdfServerStatus(inventory.pdfMap,row.doi);stats[status]++;return stats;},
         {ready:0,pending:0,failed:0,missing:0,unknown:0});
       run.summary.scopeCount=rows.length;run.summary.ownerPdfInventory=statuses;
+      run.summary.ownerPdfInventoryState=inv.pdf&&inv.pdf.complete===true?'verified'
+        :/^owner_lease_/.test(String(inv.pdf&&inv.pdf.reason||''))?String(inv.pdf.reason):'read_failed';
       run.summary.inventoryUnknown=unknownDois;run.summary.inventoryUnknownLayers=unknownLayers;
       run.summary.inventoryErrors=(inv.errors||[]).slice();run.summary.inventoryReadAt=inv.readAt||'';
     }
@@ -4779,7 +4797,7 @@ function embeddedJobDois(value) {
     if(!run.coverage)run.coverage=new Map();
     (jobs||[]).forEach(function(raw){
       var old=run.coverage.get(raw.doi);
-      if(!old){run.coverage.set(raw.doi,{job:Object.assign({},raw),attempts:0,done:{},noProgress:0,state:'pending',retryAt:0});return;}
+      if(!old){run.coverage.set(raw.doi,{job:Object.assign({},raw),attempts:0,openedPublisherTab:false,done:{},noProgress:0,state:'pending',retryAt:0});return;}
       // Retain unresolved obligations on a partial inventory read; never replace
       // a known gap with a missing response. Positive current receipts still win.
       var j=Object.assign({},old.job,raw);
@@ -4861,10 +4879,17 @@ function embeddedJobDois(value) {
   function coverageStats(run) {
     var s=run.summary,rows=Array.from(run.coverage.values()),left=rows.filter(function(r){return coverageHasNeeds(r.job)&&r.state!=='removed';});
     s.total=rows.filter(function(r){return r.state!=='removed';}).length;
-    s.visitedCount=rows.filter(function(r){return r.attempts>0&&r.state!=='removed';}).length;
+    s.visitedCount=rows.filter(function(r){return r.openedPublisherTab===true&&r.state!=='removed';}).length;
     s.attemptCount=s.results.length;s.fullyResolved=rows.filter(function(r){return r.state==='resolved';}).length;
     s.unresolvedCount=left.length;s.blockedCount=left.filter(function(r){return r.state==='blocked';}).length;
     s.pendingMissing=left.filter(function(r){return r.state==='pending'||r.state==='active';}).length;
+    var deferred=left.filter(function(r){return r.state==='pending'&&r.deferReason==='publisher_access_cooldown'
+      &&Number(r.deferUntil||0)>Date.now();});
+    s.deferredCount=deferred.length;
+    s.deferredNextAt=deferred.length?Math.min.apply(null,deferred.map(function(r){return r.deferUntil;})):0;
+    s.deferredPreview=deferred.slice(0,12).map(function(r){return {doi:r.job.doi,
+      publisher:r.job.publisher,need:captureNeedText(r.job),until:Number(r.deferUntil||0),
+      reason:'publisher_access_cooldown'};});
     s.remainingNeeds={toc:0,figures:0,evidence:0,pdf:0};
     left.forEach(function(r){if(r.job.captureToc)s.remainingNeeds.toc++;if(r.job.captureFigures)s.remainingNeeds.figures++;if(r.job.captureEvidence)s.remainingNeeds.evidence++;if(r.job.capturePrivatePdf)s.remainingNeeds.pdf++;});
     s.pendingPreview=coveragePending(run).slice(0,12).map(function(r){var j=r.job;return {doi:j.doi,journal:j.journal,addedDate:captureBatchDate(j),need:captureNeedText(j)};});
@@ -4930,16 +4955,31 @@ function embeddedJobDois(value) {
         var candidates=coveragePending(run),row=null;
         for(var i=0;i<candidates.length;i++){
           var candidate=candidates[i],job=candidate.job;
-          if(publisherAccessCooling(job)){
-            candidate.state='blocked';candidate.lastReason='publisher_access_or_rate_limit';s.skipped++;continue;
+          var cooldownUntil=publisherAccessCooldownUntil(job);
+          if(cooldownUntil){
+            // A publisher-level access gate is neither a DOI visit nor a failed
+            // capture. Preserve the obligation and its exact safe retry time.
+            candidate.deferReason='publisher_access_cooldown';
+            candidate.deferUntil=cooldownUntil;
+            candidate.retryAt=Math.max(Number(candidate.retryAt||0),cooldownUntil);
+            continue;
           }
+          candidate.deferReason='';candidate.deferUntil=0;
           if(candidate.retryAt<=Date.now()&&!publisherPacingCooling(job)){row=candidate;break;}
         }
         if(!row){
           candidates=coveragePending(run);
           if(candidates.length){
-            s.phase='retry_wait';coverageStats(run);manualSummary(run);
-            await coverageWait(run,Date.now()+1000);continue;
+            var current=Date.now(),nextDue=candidates.reduce(function(soon,c){
+              var due=Number(c.retryAt||0);return due>current?Math.min(soon,due):soon;
+            },Number.POSITIVE_INFINITY);
+            s.phase=candidates.some(function(c){return c.deferReason==='publisher_access_cooldown';})
+              ?'cooldown_wait':'retry_wait';
+            coverageStats(run);manualSummary(run);
+            // Remain interruptible and renew the controller lease, while avoiding
+            // one-second inventory/queue polling throughout a 30-minute cooldown.
+            var waitUntil=Number.isFinite(nextDue)?Math.min(current+10000,nextDue):current+1000;
+            await coverageWait(run,Math.max(current+1000,waitUntil));continue;
           }
           if(freshState&&!freshState.applied){if(!await applyFreshInventory(true))return;continue;}
           if(!endRefresh || (s.inventoryErrors||[]).length&&inventoryRecovery<2){
@@ -4969,6 +5009,7 @@ function embeddedJobDois(value) {
           run.tab=await Promise.resolve(GM_openInTab(boundPublisherJobUrl(manualTaskUrl,job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
           if(!manualExecutionCurrent(run))return;
           if(!run.tab||typeof run.tab.close!=='function')throw new Error('task_tab_handle_unavailable');
+          row.openedPublisherTab=true; // Count actual opened publisher task tabs, not failed preflight attempts.
           result=await waitManualResult(job,run.tab,run);
         }catch(error){if(!manualExecutionCurrent(run))return;result={doi:job.doi,jobId:job.jobId,status:'failed',reason:String(error.message||error),finishedAt:nowIso()};}
         finally{
@@ -4994,9 +5035,15 @@ function embeddedJobDois(value) {
         }
       }
       if(manualExecutionCurrent(run)){
-        coverageStats(run);s.finishedAt=nowIso();s.phase=controllerPaused()?'paused':s.unresolvedCount||s.inventoryUnknown?'blocked_remaining':'all_resolved';manualSummary(run);
+        coverageStats(run);s.finishedAt=nowIso();
+        s.phase=controllerPaused()?'paused':s.unresolvedCount?'blocked_remaining'
+          :s.inventoryUnknown||Number(s.ownerPdfInventory&&s.ownerPdfInventory.unknown||0)?'inventory_partial':'all_resolved';
+        manualSummary(run);
         var stored=GM_getValue(MANUAL_RUN_KEY,null);if(stored&&stored.id===run.id){stored.completedAt=s.finishedAt;GM_setValue(MANUAL_RUN_KEY,stored);}
-        badge(controllerPaused()?'已暂停':'已遍历全部待办：补齐 '+s.fullyResolved+' 篇；未补齐 '+s.unresolvedCount+' 篇；库存未确认 '+Number(s.inventoryUnknown||0)+' 篇','#374151');
+        var finishedMessage=controllerPaused()?'已暂停：本轮已访问 '+s.visitedCount+' 篇'
+          :s.attemptCount===0?'没有实际访问论文：待执行 '+s.pendingMissing+' 篇；已访问受阻 '+s.blockedCount+' 篇'
+          :'实际尝试 '+s.attemptCount+' 次；确认补齐 '+s.fullyResolved+' 篇；未补齐 '+s.unresolvedCount+' 篇';
+        badge(finishedMessage,'#374151');
       }
     }catch(error){
       if(manualExecutionCurrent(run)){coverageStats(run);s.finishedAt=nowIso();s.stopReason=String(error.message||error);s.phase='blocked_remaining';manualSummary(run);badge('抓取受阻，未完成项已保留：'+captureLiveError(s.stopReason),'#991b1b');}
@@ -5158,6 +5205,7 @@ function embeddedJobDois(value) {
       var available=availableJobs(),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
       summary={controllerRunId:CONTROLLER_ID+':'+Date.now(),scopeRevision:OCT1_SCOPE_QUEUE_REVISION,scopeCount:scopedArticles.length,
         ownerPdfInventory:scopedArticles.reduce(function(stats,item){stats[privatePdfServerStatus(ownerPdfMap,item.doi)]++;return stats;},{ready:0,pending:0,failed:0,missing:0,unknown:0}),
+        ownerPdfInventoryState:pdfInventory.complete===true?'verified':/^owner_lease_/.test(String(pdfInventory.reason||''))?String(pdfInventory.reason):'read_failed',
         lifecycleRevision:CONTROLLER_LIFECYCLE_REVISION,architectureMembershipRevision:ARCHITECTURE_MEMBERSHIP_REVISION,architectureMembership:architectureMembership,version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+pdfJobs.length,evidenceBacklog:0,privatePdfBacklog:pdfJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
       persistControllerSummary(summary,true);
       for (var i=0;i<batch.length;i+=1) {
