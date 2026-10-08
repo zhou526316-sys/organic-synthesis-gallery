@@ -86,7 +86,9 @@ function fixture(): ArchitectureFixture {
   expect(indexedItems).toHaveLength(Number(release.recordCount));
 
   return {
-    hotCount: hot.length,
+    // Includes genuinely recent admissions whose first-online date is missing
+    // or appears in future metadata; all-time membership remains unchanged.
+    hotCount: Number(release.hotHeadInline?.candidateCount ?? hot.length),
     archiveCount: archive.length,
     memberCount: Number(release.recordCount),
     archiveDoi,

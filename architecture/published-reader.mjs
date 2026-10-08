@@ -2,6 +2,7 @@ import { CatalogReader } from './reader.mjs';
 import { resolveDoisPlan, globalSearchPlan } from './frontend-plan.mjs';
 import { normalizeDoi } from '../shared/literature-identity.mjs';
 import { classifyDate } from '../shared/literature-lifecycle.mjs';
+import { isHotLandingEligible } from '../shared/literature-landing.mjs';
 
 const RELEASE_SCHEMA = 'gallery-architecture-public-v1';
 const MEMBERSHIP_SCHEMA = 'gallery-published-membership-v1';
@@ -141,12 +142,13 @@ export async function loadPublishedHotFallback(
     const bucketCount = payload.dateBuckets.reduce((sum, bucket) => {
       assert(bucket && (bucket.firstOnlineDate === null || typeof bucket.firstOnlineDate === 'string')
         && (bucket.datePrecision === 'day' || bucket.datePrecision === 'unknown')
+        && (bucket.addedDate == null || typeof bucket.addedDate === 'string')
         && Number.isSafeInteger(bucket.count) && bucket.count >= 0, 'architecture_hot_head_bucket_invalid');
       return sum + bucket.count;
     }, 0);
     assert(bucketCount === payload.candidateCount, 'architecture_hot_head_bucket_count_mismatch');
     totalCount = payload.dateBuckets.reduce((sum, bucket) =>
-      sum + (classifyDate(bucket.firstOnlineDate, asOfDate, bucket.datePrecision) === 'hot' ? bucket.count : 0), 0);
+      sum + (isHotLandingEligible(bucket, asOfDate) ? bucket.count : 0), 0);
     pageSize = payload.pageSize;
     candidates = payload.records;
   } else {
@@ -167,7 +169,7 @@ export async function loadPublishedHotFallback(
     assert(doi && deliveryDois.has(doi) && row?.paper && isHash(row?.revision) && !seen.has(doi),
       usingHead ? 'architecture_hot_head_record_invalid' : 'architecture_hot_fallback_record_invalid');
     seen.add(doi);
-    if (classifyDate(row.firstOnlineDate, asOfDate, row.datePrecision) === 'hot') hotRecords.push(row);
+    if (isHotLandingEligible(row, asOfDate)) hotRecords.push(row);
   }
   if (!usingHead) totalCount = hotRecords.length;
   const visibleRecords = usingHead ? hotRecords.slice(0, pageSize) : hotRecords;

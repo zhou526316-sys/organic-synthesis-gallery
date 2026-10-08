@@ -23,6 +23,7 @@ interface Paper {
   url: string | null;
   new: boolean;
   addedDate?: string;
+  dateUnverified?: boolean;
   authors: string[];
   synthesisType?: 'total' | 'formal';
 }
@@ -118,7 +119,7 @@ const copy = {
     clearFilters: '清除期刊/日期筛选',
     recentScope: '近三个月',
     currentScope: '当前筛选',
-    recentScopeTitle: '默认首页按首次在线发表日期显示滚动近三个月；搜索或日期筛选可检索更早文献。',
+    recentScopeTitle: '默认首页按首次在线发表日期显示滚动近三个月；最近七天新增但发表日期待核实的论文也展示在首页，不将收录日期冒充发表日期。',
     limitedRead: '当前仅使用已验证的近三个月安全数据；历史 DOI、全库搜索和历史日期检索暂不可用，当前结果不代表全库无匹配。',
     shown: '篇文献',
     titlePending: '正在核验标题…',
@@ -157,7 +158,7 @@ const copy = {
     clearFilters: 'Clear journal/date filters',
     recentScope: 'Last 3 months',
     currentScope: 'Current filter',
-    recentScopeTitle: 'The default landing view uses a rolling three-calendar-month window by first-online date; search or date filters can retrieve older papers.',
+    recentScopeTitle: 'The default landing view uses a rolling three-calendar-month window by first-online date, plus recently added records with unverified publication dates. Inclusion dates are not represented as publication dates.',
     limitedRead: 'Only the verified rolling three-month safety set is available right now. Archive DOI lookup, global search, and historical date retrieval are unavailable, so an empty result is not an all-time negative result.',
     shown: 'papers shown',
     titlePending: 'Verifying title…',
@@ -569,12 +570,22 @@ function mergePapers(base: Paper[], additions: Paper[]): Paper[] {
   return merged;
 }
 
-function prettyDate(value: string): string {
+function prettyDate(value: string, unverified = false): string {
+  const unknown = language === 'zh' ? '发表日期待核实' : 'Publication date unverified';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return unknown;
   const [year, month, day] = value.split('-').map(Number);
   const date = new Date(Date.UTC(year, month - 1, day));
-  return new Intl.DateTimeFormat(language === 'zh' ? 'zh-CN' : 'en', {
+  if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, 10) !== value) return unknown;
+  const shown = new Intl.DateTimeFormat(language === 'zh' ? 'zh-CN' : 'en', {
     year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC',
   }).format(date);
+  return unverified ? `${shown} ${language === 'zh' ? '（待核实）' : '(unverified)'}` : shown;
+}
+
+function sortableDate(paper: Paper): string {
+  const verified = /^\d{4}-\d{2}-\d{2}$/.test(paper.date)
+    && paper.date <= beijingDate() && paper.dateUnverified !== true;
+  return verified ? paper.date : (validAddedDate(paper.addedDate) || paper.date || '');
 }
 
 function visibleTitle(paper: Paper): string {
@@ -617,7 +628,7 @@ function filteredPapers(): Paper[] {
       ].some(value => value.toLowerCase().includes(needle));
     })
     .sort((a, b) => {
-      if (sort === 'oldest') return a.date.localeCompare(b.date);
+      if (sort === 'oldest') return sortableDate(a).localeCompare(sortableDate(b));
       if (sort === 'readers') {
         const aDoi = paperDoi(a);
         const bDoi = paperDoi(b);
@@ -626,10 +637,10 @@ function filteredPapers(): Paper[] {
         const aKnown = typeof aRaw === 'number';
         const bKnown = typeof bRaw === 'number';
         if (aKnown !== bKnown) return aKnown ? -1 : 1;
-        if (!aKnown && !bKnown) return b.date.localeCompare(a.date);
-        return Number(bRaw) - Number(aRaw) || b.date.localeCompare(a.date);
+        if (!aKnown && !bKnown) return sortableDate(b).localeCompare(sortableDate(a));
+        return Number(bRaw) - Number(aRaw) || sortableDate(b).localeCompare(sortableDate(a));
       }
-      return b.date.localeCompare(a.date);
+      return sortableDate(b).localeCompare(sortableDate(a));
     });
 
   if (activeEdition?.dois.length) {
@@ -815,7 +826,7 @@ function renderCards(): void {
     const localPdfButton = localPdfHref
       ? `<a class='local-pdf-button' href='${escapeHtml(localPdfHref)}' target='_blank' rel='noopener noreferrer' aria-label='${escapeHtml(`${language === 'zh' ? '管理本地 PDF' : 'Manage local PDF'}: ${visibleTitle(paper)}`)}'>${language === 'zh' ? '本地 PDF' : 'Local PDF'}</a>`
       : '';
-    return `<article class='card${editionClass}' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(paper.date)}' data-doi='${escapeHtml(doi || '')}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'>${editionBadge}<span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div><div class='card-actions'><button class='share-card' type='button' data-card-share ${doi ? '' : 'disabled'} aria-label='${escapeHtml(`${t('share')}: ${visibleTitle(paper)}`)}'>${escapeHtml(t('share'))}</button>${localPdfButton}${pdfButton}${pdfMore}${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></div></article>`;
+    return `<article class='card${editionClass}' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(paper.date)}' data-doi='${escapeHtml(doi || '')}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'>${editionBadge}<span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date, paper.dateUnverified === true))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div><div class='card-actions'><button class='share-card' type='button' data-card-share ${doi ? '' : 'disabled'} aria-label='${escapeHtml(`${t('share')}: ${visibleTitle(paper)}`)}'>${escapeHtml(t('share'))}</button>${localPdfButton}${pdfButton}${pdfMore}${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></div></article>`;
   }).join('') : `<div class='empty'>${escapeHtml(t('noResults'))}</div>`;
   restoreMedia();
   scheduleMediaBatch(0);
@@ -1391,6 +1402,7 @@ function normalizeArchitectureRows(value: unknown): Paper[] {
       url: typeof paper.url === 'string' ? paper.url : null,
       new: paper.new === true,
       addedDate: typeof paper.addedDate === 'string' ? paper.addedDate : undefined,
+      dateUnverified: paper.dateUnverified === true,
       authors: paper.authors as string[],
       synthesisType: paper.synthesisType === 'formal' || paper.synthesisType === 'total' ? paper.synthesisType : undefined,
     });

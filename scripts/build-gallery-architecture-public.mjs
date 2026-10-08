@@ -10,6 +10,7 @@ import { buildLegacyTitlePresentation } from '../architecture/title-presentation
 import { loadScopeCorrections } from './lib/scope-corrections.mjs';
 import { isExcludedDoi } from '../shared/literature-policy.js';
 import { beijingDate } from '../shared/literature-lifecycle.mjs';
+import { isHotLandingEligible, hotLandingSortDate } from '../shared/literature-landing.mjs';
 import { RESULT_WINDOW_SIZE } from '../shared/result-window.js';
 
 const ROOT = process.cwd();
@@ -103,10 +104,15 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   const presentationText = stable(presentation) + '\n';
   const presentationRef = ref(`title-presentation.${sha256(presentationText)}.json`, presentationText);
 
-  const hotCandidateDois = new Set([...bundle.partitions.hot, ...bundle.partitions.future]);
+  // Preserve publication-date uncertainty. Only fresh, reviewed additions with
+  // unknown/future dates join the ordinary three-month Hot landing for seven days.
+  const hotCandidateDois = new Set([
+    ...bundle.partitions.hot, ...bundle.partitions.future, ...bundle.partitions.date_unknown,
+  ]);
   const hotCandidateRecords = bundle.records
-    .filter(row => hotCandidateDois.has(row.doi))
-    .sort((a, b) => String(b.firstOnlineDate || b.paper?.date || '').localeCompare(String(a.firstOnlineDate || a.paper?.date || '')));
+    .filter(row => hotCandidateDois.has(row.doi) && isHotLandingEligible(row, asOfDate))
+    .sort((a, b) => hotLandingSortDate(b, asOfDate).localeCompare(hotLandingSortDate(a, asOfDate))
+      || a.doi.localeCompare(b.doi));
   const hotFallbackBody = {
     schema: 'gallery-hot-fallback-v1',
     catalogId: bundle.catalog.recordSetHash,
@@ -126,8 +132,11 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   for (const row of hotCandidateRecords) {
     const date = typeof row.firstOnlineDate === 'string' ? row.firstOnlineDate : null;
     const precision = row.datePrecision === 'day' ? 'day' : 'unknown';
-    const key = `${date || ''}|${precision}`;
-    const prior = hotDateBuckets.get(key) || { firstOnlineDate: date, datePrecision: precision, count: 0 };
+    const addedDate = typeof row.addedDate === 'string' ? row.addedDate : null;
+    const key = `${date || ''}|${precision}|${addedDate || ''}`;
+    const prior = hotDateBuckets.get(key) || {
+      firstOnlineDate: date, datePrecision: precision, addedDate, count: 0,
+    };
     prior.count += 1;
     hotDateBuckets.set(key, prior);
   }
