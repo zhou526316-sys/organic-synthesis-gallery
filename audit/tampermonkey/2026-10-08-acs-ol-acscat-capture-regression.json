@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "acs-ol-acscat-capture-failure-review-v1",
+  "timestampBeijing": "2026-10-08 23:28:53 +08:00",
+  "source": "owner authenticated publisher reports previously uploaded to /api/media/tampermonkey-reports",
+  "observation": "ACS media discovery is functioning for several sample DOIs; upload/storage and job-heartbeat paths cause incomplete closure",
+  "examples": [
+    {
+      "doi": "10.1021/acs.orglett.6c03640",
+      "status": "partial",
+      "toc": "failed; image bytes 289304 observed",
+      "figures": "1 of 5 stored; other image uploads aborted/timeouts",
+      "pdf": "PDF bytes 2212983 retrieved; 90s outbound upload failed",
+      "other": "same DOI previously had bound_publisher_heartbeat_missing"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03763",
+      "status": "success",
+      "toc": "stored",
+      "figures": "7/7 stored",
+      "pdf": "already stored"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03955",
+      "status": "success",
+      "toc": "stored",
+      "figures": "3/3 stored",
+      "pdf": "stored"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03611",
+      "status": "mixed across runs",
+      "toc": "already_available in one run",
+      "figures": "4 detected, zero stored in an earlier run",
+      "pdf": "latest access-gated with not_found PDF; cannot equate to absent TOC",
+      "other": "repeated publisher heartbeat misses"
+    },
+    {
+      "doi": "10.1021/acscatal.6c06279",
+      "status": "partial",
+      "toc": "image candidate 274739 bytes; upload failed",
+      "figures": "2/6 stored",
+      "pdf": "PDF 2613448 bytes fetched HTTP200; GM ~45s timeout, native ~30s network failure"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05658",
+      "status": "partial",
+      "toc": "stored",
+      "figures": "0/4 stored; stage upload timeouts",
+      "pdf": "PDF 1953880 bytes fetched HTTP200; GM ~45s timeout, native ~31s failed"
+    },
+    {
+      "doi": "10.1021/acscatal.6c06183",
+      "status": "success reported",
+      "toc": "stored"
+    },
+    {
+      "doi": "10.1021/acscatal.6c04987",
+      "status": "publisher_access_gate",
+      "toc": "not completed",
+      "pdf": "not_found"
+    }
+  ],
+  "verifiedCodeMechanisms": [
+    "public/toc-mainline.user.js: ACS jobs opened with active:job.publisher==='wiley', i.e. ACS tasks run background by default; heartbeat miss is not itself a publisher access refusal.",
+    "waitManualResult returns bound_publisher_heartbeat_missing when matching heartbeat is missing after elapsed threshold; other failures occur after publisher content discovery.",
+    "postJsonBudgeted uses extension GM image write request with bounded timeout; ambiguous GM timeout is not retried to avoid duplicate writes without receipts.",
+    "privatePdfUploadRequest uses GM first then browser fallback within a common 90s budget; observed two transport failures after PDF was fetched.",
+    "publisherBoot uses uploadReport for page DOI binding rejection. This legacy path omitted mandatory controllerRevision, explaining a subset of HTTP409 stale_controller_revision; 409 alone cannot prove outdated installation.",
+    "Oct-1+ journal visits now attempt TOC/Figure 1 plus body figures, HTML evidence and owner-private PDF on a justified article visit; completion is more demanding than prior TOC-only runs."
+  ],
+  "patchStatus": {
+    "pr": 418,
+    "url": "https://github.com/zhou526316-sys/organic-synthesis-gallery/pull/418",
+    "branch": "fix/tm-20261008-figure1-closure-live-diagnostics",
+    "live": false,
+    "fixes": [
+      "mandatory controllerRevision in page-binding diagnostic report",
+      "ignore unrelated publisher-tab reports",
+      "Figure1 production receipt closes current-run TOC gap",
+      "RSC first-party listing HTML fallback",
+      "install revision logged"
+    ],
+    "acsMediaTransportFixed": false
+  },
+  "nextActions": [
+    "Check live owner-VPN media-upload POST response, preflight, byte size/timeout and R2 per-DOI receipts before any retry",
+    "Prioritize preserving already discovered ACS visuals; do not infer absent from upload timeout",
+    "Verify publisher heartbeat on ACS/OL inactive tabs and report version independently of common capture protocol",
+    "Retest authorized PDF writes on genuinely missing statuses; no unauthorized access bypass",
+    "No automatic version bump or release until simulated tests and publisher live acknowledgements"
+  ],
+  "boundaries": {
+    "scope": "addedDate >= 2026-10-01",
+    "existingDataPreserved": true,
+    "productionPublicationSlot": "08:00 Asia/Shanghai only",
+    "privatePdfAccess": "owner only",
+    "newInfrastructureCost": 0,
+    "claimedAllFixed": false
+  }
+}
