@@ -863,7 +863,23 @@ async function beginDownload() {
   download.disabled = true;
   download.textContent = '正在准备下载…';
   try {
-    const downloadUrl = await verifiedPdfSource(sessionToken, 'download');
+    let downloadUrl;
+    if (await tencentGatewayEnabled()) {
+      // A browser navigation cannot be rescued once its download has started.
+      // Prefer the independent HTTPS file path and verify an actual 206 range
+      // before navigating. Fall back to the original Cloudflare route only on
+      // transport faults, never after a definitive 401/403 or missing file.
+      try {
+        downloadUrl = await verifiedPdfSource(sessionToken, 'download', true);
+        await checkPdfHeader(downloadUrl);
+      } catch (error) {
+        if (error?.notAvailable ||
+            /^(?:open|file)_http_(401|403)$/.test(String(error?.message || ''))) throw error;
+        downloadUrl = await verifiedPdfSource(sessionToken, 'download');
+      }
+    } else {
+      downloadUrl = await verifiedPdfSource(sessionToken, 'download');
+    }
     if (destroyed || sessionToken !== token()) return;
     document.documentElement.dataset.privatePdfDownload = 'started';
     // The endpoint now sends Content-Disposition: attachment. Navigate rather
