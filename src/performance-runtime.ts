@@ -68,6 +68,15 @@ function installPerformanceCss(): void {
   content-visibility: auto;
   contain-intrinsic-size: auto 560px;
 }
+/* #42: an expanded management menu must escape the card's paint containment.
+   Disable lazy paint ONLY on the active card, then restore it on close. */
+.gallery .card.user-action-open {
+  content-visibility: visible !important;
+  contain: none !important;
+  overflow: visible !important;
+  position: relative;
+  z-index: 40;
+}
 .toc-slot,
 .figure-strip-slot {
   contain: layout paint style;
