@@ -2818,10 +2818,14 @@ function embeddedJobDois(value) {
       add(location.origin + '/doi/full/' + doi);
       add(location.origin + '/doi/abs/' + doi);
     } else if (publisher === 'rsc' && location.hostname.endsWith('pubs.rsc.org')) {
-      // The legacy /en/content URLs now redirect to this same Silverchair
-      // article. Hidden cross-origin iframes yielded empty DOMs in live traces
-      // and waste 30+ seconds; use only DOI-bound live-page candidates here.
-      if(rscSilverchairArticleForJob(job,location.href))return [];
+      // Legacy /en/content landing/html now redirect back to this Silverchair
+      // page, and their hidden frames yielded empty DOMs. Keep ONE genuinely
+      // publisher-linked issue page as a DOI-scoped TOC fallback; do not blindly
+      // revisit the two old article URLs or synthesize media asset paths.
+      if(rscSilverchairArticleForJob(job,location.href)){
+        rscIssuePageUrls(job,document,location.href).slice(0,1).forEach(add);
+        return urls;
+      }
       var rscParts=rscRouteParts(job);
       if(rscParts){
         add('https://pubs.rsc.org/en/content/articlelanding/'+rscParts.year+'/'+rscParts.code+'/'+rscParts.suffix);
