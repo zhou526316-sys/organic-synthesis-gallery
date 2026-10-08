@@ -19,7 +19,8 @@ const articleUrl=vm.runInContext('articleUrl',articleCtx);
 test('opportunistic bundle uses full publisher routes',()=>{
   assert.match(articleUrl({doi:'10.1039/d6sc06874j',publisher:'rsc',captureToc:true,opportunisticFigures:true}),/\/articlehtml\/2026\/sc\/d6sc06874j$/);
   assert.equal(articleUrl({doi:'10.1039/d6sc06874j',publisher:'rsc',captureToc:true}), 'https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc06874j');
-  assert.equal(articleUrl({doi:'10.1021/jacs.6c12345',publisher:'acs',captureToc:true,opportunisticEvidence:true}), 'https://pubs.acs.org/doi/full/10.1021/jacs.6c12345');
+  assert.equal(articleUrl({doi:'10.1021/jacs.6c12345',publisher:'acs',captureToc:true,opportunisticEvidence:true}), 'https://pubs.acs.org/doi/10.1021/jacs.6c12345');
+  assert.equal(articleUrl({doi:'10.1021/jacs.6c12345',publisher:'acs',captureToc:false,captureFigures:true}), 'https://pubs.acs.org/doi/full/10.1021/jacs.6c12345');
 });
 
 const evidenceStart=source.indexOf('  function evidenceArticleUrl(job) {');
