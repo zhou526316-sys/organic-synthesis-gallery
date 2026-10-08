@@ -220,6 +220,10 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
     return route.fulfill({status:options.backupOpenStatus,contentType:'application/json',
      headers:{'access-control-allow-origin':base},body:JSON.stringify({error:'fixture_unavailable'})});
    }
+   if(url.origin==='https://pdf.gczhouwld.com' && options.tencentOpenStatus) {
+    return route.fulfill({status:options.tencentOpenStatus,contentType:'application/json',
+     headers:{'access-control-allow-origin':base},body:JSON.stringify({error:'fixture_unavailable'})});
+   }
    if(url.origin==='https://api.gczhouwld.com' && options.primaryOpenDelayMs) {
     await new Promise(resolve=>setTimeout(resolve,options.primaryOpenDelayMs));
    }
@@ -577,7 +581,37 @@ try{
   assert.deepEqual(state.openModes,['view','download']);
   assert.ok(state.privateFileDownloads>=2,'preflight and attachment navigation must be download-intent requests');
  });
- await test('PDF.js compatibility mode remains available with bounded range reads',async()=>{
+ await test('enabled Tencent route validates bytes and downloads through independent ingress',async()=>{
+  const {context,state}=await contextWith(['private_pdf_read'],undefined,{tencentReady:true});
+  const page=await gallery(context,true);
+  const viewer=new URL(await page.locator('.card .private-pdf-button').first().getAttribute('href'),base);
+  const target=await context.newPage();
+  await target.goto(viewer.toString(),{waitUntil:'domcontentloaded'});
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:12000});
+  const downloadEvent=target.waitForEvent('download',{timeout:12000});
+  await target.locator('#download').click();
+  const got=await downloadEvent;
+  assert.match(got.suggestedFilename(),/\.pdf$/);
+  assert.ok(state.openOrigins.includes('https://pdf.gczhouwld.com'));
+  assert.ok(state.privateHeaderProbeCalls>=1,'gateway download checks 16 real bytes first');
+  assert.ok(state.privateFileDownloads>=2,'gateway range + attachment download');
+ });
+ await test('downed Tencent download gateway falls back to already protected Cloudflare file route',async()=>{
+  const {context,state}=await contextWith(['private_pdf_read'],undefined,
+    {tencentReady:true,tencentOpenStatus:503});
+  const page=await gallery(context,true);
+  const viewer=new URL(await page.locator('.card .private-pdf-button').first().getAttribute('href'),base);
+  const target=await context.newPage();
+  await target.goto(viewer.toString(),{waitUntil:'domcontentloaded'});
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:12000});
+  const downloadEvent=target.waitForEvent('download',{timeout:12000});
+  await target.locator('#download').click();
+  const got=await downloadEvent;
+  assert.match(got.suggestedFilename(),/\.pdf$/);
+  assert.ok(state.openOrigins.includes('https://pdf.gczhouwld.com'));
+  assert.ok(state.openOrigins.includes('https://api.gczhouwld.com'));
+ });
+  await test('PDF.js compatibility mode remains available with bounded range reads',async()=>{
   const {context,state}=await contextWith(['private_pdf_read']);const page=await gallery(context,true);
   const pdf=page.locator('.card a.private-pdf-button').first();
   const viewer=new URL(await pdf.getAttribute('href'),base);viewer.searchParams.set('compat','1');
