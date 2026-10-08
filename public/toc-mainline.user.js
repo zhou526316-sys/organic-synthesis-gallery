@@ -3716,8 +3716,38 @@ function embeddedJobDois(value) {
     }
   }
 
+  function rasterizeVerifiedFigureOne(image,trace) {
+    if(!image||image.contentType!=='image/svg+xml')return Promise.resolve(image);
+    if(!svgQuality(image).usable)return Promise.reject(new Error('figure1_svg_unsafe_or_invalid'));
+    return new Promise(function(resolve,reject){
+      var probe=new Image(),settled=false;
+      var timer=setTimeout(function(){finish(new Error('figure1_svg_render_timeout'));},3500);
+      function finish(error,value){if(settled)return;settled=true;clearTimeout(timer);probe.onload=null;probe.onerror=null;error?reject(error):resolve(value);}
+      probe.onload=function(){
+        try{
+          var width=Number(probe.naturalWidth||image.width||0),height=Number(probe.naturalHeight||image.height||0);
+          if(width<1||height<1)throw new Error('figure1_svg_dimensions_missing');
+          var scale=Math.min(4,Math.max(1,1200/Math.max(width,height))),canvas=document.createElement('canvas');
+          canvas.width=Math.max(1,Math.round(width*scale));canvas.height=Math.max(1,Math.round(height*scale));
+          var ctx=canvas.getContext('2d');if(!ctx)throw new Error('figure1_svg_canvas_unavailable');
+          ctx.drawImage(probe,0,0,canvas.width,canvas.height);
+          var png=canvas.toDataURL('image/png');
+          if(png.length<200||png.length>5500000)throw new Error('figure1_png_size_invalid');
+          var rendered=Object.assign({},image,{imageData:png,contentType:'image/png',
+            byteLength:Math.floor((png.length-png.indexOf(',')-1)*0.75),width:canvas.width,height:canvas.height,method:'verified_svg_raster'});
+          pushTrace(trace,{stage:'figure1_render',event:'rasterized',status:'ok',url:image.sourceUrl||'',
+            imageWidth:rendered.width,imageHeight:rendered.height,message:'safe_svg_to_png_without_structure_changes'});
+          finish(null,rendered);
+        }catch(error){finish(error);}
+      };
+      probe.onerror=function(){finish(new Error('figure1_svg_render_failed'));};
+      probe.src=image.imageData;
+    });
+  }
+
   async function uploadCapture(job, candidate, image, trace, token) {
     assertBoundCaptureJob(job, candidate.url);
+    if(candidate.kind==='figure1')image=await rasterizeVerifiedFigureOne(image,trace);
     captureLiveUpdate(job,'uploading',{label:candidate.kind==='figure1'?'Figure 1 替代图':'TOC'});
     pushTrace(trace, {
       stage: 'r2_upload',
@@ -3746,7 +3776,7 @@ function embeddedJobDois(value) {
       }, token, 'r2_upload');
       if (!result || result.stored !== true || normalizeDoi(result.doi) !== normalizeDoi(job.doi) || result.kind !== candidate.kind) throw new Error('toc_capture_receipt_invalid');
       if (candidate.kind === 'official' && result.productionTocStored !== true) throw new Error('toc_production_promotion_missing');
-      if (candidate.kind === 'figure1' && isNatureScienceFamilyJob(job) && result.productionFallbackStored !== true) throw new Error('figure1_production_fallback_missing');
+      if (candidate.kind === 'figure1' && result.productionFallbackStored !== true) throw new Error('figure1_production_fallback_missing');
       assertBoundCaptureJob(job, candidate.url);
       pushTrace(trace, {
         stage: 'r2_upload',
@@ -4561,11 +4591,14 @@ function embeddedJobDois(value) {
     var localOfficial=tocRows.some(function(t){return t.kind==='official'&&t.imageUrl&&t.contentHash;});
     var productionOfficial=Boolean(media&&((media.tocStored&&!/fallback/i.test(media.tocReason||''))||media.primaryKind==='official_visual'));
     var official=productionOfficial;
-    var fallback=tocRows.some(function(t){return t.kind==='figure1'&&t.imageUrl;})||Boolean(media&&(media.primaryKind==='figure1'||media.figureOneStored));
+    // Only a production-backed Figure 1 closes the visual gap. Local-only
+    // receipts remain eligible for promotion; they are not a published card.
+    var localFigureOne=tocRows.some(function(t){return t.kind==='figure1'&&t.imageUrl;});
+    var fallback=Boolean(media&&(media.primaryKind==='figure1'||media.figureOneStored));
     // Acquisition and publication are separate layers. A local/R2 official receipt
     // must not hide a production TOC gap; reopening it lets /local-capture/import
     // perform the mandatory production promotion and replace an old fallback.
-    var tocKnown=Boolean(media)||localOfficial||Boolean(inventory.tocsKnown);
+    var tocKnown=Boolean(media)||localOfficial||localFigureOne||Boolean(inventory.tocsKnown);
     var figureKnown=expected>0||Boolean(media&&inventory.figuresKnown);
     var inspectFigures=Boolean(figureKnown&&expected===0&&knownCount>0);
     // A nonzero figure count alone is NOT proof that all body figures were captured.
@@ -4599,8 +4632,8 @@ function embeddedJobDois(value) {
       opportunisticEvidence:Boolean((bundleVisit||(recentFullCaptureEligible(raw)&&explicitFigureGap))&&textLevel!=='complete'||tocNeeded&&inventory.evidenceKnown&&!textLevel),
       capturePrivatePdf:Boolean(pdfNeeded||(bundleVisit&&privatePdfLease())),
       expectedFigureCount:expected,figureCoverageUnconfirmed:Boolean(tocNeeded&&inspectFigures),missingFigureCount:expected>0?Math.max(0,expected-knownCount):0,
-      capturedFigures:figs,existingEvidenceLevel:textLevel,existingTocKind:productionOfficial?'official':localOfficial?'official_local':fallback?'figure1':'',
-      unknownNeeds:unknown,nonQueueUnknownNeeds:nonQueueUnknown,allowFigureOne:Boolean(tocNeeded&&!official&&!fallback&&isNatureScienceFamilyJob(raw))});
+      capturedFigures:figs,existingEvidenceLevel:textLevel,existingTocKind:productionOfficial?'official':localOfficial?'official_local':fallback?'figure1':localFigureOne?'figure1_local':'',
+      unknownNeeds:unknown,nonQueueUnknownNeeds:nonQueueUnknown,allowFigureOne:Boolean(tocNeeded&&!official&&!fallback)});
     job.mediaNeed=captureMediaNeed(job);
     job.state=job.captureToc?'no_visual':job.captureFigures?'figure_gap':job.captureEvidence?'evidence_gap':'private_pdf_gap';
     return job;
@@ -6103,7 +6136,7 @@ function embeddedJobDois(value) {
       var hasVisual=Boolean(toc.available && toc.imageUrl);
       var official=Boolean(hasVisual && !/fallback/i.test(toc.reason||''));
       var natureScienceFamily=isNatureScienceFamilyJob(raw);
-      var acceptedFallback=Boolean(hasVisual && /fallback/i.test(toc.reason||'') && natureScienceFamily);
+      var acceptedFallback=Boolean(hasVisual && /fallback/i.test(toc.reason||''));
       var visualSatisfied=official||acceptedFallback;
       var latestAddedDate=String(queue.latestAddedDate||'');
       var isLatest=Boolean(latestAddedDate && String(raw.addedDate||'')===latestAddedDate);
@@ -6122,7 +6155,7 @@ function embeddedJobDois(value) {
         opportunisticFigures:true,
         opportunisticEvidence:false,
         capturePrivatePdf:false,
-        allowFigureOne:publisherForDoi(doi)!=='ccs'&&!official&&(isLatest||natureScienceFamily),
+        allowFigureOne:!official,
         _queueIndex:index
       });
     });
