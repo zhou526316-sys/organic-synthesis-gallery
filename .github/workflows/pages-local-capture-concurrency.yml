@@ -1,0 +1,31 @@
+name: Pages local-capture bounded mirror regression
+on:
+  push:
+    branches: [fix/tm-pages-local-mirror-bounded-20261009, main]
+    paths:
+      - cloudflare/scripts/merge-local-captures.mjs
+      - tests/pages-local-capture-concurrency.test.mjs
+      - .github/workflows/pages-local-capture-concurrency.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - cloudflare/scripts/merge-local-captures.mjs
+      - tests/pages-local-capture-concurrency.test.mjs
+      - .github/workflows/pages-local-capture-concurrency.yml
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Validate safe, bounded local mirror
+        run: |
+          set -euo pipefail
+          node --check cloudflare/scripts/merge-local-captures.mjs
+          node --test tests/pages-local-capture-concurrency.test.mjs
+          git diff --check
