@@ -8,6 +8,7 @@ const PUBLIC_DIR = path.resolve('public');
 const MEDIA_DIR = path.join(PUBLIC_DIR, 'media-mirror');
 const MEDIA_INDEX = path.join(PUBLIC_DIR, 'media-index.json');
 const MAX_IMAGE_BYTES = 4_000_000;
+const MAX_PARALLEL_MIRRORS = 8; // Bounded R2 fetch pressure; record writes stay serialized.
 
 function normalizeDoi(value) {
   if (typeof value !== 'string') return null;
@@ -124,6 +125,25 @@ async function downloadCapture(item) {
   return { localUrl: `media-mirror/${name}`, bytes: bytes.length, contentType: detectedType };
 }
 
+
+// Download bounded batches without changing the authoritative order of the
+// subsequent manifest merge. Failures are returned to the corresponding DOI
+// instead of terminating unrelated entries.
+export async function boundedImageDownloads(items, worker, concurrency = MAX_PARALLEL_MIRRORS) {
+  if (!Array.isArray(items)) throw new Error('capture_download_items_required');
+  const limit = Math.max(1, Math.min(MAX_PARALLEL_MIRRORS, Math.floor(Number(concurrency) || 1)));
+  const results = new Array(items.length);
+  let next = 0;
+  await Promise.all(Array.from({length: Math.min(limit, items.length)}, async () => {
+    while (next < items.length) {
+      const index = next++;
+      try { results[index] = {ok: true, value: items[index] === null ? null : await worker(items[index], index)}; }
+      catch (error) { results[index] = {ok: false, error}; }
+    }
+  }));
+  return results;
+}
+
 async function main() {
   const response = await fetch(`${SOURCE}/api/media/local-capture-index`, {
     headers: { 'cache-control': 'no-cache' },
@@ -147,18 +167,33 @@ async function main() {
   let failures = 0;
   let bytesTotal = 0;
 
-  for (const capture of captures) {
+  // 870+ local capture rows made the previous serialized 30s-per-item merge
+  // block Pages deployment. Validate every original DOI first, download no
+  // more than eight independent URLs concurrently, then update the manifest
+  // strictly in original source order. Existing DOI/source and image checks
+  // remain the only authority for the published asset.
+  const admissible = captures.map(capture => {
     const doi = normalizeDoi(capture?.doi);
     const kind = String(capture?.kind || '').toLowerCase();
     const imageUrl = typeof capture?.imageUrl === 'string' ? capture.imageUrl : '';
-    if (!doi || !['official','figure1'].includes(kind) || !imageUrl) continue;
+    if (!doi || !['official','figure1'].includes(kind) || !imageUrl) return null;
     if (!captureBelongsToDoi(capture, doi)) {
-      console.warn('LOCAL_CAPTURE_CROSS_DOI_REJECTED ' + JSON.stringify({ doi, kind }));
-      continue;
+      console.warn('LOCAL_CAPTURE_CROSS_DOI_REJECTED ' + JSON.stringify({doi, kind}));
+      return null;
     }
+    return capture;
+  });
+  const transfers = await boundedImageDownloads(admissible, downloadCapture);
 
+  for (let index = 0; index < admissible.length; index += 1) {
+    const capture = admissible[index];
+    if (!capture) continue;
+    const doi = normalizeDoi(capture.doi);
+    const kind = String(capture.kind).toLowerCase();
     try {
-      const mirrored = await downloadCapture(capture);
+      const transfer = transfers[index];
+      if (!transfer?.ok) throw transfer?.error || new Error('mirror_transfer_unconfirmed');
+      const mirrored = transfer.value;
       bytesTotal += mirrored.bytes;
 
       const record = manifest.items[doi] || {
@@ -240,6 +275,7 @@ async function main() {
 
   console.log('LOCAL_CAPTURE_MERGE_SUMMARY ' + JSON.stringify({
     captures: captures.length,
+    maxConcurrentDownloads: MAX_PARALLEL_MIRRORS,
     official,
     figure1,
     merged,
