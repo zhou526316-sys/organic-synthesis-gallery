@@ -18,6 +18,7 @@ MODE=--preflight
 if (( $# > 0 )); then MODE="$1"; fi
 ADDED=0
 STARTED=0
+UNIT_CREATED=0
 RELOADED=0
 abort(){ echo "[STOP] $*" >&2; exit 1; }
 ip_of(){ getent ahostsv4 "$1" 2>/dev/null | awk '$2=="STREAM"{print $1;exit}'; }
@@ -51,6 +52,7 @@ preflight(){
 }
 write_acme(){
  cat > "$VHOST" <<'NGINX'
+# GALLERY_PDF_GATEWAY_MANAGED_V1
 server {
  listen 80;
  listen [::]:80;
@@ -125,6 +127,7 @@ on_error(){
  echo '[ROLLBACK] Restoring previous Nginx sites (WeChat vhost never overwritten).' >&2
  if (( ADDED )); then rm -f "$LINK" "$VHOST"; fi
  if (( STARTED )); then systemctl disable --now "$SERVICE" >/dev/null 2>&1 || true; fi
+ if (( UNIT_CREATED )); then rm -f "$UNIT"; systemctl daemon-reload || true; fi
  if (( RELOADED )) && nginx -t >/dev/null 2>&1; then
   systemctl reload nginx >/dev/null 2>&1 || true
  fi
@@ -160,7 +163,7 @@ install_new(){
  chown gallerypdf:gallerypdf "$STATE";chmod 0700 "$STATE"
  install -o root -g root -m 0755 "$SOURCE_DIR/gateway.py" "$APP/gateway.py"
  python3 -m py_compile "$APP/gateway.py"
- write_unit;chmod 0644 "$UNIT";systemctl daemon-reload
+ write_unit;UNIT_CREATED=1;chmod 0644 "$UNIT";systemctl daemon-reload
  STARTED=1;systemctl enable --now "$SERVICE"
  systemctl is-active --quiet "$SERVICE" || abort 'Local PDF service failed'
  curl -fsS --max-time 3 -H "Host: $HOST" \
@@ -179,8 +182,14 @@ case "$MODE" in
  --install) install_new ;;
  --rollback)
   [[ "$(id -u)" == 0 ]] || abort 'sudo required'
+  [[ -f "$VHOST" ]] || abort 'No isolated PDF vhost to remove'
+  grep -q 'GALLERY_PDF_GATEWAY_MANAGED_V1' "$VHOST" ||
+    abort 'Vhost not managed by this installer: refuse removal'
   systemctl disable --now "$SERVICE" >/dev/null 2>&1 || true
   rm -f "$LINK" "$VHOST"
+  if [[ -f "$UNIT" ]] && grep -q 'Gallery owner-only PDF alternative gateway' "$UNIT"; then
+    rm -f "$UNIT"; systemctl daemon-reload
+  fi
   nginx -t && systemctl reload nginx
   echo '[OK] PDF-only vhost removed; osg-wechat-relay untouched.' ;;
  *) abort 'Usage: sudo bash install.sh [--preflight|--install|--rollback]' ;;
