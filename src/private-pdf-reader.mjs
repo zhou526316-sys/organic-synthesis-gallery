@@ -15,6 +15,8 @@ const API_BASE = 'https://api.gczhouwld.com';
 const ASSET_BASE = '/pdf-vault-assets/6.4.299/';
 const MAX_PDF_BYTES = 60 * 1024 * 1024;
 const SINGLE_TRANSFER_TIMEOUT_MS = 90_000;
+const ADAPTIVE_RANGE_THRESHOLD_BYTES = 3 * 1024 * 1024;
+const FIRST_PAGE_TIMEOUT_MS = 45_000;
 
 
 const params = new URLSearchParams(location.search);
@@ -22,6 +24,7 @@ const doi = String(params.get('doi') || '').trim().toLowerCase();
 const fallback = params.get('fallback') || '';
 const compatibilityMode = params.get('compat') === '1';
 const nativeMode = params.get('native') === '1' && !compatibilityMode;
+const forceFull = params.get('full') === '1' && !nativeMode && !compatibilityMode;
 const downloadOnOpen = params.get('mode') === 'download';
 const canvas = document.querySelector('#pdf-canvas');
 const stage = document.querySelector('#stage');
@@ -33,6 +36,7 @@ const zoomIn = document.querySelector('#zoom-in');
 const zoomLabel = document.querySelector('#zoom');
 const pageCount = document.querySelector('#page-count');
 const compatibility = document.querySelector('#compatibility');
+const fullOpen = document.querySelector('#full-open');
 const browserOpen = document.querySelector('#browser-open');
 const download = document.querySelector('#download');
 document.querySelector('#doi').textContent = doi;
@@ -44,6 +48,7 @@ let pageNumber = 1;
 let zoom = 1;
 let renderSequence = 0;
 let sourceUrl = '';
+let declaredPdfBytes = 0;
 let transferController = null;
 let destroyed = false;
 let phase = 'init';
@@ -61,6 +66,15 @@ function safeFallback() {
 function compatibilityHref() {
   const url = new URL(location.href);
   url.searchParams.set('compat', '1');
+  url.searchParams.delete('native');
+  url.searchParams.delete('full');
+  url.searchParams.delete('mode');
+  return url.toString();
+}
+function fullHref() {
+  const url = new URL(location.href);
+  url.searchParams.set('full', '1');
+  url.searchParams.delete('compat');
   url.searchParams.delete('native');
   url.searchParams.delete('mode');
   return url.toString();
@@ -93,7 +107,7 @@ function safeErrorCode(error) {
   const message = String(error?.message || '');
   if (/^(?:open|file)_http_\d+$/.test(message)) return message;
   if (['pdf_source_invalid','pdf_page_tree','pdf_invalid_bytes','pdf_wrong_content_type',
-       'pdf_range_unavailable','pdf_too_large','pdf_incomplete_bytes','pdf_transfer_timeout'].includes(message)) return message;
+       'pdf_range_unavailable','pdf_too_large','pdf_incomplete_bytes','pdf_transfer_timeout','pdf_first_page_timeout'].includes(message)) return message;
   if (name === 'AbortError' || name === 'TimeoutError') return 'pdf_transfer_timeout';
   return 'reader_error';
 }
@@ -158,6 +172,7 @@ async function render() {
   if (seq !== renderSequence || destroyed) return;
   setPhase('render', pageNumber === 1 ? '正在绘制第一页…' : `正在绘制第 ${pageNumber} 页…`);
   const page = await pdf.getPage(pageNumber);
+  if (seq !== renderSequence || destroyed) return;
   const base = page.getViewport({ scale: 1 });
   const available = Math.max(180, stage.clientWidth - 12);
   const displayScale = Math.min(1.6, available / base.width) * zoom;
@@ -209,6 +224,9 @@ async function getPdfSource(sessionToken, mode = 'view') {
       (mode === 'download') !== (url.searchParams.get('download') === '1')) {
     throw new Error('pdf_source_invalid');
   }
+  declaredPdfBytes = Number.isSafeInteger(Number(data.byteLength)) && Number(data.byteLength) >= 0
+    ? Number(data.byteLength) : 0;
+  document.documentElement.dataset.privatePdfDeclaredBytes = String(declaredPdfBytes);
   return { url: url.toString(), headerVerified: data.headerVerified === true };
 }
 async function checkPdfHeader(fileUrl) {
@@ -347,6 +365,7 @@ function showReaderError(error, prefix = 'PDF 读取失败') {
   else if (code === 'pdf_transfer_timeout') message = '文件传输超时。可点击上方“浏览器阅读”尝试原生模式。';
   else if (code === 'pdf_too_large') message = '文件较大，建议点击上方“浏览器阅读”以原生模式打开。';
   else if (code === 'pdf_incomplete_bytes') message = '文件传输不完整，请重新读取或尝试浏览器阅读。';
+  else if (code === 'pdf_first_page_timeout') message = '按需读取第一页超过45秒。可点击“整份下载后阅读”尝试另一条路径，或使用下载 PDF。';
   fallbackView(message, code);
 }
 let downloadBusy = false;
@@ -378,6 +397,8 @@ async function start() {
   if (!sessionToken) { fallbackView('请先在 Gallery 登录后再读取私有 PDF。'); return; }
   compatibility.href = compatibilityHref();
   compatibility.hidden = compatibilityMode || downloadOnOpen;
+  fullOpen.href = fullHref();
+  fullOpen.hidden = true;
   browserOpen.href = browserHref();
   browserOpen.hidden = nativeMode || downloadOnOpen;
   browserOpen.textContent = '浏览器阅读';
@@ -394,8 +415,14 @@ async function start() {
       location.replace(sourceUrl + '#page=1&zoom=page-width');
       return;
     }
-    const buffered = !compatibilityMode;
-    document.documentElement.dataset.privatePdfMode = buffered ? 'single-transfer' : 'compat';
+    // Small documents are more reliable with one full fetch. Large PDFs
+    // must NOT block the first page on a complete China-to-Cloudflare transfer.
+    const rangeMode = compatibilityMode ||
+      (!forceFull && declaredPdfBytes > ADAPTIVE_RANGE_THRESHOLD_BYTES);
+    const buffered = !rangeMode;
+    fullOpen.hidden = !rangeMode;
+    compatibility.hidden = rangeMode || downloadOnOpen;
+    document.documentElement.dataset.privatePdfMode = buffered ? 'single-transfer' : 'range-first';
     const loaded = buffered
       ? await Promise.all([loadPdfEngine(), fetchPdfSingleTransfer(sourceUrl, sessionToken)])
       : [await loadPdfEngine(), null];
@@ -403,20 +430,46 @@ async function start() {
     if (destroyed || token() !== sessionToken) return;
     loadingTask = buffered
       ? engine.getDocument(options({ data: bytes, disableRange: true, disableStream: true }))
-      : engine.getDocument(options({ url: sourceUrl, withCredentials: true }));
-    setPhase('parse', buffered ? '正在本地解析 PDF…' : '兼容模式：正在读取 PDF 目录…');
-    if (!buffered) {
+      : engine.getDocument(options({
+          url: sourceUrl, withCredentials: true,
+          disableRange: false, disableAutoFetch: true, disableStream: true,
+          rangeChunkSize: 1024 * 1024,
+        }));
+    setPhase('parse', buffered ? '正在本地解析 PDF…' : '正在按需读取目录和第一页…');
+    if (rangeMode) {
       loadingTask.onProgress = progress => {
         if (destroyed || status.hidden) return;
         const loadedMb = (Number(progress?.loaded || 0) / 1048576).toFixed(1);
-        status.textContent = `兼容模式：按需读取 ${loadedMb} MB`;
+        status.textContent = `正在按需读取第一页… 已取 ${loadedMb} MB`;
       };
     }
-    pdf = await loadingTask.promise;
-    if (!Number.isSafeInteger(pdf.numPages) || pdf.numPages < 1) throw new Error('pdf_page_tree');
-    controls();
-    await render();
+    let firstPageTimer = null;
+    try {
+      const firstPageJob = (async()=>{
+        pdf = await loadingTask.promise;
+        if (!Number.isSafeInteger(pdf.numPages) || pdf.numPages < 1) throw new Error('pdf_page_tree');
+        controls();
+        await render();
+      })();
+      if (rangeMode) {
+        await Promise.race([firstPageJob, new Promise((_,reject)=>{
+          firstPageTimer = window.setTimeout(()=>reject(new Error('pdf_first_page_timeout')),FIRST_PAGE_TIMEOUT_MS);
+        })]);
+      } else {
+        await firstPageJob;
+      }
+    } finally {
+      if (firstPageTimer !== null) window.clearTimeout(firstPageTimer);
+    }
   } catch (error) {
+    if (error?.message === 'pdf_first_page_timeout') {
+      renderSequence += 1;
+      renderTask?.cancel();
+      renderTask = null;
+      pdf = null;
+      try { void loadingTask?.destroy(); } catch {}
+      loadingTask = null;
+    }
     showReaderError(error);
   }
 }
