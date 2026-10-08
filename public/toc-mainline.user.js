@@ -5331,7 +5331,11 @@ function embeddedJobDois(value) {
           job.resolvedArticleUrl=manualTaskUrl;
           job.routePlan=captureRoutePlan(job,baseTaskUrl,manualTaskUrl);
           GM_setValue(ACTIVE_JOB_KEY,job);
-          run.tab=await Promise.resolve(GM_openInTab(boundPublisherJobUrl(manualTaskUrl,job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
+          // ACS background tabs can remain uninitialized through document-idle.
+          // Only a repeat visit after an actual failed attempt is foregrounded;
+          // healthy first-pass captures stay in the background.
+          var foregroundRetry=job.publisher==='wiley'||(job.publisher==='acs'&&Number(job.retryCount||0)>1);
+          run.tab=await Promise.resolve(GM_openInTab(boundPublisherJobUrl(manualTaskUrl,job.jobId),{active:foregroundRetry,insert:true,setParent:true}));
           if(!manualExecutionCurrent(run))return;
           if(!run.tab||typeof run.tab.close!=='function')throw new Error('task_tab_handle_unavailable');
           row.openedPublisherTab=true; // Count actual opened publisher task tabs, not failed preflight attempts.
