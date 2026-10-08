@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-08",
+  "revision": "2026-10-08-r1",
+  "stage": "draft_add",
+  "officialDraftReadback": "ok",
+  "articleCount": 2,
+  "expectedArticleCount": 2,
+  "articles": [
+    {
+      "order": 1,
+      "doi": "10.1021/jacs.6c14748",
+      "journal": "JACS",
+      "bodyImages": 20,
+      "coverType": "verified original graphical abstract with preserved chemistry"
+    },
+    {
+      "order": 2,
+      "doi": "10.1038/s41929-026-01602-y",
+      "journal": "Nature Catalysis",
+      "bodyImages": 12,
+      "coverType": "abstract background and exact original OS1 chemistry crop"
+    }
+  ],
+  "publicationSlot": "2026-10-08T08:00:00+08:00",
+  "dailyNewPapers": 28,
+  "sourceReviewGate": "audit/wechat-working/2026-10-08-review-gate.json",
+  "assetCount": 34,
+  "mediaImporterRunId": 37726023873,
+  "firstPublisherRun": {
+    "runId": 37726339596,
+    "result": "fail_closed_before_wechat_write",
+    "reason": "Scheme label missing from publisher caption validator"
+  },
+  "validatorCorrectionCommit": "21c5d82bd5d85158dbb8676847fcb6426755ea7f",
+  "successfulPublisherRunId": 37726614310,
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/1f33a5691dfcd561e515e158.html",
+  "actualNativeClientVerified": false,
+  "externalPreviewFetch": "not_available_from_web_viewer",
+  "localBrowserPreflight": "pass-390-and-690-no-broken-no-overflow",
+  "sourceIntegrity": "pass",
+  "publicSendAuthorized": false,
+  "publicSendPerformed": false,
+  "note": "Actual official draft/get passed and preview generated. Native WeChat mobile thumbnail text overlay remains independently unverified."
+}
