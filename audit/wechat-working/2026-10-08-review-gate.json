@@ -1,6 +1,6 @@
 {
   "date": "2026-10-08",
-  "revision": "2026-10-08-r7",
+  "revision": "2026-10-08-r8",
   "articleCount": 2,
   "selectionDois": [
     "10.1021/jacs.6c14748",
@@ -9,14 +9,14 @@
   "textReview": "pass",
   "imageReview": "pass",
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-08-r7-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-08-r7-images-only.md"
+    "textOnly": "audit/wechat-working/2026-10-08-r8-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-08-r8-images-only.md"
   },
   "sources": [
     {
       "path": "public/wechat-featured/2026-10-08.json",
-      "blobSha": "7d6e3599e216e309793f80c05ceec0db8ea7c161",
-      "sha256": "dd9950f8b3450dfdee860bef0c7b411c48965827cf11969df4346aad452efe82"
+      "blobSha": "8f3b60c7b7574ab1d5b65c59c4bd02c20c2efdd4",
+      "sha256": "c3bf995ec629f30519bf9240b4b32f2ea5cd72a1dca2124e78677917ebd6511b"
     },
     {
       "path": "public/wechat-retrospective/os1-multicentred-sulfur-20261008.json",
@@ -25,18 +25,18 @@
     },
     {
       "path": "public/wechat-editions/2026-10-08.json",
-      "blobSha": "04c39e98038e7046fcf8cf4bbbb8f922af15257f",
-      "sha256": "83b887eeaf81d1be2452bca42140f2267de66d795d43dc931dbb70df8aad4f99"
+      "blobSha": "3a7e41596759b2207da5251253711eeef90c1d1e",
+      "sha256": "b7a8a9307bfa266c408ec7a3fd184c6c9821a86cd222dbc3900793f22223a73e"
     },
     {
-      "path": "audit/wechat-working/2026-10-08-r7-text-only.md",
-      "blobSha": "1111af483e4739d035a979abda98d34fec84e6ba",
-      "sha256": "482233b3e9dd6e468ce63ee572eb3215655cacb23d6ec57578a7dc6cddfbc757"
+      "path": "audit/wechat-working/2026-10-08-r8-text-only.md",
+      "blobSha": "7f1d145d9de89d044f330cbe50c2cb2d5b79928d",
+      "sha256": "0a2a56b5568d706c3fb8df54bb3f0d40db770d769b1274483ec3d257bb76476f"
     },
     {
-      "path": "audit/wechat-working/2026-10-08-r7-images-only.md",
-      "blobSha": "9ac5a21579df08bea6e14d0fdee2773eba5d172d",
-      "sha256": "0a76a84775631b52e68da3fde0e2fa9c4e7349f69d9e7678a625aaf70a06222d"
+      "path": "audit/wechat-working/2026-10-08-r8-images-only.md",
+      "blobSha": "05f3c04b58c8e8d90cd193730cf896dc52af59f9",
+      "sha256": "a0f0b9dececd273587e7f06fb0e2307632e01f57d231da088d2d5bc25d97eefe"
     }
   ],
   "assets": [
@@ -344,5 +344,15 @@
     "textReviewStatus": "pass",
     "imageReviewStatus": "pass",
     "publisherNotYetRun": true
+  },
+  "reviewNotesR8": {
+    "userCorrection": "The first WeChat native article title must not be paper-only.",
+    "nativeTitle": "有机合成文献日报｜10.08｜今日精选｜JACS：α-氯代烷基硼酸酯与偕二硼烷的立体选择性1,2-迁移重排",
+    "sourceAndScientificBody": "Reviewed R7 complete scientific body unchanged",
+    "textReview": "pass: full title restored; no edits to experimental discussion, evidence or figures",
+    "imageReview": "pass: identical audited R7 cover and 34 pinned assets",
+    "secondArticle": "unchanged Nature Catalysis source and cover",
+    "draftWrite": "pending single same-media draft/update and draft/get readback",
+    "nativeMobileTitleLayout": "Requires actual client inspection; HTML readback checks full metadata title"
   }
 }
