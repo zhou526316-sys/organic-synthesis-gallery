@@ -263,7 +263,7 @@
   function captureLiveText(s) {
     var phaseNames = {
       starting:'正在生成缺项队列', between_jobs:'本控制页持有任务，等待下一篇', other_controller:'任务由另一控制页持有，等待其继续', interrupted:'上次任务已中断，等待恢复', waiting_controller:'仍有待办，等待控制器继续', inventory_partial:'缺项队列已结束，部分库存未确认',
-      retry_wait:'等待必要访问间隔，随后自动继续', cooldown_wait:'出版社访问受限，保留待办并等待冷却结束后安全重试', queue_refresh:'正在读取最新文献队列', inventory_refresh:'正在核对已有图片、全文和 PDF 库存', inventory_retry:'库存连接恢复中，待办未丢弃', blocked_remaining:'本轮有未完成项（请核对实际尝试次数和受阻原因）', all_resolved:'本轮已确认缺项全部补齐', page_loading:'等待出版社页面加载', evidence_capture:'读取文章文本', resume_wait:'等待旧任务收尾后自动恢复', idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
+      retry_wait:'等待必要访问间隔，随后自动继续', cooldown_wait:'出版社访问受限，保留待办并等待冷却结束后安全重试', queue_refresh:'正在读取最新文献队列', inventory_refresh:'正在核对已有图片、全文和 PDF 库存', inventory_retry:'库存连接恢复中，待办未丢弃', blocked_remaining:'仍有未补齐或未确认项（请核对实际尝试次数和受阻原因）', all_resolved:'本轮已确认缺项全部补齐', page_loading:'等待出版社页面加载', evidence_capture:'读取文章文本', resume_wait:'等待旧任务收尾后自动恢复', idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
       awaiting_publisher:'已开任务页，等待出版社脚本', discovering:'识别 TOC 和正文图',
       auth_wait:'等待出版社登录', challenge_wait:'等待出版社验证', downloading:'获取图片候选',
       comparing:'比较清晰度／矢量结构', uploading:'上传并等待存储回执', saved:'已收到存储回执',
