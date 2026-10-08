@@ -1,4 +1,5 @@
 import { test, expect, devices } from '@playwright/test';
+import { open as openStatusFixture } from './status-image-fixtures';
 import fs from 'node:fs';
 import path from 'node:path';
 import { RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE } from '../shared/result-window.js';
@@ -128,19 +129,18 @@ for (const [device, width, height] of [
   ['desktop', 1280, 900],
 ] as const) {
   test(`reading-status editor uses the roomier side of the viewport (${device})`, async ({ page }) => {
+    // Use the same isolated, stable action fixture as the status interaction
+    // suite; architecture Hot/Archive cards legitimately rerender during load.
+    const actions = await openStatusFixture(page, width);
+    await actions.locator('button[data-action="close"]').click();
     await page.setViewportSize({ width, height });
-    await stubOptionalApi(page);
-    await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
-    const actions = page.locator('#gallery > .card').first().locator('gallery-paper-actions');
     const button = actions.locator('button[data-action="status"]');
     const drawer = actions.locator('.drawer');
     await expect(button).toBeVisible({ timeout: 30000 });
 
     const moveTrigger = async (desiredTop: number): Promise<void> => {
-      // Archive fixtures can lock document scrolling while mounting. Move only
-      // this test card's action host to exercise both viewport edge cases
-      // deterministically, without changing the production positioning code.
-      await button.scrollIntoViewIfNeeded();
+      // Move only the stable test action host; avoid browser-scroll coupling
+      // with unrelated fixed overlays and document-scrolling preferences.
       await button.evaluate((node, target) => {
         const host = (node.getRootNode() as ShadowRoot).host as HTMLElement;
         const prior = Number(host.dataset.popupTestOffset || '0');
