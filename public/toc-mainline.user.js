@@ -1023,6 +1023,8 @@ function embeddedJobDois(value) {
       kind: 'manual-local-log-upload',
       version: VERSION,
       uploadedReason: 'user_menu',
+      installRevision: INSTALL_REVISION,
+      controllerRevision: CONTROLLER_REVISION,
       total: traces.length,
       summary: GM_getValue(SUMMARY_KEY, {}),
       controllerState:controllerLifecycleSnapshot(),
@@ -4956,7 +4958,8 @@ function embeddedJobDois(value) {
     var row=run.coverage.get(job.doi),next=Object.assign({},job),before=Object.keys(job.capturedFigures||{}).length;
     row.attempts++;row.lastReason=coverageReason(result);row.lastResult=result;
     var gained=0,figures=result.figures||{},toc=result.toc||{},text=result.fulltext||{};
-    if(job.captureToc && (toc.status==='already_available'||toc.status==='stored'&&toc.kind!=='figure1')){
+    if(job.captureToc && (toc.status==='already_available'
+      ||toc.status==='stored'&&(toc.kind!=='figure1'||toc.productionFallbackStored===true))){
       next.captureToc=false;row.done.captureToc=true;gained++;
     }
     if(job.captureEvidence && text.status==='stored'){
