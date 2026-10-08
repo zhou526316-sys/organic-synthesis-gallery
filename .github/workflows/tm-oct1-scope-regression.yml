@@ -8,6 +8,10 @@ on:
       - 'cloudflare/worker/src/index.js'
       - 'scripts/test-tm-oct1-scope-contract.mjs'
       - 'scripts/test-tm-stage-first.mjs'
+      - 'scripts/test-tm-paired-capture.mjs'
+      - 'scripts/test-tm224-acquisition.mjs'
+      - 'scripts/test-tm235-angew-production-toc.mjs'
+      - '.github/workflows/tm-20261001-live-acceptance.yml'
       - 'tests/tm-gap-recovery.test.mjs'
       - 'tests/tm-missing-only.test.mjs'
       - 'tests/tm-queue-coverage.test.mjs'
@@ -51,6 +55,14 @@ jobs:
           node scripts/test-tm221-window-guard.mjs
           node scripts/test-tm-stage-first.mjs
           node cloudflare/worker/scripts/test-private-pdf-capture.mjs
+      - name: Compare browser acquisition and paired publisher visit
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+          node scripts/test-tm224-acquisition.mjs
+          node scripts/test-tm235-angew-production-toc.mjs
+          node scripts/test-tm-paired-capture.mjs
       - name: Assert no changes to literature release or owner PDF reader
         run: |
           set -euo pipefail
