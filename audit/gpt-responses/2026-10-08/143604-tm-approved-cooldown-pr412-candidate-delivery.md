@@ -10,7 +10,7 @@ Context: user approved narrow Tampermonkey publisher cooldown, visit accounting,
 - Changed files: public/toc-mainline.user.js, tests/tm-immediate-restart.test.mjs, tests/tm-queue-coverage.test.mjs; no other production source, owner documents or user data changed.
 - Fix: preserve pending obligations under publisher-wide 30-minute access cooldown and safely resume after expiry, continue unaffected publishers, distinguish opened publisher tab vs pre-opening attempt, prevent 0/23 false completed message. PDF state explains owner authorization missing/expired vs read failure. Actual 401/403/429 restrictions are not bypassed.
 - Verified offline tests: 23 deferred and 0 visits, 23 eventual retry when due, unaffected publisher processed, pre-open failure not counted as visited, PDF auth-state exact handling. 61 jobs in Chromium fixture (mocked publisher network, 0 production writes) with 60 resolved, 1 intentionally unresolved.
-- GitHub CI as of time: 18 of 19 PR workflows success, 0 failures; dedicated Tampermonkey controller recovery regression still running. Controller recovery test already passed within other successful regression workflow. This is not full green and not actual publisher capture acceptance.
+- GitHub CI final verification: all 19 of 19 PR workflows SUCCESS, 0 failures; it is still not actual authenticated publisher capture acceptance.
 - Runner artifact 11532268269 from successful https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37737620949.
 - Isolated user-distributable candidate: /mnt/data/gallery-vpn-bridge-2.2.70.99-preview.user.js, SHA256 558e9be96795767f9c87a1653caf8f24795412602cf28f02f5e7bb91322f601a, bytes 416664. Compared to CI-tested packaged Bridge, executable payload is byte-identical. Only Userscript metadata changed (2.2.70.99 preview, description, remove auto update/download URL), node --check PASS. Local sandbox file verified in this turn.
 - Do not merge, publish or present an official upgrade until remaining CI and user-authorized desktop publisher capture/storage readback are satisfied. Production remains 2.2.70.
@@ -21,7 +21,7 @@ Context: user approved narrow Tampermonkey publisher cooldown, visit accounting,
 
 这是给真实浏览器验收使用的候选版，**不是正式上线的新版本**。它与通过回归测试的安装包具有相同的可执行代码；仅修改测试版标识，并关闭自动更新。现有正式安装地址仍保持 2.2.70。
 
-截至本次核查，19 项自动工作流已有 **18 项通过、0 项失败，最后 1 项控制器恢复工作流仍在执行**。因此现在仍不合并 PR #412。
+截至本次核查，**19 项自动工作流全部通过，没有失败项**。但这些验证不包含你的真实校园 VPN 出版社抓取，因此现在仍不合并 PR #412。
 
 请先选择 Edge 或 Chrome 中的一个浏览器测试，另一个继续保留原版。备份当前 Tampermonkey 脚本与设置后，下载上方 `.user.js`，在 Tampermonkey 中导入并**覆盖同名 VPN Bridge**；不要卸载脚本或清空存储。刷新 Gallery，在 Tampermonkey 中确认版本 **2.2.70.99**，只点击一次「立即开始任务（只补缺项）」。
 
