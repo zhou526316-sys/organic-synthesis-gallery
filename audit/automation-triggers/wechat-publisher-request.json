@@ -1,18 +1,19 @@
 {
-  "requestId": "wechat-daily-2026-10-08-r2-restore-user-covers-complete-si",
-  "requestedAt": "2026-10-08T14:24:00+08:00",
+  "requestId": "wechat-daily-2026-10-08-r3-white-original-toc-title-only",
+  "requestedAt": "2026-10-08T14:06:00+08:00",
   "publicationDate": "2026-10-08",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-08-r2",
+  "editorialRevision": "2026-10-08-r3",
   "approvedGate": "audit/wechat-working/2026-10-08-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
     "10.1021/jacs.6c14748",
     "10.1038/s41929-026-01602-y"
   ],
-  "sameDraftMediaId": "KhELYUzvwADwB_l1xH1SWFVYn_-s6bRj39Vw7w-SivoAE1W-c7lb3hzVk5bB-0Tr",
+  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWFVYn_-s6bRj39Vw7w-SivoAE1W-c7lb3hzVk5bB-0Tr",
   "draftOnly": true,
   "requireDraftGetReadback": true,
   "publicSendAuthorized": false,
-  "reason": "User corrected assistant; connected fixed-IP WeChat API already configured. Restore exact user-selected retrospective cover, JACS authentic TOC dark source-preserving cover with top header+bottom title reserve, replace clipped SI Fig S3 with exact full PDF crop. Import r2 verified 34 assets and source gate; preserve both articles/paragraphs, update existing same-day two-article draft only, no public send."
+  "prePublishQA": "audit/wechat-working/2026-10-08-r3-mobile-cover-qa.json",
+  "reason": "User explicitly requests real same-media draft update, not just image. R3 official JACS TOC stays white and chemically unaltered, top header retained, navy only behind native white title, first article native title only Chinese paper title. Retrospective cover and all 32 body figures unchanged. One controlled draft/update then draft/get, no public send."
 }
