@@ -2855,6 +2855,53 @@ function embeddedJobDois(value) {
     return urls;
   }
 
+  // RSC Silverchair listing pages currently return an empty hidden-iframe DOM.
+  // Read only the genuine same-origin issue/search HTML from the user's
+  // authenticated publisher session; never infer/guess CDN image URLs.
+  async function rscPublisherListingHtmlCandidates(job, trace, url) {
+    if(!job || job.publisher!=='rsc')return null;
+    var requested;
+    try{requested=new URL(url);}catch(_){return null;}
+    if(requested.protocol!=='https:' || requested.hostname.toLowerCase()!=='pubs.rsc.org'
+        || !/(?:\/results(?:[/?#]|$)|\/issue\/|\/journals\/journalissues\/)/i.test(requested.pathname))return null;
+    try{
+      var response=await gmRequest({method:'GET',url:requested.href,timeout:10000,
+        headers:{Accept:'text/html,application/xhtml+xml;q=0.9,*/*;q=0.1'}},true);
+      var status=Number(response&&response.status||0);
+      if(status===401||status===403||status===429){
+        pushTrace(trace,{stage:'rsc_listing_html',event:'access_denied',status:'failed',
+          message:'publisher_http_'+status+';no_auth_bypass_or_retry'});
+        return [];
+      }
+      if(status<200||status>=300){
+        pushTrace(trace,{stage:'rsc_listing_html',event:'http_failed',status:'failed',message:'publisher_http_'+status});
+        return null;
+      }
+      var finalUrl=String(response&&(response.finalUrl||response.responseURL)||requested.href);
+      var final=new URL(finalUrl);
+      if(final.protocol!=='https:'||final.hostname.toLowerCase()!=='pubs.rsc.org'
+          ||!/(?:\/results(?:[/?#]|$)|\/issue\/|\/journals\/journalissues\/)/i.test(final.pathname)){
+        pushTrace(trace,{stage:'rsc_listing_html',event:'redirect_rejected',status:'none',message:'not_a_publisher_listing'});
+        return [];
+      }
+      var html=String(response&&response.responseText||'');
+      if(!/^\s*(?:<!doctype\s+html|<html\b|<head\b|<body\b)/i.test(html.slice(0,500))||html.length>4000000){
+        pushTrace(trace,{stage:'rsc_listing_html',event:'non_html',status:'none',message:'empty_or_unexpected_response'});
+        return [];
+      }
+      // DOMParser is inert here: no script execution and no new resource fetch.
+      var parsed=new DOMParser().parseFromString(html,'text/html');
+      var rows=rscIssueTocCandidatesFromDocument(job,parsed,finalUrl);
+      pushTrace(trace,{stage:'rsc_listing_html',event:'scanned',status:rows.length?'found':'none',
+        message:'doi='+normalizeDoi(job.doi)+';verified_media='+rows.length});
+      return rows;
+    }catch(error){
+      pushTrace(trace,{stage:'rsc_listing_html',event:'transport_failed',status:'failed',
+        message:captureLiveError(error&&error.message||error)});
+      return null;
+    }
+  }
+
   async function iframeCandidates(job, trace) {
     var urls = iframeSourceUrls(job);
     if(job&&job.publisher==='ccs'){
@@ -2865,6 +2912,14 @@ function embeddedJobDois(value) {
     var best = [];
     for (var u = 0; u < urls.length; u += 1) {
       var url = urls[u];
+      if(job.publisher==='rsc' && rscSilverchairArticleForJob(job,location.href)){
+        var listingRows=await rscPublisherListingHtmlCandidates(job,trace,url);
+        if(listingRows!==null){
+          if(listingRows.length)return listingRows;
+          // A verified static first-party listing needs no second empty iframe.
+          continue;
+        }
+      }
       pushTrace(trace, { stage: 'iframe_dom_scan', event: 'load_start', status: 'start', url: url });
       try {
         var rows = await new Promise(function (resolve) {
