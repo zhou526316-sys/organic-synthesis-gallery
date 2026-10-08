@@ -14,6 +14,7 @@ const script=source.slice(0,cut)+`
 const server=http.createServer((req,res)=>{res.writeHead(200,{'content-type':'text/html; charset=utf-8'});res.end('<!doctype html><html lang="zh"><meta charset="utf-8"><title>Immediate restart fixture</title><body><h1>立即开始任务 · 从头抓</h1></body></html>');});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await chromium.launch({headless:true}),context=await browser.newContext({viewport:{width:1050,height:800}});
+await context.route('https://gallery.gczhouwld.com/architecture-v1/**',async route=>route.fulfill({status:200,contentType:'application/json',body:'{}'}));
 await context.tracing.start({screenshots:true,snapshots:true,sources:true});
 const report={mockedGM:true,publisherNetworkRequests:0,productionWrites:0,consoleErrors:[],pageErrors:[],failedRequests:[],responses:[],passed:false};
 try{
