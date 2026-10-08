@@ -100,7 +100,7 @@ import {
   verifyPasswordRegistration,
   wechatNotify,
 } from './integrations.js';
-import { bootstrapPrivatePdfOwner, importPrivatePdf, issuePrivatePdfCaptureLease, openPrivatePdf, privatePdfStatus, revokePrivatePdfCaptureLeases, servePrivatePdf } from './private-pdf.js';
+import { bootstrapPrivatePdfOwner, importPrivatePdf, issuePrivatePdfCaptureLease, privatePdfCaptureInventory, openPrivatePdf, privatePdfStatus, revokePrivatePdfCaptureLeases, servePrivatePdf } from './private-pdf.js';
 import { applyPrivatePdfVerification, listPrivatePdfProcessingQueue, privatePdfProcessingStatus, servePrivatePdfProcessingFile } from './private-pdf-processing.js';
 import { readPdfVaultQueue, mutatePdfVaultQueue } from './pdf-vault-queue.js';
 
@@ -132,6 +132,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/media/capture-capabilities',
   '/api/media/local-diagnostics',
   '/api/media/tampermonkey-reports',
+  '/api/private-pdf/capture-inventory',
   '/api/article-summary/evidence-inventory',
   '/api/article-summary/scheduled-handoff',
   '/api/wechat/js-sdk-signature',
@@ -784,6 +785,9 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await persistRenderReport(env, await readJson(request)));
   }
 
+  if (request.method === 'POST' && url.pathname === '/api/private-pdf/capture-inventory') {
+    return resultResponse(await privatePdfCaptureInventory(request, env, await readJson(request)), cors);
+  }
   if (request.method === 'POST' && url.pathname === '/api/private-pdf/import') {
     return resultResponse(await importPrivatePdf(request, env), cors);
   }
