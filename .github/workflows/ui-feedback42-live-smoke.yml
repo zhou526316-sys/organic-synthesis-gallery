@@ -1,0 +1,40 @@
+name: Verify feedback 42 status popover on live Gallery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ui-feedback42-live-smoke.yml'
+      - 'scripts/verify-feedback42-live.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ui-feedback42-live-smoke
+  cancel-in-progress: false
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install isolated pinned browser dependency
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx --no-install playwright install --with-deps chromium
+      - name: Inspect real custom-domain status menu without writing user data
+        run: node scripts/verify-feedback42-live.mjs
+      - name: Preserve public UI screenshots for acceptance audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: feedback42-live-screenshots-${{ github.run_id }}
+          path: ${{ runner.temp }}/feedback42-live-*.png
+          if-no-files-found: ignore
+          retention-days: 7
