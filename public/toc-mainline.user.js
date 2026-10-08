@@ -3995,6 +3995,11 @@ function embeddedJobDois(value) {
     try {
       await postJson(REPORT_ENDPOINT, {
         doi: job.doi,
+        jobId: String(job.jobId||''),
+        captureVersion: VERSION,
+        controllerRevision: CONTROLLER_REVISION,
+        mediaNeed: String(job.mediaNeed||''),
+        final: false, // Page-binding diagnostics must never override a terminal report.
         publisher: job.publisher,
         status: status,
         reason: reason,
@@ -5567,7 +5572,11 @@ function embeddedJobDois(value) {
     try {
       await bindPublisherCaptureJob(job);
     } catch (error) {
-      // Do not complete or overwrite the active job from an unrelated tab.
+      // Publisher navigation opens many unrelated tabs in one browser. A tab
+      // without this exact job binding must never report on the active DOI.
+      var bound='';
+      try { bound=sessionStorage.getItem(P+'tab-job-binding')||''; } catch (_) {}
+      if(!job.jobId||bound!==job.jobId)return;
       await uploadReport(job, [{ stage: 'page_doi_guard', event: 'rejected', status: 'failed', url: location.href, message: String(error.message) }], 'failed', String(error.message), null, writeToken());
       return;
     }
