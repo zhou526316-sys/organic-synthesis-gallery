@@ -4,6 +4,8 @@ const READ_CAPABILITY = 'private_pdf_read';
 const OWNER_CAPABILITY = 'private_pdf_owner';
 const BOOTSTRAP_HASH = '7d06423d6dec5593c6ced3cf94d7dcea652600bf0eae59e06f0921108e75e819';
 const ACCESS_TTL_MS = 5 * 60 * 1000;
+const VIEW_ABSOLUTE_TTL_MS = 90 * 60 * 1000;
+const VIEW_COOKIE_IDLE_SECONDS = 60 * 60;
 const FAST_TICKET_VERSION = 'v2';
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -33,11 +35,63 @@ function base64UrlToBytes(value) {
   const binary = atob(padded);
   return Uint8Array.from(binary, char => char.charCodeAt(0));
 }
+function ticketSecret(env) {
+  return String(env?.PRIVATE_PDF_TICKET_SECRET || env?.BRIDGE_WRITE_TOKEN || '').trim();
+}
 async function privatePdfTicketKey(env) {
-  const secret = String(env?.PRIVATE_PDF_TICKET_SECRET || env?.BRIDGE_WRITE_TOKEN || '').trim();
+  const secret = ticketSecret(env);
   if (!secret) return null;
   const raw = await crypto.subtle.digest('SHA-256', textEncoder.encode('organic-gallery-private-pdf-fast-ticket-v2\0' + secret));
   return crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+}
+async function privatePdfContinuationKey(env) {
+  const secret = ticketSecret(env);
+  if (!secret) return null;
+  const raw = await crypto.subtle.digest('SHA-256', textEncoder.encode('organic-gallery-private-pdf-continuation-v1\0' + secret));
+  return crypto.subtle.importKey('raw', raw, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
+}
+function safePrivateR2Key(value) {
+  // Key is exclusively obtained from the selected, active private R2 document.
+  // Do not reject legitimate older R2 naming schemes solely because their
+  // object path does not begin with the latest capture prefix.
+  return typeof value === 'string' && value.length > 0 && value.length <= 1024 &&
+    !/^[\\/]/.test(value) && !/[\u0000-\u001f\u007f]/.test(value) &&
+    !/(^|\/)\.\.(\/|$)/.test(value) && !/^https?:\/\//i.test(value);
+}
+function continuationCookieName(payload) {
+  return /^[A-Za-z0-9_-]{16,32}$/.test(String(payload?.nonce || ''))
+    ? 'gpdf_' + payload.nonce : '';
+}
+async function signContinuationCookie(env, ticket) {
+  const key = await privatePdfContinuationKey(env);
+  if (!key) return '';
+  return 'v1.' + bytesToBase64Url(new Uint8Array(await crypto.subtle.sign(
+    'HMAC', key, textEncoder.encode('gallery-pdf-continuation-v1\0' + ticket))));
+}
+async function hasValidContinuationCookie(request, env, payload, ticket) {
+  if (payload.mode !== 'view' || Date.now() > payload.hardExp) return false;
+  const name = continuationCookieName(payload);
+  if (!name) return false;
+  const header = request.headers.get('cookie') || '';
+  const value = header.split(';').map(part => part.trim()).find(part => part.startsWith(name + '='))
+    ?.slice(name.length + 1) || '';
+  if (!/^v1\.[A-Za-z0-9_-]{43}$/.test(value)) return false;
+  const key = await privatePdfContinuationKey(env);
+  if (!key) return false;
+  try {
+    return await crypto.subtle.verify('HMAC', key, base64UrlToBytes(value.slice(3)),
+      textEncoder.encode('gallery-pdf-continuation-v1\0' + ticket));
+  } catch { return false; }
+}
+async function extendContinuationCookie(headers, env, payload, ticket) {
+  const name = continuationCookieName(payload);
+  if (!name || payload.mode !== 'view') return;
+  const remaining = Math.ceil((payload.hardExp - Date.now()) / 1000);
+  if (remaining <= 0) return;
+  const signature = await signContinuationCookie(env, ticket);
+  if (!signature) return;
+  headers.set('set-cookie', name + '=' + signature + '; Path=/api/user-ui/private-pdf/file; Max-Age=' +
+    Math.min(VIEW_COOKIE_IDLE_SECONDS, remaining) + '; Secure; HttpOnly; SameSite=Strict');
 }
 async function makeFastTicket(env, payload) {
   const key = await privatePdfTicketKey(env);
@@ -59,9 +113,15 @@ async function readFastTicket(env, token) {
     if (iv.byteLength !== 12 || ciphertext.byteLength < 17) return null;
     const plaintext = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext);
     const payload = JSON.parse(textDecoder.decode(plaintext));
-    if (payload?.v !== 2 || typeof payload?.doi !== 'string' || typeof payload?.r2Key !== 'string') return null;
-    if (!payload.r2Key.startsWith('private-pdf/') || !Number.isSafeInteger(payload.size) || payload.size < 1) return null;
-    if (!Number.isSafeInteger(payload.exp) || payload.exp < Date.now()) return null;
+    if (payload?.v !== 2 || !normalizeDoi(payload?.doi) ||
+        !safePrivateR2Key(payload?.r2Key)) return null;
+    if (!Number.isSafeInteger(payload.size) || payload.size < 1) return null;
+    if (!Number.isSafeInteger(payload.exp) || payload.exp < 1) return null;
+    if (payload.mode == null) return { ...payload, mode: 'view', hardExp: payload.exp, nonce: '' };
+    if (!['view', 'download'].includes(payload.mode) ||
+        !Number.isSafeInteger(payload.hardExp) || payload.hardExp < payload.exp ||
+        payload.hardExp - payload.exp > VIEW_ABSOLUTE_TTL_MS ||
+        !continuationCookieName(payload)) return null;
     return payload;
   } catch {
     return null;
@@ -136,35 +196,57 @@ export async function privatePdfStatus(request, env) {
     document: doc ? { id: doc.id, versionKind: doc.version_kind, byteLength: Number(doc.byte_length || 0), capturedAt: Number(doc.captured_at || 0), processingState: doc.processing_state || 'raw' } : null } };
 }
 export async function openPrivatePdf(request, env) {
-  const doi = normalizeDoi(new URL(request.url).searchParams.get('doi'));
+  const openUrl = new URL(request.url);
+  const doi = normalizeDoi(openUrl.searchParams.get('doi'));
+  const mode = openUrl.searchParams.get('mode') || 'view';
   if (!doi) return { status: 400, body: { error: 'invalid_doi' } };
+  if (!['view', 'download'].includes(mode)) return { status: 400, body: { error: 'invalid_pdf_mode' } };
   if (!enabled(env, 'PRIVATE_PDF_READ_ENABLED') || !env.PDF_PRIVATE) return { status: 200, body: { available: false, doi, reason: 'private_pdf_unavailable' } };
   const userId = await authenticatedSessionUserId(request, env);
   if (!userId) return { status: 401, body: { error: 'not_authenticated' } };
   if (!await hasCapability(env, userId, READ_CAPABILITY)) return { status: 403, body: { error: 'private_pdf_not_entitled' } };
   const doc = await selectedDocument(env, doi);
   if (!doc) return { status: 200, body: { available: false, doi, reason: 'pdf_not_stored' } };
+  if (!safePrivateR2Key(doc.r2_key) ||
+      !Number.isSafeInteger(Number(doc.byte_length)) || Number(doc.byte_length) < 8) {
+    return { status: 200, body: { available: false, doi, reason: 'pdf_storage_metadata_invalid' } };
+  }
+  // Fail before granting an unusable URL if a D1 "ready" row points to an
+  // absent/truncated private R2 object. Only one R2 HEAD per open, not per range.
+  let objectHead;
+  try { objectHead = await env.PDF_PRIVATE.head(doc.r2_key); }
+  catch { return { status: 503, body: { error: 'private_pdf_storage_unavailable' } }; }
+  if (!objectHead || Number(objectHead.size) !== Number(doc.byte_length)) {
+    return { status: 200, body: { available: false, doi, reason: 'pdf_object_unavailable' } };
+  }
   const now = Date.now(), expiresAt = now + ACCESS_TTL_MS;
   const fastToken = await makeFastTicket(env, {
     v: 2,
     uid: userId,
     doi: doc.doi,
     r2Key: doc.r2_key,
-    size: Number(doc.byte_length || 0),
+    size: Number(doc.byte_length),
     exp: expiresAt,
+    hardExp: mode === 'view' ? now + VIEW_ABSOLUTE_TTL_MS : expiresAt,
+    mode,
+    nonce: randomToken(12),
   });
-  let token = fastToken, ticketMode = 'stateless-v2';
+  const selfChecked = fastToken ? await readFastTicket(env, fastToken) : null;
+  let token = selfChecked && selfChecked.r2Key === doc.r2_key &&
+    selfChecked.size === Number(doc.byte_length) ? fastToken : '';
+  let ticketMode = token ? 'stateless-v2' : 'legacy-d1';
   if (!token) {
     token = randomToken(32);
     const tokenHash = await sha256Hex(token);
     await env.DB.prepare(
       'INSERT INTO private_pdf_access_tokens (token_hash, user_id, document_id, created_at, expires_at) VALUES (?, ?, ?, ?, ?)'
     ).bind(tokenHash, userId, doc.id, now, expiresAt).run();
-    ticketMode = 'legacy-d1';
   }
   const url = new URL('/api/user-ui/private-pdf/file', request.url);
   url.searchParams.set('token', token);
-  return { status: 200, body: { available: true, doi, url: url.toString(), expiresAt, versionKind: doc.version_kind, ticketMode } };
+  if (mode === 'download') url.searchParams.set('download', '1');
+  return { status: 200, body: { available: true, doi, url: url.toString(), expiresAt,
+    versionKind: doc.version_kind, ticketMode, mode } };
 }
 function parseRange(header, size) {
   const match = /^bytes=(\d*)-(\d*)$/.exec(String(header || '').trim());
@@ -176,20 +258,38 @@ function parseRange(header, size) {
   end = Math.min(end, size - 1);
   return { start, end, length: end - start + 1 };
 }
+
+function privateFileError(status, code, cors = {}) {
+  const headers = new Headers(cors);
+  headers.set('content-type', 'application/json; charset=utf-8');
+  headers.set('cache-control', 'private, no-store');
+  headers.set('x-gallery-pdf-status', code);
+  headers.set('x-content-type-options', 'nosniff');
+  return new Response(JSON.stringify({ error: code }), { status, headers });
+}
 export async function servePrivatePdf(request, env, cors = {}) {
-  if (!enabled(env, 'PRIVATE_PDF_READ_ENABLED') || !env?.PDF_PRIVATE) return new Response('Not available', { status: 404 });
-  const token = new URL(request.url).searchParams.get('token') || '';
-  if (token.length < 32) return new Response('Unauthorized', { status: 401 });
-  const fast = await readFastTicket(env, token);
-  let row = fast ? {
-    user_id: fast.uid,
-    expires_at: fast.exp,
-    doi: fast.doi,
-    r2_key: fast.r2Key,
-    byte_length: fast.size,
-  } : null;
-  if (!row) {
-    if (!env?.DB) return new Response('Unauthorized', { status: 401 });
+  if (!enabled(env, 'PRIVATE_PDF_READ_ENABLED') || !env?.PDF_PRIVATE) {
+    return privateFileError(404, 'pdf_service_unavailable', cors);
+  }
+  const url = new URL(request.url), token = url.searchParams.get('token') || '';
+  if (token.length < 32) return privateFileError(401, 'pdf_ticket_missing', cors);
+  const wantsDownload = url.searchParams.get('download') === '1';
+  const isFast = token.startsWith(FAST_TICKET_VERSION + '.');
+  const fast = isFast ? await readFastTicket(env, token) : null;
+  if (isFast && !fast) return privateFileError(401, 'pdf_ticket_invalid', cors);
+
+  let row = null;
+  if (fast) {
+    if ((fast.mode === 'download') !== wantsDownload) {
+      return privateFileError(403, 'pdf_ticket_mode_mismatch', cors);
+    }
+    const fresh = Date.now() <= fast.exp;
+    const continuation = !fresh && await hasValidContinuationCookie(request, env, fast, token);
+    if (!fresh && !continuation) return privateFileError(401, 'pdf_ticket_expired', cors);
+    row = { user_id: fast.uid, expires_at: fast.hardExp, doi: fast.doi,
+      r2_key: fast.r2Key, byte_length: fast.size };
+  } else {
+    if (!env?.DB) return privateFileError(401, 'pdf_ticket_invalid', cors);
     const tokenHash = await sha256Hex(token);
     row = await env.DB.prepare(
       `SELECT t.user_id, t.expires_at, d.doi, d.r2_key, d.byte_length
@@ -200,33 +300,45 @@ export async function servePrivatePdf(request, env, cors = {}) {
     ).bind(READ_CAPABILITY, tokenHash).first();
     if (!row || Number(row.expires_at || 0) < Date.now()) {
       if (row) await env.DB.prepare('DELETE FROM private_pdf_access_tokens WHERE token_hash = ?').bind(tokenHash).run().catch(() => {});
-      return new Response('Unauthorized', { status: 401 });
+      return privateFileError(401, 'pdf_ticket_expired_or_invalid', cors);
     }
   }
+
   const size = Number(row.byte_length || 0);
-  if (!Number.isSafeInteger(size) || size < 1) return new Response('Not found', { status: 404 });
+  if (!safePrivateR2Key(row.r2_key) || !Number.isSafeInteger(size) || size < 8) {
+    return privateFileError(404, 'pdf_object_unavailable', cors);
+  }
   const range = parseRange(request.headers.get('range'), size);
-  if (range?.invalid) return new Response(null, { status: 416, headers: { 'content-range': `bytes */${size}`, ...cors } });
+  if (range?.invalid) {
+    const error = privateFileError(416, 'pdf_range_invalid', cors);
+    const h = new Headers(error.headers);
+    h.set('content-range', `bytes */${size}`);
+    return new Response(error.body, { status: 416, headers: h });
+  }
   const headers = new Headers(cors);
   headers.set('content-type', 'application/pdf');
-  headers.set('content-disposition', `inline; filename*=UTF-8''${encodeURIComponent(row.doi + '.pdf')}`);
+  headers.set('content-disposition',
+    `${wantsDownload ? 'attachment' : 'inline'}; filename*=UTF-8''${encodeURIComponent(row.doi + '.pdf')}`);
   headers.set('cache-control', 'private, no-store');
   headers.set('accept-ranges', 'bytes');
   headers.set('x-content-type-options', 'nosniff');
+  headers.set('x-gallery-pdf-status', 'ok');
   if (range) {
     headers.set('content-range', `bytes ${range.start}-${range.end}/${size}`);
     headers.set('content-length', String(range.length));
-  } else {
-    headers.set('content-length', String(size));
-  }
-  // HEAD is used only to establish document length/range support. Do not touch
-  // R2 at all for it; verified D1 metadata already carries the exact byte size.
+  } else headers.set('content-length', String(size));
+
+  if (fast && fast.mode === 'view') await extendContinuationCookie(headers, env, fast, token);
   if (request.method === 'HEAD') return new Response(null, { status: range ? 206 : 200, headers });
-  const object = await env.PDF_PRIVATE.get(row.r2_key, range ? { range: { offset: range.start, length: range.length } } : undefined);
-  if (!object) return new Response('Not found', { status: 404 });
+
+  let object;
+  try {
+    object = await env.PDF_PRIVATE.get(row.r2_key,
+      range ? { range: { offset: range.start, length: range.length } } : undefined);
+  } catch { return privateFileError(503, 'pdf_storage_unavailable', cors); }
+  if (!object) return privateFileError(404, 'pdf_object_unavailable', cors);
   return new Response(object.body, { status: range ? 206 : 200, headers });
 }
-
 
 const CAPTURE_CAPABILITY = 'private_pdf_capture';
 const CAPTURE_LEASE_TTL_MS = 7 * 24 * 60 * 60 * 1000;

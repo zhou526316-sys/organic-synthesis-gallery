@@ -96,7 +96,29 @@ await test('owner without stored PDF still falls back normally',async()=>{
   const r=await privatePdfStatus(await authRequest('/api/user-ui/private-pdf/status?doi=10.1021/jacs.6c12345'),env);
   assert.equal(r.body.entitled,true);assert.equal(r.body.available,false);
 });
-const pdf=Buffer.from('%PDF-1.7\nprivate fixture\n%%EOF');
+function makeRealPdf() {
+  const streamA='q 0.2 0.5 0.8 rg 20 20 160 150 re f Q\n';
+  const streamB='q 0.8 0.3 0.4 rg 40 30 140 170 re f Q\n';
+  const objects=[
+    '<< /Type /Catalog /Pages 2 0 R >>',
+    '<< /Type /Pages /Kids [3 0 R 5 0 R] /Count 2 >>',
+    '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 250 250] /Contents 4 0 R >>',
+    '<< /Length '+Buffer.byteLength(streamA)+' >>\nstream\n'+streamA+'endstream',
+    '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 250 250] /Contents 6 0 R >>',
+    '<< /Length '+Buffer.byteLength(streamB)+' >>\nstream\n'+streamB+'endstream',
+  ];
+  let pdf='%PDF-1.7\n% Gallery generated two-page PDF test fixture.\n';
+  const offsets=[];
+  for (let index=0;index<objects.length;index++) {
+    offsets.push(Buffer.byteLength(pdf));
+    pdf+=(index+1)+' 0 obj\n'+objects[index]+'\nendobj\n';
+  }
+  const start=Buffer.byteLength(pdf);
+  pdf+='xref\n0 '+(objects.length+1)+'\n0000000000 65535 f \n';
+  for(const offset of offsets)pdf+=String(offset).padStart(10,'0')+' 00000 n \n';
+  return Buffer.from(pdf+'trailer\n<< /Size '+(objects.length+1)+' /Root 1 0 R >>\nstartxref\n'+start+'\n%%EOF\n');
+}
+const pdf=makeRealPdf();
 bucket.put('private-pdf/fixture.pdf',pdf);
 db.documents.set('pdf1',{id:'pdf1',doi:'10.1021/jacs.6c12345',version_kind:'version_of_record',content_hash:'a'.repeat(64),r2_key:'private-pdf/fixture.pdf',byte_length:pdf.length,captured_at:now,processing_state:'ready',active:1});
 await test('status exposes metadata but never the private R2 key',async()=>{
@@ -124,6 +146,80 @@ await test('HEAD establishes PDF size without reading R2 object bytes',async()=>
   const res=await servePrivatePdf(new Request(accessUrl,{method:'HEAD'}),env,{});
   assert.equal(res.status,200);assert.equal(res.headers.get('content-length'),String(pdf.length));assert.equal(res.headers.get('accept-ranges'),'bytes');
   assert.equal(bucket.headCalls,beforeHead);assert.equal(bucket.getCalls,beforeGet);
+});
+await test('vector PDF fixture has two pages and a complete xref table',async()=>{
+  assert.equal(pdf.subarray(0,5).toString(),'%PDF-');
+  assert.match(pdf.toString(),/\/Count 2/);
+  assert.match(pdf.toString(),/xref\n0 7\n/);
+  assert.match(pdf.toString(),/startxref\n\d+\n%%EOF\n$/);
+});
+await test('view ticket continuation is bound to browser HttpOnly cookie and absolute lifetime',async()=>{
+  const first=await servePrivatePdf(new Request(accessUrl,{headers:{range:'bytes=0-15'}}),env,{});
+  assert.equal(first.status,206);
+  const cookie=first.headers.get('set-cookie');
+  assert.match(cookie,/^gpdf_[A-Za-z0-9_-]+=v1\./);
+  assert.match(cookie,/HttpOnly; SameSite=Strict/);
+  const originalNow=Date.now,issued=originalNow();
+  try {
+    Date.now=()=>issued+5*60*1000+1000;
+    const absent=await servePrivatePdf(new Request(accessUrl,{headers:{range:'bytes=0-15'}}),env,{});
+    assert.equal(absent.status,401);
+    assert.equal(absent.headers.get('x-gallery-pdf-status'),'pdf_ticket_expired');
+    const resumed=await servePrivatePdf(new Request(accessUrl,{headers:{range:'bytes=0-15',cookie:cookie.split(';')[0]}}),env,{});
+    assert.equal(resumed.status,206);
+    assert.equal(Buffer.from(await resumed.arrayBuffer()).subarray(0,5).toString(),'%PDF-');
+    Date.now=()=>issued+91*60*1000;
+    const expired=await servePrivatePdf(new Request(accessUrl,{headers:{range:'bytes=0-15',cookie:cookie.split(';')[0]}}),env,{});
+    assert.equal(expired.status,401);
+  } finally { Date.now=originalNow; }
+});
+await test('download request mints fresh attachment ticket and cannot reuse inline intent',async()=>{
+  const opened=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345&mode=download','owner-token',{method:'POST'}),env);
+  assert.equal(opened.status,200);assert.equal(opened.body.mode,'download');
+  const url=new URL(opened.body.url);
+  assert.equal(url.searchParams.get('download'),'1');
+  const file=await servePrivatePdf(new Request(url),env,{});
+  assert.equal(file.status,200);
+  assert.match(file.headers.get('content-disposition'),/^attachment;/);
+  assert.equal(file.headers.get('content-type'),'application/pdf');
+  assert.equal(Buffer.from(await file.arrayBuffer()).subarray(0,5).toString(),'%PDF-');
+  const forged=new URL(accessUrl);
+  forged.searchParams.set('download','1');
+  const denied=await servePrivatePdf(new Request(forged),env,{});
+  assert.equal(denied.status,403);
+  assert.equal(denied.headers.get('x-gallery-pdf-status'),'pdf_ticket_mode_mismatch');
+});
+await test('new ticket recovers after secret change while previous signature fails closed',async()=>{
+  const rotated={...env,BRIDGE_WRITE_TOKEN:'fixture-rotated-secret'};
+  const old=await servePrivatePdf(new Request(accessUrl),rotated,{});
+  assert.equal(old.status,401);
+  assert.equal(old.headers.get('x-gallery-pdf-status'),'pdf_ticket_invalid');
+  const opened=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','owner-token',{method:'POST'}),rotated);
+  assert.equal(opened.status,200);
+  const fresh=await servePrivatePdf(new Request(opened.body.url),rotated,{});
+  assert.equal(fresh.status,200);
+});
+await test('older valid private R2 keys no longer fail an unnecessary prefix check',async()=>{
+  const doc=db.documents.get('pdf1'),originalKey=doc.r2_key;
+  doc.r2_key='legacy-pdf/fixture-article.pdf';
+  bucket.put(doc.r2_key,pdf);
+  try {
+    const opened=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','owner-token',{method:'POST'}),env);
+    assert.equal(opened.status,200);
+    const res=await servePrivatePdf(new Request(opened.body.url),env,{});
+    assert.equal(res.status,200);
+    assert.equal(Buffer.from(await res.arrayBuffer()).subarray(0,5).toString(),'%PDF-');
+  } finally { doc.r2_key=originalKey; }
+});
+await test('inconsistent stored R2 size fails before issuing a file URL',async()=>{
+  const doc=db.documents.get('pdf1'),oldLength=doc.byte_length;
+  doc.byte_length=oldLength+2;
+  try {
+    const opened=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','owner-token',{method:'POST'}),env);
+    assert.equal(opened.status,200);
+    assert.equal(opened.body.available,false);
+    assert.equal(opened.body.reason,'pdf_object_unavailable');
+  } finally { doc.byte_length=oldLength; }
 });
 await test('ordinary account never receives private document existence or bytes',async()=>{
   const s=await privatePdfStatus(await authRequest('/api/user-ui/private-pdf/status?doi=10.1021/jacs.6c12345','other-token'),env);

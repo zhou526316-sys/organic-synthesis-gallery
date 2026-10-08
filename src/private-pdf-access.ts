@@ -159,7 +159,8 @@ function refreshSoon(): void {
 
 function guardPdfNavigation(event: MouseEvent): void {
   const anchor = event.composedPath().find(item =>
-    item instanceof HTMLAnchorElement && item.matches('a.private-pdf-button'));
+    item instanceof HTMLAnchorElement && item.matches(
+      'a.private-pdf-button, a.private-pdf-download-button, a.private-pdf-compat-button'));
   if (!anchor) return;
   if (ownerReadEnabled && authorizedToken && authorizedToken === sessionToken()) return;
   event.preventDefault();
