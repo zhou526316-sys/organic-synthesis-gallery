@@ -318,14 +318,17 @@ export function createLocalPdfVault(options = {}) {
     });
   }
 
-  async function inspectFile(file) {
+  async function inspectFile(file, verifiedInputBytes = null) {
     check();
     if (!file || !Number.isSafeInteger(file.size) || file.size < 16 || typeof file.arrayBuffer !== 'function') {
       throw new LocalPdfVaultError('invalid_pdf');
     }
     if (file.size > PDF_VAULT_MAX_BYTES) throw new LocalPdfVaultError('pdf_too_large');
     if (!crypto?.subtle?.digest) throw new LocalPdfVaultError('crypto_unavailable');
-    const bytes = new Uint8Array(await boundary(file.arrayBuffer()));
+    // When the page has just parsed this immutable File, reuse the same
+    // original bytes. Always independently hash the stored file afterwards.
+    if (verifiedInputBytes !== null && !(verifiedInputBytes instanceof Uint8Array)) throw new LocalPdfVaultError('invalid_pdf');
+    const bytes = verifiedInputBytes || new Uint8Array(await boundary(file.arrayBuffer()));
     if (bytes.byteLength !== file.size || bytes.length > PDF_VAULT_MAX_BYTES) throw new LocalPdfVaultError('invalid_pdf');
     const header = new TextDecoder('latin1').decode(bytes.subarray(0, 9));
     const tail = new TextDecoder('latin1').decode(bytes.subarray(Math.max(0, bytes.length - 1024)));
@@ -349,12 +352,12 @@ export function createLocalPdfVault(options = {}) {
     return probe;
   }
 
-  function importPdf({ doi: rawDoi, file, versionKind = 'unknown' } = {}) {
+  function importPdf({ doi: rawDoi, file, versionKind = 'unknown', validatedBytes = null } = {}) {
     return operation(async () => {
       const doi = normalizeDoi(rawDoi);
       if (!doi || doi.length > 512) throw new LocalPdfVaultError('invalid_doi');
       if (!PDF_VERSION_KINDS.includes(versionKind)) throw new LocalPdfVaultError('invalid_version');
-      const inspected = await boundary(inspectFile(file));
+      const inspected = await boundary(inspectFile(file, validatedBytes));
       const saved = await boundary(account());
       const destination = saved.destination;
       if (!destination?.directory_handle) throw new LocalPdfVaultError('destination_required');

@@ -515,6 +515,8 @@ try{
   await page.clock.install({time:new Date(Date.now()+1000)});
   await page.evaluate(()=>window.dispatchEvent(new Event('focus')));await waitCardState(page,doi,'local');
   await page.clock.fastForward(61_001);await waitCardState(page,doi,'check');
+  assert.equal(new URL(await card.locator('.local-pdf-button').getAttribute('href'),base).searchParams.get('open'),'1',
+    'expired positive evidence downgrades its label, but clicking still rechecks and opens the stored PDF');
   await assertNoCardFileIo(page);await assertPdfHidden(page);assert.equal(state.privateCalls,0);
  });
  await test('late ordinary-account queue response cannot relabel cards after switch or logout',async()=>{

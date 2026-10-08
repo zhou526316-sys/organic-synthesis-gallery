@@ -482,9 +482,9 @@ $('#import-form').addEventListener('submit', event => {
     if (file.size > context.capabilities.maxBytes) throw new LocalPdfVaultError('pdf_too_large');
     const module = await import('./reader.mjs');
     requireCurrent(context);
-    await module.validateLocalPdf(file, { assertCurrent: () => requireCurrent(context), signal: context.abortController.signal });
+    const validated = await module.validateLocalPdf(file, { assertCurrent: () => requireCurrent(context), signal: context.abortController.signal });
     requireCurrent(context);
-    await context.vault.importPdf({ doi, file, versionKind });
+    await context.vault.importPdf({ doi, file, versionKind, validatedBytes: validated.bytes });
     requireCurrent(context);
     fileInput.value = '';
     doiInput.value = doi;
