@@ -765,10 +765,13 @@ test('mobile TOC hydrates a small near-screen batch with first visible cards pri
   await expect(firstImage).toBeVisible({ timeout: 30000 });
   await expect(firstImage).toHaveAttribute('loading', 'eager');
   await expect(firstImage).toHaveAttribute('fetchpriority', 'high');
-  // The remaining near-screen cards still hydrate automatically after the
-  // first small wave instead of being abandoned.
-  await expect.poll(() => batchSizes.reduce((sum, size) => sum + size, 0), { timeout: 5000 })
-    .toBeGreaterThanOrEqual(Math.min(3, await page.locator('.toc-slot[data-doi]').count()));
+  // Do not prefetch farther cards merely to satisfy a batch-size target.
+  // When a later card actually approaches the viewport it must still hydrate.
+  const thirdSlot = page.locator('.toc-slot[data-doi]').nth(2);
+  await expect(thirdSlot).toBeAttached();
+  await thirdSlot.scrollIntoViewIfNeeded();
+  await expect.poll(() => batchSizes.length, { timeout: 5000 }).toBeGreaterThan(1);
+  await expect(thirdSlot.locator('.toc-image')).toBeVisible({ timeout: 5000 });
 });
 
 
