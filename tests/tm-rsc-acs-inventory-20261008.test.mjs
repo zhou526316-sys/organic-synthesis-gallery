@@ -75,6 +75,40 @@ test('RSC Silverchair recovery reads only genuine publisher issue/search HTML an
  assert.equal((await ctx.run(job,[],url)).length,0);assert.equal(events.at(-1).event,'redirect_rejected');
  assert.ok(src.includes("if(job.publisher==='rsc' && rscSilverchairArticleForJob(job,location.href))"));
 });
+test('ACS publisher binding report carries required controller revision, never overrides a final receipt',async()=>{
+ let reported=null;
+ const ctx=vm.createContext({
+   GM_setValue:()=>{},traceKey:doi=>'trace:'+doi,nowIso:()=>new Date('2026-10-08T14:03:00Z').toISOString(),
+   postJson:async (_url,payload)=>{reported=payload;return {stored:true};},
+   REPORT_ENDPOINT:'https://api.gczhouwld.com/api/media/tampermonkey-report/import',
+   CONTROLLER_REVISION:'2.2.41',VERSION:'6.2.20',
+   location:{href:'https://pubs.acs.org/doi/10.1021/acs.orglett.6c03611'},
+   document:{title:'ACS publisher page'},Number,String,pushTrace:()=>{}
+ });
+ vm.runInContext(extract('uploadReport')+'\n globalThis.run=uploadReport;',ctx);
+ const result=await ctx.run({doi:'10.1021/acs.orglett.6c03611',jobId:'a-valid-job-id',publisher:'acs',mediaNeed:'toc+figures'},[], 'failed','page_doi_unverified',null,'fixture');
+ assert.equal(result,true);
+ assert.equal(reported.controllerRevision,'2.2.41');
+ assert.equal(reported.captureVersion,'6.2.20');
+ assert.equal(reported.jobId,'a-valid-job-id');
+ assert.equal(reported.final,false);
+});
+
+test('unrelated ACS tab cannot upload a binding failure for a different active task',async()=>{
+ let reports=0,binding='';
+ const job={doi:'10.1021/acs.orglett.6c03611',jobId:'owner-bound-job'};
+ const ctx=vm.createContext({
+   location:{hostname:'pubs.acs.org',href:'https://pubs.acs.org/doi/10.1021/acscatal.6c06279'},
+   GM_getValue:()=>job,ACTIVE_JOB_KEY:'active-job',normalizeDoi:v=>String(v||''),
+   sessionStorage:{getItem:()=>binding},P:'osg-toc-v6:',
+   bindPublisherCaptureJob:async()=>{throw Error('capture_tab_job_mismatch');},
+   uploadReport:async()=>{reports++;},writeToken:()=> 'test-token'
+ });
+ vm.runInContext(extract('publisherBoot')+'\n globalThis.run=publisherBoot;',ctx);
+ await ctx.run();assert.equal(reports,0,'unrelated publisher tab must not claim a failed capture');
+ binding=job.jobId;
+ await ctx.run();assert.equal(reports,1,'genuinely bound failed task should retain diagnostic receipt');
+});
 test('new RSC Silverchair route is recognized and DOI-bound; ACS landing only for missing TOC',()=>{
  const c=routeContext(),job={doi:'10.1039/d6gc04458a',publisher:'rsc'};
  assert.equal(c.testFns.captureRouteClass(c.location.href),'rsc_silverchair_article');
