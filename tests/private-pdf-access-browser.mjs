@@ -346,6 +346,9 @@ try{
   const page=await gallery(context,true);
   const opened=page.waitForEvent('popup');await page.locator('.card .private-pdf-button').first().click();
   const target=await opened;
+  const csp=await target.locator('meta[http-equiv="Content-Security-Policy"]').getAttribute('content');
+  assert.match(csp||'',/connect-src[^;]*https:\/\/organic-synthesis-gallery\.zhou526316\.workers\.dev/,
+   'reader CSP explicitly permits only the known fallback Worker origin');
   await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:11000});
   assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'backup',
    JSON.stringify({routes:state.openOrigins,requests:state.privateCalls}));
