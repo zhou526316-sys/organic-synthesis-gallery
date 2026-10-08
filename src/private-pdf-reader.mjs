@@ -270,21 +270,35 @@ async function render() {
 }
 
 async function checkAnonymousGatewayHealth() {
-  const gateways = [['主线', API_BASE], ['备用', API_BACKUP]];
-  const results = await Promise.all(gateways.map(async ([label, origin]) => {
-    const start = performance.now();
+  // No actual user session, DOI or signed file URL is transmitted.
+  // A deliberately invalid test credential forces normal OPTIONS/CORS
+  // processing and the session D1 lookup, but cannot authorize a PDF.
+  const probes = [
+    ['主线公开GET', API_BASE, false], ['主线预检/POST', API_BASE, true],
+    ['备用公开GET', API_BACKUP, false], ['备用预检/POST', API_BACKUP, true],
+  ];
+  const results = await Promise.all(probes.map(async ([label, origin, isPost]) => {
+    const started = performance.now();
     try {
-      const response = await fetch(origin + '/api/_healthcheck', {
-        method: 'GET', credentials: 'omit', cache: 'no-store',
+      const url = isPost
+        ? origin + '/api/user-ui/private-pdf/open?doi=10.0000/diagnostic&mode=view'
+        : origin + '/api/_healthcheck';
+      const response = await fetch(url, {
+        method: isPost ? 'POST' : 'GET',
+        headers: isPost ? { authorization: 'Bearer gallery-invalid-diagnostic-session' } : {},
+        credentials: 'omit',
+        cache: 'no-store',
         signal: AbortSignal.timeout(3500),
       });
-      const elapsed = Math.round(performance.now() - start);
-      return label + ':' + (response.ok ? '在线' : 'HTTP' + response.status) + '/' + elapsed + 'ms';
+      const elapsed = Math.round(performance.now() - started);
+      const outcome = isPost && response.status === 401 ? 'HTTP401(预检已通过)'
+        : response.ok ? 'HTTP200' : 'HTTP' + response.status;
+      return label + ':' + outcome + '/' + elapsed + 'ms';
     } catch {
       return label + ':超时或网络故障';
     }
   }));
-  return '公开网络检查（不代表授权成功）：' + results.join('，');
+  return '脱敏线路检查（不代表个人账号授权）：' + results.join('；');
 }
 
 function sanitizedOpenServerTiming(raw) {
