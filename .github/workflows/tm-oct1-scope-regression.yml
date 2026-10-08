@@ -1,0 +1,75 @@
+name: Tampermonkey Oct-1 scope and PDF inventory guard
+on:
+  push:
+    branches: [fix/tm-oct1-scope-pdf-inventory-20261008, main]
+    paths:
+      - 'public/toc-mainline.user.js'
+      - 'cloudflare/worker/src/private-pdf.js'
+      - 'cloudflare/worker/src/index.js'
+      - 'scripts/test-tm-oct1-scope-contract.mjs'
+      - 'scripts/test-tm-stage-first.mjs'
+      - 'scripts/test-tm-paired-capture.mjs'
+      - 'scripts/test-tm224-acquisition.mjs'
+      - 'scripts/test-tm235-angew-production-toc.mjs'
+      - '.github/workflows/tm-20261001-live-acceptance.yml'
+      - 'tests/tm-gap-recovery.test.mjs'
+      - 'tests/tm-missing-only.test.mjs'
+      - 'tests/tm-queue-coverage.test.mjs'
+      - 'tests/tm-immediate-restart.test.mjs'
+      - '.github/workflows/tm-oct1-scope-regression.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'public/toc-mainline.user.js'
+      - 'cloudflare/worker/src/private-pdf.js'
+      - 'cloudflare/worker/src/index.js'
+      - 'scripts/test-tm-oct1-scope-contract.mjs'
+      - 'tests/tm-gap-recovery.test.mjs'
+      - '.github/workflows/tm-oct1-scope-regression.yml'
+permissions:
+  contents: read
+jobs:
+  scope_and_preservation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v5
+        with: {node-version: '22'}
+      - name: Verify syntax, publisher capture fidelity and Oct-1 scope
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node --check cloudflare/worker/src/private-pdf.js
+          node --check cloudflare/worker/src/index.js
+          node scripts/test-tm-oct1-scope-contract.mjs
+          node tests/tm-gap-recovery.test.mjs
+          node scripts/validate-tm220-artifacts.mjs source
+      - name: Run bounded actual queue and PDF regression fixtures
+        run: |
+          set -euo pipefail
+          node tests/tm-missing-only.test.mjs
+          node tests/tm-queue-coverage.test.mjs
+          node tests/tm-immediate-restart.test.mjs
+          node scripts/test-tm221-window-guard.mjs
+          node scripts/test-tm-stage-first.mjs
+          node cloudflare/worker/scripts/test-private-pdf-capture.mjs
+      - name: Compare browser acquisition and paired publisher visit
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+          node scripts/test-tm224-acquisition.mjs
+          node scripts/test-tm235-angew-production-toc.mjs
+          node scripts/test-tm-paired-capture.mjs
+      - name: Assert no changes to literature release or owner PDF reader
+        run: |
+          set -euo pipefail
+          BASE="$(git merge-base HEAD origin/main)"
+          git diff --exit-code "$BASE" HEAD -- \
+            PROJECT_RULES.md shared/literature-journals.js docs/literature-update-protocol.md \
+            docs/literature-scope-contract.md public/papers.gz.b64 \
+            src/private-pdf-reader.mjs src/pdf-vault \
+            .github/workflows/literature-audit.yml
+          git diff --check

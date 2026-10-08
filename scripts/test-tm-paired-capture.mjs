@@ -59,15 +59,15 @@ try{
  test('SVG active content rejected',!quality.malicious.usable);
  test('low-resolution raster threshold not loosened',!quality.raster.usable);
  const plan=await page.evaluate(({doi,foreign})=>{
-  const q={mediaGeneration:1790082000000,latestAddedDate:'2026-09-24',webpageDoiCount:2,articles:[
-    {doi,date:'2026-09-22',addedDate:'2026-09-22'},
-    {doi:foreign,date:'2026-09-21',addedDate:'2026-09-21'}]};
+  const q={mediaGeneration:1790082000000,latestAddedDate:'2026-10-02',webpageDoiCount:2,articles:[
+    {doi,date:'2026-10-02',addedDate:'2026-10-02'},
+    {doi:foreign,date:'2026-10-02',addedDate:'2026-10-02'}]};
   const out=__captureTest.pairedJobs(q,{items:{[doi]:{toc:{available:true,imageUrl:'restored.svg',reason:'reviewed_official_toc_recovery'}}}});
   let rejectsOld=false;try{__captureTest.pairedJobs({webpageDoiCount:512,visibleGaps:[]},{items:{}});}catch(_){rejectsOld=true;}
   return {out,rejectsOld};
  },{doi,foreign});
- test('historical official-TOC DOI is omitted because body-only gaps no longer create queue work',!plan.out.some(j=>j.doi===doi));
- test('historical missing-TOC DOI keeps body figures opportunistic in the same visit without Figure 1 fallback',plan.out.find(j=>j.doi===foreign).mediaNeed==='toc'&&plan.out.find(j=>j.doi===foreign).captureToc===true&&plan.out.find(j=>j.doi===foreign).captureFigures===false&&plan.out.find(j=>j.doi===foreign).opportunisticFigures===true&&plan.out.find(j=>j.doi===foreign).allowFigureOne===false);
+ test('recent official-TOC DOI is omitted because body-only gaps no longer create queue work',!plan.out.some(j=>j.doi===doi));
+ test('recent missing-TOC DOI keeps body figures opportunistic in the same visit and permits Figure 1 fallback',plan.out.find(j=>j.doi===foreign).mediaNeed==='toc'&&plan.out.find(j=>j.doi===foreign).captureToc===true&&plan.out.find(j=>j.doi===foreign).captureFigures===false&&plan.out.find(j=>j.doi===foreign).opportunisticFigures===true&&plan.out.find(j=>j.doi===foreign).allowFigureOne===true);
  test('old incomplete queue is rejected rather than falsely called complete',plan.rejectsOld);
  // Real Chromium DOM + data-image decoding + HTTP storage receipts, with no external writes.
  const result=await page.evaluate(async()=>__captureTest.runPublisherJob(__gm['osg-toc-v6:active-job']));
@@ -78,7 +78,7 @@ try{
  const before=posts.length;
  await page.evaluate(()=>{Object.keys(__gm).filter(k=>k.includes('verified-capture:')).forEach(k=>delete __gm[k]);__gm['osg-toc-v6:active-job'].captureToc=true;document.querySelector('#graphicalAbstract').remove();});
  const partial=await page.evaluate(async()=>__captureTest.runPublisherJob(__gm['osg-toc-v6:active-job']));
- test('missing TOC may still capture body opportunistically but remains a failed TOC obligation',partial.figuresStaged===2&&partial.toc.status==='not_found'&&partial.status==='failed');
+ test('missing TOC still captures body opportunistically without claiming overall success',partial.figuresStaged===2&&partial.toc.status==='not_found'&&partial.status==='partial');
  test('body still receives two storage receipts without TOC',posts.slice(before).filter(r=>r.url.endsWith('/stage')).length===2);
  await page.evaluate(()=>{__gm['osg-toc-v6:active-job'].jobId='old-task-must-not-bind';});
  let rejected=false;try{await page.evaluate(({doi,jobId})=>__captureTest.runPublisherJob({doi,jobId,captureVersion:'6.2.20'}),{doi,jobId});}catch(_){rejected=true;}
