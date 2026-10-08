@@ -228,7 +228,7 @@
       return at >= runStartedAt ? Math.max(latest, at) : latest;
     }, 0);
     return {
-      coverageRevision:summary.queueCoverageRevision||'',fullyResolved:Number(summary.fullyResolved||0),unresolvedCount:Number(summary.unresolvedCount||0),blockedCount:Number(summary.blockedCount||0),attemptCount:Number(summary.attemptCount||0),blockedPreview:summary.blockedPreview||[],
+      coverageRevision:summary.queueCoverageRevision||'',scopeRevision:summary.scopeRevision||'',scopeCount:Number(summary.scopeCount||0),ownerPdfInventory:summary.ownerPdfInventory||{},fullyResolved:Number(summary.fullyResolved||0),unresolvedCount:Number(summary.unresolvedCount||0),blockedCount:Number(summary.blockedCount||0),attemptCount:Number(summary.attemptCount||0),blockedPreview:summary.blockedPreview||[],
       phase:summary.phase||'',missingOnly:summary.mode==='missing_only',need:active?captureNeedText(active):'—',activeJob:active,
       pendingMissing:Number(summary.pendingMissing||0),remainingNeeds:summary.remainingNeeds||{},inventoryUnknown:Number(summary.inventoryUnknown||0),inventoryErrors:summary.inventoryErrors||[],pendingPreview:summary.pendingPreview||[],
       inventoryProgress:summary.inventoryProgress||{},inventoryWarmStart:Boolean(summary.inventoryWarmStart),inventoryFreshPending:Boolean(summary.inventoryFreshPending),
@@ -249,9 +249,9 @@
   }
 
   function inventoryProgressText(progress,warm,pending) {
-    var labels={media:'媒体',toc:'TOC',figures:'正文图',evidence:'全文'};
+    var labels={media:'媒体',toc:'TOC',figures:'正文图',evidence:'全文',pdf:'云端PDF'};
     var states={loading:'读取中',cached:'沿用缓存',fallback:'分批回退',done:'完成',error:'失败'};
-    var parts=['media','toc','figures','evidence'].map(function(key){
+    var parts=['media','toc','figures','evidence','pdf'].map(function(key){
       var row=progress&&progress[key]||{},text=labels[key]+'：'+(states[row.state]||'等待');
       if(Number(row.elapsedMs||0)>0)text+=' '+(Number(row.elapsedMs)/1000).toFixed(1)+'s';
       return text;
@@ -287,7 +287,7 @@
       needs:s.need||'—',
       working:s.active?(s.row&&/全文|Abstract|文本/.test(s.row.label)?'文本':s.row&&s.row.label?s.row.label:s.need||'加载文章'):'—',
       evidence:s.activeJob&&(s.activeJob.captureEvidence||s.activeJob.opportunisticEvidence)?'随当前任务顺带抓取文本':s.activeJob&&s.activeJob.existingEvidenceLevel?captureEvidenceLevelText(s.activeJob.existingEvidenceLevel)+'，不作为队列缺项':'—',
-      gaps:/^(?:starting|inventory_refresh)$/.test(s.phase||'')&&s.total===0?'库存核对中，缺项统计尚未生成':s.coverageRevision&&s.phase!=='starting'?'未补齐 '+s.unresolvedCount+' 篇（待执行 '+s.pendingMissing+'／受阻 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0):s.missingOnly?(s.phase==='starting'?'正在读取缺项库存…':'待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)+'（正文图/正文不计入队列）'):'—',
+      gaps:s.scopeRevision!==OCT1_SCOPE_QUEUE_REVISION&&s.coverageRevision?'旧版全量统计已停用；请重新按 10 月 1 日起生成缺项队列。':/^(?:starting|inventory_refresh)$/.test(s.phase||'')&&s.total===0?'仅处理 10 月 1 日之后收录文献；正在核对库存…':s.coverageRevision&&s.phase!=='starting'?'10.1起 '+s.scopeCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇（待执行 '+s.pendingMissing+'／受阻 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／确实缺PDF '+Number(s.remainingNeeds.pdf||0)+'；PDF云端 已齐 '+Number(s.ownerPdfInventory.ready||0)+'／待验证 '+(Number(s.ownerPdfInventory.pending||0)+Number(s.ownerPdfInventory.failed||0))+'／未知 '+Number(s.ownerPdfInventory.unknown||0):s.missingOnly?(s.phase==='starting'?'正在核对10.1以后文献…':'仅10.1以后 '+s.scopeCount+' 篇 · 待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)):'—',
       blocked:(s.blockedPreview||[]).map(function(r){return r.doi+' · '+r.need+' · '+r.reason;}).join('\n'),
       inventory:inventoryProgressText(s.inventoryProgress,s.inventoryWarmStart,s.inventoryFreshPending)+(s.inventoryUnknown?'；另有 '+s.inventoryUnknown+' 篇存在未确认项，不冒充已齐全或全部缺失':'')+(s.inventoryErrors.length?'；'+s.inventoryErrors.join('；'):''),
       queue:(s.pendingPreview||[]).map(function(j){return j.addedDate+' · '+j.journal+' · '+j.need+'\n'+j.doi;}).join('\n\n'),
@@ -343,7 +343,7 @@
     queueTitle.textContent='接下来补什么（最多显示 12 篇）';queueText.style.whiteSpace='pre-wrap';queueText.id='queue';fields.queue=queueText;
     queueDetails.appendChild(queueTitle);queueDetails.appendChild(queueText);main.appendChild(queueDetails);
     var note = document.createElement('small');
-    note.textContent = '分母仅为本轮缺项文献；TOC 只有生产层 official 才算闭环；PDF 只有 stored/already_stored 才算补齐。正文图与文本不单独触发队列。';
+    note.textContent = '仅处理 Gallery addedDate 不早于 2026-10-01 的文献。已入库PDF不重新下载；待验证/库存未知不计为缺失。官方TOC或已验证Figure 1主图均可闭环；正文图与全文只随真实缺项访问顺带抓取。';
     main.appendChild(note);
     details.appendChild(main); root.appendChild(details);
     (document.body || document.documentElement).appendChild(host);
@@ -4346,6 +4346,7 @@ function embeddedJobDois(value) {
   function startManualCapture(run) {
     manualExecution=run;
     run.summary={controllerRunId:'manual:'+run.id,lifecycleRevision:IMMEDIATE_RESTART_REVISION,
+      scopeRevision:OCT1_SCOPE_QUEUE_REVISION,scopeCount:0,
       controllerRevision:CONTROLLER_REVISION,version:VERSION,mode:'missing_only',missingRevision:MISSING_CAPTURE_REVISION,
       startedAt:run.startedAt,total:0,success:0,partial:0,failed:0,aborted:0,skipped:0,
       tocStored:0,figuresStaged:0,evidenceStored:0,results:[],phase:'starting'};
@@ -5146,7 +5147,7 @@ function embeddedJobDois(value) {
       if(!renewLease())throw new Error('controller_lease_lost');
       if(manualRunBlocksAutomatic())return;
       var available=availableJobs(),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
-      summary={controllerRunId:CONTROLLER_ID+':'+Date.now(),scopeCount:scopedArticles.length,
+      summary={controllerRunId:CONTROLLER_ID+':'+Date.now(),scopeRevision:OCT1_SCOPE_QUEUE_REVISION,scopeCount:scopedArticles.length,
         ownerPdfInventory:scopedArticles.reduce(function(stats,item){stats[privatePdfServerStatus(ownerPdfMap,item.doi)]++;return stats;},{ready:0,pending:0,failed:0,missing:0,unknown:0}),
         lifecycleRevision:CONTROLLER_LIFECYCLE_REVISION,architectureMembershipRevision:ARCHITECTURE_MEMBERSHIP_REVISION,architectureMembership:architectureMembership,version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+pdfJobs.length,evidenceBacklog:0,privatePdfBacklog:pdfJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
       persistControllerSummary(summary,true);
