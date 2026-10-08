@@ -22,11 +22,12 @@ export function tmReportDeliveryKey(row) {
   const doi = String(row?.doi || '').toLowerCase();
   const jobId = String(row?.jobId || '');
   if (!doi || !jobId) return '';
+  // Terminal event wins over every checkpoint of this publisher visit.
+  // Older report-index rows did not store the event id; use job identity so
+  // their repeated terminal deliveries also collapse with newer arrivals.
+  if (row?.final === true) return doi + '|' + jobId + '|final';
   const event = tmReportEventId(row);
   if (event) return doi + '|' + event;
-  // Old reports did not retain the diagnostic event id. A final result from
-  // one publisher job is immutable even if uploaded repeatedly.
-  if (row?.final === true) return doi + '|' + jobId + '|final:' + String(row.finishedAt || '');
   // Never collapse unidentified progress checkpoints: they may contain new
   // positive media receipts, even when their visible status is identical.
   return '';
