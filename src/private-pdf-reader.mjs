@@ -1,13 +1,28 @@
+const PDF_ENGINE_LOAD_TIMEOUT_MS = 25_000;
 let pdfEngine = null;
 async function loadPdfEngine() {
   if (pdfEngine) return pdfEngine;
-  const [engine, worker] = await Promise.all([
-    import('pdfjs-dist/legacy/build/pdf.mjs'),
-    import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url'),
-  ]);
-  engine.GlobalWorkerOptions.workerSrc = worker.default;
-  pdfEngine = engine;
-  return engine;
+  const started = performance.now();
+  let timeoutId = null;
+  try {
+    const [engine, worker] = await Promise.race([
+      Promise.all([
+        import('pdfjs-dist/legacy/build/pdf.mjs'),
+        import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url'),
+      ]),
+      new Promise((_, reject) => {
+        timeoutId = window.setTimeout(() => reject(new Error('pdf_engine_timeout')),
+          PDF_ENGINE_LOAD_TIMEOUT_MS);
+      }),
+    ]);
+    engine.GlobalWorkerOptions.workerSrc = worker.default;
+    pdfEngine = engine;
+    return engine;
+  } finally {
+    if (timeoutId !== null) window.clearTimeout(timeoutId);
+    document.documentElement.dataset.privatePdfEngineMs =
+      String(Math.round(performance.now() - started));
+  }
 }
 
 const SESSION_KEY = 'organic-gallery-session-v1';
@@ -109,7 +124,8 @@ function safeErrorCode(error) {
   const message = String(error?.message || '');
   if (/^(?:open|file)_http_\d+$/.test(message)) return message;
   if (['pdf_source_invalid','pdf_page_tree','pdf_invalid_bytes','pdf_wrong_content_type',
-       'pdf_range_unavailable','pdf_too_large','pdf_incomplete_bytes','pdf_transfer_timeout','pdf_first_page_timeout'].includes(message)) return message;
+       'pdf_range_unavailable','pdf_too_large','pdf_incomplete_bytes','pdf_transfer_timeout',
+       'pdf_first_page_timeout','pdf_engine_timeout'].includes(message)) return message;
   if (name === 'AbortError' || name === 'TimeoutError') return 'pdf_transfer_timeout';
   return 'reader_error';
 }
@@ -122,7 +138,18 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
   const elapsed = Math.max(0, performance.now() - startedAt);
   const diagnostic = document.createElement('small');
   diagnostic.id = 'pdf-diagnostic';
-  diagnostic.textContent = `阶段：${phase} · ${detail || 'unknown'} · ${(elapsed / 1000).toFixed(1)}s`;
+  const timingDetails = [
+    ['privatePdfAuthorizeMs', '授权', 'ms'],
+    ['privatePdfEngineMs', '阅读组件', 'ms'],
+    ['privatePdfTransferMs', '文件传输', 'ms'],
+    ['privatePdfRangeCalls', '分段请求', '次'],
+    ['privatePdfRangeBytes', '分段字节', 'B'],
+  ].flatMap(([key, label, unit]) => {
+    const value = document.documentElement.dataset[key] || '';
+    return /^\\d{1,12}$/.test(value) ? [`${label}:${value}${unit}`] : [];
+  });
+  diagnostic.textContent = `阶段：${phase} · ${detail || 'unknown'} · ${(elapsed / 1000).toFixed(1)}s` +
+    (timingDetails.length ? ' · ' + timingDetails.join(' · ') : '');
   status.appendChild(diagnostic);
   const retry = document.createElement('button');
   retry.type = 'button';
@@ -266,6 +293,7 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
       this.controllers = new Set();
       this.refreshPromise = null;
       this.totalFetched = 0;
+      this.rangeCalls = 0;
     }
     async refreshUrl() {
       if (!this.refreshPromise) {
@@ -287,7 +315,11 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
       const controller = new AbortController();
       this.controllers.add(controller);
       void this.fetchRange(begin, end, controller).catch(error => {
-        if (!controller.signal.aborted && !destroyed) this.fail(error);
+        // A transport-owned 30s timeout must fail the reader immediately.
+        // Only lifecycle cancellation (tab closing, navigation, teardown)
+        // should suppress the error; otherwise PDF.js hangs until 45s.
+        const timedOut = controller.signal.aborted && controller.signal.reason === 'range_timeout';
+        if (!destroyed && (!controller.signal.aborted || timedOut)) this.fail(error);
       }).finally(() => this.controllers.delete(controller));
     }
     async fetchRange(begin, end, controller) {
@@ -296,6 +328,8 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
         if (controller.signal.aborted || destroyed || token() !== sessionToken) return;
         const kill = window.setTimeout(() => controller.abort('range_timeout'), 30000);
         try {
+          this.rangeCalls += 1;
+          document.documentElement.dataset.privatePdfRangeCalls = String(this.rangeCalls);
           const response = await fetch(this.fileUrl, {
             headers: { range: `bytes=${begin}-${end-1}` },
             credentials: 'include',
@@ -320,6 +354,7 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
           if (chunk.byteLength !== end-begin) throw new Error('pdf_incomplete_bytes');
           if (controller.signal.aborted || destroyed || token() !== sessionToken) return;
           this.totalFetched += chunk.byteLength;
+          document.documentElement.dataset.privatePdfRangeBytes = String(this.totalFetched);
           setPhase('range', `正在按需读取第一页… 已取 ${(this.totalFetched / 1048576).toFixed(1)} MB`);
           this.onDataRange(begin, chunk);
           return;
@@ -465,6 +500,7 @@ function showReaderError(error, prefix = 'PDF 读取失败') {
   else if (code === 'pdf_too_large') message = '文件较大，建议点击上方“浏览器阅读”以原生模式打开。';
   else if (code === 'pdf_incomplete_bytes') message = '文件传输不完整，请重新读取或尝试浏览器阅读。';
   else if (code === 'pdf_first_page_timeout') message = '按需读取第一页超过45秒。可点击“整份下载后阅读”尝试另一条路径，或使用下载 PDF。';
+  else if (code === 'pdf_engine_timeout') message = 'PDF 阅读组件加载超过25秒，请重新读取或检查网络；也可尝试浏览器阅读。';
   fallbackView(message, code);
 }
 let downloadBusy = false;
@@ -503,9 +539,19 @@ async function start() {
   browserOpen.textContent = '浏览器阅读';
   download.hidden = false;
   if (downloadOnOpen) { await beginDownload(); return; }
+  // Importing the public PDF.js reader can overlap with private authorization,
+  // avoiding a second serial request on high-latency networks.
+  const enginePromise = nativeMode ? null : loadPdfEngine();
+  enginePromise?.catch(() => {}); // authorization might fail before we await it
   try {
     setPhase('authorize', '正在确认 PDF 权限…');
-    sourceUrl = await verifiedPdfSource(sessionToken, 'view');
+    const authorizeStarted = performance.now();
+    try {
+      sourceUrl = await verifiedPdfSource(sessionToken, 'view');
+    } finally {
+      document.documentElement.dataset.privatePdfAuthorizeMs =
+        String(Math.round(performance.now() - authorizeStarted));
+    }
     if (destroyed || token() !== sessionToken) return;
     if (nativeMode) {
       document.documentElement.dataset.privatePdfMode = 'native';
@@ -523,8 +569,8 @@ async function start() {
     compatibility.hidden = rangeMode || downloadOnOpen;
     document.documentElement.dataset.privatePdfMode = buffered ? 'single-transfer' : 'range-first';
     const loaded = buffered
-      ? await Promise.all([loadPdfEngine(), fetchPdfSingleTransfer(sourceUrl, sessionToken)])
-      : [await loadPdfEngine(), null];
+      ? await Promise.all([enginePromise, fetchPdfSingleTransfer(sourceUrl, sessionToken)])
+      : [await enginePromise, null];
     const [engine, bytes] = loaded;
     if (destroyed || token() !== sessionToken) return;
     rangeFailure = null;
