@@ -43,6 +43,38 @@ function visualBlock({kind='visual',url='https://rscj.silverchair-cdn.com/rscj/c
   return {block,image:a,scope:{querySelectorAll:()=>[block]}};
 }
 
+test('RSC Silverchair recovery reads only genuine publisher issue/search HTML and rejects non-DOI media',async()=>{
+ const events=[],calls=[];
+ const doi='10.1039/d6gc03161g';
+ const url='https://pubs.rsc.org/en/results?searchtext=10.1039%2Fd6gc03161g';
+ const ctx=vm.createContext({
+   URL,Number,String,RegExp,DOMParser:class {
+     parseFromString(html,mime){assert.equal(mime,'text/html');return {html};}
+   },
+   normalizeDoi:v=>String(v||'').toLowerCase(),
+   captureLiveError:v=>String(v),
+   pushTrace:(_trace,row)=>events.push(row),
+   gmRequest:async(options,skipFallback)=>{
+     calls.push(options);assert.equal(skipFallback,true);assert.equal(options.timeout,10000);
+     return {status:200,finalUrl:options.url,responseText:'<!doctype html><html><body><article>10.1039/d6gc03161g</article></body></html>'};
+   },
+   rscIssueTocCandidatesFromDocument:(job,doc,pageUrl)=>{
+     assert.equal(job.doi,doi);assert.equal(pageUrl,url);assert.ok(doc.html.includes(doi));
+     return [{kind:'official',url:'https://rscj.silverchair-cdn.com/rscj/content_public/journal/gc/ga/10.1039_d6gc03161g/d6gc03161g-ga.png'}];
+   },
+ });
+ vm.runInContext(extract('rscPublisherListingHtmlCandidates')+'\n globalThis.run=rscPublisherListingHtmlCandidates;',ctx);
+ const job={doi,publisher:'rsc'};
+ assert.equal((await ctx.run(job,[],url)).length,1);
+ assert.equal(calls.length,1);assert.equal(events.at(-1).status,'found');
+ assert.equal(await ctx.run(job,[],'https://example.com/en/results?searchtext='+doi),null);
+ assert.equal(calls.length,1,'untrusted host must never be fetched');
+ ctx.gmRequest=async()=>({status:403,responseText:'Forbidden',finalUrl:url});
+ assert.equal((await ctx.run(job,[],url)).length,0);assert.equal(events.at(-1).event,'access_denied');
+ ctx.gmRequest=async()=>({status:200,responseText:'<!doctype html><html></html>',finalUrl:'https://other.example/en/results'});
+ assert.equal((await ctx.run(job,[],url)).length,0);assert.equal(events.at(-1).event,'redirect_rejected');
+ assert.ok(src.includes("if(job.publisher==='rsc' && rscSilverchairArticleForJob(job,location.href))"));
+});
 test('new RSC Silverchair route is recognized and DOI-bound; ACS landing only for missing TOC',()=>{
  const c=routeContext(),job={doi:'10.1039/d6gc04458a',publisher:'rsc'};
  assert.equal(c.testFns.captureRouteClass(c.location.href),'rsc_silverchair_article');
