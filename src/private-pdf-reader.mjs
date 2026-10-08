@@ -35,6 +35,12 @@ const FIRST_PAGE_TIMEOUT_MS = 45_000;
 const FIRST_PAGE_RANGE_CHUNK_BYTES = 1024 * 1024;
 const RANGE_TIMEOUT_MS = 30_000;
 const PREFETCH_TIMEOUT_MS = 24_000;
+// Small PDFs can stall on one long China-to-edge response.
+// Fetch independent bounded byte ranges concurrently; keep the full-GET
+// fallback if an older endpoint or proxy does not support ranges.
+const SMALL_PDF_PARALLEL_THRESHOLD_BYTES = 512 * 1024;
+const SMALL_PDF_RANGE_CHUNK_BYTES = 384 * 1024;
+const SMALL_PDF_MAX_PARALLEL = 4;
 let privatePdfRangeNetworkCalls = 0;
 let privatePdfRangeNetworkBytes = 0;
 
@@ -455,6 +461,76 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
   }
   return new AuthenticatedRangeTransport();
 }
+async function fetchPdfParallelTransfer(fileUrl, sessionToken, byteLength) {
+  if (!Number.isSafeInteger(byteLength) || byteLength < SMALL_PDF_PARALLEL_THRESHOLD_BYTES ||
+      byteLength > ADAPTIVE_RANGE_THRESHOLD_BYTES) {
+    throw new Error('pdf_source_invalid');
+  }
+  const controller = new AbortController();
+  transferController = controller;
+  const started = performance.now();
+  const deadline = window.setTimeout(() => controller.abort('pdf_transfer_timeout'),
+    SINGLE_TRANSFER_TIMEOUT_MS);
+  const ranges = Math.ceil(byteLength / SMALL_PDF_RANGE_CHUNK_BYTES);
+  const parts = new Array(ranges);
+  let next = 0, loaded = 0;
+  document.documentElement.dataset.privatePdfTransferStrategy = 'parallel-ranges';
+  setPhase('transfer', '正在并行获取 PDF…');
+  try {
+    async function fetchPart() {
+      while (!controller.signal.aborted && !destroyed && sessionToken === token()) {
+        const index = next++;
+        if (index >= ranges) return;
+        const begin = index * SMALL_PDF_RANGE_CHUNK_BYTES;
+        const end = Math.min(byteLength, begin + SMALL_PDF_RANGE_CHUNK_BYTES);
+        const chunk = await fetchValidatedPdfRange(fileUrl, byteLength, begin, end, controller);
+        if (controller.signal.aborted || destroyed || sessionToken !== token()) {
+          throw new Error('pdf_transfer_timeout');
+        }
+        parts[index] = chunk;
+        loaded += chunk.byteLength;
+        setPhase('transfer', `正在并行获取 PDF：${(loaded / 1048576).toFixed(1)} / ${(byteLength / 1048576).toFixed(1)} MB`);
+      }
+      if (controller.signal.aborted || destroyed || sessionToken !== token()) {
+        throw new Error('pdf_transfer_timeout');
+      }
+    }
+    await Promise.all(Array.from({ length: Math.min(SMALL_PDF_MAX_PARALLEL, ranges) },
+      () => fetchPart()));
+    if (loaded !== byteLength || parts.some(part => !part)) {
+      throw new Error('pdf_incomplete_bytes');
+    }
+    const output = new Uint8Array(byteLength);
+    let cursor = 0;
+    for (const part of parts) {
+      output.set(part, cursor);
+      cursor += part.byteLength;
+    }
+    if (String.fromCharCode(...output.subarray(0, 5)) !== '%PDF-') {
+      throw new Error('pdf_invalid_bytes');
+    }
+    document.documentElement.dataset.privatePdfTransferMs =
+      String(Math.round(performance.now() - started));
+    document.documentElement.dataset.privatePdfTransferBytes = String(loaded);
+    return output;
+  } catch (error) {
+    controller.abort('parallel_failed');
+    if (destroyed || sessionToken !== token() ||
+        controller.signal.reason === 'pdf_transfer_timeout') {
+      throw new Error('pdf_transfer_timeout');
+    }
+    // Only fallback for protocol incompatibility, not expired permissions
+    // or an extremely slow data path that would waste another full transfer.
+    if (['pdf_range_unavailable', 'pdf_wrong_content_type'].includes(error?.message)) {
+      document.documentElement.dataset.privatePdfTransferStrategy = 'single-fallback';
+      return await fetchPdfSingleTransfer(fileUrl, sessionToken);
+    }
+    throw error;
+  } finally {
+    window.clearTimeout(deadline);
+    if (transferController === controller) transferController = null;
+  }
+}
 async function fetchPdfSingleTransfer(fileUrl, sessionToken) {
   const started = performance.now();
   const controller = new AbortController();
@@ -564,7 +640,7 @@ function showReaderError(error, prefix = 'PDF 读取失败') {
   else if (code === 'pdf_invalid_bytes' || code === 'pdf_wrong_content_type') message = '文件响应并非有效 PDF，已阻止打开错误页面。';
   else if (code === 'pdf_range_unavailable') message = 'PDF 文件服务不支持分段读取，暂时无法可靠打开。';
   else if (code === 'file_http_404') message = '私有 PDF 文件未找到，下载记录可能需要修复。';
-  else if (code === 'pdf_transfer_timeout') message = '文件传输超时。可点击上方“浏览器阅读”尝试原生模式。';
+  else if (code === 'pdf_transfer_timeout') message = '文件传输超时。可试用上方“整份下载后阅读”或下载 PDF；请记录阶段及耗时。';
   else if (code === 'pdf_too_large') message = '文件较大，建议点击上方“浏览器阅读”以原生模式打开。';
   else if (code === 'pdf_incomplete_bytes') message = '文件传输不完整，请重新读取或尝试浏览器阅读。';
   else if (code === 'pdf_first_page_timeout') message = '按需读取第一页超过45秒。可点击“整份下载后阅读”尝试另一条路径，或使用下载 PDF。';
@@ -634,15 +710,20 @@ async function start() {
     const rangeMode = declaredPdfBytes > 0 && (compatibilityMode ||
       (!forceFull && declaredPdfBytes > ADAPTIVE_RANGE_THRESHOLD_BYTES));
     const buffered = !rangeMode;
+    const parallelSmall = buffered && !forceFull &&
+      declaredPdfBytes >= SMALL_PDF_PARALLEL_THRESHOLD_BYTES &&
+      declaredPdfBytes <= ADAPTIVE_RANGE_THRESHOLD_BYTES;
     // Warm up the first and last chunks as soon as the edge authorizes the
     // document; PDF.js parsing then uses these bytes without waiting for a
     // second serial cross-border round trip.
     rangeWarmup = rangeMode ? prefetchPdfBoundaryRanges(sourceUrl, declaredPdfBytes) : null;
-    fullOpen.hidden = !rangeMode;
+    fullOpen.hidden = forceFull || !(rangeMode || parallelSmall);
     compatibility.hidden = rangeMode || downloadOnOpen;
     document.documentElement.dataset.privatePdfMode = buffered ? 'single-transfer' : 'range-first';
     const loaded = buffered
-      ? await Promise.all([enginePromise, fetchPdfSingleTransfer(sourceUrl, sessionToken)])
+      ? await Promise.all([enginePromise, parallelSmall
+          ? fetchPdfParallelTransfer(sourceUrl, sessionToken, declaredPdfBytes)
+          : fetchPdfSingleTransfer(sourceUrl, sessionToken)])
       : [await enginePromise, null];
     const [engine, bytes] = loaded;
     if (destroyed || token() !== sessionToken) return;
