@@ -158,33 +158,46 @@ export class GalleryPaperActions extends HTMLElement {
       return;
     }
 
-    drawer.style.left = '0px';
-    drawer.style.top = '0px';
-    drawer.style.removeProperty('max-height');
-    const anchorRect = anchor.getBoundingClientRect();
-    const hostRect = this.getBoundingClientRect();
-    const initialRect = drawer.getBoundingClientRect();
+    const viewport = window.visualViewport;
+    const viewportLeft = viewport?.offsetLeft ?? 0;
+    const viewportTop = viewport?.offsetTop ?? 0;
+    const viewportWidth = viewport?.width ?? window.innerWidth;
+    const viewportHeight = viewport?.height ?? window.innerHeight;
     const margin = 8;
     const gap = 6;
+    const cap = viewportWidth <= 680 ? 520 : 560;
 
-    let left = anchorRect.left;
-    left = Math.min(left, window.innerWidth - initialRect.width - margin);
-    left = Math.max(margin, left);
+    // Recalculate constraints from the *visible* viewport, not the page layout.
+    // Do not give the lower side priority merely because it has 220px left.
+    drawer.style.left = '0px';
+    drawer.style.top = '0px';
+    drawer.style.maxHeight = 'none';
+    drawer.style.maxWidth = `${Math.max(0, viewportWidth - margin * 2)}px`;
 
-    const below = Math.max(0, window.innerHeight - anchorRect.bottom - gap - margin);
-    const above = Math.max(0, anchorRect.top - gap - margin);
-    const openBelow = below >= Math.min(initialRect.height, 220) || below >= above;
+    const anchorRect = anchor.getBoundingClientRect();
+    const hostRect = this.getBoundingClientRect();
+    const leftEdge = viewportLeft + margin;
+    const rightEdge = viewportLeft + viewportWidth - margin;
+    const bottomEdge = viewportTop + viewportHeight - margin;
+    const above = Math.max(0, anchorRect.top - gap - viewportTop - margin);
+    const below = Math.max(0, bottomEdge - anchorRect.bottom - gap);
+
+    // Whichever side has more usable space can contain at least as much of the
+    // drawer. When neither side fits, this also minimizes internal scrolling.
+    const openBelow = below >= above;
     const available = openBelow ? below : above;
-    const cap = window.innerWidth <= 680 ? 520 : 560;
-    drawer.style.maxHeight = `${Math.max(96, Math.min(cap, available))}px`;
+    drawer.style.maxHeight = `${Math.max(0, Math.min(cap, available))}px`;
 
     const fittedRect = drawer.getBoundingClientRect();
-    const top = openBelow
+    const left = Math.max(leftEdge, Math.min(anchorRect.left, rightEdge - fittedRect.width));
+    const desiredTop = openBelow
       ? anchorRect.bottom + gap
       : anchorRect.top - fittedRect.height - gap;
+    const top = Math.max(viewportTop + margin, Math.min(desiredTop, bottomEdge - fittedRect.height));
 
     drawer.style.left = `${Math.round(left - hostRect.left)}px`;
     drawer.style.top = `${Math.round(top - hostRect.top)}px`;
+    drawer.dataset.placement = openBelow ? 'below' : 'above';
     drawer.dataset.anchor = this.panel;
   }
 

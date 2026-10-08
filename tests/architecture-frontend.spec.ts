@@ -1,4 +1,5 @@
 import { test, expect, devices } from '@playwright/test';
+import { open as openStatusFixture } from './status-image-fixtures';
 import fs from 'node:fs';
 import path from 'node:path';
 import { RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE } from '../shared/result-window.js';
@@ -118,6 +119,79 @@ async function stubOptionalApi(page: import('@playwright/test').Page): Promise<v
       return;
     }
     await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+}
+
+// Feedback #42: a status editor near the lower edge must open upward rather
+// than squeeze into a small 220px region below its triggering button.
+for (const [device, width, height] of [
+  ['mobile', 390, 844],
+  ['desktop', 1280, 900],
+] as const) {
+  test(`reading-status editor uses the roomier side of the viewport (${device})`, async ({ page }) => {
+    // Use the same isolated, stable action fixture as the status interaction
+    // suite; architecture Hot/Archive cards legitimately rerender during load.
+    const actions = await openStatusFixture(page, width);
+    await actions.locator('button[data-action="close"]').click();
+    await page.setViewportSize({ width, height });
+    const button = actions.locator('button[data-action="status"]');
+    const drawer = actions.locator('.drawer');
+    await expect(button).toBeVisible({ timeout: 30000 });
+
+    const moveTrigger = async (desiredTop: number): Promise<void> => {
+      // Move only the stable test action host; avoid browser-scroll coupling
+      // with unrelated fixed overlays and document-scrolling preferences.
+      await button.evaluate((node, target) => {
+        const host = (node.getRootNode() as ShadowRoot).host as HTMLElement;
+        const prior = Number(host.dataset.popupTestOffset || '0');
+        const next = prior + target - node.getBoundingClientRect().top;
+        host.dataset.popupTestOffset = String(next);
+        host.style.transform = `translateY(${next}px)`;
+      }, desiredTop);
+      await expect.poll(
+        () => button.evaluate((node, target) => Math.abs(node.getBoundingClientRect().top - target), desiredTop),
+        { timeout: 5000 },
+      ).toBeLessThan(3);
+    };
+    const geometry = async () => actions.evaluate(host => {
+      const root = (host as HTMLElement).shadowRoot!;
+      const anchor = root.querySelector<HTMLElement>('button[data-action="status"]')!.getBoundingClientRect();
+      const panel = root.querySelector<HTMLElement>('.drawer')!.getBoundingClientRect();
+      const vp = window.visualViewport;
+      const top = vp?.offsetTop ?? 0;
+      const bottom = top + (vp?.height ?? window.innerHeight);
+      return {
+        above: anchor.top - top,
+        below: bottom - anchor.bottom,
+        triggerTop: anchor.top,
+        triggerBottom: anchor.bottom,
+        popupTop: panel.top,
+        popupBottom: panel.bottom,
+        viewportTop: top,
+        viewportBottom: bottom,
+      };
+    });
+
+    // This regression asserts layout, not pointer hit-testing across synthetic card positions.
+    await moveTrigger(Math.round(height * 0.70));
+    await button.evaluate(node => (node as HTMLButtonElement).click());
+    await expect(drawer).toBeVisible();
+    await expect(drawer).toHaveAttribute('data-placement', 'above');
+    const upper = await geometry();
+    expect(upper.above).toBeGreaterThan(upper.below);
+    expect(upper.popupBottom).toBeLessThanOrEqual(upper.triggerTop - 5);
+    expect(upper.popupTop).toBeGreaterThanOrEqual(upper.viewportTop + 6);
+
+    await actions.locator('button[data-action="close"]').evaluate(node => (node as HTMLButtonElement).click());
+    await moveTrigger(Math.round(height * 0.18));
+    await button.evaluate(node => (node as HTMLButtonElement).click());
+    await expect(drawer).toBeVisible();
+    await expect(drawer).toHaveAttribute('data-placement', 'below');
+    const lower = await geometry();
+    expect(lower.below).toBeGreaterThan(lower.above);
+    expect(lower.popupTop).toBeGreaterThanOrEqual(lower.triggerBottom + 5);
+    expect(lower.popupBottom).toBeLessThanOrEqual(lower.viewportBottom - 6);
+    await expect(actions.locator('.bar > button.action')).toHaveCount(4);
   });
 }
 
