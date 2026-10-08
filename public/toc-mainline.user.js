@@ -4784,6 +4784,10 @@ function embeddedJobDois(value) {
       // a known gap with a missing response. Positive current receipts still win.
       var j=Object.assign({},old.job,raw);
       ['captureToc','captureFigures','captureEvidence','capturePrivatePdf'].forEach(function(k){j[k]=!old.done[k]&&Boolean(old.job[k]||raw[k]);});
+      // New positive inventory evidence supersedes a stale pending obligation.
+      // Unknown inventory does not certify completion, but cannot authorize a PDF re-download.
+      if(raw.existingTocKind==='official'||raw.existingTocKind==='figure1')j.captureToc=false;
+      if(raw.privatePdfServerStatus&&raw.privatePdfServerStatus!=='missing')j.capturePrivatePdf=false;
       j.capturedFigures=Object.assign({},old.job.capturedFigures||{},raw.capturedFigures||{});
       old.job=coverageJobNeeds(j);
       if(old.state==='resolved'&&coverageHasNeeds(old.job)){old.state='pending';old.retryAt=0;}

@@ -50,6 +50,22 @@ await test('new valid partial receipt requeues only remaining layer',()=>{
  x.T.coverageRemaining(r,j,{status:'partial',toc:{status:'stored',kind:'official'},fulltext:{status:'stored',evidenceLevel:'complete'},figures:{discovered:3,stored:1,failed:2,items:[{...fig(j.doi,1),status:'staged'}]}});
  const v=r.coverage.get(j.doi);assert.equal(v.state,'pending');assert.equal(v.job.captureToc,false);assert.equal(v.job.captureEvidence,false);assert.equal(v.job.captureFigures,true);assert.equal(v.job.missingFigureCount,2);assert.equal(Object.keys(v.job.capturedFigures).length,1);
 });
+await test('cloud-ready PDF clears stale same-DOI pending download without clearing TOC need',()=>{
+ const x=h(),run={summary:summary()},job=fakeJob(31,{captureFigures:false,captureToc:true,capturePrivatePdf:true,privatePdfServerStatus:'missing'});
+ x.T.coverageMergePlan(run,[job]);
+ x.T.coverageMergePlan(run,[{...job,capturePrivatePdf:false,privatePdfServerStatus:'ready'}]);
+ const row=run.coverage.get(job.doi);
+ assert.equal(row.job.capturePrivatePdf,false);
+ assert.equal(row.job.captureToc,true);
+});
+await test('production Figure 1 clears stale TOC obligation while preserving actual missing owner PDF',()=>{
+ const x=h(),run={summary:summary()},job=fakeJob(32,{captureFigures:false,captureToc:true,capturePrivatePdf:true,privatePdfServerStatus:'missing'});
+ x.T.coverageMergePlan(run,[job]);
+ x.T.coverageMergePlan(run,[{...job,captureToc:false,existingTocKind:'figure1'}]);
+ const row=run.coverage.get(job.doi);
+ assert.equal(row.job.captureToc,false);
+ assert.equal(row.job.capturePrivatePdf,true);
+});
 await test('same valid receipt twice does not cause infinite progress retries',()=>{
  const x=h(),r={summary:summary()},j=fakeJob(1);x.T.coverageMergePlan(r,[j]);const result={status:'partial',reason:'combined_capture',figures:{discovered:3,stored:1,failed:2,items:[{...fig(j.doi,1),status:'staged'}]}};
  x.T.coverageRemaining(r,j,result);const row=r.coverage.get(j.doi);assert.equal(row.state,'pending');x.T.coverageRemaining(r,row.job,result);assert.equal(row.state,'blocked');
