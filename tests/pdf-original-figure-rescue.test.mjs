@@ -26,7 +26,6 @@ function pdfFixture({pages=3,doi=DOI,figureOnlyOn=2}={}){
        return {items:[item('Ordinary body text without image caption',45,500)]};
      }};
    }};
- };
  return {pdf,visited:()=>visited};
 }
 
