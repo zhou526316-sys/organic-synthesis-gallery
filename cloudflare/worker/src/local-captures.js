@@ -413,10 +413,13 @@ export async function importTampermonkeyReport(request, env, payload) {
   const recentAttempts = tmUniqueReportHistory({attempts:allReceipts}, TAMPERMONKEY_REPORT_HISTORY_LIMIT);
   const effective = tmEffectiveReport({attempts:recentAttempts});
   const firstDeliveryForJob = !history.some(row => row.jobId && row.jobId === report.jobId);
-  const firstFailureForJob = report.final === true && report.status === 'failed'
-    && !history.some(row => row.jobId === report.jobId && row.final === true && row.status === 'failed');
-  const firstSuccessForJob = report.final === true && report.status === 'success'
-    && !history.some(row => row.jobId === report.jobId && row.final === true && row.status === 'success');
+  // Legacy publisher reports may have no jobId/final flag. Keep their
+  // historical counting semantics while a bound job contributes at most one
+  // failure/success of each kind across its progress and final deliveries.
+  const firstFailureForJob = report.status === 'failed'
+    && (!report.jobId || !history.some(row => row.jobId === report.jobId && row.status === 'failed'));
+  const firstSuccessForJob = report.status === 'success'
+    && (!report.jobId || !history.some(row => row.jobId === report.jobId && row.status === 'success'));
   const knownFailure = [report, ...history]
     .filter(row => row.status === 'failed' && row.final === true)
     .sort((a,b)=>Number(b.updatedAt||0)-Number(a.updatedAt||0))[0];
