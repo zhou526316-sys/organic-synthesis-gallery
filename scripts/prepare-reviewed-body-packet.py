@@ -33,7 +33,7 @@ def main():
         if current and (articlecount==5 or len(current)+len(article['images'])>30):batches.append(current);current=[];articlecount=0
         for reviewid,imageid,note in article['images']:
             r=rows[reviewid];assert (r['doi'],r['id'])==(article['doi'],imageid) and r.get('hashVerified') and not r.get('error')
-            assert re.fullmatch(r'images/next-\d{3}\.(svg|png|webp)',r['file'])
+            assert re.fullmatch(r'images/next-\d{3}\.(svg|png|webp|jpe?g)',r['file'])
             raw=z.read(r['file']);sha=hashlib.sha256(raw).hexdigest();assert sha==r['sha256'] and sha.startswith(r['contentHash']) and len(raw)==r['byteLength']==r['actualBytes']
             asset=f'audit/media-recovery/body-batches/assets/{sha}'+pathlib.PurePosixPath(r['file']).suffix
             path=pathlib.Path(asset);path.parent.mkdir(parents=True,exist_ok=True)
