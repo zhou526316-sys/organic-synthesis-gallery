@@ -35,6 +35,11 @@ jobs:
           node --test tests/tm-rsc-acs-inventory-20261008.test.mjs
           node scripts/test-tm-oct1-scope-contract.mjs
           node scripts/validate-tm220-artifacts.mjs source
+      - name: Install isolated browser test dependencies
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
       - name: Preserve existing queue and publisher protections
         run: |
           set -euo pipefail
