@@ -17,13 +17,14 @@ async function tencentSessionGatewayEnabled(): Promise<boolean> {
   } catch { return false; }
 }
 async function fetchOwnerSession(token: string): Promise<Response> {
+  const enabled = await tencentSessionGatewayEnabled();
   try {
     return await fetch(API_BASE + '/api/user-ui/auth/session', {
       headers: { authorization: 'Bearer ' + token }, cache: 'no-store',
-      signal: AbortSignal.timeout(5_000),
+      signal: AbortSignal.timeout(enabled ? 5_000 : 10_000),
     });
   } catch (error) {
-    if (!(await tencentSessionGatewayEnabled())) throw error;
+    if (!enabled) throw error;
     return fetch(PDF_TENCENT_GATEWAY + '/api/user-ui/auth/session', {
       headers: { authorization: 'Bearer ' + token }, cache: 'no-store',
       signal: AbortSignal.timeout(7_000),
