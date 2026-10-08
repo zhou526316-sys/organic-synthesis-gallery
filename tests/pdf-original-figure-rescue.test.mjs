@@ -103,7 +103,7 @@ test('PDF reader UI enables exact raster crop export but never direct public imp
  assert.ok(script.includes('scanPdfFigureRescue('));
  assert.ok(script.includes('preparePdfOriginalCropManifest('));
  assert.ok(script.includes("drawImage(canvas,rect.x,rect.y,rect.width,rect.height"));
- assert.ok(script.includes('sourcePdfBytesExported'));
+ assert.ok(fs.readFileSync('src/pdf-vault/figure-rescue.mjs','utf8').includes('sourcePdfBytesExported:false'));
  assert.ok(!script.includes('/api/media/local-capture/import'));
  assert.ok(!script.includes('/api/article-figures/stage'));
 });
