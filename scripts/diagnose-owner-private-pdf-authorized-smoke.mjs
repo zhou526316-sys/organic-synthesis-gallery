@@ -20,7 +20,8 @@ const urls = [
 const origin = 'https://gallery.gczhouwld.com';
 const runId = String(process.env.GITHUB_RUN_ID || '');
 if (!/^\d{7,18}$/.test(runId)) throw new Error('github_run_context_required');
-const userId = 'pdf_auth_smoke_' + runId;
+const batchSuffix = /^\d$/.test(String(process.env.JOURNAL_BATCH||'')) ? '_j'+String(process.env.JOURNAL_BATCH) : '';
+const userId = 'pdf_auth_smoke_' + runId + batchSuffix;
 const quote = x => "'" + String(x).replaceAll("'","''") + "'";
 const elapsed = since => Math.round(performance.now() - since);
 const sleep = n => new Promise(r=>setTimeout(r,n));
