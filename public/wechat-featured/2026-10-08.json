@@ -403,14 +403,14 @@
     },
     {
       "id": "jacs-cover",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-08-r6/jacs-cover-native-final.png",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-r7/jacs-cover-toc-large-no-label.png",
       "caption": "",
       "body": false,
       "display_width_pct": 100,
       "source_figure": "Official paper graphical abstract",
       "source_doi": "10.1021/jacs.6c14748",
-      "source_kind": "original_TOC_uniformly_scaled_native_screenshot_safe",
-      "source_adjustment": "Original R3 chemical artwork uniformly rescaled 0.718; old header ghost strips removed outside chemistry, not generated; header moved down 26px; full chemistry ends at y479; solid navy native-title backing starts y492, before actual first-line native white glyphs near y525 in user's WeChat screenshot."
+      "source_kind": "original_verified_TOC_rescaled_without_header",
+      "source_adjustment": "User requested removing 今日精选·JACS banner. Original unchanged chemistry ROI from R3 source cropped (550,93,1330,565), background-only old-header ghost removed outside the chemical O center, uniformly scaled to 760x460, positioned (560,16). Solid low-saturation navy backing starts y492 for WeChat-native two-line white title. No invented atoms, bonds or conditions."
     }
   ],
   "cover": {
@@ -422,8 +422,8 @@
     },
     "crop_235_1": "0_0_1_1",
     "crop_1_1": "0.287234_0_0.712766_1",
-    "description": "White original source-color graphical abstract. Top 今日精选·JACS moved inside safe crop boundary; original chemistry uniformly scaled above y479; solid subdued navy from y492 for native white two-line title."
+    "description": "Original JACS TOC only, without the top 今日精选·JACS header. Original chemical content enlarged and centered at 760x460 (R6 was ~560x339); white background; native white article headline rests entirely on the clean deep navy band y492:800. Keep article title unchanged."
   },
   "ai_notice": "“化之岛”基于JACS正文与作者Supporting Information整理，AI辅助查阅与图文编排，正式发布由运营者复核。全部化学结构、示意和数据均为原始来源的高清裁切，未使用生成式工具重绘。",
-  "editorialRevision": "2026-10-08-r6"
+  "editorialRevision": "2026-10-08-r7"
 }

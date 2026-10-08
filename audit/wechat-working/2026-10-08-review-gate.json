@@ -1,6 +1,6 @@
 {
   "date": "2026-10-08",
-  "revision": "2026-10-08-r6",
+  "revision": "2026-10-08-r7",
   "articleCount": 2,
   "selectionDois": [
     "10.1021/jacs.6c14748",
@@ -9,14 +9,14 @@
   "textReview": "pass",
   "imageReview": "pass",
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-08-r6-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-08-r6-images-only.md"
+    "textOnly": "audit/wechat-working/2026-10-08-r7-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-08-r7-images-only.md"
   },
   "sources": [
     {
       "path": "public/wechat-featured/2026-10-08.json",
-      "blobSha": "61073627d30dfcd9d36dad05eefd5b588fc68b3c",
-      "sha256": "ded0eab35f230366e45cd89e54d64bda432c5e53ccc41d2fd8c195a00b1cfea7"
+      "blobSha": "7d6e3599e216e309793f80c05ceec0db8ea7c161",
+      "sha256": "dd9950f8b3450dfdee860bef0c7b411c48965827cf11969df4346aad452efe82"
     },
     {
       "path": "public/wechat-retrospective/os1-multicentred-sulfur-20261008.json",
@@ -25,18 +25,18 @@
     },
     {
       "path": "public/wechat-editions/2026-10-08.json",
-      "blobSha": "54ff5cfd38d2f52c4f9696c3bb88d7c05e45d2fc",
-      "sha256": "16706cbe833019d57d6a2a8f37c90bc580e29e41af055be69bcdc570cc53b372"
+      "blobSha": "04c39e98038e7046fcf8cf4bbbb8f922af15257f",
+      "sha256": "83b887eeaf81d1be2452bca42140f2267de66d795d43dc931dbb70df8aad4f99"
     },
     {
-      "path": "audit/wechat-working/2026-10-08-r6-text-only.md",
-      "blobSha": "4820005c5f8df3d2a9e1848662ab3382ea8599bb",
-      "sha256": "b045b4f88a019ad5c94fe942dd1dc219c77f3fc4a5299f3437b8c0a456dd25f0"
+      "path": "audit/wechat-working/2026-10-08-r7-text-only.md",
+      "blobSha": "1111af483e4739d035a979abda98d34fec84e6ba",
+      "sha256": "482233b3e9dd6e468ce63ee572eb3215655cacb23d6ec57578a7dc6cddfbc757"
     },
     {
-      "path": "audit/wechat-working/2026-10-08-r6-images-only.md",
-      "blobSha": "7102df3703798e1f842a468dce70ff89f987f26b",
-      "sha256": "e008465fd55687dcf887a83b218c01fdb9931e27e1f5dd64d9a0dacf3b609c48"
+      "path": "audit/wechat-working/2026-10-08-r7-images-only.md",
+      "blobSha": "9ac5a21579df08bea6e14d0fdee2773eba5d172d",
+      "sha256": "0a76a84775631b52e68da3fde0e2fa9c4e7349f69d9e7678a625aaf70a06222d"
     }
   ],
   "assets": [
@@ -181,9 +181,9 @@
       "height": 582
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-08-r6/jacs-cover-native-final.png",
-      "blobSha": "9fef1fc85b649367cab2c3b47eeb650b58c09cc3",
-      "sha256": "7a2c2c9109991b6cbe3131e717a0082106c406b5e30155425c9675aa400f8fee",
+      "path": "public/wechat-assets/reviewed/2026-10-08-r7/jacs-cover-toc-large-no-label.png",
+      "blobSha": "1c70bbe1748c6d73d5bf3f2c423517626b1612a3",
+      "sha256": "84ba82ca0162ddb8d40d2faf28bcbba9608cb88dea2e6668cb5de3e123fb868e",
       "width": 1880,
       "height": 800
     },
@@ -331,5 +331,18 @@
     "textReview": "pass: article prose and headings are unchanged from reviewed R3",
     "retrospective": "unchanged",
     "draftTransport": "not yet run"
+  },
+  "reviewNotesR7": {
+    "userRequest": "Remove top 今日精选·JACS header and enlarge authentic TOC; write back same draft.",
+    "scientificArtwork": "R3 original verified JACS graphical-abstract crop, no generated chemistry",
+    "imageQA": "PASS: decoded PNG; complete chemistry and caption labels; background-only cleanup; no top header",
+    "headlineGeometry": "User R3 mobile screenshot found glyphs near image y525; y492 navy backing begins before glyphs",
+    "originalTOCScale": "760x460 versus prior R6 560x339",
+    "squareCrop": "center 800x800 x540..1340 contains complete x560..1320 graphic",
+    "bodyAndSecondArticle": "unchanged, 20 JACS body images plus retrospective images; 32 total body images",
+    "textReview": "PASS: source narrative unchanged; only source review heading revision changes",
+    "textReviewStatus": "pass",
+    "imageReviewStatus": "pass",
+    "publisherNotYetRun": true
   }
 }
