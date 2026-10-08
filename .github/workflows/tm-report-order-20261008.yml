@@ -1,0 +1,30 @@
+name: Tampermonkey terminal report idempotence 2026-10-08
+on:
+  push:
+    branches:
+      - fix/tm271-final-report-rsc-inventory-20261008
+  pull_request:
+    branches: [main]
+    paths:
+      - cloudflare/worker/src/local-captures.js
+      - cloudflare/worker/src/tm-report-order.js
+      - tests/tm-report-order-20261008.test.mjs
+      - .github/workflows/tm-report-order-20261008.yml
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Read-only publisher report ordering and replay regression
+        run: |
+          set -euo pipefail
+          node --check cloudflare/worker/src/tm-report-order.js
+          node --check cloudflare/worker/src/local-captures.js
+          node --test tests/tm-report-order-20261008.test.mjs
+          git diff --check
