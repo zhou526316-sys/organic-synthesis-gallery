@@ -37,7 +37,7 @@ jobs:
         run: |
           test -s scripts/test-result-window.mjs
           test -s architecture/tests/published-reader.test.mjs
-          node --test scripts/test-result-window.mjs architecture/tests/published-reader.test.mjs
+          node --test scripts/test-result-window.mjs scripts/test-daily-gallery-order.mjs architecture/tests/published-reader.test.mjs
 
       - name: Test Tampermonkey architecture membership observer
         run: node --test scripts/test-tm-architecture-membership.mjs
@@ -59,7 +59,7 @@ jobs:
 
       - name: Test and build inactive architecture public bundle
         run: |
-          node --test scripts/test-gallery-architecture-public.mjs scripts/test-result-window.mjs
+          node --test scripts/test-gallery-architecture-public.mjs scripts/test-result-window.mjs scripts/test-daily-gallery-order.mjs
           node scripts/build-gallery-architecture-public.mjs
 
       - name: Build frontend
