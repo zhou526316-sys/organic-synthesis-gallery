@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "tm-end-to-end-owner-acceptance-v1",
+  "reviewedAtBeijing": "2026-10-08 19:12:06 +08:00",
+  "task": "User-approved comprehensive Tampermonkey acquisition restoration. No unverified publisher work may be labeled resolved.",
+  "canonicalRepository": "zhou526316-sys/organic-synthesis-gallery",
+  "baseBranch": "main",
+  "liveReleasedBaseline": {
+    "bridge": "2.2.72",
+    "tocInstall": "6.2.53",
+    "protocol": "6.2.20",
+    "controller": "2.2.41",
+    "releaseCommit": "5944b25b1285017d590fcd7c3beceb8a69ff87b1",
+    "released": true,
+    "ownerInstalled": false,
+    "ownerLiveAcceptance": false
+  },
+  "currentOwnerCaptureLog": {
+    "uploadAt": "2026-10-08T11:05:01.910Z",
+    "scopeCount": 177,
+    "attempts": 14,
+    "visited": 11,
+    "unresolved": 24,
+    "fullyResolved": 1,
+    "ownerPdfReady": 166,
+    "ownerPdfMissing": 11,
+    "ownerPdfUnknown": 0,
+    "publisherError": "capture_job_stale_or_unbound",
+    "backendRejection": "409 stale_controller_revision",
+    "intermittentDiagnosticFailure": "gm_then_fetch_failed; later succeeded",
+    "sourceVersionField": "6.2.20 is shared protocol revision, not sufficient to identify the installed user-script version"
+  },
+  "confirmedIssuesStillOpen": [
+    {
+      "type": "owner_browser_upgrade_dependency",
+      "status": "confirmed",
+      "action": "Install the already-shipped 2.2.72 once without erasing Tampermonkey storage, allow fresh generation takeover; obtain a new owner-authenticated capture log."
+    },
+    {
+      "type": "publisher_rsc_visual",
+      "status": "unverified_after_release",
+      "examples": [
+        "10.1039/d6gc04458a",
+        "10.1039/d6gc05783g",
+        "10.1039/d6sc03717h"
+      ],
+      "action": "Check DOI-bound, non-preview TOC/Figure 1, article body and PDF on legitimate authenticated live pages; no fabrication."
+    },
+    {
+      "type": "publisher_acs",
+      "status": "unverified_after_release",
+      "examples": [
+        "10.1021/acs.joc.6c01708",
+        "10.1021/acs.orglett.6c03611",
+        "10.1021/acscatal.6c06183"
+      ],
+      "action": "Confirm permission/heartbeat, avoid repeat gate and identify genuine reachable landing and body routes."
+    },
+    {
+      "type": "capture_completeness",
+      "status": "open",
+      "action": "Verify missing DOI/layer independently with original hashes and server receipts; 16 supported journals, ideally several actual DOI checks per journal."
+    },
+    {
+      "type": "private_pdf",
+      "status": "open",
+      "action": "Only owner-authorized, server-confirmed missing subset (11 on latest snapshot), no owner files deleted and no permission bypass."
+    },
+    {
+      "type": "diagnostic_upload",
+      "status": "intermittent_recovered",
+      "action": "Do not classify recovered one-off network error as server outage; if 2.2.72 still reproduces, add actual install revision and bounded retry to the script."
+    },
+    {
+      "type": "computer_off_capture",
+      "status": "dependency_unresolved",
+      "action": "A local Tampermonkey process cannot run when its browser/computer is off. Authenticated cloud execution requires approved persistent VPN capability and budget; do not claim achieved."
+    }
+  ],
+  "bindingRequirements": [
+    "Use addedDate >= 2026-10-01; older/blank excluded from capture dispatch.",
+    "On a justified visit attempt TOC (or genuine Figure 1), named body figures, complete text and owner private PDF when needed.",
+    "No separate page visits triggered only by body figures or partial text.",
+    "Keep existing reliable media receipts; PDF ready/pending/unknown never treated as missing.",
+    "Preserve verified Figure 1 instead of replacing it unnecessarily.",
+    "RSC PDF-page-preview is never TOC; respect DOI and original scientific media.",
+    "Distinguish real publisher visit, layer stored, production promoted, and full closure.",
+    "Do not weaken authorization, public literature release, PDF owner privacy or fixed 08:00 slot.",
+    "Do not claim all-captured from CI or version deployment; require owner VPN live receipts.",
+    "No unapproved new costs, no blind version bump, no cleaning local storage."
+  ],
+  "actionsThisTurn": {
+    "codeModified": false,
+    "deployTriggered": false,
+    "ownerMediaDownloaded": false,
+    "privateDataTouched": false,
+    "scopeChanged": false,
+    "reason": "Current failure trace predates owner's upgrade to production 2.2.72. Publishing another version before a 2.2.72 capture would be an unjustified update and could regress working capture."
+  },
+  "nextAcceptance": "Owner updates https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js to official 2.2.72, refreshes canonical Gallery, captures a fresh batch, uploads local logs once; then use backend receipts to address each remaining attributable code failure."
+}
