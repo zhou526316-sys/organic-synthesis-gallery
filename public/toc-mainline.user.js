@@ -55,6 +55,7 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
+  var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
   var INSTALL_REVISION = '6.2.49';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -4485,12 +4486,14 @@ function embeddedJobDois(value) {
     if(!row||row.revision!==INVENTORY_STARTUP_REVISION||now-Number(row.savedAt||0)>INVENTORY_PLAN_CACHE_TTL_MS
       ||String(row.queueGeneratedAt||'')!==String(queue&&queue.generatedAt||'')
       ||Number(row.queueCount||0)!==Number(queue&&queue.articles&&queue.articles.length||0)||!Array.isArray(row.jobs))return null;
-    var allowed=new Set((queue.articles||[]).map(function(x){return normalizeDoi(x.doi);}));
+    var allowed=new Set((queue.articles||[]).filter(recentFullCaptureEligible).map(function(x){return normalizeDoi(x.doi);}));
     var jobs=[];
     for(var i=0;i<row.jobs.length;i++){
       var raw=row.jobs[i],doi=normalizeDoi(raw&&raw.doi);
       if(!doi||!allowed.has(doi))return null;
-      var job=Object.assign({},raw,{doi:doi,manualRunId:run.id});
+      var job=Object.assign({},raw,{doi:doi,manualRunId:run.id,
+        // Never dispatch PDF from a warm cache before fresh owner inventory.
+        capturePrivatePdf:false,privatePdfServerStatus:'unknown'});
       if(coverageHasNeeds(job))jobs.push(job);
     }
     return {savedAt:Number(row.savedAt||0),jobs:jobs};
@@ -4509,7 +4512,7 @@ function embeddedJobDois(value) {
   }
   async function readMissingCaptureInventory(queue,run) {
     var errors=[],mediaRows=[],cache=run?(run.inventoryCache||(run.inventoryCache=new Map())):new Map();
-    var dois=queue.articles.map(function(x){return normalizeDoi(x.doi);});
+    var dois=queue.articles.filter(recentFullCaptureEligible).map(function(x){return normalizeDoi(x.doi);});
     function meta(payload){return payload&&payload.__inventoryMeta||{};}
     async function safe(name,layer,request,valid,key,maxAttempts) {
       key=key||name;var started=Date.now();updateInventoryProgress(run,layer,'loading',started);
@@ -4535,7 +4538,8 @@ function embeddedJobDois(value) {
     function mediaRequest(ds){return inventoryReadMetadataJson({method:'POST',url:MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),
       timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{'content-type':'application/json'},data:JSON.stringify({dois:ds,readOnly:true})},'inventory');}
     async function readMedia(){
-      var started=Date.now();updateInventoryProgress(run,'media','loading',started,dois.length+' DOI');
+      var started=Date.now();
+      if(!dois.length){updateInventoryProgress(run,'media','done',started,'scope_empty');return {items:[]};}updateInventoryProgress(run,'media','loading',started,dois.length+' DOI');
       if(dois.length<=1200){
         try{
           var all=await mediaRequest(dois);
@@ -4888,6 +4892,7 @@ function embeddedJobDois(value) {
           break;
         }
         s.phase='running';row.state='active';
+        if(!recentFullCaptureEligible(row.job)){row.state='removed';coverageStats(run);manualSummary(run);continue;}
         var job=Object.assign({},row.job,{jobId:crypto.randomUUID(),controllerId:manualLeaseOwner(run),controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:row.attempts+1});
         coverageStats(run);manualSummary(run);
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);
@@ -5129,6 +5134,7 @@ function embeddedJobDois(value) {
         var attemptGeneration=pdfOnly?pdfGeneration:evidenceOnly?evidenceGeneration:generation;
         var attemptKind=pdfOnly?'pdf':evidenceOnly?'evidence':'figures';
         var priorAttempt=GM_getValue(attemptKey(batch[i].doi,attemptGeneration,attemptKind),null);
+        if(!recentFullCaptureEligible(batch[i])){summary.skipped+=1;continue;}
         var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
         markPublisherDispatch(job);
@@ -6132,6 +6138,9 @@ function embeddedJobDois(value) {
     var jobs=queue.articles.map(function(raw,index) {
       var doi=normalizeDoi(raw.doi);
       if (!doi||seen.has(doi)) throw new Error('paired_queue_invalid_or_duplicate_doi');seen.add(doi);
+      // Keep the complete registry for DOI integrity but schedule only papers
+      // actually added to Gallery on/after October 1, never historical/undated.
+      if(!recentFullCaptureEligible(raw))return null;
       var record=(media.items||{})[doi]||{};
       var toc=record.toc||{};
       var hasVisual=Boolean(toc.available && toc.imageUrl);
