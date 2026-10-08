@@ -40,7 +40,7 @@ await test('40 attempts with27partial11failed2blocked does not report0remaining'
   x.T.coverageRemaining(r,v.job,result);r.summary.results.push(result);
  }
  x.T.coverageStats(r);assert.equal(r.summary.unresolvedCount,40);assert.equal(r.summary.fullyResolved,0);assert.equal(r.summary.blockedCount,40);
- x.store.set(P+'last-run-summary',{...r.summary,queueCoverageRevision:'v6',phase:'blocked_remaining'});
+ x.store.set(P+'last-run-summary',{...r.summary,queueCoverageRevision:'v6',scopeRevision:'20261008-added-date-only-v1',scopeCount:40,phase:'blocked_remaining'});
  const snapshot=x.T.captureLiveSnapshot(x.ctx.Date.now());assert.equal(snapshot.state,'blocked_remaining');
  const t=x.T.captureLiveText(snapshot);
  assert.match(t.gaps,/未补齐 40/);assert.match(t.state,/未补齐/);
@@ -49,6 +49,36 @@ await test('new valid partial receipt requeues only remaining layer',()=>{
  const x=h(),r={summary:summary()},j=fakeJob(1,{captureToc:true,captureEvidence:true});x.T.coverageMergePlan(r,[j]);
  x.T.coverageRemaining(r,j,{status:'partial',toc:{status:'stored',kind:'official'},fulltext:{status:'stored',evidenceLevel:'complete'},figures:{discovered:3,stored:1,failed:2,items:[{...fig(j.doi,1),status:'staged'}]}});
  const v=r.coverage.get(j.doi);assert.equal(v.state,'pending');assert.equal(v.job.captureToc,false);assert.equal(v.job.captureEvidence,false);assert.equal(v.job.captureFigures,true);assert.equal(v.job.missingFigureCount,2);assert.equal(Object.keys(v.job.capturedFigures).length,1);
+});
+await test('cloud-ready PDF clears stale same-DOI pending download without clearing TOC need',()=>{
+ const x=h(),run={summary:summary()},job=fakeJob(31,{captureFigures:false,captureToc:true,capturePrivatePdf:true,privatePdfServerStatus:'missing'});
+ x.T.coverageMergePlan(run,[job]);
+ x.T.coverageMergePlan(run,[{...job,capturePrivatePdf:false,privatePdfServerStatus:'ready'}]);
+ const row=run.coverage.get(job.doi);
+ assert.equal(row.job.capturePrivatePdf,false);
+ assert.equal(row.job.captureToc,true);
+});
+await test('production Figure 1 clears stale TOC obligation while preserving actual missing owner PDF',()=>{
+ const x=h(),run={summary:summary()},job=fakeJob(32,{captureFigures:false,captureToc:true,capturePrivatePdf:true,privatePdfServerStatus:'missing'});
+ x.T.coverageMergePlan(run,[job]);
+ x.T.coverageMergePlan(run,[{...job,captureToc:false,existingTocKind:'figure1'}]);
+ const row=run.coverage.get(job.doi);
+ assert.equal(row.job.captureToc,false);
+ assert.equal(row.job.capturePrivatePdf,true);
+});
+await test('verified stored Figure 1 production fallback closes TOC gap immediately',()=>{
+ const x=h(),run={summary:summary()},job=fakeJob(33,{captureFigures:false,captureToc:true,capturePrivatePdf:false});
+ x.T.coverageMergePlan(run,[job]);
+ x.T.coverageRemaining(run,job,{status:'success',toc:{status:'stored',kind:'figure1',productionFallbackStored:true},figures:{items:[]}});
+ const row=run.coverage.get(job.doi);
+ assert.equal(row.job.captureToc,false);assert.equal(row.state,'resolved');
+});
+await test('local-only Figure 1 receipt cannot falsely close production visual gap',()=>{
+ const x=h(),run={summary:summary()},job=fakeJob(34,{captureFigures:false,captureToc:true,capturePrivatePdf:false});
+ x.T.coverageMergePlan(run,[job]);
+ x.T.coverageRemaining(run,job,{status:'partial',toc:{status:'stored',kind:'figure1',productionFallbackStored:false},figures:{items:[]}});
+ const row=run.coverage.get(job.doi);
+ assert.equal(row.job.captureToc,true);assert.notEqual(row.state,'resolved');
 });
 await test('same valid receipt twice does not cause infinite progress retries',()=>{
  const x=h(),r={summary:summary()},j=fakeJob(1);x.T.coverageMergePlan(r,[j]);const result={status:'partial',reason:'combined_capture',figures:{discovered:3,stored:1,failed:2,items:[{...fig(j.doi,1),status:'staged'}]}};
@@ -105,8 +135,8 @@ await test('Retry-After on HTML503 is preserved, not bypassed',async()=>{
 await test('private evidence inventory401 does not block the queue',async()=>{
  const ar=[article(1)],x=h(queue(ar),inv(ar),{evidenceError:true});await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(s.inventoryUnknown,0);assert.equal(s.phase,'all_resolved');assert.equal(x.opened.length,0);
 });
-await test('explicit body figure gap opens one publisher task and resolves on completion',async()=>{
- const ar=[article(1)],i=inv(ar);i.figures.items[0].expectedFigureCount=3;let n=0;
- const x=h(queue(ar),i,{result:j=>{n++;return {status:'success',toc:{status:'already_available'},figures:{discovered:3,stored:3,failed:0,items:[{...fig(j.doi,3),status:'staged'}]},fulltext:{status:'not_requested'}}}});await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(n,1);assert.equal(s.total,1);assert.equal(s.fullyResolved,1);assert.equal(s.unresolvedCount,0);
+await test('existing TOC gap opens once and captures the incomplete body figures in that visit',async()=>{
+ const ar=[article(1)],i=inv(ar);i.media.items[0].tocStored=false;i.figures.items[0].expectedFigureCount=3;let n=0;
+ const x=h(queue(ar),i,{result:j=>{n++;return {status:'success',toc:{status:'stored',kind:'official'},figures:{discovered:3,stored:3,failed:0,items:[{...fig(j.doi,3),status:'staged'}]},fulltext:{status:'not_requested'}}}});await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(n,1);assert.equal(s.total,1);assert.equal(s.fullyResolved,1);assert.equal(s.unresolvedCount,0);
 });
 console.log(JSON.stringify({passed,revision:'20261005-queue-coverage-v7',realPublisherRequests:0,productionWrites:0}));
