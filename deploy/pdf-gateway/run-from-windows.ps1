@@ -12,7 +12,7 @@ param(
 $ErrorActionPreference = 'Stop'
 if ($SshUser -notmatch '^[a-z_][a-z0-9_-]*$') { throw 'SSH 用户名格式无效' }
 $Server = $SshUser + '@relay.gczhouwld.com'
-$Source = 'https://raw.githubusercontent.com/zhou526316-sys/organic-synthesis-gallery/feature/owner-private-pdf-dual-ingress-20261008/deploy/pdf-gateway'
+$Source = 'https://raw.githubusercontent.com/zhou526316-sys/organic-synthesis-gallery/3f21b3791df8820114b71b292173a71f4afde57a/deploy/pdf-gateway'
 $Local = Join-Path $env:TEMP ('gallery-pdf-gateway-' + (Get-Date -Format 'yyyyMMddHHmmss'))
 $Remote = '/tmp/gallery-pdf-gateway-' + (Get-Date -Format 'yyyyMMddHHmmss')
 New-Item -ItemType Directory -Path $Local -Force | Out-Null
