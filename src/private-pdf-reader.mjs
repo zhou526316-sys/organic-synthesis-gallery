@@ -292,7 +292,7 @@ function sanitizedOpenServerTiming(raw) {
     'ticket_create','ticket_check','legacy_write','total']);
   if (typeof raw !== 'string' || raw.length > 500) return '';
   return raw.split(',').flatMap(segment => {
-    const m = /^\s*([a-z_]+);dur=(\d{1,6})\s*$/.exec(segment);
+    const m = /^\s*([a-z0-9_]+);dur=(\d{1,6})\s*$/.exec(segment);
     return m && allowed.has(m[1]) ? [m[1] + '=' + m[2] + 'ms'] : [];
   }).join(', ');
 }
