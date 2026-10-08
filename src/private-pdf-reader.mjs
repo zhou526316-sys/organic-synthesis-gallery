@@ -576,7 +576,8 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
     }
     async refreshUrl() {
       if (!this.refreshPromise) {
-        this.refreshPromise = getPdfSource(sessionToken, 'view').then(source => {
+        this.refreshPromise = getPdfSource(sessionToken, 'view',
+          this.fileUrl.startsWith(API_TENCENT + '/')).then(source => {
           if (declaredPdfBytes !== byteLength) throw new Error('pdf_incomplete_bytes');
           this.fileUrl = source.url;
           return this.fileUrl;
@@ -980,7 +981,7 @@ async function start(preferTencent = false) {
     const fileRouteFailure = phase === 'transfer' || phase === 'range' ||
       phase === 'parse';
     const transientFileFailure =
-      /^file_http_(408|429|5\\d\\d)$/.test(code) ||
+      /^file_http_(408|429|5\d\d)$/.test(code) ||
       ['pdf_transfer_timeout', 'pdf_incomplete_bytes',
        'pdf_first_page_timeout', 'pdf_range_unavailable'].includes(code) ||
       terminal?.name === 'TypeError';
