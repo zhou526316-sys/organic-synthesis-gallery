@@ -6,8 +6,8 @@ const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
 let passed=0;
 function test(name,fn){fn();passed++;console.log('TM_THROUGHPUT_TRUTH_PASS '+name);}
 
-assert.ok(source.includes("// @version      6.2.48"));
-assert.ok(source.includes("var INSTALL_REVISION = '6.2.48';"));
+assert.ok(source.includes("// @version      6.2.49"));
+assert.ok(source.includes("var INSTALL_REVISION = '6.2.49';"));
 assert.ok(source.includes("FIGURE_ONE_QUEUE_POLICY_REVISION = '20261008-verified-figure1-complete-v2'"));
 
 const familyStart=source.indexOf('  var FIGURE_ONE_QUEUE_POLICY_REVISION');
