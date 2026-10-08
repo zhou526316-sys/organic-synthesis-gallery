@@ -44,7 +44,7 @@ test('ACS viewer does not invent filenames from an empty or unrelated page',()=>
 
 const budgetCtx=vm.createContext({
  Date,Math,Number,String,JSON,Promise,Error,
- IMAGE_UPLOAD_TOTAL_BUDGET_MS:24000,
+ IMAGE_UPLOAD_TOTAL_BUDGET_MS:24000,IMAGE_UPLOAD_MAX_BUDGET_MS:48000,
  headerValue:()=>'',autoReportText:e=>String(e||''),
  shouldNativeRetryUpload:()=>false,
  uploadResponseError(status){const err=new Error('upload_http_'+status);err.httpStatus=status;return err;},
