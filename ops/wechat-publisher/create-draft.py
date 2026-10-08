@@ -428,7 +428,7 @@ def require_editorial_review_gate(
                     used.update(ids)
 
                 label_re = re.compile(
-                    r"(?:原文\s+)?(?:Fig\.|Table\s+\d+|Supporting Information\s+(?:Fig\.|Table)|SI\s+(?:Fig\.|Table))",
+                    r"(?:原文\s+)?(?:Fig\.|Scheme\s+\d+|Table\s+\d+|Supporting Information\s+(?:Fig\.|Scheme|Table)|SI\s+(?:Fig\.|Scheme|Table))",
                     re.IGNORECASE,
                 )
                 for fig_id in sorted(used):
@@ -438,7 +438,7 @@ def require_editorial_review_gate(
                     caption = str(fig.get("caption") or "").strip()
                     if not label_re.search(caption):
                         raise RuntimeError(
-                            f"used scientific figure caption lacks Fig/Table/SI identifier: {rel}#{fig_id}"
+                            f"used scientific figure caption lacks Fig/Scheme/Table/SI identifier: {rel}#{fig_id}"
                         )
     return gate
 
