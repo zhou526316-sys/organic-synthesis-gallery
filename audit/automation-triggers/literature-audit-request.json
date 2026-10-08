@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-07T23:07:00.000Z",
-  "requestedBy": "prepublish-primary-20261008-0800",
+  "requestedAt": "2026-10-08T00:44:07.464Z",
+  "requestedBy": "postrelease-20261008-0800-887cards",
   "publicationSlot": "2026-10-08T08:00:00+08:00",
-  "baselineMainSha": "10ed73d1735d0b9a7247135dae3f8d07d8633ddb",
-  "reason": "The scheduled prepublish primary review found no fresh 06:55 snapshot for the 2026-10-08 08:00 slot. Run the canonical DOI-union audit once for this publicationSlot and input baseline. Preserve the Asia/Shanghai three-calendar-day review window, seven-day machine safety tail, multi-ISSN Crossref online/published/created union, OpenAlex, created/deposit rescue, verifiedThrough catch-up and canonical activeFrom rules. Persist paired latest/compact snapshots only; do not mutate production literature or media, do not admit candidates, and preserve the durable pending backlog for semantic review."
+  "baselineMainSha": "8a9e01c02751576f9c51b2fb38855c08bfa5715e",
+  "reason": "After actual fixed-slot writer run 37709035758 successfully committed 28 approved new records (859 to 887) and refreshed TOC demand, recompute complete DOI-union audit from current main for post-release semantic quality. This is discovery/quality follow-up only, not a second slot or new admission request. Preserve all source checks, activeFrom, 3-day+7-day rescues and verifiedThrough gap; do not change any production literature, marker, review decisions, TOC media, or pending backlog."
 }
