@@ -47,9 +47,14 @@ await test('click does not delete credentials, existing figures or pending diagn
 await test('single user_aborted article does not terminate the manual pass',async()=>{
   let first=true;
   const x=h({noResult:true,open:(j,c)=>{
-    const result=first
-      ? {doi:j.doi,jobId:j.jobId,version:'6.2.20',status:'aborted',reason:'user_aborted',finishedAt:new Date(c.Date.now()).toISOString(),toc:{status:'not_requested'},figures:{discovered:0,stored:0,failed:0,items:[]},fulltext:{status:'not_requested'}}
-      : {doi:j.doi,jobId:j.jobId,version:'6.2.20',status:'success',finishedAt:new Date(c.Date.now()).toISOString(),toc:{status:'stored',kind:'official'},figures:{discovered:1,stored:1,failed:0,items:[]},figuresStaged:1,fulltext:{status:'stored'}};
+    let result;
+    if(first){
+      result={doi:j.doi,jobId:j.jobId,version:'6.2.20',status:'aborted',reason:'user_aborted',finishedAt:new Date(c.Date.now()).toISOString(),toc:{status:'not_requested'},figures:{discovered:0,stored:0,failed:0,items:[]},fulltext:{status:'not_requested'}};
+    }else{
+      const rf={label:'Figure 1',sourceUrl:'https://pubs.acs.org/'+j.doi+'/f1.png',contentHash:'a'.repeat(32),width:1000,height:500,quality:'high',status:'staged'};
+      c.GM_setValue(P+'verified-capture:6.2.20:1790082000000:'+j.doi,{doi:j.doi,version:'6.2.20',figures:{'Figure 1':rf},updatedAt:c.Date.now()});
+      result={doi:j.doi,jobId:j.jobId,version:'6.2.20',status:'success',finishedAt:new Date(c.Date.now()).toISOString(),toc:{status:'stored',kind:'official'},figures:{discovered:1,stored:1,failed:0,items:[rf]},figuresStaged:1,fulltext:{status:'stored'}};
+    }
     first=false;
     c.GM_setValue(P+'result:'+j.doi,result);
   }});
