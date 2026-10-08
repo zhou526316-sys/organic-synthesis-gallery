@@ -345,6 +345,17 @@ try{
   assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
   assert.equal(state.privateFileCalls>=1,true);
  });
+ await test('backup authorization failure does not cancel a slower valid canonical response',async()=>{
+  const owner={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],owner,{primaryOpenDelayMs:5500,backupOpenStatus:403});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:12000});
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'primary');
+  assert.ok(state.openOrigins.includes('https://api.gczhouwld.com'));
+  assert.ok(state.openOrigins.includes('https://organic-synthesis-gallery.zhou526316.workers.dev'));
+  assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
+ });
  await test('explicit PDF permission denial never initiates backup authorization',async()=>{
   const {context,state}=await contextWith(['private_pdf_read'],
    {available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'},
