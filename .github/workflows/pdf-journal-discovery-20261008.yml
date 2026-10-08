@@ -5,6 +5,7 @@ on:
       - diag/pdf-cross-journal-sampling-20261008
     paths:
       - .github/workflows/pdf-journal-discovery-20261008.yml
+      - scripts/diagnose-pdf-journal-discovery.mjs
   workflow_dispatch: {}
 
 permissions:
@@ -32,7 +33,7 @@ jobs:
       - name: Install Wrangler dependencies
         working-directory: cloudflare/worker
         run: npm install --no-audit --no-fund --ignore-scripts
-      - name: Discover published article PDF inventory and sample 3 per journal
+      - name: Discover current indexed article inventory and sample 3 per journal
         run: |
           set -euo pipefail
           test -n "$CLOUDFLARE_API_TOKEN"
