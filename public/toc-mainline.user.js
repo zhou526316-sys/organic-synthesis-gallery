@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.47
+// @version      6.2.48
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -55,7 +55,8 @@
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.47';
+  var INSTALL_REVISION = '6.2.48';
+  var GAP_RECOVERY_REVISION = '20261008-gap-recovery-v1';
   var CAPTURE_OBSERVABILITY_REVISION = '20261007-capture-observability-v1';
   var CONTROLLER_READ_REVISION = '20261007-native-metadata-first-v1';
   var MANUAL_RECOVERY_REVISION = '20261007-manual-resume-v1';
@@ -664,9 +665,10 @@ function embeddedJobDois(value) {
     var doi = normalizeDoi(job && job.doi);
     var publisher = String(job && job.publisher || publisherForDoi(doi));
     var suffix = doi.split('/')[1] || '';
-    var figureJob = Boolean(job && (job.captureFigures === true || job.captureEvidence === true))
+    var figureJob = Boolean(job && (job.captureFigures === true || job.captureEvidence === true
+      || job.opportunisticFigures === true || job.opportunisticEvidence === true))
       || String(job && job.mediaNeed || '').indexOf('figures') >= 0
-      || String(job && job.mediaNeed || '') === 'evidence'
+      || String(job && job.mediaNeed || '').indexOf('evidence') >= 0
       || String(job && job.state || '') === 'figure_gap';
     if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'wiley') return 'https://onlinelibrary.wiley.com/doi/' + (figureJob ? 'full/' : '') + doi;
@@ -680,7 +682,10 @@ function embeddedJobDois(value) {
     if (publisher === 'ccs') return 'https://www.chinesechemsoc.org/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'rsc') {
       var rsc = /^([a-z])(\d)([a-z]{2})/i.exec(suffix);
-      if (rsc) return 'https://pubs.rsc.org/en/content/articlelanding/' + String(2020 + Number(rsc[2])) + '/' + rsc[3].toLowerCase() + '/' + suffix.toLowerCase();
+      if (rsc) {
+        var rscBase='https://pubs.rsc.org/en/content/';
+        return rscBase+(figureJob?'articlehtml/':'articlelanding/')+String(2020 + Number(rsc[2])) + '/' + rsc[3].toLowerCase() + '/' + suffix.toLowerCase();
+      }
     }
     return 'https://doi.org/' + doi;
   }
@@ -765,9 +770,10 @@ function embeddedJobDois(value) {
       return base;
     }
     if (publisher === 'rsc') {
-      var wantsFull=Boolean(job && (job.captureFigures===true||job.captureEvidence===true))
+      var wantsFull=Boolean(job && (job.captureFigures===true||job.captureEvidence===true
+        || job.opportunisticFigures===true||job.opportunisticEvidence===true))
         || String(job&&job.mediaNeed||'').indexOf('figures')>=0
-        || String(job&&job.mediaNeed||'')==='evidence';
+        || String(job&&job.mediaNeed||'').indexOf('evidence')>=0;
       var htmlUrl=wantsFull?rscArticleHtmlUrl(job):'';
       if(htmlUrl){
         try{
@@ -1086,14 +1092,14 @@ function embeddedJobDois(value) {
     return 7;
   }
 
-  var FIGURE_ONE_QUEUE_POLICY_REVISION = '20261007-nature-science-figure1-complete-v1';
+  var FIGURE_ONE_QUEUE_POLICY_REVISION = '20261008-verified-figure1-complete-v2';
   function isNatureScienceFamilyJob(job) {
     var journal = String(job && job.journal || '').trim();
     return journal === 'Nature' || journal === 'Science'
       || /^Nature\s+/i.test(journal) || /^Science\s+/i.test(journal);
   }
-  function natureScienceFigureOneSatisfiesQueue(job, hasFigureOne) {
-    return Boolean(hasFigureOne && isNatureScienceFamilyJob(job));
+  function verifiedFigureOneSatisfiesQueue(job, hasFigureOne) {
+    return Boolean(hasFigureOne);
   }
 
   function captureQueueTier(job, latestAddedDate) {
@@ -3055,8 +3061,13 @@ function embeddedJobDois(value) {
   }
 
   function evidenceArticleUrl(job) {
-    // Evidence identity must use a DOI-bearing canonical URL. ACS Silverchair
-    // article routes can be fully loaded while omitting the DOI from location.href.
+    var publisher=String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)));
+    if(publisher==='elsevier'){
+      var live=evidenceSourceUrl();
+      if(publisherArticleHostAllowed('elsevier',live))return live;
+      var resolved=String(job&&job.resolvedArticleUrl||'').split('#')[0];
+      if(publisherArticleHostAllowed('elsevier',resolved))return resolved;
+    }
     return articleUrl(job);
   }
 
@@ -4438,6 +4449,7 @@ function embeddedJobDois(value) {
     var inspectFigures=Boolean(figureKnown&&expected===0&&knownCount>0);
     // A nonzero figure count alone is NOT proof that all body figures were captured.
     var needFigures=figureKnown&&(expected>0?knownCount<expected:true);
+    var explicitFigureGap=expected>0&&knownCount<expected;
     var text=inventory.evidenceMap.get(doi);
     var textLevel=text&&text.available!==false?String(text.evidenceLevel||'unknown'):'';
     if(!textLevel){
@@ -4448,10 +4460,9 @@ function embeddedJobDois(value) {
     if(!tocKnown)unknown.push('TOC');
     if(!figureKnown)nonQueueUnknown.push('正文图完整度');
     if(!inventory.evidenceKnown&&!textLevel)nonQueueUnknown.push('文本');
-    // Nature/Science-family articles commonly have no separate publisher TOC graphic.
-    // Once a verified Figure 1 fallback is already stored, do not keep reopening the
-    // publisher page solely to search for a non-existent official TOC.
-    var figureOneCompletesQueue=natureScienceFigureOneSatisfiesQueue(raw,fallback);
+    // A verified Figure 1 fallback is accepted as the card's primary visual for
+    // every journal; it does not need a later official-TOC replacement.
+    var figureOneCompletesQueue=verifiedFigureOneSatisfiesQueue(raw,fallback);
     var tocNeeded=tocKnown&&!productionOfficial&&!figureOneCompletesQueue;
     var pdfNeeded=privatePdfQueueNeeded(raw,Date.now(),true);
     var bundleVisit=Boolean(recentFullCaptureEligible(raw)&&(tocNeeded||pdfNeeded));
@@ -4461,16 +4472,16 @@ function embeddedJobDois(value) {
       // acquisition gap, use that same authenticated visit to collect body
       // figures and full-text evidence as well. These companion layers do not
       // create a standalone visit by themselves.
-      captureFigures:false,
+      captureFigures:Boolean(explicitFigureGap),
       captureEvidence:false,
       opportunisticFigures:Boolean(bundleVisit||(tocNeeded&&needFigures)),
-      opportunisticEvidence:Boolean(bundleVisit&&textLevel!=='complete'||tocNeeded&&inventory.evidenceKnown&&!textLevel),
+      opportunisticEvidence:Boolean((bundleVisit||(recentFullCaptureEligible(raw)&&explicitFigureGap))&&textLevel!=='complete'||tocNeeded&&inventory.evidenceKnown&&!textLevel),
       capturePrivatePdf:Boolean(pdfNeeded||(bundleVisit&&privatePdfLease())),
       expectedFigureCount:expected,figureCoverageUnconfirmed:Boolean(tocNeeded&&inspectFigures),missingFigureCount:expected>0?Math.max(0,expected-knownCount):0,
       capturedFigures:figs,existingEvidenceLevel:textLevel,existingTocKind:productionOfficial?'official':localOfficial?'official_local':fallback?'figure1':'',
       unknownNeeds:unknown,nonQueueUnknownNeeds:nonQueueUnknown,allowFigureOne:Boolean(tocNeeded&&!official&&!fallback&&isNatureScienceFamilyJob(raw))});
     job.mediaNeed=captureMediaNeed(job);
-    job.state=job.captureToc?'no_visual':'private_pdf_gap';
+    job.state=job.captureToc?'no_visual':job.captureFigures?'figure_gap':job.captureEvidence?'evidence_gap':'private_pdf_gap';
     return job;
   }
   function buildMissingCaptureJobs(queue,run,rawInventory) {
@@ -4482,7 +4493,7 @@ function embeddedJobDois(value) {
     var jobs=[],unknownDois=0,unknownLayers={toc:0,figures:0,evidence:0};
     rows.forEach(function(raw){var job=missingCaptureDecision(raw,inventory);if(job.unknownNeeds.length)unknownDois++;
       job.unknownNeeds.forEach(function(n){unknownLayers[n==='TOC'?'toc':n==='文本'?'evidence':'figures']++;});
-      if(job.captureToc||job.capturePrivatePdf){job.manualRunId=run.id;jobs.push(job);}
+      if(job.captureToc||job.captureFigures||job.captureEvidence||job.capturePrivatePdf){job.manualRunId=run.id;jobs.push(job);}
     });
     jobs.sort(compareMissingCaptureJobs);
     if(run.summary){run.summary.inventoryUnknown=unknownDois;run.summary.inventoryUnknownLayers=unknownLayers;run.summary.inventoryErrors=(inv.errors||[]).slice();run.summary.inventoryReadAt=inv.readAt||'';}
@@ -4541,8 +4552,8 @@ function embeddedJobDois(value) {
     return reasons.concat(((result.figures||{}).items||[]).filter(function(f){return f.status==='failed';}).map(function(f){return f.reason;})).filter(Boolean).join(';');
   }
   function coverageJobNeeds(job) {
-    if(job&&job.captureToc===true&&natureScienceFigureOneSatisfiesQueue(job,job.existingTocKind==='figure1'))job.captureToc=false;
-    job.mediaNeed=[job.captureToc?'toc':'',job.capturePrivatePdf?'pdf':''].filter(Boolean).join('+');
+    if(job&&job.captureToc===true&&verifiedFigureOneSatisfiesQueue(job,job.existingTocKind==='figure1'))job.captureToc=false;
+    job.mediaNeed=captureMediaNeed(job);
     return job;
   }
   function coverageMergePlan(run,jobs) {

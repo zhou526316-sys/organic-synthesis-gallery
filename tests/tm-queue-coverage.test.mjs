@@ -105,8 +105,8 @@ await test('Retry-After on HTML503 is preserved, not bypassed',async()=>{
 await test('private evidence inventory401 does not block the queue',async()=>{
  const ar=[article(1)],x=h(queue(ar),inv(ar),{evidenceError:true});await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(s.inventoryUnknown,0);assert.equal(s.phase,'all_resolved');assert.equal(x.opened.length,0);
 });
-await test('body figure completion alone does not open a publisher tab',async()=>{
+await test('explicit body figure gap opens one publisher task and resolves on completion',async()=>{
  const ar=[article(1)],i=inv(ar);i.figures.items[0].expectedFigureCount=3;let n=0;
- const x=h(queue(ar),i,{result:j=>{n++;return {figures:{discovered:3,stored:3,failed:0,items:[{...fig(j.doi,3),status:'staged'}]}}}});await x.T.forceStartFromHead();assert.equal(n,0);assert.equal(x.store.get(P+'last-run-summary').total,0);
+ const x=h(queue(ar),i,{result:j=>{n++;return {status:'success',toc:{status:'already_available'},figures:{discovered:3,stored:3,failed:0,items:[{...fig(j.doi,3),status:'staged'}]},fulltext:{status:'not_requested'}}}});await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(n,1);assert.equal(s.total,1);assert.equal(s.fullyResolved,1);assert.equal(s.unresolvedCount,0);
 });
 console.log(JSON.stringify({passed,revision:'20261005-queue-coverage-v7',realPublisherRequests:0,productionWrites:0}));
