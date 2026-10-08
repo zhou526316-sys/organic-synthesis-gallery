@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { TARGET_JOURNALS, effectiveJournalStart } from '../shared/literature-journals.js';
+import { isStandaloneRepositoryDoi } from './lib/literature-doi-provenance.mjs';
 
 const auditSource = await readFile(new URL('../cloudflare/scripts/audit-literature.mjs', import.meta.url), 'utf8');
 
@@ -69,6 +70,17 @@ assert.ok(auditSource.includes('blocked-historical-coverage-loss'), 'Known DOI d
 assert.ok(auditSource.includes('closureHistoricalCoverageLosses.length === 0'), 'verifiedThrough eligibility must require zero closure-day historical DOI losses');
 assert.ok(auditSource.includes('.map(compactCandidate)'), 'All unresolved DOI differences must flow into review output');
 assert.ok(!auditSource.includes('.filter(retainForReview)'), 'Keyword screening must not silently remove DOI differences from review');
+
+
+// Regression: a review-file journal label cannot turn a standalone Zenodo
+// repository DOI into a missing primary journal article; real journal DOI
+// disappearance remains covered by the historical DOI safety guard.
+assert.equal(isStandaloneRepositoryDoi('10.5281/zenodo.23098201'), true);
+assert.equal(isStandaloneRepositoryDoi('10.5281/ZENODO.23098201'), true);
+assert.equal(isStandaloneRepositoryDoi('10.1038/s41467-026-78459-z'), false);
+assert.equal(isStandaloneRepositoryDoi('10.1021/jacs.6c14748'), false);
+assert.ok(auditSource.includes('isStandaloneRepositoryDoi(item.doi)'), 'Non-journal provenance must be assessed within historical loss detection');
+assert.ok(auditSource.includes('historicalNonJournalRecords,'), 'Historical non-journal corrections must remain auditable');
 
 console.log(JSON.stringify({
   targetJournals: TARGET_JOURNALS.length,

@@ -5,6 +5,7 @@ import { isExcludedDoi } from '../../shared/literature-policy.js';
 import { TARGET_JOURNALS, effectiveJournalStart } from '../../shared/literature-journals.js';
 
 import { loadScopeCorrections, withScopeCorrections } from '../../scripts/lib/scope-corrections.mjs';
+import { isStandaloneRepositoryDoi } from '../../scripts/lib/literature-doi-provenance.mjs';
 
 const TIME_ZONE = 'Asia/Shanghai';
 
@@ -454,10 +455,25 @@ const universe = [...merged.values()].filter(c => {
   return c.date >= effectiveStart || (sourceDiscovered && c.date >= rescueStart) || createdInQuery;
 });
 const universeDoiSet = new Set(universe.map(candidate => normalizeDoi(candidate.doi)));
+// Review-file journal labels are not proof that a DOI belongs to that journal.
+// A Zenodo repository DOI accidentally attributed to Nature Communications in a
+// historical review must not masquerade as a missing Nature Communications paper.
+// Record these provenance corrections separately rather than silently dropping them.
+const historicalNonJournalRecords = [];
 const historicalCoverageLosses = [...reviewedHistory.values()].filter(item => {
   if (!item.date || !/^\d{4}-\d{2}-\d{2}$/.test(item.date)) return false;
   if (item.date < RESCUE_START || item.date > END) return false;
   if (isExcludedDoi(item.doi)) return false;
+  if (isStandaloneRepositoryDoi(item.doi)) {
+    if (!universeDoiSet.has(item.doi)) {
+      historicalNonJournalRecords.push({
+        doi: item.doi, reportedJournal: item.journal, date: item.date,
+        reviewFile: item.reviewFile,
+        reason: 'standalone_zenodo_repository_doi_not_target_journal_article',
+      });
+    }
+    return false;
+  }
   const journal = JOURNAL_BY_NAME.get(item.journal);
   if (journal?.activeFrom && item.date < journal.activeFrom) return false;
   return !universeDoiSet.has(item.doi);
@@ -635,6 +651,7 @@ const report = {
     sourceCoverageAnomalies: sourceCoverageAnomalies.length,
     closureCoverageAnomalies: closureCoverageAnomalies.length,
     historicalCoverageLosses: historicalCoverageLosses.length,
+    historicalNonJournalRecords: historicalNonJournalRecords.length,
     unresolved: missing.length,
     scopeCorrectionsPending: missing.filter(candidate => candidate.scopeCorrection).length,
     excludedByPolicy: excludedUniverse.length,
@@ -660,6 +677,7 @@ const report = {
   sourceCoverageAnomalies,
   closureCoverageAnomalies,
   historicalCoverageLosses,
+  historicalNonJournalRecords,
   sourceStats: stats,
   missingCandidates,
   potentialGaps,
