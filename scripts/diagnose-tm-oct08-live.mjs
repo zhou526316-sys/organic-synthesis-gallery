@@ -28,10 +28,11 @@ async function jsonEndpoint(path, options, cap=6_000_000){
   }
   return {error:last||'unavailable'};
 }
-const [production,captures,diagnostics]=await Promise.all([
+const [production,captures,diagnostics,reports]=await Promise.all([
   jsonEndpoint('/api/media/inventory',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({dois,readOnly:true})}),
   jsonEndpoint('/api/media/local-capture-index?diagnose='+Date.now(),{method:'GET'}),
-  jsonEndpoint('/api/media/local-diagnostics?diagnose='+Date.now(),{method:'GET'})
+  jsonEndpoint('/api/media/local-diagnostics?diagnose='+Date.now(),{method:'GET'}),
+  jsonEndpoint('/api/media/tampermonkey-reports?limit=200&diagnose='+Date.now(),{method:'GET'})
 ]);
 const prod=new Map((production.data?.items||[]).map(x=>[String(x.doi||'').toLowerCase(),x]));
 const tocIndex=new Map();
@@ -43,6 +44,7 @@ for(const rec of captures.data?.items||[]){
  }
 }
 const receipt=(diagnostics.data?.traces||[]).filter(t=>dois.includes(String(t.doi||'').toLowerCase()));
+const reportsMap=new Map((reports.data?.items||[]).map(r=>[String(r.doi||'').toLowerCase(),r]));
 const byDoi=new Map();
 for(const t of receipt){
  const doi=String(t.doi||'').toLowerCase(),arr=byDoi.get(doi)||[];
@@ -61,7 +63,10 @@ const rows=target.map(p=>{
    figure1Stored:m.figureOneStored===true,
    figureCount:Number(m.figureCount||0),
    localTocReceipts:idx.filter(z=>z.hasUrl&&z.hasHash).length,
-   lastCapture:traces[0]||null
+   lastCapture:traces[0]||null,
+   reportStatus:String(reportsMap.get(p.doi)?.status||''),
+   reportReason:String(reportsMap.get(p.doi)?.reason||reportsMap.get(p.doi)?.lastFailureReason||'').slice(0,130),
+   reportAttempts:Number(reportsMap.get(p.doi)?.attemptCount||0)
  };
 });
 const summary={
@@ -76,7 +81,9 @@ const summary={
  noProductionVisual:rows.filter(x=>!(x.tocStored||x.figure1Stored||x.primaryKind)).length,
  stagedMainVisual:rows.filter(x=>x.localTocReceipts>0).length,
  reportedCaptureTraces:rows.filter(x=>x.lastCapture).length,
- errors:{production:production.error||'',captures:captures.error||'',diagnostics:diagnostics.error||''},
+ reportedCaptureIndex:rows.filter(x=>x.reportStatus||x.reportAttempts).length,
+ reportedFailures:rows.filter(x=>/^(?:failed|partial|blocked)$/i.test(x.reportStatus)).length,
+ errors:{production:production.error||'',captures:captures.error||'',diagnostics:diagnostics.error||'',reports:reports.error||''},
  readOnly:true,publisherRequests:0,productionWrites:0
 };
 const report={summary,rows};
