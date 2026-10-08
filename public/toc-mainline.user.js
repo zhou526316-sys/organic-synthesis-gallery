@@ -4508,7 +4508,45 @@ function embeddedJobDois(value) {
     }catch(_){}
   }
   function inventoryComplete(inv) {
-    return Boolean(inv&&inv.media&&inv.tocs&&inv.figures&&inv.evidence&&!(inv.errors||[]).length);
+    return Boolean(inv&&inv.media&&inv.tocs&&inv.figures&&inv.evidence&&inv.pdf&&inv.pdf.complete===true&&!(inv.errors||[]).length);
+  }
+  function privatePdfServerStatus(map,doi) {
+    var row=map&&map.get(normalizeDoi(doi));
+    return row&&/^(?:ready|pending|failed|missing)$/.test(String(row.status||''))?row.status:'unknown';
+  }
+  async function readOwnerPdfInventory(articles,run) {
+    var eligible=(articles||[]).filter(recentFullCaptureEligible),started=Date.now();
+    var dois=eligible.map(function(x){return normalizeDoi(x.doi);}).filter(Boolean);
+    var lease=privatePdfLease();
+    if(!dois.length){updateInventoryProgress(run,'pdf','done',started,'scope_empty');return {schemaVersion:'private-pdf-capture-inventory-v1',complete:true,count:0,items:[],unknown:0};}
+    if(!lease){updateInventoryProgress(run,'pdf','error',started,'owner_lease_missing');return {complete:false,items:[],unknown:dois.length,reason:'owner_lease_missing'};}
+    updateInventoryProgress(run,'pdf','loading',started,'read_only;scope='+dois.length);
+    var batches=[];for(var i=0;i<dois.length;i+=75)batches.push(dois.slice(i,i+75));
+    var all=await Promise.all(batches.map(async function(batch){
+      try{
+        var response=await inventoryReadMetadataJson({method:'POST',url:PRIVATE_PDF_INVENTORY_ENDPOINT,
+          timeout:16000,headers:{'content-type':'application/json',authorization:'Bearer '+lease.token},
+          data:JSON.stringify({dois:batch})},'owner_pdf_inventory');
+        var items=Array.isArray(response&&response.items)?response.items:[];
+        if(response.schemaVersion!=='private-pdf-capture-inventory-v1'||response.complete!==true
+          ||Number(response.count)!==batch.length||items.length!==batch.length)throw new Error('owner_pdf_inventory_incomplete');
+        var found=new Map(items.map(function(item){return [normalizeDoi(item.doi),item];}));
+        if(found.size!==batch.length||batch.some(function(d){return !found.has(d)
+          ||!(/^(?:ready|pending|failed|missing)$/.test(String(found.get(d).status||'')));}))
+          throw new Error('owner_pdf_inventory_invalid_rows');
+        return {items:items};
+      }catch(error){
+        return {items:[],error:captureLiveError(error&&error.message||error)};
+      }
+    }));
+    var items=[],errors=[];
+    all.forEach(function(part,index){items=items.concat(part.items||[]);
+      if(part.error)errors.push('PDF库存第'+(index+1)+'批:'+part.error);});
+    var complete=errors.length===0&&items.length===dois.length;
+    updateInventoryProgress(run,'pdf',complete?'done':'error',started,'rows='+items.length+'/'+dois.length);
+    return {schemaVersion:'private-pdf-capture-inventory-v1',complete:complete,
+      count:items.length,items:items,unknown:dois.length-items.length,errors:errors,
+      reason:errors[0]||''};
   }
   async function readMissingCaptureInventory(queue,run) {
     var errors=[],mediaRows=[],cache=run?(run.inventoryCache||(run.inventoryCache=new Map())):new Map();
@@ -4574,9 +4612,11 @@ function embeddedJobDois(value) {
         function(x){return x&&x.schemaVersion==='capture-inventory-v1'&&x.complete===true&&Array.isArray(x.items)&&x.items.length===Number(x.count);},'figures',2),
       safe('文本库存','evidence',function(){return inventoryReadMetadataJson({method:'GET',url:EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,
         headers:{authorization:'Bearer '+String(writeToken()||'')}},'private');},
-        function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count)&&x.truncated!==true;},'evidence',2)
+        function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count)&&x.truncated!==true;},'evidence',2),
+      readOwnerPdfInventory(queue.articles,run)
     ]);
-    return {media:all[0],tocs:all[1],figures:all[2],evidence:all[3],errors:errors,readAt:nowIso()};
+    if(!all[4].complete&&all[4].reason&&all[4].reason!=='owner_lease_missing')errors.push(all[4].reason);
+    return {media:all[0],tocs:all[1],figures:all[2],evidence:all[3],pdf:all[4],errors:errors,readAt:nowIso()};
   }
   function missingCaptureDecision(raw,inventory) {
     var doi=normalizeDoi(raw.doi),media=inventory.mediaMap.get(doi),stage=inventory.figureMap.get(doi)||{};
@@ -5605,6 +5645,8 @@ function embeddedJobDois(value) {
   var PRIVATE_PDF_UPLOAD_REVISION = '20261007-pdf-upload-budget-v1';
   var PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01';
   var PRIVATE_PDF_CAPTURE_ENDPOINT = WORKER + '/api/private-pdf/import';
+  var PRIVATE_PDF_INVENTORY_ENDPOINT = WORKER + '/api/private-pdf/capture-inventory';
+  var PDF_SERVER_INVENTORY_REVISION = '20261008-owner-d1-lease-inventory-v1';
   var PRIVATE_PDF_LEASE_KEY = P + 'private-pdf-capture-lease-v1';
   var PRIVATE_PDF_ATTEMPT_PREFIX = P + 'private-pdf-attempt-v2:';
   var PRIVATE_PDF_MAX_BYTES = 60 * 1024 * 1024;
