@@ -30,6 +30,19 @@ const API_BASE = 'https://api.gczhouwld.com';
 // Same deployed owner Worker, used only if the canonical API is unusually slow.
 // Never accept arbitrary redirects or a file URL from an unlisted host.
 const API_BACKUP = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
+// Independent Tencent DNS-only ingress, activated only after real acceptance.
+const API_TENCENT = 'https://pdf.gczhouwld.com';
+async function tencentGatewayEnabled() {
+  try {
+    const response = await fetch('/pdf-gateway-routing.json', {
+      cache: 'no-store', credentials: 'same-origin', signal: AbortSignal.timeout(1200),
+    });
+    if (!response.ok) return false;
+    const data = await response.json();
+    return data?.schemaVersion === 1 && data?.enabled === true &&
+      data?.origin === API_TENCENT;
+  } catch { return false; }
+}
 const OPEN_HEDGE_DELAY_MS = 3_500;
 const OPEN_TOTAL_TIMEOUT_MS = 15_000;
 const ASSET_BASE = '/pdf-vault-assets/6.4.299/';
@@ -170,7 +183,7 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
   const route = document.documentElement.dataset.privatePdfAuthorizePath || '';
   diagnostic.textContent = `阶段：${phase} · ${detail || 'unknown'} · ${(elapsed / 1000).toFixed(1)}s` +
     (timingDetails.length ? ' · ' + timingDetails.join(' · ') : '') +
-    (['primary', 'backup', 'both-failed'].includes(route) ? ` · 授权线路:${route}` : '');
+    (['primary', 'backup', 'tencent', 'both-failed'].includes(route) ? ` · 授权线路:${route}` : '');
   status.appendChild(diagnostic);
   if (['pdf_authorize_timeout','pdf_authorize_network_error'].includes(detail)) {
     const attempts = document.documentElement.dataset.privatePdfAuthAttempts || '';
@@ -343,16 +356,17 @@ async function fetchAuthorizedSource(origin, sessionToken, mode, controller, onH
 }
 
 async function getPdfSource(sessionToken, mode = 'view') {
-  const origins = [API_BASE, API_BACKUP];
+  const tencentReady = await tencentGatewayEnabled();
+  const origins = [API_BASE, API_BACKUP, ...(tencentReady ? [API_TENCENT] : [])];
   const controllers = origins.map(() => new AbortController());
   document.documentElement.dataset.privatePdfAuthorizePath = '';
-  let hedgeTimer = null, deadlineTimer = null;
-  let backupStarted = false, pending = 0, finished = false;
+  let hedgeTimer = null, tencentTimer = null, deadlineTimer = null;
+  let backupStarted = false, tencentStarted = false, pending = 0, finished = false;
   const errors = [];
-  const attempts = [
-    { label: 'primary', started: 0, elapsed: 0, result: '未发起', stages: '' },
-    { label: 'backup', started: 0, elapsed: 0, result: '未发起', stages: '' },
-  ];
+  const attempts = origins.map((_, i) => ({
+    label: ['primary','backup','tencent'][i], started: 0, elapsed: 0,
+    result: '未发起', stages: '',
+  }));
   const saveAttempts = () => {
     const at = performance.now();
     document.documentElement.dataset.privatePdfAuthAttempts = attempts.map(a => {
@@ -368,6 +382,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
       if (finished) return;
       finished = true;
       if (hedgeTimer !== null) clearTimeout(hedgeTimer);
+      if (tencentTimer !== null) clearTimeout(tencentTimer);
       if (deadlineTimer !== null) clearTimeout(deadlineTimer);
       document.documentElement.dataset.privatePdfAuthorizePath = route ||
         (error ? 'both-failed' : '');
@@ -377,8 +392,10 @@ async function getPdfSource(sessionToken, mode = 'view') {
       else resolve(value);
     };
     const launch = index => {
-      if (finished || (index === 1 && backupStarted)) return;
+      if (finished || (index === 1 && backupStarted) ||
+          (index === 2 && tencentStarted)) return;
       if (index === 1) backupStarted = true;
+      if (index === 2) tencentStarted = true;
       const attempt = attempts[index];
       attempt.started = performance.now();
       attempt.result = '等待';
@@ -388,7 +405,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
         .then(source => {
           attempt.elapsed = Math.round(performance.now() - attempt.started);
           attempt.result = '完成';
-          finish(source, null, index === 0 ? 'primary' : 'backup');
+          finish(source, null, attempts[index].label);
         })
         .catch(error => {
           if (finished) return;
@@ -413,14 +430,21 @@ async function getPdfSource(sessionToken, mode = 'view') {
             launch(1);
           }
           if (pending === 0 && backupStarted) {
-            const status = errors.find(e => /^open_http_(5\d\d|429)$/.test(e?.message || ''));
-            finish(null, new Error(status?.message || 'pdf_authorize_network_error'));
+            // Do not finish before the independent path has had a chance to
+            // respond. Real authorization is still checked by Cloudflare.
+            if (tencentReady && !tencentStarted) launch(2);
+            else {
+              const status = errors.find(e =>
+                /^open_http_(5\d\d|429)$/.test(e?.message || ''));
+              finish(null, new Error(status?.message || 'pdf_authorize_network_error'));
+            }
           }
         });
     };
     deadlineTimer = setTimeout(() => finish(null, new Error('pdf_authorize_timeout')),
       OPEN_TOTAL_TIMEOUT_MS);
     hedgeTimer = setTimeout(() => launch(1), OPEN_HEDGE_DELAY_MS);
+    if (tencentReady) tencentTimer = setTimeout(() => launch(2), 1_800);
     launch(0);
   });
 
