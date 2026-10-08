@@ -833,12 +833,12 @@ export async function importLocalCapture(request, env, payload) {
       };
     }
     productionToc = promoted.body;
-  } else if (/^10\.(?:1038|1126)\//.test(doi) && image.contentType !== 'image/svg+xml') {
+  } else if (kind === 'figure1' && image.contentType !== 'image/svg+xml') {
     const promoted = await importPrimaryVisual(request, env, {
       doi,
       kind: 'figure1',
       imageData,
-      source: 'tampermonkey_nature_science_figure1_rescue',
+      source: /^10\.(?:1038|1126)\//.test(doi) ? 'tampermonkey_nature_science_figure1_rescue' : 'tampermonkey_verified_figure1_fallback',
       sourceUrl: payload.sourceUrl,
       articleUrl: payload.articleUrl,
       caption: payload.caption || 'Figure 1 fallback',
@@ -874,7 +874,7 @@ export async function importLocalCapture(request, env, payload) {
       stored: true,
       localStored: true,
       productionTocStored: kind === 'official' ? true : false,
-      productionFallbackStored: kind === 'figure1' && /^10\.(?:1038|1126)\//.test(doi) ? Boolean(productionFallback) : false,
+      productionFallbackStored: kind === 'figure1' ? Boolean(productionFallback) : false,
       doi,
       kind,
       contentHash: hash.slice(0, 32),
