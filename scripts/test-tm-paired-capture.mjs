@@ -78,7 +78,7 @@ try{
  const before=posts.length;
  await page.evaluate(()=>{Object.keys(__gm).filter(k=>k.includes('verified-capture:')).forEach(k=>delete __gm[k]);__gm['osg-toc-v6:active-job'].captureToc=true;document.querySelector('#graphicalAbstract').remove();});
  const partial=await page.evaluate(async()=>__captureTest.runPublisherJob(__gm['osg-toc-v6:active-job']));
- test('missing TOC may still capture body opportunistically but remains a failed TOC obligation',partial.figuresStaged===2&&partial.toc.status==='not_found'&&partial.status==='failed');
+ test('missing TOC still captures body opportunistically without claiming overall success',partial.figuresStaged===2&&partial.toc.status==='not_found'&&partial.status==='partial');
  test('body still receives two storage receipts without TOC',posts.slice(before).filter(r=>r.url.endsWith('/stage')).length===2);
  await page.evaluate(()=>{__gm['osg-toc-v6:active-job'].jobId='old-task-must-not-bind';});
  let rejected=false;try{await page.evaluate(({doi,jobId})=>__captureTest.runPublisherJob({doi,jobId,captureVersion:'6.2.20'}),{doi,jobId});}catch(_){rejected=true;}
