@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { gunzipSync, gzipSync } from 'node:zlib';
 import { chineseTitle, validChineseTitle } from '../shared/chinese-title-overrides.js';
 import { loadScopeCorrections } from './lib/scope-corrections.mjs';
+import { applyApprovedPublicationDateCorrections } from './lib/approved-publication-date-corrections.mjs';
 import path from 'node:path';
 import { isExcludedDoi } from '../shared/literature-policy.js';
 
@@ -109,6 +110,19 @@ for (const row of bundle.formalReview.accepted || []) {
   if (row.totalSynthesis === true) { card.totalSynthesis = true; card.cardLabel = row.cardLabel || 'Total Synthesis'; }
   byDoi.set(doi, card);
 }
+// User-approved publisher-date fixes are applied only here, inside the same
+// authorized 08:00 atomic literature transaction as the release marker.
+// The formal review remains an immutable record of the original source data.
+let approvedDateCorrections = { schemaVersion: 1, corrections: [] };
+try {
+  approvedDateCorrections = await readJson('audit/approved-publication-date-corrections.json');
+} catch (error) {
+  if (error?.code !== 'ENOENT') throw error;
+}
+const dateCorrectionResult = applyApprovedPublicationDateCorrections(byDoi, approvedDateCorrections, slot);
+if (dateCorrectionResult.conflicts) {
+  console.error('APPROVED_PUBLISHER_DATE_CORRECTION_CONFLICT ' + JSON.stringify(dateCorrectionResult.reports.filter(row => row.status === 'conflict')));
+}
 const forbidden = new Set([...(bundle.markerFields.rejectedDois || []), ...(bundle.markerFields.deferredDois || [])].map(normalizeDoi));
 for (const doi of forbidden) byDoi.delete(doi);
 const rollingOut = {
@@ -160,6 +174,7 @@ const result = {
   reviewed: bundle.formalReview.summary.reviewed, accepted: bundle.formalReview.summary.accepted,
   rejected: bundle.formalReview.summary.rejected, pending: bundle.formalReview.summary.pending,
   productionCards: productionDois.size, publishableDois: bundle.markerFields.publishableDois,
+  approvedPublicationDateCorrections: dateCorrectionResult,
   deferredDois: bundle.markerFields.deferredDois, formalReviewFile: formalPath,
   formalReviewBlobSha: bundle.markerFields.reviewBlobSha, pendingQueueFile: queuePath,
   pendingQueueBlobSha: bundle.markerFields.pendingQueueBlobSha,
