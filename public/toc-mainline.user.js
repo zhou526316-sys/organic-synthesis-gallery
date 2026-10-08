@@ -4155,7 +4155,16 @@ function embeddedJobDois(value) {
   function retireStaleControllerState() {
     var active=GM_getValue(ACTIVE_JOB_KEY,null),lease=GM_getValue(LEASE_KEY,null),summary=GM_getValue(SUMMARY_KEY,{})||{};
     var observed=String(active&&active.controllerRevision||lease&&lease.controllerRevision||summary.controllerRevision||'');
-    if(!observed||observed===CONTROLLER_REVISION)return {retired:false,observed:observed};
+    var observedInstall=String(active&&active.installRevision||lease&&lease.installRevision||'');
+    var oldManual=GM_getValue(MANUAL_RUN_KEY,null);
+    var scopeStale=Boolean(oldManual&&!oldManual.completedAt&&summary.controllerRunId==='manual:'+oldManual.id
+      && summary.scopeRevision!==OCT1_SCOPE_QUEUE_REVISION);
+    var installStale=Boolean(observedInstall&&observedInstall!==INSTALL_REVISION);
+    if((!observed||observed===CONTROLLER_REVISION)&&!installStale&&!scopeStale)
+      return {retired:false,observed:observed};
+    // The old controller may still use the same capture protocol/revision but
+    // an earlier install can dispatch all-history tasks. Retire its lease and
+    // bound job once, preserving all published bytes and verified checkpoints.
     var doi=normalizeDoi(active&&active.doi);
     if(active)GM_deleteValue(ACTIVE_JOB_KEY);
     if(doi){
