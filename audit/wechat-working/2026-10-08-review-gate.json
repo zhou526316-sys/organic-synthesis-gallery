@@ -1,6 +1,6 @@
 {
   "date": "2026-10-08",
-  "revision": "2026-10-08-r8",
+  "revision": "2026-10-08-r9",
   "articleCount": 2,
   "selectionDois": [
     "10.1021/jacs.6c14748",
@@ -9,14 +9,14 @@
   "textReview": "pass",
   "imageReview": "pass",
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-08-r8-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-08-r8-images-only.md"
+    "textOnly": "audit/wechat-working/2026-10-08-r9-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-08-r9-images-only.md"
   },
   "sources": [
     {
       "path": "public/wechat-featured/2026-10-08.json",
-      "blobSha": "8f3b60c7b7574ab1d5b65c59c4bd02c20c2efdd4",
-      "sha256": "c3bf995ec629f30519bf9240b4b32f2ea5cd72a1dca2124e78677917ebd6511b"
+      "blobSha": "b33b95db8abc64f379e0e9d9f61262dfd1590142",
+      "sha256": "1b6b65c98936645ebc5bce322b72245fe924aa97f0bf3fbf2a7d4bdfbd3c6dfb"
     },
     {
       "path": "public/wechat-retrospective/os1-multicentred-sulfur-20261008.json",
@@ -25,18 +25,18 @@
     },
     {
       "path": "public/wechat-editions/2026-10-08.json",
-      "blobSha": "3a7e41596759b2207da5251253711eeef90c1d1e",
-      "sha256": "b7a8a9307bfa266c408ec7a3fd184c6c9821a86cd222dbc3900793f22223a73e"
+      "blobSha": "17506314e453c715f48d8eaa232662c66bf2b3f9",
+      "sha256": "ea6be3ce46d619556ab17c18556f98fb66c55feafeb292367825682ae7854dcd"
     },
     {
-      "path": "audit/wechat-working/2026-10-08-r8-text-only.md",
-      "blobSha": "7f1d145d9de89d044f330cbe50c2cb2d5b79928d",
-      "sha256": "0a2a56b5568d706c3fb8df54bb3f0d40db770d769b1274483ec3d257bb76476f"
+      "path": "audit/wechat-working/2026-10-08-r9-text-only.md",
+      "blobSha": "cb24dd8cdb12c5f075066358951d3d8bf442b23c",
+      "sha256": "83a27b4be38ccb1114ab14f4059b6b02bcfd4b32329ffc0a4bb47882b17edb6e"
     },
     {
-      "path": "audit/wechat-working/2026-10-08-r8-images-only.md",
-      "blobSha": "05f3c04b58c8e8d90cd193730cf896dc52af59f9",
-      "sha256": "a0f0b9dececd273587e7f06fb0e2307632e01f57d231da088d2d5bc25d97eefe"
+      "path": "audit/wechat-working/2026-10-08-r9-images-only.md",
+      "blobSha": "488af3db2b9277b55c23b6e4ac4bc402a4fc49a8",
+      "sha256": "f68e7be36957afbfa98d353330b69d2b512654d59b0206eefcb8c6c86512b675"
     }
   ],
   "assets": [
@@ -181,9 +181,9 @@
       "height": 582
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-08-r7/jacs-cover-toc-large-no-label.png",
-      "blobSha": "1c70bbe1748c6d73d5bf3f2c423517626b1612a3",
-      "sha256": "84ba82ca0162ddb8d40d2faf28bcbba9608cb88dea2e6668cb5de3e123fb868e",
+      "path": "public/wechat-assets/reviewed/2026-10-08-r9/jacs-cover-original-toc-maxsafe.png",
+      "blobSha": "23be0be30254b634d1c582ae01a161ca6d76568c",
+      "sha256": "748e27fe5f8e0e12c0a1da9c6bb1e730c418e36d868dbc42b92007599f4cd873",
       "width": 1880,
       "height": 800
     },
@@ -354,5 +354,21 @@
     "secondArticle": "unchanged Nature Catalysis source and cover",
     "draftWrite": "pending single same-media draft/update and draft/get readback",
     "nativeMobileTitleLayout": "Requires actual client inspection; HTML readback checks full metadata title"
+  },
+  "reviewNotesR9": {
+    "nativeTitle": "有机合成文献日报｜10.08｜今日精选｜JACS：α-氯代烷基硼酸酯与偕二硼烷的立体选择性1,2-迁移重排",
+    "userRequest": "Further enlarge TOC and fully self-audit, no user correction cycle",
+    "originalSourceSha256": "1cd7a98d013038332724d3ff81cce2d7e97f82a0049c8b481108008cf401fbde",
+    "scaleIncreaseVsR8": {
+      "width": 1.0421,
+      "height": 1.0696
+    },
+    "cropQA": "pass: unchanged source artwork, intact 470x200 main and centered 1:1 crops",
+    "nativeTitleBand": "dark backing y514..799; two-line stress proof; R3 observed first glyph around y525",
+    "titleSimulationNotNativeScreenshot": true,
+    "textReview": "pass; complete prior native title unchanged",
+    "imageReview": "pass; original TOC unredrawn and 34 existing images source locked",
+    "otherArticleAndBody": "32 body figures + retro cover unchanged",
+    "draftWrite": "pending, must use original same-media draft only"
   }
 }

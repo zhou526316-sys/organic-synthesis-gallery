@@ -403,14 +403,14 @@
     },
     {
       "id": "jacs-cover",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-08-r7/jacs-cover-toc-large-no-label.png",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-r9/jacs-cover-original-toc-maxsafe.png",
       "caption": "",
       "body": false,
       "display_width_pct": 100,
       "source_figure": "Official paper graphical abstract",
       "source_doi": "10.1021/jacs.6c14748",
-      "source_kind": "original_verified_TOC_rescaled_without_header",
-      "source_adjustment": "User requested removing 今日精选·JACS banner. Original unchanged chemistry ROI from R3 source cropped (550,93,1330,565), background-only old-header ghost removed outside the chemical O center, uniformly scaled to 760x460, positioned (560,16). Solid low-saturation navy backing starts y492 for WeChat-native two-line white title. No invented atoms, bonds or conditions."
+      "source_kind": "authentic_paper_TOC_proportional_792x492_mobile_title_safe",
+      "source_adjustment": "Source-pixel R3 original chemistry crop (560,93,1320,565); removed only the old title remnants outside the red O group (background-only x<412 and x>=450,y<33 in crop); uniformly scaled to 792x492, placed (544,6). Native title backing starts y514, art ends y498; center-square crop preserves every label. Original scientific structures, bonds, arrows and data NOT AI redrawn."
     }
   ],
   "cover": {
@@ -422,8 +422,8 @@
     },
     "crop_235_1": "0_0_1_1",
     "crop_1_1": "0.287234_0_0.712766_1",
-    "description": "Source-verified original JACS TOC enlarged, without upper header. The native WeChat news title has been restored to the complete 有机合成文献日报｜10.08｜今日精选｜JACS：中文论文标题, while the authentic chemistry and solid navy native-title backing remain byte-identical to approved R7."
+    "description": "No upper 今日精选 banner. Original JACS TOC proportionally enlarged from 760x460 to 792x492 without clipping the 1:1 centered crop or crossing the actual native title-safe band y514. Complete Official Account title remains in article metadata: 有机合成文献日报｜10.08｜今日精选｜JACS：α-氯代烷基硼酸酯与偕二硼烷的立体选择性1,2-迁移重排"
   },
   "ai_notice": "“化之岛”基于JACS正文与作者Supporting Information整理，AI辅助查阅与图文编排，正式发布由运营者复核。全部化学结构、示意和数据均为原始来源的高清裁切，未使用生成式工具重绘。",
-  "editorialRevision": "2026-10-08-r8"
+  "editorialRevision": "2026-10-08-r9"
 }
