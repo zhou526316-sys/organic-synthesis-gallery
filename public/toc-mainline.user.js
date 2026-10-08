@@ -1790,6 +1790,111 @@ function embeddedJobDois(value) {
     return !status && /gm_then_fetch_failed|gm_request_error|Failed to fetch|NetworkError|timeout|AbortError/i.test(message);
   }
 
+  function pendingImageTransferKeys() {
+    try { return (typeof GM_listValues==='function'?GM_listValues():[])
+      .filter(function(k){return String(k).indexOf(IMAGE_OUTBOX_PREFIX)===0;}).slice(0,40); }
+    catch (_){return [];}
+  }
+  // Preserve locally captured public images after a transient upload failure.
+  // Private PDF bytes, credentials and authorization headers are never queued.
+  function retainImageForGalleryUpload(job,endpoint,payload,stage,error) {
+    if(!recentFullCaptureEligible(job)||controllerPaused()||!payload||!payload.imageData)return false;
+    if([CAPTURE_ENDPOINT,FIGURE_STAGE_ENDPOINT].indexOf(endpoint)<0||['r2_upload','figure_stage'].indexOf(stage)<0)return false;
+    if(Number(error&&error.httpStatus||0)>0||Number(error&&error.retryAfterMs||0)>0)return false;
+    var reason=String(error&&error.message||error||'');
+    if(!/gm_request_timeout|gm_request_error|gm_request_exception|failed to fetch|networkerror|timeout|budget_exhausted|transport_failed/i.test(reason)
+      ||/user_aborted|cancelled|stale|unbound|mismatch|blocked by the user|Refused to connect/i.test(reason))return false;
+    var doi=normalizeDoi(job.doi),identity=stage==='figure_stage'?String(payload.id||''):String(payload.kind||'');
+    if(!doi||!identity||normalizeDoi(payload.doi)!==doi||normalizeDoi(payload.pageDoi)!==doi
+      ||String(payload.captureVersion)!==VERSION||String(payload.jobId)!==String(job.jobId||''))return false;
+    var bytes=String(payload.imageData).length;
+    if(!/^data:image\/(?:png|jpe?g|webp|svg\+xml|gif);base64,/i.test(payload.imageData)||bytes<200||bytes>6000000)return false;
+    var key=IMAGE_OUTBOX_PREFIX+encodeURIComponent(doi)+'|'+stage+'|'+encodeURIComponent(identity);
+    try {
+      var keys=pendingImageTransferKeys(),occupied=keys.reduce(function(total,k){var p=GM_getValue(k,null);return total+Number(p&&p.bytes||0);},0);
+      var prev=GM_getValue(key,null);
+      if(prev&&String(prev.payload&&prev.payload.imageData||'').length>=bytes)return true;
+      if((!prev&&keys.length>=20)||occupied-Number(prev&&prev.bytes||0)+bytes>IMAGE_OUTBOX_CAP_BYTES)return false;
+      GM_setValue(key,{revision:'20261008-image-outbox-v1',doi:doi,addedDate:String(job.addedDate||''),
+        endpoint:endpoint,stage:stage,payload:payload,bytes:bytes,createdAt:Date.now(),attempts:0,nextAt:Date.now()+15000});
+      return true;
+    }catch(_){return false;}
+  }
+  function imageReplayReceiptMatches(row,receipt) {
+    if(!receipt||receipt.stored!==true||normalizeDoi(receipt.doi)!==row.doi)return false;
+    if(row.stage==='figure_stage')return receipt.staged===true&&receipt.id===row.payload.id&&Boolean(receipt.contentHash);
+    return receipt.kind===row.payload.kind&&Boolean(receipt.contentHash)
+      &&(row.payload.kind==='official'?receipt.productionTocStored===true:receipt.productionFallbackStored===true);
+  }
+  async function imageReplayAlreadyStored(row) {
+    try {
+      if(row.stage==='figure_stage'){
+        var packet=await getJson(WORKER+'/api/article-figures/staged?doi='+encodeURIComponent(row.doi));
+        return Boolean(packet&&Array.isArray(packet.items)&&packet.items.some(function(x){
+          return normalizeDoi(x.doi)===row.doi&&x.id===row.payload.id&&x.sourceUrl===row.payload.sourceUrl
+            &&Boolean(x.contentHash)&&Number(x.width||0)*Number(x.height||0)>=Number(row.payload.width||0)*Number(row.payload.height||0);
+        }));
+      }
+      var toc=await getJson(WORKER+'/api/toc?doi='+encodeURIComponent(row.doi));
+      if(!toc||toc.available!==true)return false;
+      var primary=String(toc.primary&&toc.primary.kind||''),reason=String(toc.reason||'');
+      return row.payload.kind==='official'
+        ? primary==='official_visual'||/^(?:primary_official_visual|cached)$/.test(reason)&&Boolean(toc.imageUrl)
+        : primary==='figure1'||/figure1_fallback/.test(reason);
+    }catch(_){return false;}
+  }
+  async function replayOneDeferredImage() {
+    if(!isGalleryPage()||imageOutboxBusy||GM_getValue(ACTIVE_JOB_KEY,null)||!writeToken())return false;
+    var keys=pendingImageTransferKeys();if(!keys.length)return false;
+    imageOutboxBusy=true;
+    var lockKey=P+'image-outbox-lock-v1',owner=CONTROLLER_ID+':image-replay',key='',row=null;
+    try{
+      var old=GM_getValue(lockKey,null);
+      if(old&&old.owner!==owner&&Number(old.expiresAt||0)>Date.now())return false;
+      GM_setValue(lockKey,{owner:owner,expiresAt:Date.now()+90000});
+      await sleep(80);
+      if((GM_getValue(lockKey,{})||{}).owner!==owner)return false;
+      keys.sort(function(a,b){return Number((GM_getValue(a,{})||{}).createdAt||0)-Number((GM_getValue(b,{})||{}).createdAt||0);});
+      key=keys.find(function(k){var v=GM_getValue(k,null);return v&&Number(v.nextAt||0)<=Date.now();})||'';
+      if(!key)return false;
+      row=GM_getValue(key,null);
+      if(!row||!row.payload||!row.payload.imageData||!row.doi||row.addedDate<RECENT_FULL_CAPTURE_CUTOFF
+        ||[CAPTURE_ENDPOINT,FIGURE_STAGE_ENDPOINT].indexOf(row.endpoint)<0
+        ||normalizeDoi(row.payload.doi)!==row.doi||normalizeDoi(row.payload.pageDoi)!==row.doi)return false;
+      // Never replay a DOI removed from the current admitted queue.
+      var queue=await getJson(QUEUE_URL+'?image-outbox='+Date.now());
+      if(!queue||!Array.isArray(queue.articles)||!queue.articles.some(function(j){
+        return normalizeDoi(j.doi)===row.doi&&recentFullCaptureEligible(j);
+      }))return false;
+      if(await imageReplayAlreadyStored(row)){GM_deleteValue(key);return true;}
+      // One browser-native POST from Gallery, not two racing publisher transports.
+      var receipt=await fetchPostJson(row.endpoint,row.payload,writeToken(),45000);
+      if(!imageReplayReceiptMatches(row,receipt))throw new Error('image_replay_receipt_unconfirmed');
+      GM_deleteValue(key);
+      GM_setValue(P+'image-outbox-last-receipt',{doi:row.doi,stage:row.stage,at:Date.now()});
+      return true;
+    }catch(error){
+      if(key&&row){
+        var active=GM_getValue(key,null);
+        if(active&&active.createdAt===row.createdAt){
+          active.attempts=Number(active.attempts||0)+1;
+          active.nextAt=Date.now()+Math.min(1800000,30000*Math.pow(2,Math.min(6,active.attempts-1)));
+          GM_setValue(key,active);
+        }
+      }
+      return false;
+    }finally{
+      var lock=GM_getValue(lockKey,null);if(lock&&lock.owner===owner)GM_deleteValue(lockKey);
+      imageOutboxBusy=false;
+    }
+  }
+  function startImageOutboxSender(){
+    if(!isGalleryPage()||globalThis.__OSG_IMAGE_OUTBOX_SENDER__)return;
+    globalThis.__OSG_IMAGE_OUTBOX_SENDER__=true;
+    setTimeout(function(){replayOneDeferredImage().catch(function(){});},16000);
+    setInterval(function(){replayOneDeferredImage().catch(function(){});},45000);
+  }
+
   async function postAcquiredImage(job, candidate, image, trace, endpoint, payload, token, stage) {
     var started=Date.now();
     // Stage/production writes may include durable index updates after R2 storage.
