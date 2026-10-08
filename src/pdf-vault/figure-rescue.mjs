@@ -68,11 +68,13 @@ export async function scanPdfFigureRescue(pdf,{doi,limit=PDF_RESCUE_SCAN_LIMIT,o
   let metadata=null;
   try{metadata=(await pdf.getMetadata?.())?.info||null;}catch{}
   let firstPagesText='';
+  let scannedPages=0;
   const candidates=[];
   const seen=new Set();
   for (let number=1;number<=pages;number++){
     const page=await pdf.getPage(number);
     const content=await page.getTextContent();
+    scannedPages=number;
     const lines=textLineGroups(content);
     if(number<=2)firstPagesText+=' '+lines.join(' ');
     for (const line of lines) {
@@ -91,8 +93,8 @@ export async function scanPdfFigureRescue(pdf,{doi,limit=PDF_RESCUE_SCAN_LIMIT,o
     if(candidates.length>=PDF_RESCUE_MAX_CANDIDATES)break;
   }
   const identity=inspectPdfDoiIdentity(target,firstPagesText,metadata);
-  return {doi:target,identity,scannedPages:Math.min(pages,Math.max(1,Math.ceil(0)||pages)),
-    totalPages:pdf.numPages,completeScan:pages===pdf.numPages,
+  return {doi:target,identity,scannedPages,
+    totalPages:pdf.numPages,completeScan:scannedPages===pdf.numPages,
     candidates:identity==='mismatch'?[]:candidates,
     publishableAutomatically:false,requiresManualCrop:true,source:'owner_authorized_original_pdf'};
 }
