@@ -1,0 +1,30 @@
+name: Owner PDF Tencent gateway isolated security regression
+on:
+  push:
+    branches:
+      - feature/owner-private-pdf-dual-ingress-20261008
+    paths:
+      - 'deploy/pdf-gateway/**'
+      - '.github/workflows/pdf-tencent-gateway-regression.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  gateway-security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/owner-private-pdf-dual-ingress-20261008
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Syntax and owner PDF gateway security regression
+        run: |
+          set -euo pipefail
+          python -m py_compile deploy/pdf-gateway/gateway.py deploy/pdf-gateway/test_gateway.py
+          python -m unittest discover -s deploy/pdf-gateway -p 'test_gateway.py' -v
