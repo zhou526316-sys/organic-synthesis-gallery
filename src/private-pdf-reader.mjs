@@ -146,7 +146,7 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
     ['privatePdfRangeBytes', '分段字节', 'B'],
   ].flatMap(([key, label, unit]) => {
     const value = document.documentElement.dataset[key] || '';
-    return /^\\d{1,12}$/.test(value) ? [`${label}:${value}${unit}`] : [];
+    return /^\d{1,12}$/.test(value) ? [`${label}:${value}${unit}`] : [];
   });
   diagnostic.textContent = `阶段：${phase} · ${detail || 'unknown'} · ${(elapsed / 1000).toFixed(1)}s` +
     (timingDetails.length ? ' · ' + timingDetails.join(' · ') : '');
