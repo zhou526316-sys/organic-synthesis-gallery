@@ -1,6 +1,6 @@
 {
   "date": "2026-10-08",
-  "revision": "2026-10-08-r2",
+  "revision": "2026-10-08-r3",
   "articleCount": 2,
   "selectionDois": [
     "10.1021/jacs.6c14748",
@@ -9,14 +9,14 @@
   "textReview": "pass",
   "imageReview": "pass",
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-08-bundle-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-08-r2-images-only.md"
+    "textOnly": "audit/wechat-working/2026-10-08-r3-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-08-r3-images-only.md"
   },
   "sources": [
     {
       "path": "public/wechat-featured/2026-10-08.json",
-      "blobSha": "c47547d3de4b93d87e065ab8b17cd23b793f5554",
-      "sha256": "6f16452375960e15c708e3f0c492589aa3bb7d80a9439278a408862e61e9cc93"
+      "blobSha": "feae8101358894ff7f7cc484db2ff47641bd5309",
+      "sha256": "086c43b4916a85525f7eb139f53fa1b27933bfed10791f2bad654dc4ce5bbbb2"
     },
     {
       "path": "public/wechat-retrospective/os1-multicentred-sulfur-20261008.json",
@@ -25,18 +25,18 @@
     },
     {
       "path": "public/wechat-editions/2026-10-08.json",
-      "blobSha": "583f85fe696baacc8f6ab49d4c268c100d1d812c",
-      "sha256": "47aafcfb52310e0ece750ecd02d325aebbafe4e94679508fa52d6a9ea441e551"
+      "blobSha": "6291104b4c6f0073bda90a4d9d1c15f9aea35d42",
+      "sha256": "8a68172e6b93b2a3a7d8711e974fa3fe11fa750165f1fcadc9dedc2738339357"
     },
     {
-      "path": "audit/wechat-working/2026-10-08-bundle-text-only.md",
-      "blobSha": "a93b121bb71f90d529a47785366e39594d6b672c",
-      "sha256": "4b6d5c9f5e127490ed8e6990e48941351e144f384a399d29e30c06de515a435d"
+      "path": "audit/wechat-working/2026-10-08-r3-text-only.md",
+      "blobSha": "f3947eb1bcad62d349ffc5b20dd9813299666649",
+      "sha256": "4fc734d89e6cc4192b3ee46f9cd8a915eb6a48fd39b86fd60e48090938a3c6de"
     },
     {
-      "path": "audit/wechat-working/2026-10-08-r2-images-only.md",
-      "blobSha": "aef604f4952897838addf2d7c472c771b5b61cca",
-      "sha256": "77f74309c00ff7e3fd026d7466e859f745e29c3dce75dbe5bbb34bf9929d904e"
+      "path": "audit/wechat-working/2026-10-08-r3-images-only.md",
+      "blobSha": "eda1dda92c0c0dbde2343e3989c35ba6f684aea8",
+      "sha256": "32c05f4ca0f89c75bb27546bf8880c058e5e97414cfd2503ca9a9b076a49bb01"
     }
   ],
   "assets": [
@@ -181,9 +181,9 @@
       "height": 582
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-08-r2/jacs-cover-original-toc-dark.png",
-      "blobSha": "3de0c478c8633b2251fd9f91f3d3a11f66ddeb3e",
-      "sha256": "35b1fd95fc666c9d316792c9e64c18459b60bdb94972f1d0f397e561ecdd9d97",
+      "path": "public/wechat-assets/reviewed/2026-10-08-r3/jacs-cover-original-white.png",
+      "blobSha": "f458c443e69f990b0c18d2b856d345d4c1a06109",
+      "sha256": "1cd7a98d013038332724d3ff81cce2d7e97f82a0049c8b481108008cf401fbde",
       "width": 1880,
       "height": 800
     },
@@ -292,9 +292,14 @@
     "JACS Fig. S3 old crop rejected (upper trace partially clipped); new source-exact full PDF crop manually inspected.",
     "Retrospective exact user-selected 1254px cover restored without any regeneration or textual alteration.",
     "JACS cover uses original published graphical abstract source, not generated chemical reconstructions; both user-selected top label and native-title lower safe zone maintained.",
-    "R2 controlled import uses CAS assertions on three mutable reviewed source records; no WeChat public send is authorized."
+    "R2 controlled import uses CAS assertions on three mutable reviewed source records; no WeChat public send is authorized.",
+    "R3 changes only native first article title and featured white-background TOC cover; 32 body figures and retrospective remain exactly as previously reviewed.",
+    "White field restores original TOC chemistry colors, original rectangle copied pixel-for-pixel from original published TOC no AI generated chemistry or altered structure.",
+    "Header 今日精选·JACS stays only inside cover; native article title is paper Chinese title alone, no repetitive heading. Visible bottom title region is separate navy backing only.",
+    "Native title stress preview: cover diagrams end at 564 px, dark background begins at 576 px; glyphs tested at 595 and 668 px; no overlap with chemistry.",
+    "Review-gated import remains draft-only; actual draft/update and draft/get required before a real preview URL is delivered."
   ],
-  "draftReadback": "pending-after-r2-review",
+  "draftReadback": "pending-r3",
   "publicSendAuthorized": false,
   "generatedBy": "reviewed_editorial_import"
 }

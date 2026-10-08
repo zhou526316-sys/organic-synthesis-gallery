@@ -403,14 +403,14 @@
     },
     {
       "id": "jacs-cover",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-08-r2/jacs-cover-original-toc-dark.png",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-r3/jacs-cover-original-white.png",
       "caption": "",
       "body": false,
       "display_width_pct": 100,
       "source_figure": "Official paper graphical abstract",
       "source_doi": "10.1021/jacs.6c14748",
-      "source_kind": "original_paper_graphical_abstract_background_and_monochrome_contrast_adapted",
-      "source_adjustment": "Authentic publisher graphical abstract geometry and colored marks retained; white background suppressed and neutral ink adjusted for contrast on low-saturation navy. Exact existing title art retained, lower caption-safe zone reserved."
+      "source_kind": "exact_unmodified_original_TOC_crop_repositioned_white",
+      "source_adjustment": "White-paper background restored. Original chemical TOC crop (x573:1308,y24:494 from original original-color published TOC) transferred pixel-identically at x572:1307,y94:564. Top navy 今日精选·JACS header. Native white title receives only a bottom slate band y576:800; no structure inside title zone; no generated structure."
     }
   ],
   "cover": {
@@ -418,11 +418,11 @@
     "canvas": {
       "width": 1880,
       "height": 800,
-      "background": "#203648"
+      "background": "#FFFFFF"
     },
     "crop_235_1": "0_0_1_1",
     "crop_1_1": "0.287234_0_0.712766_1",
-    "description": "Original published TOC chemistry retained on comfortable deep-blue background with neutral-ink contrast adaptation; authentic upper 今日精选·JACS title, lower native white-title safe zone. Never use generated chemistry source."
+    "description": "JACS original scientific graphical abstract kept white with all original colored structures exactly preserved. Top label 今日精选·JACS; bottom small dark title backing only where native white title appears. No chemical AI redraw; source chemistry bytes verified pixel-identical."
   },
   "ai_notice": "“化之岛”基于JACS正文与作者Supporting Information整理，AI辅助查阅与图文编排，正式发布由运营者复核。全部化学结构、示意和数据均为原始来源的高清裁切，未使用生成式工具重绘。",
   "editorialRevision": "2026-10-08-r1"
