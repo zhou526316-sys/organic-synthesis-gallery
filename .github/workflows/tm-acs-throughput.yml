@@ -8,6 +8,7 @@ on:
       - cloudflare/scripts/build-bridge-loader.mjs
       - scripts/validate-tm220-artifacts.mjs
       - tests/tm-acs-throughput.test.mjs
+      - scripts/test-tm223-upload.mjs
       - .github/workflows/tm-acs-throughput.yml
 permissions:
   contents: read
@@ -29,6 +30,7 @@ jobs:
           node --check public/toc-mainline.user.js
           node --check cloudflare/worker/src/local-captures.js
           node --test tests/tm-acs-throughput.test.mjs
+          node scripts/test-tm223-upload.mjs
           node --test tests/tm-gap-recovery.test.mjs
           node tests/tm-missing-only.test.mjs
           node tests/tm-queue-coverage.test.mjs
