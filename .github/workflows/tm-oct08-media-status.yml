@@ -1,0 +1,29 @@
+name: Oct 8 production media evidence (read only)
+on:
+  push:
+    branches: [audit/tm-oct08-visual-status-20261008]
+    paths:
+      - 'scripts/diagnose-tm-oct08-live.mjs'
+      - '.github/workflows/tm-oct08-media-status.yml'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with: {node-version: '22'}
+      - name: Read-only 28-paper TOC, Figure 1, and staged inventory evidence
+        run: |
+          set -euo pipefail
+          node --check scripts/diagnose-tm-oct08-live.mjs
+          node scripts/diagnose-tm-oct08-live.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-oct08-media-evidence
+          path: ${{ runner.temp }}/tm-oct08-live-media-read.json
+          retention-days: 7
+          if-no-files-found: warn
