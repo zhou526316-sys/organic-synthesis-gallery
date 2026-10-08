@@ -711,7 +711,7 @@ test('mobile title entry stays in Gallery and opens the summary before publisher
 });
 
 
-test('mobile TOC hydrates a small near-screen batch and prioritizes the visible image', async ({ page }) => {
+test('mobile TOC hydrates the first visible cards before the rest of the near-screen batch', async ({ page }) => {
   test.setTimeout(60_000);
   await page.setViewportSize({ width: 390, height: 844 });
   const batchSizes: number[] = [];
@@ -759,12 +759,16 @@ test('mobile TOC hydrates a small near-screen batch and prioritizes the visible 
 
   await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
   await expect.poll(() => batchSizes.length).toBeGreaterThan(0);
-  expect(batchSizes[0]).toBeLessThanOrEqual(6);
   expect(batchSizes[0]).toBeGreaterThan(0);
+  expect(batchSizes[0]).toBeLessThanOrEqual(2);
   const firstImage = page.locator('.card .toc-image').first();
   await expect(firstImage).toBeVisible({ timeout: 30000 });
   await expect(firstImage).toHaveAttribute('loading', 'eager');
   await expect(firstImage).toHaveAttribute('fetchpriority', 'high');
+  // The remaining near-screen cards still hydrate automatically after the
+  // first small wave instead of being abandoned.
+  await expect.poll(() => batchSizes.reduce((sum, size) => sum + size, 0), { timeout: 5000 })
+    .toBeGreaterThanOrEqual(Math.min(3, await page.locator('.toc-slot[data-doi]').count()));
 });
 
 
