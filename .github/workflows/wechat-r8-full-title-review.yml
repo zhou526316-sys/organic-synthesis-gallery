@@ -1,0 +1,88 @@
+name: WeChat R8 restore complete native daily headline
+on:
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/wechat-r8-title-review.json']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-r8-full-title-source
+  cancel-in-progress: false
+
+jobs:
+  text-source-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Confirm approved single-revision title change
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('audit/automation-triggers/wechat-r8-title-review.json').read_text())
+          assert r['action']=='restore_full_wechat_native_title_without_draft_write'
+          assert r['publicationDate']=='2026-10-08'
+          assert r['sourceRevision']=='2026-10-08-r7'
+          assert r['revision']=='2026-10-08-r8'
+          assert r['featuredDoi']=='10.1021/jacs.6c14748'
+          assert r['retrospectiveDoi']=='10.1038/s41929-026-01602-y'
+          assert r['existingMediaId']=='KhELYUzvwADwB_l1xH1SWFVYn_-s6bRj39Vw7w-SivoAE1W-c7lb3hzVk5bB-0Tr'
+          assert r['draftOnly'] is True and r['publicSendAuthorized'] is False
+          PY
+      - name: Update source text, source manifest, and review fingerprints
+        run: python3 ops/wechat-publisher/restore-full-native-title-r8.py
+      - name: Independently check all reviewed R8 sources and exact original cover
+        run: |
+          python3 - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          root=Path.cwd()
+          def gitsha(blob):
+            return hashlib.sha1(('blob '+str(len(blob))+'\0').encode()+blob).hexdigest()
+          gate=json.loads((root/'audit/wechat-working/2026-10-08-review-gate.json').read_text())
+          edt=json.loads((root/'public/wechat-editions/2026-10-08.json').read_text())
+          feat=json.loads((root/'public/wechat-featured/2026-10-08.json').read_text())
+          qa=json.loads((root/'audit/wechat-working/2026-10-08-r8-native-title-qa.json').read_text())
+          expected='有机合成文献日报｜10.08｜今日精选｜JACS：α-氯代烷基硼酸酯与偕二硼烷的立体选择性1,2-迁移重排'
+          assert edt['title']==expected==qa['title']
+          assert edt['editorialRevision']==feat['editorialRevision']==gate['revision']=='2026-10-08-r8'
+          assert edt['publicationMode']=='draft_only_manual_final_send'
+          assert edt['featured']=='10.1021/jacs.6c14748'
+          assert edt['retrospective']=='os1-multicentred-sulfur-20261008'
+          assert len(gate['assets'])==34 and len(gate['sources'])==5
+          assert gate['textReview']==gate['imageReview']=='pass'
+          for entry in gate['sources']+gate['assets']:
+            binary=(root/entry['path']).read_bytes()
+            assert gitsha(binary)==entry['blobSha'],entry['path']
+            if entry.get('sha256'):
+              assert hashlib.sha256(binary).hexdigest()==entry['sha256'],entry['path']
+          assert any(x['id']=='jacs-cover' and x['repo_path']=='public/wechat-assets/reviewed/2026-10-08-r7/jacs-cover-toc-large-no-label.png' for x in feat['figures'])
+          assert len([x for x in feat['figures'] if x.get('body') is not False])==20
+          assert qa['coverBytesChanged'] is False and qa['secondArticleChanged'] is False
+          assert qa['bodyImageChangedCount']==0 and qa['publicSendAuthorized'] is False
+          print('PASS: exact complete title; identical TOC and 34 assets; scientific content and second article preserved')
+          PY
+      - name: Commit review only, never write to WeChat in this workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            public/wechat-featured/2026-10-08.json \
+            public/wechat-editions/2026-10-08.json \
+            audit/wechat-working/2026-10-08-review-gate.json \
+            audit/wechat-working/2026-10-08-r8-text-only.md \
+            audit/wechat-working/2026-10-08-r8-images-only.md \
+            audit/wechat-working/2026-10-08-r8-native-title-qa.json
+          git diff --cached --name-only
+          git commit -m 'editorial: restore complete daily+date+JACS native title R8'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
+          echo "SOURCE_REVIEWED_NO_WECHAT_WRITE"
