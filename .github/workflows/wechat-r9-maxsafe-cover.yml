@@ -1,0 +1,116 @@
+name: WeChat JACS R9 maximize authentic TOC
+on:
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/wechat-r9-maxsafe-cover.json']
+permissions:
+  contents: write
+concurrency:
+  group: wechat-r9-maxsafe-review
+  cancel-in-progress: false
+jobs:
+  reviewed-cover-source-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 3
+      - name: Validate request and protected original draft constraints
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path("audit/automation-triggers/wechat-r9-maxsafe-cover.json").read_text())
+          assert r["action"]=="prepare_cover_review_without_wechat_write"
+          assert r["sourceRevision"]=="2026-10-08-r8"
+          assert r["revision"]=="2026-10-08-r9"
+          assert r["featuredDoi"]=="10.1021/jacs.6c14748"
+          assert r["retrospectiveDoi"]=="10.1038/s41929-026-01602-y"
+          assert r["sameMediaId"]=="KhELYUzvwADwB_l1xH1SWFVYn_-s6bRj39Vw7w-SivoAE1W-c7lb3hzVk5bB-0Tr"
+          assert r["draftOnly"] is True and r["publicSendAuthorized"] is False
+          PY
+      - name: Install exact mobile proof renderer and CJK font
+        run: |
+          python3 -m pip install --quiet 'Pillow>=10,<13'
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+      - name: Build original chemistry enlarged once, plus two mobile QA crops
+        run: python3 ops/wechat-publisher/optimize-native-toc-r9.py
+      - name: Independent source hash + white-title safe crop QA
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import hashlib, io, json
+          root=Path.cwd()
+          j=json.loads(Path('audit/wechat-working/2026-10-08-r9-cover-qa.json').read_text())
+          g=json.loads(Path('audit/wechat-working/2026-10-08-review-gate.json').read_text())
+          feat=json.loads(Path('public/wechat-featured/2026-10-08.json').read_text())
+          ed=json.loads(Path('public/wechat-editions/2026-10-08.json').read_text())
+          expected='有机合成文献日报｜10.08｜今日精选｜JACS：α-氯代烷基硼酸酯与偕二硼烷的立体选择性1,2-迁移重排'
+          assert ed['title']==expected==j['fullNativeTitle']
+          assert g['revision']==ed['editorialRevision']==feat['editorialRevision']=='2026-10-08-r9'
+          assert g['textReview']==g['imageReview']=='pass'
+          assert len(g['assets'])==34 and len(g['sources'])==5
+          assert ed['publicationMode']=='draft_only_manual_final_send'
+          assert ed['retrospective']=='os1-multicentred-sulfur-20261008'
+          assert feat['figures'][-1]['id']=='jacs-cover'
+          assert feat['figures'][-1]['body'] is False
+          assert len([x for x in feat['figures'] if x.get('body') is not False])==20
+          assert feat['figures'][-1]['repo_path']==j['newCover']
+          assert j['increaseAreaPercent']>14.0
+          assert j['artToDarkBandGap']>=16
+          assert j['artToStressTitleGlyphGap']>=30
+          assert j['bodyFigureChanges']==j['secondArticleChanges']==0
+          assert j['generatedChemistryUsed'] is False
+          def git_blob(b): return hashlib.sha1(f'blob {len(b)}\0'.encode()+b).hexdigest()
+          for row in g['sources']+g['assets']:
+            b=(root/row['path']).read_bytes()
+            assert git_blob(b)==row['blobSha'],row['path']
+            if row.get('sha256'): assert hashlib.sha256(b).hexdigest()==row['sha256']
+            if row['path'].lower().endswith(('.png','.jpg','.jpeg')):
+              with Image.open(io.BytesIO(b)) as im:
+                im.load()
+                if 'width' in row: assert (im.width,im.height)==(row['width'],row['height'])
+          proof=Path('audit/wechat-working/crop-proofs/2026-10-08-r9')
+          for path,dims in [
+            ('mobile-470x200-plain.png',(470,200)),
+            ('square-240x240.png',(240,240)),
+            ('mobile-470x200-2line-stress-simulation.png',(470,200))]:
+            with Image.open(proof/path) as im:
+              im.load(); assert im.size==dims,(path,im.size)
+          print('PASS native-title integrity; two crop modes; source chemistry; 34 reviewed assets; no send')
+          PY
+      - name: Commit only final R9 reviewed artifacts and visual proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            public/wechat-assets/reviewed/2026-10-08-r9/jacs-cover-original-toc-maxsafe.png \
+            public/wechat-featured/2026-10-08.json \
+            public/wechat-editions/2026-10-08.json \
+            audit/wechat-working/2026-10-08-review-gate.json \
+            audit/wechat-working/2026-10-08-r9-text-only.md \
+            audit/wechat-working/2026-10-08-r9-images-only.md \
+            audit/wechat-working/2026-10-08-r9-cover-qa.json \
+            audit/wechat-working/crop-proofs/2026-10-08-r9/
+          git diff --cached --name-only
+          git commit -m 'editorial: enlarge original JACS TOC max safe, inspect dual mobile crops'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
+          echo 'REVIEWED_IMAGE_SOURCE_COMMITTED; WECHAT NOT YET WRITTEN'
+      - name: Provide visual evidence artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wechat-r9-original-toc-mobile-verification
+          path: |
+            public/wechat-assets/reviewed/2026-10-08-r9/jacs-cover-original-toc-maxsafe.png
+            audit/wechat-working/2026-10-08-r9-cover-qa.json
+            audit/wechat-working/crop-proofs/2026-10-08-r9/
+          if-no-files-found: ignore
+          retention-days: 7
