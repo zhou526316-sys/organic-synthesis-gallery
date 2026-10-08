@@ -211,6 +211,7 @@ let batchAgain = false;
 let mobileInitialMediaWave = true;
 let pdfVaultRefreshTimer: number | null = null;
 let pdfVaultRefreshGeneration = 0;
+let pdfVaultCardsModule: typeof import('./pdf-vault/cards.mjs') | null = null;
 let pdfVaultCardsModulePromise: Promise<typeof import('./pdf-vault/cards.mjs')> | null = null;
 let inventoryFingerprint = '';
 let inventoryTimer: number | null = null;
@@ -238,23 +239,39 @@ function resultWindowSize(): number {
 }
 
 
+async function loadPdfVaultCardsModule(): Promise<typeof import('./pdf-vault/cards.mjs')> {
+  if (pdfVaultCardsModule) return pdfVaultCardsModule;
+  pdfVaultCardsModulePromise ||= import('./pdf-vault/cards.mjs');
+  try {
+    pdfVaultCardsModule = await pdfVaultCardsModulePromise;
+    return pdfVaultCardsModule;
+  } catch (error) {
+    pdfVaultCardsModulePromise = null;
+    throw error;
+  }
+}
+
 function schedulePdfVaultCardsRefresh(container: HTMLElement, lang: Language): void {
   const generation = ++pdfVaultRefreshGeneration;
   if (pdfVaultRefreshTimer !== null) window.clearTimeout(pdfVaultRefreshTimer);
-  // Keep account/local-PDF state accurate, but do not make the mobile first
-  // content/TOC path parse the local-vault and queue modules before media starts.
-  const delay = window.matchMedia('(max-width: 680px)').matches ? 700 : 0;
+  const mobile = window.matchMedia('(max-width: 680px)').matches;
+  const refresh = (module: typeof import('./pdf-vault/cards.mjs')): void => {
+    if (generation !== pdfVaultRefreshGeneration || !container.isConnected) return;
+    module.refreshPdfVaultCards(container, lang);
+  };
+  // Desktop preserves the pre-optimization timing: load() primes this module
+  // before mount so no new post-render chunk competes with the pagination footer.
+  if (!mobile && pdfVaultCardsModule) {
+    refresh(pdfVaultCardsModule);
+    return;
+  }
+  // Mobile keeps the PDF state enhancement out of the critical first TOC path.
   pdfVaultRefreshTimer = window.setTimeout(() => {
     pdfVaultRefreshTimer = null;
-    pdfVaultCardsModulePromise ||= import('./pdf-vault/cards.mjs');
-    void pdfVaultCardsModulePromise.then(module => {
-      if (generation !== pdfVaultRefreshGeneration || !container.isConnected) return;
-      module.refreshPdfVaultCards(container, lang);
-    }).catch(() => {
+    void loadPdfVaultCardsModule().then(refresh).catch(() => {
       // A deferred enhancement must never block the literature/media reader.
-      if (generation === pdfVaultRefreshGeneration) pdfVaultCardsModulePromise = null;
     });
-  }, delay);
+  }, mobile ? 700 : 0);
 }
 
 let resultWindowPage = 1;
@@ -1770,6 +1787,9 @@ async function load(): Promise<void> {
       const legacyDates = papers.map(paper => paper.date)
         .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
       latestCollectionDate = legacyDates[legacyDates.length - 1] || '';
+    }
+    if (!window.matchMedia('(max-width: 680px)').matches) {
+      try { await loadPdfVaultCardsModule(); } catch { /* Optional card state must not block Gallery. */ }
     }
     mount();
     window.dispatchEvent(new CustomEvent('gallery-first-content-rendered'));
