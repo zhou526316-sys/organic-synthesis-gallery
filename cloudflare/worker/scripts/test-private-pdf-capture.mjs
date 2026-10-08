@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { issuePrivatePdfCaptureLease, importPrivatePdf, revokePrivatePdfCaptureLeases } from '../src/private-pdf.js';
+import { issuePrivatePdfCaptureLease, importPrivatePdf, privatePdfCaptureInventory, revokePrivatePdfCaptureLeases } from '../src/private-pdf.js';
 
 const enc=new TextEncoder();
 async function hash(v){const d=await crypto.subtle.digest('SHA-256',enc.encode(v));return [...new Uint8Array(d)].map(x=>x.toString(16).padStart(2,'0')).join('');}
@@ -17,6 +17,11 @@ class Stmt{
       return [...d.docs.values()].find(x=>x.doi===a[0]&&x.content_hash===a[1])||null;
     }
     throw Error('first:'+q);
+  }
+  async all(){
+    if(this.sql.includes('FROM private_pdf_documents WHERE doi IN ('))return {results:[...this.db.docs.values()]
+      .filter(row=>this.a.includes(row.doi)).map(row=>({doi:row.doi,processing_state:row.processing_state,active:row.active,byte_length:row.byte_length}))};
+    throw Error('all:'+this.sql);
   }
   async run(){
     const q=this.sql,a=this.a,d=this.db;
@@ -65,6 +70,32 @@ await t('RSC Silverchair CDN PDF is accepted as publisher-bound source',async()=
   assert.ok(doc);assert.equal(new URL(doc.source_url).hostname,'rscj.silverchair-cdn.com');
   bucket.map.delete(doc.r2_key);
   db.docs.delete(doc.id);
+});
+
+await t('read-only owner capture inventory distinguishes ready, pending, failed and absent',async()=>{
+  const ready='10.1021/jacs.6c77777',failed='10.1021/jacs.6c88888';
+  db.docs.set('ready-fixture',{id:'ready-fixture',doi:ready,processing_state:'ready',active:1,byte_length:5000,r2_key:'private/secret-ready.pdf',content_hash:'secret-ready'});
+  db.docs.set('failed-fixture',{id:'failed-fixture',doi:failed,processing_state:'failed',active:0,byte_length:5000});
+  const payload={dois:[ready,'10.1021/jacs.6c12345',failed,'10.1021/jacs.6c99999']};
+  const response=await privatePdfCaptureInventory(auth(lease,'/api/private-pdf/capture-inventory'),env,payload);
+  assert.equal(response.status,200);assert.equal(response.body.complete,true);assert.equal(response.body.count,4);
+  assert.deepEqual(response.body.items.map(x=>x.status),['ready','pending','failed','missing']);
+  assert.deepEqual(response.body.summary,{ready:1,pending:1,failed:1,missing:1});
+  const serialized=JSON.stringify(response.body);
+  for(const forbidden of ['r2_key','content_hash','byte_length','documentId','private/secret-ready.pdf',lease])assert.equal(serialized.includes(forbidden),false);
+  db.docs.delete('ready-fixture');db.docs.delete('failed-fixture');
+});
+await t('owner inventory refuses missing or invalid lease and never discloses records',async()=>{
+  const payload={dois:['10.1021/jacs.6c12345']};
+  assert.equal((await privatePdfCaptureInventory(auth('other-session','/api/private-pdf/capture-inventory'),env,payload)).status,401);
+  assert.equal((await privatePdfCaptureInventory(auth('invalid-capture-lease','/api/private-pdf/capture-inventory'),env,payload)).status,401);
+  assert.equal((await privatePdfCaptureInventory(auth(lease,'/api/private-pdf/capture-inventory'),{...env,PRIVATE_PDF_CAPTURE_ENABLED:'0'},payload)).status,503);
+});
+await t('bounded owner inventory rejects oversized or duplicate batches',async()=>{
+  const request=auth(lease,'/api/private-pdf/capture-inventory');
+  assert.equal((await privatePdfCaptureInventory(request,env,{dois:Array.from({length:81},(_,i)=>'10.1021/jacs.6c'+String(i).padStart(5,'0'))})).status,400);
+  assert.equal((await privatePdfCaptureInventory(request,env,{dois:['10.1021/jacs.6c12345','10.1021/jacs.6c12345']})).status,400);
+  assert.equal((await privatePdfCaptureInventory(request,env,{dois:[]})).status,400);
 });
 
 await t('same DOI and hash is idempotent',async()=>{const r=await importPrivatePdf(upload(),env);assert.equal(r.status,200);assert.equal(r.body.duplicate,true);assert.equal(bucket.map.size,1)});
