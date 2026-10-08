@@ -6,6 +6,7 @@ on:
       - public/toc-mainline.user.js
       - tests/tm-rsc-acs-inventory-20261008.test.mjs
       - tests/tm-image-outbox-recovery-20261008.test.mjs
+      - tests/tm-owner-pdf-replay-20261008.test.mjs
       - .github/workflows/tm-rsc-acs-inventory-20261008.yml
   pull_request:
     branches: [main, fix/tm-cooldown-pdf-truth-20261008]
@@ -13,6 +14,7 @@ on:
       - public/toc-mainline.user.js
       - tests/tm-rsc-acs-inventory-20261008.test.mjs
       - tests/tm-image-outbox-recovery-20261008.test.mjs
+      - tests/tm-owner-pdf-replay-20261008.test.mjs
       - .github/workflows/tm-rsc-acs-inventory-20261008.yml
 permissions:
   contents: read
@@ -36,6 +38,7 @@ jobs:
           node --check tests/tm-rsc-acs-inventory-20261008.test.mjs
           node --test tests/tm-rsc-acs-inventory-20261008.test.mjs
           node --test tests/tm-image-outbox-recovery-20261008.test.mjs
+          node --test tests/tm-owner-pdf-replay-20261008.test.mjs
           node scripts/test-tm-oct1-scope-contract.mjs
           node scripts/validate-tm220-artifacts.mjs source
       - name: Install isolated browser test dependencies
