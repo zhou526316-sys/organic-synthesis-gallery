@@ -1,9 +1,9 @@
 {
-  "requestId": "wechat-daily-2026-10-08-r3-white-original-toc-title-only",
+  "requestId": "wechat-daily-2026-10-08-r6-native-mobile-screenshot-final-safe",
   "requestedAt": "2026-10-08T14:06:00+08:00",
   "publicationDate": "2026-10-08",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-08-r3",
+  "editorialRevision": "2026-10-08-r6",
   "approvedGate": "audit/wechat-working/2026-10-08-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -14,6 +14,6 @@
   "draftOnly": true,
   "requireDraftGetReadback": true,
   "publicSendAuthorized": false,
-  "prePublishQA": "audit/wechat-working/2026-10-08-r3-mobile-cover-qa.json",
-  "reason": "User explicitly requests real same-media draft update, not just image. R3 official JACS TOC stays white and chemically unaltered, top header retained, navy only behind native white title, first article native title only Chinese paper title. Retrospective cover and all 32 body figures unchanged. One controlled draft/update then draft/get, no public send."
+  "prePublishQA": "audit/wechat-working/2026-10-08-r6-mobile-cover-qa.json",
+  "reason": "User native WeChat mobile screenshot proved R3 top label and first title line obstructed. R6 reviewed original chemistry uniformly scaled, top label shifted inward, solid dark native two-line title backing at y492, zero old header ghost. Preserve both article order and all 32 body images. Single same-media draft/update, draft/get readback, no public sending."
 }
