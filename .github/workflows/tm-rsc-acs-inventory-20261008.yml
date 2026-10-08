@@ -1,0 +1,59 @@
+name: Tampermonkey RSC ACS inventory targeted regression
+on:
+  push:
+    branches: [fix/tm-rsc-acs-inventory-20261008]
+    paths:
+      - public/toc-mainline.user.js
+      - tests/tm-rsc-acs-inventory-20261008.test.mjs
+      - .github/workflows/tm-rsc-acs-inventory-20261008.yml
+  pull_request:
+    branches: [main, fix/tm-cooldown-pdf-truth-20261008]
+    paths:
+      - public/toc-mainline.user.js
+      - tests/tm-rsc-acs-inventory-20261008.test.mjs
+      - .github/workflows/tm-rsc-acs-inventory-20261008.yml
+permissions:
+  contents: read
+concurrency:
+  group: tm-rsc-acs-inventory-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  scoped-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Syntax, DOI binding, transport regression and protected acquisition compatibility
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node --check tests/tm-rsc-acs-inventory-20261008.test.mjs
+          node --test tests/tm-rsc-acs-inventory-20261008.test.mjs
+          node scripts/test-tm-oct1-scope-contract.mjs
+          node scripts/validate-tm220-artifacts.mjs source
+      - name: Install isolated browser test dependencies
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Preserve existing queue and publisher protections
+        run: |
+          set -euo pipefail
+          node tests/tm-queue-coverage.test.mjs
+          node tests/tm-missing-only.test.mjs
+          node tests/tm-immediate-restart.test.mjs
+          node scripts/test-tm224-acquisition.mjs
+          node scripts/test-tm-paired-capture.mjs
+          git diff --check
+      - name: Confirm no public release or owner PDF reader changes
+        run: |
+          BASE="$(git merge-base HEAD origin/main)"
+          git diff --exit-code "$BASE" HEAD -- \
+            PROJECT_RULES.md docs/literature-update-protocol.md \
+            shared/literature-journals.js public/papers.gz.b64 \
+            src/private-pdf-reader.mjs \
+            .github/workflows/literature-audit.yml
