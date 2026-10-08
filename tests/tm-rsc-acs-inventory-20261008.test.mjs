@@ -21,6 +21,7 @@ function routeContext(){
     embeddedJobDois:()=>[],
     reject:()=>false,
     articleFigureImageUrls:node=>node.mockUrls||[],
+    normalizeUrl:(url,base)=>new URL(url,base).href,
     contextFor:()=>'', 
   };
   vm.createContext(ctx);
@@ -86,11 +87,14 @@ test('old RSC hidden iframe retries are omitted on current Silverchair route onl
  const c=routeContext();
  c.rscRouteParts=()=>({year:'2026',code:'gc',suffix:'d6gc04458a'});
  c.rscIssuePageUrls=()=>[];
+ c.rscSearchResultUrl=job=>'https://pubs.rsc.org/en/results?searchtext='+encodeURIComponent(job.doi);
  c.document={querySelectorAll:()=>[],body:{}};
  vm.runInContext(extract('iframeSourceUrls')+
   '\n globalThis.iframeSourceUrlsForTest=iframeSourceUrls;',c);
  const j={doi:'10.1039/d6gc04458a',publisher:'rsc'};
- assert.equal(c.iframeSourceUrlsForTest(j).length,0,'no invented publisher issue page');
+ assert.deepEqual(Array.from(c.iframeSourceUrlsForTest(j)),
+  ['https://pubs.rsc.org/en/results?searchtext=10.1039%2Fd6gc04458a'],
+  'one real DOI-specific publisher search endpoint, never a guessed image URL');
  c.rscIssuePageUrls=()=>[
    'https://pubs.rsc.org/gc/issue/34/8',
    'https://pubs.rsc.org/gc/issue/34/9'
@@ -160,7 +164,7 @@ test('PDF owner inventory reads 177 DOI in batches of at most two and preserves 
  };
  vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\n globalThis.load=readOwnerPdfInventory;',ctx);
  const result=await ctx.load(papers,null);
- assert.equal(peak,2);assert.equal(calls,3);
+ assert.equal(peak,2);assert.equal(calls,Math.ceil(177/25));
  assert.equal(result.complete,true);assert.equal(result.items.length,177);
  assert.equal(result.unknown,0);
 });
@@ -179,4 +183,61 @@ test('inventory transport failure retains native and extension error causes with
  await assert.rejects(()=>ctx.load({method:'GET',url:'https://api.test/inventory'},'inventory'),
   e=>/inventory_inventory_transport_failed/.test(e.message)&&/browser:controller_native_timeout/.test(e.message)
    &&/gm:gm_request_error/.test(e.message));
+});
+
+test('RSC Silverchair CSS background is accepted only from a DOI-bound isolated visual block',()=>{
+ const c=routeContext(),job={doi:'10.1039/d6gc04458a',publisher:'rsc',allowFigureOne:true};
+ const x=visualBlock();
+ const u=x.image.mockUrls[0];
+ x.image.mockUrls=[];
+ const old=x.image.getAttribute;
+ x.image.getAttribute=(key)=>key==='style'?'background-image: url("'+u+'")':old(key);
+ const rows=c.testFns.rscSilverchairVisualCandidates(job,x.scope,c.location.href);
+ assert.equal(rows.length,1);
+ assert.equal(rows[0].url,u);
+ x.image.getAttribute=(key)=>key==='style'?'background-image: url("https://rscj.silverchair-cdn.com/site/logo.png")':old(key);
+ assert.equal(c.testFns.rscSilverchairVisualCandidates(job,x.scope,c.location.href).length,0);
+});
+test('owner PDF transient timeout splits only the failed small batch and preserves all DOI statuses',async()=>{
+ const papers=Array.from({length:53},(_,i)=>({doi:'10.1021/jacs.6c'+String(i).padStart(5,'0'),addedDate:'2026-10-08'}));
+ let calls=0;
+ const ctx={Map,Set,Date,Promise,console,Number,
+   normalizeDoi:d=>String(d||'').toLowerCase(),
+   recentFullCaptureEligible:x=>x.addedDate>='2026-10-01',
+   privatePdfLease:()=>({token:'测试授权占位符'}),GM_getValue:()=>null,
+   PRIVATE_PDF_LEASE_KEY:'owner-test',
+   PRIVATE_PDF_INVENTORY_ENDPOINT:'https://api.test/private-pdf/capture-inventory',
+   updateInventoryProgress:()=>{},captureLiveError:e=>String(e),
+   sleep:async()=>{},
+   inventoryReadMetadataJson:async options=>{
+     const items=JSON.parse(options.data).dois;calls++;
+     if(items.length===25&&items[0]===papers[0].doi)throw Error('owner_pdf_inventory_deadline');
+     return {schemaVersion:'private-pdf-capture-inventory-v1',complete:true,count:items.length,
+       items:items.map(doi=>({doi,status:'ready'}))};
+   }
+ };
+ vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\n globalThis.load=readOwnerPdfInventory;',ctx);
+ const result=await ctx.load(papers,null);
+ assert.equal(result.complete,true);
+ assert.equal(result.unknown,0);
+ assert.equal(result.items.length,53);
+ assert.equal(calls,5,'25 initial failed, two split parts, two unaffected batches');
+});
+test('owner PDF 403 cannot spawn retry requests or turn unknown into missing',async()=>{
+ const papers=Array.from({length:25},(_,i)=>({doi:'10.1021/jacs.6c'+String(i).padStart(5,'0'),addedDate:'2026-10-08'}));
+ let calls=0;
+ const ctx={Map,Set,Date,Promise,console,Number,
+   normalizeDoi:d=>String(d||'').toLowerCase(),recentFullCaptureEligible:x=>true,
+   privatePdfLease:()=>({token:'测试授权占位符'}),GM_getValue:()=>null,
+   PRIVATE_PDF_LEASE_KEY:'owner-test',PRIVATE_PDF_INVENTORY_ENDPOINT:'https://api.test/private-pdf/capture-inventory',
+   updateInventoryProgress:()=>{},captureLiveError:e=>String(e),sleep:async()=>{},
+   inventoryReadMetadataJson:async()=>{calls++;const e=Error('owner_pdf_inventory_http_403');e.httpStatus=403;throw e;}
+ };
+ vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\n globalThis.load=readOwnerPdfInventory;',ctx);
+ const result=await ctx.load(papers,null);
+ assert.equal(calls,1);
+ assert.equal(result.complete,false);
+ assert.equal(result.items.length,0);
+ assert.equal(result.unknown,25);
+ assert.equal(result.errors.length,1);
 });

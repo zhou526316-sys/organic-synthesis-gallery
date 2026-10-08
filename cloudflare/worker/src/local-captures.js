@@ -3,6 +3,7 @@ import { storeVerifiedStage } from './stage-storage.js';
 import { normalizeDoi } from './media.js';
 import { importFigure, importToc } from './media-write.js';
 import { importPrimaryVisual } from './primary-visual.js';
+import { tmReportEventId, tmReportDeliveryKey, tmUniqueReportHistory, tmEffectiveReport, tmProjectReportItem } from './tm-report-order.js';
 
 const INDEX_KEY = 'local-captures/index.json';
 const IMAGE_PREFIX = 'local-captures/images/';
@@ -256,6 +257,7 @@ function reportAttemptSummary(report, reportKey, attemptId) {
     attemptId,
     doi: report.doi,
     jobId: report.jobId,
+    deliveryEventId: report.deliveryEventId || '',
     captureVersion: report.captureVersion,
     controllerRevision: report.controllerRevision,
     mediaNeed: report.mediaNeed,
@@ -292,6 +294,7 @@ function legacyAttemptSummary(item) {
     attemptId: safeText(item.attemptId || ('legacy-' + String(item.updatedAt || 0)), 120),
     doi: safeText(item.doi || '', 300),
     jobId: safeText(item.jobId || '', 120),
+    deliveryEventId: safeText(item.deliveryEventId || '', 140),
     captureVersion: safeText(item.captureVersion || '', 40),
     controllerRevision: safeText(item.controllerRevision || '', 40),
     mediaNeed: safeText(item.mediaNeed || '', 40),
@@ -378,6 +381,26 @@ export async function importTampermonkeyReport(request, env, payload) {
     trace,
     updatedAt: now,
   };
+  report.deliveryEventId = tmReportEventId(report);
+  // Deduplicate BEFORE writing another immutable report object. The same
+  // publisher task and terminal event are one visit, not five failures.
+  const index = await readTampermonkeyReportIndex(env);
+  const previous = index.items?.[doi] && typeof index.items[doi] === 'object' ? index.items[doi] : {};
+  const history = tmUniqueReportHistory(previous, 1000);
+  const deliveryKey = tmReportDeliveryKey(report);
+  const duplicate = deliveryKey ? history.find(row => tmReportDeliveryKey(row) === deliveryKey) : null;
+  if (duplicate) return {
+    status: 200,
+    body: {
+      stored: true, duplicate: true, doi,
+      attemptId: duplicate.attemptId || '',
+      status: duplicate.status, reason: duplicate.reason,
+      retainedAttempts: tmUniqueReportHistory(previous, TAMPERMONKEY_REPORT_HISTORY_LIMIT).length,
+      failureCount: Number(previous.failureCount || 0),
+      successCount: Number(previous.successCount || 0),
+      updatedAt: Number(previous.updatedAt || now),
+    },
+  };
 
   const doiHash = await sha256Hex(new TextEncoder().encode(doi));
   const key = TAMPERMONKEY_REPORT_PREFIX + doiHash.slice(0, 32) + '/' + attemptId + '.json';
@@ -386,22 +409,25 @@ export async function importTampermonkeyReport(request, env, payload) {
     customMetadata: { doi, status: report.status, source: report.source, attemptId },
   });
 
-  const index = await readTampermonkeyReportIndex(env);
-  const previous = index.items?.[doi] && typeof index.items[doi] === 'object' ? index.items[doi] : {};
-  const attempts = Array.isArray(previous.attempts) ? previous.attempts.slice() : [];
-  if (!attempts.length) {
-    const legacy = legacyAttemptSummary(previous);
-    if (legacy) attempts.push(legacy);
-  }
-  attempts.push(reportAttemptSummary(report, key, attemptId));
-  attempts.sort((a, b) => Number(b?.updatedAt || 0) - Number(a?.updatedAt || 0));
-  const recentAttempts = attempts.slice(0, TAMPERMONKEY_REPORT_HISTORY_LIMIT);
-  const failureAttempts = recentAttempts.filter(item => item.status === 'failed');
-  const successAttempts = recentAttempts.filter(item => item.status === 'success');
+  const allReceipts = [...history, reportAttemptSummary(report, key, attemptId)];
+  const recentAttempts = tmUniqueReportHistory({attempts:allReceipts}, TAMPERMONKEY_REPORT_HISTORY_LIMIT);
+  const effective = tmEffectiveReport({attempts:recentAttempts});
+  const firstDeliveryForJob = !history.some(row => row.jobId && row.jobId === report.jobId);
+  // Legacy publisher reports may have no jobId/final flag. Keep their
+  // historical counting semantics while a bound job contributes at most one
+  // failure/success of each kind across its progress and final deliveries.
+  const firstFailureForJob = report.status === 'failed'
+    && (!report.jobId || !history.some(row => row.jobId === report.jobId && row.status === 'failed'));
+  const firstSuccessForJob = report.status === 'success'
+    && (!report.jobId || !history.some(row => row.jobId === report.jobId && row.status === 'success'));
+  const knownFailure = [report, ...history]
+    .filter(row => row.status === 'failed' && row.final === true)
+    .sort((a,b)=>Number(b.updatedAt||0)-Number(a.updatedAt||0))[0];
 
-  index.items[doi] = {
+  index.items[doi] = tmProjectReportItem({
     doi,
     jobId: report.jobId,
+    deliveryEventId: report.deliveryEventId,
     captureVersion: report.captureVersion,
     controllerRevision: report.controllerRevision,
     mediaNeed: report.mediaNeed,
@@ -427,24 +453,16 @@ export async function importTampermonkeyReport(request, env, payload) {
     reportKey: key,
     attemptId,
     traceEvents: trace.length,
-    attemptCount: Number(previous.attemptCount || attempts.length),
-    retainedAttempts: recentAttempts.length,
-    failureCount: Number(previous.failureCount || 0) + (report.status === 'failed' ? 1 : 0),
-    successCount: Number(previous.successCount || 0) + (report.status === 'success' ? 1 : 0),
-    lastFailureReason: report.status === 'failed'
-      ? report.reason
-      : safeText(previous.lastFailureReason || failureAttempts[0]?.reason || '', 240),
-    lastFailureAt: report.status === 'failed'
-      ? now
-      : Number(previous.lastFailureAt || failureAttempts[0]?.updatedAt || 0),
+    attemptCount: Math.max(Number(previous.attemptCount||0) + (firstDeliveryForJob?1:0), 1),
+    failureCount: Number(previous.failureCount||0) + (firstFailureForJob?1:0),
+    successCount: Number(previous.successCount||0) + (firstSuccessForJob?1:0),
+    lastFailureReason: knownFailure ? knownFailure.reason : safeText(previous.lastFailureReason||'',240),
+    lastFailureAt: knownFailure ? Number(knownFailure.updatedAt||0) : Number(previous.lastFailureAt||0),
     attempts: recentAttempts,
-    completedFigurePacket: latestCompletedFigurePacket({...previous,attempts}),
-    updatedAt: now,
-  };
-  index.items[doi].attemptCount = Math.max(
-    Number(previous.attemptCount || 0) + 1,
-    recentAttempts.length,
-  );
+    completedFigurePacket: latestCompletedFigurePacket({...previous,attempts:allReceipts}),
+    updatedAt: effective?.updatedAt || now,
+  });
+
   index.version = 2;
   index.updatedAt = now;
   const entries = Object.entries(index.items)
@@ -484,7 +502,7 @@ export async function getTampermonkeyReports(request, env) {
   const index = await readTampermonkeyReportIndex(env);
 
   if (doi) {
-    const item = index.items?.[doi];
+    const item = tmProjectReportItem(index.items?.[doi]);
     if (!item?.reportKey) return { status: 404, body: { error: 'tampermonkey_report_not_found', doi } };
     const latest = await readReportObject(env, {
       attemptId: item.attemptId || '',
@@ -496,7 +514,7 @@ export async function getTampermonkeyReports(request, env) {
       return { status: 200, body: latest };
     }
 
-    const summaries = (Array.isArray(item.attempts) ? item.attempts : [])
+    const summaries = tmUniqueReportHistory(item)
       .filter(attempt => !statusFilter || String(attempt?.status || '').toLowerCase() === statusFilter)
       .slice(0, limit);
     const attempts = await Promise.all(summaries.map(summary => readReportObject(env, summary)));
@@ -517,15 +535,13 @@ export async function getTampermonkeyReports(request, env) {
     };
   }
 
-  const latestItems = Object.values(index.items || {})
+  const latestItems = Object.values(index.items || {}).map(tmProjectReportItem)
     .sort((a, b) => Number(b?.updatedAt || 0) - Number(a?.updatedAt || 0));
 
   if (statusFilter) {
     const attempts = [];
     for (const item of latestItems) {
-      const history = Array.isArray(item?.attempts) && item.attempts.length
-        ? item.attempts
-        : [legacyAttemptSummary(item)].filter(Boolean);
+      const history = tmUniqueReportHistory(item);
       for (const attempt of history) {
         if (String(attempt?.status || '').toLowerCase() !== statusFilter) continue;
         attempts.push(attempt);
