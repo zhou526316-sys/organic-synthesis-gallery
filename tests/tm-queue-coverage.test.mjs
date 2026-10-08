@@ -66,6 +66,20 @@ await test('production Figure 1 clears stale TOC obligation while preserving act
  assert.equal(row.job.captureToc,false);
  assert.equal(row.job.capturePrivatePdf,true);
 });
+await test('verified stored Figure 1 production fallback closes TOC gap immediately',()=>{
+ const x=h(),run={summary:summary()},job=fakeJob(33,{captureFigures:false,captureToc:true,capturePrivatePdf:false});
+ x.T.coverageMergePlan(run,[job]);
+ x.T.coverageRemaining(run,job,{status:'success',toc:{status:'stored',kind:'figure1',productionFallbackStored:true},figures:{items:[]}});
+ const row=run.coverage.get(job.doi);
+ assert.equal(row.job.captureToc,false);assert.equal(row.state,'resolved');
+});
+await test('local-only Figure 1 receipt cannot falsely close production visual gap',()=>{
+ const x=h(),run={summary:summary()},job=fakeJob(34,{captureFigures:false,captureToc:true,capturePrivatePdf:false});
+ x.T.coverageMergePlan(run,[job]);
+ x.T.coverageRemaining(run,job,{status:'partial',toc:{status:'stored',kind:'figure1',productionFallbackStored:false},figures:{items:[]}});
+ const row=run.coverage.get(job.doi);
+ assert.equal(row.job.captureToc,true);assert.notEqual(row.state,'resolved');
+});
 await test('same valid receipt twice does not cause infinite progress retries',()=>{
  const x=h(),r={summary:summary()},j=fakeJob(1);x.T.coverageMergePlan(r,[j]);const result={status:'partial',reason:'combined_capture',figures:{discovered:3,stored:1,failed:2,items:[{...fig(j.doi,1),status:'staged'}]}};
  x.T.coverageRemaining(r,j,result);const row=r.coverage.get(j.doi);assert.equal(row.state,'pending');x.T.coverageRemaining(r,row.job,result);assert.equal(row.state,'blocked');
