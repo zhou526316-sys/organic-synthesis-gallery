@@ -86,6 +86,7 @@ test('old RSC hidden iframe retries are omitted on current Silverchair route onl
  const c=routeContext();
  c.rscRouteParts=()=>({year:'2026',code:'gc',suffix:'d6gc04458a'});
  c.rscIssuePageUrls=()=>[];
+ c.document={querySelectorAll:()=>[],body:{}};
  vm.runInContext(extract('iframeSourceUrls')+
   '\n globalThis.iframeSourceUrlsForTest=iframeSourceUrls;',c);
  const j={doi:'10.1039/d6gc04458a',publisher:'rsc'};
@@ -101,7 +102,7 @@ test('five inventory layers never start more than two concurrent network tasks',
    RECENT_FULL_CAPTURE_CUTOFF:'2026-10-01',
    normalizeDoi:d=>String(d||'').toLowerCase(),
    recentFullCaptureEligible:x=>x.addedDate>='2026-10-01',
-   updateInventoryProgress:()=>{},manualExecutionCurrent:()=>true,controllerPaused:()=>false,
+   updateInventoryProgress:()=>{},nowIso:()=>new Date().toISOString(),manualExecutionCurrent:()=>true,controllerPaused:()=>false,
    captureLiveError:e=>String(e),coverageTransient:()=>false,sleep:async()=>{},
    MEDIA_INVENTORY_ENDPOINT:'https://api.test/media/inventory',
    CAPTURE_INDEX_URL:'https://api.test/media/local-capture-index',
