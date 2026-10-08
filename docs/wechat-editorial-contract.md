@@ -1,11 +1,12 @@
 # WeChat Editorial Contract
 
-Updated: 2026-10-07
+Updated: 2026-10-08
 Status: active
 
 ## Daily publication shape
 
 - **Title de-duplication (user override 2026-10-08):** when the first cover already visibly says “今日精选·JACS” (or “今日精选·[期刊]”), the WeChat native article title MUST be **only the paper’s faithful Chinese title**. Never repeat “有机合成文献日报”, date, “今日精选”, or the journal label in that native title. The daily literature count/date remain in the article body and edition metadata. If the cover lacks this label, use an editorially appropriate concise journal/date title only when explicitly requested.
+- **Header-free cover: restore full native title (user override 2026-10-08, subsequent clarification):** When the user intentionally removes the “今日精选 · 期刊” line from the cover to enlarge the original TOC, the Official Account native article title **must include the full column identity, date, journal and paper Chinese title**, formatted `有机合成文献日报｜MM.DD｜今日精选｜JOURNAL：论文中文标题`. For the 2026-10-08 JACS draft this is exactly `有机合成文献日报｜10.08｜今日精选｜JACS：α-氯代烷基硼酸酯与偕二硼烷的立体选择性1,2-迁移重排`. This explicit instruction supersedes the paper-only and concise-title fallback for header-free covers. **Do not repaint the header on the cover image**, and preserve the source-authentic TOC and native headline-safe dark lower backing. Actual mobile title wrapping/cropping remains subject to client verification.
 
 The 10:00 Asia/Shanghai WeChat update is one multi-article push with two editorial entries:
 
