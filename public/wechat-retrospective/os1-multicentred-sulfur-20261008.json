@@ -338,25 +338,26 @@
     },
     {
       "id": "retro-cover",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-08-retro/cover-retrospective-concept-exact-chemistry.png",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-r2/retro-user-approved-exact.png",
       "caption": "",
       "body": false,
       "display_width_pct": 100,
       "source_figure": "Original abstract cover with exact unaltered published chemical figure",
       "source_doi": "10.1038/s41929-026-01602-y",
-      "source_kind": "editorial_composite_exact_original_chemistry"
+      "source_kind": "exact_user_approved_concept_cover",
+      "source_adjustment": "Exact 1254x1254 user-selected image from 2026-10-08; not regenerated or edited."
     }
   ],
   "cover": {
     "source_figure_id": "retro-cover",
     "canvas": {
-      "width": 1280,
-      "height": 1280,
+      "width": 1254,
+      "height": 1254,
       "background": "#203648"
     },
     "crop_1_1": "0_0_1_1",
     "crop_235_1": "0_0.287234_1_0.712766",
-    "description": "Abstract restrained orbital-layout and untouched crop of OS1 from authentic source Fig. 1c, not AI-redrawn chemistry"
+    "description": "User-approved original square concept cover dated 2026-10-08, exact bytes, with luminous through-space orbital motif. Artistic cover; source evidence is in original figures within article."
   },
   "ai_notice": "“化之岛”根据Nature Catalysis正文和SI整理，AI辅助图文编排；机制计算和实验对应关系按原文核对。封面为编排概念图，硫结构与轨道来自原文原样裁切。",
   "editorialRevision": "2026-10-08-r1"

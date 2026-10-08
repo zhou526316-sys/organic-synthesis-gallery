@@ -1,6 +1,6 @@
 {
   "date": "2026-10-08",
-  "revision": "2026-10-08-r1",
+  "revision": "2026-10-08-r2",
   "articleCount": 2,
   "selectionDois": [
     "10.1021/jacs.6c14748",
@@ -10,18 +10,18 @@
   "imageReview": "pass",
   "artifacts": {
     "textOnly": "audit/wechat-working/2026-10-08-bundle-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-08-bundle-images-only.md"
+    "imagesOnly": "audit/wechat-working/2026-10-08-r2-images-only.md"
   },
   "sources": [
     {
       "path": "public/wechat-featured/2026-10-08.json",
-      "blobSha": "81ad6ac1ccad14aa1f75df00c7d61fd19e259232",
-      "sha256": "89cd76964fc764dbacf50b383de3293a8aba673b487f60b84a343fedcd210756"
+      "blobSha": "c47547d3de4b93d87e065ab8b17cd23b793f5554",
+      "sha256": "6f16452375960e15c708e3f0c492589aa3bb7d80a9439278a408862e61e9cc93"
     },
     {
       "path": "public/wechat-retrospective/os1-multicentred-sulfur-20261008.json",
-      "blobSha": "57ec52bd60813fb69d5ec99bb7db9778a17e2ce6",
-      "sha256": "245d60012f2a764e2de2024f3d660eed60f15d6962aff1f9205bb5b47c2fb66e"
+      "blobSha": "873139bcb57b260f1d0fe19d1b344191ede5755b",
+      "sha256": "8521a671bbb5d44d9fc3592c6e1bea756c0be2c95d300dd40e81cd909e15b8cf"
     },
     {
       "path": "public/wechat-editions/2026-10-08.json",
@@ -34,9 +34,9 @@
       "sha256": "4b6d5c9f5e127490ed8e6990e48941351e144f384a399d29e30c06de515a435d"
     },
     {
-      "path": "audit/wechat-working/2026-10-08-bundle-images-only.md",
-      "blobSha": "d08d746feb0db52cf3d1c5ff58b03dc9840c76bb",
-      "sha256": "b0c58d400e7dbea4a0375e5a7565389d016d5749f60941fd7c27b44b75538a42"
+      "path": "audit/wechat-working/2026-10-08-r2-images-only.md",
+      "blobSha": "aef604f4952897838addf2d7c472c771b5b61cca",
+      "sha256": "77f74309c00ff7e3fd026d7466e859f745e29c3dce75dbe5bbb34bf9929d904e"
     }
   ],
   "assets": [
@@ -125,11 +125,11 @@
       "height": 1608
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-08-daily/jacs16-si-s43-side-ate.png",
-      "blobSha": "9fc77eed24c874ff20b8385cbbe508ae84e852f4",
-      "sha256": "93a2b26dc245748751a3d592d529447d4f210d06415a79fa31794b5df3b8f9c0",
-      "width": 1410,
-      "height": 1233
+      "path": "public/wechat-assets/reviewed/2026-10-08-r2/jacs-si-fig-s3-complete.png",
+      "blobSha": "4ddd9526a7de7d6fb1de4a46360b7ea72d19bc21",
+      "sha256": "714d9a291afb7b21f5f9d601de2a2f091439558aec36b334e344792e0cb35967",
+      "width": 1511,
+      "height": 1185
     },
     {
       "path": "public/wechat-assets/reviewed/2026-10-08-daily/jacs10-scheme3b-stereo.png",
@@ -181,9 +181,9 @@
       "height": 582
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-08-daily/daily-cover-toc-native-preserved.png",
-      "blobSha": "9c71de0eceac267a01b1f0617cf43aa972b1ea53",
-      "sha256": "5bd2e69a394f6846342e2ec25e69815d3ce4b1acd07c5f0ffc911f8ce8f499be",
+      "path": "public/wechat-assets/reviewed/2026-10-08-r2/jacs-cover-original-toc-dark.png",
+      "blobSha": "3de0c478c8633b2251fd9f91f3d3a11f66ddeb3e",
+      "sha256": "35b1fd95fc666c9d316792c9e64c18459b60bdb94972f1d0f397e561ecdd9d97",
       "width": 1880,
       "height": 800
     },
@@ -272,11 +272,11 @@
       "height": 1468
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-08-retro/cover-retrospective-concept-exact-chemistry.png",
-      "blobSha": "89804b30cc56eba6e45c53e3cdc6032614cbecb6",
-      "sha256": "b3f24fb36f9e2220b5ceab4123aa7d17f41eb314c43d5a8f65cf2c706af352e3",
-      "width": 1280,
-      "height": 1280
+      "path": "public/wechat-assets/reviewed/2026-10-08-r2/retro-user-approved-exact.png",
+      "blobSha": "c144411fbb3d6618dd0e5c44b335d25a510cf346",
+      "sha256": "c82db4f982aa234257cc913416e9aa786ea37a868307cc0eac89d30857b8026b",
+      "width": 1254,
+      "height": 1254
     }
   ],
   "materializedCropReviewRequired": true,
@@ -287,9 +287,14 @@
     "20 JACS figures and 12 retrospective figures are pinned standalone exact-source rasters with source figure names and complete labels; no AI chemistry redraw.",
     "Retrospective composite uses exact published OS1 chemistry on a light panel with restrained abstract deep blue-gray surrounding.",
     "Web publisher strictly draft-only; no public sending authorized.",
-    "Both text and image source revisions locked before the one terminal draft update and draft/get readback."
+    "Both text and image source revisions locked before the one terminal draft update and draft/get readback.",
+    "R2 includes only user-requested visual corrections; all narrative text, original scientific claims and 31 other reviewed images retained.",
+    "JACS Fig. S3 old crop rejected (upper trace partially clipped); new source-exact full PDF crop manually inspected.",
+    "Retrospective exact user-selected 1254px cover restored without any regeneration or textual alteration.",
+    "JACS cover uses original published graphical abstract source, not generated chemical reconstructions; both user-selected top label and native-title lower safe zone maintained.",
+    "R2 controlled import uses CAS assertions on three mutable reviewed source records; no WeChat public send is authorized."
   ],
-  "draftReadback": "not_run",
+  "draftReadback": "pending-after-r2-review",
   "publicSendAuthorized": false,
   "generatedBy": "reviewed_editorial_import"
 }

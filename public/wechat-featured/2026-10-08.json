@@ -322,13 +322,14 @@
     },
     {
       "id": "j13",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-08-daily/jacs16-si-s43-side-ate.png",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-r2/jacs-si-fig-s3-complete.png",
       "caption": "SI Fig. S3｜n-BuBpin与活化剂形成另一boron-ate的信号；该副过程有助于解释为什么需要过量活化剂。",
       "body": true,
       "display_width_pct": 100,
       "source_figure": "SI Fig. S3",
       "source_doi": "10.1021/jacs.6c14748",
-      "source_kind": "original_source_crop"
+      "source_kind": "exact_full_figure_crop_original_SI_PDF",
+      "source_adjustment": "Full Fig. S3 including upper and lower 11B NMR traces, chemical insets, labels, axis and complete original caption; directly cropped from original page S43, no generative redrawing."
     },
     {
       "id": "j14",
@@ -402,13 +403,14 @@
     },
     {
       "id": "jacs-cover",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-08-daily/daily-cover-toc-native-preserved.png",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-08-r2/jacs-cover-original-toc-dark.png",
       "caption": "",
       "body": false,
       "display_width_pct": 100,
       "source_figure": "Official paper graphical abstract",
       "source_doi": "10.1021/jacs.6c14748",
-      "source_kind": "verified_original_toc"
+      "source_kind": "original_paper_graphical_abstract_background_and_monochrome_contrast_adapted",
+      "source_adjustment": "Authentic publisher graphical abstract geometry and colored marks retained; white background suppressed and neutral ink adjusted for contrast on low-saturation navy. Exact existing title art retained, lower caption-safe zone reserved."
     }
   ],
   "cover": {
@@ -420,7 +422,7 @@
     },
     "crop_235_1": "0_0_1_1",
     "crop_1_1": "0.287234_0_0.712766_1",
-    "description": "Authentic TOC crop preserved unchanged on neutral white panel; comfortable deep slate blue outside; separate native title area. No chemistry reconstructed."
+    "description": "Original published TOC chemistry retained on comfortable deep-blue background with neutral-ink contrast adaptation; authentic upper 今日精选·JACS title, lower native white-title safe zone. Never use generated chemistry source."
   },
   "ai_notice": "“化之岛”基于JACS正文与作者Supporting Information整理，AI辅助查阅与图文编排，正式发布由运营者复核。全部化学结构、示意和数据均为原始来源的高清裁切，未使用生成式工具重绘。",
   "editorialRevision": "2026-10-08-r1"
