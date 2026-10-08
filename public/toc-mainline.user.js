@@ -4663,7 +4663,8 @@ function embeddedJobDois(value) {
     // every journal; it does not need a later official-TOC replacement.
     var figureOneCompletesQueue=verifiedFigureOneSatisfiesQueue(raw,fallback);
     var tocNeeded=tocKnown&&!productionOfficial&&!figureOneCompletesQueue;
-    var pdfNeeded=privatePdfQueueNeeded(raw,Date.now(),true);
+    var ownerPdfStatus=privatePdfServerStatus(inventory.pdfMap,doi);
+    var pdfNeeded=privatePdfQueueNeeded(Object.assign({},raw,{privatePdfServerStatus:ownerPdfStatus}),Date.now(),true);
     var bundleVisit=Boolean(recentFullCaptureEligible(raw)&&(tocNeeded||pdfNeeded));
     var job=Object.assign({},raw,{doi:doi,publisher:publisherForDoi(doi),missingOnly:true,recaptureFromHead:false,
       captureToc:tocNeeded,
@@ -4671,11 +4672,13 @@ function embeddedJobDois(value) {
       // acquisition gap, use that same authenticated visit to collect body
       // figures and full-text evidence as well. These companion layers do not
       // create a standalone visit by themselves.
-      captureFigures:Boolean(explicitFigureGap),
+      // Companion images/text do not create independent publisher visits.
+      captureFigures:false,
       captureEvidence:false,
-      opportunisticFigures:Boolean(bundleVisit||(tocNeeded&&needFigures)),
-      opportunisticEvidence:Boolean((bundleVisit||(recentFullCaptureEligible(raw)&&explicitFigureGap))&&textLevel!=='complete'||tocNeeded&&inventory.evidenceKnown&&!textLevel),
-      capturePrivatePdf:Boolean(pdfNeeded||(bundleVisit&&privatePdfLease())),
+      opportunisticFigures:Boolean(bundleVisit||tocNeeded),
+      opportunisticEvidence:Boolean(bundleVisit&&textLevel!=='complete'),
+      // Only owner-verified cloud absence may generate a PDF download.
+      capturePrivatePdf:Boolean(pdfNeeded),privatePdfServerStatus:ownerPdfStatus,
       expectedFigureCount:expected,figureCoverageUnconfirmed:Boolean(tocNeeded&&inspectFigures),missingFigureCount:expected>0?Math.max(0,expected-knownCount):0,
       capturedFigures:figs,existingEvidenceLevel:textLevel,existingTocKind:productionOfficial?'official':localOfficial?'official_local':fallback?'figure1':localFigureOne?'figure1_local':'',
       unknownNeeds:unknown,nonQueueUnknownNeeds:nonQueueUnknown,allowFigureOne:Boolean(tocNeeded&&!official&&!fallback)});
@@ -4687,7 +4690,8 @@ function embeddedJobDois(value) {
     // Reuse complete registry validation, but don't reuse its historical TOC-first tiers.
     var rows=pairedJobs(queue,{items:{}}), inv=rawInventory||{};
     var inventory={mediaMap:mapCaptureRows(inv.media),tocMap:new Map(),figureMap:mapCaptureRows(inv.figures),evidenceMap:mapCaptureRows(inv.evidence),
-      tocsKnown:Boolean(inv.tocs),figuresKnown:Boolean(inv.figures&&inv.figures.complete),evidenceKnown:Boolean(inv.evidence)};
+      pdfMap:mapCaptureRows(inv.pdf),tocsKnown:Boolean(inv.tocs),
+      figuresKnown:Boolean(inv.figures&&inv.figures.complete),evidenceKnown:Boolean(inv.evidence)};
     ((inv.tocs||{}).items||[]).forEach(function(t){var d=normalizeDoi(t.doi);if(!d||Number(t.mediaGeneration)!==1790082000000)return;var a=inventory.tocMap.get(d)||[];a.push(t);inventory.tocMap.set(d,a);});
     var jobs=[],unknownDois=0,unknownLayers={toc:0,figures:0,evidence:0};
     rows.forEach(function(raw){var job=missingCaptureDecision(raw,inventory);if(job.unknownNeeds.length)unknownDois++;
@@ -4695,7 +4699,13 @@ function embeddedJobDois(value) {
       if(job.captureToc||job.captureFigures||job.captureEvidence||job.capturePrivatePdf){job.manualRunId=run.id;jobs.push(job);}
     });
     jobs.sort(compareMissingCaptureJobs);
-    if(run.summary){run.summary.inventoryUnknown=unknownDois;run.summary.inventoryUnknownLayers=unknownLayers;run.summary.inventoryErrors=(inv.errors||[]).slice();run.summary.inventoryReadAt=inv.readAt||'';}
+    if(run.summary){
+      var statuses=rows.reduce(function(stats,row){var status=privatePdfServerStatus(inventory.pdfMap,row.doi);stats[status]++;return stats;},
+        {ready:0,pending:0,failed:0,missing:0,unknown:0});
+      run.summary.scopeCount=rows.length;run.summary.ownerPdfInventory=statuses;
+      run.summary.inventoryUnknown=unknownDois;run.summary.inventoryUnknownLayers=unknownLayers;
+      run.summary.inventoryErrors=(inv.errors||[]).slice();run.summary.inventoryReadAt=inv.readAt||'';
+    }
     return jobs;
   }
   function updateMissingQueueSummary(run,pending) {
