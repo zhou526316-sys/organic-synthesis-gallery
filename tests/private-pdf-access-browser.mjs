@@ -85,7 +85,7 @@ const papers=Array.from({length:72},(_,index)=>({
 const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
 async function contextWith(capabilities,openResult={available:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=opaque'},options={}){
  const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900},locale:options.locale||'en-US'});
- const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateFullFileCalls:0,authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
+ const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,openModes:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
  if(options.pendingQueue)state.queueRows.set('fixture-owner',new Map(papers.map(paper=>[paper.doi,{doi:paper.doi,state:'pending',revision:1,createdAt:Date.now(),updatedAt:Date.now()}])));
  await context.addInitScript(fixtureOrigin=>{
   if(location.origin!==fixtureOrigin)return;
@@ -164,7 +164,12 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
   if(url.pathname==='/api/user-ui/private-pdf/file'){
    state.privateFileCalls++;
    const range=String(route.request().headers().range||'');
-   const common={'access-control-allow-origin':'*','access-control-expose-headers':'content-length, content-range, accept-ranges, content-type','accept-ranges':'bytes','cache-control':'private, no-store'};
+   const download=url.searchParams.get('download')==='1';
+   if(download)state.privateFileDownloads++;
+   const common={'access-control-allow-origin':base,'access-control-allow-credentials':'true','access-control-allow-headers':'range, authorization','access-control-expose-headers':'content-length, content-range, accept-ranges, content-type, x-gallery-pdf-status','accept-ranges':'bytes','cache-control':'private, no-store','content-disposition':download?'attachment; filename="fixture.pdf"':'inline; filename="fixture.pdf"'};
+   if(options.fileStatus){
+    return route.fulfill({status:options.fileStatus,contentType:'application/json',headers:{...common,'x-gallery-pdf-status':'pdf_ticket_invalid'},body:'{"error":"pdf_ticket_invalid"}'});
+   }
    if(range){
     state.privateRangeCalls++;
     const match=/^bytes=(\d+)-(\d*)$/.exec(range);
@@ -174,6 +179,16 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    }
    state.privateFullFileCalls++;
    return route.fulfill({status:200,contentType:'application/pdf',headers:{...common,'content-length':String(cardPdf.length)},body:cardPdf});
+  }
+  if(url.pathname==='/api/user-ui/private-pdf/open'){
+   state.privateCalls++;
+   const mode=url.searchParams.get('mode')||'view';
+   state.openModes.push(mode);
+   if(openResult?.available!==true)return reply(openResult);
+   const source=new URL(openResult.url);
+   if(mode==='download')source.searchParams.set('download','1');
+   else source.searchParams.delete('download');
+   return reply({...openResult,mode,url:source.toString()});
   }
   if(url.pathname.startsWith('/api/user-ui/private-pdf/')){state.privateCalls++;return reply(openResult);}
   if(url.pathname==='/api/user-ui/integrations')return reply({auth:{local:true,google:false,wechat:false,qq:false,email:false},payments:{wechat:false,alipay:false}});
@@ -240,14 +255,41 @@ try{
   await original.evaluate(anchor=>{anchor.href='/publisher-fallback.html';});
   const publisherPage=await popup(page,original);assert.match(publisherPage.url(),/publisher-fallback\.html/);
   assert.equal(state.privateCalls,0);await publisherPage.close();
-  const target=await popup(page,pdf);assert.match(target.url(),/\/pdf\/?\?doi=/);
-  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='native',undefined,{timeout:7000});
-  const native=target.locator('#native-pdf-frame');
-  assert.equal(await native.isVisible(),true);
-  assert.match(await native.getAttribute('src'),/\/api\/user-ui\/private-pdf\/file\?token=/);
-  assert.equal(await target.locator('#download').isVisible(),true);
-  assert.equal(await target.locator('#compatibility').isVisible(),true);
-  assert.equal(state.privateCalls,1);
+  const popupPromise=page.waitForEvent('popup');await pdf.click();const target=await popupPromise;
+  await waitForNode(page,()=>state.privateRangeCalls>=1);
+  await waitForNode(page,()=>state.privateFileCalls>=2);
+  assert.equal(state.privateCalls,1,'default reading mints one view ticket');
+  assert.deepEqual(state.openModes,['view']);
+  assert.equal(await target.locator('#native-pdf-frame').count(),0,'the blocked cross-origin iframe must not be used');
+  assert.equal(await page.locator('.private-pdf-more').first().isVisible(),true,'owner can access separate download/compatibility controls');
+  await page.locator('.private-pdf-more summary').first().click();
+  const optionsMenu=page.locator('.private-pdf-more').first();
+  assert.match(await optionsMenu.locator('.private-pdf-download-button').getAttribute('href'),/mode=download/);
+  assert.match(await optionsMenu.locator('.private-pdf-compat-button').getAttribute('href'),/compat=1/);
+ });
+ await test('a rejected PDF header stays in safe Gallery shell rather than navigating to Unauthorized',async()=>{
+  const {context,state}=await contextWith(['private_pdf_read'],undefined,{fileStatus:401});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',undefined,{timeout:7000});
+  assert.match(target.url(),/\/pdf\/\?doi=/);
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/file_http_401/);
+  assert.equal(state.privateCalls,2,'a rejected short-lived ticket is reminted exactly once');
+ });
+ await test('compatibility reader download mints an attachment ticket on every click',async()=>{
+  const {context,state}=await contextWith(['private_pdf_read']);
+  const page=await gallery(context,true);
+  const viewer=new URL(await page.locator('.card .private-pdf-button').first().getAttribute('href'),base);
+  viewer.searchParams.set('compat','1');
+  const target=await context.newPage();
+  await target.goto(viewer.toString(),{waitUntil:'domcontentloaded'});
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:7000});
+  const downloadEvent=target.waitForEvent('download',{timeout:7000});
+  await target.locator('#download').click();
+  const received=await downloadEvent;
+  assert.match(received.suggestedFilename(),/\.pdf$/);
+  assert.deepEqual(state.openModes,['view','download']);
+  assert.ok(state.privateFileDownloads>=2,'preflight and attachment navigation must be download-intent requests');
  });
  await test('PDF.js compatibility mode remains available with bounded range reads',async()=>{
   const {context,state}=await contextWith(['private_pdf_read']);const page=await gallery(context,true);
