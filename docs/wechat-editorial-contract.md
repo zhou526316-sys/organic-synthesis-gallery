@@ -5,7 +5,7 @@ Status: active
 
 ## Daily publication shape
 
-- Daily main-article title should identify the selected feature directly after the literature-daily label, using the pattern **“有机合成文献日报｜日期｜今日精选｜期刊：中文论文标题”** when platform length allows. The Chinese paper title should be a faithful translation of the original title, not a marketing rewrite.
+- **Title de-duplication (user override 2026-10-08):** when the first cover already visibly says “今日精选·JACS” (or “今日精选·[期刊]”), the WeChat native article title MUST be **only the paper’s faithful Chinese title**. Never repeat “有机合成文献日报”, date, “今日精选”, or the journal label in that native title. The daily literature count/date remain in the article body and edition metadata. If the cover lacks this label, use an editorially appropriate concise journal/date title only when explicitly requested.
 
 The 10:00 Asia/Shanghai WeChat update is one multi-article push with two editorial entries:
 

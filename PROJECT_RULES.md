@@ -118,3 +118,22 @@ Effective from the user's 2026-10-07 instruction, featured WeChat articles must 
 3. Each article must extract 1–3 transferable design principles for method/catalyst development, but every high-level insight must be traceable to specific evidence in the paper and must state its extrapolation limit.
 4. “High-level” must never mean grandiose. Repetitive model-like rhetoric (for example frequent “真正…”, “最…”, “不是A而是B”, “值得注意的是…”) should be actively removed during the human-language pass.
 5. Every featured text receives three separate reviews before textReview=pass: scientific-evidence review, anti-AI/natural-language review, and cross-domain/transferable-insight review.
+
+## WeChat image-to-draft delivery loop (binding)
+
+Effective from the user's 2026-10-08 instruction, the image-editing task is NOT done when an image has merely been generated or delivered.
+
+For any WeChat image/cover correction, default to the following end-to-end flow WITHOUT requesting a second authorization to finish the already approved draft-edit task:
+
+1. Inspect the current **same-day same-media** Official Account draft and source manifests; keep selected DOI, article order, full body and unrelated image assets unchanged.
+2. Build/repair the cover or scientific crop from **original verified source**. Preserve chemistry exactly; never use an AI-regenerated molecular structure in place of original figures.
+3. Independently verify visual dimensions, source-image fidelity, native headline overlay clearance, text/cover duplication, figure completeness and mobile readability. A standalone generated image is **not** a verified WeChat draft.
+4. Lock asset bytes and revised source hashes. Make one controlled `draft/update` call via the existing fixed-IP WeChat API and **`draft/get` readback**. If an editorial gate fails, fix source/QA first; never claim the draft was updated.
+5. Inspect the actual returned article titles, source images, two-article order and generated preview; if a clear issue remains, revise the source and rerun the complete review/update/readback loop.
+6. **Only after the readback and applicable preview/layout QA have passed** provide the user a fresh, genuine `https://relay.gczhouwld.com/wechat-preview/...` URL returned by the publishing relay. Do not invent or reuse a previous preview link as a successful new update. Distinguish native-app display (only verified by a genuine client observation) from web preview/layout simulations.
+7. Draft permission never authorizes public send or distribution.
+
+If the task cannot reach draft/get success, state the exact blocker; do not stop at image generation and say that the user can copy it manually.
+
+User override on cover + article title: when the cover includes “今日精选·JACS”/“今日精选·期刊”, the main article’s actual native title is the **paper Chinese title only**, without duplicating the cover label/date prefix. Keep a white/light original-color TOC when the user requests it, with only a sufficiently high-contrast bottom strip for native white title and no chemistry glyphs beneath the title.
+

@@ -173,7 +173,7 @@ jobs:
                       if not isinstance(allowed_replacements, dict):
                           raise RuntimeError('Invalid replaceExisting map')
                       old_sha = str(allowed_replacements.get(rel) or '')
-                      allowed_mutable = {gate_rel, 'public/wechat-featured/2026-10-08.json', 'public/wechat-retrospective/os1-multicentred-sulfur-20261008.json'}
+                      allowed_mutable = {gate_rel, 'public/wechat-featured/2026-10-08.json', 'public/wechat-retrospective/os1-multicentred-sulfur-20261008.json', 'public/wechat-editions/2026-10-08.json'}
                       if rel not in allowed_mutable or not re.fullmatch(r'[a-f0-9]{40}', old_sha) or blob(target.read_bytes()) != old_sha:
                           raise RuntimeError('Refusing to replace non-matching existing content: '+rel)
                   target.parent.mkdir(parents=True,exist_ok=True); target.write_bytes(payload)

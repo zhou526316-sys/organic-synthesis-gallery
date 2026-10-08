@@ -1,17 +1,17 @@
 {
-  "requestId": "2026-10-08-r2-repair-covers-s3-single-import",
+  "requestId": "wechat-2026-10-08-r3-white-TOC-native-title-import",
   "requestedAt": "2026-10-08T14:06:00+08:00",
   "action": "import_reviewed_editorial_package",
-  "revision": "2026-10-08-r2",
+  "revision": "2026-10-08-r3",
   "doi": "10.1038/s41929-026-01602-y",
-  "packageUrl": "https://at.adobe.com/rwW1tGvAMYrw3EmB",
-  "packageSha256": "56ff0d6df2d4c08e96afe985e880e8d91c56daa05e44a2d9ed1dae88af68565a",
+  "packageUrl": "https://at.adobe.com/oRErUSbyYk4eVElF",
+  "packageSha256": "ca6936626e34288d3a153f35f8899a0bad3e009068d9918f386fee655b8631b1",
   "manifestPath": "public/wechat-retrospective/os1-multicentred-sulfur-20261008.json",
   "gatePath": "audit/wechat-working/2026-10-08-review-gate.json",
   "replaceExisting": {
-    "public/wechat-featured/2026-10-08.json": "81ad6ac1ccad14aa1f75df00c7d61fd19e259232",
-    "public/wechat-retrospective/os1-multicentred-sulfur-20261008.json": "57ec52bd60813fb69d5ec99bb7db9778a17e2ce6",
-    "audit/wechat-working/2026-10-08-review-gate.json": "2322cf4000fd6b341cc0b092dea4cc3b345433f6"
+    "public/wechat-featured/2026-10-08.json": "c47547d3de4b93d87e065ab8b17cd23b793f5554",
+    "public/wechat-editions/2026-10-08.json": "583f85fe696baacc8f6ab49d4c268c100d1d812c",
+    "audit/wechat-working/2026-10-08-review-gate.json": "8d3b7f5ead0685ba88c7f644e0297bd82acdaae9"
   },
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -20,5 +20,5 @@
   ],
   "thisStepWritesDraft": false,
   "publicSendAuthorized": false,
-  "note": "Import 3 corrected versioned assets and exact reviewed manifests; protects existing files by SHA CAS; no WeChat writes in this stage."
+  "note": "Single source-locked R3 correction: restore authentic white original-color JACS TOC, keep top 今日精选·JACS, reserve bottom native white title region with no structures; use paper-title-only native article title; preserve other 33 assets and approved retrospective cover. Import-only; draft/update follows only after successful CAS review."
 }
