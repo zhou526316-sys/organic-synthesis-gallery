@@ -17,7 +17,7 @@ function h(q=queue([]),inventory=inv([]),opts={}){
  GM_getValue:(k,d)=>store.has(k)?structuredClone(store.get(k)):d,GM_setValue:(k,v)=>store.set(k,structuredClone(v)),GM_deleteValue:k=>store.delete(k),GM_listValues:()=>[...store.keys()],GM_registerMenuCommand(){},
  setTimeout:(f,ms)=>{timers.set(++id,{f,ms});return id},clearTimeout:i=>timers.delete(i),setInterval:(f,ms)=>{timers.set(++id,{f,ms,interval:true});return id},clearInterval:i=>timers.delete(i),
  __get:async u=>opts.get?opts.get(u,get):get(u),__post:async(u,p)=>{calls.push(u);if(opts.post)return opts.post(u,p);return {items:inventory.media.items.filter(x=>p.dois.includes(x.doi))}},__private:async()=>{if(opts.evidenceError)throw Error('private_http_401');return inventory.evidence},__sleep:async ms=>{if(opts.sleep)await opts.sleep(ms,advance=>{now+=advance});else now+=ms},
- GM_openInTab:u=>{const j=store.get(P+'active-job');opened.push(structuredClone(j));if(!opts.noResult)store.set(P+'result:'+j.doi,Object.assign({doi:j.doi,jobId:j.jobId,version:'6.2.20',finishedAt:new D().toISOString(),status:'success',toc:{status:j.captureToc?'stored':'already_available'},privatePdf:j.capturePrivatePdf?{status:'stored'}:null,fulltext:{status:opts.failText?'failed':(j.captureEvidence||j.opportunisticEvidence)?'stored':'not_requested'}},opts.result?opts.result(j,opened.length,store):{}));return {closed:false,close(){this.closed=true}};}
+ GM_openInTab:u=>{if(opts.openTabFailure)throw Error('task_tab_open_failed');const j=store.get(P+'active-job');opened.push(structuredClone(j));if(!opts.noResult)store.set(P+'result:'+j.doi,Object.assign({doi:j.doi,jobId:j.jobId,version:'6.2.20',finishedAt:new D().toISOString(),status:'success',toc:{status:j.captureToc?'stored':'already_available'},privatePdf:j.capturePrivatePdf?{status:'stored'}:null,fulltext:{status:opts.failText?'failed':(j.captureEvidence||j.opportunisticEvidence)?'stored':'not_requested'}},opts.result?opts.result(j,opened.length,store):{}));return {closed:false,close(){this.closed=true}};}
  });
  const cut=source.lastIndexOf('  installManualRestartListener();');
  vm.runInContext(source.slice(0,cut)+`
@@ -176,4 +176,14 @@ await test('owner PDF missing, expired, and unreadable inventory remain distinct
  assert.equal(failState.summary.ownerPdfInventory.unknown,1);
 });
 
+
+await test('pre-opening task failure is an attempt but never a publisher visit',async()=>{
+ const ar=[article(8)],i=inv(ar);i.media.items[0].tocStored=false;
+ const x=h(queue(ar),i,{openTabFailure:true});await x.T.forceStartFromHead();
+ const s=x.store.get(P+'last-run-summary');
+ assert.equal(s.attemptCount,1);assert.equal(s.visitedCount,0);
+ assert.equal(s.blockedCount,1);assert.equal(x.opened.length,0);
+ const panel=x.T.captureLiveText(x.T.captureLiveSnapshot(x.ctx.Date.now()));
+ assert.match(panel.batch,/实际访问 0／1/);
+});
 console.log(JSON.stringify({passed,revision:'20261008-cooldown-deferred-v1',realPublisherRequests:0,productionWrites:0}));
