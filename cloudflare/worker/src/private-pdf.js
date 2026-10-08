@@ -4,6 +4,8 @@ const READ_CAPABILITY = 'private_pdf_read';
 const OWNER_CAPABILITY = 'private_pdf_owner';
 const BOOTSTRAP_HASH = '7d06423d6dec5593c6ced3cf94d7dcea652600bf0eae59e06f0921108e75e819';
 const ACCESS_TTL_MS = 5 * 60 * 1000;
+const VIEW_ABSOLUTE_TTL_MS = 90 * 60 * 1000;
+const VIEW_COOKIE_IDLE_SECONDS = 60 * 60;
 const FAST_TICKET_VERSION = 'v2';
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -33,11 +35,63 @@ function base64UrlToBytes(value) {
   const binary = atob(padded);
   return Uint8Array.from(binary, char => char.charCodeAt(0));
 }
+function ticketSecret(env) {
+  return String(env?.PRIVATE_PDF_TICKET_SECRET || env?.BRIDGE_WRITE_TOKEN || '').trim();
+}
 async function privatePdfTicketKey(env) {
-  const secret = String(env?.PRIVATE_PDF_TICKET_SECRET || env?.BRIDGE_WRITE_TOKEN || '').trim();
+  const secret = ticketSecret(env);
   if (!secret) return null;
   const raw = await crypto.subtle.digest('SHA-256', textEncoder.encode('organic-gallery-private-pdf-fast-ticket-v2\0' + secret));
   return crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+}
+async function privatePdfContinuationKey(env) {
+  const secret = ticketSecret(env);
+  if (!secret) return null;
+  const raw = await crypto.subtle.digest('SHA-256', textEncoder.encode('organic-gallery-private-pdf-continuation-v1\0' + secret));
+  return crypto.subtle.importKey('raw', raw, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
+}
+function safePrivateR2Key(value) {
+  // Key is exclusively obtained from the selected, active private R2 document.
+  // Do not reject legitimate older R2 naming schemes solely because their
+  // object path does not begin with the latest capture prefix.
+  return typeof value === 'string' && value.length > 0 && value.length <= 1024 &&
+    !/^[\\/]/.test(value) && !/[\u0000-\u001f\u007f]/.test(value) &&
+    !/(^|\/)\.\.(\/|$)/.test(value) && !/^https?:\/\//i.test(value);
+}
+function continuationCookieName(payload) {
+  return /^[A-Za-z0-9_-]{16,32}$/.test(String(payload?.nonce || ''))
+    ? 'gpdf_' + payload.nonce : '';
+}
+async function signContinuationCookie(env, ticket) {
+  const key = await privatePdfContinuationKey(env);
+  if (!key) return '';
+  return 'v1.' + bytesToBase64Url(new Uint8Array(await crypto.subtle.sign(
+    'HMAC', key, textEncoder.encode('gallery-pdf-continuation-v1\0' + ticket))));
+}
+async function hasValidContinuationCookie(request, env, payload, ticket) {
+  if (payload.mode !== 'view' || Date.now() > payload.hardExp) return false;
+  const name = continuationCookieName(payload);
+  if (!name) return false;
+  const header = request.headers.get('cookie') || '';
+  const value = header.split(';').map(part => part.trim()).find(part => part.startsWith(name + '='))
+    ?.slice(name.length + 1) || '';
+  if (!/^v1\.[A-Za-z0-9_-]{43}$/.test(value)) return false;
+  const key = await privatePdfContinuationKey(env);
+  if (!key) return false;
+  try {
+    return await crypto.subtle.verify('HMAC', key, base64UrlToBytes(value.slice(3)),
+      textEncoder.encode('gallery-pdf-continuation-v1\0' + ticket));
+  } catch { return false; }
+}
+async function extendContinuationCookie(headers, env, payload, ticket) {
+  const name = continuationCookieName(payload);
+  if (!name || payload.mode !== 'view') return;
+  const remaining = Math.ceil((payload.hardExp - Date.now()) / 1000);
+  if (remaining <= 0) return;
+  const signature = await signContinuationCookie(env, ticket);
+  if (!signature) return;
+  headers.set('set-cookie', name + '=' + signature + '; Path=/api/user-ui/private-pdf/file; Max-Age=' +
+    Math.min(VIEW_COOKIE_IDLE_SECONDS, remaining) + '; Secure; HttpOnly; SameSite=Strict');
 }
 async function makeFastTicket(env, payload) {
   const key = await privatePdfTicketKey(env);
@@ -59,9 +113,15 @@ async function readFastTicket(env, token) {
     if (iv.byteLength !== 12 || ciphertext.byteLength < 17) return null;
     const plaintext = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext);
     const payload = JSON.parse(textDecoder.decode(plaintext));
-    if (payload?.v !== 2 || typeof payload?.doi !== 'string' || typeof payload?.r2Key !== 'string') return null;
-    if (!payload.r2Key.startsWith('private-pdf/') || !Number.isSafeInteger(payload.size) || payload.size < 1) return null;
-    if (!Number.isSafeInteger(payload.exp) || payload.exp < Date.now()) return null;
+    if (payload?.v !== 2 || !normalizeDoi(payload?.doi) ||
+        !safePrivateR2Key(payload?.r2Key)) return null;
+    if (!Number.isSafeInteger(payload.size) || payload.size < 1) return null;
+    if (!Number.isSafeInteger(payload.exp) || payload.exp < 1) return null;
+    if (payload.mode == null) return { ...payload, mode: 'view', hardExp: payload.exp, nonce: '' };
+    if (!['view', 'download'].includes(payload.mode) ||
+        !Number.isSafeInteger(payload.hardExp) || payload.hardExp < payload.exp ||
+        payload.hardExp - payload.exp > VIEW_ABSOLUTE_TTL_MS ||
+        !continuationCookieName(payload)) return null;
     return payload;
   } catch {
     return null;
