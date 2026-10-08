@@ -313,9 +313,14 @@ async function getPdfSource(sessionToken, mode = 'view') {
           pending--;
           // Never route around an explicit permission denial or a verified
           // absence of a private file. Both endpoints enforce the same policy.
-          if (error?.notAvailable || /^open_http_(401|403)$/.test(error?.message || '') ||
-              error?.message === 'pdf_source_invalid') {
-            finish(null, error, index === 0 ? 'primary' : 'backup');
+          const explicitDenial = error?.notAvailable ||
+            /^open_http_(401|403)$/.test(error?.message || '') ||
+            error?.message === 'pdf_source_invalid';
+          // The canonical endpoint is authoritative. A secondary gateway
+          // may be temporarily out of sync: never let its denial cancel a
+          // still-running canonical request. A primary denial is final.
+          if (index === 0 && explicitDenial) {
+            finish(null, error, 'primary');
             return;
           }
           errors.push(error);
