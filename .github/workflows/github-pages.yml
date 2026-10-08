@@ -298,20 +298,27 @@ jobs:
           NODE
       - name: Bind built literature to exact authorized repository set
         run: node scripts/pages-release-delivery.mjs build dist
-      - name: Start verified architecture preview server
+      - name: Start verified architecture and status-fixture preview servers
         timeout-minutes: 1
         shell: bash
         run: |
           set -euo pipefail
           test -s dist/release-delivery.json
-          nohup npm run preview -- --host 127.0.0.1 --port 4174 >"$RUNNER_TEMP/gallery-architecture-preview.log" 2>&1 &
+          # Architecture regression uses 4174; the shared status UI fixture
+          # used by feedback #42 retains its independent, stable 4173 origin.
+          # Fail closed if either exact port is unavailable; do not silently
+          # let Vite switch ports and pass tests against the wrong preview.
+          nohup npm run preview -- --host 127.0.0.1 --port 4174 --strictPort >"$RUNNER_TEMP/gallery-architecture-preview.log" 2>&1 &
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 --strictPort >"$RUNNER_TEMP/gallery-status-fixture-preview.log" 2>&1 &
           for i in {1..40}; do
-            if curl --fail --silent http://127.0.0.1:4174/ >/dev/null; then
+            if curl --fail --silent http://127.0.0.1:4174/ >/dev/null &&
+               curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then
               exit 0
             fi
             sleep 1
           done
           cat "$RUNNER_TEMP/gallery-architecture-preview.log"
+          cat "$RUNNER_TEMP/gallery-status-fixture-preview.log"
           exit 1
       - name: Verify responsive pagination and Hot Archive frontend before publication
         timeout-minutes: 5
