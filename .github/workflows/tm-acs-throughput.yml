@@ -1,13 +1,17 @@
 name: Tampermonkey ACS recovery regression
 on:
   push:
-    branches: [fix/tm-acs-throughput-20261008]
+    branches: [fix/tm-acs-throughput-20261008, main]
+  pull_request:
+    branches: [main]
     paths:
       - public/toc-mainline.user.js
       - cloudflare/worker/src/local-captures.js
       - cloudflare/scripts/build-bridge-loader.mjs
       - scripts/validate-tm220-artifacts.mjs
       - tests/tm-acs-throughput.test.mjs
+      - tests/tm-image-outbox-recovery-20261008.test.mjs
+      - tests/tm-owner-pdf-replay-20261008.test.mjs
       - scripts/test-tm223-upload.mjs
       - .github/workflows/tm-acs-throughput.yml
 permissions:
@@ -30,6 +34,8 @@ jobs:
           node --check public/toc-mainline.user.js
           node --check cloudflare/worker/src/local-captures.js
           node --test tests/tm-acs-throughput.test.mjs
+          node --test tests/tm-image-outbox-recovery-20261008.test.mjs
+          node --test tests/tm-owner-pdf-replay-20261008.test.mjs
           node scripts/test-tm223-upload.mjs
           node --test tests/tm-gap-recovery.test.mjs
           node tests/tm-missing-only.test.mjs
@@ -39,7 +45,7 @@ jobs:
           node scripts/test-stage-storage.mjs
           node scripts/validate-tm220-artifacts.mjs source
           git diff --check
-      - name: Build Bridge 2.2.68
+      - name: Build Bridge 2.2.73
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
@@ -50,8 +56,8 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.68' public/gallery-vpn-bridge.user.js
-          grep -F "var INSTALL_REVISION = '6.2.49';" public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.73' public/gallery-vpn-bridge.user.js
+          grep -F "var INSTALL_REVISION = '6.2.54';" public/gallery-vpn-bridge.user.js
           grep -F "ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1'" public/gallery-vpn-bridge.user.js
       - uses: actions/upload-artifact@v4
         if: always()
