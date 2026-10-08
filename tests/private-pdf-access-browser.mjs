@@ -193,6 +193,15 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    }
   }
   if(url.pathname==='/api/user-ui/private-pdf/open'){
+   if(route.request().method()==='OPTIONS'){
+    return route.fulfill({status:204,headers:{
+     'access-control-allow-origin':base,
+     'access-control-allow-methods':'GET, HEAD, POST, OPTIONS',
+     'access-control-allow-headers':'content-type, authorization, range',
+     'access-control-max-age':'86400',
+     'vary':'Origin',
+    }});
+   }
    state.privateCalls++;
    const mode=url.searchParams.get('mode')||'view';
    state.openModes.push(mode);
@@ -338,7 +347,8 @@ try{
   const opened=page.waitForEvent('popup');await page.locator('.card .private-pdf-button').first().click();
   const target=await opened;
   await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:11000});
-  assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'backup');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'backup',
+   JSON.stringify({routes:state.openOrigins,requests:state.privateCalls}));
   assert.ok(state.openOrigins.includes('https://api.gczhouwld.com'));
   assert.ok(state.openOrigins.includes('https://organic-synthesis-gallery.zhou526316.workers.dev'));
   assert.equal(await target.locator('html').getAttribute('data-private-pdf-transfer-strategy'),'parallel-ranges');
