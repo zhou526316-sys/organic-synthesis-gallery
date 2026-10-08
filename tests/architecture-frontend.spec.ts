@@ -137,13 +137,21 @@ for (const [device, width, height] of [
     await expect(button).toBeVisible({ timeout: 30000 });
 
     const moveTrigger = async (desiredTop: number): Promise<void> => {
+      // Archive fixtures can lock document scrolling while mounting. Move only
+      // this test card's action host to exercise both viewport edge cases
+      // deterministically, without changing the production positioning code.
+      await button.scrollIntoViewIfNeeded();
       await button.evaluate((node, target) => {
-        window.scrollBy(0, node.getBoundingClientRect().top - target);
+        const host = (node.getRootNode() as ShadowRoot).host as HTMLElement;
+        const prior = Number(host.dataset.popupTestOffset || '0');
+        const next = prior + target - node.getBoundingClientRect().top;
+        host.dataset.popupTestOffset = String(next);
+        host.style.transform = `translateY(${next}px)`;
       }, desiredTop);
       await expect.poll(
         () => button.evaluate((node, target) => Math.abs(node.getBoundingClientRect().top - target), desiredTop),
         { timeout: 5000 },
-      ).toBeLessThan(38);
+      ).toBeLessThan(3);
     };
     const geometry = async () => actions.evaluate(host => {
       const root = (host as HTMLElement).shadowRoot!;
