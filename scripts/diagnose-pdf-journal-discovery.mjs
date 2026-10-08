@@ -87,6 +87,7 @@ for(const journal of TARGET_JOURNALS){
     addedSinceOct1:recent.length,
     readySinceOct1:recent.filter(x=>x.ready).length,
     missingSinceOct1:recent.filter(x=>!x.ready).length,
+    missingSinceOct1Dois:recent.filter(x=>!x.ready).map(x=>x.doi),
     ready:ready.length,
     missing:notReady.length,
     selection:chosen.map(x=>({doi:x.doi,addedDate:x.addedDate,fileBytes:x.size,ready:x.ready})),
