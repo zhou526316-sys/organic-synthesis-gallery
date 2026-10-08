@@ -1,4 +1,4 @@
-name: Owner PDF read-only runtime verification (one-shot)
+name: Owner PDF independent runtime verification (one-shot)
 on:
   push:
     branches:
@@ -42,3 +42,18 @@ jobs:
           test -n "$CLOUDFLARE_API_TOKEN"
           test -n "$CLOUDFLARE_ACCOUNT_ID"
           node scripts/diagnose-owner-private-pdf-live-readonly.mjs
+      - name: Validate synthetic owner PDF access through both real Worker origins
+        timeout-minutes: 4
+        run: |
+          set -euo pipefail
+          node --check scripts/diagnose-owner-private-pdf-authorized-smoke.mjs
+          node scripts/diagnose-owner-private-pdf-authorized-smoke.mjs
+      - name: Clean up only this run's synthetic PDF account and sessions
+        if: always()
+        timeout-minutes: 2
+        run: |
+          if test -x cloudflare/worker/node_modules/.bin/wrangler && test -d node_modules/pdfjs-dist; then
+            node scripts/diagnose-owner-private-pdf-authorized-smoke.mjs --cleanup
+          else
+            echo "Dependencies unavailable; the synthetic account setup step could not run."
+          fi
