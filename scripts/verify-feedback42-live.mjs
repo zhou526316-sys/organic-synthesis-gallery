@@ -46,27 +46,43 @@ async function verify(width, height, expectedPlacement) {
     const result = await page.evaluate(async ({ expectedPlacement, fraction }) => {
       const nextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
       for (let attempt = 1; attempt <= 10; attempt++) {
-        const host = [...document.querySelectorAll('gallery-paper-actions')].find(item =>
+        const findHost = () => [...document.querySelectorAll('gallery-paper-actions')].find(item =>
           item.isConnected && item.shadowRoot?.querySelector('button[data-action="status"]'));
+        const host = findHost();
         if (!host) { await nextFrame(); continue; }
-        const trigger = host.shadowRoot.querySelector('button[data-action="status"]');
         const viewport = window.visualViewport;
         const vh = viewport?.height ?? innerHeight;
         const targetY = (viewport?.offsetTop ?? 0) + vh * fraction;
-        host.style.transform = `translateY(${targetY - trigger.getBoundingClientRect().top}px)`;
-        // Keep finding and clicking within one browser evaluation to avoid stale
-        // remote element IDs when the gallery rerenders asynchronously.
-        host.shadowRoot.querySelector('button[data-action="status"]').click();
+        const trigger = host.shadowRoot.querySelector('button[data-action="status"]');
+        // Scroll the ACTUAL live card into view rather than translating a
+        // content-visibility:auto card that the browser may not paint.
+        window.scrollBy(0, trigger.getBoundingClientRect().top - targetY);
+        await nextFrame();
+        const activeHost = host.isConnected ? host : findHost();
+        if (!activeHost) continue;
+        const activeTrigger = activeHost.shadowRoot?.querySelector('button[data-action="status"]');
+        if (!activeTrigger) continue;
+        if (Math.abs(activeTrigger.getBoundingClientRect().top - targetY) > 42) {
+          await nextFrame();
+          continue;
+        }
+        // Atomic DOM click bypasses remote element IDs invalidated by
+        // asynchronous updates to the card list. No status is selected.
+        activeTrigger.click();
         await nextFrame();
         await nextFrame();
-        if (!host.isConnected) continue;
-        const panel = host.shadowRoot.querySelector('.drawer');
-        const currentTrigger = host.shadowRoot.querySelector('button[data-action="status"]');
+        if (!activeHost.isConnected) continue;
+        const panel = activeHost.shadowRoot?.querySelector('.drawer');
+        const currentTrigger = activeHost.shadowRoot?.querySelector('button[data-action="status"]');
         if (!panel || !currentTrigger) continue;
         const menu = panel.getBoundingClientRect();
         const anchor = currentTrigger.getBoundingClientRect();
         const top = viewport?.offsetTop ?? 0;
         const bottom = top + vh;
+        const x = Math.max(5, Math.min(innerWidth - 5, menu.left + Math.min(85, menu.width / 2)));
+        const y = Math.max(top + 5, Math.min(bottom - 5, menu.top + Math.min(75, menu.height / 2)));
+        const hit = document.elementFromPoint(x, y);
+        const painted = hit === activeHost || hit?.closest('gallery-paper-actions') === activeHost;
         return {
           attempt, expectedPlacement, actualPlacement: panel.dataset.placement || '',
           anchorState: panel.dataset.anchor || '',
@@ -74,13 +90,14 @@ async function verify(width, height, expectedPlacement) {
           triggerTop: anchor.top, triggerBottom: anchor.bottom,
           viewportTop: top, viewportBottom: bottom,
           aboveSpace: anchor.top - top, belowSpace: bottom - anchor.bottom,
-          statusChoices: host.shadowRoot.querySelectorAll('button[data-action^="set-status:"]').length,
+          statusChoices: activeHost.shadowRoot.querySelectorAll('button[data-action^="set-status:"]').length,
           popupScrollable: ['auto', 'scroll'].includes(getComputedStyle(panel).overflowY),
-          documentContainsHost: host.isConnected,
+          documentContainsHost: activeHost.isConnected,
+          menuPainted: painted, hitTag: hit?.tagName || '', targetY,
         };
       }
       return { error: 'No stable action host after ten bounded attempts' };
-    }, { expectedPlacement, fraction: expectedPlacement === 'above' ? 0.72 : 0.18 });
+    }, { expectedPlacement, fraction: expectedPlacement === 'above' ? 0.64 : 0.18 });
 
     const photo = join(process.env.RUNNER_TEMP || tmpdir(),
       `feedback42-live-${width}-${expectedPlacement}.png`);
@@ -105,6 +122,7 @@ async function verify(width, height, expectedPlacement) {
     assert.ok(result.statusChoices > 0, 'No visible status choices were rendered');
     assert.equal(result.popupScrollable, true, 'Long status lists must remain scrollable');
     assert.ok(result.documentContainsHost, 'Status button host was detached');
+    assert.equal(result.menuPainted, true, 'Popup geometry exists but is not painted above other UI');
     assert.ok(result.menuTop >= result.viewportTop + 5, 'Menu overflowed viewport top');
     assert.ok(result.menuBottom <= result.viewportBottom - 5, 'Menu overflowed viewport bottom');
     if (expectedPlacement === 'above') {
