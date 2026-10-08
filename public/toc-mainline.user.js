@@ -98,7 +98,7 @@
   var INVENTORY_PLAN_CACHE_TTL_MS = 10 * 60 * 1000;
   var INVENTORY_HEDGE_DELAY_MS = 900;
   var INVENTORY_TRANSPORT_REPAIR_REVISION = '20261008-bounded-layers-labeled-aborts-v1';
-  var INVENTORY_REQUEST_TIMEOUT_MS = 12000;
+  var INVENTORY_REQUEST_TIMEOUT_MS = 20000; // Browser-read timeout observed at 12s; bounded hedge preserved.
   var ARCHITECTURE_MEMBERSHIP_STATE_KEY = P + 'architecture-membership-shadow-v1';
   var ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY = P + 'architecture-membership-observer-v1';
   var TOKEN_KEY = P + 'write-token';
@@ -3320,7 +3320,7 @@ function embeddedJobDois(value) {
         return {status:packet.fulltextStatus==='invalid'?'invalid':'empty',reason:String(packet.reason||'evidence_unavailable'),chars:Number(packet.chars||0),sections:Number(packet.sections||0)};
       }
       captureLiveUpdate(job,'uploading',{label:packet.fulltextStatus==='abstract_only'?'Abstract':'全文证据'});
-      var uploadTimeout=String(job.mediaNeed||'')==='evidence'?10000:4000;
+      var uploadTimeout=String(job.mediaNeed||'')==='evidence'?10000:job.publisher==='rsc'?9000:4000;
       var receipt = await postArticleEvidence(packet,token,uploadTimeout);
       if (!receipt || receipt.stored !== true || receipt.doi !== normalizeDoi(job.doi) || receipt.schemaVersion !== EVIDENCE_SCHEMA_VERSION) {
         throw new Error('evidence_receipt_invalid');
@@ -4648,31 +4648,47 @@ function embeddedJobDois(value) {
       return {complete:false,items:[],unknown:dois.length,reason:reason};
     }
     updateInventoryProgress(run,'pdf','loading',started,'read_only;scope='+dois.length);
-    var batches=[];for(var i=0;i<dois.length;i+=75)batches.push(dois.slice(i,i+75));
+    var batches=[];for(var i=0;i<dois.length;i+=25)batches.push(dois.slice(i,i+25));
     var all=[];
     for(var offset=0;offset<batches.length;offset+=2){
       var pair=await Promise.all(batches.slice(offset,offset+2).map(async function(batch){
-      try{
-        var response=await inventoryReadMetadataJson({method:'POST',url:PRIVATE_PDF_INVENTORY_ENDPOINT,
-          timeout:16000,headers:{'content-type':'application/json',authorization:'Bearer '+lease.token},
-          data:JSON.stringify({dois:batch})},'owner_pdf_inventory');
-        var items=Array.isArray(response&&response.items)?response.items:[];
-        if(response.schemaVersion!=='private-pdf-capture-inventory-v1'||response.complete!==true
-          ||Number(response.count)!==batch.length||items.length!==batch.length)throw new Error('owner_pdf_inventory_incomplete');
-        var found=new Map(items.map(function(item){return [normalizeDoi(item.doi),item];}));
-        if(found.size!==batch.length||batch.some(function(d){return !found.has(d)
-          ||!(/^(?:ready|pending|failed|missing)$/.test(String(found.get(d).status||'')));}))
-          throw new Error('owner_pdf_inventory_invalid_rows');
-        return {items:items};
-      }catch(error){
-        return {items:[],error:captureLiveError(error&&error.message||error)};
-      }
+        async function verify(part,depth){
+          try {
+            var response=await inventoryReadMetadataJson({method:'POST',url:PRIVATE_PDF_INVENTORY_ENDPOINT,
+              timeout:20000,headers:{'content-type':'application/json',authorization:'Bearer '+lease.token},
+              data:JSON.stringify({dois:part})},'owner_pdf_inventory');
+            var rows=Array.isArray(response&&response.items)?response.items:[];
+            if(response.schemaVersion!=='private-pdf-capture-inventory-v1'||response.complete!==true
+                ||Number(response.count)!==part.length||rows.length!==part.length)
+              throw new Error('owner_pdf_inventory_incomplete');
+            var found=new Map(rows.map(function(item){return [normalizeDoi(item.doi),item];}));
+            if(found.size!==part.length||part.some(function(d){return !found.has(d)
+                ||!(/^(?:ready|pending|failed|missing)$/.test(String(found.get(d).status||'')));}))
+              throw new Error('owner_pdf_inventory_invalid_rows');
+            return {items:rows,errors:[]};
+          } catch(error) {
+            var msg=captureLiveError(error&&error.message||error);
+            var status=Number(error&&error.httpStatus||0);
+            // One bounded subdivision for transient failures only. An
+            // owner-auth/rate-limit denial never triggers additional requests.
+            if(depth===0&&part.length>12&&![401,403,429].includes(status)
+                && /timeout|deadline|aborted|network|failed to fetch|transport|incomplete/i.test(msg)){
+              var mid=Math.ceil(part.length/2);
+              await sleep(300);
+              var left=await verify(part.slice(0,mid),1);
+              var right=await verify(part.slice(mid),1);
+              return {items:left.items.concat(right.items),errors:left.errors.concat(right.errors)};
+            }
+            return {items:[],errors:['PDF库存小批 '+part.length+' 篇:'+msg]};
+          }
+        }
+        return verify(batch,0);
       }));
       all=all.concat(pair);
     }
     var items=[],errors=[];
     all.forEach(function(part,index){items=items.concat(part.items||[]);
-      if(part.error)errors.push('PDF库存第'+(index+1)+'批:'+part.error);});
+      (part.errors||[]).forEach(function(error){errors.push('PDF库存第'+(index+1)+'批:'+error);});});
     var complete=errors.length===0&&items.length===dois.length;
     updateInventoryProgress(run,'pdf',complete?'done':'error',started,'rows='+items.length+'/'+dois.length);
     return {schemaVersion:'private-pdf-capture-inventory-v1',complete:complete,
@@ -4716,20 +4732,24 @@ function embeddedJobDois(value) {
           updateInventoryProgress(run,'media','done',started,(meta(all).transport||'')+';single='+dois.length);return {items:all.items};
         }catch(error){updateInventoryProgress(run,'media','fallback',started,'单批失败，改分片');}
       }
-      var chunks=[];for(var i=0;i<dois.length;i+=250)chunks.push(dois.slice(i,i+250));
-      var batches=await Promise.all(chunks.map(async function(ds,index){
-        var key='media:'+index+':'+String(queue.generatedAt||'');
-        for(var attempt=0;attempt<2;attempt++){
-          if(run&&(!manualExecutionCurrent(run)||controllerPaused()))return null;
-          try{var x=await mediaRequest(ds);if(!mediaValid(x,ds))throw new Error('invalid_inventory_shape');cache.set(key,x);return x;}
-          catch(e){
-            if(attempt===0&&coverageTransient(e.message)&&!Number(e.retryAfterMs||0)){await sleep(750);continue;}
-            errors.push('媒体库存分片'+(index+1)+':'+captureLiveError(e.message||e)+(cache.has(key)?'（保留本轮上次有效库存）':''));
-            return cache.get(key)||null;
+      var chunks=[];for(var i=0;i<dois.length;i+=30)chunks.push(dois.slice(i,i+30));
+      var batches=[];
+      for(var offset=0;offset<chunks.length;offset+=2){
+        var segment=await Promise.all(chunks.slice(offset,offset+2).map(async function(ds,localIndex){
+          var index=offset+localIndex,key='media:'+index+':'+String(queue.generatedAt||'');
+          for(var attempt=0;attempt<2;attempt++){
+            if(run&&(!manualExecutionCurrent(run)||controllerPaused()))return null;
+            try{var x=await mediaRequest(ds);if(!mediaValid(x,ds))throw new Error('invalid_inventory_shape');cache.set(key,x);return x;}
+            catch(e){
+              if(attempt===0&&coverageTransient(e.message)&&!Number(e.retryAfterMs||0)){await sleep(600);continue;}
+              errors.push('媒体库存分片'+(index+1)+':'+captureLiveError(e.message||e)+(cache.has(key)?'（保留本轮上次有效库存）':''));
+              return cache.get(key)||null;
+            }
           }
-        }
-        return null;
-      }));
+          return null;
+        }));
+        batches=batches.concat(segment);
+      }
       batches.forEach(function(x){if(x)mediaRows=mediaRows.concat(x.items);});
       var complete=mediaRows.length===dois.length;
       updateInventoryProgress(run,'media',complete?'done':'error',started,'chunks='+chunks.length+';rows='+mediaRows.length);
