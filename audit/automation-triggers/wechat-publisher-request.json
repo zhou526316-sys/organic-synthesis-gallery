@@ -1,16 +1,17 @@
 {
-  "requestId": "wechat-daily-2026-10-07-r17-remove-basic-background",
-  "requestedAt": "2026-10-07T08:53:47Z",
-  "publicationDate": "2026-10-07",
+  "requestId": "wechat-daily-2026-10-08-r1-reviewed-two-card-bundle",
+  "requestedAt": "2026-10-08T04:22:00Z",
+  "publicationDate": "2026-10-08",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-07-r17",
-  "approvedGate": "audit/wechat-working/2026-10-07-review-gate.json",
+  "editorialRevision": "2026-10-08-r1",
+  "approvedGate": "audit/wechat-working/2026-10-08-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
-    "10.1002/anie.3699223",
-    "10.1038/s41929-026-01593-w"
+    "10.1021/jacs.6c14748",
+    "10.1038/s41929-026-01602-y"
   ],
   "draftOnly": true,
   "requireDraftGetReadback": true,
-  "reason": "User explicitly requested deletion of the screenshot's shallow supplementary background. Remove full four-paragraph quenching-cycle section, ncx1 image/caption; tidy remaining concept numbering and local term definitions. Independent text/image review and source preview pass; both covers and original-paper figures unchanged. Update same two-article draft and read back, no public sending."
+  "review": "audit/wechat-working/2026-10-08-r1-mobile-preflight.json",
+  "reason": "Explicitly selected JACS daily and Nature Catalysis OS1 retrospective; 34 source-locked images, both text and image gates passed, mobile 390/690 preflight passed. Write a single two-card WeChat draft and read back. Do not publicly send."
 }

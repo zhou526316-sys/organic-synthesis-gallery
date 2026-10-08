@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-08",
+  "revision": "2026-10-08-r1",
+  "bundleSha256": "3c19a9dfbd49875568626d29d10c9f21178f377e2433297602bc9b0d298b40d1",
+  "importerRunId": 37726023873,
+  "importReceipt": "audit/wechat-working/2026-10-08-r1-import-receipt.json",
+  "editorialGate": "audit/wechat-working/2026-10-08-review-gate.json",
+  "textReview": "pass",
+  "imageReview": "pass",
+  "imageCount": 34,
+  "bodyImageCounts": {
+    "daily": 20,
+    "retrospective": 12
+  },
+  "coverCount": 2,
+  "visualTemplateReview": "pass",
+  "visualQAType": "local_390px_690px_browser_preflight_not_native_wechat",
+  "breakpoints": [
+    {
+      "width": 390,
+      "scrollWidth": 390,
+      "loadedImages": 34,
+      "brokenImages": 0,
+      "oversizedItems": 0
+    },
+    {
+      "width": 690,
+      "scrollWidth": 690,
+      "loadedImages": 34,
+      "brokenImages": 0,
+      "oversizedItems": 0
+    }
+  ],
+  "sourceImages": "fixed materialized high-resolution PNG rasters; no runtime crop or generative reconstruction of chemistry",
+  "release": {
+    "slot": "2026-10-08T08:00:00+08:00",
+    "publishedDois": 28,
+    "hasSelectedFeatured": true
+  },
+  "publicationMode": "draft_only",
+  "publicSendAuthorized": false,
+  "nativeClientVerified": false,
+  "note": "Source review plus browser preflight complete. Native WeChat transport review still requires actual draft/get."
+}
