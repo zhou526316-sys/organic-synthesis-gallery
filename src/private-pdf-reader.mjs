@@ -1,3 +1,5 @@
+import {scanPdfFigureRescue,preparePdfOriginalCropManifest} from './pdf-vault/figure-rescue.mjs';
+
 const PDF_ENGINE_LOAD_TIMEOUT_MS = 25_000;
 let pdfEngine = null;
 async function loadPdfEngine() {
@@ -70,6 +72,15 @@ const compatibility = document.querySelector('#compatibility');
 const fullOpen = document.querySelector('#full-open');
 const browserOpen = document.querySelector('#browser-open');
 const download = document.querySelector('#download');
+const figureRescueButton = document.querySelector('#pdf-figure-rescue');
+const cropSelectButton = document.querySelector('#pdf-crop-select');
+const cropExportButton = document.querySelector('#pdf-crop-export');
+const cropNotice = document.querySelector('#pdf-crop-notice');
+const cropBox = document.querySelector('#pdf-crop-box');
+const figureRescuePanel = document.querySelector('#pdf-rescue-panel');
+const figureRescueResults = document.querySelector('#pdf-rescue-results');
+const figureRescueProgress = document.querySelector('#pdf-rescue-progress');
+const cropPageWrap = document.querySelector('#pdf-page-wrap');
 document.querySelector('#doi').textContent = doi;
 
 let loadingTask = null;
@@ -78,6 +89,13 @@ let renderTask = null;
 let pageNumber = 1;
 let zoom = 1;
 let renderSequence = 0;
+let rescueBusy = false;
+let rescueScan = null;
+let rescueCandidate = null;
+let rescueOwnerSession = '';
+let cropSelecting = false;
+let cropStart = null;
+let cropSelection = null;
 let sourceUrl = '';
 let declaredPdfBytes = 0;
 let transferController = null;
@@ -234,6 +252,10 @@ function options(source) {
 async function render() {
   if (!pdf || destroyed) return;
   const seq = ++renderSequence;
+  cropSelection = null;
+  cropSelecting = false;
+  cropBox.hidden = true;
+  cropExportButton.disabled = true;
   const old = renderTask;
   old?.cancel();
   if (old) await old.promise.catch(() => {});
@@ -916,6 +938,12 @@ async function start() {
         if (!Number.isSafeInteger(pdf.numPages) || pdf.numPages < 1) throw new Error('pdf_page_tree');
         controls();
         await render();
+        figureRescueButton.disabled = false;
+        if (params.get('rescue') === '1') {
+          void openPdfFigureRescue().catch(error => {
+            figureRescueProgress.textContent = 'PDF 图号定位失败：' + String(error?.message || '解析异常');
+          });
+        }
       })();
       if (rangeMode) {
         await Promise.race([firstPageJob, activeRangeTransport.failed, new Promise((_,reject)=>{
@@ -940,6 +968,140 @@ async function start() {
     showReaderError(rangeFailure || error);
   }
 }
+
+function setCropNotice(value) { cropNotice.textContent = String(value || '').slice(0,180); }
+function relativePoint(event) {
+  const rect=canvas.getBoundingClientRect();
+  if (!(rect.width>0 && rect.height>0)) return null;
+  return {x:Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width)),
+    y:Math.max(0,Math.min(1,(event.clientY-rect.top)/rect.height))};
+}
+function renderCropSelection(start,finish) {
+  if (!start || !finish) { cropBox.hidden=true;return null; }
+  const crop={x:Math.min(start.x,finish.x),y:Math.min(start.y,finish.y),
+    width:Math.abs(start.x-finish.x),height:Math.abs(start.y-finish.y)};
+  cropBox.style.left=(crop.x*100)+'%';
+  cropBox.style.top=(crop.y*100)+'%';
+  cropBox.style.width=(crop.width*100)+'%';
+  cropBox.style.height=(crop.height*100)+'%';
+  cropBox.hidden=false;
+  return crop;
+}
+canvas.addEventListener('pointerdown',event=>{
+  if(!cropSelecting||!rescueCandidate||!pdf||destroyed||!token()||token()!==rescueOwnerSession)return;
+  const start=relativePoint(event);if(!start)return;
+  event.preventDefault();cropStart=start;cropSelection=null;
+  try{canvas.setPointerCapture(event.pointerId);}catch{}
+});
+canvas.addEventListener('pointermove',event=>{
+  if(!cropSelecting||!cropStart)return;
+  renderCropSelection(cropStart,relativePoint(event));
+});
+canvas.addEventListener('pointerup',event=>{
+  if(!cropSelecting||!cropStart)return;
+  const selection=renderCropSelection(cropStart,relativePoint(event));
+  cropStart=null;cropSelecting=false;canvas.style.cursor='default';canvas.style.touchAction='';
+  if(!selection||selection.width<0.08||selection.height<0.045
+    ||selection.width*selection.height>0.8){
+    cropSelection=null;cropBox.hidden=true;cropExportButton.disabled=true;
+    setCropNotice('图像选区无效：请准确框选原始 Figure/Scheme 区域，不选整页。');
+    return;
+  }
+  cropSelection=selection;cropExportButton.disabled=false;
+  setCropNotice('已选取原图局部，确认图号与结构完整后导出 PNG 与溯源信息。');
+});
+canvas.addEventListener('pointercancel',()=>{
+  cropStart=null;cropSelecting=false;cropSelection=null;cropBox.hidden=true;
+  cropExportButton.disabled=true;canvas.style.cursor='default';canvas.style.touchAction='';
+});
+
+async function openPdfFigureRescue(){
+  if(!pdf||destroyed||rescueBusy)return;
+  if(!token())throw new Error('pdf_owner_session_missing');
+  figureRescuePanel.hidden=false;
+  figureRescueResults.replaceChildren();
+  rescueOwnerSession=token();
+  rescueBusy=true;figureRescueButton.disabled=true;
+  figureRescueProgress.textContent='正在本地扫描 PDF 文字层，匹配原始 Figure/Scheme 图号…';
+  try {
+    const current=pdf;
+    const scan=await scanPdfFigureRescue(current,{doi,onProgress:row=>{
+      figureRescueProgress.textContent='已扫描 '+row.scannedPages+'/'+row.totalPages+' 页；定位候选 '+row.candidates+' 项。';
+    }});
+    if(destroyed||current!==pdf||rescueOwnerSession!==token())return;
+    rescueScan=scan;
+    figureRescueProgress.textContent=scan.identity==='match'
+      ? '已在 PDF 核对 DOI；发现 '+scan.candidates.length+' 个图号候选。'
+      : scan.identity==='mismatch'
+      ? 'PDF DOI 与当前论文不一致，禁止使用。'
+      : 'PDF 内未能直接核实 DOI：仅供个人检查，不允许自动发布。';
+    if(scan.identity==='mismatch')figureRescueProgress.classList.add('pdf-rescue-warning');
+    if(!scan.candidates.length){
+      const empty=document.createElement('p');
+      empty.textContent='没有定位到可信图号。可继续用 PDF 阅读器查看，但不能将任意页面冒充 TOC。';
+      figureRescueResults.append(empty);
+    }
+    for(const candidate of scan.candidates){
+      const b=document.createElement('button');
+      b.type='button';b.className='pdf-rescue-candidate';
+      b.textContent=candidate.label+' · 第 '+candidate.page+' 页：'+candidate.caption.slice(0,86);
+      b.addEventListener('click',()=>{
+        if(!pdf||destroyed||rescueOwnerSession!==token())return;
+        rescueCandidate=candidate;figureRescuePanel.hidden=true;
+        cropSelectButton.hidden=false;cropExportButton.hidden=false;cropExportButton.disabled=true;
+        setCropNotice('原图候选：'+candidate.label+'，请先在 PDF 原页核对图像范围。');
+        update(()=>{pageNumber=candidate.page;});
+      });
+      figureRescueResults.append(b);
+    }
+  } finally {rescueBusy=false;figureRescueButton.disabled=false;}
+}
+figureRescueButton.addEventListener('click',()=>{
+  void openPdfFigureRescue().catch(e=>{figureRescuePanel.hidden=false;
+    figureRescueProgress.textContent='PDF 图号扫描失败：'+String(e?.message||'unknown');});
+});
+document.querySelector('#pdf-rescue-close').addEventListener('click',()=>{figureRescuePanel.hidden=true;});
+cropSelectButton.addEventListener('click',()=>{
+  if(!pdf||!rescueCandidate||rescueCandidate.page!==pageNumber||!token()||token()!==rescueOwnerSession)return;
+  cropSelecting=true;cropStart=null;cropSelection=null;cropBox.hidden=true;
+  cropExportButton.disabled=true;
+  canvas.style.cursor='crosshair';canvas.style.touchAction='none';
+  setCropNotice('请在 PDF 上拖动鼠标或触摸，框选真实图像区域。');
+});
+function localDownloadBlob(blob,filename){
+  const url=URL.createObjectURL(blob),link=document.createElement('a');
+  link.href=url;link.download=filename;link.style.display='none';document.body.append(link);
+  link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1200);
+}
+cropExportButton.addEventListener('click',async()=>{
+  if(!pdf||!rescueCandidate||!cropSelection||destroyed||!token()
+    ||token()!==rescueOwnerSession||rescueCandidate.page!==pageNumber)return;
+  const crop=cropSelection;
+  const rect={x:Math.floor(crop.x*canvas.width),y:Math.floor(crop.y*canvas.height),
+    width:Math.round(crop.width*canvas.width),height:Math.round(crop.height*canvas.height)};
+  if(rect.width<120||rect.height<100||rect.width*rect.height>12_000_000){
+    setCropNotice('输出区域太小或过大，请重新框选。');return;
+  }
+  cropExportButton.disabled=true;
+  try{
+    const out=document.createElement('canvas');
+    out.width=rect.width;out.height=rect.height;
+    out.getContext('2d').drawImage(canvas,rect.x,rect.y,rect.width,rect.height,0,0,rect.width,rect.height);
+    const blob=await new Promise(resolve=>out.toBlob(resolve,'image/png'));
+    if(!blob)throw new Error('crop_png_encoding_failed');
+    const hash=await crypto.subtle.digest('SHA-256',await blob.arrayBuffer());
+    const sha=[...new Uint8Array(hash)].map(x=>x.toString(16).padStart(2,'0')).join('');
+    const manifest=preparePdfOriginalCropManifest({doi,identity:rescueScan?.identity,
+      candidate:rescueCandidate,crop,canvasWidth:rect.width,canvasHeight:rect.height,sha256:sha});
+    const base=doi.replace(/[^a-z0-9._-]/gi,'_')+'_'+rescueCandidate.label.replace(/\s+/g,'-').toLowerCase()
+      +'_pdf-page-'+rescueCandidate.page;
+    localDownloadBlob(blob,base+'_unreviewed.png');
+    localDownloadBlob(new Blob([JSON.stringify(manifest,null,2)],{type:'application/json'}),base+'_provenance.json');
+    setCropNotice('PNG 和原图溯源信息已保存到浏览器下载目录。未上传或发布；须人工审核化学结构和使用权限。');
+  }catch(e){setCropNotice('原图导出失败：'+String(e?.message||e));}
+  finally{cropExportButton.disabled=false;}
+});
+
 download.addEventListener('click', () => { void beginDownload(); });
 function update(change) {
   if (!pdf || renderTask || destroyed) return;
