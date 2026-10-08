@@ -238,6 +238,11 @@ async function handleApi(request, env, ctx) {
   const userUiRoute = url.pathname.startsWith('/api/user-ui/');
   const corsRoute = isBrowserReadablePath(url.pathname);
   const cors = corsRoute ? browserCorsHeaders(request) : {};
+  if (url.pathname === '/api/user-ui/private-pdf/open') {
+    // Let only the authorized Gallery caller read aggregate phase durations;
+    // server-timing contains no request, account, DOI or PDF file values.
+    cors['access-control-expose-headers'] += ', server-timing';
+  }
   if (url.pathname === '/api/user-ui/private-pdf/file') {
     // The Gallery origin and the API are same-site but cross-origin. Signed,
     // HttpOnly continuation cookies require credentialed CORS for the
