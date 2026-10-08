@@ -172,6 +172,24 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
     (timingDetails.length ? ' · ' + timingDetails.join(' · ') : '') +
     (['primary', 'backup', 'both-failed'].includes(route) ? ` · 授权线路:${route}` : '');
   status.appendChild(diagnostic);
+  if (['pdf_authorize_timeout','pdf_authorize_network_error'].includes(detail)) {
+    const attempts = document.documentElement.dataset.privatePdfAuthAttempts || '';
+    if (attempts && attempts.length < 360) {
+      const breakdown = document.createElement('small');
+      breakdown.id = 'pdf-auth-attempts';
+      breakdown.textContent = '授权请求：' + attempts;
+      status.appendChild(breakdown);
+    }
+    const probe = document.createElement('small');
+    probe.id = 'pdf-anonymous-network-probe';
+    probe.textContent = '正在检查两条公开网络线路（不携带账号或 PDF 信息）…';
+    status.appendChild(probe);
+    void checkAnonymousGatewayHealth().then(result => {
+      if (!destroyed && probe.isConnected) probe.textContent = result;
+    }).catch(() => {
+      if (!destroyed && probe.isConnected) probe.textContent = '公开网络线路检查暂时不可用';
+    });
+  }
   const retry = document.createElement('button');
   retry.type = 'button';
   retry.textContent = '重新读取';
@@ -251,7 +269,48 @@ async function render() {
   controls();
 }
 
-async function fetchAuthorizedSource(origin, sessionToken, mode, controller) {
+async function checkAnonymousGatewayHealth() {
+  // No actual user session, DOI or signed file URL is transmitted.
+  // A deliberately invalid test credential forces normal OPTIONS/CORS
+  // processing and the session D1 lookup, but cannot authorize a PDF.
+  const probes = [
+    ['主线公开GET', API_BASE, false], ['主线预检/POST', API_BASE, true],
+    ['备用公开GET', API_BACKUP, false], ['备用预检/POST', API_BACKUP, true],
+  ];
+  const results = await Promise.all(probes.map(async ([label, origin, isPost]) => {
+    const started = performance.now();
+    try {
+      const url = isPost
+        ? origin + '/api/user-ui/private-pdf/open?doi=10.0000/diagnostic&mode=view'
+        : origin + '/api/_healthcheck';
+      const response = await fetch(url, {
+        method: isPost ? 'POST' : 'GET',
+        headers: isPost ? { authorization: 'Bearer gallery-invalid-diagnostic-session' } : {},
+        credentials: 'omit',
+        cache: 'no-store',
+        signal: AbortSignal.timeout(3500),
+      });
+      const elapsed = Math.round(performance.now() - started);
+      const outcome = isPost && response.status === 401 ? 'HTTP401(预检已通过)'
+        : response.ok ? 'HTTP200' : 'HTTP' + response.status;
+      return label + ':' + outcome + '/' + elapsed + 'ms';
+    } catch {
+      return label + ':超时或网络故障';
+    }
+  }));
+  return '脱敏线路检查（不代表个人账号授权）：' + results.join('；');
+}
+
+function sanitizedOpenServerTiming(raw) {
+  const allowed = new Set(['session','capability','document','r2_get','r2_body',
+    'ticket_create','ticket_check','legacy_write','total']);
+  if (typeof raw !== 'string' || raw.length > 500) return '';
+  return raw.split(',').flatMap(segment => {
+    const m = /^\s*([a-z0-9_]+);dur=(\d{1,6})\s*$/.exec(segment);
+    return m && allowed.has(m[1]) ? [m[1] + '=' + m[2] + 'ms'] : [];
+  }).join(', ');
+}
+async function fetchAuthorizedSource(origin, sessionToken, mode, controller, onHeaders) {
   const openUrl = new URL('/api/user-ui/private-pdf/open', origin);
   openUrl.searchParams.set('doi', doi);
   openUrl.searchParams.set('mode', mode);
@@ -262,6 +321,7 @@ async function fetchAuthorizedSource(origin, sessionToken, mode, controller) {
     cache: 'no-store',
     signal: controller.signal,
   });
+  onHeaders?.(opened.status, sanitizedOpenServerTiming(opened.headers.get('server-timing')));
   if (!opened.ok) throw new Error('open_http_' + opened.status);
   const data = await opened.json();
   if (!data || data.available !== true || typeof data.url !== 'string') {
@@ -289,6 +349,19 @@ async function getPdfSource(sessionToken, mode = 'view') {
   let hedgeTimer = null, deadlineTimer = null;
   let backupStarted = false, pending = 0, finished = false;
   const errors = [];
+  const attempts = [
+    { label: 'primary', started: 0, elapsed: 0, result: '未发起', stages: '' },
+    { label: 'backup', started: 0, elapsed: 0, result: '未发起', stages: '' },
+  ];
+  const saveAttempts = () => {
+    const at = performance.now();
+    document.documentElement.dataset.privatePdfAuthAttempts = attempts.map(a => {
+      const ms = a.started ? Math.round(a.elapsed || at - a.started) : 0;
+      const state = a.started && a.result === '等待' ? '无响应' : a.result;
+      return a.label + ':' + state + '/' + ms + 'ms' +
+        (a.stages ? '[' + a.stages + ']' : '');
+    }).join('；').slice(0,350);
+  };
 
   const result = await new Promise((resolve, reject) => {
     const finish = (value, error, route = '') => {
@@ -298,6 +371,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
       if (deadlineTimer !== null) clearTimeout(deadlineTimer);
       document.documentElement.dataset.privatePdfAuthorizePath = route ||
         (error ? 'both-failed' : '');
+      saveAttempts();
       for (const controller of controllers) controller.abort('open_complete');
       if (error) reject(error);
       else resolve(value);
@@ -305,11 +379,21 @@ async function getPdfSource(sessionToken, mode = 'view') {
     const launch = index => {
       if (finished || (index === 1 && backupStarted)) return;
       if (index === 1) backupStarted = true;
+      const attempt = attempts[index];
+      attempt.started = performance.now();
+      attempt.result = '等待';
       pending++;
-      void fetchAuthorizedSource(origins[index], sessionToken, mode, controllers[index])
-        .then(source => finish(source, null, index === 0 ? 'primary' : 'backup'))
+      void fetchAuthorizedSource(origins[index], sessionToken, mode, controllers[index],
+        (status, stages) => { attempt.result = 'HTTP' + status; attempt.stages = stages; })
+        .then(source => {
+          attempt.elapsed = Math.round(performance.now() - attempt.started);
+          attempt.result = '完成';
+          finish(source, null, index === 0 ? 'primary' : 'backup');
+        })
         .catch(error => {
           if (finished) return;
+          attempt.elapsed = Math.round(performance.now() - attempt.started);
+          if (attempt.result === '等待') attempt.result = '网络失败';
           pending--;
           // Never route around an explicit permission denial or a verified
           // absence of a private file. Both endpoints enforce the same policy.

@@ -334,6 +334,17 @@ jobs:
           compatibility_date = "2026-09-16"
           workers_dev = true
 
+          # Temporary owner-PDF authorization diagnosis. Automatic deadline
+          # is enforced in openPrivatePdf() on 2026-10-10 00:00 Asia/Shanghai.
+          # Do not enable broad native traces: their automatic R2 spans include
+          # private object keys. Instead persist only explicitly redacted
+          # application phase timings and strip all request query strings.
+          [observability.logs]
+          enabled = true
+          head_sampling_rate = 1
+          redact_query_string = true
+          invocation_logs = false
+
           [vars]
           MIGRATION_STAGE = "staging"
           WECHAT_MP_APP_ID = "$WECHAT_MP_APP_ID"
@@ -359,6 +370,7 @@ jobs:
           SITE_ANALYTICS_PUBLIC_SNAPSHOT_MAX_AGE_MS = "1200000"
           LITERATURE_CATALOG_INDEX_SHADOW_ENABLED = "1"
           LITERATURE_CATALOG_INDEX_READ_ENABLED = "1"
+          PRIVATE_PDF_OPEN_TIMING_ENABLED = "1"
           PRIVATE_PDF_READ_ENABLED = "1"
           PRIVATE_PDF_CAPTURE_ENABLED = "1"
           PRIVATE_PDF_PROCESSING_ENABLED = "1"
