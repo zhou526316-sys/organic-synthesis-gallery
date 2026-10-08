@@ -116,6 +116,66 @@ if(process.argv[2]==='--cleanup') {
     });
     return data;
   }
+  async function verifyRealBrowser(session) {
+    const { chromium } = await import('playwright');
+    const launchStart = performance.now();
+    const browser = await chromium.launch({ headless: true });
+    try {
+      const context = await browser.newContext({
+        viewport: { width: 1280, height: 900 },
+        locale: 'zh-CN',
+        serviceWorkers: 'block',
+      });
+      await context.addInitScript(({targetOrigin,sessionKey,sessionToken}) => {
+        if(location.origin===targetOrigin) localStorage.setItem(sessionKey,sessionToken);
+      },{
+        targetOrigin:origin,sessionKey:'organic-gallery-session-v1',sessionToken:session,
+      });
+      const page = await context.newPage();
+      const began = performance.now();
+      await page.goto(origin+'/pdf/?doi='+encodeURIComponent(doi),{
+        waitUntil:'domcontentloaded',timeout:12000,
+      });
+      let response = 'pending';
+      try {
+        await page.waitForFunction(()=>{
+          const state=document.documentElement.dataset.privatePdfViewer||'';
+          return state==='ready'||state==='error';
+        },null,{timeout:25000});
+        response = 'terminal';
+      } catch { response='timeout'; }
+      // Whitelist only machine numeric diagnostics and static status codes:
+      // never log HTML, text, request URLs, cookie, account or localStorage.
+      const safe = await page.evaluate(()=>{
+        const d=document.documentElement.dataset;
+        const status=(d.privatePdfViewer||'').slice(0,20);
+        const error=(d.privatePdfError||'').replace(/[^a-z0-9_]/gi,'').slice(0,60);
+        const number=(field)=>{
+          const v=d[field]||'';
+          return /^\d{1,9}$/.test(v)?Number(v):null;
+        };
+        return {
+          status, error,
+          authorizationMs:number('privatePdfAuthorizeMs'),
+          readyMs:number('privatePdfReadyMs'),
+          fileTransferMs:number('privatePdfTransferMs'),
+          networkRangeCount:number('privatePdfRangeCalls'),
+          firstPageRendered:document.querySelector('#pdf-canvas')?.dataset.renderedPage==='1',
+          successRoute:['primary','backup'].includes(d.privatePdfAuthorizePath||'')
+            ?d.privatePdfAuthorizePath:'unknown',
+        };
+      });
+      mark('real_gallery_chromium_page',{
+        result:response,totalMs:elapsed(began),browserLaunchMs:elapsed(launchStart)-elapsed(began),
+        ...safe,
+      });
+      if(response!=='terminal'||safe.status!=='ready'||!safe.firstPageRendered)
+        throw new Error('real_gallery_browser_not_readable');
+    } finally {
+      await browser.close();
+    }
+  }
+
   try {
     const beforehand=sql('SELECT COUNT(*) AS n FROM users WHERE id='+quote(userId)+';','preflight');
     if(Number(beforehand.rows[0]?.n)!==0)throw new Error('synthetic_id_collision');
@@ -139,6 +199,7 @@ if(process.argv[2]==='--cleanup') {
       mark(label+'_first16bytes',{http:206,totalMs:part.totalMs,sizeBytes:part.bytes.length});
       sources.push(v);
     }
+    if(process.env.RUN_GALLERY_BROWSER==='1') await verifyRealBrowser(ownerToken);
     const full=await fileSample(sources[0],true);
     mark('canonical_full_download',{http:200,totalMs:full.totalMs,
       networkMs:full.networkMs,bytes:full.bytes.length});
@@ -166,7 +227,8 @@ if(process.argv[2]==='--cleanup') {
     // Avoid permanent test entitlement even if the primary route fails.
     try { cleanup(); }
     catch { report.cleanupVerified=false;process.exitCode=1; }
-    report.ok=!report.failure&&report.cleanupVerified&&report.tests.length>=6;
+    report.ok=!report.failure&&report.cleanupVerified&&report.tests.length >=
+      (process.env.RUN_GALLERY_BROWSER==='1'?8:6);
     if(!report.ok)process.exitCode=1;
     console.log('PRIVATE_PDF_AUTHORIZED_RESULT '+JSON.stringify(report));
   }
