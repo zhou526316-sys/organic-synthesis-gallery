@@ -38,6 +38,7 @@ const context={
   console,
   RECENT_FULL_CAPTURE_CUTOFF:'2026-10-01',
   PRIVATE_PDF_ADDED_DATE_CUTOFF:'2026-10-01',
+  PRIVATE_PDF_ATTEMPT_PREFIX:'osg-toc-v6:private-pdf-attempt-v2:',
   normalizeDoi:v=>String(v||'').toLowerCase().trim(),
   publisherForDoi:d=>d.startsWith('10.1038/')?'nature':'acs',
   isNatureScienceFamilyJob:j=>j.journal==='Nature'||j.journal==='Science',
