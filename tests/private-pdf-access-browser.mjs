@@ -179,8 +179,9 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
     const download=url.searchParams.get('download')==='1';
     if(download)state.privateFileDownloads++;
     const common={'access-control-allow-origin':base,'access-control-allow-credentials':'true','access-control-allow-headers':'range, authorization','access-control-expose-headers':'content-length, content-range, accept-ranges, content-type, x-gallery-pdf-status','accept-ranges':'bytes','cache-control':'private, no-store','content-disposition':download?'attachment; filename="fixture.pdf"':'inline; filename="fixture.pdf"'};
-    if(options.fileStatus){
-     return route.fulfill({status:options.fileStatus,contentType:'application/json',headers:{...common,'x-gallery-pdf-status':'pdf_ticket_invalid'},body:'{"error":"pdf_ticket_invalid"}'});
+    if(options.fileStatus || (url.origin==='https://api.gczhouwld.com' && options.primaryFileStatus)){
+     const code=options.fileStatus||options.primaryFileStatus;
+     return route.fulfill({status:code,contentType:'application/json',headers:{...common,'x-gallery-pdf-status':'pdf_test_failure'},body:'{"error":"pdf_test_failure"}'});
     }
     if(range){
      state.privateRangeCalls++;
@@ -396,7 +397,31 @@ try{
   assert.ok(state.openOrigins.includes('https://pdf.gczhouwld.com'));
   assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
  });
- await test('explicit canonical permission denial cannot be bypassed via enabled Tencent gateway',async()=>{
+ await test('Tencent gateway retries an authenticated PDF whose Cloudflare file transfer fails',async()=>{
+  const owner={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],owner,{
+    tencentReady:true,primaryFileStatus:503,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:13000});
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-fallback'),'tencent');
+  assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
+  assert.ok(state.openOrigins.includes('https://pdf.gczhouwld.com'));
+  assert.ok(state.privateFileCalls>1,'original route failed before independent file delivery');
+ });
+ await test('file permission denial never triggers an independent Tencent retry',async()=>{
+  const owner={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],owner,{
+    tencentReady:true,fileStatus:403,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',undefined,{timeout:10000});
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/file_http_403/);
+  assert.equal(state.openOrigins.includes('https://pdf.gczhouwld.com'),false);
+ });
+  await test('explicit canonical permission denial cannot be bypassed via enabled Tencent gateway',async()=>{
   const owner={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
   const {context,state}=await contextWith(['private_pdf_read'],owner,{
     tencentReady:true,primaryOpenStatus:403,
