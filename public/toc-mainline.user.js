@@ -339,7 +339,7 @@
     var details = document.createElement('details');
     details.open = GM_getValue(LIVE_PANEL_KEY, true) !== false;
     var heading = document.createElement('summary');
-    heading.textContent = '抓取实时进度 · VPN Bridge ' + String(globalThis.__OSG_BRIDGE_VERSION__||'独立TOC') + ' · 引擎 ' + INSTALL_REVISION + ' · 控制器 ' + CONTROLLER_REVISION + ' · 全队列补缺6 · 图源适配7';
+    heading.textContent = '抓取实时进度 · VPN Bridge ' + String(globalThis.__OSG_BRIDGE_VERSION__||'独立TOC') + ' · 引擎 ' + (typeof INSTALL_REVISION==='string'?INSTALL_REVISION:'未知') + ' · 控制器 ' + CONTROLLER_REVISION + ' · 全队列补缺6 · 图源适配7';
     details.appendChild(heading);
     var main = document.createElement('main');
     var immediate = document.createElement('button');
