@@ -1,0 +1,89 @@
+name: WeChat JACS R5 native-cover source repair
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/wechat-r5-cover-repair.json'
+permissions:
+  contents: write
+concurrency:
+  group: wechat-r5-native-cover-repair
+  cancel-in-progress: false
+jobs:
+  render-reviewed-cover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Validate single request and immutable source
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path("audit/automation-triggers/wechat-r5-cover-repair.json").read_text())
+          assert r["action"] == "prepare_reviewed_cover_without_draft_write"
+          assert r["sourceRevision"]=="2026-10-08-r4"
+          assert r["revision"]=="2026-10-08-r5"
+          assert r["featuredDoi"]=="10.1021/jacs.6c14748"
+          assert r["publicSendAuthorized"] is False
+          assert r["draftUpdateAuthorized"] is True
+          print("Single-edit source-lock accepted; only cover asset & QA may change.")
+          PY
+      - name: Install raster verifier
+        run: python3 -m pip install --quiet 'Pillow>=10,<13'
+      - name: Build and independently test revised asset
+        run: python3 ops/wechat-publisher/repair-native-cover-r4.py
+      - name: Verify exact scoped changes and frozen source gate
+        run: |
+          python3 - <<'PY'
+          import json, hashlib, pathlib
+          root=pathlib.Path.cwd()
+          g=json.loads((root/"audit/wechat-working/2026-10-08-review-gate.json").read_text())
+          assert g["revision"]=="2026-10-08-r5"
+          assert g["textReview"]=="pass" and g["imageReview"]=="pass"
+          assert len(g["selectionDois"])==2
+          for item in g["sources"]+g["assets"]:
+            path=root/item["path"]
+            raw=path.read_bytes()
+            blob=hashlib.sha1(("blob "+str(len(raw))+"\0").encode()+raw).hexdigest()
+            assert blob==item["blobSha"], item["path"]
+            if item.get("sha256"): assert hashlib.sha256(raw).hexdigest()==item["sha256"]
+          m=json.loads((root/"public/wechat-featured/2026-10-08.json").read_text())
+          assert m["figures"][-1]["id"]=="jacs-cover"
+          assert m["figures"][-1]["body"] is False
+          assert m["figures"][-1]["repo_path"].endswith("jacs-cover-native-safe-clean.png")
+          assert json.loads((root/"public/wechat-editions/2026-10-08.json").read_text())["editorialRevision"]=="2026-10-08-r5"
+          print("PASS: all review source + asset fingerprints and DOI/order invariants")
+          PY
+      - name: Persist reviewed sources and raster, no WeChat API write
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            public/wechat-assets/reviewed/2026-10-08-r5/jacs-cover-native-safe.png \
+            public/wechat-featured/2026-10-08.json \
+            public/wechat-editions/2026-10-08.json \
+            audit/wechat-working/2026-10-08-review-gate.json \
+            audit/wechat-working/2026-10-08-r5-text-only.md \
+            audit/wechat-working/2026-10-08-r5-images-only.md \
+            audit/wechat-working/2026-10-08-r5-mobile-cover-qa.json
+          git diff --cached --name-only
+          git commit -m 'editorial: make Oct 8 JACS native cover screenshot safe (R5)'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
+          echo 'SOURCE_ONLY_COMMITTED; draft_update not invoked'
+      - name: Save visual proof artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wechat-2026-10-08-r5-native-cover
+          path: |
+            public/wechat-assets/reviewed/2026-10-08-r5/jacs-cover-native-safe.png
+            audit/wechat-working/2026-10-08-r5-mobile-cover-qa.json
+          retention-days: 7
+          if-no-files-found: ignore
