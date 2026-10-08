@@ -141,7 +141,7 @@ for (const [device, width, height] of [
         window.scrollBy(0, node.getBoundingClientRect().top - target);
       }, desiredTop);
       await expect.poll(
-        () => button.evaluate(node => Math.abs(node.getBoundingClientRect().top - desiredTop)),
+        () => button.evaluate((node, target) => Math.abs(node.getBoundingClientRect().top - target), desiredTop),
         { timeout: 5000 },
       ).toBeLessThan(38);
     };
