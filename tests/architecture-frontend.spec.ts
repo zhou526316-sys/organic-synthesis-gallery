@@ -121,6 +121,71 @@ async function stubOptionalApi(page: import('@playwright/test').Page): Promise<v
   });
 }
 
+// Feedback #42: a status editor near the lower edge must open upward rather
+// than squeeze into a small 220px region below its triggering button.
+for (const [device, width, height] of [
+  ['mobile', 390, 844],
+  ['desktop', 1280, 900],
+] as const) {
+  test(`reading-status editor uses the roomier side of the viewport (${device})`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await stubOptionalApi(page);
+    await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+    const actions = page.locator('#gallery > .card').first().locator('gallery-paper-actions');
+    const button = actions.locator('button[data-action="status"]');
+    const drawer = actions.locator('.drawer');
+    await expect(button).toBeVisible({ timeout: 30000 });
+
+    const moveTrigger = async (desiredTop: number): Promise<void> => {
+      await button.evaluate((node, target) => {
+        window.scrollBy(0, node.getBoundingClientRect().top - target);
+      }, desiredTop);
+      await expect.poll(
+        () => button.evaluate(node => Math.abs(node.getBoundingClientRect().top - desiredTop)),
+        { timeout: 5000 },
+      ).toBeLessThan(38);
+    };
+    const geometry = async () => actions.evaluate(host => {
+      const root = (host as HTMLElement).shadowRoot!;
+      const anchor = root.querySelector<HTMLElement>('button[data-action="status"]')!.getBoundingClientRect();
+      const panel = root.querySelector<HTMLElement>('.drawer')!.getBoundingClientRect();
+      const vp = window.visualViewport;
+      const top = vp?.offsetTop ?? 0;
+      const bottom = top + (vp?.height ?? window.innerHeight);
+      return {
+        above: anchor.top - top,
+        below: bottom - anchor.bottom,
+        triggerTop: anchor.top,
+        triggerBottom: anchor.bottom,
+        popupTop: panel.top,
+        popupBottom: panel.bottom,
+        viewportTop: top,
+        viewportBottom: bottom,
+      };
+    });
+
+    await moveTrigger(Math.round(height * 0.70));
+    await button.click();
+    await expect(drawer).toBeVisible();
+    await expect(drawer).toHaveAttribute('data-placement', 'above');
+    const upper = await geometry();
+    expect(upper.above).toBeGreaterThan(upper.below);
+    expect(upper.popupBottom).toBeLessThanOrEqual(upper.triggerTop - 5);
+    expect(upper.popupTop).toBeGreaterThanOrEqual(upper.viewportTop + 6);
+
+    await actions.locator('button[data-action="close"]').click();
+    await moveTrigger(Math.round(height * 0.18));
+    await button.click();
+    await expect(drawer).toBeVisible();
+    await expect(drawer).toHaveAttribute('data-placement', 'below');
+    const lower = await geometry();
+    expect(lower.below).toBeGreaterThan(lower.above);
+    expect(lower.popupTop).toBeGreaterThanOrEqual(lower.triggerBottom + 5);
+    expect(lower.popupBottom).toBeLessThanOrEqual(lower.viewportBottom - 6);
+    await expect(actions.locator('.bar > button.action')).toHaveCount(4);
+  });
+}
+
 test('architecture-v1 landing is Hot-only while all-time membership stays complete', async ({ page }) => {
   const data = fixture();
   expect(data.archiveCount).toBeGreaterThan(0);
