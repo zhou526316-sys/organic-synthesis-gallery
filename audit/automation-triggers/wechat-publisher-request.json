@@ -1,9 +1,9 @@
 {
-  "requestId": "wechat-daily-2026-10-08-r6-native-mobile-screenshot-final-safe",
+  "requestId": "wechat-2026-10-08-r7-remove-top-label-enlarge-original-toc",
   "requestedAt": "2026-10-08T14:06:00+08:00",
   "publicationDate": "2026-10-08",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-08-r6",
+  "editorialRevision": "2026-10-08-r7",
   "approvedGate": "audit/wechat-working/2026-10-08-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -14,6 +14,6 @@
   "draftOnly": true,
   "requireDraftGetReadback": true,
   "publicSendAuthorized": false,
-  "prePublishQA": "audit/wechat-working/2026-10-08-r6-mobile-cover-qa.json",
-  "reason": "User native WeChat mobile screenshot proved R3 top label and first title line obstructed. R6 reviewed original chemistry uniformly scaled, top label shifted inward, solid dark native two-line title backing at y492, zero old header ghost. Preserve both article order and all 32 body images. Single same-media draft/update, draft/get readback, no public sending."
+  "prePublishQA": "audit/wechat-working/2026-10-08-r7-mobile-cover-qa.json",
+  "reason": "Explicit user authorized updating the SAME existing two-article WeChat draft with reviewed R7 JACS cover: remove top 今日精选·JACS banner, enlarge exact original paper TOC to 760x460 (~36% bigger than R6), preserve dark native headline backing from y492 and all 32 body images plus Nature Catalysis square cover. Draft-only single controlled update and mandatory draft/get readback; NEVER freepublish/submit."
 }
