@@ -355,7 +355,25 @@ async function fetchAuthorizedSource(origin, sessionToken, mode, controller, onH
   };
 }
 
-async function getPdfSource(sessionToken, mode = 'view') {
+async function getPdfSource(sessionToken, mode = 'view', preferTencent = false) {
+  if (preferTencent) {
+    if (!(await tencentGatewayEnabled())) throw new Error('pdf_authorize_network_error');
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort('tencent_authorize_timeout'),
+      OPEN_TOTAL_TIMEOUT_MS);
+    try {
+      const source = await fetchAuthorizedSource(API_TENCENT, sessionToken, mode, controller);
+      document.documentElement.dataset.privatePdfAuthorizePath = 'tencent';
+      declaredPdfBytes = source.byteLength;
+      document.documentElement.dataset.privatePdfDeclaredBytes = String(declaredPdfBytes);
+      return source;
+    } catch (error) {
+      if (controller.signal.aborted) throw new Error('pdf_authorize_timeout');
+      throw error;
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }
   const tencentReady = await tencentGatewayEnabled();
   const origins = [API_BASE, API_BACKUP, ...(tencentReady ? [API_TENCENT] : [])];
   const controllers = origins.map(() => new AbortController());
@@ -788,10 +806,10 @@ async function fetchPdfSingleTransfer(fileUrl, sessionToken) {
     if (transferController === controller) transferController = null;
   }
 }
-async function verifiedPdfSource(sessionToken, mode = 'view') {
+async function verifiedPdfSource(sessionToken, mode = 'view', preferTencent = false) {
   let lastError;
   for (let attempt = 0; attempt < 2; attempt += 1) {
-    const source = await getPdfSource(sessionToken, mode);
+    const source = await getPdfSource(sessionToken, mode, preferTencent);
     // The updated Worker has already checked R2 object size, the %PDF-
     // signature and a self-tested v2 ticket within the authorized POST.
     // Avoid a second China-to-edge roundtrip. An older Worker or a legacy
@@ -858,7 +876,7 @@ async function beginDownload() {
     download.textContent = '下载 PDF';
   }
 }
-async function start() {
+async function start(preferTencent = false) {
   if (!/^10\.\d{4,9}\/.+/.test(doi)) { fallbackView('DOI 无效。'); return; }
   const sessionToken = token();
   if (!sessionToken) { fallbackView('请先在 Gallery 登录后再读取私有 PDF。'); return; }
@@ -880,7 +898,7 @@ async function start() {
     setPhase('authorize', '正在确认 PDF 权限…');
     const authorizeStarted = performance.now();
     try {
-      sourceUrl = await verifiedPdfSource(sessionToken, 'view');
+      sourceUrl = await verifiedPdfSource(sessionToken, 'view', preferTencent);
     } finally {
       document.documentElement.dataset.privatePdfAuthorizeMs =
         String(Math.round(performance.now() - authorizeStarted));
@@ -953,6 +971,40 @@ async function start() {
     }
   } catch (error) {
     rangeWarmup?.abort();
+    const terminal = rangeFailure || error;
+    const code = String(terminal?.message || '');
+    // A successful Cloudflare *authorization* does not prove that the
+    // browser can fetch the signed PDF bytes through the same network.
+    // One independent Tencent reauthorization is permitted on transport
+    // failure; never retry permission denial, absence or invalid PDF data.
+    const fileRouteFailure = phase === 'transfer' || phase === 'range' ||
+      phase === 'parse';
+    const transientFileFailure =
+      /^file_http_(408|429|5\\d\\d)$/.test(code) ||
+      ['pdf_transfer_timeout', 'pdf_incomplete_bytes',
+       'pdf_first_page_timeout', 'pdf_range_unavailable'].includes(code) ||
+      terminal?.name === 'TypeError';
+    const canChangeRoute = !preferTencent && !nativeMode && !destroyed &&
+      sessionToken === token() && sourceUrl &&
+      [API_BASE, API_BACKUP].some(host => sourceUrl.startsWith(host + '/')) &&
+      fileRouteFailure && transientFileFailure &&
+      await tencentGatewayEnabled();
+    if (canChangeRoute) {
+      document.documentElement.dataset.privatePdfFileFallback = 'tencent';
+      renderSequence += 1;
+      renderTask?.cancel();
+      renderTask = null;
+      pdf = null;
+      rangeFailure = null;
+      transferController?.abort('switch_gateway');
+      activeRangeTransport?.abort();
+      try { await loadingTask?.destroy(); } catch { /* teardown is best effort */ }
+      loadingTask = null;
+      pageNumber = 1;
+      sourceUrl = '';
+      setPhase('authorize', '文件传输失败，正在自动切换独立 PDF 线路…');
+      return start(true);
+    }
     if (rangeFailure || error?.message === 'pdf_first_page_timeout') {
       renderSequence += 1;
       renderTask?.cancel();
@@ -961,7 +1013,7 @@ async function start() {
       try { void loadingTask?.destroy(); } catch {}
       loadingTask = null;
     }
-    showReaderError(rangeFailure || error);
+    showReaderError(terminal);
   }
 }
 download.addEventListener('click', () => { void beginDownload(); });
