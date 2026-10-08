@@ -421,7 +421,7 @@ export async function importTampermonkeyReport(request, env, payload) {
   const firstSuccessForJob = report.status === 'success'
     && (!report.jobId || !history.some(row => row.jobId === report.jobId && row.status === 'success'));
   const knownFailure = [report, ...history]
-    .filter(row => row.status === 'failed' && row.final === true)
+    .filter(row => row.status === 'failed')
     .sort((a,b)=>Number(b.updatedAt||0)-Number(a.updatedAt||0))[0];
 
   index.items[doi] = tmProjectReportItem({
