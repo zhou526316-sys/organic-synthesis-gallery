@@ -147,6 +147,20 @@ test('architecture-v1 landing is Hot-only while all-time membership stays comple
   expect(data.hotCount).toBeLessThan(data.memberCount);
 });
 
+test('publisher-verified SciAdv card displays 7 Oct without pending-date label', async ({ page }) => {
+  // Test the rendered card, not only the override helper. The authorized
+  // source data may still say 9 Oct until the next fixed 08:00 release.
+  await stubOptionalApi(page);
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
+    .toBe('architecture-v1');
+  await page.locator('#search').fill('10.1126/sciadv.aed4187');
+  const card = page.locator('#gallery > .card[data-doi="10.1126/sciadv.aed4187"]');
+  await expect(card).toBeVisible({ timeout: 30000 });
+  await expect(card).toHaveAttribute('data-date', '2026-10-07');
+  await expect(card.locator('.tag.date')).not.toContainText(/2026-10-09|Oct 9|待核实|unverified/i);
+});
+
 test('verified Hot bootstrap renders before all-time membership finishes', async ({ page }) => {
   const data = fixture();
   let releaseMembership!: () => void;

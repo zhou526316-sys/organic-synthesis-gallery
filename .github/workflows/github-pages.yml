@@ -21,6 +21,8 @@ on:
       - 'scripts/build-gallery-architecture-public.mjs'
       - 'scripts/test-gallery-architecture-public.mjs'
       - 'scripts/test-daily-gallery-order.mjs'
+      - 'scripts/test-publisher-date-display-fix.mjs'
+      - 'shared/publisher-date-display-fix.mjs'
       - 'shared/daily-gallery-order.mjs'
       - 'architecture/**'
       - 'shared/result-window.js'
@@ -116,7 +118,7 @@ jobs:
         run: |
           test -s scripts/test-result-window.mjs
           test -s architecture/tests/published-reader.test.mjs
-          node --test scripts/test-result-window.mjs scripts/test-daily-gallery-order.mjs architecture/tests/published-reader.test.mjs
+          node --test scripts/test-result-window.mjs scripts/test-daily-gallery-order.mjs scripts/test-publisher-date-display-fix.mjs architecture/tests/published-reader.test.mjs
       - name: Resolve trusted main deployment snapshot
         id: resolve
         run: node scripts/pages-release-delivery.mjs resolve
