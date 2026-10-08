@@ -33,6 +33,15 @@ try{
  await test('foreign DOI still fails candidate provenance check',async()=>{assert.equal((await collect(`<figure><h3>Figure 1</h3><img src="${url.replace('3010868','9999999')}"></figure>`)).length,0);});
  await test('existing standard numbered caption still works',async()=>{const r=await collect(`<figure><img src="${url}"><figcaption>Figure 2. Existing caption.</figcaption></figure>`);assert.equal(r[0].label,'Figure 2');});
  await test('Wiley-only heading fallback does not change another publisher',async()=>{assert.equal((await collect(`<figure><h3>Figure 1</h3><img src="${url}"></figure>`,'rsc')).length,0);});
+ await test('RSC numbered sibling heading yields a body figure with no caption class',async()=>{
+  const img='https://pubs.rsc.org/image/article/d6sc05561c/figure1.png';
+  const rows=await collect('<div class="media-block"><div class="image-pane"><img src="'+img+'"></div><h4>Figure 1. Reaction development.</h4></div>','rsc');
+  assert.equal(rows.length,1);assert.equal(rows[0].label,'Figure 1');assert.equal(rows[0].url,img);
+ });
+ await test('RSC does not cross-associate a caption across two images',async()=>{
+  const rows=await collect('<div class="section-content"><div><img src="/assets/f1.png"></div><div><img src="/assets/f2.png"></div><h4>Figure 1. One of two images.</h4></div>','rsc');
+  assert.equal(rows.length,0);
+ });
  await test('fifth explicit ACS vector candidate is preferred rather than discarded by four-item cap',async()=>{
   const x=await page.evaluate(async()=>{T.fixtureQuality();const cs=Array.from({length:5},(_,i)=>({label:'Figure 1',url:'https://pubs.acs.org/'+(i===4?'good.svg':'bad'+i+'.png')}));const r=await T.acquireBestVisual({publisher:'acs',captureDeadline:Date.now()+10000},cs,[],new Map(),'figure');return{url:r?.candidate.url,seen};});
   assert.equal(x.url,'https://pubs.acs.org/good.svg');assert.equal(x.seen[0],x.url);
