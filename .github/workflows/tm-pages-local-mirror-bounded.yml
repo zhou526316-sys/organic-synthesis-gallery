@@ -1,0 +1,39 @@
+name: Verify bounded local-capture Pages media merge
+on:
+  push:
+    branches: [fix/tm-pages-local-mirror-bounded-20261009]
+    paths:
+      - 'cloudflare/scripts/merge-local-captures.mjs'
+      - 'tests/pages-local-capture-concurrency.test.mjs'
+      - '.github/workflows/tm-pages-local-mirror-bounded.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cloudflare/scripts/merge-local-captures.mjs'
+      - 'tests/pages-local-capture-concurrency.test.mjs'
+      - '.github/workflows/tm-pages-local-mirror-bounded.yml'
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify unchanged publisher authority and deterministic ordered media manifest
+        run: |
+          set -euo pipefail
+          node --check cloudflare/scripts/merge-local-captures.mjs
+          node --test tests/pages-local-capture-concurrency.test.mjs
+          git diff --check
+      - name: Prevent unintended scope, account, PDF and publication changes
+        run: |
+          set -euo pipefail
+          git diff --exit-code origin/main...HEAD -- \
+            public/papers.gz.b64 public/toc-demand-live.json \
+            cloudflare/worker/src/private-pdf.js \
+            shared/literature-journals.js \
+            docs/literature-update-protocol.md
