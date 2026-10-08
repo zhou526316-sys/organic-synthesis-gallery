@@ -211,13 +211,22 @@ export async function openPrivatePdf(request, env) {
       !Number.isSafeInteger(Number(doc.byte_length)) || Number(doc.byte_length) < 8) {
     return { status: 200, body: { available: false, doi, reason: 'pdf_storage_metadata_invalid' } };
   }
-  // Fail before granting an unusable URL if a D1 "ready" row points to an
-  // absent/truncated private R2 object. Only one R2 HEAD per open, not per range.
-  let objectHead;
-  try { objectHead = await env.PDF_PRIVATE.head(doc.r2_key); }
-  catch { return { status: 503, body: { error: 'private_pdf_storage_unavailable' } }; }
-  if (!objectHead || Number(objectHead.size) !== Number(doc.byte_length)) {
-    return { status: 200, body: { available: false, doi, reason: 'pdf_object_unavailable' } };
+  // Validate size AND actual PDF signature at the edge before minting a URL.
+  // One 16-byte R2 range replaces the previous HEAD here and the extra
+  // browser-to-Worker preflight request on the stateless v2 fast path.
+  let firstBytes;
+  try {
+    const object = await env.PDF_PRIVATE.get(doc.r2_key, { range: { offset: 0, length: 16 } });
+    if (!object || Number(object.size) !== Number(doc.byte_length)) {
+      return { status: 200, body: { available: false, doi, reason: 'pdf_object_unavailable' } };
+    }
+    firstBytes = new Uint8Array(await object.arrayBuffer());
+  } catch {
+    return { status: 503, body: { error: 'private_pdf_storage_unavailable' } };
+  }
+  if (firstBytes.length !== 16 ||
+      String.fromCharCode(...firstBytes.subarray(0, 5)) !== '%PDF-') {
+    return { status: 200, body: { available: false, doi, reason: 'pdf_header_invalid' } };
   }
   const now = Date.now(), expiresAt = now + ACCESS_TTL_MS;
   const fastToken = await makeFastTicket(env, {
@@ -246,7 +255,10 @@ export async function openPrivatePdf(request, env) {
   url.searchParams.set('token', token);
   if (mode === 'download') url.searchParams.set('download', '1');
   return { status: 200, body: { available: true, doi, url: url.toString(), expiresAt,
-    versionKind: doc.version_kind, ticketMode, mode } };
+    versionKind: doc.version_kind, ticketMode, mode,
+    // Only the same-worker self-tested stateless ticket may omit browser
+    // preflight. Legacy D1 tokens retain the old per-open verification path.
+    headerVerified: ticketMode === 'stateless-v2' } };
 }
 function parseRange(header, size) {
   const match = /^bytes=(\d*)-(\d*)$/.exec(String(header || '').trim());

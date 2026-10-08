@@ -61,7 +61,7 @@ class FakeBucket {
   async head(key){this.headCalls++;const b=this.objects.get(key);return b?{size:b.length}:null;}
   async get(key,opt){this.getCalls++;const b=this.objects.get(key);if(!b)return null;let out=b;
     if(opt?.range){out=b.slice(opt.range.offset,opt.range.offset+opt.range.length);}
-    return {body:out};
+    return {body:out,size:b.length,arrayBuffer:async()=>out.buffer.slice(out.byteOffset,out.byteOffset+out.byteLength)};
   }
 }
 async function authRequest(path, token='owner-token', init={}) {
@@ -129,6 +129,8 @@ let accessUrl='';
 await test('owner open returns only a short-lived opaque file URL',async()=>{
   const r=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','owner-token',{method:'POST'}),env);
   assert.equal(r.status,200);assert.equal(r.body.available,true);accessUrl=r.body.url;assert.ok(/token=v2\./.test(accessUrl));assert.equal(r.body.ticketMode,'stateless-v2');assert.ok(!accessUrl.includes('fixture.pdf'));
+  assert.equal(r.body.headerVerified,true,'edge verifies the real PDF header during open');
+  assert.equal(bucket.headCalls,0,'initial open does not issue a separate R2 HEAD');
 });
 await test('temporary URL serves inline PDF bytes with no-store',async()=>{
   const res=await servePrivatePdf(new Request(accessUrl),env,{});
@@ -220,6 +222,25 @@ await test('inconsistent stored R2 size fails before issuing a file URL',async()
     assert.equal(opened.body.available,false);
     assert.equal(opened.body.reason,'pdf_object_unavailable');
   } finally { doc.byte_length=oldLength; }
+});
+await test('invalid R2 PDF header is rejected before creating any file ticket',async()=>{
+  const document=db.documents.get('pdf1');
+  const previous=bucket.objects.get(document.r2_key);
+  const bad=Buffer.from(previous);
+  bad[0]=0x3c; // fake HTML or a non-PDF response with the same byte count
+  bucket.objects.set(document.r2_key,bad);
+  try {
+    const opened=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','owner-token',{method:'POST'}),env);
+    assert.equal(opened.status,200);assert.equal(opened.body.available,false);
+    assert.equal(opened.body.reason,'pdf_header_invalid');
+    assert.equal(opened.body.url,undefined);
+  } finally { bucket.objects.set(document.r2_key,previous); }
+});
+await test('legacy D1 fallback keeps client-side file verification',async()=>{
+  const legacy={...env,BRIDGE_WRITE_TOKEN:'',PRIVATE_PDF_TICKET_SECRET:''};
+  const opened=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','owner-token',{method:'POST'}),legacy);
+  assert.equal(opened.body.ticketMode,'legacy-d1');
+  assert.equal(opened.body.headerVerified,false);
 });
 await test('ordinary account never receives private document existence or bytes',async()=>{
   const s=await privatePdfStatus(await authRequest('/api/user-ui/private-pdf/status?doi=10.1021/jacs.6c12345','other-token'),env);

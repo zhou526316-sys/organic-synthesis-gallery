@@ -14,12 +14,14 @@ const SESSION_KEY = 'organic-gallery-session-v1';
 const API_BASE = 'https://api.gczhouwld.com';
 const ASSET_BASE = '/pdf-vault-assets/6.4.299/';
 const MAX_PDF_BYTES = 60 * 1024 * 1024;
+const SINGLE_TRANSFER_TIMEOUT_MS = 90_000;
 
 
 const params = new URLSearchParams(location.search);
 const doi = String(params.get('doi') || '').trim().toLowerCase();
 const fallback = params.get('fallback') || '';
 const compatibilityMode = params.get('compat') === '1';
+const nativeMode = params.get('native') === '1' && !compatibilityMode;
 const downloadOnOpen = params.get('mode') === 'download';
 const canvas = document.querySelector('#pdf-canvas');
 const stage = document.querySelector('#stage');
@@ -42,6 +44,7 @@ let pageNumber = 1;
 let zoom = 1;
 let renderSequence = 0;
 let sourceUrl = '';
+let transferController = null;
 let destroyed = false;
 let phase = 'init';
 const startedAt = performance.now();
@@ -58,12 +61,14 @@ function safeFallback() {
 function compatibilityHref() {
   const url = new URL(location.href);
   url.searchParams.set('compat', '1');
+  url.searchParams.delete('native');
   url.searchParams.delete('mode');
   return url.toString();
 }
 function browserHref() {
   const url = new URL(location.href);
   url.searchParams.delete('compat');
+  url.searchParams.set('native', '1');
   url.searchParams.delete('mode');
   return url.toString();
 }
@@ -87,7 +92,9 @@ function safeErrorCode(error) {
   if (['PasswordException','InvalidPDFException','MissingPDFException','UnexpectedResponseException','UnknownErrorException'].includes(name)) return name;
   const message = String(error?.message || '');
   if (/^(?:open|file)_http_\d+$/.test(message)) return message;
-  if (['pdf_source_invalid','pdf_page_tree','pdf_invalid_bytes','pdf_wrong_content_type','pdf_range_unavailable'].includes(message)) return message;
+  if (['pdf_source_invalid','pdf_page_tree','pdf_invalid_bytes','pdf_wrong_content_type',
+       'pdf_range_unavailable','pdf_too_large','pdf_incomplete_bytes','pdf_transfer_timeout'].includes(message)) return message;
+  if (name === 'AbortError' || name === 'TimeoutError') return 'pdf_transfer_timeout';
   return 'reader_error';
 }
 function fallbackView(message = '该论文暂时无法读取私有 PDF。', detail = '') {
@@ -202,7 +209,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
       (mode === 'download') !== (url.searchParams.get('download') === '1')) {
     throw new Error('pdf_source_invalid');
   }
-  return url.toString();
+  return { url: url.toString(), headerVerified: data.headerVerified === true };
 }
 async function checkPdfHeader(fileUrl) {
   // Check the actual PDF bytes rather than treating an iframe DOM node or a
@@ -228,14 +235,94 @@ async function checkPdfHeader(fileUrl) {
   const head = new TextDecoder().decode(bytes.subarray(0, 5));
   if (head !== '%PDF-') throw new Error('pdf_invalid_bytes');
 }
+async function fetchPdfSingleTransfer(fileUrl, sessionToken) {
+  const started = performance.now();
+  const controller = new AbortController();
+  transferController = controller;
+  const timeout = window.setTimeout(() => controller.abort('pdf_transfer_timeout'),
+    SINGLE_TRANSFER_TIMEOUT_MS);
+  try {
+    setPhase('transfer', '正在快速获取 PDF…');
+    const response = await fetch(fileUrl, {
+      method: 'GET',
+      credentials: 'include',
+      cache: 'no-store',
+      signal: controller.signal,
+    });
+    if (!response.ok) throw new Error('file_http_' + response.status);
+    if (response.status !== 200) throw new Error('pdf_range_unavailable');
+    if (!/^application\/pdf(?:\s*;|$)/i.test(response.headers.get('content-type') || '')) {
+      await response.body?.cancel().catch(() => {});
+      throw new Error('pdf_wrong_content_type');
+    }
+    const length = Number(response.headers.get('content-length') || 0);
+    if (!Number.isSafeInteger(length) || length < 0 || length > MAX_PDF_BYTES) {
+      await response.body?.cancel().catch(() => {});
+      throw new Error('pdf_too_large');
+    }
+    const parts = [];
+    let loaded = 0;
+    if (response.body?.getReader) {
+      const reader = response.body.getReader();
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        if (destroyed || sessionToken !== token()) {
+          await reader.cancel().catch(() => {});
+          throw new Error('pdf_transfer_timeout');
+        }
+        const chunk = value instanceof Uint8Array ? value : new Uint8Array(value);
+        loaded += chunk.byteLength;
+        if (loaded > MAX_PDF_BYTES) {
+          await reader.cancel().catch(() => {});
+          throw new Error('pdf_too_large');
+        }
+        parts.push(chunk);
+        const readMb = (loaded / 1048576).toFixed(1);
+        const expected = length ? ` / ${(length / 1048576).toFixed(1)} MB` : ' MB';
+        setPhase('transfer', `正在快速获取 PDF：${readMb}${expected}`);
+      }
+    } else {
+      const chunk = new Uint8Array(await response.arrayBuffer());
+      parts.push(chunk);
+      loaded = chunk.byteLength;
+    }
+    if (loaded < 8 || (length && loaded !== length)) throw new Error('pdf_incomplete_bytes');
+    const output = new Uint8Array(loaded);
+    let offset = 0;
+    for (const chunk of parts) { output.set(chunk, offset); offset += chunk.length; }
+    parts.length = 0;
+    if (String.fromCharCode(...output.subarray(0, 5)) !== '%PDF-') {
+      throw new Error('pdf_invalid_bytes');
+    }
+    document.documentElement.dataset.privatePdfTransferMs = String(Math.round(performance.now() - started));
+    document.documentElement.dataset.privatePdfTransferBytes = String(loaded);
+    return output;
+  } catch (error) {
+    if (controller.signal.aborted) throw new Error('pdf_transfer_timeout');
+    throw error;
+  } finally {
+    window.clearTimeout(timeout);
+    if (transferController === controller) transferController = null;
+  }
+}
 async function verifiedPdfSource(sessionToken, mode = 'view') {
   let lastError;
   for (let attempt = 0; attempt < 2; attempt += 1) {
-    const fileUrl = await getPdfSource(sessionToken, mode);
+    const source = await getPdfSource(sessionToken, mode);
+    // The updated Worker has already checked R2 object size, the %PDF-
+    // signature and a self-tested v2 ticket within the authorized POST.
+    // Avoid a second China-to-edge roundtrip. An older Worker or a legacy
+    // opaque ticket must still use the independent 206 file preflight.
+    if (source.headerVerified) {
+      document.documentElement.dataset.privatePdfPreflight = 'edge';
+      return source.url;
+    }
     try {
       setPhase('preflight', mode === 'download' ? '正在确认下载文件…' : '正在确认 PDF 文件响应…');
-      await checkPdfHeader(fileUrl);
-      return fileUrl;
+      await checkPdfHeader(source.url);
+      document.documentElement.dataset.privatePdfPreflight = 'browser';
+      return source.url;
     } catch (error) {
       lastError = error;
       // Refresh a rejected short-lived ticket once, but never loop on 404,
@@ -257,6 +344,9 @@ function showReaderError(error, prefix = 'PDF 读取失败') {
   else if (code === 'pdf_invalid_bytes' || code === 'pdf_wrong_content_type') message = '文件响应并非有效 PDF，已阻止打开错误页面。';
   else if (code === 'pdf_range_unavailable') message = 'PDF 文件服务不支持分段读取，暂时无法可靠打开。';
   else if (code === 'file_http_404') message = '私有 PDF 文件未找到，下载记录可能需要修复。';
+  else if (code === 'pdf_transfer_timeout') message = '文件传输超时。可点击上方“浏览器阅读”尝试原生模式。';
+  else if (code === 'pdf_too_large') message = '文件较大，建议点击上方“浏览器阅读”以原生模式打开。';
+  else if (code === 'pdf_incomplete_bytes') message = '文件传输不完整，请重新读取或尝试浏览器阅读。';
   fallbackView(message, code);
 }
 let downloadBusy = false;
@@ -289,33 +379,39 @@ async function start() {
   compatibility.href = compatibilityHref();
   compatibility.hidden = compatibilityMode || downloadOnOpen;
   browserOpen.href = browserHref();
-  browserOpen.hidden = !compatibilityMode;
+  browserOpen.hidden = nativeMode || downloadOnOpen;
+  browserOpen.textContent = '浏览器阅读';
   download.hidden = false;
   if (downloadOnOpen) { await beginDownload(); return; }
   try {
     setPhase('authorize', '正在确认 PDF 权限…');
     sourceUrl = await verifiedPdfSource(sessionToken, 'view');
     if (destroyed || token() !== sessionToken) return;
-    if (!compatibilityMode) {
+    if (nativeMode) {
       document.documentElement.dataset.privatePdfMode = 'native';
       document.documentElement.dataset.privatePdfViewer = 'handoff';
       setPhase('native-handoff', '正在打开浏览器 PDF 阅读器…');
-      // Replace the shell in the SAME tab. The cross-origin PDF iframe was
-      // blocked by some browsers even when the file URL was authorized.
       location.replace(sourceUrl + '#page=1&zoom=page-width');
       return;
     }
-    document.documentElement.dataset.privatePdfMode = 'compat';
-    const engine = await loadPdfEngine();
+    const buffered = !compatibilityMode;
+    document.documentElement.dataset.privatePdfMode = buffered ? 'single-transfer' : 'compat';
+    const loaded = buffered
+      ? await Promise.all([loadPdfEngine(), fetchPdfSingleTransfer(sourceUrl, sessionToken)])
+      : [await loadPdfEngine(), null];
+    const [engine, bytes] = loaded;
     if (destroyed || token() !== sessionToken) return;
-    loadingTask = engine.getDocument(options({ url: sourceUrl, withCredentials: true }));
-    setPhase('parse', '兼容模式：正在读取 PDF 目录…');
-    loadingTask.onProgress = progress => {
-      if (destroyed || status.hidden) return;
-      const loaded = Number(progress?.loaded || 0);
-      const loadedMb = loaded > 0 ? (loaded / 1024 / 1024).toFixed(1) : '0.0';
-      status.textContent = `正在准备第一页… 已按需读取 ${loadedMb} MB`;
-    };
+    loadingTask = buffered
+      ? engine.getDocument(options({ data: bytes, disableRange: true, disableStream: true }))
+      : engine.getDocument(options({ url: sourceUrl, withCredentials: true }));
+    setPhase('parse', buffered ? '正在本地解析 PDF…' : '兼容模式：正在读取 PDF 目录…');
+    if (!buffered) {
+      loadingTask.onProgress = progress => {
+        if (destroyed || status.hidden) return;
+        const loadedMb = (Number(progress?.loaded || 0) / 1048576).toFixed(1);
+        status.textContent = `兼容模式：按需读取 ${loadedMb} MB`;
+      };
+    }
     pdf = await loadingTask.promise;
     if (!Number.isSafeInteger(pdf.numPages) || pdf.numPages < 1) throw new Error('pdf_page_tree');
     controls();
@@ -340,6 +436,8 @@ function destroy() {
   renderSequence += 1;
   renderTask?.cancel();
   renderTask = null;
+  transferController?.abort();
+  transferController = null;
   canvas.width = 0;
   canvas.height = 0;
   sourceUrl = '';
