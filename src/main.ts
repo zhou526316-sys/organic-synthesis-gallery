@@ -2,7 +2,6 @@ import { api } from './platform-api';
 import { chineseTitle, validChineseTitle } from '../shared/chinese-title-overrides.js';
 import './styles.css';
 import './pdf-vault/card-entry.css';
-import { refreshPdfVaultCards } from './pdf-vault/cards.mjs';
 import { mountUserShell } from './user-shell';
 import { beijingDate, earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
@@ -209,6 +208,11 @@ const mediaCheckedAt = new Map<string, number>();
 let batchTimer: number | null = null;
 let batchRunning = false;
 let batchAgain = false;
+let mobileInitialMediaWave = true;
+let pdfVaultRefreshTimer: number | null = null;
+let pdfVaultRefreshGeneration = 0;
+let pdfVaultCardsModule: typeof import('./pdf-vault/cards.mjs') | null = null;
+let pdfVaultCardsModulePromise: Promise<typeof import('./pdf-vault/cards.mjs')> | null = null;
 let inventoryFingerprint = '';
 let inventoryTimer: number | null = null;
 let bridgeStageTimer: number | null = null;
@@ -232,6 +236,41 @@ function resultWindowSize(): number {
   return window.matchMedia('(max-width: 680px)').matches
     ? MOBILE_RESULT_WINDOW_SIZE
     : DESKTOP_RESULT_WINDOW_SIZE;
+}
+
+
+async function loadPdfVaultCardsModule(): Promise<typeof import('./pdf-vault/cards.mjs')> {
+  if (pdfVaultCardsModule) return pdfVaultCardsModule;
+  pdfVaultCardsModulePromise ||= import('./pdf-vault/cards.mjs');
+  try {
+    pdfVaultCardsModule = await pdfVaultCardsModulePromise;
+    return pdfVaultCardsModule;
+  } catch (error) {
+    pdfVaultCardsModulePromise = null;
+    throw error;
+  }
+}
+
+function schedulePdfVaultCardsRefresh(container: HTMLElement, lang: Language): void {
+  const generation = ++pdfVaultRefreshGeneration;
+  if (pdfVaultRefreshTimer !== null) window.clearTimeout(pdfVaultRefreshTimer);
+  const mobile = window.matchMedia('(max-width: 680px)').matches;
+  const refresh = (module: typeof import('./pdf-vault/cards.mjs')): void => {
+    if (generation !== pdfVaultRefreshGeneration || !container.isConnected) return;
+    module.refreshPdfVaultCards(container, lang);
+  };
+  // Desktop preserves the existing stable layout timing by loading this module
+  // before mount. Mobile keeps account/local-PDF state out of the first TOC path.
+  if (!mobile && pdfVaultCardsModule) {
+    refresh(pdfVaultCardsModule);
+    return;
+  }
+  pdfVaultRefreshTimer = window.setTimeout(() => {
+    pdfVaultRefreshTimer = null;
+    void loadPdfVaultCardsModule().then(refresh).catch(() => {
+      // A deferred enhancement must never block the literature/media reader.
+    });
+  }, mobile ? 700 : 0);
 }
 
 let resultWindowPage = 1;
@@ -773,9 +812,9 @@ function renderCards(): void {
       : '';
     return `<article class='card${editionClass}' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(paper.date)}' data-doi='${escapeHtml(doi || '')}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'>${editionBadge}<span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div><div class='card-actions'><button class='share-card' type='button' data-card-share ${doi ? '' : 'disabled'} aria-label='${escapeHtml(`${t('share')}: ${visibleTitle(paper)}`)}'>${escapeHtml(t('share'))}</button>${localPdfButton}${pdfButton}${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></div></article>`;
   }).join('') : `<div class='empty'>${escapeHtml(t('noResults'))}</div>`;
-  refreshPdfVaultCards(gallery, language);
   restoreMedia();
   scheduleMediaBatch(0);
+  schedulePdfVaultCardsRefresh(gallery, language);
   if (activeEdition && !editionAutoScrolled) {
     editionAutoScrolled = true;
     requestAnimationFrame(() => {
@@ -1006,7 +1045,7 @@ async function hydrateMediaBatch(): Promise<void> {
   }
   const now = Date.now();
   const targets = visibleMediaTargets();
-  const dois = [...new Set(targets.flatMap(target => {
+  const candidateDois = [...new Set(targets.flatMap(target => {
     const key = target.doi.toLowerCase();
     const tocReady = tocCache.get(key);
     const figureReady = figureCache.get(key);
@@ -1014,7 +1053,11 @@ async function hydrateMediaBatch(): Promise<void> {
     if (now - (mediaCheckedAt.get(key) || 0) < 20_000) return [];
     return [target.doi];
   }))];
-  if (!dois.length) return;
+  if (!candidateDois.length) return;
+  const firstMobileWave = innerWidth <= 680 && mobileInitialMediaWave;
+  const dois = firstMobileWave ? candidateDois.slice(0, 2) : candidateDois;
+  const needsMobileFollowup = firstMobileWave && candidateDois.length > dois.length;
+  if (firstMobileWave) mobileInitialMediaWave = false;
   batchRunning = true;
   try {
     const response = await api.post('/api/media/batch', { dois });
@@ -1042,6 +1085,8 @@ async function hydrateMediaBatch(): Promise<void> {
     if (batchAgain) {
       batchAgain = false;
       scheduleMediaBatch(0);
+    } else if (needsMobileFollowup) {
+      scheduleMediaBatch(40);
     }
   }
 }
@@ -1738,6 +1783,9 @@ async function load(): Promise<void> {
       const legacyDates = papers.map(paper => paper.date)
         .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
       latestCollectionDate = legacyDates[legacyDates.length - 1] || '';
+    }
+    if (!window.matchMedia('(max-width: 680px)').matches) {
+      try { await loadPdfVaultCardsModule(); } catch { /* Optional card state must not block Gallery. */ }
     }
     mount();
     window.dispatchEvent(new CustomEvent('gallery-first-content-rendered'));
