@@ -79,10 +79,14 @@ for(const journal of TARGET_JOURNALS){
   insert(ready.slice().sort((a,b)=>a.addedDate.localeCompare(b.addedDate))[0]);
   for(const x of latest(ready)){if(chosen.length>=3)break;insert(x);}
   for(const x of latest(notReady)){if(chosen.length>=3)break;insert(x);}
+  const recent=entries.filter(x=>x.addedDate>='2026-10-01');
   report.push({
     journal:journal.name,
     activeFrom:journal.activeFrom,
     publishedCards:entries.length,
+    addedSinceOct1:recent.length,
+    readySinceOct1:recent.filter(x=>x.ready).length,
+    missingSinceOct1:recent.filter(x=>!x.ready).length,
     ready:ready.length,
     missing:notReady.length,
     selection:chosen.map(x=>({doi:x.doi,addedDate:x.addedDate,fileBytes:x.size,ready:x.ready})),
