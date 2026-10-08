@@ -2,7 +2,7 @@ name: Verify feedback 42 status popover on live Gallery
 
 on:
   workflow_dispatch:
-  # One-time follow-up for the specifically corrected Pages release run.
+  # One-time live acceptance for PR #423 after its exact Pages release run.
   # This workflow ONLY verifies the public UI; it does not publish anything.
   workflow_run:
     workflows: ['Deploy GitHub Pages frontend']
@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   inspect:
-    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.id == 37810874584 && github.event.workflow_run.conclusion == 'success')
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.id == 37815767767 && github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
