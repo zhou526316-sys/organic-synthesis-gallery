@@ -354,15 +354,8 @@ export class GalleryUserShell extends HTMLElement {
       '/api/user-ui/auth/exchange', '/api/user-ui/auth/email/consume',
       '/api/user-ui/auth/register/consume',
     ].includes(path);
-    let response: Response;
-    try {
-      response = await fetch(`${WORKER_API_BASE}${path}`, {
-        ...init, headers,
-        ...(isAuthRoute ? { signal: AbortSignal.timeout(5_000) } : {}),
-      });
-    } catch (error) {
-      if (!isAuthRoute) throw error;
-      let gatewayEnabled = false;
+    let gatewayEnabled = false;
+    if (isAuthRoute) {
       try {
         const manifest = await fetch('/pdf-gateway-routing.json', {
           cache: 'no-store', signal: AbortSignal.timeout(1200),
@@ -373,6 +366,16 @@ export class GalleryUserShell extends HTMLElement {
             data.origin === 'https://pdf.gczhouwld.com';
         }
       } catch { /* route is not accepted */ }
+    }
+    let response: Response;
+    try {
+      response = await fetch(`${WORKER_API_BASE}${path}`, {
+        ...init, headers,
+        // Before the Tencent gateway is live, preserve the existing login
+        // transport behavior; do not add a new 5-second timeout to users.
+        ...(gatewayEnabled ? { signal: AbortSignal.timeout(5_000) } : {}),
+      });
+    } catch (error) {
       if (!gatewayEnabled) throw error;
       response = await fetch(`https://pdf.gczhouwld.com${path}`, {
         ...init, headers, signal: AbortSignal.timeout(7_000),
