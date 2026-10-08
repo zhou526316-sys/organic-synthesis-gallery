@@ -276,14 +276,41 @@ class Reader(BaseHTTPRequestHandler):
             upstream.close()
 
 
+class BoundedServer(ThreadingHTTPServer):
+    # Limit even slow-header/idle HTTP client threads, not just Worker
+    # calls. Without this limit an unauthenticated public client could
+    # exhaust a 2GB Tencent VM before it reached the 4-request SEM gate.
+    allow_reuse_address = True
+    daemon_threads = True
+    request_queue_size = 24
+
+    def __init__(self, *args, **kwargs):
+        self._clients = threading.BoundedSemaphore(20)
+        super().__init__(*args, **kwargs)
+
+    def process_request(self, request, client_address):
+        if not self._clients.acquire(blocking=False):
+            request.close()
+            return
+        try:
+            super().process_request(request, client_address)
+        except BaseException:
+            self._clients.release()
+            raise
+
+    def process_request_thread(self, request, client_address):
+        try:
+            super().process_request_thread(request, client_address)
+        finally:
+            self._clients.release()
+
+    def handle_error(self, *_):
+        # Never log signed PDF URLs, Authorization headers or raw cookies.
+        pass
+
+
 if __name__ == "__main__":
-    class QuietServer(ThreadingHTTPServer):
-        allow_reuse_address = True
-        def handle_error(self, *_):
-            # No traceback lines with signed query strings in systemd logs.
-            pass
-    server = QuietServer(LISTEN, Reader)
-    server.daemon_threads = True
+    server = BoundedServer(LISTEN, Reader)
     try:
         server.serve_forever(poll_interval=.5)
     finally:
