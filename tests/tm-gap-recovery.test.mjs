@@ -4,8 +4,8 @@ import vm from 'node:vm';
 import {test} from 'node:test';
 
 const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
-assert.ok(source.includes("// @version      6.2.51"));
-assert.ok(source.includes("var INSTALL_REVISION = '6.2.51';"));
+assert.ok(source.includes("// @version      6.2.52"));
+assert.ok(source.includes("var INSTALL_REVISION = '6.2.52';"));
 assert.ok(source.includes("GAP_RECOVERY_REVISION = '20261008-gap-recovery-v1'"));
 assert.ok(source.includes("FIGURE_ONE_QUEUE_POLICY_REVISION = '20261008-verified-figure1-complete-v2'"));
 
@@ -19,7 +19,8 @@ const articleUrl=vm.runInContext('articleUrl',articleCtx);
 test('opportunistic bundle uses full publisher routes',()=>{
   assert.match(articleUrl({doi:'10.1039/d6sc06874j',publisher:'rsc',captureToc:true,opportunisticFigures:true}),/\/articlehtml\/2026\/sc\/d6sc06874j$/);
   assert.equal(articleUrl({doi:'10.1039/d6sc06874j',publisher:'rsc',captureToc:true}), 'https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc06874j');
-  assert.equal(articleUrl({doi:'10.1021/jacs.6c12345',publisher:'acs',captureToc:true,opportunisticEvidence:true}), 'https://pubs.acs.org/doi/full/10.1021/jacs.6c12345');
+  assert.equal(articleUrl({doi:'10.1021/jacs.6c12345',publisher:'acs',captureToc:true,opportunisticEvidence:true}), 'https://pubs.acs.org/doi/10.1021/jacs.6c12345');
+  assert.equal(articleUrl({doi:'10.1021/jacs.6c12345',publisher:'acs',captureToc:false,captureFigures:true}), 'https://pubs.acs.org/doi/full/10.1021/jacs.6c12345');
 });
 
 const evidenceStart=source.indexOf('  function evidenceArticleUrl(job) {');
