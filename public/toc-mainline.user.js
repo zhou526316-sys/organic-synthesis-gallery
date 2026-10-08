@@ -2407,7 +2407,7 @@ function embeddedJobDois(value) {
       if(kind==='figure1'&&job.allowFigureOne===false)return;
       var nodes=block.querySelectorAll('img,source,a[href],object[data],[style*="background-image" i]');
       Array.prototype.slice.call(nodes).slice(0,28).forEach(function(node){
-        var urls=articleFigureImageUrls(node,base);
+        var urls=articleFigureImageUrls(node,base).slice();
         // Silverchair also renders DOI-associated visuals as CSS background
         // images. Only read URLs embedded in the ACTUAL article block.
         var inline=String(node.getAttribute&&node.getAttribute('style')||'');
