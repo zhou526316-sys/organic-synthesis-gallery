@@ -1,19 +1,27 @@
 import { spawnSync } from 'node:child_process';
-import { gunzipSync } from 'node:zlib';
-import fs from 'node:fs';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
 
-const dataRaw=fs.readFileSync('public/papers.gz.b64','utf8').trim();
-let catalog;
-try{
-  const raw=gunzipSync(Buffer.from(dataRaw,'base64')).toString('utf8');
-  const parsed=JSON.parse(raw);
-  catalog=Array.isArray(parsed)?parsed:(Array.isArray(parsed.papers)?parsed.papers:Array.isArray(parsed.articles)?parsed.articles:null);
-}catch(error){
-  console.log('PDF_JOURNAL_DISCOVERY '+JSON.stringify({ok:false,reason:'published_catalog_parse_failed'}));
-  process.exit(1);
-}
-if(!catalog)throw Error('published_catalog_shape_invalid');
+// Read the *current deployed indexed catalog*, not the historical archive
+// public/papers.gz.b64 (which stops before the newest journal additions).
+const readD1=(name,sql)=>{
+  const p=spawnSync('cloudflare/worker/node_modules/.bin/wrangler',
+    ['d1','execute',name,'--remote','--command',sql,'--json'],
+    {encoding:'utf8',timeout:55000,maxBuffer:8*1024*1024,env:process.env,
+     stdio:['ignore','pipe','pipe']});
+  if(p.status!==0)throw Error('D1_inventory_read_failed');
+  const data=JSON.parse(p.stdout);
+  const blocks=Array.isArray(data)?data:[data];
+  if(blocks.some(b=>b.success===false))throw Error('D1_inventory_failed');
+  return blocks.flatMap(b=>Array.isArray(b.results)?b.results:[]);
+};
+const generations=readD1('organic-synthesis-lit-index',
+  'SELECT catalog_id,record_count,publication_slot FROM literature_catalog_generations WHERE ready=1 ORDER BY updated_at DESC LIMIT 1;');
+const latest=generations[0];
+if(!latest?.catalog_id||!/^[a-f0-9]{64}$/.test(latest.catalog_id))throw Error('current_catalog_generation_unavailable');
+const catalog=readD1('organic-synthesis-lit-index',
+  'SELECT doi,journal,added_date AS addedDate FROM literature_catalog_index WHERE catalog_id='+
+  "'"+latest.catalog_id+"'"+' ORDER BY added_date DESC,doi ASC LIMIT 6000;');
+if(catalog.length!==Number(latest.record_count))throw Error('current_index_row_count_mismatch');
 const identity=(value)=>String(value||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'');
 const aliases={
   Nature:['nature'],
@@ -35,12 +43,7 @@ const aliases={
 };
 const lookup=new Map(Object.entries(aliases).flatMap(([name,entries])=>entries.map(key=>[key,name])));
 const sql='SELECT doi,byte_length,version_kind,captured_at FROM private_pdf_documents WHERE active=1 AND processing_state='+ "'ready'" +' ORDER BY captured_at DESC LIMIT 5000;';
-const r=spawnSync('cloudflare/worker/node_modules/.bin/wrangler',
-  ['d1','execute','organic-synthesis-gallery','--remote','--command',sql,'--json'],
-  {encoding:'utf8',timeout:55000,maxBuffer:6*1024*1024,env:process.env,stdio:['ignore','pipe','pipe']});
-if(r.status!==0)throw Error('ready_pdf_inventory_query_failed');
-const output=JSON.parse(r.stdout);const groups=Array.isArray(output)?output:[output];
-const all=groups.flatMap(o=>Array.isArray(o.results)?o.results:[]);
+const all=readD1('organic-synthesis-gallery',sql);
 const ranking={version_of_record:4,accepted_manuscript:3,preprint:2,unknown:1};
 const docs=new Map();
 for(const row of all){
@@ -86,4 +89,4 @@ for(const journal of TARGET_JOURNALS){
     testCount:chosen.length,
   });
 }
-console.log('PDF_JOURNAL_DISCOVERY '+JSON.stringify({ok:true,source:'main-canonical-journal-registry+published-cards+production-D1',catalogCount:catalog.length,readyInventoryUniqueDois:docs.size,unknownJournalNames:unknown,journals:report}));
+console.log('PDF_JOURNAL_DISCOVERY '+JSON.stringify({ok:true,source:'main-canonical-journal-registry+current-deployed-literature-index+production-D1',catalogGeneration:latest.catalog_id,publicationSlot:latest.publication_slot,catalogCount:catalog.length,readyInventoryUniqueDois:docs.size,unknownJournalNames:unknown,journals:report}));
