@@ -85,7 +85,7 @@ const papers=Array.from({length:72},(_,index)=>({
 const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
 async function contextWith(capabilities,openResult={available:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=opaque'},options={}){
  const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900},locale:options.locale||'en-US'});
- const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,openModes:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
+ const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,rangeInFlight:0,maxConcurrentRanges:0,openModes:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
  const filePdf=options.largePdf?largeCardPdf:cardPdf;
  if(options.pendingQueue)state.queueRows.set('fixture-owner',new Map(papers.map(paper=>[paper.doi,{doi:paper.doi,state:'pending',revision:1,createdAt:Date.now(),updatedAt:Date.now()}])));
  await context.addInitScript(fixtureOrigin=>{
@@ -164,24 +164,33 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
   }
   if(url.pathname==='/api/user-ui/private-pdf/file'){
    state.privateFileCalls++;
-   if(options.fileDelayMs)await new Promise(resolve=>setTimeout(resolve,Number(options.fileDelayMs)));
    const range=String(route.request().headers().range||'');
-   const download=url.searchParams.get('download')==='1';
-   if(download)state.privateFileDownloads++;
-   const common={'access-control-allow-origin':base,'access-control-allow-credentials':'true','access-control-allow-headers':'range, authorization','access-control-expose-headers':'content-length, content-range, accept-ranges, content-type, x-gallery-pdf-status','accept-ranges':'bytes','cache-control':'private, no-store','content-disposition':download?'attachment; filename="fixture.pdf"':'inline; filename="fixture.pdf"'};
-   if(options.fileStatus){
-    return route.fulfill({status:options.fileStatus,contentType:'application/json',headers:{...common,'x-gallery-pdf-status':'pdf_ticket_invalid'},body:'{"error":"pdf_ticket_invalid"}'});
-   }
    if(range){
-    state.privateRangeCalls++;
-    if(range==='bytes=0-15')state.privateHeaderProbeCalls++;
-    const match=/^bytes=(\d+)-(\d*)$/.exec(range);
-    const start=match?Number(match[1]):0,end=match&&match[2]?Math.min(Number(match[2]),filePdf.length-1):filePdf.length-1;
-    const body=filePdf.subarray(start,end+1);
-    return route.fulfill({status:206,contentType:'application/pdf',headers:{...common,'content-range':`bytes ${start}-${end}/${filePdf.length}`,'content-length':String(body.length)},body});
+    state.rangeInFlight++;
+    state.maxConcurrentRanges=Math.max(state.maxConcurrentRanges,state.rangeInFlight);
    }
-   state.privateFullFileCalls++;
-   return route.fulfill({status:200,contentType:'application/pdf',headers:{...common,'content-length':String(filePdf.length)},body:filePdf});
+   try {
+    if(options.fileDelayMs)await new Promise(resolve=>setTimeout(resolve,Number(options.fileDelayMs)));
+    const download=url.searchParams.get('download')==='1';
+    if(download)state.privateFileDownloads++;
+    const common={'access-control-allow-origin':base,'access-control-allow-credentials':'true','access-control-allow-headers':'range, authorization','access-control-expose-headers':'content-length, content-range, accept-ranges, content-type, x-gallery-pdf-status','accept-ranges':'bytes','cache-control':'private, no-store','content-disposition':download?'attachment; filename="fixture.pdf"':'inline; filename="fixture.pdf"'};
+    if(options.fileStatus){
+     return route.fulfill({status:options.fileStatus,contentType:'application/json',headers:{...common,'x-gallery-pdf-status':'pdf_ticket_invalid'},body:'{"error":"pdf_ticket_invalid"}'});
+    }
+    if(range){
+     state.privateRangeCalls++;
+     if(range==='bytes=0-15')state.privateHeaderProbeCalls++;
+     if(options.rangeUnsupported)return route.fulfill({status:200,contentType:'application/pdf',headers:{...common,'content-length':String(filePdf.length)},body:filePdf});
+     const match=/^bytes=(\d+)-(\d*)$/.exec(range);
+     const start=match?Number(match[1]):0,end=match&&match[2]?Math.min(Number(match[2]),filePdf.length-1):filePdf.length-1;
+     const body=filePdf.subarray(start,end+1);
+     return route.fulfill({status:206,contentType:'application/pdf',headers:{...common,'content-range':`bytes ${start}-${end}/${filePdf.length}`,'content-length':String(body.length)},body});
+    }
+    state.privateFullFileCalls++;
+    return route.fulfill({status:200,contentType:'application/pdf',headers:{...common,'content-length':String(filePdf.length)},body:filePdf});
+   } finally {
+    if(range)state.rangeInFlight--;
+   }
   }
   if(url.pathname==='/api/user-ui/private-pdf/open'){
    state.privateCalls++;
@@ -274,12 +283,12 @@ try{
   await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:12000});
   assert.equal(state.privateCalls,1,'default reading mints one view ticket');
   assert.deepEqual(state.openModes,['view']);
-  assert.equal(state.privateFullFileCalls,1,'the default reader downloads the document only once');
-  assert.ok(state.privateRangeCalls<=1,'PDF.js must not make additional remote ranges after full transfer');
+  assert.equal(state.privateFullFileCalls,0,'small PDF uses parallel bounded ranges');
+  assert.ok(state.privateRangeCalls>=3&&state.privateRangeCalls<=8,'small PDF fetches bounded ranges');
   assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
   await target.locator('#next').click();
   await target.waitForFunction(()=>document.querySelector('#pdf-canvas')?.dataset.renderedPage==='2',undefined,{timeout:7000});
-  assert.equal(state.privateFullFileCalls,1,'turning a page uses local bytes instead of another network GET');
+  assert.equal(state.privateFullFileCalls,0,'page turn uses local assembled bytes');
   assert.equal(await target.locator('#native-pdf-frame').count(),0,'the blocked cross-origin iframe must not be used');
   assert.equal(await page.locator('.private-pdf-more').first().isVisible(),true,'owner can access separate download/compatibility controls');
   await page.locator('.private-pdf-more summary').first().click();
@@ -300,7 +309,7 @@ try{
   assert.deepEqual(state.openModes,['view']);
   await target.close();
  });
- await test('high-RTT default buffered read uses exactly one full document GET',async()=>{
+ await test('high-RTT small file uses concurrent ranges and local page turns',async()=>{
   const fast={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
   const {context,state}=await contextWith(['private_pdf_read'],fast,{fileDelayMs:450});
   const page=await gallery(context,true);
@@ -309,13 +318,29 @@ try{
   const target=await popupPromise;
   await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:12000});
   assert.equal(state.privateCalls,1);
-  assert.equal(state.privateFullFileCalls,1);
-  assert.equal(state.privateRangeCalls,0,'edge-verified fast path skips all first-page browser range requests');
+  assert.equal(state.privateFullFileCalls,0);
+  assert.ok(state.privateRangeCalls>=3&&state.privateRangeCalls<=8);
+  assert.ok(state.maxConcurrentRanges>=2,'slow responses must overlap');
+  assert.equal(state.privateHeaderProbeCalls,0,'no duplicate edge-verified header probe');
   assert.equal(await target.locator('html').getAttribute('data-private-pdf-mode'),'single-transfer');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-transfer-strategy'),'parallel-ranges');
   assert.ok(Number(await target.locator('html').getAttribute('data-private-pdf-transfer-bytes'))>1_000_000);
+  assert.equal(await target.locator('#full-open').isVisible(),true);
+  const requestsAfterFirst=state.privateFileCalls;
   await target.locator('#next').click();
   await target.waitForFunction(()=>document.querySelector('#pdf-canvas')?.dataset.renderedPage==='2');
-  assert.equal(state.privateFileCalls,1,'second page is rendered without any further remote requests');
+  assert.equal(state.privateFileCalls,requestsAfterFirst,'page two makes no network calls');
+ });
+ await test('small PDF falls back to full GET if Range responses are unsupported',async()=>{
+  const fast={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],fast,{rangeUnsupported:true});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:12000});
+  assert.equal(state.privateFullFileCalls,1,'exactly one fallback GET');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-transfer-strategy'),'single-fallback');
+  assert.equal(state.privateHeaderProbeCalls,0);
+  assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
  });
  await test('large multi-megabyte PDF displays page one from ranges before whole-file transfer',async()=>{
   const fast={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-large'};
@@ -337,7 +362,7 @@ try{
   assert.ok(Number(timings.ranges)>=1,'real Range attempts are counted');
   assert.ok(Number(timings.bytes)>0,'accepted bytes are counted');
   assert.equal(state.privateFullFileCalls,0,'first page must not wait for a full PDF download');
-  assert.ok(state.privateRangeCalls>=1&&state.privateRangeCalls<=8,'first page uses bounded PDF ranges');
+  assert.ok(state.privateRangeCalls>=2&&state.privateRangeCalls<=12,'header/trailer warmup and normal PDF ranges');
   assert.ok(largeCardPdf.length>6*1048576,'large file fixture must exceed the adaptive threshold');
   assert.equal(await target.locator('#full-open').isVisible(),true,'manual full-transfer fallback remains available');
   assert.match(await target.locator('#full-open').getAttribute('href'),/full=1/);
