@@ -6,6 +6,7 @@ import { mountUserShell } from './user-shell';
 import { beijingDate, earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
 import { compareDailyGalleryCards } from '../shared/daily-gallery-order.mjs';
+import { correctedPublisherDateForDisplay } from '../shared/publisher-date-display-fix.mjs';
 import { RESULT_WINDOW_SIZE as DESKTOP_RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE, resultPaginationItems, resultWindowState } from '../shared/result-window.js';
 import { store } from './user-ui/shared';
 import { PublishedCatalogClient, loadPublishedHotFallback } from '../architecture/published-reader.mjs';
@@ -513,7 +514,7 @@ function pendingTitle(value: string | null | undefined): boolean {
 }
 
 function normalizePaper(paper: Paper): Paper {
-  return {
+  const normalized: Paper = {
     ...paper,
     journal: canonicalJournal(paper.journal),
     title: pendingTitle(paper.title) ? null : paper.title?.trim() || null,
@@ -523,6 +524,9 @@ function normalizePaper(paper: Paper): Paper {
       ? paper.authors.filter((author): author is string => typeof author === 'string').map(author => author.trim()).filter(Boolean)
       : [],
   };
+  // The approved publisher date is corrected for Gallery presentation now;
+  // fixed-slot production records and publisher provenance remain untouched.
+  return correctedPublisherDateForDisplay(normalized);
 }
 
 function titleCacheKey(paper: Paper): string {
