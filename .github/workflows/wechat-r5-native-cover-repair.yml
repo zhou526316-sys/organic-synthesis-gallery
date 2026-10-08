@@ -64,7 +64,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add \
-            public/wechat-assets/reviewed/2026-10-08-r5/jacs-cover-native-safe.png \
+            public/wechat-assets/reviewed/2026-10-08-r5/jacs-cover-native-safe-clean.png \
             public/wechat-featured/2026-10-08.json \
             public/wechat-editions/2026-10-08.json \
             audit/wechat-working/2026-10-08-review-gate.json \
@@ -83,7 +83,7 @@ jobs:
         with:
           name: wechat-2026-10-08-r5-native-cover
           path: |
-            public/wechat-assets/reviewed/2026-10-08-r5/jacs-cover-native-safe.png
+            public/wechat-assets/reviewed/2026-10-08-r5/jacs-cover-native-safe-clean.png
             audit/wechat-working/2026-10-08-r5-mobile-cover-qa.json
           retention-days: 7
           if-no-files-found: ignore
