@@ -78,7 +78,7 @@ Pre-release assistant work must persist decisions only to `audit/prepublish-revi
 
 Global incompleteness at the slot fails closed: keep the previous verified production snapshot, record `publication_missed` / `incomplete_review`, and carry the unfinished work to the next slot. Documented single-paper pending is not global incompleteness: apply the per-DOI amendment above. Do not publish at arbitrary off-slot times merely because review eventually finishes.
 
-Snapshot `generatedAt` must fall in the target slot's preceding 65 minutes and not after the slot; both diagnostic and compact `endDate` must be the target Beijing date. A prior-evening test snapshot is not the next morning's fresh audit. Never backdate a newer audit.
+By explicit user amendment on 2026-10-08, a real paired snapshot may be generated from 06:55 through 09:00 Beijing for the single daily 08:00 publication slot, matching its 60-minute technical execution grace. Do not backdate `generatedAt`, invent a 09:00 release slot, or publish without complete same-generation candidate decisions and strict gate success; both diagnostic and compact `endDate` must equal the target Beijing date. A prior-evening test snapshot is not the next morning's fresh audit. Never backdate a newer audit.
 
 A Pages deployment may take a few minutes after the slot-time release commit. Record the logical production release event and actual deployment completion separately. No other scheduled task may introduce new production literature data outside the daily 08:00 release.
 

@@ -83,16 +83,18 @@ async function evaluate() {
       && pendingDois.every(doi => !record.publishableDois.includes(doi)), 'release_allowlist_mismatch');
   }
 
-  // The sole 08:00 release uses a 65-minute snapshot window, with no backdating.
+  // User-approved single 08:00 slot accepts actual paired audits from 06:55 through 09:00 Beijing.
+  // No separate 09:00 slot; generation timestamps must never be backdated or from the future.
   const slot = String(review.publicationSlot || '');
   const slotValid = /^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(slot) && Number.isFinite(Date.parse(slot));
   const generated = Date.parse(handoff.generatedAt || '');
   const slotTime = Date.parse(slot);
   const snapshotFreshForSlot = slotValid && Number.isFinite(generated)
-    && generated >= slotTime - 65 * 60 * 1000 && generated <= slotTime
+    && generated >= slotTime - 65 * 60 * 1000 && generated <= slotTime + 60 * 60 * 1000
+    && generated <= Date.now()
     && handoff.endDate === slot.slice(0, 10) && latest.endDate === slot.slice(0, 10);
   block(slotValid, 'invalid_publication_slot');
-  block(snapshotFreshForSlot, 'snapshot_not_from_target_slot_prerelease_window');
+  block(snapshotFreshForSlot, 'snapshot_not_from_target_slot_0655_to_0900_window');
   const sourceChecks = Array.isArray(review.sourceChecks) ? review.sourceChecks : [];
   const publisherCoverageFullyVerified = sourceChecks.length > 0 && sourceChecks.every(row => row.status === 'checked');
   if (includeCount === 0) block(publisherCoverageFullyVerified, 'zero_new_requires_complete_publisher_source_proof');

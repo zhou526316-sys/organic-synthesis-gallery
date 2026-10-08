@@ -75,9 +75,16 @@ try {
   data = fixture();
   data.review.handoffGeneratedAt = data.handoff.generatedAt = data.latest.generatedAt = '2026-09-23T00:05:00.000Z';
   result = await run(data);
+  assert.equal(result.exit, 0);
+  assert.equal(result.body.snapshotFreshForSlot, true);
+  passed.push('0805_actual_snapshot_valid_in_slot_grace');
+
+  data = fixture();
+  data.review.handoffGeneratedAt = data.handoff.generatedAt = data.latest.generatedAt = '2026-09-23T01:00:00.001Z';
+  result = await run(data);
   assert.equal(result.exit, 1);
   assert.equal(result.body.snapshotFreshForSlot, false);
-  passed.push('after_slot_discovery_cannot_be_backdated');
+  passed.push('0900_plus_one_millisecond_not_a_valid_snapshot');
 
   data = fixture();
   data.review.publicationSlot = '2026-09-23T08:05:00+08:00';
