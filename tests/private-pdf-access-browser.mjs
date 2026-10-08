@@ -414,7 +414,25 @@ try{
   assert.ok(state.openOrigins.includes('https://pdf.gczhouwld.com'));
   assert.ok(state.privateFileCalls>1,'original route failed before independent file delivery');
  });
- await test('file permission denial never triggers an independent Tencent retry',async()=>{
+ await test('upstream PDF rate limit cannot be bypassed through Tencent file delivery',async()=>{
+  const owner={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],owner,{tencentReady:true,primaryFileStatus:429});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',undefined,{timeout:9000});
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/file_http_429/);
+  assert.ok(!state.openOrigins.includes('https://pdf.gczhouwld.com'));
+ });
+ await test('canonical authorization rate limit cannot be bypassed through other routes',async()=>{
+  const owner={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],owner,{tencentReady:true,primaryOpenStatus:429});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',undefined,{timeout:9000});
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/open_http_429/);
+  assert.deepEqual(state.openOrigins,['https://api.gczhouwld.com']);
+ });
+  await test('file permission denial never triggers an independent Tencent retry',async()=>{
   const owner={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
   const {context,state}=await contextWith(['private_pdf_read'],owner,{
     tencentReady:true,fileStatus:403,
