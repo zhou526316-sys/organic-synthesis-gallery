@@ -5059,8 +5059,12 @@ function embeddedJobDois(value) {
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var architectureMembership=await observeArchitectureMembership(queue);
       var queueCheckedAt=Date.now();
-      var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
+      var scopedArticles=queue.articles.filter(recentFullCaptureEligible);
+      var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),
+        {dois:scopedArticles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
       var media=productionMediaSnapshot(productionInventory);
+      var pdfInventory=await readOwnerPdfInventory(scopedArticles,null);
+      var ownerPdfMap=mapCaptureRows(pdfInventory);
       var evidenceInventory=null,stageInventory=null;
       try { evidenceInventory=await getPrivateJson(EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),writeToken()); }
       catch(error){ try{console.warn('[OSG TOC] evidence inventory unavailable; evidence-only backlog paused',String(error&&error.message||error));}catch(_){} }
@@ -5070,7 +5074,7 @@ function embeddedJobDois(value) {
       } catch(error){ try{console.warn('[OSG TOC] staged figure inventory unavailable; local checkpoints still reused',String(error&&error.message||error));}catch(_){} }
       var mediaJobs=pairedJobs(queue,media);
       var evidenceMissing=evidenceInventory?evidenceMissingDois(queue,evidenceInventory):new Set();
-      var pdfJobs=privatePdfBackfillJobs(queue,mapCaptureRows(stageInventory),mapCaptureRows(productionInventory));
+      var pdfJobs=privatePdfBackfillJobs(queue,mapCaptureRows(stageInventory),mapCaptureRows(productionInventory),ownerPdfMap);
       var evidenceJobs=[]; // Text incompleteness is no longer an independent queue trigger.
       var generation=VERSION+':paired:'+String(queue.mediaGeneration);
       var evidenceGeneration=EVIDENCE_SCHEMA_VERSION+':'+CONTROLLER_REVISION+':'+String(queue.latestAddedDate||queue.generatedAt||'');
@@ -5116,6 +5120,7 @@ function embeddedJobDois(value) {
         var merged=new Map();
         mediaAvailable.forEach(function(raw){
           var job=Object.assign({},raw),doi=normalizeDoi(raw.doi),recent=recentFullCaptureEligible(job);
+          job.privatePdfServerStatus=privatePdfServerStatus(ownerPdfMap,doi);
           // A 2026-10-01+ visit is a one-page acquisition bundle: TOC when
           // needed, body figures, missing/incomplete full text and PDF when
           // not already stored. Older records keep the previous behavior.
@@ -5141,7 +5146,9 @@ function embeddedJobDois(value) {
       if(!renewLease())throw new Error('controller_lease_lost');
       if(manualRunBlocksAutomatic())return;
       var available=availableJobs(),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
-      summary={controllerRunId:CONTROLLER_ID+':'+Date.now(),lifecycleRevision:CONTROLLER_LIFECYCLE_REVISION,architectureMembershipRevision:ARCHITECTURE_MEMBERSHIP_REVISION,architectureMembership:architectureMembership,version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+pdfJobs.length,evidenceBacklog:0,privatePdfBacklog:pdfJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
+      summary={controllerRunId:CONTROLLER_ID+':'+Date.now(),scopeCount:scopedArticles.length,
+        ownerPdfInventory:scopedArticles.reduce(function(stats,item){stats[privatePdfServerStatus(ownerPdfMap,item.doi)]++;return stats;},{ready:0,pending:0,failed:0,missing:0,unknown:0}),
+        lifecycleRevision:CONTROLLER_LIFECYCLE_REVISION,architectureMembershipRevision:ARCHITECTURE_MEMBERSHIP_REVISION,architectureMembership:architectureMembership,version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+pdfJobs.length,evidenceBacklog:0,privatePdfBacklog:pdfJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
       persistControllerSummary(summary,true);
       for (var i=0;i<batch.length;i+=1) {
         if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
