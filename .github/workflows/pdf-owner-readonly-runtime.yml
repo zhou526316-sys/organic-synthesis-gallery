@@ -1,0 +1,44 @@
+name: Owner PDF read-only runtime verification (one-shot)
+on:
+  push:
+    branches:
+      - diag/pdf-owner-live-verification-20261008
+    paths:
+      - .github/workflows/pdf-owner-readonly-runtime.yml
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pdf-owner-readonly-runtime
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CI: 'true'
+    steps:
+      - name: Checkout isolated diagnostic branch
+        uses: actions/checkout@v4
+        with:
+          ref: diag/pdf-owner-live-verification-20261008
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned PDF parser
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Install Worker CLI for read-only D1 and R2 operations
+        working-directory: cloudflare/worker
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Read-only synthetic network and owner document verification
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          node scripts/diagnose-owner-private-pdf-live-readonly.mjs
