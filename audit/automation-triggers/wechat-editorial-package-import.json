@@ -1,15 +1,20 @@
 {
-  "requestId": "phoenix1-r7-import-20261007-1247",
-  "requestedAt": "2026-10-07T12:47:00+08:00",
+  "requestId": "2026-10-08-r1-two-article-import-1230",
+  "requestedAt": "2026-10-08T12:30:00+08:00",
   "action": "import_reviewed_editorial_package",
-  "revision": "phoenix1-r7",
-  "doi": "10.1038/s41929-026-01593-w",
-  "packageUrl": "https://at.adobe.com/ciubAnfFxYiDsNZN",
-  "packageSha256": "5a6d49ebee6530becd91accba7ce571af871534235fe7ad9c1600f8aeb102fbb",
-  "manifestPath": "public/wechat-retrospective/phoenix1-bimodal-structural-regeneration.json",
-  "gatePath": "audit/wechat-working/phoenix1-r7-review-gate.json",
+  "revision": "2026-10-08-r1",
+  "doi": "10.1038/s41929-026-01602-y",
+  "packageUrl": "https://at.adobe.com/JmErFDUcCR00JoFs",
+  "packageSha256": "3c19a9dfbd49875568626d29d10c9f21178f377e2433297602bc9b0d298b40d1",
+  "manifestPath": "public/wechat-retrospective/os1-multicentred-sulfur-20261008.json",
+  "gatePath": "audit/wechat-working/2026-10-08-review-gate.json",
+  "expectedArticleCount": 2,
+  "expectedDois": [
+    "10.1021/jacs.6c14748",
+    "10.1038/s41929-026-01602-y"
+  ],
   "draftWriteAuthorizedInConversation": true,
   "thisStepWritesDraft": false,
   "publicSendAuthorized": false,
-  "note": "Restore completed assets from prior conversation package, retaining exact image bytes and the existing review hold. Never substitute this import receipt for draft/get."
+  "note": "Import the exact source-reviewed 2026-10-08 two-card bundle, including JACS featured, Nature Catalysis retrospective, edition and 34 immutable PNGs. This step does not write or send WeChat."
 }

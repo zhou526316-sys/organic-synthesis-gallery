@@ -70,6 +70,7 @@ jobs:
               required = {manifest_rel, gate_rel}
               required.update(gate['artifacts'].values())
               required.update(x['path'] for x in gate['assets'])
+              required.update(x['path'] for x in gate['sources'])
               source_rows = {x['path']: x for x in gate['sources']}
               if manifest_rel not in source_rows:
                   raise RuntimeError('Manifest not covered by review')
@@ -77,7 +78,7 @@ jobs:
                   p = PurePosixPath(rel)
                   if p.is_absolute() or '..' in p.parts or '\\' in rel:
                       raise RuntimeError('Unsafe package path')
-                  allowed = (rel == manifest_rel or rel.startswith('audit/wechat-working/') or rel.startswith('public/wechat-assets/reviewed/'))
+                  allowed = (rel == manifest_rel or rel.startswith('audit/wechat-working/') or rel.startswith('public/wechat-assets/reviewed/') or rel.startswith('public/wechat-featured/') or rel.startswith('public/wechat-editions/'))
                   if not allowed or p.suffix not in {'.png', '.jpg', '.jpeg', '.json', '.md'}:
                       raise RuntimeError('Non-editorial package content')
                   item = archive.getinfo(rel)
