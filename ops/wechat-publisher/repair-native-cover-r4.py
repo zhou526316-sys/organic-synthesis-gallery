@@ -13,9 +13,9 @@ from PIL import Image, ImageChops
 
 ROOT = Path(__file__).resolve().parents[2]
 DATE = "2026-10-08"
-REV = "2026-10-08-r5"
+REV = "2026-10-08-r6"
 SOURCE = ROOT / "public/wechat-assets/reviewed/2026-10-08-r3/jacs-cover-original-white.png"
-TARGET_REL = "public/wechat-assets/reviewed/2026-10-08-r5/jacs-cover-native-safe-clean.png"
+TARGET_REL = "public/wechat-assets/reviewed/2026-10-08-r6/jacs-cover-native-final.png"
 TARGET = ROOT / TARGET_REL
 EXPECTED_SHA = "1cd7a98d013038332724d3ff81cce2d7e97f82a0049c8b481108008cf401fbde"
 
@@ -60,8 +60,8 @@ def main() -> None:
     # Clear only old navy header glyphs carried into the top of R4 crop.
     # The central oxygen group at source x~970 stays exactly intact.
     clean=ImageDraw.Draw(art)
-    clean.rectangle((0,0,404,32),fill="#ffffff")
-    clean.rectangle((465,0,art.width,32),fill="#ffffff")
+    clean.rectangle((0,0,421,32),fill="#ffffff")
+    clean.rectangle((460,0,art.width,32),fill="#ffffff")
     new_h=339
     new_w=round(art.width*new_h/art.height)
     art=art.resize((new_w,new_h),Image.Resampling.LANCZOS)
@@ -91,10 +91,10 @@ def main() -> None:
     assert featured["paper"]["doi"]=="10.1021/jacs.6c14748"
     assert edition["featured"]==featured["paper"]["doi"]
     assert edition["retrospective"]=="os1-multicentred-sulfur-20261008"
-    assert edition["editorialRevision"]=="2026-10-08-r4"
+    assert edition["editorialRevision"]=="2026-10-08-r5"
     cover_item=[x for x in featured["figures"] if x.get("id")=="jacs-cover"]
     assert len(cover_item)==1
-    assert cover_item[0]["repo_path"]=="public/wechat-assets/reviewed/2026-10-08-r4/jacs-cover-native-safe.png"
+    assert cover_item[0]["repo_path"]=="public/wechat-assets/reviewed/2026-10-08-r5/jacs-cover-native-safe-clean.png"
     cover_item[0]["repo_path"]=TARGET_REL
     cover_item[0]["source_kind"]="original_TOC_uniformly_scaled_native_screenshot_safe"
     cover_item[0]["source_adjustment"]=(
@@ -113,13 +113,13 @@ def main() -> None:
     save_json(featured_rel,featured)
     save_json(edition_rel,edition)
 
-    old_text=ROOT/"audit/wechat-working/2026-10-08-r4-text-only.md"
+    old_text=ROOT/"audit/wechat-working/2026-10-08-r5-text-only.md"
     new_text_rel=f"audit/wechat-working/{REV}-text-only.md"
-    content=old_text.read_text(encoding="utf-8").replace("(R4)","(R5)")
+    content=old_text.read_text(encoding="utf-8").replace("(R5)","(R6)")
     (ROOT/new_text_rel).write_text(content,encoding="utf-8")
-    old_images=ROOT/"audit/wechat-working/2026-10-08-r4-images-only.md"
+    old_images=ROOT/"audit/wechat-working/2026-10-08-r5-images-only.md"
     new_images_rel=f"audit/wechat-working/{REV}-images-only.md"
-    old_source_rel="public/wechat-assets/reviewed/2026-10-08-r4/jacs-cover-native-safe.png"
+    old_source_rel="public/wechat-assets/reviewed/2026-10-08-r5/jacs-cover-native-safe-clean.png"
     image_text=old_images.read_text(encoding="utf-8")
     assert old_source_rel in image_text
     image_text=image_text.replace(old_source_rel,TARGET_REL)
@@ -133,7 +133,7 @@ def main() -> None:
 
     gate_rel="audit/wechat-working/2026-10-08-review-gate.json"
     gate=json.loads((ROOT/gate_rel).read_text(encoding="utf-8"))
-    assert gate["revision"]=="2026-10-08-r4"
+    assert gate["revision"]=="2026-10-08-r5"
     assert gate["textReview"]=="pass" and gate["imageReview"]=="pass"
     assert gate["articleCount"]==2
     gate["revision"]=REV
@@ -152,12 +152,12 @@ def main() -> None:
         source_map[path]["blobSha"]=blobsha(payload)
         source_map[path]["sha256"]=sha256(payload)
     gate["sources"]=[row for row in gate["sources"] if row["path"] not in [
-        "audit/wechat-working/2026-10-08-r4-text-only.md",
-        "audit/wechat-working/2026-10-08-r4-images-only.md"]]
+        "audit/wechat-working/2026-10-08-r5-text-only.md",
+        "audit/wechat-working/2026-10-08-r5-images-only.md"]]
     for path in [new_text_rel,new_images_rel]:
         payload=(ROOT/path).read_bytes()
         gate["sources"].append({"path":path,"blobSha":blobsha(payload),"sha256":sha256(payload)})
-    gate["reviewNotesR5"]={
+    gate["reviewNotesR6"]={
       "actualNativeMobileScreenshot":"2026-10-08 user screenshot, R3 visually failed",
       "nativeFirstLineOverWhiteFix":"native glyphs begin near original y525; dark now starts y492",
       "headerSafeMargin":"header moved down 26 original pixels",
