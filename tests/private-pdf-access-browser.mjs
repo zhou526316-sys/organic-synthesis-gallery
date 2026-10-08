@@ -326,6 +326,16 @@ try{
   const target=await popupPromise;
   await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:20000});
   assert.equal(await target.locator('html').getAttribute('data-private-pdf-mode'),'range-first');
+  const timings=await target.locator('html').evaluate(root=>({
+   auth:root.dataset.privatePdfAuthorizeMs,
+   engine:root.dataset.privatePdfEngineMs,
+   ranges:root.dataset.privatePdfRangeCalls,
+   bytes:root.dataset.privatePdfRangeBytes,
+  }));
+  assert.match(timings.auth||'',/^\d+$/,'permission timing must be recorded without tokens');
+  assert.match(timings.engine||'',/^\d+$/,'PDF.js loading timing must be recorded');
+  assert.ok(Number(timings.ranges)>=1,'real Range attempts are counted');
+  assert.ok(Number(timings.bytes)>0,'accepted bytes are counted');
   assert.equal(state.privateFullFileCalls,0,'first page must not wait for a full PDF download');
   assert.ok(state.privateRangeCalls>=1&&state.privateRangeCalls<=8,'first page uses bounded PDF ranges');
   assert.ok(largeCardPdf.length>6*1048576,'large file fixture must exceed the adaptive threshold');
@@ -333,6 +343,18 @@ try{
   assert.match(await target.locator('#full-open').getAttribute('href'),/full=1/);
   await target.locator('#next').click();
   await target.waitForFunction(()=>document.querySelector('#pdf-canvas')?.dataset.renderedPage==='2',undefined,{timeout:15000});
+ });
+ await test('large PDF Range errors show prompt sanitized stage timings instead of a blank reader',async()=>{
+  const fast={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context}=await contextWith(['private_pdf_read'],fast,{largePdf:true,fileStatus:503});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',undefined,{timeout:12000});
+  const diagnostic=await target.locator('#pdf-diagnostic').textContent();
+  assert.match(diagnostic,/file_http_503/);
+  assert.match(diagnostic,/授权:\d+ms/);
+  assert.match(diagnostic,/分段请求:\d+次/);
+  assert.doesNotMatch(diagnostic,/token=|fixture-fast|fixture-session/);
  });
  await test('older Worker without byteLength preserves readable single-transfer fallback',async()=>{
   const original={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=old-worker'};
