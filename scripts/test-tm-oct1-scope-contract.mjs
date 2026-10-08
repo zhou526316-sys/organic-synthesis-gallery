@@ -12,9 +12,9 @@ const functionSource=(s,name)=>{
   assert.ok(match,'missing function: '+name);
   const from=match.index;
   const rest=s.slice(from+match[0].length);
-  const next=rest.search(/^  (?:async )?function [A-Za-z0-9_]+\(/m);
-  assert.ok(next>=0,'missing next function after '+name);
-  return s.slice(from,from+match[0].length+next);
+  const end=rest.indexOf('\n  }\n');
+  assert.ok(end>=0,'missing exact outer closing brace after '+name);
+  return s.slice(from,from+match[0].length+end+'\n  }\n'.length);
 };
 const protectedFunctions=[
   'articleFigureResolution','collectArticleFigureCandidates',
