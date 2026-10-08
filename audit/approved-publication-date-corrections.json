@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Approved, evidence-backed publication-date fixes applied only by the authorized 08:00 fixed-slot literature writer, never by a UI or media deployment.",
+  "corrections": [
+    {
+      "doi": "10.1126/sciadv.aed4187",
+      "journal": "Science Advances",
+      "expectedOldDate": "2026-10-09",
+      "correctDate": "2026-10-07",
+      "preserveAddedDate": "2026-10-08",
+      "earliestPublicationSlot": "2026-10-09T08:00:00+08:00",
+      "publisherUrl": "https://www.science.org/doi/10.1126/sciadv.aed4187",
+      "publisherDisplayedDate": "7 Oct 2026",
+      "evidence": "User-supplied publisher article-page screenshot on 2026-10-08: article visibly dated 7 Oct 2026. Earlier formal review recorded dateUnverified=true and Crossref publishedDate=2026-10-09, createdDate=2026-10-07.",
+      "userApproval": "Explicit user response '批准' in 2026-10-08 Gallery date correction conversation.",
+      "approvedAt": "2026-10-08T12:31:14+08:00",
+      "state": "approved_for_next_fixed_slot"
+    }
+  ]
+}
