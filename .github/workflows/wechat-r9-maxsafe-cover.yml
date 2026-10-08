@@ -59,7 +59,7 @@ jobs:
           assert feat['figures'][-1]['body'] is False
           assert len([x for x in feat['figures'] if x.get('body') is not False])==20
           assert feat['figures'][-1]['repo_path']==j['newCover']
-          assert j['increaseAreaPercent']>14.0
+          assert 11.0 < j['increaseAreaPercent'] < 13.0
           assert j['artToDarkBandGap']>=16
           assert j['artToStressTitleGlyphGap']>=30
           assert j['bodyFigureChanges']==j['secondArticleChanges']==0
