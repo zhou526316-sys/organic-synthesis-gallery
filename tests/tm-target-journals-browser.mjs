@@ -54,6 +54,56 @@ try{
     assert.equal(result.fig.label,'Figure 1');assert.equal(result.fig.official,false);
   });
 
+  await tc('RSC split image-wrapper and sibling caption recover one numbered figure',async()=>{
+    const rows=await page.evaluate(()=>{
+      const root=document.querySelector('#fixture');
+      root.innerHTML='<div class="media-block"><div class="visual"><a><img id="rsc-split" src="/assets/f2.png"></a></div>'+
+        '<div class="fig-caption"><span>Fig. 2.</span> Isolated mechanism.</div></div>';
+      const row=T.rscBodyFigureContext(document.getElementById('rsc-split'),null);
+      return row?{label:row.label,caption:row.caption,official:row.official}:null;
+    });
+    assert.equal(rows.label,'Figure 2');assert.match(rows.caption,/Fig\.\s*2/);assert.equal(rows.official,false);
+  });
+
+  await tc('RSC heading and same-block ARIA figure number remain locally scoped',async()=>{
+    const rows=await page.evaluate(()=>{
+      const root=document.querySelector('#fixture');
+      root.innerHTML='<div class="image-frame" aria-labelledby="rsc-f3"><img id="rsc-aria" src="/assets/f3.png">'+
+        '<span id="rsc-f3">Scheme 3. Catalytic cycle</span></div>';
+      const row=T.rscBodyFigureContext(document.getElementById('rsc-aria'),null);
+      return row?{label:row.label,caption:row.caption}:null;
+    });
+    assert.equal(rows.label,'Scheme 3');assert.match(rows.caption,/Scheme 3/);
+  });
+
+  await tc('RSC two images in a shared container cannot borrow one caption',async()=>{
+    const value=await page.evaluate(()=>{
+      const root=document.querySelector('#fixture');
+      root.innerHTML='<div class="article-media"><div><img id="rsc-left" src="/assets/1.png"></div>'+
+        '<div><img id="rsc-right" src="/assets/2.png"></div>'+
+        '<div class="fig-caption">Figure 1. Only one of the images may be relevant.</div></div>';
+      return T.rscBodyFigureContext(document.getElementById('rsc-left'),null);
+    });
+    assert.equal(value,null);
+  });
+
+  await tc('RSC non-numbered and off-block captions never invent figure labels',async()=>{
+    const values=await page.evaluate(()=>{
+      const root=document.querySelector('#fixture');
+      root.innerHTML='<div class="media-block"><img id="rsc-nonnumbered" src="/assets/1.png"><div class="fig-caption">Results and Discussion</div></div>'+
+        '<div class="other"><span id="outside">Figure 7. Elsewhere</span><div aria-labelledby="outside"><img id="rsc-external" src="/assets/2.png"></div></div>';
+      return [T.rscBodyFigureContext(document.getElementById('rsc-nonnumbered'),null),
+              T.rscBodyFigureContext(document.getElementById('rsc-external'),null)];
+    });
+    assert.deepEqual(values,[null,null]);
+  });
+
+  await tc('RSC diagnostics persist bounded unlabeled DOM evidence',async()=>{
+    assert.ok(source.includes('rscNoLabelSamples:[]'));
+    assert.ok(source.includes("RSC_BODY_FIGURE_REVISION = '20261008-rsc-caption-association-v1'"));
+    assert.ok(source.includes("var INSTALL_REVISION = '6.2.50'"));
+  });
+
   await tc('RSC page-preview PDF GIF is never accepted as graphical abstract',async()=>{
     const result=await page.evaluate(()=>{
       const root=document.querySelector('#fixture');
