@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-08",
+  "revision": "2026-10-08-r2",
+  "status": "success",
+  "sourceImportRunId": 37736574642,
+  "sourceImportReceipt": "audit/wechat-working/2026-10-08-r2-import-receipt.json",
+  "publisherRunId": 37736738477,
+  "successfulStage": "draft_update",
+  "mediaId": "KhELYUzvwADwB_l1xH1SWFVYn_-s6bRj39Vw7w-SivoAE1W-c7lb3hzVk5bB-0Tr",
+  "retainedExistingMediaId": true,
+  "draftReadback": "ok",
+  "articleCount": 2,
+  "newPapers": 28,
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/029c168fe848633a5072afac.html",
+  "generatedAt": "2026-10-08T06:17:15.223687Z",
+  "expectedDois": [
+    "10.1021/jacs.6c14748",
+    "10.1038/s41929-026-01602-y"
+  ],
+  "verifiedAssetCount": 34,
+  "sourceGateRevision": "2026-10-08-r2",
+  "updates": [
+    {
+      "asset": "public/wechat-assets/reviewed/2026-10-08-r2/jacs-cover-original-toc-dark.png",
+      "qa": "exact sourced TOC / native title safe zone + user requested header; neutral grayscale ink contrast-adapted for dark background"
+    },
+    {
+      "asset": "public/wechat-assets/reviewed/2026-10-08-r2/jacs-si-fig-s3-complete.png",
+      "qa": "full direct source PDF crop S43, two spectra and complete caption verified"
+    },
+    {
+      "asset": "public/wechat-assets/reviewed/2026-10-08-r2/retro-user-approved-exact.png",
+      "qa": "user-supplied approved image unchanged"
+    }
+  ],
+  "renderReviewed": "local image inspection + exact byte fingerprints",
+  "officialReadback": "pass",
+  "officialAppNativeTitleOverlay": "not independently verified",
+  "remotePreviewHTTPCheck": "unavailable in assistant network; URL supplied by successful fixed-IP relay draft/get",
+  "publicSendAuthorized": false,
+  "publicSendPerformed": false,
+  "note": "No new draft was created; existing same-day two-article media ID updated. The false previous claim that ChatGPT lacked an API path was corrected."
+}
