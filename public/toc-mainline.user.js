@@ -2375,6 +2375,7 @@ function embeddedJobDois(value) {
     var sections=scope.querySelectorAll(
       '[class*="visual-abstract" i],[id*="visual-abstract" i],'
       +'[class*="graphical-abstract" i],[id*="graphical-abstract" i],'
+      +'[class*="article-abstract" i],[id*="article-abstract" i],'
       +'[data-figure-id],figure,[role="figure"],.fig-section'
     ),rows=[],seen=new Set();
     function mediaBound(url){
@@ -2404,9 +2405,15 @@ function embeddedJobDois(value) {
       if(!visual&&!figureOne)return;
       var kind=visual?'official':'figure1';
       if(kind==='figure1'&&job.allowFigureOne===false)return;
-      var nodes=block.querySelectorAll('img,source,a[href],object[data]');
+      var nodes=block.querySelectorAll('img,source,a[href],object[data],[style*="background-image" i]');
       Array.prototype.slice.call(nodes).slice(0,28).forEach(function(node){
-        articleFigureImageUrls(node,base).forEach(function(url,rank){
+        var urls=articleFigureImageUrls(node,base);
+        // Silverchair also renders DOI-associated visuals as CSS background
+        // images. Only read URLs embedded in the ACTUAL article block.
+        var inline=String(node.getAttribute&&node.getAttribute('style')||'');
+        var css=inline.match(/background-image\\s*:\\s*url\\(\\s*["']?([^"'\\)\\s]+)/i);
+        if(css){var url=normalizeUrl(css[1],base);if(url&&urls.indexOf(url)<0)urls.push(url);}
+        urls.forEach(function(url,rank){
           if(!mediaBound(url)||seen.has(url))return;
           seen.add(url);
           rows.push({url:url,kind:kind,assetType:visual?'graphical_abstract':'figure1_fallback',
@@ -2823,7 +2830,12 @@ function embeddedJobDois(value) {
       // publisher-linked issue page as a DOI-scoped TOC fallback; do not blindly
       // revisit the two old article URLs or synthesize media asset paths.
       if(rscSilverchairArticleForJob(job,location.href)){
-        rscIssuePageUrls(job,document,location.href).slice(0,1).forEach(add);
+        var publisherIssue=rscIssuePageUrls(job,document,location.href);
+        if(publisherIssue.length)publisherIssue.slice(0,1).forEach(add);
+        // A DOI-specific publisher search result may contain its separately
+        // supplied Visual Abstract even when the Silverchair article shell has
+        // only a PDF-page thumbnail. One same-origin fallback, never guessed GA.
+        else add(rscSearchResultUrl(job));
         return urls;
       }
       var rscParts=rscRouteParts(job);
