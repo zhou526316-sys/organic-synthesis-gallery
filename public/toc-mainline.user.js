@@ -58,6 +58,7 @@
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
   var INSTALL_REVISION = '6.2.51';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
+  var PUBLISHER_ROUTE_REPAIR_REVISION = '20261008-rsc-silverchair-and-acs-toc-route-v1';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
   var GAP_RECOVERY_REVISION = '20261008-gap-recovery-v1';
   var CAPTURE_OBSERVABILITY_REVISION = '20261007-capture-observability-v1';
@@ -681,7 +682,12 @@ function embeddedJobDois(value) {
       || String(job && job.mediaNeed || '').indexOf('figures') >= 0
       || String(job && job.mediaNeed || '').indexOf('evidence') >= 0
       || String(job && job.state || '') === 'figure_gap';
-    if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + (figureJob ? 'full/' : '') + doi;
+    // TOC is on the public article landing route. Starting at /doi/full/ for a
+    // missing-TOC job often produces an access-gate shell before any image scan.
+    // Other ACS body/PDF-only visits keep their established full-text route.
+    // Do not retry a publisher access gate or bypass authorization.
+    if (publisher === 'acs') return 'https://pubs.acs.org/doi/'
+      + (job && job.captureToc === true ? '' : (figureJob ? 'full/' : '')) + doi;
     if (publisher === 'wiley') return 'https://onlinelibrary.wiley.com/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'nature') return 'https://www.nature.com/articles/' + suffix;
     if (publisher === 'science') {
@@ -725,7 +731,8 @@ function embeddedJobDois(value) {
   function captureRouteClass(value) {
     try {
       var u=new URL(String(value||''),location.href),h=u.hostname.toLowerCase(),p=u.pathname.toLowerCase();
-      if(h.endsWith('pubs.rsc.org'))return p.indexOf('/articlehtml/')>=0?'rsc_articlehtml':p.indexOf('/articlelanding/')>=0?'rsc_articlelanding':'rsc_other';
+      if(h.endsWith('pubs.rsc.org'))return /^\/[a-z0-9-]{2,15}\/article\/doi\/10\.1039\/[a-z0-9._-]+(?:\/|$)/i.test(p)?'rsc_silverchair_article'
+        :p.indexOf('/articlehtml/')>=0?'rsc_articlehtml':p.indexOf('/articlelanding/')>=0?'rsc_articlelanding':'rsc_other';
       if(h.endsWith('pubs.acs.org'))return p.indexOf('/doi/full/')>=0?'acs_full':'acs_landing';
       if(h.endsWith('onlinelibrary.wiley.com'))return p.indexOf('/doi/full/')>=0?'wiley_full':'wiley_landing';
       if(h.endsWith('science.org'))return p.indexOf('/doi/full/')>=0?'science_full':'science_landing';
@@ -2329,6 +2336,69 @@ function embeddedJobDois(value) {
     return {block:block,label:labels[0],caption:(numbered[0]||texts[0]||own).slice(0,600),official:false};
   }
 
+  function rscSilverchairArticleForJob(job, value) {
+    var doi=normalizeDoi(job&&job.doi);
+    try{
+      var u=new URL(String(value||''),location.href);
+      if(u.hostname.toLowerCase()!=='pubs.rsc.org')return false;
+      var match=/^\/[a-z0-9-]{2,15}\/article\/doi\/10\.1039\/([^/?#]+)(?:\/|$)/i.exec(u.pathname);
+      return Boolean(match&&normalizeDoi('10.1039/'+decodeURIComponent(match[1]))===doi);
+    }catch(_){return false;}
+  }
+
+  function rscSilverchairVisualCandidates(job, scope, baseUrl) {
+    // Accept only actual DOI-bound publisher media referenced inside the live
+    // Silverchair Visual Abstract / Graphical Abstract / isolated Figure 1 DOM.
+    // No guessed CDN paths, PDF-cover thumbnails or issue-level banners.
+    var base=baseUrl||location.href,doi=normalizeDoi(job&&job.doi),suffix=doi.split('/')[1]||'';
+    if(!rscSilverchairArticleForJob(job,base)||!scope||!scope.querySelectorAll)return [];
+    var sections=scope.querySelectorAll(
+      '[class*="visual-abstract" i],[id*="visual-abstract" i],'
+      +'[class*="graphical-abstract" i],[id*="graphical-abstract" i],'
+      +'[data-figure-id],figure,[role="figure"],.fig-section'
+    ),rows=[],seen=new Set();
+    function mediaBound(url){
+      if(!url||rscPdfPreviewUrl(url)||!candidateBelongsToJob(url,job))return false;
+      try{
+        var u=new URL(url,base),h=u.hostname.toLowerCase();
+        if(h!=='pubs.rsc.org'&&!h.endsWith('.silverchair-cdn.com'))return false;
+        if(!/\.(?:svg|png|jpe?g|webp|gif)(?:$|[?#])/i.test(u.href))return false;
+        // A generic logo or a different article's visual is never a DOI asset.
+        return u.href.toLowerCase().indexOf(suffix)>=0
+          || embeddedJobDois(u.href).indexOf(doi)>=0;
+      }catch(_){return false;}
+    }
+    Array.prototype.slice.call(sections).slice(0,50).forEach(function(block){
+      if(block.closest&&block.closest('aside,nav,header,footer,[class*="related" i],[class*="recommended" i]'))return;
+      var label=String(block.getAttribute&&block.getAttribute('aria-label')||'')+' '
+        +String(block.getAttribute&&block.getAttribute('class')||'')+' '
+        +String(block.getAttribute&&block.getAttribute('id')||'');
+      var headings=Array.from(block.querySelectorAll(
+        'figcaption,.caption,[class*="caption" i],[class*="figure-title" i],h2,h3,h4'
+      )).map(function(n){return String(n.textContent||'').replace(/\s+/g,' ').trim();}).filter(Boolean);
+      var lead=(headings[0]||'').slice(0,160);
+      var visual=/visual[-_\s]*abstract|graphical[-_\s]*abstract|table\s*of\s*contents[-_\s]*(?:graphic|image)/i
+        .test(label+' '+headings.slice(0,2).join(' '));
+      var figureOne=/^(?:Fig(?:ure)?\.?\s*0*1)(?:\b|[\s:.)-])/i.test(lead)
+        || /^Fig(?:ure)?[-_\s]*0*1(?:\b|[-_])/i.test(label);
+      if(!visual&&!figureOne)return;
+      var kind=visual?'official':'figure1';
+      if(kind==='figure1'&&job.allowFigureOne===false)return;
+      var nodes=block.querySelectorAll('img,source,a[href],object[data]');
+      Array.prototype.slice.call(nodes).slice(0,28).forEach(function(node){
+        articleFigureImageUrls(node,base).forEach(function(url,rank){
+          if(!mediaBound(url)||seen.has(url))return;
+          seen.add(url);
+          rows.push({url:url,kind:kind,assetType:visual?'graphical_abstract':'figure1_fallback',
+            score:(visual?990:190)-rank,text:lead||label.slice(0,120),
+            source:'rsc_silverchair_isolated_'+(visual?'visual_abstract':'figure1'),
+            element:node.tagName&&node.tagName.toLowerCase()==='img'?node:null});
+        });
+      });
+    });
+    return rows.sort(function(a,b){return b.score-a.score;});
+  }
+
   function rscGraphicalAbstractCandidates(job, root, baseUrl) {
     if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='rsc')return [];
     var scope=root||document,base=baseUrl||location.href,rows=[],seen=new Set();
@@ -2354,6 +2424,9 @@ function embeddedJobDois(value) {
           && !/\bFig(?:ure)?\.?\s*\d+/i.test(context)){
         add(img,900,'rsc_graphical_abstract_context',context);
       }
+    });
+    rscSilverchairVisualCandidates(job,scope,base).forEach(function(row){
+      if(!seen.has(row.url)){seen.add(row.url);rows.push(row);}
     });
     return rows.sort(function(a,b){return b.score-a.score;});
   }
@@ -2725,6 +2798,10 @@ function embeddedJobDois(value) {
       add(location.origin + '/doi/full/' + doi);
       add(location.origin + '/doi/abs/' + doi);
     } else if (publisher === 'rsc' && location.hostname.endsWith('pubs.rsc.org')) {
+      // The legacy /en/content URLs now redirect to this same Silverchair
+      // article. Hidden cross-origin iframes yielded empty DOMs in live traces
+      // and waste 30+ seconds; use only DOI-bound live-page candidates here.
+      if(rscSilverchairArticleForJob(job,location.href))return [];
       var rscParts=rscRouteParts(job);
       if(rscParts){
         add('https://pubs.rsc.org/en/content/articlelanding/'+rscParts.year+'/'+rscParts.code+'/'+rscParts.suffix);
