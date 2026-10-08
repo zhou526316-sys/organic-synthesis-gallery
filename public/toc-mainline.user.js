@@ -60,6 +60,10 @@
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261008-rsc-silverchair-and-acs-toc-route-v1';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
+  var IMAGE_UPLOAD_MAX_BUDGET_MS = 48000;
+  var IMAGE_OUTBOX_PREFIX = 'osg-toc-v6:pending-image-transfer-v1:';
+  var IMAGE_OUTBOX_CAP_BYTES = 18 * 1024 * 1024;
+  var imageOutboxBusy = false;
   var GAP_RECOVERY_REVISION = '20261008-gap-recovery-v1';
   var CAPTURE_OBSERVABILITY_REVISION = '20261007-capture-observability-v1';
   var CONTROLLER_READ_REVISION = '20261007-native-metadata-first-v1';
@@ -1744,9 +1748,9 @@ function embeddedJobDois(value) {
   }
 
   async function postJsonBudgeted(url,payload,token,budgetMs) {
-    var start=Date.now(),budget=Math.max(1000,Math.min(IMAGE_UPLOAD_TOTAL_BUDGET_MS,Number(budgetMs||IMAGE_UPLOAD_TOTAL_BUDGET_MS)));
+    var start=Date.now(),budget=Math.max(1000,Math.min(IMAGE_UPLOAD_MAX_BUDGET_MS,Number(budgetMs||IMAGE_UPLOAD_TOTAL_BUDGET_MS)));
     function left(){return Math.max(0,budget-(Date.now()-start));}
-    var gmOptions={method:'POST',url:url,timeout:Math.max(1000,Math.min(13000,left())),
+    var gmOptions={method:'POST',url:url,timeout:Math.max(1000,Math.min(35000,Math.floor(left()*0.8))),
       headers:{'content-type':'application/json',authorization:'Bearer '+token},data:JSON.stringify(payload)};
     var response;
     try{
@@ -1787,7 +1791,13 @@ function embeddedJobDois(value) {
   }
 
   async function postAcquiredImage(job, candidate, image, trace, endpoint, payload, token, stage) {
-    var started=Date.now(),deadline=started+IMAGE_UPLOAD_TOTAL_BUDGET_MS,lastError=null;
+    var started=Date.now();
+    // Stage/production writes may include durable index updates after R2 storage.
+    // The old unconditional 13s extension timeout truncated legitimate ACS writes.
+    var byteCount=Math.max(0,Number(image&&image.byteLength||0));
+    var allowedBudget=Math.min(IMAGE_UPLOAD_MAX_BUDGET_MS,
+      IMAGE_UPLOAD_TOTAL_BUDGET_MS+Math.ceil(byteCount/(256*1024))*3000);
+    var deadline=started+allowedBudget,lastError=null;
     for(var attempt=0;attempt<2;attempt++){
       assertBoundCaptureJob(job,candidate.url);
       var left=Math.max(0,Math.min(deadline-Date.now(),Number(job.captureDeadline||deadline)-Date.now()));
@@ -1806,11 +1816,11 @@ function embeddedJobDois(value) {
         // Do not launch a second concurrent write without a receipt.
         if(/timeout|abort|budget_exhausted/i.test(ms)||attempt>=1||!retryableImageUpload(error)||wait>3000||Date.now()+wait+1500>=deadline){
           pushTrace(trace,{stage:stage,event:'upload_deferred',status:'deferred',url:endpoint,
-            message:'budgetMs='+IMAGE_UPLOAD_TOTAL_BUDGET_MS+';elapsedMs='+(Date.now()-started)+';gap_preserved=1;retryAfterMs='+Number(error&&error.retryAfterMs||0)});
+            message:'budgetMs='+allowedBudget+';elapsedMs='+(Date.now()-started)+';gap_preserved=1;retryAfterMs='+Number(error&&error.retryAfterMs||0)});
           throw error;
         }
         pushTrace(trace,{stage:stage,event:'upload_retry_wait',status:'retrying',url:endpoint,httpStatus:Number(error&&error.httpStatus||0),
-          message:'same_acquired_image;nextAttempt=2;delayMs='+wait+';totalBudgetMs='+IMAGE_UPLOAD_TOTAL_BUDGET_MS+';publisherDownloads=0'});
+          message:'same_acquired_image;nextAttempt=2;delayMs='+wait+';totalBudgetMs='+allowedBudget+';publisherDownloads=0'});
         await sleep(wait);
       }
     }
@@ -6265,7 +6275,9 @@ function embeddedJobDois(value) {
       record('start','start');record('transport_start','start');
       totalTimer=setTimeout(function(){finish(new Error('private_pdf_upload_budget_exhausted'));},budget);
       bindingTimer=setInterval(function(){if(!currentCaptureJob(job)||controllerPaused())finish(new Error('private_pdf_upload_cancelled'));},500);
-      var firstBudget=Math.max(1,Math.floor(budget/2));
+      // Preserve most of the authorization-bound GM session upload window.
+      // Switching transport after 45s aborted valid 2MB ACS uploads prematurely.
+      var firstBudget=Math.max(1,Math.floor(budget*0.8));
       firstTimer=setTimeout(function(){fallback(new Error('gm_request_timeout'));},firstBudget);
       try{
         gmHandle=GM_xmlhttpRequest(Object.assign({},options,{timeout:firstBudget,
