@@ -85,7 +85,7 @@ const papers=Array.from({length:72},(_,index)=>({
 const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
 async function contextWith(capabilities,openResult={available:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=opaque'},options={}){
  const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900},locale:options.locale||'en-US'});
- const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,rangeInFlight:0,maxConcurrentRanges:0,openModes:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
+ const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,rangeInFlight:0,maxConcurrentRanges:0,openModes:[],openOrigins:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
  const filePdf=options.largePdf?largeCardPdf:cardPdf;
  if(options.pendingQueue)state.queueRows.set('fixture-owner',new Map(papers.map(paper=>[paper.doi,{doi:paper.doi,state:'pending',revision:1,createdAt:Date.now(),updatedAt:Date.now()}])));
  await context.addInitScript(fixtureOrigin=>{
@@ -193,15 +193,46 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    }
   }
   if(url.pathname==='/api/user-ui/private-pdf/open'){
+   if(route.request().method()==='OPTIONS'){
+    return route.fulfill({status:204,headers:{
+     'access-control-allow-origin':base,
+     'access-control-allow-methods':'GET, HEAD, POST, OPTIONS',
+     'access-control-allow-headers':'content-type, authorization, range',
+     'access-control-max-age':'86400',
+     'vary':'Origin',
+    }});
+   }
    state.privateCalls++;
    const mode=url.searchParams.get('mode')||'view';
    state.openModes.push(mode);
+   state.openOrigins.push(url.origin);
+   if(url.origin==='https://api.gczhouwld.com' && options.primaryOpenStatus) {
+    return route.fulfill({status:options.primaryOpenStatus,contentType:'application/json',
+     headers:{'access-control-allow-origin':base},body:JSON.stringify({error:'fixture_denied'})});
+   }
+   if(url.origin==='https://organic-synthesis-gallery.zhou526316.workers.dev' && options.backupOpenStatus) {
+    return route.fulfill({status:options.backupOpenStatus,contentType:'application/json',
+     headers:{'access-control-allow-origin':base},body:JSON.stringify({error:'fixture_unavailable'})});
+   }
+   if(url.origin==='https://api.gczhouwld.com' && options.primaryOpenDelayMs) {
+    await new Promise(resolve=>setTimeout(resolve,options.primaryOpenDelayMs));
+   }
    if(openResult?.available!==true)return reply(openResult);
    const source=new URL(openResult.url);
+   if(url.origin==='https://organic-synthesis-gallery.zhou526316.workers.dev') {
+    // Both authorized gateways return a signed ticket on their own host.
+    source.host=url.host;
+   }
    if(mode==='download')source.searchParams.set('download','1');
    else source.searchParams.delete('download');
-   return reply({...openResult,mode,url:source.toString(),
-     ...(options.omitByteLength?{}:{byteLength:filePdf.length})});
+   try { return await reply({...openResult,mode,url:source.toString(),
+     ...(options.omitByteLength?{}:{byteLength:filePdf.length})}); }
+   catch(error) {
+    // Browser may cancel a delayed losing authorization request after the
+    // verified secondary gateway has already won.
+    if(options.primaryOpenDelayMs && url.origin==='https://api.gczhouwld.com') return;
+    throw error;
+   }
   }
   if(url.pathname.startsWith('/api/user-ui/private-pdf/')){state.privateCalls++;return reply(openResult);}
   if(url.pathname==='/api/user-ui/integrations')return reply({auth:{local:true,google:false,wechat:false,qq:false,email:false},payments:{wechat:false,alipay:false}});
@@ -308,6 +339,46 @@ try{
   assert.equal(state.privateHeaderProbeCalls,0,'edge-verified signed ticket must not fetch bytes 0-15 a second time');
   assert.deepEqual(state.openModes,['view']);
   await target.close();
+ });
+ await test('slow primary PDF authorization falls back to the same owner Worker without bypassing entitlement',async()=>{
+  const owner={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],owner,{primaryOpenDelayMs:8000});
+  const page=await gallery(context,true);
+  const opened=page.waitForEvent('popup');await page.locator('.card .private-pdf-button').first().click();
+  const target=await opened;
+  const csp=await target.locator('meta[http-equiv="Content-Security-Policy"]').getAttribute('content');
+  assert.match(csp||'',/connect-src[^;]*https:\/\/organic-synthesis-gallery\.zhou526316\.workers\.dev/,
+   'reader CSP explicitly permits only the known fallback Worker origin');
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:11000});
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'backup',
+   JSON.stringify({routes:state.openOrigins,requests:state.privateCalls}));
+  assert.ok(state.openOrigins.includes('https://api.gczhouwld.com'));
+  assert.ok(state.openOrigins.includes('https://organic-synthesis-gallery.zhou526316.workers.dev'));
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-transfer-strategy'),'parallel-ranges');
+  assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
+  assert.equal(state.privateFileCalls>=1,true);
+ });
+ await test('backup authorization failure does not cancel a slower valid canonical response',async()=>{
+  const owner={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],owner,{primaryOpenDelayMs:5500,backupOpenStatus:403});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:12000});
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'primary');
+  assert.ok(state.openOrigins.includes('https://api.gczhouwld.com'));
+  assert.ok(state.openOrigins.includes('https://organic-synthesis-gallery.zhou526316.workers.dev'));
+  assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
+ });
+ await test('explicit PDF permission denial never initiates backup authorization',async()=>{
+  const {context,state}=await contextWith(['private_pdf_read'],
+   {available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'},
+   {primaryOpenStatus:403});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',undefined,{timeout:8000});
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/open_http_403/);
+  assert.deepEqual(state.openOrigins,['https://api.gczhouwld.com']);
+  assert.equal(state.privateFileCalls,0,'denied accounts never receive PDF bytes');
  });
  await test('high-RTT small file uses concurrent ranges and local page turns',async()=>{
   const fast={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};

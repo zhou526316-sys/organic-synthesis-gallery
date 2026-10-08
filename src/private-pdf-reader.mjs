@@ -27,6 +27,11 @@ async function loadPdfEngine() {
 
 const SESSION_KEY = 'organic-gallery-session-v1';
 const API_BASE = 'https://api.gczhouwld.com';
+// Same deployed owner Worker, used only if the canonical API is unusually slow.
+// Never accept arbitrary redirects or a file URL from an unlisted host.
+const API_BACKUP = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
+const OPEN_HEDGE_DELAY_MS = 3_500;
+const OPEN_TOTAL_TIMEOUT_MS = 15_000;
 const ASSET_BASE = '/pdf-vault-assets/6.4.299/';
 const MAX_PDF_BYTES = 60 * 1024 * 1024;
 const SINGLE_TRANSFER_TIMEOUT_MS = 90_000;
@@ -136,7 +141,8 @@ function safeErrorCode(error) {
   if (/^(?:open|file)_http_\d+$/.test(message)) return message;
   if (['pdf_source_invalid','pdf_page_tree','pdf_invalid_bytes','pdf_wrong_content_type',
        'pdf_range_unavailable','pdf_too_large','pdf_incomplete_bytes','pdf_transfer_timeout',
-       'pdf_first_page_timeout','pdf_engine_timeout'].includes(message)) return message;
+       'pdf_first_page_timeout','pdf_engine_timeout','pdf_authorize_timeout',
+       'pdf_authorize_network_error'].includes(message)) return message;
   if (name === 'AbortError' || name === 'TimeoutError') return 'pdf_transfer_timeout';
   return 'reader_error';
 }
@@ -161,8 +167,10 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
     const value = document.documentElement.dataset[key] || '';
     return /^\d{1,12}$/.test(value) ? [`${label}:${value}${unit}`] : [];
   });
+  const route = document.documentElement.dataset.privatePdfAuthorizePath || '';
   diagnostic.textContent = `阶段：${phase} · ${detail || 'unknown'} · ${(elapsed / 1000).toFixed(1)}s` +
-    (timingDetails.length ? ' · ' + timingDetails.join(' · ') : '');
+    (timingDetails.length ? ' · ' + timingDetails.join(' · ') : '') +
+    (['primary', 'backup', 'both-failed'].includes(route) ? ` · 授权线路:${route}` : '');
   status.appendChild(diagnostic);
   const retry = document.createElement('button');
   retry.type = 'button';
@@ -243,8 +251,8 @@ async function render() {
   controls();
 }
 
-async function getPdfSource(sessionToken, mode = 'view') {
-  const openUrl = new URL('/api/user-ui/private-pdf/open', API_BASE);
+async function fetchAuthorizedSource(origin, sessionToken, mode, controller) {
+  const openUrl = new URL('/api/user-ui/private-pdf/open', origin);
   openUrl.searchParams.set('doi', doi);
   openUrl.searchParams.set('mode', mode);
   const opened = await fetch(openUrl, {
@@ -252,7 +260,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
     headers: { authorization: 'Bearer ' + sessionToken },
     credentials: 'omit',
     cache: 'no-store',
-    signal: AbortSignal.timeout(15000),
+    signal: controller.signal,
   });
   if (!opened.ok) throw new Error('open_http_' + opened.status);
   const data = await opened.json();
@@ -261,15 +269,80 @@ async function getPdfSource(sessionToken, mode = 'view') {
     error.notAvailable = true;
     throw error;
   }
-  const url = new URL(data.url, API_BASE);
-  if (url.origin !== API_BASE || url.pathname !== '/api/user-ui/private-pdf/file' ||
+  const url = new URL(data.url, origin);
+  if (url.origin !== origin || url.pathname !== '/api/user-ui/private-pdf/file' ||
       (mode === 'download') !== (url.searchParams.get('download') === '1')) {
     throw new Error('pdf_source_invalid');
   }
-  declaredPdfBytes = Number.isSafeInteger(Number(data.byteLength)) && Number(data.byteLength) >= 0
-    ? Number(data.byteLength) : 0;
+  const size = Number(data.byteLength);
+  return {
+    url: url.toString(),
+    headerVerified: data.headerVerified === true,
+    byteLength: Number.isSafeInteger(size) && size >= 0 ? size : 0,
+  };
+}
+
+async function getPdfSource(sessionToken, mode = 'view') {
+  const origins = [API_BASE, API_BACKUP];
+  const controllers = origins.map(() => new AbortController());
+  document.documentElement.dataset.privatePdfAuthorizePath = '';
+  let hedgeTimer = null, deadlineTimer = null;
+  let backupStarted = false, pending = 0, finished = false;
+  const errors = [];
+
+  const result = await new Promise((resolve, reject) => {
+    const finish = (value, error, route = '') => {
+      if (finished) return;
+      finished = true;
+      if (hedgeTimer !== null) clearTimeout(hedgeTimer);
+      if (deadlineTimer !== null) clearTimeout(deadlineTimer);
+      document.documentElement.dataset.privatePdfAuthorizePath = route ||
+        (error ? 'both-failed' : '');
+      for (const controller of controllers) controller.abort('open_complete');
+      if (error) reject(error);
+      else resolve(value);
+    };
+    const launch = index => {
+      if (finished || (index === 1 && backupStarted)) return;
+      if (index === 1) backupStarted = true;
+      pending++;
+      void fetchAuthorizedSource(origins[index], sessionToken, mode, controllers[index])
+        .then(source => finish(source, null, index === 0 ? 'primary' : 'backup'))
+        .catch(error => {
+          if (finished) return;
+          pending--;
+          // Never route around an explicit permission denial or a verified
+          // absence of a private file. Both endpoints enforce the same policy.
+          const explicitDenial = error?.notAvailable ||
+            /^open_http_(401|403)$/.test(error?.message || '') ||
+            error?.message === 'pdf_source_invalid';
+          // The canonical endpoint is authoritative. A secondary gateway
+          // may be temporarily out of sync: never let its denial cancel a
+          // still-running canonical request. A primary denial is final.
+          if (index === 0 && explicitDenial) {
+            finish(null, error, 'primary');
+            return;
+          }
+          errors.push(error);
+          if (index === 0 && !backupStarted) {
+            if (hedgeTimer !== null) clearTimeout(hedgeTimer);
+            launch(1);
+          }
+          if (pending === 0 && backupStarted) {
+            const status = errors.find(e => /^open_http_(5\d\d|429)$/.test(e?.message || ''));
+            finish(null, new Error(status?.message || 'pdf_authorize_network_error'));
+          }
+        });
+    };
+    deadlineTimer = setTimeout(() => finish(null, new Error('pdf_authorize_timeout')),
+      OPEN_TOTAL_TIMEOUT_MS);
+    hedgeTimer = setTimeout(() => launch(1), OPEN_HEDGE_DELAY_MS);
+    launch(0);
+  });
+
+  declaredPdfBytes = result.byteLength;
   document.documentElement.dataset.privatePdfDeclaredBytes = String(declaredPdfBytes);
-  return { url: url.toString(), headerVerified: data.headerVerified === true };
+  return { url: result.url, headerVerified: result.headerVerified };
 }
 async function checkPdfHeader(fileUrl) {
   // Check the actual PDF bytes rather than treating an iframe DOM node or a
@@ -645,6 +718,8 @@ function showReaderError(error, prefix = 'PDF 读取失败') {
   else if (code === 'pdf_invalid_bytes' || code === 'pdf_wrong_content_type') message = '文件响应并非有效 PDF，已阻止打开错误页面。';
   else if (code === 'pdf_range_unavailable') message = 'PDF 文件服务不支持分段读取，暂时无法可靠打开。';
   else if (code === 'file_http_404') message = '私有 PDF 文件未找到，下载记录可能需要修复。';
+  else if (code === 'pdf_authorize_timeout') message = 'PDF 授权接口在15秒内未响应，尚未开始传输文件。请稍后重新读取。';
+  else if (code === 'pdf_authorize_network_error') message = 'PDF 授权接口连接失败，尚未开始传输文件。请检查网络或稍后重试。';
   else if (code === 'pdf_transfer_timeout') message = '文件传输超时。可试用上方“整份下载后阅读”或下载 PDF；请记录阶段及耗时。';
   else if (code === 'pdf_too_large') message = '文件较大，建议点击上方“浏览器阅读”以原生模式打开。';
   else if (code === 'pdf_incomplete_bytes') message = '文件传输不完整，请重新读取或尝试浏览器阅读。';
