@@ -5669,39 +5669,38 @@ function embeddedJobDois(value) {
 
   function privatePdfQueueNeeded(job,now,ignoreCooldown) {
     if(!privatePdfCaptureEligibleByAddedDate(job)||!privatePdfLease())return false;
+    // A stale local stored/missing receipt is not current proof. Only the
+    // owner-authenticated D1 inventory may authorize a fresh PDF download.
+    if(String(job&&job.privatePdfServerStatus||'')!=='missing')return false;
     var doi=normalizeDoi(job&&job.doi);if(!doi)return false;
     var prior=GM_getValue(PRIVATE_PDF_ATTEMPT_PREFIX+doi,null),ts=Number(now||Date.now());
-    if(!prior)return true;
-    var age=Math.max(0,ts-Number(prior.at||0));
-    if(prior.status==='stored'&&age<30*24*60*60*1000){
-      // A PDF stored by the pre-bundle runtime is reusable as PDF bytes, but
-      // Oct-1+ papers still need one authenticated page visit under the bundle
-      // revision so body figures and full text are not skipped.
-      if(recentFullCaptureEligible(job)&&String(prior.revision||'')!==PRIVATE_PDF_CAPTURE_REVISION)return true;
-      return false;
-    }
+    var age=prior?Math.max(0,ts-Number(prior.at||0)):Number.POSITIVE_INFINITY;
     if(ignoreCooldown)return true;
-    if(prior.status==='not_found'&&age<6*60*60*1000)return false;
-    if(prior.status==='failed'&&age<30*60*1000)return false;
+    if(prior&&prior.status==='not_found'&&age<6*60*60*1000)return false;
+    if(prior&&prior.status==='failed'&&age<30*60*1000)return false;
     return true;
   }
 
-  function privatePdfBackfillJobs(queue,stageMap,productionMap) {
+  function privatePdfBackfillJobs(queue,stageMap,productionMap,ownerPdfMap) {
     if(!privatePdfLease())return [];
     stageMap=stageMap||new Map();productionMap=productionMap||new Map();
-    return (queue&&Array.isArray(queue.articles)?queue.articles:[]).filter(function(raw){return privatePdfQueueNeeded(raw,Date.now());}).map(function(raw){
-      var doi=normalizeDoi(raw&&raw.doi),stage=stageMap.get(doi)||{},production=productionMap.get(doi)||{},figs={};
+    ownerPdfMap=ownerPdfMap||new Map();
+    return (queue&&Array.isArray(queue.articles)?queue.articles:[]).map(function(raw){
+      var doi=normalizeDoi(raw&&raw.doi),status=privatePdfServerStatus(ownerPdfMap,doi);
+      var source=Object.assign({},raw,{privatePdfServerStatus:status});
+      if(!privatePdfQueueNeeded(source,Date.now()))return null;
+      var stage=stageMap.get(doi)||{},production=productionMap.get(doi)||{},figs={};
       [stage.figures||{},production.capturedFigures||[]].forEach(function(group){
         Object.keys(group).forEach(function(k){var f=group[k];if(validReceiptForDoi(f,doi))figs[f.label]=f;});
       });
-      var job=Object.assign({},raw,{doi:doi,publisher:publisherForDoi(doi),state:'private_pdf_gap',
+      var job=Object.assign({},source,{doi:doi,publisher:publisherForDoi(doi),state:'private_pdf_gap',
         captureToc:false,captureFigures:false,captureEvidence:false,
-        opportunisticFigures:recentFullCaptureEligible(raw),opportunisticEvidence:recentFullCaptureEligible(raw),
+        opportunisticFigures:true,opportunisticEvidence:true,
         capturePrivatePdf:true,allowFigureOne:false,capturedFigures:figs,
         expectedFigureCount:Math.max(0,Number(stage.expectedFigureCount||0),Object.keys(figs).length)});
       job.mediaNeed=captureMediaNeed(job);
       return job;
-    }).sort(compareMissingCaptureJobs);
+    }).filter(Boolean).sort(compareMissingCaptureJobs);
   }
 
   function privatePdfLease() {
@@ -6031,6 +6030,14 @@ function embeddedJobDois(value) {
 
   async function maybeCapturePrivatePdf(job,trace) {
     if(!job||!currentCaptureJob(job)||!privatePdfCaptureEligibleByAddedDate(job))return null;
+    var serverStatus=String(job.privatePdfServerStatus||'unknown');
+    if(serverStatus==='ready'){
+      captureLiveUpdate(job,'private_pdf_saved',{pdfStatus:'already_stored',pdfStage:'云端已验证存在；无需重抓'});
+      return {status:'already_stored',reason:'owner_cloud_inventory_ready'};
+    }
+    if(serverStatus!=='missing'||job.capturePrivatePdf!==true){
+      return {status:'skipped',reason:serverStatus==='pending'||serverStatus==='failed'?'owner_pdf_verification_pending':'owner_pdf_inventory_unknown'};
+    }
     var lease=privatePdfLease();
     if(!lease){
       captureLiveUpdate(job,'private_pdf_no_lease',{pdfStatus:'skipped',pdfStage:'未获得 owner PDF 授权'});
@@ -6039,7 +6046,7 @@ function embeddedJobDois(value) {
     }
     pushTrace(trace,{stage:'private_pdf_lease',event:'active',status:'ok',message:'expiresAt='+String(Number(lease.expiresAt||0))+';revision='+String(lease.revision||PRIVATE_PDF_CAPTURE_REVISION)});
     var doi=normalizeDoi(job.doi),key=PRIVATE_PDF_ATTEMPT_PREFIX+doi,prior=GM_getValue(key,null),now=Date.now();
-    if(prior&&prior.status==='stored'&&now-Number(prior.at||0)<30*24*60*60*1000){
+    if(prior&&prior.status==='stored'&&serverStatus==='ready'&&now-Number(prior.at||0)<30*24*60*60*1000){
       if(String(prior.revision||'')!==PRIVATE_PDF_CAPTURE_REVISION){
         prior=Object.assign({},prior,{revision:PRIVATE_PDF_CAPTURE_REVISION,bundleUpgradedAt:Date.now()});
         GM_setValue(key,prior);
