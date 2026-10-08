@@ -13,7 +13,7 @@ const job={doi,jobId:'active-one',startedAt:new Date(now).toISOString(),_liveRes
 store.set(activeKey,{doi,jobId:job.jobId,startedAt:job.startedAt,journal:'JACS'});
 const writes=[];
 class Clock extends Date {static now(){return now;}}
-const ctx=vm.createContext({Date:Clock,P:'osg-toc-v6:',VERSION:'6.2.20',CONTROLLER_REVISION:'2.2.41',CONTROLLER_STOP_REASON:'',ACTIVE_JOB_KEY:activeKey,SUMMARY_KEY:summaryKey,ENABLED_KEY:'enabled',ABORT_KEY:'abort',MANUAL_RUN_KEY:'manual',LEASE_KEY:'lease',CONTROLLER_ID:'this-page',
+const ctx=vm.createContext({Date:Clock,P:'osg-toc-v6:',VERSION:'6.2.20',CONTROLLER_REVISION:'2.2.41',OCT1_SCOPE_QUEUE_REVISION:'20261008-added-date-only-v1',CONTROLLER_STOP_REASON:'',ACTIVE_JOB_KEY:activeKey,SUMMARY_KEY:summaryKey,ENABLED_KEY:'enabled',ABORT_KEY:'abort',MANUAL_RUN_KEY:'manual',LEASE_KEY:'lease',CONTROLLER_ID:'this-page',
  automaticReportDisplay:()=> '自动报告测试',
  captureNeedText:()=> 'toc+figures',captureEvidenceLevelText:()=> 'mock evidence',
  normalizeDoi:s=>String(s||'').toLowerCase(),progressKey:d=>'progress:'+d,
@@ -57,6 +57,16 @@ function idleFixture(options={}){
 }
 const ownLease={owner:'manual:current-run',manualRunId:'current-run',expiresAt:now+45000};
 test('idle clock uses latest result and separates batch start',()=>{const s=idleFixture();assert.equal(s.ageSeconds,1213);assert.equal(s.runStartedAt,now-8895000);const t=api.captureLiveText(s);assert.match(t.last,/20 分钟前/);assert.notEqual(t.started,t.last);});
+test('Oct-1 cohort counts and owner PDF inventory stay separate from missing DOI obligations',()=>{
+ const snapshot=idleFixture({summary:{scopeRevision:'20261008-added-date-only-v1',scopeCount:177,
+   ownerPdfInventory:{ready:154,pending:9,failed:0,unknown:14}}});
+ const label=api.captureLiveText(snapshot).gaps;
+ assert.match(label,/10\.1起 177 篇/);
+ assert.match(label,/PDF云端 已齐 154/);
+ assert.match(label,/待验证 9/);
+ assert.match(label,/未知 14/);
+ assert.match(label,/未补齐 163 篇/);
+});
 test('batch start alone is never fabricated as progress',()=>{const s=idleFixture({summary:{results:[]}});assert.equal(s.lastAt,null);assert.equal(s.ageSeconds,null);assert.equal(api.captureLiveText(s).last,'尚无采集进展');});
 test('no active DOI cannot imply PDF is unnecessary or already complete',()=>{const s=idleFixture();s.row={pdfStatus:'stored',pdfBytes:2000};assert.equal(api.captureLiveText(s).pdf,'等待下一篇');});
 test('manual lease belongs to this page despite manual owner prefix',()=>{assert.equal(idleFixture({lease:ownLease}).state,'between_jobs');});
@@ -87,7 +97,7 @@ try{
  await page.evaluate(()=>{document.querySelector('#ordinary').onclick=()=>document.querySelector('#count').textContent='1';});
  const fixture={active:{doi,jobId:'browser-task',journal:'JACS',startedAt:new Date().toISOString()},summary:{total:8,results:[],figuresStaged:0},row:{doi,jobId:'browser-task',phase:'uploading',label:'Scheme 2',at:Date.now(),discoveryDone:true,discovered:8,stored:2,failed:0,stagedReceipts:2,reused:0,tocStatus:'already_available',lastError:'',quality:'vector',width:640,height:468}};
  await page.evaluate(({moduleSource,fixture})=>{
-   window.P='osg-toc-v6:';window.VERSION='6.2.20';window.CONTROLLER_REVISION='2.2.41';window.CONTROLLER_STOP_REASON='';window.ACTIVE_JOB_KEY='active';window.SUMMARY_KEY='summary';window.ENABLED_KEY='enabled';window.ABORT_KEY='abort';
+   window.P='osg-toc-v6:';window.VERSION='6.2.20';window.CONTROLLER_REVISION='2.2.41';window.OCT1_SCOPE_QUEUE_REVISION='20261008-added-date-only-v1';window.CONTROLLER_STOP_REASON='';window.ACTIVE_JOB_KEY='active';window.SUMMARY_KEY='summary';window.ENABLED_KEY='enabled';window.ABORT_KEY='abort';
    window.automaticReportDisplay=()=> '自动报告测试';window.captureNeedText=()=> 'toc+figures';window.captureEvidenceLevelText=()=> 'mock evidence';window.forceStartFromHead=()=>{};window.normalizeDoi=s=>String(s||'').toLowerCase();window.progressKey=d=>'progress:'+d;window.isGalleryPage=()=>true;
    window.fixtureStore=new Map([['active',fixture.active],['summary',fixture.summary],['osg-toc-v6:live-progress-v1',fixture.row]]);
    window.GM_getValue=(k,d)=>window.fixtureStore.has(k)?structuredClone(window.fixtureStore.get(k)):d;
