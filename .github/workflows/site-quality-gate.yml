@@ -48,6 +48,7 @@ jobs:
           node scripts/test-prepublish-readiness.mjs
           node scripts/test-prepublish-slot-window.mjs
           node scripts/test-per-doi-release.mjs
+          node --test scripts/test-approved-publication-date-corrections.mjs
           node scripts/test-deferred-publication-quality.mjs
           node scripts/test-formal-review-conversion.mjs
           node scripts/test-pages-literature-authorization.mjs
