@@ -1,20 +1,24 @@
 {
-  "requestId": "2026-10-08-r1-two-article-import-1230",
-  "requestedAt": "2026-10-08T12:30:00+08:00",
+  "requestId": "2026-10-08-r2-repair-covers-s3-single-import",
+  "requestedAt": "2026-10-08T14:06:00+08:00",
   "action": "import_reviewed_editorial_package",
-  "revision": "2026-10-08-r1",
+  "revision": "2026-10-08-r2",
   "doi": "10.1038/s41929-026-01602-y",
-  "packageUrl": "https://at.adobe.com/JmErFDUcCR00JoFs",
-  "packageSha256": "3c19a9dfbd49875568626d29d10c9f21178f377e2433297602bc9b0d298b40d1",
+  "packageUrl": "https://at.adobe.com/rwW1tGvAMYrw3EmB",
+  "packageSha256": "56ff0d6df2d4c08e96afe985e880e8d91c56daa05e44a2d9ed1dae88af68565a",
   "manifestPath": "public/wechat-retrospective/os1-multicentred-sulfur-20261008.json",
   "gatePath": "audit/wechat-working/2026-10-08-review-gate.json",
+  "replaceExisting": {
+    "public/wechat-featured/2026-10-08.json": "81ad6ac1ccad14aa1f75df00c7d61fd19e259232",
+    "public/wechat-retrospective/os1-multicentred-sulfur-20261008.json": "57ec52bd60813fb69d5ec99bb7db9778a17e2ce6",
+    "audit/wechat-working/2026-10-08-review-gate.json": "2322cf4000fd6b341cc0b092dea4cc3b345433f6"
+  },
   "expectedArticleCount": 2,
   "expectedDois": [
     "10.1021/jacs.6c14748",
     "10.1038/s41929-026-01602-y"
   ],
-  "draftWriteAuthorizedInConversation": true,
   "thisStepWritesDraft": false,
   "publicSendAuthorized": false,
-  "note": "Import the exact source-reviewed 2026-10-08 two-card bundle, including JACS featured, Nature Catalysis retrospective, edition and 34 immutable PNGs. This step does not write or send WeChat."
+  "note": "Import 3 corrected versioned assets and exact reviewed manifests; protects existing files by SHA CAS; no WeChat writes in this stage."
 }

@@ -169,7 +169,13 @@ jobs:
               for rel in written:
                   target=root/rel; payload=(staged/rel).read_bytes()
                   if target.exists() and target.read_bytes()!=payload:
-                      raise RuntimeError('Refusing to replace different existing content: '+rel)
+                      allowed_replacements = req.get('replaceExisting') or {}
+                      if not isinstance(allowed_replacements, dict):
+                          raise RuntimeError('Invalid replaceExisting map')
+                      old_sha = str(allowed_replacements.get(rel) or '')
+                      allowed_mutable = {gate_rel, 'public/wechat-featured/2026-10-08.json', 'public/wechat-retrospective/os1-multicentred-sulfur-20261008.json'}
+                      if rel not in allowed_mutable or not re.fullmatch(r'[a-f0-9]{40}', old_sha) or blob(target.read_bytes()) != old_sha:
+                          raise RuntimeError('Refusing to replace non-matching existing content: '+rel)
                   target.parent.mkdir(parents=True,exist_ok=True); target.write_bytes(payload)
               subprocess.run(['git','add','--',*written],check=True)
               if subprocess.run(['git','diff','--cached','--quiet']).returncode==0: break
