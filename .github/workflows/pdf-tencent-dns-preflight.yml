@@ -1,0 +1,58 @@
+name: Owner PDF DNS authority read-only preflight
+on:
+  push:
+    branches:
+      - feature/owner-private-pdf-dual-ingress-20261008
+    paths:
+      - '.github/workflows/pdf-tencent-dns-preflight.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  check-dns-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - name: Check zone and DNS-read permissions without mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          HTTP=$(curl -sS --max-time 12 -o /tmp/gallery-dns-zone-check.json -w '%{http_code}' \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            'https://api.cloudflare.com/client/v4/zones?name=gczhouwld.com')
+          export HTTP
+          node - <<'NODE'
+          const fs=require('fs');
+          let ok=false,zone='';
+          try {
+            const body=JSON.parse(fs.readFileSync('/tmp/gallery-dns-zone-check.json','utf8'));
+            ok=body.success===true&&Array.isArray(body.result)&&body.result.length===1&&
+              body.result[0]?.name==='gczhouwld.com';
+            zone=ok?String(body.result[0].id||''):'';
+          } catch {}
+          process.stdout.write('ZONE_READ '+JSON.stringify({http:Number(process.env.HTTP),ok,zoneIdValid:/^[a-f0-9]{32}$/.test(zone)})+'\n');
+          if(ok&&/^[a-f0-9]{32}$/.test(zone))fs.writeFileSync('/tmp/gallery-pdf-zone-id',zone);
+          NODE
+          if test -s /tmp/gallery-pdf-zone-id; then
+            ZONE=$(cat /tmp/gallery-pdf-zone-id)
+            HTTP=$(curl -sS --max-time 12 -o /tmp/gallery-dns-record-check.json -w '%{http_code}' \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              "https://api.cloudflare.com/client/v4/zones/$ZONE/dns_records?name=pdf.gczhouwld.com")
+            export HTTP
+            node - <<'NODE'
+            const fs=require('fs');
+            let ok=false,count=null;
+            try {
+              const data=JSON.parse(fs.readFileSync('/tmp/gallery-dns-record-check.json','utf8'));
+              ok=data.success===true;count=ok?data.result.length:null;
+            }catch{}
+            console.log('PDF_DNS_READ '+JSON.stringify({http:Number(process.env.HTTP),ok,count}));
+            NODE
+          fi
