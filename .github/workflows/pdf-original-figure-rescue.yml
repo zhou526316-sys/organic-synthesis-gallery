@@ -1,0 +1,36 @@
+name: Owner PDF original figure rescue regression
+on:
+  push:
+    branches: [feat/pdf-original-figure-rescue-20261009, main]
+    paths:
+      - src/pdf-vault/figure-rescue.mjs
+      - src/private-pdf-reader.mjs
+      - pdf/index.html
+      - tests/pdf-original-figure-rescue.test.mjs
+      - .github/workflows/pdf-original-figure-rescue.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - src/pdf-vault/figure-rescue.mjs
+      - src/private-pdf-reader.mjs
+      - pdf/index.html
+      - tests/pdf-original-figure-rescue.test.mjs
+      - .github/workflows/pdf-original-figure-rescue.yml
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify source-only PDF figure extraction and no public import
+        run: |
+          set -euo pipefail
+          node --check src/pdf-vault/figure-rescue.mjs
+          node --check src/private-pdf-reader.mjs
+          node --test tests/pdf-original-figure-rescue.test.mjs
+          git diff --check

@@ -18,6 +18,19 @@
     main{position:relative;flex:1;min-height:0;overflow:auto;background:#dfe5ee;padding:18px}
     #stage{min-height:100%;display:flex;justify-content:center;align-items:flex-start}
     #pdf-canvas{display:block;max-width:100%;background:#fff;box-shadow:0 5px 24px rgba(15,23,42,.18)}
+    #pdf-page-wrap{position:relative;display:inline-block;max-width:100%;touch-action:auto}
+    #pdf-crop-box{position:absolute;pointer-events:none;border:2px dashed #0b60ce;background:rgba(20,117,232,.13)}
+    #pdf-crop-box[hidden],#pdf-rescue-panel[hidden],.rescue-control[hidden]{display:none!important}
+    #pdf-rescue-panel{position:fixed;top:65px;right:14px;bottom:12px;width:min(360px,calc(100vw - 28px));overflow:auto;
+      z-index:5;padding:16px;background:#fff;border:1px solid #bbcadb;border-radius:12px;box-shadow:0 14px 42px #1c2c4436}
+    #pdf-rescue-panel button{display:block;width:100%;text-align:left;margin:6px 0;white-space:normal}
+    #pdf-rescue-panel h2{font-size:17px;margin:0 0 10px}
+    #pdf-rescue-panel small{display:block;color:#667085;line-height:1.55}
+    #pdf-crop-notice{font-size:12px;color:#185abc;min-width:0}
+    #pdf-rescue-progress{font-size:13px;line-height:1.6;color:#344054}
+    #pdf-rescue-close{width:auto!important;float:right;margin:0!important}
+    .pdf-rescue-candidate{border:1px solid #cedbea;background:#f8faff!important}
+    .pdf-rescue-warning{color:#b33927!important}
 
     #status{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center;color:#56657a;background:#f5f7fb;z-index:1}
     #status[hidden]{display:none}.bad{color:#9f2d20}
@@ -39,10 +52,24 @@
       <a id="full-open" class="download" hidden>整份下载后阅读</a>
       <a id="browser-open" class="download" hidden>浏览器阅读</a>
       <button id="download" type="button" class="download" hidden>下载 PDF</button>
+      <button id="pdf-figure-rescue" class="rescue-control" type="button" disabled>从 PDF 找图</button>
+      <button id="pdf-crop-select" class="rescue-control" type="button" hidden>框选原图</button>
+      <button id="pdf-crop-export" class="rescue-control" type="button" hidden disabled>导出原图候选</button>
+      <span id="pdf-crop-notice" role="status" aria-live="polite"></span>
     </div>
   </header>
+  <aside id="pdf-rescue-panel" hidden aria-label="PDF 原图恢复候选">
+    <button id="pdf-rescue-close" type="button">关闭</button>
+    <h2>从原始 PDF 找图</h2>
+    <p id="pdf-rescue-progress" role="status" aria-live="polite">仅在当前浏览器解析，不上传 PDF 或页面。</p>
+    <div id="pdf-rescue-results"></div>
+    <small>找到的图号只是定位候选。必须手工核对原始图像范围、DOI 和出版许可；导出的 PNG 与溯源记录不会自动发布到公共图库。</small>
+  </aside>
   <main id="main">
-    <div id="stage"><canvas id="pdf-canvas" width="0" height="0" aria-label="论文 PDF 页面"></canvas></div>
+    <div id="stage"><div id="pdf-page-wrap">
+      <canvas id="pdf-canvas" width="0" height="0" aria-label="论文 PDF 页面"></canvas>
+      <div id="pdf-crop-box" hidden></div>
+    </div></div>
     <div id="status">正在打开私有 PDF…</div>
   </main>
   <script type="module" src="/src/private-pdf-reader.mjs"></script>
