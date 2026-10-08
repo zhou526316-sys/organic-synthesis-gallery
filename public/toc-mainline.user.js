@@ -4430,6 +4430,11 @@ function embeddedJobDois(value) {
     try {
       await postJson(REPORT_ENDPOINT, {
         doi: job.doi,
+        jobId: String(job.jobId || ''),
+        captureVersion: VERSION,
+        controllerRevision: CONTROLLER_REVISION,
+        mediaNeed: String(job.mediaNeed || ''),
+        final: false, // Controller-only report must never replace a publisher final receipt.
         publisher: job.publisher || publisherForDoi(job.doi),
         status: status,
         reason: String(reason || 'controller_failure').slice(0, 220),
