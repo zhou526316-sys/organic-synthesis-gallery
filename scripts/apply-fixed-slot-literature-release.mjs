@@ -119,12 +119,12 @@ try {
 } catch (error) {
   if (error?.code !== 'ENOENT') throw error;
 }
+const forbidden = new Set([...(bundle.markerFields.rejectedDois || []), ...(bundle.markerFields.deferredDois || [])].map(normalizeDoi));
+for (const doi of forbidden) byDoi.delete(doi);
 const dateCorrectionResult = applyApprovedPublicationDateCorrections(byDoi, approvedDateCorrections, slot);
 if (dateCorrectionResult.conflicts) {
   console.error('APPROVED_PUBLISHER_DATE_CORRECTION_CONFLICT ' + JSON.stringify(dateCorrectionResult.reports.filter(row => row.status === 'conflict')));
 }
-const forbidden = new Set([...(bundle.markerFields.rejectedDois || []), ...(bundle.markerFields.deferredDois || [])].map(normalizeDoi));
-for (const doi of forbidden) byDoi.delete(doi);
 const rollingOut = {
   generatedAt: beijingIso(),
   auditWindow: { start: bundle.formalReview?.windowAccounting?.mainWindowStart || '2026-09-21', end: slot.slice(0, 10) },
