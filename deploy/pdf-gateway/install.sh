@@ -37,7 +37,7 @@ preflight(){
  if ss -ltnH '( sport = :18867 )' 2>/dev/null | grep -q .; then
    abort 'Private PDF localhost port 18867 already in use; no changes permitted'
  fi
- if nginx -T 2>/dev/null | grep -Eq '[[:space:]]server_name[[:space:]]+pdf[.]gczhouwld[.]com[[:space:];]'; then
+ if nginx -T 2>/dev/null | grep -E '[[:space:]]server_name[[:space:]]+pdf[.]gczhouwld[.]com[[:space:];]' >/dev/null; then
    abort 'An existing Nginx vhost already owns the PDF hostname; do not overwrite'
  fi
  echo "[CHECK] WeChat vhost SHA: $(we_chat_hash)"
