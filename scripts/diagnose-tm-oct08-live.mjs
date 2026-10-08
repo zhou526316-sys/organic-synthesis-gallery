@@ -28,11 +28,12 @@ async function jsonEndpoint(path, options, cap=6_000_000){
   }
   return {error:last||'unavailable'};
 }
-const [production,captures,diagnostics,reports]=await Promise.all([
+const [production,captures,diagnostics,reports,staged]=await Promise.all([
   jsonEndpoint('/api/media/inventory',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({dois,readOnly:true})}),
   jsonEndpoint('/api/media/local-capture-index?diagnose='+Date.now(),{method:'GET'}),
   jsonEndpoint('/api/media/local-diagnostics?diagnose='+Date.now(),{method:'GET'}),
-  jsonEndpoint('/api/media/tampermonkey-reports?limit=200&diagnose='+Date.now(),{method:'GET'})
+  jsonEndpoint('/api/media/tampermonkey-reports?limit=200&diagnose='+Date.now(),{method:'GET'}),
+  jsonEndpoint('/api/article-figures/staged?inventory=1&diagnose='+Date.now(),{method:'GET'})
 ]);
 const prod=new Map((production.data?.items||[]).map(x=>[String(x.doi||'').toLowerCase(),x]));
 const tocIndex=new Map();
@@ -45,6 +46,7 @@ for(const rec of captures.data?.items||[]){
 }
 const receipt=(diagnostics.data?.traces||[]).filter(t=>dois.includes(String(t.doi||'').toLowerCase()));
 const reportsMap=new Map((reports.data?.items||[]).map(r=>[String(r.doi||'').toLowerCase(),r]));
+const stagedMap=new Map((staged.data?.items||[]).map(r=>[String(r.doi||'').toLowerCase(),r]));
 const byDoi=new Map();
 for(const t of receipt){
  const doi=String(t.doi||'').toLowerCase(),arr=byDoi.get(doi)||[];
@@ -62,6 +64,8 @@ const rows=target.map(p=>{
    tocStored:m.tocStored===true,primaryKind:m.primaryKind||'',
    figure1Stored:m.figureOneStored===true,
    figureCount:Number(m.figureCount||0),
+   stagedBodyFigureCount:Object.keys(stagedMap.get(p.doi)?.figures||{}).length,
+   stagedExpectedFigureCount:Number(stagedMap.get(p.doi)?.expectedFigureCount||0),
    localTocReceipts:idx.filter(z=>z.hasUrl&&z.hasHash).length,
    lastCapture:traces[0]||null,
    reportStatus:String(reportsMap.get(p.doi)?.status||''),
@@ -80,10 +84,12 @@ const summary={
  anyPrimary:rows.filter(x=>x.tocStored||x.figure1Stored||x.primaryKind).length,
  noProductionVisual:rows.filter(x=>!(x.tocStored||x.figure1Stored||x.primaryKind)).length,
  stagedMainVisual:rows.filter(x=>x.localTocReceipts>0).length,
+ stagedBodyDois:rows.filter(x=>x.stagedBodyFigureCount>0).length,
+ stagedBodyFigures:rows.reduce((n,x)=>n+x.stagedBodyFigureCount,0),
  reportedCaptureTraces:rows.filter(x=>x.lastCapture).length,
  reportedCaptureIndex:rows.filter(x=>x.reportStatus||x.reportAttempts).length,
  reportedFailures:rows.filter(x=>/^(?:failed|partial|blocked)$/i.test(x.reportStatus)).length,
- errors:{production:production.error||'',captures:captures.error||'',diagnostics:diagnostics.error||'',reports:reports.error||''},
+ errors:{production:production.error||'',captures:captures.error||'',diagnostics:diagnostics.error||'',reports:reports.error||'',staged:staged.error||''},
  readOnly:true,publisherRequests:0,productionWrites:0
 };
 const report={summary,rows};
