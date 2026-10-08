@@ -34,6 +34,12 @@ preflight(){
  python3 -c 'import sys; assert sys.version_info >= (3,10)'
  [[ -e /etc/nginx/sites-enabled/osg-wechat-relay ]] || abort 'WeChat vhost not found'
  nginx -t || abort 'Existing nginx config invalid'
+ if ss -ltnH '( sport = :18867 )' 2>/dev/null | grep -q .; then
+   abort 'Private PDF localhost port 18867 already in use; no changes permitted'
+ fi
+ if nginx -T 2>/dev/null | grep -Eq '[[:space:]]server_name[[:space:]]+pdf[.]gczhouwld[.]com[[:space:];]'; then
+   abort 'An existing Nginx vhost already owns the PDF hostname; do not overwrite'
+ fi
  echo "[CHECK] WeChat vhost SHA: $(we_chat_hash)"
  free -h; df -h /
  local a p
@@ -75,6 +81,10 @@ server {
  ssl_certificate_key /etc/letsencrypt/live/pdf.gczhouwld.com/privkey.pem;
  ssl_protocols TLSv1.2 TLSv1.3;
  client_max_body_size 8k;
+ client_header_timeout 15s;
+ client_body_timeout 15s;
+ keepalive_timeout 5s;
+ send_timeout 30s;
  access_log off;
  error_log /var/log/nginx/gallery-pdf-gateway.error.log crit;
  add_header Referrer-Policy no-referrer always;
