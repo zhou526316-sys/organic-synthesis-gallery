@@ -50,6 +50,19 @@ await test('new valid partial receipt requeues only remaining layer',()=>{
  x.T.coverageRemaining(r,j,{status:'partial',toc:{status:'stored',kind:'official'},fulltext:{status:'stored',evidenceLevel:'complete'},figures:{discovered:3,stored:1,failed:2,items:[{...fig(j.doi,1),status:'staged'}]}});
  const v=r.coverage.get(j.doi);assert.equal(v.state,'pending');assert.equal(v.job.captureToc,false);assert.equal(v.job.captureEvidence,false);assert.equal(v.job.captureFigures,true);assert.equal(v.job.missingFigureCount,2);assert.equal(Object.keys(v.job.capturedFigures).length,1);
 });
+await test('production-confirmed Figure 1 fallback closes the current-run TOC gap',()=>{
+ const x=h(),r={summary:summary()},j=fakeJob(91,{captureToc:true,captureFigures:false,captureEvidence:false,capturePrivatePdf:false});
+ x.T.coverageMergePlan(r,[j]);
+ x.T.coverageRemaining(r,j,{status:'partial',reason:'combined_capture',toc:{status:'stored',kind:'figure1',productionFallbackStored:true}});
+ const row=r.coverage.get(j.doi);assert.equal(row.job.captureToc,false);assert.equal(row.state,'resolved');
+ x.T.coverageStats(r);assert.equal(r.summary.fullyResolved,1);assert.equal(r.summary.unresolvedCount,0);
+});
+await test('unconfirmed local Figure 1 does not falsely close a live TOC gap',()=>{
+ const x=h(),r={summary:summary()},j=fakeJob(92,{captureToc:true,captureFigures:false,captureEvidence:false,capturePrivatePdf:false});
+ x.T.coverageMergePlan(r,[j]);
+ x.T.coverageRemaining(r,j,{status:'partial',reason:'no_usable_official_or_figure1',toc:{status:'stored',kind:'figure1',productionFallbackStored:false}});
+ const row=r.coverage.get(j.doi);assert.equal(row.job.captureToc,true);assert.equal(row.state,'blocked');
+});
 await test('same valid receipt twice does not cause infinite progress retries',()=>{
  const x=h(),r={summary:summary()},j=fakeJob(1);x.T.coverageMergePlan(r,[j]);const result={status:'partial',reason:'combined_capture',figures:{discovered:3,stored:1,failed:2,items:[{...fig(j.doi,1),status:'staged'}]}};
  x.T.coverageRemaining(r,j,result);const row=r.coverage.get(j.doi);assert.equal(row.state,'pending');x.T.coverageRemaining(r,row.job,result);assert.equal(row.state,'blocked');
