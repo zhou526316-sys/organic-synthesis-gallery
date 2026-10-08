@@ -4797,7 +4797,7 @@ function embeddedJobDois(value) {
     if(!run.coverage)run.coverage=new Map();
     (jobs||[]).forEach(function(raw){
       var old=run.coverage.get(raw.doi);
-      if(!old){run.coverage.set(raw.doi,{job:Object.assign({},raw),attempts:0,done:{},noProgress:0,state:'pending',retryAt:0});return;}
+      if(!old){run.coverage.set(raw.doi,{job:Object.assign({},raw),attempts:0,openedPublisherTab:false,done:{},noProgress:0,state:'pending',retryAt:0});return;}
       // Retain unresolved obligations on a partial inventory read; never replace
       // a known gap with a missing response. Positive current receipts still win.
       var j=Object.assign({},old.job,raw);
@@ -4879,7 +4879,7 @@ function embeddedJobDois(value) {
   function coverageStats(run) {
     var s=run.summary,rows=Array.from(run.coverage.values()),left=rows.filter(function(r){return coverageHasNeeds(r.job)&&r.state!=='removed';});
     s.total=rows.filter(function(r){return r.state!=='removed';}).length;
-    s.visitedCount=rows.filter(function(r){return r.attempts>0&&r.state!=='removed';}).length;
+    s.visitedCount=rows.filter(function(r){return r.openedPublisherTab===true&&r.state!=='removed';}).length;
     s.attemptCount=s.results.length;s.fullyResolved=rows.filter(function(r){return r.state==='resolved';}).length;
     s.unresolvedCount=left.length;s.blockedCount=left.filter(function(r){return r.state==='blocked';}).length;
     s.pendingMissing=left.filter(function(r){return r.state==='pending'||r.state==='active';}).length;
@@ -5009,6 +5009,7 @@ function embeddedJobDois(value) {
           run.tab=await Promise.resolve(GM_openInTab(boundPublisherJobUrl(manualTaskUrl,job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
           if(!manualExecutionCurrent(run))return;
           if(!run.tab||typeof run.tab.close!=='function')throw new Error('task_tab_handle_unavailable');
+          row.openedPublisherTab=true; // Count actual opened publisher task tabs, not failed preflight attempts.
           result=await waitManualResult(job,run.tab,run);
         }catch(error){if(!manualExecutionCurrent(run))return;result={doi:job.doi,jobId:job.jobId,status:'failed',reason:String(error.message||error),finishedAt:nowIso()};}
         finally{
