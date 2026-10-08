@@ -54,14 +54,14 @@ jobs:
       - name: Build current Bridge installer
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
-          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
         run: |
           set -euo pipefail
           node cloudflare/scripts/build-cloudflare-bridge.mjs
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.72' public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.73' public/gallery-vpn-bridge.user.js
           grep -F "var VERSION = '6.2.20';" public/gallery-vpn-bridge.user.js
           grep -F "var CONTROLLER_REVISION = '2.2.41';" public/gallery-vpn-bridge.user.js
           grep -F 'controllerFailureDisposition' public/gallery-vpn-bridge.user.js

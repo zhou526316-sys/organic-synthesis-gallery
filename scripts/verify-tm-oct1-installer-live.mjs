@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import path from 'node:path';
-const VERSION='2.2.72',INSTALL='6.2.53';
+const VERSION='2.2.73',INSTALL='6.2.54';
 const origin='https://api.gczhouwld.com';
-const targets=[['api','https://api.gczhouwld.com/gallery-vpn-bridge.user.js'],
-  ['worker','https://organic-synthesis-gallery.zhou526316.workers.dev/gallery-vpn-bridge.user.js']];
+const targets=[['gallery','https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js'],
+  ['api','https://api.gczhouwld.com/gallery-vpn-bridge.user.js']];
 const report={checkedAt:new Date().toISOString(),version:VERSION,install:INSTALL,
   readOnly:true,publisherRequests:0,productionWrites:0,checks:[],passed:false};
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));

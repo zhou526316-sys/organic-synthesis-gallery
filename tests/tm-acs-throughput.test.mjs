@@ -5,7 +5,7 @@ import {test} from 'node:test';
 
 const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
 const worker=fs.readFileSync('cloudflare/worker/src/local-captures.js','utf8');
-assert.match(source,/\/\/ @version\s+6\.2\.49/);
+assert.match(source,/\/\/ @version\s+6\.2\.54/);
 assert.ok(source.includes("ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1'"));
 assert.ok(source.includes("IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000"));
 assert.ok(source.includes("if (candidate.kind === 'figure1' && result.productionFallbackStored !== true)"));
@@ -44,7 +44,7 @@ test('ACS viewer does not invent filenames from an empty or unrelated page',()=>
 
 const budgetCtx=vm.createContext({
  Date,Math,Number,String,JSON,Promise,Error,
- IMAGE_UPLOAD_TOTAL_BUDGET_MS:24000,
+ IMAGE_UPLOAD_TOTAL_BUDGET_MS:24000,IMAGE_UPLOAD_MAX_BUDGET_MS:48000,
  headerValue:()=>'',autoReportText:e=>String(e||''),
  shouldNativeRetryUpload:()=>false,
  uploadResponseError(status){const err=new Error('upload_http_'+status);err.httpStatus=status;return err;},

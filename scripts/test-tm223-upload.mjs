@@ -8,7 +8,7 @@ let passed=0;
 async function test(name,fn){await fn();passed++;console.log('TM223_UPLOAD_PASS '+name);}
 function harness(options={}){
  const calls=[],waits=[],events=[];let attempt=0,guards=0;
- const env={AbortController,Date,setTimeout,clearTimeout,console,IMAGE_UPLOAD_TOTAL_BUDGET_MS:24000,ACS_MEDIA_RECOVERY_REVISION:'20261008-acs-viewer-upload-v1',autoReportText:x=>String(x||'').replace(/Bearer\s+\S+|token=\S+/gi,'[redacted]'),
+ const env={AbortController,Date,setTimeout,clearTimeout,console,IMAGE_UPLOAD_TOTAL_BUDGET_MS:24000,IMAGE_UPLOAD_MAX_BUDGET_MS:48000,recentFullCaptureEligible:()=>false,retainImageForGalleryUpload:()=>false,ACS_MEDIA_RECOVERY_REVISION:'20261008-acs-viewer-upload-v1',autoReportText:x=>String(x||'').replace(/Bearer\s+\S+|token=\S+/gi,'[redacted]'),
   headerValue:(s,h)=>String(s||'').split(/\r?\n/).map(x=>x.split(':')).find(x=>x[0].toLowerCase()===h)?.slice(1).join(':').trim()||'',
   sleep:async ms=>{waits.push(ms);if(options.stopAfterWait)env.stopped=true;},captureLiveUpdate:()=>{},pushTrace:(_t,e)=>events.push(e),
   assertBoundCaptureJob:()=>{guards++;if(env.stopped)throw Error('capture_job_stale_or_unbound');return '10.1021/test.a';},

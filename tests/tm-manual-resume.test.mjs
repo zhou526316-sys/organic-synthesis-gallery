@@ -7,8 +7,9 @@ const P='osg-toc-v6:',MK=P+'manual-from-head-v3';let passed=0;
 function defer(){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b});return {promise,resolve,reject};}
 const articles=[{doi:'10.1038/s41586-026-old',journal:'Nature',addedDate:'2026-09-30',date:'2026-09-30'},
  {doi:'10.1021/jacs.6c90002',journal:'JACS',addedDate:'2026-10-01',date:'2026-10-01'},
- {doi:'10.1002/anie.90001',journal:'Angew',addedDate:'2026-10-01',date:'2026-10-01'}];
-const queue={articles,latestAddedDate:'2026-10-01',generatedAt:'2026-10-01T05:00:00Z',webpageDoiCount:3,mediaGeneration:1790082000000};
+ {doi:'10.1002/anie.90001',journal:'Angew',addedDate:'2026-10-01',date:'2026-10-01'},
+ {doi:'10.1039/d6sc00099a',journal:'Chemical Science',addedDate:'2026-10-01',date:'2026-10-01'}];
+const queue={articles,latestAddedDate:'2026-10-01',generatedAt:'2026-10-01T05:00:00Z',webpageDoiCount:4,mediaGeneration:1790082000000};
 const caps={captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',mediaControllerRevision:'2.2.41',evidenceSchemaVersion:'article-evidence-v2'};
 function h(opt={}){
  const store=opt.store||new Map(),listeners=opt.listeners||[],badges=[],opened=[],requests=[],timers=new Map(),reports=[],clock=opt.clock||{now:1790827200000};let id=0,c;
@@ -110,7 +111,9 @@ await test('late old-generation results remain rejected after recovery',async()=
 await test('publisher cooldowns credentials and saved checkpoints survive recovery',async()=>{
  const x=orphan(h()),until=x.clock.now+30*60000;x.put(P+'publisher-access-cooldown:acs',{until});
  const keys=['organicGalleryCloudflareBridgeWriteToken',x.T.checkpointKey(articles[1].doi),P+'auto-report-v1:pending'];keys.forEach(k=>x.put(k,{retained:true}));
- await x.T.tryResumeInterruptedManualRun();assert.equal(x.opened.some(v=>v.j.publisher==='acs'),false);assert.equal(x.store.get(P+'publisher-access-cooldown:acs').until,until);keys.forEach(k=>assert.deepEqual(x.store.get(k),{retained:true}));
+ await x.T.tryResumeInterruptedManualRun();assert.ok(x.opened.every(v=>v.j.publisher!=='acs'||v.at>=until),'ACS visits must remain deferred until cooldown ends');assert.ok(x.opened.some(v=>v.j.publisher==='acs'),'Deferred ACS work must continue after cooldown');
+ assert.equal(x.store.get('organicGalleryCloudflareBridgeWriteToken').retained,true);assert.equal(x.store.get(P+'auto-report-v1:pending').retained,true);
+ const cp=x.store.get(x.T.checkpointKey(articles[1].doi));assert.ok(cp&&cp.figures&&cp.figures['Figure 1']?.contentHash,'legitimate new verified media may update the preexisting checkpoint');
 });
 await test('missing write capability and pending user resume request prevent recovery',async()=>{
  const x=orphan(h({noToken:true}));assert.equal(await x.T.tryResumeInterruptedManualRun(),false);assert.equal(x.requests.length,0);

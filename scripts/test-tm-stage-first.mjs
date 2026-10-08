@@ -18,7 +18,8 @@ async function scenario(name, options = {}) {
   const ctx = vm.createContext({
     sleep: async () => {},
     captureLiveUpdate: () => {}, // The observer has independent ownership/count/privacy tests.
-    VERSION: '6.2.20', IMAGE_UPLOAD_TOTAL_BUDGET_MS: 24000,
+    VERSION: '6.2.20', IMAGE_UPLOAD_TOTAL_BUDGET_MS: 24000, IMAGE_UPLOAD_MAX_BUDGET_MS: 48000,
+    recentFullCaptureEligible:()=>false,retainImageForGalleryUpload:()=>false,
     ACS_MEDIA_RECOVERY_REVISION:'20261008-acs-viewer-upload-v1',
     location: { href: 'https://pubs.acs.org/doi/' + doi },
     FIGURE_STAGE_ENDPOINT: '/api/article-figures/stage',
