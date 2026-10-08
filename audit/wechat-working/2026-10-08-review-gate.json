@@ -1,6 +1,6 @@
 {
   "date": "2026-10-08",
-  "revision": "2026-10-08-r4",
+  "revision": "2026-10-08-r5",
   "articleCount": 2,
   "selectionDois": [
     "10.1021/jacs.6c14748",
@@ -9,14 +9,14 @@
   "textReview": "pass",
   "imageReview": "pass",
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-08-r4-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-08-r4-images-only.md"
+    "textOnly": "audit/wechat-working/2026-10-08-r5-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-08-r5-images-only.md"
   },
   "sources": [
     {
       "path": "public/wechat-featured/2026-10-08.json",
-      "blobSha": "af4fa4a9d3c7f70777c3a5b36da68e292784c1ec",
-      "sha256": "14a594cf09fd65638b12362a58f8229dade324f1aaf37222fb1696ee96bf992d"
+      "blobSha": "ba64a482a884e27fec9464c1de4f0434f70393a6",
+      "sha256": "a084c90c38f911a678f39934290704112f8094302663b0ccc73d8a9ac10c3766"
     },
     {
       "path": "public/wechat-retrospective/os1-multicentred-sulfur-20261008.json",
@@ -25,18 +25,18 @@
     },
     {
       "path": "public/wechat-editions/2026-10-08.json",
-      "blobSha": "5add45a9e88d99ddedc4949eea966f1473c4cef2",
-      "sha256": "c697989374191b2fa9262f421f2a0d2944e6020d07a23e0b4121a51252bb3fa9"
+      "blobSha": "bc17f4a15285450acc1e12ec3b8b8ab76e501f9b",
+      "sha256": "9bf2a99728c565dec4edbceffa316097ae5d1e63dbb187d1b49500333343a3ea"
     },
     {
-      "path": "audit/wechat-working/2026-10-08-r4-text-only.md",
-      "blobSha": "144de8b1a65786e6c0ebdbdf72b22a1f2f8c98c6",
-      "sha256": "0ce3bf938f8358502c9fbf3c990cc93847e238d487b997d70a39d08bdbc48551"
+      "path": "audit/wechat-working/2026-10-08-r5-text-only.md",
+      "blobSha": "bfa132372e79bfdc96b09fdead7c817e9a14bb72",
+      "sha256": "d364d8be41e6e051ed6684d75441a649755a0e494cd3b231b771c8682f9c066d"
     },
     {
-      "path": "audit/wechat-working/2026-10-08-r4-images-only.md",
-      "blobSha": "bc2bac962126e80778f7875d9f43eaf33e17cb9d",
-      "sha256": "20a830fefa4e3fe7ecb73257fc0bb54edd614c8c7d7cc8fe581a702171552247"
+      "path": "audit/wechat-working/2026-10-08-r5-images-only.md",
+      "blobSha": "bb21518c18d8ae328a37e722ce21c96ee8ba15ed",
+      "sha256": "c939ca08e988d87e3309c59d0e0decfe2709a71ee43388b270982244db4d9ec4"
     }
   ],
   "assets": [
@@ -181,9 +181,9 @@
       "height": 582
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-08-r4/jacs-cover-native-safe.png",
-      "blobSha": "0ea088b489d9a7c0d14fb54eceab85b3abd5e4d0",
-      "sha256": "883837de809bf0ad5e4a1c5636c91842a2e74ce36319e7e5693a5ec545fbeff7",
+      "path": "public/wechat-assets/reviewed/2026-10-08-r5/jacs-cover-native-safe-clean.png",
+      "blobSha": "fd585e378c705d79c3ed500da7b4b5ee5ef6e036",
+      "sha256": "99d3c4901d0f7ee173526bca7f310dc6328cd4973ba8523cf8262304598a0b07",
       "width": 1880,
       "height": 800
     },
@@ -307,6 +307,16 @@
     "nativeFirstLineOverWhiteFix": "native glyphs begin near original y525; dark now starts y492",
     "headerSafeMargin": "header moved down 26 original pixels",
     "chemistry": "uniformly resampled verified original; no generated atoms or bonds",
+    "imageReview": "pass: actual output checked for crop, preservation and separated title region",
+    "textReview": "pass: article prose and headings are unchanged from reviewed R3",
+    "retrospective": "unchanged",
+    "draftTransport": "not yet run"
+  },
+  "reviewNotesR5": {
+    "actualNativeMobileScreenshot": "2026-10-08 user screenshot, R3 visually failed",
+    "nativeFirstLineOverWhiteFix": "native glyphs begin near original y525; dark now starts y492",
+    "headerSafeMargin": "header moved down 26 original pixels",
+    "chemistry": "resampled verified original; top ghost strips removed outside chemistry; no generated bonds",
     "imageReview": "pass: actual output checked for crop, preservation and separated title region",
     "textReview": "pass: article prose and headings are unchanged from reviewed R3",
     "retrospective": "unchanged",
