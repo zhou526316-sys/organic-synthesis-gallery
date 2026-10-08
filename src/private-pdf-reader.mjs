@@ -370,6 +370,10 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
       this.refreshPromise = null;
       this.totalFetched = 0;
       this.warmup = warmup;
+      // PDF.js sometimes leaves loadingTask.promise unsettled after destroy().
+      // Expose an independent terminal error signal to the page controller.
+      this.failed = new Promise((_, reject) => { this.rejectFailure = reject; });
+      this.failed.catch(() => {}); // protect errors before the reader awaits the race
     }
     async refreshUrl() {
       if (!this.refreshPromise) {
@@ -450,6 +454,7 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
     fail(error) {
       if (rangeFailure || destroyed) return;
       rangeFailure = error;
+      this.rejectFailure(error);
       void loadingTask?.destroy().catch(() => {});
       this.abort();
     }
@@ -754,7 +759,7 @@ async function start() {
         await render();
       })();
       if (rangeMode) {
-        await Promise.race([firstPageJob, new Promise((_,reject)=>{
+        await Promise.race([firstPageJob, activeRangeTransport.failed, new Promise((_,reject)=>{
           firstPageTimer = window.setTimeout(()=>reject(new Error('pdf_first_page_timeout')),FIRST_PAGE_TIMEOUT_MS);
         })]);
       } else {
@@ -765,7 +770,7 @@ async function start() {
     }
   } catch (error) {
     rangeWarmup?.abort();
-    if (error?.message === 'pdf_first_page_timeout') {
+    if (rangeFailure || error?.message === 'pdf_first_page_timeout') {
       renderSequence += 1;
       renderTask?.cancel();
       renderTask = null;
