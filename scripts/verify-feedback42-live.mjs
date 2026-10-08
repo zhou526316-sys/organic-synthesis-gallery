@@ -58,6 +58,7 @@ async function verify(width, height, expectedPlacement) {
         // remote element IDs when the gallery rerenders asynchronously.
         host.shadowRoot.querySelector('button[data-action="status"]').click();
         await nextFrame();
+        await nextFrame();
         if (!host.isConnected) continue;
         const panel = host.shadowRoot.querySelector('.drawer');
         const currentTrigger = host.shadowRoot.querySelector('button[data-action="status"]');
@@ -68,6 +69,7 @@ async function verify(width, height, expectedPlacement) {
         const bottom = top + vh;
         return {
           attempt, expectedPlacement, actualPlacement: panel.dataset.placement || '',
+          anchorState: panel.dataset.anchor || '',
           menuTop: menu.top, menuBottom: menu.bottom,
           triggerTop: anchor.top, triggerBottom: anchor.bottom,
           viewportTop: top, viewportBottom: bottom,
@@ -83,6 +85,20 @@ async function verify(width, height, expectedPlacement) {
     const photo = join(process.env.RUNNER_TEMP || tmpdir(),
       `feedback42-live-${width}-${expectedPlacement}.png`);
     await page.screenshot({ path: photo, timeout: 12000 }).catch(() => {});
+    console.log('LIVE_FEEDBACK42_PROBE', JSON.stringify({ width, height, ...result, interceptedWrites }));
+    if (!result.error && result.actualPlacement !== expectedPlacement) {
+      const assets = await page.evaluate(async () => {
+        const scripts = [...document.querySelectorAll('script[src]')].map(el => el.src);
+        const latest = scripts.find(url => /\\/assets\\//.test(url)) || scripts[0] || '';
+        try {
+          const body = latest ? await fetch(latest, { cache: 'no-store' }).then(r => r.text()) : '';
+          return { latestScript: latest, scriptLength: body.length,
+            containsNewPlacementCode: body.includes('dataset.placement'),
+            containsNewVisualViewport: body.includes('visualViewport') };
+        } catch (error) { return { latestScript: latest, error: String(error) }; }
+      });
+      console.log('LIVE_FEEDBACK42_BUNDLE', JSON.stringify(assets));
+    }
     assert.ok(!result.error, result.error || 'Unexpected live QA failure');
     assert.equal(result.actualPlacement, expectedPlacement,
       'The LIVE deployed menu lacks the expected PR #419 placement');
