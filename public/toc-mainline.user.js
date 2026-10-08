@@ -6432,6 +6432,118 @@ function embeddedJobDois(value) {
     return body;
   }
 
+  var OWNER_PDF_REPLAY_PREFIX='osg-toc-v6:owner-private-pdf-upload-replay-v1:';
+  var ownerPdfReplayBusy=false;
+  function pendingOwnerPdfKeys(){
+    try{return (typeof GM_listValues==='function'?GM_listValues():[])
+      .filter(function(k){return String(k).indexOf(OWNER_PDF_REPLAY_PREFIX)===0;}).slice(0,20);}
+    catch(_){return [];}
+  }
+  function privatePdfBufferBase64(buffer){
+    var bytes=new Uint8Array(buffer),parts=[];
+    for(var i=0;i<bytes.length;i+=8192)parts.push(String.fromCharCode.apply(null,bytes.subarray(i,i+8192)));
+    return btoa(parts.join(''));
+  }
+  async function retainOwnerPdfAfterUploadFailure(job,pdf,error){
+    if(!recentFullCaptureEligible(job)||!job.capturePrivatePdf||controllerPaused()
+      ||!pdf||!pdf.buffer||!privatePdfBytesValid(pdf.buffer))return false;
+    if(Number(error&&error.httpStatus||0)>0)return false;
+    var reason=String(error&&error.message||error||'');
+    if(!/timeout|failed to fetch|networkerror|gm_request|transport_failed|budget_exhausted/i.test(reason)
+      ||/cancelled|unbound|stale|permission|user_aborted|mismatch/i.test(reason))return false;
+    var doi=normalizeDoi(job.doi),buffer=pdf.buffer,bytes=Number(buffer.byteLength||0);
+    if(!doi||bytes<1024||bytes>8*1024*1024)return false;
+    var key=OWNER_PDF_REPLAY_PREFIX+encodeURIComponent(doi);
+    try{
+      var existing=GM_getValue(key,null);
+      if(existing&&Number(existing.byteLength||0)>=bytes)return true;
+      var all=pendingOwnerPdfKeys(),total=all.reduce(function(sum,k){var row=GM_getValue(k,null);return sum+Number(row&&row.base64&&row.base64.length||0);},0);
+      if((!existing&&all.length>=8)||total-Number(existing&&existing.base64&&existing.base64.length||0)+Math.ceil(bytes*4/3)>24*1024*1024)return false;
+      var digest=await crypto.subtle.digest('SHA-256',buffer);
+      var sha=[...new Uint8Array(digest)].map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+      var raw=privatePdfBufferBase64(buffer);
+      GM_setValue(key,{revision:'20261008-owner-pdf-gallery-retry-v1',doi:doi,
+        addedDate:String(job.addedDate||''),publisher:String(job.publisher||publisherForDoi(doi)),
+        articleUrl:String(location.href||''),sourceUrl:String(pdf.sourceUrl||''),
+        byteLength:bytes,sha256:sha,base64:raw,createdAt:Date.now(),attempts:0,nextAt:Date.now()+15000});
+      return true;
+    }catch(_){return false;}
+  }
+  async function replayOneOwnerPdf(){
+    if(!isGalleryPage()||ownerPdfReplayBusy||GM_getValue(ACTIVE_JOB_KEY,null))return false;
+    var lease=privatePdfLease();if(!lease)return false;
+    var keys=pendingOwnerPdfKeys();if(!keys.length)return false;
+    ownerPdfReplayBusy=true;
+    var lockKey=P+'owner-pdf-replay-lock-v1',owner=CONTROLLER_ID+':owner-pdf',key='',row=null;
+    try{
+      var lock=GM_getValue(lockKey,null);
+      if(lock&&lock.owner!==owner&&Number(lock.expiresAt||0)>Date.now())return false;
+      GM_setValue(lockKey,{owner:owner,expiresAt:Date.now()+150000});
+      await sleep(80);
+      if((GM_getValue(lockKey,{})||{}).owner!==owner)return false;
+      keys.sort(function(a,b){return Number((GM_getValue(a,{})||{}).createdAt||0)-Number((GM_getValue(b,{})||{}).createdAt||0);});
+      key=keys.find(function(k){var v=GM_getValue(k,null);return v&&Number(v.nextAt||0)<=Date.now();})||'';
+      if(!key)return false;
+      row=GM_getValue(key,null);
+      if(!row||!row.doi||!row.base64||!row.sha256||!row.sourceUrl||!row.articleUrl
+        ||row.addedDate<RECENT_FULL_CAPTURE_CUTOFF||row.byteLength>8*1024*1024)return false;
+      var queue=await getJson(QUEUE_URL+'?owner-pdf-replay='+Date.now());
+      if(!queue||!Array.isArray(queue.articles)||!queue.articles.some(function(x){
+        return normalizeDoi(x.doi)===row.doi&&recentFullCaptureEligible(x);
+      }))return false;
+      // Only a positive owner-lease inventory status can authorize a new write.
+      var inventory=await inventoryReadMetadataJson({method:'POST',url:PRIVATE_PDF_INVENTORY_ENDPOINT,
+        timeout:20000,headers:{'content-type':'application/json',authorization:'Bearer '+lease.token},
+        data:JSON.stringify({dois:[row.doi]})},'owner_pdf_inventory');
+      var state=inventory&&inventory.complete===true&&Array.isArray(inventory.items)
+        &&inventory.items.length===1&&normalizeDoi(inventory.items[0].doi)===row.doi
+        ?String(inventory.items[0].status||''):'unknown';
+      if(state==='ready'){GM_deleteValue(key);return true;}
+      if(state!=='missing')return false;
+      var binary=atob(row.base64),bytes=new Uint8Array(binary.length);
+      for(var i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+      if(bytes.byteLength!==Number(row.byteLength||0)||!privatePdfBytesValid(bytes.buffer))return false;
+      var hash=await crypto.subtle.digest('SHA-256',bytes.buffer);
+      var digest=[...new Uint8Array(hash)].map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+      if(digest!==row.sha256)return false;
+      var url=new URL(PRIVATE_PDF_CAPTURE_ENDPOINT);
+      url.searchParams.set('doi',row.doi);url.searchParams.set('publisher',row.publisher);
+      url.searchParams.set('articleUrl',row.articleUrl);url.searchParams.set('sourceUrl',row.sourceUrl);
+      url.searchParams.set('versionKind','unknown');url.searchParams.set('controllerRevision',CONTROLLER_REVISION);
+      var abort=new AbortController(),timer=setTimeout(function(){abort.abort();},90000),response;
+      try{
+        response=await fetch(url.href,{method:'POST',mode:'cors',credentials:'omit',cache:'no-store',
+          signal:abort.signal,headers:{'content-type':'application/pdf',authorization:'Bearer '+lease.token},body:bytes.buffer});
+      }finally{clearTimeout(timer);}
+      var receipt={};try{receipt=await response.json();}catch(_){}
+      if(!response.ok||receipt.stored!==true||normalizeDoi(receipt.doi)!==row.doi
+        ||receipt.contentHash!==row.sha256||Number(receipt.byteLength||0)!==row.byteLength)
+        throw new Error('owner_pdf_gallery_receipt_unconfirmed_'+response.status);
+      GM_deleteValue(key);
+      GM_setValue(P+'owner-pdf-replay-last-receipt',{doi:row.doi,at:Date.now(),stored:true});
+      return true;
+    }catch(error){
+      if(key&&row){
+        var current=GM_getValue(key,null);
+        if(current&&current.createdAt===row.createdAt){
+          current.attempts=Number(current.attempts||0)+1;
+          current.nextAt=Date.now()+Math.min(1800000,30000*Math.pow(2,Math.min(6,current.attempts-1)));
+          GM_setValue(key,current);
+        }
+      }
+      return false;
+    }finally{
+      var held=GM_getValue(lockKey,null);if(held&&held.owner===owner)GM_deleteValue(lockKey);
+      ownerPdfReplayBusy=false;
+    }
+  }
+  function startOwnerPdfReplaySender(){
+    if(!isGalleryPage()||globalThis.__OSG_OWNER_PDF_REPLAY_SENDER__)return;
+    globalThis.__OSG_OWNER_PDF_REPLAY_SENDER__=true;
+    setTimeout(function(){replayOneOwnerPdf().catch(function(){});},23000);
+    setInterval(function(){replayOneOwnerPdf().catch(function(){});},60000);
+  }
+
   async function maybeCapturePrivatePdf(job,trace) {
     if(!job||!currentCaptureJob(job)||!privatePdfCaptureEligibleByAddedDate(job))return null;
     var serverStatus=String(job.privatePdfServerStatus||'unknown');
