@@ -198,7 +198,7 @@ try{
     assert.ok(source.includes("message:'official='+String(toc.length)+';persisted=1'"));
     assert.ok(source.includes("if(job.publisher!=='ccs')rows.sort"));
     assert.ok(source.includes("stage:'ccs_figure_label',event:'conflict',status:'rejected'"));
-    assert.ok(source.includes("allowFigureOne:publisherForDoi(doi)!=='ccs'"));
+    assert.ok(source.includes("allowFigureOne:!official"));
     assert.ok(source.includes("allowFigureOne && publisher !== 'ccs'"));
   });
 
