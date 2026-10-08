@@ -1,0 +1,29 @@
+name: Tampermonkey Oct-1 postdeploy installer readback
+on:
+  workflow_run:
+    workflows: ['Deploy Worker frontend assets']
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  readback:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Read-only API and Worker installer version plus private inventory access guard
+        run: |
+          node --check scripts/verify-tm-oct1-installer-live.mjs
+          node scripts/verify-tm-oct1-installer-live.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-oct1-installer-production-readback
+          path: ${{ runner.temp }}/tm-oct1-live-acceptance.json
+          retention-days: 7

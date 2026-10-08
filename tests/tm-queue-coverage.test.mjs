@@ -40,7 +40,7 @@ await test('40 attempts with27partial11failed2blocked does not report0remaining'
   x.T.coverageRemaining(r,v.job,result);r.summary.results.push(result);
  }
  x.T.coverageStats(r);assert.equal(r.summary.unresolvedCount,40);assert.equal(r.summary.fullyResolved,0);assert.equal(r.summary.blockedCount,40);
- x.store.set(P+'last-run-summary',{...r.summary,queueCoverageRevision:'v6',phase:'blocked_remaining'});
+ x.store.set(P+'last-run-summary',{...r.summary,queueCoverageRevision:'v6',scopeRevision:'20261008-added-date-only-v1',scopeCount:40,phase:'blocked_remaining'});
  const snapshot=x.T.captureLiveSnapshot(x.ctx.Date.now());assert.equal(snapshot.state,'blocked_remaining');
  const t=x.T.captureLiveText(snapshot);
  assert.match(t.gaps,/未补齐 40/);assert.match(t.state,/未补齐/);
@@ -105,8 +105,8 @@ await test('Retry-After on HTML503 is preserved, not bypassed',async()=>{
 await test('private evidence inventory401 does not block the queue',async()=>{
  const ar=[article(1)],x=h(queue(ar),inv(ar),{evidenceError:true});await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(s.inventoryUnknown,0);assert.equal(s.phase,'all_resolved');assert.equal(x.opened.length,0);
 });
-await test('explicit body figure gap opens one publisher task and resolves on completion',async()=>{
- const ar=[article(1)],i=inv(ar);i.figures.items[0].expectedFigureCount=3;let n=0;
- const x=h(queue(ar),i,{result:j=>{n++;return {status:'success',toc:{status:'already_available'},figures:{discovered:3,stored:3,failed:0,items:[{...fig(j.doi,3),status:'staged'}]},fulltext:{status:'not_requested'}}}});await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(n,1);assert.equal(s.total,1);assert.equal(s.fullyResolved,1);assert.equal(s.unresolvedCount,0);
+await test('existing TOC gap opens once and captures the incomplete body figures in that visit',async()=>{
+ const ar=[article(1)],i=inv(ar);i.media.items[0].tocStored=false;i.figures.items[0].expectedFigureCount=3;let n=0;
+ const x=h(queue(ar),i,{result:j=>{n++;return {status:'success',toc:{status:'stored',kind:'official'},figures:{discovered:3,stored:3,failed:0,items:[{...fig(j.doi,3),status:'staged'}]},fulltext:{status:'not_requested'}}}});await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(n,1);assert.equal(s.total,1);assert.equal(s.fullyResolved,1);assert.equal(s.unresolvedCount,0);
 });
 console.log(JSON.stringify({passed,revision:'20261005-queue-coverage-v7',realPublisherRequests:0,productionWrites:0}));

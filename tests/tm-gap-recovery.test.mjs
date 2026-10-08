@@ -4,8 +4,8 @@ import vm from 'node:vm';
 import {test} from 'node:test';
 
 const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
-assert.ok(source.includes("// @version      6.2.49"));
-assert.ok(source.includes("var INSTALL_REVISION = '6.2.49';"));
+assert.ok(source.includes("// @version      6.2.51"));
+assert.ok(source.includes("var INSTALL_REVISION = '6.2.51';"));
 assert.ok(source.includes("GAP_RECOVERY_REVISION = '20261008-gap-recovery-v1'"));
 assert.ok(source.includes("FIGURE_ONE_QUEUE_POLICY_REVISION = '20261008-verified-figure1-complete-v2'"));
 
@@ -55,9 +55,11 @@ test('verified Figure 1 closes primary-visual gap across journals',()=>{
   assert.equal(accept({journal:'JACS'},false),false);
 });
 
-test('known partial figure coverage is a real standalone obligation',()=>{
+test('partial figure coverage is handled only on a genuine publisher visit',()=>{
   assert.ok(source.includes('var explicitFigureGap=expected>0&&knownCount<expected;'));
-  assert.ok(source.includes('captureFigures:Boolean(explicitFigureGap)'));
+  assert.ok(source.includes('captureFigures:false,'));
+  assert.ok(source.includes('opportunisticFigures:Boolean(bundleVisit||tocNeeded)'));
+  assert.ok(source.includes('capturePrivatePdf:Boolean(pdfNeeded),privatePdfServerStatus:ownerPdfStatus'));
   assert.ok(source.includes('if(job.captureToc||job.captureFigures||job.captureEvidence||job.capturePrivatePdf)'));
   assert.ok(source.includes('job.mediaNeed=captureMediaNeed(job);'));
   assert.ok(source.includes("job.state=job.captureToc?'no_visual':job.captureFigures?'figure_gap'"));

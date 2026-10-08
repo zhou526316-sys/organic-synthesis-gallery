@@ -186,9 +186,9 @@ try{
     !source.includes('remainingAvailable.length>0||urgentEvidencePending'));
 
   const combinedPlan=await page.evaluate(()=>{
-    const q={latestAddedDate:'2026-09-25',webpageDoiCount:2,mediaGeneration:1790082000000,articles:[
-      {doi:'10.1002/anie.5617321',journal:'Angew',addedDate:'2026-09-24'},
-      {doi:'10.1021/jacs.6c10009',journal:'JACS',addedDate:'2026-09-25'},
+    const q={latestAddedDate:'2026-10-02',webpageDoiCount:2,mediaGeneration:1790082000000,articles:[
+      {doi:'10.1002/anie.5617321',journal:'Angew',addedDate:'2026-10-02'},
+      {doi:'10.1021/jacs.6c10009',journal:'JACS',addedDate:'2026-10-02'},
     ]};
     const media={items:{
       '10.1002/anie.5617321':{toc:{available:false},figures:{available:false,figures:[]}},
@@ -203,7 +203,7 @@ try{
       evidenceDois:evidence.map(r=>r.doi)
     };
   });
-  test('historical missing-TOC media trigger keeps body discovery opportunistic in the same visit',
+  test('recent missing-TOC media trigger keeps body discovery opportunistic in the same visit',
     combinedPlan.wiley.mediaNeed==='toc'&&combinedPlan.wiley.captureToc===true&&combinedPlan.wiley.captureFigures===false&&combinedPlan.wiley.opportunisticFigures===true);
   test('missing evidence never creates an evidence-only DOI job',combinedPlan.evidenceDois.length===0);
   test('scheduler only adds missing evidence opportunistically to an existing publisher visit',
