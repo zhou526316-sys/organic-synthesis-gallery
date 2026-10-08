@@ -9,6 +9,7 @@ on:
       - tests/tm-gap-recovery.test.mjs
       - tests/tm-missing-only.test.mjs
       - tests/tm-queue-coverage.test.mjs
+      - tests/tm-manual-resume.test.mjs
       - tests/tm-throughput-truth.test.mjs
       - .github/workflows/tm-gap-recovery.yml
 permissions:
