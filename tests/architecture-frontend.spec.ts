@@ -177,12 +177,31 @@ for (const [device, width, height] of [
     await button.evaluate(node => (node as HTMLButtonElement).click());
     await expect(drawer).toBeVisible();
     await expect(drawer).toHaveAttribute('data-placement', 'above');
+    // The former page could calculate a valid menu rectangle but still paint
+    // nothing: content-visibility:auto on the containing card clipped the
+    // absolute-positioned status editor outside its card boundary.
+    const visibleMenu = await actions.evaluate(host => {
+      const card = (host as HTMLElement).closest('.card')!;
+      const panel = (host as HTMLElement).shadowRoot!.querySelector<HTMLElement>('.drawer')!;
+      const rect = panel.getBoundingClientRect();
+      const x = Math.max(5, Math.min(innerWidth - 5, rect.left + Math.min(85, rect.width / 2)));
+      const y = Math.max(5, Math.min(innerHeight - 5, rect.top + Math.min(75, rect.height / 2)));
+      return {
+        containment: getComputedStyle(card).contentVisibility,
+        topmost: document.elementFromPoint(x, y) === host,
+      };
+    });
+    expect(visibleMenu.containment).toBe('visible');
+    expect(visibleMenu.topmost).toBe(true);
     const upper = await geometry();
     expect(upper.above).toBeGreaterThan(upper.below);
     expect(upper.popupBottom).toBeLessThanOrEqual(upper.triggerTop - 5);
     expect(upper.popupTop).toBeGreaterThanOrEqual(upper.viewportTop + 6);
 
     await actions.locator('button[data-action="close"]').evaluate(node => (node as HTMLButtonElement).click());
+    await expect.poll(() => actions.evaluate(host =>
+      getComputedStyle((host as HTMLElement).closest('.card')!).contentVisibility
+    )).toBe('auto');
     await moveTrigger(Math.round(height * 0.18));
     await button.evaluate(node => (node as HTMLButtonElement).click());
     await expect(drawer).toBeVisible();
