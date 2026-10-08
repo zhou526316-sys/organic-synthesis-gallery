@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-08T00:44:07.464Z",
-  "requestedBy": "postrelease-20261008-0800-887cards",
-  "publicationSlot": "2026-10-08T08:00:00+08:00",
-  "baselineMainSha": "8a9e01c02751576f9c51b2fb38855c08bfa5715e",
-  "reason": "After actual fixed-slot writer run 37709035758 successfully committed 28 approved new records (859 to 887) and refreshed TOC demand, recompute complete DOI-union audit from current main for post-release semantic quality. This is discovery/quality follow-up only, not a second slot or new admission request. Preserve all source checks, activeFrom, 3-day+7-day rescues and verifiedThrough gap; do not change any production literature, marker, review decisions, TOC media, or pending backlog."
+  "requestedAt": "2026-10-08T23:07:20.000Z",
+  "requestedBy": "prepublish-primary-20261009-0800",
+  "publicationSlot": "2026-10-09T08:00:00+08:00",
+  "baselineMainSha": "965415b14a2cb275f244a1e779fda3f28dd91ea5",
+  "reason": "The sole daily 08:00 prepublish review found no valid 06:55 same-slot machine audit: main still carries generatedAt 2026-10-08T02:20:17.569Z with endDate 2026-10-08, while the required 2026-10-09 snapshot and same-slot run are absent. Run the canonical 3-day Asia/Shanghai discovery window plus 7-day safety scan, multi-ISSN Crossref online/published/created, OpenAlex and created/deposit rescue with verifiedThrough catch-up. Refresh audit/latest.json and audit/unresolved-latest.json atomically for publicationSlot 2026-10-09T08:00:00+08:00; do not modify production literature, formal review, TOC media or schedules."
 }
