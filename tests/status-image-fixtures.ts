@@ -1,5 +1,8 @@
 import { expect, type Page, type BrowserContext, type Locator } from '@playwright/test';
 import { recordStatusNetwork } from './status-network-evidence';
+// The architecture Pages gate runs its isolated preview on 4174, while the
+// regular status-image suite defaults to 4173. Use the explicit test origin.
+const LOCAL_PREVIEW_BASE = String(process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4173').replace(/\/$/, '');
 export const KEY = 'organic-gallery-user-ui-v1';
 export const GIF = Buffer.from('R0lGODlheAA8AIEAAP8AAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQAKAAAACwAAAAAeAA8AAAIigABCBxIsKDBgwgTKlzIsKHDhxAjSpxIsaLFixgzatzIsaPHjyBDihxJsqTJkyhTqlzJsqXLlzBjypxJs6bNmzhz6tzJs6fPn0CDCh1KtKjRo0iTKl3KtKnTp1CjSp1KtarVq1izat3KtavXr2DDih1LtqzZs2jTql3Ltq3bt3Djyp1Lt67duzwDAgAh+QQBKAABACwAAAAAeAA8AIEAAP8AAAAAAAAAAAAIigABCBxIsKDBgwgTKlzIsKHDhxAjSpxIsaLFixgzatzIsaPHjyBDihxJsqTJkyhTqlzJsqXLlzBjypxJs6bNmzhz6tzJs6fPn0CDCh1KtKjRo0iTKl3KtKnTp1CjSp1KtarVq1izat3KtavXr2DDih1LtqzZs2jTql3Ltq3bt3Djyp1Lt67duzwDAgA7', 'base64');
 export const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64');
@@ -15,9 +18,9 @@ export async function isolate(context: BrowserContext): Promise<void> {
     if (url.startsWith('blob:') || url.startsWith('data:')) { await route.continue(); return; }
     const parsed = new URL(url);
     const api = parsed.pathname === '/api' || parsed.pathname.startsWith('/api/');
-    if (parsed.origin === 'http://127.0.0.1:4173' && !api && ['GET', 'HEAD'].includes(request.method())) { await route.continue(); return; }
+    if (parsed.origin === new URL(LOCAL_PREVIEW_BASE).origin && !api && ['GET', 'HEAD'].includes(request.method())) { await route.continue(); return; }
     const headers = {
-      'access-control-allow-origin': request.headers().origin || 'http://127.0.0.1:4173',
+      'access-control-allow-origin': request.headers().origin || LOCAL_PREVIEW_BASE,
       'access-control-allow-credentials': 'true',
       'access-control-allow-headers': request.headers()['access-control-request-headers'] || 'content-type, authorization',
       'access-control-allow-methods': 'GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS',
@@ -34,7 +37,7 @@ export async function open(page: Page, width = 390): Promise<Locator> {
   page.on('console', message => { if (message.text().startsWith('status-image-error')) console.log(message.text()); });
   await isolate(page.context());
   await page.setViewportSize({ width, height: 900 });
-  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  await page.goto(LOCAL_PREVIEW_BASE + '/', { waitUntil: 'domcontentloaded' });
   console.log('image capabilities', await page.evaluate(() => ({ secure: isSecureContext, digest: typeof crypto.subtle?.digest, database: typeof indexedDB.open, arrayBuffer: typeof Blob.prototype.arrayBuffer })));
   const actions = page.locator('gallery-paper-actions').first();
   await expect(actions).toBeVisible({ timeout: 30000 });
