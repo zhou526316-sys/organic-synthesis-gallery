@@ -10,7 +10,8 @@ import { buildLegacyTitlePresentation } from '../architecture/title-presentation
 import { loadScopeCorrections } from './lib/scope-corrections.mjs';
 import { isExcludedDoi } from '../shared/literature-policy.js';
 import { beijingDate } from '../shared/literature-lifecycle.mjs';
-import { isHotLandingEligible, hotLandingSortDate } from '../shared/literature-landing.mjs';
+import { isHotLandingEligible } from '../shared/literature-landing.mjs';
+import { compareDailyGalleryCards } from '../shared/daily-gallery-order.mjs';
 import { RESULT_WINDOW_SIZE } from '../shared/result-window.js';
 
 const ROOT = process.cwd();
@@ -109,10 +110,11 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   const hotCandidateDois = new Set([
     ...bundle.partitions.hot, ...bundle.partitions.future, ...bundle.partitions.date_unknown,
   ]);
+  // Sort BEFORE slicing the 24-card Hot head. Otherwise priority journals
+  // from one daily admission can fall off page one even if the UI resorts.
   const hotCandidateRecords = bundle.records
     .filter(row => hotCandidateDois.has(row.doi) && isHotLandingEligible(row, asOfDate))
-    .sort((a, b) => hotLandingSortDate(b, asOfDate).localeCompare(hotLandingSortDate(a, asOfDate))
-      || a.doi.localeCompare(b.doi));
+    .sort(compareDailyGalleryCards);
   const hotFallbackBody = {
     schema: 'gallery-hot-fallback-v1',
     catalogId: bundle.catalog.recordSetHash,
