@@ -2411,7 +2411,7 @@ function embeddedJobDois(value) {
         // Silverchair also renders DOI-associated visuals as CSS background
         // images. Only read URLs embedded in the ACTUAL article block.
         var inline=String(node.getAttribute&&node.getAttribute('style')||'');
-        var css=inline.match(/background-image\\s*:\\s*url\\(\\s*["']?([^"'\\)\\s]+)/i);
+        var css=inline.match(/background-image\s*:\s*url\(\s*["']?([^"')\s]+)/i);
         if(css){var url=normalizeUrl(css[1],base);if(url&&urls.indexOf(url)<0)urls.push(url);}
         urls.forEach(function(url,rank){
           if(!mediaBound(url)||seen.has(url))return;
