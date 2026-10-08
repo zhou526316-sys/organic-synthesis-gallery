@@ -3718,7 +3718,8 @@ function embeddedJobDois(value) {
 
   function rasterizeVerifiedFigureOne(image,trace) {
     if(!image||image.contentType!=='image/svg+xml')return Promise.resolve(image);
-    if(!svgQuality(image).usable)return Promise.reject(new Error('figure1_svg_unsafe_or_invalid'));
+    var verdict=svgQuality(image);
+    if(!verdict||!verdict.usable)return Promise.reject(new Error('figure1_svg_unsafe_or_invalid'));
     return new Promise(function(resolve,reject){
       var probe=new Image(),settled=false;
       var timer=setTimeout(function(){finish(new Error('figure1_svg_render_timeout'));},3500);
