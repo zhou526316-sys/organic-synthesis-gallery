@@ -1,9 +1,9 @@
 {
-  "requestId": "wechat-2026-10-08-r8-restore-full-native-title-no-banner",
+  "requestId": "wechat-2026-10-08-r9-max-safe-original-TOC-full-native-title",
   "requestedAt": "2026-10-08T14:06:00+08:00",
   "publicationDate": "2026-10-08",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-08-r8",
+  "editorialRevision": "2026-10-08-r9",
   "approvedGate": "audit/wechat-working/2026-10-08-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -14,6 +14,6 @@
   "draftOnly": true,
   "requireDraftGetReadback": true,
   "publicSendAuthorized": false,
-  "prePublishQA": "audit/wechat-working/2026-10-08-r8-native-title-qa.json",
-  "reason": "User explicitly requires reinstating ALL native title prefixes '有机合成文献日报｜10.08｜今日精选｜JACS：' followed by the Chinese paper title; not paper-only. R7 audited original graphical abstract remains large and no banner text is added to cover. Preserve 2 articles, 32 body images and retrospective cover. One same-media draft/update and mandatory draft/get, NO public send."
+  "prePublishQA": "audit/wechat-working/2026-10-08-r9-cover-qa.json",
+  "reason": "User requested self-reviewed additional TOC enlargement without asking for further corrections. Verified original JACS TOC now 792x492, +11.46% area relative to 760x460 R8; 2.35:1 and central 1:1 mobile crop proofs and two-line title stress checked. KEEP exact complete native article title, header-free white TOC, source-exact chemistry, all body images and Nature Catalysis second article. Update SAME existing media_id once; draft/get mandatory. No public send."
 }
