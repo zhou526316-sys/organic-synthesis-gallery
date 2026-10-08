@@ -362,7 +362,7 @@ try{
   const pdf=page.locator('.card a.private-pdf-button').first();
   const expected=new URL(await pdf.getAttribute('href'),base).searchParams.get('fallback');
   const target=await popup(page,pdf);assert.match(target.url(),/\/pdf\/?\?doi=/);
-  await target.getByText('该论文尚无已验证的私有 PDF。').waitFor();
+  await target.getByText(/该论文暂无可读取的私有 PDF/).waitFor();
   assert.equal(await target.locator('#publisher-fallback').getAttribute('href'),expected);
  });
  for(const [width,expected] of [[1280,24],[390,12]]){
