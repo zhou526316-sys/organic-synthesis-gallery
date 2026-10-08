@@ -1,6 +1,6 @@
 {
-  "requestId": "wechat-daily-2026-10-08-r1-reviewed-two-card-bundle",
-  "requestedAt": "2026-10-08T04:22:00Z",
+  "requestId": "wechat-daily-2026-10-08-r1-scheme-gate-fix-retry1",
+  "requestedAt": "2026-10-08T04:15:01Z",
   "publicationDate": "2026-10-08",
   "action": "sync_daily_draft",
   "editorialRevision": "2026-10-08-r1",
@@ -13,5 +13,5 @@
   "draftOnly": true,
   "requireDraftGetReadback": true,
   "review": "audit/wechat-working/2026-10-08-r1-mobile-preflight.json",
-  "reason": "Explicitly selected JACS daily and Nature Catalysis OS1 retrospective; 34 source-locked images, both text and image gates passed, mobile 390/690 preflight passed. Write a single two-card WeChat draft and read back. Do not publicly send."
+  "reason": "One controlled retry after first run failed closed before any WeChat write: publisher caption validator omitted correct JACS Scheme references. Updated validator now recognizes original Fig/Scheme/Table/SI labels; all 32 body captions independently matched. Source manifests and all 34 image fingerprints unchanged; draft-only, no public send."
 }
