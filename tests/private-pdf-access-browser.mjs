@@ -226,12 +226,20 @@ async function replaceToken(page,value,event=true){
 }
 function localCardPdf(){
  const stream='q 0.2 0.5 0.8 rg 20 20 180 180 re f Q\n' + ('% range-stream-padding 0123456789abcdef\n'.repeat(42000));
- const objects=['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Kids [3 0 R] /Count 1 >>','<< /Type /Page /Parent 2 0 R /MediaBox [0 0 240 240] /Resources << >> /Contents 4 0 R >>','<< /Length '+Buffer.byteLength(stream)+' >>\nstream\n'+stream+'endstream'];
- let body='%PDF-1.7\n% Gallery self-generated card fixture.\n% '+('fixture-padding '.repeat(80))+'\n';const offsets=[];
+ const second='q 0.8 0.2 0.4 rg 40 40 120 140 re f Q\n';
+ const objects=[
+   '<< /Type /Catalog /Pages 2 0 R >>',
+   '<< /Type /Pages /Kids [3 0 R 5 0 R] /Count 2 >>',
+   '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 240 240] /Resources << >> /Contents 4 0 R >>',
+   '<< /Length '+Buffer.byteLength(stream)+' >>\nstream\n'+stream+'endstream',
+   '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 240 240] /Resources << >> /Contents 6 0 R >>',
+   '<< /Length '+Buffer.byteLength(second)+' >>\nstream\n'+second+'endstream',
+ ];
+ let body='%PDF-1.7\n% Gallery self-generated two-page card fixture.\n% '+('fixture-padding '.repeat(80))+'\n';const offsets=[];
  for(let index=0;index<objects.length;index++){offsets.push(Buffer.byteLength(body));body+=(index+1)+' 0 obj\n'+objects[index]+'\nendobj\n';}
- const start=Buffer.byteLength(body);body+='xref\n0 5\n0000000000 65535 f \n';
+ const start=Buffer.byteLength(body);body+='xref\n0 7\n0000000000 65535 f \n';
  for(const offset of offsets)body+=String(offset).padStart(10,'0')+' 00000 n \n';
- return Buffer.from(body+'trailer\n<< /Size 5 /Root 1 0 R >>\nstartxref\n'+start+'\n%%EOF\n');
+ return Buffer.from(body+'trailer\n<< /Size 7 /Root 1 0 R >>\nstartxref\n'+start+'\n%%EOF\n');
 }
 const cardPdf=localCardPdf(),vaultBy=(page,name)=>page.getByTestId('pdf-vault-'+name);
 async function waitLocalStatus(page,status){await page.waitForFunction(status=>document.querySelector('[data-testid="pdf-vault-status"]')?.dataset.status===status,status);}
@@ -300,6 +308,9 @@ try{
   const rendered=await target.locator('#pdf-canvas').evaluate(canvas=>({page:canvas.dataset.renderedPage,width:canvas.width,height:canvas.height}));
   assert.equal(rendered.page,'1');assert.ok(rendered.width>0&&rendered.height>0);
   assert.ok(state.privateRangeCalls>=1);assert.ok(state.privateRangeCalls<=8);
+  assert.match(await target.locator('#page-count').textContent(),/1 \/ 2/);
+  await target.locator('#next').click();
+  await target.waitForFunction(()=>document.querySelector('#pdf-canvas')?.dataset.renderedPage==='2',undefined,{timeout:7000});
  });
  for(const capabilities of [[],['private_pdf_owner','private_pdf_capture']]){
   await test(capabilities.length?'capture-only account has no PDF read button or private lookup':'ordinary account hides PDF button and retains publisher original',async()=>{
