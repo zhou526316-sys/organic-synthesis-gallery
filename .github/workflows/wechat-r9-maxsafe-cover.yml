@@ -99,10 +99,25 @@ jobs:
             audit/wechat-working/crop-proofs/2026-10-08-r9/
           git diff --cached --name-only
           git commit -m 'editorial: enlarge original JACS TOC max safe, inspect dual mobile crops'
-          git fetch origin main
-          git rebase origin/main
-          git push origin HEAD:main
-          echo 'REVIEWED_IMAGE_SOURCE_COMMITTED; WECHAT NOT YET WRITTEN'
+          # Main is actively updated by independent Gallery/TOC workflows.
+          # A ref race after fetch is not a failed image QA: retry safely on
+          # latest main, but fail closed on conflicting editorial file edits.
+          for attempt in 1 2 3 4 5 6; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo 'Editorial source collision: refusing unsafe merge' >&2
+              exit 1
+            fi
+            if git push origin HEAD:main; then
+              echo 'REVIEWED_IMAGE_SOURCE_COMMITTED; WECHAT NOT YET WRITTEN'
+              exit 0
+            fi
+            echo "Main ref advanced after fetch, safely retrying push ($attempt/6)" >&2
+            sleep 2
+          done
+          echo 'Failed safe editorial push after six ref leases' >&2
+          exit 1
       - name: Provide visual evidence artifact
         if: always()
         uses: actions/upload-artifact@v4
