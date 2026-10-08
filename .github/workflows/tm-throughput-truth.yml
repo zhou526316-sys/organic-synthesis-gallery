@@ -35,7 +35,7 @@ jobs:
           node scripts/test-tm222-auto-report.mjs
           node scripts/validate-tm220-artifacts.mjs source
           git diff --check
-      - name: Build Bridge 2.2.67
+      - name: Build Bridge 2.2.68
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
@@ -46,8 +46,8 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.67' public/gallery-vpn-bridge.user.js
-          grep -F "var INSTALL_REVISION = '6.2.48';" public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.68' public/gallery-vpn-bridge.user.js
+          grep -F "var INSTALL_REVISION = '6.2.49';" public/gallery-vpn-bridge.user.js
       - uses: actions/upload-artifact@v4
         if: always()
         with:
