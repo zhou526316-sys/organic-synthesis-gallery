@@ -102,7 +102,7 @@ class GatewayTest(unittest.TestCase):
         gateway.QUOTA_DB = str(Path(cls.tmp.name) / "quota.sqlite3")
         cls.previous = http.client.HTTPSConnection
         http.client.HTTPSConnection = Backend
-        cls.server = ThreadingHTTPServer(("127.0.0.1", 0), gateway.Reader)
+        cls.server = gateway.BoundedServer(("127.0.0.1", 0), gateway.Reader)
         cls.thread = threading.Thread(target=cls.server.serve_forever, daemon=True)
         cls.thread.start()
 
