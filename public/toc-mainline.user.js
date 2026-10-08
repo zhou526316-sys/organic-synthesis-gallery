@@ -314,7 +314,7 @@
       started: s.runStartedAt ? new Date(s.runStartedAt).toLocaleTimeString() : '尚未开始本轮',
       last: s.lastAt ? new Date(s.lastAt).toLocaleTimeString() + ' · ' + captureLiveAgeText(s.ageSeconds) : '尚无采集进展',
       stale: s.active && s.ageSeconds >= 45 ? '一段时间没有新进展：可能正在等待网络或页面验证，不等于抓取失败。' : '',
-      error: lastError || '无', publication: s.publication, delivery: automaticReportDisplay()+(pendingImageTransferKeys().length?' · 待补传图片 '+pendingImageTransferKeys().length+' 张':'')
+      error: lastError || '无', publication: s.publication, delivery: automaticReportDisplay()+(pendingImageTransferKeys().length?' · 待补传图片 '+pendingImageTransferKeys().length+' 张':'')+(pendingOwnerPdfKeys().length?' · 待补传私人PDF '+pendingOwnerPdfKeys().length+' 篇':'')
     };
   }
 
@@ -5756,6 +5756,10 @@ function embeddedJobDois(value) {
       replayOneDeferredImage().catch(function(){});
       window.alert('已检查待补传图片。只有原 DOI 与存储回执符合要求时才会清除本地暂存。');
     });
+    GM_registerMenuCommand('使用 owner 授权补传本机暂存私人PDF', function () {
+      replayOneOwnerPdf().catch(function(){});
+      window.alert('已检查 owner 授权和云端 PDF 库存，仅确认真正缺失时上传；本机文件直到存储回执确认后才清除。');
+    });
     GM_registerMenuCommand('上传本地 TOC 日志', function () {
       uploadLocalDiagnostics().catch(function () {});
     });
@@ -6445,7 +6449,7 @@ function embeddedJobDois(value) {
     return btoa(parts.join(''));
   }
   async function retainOwnerPdfAfterUploadFailure(job,pdf,error){
-    if(!recentFullCaptureEligible(job)||!job.capturePrivatePdf||controllerPaused()
+    if(!recentFullCaptureEligible(job)||!job.capturePrivatePdf||controllerPaused()||!currentCaptureJob(job)
       ||!pdf||!pdf.buffer||!privatePdfBytesValid(pdf.buffer))return false;
     if(Number(error&&error.httpStatus||0)>0)return false;
     var reason=String(error&&error.message||error||'');
@@ -6612,6 +6616,9 @@ function embeddedJobDois(value) {
       }catch(error){
         lastError=error;
         if(Number(error&&error.httpStatus||0)===401)GM_deleteValue(PRIVATE_PDF_LEASE_KEY);
+        var kept=await retainOwnerPdfAfterUploadFailure(job,pdf,error);
+        pushTrace(trace,{stage:'private_pdf_gallery_retry',event:kept?'retained_locally':'not_retained',status:kept?'deferred':'info',
+          byteLength:Number(pdf&&pdf.byteLength||0),message:'owner_only=1;gallery_replay='+Number(kept)+';no_publisher_redownload=1'});
         pushTrace(trace,{stage:'private_pdf_upload',event:'receipt_failed',status:'failed',httpStatus:Number(error&&error.httpStatus||0),url:PRIVATE_PDF_CAPTURE_ENDPOINT,byteLength:pdf.byteLength,message:captureLiveError(error&&error.message||error)});
       }
     }
@@ -6782,6 +6789,7 @@ function embeddedJobDois(value) {
     mountCaptureLivePanel();
     startAutomaticCaptureReports();
     startImageOutboxSender();
+    startOwnerPdfReplaySender();
     var staleTakeover=retireStaleControllerState();
     if(staleTakeover.retired&&!controllerPaused()){
       badge('已自动淘汰旧 controller '+staleTakeover.observed+'；正在按最新规则重新生成缺项队列','#175cd3');
