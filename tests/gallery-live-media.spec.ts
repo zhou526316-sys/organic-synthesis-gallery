@@ -3,7 +3,7 @@ import { test, expect, type Page } from '@playwright/test';
 test.use({ serviceWorkers: 'block' });
 const GALLERY = 'https://gallery.gczhouwld.com';
 const API = 'https://api.gczhouwld.com';
-const LOCAL_PREVIEW = 'http://127.0.0.1:4173';
+const LOCAL_PREVIEW = 'http://127.0.0.1:4174';
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64');
 const OFFICIAL = '10.1021/acscatal.6c06476';
 const SCIENCE = '10.1126/science.aef3001';
