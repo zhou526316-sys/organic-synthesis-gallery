@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "beijingTime": "2026-10-09 18:16:50",
+  "task": "Organic Synthesis Gallery PDF startup throughput and read-only grant deployment",
+  "status": "deployed_and_verified_except_owner_authenticated_grant_and_real_campus_pdf_speed",
+  "performance": {
+    "pr": 449,
+    "mergedCommit": "196b2614a1810df15da1ef53575f4eeac91f6b68",
+    "logic": "For edge-verified PDF 512KiB–3MiB, render first page using independent PDF.js demand ranges rather than waiting for complete parallel 384KiB whole-file download; old non-edge verified and explicit full paths retained.",
+    "isolatedBrowserRun": 37914677651,
+    "isolatedBrowserCasesPassed": 32,
+    "isolatedBrowserCasesTotal": 32,
+    "delayedMiddlePageFixtureBytes": 2862127,
+    "artificialSlowMiddleDelayMs": 5500,
+    "observedFirstPageReadyMs": 564,
+    "realOwnerCampusNetworkAcceptance": false
+  },
+  "grant": {
+    "pr": 450,
+    "mergedCommit": "17bffaa8b37e82f7d581fb3a1b4d9d2467874d7a",
+    "permissionName": "private_pdf_read",
+    "otherCapabilitiesGranted": false,
+    "accountVerifiedInProduction": false,
+    "targetEmailRecordedInRepo": false,
+    "targetAccountGrantPerformed": false,
+    "trustedOwnerActionRequired": true,
+    "sitePath": "https://gallery.gczhouwld.com/private-pdf-owner-setup.html",
+    "ownerAuthentication": "bearer session and existing private_pdf_owner capability",
+    "targetVerification": "users.email AND user_email_verifications.email both match, unique record, verified timestamp>0",
+    "sharingLicenseConfirmedByOwner": false,
+    "transactionalAudit": true,
+    "revocationSupported": true,
+    "revokesIssuedRangeAccessByIndexedExists": true,
+    "includesExistingDownloadFeature": true,
+    "isolatedSecurityRun": 37914882885,
+    "isolatedSecurityConclusion": "success",
+    "publicUnauthorizedSmoke": {
+      "run": 37916507305,
+      "conclusion": "success",
+      "preflight": 204,
+      "unauthenticated": 401,
+      "ownerPage": 200
+    }
+  },
+  "production": {
+    "workerDeploy": {
+      "run": 37915186682,
+      "conclusion": "success"
+    },
+    "pagesDeploy": {
+      "run": 37915186746,
+      "conclusion": "success"
+    },
+    "pdfVaultLive": {
+      "run": 37916315084,
+      "conclusion": "success",
+      "verifiedFileCount": 13,
+      "underlyingPagesRun": 37915186746,
+      "sourceCommit": "294b1559ecf9762acc806d868021db089b1d4365"
+    }
+  },
+  "remaining": [
+    "Site owner must log into Gallery owner account, input verified target email, confirm sharing rights and grant PDF read; then read back status in owner page.",
+    "No actual owner-authenticated mainland/campus Windows Edge PDF transfer was observed; new strategy is proven by isolated browser fixtures only.",
+    "Tencent independent PDF gateway remains behind Draft PR #420 with TLS hostname mismatch; domestic ISP slow Cloudflare transport remains possible."
+  ],
+  "noTargetEmailInPublicAudit": true,
+  "privateCredentialsRead": false,
+  "siteOperationsRestrictedToOwnerGrant": false
+}
