@@ -103,6 +103,7 @@ import {
   wechatNotify,
 } from './integrations.js';
 import { startPhoneOtp, verifyPhoneOtp } from './phone-otp.js';
+import { managePrivatePdfReaderGrant } from './private-pdf-reader-grants.js';
 import { bootstrapPrivatePdfOwner, importPrivatePdf, issuePrivatePdfCaptureLease, privatePdfCaptureInventory, openPrivatePdf, privatePdfStatus, revokePrivatePdfCaptureLeases, servePrivatePdf } from './private-pdf.js';
 import { applyPrivatePdfVerification, listPrivatePdfProcessingQueue, privatePdfProcessingStatus, servePrivatePdfProcessingFile } from './private-pdf-processing.js';
 import { readPdfVaultQueue, mutatePdfVaultQueue } from './pdf-vault-queue.js';
@@ -621,6 +622,9 @@ async function handleApi(request, env, ctx) {
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/private-pdf/bootstrap-owner') {
     return resultResponse(await bootstrapPrivatePdfOwner(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/private-pdf/reader-grant') {
+    return resultResponse(await managePrivatePdfReaderGrant(request, env, await readJson(request)), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/private-pdf/capture-lease') {
     return resultResponse(await issuePrivatePdfCaptureLease(request, env), cors);
