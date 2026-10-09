@@ -159,7 +159,12 @@ function mediaItemHasFigures(item: StaticMediaItem | undefined): boolean {
 function mergeMediaItem(local: StaticMediaItem | undefined, dynamic: StaticMediaItem | undefined): StaticMediaItem | undefined {
   if (!local) return dynamic;
   if (!dynamic) return local;
-  const toc = mediaItemHasToc(local) ? local.toc : dynamic.toc;
+  // A live, DOI-bound available TOC is newer authority than the Pages snapshot:
+  // the latter may predate an exact-hash correction or a new owner capture.
+  // Preserve verified static TOCs if the Worker genuinely has no image yet.
+  const toc = mediaItemHasToc(dynamic) ? dynamic.toc : mediaItemHasToc(local) ? local.toc : dynamic.toc;
+  // Published numbered figures have their own static integrity gate. Do not
+  // replace a verified Pages figure list with an empty D1 staging response.
   const figures = mediaItemHasFigures(local) ? local.figures : dynamic.figures;
   return {
     ...dynamic,
@@ -173,18 +178,53 @@ function mergeMediaItem(local: StaticMediaItem | undefined, dynamic: StaticMedia
   };
 }
 
-function loadMediaManifest(): Promise<StaticMediaManifest> {
+// This previously accepted publisher illustration is a verified *substrate
+// scope* grid, not the paper's actual graphical abstract. The one-off D1
+// correction does not retroactively rewrite older published Pages snapshots.
+const VERIFIED_WRONG_TOC_DOI = '10.1002/anie.4335022';
+const VERIFIED_WRONG_TOC_HASH = '35f10c5321cd43179a4c71c73e388da8';
+
+function excludeConfirmedWrongToc(item: StaticMediaItem): StaticMediaItem {
+  if (normalizeDoi(item.doi) !== VERIFIED_WRONG_TOC_DOI
+      || item.toc?.contentHash !== VERIFIED_WRONG_TOC_HASH) return item;
+  const hasFigures = mediaItemHasFigures(item);
+  return {
+    ...item,
+    toc: { ...item.toc, available: false, imageUrl: undefined, reason: 'verified_wrong_toc_excluded' },
+    inventory: {
+      ...(item.inventory || {}),
+      status: hasFigures ? 'figures_only' : 'missing',
+      largeSource: 'none',
+      suspiciousToc: true,
+    },
+  };
+}
+
+function sanitizeManifest(manifest: StaticMediaManifest): StaticMediaManifest {
+  const item = manifest.items?.[VERIFIED_WRONG_TOC_DOI];
+  if (!item || item.toc?.contentHash !== VERIFIED_WRONG_TOC_HASH) return manifest;
+  return {
+    ...manifest,
+    items: { ...manifest.items, [VERIFIED_WRONG_TOC_DOI]: excludeConfirmedWrongToc(item) },
+  };
+}
+
+// The visible DOI API and post-first-paint recovery share exactly one bounded
+// snapshot promise. A media change can explicitly invalidate it without an
+// unconditional second no-store download of the multi-megabyte index.
+export function loadMediaManifest(forceRefresh = false): Promise<StaticMediaManifest> {
   const now = Date.now();
+  if (forceRefresh) mediaManifestPromise = null;
   if (!mediaManifestPromise || now - mediaManifestFetchedAt >= MEDIA_MANIFEST_MAX_AGE_MS) {
     mediaManifestFetchedAt = now;
     // A transient 503 or offline moment must never erase a previously verified
     // static TOC or body-figure record from an active user's tab.
     const fallback: StaticMediaManifest = lastKnownMediaManifest || { version: 1, generatedAt: 0, items: {} };
-    mediaManifestPromise = fetchStaticJson<StaticMediaManifest>('media-index.json', fallback, 'no-cache')
+    mediaManifestPromise = fetchStaticJson<StaticMediaManifest>('media-index.json', fallback, forceRefresh ? 'reload' : 'no-cache')
       .then(payload => {
-        const next: StaticMediaManifest = payload && typeof payload === 'object'
+        const next: StaticMediaManifest = sanitizeManifest(payload && typeof payload === 'object'
           ? { version: payload.version || 1, generatedAt: payload.generatedAt || 0, items: payload.items || {} }
-          : fallback;
+          : fallback);
         // Older CDN edges may briefly serve an earlier Pages generation.
         if (lastKnownMediaManifest && Number(next.generatedAt || 0) < Number(lastKnownMediaManifest.generatedAt || 0)) {
           return lastKnownMediaManifest;
@@ -319,51 +359,49 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
   }
 
   if (path === '/api/media/batch' && requested.length) {
-    const manifest = await loadMediaManifest();
-    const localByDoi = new Map<string, StaticMediaItem>();
-    for (const doi of requested) {
-      const item = manifest.items?.[doi];
-      if (item) localByDoi.set(doi, normalizeMediaItem(item, 'static'));
-    }
-
-    const incomplete = requested.filter(doi => {
-      const item = localByDoi.get(doi);
-      return !mediaItemHasToc(item) || !mediaItemHasFigures(item);
-    });
-
-    if (incomplete.length) {
-      try {
-        const fromCanonical = publicStaticMediaFrontend();
-        const dynamic = fromCanonical
-          ? await canonicalMediaRequest<{ generatedAt?: number; items?: StaticMediaItem[] }>(path, { dois: incomplete })
-          : await rawRequest<{ generatedAt?: number; items?: StaticMediaItem[] }>('POST', path, { dois: incomplete });
-        if (!Array.isArray(dynamic.data?.items)) throw new Error('live_media_response_invalid');
-        const dynamicByDoi = new Map<string, StaticMediaItem>();
-        for (const item of dynamic.data?.items || []) {
-          const doi = normalizeDoi(item?.doi);
-          if (!doi) continue;
-          dynamicByDoi.set(doi, normalizeMediaItem(item, fromCanonical ? 'worker' : 'static'));
-        }
-        const items = requested.flatMap(doi => {
-          const merged = mergeMediaItem(localByDoi.get(doi), dynamicByDoi.get(doi));
-          return merged ? [merged] : [];
-        });
-        return {
-          data: { generatedAt: dynamic.data?.generatedAt || manifest.generatedAt || Date.now(), items } as T,
-          status: 200,
-          headers: new Headers({ 'x-gallery-media-source': localByDoi.size ? 'static+dynamic' : 'dynamic' }),
-        };
-      } catch (error) {
-        // Fail open for already-published static images but keep this failure distinguishable
-        // from an article that genuinely has no production media.
-        console.warn('[Gallery media] live batch unavailable; preserving static snapshot', error);
+    // Prefer the small current-DUI batch for visible cards. Loading the entire
+    // Pages media index first delayed fresh TOCs and let stale statics win.
+    const liveByDoi = new Map<string, StaticMediaItem>();
+    let liveGeneratedAt = 0;
+    let liveError = false;
+    try {
+      const fromCanonical = publicStaticMediaFrontend();
+      const live = fromCanonical
+        ? await canonicalMediaRequest<{ generatedAt?: number; items?: StaticMediaItem[] }>(path, { dois: requested })
+        : await rawRequest<{ generatedAt?: number; items?: StaticMediaItem[] }>('POST', path, { dois: requested });
+      if (!Array.isArray(live.data?.items)) throw new Error('live_media_response_invalid');
+      liveGeneratedAt = Number(live.data.generatedAt || 0);
+      const requestedSet = new Set(requested);
+      for (const item of live.data.items) {
+        const doi = normalizeDoi(item?.doi);
+        if (!doi || !requestedSet.has(doi)) continue;
+        liveByDoi.set(doi, excludeConfirmedWrongToc(normalizeMediaItem(item, fromCanonical ? 'worker' : 'static')));
       }
+      // Deliver the live TOC immediately to the already-mounted visible cards;
+      // the API response still merges any separately published static figures.
+      if (typeof window !== 'undefined' && liveByDoi.size) {
+        window.dispatchEvent(new CustomEvent('gallery-media-live-batch', {
+          detail: { items: requested.flatMap(doi => liveByDoi.get(doi) ? [liveByDoi.get(doi)!] : []) },
+        }));
+      }
+    } catch (error) {
+      liveError = true;
+      console.warn('[Gallery media] live batch unavailable; preserving verified static snapshot', error);
     }
 
+    const manifest = await loadMediaManifest();
+    const items = requested.flatMap(doi => {
+      const raw = manifest.items?.[doi];
+      const local = raw ? normalizeMediaItem(excludeConfirmedWrongToc(raw), 'static') : undefined;
+      const merged = mergeMediaItem(local, liveByDoi.get(doi));
+      return merged ? [merged] : [];
+    });
     return {
-      data: { generatedAt: manifest.generatedAt || Date.now(), items: requested.flatMap(doi => localByDoi.get(doi) ? [localByDoi.get(doi)!] : []) } as T,
+      data: { generatedAt: liveGeneratedAt || manifest.generatedAt || Date.now(), items } as T,
       status: 200,
-      headers: new Headers({ 'x-gallery-media-source': incomplete.length ? 'static-fallback' : 'static-manifest' }),
+      headers: new Headers({
+        'x-gallery-media-source': liveError ? 'static-fallback' : liveByDoi.size ? 'static+dynamic' : 'static-manifest',
+      }),
     };
   }
 
