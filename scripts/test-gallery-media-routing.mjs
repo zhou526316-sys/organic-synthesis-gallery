@@ -128,7 +128,7 @@ test('canonical API outage preserves only already verified static media', async 
 test('local Vite dev uses its existing same-origin isolated API, not production', async () => {
   const x = mock('127.0.0.1');
   const reply = await x.api.post('/api/media/batch', { dois: [OFFICIAL] });
-  assert.equal(reply.data.items.length, 2);
+  assert.equal(reply.data.items.length, 1, 'only requested DOI is returned');
   assert.equal(x.calls.filter(row => row.method === 'POST')[0].url,
     'https://127.0.0.1/api/media/batch');
 });
