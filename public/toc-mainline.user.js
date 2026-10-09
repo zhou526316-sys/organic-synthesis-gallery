@@ -5689,6 +5689,35 @@ function embeddedJobDois(value) {
     }
   }
 
+  // A DOI-less Elsevier landing/interstitial can run an authenticated
+  // publisher script but never bind to the article; until now it only posted
+  // a non-final diagnostic and left the controller waiting eight minutes.
+  // After the existing 45s bounded DOM/DOI grace period is exhausted, close
+  // this exact bound job as a failed *attempt* so the next DOI can proceed.
+  // This never claims media absence and never writes publisher-derived bytes.
+  function finalizeBoundElsevierDoiFailure(job,error) {
+    if(String(error&&error.message||error)!=='page_doi_unverified')return false;
+    if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='elsevier')return false;
+    if(!job||!job.jobId||!currentCaptureJob(job)||controllerPaused())return false;
+    var binding='';
+    try{binding=sessionStorage.getItem(P+'tab-job-binding')||'';}catch(_){}
+    if(binding!==job.jobId||completedPublisherResult(job))return false;
+    var trace=[];
+    pushTrace(trace,{stage:'page_doi_guard',event:'bound_publisher_doi_unverified',status:'failed',
+      url:location.href,message:'publisher=elsevier;identity=unverified;grace_expired=1;no_media_claims=1'});
+    var row={doi:normalizeDoi(job.doi),jobId:job.jobId,version:VERSION,
+      controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,
+      status:'failed',reason:'page_doi_unverified',finishedAt:nowIso(),
+      toc:{status:'not_requested'},figures:{status:'not_requested',discovered:0,stored:0,failed:0},
+      fulltext:{status:'not_requested'},privatePdf:{status:'not_requested'}};
+    GM_setValue(traceKey(job.doi),{doi:row.doi,jobId:row.jobId,status:'failed',
+      trace:trace,finishedAt:row.finishedAt});
+    enqueueCaptureReport(job,trace,'failed',row.reason,true);
+    GM_setValue(resultKey(job.doi),row);
+    GM_deleteValue(progressKey(job.doi));
+    return true;
+  }
+
   async function publisherBoot() {
     if (location.hostname === 'doi.org') return;
     var job = GM_getValue(ACTIVE_JOB_KEY, null);
@@ -5703,6 +5732,7 @@ function embeddedJobDois(value) {
       var bound='';
       try { bound=sessionStorage.getItem(P+'tab-job-binding')||''; } catch (_) {}
       if(!job.jobId||bound!==job.jobId)return;
+      if(finalizeBoundElsevierDoiFailure(job,error))return;
       await uploadReport(job, [{ stage: 'page_doi_guard', event: 'rejected', status: 'failed', url: location.href, message: String(error.message) }], 'failed', String(error.message), null, writeToken());
       return;
     }
