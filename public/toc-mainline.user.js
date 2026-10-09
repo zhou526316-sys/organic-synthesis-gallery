@@ -431,7 +431,11 @@
       var revision=Number(prior&&prior.revision||0)+1;
       var important=(job._diagnosticFailures||[]).slice(-48);
       var recent=(trace||[]).slice(-32).map(autoReportEvent);
-      var seen=new Set();var events=important.concat(recent).filter(function(e){var k=e.at+'|'+e.stage+'|'+e.event+'|'+e.url;if(seen.has(k))return false;seen.add(k);return true;});
+      // RSC Silverchair AJAX may occur >32 trace events before a PDF 403.
+      // Preserve its source outcome in the final report so missing TOCs can
+      // be diagnosed without a fresh publisher visit or owner PDF access.
+      var rscAjax=(trace||[]).filter(function(e){return e&&e.stage==='rsc_native_abstract_ajax';}).slice(-4).map(autoReportEvent);
+      var seen=new Set();var events=important.concat(rscAjax,recent).filter(function(e){var k=e.at+'|'+e.stage+'|'+e.event+'|'+e.url;if(seen.has(k))return false;seen.add(k);return true;});
       var page=autoReportUrl(actualPageUrl===undefined?location.href:actualPageUrl);
       var last=important.length?important[important.length-1]:recent[recent.length-1]||{};
       var metadata={eventId:job.jobId+(final?':final':':checkpoint')+':'+revision,jobId:job.jobId,installRevision:typeof INSTALL_REVISION==='string'?INSTALL_REVISION:'',captureObservabilityRevision:typeof CAPTURE_OBSERVABILITY_REVISION==='string'?CAPTURE_OBSERVABILITY_REVISION:'',controllerRevision:CONTROLLER_REVISION,architectureMembershipRevision:typeof ARCHITECTURE_MEMBERSHIP_REVISION==='string'?ARCHITECTURE_MEMBERSHIP_REVISION:'',publisherMediaRevision:typeof PUBLISHER_MEDIA_REVISION==='string'?PUBLISHER_MEDIA_REVISION:'',queueCoverageRevision:typeof QUEUE_COVERAGE_REVISION==='string'?QUEUE_COVERAGE_REVISION:'',missingRevision:typeof MISSING_CAPTURE_REVISION==='string'?MISSING_CAPTURE_REVISION:'',requestedNeeds:typeof captureNeedText==='function'?captureNeedText(job):'',routePlan:job&&job.routePlan?job.routePlan:null,lifecycleRevision:typeof CONTROLLER_LIFECYCLE_REVISION==='string'?CONTROLLER_LIFECYCLE_REVISION:'',controllerState:typeof controllerLifecycleSnapshot==='function'?controllerLifecycleSnapshot():null,captureVersion:VERSION,kind:final?'final_result':'failure_checkpoint',retryCount:Number(job.retryCount||0),pageDois:embeddedJobDois(page),httpStatusKnown:Number(last.httpStatus||0)>0};
@@ -5867,6 +5871,42 @@ function embeddedJobDois(value) {
     }
   }
 
+  // A DOI-bound publisher tab can fail verification before runPublisherJob
+  // begins (Elsevier interstitial/article shell). Persist a terminal local
+  // result as well as an outbox report: otherwise the Gallery controller
+  // cannot observe the failure and waits its entire 8-minute deadline.
+  function finishBoundPublisherPreflightFailure(job,error) {
+    if(!job||!job.jobId||job.captureVersion!==VERSION||!currentCaptureJob(job))return false;
+    var bound='';
+    try {bound=sessionStorage.getItem(P+'tab-job-binding')||'';}catch(_){}
+    if(bound!==job.jobId)return false;
+    var reason=captureLiveError(error&&error.message||error||'publisher_preflight_failed').slice(0,160);
+    var finished=nowIso(),terminal={
+      doi:normalizeDoi(job.doi),jobId:job.jobId,version:VERSION,
+      controllerRevision:CONTROLLER_REVISION,
+      publisherTaskBindingRevision:PUBLISHER_TASK_BINDING_REVISION,
+      status:'failed',reason:reason,finishedAt:finished,
+      toc:{status:job.captureToc?'failed':'not_requested',reason:reason},
+      figures:{status:'not_requested',discovered:0,stored:0,failed:0,items:[]},
+      fulltext:{status:'not_requested'},
+      privatePdf:{status:'not_requested'},
+      retryAfterMs:/^(?:page_doi_unverified|page_doi_mismatch|capture_tab_job_mismatch)$/.test(reason)?6*60*60*1000:0
+    };
+    var trace=[{at:finished,stage:'page_doi_guard',event:'rejected',status:'failed',
+      url:location.href,message:reason}];
+    job._liveResult=terminal;
+    GM_setValue(traceKey(job.doi),{doi:terminal.doi,jobId:job.jobId,status:'failed',
+      reason:reason,finishedAt:finished,trace:trace});
+    enqueueCaptureReport(job,trace,'failed',reason,true,location.href);
+    // The real publisher may still be loading on another visit. Never mutate
+    // media or accept old job reports after user explicitly replaces this run.
+    if(!currentCaptureJob(job))return false;
+    GM_setValue(resultKey(job.doi),terminal);
+    var progress=GM_getValue(progressKey(job.doi),null);
+    if(!progress||!progress.jobId||progress.jobId===job.jobId)GM_deleteValue(progressKey(job.doi));
+    return true;
+  }
+
   async function publisherBoot() {
     if (location.hostname === 'doi.org') return;
     var job = GM_getValue(ACTIVE_JOB_KEY, null);
@@ -5881,7 +5921,7 @@ function embeddedJobDois(value) {
       var bound='';
       try { bound=sessionStorage.getItem(P+'tab-job-binding')||''; } catch (_) {}
       if(!job.jobId||bound!==job.jobId)return;
-      await uploadReport(job, [{ stage: 'page_doi_guard', event: 'rejected', status: 'failed', url: location.href, message: String(error.message) }], 'failed', String(error.message), null, writeToken());
+      finishBoundPublisherPreflightFailure(job,error);
       return;
     }
     writePublisherHeartbeat(job, 'active_job_seen');
@@ -6266,6 +6306,11 @@ function embeddedJobDois(value) {
     var age=prior?Math.max(0,ts-Number(prior.at||0)):Number.POSITIVE_INFINITY;
     if(ignoreCooldown)return true;
     if(prior&&prior.status==='not_found'&&age<6*60*60*1000)return false;
+    // A publisher's explicit access refusal is not a transient transport
+    // timeout. Preserve a long per-DOI cooldown, but explicit owner restart
+    // can still recheck once access has been restored.
+    if(prior&&prior.status==='failed'&&/^(?:private_pdf_http_40[139]|access_denied_http_40[139]|(?:http_)?40[139])(?:\b|$)/i.test(String(prior.reason||''))
+      &&age<6*60*60*1000)return false;
     if(prior&&prior.status==='failed'&&age<30*60*1000)return false;
     return true;
   }
@@ -6864,7 +6909,7 @@ function embeddedJobDois(value) {
     var count=Math.max(1,Number(prior.retryCount||1));
     var detail=[prior.reason,(prior.toc||{}).reason,(prior.fulltext||{}).reason]
       .concat(((prior.figures||{}).items||[]).filter(function(x){return x.status==='failed';}).map(function(x){return x.reason;})).join(';');
-    if (/doi_mismatch|receipt_invalid|stale_or_unbound/i.test(detail)) {
+    if (/doi_mismatch|page_doi_unverified|receipt_invalid|stale_or_unbound/i.test(detail)) {
       return elapsed>=Math.max(6*60*60*1000,Number(prior.retryAfterMs||0));
     }
     if (/permission|blocked by the user|Refused to connect|(?:http_|status[=:])(401|403|429)|auth_|challenge_|publisher_access_gate/i.test(detail)) {
