@@ -143,6 +143,16 @@ try {
     status.push(...outcomes);
   }
   const statusByDoi=new Map(status.map(s=>[s.doi,s]));
+  report.fourProvenance=missingTarget.map(doi=>({doi,
+    sources:rows.filter(r=>String(r?.doi||'').toLowerCase()===doi).map(row=>({
+      kind:limited(row?.kind,30),publisherSource:cleanUrl(row?.sourceUrl),
+      articleUrl:cleanUrl(row?.articleUrl),caption:limited(row?.caption,180),
+      candidateSource:limited(row?.candidateSource,100),assetType:limited(row?.assetType,70),
+      contentHash:limited(row?.contentHash,80),updatedAt:Number(row?.updatedAt||0),
+      liveHashMatch:limited(row?.contentHash,80)===statusByDoi.get(doi)?.contentHash
+        &&statusByDoi.get(doi)?.available===true
+    }))
+  }));
   report.fourMissing=missingTarget.map(doi=>statusByDoi.get(doi));
   report.exactAngewQuarantine = statusByDoi.get('10.1002/anie.4335022');
   assert.notEqual(report.exactAngewQuarantine?.contentHash,
@@ -193,7 +203,7 @@ await writeFile(output,JSON.stringify(report,null,2)+'\n','utf8');
 console.log('TM_OCT09_LIVE_SUMMARY '+JSON.stringify({
   checkedAt:report.checkedAt,status:report.status,
   installer:report.installer,queue:report.queue,captureIndex:report.captureIndex,
-  fourMissing:report.fourMissing,exactAngewQuarantine:report.exactAngewQuarantine,oct09Angew:report.oct09Angew,
+  fourMissing:report.fourMissing,fourProvenance:report.fourProvenance,exactAngewQuarantine:report.exactAngewQuarantine,oct09Angew:report.oct09Angew,
   recentAngewInspected:report.recentAngew?.length,
   anomalyCandidates:report.anomalyCandidates,
   internalAssetIdDiffersFromDoi:report.internalAssetIdDiffersFromDoi,
