@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "tm-rsc-silverchair-native-abstract-ajax-remediation-v1",
+  "createdAt": "2026-10-09T08:56:54.418Z",
+  "userAuthorization": "Approved completion of four Chem/RSC Oct-09 missing TOCs; user subsequently updated Bridge 2.2.76 and requested continuation",
+  "targetDois": [
+    {
+      "doi": "10.1039/d6sc06407h",
+      "journal": "Chemical Science",
+      "articleId": "1367242",
+      "journalCode": "sc"
+    },
+    {
+      "doi": "10.1039/d6gc03748h",
+      "journal": "Green Chemistry",
+      "articleId": "1367368",
+      "journalCode": "gc"
+    }
+  ],
+  "evidence": {
+    "ownerTraceResult": "2026-10-09 owner-authenticated RSC article shells contained 9 IMG, 0 figure/figcaption, 2 PDF preview images, zero qualified TOC (no_rsc_toc_found)",
+    "observedPublisherPages": [
+      "https://pubs.rsc.org/sc/article/doi/10.1039/D6SC06407H/1367242/Harnessing-Carbyne-Reactivity-from-Stabilized",
+      "https://pubs.rsc.org/gc/article/doi/10.1039/D6GC03748H/1367368/Green-Synthesis-of-Dihydropyranone-Intermediates"
+    ],
+    "publisherInterfaceReference": "https://github.com/Fucose/TOC-Restorer",
+    "nativePlatformRoute": "/{journalCode}/PlatformArticle/ArticleAbstractAjax?articleId={boundArticleId}&layAbstract=false",
+    "caveat": "This read-only publisher endpoint is a candidate mechanism; no authenticated live response from the current user browser has yet verified image bytes."
+  },
+  "protection": {
+    "onlyTargetedDois": true,
+    "firstPartyOnly": true,
+    "boundPublisherPageDOI": true,
+    "articleIdTakenOnlyFromCurrentBoundArticleUrl": true,
+    "oneGETPerJustifiedArticleVisit": true,
+    "timeoutMs": 9000,
+    "rateLimitOrAuthRefusalNoRetry": true,
+    "jsonSuccessAndExplicitGraphicalAbstractContainerRequired": true,
+    "noPdfPagePreview": true,
+    "noNumberedBodyFigureAsOfficial": true,
+    "noForeignDOI": true,
+    "imageSrcHostAllowed": "HTTPS RSC-controlled domain only",
+    "noNewTampermonkeyConnectHosts": true,
+    "noCAPTCHAbypass": true,
+    "noOwnerPdfLeak": true,
+    "noChangesToOtherPublisherParsing": true,
+    "noChangeToLiteratureRelease": true,
+    "noR2DeleteOrReset": true
+  },
+  "version": {
+    "proposedBridge": "2.2.77",
+    "proposedEngine": "6.2.58",
+    "captureProtocol": "6.2.20",
+    "controllerRevision": "2.2.41"
+  },
+  "rolloutState": "source_branch_pending_CI;do_not_claim_production_acquisition_without_owner_browser_receipt",
+  "tests": "Chromium fixture for exact DOI/id and GC/SC routes, official AJAX HTML, forged/foreign PDF preview, scope, HTTP403, other RSC untouched"
+}

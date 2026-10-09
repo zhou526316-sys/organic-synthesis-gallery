@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.57
+// @version      6.2.58
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.57';
+  var INSTALL_REVISION = '6.2.58';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261008-rsc-silverchair-and-acs-toc-route-v1';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -2528,6 +2528,89 @@ function embeddedJobDois(value) {
     return /(?:^|\/)[^/]+\.pdf\.(?:gif|png|jpe?g|webp)$/.test(raw);
   }
 
+  // Silverchair loads graphical abstracts from a publisher-owned AJAX response
+  // when the RSC article shell lacks the original TOC/figure DOM. This is a
+  // bounded, first-party, same-session fallback for TWO verified Oct-09 gaps.
+  // A PDF first-page preview, generic image, or foreign article is never TOC.
+  var RSC_NATIVE_ABSTRACT_AJAX_REVISION = '20261009-two-doi-ajax-source-v1';
+  function rscNativeAjaxBoundRoute(job) {
+    var doi=normalizeDoi(job&&job.doi);
+    if(doi!=='10.1039/d6sc06407h'&&doi!=='10.1039/d6gc03748h')return null;
+    try{
+      var url=new URL(location.href),path=url.pathname;
+      if(url.protocol!=='https:'||url.hostname.toLowerCase()!=='pubs.rsc.org')return null;
+      var match=/^\/(sc|gc)\/article\/doi\/10\.1039\/([^/]+)\/(\d{5,10})(?:\/|$)/i.exec(path);
+      if(!match||normalizeDoi('10.1039/'+match[2])!==doi)return null;
+      var code=match[1].toLowerCase();
+      if(code!==(doi.indexOf('/d6sc')>=0?'sc':'gc'))return null;
+      return {doi:doi,code:code,articleId:match[3],
+        url:url.origin+'/'+code+'/PlatformArticle/ArticleAbstractAjax?articleId='+match[3]+'&layAbstract=false'};
+    }catch(_){return null;}
+  }
+  async function rscNativeAjaxGraphicalAbstractCandidates(job,trace) {
+    var route=rscNativeAjaxBoundRoute(job);
+    if(!route)return [];
+    var abort=new AbortController(),timer=setTimeout(function(){abort.abort();},9000);
+    pushTrace(trace,{stage:'rsc_native_abstract_ajax',event:'request_start',status:'start',
+      url:route.url,message:'doi='+route.doi+';articleId='+route.articleId+';bounded=1'});
+    try{
+      var response=await fetch(route.url,{method:'GET',credentials:'same-origin',redirect:'follow',
+        headers:{'X-Requested-With':'XMLHttpRequest','Accept':'application/json'},signal:abort.signal});
+      if(response.status===401||response.status===403||response.status===429){
+        pushTrace(trace,{stage:'rsc_native_abstract_ajax',event:'access_denied',status:'failed',
+          url:route.url,httpStatus:response.status,message:'no_permission_bypass_or_retry'});
+        return [];
+      }
+      if(!response.ok){
+        pushTrace(trace,{stage:'rsc_native_abstract_ajax',event:'http_failed',status:'failed',
+          url:route.url,httpStatus:response.status});
+        return [];
+      }
+      var payloadText=await response.text();
+      if(!payloadText||payloadText.length>160000)throw new Error('rsc_ajax_payload_size_invalid');
+      var payload=JSON.parse(payloadText);
+      if(payload.Success!==true||typeof payload.Html!=='string'||payload.Html.length>120000){
+        pushTrace(trace,{stage:'rsc_native_abstract_ajax',event:'no_graphical_abstract',status:'none',
+          url:route.url,message:'publisher_returned_no_semantic_abstract_html'});
+        return [];
+      }
+      var doc=new DOMParser().parseFromString(payload.Html,'text/html');
+      var imgs=Array.from(doc.querySelectorAll('.graphical-abstract img,.fig-graphic img,.graphicalAbstract img')).slice(0,10);
+      var seen=new Set(),rows=[];
+      imgs.forEach(function(img){
+        var parent=img.closest('.graphical-abstract,.fig-graphic,.graphicalAbstract');
+        var text=String([img.getAttribute('alt'),img.getAttribute('title'),img.getAttribute('aria-label'),
+          parent&&parent.getAttribute('aria-label')].filter(Boolean).join(' ')).slice(0,500);
+        if(/^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*[1-9]\d*[a-z]?\b|substrate\s+scope|reaction\s+scope/i.test(text))return;
+        var candidates=articleFigureImageUrls(img,route.url);
+        var raw=img.getAttribute('data-src')||img.getAttribute('src')||'';
+        if(raw)candidates.push(normalizeUrl(raw,route.url));
+        candidates.slice(0,5).forEach(function(value,rank){
+          var url=normalizeUrl(value,route.url);
+          if(!url||seen.has(url)||rscPdfPreviewUrl(url)||reject(text,url)
+              ||!candidateBelongsToJob(url,job))return;
+          try{
+            var u=new URL(url);
+            if(u.protocol!=='https:'||!(u.hostname==='pubs.rsc.org'||u.hostname.endsWith('.rsc.org')))return;
+            if(!/\.(?:png|jpe?g|webp|gif|svg)(?:$|[?#])/i.test(url))return;
+          }catch(_){return;}
+          seen.add(url);
+          rows.push({url:url,kind:'official',assetType:'graphical_abstract',
+            score:990-rank,text:'RSC official article graphical abstract',
+            source:'rsc_silverchair_abstract_ajax',element:null});
+        });
+      });
+      pushTrace(trace,{stage:'rsc_native_abstract_ajax',event:'semantic_scan',status:rows.length?'found':'none',
+        url:route.url,message:'doi='+route.doi+';articleId='+route.articleId+
+          ';semanticImages='+imgs.length+';accepted='+rows.length});
+      return rows.sort(function(a,b){return b.score-a.score;});
+    }catch(error){
+      pushTrace(trace,{stage:'rsc_native_abstract_ajax',event:'transport_or_shape_failed',status:'failed',
+        url:route.url,message:captureLiveError(error&&error.message||error)});
+      return [];
+    }finally{clearTimeout(timer);}
+  }
+
   function rscBodyFigureContext(node, original) {
     if(!node||!node.closest)return original;
     if(original&&(original.label||original.official))return original;
@@ -3109,6 +3192,10 @@ function embeddedJobDois(value) {
   }
 
   async function iframeCandidates(job, trace) {
+    // Same article's authorized Silverchair abstract response precedes the
+    // slower issue/search iframe route. Only two DOI-bound Oct-09 jobs call it.
+    var nativeRsc=await rscNativeAjaxGraphicalAbstractCandidates(job,trace);
+    if(nativeRsc.length)return nativeRsc;
     var urls = iframeSourceUrls(job);
     if(job&&job.publisher==='ccs'){
       var crossrefTocUrl=await ccsCrossrefTocIndexUrl(job,trace);

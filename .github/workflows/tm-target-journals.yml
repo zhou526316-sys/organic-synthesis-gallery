@@ -9,6 +9,7 @@ on:
       - 'scripts/tm-private-pdf-capture.inc.js'
       - 'scripts/apply-private-pdf-capture.py'
       - 'tests/tm-target-journals-browser.mjs'
+      - 'scripts/test-tm-rsc-native-ajax-toc.mjs'
       - 'tests/tm-newest-retry.test.mjs'
       - 'tests/private-pdf-capture-browser.mjs'
       - 'docs/private-pdf-editorial-pipeline.md'
@@ -65,6 +66,7 @@ jobs:
       - name: Verify Chem RSC CCS adapters and PDF cutoff
         run: |
           node tests/tm-target-journals-browser.mjs
+          node scripts/test-tm-rsc-native-ajax-toc.mjs
           node tests/private-pdf-capture-browser.mjs
 
       - name: Build and validate canonical compatible installer
@@ -81,6 +83,7 @@ jobs:
           grep -F "PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'" public/gallery-vpn-bridge.user.js
           grep -F "ccs_toc_index_key_image" public/gallery-vpn-bridge.user.js
           grep -F "rsc_graphical_abstract" public/gallery-vpn-bridge.user.js
+          grep -F "RSC_NATIVE_ABSTRACT_AJAX_REVISION = '20261009-two-doi-ajax-source-v1'" public/gallery-vpn-bridge.user.js
           mkdir -p "$RUNNER_TEMP/target-journals"
           cp public/gallery-vpn-bridge.user.js "$RUNNER_TEMP/target-journals/"
           sha256sum public/gallery-vpn-bridge.user.js > "$RUNNER_TEMP/target-journals/sha256.txt"
