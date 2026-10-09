@@ -10,7 +10,7 @@
   ],
   "maxNewImages": 250,
   "maxNewArticles": 25,
-  "maxFiguresPerCard": 10,
+  "maxFiguresPerCard": 20,
   "maxSnapshotItems": 2000,
   "heldDois": [
     {
@@ -20,7 +20,7 @@
   ],
   "verificationMode": "automated_source_identity_digest_and_image_decode",
   "individualSemanticReview": false,
-  "notes": "Publish TOC and body figures in the same Pages deployment. New captures require a completed Tampermonkey final packet plus strict DOI/source/hash/decode validation; historical staged captures at or before the cutover may backfill only after a 15-minute stability window and the same strict validation. Previously staged eligible body figures are continuously drained. No cross-DOI source, partial packet, invalid marker, unsupported/unsafe image, or missing-TOC packet may publish.",
+  "notes": "Publish TOC and body figures in the same Pages deployment. New captures require a completed Tampermonkey final packet plus strict DOI/source/hash/decode validation; historical staged captures at or before the cutover may backfill only after a 15-minute stability window and the same strict validation. Previously staged eligible body figures are continuously drained. No cross-DOI source, incomplete body packet, invalid marker, unsupported/unsafe image, or missing verified primary graphic may publish. A strictly verified Nature/Science Figure 1 primary can satisfy primary-graphic readiness. A PDF HTTP403 alone does not invalidate completed body figures. All images still require exact DOI/source/hash/decode validation.",
   "minNewArticles": 1,
   "requireOfficialTocInBuild": true,
   "reviewBatchTarget": "completed single-article packets publish immediately; historical staged backlog drains automatically in bounded batches",
