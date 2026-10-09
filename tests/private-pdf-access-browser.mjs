@@ -332,7 +332,7 @@ async function importCardPdf(page,doi){
 async function waitCardState(page,doi,state){await page.waitForFunction(({doi,state})=>[...document.querySelectorAll('.card')].find(card=>card.dataset.doi===doi)?.querySelector('.local-pdf-button')?.dataset.pdfVaultState===state,{doi,state});}
 async function assertNoCardFileIo(page){assert.deepEqual(await page.evaluate(()=>window.__vaultIo),{getFile:0,queryPermission:0,arrayBuffer:0,digest:0},'main cards use metadata only, with no PDF bytes or permission prompts');}
 async function scrollPdfToPage(target, pageNumber = 2) {
-  await target.locator('#main').evaluate((root, page) => {
+  await target.locator('#pdf-scroll-container').evaluate((root, page) => {
     const slot = root.querySelector(`.pdfViewer .page[data-page-number="${page}"]`);
     if (!slot) throw new Error('continuous_pdf_page_slot_missing');
     root.scrollTop = Math.max(0, slot.offsetTop - root.offsetTop - 8);
