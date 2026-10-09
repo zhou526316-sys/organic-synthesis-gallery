@@ -4,14 +4,8 @@ on:
     branches:
       - feature/pdf-continuous-scroll-20261009
     paths:
-      - 'src/pdf-continuous-viewer.mjs'
-      - 'src/pdf-vault/reader.mjs'
-      - 'src/pdf-vault/page.css'
-      - 'src/private-pdf-reader.mjs'
-      - 'pdf/index.html'
-      - 'pdf-vault/index.html'
-      - 'tests/private-pdf-access-browser.mjs'
-      - 'tests/pdf-vault-local-browser.mjs'
+      # Explicit CI checkpoint only, avoids dozens of duplicate Chromium
+      # runs while the independent reader and its tests are being refined.
       - '.github/workflows/pdf-continuous-scroll-regression.yml'
   workflow_dispatch: {}
 
