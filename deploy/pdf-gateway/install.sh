@@ -155,16 +155,44 @@ install_new(){
  fi
  local wechat_before
  wechat_before="$(we_chat_hash)"
- mkdir -p /var/backups/gallery-pdf-gateway "$WEBROOT" "$APP" "$STATE"
+ # Prior installer used umask 077 with mkdir -p, leaving dedicated
+ # HTTP-01 webroot and /opt app directories mode 0700. Nginx's
+ # unprivileged worker cannot traverse root-only challenge directories,
+ # leading to a real Let's Encrypt HTTP-01 404.
+ # Explicit modes protect private state while allowing nginx and systemd
+ # users to traverse only the intentionally public paths.
+ mkdir -p /var/backups/gallery-pdf-gateway "$STATE"
+ install -d -o root -g root -m 0755 "$WEBROOT" \
+   "$WEBROOT/.well-known" "$WEBROOT/.well-known/acme-challenge" "$APP"
  cp -a /etc/nginx/sites-enabled/osg-wechat-relay \
    "/var/backups/gallery-pdf-gateway/wechat.$(date +%Y%m%d%H%M%S)"
  trap on_error ERR EXIT INT TERM
  if ! cert_ok; then
    write_acme;ln -s "$VHOST" "$LINK";ADDED=1
    nginx -t;systemctl reload nginx;RELOADED=1
-   certbot certonly --webroot -w "$WEBROOT" -d "$HOST" \
-    --cert-name "$HOST" --agree-tos --non-interactive \
-    --register-unsafely-without-email || abort 'TLS issuance failed'
+   # Confirm that the actual unprivileged Nginx listener serves a real
+   # HTTP-01 challenge before requesting a public CA certificate.
+   # This does not contact Let's Encrypt and cannot consume a CA limit.
+   local acme_name acme_expect acme_result
+   acme_name="gallery-acme-probe-$"
+   acme_expect="gallery-private-pdf-http01-$"
+   printf '%s' "$acme_expect" > "$WEBROOT/.well-known/acme-challenge/$acme_name"
+   chmod 0644 "$WEBROOT/.well-known/acme-challenge/$acme_name"
+   acme_result="$(curl --noproxy '*' --fail --silent --show-error \
+     --connect-timeout 3 --max-time 8 --resolve "$HOST:80:127.0.0.1" \
+     "http://$HOST/.well-known/acme-challenge/$acme_name")" || \
+     abort 'Local ACME webroot challenge returned an error; certbot was NOT called'
+   rm -f "$WEBROOT/.well-known/acme-challenge/$acme_name"
+   [[ "$acme_result" == "$acme_expect" ]] || \
+     abort 'Nginx did not serve the exact ACME probe bytes; certbot was NOT called'
+   echo '[CHECK] Nginx HTTP-01 webroot probe passed (correct bytes, HTTP 200)'
+   # For ACME challenge files only, use conventional public-web permissions;
+   # Certbot manages the private key permissions in /etc/letsencrypt itself.
+   ( umask 022
+     certbot certonly --webroot -w "$WEBROOT" -d "$HOST" \
+       --cert-name "$HOST" --agree-tos --non-interactive \
+       --register-unsafely-without-email
+   ) || abort 'TLS issuance failed after verified local ACME probe'
  fi
  cert_ok || abort 'Certificate does not include pdf subdomain'
  if ! id gallerypdf >/dev/null 2>&1; then
