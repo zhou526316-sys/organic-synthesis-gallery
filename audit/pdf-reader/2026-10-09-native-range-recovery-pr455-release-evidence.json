@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "beijingTime": "2026-10-09 23:05:07",
+  "feedback": "PDF-20261009-2234-NATIVE-BROWSER-SLOW",
+  "authorizedBatch": "Authenticated Range retry and bounded byte-identical cross-Worker fallback, native-browser 206 preflight and recovery preserving Gallery original tab.",
+  "repository": "zhou526316-sys/organic-synthesis-gallery",
+  "merge": {
+    "pr": 455,
+    "mergeCommit": "bc9c607056f0244ff85ffa5641c5c440f98a8cae",
+    "merged": true
+  },
+  "implementation": {
+    "worker": "returns contentHash (SHA-256) only to authorized PDF open; never exposes private R2 key",
+    "range": "on recoverable 500/502/503/504 or network timeout, alternate allowlisted Worker remints owner-authenticated v2 ticket; compares contentHash and byteLength. One failover per viewer; concurrent failures share one promise.",
+    "failClosed": "401/403/404, invalid PDF bytes/content type/Content-Range, mismatched hashes; legacy no identity remains same-host bounded retry",
+    "deadlinesMs": {
+      "firstRange": 12000,
+      "secondRange": 15000,
+      "alternateAuthorizedOpen": 10000,
+      "warmup": 9000,
+      "firstPage": 45000
+    },
+    "native": "always preflight actual 206 bytes=0-15, validate content-type/range/16-byte PDF header and establish continuation cookie; browser option opens separate noopener tab, original Gallery error/retry remains",
+    "dataSecurity": "does not store PDF bytes in Gallery, does not save bearer or signed URLs to logs"
+  },
+  "isolated": {
+    "runId": 37948053477,
+    "conclusion": "success",
+    "privatePdfBrowser": {
+      "passed": 39,
+      "total": 39
+    },
+    "localPdfBrowser": {
+      "passed": 23,
+      "total": 23
+    },
+    "workerPrivatePdfTestsPassed": 28,
+    "newScenarios": [
+      "primary Range 503->secondary valid identical PDF",
+      "content hash mismatch prevents extra bytes",
+      "file 403 no backup auth",
+      "native 503 remains on Gallery with error/retry",
+      "browser native link new tab and original tab remains"
+    ]
+  },
+  "release": {
+    "workerRun": 37948599826,
+    "pagesRun": 37948599914,
+    "workerFinalConclusion": "pending_at_audit_generation",
+    "pagesFinalConclusion": "pending_at_audit_generation",
+    "downstreamPrivatePdfRun": 37948599825,
+    "localVaultRun": 37948599926,
+    "localVaultConclusion": "success"
+  },
+  "limitations": [
+    "Both production PDF file origin hosts still resolve to Cloudflare Worker, not independent China ingress.",
+    "Tencent PR #420 remains Draft/disabled until TLS and China authenticated acceptance; cannot promise reachability when both Cloudflare paths fail.",
+    "Headless isolated Chromium cannot prove a real campus Edge native PDF extension painted all pages.",
+    "Authenticated private PDF roundtrip not measured in this conversation; public healthcheck is not file transfer.",
+    "The native browser plugin can still fail after handoff; the original Gallery tab remains available rather than silently swallowing the error."
+  ],
+  "actualUserCredentialsUsed": false,
+  "privatePdfBytesDownloaded": false
+}
