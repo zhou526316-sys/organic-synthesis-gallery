@@ -1,0 +1,132 @@
+name: WeChat Oct09 R2 Fig4B alignment and authentic-cover source review
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/wechat-oct09-r2-review.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-oct09-r2-reviewed-source
+  cancel-in-progress: false
+
+jobs:
+  independent-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 4
+      - name: Validate exact approval (source-only; no early API write)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('audit/automation-triggers/wechat-oct09-r2-review.json').read_text())
+          assert r['action']=='review_source_revisions_only'
+          assert r['sourceRevision']=='2026-10-09-r1'
+          assert r['revision']=='2026-10-09-r2'
+          assert r['publicationDate']=='2026-10-09'
+          assert r['expectedDois']==['10.1126/science.aef3001','10.1126/science.aeh7895']
+          assert r['existingMediaId']=='KhELYUzvwADwB_l1xH1SWE4Nt7iQ0MsStYhbY_QtnZvPa4Y4cW7sWdrXjysQoIjO'
+          assert r['publicSendAuthorized'] is False
+          assert r['draftOnly'] is True
+          PY
+      - name: Install raster QA dependency
+        run: python3 -m pip install -q 'Pillow>=10,<13'
+      - name: Repair evidence-to-figure mapping and reviewed headline cover
+        run: python3 ops/wechat-publisher/repair-oct09-figures-and-cover-r2.py
+      - name: Independent R2 integrity checks
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, io, json
+          from pathlib import Path
+          from PIL import Image
+          root=Path.cwd()
+          gate=json.loads(Path('audit/wechat-working/2026-10-09-review-gate.json').read_text())
+          daily=json.loads(Path('public/wechat-featured/2026-10-09.json').read_text())
+          retro=json.loads(Path('public/wechat-retrospective/science-aeh7895-hezhi-tao-20261009.json').read_text())
+          edition=json.loads(Path('public/wechat-editions/2026-10-09.json').read_text())
+          qa=json.loads(Path('audit/wechat-working/2026-10-09-r2-correction-qa.json').read_text())
+          assert daily['editorialRevision']==retro['editorialRevision']==edition['editorialRevision']==gate['revision']=='2026-10-09-r2'
+          assert edition['publicationMode']=='draft_only_manual_final_send'
+          assert edition['title']==qa['fullNativeTitle']
+          assert edition['title']=='有机合成文献日报｜10.09｜今日精选｜Science：通过氧气活化实现酶催化不对称氢膦酰化'
+          assert gate['selectionDois']==['10.1126/science.aef3001','10.1126/science.aeh7895']
+          assert gate['textReview']==gate['imageReview']=='pass'
+          assert len(gate['sources'])==7 and len(gate['assets'])==44
+          assert retro['sections'][7]['figures']==['r09']
+          assert retro['sections'][7]['figures_after_paragraph']=={'3':['r09']}
+          assert retro['sections'][-1]['figures']==[]
+          assert '原文图 4B' in retro['sections'][7]['paragraphs'][2]
+          assert 'DBU' in retro['sections'][7]['paragraphs'][2]
+          assert retro['sections'][9]['figures_after_paragraph']=={'1':['r19'],'2':['r20'],'3':['r21']}
+          assert retro['sections'][3]['figures_after_paragraph']=={'1':['r04'],'2':['r05']}
+          assert retro['sections'][5]['figures_after_paragraph']=={'1':['r07'],'2':['r08']}
+          assert retro['sections'][6]['figures_after_paragraph']['3']==['r11','r22']
+          assert qa['originalChemistryRedrawn'] is False and qa['otherMisplacedFiguresRepaired'] is True
+          assert qa['originalMediaUpdateRequired'] is True and qa['publicSendAuthorized'] is False
+          cover=next(f for f in daily['figures'] if f['id']=='fcover')
+          assert cover['repo_path']==qa['coverPath']
+          assert cover['body'] is False
+          assert 'r09' in Path('audit/wechat-working/2026-10-09-r2-images-only.md').read_text()
+          assert '原生标题：'+edition['title'] in Path('audit/wechat-working/2026-10-09-r2-text-only.md').read_text()
+          def blob(data):return hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()
+          for item in gate['sources']+gate['assets']:
+            data=(root/item['path']).read_bytes()
+            assert blob(data)==item['blobSha'],item['path']
+            assert hashlib.sha256(data).hexdigest()==item['sha256'],item['path']
+            if item in gate['assets']:
+              with Image.open(io.BytesIO(data)) as image:
+                image.load()
+                assert (image.width,image.height)==(item['width'],item['height']),item['path']
+          print('PASS: two selected Science DOIs; 44 byte-pinned images; original TOC; Fig4B section7 paragraph3; full title')
+          PY
+      - name: Commit only R2 source and audited cover, never WeChat API
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            public/wechat-assets/reviewed/2026-10-09-r2/science-aef3001-cover-source-authentic-full-title.png \
+            public/wechat-featured/2026-10-09.json \
+            public/wechat-retrospective/science-aeh7895-hezhi-tao-20261009.json \
+            public/wechat-editions/2026-10-09.json \
+            audit/wechat-working/2026-10-09-review-gate.json \
+            audit/wechat-working/2026-10-09-r2-text-only.md \
+            audit/wechat-working/2026-10-09-r2-images-only.md \
+            audit/wechat-working/2026-10-09-r2-correction-qa.json
+          git diff --cached --name-only
+          git commit -m 'editorial: align Oct09 all retrospective figures, move Fig4B, restore Science native title and TOC'
+          for i in 1 2 3 4 5 6; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo 'Refusing to overwrite a concurrent editorial source change' >&2
+              exit 1
+            fi
+            if git push origin HEAD:main; then
+              echo 'SOURCE_REVIEW_COMPLETE; NO_WECHAT_DRAFT_WRITE'
+              exit 0
+            fi
+            sleep 2
+          done
+          echo 'Main moved six times; no unsafe overwrite' >&2
+          exit 1
+      - name: Keep visual proof for human inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wechat-oct09-r2-verified-source-and-cover
+          path: |
+            public/wechat-assets/reviewed/2026-10-09-r2/science-aef3001-cover-source-authentic-full-title.png
+            audit/wechat-working/2026-10-09-r2-correction-qa.json
+          if-no-files-found: ignore
+          retention-days: 7
