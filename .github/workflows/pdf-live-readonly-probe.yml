@@ -1,0 +1,31 @@
+name: Gallery PDF public-route read-only network probe
+on:
+  push:
+    branches:
+      - feature/owner-private-pdf-dual-ingress-20261008
+    paths:
+      - 'scripts/pdf-live-readonly-probe.mjs'
+      - '.github/workflows/pdf-live-readonly-probe.yml'
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  network-readonly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+      - name: Read-only unauthenticated requests from overseas CI (not Mainland/campus)
+        env:
+          PDF_PUBLIC_PROBE_OUTPUT: ${{ runner.temp }}/gallery-pdf-public-net.json
+        run: node scripts/pdf-live-readonly-probe.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pdf-public-readonly-network-diagnostics
+          path: ${{ runner.temp }}/gallery-pdf-public-net.json
+          if-no-files-found: ignore
+          retention-days: 5
