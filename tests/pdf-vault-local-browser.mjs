@@ -43,6 +43,36 @@ function vectorPdf(shade = '0.2') {
   body += 'trailer\n<< /Size ' + (objects.length + 1) + ' /Root 1 0 R >>\nstartxref\n' + start + '\n%%EOF\n';
   return Buffer.from(body);
 }
+
+// Self-generated PDF (no publisher material). Many page refs, realistic xref,
+// and a padded final stream stress parsing without fetching whole-document RAM.
+function pressurePdf(pageCount = 128, tailBytes = 0) {
+  if (!Number.isInteger(pageCount) || pageCount < 2 || pageCount > 150) throw new Error('invalid_pressure_pages');
+  const pages = [], objects = new Array(2 + pageCount * 2);
+  objects[0] = '<< /Type /Catalog /Pages 2 0 R >>';
+  for (let i = 0; i < pageCount; i++) {
+    const page = 3 + i * 2, contents = page + 1;
+    pages.push(page + ' 0 R');
+    objects[page - 1] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 360 480] /Resources << >> /Contents ' + contents + ' 0 R >>';
+    const paint = 'q 0.12 0.43 0.68 rg 30 30 300 420 re f Q\n';
+    const padding = i === pageCount - 1 && tailBytes ? '%' + 'x'.repeat(tailBytes) + '\n' : '';
+    const stream = paint + padding;
+    objects[contents - 1] = '<< /Length ' + Buffer.byteLength(stream) + ' >>\nstream\n' + stream + 'endstream';
+  }
+  objects[1] = '<< /Type /Pages /Kids [' + pages.join(' ') + '] /Count ' + pageCount + ' >>';
+  let body = '%PDF-1.7\n% Synthetic Gallery scroll pressure test; no real paper content.\n';
+  const offsets = [];
+  for (let i = 0; i < objects.length; i++) {
+    offsets.push(Buffer.byteLength(body));
+    body += String(i + 1) + ' 0 obj\n' + objects[i] + '\nendobj\n';
+  }
+  const start = Buffer.byteLength(body);
+  body += 'xref\n0 ' + String(objects.length + 1) + '\n0000000000 65535 f \n';
+  for (const offset of offsets) body += String(offset).padStart(10, '0') + ' 00000 n \n';
+  body += 'trailer\n<< /Size ' + String(objects.length + 1) + ' /Root 1 0 R >>\nstartxref\n' + start + '\n%%EOF\n';
+  return Buffer.from(body);
+}
+
 const PDF = vectorPdf(), CHANGED_PDF = vectorPdf('0.7');
 assert.equal(PDF.length, CHANGED_PDF.length, 'changed fixture preserves size so a size-only probe cannot pass');
 const PDF_HASH = createHash('sha256').update(PDF).digest('hex');
@@ -143,8 +173,8 @@ async function pageWaitNoQueue(page) {
 }
 async function queueAdd(page) { await by(page, 'queue-doi').fill(DOI); await by(page, 'queue-add').click(); await waitQueueStatus(page, 'success'); }
 
-async function trackedContext({ width = 1280, holdAuth = false, folderPicker = true, queue = queueFixture(), indexedDb = true } = {}) {
-  const context = await browser.newContext({ viewport: { width, height: 900 }, acceptDownloads: true });
+async function trackedContext({ width = 1280, holdAuth = false, folderPicker = true, queue = queueFixture(), indexedDb = true, nativeTouch = false } = {}) {
+  const context = await browser.newContext({ viewport: { width, height: 900 }, acceptDownloads: true, ...(nativeTouch ? {isMobile:true,hasTouch:true,deviceScaleFactor:2} : {}) });
   contexts.add(context); context.setDefaultTimeout(7000); context.setDefaultNavigationTimeout(12000);
   await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
   const diagnostic = activeCase;
@@ -419,6 +449,75 @@ try {
     await page.waitForFunction(() => /1\s*\/\s*2/.test(document.querySelector('[data-testid="pdf-vault-reader-pagecount"]')?.textContent || ''));
     await by(page, 'reader-close').click(); await assertNoReader(page);
     assert.equal(await by(page, 'reader-canvas').count(), 0, 'closing destroys page canvases');
+  });
+  await test('128-page 5MiB PDF scroll remains lazy and clears every canvas after close', async () => {
+    const source = pressurePdf(128, 5 * 1024 * 1024);
+    assert.ok(source.length > 5 * 1024 * 1024);
+    const { context } = await trackedContext();
+    const page = await pageFor(context);
+    await selectDestination(page);
+    await importFile(page, source, 'gallery-pressure-128.pdf');
+    await waitStatus(page, 'success');
+    await openFirst(page);
+    const viewer = by(page, 'reader').locator('.reader-scroll-container');
+    const measure = async number => {
+      await viewer.evaluate((element, pageNumber) => {
+        const slot = element.querySelector('.pdfViewer .page[data-page-number="' + pageNumber + '"]');
+        if (!slot) throw new Error('missing_pressure_page_slot');
+        element.scrollTop = Math.max(0, slot.offsetTop - element.offsetTop);
+        element.dispatchEvent(new Event('scroll'));
+      }, number);
+      await page.waitForFunction(pageNumber => (
+        document.querySelector('[data-testid="pdf-vault-reader-pagecount"]')?.textContent?.includes('第 ' + pageNumber + ' / 128') &&
+        document.querySelector('.reader-scroll-container .pdfViewer .page[data-page-number="' + pageNumber + '"] canvas')?.dataset.renderedPage === String(pageNumber)
+      ), number, {timeout:20000});
+      return viewer.evaluate(element => ({
+        slots:element.querySelectorAll('.pdfViewer .page').length,
+        canvases:element.querySelectorAll('.pdfViewer .page canvas').length,
+        width:element.clientWidth,scrollWidth:element.scrollWidth
+      }));
+    };
+    const observed = [];
+    for(const index of [1,64,128,1]) {
+      const m = await measure(index);
+      assert.equal(m.slots,128,'all 128 pages have layout slots');
+      assert.ok(m.canvases<=18,'lazy render queue must bound live canvases: '+JSON.stringify(m));
+      assert.ok(m.scrollWidth<=m.width+4,'fit-to-width PDF has no horizontal overflow');
+      observed.push({page:index,canvases:m.canvases});
+    }
+    console.log('PDF_VAULT_LAZY_PRESSURE '+JSON.stringify({pages:128,sourceBytes:source.length,observed}));
+    await by(page,'reader-close').click();
+    assert.equal(await page.locator('#local-pdf-continuous canvas').count(),0,'close releases every rendered page');
+  });
+  await test('390px native touch gesture scrolls local PDF without overflow', async () => {
+    const { context } = await trackedContext({width:390,folderPicker:false,nativeTouch:true});
+    const page = await pageFor(context);
+    await importGood(page);
+    await openFirst(page);
+    const viewer = by(page,'reader').locator('.reader-scroll-container');
+    const rect = await viewer.boundingBox();
+    assert.ok(rect&&rect.width>100&&rect.height>150);
+    const before = await viewer.evaluate(node=>node.scrollTop);
+    const client = await context.newCDPSession(page);
+    const x = Math.round(rect.x+rect.width/2);
+    const y = Math.round(rect.y+Math.min(rect.height*0.8,rect.height-32));
+    await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:0}]});
+    for(let i=1;i<=12;i++){
+      await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:Math.round(y-i*43),id:0}]});
+      await new Promise(resolve=>setTimeout(resolve,16));
+    }
+    await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    await page.waitForFunction(old=>document.querySelector('.reader-scroll-container')?.scrollTop>old+60,before,{timeout:8000});
+    const metrics=await page.evaluate(()=>({
+      viewport:innerWidth,docWidth:document.documentElement.scrollWidth,
+      pdfScroll:document.querySelector('.reader-scroll-container')?.scrollTop,
+      label:document.querySelector('[data-testid="pdf-vault-reader-pagecount"]')?.textContent
+    }));
+    assert.ok(metrics.docWidth<=metrics.viewport+1,'mobile reader widens page');
+    assert.ok(metrics.pdfScroll>before+60,'native touch gesture moves PDF');
+    await by(page,'reader-close').click();
+    assert.equal(await page.locator('#local-pdf-continuous canvas').count(),0);
+    console.log('PDF_VAULT_NATIVE_TOUCH '+JSON.stringify(metrics));
   });
   await test('changed same-size PDF cannot reuse a prior readability result', async () => {
     const { context } = await trackedContext(); const page = await pageFor(context); await importGood(page); await mutateFile(page, 'change');

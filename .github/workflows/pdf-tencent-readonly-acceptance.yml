@@ -1,0 +1,34 @@
+name: Tencent PDF public health and DNS read-only acceptance
+on:
+  push:
+    branches:
+      - feature/owner-private-pdf-dual-ingress-20261008
+    paths:
+      - 'scripts/pdf-tencent-readonly-acceptance.mjs'
+      - '.github/workflows/pdf-tencent-readonly-acceptance.yml'
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+      - name: Syntax and public DNS/TLS gateway validation, no authentication or writes
+        env:
+          PDF_TENCENT_PUBLIC_REPORT: ${{ runner.temp }}/pdf-tencent-public-diagnostic.json
+        run: |
+          node --check scripts/pdf-tencent-readonly-acceptance.mjs
+          node scripts/pdf-tencent-readonly-acceptance.mjs
+      - name: Preserve bounded public diagnosis, including blocked readiness reasons
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tencent-pdf-public-readonly-diagnostic
+          path: ${{ runner.temp }}/pdf-tencent-public-diagnostic.json
+          if-no-files-found: ignore
+          retention-days: 7

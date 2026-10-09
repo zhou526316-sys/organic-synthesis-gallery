@@ -34,6 +34,19 @@ const API_BASE = 'https://api.gczhouwld.com';
 // Same deployed owner Worker, used only if the canonical API is unusually slow.
 // Never accept arbitrary redirects or a file URL from an unlisted host.
 const API_BACKUP = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
+// Independent Tencent DNS-only ingress, activated only after real acceptance.
+const API_TENCENT = 'https://pdf.gczhouwld.com';
+async function tencentGatewayEnabled() {
+  try {
+    const response = await fetch('/pdf-gateway-routing.json', {
+      cache: 'no-store', credentials: 'same-origin', signal: AbortSignal.timeout(1200),
+    });
+    if (!response.ok) return false;
+    const data = await response.json();
+    return data?.schemaVersion === 1 && data?.enabled === true &&
+      data?.origin === API_TENCENT;
+  } catch { return false; }
+}
 const OPEN_HEDGE_DELAY_MS = 3_500;
 const OPEN_TOTAL_TIMEOUT_MS = 15_000;
 const ASSET_BASE = '/pdf-vault-assets/6.4.299/';
@@ -188,7 +201,7 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
   const route = document.documentElement.dataset.privatePdfAuthorizePath || '';
   diagnostic.textContent = `阶段：${phase} · ${detail || 'unknown'} · ${(elapsed / 1000).toFixed(1)}s` +
     (timingDetails.length ? ' · ' + timingDetails.join(' · ') : '') +
-    (['primary', 'backup', 'both-failed'].includes(route) ? ` · 授权线路:${route}` : '');
+    (['primary', 'backup', 'tencent', 'both-failed'].includes(route) ? ` · 授权线路:${route}` : '');
   status.appendChild(diagnostic);
   if (['pdf_authorize_timeout','pdf_authorize_network_error'].includes(detail)) {
     const attempts = document.documentElement.dataset.privatePdfAuthAttempts || '';
@@ -341,17 +354,36 @@ async function fetchAuthorizedSource(origin, sessionToken, mode, controller, onH
   };
 }
 
-async function getPdfSource(sessionToken, mode = 'view') {
-  const origins = [API_BASE, API_BACKUP];
+async function getPdfSource(sessionToken, mode = 'view', preferTencent = false) {
+  if (preferTencent) {
+    if (!(await tencentGatewayEnabled())) throw new Error('pdf_authorize_network_error');
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort('tencent_authorize_timeout'),
+      OPEN_TOTAL_TIMEOUT_MS);
+    try {
+      const source = await fetchAuthorizedSource(API_TENCENT, sessionToken, mode, controller);
+      document.documentElement.dataset.privatePdfAuthorizePath = 'tencent';
+      declaredPdfBytes = source.byteLength;
+      document.documentElement.dataset.privatePdfDeclaredBytes = String(declaredPdfBytes);
+      return source;
+    } catch (error) {
+      if (controller.signal.aborted) throw new Error('pdf_authorize_timeout');
+      throw error;
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }
+  const tencentReady = await tencentGatewayEnabled();
+  const origins = [API_BASE, API_BACKUP, ...(tencentReady ? [API_TENCENT] : [])];
   const controllers = origins.map(() => new AbortController());
   document.documentElement.dataset.privatePdfAuthorizePath = '';
-  let hedgeTimer = null, deadlineTimer = null;
-  let backupStarted = false, pending = 0, finished = false;
+  let hedgeTimer = null, tencentTimer = null, deadlineTimer = null;
+  let backupStarted = false, tencentStarted = false, pending = 0, finished = false;
   const errors = [];
-  const attempts = [
-    { label: 'primary', started: 0, elapsed: 0, result: '未发起', stages: '' },
-    { label: 'backup', started: 0, elapsed: 0, result: '未发起', stages: '' },
-  ];
+  const attempts = origins.map((_, i) => ({
+    label: ['primary','backup','tencent'][i], started: 0, elapsed: 0,
+    result: '未发起', stages: '',
+  }));
   const saveAttempts = () => {
     const at = performance.now();
     document.documentElement.dataset.privatePdfAuthAttempts = attempts.map(a => {
@@ -367,6 +399,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
       if (finished) return;
       finished = true;
       if (hedgeTimer !== null) clearTimeout(hedgeTimer);
+      if (tencentTimer !== null) clearTimeout(tencentTimer);
       if (deadlineTimer !== null) clearTimeout(deadlineTimer);
       document.documentElement.dataset.privatePdfAuthorizePath = route ||
         (error ? 'both-failed' : '');
@@ -376,8 +409,10 @@ async function getPdfSource(sessionToken, mode = 'view') {
       else resolve(value);
     };
     const launch = index => {
-      if (finished || (index === 1 && backupStarted)) return;
+      if (finished || (index === 1 && backupStarted) ||
+          (index === 2 && tencentStarted)) return;
       if (index === 1) backupStarted = true;
+      if (index === 2) tencentStarted = true;
       const attempt = attempts[index];
       attempt.started = performance.now();
       attempt.result = '等待';
@@ -387,7 +422,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
         .then(source => {
           attempt.elapsed = Math.round(performance.now() - attempt.started);
           attempt.result = '完成';
-          finish(source, null, index === 0 ? 'primary' : 'backup');
+          finish(source, null, attempts[index].label);
         })
         .catch(error => {
           if (finished) return;
@@ -397,7 +432,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
           // Never route around an explicit permission denial or a verified
           // absence of a private file. Both endpoints enforce the same policy.
           const explicitDenial = error?.notAvailable ||
-            /^open_http_(401|403)$/.test(error?.message || '') ||
+            /^open_http_(401|403|429)$/.test(error?.message || '') ||
             error?.message === 'pdf_source_invalid';
           // The canonical endpoint is authoritative. A secondary gateway
           // may be temporarily out of sync: never let its denial cancel a
@@ -412,14 +447,21 @@ async function getPdfSource(sessionToken, mode = 'view') {
             launch(1);
           }
           if (pending === 0 && backupStarted) {
-            const status = errors.find(e => /^open_http_(5\d\d|429)$/.test(e?.message || ''));
-            finish(null, new Error(status?.message || 'pdf_authorize_network_error'));
+            // Do not finish before the independent path has had a chance to
+            // respond. Real authorization is still checked by Cloudflare.
+            if (tencentReady && !tencentStarted) launch(2);
+            else {
+              const status = errors.find(e =>
+                /^open_http_(5\d\d|429)$/.test(e?.message || ''));
+              finish(null, new Error(status?.message || 'pdf_authorize_network_error'));
+            }
           }
         });
     };
     deadlineTimer = setTimeout(() => finish(null, new Error('pdf_authorize_timeout')),
       OPEN_TOTAL_TIMEOUT_MS);
     hedgeTimer = setTimeout(() => launch(1), OPEN_HEDGE_DELAY_MS);
+    if (tencentReady) tencentTimer = setTimeout(() => launch(2), 1_800);
     launch(0);
   });
 
@@ -533,7 +575,8 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
     }
     async refreshUrl() {
       if (!this.refreshPromise) {
-        this.refreshPromise = getPdfSource(sessionToken, 'view').then(source => {
+        this.refreshPromise = getPdfSource(sessionToken, 'view',
+          this.fileUrl.startsWith(API_TENCENT + '/')).then(source => {
           if (declaredPdfBytes !== byteLength) throw new Error('pdf_incomplete_bytes');
           this.fileUrl = source.url;
           return this.fileUrl;
@@ -763,10 +806,10 @@ async function fetchPdfSingleTransfer(fileUrl, sessionToken) {
     if (transferController === controller) transferController = null;
   }
 }
-async function verifiedPdfSource(sessionToken, mode = 'view') {
+async function verifiedPdfSource(sessionToken, mode = 'view', preferTencent = false) {
   let lastError;
   for (let attempt = 0; attempt < 2; attempt += 1) {
-    const source = await getPdfSource(sessionToken, mode);
+    const source = await getPdfSource(sessionToken, mode, preferTencent);
     // The updated Worker has already checked R2 object size, the %PDF-
     // signature and a self-tested v2 ticket within the authorized POST.
     // Avoid a second China-to-edge roundtrip. An older Worker or a legacy
@@ -819,7 +862,23 @@ async function beginDownload() {
   download.disabled = true;
   download.textContent = '正在准备下载…';
   try {
-    const downloadUrl = await verifiedPdfSource(sessionToken, 'download');
+    let downloadUrl;
+    if (await tencentGatewayEnabled()) {
+      // A browser navigation cannot be rescued once its download has started.
+      // Prefer the independent HTTPS file path and verify an actual 206 range
+      // before navigating. Fall back to the original Cloudflare route only on
+      // transport faults, never after a definitive 401/403 or missing file.
+      try {
+        downloadUrl = await verifiedPdfSource(sessionToken, 'download', true);
+        await checkPdfHeader(downloadUrl);
+      } catch (error) {
+        if (error?.notAvailable ||
+            /^(?:open|file)_http_(401|403|429)$/.test(String(error?.message || ''))) throw error;
+        downloadUrl = await verifiedPdfSource(sessionToken, 'download');
+      }
+    } else {
+      downloadUrl = await verifiedPdfSource(sessionToken, 'download');
+    }
     if (destroyed || sessionToken !== token()) return;
     document.documentElement.dataset.privatePdfDownload = 'started';
     // The endpoint now sends Content-Disposition: attachment. Navigate rather
@@ -833,7 +892,7 @@ async function beginDownload() {
     download.textContent = '下载 PDF';
   }
 }
-async function start() {
+async function start(preferTencent = false) {
   if (!/^10\.\d{4,9}\/.+/.test(doi)) { fallbackView('DOI 无效。'); return; }
   const sessionToken = token();
   if (!sessionToken) { fallbackView('请先在 Gallery 登录后再读取私有 PDF。'); return; }
@@ -855,7 +914,7 @@ async function start() {
     setPhase('authorize', '正在确认 PDF 权限…');
     const authorizeStarted = performance.now();
     try {
-      sourceUrl = await verifiedPdfSource(sessionToken, 'view');
+      sourceUrl = await verifiedPdfSource(sessionToken, 'view', preferTencent);
     } finally {
       document.documentElement.dataset.privatePdfAuthorizeMs =
         String(Math.round(performance.now() - authorizeStarted));
@@ -955,14 +1014,47 @@ async function start() {
           });
         }
       })();
-      // Buffered/small-PDF parsing must have the same bounded first-page
-      // deadline as range-first documents; previously the buffered branch
-      // waited indefinitely after a successful file transfer.
+      // Bound the first PDF.js page in both Range and buffered modes.
       await waitForPdfFirstPage(firstPageJob,
         rangeMode ? activeRangeTransport.failed : null, FIRST_PAGE_TIMEOUT_MS);
     }
   } catch (error) {
     rangeWarmup?.abort();
+    const terminal = rangeFailure || error;
+    const failureCode = String(terminal?.message || '');
+    const filePhase = phase === 'transfer' || phase === 'range' || phase === 'parse';
+    const transientFileFailure =
+      /^file_http_(408|5\d\d)$/.test(failureCode) ||
+      ['pdf_transfer_timeout', 'pdf_incomplete_bytes',
+       'pdf_first_page_timeout', 'pdf_range_unavailable'].includes(failureCode) ||
+      ((phase === 'transfer' || phase === 'range') && terminal?.name === 'TypeError');
+    // A successful upstream ticket does not imply its PDF bytes are reachable.
+    // Retest the independent route once, never on 401/403/429, missing PDFs,
+    // invalid content, or permanent access denial.
+    const switchToTencent = !preferTencent && !nativeMode && !destroyed &&
+      sessionToken === token() && sourceUrl &&
+      [API_BASE, API_BACKUP].some(host => sourceUrl.startsWith(host + '/')) &&
+      filePhase && transientFileFailure && await tencentGatewayEnabled();
+    if (switchToTencent) {
+      document.documentElement.dataset.privatePdfFileFallback = 'tencent';
+      renderSequence += 1;
+      renderTask?.cancel();
+      renderTask = null;
+      continuous?.destroy();
+      continuous = null;
+      canvas = null;
+      pdf = null;
+      rangeFailure = null;
+      transferController?.abort('switch_gateway');
+      activeRangeTransport?.abort();
+      try { await loadingTask?.destroy(); } catch { /* lifecycle cleanup */ }
+      loadingTask = null;
+      activeRangeTransport = null;
+      pageNumber = 1;
+      sourceUrl = '';
+      setPhase('authorize', '文件传输失败，正在自动切换独立 PDF 线路…');
+      return start(true);
+    }
     if (phase === 'parse' && !continuous) {
       const kind = String(error?.name || 'Error').replace(/[^A-Za-z]/g, '').slice(0,30);
       const summary = String(error?.message || '')
@@ -983,7 +1075,7 @@ async function start() {
       try { void loadingTask?.destroy(); } catch {}
       loadingTask = null;
     }
-    showReaderError(rangeFailure || error);
+    showReaderError(terminal);
   }
 }
 

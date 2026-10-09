@@ -1,0 +1,63 @@
+name: Gallery owner PDF Tencent failover frontend regression
+on:
+  push:
+    branches:
+      - feature/owner-private-pdf-dual-ingress-20261008
+    paths:
+      - 'src/private-pdf-reader.mjs'
+      - 'src/pdf-continuous-viewer.mjs'
+      - 'src/pdf-vault/reader.mjs'
+      - 'tests/pdf-vault-local-browser.mjs'
+      - 'src/private-pdf-access.ts'
+      - 'src/user-ui/library-shell.ts'
+      - 'pdf/index.html'
+      - 'public/pdf-gateway-routing.json'
+      - 'tests/private-pdf-access-browser.mjs'
+      - '.github/workflows/pdf-tencent-frontend-regression.yml'
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  reader:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/owner-private-pdf-dual-ingress-20261008
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+      - name: Build and validate
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+      - name: Install isolated Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Block flip-page regressions and accidental gateway activation
+        run: |
+          grep -q 'createContinuousPdfViewer' src/private-pdf-reader.mjs
+          grep -q 'waitForPdfFirstPage' src/private-pdf-reader.mjs
+          node --test tests/pdf-first-page-watchdog.mjs
+          grep -q 'id="pdf-scroll-container"' pdf/index.html
+          grep -q '"enabled": false' public/pdf-gateway-routing.json
+          ! grep -q 'previous.addEventListener' src/private-pdf-reader.mjs
+          ! grep -q 'next.addEventListener' src/private-pdf-reader.mjs
+      - name: Exercise Tencent failover and continuous owner/local PDF readers
+        env:
+          PRIVATE_PDF_BROWSER_OUTPUT: ${{ runner.temp }}/gateway-browser-qa
+          PDF_VAULT_BROWSER_OUTPUT: ${{ runner.temp }}/gateway-vault-qa
+        run: |
+          node tests/private-pdf-access-browser.mjs
+          node tests/pdf-vault-local-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gateway-owner-pdf-browser-qa
+          path: |
+            ${{ runner.temp }}/gateway-browser-qa
+            ${{ runner.temp }}/gateway-vault-qa
+          if-no-files-found: ignore
+          retention-days: 5
