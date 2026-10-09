@@ -409,7 +409,7 @@ try{
    JSON.stringify({routes:state.openOrigins,requests:state.privateCalls}));
   assert.ok(state.openOrigins.includes('https://api.gczhouwld.com'));
   assert.ok(state.openOrigins.includes('https://organic-synthesis-gallery.zhou526316.workers.dev'));
-  assert.equal(await target.locator('html').getAttribute('data-private-pdf-transfer-strategy'),'parallel-ranges');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-transfer-strategy'),'on-demand-ranges');
   assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
   assert.equal(state.privateFileCalls>=1,true);
  });
