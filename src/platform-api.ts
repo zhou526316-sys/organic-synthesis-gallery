@@ -390,6 +390,7 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
     }
 
     const manifest = await loadMediaManifest();
+    const hasStaticForRequest = requested.some(doi => Boolean(manifest.items?.[doi]));
     const items = requested.flatMap(doi => {
       const raw = manifest.items?.[doi];
       const local = raw ? normalizeMediaItem(excludeConfirmedWrongToc(raw), 'static') : undefined;
@@ -400,7 +401,7 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
       data: { generatedAt: liveGeneratedAt || manifest.generatedAt || Date.now(), items } as T,
       status: 200,
       headers: new Headers({
-        'x-gallery-media-source': liveError ? 'static-fallback' : liveByDoi.size ? 'static+dynamic' : 'static-manifest',
+        'x-gallery-media-source': liveError ? 'static-fallback' : liveByDoi.size ? (hasStaticForRequest ? 'static+dynamic' : 'dynamic') : 'static-manifest',
       }),
     };
   }
