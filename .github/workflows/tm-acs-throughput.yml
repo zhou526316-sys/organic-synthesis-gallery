@@ -13,6 +13,7 @@ on:
       - tests/tm-image-outbox-recovery-20261008.test.mjs
       - tests/tm-owner-pdf-replay-20261008.test.mjs
       - scripts/test-tm223-upload.mjs
+      - scripts/test-tm-preflight-handoff-and-chem-pii.mjs
       - .github/workflows/tm-acs-throughput.yml
 permissions:
   contents: read
@@ -37,6 +38,7 @@ jobs:
           node --test tests/tm-image-outbox-recovery-20261008.test.mjs
           node --test tests/tm-owner-pdf-replay-20261008.test.mjs
           node scripts/test-tm223-upload.mjs
+          node scripts/test-tm-preflight-handoff-and-chem-pii.mjs
           node --test tests/tm-gap-recovery.test.mjs
           node tests/tm-missing-only.test.mjs
           node tests/tm-queue-coverage.test.mjs
