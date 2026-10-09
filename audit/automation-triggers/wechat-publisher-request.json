@@ -1,19 +1,17 @@
 {
-  "requestId": "wechat-2026-10-08-r9-max-safe-original-TOC-full-native-title",
-  "requestedAt": "2026-10-08T14:06:00+08:00",
-  "publicationDate": "2026-10-08",
+  "requestId": "wechat-2026-10-09-r1-user-approved-two-science-initial-draft",
+  "requestedAt": "2026-10-09T11:10:00+08:00",
+  "publicationDate": "2026-10-09",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-08-r9",
-  "approvedGate": "audit/wechat-working/2026-10-08-review-gate.json",
+  "editorialRevision": "2026-10-09-r1",
+  "approvedGate": "audit/wechat-working/2026-10-09-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
-    "10.1021/jacs.6c14748",
-    "10.1038/s41929-026-01602-y"
+    "10.1126/science.aef3001",
+    "10.1126/science.aeh7895"
   ],
-  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWFVYn_-s6bRj39Vw7w-SivoAE1W-c7lb3hzVk5bB-0Tr",
   "draftOnly": true,
   "requireDraftGetReadback": true,
   "publicSendAuthorized": false,
-  "prePublishQA": "audit/wechat-working/2026-10-08-r9-cover-qa.json",
-  "reason": "User requested self-reviewed additional TOC enlargement without asking for further corrections. Verified original JACS TOC now 792x492, +11.46% area relative to 760x460 R8; 2.35:1 and central 1:1 mobile crop proofs and two-line title stress checked. KEEP exact complete native article title, header-free white TOC, source-exact chemistry, all body images and Nature Catalysis second article. Update SAME existing media_id once; draft/get mandatory. No public send."
+  "reason": "Owner approved preparing today's two-item WeChat draft only, with user-selected Science aef3001 as 今日精选, Science aeh7895 何智涛 as independent 往期精选, reviewed 20+22 source figures and 2 covers from R1 fingerprint gate, same-day 08:00 verified 28-paper Gallery index. Never reuse Oct8 media_id; initial Oct9 draft only. No freepublish/submit or group sending."
 }
