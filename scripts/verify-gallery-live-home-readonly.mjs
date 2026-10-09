@@ -163,10 +163,10 @@ try {
         await bodySlot.locator('.figure-thumb img').first().waitFor({ state:'attached', timeout:25000 });
         sampleFound = true;
         await bodySlot.locator('.figure-thumb img').first().scrollIntoViewIfNeeded({ timeout:8000 });
-        await page.waitForFunction(() =>
-          [...document.querySelectorAll('.figure-strip-slot[data-figure-doi="' + BODY_SAMPLE + '"] img')]
+        await page.waitForFunction(doi =>
+          [...document.querySelectorAll('.figure-strip-slot[data-figure-doi="' + doi + '"] img')]
             .some(img => img.complete && img.naturalWidth > 0),
-          null, { timeout:18000, polling:200 },
+          BODY_SAMPLE, { timeout:18000, polling:200 },
         );
         const result = await bodySlot.evaluate(slot => {
           const imgs = [...slot.querySelectorAll('.figure-thumb img')];
