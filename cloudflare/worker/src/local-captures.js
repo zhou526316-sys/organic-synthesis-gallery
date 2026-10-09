@@ -81,6 +81,31 @@ export function isRejectedRscPreviewCapture(item, doi = item?.doi) {
     || /\bpdf\s+first\s+page\s+preview\b/.test(semantic);
 }
 
+export function angewOfficialGaEvidenceError(item, requestedDoi = item?.doi) {
+  const doi = normalizeDoi(requestedDoi || '');
+  if (!/^10\.1002\/anie\./.test(doi) || String(item?.kind || '') !== 'official') return '';
+  const candidateSource = String(item?.candidateSource || '');
+  const caption = String(item?.caption || '');
+  if (/wiley_ga_labeled_section_single_image/i.test(candidateSource)) return 'angew_unverified_single_image_toc';
+  if (/^(?:fig(?:ure)?\.?|scheme|chart)\s*[1-9]\d*/i.test(caption.trim())
+    || /\b(?:substrate|reaction|product)\s+(?:scope|screening|expansion)\b|\bscope\s+of\s+substrates\b/i.test(caption)) {
+    return 'angew_body_figure_not_official_toc';
+  }
+  const articleDois = embeddedKnownDois(item?.articleUrl || '');
+  if (!articleDois.includes(doi) || articleDois.some(value => value !== doi)) return 'angew_article_doi_evidence_missing';
+  let source;
+  try { source = new URL(String(item?.sourceUrl || '')); } catch { return 'angew_ga_source_url_invalid'; }
+  const host = source.hostname.toLowerCase();
+  if (!(host === 'wiley.com' || host.endsWith('.wiley.com')
+    || host === 'wiley.com.cn' || host.endsWith('.wiley.com.cn'))) return 'angew_ga_source_not_wiley';
+  const path = decodeURIComponent(source.pathname).toLowerCase();
+  const officialAsset = /-gra-\d+(?:[-_.]|$)|graphical[-_]abstract|visual[-_]abstract|(?:^|[\/_-])(?:ga|fx)0*1(?:[-_.]|$)/i.test(path);
+  const headMetadata = candidateSource === 'article_head_metadata'
+    && /^(?:graphical_abstract|toc_graphic|abstract_image)$/.test(String(item?.assetType || ''));
+  if (!officialAsset && !headMetadata) return 'angew_ga_role_not_proven';
+  return '';
+}
+
 function captureIntakeError(payload, doi) {
   if (payload?.captureVersion !== '6.2.20') return 'capture_client_upgrade_required';
   if (!/^[a-z0-9-]{16,80}$/i.test(String(payload?.jobId || ''))) return 'capture_job_binding_missing';
@@ -88,6 +113,8 @@ function captureIntakeError(payload, doi) {
   if (!safeUrl(payload?.articleUrl) || !safeUrl(payload?.sourceUrl)) return 'capture_source_evidence_missing';
   if (!captureBelongsToDoi(payload, doi)) return 'media_source_doi_mismatch';
   if (isRejectedRscPreviewCapture(payload, doi)) return 'rsc_pdf_preview_rejected';
+  const angewError = angewOfficialGaEvidenceError(payload, doi);
+  if (angewError) return angewError;
   return '';
 }
 
@@ -811,6 +838,8 @@ export async function importLocalCapture(request, env, payload) {
     caption: typeof payload?.caption === 'string' ? payload.caption.slice(0, 600) : '',
     sourceUrl: typeof payload?.sourceUrl === 'string' ? payload.sourceUrl.slice(0, 2000) : '',
     source: safeText(payload?.source || 'windows-toc-collector', 80),
+    candidateSource: safeText(payload?.candidateSource || '', 100),
+    assetType: safeText(payload?.assetType || '', 60),
     capturedAt: typeof payload?.capturedAt === 'string' ? payload.capturedAt.slice(0, 80) : '',
     updatedAt: now,
   };
@@ -824,14 +853,22 @@ export async function importLocalCapture(request, env, payload) {
   let productionFallback = null;
   const imageData = 'data:' + image.contentType + ';base64,' + bytesToBase64(image.bytes);
   if (kind === 'official') {
+    const existingToc = await env.DB.prepare('SELECT available, r2_key, content_hash FROM toc_assets WHERE doi = ? LIMIT 1').bind(doi).first();
+    if (existingToc && Number(existingToc.available) === 1 && existingToc.r2_key
+      && String(existingToc.content_hash || '').toLowerCase() !== hash.slice(0, 32)) {
+      return { status: 409, body: { stored: true, localStored: true, productionTocStored: false,
+        code: 'official_toc_conflict_review_required', doi, kind, contentHash: hash.slice(0, 32),
+        existingHash: String(existingToc.content_hash || ''), updatedAt: now } };
+    }
     const promoted = await importToc(request, env, {
       doi,
       articleUrl: payload.articleUrl,
       sourceUrl: payload.sourceUrl,
       imageData,
-      replace: true,
+      replace: false,
     });
-    if (Number(promoted?.status || 500) < 200 || Number(promoted?.status || 500) >= 300 || promoted?.body?.available !== true) {
+    if (Number(promoted?.status || 500) < 200 || Number(promoted?.status || 500) >= 300 || promoted?.body?.available !== true
+      || String(promoted?.body?.contentHash || '').toLowerCase() !== hash.slice(0, 32)) {
       return {
         status: 503,
         body: {
@@ -1088,12 +1125,14 @@ export async function promoteOfficialLocalTocs(request, env, options = {}) {
     const current = await env.DB.prepare(
       'SELECT available, r2_key, updated_at FROM toc_assets WHERE doi = ? LIMIT 1'
     ).bind(doi).first();
-    if (current && Number(current.available) === 1 && current.r2_key && Number(current.updated_at || 0) >= MEDIA_REBUILD_EPOCH) {
+    if (current && Number(current.available) === 1 && current.r2_key) {
       alreadyCurrent += 1;
       continue;
     }
 
     try {
+      const angewError = angewOfficialGaEvidenceError(item, doi);
+      if (angewError) throw new Error(angewError);
       const object = await env.MEDIA.get(item.r2Key);
       if (!object) throw new Error('local_toc_r2_object_missing');
       const bytes = new Uint8Array(await object.arrayBuffer());
@@ -1105,7 +1144,7 @@ export async function promoteOfficialLocalTocs(request, env, options = {}) {
         articleUrl: item.articleUrl,
         sourceUrl: item.sourceUrl,
         imageData,
-        replace: true,
+        replace: false,
       });
       if (Number(result?.status || 500) < 200 || Number(result?.status || 500) >= 300 || result?.body?.available !== true) {
         const detail = safeText(result?.body?.code || result?.body?.error || '', 120);
