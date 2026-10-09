@@ -5,7 +5,8 @@ import {angewOfficialGaEvidenceError, importLocalCapture} from '../cloudflare/wo
 
 const doi='10.1002/anie.4335022';
 const articleUrl='https://onlinelibrary.wiley.com/doi/full/'+doi;
-const ga='https://onlinelibrary.wiley.com/cms/asset/a/anie75210-gra-0003.png';
+const ga='https://onlinelibrary.wiley.com/cms/asset/a/anie76001-gra-0001-m.jpg';
+const knownWrong='https://onlinelibrary.wiley.com/cms/asset/6f79df19-df6a-4793-8929-6fb43d0f1bbd/anie75210-gra-0003.png';
 const alternate='https://onlinelibrary.wiley.com/cms/asset/a/anie75027-gra-0001-m.jpg';
 const explicitForeign='https://onlinelibrary.wiley.com/cms/asset/10.1002/anie.5624001/anie75027-gra-0001-m.jpg';
 const neutral='https://onlinelibrary.wiley.com/cms/asset/a/figure-original.jpg';
@@ -26,6 +27,12 @@ verify('single-image heading fallback is never sufficient',
   angewOfficialGaEvidenceError(make({candidateSource:'wiley_ga_labeled_section_single_image'}))==='angew_unverified_single_image_toc');
 verify('Wiley internal GA filename numbers need not equal DOI suffix',
   angewOfficialGaEvidenceError(make({sourceUrl:alternate}))==='');
+verify('exact DOI visually confirmed substrate-scope image cannot be official TOC',
+  angewOfficialGaEvidenceError(make({sourceUrl:knownWrong}))==='angew_verified_substrate_scope_not_toc');
+verify('targeted policy does not globally ban another DOI',
+  angewOfficialGaEvidenceError(make({doi:'10.1002/anie.5624001',
+    articleUrl:'https://onlinelibrary.wiley.com/doi/full/10.1002/anie.5624001',
+    sourceUrl:knownWrong}))==='');
 verify('explicit foreign DOI inside Wiley source URL is still rejected',
   angewOfficialGaEvidenceError(make({sourceUrl:explicitForeign}))==='angew_explicit_foreign_doi_source');
 verify('unlabelled ordinary Wiley body image is not official',
@@ -66,6 +73,11 @@ verify('conflict leaves forensic local image but never imports production TOC',
   mediaWrites.some(key=>key.includes('/images/'))&&!mediaWrites.some(key=>key.startsWith('toc-cache/')));
 
 const writesBefore=mediaWrites.length;
+const knownWrongReceipt=await importLocalCapture({url:'https://api.gczhouwld.com/api/media/local-capture/import'},env,
+  make({sourceUrl:knownWrong,imageData:'data:image/gif;base64,'+gif.toString('base64')}));
+verify('verified scope artwork rejected before writing to R2',
+  knownWrongReceipt.status===409&&knownWrongReceipt.body.code==='angew_verified_substrate_scope_not_toc'
+    &&mediaWrites.length===writesBefore);
 const bad=await importLocalCapture({url:'https://api.gczhouwld.com/api/media/local-capture/import'},env,
   make({caption:'Scheme 4. Substrate scope',imageData:'data:image/gif;base64,'+gif.toString('base64')}));
 verify('rejected scope image cannot even enter local official staging',
@@ -103,6 +115,9 @@ try {
   }
   const lone=await inspect('<section><h3>Graphical Abstract</h3><img alt="Substrate scope" src="'+neutral+'"></section>');
   verify('lone image near GA heading cannot masquerade as official TOC',!lone.some(x=>x.kind==='official'));
+  const wrong=await inspect('<section><h3>Graphical Abstract</h3><img alt="Graphical Abstract" src="'+knownWrong+'"></section>');
+  verify('known Angew substrate grid cannot masquerade as GA or Figure 1',
+    !wrong.some(x=>x.kind==='official'||x.kind==='figure1'));
   const authentic=await inspect('<section><h3>Graphical Abstract</h3><img alt="Graphical Abstract" src="'+ga+'"></section>');
   verify('real Wiley -gra- GA survives strict source filter',
     authentic.some(x=>x.kind==='official'&&x.url===ga));
