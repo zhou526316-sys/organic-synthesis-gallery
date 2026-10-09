@@ -5731,7 +5731,7 @@ function embeddedJobDois(value) {
       // without this exact job binding must never report on the active DOI.
       var bound='';
       try { bound=sessionStorage.getItem(P+'tab-job-binding')||''; } catch (_) {}
-      if(!job.jobId||bound!==job.jobId)return;
+      if(!job.jobId||bound!==job.jobId||!currentCaptureJob(job)||controllerPaused())return;
       if(finalizeBoundElsevierDoiFailure(job,error))return;
       await uploadReport(job, [{ stage: 'page_doi_guard', event: 'rejected', status: 'failed', url: location.href, message: String(error.message) }], 'failed', String(error.message), null, writeToken());
       return;
