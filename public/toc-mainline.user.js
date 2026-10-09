@@ -778,6 +778,43 @@ function embeddedJobDois(value) {
     return '';
   }
 
+  // The DOI redirect sometimes stops at linkinghub/doi.org behind browser
+  // access checks and never reaches a matched ScienceDirect/Cell Press tab.
+  // Crossref's exact DOI primary resource records the real publisher PII;
+  // consult it read-only, check identity, and use the existing Elsevier PII
+  // article route. Never guess a PII or publisher media asset.
+  async function elsevierCrossrefVerifiedArticleUrl(job) {
+    var doi=normalizeDoi(job&&job.doi);
+    if(!doi||String(job&&job.publisher||publisherForDoi(doi))!=='elsevier')return '';
+    var cacheKey=P+'verified-elsevier-pii-route-v1:'+doi;
+    try{
+      var cached=GM_getValue(cacheKey,null);
+      if(cached&&Number(cached.validUntil||0)>Date.now()
+        &&String(cached.doi||'')===doi
+        &&publisherArticleHostAllowed('elsevier',cached.url)
+        &&/^https:\/\/www\.sciencedirect\.com\/science\/article\/pii\/S[0-9]{15}[0-9X]$/i.test(String(cached.url||'')))return cached.url;
+    }catch(_){}
+    try{
+      var endpoint='https://api.crossref.org/works/'+encodeURIComponent(doi);
+      var response=await gmRequest({method:'GET',url:endpoint,timeout:9000,
+        headers:{Accept:'application/json'}},true);
+      if(Number(response&&response.status||0)!==200)return '';
+      var data=JSON.parse(String(response&&response.responseText||''));
+      var article=data&&data.message||{};
+      if(normalizeDoi(article.DOI)!==doi)return '';
+      var publisherUrl=String(article.resource&&article.resource.primary&&article.resource.primary.URL||'');
+      var primary=new URL(publisherUrl);
+      if(primary.protocol!=='https:'||primary.hostname.toLowerCase()!=='linkinghub.elsevier.com'
+        ||primary.username||primary.password)return '';
+      var piiMatch=primary.pathname.match(/^\/retrieve\/pii\/(S[0-9]{15}[0-9X])$/i);
+      if(!piiMatch)return '';
+      var route='https://www.sciencedirect.com/science/article/pii/'+piiMatch[1].toUpperCase();
+      if(!publisherArticleHostAllowed('elsevier',route))return '';
+      try{GM_setValue(cacheKey,{doi:doi,url:route,validUntil:Date.now()+7*24*60*60*1000});}catch(_){}
+      return route;
+    }catch(_){return '';}
+  }
+
   async function resolvePublisherTaskUrl(job) {
     var base = articleUrl(job);
     var publisher=String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi)));
@@ -790,6 +827,8 @@ function embeddedJobDois(value) {
         var resolved = elsevierResolvedPublisherUrl(response);
         if (resolved) return resolved;
       } catch (_) {}
+      var verifiedRoute=await elsevierCrossrefVerifiedArticleUrl(job);
+      if(verifiedRoute)return verifiedRoute;
       return base;
     }
     if (publisher === 'rsc') {
