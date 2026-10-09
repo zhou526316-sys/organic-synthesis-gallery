@@ -12,6 +12,18 @@ const MAX_MANIFEST_BYTES = 512 * 1024;
 const TIME_BUDGET_MS = 150_000;
 const REQUEST_TIMEOUT_MS = 10_000;
 const ATTEMPTS = 3;
+const SUPPORTED_STANDARD_FONT = 'pdf-vault-assets/6.4.299/standard_fonts/LiberationSans-Regular.ttf';
+const STANDARD_FONT_MAX_BYTES = 512 * 1024;
+
+// The synthetic browser fixture can render via system fonts without ever
+// requesting a bundled standard font. Verify the actual hosted binary here.
+export function isValidBundledStandardFont(bytes) {
+  if (!(bytes instanceof Uint8Array) || bytes.byteLength < 2048 ||
+      bytes.byteLength > STANDARD_FONT_MAX_BYTES) return false;
+  // TrueType 0x00010000, or OpenType CFF 'OTTO'.
+  return (bytes[0] === 0 && bytes[1] === 1 && bytes[2] === 0 && bytes[3] === 0) ||
+    (bytes[0] === 79 && bytes[1] === 84 && bytes[2] === 84 && bytes[3] === 79);
+}
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 const message = error => String(error?.message || error).slice(0, 400);
 const check = (condition, code) => assert.ok(condition, code);
@@ -44,7 +56,9 @@ function validateInputs(browser, manifest) {
   check(seen.has('pdf-vault/index.html'), 'vault_html_not_verified_by_browser');
   check(files.some(file => /^assets\/pdfVault-.+\.js$/.test(file.path)) && files.some(file => /^assets\/pdfVault-.+\.css$/.test(file.path)), 'vault_entry_assets_missing');
   check(files.some(file => /^assets\/reader-.+\.js$/.test(file.path)) && files.some(file => /^assets\/pdf\.worker.+\.mjs$/.test(file.path)), 'reader_assets_missing');
-  check(files.some(file => file.path.includes('/standard_fonts/')), 'rendered_standard_font_missing');
+  // A valid synthetic PDF can render with system fonts: no font GET is then
+  // visible in the Chromium request log. Independently probe the hosted font
+  // after validating the deployment manifest; do not invent a browser hit.
   return files;
 }
 
@@ -112,6 +126,14 @@ export async function verifyPdfVaultLive({ browser, manifest, fetchImpl = fetch,
       return { sourceCommit: live.sourceCommit, bytes: bytes.length, sha256: sha256(bytes) };
     };
     report.before = await get('release-delivery.json', MAX_MANIFEST_BYTES, checkManifest);
+    if (!files.some(file => file.path.includes('/standard_fonts/'))) {
+      report.standardFont = await get(SUPPORTED_STANDARD_FONT, STANDARD_FONT_MAX_BYTES,
+        bytes => {
+          check(isValidBundledStandardFont(bytes), 'bundled_standard_font_invalid');
+          return {path: SUPPORTED_STANDARD_FONT, bytes: bytes.length, sha256: sha256(bytes)};
+        });
+      report.standardFont.browserRequested = false;
+    }
     let index = 0;
     await Promise.all(Array.from({ length: Math.min(3, files.length) }, async () => {
       for (;;) {
