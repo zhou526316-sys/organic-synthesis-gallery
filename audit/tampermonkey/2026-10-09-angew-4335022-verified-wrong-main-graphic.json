@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "confirmed-wiley-substrate-scope-toc-misclassification-v1",
+  "inspectedAtBeijing": "2026-10-09 15:47 +08:00",
+  "userApproval": "Explicit approval on 2026-10-09 for Angew TOC source correctness, targeted correction and Chem/RSC retrieval",
+  "sourceArtifact": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37900910426",
+  "verification": {
+    "scope": "All 25 Angew added since 2026-10-01",
+    "publicImageBytesVerified": 25,
+    "sha256Valid": 25,
+    "otherKnownWrongImages": 0,
+    "badDoi": "10.1002/anie.4335022",
+    "title": "A Mild Disilane-Enabled Halide-to-Deuterium Manifold With D2O for Aryl and Benzylic Halides",
+    "imageContent": "Dense multi-row substrate-extension compound structure grid; inappropriate as the article TOC/main graphic",
+    "productionTocReason": "imported",
+    "publishedContentHash": "35f10c5321cd43179a4c71c73e388da8",
+    "publisherSourceUrl": "https://onlinelibrary.wiley.com/cms/asset/6f79df19-df6a-4793-8929-6fb43d0f1bbd/anie75210-gra-0003.png",
+    "comparedOtherOct09Doi": "10.1002/anie.5624001",
+    "comparedOtherIsNotScopeGrid": true,
+    "sourceIsSameAsStagedNumberedBodyForBadDoi": false
+  },
+  "remediation": {
+    "browser": "For this one DOI reject the precisely verified wrong publisher asset URL as both official TOC and fallback, allowing other legitimate Publisher GA/Figure1 evidence.",
+    "worker": "For this DOI reject the exact wrong publisher GA URL, or the exact confirmed wrong image content hash, from official local-capture promotion.",
+    "futureProducerVersion": {
+      "bridge": "2.2.76",
+      "tocEngine": "6.2.57",
+      "captureProtocol": "6.2.20",
+      "controller": "2.2.41"
+    },
+    "storage": "Preserve all existing R2 bytes and other 24 Angew public media. Existing wrong production TOC needs a compare-and-swap correction after code deployments and before owner re-capture.",
+    "publisherAccess": "No new publisher visit during this audit; new actual GA requires owner authenticated publisher visit, otherwise remain missing/figure1 truthfully.",
+    "publicationPolicy": "No changes to 08:00 literature admission, DOI scope, private PDF access or billing."
+  }
+}

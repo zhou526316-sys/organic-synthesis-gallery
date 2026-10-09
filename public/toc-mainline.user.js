@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.56
+// @version      6.2.57
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.56';
+  var INSTALL_REVISION = '6.2.57';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261008-rsc-silverchair-and-acs-toc-route-v1';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -2368,6 +2368,19 @@ function embeddedJobDois(value) {
     }
   }
 
+  // Immutable publisher-asset identity, visually inspected against the public
+  // Gallery record for DOI 10.1002/anie.4335022 (2026-10-09).
+  // This specific -gra-0003 is a dense substrate-scope grid, not a Gallery TOC.
+  // No broad -gra- number rule: other Wiley internal asset IDs remain eligible.
+  function verifiedWrongWileyTocSource(job, value) {
+    if (normalizeDoi(job && job.doi) !== '10.1002/anie.4335022') return false;
+    try {
+      var url = new URL(String(value || ''), location.href);
+      return wileyAssetHostAllowed(url.href)
+        && /\/anie75210-gra-0003(?:[-_.]|$)/i.test(url.pathname);
+    } catch (_) { return false; }
+  }
+
   function wileyGraphicalAbstractCandidates(job, root, baseUrl) {
     if (String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))) !== 'wiley') return [];
     var scope = root || document;
@@ -2382,7 +2395,7 @@ function embeddedJobDois(value) {
 
     function add(url, node, source, score, text) {
       url = normalizeUrl(url, base);
-      if (!url || !wileyAssetHostAllowed(url) || !candidateBelongsToJob(url, job) || reject(text, url)) return;
+      if (!url || !wileyAssetHostAllowed(url) || !candidateBelongsToJob(url, job) || reject(text, url) || verifiedWrongWileyTocSource(job, url)) return;
       if (!wileyGaUrlSignal(url) || wileyBodyOnlyVisual(node) || wileyBodySourceCollision(url, scope, base)) return;
       var row = {
         url: url,
@@ -2909,6 +2922,12 @@ function embeddedJobDois(value) {
     var scope = root || document, rows = [], seen = new Set();
     var diag={nodes:0,noContext:0,noKind:0,noUrl:0,pdfPreview:0,duplicate:0,doiMismatch:0,rejected:0,accepted:0};
     function add(row) {
+      if (String(job && job.publisher || '') === 'wiley' && verifiedWrongWileyTocSource(job, row && row.url)) {
+        diag.rejected++;
+        pushTrace(trace,{stage:'wiley_toc_candidate',event:'verified_scope_artwork_rejected',status:'rejected',
+          url:row.url,candidateSource:row.source,message:'DOI 10.1002/anie.4335022 known substrate-scope grid cannot be a TOC'});
+        return;
+      }
       if (String(job && job.publisher || '') === 'rsc' && rscPdfPreviewUrl(row && row.url)) {
         diag.pdfPreview++;pushTrace(trace,{stage:'rsc_toc_candidate',event:'pdf_preview_rejected',status:'rejected',url:row&&row.url||'',message:'page-preview asset cannot be an official TOC'});return;
       }
