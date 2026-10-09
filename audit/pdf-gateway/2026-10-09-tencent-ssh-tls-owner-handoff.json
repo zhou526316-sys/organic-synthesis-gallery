@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "beijingTime": "2026-10-09 14:09:14",
+  "task": "Gallery Tencent independent owner PDF route public-domain acceptance and owner Windows handoff",
+  "state": "BLOCKED_WAITING_FOR_OWNER_TENCENT_SSH_QR_AND_PRIVATE_NETWORK_ACCEPTANCE",
+  "evidence": {
+    "dns": {
+      "pdf": "43.135.32.73",
+      "relay": "43.135.32.73",
+      "sharedIp": true
+    },
+    "tls": {
+      "verified": false,
+      "error": "ERR_TLS_CERT_ALTNAME_INVALID",
+      "presentedCN": "relay.gczhouwld.com",
+      "presentedSAN": [
+        "relay.gczhouwld.com"
+      ],
+      "pdfHostInSAN": false,
+      "sourceRun": 37891507915
+    },
+    "publicProbeRuns": [
+      37891328515,
+      37891507915
+    ],
+    "pr420": {
+      "draft": true,
+      "merged": false,
+      "headSha": "cae30a94be56747f7405ee25783261accedc9f36",
+      "routingEnabled": false
+    },
+    "installer": {
+      "path": "deploy/pdf-gateway/run-once-from-windows.ps1",
+      "sourceRef": "cae30a94be56747f7405ee25783261accedc9f36",
+      "payloadPinnedCommit": "5693dd5a43f46cc9fd35842983b308b4c9c08fb5",
+      "oneSshSession": true,
+      "interactiveConfirmation": "YES",
+      "requiredTencentWechatQr": true,
+      "serverChangesNotPerformedByAssistant": true
+    },
+    "postInstallOwnerPCProbe": {
+      "publicHttps200": true,
+      "corsExactOrigin": true,
+      "certificateTrustRequired": true,
+      "anonymousFileRequestExpect401": true,
+      "secretless": true,
+      "triggerOnlyAfterInstall": true
+    },
+    "nativeWindowsTest": {
+      "workflowRun": 37891932792,
+      "conclusion": "success",
+      "jobs": [
+        "gateway-security",
+        "windows-powershell51"
+      ]
+    },
+    "remainingTests": [
+      "real owner logged-in PDF open from Windows Edge",
+      "206 Range first and second pages and PDF download",
+      "other user denial",
+      "real China Mobile/China Telecom/China Unicom samples",
+      "WeChat relay stability and existing shared VM egress quota",
+      "enable only after all passes"
+    ]
+  },
+  "constraints": {
+    "incrementalPaidServices": false,
+    "existingTencentVMOnly": true,
+    "relayUnaffected": true,
+    "tokenLogging": false,
+    "ignoreTLS": false,
+    "providerEgressSharedNotHardGuaranteedFree": true,
+    "unverifiedPrivateOwnerAccess": true
+  },
+  "ownerAction": "Execute immutable one-SSH Windows launcher -Mode Install, approve YES and required Tencent WeChat QR, return non-secret final CHECK/SUCCESS/WINDOWS HTTPS PASS/WINDOWS SECURITY PASS lines.",
+  "nextAssistantAction": "Upon receipt, perform fresh public DNS/TLS/CORS/anonymous-denied checks, verify end-to-end owner PDF with user present and only then consider isolated guarded enablement."
+}
