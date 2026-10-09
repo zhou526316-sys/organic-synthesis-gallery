@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "dateBeijing": "2026-10-09",
+  "context": "ChatGPT project Gallery architecture continuation: continuous PDF pressure, buffered first-page timeout and live verification",
+  "status": "production_pdf_reader_patch_deployed_and_independently_verified",
+  "release": {
+    "mergedPullRequest": 435,
+    "mergeCommit": "a9c9c0adadad3aab2f4acbac0f225995d88e3a7b",
+    "pagesRun": 37887111773,
+    "pagesConclusion": "success",
+    "workerFrontendSyncRun": 37887111790,
+    "workerFrontendSyncConclusion": "success",
+    "originalFigureRescueRetained": true,
+    "continuousScrollRetained": true
+  },
+  "fix": {
+    "issue": "Previously buffered small-PDF PDF.js first-page parse/render await had no deadline after bytes were loaded; Range first page had 45s watchdog.",
+    "firstPageBudgetMs": 45000,
+    "details": "Shared first-page deadline for buffered and Range modes, with PDFViewer, canvas, range transport and PDF.js task cleanup on failure.",
+    "noAccessPolicyChange": true,
+    "unitTests": {
+      "passed": 5,
+      "total": 5
+    },
+    "ownerChromiumRegression": {
+      "passed": 31,
+      "total": 31,
+      "run": 37886961616,
+      "conclusion": "success"
+    }
+  },
+  "pressure": {
+    "run": 37886504161,
+    "conclusion": "success",
+    "syntheticPdfBytes": 5274730,
+    "pageCount": 128,
+    "onlineCases": {
+      "passed": 44,
+      "total": 44
+    },
+    "localCases": {
+      "passed": 25,
+      "total": 25
+    },
+    "onlineRangeCalls": 4,
+    "onlineWholeFileGet": false,
+    "onlineObservedCanvasCounts": [
+      2,
+      3,
+      6,
+      6
+    ],
+    "localObservedCanvasCounts": [
+      1,
+      3,
+      6,
+      6
+    ],
+    "observedPages": [
+      1,
+      64,
+      128,
+      1
+    ],
+    "mobile": {
+      "simulatedNativeTouch": true,
+      "viewportPx": 390,
+      "documentWidthPx": 390,
+      "scrollDistancePx": 207,
+      "arrivedAtPage": 2
+    },
+    "bothCloudflareLinesStalled": {
+      "artificialOriginLatencyMs": 25000,
+      "readerFailureMs": 15032,
+      "unauthorizedFileReads": 0,
+      "reason": "pdf_authorize_timeout"
+    }
+  },
+  "publicProbe": {
+    "run": 37886605916,
+    "conclusion": "success",
+    "location": "GitHub hosted overseas Linux runner, NOT campus or Mainland China",
+    "authenticated": false,
+    "allHttp200": true,
+    "ttfbMs": {
+      "gallery_pdf": 294,
+      "gallery_pdf_vault": 253,
+      "api_healthcheck": 394
+    },
+    "pageContainsContinuousScrollLabel": true
+  },
+  "liveVerification": {
+    "initialRun": 37887896823,
+    "initialConclusion": "failure",
+    "initialFailureCode": "rendered_standard_font_missing",
+    "rootCause": "Synthetic PDF used a system-resolved font and did not request bundled font, so verifier incorrectly treated missing observed request as missing deployed resource",
+    "validatorFixPullRequest": 436,
+    "validatorFixCommit": "dd3ed292161a3ef3e13eb2c6fbbff74a2bd905c8",
+    "isolatedFontPublicProbeRun": 37888176823,
+    "isolatedFontPublicProbeConclusion": "success",
+    "finalRun": 37888250831,
+    "finalConclusion": "success",
+    "validatedPagesRun": 37887111773,
+    "validatedSourceCommit": "a9c9c0adadad3aab2f4acbac0f225995d88e3a7b",
+    "verifiedSha256ResourceCount": 13,
+    "hostedStandardFontIndependentRead": "pass",
+    "productionMutations": false
+  },
+  "tencentGateway": {
+    "pullRequest": 420,
+    "status": "draft_not_merged",
+    "head": "56c6ca210fee7fa902a16c07fbebcbb1f6d8fecb",
+    "changedFiles": 19,
+    "routingEnabled": false,
+    "combinedRegressionRun": 37887322930,
+    "combinedRegressionConclusion": "success",
+    "chinaGateNotYetApproved": true
+  },
+  "remainingCaveats": [
+    "No actual user Windows Edge/campus/VPN owner-authenticated timing or successful PDF open was measured.",
+    "45s bounds first-page parse/render phase only, not total network authorization or file transfer.",
+    "Overseas public health HTTP 200 does not establish mainland performance or private owner access.",
+    "Synthetic PDF stress checks are not all real journal document variants."
+  ],
+  "source": "Independent GitHub Actions CI and public unauthenticated probes; no user secrets or PDF content included"
+}
