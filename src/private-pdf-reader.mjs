@@ -967,6 +967,13 @@ async function start() {
     }
   } catch (error) {
     rangeWarmup?.abort();
+    if (phase === 'parse' && !continuous) {
+      const kind = String(error?.name || 'Error').replace(/[^A-Za-z]/g, '').slice(0,30);
+      const summary = String(error?.message || '')
+        .replace(/https?:\/\/\S+|Bearer\s+\S+|token=\S+/gi, '[redacted]')
+        .slice(0,180);
+      document.documentElement.dataset.pdfContinuousInitFailure = kind + ':' + summary;
+    }
     if (rangeFailure || error?.message === 'pdf_first_page_timeout') {
       renderSequence += 1;
       renderTask?.cancel();
