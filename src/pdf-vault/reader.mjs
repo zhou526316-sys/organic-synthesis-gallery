@@ -1,5 +1,6 @@
 import { AnnotationMode, GlobalWorkerOptions, getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import workerUrl from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
+import { createContinuousPdfViewer } from '../pdf-continuous-viewer.mjs';
 
 // All parser support assets are a pinned part of the same Gallery release.
 // No URL, credentials, PDF hash, file path or bytes are sent to a remote viewer.
@@ -82,27 +83,28 @@ export async function validateLocalPdf(file, { assertCurrent = () => true, signa
 
 /** Canvas-only reader: it does not instantiate annotation/link layers, PDF
  * scripting, forms, attachment download handlers or external document URLs. */
-export function createLocalPdfReader({ dialog, assertCurrent = () => true, signal, onExport = () => {}, onClose = () => {} }) {
+/** Local owner PDF rendering is entirely browser-side: no API or PDF bytes
+ * leave this device. PDF.js owns continuous page scrolling and bounded canvas
+ * rendering, rather than placing every page into RAM at once. */
+export function createLocalPdfReader({
+  dialog, assertCurrent = () => true, signal,
+  onExport = () => {}, onClose = () => {},
+}) {
   const find = name => dialog.querySelector(`[data-testid="pdf-vault-reader-${name}"]`);
-  const canvas = find('canvas');
   const status = find('status');
   const pageCount = find('pagecount');
-  const previous = find('previous');
-  const next = find('next');
   const zoomIn = find('zoom-in');
   const zoomOut = find('zoom-out');
   const exportButton = find('export');
   const zoomLabel = dialog.querySelector('#reader-zoom-value');
   const stage = dialog.querySelector('.reader-stage');
+  const pages = dialog.querySelector('#local-pdf-continuous');
   const listeners = [];
   let task = null;
   let pdf = null;
-  let renderTask = null;
-  let renderSequence = 0;
+  let continuous = null;
   let closed = false;
   let loading = false;
-  let rendering = false;
-  let pageNumber = 1;
   let zoom = 1;
 
   function check() {
@@ -111,13 +113,12 @@ export function createLocalPdfReader({ dialog, assertCurrent = () => true, signa
   }
 
   function controls() {
-    const pending = closed || loading || rendering || !pdf;
-    previous.disabled = pending || pageNumber <= 1;
-    next.disabled = pending || pageNumber >= (pdf?.numPages || 0);
+    const pending = closed || loading || !pdf;
     zoomOut.disabled = pending || zoom <= 0.5;
     zoomIn.disabled = pending || zoom >= 3;
     exportButton.disabled = closed || loading;
-    pageCount.textContent = pdf ? `第 ${pageNumber} / ${pdf.numPages} 页` : '正在载入…';
+    pageCount.textContent = pdf
+      ? `第 ${continuous?.pageNumber || 1} / ${pdf.numPages} 页` : '正在载入…';
     zoomLabel.textContent = `${Math.round(zoom * 100)}%`;
   }
 
@@ -127,68 +128,12 @@ export function createLocalPdfReader({ dialog, assertCurrent = () => true, signa
   }
 
   function displayError(error) {
-    if (closed || signal?.aborted || error?.code === 'account_changed' || error?.code === 'operation_cancelled' || error?.name === 'RenderingCancelledException') return;
-    canvas.width = 0;
-    canvas.height = 0;
-    canvas.dataset.renderedPage = '';
-    const message = error?.name === 'PasswordException'
+    if (closed || signal?.aborted || error?.code === 'account_changed' ||
+        error?.code === 'operation_cancelled' ||
+        error?.name === 'RenderingCancelledException') return;
+    readerStatus(error?.name === 'PasswordException'
       ? '这份 PDF 需要密码。请导出后使用本地阅读器打开。'
-      : '这份 PDF 暂时无法在页面中完整绘制。可以导出原文件，使用本地阅读器继续阅读。';
-    readerStatus(message, 'error');
-  }
-
-  async function renderPage() {
-    check();
-    if (!pdf) return;
-    const sequence = ++renderSequence;
-    const pageToRender = pageNumber;
-    rendering = true;
-    canvas.dataset.renderedPage = '';
-    controls();
-    readerStatus('正在绘制页面…', 'busy');
-    const oldRender = renderTask;
-    oldRender?.cancel();
-    try {
-      if (oldRender) await oldRender.promise.catch(() => {});
-      check();
-      if (sequence !== renderSequence) return;
-      const page = await pdf.getPage(pageToRender);
-      check();
-      if (sequence !== renderSequence) return;
-      const base = page.getViewport({ scale: 1 });
-      if (!(base.width > 0 && base.height > 0 && Number.isFinite(base.width) && Number.isFinite(base.height))) throw pdfError('invalid_pdf');
-      const computed = getComputedStyle(stage);
-      const availableWidth = Math.max(120, stage.clientWidth - parseFloat(computed.paddingLeft) - parseFloat(computed.paddingRight));
-      const scale = Math.min(1.5, availableWidth / base.width) * zoom;
-      const cssWidth = base.width * scale;
-      const cssHeight = base.height * scale;
-      const outputScale = Math.min(devicePixelRatio || 1, 2, Math.sqrt(12_000_000 / (cssWidth * cssHeight)), 8192 / Math.max(cssWidth, cssHeight));
-      const viewport = page.getViewport({ scale: scale * outputScale });
-      canvas.width = Math.max(1, Math.floor(viewport.width));
-      canvas.height = Math.max(1, Math.floor(viewport.height));
-      canvas.style.width = `${Math.round(cssWidth)}px`;
-      canvas.style.height = `${Math.round(cssHeight)}px`;
-      canvas.setAttribute('aria-label', `PDF 第 ${pageToRender} 页`);
-      // Appearance data is drawn to the canvas; no active annotation controls
-      // or link/attachment actions are created in the DOM.
-      const renderingTask = page.render({ canvas, viewport, annotationMode: AnnotationMode.ENABLE });
-      renderTask = renderingTask;
-      await renderingTask.promise;
-      check();
-      if (sequence !== renderSequence) return;
-      canvas.dataset.renderedPage = String(pageToRender);
-      readerStatus('', 'success');
-      stage.scrollTop = 0;
-    } catch (error) {
-      if (sequence === renderSequence) displayError(error);
-      if (error?.code === 'operation_cancelled' || error?.code === 'account_changed') throw error;
-    } finally {
-      if (sequence === renderSequence && !closed) {
-        rendering = false;
-        renderTask = null;
-        controls();
-      }
-    }
+      : '这份 PDF 暂时无法在页面中完整绘制。可以导出原文件继续阅读。', 'error');
   }
 
   function listen(element, type, callback) {
@@ -196,34 +141,42 @@ export function createLocalPdfReader({ dialog, assertCurrent = () => true, signa
     listeners.push(() => element.removeEventListener(type, callback));
   }
 
-  function update(change) {
-    try { check(); } catch { close(); return; }
-    if (loading || rendering || !pdf) return;
-    change();
-    void renderPage().catch(() => {});
+  function activeCanvas(number) {
+    // Preserve a single active canvas test/automation hook, but keep the
+    // other rendered PDF pages in the real continuous document.
+    for (const existing of pages.querySelectorAll('[data-testid="pdf-vault-reader-canvas"]')) {
+      existing.removeAttribute('data-testid');
+    }
+    const canvas = continuous?.getCanvas(number);
+    if (canvas) canvas.dataset.testid = 'pdf-vault-reader-canvas';
   }
 
-  listen(previous, 'click', () => update(() => { pageNumber = Math.max(1, pageNumber - 1); }));
-  listen(next, 'click', () => update(() => { pageNumber = Math.min(pdf.numPages, pageNumber + 1); }));
-  listen(zoomOut, 'click', () => update(() => { zoom = Math.max(0.5, zoom - 0.25); }));
-  listen(zoomIn, 'click', () => update(() => { zoom = Math.min(3, zoom + 0.25); }));
+  listen(zoomOut, 'click', () => {
+    try { check(); } catch { close(); return; }
+    if (!continuous || loading) return;
+    zoom = Math.max(0.5, zoom - 0.25);
+    continuous.setZoom(zoom);
+    controls();
+  });
+  listen(zoomIn, 'click', () => {
+    try { check(); } catch { close(); return; }
+    if (!continuous || loading) return;
+    zoom = Math.min(3, zoom + 0.25);
+    continuous.setZoom(zoom);
+    controls();
+  });
   listen(exportButton, 'click', () => {
     try { check(); } catch { close(); return; }
     if (!loading) onExport();
   });
+  listen(window, 'resize', () => { if (continuous && !closed) continuous.resize(); });
   signal?.addEventListener('abort', close, { once: true });
 
   function close() {
     if (closed) return;
     closed = true;
-    renderSequence += 1;
-    renderTask?.cancel();
-    renderTask = null;
-    canvas.width = 0;
-    canvas.height = 0;
-    canvas.dataset.renderedPage = '';
-    canvas.style.width = '';
-    canvas.style.height = '';
+    continuous?.destroy();
+    continuous = null;
     pageCount.textContent = '';
     readerStatus('');
     if (dialog.open) dialog.close();
@@ -245,18 +198,40 @@ export function createLocalPdfReader({ dialog, assertCurrent = () => true, signa
       if (!dialog.open) dialog.showModal();
       try {
         const data = validatedBytes instanceof Uint8Array && validatedBytes.byteLength === file.size
-          ? validatedBytes
-          : new Uint8Array(await file.arrayBuffer());
+          ? validatedBytes : new Uint8Array(await file.arrayBuffer());
         check();
         task = getDocument(options(data));
         pdf = await task.promise;
         check();
-        if (!Number.isSafeInteger(pdf.numPages) || pdf.numPages < 1) throw pdfError('invalid_pdf');
+        if (!Number.isSafeInteger(pdf.numPages) || pdf.numPages < 1) {
+          throw pdfError('invalid_pdf');
+        }
         loading = false;
-        await renderPage();
+        stage.scrollTop = 0;
+        let firstPageResolve;
+        const firstPage = new Promise(resolve => { firstPageResolve = resolve; });
+        continuous = createContinuousPdfViewer({
+          container: stage, viewer: pages, pdf,
+          onPageChange: page => { controls(); activeCanvas(page); },
+          onPageRendered: (page, canvas) => {
+            if (closed || !pdf || !canvas) return;
+            if (page === (continuous?.pageNumber || 1)) activeCanvas(page);
+            if (page === 1 && firstPageResolve) {
+              firstPageResolve(); firstPageResolve = null;
+              readerStatus('', 'success');
+            }
+          },
+          onError: displayError,
+        });
+        await continuous.ready;
+        check();
+        await firstPage;
+        controls();
       } catch (error) {
         displayError(error);
-        if (error?.code === 'operation_cancelled' || error?.code === 'account_changed') throw error;
+        if (error?.code === 'operation_cancelled' || error?.code === 'account_changed') {
+          throw error;
+        }
       } finally {
         if (!closed) { loading = false; controls(); }
       }
