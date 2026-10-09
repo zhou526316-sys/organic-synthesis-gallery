@@ -118,7 +118,7 @@ const outcomes=[];
 try {
   for(const [name,type] of [['chromium',chromium],['webkit',webkit]]) {
     const browser=await type.launch({headless:true}),context=await browser.newContext({locale:'en-US',viewport:{width:1280,height:900},serviceWorkers:'block'});
-    const page=await context.newPage(),events={errors:[],console:[],failedRequests:[],responses:[],externalRequestsBlocked:[]};
+    const page=await context.newPage(),events={errors:[],console:[],failedRequests:[],responses:[],externalRequestsBlocked:[],navigations:[],crashes:[]};
     const summaryRequests=[];
     await context.route('**/*',async route=>{
       const u=new URL(route.request().url());
@@ -131,8 +131,15 @@ try {
           zh:'历史文献中文摘要',en:'Archive paper English summary',generatedAt:Date.now()
         })});
       }
-      return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(u.pathname.includes('reader-counts')?{counts:{}}:{})});
+      // Account integrations must follow the current phone-OTP UI contract;
+      // returning bare {} caused repeated test-only auth.phone exceptions.
+      const payload=u.pathname==='/api/user-ui/integrations'
+        ? {auth:{local:true,email:true,google:false,wechat:false,qq:false,phone:false},payments:{wechat:false,alipay:false}}
+        : u.pathname.includes('reader-counts')?{counts:{}}:{};
+      return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(payload)});
     });
+    page.on('framenavigated',frame=>{if(frame===page.mainFrame())events.navigations.push(frame.url());});
+    page.on('crash',()=>events.crashes.push('main_page_crashed'));
     page.on('pageerror',e=>events.errors.push(e.message));
     page.on('console',m=>{if(m.type()==='error')events.console.push(m.text());});
     page.on('requestfailed',r=>events.failedRequests.push({url:r.url(),error:r.failure()?.errorText}));
