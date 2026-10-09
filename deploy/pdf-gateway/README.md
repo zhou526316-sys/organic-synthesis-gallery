@@ -22,7 +22,7 @@ connections and therefore prompts multiple QR scans. **Use the new
 The one-session launcher runs on the user's **local Windows PowerShell**.
 It creates a short UTF-8 Bash command, sends it in Base64 over **one SSH
 session**, downloads reviewed Python/Bash payloads at the immutable Git commit
-`f36fc03b2747f1fbaac2799854b62c04dd594b16` on the existing Tencent VM,
+`5693dd5a43f46cc9fd35842983b308b4c9c08fb5` on the existing Tencent VM,
 and runs `sudo bash install.sh --preflight` or `--install` inside that same
 session. It also supports `--rollback`. No SCP connections, API keys, or
 separate server purchase are involved.
@@ -44,6 +44,30 @@ separate server purchase are involved.
   limits its own transfer, not total VM usage; do not assume provider overage
   is impossible if the rest of the VM exhausts its package. The user requires
   **zero incremental paid cost**.
+
+## Certificate issuance correction — 2026-10-09
+
+The first owner-triggered `--install` reached Certbot but Let's Encrypt's HTTP-01
+probe received 404 from the correct DNS-only Tencent IP, and the PDF vhost
+rolled back. Root cause in the installer is consistent with `umask 077`:
+new `/var/www/gallery-pdf-acme` and `/opt/gallery-pdf-gateway` directories
+were created as root-only `0700`; nginx's worker cannot traverse the HTTP-01
+webroot and systemd's `gallerypdf` cannot traverse the app directory.
+
+The updated installer explicitly repairs its dedicated directory modes to
+`0755` (preserves `/var/lib/gallery-pdf-gateway` private mode `0700`), stages
+a `0644` **fake challenge file**, and verifies the exact file bytes through
+the actual localhost Nginx HTTP-01 virtual host **before** requesting a real
+certificate. If this probe fails, the installer aborts without touching CA
+rate limits and rolls back its own vhost. Certbot runs with temporary
+`umask 022` only; private key modes remain managed by Certbot.
+A GitHub hosted Linux regression reproduces `0700` under `umask 077`, repairs
+the directory, and confirms an unprivileged `nobody` reader can read the
+`0644` challenge file. The independent VM will still require live proof
+before claiming issued TLS or successful PDF access.
+
+**The old source commit `f36fc03...` must not be used for new installations.**
+Use the new `run-once-from-windows.ps1` pinned to the corrected version.
 
 ## Workflow
 
