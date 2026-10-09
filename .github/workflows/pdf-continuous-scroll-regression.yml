@@ -40,5 +40,10 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Browser test owner private PDF and local PDF library
         run: |
+          set +e
           node tests/private-pdf-access-browser.mjs
+          private_status=$?
           node tests/pdf-vault-local-browser.mjs
+          local_status=$?
+          echo "CONTINUOUS_BROWSER_RESULTS private=$private_status local=$local_status"
+          test "$private_status" -eq 0 && test "$local_status" -eq 0
