@@ -1,5 +1,6 @@
 import {scanPdfFigureRescue,preparePdfOriginalCropManifest} from './pdf-vault/figure-rescue.mjs';
 import {createContinuousPdfViewer} from './pdf-continuous-viewer.mjs';
+import {waitForPdfFirstPage} from './pdf-first-page-watchdog.mjs';
 
 const PDF_ENGINE_LOAD_TIMEOUT_MS = 25_000;
 let pdfEngine = null;
@@ -966,8 +967,7 @@ async function start(preferTencent = false) {
         status.textContent = `正在按需读取第一页… 已取 ${loadedMb} MB`;
       };
     }
-    let firstPageTimer = null;
-    try {
+    {
       const firstPageJob = (async()=>{
         pdf = await loadingTask.promise;
         if (!Number.isSafeInteger(pdf.numPages) || pdf.numPages < 1) throw new Error('pdf_page_tree');
@@ -1014,15 +1014,9 @@ async function start(preferTencent = false) {
           });
         }
       })();
-      if (rangeMode) {
-        await Promise.race([firstPageJob, activeRangeTransport.failed, new Promise((_,reject)=>{
-          firstPageTimer = window.setTimeout(()=>reject(new Error('pdf_first_page_timeout')),FIRST_PAGE_TIMEOUT_MS);
-        })]);
-      } else {
-        await firstPageJob;
-      }
-    } finally {
-      if (firstPageTimer !== null) window.clearTimeout(firstPageTimer);
+      // Bound the first PDF.js page in both Range and buffered modes.
+      await waitForPdfFirstPage(firstPageJob,
+        rangeMode ? activeRangeTransport.failed : null, FIRST_PAGE_TIMEOUT_MS);
     }
   } catch (error) {
     rangeWarmup?.abort();
@@ -1072,6 +1066,11 @@ async function start(preferTencent = false) {
       renderSequence += 1;
       renderTask?.cancel();
       renderTask = null;
+      continuous?.destroy();
+      continuous = null;
+      canvas = null;
+      activeRangeTransport?.abort();
+      activeRangeTransport = null;
       pdf = null;
       try { void loadingTask?.destroy(); } catch {}
       loadingTask = null;

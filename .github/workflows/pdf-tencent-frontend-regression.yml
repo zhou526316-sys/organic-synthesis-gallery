@@ -39,6 +39,8 @@ jobs:
       - name: Block flip-page regressions and accidental gateway activation
         run: |
           grep -q 'createContinuousPdfViewer' src/private-pdf-reader.mjs
+          grep -q 'waitForPdfFirstPage' src/private-pdf-reader.mjs
+          node --test tests/pdf-first-page-watchdog.mjs
           grep -q 'id="pdf-scroll-container"' pdf/index.html
           grep -q '"enabled": false' public/pdf-gateway-routing.json
           ! grep -q 'previous.addEventListener' src/private-pdf-reader.mjs

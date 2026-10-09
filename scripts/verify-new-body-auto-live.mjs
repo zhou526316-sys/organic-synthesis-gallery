@@ -4,6 +4,7 @@ import {chromium} from 'playwright';
 import {sha256,exactKey,evidenceKey,validateNewBodyMetadata,validateNewBodyBytes} from '../cloudflare/scripts/new-body-auto-validation.mjs';
 import {selectLiveVerificationBatch} from './select-new-body-live-dois.mjs';
 import {liveMediaPrimaryProof} from './live-media-primary-proof.mjs';
+import {safeLiveVerificationRequest} from './gallery-live-readonly-post.mjs';
 const base='https://gallery.gczhouwld.com/';
 const baseUrl=new URL(base);
 const out=process.env.RUNNER_TEMP+'/new-body-auto-live';await mkdir(out,{recursive:true});
@@ -64,13 +65,50 @@ try{
  const browser=await chromium.launch({headless:true});
  try{
   const context=await browser.newContext({viewport:{width:1360,height:1000},serviceWorkers:'block'});
-  await context.route('**/*',route=>['GET','HEAD','OPTIONS'].includes(route.request().method())?route.continue():route.fulfill({status:503,body:'read-only acceptance blocks production writes'}));
+  const allowedReadOnlyPosts=[];
+  await context.route('**/*',route=>{
+    const request=route.request();
+    if(safeLiveVerificationRequest(request.method(),request.url())){
+      if(request.method()==='POST')allowedReadOnlyPosts.push(new URL(request.url()).pathname);
+      return route.continue();
+    }
+    return route.fulfill({status:503,body:'read-only acceptance blocks production writes'});
+  });
   const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e.message)));
-  await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});await page.locator('#search').waitFor({timeout:30000});
+  await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});
+  await page.locator('#search').waitFor({timeout:30000});
+  await page.waitForFunction(()=>document.documentElement.dataset.catalogRead==='architecture-v1',
+    null,{timeout:30000});
   const dois=verification.dois;
   for(const [i,doi] of dois.entries()){
-   await page.locator('#search').fill(doi);await page.locator('#search').press('Escape');
-   const selector='.figure-strip-slot[data-figure-doi="'+doi+'"]',strip=page.locator(selector);await strip.waitFor({timeout:20000});await strip.scrollIntoViewIfNeeded();
+   // Native Escape clears <input type="search"> in Chromium, returning the
+   // Gallery to its default Hot list before the archived DOI can be resolved.
+   await page.locator('#search').fill(doi);
+   await page.waitForFunction(value=>document.querySelector('#search')?.value===value,
+     doi,{timeout:5000});
+   const selector='.figure-strip-slot[data-figure-doi="'+doi+'"]',strip=page.locator(selector);
+   try{
+     await strip.waitFor({timeout:25000});
+   }catch(error){
+     const diagnostic=await page.evaluate(()=>{
+       const doc=document.documentElement;
+       return {catalogRead:doc.dataset.catalogRead||null,
+         catalogQueryRead:doc.dataset.catalogQueryRead||null,
+         catalogIndexCapability:doc.dataset.catalogIndexCapability||null,
+         resultCount:document.querySelector('#resultCount')?.textContent||null,
+         search:document.querySelector('#search')?.value||null,
+         cards:[...document.querySelectorAll('#gallery > .card')].slice(0,4).map(card=>({
+           doi:card.getAttribute('data-doi'),
+           figureState:card.querySelector('.figure-strip-slot')?.getAttribute('data-state')||null,
+           figureHidden:card.querySelector('.figure-strip-slot')?.hidden??null,
+         })),
+         pageError:document.querySelector('.error')?.textContent?.slice(0,220)||null};
+     });
+     throw new Error('body_card_not_visible doi='+doi+' observed='+JSON.stringify(diagnostic)
+       +' allowedReadOnlyPosts='+JSON.stringify(allowedReadOnlyPosts.slice(-10))
+       +' cause='+String(error?.message||error));
+   }
+   await strip.scrollIntoViewIfNeeded();
    const expected=media.items[doi].figures.figures;
    try{
      await page.waitForFunction(({s,n})=>document.querySelectorAll(s+' .figure-thumb img').length===n,{s:selector,n:expected.length},{timeout:20000});

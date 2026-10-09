@@ -1,6 +1,7 @@
 {
-  "requestedAt": "2026-09-24T22:55:00+08:00",
+  "requestedAt": "2026-10-09T13:02:52.828+08:00",
   "readOnly": true,
   "productionWrites": 0,
-  "reason": "Run one fresh read-only automatic body live verification after PR #226 aligned the verifier with the current bounded publication policy. Verify exact deployed snapshot, media ledger, image bytes, labels, URLs, official TOCs and rendered cards without changing publication or media."
+  "expectedMergedVerifierCommit": "5a429f4fe7a3c81ccd865831ad946f608da1c4fd",
+  "reason": "One read-only production image and browser verification after PR #434. Retain search DOI in HTML type=search, permit only exact public D1/media read-only POSTs, compare all immutable body images by SHA256, then verify visible archived DOI card/figure labels and image decode without any writes or recapture."
 }
