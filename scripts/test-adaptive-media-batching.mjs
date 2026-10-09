@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {adaptiveBatchGate,strongOfficialCapture,strongVerifiedFigureOneCapture,verifiedFigureOneInBuild,verifiedPrimaryReadyDois,tocReadyDois,officialToc,completedPacketMap} from '../cloudflare/scripts/merge-new-body-auto.mjs';
+import {adaptiveBatchGate,strongOfficialCapture,strongVerifiedFigureOneCapture,verifiedFigureOneInBuild,verifiedPrimaryReadyDois,tocReadyDois,officialToc,completedPacketMap,fitsCardFigureBudget} from '../cloudflare/scripts/merge-new-body-auto.mjs';
 import {captureBelongsToDoi,embeddedKnownDois} from '../cloudflare/scripts/merge-local-captures.mjs';
 import fs from 'node:fs/promises';
 
@@ -12,6 +12,18 @@ test('policy now releases completed single-article packets immediately',()=>{
   assert.equal(policy.minNewArticles,1);assert.equal(policy.maxNewArticles,25);assert.equal(policy.maxFiguresPerCard,20);
   assert.equal(policy.requireOfficialTocInBuild,true);assert.equal(policy.requireCompletedCapturePacket,true);
   assert.equal(policy.backfillStabilityMinutes,15);assert.ok(Number.isFinite(Date.parse(policy.backfillCapturedBefore)));
+});
+test('18 staged images are publishable as one atomically validated card packet',()=>{
+  assert.equal(fitsCardFigureBudget(0,18,policy),true);
+  assert.equal(fitsCardFigureBudget(2,18,policy),true);
+  assert.equal(fitsCardFigureBudget(0,20,policy),true);
+});
+test('packet over 20 never publishes partially and invalid counts are rejected',()=>{
+  for(const [current,incoming] of [[0,21],[10,11],[20,1],[-1,5],[10,-1],[0,Infinity]]){
+    assert.equal(fitsCardFigureBudget(current,incoming,policy),false);
+  }
+  assert.equal(fitsCardFigureBudget(10,10,policy),true);
+  assert.equal(fitsCardFigureBudget(1,18,{...policy,maxFiguresPerCard:10}),false);
 });
 test('one eligible completed article is deployment-ready',()=>{const g=adaptiveBatchGate(rows(1),policy,now);assert.equal(g.ready,true);assert.equal(g.mode,'target_batch');assert.equal(g.articleCount,1);});
 test('zero articles never triggers a deploy',()=>{const g=adaptiveBatchGate([],policy,now);assert.equal(g.ready,false);assert.equal(g.articleCount,0);});
