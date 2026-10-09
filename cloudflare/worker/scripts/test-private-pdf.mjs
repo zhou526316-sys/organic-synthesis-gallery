@@ -147,6 +147,7 @@ await test('owner open returns only a short-lived opaque file URL',async()=>{
   const r=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','owner-token',{method:'POST'}),env);
   assert.equal(r.status,200);assert.equal(r.body.available,true);accessUrl=r.body.url;assert.ok(/token=v2\./.test(accessUrl));assert.equal(r.body.ticketMode,'stateless-v2');assert.ok(!accessUrl.includes('fixture.pdf'));
   assert.equal(r.body.headerVerified,true,'edge verifies the real PDF header during open');
+  assert.equal(r.body.contentHash,'a'.repeat(64),'authenticated open pins immutable PDF content identity');
   assert.equal(bucket.headCalls,0,'initial open does not issue a separate R2 HEAD');
   const timing=r.headers?.['server-timing']||'';
   assert.match(timing,/session;dur=\d+/);
