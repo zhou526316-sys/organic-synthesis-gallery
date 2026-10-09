@@ -227,6 +227,9 @@ jobs:
       - name: Validate and atomically merge completed TOC plus body packets
         id: auto_body_validation
         run: |
+          # Fail before media mutation if transient transport fallback violates
+          # the original digest, allowed-source, or hard-error contracts.
+          node --test scripts/test-new-body-transport.mjs
           npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1 @playwright/test@1.55.1
           npx playwright install --with-deps chromium webkit
           node cloudflare/scripts/merge-new-body-auto.mjs

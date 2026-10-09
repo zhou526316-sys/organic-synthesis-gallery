@@ -32,6 +32,9 @@ jobs:
       - name: Type-check frontend
         run: npx tsc --noEmit
 
+      - name: Verify optional body-media 503 resilience
+        run: node --test scripts/test-new-body-transport.mjs
+
       - name: Test responsive result pagination and verified reader
         timeout-minutes: 2
         run: |
