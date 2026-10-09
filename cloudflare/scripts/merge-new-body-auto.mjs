@@ -177,6 +177,11 @@ export function tocReadyDois(inputs){
   for(const row of inputs?.localCaptures?.items||[])if(strongOfficialCapture(row))ready.add(normalizeDoi(row.doi));
   return ready;
 }
+export function fitsCardFigureBudget(alreadyPublished,newFigures,policy){
+  const current=Number(alreadyPublished),incoming=Number(newFigures),max=Number(policy?.maxFiguresPerCard);
+  return Number.isInteger(current)&&current>=0&&Number.isInteger(incoming)&&incoming>=0
+    &&Number.isInteger(max)&&max>=1&&max<=20&&current+incoming<=max;
+}
 export function adaptiveBatchGate(rows,policy,now=Date.now()){
   const dois=new Set();
   let latestUpdatedAt=0,oldestUpdatedAt=0;
@@ -300,7 +305,7 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
         tocWaitingDois.add(doi);continue;
       }
       const baseCount=(media.items[doi]?.figures?.figures?.length||0);
-      if(baseCount+packetRows.length>policy.maxFiguresPerCard){
+      if(!fitsCardFigureBudget(baseCount,packetRows.length,policy)){
         held.push({doi,id:null,reason:'auto_card_display_limit'});continue;
       }
       const packetPrepared=[],packetAdded=[];
