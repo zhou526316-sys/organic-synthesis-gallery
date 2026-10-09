@@ -66,11 +66,27 @@ try{
   const context=await browser.newContext({viewport:{width:1360,height:1000},serviceWorkers:'block'});
   await context.route('**/*',route=>['GET','HEAD','OPTIONS'].includes(route.request().method())?route.continue():route.fulfill({status:503,body:'read-only acceptance blocks production writes'}));
   const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e.message)));
-  await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});await page.locator('#search').waitFor({timeout:30000});
   const dois=verification.dois;
   for(const [i,doi] of dois.entries()){
-   await page.locator('#search').fill(doi);await page.locator('#search').press('Escape');
-   const selector='.figure-strip-slot[data-figure-doi="'+doi+'"]',strip=page.locator(selector);await strip.waitFor({timeout:20000});await strip.scrollIntoViewIfNeeded();
+   // Verify the real public DOI-deep-link path. Unlike a fast succession of
+   // homepage searches, this path pins the requested published archived DOI to
+   // the first result and reads its exact sharded record, not a fabricated card.
+   const directUrl=new URL(base);directUrl.searchParams.set('doi',doi);
+   await page.goto(directUrl.href,{waitUntil:'domcontentloaded',timeout:45000});
+   const card=page.locator('#gallery .card[data-doi="'+doi+'"]').first();
+   try { await card.waitFor({state:'visible',timeout:30000}); }
+   catch(error) {
+     const snapshot=await page.evaluate(()=>({
+       catalogRead:document.documentElement.dataset.catalogRead||'',
+       catalogQueryRead:document.documentElement.dataset.catalogQueryRead||'',
+       resultCount:document.querySelector('#resultCount')?.textContent||'',
+       galleryCards:document.querySelectorAll('#gallery .card').length,
+       errorText:document.querySelector('.error')?.textContent?.slice(0,300)||'',
+     }));
+     throw new Error('published_doi_card_not_found doi='+doi+' diagnostics='+JSON.stringify(snapshot)+' cause='+String(error?.message||error));
+   }
+   const selector='.figure-strip-slot[data-figure-doi="'+doi+'"]',strip=card.locator(selector);
+   await strip.waitFor({timeout:20000});await strip.scrollIntoViewIfNeeded();
    const expected=media.items[doi].figures.figures;
    try{
      await page.waitForFunction(({s,n})=>document.querySelectorAll(s+' .figure-thumb img').length===n,{s:selector,n:expected.length},{timeout:20000});
