@@ -61,12 +61,20 @@ function bodyOnlyCaption(value) {
   return /^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*[1-9]\d*[a-z]?\b/i.test(s)
     || /\b(?:substrate|reaction|product)\s+(?:scope|screening|expansion)\b|\bscope\s+of\s+substrates\b/i.test(s);
 }
-function captureEvidence(row) {
+function wileyAssetNumberEvidence(value,doi) {
+  const expected=/^10\.1002\/anie\.([0-9]{5,8})/i.exec(String(doi||''))?.[1]||'';
+  const candidate=cleanUrl(value);
+  const observed=[...candidate.matchAll(/anie[._-]?([0-9]{5,8})(?=[^0-9]|$)/gi)].map(m=>m[1]);
+  return {doiNumericSuffix:expected,sourceNumericSuffixes:observed,
+    discrepant:!!expected&&observed.length>0&&observed.some(n=>n!==expected)};
+}
+function captureEvidence(row,doi) {
   const role=limited(row?.candidateSource,100);
   const url=cleanUrl(row?.sourceUrl);
   const caption=limited(row?.caption,120);
   let articleHost='';
   try {articleHost=new URL(String(row?.articleUrl||'')).hostname;}catch{}
+  const numeric=wileyAssetNumberEvidence(url,doi);
   const flagged=bodyOnlyCaption(caption)||role==='wiley_ga_labeled_section_single_image';
   const uncertain=!gaSignal(url)&&role!=='article_head_metadata';
   return {
@@ -78,7 +86,9 @@ function captureEvidence(row) {
     articleHost,
     hash:limited(row?.contentHash,80),
     updatedAt:Number(row?.updatedAt||0),
-    category:flagged?'suspected_body_image':
+    publisherAssetIdentity:numeric,
+    category:numeric.discrepant?'wiley_ga_numeric_asset_mismatch':
+      flagged?'suspected_body_image':
       uncertain?'unverified_graphical_abstract_origin':'publisher_ga_signal',
   };
 }
@@ -111,7 +121,7 @@ try {
     const doi=String(r?.doi||'').toLowerCase();
     if(!angews.includes(doi) || String(r?.kind||'').toLowerCase()!=='official')continue;
     if(!byDoi.has(doi))byDoi.set(doi,[]);
-    byDoi.get(doi).push(captureEvidence(r));
+    byDoi.get(doi).push(captureEvidence(r,doi));
   }
   report.captureIndex={updatedAt:Number(index.updatedAt||0),rows:rows.length,
     eligibleAngewOfficialCaptures:[...byDoi.values()].reduce((sum,a)=>sum+a.length,0)};
@@ -137,6 +147,21 @@ try {
   report.fourMissing=missingTarget.map(doi=>statusByDoi.get(doi));
   report.oct09Angew=featuredAngew.map(doi=>({...statusByDoi.get(doi),
     capturedSources:byDoi.get(doi)||[]}));
+  report.oct09BodyCrosscheck=[];
+  for(const doi of featuredAngew){
+    try {
+      const packet=JSON.parse(await get(API+'/api/article-figures/staged?doi='+encodeURIComponent(doi)+'&audit='+Date.now(),2_000_000));
+      const publicToc=statusByDoi.get(doi);
+      const evidence=(byDoi.get(doi)||[]).filter(x=>x.hash&&x.hash===publicToc?.contentHash);
+      const hits=itemList(packet).filter(row=>evidence.some(x=>{
+        const bodySource=cleanUrl(row?.sourceUrl);
+        const bodyHash=String(row?.contentHash||row?.sha256||'').toLowerCase();
+        return bodySource===x.sourceUrl||bodyHash.startsWith(x.hash);
+      })).map(row=>({label:limited(row?.label,70),sourceUrl:cleanUrl(row?.sourceUrl)}));
+      report.oct09BodyCrosscheck.push({doi,stagedCount:itemList(packet).length,
+        matchingPublishedToc:hits,numberedBodyCollision:hits.length>0});
+    }catch(e){report.oct09BodyCrosscheck.push({doi,checkUnavailable:limited(e?.message||e,160)});}
+  }
   report.recentAngew=angews.map(doi=>({
     ...statusByDoi.get(doi),
     origins:(byDoi.get(doi)||[]).map(s=>({...s,
@@ -145,7 +170,8 @@ try {
   report.anomalyCandidates=report.recentAngew.filter(x=>x.origins.some(o=>
     o.matchingPublishedHash && o.category!=='publisher_ga_signal'
   )).map(x=>({doi:x.doi,reason:x.reason,category:x.origins.filter(o=>o.matchingPublishedHash)
-    .map(o=>o.category),sourceUrls:x.origins.filter(o=>o.matchingPublishedHash).map(o=>o.sourceUrl)}));
+    .map(o=>o.category),sourceUrls:x.origins.filter(o=>o.matchingPublishedHash).map(o=>o.sourceUrl),
+    numericIds:x.origins.filter(o=>o.matchingPublishedHash).map(o=>o.publisherAssetIdentity)}));
   report.remainingCacheMiss=report.fourMissing.filter(x=>!x?.available).map(x=>x.doi);
   report.completedAt=new Date().toISOString();
   report.status='read_only_complete';
@@ -163,6 +189,7 @@ console.log('TM_OCT09_LIVE_SUMMARY '+JSON.stringify({
   fourMissing:report.fourMissing,oct09Angew:report.oct09Angew,
   recentAngewInspected:report.recentAngew?.length,
   anomalyCandidates:report.anomalyCandidates,
+  oct09BodyCrosscheck:report.oct09BodyCrosscheck,
   remainingCacheMiss:report.remainingCacheMiss,errors:report.errors,
   readOnly:true,productionWrites:0,publisherVisits:0
 }));
