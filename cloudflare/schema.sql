@@ -1137,3 +1137,97 @@ WHEN NEW.user_id IS NOT OLD.user_id OR NEW.doi IS NOT OLD.doi
 BEGIN
   SELECT RAISE(ABORT, 'pdf_vault_queue_identity_or_revision_invalid');
 END;
+
+
+-- Account-device concurrency and Tencent SMS OTP groundwork (2026-10-09).
+-- A separate metadata table keeps the existing user_sessions schema and all
+-- older sessions valid. The insert trigger is the server-side single-writer
+-- authority: even concurrent/password/OAuth logins can never retain >5
+-- unexpired bearer sessions. The newly inserted session is always kept.
+CREATE TABLE IF NOT EXISTS user_session_devices (
+  token_hash TEXT PRIMARY KEY REFERENCES user_sessions(token_hash) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  device_id TEXT,
+  device_label TEXT,
+  last_seen_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_user_session_devices_account
+  ON user_session_devices(user_id, last_seen_at, token_hash);
+CREATE INDEX IF NOT EXISTS idx_user_session_devices_stable_id
+  ON user_session_devices(user_id, device_id);
+CREATE TRIGGER IF NOT EXISTS trg_gallery_session_five_limit
+AFTER INSERT ON user_sessions
+BEGIN
+  INSERT INTO user_session_devices(token_hash, user_id, device_id, device_label, last_seen_at)
+  VALUES (NEW.token_hash, NEW.user_id, NULL, NULL, NEW.created_at);
+  DELETE FROM user_sessions
+   WHERE token_hash IN (
+     SELECT s.token_hash
+       FROM user_sessions AS s
+       LEFT JOIN user_session_devices AS d ON d.token_hash = s.token_hash
+      WHERE s.user_id = NEW.user_id
+        AND s.expires_at > NEW.created_at
+        AND s.token_hash <> NEW.token_hash
+      ORDER BY COALESCE(d.last_seen_at, s.created_at) ASC, s.created_at ASC, s.token_hash ASC
+      LIMIT (
+        SELECT MAX(0, COUNT(*) - 5)
+          FROM user_sessions
+         WHERE user_id = NEW.user_id AND expires_at > NEW.created_at
+      )
+   );
+END;
+-- Robust cleanup even on database connections with FK enforcement disabled.
+CREATE TRIGGER IF NOT EXISTS trg_gallery_session_device_cleanup
+AFTER DELETE ON user_sessions
+BEGIN
+  DELETE FROM user_session_devices WHERE token_hash = OLD.token_hash;
+END;
+
+-- Phone ownership is unique; never infer or auto-merge user identities.
+CREATE TABLE IF NOT EXISTS user_phone_links (
+  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  phone_e164 TEXT NOT NULL UNIQUE CHECK (phone_e164 GLOB '+86[1-9]*' AND length(phone_e164) = 14),
+  verified_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_user_phone_links_phone ON user_phone_links(phone_e164);
+
+-- One-use OTP, stored exclusively as keyed HMAC (never plaintext).
+CREATE TABLE IF NOT EXISTS phone_otp_challenges (
+  challenge_id TEXT PRIMARY KEY,
+  purpose TEXT NOT NULL CHECK (purpose IN ('login','bind')),
+  user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
+  phone_e164 TEXT NOT NULL,
+  code_hash TEXT NOT NULL,
+  code_salt TEXT NOT NULL,
+  attempts INTEGER NOT NULL DEFAULT 0 CHECK (attempts >= 0),
+  last_sent_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL,
+  expires_at INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_phone_otp_purpose_number
+  ON phone_otp_challenges(purpose, phone_e164);
+CREATE INDEX IF NOT EXISTS idx_phone_otp_expiry
+  ON phone_otp_challenges(expires_at);
+
+-- Bounded sender abuse budget. Only keyed phone/IP fingerprints are stored.
+CREATE TABLE IF NOT EXISTS phone_sms_send_attempts (
+  attempt_id TEXT PRIMARY KEY,
+  phone_hash TEXT NOT NULL,
+  ip_hash TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_phone_sms_attempts_phone
+  ON phone_sms_send_attempts(phone_hash, created_at);
+CREATE INDEX IF NOT EXISTS idx_phone_sms_attempts_ip
+  ON phone_sms_send_attempts(ip_hash, created_at);
+
+
+-- New private-PDF fallback tickets remember their originating login session.
+-- Session hashes deliberately do not cascade away on logout: the missing
+-- user_sessions row must remain detectable so revoked tickets cannot revive.
+CREATE TABLE IF NOT EXISTS user_pdf_ticket_session_refs (
+  ticket_hash TEXT PRIMARY KEY REFERENCES private_pdf_access_tokens(token_hash) ON DELETE CASCADE,
+  session_hash TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_user_pdf_ticket_session_refs_session
+  ON user_pdf_ticket_session_refs(session_hash);
