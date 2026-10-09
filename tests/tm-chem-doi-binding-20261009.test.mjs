@@ -113,7 +113,7 @@ test('successful Elsevier binding proceeds to ordinary legitimate publisher capt
  assert.equal(x.reports.length,0);
  assert.equal(x.store.has(P+'result:'+DOI),false);
 });
-test('no image, PDF, authorization or media byte is present in synthetic terminal diagnostic',()=>{
+test('no image, PDF, authorization or media byte is present in synthetic terminal diagnostic',async()=>{
  const x=harness();
  await x.ctx.T.publisherBoot();
  const state=JSON.stringify([...x.store]);
