@@ -11,6 +11,7 @@ import { stable, digest } from './catalog.mjs';
 import { gunzipSync } from 'node:zlib';
 import { buildLegacyTitlePresentation } from './title-presentation.mjs';
 import { RESULT_WINDOW_SIZE } from '../shared/result-window.js';
+import { isHotLandingEligible } from '../shared/literature-landing.mjs';
 
 const root=process.cwd(), shadow=path.resolve(process.argv[2] || ''), out=path.join(shadow,'validation/browser');
 await mkdir(out,{recursive:true});
@@ -66,7 +67,7 @@ const hooks=`
     resultWindowPage=1; renderCards();
     while(true){
       rows.push(...(globalThis as any).__archBridge.inspect());
-      const state=resultWindowState(filteredPapers().length,resultWindowPage,RESULT_WINDOW_SIZE);
+      const state=resultWindowState(filteredPapers().length,resultWindowPage,${RESULT_WINDOW_SIZE});
       if(!state.hasNext) break;
       resultWindowPage+=1; renderCards();
       await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));
@@ -109,11 +110,15 @@ const server=createServer(async(req,res)=>{
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const base=`http://127.0.0.1:${server.address().port}`;
 const archiveTarget=life.partitions.archive[0]||records[0].doi;
+// Current Hot landing includes recently added papers with unknown/future online dates;
+// lifecycle.partitions.hot alone is no longer the complete landing membership.
+const expectedHotDois=records.filter(row=>isHotLandingEligible(row,report.asOfDate))
+  .map(row=>row.doi).sort();
 const outcomes=[];
 try {
   for(const [name,type] of [['chromium',chromium],['webkit',webkit]]) {
     const browser=await type.launch({headless:true}),context=await browser.newContext({locale:'en-US',viewport:{width:1280,height:900},serviceWorkers:'block'});
-    const page=await context.newPage(),events={errors:[],console:[],failedRequests:[],responses:[],externalRequestsBlocked:[]};
+    const page=await context.newPage(),events={errors:[],console:[],failedRequests:[],responses:[],externalRequestsBlocked:[],navigations:[],crashes:[]};
     const summaryRequests=[];
     await context.route('**/*',async route=>{
       const u=new URL(route.request().url());
@@ -126,8 +131,15 @@ try {
           zh:'历史文献中文摘要',en:'Archive paper English summary',generatedAt:Date.now()
         })});
       }
-      return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(u.pathname.includes('reader-counts')?{counts:{}}:{})});
+      // Account integrations must follow the current phone-OTP UI contract;
+      // returning bare {} caused repeated test-only auth.phone exceptions.
+      const payload=u.pathname==='/api/user-ui/integrations'
+        ? {auth:{local:true,email:true,google:false,wechat:false,qq:false,phone:false},payments:{wechat:false,alipay:false}}
+        : u.pathname.includes('reader-counts')?{counts:{}}:{};
+      return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(payload)});
     });
+    page.on('framenavigated',frame=>{if(frame===page.mainFrame())events.navigations.push(frame.url());});
+    page.on('crash',()=>events.crashes.push('main_page_crashed'));
     page.on('pageerror',e=>events.errors.push(e.message));
     page.on('console',m=>{if(m.type()==='error')events.console.push(m.text());});
     page.on('requestfailed',r=>events.failedRequests.push({url:r.url(),error:r.failure()?.errorText}));
@@ -173,10 +185,11 @@ try {
       await writeFile(path.join(out,`${name}-field-parity.json`),JSON.stringify({compared:records.length,languages:['en','zh'],windowSize:RESULT_WINDOW_SIZE,differences},null,2));
       if(differences.length)console.log('GALLERY_DISPLAY_DIFFERENCES '+JSON.stringify(differences.slice(0,30)));
       assert.equal(differences.length,0,`legacy_display_mismatch:${differences.length}`);
-      const hot=await page.evaluate(async()=>{const r=await __arch.loadLandingPlan(__arch.reader,{asOfDate:__arch.asOfDate});await __archBridge.replace(r.records.map(__arch.project));const dom=__archBridge.inspect().length;const accessible=(await __archBridge.inspectAll()).length;return{count:r.records.length,complete:r.complete,dom,accessible};});
-      assert.equal(hot.count,life.counts.hot);
+      const hot=await page.evaluate(async()=>{const r=await __arch.loadLandingPlan(__arch.reader,{asOfDate:__arch.asOfDate});await __archBridge.replace(r.records.map(__arch.project));const dom=__archBridge.inspect().length;const accessible=(await __archBridge.inspectAll()).length;return{count:r.records.length,complete:r.complete,dom,accessible,dois:r.records.map(row=>row.doi).sort()};});
+      assert.equal(hot.count,expectedHotDois.length,'hot_landing_card_count_mismatch');
       assert.equal(hot.complete,true);
-      assert.equal(hot.accessible,life.counts.hot);
+      assert.equal(hot.accessible,expectedHotDois.length,'hot_landing_paged_count_mismatch');
+      assert.deepEqual(hot.dois,expectedHotDois,'hot_landing_doi_set_mismatch');
       assert.ok(hot.dom<=RESULT_WINDOW_SIZE,'hot_dom_window_over_budget');
 
       // A shared Archive DOI is injected ahead of Hot without loading every history shard.
@@ -186,7 +199,7 @@ try {
         await __archBridge.replace(r.records.map(__arch.project));
         return {first:document.querySelector('#gallery > .card')?.getAttribute('data-doi')||'',hotCount:r.hotCount,total:r.records.length,lifecycle:r.shared?.lifecycle,status:r.shared?.status};
       },archiveTarget);
-      assert.deepEqual(deepLink,{first:archiveTarget,hotCount:life.counts.hot,total:life.counts.hot+1,lifecycle:'archive',status:'published'});
+      assert.deepEqual(deepLink,{first:archiveTarget,hotCount:expectedHotDois.length,total:expectedHotDois.length+1,lifecycle:'archive',status:'published'});
 
       // User state remains keyed by DOI even when the Archive card is removed/reloaded.
       const actions=page.locator('gallery-paper-actions').first();
