@@ -15,10 +15,13 @@
     button,.download{min-height:34px;padding:6px 10px;border:1px solid #d6deeb;border-radius:9px;background:#fff;color:#344054;font:inherit;font-weight:650;cursor:pointer}
     button:disabled{opacity:.45;cursor:default}.download[hidden]{display:none} .download[disabled]{opacity:.5}
     #page-count,#zoom{min-width:58px;text-align:center;font-size:12px;color:#56657a}
-    main{position:relative;flex:1;min-height:0;overflow:auto;background:#dfe5ee;padding:18px}
+    main{position:relative;flex:1;min-height:0;overflow:auto;background:#dfe5ee;padding:18px;overscroll-behavior:contain}
     #stage{min-height:100%;display:flex;justify-content:center;align-items:flex-start}
-    #pdf-canvas{display:block;max-width:100%;background:#fff;box-shadow:0 5px 24px rgba(15,23,42,.18)}
-    #pdf-page-wrap{position:relative;display:inline-block;max-width:100%;touch-action:auto}
+    #stage{position:relative;display:block;min-height:100%;width:100%;text-align:left}
+    #stage .page{margin:0 auto 16px!important;box-shadow:0 5px 24px rgba(15,23,42,.18)}
+    #stage .page canvas{display:block;max-width:none}
+    .pdf-scroll-hint{font-size:12px;color:#758298;white-space:nowrap}
+    #stage .canvasWrapper.pdf-crop-target{position:relative;touch-action:auto}
     #pdf-crop-box{position:absolute;pointer-events:none;border:2px dashed #0b60ce;background:rgba(20,117,232,.13)}
     #pdf-crop-box[hidden],#pdf-rescue-panel[hidden],.rescue-control[hidden]{display:none!important}
     #pdf-rescue-panel{position:fixed;top:65px;right:14px;bottom:12px;width:min(360px,calc(100vw - 28px));overflow:auto;
@@ -42,9 +45,8 @@
     <a href="/">← 返回 Gallery</a>
     <span id="doi"></span>
     <div class="toolbar" aria-label="PDF 阅读工具">
-      <button id="previous" type="button" disabled>上一页</button>
-      <span id="page-count">—</span>
-      <button id="next" type="button" disabled>下一页</button>
+      <span id="page-count" aria-live="polite">—</span>
+      <span class="pdf-scroll-hint">连续滚动</span>
       <button id="zoom-out" type="button" disabled>−</button>
       <span id="zoom">100%</span>
       <button id="zoom-in" type="button" disabled>＋</button>
@@ -66,10 +68,8 @@
     <small>找到的图号只是定位候选。必须手工核对原始图像范围、DOI 和出版许可；导出的 PNG 与溯源记录不会自动发布到公共图库。</small>
   </aside>
   <main id="main">
-    <div id="stage"><div id="pdf-page-wrap">
-      <canvas id="pdf-canvas" width="0" height="0" aria-label="论文 PDF 页面"></canvas>
-      <div id="pdf-crop-box" hidden></div>
-    </div></div>
+    <div id="stage" class="pdfViewer" aria-label="连续滚动 PDF 文献"></div>
+    <div id="pdf-crop-box" hidden></div>
     <div id="status">正在打开私有 PDF…</div>
   </main>
   <script type="module" src="/src/private-pdf-reader.mjs"></script>
