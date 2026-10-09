@@ -51,9 +51,12 @@ function clearReader() {
   const previous = reader;
   reader = null;
   // Hide content synchronously; worker/task teardown can then finish safely.
-  const canvas = byTestId('reader-canvas');
-  canvas.width = 0;
-  canvas.height = 0;
+  // Multiple lazily rendered PDF pages may be visible. Synchronously
+  // invalidate every canvas on logout/account change before teardown.
+  for (const canvas of readerDialog.querySelectorAll('.reader-scroll-container canvas')) {
+    canvas.width = 0;
+    canvas.height = 0;
+  }
   byTestId('reader-pagecount').textContent = '';
   $('#reader-title').textContent = 'PDF 阅读器';
   byTestId('reader-status').textContent = '';
