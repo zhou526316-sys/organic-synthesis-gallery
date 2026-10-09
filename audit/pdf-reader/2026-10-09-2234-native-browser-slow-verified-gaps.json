@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "beijingTime": "2026-10-09 22:41:45",
+  "feedbackId": "PDF-20261009-2234-NATIVE-BROWSER-SLOW",
+  "request": "PDF现在打开还是很慢，特别是浏览器上经常打不开",
+  "status": "verified_source_defects; actual authenticated Edge network error not captured",
+  "files": [
+    "src/private-pdf-reader.mjs",
+    "cloudflare/worker/src/private-pdf.js",
+    "tests/private-pdf-access-browser.mjs",
+    "pdf/index.html"
+  ],
+  "defects": [
+    "native browser button calls location.replace with signed Cloudflare URL; after navigation Gallery loses own progress/error/retry UI",
+    "authorization hedges API_BASE/API_BACKUP, while Range file transfer retries same file host on transient errors; only HTTP401 refreshes URL",
+    "native regression checks requests/handoff but not actual page rendering or recovery on timeout or HTTP401/503"
+  ],
+  "otherObservations": [
+    "private PDF bytes use Cache-Control private,no-store; repeated remote opens cannot rely on browser HTTP cache",
+    "fast view ticket 5-minute initial lifetime with bounded cookie continuation; originating login/session revocation is enforced",
+    "Pages #37943957964, Worker #37943958036, PDF Vault live #37945336798 all success, not equivalent to owner native PDF success",
+    "current TinyFish public read-only probe: pdf shell ~6135ms, API health ~4142ms; Tencent health target_unreachable. No user credentials or private PDF data requested"
+  ],
+  "proposedApprovalBatch": [
+    "For recoverable file Range timeouts/502/503/504, switch to newly authorized backup path with content identity/byte-range integrity checks; no 401/403 bypass",
+    "For browser-native mode, retain Gallery recovery controls and add real 206/header check plus Edge/Chromium native page/failure tests",
+    "Add privacy-safe per-phase timing for authenticated owner-user diagnostic and verify China/campus device after deploy"
+  ],
+  "risks": [
+    "Extra cross-border authorization on backup may add latency/egress",
+    "do not mix bytes from different document versions",
+    "preflight adds RTT on fast paths",
+    "Tencent independent ingress remains unavailable"
+  ],
+  "productionRepairApplied": false,
+  "awaitingUserExplicitFeedbackApproval": true
+}
