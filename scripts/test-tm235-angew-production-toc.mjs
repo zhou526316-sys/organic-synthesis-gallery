@@ -159,7 +159,7 @@ try {
 
 console.log('TM235_ANGEW_TEST_SUMMARY ' + JSON.stringify({
   passed,
-  bridge:'2.2.77',
+  bridge:'2.2.78',
   captureProtocol:'6.2.20',
   productionTocAuthority:'d1',
   officialTocAutoPromotion:true,
