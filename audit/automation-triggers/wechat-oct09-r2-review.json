@@ -1,0 +1,15 @@
+{
+  "requestId": "wechat-2026-10-09-r2-move-fig4b-and-restore-full-daily-native-title",
+  "action": "review_source_revisions_only",
+  "sourceRevision": "2026-10-09-r1",
+  "revision": "2026-10-09-r2",
+  "publicationDate": "2026-10-09",
+  "expectedDois": [
+    "10.1126/science.aef3001",
+    "10.1126/science.aeh7895"
+  ],
+  "existingMediaId": "KhELYUzvwADwB_l1xH1SWE4Nt7iQ0MsStYhbY_QtnZvPa4Y4cW7sWdrXjysQoIjO",
+  "draftOnly": true,
+  "publicSendAuthorized": false,
+  "note": "Correct user-observed Science 10.09 daily cover/title and retrospective image timing. The previous Fig.4B r09 was wrongly appended to conclusion; move directly after scope paragraph 3 which explains DBU-assisted alkene isomerization. Repair other off-by-one figure placements, keep 22 original PDF crops and 7-circle user-selected cover unchanged. Restore native daily title and original 2.35:1 white TOC with navy native title band. No WeChat write until independent SHA256 and HTML gate pass."
+}
