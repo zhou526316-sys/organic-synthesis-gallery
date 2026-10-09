@@ -1,17 +1,17 @@
 {
-  "requestId": "tm-20261009-1639-after-276-owner-refresh",
+  "requestId": "tm-20261009-1746-owner-upload-post-rsc-ajax",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "requestedAt": "2026-10-09T08:40:10.246Z",
-  "context": "After user installed current Tampermonkey and exact Angew 4335022 wrong TOC quarantine, read current owner diagnostic R2 snapshot and distinguish installed version from actual latest authenticated capture run. Prioritize 10.1002/anie.4335022 and four Oct9 Chem/RSC no-visual DOIs. Do not capture, mutate, promote, delete or alter literature schedule.",
+  "requestedAt": "2026-10-09T09:46:00Z",
+  "context": "Read newly uploaded owner Tampermonkey diagnostic snapshot after deployed Bridge 2.2.77 / TOC 6.2.58. Inspect latest uploadedAt and capture times, identify whether official RSC ArticleAbstractAjax recovery actually ran for 10.1039/d6sc06407h and 10.1039/d6gc03748h; also check Chem 103008/103043 main visuals and DOI 10.1002/anie.4335022 quarantine. Read-only evidence; do not visit publisher, upload, modify or promote media.",
   "targetDois": [
-    "10.1002/anie.4335022",
+    "10.1039/d6sc06407h",
+    "10.1039/d6gc03748h",
     "10.1016/j.chempr.2026.103008",
     "10.1016/j.chempr.2026.103043",
-    "10.1039/d6sc06407h",
-    "10.1039/d6gc03748h"
+    "10.1002/anie.4335022"
   ],
-  "expectedBridgeVersion": "2.2.76",
-  "expectedInstallRevision": "6.2.57",
+  "expectedBridgeVersion": "2.2.77",
+  "expectedInstallRevision": "6.2.58",
   "readOnly": true,
   "allowCapture": false,
   "allowMediaWrite": false,
