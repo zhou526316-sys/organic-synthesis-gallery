@@ -38,3 +38,51 @@ jobs:
           bash -n deploy/pdf-gateway/install.sh
           python -m py_compile deploy/pdf-gateway/gateway.py deploy/pdf-gateway/test_gateway.py
           python -m unittest discover -s deploy/pdf-gateway -p 'test_gateway.py' -v
+
+  windows-powershell51:
+    runs-on: windows-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/owner-private-pdf-dual-ingress-20261008
+          persist-credentials: false
+      - name: Validate literal UTF-8 BOM for Windows PowerShell 5.1
+        shell: powershell
+        run: |
+          if ($PSVersionTable.PSVersion.Major -ne 5) {
+            throw 'This test requires Windows PowerShell 5.1, not pwsh 7'
+          }
+          $file = 'deploy/pdf-gateway/run-from-windows.ps1'
+          $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path $file).Path)
+          if ($bytes.Length -lt 3 -or $bytes[0] -ne 239 -or $bytes[1] -ne 187 -or $bytes[2] -ne 191) {
+            throw 'Windows PowerShell 5.1 requires a UTF-8 BOM for this installer'
+          }
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path $file).Path, [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Host $_.Message }
+            throw 'Windows PowerShell 5.1 failed to parse the checked-out installer'
+          }
+          Write-Host 'WIN_PS51_LOCAL_PARSE_PASS'
+      - name: Repeat user raw download and Windows PowerShell 5.1 parse
+        shell: powershell
+        run: |
+          $uri = 'https://raw.githubusercontent.com/zhou526316-sys/organic-synthesis-gallery/' + $env:GITHUB_SHA + '/deploy/pdf-gateway/run-from-windows.ps1'
+          $dest = Join-Path $env:TEMP 'gallery-pdf-gateway-download-ps51.ps1'
+          Invoke-WebRequest -Uri $uri -OutFile $dest -UseBasicParsing
+          $bytes = [System.IO.File]::ReadAllBytes($dest)
+          if ($bytes.Length -lt 3 -or $bytes[0] -ne 239 -or $bytes[1] -ne 187 -or $bytes[2] -ne 191) {
+            throw 'Raw GitHub download lost the UTF-8 BOM'
+          }
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            $dest, [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Host $_.Message }
+            throw 'Windows PowerShell 5.1 failed to parse downloaded installer'
+          }
+          Write-Host 'WIN_PS51_RAW_DOWNLOAD_PARSE_PASS'
