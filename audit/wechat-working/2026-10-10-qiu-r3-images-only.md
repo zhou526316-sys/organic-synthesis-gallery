@@ -220,6 +220,8 @@
 - SHA256 801678f47a5174f54f666c86f387ddca6aef83ab6d336576d233bb0303a4b61d
 
 ## 往期精选概念封面
-- public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/2026-10-10-qiu-electrolysis-source-chemistry-cover.png
-- SHA256 abceafa2dd3f62e76e53bad1bf1f5bace59d237eb7a7f6f40b0f86422bae8d6e
+- public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/2026-10-10-qiu-electrolysis-source-chemistry-cover-r4.png
+- SHA256 9c80ca3e521490debc3158554160a533629eeb319e9159dce1310dea7a8a5af0
 - 图式与关键化学结构分别审核：化学结构仅来自主文 Fig.1c，背景为非化学示意。
+
+R4：封面原始化学结构由 Fig. 1c 精确裁切，手机端字号与结构占比提高；正文其余31张图及全部段落不变。

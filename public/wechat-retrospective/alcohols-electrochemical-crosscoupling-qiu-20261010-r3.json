@@ -817,14 +817,14 @@
     },
     {
       "id": "retro-cover",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/2026-10-10-qiu-electrolysis-source-chemistry-cover.png",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/2026-10-10-qiu-electrolysis-source-chemistry-cover-r4.png",
       "caption": "",
       "body": false,
       "display_width_pct": 100,
       "source_figure": "Nature Synthesis Fig. 1c original source molecular cutouts",
       "source_doi": "10.1038/s44160-026-01128-y",
       "source_kind": "source_exact_cutouts_on_nonmolecular_concept_background",
-      "source_adjustment": "Four figures from exact original Fig.1c clipped and background alpha processed; foreground RGB unmodified; Fe electrode and Ni foam illustrative schematic; no generated atomic structures."
+      "source_adjustment": "R4 concept cover: 2 enlarged chemical structures cropped directly from main paper Fig.1c. Authentic foreground RGB preserved; no generated chemistry. Deep navy text, Fe anode/Ni foam cathode vector silhouettes, no bubbles. Reviewed native 1254-square and mobile square crop."
     }
   ],
   "cover": {
@@ -836,9 +836,9 @@
     },
     "crop_1_1": "0_0_1_1",
     "crop_235_1": "0_0.287234_1_0.712766",
-    "description": "Subdued modern chemistry editorial, NO bubbles. All four source chemical structures cut directly from original Fig1c and preserve original foreground RGB; electrode and flow symbols are artistic conceptual. Native square cover for retrospective second card."
+    "description": "R4 single restrained graphical title, electrochemical Fe(+)/Ni foam(-) and C(sp3)-C(sp3) concept; source-authentic two fully intact Fig.1c structures. No drawn molecular structures or artificial orbitals; retains native square WeChat crop."
   },
   "ai_notice": "本文根据作者公开论文正文与 251 页补充材料独立整理。分子结构、谱图与数据采用原文裁切；概念封面仅用于辅助理解，不作为机理证据。",
-  "editorialRevision": "2026-10-10-qiu-r3",
+  "editorialRevision": "2026-10-10-qiu-r4",
   "targetDateBeijing": "2026-10-10"
 }
