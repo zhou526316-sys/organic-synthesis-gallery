@@ -29,6 +29,9 @@ jobs:
       - name: Install frontend dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Test Gallery custom-domain live media routing
+        run: node --test scripts/test-gallery-media-routing.mjs
+
       - name: Type-check frontend
         run: npx tsc --noEmit
 
@@ -216,6 +219,9 @@ jobs:
           done
           cat /tmp/gallery-architecture-preview.log
           exit 1
+
+      - name: Verify Gallery custom-domain TOC cards and load-error recovery
+        run: npx playwright test tests/gallery-live-media.spec.ts --browser=webkit --reporter=line --workers=1
 
       - name: Run Hot Archive frontend regression
         env:

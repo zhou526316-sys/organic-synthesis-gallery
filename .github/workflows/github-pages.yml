@@ -159,6 +159,8 @@ jobs:
           enablement: true
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Guard live media routing on the canonical Gallery domain
+        run: node --test scripts/test-gallery-media-routing.mjs
       - name: Verify repository-owned literature baseline
         shell: bash
         run: |

@@ -924,6 +924,21 @@ select {
   font-size: 11px;
   line-height: 1.4;
 }
+.toc-retry {
+  max-width: calc(100% - 28px);
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+  font: 500 12px/1.5 system-ui, sans-serif;
+  text-align: center;
+}
+.toc-retry:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
 .figure-strip-slot.pending {
   display: block;
   min-height: 96px;

@@ -64,6 +64,9 @@ interface InventoryItem {
 }
 
 const WORKER_ORIGIN = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
+// Canonical browser-readable API. The Gallery custom domain is hosted on static Pages,
+// not on the Worker, so media POSTs must not go to its same-origin /api path.
+const MEDIA_API_ORIGIN = 'https://api.gczhouwld.com';
 
 let mediaManifestPromise: Promise<StaticMediaManifest> | null = null;
 let translationsPromise: Promise<StaticTranslations> | null = null;
@@ -77,12 +80,20 @@ function assetUrl(path: string): string {
 
 function workerAssetUrl(path: string): string {
   if (/^(?:https?:|data:|blob:)/i.test(path)) return path;
-  return new URL(path, `${WORKER_ORIGIN}/`).toString();
+  return new URL(path, `${MEDIA_API_ORIGIN}/`).toString();
 }
 
 function staticFrontendOnly(): boolean {
   if (typeof location === 'undefined') return false;
   return location.hostname.endsWith('.github.io') || location.protocol === 'file:';
+}
+
+function publicStaticMediaFrontend(): boolean {
+  if (typeof location === 'undefined') return false;
+  const host = location.hostname.toLowerCase();
+  return host === 'gallery.gczhouwld.com'
+    || host === 'organic-synthesis-gallery-public.pages.dev'
+    || staticFrontendOnly();
 }
 
 function localDevelopmentHost(): boolean {
@@ -243,6 +254,10 @@ function workerRequest<T>(method: string, path: string, body?: unknown): Promise
   return rawRequest<T>(method, `${WORKER_ORIGIN}${path}`, body);
 }
 
+function canonicalMediaRequest<T>(path: string, body?: unknown): Promise<ApiResponse<T>> {
+  return rawRequest<T>('POST', `${MEDIA_API_ORIGIN}${path}`, body);
+}
+
 async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResponse<T>> {
   if (!localDevelopmentHost() && path === '/api/literature/catalog-view') {
     return workerRequest<T>('POST', path, body);
@@ -257,9 +272,9 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
     const localByDoi = new Map(requested.map(doi => [doi, localInventory(manifest.items?.[doi], doi)]));
     const incomplete = requested.filter(doi => localByDoi.get(doi)?.status !== 'complete');
 
-    if (staticFrontendOnly() && incomplete.length) {
+    if (publicStaticMediaFrontend() && incomplete.length) {
       try {
-        const dynamic = await workerRequest<{ generatedAt?: number; items?: InventoryItem[] }>('POST', path, { dois: incomplete });
+        const dynamic = await canonicalMediaRequest<{ generatedAt?: number; items?: InventoryItem[] }>(path, { dois: incomplete, readOnly: true });
         for (const item of dynamic.data?.items || []) {
           const doi = normalizeDoi(item?.doi);
           if (!doi) continue;
@@ -271,8 +286,9 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
           status: 200,
           headers: new Headers({ 'x-gallery-media-source': 'static+worker-inventory' }),
         };
-      } catch {
-        // Keep the complete static snapshot usable if the Worker is unavailable.
+      } catch (error) {
+        // An unreadable remote inventory is not proof that a missing item is complete.
+        console.warn('[Gallery media] live inventory unavailable; preserving static snapshot', error);
       }
     }
 
@@ -298,14 +314,16 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
 
     if (incomplete.length) {
       try {
-        const dynamic = staticFrontendOnly()
-          ? await workerRequest<{ generatedAt?: number; items?: StaticMediaItem[] }>('POST', path, { dois: incomplete })
+        const fromCanonical = publicStaticMediaFrontend();
+        const dynamic = fromCanonical
+          ? await canonicalMediaRequest<{ generatedAt?: number; items?: StaticMediaItem[] }>(path, { dois: incomplete })
           : await rawRequest<{ generatedAt?: number; items?: StaticMediaItem[] }>('POST', path, { dois: incomplete });
+        if (!Array.isArray(dynamic.data?.items)) throw new Error('live_media_response_invalid');
         const dynamicByDoi = new Map<string, StaticMediaItem>();
         for (const item of dynamic.data?.items || []) {
           const doi = normalizeDoi(item?.doi);
           if (!doi) continue;
-          dynamicByDoi.set(doi, normalizeMediaItem(item, staticFrontendOnly() ? 'worker' : 'static'));
+          dynamicByDoi.set(doi, normalizeMediaItem(item, fromCanonical ? 'worker' : 'static'));
         }
         const items = requested.flatMap(doi => {
           const merged = mergeMediaItem(localByDoi.get(doi), dynamicByDoi.get(doi));
@@ -316,8 +334,10 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
           status: 200,
           headers: new Headers({ 'x-gallery-media-source': localByDoi.size ? 'static+dynamic' : 'dynamic' }),
         };
-      } catch {
-        // Preserve all static media if the Worker cannot fill the gaps.
+      } catch (error) {
+        // Fail open for already-published static images but keep this failure distinguishable
+        // from an article that genuinely has no production media.
+        console.warn('[Gallery media] live batch unavailable; preserving static snapshot', error);
       }
     }
 

@@ -1087,6 +1087,7 @@ async function hydrateMediaBatch(): Promise<void> {
   try {
     const response = await api.post('/api/media/batch', { dois });
     const payload = response.data as { items?: MediaBatchItem[] };
+    const liveMediaUnavailable = response.headers.get('x-gallery-media-source') === 'static-fallback';
     for (const item of payload.items || []) {
       const doi = normalizeDoi(item.doi);
       if (!doi) continue;
@@ -1095,15 +1096,36 @@ async function hydrateMediaBatch(): Promise<void> {
       tocCache.set(key, { result: item.toc, fetchedAt: Date.now() });
       figureCache.set(key, { result: item.figures, fetchedAt: Date.now() });
       document.querySelectorAll<HTMLElement>('.toc-slot[data-doi]').forEach(slot => {
-        if ((slot.dataset.doi || '').toLowerCase() === key) renderToc(slot, item.toc);
+        if ((slot.dataset.doi || '').toLowerCase() !== key) return;
+        if (item.toc?.available && item.toc.imageUrl) renderToc(slot, item.toc);
+        else if (liveMediaUnavailable) renderTocUnavailable(slot, 'service');
+        else if (!slot.querySelector('img.toc-image')) {
+          const pending = slot.querySelector<HTMLElement>('.generated-graphic-status');
+          if (pending) pending.textContent = language === 'zh' ? '原始主图待补齐' : 'Original graphic pending';
+          slot.dataset.state = 'not-yet-available';
+        }
       });
       document.querySelectorAll<HTMLElement>('.figure-strip-slot[data-figure-doi]').forEach(slot => {
         if ((slot.dataset.figureDoi || '').toLowerCase() === key) renderFigures(slot, item.figures);
       });
     }
+    if (liveMediaUnavailable) {
+      // A failed canonical API read may return an empty static snapshot.
+      // Do not leave those visible cards pretending that a capture is still running.
+      const requested = new Set(dois.map(doi => doi.toLowerCase()));
+      for (const target of targets) {
+        if (!requested.has(target.doi.toLowerCase())) continue;
+        if (tocCache.get(target.doi.toLowerCase())?.result.available) continue;
+        renderTocUnavailable(target.toc, 'service');
+      }
+    }
   } catch {
-    // The normal path is the bounded visible-DOI API batch. Only if it fails
-    // do we activate the large static media manifest as a compatibility fallback.
+    // Preserve the existing static compatibility fallback, but expose a retry
+    // instead of leaving the visible card stuck in the generated-pending state.
+    for (const target of targets) {
+      if (!dois.includes(target.doi)) continue;
+      renderTocUnavailable(target.toc, 'service');
+    }
     window.dispatchEvent(new CustomEvent('gallery-media-static-fallback'));
   } finally {
     batchRunning = false;
@@ -1114,6 +1136,34 @@ async function hydrateMediaBatch(): Promise<void> {
       scheduleMediaBatch(40);
     }
   }
+}
+
+function renderTocUnavailable(slot: HTMLElement, reason: 'service' | 'image'): void {
+  // Never replace an existing visible original, including a TOC already
+  // consumed by the article summary panel, with a transient API error.
+  if (slot.querySelector('img.toc-image')) return;
+  if (slot.dataset.state === reason + '-error') return;
+  const retry = document.createElement('button');
+  retry.type = 'button';
+  retry.className = 'toc-retry';
+  retry.textContent = reason === 'service'
+    ? (language === 'zh' ? '主图服务暂不可用 · 点击重试' : 'Graphic service unavailable · Retry')
+    : (language === 'zh' ? '主图加载失败 · 点击重试' : 'Graphic could not load · Retry');
+  retry.addEventListener('click', () => {
+    const doi = normalizeDoi(slot.dataset.doi);
+    if (!doi) return;
+    const key = doi.toLowerCase();
+    tocCache.delete(key);
+    figureCache.delete(key);
+    mediaCheckedAt.delete(key);
+    slot.dataset.state = 'retrying';
+    retry.textContent = language === 'zh' ? '正在重新读取主图…' : 'Retrying original graphic…';
+    scheduleMediaBatch(0);
+  });
+  slot.replaceChildren(retry);
+  slot.classList.remove('generated');
+  slot.classList.add('loaded');
+  slot.dataset.state = reason + '-error';
 }
 
 function renderToc(slot: HTMLElement, result: TocResponse): void {
@@ -1129,11 +1179,11 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
   image.className = 'toc-image';
   const rect = slot.getBoundingClientRect();
   const priority = rect.bottom >= -80 && rect.top <= innerHeight + (innerWidth <= 680 ? 220 : 120);
-  image.loading = priority ? 'eager' : 'lazy';
+  // The image remains detached until load; a detached lazy image never starts.
+  // Limit work via visibleMediaTargets(), with low fetch priority for preloads.
+  image.loading = 'eager';
   image.decoding = 'async';
-  if (priority) image.setAttribute('fetchpriority', 'high');
-  image.src = cardImageUrl;
-  image.decoding = 'async';
+  image.setAttribute('fetchpriority', priority ? 'high' : 'low');
   const label = document.createElement('span');
   label.className = 'toc-label';
   label.textContent = result.primary?.label || (result.reason === 'figure1_fallback'
@@ -1145,12 +1195,30 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
         : t('toc'));
   button.append(image, label);
   button.addEventListener('click', () => openLightbox(masterImageUrl, label.textContent || t('toc')));
+  // A CDN thumbnail may fail while its immutable master is still healthy.
+  // Try only distinct proven URLs from this exact DOI; never invent an image URL.
+  const candidates = [...new Set([cardImageUrl, masterImageUrl, result.imageUrl].filter(Boolean))];
+  let current = 0;
+  const renderId = String(Date.now()) + ':' + Math.random().toString(36).slice(2);
+  slot.dataset.mediaRenderId = renderId;
   image.addEventListener('load', () => {
+    if (slot.dataset.mediaRenderId !== renderId) return;
     slot.replaceChildren(button);
     slot.classList.remove('generated');
     slot.classList.add('loaded');
     slot.dataset.state = 'done';
   });
+  image.addEventListener('error', () => {
+    if (slot.dataset.mediaRenderId !== renderId) return;
+    current += 1;
+    if (current < candidates.length) {
+      image.src = candidates[current];
+      return;
+    }
+    console.warn('[Gallery media] original graphic image failed to load', slot.dataset.doi);
+    renderTocUnavailable(slot, 'image');
+  });
+  image.src = candidates[0];
 }
 
 function renderFigures(slot: HTMLElement, result: FigureResponse): void {
