@@ -1,0 +1,32 @@
+name: Private PDF read-only edge and D1 round-trip diagnosis
+on:
+  push:
+    branches: [diag/pdf-latency-readonly-20261009]
+    paths:
+      - 'scripts/pdf-latency-readonly-20261009.mjs'
+      - '.github/workflows/pdf-latency-readonly-20261009.yml'
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  public-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+      - name: Only synthetic-invalid sessions, public GET, and unauthorized PDF POST
+        env:
+          PDF_LATENCY_OUTPUT: ${{ runner.temp }}/pdf-public-latency-20261009.json
+        run: |
+          node --check scripts/pdf-latency-readonly-20261009.mjs
+          node scripts/pdf-latency-readonly-20261009.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pdf-public-latency-sanitized
+          path: ${{ runner.temp }}/pdf-public-latency-20261009.json
+          retention-days: 5
+          if-no-files-found: ignore
