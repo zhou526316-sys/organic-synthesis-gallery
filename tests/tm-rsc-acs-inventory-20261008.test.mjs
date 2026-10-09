@@ -102,7 +102,8 @@ test('unrelated ACS tab cannot upload a binding failure for a different active t
    GM_getValue:()=>job,ACTIVE_JOB_KEY:'active-job',normalizeDoi:v=>String(v||''),
    sessionStorage:{getItem:()=>binding},P:'osg-toc-v6:',
    bindPublisherCaptureJob:async()=>{throw Error('capture_tab_job_mismatch');},
-   uploadReport:async()=>{reports++;},writeToken:()=> 'test-token'
+   uploadReport:async()=>{reports++;},writeToken:()=> 'test-token',
+   currentCaptureJob:()=>true,controllerPaused:()=>false,finalizeBoundElsevierDoiFailure:()=>false
  });
  vm.runInContext(extract('publisherBoot')+'\n globalThis.run=publisherBoot;',ctx);
  await ctx.run();assert.equal(reports,0,'unrelated publisher tab must not claim a failed capture');
