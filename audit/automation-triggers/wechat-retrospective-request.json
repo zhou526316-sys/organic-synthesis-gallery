@@ -1,14 +1,14 @@
 {
-  "requestId": "retrospective-qiu-alcohol-electrocoupling-20261010-r1-draft-only",
+  "requestId": "retrospective-qiu-alcohol-electrocoupling-20261010-r2-complete-figlabels",
   "requestedAt": "2026-10-09T23:05:00+08:00",
   "action": "sync_retrospective_draft",
-  "slug": "alcohols-electrochemical-crosscoupling-qiu-20261010",
-  "manifest": "public/wechat-retrospective/alcohols-electrochemical-crosscoupling-qiu-20261010.json",
-  "reviewGate": "audit/wechat-working/retrospective-alcohols-electrochemical-crosscoupling-qiu-20261010-review-gate.json",
+  "slug": "alcohols-electrochemical-crosscoupling-qiu-20261010-r2",
+  "manifest": "public/wechat-retrospective/alcohols-electrochemical-crosscoupling-qiu-20261010-r2.json",
+  "reviewGate": "audit/wechat-working/retrospective-alcohols-electrochemical-crosscoupling-qiu-20261010-r2-review-gate.json",
   "selectedDoi": "10.1038/s44160-026-01128-y",
   "targetDateBeijing": "2026-10-10",
-  "expectedManifestBlobSha": "a6ca28cb2fe1526c0f44100f2dfd43675b854c77",
-  "reason": "The user explicitly chose this Nature Synthesis article as Oct10 retrospective and requested preparation of the draft. Prior importer receipt 37951481585 verified 32 source-exact scientific figures and one concept cover, complete text/figure mapping. Create a separate one-article retrospective draft and read back with draft/get, do NOT generate Oct10 daily featured or public send. This retrospective will become the second article when the user selects the Oct10 first article.",
+  "expectedManifestBlobSha": "ef60a04a336db8b76fe6ac9195c7277b5c53e266",
+  "reason": "User selected this as tomorrow's independent retrospective. R2 imported 32 exact-source scientific figures with explicit Fig/SI source markers and 1 source-cropped concept cover, all metadata SHA and template checks passed in run 37952039975. Create ONE standalone retrospective WeChat draft (not a new daily edition), call draft/get readback, and do not publicly send.",
   "draftOnly": true,
   "publicSendAuthorized": false
 }
