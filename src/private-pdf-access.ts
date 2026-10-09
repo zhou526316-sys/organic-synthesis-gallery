@@ -2,6 +2,35 @@ const SESSION_KEY = 'organic-gallery-session-v1';
 const SESSION_USER_KEY = 'organic-gallery-session-user-v1';
 const CAPABILITY_CACHE_KEY = 'organic-gallery-private-pdf-capability-v1';
 const API_BASE = 'https://api.gczhouwld.com';
+const PDF_TENCENT_GATEWAY = 'https://pdf.gczhouwld.com';
+// This static first-party flag stays false until real DNS, TLS, owner and
+// Chinese-network acceptance. Never use arbitrary gateway URLs from JSON.
+async function tencentSessionGatewayEnabled(): Promise<boolean> {
+  try {
+    const response = await fetch('/pdf-gateway-routing.json', {
+      cache: 'no-store', signal: AbortSignal.timeout(1200),
+    });
+    if (!response.ok) return false;
+    const data = await response.json() as { schemaVersion?: number; enabled?: boolean; origin?: string };
+    return data.schemaVersion === 1 && data.enabled === true &&
+      data.origin === PDF_TENCENT_GATEWAY;
+  } catch { return false; }
+}
+async function fetchOwnerSession(token: string): Promise<Response> {
+  const enabled = await tencentSessionGatewayEnabled();
+  try {
+    return await fetch(API_BASE + '/api/user-ui/auth/session', {
+      headers: { authorization: 'Bearer ' + token }, cache: 'no-store',
+      signal: AbortSignal.timeout(enabled ? 5_000 : 10_000),
+    });
+  } catch (error) {
+    if (!enabled) throw error;
+    return fetch(PDF_TENCENT_GATEWAY + '/api/user-ui/auth/session', {
+      headers: { authorization: 'Bearer ' + token }, cache: 'no-store',
+      signal: AbortSignal.timeout(7_000),
+    });
+  }
+}
 const READ_CAPABILITY = 'private_pdf_read';
 const TOKEN_WATCH_MS = 800;
 const CAPABILITY_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
@@ -92,11 +121,7 @@ function revokeLocalCapability(source = 'none'): void {
 async function refreshCapability(token: string, generation: number): Promise<void> {
   if (!token) return;
   try {
-    const response = await fetch(API_BASE + '/api/user-ui/auth/session', {
-      headers: { authorization: 'Bearer ' + token },
-      cache: 'no-store',
-      signal: AbortSignal.timeout(10_000),
-    });
+    const response = await fetchOwnerSession(token);
     // Network/edge failures are not evidence that a previously verified owner
     // lost permission. Keep the last verified UI state and retry later.
     if (!response.ok) return;
