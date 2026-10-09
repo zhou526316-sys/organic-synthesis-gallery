@@ -1,5 +1,8 @@
-const DEFAULT_RETURN = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/';
+import { issueBearerSession, touchBearerSession, listBearerSessions, revokeBearerSession } from './auth-sessions.js';
+
+const DEFAULT_RETURN = 'https://gallery.gczhouwld.com/';
 const ALLOWED_RETURN_ORIGINS = new Set([
+  'https://gallery.gczhouwld.com',
   'https://zhou526316-sys.github.io',
   'https://organic-synthesis-gallery.zhou526316.workers.dev',
   'https://organic-synthesis-gallery-public.pages.dev',
@@ -8,7 +11,6 @@ const ALLOWED_RETURN_ORIGINS = new Set([
 ]);
 const AUTH_PROVIDERS = new Set(['google', 'wechat', 'qq']);
 const PAYMENT_PROVIDERS = new Set(['wechat', 'alipay']);
-const SESSION_TTL = 1000 * 60 * 60 * 24 * 30;
 const STATE_TTL = 1000 * 60 * 10;
 const EXCHANGE_TTL = 1000 * 60 * 5;
 const EMAIL_TTL = 1000 * 60 * 15;
@@ -501,12 +503,7 @@ export async function exchangeAuth(env, payload) {
   const row = await env.DB.prepare('SELECT user_id, expires_at FROM login_exchange_codes WHERE code_hash = ?').bind(hash).first();
   await env.DB.prepare('DELETE FROM login_exchange_codes WHERE code_hash = ?').bind(hash).run();
   if (!row || Number(row.expires_at || 0) < Date.now()) return { status: 400, body: { error: 'invalid_or_expired_code' } };
-  const token = randomToken(36);
-  const tokenHash = await sha256Hex(token);
-  const now = Date.now();
-  await env.DB.prepare('INSERT INTO user_sessions (token_hash, user_id, created_at, expires_at) VALUES (?, ?, ?, ?)')
-    .bind(tokenHash, row.user_id, now, now + SESSION_TTL).run();
-  return { status: 200, body: { token, user: await userSummary(env, row.user_id), expiresAt: now + SESSION_TTL } };
+  return { status: 200, body: await createUserSession(env, row.user_id, payload) };
 }
 
 function bearerToken(request) {
@@ -524,6 +521,7 @@ async function sessionRow(request, env) {
     await env.DB.prepare('DELETE FROM user_sessions WHERE token_hash = ?').bind(hash).run();
     return null;
   }
+  try { await touchBearerSession(env, row.token_hash); } catch { /* Preserve authentication during transient metadata failures. */ }
   return row;
 }
 
@@ -619,14 +617,9 @@ async function verifyPassword(password, row) {
   }
 }
 
-async function createUserSession(env, userId) {
-  const token = randomToken(36);
-  const tokenHash = await sha256Hex(token);
-  const now = Date.now();
-  await env.DB.prepare(
-    'INSERT INTO user_sessions (token_hash, user_id, created_at, expires_at) VALUES (?, ?, ?, ?)'
-  ).bind(tokenHash, userId, now, now + SESSION_TTL).run();
-  return { token, user: await userSummary(env, userId), expiresAt: now + SESSION_TTL };
+export async function createUserSession(env, userId, payload = {}) {
+  const { token, expiresAt } = await issueBearerSession(env, userId, payload);
+  return { token, user: await userSummary(env, userId), expiresAt };
 }
 
 export async function registerPasswordUser(request, env, payload) {
@@ -726,7 +719,7 @@ export async function verifyPasswordRegistration(env, payload) {
       'INSERT INTO user_email_verifications (user_id, email, verified_at) VALUES (?, ?, ?)'
     ).bind(userId, row.email, now).run();
     await env.DB.prepare('DELETE FROM email_code_challenges WHERE challenge_id = ?').bind(row.challenge_id).run();
-    return { status: 201, body: await createUserSession(env, userId) };
+    return { status: 201, body: await createUserSession(env, userId, payload) };
   } catch (error) {
     await env.DB.prepare('DELETE FROM users WHERE id = ?').bind(userId).run().catch(() => {});
     const message = error instanceof Error ? error.message : String(error);
@@ -919,7 +912,7 @@ export async function changePassword(request, env, payload) {
     'UPDATE password_credentials SET password_hash = ?, salt = ?, iterations = ?, updated_at = ? WHERE user_id = ?'
   ).bind(credential.hash, credential.salt, credential.iterations, now, session.user_id).run();
   await env.DB.prepare('DELETE FROM user_sessions WHERE user_id = ?').bind(session.user_id).run();
-  return { status: 200, body: await createUserSession(env, session.user_id) };
+  return { status: 200, body: await createUserSession(env, session.user_id, payload) };
 }
 
 export async function startEmailChange(request, env, payload) {
@@ -1083,6 +1076,20 @@ export async function confirmEmailChange(request, env, payload) {
   return { status: 200, body: await createUserSession(env, session.user_id) };
 }
 
+export async function listAccountDevices(request, env) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  const session = await sessionRow(request, env);
+  if (!session) return { status: 401, body: { error: 'not_authenticated' } };
+  return { status: 200, body: await listBearerSessions(env, session.user_id, session.token_hash) };
+}
+
+export async function revokeAccountDevice(request, env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  const session = await sessionRow(request, env);
+  if (!session) return { status: 401, body: { error: 'not_authenticated' } };
+  return revokeBearerSession(env, session.user_id, session.token_hash, payload?.sessionId);
+}
+
 export async function revokeOtherSessions(request, env) {
   if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
   const session = await sessionRow(request, env);
@@ -1142,7 +1149,7 @@ export async function passwordLogin(env, payload) {
     'SELECT user_id, password_hash, salt, iterations FROM password_credentials WHERE email = ?'
   ).bind(email).first();
   if (!row || !(await verifyPassword(password, row))) return { status: 401, body: { error: 'invalid_credentials' } };
-  return { status: 200, body: await createUserSession(env, row.user_id) };
+  return { status: 200, body: await createUserSession(env, row.user_id, payload) };
 }
 
 async function upsertEmailIdentity(env, email) {
