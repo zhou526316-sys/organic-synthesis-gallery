@@ -1892,6 +1892,12 @@ async function load(): Promise<void> {
 }
 
 window.addEventListener('scroll', () => scheduleMediaBatch(40), { passive: true });
+// A tab kept open through a scheduled media-only Pages publication must
+// recheck visible cards when the visitor returns, without forcing a full reload.
+window.addEventListener('focus', () => scheduleMediaBatch(50));
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) scheduleMediaBatch(50);
+});
 window.addEventListener('resize', () => {
   const nextWindowSize = resultWindowSize();
   if (nextWindowSize !== lastResultWindowSize) {
