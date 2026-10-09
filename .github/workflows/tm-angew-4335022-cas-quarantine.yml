@@ -1,0 +1,59 @@
+name: One-time verified Angew TOC conditional quarantine
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/quarantine-tm-angew-4335022-once.mjs'
+      - '.github/workflows/tm-angew-4335022-cas-quarantine.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/tm-angew-4335022-cas-quarantine.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tm-angew-4335022-exact-cas
+  cancel-in-progress: false
+
+jobs:
+  source-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify immutable DOI and compare-and-swap scope
+        run: |
+          set -euo pipefail
+          node --check scripts/quarantine-tm-angew-4335022-once.mjs
+          node scripts/quarantine-tm-angew-4335022-once.mjs --contract-check
+
+  exact-production-cas:
+    if: github.event_name == 'push'
+    needs: source-contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Quarantine only exact DOI, image hash and R2 key after verified 2.2.76 deployment
+        run: node scripts/quarantine-tm-angew-4335022-once.mjs --execute-production
+      - name: Retain sanitized immutable result only
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-angew-4335022-conditional-quarantine
+          path: ${{ runner.temp }}/tm-angew-4335022-cas-report.json
+          retention-days: 14
+          if-no-files-found: warn
