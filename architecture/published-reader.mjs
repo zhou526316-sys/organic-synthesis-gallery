@@ -62,6 +62,73 @@ function recordPapers(records) {
   return out;
 }
 
+// During an atomic Pages release, CDN edges can briefly serve a delivery
+// manifest and architecture release from adjacent deployments. Retry only
+// a *pair* whose hash/generation mismatches, never a single unverified file.
+// Initial read + two bounded rechecks; stable or unrelated errors fail closed.
+const RELEASE_PAIR_RETRY_PAUSES_MS = [160, 360];
+
+async function pauseReleasePairRetry(milliseconds, signal) {
+  if (signal?.aborted) throw signal.reason || new Error('architecture_release_pair_aborted');
+  await new Promise((resolve, reject) => {
+    const onAbort = () => {
+      clearTimeout(timer);
+      signal?.removeEventListener('abort', onAbort);
+      reject(signal.reason || new Error('architecture_release_pair_aborted'));
+    };
+    const timer = setTimeout(() => {
+      signal?.removeEventListener('abort', onAbort);
+      resolve();
+    }, milliseconds);
+    signal?.addEventListener('abort', onAbort, { once: true });
+  });
+}
+
+async function readVerifiedReleasePair(site, architectureBase, fetchBytes, signal) {
+  for (let attempt = 0; attempt <= RELEASE_PAIR_RETRY_PAUSES_MS.length; attempt += 1) {
+    if (attempt) await pauseReleasePairRetry(RELEASE_PAIR_RETRY_PAUSES_MS[attempt - 1], signal);
+    if (signal?.aborted) throw signal.reason || new Error('architecture_release_pair_aborted');
+    const deliveryUrl = new URL('release-delivery.json', site);
+    const releaseUrl = new URL('release.json', architectureBase);
+    if (attempt) {
+      // Use the same cache-busting nonce on both objects. A cache mode alone
+      // cannot bypass an older immutable-looking CDN edge response.
+      const nonce = String(Date.now()) + '-' + String(attempt);
+      deliveryUrl.searchParams.set('gallery_pair_retry', nonce);
+      releaseUrl.searchParams.set('gallery_pair_retry', nonce);
+    }
+    const options = { cache: attempt ? 'reload' : 'no-store', maxBytes: 2 * 1024 * 1024 };
+    const [first, releaseRead] = await Promise.all([
+      fetchBytes(deliveryUrl, { ...options, label: 'delivery' }, signal),
+      fetchBytes(releaseUrl, { ...options, label: 'architecture_release' }, signal),
+    ]);
+    const delivery = parseJson(first.bytes, 'delivery');
+    const asOfDate = serverBeijingDate(first.response.headers);
+    assert(delivery?.schemaVersion >= 2 && isSha(delivery.sourceCommit), 'delivery_v2_required');
+    assert(Array.isArray(delivery.dois) && delivery.productionCards === delivery.dois.length, 'delivery_membership_invalid');
+    assert(isHash(delivery.datasetSha256) && isHash(delivery.architectureCatalogId), 'delivery_architecture_identity_missing');
+    assert(delivery.files && isHash(delivery.files['architecture-v1/release.json']), 'delivery_architecture_release_missing');
+    assert(delivery.architectureObjects && typeof delivery.architectureObjects === 'object', 'delivery_architecture_objects_missing');
+    if (await digest(releaseRead.bytes) !== delivery.files['architecture-v1/release.json']) {
+      if (attempt < RELEASE_PAIR_RETRY_PAUSES_MS.length) continue;
+      throw new Error('architecture_release_hash_mismatch');
+    }
+    const release = parseJson(releaseRead.bytes, 'architecture_release');
+    assert(release?.schema === RELEASE_SCHEMA && release.frontendReadActivation === true, 'frontend_architecture_not_active');
+    assert(release.productionActivation === false, 'frontend_activation_scope_invalid');
+    const sameGeneration = release.sourceCommit === delivery.sourceCommit
+      && release.publicationSlot === delivery.publicationSlot
+      && release.datasetSha256 === delivery.datasetSha256
+      && release.recordCount === delivery.productionCards
+      && release.catalogId === delivery.architectureCatalogId;
+    if (!sameGeneration) {
+      if (attempt < RELEASE_PAIR_RETRY_PAUSES_MS.length) continue;
+      throw new Error('architecture_release_generation_mismatch');
+    }
+    return { delivery, release, asOfDate };
+  }
+  throw new Error('architecture_release_hash_mismatch');
+}
 export async function loadPublishedHotFallback(
   siteBase,
   { fetcher = globalThis.fetch, signal, headOnly = false } = {},
@@ -73,27 +140,7 @@ export async function loadPublishedHotFallback(
     return { response, bytes: await responseBytes(response, maxBytes, label) };
   };
 
-  const deliveryUrl = new URL('release-delivery.json', site);
-  const releaseUrl = new URL('release.json', architectureBase);
-  const [first, releaseRead] = await Promise.all([
-    fetchBytes(deliveryUrl, { maxBytes:2 * 1024 * 1024, label:'delivery' }),
-    fetchBytes(releaseUrl, { maxBytes:2 * 1024 * 1024, label:'architecture_release' }),
-  ]);
-  const delivery = parseJson(first.bytes, 'delivery');
-  const asOfDate = serverBeijingDate(first.response.headers);
-  assert(delivery?.schemaVersion >= 2 && isSha(delivery.sourceCommit), 'delivery_v2_required');
-  assert(Array.isArray(delivery.dois) && delivery.productionCards === delivery.dois.length, 'delivery_membership_invalid');
-  assert(isHash(delivery.datasetSha256) && isHash(delivery.architectureCatalogId), 'delivery_architecture_identity_missing');
-  assert(delivery.files && isHash(delivery.files['architecture-v1/release.json']), 'delivery_architecture_release_missing');
-  assert(delivery.architectureObjects && typeof delivery.architectureObjects === 'object', 'delivery_architecture_objects_missing');
-  assert(await digest(releaseRead.bytes) === delivery.files['architecture-v1/release.json'], 'architecture_release_hash_mismatch');
-
-  const release = parseJson(releaseRead.bytes, 'architecture_release');
-  assert(release?.schema === RELEASE_SCHEMA && release.frontendReadActivation === true, 'frontend_architecture_not_active');
-  assert(release.productionActivation === false, 'frontend_activation_scope_invalid');
-  assert(release.sourceCommit === delivery.sourceCommit && release.publicationSlot === delivery.publicationSlot
-    && release.datasetSha256 === delivery.datasetSha256 && release.recordCount === delivery.productionCards
-    && release.catalogId === delivery.architectureCatalogId, 'architecture_release_generation_mismatch');
+  const { delivery, release, asOfDate } = await readVerifiedReleasePair(site, architectureBase, fetchBytes, signal);
 
   const usingHead = Boolean(headOnly && release.hotHead);
   const selectedRef = usingHead ? release.hotHead : release.hotFallback;
@@ -220,26 +267,9 @@ export class PublishedCatalogClient {
   }
 
   async open(signal) {
-    const deliveryUrl = new URL('release-delivery.json', this.siteBase);
-    const releaseUrl = new URL('release.json', this.architectureBase);
-    const [first, releaseRead] = await Promise.all([
-      this.fetchBytes(deliveryUrl, { maxBytes: 2 * 1024 * 1024, label: 'delivery' }, signal),
-      this.fetchBytes(releaseUrl, { maxBytes: 2 * 1024 * 1024, label: 'architecture_release' }, signal),
-    ]);
-      const delivery = parseJson(first.bytes, 'delivery');
-    const asOfDate = serverBeijingDate(first.response.headers);
-    assert(delivery?.schemaVersion >= 2 && isSha(delivery.sourceCommit), 'delivery_v2_required');
-    assert(Array.isArray(delivery.dois) && delivery.productionCards === delivery.dois.length, 'delivery_membership_invalid');
-    assert(isHash(delivery.datasetSha256) && isHash(delivery.architectureCatalogId), 'delivery_architecture_identity_missing');
-    assert(delivery.files && isHash(delivery.files['architecture-v1/release.json']), 'delivery_architecture_release_missing');
-    assert(delivery.architectureObjects && typeof delivery.architectureObjects === 'object', 'delivery_architecture_objects_missing');
-    assert(await digest(releaseRead.bytes) === delivery.files['architecture-v1/release.json'], 'architecture_release_hash_mismatch');
-    const release = parseJson(releaseRead.bytes, 'architecture_release');
-    assert(release?.schema === RELEASE_SCHEMA && release.frontendReadActivation === true, 'frontend_architecture_not_active');
-    assert(release.productionActivation === false, 'frontend_activation_scope_invalid');
-    assert(release.sourceCommit === delivery.sourceCommit && release.publicationSlot === delivery.publicationSlot
-      && release.datasetSha256 === delivery.datasetSha256 && release.recordCount === delivery.productionCards
-      && release.catalogId === delivery.architectureCatalogId, 'architecture_release_generation_mismatch');
+    const { delivery, release, asOfDate } = await readVerifiedReleasePair(
+      this.siteBase, this.architectureBase, (url, options) => this.fetchBytes(url, options, signal), signal,
+    );
     assert(Array.isArray(release.objects) && release.objects.length > 0, 'architecture_release_objects_missing');
 
     for (const ref of release.objects) {
