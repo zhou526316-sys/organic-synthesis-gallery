@@ -13,6 +13,16 @@ async function openCanonical(page: Page, doi: string, { figure1 = false, imageFa
   const calls: Array<{ url: string; method: string }> = [];
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
+  // main.ts is dynamically imported by bootstrap.ts *after* DOMContentLoaded;
+  // wait for its real event listener instead of dispatching before it exists.
+  await page.addInitScript(() => {
+    (window as any).__galleryMediaListenerReady = false;
+    const nativeAdd = window.addEventListener;
+    window.addEventListener = function (type, callback, options) {
+      if (type === 'gallery-assets-updated') (window as any).__galleryMediaListenerReady = true;
+      return nativeAdd.call(this, type, callback, options);
+    } as typeof window.addEventListener;
+  });
   await page.route('**/*', async route => {
     const request = route.request();
     const url = new URL(request.url());
@@ -79,6 +89,15 @@ async function openCanonical(page: Page, doi: string, { figure1 = false, imageFa
   });
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto(GALLERY + '/', { waitUntil: 'load' });
+  try {
+    await page.waitForFunction(() => (window as any).__galleryMediaListenerReady === true, null, { timeout: 15000 });
+  } catch (error) {
+    console.log('GALLERY_MEDIA_MODULE_DIAGNOSTIC', await page.evaluate(() => ({
+      appText: document.querySelector('#app')?.textContent?.slice(0, 450),
+      scripts: [...document.querySelectorAll('script[src]')].map(x => (x as HTMLScriptElement).src),
+    })), errors);
+    throw error;
+  }
   // The isolated CI adapter deliberately does not return a literature catalogue;
   // inject one genuine DOI card into the built app instead of falsely expecting
   // the entire remote publication service to populate the test environment.
