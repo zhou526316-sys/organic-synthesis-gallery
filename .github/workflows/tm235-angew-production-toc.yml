@@ -11,6 +11,8 @@ on:
       - 'cloudflare/worker/src/media-write.js'
       - '.github/workflows/deploy-worker-frontend.yml'
       - 'scripts/test-tm235-angew-production-toc.mjs'
+      - 'scripts/test-tm-angew-ga-integrity.mjs'
+      - 'scripts/test-tm-oct09-four-publisher-routes.mjs'
       - 'scripts/validate-tm220-artifacts.mjs'
       - '.github/workflows/tm235-angew-production-toc.yml'
 
@@ -34,6 +36,10 @@ jobs:
           node --check cloudflare/worker/src/local-captures.js
           node --check cloudflare/worker/src/index.js
           node --check scripts/test-tm235-angew-production-toc.mjs
+          node --check scripts/test-tm-angew-ga-integrity.mjs
+          node --check scripts/test-tm-oct09-four-publisher-routes.mjs
+          node scripts/test-tm-oct09-four-publisher-routes.mjs | tee "$RUNNER_TEMP/tm-oct9-verified-routes.log"
+          grep -F 'OCT9_VERIFIED_ROUTE_SUMMARY ' "$RUNNER_TEMP/tm-oct9-verified-routes.log"
           ! grep -F "getJson('https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json" public/toc-mainline.user.js
           grep -F "MEDIA_INVENTORY_ENDPOINT" public/toc-mainline.user.js
           grep -F "productionTocStored" public/toc-mainline.user.js
@@ -49,6 +55,8 @@ jobs:
           npx playwright install --with-deps chromium
           node scripts/test-tm235-angew-production-toc.mjs | tee "$RUNNER_TEMP/tm235-angew.log"
           grep -F 'TM235_ANGEW_TEST_SUMMARY ' "$RUNNER_TEMP/tm235-angew.log"
+          node scripts/test-tm-angew-ga-integrity.mjs | tee "$RUNNER_TEMP/tm-angew-ga-integrity.log"
+          grep -F 'ANGEW_GA_INTEGRITY_SUMMARY ' "$RUNNER_TEMP/tm-angew-ga-integrity.log"
 
       - name: Worker dry-run
         working-directory: cloudflare/worker
@@ -82,5 +90,7 @@ jobs:
             public/gallery-vpn-bridge.user.js
             public/toc-mainline.user.js
             ${{ runner.temp }}/tm235-angew.log
+            ${{ runner.temp }}/tm-angew-ga-integrity.log
+            ${{ runner.temp }}/tm-oct9-verified-routes.log
           retention-days: 7
           if-no-files-found: warn

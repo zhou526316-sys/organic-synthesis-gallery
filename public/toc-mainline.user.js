@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.54
+// @version      6.2.55
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -51,12 +51,13 @@
   var MISSING_CAPTURE_REVISION = '20261006-oct1-bundle-v7';
   var QUEUE_COVERAGE_REVISION = '20261006-queue-coverage-v9';
   var PUBLISHER_MEDIA_REVISION = '20261007-rsc-search-fallback-v14';
+  var WILEY_GA_PROVENANCE_REVISION = '20261009-graphical-abstract-no-body-scope-v1';
   var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.54';
+  var INSTALL_REVISION = '6.2.55';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261008-rsc-silverchair-and-acs-toc-route-v1';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -778,6 +779,24 @@ function embeddedJobDois(value) {
     return '';
   }
 
+  // Exact publisher article routes for the four 2026-10-09 unresolved primary visuals.
+  // These are known first-party article pages, not guessed image/CDN URLs.
+  // Consult only after normal DOI/HTML resolution failed; preserve all other DOI paths.
+  function oct09VerifiedPublisherArticleRoute(job) {
+    var doi = normalizeDoi(job && job.doi);
+    var exact = {
+      '10.1016/j.chempr.2026.103008': 'https://www.sciencedirect.com/science/article/pii/S2451929426000744',
+      '10.1016/j.chempr.2026.103043': 'https://www.sciencedirect.com/science/article/pii/S2451929426001099',
+      '10.1039/d6sc06407h': 'https://pubs.rsc.org/sc/article/doi/10.1039/D6SC06407H/1367242/Harnessing-Carbyne-Reactivity-from-Stabilized',
+      '10.1039/d6gc03748h': 'https://pubs.rsc.org/gc/article/doi/10.1039/D6GC03748H/1367368/Green-Synthesis-of-Dihydropyranone-Intermediates'
+    };
+    var url = exact[doi] || '';
+    var publisher = publisherForDoi(doi);
+    if (!url || !publisherArticleHostAllowed(publisher, url)) return '';
+    if (publisher === 'rsc' && url.toLowerCase().indexOf('/article/doi/' + doi) < 0) return '';
+    return url;
+  }
+
   async function resolvePublisherTaskUrl(job) {
     var base = articleUrl(job);
     var publisher=String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi)));
@@ -790,7 +809,7 @@ function embeddedJobDois(value) {
         var resolved = elsevierResolvedPublisherUrl(response);
         if (resolved) return resolved;
       } catch (_) {}
-      return base;
+      return oct09VerifiedPublisherArticleRoute(job) || base;
     }
     if (publisher === 'rsc') {
       var wantsFull=Boolean(job && (job.captureFigures===true||job.captureEvidence===true
@@ -810,6 +829,10 @@ function embeddedJobDois(value) {
               && (rscFinal.toLowerCase().indexOf(suffix)>=0||rscText.indexOf(normalizeDoi(job.doi))>=0||rscText.indexOf(suffix)>=0)) return rscFinal;
         }catch(_){}
       }
+      // Publisher-indexed Silverchair full-article route, used only when the
+      // articleHTML page did not provide a DOI-bound usable canonical route.
+      var verifiedRsc = oct09VerifiedPublisherArticleRoute(job);
+      if (verifiedRsc) return verifiedRsc;
     }
     return base;
   }
@@ -2295,6 +2318,53 @@ function embeddedJobDois(value) {
     return /-gra-\d+(?:[-_.]|$)|graphical[-_\s]*abstract|visual[-_\s]*abstract|(?:^|[\/_-])(?:ga|fx)0*1(?:[-_.]|$)/i.test(String(value || ''));
   }
 
+  // Wiley's numbered manuscript Figures/Schemes, including substrate-expansion panels,
+  // are not an official TOC even when a neighboring section says Graphical Abstract.
+  // Inspect only the owning figure block; do not infer roles from whole-page text.
+  function wileyGaAssetMatchesDoi(value, job) {
+    var doi = normalizeDoi(job && job.doi), expected = /^10\.1002\/anie\.([0-9]{5,8})/.exec(doi);
+    if (!expected) return true;
+    try {
+      var path = decodeURIComponent(new URL(String(value || ''), location.href).pathname);
+      var observed = Array.from(path.matchAll(/anie[._-]?([0-9]{5,8})(?=[^0-9]|$)/gi));
+      return observed.every(function(m) { return m[1] === expected[1]; });
+    } catch (_) { return false; }
+  }
+
+  function wileyBodyOnlyVisual(node) {
+    if (!node || !node.closest) return false;
+    var block = node.closest('figure,[role="figure"],.article-section__figure,.fig-section,.article-figure,.figure');
+    if (!block || !block.querySelectorAll) return false;
+    var texts = Array.from(block.querySelectorAll(
+      'figcaption,.caption,[class*="caption"],.figure-title,.figure__title,[role="heading"]'
+    )).slice(0, 12).map(function(el) {
+      return String(el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 320);
+    });
+    var own = [node.getAttribute && node.getAttribute('alt'),
+      node.getAttribute && node.getAttribute('aria-label')].filter(Boolean);
+    var evidence = texts.concat(own);
+    return evidence.some(function(value) {
+      return /^(?:fig(?:ure)?\.?|scheme|chart)\s*[1-9]\d*[a-z]?\b/i.test(value)
+        || /\b(?:substrate|reaction|functional[- ]group|product)\s+(?:scope|screening|expansion)\b|\bscope\s+of\s+(?:substrates|reactions|products)\b/i.test(value);
+    });
+  }
+
+  function wileyBodySourceCollision(value, scope, baseUrl) {
+    if (!scope || !scope.querySelectorAll) return false;
+    var wanted = mediaUrlIdentity(value, baseUrl || location.href);
+    if (!wanted) return false;
+    return Array.from(scope.querySelectorAll(
+      'figure img,figure source,figure object,[role="figure"] img,[role="figure"] source,.article-section__figure img,.article-section__figure source'
+    )).some(function(node) {
+      if (!wileyBodyOnlyVisual(node)) return false;
+      var urls = articleFigureImageUrls(node, baseUrl || location.href)
+        .concat(imageUrls(node, baseUrl || location.href));
+      return urls.some(function(url) {
+        return mediaUrlIdentity(url, baseUrl || location.href) === wanted;
+      });
+    });
+  }
+
   function wileyAssetHostAllowed(value) {
     try {
       var host = new URL(String(value || ''), location.href).hostname.toLowerCase();
@@ -2320,6 +2390,7 @@ function embeddedJobDois(value) {
     function add(url, node, source, score, text) {
       url = normalizeUrl(url, base);
       if (!url || !wileyAssetHostAllowed(url) || !candidateBelongsToJob(url, job) || reject(text, url)) return;
+      if (!wileyGaUrlSignal(url) || !wileyGaAssetMatchesDoi(url, job) || wileyBodyOnlyVisual(node) || wileyBodySourceCollision(url, scope, base)) return;
       var row = {
         url: url,
         kind: 'official',
@@ -2360,15 +2431,9 @@ function embeddedJobDois(value) {
         });
         return;
       }
-      var byIdentity = new Map();
-      all.forEach(function(item) {
-        var key = mediaUrlIdentity(item.url, base);
-        if (key && !byIdentity.has(key)) byIdentity.set(key, item);
-      });
-      if (byIdentity.size === 1) {
-        var only = Array.from(byIdentity.values())[0];
-        add(only.url, only.node, 'wiley_ga_labeled_section_single_image', 900, headingText);
-      }
+      // A lone image next to a GA heading is not enough: it may be a substrate-scope
+      // figure, and a permissive fallback silently promotes that figure to official.
+      // Retain strong -gra-/GA assets and article-head citation metadata only.
     }
 
     if (scope.querySelectorAll) {
@@ -2853,6 +2918,18 @@ function embeddedJobDois(value) {
     function add(row) {
       if (String(job && job.publisher || '') === 'rsc' && rscPdfPreviewUrl(row && row.url)) {
         diag.pdfPreview++;pushTrace(trace,{stage:'rsc_toc_candidate',event:'pdf_preview_rejected',status:'rejected',url:row&&row.url||'',message:'page-preview asset cannot be an official TOC'});return;
+      }
+      if (String(job && job.publisher || '') === 'wiley' && row && row.kind === 'official') {
+        var supportedMeta = row.source === 'article_head_metadata'
+          && /citation_(?:graphical_abstract|visual_abstract|toc_graphic|abstract_image)/i.test(String(row.text || ''));
+        if (!wileyAssetHostAllowed(row.url) || !wileyGaAssetMatchesDoi(row.url, job) || wileyBodyOnlyVisual(row.element)
+          || wileyBodySourceCollision(row.url, scope, baseUrl || location.href)
+          || (!wileyGaUrlSignal(row.url) && !supportedMeta)) {
+          diag.rejected++;
+          pushTrace(trace,{stage:'wiley_toc_candidate',event:'body_figure_or_unverified_ga_rejected',status:'rejected',
+            url:row.url,candidateSource:row.source,message:'Only publisher GA evidence may become an official Angew TOC'});
+          return;
+        }
       }
       if(seen.has(row.url)){diag.duplicate++;return;}
       if(!candidateBelongsToJob(row.url,job)){diag.doiMismatch++;return;}
@@ -4073,7 +4150,9 @@ function embeddedJobDois(value) {
         width: Number(image.width || 0) || undefined,
         height: Number(image.height || 0) || undefined,
         capturedAt: nowIso(),
-        source: 'tampermonkey-toc-mainline'
+        source: 'tampermonkey-toc-mainline',
+        candidateSource: String(candidate.source || ''),
+        assetType: String(candidate.assetType || '')
       }, token, 'r2_upload');
       if (!result || result.stored !== true || normalizeDoi(result.doi) !== normalizeDoi(job.doi) || result.kind !== candidate.kind) throw new Error('toc_capture_receipt_invalid');
       if (candidate.kind === 'official' && result.productionTocStored !== true) throw new Error('toc_production_promotion_missing');

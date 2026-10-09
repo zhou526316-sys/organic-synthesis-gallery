@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "tm-angew-ga-integrity-review-v1",
+  "dateBeijing": "2026-10-09",
+  "approvedByUser": true,
+  "branch": "fix/tm-angew-primary-ga-evidence-20261009",
+  "scope": [
+    "Angew official TOC identification",
+    "immutable production TOC conflict protection",
+    "Angew DOM+Worker regression"
+  ],
+  "notChanged": [
+    "literature admission and 08:00 publication",
+    "other publisher role gates",
+    "private PDF authorization",
+    "mediaGeneration",
+    "controller revision",
+    "Capture protocol"
+  ],
+  "versions": {
+    "bridge": "2.2.74",
+    "engine": "6.2.55",
+    "captureProtocol": "6.2.20",
+    "controller": "2.2.41"
+  },
+  "behavior": [
+    "require actual Wiley GA -gra- or article-head publisher metadata; reject numbered Scheme/Figure or scope and neighbor-only single image",
+    "reject visibly foreign Angew GA filename even on Wiley host",
+    "send candidateSource and assetType for Worker verification",
+    "deny ambiguous legacy source classification and automatic replacement of different-hash cached official TOC",
+    "retain confirmed Figure1 fallback and companion body/fulltext/PDF visit bundling"
+  ],
+  "currentLimit": "No owner-authenticated visual comparison of the exact misrendered Angew DOI yet; do not quarantine or replace production record blindly. Need live DOIs/hash/source inspection after the guard ships.",
+  "tests": "Pending workflow verification",
+  "notes": "No production deletion or R2 cleanup."
+}
