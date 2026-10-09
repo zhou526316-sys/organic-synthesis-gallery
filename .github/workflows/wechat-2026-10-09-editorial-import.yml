@@ -1,0 +1,142 @@
+name: WeChat 2026-10-09 reviewed dual-Science editorial import
+on:
+  push:
+    branches: [main]
+    paths:
+      - audit/automation-triggers/wechat-oct09-import.json
+permissions:
+  contents: write
+concurrency:
+  group: wechat-2026-10-09-review-import
+  cancel-in-progress: false
+jobs:
+  review-and-import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Verify exact DOI and draft-only intent
+        run: |
+          python3 - <<'PY'
+          import json
+          r=json.load(open('audit/automation-triggers/wechat-oct09-import.json'))
+          assert r['action']=='materialize_user_selected_editorial_only'
+          assert r['date']=='2026-10-09' and r['revision']=='2026-10-09-r1'
+          assert r['expectedDois']==['10.1126/science.aef3001','10.1126/science.aeh7895']
+          assert r['publicationMode']=='draft_only'
+          assert r['publicSendAuthorized'] is False
+          assert r['ownerApprovedRetrospectiveCover'] is True
+          for spec in r['files'].values():
+              assert spec['url'].startswith('https://at.adobe.com/')
+              assert len(spec['sha256'])==64
+          PY
+      - name: Install immutable-PDF crop renderer and Chinese font
+        run: |
+          python3 -m pip install --quiet 'pymupdf>=1.24,<1.28' 'Pillow>=10,<13'
+          sudo apt-get update -qq
+          sudo apt-get install -qq -y fonts-noto-cjk
+      - name: Retrieve hash-locked source assets into ephemeral workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/wechat-oct09-input
+          python3 - <<'PY'
+          import hashlib,json,pathlib,re,urllib.request
+          r=json.load(open('audit/automation-triggers/wechat-oct09-import.json'))
+          for key,lim in [('package',19000000),('main',5000000),('si',20000000),('cover',5000000)]:
+              src=r['files'][key]
+              assert re.fullmatch(r'https://at\.adobe\.com/[A-Za-z0-9]+',src['url'])
+              with urllib.request.urlopen(src['url'],timeout=90) as response:
+                  payload=response.read(lim+1)
+              assert len(payload)<=lim, 'Oversize '+key
+              assert hashlib.sha256(payload).hexdigest()==src['sha256'],'Hash mismatch '+key
+              pathlib.Path('/tmp/wechat-oct09-input/'+key).write_bytes(payload)
+              print(key,len(payload),'sha verified')
+          PY
+      - name: Build immutable images, source manifests, and independent review gate
+        run: |
+          python3 ops/wechat-publisher/build-2026-10-09-editorial.py \
+            --root . \
+            --package /tmp/wechat-oct09-input/package \
+            --main /tmp/wechat-oct09-input/main \
+            --si /tmp/wechat-oct09-input/si \
+            --cover /tmp/wechat-oct09-input/cover | tee /tmp/wechat-oct09-result.json
+      - name: Independently verify every source fingerprint, caption, and article
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,pathlib
+          from PIL import Image
+          root=pathlib.Path('.')
+          gate=json.load(open('audit/wechat-working/2026-10-09-review-gate.json'))
+          fa=json.load(open('public/wechat-featured/2026-10-09.json'))
+          rb=json.load(open('public/wechat-retrospective/science-aeh7895-hezhi-tao-20261009.json'))
+          ed=json.load(open('public/wechat-editions/2026-10-09.json'))
+          def blob(data):
+              return hashlib.sha1(('blob '+str(len(data))+'\0').encode()+data).hexdigest()
+          assert ed['selectionAuthority']=='explicit_user_selection'
+          assert ed['publicationMode']=='draft_only_manual_final_send'
+          assert gate['revision']=='2026-10-09-r1'
+          assert gate['textReview']==gate['imageReview']=='pass'
+          assert gate['articleCount']==2 and gate['strictFigurePlacement']
+          assert gate['selectionDois']==[fa['paper']['doi'],rb['paper']['doi']]==ed.get('expectedDois',gate['selectionDois'])
+          assert len(gate['assets'])==44 and len(gate['sources'])==7
+          assert len([f for f in fa['figures'] if f.get('body') is not False])==20
+          assert len([f for f in rb['figures'] if f.get('body') is not False])==22
+          assert rb['title'].startswith('往期精选｜Science｜何智涛')
+          for r in gate['assets']+gate['sources']:
+              data=(root/r['path']).read_bytes()
+              assert blob(data)==r['blobSha'],r['path']
+              assert hashlib.sha256(data).hexdigest()==r['sha256'],r['path']
+              if 'width' in r:
+                  with Image.open(root/r['path']) as im:
+                      im.load()
+                      assert (im.width,im.height)==(r['width'],r['height'])
+          assert 'E 型 TT' in (root/gate['artifacts']['textOnly']).read_text()
+          print('PASS: 2 user-selected Science DOIs; 42 source figure images; 2 cover images; 44 SHA/dimension checks; title and scientific boundaries')
+          PY
+      - name: Commit exact reviewed files, never call WeChat at source-import stage
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            public/wechat-assets/reviewed/2026-10-09-science-aef3001/ \
+            public/wechat-assets/reviewed/2026-10-09-science-aeh7895/ \
+            public/wechat-featured/2026-10-09.json \
+            public/wechat-retrospective/science-aeh7895-hezhi-tao-20261009.json \
+            public/wechat-editions/2026-10-09.json \
+            audit/wechat-working/2026-10-09-review-gate.json \
+            audit/wechat-working/2026-10-09-r1-text-only.md \
+            audit/wechat-working/2026-10-09-r1-images-only.md \
+            audit/wechat-working/2026-10-09-r1-import-receipt.json
+          git diff --cached --stat
+          git commit -m 'editorial: materialize reviewed Oct9 Science dual draft source only'
+          for attempt in 1 2 3 4 5 6; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo "Conflicting editorial source edits, fail closed" >&2
+              exit 1
+            fi
+            if git push origin HEAD:main; then
+              echo "REVIEW_SOURCE_COMMITTED, NO WECHAT WRITE"
+              exit 0
+            fi
+            echo "main ref advanced; safe retry $attempt" >&2
+            sleep 2
+          done
+          echo 'No safe main writer lease after retries' >&2
+          exit 1
+      - name: Upload review receipt for troubleshooting
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: oct09-wechat-editorial-source-review
+          path: |
+            audit/wechat-working/2026-10-09-r1-import-receipt.json
+            audit/wechat-working/2026-10-09-review-gate.json
+          retention-days: 7
+          if-no-files-found: ignore
