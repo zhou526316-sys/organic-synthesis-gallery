@@ -86,3 +86,44 @@ jobs:
             throw 'Windows PowerShell 5.1 failed to parse downloaded installer'
           }
           Write-Host 'WIN_PS51_RAW_DOWNLOAD_PARSE_PASS'
+
+      - name: Check one-session Windows PowerShell 5.1 installer and pinned raw URL
+        shell: powershell
+        run: |
+          $path = 'deploy/pdf-gateway/run-once-from-windows.ps1'
+          $b = [System.IO.File]::ReadAllBytes((Resolve-Path $path).Path)
+          if ($b.Length -lt 3 -or $b[0] -ne 239 -or $b[1] -ne 187 -or $b[2] -ne 191) {
+            throw 'The one-SSH launcher must include a Windows PS 5.1 UTF-8 BOM'
+          }
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path $path).Path, [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count) { $errors | ForEach-Object { Write-Host $_.Message }; throw 'New launcher syntax invalid' }
+          $text = [System.IO.File]::ReadAllText((Resolve-Path $path).Path)
+          if ([regex]::Matches($text,'& ssh\.exe').Count -ne 1) { throw 'Expected exactly one SSH process' }
+          if ($text.Contains('scp.exe')) { throw 'No additional SCP authentication allowed' }
+          if (-not $text.Contains('f36fc03b2747f1fbaac2799854b62c04dd594b16')) {
+            throw 'Expected immutable reviewed gateway version'
+          }
+          if (-not $text.Contains('sudo bash "$WORK/install.sh" "$MODE"')) {
+            throw 'Expected guarded installer, not a direct nginx overwrite'
+          }
+          Write-Host 'WIN_PS51_ONE_SSH_INSTALLER_PASS'
+      - name: Verify GitHub raw download of one-session launcher under PowerShell 5.1
+        shell: powershell
+        run: |
+          $url = 'https://raw.githubusercontent.com/zhou526316-sys/organic-synthesis-gallery/' +
+            $env:GITHUB_SHA + '/deploy/pdf-gateway/run-once-from-windows.ps1'
+          $file = Join-Path $env:TEMP 'gallery-one-ssh-windows-ps51.ps1'
+          Invoke-WebRequest -Uri $url -OutFile $file -UseBasicParsing
+          $b = [System.IO.File]::ReadAllBytes($file)
+          if ($b[0] -ne 239 -or $b[1] -ne 187 -or $b[2] -ne 191) {
+            throw 'Raw download missing UTF-8 BOM'
+          }
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            $file, [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count) { throw 'PS 5.1 downloaded installer syntax invalid' }
+          Write-Host 'WIN_PS51_ONE_SSH_RAW_DOWNLOAD_PASS'
