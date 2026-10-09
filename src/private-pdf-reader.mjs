@@ -997,17 +997,18 @@ function renderCropSelection(start,finish) {
   cropBox.hidden=false;
   return crop;
 }
-canvas.addEventListener('pointerdown',event=>{
+stage.addEventListener('pointerdown',event=>{
   if(!cropSelecting||!rescueCandidate||!pdf||destroyed||!token()||token()!==rescueOwnerSession)return;
+  if(event.target!==canvas || Number(canvas?.dataset.renderedPage)!==rescueCandidate.page)return;
   const start=relativePoint(event);if(!start)return;
   event.preventDefault();cropStart=start;cropSelection=null;
   try{canvas.setPointerCapture(event.pointerId);}catch{}
 });
-canvas.addEventListener('pointermove',event=>{
+stage.addEventListener('pointermove',event=>{
   if(!cropSelecting||!cropStart)return;
   renderCropSelection(cropStart,relativePoint(event));
 });
-canvas.addEventListener('pointerup',event=>{
+stage.addEventListener('pointerup',event=>{
   if(!cropSelecting||!cropStart)return;
   const selection=renderCropSelection(cropStart,relativePoint(event));
   cropStart=null;cropSelecting=false;canvas.style.cursor='default';canvas.style.touchAction='';
@@ -1020,7 +1021,7 @@ canvas.addEventListener('pointerup',event=>{
   cropSelection=selection;cropExportButton.disabled=false;
   setCropNotice('已选取原图局部，确认图号与结构完整后导出 PNG 与溯源信息。');
 });
-canvas.addEventListener('pointercancel',()=>{
+stage.addEventListener('pointercancel',()=>{
   cropStart=null;cropSelecting=false;cropSelection=null;cropBox.hidden=true;
   cropExportButton.disabled=true;canvas.style.cursor='default';canvas.style.touchAction='';
 });
@@ -1060,7 +1061,9 @@ async function openPdfFigureRescue(){
         rescueCandidate=candidate;figureRescuePanel.hidden=true;
         cropSelectButton.hidden=false;cropExportButton.hidden=false;cropExportButton.disabled=true;
         setCropNotice('原图候选：'+candidate.label+'，请先在 PDF 原页核对图像范围。');
-        update(()=>{pageNumber=candidate.page;});
+        pageNumber = candidate.page;
+        continuous?.goto(pageNumber);
+        controls();
       });
       figureRescueResults.append(b);
     }
@@ -1073,6 +1076,18 @@ figureRescueButton.addEventListener('click',()=>{
 document.querySelector('#pdf-rescue-close').addEventListener('click',()=>{figureRescuePanel.hidden=true;});
 cropSelectButton.addEventListener('click',()=>{
   if(!pdf||!rescueCandidate||rescueCandidate.page!==pageNumber||!token()||token()!==rescueOwnerSession)return;
+  const sourceCanvas = continuous?.getCanvas(rescueCandidate.page);
+  if(!sourceCanvas || sourceCanvas.dataset.renderedPage !== String(rescueCandidate.page)){
+    setCropNotice('当前原图尚未绘制完成，请稍后再框选。');
+    return;
+  }
+  if (canvas && canvas !== sourceCanvas) canvas.removeAttribute('id');
+  canvas = sourceCanvas;
+  canvas.id = 'pdf-canvas';
+  cropPageWrap = canvas.closest('.canvasWrapper') || canvas.parentElement;
+  if (!cropPageWrap) return;
+  cropPageWrap.classList.add('pdf-crop-target');
+  cropPageWrap.appendChild(cropBox);
   cropSelecting=true;cropStart=null;cropSelection=null;cropBox.hidden=true;
   cropExportButton.disabled=true;
   canvas.style.cursor='crosshair';canvas.style.touchAction='none';
@@ -1085,7 +1100,8 @@ function localDownloadBlob(blob,filename){
 }
 cropExportButton.addEventListener('click',async()=>{
   if(!pdf||!rescueCandidate||!cropSelection||destroyed||!token()
-    ||token()!==rescueOwnerSession||rescueCandidate.page!==pageNumber)return;
+    ||token()!==rescueOwnerSession||rescueCandidate.page!==pageNumber
+    ||!canvas||canvas.dataset.renderedPage!==String(rescueCandidate.page))return;
   const crop=cropSelection;
   const rect={x:Math.floor(crop.x*canvas.width),y:Math.floor(crop.y*canvas.height),
     width:Math.round(crop.width*canvas.width),height:Math.round(crop.height*canvas.height)};
@@ -1114,14 +1130,13 @@ cropExportButton.addEventListener('click',async()=>{
 
 download.addEventListener('click', () => { void beginDownload(); });
 function update(change) {
-  if (!pdf || renderTask || destroyed) return;
+  if (!pdf || !continuous || destroyed) return;
   change();
   void render().catch(error => fallbackView('PDF 页面绘制失败，请稍后重试。', safeErrorCode(error)));
 }
-previous.addEventListener('click', () => update(() => { pageNumber = Math.max(1, pageNumber - 1); }));
-next.addEventListener('click', () => update(() => { pageNumber = Math.min(pdf.numPages, pageNumber + 1); }));
 zoomOut.addEventListener('click', () => update(() => { zoom = Math.max(0.5, zoom - 0.25); }));
 zoomIn.addEventListener('click', () => update(() => { zoom = Math.min(3, zoom + 0.25); }));
+window.addEventListener('resize', () => { if (continuous && !destroyed) continuous.resize(); });
 function destroy() {
   if (destroyed) return;
   destroyed = true;
@@ -1132,8 +1147,10 @@ function destroy() {
   transferController = null;
   activeRangeTransport?.abort();
   activeRangeTransport = null;
-  canvas.width = 0;
-  canvas.height = 0;
+  continuous?.destroy();
+  continuous = null;
+  if (canvas) { canvas.width = 0; canvas.height = 0; canvas.removeAttribute('id'); }
+  canvas = null;
   sourceUrl = '';
   try { loadingTask?.destroy(); } catch {}
   loadingTask = null;
