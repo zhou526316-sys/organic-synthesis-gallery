@@ -37,10 +37,16 @@ preflight(){
  if ss -ltnH '( sport = :18867 )' 2>/dev/null | grep -q .; then
    abort 'Private PDF localhost port 18867 already in use; no changes permitted'
  fi
- if nginx -T 2>/dev/null | grep -E '[[:space:]]server_name[[:space:]]+pdf[.]gczhouwld[.]com[[:space:];]' >/dev/null; then
+ local nginx_dump
+ nginx_dump="$(nginx -T 2>/dev/null)" || abort 'Unable to inspect current Nginx configuration'
+ if grep -E '[[:space:]]server_name[[:space:]]+pdf[.]gczhouwld[.]com[[:space:];]' <<< "$nginx_dump" >/dev/null; then
    abort 'An existing Nginx vhost already owns the PDF hostname; do not overwrite'
  fi
  echo "[CHECK] WeChat vhost SHA: $(we_chat_hash)"
+ echo '[CHECK] Existing PDF ACME/app directory modes (read-only):'
+ for dir in "$WEBROOT" "$WEBROOT/.well-known" "$WEBROOT/.well-known/acme-challenge" "$APP"; do
+   if [[ -e "$dir" ]]; then stat -c '%a %U:%G %n' "$dir"; fi
+ done
  free -h; df -h /
  local a p
  a="$(ip_of "$RELAY" || true)";p="$(ip_of "$HOST" || true)"
@@ -178,10 +184,12 @@ install_new(){
    acme_expect="gallery-private-pdf-http01-$"
    printf '%s' "$acme_expect" > "$WEBROOT/.well-known/acme-challenge/$acme_name"
    chmod 0644 "$WEBROOT/.well-known/acme-challenge/$acme_name"
-   acme_result="$(curl --noproxy '*' --fail --silent --show-error \
+   if ! acme_result="$(curl --noproxy '*' --fail --silent --show-error \
      --connect-timeout 3 --max-time 8 --resolve "$HOST:80:127.0.0.1" \
-     "http://$HOST/.well-known/acme-challenge/$acme_name")" || \
+     "http://$HOST/.well-known/acme-challenge/$acme_name")"; then
+     rm -f "$WEBROOT/.well-known/acme-challenge/$acme_name"
      abort 'Local ACME webroot challenge returned an error; certbot was NOT called'
+   fi
    rm -f "$WEBROOT/.well-known/acme-challenge/$acme_name"
    [[ "$acme_result" == "$acme_expect" ]] || \
      abort 'Nginx did not serve the exact ACME probe bytes; certbot was NOT called'
