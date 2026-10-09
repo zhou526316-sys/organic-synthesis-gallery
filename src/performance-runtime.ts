@@ -1,4 +1,5 @@
 import { shouldScanDisplay } from './user-ui/display-mutation-scope';
+import { loadMediaManifest } from './platform-api';
 interface StaticToc {
   available?: boolean;
   imageUrl?: string;
@@ -28,11 +29,8 @@ interface StaticMediaManifest {
 
 const TOC_HIGH_PRIORITY_COUNT = 4;
 const TOC_ROOT_MARGIN = '720px 0px';
-const FIGURE_DELAY_MS = 1900;
 const FIGURE_ROOT_MARGIN = '900px 0px';
-const installStartedAt = performance.now();
 
-let manifestPromise: Promise<StaticMediaManifest> | null = null;
 let staticFallbackActive = false;
 let scanQueued = false;
 let tocObserver: IntersectionObserver | null = null;
@@ -46,17 +44,7 @@ function assetUrl(path: string): string {
 }
 
 function loadManifest(forceRefresh = false): Promise<StaticMediaManifest> {
-  if (forceRefresh) manifestPromise = null;
-  if (!manifestPromise) {
-    const url = new URL('./media-index.json', document.baseURI);
-    manifestPromise = fetch(url, {
-      cache: forceRefresh ? 'reload' : 'default',
-      credentials: 'same-origin',
-    })
-      .then(response => response.ok ? response.json() as Promise<StaticMediaManifest> : { items: {} })
-      .catch(() => ({ items: {} }));
-  }
-  return manifestPromise;
+  return loadMediaManifest(forceRefresh);
 }
 
 function installPerformanceCss(): void {
@@ -290,8 +278,7 @@ function observeFigureSlots(manifest: StaticMediaManifest): void {
   const render = (slot: HTMLElement): void => {
     const doi = (slot.dataset.figureDoi || '').trim().toLowerCase();
     const item = manifest.items?.[doi];
-    const wait = Math.max(0, FIGURE_DELAY_MS - (performance.now() - installStartedAt));
-    window.setTimeout(() => renderFiguresFromManifest(slot, item), wait);
+    renderFiguresFromManifest(slot, item);
   };
 
   if (!('IntersectionObserver' in window)) {
@@ -308,8 +295,7 @@ function observeFigureSlots(manifest: StaticMediaManifest): void {
         const doi = (slot.dataset.figureDoi || '').trim().toLowerCase();
         void loadManifest().then(current => {
           const item = current.items?.[doi];
-          const wait = Math.max(0, FIGURE_DELAY_MS - (performance.now() - installStartedAt));
-          window.setTimeout(() => renderFiguresFromManifest(slot, item), wait);
+          renderFiguresFromManifest(slot, item);
         });
       }
     }, { rootMargin: FIGURE_ROOT_MARGIN, threshold: 0 });
@@ -359,7 +345,6 @@ export function installGalleryPerformanceRuntime(): () => void {
 
   const enableStaticFallback = (forceRefresh = false): void => {
     staticFallbackActive = true;
-    if (forceRefresh) manifestPromise = null;
     document.querySelectorAll<HTMLElement>('.toc-slot[data-doi]').forEach(slot => {
       delete slot.dataset.performanceTocObserved;
     });
