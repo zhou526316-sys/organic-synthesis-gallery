@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-08T23:07:20.000Z",
-  "requestedBy": "prepublish-primary-20261009-0800",
-  "publicationSlot": "2026-10-09T08:00:00+08:00",
-  "baselineMainSha": "965415b14a2cb275f244a1e779fda3f28dd91ea5",
-  "reason": "The sole daily 08:00 prepublish review found no valid 06:55 same-slot machine audit: main still carries generatedAt 2026-10-08T02:20:17.569Z with endDate 2026-10-08, while the required 2026-10-09 snapshot and same-slot run are absent. Run the canonical 3-day Asia/Shanghai discovery window plus 7-day safety scan, multi-ISSN Crossref online/published/created, OpenAlex and created/deposit rescue with verifiedThrough catch-up. Refresh audit/latest.json and audit/unresolved-latest.json atomically for publicationSlot 2026-10-09T08:00:00+08:00; do not modify production literature, formal review, TOC media or schedules."
+  "requestedAt": "2026-10-09T23:08:00.000Z",
+  "requestedBy": "prepublish-primary-20261010-0800",
+  "publicationSlot": "2026-10-10T08:00:00+08:00",
+  "baselineMainSha": "df7c4ab65a30d0ee51464cc604f3d545b8f589b0",
+  "reason": "The sole daily 08:00 prepublish review found no valid 06:55 same-slot machine audit: main still carries generatedAt 2026-10-08T23:09:44.996Z with endDate 2026-10-09, while the required 2026-10-10 snapshot and same-slot run are absent. Run the canonical 3-day Asia/Shanghai discovery window plus 7-day safety scan, multi-ISSN Crossref online/published/created, OpenAlex and created/deposit rescue with verifiedThrough catch-up. Refresh audit/latest.json and audit/unresolved-latest.json atomically for publicationSlot 2026-10-10T08:00:00+08:00; do not modify production literature, formal review, TOC media or schedules."
 }
