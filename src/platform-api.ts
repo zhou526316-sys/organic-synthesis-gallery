@@ -186,7 +186,7 @@ function loadMediaManifest(): Promise<StaticMediaManifest> {
           ? { version: payload.version || 1, generatedAt: payload.generatedAt || 0, items: payload.items || {} }
           : fallback;
         // Older CDN edges may briefly serve an earlier Pages generation.
-        if (lastKnownMediaManifest && next.generatedAt < lastKnownMediaManifest.generatedAt) {
+        if (lastKnownMediaManifest && Number(next.generatedAt || 0) < Number(lastKnownMediaManifest.generatedAt || 0)) {
           return lastKnownMediaManifest;
         }
         lastKnownMediaManifest = next;
