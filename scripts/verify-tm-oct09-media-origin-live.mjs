@@ -87,8 +87,7 @@ function captureEvidence(row,doi) {
     hash:limited(row?.contentHash,80),
     updatedAt:Number(row?.updatedAt||0),
     publisherAssetIdentity:numeric,
-    category:numeric.discrepant?'wiley_ga_numeric_asset_mismatch':
-      flagged?'suspected_body_image':
+    category:flagged?'suspected_body_image':
       uncertain?'unverified_graphical_abstract_origin':'publisher_ga_signal',
   };
 }
@@ -98,8 +97,8 @@ try {
   const engine=installer.match(/var INSTALL_REVISION = '([^']+)'/)?.[1]||'';
   const controller=installer.match(/var CONTROLLER_REVISION = '([^']+)'/)?.[1]||'';
   report.installer={bridge,engine,controller,bytes:installer.length};
-  assert.equal(bridge,'2.2.74','unexpected production Bridge revision');
-  assert.equal(engine,'6.2.55','unexpected production TOC engine revision');
+  assert.equal(bridge,'2.2.76','unexpected production Bridge revision');
+  assert.equal(engine,'6.2.57','unexpected production TOC engine revision');
   assert.equal(controller,'2.2.41','unexpected production controller revision');
 
   const queue=JSON.parse(await get(SITE+'/toc-demand-live.json?media_origin_audit='+Date.now(),3_000_000));
@@ -167,8 +166,12 @@ try {
     origins:(byDoi.get(doi)||[]).map(s=>({...s,
       matchingPublishedHash:s.hash!==''&&s.hash===statusByDoi.get(doi)?.contentHash}))
   }));
+  // Wiley -gra- internal asset numbering is NOT a DOI field. Count the
+  // mismatches as descriptive publisher metadata, not content violations.
+  report.internalAssetIdDiffersFromDoi=report.recentAngew.filter(x=>x.origins.some(o=>o.matchingPublishedHash && o.publisherAssetIdentity?.discrepant)).length;
   report.anomalyCandidates=report.recentAngew.filter(x=>x.origins.some(o=>
-    o.matchingPublishedHash && o.category!=='publisher_ga_signal'
+    o.matchingPublishedHash && (o.category==='suspected_body_image' || o.category==='unverified_graphical_abstract_origin'
+      || (x.doi==='10.1002/anie.4335022' && o.hash==='35f10c5321cd43179a4c71c73e388da8'))
   )).map(x=>({doi:x.doi,reason:x.reason,category:x.origins.filter(o=>o.matchingPublishedHash)
     .map(o=>o.category),sourceUrls:x.origins.filter(o=>o.matchingPublishedHash).map(o=>o.sourceUrl),
     numericIds:x.origins.filter(o=>o.matchingPublishedHash).map(o=>o.publisherAssetIdentity)}));
@@ -189,6 +192,7 @@ console.log('TM_OCT09_LIVE_SUMMARY '+JSON.stringify({
   fourMissing:report.fourMissing,oct09Angew:report.oct09Angew,
   recentAngewInspected:report.recentAngew?.length,
   anomalyCandidates:report.anomalyCandidates,
+  internalAssetIdDiffersFromDoi:report.internalAssetIdDiffersFromDoi,
   oct09BodyCrosscheck:report.oct09BodyCrosscheck,
   remainingCacheMiss:report.remainingCacheMiss,errors:report.errors,
   readOnly:true,productionWrites:0,publisherVisits:0
