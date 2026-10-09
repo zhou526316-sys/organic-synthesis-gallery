@@ -13,7 +13,13 @@ class FakeStatement {
   bind(...args) { this.args=args; return this; }
   async first() {
     const q=this.sql, a=this.args, db=this.db;
-    if(q.includes('FROM user_sessions WHERE token_hash')) return db.sessions.get(a[0]) || null;
+    if(q.includes('FROM user_sessions WHERE token_hash')) {
+      const row=db.sessions.get(a[0]) || null;
+      if(!row) return null;
+      if(a.length>=2 && row.user_id!==a[1]) return null;
+      if(a.length>=3 && Number(row.expires_at)<=Number(a[2])) return null;
+      return row;
+    }
     if(q.includes('FROM user_email_verifications WHERE user_id')) return db.verified.has(a[0]) ? {ok:1}:null;
     if(q.includes('FROM user_capabilities WHERE capability = ? LIMIT 1')) {
       for(const [key] of db.capabilities) { const [u,c]=key.split('|'); if(c===a[0]) return {user_id:u}; } return null;
@@ -24,7 +30,10 @@ class FakeStatement {
       rows.sort((x,y)=>y.captured_at-x.captured_at); return rows[0]||null;
     }
     if(q.includes('FROM private_pdf_access_tokens t')) {
-      const token=db.tokens.get(a[1]); if(!token)return null;
+      const ticketHash=a[a.length-1];
+      const token=db.tokens.get(ticketHash); if(!token)return null;
+      const parentHash=db.pdfSessionRefs.get(ticketHash);
+      if(parentHash && (!db.sessions.has(parentHash) || Number(db.sessions.get(parentHash).expires_at)<=Date.now())) return null;
       const doc=db.documents.get(token.document_id); if(!doc||doc.active!==1)return null;
       if(!db.capabilities.has(token.user_id+'|'+a[0]))return null;
       return {...token,doi:doc.doi,r2_key:doc.r2_key,byte_length:doc.byte_length};
@@ -42,12 +51,14 @@ class FakeStatement {
     const q=this.sql,a=this.args,db=this.db;
     if(q.startsWith('INSERT INTO user_capabilities')) { db.capabilities.set(a[0]+'|'+a[1],{user_id:a[0],capability:a[1],granted_at:a[2]}); return {success:true}; }
     if(q.startsWith('INSERT INTO private_pdf_access_tokens')) { db.tokens.set(a[0],{token_hash:a[0],user_id:a[1],document_id:a[2],created_at:a[3],expires_at:a[4]}); return {success:true}; }
+    if(q.startsWith('INSERT INTO user_pdf_ticket_session_refs')) {db.pdfSessionRefs.set(a[0],a[1]);return {success:true};}
     if(q.startsWith('DELETE FROM private_pdf_access_tokens')) { db.tokens.delete(a[0]); return {success:true}; }
     throw new Error('Unhandled run: '+q);
   }
 }
 class FakeDB {
-  constructor(){this.sessions=new Map();this.verified=new Set();this.capabilities=new Map();this.documents=new Map();this.tokens=new Map();this.firstCalls=0;}
+  constructor(){this.sessions=new Map();this.verified=new Set();this.capabilities=new Map();this.documents=new Map();this.tokens=new Map();this.pdfSessionRefs=new Map();this.firstCalls=0;}
+  async batch(statements){for(const item of statements)await item.run();}
   prepare(sql){
     const stmt=new FakeStatement(this,sql);
     const original=stmt.first.bind(stmt);
@@ -159,11 +170,12 @@ await test('temporary URL serves inline PDF bytes with no-store',async()=>{
   assert.equal(res.status,200);assert.equal(res.headers.get('content-type'),'application/pdf');assert.match(res.headers.get('content-disposition'),/^inline/);assert.equal(res.headers.get('cache-control'),'private, no-store');
   assert.equal(Buffer.from(await res.arrayBuffer()).toString(),pdf.toString());
 });
-await test('fast ticket range is honored without D1 or redundant R2 HEAD',async()=>{
+await test('fast ticket range is honored with one indexed session read and no redundant R2 HEAD',async()=>{
   const beforeHead=bucket.headCalls,beforeGet=bucket.getCalls,beforeDb=db.firstCalls;
   const res=await servePrivatePdf(new Request(accessUrl,{headers:{range:'bytes=0-7'}}),env,{});
   assert.equal(res.status,206);assert.equal(res.headers.get('content-range'),`bytes 0-7/${pdf.length}`);assert.equal(Buffer.from(await res.arrayBuffer()).length,8);
-  assert.equal(bucket.headCalls,beforeHead);assert.equal(bucket.getCalls,beforeGet+1);assert.equal(db.firstCalls,beforeDb);
+  assert.equal(bucket.headCalls,beforeHead);assert.equal(bucket.getCalls,beforeGet+1);
+  assert.equal(db.firstCalls,beforeDb+1,'revocation requires exactly one indexed D1 session check per Range');
 });
 await test('HEAD establishes PDF size without reading R2 object bytes',async()=>{
   const beforeHead=bucket.headCalls,beforeGet=bucket.getCalls;
@@ -196,6 +208,20 @@ await test('view ticket continuation is bound to browser HttpOnly cookie and abs
     const expired=await servePrivatePdf(new Request(accessUrl,{headers:{range:'bytes=0-15',cookie:cookie.split(';')[0]}}),env,{});
     assert.equal(expired.status,401);
   } finally { Date.now=originalNow; }
+});
+await test('evicting an account session revokes already issued PDF ticket and stops R2 reads',async()=>{
+  const hash=await sha256('owner-token');
+  const active=db.sessions.get(hash);
+  const previousGets=bucket.getCalls;
+  db.sessions.delete(hash);
+  try {
+    const denied=await servePrivatePdf(new Request(accessUrl,{headers:{range:'bytes=0-7'}}),env,{});
+    assert.equal(denied.status,401);
+    assert.equal(denied.headers.get('x-gallery-pdf-status'),'pdf_session_revoked');
+    assert.equal(bucket.getCalls,previousGets,'revoked browser cannot fetch private object bytes');
+  } finally {
+    db.sessions.set(hash,active);
+  }
 });
 await test('download request mints fresh attachment ticket and cannot reuse inline intent',async()=>{
   const opened=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345&mode=download','owner-token',{method:'POST'}),env);
