@@ -1,4 +1,5 @@
 import {readPublicationPages} from './read-publication-pages.mjs';
+import {completedBodyPacket} from '../../shared/body-packet-completion.mjs';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -137,15 +138,35 @@ export function strongOfficialCapture(row){
   }
   return false;
 }
+// A verified Figure 1 can be the accepted primary graphic for Nature/Science.
+// It does not turn an arbitrary PDF preview or unbound article image into a TOC.
+export function strongVerifiedFigureOneCapture(row){
+  const doi=normalizeDoi(row?.doi||'');
+  return Boolean(doi && /^10\.(?:1038|1126)\//.test(doi)
+    && String(row?.kind||'').toLowerCase()==='figure1'
+    && /^[a-f0-9]{32}$/.test(String(row.contentHash||''))
+    && strongOfficialCapture({...row,kind:'official'}));
+}
+export function verifiedFigureOneInBuild(record,doi,localCaptures){
+  const toc=record?.toc;
+  if(!toc?.available||!toc?.imageUrl||toc?.reason!=='figure1_fallback'
+    ||!/^[a-f0-9]{32}$/.test(String(toc.contentHash||'')))return false;
+  return Boolean((localCaptures?.items||[]).some(row=>
+    normalizeDoi(row?.doi||'')===doi && strongVerifiedFigureOneCapture(row)
+    && row.contentHash===toc.contentHash
+    && (record?.figures?.figures||[]).some(f=>f.id==='figure-1' && f.contentHash===row.contentHash && !!f.imageUrl)));
+}
+export function verifiedPrimaryReadyDois(inputs){
+  const ready=tocReadyDois(inputs);
+  for(const row of inputs?.localCaptures?.items||[])if(strongVerifiedFigureOneCapture(row))ready.add(normalizeDoi(row.doi));
+  return ready;
+}
 export function completedPacketMap(inputs){
   const map=new Map();
   for(const row of inputs?.reports?.items||[]){
     const doi=normalizeDoi(row?.doi||'');
-    const jobId=String(row?.jobId||'');
     const mediaNeed=String(row?.mediaNeed||'');
-    if(!doi||!row.final||row.status!=='success'||row.captureVersion!=='6.2.20'||!/^[a-z0-9-]{16,80}$/i.test(jobId))continue;
-    if(!mediaNeed.includes('figures'))continue;
-    if(Number(row.figuresStored||0)!==Number(row.figuresDiscovered||0))continue;
+    if(!doi||!mediaNeed.includes('figures')||!completedBodyPacket(row))continue;
     map.set(doi,row);
   }
   return map;
@@ -179,7 +200,7 @@ export async function pendingNewRows({root=process.cwd(),inputs,now=Date.now()})
   assertSnapshotCoherence(inputs.previous,inputs.live);
   const cfg=await configuration(root),{policy,holds,papers}=cfg;
   if(!policy.enabled||!inputs.stage)return {...cfg,rows:[]};
-  const oldKeys=new Set(inputs.previous.items.map(x=>exactKey(x.record))),tocReady=tocReadyDois(inputs),packets=completedPacketMap(inputs);
+  const oldKeys=new Set(inputs.previous.items.map(x=>exactKey(x.record))),tocReady=verifiedPrimaryReadyDois(inputs),packets=completedPacketMap(inputs);
   const cutoff=Date.parse(policy.backfillCapturedBefore),stabilityMs=policy.backfillStabilityMinutes*60000;
   const stageByDoi=new Map();
   for(const row of inputs.stage.items){
@@ -273,8 +294,10 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
     for(const doi of candidateDois){
       const packetRows=rows.filter(row=>row.doi===doi&&!alreadyIn(media,row));
       if(!packetRows.length)continue;
-      if(policy.requireOfficialTocInBuild&&!officialToc(media.items[doi])){
-        held.push({doi,id:null,reason:'waiting_for_official_toc_in_same_build'});tocWaitingDois.add(doi);continue;
+      if(policy.requireOfficialTocInBuild && !officialToc(media.items[doi])
+        && !verifiedFigureOneInBuild(media.items[doi],doi,inputs.localCaptures)){
+        held.push({doi,id:null,reason:'waiting_for_verified_primary_visual_in_same_build'});
+        tocWaitingDois.add(doi);continue;
       }
       const baseCount=(media.items[doi]?.figures?.figures?.length||0);
       if(baseCount+packetRows.length>policy.maxFiguresPerCard){
