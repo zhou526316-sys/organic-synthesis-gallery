@@ -51,6 +51,7 @@
   var MISSING_CAPTURE_REVISION = '20261006-oct1-bundle-v7';
   var QUEUE_COVERAGE_REVISION = '20261006-queue-coverage-v9';
   var PUBLISHER_MEDIA_REVISION = '20261007-rsc-search-fallback-v14';
+  var WILEY_GA_PROVENANCE_REVISION = '20261009-graphical-abstract-no-body-scope-v1';
   var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
@@ -2295,6 +2296,43 @@ function embeddedJobDois(value) {
     return /-gra-\d+(?:[-_.]|$)|graphical[-_\s]*abstract|visual[-_\s]*abstract|(?:^|[\/_-])(?:ga|fx)0*1(?:[-_.]|$)/i.test(String(value || ''));
   }
 
+  // Wiley's numbered manuscript Figures/Schemes, including substrate-expansion panels,
+  // are not an official TOC even when a neighboring section says Graphical Abstract.
+  // Inspect only the owning figure block; do not infer roles from whole-page text.
+  function wileyBodyOnlyVisual(node) {
+    if (!node || !node.closest) return false;
+    var block = node.closest('figure,[role="figure"],.article-section__figure,.fig-section,.article-figure,.figure');
+    if (!block || !block.querySelectorAll) return false;
+    var texts = Array.from(block.querySelectorAll(
+      'figcaption,.caption,[class*="caption"],.figure-title,.figure__title,[role="heading"]'
+    )).slice(0, 12).map(function(el) {
+      return String(el.textContent || '').replace(/\\s+/g, ' ').trim().slice(0, 320);
+    });
+    var own = [node.getAttribute && node.getAttribute('alt'),
+      node.getAttribute && node.getAttribute('aria-label')].filter(Boolean);
+    var evidence = texts.concat(own);
+    return evidence.some(function(value) {
+      return /^(?:fig(?:ure)?\\.?|scheme|chart)\\s*[1-9]\\d*[a-z]?\\b/i.test(value)
+        || /\\b(?:substrate|reaction|functional[- ]group|product)\\s+(?:scope|screening|expansion)\\b|\\bscope\\s+of\\s+(?:substrates|reactions|products)\\b/i.test(value);
+    });
+  }
+
+  function wileyBodySourceCollision(value, scope, baseUrl) {
+    if (!scope || !scope.querySelectorAll) return false;
+    var wanted = mediaUrlIdentity(value, baseUrl || location.href);
+    if (!wanted) return false;
+    return Array.from(scope.querySelectorAll(
+      'figure img,figure source,figure object,[role="figure"] img,[role="figure"] source,.article-section__figure img,.article-section__figure source'
+    )).some(function(node) {
+      if (!wileyBodyOnlyVisual(node)) return false;
+      var urls = articleFigureImageUrls(node, baseUrl || location.href)
+        .concat(imageUrls(node, baseUrl || location.href));
+      return urls.some(function(url) {
+        return mediaUrlIdentity(url, baseUrl || location.href) === wanted;
+      });
+    });
+  }
+
   function wileyAssetHostAllowed(value) {
     try {
       var host = new URL(String(value || ''), location.href).hostname.toLowerCase();
@@ -2320,6 +2358,7 @@ function embeddedJobDois(value) {
     function add(url, node, source, score, text) {
       url = normalizeUrl(url, base);
       if (!url || !wileyAssetHostAllowed(url) || !candidateBelongsToJob(url, job) || reject(text, url)) return;
+      if (!wileyGaUrlSignal(url) || wileyBodyOnlyVisual(node) || wileyBodySourceCollision(url, scope, base)) return;
       var row = {
         url: url,
         kind: 'official',
@@ -2360,15 +2399,9 @@ function embeddedJobDois(value) {
         });
         return;
       }
-      var byIdentity = new Map();
-      all.forEach(function(item) {
-        var key = mediaUrlIdentity(item.url, base);
-        if (key && !byIdentity.has(key)) byIdentity.set(key, item);
-      });
-      if (byIdentity.size === 1) {
-        var only = Array.from(byIdentity.values())[0];
-        add(only.url, only.node, 'wiley_ga_labeled_section_single_image', 900, headingText);
-      }
+      // A lone image next to a GA heading is not enough: it may be a substrate-scope
+      // figure, and a permissive fallback silently promotes that figure to official.
+      // Retain strong -gra-/GA assets and article-head citation metadata only.
     }
 
     if (scope.querySelectorAll) {
@@ -2853,6 +2886,18 @@ function embeddedJobDois(value) {
     function add(row) {
       if (String(job && job.publisher || '') === 'rsc' && rscPdfPreviewUrl(row && row.url)) {
         diag.pdfPreview++;pushTrace(trace,{stage:'rsc_toc_candidate',event:'pdf_preview_rejected',status:'rejected',url:row&&row.url||'',message:'page-preview asset cannot be an official TOC'});return;
+      }
+      if (String(job && job.publisher || '') === 'wiley' && row && row.kind === 'official') {
+        var supportedMeta = row.source === 'article_head_metadata'
+          && /citation_(?:graphical_abstract|visual_abstract|toc_graphic|abstract_image)/i.test(String(row.text || ''));
+        if (!wileyAssetHostAllowed(row.url) || wileyBodyOnlyVisual(row.element)
+          || wileyBodySourceCollision(row.url, scope, baseUrl || location.href)
+          || (!wileyGaUrlSignal(row.url) && !supportedMeta)) {
+          diag.rejected++;
+          pushTrace(trace,{stage:'wiley_toc_candidate',event:'body_figure_or_unverified_ga_rejected',status:'rejected',
+            url:row.url,candidateSource:row.source,message:'Only publisher GA evidence may become an official Angew TOC'});
+          return;
+        }
       }
       if(seen.has(row.url)){diag.duplicate++;return;}
       if(!candidateBelongsToJob(row.url,job)){diag.doiMismatch++;return;}
@@ -4073,7 +4118,9 @@ function embeddedJobDois(value) {
         width: Number(image.width || 0) || undefined,
         height: Number(image.height || 0) || undefined,
         capturedAt: nowIso(),
-        source: 'tampermonkey-toc-mainline'
+        source: 'tampermonkey-toc-mainline',
+        candidateSource: String(candidate.source || ''),
+        assetType: String(candidate.assetType || '')
       }, token, 'r2_upload');
       if (!result || result.stored !== true || normalizeDoi(result.doi) !== normalizeDoi(job.doi) || result.kind !== candidate.kind) throw new Error('toc_capture_receipt_invalid');
       if (candidate.kind === 'official' && result.productionTocStored !== true) throw new Error('toc_production_promotion_missing');
