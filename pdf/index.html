@@ -15,7 +15,8 @@
     button,.download{min-height:34px;padding:6px 10px;border:1px solid #d6deeb;border-radius:9px;background:#fff;color:#344054;font:inherit;font-weight:650;cursor:pointer}
     button:disabled{opacity:.45;cursor:default}.download[hidden]{display:none} .download[disabled]{opacity:.5}
     #page-count,#zoom{min-width:58px;text-align:center;font-size:12px;color:#56657a}
-    main{position:relative;flex:1;min-height:0;overflow:auto;background:#dfe5ee;padding:18px;overscroll-behavior:contain}
+    main{position:relative;flex:1;min-height:0;overflow:hidden;background:#dfe5ee;padding:0}
+    #pdf-scroll-container{position:absolute;inset:0;overflow:auto;padding:18px;overscroll-behavior:contain}
     #stage{min-height:100%;display:flex;justify-content:center;align-items:flex-start}
     #stage{position:relative;display:block;min-height:100%;width:100%;text-align:left}
     #stage .page{margin:0 auto 16px!important;box-shadow:0 5px 24px rgba(15,23,42,.18)}
@@ -68,7 +69,9 @@
     <small>找到的图号只是定位候选。必须手工核对原始图像范围、DOI 和出版许可；导出的 PNG 与溯源记录不会自动发布到公共图库。</small>
   </aside>
   <main id="main">
-    <div id="stage" class="pdfViewer" aria-label="连续滚动 PDF 文献"></div>
+    <div id="pdf-scroll-container" aria-label="连续滚动 PDF 文献" tabindex="0">
+      <div id="stage" class="pdfViewer"></div>
+    </div>
     <div id="pdf-crop-box" hidden></div>
     <div id="status">正在打开私有 PDF…</div>
   </main>
