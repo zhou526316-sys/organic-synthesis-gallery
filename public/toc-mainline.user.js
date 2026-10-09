@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.58
+// @version      6.2.59
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.58';
+  var INSTALL_REVISION = '6.2.59';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261008-rsc-silverchair-and-acs-toc-route-v1';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -431,7 +431,11 @@
       var revision=Number(prior&&prior.revision||0)+1;
       var important=(job._diagnosticFailures||[]).slice(-48);
       var recent=(trace||[]).slice(-32).map(autoReportEvent);
-      var seen=new Set();var events=important.concat(recent).filter(function(e){var k=e.at+'|'+e.stage+'|'+e.event+'|'+e.url;if(seen.has(k))return false;seen.add(k);return true;});
+      // RSC Silverchair AJAX may occur >32 trace events before a PDF 403.
+      // Preserve its source outcome in the final report so missing TOCs can
+      // be diagnosed without a fresh publisher visit or owner PDF access.
+      var rscAjax=(trace||[]).filter(function(e){return e&&e.stage==='rsc_native_abstract_ajax';}).slice(-4).map(autoReportEvent);
+      var seen=new Set();var events=important.concat(rscAjax,recent).filter(function(e){var k=e.at+'|'+e.stage+'|'+e.event+'|'+e.url;if(seen.has(k))return false;seen.add(k);return true;});
       var page=autoReportUrl(actualPageUrl===undefined?location.href:actualPageUrl);
       var last=important.length?important[important.length-1]:recent[recent.length-1]||{};
       var metadata={eventId:job.jobId+(final?':final':':checkpoint')+':'+revision,jobId:job.jobId,installRevision:typeof INSTALL_REVISION==='string'?INSTALL_REVISION:'',captureObservabilityRevision:typeof CAPTURE_OBSERVABILITY_REVISION==='string'?CAPTURE_OBSERVABILITY_REVISION:'',controllerRevision:CONTROLLER_REVISION,architectureMembershipRevision:typeof ARCHITECTURE_MEMBERSHIP_REVISION==='string'?ARCHITECTURE_MEMBERSHIP_REVISION:'',publisherMediaRevision:typeof PUBLISHER_MEDIA_REVISION==='string'?PUBLISHER_MEDIA_REVISION:'',queueCoverageRevision:typeof QUEUE_COVERAGE_REVISION==='string'?QUEUE_COVERAGE_REVISION:'',missingRevision:typeof MISSING_CAPTURE_REVISION==='string'?MISSING_CAPTURE_REVISION:'',requestedNeeds:typeof captureNeedText==='function'?captureNeedText(job):'',routePlan:job&&job.routePlan?job.routePlan:null,lifecycleRevision:typeof CONTROLLER_LIFECYCLE_REVISION==='string'?CONTROLLER_LIFECYCLE_REVISION:'',controllerState:typeof controllerLifecycleSnapshot==='function'?controllerLifecycleSnapshot():null,captureVersion:VERSION,kind:final?'final_result':'failure_checkpoint',retryCount:Number(job.retryCount||0),pageDois:embeddedJobDois(page),httpStatusKnown:Number(last.httpStatus||0)>0};
@@ -592,6 +596,30 @@ function embeddedJobDois(value) {
   return [...found].filter(Boolean);
 }
 
+  // These DOI-to-PII pairs were verified from the same Chem publisher pages
+  // and successful Gallery TOC receipts. ScienceDirect may omit citation_doi
+  // on an otherwise DOI-bound /science/article/pii/ page. Never generalize
+  // this exception to arbitrary PII or to publisher interstitial hosts.
+  function verifiedChemPublisherPii(job) {
+    var doi=normalizeDoi(job&&job.doi);
+    var pairs={
+      '10.1016/j.chempr.2026.103008':'S2451929426000744',
+      '10.1016/j.chempr.2026.103043':'S2451929426001099',
+      '10.1016/j.chempr.2026.103220':'S245192942600286X',
+      '10.1016/j.chempr.2026.103282':'S2451929426003487'
+    };
+    return pairs[doi]||'';
+  }
+  function verifiedChemPublisherPage(job,value) {
+    var pii=verifiedChemPublisherPii(job);
+    if(!pii)return false;
+    try{
+      var u=new URL(String(value||''),location.href);
+      return u.protocol==='https:'&&(u.hostname==='www.sciencedirect.com'||u.hostname==='sciencedirect.com')
+        &&new RegExp('^/science/article/pii/'+pii+'(?:/|$)','i').test(u.pathname);
+    }catch(_){return false;}
+  }
+
   function publisherPageDois() {
     var ids = embeddedJobDois(location.href);
     document.querySelectorAll('head meta[name="citation_doi"],head meta[name="dc.Identifier"],head meta[name="DC.Identifier"],head meta[property="citation_doi"],head link[rel="canonical"]').forEach(function (node) {
@@ -615,6 +643,7 @@ function embeddedJobDois(value) {
     try { binding = sessionStorage.getItem(P + 'tab-job-binding') || ''; } catch (_) {}
     if (binding !== job.jobId) throw new Error('capture_tab_job_mismatch');
     var page = publisherPageDois();
+    if (!page.length && verifiedChemPublisherPage(job,location.href)) page=[normalizeDoi(job.doi)];
     if (!page.length) throw new Error('page_doi_unverified');
     if (page.some(function (doi) { return doi !== normalizeDoi(job.doi); })) throw new Error('page_doi_mismatch');
     var source = embeddedJobDois(sourceUrl || '');
@@ -665,7 +694,16 @@ function embeddedJobDois(value) {
 
   function candidateBelongsToJob(url, job) {
     var doi = normalizeDoi(job && job.doi);
-    return Boolean(doi && embeddedJobDois(url).every(function (value) { return value === doi; }));
+    if(!doi || !embeddedJobDois(url).every(function(value){return value===doi;}))return false;
+    var pii=verifiedChemPublisherPii(job);
+    if(pii){
+      // Elsevier CDN assets carry their article's PII instead of full DOI.
+      // Reject an explicitly different PII; unrelated images on the same
+      // publisher shell must not be promoted into a DOI's media inventory.
+      var match=String(url||'').match(/(?:\/pii\/|1-s2\.0-)(S[0-9A-Z]{12,})(?=[^0-9A-Z]|$)/i);
+      if(match&&String(match[1]).toUpperCase()!==pii.toUpperCase())return false;
+    }
+    return true;
   }
 
   function publisherForDoi(doi) {
@@ -3351,7 +3389,8 @@ function embeddedJobDois(value) {
     var canonical = String((document.querySelector('link[rel="canonical"]') || {}).href || '').toLowerCase();
     var doi = normalizeDoi(job.doi);
     var suffix = doi.split('/').pop() || doi;
-    var doiMatch = citation.indexOf(doi) >= 0 || canonical.indexOf(doi) >= 0 || href.toLowerCase().indexOf(suffix.toLowerCase()) >= 0;
+    var doiMatch = citation.indexOf(doi) >= 0 || canonical.indexOf(doi) >= 0 || href.toLowerCase().indexOf(suffix.toLowerCase()) >= 0
+      || verifiedChemPublisherPage(job,href);
     var meaningfulArticle = doiMatch && text.length >= 900;
     var gateText = title + '\n' + text.slice(0, 16000);
     // Science/AAAS may expose some article text behind an explicit "Check access"
@@ -5867,6 +5906,42 @@ function embeddedJobDois(value) {
     }
   }
 
+  // A DOI-bound publisher tab can fail verification before runPublisherJob
+  // begins (Elsevier interstitial/article shell). Persist a terminal local
+  // result as well as an outbox report: otherwise the Gallery controller
+  // cannot observe the failure and waits its entire 8-minute deadline.
+  function finishBoundPublisherPreflightFailure(job,error) {
+    if(!job||!job.jobId||job.captureVersion!==VERSION||!currentCaptureJob(job))return false;
+    var bound='';
+    try {bound=sessionStorage.getItem(P+'tab-job-binding')||'';}catch(_){}
+    if(bound!==job.jobId)return false;
+    var reason=captureLiveError(error&&error.message||error||'publisher_preflight_failed').slice(0,160);
+    var finished=nowIso(),terminal={
+      doi:normalizeDoi(job.doi),jobId:job.jobId,version:VERSION,
+      controllerRevision:CONTROLLER_REVISION,
+      publisherTaskBindingRevision:PUBLISHER_TASK_BINDING_REVISION,
+      status:'failed',reason:reason,finishedAt:finished,
+      toc:{status:job.captureToc?'failed':'not_requested',reason:reason},
+      figures:{status:'not_requested',discovered:0,stored:0,failed:0,items:[]},
+      fulltext:{status:'not_requested'},
+      privatePdf:{status:'not_requested'},
+      retryAfterMs:/^(?:page_doi_unverified|page_doi_mismatch|capture_tab_job_mismatch)$/.test(reason)?6*60*60*1000:0
+    };
+    var trace=[{at:finished,stage:'page_doi_guard',event:'rejected',status:'failed',
+      url:location.href,message:reason}];
+    job._liveResult=terminal;
+    GM_setValue(traceKey(job.doi),{doi:terminal.doi,jobId:job.jobId,status:'failed',
+      reason:reason,finishedAt:finished,trace:trace});
+    enqueueCaptureReport(job,trace,'failed',reason,true,location.href);
+    // The real publisher may still be loading on another visit. Never mutate
+    // media or accept old job reports after user explicitly replaces this run.
+    if(!currentCaptureJob(job))return false;
+    GM_setValue(resultKey(job.doi),terminal);
+    var progress=GM_getValue(progressKey(job.doi),null);
+    if(!progress||!progress.jobId||progress.jobId===job.jobId)GM_deleteValue(progressKey(job.doi));
+    return true;
+  }
+
   async function publisherBoot() {
     if (location.hostname === 'doi.org') return;
     var job = GM_getValue(ACTIVE_JOB_KEY, null);
@@ -5881,7 +5956,7 @@ function embeddedJobDois(value) {
       var bound='';
       try { bound=sessionStorage.getItem(P+'tab-job-binding')||''; } catch (_) {}
       if(!job.jobId||bound!==job.jobId)return;
-      await uploadReport(job, [{ stage: 'page_doi_guard', event: 'rejected', status: 'failed', url: location.href, message: String(error.message) }], 'failed', String(error.message), null, writeToken());
+      finishBoundPublisherPreflightFailure(job,error);
       return;
     }
     writePublisherHeartbeat(job, 'active_job_seen');
@@ -6266,6 +6341,11 @@ function embeddedJobDois(value) {
     var age=prior?Math.max(0,ts-Number(prior.at||0)):Number.POSITIVE_INFINITY;
     if(ignoreCooldown)return true;
     if(prior&&prior.status==='not_found'&&age<6*60*60*1000)return false;
+    // A publisher's explicit access refusal is not a transient transport
+    // timeout. Preserve a long per-DOI cooldown, but explicit owner restart
+    // can still recheck once access has been restored.
+    if(prior&&prior.status==='failed'&&/^(?:private_pdf_http_40[139]|access_denied_http_40[139]|(?:http_)?40[139])(?:\b|$)/i.test(String(prior.reason||''))
+      &&age<6*60*60*1000)return false;
     if(prior&&prior.status==='failed'&&age<30*60*1000)return false;
     return true;
   }
@@ -6864,7 +6944,7 @@ function embeddedJobDois(value) {
     var count=Math.max(1,Number(prior.retryCount||1));
     var detail=[prior.reason,(prior.toc||{}).reason,(prior.fulltext||{}).reason]
       .concat(((prior.figures||{}).items||[]).filter(function(x){return x.status==='failed';}).map(function(x){return x.reason;})).join(';');
-    if (/doi_mismatch|receipt_invalid|stale_or_unbound/i.test(detail)) {
+    if (/doi_mismatch|page_doi_unverified|receipt_invalid|stale_or_unbound/i.test(detail)) {
       return elapsed>=Math.max(6*60*60*1000,Number(prior.retryAfterMs||0));
     }
     if (/permission|blocked by the user|Refused to connect|(?:http_|status[=:])(401|403|429)|auth_|challenge_|publisher_access_gate/i.test(detail)) {

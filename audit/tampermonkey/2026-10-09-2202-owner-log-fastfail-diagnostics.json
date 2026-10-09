@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "tm-owner-2202-upload-failure-triage-v1",
+  "observedAtBeijing": "2026-10-09 22:03+08:00",
+  "sourceRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37941361221",
+  "ownerUpload": {
+    "uploadedAt": 1791554547393,
+    "controllerRevision": "2.2.41",
+    "captureProtocol": "6.2.20",
+    "installedEngineFromNewReport": "6.2.58",
+    "verifiedActualUserRun": true,
+    "startedAt": "2026-10-09T12:51:14.463Z",
+    "total": 19,
+    "success": 0,
+    "failed": 8,
+    "otherPartialOrPending": 11
+  },
+  "forensics": [
+    {
+      "category": "Chem Elsevier terminal handoff",
+      "dois": [
+        "10.1016/j.chempr.2026.103008",
+        "10.1016/j.chempr.2026.103043",
+        "10.1016/j.chempr.2026.103220",
+        "10.1016/j.chempr.2026.103282"
+      ],
+      "observed": "Publisher emitted page_doi_unverified report while controller logged 8-minute controller_timeout; repeated 8 task failures",
+      "rootCause": "publisherBoot preflight catch uploaded server report without GM local terminal resultKey; completedPublisherResult only reads matching GM resultKey and cannot consume server report",
+      "fix": "Bound-session current-job failure writes versioned terminal GM result and durable report outbox; controller returns without waiting full 8 minutes. Known publisher DOI-PII fallback for exact four verified Chem pages only, with cross-PII source rejection."
+    },
+    {
+      "category": "RSC",
+      "dois": [
+        "10.1039/d6sc06407h",
+        "10.1039/d6gc03748h"
+      ],
+      "observed": "Science TOC not found, 0/0 figures, partial fulltext and PDF HTTP403; GreenChem explicit access gate. PDF-cover preview rejected.",
+      "fix": "Keep publishers' access refusal authoritative; retain native Silverchair AJAX stage in final trace despite 32-event truncation. No replacement with PDF thumbnail."
+    },
+    {
+      "category": "PDF",
+      "observed": "Authenticated publisher requests HTTP 403; user-visible completion must remain failed (not stored). A failed prior PDF was retried after 30 min even for confirmed 403.",
+      "fix": "For exact 401/403/429 style access refusal retain six-hour per-DOI cooldown; transient failures keep original short retry; explicit manual retry still allowed."
+    },
+    {
+      "category": "Architecture observer",
+      "observed": "architecture_membership_serial_conflict",
+      "fix": "Do not relax immutable serial/hash guard. Architecture team follow-up; observer error is separate from capture engine."
+    }
+  ],
+  "releaseProposal": {
+    "bridge": "2.2.78",
+    "engine": "6.2.59",
+    "captureProtocol": "6.2.20",
+    "controller": "2.2.41"
+  },
+  "scopeLimit": [
+    "addedDate >= 2026-10-01 remains",
+    "08:00-only literature release unchanged",
+    "No Cloudflare D1 schema or R2 mutation",
+    "No PDF entitlement bypass or unauthorized cross-browser fetching",
+    "No Figure1/TOC authenticity downgrade",
+    "No automatic publisher CAPTCHA bypass"
+  ],
+  "status": "PR pending CI and live deployment; not a claim of recovered figures or PDF"
+}
