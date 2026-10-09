@@ -3192,6 +3192,10 @@ function embeddedJobDois(value) {
   }
 
   async function iframeCandidates(job, trace) {
+    // Same article's authorized Silverchair abstract response precedes the
+    // slower issue/search iframe route. Only two DOI-bound Oct-09 jobs call it.
+    var nativeRsc=await rscNativeAjaxGraphicalAbstractCandidates(job,trace);
+    if(nativeRsc.length)return nativeRsc;
     var urls = iframeSourceUrls(job);
     if(job&&job.publisher==='ccs'){
       var crossrefTocUrl=await ccsCrossrefTocIndexUrl(job,trace);
@@ -6157,7 +6161,7 @@ function embeddedJobDois(value) {
   }
 
   async function waitForPairedVisuals(job,trace) {
-    var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started,iframeAttempted=false,rscAjaxAttempted=false,accessGateStarted=0,initialDomLogged=false;
+    var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started,iframeAttempted=false,accessGateStarted=0,initialDomLogged=false;
     var toc=[],figures=[],recoveredOfficialToc=[];
     while (Date.now()-started<90000 && Date.now()<job.captureDeadline) {
       if (isAbortRequested()) throw new Error('user_aborted');
@@ -6200,16 +6204,6 @@ function embeddedJobDois(value) {
         captureLiveUpdate(job,'page_loading');
         if(elapsed>=30000)throw new Error('publisher_page_not_ready');
         await sleep(800);continue;
-      }
-      if(wantsToc&&!toc.length&&!rscAjaxAttempted&&job.publisher==='rsc'&&elapsed>1600){
-        rscAjaxAttempted=true;
-        var ajaxRows=await rscNativeAjaxGraphicalAbstractCandidates(job,trace);
-        if(ajaxRows.length){
-          recoveredOfficialToc=ajaxRows.slice();
-          toc=recoveredOfficialToc.slice();
-          pushTrace(trace,{stage:'paired_toc_fallback',event:'rsc_native_ajax_recovery',
-            status:'found',message:'official='+toc.length+';persistent=1'});
-        }
       }
       if (wantsToc && !toc.length && !iframeAttempted && elapsed>7000 &&
           (job.publisher==='acs'||job.publisher==='wiley'||job.publisher==='rsc'||job.publisher==='ccs')) {
