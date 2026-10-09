@@ -1892,11 +1892,19 @@ async function load(): Promise<void> {
 }
 
 window.addEventListener('scroll', () => scheduleMediaBatch(40), { passive: true });
-// A tab kept open through a scheduled media-only Pages publication must
-// recheck visible cards when the visitor returns, without forcing a full reload.
-window.addEventListener('focus', () => scheduleMediaBatch(50));
+// Only recheck after a genuine background/foreground transition. Window
+// focus alone also fires on first load and can shift mobile pagination while
+// its first layout is settling.
+let mediaHiddenSince = 0;
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden) scheduleMediaBatch(50);
+  if (document.hidden) {
+    mediaHiddenSince = Date.now();
+    return;
+  }
+  if (mediaHiddenSince && Date.now() - mediaHiddenSince >= 60_000) {
+    scheduleMediaBatch(50);
+  }
+  mediaHiddenSince = 0;
 });
 window.addEventListener('resize', () => {
   const nextWindowSize = resultWindowSize();
