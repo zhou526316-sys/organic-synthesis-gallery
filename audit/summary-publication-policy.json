@@ -1,21 +1,37 @@
 {
   "version": 1,
-  "effectiveDate": "2026-10-02",
-  "userInstruction": "9.20之前的摘要就不管了，专心把新的摘要都上线了。",
-  "minimumArticleDate": "2026-09-20",
+  "effectiveDate": "2026-10-09",
+  "userInstruction": "10月1日之后的摘要可以上线了，毕竟大部分都有PDF正文了。",
+  "minimumArticleDate": "2026-10-01",
   "minimumDateInclusive": true,
-  "articleDateField": "date",
-  "articleDateMeaning": "canonical literature first-online publication date, not text capture time",
+  "articleDateField": "addedDate",
+  "articleDateMeaning": "Gallery canonical addedDate is the admission date; publisher first-online date and Evidence capturedAt must not substitute",
   "beforeCutoff": "preserve existing published summaries; do not backfill or regenerate",
-  "missingArticleDate": "report separately; never infer from capture date",
+  "missingArticleDate": "If addedDate is missing or malformed, hold for explicit verification rather than inferring from publication or capture time",
   "scope": "currently active canonical literature DOIs only",
-  "priority": ["article date descending", "addedDate descending", "capturedAt descending"],
+  "priority": [
+    "addedDate descending",
+    "article date descending",
+    "capturedAt descending"
+  ],
   "publicationCadence": "12:00 Asia/Shanghai",
   "modelApiRequired": false,
   "evidenceDepthControlsEligibility": false,
-  "allowedEvidenceLevels": ["complete", "partial", "abstract_only"],
-  "evidenceRule": "Summarize only verified captured text; label partial/Abstract-only coverage; never fabricate missing scientific claims.",
+  "allowedEvidenceLevels": [
+    "complete",
+    "partial",
+    "abstract_only"
+  ],
+  "evidenceRule": "Publish only double-checked bilingual summaries supported by captured Article Evidence Packet text. A private stored PDF is not itself evidence that the summary reviewer can access its full text; use verified extracted text, label partial/Abstract-only coverage, never fabricate claims.",
   "validExistingSummaries": "reuse when sourceHash and evidencePacketHash match current captured evidence",
-  "catchUpPublication": "one merged summary-data update and one deployment after reviewing the entire eligible current set; no old-backlog-first batches",
-  "protected": ["literature cards", "authoritative literature datasets", "TOC demand", "08:00/18:00 literature release state", "Tampermonkey capture logic", "paused feedback"]
+  "catchUpPublication": "One existing reviewed-summary pipeline, a single merged authorized publication for completed records, with explicit durable pending reasons for any unprocessed or unverified DOI. No unreviewed mass fill or duplicate scheduled publisher.",
+  "protected": [
+    "literature cards",
+    "authoritative literature datasets",
+    "TOC demand",
+    "08:00/18:00 literature release state",
+    "Tampermonkey capture logic",
+    "paused feedback"
+  ],
+  "minimumAddedDate": "2026-10-01"
 }

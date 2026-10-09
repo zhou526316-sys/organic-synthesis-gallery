@@ -41,7 +41,7 @@ jobs:
           ! grep -F 'runSummaryReviewCycle' cloudflare/worker/src/index.js
           grep -F 'SUMMARY_REVIEW_ENABLED = "0"' .github/workflows/deploy-worker-frontend.yml
           grep -F 'SUMMARY_MODE = "scheduled_chatgpt_daily_no_api"' .github/workflows/deploy-worker-frontend.yml
-          grep -F 'crons = ["0 */6 * * *"]' .github/workflows/deploy-worker-frontend.yml
+          grep -F 'crons = ["*/15 * * * *"]' .github/workflows/deploy-worker-frontend.yml
           grep -F "'/api/article-summary/scheduled-handoff'" cloudflare/worker/src/index.js
           grep -F "'/api/admin/article-summary/handoff-backfill'" cloudflare/worker/src/index.js
           grep -F "Backfill encrypted daily-summary handoff" .github/workflows/deploy-worker-frontend.yml
@@ -52,6 +52,8 @@ jobs:
           grep -F "manifestOnly" cloudflare/worker/src/index.js
           grep -F "9c55e2d2ed734de9" cloudflare/worker/src/scheduled-summary-handoff.js
           grep -F "'public/scheduled-article-summaries.json'" .github/workflows/deploy-worker-frontend.yml
+      - name: Verify current summary admission-date scope
+        run: python3 scripts/test-summary-oct1-scope.py
       - name: Install Worker dependencies
         working-directory: cloudflare/worker
         run: npm install --no-audit --no-fund

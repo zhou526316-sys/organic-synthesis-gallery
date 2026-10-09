@@ -14,13 +14,15 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 18
     env:
       BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Check Oct-1 Gallery addedDate scope before collecting private evidence
+        run: python3 scripts/test-summary-oct1-scope.py
       - name: Read current registry and encrypted evidence without publisher access
         shell: bash
         run: |
@@ -43,7 +45,8 @@ jobs:
                   time.sleep(1)
           def save(name,value): (out/name).write_text(json.dumps(value,ensure_ascii=False,indent=2),encoding='utf-8')
           policy=json.loads(pathlib.Path('audit/summary-publication-policy.json').read_text())
-          cutoff=policy['minimumArticleDate']
+          cutoff=policy['minimumAddedDate']
+          assert policy['articleDateField']=='addedDate' and policy['minimumArticleDate']==cutoff,'invalid_oct1_summary_scope'
           health=get('/api/_healthcheck')
           assert health.get('summaryMode')=='scheduled_chatgpt_daily_no_api' and health.get('summaryReviewReady') is True and health.get('summaryReviewEnabled') is False,'summary_runtime_not_ready'
           registry=get('https://gallery.gczhouwld.com/toc-demand-live.json')
@@ -51,8 +54,14 @@ jobs:
           inventory=get('/api/article-summary/evidence-inventory',True)
           evidence={v['doi'].lower():v for v in inventory['items']}
           articles={v['doi'].lower():v for v in registry['articles'] if v.get('doi')}
-          current={d:a for d,a in articles.items() if re.fullmatch(r'\d{4}-\d{2}-\d{2}',str(a.get('date',''))) and a['date']>=cutoff}
-          unknown=[d for d,a in articles.items() if not re.fullmatch(r'\d{4}-\d{2}-\d{2}',str(a.get('date','')))]
+          def valid_added_date(a):
+              value=a.get('addedDate')
+              if not isinstance(value,str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}',value):return False
+              try:datetime.date.fromisoformat(value)
+              except ValueError:return False
+              return True
+          current={d:a for d,a in articles.items() if valid_added_date(a) and a['addedDate']>=cutoff}
+          unknown=[d for d,a in articles.items() if not valid_added_date(a)]
           ready=[]; reused=[]; missing=[]
           for d,a in current.items():
               ev=evidence.get(d)
@@ -60,12 +69,12 @@ jobs:
               old=repo_summary.get('items',{}).get(d,{})
               if old.get('status')=='approved' and all(old.get(k)==ev.get(k) for k in ('sourceHash','evidencePacketHash')) and old.get('zh') and old.get('en'):reused.append(d)
               else:ready.append(d)
-          ready.sort(key=lambda d:(current[d].get('date',''),current[d].get('addedDate',''),str(evidence[d].get('capturedAt',''))),reverse=True)
-          report={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'repositoryCommit':os.environ['GITHUB_SHA'],'policy':policy,'counts':{'active':len(articles),'inScope':len(current),'existingCurrent':len(reused),'capturedPending':len(ready),'missingEvidence':len(missing),'ignoredOlder':len(articles)-len(current)-len(unknown),'unknownDate':len(unknown)},'inScopeArticles':list(current.values()),'readyDois':ready,'reusedDois':reused,'missingEvidenceDois':missing,'unknownDateDois':unknown,'results':[]}
+          ready.sort(key=lambda d:(current[d].get('addedDate',''),current[d].get('date',''),str(evidence[d].get('capturedAt',''))),reverse=True)
+          report={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'repositoryCommit':os.environ['GITHUB_SHA'],'policy':policy,'scopeDateField':'addedDate','counts':{'active':len(articles),'inScope':len(current),'existingCurrent':len(reused),'capturedPending':len(ready),'missingEvidence':len(missing),'ignoredOlder':len(articles)-len(current)-len(unknown),'unknownDate':len(unknown)},'inScopeArticles':list(current.values()),'readyDois':ready,'reusedDois':reused,'missingEvidenceDois':missing,'unknownDateDois':unknown,'results':[]}
           save('plan.json',report);save('summary-baseline.json',repo_summary);save('registry.json',registry);save('inventory.json',inventory)
           print('SUMMARY_CUTOFF_PLAN '+json.dumps(report['counts']),flush=True)
           def collect(d):
-              result={'doi':d,'articleDate':current[d]['date'],'evidenceLevel':evidence[d].get('evidenceLevel')}
+              result={'doi':d,'articleDate':current[d].get('date'),'addedDate':current[d]['addedDate'],'evidenceLevel':evidence[d].get('evidenceLevel')}
               try:
                   base='/api/article-summary/scheduled-handoff?doi='+urllib.parse.quote(d,safe='')+'&partSize=6000&part='
                   first=get(base+'0')
