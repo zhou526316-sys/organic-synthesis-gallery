@@ -18,7 +18,7 @@ const functionSource=(s,name)=>{
 };
 const protectedFunctions=[
   'articleFigureResolution','collectArticleFigureCandidates',
-  'rscBodyFigureContext','collectCandidates','svgQuality',
+  'rscBodyFigureContext','svgQuality',
   'waitForPairedVisuals','acquireBestVisual','privatePdfHostAllowed',
   'discoverExplicitPdfCandidates','privatePdfBytesValid',
   'waitForPrivatePdfCandidates','fetchExplicitPdf','uploadPrivatePdf'
@@ -27,6 +27,26 @@ for(const name of protectedFunctions){
   assert.equal(functionSource(source,name),functionSource(original,name),
     'published acquisition code unexpectedly modified: '+name);
 }
+// This newly user-approved Wiley-only admission guard is the ONLY permitted
+// exception to the immutable general collectCandidates implementation.
+// Strip the exact scoped guard and verify every other byte against the pinned
+// production baseline. This does not exempt non-Wiley acquisition changes.
+const actualCollect=functionSource(source,'collectCandidates');
+const originalCollect=functionSource(original,'collectCandidates');
+const guardStart="      if (String(job && job.publisher || '') === 'wiley' && row && row.kind === 'official') {";
+const afterGuard="      if(seen.has(row.url)){diag.duplicate++;return;}";
+const first=actualCollect.indexOf(guardStart);
+const last=actualCollect.indexOf(afterGuard,first);
+assert.ok(first>0&&last>first,'Wiley-specific GA guard must remain within candidate admission');
+const guard=actualCollect.slice(first,last);
+for(const needle of ['wileyAssetHostAllowed(row.url)','wileyGaAssetMatchesDoi(row.url, job)',
+  'wileyBodyOnlyVisual(row.element)','wileyBodySourceCollision(row.url, scope',
+  "(!wileyGaUrlSignal(row.url) && !supportedMeta)",'return;']){
+  assert.ok(guard.includes(needle),'Wiley GA admission guard lost '+needle);
+}
+assert.equal(actualCollect.slice(0,first)+actualCollect.slice(last),originalCollect,
+  'unapproved non-Wiley or general candidate-discovery change');
+
 assert.ok(source.includes("OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1'"));
 assert.ok(source.includes("PRIVATE_PDF_INVENTORY_ENDPOINT = WORKER + '/api/private-pdf/capture-inventory'"));
 assert.ok(source.includes("var scopedArticles=queue.articles.filter(recentFullCaptureEligible)"));
