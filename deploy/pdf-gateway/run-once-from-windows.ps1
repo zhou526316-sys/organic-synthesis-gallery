@@ -15,7 +15,7 @@ if (-not (Get-Command ssh.exe -ErrorAction SilentlyContinue)) {
     throw 'Windows OpenSSH client not found: ssh.exe'
 }
 $Server = $SshUser + '@relay.gczhouwld.com'
-$PinnedSource = 'f36fc03b2747f1fbaac2799854b62c04dd594b16'
+$PinnedSource = '5693dd5a43f46cc9fd35842983b308b4c9c08fb5'
 $GithubRaw = 'https://raw.githubusercontent.com/zhou526316-sys/organic-synthesis-gallery/' + $PinnedSource + '/deploy/pdf-gateway'
 $RemoteMode = switch ($Mode) {
     'Preflight' { '--preflight' }
