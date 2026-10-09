@@ -1,5 +1,5 @@
 {
-  "requestId": "retrospective-qiu-nature-synthesis-20261010-r3-science-source-qa",
+  "requestId": "retrospective-qiu-nature-synthesis-20261010-r4-same-media-concept-cover",
   "requestedAt": "2026-10-09T23:05:00+08:00",
   "action": "sync_retrospective_draft",
   "slug": "alcohols-electrochemical-crosscoupling-qiu-20261010-r3",
@@ -7,8 +7,11 @@
   "reviewGate": "audit/wechat-working/retrospective-alcohols-electrochemical-crosscoupling-qiu-20261010-r3-review-gate.json",
   "selectedDoi": "10.1038/s44160-026-01128-y",
   "targetDateBeijing": "2026-10-10",
-  "expectedManifestBlobSha": "5119f2e52d58003e2329f0907440d63ffb30746a",
-  "reason": "User explicitly selected tomorrow's Nature Synthesis retrospective. R3 verified all 31 original scientific figure captions against official publisher exact label regex; source-locked images and concept cover present, images 32 assets; import run 37952410442 passed, original unnumbered SI comparison retained only as cited prose. Create standalone retro WeChat draft and draft/get preview only; do not send or substitute Oct10 daily-feature DOI.",
+  "expectedManifestBlobSha": "930d83111be384940f6dd9cc6f9bed79eeba031e",
+  "existingMediaId": "KhELYUzvwADwB_l1xH1SWIqqwCMJEpfxgkJaNxcK4UF7Mdad-65gIcqYlUYTjxn8",
+  "expectedArticleCount": 1,
+  "reason": "R4 review 37953471177 succeeds: replace only the user-requested no-bubble concept cover, two exact PDF Fig1c molecular cutouts larger with comfortable mobile presentation; 31 original science figure bytes/text unchanged. Reuse SAME retrospective slug, update SAME media_id from official R3 draft/get, demand draft/get readback and fresh URL. No Oct10 daily selection, do not publish.",
   "draftOnly": true,
-  "publicSendAuthorized": false
+  "publicSendAuthorized": false,
+  "requireDraftGetReadback": true
 }
