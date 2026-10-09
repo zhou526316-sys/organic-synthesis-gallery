@@ -1,19 +1,19 @@
 {
-  "requestId": "wechat-2026-10-10-qiu-r2-fig-label-standards-reviewed-import",
+  "requestId": "wechat-2026-10-10-qiu-r3-exact-fig-identifiers-import",
   "requestedAt": "2026-10-09T23:05:00+08:00",
   "action": "import_reviewed_editorial_package",
-  "revision": "2026-10-10-qiu-r2",
+  "revision": "2026-10-10-qiu-r3",
   "doi": "10.1038/s44160-026-01128-y",
   "targetDateBeijing": "2026-10-10",
-  "packageUrl": "https://at.adobe.com/gcr0xCl7bFSwzJpn",
-  "packageSha256": "48512494d1320ab4e5a8179b0e585e689eea1defa977bc910a97af0a984dadbe",
-  "manifestPath": "public/wechat-retrospective/alcohols-electrochemical-crosscoupling-qiu-20261010-r2.json",
-  "gatePath": "audit/wechat-working/retrospective-alcohols-electrochemical-crosscoupling-qiu-20261010-r2-review-gate.json",
+  "packageUrl": "https://at.adobe.com/AOaaHNB20PiMVocU",
+  "packageSha256": "c51ff8af54966ac77ac47117c05cb343956fe933663c102f6046df5fafbe4170",
+  "manifestPath": "public/wechat-retrospective/alcohols-electrochemical-crosscoupling-qiu-20261010-r3.json",
+  "gatePath": "audit/wechat-working/retrospective-alcohols-electrochemical-crosscoupling-qiu-20261010-r3-review-gate.json",
   "expectedArticleCount": 1,
   "expectedDois": [
     "10.1038/s44160-026-01128-y"
   ],
   "thisStepWritesDraft": false,
   "publicSendAuthorized": false,
-  "note": "Corrects R1 fatal publisher caption lint by adding manuscript-accurate Fig./SI Fig./SI Table identifiers to every used science image, with a brand new independently hashed review gate and source manifest. All 33 reviewed raster assets identical to prior imported true-PDF originals; no AI chemical redrawing. No daily pick, no public sending."
+  "note": "R3 complete strict publisher caption regex preflight: all 31 numbered source figures valid. Deliberately omit unnumbered SI section 5.7 illustration while retaining its factual discussion. 31 main/SI original body figures plus 1 source-locked cover. This import is source-only, and user did not select Oct10 daily feature."
 }
