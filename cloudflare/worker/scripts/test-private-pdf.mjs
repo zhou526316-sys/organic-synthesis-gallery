@@ -313,11 +313,11 @@ await test('ordinary account never receives private document existence or bytes'
   const o=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','other-token',{method:'POST'}),env);
   assert.equal(o.status,403);
 });
-await test('fast ticket remains independent of capability changes but requires an active session',async()=>{
+await test('fast ticket requires both an active session and continuing read capability',async()=>{
   const beforeDb=db.firstCalls;
   db.capabilities.delete('owner|private_pdf_read');
   const res=await servePrivatePdf(new Request(accessUrl,{headers:{range:'bytes=0-7'}}),env,{});
-  assert.equal(res.status,206);assert.equal(db.firstCalls,beforeDb+1,'one indexed session read is required');
+  assert.equal(res.status,401);assert.equal(db.firstCalls,beforeDb+1,'one indexed session and capability lookup is required');
   db.capabilities.set('owner|private_pdf_read',{});
 });
 await test('legacy opaque ticket still supports immediate capability revocation',async()=>{
