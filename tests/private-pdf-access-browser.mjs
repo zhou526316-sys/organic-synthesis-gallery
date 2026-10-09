@@ -71,6 +71,7 @@ async function test(name,fn){
         pathname: location.pathname,
         viewerState: document.documentElement.dataset.privatePdfViewer || '',
         phase: document.documentElement.dataset.privatePdfPhase || '',
+        initFailure: document.documentElement.dataset.pdfContinuousInitFailure || '',
         message: document.querySelector('#status')?.textContent?.slice(0,180) || '',
         stageChildren: document.querySelector('#stage')?.children.length ?? null,
         pageSlots: document.querySelectorAll('.pdfViewer .page').length,
