@@ -1,0 +1,864 @@
+{
+  "slug": "alcohols-electrochemical-crosscoupling-qiu-20261010-r2",
+  "title": "往期精选｜Nature Synthesis｜邱友爱等：醇与醇的电化学脱羟基交叉偶联",
+  "headline": "醇与醇的电化学脱羟基交叉偶联",
+  "kicker": "往期精选｜Nature Synthesis",
+  "digest": "邱友爱等报道醇原位活化与镍催化电解耦合实现 C(sp³)–C(sp³) 交叉偶联；重点解读析氢诱导的电位变化、Ni(I)/Ni(0) 证据、反应局限与合成应用。",
+  "source_url": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01128-y",
+  "paper": {
+    "doi": "10.1038/s44160-026-01128-y",
+    "title": "Electrochemical C(sp3)–C(sp3) cross-coupling of alcohols",
+    "journal": "Nature Synthesis",
+    "authors": "Yanwei Wang, Yushi Jiang, Weikang Qi, Youai Qiu",
+    "publishedOnline": "2026-07-24"
+  },
+  "quick_points": [
+    {
+      "label": "反应做成了什么",
+      "text": "以醇为烷基来源，经 Vilsmeier 型试剂原位脱羟基活化，再经镍催化电解形成 C(sp³)–C(sp³) 键；还可利用 CD₃OD 进行选择性氘代甲基化。"
+    },
+    {
+      "label": "为什么难",
+      "text": "两种醇的活化、活化副产物的兼容性、均偶联竞争，以及阴极析氢对镍还原条件的影响，必须同时协调。"
+    },
+    {
+      "label": "最值得关注的证据",
+      "text": "原文 Fig. 5d / SI 图 S8、S14/S15 记录卤代烷烃先生成、析氢阶段以及工作电位负移；Ni(I)/Ni(0) 可能随卤代物种类变化。"
+    }
+  ],
+  "lead_figure_id": "f01",
+  "lead_figure_position": "after_first_quick_point",
+  "sections": [
+    {
+      "heading": "读这篇论文，先明确真正要解决的问题",
+      "paragraphs": [
+        "从有机合成的角度看，醇既便宜又容易获得，羟基也常出现在复杂天然产物和药物片段中。但想让两个醇各自去掉一个羟基，再选择性地接成一根 C(sp³)–C(sp³) 键，远不像纸面上写下“ROH + R′OH → R–R′”那么简单：C–O 键不易直接断裂；两种醇都需活化；得到的两个烷基片段还可能各自均偶联。",
+        "邱友爱团队把一个长期存在的合成矛盾拆解成三个先后衔接的问题：怎样让醇快速变成能被镍活化的前体？活化时产生的副产物会不会破坏催化？在两种活性烷基片段共存时，怎样仍然以交叉偶联为主？他们使用 Vilsmeier 类试剂原位活化醇，再通过镍催化电解完成 C–C 成键，展示了从甲醇、氘代甲醇到结构复杂醇的多种组合。本文最值得仔细读的，不只是广泛的产物表，而是反应活化、阴极析氢、工作电位和镍催化之间被实验揭示的时间关系。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    },
+    {
+      "heading": "从容易得到的醇出发，最难的为什么不是“有无催化剂”？",
+      "paragraphs": [
+        "原文图 1a 说明了醇作为碳源的供应优势；但供应量大并不意味着它适合直接参与还原交叉偶联。醇的 C(sp³)–O 键本身不易被普通镍催化循环活化，羟基又不是合适的离去基团。过去常用的 Mitsunobu 型活化会产生化学计量的膦氧；NHC 辅助、苯并噁唑鎓盐活化等方法虽能切断 C–O 键，却也需要考虑活化副产物的化学兼容性。原文图 1b 把这些思路放在同一张图上比较。",
+        "这项工作的设计要求比“把醇转成卤代物再偶联”更严格：两种醇的活化要尽可能同步；原位生成的含氧副产物不能明显毒化镍催化剂；两个相似的烷基前体同时存在时，偶联还要压过均偶联。因此，作者采用活化剂与电化学还原互相配合的策略。原文图 1c 是理解全文的起点，其中列出的代表性后期修饰只是方法用途的展示，不能替代机理证据。"
+      ],
+      "figures": [
+        "f02",
+        "f03"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "f02",
+          "f03"
+        ]
+      }
+    },
+    {
+      "heading": "真正让“醇–醇偶联”走起来的，是哪一步化学活化？",
+      "paragraphs": [
+        "作者使用 Vilsmeier 型试剂实现原位脱羟基活化，其中碘代型 A-3 对模型反应最有利。以 1-萘基乙醇与甲醇为例，主文图 2 顶部给出活化剂比较：A-1、A-2、A-3、A-4、A-5 分别对应约 22%、61%、78%、76% 和痕量的目标产物（筛选值；正式分离产率需单独查阅图 2 底物结果）。补充材料表 S1 还表明，去掉活化剂时目标产物为 0。A-3 并不是少量催化添加剂，而是按两种醇的总量计约 1.1 当量的化学活化剂。",
+        "核心的反应路径是：醇进攻活化试剂，C–O 键断裂，羟基的氧转移到能形成 DMF 的含氮骨架，原位产生碘代烷烃。这里“醇可直接用作原料”的意义，是不必先单独制备、纯化每一种卤代烷烃；并不意味着没有化学计量试剂或没有卤代烃中间体。补充材料中不同醇与 A-2/A-3 的核磁活化实验也支持这一步能够在加热条件下发生。",
+        "活化体系同样有边界。补充材料表 S3 显示，DMF 的模型收率为 78%，DMA 为 34%，NMP 为 70%，MeCN 和 DMSO 均未得到目标产物。因而 DMF 不能只被看作一种可以任意更换的溶剂；它同时关系到活化试剂的副产物兼容性、镍物种稳定性和电解过程。"
+      ],
+      "figures": [
+        "f04",
+        "s01",
+        "s03"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "f04",
+          "s01"
+        ],
+        "3": [
+          "s03"
+        ]
+      }
+    },
+    {
+      "heading": "一个反常的时间序列：为什么电流先去析氢，随后才大量成键？",
+      "paragraphs": [
+        "原文图 5d 与补充材料图 S8 给出了全篇最有启发性的实验之一。作者在代表性醇–甲醇体系中监测到，反应开始后约 3 分钟，醇已基本转化成相应碘代烷烃；在最初约 1 小时内，目标偶联产物仍很少。随后卤代物逐步消耗，甲基化产物开始累积，6 小时附近达到约 80% 的核磁收率。副产均偶联也在后期少量出现。",
+        "作者将这一“先活化、后偶联”的滞后与质子浓度和阴极析氢联系起来。醇的脱羟基活化会产生酸，初期阴极电子优先用于还原质子。随着质子被消耗，阴极电位在恒电流下转向更负，镍配合物的还原才能更有效地发生。所谓电解环境的“自调节”，在这里是可测量的反应历程，而不是电化学体系天然具有的普遍优点。",
+        "补充材料图 S14 进一步记录：使用 A-3 时，初始约 50 分钟阴极电位为 −1.34 至 −1.56 V（相对于 Ag/AgNO₃），随后主要位于 −1.59 至 −1.85 V。这个区间与 Ni(II)/Ni(I) 还原窗口的重叠更明显。需要区分，“工作电位落入某氧化还原窗口”支持某类镍物种的可达性，不等于反应液中的所有镍都只保持一种价态，也不是对单一速率决定步骤的直接证明。"
+      ],
+      "figures": [
+        "f19",
+        "s10",
+        "s13"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "f19",
+          "s10"
+        ],
+        "3": [
+          "s13"
+        ]
+      }
+    },
+    {
+      "heading": "Ni(I) 还是 Ni(0)：哪些实验证据足以约束催化循环？",
+      "paragraphs": [
+        "原文图 5a 的循环伏安在所用 DMF/电解质及参比体系下给出两个代表性还原峰：约 −1.69 V（Ni(II)/Ni(I)）和 −2.06 V（Ni(I)/Ni(0)），均相对于 Ag/AgNO₃。在加入碘代烷烃后，两处区域均出现催化电流变化；加入溴代烷烃时，主要在更负的 Ni(I)/Ni(0) 区域出现响应。这个差异提示卤代物的种类会改变所需的镍还原态。",
+        "比伏安图更有区分力的是原文图 5c 的化学计量对照。在不通电的试验条件下，由 Ni(cod)₂/L1 原位制得的 Ni(0) 配合物参与碘代烷烃与 MeI 的反应，目标产物为 19%；测试的 Ni(I) 物种给出 5%，Ni(II) 前体未得到目标产物。这并不能推出 Ni(0) 是标准电解条件下唯一活性物种；它说明低价镍具有引发相关化学步骤的能力，且不同镍物种的反应效率不相同。",
+        "另一组对照使用预制烷基镍配合物。甲基–Ni(I) 在所测无电极条件下给出约 25% 的甲基化产物；甲基–Ni(II) 对应实验约 6%，而在电解条件下还观察到 12% 的目标偶联与 39% 的均偶联。因而“某一化学计量镍配合物反应表现一般”只能说明它不能高效复现完整电催化体系，不能单独证明或排除该价态在真实催化循环中的参与。",
+        "据此，作者对以 A-3 原位生成碘代烷烃的体系，提出 Ni(I)/Ni(II)/Ni(III) 的循环模型（原文图 5e）。补充材料图 S15 又表明，当使用 A-2、原位生成溴代烷烃时，阴极电位更负，可能进入 Ni(I) → Ni(0) 的还原区域。论文没有证明所有底物、活化剂和电极条件都遵循完全相同的镍价态路径。"
+      ],
+      "figures": [
+        "f16",
+        "s11",
+        "f18",
+        "f20",
+        "s14"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "f16",
+          "s11"
+        ],
+        "2": [
+          "f18"
+        ],
+        "3": [
+          "f20",
+          "s14"
+        ]
+      }
+    },
+    {
+      "heading": "是两条自由基相遇，还是镍把两种烷基片段组织到一起？",
+      "paragraphs": [
+        "原文图 5b 的自由基钟实验为烷基自由基的形成提供了较直接的间接证据：带末端烯烃的醇给出未环化产物 105（36%）和环化产物 106（17%）；环丙基甲醇则得到开环偶联产物 108（45%），而预期保环产物未检出。两组底物都符合反应过程中存在可发生分子内重排或开环的碳自由基。",
+        "但“检测到自由基特征产物”不等于已证明两种自由基在溶液中直接、无选择地偶遇成键。作者提出的循环包括烷基自由基与镍配合物之间的俘获及还原消除；这是为解释选择性交叉偶联提供的合理框架，其具体步骤的先后、各氧化态的寿命以及均偶联途径的竞争程度，仍需更多动力学或原位表征来进一步约束。"
+      ],
+      "figures": [
+        "f17"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "f17"
+        ]
+      }
+    },
+    {
+      "heading": "从 MeOH 到 CD₃OD：这项方法在“甲基效应”方面能做什么？",
+      "paragraphs": [
+        "原文图 2 首先系统展示了以甲醇或氘代甲醇为偶联原料的脱羟基甲基化。普通伯醇、芳基取代醇、杂环取代醇与部分手性氨基醇，都能将原来的羟基位点转化为新的 C–C 键。换成 CD₃OD 时，可以把 CD₃ 引入指定侧链位置，为同位素标记分子的合成提供路线。这种优势与“在目标分子上直接更换一个关键取代基”的药物化学需求密切相关。",
+        "不过，图 2 中部分二级醇、稠环或桥环底物需要切换到 L3、较低电流密度或先行单独活化。多环体系的 dr 也不是一律很高，例如 31 的 dr 仅约 1.5:1，甾体衍生物 47、48 在图中也分别只有约 2:1、1.4:1 的非对映选择性。对于含手性中心的氨基醇，作者观察到某些产物的手性得到保留，这不等于催化剂在该步骤新建了高 ee 的手性中心。",
+        "原文图 4a 将糖、糖苷、Corey lactone 二醇及 steroid 类复杂分子纳入氘代甲基化展示，证明该反应能够处理相对复杂的分子框架。但复杂分子之间收率和非对映选择性的差异较明显，不能由一张底物范围图推断所有后期修饰都具有相同效率。"
+      ],
+      "figures": [
+        "f05",
+        "f06",
+        "f11"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "f05"
+        ],
+        "2": [
+          "f06"
+        ],
+        "3": [
+          "f11"
+        ]
+      }
+    },
+    {
+      "heading": "醇的配对能走多远？四类组合不应被写成“一套通用条件”",
+      "paragraphs": [
+        "原文图 3 才是这项研究从“甲基化”迈向广义醇–醇交叉偶联的关键。伯醇–伯醇体系可形成链延长产物，部分烯基、醚基和含氮保护基得以保留；一个 Corey lactone 二醇示例中，作者优先活化伯羟基而保留另一个羟基，体现了条件相关的化学选择性。",
+        "随后，伯醇–仲醇和仲醇–仲醇偶联使方法覆盖更拥挤的 C(sp³) 连接位点。但三类底物并非沿用一套电解条件：典型伯醇–伯醇反应使用 Fe 阳极、泡沫镍阴极、L1、90 °C 和 25 mA cm⁻²；伯醇–仲醇常切换 L3 并以约 50 °C、15 mA cm⁻² 电解；仲醇–仲醇可经更高温度的预活化，在室温约 10 mA cm⁻² 下进行电解。这里对配体、温度和电流的调节，是解决不同烷基自由基反应性和活化难度的实际代价。",
+        "最需要单独说明的是三级醇–伯醇形成全碳季碳中心的示例。论文为此采用另一组 Ti 阳极、Cu 阴极、Ag₂O 和不同活化剂的操作路线，产物 85、86 的分离收率分别约 42% 和 32%。补充材料还指出，一些三级醇在 DMF 等较弱碱性溶剂中容易消除，因此要调整活化溶剂与操作流程。它们属于扩展方法，不是标准 Fe/Ni 条件可以直接包办的证据。"
+      ],
+      "figures": [
+        "f07",
+        "f08",
+        "f09",
+        "f10"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "f07",
+          "f08",
+          "f09"
+        ],
+        "2": [
+          "f10"
+        ]
+      }
+    },
+    {
+      "heading": "合成应用证明了什么，哪些结论还不能外推？",
+      "paragraphs": [
+        "原文图 4b 中，作者从手性哌啶醇制备 (S)-3-乙基哌啶衍生物：代表性甲基化产物 94 为 85% 收率，超过 99% ee；CD₃OD 对应的 94′ 为 82% 收率、超过 99% ee。这里的“高 ee”主要反映底物原有立体信息得到保留，不能宣称本文已经实现手性醇的普遍不对称去羟基偶联。",
+        "同一图还展示了用于 CCR3 拮抗剂前体的芳基化转化，代表性产物 100 为 92% 收率、超过 99% ee。须强调：这一实例使用的是醇与芳基碘化物，而非两个醇直接交叉偶联，不能把它统计成新醇–醇适用范围。rac-traumatic lactone 的例子则经偶联及后续水解得到目标内酯，整条路线仍包括附加转化步骤。",
+        "补充材料记录了一个更贴近放大的检验：4 mmol 规模的产物 54 在 400 mA 电流、5 小时电解后获得 1.16 g、70% 的分离收率。这说明该体系不局限于 0.3 mmol 的筛选规模，却距离不经优化的连续化生产仍有差距；放大实验仍使用化学计量活化剂、较大量 DMF、过量醇及牺牲铁阳极。"
+      ],
+      "figures": [
+        "f12",
+        "f13",
+        "f14",
+        "f15",
+        "s07"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "f12",
+          "f13"
+        ],
+        "2": [
+          "f14",
+          "f15"
+        ],
+        "3": [
+          "s07"
+        ]
+      }
+    },
+    {
+      "heading": "SI 中最有价值的反面证据：交叉选择性需要付出什么？",
+      "paragraphs": [
+        "补充材料表 S6 表明，模型反应将甲醇由 3.0 当量降至 1.5 当量时，目标产物的核磁收率由 78% 降至 53%，伴随均偶联副产物增多。这说明高浓度的某一偶联伙伴是抑制不利竞争的一种实用手段，而不是“天然高选择性”的免费优势。补充材料第 5.7 节还给出不同类别醇之间的均偶联数据：两种伯醇的某个测试中，过量醇对应的均偶联副产物可达约 32%；两种仲醇时也有明显竞争。",
+        "电解本身的代价也值得放回评价体系。补充材料表 S11 对许多标准反应记录了约 18.7 F mol⁻¹ 的投入电量，远高于一个简单两电子反应的理论电子数；电极筛选中，Fe/泡沫镍比改用石墨毡等组合更适用，提示电极并不是可随意替换的惰性导线。因而论文的主要价值在于新的合成连接能力和反应网络控制，而不能据“电作还原剂”就直接得出“低能耗、零废物、完全绿色”的结论。",
+        "补充材料还记录了失败或低效的底物，以及碘代烷烃生成阶段可能发生的消除反应。特别是一些环己基仲醇活化时易形成烯烃；某些三级醇在 DMF/DMA/NMP 中更容易发生消除。由此看来，制约这一方法的并不只是催化剂能否捕获自由基，还有第一阶段脱羟基活化能否避开底物本身的分解路径。"
+      ],
+      "figures": [
+        "s05",
+        "s15",
+        "s04",
+        "s16",
+        "s08"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "s05",
+          "s15"
+        ],
+        "2": [
+          "s04",
+          "s16"
+        ],
+        "3": [
+          "s08"
+        ]
+      }
+    },
+    {
+      "heading": "这篇论文可以带走的设计思想",
+      "paragraphs": [
+        "该工作提供的思路不是某一种具体镍催化循环的普遍“定式”，而是在一个原位产生离去基团、酸、卤代烷烃和自由基的复杂体系中，识别各个阶段真正控制选择性的因素。活化试剂的副产物能否与催化剂共存、阴极析氢能否改变竞争反应发生的时间、电位能否覆盖所需镍物种的还原区间，这些因素被放在同一个操作体系中考察。",
+        "从方法学角度，还有值得继续追究的问题：能否降低活化剂和过量醇的需求？能否在较低输入电荷下维持高交叉选择性？能否通过原位光谱或时间分辨实验更清楚地区分 Ni(I)、Ni(0) 的真实作用？对于不同卤代物，电极材料和电位历程是否需要独立优化？这些并不是否定工作本身，而是说明从“能够合成”走向“可预测、可放大、可持续”仍有明确的研究空间。",
+        "原始资料：Wang, Y.; Jiang, Y.; Qi, W.; Qiu, Y. Nature Synthesis, DOI 10.1038/s44160-026-01128-y。科学结构、实验结果、反应条件和数据以正文图 1–5 及 251 页补充材料为准。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    }
+  ],
+  "figures": [
+    {
+      "id": "f01",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f01.png",
+      "caption": "原文 Fig. 1c｜双醇原位脱羟基交叉偶联设计：活化剂与镍电解耦合；代表性应用不等于机理结论。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 1c",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 2,
+      "source_crop_fraction": [
+        0.083988,
+        0.401627,
+        0.923873,
+        0.60021
+      ]
+    },
+    {
+      "id": "f02",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f02.png",
+      "caption": "原文 Fig. 1a｜各种烷基前体的供应和交叉偶联使用情况：醇的原料优势。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 1a",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 2,
+      "source_crop_fraction": [
+        0.082012,
+        0.074375,
+        0.924861,
+        0.213457
+      ]
+    },
+    {
+      "id": "f03",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f03.png",
+      "caption": "原文 Fig. 1b｜Mitsunobu、NHC 与 CEBO 原位脱羟基活化策略及其副产物。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 1b",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 2,
+      "source_crop_fraction": [
+        0.079048,
+        0.218664,
+        0.926837,
+        0.388984
+      ]
+    },
+    {
+      "id": "f04",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f04.png",
+      "caption": "原文 Fig. 2 顶部｜A-1–A-5 活化剂筛选与模型醇甲基化；78% 为筛选测定值。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 2 顶部",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 3,
+      "source_crop_fraction": [
+        0.079048,
+        0.06545,
+        0.929801,
+        0.17627
+      ]
+    },
+    {
+      "id": "s01",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s01.png",
+      "caption": "SI Table S1｜Vilsmeier 活化剂 A-1–A-13 与无活化剂对照；目标产物和均偶联副产物。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "补充材料表 S1",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "SI",
+      "source_pdf_page": 5,
+      "source_crop_fraction": [
+        0.138334,
+        0.052401,
+        0.861623,
+        0.508641
+      ]
+    },
+    {
+      "id": "s03",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s03.png",
+      "caption": "SI Table S3｜溶剂对照：DMF、DMA、NMP、MeCN、DMSO。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "补充材料表 S3",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "SI",
+      "source_pdf_page": 6,
+      "source_crop_fraction": [
+        0.133393,
+        0.550562,
+        0.859646,
+        0.878943
+      ]
+    },
+    {
+      "id": "f19",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f19.png",
+      "caption": "原文 Fig. 5d｜活化卤代烷烃快速生成、初始 HER 及后期偶联增长的时间轨迹。",
+      "body": true,
+      "display_width_pct": 95,
+      "source_figure": "原文 Fig. 5d",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 7,
+      "source_crop_fraction": [
+        0.079048,
+        0.626241,
+        0.505907,
+        0.833749
+      ]
+    },
+    {
+      "id": "s10",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s10.png",
+      "caption": "SI Fig. S8｜3 分钟即生成卤代物的时间追踪，随后偶联逐渐开始。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "补充材料图 S8",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "SI",
+      "source_pdf_page": 41,
+      "source_crop_fraction": [
+        0.132405,
+        0.223579,
+        0.864587,
+        0.880341
+      ]
+    },
+    {
+      "id": "s13",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s13.png",
+      "caption": "SI Fig. S14｜A-3 反应中阴极工作电位随时间由较正转向 Ni(II)/Ni(I) 还原区域。",
+      "body": true,
+      "display_width_pct": 95,
+      "source_figure": "补充材料图 S14",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "SI",
+      "source_pdf_page": 45,
+      "source_crop_fraction": [
+        0.173905,
+        0.29694,
+        0.79542,
+        0.733617
+      ]
+    },
+    {
+      "id": "f16",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f16.png",
+      "caption": "原文 Fig. 5a｜镍配合物在烷基溴化物、碘化物存在下的不同伏安响应。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 5a",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 7,
+      "source_crop_fraction": [
+        0.079048,
+        0.069169,
+        0.922885,
+        0.28932
+      ]
+    },
+    {
+      "id": "s11",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s11.png",
+      "caption": "SI Fig. S9｜镍配合物 Ni(II)/Ni(I) 与 Ni(I)/Ni(0) 的伏安窗口和峰值。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "补充材料图 S9",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "SI",
+      "source_pdf_page": 42,
+      "source_crop_fraction": [
+        0.130429,
+        0.181658,
+        0.864587,
+        0.642788
+      ]
+    },
+    {
+      "id": "f18",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f18.png",
+      "caption": "原文 Fig. 5c｜预制 Ni(0)、Ni(I)、Ni(II) 与烷基镍配合物的化学计量对照。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 5c",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 7,
+      "source_crop_fraction": [
+        0.07806,
+        0.400884,
+        0.926837,
+        0.627729
+      ]
+    },
+    {
+      "id": "f20",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f20.png",
+      "caption": "原文 Fig. 5e｜作者提出的 Ni(I)/Ni(II)/Ni(III) 催化循环，属于工作模型。",
+      "body": true,
+      "display_width_pct": 95,
+      "source_figure": "原文 Fig. 5e",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 7,
+      "source_crop_fraction": [
+        0.503931,
+        0.626241,
+        0.925849,
+        0.831517
+      ]
+    },
+    {
+      "id": "s14",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s14.png",
+      "caption": "SI Fig. S15｜A-2 条件下阴极更负的电位历程，可能涉及 Ni(0)。",
+      "body": true,
+      "display_width_pct": 95,
+      "source_figure": "补充材料图 S15",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "SI",
+      "source_pdf_page": 46,
+      "source_crop_fraction": [
+        0.174894,
+        0.410826,
+        0.802337,
+        0.817459
+      ]
+    },
+    {
+      "id": "f17",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f17.png",
+      "caption": "原文 Fig. 5b｜自由基钟：环化与环丙基开环实验。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 5b",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 7,
+      "source_crop_fraction": [
+        0.07806,
+        0.290808,
+        0.927825,
+        0.402371
+      ]
+    },
+    {
+      "id": "f05",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f05.png",
+      "caption": "原文 Fig. 2 主体｜MeOH 与 CD₃OD 作为甲基及氘代甲基来源的底物适用范围。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 2 主体",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 3,
+      "source_crop_fraction": [
+        0.079048,
+        0.174782,
+        0.928813,
+        0.473772
+      ]
+    },
+    {
+      "id": "f06",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f06.png",
+      "caption": "原文 Fig. 2 下部｜药物片段和多环骨架的后期氘代甲基化及 dr 边界。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 2 下部",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 3,
+      "source_crop_fraction": [
+        0.079048,
+        0.473028,
+        0.928813,
+        0.838211
+      ]
+    },
+    {
+      "id": "f11",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f11.png",
+      "caption": "原文 Fig. 4a｜糖、天然产物、药物片段的氘代甲基化应用；甾体体系具有 dr 限制。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 4a",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 6,
+      "source_crop_fraction": [
+        0.080036,
+        0.069913,
+        0.927825,
+        0.293783
+      ]
+    },
+    {
+      "id": "f07",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f07.png",
+      "caption": "原文 Fig. 3 顶部｜不同醇类型的交叉偶联通式、Fe/Ni 电极和配体 L1/L3。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 3 顶部",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 4,
+      "source_crop_fraction": [
+        0.081024,
+        0.063963,
+        0.927825,
+        0.155445
+      ]
+    },
+    {
+      "id": "f08",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f08.png",
+      "caption": "原文 Fig. 3 伯醇上部｜伯醇–伯醇的链延长、含氮杂环和含氧环结构。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 3 伯醇上部",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 4,
+      "source_crop_fraction": [
+        0.07806,
+        0.153957,
+        0.929801,
+        0.371877
+      ]
+    },
+    {
+      "id": "f09",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f09.png",
+      "caption": "原文 Fig. 3 伯醇下部及伯仲醇｜官能团容忍、羟基选择性及伯仲醇偶联实例。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 3 伯醇下部及伯仲醇",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 4,
+      "source_crop_fraction": [
+        0.07806,
+        0.371877,
+        0.929801,
+        0.571203
+      ]
+    },
+    {
+      "id": "f10",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f10.png",
+      "caption": "原文 Fig. 3 底部｜仲醇–仲醇以及三级–一级醇的扩展条件与不同收率。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 3 底部",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 4,
+      "source_crop_fraction": [
+        0.07806,
+        0.57046,
+        0.927825,
+        0.754911
+      ]
+    },
+    {
+      "id": "f12",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f12.png",
+      "caption": "原文 Fig. 4b(i)｜从手性哌啶醇出发构建吲哚并喹嗪生物碱前体。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 4b(i)",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 6,
+      "source_crop_fraction": [
+        0.080036,
+        0.290064,
+        0.923873,
+        0.463359
+      ]
+    },
+    {
+      "id": "f13",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f13.png",
+      "caption": "原文 Fig. 4b(ii)｜CD₃OD 参与合成含氘吲哚并喹嗪衍生物。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 4b(ii)",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 6,
+      "source_crop_fraction": [
+        0.080036,
+        0.467078,
+        0.925849,
+        0.563022
+      ]
+    },
+    {
+      "id": "f14",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f14.png",
+      "caption": "原文 Fig. 4b(iii)｜醇与芳基碘化物偶联构建 CCR3 拮抗剂前体：不是醇–醇偶联。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 4b(iii)",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 6,
+      "source_crop_fraction": [
+        0.080036,
+        0.563766,
+        0.928813,
+        0.736317
+      ]
+    },
+    {
+      "id": "f15",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f15.png",
+      "caption": "原文 Fig. 4b(iv)｜rac-traumatic lactone 的偶联与后续水解合成路线。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "原文 Fig. 4b(iv)",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "main",
+      "source_pdf_page": 6,
+      "source_crop_fraction": [
+        0.080036,
+        0.739292,
+        0.928813,
+        0.817386
+      ]
+    },
+    {
+      "id": "s07",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s07.png",
+      "caption": "SI Fig. S2｜4 mmol、1.16 g 放大的装置及条件；Fe/Ni 电极与实际操作。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "补充材料图 S2",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "SI",
+      "source_pdf_page": 18,
+      "source_crop_fraction": [
+        0.138334,
+        0.094322,
+        0.869527,
+        0.524012
+      ]
+    },
+    {
+      "id": "s05",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s05.png",
+      "caption": "SI Table S6｜降低 MeOH 当量后目标收率下降、均偶联增加。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "补充材料表 S6",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "SI",
+      "source_pdf_page": 8,
+      "source_crop_fraction": [
+        0.133393,
+        0.51982,
+        0.869527,
+        0.890821
+      ]
+    },
+    {
+      "id": "s15",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s15.png",
+      "caption": "补充材料第 47 页竞争产物对照｜不同醇配对中的均偶联副产物与交叉选择性的竞争。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "补充材料第 47 页竞争产物对照",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "SI",
+      "source_pdf_page": 48,
+      "source_crop_fraction": [
+        0.134382,
+        0.073362,
+        0.864587,
+        0.890821
+      ]
+    },
+    {
+      "id": "s04",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s04.png",
+      "caption": "SI Table S4｜电极材料对照：Fe 阳极和泡沫镍阴极更有效。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "补充材料表 S4",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "SI",
+      "source_pdf_page": 7,
+      "source_crop_fraction": [
+        0.126477,
+        0.051004,
+        0.859646,
+        0.579907
+      ]
+    },
+    {
+      "id": "s16",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s16.png",
+      "caption": "SI Table S11（节选）｜按产物统计电荷投入，标准条件多数为约 18.7 F mol⁻¹。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "补充材料表 S11（节选）",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "SI",
+      "source_pdf_page": 19,
+      "source_crop_fraction": [
+        0.128453,
+        0.055895,
+        0.869527,
+        0.518423
+      ]
+    },
+    {
+      "id": "s08",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s08.png",
+      "caption": "SI Fig. S7（下半部）｜反应边界：不适用的官能团及反应体系，报告低效或未检出。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "补充材料图 S7（下半部）",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "exact_unchanged_source_pdf_crop",
+      "pdf_source": "SI",
+      "source_pdf_page": 27,
+      "source_crop_fraction": [
+        0.143274,
+        0.374494,
+        0.89423,
+        0.740604
+      ]
+    },
+    {
+      "id": "retro-cover",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/2026-10-10-qiu-electrolysis-source-chemistry-cover.png",
+      "caption": "",
+      "body": false,
+      "display_width_pct": 100,
+      "source_figure": "Nature Synthesis Fig. 1c original source molecular cutouts",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "source_exact_cutouts_on_nonmolecular_concept_background",
+      "source_adjustment": "Four figures from exact original Fig.1c clipped and background alpha processed; foreground RGB unmodified; Fe electrode and Ni foam illustrative schematic; no generated atomic structures."
+    }
+  ],
+  "cover": {
+    "source_figure_id": "retro-cover",
+    "canvas": {
+      "width": 1254,
+      "height": 1254,
+      "background": "#112d49"
+    },
+    "crop_1_1": "0_0_1_1",
+    "crop_235_1": "0_0.287234_1_0.712766",
+    "description": "Subdued modern chemistry editorial, NO bubbles. All four source chemical structures cut directly from original Fig1c and preserve original foreground RGB; electrode and flow symbols are artistic conceptual. Native square cover for retrospective second card."
+  },
+  "ai_notice": "本文根据作者公开论文正文与 251 页补充材料独立整理。分子结构、谱图与数据采用原文裁切；概念封面仅用于辅助理解，不作为机理证据。",
+  "editorialRevision": "2026-10-10-qiu-r2",
+  "targetDateBeijing": "2026-10-10"
+}
