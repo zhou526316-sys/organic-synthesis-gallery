@@ -1,0 +1,379 @@
+{
+  "date": "2026-10-09",
+  "revision": "2026-10-09-r1",
+  "articleCount": 2,
+  "strictFigurePlacement": true,
+  "selectionDois": [
+    "10.1126/science.aef3001",
+    "10.1126/science.aeh7895"
+  ],
+  "expectedArticleOrder": [
+    "10.1126/science.aef3001",
+    "10.1126/science.aeh7895"
+  ],
+  "artifacts": {
+    "textOnly": "audit/wechat-working/2026-10-09-r1-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-09-r1-images-only.md"
+  },
+  "sources": [
+    {
+      "path": "public/wechat-featured/2026-10-09.json",
+      "blobSha": "38ee768951715801ee3b0074c9c6a662f8c13442",
+      "sha256": "df71138e4970da97f89fb3840bf391a6fd059c6908e90e8054e9809b6dbda227"
+    },
+    {
+      "path": "public/wechat-retrospective/science-aeh7895-hezhi-tao-20261009.json",
+      "blobSha": "45e3117fdd8e7f18a8c1e6d42e4e7a6c68f6faf3",
+      "sha256": "b9335b7f07f96dc2147d700c4367b9b7fd91a9ea611e175b05b43a15255c21d7"
+    },
+    {
+      "path": "public/wechat-editions/2026-10-09.json",
+      "blobSha": "eaf1cc82f970756352e849cafa15b2a4c4ed39f5",
+      "sha256": "4cffa92d5ac5aa0b211629bda371bfb74f134ac657b6a49e68128ccb2d140772"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-09-r1-text-only.md",
+      "blobSha": "5b83c8039ef7708361c911ec189ee940341b5286",
+      "sha256": "cc0bf6942a502863141ea2ba5a002fff5938c44cee63db2aabb1684526e6ffce"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-09-r1-images-only.md",
+      "blobSha": "7516f4e87ea9ea3a60c73e1a01afded5f0c48735",
+      "sha256": "96017cbf108e35f3627977b3b03139ebca7ee15f7e2402a14f2133d6f4611f68"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-09-science-aeh7895-text-only.md",
+      "blobSha": "630f6aa1b850242902f78b6aefd0998999c3d418",
+      "sha256": "9051bda71c9690889a17c92efca016ec8515c26804b21e5fc3a66f304830bb84"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-09-science-aeh7895-images-only.md",
+      "blobSha": "6c2d9ad9f25697e7b127d7911791426aa58a49a9",
+      "sha256": "f3577149034bf64b416ea7d6ee2a123d183cfc6ee06425d2e72c5246c079c190"
+    }
+  ],
+  "assets": [
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig1b-comparison.png",
+      "blobSha": "2aaa0195b43e63b5ca1a78934475b8cf95c54a29",
+      "sha256": "7c5b54a7e3ed80d72d6977817cc3c945aef5417cf2a8c231ece80eda1c216a84",
+      "width": 1066,
+      "height": 211
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig1c-reaction.png",
+      "blobSha": "1ececbe5bc441914a4fa55bbb593cee80d6044ee",
+      "sha256": "89e60374b9a17c31da95f6fafdfb545781f42b8f3a577759d1e34aca9994fcb0",
+      "width": 1066,
+      "height": 161
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig1c-pathways.png",
+      "blobSha": "09dc031b3c3ce89808e65660b4e2cefcf7144dfb",
+      "sha256": "5b6bd3f529ad2bdbc9be330cd52705bef75e18040126d218cab2bea1991cd515",
+      "width": 1066,
+      "height": 577
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig2a-screen.png",
+      "blobSha": "1638f467b1ff8b7c5108f00cfec778733fe26e2e",
+      "sha256": "34607dcd66d14caef913a8a16ab93229c4f1d9c35ef5d48a95491f94ded9268b",
+      "width": 1098,
+      "height": 381
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig2b-evolution.png",
+      "blobSha": "3360972bdb7dad6a2270e12e95a8101a4571bf1a",
+      "sha256": "5f186f6092e8f40933ce7fa59e28546520fd8533c045a4d431bd0f3dd086047f",
+      "width": 1098,
+      "height": 454
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig3a-control.png",
+      "blobSha": "c38d26b3fd53efc58957b0b0a83d1cc77436d5c8",
+      "sha256": "9629563e627fcd621f5eac20b0f8ffa438ba45f4bc74402ce35699047525e4db",
+      "width": 687,
+      "height": 333
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig3b-ros.png",
+      "blobSha": "97c172f70b739778ffac31beb49b00e9ad58d8cb",
+      "sha256": "e0ccadf4f92bb8ea2534c3788e6d022a6311023f3297a62cfd6bb4a21fdcecb5",
+      "width": 687,
+      "height": 289
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig3c-peroxide.png",
+      "blobSha": "2ae07448e0356c811d3bd7cdd3bb8090bd7b8380",
+      "sha256": "35ae99ced906954f5969b1e94bc08386984d73e2f612195efc1cfccc6eda6218",
+      "width": 536,
+      "height": 290
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig3d-uvvis.png",
+      "blobSha": "a97b781bcb235f401483687f7a15da5ed6e132cc",
+      "sha256": "54523f26ef8a0299613a0b55b29593ed5f7e0b02723b52a79032d8a275da9b40",
+      "width": 309,
+      "height": 298
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig3e-epr.png",
+      "blobSha": "0c5860351c6f0f27ea1aa3979980e9b810b14eb3",
+      "sha256": "911f8470c49d321077946462a589be5dac106255f581e6efe20603658ecf3b15",
+      "width": 561,
+      "height": 612
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig3f-deuterium.png",
+      "blobSha": "8c685ff92850cc2e76a66316830ad344456fcd06",
+      "sha256": "986ce556eeb7e11881094960dc3f5b5371dfd9e818ac0654b2fa58a0981576d4",
+      "width": 478,
+      "height": 296
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig3g-oxygen-dft.png",
+      "blobSha": "c5ed1bce265322d22182fda10c921ef2eedf3469",
+      "sha256": "cd36a1ef641789446dc80b699d824177ce6ed6a06740c10f81f8a1a8e7cf554d",
+      "width": 580,
+      "height": 518
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig3h-hat-dft.png",
+      "blobSha": "91a28fe029283dd6ebac84dd455cf24a2c3a0d4e",
+      "sha256": "e44a5b80ec65d3b8fb0a89672a07256b8d9c3f41d15c3fe658c8f22398aebe09",
+      "width": 703,
+      "height": 518
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig3i-nac.png",
+      "blobSha": "a085df4c7b18667a99f6abd6cdd4e4d6c9310d45",
+      "sha256": "2dc368f061b07625f157a2b06ad4272a84108628b8d961a8bcdef6aea8bbd9c3",
+      "width": 1301,
+      "height": 372
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig4-alkene-scope.png",
+      "blobSha": "30ea265aa8cfd0f0b95cd53cf934ec0976fdba6b",
+      "sha256": "70eaf0200af3848a55468b15941ebf91646580b3e219fdf0cd877ddc6f6f5a28",
+      "width": 1078,
+      "height": 574
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig4-p-donor-scope.png",
+      "blobSha": "5b224cc3d4ee4169e561f37917228ba9adf97b9e",
+      "sha256": "2a02bf4c85e57124c152ff1d7a151d1777142c763829d31da329b63b17fb5238",
+      "width": 1078,
+      "height": 392
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/fig4-applications.png",
+      "blobSha": "9d67c92e6b76bb566cd1f1fa7c5a2f54a9c2d60e",
+      "sha256": "a9b8a3829cd525300826880d043de07f5ac79cb110a74db9b099b146abcb2711",
+      "width": 1078,
+      "height": 570
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/si-figs4-progress.png",
+      "blobSha": "eaca2a362dc3ab2bea747ab6b07635eaad5d6b84",
+      "sha256": "d848cc70c95cc2f371ff02b897383317d3f86e98f0afad160f18b9e600ff3e14",
+      "width": 955,
+      "height": 580
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/si-figs9-deuterium.png",
+      "blobSha": "6dcafae2b05519ac808bc30395a8763e31464f63",
+      "sha256": "d15b12b2291b56d539c5b7d41351c87f02f638722f9f83fc7347b6e28d1a83ea",
+      "width": 965,
+      "height": 1584
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/si-figs23-nac.png",
+      "blobSha": "934359458b159343fbef4e566c54a1f25f7e8e98",
+      "sha256": "33983b759d8366f5474be7571cf04119cba82f8885031e8aba9d4e3968447ee1",
+      "width": 1097,
+      "height": 1130
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/science-aef3001-cover-source-true.png",
+      "blobSha": "d4875a7c261aa977e0a12e9344d2e597f5fd4ae6",
+      "sha256": "845e423aad090e75da8228124043d22e38dcfe7d18bd4f3687761839408c87fb",
+      "width": 1880,
+      "height": 800
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig1c-selectivity-platform.png",
+      "blobSha": "d06b87e6fef83ebe69c1a5cd7b03ce7668a6bedf",
+      "sha256": "e11ff133bf6e0526c5396124f09956d66e990cf7f8bf3b16b84fa85501383ab6",
+      "width": 1258,
+      "height": 584
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig1a-four-dimensions.png",
+      "blobSha": "979bda930515bbf9ebf91671d9ef857463b1769e",
+      "sha256": "6e3d4a038398947f4a689d14e6f4fd8c5c1d8177f6dfce09627d7061ecb5706e",
+      "width": 1258,
+      "height": 290
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig1b-classical-and-challenges.png",
+      "blobSha": "8367291bc6ebbad7e215953be939eb89974ffe4b",
+      "sha256": "4e3099aa5ae8bc8950186c287befe3c250bc7ef0ef25f42a1e6742c80ad31c8a",
+      "width": 1258,
+      "height": 454
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig2a-e-tail-tail.png",
+      "blobSha": "40f59237dbdd522ecef49c97ce06b4aab7df8a08",
+      "sha256": "204bdc07f556d3937c148da1acd1f2b210d4eef55d577f3f491f52e2a4cced69",
+      "width": 1261,
+      "height": 572
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig2b-z-tail-tail.png",
+      "blobSha": "472dac8ef6d43fb2030487a151a64bbe4e04f1c6",
+      "sha256": "ef987aec054525e35f4e4d8c6d256eba109033ac63ace5d9fd1e9c3f471a1d1b",
+      "width": 1261,
+      "height": 1010
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig3a-tail-head.png",
+      "blobSha": "3ca962a6f6c970001f3c48cda2da89d8436e1ca3",
+      "sha256": "a15efdaa9dcc7f65bc480694e39b839990ddf4997fd1773565a5ab8800e918de",
+      "width": 1261,
+      "height": 736
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig3b-z-enantio-tail-tail.png",
+      "blobSha": "a7b4d8765ef1a4cdcbdd2c22080647a484b23250",
+      "sha256": "450697db242bf301b6bdc4d572673a9cdfb38539de7d706cef42576bc93a998c",
+      "width": 1261,
+      "height": 835
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig4a-double-asym-tail-head.png",
+      "blobSha": "362e8b40b978ce0cab8f238c19aeb9046fd38dc5",
+      "sha256": "646a4360de80bf74c366ac21bfa86497ccda8b7b16ccb16d49e0903ed978c893",
+      "width": 1261,
+      "height": 1248
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig4b-cascade.png",
+      "blobSha": "0b3e46beec91b65e433bbfeb9b4e6893c396e8f8",
+      "sha256": "0fdb26d229c98feb94e1cdb31e08f43a0e7a9aee5a21ad6354f2c7de59659ba1",
+      "width": 1261,
+      "height": 252
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig5a-deuterium.png",
+      "blobSha": "ce669039fdc1bb23dd8fbec533c40b0cbb0a72e6",
+      "sha256": "a3ad2e381a6d1fb9056a5c64731b75629881ff003cdfd7ca3d65c9e8ad09acd3",
+      "width": 1261,
+      "height": 281
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig5b-dft-transition-states.png",
+      "blobSha": "bb0edaafab1a387d5ceea64937e7d3c76dcee5c7",
+      "sha256": "e400c93ff26549b338266befbc4e7d2c080928baac058befc42e5fbba46a72b3",
+      "width": 1023,
+      "height": 622
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig5c-proposed-cycles.png",
+      "blobSha": "66b42eb90c2428619cf14cc6bc5550b599b31f3f",
+      "sha256": "10cb1cd3475272d7352ccf14ad4cf7f268e746e8604d6a0636c4f36dc92a4fbb",
+      "width": 1023,
+      "height": 358
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs5-hydrogen-sources.png",
+      "blobSha": "6a1b96e03a0a45b38dc07593f31a0cea0f5fc868",
+      "sha256": "2e4b89090b6f5e891fa71fa4f22bfeb373010a15117a74143995a0b1a5dba0cb",
+      "width": 1218,
+      "height": 811
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs6-acid-counterion.png",
+      "blobSha": "16bd09359f3255241005ff4086c75d96a94811ca",
+      "sha256": "310b566bd6c340c5e25db8800ec48fa91acd90019c4dc4643ff4c5ab96023292",
+      "width": 1216,
+      "height": 746
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs9-kinetics.png",
+      "blobSha": "ce8a4243562661a29365efdaf536679acd1a6166",
+      "sha256": "f127535e95ac17ddb0117850d711f209c23c8d88663e8b8699a9ff3883583661",
+      "width": 1218,
+      "height": 1364
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs1a-drug-functionalization.png",
+      "blobSha": "63ba6229b52172cba3e1f2e5db1d2b7c147a80e8",
+      "sha256": "6ca19787b9d45599768e44661a4413c3ca03de191bf1838232140f93f1335d85",
+      "width": 1218,
+      "height": 655
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs1b-product-diversification.png",
+      "blobSha": "ea4c73c620d4f1eb37a36d56d6378c6dd42bb192",
+      "sha256": "bcbf2f5d95f4d784b0907799eb7fd3306f0541ecbce330c8c92e3e3595e4251b",
+      "width": 1218,
+      "height": 736
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs2-route-comparison.png",
+      "blobSha": "ff02c0386cd28a830bed7316925773da539082c8",
+      "sha256": "e5e56fadd970a7758de4b220173c1e8e2d20672f5b99a52d8ef1f1c9a01f1105",
+      "width": 1218,
+      "height": 1399
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-table-s6-e-route-not-solved.png",
+      "blobSha": "f3ed0280231590d913145bcefd82381182473c72",
+      "sha256": "31e673de665f0744a5a799497c11880f685f880c5dfa2b974ee9e58cb00ce95c",
+      "width": 1204,
+      "height": 1500
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs11-substrate-limits.png",
+      "blobSha": "b0576b63e631cebf003a76d1471f2cadccbdc079",
+      "sha256": "53f7181961f06fe836dd5a7c44d691632c0ca0bc826941cb07fab7698cb7c377",
+      "width": 1202,
+      "height": 483
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs3-robustness.png",
+      "blobSha": "8d6445b82cde1968e1e331f1aace9186cdcd24b2",
+      "sha256": "736619ee1e9c9f6a16caf11abb21d4c6fd3eaf80daebe65f6677be5b4a5dd227",
+      "width": 1218,
+      "height": 825
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs16-calc-differences.png",
+      "blobSha": "22cd1fc8d92a7d3c67732626b373f0aca8071684",
+      "sha256": "c724636b6edcdfebe9c620f17c8b0d898c695a5304ce2cc6a077e362e64e1d44",
+      "width": 1218,
+      "height": 741
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/science-aeh7895-user-approved-seven-circle.png",
+      "blobSha": "5d415a32f3aef3220b56aba3683e0295cf65e004",
+      "sha256": "2b1231a84cddbeec17ee4e2e8598488299988bb354df0a2575425f42ee17c407",
+      "width": 1254,
+      "height": 1254
+    }
+  ],
+  "textReview": "pass",
+  "imageReview": "pass",
+  "reviewNotes": {
+    "sourceBounded": "Main and SI from the two specific Science papers; no unsupported chemistry redrawing in body figures",
+    "mainPDFpages": 11,
+    "mainSIpages": 209,
+    "dailyRelease0800": "accepted 28, including science.aef3001",
+    "scienceClaims": "M5a blue 76% 98% ee; M6 dark 75% 97% ee; ROS pathways not all localized or directly observed",
+    "retrospectiveClaims": "Four dimensions not all combinable; E-TT + ee limitation from SI Table S6",
+    "conceptCoverUserApproved": true,
+    "conceptCoverCaution": "The decorative artwork includes illustrative structures but is not treated as a source-verifiable chemical diagram. Body figures are source-exact.",
+    "publication": "draft only; publicSendAuthorized=false",
+    "layout": "every reviewed body image appears exactly once, following its explanation"
+  }
+}

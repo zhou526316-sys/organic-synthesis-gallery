@@ -1,0 +1,479 @@
+{
+  "slug": "science-aeh7895-hezhi-tao-20261009",
+  "editorialRevision": "2026-10-09-r1",
+  "title": "往期精选｜Science｜何智涛：功能化链状二烯与胺的立体发散式调聚反应",
+  "headline": "功能化链状二烯与胺的立体发散式调聚反应",
+  "kicker": "往期精选｜Science",
+  "digest": "何智涛等研究者实现功能化二烯与胺的多维选择性调聚，结合底物拓展、机理和失败边界评估其真正创新。",
+  "source_url": "https://gallery.gczhouwld.com/?doi=10.1126/science.aeh7895",
+  "paper": {
+    "doi": "10.1126/science.aeh7895",
+    "title": "Stereodivergent telomerization of linear functionalized dienes with amines",
+    "journal": "Science",
+    "authors": "Wen-Qian Wang, Ren-En Li, Hui Xu, Han-Zhe Miao, Liang Chen, Chao Zheng, Shu-Li You, Zhi-Tao He"
+  },
+  "lead_figure_id": "r01",
+  "lead_figure_position": "after_first_quick_point",
+  "quick_points": [
+    {
+      "label": "做成了什么",
+      "text": "通过切换钯催化、配体与酸碱组合，调节功能化二烯与胺调聚的 TT/TH、E/Z、dr 和 ee。"
+    },
+    {
+      "label": "为什么这比单一不对称加成难",
+      "text": "连接方式、双键构型和多个手性中心的控制需要兼顾；优化其中一个指标会改变其他反应路径。"
+    },
+    {
+      "label": "必须看到的局限",
+      "text": "SI Table S6 中 E 型 TT 不对称路线尚未同时达到理想的几何与对映选择性；其他底物也存在实际边界。"
+    }
+  ],
+  "sections": [
+    {
+      "heading": "为什么要让同一组原料生成不同产物？",
+      "paragraphs": [
+        "从同一组二烯和胺出发，能否只改变催化体系，就引导两个二烯分子以不同方式连接，控制新生成双键的构型，并进一步决定产物手性中心的相对构型与绝对构型？",
+        "把这个问题放进钯催化调聚反应里，困难就会显现。反应看起来只是两个二烯分子与一个含氮亲核试剂的反应；当二烯骨架引入酯基后，两端的反应环境不再等价，连接位置、双键构型和手性中心的形成都会面临多种竞争路径。提高转化率只解决了“能否反应”，离“得到指定异构体”还很远。",
+        "何智涛、游书力、郑超等研究者在这项工作中，建立了钯与羧酸协同催化的多套反应条件，通过改变配体、酸和碱的组合，使同一组带有酯基的链状 1,3-二烯和胺选择性地生成多类 γ-氨基酯。最有代表性的进展，是在区域选择性、E/Z 几何选择性之外，进一步实现了非对映选择性和对映选择性控制。这里的“四维”指整个平台能够触及四种选择性维度，并非所有理论上的异构体组合都已被逐一实现。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    },
+    {
+      "heading": "从简单二烯走向功能化二烯，选择性为什么更难控制？",
+      "paragraphs": [
+        "调聚反应（telomerization）可以理解为两个共轭二烯单元在金属催化下发生连接，再由亲核试剂参与形成最终产物。它早已不是陌生反应：丁二烯与醇或胺的调聚具有工业背景，其基本反应具有很高的理论原子经济性。但经典底物通常足够简单，回避了大量位置与立体异构的竞争。这和在复杂功能化二烯上实现精确调聚，是两种难度不同的任务。",
+        "原文图 1A–B 很清楚地展示了难度如何逐级上升。在较简单的底物中，控制连接位置或双键的 E/Z 构型已有不少研究；两个甚至三个因素叠加，竞争路径便迅速增加。酯基进入二烯后，一方面提供了可进一步转化的官能团，另一方面也使不同端位和加成取向成为真实的竞争通道。体系还可能走向二聚、Diels–Alder 环化或 1,5-加成，而不是期望的调聚。",
+        "因此，图 1C 最值得先看的不是外围画了多少种产物，而是中心始终保持不变的两类反应物：功能化二烯和胺。研究者希望通过改变催化条件，分别调节原本相互牵制的几种选择性，使反应优先生成不同的目标产物。这个目标比“找到一种高选择性条件”更严格，因为同一组原料必须能够在不同条件下有选择地生成预期产物。"
+      ],
+      "figures": [
+        "r02",
+        "r03"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "r02"
+        ],
+        "3": [
+          "r03"
+        ]
+      }
+    },
+    {
+      "heading": "第一步先定碳骨架：两分子二烯怎样接在一起",
+      "paragraphs": [
+        "在谈对映体过量（ee）之前，首先要弄清两个二烯单元如何连接。按原文对二烯两端的定义，两个二烯可以按尾—尾（tail-to-tail，TT）或尾—头（tail-to-head，TH）等方式连接，从而得到不同的区域异构体。这里所说的“头”和“尾”应按原文对二烯取代位置的标注来判断，不能仅根据产物是直链还是支链来判断。",
+        "作者采用的机理框架沿用了钯催化二烯调聚研究中的重要思路：低价钯先与两分子二烯配位，随后通过氧化环金属化形成新的 C–C 键及含钯中间体；其后经质子化与烯丙基取代，胺作为亲核体进入产物。这一框架给出了一个可以验证的设想：影响早期 C–C 形成的配体结构，可能同时改变区域和双键构型；酸、碱与亲核体则可能显著影响反应能否顺利向产物推进。需要注意，原文图 5C 是作者根据现有证据提出的催化循环，不等于其中每个中间体都已被直接分离表征。"
+      ],
+      "figures": [
+        "r04",
+        "r05",
+        "r21"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "r04",
+          "r05",
+          "r21"
+        ]
+      }
+    },
+    {
+      "heading": "连接方式不变，怎样让双键从 E 构型切换到 Z 构型？",
+      "paragraphs": [
+        "作者先在相对容易的 TT 路线上分别得到两种双键构型的产物。原文图 2A 中，体积较大的亚磷酰胺配体 L24 与羧酸 A1 搭配，代表性产物 E-3a 的分离收率为 81%，E/Z 与 TT/TH 均超过 20:1。这里的 E 指的是可切换的那一个烯烃几何构型，不意味着产物中所有双键都以同一种方式形成。",
+        "换用位阻较小的 L27，并把酸和碱的组合改为 A2、三乙胺后，原文图 2B 中相同原料转而优先形成 Z-4a：79% 分离收率，Z/E 与 TT/TH 均超过 20:1。两套条件并非简单地把一个配体换成另一个，其酸、碱、温度和反应时间也不同。E-路线的典型条件需要约三天，而 Z-路线在室温下约一天完成。将选择性全部归因于“L24 大、L27 小”，是不充分的。",
+        "不过，配体位阻确实提供了一条值得追究的线索。补充材料中 L23–L30 等系列的筛选结果，显示几种结构相近的亚磷酰胺配体可以让 E/Z 偏好发生明显翻转；对缺少催化剂结构信息的读者来说，这比单纯记下两个最佳条件更有价值——说明几何构型不是一个反应结束后再被“校正”的指标，而可能与早期成键时的配位构象直接相连。"
+      ],
+      "figures": [
+        "r06"
+      ],
+      "figures_after_paragraph": {
+        "3": [
+          "r06"
+        ]
+      }
+    },
+    {
+      "heading": "换成尾—头连接，为什么还要考虑非对映选择性？",
+      "paragraphs": [
+        "当体系选择 TH 连接方式，产物不再只是改变一根双键的空间方向。两个潜在的手性中心位于容易发生构象变化的链状骨架上，需要考虑它们之间的相对构型。这个问题与环内相邻手性中心的立体控制并不一样：空间上分隔的中心很难天然获得刚性的相互约束。",
+        "原文图 3A 给出了一条非对映选择性 TH 路线：Pd/L14、羧酸 A3 与 N-甲基吗啉（NMM）协同，代表性产物 trans-5a 可达 98% 收率、10:1 dr 和超过 20:1 的 TH/TT。这个结果表明，调聚中不仅能够在 TT 与 TH 之间切换，TH 骨架的相对立体化学也可以被有效控制。这里的 trans 描述的是两个手性中心的相对构型，不应误写为某根烯烃的 E 构型。",
+        "值得注意的是，加入碱对这一反应不只是“把酸中和掉”。补充材料表 S3 中，酸、碱改变会导致区域选择性和收率大幅变化；例如 K₂CO₃ 在所测条件下甚至使 TT 成为优势产物。对于这种同时经历金属价态变化、质子转移和烯丙基取代的体系，简单把碱看作不参与选择性的旁观者，会丢失实验真正告诉我们的信息。"
+      ],
+      "figures": [
+        "r07",
+        "r08"
+      ],
+      "figures_after_paragraph": {
+        "3": [
+          "r07",
+          "r08"
+        ]
+      }
+    },
+    {
+      "heading": "引入不对称控制：一个手性中心与两个手性中心有什么不同？",
+      "paragraphs": [
+        "先看原文图 3B。对于以 Z 构型为主的 TT 调聚，手性亚磷酰胺 L48 将产物 (S)-4a 的分离收率和对映选择性推进到 73% 与 90% ee，同时保持 16:1 的 Z/E 和超过 20:1 的 TT/TH。这说明在保持 TT 连接方式的同时，还能够控制新手性中心的绝对构型；反应产物仍属于 TT 路线，而不是因为出现 ee 就改变了连接方式。",
+        "更难的是 TH 骨架上的两个彼此间隔的手性中心。作者没有把 L48 直接照搬过去，而是以既有手性亚磷酰胺骨架为起点，比较了 L54、L55，再设计出 L56 和 L57。原文图 4A 中，Pd/L57 与 A3、NMM 的组合为 (S,S)-5a 给出了 90% 分离收率、96% ee、超过 20:1 dr 及超过 20:1 TH/TT。这些数据需要结合解读：ee 衡量对映体富集程度，dr 表示非对映异构体的比例，TH/TT 则反映两种连接方式的竞争关系，任何一个指标都不能替代其余两个。",
+        "L57 的价值，不在于“手性配体很大所以一切都解决了”。不同配体对 TT/TH 和 ee 的影响并不总是同向：补充材料表 S5 中，L54、L55 可以获得很高的 ee，却可能仍受反应活性、区域选择性或 dr 的限制。最终配体设计同时兼顾了这些指标，才形成了可用的 TH 不对称条件。这类多目标优化，往往比把某一个选择性指标单独推到极致更接近真实的催化剂设计。"
+      ],
+      "figures": [
+        "r10",
+        "r13",
+        "r14"
+      ],
+      "figures_after_paragraph": {
+        "3": [
+          "r10",
+          "r13",
+          "r14"
+        ]
+      }
+    },
+    {
+      "heading": "选择性来源：哪些有实验支撑，哪些仍属于模型",
+      "paragraphs": [
+        "这里需要把三类不同性质的证据分开。第一类是原文图 5A 的氘标记实验。标记二烯的氘分布和以氘代胺为原料产生的部分氘掺入，与“先形成二烯来源的含钯中间体，再发生质子转移”的反应路径相吻合。氘代胺实验在部分位置观察到约 31% 或 28% 的氘掺入，这支持胺参与质子来源的可能性，但不能据此宣称每次质子化都只来自胺。",
+        "第二类是酸和碱的对照。补充材料图 S5–S6 表明，去掉羧酸通常会降低反应效率或改变区域选择性；某些羧酸盐在一定条件下能够代替游离酸发挥作用，改变反离子组成也会影响结果。结合氘交换结果，羧酸可能兼任质子供体、离子配对参与者或质子传递网络的组成部分。不同路线的权重未必一致，所以用“羧酸只负责给 H⁺”解释整篇工作并不充分。",
+        "第三类是计算。原文图 5B 以及补充材料中的相关过渡态比较，将区域和几何选择性的关键差异放在早期氧化环金属化上。对于 L27，计算提示二烯采取 s-cis 构象可减少与配体骨架的不利接触，Z 优选过渡态相对相应 E 路线有约 2.2 kcal/mol 的优势。对于 L14，空间拥挤改变两分子二烯靠近的方式，支持 TH 相对 TT 的优先形成；相应比较的能量差约为 1.8 kcal/mol。这些数值属于特定计算模型下的相对自由能，不是每一种底物都适用的实验常数。",
+        "原文的动力学结论还需要区分两个不同的问题：补充材料图 S9 的速率研究支持后期烯丙基取代可能是限制整体反应速率的重要步骤，而 DFT 主要讨论早期氧化环金属化对区域和构型选择性的影响。**控制“哪个产物先被选中”的步骤，未必就是决定整体反应“走得多快”的步骤。** 把选择性决定步骤和速率决定步骤分开，是读懂这组机理数据的关键。",
+        "作者据此提出原文图 5C 的催化循环。它能够把氘标记、配体效应、酸盐效应及计算趋势放进统一框架，但仍不能据此确定所有实际反应条件下的金属配位数、活性物种分布及每一种离子对的精确结构。"
+      ],
+      "figures": [
+        "r11",
+        "r12",
+        "r15",
+        "r22"
+      ],
+      "figures_after_paragraph": {
+        "3": [
+          "r11"
+        ],
+        "5": [
+          "r12",
+          "r22"
+        ],
+        "4": [
+          "r15"
+        ]
+      }
+    },
+    {
+      "heading": "底物适用范围说明了什么，又有哪些限制？",
+      "paragraphs": [
+        "图 2A–B 的 TT 底物范围覆盖芳胺、部分烷基伯胺和仲胺、肼衍生物以及不同酯基取代的二烯。烷基胺不能直接套用芳胺的反应条件：作者专门针对其反应性重新筛选，最终使用单膦配体 L38 扩展部分底物。这说明“可兼容”与“使用同一套标准条件就能兼容”不是一回事。",
+        "图 3A 与 图 4A 的 TH 路线则使两个分隔的手性中心成为可操作的合成目标。部分含游离羟基、硼酸酯、卤素或杂环的胺可以进入反应；多种酯基取代二烯也能参与。但不同产物的 dr、ee 和收率并非都达到模型底物的水平，而且有些需要改变碱或延长反应时间。图 4A 中某些结果仍是 7:1 或 14:1 dr，不能把 “(S,S)-5a 超过 20:1 dr” 机械推及整个范围。",
+        "作者还在原文图 4B 展示了调聚与后续烯烃异构化的串联。这里需要区分步骤：DBU 介导的后续异构化将原始调聚产物转变为不同位置的 1,7-二烯骨架，不能把这类新双键位置全部描述为钯催化调聚一步直接决定的结果。对于合成研究者，这提示的是另一种组合思路——先在复杂网络里控制骨架与手性，再利用剩余官能团选择性地扩展结构空间。"
+      ],
+      "figures": [
+        "r20"
+      ],
+      "figures_after_paragraph": {
+        "3": [
+          "r20"
+        ]
+      }
+    },
+    {
+      "heading": "复杂分子的后期修饰，能证明这套方法有多实用？",
+      "paragraphs": [
+        "补充材料图 S1A 展示了几类生物活性分子或其合成中间体的后期修饰，包括 apixaban 中间体、amoxapine、ceritinib 和 vortioxetine。它们证明不同含氮结构可以在所开发的一些条件下进入调聚，而不是证明这些药物本身由此获得了更好的药理性质或已经形成通用的制药工艺。",
+        "补充材料图 S1B 与 S2 则更能体现两处酯基和烯烃所提供的合成弹性：烯烃复分解、串联加成和官能团转化可进入环戊烯、哌啶、托烷、氮杂七元环及桥环内酰胺等骨架。部分后续反应收率并不特别高，例如托烷衍生物 16 的转化收率约为 42%；将路线图写成“一步高效合成各种药物骨架”会忽略实际的步骤成本。",
+        "作者还给出了 5 mmol 胺规模的放大实验，获得约 1.5 g 的 (S,S)-5x，分离收率 80%、94% ee、超过 20:1 dr 与 TH/TT。这个结果支持该体系可以超出 0.1 mmol 的条件筛选规模，但还不足以推断为工业化可行：催化剂及手性配体的成本、不同二烯的过量使用、反应时间与后处理负担仍需要单独评估。理论上的原子经济性，也不等于已经实现了最优的实际物料效率。"
+      ],
+      "figures": [
+        "r16",
+        "r17",
+        "r18"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "r16"
+        ],
+        "2": [
+          "r17"
+        ],
+        "3": [
+          "r18"
+        ]
+      }
+    },
+    {
+      "heading": "补充材料中的未解决问题，同样值得认真看",
+      "paragraphs": [
+        "谈“立体发散”，最容易产生的误解是四种选择性都能任意组合，进而获得全部可能的异构体。补充材料表 S6 正好提醒我们不能这样讲。作者对 E 选择性 TT 的不对称版本进行了尝试，测试的多种手性配体却未能兼顾目标几何构型和对映选择性。例如 L48 条件下记录的 3a ee 可达 83%，但相应 E/Z 小于 1:20，即目标 E 产物并非几何上的优势组分。这个数据不能被抽掉 E/Z 背景后单独宣传为“成功的 E-型不对称调聚”。",
+        "另一个边界来自亲核体类型。补充材料图 S11 中，水并未给出预期反应；乙醇体系产生复杂结果；二烯羧酸只显示了有希望但尚不高效的两步转化。酰胺取代的二烯虽有可行实例，部分路线的选择性或收率也明显下降。因而本文提出的是针对带有官能团的链状二烯与胺建立的方法，而非所有亲核体、所有二烯及所有立体异构体都已被普适解决。",
+        "再看实用条件，补充材料图 S3 展示了某些 TT 反应对空气、水或较低钯用量的耐受；例如低钯用量实验的 TON 达 900。但这只是指定底物与相应条件下的证据，不应泛化为整套TH 不对称反应条件都可以无水无氧操作，或将较低催化剂用量与同样短的反应时间画等号。"
+      ],
+      "figures": [
+        "r19"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "r19"
+        ]
+      }
+    },
+    {
+      "heading": "这项工作的设计思想，能否超出调聚反应本身",
+      "paragraphs": [
+        "这篇论文把一个往往被当作“单产物优化”的反应，转变成了需要协调多条竞争反应路径的选择性设计问题。更值得学习的是它的研究顺序：先辨认 C–C 成键的连接方式，再调节其中一处双键的 E/Z 构型，随后针对新增的立体中心分别设计非对映和对映控制手段。每向前推进一层，便回到实验中验证上一步的选择性是否仍然被保留。",
+        "这种做法对不对称催化具有普遍的启发，却不宜上升为普遍定律：当反应网络中存在多个可能由不同阶段决定的选择性因素时，应该通过配体、离子环境和底物组织的组合逐一识别它们，而不是假设一个“大位阻手性催化剂”能同时替代所有控制手段。作者的 DFT 恰好提供了可以继续测试的结构设想，而补充材料中尚未完善的 E 型不对称 TT 路线则说明，这套设计还有进一步拓展的空间。",
+        "以这样的标准衡量，该工作的贡献既不是“第一次得到 γ-氨基酯”，也不是“钯催化调聚已经完全可编程”。更准确的表述是：研究者将以往主要应用于简单二烯的调聚反应拓展到功能化二烯，并建立了通过不同催化条件选择目标产物的方法，并展示了从简单区域/构型控制逐步走向不对称多中心构建的实际可行性。哪些选择性能够真正互相独立、哪些只是对某些条件组合敏感，以及如何在更复杂底物上保持稳定，仍是有研究价值的后续问题。"
+      ],
+      "figures": [
+        "r09"
+      ],
+      "figures_after_paragraph": {
+        "3": [
+          "r09"
+        ]
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "r01",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig1c-selectivity-platform.png",
+      "caption": "原文 Fig. 1C｜同一组功能化二烯与胺在不同催化条件下进入不同选择性调聚出口。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "原文 Fig. 1C",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r02",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig1a-four-dimensions.png",
+      "caption": "原文 Fig. 1A｜选择性从单因素到四因素的设计难度示意；四维是整个平台的目标，不是全组合均已获得。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "原文 Fig. 1A",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r03",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig1b-classical-and-challenges.png",
+      "caption": "原文 Fig. 1B｜传统丁二烯调聚与功能化二烯产生的区域、构型和副反应竞争。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "原文 Fig. 1B",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r04",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig2a-e-tail-tail.png",
+      "caption": "原文 Fig. 2A｜L24/A1 路线偏向 E 型 tail-to-tail 调聚；模型产物 3a 81% 分离收率。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "原文 Fig. 2A",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r05",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig2b-z-tail-tail.png",
+      "caption": "原文 Fig. 2B｜L27/A2 条件偏向 Z 型 tail-to-tail；烷基胺部分需另用 L38。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "原文 Fig. 2B",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r06",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig3a-tail-head.png",
+      "caption": "原文 Fig. 3A｜L14/A3/NMM 控制 tail-to-head 与相对立体构型；5a 98% 收率、10:1 dr。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "原文 Fig. 3A",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r07",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig3b-z-enantio-tail-tail.png",
+      "caption": "原文 Fig. 3B｜L48 使 Z 型 tail-to-tail 实现对映选择性；(S)-4a 73% 收率、90% ee。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "原文 Fig. 3B",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r08",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig4a-double-asym-tail-head.png",
+      "caption": "原文 Fig. 4A｜L57 协同控制 TH 骨架和两个间隔手性中心；(S,S)-5a 达 90% 收率、96% ee、>20:1 dr。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "原文 Fig. 4A",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r09",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig4b-cascade.png",
+      "caption": "原文 Fig. 4B｜调聚后再经 DBU 异构化得到 1,7-二烯；第二阶段不是直接的钯调聚选择性。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "原文 Fig. 4B",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r10",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig5a-deuterium.png",
+      "caption": "原文 Fig. 5A｜氘标记分布与质子转移途径相容，不足以证明唯一的质子来源。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "原文 Fig. 5A",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r11",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig5b-dft-transition-states.png",
+      "caption": "原文 Fig. 5B｜L27/L14 的过渡态计算比较，分析几何与区域选择性来源。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "原文 Fig. 5B",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r12",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/fig5c-proposed-cycles.png",
+      "caption": "原文 Fig. 5C｜作者综合实验及计算提出的催化循环，不能当作中间体已逐个直接观测。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "原文 Fig. 5C",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r13",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs5-hydrogen-sources.png",
+      "caption": "SI Fig. S5｜酸、胺及 D₂O 相关的质子化对照，说明质子供给可能涉及交换网络。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "SI Fig. S5",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r14",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs6-acid-counterion.png",
+      "caption": "SI Fig. S6｜羧酸盐和反离子对产率/区域选择性的作用，支持酸不止是简单质子源。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "SI Fig. S6",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r15",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs9-kinetics.png",
+      "caption": "SI Fig. S9｜速率研究用于讨论后期烯丙基取代的动力学约束。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "SI Fig. S9",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r16",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs1a-drug-functionalization.png",
+      "caption": "SI Fig. S1A｜对生物活性分子或合成中间体的含氮位点进行后期修饰。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "SI Fig. S1A",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r17",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs1b-product-diversification.png",
+      "caption": "SI Fig. S1B｜调聚产物中的酯基和双键进一步转化为多类含氮骨架，并含放大实验。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "SI Fig. S1B",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r18",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs2-route-comparison.png",
+      "caption": "SI Fig. S2｜部分复杂含氮骨架与文献路线的步骤比较，不能据此笼统宣称所有路线均更优。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "SI Fig. S2",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r19",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-table-s6-e-route-not-solved.png",
+      "caption": "SI Table S6｜尝试不对称 E 型 TT 时 ee 与目标 E/Z 未同步达到理想值；L48 条件的 83% ee 必须与 E/Z<1:20 同看。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "SI Table S6",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r20",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs11-substrate-limits.png",
+      "caption": "SI Fig. S11｜二烯酸可经两步有限转化，乙醇体系复杂，水未给出目标产物。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "SI Fig. S11",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r21",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs3-robustness.png",
+      "caption": "SI Fig. S3｜指定 TT 模型底物对空气、水和低钯用量的耐受性；不可外推所有 TH 不对称体系。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "SI Fig. S3",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "r22",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/si-figs16-calc-differences.png",
+      "caption": "SI Fig. S16｜L14 参与的计算过渡态相对能量，作为作者选择性模型的补充。",
+      "body": true,
+      "display_width_pct": 94,
+      "source_figure": "SI Fig. S16",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "exact_pdf_crop"
+    },
+    {
+      "id": "rcover",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aeh7895/science-aeh7895-user-approved-seven-circle.png",
+      "caption": "",
+      "body": false,
+      "display_width_pct": 94,
+      "source_figure": "User-selected seven-circle concept cover",
+      "source_doi": "10.1126/science.aeh7895",
+      "source_kind": "separately_approved_cover"
+    }
+  ],
+  "cover": {
+    "source_figure_id": "rcover",
+    "canvas": {
+      "width": 1254,
+      "height": 1254
+    },
+    "crop_235_1": "0_0.287234_1_0.712766",
+    "crop_1_1": "0_0_1_1",
+    "description": "Owner explicitly approved the seven-color-ring conceptual cover; it is illustrative art, not a scientific figure or verified molecular structure."
+  },
+  "ai_notice": "论文数据和机理均以原文与 SI 核对；封面由用户确认的概念艺术图承担主题识别，不作为结构证据。"
+}
