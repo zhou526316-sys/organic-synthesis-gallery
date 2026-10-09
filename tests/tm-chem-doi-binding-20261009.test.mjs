@@ -123,3 +123,68 @@ test('no image, PDF, authorization or media byte is present in synthetic termina
  assert.ok(!state.includes('pdfData'));
  assert.ok(x.reports[0][2]==='failed');
 });
+
+
+function crossrefHarness({recordDoi=DOI,primary='https://linkinghub.elsevier.com/retrieve/pii/S245192942600286X',responseStatus=200}={}){
+ const store=new Map(),reads=[];
+ const message={message:{DOI:recordDoi,resource:{primary:{URL:primary}}}};
+ const ctx=vm.createContext({
+   URL,JSON,Date,Math,Number,String,RegExp,encodeURIComponent,
+   P,GM_getValue:(key,fallback)=>store.has(key)?store.get(key):fallback,
+   GM_setValue:(key,value)=>store.set(key,value),
+   normalizeDoi:d=>String(d||'').trim().toLowerCase(),
+   publisherForDoi:()=> 'elsevier',
+   publisherArticleHostAllowed:(publisher,url)=>publisher==='elsevier'&&String(url).startsWith('https://www.sciencedirect.com/science/article/pii/'),
+   gmRequest:async options=>{
+     reads.push(options);
+     return {status:responseStatus,responseText:JSON.stringify(message)};
+   }
+ });
+ vm.runInContext(extract('elsevierCrossrefVerifiedArticleUrl')+
+  '\n globalThis.route=elsevierCrossrefVerifiedArticleUrl;',ctx);
+ return {ctx,reads,store};
+}
+test('exact Chem DOI Crossref PII resolves to authentic publisher article route and caches result',async()=>{
+ const x=crossrefHarness();
+ const expected='https://www.sciencedirect.com/science/article/pii/S245192942600286X';
+ assert.equal(await x.ctx.route({doi:DOI,publisher:'elsevier'}),expected);
+ assert.equal(x.reads.length,1);
+ assert.equal(x.reads[0].url,'https://api.crossref.org/works/'+encodeURIComponent(DOI));
+ assert.equal(x.reads[0].timeout,9000);
+ assert.equal(await x.ctx.route({doi:DOI,publisher:'elsevier'}),expected);
+ assert.equal(x.reads.length,1,'valid DOI-bound public metadata is reused, no second Crossref request');
+});
+test('different Crossref DOI, fabricated PII or non-Elsevier host cannot become a Chem article link',async()=>{
+ for(const source of [
+  {recordDoi:'10.1016/j.chempr.2026.103282'},
+  {primary:'https://publisher.evil.example/retrieve/pii/S245192942600286X'},
+  {primary:'https://linkinghub.elsevier.com/retrieve/pii/SINVALID'},
+  {primary:'http://linkinghub.elsevier.com/retrieve/pii/S245192942600286X'},
+  {responseStatus:403}
+ ]){
+  const x=crossrefHarness(source);
+  assert.equal(await x.ctx.route({doi:DOI,publisher:'elsevier'}),'');
+  assert.equal(x.store.size,0);
+ }
+});
+test('second real Chem DOI uses publisher-registered distinct PII, not a shared template path',async()=>{
+ const x=crossrefHarness({recordDoi:'10.1016/j.chempr.2026.103282',primary:'https://linkinghub.elsevier.com/retrieve/pii/S2451929426003487'});
+ const url=await x.ctx.route({doi:'10.1016/j.chempr.2026.103282',publisher:'elsevier'});
+ assert.equal(url,'https://www.sciencedirect.com/science/article/pii/S2451929426003487');
+ assert.notEqual(url,'https://www.sciencedirect.com/science/article/pii/S245192942600286X');
+});
+test('DOI route resolver invokes the verified Crossref fallback only when original DOI redirect has no publisher page',async()=>{
+ const ctx=vm.createContext({
+   String,Number,Boolean,JSON,URL,Math,Date,
+   normalizeDoi:v=>String(v||'').toLowerCase(),
+   publisherForDoi:()=> 'elsevier',
+   articleUrl:j=>'https://doi.org/'+j.doi,
+   elsevierResolvedPublisherUrl:()=> '',
+   gmRequest:async options=>({status:403,finalUrl:'https://doi.org/'+DOI,responseText:''}),
+   elsevierCrossrefVerifiedArticleUrl:async()=> 'https://www.sciencedirect.com/science/article/pii/S245192942600286X'
+ });
+ vm.runInContext(extract('resolvePublisherTaskUrl')+
+  '\n globalThis.run=resolvePublisherTaskUrl;',ctx);
+ assert.equal(await ctx.run({doi:DOI,publisher:'elsevier'}),
+  'https://www.sciencedirect.com/science/article/pii/S245192942600286X');
+});
