@@ -111,7 +111,7 @@ const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
 async function contextWith(capabilities,openResult={available:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=opaque'},options={}){
  const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900},locale:options.locale||'en-US'});
  const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,rangeInFlight:0,maxConcurrentRanges:0,openModes:[],openOrigins:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
- const filePdf=options.largePdf?largeCardPdf:cardPdf;
+ const filePdf=options.stressPdf?longCardPdf:(options.largePdf?largeCardPdf:cardPdf);
  if(options.pendingQueue)state.queueRows.set('fixture-owner',new Map(papers.map(paper=>[paper.doi,{doi:paper.doi,state:'pending',revision:1,createdAt:Date.now(),updatedAt:Date.now()}])));
  await context.addInitScript(fixtureOrigin=>{
   if(location.origin!==fixtureOrigin)return;
@@ -252,6 +252,9 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    if(url.origin==='https://api.gczhouwld.com' && options.primaryOpenDelayMs) {
     await new Promise(resolve=>setTimeout(resolve,options.primaryOpenDelayMs));
    }
+   if(url.origin==='https://organic-synthesis-gallery.zhou526316.workers.dev' && options.backupOpenDelayMs) {
+    await new Promise(resolve=>setTimeout(resolve,options.backupOpenDelayMs));
+   }
    if(openResult?.available!==true)return reply(openResult);
    const source=new URL(openResult.url);
    if(['https://organic-synthesis-gallery.zhou526316.workers.dev',
@@ -331,7 +334,37 @@ function localCardPdf(extraSecondPadding=0){
  for(const offset of offsets)body+=String(offset).padStart(10,'0')+' 00000 n \n';
  return Buffer.from(body+'trailer\n<< /Size 7 /Root 1 0 R >>\nstartxref\n'+start+'\n%%EOF\n');
 }
-const cardPdf=localCardPdf(),largeCardPdf=localCardPdf(200000),vaultBy=(page,name)=>page.getByTestId('pdf-vault-'+name);
+// Self-generated PDF (no publisher material). Many page refs, realistic xref,
+// and a padded final stream stress parsing without fetching whole-document RAM.
+function pressurePdf(pageCount = 128, tailBytes = 0) {
+  if (!Number.isInteger(pageCount) || pageCount < 2 || pageCount > 150) throw new Error('invalid_pressure_pages');
+  const pages = [], objects = new Array(2 + pageCount * 2);
+  objects[0] = '<< /Type /Catalog /Pages 2 0 R >>';
+  for (let i = 0; i < pageCount; i++) {
+    const page = 3 + i * 2, contents = page + 1;
+    pages.push(page + ' 0 R');
+    objects[page - 1] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 360 480] /Resources << >> /Contents ' + contents + ' 0 R >>';
+    const paint = 'q 0.12 0.43 0.68 rg 30 30 300 420 re f Q\n';
+    const padding = i === pageCount - 1 && tailBytes ? '%' + 'x'.repeat(tailBytes) + '\n' : '';
+    const stream = paint + padding;
+    objects[contents - 1] = '<< /Length ' + Buffer.byteLength(stream) + ' >>\nstream\n' + stream + 'endstream';
+  }
+  objects[1] = '<< /Type /Pages /Kids [' + pages.join(' ') + '] /Count ' + pageCount + ' >>';
+  let body = '%PDF-1.7\n% Synthetic Gallery scroll pressure test; no real paper content.\n';
+  const offsets = [];
+  for (let i = 0; i < objects.length; i++) {
+    offsets.push(Buffer.byteLength(body));
+    body += String(i + 1) + ' 0 obj\n' + objects[i] + '\nendobj\n';
+  }
+  const start = Buffer.byteLength(body);
+  body += 'xref\n0 ' + String(objects.length + 1) + '\n0000000000 65535 f \n';
+  for (const offset of offsets) body += String(offset).padStart(10, '0') + ' 00000 n \n';
+  body += 'trailer\n<< /Size ' + String(objects.length + 1) + ' /Root 1 0 R >>\nstartxref\n' + start + '\n%%EOF\n';
+  return Buffer.from(body);
+}
+
+
+const cardPdf=localCardPdf(),largeCardPdf=localCardPdf(200000),longCardPdf=pressurePdf(128,5*1024*1024),vaultBy=(page,name)=>page.getByTestId('pdf-vault-'+name);
 async function waitLocalStatus(page,status){await page.waitForFunction(status=>document.querySelector('[data-testid="pdf-vault-status"]')?.dataset.status===status,status);}
 async function importCardPdf(page,doi){
  const before=await vaultBy(page,'list').locator('article[data-copy-id]').count();
@@ -588,6 +621,49 @@ try{
   assert.equal(await target.locator('#full-open').isVisible(),true,'manual full-transfer fallback remains available');
   assert.match(await target.locator('#full-open').getAttribute('href'),/full=1/);
   await scrollPdfToPage(target, 2);
+ });
+ await test('128-page 5MiB owner-private PDF uses demand ranges and bounds live canvases',async()=>{
+  const owner={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-stress'};
+  const {context,state}=await contextWith(['private_pdf_read'],owner,{stressPdf:true,fileDelayMs:75});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:22000});
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-mode'),'range-first');
+  assert.equal(state.privateFullFileCalls,0,'first page must not transfer whole file');
+  const observed=[];
+  for(const number of [1,64,128,1]){
+    if(number!==1 || observed.length) await scrollPdfToPage(target,number);
+    const metrics=await target.locator('#pdf-scroll-container').evaluate(element=>({
+      pages:element.querySelectorAll('.pdfViewer .page').length,
+      canvases:element.querySelectorAll('.pdfViewer .page canvas').length,
+      width:element.clientWidth,scrollWidth:element.scrollWidth
+    }));
+    assert.equal(metrics.pages,128);
+    assert.ok(metrics.canvases<=18,'PDF.js must bound live canvas count: '+JSON.stringify(metrics));
+    assert.ok(metrics.scrollWidth<=metrics.width+4,'fit-to-width PDF must not overflow');
+    observed.push({page:number,canvases:metrics.canvases});
+  }
+  assert.equal(state.privateFullFileCalls,0,'no entire 5MiB transfer while browsing');
+  console.log('PRIVATE_PDF_LAZY_PRESSURE '+JSON.stringify({
+    pages:128,bytes:longCardPdf.length,rangeCalls:state.privateRangeCalls,observed
+  }));
+ });
+ await test('both Cloudflare authorization lines stalled fail at bounded deadline',async()=>{
+  const owner={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-delay'};
+  const {context,state}=await contextWith(['private_pdf_read'],owner,{primaryOpenDelayMs:25000,backupOpenDelayMs:25000});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  const begin=Date.now();
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',undefined,{timeout:20000});
+  const elapsed=Date.now()-begin;
+  const diagnostic=await target.locator('#pdf-diagnostic').textContent();
+  assert.ok(elapsed>=10000&&elapsed<=20000,'bounded authorization deadline: '+elapsed);
+  assert.match(diagnostic,/pdf_authorize_timeout/);
+  assert.doesNotMatch(diagnostic,/fixture-delay|Bearer|token=|PDF_PRIVATE_SECRET/);
+  assert.equal(state.privateFileCalls,0,'no PDF file read when authorization times out');
+  assert.ok(state.openOrigins.includes('https://api.gczhouwld.com'));
+  assert.ok(state.openOrigins.includes('https://organic-synthesis-gallery.zhou526316.workers.dev'));
+  console.log('PRIVATE_PDF_SLOW_AUTH '+JSON.stringify({elapsedMs:elapsed,route:'both-failed'}));
  });
  await test('large PDF Range errors show prompt sanitized stage timings instead of a blank reader',async()=>{
   const fast={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
