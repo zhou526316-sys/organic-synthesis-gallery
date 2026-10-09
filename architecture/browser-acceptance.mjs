@@ -11,6 +11,7 @@ import { stable, digest } from './catalog.mjs';
 import { gunzipSync } from 'node:zlib';
 import { buildLegacyTitlePresentation } from './title-presentation.mjs';
 import { RESULT_WINDOW_SIZE } from '../shared/result-window.js';
+import { isHotLandingEligible } from '../shared/literature-landing.mjs';
 
 const root=process.cwd(), shadow=path.resolve(process.argv[2] || ''), out=path.join(shadow,'validation/browser');
 await mkdir(out,{recursive:true});
@@ -109,6 +110,10 @@ const server=createServer(async(req,res)=>{
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const base=`http://127.0.0.1:${server.address().port}`;
 const archiveTarget=life.partitions.archive[0]||records[0].doi;
+// Current Hot landing includes recently added papers with unknown/future online dates;
+// lifecycle.partitions.hot alone is no longer the complete landing membership.
+const expectedHotDois=records.filter(row=>isHotLandingEligible(row,report.asOfDate))
+  .map(row=>row.doi).sort();
 const outcomes=[];
 try {
   for(const [name,type] of [['chromium',chromium],['webkit',webkit]]) {
@@ -173,10 +178,11 @@ try {
       await writeFile(path.join(out,`${name}-field-parity.json`),JSON.stringify({compared:records.length,languages:['en','zh'],windowSize:RESULT_WINDOW_SIZE,differences},null,2));
       if(differences.length)console.log('GALLERY_DISPLAY_DIFFERENCES '+JSON.stringify(differences.slice(0,30)));
       assert.equal(differences.length,0,`legacy_display_mismatch:${differences.length}`);
-      const hot=await page.evaluate(async()=>{const r=await __arch.loadLandingPlan(__arch.reader,{asOfDate:__arch.asOfDate});await __archBridge.replace(r.records.map(__arch.project));const dom=__archBridge.inspect().length;const accessible=(await __archBridge.inspectAll()).length;return{count:r.records.length,complete:r.complete,dom,accessible};});
-      assert.equal(hot.count,life.counts.hot);
+      const hot=await page.evaluate(async()=>{const r=await __arch.loadLandingPlan(__arch.reader,{asOfDate:__arch.asOfDate});await __archBridge.replace(r.records.map(__arch.project));const dom=__archBridge.inspect().length;const accessible=(await __archBridge.inspectAll()).length;return{count:r.records.length,complete:r.complete,dom,accessible,dois:r.records.map(row=>row.doi).sort()};});
+      assert.equal(hot.count,expectedHotDois.length,'hot_landing_card_count_mismatch');
       assert.equal(hot.complete,true);
-      assert.equal(hot.accessible,life.counts.hot);
+      assert.equal(hot.accessible,expectedHotDois.length,'hot_landing_paged_count_mismatch');
+      assert.deepEqual(hot.dois,expectedHotDois,'hot_landing_doi_set_mismatch');
       assert.ok(hot.dom<=RESULT_WINDOW_SIZE,'hot_dom_window_over_budget');
 
       // A shared Archive DOI is injected ahead of Hot without loading every history shard.
@@ -186,7 +192,7 @@ try {
         await __archBridge.replace(r.records.map(__arch.project));
         return {first:document.querySelector('#gallery > .card')?.getAttribute('data-doi')||'',hotCount:r.hotCount,total:r.records.length,lifecycle:r.shared?.lifecycle,status:r.shared?.status};
       },archiveTarget);
-      assert.deepEqual(deepLink,{first:archiveTarget,hotCount:life.counts.hot,total:life.counts.hot+1,lifecycle:'archive',status:'published'});
+      assert.deepEqual(deepLink,{first:archiveTarget,hotCount:expectedHotDois.length,total:expectedHotDois.length+1,lifecycle:'archive',status:'published'});
 
       // User state remains keyed by DOI even when the Archive card is removed/reloaded.
       const actions=page.locator('gallery-paper-actions').first();
