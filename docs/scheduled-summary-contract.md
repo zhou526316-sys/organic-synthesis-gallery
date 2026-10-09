@@ -1,14 +1,14 @@
 # Organic Synthesis Gallery — Daily Scheduled Summary Contract
 
-Status: normative production contract. Updated 2026-10-02 by the user's instruction: “9.20之前的摘要就不管了，专心把新的摘要都上线了。”
+Status: normative production contract. Updated 2026-10-09 under the user's authorization to resume summaries for papers added on or after 2026-10-01. Prior Sep-20 first-online policy is retired for new work; all older reviewed summaries remain intact.
 
 ## 0. Current publication scope — overrides historical all-backlog instructions
 
-Read `audit/summary-publication-policy.json` on current main before every run. Process only currently active canonical literature DOIs whose first-online article `date` is **2026-09-20 or later, inclusive**. Use the canonical article date, not Evidence capturedAt, as the cutoff. Missing dates must be reported separately, never guessed from capture timestamps.
+Read `audit/summary-publication-policy.json` on current main before every run. Process only currently active Gallery literature DOIs whose **canonical `addedDate >= 2026-10-01` (inclusive)**. `addedDate` is the date Gallery admitted the DOI, not the publisher's first-online `date`, a PDF storage timestamp, or Evidence `capturedAt`. Entries without a valid `addedDate` must be reported as unknown and excluded from new-summary publication until verified; they must not be silently guessed or relabeled.
 
-Preserve already-published summaries for articles before the cutoff, but do not backfill, regenerate or spend the new-summary review budget on those older articles. The words “entire backlog”, “every Evidence item” and “all pending” below mean the entire **in-scope** set, not pre-cutoff literature.
+Preserve already-published summaries for articles added before the cutoff, but do not backfill, regenerate or spend the new-summary review budget on those older articles. The words “entire backlog”, “every Evidence item” and “all pending” below mean the entire **in-scope** set, not pre-cutoff literature.
 
-Within that set, process newest article dates first, then addedDate and capturedAt descending. A matching approved existing summary is reused. Complete, partial and abstract_only captures are all eligible; coverage controls depth, not publication eligibility. Do not wait for complete full text when usable captured text already exists. Never turn a title-only placeholder into a completed summary.
+Within that set, process newest `addedDate` first, then canonical publisher `date` and Evidence `capturedAt`. A matching approved existing summary is reused. Complete, partial and abstract_only captured **text** packets are eligible; coverage controls depth, not publication eligibility. A stored owner-private PDF does not itself establish a readable Evidence Packet or permission to publish its full text. Use verified captured article text; never turn a title-only placeholder or PDF-available flag into a completed summary.
 
 ## 1. Publication cadence and authority boundary
 
@@ -24,7 +24,7 @@ Article Evidence Packet v2 stays private in R2. Eligible packets use gzip follow
 
 The reviewer holds the matching private key only in its private task context. Never write that key to GitHub, workflow arguments, artifacts, replies or logs. Key rotation is complete only when the deployed public key/keyId, the private review key and the live handoff metadata match. Do not fall back to retired keys or transports.
 
-The public metadata route is `GET /api/article-summary/scheduled-handoff?manifest=1&limit=N`; this returns metadata, not ciphertext. It has a bounded limit and can include out-of-scope old papers. Repeatedly fetching the same first page is not complete enumeration. Filter by canonical article dates before decrypting.
+The public metadata route is `GET /api/article-summary/scheduled-handoff?manifest=1&limit=N`; this returns metadata, not ciphertext. It has a bounded limit and can include out-of-scope old papers. Repeatedly fetching the same first page is not complete enumeration. Filter by the canonical `addedDate` in the current active Gallery registry before decrypting.
 
 The reusable `Prepare current literature summary handoff` workflow (`.github/workflows/summary-evidence-handoff.yml`) provides complete scoped enumeration when the metadata route is capped or slow. Refresh `audit/summary-handoff-request.json` on main with the current timestamp and purpose to trigger it; reuse a valid current run instead of restarting it. The workflow reads the current public registry and authenticated Evidence inventory, applies the policy cutoff, skips hash-matching approved summaries, and uses the existing per-DOI encrypted-part route for the remainder. It uploads `current-summary-encrypted-handoff`, containing a plan, public summary/registry snapshots, Evidence metadata and encrypted envelopes only. It contains no private decryption key and no plaintext captured Evidence. Download it with the GitHub connector, verify the artifact digest, and decrypt only in the private local review environment. Review the plan's missingEvidenceDois separately; do not count them as completed summaries.
 
@@ -34,7 +34,7 @@ Each bounded part uses `GET /api/article-summary/scheduled-handoff?doi=<DOI>&par
 
 At 12:00, or on an explicitly authorized catch-up, read current main policy, contract, summary data, live health and in-scope registry. Require the no-API scheduled runtime to be ready. Only the relevant existing scheduled task performs semantic review; the transport runner does not manufacture scientific summaries.
 
-Review every eligible in-scope packet, newest-first. A DOI with a usable Abstract or partial text is summarized at that depth. Failed transport, integrity or explicit processing-policy cases remain pending without blocking other valid articles. Reuse existing approved summaries only when both sourceHash and evidencePacketHash still match current Evidence.
+Review every eligible in-scope packet, newest-`addedDate`-first. A DOI with a usable Abstract or partial text is summarized at that depth. Failed transport, integrity or explicit processing-policy cases remain pending without blocking other valid articles. Reuse existing approved summaries only when both sourceHash and evidencePacketHash still match current Evidence.
 
 Perform two passes per DOI: first assemble the evidence-supported scientific account; then challenge all numbers, conditions, scope, selectivity, mechanism attribution, limitations and bilingual agreement against that article's captured text. Do not claim separate independent reviewers or reviews that did not happen.
 
@@ -64,7 +64,7 @@ The Worker serves a scheduled summary only when both hashes match the current Ev
 
 Block individual records for decryption/authentication failure, mixed or mismatching current hashes, explicit no_external_ai, malformed output or material bilingual disagreement that cannot be corrected from the evidence. Incomplete full text or missing individual facts is not itself a publication blocker.
 
-Report separately: in-scope article count, valid reused summaries, newly published summaries, captured-but-unpublished items, no-captured-text items, and ignored pre-cutoff articles. Count only currently active DOI. Retain the actual failure reasons and no invented completion counts.
+Report separately: in-scope Oct-1+ added article count, valid reused summaries, newly published summaries, captured-but-unpublished items, no-captured-text items, missing-`addedDate` items, and ignored pre-cutoff articles. Count only currently active DOI. Retain the actual failure reasons and no invented completion counts.
 
 ## 7. Deployment and public display
 
