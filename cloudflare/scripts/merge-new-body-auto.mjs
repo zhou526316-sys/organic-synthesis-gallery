@@ -20,7 +20,7 @@ export function transientAutoMediaError(error){
 }
 export async function fetchStored(url,maxBytes=20000000,missing=false,options={}){
   const u=new URL(url,SITE),site=new URL(SITE);
-  const permitted=u.origin===site.origin&&(u.pathname===site.pathname+SNAPSHOT||u.pathname===site.pathname+'media-index.json'||new RegExp('^'+site.pathname+'media-mirror/body-auto-[a-f0-9]{64}\\.(svg|png|webp|jpg)
+  const permitted=u.origin===site.origin&&(u.pathname===site.pathname+SNAPSHOT||u.pathname===site.pathname+'media-index.json'||new RegExp('^'+site.pathname+'media-mirror/body-auto-[a-f0-9]{64}\\.(svg|png|webp|jpg)$').test(u.pathname))||u.origin===WORKER&&(u.pathname==='/api/article-figures/staged'||u.pathname==='/api/media/local-capture-index'||u.pathname==='/api/media/tampermonkey-reports'||/^\/media\/local-captures\/article-figures\/images\/[a-f0-9]{24}\/(figure|scheme|chart)-\d{1,3}-[a-f0-9]{16}\.(svg|png|webp|jpg)$/.test(u.pathname));
   requireBody(permitted&&!u.username&&!u.password,'auto_fetch_not_stored_asset');
   const fetchImpl=options.fetchImpl||fetch;
   const wait=options.wait||((ms)=>new Promise(resolve=>setTimeout(resolve,ms)));
