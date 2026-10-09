@@ -596,6 +596,30 @@ function embeddedJobDois(value) {
   return [...found].filter(Boolean);
 }
 
+  // These DOI-to-PII pairs were verified from the same Chem publisher pages
+  // and successful Gallery TOC receipts. ScienceDirect may omit citation_doi
+  // on an otherwise DOI-bound /science/article/pii/ page. Never generalize
+  // this exception to arbitrary PII or to publisher interstitial hosts.
+  function verifiedChemPublisherPii(job) {
+    var doi=normalizeDoi(job&&job.doi);
+    var pairs={
+      '10.1016/j.chempr.2026.103008':'S2451929426000744',
+      '10.1016/j.chempr.2026.103043':'S2451929426001099',
+      '10.1016/j.chempr.2026.103220':'S245192942600286X',
+      '10.1016/j.chempr.2026.103282':'S2451929426003487'
+    };
+    return pairs[doi]||'';
+  }
+  function verifiedChemPublisherPage(job,value) {
+    var pii=verifiedChemPublisherPii(job);
+    if(!pii)return false;
+    try{
+      var u=new URL(String(value||''),location.href);
+      return u.protocol==='https:'&&(u.hostname==='www.sciencedirect.com'||u.hostname==='sciencedirect.com')
+        &&new RegExp('^/science/article/pii/'+pii+'(?:/|$)','i').test(u.pathname);
+    }catch(_){return false;}
+  }
+
   function publisherPageDois() {
     var ids = embeddedJobDois(location.href);
     document.querySelectorAll('head meta[name="citation_doi"],head meta[name="dc.Identifier"],head meta[name="DC.Identifier"],head meta[property="citation_doi"],head link[rel="canonical"]').forEach(function (node) {
@@ -619,6 +643,7 @@ function embeddedJobDois(value) {
     try { binding = sessionStorage.getItem(P + 'tab-job-binding') || ''; } catch (_) {}
     if (binding !== job.jobId) throw new Error('capture_tab_job_mismatch');
     var page = publisherPageDois();
+    if (!page.length && verifiedChemPublisherPage(job,location.href)) page=[normalizeDoi(job.doi)];
     if (!page.length) throw new Error('page_doi_unverified');
     if (page.some(function (doi) { return doi !== normalizeDoi(job.doi); })) throw new Error('page_doi_mismatch');
     var source = embeddedJobDois(sourceUrl || '');
@@ -669,7 +694,16 @@ function embeddedJobDois(value) {
 
   function candidateBelongsToJob(url, job) {
     var doi = normalizeDoi(job && job.doi);
-    return Boolean(doi && embeddedJobDois(url).every(function (value) { return value === doi; }));
+    if(!doi || !embeddedJobDois(url).every(function(value){return value===doi;}))return false;
+    var pii=verifiedChemPublisherPii(job);
+    if(pii){
+      // Elsevier CDN assets carry their article's PII instead of full DOI.
+      // Reject an explicitly different PII; unrelated images on the same
+      // publisher shell must not be promoted into a DOI's media inventory.
+      var match=String(url||'').match(/(?:\/pii\/|1-s2\.0-)(S[0-9A-Z]{12,})(?=[^0-9A-Z]|$)/i);
+      if(match&&String(match[1]).toUpperCase()!==pii.toUpperCase())return false;
+    }
+    return true;
   }
 
   function publisherForDoi(doi) {
@@ -3355,7 +3389,8 @@ function embeddedJobDois(value) {
     var canonical = String((document.querySelector('link[rel="canonical"]') || {}).href || '').toLowerCase();
     var doi = normalizeDoi(job.doi);
     var suffix = doi.split('/').pop() || doi;
-    var doiMatch = citation.indexOf(doi) >= 0 || canonical.indexOf(doi) >= 0 || href.toLowerCase().indexOf(suffix.toLowerCase()) >= 0;
+    var doiMatch = citation.indexOf(doi) >= 0 || canonical.indexOf(doi) >= 0 || href.toLowerCase().indexOf(suffix.toLowerCase()) >= 0
+      || verifiedChemPublisherPage(job,href);
     var meaningfulArticle = doiMatch && text.length >= 900;
     var gateText = title + '\n' + text.slice(0, 16000);
     // Science/AAAS may expose some article text behind an explicit "Check access"
