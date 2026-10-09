@@ -10,7 +10,7 @@
   ],
   "maxNewImages": 250,
   "maxNewArticles": 25,
-  "maxFiguresPerCard": 10,
+  "maxFiguresPerCard": 20,
   "maxSnapshotItems": 2000,
   "heldDois": [
     {
@@ -20,7 +20,7 @@
   ],
   "verificationMode": "automated_source_identity_digest_and_image_decode",
   "individualSemanticReview": false,
-  "notes": "Publish TOC and body figures in the same Pages deployment. New captures require a completed Tampermonkey final packet plus strict DOI/source/hash/decode validation; historical staged captures at or before the cutover may backfill only after a 15-minute stability window and the same strict validation. Previously staged eligible body figures are continuously drained. No cross-DOI source, partial packet, invalid marker, unsupported/unsafe image, or missing-TOC packet may publish.",
+  "notes": "Publish TOC and body figures in the same Pages deployment. New captures require a completed Tampermonkey final packet plus strict DOI/source/hash/decode validation; historical staged captures at or before the cutover may backfill only after a 15-minute stability window and the same strict validation. Previously staged eligible body figures are continuously drained. No cross-DOI source, partial packet, invalid marker, unsupported/unsafe image, or missing-TOC packet may publish. Publish at most 20 semantically distinct figures per card, aligned with the existing 20-figure Tampermonkey acquisition limit and horizontal lazy-loaded figure gallery.",
   "minNewArticles": 1,
   "requireOfficialTocInBuild": true,
   "reviewBatchTarget": "completed single-article packets publish immediately; historical staged backlog drains automatically in bounded batches",
