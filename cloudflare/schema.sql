@@ -1220,3 +1220,14 @@ CREATE INDEX IF NOT EXISTS idx_phone_sms_attempts_phone
   ON phone_sms_send_attempts(phone_hash, created_at);
 CREATE INDEX IF NOT EXISTS idx_phone_sms_attempts_ip
   ON phone_sms_send_attempts(ip_hash, created_at);
+
+
+-- New private-PDF fallback tickets remember their originating login session.
+-- Session hashes deliberately do not cascade away on logout: the missing
+-- user_sessions row must remain detectable so revoked tickets cannot revive.
+CREATE TABLE IF NOT EXISTS user_pdf_ticket_session_refs (
+  ticket_hash TEXT PRIMARY KEY REFERENCES private_pdf_access_tokens(token_hash) ON DELETE CASCADE,
+  session_hash TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_user_pdf_ticket_session_refs_session
+  ON user_pdf_ticket_session_refs(session_hash);
