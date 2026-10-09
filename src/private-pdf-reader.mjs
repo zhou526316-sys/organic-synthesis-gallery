@@ -1,4 +1,5 @@
 import {scanPdfFigureRescue,preparePdfOriginalCropManifest} from './pdf-vault/figure-rescue.mjs';
+import {createContinuousPdfViewer} from './pdf-continuous-viewer.mjs';
 
 const PDF_ENGINE_LOAD_TIMEOUT_MS = 25_000;
 let pdfEngine = null;
@@ -59,11 +60,10 @@ const compatibilityMode = params.get('compat') === '1';
 const nativeMode = params.get('native') === '1' && !compatibilityMode;
 const forceFull = params.get('full') === '1' && !nativeMode && !compatibilityMode;
 const downloadOnOpen = params.get('mode') === 'download';
-const canvas = document.querySelector('#pdf-canvas');
+let canvas = null;
+const main = document.querySelector('#main');
 const stage = document.querySelector('#stage');
 const status = document.querySelector('#status');
-const previous = document.querySelector('#previous');
-const next = document.querySelector('#next');
 const zoomOut = document.querySelector('#zoom-out');
 const zoomIn = document.querySelector('#zoom-in');
 const zoomLabel = document.querySelector('#zoom');
@@ -80,7 +80,8 @@ const cropBox = document.querySelector('#pdf-crop-box');
 const figureRescuePanel = document.querySelector('#pdf-rescue-panel');
 const figureRescueResults = document.querySelector('#pdf-rescue-results');
 const figureRescueProgress = document.querySelector('#pdf-rescue-progress');
-const cropPageWrap = document.querySelector('#pdf-page-wrap');
+let cropPageWrap = null;
+let continuous = null;
 document.querySelector('#doi').textContent = doi;
 
 let loadingTask = null;
@@ -139,8 +140,6 @@ function browserHref() {
 }
 function controls() {
   const ready = Boolean(pdf) && !destroyed;
-  previous.disabled = !ready || pageNumber <= 1;
-  next.disabled = !ready || pageNumber >= (pdf?.numPages || 0);
   zoomOut.disabled = !ready || zoom <= 0.5;
   zoomIn.disabled = !ready || zoom >= 3;
   pageCount.textContent = pdf ? `第 ${pageNumber} / ${pdf.numPages} 页` : '—';
@@ -249,45 +248,22 @@ function options(source) {
     verbosity: 0,
   };
 }
+function activePageCanvas(page) {
+  if (!continuous) return null;
+  const wanted = continuous.getCanvas(page);
+  if (canvas && canvas !== wanted) canvas.removeAttribute('id');
+  canvas = wanted || null;
+  if (canvas) canvas.id = 'pdf-canvas';
+  return canvas;
+}
 async function render() {
-  if (!pdf || destroyed) return;
-  const seq = ++renderSequence;
+  if (!pdf || destroyed || !continuous) return;
   cropSelection = null;
   cropSelecting = false;
   cropBox.hidden = true;
   cropExportButton.disabled = true;
-  const old = renderTask;
-  old?.cancel();
-  if (old) await old.promise.catch(() => {});
-  if (seq !== renderSequence || destroyed) return;
-  setPhase('render', pageNumber === 1 ? '正在绘制第一页…' : `正在绘制第 ${pageNumber} 页…`);
-  const page = await pdf.getPage(pageNumber);
-  if (seq !== renderSequence || destroyed) return;
-  const base = page.getViewport({ scale: 1 });
-  const available = Math.max(180, stage.clientWidth - 12);
-  const displayScale = Math.min(1.6, available / base.width) * zoom;
-  const cssWidth = base.width * displayScale;
-  const cssHeight = base.height * displayScale;
-  const outputScale = Math.min(devicePixelRatio || 1, 2, Math.sqrt(14_000_000 / Math.max(1, cssWidth * cssHeight)), 8192 / Math.max(cssWidth, cssHeight));
-  const viewport = page.getViewport({ scale: displayScale * outputScale });
-  canvas.width = Math.max(1, Math.floor(viewport.width));
-  canvas.height = Math.max(1, Math.floor(viewport.height));
-  canvas.style.width = `${Math.round(cssWidth)}px`;
-  canvas.style.height = `${Math.round(cssHeight)}px`;
-  const task = page.render({ canvas, viewport, annotationMode: pdfEngine.AnnotationMode.ENABLE });
-  renderTask = task;
-  try {
-    await task.promise;
-  } finally {
-    if (renderTask === task) renderTask = null;
-  }
-  if (seq !== renderSequence || destroyed) return;
-  canvas.dataset.renderedPage = String(pageNumber);
-  status.hidden = true;
-  document.documentElement.dataset.privatePdfViewer = 'ready';
-  document.documentElement.dataset.privatePdfReadyMs = String(Math.round(performance.now() - startedAt));
-  setPhase('ready');
-  stage.parentElement.scrollTop = 0;
+  continuous.goto(pageNumber);
+  continuous.setZoom(zoom);
   controls();
 }
 
