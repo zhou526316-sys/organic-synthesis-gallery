@@ -912,8 +912,42 @@ async function start() {
       const firstPageJob = (async()=>{
         pdf = await loadingTask.promise;
         if (!Number.isSafeInteger(pdf.numPages) || pdf.numPages < 1) throw new Error('pdf_page_tree');
+        let firstRenderedResolve;
+        const firstRendered = new Promise(resolve => { firstRenderedResolve = resolve; });
+        continuous = createContinuousPdfViewer({
+          container: main, viewer: stage, pdf,
+          onPageChange: number => {
+            if (destroyed || !pdf) return;
+            pageNumber = number;
+            activePageCanvas(number);
+            if (cropSelecting && rescueCandidate?.page !== pageNumber) {
+              cropSelecting = false;
+              cropSelection = null;
+              cropBox.hidden = true;
+              cropExportButton.disabled = true;
+            }
+            controls();
+          },
+          onPageRendered: (number, element) => {
+            if (destroyed) return;
+            if (number === pageNumber) activePageCanvas(number);
+            if (number === 1 && firstRenderedResolve) {
+              firstRenderedResolve();
+              firstRenderedResolve = null;
+              status.hidden = true;
+              document.documentElement.dataset.privatePdfViewer = 'ready';
+              document.documentElement.dataset.privatePdfReadyMs =
+                String(Math.round(performance.now() - startedAt));
+              setPhase('ready');
+            }
+          },
+          onError: error => {
+            if (!destroyed && !status.hidden) showReaderError(error);
+          },
+        });
+        await continuous.ready;
+        await firstRendered;
         controls();
-        await render();
         figureRescueButton.disabled = false;
         if (params.get('rescue') === '1') {
           void openPdfFigureRescue().catch(error => {
