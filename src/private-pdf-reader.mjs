@@ -61,7 +61,7 @@ const nativeMode = params.get('native') === '1' && !compatibilityMode;
 const forceFull = params.get('full') === '1' && !nativeMode && !compatibilityMode;
 const downloadOnOpen = params.get('mode') === 'download';
 let canvas = null;
-const main = document.querySelector('#main');
+const main = document.querySelector('#pdf-scroll-container');
 const stage = document.querySelector('#stage');
 const status = document.querySelector('#status');
 const zoomOut = document.querySelector('#zoom-out');
