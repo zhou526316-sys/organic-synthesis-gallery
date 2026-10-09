@@ -1,0 +1,44 @@
+name: PDF continuous-scrolling isolated regression
+# Checkpoint: both continuous readers, safe account logout, natural scrolling.
+on:
+  push:
+    branches:
+      - feature/pdf-continuous-scroll-20261009
+    paths:
+      # Explicit CI checkpoint only, avoids dozens of duplicate Chromium
+      # runs while the independent reader and its tests are being refined.
+      - '.github/workflows/pdf-continuous-scroll-regression.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/pdf-continuous-scroll-20261009
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Build pdfjs-dist v6.4.299 continuous viewer
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+      - name: Install test browser
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Browser test owner private PDF and local PDF library
+        run: |
+          set +e
+          node tests/private-pdf-access-browser.mjs
+          private_status=$?
+          node tests/pdf-vault-local-browser.mjs
+          local_status=$?
+          echo "CONTINUOUS_BROWSER_RESULTS private=$private_status local=$local_status"
+          test "$private_status" -eq 0 && test "$local_status" -eq 0

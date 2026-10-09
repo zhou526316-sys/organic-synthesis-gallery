@@ -1,4 +1,5 @@
 import {scanPdfFigureRescue,preparePdfOriginalCropManifest} from './pdf-vault/figure-rescue.mjs';
+import {createContinuousPdfViewer} from './pdf-continuous-viewer.mjs';
 
 const PDF_ENGINE_LOAD_TIMEOUT_MS = 25_000;
 let pdfEngine = null;
@@ -59,11 +60,10 @@ const compatibilityMode = params.get('compat') === '1';
 const nativeMode = params.get('native') === '1' && !compatibilityMode;
 const forceFull = params.get('full') === '1' && !nativeMode && !compatibilityMode;
 const downloadOnOpen = params.get('mode') === 'download';
-const canvas = document.querySelector('#pdf-canvas');
+let canvas = null;
+const main = document.querySelector('#pdf-scroll-container');
 const stage = document.querySelector('#stage');
 const status = document.querySelector('#status');
-const previous = document.querySelector('#previous');
-const next = document.querySelector('#next');
 const zoomOut = document.querySelector('#zoom-out');
 const zoomIn = document.querySelector('#zoom-in');
 const zoomLabel = document.querySelector('#zoom');
@@ -80,7 +80,8 @@ const cropBox = document.querySelector('#pdf-crop-box');
 const figureRescuePanel = document.querySelector('#pdf-rescue-panel');
 const figureRescueResults = document.querySelector('#pdf-rescue-results');
 const figureRescueProgress = document.querySelector('#pdf-rescue-progress');
-const cropPageWrap = document.querySelector('#pdf-page-wrap');
+let cropPageWrap = null;
+let continuous = null;
 document.querySelector('#doi').textContent = doi;
 
 let loadingTask = null;
@@ -139,8 +140,6 @@ function browserHref() {
 }
 function controls() {
   const ready = Boolean(pdf) && !destroyed;
-  previous.disabled = !ready || pageNumber <= 1;
-  next.disabled = !ready || pageNumber >= (pdf?.numPages || 0);
   zoomOut.disabled = !ready || zoom <= 0.5;
   zoomIn.disabled = !ready || zoom >= 3;
   pageCount.textContent = pdf ? `第 ${pageNumber} / ${pdf.numPages} 页` : '—';
@@ -249,45 +248,22 @@ function options(source) {
     verbosity: 0,
   };
 }
+function activePageCanvas(page) {
+  if (!continuous) return null;
+  const wanted = continuous.getCanvas(page);
+  if (canvas && canvas !== wanted) canvas.removeAttribute('id');
+  canvas = wanted || null;
+  if (canvas) canvas.id = 'pdf-canvas';
+  return canvas;
+}
 async function render() {
-  if (!pdf || destroyed) return;
-  const seq = ++renderSequence;
+  if (!pdf || destroyed || !continuous) return;
   cropSelection = null;
   cropSelecting = false;
   cropBox.hidden = true;
   cropExportButton.disabled = true;
-  const old = renderTask;
-  old?.cancel();
-  if (old) await old.promise.catch(() => {});
-  if (seq !== renderSequence || destroyed) return;
-  setPhase('render', pageNumber === 1 ? '正在绘制第一页…' : `正在绘制第 ${pageNumber} 页…`);
-  const page = await pdf.getPage(pageNumber);
-  if (seq !== renderSequence || destroyed) return;
-  const base = page.getViewport({ scale: 1 });
-  const available = Math.max(180, stage.clientWidth - 12);
-  const displayScale = Math.min(1.6, available / base.width) * zoom;
-  const cssWidth = base.width * displayScale;
-  const cssHeight = base.height * displayScale;
-  const outputScale = Math.min(devicePixelRatio || 1, 2, Math.sqrt(14_000_000 / Math.max(1, cssWidth * cssHeight)), 8192 / Math.max(cssWidth, cssHeight));
-  const viewport = page.getViewport({ scale: displayScale * outputScale });
-  canvas.width = Math.max(1, Math.floor(viewport.width));
-  canvas.height = Math.max(1, Math.floor(viewport.height));
-  canvas.style.width = `${Math.round(cssWidth)}px`;
-  canvas.style.height = `${Math.round(cssHeight)}px`;
-  const task = page.render({ canvas, viewport, annotationMode: pdfEngine.AnnotationMode.ENABLE });
-  renderTask = task;
-  try {
-    await task.promise;
-  } finally {
-    if (renderTask === task) renderTask = null;
-  }
-  if (seq !== renderSequence || destroyed) return;
-  canvas.dataset.renderedPage = String(pageNumber);
-  status.hidden = true;
-  document.documentElement.dataset.privatePdfViewer = 'ready';
-  document.documentElement.dataset.privatePdfReadyMs = String(Math.round(performance.now() - startedAt));
-  setPhase('ready');
-  stage.parentElement.scrollTop = 0;
+  continuous.goto(pageNumber);
+  continuous.setZoom(zoom);
   controls();
 }
 
@@ -936,8 +912,42 @@ async function start() {
       const firstPageJob = (async()=>{
         pdf = await loadingTask.promise;
         if (!Number.isSafeInteger(pdf.numPages) || pdf.numPages < 1) throw new Error('pdf_page_tree');
+        let firstRenderedResolve;
+        const firstRendered = new Promise(resolve => { firstRenderedResolve = resolve; });
+        continuous = await createContinuousPdfViewer({
+          container: main, viewer: stage, pdf,
+          onPageChange: number => {
+            if (destroyed || !pdf) return;
+            pageNumber = number;
+            activePageCanvas(number);
+            if (cropSelecting && rescueCandidate?.page !== pageNumber) {
+              cropSelecting = false;
+              cropSelection = null;
+              cropBox.hidden = true;
+              cropExportButton.disabled = true;
+            }
+            controls();
+          },
+          onPageRendered: (number, element) => {
+            if (destroyed) return;
+            if (number === pageNumber) activePageCanvas(number);
+            if (number === 1 && firstRenderedResolve) {
+              firstRenderedResolve();
+              firstRenderedResolve = null;
+              status.hidden = true;
+              document.documentElement.dataset.privatePdfViewer = 'ready';
+              document.documentElement.dataset.privatePdfReadyMs =
+                String(Math.round(performance.now() - startedAt));
+              setPhase('ready');
+            }
+          },
+          onError: error => {
+            if (!destroyed && !status.hidden) showReaderError(error);
+          },
+        });
+        await continuous.ready;
+        await firstRendered;
         controls();
-        await render();
         figureRescueButton.disabled = false;
         if (params.get('rescue') === '1') {
           void openPdfFigureRescue().catch(error => {
@@ -957,6 +967,13 @@ async function start() {
     }
   } catch (error) {
     rangeWarmup?.abort();
+    if (phase === 'parse' && !continuous) {
+      const kind = String(error?.name || 'Error').replace(/[^A-Za-z]/g, '').slice(0,30);
+      const summary = String(error?.message || '')
+        .replace(/https?:\/\/\S+|Bearer\s+\S+|token=\S+/gi, '[redacted]')
+        .slice(0,180);
+      document.documentElement.dataset.pdfContinuousInitFailure = kind + ':' + summary;
+    }
     if (rangeFailure || error?.message === 'pdf_first_page_timeout') {
       renderSequence += 1;
       renderTask?.cancel();
@@ -987,17 +1004,18 @@ function renderCropSelection(start,finish) {
   cropBox.hidden=false;
   return crop;
 }
-canvas.addEventListener('pointerdown',event=>{
+stage.addEventListener('pointerdown',event=>{
   if(!cropSelecting||!rescueCandidate||!pdf||destroyed||!token()||token()!==rescueOwnerSession)return;
+  if(event.target!==canvas || Number(canvas?.dataset.renderedPage)!==rescueCandidate.page)return;
   const start=relativePoint(event);if(!start)return;
   event.preventDefault();cropStart=start;cropSelection=null;
   try{canvas.setPointerCapture(event.pointerId);}catch{}
 });
-canvas.addEventListener('pointermove',event=>{
+stage.addEventListener('pointermove',event=>{
   if(!cropSelecting||!cropStart)return;
   renderCropSelection(cropStart,relativePoint(event));
 });
-canvas.addEventListener('pointerup',event=>{
+stage.addEventListener('pointerup',event=>{
   if(!cropSelecting||!cropStart)return;
   const selection=renderCropSelection(cropStart,relativePoint(event));
   cropStart=null;cropSelecting=false;canvas.style.cursor='default';canvas.style.touchAction='';
@@ -1010,7 +1028,7 @@ canvas.addEventListener('pointerup',event=>{
   cropSelection=selection;cropExportButton.disabled=false;
   setCropNotice('已选取原图局部，确认图号与结构完整后导出 PNG 与溯源信息。');
 });
-canvas.addEventListener('pointercancel',()=>{
+stage.addEventListener('pointercancel',()=>{
   cropStart=null;cropSelecting=false;cropSelection=null;cropBox.hidden=true;
   cropExportButton.disabled=true;canvas.style.cursor='default';canvas.style.touchAction='';
 });
@@ -1050,7 +1068,9 @@ async function openPdfFigureRescue(){
         rescueCandidate=candidate;figureRescuePanel.hidden=true;
         cropSelectButton.hidden=false;cropExportButton.hidden=false;cropExportButton.disabled=true;
         setCropNotice('原图候选：'+candidate.label+'，请先在 PDF 原页核对图像范围。');
-        update(()=>{pageNumber=candidate.page;});
+        pageNumber = candidate.page;
+        continuous?.goto(pageNumber);
+        controls();
       });
       figureRescueResults.append(b);
     }
@@ -1063,6 +1083,18 @@ figureRescueButton.addEventListener('click',()=>{
 document.querySelector('#pdf-rescue-close').addEventListener('click',()=>{figureRescuePanel.hidden=true;});
 cropSelectButton.addEventListener('click',()=>{
   if(!pdf||!rescueCandidate||rescueCandidate.page!==pageNumber||!token()||token()!==rescueOwnerSession)return;
+  const sourceCanvas = continuous?.getCanvas(rescueCandidate.page);
+  if(!sourceCanvas || sourceCanvas.dataset.renderedPage !== String(rescueCandidate.page)){
+    setCropNotice('当前原图尚未绘制完成，请稍后再框选。');
+    return;
+  }
+  if (canvas && canvas !== sourceCanvas) canvas.removeAttribute('id');
+  canvas = sourceCanvas;
+  canvas.id = 'pdf-canvas';
+  cropPageWrap = canvas.closest('.canvasWrapper') || canvas.parentElement;
+  if (!cropPageWrap) return;
+  cropPageWrap.classList.add('pdf-crop-target');
+  cropPageWrap.appendChild(cropBox);
   cropSelecting=true;cropStart=null;cropSelection=null;cropBox.hidden=true;
   cropExportButton.disabled=true;
   canvas.style.cursor='crosshair';canvas.style.touchAction='none';
@@ -1075,7 +1107,8 @@ function localDownloadBlob(blob,filename){
 }
 cropExportButton.addEventListener('click',async()=>{
   if(!pdf||!rescueCandidate||!cropSelection||destroyed||!token()
-    ||token()!==rescueOwnerSession||rescueCandidate.page!==pageNumber)return;
+    ||token()!==rescueOwnerSession||rescueCandidate.page!==pageNumber
+    ||!canvas||canvas.dataset.renderedPage!==String(rescueCandidate.page))return;
   const crop=cropSelection;
   const rect={x:Math.floor(crop.x*canvas.width),y:Math.floor(crop.y*canvas.height),
     width:Math.round(crop.width*canvas.width),height:Math.round(crop.height*canvas.height)};
@@ -1104,14 +1137,13 @@ cropExportButton.addEventListener('click',async()=>{
 
 download.addEventListener('click', () => { void beginDownload(); });
 function update(change) {
-  if (!pdf || renderTask || destroyed) return;
+  if (!pdf || !continuous || destroyed) return;
   change();
   void render().catch(error => fallbackView('PDF 页面绘制失败，请稍后重试。', safeErrorCode(error)));
 }
-previous.addEventListener('click', () => update(() => { pageNumber = Math.max(1, pageNumber - 1); }));
-next.addEventListener('click', () => update(() => { pageNumber = Math.min(pdf.numPages, pageNumber + 1); }));
 zoomOut.addEventListener('click', () => update(() => { zoom = Math.max(0.5, zoom - 0.25); }));
 zoomIn.addEventListener('click', () => update(() => { zoom = Math.min(3, zoom + 0.25); }));
+window.addEventListener('resize', () => { if (continuous && !destroyed) continuous.resize(); });
 function destroy() {
   if (destroyed) return;
   destroyed = true;
@@ -1122,8 +1154,10 @@ function destroy() {
   transferController = null;
   activeRangeTransport?.abort();
   activeRangeTransport = null;
-  canvas.width = 0;
-  canvas.height = 0;
+  continuous?.destroy();
+  continuous = null;
+  if (canvas) { canvas.width = 0; canvas.height = 0; canvas.removeAttribute('id'); }
+  canvas = null;
   sourceUrl = '';
   try { loadingTask?.destroy(); } catch {}
   loadingTask = null;
