@@ -9,7 +9,7 @@ const now=Date.now(),doi='10.1021/jacs.6c91234';
 const rows=n=>Array.from({length:n},(_,i)=>({doi:'10.1021/jacs.6c'+String(91000+i),updatedAt:now-i}));
 
 test('policy now releases completed single-article packets immediately',()=>{
-  assert.equal(policy.minNewArticles,1);assert.equal(policy.maxNewArticles,25);assert.equal(policy.maxFiguresPerCard,10);
+  assert.equal(policy.minNewArticles,1);assert.equal(policy.maxNewArticles,25);assert.equal(policy.maxFiguresPerCard,20);
   assert.equal(policy.requireOfficialTocInBuild,true);assert.equal(policy.requireCompletedCapturePacket,true);
   assert.equal(policy.backfillStabilityMinutes,15);assert.ok(Number.isFinite(Date.parse(policy.backfillCapturedBefore)));
 });
