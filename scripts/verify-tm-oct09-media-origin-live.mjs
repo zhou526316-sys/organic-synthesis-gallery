@@ -154,6 +154,43 @@ try {
     }))
   }));
   report.fourMissing=missingTarget.map(doi=>statusByDoi.get(doi));
+  // Per-DOI read-only report endpoint; surface publisher routing and rejection
+  // reasons without copying page HTML, private PDF bytes, tokens or cookies.
+  report.ownerCaptureHistory=[];
+  for(const doi of [...missingTarget,'10.1002/anie.4335022']){
+    try{
+      const data=JSON.parse(await get(API+'/api/media/tampermonkey-reports?doi='+
+        encodeURIComponent(doi)+'&history=1&limit=3',2_500_000));
+      const tries=Array.isArray(data.attempts)?data.attempts:[];
+      const chosen=tries.map(item=>{
+        const trace=Array.isArray(item?.trace)?item.trace:[];
+        const findings=trace.filter(event=>
+          /(?:failed|none|rejected|partial)/i.test(String(event?.status||'')) ||
+          /(?:page_doi_guard|publisher|rsc_listing_html|candidate_discovery|toc_filter_summary|dom_snapshot|paired_toc_fallback)/i.test(String(event?.stage||''))
+        ).slice(-8).map(event=>({
+          stage:limited(event?.stage,70),event:limited(event?.event,70),
+          status:limited(event?.status,50),httpStatus:Number(event?.httpStatus||0),
+          message:limited(event?.message,190),source:limited(event?.candidateSource,80),
+          url:cleanUrl(event?.url)
+        }));
+        return {
+          finishedAt:limited(item?.finishedAt,80),status:limited(item?.status,60),
+          reason:limited(item?.reason,200),candidateSource:limited(item?.candidateSource,80),
+          sourceUrl:cleanUrl(item?.sourceUrl),articleUrl:cleanUrl(item?.articleUrl),
+          traceCount:trace.length,observed:findings
+        };
+      });
+      report.ownerCaptureHistory.push({doi,attemptCount:Number(data.attemptCount||0),
+        retained:Number(data.retainedAttempts||tries.length),
+        latestStatus:limited(data.latest?.status,50),
+        latestFinishedAt:limited(data.latest?.finishedAt,80),
+        latestReason:limited(data.latest?.reason,200),
+        attempts:chosen});
+    }catch(error){
+      report.ownerCaptureHistory.push({doi,readUnavailable:limited(error?.message||error,180)});
+    }
+  }
+
   report.exactAngewQuarantine = statusByDoi.get('10.1002/anie.4335022');
   assert.notEqual(report.exactAngewQuarantine?.contentHash,
     '35f10c5321cd43179a4c71c73e388da8',
@@ -203,7 +240,8 @@ await writeFile(output,JSON.stringify(report,null,2)+'\n','utf8');
 console.log('TM_OCT09_LIVE_SUMMARY '+JSON.stringify({
   checkedAt:report.checkedAt,status:report.status,
   installer:report.installer,queue:report.queue,captureIndex:report.captureIndex,
-  fourMissing:report.fourMissing,fourProvenance:report.fourProvenance,exactAngewQuarantine:report.exactAngewQuarantine,oct09Angew:report.oct09Angew,
+  fourMissing:report.fourMissing,fourProvenance:report.fourProvenance,exactAngewQuarantine:report.exactAngewQuarantine,
+  ownerCaptureHistory:report.ownerCaptureHistory,oct09Angew:report.oct09Angew,
   recentAngewInspected:report.recentAngew?.length,
   anomalyCandidates:report.anomalyCandidates,
   internalAssetIdDiffersFromDoi:report.internalAssetIdDiffersFromDoi,
