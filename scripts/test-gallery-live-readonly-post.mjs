@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { safeLiveVerificationRequest as safe } from './gallery-live-readonly-post.mjs';
 
@@ -32,4 +33,12 @@ test('write, auth, publication and unknown routes remain forbidden',()=>{
   assert.equal(safe('PUT','https://api.gczhouwld.com/api/literature/catalog-view'),false);
   assert.equal(safe('PATCH','https://api.gczhouwld.com/api/media/batch'),false);
   assert.equal(safe('DELETE','https://api.gczhouwld.com/api/media/inventory'),false);
+});
+
+test('live browser verification retains the requested DOI in native search input',()=>{
+  const code=readFileSync(new URL('./verify-new-body-auto-live.mjs',import.meta.url),'utf8');
+  assert.match(code,/page\.locator\('#search'\)\.fill\(doi\)/);
+  assert.match(code,/dataset\.catalogRead==='architecture-v1'/);
+  assert.doesNotMatch(code,/\.press\(['"]Escape['"]\)/,
+    'Escape on type=search clears the DOI and falls back to the Hot list');
 });

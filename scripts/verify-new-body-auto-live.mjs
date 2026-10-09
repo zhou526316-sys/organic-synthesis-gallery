@@ -75,10 +75,17 @@ try{
     return route.fulfill({status:503,body:'read-only acceptance blocks production writes'});
   });
   const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e.message)));
-  await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});await page.locator('#search').waitFor({timeout:30000});
+  await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});
+  await page.locator('#search').waitFor({timeout:30000});
+  await page.waitForFunction(()=>document.documentElement.dataset.catalogRead==='architecture-v1',
+    null,{timeout:30000});
   const dois=verification.dois;
   for(const [i,doi] of dois.entries()){
-   await page.locator('#search').fill(doi);await page.locator('#search').press('Escape');
+   // Native Escape clears <input type="search"> in Chromium, returning the
+   // Gallery to its default Hot list before the archived DOI can be resolved.
+   await page.locator('#search').fill(doi);
+   await page.waitForFunction(value=>document.querySelector('#search')?.value===value,
+     doi,{timeout:5000});
    const selector='.figure-strip-slot[data-figure-doi="'+doi+'"]',strip=page.locator(selector);
    try{
      await strip.waitFor({timeout:25000});
