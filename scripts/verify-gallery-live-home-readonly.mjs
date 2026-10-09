@@ -4,6 +4,7 @@ import path from 'node:path';
 
 const SITE = 'https://gallery.gczhouwld.com/';
 const ANGeW = '10.1002/anie.4335022';
+const BODY_SAMPLE = '10.1021/acscatal.6c06476';
 const BAD_MIRROR = 'worker-52eb28218d55f8af1d17e0f35ab4.png';
 const reportDir = path.join(process.env.RUNNER_TEMP || '/tmp', 'gallery-live-home-qa');
 const report = {
@@ -84,10 +85,22 @@ try {
     try {
       await page.goto(SITE, { waitUntil:'domcontentloaded', timeout:35000 });
       await waitForContent(page);
+      // Measure first decoded media paint rather than conflating quick card
+      // skeleton creation with an actually visible chemical graphic.
+      if ((await readUi(page)).cards > 0) {
+        try {
+          await page.waitForFunction(() =>
+            [...document.querySelectorAll('#gallery img.toc-image')].some(img => img.complete && img.naturalWidth > 0),
+            null, { timeout:18000, polling:200 });
+        } catch { /* Preserve a missing media paint as an explicit null. */ }
+      }
     } catch (error) { navigationError = String(error).slice(0,400); }
+    const coldUi = await readUi(page);
     const cold = {
       viewport, phase:'cold', elapsedMs:Date.now()-started,
-      url:page.url(), navigationError, ...(await readUi(page)), ...network,
+      firstTocPaintMs:coldUi.loadedTocs > 0 ? Date.now()-started : null,
+      url:page.url(), navigationError, ...coldUi,
+      errors:[...network.errors], failedRequests:[...network.failedRequests], status:[...network.status],
     };
     report.probes.push(cold);
     await page.screenshot({ path:path.join(reportDir, 'gallery-' + viewport.width + '-cold.png') }).catch(() => {});
@@ -100,8 +113,16 @@ try {
     const warmStarted = Date.now();
     await page.reload({ waitUntil:'domcontentloaded', timeout:35000 });
     await waitForContent(page);
+    try {
+      await page.waitForFunction(() =>
+        [...document.querySelectorAll('#gallery img.toc-image')].some(img => img.complete && img.naturalWidth > 0),
+        null, { timeout:15000, polling:200 });
+    } catch {}
+    const warmUi = await readUi(page);
     const warm = {
-      viewport, phase:'warm', elapsedMs:Date.now()-warmStarted, ...(await readUi(page)),
+      viewport, phase:'warm', elapsedMs:Date.now()-warmStarted,
+      firstTocPaintMs:warmUi.loadedTocs > 0 ? Date.now()-warmStarted : null,
+      ...warmUi,
     };
     report.probes.push(warm);
     if (warm.error || warm.cards === 0) failed = true;
@@ -130,6 +151,35 @@ try {
         failed = true;
       }
       await page.screenshot({ path:path.join(reportDir, 'gallery-angew-search.png') }).catch(() => {});
+
+      // The static public index confirms this specific ACS Catalysis DOI has
+      // numbered body figures. Verify that a real card actually paints them.
+      await search.fill(BODY_SAMPLE);
+      const bodySlot = page.locator('.figure-strip-slot[data-figure-doi="' + BODY_SAMPLE + '"]').first();
+      let thumbs = 0;
+      let decoded = 0;
+      let sampleFound = false;
+      try {
+        await bodySlot.locator('.figure-thumb img').first().waitFor({ state:'attached', timeout:25000 });
+        sampleFound = true;
+        await bodySlot.locator('.figure-thumb img').first().scrollIntoViewIfNeeded({ timeout:8000 });
+        await page.waitForFunction(() =>
+          [...document.querySelectorAll('.figure-strip-slot[data-figure-doi="' + BODY_SAMPLE + '"] img')]
+            .some(img => img.complete && img.naturalWidth > 0),
+          null, { timeout:18000, polling:200 },
+        );
+        const result = await bodySlot.evaluate(slot => {
+          const imgs = [...slot.querySelectorAll('.figure-thumb img')];
+          return { thumbs:imgs.length, decoded:imgs.filter(img => img.complete && img.naturalWidth > 0).length };
+        });
+        thumbs = result.thumbs;
+        decoded = result.decoded;
+      } catch (error) {
+        report.bodyImageError = String(error).slice(0,400);
+      }
+      report.bodySample = { doi:BODY_SAMPLE, found:sampleFound, thumbs, decoded };
+      if (!sampleFound || !decoded) failed = true;
+      await page.screenshot({ path:path.join(reportDir, 'gallery-body-figures.png') }).catch(() => {});
     }
     await context.close();
   }
