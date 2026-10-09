@@ -41,7 +41,7 @@ jobs:
           ! grep -F 'runSummaryReviewCycle' cloudflare/worker/src/index.js
           grep -F 'SUMMARY_REVIEW_ENABLED = "0"' .github/workflows/deploy-worker-frontend.yml
           grep -F 'SUMMARY_MODE = "scheduled_chatgpt_daily_no_api"' .github/workflows/deploy-worker-frontend.yml
-          grep -F 'crons = ["0 */6 * * *"]' .github/workflows/deploy-worker-frontend.yml
+          grep -F 'crons = ["*/15 * * * *"]' .github/workflows/deploy-worker-frontend.yml
           grep -F "'/api/article-summary/scheduled-handoff'" cloudflare/worker/src/index.js
           grep -F "'/api/admin/article-summary/handoff-backfill'" cloudflare/worker/src/index.js
           grep -F "Backfill encrypted daily-summary handoff" .github/workflows/deploy-worker-frontend.yml
