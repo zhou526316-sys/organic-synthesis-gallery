@@ -1,5 +1,19 @@
-import { EventBus, PDFViewer, SimpleLinkService } from 'pdfjs-dist/legacy/web/pdf_viewer.mjs';
 import 'pdfjs-dist/web/pdf_viewer.css';
+
+// PDF.js 6.x viewer bundle captures globalThis.pdfjsLib during evaluation.
+// A static viewer import runs before the document library is initialized and
+// causes AbortException destructuring failures. Load in a strict sequence.
+let componentsPromise = null;
+async function viewerComponents() {
+  if (!componentsPromise) {
+    componentsPromise = (async () => {
+      const engine = await import('pdfjs-dist/legacy/build/pdf.mjs');
+      globalThis.pdfjsLib = engine;
+      return import('pdfjs-dist/legacy/web/pdf_viewer.mjs');
+    })().catch(error => { componentsPromise = null; throw error; });
+  }
+  return componentsPromise;
+}
 
 /**
  * The PDF.js continuous document viewer owns its own lazy rendering queue:
@@ -8,7 +22,7 @@ import 'pdfjs-dist/web/pdf_viewer.css';
  *
  * Caller owns the PDF document and its signed Range transport, if any.
  */
-export function createContinuousPdfViewer({
+export async function createContinuousPdfViewer({
   container,
   viewer,
   pdf,
@@ -19,6 +33,7 @@ export function createContinuousPdfViewer({
   if (!container || !viewer || !pdf || pdf.numPages < 1) {
     throw new Error('pdf_continuous_invalid_arguments');
   }
+  const { EventBus, PDFViewer, SimpleLinkService } = await viewerComponents();
   let closed = false;
   let zoom = 1;
   let baseScale = 1;
