@@ -5,10 +5,13 @@ import { hydrateStatusImages, statusImageError, statusImageTag, viewStatusImage 
 const NAME = 'gallery-user-shell';
 const SESSION_KEY = 'organic-gallery-session-v1';
 const SESSION_USER_KEY = 'organic-gallery-session-user-v1';
+const DEVICE_ID_KEY = 'organic-gallery-device-id-v1';
 type Tab = 'saved' | 'notes' | 'followed' | 'settings' | 'login';
 type Provider = 'google' | 'wechat' | 'qq' | 'email';
-interface IntegrationStatus { auth: Record<Provider | 'local', boolean>; }
-interface AuthUser { id: string; displayName?: string | null; email?: string | null; avatarUrl?: string | null; localAccount?: boolean; emailVerified?: boolean; }
+interface IntegrationStatus { auth: Record<Provider | 'local' | 'phone', boolean>; }
+interface AuthUser { id: string; displayName?: string | null; email?: string | null; phoneMasked?: string | null; avatarUrl?: string | null; localAccount?: boolean; emailVerified?: boolean; }
+interface DeviceSession { sessionId: string; deviceLabel?: string | null; current: boolean; createdAt: number; lastSeenAt: number; expiresAt: number; }
+interface DeviceSessionList { limit: number; count: number; sessions: DeviceSession[]; }
 interface AuthApiErrorData { error?: string; challengeId?: string; retryAfter?: number; attemptsRemaining?: number; }
 class AuthApiError extends Error { constructor(message: string, readonly status: number, readonly data: AuthApiErrorData) { super(message); this.name = 'AuthApiError'; } }
 
@@ -43,6 +46,34 @@ function saveSessionToken(value: string, user: AuthUser | null = null): void {
   if (!value) cacheSessionUser(null);
   window.dispatchEvent(new Event('gallery-auth-session-changed'));
 }
+function currentDeviceId(): string {
+  try {
+    let id = localStorage.getItem(DEVICE_ID_KEY) || '';
+    if (/^[a-f0-9]{32}$/.test(id)) return id;
+    const data = new Uint8Array(16);
+    crypto.getRandomValues(data);
+    id = Array.from(data).map(byte => byte.toString(16).padStart(2, '0')).join('');
+    localStorage.setItem(DEVICE_ID_KEY, id);
+    return id;
+  } catch { return ''; }
+}
+function currentDeviceLabel(): string {
+  const agent = navigator.userAgent;
+  const browser = /Edg\//.test(agent) ? 'Edge'
+    : /Firefox\//.test(agent) ? 'Firefox'
+    : /Chrome\//.test(agent) ? 'Chrome'
+    : /Safari\//.test(agent) ? 'Safari' : '浏览器';
+  const device = /iPhone|iPad/.test(agent) ? 'iOS'
+    : /Android/.test(agent) ? 'Android'
+    : /Windows/.test(agent) ? 'Windows'
+    : /Macintosh/.test(agent) ? 'macOS'
+    : /Linux/.test(agent) ? 'Linux' : '设备';
+  return browser + ' · ' + device;
+}
+function deviceMetadata(): { deviceId: string; deviceLabel: string } {
+  return { deviceId: currentDeviceId(), deviceLabel: currentDeviceLabel() };
+}
+
 function returnUrl(): string { const url = new URL(location.href); url.hash = ''; return url.toString(); }
 
 export class GalleryUserShell extends HTMLElement {
@@ -55,7 +86,13 @@ export class GalleryUserShell extends HTMLElement {
   private integrations: IntegrationStatus | null = null;
   private authUser: AuthUser | null = cachedSessionUser();
   private authMode: 'login' | 'register' = 'login';
-  private authFlow: 'credentials' | 'register-code' | 'forgot-email' | 'reset-code' = 'credentials';
+  private authFlow: 'credentials' | 'register-code' | 'forgot-email' | 'reset-code' | 'phone' | 'phone-code' = 'credentials';
+  private phonePurpose: 'login' | 'bind' = 'login';
+  private phoneChallengeId = '';
+  private phonePending = '';
+  private phoneRequestBusy = false;
+  private devices: DeviceSessionList | null = null;
+  private sessionPoll: ReturnType<typeof setInterval> | null = null;
   private registerChallengeId = '';
   private registerEmail = '';
   private resetChallengeId = '';
@@ -90,6 +127,9 @@ export class GalleryUserShell extends HTMLElement {
     this.restoreSession();
     void this.refreshIntegrations();
     void this.consumeAuthHash();
+    this.sessionPoll = window.setInterval(() => {
+      if (sessionToken() && document.visibilityState === 'visible') void this.refreshSession();
+    }, 90_000);
   }
   disconnectedCallback(): void {
     document.removeEventListener('pointerdown', this.outside);
@@ -97,6 +137,8 @@ export class GalleryUserShell extends HTMLElement {
     window.removeEventListener('pageshow', this.restoreSession);
     document.removeEventListener('visibilitychange', this.restoreVisibleSession);
     store.removeEventListener('change', this.rerender);
+    if (this.sessionPoll !== null) window.clearInterval(this.sessionPoll);
+    this.sessionPoll = null;
   }
   attributeChangedCallback(): void { if (this.isConnected) this.render(); }
   private get language(): Language { return this.dataset.language === 'en' ? 'en' : 'zh'; }
@@ -346,6 +388,11 @@ export class GalleryUserShell extends HTMLElement {
 
   private async api<T>(path: string, init: RequestInit = {}): Promise<T> {
     const token = sessionToken();
+    // The browser ID is not a hardware fingerprint and is never sent to publishers.
+    if (typeof init.body === 'string' && /^\/api\/user-ui\/auth\/(?:exchange|password\/login|register\/verify|password\/change|email\/change\/confirm|phone\/verify)$/.test(path)) {
+      try { init = { ...init, body: JSON.stringify({ ...JSON.parse(init.body), ...deviceMetadata() }) }; }
+      catch { /* Let the backend report malformed input. */ }
+    }
     const headers = new Headers(init.headers || {});
     if (init.body && !headers.has('content-type')) headers.set('content-type', 'application/json');
     if (token) headers.set('authorization', `Bearer ${token}`);
@@ -358,6 +405,7 @@ export class GalleryUserShell extends HTMLElement {
   private async refreshIntegrations(): Promise<void> {
     try { this.integrations = await this.api<IntegrationStatus>('/api/user-ui/integrations'); }
     catch { this.integrations = null; }
+    if (!sessionToken() && this.integrations?.auth.phone && this.authFlow === 'credentials') this.authFlow = 'phone';
     this.render();
   }
 
@@ -387,8 +435,13 @@ export class GalleryUserShell extends HTMLElement {
     }
     if (sessionToken() !== token) return;
     if (negativeReads === 3) {
+      // The server rejected the bearer token three times (not a network timeout).
+      // Clear it across tabs; keep browser-local paper edits intact.
+      saveSessionToken('');
       this.authUser = null;
-      cacheSessionUser(null);
+      this.devices = null;
+      this.integrationMessage = this.tr('登录状态已失效，可能已在其他设备退出；本地内容仍保留。', 'This session is no longer active, possibly because another device signed in. Local data remains on this device.');
+      this.render();
     } else if (!this.authUser) {
       this.authUser = cachedSessionUser();
     }
