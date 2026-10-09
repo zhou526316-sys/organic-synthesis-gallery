@@ -1,0 +1,53 @@
+name: Gallery canonical-domain media card regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/main.ts'
+      - 'src/platform-api.ts'
+      - 'src/styles.css'
+      - 'tests/gallery-live-media.spec.ts'
+      - '.github/workflows/gallery-live-media-regression.yml'
+permissions:
+  contents: read
+jobs:
+  canonical-media:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install frontend and browser tools
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock @playwright/test@1.55.1
+          npx playwright install --with-deps webkit
+      - name: Build same Gallery frontend as Pages
+        run: |
+          node cloudflare/scripts/merge-curated-pages.mjs
+          node scripts/build-gallery-architecture-public.mjs
+          npm run build
+          node scripts/pages-release-delivery.mjs build dist
+      - name: Start bounded local static preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          nohup npm run preview -- --host 127.0.0.1 --port 4174 >/tmp/gallery-live-media-preview.log 2>&1 &
+          for i in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:4174/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/gallery-live-media-preview.log
+          exit 1
+      - name: Verify real app hooks render saved official TOC, Figure 1, and retry
+        run: npx playwright test tests/gallery-live-media.spec.ts --browser=webkit --reporter=line --workers=1
+      - name: Preserve browser failure trace
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-live-media-browser-qa
+          path: test-results/
+          retention-days: 7
+          if-no-files-found: ignore
