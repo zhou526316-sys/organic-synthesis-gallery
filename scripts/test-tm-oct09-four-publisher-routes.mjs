@@ -48,7 +48,7 @@ ok('existing legitimate ScienceDirect DOI resolution is retained',
 stubResponse={status:200,finalUrl:'https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc06407h',
   responseText:'Exact 10.1039/d6sc06407h publisher article content'};
 ok('existing legitimate RSC articleHTML DOI resolution is retained',
-  (await resolve({doi:'10.1039/d6sc06407h',publisher:'rsc'}))===stubResponse.finalUrl);
+  (await resolve({doi:'10.1039/d6sc06407h',publisher:'rsc',opportunisticEvidence:true}))===stubResponse.finalUrl);
 ok('read-only routes never upload, alter original queue or unlock PDF',calls>0
   && !source.slice(from,to).includes('/api/media/local-capture/import')
   && !source.slice(from,to).includes('privatePdfUploadRequest'));
