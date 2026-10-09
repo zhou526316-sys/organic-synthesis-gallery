@@ -1,6 +1,6 @@
 {
   "selectionAuthority": "explicit_user_selection",
-  "editorialRevision": "2026-10-09-r1",
+  "editorialRevision": "2026-10-09-r2",
   "paper": {
     "doi": "10.1126/science.aef3001",
     "title": "Asymmetric enzymatic hydrophosphorylation through O2 activation",
@@ -549,24 +549,26 @@
     },
     {
       "id": "fcover",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/science-aef3001-cover-source-true.png",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-09-r2/science-aef3001-cover-source-authentic-full-title.png",
       "caption": "",
       "body": false,
       "display_width_pct": 100,
       "source_figure": "Science original graphical abstract",
       "source_doi": "10.1126/science.aef3001",
-      "source_kind": "separately_approved_cover"
+      "source_kind": "source_pixel_exact_graphical_abstract_relayout_no_chemistry_redrawing",
+      "source_adjustment": "Reviewed October-9 Science original cover crop x620..1260 y96..526 resized proportionally to 760x511 and placed at x560,y0; white upper field, native-text-only navy lower field starting y514. No image-printed title, no altered chemistry, no redrawn bonds."
     }
   ],
   "cover": {
     "source_figure_id": "fcover",
     "canvas": {
       "width": 1880,
-      "height": 800
+      "height": 800,
+      "background": "#FFFFFF"
     },
     "crop_235_1": "0_0_1_1",
     "crop_1_1": "0.287234_0_0.712766_1",
-    "description": "Real Science graphical abstract, unredrawn. Dark native-title backing starts below scientific panel."
+    "description": "No top text label; original Science graphical abstract enlarged 18.75%. Native WeChat title appears in the lower navy backing. Both 2.35:1 and central square crop contain all scientific source pixels."
   },
   "takehome_heading": "这项工作的研究边界",
   "takehome": [

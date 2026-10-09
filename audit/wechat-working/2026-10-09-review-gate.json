@@ -1,6 +1,6 @@
 {
   "date": "2026-10-09",
-  "revision": "2026-10-09-r1",
+  "revision": "2026-10-09-r2",
   "articleCount": 2,
   "strictFigurePlacement": true,
   "selectionDois": [
@@ -12,34 +12,24 @@
     "10.1126/science.aeh7895"
   ],
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-09-r1-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-09-r1-images-only.md"
+    "textOnly": "audit/wechat-working/2026-10-09-r2-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-09-r2-images-only.md"
   },
   "sources": [
     {
       "path": "public/wechat-featured/2026-10-09.json",
-      "blobSha": "38ee768951715801ee3b0074c9c6a662f8c13442",
-      "sha256": "df71138e4970da97f89fb3840bf391a6fd059c6908e90e8054e9809b6dbda227"
+      "blobSha": "c5c777b76a1c49b45596c5228af727ac9a3e117d",
+      "sha256": "c364588d34ebc7b0ee4e6cd8432889660a61ef86b1e9573059fa5e95bcd46d99"
     },
     {
       "path": "public/wechat-retrospective/science-aeh7895-hezhi-tao-20261009.json",
-      "blobSha": "45e3117fdd8e7f18a8c1e6d42e4e7a6c68f6faf3",
-      "sha256": "b9335b7f07f96dc2147d700c4367b9b7fd91a9ea611e175b05b43a15255c21d7"
+      "blobSha": "99825c8d0fb97650ce0146b41f6c5ebd049d68db",
+      "sha256": "06d3b1ad448ffbb4b4871daea2eef376c6afc3b792dee22c81ab8d552c8fb296"
     },
     {
       "path": "public/wechat-editions/2026-10-09.json",
-      "blobSha": "eaf1cc82f970756352e849cafa15b2a4c4ed39f5",
-      "sha256": "4cffa92d5ac5aa0b211629bda371bfb74f134ac657b6a49e68128ccb2d140772"
-    },
-    {
-      "path": "audit/wechat-working/2026-10-09-r1-text-only.md",
-      "blobSha": "5b83c8039ef7708361c911ec189ee940341b5286",
-      "sha256": "cc0bf6942a502863141ea2ba5a002fff5938c44cee63db2aabb1684526e6ffce"
-    },
-    {
-      "path": "audit/wechat-working/2026-10-09-r1-images-only.md",
-      "blobSha": "7516f4e87ea9ea3a60c73e1a01afded5f0c48735",
-      "sha256": "96017cbf108e35f3627977b3b03139ebca7ee15f7e2402a14f2133d6f4611f68"
+      "blobSha": "ce398c77b60361cfead16ab5b7f3536a2c734a7b",
+      "sha256": "3e226ccfab2a69e651371502322e47646a2d1338514b4a5131e59a0ca2ff9b0a"
     },
     {
       "path": "audit/wechat-working/2026-10-09-science-aeh7895-text-only.md",
@@ -50,6 +40,16 @@
       "path": "audit/wechat-working/2026-10-09-science-aeh7895-images-only.md",
       "blobSha": "6c2d9ad9f25697e7b127d7911791426aa58a49a9",
       "sha256": "f3577149034bf64b416ea7d6ee2a123d183cfc6ee06425d2e72c5246c079c190"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-09-r2-text-only.md",
+      "blobSha": "8ea8bc126e5a911fb7211f90a83c293744198932",
+      "sha256": "f072fc73dd6e98975ff3bc7fba453bee76abe4e3b034267ba5e282a911c6a766"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-09-r2-images-only.md",
+      "blobSha": "d964984242cdabbbba4628f996e7ed103269a4c3",
+      "sha256": "7e2ba45f85905b3ffa6e4ec3fb0e9970435e9d132d541b42517efb157f735a34"
     }
   ],
   "assets": [
@@ -194,9 +194,9 @@
       "height": 1130
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-09-science-aef3001/science-aef3001-cover-source-true.png",
-      "blobSha": "d4875a7c261aa977e0a12e9344d2e597f5fd4ae6",
-      "sha256": "845e423aad090e75da8228124043d22e38dcfe7d18bd4f3687761839408c87fb",
+      "path": "public/wechat-assets/reviewed/2026-10-09-r2/science-aef3001-cover-source-authentic-full-title.png",
+      "blobSha": "b317e2824363e56707c3fe602750b950150e2da0",
+      "sha256": "b053a1cf071a824fc983c4c939d4455f6c82da4984ff5aba604f04ac92efcf24",
       "width": 1880,
       "height": 800
     },
@@ -375,5 +375,18 @@
     "conceptCoverCaution": "The decorative artwork includes illustrative structures but is not treated as a source-verifiable chemical diagram. Body figures are source-exact.",
     "publication": "draft only; publicSendAuthorized=false",
     "layout": "every reviewed body image appears exactly once, following its explanation"
+  },
+  "reviewNotesR2": {
+    "trigger": "User spotted misplaced Fig.4B and daily native-title/cover error",
+    "retrospective": "22 original body images mapped to their evidence paragraphs; Fig.4B r09 exactly after scope paragraph 3",
+    "fig4bScience": "Source Fig.4B reports 6a 64%, 6b 94%, (S)-6a 85%, 83% ee under standard conditions then DBU/DCM",
+    "featuredCover": "source-authentic chemistry; 760x511 from 640x430, header-free white top + navy native title region",
+    "featuredNativeTitle": "有机合成文献日报｜10.09｜今日精选｜Science：通过氧气活化实现酶催化不对称氢膦酰化",
+    "originalImageBytesExceptFeaturedCover": "unchanged",
+    "secondArticleSelectedCoverBytes": "unchanged",
+    "textReview": "pass: original paragraph preserved elsewhere and Fig.4B source-derived discussion expanded",
+    "imageReview": "pass: 44 decoded assets, 42 referenced images, unique placement and HTML dry-run",
+    "draftStatus": "review_ready_not_yet_written",
+    "publicSendAuthorized": false
   }
 }
