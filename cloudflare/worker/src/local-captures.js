@@ -1,4 +1,5 @@
 import { publicationPage } from './publication-pagination.js';
+import { completedBodyPacket } from '../../../shared/body-packet-completion.mjs';
 import { storeVerifiedStage } from './stage-storage.js';
 import { normalizeDoi } from './media.js';
 import { importFigure, importToc } from './media-write.js';
@@ -232,11 +233,8 @@ async function readTampermonkeyReportIndex(env) {
 // A successful body packet survives later TOC-only/failed diagnostics. It is
 // evidence only: existing per-image marker/hash/DOI/TOC/atomic gates still decide.
 function completedFigurePacket(row) {
-  return Boolean(row && normalizeDoi(row.doi) && row.captureVersion==='6.2.20'
-    && row.final===true && row.status==='success' && String(row.mediaNeed||'').includes('figures')
-    && /^[a-z0-9-]{16,80}$/i.test(String(row.jobId||''))
+  return Boolean(row && normalizeDoi(row.doi) && completedBodyPacket(row)
     && Number(row.updatedAt)>=MEDIA_REBUILD_EPOCH
-    && Number(row.figuresDiscovered)>0 && Number(row.figuresStored)===Number(row.figuresDiscovered)
     && captureBelongsToDoi(row,normalizeDoi(row.doi)));
 }
 function latestCompletedFigurePacket(item) {
@@ -248,6 +246,7 @@ function publicationReportRows(index) {
     .map(p=>({doi:p.doi,jobId:p.jobId,captureVersion:p.captureVersion,controllerRevision:p.controllerRevision,
       mediaNeed:p.mediaNeed,final:p.final,status:p.status,tocStatus:p.tocStatus,
       figuresDiscovered:p.figuresDiscovered,figuresStored:p.figuresStored,figureLabels:p.figureLabels||[],
+      fulltextStatus:p.fulltextStatus,privatePdfStatus:p.privatePdfStatus,reason:p.reason,
       articleUrl:p.articleUrl,sourceUrl:p.sourceUrl,updatedAt:p.updatedAt,finishedAt:p.finishedAt}))
     .sort((a,b)=>a.doi.localeCompare(b.doi));
 }
