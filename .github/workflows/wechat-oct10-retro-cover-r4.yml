@@ -1,0 +1,147 @@
+name: WeChat Oct10 retro source-lock cover R4
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/wechat-oct10-cover-r4.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-oct10-retro-cover-source
+  cancel-in-progress: false
+
+jobs:
+  review-and-import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 3
+      - name: Install source image validator
+        run: python3 -m pip install -q 'Pillow>=10,<13'
+      - name: Import exact-byte original chemistry cover into the existing R3 WeChat retrospective
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, importlib.util, io, json, re, subprocess, sys, urllib.request
+          from pathlib import Path
+          from PIL import Image
+          root=Path.cwd()
+          trigger=root/'audit/automation-triggers/wechat-oct10-cover-r4.json'
+          req=json.loads(trigger.read_text(encoding='utf-8'))
+          assert req['action']=='replace_reviewed_retrospective_cover_only'
+          assert req['date']=='2026-10-10'
+          assert req['doi']=='10.1038/s44160-026-01128-y'
+          assert req['revisionFrom']=='2026-10-10-qiu-r3'
+          assert req['revisionTo']=='2026-10-10-qiu-r4'
+          assert req['draftOnly'] is True and req['publicSendAuthorized'] is False
+          url=req['sourceUrl']
+          assert re.fullmatch(r'https://at\.adobe\.com/[A-Za-z0-9]+',url)
+          def sha(b):return hashlib.sha256(b).hexdigest()
+          def blob(b):return hashlib.sha1(f'blob {len(b)}\0'.encode()+b).hexdigest()
+          def dump(j):return (json.dumps(j,ensure_ascii=False,indent=2)+'\n').encode()
+          def load(rel):return (root/rel).read_bytes()
+          manifest_rel='public/wechat-retrospective/alcohols-electrochemical-crosscoupling-qiu-20261010-r3.json'
+          gate_rel='audit/wechat-working/retrospective-alcohols-electrochemical-crosscoupling-qiu-20261010-r3-review-gate.json'
+          image_md_rel='audit/wechat-working/2026-10-10-qiu-r3-images-only.md'
+          assert blob(load(manifest_rel))==req['expectedManifestBlobSha'], 'reviewed R3 manuscript moved'
+          assert blob(load(gate_rel))==req['expectedGateBlobSha'], 'reviewed R3 gate moved'
+          assert blob(load(image_md_rel))==req['expectedImageReviewBlobSha'], 'reviewed R3 image map moved'
+          with urllib.request.urlopen(url,timeout=35) as resp:raw=resp.read(2000001)
+          assert len(raw)<2000000 and sha(raw)==req['sourceSha256'], 'new cover cannot be authenticated'
+          with Image.open(io.BytesIO(raw)) as image:
+              image.load()
+              assert image.mode in ('RGB','RGBA') and image.size==(1254,1254)
+          old=json.loads(load(manifest_rel))
+          gate=json.loads(load(gate_rel))
+          assert old['slug']=='alcohols-electrochemical-crosscoupling-qiu-20261010-r3'
+          assert old['paper']['doi']==req['doi']
+          assert old['editorialRevision']=='2026-10-10-qiu-r3'
+          assert gate['textReview']==gate['imageReview']=='pass'
+          old_images=old['figures']
+          covers=[i for i in old_images if i['id']=='retro-cover' and i['body'] is False]
+          assert len(covers)==1
+          old_cover=covers[0]['repo_path']
+          assert old_cover=='public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/2026-10-10-qiu-electrolysis-source-chemistry-cover.png'
+          new_cover='public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/2026-10-10-qiu-electrolysis-source-chemistry-cover-r4.png'
+          dest=root/new_cover
+          assert not dest.exists(),'refusing to overwrite unrelated image'
+          dest.parent.mkdir(parents=True,exist_ok=True)
+          dest.write_bytes(raw)
+          before=[(x['id'],x['repo_path'],x['caption']) for x in old_images if x.get('body') is not False]
+          assert len(before)==31
+          covers[0]['repo_path']=new_cover
+          covers[0]['source_adjustment']=(
+              'R4 concept cover: 2 enlarged chemical structures cropped directly from main paper Fig.1c. '
+              'Authentic foreground RGB preserved; no generated chemistry. '
+              'Deep navy text, Fe anode/Ni foam cathode vector silhouettes, no bubbles. '
+              'Reviewed native 1254-square and mobile square crop.')
+          old['cover']['description']=(
+              'R4 single restrained graphical title, electrochemical Fe(+)/Ni foam(-) and '
+              'C(sp3)-C(sp3) concept; source-authentic two fully intact Fig.1c structures. '
+              'No drawn molecular structures or artificial orbitals; retains native square WeChat crop.')
+          old['editorialRevision']='2026-10-10-qiu-r4'
+          assert before==[(x['id'],x['repo_path'],x['caption']) for x in old['figures'] if x.get('body') is not False]
+          md=load(image_md_rel).decode('utf-8')
+          assert md.count(old_cover)==1
+          md=md.replace(old_cover,new_cover,1)
+          assert md.count('abceafa2dd3f62e76e53bad1bf1f5bace59d237eb7a7f6f40b0f86422bae8d6e')<=1
+          md=md.replace('abceafa2dd3f62e76e53bad1bf1f5bace59d237eb7a7f6f40b0f86422bae8d6e',sha(raw))
+          md += '\nR4：封面原始化学结构由 Fig. 1c 精确裁切，手机端字号与结构占比提高；正文其余31张图及全部段落不变。\n'
+          (root/manifest_rel).write_bytes(dump(old))
+          (root/image_md_rel).write_text(md,encoding='utf-8')
+          gate['revision']='2026-10-10-qiu-r4'
+          items=[x for x in gate['assets'] if x['path']==old_cover]
+          assert len(items)==1
+          items[0].update(path=new_cover,blobSha=blob(raw),sha256=sha(raw),width=1254,height=1254)
+          for p in [manifest_rel,image_md_rel]:
+              rows=[x for x in gate['sources'] if x['path']==p]
+              assert len(rows)==1
+              b=load(p)
+              rows[0].update(blobSha=blob(b),sha256=sha(b))
+          notes=gate.setdefault('reviewNotes',[])
+          if isinstance(notes,list):
+              notes.append('R4 mobile cover correction: exact source Fig1c molecules enlarged, no molecule redrawing, all original body scientific images unchanged, same retrospective slug and draft media_id to be reused.')
+          gate['draftReadback']='pending-r4'
+          (root/gate_rel).write_bytes(dump(gate))
+          # Enforce every source and asset immutable byte hash without WeChat API calls.
+          for item in gate['sources']+gate['assets']:
+              content=load(item['path'])
+              assert blob(content)==item['blobSha']
+              assert sha(content)==item['sha256']
+              if item in gate['assets']:
+                  with Image.open(io.BytesIO(content)) as im:
+                      im.load()
+                      assert (im.width,im.height)==(item['width'],item['height'])
+          publisher=root/'ops/wechat-publisher/create-draft.py'
+          spec=importlib.util.spec_from_file_location('retrospective_cover_r4_publisher',publisher)
+          module=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          module.require_editorial_review_gate(root/gate_rel,[root/manifest_rel])
+          urls={x['id']:'https://review.invalid/'+x['id']+'.png' for x in old['figures']}
+          page=module.build_retrospective_content(old,urls)
+          assert all(f['caption'] in page for f in old['figures'] if f.get('body') is not False)
+          assert len([f for f in old['figures'] if f.get('body') is not False])==31
+          # Confirm all original body scientific figures were never rewritten.
+          assert all(f['repo_path']!=new_cover for f in old['figures'] if f.get('body') is not False)
+          for path in [manifest_rel,gate_rel,image_md_rel,new_cover]:
+              print('R4 reviewed:',path)
+          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
+          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+          subprocess.run(['git','add','--',manifest_rel,gate_rel,image_md_rel,new_cover],check=True)
+          subprocess.run(['git','commit','-m','editorial: replace Oct10 Qiu concept cover with source-true mobile-safe R4 (same draft, no send)'],check=True)
+          for attempt in range(5):
+              subprocess.run(['git','fetch','origin','main'],check=True)
+              reb=subprocess.run(['git','rebase','origin/main'])
+              if reb.returncode:
+                  subprocess.run(['git','rebase','--abort'])
+                  raise RuntimeError('Concurrent editorial manifest changed; refused overwrite')
+              if subprocess.run(['git','push','origin','HEAD:main']).returncode==0:
+                  print('R4_SOURCE_REVIEW_SUCCESS_DRAFT_NOT_WRITTEN')
+                  break
+          else:raise RuntimeError('Failed CAS push after 5 attempts')
+          PY
