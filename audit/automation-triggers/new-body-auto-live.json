@@ -1,7 +1,7 @@
 {
-  "requestedAt": "2026-10-09T12:53:01.064+08:00",
+  "requestedAt": "2026-10-09T13:02:52.828+08:00",
   "readOnly": true,
   "productionWrites": 0,
-  "expectedMergedVerifierCommit": "deffac5112484dd9259e9c27d1be03a98c5f6e6f",
-  "reason": "One authorized read-only live verification after PR #433: allow exact read-only catalog-view/media batch POSTs for archived DOI cards, keep all state-changing POSTs denied; recheck all published SHA256, matching labels/URLs, figure1 pairing and browser image decode without recapture or new literature publication."
+  "expectedMergedVerifierCommit": "5a429f4fe7a3c81ccd865831ad946f608da1c4fd",
+  "reason": "One read-only production image and browser verification after PR #434. Retain search DOI in HTML type=search, permit only exact public D1/media read-only POSTs, compare all immutable body images by SHA256, then verify visible archived DOI card/figure labels and image decode without any writes or recapture."
 }
