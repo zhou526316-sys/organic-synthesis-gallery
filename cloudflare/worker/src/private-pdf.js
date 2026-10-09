@@ -115,6 +115,9 @@ async function readFastTicket(env, token) {
     const payload = JSON.parse(textDecoder.decode(plaintext));
     if (payload?.v !== 2 || !normalizeDoi(payload?.doi) ||
         !safePrivateR2Key(payload?.r2Key)) return null;
+    // Old in-flight tickets omit this field; all newly issued tickets bind to
+    // their originating login session to support immediate device revocation.
+    if (payload.sessionHash !== undefined && !/^[a-f0-9]{64}$/.test(String(payload.sessionHash))) return null;
     if (!Number.isSafeInteger(payload.size) || payload.size < 1) return null;
     if (!Number.isSafeInteger(payload.exp) || payload.exp < 1) return null;
     if (payload.mode == null) return { ...payload, mode: 'view', hardExp: payload.exp, nonce: '' };
@@ -266,10 +269,13 @@ export async function openPrivatePdf(request, env) {
     return reply(200, { available: false, doi, reason: 'pdf_header_invalid' });
   }
   const now = Date.now(), expiresAt = now + ACCESS_TTL_MS;
+  const loginBearer = String(request.headers.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
+  if (!loginBearer) return reply(401, { error: 'not_authenticated' });
+  const originatingSessionHash = await sha256Hex(loginBearer);
   const fastToken = await measure('ticket_create', () => makeFastTicket(env, {
     v: 2, uid: userId, doi: doc.doi, r2Key: doc.r2_key, size: Number(doc.byte_length),
     exp: expiresAt, hardExp: mode === 'view' ? now + VIEW_ABSOLUTE_TTL_MS : expiresAt,
-    mode, nonce: randomToken(12),
+    mode, nonce: randomToken(12), sessionHash: originatingSessionHash,
   }));
   const selfChecked = fastToken ? await measure('ticket_check', () => readFastTicket(env, fastToken)) : null;
   let ticket = selfChecked && selfChecked.r2Key === doc.r2_key &&
@@ -278,9 +284,12 @@ export async function openPrivatePdf(request, env) {
   if (!ticket) {
     ticket = randomToken(32);
     const tokenHash = await sha256Hex(ticket);
-    await measure('legacy_write', () => env.DB.prepare(
-      'INSERT INTO private_pdf_access_tokens (token_hash, user_id, document_id, created_at, expires_at) VALUES (?, ?, ?, ?, ?)'
-    ).bind(tokenHash, userId, doc.id, now, expiresAt).run());
+    await measure('legacy_write', () => env.DB.batch([
+      env.DB.prepare('INSERT INTO private_pdf_access_tokens (token_hash,user_id,document_id,created_at,expires_at) VALUES (?,?,?,?,?)')
+        .bind(tokenHash, userId, doc.id, now, expiresAt),
+      env.DB.prepare('INSERT INTO user_pdf_ticket_session_refs(ticket_hash,session_hash) VALUES (?,?)')
+        .bind(tokenHash, originatingSessionHash),
+    ]));
   }
   const url = new URL('/api/user-ui/private-pdf/file', request.url);
   url.searchParams.set('token', ticket);
@@ -328,6 +337,19 @@ export async function servePrivatePdf(request, env, cors = {}) {
     const fresh = Date.now() <= fast.exp;
     const continuation = !fresh && await hasValidContinuationCookie(request, env, fast, token);
     if (!fresh && !continuation) return privateFileError(401, 'pdf_ticket_expired', cors);
+    // Do not cache this decision across requests: a logged-out or evicted
+    // browser must lose access before its previously minted PDF ticket expires.
+    // The indexed lookup is intentionally the one extra D1 read per Range.
+    if (fast.sessionHash) {
+      if (!env?.DB) return privateFileError(503, 'pdf_session_check_unavailable', cors);
+      let active = null;
+      try {
+        active = await env.DB.prepare(
+          'SELECT token_hash FROM user_sessions WHERE token_hash=? AND user_id=? AND expires_at>?'
+        ).bind(fast.sessionHash, fast.uid, Date.now()).first();
+      } catch { return privateFileError(503, 'pdf_session_check_unavailable', cors); }
+      if (!active?.token_hash) return privateFileError(401, 'pdf_session_revoked', cors);
+    }
     row = { user_id: fast.uid, expires_at: fast.hardExp, doi: fast.doi,
       r2_key: fast.r2Key, byte_length: fast.size };
   } else {
@@ -338,8 +360,11 @@ export async function servePrivatePdf(request, env, cors = {}) {
          FROM private_pdf_access_tokens t
          JOIN private_pdf_documents d ON d.id = t.document_id AND d.active = 1 AND d.processing_state = 'ready'
          JOIN user_capabilities c ON c.user_id = t.user_id AND c.capability = ?
-        WHERE t.token_hash = ? LIMIT 1`
-    ).bind(READ_CAPABILITY, tokenHash).first();
+         LEFT JOIN user_pdf_ticket_session_refs ref ON ref.ticket_hash = t.token_hash
+         LEFT JOIN user_sessions active ON active.token_hash = ref.session_hash
+           AND active.user_id = t.user_id AND active.expires_at > ?
+        WHERE t.token_hash = ? AND (ref.ticket_hash IS NULL OR active.token_hash IS NOT NULL) LIMIT 1`
+    ).bind(READ_CAPABILITY, Date.now(), tokenHash).first();
     if (!row || Number(row.expires_at || 0) < Date.now()) {
       if (row) await env.DB.prepare('DELETE FROM private_pdf_access_tokens WHERE token_hash = ?').bind(tokenHash).run().catch(() => {});
       return privateFileError(401, 'pdf_ticket_expired_or_invalid', cors);
