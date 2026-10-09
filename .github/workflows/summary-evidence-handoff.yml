@@ -54,8 +54,14 @@ jobs:
           inventory=get('/api/article-summary/evidence-inventory',True)
           evidence={v['doi'].lower():v for v in inventory['items']}
           articles={v['doi'].lower():v for v in registry['articles'] if v.get('doi')}
-          current={d:a for d,a in articles.items() if re.fullmatch(r'\d{4}-\d{2}-\d{2}',str(a.get('addedDate',''))) and a['addedDate']>=cutoff}
-          unknown=[d for d,a in articles.items() if not re.fullmatch(r'\d{4}-\d{2}-\d{2}',str(a.get('addedDate','')))]
+          def valid_added_date(a):
+              value=a.get('addedDate')
+              if not isinstance(value,str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}',value):return False
+              try:datetime.date.fromisoformat(value)
+              except ValueError:return False
+              return True
+          current={d:a for d,a in articles.items() if valid_added_date(a) and a['addedDate']>=cutoff}
+          unknown=[d for d,a in articles.items() if not valid_added_date(a)]
           ready=[]; reused=[]; missing=[]
           for d,a in current.items():
               ev=evidence.get(d)
