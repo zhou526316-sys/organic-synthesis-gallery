@@ -72,3 +72,41 @@ if ($LASTEXITCODE -ne 0) {
     throw ('SSH/install stage failed. Exit code: ' + $LASTEXITCODE + '. Keep the gateway disabled.')
 }
 Write-Host ('Finished: ' + $Mode)
+
+if ($Mode -eq 'Install') {
+    # Test actual Windows external route using its ordinary certificate trust
+    # store. This does not authorize or retrieve a private PDF.
+    $Url = 'https://pdf.gczhouwld.com/_pdf_gateway_health'
+    $Stopwatch = [Diagnostics.Stopwatch]::StartNew()
+    try {
+        $Response = Invoke-WebRequest -Uri $Url -Method Get -TimeoutSec 12 -MaximumRedirection 0 -UseBasicParsing -ErrorAction Stop -Headers @{ Origin = 'https://gallery.gczhouwld.com'; 'Cache-Control' = 'no-cache' }
+        $Data = $Response.Content | ConvertFrom-Json -ErrorAction Stop
+        $AllowedOrigin = [string]$Response.Headers['Access-Control-Allow-Origin']
+        if ($Response.StatusCode -ne 200 -or $Data.ok -ne $true -or
+            $Data.role -ne 'private-pdf-ingress' -or $Data.authenticated -ne $false -or
+            $AllowedOrigin -ne 'https://gallery.gczhouwld.com' -or
+            $Response.BaseResponse.ResponseUri.AbsoluteUri -ne $Url) {
+            throw 'Unexpected public gateway health response or CORS origin'
+        }
+        $Stopwatch.Stop()
+        Write-Host ('[WINDOWS HTTPS PASS] Public health 200, CORS and trusted TLS. Elapsed=' + $Stopwatch.ElapsedMilliseconds + 'ms')
+    }
+    catch {
+        Write-Warning ('[WINDOWS HTTPS FAIL] ' + $_.Exception.Message)
+        throw 'Tencent gateway public acceptance failed from this Windows network. Leave Gallery routing DISABLED. Local gateway installation may already be complete; do not bypass certificate verification.'
+    }
+    # No account token, cookie, signed URL or real PDF is sent. Verify that
+    # absent file tickets are rejected before the upstream PDF is requested.
+    $Status = 0
+    try {
+        $Unused = Invoke-WebRequest -Uri 'https://pdf.gczhouwld.com/api/user-ui/private-pdf/file' -Method Get -TimeoutSec 12 -MaximumRedirection 0 -UseBasicParsing -ErrorAction Stop
+        $Status = [int]$Unused.StatusCode
+    }
+    catch {
+        if ($_.Exception.Response) { $Status = [int]$_.Exception.Response.StatusCode }
+        else { throw 'Unable to verify that unauthenticated file access is blocked.' }
+    }
+    if ($Status -ne 401) { throw 'Unauthenticated PDF-file rejection not proven. Leave Gallery routing DISABLED.' }
+    Write-Host '[WINDOWS SECURITY PASS] Unauthenticated PDF file request returned 401.'
+    Write-Host '[NEXT] Do not enable routing yet. Owner-only 206 Range, account isolation, real Edge and China-network acceptance remain.'
+}
