@@ -97,7 +97,7 @@ export function createLocalPdfReader({
   const zoomOut = find('zoom-out');
   const exportButton = find('export');
   const zoomLabel = dialog.querySelector('#reader-zoom-value');
-  const stage = dialog.querySelector('.reader-stage');
+  const stage = dialog.querySelector('.reader-scroll-container');
   const pages = dialog.querySelector('#local-pdf-continuous');
   const listeners = [];
   let task = null;
