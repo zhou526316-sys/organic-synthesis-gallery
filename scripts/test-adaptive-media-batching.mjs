@@ -9,7 +9,7 @@ const now=Date.now(),doi='10.1021/jacs.6c91234';
 const rows=n=>Array.from({length:n},(_,i)=>({doi:'10.1021/jacs.6c'+String(91000+i),updatedAt:now-i}));
 
 test('policy now releases completed single-article packets immediately',()=>{
-  assert.equal(policy.minNewArticles,1);assert.equal(policy.maxNewArticles,25);assert.equal(policy.maxFiguresPerCard,20);
+  assert.equal(policy.minNewArticles,1);assert.equal(policy.maxNewArticles,25);assert.equal(policy.maxFiguresPerCard,10);
   assert.equal(policy.requireOfficialTocInBuild,true);assert.equal(policy.requireCompletedCapturePacket,true);
   assert.equal(policy.backfillStabilityMinutes,15);assert.ok(Number.isFinite(Date.parse(policy.backfillCapturedBefore)));
 });
@@ -18,7 +18,7 @@ test('zero articles never triggers a deploy',()=>{const g=adaptiveBatchGate([],p
 test('a completed image packet survives an independent PDF 403 only',()=>{
   const item={doi:'10.1016/j.chempr.2026.103220',jobId:'publisher-job-123456789',
     captureVersion:'6.2.20',mediaNeed:'toc+figures+evidence+pdf',
-    final:true,status:'partial',tocStatus:'already_available',privatePdfStatus:'failed',
+    final:true,status:'partial',tocStatus:'already_available',privatePdfStatus:'failed',fulltextStatus:'not_requested',
     figuresDiscovered:7,figuresStored:7,figureLabels:['Figure 1','Figure 2','Figure 3','Figure 4','Figure 5','Figure 6','Figure 7'],
     reason:'combined_capture;toc=already_available;figures=7/7;evidence=not_requested;published=0;pdf=private_pdf_http_403'};
   const make=x=>completedPacketMap({reports:{items:[x]}});
