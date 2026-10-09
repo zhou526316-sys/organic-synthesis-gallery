@@ -1099,7 +1099,7 @@ async function hydrateMediaBatch(): Promise<void> {
         if ((slot.dataset.doi || '').toLowerCase() !== key) return;
         if (item.toc?.available && item.toc.imageUrl) renderToc(slot, item.toc);
         else if (liveMediaUnavailable) renderTocUnavailable(slot, 'service');
-        else {
+        else if (!slot.querySelector('img.toc-image')) {
           const pending = slot.querySelector<HTMLElement>('.generated-graphic-status');
           if (pending) pending.textContent = language === 'zh' ? '原始主图待补齐' : 'Original graphic pending';
           slot.dataset.state = 'not-yet-available';
@@ -1139,6 +1139,9 @@ async function hydrateMediaBatch(): Promise<void> {
 }
 
 function renderTocUnavailable(slot: HTMLElement, reason: 'service' | 'image'): void {
+  // Never replace an existing visible original, including a TOC already
+  // consumed by the article summary panel, with a transient API error.
+  if (slot.querySelector('img.toc-image')) return;
   if (slot.dataset.state === reason + '-error') return;
   const retry = document.createElement('button');
   retry.type = 'button';
