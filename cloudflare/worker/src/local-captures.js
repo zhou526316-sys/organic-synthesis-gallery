@@ -101,11 +101,10 @@ export function angewOfficialGaEvidenceError(item, requestedDoi = item?.doi) {
   let path;
   try { path = decodeURIComponent(source.pathname).toLowerCase(); }
   catch { return 'angew_ga_source_path_invalid'; }
-  const expectedSuffix = /^10\.1002\/anie\.([0-9]{5,8})/.exec(doi);
-  if (expectedSuffix) {
-    const assetIds = [...path.matchAll(/anie[._-]?([0-9]{5,8})(?=[^0-9]|$)/gi)];
-    if (assetIds.some(match => match[1] !== expectedSuffix[1])) return 'angew_cross_article_ga_asset';
-  }
+  // -gra- filenames contain Wiley-internal asset numbers, not DOI suffixes.
+  // Refuse a real foreign DOI embedded in the media URL, not different numbers.
+  if (embeddedKnownDois(item?.sourceUrl || '').some(sourceDoi => sourceDoi !== doi))
+    return 'angew_explicit_foreign_doi_source';
   const officialAsset = /-gra-\d+(?:[-_.]|$)|graphical[-_]abstract|visual[-_]abstract|(?:^|[\/_-])(?:ga|fx)0*1(?:[-_.]|$)/i.test(path);
   const headMetadata = candidateSource === 'article_head_metadata'
     && /^(?:graphical_abstract|toc_graphic|abstract_image)$/.test(String(item?.assetType || ''));
