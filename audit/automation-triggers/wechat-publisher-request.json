@@ -1,17 +1,19 @@
 {
-  "requestId": "wechat-2026-10-09-r1-user-approved-two-science-initial-draft",
-  "requestedAt": "2026-10-09T11:10:00+08:00",
+  "requestId": "wechat-2026-10-09-r2-same-media-correct-fig4b-and-daily-cover",
+  "requestedAt": "2026-10-09T03:35:17.589Z",
   "publicationDate": "2026-10-09",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-09-r1",
+  "editorialRevision": "2026-10-09-r2",
   "approvedGate": "audit/wechat-working/2026-10-09-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
     "10.1126/science.aef3001",
     "10.1126/science.aeh7895"
   ],
+  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWE4Nt7iQ0MsStYhbY_QtnZvPa4Y4cW7sWdrXjysQoIjO",
   "draftOnly": true,
   "requireDraftGetReadback": true,
   "publicSendAuthorized": false,
-  "reason": "Owner approved preparing today's two-item WeChat draft only, with user-selected Science aef3001 as 今日精选, Science aeh7895 何智涛 as independent 往期精选, reviewed 20+22 source figures and 2 covers from R1 fingerprint gate, same-day 08:00 verified 28-paper Gallery index. Never reuse Oct8 media_id; initial Oct9 draft only. No freepublish/submit or group sending."
+  "prePublishQA": "audit/wechat-working/2026-10-09-r2-correction-qa.json",
+  "reason": "User corrected Science Oct9 main cover/title and observed retrospective Fig4B incorrectly at end. Reviewed R2 fixes all 22 evidence paragraph image placements; Fig4B r09 is after scope paragraph3 with DBU / 6a/6b/(S)-6a data. Restore full native first headline and source-authentic enlarged TOC cover with navy bottom. Keep second article user-approved seven-circle cover and all 42 body images. Update the SAME October9 two-article media_id only, require draft/get and new real relay preview. Never mass send."
 }
