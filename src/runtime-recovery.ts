@@ -268,7 +268,10 @@ observer.observe(document.documentElement, { childList: true, subtree: true, att
 document.addEventListener('click', () => scheduleScan(0), true);
 window.addEventListener('pageshow', () => scheduleScan(0));
 window.addEventListener('scroll', () => scheduleScan(60), { passive: true });
-let lastMediaRevalidation = 0;
+// The initial shared manifest read is already fresh. A media-update event
+// immediately after mount should refresh the small canonical DOI batch, not
+// force another 2MB static index request.
+let lastMediaRevalidation = Date.now();
 window.addEventListener('gallery-assets-updated', () => {
   const now = Date.now();
   if (now - lastMediaRevalidation >= 45_000) {
