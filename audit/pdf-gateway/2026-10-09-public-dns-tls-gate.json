@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "beijingObserved": "2026-10-09 14:05:29",
+  "project": "Organic Synthesis Gallery owner-private PDF Tencent independent fallback",
+  "mainline": "main unchanged by gateway enablement",
+  "branch": "feature/owner-private-pdf-dual-ingress-20261008",
+  "branchEvidenceCommit": "2e5ec37e567cfebb3cecffc0f61d4f874d493af3",
+  "pullRequest": 420,
+  "draft": true,
+  "merged": false,
+  "routingEnabled": false,
+  "sources": [
+    {
+      "run": 37891328515,
+      "type": "public_dns_https_no_auth",
+      "status": "failed_cert_hostname_mismatch"
+    },
+    {
+      "run": 37891507915,
+      "type": "public_certificate_subject_diagnostic_without_http_or_credentials",
+      "status": "confirmed_wrong_tls_certificate"
+    }
+  ],
+  "observations": {
+    "location": "GitHub-hosted runner outside Chinese mainland; cannot substitute for actual China Telecom/Unicom/Mobile or owner's Edge",
+    "pdfDnsA": [
+      "43.135.32.73"
+    ],
+    "relayDnsA": [
+      "43.135.32.73"
+    ],
+    "sameExistingTencentIp": true,
+    "httpsGet": "ERR_TLS_CERT_ALTNAME_INVALID",
+    "tlsCertificateCommonName": "relay.gczhouwld.com",
+    "tlsCertificateSanDns": [
+      "relay.gczhouwld.com"
+    ],
+    "certificateNamesPdfHost": false,
+    "certificateExpiryPublic": "Dec 22 16:07:38 2026 GMT",
+    "upstreamOwnerAuthorizationTested": false,
+    "range206TestedAgainstLiveGateway": false,
+    "privatePdfDownloaded": false,
+    "serverMutations": false,
+    "passedLiveAllNetworks": false
+  },
+  "operationalBlocker": "Server needs dedicated pdf.gczhouwld.com TLS certificate and isolated Nginx gateway vhost; current HTTPS presents relay-only certificate; no SSH tool session has been established in this chat.",
+  "approvedOneSSHInstaller": {
+    "launcherPinnedCommit": "2e5ec37e567cfebb3cecffc0f61d4f874d493af3",
+    "launcherPath": "deploy/pdf-gateway/run-once-from-windows.ps1",
+    "pinnedPayloadCommit": "5693dd5a43f46cc9fd35842983b308b4c9c08fb5",
+    "pinnedPayloadShaMatchesReviewed": true,
+    "mode": "Install; internally preflight then guarded independent TLS/Nginx, confirmation YES, one WeChat QR SSH, rollback on installation failure",
+    "incrementalPaidServiceRequested": false
+  },
+  "nextGates": [
+    "Owner must initiate single-SSH QR authenticated install on existing Tencent machine (not possible by current read-only tools).",
+    "Repeat public DNS/TLS gateway health and anonymous denied/CORS tests; verify standard HTTPS without disabling certificate checks.",
+    "Confirm WeChat relay host/config SHA and health unchanged, nginx -t, the provider traffic quota and no unexpected paid package.",
+    "Test owner real logged-in PDF authorization, genuine 206 Range and continuous rendering/download from at least one Mainland Edge connection; test unauthorized user blocked.",
+    "Only after all acceptance gates pass: review PR #420 for baseline drift, merge and enable routing in a separate guarded Pages change with rollback evidence."
+  ]
+}
