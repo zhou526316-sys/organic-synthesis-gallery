@@ -2321,16 +2321,9 @@ function embeddedJobDois(value) {
   // Wiley's numbered manuscript Figures/Schemes, including substrate-expansion panels,
   // are not an official TOC even when a neighboring section says Graphical Abstract.
   // Inspect only the owning figure block; do not infer roles from whole-page text.
-  function wileyGaAssetMatchesDoi(value, job) {
-    var doi = normalizeDoi(job && job.doi), expected = /^10\.1002\/anie\.([0-9]{5,8})/.exec(doi);
-    if (!expected) return true;
-    try {
-      var path = decodeURIComponent(new URL(String(value || ''), location.href).pathname);
-      var observed = Array.from(path.matchAll(/anie[._-]?([0-9]{5,8})(?=[^0-9]|$)/gi));
-      return observed.every(function(m) { return m[1] === expected[1]; });
-    } catch (_) { return false; }
-  }
-
+  // Wiley -gra- file numbers are internal image/manuscript asset identifiers.
+  // They do not have to equal the publisher DOI numeric suffix. DOI binding
+  // is enforced by assertBoundCaptureJob and candidateBelongsToJob instead.
   function wileyBodyOnlyVisual(node) {
     if (!node || !node.closest) return false;
     var block = node.closest('figure,[role="figure"],.article-section__figure,.fig-section,.article-figure,.figure');
@@ -2390,7 +2383,7 @@ function embeddedJobDois(value) {
     function add(url, node, source, score, text) {
       url = normalizeUrl(url, base);
       if (!url || !wileyAssetHostAllowed(url) || !candidateBelongsToJob(url, job) || reject(text, url)) return;
-      if (!wileyGaUrlSignal(url) || !wileyGaAssetMatchesDoi(url, job) || wileyBodyOnlyVisual(node) || wileyBodySourceCollision(url, scope, base)) return;
+      if (!wileyGaUrlSignal(url) || wileyBodyOnlyVisual(node) || wileyBodySourceCollision(url, scope, base)) return;
       var row = {
         url: url,
         kind: 'official',
@@ -2922,7 +2915,7 @@ function embeddedJobDois(value) {
       if (String(job && job.publisher || '') === 'wiley' && row && row.kind === 'official') {
         var supportedMeta = row.source === 'article_head_metadata'
           && /citation_(?:graphical_abstract|visual_abstract|toc_graphic|abstract_image)/i.test(String(row.text || ''));
-        if (!wileyAssetHostAllowed(row.url) || !wileyGaAssetMatchesDoi(row.url, job) || wileyBodyOnlyVisual(row.element)
+        if (!wileyAssetHostAllowed(row.url) || wileyBodyOnlyVisual(row.element)
           || wileyBodySourceCollision(row.url, scope, baseUrl || location.href)
           || (!wileyGaUrlSignal(row.url) && !supportedMeta)) {
           diag.rejected++;
