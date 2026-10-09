@@ -1176,9 +1176,11 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
   image.className = 'toc-image';
   const rect = slot.getBoundingClientRect();
   const priority = rect.bottom >= -80 && rect.top <= innerHeight + (innerWidth <= 680 ? 220 : 120);
-  image.loading = priority ? 'eager' : 'lazy';
+  // The image remains detached until load; a detached lazy image never starts.
+  // Limit work via visibleMediaTargets(), with low fetch priority for preloads.
+  image.loading = 'eager';
   image.decoding = 'async';
-  if (priority) image.setAttribute('fetchpriority', 'high');
+  image.setAttribute('fetchpriority', priority ? 'high' : 'low');
   const label = document.createElement('span');
   label.className = 'toc-label';
   label.textContent = result.primary?.label || (result.reason === 'figure1_fallback'
