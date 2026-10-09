@@ -56,31 +56,41 @@ try{
     const results=await Promise.all([mediaInventory(left),...(right.length?[mediaInventory(right)]:[])]);
     media.push(...results.flat());
   }
-  const [staged,reports]=await Promise.all([
+  const [staged,reports,siteManifest]=await Promise.all([
     json(API+'/api/article-figures/staged?inventory=1&ts='+Date.now(),6_000_000),
-    json(API+'/api/media/tampermonkey-reports?limit=200&ts='+Date.now(),4_000_000)
+    json(API+'/api/media/tampermonkey-reports?limit=200&ts='+Date.now(),4_000_000),
+    json(SITE+'/media-index.json?ts='+Date.now(),12_000_000)
   ]);
+  assert.ok(siteManifest.items && typeof siteManifest.items==='object' && !Array.isArray(siteManifest.items),
+    'published static media manifest invalid');
   assert.equal(staged.schemaVersion,'capture-inventory-v1','stage inventory not ready');
   assert.ok(staged.complete===true&&Array.isArray(staged.items),'stage inventory incomplete');
   assert.ok(Array.isArray(reports.items),'report index unavailable');
   const mediaBy=new Map(media.map(row=>[normalized(row.doi),row]));
   const stageBy=new Map(staged.items.map(row=>[normalized(row.doi),row]));
   const reportsBy=new Map(reports.items.map(row=>[normalized(row.doi),row]));
+  const publicBy=new Map(Object.entries(siteManifest.items).map(([doi,row])=>[normalized(doi),row]));
+  const staticAllFigureCount=Object.values(siteManifest.items).reduce((total,row)=>total+
+    (Array.isArray(row?.figures?.figures)?row.figures.figures.length:0),0);
 
   for(const raw of recent){
     const doi=normalized(raw.doi),m=mediaBy.get(doi);
     assert.ok(m,'missing inventory row '+doi);
-    const stage=stageBy.get(doi),latest=reportsBy.get(doi);
+    const stage=stageBy.get(doi),latest=reportsBy.get(doi),staticRow=publicBy.get(doi)||{};
     const ids=stageLabels(stage);
-    const published=n(m.figureCount),stagedUnique=ids.length;
+    const publicFigures=Array.isArray(staticRow?.figures?.figures)?staticRow.figures.figures.filter(f=>f?.imageUrl&&f?.label):[];
+    const published=publicFigures.length,dbPublished=n(m.figureCount),stagedUnique=ids.length;
+    const publicLabels=new Set(publicFigures.map(f=>String(f.label||'')));
+    const unionLabels=new Set([...ids,...publicLabels]);
     const expected=Math.max(n(stage?.expectedFigureCount),n(latest?.figuresDiscovered));
     const primaryKind=text(m.primaryKind,45);
     const acceptedFallback=primaryKind==='figure1'||Boolean(m.figureOneStored);
     const hasVisual=m.tocStored===true||primaryKind==='official_visual'||acceptedFallback;
     const tocGap=!hasVisual||m.suspiciousToc===true;
-    const figuresUncaptured=expected>stagedUnique;
-    const capturedNotPublished=stagedUnique>published;
-    const figureUnknown=expected===0&&stagedUnique===0&&published===0;
+    const figuresUncaptured=expected>unionLabels.size;
+    const unpublicLabels=ids.filter(label=>!publicLabels.has(label));
+    const capturedNotPublished=unpublicLabels.length>0;
+    const figureUnknown=expected===0&&unionLabels.size===0;
     const pdfStatus=text(latest?.privatePdfStatus,42);
     const latestReason=text(latest?.reason,180);
     const pdfDenied=/private_pdf_http_40[139]|access_denied_http_40[139]/i.test(latestReason)||
@@ -95,8 +105,9 @@ try{
       addedDate:String(raw.addedDate||''),tocGap,rawToc:m.tocRawStored===true,
       tocPublished:m.tocStored===true,tocReason:text(m.tocReason,65),
       suspiciousToc:m.suspiciousToc===true,acceptedFallback,
-      stageFigures:stagedUnique,publishedFigures:published,expectedFigures:expected,
-      figuresUncaptured,capturedNotPublished,figureUnknown,
+      stageFigures:stagedUnique,publishedFigures:published,databaseFigures:dbPublished,
+      stagedNotPublishedLabels:unpublicLabels.slice(0,16),expectedFigures:expected,
+      knownFigureLabels:unionLabels.size,figuresUncaptured,capturedNotPublished,figureUnknown,
       pdfState,evidenceState,latestStatus:text(latest?.status,36),
       lastAttemptAt:text(latest?.finishedAt,44),lastReason:latestReason
     };
@@ -133,7 +144,11 @@ try{
     observedPdfFailedOther:rows.filter(r=>r.pdfState==='reported_failed').length,
     pdfCoverageUnknown:rows.filter(r=>['not_confirmed','not_requested'].includes(r.pdfState)).length,
     reportIndexAvailable:reports.items.length,stageInventoryCount:staged.count,
-    importantCaveat:'PDF counts are reported latest-attempt observations, NOT the owner-authoritative authenticated PDF inventory. Stage/published figure counts are distinct and not summed.'
+    staticManifestGeneratedAt:siteManifest.generatedAt,staticManifestDois:Object.keys(siteManifest.items).length,
+    staticManifestAllBodyFigures:staticAllFigureCount,
+    databaseFigureCountScoped:rows.reduce((total,r)=>total+r.databaseFigures,0),
+    staticFigureCountScoped:rows.reduce((total,r)=>total+r.publishedFigures,0),
+    importantCaveat:'Publicly displayed body images use Gallery static media-index.json, not Cloudflare D1 article_figures rows; PDF counts are latest-attempt observations, not the authenticated owner PDF inventory. Stage and published figure labels are compared by semantic label, never summed.'
   };
   const score=r=>(r.tocGap?100:0)+(r.figuresUncaptured?30:0)+(r.capturedNotPublished?15:0)+
     (r.pdfState==='reported_access_denied'?8:0)+(r.figureUnknown?5:0);
