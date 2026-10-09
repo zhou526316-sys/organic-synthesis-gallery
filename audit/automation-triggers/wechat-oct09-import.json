@@ -1,0 +1,32 @@
+{
+  "requestId": "wechat-2026-10-09-user-selected-two-science-review-import-r1",
+  "action": "materialize_user_selected_editorial_only",
+  "date": "2026-10-09",
+  "revision": "2026-10-09-r1",
+  "expectedDois": [
+    "10.1126/science.aef3001",
+    "10.1126/science.aeh7895"
+  ],
+  "publicationMode": "draft_only",
+  "ownerApprovedRetrospectiveCover": true,
+  "publicSendAuthorized": false,
+  "files": {
+    "package": {
+      "url": "https://at.adobe.com/ogs1n8AVjFVyR0tT",
+      "sha256": "7489639db3305f3ed5687d76a7000ff49eb14a333fc8bb6fcc4d000f9bbbaaa8"
+    },
+    "main": {
+      "url": "https://at.adobe.com/azVuhMuemR3qvugn",
+      "sha256": "9f08208f5f130336e82582ccee489e1cdaee57120c7a0fe360c621c70496ef9a"
+    },
+    "si": {
+      "url": "https://at.adobe.com/EcHEI42wBl0p9lYm",
+      "sha256": "55158e5a6e68b4a14798acb31d61cb5291fb1c6725b6f56ffe8b7be7a47bd0f9"
+    },
+    "cover": {
+      "url": "https://at.adobe.com/LcajIDY5pzYnKXfl",
+      "sha256": "2b1231a84cddbeec17ee4e2e8598488299988bb354df0a2575425f42ee17c407"
+    }
+  },
+  "note": "Only materialize source-authentic, editorially reviewed images and manifests into main. This action MUST NOT update WeChat draft or publish. Use the existing canonical 2026-10-09 08:00 accepted batch (28)."
+}
