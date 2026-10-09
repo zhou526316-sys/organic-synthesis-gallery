@@ -3,6 +3,7 @@ import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {chromium} from 'playwright';
 import {sha256,exactKey,evidenceKey,validateNewBodyMetadata,validateNewBodyBytes} from '../cloudflare/scripts/new-body-auto-validation.mjs';
 import {selectLiveVerificationBatch} from './select-new-body-live-dois.mjs';
+import {liveMediaPrimaryProof} from './live-media-primary-proof.mjs';
 const base='https://gallery.gczhouwld.com/';
 const baseUrl=new URL(base);
 const out=process.env.RUNNER_TEMP+'/new-body-auto-live';await mkdir(out,{recursive:true});
@@ -53,8 +54,10 @@ try{
  }
  for(const doi of verification.dois){
    const toc=media.items[doi]?.toc;
-   assert.ok(toc?.available&&toc?.imageUrl&&!/fallback/i.test(String(toc.reason||''))&&!String(toc.reason||'').startsWith('figure_fallback:'),'body published without official TOC '+doi);
-   result.pairedToc.push({doi,imageUrl:toc.imageUrl,contentHash:toc.contentHash||null,reason:toc.reason||null,official:true});
+   const proof=liveMediaPrimaryProof(doi,media.items[doi]);
+   assert.ok(proof.valid,'body published without verified official or Figure 1 primary '+doi+' '+proof.kind);
+   result.pairedToc.push({doi,imageUrl:toc.imageUrl,contentHash:toc.contentHash||null,reason:toc.reason||null,
+     kind:proof.kind,official:proof.kind==='official',verifiedFigure1:proof.kind==='verified_figure1'});
  }
  result.retainedReviewedToc1=Object.values(media.items).filter(x=>x.toc?.recoveryId==='toc-batch1-20260922').length;
  result.retainedReviewedToc2=Object.values(media.items).filter(x=>x.toc?.recoveryId==='sealed-media-batch2-20260923'&&!/fallback/i.test(x.toc.reason||'')).length;
@@ -69,7 +72,27 @@ try{
    await page.locator('#search').fill(doi);await page.locator('#search').press('Escape');
    const selector='.figure-strip-slot[data-figure-doi="'+doi+'"]',strip=page.locator(selector);await strip.waitFor({timeout:20000});await strip.scrollIntoViewIfNeeded();
    const expected=media.items[doi].figures.figures;
-   await page.waitForFunction(({s,n})=>document.querySelectorAll(s+' .figure-thumb img').length===n,{s:selector,n:expected.length},{timeout:20000});
+   try{
+     await page.waitForFunction(({s,n})=>document.querySelectorAll(s+' .figure-thumb img').length===n,{s:selector,n:expected.length},{timeout:20000});
+   }catch(initialError){
+     // A fast sequence of searches can leave a bounded media batch in flight.
+     // Re-signal the existing scroll hydration hook once and fail with DOI
+     // evidence rather than reporting an anonymous 20-second timeout.
+     await page.evaluate(()=>window.dispatchEvent(new Event('scroll')));
+     try{
+       await page.waitForFunction(({s,n})=>document.querySelectorAll(s+' .figure-thumb img').length===n,{s:selector,n:expected.length},{timeout:12000});
+     }catch(retryError){
+       const diagnostic=await page.evaluate(s=>{
+         const slot=document.querySelector(s),card=slot?.closest('.card');
+         return {state:slot?.getAttribute('data-state')||null,rendered:slot?.querySelectorAll('.figure-thumb img').length||0,
+           hidden:slot?.hidden??null,title:card?.querySelector('h2')?.textContent?.slice(0,90)||null,
+           resultCount:document.querySelector('#resultCount')?.textContent?.slice(0,100)||null};
+       },selector);
+       throw new Error('body_card_wait_failed doi='+doi+' expected='+expected.length+
+         ' observed='+JSON.stringify(diagnostic)+' first='+String(initialError?.message||initialError)+
+         ' retry='+String(retryError?.message||retryError));
+     }
+   }
    await strip.locator('.figure-thumb img').evaluateAll(images=>images.forEach(x=>{x.loading='eager';}));
    await page.waitForFunction(s=>[...document.querySelectorAll(s+' .figure-thumb img')].every(x=>x.complete&&x.naturalWidth>0),selector,{timeout:25000});
    const images=await strip.locator('.figure-thumb img').evaluateAll(images=>images.map(x=>({label:x.alt,url:x.currentSrc||x.src,width:x.naturalWidth,height:x.naturalHeight})));
