@@ -59,6 +59,12 @@ async function test(name,fn){
  try{await fn();assert.equal(record.pageErrors.length,0,'uncaught browser error');assert.deepEqual(record.unmockedExternalRequests,[],'all external requests must use fixtures');record.status='passed';passed++;console.log('PRIVATE_PDF_BROWSER_PASS '+name);}
  catch(error){
   record.status='failed';record.error=String(error?.stack||error);
+  console.error('PDF_CONTINUOUS_FIXTURE_ERROR '+JSON.stringify({
+    pageErrors:record.pageErrors.slice(0,4),
+    consoleErrors:record.consoleErrors.slice(0,4),
+    failedRequests:record.failedRequests.slice(0,4),
+    unmockedExternalRequests:record.unmockedExternalRequests.slice(0,4),
+  }));
   const slug=String(cases.length).padStart(2,'0')+'-'+name.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,55);
   let index=0;record.screenshots=[];record.traces=[];
   for(const context of activeContexts){
