@@ -1,0 +1,21 @@
+name: Private PDF owner-grant live no-credential acceptance
+on:
+  push:
+    branches: [diag/pdf-owner-grant-live-smoke-20261009]
+    paths:
+      - 'scripts/pdf-owner-grant-live-smoke-20261009.mjs'
+      - '.github/workflows/pdf-owner-grant-live-smoke-20261009.yml'
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  unauthenticated:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+      - name: Read-only CORS 204, anonymous denial 401 and owner UI live
+        run: node scripts/pdf-owner-grant-live-smoke-20261009.mjs
