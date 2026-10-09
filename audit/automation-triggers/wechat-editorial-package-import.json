@@ -1,24 +1,19 @@
 {
-  "requestId": "wechat-2026-10-08-r3-white-TOC-native-title-import",
-  "requestedAt": "2026-10-08T14:06:00+08:00",
+  "requestId": "wechat-2026-10-10-qiu-nature-synthesis-retro-r1-reviewed-original-image-import",
+  "requestedAt": "2026-10-09T23:05:00+08:00",
   "action": "import_reviewed_editorial_package",
-  "revision": "2026-10-08-r3",
-  "doi": "10.1038/s41929-026-01602-y",
-  "packageUrl": "https://at.adobe.com/oRErUSbyYk4eVElF",
-  "packageSha256": "ca6936626e34288d3a153f35f8899a0bad3e009068d9918f386fee655b8631b1",
-  "manifestPath": "public/wechat-retrospective/os1-multicentred-sulfur-20261008.json",
-  "gatePath": "audit/wechat-working/2026-10-08-review-gate.json",
-  "replaceExisting": {
-    "public/wechat-featured/2026-10-08.json": "c47547d3de4b93d87e065ab8b17cd23b793f5554",
-    "public/wechat-editions/2026-10-08.json": "583f85fe696baacc8f6ab49d4c268c100d1d812c",
-    "audit/wechat-working/2026-10-08-review-gate.json": "8d3b7f5ead0685ba88c7f644e0297bd82acdaae9"
-  },
-  "expectedArticleCount": 2,
+  "revision": "2026-10-10-qiu-r1",
+  "doi": "10.1038/s44160-026-01128-y",
+  "targetDateBeijing": "2026-10-10",
+  "packageUrl": "https://at.adobe.com/g62Z21lsXemJLAYe",
+  "packageSha256": "39206903c9b9953fda7ce872a6b92b4791fb369b37fcbd56018faeb667cd4702",
+  "manifestPath": "public/wechat-retrospective/alcohols-electrochemical-crosscoupling-qiu-20261010.json",
+  "gatePath": "audit/wechat-working/retrospective-alcohols-electrochemical-crosscoupling-qiu-20261010-review-gate.json",
+  "expectedArticleCount": 1,
   "expectedDois": [
-    "10.1021/jacs.6c14748",
-    "10.1038/s41929-026-01602-y"
+    "10.1038/s44160-026-01128-y"
   ],
   "thisStepWritesDraft": false,
   "publicSendAuthorized": false,
-  "note": "Single source-locked R3 correction: restore authentic white original-color JACS TOC, keep top 今日精选·JACS, reserve bottom native white title region with no structures; use paper-title-only native article title; preserve other 33 assets and approved retrospective cover. Import-only; draft/update follows only after successful CAS review."
+  "note": "The user selected a Nature Synthesis article as the October 10 retrospective. Import one fully original-science-source 32-figure deep-read with 251-page SI review and source-lock chemical-cutout non-bubble cover. No October 10 daily-feature selection yet: do not invent or replace it. This importer is asset and review gate only; a separate one-time standalone retrospective draft/add with draft/get may follow."
 }
