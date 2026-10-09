@@ -25,10 +25,6 @@ interface StaticMediaItem {
   };
 }
 
-interface StaticMediaManifest {
-  items?: Record<string, StaticMediaItem>;
-}
-
 const translations = new Map<string, string>();
 let scanTimer: number | null = null;
 
