@@ -4,6 +4,7 @@
 // and MUST NOT turn on the Gallery route manifest.
 import dns from 'node:dns/promises';
 import https from 'node:https';
+import tls from 'node:tls';
 import fs from 'node:fs/promises';
 import { performance } from 'node:perf_hooks';
 
@@ -64,6 +65,30 @@ function request(method,path) {
     req.end();
   });
 }
+
+function inspectPresentedCertificate() {
+  // Diagnostic TLS handshake only: intentionally skips trust validation to
+  // inspect the broken certificate's public DNS names. No HTTP, credentials,
+  // cookies or private URLs are sent. Never use this socket for document access.
+  return new Promise(resolve=>{
+    let finished=false;
+    const done=value=>{if(finished)return;finished=true;resolve(value);};
+    const socket=tls.connect({host:PDF_HOST,port:443,servername:PDF_HOST,
+      rejectUnauthorized:false,timeout:6000},()=>{
+      const cert=socket.getPeerCertificate();
+      const dnsNames=String(cert?.subjectaltname||'').split(', ')
+        .filter(name=>name.startsWith('DNS:')).map(name=>name.slice(4)).slice(0,12);
+      done({handshakeOk:true,untrustedInspectionOnly:true,
+        presentedCommonName:String(cert?.subject?.CN||'').slice(0,140),
+        presentedDnsNames:dnsNames,validTo:String(cert?.valid_to||'').slice(0,70),
+        hostnamePresent:dnsNames.some(name=>name===PDF_HOST || name==='*.gczhouwld.com')});
+      socket.end();
+    });
+    socket.on('error',err=>done({handshakeOk:false,error:errorCode(err)}));
+    socket.on('timeout',()=>{socket.destroy();done({handshakeOk:false,error:'SOCKET_TIMEOUT'});});
+  });
+}
+
 const results={schemaVersion:1,runAt:new Date().toISOString(),
   source:'GitHub hosted Linux runner (not mainland China)',
   authenticatingUser:false,ownerAccessTested:false,privatePdfDownloaded:false,
@@ -73,6 +98,7 @@ const match=pdf.ok&&relay.ok&&pdf.ips.some(ip=>relay.ips.includes(ip));
 results.dns={pdf,relay,sharesExistingHost:match};
 if(match) {
   results.health=await request('GET','/_pdf_gateway_health');
+  if(!results.health.ok) results.presentedCertificate=await inspectPresentedCertificate();
   if(results.health.ok) {
     results.anonymousDenial=await request('GET','/api/user-ui/private-pdf/file');
     results.preflight=await request('OPTIONS','/api/user-ui/private-pdf/open');
