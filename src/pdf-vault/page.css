@@ -24,3 +24,12 @@
   .queue-actions > * { max-width: 100%; }
   .queue-actions button { padding: 9px 10px; font-size: 12px; }
 }
+
+/* Standard PDF.js continuous-page layout; page canvases are virtualized by
+   its rendering queue and the scroll position drives the active page label. */
+.reader-mode-caption{font-size:12px;color:#64725e}
+.reader-stage>.pdfViewer{position:relative;width:100%;min-height:100%;text-align:left}
+.reader-stage>.pdfViewer .page{margin:0 auto 16px!important;box-shadow:0 4px 20px #223a2826}
+.reader-stage>.pdfViewer .page canvas{max-width:none;margin:0}
+.reader-stage:focus-visible{outline:2px solid #588f72;outline-offset:-3px}
+@media(max-width:680px){.reader-stage{padding:8px}.reader-mode-caption{font-size:11px}}
