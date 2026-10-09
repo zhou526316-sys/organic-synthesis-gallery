@@ -229,6 +229,77 @@ export class GalleryUserShell extends HTMLElement {
     return this.integrations.auth[provider] ? this.tr('可用', 'ready') : this.tr('待配置', 'configuration required');
   }
 
+  private phoneLoginMarkup(): string {
+    if (!this.integrations?.auth.phone) {
+      return "<section class='section'><h4>" + this.tr('手机号快捷登录', 'Phone sign-in') + "</h4><div class='help'>" +
+        this.tr('短信服务尚未开通，请先使用邮箱或第三方登录。', 'SMS is not yet active. Use email or a linked provider.') + "</div></section>";
+    }
+    if (this.authFlow === 'phone-code') {
+      return "<section class='section'><h4>" + this.tr('输入短信验证码', 'SMS verification') + "</h4>" +
+        "<div class='help'>" + escapeHtml(this.phonePending) + " · " +
+        this.tr('验证码 5 分钟有效', 'Code expires in 5 minutes') + "</div>" +
+        "<form class='auth-form' data-phone-code-form><input class='code-input' type='text' inputmode='numeric' autocomplete='one-time-code' maxlength='6' placeholder='000000' data-phone-code required>" +
+        "<button class='primary' type='submit'>" + this.tr('验证并登录', 'Verify and sign in') + "</button></form>" +
+        "<div class='row'><button class='secondary' type='button' data-action='phone-resend'>" + this.tr('重新发送', 'Resend code') + "</button>" +
+        "<button class='link' type='button' data-action='phone-back'>" + this.tr('修改手机号', 'Change number') + "</button></div>" +
+        "<div class='notice auth-notice' data-auth-message role='status'></div></section>";
+    }
+    return "<section class='section'><h4>" + this.tr('手机验证码快捷登录 / 注册', 'Sign in / register with phone') + "</h4>" +
+      "<form class='auth-form' data-phone-form><div class='row'><span>+86</span><input type='tel' inputmode='tel' autocomplete='tel-national' maxlength='18' data-phone-number placeholder='" +
+      this.tr('中国大陆手机号', 'Mainland China mobile number') + "' required></div>" +
+      "<button class='primary' type='submit'>" + this.tr('发送验证码', 'Send SMS code') + "</button>" +
+      "<div class='notice auth-notice' data-auth-message role='status'></div></form>" +
+      "<div class='help'>" + this.tr('新手机号验证后自动注册；已有账号直接登录。', 'New numbers register automatically after verification.') + "</div></section>";
+  }
+
+  private phoneManageMarkup(): string {
+    if (this.authUser?.phoneMasked) {
+      return "<section class='section'><h4>" + this.tr('手机号', 'Phone') + "</h4><div class='verified'>" +
+        escapeHtml(this.authUser.phoneMasked) + "</div></section>";
+    }
+    if (this.phonePurpose === 'bind' && (this.authFlow === 'phone' || this.authFlow === 'phone-code')) {
+      if (this.authFlow === 'phone-code') {
+        return "<section class='section'><h4>" + this.tr('验证绑定手机号', 'Verify phone binding') +
+          "</h4><div class='help'>" + escapeHtml(this.phonePending) + "</div>" +
+          "<form class='auth-form' data-phone-code-form><input class='code-input' inputmode='numeric' maxlength='6' autocomplete='one-time-code' placeholder='000000' data-phone-code>" +
+          "<button class='primary' type='submit'>" + this.tr('确认绑定', 'Confirm binding') + "</button></form>" +
+          "<div class='row'><button class='secondary' type='button' data-action='phone-resend'>" + this.tr('重新发送', 'Resend') + "</button>" +
+          "<button class='link' type='button' data-action='phone-cancel'>" + this.tr('取消', 'Cancel') + "</button></div>" +
+          "<div class='notice auth-notice' data-auth-message role='status'></div></section>";
+      }
+      return "<section class='section'><h4>" + this.tr('绑定手机号', 'Bind phone') + "</h4>" +
+        "<form class='auth-form' data-phone-form><div class='row'><span>+86</span>" +
+        "<input type='tel' inputmode='tel' data-phone-number placeholder='" + this.tr('中国大陆手机号', 'Mainland China phone') + "' required></div>" +
+        "<button class='primary' type='submit'>" + this.tr('发送绑定验证码', 'Send binding code') + "</button></form>" +
+        "<button class='link' type='button' data-action='phone-cancel'>" + this.tr('取消', 'Cancel') +
+        "</button><div class='notice auth-notice' data-auth-message role='status'></div></section>";
+    }
+    return "<section class='section'><h4>" + this.tr('手机号', 'Phone') + "</h4><button class='secondary' type='button' data-action='phone-bind' " +
+      (this.integrations?.auth.phone ? '' : 'disabled') + ">" + this.tr('绑定手机号', 'Bind phone number') + "</button>" +
+      (this.integrations?.auth.phone ? '' : "<div class='help'>" + this.tr('短信服务尚未开通。', 'SMS service is not yet configured.') + "</div>") + "</section>";
+  }
+
+  private sessionManageMarkup(): string {
+    const devices = this.devices;
+    const list = devices ? devices.sessions.map(item =>
+      "<div class='manage-row'><div class='top'><strong>" +
+      escapeHtml(item.deviceLabel || this.tr('旧版登录环境', 'Earlier sign-in')) +
+      (item.current ? ' · ' + this.tr('当前设备', 'This device') : '') + "</strong></div>" +
+      "<div class='help'>" + this.tr('最近活动：', 'Last active: ') +
+      escapeHtml(new Date(item.lastSeenAt).toLocaleString()) + "</div>" +
+      (item.current ? '' : "<button class='secondary' type='button' data-action='revoke-device:" +
+        encodeURIComponent(item.sessionId) + "'>" + this.tr('退出此设备', 'Sign out device') + "</button>") +
+      "</div>"
+    ).join('') : '';
+    return "<section class='section'><h4>" + this.tr('登录设备', 'Signed-in devices') + "</h4>" +
+      "<div class='help'>" + this.tr('最多同时登录 5 个浏览器或 App；第 6 个登录将退出最久未活动的设备。', 'Up to 5 browser/app sessions; the oldest inactive session is removed on the sixth sign-in.') + "</div>" +
+      (devices ? "<div class='manage'>" + list + "</div>" : '') +
+      "<div class='row'><button class='secondary' type='button' data-action='load-devices'>" +
+      this.tr(devices ? '刷新设备' : '查看登录设备', devices ? 'Refresh devices' : 'View signed-in devices') + "</button>" +
+      "<button class='secondary' type='button' data-action='revoke-other-sessions'>" +
+      this.tr('退出其他全部设备', 'Sign out all other devices') + "</button></div></section>";
+  }
+
   private login(): string {
     if (this.authUser) {
       const local = Boolean(this.authUser.localAccount);
@@ -254,11 +325,11 @@ export class GalleryUserShell extends HTMLElement {
             <button class='secondary' type='button' data-action='change-password'>${this.tr('修改密码', 'Change password')}</button>
           </div>
         </section>
-        <section class='section'><button class='secondary' type='button' data-action='revoke-other-sessions'>${this.tr('退出其他设备', 'Sign out other devices')}</button></section>` : '';
+        ` : '';
 
       return `<div class='user-card'>${this.authUser.avatarUrl ? `<img class='avatar' src='${escapeHtml(this.authUser.avatarUrl)}' alt=''>` : `<div class='avatar'></div>`}<div><strong>${escapeHtml(this.authUser.displayName || this.authUser.email || this.authUser.id)}</strong>${this.authUser.email ? `<div class='help'>${escapeHtml(this.authUser.email)}</div>` : ''}</div></div>
         <div class='row' style='margin-top:10px'><button class='secondary' type='button' data-action='logout'>${this.tr('退出登录', 'Sign out')}</button></div>
-        ${verification}${passwordTools}
+        ${verification}${passwordTools}${this.phoneManageMarkup()}${this.sessionManageMarkup()}
         ${this.integrationMessage ? `<div class='notice'>${escapeHtml(this.integrationMessage)}</div>` : ''}`;
     }
 
@@ -266,7 +337,9 @@ export class GalleryUserShell extends HTMLElement {
     const register = this.authMode === 'register';
 
     let nativeAccount = '';
-    if (this.authFlow === 'register-code') {
+    if (this.authFlow === 'phone' || this.authFlow === 'phone-code') {
+      nativeAccount = this.phoneLoginMarkup();
+    } else if (this.authFlow === 'register-code') {
       nativeAccount = `<section class='section' style='border-top:0;padding-top:0'>
         <h4>${this.tr('验证邮箱', 'Verify email')}</h4>
         <div class='help' style='margin-bottom:8px'>${this.tr(`验证码已发送至 ${this.registerEmail}，10 分钟内有效。`, `A 6-digit code was sent to ${this.registerEmail}. It is valid for 10 minutes.`)}</div>
@@ -318,6 +391,14 @@ export class GalleryUserShell extends HTMLElement {
         </form>
         <div class='help' style='margin-top:7px'>${register ? this.tr('注册需要先验证邮箱。验证码 10 分钟内有效。', 'Registration requires email verification. Codes are valid for 10 minutes.') : this.tr('本站账号会同步收藏、阅读状态、私人备注和个性化设置。', 'Site accounts sync saved papers, reading status, private notes, and preferences.')}</div>
       </section>`;
+    }
+
+    if (this.authFlow === 'phone' || this.authFlow === 'phone-code') {
+      nativeAccount += `<button class='link' type='button' data-action='phone-email-mode'>${this.tr('使用邮箱账号登录', 'Use email sign-in')}</button>`;
+    } else if (this.integrations?.auth.phone) {
+      nativeAccount += `<button class='link' type='button' data-action='phone-login'>${this.tr('使用手机号验证码登录', 'Use phone verification')}</button>`;
+    } else {
+      nativeAccount += `<div class='help'>${this.tr('短信登录尚未开通。', 'SMS sign-in is not yet available.')}</div>`;
     }
 
     return `${nativeAccount}
