@@ -29,6 +29,7 @@ catch(error){
 }
 const SESSION_KEY='organic-gallery-session-v1';
 const TEST_SCOPE=String(process.env.PRIVATE_PDF_BROWSER_SCOPE||'all');
+const MOCK_PDF_HASH='a'.repeat(64);
 const API_ROUTE=/^https:\/\/(?:api\.gczhouwld\.com|organic-synthesis-gallery\.zhou526316\.workers\.dev)\//;
 const activeContexts=new Set(),cases=[];
 let passed=0,currentCase=null;
@@ -110,7 +111,7 @@ const papers=Array.from({length:72},(_,index)=>({
 const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
 async function contextWith(capabilities,openResult={available:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=opaque'},options={}){
  const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900},locale:options.locale||'en-US'});
- const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,rangeInFlight:0,maxConcurrentRanges:0,openModes:[],openOrigins:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map(),slowMiddleHits:0};
+ const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,rangeInFlight:0,maxConcurrentRanges:0,primaryFileFailures:0,openModes:[],openOrigins:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map(),slowMiddleHits:0};
  const filePdf=options.tailHeavyPdf?tailHeavyPdf:(options.largePdf?largeCardPdf:cardPdf);
  if(options.pendingQueue)state.queueRows.set('fixture-owner',new Map(papers.map(paper=>[paper.doi,{doi:paper.doi,state:'pending',revision:1,createdAt:Date.now(),updatedAt:Date.now()}])));
  await context.addInitScript(fixtureOrigin=>{
@@ -207,6 +208,12 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
     const download=url.searchParams.get('download')==='1';
     if(download)state.privateFileDownloads++;
     const common={'access-control-allow-origin':base,'access-control-allow-credentials':'true','access-control-allow-headers':'range, authorization','access-control-expose-headers':'content-length, content-range, accept-ranges, content-type, x-gallery-pdf-status','accept-ranges':'bytes','cache-control':'private, no-store','content-disposition':download?'attachment; filename="fixture.pdf"':'inline; filename="fixture.pdf"'};
+    if(options.primaryFileStatus && url.origin==='https://api.gczhouwld.com' && range && range!=='bytes=0-15'){
+     state.primaryFileFailures++;
+     return route.fulfill({status:options.primaryFileStatus,contentType:'application/json',
+       headers:{...common,'x-gallery-pdf-status':'simulated_primary_failure'},
+       body:'{"error":"synthetic_primary_failure"}'});
+    }
     if(options.fileStatus){
      return route.fulfill({status:options.fileStatus,contentType:'application/json',headers:{...common,'x-gallery-pdf-status':'pdf_ticket_invalid'},body:'{"error":"pdf_ticket_invalid"}'});
     }
@@ -260,6 +267,8 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    else source.searchParams.delete('download');
    try {
     const data={...openResult,mode,url:source.toString(),
+     contentHash: url.origin==='https://organic-synthesis-gallery.zhou526316.workers.dev'
+       && options.backupContentHash ? options.backupContentHash : MOCK_PDF_HASH,
      ...(options.omitByteLength?{}:{byteLength:filePdf.length})};
     if(options.withOpenTiming){
      return route.fulfill({status:200,contentType:'application/json',headers:{
@@ -549,6 +558,71 @@ try{
   await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:12000});
   assert.equal(await target.locator('html').getAttribute('data-private-pdf-mode'),'single-transfer');
   assert.equal(state.privateFullFileCalls,1);
+ });
+ await test('transient primary 503 triggers one reauthorized, byte-identity-matched backup file route',async()=>{
+  const source={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],source,{primaryFileStatus:503});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:14500});
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-failovers'),'1');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-route'),'backup');
+  assert.ok(state.primaryFileFailures>=1,'synthetic primary 503 was actually exercised');
+  assert.equal(state.openOrigins.filter(x=>x.includes('workers.dev')).length,1,
+    'concurrent failed ranges must share a single backup authorization');
+  assert.equal(state.privateFullFileCalls,0,'failover must stay byte-range based');
+  await scrollPdfToPage(target,2);
+  assert.equal(await target.locator('#page-count').textContent(), '第 2 / 2 页');
+ });
+ await test('source-hash mismatch refuses cross-document Range stitching without backup bytes',async()=>{
+  const source={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],source,
+    {primaryFileStatus:503,backupContentHash:'b'.repeat(64)});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',undefined,{timeout:14000});
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/pdf_source_invalid/);
+  assert.ok(state.primaryFileFailures>0);
+  assert.equal(state.privateRangeCalls,0,'no alternate PDF bytes were delivered after identity mismatch');
+ });
+ await test('file 403 never attempts unauthorized secondary PDF open',async()=>{
+  const source={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],source,{primaryFileStatus:403});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',undefined,{timeout:12000});
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/file_http_403/);
+  assert.deepEqual(state.openOrigins,['https://api.gczhouwld.com']);
+ });
+ await test('native preflight failure stays on Gallery diagnosis instead of navigating to error PDF',async()=>{
+  const source={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],source,{fileStatus:503});
+  const page=await gallery(context,true);
+  const viewer=new URL(await page.locator('.card .private-pdf-button').first().getAttribute('href'),base);
+  viewer.searchParams.set('native','1');
+  const target=await context.newPage();await target.goto(viewer.toString(),{waitUntil:'domcontentloaded'});
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',undefined,{timeout:12000});
+  assert.match(target.url(),/\/pdf\/\?/);
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/file_http_503/);
+  assert.equal(state.privateHeaderProbeCalls,0,'failed native 503 must not count as delivered PDF header');
+  assert.equal(state.privateCalls,1,'native 503 must not bypass authorization');
+  assert.equal(await target.getByText('重新读取').count(),1);
+ });
+ await test('browser-native alternative opens a separate tab and leaves original Gallery recovery UI',async()=>{
+  const source={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],source);
+  const galleryPage=await gallery(context,true);
+  const reader=await popup(galleryPage,galleryPage.locator('.card .private-pdf-button').first());
+  await reader.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready');
+  const anchor=reader.locator('#browser-open');
+  assert.equal(await anchor.getAttribute('target'),'_blank');
+  assert.match(await anchor.getAttribute('rel'),/noopener/);
+  const spawned=reader.waitForEvent('popup');await anchor.click();const other=await spawned;
+  await waitForNode(galleryPage,()=>state.privateHeaderProbeCalls>0);
+  assert.match(reader.url(),/\/pdf\/\?/);
+  assert.equal(await reader.locator('html').getAttribute('data-private-pdf-viewer'),'ready');
+  assert.ok(state.privateFileCalls>=3,'original Gallery reader and prevalidated native PDF each fetch data');
+  await other.close().catch(()=>{});
  });
  await test('explicit browser-native mode remains available for large or unusual PDFs',async()=>{
   const {context,state}=await contextWith(['private_pdf_read']);

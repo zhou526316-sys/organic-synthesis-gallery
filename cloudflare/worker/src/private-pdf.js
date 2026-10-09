@@ -297,6 +297,11 @@ export async function openPrivatePdf(request, env) {
   return reply(200, { available: true, doi, url: url.toString(), expiresAt,
     versionKind: doc.version_kind, ticketMode, mode,
     byteLength: Number(doc.byte_length),
+    // A strong authenticated document identity lets the browser reject
+    // mixed-range bytes if a secondary Worker selects a different PDF.
+    // R2 object keys, source URLs and private file contents stay hidden.
+    contentHash: /^[a-f0-9]{64}$/i.test(String(doc.content_hash || ''))
+      ? String(doc.content_hash).toLowerCase() : null,
     headerVerified: ticketMode === 'stateless-v2' });
 }
 function parseRange(header, size) {
