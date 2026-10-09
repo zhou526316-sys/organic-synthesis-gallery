@@ -1,0 +1,37 @@
+name: PDF buffered first-page deadline isolated browser regression
+on:
+  push:
+    branches:
+      - fix/pdf-buffered-first-page-watchdog-20261009
+    paths:
+      - 'src/private-pdf-reader.mjs'
+      - 'src/pdf-first-page-watchdog.mjs'
+      - 'tests/pdf-first-page-watchdog.mjs'
+      - '.github/workflows/pdf-startup-watchdog-regression.yml'
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  bounded-startup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+      - name: Check deadline invariants and parse
+        run: |
+          node --check src/private-pdf-reader.mjs
+          node --test tests/pdf-first-page-watchdog.mjs
+          ! grep -q 'previous.addEventListener' src/private-pdf-reader.mjs
+          grep -q 'createContinuousPdfViewer' src/private-pdf-reader.mjs
+      - name: Bundle production assets without deploying
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+      - name: Chromium owner-private PDF first-page and scroll regression
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.1
+          npx playwright install --with-deps chromium
+          PRIVATE_PDF_BROWSER_SCOPE=owner node tests/private-pdf-access-browser.mjs
