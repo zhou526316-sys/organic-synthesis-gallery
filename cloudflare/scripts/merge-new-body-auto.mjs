@@ -8,16 +8,56 @@ import {POLICY_ID,sha256,requireBody,exactKey,evidenceKey,validateNewBodyMetadat
 export const SITE='https://gallery.gczhouwld.com/';
 export const WORKER='https://organic-synthesis-gallery.zhou526316.workers.dev';
 const SNAPSHOT='auto-body-publication.json';
-export async function fetchStored(url,maxBytes=20000000,missing=false){
+// Optional media transport may be temporarily unavailable during the 08:00
+// literature delivery. Retrying only transport errors keeps byte/evidence
+// validation strict without making one transient 503 fatal to the whole site.
+export const AUTO_MEDIA_RETRY_DELAYS_MS=Object.freeze([500,1400,3000]);
+export function transientAutoMediaError(error){
+  const message=String(error?.message||error);
+  return /^auto_read_http_(?:429|5[0-9]{2})$/.test(message)
+    || ['AbortError','TimeoutError'].includes(String(error?.name||''))
+    || (error instanceof TypeError && /fetch|network|terminated|socket|abort/i.test(message));
+}
+export async function fetchStored(url,maxBytes=20000000,missing=false,options={}){
   const u=new URL(url,SITE),site=new URL(SITE);
-  const permitted=u.origin===site.origin&&(u.pathname===site.pathname+SNAPSHOT||u.pathname===site.pathname+'media-index.json'||new RegExp('^'+site.pathname+'media-mirror/body-auto-[a-f0-9]{64}\\.(svg|png|webp|jpg)$').test(u.pathname))||u.origin===WORKER&&(u.pathname==='/api/article-figures/staged'||u.pathname==='/api/media/local-capture-index'||u.pathname==='/api/media/tampermonkey-reports'||/^\/media\/local-captures\/article-figures\/images\/[a-f0-9]{24}\/(figure|scheme|chart)-\d{1,3}-[a-f0-9]{16}\.(svg|png|webp|jpg)$/.test(u.pathname));
+  const permitted=u.origin===site.origin&&(u.pathname===site.pathname+SNAPSHOT||u.pathname===site.pathname+'media-index.json'||new RegExp('^'+site.pathname+'media-mirror/body-auto-[a-f0-9]{64}\\\\.(svg|png|webp|jpg)$').test(u.pathname))||u.origin===WORKER&&(u.pathname==='/api/article-figures/staged'||u.pathname==='/api/media/local-capture-index'||u.pathname==='/api/media/tampermonkey-reports'||/^\\/media\\/local-captures\\/article-figures\\/images\\/[a-f0-9]{24}\\/(figure|scheme|chart)-\\d{1,3}-[a-f0-9]{16}\\.(svg|png|webp|jpg)$/.test(u.pathname));
   requireBody(permitted&&!u.username&&!u.password,'auto_fetch_not_stored_asset');
-  const response=await fetch(u,{headers:{'cache-control':'no-cache'},redirect:'error',credentials:'omit',signal:AbortSignal.timeout(20000)});
-  if(missing&&response.status===404)return null;
-  requireBody(response.ok,'auto_read_http_'+response.status);
-  const reader=response.body.getReader();let size=0;const parts=[];
-  try{for(;;){const {done,value}=await reader.read();if(done)break;size+=value.length;requireBody(size<=maxBytes,'auto_read_size_limit');parts.push(Buffer.from(value));}}finally{reader.releaseLock();}
-  return Buffer.concat(parts);
+  const fetchImpl=options.fetchImpl||fetch;
+  const wait=options.wait||((ms)=>new Promise(resolve=>setTimeout(resolve,ms)));
+  const timeoutMs=Number(options.timeoutMs||18000);
+  requireBody(Number.isFinite(timeoutMs)&&timeoutMs>0&&timeoutMs<=20000,'auto_read_timeout_config');
+  for(let attempt=0;attempt<=AUTO_MEDIA_RETRY_DELAYS_MS.length;attempt++){
+    try{
+      const response=await fetchImpl(u,{headers:{'cache-control':'no-cache'},redirect:'error',credentials:'omit',signal:AbortSignal.timeout(timeoutMs)});
+      if(missing&&response.status===404)return null;
+      requireBody(response.ok,'auto_read_http_'+response.status);
+      requireBody(response.body&&typeof response.body.getReader==='function','auto_read_missing_body');
+      const reader=response.body.getReader();let size=0;const parts=[];
+      try{for(;;){const {done,value}=await reader.read();if(done)break;size+=value.length;requireBody(size<=maxBytes,'auto_read_size_limit');parts.push(Buffer.from(value));}}
+      finally{reader.releaseLock();}
+      return Buffer.concat(parts);
+    }catch(error){
+      if(attempt===AUTO_MEDIA_RETRY_DELAYS_MS.length||!transientAutoMediaError(error))throw error;
+      console.warn('AUTO_BODY_TRANSIENT_RETRY '+JSON.stringify({
+        attempt:attempt+1,maxAttempts:AUTO_MEDIA_RETRY_DELAYS_MS.length+1,
+        source:u.origin===site.origin?'verified_gallery_media':'staged_worker_media',
+        reason:String(error?.message||error).slice(0,100)
+      }));
+      await wait(AUTO_MEDIA_RETRY_DELAYS_MS[attempt]);
+    }
+  }
+  throw new Error('auto_retry_exhausted');
+}
+// Use only an exact digest-addressed, already-published mirror. Hash mismatch
+// triggers authenticated stored-source refetch, never use of unverifiable bytes.
+export async function readVerifiedPriorLocalImage(root,old){
+  const url=String(old?.imageUrl||''),digest=String(old?.record?.sha256||'');
+  const match=url.match(/^media-mirror\\/body-auto-([a-f0-9]{64})\\.(svg|png|webp|jpg)$/);
+  requireBody(match&&match[1]===digest,'auto_previous_image_path');
+  let bytes;
+  try{bytes=await readFile(path.join(root,'public',url));}
+  catch(error){if(error?.code==='ENOENT')return null;throw error;}
+  return sha256(bytes)===digest?bytes:null;
 }
 export function assertSnapshotCoherence(previous,live){
   const prior=new Map();
