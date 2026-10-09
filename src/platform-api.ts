@@ -69,6 +69,12 @@ const WORKER_ORIGIN = 'https://organic-synthesis-gallery.zhou526316.workers.dev'
 const MEDIA_API_ORIGIN = 'https://api.gczhouwld.com';
 
 let mediaManifestPromise: Promise<StaticMediaManifest> | null = null;
+let mediaManifestFetchedAt = 0;
+let lastKnownMediaManifest: StaticMediaManifest | null = null;
+// Media is published independently of the 08:00 article batch. An open browser
+// tab must not retain a stale manifest indefinitely after a new Pages delivery.
+// Five minutes bounds network traffic for visitors in mainland China.
+const MEDIA_MANIFEST_MAX_AGE_MS = 5 * 60 * 1000;
 let translationsPromise: Promise<StaticTranslations> | null = null;
 let resolutionsPromise: Promise<StaticResolutions> | null = null;
 
@@ -168,11 +174,24 @@ function mergeMediaItem(local: StaticMediaItem | undefined, dynamic: StaticMedia
 }
 
 function loadMediaManifest(): Promise<StaticMediaManifest> {
-  if (!mediaManifestPromise) {
-    mediaManifestPromise = fetchStaticJson<StaticMediaManifest>('media-index.json', { version: 1, generatedAt: 0, items: {} }, 'no-cache')
-      .then(payload => payload && typeof payload === 'object'
-        ? { version: payload.version || 1, generatedAt: payload.generatedAt || 0, items: payload.items || {} }
-        : { version: 1, generatedAt: 0, items: {} });
+  const now = Date.now();
+  if (!mediaManifestPromise || now - mediaManifestFetchedAt >= MEDIA_MANIFEST_MAX_AGE_MS) {
+    mediaManifestFetchedAt = now;
+    // A transient 503 or offline moment must never erase a previously verified
+    // static TOC or body-figure record from an active user's tab.
+    const fallback: StaticMediaManifest = lastKnownMediaManifest || { version: 1, generatedAt: 0, items: {} };
+    mediaManifestPromise = fetchStaticJson<StaticMediaManifest>('media-index.json', fallback, 'no-cache')
+      .then(payload => {
+        const next: StaticMediaManifest = payload && typeof payload === 'object'
+          ? { version: payload.version || 1, generatedAt: payload.generatedAt || 0, items: payload.items || {} }
+          : fallback;
+        // Older CDN edges may briefly serve an earlier Pages generation.
+        if (lastKnownMediaManifest && Number(next.generatedAt || 0) < Number(lastKnownMediaManifest.generatedAt || 0)) {
+          return lastKnownMediaManifest;
+        }
+        lastKnownMediaManifest = next;
+        return next;
+      });
   }
   return mediaManifestPromise;
 }

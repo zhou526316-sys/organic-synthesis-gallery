@@ -30,12 +30,16 @@ function mock(host, { staticItems = {}, dynamicItems = [official, science],
   const origin = 'https://' + host;
   const calls = [];
   const warnings = [];
+  let clock = 1791510000000;
+  let manifestGeneration = 1;
+  let manifestUnavailable = false;
   const fetch = async (path, options = {}) => {
     const url = new URL(String(path), origin);
     const method = options.method || 'GET';
     calls.push({ url: url.href, method, body: options.body || '' });
     if (url.origin === origin && url.pathname === '/media-index.json' && method === 'GET') {
-      return new Response(JSON.stringify({ version: 1, generatedAt: 1, items: staticItems }), {
+      if (manifestUnavailable) return new Response('temporarily unavailable', { status: 503 });
+      return new Response(JSON.stringify({ version: 1, generatedAt: manifestGeneration, items: staticItems }), {
         status: 200, headers: { 'content-type': 'application/json' },
       });
     }
@@ -63,12 +67,18 @@ function mock(host, { staticItems = {}, dynamicItems = [official, science],
   };
   const sandbox = {
     exports: {}, URL, Headers, fetch, Response,
+    Date: class Clock extends Date { static now() { return clock; } },
     location: { hostname: host, protocol: 'https:' },
     document: { baseURI: origin + '/' },
     console: { warn: (...args) => warnings.push(args.map(String).join(' ')) },
   };
   runInNewContext(compiled, sandbox);
-  return { api: sandbox.exports.api, calls, warnings };
+  return {
+    api: sandbox.exports.api, calls, warnings,
+    advance: ms => { clock += ms; },
+    setManifest: (items, generatedAt) => { staticItems = items; manifestGeneration = generatedAt; },
+    setManifestUnavailable: unavailable => { manifestUnavailable = unavailable; },
+  };
 }
 
 for (const host of ['gallery.gczhouwld.com',
@@ -131,4 +141,55 @@ test('local Vite dev uses its existing same-origin isolated API, not production'
   assert.equal(reply.data.items.length, 1, 'only requested DOI is returned');
   assert.equal(x.calls.filter(row => row.method === 'POST')[0].url,
     'https://127.0.0.1/api/media/batch');
+});
+
+test('long-lived custom-domain tab refreshes the static body figures only after bounded TTL', async () => {
+  const partial = {
+    doi: OFFICIAL,
+    toc: { ...official.toc, imageUrl: 'media-mirror/current-toc.png' },
+    figures: { available: false, figures: [] },
+  };
+  const complete = {
+    ...partial,
+    figures: { available: true, figures: [
+      { id: 'figure-1', label: 'Figure 1', imageUrl: 'media-mirror/body-auto-proven-1.png' },
+      { id: 'figure-2', label: 'Figure 2', imageUrl: 'media-mirror/body-auto-proven-2.png' },
+    ] },
+  };
+  const x = mock('gallery.gczhouwld.com', { staticItems: { [OFFICIAL]: partial }, dynamicItems: [] });
+  const first = await x.api.post('/api/media/batch', { dois: [OFFICIAL] });
+  assert.equal(first.data.items[0].figures.available, false);
+  x.setManifest({ [OFFICIAL]: complete }, 2);
+  const stillCached = await x.api.post('/api/media/batch', { dois: [OFFICIAL] });
+  assert.equal(stillCached.data.items[0].figures.available, false);
+  assert.equal(x.calls.filter(row => row.url.endsWith('/media-index.json')).length, 1);
+  x.advance(5 * 60_000 + 1);
+  const updated = await x.api.post('/api/media/batch', { dois: [OFFICIAL] });
+  assert.equal(updated.data.items[0].figures.figures.length, 2);
+  assert.ok(updated.data.items[0].figures.figures[0].imageUrl.endsWith('body-auto-proven-1.png'));
+  assert.equal(updated.headers.get('x-gallery-media-source'), 'static-manifest');
+  assert.equal(x.calls.filter(row => row.url.endsWith('/media-index.json')).length, 2);
+});
+
+test('live manifest refresh preserves prior original figure files through a 503 or stale CDN edge', async () => {
+  const complete = {
+    doi: OFFICIAL, toc: { ...official.toc, imageUrl: 'media-mirror/old-good-toc.png' },
+    figures: { available: true, figures: [
+      { id: 'figure-1', label: 'Figure 1', imageUrl: 'media-mirror/body-auto-good-1.png' },
+    ] },
+  };
+  const x = mock('gallery.gczhouwld.com', { staticItems: { [OFFICIAL]: complete } });
+  const first = await x.api.post('/api/media/batch', { dois: [OFFICIAL] });
+  assert.equal(first.data.items[0].figures.figures.length, 1);
+  x.advance(5 * 60_000 + 1);
+  x.setManifestUnavailable(true);
+  const outage = await x.api.post('/api/media/batch', { dois: [OFFICIAL] });
+  assert.equal(outage.data.items[0].figures.figures.length, 1);
+  assert.equal(outage.data.items[0].toc.available, true);
+  x.setManifestUnavailable(false);
+  x.setManifest({}, 0);
+  x.advance(5 * 60_000 + 1);
+  const stale = await x.api.post('/api/media/batch', { dois: [OFFICIAL] });
+  assert.equal(stale.data.items[0].figures.figures.length, 1);
+  assert.equal(stale.data.items[0].toc.available, true);
 });
