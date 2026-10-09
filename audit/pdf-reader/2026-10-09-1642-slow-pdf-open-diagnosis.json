@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "beijingTime": "2026-10-09 16:52:43",
+  "context": "PDF slow-open user feedback (16:42 BJT), accompanied by user screenshot",
+  "status": "verified_source_behavior_and_read_only_public_probes_no_private_owner_acceptance",
+  "scope": "Read-only investigation and evidence. No production repair/source edits. Feedback correction held for user approval per PROJECT_RULES.md.",
+  "currentFrontend": {
+    "source": "src/private-pdf-reader.mjs",
+    "unchangedFromPreFeedbackBlob": "ae8a80601074d16e5a6e0acf1221da36afffde0f",
+    "continuousPdfJs": true,
+    "bufferedAndRangePageWaitBounded": true,
+    "gatewayPrimary": "https://api.gczhouwld.com",
+    "gatewaySecondary": "https://organic-synthesis-gallery.zhou526316.workers.dev",
+    "independentTencentRoutingActive": false,
+    "phaseBudgetsMs": {
+      "authorization": 15000,
+      "fullOrParallelTransfer": 90000,
+      "firstPageParseAndPaint": 45000,
+      "pdfJsImport": 25000,
+      "individualRange": 30000
+    },
+    "note": "Separately bounded stages do not imply end-to-end 45-second time limit. Authorize + transfer + initial parse may extend toward minutes on a degraded network."
+  },
+  "workerChange": {
+    "pr": 440,
+    "merge": "fc4081d283b0b673470eb89d2a1ab250bcb1e554",
+    "mergedAtUTC": "2026-10-09T06:21:52Z",
+    "feature": "Bind private PDF v2 tickets to originating login; check session token hash on each Range request to honor device revocation.",
+    "dbLookup": "SELECT token_hash FROM user_sessions WHERE token_hash=? AND user_id=? AND expires_at>?",
+    "index": "token_hash TEXT PRIMARY KEY",
+    "confirmedRegression": "One extra indexed D1 check per ticketed Range request; latency impact on owner Mainland Edge not measured.",
+    "securityConstraint": "Do not disable immediate logout / device-revocation check without approved safety design."
+  },
+  "publicProbe": {
+    "commit": "4023da99a860dd9f61ef732fb46a818c84c1d742",
+    "run": 37907269828,
+    "conclusion": "success",
+    "origin": "GitHub-hosted overseas Linux (not Mainland China)",
+    "attempts": 18,
+    "unexpectedResponses": 0,
+    "canonicalMediansMs": {
+      "health": 25,
+      "invalidSessionRead": 76,
+      "unauthorizedPrivateOpen": 73
+    },
+    "backupMediansMs": {
+      "health": 18,
+      "invalidSessionRead": 67,
+      "unauthorizedPrivateOpen": 67
+    },
+    "limitation": "Synthetic invalid bearer only. No authorized owner open, R2 file download, real browser network, mobile ISP, university VPN or PDF.js paint latency tested in production."
+  },
+  "tencentHealthRerun": {
+    "run": 37891507915,
+    "rerunJob": 113744187906,
+    "timeUTC": "2026-10-09T08:50:30Z",
+    "dnsA": "43.135.32.73",
+    "httpsError": "ERR_TLS_CERT_ALTNAME_INVALID",
+    "certificatePresented": "relay.gczhouwld.com",
+    "certificateSan": [
+      "relay.gczhouwld.com"
+    ],
+    "gatewayActivated": false,
+    "reason": "missing PDF hostname TLS certificate"
+  },
+  "openHypotheses": [
+    "Campus/China to Cloudflare RTT or file throughput is degraded.",
+    "First-page PDF.js parsing waits for several non-linearized distant R2 ranges.",
+    "Additional indexed D1 lookup may add some per-range latency but no minutes-long regression proven.",
+    "Concurrent publisher/media capture could share Worker/D1/R2 resources, but no direct load measurements confirm impact."
+  ],
+  "nextSuggestedApprovedInterventions": [
+    "Display sanitized phase-level progress and timed metrics while the PDF is still loading, not only after an error.",
+    "Use a bounded first-page strategy and avoid duplicative fallback work, preserving authorization and Range correctness.",
+    "Complete Tencent independent TLS and owner authenticated 206 acceptance before enabling a zero-cost fallback.",
+    "Keep explicit local-saving path for repeated PDFs to avoid recurring network downloads; do not silently upload or share PDFs."
+  ],
+  "privateCredentialsCollected": false,
+  "productionModified": false
+}
