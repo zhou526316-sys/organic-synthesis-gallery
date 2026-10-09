@@ -9,6 +9,7 @@ on:
       - 'scripts/tm-private-pdf-capture.inc.js'
       - 'scripts/apply-private-pdf-capture.py'
       - 'tests/tm-target-journals-browser.mjs'
+      - 'scripts/test-card20-policy-delta.mjs'
       - 'scripts/test-tm-rsc-native-ajax-toc.mjs'
       - 'tests/tm-newest-retry.test.mjs'
       - 'tests/private-pdf-capture-browser.mjs'
@@ -39,8 +40,9 @@ jobs:
             docs/literature-scope-contract.md docs/literature-update-protocol.md \
             public/papers.gz.b64 public/rolling-supplement.json \
             .github/workflows/literature-audit.yml .github/workflows/prepublish-review-gate.yml \
-            .github/workflows/new-body-continuous.yml audit/media-auto-policy.json \
+            .github/workflows/new-body-continuous.yml \
             cloudflare/worker/src/media.js
+          node scripts/test-card20-policy-delta.mjs "$BASE"
 
       - name: Verify source syntax and existing queue/controller protections
         run: |
