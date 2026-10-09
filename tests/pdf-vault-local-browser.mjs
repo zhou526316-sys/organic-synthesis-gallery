@@ -406,13 +406,13 @@ try {
   await test('PDF.js scrolls through both pages and closes without retaining pixels', async () => {
     const { context } = await trackedContext(); const page = await pageFor(context); await importGood(page); await openFirst(page); await assertRendered(page);
     assert.match(await by(page, 'reader-pagecount').innerText(), /1\s*\/\s*2/);
-    await by(page, 'reader').locator('.reader-stage').evaluate(stage => {
+    await by(page, 'reader').locator('.reader-scroll-container').evaluate(stage => {
       stage.scrollTop = stage.scrollHeight;
       stage.dispatchEvent(new Event('scroll'));
     });
     await page.waitForFunction(() => /2\s*\/\s*2/.test(document.querySelector('[data-testid="pdf-vault-reader-pagecount"]')?.textContent || ''));
     await assertRendered(page);
-    await by(page, 'reader').locator('.reader-stage').evaluate(stage => {
+    await by(page, 'reader').locator('.reader-scroll-container').evaluate(stage => {
       stage.scrollTop = 0;
       stage.dispatchEvent(new Event('scroll'));
     });
