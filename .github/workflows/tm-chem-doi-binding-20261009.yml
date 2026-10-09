@@ -1,0 +1,31 @@
+name: Tampermonkey Chem DOI-binding terminal result regression
+on:
+  push:
+    branches: [fix/tm-chem-doi-binding-timeout-20261009, main]
+    paths:
+      - public/toc-mainline.user.js
+      - tests/tm-chem-doi-binding-20261009.test.mjs
+      - .github/workflows/tm-chem-doi-binding-20261009.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - public/toc-mainline.user.js
+      - tests/tm-chem-doi-binding-20261009.test.mjs
+      - .github/workflows/tm-chem-doi-binding-20261009.yml
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Validate Chem-only terminal release without publisher requests
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node --test tests/tm-chem-doi-binding-20261009.test.mjs
+          git diff --check
