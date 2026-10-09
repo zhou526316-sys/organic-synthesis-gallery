@@ -778,6 +778,43 @@ function embeddedJobDois(value) {
     return '';
   }
 
+  // The DOI redirect sometimes stops at linkinghub/doi.org behind browser
+  // access checks and never reaches a matched ScienceDirect/Cell Press tab.
+  // Crossref's exact DOI primary resource records the real publisher PII;
+  // consult it read-only, check identity, and use the existing Elsevier PII
+  // article route. Never guess a PII or publisher media asset.
+  async function elsevierCrossrefVerifiedArticleUrl(job) {
+    var doi=normalizeDoi(job&&job.doi);
+    if(!doi||String(job&&job.publisher||publisherForDoi(doi))!=='elsevier')return '';
+    var cacheKey=P+'verified-elsevier-pii-route-v1:'+doi;
+    try{
+      var cached=GM_getValue(cacheKey,null);
+      if(cached&&Number(cached.validUntil||0)>Date.now()
+        &&String(cached.doi||'')===doi
+        &&publisherArticleHostAllowed('elsevier',cached.url)
+        &&/^https:\/\/www\.sciencedirect\.com\/science\/article\/pii\/S[0-9]{15}[0-9X]$/i.test(String(cached.url||'')))return cached.url;
+    }catch(_){}
+    try{
+      var endpoint='https://api.crossref.org/works/'+encodeURIComponent(doi);
+      var response=await gmRequest({method:'GET',url:endpoint,timeout:9000,
+        headers:{Accept:'application/json'}},true);
+      if(Number(response&&response.status||0)!==200)return '';
+      var data=JSON.parse(String(response&&response.responseText||''));
+      var article=data&&data.message||{};
+      if(normalizeDoi(article.DOI)!==doi)return '';
+      var publisherUrl=String(article.resource&&article.resource.primary&&article.resource.primary.URL||'');
+      var primary=new URL(publisherUrl);
+      if(primary.protocol!=='https:'||primary.hostname.toLowerCase()!=='linkinghub.elsevier.com'
+        ||primary.username||primary.password)return '';
+      var piiMatch=primary.pathname.match(/^\/retrieve\/pii\/(S[0-9]{15}[0-9X])$/i);
+      if(!piiMatch)return '';
+      var route='https://www.sciencedirect.com/science/article/pii/'+piiMatch[1].toUpperCase();
+      if(!publisherArticleHostAllowed('elsevier',route))return '';
+      try{GM_setValue(cacheKey,{doi:doi,url:route,validUntil:Date.now()+7*24*60*60*1000});}catch(_){}
+      return route;
+    }catch(_){return '';}
+  }
+
   async function resolvePublisherTaskUrl(job) {
     var base = articleUrl(job);
     var publisher=String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi)));
@@ -790,6 +827,8 @@ function embeddedJobDois(value) {
         var resolved = elsevierResolvedPublisherUrl(response);
         if (resolved) return resolved;
       } catch (_) {}
+      var verifiedRoute=await elsevierCrossrefVerifiedArticleUrl(job);
+      if(verifiedRoute)return verifiedRoute;
       return base;
     }
     if (publisher === 'rsc') {
@@ -5689,6 +5728,35 @@ function embeddedJobDois(value) {
     }
   }
 
+  // A DOI-less Elsevier landing/interstitial can run an authenticated
+  // publisher script but never bind to the article; until now it only posted
+  // a non-final diagnostic and left the controller waiting eight minutes.
+  // After the existing 45s bounded DOM/DOI grace period is exhausted, close
+  // this exact bound job as a failed *attempt* so the next DOI can proceed.
+  // This never claims media absence and never writes publisher-derived bytes.
+  function finalizeBoundElsevierDoiFailure(job,error) {
+    if(String(error&&error.message||error)!=='page_doi_unverified')return false;
+    if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='elsevier')return false;
+    if(!job||!job.jobId||!currentCaptureJob(job)||controllerPaused())return false;
+    var binding='';
+    try{binding=sessionStorage.getItem(P+'tab-job-binding')||'';}catch(_){}
+    if(binding!==job.jobId||completedPublisherResult(job))return false;
+    var trace=[];
+    pushTrace(trace,{stage:'page_doi_guard',event:'bound_publisher_doi_unverified',status:'failed',
+      url:location.href,message:'publisher=elsevier;identity=unverified;grace_expired=1;no_media_claims=1'});
+    var row={doi:normalizeDoi(job.doi),jobId:job.jobId,version:VERSION,
+      controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,
+      status:'failed',reason:'page_doi_unverified',finishedAt:nowIso(),
+      toc:{status:'not_requested'},figures:{status:'not_requested',discovered:0,stored:0,failed:0},
+      fulltext:{status:'not_requested'},privatePdf:{status:'not_requested'}};
+    GM_setValue(traceKey(job.doi),{doi:row.doi,jobId:row.jobId,status:'failed',
+      trace:trace,finishedAt:row.finishedAt});
+    enqueueCaptureReport(job,trace,'failed',row.reason,true);
+    GM_setValue(resultKey(job.doi),row);
+    GM_deleteValue(progressKey(job.doi));
+    return true;
+  }
+
   async function publisherBoot() {
     if (location.hostname === 'doi.org') return;
     var job = GM_getValue(ACTIVE_JOB_KEY, null);
@@ -5702,7 +5770,8 @@ function embeddedJobDois(value) {
       // without this exact job binding must never report on the active DOI.
       var bound='';
       try { bound=sessionStorage.getItem(P+'tab-job-binding')||''; } catch (_) {}
-      if(!job.jobId||bound!==job.jobId)return;
+      if(!job.jobId||bound!==job.jobId||!currentCaptureJob(job)||controllerPaused())return;
+      if(finalizeBoundElsevierDoiFailure(job,error))return;
       await uploadReport(job, [{ stage: 'page_doi_guard', event: 'rejected', status: 'failed', url: location.href, message: String(error.message) }], 'failed', String(error.message), null, writeToken());
       return;
     }
