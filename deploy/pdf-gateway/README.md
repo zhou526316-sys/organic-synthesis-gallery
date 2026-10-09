@@ -12,6 +12,39 @@ New costs, paid services, overage, PDF public storage, access bypass: prohibited
 - `run-from-windows.ps1` — downloads two source files from repository via HTTPS, copies over existing SSH, and runs remote script. Defaults to Preflight; Install requires explicit `-Mode Install` and console confirmation.
 - `public/pdf-gateway-routing.json` — `enabled:false` until domain+TLS+real China acceptance; already-tested branch code fails closed when disabled.
 
+## 2026-10-09 deployment update: single WeChat QR
+
+Tencent Lighthouse's owner-protected SSH login requires WeChat QR for **every**
+new SSH or SCP connection. The older `run-from-windows.ps1` performs four
+connections and therefore prompts multiple QR scans. **Use the new
+`run-once-from-windows.ps1`** rather than the older multi-login launcher.
+
+The one-session launcher runs on the user's **local Windows PowerShell**.
+It creates a short UTF-8 Bash command, sends it in Base64 over **one SSH
+session**, downloads reviewed Python/Bash payloads at the immutable Git commit
+`f36fc03b2747f1fbaac2799854b62c04dd594b16` on the existing Tencent VM,
+and runs `sudo bash install.sh --preflight` or `--install` inside that same
+session. It also supports `--rollback`. No SCP connections, API keys, or
+separate server purchase are involved.
+
+- Windows PowerShell 5.1 UTF-8 BOM, GitHub raw-download parse, single-SSH static
+  safeguard: passed in [GitHub Actions run 37874518296](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37874518296).
+- `--install` requires typing YES locally, before the SSH connection. A
+  Tencent QR authentication can still be required once, plus a separate
+  `sudo` password if the VM's privilege policy requires it.
+- The installer creates a dedicated ACME HTTP challenge vhost temporarily and
+  reuses it after installing free HTTPS with Certbot. Existing
+  `osg-wechat-relay` files remain unchanged, checked by SHA. Nginx is syntax
+  validated before graceful reload; failure triggers rollback.
+- The first SSH command **never proves Gallery PDF is deployed**. Owner PDF
+  routing remains disabled by `public/pdf-gateway-routing.json` until
+  real China-end-user acceptance of same-account authentication, 206 Range,
+  both pages and attachment download.
+- The existing 512GB VM package is shared with WeChat. Gateway's 256MiB quota
+  limits its own transfer, not total VM usage; do not assume provider overage
+  is impossible if the rest of the VM exhausts its package. The user requires
+  **zero incremental paid cost**.
+
 ## Workflow
 
 1. Review sources in GitHub, run isolated Python test `python3 -m unittest discover -s deploy/pdf-gateway -p test_gateway.py` (9/9 passing) and private PDF Playwright test (33/33 passing).
