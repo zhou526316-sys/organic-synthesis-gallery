@@ -312,6 +312,22 @@ await test('legacy opaque ticket still supports immediate capability revocation'
   assert.equal(res.status,401);
   db.capabilities.set('owner|private_pdf_read',{});
 });
+await test('legacy database PDF ticket is revoked with originating browser session',async()=>{
+  const legacyEnv={...env,BRIDGE_WRITE_TOKEN:'',PRIVATE_PDF_TICKET_SECRET:''};
+  const opened=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','owner-token',{method:'POST'}),legacyEnv);
+  assert.equal(opened.status,200);
+  assert.equal(opened.body.ticketMode,'legacy-d1');
+  const sessionHash=await sha256('owner-token');
+  const saved=db.sessions.get(sessionHash);
+  db.sessions.delete(sessionHash);
+  try {
+    const denied=await servePrivatePdf(new Request(opened.body.url),legacyEnv,{});
+    assert.equal(denied.status,401);
+    assert.equal(denied.headers.get('x-gallery-pdf-status'),'pdf_ticket_expired_or_invalid');
+  } finally {
+    db.sessions.set(sessionHash,saved);
+  }
+});
 await test('kill switch disables owner routing without touching stored PDF',async()=>{
   const off={...env,PRIVATE_PDF_READ_ENABLED:'0'};
   const s=await privatePdfStatus(await authRequest('/api/user-ui/private-pdf/status?doi=10.1021/jacs.6c12345'),off);
