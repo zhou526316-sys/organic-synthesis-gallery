@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "tm-20261009-owner-log-timing-diagnostic-v1",
+  "checkedAt": "2026-10-09T09:55:25.241Z",
+  "sourceEvidence": {
+    "uploadType": "manual-local-log-upload",
+    "uploadedAtUTC": "2026-10-09T09:46:13.133Z",
+    "installRevision": "6.2.57",
+    "captureProtocol": "6.2.20",
+    "controllerRevision": "2.2.41",
+    "runStartUTC": "2026-10-09T08:36:57.099Z",
+    "source": "api/media/local-diagnostics plus archived R2 acceptance reader run 37913534420",
+    "readOnly": true
+  },
+  "publishedInstaller": {
+    "bridge": "2.2.77",
+    "tocEngine": "6.2.58",
+    "controller": "2.2.41",
+    "workerDeployRun": 37908656418,
+    "workerDeployCompleteUTC": "2026-10-09T09:06:00Z",
+    "pagesDeployRun": 37908656410,
+    "pagesDeployCompleteUTC": "2026-10-09T09:13:59Z",
+    "publicLiveAcceptanceRun": 37912230636,
+    "publicLiveAcceptanceResult": "success",
+    "publicLiveAcceptanceUTC": "2026-10-09T09:35:23Z"
+  },
+  "targetRsc": [
+    {
+      "doi": "10.1039/d6sc06407h",
+      "latestStartedUTC": "2026-10-09T08:55:00.389Z",
+      "latestFinishedUTC": "2026-10-09T08:56:40.432Z",
+      "capture": "toc=not_found;figures=0/0;evidence=stored;pdf=private_pdf_http_403",
+      "publisherListingGET": "HTTP_403",
+      "rscNativeAjaxStagePresent": false,
+      "productionToc": "cache_miss"
+    },
+    {
+      "doi": "10.1039/d6gc03748h",
+      "latestStartedUTC": "2026-10-09T08:56:45.518Z",
+      "latestFinishedUTC": "2026-10-09T08:57:13.405Z",
+      "capture": "toc=not_found;figures=0/0;evidence=stored",
+      "priorPublisherListingGET": "HTTP_403",
+      "rscNativeAjaxStagePresent": false,
+      "productionToc": "cache_miss"
+    }
+  ],
+  "otherMedia": {
+    "10.1016/j.chempr.2026.103008": {
+      "toc": "imported",
+      "bodyFigures": "7/8",
+      "pdf": "publisher_403"
+    },
+    "10.1016/j.chempr.2026.103043": {
+      "toc": "imported",
+      "bodyFigures": "2/6",
+      "pdf": "publisher_403"
+    },
+    "10.1002/anie.4335022": {
+      "toc": "imported_after_exact_original_bad_hash_quarantine",
+      "currentContentHash": "6406e6533f718759721bdd09740e0845",
+      "publisherAsset": "anie75210-gra-0001-m.jpg",
+      "oldRejectedHash": "35f10c5321cd43179a4c71c73e388da8",
+      "visualVerificationOfNewAsset": false
+    }
+  },
+  "architectureObserver": {
+    "status": "architecture_membership_serial_conflict",
+    "codeCause": "same serial but different membership SHA compared to prior locally stored snapshot",
+    "impact": "observer logs error and returns {ok:false}; controller run continues; not direct RSC failure",
+    "resolution": "architecture team should reconcile immutable same-slot membership data; do not clear verification memory blindly"
+  },
+  "conclusion": "The RSC missing images have not yet been retested with new native AJAX: their last attempts predate completed Pages deployment and uploaded owner log reports 6.2.57. Do not classify RSC AJAX as broken or fixed until the updated script 6.2.58 makes DOI-bound native AJAX attempt with success/error receipt.",
+  "nextUserBrowserAction": "In the actual Tampermonkey-equipped Edge/Chrome profile, close or reload stale Gallery controller tabs; open https://gallery.gczhouwld.com/#osg-start-from-head once to run the current missing-only queue with loaded 6.2.58. Existing valid server captures are reused; no mass re-download or publication schedule change. Re-upload diagnostics after target RSC attempts.",
+  "authorization": "No owner browser control, no publisher access bypass, no media writes or deletions made by this read-only diagnosis."
+}
