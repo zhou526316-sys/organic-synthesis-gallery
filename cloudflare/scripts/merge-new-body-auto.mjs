@@ -139,7 +139,7 @@ export function strongOfficialCapture(row){
   return false;
 }
 // A verified Figure 1 can be the accepted primary graphic for Nature/Science.
- // It does not turn an arbitrary PDF preview or unbound article image into a TOC.
+// It does not turn an arbitrary PDF preview or unbound article image into a TOC.
 export function strongVerifiedFigureOneCapture(row){
   const doi=normalizeDoi(row?.doi||'');
   return Boolean(doi && /^10\.(?:1038|1126)\//.test(doi)
@@ -165,8 +165,6 @@ export function completedPacketMap(inputs){
   const map=new Map();
   for(const row of inputs?.reports?.items||[]){
     const doi=normalizeDoi(row?.doi||'');
-    const jobId=String(row?.jobId||'');
-    const mediaNeed=String(row?.mediaNeed||'');
     if(!doi||!completedBodyPacket(row))continue;
     map.set(doi,row);
   }
