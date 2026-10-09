@@ -79,6 +79,7 @@ The current full legacy-corpus fallback is a temporary migration safety net. It 
 - The all-time membership object is complete and separate from Hot/Archive display partitions.
 - A frontend generation must be bound to one verified delivery/release generation; do not mix objects from different releases.
 - Hash mismatch, DOI-set mismatch, record-revision mismatch, partial object failure or concurrent release change fails closed or falls back; it does not manufacture absence.
+- During a static Pages/CDN release switch, only a mismatch between the delivery and architecture-release SHA-256 or their explicitly bound generation may trigger two **paired** re-reads (three total attempts, with brief bounded pauses). Recheck both files against the same retry nonce, require all hashes and generation fields to match before trusting either, and fail closed if mismatches persist. Unrelated invalid metadata, failed object hashes, scope changes and authentication/authorization errors remain terminal; retry never authorizes new records or changes the 08:00 publication slot.
 - Public read activation is independent from write-side activation. A browser read switch does not authorize publication, acquisition dispatch, summary mutation or media mutation.
 
 ## 8. Asset-state rule
