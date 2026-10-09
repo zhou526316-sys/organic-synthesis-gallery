@@ -14,7 +14,7 @@ const papers = [
   { doi:'10.1234/hot', title:'Hot photoredox chemistry', titleZh:'近期光氧化还原化学', journal:'Angew', authors:['B'], date:'2026-10-03', url:'https://doi.org/10.1234/hot', new:true, addedDate:'2026-10-04' },
 ];
 
-function fixture({ corruptRelease = false, active = true, badMembership = false, sourcePapers = papers } = {}) {
+function fixture({ corruptRelease = false, active = true, badMembership = false, wrongGeneration = false, sourcePapers = papers } = {}) {
   const bundle = buildCatalog(sourcePapers, {
     asOfDate:'2026-10-04',
     source:{ commit:sourceCommit, datasetSha256, publicationSlot, markerBlobSha:'c'.repeat(40), parityBasis:'fixture' },
@@ -64,7 +64,7 @@ function fixture({ corruptRelease = false, active = true, badMembership = false,
   const releaseText = stable(release)+'\n';
   const architectureObjects = Object.fromEntries(objects.map(row=>['architecture-v1/'+row.path,row.sha256]));
   const delivery = {
-    schemaVersion:2, sourceCommit, markerBlobSha:'c'.repeat(40), publicationSlot,
+    schemaVersion:2, sourceCommit:wrongGeneration ? 'd'.repeat(40) : sourceCommit, markerBlobSha:'c'.repeat(40), publicationSlot,
     productionCards:sourcePapers.length, datasetSha256, dois:bundle.records.map(row=>row.doi),
     files:{'architecture-v1/release.json':corruptRelease?'0'.repeat(64):sha256(releaseText)},
     architectureObjects, architectureCatalogId:bundle.catalog.recordSetHash,
@@ -82,7 +82,7 @@ function fixture({ corruptRelease = false, active = true, badMembership = false,
       headers:{ date:'Sun, 04 Oct 2026 00:20:00 GMT', 'content-type':'application/json' },
     });
   };
-  return { fetcher };
+  return { fetcher, map };
 }
 
 test('verified frontend reader loads Hot only by default and preserves all-time membership', async () => {
@@ -206,4 +206,110 @@ test('static Archive fallback refuses corpus-wide fanout after 36 monthly segmen
   const client = await new PublishedCatalogClient('https://example.invalid/', fixture({ sourcePapers })).open();
   await assert.rejects(client.search('Fanout chemistry'), /global_search_fanout_window_required/);
   await assert.rejects(client.range('2023-10-01','2026-10-04'), /date_range_fanout_window_required/);
+});
+
+function trackedFetch(fetchImpl) {
+  const requests = [];
+  return {
+    requests,
+    async fetcher(url, init = {}) {
+      const u = new URL(url);
+      requests.push({ pathname:u.pathname, nonce:u.searchParams.get('gallery_pair_retry'), cache:init.cache });
+      return fetchImpl(url, init);
+    },
+  };
+}
+
+const pairEntries = [
+  ['full published reader', async fetcher => new PublishedCatalogClient('https://example.invalid/', { fetcher }).open()],
+  ['bounded Hot head', async fetcher => loadPublishedHotFallback('https://example.invalid/', { fetcher, headOnly:true })],
+];
+function pairRequests(requests) {
+  return requests.filter(row => row.pathname === '/release-delivery.json'
+    || row.pathname === '/architecture-v1/release.json');
+}
+
+for (const [name, open] of pairEntries) {
+  test(name + ' performs one verified pair only when manifests match', async () => {
+    const fixtureGood = fixture();
+    const tracker = trackedFetch(fixtureGood.fetcher);
+    const reader = await open(tracker.fetcher);
+    assert.ok(reader);
+    const reads = pairRequests(tracker.requests);
+    assert.equal(reads.length, 2);
+    assert.ok(reads.every(row => row.nonce === null && row.cache === 'no-store'));
+  });
+
+  test(name + ' recovers one transient release digest mismatch by rereading both manifests', async () => {
+    const good = fixture();
+    const stale = fixture({ corruptRelease:true });
+    const tracker = trackedFetch(url => {
+      const u = new URL(url);
+      return u.pathname === '/release-delivery.json' && !u.search
+        ? stale.fetcher(url) : good.fetcher(url);
+    });
+    const output = await open(tracker.fetcher);
+    assert.ok(output);
+    const reads = pairRequests(tracker.requests);
+    assert.equal(reads.length, 4, 'initial pair and one complete reread');
+    const secondPair = reads.slice(2);
+    assert.ok(secondPair.every(row => row.nonce && row.cache === 'reload'));
+    assert.equal(secondPair[0].nonce, secondPair[1].nonce, 'pair must bypass edge cache together');
+  });
+
+  test(name + ' tolerates at most two hash rechecks and requires a fresh matching pair', async () => {
+    const good = fixture(), stale = fixture({ corruptRelease:true });
+    const tracker = trackedFetch(url => {
+      const u = new URL(url);
+      const nonce = u.searchParams.get('gallery_pair_retry');
+      const wrong = !nonce || nonce.endsWith('-1');
+      return u.pathname === '/release-delivery.json' && wrong
+        ? stale.fetcher(url) : good.fetcher(url);
+    });
+    const output = await open(tracker.fetcher);
+    assert.ok(output);
+    const reads = pairRequests(tracker.requests);
+    assert.equal(reads.length, 6);
+    assert.equal(new Set(reads.filter(row => row.nonce).map(row => row.nonce)).size, 2);
+  });
+
+  test(name + ' fails closed after three permanently mismatched pair reads', async () => {
+    const bad = fixture({ corruptRelease:true });
+    const tracker = trackedFetch(bad.fetcher);
+    await assert.rejects(open(tracker.fetcher), /architecture_release_hash_mismatch/);
+    const reads = pairRequests(tracker.requests);
+    assert.equal(reads.length, 6, 'no fourth or unbounded retry is allowed');
+    assert.ok(reads.slice(2).every(row => row.cache === 'reload' && row.nonce));
+    assert.equal(new Set(reads.slice(2).map(row => row.nonce)).size, 2);
+    assert.equal(tracker.requests.length, 6, 'invalid manifest cannot authorize any architecture object');
+  });
+
+  test(name + ' recovers a transient hash-bound generation mismatch with the same pair protocol', async () => {
+    const good = fixture(), stale = fixture({ wrongGeneration:true });
+    const tracker = trackedFetch(url => {
+      const u = new URL(url);
+      return u.pathname === '/release-delivery.json' && !u.search
+        ? stale.fetcher(url) : good.fetcher(url);
+    });
+    const result = await open(tracker.fetcher);
+    assert.ok(result);
+    assert.equal(pairRequests(tracker.requests).length, 4);
+  });
+
+  test(name + ' does not retry unrelated invalid frontend activation', async () => {
+    const inactive = fixture({ active:false });
+    const tracker = trackedFetch(inactive.fetcher);
+    await assert.rejects(open(tracker.fetcher), /frontend_architecture_not_active/);
+    assert.equal(pairRequests(tracker.requests).length, 2);
+  });
+}
+
+test('aborting during the first failed release pair prevents any retry', async () => {
+  const bad = fixture({ corruptRelease:true });
+  const tracker = trackedFetch(bad.fetcher);
+  const abort = new AbortController();
+  const task = new PublishedCatalogClient('https://example.invalid/', { fetcher:tracker.fetcher }).open(abort.signal);
+  setTimeout(() => abort.abort(new Error('release_pair_test_cancelled')), 35);
+  await assert.rejects(task, /release_pair_test_cancelled/);
+  assert.equal(pairRequests(tracker.requests).length, 2);
 });
