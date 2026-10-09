@@ -74,7 +74,7 @@ try{
  fixture.html='<div class="graphical-abstract"><img src="https://evil.example/graphic.png"></div>';
  response=await read(sc);
  test('foreign publisher image source denied',response.rows.length===0);
- fixture.html='<div class="graphical-abstract"><img src="https://pubs.rsc.org/image/article/2026/gc/10.1039-d6gc03748h-abstract.jpg"></div>';
+ fixture.html='<div class="graphical-abstract"><img src="https://pubs.rsc.org/image/article/2026/gc/10.1039/d6gc03748h-abstract.jpg"></div>';
  response=await read(sc);
  test('explicitly foreign DOI source denied',response.rows.length===0);
  fixture={success:false,html:'<div class="graphical-abstract"><img src="'+gaImage+'"></div>',status:200};
