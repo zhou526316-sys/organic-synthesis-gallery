@@ -1,4 +1,5 @@
 import {readPublicationPages} from './read-publication-pages.mjs';
+import {completedBodyPacket} from '../../shared/body-packet-completion.mjs';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -166,15 +167,7 @@ export function completedPacketMap(inputs){
     const doi=normalizeDoi(row?.doi||'');
     const jobId=String(row?.jobId||'');
     const mediaNeed=String(row?.mediaNeed||'');
-    // PDF HTTP403 is independent of a completed body-image packet.
-    // Admit a partial terminal report ONLY if the sole partial layer is PDF403:
-    // complete and explicitly numbered figures, positive TOC, no other failure.
-    const pdfOnlyPartial=row.status==='partial' && row.privatePdfStatus==='failed'
-      && /^combined_capture;toc=(?:stored|already_available);figures=(\d+)\/\1;evidence=(?:stored|not_requested);published=0;pdf=private_pdf_http_403$/.test(String(row.reason||''));
-    if(!doi||!row.final||!(row.status==='success'||pdfOnlyPartial)
-      ||row.captureVersion!=='6.2.20'||!/^[a-z0-9-]{16,80}$/i.test(jobId))continue;
-    if(!mediaNeed.includes('figures'))continue;
-    if(Number(row.figuresDiscovered||0)<=0||Number(row.figuresStored||0)!==Number(row.figuresDiscovered||0))continue;
+    if(!doi||!completedBodyPacket(row))continue;
     map.set(doi,row);
   }
   return map;
