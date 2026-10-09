@@ -74,9 +74,9 @@
 
     <dialog class="reader-dialog" data-testid="pdf-vault-reader" aria-labelledby="reader-title">
       <div class="reader-heading"><div><span class="eyebrow">本地阅读</span><h2 id="reader-title">PDF 阅读器</h2></div><button type="button" class="quiet-button" data-testid="pdf-vault-reader-close" aria-label="关闭 PDF 阅读器">关闭</button></div>
-      <div class="reader-toolbar" aria-label="阅读工具"><div class="reader-paging"><button type="button" class="secondary" data-testid="pdf-vault-reader-previous" aria-label="上一页">上一页</button><span data-testid="pdf-vault-reader-pagecount" aria-live="polite">正在载入…</span><button type="button" class="secondary" data-testid="pdf-vault-reader-next" aria-label="下一页">下一页</button></div><div class="reader-zoom"><button type="button" class="quiet-button" data-testid="pdf-vault-reader-zoom-out" aria-label="缩小">−</button><span id="reader-zoom-value">100%</span><button type="button" class="quiet-button" data-testid="pdf-vault-reader-zoom-in" aria-label="放大">＋</button><button type="button" class="quiet-button" data-testid="pdf-vault-reader-export">导出 PDF</button></div></div>
+      <div class="reader-toolbar" aria-label="阅读工具"><div class="reader-paging"><span data-testid="pdf-vault-reader-pagecount" aria-live="polite">正在载入…</span><span class="reader-mode-caption">连续滚动</span></div><div class="reader-zoom"><button type="button" class="quiet-button" data-testid="pdf-vault-reader-zoom-out" aria-label="缩小">−</button><span id="reader-zoom-value">100%</span><button type="button" class="quiet-button" data-testid="pdf-vault-reader-zoom-in" aria-label="放大">＋</button><button type="button" class="quiet-button" data-testid="pdf-vault-reader-export">导出 PDF</button></div></div>
       <p class="reader-status" data-testid="pdf-vault-reader-status" role="status" aria-live="polite"></p>
-      <div class="reader-stage"><canvas data-testid="pdf-vault-reader-canvas" aria-label="PDF 页面" width="0" height="0"></canvas></div>
+      <div class="reader-stage" aria-label="连续滚动 PDF 页面" tabindex="0"><div id="local-pdf-continuous" class="pdfViewer"></div></div>
     </dialog>
     <script type="module" src="/src/pdf-vault/page.mjs"></script>
   </body>
