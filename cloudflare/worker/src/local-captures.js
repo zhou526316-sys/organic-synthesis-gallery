@@ -98,7 +98,14 @@ export function angewOfficialGaEvidenceError(item, requestedDoi = item?.doi) {
   const host = source.hostname.toLowerCase();
   if (!(host === 'wiley.com' || host.endsWith('.wiley.com')
     || host === 'wiley.com.cn' || host.endsWith('.wiley.com.cn'))) return 'angew_ga_source_not_wiley';
-  const path = decodeURIComponent(source.pathname).toLowerCase();
+  let path;
+  try { path = decodeURIComponent(source.pathname).toLowerCase(); }
+  catch { return 'angew_ga_source_path_invalid'; }
+  const expectedSuffix = /^10\.1002\/anie\.([0-9]{5,8})/.exec(doi);
+  if (expectedSuffix) {
+    const assetIds = [...path.matchAll(/anie[._-]?([0-9]{5,8})(?=[^0-9]|$)/gi)];
+    if (assetIds.some(match => match[1] !== expectedSuffix[1])) return 'angew_cross_article_ga_asset';
+  }
   const officialAsset = /-gra-\d+(?:[-_.]|$)|graphical[-_]abstract|visual[-_]abstract|(?:^|[\/_-])(?:ga|fx)0*1(?:[-_.]|$)/i.test(path);
   const headMetadata = candidateSource === 'article_head_metadata'
     && /^(?:graphical_abstract|toc_graphic|abstract_image)$/.test(String(item?.assetType || ''));
