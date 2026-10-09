@@ -31,6 +31,8 @@ jobs:
 
       - name: Test Gallery custom-domain live media routing
         run: node --test scripts/test-gallery-media-routing.mjs
+      - name: Assert live acceptance blocks writes and admits read-only archive queries
+        run: node --test scripts/test-gallery-live-readonly-post.mjs
 
       - name: Type-check frontend
         run: npx tsc --noEmit
