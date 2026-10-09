@@ -253,3 +253,12 @@ test('post-first-paint media recovery shares cached manifest with canonical batc
   assert.doesNotMatch(performanceRuntime, /FIGURE_DELAY_MS/);
   assert.match(performanceRuntime, /gallery-media-live-batch/);
 });
+
+test('failed static body figures do not trigger an unbounded recovery loop', () => {
+  const recovery = readFileSync('src/runtime-recovery.ts', 'utf8');
+  assert.match(recovery, /runtimeFigureErrorKey\s*===\s*sourceKey/);
+  assert.match(recovery, /Date\.now\(\)\s*<\s*Number\(slot\.dataset\.runtimeFigureRetryAfter/);
+  assert.match(recovery, /Date\.now\(\)\s*\+\s*60_000/);
+  assert.match(recovery, /delete slot\.dataset\.runtimeFigureErrorKey/);
+  assert.match(recovery, /figures\.slice\(0, 10\)\.map\(figure => figure\.imageUrl\)/);
+});
