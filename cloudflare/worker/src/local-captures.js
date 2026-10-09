@@ -105,6 +105,8 @@ export function angewOfficialGaEvidenceError(item, requestedDoi = item?.doi) {
   // Refuse a real foreign DOI embedded in the media URL, not different numbers.
   if (embeddedKnownDois(item?.sourceUrl || '').some(sourceDoi => sourceDoi !== doi))
     return 'angew_explicit_foreign_doi_source';
+  if (doi === '10.1002/anie.4335022' && /\/anie75210-gra-0003(?:[-_.]|$)/i.test(path))
+    return 'angew_verified_substrate_scope_not_toc';
   const officialAsset = /-gra-\d+(?:[-_.]|$)|graphical[-_]abstract|visual[-_]abstract|(?:^|[\/_-])(?:ga|fx)0*1(?:[-_.]|$)/i.test(path);
   const headMetadata = candidateSource === 'article_head_metadata'
     && /^(?:graphical_abstract|toc_graphic|abstract_image)$/.test(String(item?.assetType || ''));
@@ -819,6 +821,11 @@ export async function importLocalCapture(request, env, payload) {
   if (!image) return { status: 400, body: { error: 'A valid imageData payload is required.' } };
 
   const hash = await sha256Hex(image.bytes);
+  if (doi === '10.1002/anie.4335022' && kind === 'official'
+    && hash.slice(0,32) === '35f10c5321cd43179a4c71c73e388da8') {
+    return {status:409,body:{doi,kind,stored:false,productionTocStored:false,
+      code:'angew_verified_substrate_scope_bytes_not_toc'}};
+  }
   const doiHash = await sha256Hex(new TextEncoder().encode(doi));
   const key = `${IMAGE_PREFIX}${doiHash.slice(0, 24)}-${kind}-${hash.slice(0, 16)}.${extensionFor(image.contentType)}`;
   await env.MEDIA.put(key, image.bytes, {
