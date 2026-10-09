@@ -11,6 +11,7 @@ test('browser device replacement and concurrent login issuer remain capped', asy
   const sql = fs.readFileSync('cloudflare/schema.sql','utf8');
   db.exec(sql.slice(sql.indexOf('-- Account-device concurrency and Tencent SMS OTP groundwork')));
   db.prepare('INSERT INTO users(id) VALUES (?)').run('account');
+  let batchQueue = Promise.resolve();
   const DB = {
     prepare(statement) {
       return {
@@ -23,15 +24,20 @@ test('browser device replacement and concurrent login issuer remain capped', asy
         },
       };
     },
-    async batch(ops) {
-      db.exec('BEGIN IMMEDIATE');
-      try {
-        for (const op of ops) await op.run();
-        db.exec('COMMIT');
-      } catch (error) {
-        db.exec('ROLLBACK');
-        throw error;
-      }
+    batch(ops) {
+      // D1 serializes transactions; serialize the in-memory SQLite mock too.
+      const task = batchQueue.then(async () => {
+        db.exec('BEGIN IMMEDIATE');
+        try {
+          for (const op of ops) await op.run();
+          db.exec('COMMIT');
+        } catch (error) {
+          db.exec('ROLLBACK');
+          throw error;
+        }
+      });
+      batchQueue = task.catch(() => {});
+      return task;
     },
   };
   const env = { DB };
