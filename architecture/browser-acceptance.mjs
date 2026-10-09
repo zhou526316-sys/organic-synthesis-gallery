@@ -66,7 +66,7 @@ const hooks=`
     resultWindowPage=1; renderCards();
     while(true){
       rows.push(...(globalThis as any).__archBridge.inspect());
-      const state=resultWindowState(filteredPapers().length,resultWindowPage,RESULT_WINDOW_SIZE);
+      const state=resultWindowState(filteredPapers().length,resultWindowPage,${RESULT_WINDOW_SIZE});
       if(!state.hasNext) break;
       resultWindowPage+=1; renderCards();
       await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));
