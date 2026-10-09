@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "tm-owner-bridge273-diagnosis-v1",
+  "observedAtBeijing": "2026-10-09 08:37 +08:00",
+  "uploadedAtBeijing": "2026-10-09 08:24:16 +08:00",
+  "ownerLogUploadedAtEpochMs": 1791505456878,
+  "runStartedAtUTC": "2026-10-08T16:46:06.074Z",
+  "runFinishedAtUTC": "2026-10-08T17:50:40.233Z",
+  "runtime": {
+    "installedTocEngine": "6.2.54",
+    "bridgePublicInstaller": "2.2.73",
+    "protocol": "6.2.20",
+    "controller": "2.2.41"
+  },
+  "previousAdmissions": {
+    "scopeThroughOct8": 177,
+    "runUniqueJobs": 16,
+    "attempts": 18,
+    "publisherVisits": 16,
+    "confirmedFullClosuresThisRun": 1,
+    "unresolvedThisRun": 15,
+    "missingToc": 13,
+    "pdfInventory": {
+      "ready": 174,
+      "missing": 3,
+      "pending": 0,
+      "failed": 0,
+      "unknown": 0
+    },
+    "stagedFiguresThisRun": 6,
+    "inventoryErrors": []
+  },
+  "currentProduction": {
+    "source": "main public/toc-demand-live.json",
+    "generatedAt": "2026-10-09T00:00:22.125Z",
+    "totalRegistry": 915,
+    "admittedFromOct1ThroughOct9": 205,
+    "admittedOct9": 28,
+    "notCoveredByOwnerLog": 28
+  },
+  "verifiedPublisherCases": [
+    {
+      "doi": "10.1021/acs.orglett.6c03611",
+      "journal": "Organic Letters",
+      "toc": "already_available",
+      "figures": "4/4 staged",
+      "ownerPrivatePdf": "stored",
+      "verified": true
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01847",
+      "journal": "JOC",
+      "toc": "not_found",
+      "figures": "4/4 staged",
+      "ownerPrivatePdf": "already_stored",
+      "verified": true
+    },
+    {
+      "doi": "10.1039/d6gc04458a",
+      "journal": "Green Chemistry",
+      "toc": "not_found",
+      "bodyFigures": "0/0",
+      "publisherSurface": "Silverchair: seven IMG, zero figure/figcaption, PDF page preview rejected correctly",
+      "ownerPrivatePdf": "ready"
+    },
+    {
+      "doi": "10.1039/d6sc03717h",
+      "journal": "Chemical Science",
+      "toc": "not_found",
+      "bodyFigures": "0/0",
+      "ownerPrivatePdf": "3xx not received; publisher PDF HTTP403 response; no access bypass"
+    },
+    {
+      "doi": "10.1039/d6gc03161g",
+      "journal": "Green Chemistry",
+      "toc": "not_found",
+      "bodyFigures": "0/0",
+      "publisherSurface": "Silverchair: seven IMG, zero figure/figcaption"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103220",
+      "journal": "Chem",
+      "problem": "page_doi_unverified then controller_timeout twice",
+      "crossrefVerifiedPii": "S245192942600286X",
+      "ownerPrivatePdf": "missing in current inventory"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103282",
+      "journal": "Chem",
+      "problem": "page_doi_unverified then controller_timeout twice",
+      "crossrefVerifiedPii": "S2451929426003487",
+      "ownerPrivatePdf": "missing in current inventory"
+    }
+  ],
+  "confirmedRootCauses": [
+    "RSC Silverchair article shell contains PDF preview thumbnails, but no DOI-bound graphical abstract or numbered body figure. Strict thumbnail rejection is correct.",
+    "Elsevier article DOI route via doi.org may fail to resolve to an authenticated publisher tab, and the page-binding rejection formerly never terminated the controller job.",
+    "Two Chem DOI primary resources have real publisher PII proven by exact Crossref metadata; external publisher pages remain bot-blocked on generic network.",
+    "Uploaded local diagnostics were from a finished run before 2026-10-09 08:00 Beijing, so new 28 cannot be treated as captured."
+  ],
+  "response": {
+    "pdfOwnerFallbackReleased": true,
+    "pdfOwnerFallbackExample": "https://gallery.gczhouwld.com/pdf/?doi=10.1039%2Fd6gc04458a&rescue=1",
+    "pdfCandidatesOnly": true,
+    "automaticPublicImport": false,
+    "ownerPdfPrivate": true,
+    "recommendedRetainedPublicBridge": "2.2.73",
+    "newCodeDraft": {
+      "pr": 424,
+      "branch": "fix/tm-chem-doi-binding-timeout-20261009",
+      "fixes": [
+        "DOI-verified Crossref PII route used only after real Elsevier redirect lookup fails",
+        "after bounded DOI binding grace, genuinely bound DOI-unverified Chem task closes as failed attempt and next task may proceed"
+      ],
+      "released": false,
+      "ci": "in progress"
+    },
+    "dailyReleaseConstraint": "single 08:00 Asia/Shanghai; no off-slot literature admission"
+  }
+}
