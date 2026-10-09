@@ -210,7 +210,7 @@ export function createLocalPdfReader({
         stage.scrollTop = 0;
         let firstPageResolve;
         const firstPage = new Promise(resolve => { firstPageResolve = resolve; });
-        continuous = createContinuousPdfViewer({
+        continuous = await createContinuousPdfViewer({
           container: stage, viewer: pages, pdf,
           onPageChange: page => { controls(); activeCanvas(page); },
           onPageRendered: (page, canvas) => {
