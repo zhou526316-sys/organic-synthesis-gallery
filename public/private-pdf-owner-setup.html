@@ -17,6 +17,19 @@ body{font-family:Inter,system-ui,sans-serif;max-width:720px;margin:48px auto;pad
 <button id="claim" disabled>确认将当前账号设为私有 PDF owner</button>
 <button id="authorize" disabled hidden>授权本浏览器抓取 PDF（7 天）</button>
 <p id="capture-status" class="muted"></p>
+<section id="reader-grant-panel" hidden style="border-top:1px solid #d0d5dd;margin-top:24px;padding-top:16px">
+  <h2>PDF 阅读权限管理</h2>
+  <p class="muted">只有站长可以授权已验证邮箱的 Gallery 账号。仅添加 private_pdf_read；不添加站长、抓取或处理权限。现有阅读权限也允许下载，因此只对有权分享的文献授权。</p>
+  <label for="reader-grant-email">已验证的目标账号邮箱</label>
+  <input id="reader-grant-email" type="email" autocomplete="off" spellcheck="false" placeholder="reader@example.com" style="display:block;width:100%;box-sizing:border-box;padding:10px;margin:10px 0 12px">
+  <label style="display:block;margin-bottom:12px"><input id="reader-grant-rights" type="checkbox"> 我确认有权向该账号提供相关 PDF 文献的访问权限。</label>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button type="button" id="reader-grant-check">检查状态</button>
+    <button type="button" id="reader-grant-add">授予阅读权限</button>
+    <button type="button" id="reader-grant-revoke">撤销阅读权限</button>
+  </div>
+  <p id="reader-grant-result" class="muted" role="status" aria-live="polite"></p>
+</section>
 </main>
 <script type="module">
 const SESSION_KEY='organic-gallery-session-v1';
@@ -89,8 +102,50 @@ async function json(path,init={}){
         }
       });
     }
+    async function enableReaderGrantPanel(){
+      const panel=document.querySelector('#reader-grant-panel');
+      panel.hidden=false;
+      const input=document.querySelector('#reader-grant-email');
+      const consent=document.querySelector('#reader-grant-rights');
+      const result=document.querySelector('#reader-grant-result');
+      const actions=[
+        ['reader-grant-check','status'],
+        ['reader-grant-add','grant'],
+        ['reader-grant-revoke','revoke']
+      ];
+      const buttons=actions.map(([name])=>document.getElementById(name));
+      for(const [id,action] of actions){
+        document.getElementById(id).addEventListener('click',async()=>{
+          const email=String(input.value||'').trim().toLowerCase();
+          if(!email || !input.checkValidity()){result.className='bad';result.textContent='请输入有效邮箱地址。';return;}
+          if(action==='grant' && !consent.checked){
+            result.className='bad';result.textContent='请确认拥有相关文献的分享权限。';return;
+          }
+          buttons.forEach(button=>button.disabled=true);
+          result.className='muted';result.textContent='正在核对已验证的目标账号和阅读权限…';
+          try{
+            const data=await json('/api/user-ui/private-pdf/reader-grant',{
+              method:'POST',
+              body:JSON.stringify({email,action,rightsConfirmed:action==='grant'&&consent.checked})
+            });
+            const verdict=data.readGranted?'已拥有 PDF 阅读权限。':'目前没有 PDF 阅读权限。';
+            result.className='ok';
+            result.textContent=verdict+(data.changed?' 授权记录已更新。':' 无需修改。');
+          }catch(error){
+            result.className='bad';
+            const reason=String(error?.message||error);
+            result.textContent=reason==='reader_account_not_verified_or_ambiguous'
+              ? '找不到当前邮箱与已验证邮箱一致的唯一账号。'
+              : reason==='reader_target_has_privileged_pdf_capabilities'
+              ? '该账号已有其他私有 PDF 管理权限，不通过只读授权页修改。'
+              : '未能更新权限：'+reason;
+          }finally{buttons.forEach(button=>button.disabled=false);}
+        });
+      }
+    }
     if(capabilities.includes('private_pdf_owner')){
       status.textContent='这个账号已经是私有 PDF owner。';status.className='ok';
+      await enableReaderGrantPanel();
       await offerCaptureAuthorization();
       return;
     }
@@ -105,6 +160,7 @@ async function json(path,init={}){
         history.replaceState(null,'',location.pathname+location.search);
         window.dispatchEvent(new Event('gallery-auth-session-changed'));
         capabilities.splice(0,capabilities.length,...(result.capabilities||[]));
+        await enableReaderGrantPanel();
         await offerCaptureAuthorization();
       }catch(error){status.textContent='绑定失败：'+String(error?.message||error);status.className='bad';button.disabled=false;}
     },{once:true});

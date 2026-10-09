@@ -345,7 +345,9 @@ export async function servePrivatePdf(request, env, cors = {}) {
       let active = null;
       try {
         active = await env.DB.prepare(
-          'SELECT token_hash FROM user_sessions WHERE token_hash=? AND user_id=? AND expires_at>?'
+          'SELECT s.token_hash FROM user_sessions s ' +
+          'WHERE s.token_hash=? AND s.user_id=? AND s.expires_at>? ' +
+          "AND EXISTS (SELECT 1 FROM user_capabilities c WHERE c.user_id=s.user_id AND c.capability='private_pdf_read')"
         ).bind(fast.sessionHash, fast.uid, Date.now()).first();
       } catch { return privateFileError(503, 'pdf_session_check_unavailable', cors); }
       if (!active?.token_hash) return privateFileError(401, 'pdf_session_revoked', cors);

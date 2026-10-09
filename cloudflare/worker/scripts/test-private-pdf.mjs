@@ -13,6 +13,12 @@ class FakeStatement {
   bind(...args) { this.args=args; return this; }
   async first() {
     const q=this.sql, a=this.args, db=this.db;
+    if(q.includes('FROM user_sessions s WHERE s.token_hash')) {
+      const row=db.sessions.get(a[0]) || null;
+      if(!row || row.user_id!==a[1] || Number(row.expires_at)<=Number(a[2]) ||
+          !db.capabilities.has(row.user_id+'|private_pdf_read')) return null;
+      return row;
+    }
     if(q.includes('FROM user_sessions WHERE token_hash')) {
       const row=db.sessions.get(a[0]) || null;
       if(!row) return null;
@@ -209,6 +215,17 @@ await test('view ticket continuation is bound to browser HttpOnly cookie and abs
     assert.equal(expired.status,401);
   } finally { Date.now=originalNow; }
 });
+await test('revoking private_pdf_read invalidates an active signed Range ticket',async()=>{
+  const current=db.capabilities.get('owner|private_pdf_read');
+  assert.ok(current,'the owner fixture must have a read capability');
+  const before=bucket.getCalls;
+  db.capabilities.delete('owner|private_pdf_read');
+  const denied=await servePrivatePdf(new Request(accessUrl,{headers:{range:'bytes=0-7'}}),env,{});
+  assert.equal(denied.status,401,'revocation must take effect without bearer login logout');
+  assert.equal(denied.headers.get('x-gallery-pdf-status'),'pdf_session_revoked');
+  assert.equal(bucket.getCalls,before,'revoked permission never reads private R2 bytes');
+  db.capabilities.set('owner|private_pdf_read',current);
+});
 await test('evicting an account session revokes already issued PDF ticket and stops R2 reads',async()=>{
   const hash=await sha256('owner-token');
   const active=db.sessions.get(hash);
@@ -296,11 +313,11 @@ await test('ordinary account never receives private document existence or bytes'
   const o=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','other-token',{method:'POST'}),env);
   assert.equal(o.status,403);
 });
-await test('fast ticket remains independent of capability changes but requires an active session',async()=>{
+await test('fast ticket requires both an active session and continuing read capability',async()=>{
   const beforeDb=db.firstCalls;
   db.capabilities.delete('owner|private_pdf_read');
   const res=await servePrivatePdf(new Request(accessUrl,{headers:{range:'bytes=0-7'}}),env,{});
-  assert.equal(res.status,206);assert.equal(db.firstCalls,beforeDb+1,'one indexed session read is required');
+  assert.equal(res.status,401);assert.equal(db.firstCalls,beforeDb+1,'one indexed session and capability lookup is required');
   db.capabilities.set('owner|private_pdf_read',{});
 });
 await test('legacy opaque ticket still supports immediate capability revocation',async()=>{
