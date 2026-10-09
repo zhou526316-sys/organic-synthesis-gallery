@@ -187,6 +187,7 @@ export function integrationStatus(env) {
         wechat: providerConfigured(env, 'wechat'),
         qq: providerConfigured(env, 'qq'),
         email: providerConfigured(env, 'email'),
+        phone: Boolean(env.TENCENT_SMS_SECRET_ID && env.TENCENT_SMS_SECRET_KEY && env.TENCENT_SMS_SDK_APP_ID && env.TENCENT_SMS_SIGN_NAME && env.TENCENT_SMS_TEMPLATE_ID && env.SMS_OTP_PEPPER),
       },
       payments: {
         wechat: paymentConfigured(env, 'wechat'),
@@ -484,7 +485,9 @@ async function userSummary(env, userId) {
        FROM users u
       WHERE u.id = ?`
   ).bind(userId).first();
+  const phone = row ? await env.DB.prepare('SELECT phone_e164 FROM user_phone_links WHERE user_id = ?').bind(userId).first() : null;
   return row ? {
+    phoneMasked: phone?.phone_e164 ? '+86 ' + phone.phone_e164.slice(3, 6) + '****' + phone.phone_e164.slice(-4) : null,
     id: row.id,
     displayName: row.display_name || null,
     email: row.email || null,
