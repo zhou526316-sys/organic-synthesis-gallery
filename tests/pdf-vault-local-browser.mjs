@@ -403,13 +403,22 @@ try {
     const copies = await localCopies(page); assert.equal(copies[0].storage_kind, 'local_folder'); assert.equal(copies[0].hasDirectoryHandle, true);
     await page.reload({ waitUntil: 'domcontentloaded' }); await waitAccount(page, 'a'); await openFirst(page); await assertRendered(page);
   });
-  await test('PDF.js renders both pages and closes without retaining pixels', async () => {
+  await test('PDF.js scrolls through both pages and closes without retaining pixels', async () => {
     const { context } = await trackedContext(); const page = await pageFor(context); await importGood(page); await openFirst(page); await assertRendered(page);
     assert.match(await by(page, 'reader-pagecount').innerText(), /1\s*\/\s*2/);
-    await by(page, 'reader-next').click(); await page.waitForFunction(() => /2\s*\/\s*2/.test(document.querySelector('[data-testid="pdf-vault-reader-pagecount"]')?.textContent || ''));
-    await assertRendered(page); await by(page, 'reader-previous').click(); await page.waitForFunction(() => /1\s*\/\s*2/.test(document.querySelector('[data-testid="pdf-vault-reader-pagecount"]')?.textContent || ''));
+    await by(page, 'reader').locator('.reader-stage').evaluate(stage => {
+      stage.scrollTop = stage.scrollHeight;
+      stage.dispatchEvent(new Event('scroll'));
+    });
+    await page.waitForFunction(() => /2\s*\/\s*2/.test(document.querySelector('[data-testid="pdf-vault-reader-pagecount"]')?.textContent || ''));
+    await assertRendered(page);
+    await by(page, 'reader').locator('.reader-stage').evaluate(stage => {
+      stage.scrollTop = 0;
+      stage.dispatchEvent(new Event('scroll'));
+    });
+    await page.waitForFunction(() => /1\s*\/\s*2/.test(document.querySelector('[data-testid="pdf-vault-reader-pagecount"]')?.textContent || ''));
     await by(page, 'reader-close').click(); await assertNoReader(page);
-    assert.equal(await by(page, 'reader-canvas').evaluate(canvas => canvas.width), 0);
+    assert.equal(await by(page, 'reader-canvas').count(), 0, 'closing destroys page canvases');
   });
   await test('changed same-size PDF cannot reuse a prior readability result', async () => {
     const { context } = await trackedContext(); const page = await pageFor(context); await importGood(page); await mutateFile(page, 'change');
@@ -437,7 +446,7 @@ try {
   await test('storage events revoke an old account reader in another tab', async () => {
     const { context } = await trackedContext(); const page = await pageFor(context); await importGood(page); await openFirst(page);
     const second = await pageFor(context); await switchAccount(second, 'b'); await waitAccount(page, 'b');
-    assert.equal(await copyRows(page).count(), 0); await assertNoReader(page); assert.equal(await by(page, 'reader-canvas').evaluate(canvas => canvas.width), 0);
+    assert.equal(await copyRows(page).count(), 0); await assertNoReader(page); assert.equal(await by(page, 'reader-canvas').count(), 0, 'closing destroys page canvases');
   });
   await test('watcher catches a token change without an explicit auth event', async () => {
     const { context } = await trackedContext(); const page = await pageFor(context); await importGood(page); await openFirst(page);
@@ -502,7 +511,7 @@ try {
     const metrics = await page.evaluate(() => ({ width: innerWidth, document: document.documentElement.scrollWidth, body: document.body.scrollWidth, overflows: [...document.querySelectorAll('body *')].map(element => ({ tag: element.tagName, className: String(element.className || ''), testId: element.dataset?.testid || '', left: element.getBoundingClientRect().left, right: element.getBoundingClientRect().right })).filter(item => item.left < -1 || item.right > innerWidth + 1).slice(0, 12) }));
     activeCase.layout = metrics;
     assert.ok(metrics.document <= metrics.width + 1 && metrics.body <= metrics.width + 1, 'no page-level horizontal overflow: ' + JSON.stringify(metrics));
-    for (const name of ['reader', 'reader-next', 'reader-previous', 'reader-close']) {
+    for (const name of ['reader', 'reader-close', 'reader-pagecount']) {
       const box = await by(page, name).boundingBox(); assert.ok(box && box.width > 0 && box.height > 0 && box.x >= -1 && box.x + box.width <= 391, name + ' fits viewport');
     }
   });
