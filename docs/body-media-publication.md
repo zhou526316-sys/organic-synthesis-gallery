@@ -92,10 +92,9 @@ other capture error. Both the Worker publication-report projection and the Pages
 publication gate apply the same shared rule. The PDF remains failed or missing;
 no authorization is bypassed.
 
-The public per-card policy permits up to 20 numbered semantic Figure/Scheme/Chart
-assets to match the collector's existing maximum, instead of blocking entire articles
-whose validated packet contains 11–20 distinct figures. The frontend already uses a
-horizontally navigable lazy-image strip for body figures and limits hydration to near
-screen cards. Each new figure still requires the independent original bytes, provenance,
-hash, image-decode and immutable-asset publication checks. Beyond 20 assets requires
-a separate explicit UI/storage design and is not silently truncated or marked complete.
+The existing ten-image per-card publication cap is a protected policy in
+`audit/media-auto-policy.json`; this repair does **not** alter or bypass it.
+A fully captured paper with 11–20 figures remains staged with the truthful
+`auto_card_display_limit` hold until a separate publication-policy review
+authorizes a reader/strip expansion. All new figure bytes still require
+independent provenance, digest, image-decode and immutable public-file checks.
