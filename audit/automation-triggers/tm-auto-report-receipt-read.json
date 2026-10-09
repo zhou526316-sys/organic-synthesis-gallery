@@ -1,9 +1,17 @@
 {
-  "requestedAt": "2026-10-04T12:30:00Z",
-  "reason": "Read-only verification after RSC/Chem discovery and Elsevier task-binding repair. Check whether 10.1016/j.chempr.2026.103282 has a newer Tampermonkey attempt using installer 6.2.24 / packaged Bridge 2.2.42 and whether bound_publisher_heartbeat_missing is cleared. Do not capture, promote, delete, or publish media.",
-  "targetDoi": "10.1016/j.chempr.2026.103282",
-  "expectedInstallRevision": "6.2.24",
-  "expectedBridgeVersion": "2.2.42",
+  "requestedAt": "2026-10-09T08:40:10.249Z",
+  "reason": "Read actual latest DOI-scoped automatic Tampermonkey owner reports following Bridge 2.2.76 installation, verified bad Angew 4335022 cache removal, and the four unresolved Oct9 Chem/RSC primary visuals. No publisher visits and no media mutations.",
+  "targetDois": [
+    "10.1002/anie.4335022",
+    "10.1016/j.chempr.2026.103008",
+    "10.1016/j.chempr.2026.103043",
+    "10.1039/d6sc06407h",
+    "10.1039/d6gc03748h"
+  ],
+  "expectedBridgeVersion": "2.2.76",
+  "expectedInstallRevision": "6.2.57",
   "readOnly": true,
-  "mediaWrites": 0
+  "mediaWrites": 0,
+  "publisherRequests": 0,
+  "privatePdfRequests": 0
 }
