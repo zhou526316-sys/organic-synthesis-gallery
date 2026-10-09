@@ -7,8 +7,10 @@ const LOCAL_PREVIEW = 'http://127.0.0.1:4174';
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64');
 const OFFICIAL = '10.1021/acscatal.6c06476';
 const SCIENCE = '10.1126/science.aef3001';
+const CONFIRMED_BAD_ANGeW = '10.1002/anie.4335022';
+const WRONG_TOC_HASH = '35f10c5321cd43179a4c71c73e388da8';
 
-async function openCanonical(page: Page, doi: string, { figure1 = false, imageFailure = false } = {}) {
+async function openCanonical(page: Page, doi: string, { figure1 = false, imageFailure = false, staleStatic = false } = {}) {
   let imageUnavailable = imageFailure;
   const calls: Array<{ url: string; method: string }> = [];
   const errors: string[] = [];
@@ -28,6 +30,24 @@ async function openCanonical(page: Page, doi: string, { figure1 = false, imageFa
     const url = new URL(request.url());
     const method = request.method();
     if (url.origin === GALLERY) {
+      if (staleStatic && url.pathname === '/media-index.json') {
+        calls.push({ url: url.href, method });
+        await route.fulfill({
+          status: 200, contentType: 'application/json',
+          body: JSON.stringify({
+            version: 2, generatedAt: 1,
+            items: { [doi]: {
+              doi, toc: {
+                available: true, reason: 'imported',
+                contentHash: WRONG_TOC_HASH,
+                imageUrl: 'media-mirror/old-substrate-grid.png',
+              },
+              figures: { available: false, doi, figures: [] },
+            } },
+          }),
+        });
+        return;
+      }
       if (url.pathname.startsWith('/api/')) {
         calls.push({ url: url.href, method });
         await route.fulfill({ status: 404, body: 'Gallery is static Pages, not the media API' });
@@ -153,6 +173,18 @@ test('unavailable original image shows actionable retry and recovers without a n
   const img = fixture.card.locator('.toc-slot[data-state="done"] img.toc-image');
   await expect(img).toBeVisible({ timeout: 25000 });
   await expect.poll(async () => img.evaluate(node => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  expect(fixture.calls.some(row => row.url === API + '/api/media/batch' && row.method === 'POST')).toBe(true);
+  expect(fixture.errors).toEqual([]);
+});
+
+test('corrected Angew media from live API overrides the previously published wrong TOC', async ({ page }) => {
+  test.setTimeout(90000);
+  const fixture = await openCanonical(page, CONFIRMED_BAD_ANGeW, { staleStatic: true });
+  const img = fixture.card.locator('.toc-slot[data-state="done"] img.toc-image');
+  await expect(img).toBeVisible({ timeout: 25000 });
+  await expect.poll(async () => img.evaluate(node => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  await expect(img).toHaveAttribute('src', API + '/media/original.png');
+  expect(fixture.calls.filter(row => row.url === GALLERY + '/media-index.json').length).toBe(1);
   expect(fixture.calls.some(row => row.url === API + '/api/media/batch' && row.method === 'POST')).toBe(true);
   expect(fixture.errors).toEqual([]);
 });
