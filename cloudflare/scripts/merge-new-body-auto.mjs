@@ -165,7 +165,8 @@ export function completedPacketMap(inputs){
   const map=new Map();
   for(const row of inputs?.reports?.items||[]){
     const doi=normalizeDoi(row?.doi||'');
-    if(!doi||!completedBodyPacket(row))continue;
+    const mediaNeed=String(row?.mediaNeed||'');
+    if(!doi||!mediaNeed.includes('figures')||!completedBodyPacket(row))continue;
     map.set(doi,row);
   }
   return map;
