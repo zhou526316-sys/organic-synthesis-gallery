@@ -166,6 +166,12 @@ function restoreFigures(slot: HTMLElement, item: StaticMediaItem): void {
   if (slot.querySelector('.figure-thumb:not(.generated-thumb) img')) return;
   const figures = (item.figures?.figures || []).filter(figure => typeof figure.imageUrl === 'string' && figure.imageUrl);
   if (!figures.length) return;
+  // Image errors mutate the card DOM, which schedules another recovery scan.
+  // Do not turn repeated 404/403/connection failures into an unbounded loop.
+  // A new asset URL bypasses this cooldown without waiting.
+  const sourceKey = figures.slice(0, 10).map(figure => figure.imageUrl).join('|');
+  if (slot.dataset.runtimeFigureErrorKey === sourceKey
+      && Date.now() < Number(slot.dataset.runtimeFigureRetryAfter || 0)) return;
 
   const heading = document.createElement('div');
   heading.className = 'figure-strip-heading';
@@ -193,12 +199,18 @@ function restoreFigures(slot: HTMLElement, item: StaticMediaItem): void {
     label.textContent = figure.label || 'Figure';
     button.append(image, label);
     strip.appendChild(button);
+    image.addEventListener('load', () => {
+      delete slot.dataset.runtimeFigureErrorKey;
+      delete slot.dataset.runtimeFigureRetryAfter;
+    }, { once: true });
     image.addEventListener('error', () => {
       button.remove();
       if (!strip.querySelector('.figure-thumb')) {
         strip.remove();
         heading.remove();
         slot.dataset.state = 'image-error';
+        slot.dataset.runtimeFigureErrorKey = sourceKey;
+        slot.dataset.runtimeFigureRetryAfter = String(Date.now() + 60_000);
       }
     }, { once: true });
     image.src = assetUrl(figure.imageUrl!);
