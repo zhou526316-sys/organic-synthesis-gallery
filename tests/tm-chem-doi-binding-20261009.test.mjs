@@ -17,7 +17,7 @@ const job={doi:DOI,jobId:'12345678-1234-4234-a234-123456789012',publisher:'elsev
 function harness({publisher='elsevier',reason='page_doi_unverified',binding=true,active=true,prior=false}={}){
  const store=new Map(),reports=[],apiReports=[],events=[];
  let ran=0,slept=0,heartbeats=0;
- const j={...job,publisher};
+ const j={...job,publisher,startedAt:new Date().toISOString()};
  const ctx={
   String,Number,Boolean,Date,JSON,Math,console,
   P,VERSION:'6.2.20',CONTROLLER_REVISION:'2.2.41',INSTALL_REVISION:'6.2.54',
