@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "beijingTime": "2026-10-09 23:14:26",
+  "project": "Organic Synthesis Gallery",
+  "userApprovedRemediation": "PDF native browser cannot open and long Range transfer delays",
+  "release": {
+    "pr": 455,
+    "merged": true,
+    "mergeCommit": "bc9c607056f0244ff85ffa5641c5c440f98a8cae",
+    "worker": {
+      "run": 37948599826,
+      "conclusion": "success"
+    },
+    "pages": {
+      "run": 37948599914,
+      "conclusion": "success"
+    },
+    "pdfVaultLive": {
+      "run": 37950011372,
+      "conclusion": "success",
+      "sourceCommit": "bc9c607056f0244ff85ffa5641c5c440f98a8cae",
+      "verifiedStaticFiles": 13
+    },
+    "privatePdfMainRegression": {
+      "run": 37948599825,
+      "conclusion": "success"
+    },
+    "independent": {
+      "run": 37948053477,
+      "conclusion": "success",
+      "onlineCases": 39,
+      "localCases": 23,
+      "workerCases": 28
+    }
+  },
+  "functionality": {
+    "transferFallback": "Recoverable 500/502/503/504 or timedout Range can try alternate authorized Worker once; strong PDF SHA-256 contentHash + byteLength enforced, 401/403 fail-closed.",
+    "native": "Browser mode requires actual authenticated 206 header bytes=0-15 and opens in separate noopener tab while original Gallery retry interface stays available.",
+    "pdfjs": "Continuous vertical scroll retained; original-image crop feature not changed.",
+    "noSecretOrPrivatePdfLogging": true
+  },
+  "publicLiveSmoke": {
+    "urls": [
+      "https://gallery.gczhouwld.com/pdf/",
+      "https://api.gczhouwld.com/api/_healthcheck"
+    ],
+    "pageAvailable": true,
+    "apiHealthOk": true,
+    "publicPdfContinuousScrollMarkup": true,
+    "totalLatencyMsForThisExternalProbe": {
+      "pdfPage": 2951,
+      "apiHealth": 418
+    },
+    "subjectToGeoLatencyVariation": true,
+    "actualAuthenticatedPdfNotTested": true
+  },
+  "knownLimitations": [
+    "Both primary and alternate PDF file hosts still run through the Cloudflare ecosystem; cannot solve all-carrier outages.",
+    "Tencent independent PDF ingress PR #420 is still draft and disabled pending correct TLS cert and owner China acceptance.",
+    "Headless Chromium fixture success is not a guarantee of real Edge PDF plugin rendering on user's specific machine.",
+    "The native plugin may fail after handoff; a Gallery parent reader now remains for retry rather than disappearing.",
+    "File content identity fallback is unavailable for old private PDFs with missing/invalid contentHash; old same-host bounded retry applies."
+  ],
+  "remainingOwnerValidation": "Use actual signed-in Gallery account from Edge on China network, compare PDF.js viewer and native browser for a representative DOI, record only sanitized stage error/time, never share raw signed PDF URLs, tokens or cookies."
+}
