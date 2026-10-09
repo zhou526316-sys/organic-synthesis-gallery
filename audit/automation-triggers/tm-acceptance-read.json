@@ -1,8 +1,8 @@
 {
-  "requestId": "tm-20261009-1746-owner-upload-post-rsc-ajax",
+  "requestId": "tm-20261009-2202-owner-newlog-full-gap-forensics",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "requestedAt": "2026-10-09T09:46:00Z",
-  "context": "Read newly uploaded owner Tampermonkey diagnostic snapshot after deployed Bridge 2.2.77 / TOC 6.2.58. Inspect latest uploadedAt and capture times, identify whether official RSC ArticleAbstractAjax recovery actually ran for 10.1039/d6sc06407h and 10.1039/d6gc03748h; also check Chem 103008/103043 main visuals and DOI 10.1002/anie.4335022 quarantine. Read-only evidence; do not visit publisher, upload, modify or promote media.",
+  "requestedAt": "2026-10-09T14:02:00Z",
+  "context": "Owner uploaded NEW Tampermonkey diagnostic logs around Beijing 22:02. Read current R2 uploadedAt, task summary, per-DOI failures, trace and latest result; focus all missing TOC, body figures, full text evidence and private PDFs for Gallery DOI addedDate 2026-10-01+. Confirm actual version 2.2.77/6.2.58 or newer, distinguish owner browser execution from installer update; prioritize 10.1039/d6sc06407h, 10.1039/d6gc03748h, Chem 103008/103043, Angew 4335022. NO publisher visits, media write, deletion, promotion, literature release.",
   "targetDois": [
     "10.1039/d6sc06407h",
     "10.1039/d6gc03748h",
