@@ -72,7 +72,7 @@ export function assertSnapshotCoherence(previous,live){
 }
 async function configuration(root){
   const policy=JSON.parse(await readFile(path.join(root,'audit/media-auto-policy.json'),'utf8'));
-  requireBody(policy.schemaVersion===1&&policy.policyId===POLICY_ID&&Number.isInteger(policy.minNewArticles)&&policy.minNewArticles>=1&&Number.isInteger(policy.maxNewArticles)&&policy.maxNewArticles>=policy.minNewArticles&&policy.maxNewArticles<=25&&Number.isInteger(policy.maxNewImages)&&policy.maxNewImages>=policy.maxNewArticles&&policy.maxNewImages<=250&&policy.maxFiguresPerCard<=10&&policy.requireOfficialTocInBuild===true&&policy.requireCompletedCapturePacket===true&&Number.isInteger(policy.backfillStabilityMinutes)&&policy.backfillStabilityMinutes>=5&&policy.backfillStabilityMinutes<=120&&Number.isFinite(Date.parse(policy.backfillCapturedBefore)),'auto_invalid_configuration');
+  requireBody(policy.schemaVersion===1&&policy.policyId===POLICY_ID&&Number.isInteger(policy.minNewArticles)&&policy.minNewArticles>=1&&Number.isInteger(policy.maxNewArticles)&&policy.maxNewArticles>=policy.minNewArticles&&policy.maxNewArticles<=25&&Number.isInteger(policy.maxNewImages)&&policy.maxNewImages>=policy.maxNewArticles&&policy.maxNewImages<=250&&policy.maxFiguresPerCard>=10&&policy.maxFiguresPerCard<=20&&policy.requireOfficialTocInBuild===true&&policy.requireCompletedCapturePacket===true&&Number.isInteger(policy.backfillStabilityMinutes)&&policy.backfillStabilityMinutes>=5&&policy.backfillStabilityMinutes<=120&&Number.isFinite(Date.parse(policy.backfillCapturedBefore)),'auto_invalid_configuration');
   const state=JSON.parse(await readFile(path.join(root,'audit/literature-update-state.json'),'utf8'));
   const holds=new Set([...(policy.heldDois||[]),...(state.pendingScopeReviewBacklog||[])].map(x=>x.doi));
   return {policy,holds,papers:await readPapers(root)};
@@ -137,15 +137,44 @@ export function strongOfficialCapture(row){
   }
   return false;
 }
+// A verified Figure 1 can be the accepted primary graphic for Nature/Science.
+ // It does not turn an arbitrary PDF preview or unbound article image into a TOC.
+export function strongVerifiedFigureOneCapture(row){
+  const doi=normalizeDoi(row?.doi||'');
+  return Boolean(doi && /^10\.(?:1038|1126)\//.test(doi)
+    && String(row?.kind||'').toLowerCase()==='figure1'
+    && /^[a-f0-9]{32}$/.test(String(row.contentHash||''))
+    && strongOfficialCapture({...row,kind:'official'}));
+}
+export function verifiedFigureOneInBuild(record,doi,localCaptures){
+  const toc=record?.toc;
+  if(!toc?.available||!toc?.imageUrl||toc?.reason!=='figure1_fallback'
+    ||!/^[a-f0-9]{32}$/.test(String(toc.contentHash||'')))return false;
+  return Boolean((localCaptures?.items||[]).some(row=>
+    normalizeDoi(row?.doi||'')===doi && strongVerifiedFigureOneCapture(row)
+    && row.contentHash===toc.contentHash
+    && (record?.figures?.figures||[]).some(f=>f.id==='figure-1' && f.contentHash===row.contentHash && !!f.imageUrl)));
+}
+export function verifiedPrimaryReadyDois(inputs){
+  const ready=tocReadyDois(inputs);
+  for(const row of inputs?.localCaptures?.items||[])if(strongVerifiedFigureOneCapture(row))ready.add(normalizeDoi(row.doi));
+  return ready;
+}
 export function completedPacketMap(inputs){
   const map=new Map();
   for(const row of inputs?.reports?.items||[]){
     const doi=normalizeDoi(row?.doi||'');
     const jobId=String(row?.jobId||'');
     const mediaNeed=String(row?.mediaNeed||'');
-    if(!doi||!row.final||row.status!=='success'||row.captureVersion!=='6.2.20'||!/^[a-z0-9-]{16,80}$/i.test(jobId))continue;
+    // PDF HTTP403 is independent of a completed body-image packet.
+    // Admit a partial terminal report ONLY if the sole partial layer is PDF403:
+    // complete and explicitly numbered figures, positive TOC, no other failure.
+    const pdfOnlyPartial=row.status==='partial' && row.privatePdfStatus==='failed'
+      && /^combined_capture;toc=(?:stored|already_available);figures=(\d+)\/\1;evidence=(?:stored|not_requested);published=0;pdf=private_pdf_http_403$/.test(String(row.reason||''));
+    if(!doi||!row.final||!(row.status==='success'||pdfOnlyPartial)
+      ||row.captureVersion!=='6.2.20'||!/^[a-z0-9-]{16,80}$/i.test(jobId))continue;
     if(!mediaNeed.includes('figures'))continue;
-    if(Number(row.figuresStored||0)!==Number(row.figuresDiscovered||0))continue;
+    if(Number(row.figuresDiscovered||0)<=0||Number(row.figuresStored||0)!==Number(row.figuresDiscovered||0))continue;
     map.set(doi,row);
   }
   return map;
@@ -179,7 +208,7 @@ export async function pendingNewRows({root=process.cwd(),inputs,now=Date.now()})
   assertSnapshotCoherence(inputs.previous,inputs.live);
   const cfg=await configuration(root),{policy,holds,papers}=cfg;
   if(!policy.enabled||!inputs.stage)return {...cfg,rows:[]};
-  const oldKeys=new Set(inputs.previous.items.map(x=>exactKey(x.record))),tocReady=tocReadyDois(inputs),packets=completedPacketMap(inputs);
+  const oldKeys=new Set(inputs.previous.items.map(x=>exactKey(x.record))),tocReady=verifiedPrimaryReadyDois(inputs),packets=completedPacketMap(inputs);
   const cutoff=Date.parse(policy.backfillCapturedBefore),stabilityMs=policy.backfillStabilityMinutes*60000;
   const stageByDoi=new Map();
   for(const row of inputs.stage.items){
@@ -273,8 +302,10 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
     for(const doi of candidateDois){
       const packetRows=rows.filter(row=>row.doi===doi&&!alreadyIn(media,row));
       if(!packetRows.length)continue;
-      if(policy.requireOfficialTocInBuild&&!officialToc(media.items[doi])){
-        held.push({doi,id:null,reason:'waiting_for_official_toc_in_same_build'});tocWaitingDois.add(doi);continue;
+      if(policy.requireOfficialTocInBuild && !officialToc(media.items[doi])
+        && !verifiedFigureOneInBuild(media.items[doi],doi,inputs.localCaptures)){
+        held.push({doi,id:null,reason:'waiting_for_verified_primary_visual_in_same_build'});
+        tocWaitingDois.add(doi);continue;
       }
       const baseCount=(media.items[doi]?.figures?.figures?.length||0);
       if(baseCount+packetRows.length>policy.maxFiguresPerCard){
