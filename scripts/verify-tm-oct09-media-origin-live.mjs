@@ -144,6 +144,10 @@ try {
   }
   const statusByDoi=new Map(status.map(s=>[s.doi,s]));
   report.fourMissing=missingTarget.map(doi=>statusByDoi.get(doi));
+  report.exactAngewQuarantine = statusByDoi.get('10.1002/anie.4335022');
+  assert.notEqual(report.exactAngewQuarantine?.contentHash,
+    '35f10c5321cd43179a4c71c73e388da8',
+    'the confirmed Angew substrate grid must no longer be visible as primary TOC');
   report.oct09Angew=featuredAngew.map(doi=>({...statusByDoi.get(doi),
     capturedSources:byDoi.get(doi)||[]}));
   report.oct09BodyCrosscheck=[];
@@ -189,7 +193,7 @@ await writeFile(output,JSON.stringify(report,null,2)+'\n','utf8');
 console.log('TM_OCT09_LIVE_SUMMARY '+JSON.stringify({
   checkedAt:report.checkedAt,status:report.status,
   installer:report.installer,queue:report.queue,captureIndex:report.captureIndex,
-  fourMissing:report.fourMissing,oct09Angew:report.oct09Angew,
+  fourMissing:report.fourMissing,exactAngewQuarantine:report.exactAngewQuarantine,oct09Angew:report.oct09Angew,
   recentAngewInspected:report.recentAngew?.length,
   anomalyCandidates:report.anomalyCandidates,
   internalAssetIdDiffersFromDoi:report.internalAssetIdDiffersFromDoi,
