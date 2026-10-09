@@ -81,7 +81,7 @@ jobs:
           node-version: '22'
 
       - name: Verify five-device account limit and SMS provider fail-closed mode
-        run: node --test scripts/test-auth-session-limit.mjs scripts/test-auth-device-issuer.mjs
+        run: node --test scripts/test-auth-session-limit.mjs scripts/test-auth-device-issuer.mjs scripts/test-phone-otp-core.mjs
 
       - name: Verify analytics source integrity and bounded public reads
         timeout-minutes: 2
