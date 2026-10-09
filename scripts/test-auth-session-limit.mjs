@@ -20,3 +20,12 @@ test('five active sessions maximum, newest retained, session metadata cleaned', 
   assert.equal(db.prepare('SELECT COUNT(*) AS n FROM user_session_devices').get().n, 5);
   db.close();
 });
+test('SMS routes are disabled before approved provider configuration', async () => {
+  const { normalizeMainlandPhone, smsConfigured, startPhoneOtp } = await import('../cloudflare/worker/src/phone-otp.js');
+  assert.equal(normalizeMainlandPhone('13800138000'), '+8613800138000');
+  assert.equal(normalizeMainlandPhone('12800138000'), null);
+  assert.equal(smsConfigured({}), false);
+  const response = await startPhoneOtp({ headers: new Headers() }, { DB: {} }, { phone: '13800138000' });
+  assert.equal(response.status, 503);
+  assert.equal(response.body.error, 'sms_not_configured');
+});
