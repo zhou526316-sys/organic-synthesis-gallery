@@ -1,0 +1,37 @@
+name: Gallery live homepage read-only QA
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/verify-gallery-live-home-readonly.mjs'
+      - '.github/workflows/gallery-live-home-readonly.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser:
+    name: Production browser cold/warm, mobile and Angew
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install read-only browser tools
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock @playwright/test@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Verify Gallery live home and exact Angew media without writing
+        run: node scripts/verify-gallery-live-home-readonly.mjs
+      - name: Retain screenshots and bounded diagnostic report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-live-home-readonly
+          path: ${{ runner.temp }}/gallery-live-home-qa/
+          if-no-files-found: warn
+          retention-days: 5
