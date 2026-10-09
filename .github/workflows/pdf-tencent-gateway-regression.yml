@@ -35,7 +35,8 @@ jobs:
       - name: Syntax and owner PDF gateway security regression
         run: |
           set -euo pipefail
-          bash -n deploy/pdf-gateway/install.sh
+          bash -n deploy/pdf-gateway/install.sh deploy/pdf-gateway/test_acme_permissions.sh
+          bash deploy/pdf-gateway/test_acme_permissions.sh
           python -m py_compile deploy/pdf-gateway/gateway.py deploy/pdf-gateway/test_gateway.py
           python -m unittest discover -s deploy/pdf-gateway -p 'test_gateway.py' -v
 
