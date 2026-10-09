@@ -359,11 +359,26 @@ export function installGalleryPerformanceRuntime(): () => void {
     if (event.persisted && staticFallbackActive) refreshMedia();
   };
 
+  // A small canonical API batch can finish while the large static manifest is
+  // still downloading. Paint the verified DOI-bound live image immediately.
+  const onLiveBatch = (event: Event): void => {
+    if (!(event instanceof CustomEvent) || !Array.isArray(event.detail?.items)) return;
+    for (const item of event.detail.items as StaticMediaItem[]) {
+      const doi = (item.doi || '').toLowerCase();
+      if (!doi || !item.toc?.available || !item.toc.imageUrl) continue;
+      for (const slot of document.querySelectorAll<HTMLElement>('.toc-slot[data-doi]')) {
+        if ((slot.dataset.doi || '').toLowerCase() !== doi || !tocIsNearViewport(slot)) continue;
+        hydrateTocSlot(slot, item, true);
+      }
+    }
+  };
+  window.addEventListener('gallery-media-live-batch', onLiveBatch);
   window.addEventListener('gallery-media-static-fallback', fallbackOnApiFailure);
   window.addEventListener('pageshow', refreshOnPageShow);
   window.addEventListener('gallery-assets-updated', refreshMedia as EventListener);
 
   return () => {
+    window.removeEventListener('gallery-media-live-batch', onLiveBatch);
     window.removeEventListener('gallery-media-static-fallback', fallbackOnApiFailure);
     window.removeEventListener('pageshow', refreshOnPageShow);
     window.removeEventListener('gallery-assets-updated', refreshMedia as EventListener);
