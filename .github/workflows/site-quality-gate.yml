@@ -34,8 +34,8 @@ jobs:
       - name: Assert live acceptance blocks writes and admits read-only archive queries
         run: node --test scripts/test-gallery-live-readonly-post.mjs
 
-      - name: Validate five-session D1 migration before deployment
-        run: node --test scripts/test-auth-session-limit.mjs
+      - name: Verify five-device account limit and SMS provider fail-closed mode
+        run: node --test scripts/test-auth-session-limit.mjs scripts/test-auth-device-issuer.mjs scripts/test-phone-otp-core.mjs
 
       - name: Type-check frontend
         run: npx tsc --noEmit

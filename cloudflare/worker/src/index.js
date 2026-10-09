@@ -85,6 +85,8 @@ import {
   integrationStatus,
   probeEmailDelivery,
   logout,
+  listAccountDevices,
+  revokeAccountDevice,
   paymentStatus,
   passwordLogin,
   registerPasswordUser,
@@ -100,6 +102,7 @@ import {
   verifyPasswordRegistration,
   wechatNotify,
 } from './integrations.js';
+import { startPhoneOtp, verifyPhoneOtp } from './phone-otp.js';
 import { bootstrapPrivatePdfOwner, importPrivatePdf, issuePrivatePdfCaptureLease, privatePdfCaptureInventory, openPrivatePdf, privatePdfStatus, revokePrivatePdfCaptureLeases, servePrivatePdf } from './private-pdf.js';
 import { applyPrivatePdfVerification, listPrivatePdfProcessingQueue, privatePdfProcessingStatus, servePrivatePdfProcessingFile } from './private-pdf-processing.js';
 import { readPdfVaultQueue, mutatePdfVaultQueue } from './pdf-vault-queue.js';
@@ -645,6 +648,18 @@ async function handleApi(request, env, ctx) {
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/logout') {
     return resultResponse(await logout(request, env), cors);
+  }
+  if (request.method === 'GET' && url.pathname === '/api/user-ui/auth/sessions') {
+    return resultResponse(await listAccountDevices(request, env), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/sessions/revoke') {
+    return resultResponse(await revokeAccountDevice(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/phone/start') {
+    return resultResponse(await startPhoneOtp(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/phone/verify') {
+    return resultResponse(await verifyPhoneOtp(request, env, await readJson(request)), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/email/start') {
     return resultResponse(await emailStart(request, env, await readJson(request)), cors);

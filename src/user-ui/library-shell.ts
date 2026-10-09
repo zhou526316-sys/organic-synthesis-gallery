@@ -5,10 +5,13 @@ import { hydrateStatusImages, statusImageError, statusImageTag, viewStatusImage 
 const NAME = 'gallery-user-shell';
 const SESSION_KEY = 'organic-gallery-session-v1';
 const SESSION_USER_KEY = 'organic-gallery-session-user-v1';
+const DEVICE_ID_KEY = 'organic-gallery-device-id-v1';
 type Tab = 'saved' | 'notes' | 'followed' | 'settings' | 'login';
 type Provider = 'google' | 'wechat' | 'qq' | 'email';
-interface IntegrationStatus { auth: Record<Provider | 'local', boolean>; }
-interface AuthUser { id: string; displayName?: string | null; email?: string | null; avatarUrl?: string | null; localAccount?: boolean; emailVerified?: boolean; }
+interface IntegrationStatus { auth: Record<Provider | 'local' | 'phone', boolean>; }
+interface AuthUser { id: string; displayName?: string | null; email?: string | null; phoneMasked?: string | null; avatarUrl?: string | null; localAccount?: boolean; emailVerified?: boolean; }
+interface DeviceSession { sessionId: string; deviceLabel?: string | null; current: boolean; createdAt: number; lastSeenAt: number; expiresAt: number; }
+interface DeviceSessionList { limit: number; count: number; sessions: DeviceSession[]; }
 interface AuthApiErrorData { error?: string; challengeId?: string; retryAfter?: number; attemptsRemaining?: number; }
 class AuthApiError extends Error { constructor(message: string, readonly status: number, readonly data: AuthApiErrorData) { super(message); this.name = 'AuthApiError'; } }
 
@@ -43,6 +46,34 @@ function saveSessionToken(value: string, user: AuthUser | null = null): void {
   if (!value) cacheSessionUser(null);
   window.dispatchEvent(new Event('gallery-auth-session-changed'));
 }
+function currentDeviceId(): string {
+  try {
+    let id = localStorage.getItem(DEVICE_ID_KEY) || '';
+    if (/^[a-f0-9]{32}$/.test(id)) return id;
+    const data = new Uint8Array(16);
+    crypto.getRandomValues(data);
+    id = Array.from(data).map(byte => byte.toString(16).padStart(2, '0')).join('');
+    localStorage.setItem(DEVICE_ID_KEY, id);
+    return id;
+  } catch { return ''; }
+}
+function currentDeviceLabel(): string {
+  const agent = navigator.userAgent;
+  const browser = /Edg\//.test(agent) ? 'Edge'
+    : /Firefox\//.test(agent) ? 'Firefox'
+    : /Chrome\//.test(agent) ? 'Chrome'
+    : /Safari\//.test(agent) ? 'Safari' : '浏览器';
+  const device = /iPhone|iPad/.test(agent) ? 'iOS'
+    : /Android/.test(agent) ? 'Android'
+    : /Windows/.test(agent) ? 'Windows'
+    : /Macintosh/.test(agent) ? 'macOS'
+    : /Linux/.test(agent) ? 'Linux' : '设备';
+  return browser + ' · ' + device;
+}
+function deviceMetadata(): { deviceId: string; deviceLabel: string } {
+  return { deviceId: currentDeviceId(), deviceLabel: currentDeviceLabel() };
+}
+
 function returnUrl(): string { const url = new URL(location.href); url.hash = ''; return url.toString(); }
 
 export class GalleryUserShell extends HTMLElement {
@@ -55,7 +86,14 @@ export class GalleryUserShell extends HTMLElement {
   private integrations: IntegrationStatus | null = null;
   private authUser: AuthUser | null = cachedSessionUser();
   private authMode: 'login' | 'register' = 'login';
-  private authFlow: 'credentials' | 'register-code' | 'forgot-email' | 'reset-code' = 'credentials';
+  private authFlow: 'credentials' | 'register-code' | 'forgot-email' | 'reset-code' | 'phone' | 'phone-code' = 'credentials';
+  private phonePurpose: 'login' | 'bind' = 'login';
+  private phoneChallengeId = '';
+  private phonePending = '';
+  private phoneNumber = '';
+  private phoneRequestBusy = false;
+  private devices: DeviceSessionList | null = null;
+  private sessionPoll: ReturnType<typeof setInterval> | null = null;
   private registerChallengeId = '';
   private registerEmail = '';
   private resetChallengeId = '';
@@ -90,6 +128,9 @@ export class GalleryUserShell extends HTMLElement {
     this.restoreSession();
     void this.refreshIntegrations();
     void this.consumeAuthHash();
+    this.sessionPoll = window.setInterval(() => {
+      if (sessionToken() && document.visibilityState === 'visible') void this.refreshSession();
+    }, 90_000);
   }
   disconnectedCallback(): void {
     document.removeEventListener('pointerdown', this.outside);
@@ -97,6 +138,8 @@ export class GalleryUserShell extends HTMLElement {
     window.removeEventListener('pageshow', this.restoreSession);
     document.removeEventListener('visibilitychange', this.restoreVisibleSession);
     store.removeEventListener('change', this.rerender);
+    if (this.sessionPoll !== null) window.clearInterval(this.sessionPoll);
+    this.sessionPoll = null;
   }
   attributeChangedCallback(): void { if (this.isConnected) this.render(); }
   private get language(): Language { return this.dataset.language === 'en' ? 'en' : 'zh'; }
@@ -187,6 +230,77 @@ export class GalleryUserShell extends HTMLElement {
     return this.integrations.auth[provider] ? this.tr('可用', 'ready') : this.tr('待配置', 'configuration required');
   }
 
+  private phoneLoginMarkup(): string {
+    if (!this.integrations?.auth.phone) {
+      return "<section class='section'><h4>" + this.tr('手机号快捷登录', 'Phone sign-in') + "</h4><div class='help'>" +
+        this.tr('短信服务尚未开通，请先使用邮箱或第三方登录。', 'SMS is not yet active. Use email or a linked provider.') + "</div></section>";
+    }
+    if (this.authFlow === 'phone-code') {
+      return "<section class='section'><h4>" + this.tr('输入短信验证码', 'SMS verification') + "</h4>" +
+        "<div class='help'>" + escapeHtml(this.phonePending) + " · " +
+        this.tr('验证码 5 分钟有效', 'Code expires in 5 minutes') + "</div>" +
+        "<form class='auth-form' data-phone-code-form><input class='code-input' type='text' inputmode='numeric' autocomplete='one-time-code' maxlength='6' placeholder='000000' data-phone-code required>" +
+        "<button class='primary' type='submit'>" + this.tr('验证并登录', 'Verify and sign in') + "</button></form>" +
+        "<div class='row'><button class='secondary' type='button' data-action='phone-resend'>" + this.tr('重新发送', 'Resend code') + "</button>" +
+        "<button class='link' type='button' data-action='phone-back'>" + this.tr('修改手机号', 'Change number') + "</button></div>" +
+        "<div class='notice auth-notice' data-auth-message role='status'></div></section>";
+    }
+    return "<section class='section'><h4>" + this.tr('手机验证码快捷登录 / 注册', 'Sign in / register with phone') + "</h4>" +
+      "<form class='auth-form' data-phone-form><div class='row'><span>+86</span><input type='tel' inputmode='tel' autocomplete='tel-national' maxlength='18' data-phone-number placeholder='" +
+      this.tr('中国大陆手机号', 'Mainland China mobile number') + "' required></div>" +
+      "<button class='primary' type='submit'>" + this.tr('发送验证码', 'Send SMS code') + "</button>" +
+      "<div class='notice auth-notice' data-auth-message role='status'></div></form>" +
+      "<div class='help'>" + this.tr('新手机号验证后自动注册；已有账号直接登录。', 'New numbers register automatically after verification.') + "</div></section>";
+  }
+
+  private phoneManageMarkup(): string {
+    if (this.authUser?.phoneMasked) {
+      return "<section class='section'><h4>" + this.tr('手机号', 'Phone') + "</h4><div class='verified'>" +
+        escapeHtml(this.authUser.phoneMasked) + "</div></section>";
+    }
+    if (this.phonePurpose === 'bind' && (this.authFlow === 'phone' || this.authFlow === 'phone-code')) {
+      if (this.authFlow === 'phone-code') {
+        return "<section class='section'><h4>" + this.tr('验证绑定手机号', 'Verify phone binding') +
+          "</h4><div class='help'>" + escapeHtml(this.phonePending) + "</div>" +
+          "<form class='auth-form' data-phone-code-form><input class='code-input' inputmode='numeric' maxlength='6' autocomplete='one-time-code' placeholder='000000' data-phone-code>" +
+          "<button class='primary' type='submit'>" + this.tr('确认绑定', 'Confirm binding') + "</button></form>" +
+          "<div class='row'><button class='secondary' type='button' data-action='phone-resend'>" + this.tr('重新发送', 'Resend') + "</button>" +
+          "<button class='link' type='button' data-action='phone-cancel'>" + this.tr('取消', 'Cancel') + "</button></div>" +
+          "<div class='notice auth-notice' data-auth-message role='status'></div></section>";
+      }
+      return "<section class='section'><h4>" + this.tr('绑定手机号', 'Bind phone') + "</h4>" +
+        "<form class='auth-form' data-phone-form><div class='row'><span>+86</span>" +
+        "<input type='tel' inputmode='tel' data-phone-number placeholder='" + this.tr('中国大陆手机号', 'Mainland China phone') + "' required></div>" +
+        "<button class='primary' type='submit'>" + this.tr('发送绑定验证码', 'Send binding code') + "</button></form>" +
+        "<button class='link' type='button' data-action='phone-cancel'>" + this.tr('取消', 'Cancel') +
+        "</button><div class='notice auth-notice' data-auth-message role='status'></div></section>";
+    }
+    return "<section class='section'><h4>" + this.tr('手机号', 'Phone') + "</h4><button class='secondary' type='button' data-action='phone-bind' " +
+      (this.integrations?.auth.phone ? '' : 'disabled') + ">" + this.tr('绑定手机号', 'Bind phone number') + "</button>" +
+      (this.integrations?.auth.phone ? '' : "<div class='help'>" + this.tr('短信服务尚未开通。', 'SMS service is not yet configured.') + "</div>") + "</section>";
+  }
+
+  private sessionManageMarkup(): string {
+    const devices = this.devices;
+    const list = devices ? devices.sessions.map(item =>
+      "<div class='manage-row'><div class='top'><strong>" +
+      escapeHtml(item.deviceLabel || this.tr('旧版登录环境', 'Earlier sign-in')) +
+      (item.current ? ' · ' + this.tr('当前设备', 'This device') : '') + "</strong></div>" +
+      "<div class='help'>" + this.tr('最近活动：', 'Last active: ') +
+      escapeHtml(new Date(item.lastSeenAt).toLocaleString()) + "</div>" +
+      (item.current ? '' : "<button class='secondary' type='button' data-action='revoke-device:" +
+        encodeURIComponent(item.sessionId) + "'>" + this.tr('退出此设备', 'Sign out device') + "</button>") +
+      "</div>"
+    ).join('') : '';
+    return "<section class='section'><h4>" + this.tr('登录设备', 'Signed-in devices') + "</h4>" +
+      "<div class='help'>" + this.tr('最多同时登录 5 个浏览器或 App；第 6 个登录将退出最久未活动的设备。', 'Up to 5 browser/app sessions; the oldest inactive session is removed on the sixth sign-in.') + "</div>" +
+      (devices ? "<div class='manage'>" + list + "</div>" : '') +
+      "<div class='row'><button class='secondary' type='button' data-action='load-devices'>" +
+      this.tr(devices ? '刷新设备' : '查看登录设备', devices ? 'Refresh devices' : 'View signed-in devices') + "</button>" +
+      "<button class='secondary' type='button' data-action='revoke-other-sessions'>" +
+      this.tr('退出其他全部设备', 'Sign out all other devices') + "</button></div></section>";
+  }
+
   private login(): string {
     if (this.authUser) {
       const local = Boolean(this.authUser.localAccount);
@@ -212,11 +326,11 @@ export class GalleryUserShell extends HTMLElement {
             <button class='secondary' type='button' data-action='change-password'>${this.tr('修改密码', 'Change password')}</button>
           </div>
         </section>
-        <section class='section'><button class='secondary' type='button' data-action='revoke-other-sessions'>${this.tr('退出其他设备', 'Sign out other devices')}</button></section>` : '';
+        ` : '';
 
       return `<div class='user-card'>${this.authUser.avatarUrl ? `<img class='avatar' src='${escapeHtml(this.authUser.avatarUrl)}' alt=''>` : `<div class='avatar'></div>`}<div><strong>${escapeHtml(this.authUser.displayName || this.authUser.email || this.authUser.id)}</strong>${this.authUser.email ? `<div class='help'>${escapeHtml(this.authUser.email)}</div>` : ''}</div></div>
         <div class='row' style='margin-top:10px'><button class='secondary' type='button' data-action='logout'>${this.tr('退出登录', 'Sign out')}</button></div>
-        ${verification}${passwordTools}
+        ${verification}${passwordTools}${this.phoneManageMarkup()}${this.sessionManageMarkup()}
         ${this.integrationMessage ? `<div class='notice'>${escapeHtml(this.integrationMessage)}</div>` : ''}`;
     }
 
@@ -224,7 +338,9 @@ export class GalleryUserShell extends HTMLElement {
     const register = this.authMode === 'register';
 
     let nativeAccount = '';
-    if (this.authFlow === 'register-code') {
+    if (this.authFlow === 'phone' || this.authFlow === 'phone-code') {
+      nativeAccount = this.phoneLoginMarkup();
+    } else if (this.authFlow === 'register-code') {
       nativeAccount = `<section class='section' style='border-top:0;padding-top:0'>
         <h4>${this.tr('验证邮箱', 'Verify email')}</h4>
         <div class='help' style='margin-bottom:8px'>${this.tr(`验证码已发送至 ${this.registerEmail}，10 分钟内有效。`, `A 6-digit code was sent to ${this.registerEmail}. It is valid for 10 minutes.`)}</div>
@@ -278,6 +394,14 @@ export class GalleryUserShell extends HTMLElement {
       </section>`;
     }
 
+    if (this.authFlow === 'phone' || this.authFlow === 'phone-code') {
+      nativeAccount += `<button class='link' type='button' data-action='phone-email-mode'>${this.tr('使用邮箱账号登录', 'Use email sign-in')}</button>`;
+    } else if (this.integrations?.auth.phone) {
+      nativeAccount += `<button class='link' type='button' data-action='phone-login'>${this.tr('使用手机号验证码登录', 'Use phone verification')}</button>`;
+    } else {
+      nativeAccount += `<div class='help'>${this.tr('短信登录尚未开通。', 'SMS sign-in is not yet available.')}</div>`;
+    }
+
     return `${nativeAccount}
       <section class='section'><h4>${this.tr('其他登录方式', 'Other sign-in methods')}</h4><div class='provider'><button type='button' data-action='provider:google' ${enabled('google')}>Google <small class='${this.integrations?.auth.google ? 'ok' : 'off'}'>· ${this.providerState('google')}</small></button><button type='button' data-action='provider:wechat' ${enabled('wechat')}>微信 <small class='${this.integrations?.auth.wechat ? 'ok' : 'off'}'>· ${this.providerState('wechat')}</small></button><button type='button' data-action='provider:qq' ${enabled('qq')}>QQ <small class='${this.integrations?.auth.qq ? 'ok' : 'off'}'>· ${this.providerState('qq')}</small></button></div></section>
       <section class='section'><h4>${this.tr('邮箱免密码登录', 'Passwordless email sign-in')}</h4><div class='row'><input class='email' type='email' data-email placeholder='name@example.com'><button class='secondary' type='button' data-action='email-login' ${enabled('email')}>${this.tr('发送登录链接', 'Send sign-in link')}</button></div><div class='help'>${this.providerState('email')}</div></section>`;
@@ -287,6 +411,14 @@ export class GalleryUserShell extends HTMLElement {
     this.shadow.querySelector('.trigger')?.addEventListener('click', event => { event.stopPropagation(); this.open = !this.open; this.render(); });
     this.shadow.querySelectorAll<HTMLButtonElement>('[data-tab]').forEach(button => button.addEventListener('click', () => { this.tab = button.dataset.tab as Tab; this.render(); }));
     this.shadow.querySelectorAll<HTMLButtonElement>('[data-action]').forEach(button => button.addEventListener('click', () => { void this.action(button.dataset.action || ''); }));
+    this.shadow.querySelector<HTMLFormElement>('[data-phone-form]')?.addEventListener('submit', event => {
+      event.preventDefault();
+      void this.startPhoneCode();
+    });
+    this.shadow.querySelector<HTMLFormElement>('[data-phone-code-form]')?.addEventListener('submit', event => {
+      event.preventDefault();
+      void this.confirmPhoneCode();
+    });
     this.shadow.querySelector<HTMLFormElement>('[data-native-auth-form]')?.addEventListener('submit', event => {
       event.preventDefault();
       const form = event.currentTarget as HTMLFormElement;
@@ -346,6 +478,11 @@ export class GalleryUserShell extends HTMLElement {
 
   private async api<T>(path: string, init: RequestInit = {}): Promise<T> {
     const token = sessionToken();
+    // The browser ID is not a hardware fingerprint and is never sent to publishers.
+    if (typeof init.body === 'string' && /^\/api\/user-ui\/auth\/(?:exchange|password\/login|register\/verify|password\/change|email\/change\/confirm|phone\/verify)$/.test(path)) {
+      try { init = { ...init, body: JSON.stringify({ ...JSON.parse(init.body), ...deviceMetadata() }) }; }
+      catch { /* Let the backend report malformed input. */ }
+    }
     const headers = new Headers(init.headers || {});
     if (init.body && !headers.has('content-type')) headers.set('content-type', 'application/json');
     if (token) headers.set('authorization', `Bearer ${token}`);
@@ -358,6 +495,7 @@ export class GalleryUserShell extends HTMLElement {
   private async refreshIntegrations(): Promise<void> {
     try { this.integrations = await this.api<IntegrationStatus>('/api/user-ui/integrations'); }
     catch { this.integrations = null; }
+    if (!sessionToken() && this.integrations?.auth.phone && this.authFlow === 'credentials') this.authFlow = 'phone';
     this.render();
   }
 
@@ -387,8 +525,13 @@ export class GalleryUserShell extends HTMLElement {
     }
     if (sessionToken() !== token) return;
     if (negativeReads === 3) {
+      // The server rejected the bearer token three times (not a network timeout).
+      // Clear it across tabs; keep browser-local paper edits intact.
+      saveSessionToken('');
       this.authUser = null;
-      cacheSessionUser(null);
+      this.devices = null;
+      this.integrationMessage = this.tr('登录状态已失效，可能已在其他设备退出；本地内容仍保留。', 'This session is no longer active, possibly because another device signed in. Local data remains on this device.');
+      this.render();
     } else if (!this.authUser) {
       this.authUser = cachedSessionUser();
     }
@@ -433,6 +576,12 @@ export class GalleryUserShell extends HTMLElement {
       registration_failed: this.tr('注册失败，请稍后重试。', 'Registration failed. Try again later.'),
       invalid_current_password: this.tr('当前密码不正确。', 'Current password is incorrect.'),
       not_authenticated: this.tr('登录状态已失效，请重新登录。', 'Your session expired. Sign in again.'),
+      sms_not_configured: this.tr('短信服务尚未开通，请使用邮箱登录。', 'SMS is not configured yet. Use email sign-in.'),
+      invalid_phone: this.tr('手机号格式不正确。', 'Invalid phone number.'),
+      sms_delivery_failed: this.tr('短信发送失败，请稍后重试。', 'Could not send the SMS. Try again later.'),
+      sms_rate_limited: this.tr('验证码发送过于频繁，请稍后再试。', 'Too many SMS requests. Try again later.'),
+      phone_already_bound: this.tr('该手机号已绑定账号，不能直接合并。', 'This phone is already linked to an account.'),
+      code_already_used: this.tr('验证码已使用，请重新发送。', 'Code already used. Request a new one.'),
     };
     return known[code] || this.tr(`操作失败：${code}`, `Request failed: ${code}`);
   }
@@ -663,6 +812,7 @@ export class GalleryUserShell extends HTMLElement {
     try {
       const result = await this.api<{ revoked: number }>('/api/user-ui/auth/sessions/revoke-others', { method: 'POST', body: '{}' });
       this.integrationMessage = this.tr(`已退出其他设备（${result.revoked} 个会话）。`, `Signed out ${result.revoked} other session(s).`);
+      this.devices = null;
       this.render();
     } catch (error) {
       this.integrationMessage = this.authErrorMessage(error);
@@ -673,6 +823,96 @@ export class GalleryUserShell extends HTMLElement {
   private async startProvider(provider: Exclude<Provider, 'email'>): Promise<void> {
     if (!this.integrations?.auth[provider]) return;
     location.href = `${WORKER_API_BASE}/api/user-ui/auth/start?provider=${encodeURIComponent(provider)}&returnTo=${encodeURIComponent(returnUrl())}`;
+  }
+
+  private async startPhoneCode(resend = false): Promise<void> {
+    if (this.phoneRequestBusy || !this.integrations?.auth.phone) return;
+    const typed = this.shadow.querySelector<HTMLInputElement>('[data-phone-number]')?.value.trim() || '';
+    const phone = resend ? this.phoneNumber : typed;
+    const cleaned = phone.replace(/[\s-]/g, '').replace(/^\+86/, '');
+    if (!/^1[3-9]\d{9}$/.test(cleaned)) {
+      this.setAuthMessage(this.tr('请输入有效的中国大陆手机号。', 'Enter a valid mainland China phone number.'));
+      return;
+    }
+    this.phoneRequestBusy = true;
+    this.phoneNumber = cleaned;
+    this.setAuthMessage('');
+    try {
+      const result = await this.api<{ challengeId: string; phoneMasked?: string }>('/api/user-ui/auth/phone/start', {
+        method: 'POST', body: JSON.stringify({ phone: cleaned, purpose: this.phonePurpose }),
+      });
+      this.phoneChallengeId = result.challengeId;
+      this.phonePending = result.phoneMasked || '+86 ********';
+      this.authFlow = 'phone-code';
+      this.integrationMessage = this.tr('短信验证码已发送，5 分钟内有效。', 'SMS code sent; it expires in 5 minutes.');
+      this.render();
+    } catch (error) {
+      this.setAuthMessage(this.authErrorMessage(error));
+    } finally { this.phoneRequestBusy = false; }
+  }
+
+  private async confirmPhoneCode(): Promise<void> {
+    if (this.phoneRequestBusy) return;
+    const input = this.shadow.querySelector<HTMLInputElement>('[data-phone-code]');
+    const code = input?.value.trim() || '';
+    if (!/^\d{6}$/.test(code)) {
+      this.setAuthMessage(this.tr('请输入 6 位验证码。', 'Enter the six-digit code.'));
+      return;
+    }
+    this.phoneRequestBusy = true;
+    try {
+      const result = await this.api<{ token?: string; user?: AuthUser; verified?: boolean; phoneMasked?: string }>('/api/user-ui/auth/phone/verify', {
+        method: 'POST', body: JSON.stringify({ challengeId: this.phoneChallengeId, code }),
+      });
+      if (this.phonePurpose === 'bind') {
+        if (!result.verified || !result.phoneMasked || !this.authUser) throw new Error('phone_binding_failed');
+        this.authUser = { ...this.authUser, phoneMasked: result.phoneMasked };
+        cacheSessionUser(this.authUser);
+        this.integrationMessage = this.tr('手机号已绑定，原有账户数据和权限未改变。', 'Phone bound; account data and permissions are unchanged.');
+      } else {
+        if (!result.token || !result.user) throw new Error('phone_login_failed');
+        saveSessionToken(result.token, result.user);
+        this.authUser = result.user;
+        this.devices = null;
+        this.integrationMessage = this.tr('验证成功，已登录。', 'Phone verified and signed in.');
+      }
+      this.phonePurpose = 'login';
+      this.authFlow = 'credentials';
+      this.phoneChallengeId = '';
+      this.phoneNumber = '';
+      this.phonePending = '';
+      this.render();
+    } catch (error) {
+      this.setAuthMessage(this.authErrorMessage(error));
+    } finally { this.phoneRequestBusy = false; }
+  }
+
+  private async loadAccountDevices(): Promise<void> {
+    try {
+      this.devices = await this.api<DeviceSessionList>('/api/user-ui/auth/sessions');
+      this.integrationMessage = '';
+      this.render();
+    } catch (error) {
+      this.integrationMessage = this.authErrorMessage(error);
+      this.render();
+    }
+  }
+
+  private async revokeAccountDevice(sessionId: string): Promise<void> {
+    if (!/^[a-f0-9]{24}$/.test(sessionId)) return;
+    try {
+      const result = await this.api<{ revoked: number }>('/api/user-ui/auth/sessions/revoke', {
+        method: 'POST', body: JSON.stringify({ sessionId }),
+      });
+      this.integrationMessage = result.revoked
+        ? this.tr('已退出指定设备。', 'Selected device signed out.')
+        : this.tr('设备已经退出或不存在。', 'Device already signed out or missing.');
+      this.devices = await this.api<DeviceSessionList>('/api/user-ui/auth/sessions');
+      this.render();
+    } catch (error) {
+      this.integrationMessage = this.authErrorMessage(error);
+      this.render();
+    }
   }
 
   private async startEmail(): Promise<void> {
@@ -733,6 +973,14 @@ export class GalleryUserShell extends HTMLElement {
     if (action === 'confirm-existing-email') { await this.confirmExistingEmailVerification(); return; }
     if (action === 'resend-existing-email') { await this.resendExistingEmailVerification(); return; }
     if (action === 'change-password') { await this.changePassword(); return; }
+    if (action === 'phone-login') { this.phonePurpose = 'login'; this.authFlow = 'phone'; this.integrationMessage = ''; this.render(); return; }
+    if (action === 'phone-email-mode') { this.authFlow = 'credentials'; this.authMode = 'login'; this.integrationMessage = ''; this.render(); return; }
+    if (action === 'phone-bind') { this.phonePurpose = 'bind'; this.authFlow = 'phone'; this.integrationMessage = ''; this.render(); return; }
+    if (action === 'phone-cancel') { this.phonePurpose = 'login'; this.authFlow = 'credentials'; this.phoneChallengeId = ''; this.integrationMessage = ''; this.render(); return; }
+    if (action === 'phone-back') { this.authFlow = 'phone'; this.phoneChallengeId = ''; this.integrationMessage = ''; this.render(); return; }
+    if (action === 'phone-resend') { await this.startPhoneCode(true); return; }
+    if (action === 'load-devices') { await this.loadAccountDevices(); return; }
+    if (action.startsWith('revoke-device:')) { await this.revokeAccountDevice(decodeURIComponent(action.slice(14))); return; }
     if (action === 'revoke-other-sessions') { await this.revokeOtherSessions(); return; }
     if (action.startsWith('provider:')) { await this.startProvider(action.slice(9) as Exclude<Provider, 'email'>); return; }
     if (action === 'email-login') { await this.startEmail(); return; }
