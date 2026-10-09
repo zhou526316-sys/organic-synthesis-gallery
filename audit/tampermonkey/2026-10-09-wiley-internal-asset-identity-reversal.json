@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "tm-wiley-internal-ga-asset-number-review-v1",
+  "reviewedAtBeijing": "2026-10-09 15:39 +08:00",
+  "sourceRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37900128025",
+  "userApproval": "Earlier user-approved Angew TOC source hardening and four Chem/RSC DOI acquisition repair",
+  "observations": {
+    "eligibleAngewAddedSinceOct1": 25,
+    "publishedAngewWithNumericFilenameDifferentFromDoi": 25,
+    "representativeCases": [
+      {
+        "doi": "10.1002/anie.4335022",
+        "wileyAssetStem": "anie75210",
+        "tocReason": "imported",
+        "publishedHash": "35f10c5321cd43179a4c71c73e388da8",
+        "matchingBodyStageImages": 0
+      },
+      {
+        "doi": "10.1002/anie.5624001",
+        "wileyAssetStem": "anie75027",
+        "tocReason": "imported",
+        "publishedHash": "2c0fc1d8e0f2028707d94eb5f4d04c87",
+        "matchingBodyStageImages": 0
+      }
+    ],
+    "interpretation": "Wiley's internal -gra- asset numbering need not equal the numeric suffix of the manuscript DOI. Numeric mismatch alone is not foreign-DOI proof. Requiring equality in 2.2.74 / 6.2.55 would reject all 25 observed GA source URLs in the owner collector, a regression risk.",
+    "remainingMissingMainVisual": [
+      "10.1016/j.chempr.2026.103008",
+      "10.1016/j.chempr.2026.103043",
+      "10.1039/d6sc06407h",
+      "10.1039/d6gc03748h"
+    ]
+  },
+  "changes": {
+    "newBridgeVersion": "2.2.75",
+    "newEngineVersion": "6.2.56",
+    "retainedController": "2.2.41",
+    "retainedCaptureProtocol": "6.2.20",
+    "browser": "Remove wileyGaAssetMatchesDoi numeric comparison. Retain exact current article DOI binding, publisher domain verification, isolated GA semantics and numbered body/scope exclusions.",
+    "worker": "Remove filename numerical equality test from Angew verification. Reject explicit embedded foreign DOI; preserve conflict hold on different-hash existing production TOC.",
+    "dataActions": "No quarantine, TOC replacement, private PDF access, literature admission or re-download of already stored figures.",
+    "tests": "Browser/Worker regression uses actual publisher -gra- internal asset IDs 75210 and 75027 with different current DOI numeric suffix; explicit full foreign DOI is still refused."
+  },
+  "releaseGate": "Do not claim live fixed until browser and Worker deployment and exact installed Bridge 2.2.75 / engine 6.2.56 live readback, and owner authorized capture produces truthful target receipts.",
+  "responseSyncPending": false
+}
