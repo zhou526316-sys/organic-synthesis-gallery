@@ -914,7 +914,7 @@ async function start() {
         if (!Number.isSafeInteger(pdf.numPages) || pdf.numPages < 1) throw new Error('pdf_page_tree');
         let firstRenderedResolve;
         const firstRendered = new Promise(resolve => { firstRenderedResolve = resolve; });
-        continuous = createContinuousPdfViewer({
+        continuous = await createContinuousPdfViewer({
           container: main, viewer: stage, pdf,
           onPageChange: number => {
             if (destroyed || !pdf) return;
