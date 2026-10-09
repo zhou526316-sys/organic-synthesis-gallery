@@ -868,10 +868,15 @@ async function start() {
       location.replace(sourceUrl + '#page=1&zoom=page-width');
       return;
     }
-    // Small documents are more reliable with one full fetch. Large PDFs
-    // must NOT block the first page on a complete China-to-Cloudflare transfer.
+    // PDF start must not wait for every byte of a 0.5-3 MiB file.
+    // On the current edge-verified v2 ticket, prefer first/trailer on-demand
+    // ranges and render page 1 while other page streams remain unfetched.
+    // Older, browser-preflight/opaque tickets retain the proven buffered
+    // fallback. Explicit "full=1" remains available for unusual publishers.
+    const edgeVerified = document.documentElement.dataset.privatePdfPreflight === 'edge';
     const rangeMode = declaredPdfBytes > 0 && (compatibilityMode ||
-      (!forceFull && declaredPdfBytes > ADAPTIVE_RANGE_THRESHOLD_BYTES));
+      (!forceFull && (declaredPdfBytes > ADAPTIVE_RANGE_THRESHOLD_BYTES ||
+        (edgeVerified && declaredPdfBytes >= SMALL_PDF_PARALLEL_THRESHOLD_BYTES))));
     const buffered = !rangeMode;
     const parallelSmall = buffered && !forceFull &&
       declaredPdfBytes >= SMALL_PDF_PARALLEL_THRESHOLD_BYTES &&
@@ -883,6 +888,7 @@ async function start() {
     fullOpen.hidden = forceFull || !(rangeMode || parallelSmall);
     compatibility.hidden = rangeMode || downloadOnOpen;
     document.documentElement.dataset.privatePdfMode = buffered ? 'single-transfer' : 'range-first';
+    if (rangeMode) document.documentElement.dataset.privatePdfTransferStrategy = 'on-demand-ranges';
     const loaded = buffered
       ? await Promise.all([enginePromise, parallelSmall
           ? fetchPdfParallelTransfer(sourceUrl, sessionToken, declaredPdfBytes)

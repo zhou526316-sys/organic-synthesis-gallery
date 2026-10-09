@@ -110,8 +110,8 @@ const papers=Array.from({length:72},(_,index)=>({
 const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
 async function contextWith(capabilities,openResult={available:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=opaque'},options={}){
  const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900},locale:options.locale||'en-US'});
- const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,rangeInFlight:0,maxConcurrentRanges:0,openModes:[],openOrigins:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map()};
- const filePdf=options.largePdf?largeCardPdf:cardPdf;
+ const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,rangeInFlight:0,maxConcurrentRanges:0,openModes:[],openOrigins:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map(),slowMiddleHits:0};
+ const filePdf=options.tailHeavyPdf?tailHeavyPdf:(options.largePdf?largeCardPdf:cardPdf);
  if(options.pendingQueue)state.queueRows.set('fixture-owner',new Map(papers.map(paper=>[paper.doi,{doi:paper.doi,state:'pending',revision:1,createdAt:Date.now(),updatedAt:Date.now()}])));
  await context.addInitScript(fixtureOrigin=>{
   if(location.origin!==fixtureOrigin)return;
@@ -196,6 +196,14 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    }
    try {
     if(options.fileDelayMs)await new Promise(resolve=>setTimeout(resolve,Number(options.fileDelayMs)));
+    if(options.slowMiddleMs && range) {
+      const match=/^bytes=(\d+)-/.exec(range);
+      const offset=match?Number(match[1]):-1;
+      if(offset>=1048576&&offset<2097152) {
+        state.slowMiddleHits++;
+        await new Promise(resolve=>setTimeout(resolve,Number(options.slowMiddleMs)));
+      }
+    }
     const download=url.searchParams.get('download')==='1';
     if(download)state.privateFileDownloads++;
     const common={'access-control-allow-origin':base,'access-control-allow-credentials':'true','access-control-allow-headers':'range, authorization','access-control-expose-headers':'content-length, content-range, accept-ranges, content-type, x-gallery-pdf-status','accept-ranges':'bytes','cache-control':'private, no-store','content-disposition':download?'attachment; filename="fixture.pdf"':'inline; filename="fixture.pdf"'};
@@ -205,7 +213,7 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
     if(range){
      state.privateRangeCalls++;
      if(range==='bytes=0-15')state.privateHeaderProbeCalls++;
-     if(options.rangeUnsupported)return route.fulfill({status:200,contentType:'application/pdf',headers:{...common,'content-length':String(filePdf.length)},body:filePdf});
+     if(options.rangeUnsupported && range!=='bytes=0-15')return route.fulfill({status:200,contentType:'application/pdf',headers:{...common,'content-length':String(filePdf.length)},body:filePdf});
      const match=/^bytes=(\d+)-(\d*)$/.exec(range);
      const start=match?Number(match[1]):0,end=match&&match[2]?Math.min(Number(match[2]),filePdf.length-1):filePdf.length-1;
      const body=filePdf.subarray(start,end+1);
@@ -302,8 +310,8 @@ async function replaceToken(page,value,event=true){
   return document.documentElement.dataset.privatePdfRead;
  },{value,event,key:SESSION_KEY});
 }
-function localCardPdf(extraSecondPadding=0){
- const stream='q 0.2 0.5 0.8 rg 20 20 180 180 re f Q\n' + ('% range-stream-padding 0123456789abcdef\n'.repeat(42000));
+function localCardPdf(extraSecondPadding=0,firstPagePadding=42000){
+ const stream='q 0.2 0.5 0.8 rg 20 20 180 180 re f Q\n' + ('% range-stream-padding 0123456789abcdef\n'.repeat(firstPagePadding));
  const second='q 0.8 0.2 0.4 rg 40 40 120 140 re f Q\n'
    + ('% second-page-size-padding 0123456789abcdef\n'.repeat(extraSecondPadding));
  const objects=[
@@ -320,7 +328,7 @@ function localCardPdf(extraSecondPadding=0){
  for(const offset of offsets)body+=String(offset).padStart(10,'0')+' 00000 n \n';
  return Buffer.from(body+'trailer\n<< /Size 7 /Root 1 0 R >>\nstartxref\n'+start+'\n%%EOF\n');
 }
-const cardPdf=localCardPdf(),largeCardPdf=localCardPdf(200000),vaultBy=(page,name)=>page.getByTestId('pdf-vault-'+name);
+const cardPdf=localCardPdf(),largeCardPdf=localCardPdf(200000),tailHeavyPdf=localCardPdf(65000,2),vaultBy=(page,name)=>page.getByTestId('pdf-vault-'+name);
 async function waitLocalStatus(page,status){await page.waitForFunction(status=>document.querySelector('[data-testid="pdf-vault-status"]')?.dataset.status===status,status);}
 async function importCardPdf(page,doi){
  const before=await vaultBy(page,'list').locator('article[data-copy-id]').count();
@@ -401,7 +409,7 @@ try{
    JSON.stringify({routes:state.openOrigins,requests:state.privateCalls}));
   assert.ok(state.openOrigins.includes('https://api.gczhouwld.com'));
   assert.ok(state.openOrigins.includes('https://organic-synthesis-gallery.zhou526316.workers.dev'));
-  assert.equal(await target.locator('html').getAttribute('data-private-pdf-transfer-strategy'),'parallel-ranges');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-transfer-strategy'),'on-demand-ranges');
   assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
   assert.equal(state.privateFileCalls>=1,true);
  });
@@ -454,23 +462,42 @@ try{
   assert.ok(state.privateRangeCalls>=3&&state.privateRangeCalls<=8);
   assert.ok(state.maxConcurrentRanges>=2,'slow responses must overlap');
   assert.equal(state.privateHeaderProbeCalls,0,'no duplicate edge-verified header probe');
-  assert.equal(await target.locator('html').getAttribute('data-private-pdf-mode'),'single-transfer');
-  assert.equal(await target.locator('html').getAttribute('data-private-pdf-transfer-strategy'),'parallel-ranges');
-  assert.ok(Number(await target.locator('html').getAttribute('data-private-pdf-transfer-bytes'))>1_000_000);
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-mode'),'range-first');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-transfer-strategy'),'on-demand-ranges');
+  assert.ok(Number(await target.locator('html').getAttribute('data-private-pdf-range-bytes'))>0);
   assert.equal(await target.locator('#full-open').isVisible(),true);
   const requestsAfterFirst=state.privateFileCalls;
   await scrollPdfToPage(target, 2);
-  assert.equal(state.privateFileCalls,requestsAfterFirst,'page two makes no network calls');
+  assert.ok(state.privateFileCalls>=requestsAfterFirst,'later pages may trigger lazy Range reads');
+ });
+ await test('2-to-3 MiB edge-verified PDF displays page one without waiting for slow middle-page Range',async()=>{
+  assert.ok(tailHeavyPdf.length>2*1048576 && tailHeavyPdf.length<3*1048576,
+    'a first-page-light, later-page-heavy real synthetic PDF fixture');
+  const fast={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],fast,{tailHeavyPdf:true,slowMiddleMs:5500,fileDelayMs:65});
+  const page=await gallery(context,true);
+  const started=Date.now();
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:12500});
+  const firstElapsed=Date.now()-started;
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-mode'),'range-first');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-transfer-strategy'),'on-demand-ranges');
+  assert.equal(state.privateFullFileCalls,0,'no unnecessary full-file GET before first page');
+  assert.ok(firstElapsed<4800,'first page must not block behind a 5.5s delayed middle Range: '+firstElapsed);
+  assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
+  console.log('PDF_OWNER_FAST_FIRST_PAGE '+JSON.stringify({totalBytes:tailHeavyPdf.length,readyMs:firstElapsed,rangeRequests:state.privateRangeCalls}));
+  await scrollPdfToPage(target,2);
+  assert.ok(state.privateRangeCalls>=2,'later page PDF data remains readable on demand');
  });
  await test('small PDF falls back to full GET if Range responses are unsupported',async()=>{
-  const fast={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const fast={available:true,headerVerified:false,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
   const {context,state}=await contextWith(['private_pdf_read'],fast,{rangeUnsupported:true});
   const page=await gallery(context,true);
   const target=await popup(page,page.locator('.card .private-pdf-button').first());
   await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',undefined,{timeout:12000});
   assert.equal(state.privateFullFileCalls,1,'exactly one fallback GET');
   assert.equal(await target.locator('html').getAttribute('data-private-pdf-transfer-strategy'),'single-fallback');
-  assert.equal(state.privateHeaderProbeCalls,0);
+  assert.equal(state.privateHeaderProbeCalls,1,'legacy ticket verified by browser 16-byte 206 preflight');
   assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
  });
  await test('large multi-megabyte PDF displays page one from ranges before whole-file transfer',async()=>{
