@@ -306,6 +306,20 @@ async function importCardPdf(page,doi){
 }
 async function waitCardState(page,doi,state){await page.waitForFunction(({doi,state})=>[...document.querySelectorAll('.card')].find(card=>card.dataset.doi===doi)?.querySelector('.local-pdf-button')?.dataset.pdfVaultState===state,{doi,state});}
 async function assertNoCardFileIo(page){assert.deepEqual(await page.evaluate(()=>window.__vaultIo),{getFile:0,queryPermission:0,arrayBuffer:0,digest:0},'main cards use metadata only, with no PDF bytes or permission prompts');}
+async function scrollPdfToPage(target, pageNumber = 2) {
+  await target.locator('#main').evaluate((root, page) => {
+    const slot = root.querySelector(`.pdfViewer .page[data-page-number="${page}"]`);
+    if (!slot) throw new Error('continuous_pdf_page_slot_missing');
+    root.scrollTop = Math.max(0, slot.offsetTop - root.offsetTop - 8);
+    root.dispatchEvent(new Event('scroll', { bubbles: false }));
+  }, pageNumber);
+  await target.waitForFunction(page =>
+    document.querySelector(`.pdfViewer .page[data-page-number="${page}"] canvas`)
+      ?.dataset.renderedPage === String(page) &&
+    (document.querySelector('#page-count')?.textContent || '').includes(`第 ${page} /`),
+    pageNumber, { timeout: 15000 });
+}
+
 try{
  await test('owner PDF button is independent and original link remains publisher-only',async()=>{
   const {context,state}=await contextWith(['private_pdf_read']);const page=await gallery(context,true);
@@ -326,8 +340,7 @@ try{
   assert.equal(state.privateFullFileCalls,0,'small PDF uses parallel bounded ranges');
   assert.ok(state.privateRangeCalls>=3&&state.privateRangeCalls<=8,'small PDF fetches bounded ranges');
   assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
-  await target.locator('#next').click();
-  await target.waitForFunction(()=>document.querySelector('#pdf-canvas')?.dataset.renderedPage==='2',undefined,{timeout:7000});
+  await scrollPdfToPage(target, 2);
   assert.equal(state.privateFullFileCalls,0,'page turn uses local assembled bytes');
   assert.equal(await target.locator('#native-pdf-frame').count(),0,'the blocked cross-origin iframe must not be used');
   assert.equal(await page.locator('.private-pdf-more').first().isVisible(),true,'owner can access separate download/compatibility controls');
@@ -421,8 +434,7 @@ try{
   assert.ok(Number(await target.locator('html').getAttribute('data-private-pdf-transfer-bytes'))>1_000_000);
   assert.equal(await target.locator('#full-open').isVisible(),true);
   const requestsAfterFirst=state.privateFileCalls;
-  await target.locator('#next').click();
-  await target.waitForFunction(()=>document.querySelector('#pdf-canvas')?.dataset.renderedPage==='2');
+  await scrollPdfToPage(target, 2);
   assert.equal(state.privateFileCalls,requestsAfterFirst,'page two makes no network calls');
  });
  await test('small PDF falls back to full GET if Range responses are unsupported',async()=>{
@@ -460,8 +472,7 @@ try{
   assert.ok(largeCardPdf.length>6*1048576,'large file fixture must exceed the adaptive threshold');
   assert.equal(await target.locator('#full-open').isVisible(),true,'manual full-transfer fallback remains available');
   assert.match(await target.locator('#full-open').getAttribute('href'),/full=1/);
-  await target.locator('#next').click();
-  await target.waitForFunction(()=>document.querySelector('#pdf-canvas')?.dataset.renderedPage==='2',undefined,{timeout:15000});
+  await scrollPdfToPage(target, 2);
  });
  await test('large PDF Range errors show prompt sanitized stage timings instead of a blank reader',async()=>{
   const fast={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
@@ -532,8 +543,7 @@ try{
   assert.equal(rendered.page,'1');assert.ok(rendered.width>0&&rendered.height>0);
   assert.ok(state.privateRangeCalls>=1);assert.ok(state.privateRangeCalls<=8);
   assert.match(await target.locator('#page-count').textContent(),/1 \/ 2/);
-  await target.locator('#next').click();
-  await target.waitForFunction(()=>document.querySelector('#pdf-canvas')?.dataset.renderedPage==='2',undefined,{timeout:7000});
+  await scrollPdfToPage(target, 2);
  });
  for(const capabilities of [[],['private_pdf_owner','private_pdf_capture']]){
   await test(capabilities.length?'capture-only account has no PDF read button or private lookup':'ordinary account hides PDF button and retains publisher original',async()=>{
