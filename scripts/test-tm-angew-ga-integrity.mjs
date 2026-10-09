@@ -5,8 +5,9 @@ import {angewOfficialGaEvidenceError, importLocalCapture} from '../cloudflare/wo
 
 const doi='10.1002/anie.4335022';
 const articleUrl='https://onlinelibrary.wiley.com/doi/full/'+doi;
-const ga='https://onlinelibrary.wiley.com/cms/asset/a/anie4335022-gra-0001-m.jpg';
-const alternate='https://onlinelibrary.wiley.com/cms/asset/a/anie5624001-gra-0001-m.jpg';
+const ga='https://onlinelibrary.wiley.com/cms/asset/a/anie75210-gra-0003.png';
+const alternate='https://onlinelibrary.wiley.com/cms/asset/a/anie75027-gra-0001-m.jpg';
+const explicitForeign='https://onlinelibrary.wiley.com/cms/asset/10.1002/anie.5624001/anie75027-gra-0001-m.jpg';
 const neutral='https://onlinelibrary.wiley.com/cms/asset/a/figure-original.jpg';
 const make=(overrides={})=>({
   doi,kind:'official',captureVersion:'6.2.20',jobId:'12345678-1234-1234-1234-123456789012',
@@ -23,8 +24,10 @@ verify('numbered Scheme and substrate scope cannot be official',
   angewOfficialGaEvidenceError(make({caption:'Scheme 3. Substrate scope'}))==='angew_body_figure_not_official_toc');
 verify('single-image heading fallback is never sufficient',
   angewOfficialGaEvidenceError(make({candidateSource:'wiley_ga_labeled_section_single_image'}))==='angew_unverified_single_image_toc');
-verify('foreign article GA filename cannot be reused for current DOI',
-  angewOfficialGaEvidenceError(make({sourceUrl:alternate}))==='angew_cross_article_ga_asset');
+verify('Wiley internal GA filename numbers need not equal DOI suffix',
+  angewOfficialGaEvidenceError(make({sourceUrl:alternate}))==='');
+verify('explicit foreign DOI inside Wiley source URL is still rejected',
+  angewOfficialGaEvidenceError(make({sourceUrl:explicitForeign}))==='angew_explicit_foreign_doi_source');
 verify('unlabelled ordinary Wiley body image is not official',
   angewOfficialGaEvidenceError(make({sourceUrl:neutral}))==='angew_ga_role_not_proven');
 verify('untrusted image host never accepted',
@@ -70,7 +73,7 @@ verify('rejected scope image cannot even enter local official staging',
 
 const source=await fs.readFile('public/toc-mainline.user.js','utf8');
 const exposed=source.replace('  installMenu();',
-  '  globalThis.__tmAngewGa={wileyGraphicalAbstractCandidates,collectCandidates,wileyBodyOnlyVisual,wileyGaAssetMatchesDoi}; return;\n  installMenu();');
+  '  globalThis.__tmAngewGa={wileyGraphicalAbstractCandidates,collectCandidates,wileyBodyOnlyVisual}; return;\n  installMenu();');
 assert.notEqual(exposed,source,'mainline exposure marker must exist');
 const browser=await chromium.launch({headless:true});
 try {
@@ -103,8 +106,11 @@ try {
   const authentic=await inspect('<section><h3>Graphical Abstract</h3><img alt="Graphical Abstract" src="'+ga+'"></section>');
   verify('real Wiley -gra- GA survives strict source filter',
     authentic.some(x=>x.kind==='official'&&x.url===ga));
-  const foreign=await inspect('<section><h3>Graphical Abstract</h3><img src="'+alternate+'"></section>');
-  verify('cross-paper -gra- image is not selected by shared page DOM',foreign.length===0);
+  const alternateInternalId=await inspect('<section><h3>Graphical Abstract</h3><img src="'+alternate+'"></section>');
+  verify('Wiley official GA with unrelated internal asset ID remains a viable candidate',
+    alternateInternalId.some(x=>x.kind==='official'&&x.url===alternate));
+  const foreign=await inspect('<section><h3>Graphical Abstract</h3><img src="'+explicitForeign+'"></section>');
+  verify('explicit foreign DOI in asset URL is rejected by same-article binding',foreign.length===0);
   const scope=await inspect('<section><h3>Graphical Abstract</h3><figure><figcaption>Scheme 3. Substrate scope</figcaption><img src="'+ga+'"></figure></section>');
   verify('numbered substrate scope is refused even with GA-looking filename',
     !scope.some(x=>x.kind==='official'));

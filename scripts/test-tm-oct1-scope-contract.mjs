@@ -39,11 +39,15 @@ const first=actualCollect.indexOf(guardStart);
 const last=actualCollect.indexOf(afterGuard,first);
 assert.ok(first>0&&last>first,'Wiley-specific GA guard must remain within candidate admission');
 const guard=actualCollect.slice(first,last);
-for(const needle of ['wileyAssetHostAllowed(row.url)','wileyGaAssetMatchesDoi(row.url, job)',
+for(const needle of ['wileyAssetHostAllowed(row.url)',
   'wileyBodyOnlyVisual(row.element)','wileyBodySourceCollision(row.url, scope',
   "(!wileyGaUrlSignal(row.url) && !supportedMeta)",'return;']){
   assert.ok(guard.includes(needle),'Wiley GA admission guard lost '+needle);
 }
+assert.ok(!source.includes('wileyGaAssetMatchesDoi'),
+  'Wiley internal GA numeric ID must not be equated with DOI suffix');
+assert.ok(source.includes('candidateBelongsToJob(row.url,job)'),
+  'GA candidate must still carry current publisher article DOI evidence');
 assert.equal(actualCollect.slice(0,first)+actualCollect.slice(last),originalCollect,
   'unapproved non-Wiley or general candidate-discovery change');
 
