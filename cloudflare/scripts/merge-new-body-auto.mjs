@@ -73,7 +73,7 @@ export function assertSnapshotCoherence(previous,live){
 }
 async function configuration(root){
   const policy=JSON.parse(await readFile(path.join(root,'audit/media-auto-policy.json'),'utf8'));
-  requireBody(policy.schemaVersion===1&&policy.policyId===POLICY_ID&&Number.isInteger(policy.minNewArticles)&&policy.minNewArticles>=1&&Number.isInteger(policy.maxNewArticles)&&policy.maxNewArticles>=policy.minNewArticles&&policy.maxNewArticles<=25&&Number.isInteger(policy.maxNewImages)&&policy.maxNewImages>=policy.maxNewArticles&&policy.maxNewImages<=250&&policy.maxFiguresPerCard<=10&&policy.requireOfficialTocInBuild===true&&policy.requireCompletedCapturePacket===true&&Number.isInteger(policy.backfillStabilityMinutes)&&policy.backfillStabilityMinutes>=5&&policy.backfillStabilityMinutes<=120&&Number.isFinite(Date.parse(policy.backfillCapturedBefore)),'auto_invalid_configuration');
+  requireBody(policy.schemaVersion===1&&policy.policyId===POLICY_ID&&Number.isInteger(policy.minNewArticles)&&policy.minNewArticles>=1&&Number.isInteger(policy.maxNewArticles)&&policy.maxNewArticles>=policy.minNewArticles&&policy.maxNewArticles<=25&&Number.isInteger(policy.maxNewImages)&&policy.maxNewImages>=policy.maxNewArticles&&policy.maxNewImages<=250&&Number.isInteger(policy.maxFiguresPerCard)&&policy.maxFiguresPerCard>=1&&policy.maxFiguresPerCard<=20&&policy.requireOfficialTocInBuild===true&&policy.requireCompletedCapturePacket===true&&Number.isInteger(policy.backfillStabilityMinutes)&&policy.backfillStabilityMinutes>=5&&policy.backfillStabilityMinutes<=120&&Number.isFinite(Date.parse(policy.backfillCapturedBefore)),'auto_invalid_configuration');
   const state=JSON.parse(await readFile(path.join(root,'audit/literature-update-state.json'),'utf8'));
   const holds=new Set([...(policy.heldDois||[]),...(state.pendingScopeReviewBacklog||[])].map(x=>x.doi));
   return {policy,holds,papers:await readPapers(root)};
@@ -176,6 +176,11 @@ export function tocReadyDois(inputs){
   for(const [doi,record] of Object.entries(inputs?.live?.items||{}))if(officialToc(record))ready.add(normalizeDoi(doi)||doi);
   for(const row of inputs?.localCaptures?.items||[])if(strongOfficialCapture(row))ready.add(normalizeDoi(row.doi));
   return ready;
+}
+export function fitsCardFigureBudget(alreadyPublished,newFigures,policy){
+  const current=Number(alreadyPublished),incoming=Number(newFigures),max=Number(policy?.maxFiguresPerCard);
+  return Number.isInteger(current)&&current>=0&&Number.isInteger(incoming)&&incoming>=0
+    &&Number.isInteger(max)&&max>=1&&max<=20&&current+incoming<=max;
 }
 export function adaptiveBatchGate(rows,policy,now=Date.now()){
   const dois=new Set();
@@ -300,7 +305,7 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
         tocWaitingDois.add(doi);continue;
       }
       const baseCount=(media.items[doi]?.figures?.figures?.length||0);
-      if(baseCount+packetRows.length>policy.maxFiguresPerCard){
+      if(!fitsCardFigureBudget(baseCount,packetRows.length,policy)){
         held.push({doi,id:null,reason:'auto_card_display_limit'});continue;
       }
       const packetPrepared=[],packetAdded=[];
