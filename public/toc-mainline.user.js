@@ -779,6 +779,24 @@ function embeddedJobDois(value) {
     return '';
   }
 
+  // Exact publisher article routes for the four 2026-10-09 unresolved primary visuals.
+  // These are known first-party article pages, not guessed image/CDN URLs.
+  // Consult only after normal DOI/HTML resolution failed; preserve all other DOI paths.
+  function oct09VerifiedPublisherArticleRoute(job) {
+    var doi = normalizeDoi(job && job.doi);
+    var exact = {
+      '10.1016/j.chempr.2026.103008': 'https://www.sciencedirect.com/science/article/pii/S2451929426000744',
+      '10.1016/j.chempr.2026.103043': 'https://www.sciencedirect.com/science/article/pii/S2451929426001099',
+      '10.1039/d6sc06407h': 'https://pubs.rsc.org/sc/article/doi/10.1039/D6SC06407H/1367242/Harnessing-Carbyne-Reactivity-from-Stabilized',
+      '10.1039/d6gc03748h': 'https://pubs.rsc.org/gc/article/doi/10.1039/D6GC03748H/1367368/Green-Synthesis-of-Dihydropyranone-Intermediates'
+    };
+    var url = exact[doi] || '';
+    var publisher = publisherForDoi(doi);
+    if (!url || !publisherArticleHostAllowed(publisher, url)) return '';
+    if (publisher === 'rsc' && url.toLowerCase().indexOf('/article/doi/' + doi) < 0) return '';
+    return url;
+  }
+
   async function resolvePublisherTaskUrl(job) {
     var base = articleUrl(job);
     var publisher=String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi)));
@@ -791,7 +809,7 @@ function embeddedJobDois(value) {
         var resolved = elsevierResolvedPublisherUrl(response);
         if (resolved) return resolved;
       } catch (_) {}
-      return base;
+      return oct09VerifiedPublisherArticleRoute(job) || base;
     }
     if (publisher === 'rsc') {
       var wantsFull=Boolean(job && (job.captureFigures===true||job.captureEvidence===true
@@ -811,6 +829,10 @@ function embeddedJobDois(value) {
               && (rscFinal.toLowerCase().indexOf(suffix)>=0||rscText.indexOf(normalizeDoi(job.doi))>=0||rscText.indexOf(suffix)>=0)) return rscFinal;
         }catch(_){}
       }
+      // Publisher-indexed Silverchair full-article route, used only when the
+      // articleHTML page did not provide a DOI-bound usable canonical route.
+      var verifiedRsc = oct09VerifiedPublisherArticleRoute(job);
+      if (verifiedRsc) return verifiedRsc;
     }
     return base;
   }
