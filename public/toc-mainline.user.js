@@ -2306,14 +2306,14 @@ function embeddedJobDois(value) {
     var texts = Array.from(block.querySelectorAll(
       'figcaption,.caption,[class*="caption"],.figure-title,.figure__title,[role="heading"]'
     )).slice(0, 12).map(function(el) {
-      return String(el.textContent || '').replace(/\\s+/g, ' ').trim().slice(0, 320);
+      return String(el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 320);
     });
     var own = [node.getAttribute && node.getAttribute('alt'),
       node.getAttribute && node.getAttribute('aria-label')].filter(Boolean);
     var evidence = texts.concat(own);
     return evidence.some(function(value) {
-      return /^(?:fig(?:ure)?\\.?|scheme|chart)\\s*[1-9]\\d*[a-z]?\\b/i.test(value)
-        || /\\b(?:substrate|reaction|functional[- ]group|product)\\s+(?:scope|screening|expansion)\\b|\\bscope\\s+of\\s+(?:substrates|reactions|products)\\b/i.test(value);
+      return /^(?:fig(?:ure)?\.?|scheme|chart)\s*[1-9]\d*[a-z]?\b/i.test(value)
+        || /\b(?:substrate|reaction|functional[- ]group|product)\s+(?:scope|screening|expansion)\b|\bscope\s+of\s+(?:substrates|reactions|products)\b/i.test(value);
     });
   }
 
