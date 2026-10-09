@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "beijingTime": "2026-10-09 17 (sekund: 56)",
+  "project": "Organic Synthesis Gallery",
+  "task": "China mainland carrier public network test and user-requested account PDF read grant verification",
+  "networkTests": [
+    {
+      "provider": "ITDOG",
+      "tool": "web automation",
+      "url": "https://www.itdog.cn/http/",
+      "runId": "5a335360-ddee-487a-9183-8b8c718691a1",
+      "result": "no_measurement",
+      "blocker": "Cloudflare human-verification challenge; subsequent tunnel connection failed",
+      "noFakeStatistics": true
+    },
+    {
+      "provider": "17CE",
+      "url": "https://www.17ce.com/?lang=zh_cn",
+      "runId": "e5ec4439-6610-4036-8a9c-05f4770c3973",
+      "target": "https://api.gczhouwld.com/api/_healthcheck",
+      "kind": "public_unauthenticated_GET",
+      "reportedNodes": 181,
+      "reportedISPs": 8,
+      "reportedRegions": 38,
+      "carrierReportedSeconds": {
+        "telecom": {
+          "avg": 2.23,
+          "min": 0.88,
+          "max": 8.79
+        },
+        "unicom": {
+          "avg": 3.26,
+          "min": 1.06,
+          "max": 8.49
+        },
+        "mobile": {
+          "avg": 2.26,
+          "min": 0.8,
+          "max": 9.04
+        }
+      },
+      "reportedHTTP200": true,
+      "alsoReportedFailures": [
+        "CURLcode:28",
+        "下载时间异常"
+      ],
+      "exactSuccessAndTimeoutCounts": "not_available_from_result",
+      "sourceDataCaveat": "Automated UI summarized carrier results; partial errors were present, so 181/181 success must not be claimed",
+      "isOwnerAuthenticated": false,
+      "isPdfByteDownload": false
+    },
+    {
+      "provider": "17CE",
+      "url": "https://www.17ce.com/?lang=zh_cn",
+      "runId": "e4d268c6-a77f-48ea-a9e4-543a38e13786",
+      "target": "https://gallery.gczhouwld.com/pdf/",
+      "kind": "public_unauthenticated_GET_HTML",
+      "resultSummary": {
+        "httpStatus200Reported": true,
+        "ttfbSecondsReported": 1.203,
+        "resolutionIPReported": "185.199.109.153",
+        "reportLengthBytes": 2492
+      },
+      "sourceDataCaveat": "Agent reported identical 1.206s across all 181 nodes despite free dashboard including overseas nodes; per-node measurements considered unreliable and cannot establish full China-carrier availability",
+      "isOwnerAuthenticated": false,
+      "isPdfByteDownload": false
+    }
+  ],
+  "entitlementReview": {
+    "emailNotStoredInPublicAudit": true,
+    "requestedAction": "add a named Gallery account to private_pdf_read",
+    "currentPublicCapability": "private_pdf_read",
+    "blastRadius": "grants read to owner-private R2 PDF library across available documents; not limited to one DOI or personal local PDF",
+    "existingOfficialOwnerFlow": "bootstrapPrivatePdfOwner one verified account and one claim code; does not provide arbitrary email-scoped secondary reader grant",
+    "d1Table": "user_capabilities (user_id, capability, granted_at, granted_by)",
+    "accountsExistenceConfirmed": false,
+    "emailVerificationConfirmed": false,
+    "targetAccountOwnershipConfirmed": false,
+    "rightsToSharePrivatePaywalledContentsConfirmed": false,
+    "productionGrantApplied": false,
+    "status": "PENDING_ACCOUNT_OWNERSHIP_AND_VERIFIED_EMAIL_CONFIRMATION",
+    "projectRule": "Non-negotiable cross-account rights isolation; no automatic cross-user entitlements to paywalled PDFs",
+    "safeNext": "Ask whether email is a verified secondary Gallery account the site owner personally controls. Any future grant requires owner-authenticated server-side workflow, least privileges, audit and revocation; no email-based privilege inference."
+  },
+  "productionModified": false,
+  "noCredentialsShared": true
+}
