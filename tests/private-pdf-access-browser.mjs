@@ -65,6 +65,24 @@ async function test(name,fn){
     failedRequests:record.failedRequests.slice(0,4),
     unmockedExternalRequests:record.unmockedExternalRequests.slice(0,4),
   }));
+  for (const context of activeContexts) {
+    for (const page of context.pages()) {
+      const details = await page.evaluate(() => ({
+        pathname: location.pathname,
+        viewerState: document.documentElement.dataset.privatePdfViewer || '',
+        phase: document.documentElement.dataset.privatePdfPhase || '',
+        message: document.querySelector('#status')?.textContent?.slice(0,180) || '',
+        stageChildren: document.querySelector('#stage')?.children.length ?? null,
+        pageSlots: document.querySelectorAll('.pdfViewer .page').length,
+        renderedCanvases: document.querySelectorAll('.pdfViewer .page canvas').length,
+        mainHeight: document.querySelector('#main')?.clientHeight || 0,
+        mainWidth: document.querySelector('#main')?.clientWidth || 0,
+        stageHeight: document.querySelector('#stage')?.clientHeight || 0,
+        pageLabel: document.querySelector('#page-count')?.textContent || '',
+      })).catch(() => ({ inaccessible: true }));
+      console.error('PDF_CONTINUOUS_VIEWPORT_STATE ' + JSON.stringify(details));
+    }
+  }
   const slug=String(cases.length).padStart(2,'0')+'-'+name.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,55);
   let index=0;record.screenshots=[];record.traces=[];
   for(const context of activeContexts){
