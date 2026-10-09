@@ -193,3 +193,63 @@ test('live manifest refresh preserves prior original figure files through a 503 
   assert.equal(stale.data.items[0].figures.figures.length, 1);
   assert.equal(stale.data.items[0].toc.available, true);
 });
+
+const ANGeW = '10.1002/anie.4335022';
+const BAD = '35f10c5321cd43179a4c71c73e388da8';
+const NEW = '6406e6533f718759721bdd09740e0845';
+
+test('live Angew correction wins over a complete but stale published TOC', async () => {
+  const old = {
+    doi: ANGeW,
+    toc: { available: true, imageUrl: 'media-mirror/old-substrate-grid.png',
+      contentHash: BAD, reason: 'imported' },
+    figures: { available: true, doi: ANGeW,
+      figures: [{ id: 'figure-2', label: 'Figure 2',
+        imageUrl: 'media-mirror/confirmed-body-figure.png' }] },
+  };
+  const current = {
+    doi: ANGeW,
+    toc: { available: true, imageUrl: '/media/toc-cache/images/new-confirmed-candidate.jpg',
+      contentHash: NEW, reason: 'imported' },
+    figures: { available: false, doi: ANGeW, figures: [] },
+  };
+  const x = mock('gallery.gczhouwld.com', {
+    staticItems: { [ANGeW]: old }, dynamicItems: [current],
+  });
+  const actual = await x.api.post('/api/media/batch', { dois: [ANGeW] });
+  assert.equal(actual.data.items[0].toc.contentHash, NEW);
+  assert.ok(actual.data.items[0].toc.imageUrl.startsWith(CANONICAL));
+  assert.equal(actual.data.items[0].figures.figures.length, 1,
+    'published numbered figures are not lost to a D1-only TOC update');
+  assert.equal(actual.headers.get('x-gallery-media-source'), 'static+dynamic');
+  assert.equal(x.calls.filter(call => call.method === 'POST').length, 1,
+    'even complete static records must be checked against the live API');
+});
+
+test('verified bad Angew TOC is never resurrected by offline static fallback', async () => {
+  const x = mock('gallery.gczhouwld.com', {
+    rejectRemote: true,
+    staticItems: {
+      [ANGeW]: {
+        doi: ANGeW,
+        toc: { available: true, imageUrl: 'media-mirror/old-substrate-grid.png',
+          contentHash: BAD, reason: 'imported' },
+        figures: { available: false, doi: ANGeW, figures: [] },
+      },
+    },
+  });
+  const actual = await x.api.post('/api/media/batch', { dois: [ANGeW] });
+  assert.equal(actual.data.items[0].toc.available, false);
+  assert.equal(actual.data.items[0].toc.imageUrl, undefined);
+  assert.equal(actual.data.items[0].inventory.status, 'missing');
+  assert.equal(actual.headers.get('x-gallery-media-source'), 'static-fallback');
+});
+
+test('post-first-paint media recovery shares cached manifest with canonical batches', () => {
+  const recovery = readFileSync('src/runtime-recovery.ts', 'utf8');
+  const performanceRuntime = readFileSync('src/performance-runtime.ts', 'utf8');
+  assert.match(recovery, /import \{ loadMediaManifest \} from '\.\/platform-api'/);
+  assert.doesNotMatch(recovery, /fetch\(assetUrl\('media-index\.json'\)/);
+  assert.doesNotMatch(performanceRuntime, /FIGURE_DELAY_MS/);
+  assert.match(performanceRuntime, /gallery-media-live-batch/);
+});

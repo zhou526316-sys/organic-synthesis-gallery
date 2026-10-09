@@ -1,4 +1,5 @@
 import { shouldScanDisplay } from './user-ui/display-mutation-scope';
+import { loadMediaManifest } from './platform-api';
 import { store } from './user-ui/shared';
 
 interface TranslationItem {
@@ -24,12 +25,7 @@ interface StaticMediaItem {
   };
 }
 
-interface StaticMediaManifest {
-  items?: Record<string, StaticMediaItem>;
-}
-
 const translations = new Map<string, string>();
-let mediaManifestPromise: Promise<StaticMediaManifest> | null = null;
 let scanTimer: number | null = null;
 
 function assetUrl(path: string): string {
@@ -94,18 +90,6 @@ async function loadTranslations(): Promise<void> {
   } catch {
     // The main Gallery remains usable in English if the snapshot is unavailable.
   }
-}
-
-async function loadMediaManifest(): Promise<StaticMediaManifest> {
-  if (!mediaManifestPromise) {
-    mediaManifestPromise = fetch(assetUrl('media-index.json'), {
-      credentials: 'same-origin',
-      cache: 'no-store',
-    })
-      .then(response => response.ok ? response.json() as Promise<StaticMediaManifest> : { items: {} })
-      .catch(() => ({ items: {} }));
-  }
-  return mediaManifestPromise;
 }
 
 function cardEnglishTitle(card: HTMLElement): string {
@@ -188,7 +172,14 @@ function restoreFigures(slot: HTMLElement, item: StaticMediaItem): void {
   heading.textContent = isChineseUi() ? '正文图片' : 'Article figures';
   const strip = document.createElement('div');
   strip.className = 'figure-strip';
-  let committed = false;
+  // Attach the strip before using native lazy images: detached lazy <img>
+  // elements do not start loading, so waiting for their 'load' to attach the
+  // strip could leave every body image invisible indefinitely.
+  slot.replaceChildren(heading, strip);
+  slot.hidden = false;
+  slot.classList.remove('generated');
+  slot.classList.add('loaded');
+  slot.dataset.state = 'done';
 
   for (const figure of figures.slice(0, 10)) {
     const button = document.createElement('button');
@@ -202,16 +193,14 @@ function restoreFigures(slot: HTMLElement, item: StaticMediaItem): void {
     label.textContent = figure.label || 'Figure';
     button.append(image, label);
     strip.appendChild(button);
-    image.addEventListener('load', () => {
-      if (!committed && image.naturalWidth) {
-        committed = true;
-        slot.replaceChildren(heading, strip);
-        slot.classList.remove('generated');
-        slot.classList.add('loaded');
-        slot.dataset.state = 'done';
+    image.addEventListener('error', () => {
+      button.remove();
+      if (!strip.querySelector('.figure-thumb')) {
+        strip.remove();
+        heading.remove();
+        slot.dataset.state = 'image-error';
       }
     }, { once: true });
-    image.addEventListener('error', () => button.remove(), { once: true });
     image.src = assetUrl(figure.imageUrl!);
   }
 }
@@ -279,9 +268,18 @@ observer.observe(document.documentElement, { childList: true, subtree: true, att
 document.addEventListener('click', () => scheduleScan(0), true);
 window.addEventListener('pageshow', () => scheduleScan(0));
 window.addEventListener('scroll', () => scheduleScan(60), { passive: true });
+// The initial shared manifest read is already fresh. A media-update event
+// immediately after mount should refresh the small canonical DOI batch, not
+// force another 2MB static index request.
+let lastMediaRevalidation = Date.now();
 window.addEventListener('gallery-assets-updated', () => {
-  mediaManifestPromise = null;
-  scheduleScan(0);
+  const now = Date.now();
+  if (now - lastMediaRevalidation >= 45_000) {
+    lastMediaRevalidation = now;
+    void loadMediaManifest(true).then(() => scheduleScan(0));
+  } else {
+    scheduleScan(0);
+  }
 });
 store.addEventListener('change', () => scheduleScan(0));
 

@@ -87,6 +87,23 @@ async function main() {
       figures: kept,
     };
 
+    // A past Angew TOC was proven to be a substrate-scope grid. Existing
+    // mirror files are audit evidence, but that exact DOI/hash must never
+    // re-enter the next Pages media snapshot even when the old file decodes.
+    if (doi.toLowerCase() === '10.1002/anie.4335022'
+        && record?.toc?.contentHash === '35f10c5321cd43179a4c71c73e388da8') {
+      invalidTocs += 1;
+      console.warn('STATIC_MEDIA_REJECT_VERIFIED_WRONG_TOC ' + doi);
+      record.toc = {
+        available: false,
+        doi,
+        articleUrl: record.toc?.articleUrl || '',
+        reason: 'verified_wrong_toc_excluded',
+        cacheHit: true,
+        cacheState: 'miss',
+      };
+    }
+
     const tocUrl = record?.toc?.imageUrl;
     if (tocUrl && !(await validLocal(tocUrl))) {
       invalidTocs += 1;
