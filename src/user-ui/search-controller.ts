@@ -65,7 +65,12 @@ export class UserSearchController {
     if (!(target instanceof Node) || this.searchInput?.contains(target) || this.popover?.contains(target)) return;
     this.dismissSuggestions();
   };
-  private readonly onPageScroll = (): void => { this.dismissSuggestions(); };
+  private readonly onPageScroll = (event: Event): void => {
+    // A user scrolling within the suggestions should still be able to select
+    // one. Dismiss only when the page or a different scroll container moves.
+    if (event.target instanceof Node && this.popover?.contains(event.target)) return;
+    this.dismissSuggestions();
+  };
   private readonly onTabVisibility = (): void => {
     if (document.hidden) this.dismissSuggestions();
   };
@@ -470,13 +475,13 @@ export class UserSearchController {
       const item = suggestions[Number(button.dataset.index || 0)];
       if (!item) return;
       button.addEventListener('pointerdown', event => {
+        // Keep focus in the search box without removing the target before the
+        // browser dispatches click. Works for mouse, touch and Playwright tap.
         event.preventDefault();
-        select(item);
       });
       button.addEventListener('click', event => {
-        // Keyboard activation has no preceding pointerdown; normal clicks have
-        // already selected and removed the popover at pointerdown.
-        if (event.detail === 0) select(item);
+        event.preventDefault();
+        select(item);
       });
     });
     document.body.appendChild(popover);
