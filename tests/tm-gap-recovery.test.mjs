@@ -4,8 +4,8 @@ import vm from 'node:vm';
 import {test} from 'node:test';
 
 const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
-assert.ok(source.includes("// @version      6.2.59"));
-assert.ok(source.includes("var INSTALL_REVISION = '6.2.59';"));
+assert.ok(source.includes("// @version      6.2.60"));
+assert.ok(source.includes("var INSTALL_REVISION = '6.2.60';"));
 assert.ok(source.includes("GAP_RECOVERY_REVISION = '20261008-gap-recovery-v1'"));
 assert.ok(source.includes("FIGURE_ONE_QUEUE_POLICY_REVISION = '20261008-verified-figure1-complete-v2'"));
 

@@ -66,7 +66,18 @@ await test('single user_aborted article does not terminate the manual pass',asyn
   assert.notEqual(summary.phase,'paused');
 });
 await test('unavailable page does not stop subsequent articles',async()=>{const x=h({open:(job,c)=>{if(job.doi===articles[1].doi)throw Error('open failed');}});await x.T.forceStartFromHead();assert.equal(x.store.get(P+'last-run-summary').failed,1);assert.equal(x.store.get(P+'last-run-summary').success,2);});
-await test('publisher cooldown preserves restrictions, continues unrelated tasks, then retries when due',async()=>{const x=h();x.put(P+'publisher-access-cooldown:acs',{until:x.clock.now+30*60000});await x.T.forceStartFromHead();assert.equal(x.opened.length,3);assert.equal(x.opened[2].j.publisher,'acs');assert.equal(x.store.get(P+'last-run-summary').skipped,0);assert.equal(x.store.get(P+'last-run-summary').visitedCount,3);});
+await test('unverified legacy publisher cooldown is cleared so unrelated ACS and Nature jobs proceed',async()=>{
+ const x=h(),key=P+'publisher-access-cooldown:acs';
+ x.put(key,{until:x.clock.now+30*60000,reason:'publisher_access_gate'});
+ await x.T.forceStartFromHead();
+ assert.equal(x.opened.length,3);
+ assert.equal(x.opened.filter(o=>o.j.publisher==='acs').length,1);
+ assert.equal(x.opened.filter(o=>o.j.publisher==='nature').length,1);
+ assert.equal(x.opened.filter(o=>o.j.publisher==='wiley').length,1);
+ assert.equal(x.store.has(key),false);
+ assert.equal(x.store.get(P+'last-run-summary').skipped,0);
+ assert.equal(x.store.get(P+'last-run-summary').visitedCount,3);
+});
 await test('old failed-paper cooldown never blocks an explicit new pass',async()=>{const x=h();x.put(x.T.attemptKey(articles[1].doi,'6.2.20:paired:1790082000000','figures'),{status:'failed',reason:'controller_timeout',retryCount:9,finishedAt:new Date(x.clock.now).toISOString()});await x.T.forceStartFromHead();assert.equal(x.opened[0].j.doi,articles[1].doi);});
 await test('manual pause halts the new pass without deleting acquired results',async()=>{const x=h({open:(j,c)=>c.T.requestControllerPause()});await x.T.forceStartFromHead();assert.equal(x.opened.length,1);assert.equal(x.store.get(P+'last-run-summary').success,1);assert.equal(x.store.get(P+'enabled'),false);});
 await test('token absence does not revoke existing work or start unauthenticated requests',async()=>{const x=h({noToken:true});x.put(P+'controller-lease',{owner:'other'});await x.T.forceStartFromHead();assert.equal(x.requests.length,0);assert.equal(x.store.get(P+'controller-lease').owner,'other');});

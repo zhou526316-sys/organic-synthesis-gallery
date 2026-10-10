@@ -19,7 +19,7 @@ const functionSource=(s,name)=>{
 const protectedFunctions=[
   'articleFigureResolution','collectArticleFigureCandidates',
   'rscBodyFigureContext','svgQuality',
-  'waitForPairedVisuals','acquireBestVisual','privatePdfHostAllowed',
+  'acquireBestVisual','privatePdfHostAllowed',
   'discoverExplicitPdfCandidates','privatePdfBytesValid',
   'waitForPrivatePdfCandidates','fetchExplicitPdf','uploadPrivatePdf'
 ];
@@ -27,6 +27,28 @@ for(const name of protectedFunctions){
   assert.equal(functionSource(source,name),functionSource(original,name),
     'published acquisition code unexpectedly modified: '+name);
 }
+// The owner's 2026-10-10 approval changes ONLY the final publisher access
+// cooldown trace to DOI-scoped; all other acquisition/identity/discovery code
+// in the protected visual-wait function must stay byte-for-byte identical.
+const actualVisualWait=functionSource(source,'waitForPairedVisuals');
+const originalVisualWait=functionSource(original,'waitForPairedVisuals');
+const cooldownStart="          var cooldown=markPublisherAccessCooldown(job,'publisher_access_gate');";
+const cooldownEnd="          throw new Error('publisher_access_gate');";
+const segment=(text)=>{
+  const start=text.indexOf(cooldownStart),end=text.indexOf(cooldownEnd,start);
+  assert.ok(start>=0&&end>start,'approved verified publisher access gate block missing');
+  return {start,end:end+cooldownEnd.length};
+};
+const actualGate=segment(actualVisualWait),baselineGate=segment(originalVisualWait);
+const gatePatch=actualVisualWait.slice(actualGate.start,actualGate.end);
+assert.ok(gatePatch.includes("event:'doi_cooldown'")&&gatePatch.includes("scope=doi;publisher="));
+assert.ok(gatePatch.includes("triggerDoi=")&&gatePatch.includes("cooldownMs="));
+assert.equal(
+  actualVisualWait.slice(0,actualGate.start)
+    +originalVisualWait.slice(baselineGate.start,baselineGate.end)
+    +actualVisualWait.slice(actualGate.end),originalVisualWait,
+  'Unapproved publisher acquisition behavior changed beyond the single approved access-cooldown trace'
+);
 // Only two user-approved Wiley-only exception blocks may diverge from pinned
 // general candidate discovery: official GA semantic gate + an exact DOI/asset
 // quarantine of one visually confirmed substrate-scope image.

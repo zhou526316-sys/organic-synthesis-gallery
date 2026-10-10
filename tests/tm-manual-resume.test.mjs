@@ -109,7 +109,11 @@ await test('late old-generation results remain rejected after recovery',async()=
  const r=await x.T.finishPairedJob(old,{status:'success'},[],'');assert.equal(r.reason,'manual_run_superseded');assert.equal(x.T.saveCheckpoint(old.doi,{figures:{wrong:1}},old),false);assert.deepEqual(x.store.get(P+'last-run-summary'),before);
 });
 await test('publisher cooldowns credentials and saved checkpoints survive recovery',async()=>{
- const x=orphan(h()),until=x.clock.now+30*60000;x.put(P+'publisher-access-cooldown:acs',{until});
+ const x=orphan(h()),until=x.clock.now+30*60000;x.put(P+'publisher-access-cooldown:acs',{
+   revision:'20261010-doi-first-authoritative-global-v1',scope:'publisher',publisher:'acs',
+   doi:articles[1].doi,reason:'publisher_http_429_retry_after',
+   httpStatus:429,retryAfterMs:30*60000,verified:true,at:x.clock.now,until
+ });
  const keys=['organicGalleryCloudflareBridgeWriteToken',x.T.checkpointKey(articles[1].doi),P+'auto-report-v1:pending'];keys.forEach(k=>x.put(k,{retained:true}));
  await x.T.tryResumeInterruptedManualRun();assert.ok(x.opened.every(v=>v.j.publisher!=='acs'||v.at>=until),'ACS visits must remain deferred until cooldown ends');assert.ok(x.opened.some(v=>v.j.publisher==='acs'),'Deferred ACS work must continue after cooldown');
  assert.equal(x.store.get('organicGalleryCloudflareBridgeWriteToken').retained,true);assert.equal(x.store.get(P+'auto-report-v1:pending').retained,true);

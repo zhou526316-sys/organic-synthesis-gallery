@@ -123,13 +123,14 @@ await test('existing TOC gap opens once and captures the incomplete body figures
  const x=h(queue(ar),i,{result:j=>{n++;return {status:'success',toc:{status:'stored',kind:'official'},figures:{discovered:3,stored:3,failed:0,items:[{...fig(j.doi,3),status:'staged'}]},fulltext:{status:'not_requested'}}}});await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(n,1);assert.equal(s.total,1);assert.equal(s.fullyResolved,1);assert.equal(s.unresolvedCount,0);
 });
 
-await test('23 publisher cooldown items remain deferred with zero fabricated visits and retry safely',async()=>{
+await test('verified 429 publisher limit defers 23 items without fabricated visits and retries after deadline',async()=>{
  const ar=Array.from({length:23},(_,n)=>article(n)),i=inv(ar);i.media.items.forEach(x=>x.tocStored=false);
  let release;const barrier=new Promise(resolve=>{release=resolve;});
  const x=h(queue(ar),i,{sleep:async(ms,advance)=>{await barrier;advance(ms);}});
  const until=x.ctx.Date.now()+2500;
- x.store.set(P+'publisher-access-cooldown:acs',{publisher:'acs',doi:ar[0].doi,
-   reason:'publisher_access_gate',at:x.ctx.Date.now(),until});
+ x.store.set(P+'publisher-access-cooldown:acs',{revision:'20261010-doi-first-authoritative-global-v1',
+   scope:'publisher',publisher:'acs',doi:ar[0].doi,
+   reason:'publisher_http_429_retry_after',httpStatus:429,retryAfterMs:2500,verified:true,at:x.ctx.Date.now(),until});
  const running=x.T.forceStartFromHead();
  let snap=null;
  for(let n=0;n<100;n++){
@@ -157,7 +158,9 @@ await test('unaffected publisher runs during another publisher cooldown',async()
  const ar=[article(1),article(2,{doi:'10.1039/d6sc00001a',journal:'Chemical Science',publisher:'rsc'})],i=inv(ar);
  i.media.items.forEach(x=>x.tocStored=false);
  const x=h(queue(ar),i);
- x.store.set(P+'publisher-access-cooldown:acs',{publisher:'acs',reason:'publisher_access_gate',until:x.ctx.Date.now()+3000});
+ x.store.set(P+'publisher-access-cooldown:acs',{revision:'20261010-doi-first-authoritative-global-v1',
+   scope:'publisher',publisher:'acs',doi:ar[0].doi,reason:'publisher_http_429_retry_after',
+   httpStatus:429,retryAfterMs:3000,verified:true,at:x.ctx.Date.now(),until:x.ctx.Date.now()+3000});
  await x.T.forceStartFromHead();
  assert.deepEqual(x.opened.map(j=>j.publisher),['rsc','acs']);
  assert.equal(x.store.get(P+'last-run-summary').attemptCount,2);
