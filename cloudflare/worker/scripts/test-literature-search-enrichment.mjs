@@ -183,3 +183,24 @@ test('no unauthorized abstract refresh: reject foreign DOI, wrong revision, summ
   assert.equal((await getSearchEnrichmentCoverage(env,{catalogId:'b'.repeat(64)})).status,409);
   assert.equal((await getSearchEnrichmentCoverage(env,{catalogId:GEN.catalogId})).body.originalAbstracts,2);
 });
+
+
+test('authenticated baseline view parity excludes only enrichment, while public LMCT search expands',async t=>{
+  const env=await fixture(t);
+  await insert(env,enr);
+  assert.equal((await finalize(env)).status,200);
+  const publicView=await query(env,'LMCT');
+  assert.equal(publicView.body.matched,2);
+  const originalOnly=await queryLiteratureCatalogView(env,{catalogId:GEN.catalogId,query:'LMCT'},
+    {baseOnly:true});
+  assert.equal(originalOnly.status,200);
+  assert.equal(originalOnly.body.matched,0);
+  const baselineTitle=await queryLiteratureCatalogView(env,{catalogId:GEN.catalogId,query:'photocatalytic'},
+    {baseOnly:true});
+  assert.equal(baselineTitle.body.matched,1);
+  assert.deepEqual(baselineTitle.body.items.map(x=>x.doi),['10.1234/a']);
+  // A non-search baseline date audit retains the same approved DOI membership.
+  const date=await queryLiteratureCatalogView(env,{catalogId:GEN.catalogId,
+    dateFrom:'2026-10-07',dateTo:'2026-10-07'},{baseOnly:true});
+  assert.equal(date.body.matched,1);
+});
