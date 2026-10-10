@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import vm from 'node:vm';
 import { isHistoricalBackfill, isJulSepTocOnly, paperMediaPolicy, shouldShowDailyNew, isOctoberFullCapturePaper } from '../shared/historical-literature-policy.js';
 import { isHotLandingEligible } from '../shared/literature-landing.mjs';
 import { verifiedHistoricalTitle } from '../shared/verified-historical-title-repairs.js';
@@ -41,7 +42,8 @@ assert.equal(verifiedHistoricalTitle('10.1021/acs.orglett.fake'),null);
 const main=readFileSync('src/main.ts','utf8');
 const queue=readFileSync('cloudflare/scripts/build-live-toc-demand-queue.mjs','utf8');
 const tm=readFileSync('public/toc-mainline.user.js','utf8');
-assert.ok(main.includes('!isHistoricalBackfill(paper) && isNewTodayDate(paper.addedDate)'), 'history may appear new');
+assert.ok(main.includes('!isHistoricalBackfill(paper)')
+  && main.includes("validAddedDate(paper.addedDate) || '') >= '2026-10-01'"), 'history may appear new');
 assert.ok(main.includes("mediaMode === 'metadata_only' ? '' : tocMarkup(paper)"), 'old history must not queue TOC');
 assert.ok(main.includes("mediaMode === 'standard' ? figureMarkup(paper) : ''"), 'TOC-only figure slot leak');
 assert.ok(main.includes('doi && !historicalBackfill ? `/pdf/'), 'backfill PDF action leak');
@@ -52,4 +54,27 @@ assert.ok(queue.includes('mediaPolicy: paperMediaPolicy(paper)'), 'TOC queue lac
 assert.ok(tm.includes('&&recentFullCaptureEligible(job);'), 'PDF inventory guard lacks publisher-date cutoff');
 assert.ok(tm.includes('opportunisticFigures:!tocOnlyCaptureEligible(raw)'), 'historical TOC would fetch body');
 assert.ok(tm.includes('if(!captureJobEligible(batch[i]))'), 'historical TOC never dispatched');
+
+const projectionSource=readFileSync('scripts/sync-literature-catalog-index-shadow.mjs','utf8');
+const from=projectionSource.indexOf('function paperProjection(record) {');
+const to=projectionSource.indexOf('\nfunction searchProjection(record)',from);
+assert.ok(from>0&&to>from,'D1 historic source-fenced projection missing');
+const context=vm.createContext({normalizeDoi:s=>String(s).toLowerCase()});
+vm.runInContext(projectionSource.slice(from,to),context);
+const project=vm.runInContext('paperProjection',context);
+const row=(publication,source)=>({
+  doi:'10.1234/test',revision:'0'.repeat(64),firstOnlineDate:publication,
+  addedDate:'2026-10-10',datePrecision:'day',paper:{
+    title:'Chemistry',journal:'JACS',authors:['A Li'],ingestionChannel:source,
+  }
+});
+assert.equal(project(row('2026-08-31','historical_backfill')).addedDate,null,
+  'historical D1 row must not match Today index');
+assert.equal(project(row('2026-08-31',undefined)).addedDate,null,
+  'late July–September source must not match Today index');
+assert.equal(project(row('2026-10-08',undefined)).addedDate,'2026-10-10',
+  'genuine October DOI must retain indexed addition date');
+assert.equal(project(row('2026-06-03','historical_backfill')).addedDate,null,
+  'pre-July history must not match Today index');
+
 console.log(JSON.stringify({ok:true,historicalCards:true,latestNewExcluded:true,oldMetadataOnly:true,julSepTocOnly:true,pdfBlocked:true,verifiedEnglishTitleRecoveries:map.size}));
