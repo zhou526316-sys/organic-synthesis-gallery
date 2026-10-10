@@ -43,12 +43,12 @@ MODE="__REMOTE_MODE__"
 BASE="__GITHUB_RAW__"
 WORK="$(mktemp -d /tmp/gallery-pdf-once.XXXXXXXX)"
 cleanup() {
-  rm -f -- "$WORK/gateway.py" "$WORK/install.sh"
+  rm -f -- "$WORK/gateway.py" "$WORK/install.sh" "$WORK/nginx_include.py"
   rmdir -- "$WORK" 2>/dev/null || true
 }
 trap cleanup EXIT
 printf '[CHECK] One SSH authentication accepted; preparing %s\n' "$MODE"
-for file in gateway.py install.sh; do
+for file in gateway.py install.sh nginx_include.py; do
   curl --noproxy '*' --fail --silent --show-error --location \
     --connect-timeout 8 --max-time 40 \
     "$BASE/$file" --output "$WORK/$file"
@@ -58,6 +58,7 @@ for file in gateway.py install.sh; do
   }
 done
 bash -n "$WORK/install.sh"
+python3 -B -c 'import ast,sys;ast.parse(open(sys.argv[1],encoding="utf-8").read())' "$WORK/nginx_include.py"
 python3 -B -c 'import ast,sys;ast.parse(open(sys.argv[1],encoding="utf-8").read())' "$WORK/gateway.py"
 echo '[CHECK] Pinned sources downloaded and syntax-checked.'
 sudo bash "$WORK/install.sh" "$MODE"
