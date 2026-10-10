@@ -122,6 +122,8 @@ jobs:
           path: summary-status-report/status.json
           retention-days: 7
           if-no-files-found: error
+      - name: Validate existing approved-review and Evidence mismatch categories
+        run: node --test scripts/test-gallery-abstract-gap-classification.mjs
       - name: Check all published DOI abstract-source gaps and live card availability
         if: always()
         env:
