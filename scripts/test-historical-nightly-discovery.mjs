@@ -550,3 +550,136 @@ test('saved completed leaf missing on disk prevents false root promotion',async(
     assert.equal(x.completed.length,0);
   },{priorState:state});
 });
+
+
+
+test('OpenAlex cursor corruption and changing totals never become successful or split windows',async()=>{
+  for(const scenario of ['missing','changed']){
+    await isolatedHistoricalRun(async({readState,readBatch})=>{
+      global.fetch=async url=>{
+        const u=new URL(url);
+        if(u.hostname==='api.crossref.org')return emptyCrossref();
+        const first=u.searchParams.get('cursor')==='*';
+        return {ok:true,json:async()=>({meta:{
+          count:scenario==='changed'&&!first?999:1001,
+          ...(scenario==='missing'?{}:{next_cursor:'p1'})
+        },results:Array.from({length:100},(_,i)=>oaRow('10.1021/jacs.6c'
+          +String((first?0:100)+i).padStart(5,'0')))})};
+      };
+      const result=await runNightly(),record=await readBatch('2026-09-22_2026-09-30_jacs');
+      assert.equal(result.blocked,true,scenario);
+      assert.equal(result.completeWindows,0,scenario);
+      assert.equal(result.activeSplit,null,scenario);
+      assert.equal((await readState()).cursor.journalIndex,0,scenario);
+      assert.match(record.consistency.issues.join('|'),
+        scenario==='missing'?/missing_next_cursor/:/total_changed/);
+    });
+  }
+});
+
+test('mixed Crossref truncation and OpenAlex 429 cannot split away a missing source',async()=>{
+  await isolatedHistoricalRun(async({readBatch,readState})=>{
+    global.fetch=async url=>{
+      const u=new URL(url);
+      if(u.hostname==='api.openalex.org')return {ok:false,status:429};
+      return saturatedCrossref(u);
+    };
+    const result=await runNightly();
+    assert.equal(result.blocked,true);
+    assert.equal(result.activeSplit,null);
+    assert.equal(result.completeWindows,0);
+    assert.equal((await readState()).cursor.journalIndex,0);
+    const batch=await readBatch('2026-09-22_2026-09-30_jacs');
+    assert.match(batch.consistency.issues.join('|'),/truncated_or_inconsistent/);
+    assert.match(batch.consistency.issues.join('|'),/429/);
+    assert.equal(batch.status,'incomplete_sources');
+  });
+});
+
+test('shared DOI across nonoverlapping split leaves is deduplicated once without losing unique rows',async()=>{
+  const state=stage0(),root='2026-09-22_2026-09-30_jacs';
+  state.activeSplit={rootId:root,rootRange:state.cursor.range,journalName:'JACS',completed:[],
+    pending:[{from:'2026-09-22',to:'2026-09-25'},{from:'2026-09-26',to:'2026-09-30'}]};
+  await isolatedHistoricalRun(async({readBatch})=>{
+    process.env.MAX_UNITS='2';
+    global.fetch=async url=>{
+      const u=new URL(url);
+      if(u.hostname==='api.openalex.org')return emptyOpenAlex();
+      if(!u.pathname.includes('0002-7863'))return emptyCrossref();
+      const left=(u.searchParams.get('filter')||'').includes('2026-09-22');
+      return completeCrossref([crRow('10.1021/jacs.6c44444'),
+        crRow(left?'10.1021/jacs.6c11111':'10.1021/jacs.6c22222')]);
+    };
+    const result=await runNightly();
+    assert.equal(result.completeWindows,1);
+    const batch=await readBatch(root);
+    assert.equal(batch.candidateCount,3);
+    assert.equal(batch.duplicateDoisAcrossSubwindows,1);
+    assert.equal(batch.sourceStatus.splitSegments.length,2);
+    assert.equal(batch.status,'source_enumeration_complete');
+    assert.deepEqual(batch.records.map(x=>x.doi),
+      ['10.1021/jacs.6c11111','10.1021/jacs.6c22222','10.1021/jacs.6c44444']);
+    assert.ok(batch.records.every(x=>x.discoveredIn.from==='2026-09-22'
+      &&x.discoveredIn.to==='2026-09-30'));
+  },{priorState:state});
+});
+
+test('corrupted completed leaf journal identity cannot be used to close the root',async()=>{
+  const state=stage0(),root='2026-09-22_2026-09-30_jacs';
+  const prior=root+'__2026-09-22_2026-09-25';
+  state.activeSplit={rootId:root,rootRange:state.cursor.range,journalName:'JACS',
+    completed:[prior],pending:[{from:'2026-09-26',to:'2026-09-30'}]};
+  await isolatedHistoricalRun(async({readState,write})=>{
+    await write('audit/historical-staging/batches/'+prior+'.json',{
+      schema:SCHEMA,recordType:'historical_discovery_segment_evidence',
+      parentBatchId:root,journal:'Angew',range:{from:'2026-09-22',to:'2026-09-25'},
+      status:'source_enumeration_complete',consistency:{complete:true,sourceCounts:{crossref:0,openalex:0}},
+      candidateCount:0,records:[]
+    });
+    global.fetch=async url=>new URL(url).hostname==='api.crossref.org'
+      ?emptyCrossref():emptyOpenAlex();
+    await assert.rejects(runNightly(),/split_segment_evidence_incomplete/);
+    const saved=await readState();
+    assert.equal(saved.completed.length,0);
+    assert.equal(saved.cursor.journalIndex,0);
+  },{priorState:state});
+});
+
+test('API call budget exhaustion reports incomplete coverage, never split or a false successful DOI window',async()=>{
+  await isolatedHistoricalRun(async({readState,readBatch})=>{
+    process.env.API_REQUEST_LIMIT='4';
+    let remoteCalls=0;
+    global.fetch=async url=>{
+      remoteCalls++;
+      const u=new URL(url);
+      return u.hostname==='api.crossref.org'?saturatedCrossref(u):emptyOpenAlex();
+    };
+    const result=await runNightly();
+    assert.equal(result.blocked,true);
+    assert.equal(result.completeWindows,0);
+    assert.equal(result.activeSplit,null);
+    assert.ok(remoteCalls<=4,'no external request after the configured budget');
+    assert.equal((await readState()).cursor.journalIndex,0);
+    const batch=await readBatch('2026-09-22_2026-09-30_jacs');
+    assert.equal(batch.status,'incomplete_sources');
+    assert.match(batch.consistency.issues.join('|'),/nightly_api_budget_exceeded/);
+  });
+});
+
+test('date boundaries preserve leap day and stage-only guard refuses an unapproved main-branch write',async()=>{
+  assert.deepEqual(bisectDateRange({from:'2024-02-28',to:'2024-03-02'}),[
+    {from:'2024-02-28',to:'2024-02-29'},
+    {from:'2024-03-01',to:'2024-03-02'}
+  ]);
+  await isolatedHistoricalRun(async()=>{
+    let remoteCalls=0;
+    global.fetch=async()=>{remoteCalls++;return emptyCrossref()};
+    process.env.HISTORICAL_STAGING_ONLY='0';
+    await assert.rejects(runNightly(),/staging_only_guard_required/);
+    process.env.HISTORICAL_STAGING_ONLY='1';
+    process.env.GITHUB_REF_NAME='main';
+    process.env.HISTORICAL_STAGING_BRANCH='0';
+    await assert.rejects(runNightly(),/refuses_to_write_production_main/);
+    assert.equal(remoteCalls,0);
+  });
+});
