@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "observedBeijing": "2026-10-10 09:25:08",
+  "feedback": "User shows '正在按需读取目录和第一页…' indefinitely/still cannot open previously identified DOI under campus+school VPN+Ghelper rule-proxy US node.",
+  "screenshotObservation": "Reader status message only; no numeric duration or request details in latest image. It evidences waiting at parse stage, not proof of a particular HTTP error.",
+  "priorScreenshot": {
+    "statuses": [
+      206,
+      206,
+      206
+    ],
+    "timesSeconds": [
+      8.99,
+      9.01,
+      12
+    ],
+    "sizesAsDisplayed": [
+      "180 kB",
+      "257 B",
+      "591 B"
+    ],
+    "signedUrlsNotSaved": true
+  },
+  "verifiedCode": {
+    "source": "src/private-pdf-reader.mjs",
+    "blobSha": "043397a98f04bed55b8c94d130c0db4b0e38eb4a",
+    "prefetchRangeBytes": 1048576,
+    "prefetchTimeoutMs": 9000,
+    "initialRangeTimeoutMs": 12000,
+    "downloadMechanism": "await response.arrayBuffer() then onDataRange; no per-byte streaming UI during unfinished Range",
+    "existingPdfJsProgress": "onDataRange updates PDF.js only after complete chunk",
+    "backupLimitation": "Both API_BASE and API_BACKUP are Cloudflare Worker routes; independent Tencent ingress remains unaccepted"
+  },
+  "assessment": "Head-of-line first-page stall plausible and directly tied to chunk size and completion-before-parser design. Root cause user-specific network endpoint throughput not independently measurable from no-credential tools. 206 header alone does not establish complete Range response.",
+  "proposedNotApproved": [
+    "Bounded 128-256 KiB initial PDF.js Range, preserving alignment, trailer/index loading and PDF integrity; adaptive smaller retries with proof of correct byte positions.",
+    "Use streaming reader for bytes-received telemetry, validate final Range byte count, content type, exact Content-Range and strong PDF identity before onDataRange.",
+    "Slow 206 truncated-body and timeout Chromium regression plus localhost fixture; no paid services or unrelated release changes."
+  ],
+  "prohibitedInCurrentTurn": "No change to production or repair branch before explicit approval; separate ongoing project tasks unchanged.",
+  "requestSpecificApproval": true
+}
