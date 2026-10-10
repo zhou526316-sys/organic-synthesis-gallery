@@ -839,6 +839,49 @@ for (const width of [390, 1280]) {
   });
 }
 
+test('search suggestions appear after the visible journal candidate window hydrates', async ({ page }) => {
+  await stubOptionalApi(page);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+    { waitUntil: 'domcontentloaded' });
+  const gallery = page.locator('#gallery');
+  await expect(gallery.locator('.card').first()).toBeVisible({ timeout: 30000 });
+  const journal = (await gallery.locator('.card').first().getAttribute('data-journal')) || '';
+  const query = journal.slice(0, 2);
+  expect(query.length).toBe(2);
+  // Prevent corpus transport in this lifecycle test. The Gallery card window
+  // deliberately hydrates after the user has already entered a query.
+  await page.evaluate(() => {
+    document.querySelector('#app')?.addEventListener(
+      'gallery-corpus-query', event => event.stopImmediatePropagation(), true,
+    );
+    const node = document.querySelector('#gallery');
+    if (!node) return;
+    (window as any).__savedGalleryNodes = [...node.childNodes];
+    node.replaceChildren();
+  });
+  await page.waitForTimeout(100); // Let the card mutation observer clear stale candidates.
+  const search = page.locator('#search');
+  await search.fill(query);
+  await expect(search).toBeFocused();
+  await page.evaluate(() => {
+    const node = document.querySelector('#gallery');
+    const originals = (window as any).__savedGalleryNodes as Node[] | undefined;
+    if (!node || !originals) return;
+    node.replaceChildren(...originals);
+  });
+  await expect(gallery.locator('.card').first()).toBeVisible();
+  await expect(page.locator('.user-search-popover button').first()).toBeVisible({ timeout: 10000 });
+  await search.press('Escape');
+  await expect(page.locator('.user-search-popover')).toHaveCount(0);
+  // A later card refresh cannot recreate suggestions after an explicit Escape.
+  await page.evaluate(() => {
+    const gallery = document.querySelector('#gallery');
+    if (gallery?.firstChild) gallery.appendChild(gallery.firstChild);
+  });
+  await expect(page.locator('.user-search-popover')).toHaveCount(0);
+});
+
 test('a burst of search keystrokes does not rebuild gallery cards or schedule stale indexed renders', async ({ page }) => {
   await stubOptionalApi(page);
   await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
