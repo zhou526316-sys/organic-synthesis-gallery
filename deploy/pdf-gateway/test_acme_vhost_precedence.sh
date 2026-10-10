@@ -26,6 +26,7 @@ pid $tmp/nginx.pid;
 error_log $tmp/logs/error.log warn;
 events { worker_connections 16; }
 http {
+ access_log off;
  server {
   listen 127.0.0.1:$port default_server;
   server_name relay.gczhouwld.com;
