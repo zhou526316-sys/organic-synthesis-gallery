@@ -56,6 +56,9 @@ jobs:
           retention-days: 21
 
   live-browser-readonly:
+    # A PR cannot change the already deployed site. Run full public-browser
+    # acceptance only after production sync/deployment, not against old code.
+    if: github.event_name != 'pull_request'
     needs: live-search-readonly
     strategy:
       fail-fast: false

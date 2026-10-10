@@ -334,9 +334,46 @@ function canonicalMediaRequest<T>(path: string, body?: unknown): Promise<ApiResp
   return rawRequest<T>('POST', `${MEDIA_API_ORIGIN}${path}`, body);
 }
 
+function catalogViewGetPath(body?: unknown): string | null {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return null;
+  const record = body as Record<string, unknown>;
+  if (typeof record.catalogId !== 'string' || !/^[a-f0-9]{64}$/.test(record.catalogId)) return null;
+  const params = new URLSearchParams();
+  for (const key of ['catalogId', 'query', 'sort', 'limit', 'cursor', 'dateFrom', 'dateTo', 'addedDate'] as const) {
+    const value = record[key];
+    if (value === undefined || value === null || value === '') continue;
+    if (typeof value !== 'string' && typeof value !== 'number') return null;
+    params.set(key, String(value));
+  }
+  for (const [key, param] of [['selectedJournals', 'selectedJournal'], ['excludedJournals', 'excludedJournal']] as const) {
+    const values = record[key];
+    if (values === undefined) continue;
+    if (!Array.isArray(values) || values.some(value => typeof value !== 'string')) return null;
+    for (const value of values) params.append(param, value);
+  }
+  const encoded = params.toString();
+  return encoded.length <= 3500 ? '/api/literature/catalog-view?' + encoded : null;
+}
+
+async function publicCatalogView<T>(body?: unknown): Promise<ApiResponse<T>> {
+  // A GET cannot carry a JSON body, so the browser issues one simple CORS
+  // request without OPTIONS. Retain POST for older Worker versions, oversized
+  // filters and environments where an intermediary refuses GET.
+  const readPath = catalogViewGetPath(body);
+  if (readPath) {
+    try {
+      return await literatureReadWithFailover<T>('GET', readPath);
+    } catch (error) {
+      console.warn('[Gallery search] GET transport unavailable; trying compatible POST', error);
+    }
+  }
+  return literatureReadWithFailover<T>('POST', '/api/literature/catalog-view', body);
+}
+
+
 async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResponse<T>> {
   if (!localDevelopmentHost() && path === '/api/literature/catalog-view') {
-    return literatureReadWithFailover<T>('POST', path, body);
+    return publicCatalogView<T>(body);
   }
 
   const requested = body && typeof body === 'object' && Array.isArray((body as { dois?: unknown }).dois)

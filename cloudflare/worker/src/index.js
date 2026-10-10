@@ -50,6 +50,7 @@ import {
   queryLiteratureCatalogView,
   queryPublishedLiteratureCatalogView,
 } from './literature-catalog-index.js';
+import { parseCatalogViewGetParams } from './literature-catalog-get-query.js';
 import { beginSearchEnrichment, importSearchEnrichment, finalizeSearchEnrichment, getSearchAbstract, getSearchEnrichmentCoverage, refreshSearchEnrichmentAbstracts } from './literature-search-enrichment.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus, userLibraryRowShadowEnabled } from './user-library-shadow.js';
@@ -446,7 +447,13 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await finalizeSearchEnrichment(env,await readJson(request)),cors);
   }
 
+  if (request.method === 'GET' && url.pathname === '/api/literature/catalog-view') {
+    const input = parseCatalogViewGetParams(url.searchParams);
+    if (!input.ok) return json({error:input.error}, {status:400,headers:cors});
+    return resultResponse(await queryPublishedLiteratureCatalogView(env,input.query), cors);
+  }
   if (request.method === 'POST' && url.pathname === '/api/literature/catalog-view') {
+    // Existing legacy clients and diagnostic tooling keep POST compatibility.
     return resultResponse(await queryPublishedLiteratureCatalogView(env, await readJson(request)), cors);
   }
 
