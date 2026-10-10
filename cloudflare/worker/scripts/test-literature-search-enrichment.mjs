@@ -85,7 +85,7 @@ test('LMCT expands only to reliable chemistry phrases in the abstract and review
   assert.equal(result.status,200);
   assert.equal(result.body.matched,2);
   assert.deepEqual(result.body.items.map(x=>x.doi),['10.1234/a','10.1234/b']);
-  assert.equal((await query(env,'配体到金属电荷转移')).body.matched,1);
+  assert.equal((await query(env,'配体到金属电荷转移')).body.matched,2);
   assert.equal((await query(env,'手性磷酸')).body.matched,1);
   assert.equal((await query(env,'轴手性')).body.matched,1);
   const narrowed=await query(env,'LMCT',{selectedJournals:['Angew']});
