@@ -3,12 +3,14 @@
 import {createHash} from 'node:crypto';
 import {writeFile} from 'node:fs/promises';
 import {fetchPublisherMetadataAbstract} from './lib/publisher-abstract-metadata.mjs';
+import {matchSpringerNatureMetaAbstract,springerNatureMetadataEndpoint} from './lib/springer-nature-meta-abstract.mjs';
 import {boundedMetadataWindow,matchEuropePmcAbstracts,matchSemanticScholarAbstracts} from './lib/doi-scholarly-abstract-metadata.mjs';
 
 const SITE=new URL(process.env.SITE_URL||'https://gallery.gczhouwld.com/');
 const WORKER=new URL(process.env.WORKER_URL||'https://organic-synthesis-gallery.zhou526316.workers.dev/');
 const TOKEN=String(process.env.BRIDGE_WRITE_TOKEN||'').trim();
 const OPENALEX_KEY=String(process.env.OPENALEX_API_KEY||'').trim();
+const SPRINGER_NATURE_META_KEY=String(process.env.SPRINGER_NATURE_API_KEY||'').trim();
 const REPORT=process.env.SEARCH_ENRICHMENT_REPORT||'/tmp/literature-search-enrichment-report.json';
 const SHA=/^[a-f0-9]{64}$/;
 const DOI=/^10\.\d{4,9}\/\S+$/;
@@ -238,6 +240,39 @@ async function hydrateAbstracts(dois,report){
         reason:String(error?.message||error).slice(0,160)});
     }
     await pause(350);
+  }
+  // Springer Nature's official metadata API can return Nature journal
+  // abstracts even when publisher HTML is only an identity/SPA shell.
+  // Optional free-tier key; no key means no network calls, no paid fallback.
+  const springerMissing=dois.filter(doi=>doi.startsWith('10.1038/')&&!found.has(doi));
+  const springerLimit=Math.min(springerMissing.length,
+    Math.max(0,Math.min(40,Number(process.env.SPRINGER_NATURE_META_LIMIT||'30'))));
+  const springerSelection=springerLimit>0?boundedMetadataWindow(
+    springerMissing,springerLimit,epochDay,outerWindows):{selected:[],number:0,windows:0};
+  report.springerNatureMetaConfigured=Boolean(SPRINGER_NATURE_META_KEY);
+  report.springerNatureMetaAttempted=0;
+  report.springerNatureMetaRecovered=0;
+  report.springerNatureMetaErrors=[];
+  report.springerNatureMetaWindow={number:springerSelection.number,
+    windows:springerSelection.windows,totalMissing:springerMissing.length};
+  if(SPRINGER_NATURE_META_KEY){
+    for(const doi of springerSelection.selected){
+      report.springerNatureMetaAttempted++;
+      try{
+        const url=springerNatureMetadataEndpoint(doi,SPRINGER_NATURE_META_KEY);
+        const data=await request(url,{retries:0});
+        const abstract=matchSpringerNatureMetaAbstract(doi,data);
+        if(abstract){
+          found.set(doi,{abstract,source:'springer_nature_meta'});
+          report.springerNatureMetaRecovered++;
+        }
+      }catch(error){
+        report.springerNatureMetaErrors.push({doi,
+          error:String(error?.message||error).slice(0,130)});
+        if(/metadata_http_(?:401|403|429)/.test(String(error?.message||'')))break;
+      }
+      await pause(900);
+    }
   }
   // Genuine DOI-verified publisher <head> metadata is a last resort for
   // Crossref/OpenAlex misses. Never acquire historical article body, SI or PDF.
