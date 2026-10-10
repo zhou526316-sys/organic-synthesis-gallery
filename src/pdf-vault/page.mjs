@@ -7,6 +7,9 @@ const SESSION_KEY = 'organic-gallery-session-v1';
 const SESSION_PATH = '/api/user-ui/auth/session';
 const SESSION_ENDPOINT = `https://api.gczhouwld.com${SESSION_PATH}`;
 const TOKEN_WATCH_MS = 800;
+const SESSION_REQUEST_TIMEOUT_MS = 6_500;
+const SESSION_INITIAL_ATTEMPTS = 2;
+const SESSION_INITIAL_TIMEOUT_MS = 16_000;
 const $ = selector => document.querySelector(selector);
 const byTestId = name => $(`[data-testid="pdf-vault-${name}"]`);
 const workspace = $('#vault-workspace');
@@ -328,25 +331,87 @@ function openRequestedCopy(context) {
   }
 }
 
+function sessionReadError(code, httpStatus = 0) {
+  const error = new Error(code);
+  error.code = code;
+  error.httpStatus = httpStatus;
+  return error;
+}
+
+function sessionFailureMessage(error) {
+  if (error?.code === 'session_timeout') return '账号验证接口响应超时；当前登录令牌没有被清除。请检查网络后重试。';
+  if (error?.code === 'session_network') return '无法连接账号验证接口。请检查当前网络或代理，再点击“重新验证账号”。';
+  if (error?.code === 'session_http') {
+    const status = Number(error.httpStatus) || 0;
+    return `账号接口暂时无法正常验证（HTTP ${status || '异常'}）。这不等于登录失效，请稍后重试。`;
+  }
+  if (error?.code === 'session_invalid_response') return '账号接口返回了异常数据，暂时无法判断登录是否有效。请稍后重试。';
+  return '账号验证暂时未完成。请检查网络并重试；不需要清除浏览器的本地 PDF 文件。';
+}
+
 async function readSession(token, controller) {
   if (controller.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-  // The public frontend is static. Use its existing account API directly;
-  // probing /api on GitHub Pages would always create an avoidable 404.
-  const response = await fetch(SESSION_ENDPOINT, { headers: { authorization: `Bearer ${token}` }, cache: 'no-store', credentials: 'omit', redirect: 'error', signal: controller.signal });
-  if (response.status === 401 || response.status === 403) return null;
-  if (!response.ok) throw new Error('session_unavailable');
-  const data = await response.json();
-  if (data?.authenticated !== true) return null;
-  if (typeof data?.user?.id !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(data.user.id)) throw new Error('session_unavailable');
-  return data.user;
+  const attempt = new AbortController();
+  const forwardAbort = () => attempt.abort();
+  controller.signal.addEventListener('abort', forwardAbort, { once: true });
+  const timeout = window.setTimeout(() => attempt.abort(), SESSION_REQUEST_TIMEOUT_MS);
+  try {
+    // The public frontend is static; /api on GitHub Pages would be a 404.
+    const response = await fetch(SESSION_ENDPOINT, {
+      headers: { authorization: `Bearer ${token}` },
+      cache: 'no-store', credentials: 'omit', redirect: 'error', signal: attempt.signal,
+    });
+    // This endpoint explicitly reports invalid sessions as HTTP 200 with
+    // { authenticated: false, user: null }. HTTP 403 can instead be an edge
+    // challenge; it must not be mistaken for a revoked account token.
+    if (!response.ok) throw sessionReadError('session_http', response.status);
+    let data;
+    try { data = await response.json(); }
+    catch { throw sessionReadError('session_invalid_response'); }
+    if (data?.authenticated === false && data?.user === null) return null;
+    if (data?.authenticated !== true ||
+        typeof data?.user?.id !== 'string' ||
+        !/^[A-Za-z0-9_-]{1,128}$/.test(data.user.id)) {
+      throw sessionReadError('session_invalid_response');
+    }
+    return data.user;
+  } catch (error) {
+    if (controller.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+    // DOMException AbortError may have the numeric legacy code 20; classify
+    // the attempt's own timer before treating a code as our application error.
+    if (attempt.signal.aborted) throw sessionReadError('session_timeout');
+    if (typeof error?.code === 'string') throw error;
+    throw sessionReadError('session_network');
+  } finally {
+    window.clearTimeout(timeout);
+    controller.signal.removeEventListener('abort', forwardAbort);
+  }
+}
+
+async function readSessionWithRetry(token, controller) {
+  let lastError;
+  for (let attempt = 0; attempt < SESSION_INITIAL_ATTEMPTS; attempt += 1) {
+    try { return await readSession(token, controller); }
+    catch (error) {
+      if (controller.signal.aborted) throw error;
+      lastError = error;
+      if (attempt === SESSION_INITIAL_ATTEMPTS - 1) break;
+      // Do not hammer the endpoint when the failure is clearly permanent.
+      if (error?.code === 'session_http' && ![403, 408, 429, 500, 502, 503, 504].includes(error.httpStatus)) break;
+      await new Promise(resolve => window.setTimeout(resolve, 250));
+      if (controller.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+    }
+  }
+  throw lastError;
 }
 
 // Revalidate the *same* session without destroying an open local document.
  // Token changes and explicit logout still use verifySession's immediate
  // revocation path. Temporary network outages are not evidence of logout.
-async function revalidateCurrentSession() {
+async function revalidateCurrentSession({ manual = false } = {}) {
   const context = active;
   if (!context || !current(context) || verifying) return;
+  if (manual) showStatus('正在重新验证当前账号…', 'busy');
   const stamp = generation;
   verifying = true;
   sessionRefresh.disabled = true;
@@ -363,9 +428,11 @@ async function revalidateCurrentSession() {
     context.user = user;
     lastVerified = Date.now();
     accountLabel.textContent = `${user.displayName || user.email || 'Gallery 用户'} · 账号已验证`;
-  } catch {
+    if (manual) showStatus('账号验证成功，本地文献仍可使用。', 'success');
+  } catch (error) {
     if (current(context) && stamp === generation) {
       $('#account-help').textContent = '网络暂时无法重新确认账号，现有本地阅读不受影响；账号切换时仍会立即关闭。';
+      if (manual) showStatus(sessionFailureMessage(error), 'error');
     }
   } finally {
     clearTimeout(timeout);
@@ -398,9 +465,9 @@ async function verifySession() {
   }
   const controller = new AbortController();
   authController = controller;
-  const timeout = window.setTimeout(() => controller.abort(), 12_000);
+  const timeout = window.setTimeout(() => controller.abort(), SESSION_INITIAL_TIMEOUT_MS);
   try {
-    const user = await readSession(token, controller);
+    const user = await readSessionWithRetry(token, controller);
     if (checkGeneration !== generation || token !== sessionToken()) return;
     if (!user) {
       document.documentElement.dataset.pdfVaultAuth = 'signed-out';
@@ -454,7 +521,7 @@ async function verifySession() {
     document.documentElement.dataset.pdfVaultAuth = 'error';
     accountLabel.textContent = queuePanel ? '账号已验证 · 本地存储暂不可用' : '暂时无法打开本地文献库';
     $('#account-help').textContent = queuePanel ? '仍可使用待电脑获取队列。已有磁盘文件不受影响，请在支持的浏览器中导入和阅读。' : '已有磁盘文件不受影响，请检查网络或浏览器设置后重试。';
-    showStatus(error instanceof LocalPdfVaultError ? errorMessage(error) : '账号验证未完成。请检查网络后点击“重新验证账号”。', 'error');
+    showStatus(error instanceof LocalPdfVaultError ? errorMessage(error) : sessionFailureMessage(error), 'error');
   } finally {
     clearTimeout(timeout);
     if (checkGeneration === generation) {
@@ -467,7 +534,12 @@ async function verifySession() {
 }
 
 doiInput.value = initialDoi;
-sessionRefresh.addEventListener('click', () => void verifySession());
+sessionRefresh.addEventListener('click', () => {
+  // Rechecking a valid same-token session must not close the reader or erase
+  // the existing local-file state if the API is temporarily unreachable.
+  if (active && current(active)) void revalidateCurrentSession({ manual: true });
+  else void verifySession();
+});
 byTestId('directory').addEventListener('click', () => void action('请选择文献文件夹…', context => context.vault.selectDirectory(), '已选择真实文献文件夹。现在可以导入 PDF。'));
 byTestId('opfs').addEventListener('click', () => void action('正在准备浏览器内存储…', context => context.vault.useOpfs(), '已选择浏览器内存储。清除网站数据可能丢失文件，请及时导出备份。'));
 byTestId('restore').addEventListener('click', () => void action('正在恢复文件夹权限…', context => context.vault.restorePermission(), '权限已恢复。打开文献时仍会重新检查文件。'));
