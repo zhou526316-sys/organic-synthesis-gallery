@@ -9,6 +9,9 @@ on:
       - 'cloudflare/worker/scripts/test-literature-search-enrichment.mjs'
       - 'src/user-ui/shared.ts'
       - 'src/user-ui/paper-actions.ts'
+      - 'scripts/sync-literature-search-enrichment.mjs'
+      - 'scripts/lib/publisher-abstract-metadata.mjs'
+      - 'scripts/test-publisher-abstract-metadata.mjs'
       - '.github/workflows/gallery-basic-abstracts-ci.yml'
   workflow_dispatch:
 permissions:
@@ -32,8 +35,12 @@ jobs:
           node --check cloudflare/worker/src/literature-basic-abstracts.js
           node --check cloudflare/worker/src/literature-search-enrichment.js
           node --check cloudflare/worker/src/index.js
+          node --check scripts/sync-literature-search-enrichment.mjs
+          node --check scripts/lib/publisher-abstract-metadata.mjs
       - name: Check DOI membership, source hash and all-time excerpt regression
         run: node --test cloudflare/worker/scripts/test-literature-search-enrichment.mjs
+      - name: Verify protected publisher HEAD metadata parsing without body capture
+        run: node --test scripts/test-publisher-abstract-metadata.mjs
       - name: Install dependencies and validate card type safety
         run: |
           npm install --no-audit --no-fund
