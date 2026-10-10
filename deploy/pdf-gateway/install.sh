@@ -20,6 +20,7 @@ ADDED=0
 STARTED=0
 UNIT_CREATED=0
 RELOADED=0
+MAIN_PATCHED=0
 abort(){ echo "[STOP] $*" >&2; exit 1; }
 ip_of(){ getent ahostsv4 "$1" 2>/dev/null | awk '$2=="STREAM"{print $1;exit}'; }
 we_chat_hash(){ sha256sum /etc/nginx/sites-enabled/osg-wechat-relay | awk '{print $1}'; }
@@ -70,6 +71,14 @@ dump_http_route_diagnostic(){
   dump="$(nginx -T 2>/dev/null)" || { echo '[DIAG] nginx -T unavailable' >&2; return 0; }
   printf '%s\n' "$dump" | sed -n 's/^# configuration file \(.*\):$/\1/p' |
     grep -E '^/etc/nginx/(nginx\.conf|sites-enabled/|conf\.d/)' | head -30 >&2 || true
+  echo '[DIAG] Nginx parent include directives for supported site directories:' >&2
+  printf '%s\n' "$dump" | awk '
+   /^# configuration file / { file=$0; sub(/^# configuration file /,"",file); sub(/:$/,"",file) }
+   file=="/etc/nginx/nginx.conf" && /^[[:space:]]*include[[:space:]]/ &&
+     /sites-enabled|conf[.]d/ {
+      line=$0;sub(/^[[:space:]]*/,"",line);
+      if (length(line)<220) print file " " line
+   }' | head -25 >&2 || true
   echo '[DIAG] HTTP listener and server-name directives (no config bodies):' >&2
   printf '%s\n' "$dump" | awk '
    /^# configuration file / { file=$0; sub(/^# configuration file /,"",file); sub(/:$/,"",file) }
@@ -169,6 +178,12 @@ on_error(){
  trap - ERR EXIT INT TERM
  if (( rc == 0 )); then return; fi
  echo '[ROLLBACK] Restoring previous Nginx sites (WeChat vhost never overwritten).' >&2
+ if (( MAIN_PATCHED )); then
+  if ! python3 -B "$SOURCE_DIR/nginx_include.py" remove; then
+   echo '[STOP] Managed parent include could not be removed. Preserve PDF site for manual review; no reload.' >&2
+   exit "$rc"
+  fi
+ fi
  if (( ADDED )); then rm -f "$LINK" "$VHOST"; fi
  if (( STARTED )); then systemctl disable --now "$SERVICE" >/dev/null 2>&1 || true; fi
  if (( UNIT_CREATED )); then rm -f "$UNIT"; systemctl daemon-reload || true; fi
@@ -181,7 +196,8 @@ install_new(){
  preflight
  [[ ! -e "$VHOST" && ! -e "$LINK" && ! -e "$UNIT" ]] ||
    abort 'Gateway files already exist, refusing overwrite'
- [[ -f "$SOURCE_DIR/gateway.py" ]] || abort 'Missing gateway.py next to installer'
+ [[ -f "$SOURCE_DIR/gateway.py" && -f "$SOURCE_DIR/nginx_include.py" ]] ||
+   abort 'Missing reviewed gateway.py or nginx_include.py next to installer'
  [[ -n "$(ip_of "$HOST")" && "$(ip_of "$HOST")" == "$(ip_of "$RELAY")" ]] ||
    abort 'Create DNS-only A pdf.gczhouwld.com first'
  if ! cert_ok; then
@@ -203,18 +219,30 @@ install_new(){
  trap on_error ERR EXIT INT TERM
  if ! cert_ok; then
    write_acme;ln -s "$VHOST" "$LINK";ADDED=1
-   nginx -t;systemctl reload nginx;RELOADED=1
-   # A valid nginx -t is not proof that the enabled PDF site belongs to the
-   # effective include graph. Check this BEFORE probing or calling Certbot.
+   # PRE-RELOAD proof: nginx -t can pass while nginx.conf explicitly includes
+   # only the WeChat relay. Never reload or call Certbot for an unloaded site.
+   nginx -t || abort 'Staged isolated PDF site has invalid Nginx syntax'
    local effective_nginx_dump
    effective_nginx_dump="$(nginx -T 2>/dev/null)" ||
-     abort 'Cannot inspect effective Nginx include graph after reload'
+     abort 'Cannot inspect effective Nginx include graph before reload'
    if [[ "$effective_nginx_dump" != *'# GALLERY_PDF_GATEWAY_MANAGED_V1'* ]]; then
-     echo '[DIAG] PDF vhost symlink exists but is absent from nginx -T.' >&2
+     echo '[CHECK] Dedicated sites-enabled PDF site not in effective include graph.' >&2
+     # Strict fallback: add only one reversible marked include NEXT TO an exact
+     # existing relay include in /etc/nginx/nginx.conf, after private backup.
+     # Any unfamiliar structure fails closed; relay vhost content is immutable.
+     python3 -B "$SOURCE_DIR/nginx_include.py" apply ||
+       abort 'No approved safe parent include anchor; certbot was NOT called'
+     MAIN_PATCHED=1
+     nginx -t || abort 'Guarded parent include failed syntax; certbot was NOT called'
+     effective_nginx_dump="$(nginx -T 2>/dev/null)" ||
+       abort 'Cannot inspect guarded Nginx configuration'
+   fi
+   if [[ "$effective_nginx_dump" != *'# GALLERY_PDF_GATEWAY_MANAGED_V1'* ]]; then
      dump_http_route_diagnostic
-     abort 'PDF site is not loaded by effective nginx config; certbot was NOT called'
+     abort 'PDF vhost still absent from effective nginx config; certbot was NOT called'
    fi
    echo '[CHECK] Managed PDF vhost found in effective nginx -T configuration.'
+   nginx -t;systemctl reload nginx;RELOADED=1
    # Confirm that the actual unprivileged Nginx listener serves a real
    # HTTP-01 challenge before requesting a public CA certificate.
    # This does not contact Let's Encrypt and cannot consume a CA limit.
@@ -290,6 +318,11 @@ case "$MODE" in
   [[ -f "$VHOST" ]] || abort 'No isolated PDF vhost to remove'
   grep -q 'GALLERY_PDF_GATEWAY_MANAGED_V1' "$VHOST" ||
     abort 'Vhost not managed by this installer: refuse removal'
+  # Remove optional one-line parent include BEFORE deleting its target.
+  [[ -f "$SOURCE_DIR/nginx_include.py" ]] ||
+    abort 'Missing isolated nginx parent include helper; refuse rollback'
+  python3 -B "$SOURCE_DIR/nginx_include.py" remove ||
+    abort 'Could not safely remove managed parent include; site preserved'
   systemctl disable --now "$SERVICE" >/dev/null 2>&1 || true
   rm -f "$LINK" "$VHOST"
   if [[ -f "$UNIT" ]] && grep -q 'Gallery owner-only PDF alternative gateway' "$UNIT"; then
