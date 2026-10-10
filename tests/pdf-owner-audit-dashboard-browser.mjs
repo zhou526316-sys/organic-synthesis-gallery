@@ -84,9 +84,11 @@ try{
    await page.waitForFunction(() =>
     (document.querySelector('#notice')?.textContent||'').includes('private_pdf_owner'),
     undefined,{timeout:11000});
-   assert.match(await page.locator('#notice').textContent(),/private_pdf_owner/);
+   assert.equal(await page.evaluate(() =>
+     localStorage.getItem('organic-gallery-session-v1')),'fixture-reader-secret');
+   assert.match(await page.locator('#notice').textContent(),/账号没有 private_pdf_owner 权限/);
    assert.equal(await page.getByText(doiA).count(),0);
-   assert.equal(await page.locator('#results tr').count(),0);
+   assert.doesNotMatch(await page.locator('#results').innerText(),/10\.\d{4,9}\//);
   }finally{await ctx.close();}
  });
  await test('admin dashboard displays separately labeled inventory/R2/browser states and safe Tencent URL',async()=>{
