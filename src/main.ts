@@ -314,12 +314,28 @@ store.addEventListener('counts', () => {
   if (sort === 'readers') renderCards();
 });
 
-app.addEventListener('gallery-corpus-query', event => {
-  const detail = event instanceof CustomEvent ? event.detail as { query?: unknown } : undefined;
-  query = typeof detail?.query === 'string' ? detail.query : '';
+function processCorpusSearchInput(nextQuery: string): void {
+  query = nextQuery;
+  // The modern UserSearchController intercepts the native input event in the
+  // capture phase and forwards gallery-corpus-query. Apply identical indexing
+  // and sorting rules to BOTH paths; the old input listener alone is not live.
+  if ([...query.trim()].length >= 3 && sort === 'readers') {
+    sort = 'newest';
+    readersSortAdjustedForSearch = true;
+    const sortInput = document.querySelector<HTMLSelectElement>('#sort');
+    if (sortInput) sortInput.value = 'newest';
+  }
+  if (!query.trim()) readersSortAdjustedForSearch = false;
   resetResultWindow();
+  indexedSearchPending = [...query.trim()].length >= 3
+    && (Boolean(indexedViewRequest('')) || architectureBootstrapPending);
   renderCards();
   scheduleArchitectureCorpusRefresh();
+}
+
+app.addEventListener('gallery-corpus-query', event => {
+  const detail = event instanceof CustomEvent ? event.detail as { query?: unknown } : undefined;
+  processCorpusSearchInput(typeof detail?.query === 'string' ? detail.query : '');
 });
 
 hydrateFilterPreferences();
@@ -954,19 +970,8 @@ function mount(): void {
   }
 
   document.querySelector<HTMLInputElement>('#search')?.addEventListener('input', event => {
-    query = (event.target as HTMLInputElement).value;
-    if ([...query.trim()].length >= 3 && sort === 'readers') {
-      sort = 'newest';
-      readersSortAdjustedForSearch = true;
-      const sortInput = document.querySelector<HTMLSelectElement>('#sort');
-      if (sortInput) sortInput.value = 'newest';
-    }
-    if (!query.trim()) readersSortAdjustedForSearch = false;
-    resetResultWindow();
-    indexedSearchPending = [...query.trim()].length >= 3
-      && (Boolean(indexedViewRequest('')) || architectureBootstrapPending);
-    renderCards();
-    scheduleArchitectureCorpusRefresh();
+    // Compatibility path if the optional UserSearchController is unavailable.
+    processCorpusSearchInput((event.target as HTMLInputElement).value);
   });
   document.querySelector<HTMLSelectElement>('#sort')?.addEventListener('change', event => {
     const value = (event.target as HTMLSelectElement).value;
