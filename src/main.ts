@@ -826,23 +826,29 @@ function renderCards(): void {
     const isFeaturedPaper = Boolean(doiKey && featuredDoi && doiKey === featuredDoi);
     const editionClass = isFeaturedPaper ? ' edition-featured' : isEditionPaper ? ' edition-highlight' : '';
     const historicalBackfill = isHistoricalBackfill(paper);
-    const mediaMode = historicalBackfill ? paperMediaPolicy(paper) : 'standard';
+    const lateJulSepBackfill = paper.date >= '2026-07-01' && paper.date <= '2026-09-30'
+      && (validAddedDate(paper.addedDate) || '') >= '2026-10-01';
+    const retrospectiveCard = historicalBackfill || lateJulSepBackfill;
+    // Retain already-published regular July–September PDF/figures; a newly
+    // backfilled old-date DOI must be rendered as TOC-only even if its source
+    // flag was omitted by a legacy importer.
+    const mediaMode = retrospectiveCard ? paperMediaPolicy(paper) : 'standard';
     const editionBadge = isFeaturedPaper
       ? `<span class='tag edition-featured'>${language === 'zh' ? '每日精选' : 'Featured'}</span>`
       : isEditionPaper
         ? `<span class='tag edition'>${language === 'zh' ? '本期文献' : 'This edition'}</span>`
         : '';
     const href = doi ? `https://doi.org/${doi}` : (paper.url || '');
-    const pdfHref = doi && !historicalBackfill ? `/pdf/?${new URLSearchParams({ doi, fallback: href })}` : '';
+    const pdfHref = doi && !retrospectiveCard ? `/pdf/?${new URLSearchParams({ doi, fallback: href })}` : '';
     const pdfButton = pdfHref
       ? `<a class='private-pdf-button' href='${escapeHtml(pdfHref)}' target='_blank' rel='noopener noreferrer' aria-label='${escapeHtml(`${language === 'zh' ? '查看 PDF' : 'Read PDF'}: ${visibleTitle(paper)}`)}'>PDF</a>`
       : '';
-    const pdfDownloadHref = doi && !historicalBackfill ? `/pdf/?${new URLSearchParams({ doi, fallback: href, mode: 'download' })}` : '';
-    const pdfCompatHref = doi && !historicalBackfill ? `/pdf/?${new URLSearchParams({ doi, fallback: href, compat: '1' })}` : '';
+    const pdfDownloadHref = doi && !retrospectiveCard ? `/pdf/?${new URLSearchParams({ doi, fallback: href, mode: 'download' })}` : '';
+    const pdfCompatHref = doi && !retrospectiveCard ? `/pdf/?${new URLSearchParams({ doi, fallback: href, compat: '1' })}` : '';
     const pdfMore = pdfHref
       ? `<details class='private-pdf-more'><summary aria-label='${language === 'zh' ? 'PDF 更多操作' : 'More PDF options'}' title='${language === 'zh' ? 'PDF 下载或兼容模式' : 'Download or compatibility mode'}'>⋯</summary><div class='private-pdf-menu'><a class='private-pdf-download-button' href='${escapeHtml(pdfDownloadHref)}' target='_blank' rel='noopener noreferrer'>${language === 'zh' ? '下载 PDF' : 'Download PDF'}</a><a class='private-pdf-compat-button' href='${escapeHtml(pdfCompatHref)}' target='_blank' rel='noopener noreferrer'>${language === 'zh' ? '兼容模式' : 'Compatibility'}</a></div></details>`
       : '';
-    const localPdfHref = doi && !historicalBackfill ? `/pdf-vault/?${new URLSearchParams({ doi })}` : '';
+    const localPdfHref = doi && !retrospectiveCard ? `/pdf-vault/?${new URLSearchParams({ doi })}` : '';
     const localPdfButton = localPdfHref
       ? `<a class='local-pdf-button' href='${escapeHtml(localPdfHref)}' target='_blank' rel='noopener noreferrer' aria-label='${escapeHtml(`${language === 'zh' ? '管理本地 PDF' : 'Manage local PDF'}: ${visibleTitle(paper)}`)}'>${language === 'zh' ? '本地 PDF' : 'Local PDF'}</a>`
       : '';
