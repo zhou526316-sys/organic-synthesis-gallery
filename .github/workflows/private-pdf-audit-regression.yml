@@ -1,5 +1,15 @@
 name: Owner PDF complete-catalog audit and admin isolation regression
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cloudflare/private-pdf-audit-v2.sql'
+      - 'cloudflare/worker/src/private-pdf-audit.js'
+      - 'cloudflare/worker/scripts/test-private-pdf-audit.mjs'
+      - 'scripts/audit-private-pdf-library.mjs'
+      - '.github/workflows/private-pdf-library-audit.yml'
+      - '.github/workflows/deploy-worker-frontend.yml'
+      - 'tests/private-pdf-library-source.test.mjs'
   push:
     branches: [feature/private-pdf-all-library-audit-20261010]
     paths:
