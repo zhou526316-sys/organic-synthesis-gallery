@@ -16,6 +16,16 @@ test('all published supplementary sources are included in audit union, not only 
  assert.equal(dataset.size,2);
  assertPartition({productionCards:2,publishableDois:[early.doi,late.doi],rejectedDois:[],deferredDois:[]},[...dataset.keys()]);
 });
+test('actual main repository publication snapshot is complete before audit',()=>{
+ const files=Object.fromEntries(DATA_FILES.map(name=>[
+  name,fs.readFileSync(new URL('../public/'+name,import.meta.url),'utf8'),
+ ]));
+ const marker=JSON.parse(fs.readFileSync(
+  new URL('../audit/publication-release-state.json',import.meta.url),'utf8'));
+ const all=collectPapers(files,isExcludedDoi);
+ assertPartition(marker,[...all.keys()]);
+ assert(all.size>=1);
+});
 test('runtime refuses to expose private tokens or raw PDF content in summary',()=>{
  const source=fs.readFileSync(new URL('../scripts/audit-private-pdf-library.mjs',import.meta.url),'utf8');
  assert.match(source,/const token = String\(process\.env\.BRIDGE_WRITE_TOKEN/);
