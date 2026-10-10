@@ -34,3 +34,5 @@
 - 对身份验证、403、429、未知跳转和验证码，只记录真实失败原因后继续下一 DOI，不绕过登录。对历史回溯的多层滚动 DOI 窗口，来源补抓的轮换索引按外层周期推进，不让较早 DOI 永久饥饿。
 - 对快速增长的长历史目录，需要优化首次重建时的旧 DOI 源缓存复用及可恢复分批，不允许凭成功导入空字符串宣布完整；每轮须报告 `originalAbstracts`、`missingOriginalAbstracts`、`reviewedBilingualCandidates` 和实际通过 DOI 抽查的显示数。
 - 全库检索继续基于原始英文摘要和已经审核的解读索引；本次基础双语概述存放在独立审核表，不自动冒充 Deep Evidence 的已批准记录，也不擅自修改文献收录范围或每日热门数据。
+- **必须区分“已存审核记录”和“线上可读解读”**。发布目录 `scheduled-article-summaries.json` 中的 `approved` 不代表当前 Evidence v2 必然匹配。摘要状态审计每轮需核对全部（当前 443 条）批准的 DOI，按真实 `/api/user-ui/article-summary` 返回的 `available`、`source`、`sourceHash` 与 `evidencePacketHash` 统计深度解读可读数量；不以首 80 条抽样冒充全库可读。记录了旧审核、但 Evidence 与审核证据指纹不一致时必须重新核对当前 Evidence，不能直接修改哈希、公开旧解读或访问历史付费正文。
+- 审计对数量超过单轮 500 DOI 的情况必须明确报告 `completeCurrentReviewCoverage=false` 和当前窗口，不可声称完成全量。审计只读取公开摘要状态、目录与已公开的审核记录，输出必要 DOI 和哈希比较布尔值，不发布全文或凭证。
