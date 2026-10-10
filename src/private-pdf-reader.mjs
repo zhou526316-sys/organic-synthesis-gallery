@@ -644,7 +644,7 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
         // gateway. Never replay the original Worker-issued signed file URL.
         const onTencent = new URL(this.fileUrl).origin === TENCENT_PDF_ORIGIN;
         const renew = onTencent
-          ? tencentPdfRouteEnabled().then(allowed => {
+          ? tencentPdfRouteEnabled(undefined, 1200, {manual:manualTencentTrial}).then(allowed => {
             if (!allowed) throw new Error('pdf_source_invalid');
             return fetchAuthorizedSource(TENCENT_PDF_ORIGIN, sessionToken, 'view',
               {signal:AbortSignal.timeout(FALLBACK_AUTHORIZE_TIMEOUT_MS)});
@@ -689,6 +689,10 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
       // promise so another Range cannot mint a second ticket while it loads.
       this.failoverPromise = (async () => {
         const activeOrigin = new URL(this.fileUrl).origin;
+        // A manual canary must not silently switch to Cloudflare and report
+        // apparent Tencent success after a failed PDF Range transfer.
+        if (manualTencentTrial && activeOrigin === TENCENT_PDF_ORIGIN)
+          throw new Error('pdf_transfer_timeout');
         const tencentReady = await tencentPdfRouteEnabled();
         const alternate = nextOwnerPdfFileOrigin(activeOrigin, tencentReady);
         if (!alternate) throw new Error('pdf_source_invalid');
