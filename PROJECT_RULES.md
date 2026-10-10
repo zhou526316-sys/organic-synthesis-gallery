@@ -54,6 +54,44 @@ Effective from the user's 2026-10-06 instruction: **for a Gallery paper whose `a
 7. A PDF failure remains independent of successfully captured TOC/body/text media and does not invalidate those receipts. The controller must continue to later DOI jobs rather than stall on one failed PDF.
 8. Old in-memory controllers must fail closed after a controller-generation cutover. Stale controller final reports and private-PDF uploads must not overwrite current completion truth.
 
+## 2026-10-10 historical backfill vs Oct-1 media-capture exception
+
+User-approved historical literature policy is an explicit **exception** to the
+Oct-1+ `addedDate` publisher-visit bundle above, not an amendment to normal
+new-paper capture or the sole 08:00 publication slot.
+
+1. Nightly 23:00 Asia/Shanghai historical discovery/review is **staging only**.
+   It does not publish new DOI records, alter prospective journal `activeFrom`
+   rules, bypass DOI scope review or trigger another Pages release. Production
+   admission remains limited to the authorized single 08:00 slot.
+2. Admit retrospective literature only after source identity and review
+   validation using `ingestionChannel: historical_backfill` (not inferred
+   from `addedDate`). All such records are excluded from Hot/Today, daily-new
+   tags/counts, WeChat daily-new content, and 08:00 *new-paper* metrics;
+   they remain visible to all-time Archive/DOI search.
+3. For **papers first published 2026-07-01 through 2026-09-30**, including
+   late additions after 2026-10-01, **only TOC/official graphical abstract may
+   be newly acquired**. Do not enqueue or opportunistically capture new body
+   figures, full text, SI or PDF for those old-date capture jobs, regardless of
+   `addedDate`. Explicit historical source records use `mediaPolicy: toc_only`.
+   Actual source media acquisition remains under Tampermonkey. Preserve all
+   existing verified TOC/body/PDF bytes and prior owner access; do not erase
+   existing assets or repeat fully verified acquisitions.
+4. Historical papers published before 2026-07-01 use
+   `mediaPolicy: metadata_only`: verified title, authors, DOI (if one exists),
+   bibliography, legally displayable abstract, and citation data, without
+   TOC/figure/PDF acquisition or placeholder UI.
+5. Publisher-verified missing original English titles in July–September
+   get a separate DOI-specific repair proof. Differentiate truly missing
+   English title from missing Chinese translation; never replace a known valid
+   title using an inferred/guess title. A preliminary set of 83 static
+   unresolved English titles is an audit input, **not** a verified live count.
+6. Before activating an all-history publication path, test that its metadata
+   survives catalog/source/queue/build normalization and that historic papers
+   cannot reappear in the Today's result set or in owner-PDF capture, even
+   when indexed with an October `addedDate`. The normal Oct-1+ published
+   papers keep their existing full-media acquisition obligations.
+
 ## WeChat draft editorial gate
 
 Effective from the user's 2026-10-06 instruction: **公众号草稿不得从正在编辑的源稿直接写入微信。先生成纯文字审阅稿与纯图片审阅稿，分别审核通过后，才允许合成并写入公众号草稿。**
