@@ -1,6 +1,6 @@
 {
   "date": "2026-10-10",
-  "revision": "2026-10-10-r3",
+  "revision": "2026-10-10-r4",
   "articleCount": 2,
   "selectionAuthority": "explicit_user_selection",
   "selectionDois": [
@@ -13,33 +13,28 @@
   "materializedCropReviewRequired": true,
   "artifacts": {
     "textOnly": "audit/wechat-working/2026-10-10-r3-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-10-r1-images-only.md"
+    "imagesOnly": "audit/wechat-working/2026-10-10-r4-images-only.md"
   },
   "sources": [
     {
       "path": "public/wechat-featured/2026-10-10.json",
-      "blobSha": "d0226a131fe5fd28ada204bad401152f91e86a01",
-      "sha256": "c0dcf3028373ef09ff302c4bc4278e75b7163d2f4544fe14220af87e94ec3761"
+      "blobSha": "ad78f4de0e7b0f962d8017c4dd883a1186e7e014",
+      "sha256": "6c81219bcf1c5230fba8bd3fb2bddf9657b3c82190918b70388a2b2d0d6b1db8"
     },
     {
       "path": "public/wechat-retrospective/alcohols-electrochemical-crosscoupling-qiu-20261010-r5.json",
-      "blobSha": "3a8825aed685a1fa10c72c6eb2c71ae94ad8499b",
-      "sha256": "3901cb45a13039ae5f328b57d91d92e8336881a2d05232c74afc27054a197593"
+      "blobSha": "be70d6e0a48b973ed9d4b8a1a6912d5c80a30554",
+      "sha256": "3e62851324752082b395118ba1afadc0ba6f56a9b33510937aa52380769e3167"
     },
     {
       "path": "public/wechat-editions/2026-10-10.json",
-      "blobSha": "b2bcea42f5cc953f3adc8c5157f682985331d8f6",
-      "sha256": "f41ea7d924ba221370662ca69452286dc295c8a389a0349517f0a9fdbf3d96dc"
+      "blobSha": "6192dd9a371fc413cc5c9739479b062fa94f9e5f",
+      "sha256": "fc02bfb756eb9eb886b0c1ee503865a33ea106de0729cab7ce1563b3a672c189"
     },
     {
       "path": "audit/wechat-working/2026-10-10-r3-text-only.md",
       "blobSha": "2939a94ae9a4b00b8b17b060a227ca704f3a3292",
       "sha256": "d19d993dff793539107f6cb2453b3c6586f57b6028b329423c6db6a67a824912"
-    },
-    {
-      "path": "audit/wechat-working/2026-10-10-r1-images-only.md",
-      "blobSha": "8fc007eebd9b40525aa6c70f91f488cfb443f7af",
-      "sha256": "e7811499f40bc8e06bd3feaa979835be40d537b4aafe9396f0727a7782309fd6"
     },
     {
       "path": "audit/wechat-working/2026-10-10-r3-editorial-plan.json",
@@ -50,6 +45,11 @@
       "path": "audit/wechat-working/2026-10-10-r3-prose-overlay.json",
       "blobSha": "cc6671a22e61b611405f7bd1d66d95d8b9193240",
       "sha256": "12391467fa9efb8383e3f352b7df7afc06c93f1cc8b965d7b623948719eacf39"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-10-r4-images-only.md",
+      "blobSha": "199edd2dcc1c3d11b7110d6b35db859cb93b38f9",
+      "sha256": "ae347e3ad308780c36aae32b7061ae5abd0c6db40614d13d75e7de7d89794edc"
     }
   ],
   "assets": [
@@ -320,13 +320,6 @@
       "height": 461
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f20.png",
-      "blobSha": "850c09569a17cf7c47b64ad6950e34970284c6fa",
-      "sha256": "96c030e3063e83a5f64fb0c73a43808555da4318e213289d5478bf64d5d5e788",
-      "width": 704,
-      "height": 456
-    },
-    {
       "path": "public/wechat-assets/reviewed/2026-10-10-r2/nature-synthesis-user-selected-exact-square.png",
       "blobSha": "056bde6e609eed004491cab7286c68dfa109a065",
       "sha256": "8748213670c0caeff07f5cf030390ba44e8878eb32982b20b0675ee34804c814",
@@ -404,15 +397,29 @@
       "height": 960
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s16.png",
-      "blobSha": "60af512e153804f03bf282223d075514ccb2a849",
-      "sha256": "224b8b54776f47fead7651164299911738602d004816dbea1b11539fb1658b08",
-      "width": 1236,
-      "height": 1092
+      "path": "public/wechat-assets/reviewed/2026-10-10-r4-complete-evidence/fig5e-complete-main-p7.png",
+      "blobSha": "08c539983990491b07595ac5b2d2df3fb6de1db9",
+      "sha256": "16237e41194bf7f4d9b56d56008d261acee6d19ac155759b88761181327e311b",
+      "width": 1048,
+      "height": 748
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-10-r4-complete-evidence/si-table-s11-full-part1-si-p18.png",
+      "blobSha": "905e57252e7204f56747e80d44ea540ec4289e21",
+      "sha256": "7fd012103a46ef248bdd6e5485a40fdb05a65344d9fc0e5c81896942ecaca6e9",
+      "width": 1427,
+      "height": 2128
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-10-r4-complete-evidence/si-table-s11-full-part2-si-p19.png",
+      "blobSha": "00601bbf368856256490e61f3de97daefbf6878d",
+      "sha256": "9aa1899f8eb227371fd94a7d739d2bc1b93f1e14d38f7041508185c62c6f00dd",
+      "width": 1427,
+      "height": 1362
     }
   ],
   "publicSendAuthorized": false,
-  "draftReadback": "pending-r3",
+  "draftReadback": "pending-r4",
   "reviewNotes": [
     "2026-10-10 08:00 formal review selected the exact user-submitted Angew DOI, 23 accepted, Gallery productionCards>=938.",
     "First article 10 sections, 35 research paragraphs, 18 source-authentic Scheme/SI numbered scientific figures.",
@@ -422,6 +429,7 @@
     "2026-10-10 Fig placement and captions mapped by paragraph; independent source SHA256 for 51 exact decoded assets.",
     "This import is source-only. Draft publisher may run once only after approval, then perform actual draft/get. No public send.",
     "R2 cover-only: full title unchanged; first cover PDF source Scheme1B enlarged 996x500 safely above y515 native title band; second cover EXACT user-selected 1254 square bytes; the 49 science body figures and article text unchanged. One same-media draft/update and draft/get required, publicSendAuthorized=false.",
-    "R3: user-requested deep Chinese narrative rewriting, 10+11 science-source chapters, 35+31 paragraphs; source-backed figures, captions and both cover assets unchanged. All 49 science body images remain at exactly the same paragraph positions, evidence strength graded by control, CV, isotope, stoichiometric tests and source models. R3 must update same WeChat media_id once with draft/get; no public send."
+    "R3: user-requested deep Chinese narrative rewriting, 10+11 science-source chapters, 35+31 paragraphs; source-backed figures, captions and both cover assets unchanged. All 49 science body images remain at exactly the same paragraph positions, evidence strength graded by control, CV, isotope, stoichiometric tests and source models. R3 must update same WeChat media_id once with draft/get; no public send.",
+    "R4 strict scientific image integrity repair: source PDF p7 Fig5e complete reaction mechanism; source SI printed pp18/19 full Supplementary Table11 including all headers, all rows, electricity Q formula. Replaces truncated f20/s16 with f20/s16+s16b, all original article prose, 18 Angew and 29 other Nature body image bytes, and two approved covers unchanged. Live images 50, total source assets 52. Draft only; requires one same-media draft/update + draft/get, no public send."
   ]
 }

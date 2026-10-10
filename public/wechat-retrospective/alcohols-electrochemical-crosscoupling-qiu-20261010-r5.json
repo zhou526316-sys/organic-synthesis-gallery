@@ -230,6 +230,7 @@
         "s05",
         "s04",
         "s16",
+        "s16b",
         "s08"
       ],
       "figures_after_paragraph": {
@@ -238,7 +239,8 @@
         ],
         "2": [
           "s04",
-          "s16"
+          "s16",
+          "s16b"
         ],
         "3": [
           "s08"
@@ -475,20 +477,20 @@
     },
     {
       "id": "f20",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f20.png",
-      "caption": "原文 Fig. 5e｜作者提出的 Ni(I)/Ni(II)/Ni(III) 催化循环，属于工作模型。",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-r4-complete-evidence/fig5e-complete-main-p7.png",
+      "caption": "原文 Fig. 5e｜完整镍催化循环工作模型：Int-I 至 Int-V、A-3 原位醇活化、Ni(I)/Ni(II)/Ni(III) 转化与阴极析氢均完整呈现。",
       "body": true,
-      "display_width_pct": 95,
+      "display_width_pct": 100,
       "source_figure": "原文 Fig. 5e",
       "source_doi": "10.1038/s44160-026-01128-y",
-      "source_kind": "exact_unchanged_source_pdf_crop",
+      "source_kind": "source_original_PDF_exact_full_panel_verified",
       "pdf_source": "main",
       "source_pdf_page": 7,
       "source_crop_fraction": [
-        0.503931,
-        0.626241,
-        0.925849,
-        0.831517
+        0.49055,
+        0.63096,
+        0.93067,
+        0.86741
       ]
     },
     {
@@ -781,20 +783,38 @@
     },
     {
       "id": "s16",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s16.png",
-      "caption": "SI Table S11（节选）｜按产物统计电荷投入，标准条件多数为约 18.7 F mol⁻¹。",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-r4-complete-evidence/si-table-s11-full-part1-si-p18.png",
+      "caption": "SI Table S11（完整原表上页，SI 第18页）｜保留完整标题、三组表头及全部上页数据，含 12.4、18.7、24.9 F mol⁻¹ 等投入电荷。",
       "body": true,
       "display_width_pct": 100,
       "source_figure": "补充材料表 S11（节选）",
       "source_doi": "10.1038/s44160-026-01128-y",
-      "source_kind": "exact_unchanged_source_pdf_crop",
+      "source_kind": "source_original_PDF_exact_whole_table_page",
       "pdf_source": "SI",
       "source_pdf_page": 19,
       "source_crop_fraction": [
-        0.128453,
-        0.055895,
-        0.869527,
-        0.518423
+        0.139424,
+        0.081956,
+        0.912117,
+        0.89676
+      ]
+    },
+    {
+      "id": "s16b",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-r4-complete-evidence/si-table-s11-full-part2-si-p19.png",
+      "caption": "SI Table S11（续页，SI 第19页）｜保留原表其余全部数据行（28–41、67–80、123–134）以及末尾的电荷投入计算公式；列名沿用上一张表。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "SI Table S11（续页）",
+      "source_doi": "10.1038/s44160-026-01128-y",
+      "source_kind": "source_original_PDF_exact_whole_table_continuation",
+      "pdf_source": "SI",
+      "source_pdf_page": 20,
+      "source_crop_fraction": [
+        0.139424,
+        0.081956,
+        0.912117,
+        0.60338
       ]
     },
     {
@@ -839,6 +859,6 @@
     "description": "Exact owner-selected dark-blue Nature Synthesis conceptual PNG with electrodes, multiple structures and Chinese 仇友爱 author credit. Shown unmodified as the square second-article thumbnail."
   },
   "ai_notice": "本文根据作者公开论文正文与 251 页补充材料独立整理。分子结构、谱图与数据采用原文裁切；概念封面仅用于辅助理解，不作为机理证据。",
-  "editorialRevision": "2026-10-10-r3",
+  "editorialRevision": "2026-10-10-r4",
   "targetDateBeijing": "2026-10-10"
 }
