@@ -88,9 +88,9 @@ def publisher_access_trace():
             if str(row.get("stage") or "") not in ("page","publisher_access","rsc_native_abstract_ajax","page_preflight"):continue
             info=fields(row,["stage","event","status","httpStatus","at"])
             msg=str(row.get("message") or "")
-            safe=re.search(r"doiMatch=(?:true|false);textLength=\\d+;accessGate=(?:true|false)",msg,re.I)
+            safe=re.search(r"doiMatch=(?:true|false);textLength=\d+;accessGate=(?:true|false)",msg,re.I)
             if safe:info["identityAndGate"]=safe.group(0)
-            ms=re.search(r"cooldownMs=\\d+;until=\\d+",msg)
+            ms=re.search(r"cooldownMs=\d+;until=\d+",msg)
             if ms:info["cooldownTimer"]=ms.group(0)
             out.append(info)
     return out[-32:]
@@ -102,4 +102,5 @@ report["cooldownSummary"]={
  "ownerPdfInventory":s.get("ownerPdfInventory") if isinstance(s.get("ownerPdfInventory"),dict) else {}
 }
 report["rscPageAccessTrace"]=publisher_access_trace()
-\nprint("TM_OCT10_BOOTSTRAP_FORENSICS "+json.dumps(report,ensure_ascii=False,separators=(",",":")),flush=True)
+
+print("TM_OCT10_BOOTSTRAP_FORENSICS "+json.dumps(report,ensure_ascii=False,separators=(",",":")),flush=True)
