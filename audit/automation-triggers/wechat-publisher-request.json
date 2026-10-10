@@ -1,21 +1,19 @@
 {
-  "requestId": "wechat-2026-10-10-dual-anie3306470-naturesyn-qiu-r1-final-draft-get",
-  "requestedAt": "2026-10-10T10:19:00+08:00",
+  "requestId": "wechat-2026-10-10-r2-two-covers-same-draft-real-update",
   "publicationDate": "2026-10-10",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-10-r1",
+  "editorialRevision": "2026-10-10-r2",
   "approvedGate": "audit/wechat-working/2026-10-10-review-gate.json",
+  "prePublishQA": "audit/wechat-working/2026-10-10-r2-cover-review-and-qa.json",
   "expectedArticleCount": 2,
   "expectedDois": [
     "10.1002/anie.3306470",
     "10.1038/s44160-026-01128-y"
   ],
-  "expectedFirstTitle": "有机合成文献日报｜10.10｜今日精选｜Angew.：铁–LMCT/镍–SH₂协同催化游离羧酸直接甲基编辑",
-  "expectedSecondTitle": "往期精选｜Nature Synthesis｜仇友爱等：醇与醇的电化学脱羟基交叉偶联",
+  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWFOfn60HSWWcYlciDjMIDj7HKSul-GJJti3u0OIKFcyL",
   "expectedReviewedBodyImages": 49,
-  "sourceReviewReceipt": "audit/wechat-working/2026-10-10-r1-import-and-qa.json",
   "draftOnly": true,
   "requireDraftGetReadback": true,
   "publicSendAuthorized": false,
-  "reason": "User approved 10.10 Angew Fe LMCT Ni SH2 as first featured and Nature Synthesis 仇友爱 retrospective as second. Formal 08:00 accepted 23, source-only reviewed pack R1 succeeded: 18 Angew Scheme/SI exact figures and 31 byte-preserved Nature Synthesis figures, two original source covers, full title and surname corrected. One final draft add/update via existing fixed-IP relay then actual draft/get and real preview; NEVER freepublish or public send."
+  "reason": "Actual user-directed cover-only replacement in SAME existing Oct10 dual-article WeChat draft. R2 review PASS: first Angew PDF Scheme1B enlarged to 996x500 with navy title zone below y515; second Nature Synthesis cover EXACT 1254x1254 owner image bytes SHA256 8748213670c0caeff07f5cf030390ba44e8878eb32982b20b0675ee34804c814. All 49 body images, full two titles, article prose and 23 released papers unchanged. Perform one draft/update, require draft/get and a fresh real preview. Do not mass send."
 }
