@@ -5148,7 +5148,7 @@ function embeddedJobDois(value) {
           return x;
         }catch(e){
           if(attempt+1<maxAttempts&&coverageTransient(e.message)&&!Number(e.retryAfterMs||0)
-            &&!/\b(?:inventory_transport_failed|inventory_deadline)\b/i.test(String(e.message||''))){
+            &&!/(?:inventory_transport_failed|inventory_deadline)(?:;|$)/i.test(String(e.message||''))){
             await sleep(750);continue;
           }
           errors.push(name+':'+captureLiveError(e.message||e)+(cache.has(key)?'（保留本轮上次有效库存）':''));
