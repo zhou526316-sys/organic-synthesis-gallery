@@ -113,7 +113,7 @@ try{
    await page.goto(site+'/pdf-audit.html');
    await page.getByText(doiA).waitFor();
    await page.getByRole('button',{name:'记录两页实测'}).click();
-   await page.getByText('管理员人工确认两页').waitFor();
+   await page.locator('#results td').getByText('管理员人工确认两页',{exact:true}).waitFor();
    assert.equal(stats().writes,1);
   }finally{await ctx.close();}
  });
