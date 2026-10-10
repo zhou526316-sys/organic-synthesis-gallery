@@ -69,4 +69,37 @@ report={
  "recentTraces":trace_headers(),
  "readOnly":True,"publisherRequests":0,"productionWrites":0
 }
-print("TM_OCT10_BOOTSTRAP_FORENSICS "+json.dumps(report,ensure_ascii=False,separators=(",",":")),flush=True)
+
+# Bounded latest-run publisher/access evidence. No arbitrary messages, URLs, or user credentials.
+import re
+def compact_preview(label):
+    rows=s.get(label)
+    if not isinstance(rows,list):return []
+    return [fields(r,["doi","publisher","need","until","reason"]) for r in rows[:12] if isinstance(r,dict)]
+def publisher_access_trace():
+    traces=d.get("traces")
+    if not isinstance(traces,list):return []
+    out=[]
+    for t in traces:
+        if not isinstance(t,dict) or t.get("doi")!="10.1039/d6gc03748h":continue
+        events=t.get("trace") if isinstance(t.get("trace"),list) else []
+        for row in events:
+            if not isinstance(row,dict):continue
+            if str(row.get("stage") or "") not in ("page","publisher_access","rsc_native_abstract_ajax","page_preflight"):continue
+            info=fields(row,["stage","event","status","httpStatus","at"])
+            msg=str(row.get("message") or "")
+            safe=re.search(r"doiMatch=(?:true|false);textLength=\\d+;accessGate=(?:true|false)",msg,re.I)
+            if safe:info["identityAndGate"]=safe.group(0)
+            ms=re.search(r"cooldownMs=\\d+;until=\\d+",msg)
+            if ms:info["cooldownTimer"]=ms.group(0)
+            out.append(info)
+    return out[-32:]
+report["cooldownSummary"]={
+ "deferredCount":val(s,"deferredCount"),"deferredNextAt":val(s,"deferredNextAt"),
+ "deferredPreview":compact_preview("deferredPreview"),
+ "blockedPreview":compact_preview("blockedPreview"),
+ "remainingNeeds":s.get("remainingNeeds") if isinstance(s.get("remainingNeeds"),dict) else {},
+ "ownerPdfInventory":s.get("ownerPdfInventory") if isinstance(s.get("ownerPdfInventory"),dict) else {}
+}
+report["rscPageAccessTrace"]=publisher_access_trace()
+\nprint("TM_OCT10_BOOTSTRAP_FORENSICS "+json.dumps(report,ensure_ascii=False,separators=(",",":")),flush=True)
