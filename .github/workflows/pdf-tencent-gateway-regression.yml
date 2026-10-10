@@ -115,7 +115,7 @@ jobs:
           $text = [System.IO.File]::ReadAllText((Resolve-Path $path).Path)
           if ([regex]::Matches($text,'& ssh\.exe').Count -ne 1) { throw 'Expected exactly one SSH process' }
           if ($text.Contains('scp.exe')) { throw 'No additional SCP authentication allowed' }
-          if (-not $text.Contains('6afee5f44c1ee68b813232eba0036cb0053a541a')) {
+          if (-not $text.Contains('19fc7851114e6862ef3fb05a51af5b2355726b0b')) {
             throw 'Expected immutable reviewed gateway version'
           }
           if (-not $text.Contains('sudo bash "$WORK/install.sh" "$MODE"')) {
