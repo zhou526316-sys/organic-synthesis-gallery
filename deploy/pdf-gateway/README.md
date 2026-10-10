@@ -271,3 +271,54 @@ Do not call this a live success before the owner's real run produces
 `LOCAL_GATEWAY_READY`, `[SUCCESS]`, and Windows HTTPS/security checks.
 Private PDF routing remains disabled pending real mainland mobile owner
 authentication, Range 206, account isolation and reader validation.
+
+## 2026-10-10 live gateway ready; localhost HTTPS certificate host mismatch
+
+The owner reran the reviewed one-SSH installation. The existing Let's Encrypt
+`pdf.gczhouwld.com` certificate was recognized (`TLS already ready`), the
+Cloudflare upstream health was HTTP 200, and the Python localhost gateway
+became healthy on the second bounded poll:
+`[CHECK] LOCAL_GATEWAY_READY ... (attempt 2)`. Nginx configuration syntax
+again passed. The following trusted TLS health request to
+`https://pdf.gczhouwld.com/_pdf_gateway_health` using a 127.0.0.1:443
+`--resolve` mapping failed with curl(60) **host SAN mismatch**. The installer
+correctly stopped/rolled back; the publicly configured alternate route
+remains disabled. This is not a Python startup or certificate issuance failure.
+
+Two plausible local causes exist: existing relay Nginx site may bind a
+more-specific `127.0.0.1:443` address group, which takes precedence over
+PDF's `listen 443 ssl` wildcard for loopback SNI requests; and old TLS health
+curl inherited HTTP(S)_PROXY environment instead of explicitly bypassing it.
+Neither real-server cause is proven from the returned log alone.
+
+Fix in the isolated PDF-only vhost: add `listen 127.0.0.1:443 ssl;` while
+keeping IPv4/IPv6 public 443 bindings and the relay site's file unchanged.
+Replace the single TLS health curl with up to 8 bounded `--noproxy '*'`
+requests requiring both valid normal CA+hostname verification and exact
+anonymous PDF-health response. Never use `-k` or `--insecure`.
+On continued failure, report curl exit status, sanitized effective 443
+listen directives and only whether the SNI peer leaf fingerprint equals
+the installed PDF cert's fingerprint; never expose keys, tokens, raw
+certificates, or full Nginx/HTTP logs.
+
+An actual Nginx/OpenSSL isolated TLS reproducer generates separate relay
+and PDF SAN certificates. With relay on specific 127.0.0.1:443-equivalent
+and PDF wildcard only, curl reports **the same 60 subject-name mismatch**.
+After PDF joins the specific listener, trusted PDF HTTPS becomes 200 with
+exact body; relay hostname and original cert continue working. A separate
+mocked startup verifier checks bounded recovery, proxy bypass, fail closed
+and sanitized errors. Existing gateway and Nginx tests still pass.
+
+Both Linux and Windows PowerShell 5.1 regression jobs passed:
+https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38026022855
+
+Immutable reviewed installer source: `f8653cf1be5f5049e3abfdd2e758b91b77b16aad`.
+Immutable one-SSH Windows launcher: `971291ca2041086ee59ec968ceff40fd2b6d3868`.
+Gateway Python, installer Bash and nginx include helper are byte-identical
+between source pin and Windows launcher revision. Real Tencent deployment
+of this TLS fix is NOT YET VERIFIED. Repeat owner -Mode Install only with
+explicit YES and Tencent QR; require local `LOCAL_TLS_SNI_PASS`,
+`[SUCCESS]`, Windows trusted HTTPS + unauthenticated 401.
+Gallery routing remains `enabled:false` until cross-account and owner PDF
+Range 206 / domestic mobile data acceptance. Keep PDF quality, chunk size
+and continuous scroll unchanged.
