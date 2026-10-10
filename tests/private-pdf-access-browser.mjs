@@ -575,7 +575,8 @@ try{
     undefined,{timeout:10000});
   assert.equal(state.tencentOpenCalls,0);
   assert.equal(state.tencentRangeCalls,0);
-  assert.deepEqual(state.openOrigins,[]);
+  assert.equal(state.openOrigins.filter(origin=>origin==='https://pdf.gczhouwld.com').length,0,
+    'anonymous canonical health probes are permitted, but disabled Tencent never gets a ticket');
  });
  await test('manual Tencent trial does not bypass a denied account',async()=>{
   const source={available:true,headerVerified:true,
