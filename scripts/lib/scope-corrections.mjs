@@ -12,7 +12,17 @@ export function validateScopeCorrections(payload) {
     if (row.decision !== 'exclude' || row.firstPassDecision !== 'exclude' || row.challengeDecision !== 'exclude') throw new Error('Scope corrections cannot add or silently defer literature');
     if (!row.title || !row.journal || !/^\d{4}-\d{2}-\d{2}$/.test(row.date || '')) throw new Error('Correction metadata is incomplete');
     if (String(row.reason || '').length < 24 || String(row.evidenceBasis || '').length < 40 || String(row.challengeReason || '').length < 30) throw new Error('Correction evidence missing');
-    if (!String(row.source || '').startsWith('explicit_user_scope_correction')) throw new Error('Correction requires recorded explicit user scope instruction');
+    const source = String(row.source || '');
+    // A DOI-specific user exclusion has the same authority as the historical
+    // explicit_user_scope_correction marker, but only when the actual user's
+    // DOI-level instruction is retained and explicitly says to exclude it.
+    // Never convert a generic source label into a new exclusion policy.
+    const evidenceLinkedToInstruction =
+      source === 'explicit_user_doi_decision_and_article_specific_evidence_2026-10-10' &&
+      String(row.userInstruction || '').toLowerCase().includes(doi) &&
+      /排除|不属于|不算|exclude/i.test(String(row.userInstruction || ''));
+    if (!source.startsWith('explicit_user_scope_correction') && !evidenceLinkedToInstruction)
+      throw new Error('Correction requires recorded explicit user scope instruction');
   }
   return payload.items;
 }
