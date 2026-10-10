@@ -607,7 +607,9 @@ function visibleTitle(paper: Paper): string {
 }
 
 function isNewToday(paper: Paper): boolean {
-  return !isHistoricalBackfill(paper) && isNewTodayDate(paper.addedDate);
+  return !isHistoricalBackfill(paper)
+    && !(paper.date >= '2026-07-01' && paper.date <= '2026-09-30' && (validAddedDate(paper.addedDate) || '') >= '2026-10-01')
+    && isNewTodayDate(paper.addedDate);
 }
 
 function scheduleNewnessBoundary(): void {
