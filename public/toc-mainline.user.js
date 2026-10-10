@@ -2789,6 +2789,12 @@ function embeddedJobDois(value) {
       var nodes=block.querySelectorAll('img,source,a[href],object[data],[style*="background-image" i]');
       Array.prototype.slice.call(nodes).slice(0,28).forEach(function(node){
         var urls=articleFigureImageUrls(node,base).slice();
+        // Silverchair can embed the actual numbered SVG in <object data>.
+        var objectData=node.getAttribute&&node.getAttribute('data');
+        if(objectData){
+          var objectAsset=normalizeUrl(objectData,base);
+          if(objectAsset&&urls.indexOf(objectAsset)<0)urls.unshift(objectAsset);
+        }
         // Silverchair also renders DOI-associated visuals as CSS background
         // images. Only read URLs embedded in the ACTUAL article block.
         var inline=String(node.getAttribute&&node.getAttribute('style')||'');
@@ -6408,11 +6414,15 @@ function embeddedJobDois(value) {
           (job.publisher==='acs'||job.publisher==='wiley'||job.publisher==='rsc'||job.publisher==='ccs')) {
         iframeAttempted=true;
         var iframeRows=await iframeCandidates(job,trace);
-        var recovered=iframeRows.filter(function(row){return row&&row.kind==='official';});
+        var recovered=iframeRows.filter(function(row){
+          return row&&(row.kind==='official'||row.kind==='figure1'&&job.allowFigureOne!==false);
+        });
         if(recovered.length){
           recoveredOfficialToc=recovered.slice();
           toc=recoveredOfficialToc.slice();
-          pushTrace(trace,{stage:'paired_toc_fallback',event:'iframe_recovery',status:'found',message:'official='+String(toc.length)+';persisted=1'});
+          pushTrace(trace,{stage:'paired_toc_fallback',event:'iframe_recovery',status:'found',
+            message:'official='+recovered.filter(function(r){return r.kind==='official';}).length
+              +';verifiedFigure1='+recovered.filter(function(r){return r.kind==='figure1';}).length+';persisted=1'});
         }
       }
       var figureSignature=figures.map(function(x){return x.label+'|'+x.url;}).join('|');
