@@ -1,0 +1,816 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Chemistry",
+  "issns": [
+    "1755-4330",
+    "1755-4349"
+  ],
+  "range": {
+    "from": "2026-09-22",
+    "to": "2026-09-30"
+  },
+  "checkedAt": "2026-10-10T17:59:10.754Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "1755-4330",
+        "total": 16,
+        "count": 16,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1755-4349",
+        "total": 16,
+        "count": 16,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 16,
+      "count": 16,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 16,
+      "openalex": 16
+    }
+  },
+  "candidateCount": 16,
+  "alreadyPublished": 2,
+  "unreviewed": 14,
+  "records": [
+    {
+      "doi": "10.1038/s41557-026-02235-1",
+      "title": "Secondary-sphere hydrogen bonding promotes catalytic nitrate reduction at iron",
+      "authors": [
+        "Writhabrata Sarkar",
+        "Andrew R. LaDuca",
+        "Riley W. Kazukiewicz",
+        "Nathaniel K. Szymczak"
+      ],
+      "date": "2026-09-22",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02235-1"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02235-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02241-3",
+      "title": "Molecular engineering stabilizes the commensurate charge density wave state in 1T-TaS2/arginine hybrid superlattices",
+      "authors": [
+        "Jingyuan Zhou",
+        "Boxuan Zhou",
+        "Chih-En Hsu",
+        "Katherine Pettersen",
+        "Jingxuan Zhou",
+        "Zhong Wan",
+        "Xingxu Yan",
+        "Huaying Ren",
+        "Qi Qian",
+        "Ao Zhang",
+        "Bosi Peng",
+        "Ranning Tang",
+        "Xiaoqing Pan",
+        "Zdenek Sofer",
+        "Hung-Chung Hsueh",
+        "Zhenglu Li",
+        "Yu Huang",
+        "Xiangfeng Duan"
+      ],
+      "date": "2026-09-29",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02241-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02241-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02244-0",
+      "title": "Temperature and reproducibility in photocatalysis",
+      "authors": [
+        "Kaid Harper"
+      ],
+      "date": "2026-09-22",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1679-1681",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02244-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02244-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02246-y",
+      "title": "Breaking N-alkyl aziridines for cross-coupling reactions",
+      "authors": [],
+      "date": "2026-09-23",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1690-1691",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02246-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02246-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02247-x",
+      "title": "Divergent ring opening and functionalization of N-alkyl aziridines via boryl radical fragmentation",
+      "authors": [
+        "Pan Peng",
+        "Baptiste Roure",
+        "Thomas Lulli",
+        "Chiara Stavagna",
+        "Giovanni Lonardi",
+        "Daniele Leonori"
+      ],
+      "date": "2026-09-23",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1755-1762",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02247-x"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02247-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02249-9",
+      "title": "Deep reduction in electrosynthesis",
+      "authors": [
+        "Mickaël E. Avanthay",
+        "John R. Box",
+        "Alastair J. J. Lennox"
+      ],
+      "date": "2026-09-28",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1694-1707",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02249-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02249-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02251-1",
+      "title": "Programming semiconducting two-dimensional conjugated metal–organic frameworks via anisotropic reticular chemistry",
+      "authors": [
+        "Jianjun Zhang",
+        "Guojun Zhou",
+        "Hio-Ieng Un",
+        "Jianbo Song",
+        "Petko St. Petkov",
+        "Rashid Iqbal",
+        "Shuai Fu",
+        "Xing Huang",
+        "Geping Zhang",
+        "Yang Lu",
+        "Darius Pohl",
+        "Renxiang Liu",
+        "Yubin Fu",
+        "Xiaodong Li",
+        "Wenjie Zhang",
+        "Bernd Rellinghaus",
+        "Alexey Alfonsov",
+        "Volodymyr Bon",
+        "Jie Ding",
+        "Stuart S. P. Parkin",
+        "Thomas Heine",
+        "Zhiyong Wang",
+        "Zhehao Huang",
+        "Henning Sirringhaus",
+        "Xinliang Feng",
+        "Renhao Dong"
+      ],
+      "date": "2026-09-24",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02251-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02251-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02254-y",
+      "title": "The many lives of a universal solvent",
+      "authors": [
+        "Yasir S. Raouf"
+      ],
+      "date": "2026-09-30",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1840-1840",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02254-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02254-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02255-x",
+      "title": "Bug bites",
+      "authors": [
+        "Michelle Francl"
+      ],
+      "date": "2026-09-30",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1682-1683",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02255-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02255-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02257-9",
+      "title": "Catalyst-directed vibrational frequency disparity for isotopologue sieving in CO2 electrolysis",
+      "authors": [
+        "Ningce Zhang",
+        "Haoyun Bai",
+        "Guoqiang Shen",
+        "Luyao Ma",
+        "Bohua Ren",
+        "Haochen Shen",
+        "Xiaodong Yang",
+        "Chao Liu",
+        "Kaiyu Qiu",
+        "Shuxuan Liu",
+        "Wenfei Long",
+        "Jiale Sun",
+        "Yuqin Zou",
+        "Guobin Wen",
+        "Shuangyin Wang"
+      ],
+      "date": "2026-09-25",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02257-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02257-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02258-8",
+      "title": "De novo synthesis of threofuranoses via a triple-carbonylation cascade of aldehydes",
+      "authors": [
+        "Xiaotong Shen",
+        "Ruifang Nie",
+        "Wenjun Jiang",
+        "Suhua Li"
+      ],
+      "date": "2026-09-22",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02258-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02258-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02259-7",
+      "title": "Avoiding the path of LIESST resistance",
+      "authors": [
+        "Conor T. Kelly",
+        "Grace G. Morgan"
+      ],
+      "date": "2026-09-25",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1684-1685",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02259-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02259-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02261-z",
+      "title": "Sterically gated Lewis acid and base pairs enable orthogonal defect passivation in perovskite solar cells",
+      "authors": [
+        "Donghoon Shin",
+        "Shuta Kitade",
+        "Linrui Duan",
+        "Cheng Liu",
+        "Chu Li",
+        "Chuying Huang",
+        "Ubaid H. Kazianga",
+        "Rafael López-Arteaga",
+        "Samantha A. Reitz",
+        "Deokjae Choi",
+        "Yi Yang",
+        "Hae Jeong Kim",
+        "Jaewon Lee",
+        "Jarod Beights",
+        "Hyoung Woo Kwon",
+        "Ji-Yoon Song",
+        "Yuan Liu",
+        "Jongmin Choi",
+        "Chad A. Mirkin",
+        "Mercouri G. Kanatzidis",
+        "Bin Chen",
+        "Edward H. Sargent"
+      ],
+      "date": "2026-09-23",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02261-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02261-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02262-y",
+      "title": "Linking vibrational energetics to carbon isotope separation in CO2 electrolysis",
+      "authors": [],
+      "date": "2026-09-29",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02262-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02262-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02267-7",
+      "title": "An open-framework boron allotrope exhibiting high conductivity and plasticity",
+      "authors": [
+        "Feng Chen",
+        "Lianfeng Zou",
+        "Penghui Li",
+        "Changzeng Fan",
+        "Yibo Liu",
+        "Bo Xu",
+        "Xi Shao",
+        "Hehe Zhang",
+        "Xin-Ling He",
+        "Ming-Xing Huang",
+        "Fang Chen",
+        "Anmin Nie",
+        "Feng Ke",
+        "Zhisheng Zhao",
+        "Hongliang Dong",
+        "Yao Yang",
+        "Xiao-Ji Weng",
+        "Hui-Tian Wang",
+        "Xiang-Feng Zhou",
+        "Yongjun Tian"
+      ],
+      "date": "2026-09-23",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02267-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02267-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02277-5",
+      "title": "Unmasking phenylalanine interactions through bioorthogonal decaging",
+      "authors": [],
+      "date": "2026-09-25",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02277-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02277-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

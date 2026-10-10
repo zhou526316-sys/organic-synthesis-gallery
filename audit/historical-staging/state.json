@@ -7,11 +7,134 @@
       "from": "2026-09-22",
       "to": "2026-09-30"
     },
-    "journalIndex": 0
+    "journalIndex": 8
   },
-  "completed": [],
-  "attempts": [],
+  "completed": [
+    "2026-09-22_2026-09-30_jacs",
+    "2026-09-22_2026-09-30_angew",
+    "2026-09-22_2026-09-30_nature",
+    "2026-09-22_2026-09-30_science",
+    "2026-09-22_2026-09-30_nature-catalysis",
+    "2026-09-22_2026-09-30_nature-synthesis",
+    "2026-09-22_2026-09-30_nature-chemistry",
+    "2026-09-22_2026-09-30_nature-communications"
+  ],
+  "attempts": [
+    {
+      "id": "2026-09-22_2026-09-30_jacs",
+      "journal": "JACS",
+      "range": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "status": "source_enumeration_complete",
+      "count": 155,
+      "errors": [],
+      "at": "2026-10-10T17:59:04.078Z"
+    },
+    {
+      "id": "2026-09-22_2026-09-30_angew",
+      "journal": "Angew",
+      "range": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "status": "source_enumeration_complete",
+      "count": 213,
+      "errors": [],
+      "at": "2026-10-10T17:59:06.753Z"
+    },
+    {
+      "id": "2026-09-22_2026-09-30_nature",
+      "journal": "Nature",
+      "range": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "status": "source_enumeration_complete",
+      "count": 153,
+      "errors": [],
+      "at": "2026-10-10T17:59:08.140Z"
+    },
+    {
+      "id": "2026-09-22_2026-09-30_science",
+      "journal": "Science",
+      "range": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "status": "source_enumeration_complete",
+      "count": 44,
+      "errors": [],
+      "at": "2026-10-10T17:59:08.814Z"
+    },
+    {
+      "id": "2026-09-22_2026-09-30_nature-catalysis",
+      "journal": "Nature Catalysis",
+      "range": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "status": "source_enumeration_complete",
+      "count": 4,
+      "errors": [],
+      "at": "2026-10-10T17:59:09.599Z"
+    },
+    {
+      "id": "2026-09-22_2026-09-30_nature-synthesis",
+      "journal": "Nature Synthesis",
+      "range": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "status": "source_enumeration_complete",
+      "count": 9,
+      "errors": [],
+      "at": "2026-10-10T17:59:10.203Z"
+    },
+    {
+      "id": "2026-09-22_2026-09-30_nature-chemistry",
+      "journal": "Nature Chemistry",
+      "range": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "status": "source_enumeration_complete",
+      "count": 16,
+      "errors": [],
+      "at": "2026-10-10T17:59:10.754Z"
+    },
+    {
+      "id": "2026-09-22_2026-09-30_nature-communications",
+      "journal": "Nature Communications",
+      "range": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "status": "source_enumeration_complete",
+      "count": 272,
+      "errors": [],
+      "at": "2026-10-10T17:59:12.688Z"
+    }
+  ],
   "publishedMembershipSnapshot": 938,
-  "lastRun": null,
-  "note": "Initialization only. No historical candidate window has yet been crawled or approved. Exact 23:00 scheduled acquisition runs from main and writes exclusively to this staging branch."
+  "lastRun": {
+    "processed": 8,
+    "blocked": false,
+    "requests": 37,
+    "next": {
+      "range": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "journalIndex": 8
+    },
+    "verifiedPublishedDois": 938,
+    "completeWindows": 8,
+    "noPublication": true,
+    "noPdf": true
+  },
+  "note": "Initialization only. No historical candidate window has yet been crawled or approved. Exact 23:00 scheduled acquisition runs from main and writes exclusively to this staging branch.",
+  "lastRunStarted": "2026-10-10T17:59:01.181Z",
+  "lastRunFinished": "2026-10-10T17:59:12.992Z"
 }

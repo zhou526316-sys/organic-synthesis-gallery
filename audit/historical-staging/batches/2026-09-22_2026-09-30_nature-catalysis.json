@@ -1,0 +1,246 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2026-09-22",
+    "to": "2026-09-30"
+  },
+  "checkedAt": "2026-10-10T17:59:09.599Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "total": 4,
+        "count": 4,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 4,
+      "count": 4,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 4,
+      "openalex": 4
+    }
+  },
+  "candidateCount": 4,
+  "alreadyPublished": 1,
+  "unreviewed": 3,
+  "records": [
+    {
+      "doi": "10.1038/s41929-026-01614-8",
+      "title": "Engineering cellular nitrene chemistry",
+      "authors": [
+        "Jan-Stefan Völler"
+      ],
+      "date": "2026-09-22",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "9",
+        "pages": "925-925",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01614-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01614-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01615-7",
+      "title": "Preferential locations of catalytically active oxygen vacancies at Cr/ZnO interfaces during syngas conversion",
+      "authors": [
+        "Chengsheng Yang",
+        "Rui Ma",
+        "Chi Zhang",
+        "Xiao Kong",
+        "Beikai Ding",
+        "Rongtan Li",
+        "Sicong Ma",
+        "Zhi-Pan Liu",
+        "Yong Cao",
+        "Qiang Fu",
+        "Fan Yang",
+        "Xinhe Bao",
+        "Yifeng Zhu"
+      ],
+      "date": "2026-09-25",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01615-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01615-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01616-6",
+      "title": "Ligand design broadens NiI-catalysed C(sp2)–heteroatom couplings of aryl bromides at low catalyst loadings",
+      "authors": [
+        "Aleksander R. Bena",
+        "Trisha Banik",
+        "Christos Giannoudis",
+        "Florian Ortis",
+        "Daniel Bím",
+        "Haralds Baunis",
+        "Gayathri H. Palissery",
+        "Bartholomäus Pieber"
+      ],
+      "date": "2026-09-29",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01616-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01616-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01623-7",
+      "title": "Author Correction: Alkali metal cation impurities stabilize Cu+ in oxide-derived copper for CO2 electrolysis",
+      "authors": [
+        "Haesol Kim",
+        "Seunghoon Lee",
+        "Jihoon Son",
+        "Hansol Choi",
+        "Junsic Cho",
+        "Baptiste Gault",
+        "Won-Hyoung Lee",
+        "Benedikt Paul Klein",
+        "Cheolho Jeon",
+        "Joonhee Moon",
+        "Da Hye Won",
+        "Dae-Hyun Nam",
+        "Gyeongwon Kang",
+        "Hyeyoung Shin",
+        "Se-Ho Kim",
+        "Chang Hyuck Choi"
+      ],
+      "date": "2026-09-23",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01623-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01623-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
