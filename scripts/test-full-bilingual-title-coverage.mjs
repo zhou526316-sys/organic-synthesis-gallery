@@ -27,7 +27,7 @@ try {
     ENGLISH_RECEIPT,...ZH_PARTS,DIAGNOSTIC_PATH,...EDITORIAL_PARTS
   ];
   for(const name of assets)await copy(name);
-  const snapshot=await Promise.all(protectedInputs.map(readFile));
+  const snapshot=await Promise.all(protectedInputs.map(file=>readFile(file)));
 
   // Mirror the Pages derived-source precedence but without publisher or media
   // network requests. No changes to static source data are allowed.
