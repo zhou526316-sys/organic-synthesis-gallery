@@ -3220,6 +3220,15 @@ def main() -> int:
     if not media_id:
         raise RuntimeError("draft write succeeded but no media_id is available")
 
+
+    draft = get_draft(token, media_id)
+    assert_draft_source_links(draft, expected_source_links)
+    preview_path, preview_url = write_draft_preview(
+        draft,
+        media_id=media_id,
+        preview_dir=Path(args.preview_dir),
+        base_url=args.preview_base_url,
+    )
     save_state(
         DEFAULT_STATE,
         {
@@ -3230,15 +3239,6 @@ def main() -> int:
             "articleCount": len(articles),
             "retrospective": retrospective_slug or None,
         },
-    )
-
-    draft = get_draft(token, media_id)
-    assert_draft_source_links(draft, expected_source_links)
-    preview_path, preview_url = write_draft_preview(
-        draft,
-        media_id=media_id,
-        preview_dir=Path(args.preview_dir),
-        base_url=args.preview_base_url,
     )
 
     output_payload = {
