@@ -85,6 +85,20 @@ class ExactRecoveryTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "ambiguous"):
                 publisher.find_unique_readable_draft("token", [TITLE_A, TITLE_B], [DA, DR])
 
+    def test_inventory_beyond_scan_limit_fails_closed(self):
+        with patch.object(publisher, "json_request", return_value={
+            "total_count": 101,
+            "item": [{"media_id": RECOVERED, "content": {
+                "news_item": [{"title": TITLE_A}, {"title": TITLE_B}]
+            }}],
+        }), patch.object(publisher, "get_draft", side_effect=AssertionError(
+            "Must not adopt any draft from an incomplete inventory"
+        )), patch.object(publisher, "update_draft", side_effect=AssertionError(
+            "Must not write"
+        )):
+            with self.assertRaisesRegex(RuntimeError, "exceeds safe scan limit"):
+                publisher.find_unique_readable_draft("token", [TITLE_A, TITLE_B], [DA, DR])
+
     def test_other_wechat_account_failure_is_not_bypassed(self):
         with patch.object(publisher, "json_request", return_value={
             "errcode": 48001, "errmsg": "API unauthorized"
