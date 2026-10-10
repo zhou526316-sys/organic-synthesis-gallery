@@ -62,6 +62,30 @@ preflight(){
   https://api.gczhouwld.com/api/_healthcheck ||
   abort 'Tencent to Cloudflare unavailable'
 }
+dump_http_route_diagnostic(){
+  # Read-only, redacted: show effective nginx file paths and listen/name
+  # directives only. Do not print nginx -T bodies, credentials or URLs.
+  echo '[DIAG] Effective Nginx configuration file paths (filtered):' >&2
+  local dump
+  dump="$(nginx -T 2>/dev/null)" || { echo '[DIAG] nginx -T unavailable' >&2; return 0; }
+  printf '%s\n' "$dump" | sed -n 's/^# configuration file \(.*\):$/\1/p' |
+    grep -E '^/etc/nginx/(nginx\.conf|sites-enabled/|conf\.d/)' | head -30 >&2 || true
+  echo '[DIAG] HTTP listener and server-name directives (no config bodies):' >&2
+  printf '%s\n' "$dump" | awk '
+   /^# configuration file / { file=$0; sub(/^# configuration file /,"",file); sub(/:$/,"",file) }
+   /^[[:space:]]*listen[[:space:]]/ {
+      line=$0; sub(/^[[:space:]]*/,"",line);
+      if (line ~ /(^listen 80[ ;]|:80[ ;]|\\[::\\]:80[ ;])/) print file " " line
+   }
+   /^[[:space:]]*server_name[[:space:]]/ {
+      line=$0; sub(/^[[:space:]]*/,"",line);
+      if (length(line)<180) print file " " line
+   }' | head -45 >&2 || true
+  echo '[DIAG] Active Nginx service and HTTP listening process (no site contents):' >&2
+  systemctl show nginx -p MainPID -p ActiveState --no-pager >&2 || true
+  ss -ltnp '( sport = :80 )' 2>/dev/null | head -8 >&2 || true
+  echo '[DIAG] This diagnostic is read-only; do not publish nginx.conf contents.' >&2
+}
 write_acme(){
  cat > "$VHOST" <<'NGINX'
 # GALLERY_PDF_GATEWAY_MANAGED_V1
@@ -180,6 +204,17 @@ install_new(){
  if ! cert_ok; then
    write_acme;ln -s "$VHOST" "$LINK";ADDED=1
    nginx -t;systemctl reload nginx;RELOADED=1
+   # A valid nginx -t is not proof that the enabled PDF site belongs to the
+   # effective include graph. Check this BEFORE probing or calling Certbot.
+   local effective_nginx_dump
+   effective_nginx_dump="$(nginx -T 2>/dev/null)" ||
+     abort 'Cannot inspect effective Nginx include graph after reload'
+   if [[ "$effective_nginx_dump" != *'# GALLERY_PDF_GATEWAY_MANAGED_V1'* ]]; then
+     echo '[DIAG] PDF vhost symlink exists but is absent from nginx -T.' >&2
+     dump_http_route_diagnostic
+     abort 'PDF site is not loaded by effective nginx config; certbot was NOT called'
+   fi
+   echo '[CHECK] Managed PDF vhost found in effective nginx -T configuration.'
    # Confirm that the actual unprivileged Nginx listener serves a real
    # HTTP-01 challenge before requesting a public CA certificate.
    # This does not contact Let's Encrypt and cannot consume a CA limit.
@@ -209,6 +244,7 @@ install_new(){
      ss -ltnH '( sport = :80 )' 2>/dev/null | head -8 >&2 || true
      echo '[DIAG] File ancestry:' >&2
      namei -l "$WEBROOT/.well-known/acme-challenge/$acme_name" >&2 || true
+     dump_http_route_diagnostic
      rm -f "$WEBROOT/.well-known/acme-challenge/$acme_name"
      abort 'Local ACME webroot challenge returned an error; certbot was NOT called'
    fi
@@ -247,6 +283,7 @@ install_new(){
 }
 case "$MODE" in
  --preflight) preflight ;;
+ --diagnose) dump_http_route_diagnostic ;;
  --install) install_new ;;
  --rollback)
   [[ "$(id -u)" == 0 ]] || abort 'sudo required'
@@ -260,5 +297,5 @@ case "$MODE" in
   fi
   nginx -t && systemctl reload nginx
   echo '[OK] PDF-only vhost removed; osg-wechat-relay untouched.' ;;
- *) abort 'Usage: sudo bash install.sh [--preflight|--install|--rollback]' ;;
+ *) abort 'Usage: sudo bash install.sh [--preflight|--diagnose|--install|--rollback]' ;;
 esac
