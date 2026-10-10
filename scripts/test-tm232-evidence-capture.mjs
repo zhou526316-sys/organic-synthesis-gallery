@@ -207,11 +207,11 @@ try{
     combinedPlan.wiley.mediaNeed==='toc'&&combinedPlan.wiley.captureToc===true&&combinedPlan.wiley.captureFigures===false&&combinedPlan.wiley.opportunisticFigures===true);
   test('missing evidence never creates an evidence-only DOI job',combinedPlan.evidenceDois.length===0);
   test('scheduler only adds missing evidence opportunistically to an existing publisher visit',
-    source.includes('job.opportunisticEvidence=Boolean(evidenceMissing.has(doi));')&&
+    source.includes('job.opportunisticEvidence=Boolean(!tocOnlyCaptureEligible(job)&&evidenceMissing.has(doi));')&&
     source.includes('job.captureEvidence=false;')&&
     source.includes('var evidenceJobs=[];')&&
     source.includes("var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';")&&
-    source.includes('job.opportunisticFigures=Boolean(job.opportunisticFigures||recent);'));
+    source.includes('job.opportunisticFigures=Boolean(!tocOnlyCaptureEligible(job)&&(job.opportunisticFigures||recent));'));
 
   const isolatedFailure=await page.evaluate(async()=>{
     window.__evidenceTransport='fail';
