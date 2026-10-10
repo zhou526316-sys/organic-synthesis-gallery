@@ -243,7 +243,6 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    }
   }
   if(url.pathname==='/api/user-ui/private-pdf/open'){
-   if(url.origin==='https://pdf.gczhouwld.com')state.tencentOpenCalls++;
    if(route.request().method()==='OPTIONS'){
     return route.fulfill({status:204,headers:{
      'access-control-allow-origin':base,
@@ -254,6 +253,7 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
     }});
    }
    state.privateCalls++;
+   if(url.origin==='https://pdf.gczhouwld.com')state.tencentOpenCalls++;
    const mode=url.searchParams.get('mode')||'view';
    state.openModes.push(mode);
    state.openOrigins.push(url.origin);
@@ -632,6 +632,55 @@ try{
   assert.equal(state.privateFullFileCalls,0,'failover must stay byte-range based');
   await scrollPdfToPage(target,2);
   assert.equal(await target.locator('#page-count').textContent(), '第 2 / 2 页');
+ });
+
+ await test('large PDF file route recovers through Tencent with independent ticket and second page',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],source,{
+    largePdf:true,primaryFileStatus:503,tencentEnabled:true,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:18000});
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-route'),'tencent');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-failovers'),'1');
+  assert.ok(state.primaryFileFailures>=1,'primary larger-than-16-byte Range failed');
+  assert.equal(state.tencentOpenCalls,1,'concurrent failed Range requests share one Tencent authorization');
+  assert.ok(state.tencentRangeCalls>=1);
+  assert.ok(state.tencentMaxRangeBytes>=512*1024,'large PDF tests realistic multi-hundred KiB Range');
+  assert.equal(state.privateFullFileCalls,0,'fallback must not force full PDF transfer');
+  await scrollPdfToPage(target,2);
+  assert.equal(await target.locator('#page-count').textContent(),'第 2 / 2 页');
+ });
+ await test('Tencent alternate with different PDF SHA refuses cross-document byte mixing',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],source,{
+    primaryFileStatus:503,tencentEnabled:true,tencentContentHash:'b'.repeat(64),
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',
+    undefined,{timeout:15000});
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/pdf_source_invalid/);
+  assert.ok(state.tencentOpenCalls>=1,'wrong-document attempt was actually tested');
+  assert.equal(state.tencentRangeCalls,0,'mismatched file may not supply any PDF bytes');
+ });
+ await test('Tencent enabled cannot bypass an explicit file-403 denial',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],source,{
+    primaryFileStatus:403,tencentEnabled:true,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',
+    undefined,{timeout:12000});
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/file_http_403/);
+  assert.equal(state.tencentOpenCalls,0,'denials must not mint another ticket');
+  assert.equal(state.tencentRangeCalls,0,'denials must not retrieve bytes');
  });
  await test('source-hash mismatch refuses cross-document Range stitching without backup bytes',async()=>{
   const source={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
