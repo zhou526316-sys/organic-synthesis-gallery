@@ -22,12 +22,83 @@ function h(q=queue([]),inventory=inv([]),opts={}){
  const cut=source.lastIndexOf('  installManualRestartListener();');
  vm.runInContext(source.slice(0,cut)+`
  isGalleryPage=()=>true;writeToken=()=> 'fixture';badge=()=>{};sleep=__sleep;getJson=__get;postReadJson=__post;getPrivateJson=__private;inventoryReadMetadataJson=async(o,p)=>String(o.method||'GET').toUpperCase()==='POST'?__post(o.url,JSON.parse(o.data||'{}')):String(o.url||'').includes('evidence-inventory')?__private(o.url):__get(o.url);enqueueCaptureReport=()=>true;
- globalThis.T={coverageStats,coveragePending,coverageMergePlan,coverageRemaining,metadataJson,metadataTransport:(g,n)=>{gmRequest=g;nativeControllerRequest=n;},buildMissingCaptureJobs,captureNeedText,captureLiveText,captureLiveSnapshot,forceStartFromHead,manualRunBlocksAutomatic,readMissingCaptureInventory,checkpointKey};
+ globalThis.T={coverageStats,coveragePending,coverageMergePlan,coverageApplyFreshPlan,coverageRemaining,metadataJson,metadataTransport:(g,n)=>{gmRequest=g;nativeControllerRequest=n;},buildMissingCaptureJobs,captureNeedText,captureLiveText,captureLiveSnapshot,forceStartFromHead,manualRunBlocksAutomatic,readMissingCaptureInventory,checkpointKey};
  })();`,ctx);
  return {T:ctx.T,ctx,store,opened,calls,timers,plan:(ar=q.articles,i=inventory)=>{const run={id:'test',summary:{results:[]}};return {jobs:Array.from(ctx.T.buildMissingCaptureJobs(queue(ar),run,i)),summary:run.summary};}};
 }
 const summary=()=>({results:[],remainingNeeds:{}});
 const fakeJob=(n,flags={})=>({...article(n),captureFigures:true,captureToc:false,captureEvidence:false,capturedFigures:{},...flags});
+const historicalTocJob=(n,extra={})=>({
+ ...article(n,{date:'2026-09-20',addedDate:'2026-10-10',mediaPolicy:'toc_only',ingestionChannel:'historical_backfill'}),
+ captureToc:true,captureFigures:false,captureEvidence:false,capturePrivatePdf:false,
+ opportunisticFigures:false,opportunisticEvidence:false,existingTocKind:'figure1',
+ capturedFigures:{},...extra
+});
+await test('historical Figure1 fallback never removes official TOC need on warm/fresh inventory refresh',()=>{
+ const x=h(),run={summary:summary()},job=historicalTocJob(95);
+ x.T.coverageMergePlan(run,[job]);
+ x.T.coverageApplyFreshPlan(run,[{...job}],true);
+ x.T.coverageMergePlan(run,[{...job}]);
+ const current=run.coverage.get(job.doi);
+ assert.equal(current.job.captureToc,true);
+ assert.equal(current.job.capturePrivatePdf,false);
+ assert.equal(current.job.opportunisticFigures,false);
+ assert.equal(current.job.opportunisticEvidence,false);
+ assert.equal(x.T.coveragePending(run).length,1);
+ x.T.coverageStats(run);
+ assert.equal(run.summary.unresolvedCount,1);
+ assert.equal(run.summary.fullyResolved,0);
+});
+await test('historical fallback upload cannot count as official TOC completion',()=>{
+ const x=h(),run={summary:summary()},job=historicalTocJob(96);
+ x.T.coverageMergePlan(run,[job]);
+ x.T.coverageRemaining(run,job,{status:'partial',reason:'only_verified_figure1_fallback',
+   toc:{status:'stored',kind:'figure1',productionFallbackStored:true}});
+ const row=run.coverage.get(job.doi);
+ assert.equal(row.job.captureToc,true);
+ assert.equal(row.state,'blocked');
+ x.T.coverageStats(run);
+ assert.equal(run.summary.fullyResolved,0);
+ assert.equal(run.summary.unresolvedCount,1);
+});
+await test('historical official TOC requires a production-backed receipt, not local-only bytes',()=>{
+ const x=h(),run={summary:summary()},job=historicalTocJob(97);
+ x.T.coverageMergePlan(run,[job]);
+ x.T.coverageRemaining(run,job,{status:'partial',reason:'unpublished_official_asset',
+   toc:{status:'stored',kind:'official',productionTocStored:false}});
+ assert.equal(run.coverage.get(job.doi).job.captureToc,true);
+ assert.equal(run.coverage.get(job.doi).state,'blocked');
+ const x2=h(),run2={summary:summary()},job2=historicalTocJob(98);
+ x2.T.coverageMergePlan(run2,[job2]);
+ x2.T.coverageRemaining(run2,job2,{status:'success',
+   toc:{status:'stored',kind:'official',productionTocStored:true}});
+ assert.equal(run2.coverage.get(job2.doi).state,'resolved');
+ x2.T.coverageStats(run2);
+ assert.equal(run2.summary.fullyResolved,1);
+});
+await test('panel distinguishes full registry from eligible scope and never counts untouched inventory as current success',()=>{
+ const x=h(),r={summary:summary()},j1=fakeJob(1,{captureFigures:false,captureToc:true}),j2=fakeJob(2,{captureFigures:false,captureToc:true});
+ x.T.coverageMergePlan(r,[j1,j2]);
+ x.T.coverageApplyFreshPlan(r,[j2],true);
+ x.T.coverageStats(r);
+ assert.equal(r.summary.total,2);
+ assert.equal(r.summary.fullyResolved,0);
+ assert.equal(r.summary.inventoryAlreadySatisfiedCount,1);
+ assert.equal(r.summary.unresolvedCount,1);
+ const words=x.T.captureLiveText({
+   scopeRevision:'20261008-added-date-only-v1',coverageRevision:'v10',
+   scopeCount:938,scopeRecentCount:197,scopeHistoricalCount:733,scopeExcludedCount:8,
+   phase:'blocked_remaining',total:2,completed:0,inventoryAlreadySatisfiedCount:1,
+   fullyResolved:0,unresolvedCount:1,pendingMissing:1,deferredCount:0,blockedCount:0,
+   attemptCount:0,remainingNeeds:{toc:1,pdf:0},ownerPdfInventory:{ready:0,pending:0,failed:0,unknown:733},
+   ownerPdfInventoryState:'owner_lease_missing',inventoryProgress:{},
+   inventoryErrors:[],pendingPreview:[],blockedPreview:[],deferredPreview:[]
+ });
+ assert.match(words.gaps,/目录 938 篇（10月起常规 197／7—9月历史仅补官方TOC 733／其他不派发 8）/);
+ assert.doesNotMatch(words.gaps,/10\\.1起 938/);
+ assert.match(words.batch,/库存核实已齐 1 篇/);
+ assert.match(words.batch,/确认补齐 0 篇/);
+});
 await test('single run visits61 missing articles, including all after40',async()=>{
  const ar=Array.from({length:61},(_,n)=>article(n)),i=inv(ar);i.media.items.forEach(x=>x.tocStored=false);
  const x=h(queue(ar),i);await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');
