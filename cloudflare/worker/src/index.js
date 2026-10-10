@@ -50,6 +50,7 @@ import {
   queryLiteratureCatalogView,
   queryPublishedLiteratureCatalogView,
 } from './literature-catalog-index.js';
+import { beginSearchEnrichment, importSearchEnrichment, finalizeSearchEnrichment, getSearchAbstract } from './literature-search-enrichment.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus, userLibraryRowShadowEnabled } from './user-library-shadow.js';
 import {
@@ -128,6 +129,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/title-translations/zh',
   '/api/literature/supplement',
   '/api/literature/catalog-view',
+  '/api/literature/abstract',
   '/api/toc',
   '/api/article-figures',
   '/api/article-figures/staged',
@@ -405,6 +407,29 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await compareSummaryReviewCandidateShadow(env, {
       preferredDoi: String(body?.preferredDoi || ''),
     }));
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/literature/abstract') {
+    if (!literatureCatalogIndexReadEnabled(env))
+      return json({error:'literature_catalog_index_read_disabled'}, {status:503,headers:cors});
+    return resultResponse(await getSearchAbstract(env,{
+      catalogId:url.searchParams.get('catalogId')||'',doi:url.searchParams.get('doi')||'',
+    }),cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/literature-search-enrichment/begin') {
+    const authError=requireWriteAuthorization(request,env);
+    if(authError) return authError;
+    return resultResponse(await beginSearchEnrichment(env,await readJson(request)),cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/literature-search-enrichment/import') {
+    const authError=requireWriteAuthorization(request,env);
+    if(authError) return authError;
+    return resultResponse(await importSearchEnrichment(env,await readJson(request)),cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/literature-search-enrichment/finalize') {
+    const authError=requireWriteAuthorization(request,env);
+    if(authError) return authError;
+    return resultResponse(await finalizeSearchEnrichment(env,await readJson(request)),cors);
   }
 
   if (request.method === 'POST' && url.pathname === '/api/literature/catalog-view') {
