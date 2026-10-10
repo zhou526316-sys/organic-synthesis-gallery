@@ -57,6 +57,11 @@ jobs:
 
   live-browser-readonly:
     needs: live-search-readonly
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        viewport: [1280, 390]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -75,12 +80,13 @@ jobs:
       - name: Check published Gallery search cards on desktop and mobile
         env:
           GALLERY_SEARCH_BROWSER_OUTPUT: ${{ runner.temp }}/gallery-search-browser
+          GALLERY_SEARCH_BROWSER_VIEWPORT: ${{ matrix.viewport }}
         run: node scripts/verify-gallery-search-browser.mjs
       - name: Preserve browser result and any failure screenshot
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: gallery-search-browser-${{ github.run_id }}-${{ github.run_attempt }}
+          name: gallery-search-browser-${{ matrix.viewport }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/gallery-search-browser/
           if-no-files-found: warn
           retention-days: 14
