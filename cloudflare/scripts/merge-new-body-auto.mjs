@@ -166,7 +166,7 @@ export function completedPacketMap(inputs){
   for(const row of inputs?.reports?.items||[]){
     const doi=normalizeDoi(row?.doi||'');
     const mediaNeed=String(row?.mediaNeed||'');
-    if(!doi||!mediaNeed.includes('figures')||!completedBodyPacket(row))continue;
+    if(!doi||!completedBodyPacket(row))continue; // includes verified TOC/PDF companion figure packets
     map.set(doi,row);
   }
   return map;
