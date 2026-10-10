@@ -44,10 +44,6 @@ try{
  browser=await chromium.launch({headless:true});
  const newCase=async(role)=>{
   const ctx=await browser.newContext({acceptDownloads:true});
-  await ctx.addInitScript(siteOrigin=>{
-    if(location.origin!==siteOrigin)return;
-    localStorage.setItem('organic-gallery-session-v1','fixture-'+role+'-secret');
-  },site);
   let queries=0,writes=0;
   await ctx.route('https://api.gczhouwld.com/**',async route=>{
    const req=route.request(),url=new URL(req.url()),method=req.method();
@@ -75,7 +71,15 @@ try{
    return route.fulfill({status:200,headers:{...cors,'content-type':'application/json'},
     body:JSON.stringify(result)});
   });
-  return {ctx,page:await ctx.newPage(),stats:()=>({queries,writes})};
+  const page=await ctx.newPage();
+  // Seed only a fixture credential in the SAME ORIGIN, then reload so the
+  // browser tests the actual owner/reader route rather than a login placeholder.
+  await page.goto(site+'/pdf-audit.html');
+  await page.evaluate(v=>localStorage.setItem('organic-gallery-session-v1',v),
+    'fixture-'+role+'-secret');
+  assert.equal(await page.evaluate(()=>localStorage.getItem('organic-gallery-session-v1')),
+    'fixture-'+role+'-secret');
+  return {ctx,page,stats:()=>({queries,writes})};
  };
  await test('reader role is refused without ever seeing DOI rows',async()=>{
   const {ctx,page}=await newCase('reader');
