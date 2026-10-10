@@ -772,7 +772,7 @@ for (const width of [390, 1280]) {
       { waitUntil: 'domcontentloaded' });
     await expect(page.locator('#gallery .card').first()).toBeVisible({ timeout: 30000 });
     const firstDoi = await page.locator('#gallery .card').first().getAttribute('data-doi');
-    expect(firstDoi).toMatch(/^10\\./);
+    expect(firstDoi?.startsWith('10.')).toBe(true);
     // Every verified paper DOI starts with 10.; journal names in the first
     // bootstrap window can change asynchronously and are not a stable
     // suggestion fixture for the different viewport sizes.
