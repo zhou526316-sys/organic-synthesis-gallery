@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.60
+// @version      6.2.61
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,9 +57,9 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.60';
+  var INSTALL_REVISION = '6.2.61';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
-  var PUBLISHER_ROUTE_REPAIR_REVISION = '20261008-rsc-silverchair-and-acs-toc-route-v1';
+  var PUBLISHER_ROUTE_REPAIR_REVISION = '20261010-rsc-articleid-semantic-and-acs-figure1-v2';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
   var IMAGE_UPLOAD_MAX_BUDGET_MS = 48000;
   var IMAGE_OUTBOX_PREFIX = 'osg-toc-v6:pending-image-transfer-v1:';
@@ -2595,17 +2595,19 @@ function embeddedJobDois(value) {
   // when the RSC article shell lacks the original TOC/figure DOM. This is a
   // bounded, first-party, same-session fallback for TWO verified Oct-09 gaps.
   // A PDF first-page preview, generic image, or foreign article is never TOC.
-  var RSC_NATIVE_ABSTRACT_AJAX_REVISION = '20261009-two-doi-ajax-source-v1';
+  var RSC_NATIVE_ABSTRACT_AJAX_REVISION = '20261010-doi-article-id-semantic-v2';
   function rscNativeAjaxBoundRoute(job) {
     var doi=normalizeDoi(job&&job.doi);
-    if(doi!=='10.1039/d6sc06407h'&&doi!=='10.1039/d6gc03748h')return null;
+    if(!/^10\.1039\/[a-z][0-9][a-z]{2}[a-z0-9]+$/i.test(doi)
+      ||String(job&&job.publisher||publisherForDoi(doi))!=='rsc')return null;
     try{
       var url=new URL(location.href),path=url.pathname;
       if(url.protocol!=='https:'||url.hostname.toLowerCase()!=='pubs.rsc.org')return null;
       var match=/^\/(sc|gc)\/article\/doi\/10\.1039\/([^/]+)\/(\d{5,10})(?:\/|$)/i.exec(path);
       if(!match||normalizeDoi('10.1039/'+match[2])!==doi)return null;
       var code=match[1].toLowerCase();
-      if(code!==(doi.indexOf('/d6sc')>=0?'sc':'gc'))return null;
+      var parts=rscRouteParts(job);
+      if(!parts||parts.code!==code)return null;
       return {doi:doi,code:code,articleId:match[3],
         url:url.origin+'/'+code+'/PlatformArticle/ArticleAbstractAjax?articleId='+match[3]+'&layAbstract=false'};
     }catch(_){return null;}
