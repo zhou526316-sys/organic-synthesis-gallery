@@ -19,8 +19,9 @@ export function isJulSepPaper(paper) {
 // Explicit historic records are always out of the October body/PDF bundle;
 // a late-entered July–September paper is TOC-only even if addedDate is in Oct.
 export function isJulSepTocOnly(paper) {
-  return isJulSepPaper(paper) && (isHistoricalBackfill(paper)
-    || day(paper?.addedDate) >= OCT_FULL_START);
+  // User rule applies to all July–September papers needing newly acquired media,
+  // not only newly backfilled DOI rows. Existing assets are left untouched.
+  return isJulSepPaper(paper);
 }
 
 export function paperMediaPolicy(paper) {
