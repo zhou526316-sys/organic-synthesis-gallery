@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { isHistoricalBackfill, isJulSepTocOnly, paperMediaPolicy, shouldShowDailyNew, isOctoberFullCapturePaper, isRetrospectiveAdmission } from '../shared/historical-literature-policy.js';
 import { isHotLandingEligible } from '../shared/literature-landing.mjs';
-import { verifiedHistoricalTitle, VERIFIED_HISTORICAL_TITLE_COUNT } from '../shared/verified-historical-title-repairs.js';
+import { verifiedHistoricalTitle, verifiedTocQueueTitle, VERIFIED_HISTORICAL_TITLE_COUNT } from '../shared/verified-historical-title-repairs.js';
 
 const recentDay = '2026-10-10';
 const preJuly = {doi:'10.1234/historical-old',date:'1967-03-08',addedDate:recentDay,ingestionChannel:'historical_backfill'};
@@ -62,7 +62,16 @@ for(const old of titleGapAudit.records){
  const actual=verifiedHistoricalTitle(old.doi);
  assert.ok(typeof actual==='string'&&actual.length>10,'unverified historical English title: '+old.doi);
  assert.ok(evidenceDoi.has(old.doi),'title without Crossref/publisher DOI receipt: '+old.doi);
+ assert.equal(verifiedTocQueueTitle(old.doi, old.title), actual,
+   'missing historic TOC queue title not restored from exact DOI evidence: '+old.doi);
+ assert.equal(verifiedTocQueueTitle(old.doi.toUpperCase(), 'Title pending verification'), actual,
+   'placeholder historic TOC queue title not restored: '+old.doi);
+ assert.equal(verifiedTocQueueTitle(old.doi, 'Existing valid publisher article title'), 'Existing valid publisher article title',
+   'verified sidecar must not overwrite valid existing title: '+old.doi);
 }
+assert.equal(verifiedTocQueueTitle('10.1021/jacs.fake', ''), '', 'missing DOI must not fabricate article title');
+assert.equal(verifiedTocQueueTitle('10.1021/jacs.fake', 'A real JACS article title'), 'A real JACS article title');
+
 
 
 const main=readFileSync('src/main.ts','utf8');
@@ -76,6 +85,8 @@ assert.ok(main.includes('doi && !retrospectiveCard ? `/pdf-vault/'), 'backfill l
 assert.ok(queue.includes("filter(paper => !isRetrospectiveAdmission(paper))"), 'history included in latestAddedDate');
 assert.ok(queue.includes("isHistoricalBackfill(paper) || paperMediaPolicy(paper) === 'toc_only'"), 'history in figure-gap queue');
 assert.ok(queue.includes('mediaPolicy: paperMediaPolicy(paper)'), 'TOC queue lacks capture policy');
+assert.ok(queue.includes('title: verifiedTocQueueTitle(doi, raw?.title)'), 'TOC queue does not apply verified DOI title');
+assert.ok(queue.includes('title: verifiedTocQueueTitle(doi, prev.title || paper.title)'), 'TOC queue duplicate merge loses verified DOI title');
 assert.ok(tm.includes('&&recentFullCaptureEligible(job);'), 'PDF inventory guard lacks publisher-date cutoff');
 assert.ok(tm.includes('opportunisticFigures:!tocOnlyCaptureEligible(raw)'), 'historical TOC would fetch body');
 assert.ok(tm.includes('if(!captureJobEligible(batch[i]))'), 'historical TOC never dispatched');

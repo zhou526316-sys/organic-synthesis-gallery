@@ -3,6 +3,7 @@ import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { isExcludedDoi } from '../../shared/literature-policy.js';
 import { isHistoricalBackfill, isRetrospectiveAdmission, paperMediaPolicy } from '../../shared/historical-literature-policy.js';
+import { verifiedTocQueueTitle } from '../../shared/verified-historical-title-repairs.js';
 
 const ROOT = process.cwd();
 const PUBLIC = path.join(ROOT, 'public');
@@ -111,7 +112,7 @@ async function loadPapers() {
     const paper = {
       doi,
       journal: canonicalJournal(raw?.journal || ''),
-      title: typeof raw?.title === 'string' ? raw.title : '',
+      title: verifiedTocQueueTitle(doi, raw?.title),
       date: typeof raw?.date === 'string' ? raw.date : '',
       addedDate: typeof raw?.addedDate === 'string' ? raw.addedDate : '',
       ingestionChannel: raw?.ingestionChannel === 'historical_backfill' ? 'historical_backfill' : undefined,
@@ -123,7 +124,7 @@ async function loadPapers() {
       merged.set(doi, {
         doi,
         journal: prev.journal || paper.journal,
-        title: prev.title || paper.title,
+        title: verifiedTocQueueTitle(doi, prev.title || paper.title),
         date: prev.date || paper.date,
         addedDate: knownAddedDates[0] || '',
         // A duplicate DOI already in the regular catalog cannot be silently

@@ -96,3 +96,16 @@ export function verifiedHistoricalTitle(doi) {
 export function verifiedHistoricalTitleSources(doi) {
   return VERIFIED[String(doi || '').trim().toLowerCase()] || null;
 }
+
+// TOC acquisition queue metadata is not a literature-authority write.
+// Use only a previously DOI-verified replacement for an *empty/placeholder*
+// English title; never override a real publisher/canonical article title.
+export function verifiedTocQueueTitle(doi, rawTitle) {
+  const title = typeof rawTitle === 'string' ? rawTitle.trim() : '';
+  const flat = title.toLowerCase().replace(/[：:….]/g, '').replace(/\s+/g, ' ');
+  const pending = !title
+    || ['title pending verification', 'title pending', 'pending verification',
+        'pending title verification', '标题待核验', '待核验', '标题待确认', '待确认'].includes(flat)
+    || /cloudflare|checking your browser|verify you are human|enable javascript|access denied|page not found/i.test(flat);
+  return pending ? verifiedHistoricalTitle(doi) || '' : title;
+}
