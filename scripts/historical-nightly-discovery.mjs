@@ -265,25 +265,52 @@ async function publishedSet(){
  * Only promote a split root after every non-overlapping leaf has complete source coverage.
  * Leaf files are audit evidence, not separate admission/search candidates.
  */
-async function finalizeSplitRoot(split,journal){
+async function finalizeSplitRoot(split,journal,published){
   const merged=new Map(),segments=[];
   let crossrefCount=0,openalexCount=0,duplicateDois=0;
+  if(!validDate(split.rootRange?.from)||!validDate(split.rootRange?.to)
+    ||split.rootRange.from>split.rootRange.to)
+    throw Error('split_segment_root_range_invalid');
+  if(new Set(split.completed).size!==split.completed.length)
+    throw Error('split_segment_duplicate_receipt');
   for(const id of split.completed){
     const batch=await loadJson(STAGE_ROOT+'/batches/'+id+'.json',null);
     if(!batch||batch.recordType!=='historical_discovery_segment_evidence'
       ||batch.parentBatchId!==split.rootId||batch.status!=='source_enumeration_complete'
-      ||batch.consistency?.complete!==true||!Array.isArray(batch.records))
+      ||batch.consistency?.complete!==true||!Array.isArray(batch.records)
+      ||batch.journal!==journal.name
+      ||!validDate(batch.range?.from)||!validDate(batch.range?.to)
+      ||batch.range.from>batch.range.to
+      ||id!==split.rootId+'__'+batch.range.from+'_'+batch.range.to)
       throw Error('split_segment_evidence_incomplete:'+id);
     crossrefCount+=batch.consistency.sourceCounts?.crossref||0;
     openalexCount+=batch.consistency.sourceCounts?.openalex||0;
     segments.push({id,range:batch.range,candidates:batch.candidateCount});
     for(const record of batch.records){
-      if(!record?.doi)throw Error('split_segment_invalid_doi');
+      if(!record?.doi||normDoi(record.doi)!==record.doi)
+        throw Error('split_segment_invalid_doi');
       if(merged.has(record.doi))duplicateDois++;
       else merged.set(record.doi,record);
     }
   }
-  const rows=[...merged.values()].sort((a,b)=>a.doi.localeCompare(b.doi));
+  // Validate the union of leaf date windows before claiming the entire root was enumerated.
+  // This also rejects malformed, overlapping, forged, or truncated saved checkpoints.
+  const ordered=[...segments].sort((a,b)=>a.range.from.localeCompare(b.range.from));
+  let nextDate=split.rootRange.from;
+  for(const segment of ordered){
+    if(segment.range.from!==nextDate)
+      throw Error('split_segment_coverage_gap_or_overlap');
+    nextDate=dateText(Date.parse(segment.range.to+'T00:00:00Z')+DAY_MS);
+  }
+  if(nextDate!==dateText(Date.parse(split.rootRange.to+'T00:00:00Z')+DAY_MS))
+    throw Error('split_segment_coverage_gap_or_overlap');
+  // The 08:00 official DOI registry may have changed between resumed nightly leaves.
+  const rows=[...merged.values()].sort((a,b)=>a.doi.localeCompare(b.doi)).map(record=>{
+    const existingGalleryRecord=published.has(record.doi);
+    return {...record,discoveredIn:split.rootRange,
+      existingGalleryRecord,reviewStatus:existingGalleryRecord?'already_published':'unfinished',
+      needsArticleEvidence:!existingGalleryRecord};
+  });
   const rootRecord={
     schema:SCHEMA,recordType:'historical_discovery_candidate_only',
     journal:journal.name,issns:journal.issns,range:split.rootRange,
@@ -322,15 +349,18 @@ export async function runNightly() {
     if(budget.max-budget.count<3){deferredBudget=true;break;}
     const rootRange=state.cursor.range,journal=journals[state.cursor.journalIndex];
     if(!journal)throw Error('invalid_history_cursor_journal');
+    if(!validDate(rootRange?.from)||!validDate(rootRange?.to)||rootRange.from>rootRange.to)
+      throw Error('invalid_history_cursor_date_range');
     const rootId=journalBatchId(rootRange,journal);
     const split=state.activeSplit;
     if(split&&(
       split.rootId!==rootId||split.journalName!==journal.name
+      ||split.rootRange?.from!==rootRange.from||split.rootRange?.to!==rootRange.to
       ||!Array.isArray(split.pending)||!split.pending.length
       ||!Array.isArray(split.completed)))
       throw Error('invalid_existing_split_state');
     const range=split?split.pending[0]:rootRange;
-    if(!validDate(range?.from)||!validDate(range?.to)
+    if(!validDate(range?.from)||!validDate(range?.to)||range.from>range.to
       ||range.from<rootRange.from||range.to>rootRange.to)
       throw Error('invalid_pending_split_range');
     const id=split?rootId+'__'+range.from+'_'+range.to:rootId;
@@ -366,7 +396,7 @@ export async function runNightly() {
         split.completed.push(id);
         split.pending.shift();
         if(!split.pending.length){
-          await finalizeSplitRoot(split,journal);
+          await finalizeSplitRoot(split,journal,articles);
           state.completed.push(rootId);
           state.cursor=nextCursor(state.cursor,journals);
           delete state.activeSplit;
