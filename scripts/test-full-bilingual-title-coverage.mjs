@@ -141,6 +141,24 @@ try {
   assert.equal(futureResult.summary.chineseMissing,0);
   assert.equal(futureResult.summary.newLiteratureAdmissions,0);
 
+  // Exercise the real three-stage build adapters against a later authorized
+  // catalog with 939 members. A frozen October-10 evidence receipt must not
+  // block October-11 publication just because the approved DOI count grows.
+  const futureRolling=JSON.parse(await readFile(inTemp('public/rolling-supplement.json'),'utf8'));
+  futureRolling.papers.push(future);
+  await writeFile(inTemp('public/rolling-supplement.json'),JSON.stringify(futureRolling));
+  const futureMarker=JSON.parse(await readFile(inTemp('audit/publication-release-state.json'),'utf8'));
+  futureMarker.productionCards=939;
+  await writeFile(inTemp('audit/publication-release-state.json'),JSON.stringify(futureMarker));
+  const futureEnglish=await applyVerifiedTitlePresentationToPages(tmp);
+  assert.equal(futureEnglish.originalApprovedDois,939);
+  const futureZh=await applyVerifiedChineseTitlePresentationToPages(tmp);
+  assert.equal(futureZh.originalApprovedDois,939);
+  const futureAll=await applyFullBilingualTitleCoverageToPages(tmp);
+  assert.equal(futureAll.approvedDois,939);
+  assert.equal(futureAll.chineseCovered,939);
+  assert.equal(futureAll.chineseMissing,0);
+
   const frontend=await readFile('src/main.ts','utf8');
   assert(frontend.includes('scheduleMissingChineseTitleTranslations();'),
     'new archive or indexed DOI results do not trigger Chinese hydration');
