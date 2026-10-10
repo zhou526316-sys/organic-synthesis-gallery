@@ -1,0 +1,30 @@
+{
+  "requestId": "wechat-2026-10-10-r4-fix-cut-off-Fig5e-and-complete-two-page-SI-TableS11",
+  "action": "replace_truncated_source_figures_only",
+  "date": "2026-10-10",
+  "revisionFrom": "2026-10-10-r3",
+  "revisionTo": "2026-10-10-r4",
+  "selectedDois": [
+    "10.1002/anie.3306470",
+    "10.1038/s44160-026-01128-y"
+  ],
+  "existingMediaId": "KhELYUzvwADwB_l1xH1SWFOfn60HSWWcYlciDjMIDj7HKSul-GJJti3u0OIKFcyL",
+  "expectedPriorRealPreview": "https://relay.gczhouwld.com/wechat-preview/e4795548645a1dabc379a911.html",
+  "packageUrl": "https://at.adobe.com/68qq0aRd6GF9DxsU",
+  "packageSha256": "f972796d94b4316f1cd620383471568a5d6ede1bf266eef2d52d5ef2f1fac6c1",
+  "reviewedSourcePaths": [
+    "public/wechat-assets/reviewed/2026-10-10-r4-complete-evidence/fig5e-complete-main-p7.png",
+    "public/wechat-assets/reviewed/2026-10-10-r4-complete-evidence/si-table-s11-full-part1-si-p18.png",
+    "public/wechat-assets/reviewed/2026-10-10-r4-complete-evidence/si-table-s11-full-part2-si-p19.png"
+  ],
+  "sourcesSha256": {
+    "public/wechat-assets/reviewed/2026-10-10-r4-complete-evidence/fig5e-complete-main-p7.png": "16237e41194bf7f4d9b56d56008d261acee6d19ac155759b88761181327e311b",
+    "public/wechat-assets/reviewed/2026-10-10-r4-complete-evidence/si-table-s11-full-part1-si-p18.png": "7fd012103a46ef248bdd6e5485a40fdb05a65344d9fc0e5c81896942ecaca6e9",
+    "public/wechat-assets/reviewed/2026-10-10-r4-complete-evidence/si-table-s11-full-part2-si-p19.png": "9aa1899f8eb227371fd94a7d739d2bc1b93f1e14d38f7041508185c62c6f00dd"
+  },
+  "draftOnly": true,
+  "publicSendAuthorized": false,
+  "sourceReviewOnly": true,
+  "requireSameMediaDraftGetAfterReview": true,
+  "reason": "User provided screenshots proving original Nature Synthesis Fig.5e and SI TableS11 are truncated and explicitly ordered replace them IN the same WeChat Official Account draft. Fig5e full original PDF p7 exact source crop complete all Int-I..V and electrochemical HER. Table S11 printed SI pp18-19 must be represented as TWO consecutive complete original page images (all title/header/data/formula). Keep 18 Angew body figures, other 29 Nature figures, both covers and two articles' full prose/titles absolutely unchanged. No other images/semantics change. Run independently reviewed source import first, then one fixed-IP same-media draft/update and draft/get. No mass/public send."
+}
