@@ -495,7 +495,9 @@ async function handleApi(request, env, ctx) {
   if (request.method === 'POST' && url.pathname === '/api/admin/literature-catalog-index/view') {
     const authError = requireWriteAuthorization(request, env);
     if (authError) return authError;
-    return resultResponse(await queryLiteratureCatalogView(env, await readJson(request)));
+    // Parity audits compare only the baseline DOI/title/date index. Public
+    // queries still include the separately verified original-abstract FTS.
+    return resultResponse(await queryLiteratureCatalogView(env, await readJson(request), {baseOnly:true}));
   }
 
   if (request.method === 'GET' && url.pathname === '/api/admin/user-library-shadow/status') {
