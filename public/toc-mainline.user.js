@@ -269,6 +269,23 @@
     return prefix+parts.join(' / ');
   }
 
+  function captureBlockCategory(reason) {
+    // A completed publisher visit with no usable TOC is NOT an access denial;
+    // PDF HTTP403 is independent of successfully staged body figures.
+    var text=String(reason||''),labels=[];
+    if(/publisher_access_gate|challenge_not_completed|auth_not_completed|page_doi_unverified|access_gate/i.test(text))
+      labels.push('出版社访问验证');
+    if(/(?:private_pdf_http_40[13]|private_pdf_failed|private_pdf_not_found|pdf=private_pdf_http_403)/i.test(text))
+      labels.push('PDF 权限或获取受阻');
+    if(/no_usable_official_or_figure1|toc=(?:not_found|failed)|no_toc_candidate|toc_candidate_unavailable/i.test(text))
+      labels.push('TOC/主图未获取');
+    if(/upload_http_|image_upload_budget|figure_stage.*failed|r2_upload.*failed|gm_request_timeout/i.test(text))
+      labels.push('媒体传输或上传失败');
+    if(/figures=\d+\/\d+|no_usable_figure_variant|article_figure.*failed/i.test(text)
+      &&!/figures=0\/0/.test(text))labels.push('正文图待核实');
+    return labels.length?labels.join('＋'):'其他待核实问题';
+  }
+
   function captureLiveText(s) {
     var phaseNames = {
       starting:'正在生成缺项队列', between_jobs:'本控制页持有任务，等待下一篇', other_controller:'任务由另一控制页持有，等待其继续', interrupted:'上次任务已中断，等待恢复', waiting_controller:'仍有待办，等待控制器继续', inventory_partial:'缺项队列已结束，部分库存未确认',
@@ -303,12 +320,12 @@
       needs:s.need||'—',
       working:s.active?(s.row&&/全文|Abstract|文本/.test(s.row.label)?'文本':s.row&&s.row.label?s.row.label:s.need||'加载文章'):'—',
       evidence:s.activeJob&&(s.activeJob.captureEvidence||s.activeJob.opportunisticEvidence)?'随当前任务顺带抓取文本':s.activeJob&&s.activeJob.existingEvidenceLevel?captureEvidenceLevelText(s.activeJob.existingEvidenceLevel)+'，不作为队列缺项':'—',
-      gaps:s.scopeRevision!==OCT1_SCOPE_QUEUE_REVISION&&s.coverageRevision?'旧版全量统计已停用；请重新按 10 月 1 日起生成缺项队列。':/^(?:starting|inventory_refresh)$/.test(s.phase||'')&&s.total===0?'仅处理 10 月 1 日之后收录文献；正在核对库存…':s.coverageRevision&&s.phase!=='starting'?'10.1起 '+s.scopeCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇（待执行 '+Math.max(0,s.pendingMissing-s.deferredCount)+'／冷却等待 '+s.deferredCount+'／访问受阻 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／确实缺PDF '+Number(s.remainingNeeds.pdf||0)+'；PDF云端 已齐 '+Number(s.ownerPdfInventory.ready||0)+'／待验证 '+(Number(s.ownerPdfInventory.pending||0)+Number(s.ownerPdfInventory.failed||0))+'／未知 '+Number(s.ownerPdfInventory.unknown||0):s.missingOnly?(s.phase==='starting'?'正在核对10.1以后文献…':'仅10.1以后 '+s.scopeCount+' 篇 · 待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)):'—',
+      gaps:s.scopeRevision!==OCT1_SCOPE_QUEUE_REVISION&&s.coverageRevision?'旧版全量统计已停用；请重新按 10 月 1 日起生成缺项队列。':/^(?:starting|inventory_refresh)$/.test(s.phase||'')&&s.total===0?'仅处理 10 月 1 日之后收录文献；正在核对库存…':s.coverageRevision&&s.phase!=='starting'?'10.1起 '+s.scopeCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇（待执行 '+Math.max(0,s.pendingMissing-s.deferredCount)+'／冷却等待 '+s.deferredCount+'／未补齐待诊断 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／确实缺PDF '+Number(s.remainingNeeds.pdf||0)+'；PDF云端 已齐 '+Number(s.ownerPdfInventory.ready||0)+'／待验证 '+(Number(s.ownerPdfInventory.pending||0)+Number(s.ownerPdfInventory.failed||0))+'／未知 '+Number(s.ownerPdfInventory.unknown||0):s.missingOnly?(s.phase==='starting'?'正在核对10.1以后文献…':'仅10.1以后 '+s.scopeCount+' 篇 · 待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)):'—',
       blocked:(s.deferredPreview||[]).map(function(r){return r.doi+' · '+r.need+' · '+String(r.publisher||'')
           +' · '+(r.scope==='publisher'?'出版社限流':'本篇访问验证')
           +' · 触发 '+String(r.triggerDoi||r.doi)+' · '+String(r.reason||'')
           +' · 冷却至 '+new Date(r.until).toLocaleTimeString()+'（尚未访问）';})
-        .concat((s.blockedPreview||[]).map(function(r){return r.doi+' · '+r.need+' · 已访问受阻 · '+r.reason;})).join('\n'),
+        .concat((s.blockedPreview||[]).map(function(r){return r.doi+' · '+r.need+' · '+(r.category||captureBlockCategory(r.reason))+' · '+r.reason;})).join('\n'),
       inventory:inventoryProgressText(s.inventoryProgress,s.inventoryWarmStart,s.inventoryFreshPending)+'；PDF核对：'+pdfInventoryNotice+(s.inventoryUnknown?'；另有 '+s.inventoryUnknown+' 篇存在未确认项，不冒充已齐全或全部缺失':'')+(s.inventoryErrors.length?'；'+s.inventoryErrors.join('；'):''),
       queue:(s.pendingPreview||[]).map(function(j){return j.addedDate+' · '+j.journal+' · '+j.need+'\n'+j.doi;}).join('\n\n'),
       doi: s.doi || '当前没有任务页', journal: s.journal,
@@ -5565,7 +5582,7 @@ function embeddedJobDois(value) {
     s.remainingNeeds={toc:0,figures:0,evidence:0,pdf:0};
     left.forEach(function(r){if(r.job.captureToc)s.remainingNeeds.toc++;if(r.job.captureFigures)s.remainingNeeds.figures++;if(r.job.captureEvidence)s.remainingNeeds.evidence++;if(r.job.capturePrivatePdf)s.remainingNeeds.pdf++;});
     s.pendingPreview=coveragePending(run).slice(0,12).map(function(r){var j=r.job;return {doi:j.doi,journal:j.journal,addedDate:captureBatchDate(j),need:captureNeedText(j)};});
-    s.blockedPreview=left.filter(function(r){return r.state==='blocked';}).slice(0,12).map(function(r){return {doi:r.job.doi,need:captureNeedText(r.job),reason:captureLiveError(r.lastReason||'本次没有新进展')};});
+    s.blockedPreview=left.filter(function(r){return r.state==='blocked';}).slice(0,12).map(function(r){return {doi:r.job.doi,need:captureNeedText(r.job),reason:captureLiveError(r.lastReason||'本次没有新进展'),category:captureBlockCategory(r.lastReason)};});
     return s;
   }
   async function coverageWait(run,until) {
