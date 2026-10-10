@@ -31,6 +31,8 @@ jobs:
         run: node --test scripts/test-springer-nature-meta-abstract.mjs
       - name: Verify scholarly DOI-only source adapters
         run: node --test scripts/test-doi-scholarly-abstract-metadata.mjs
+      - name: Validate authenticated DOI-only scholar metadata rate-limit handling
+        run: node --test scripts/test-semantic-scholar-abstract-client.mjs
       - name: Verify publisher metadata DOI and redirect constraints
         run: node --test scripts/test-publisher-abstract-metadata.mjs
       - name: Validate true DOI-bound abstract recovery and term search
@@ -41,6 +43,7 @@ jobs:
           WORKER_URL: https://api.gczhouwld.com/
           BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
           OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+          SEMANTIC_SCHOLAR_API_KEY: ${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}
           SPRINGER_NATURE_API_KEY: ${{ secrets.SPRINGER_NATURE_API_KEY }}
           SEARCH_ENRICHMENT_REPORT: ${{ runner.temp }}/abstract-recovery-report.json
           SEARCH_ABSTRACT_RETRY_LIMIT: '300'
