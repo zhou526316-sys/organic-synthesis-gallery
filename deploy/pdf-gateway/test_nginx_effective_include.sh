@@ -5,7 +5,7 @@ command -v nginx >/dev/null || { echo '[FAIL] nginx required'; exit 1; }
 command -v curl >/dev/null || { echo '[FAIL] curl required'; exit 1; }
 source_file="$(cd "$(dirname "$0")" && pwd -P)/install.sh"
 grep -F 'Managed PDF vhost found in effective nginx -T configuration' "$source_file" >/dev/null
-grep -F "PDF vhost symlink exists but is absent from nginx -T." "$source_file" >/dev/null
+grep -F "[CHECK] Dedicated sites-enabled PDF site not in effective include graph." "$source_file" >/dev/null
 grep -F -- '--diagnose) dump_http_route_diagnostic' "$source_file" >/dev/null
 grep -F 'acme_name="gallery-acme-probe-$(date +%s)-$$"' "$source_file" >/dev/null
 
