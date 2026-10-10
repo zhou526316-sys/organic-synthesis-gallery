@@ -208,8 +208,9 @@ wait_local_gateway(){
  journal_snippet="$(journalctl -u "$SERVICE" --since '-90 seconds' \
    --no-pager -o cat 2>/dev/null | tail -40 || true)"
  for signature in PermissionError FileNotFoundError ModuleNotFoundError \
-   ImportError SyntaxError MemoryError sqlite3.OperationalError \
-   AddressInUseError ConnectionRefusedError 'Failed at step' \
+   ImportError SyntaxError MemoryError OSError sqlite3.OperationalError \
+   AddressInUseError ConnectionRefusedError 'Address already in use' \
+   'Failed at step' \
    'Operation not permitted' 'Read-only file system'; do
    if grep -Fq "$signature" <<< "$journal_snippet"; then
      echo "[DIAG] SERVICE_ERROR_CLASS=$signature" >&2
