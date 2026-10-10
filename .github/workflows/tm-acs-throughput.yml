@@ -26,8 +26,10 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: tm-acs-throughput
-  cancel-in-progress: false
+  # A stale PR run should not block tests of the newer approved revision;
+  # keep main production CI non-cancelling.
+  group: tm-acs-throughput-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   verify:
     runs-on: ubuntu-latest
