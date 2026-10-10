@@ -1,0 +1,43 @@
+name: WeChat Read Original Link-Only Recovery CI
+on:
+  pull_request:
+    paths:
+      - 'ops/wechat-publisher/create-draft.py'
+      - 'tests/test-wechat-source-link-only-recovery.py'
+      - '.github/workflows/wechat-source-link-only-recovery-ci.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ops/wechat-publisher/create-draft.py'
+      - 'tests/test-wechat-source-link-only-recovery.py'
+      - '.github/workflows/wechat-source-link-only-recovery-ci.yml'
+permissions:
+  contents: read
+jobs:
+  safety-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check publisher and test syntax
+        run: python -m py_compile ops/wechat-publisher/create-draft.py tests/test-wechat-source-link-only-recovery.py
+      - name: Enforce source-link only and draft identity readback
+        run: python tests/test-wechat-source-link-only-recovery.py -v
+      - name: No duplicate drafts or public sends in recovery implementation
+        run: |
+          python - <<'PY'
+          import pathlib
+          s=pathlib.Path('ops/wechat-publisher/create-draft.py').read_text()
+          body=s.split('def update_verified_original_links_only(',1)[1].split('\ndef preview_slug(',1)[0]
+          assert 'create_draft(' not in body
+          assert 'submit_publish(' not in body
+          assert 'upload_' not in body
+          assert 'draft/batchget?' in s
+          assert '"no_content": 1' in s
+          assert 'find_unique_readable_draft(token, titles, dois)' in body
+          assert 'post-update non-URL article field changed' in body
+          print('SAFE: link-only recovery neither uploads body/cover nor creates or publicly sends drafts')
+          PY
