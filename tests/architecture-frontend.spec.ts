@@ -771,12 +771,14 @@ for (const width of [390, 1280]) {
     await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
       { waitUntil: 'domcontentloaded' });
     await expect(page.locator('#gallery .card').first()).toBeVisible({ timeout: 30000 });
-    const journal = (await page.locator('#gallery .card').first().getAttribute('data-journal')) || '';
-    expect(journal.length).toBeGreaterThanOrEqual(2);
-    const query = journal.slice(0, 2);
-    // Scope this test to the suggestion controller: a 2-character query can
-    // trigger an asynchronous static shard search and remount the app while
-    // this test is about closing the popup, not corpus transport.
+    const firstDoi = await page.locator('#gallery .card').first().getAttribute('data-doi');
+    expect(firstDoi).toMatch(/^10\\./);
+    // Every verified paper DOI starts with 10.; journal names in the first
+    // bootstrap window can change asynchronously and are not a stable
+    // suggestion fixture for the different viewport sizes.
+    const query = '10.';
+    // Scope this test to the suggestion controller so its lifecycle does not
+    // depend on unrelated asynchronous corpus searches/remounts.
     await page.evaluate(() => {
       document.querySelector('#app')?.addEventListener(
         'gallery-corpus-query', event => event.stopImmediatePropagation(), true,
@@ -785,13 +787,18 @@ for (const width of [390, 1280]) {
     const search = page.locator('#search');
     const popover = page.locator('.user-search-popover');
     const openSuggestions = async (): Promise<void> => {
+      // Ensure Playwright's automatic scroll-to-input occurs *before* creating
+      // the popover; page-scroll dismisses it by design.
+      await search.scrollIntoViewIfNeeded();
       await search.fill('');
       await search.fill(query);
       await expect(popover.locator('button').first()).toBeVisible({ timeout: 10000 });
     };
 
     await openSuggestions();
-    await page.locator('h1').click();
+    // A nearby non-input surface tests outside-pointer dismissal without
+    // moving the viewport back to the hero and racing input auto-scroll.
+    await page.locator('.resultline').click();
     await expect(popover).toHaveCount(0);
 
     await openSuggestions();
