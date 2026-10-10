@@ -239,7 +239,7 @@ export class GalleryPaperActions extends HTMLElement {
     if (!doi) {
       this.summaryData = null;
       this.summaryLoading = false;
-      this.summaryError = this.tr('该文献 DOI 尚未核验，暂不能读取 AI 摘要。', 'This paper has no verified DOI yet, so the AI summary cannot be read.');
+      this.summaryError = this.tr('该文献 DOI 尚未核验，暂不能读取摘要。', 'This paper has no verified DOI yet, so the abstract cannot be read.');
       this.render();
       return;
     }
@@ -263,6 +263,18 @@ export class GalleryPaperActions extends HTMLElement {
       content = `<div class='summary-state'>${this.tr('正在读取摘要状态…', 'Loading summary status…')}</div>`;
     } else if (this.summaryError) {
       content = `<div class='summary-state error'>${escapeHtml(this.summaryError)}</div>`;
+    } else if (!data?.available && data?.abstractAvailable && data?.abstractExcerpt) {
+      // Metadata abstracts are not deep reviewed summaries, and deposited
+      // publisher text must not be rendered as an unrestricted full abstract.
+      const attribution = data.abstractSource === 'openalex' ? 'OpenAlex'
+        : data.abstractSource === 'crossref' ? 'Crossref' : 'DOI metadata';
+      const source = data.originalArticleUrl
+        ? `<a class='summary-open' href='${escapeHtml(data.originalArticleUrl)}' target='_blank' rel='noopener noreferrer'>${this.tr('查看原始摘要 ↗','Read source abstract ↗')}</a>`
+        : '';
+      content = `<div class='summary-meta'>${this.tr('原始英文摘要节选（最多 200 字符）','Original English abstract excerpt (up to 200 characters)')} · ${escapeHtml(attribution)}</div>
+        <div class='summary-text' lang='en'>${escapeHtml(data.abstractExcerpt)}</div>
+        <div class='summary-state'>${this.tr('中文概述尚未通过核验；此处为来源明确的英文原文节选，不是全文解读。','A reviewed Chinese overview is not yet available. This is an attributed excerpt, not a full-paper interpretation.')}</div>
+        ${source}`;
     } else if (!data?.available) {
       const coverage = data?.evidenceLevel === 'abstract_only'
         ? this.tr('Abstract', 'Abstract')
@@ -299,7 +311,7 @@ export class GalleryPaperActions extends HTMLElement {
       ${toc ? `<div class='summary-toc'><img src='${escapeHtml(toc)}' alt='TOC / graphical abstract'></div>` : ''}
       <div class='summary-main'>
         ${content}
-        ${data?.generatedAt ? `<div class='summary-meta'>${this.tr('摘要已生成', 'Summary ready')} · ${data.evidenceLevel === 'abstract_only' ? this.tr('基于 Abstract', 'Abstract-based') : data.evidenceLevel === 'partial' ? this.tr('基于部分正文', 'based on partial article text') : data.evidenceLevel === 'complete' ? this.tr('基于完整正文', 'based on complete article text') : this.tr('基于已同步证据', 'based on synced evidence')} · ${this.tr('生成于', 'Generated')} ${formatTime(data.generatedAt)}</div>` : ''}
+        ${data?.generatedAt ? `<div class='summary-meta'>${this.tr('摘要已生成', 'Summary ready')} · ${data.source === 'reviewed_metadata_abstract_v1' ? this.tr('基于原始 Abstract 的审核概述', 'Reviewed overview based on the original abstract') : data.evidenceLevel === 'abstract_only' ? this.tr('基于 Abstract', 'Abstract-based') : data.evidenceLevel === 'partial' ? this.tr('基于部分正文', 'based on partial article text') : data.evidenceLevel === 'complete' ? this.tr('基于完整正文', 'based on complete article text') : this.tr('基于已同步证据', 'based on synced evidence')} · ${this.tr('生成于', 'Generated')} ${formatTime(data.generatedAt)}</div>` : ''}
         ${meta?.href ? `<a class='summary-open' data-summary-open href='${escapeHtml(meta.href)}' target='_blank' rel='noopener noreferrer'>${this.tr('打开原文 ↗', 'Open original ↗')}</a>` : ''}
       </div>
     </section>`;
@@ -329,7 +341,7 @@ export class GalleryPaperActions extends HTMLElement {
       .status-original-action[data-image-source='crop']{object-fit:contain!important}
       ${SUMMARY_PANEL_STYLES}
       ${STATUS_PRESENTATION_CSS}
-    </style>${this.chips(paper, status)}<div class='summary-entry'><button type='button' class='summary-trigger' data-action='summary'>✦ ${this.tr('AI 摘要', 'AI summary')}</button></div><div class='bar'>
+    </style>${this.chips(paper, status)}<div class='summary-entry'><button type='button' class='summary-trigger' data-action='summary'>✦ ${this.tr('摘要', 'Abstract')}</button></div><div class='bar'>
       ${button(s.favorite, paper.favorite ? this.tr('已收藏', 'Saved') : this.tr('收藏', 'Save'), 'favorite', paper.favorite ? '★' : '☆', paper.favorite)}
       ${button(status ? { ...s.status, rgb: status.style.rgb } : s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status), status?.style.imageData ? status.style : undefined)}
       ${button(s.note, this.tr('私人备注', 'Private note'), 'note', '✎', Boolean(paper.note))}
@@ -398,7 +410,7 @@ export class GalleryPaperActions extends HTMLElement {
   }
 
   private drawer(paper: PaperUserState): string {
-    const meta = store.metadata(this.paperId); const title = this.panel === 'favorite' ? this.tr('收藏与收藏夹', 'Saved papers and folders') : this.panel === 'summary' ? this.tr('AI 文献摘要', 'AI paper summary') : this.panel === 'status' ? this.tr('阅读状态', 'Reading status') : this.panel === 'note' ? this.tr('私人备注', 'Private note') : this.tr('文献管理', 'Paper tools');
+    const meta = store.metadata(this.paperId); const title = this.panel === 'favorite' ? this.tr('收藏与收藏夹', 'Saved papers and folders') : this.panel === 'summary' ? this.tr('文献摘要', 'Paper abstract') : this.panel === 'status' ? this.tr('阅读状态', 'Reading status') : this.panel === 'note' ? this.tr('私人备注', 'Private note') : this.tr('文献管理', 'Paper tools');
     let body = '';
     if (this.panel === 'summary') {
       body = this.summaryMarkup();
