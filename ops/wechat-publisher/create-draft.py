@@ -2520,6 +2520,13 @@ def find_unique_readable_draft(
         items = result.get("item")
         if not isinstance(items, list):
             raise RuntimeError("draft recovery cannot verify WeChat batchget shape")
+        total = result.get("total_count")
+        # A unique match inside the first 100 entries is NOT proof of a
+        # unique draft if the account holds more than 100. Fail closed.
+        if not isinstance(total, int) or total < 0:
+            raise RuntimeError("draft recovery cannot verify full draft inventory")
+        if total > max_items:
+            raise RuntimeError("draft recovery inventory exceeds safe scan limit; no write")
         for row in items:
             if not isinstance(row, dict):
                 continue
