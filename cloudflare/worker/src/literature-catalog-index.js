@@ -1,3 +1,4 @@
+import { searchEnrichmentReady, searchFtsExpression, searchTermAlternatives } from './literature-search-enrichment.js';
 export const LITERATURE_CATALOG_INDEX_SCHEMA_VERSION = 'literature-catalog-index-v1';
 export const LITERATURE_INDEX_IMPORT_BATCH_MAX = 8;
 const schemaReadyBindings = new WeakSet();
@@ -412,7 +413,7 @@ export async function queryLiteratureCatalogIndex(env,{catalogId:catalogIdValue,
 export async function queryLiteratureCatalogView(env,{
   catalogId:catalogIdValue,query='',selectedJournals=[],excludedJournals=[],
   dateFrom='',dateTo='',addedDate='',sort='newest',limit=60,cursor=''
-}={}){
+}={}, {baseOnly=false}={}){
   if(!literatureCatalogIndexShadowEnabled(env)) return {status:409,body:{error:'literature_catalog_index_shadow_disabled',enabled:false,readPathActive:false}};
   if(!env?.LITERATURE_INDEX_DB) return {status:503,body:{error:'literature_catalog_index_db_missing'}};
   await ensureLiteratureCatalogIndexSchema(env);
@@ -436,24 +437,26 @@ export async function queryLiteratureCatalogView(env,{
   }
 
   const exactOnlineDate=view.dateFrom&&view.dateFrom===view.dateTo?view.dateFrom:'';
-  const joins=[],where=[],args=[];
+  const joins=[],where=['i.catalog_id=?'],args=[catalogId];
   if(view.queryText){
-    const match=phraseQuery(view.queryText);
-    joins.push('JOIN literature_catalog_fts f ON f.catalog_id=i.catalog_id AND f.doi=i.doi');
-    where.push('literature_catalog_fts MATCH ?','f.catalog_id=?','i.catalog_id=?');
-    args.push(match,catalogId,catalogId);
-    where.push(`(
-      instr(lower(COALESCE(i.title,'')),?)>0 OR
-      instr(lower(COALESCE(i.title_zh,'')),?)>0 OR
-      instr(lower(COALESCE(i.doi,'')),?)>0 OR
-      instr(lower(COALESCE(i.journal,'')),?)>0 OR
-      instr(lower(COALESCE(i.authors_text,'')),?)>0 OR
-      instr(lower(COALESCE(i.first_online_date,'')),?)>0
-    )`);
-    args.push(...Array(6).fill(view.queryText));
-  }else{
-    where.push('i.catalog_id=?');
-    args.push(catalogId);
+    const match=searchFtsExpression(view.queryText);
+    const terms=searchTermAlternatives(view.queryText);
+    // FTS first narrows candidate DOIs. Preserve the legacy frontend's
+    // substring fields: synthesis_type alone is NOT an ordinary search hit.
+    // Every candidate is also bound to this exact published generation.
+    const fields=['title','title_zh','doi','journal','authors_text','first_online_date'];
+    const termsSql=terms.map(()=>fields.map(field=>
+      `instr(lower(COALESCE(i.${field},'')),?)>0`).join(' OR ')).join(' OR ');
+    const originalCandidate='i.doi IN (SELECT f.doi FROM literature_catalog_fts f'
+      +' WHERE f.catalog_id=? AND literature_catalog_fts MATCH ?)';
+    const enriched=!baseOnly && await searchEnrichmentReady(env,catalogId);
+    const enrichmentCandidate='i.doi IN (SELECT e.doi FROM literature_search_enrichment_fts e'
+      +' WHERE e.catalog_id=? AND literature_search_enrichment_fts MATCH ?)';
+    where.push('(('+originalCandidate+' AND ('+termsSql+'))'
+      +(enriched?' OR '+enrichmentCandidate:'')+')');
+    args.push(catalogId,match);
+    for(const term of terms)for(const _ of fields)args.push(term);
+    if(enriched)args.push(catalogId,match);
   }
   if(view.selectedJournals.length){
     where.push(`i.journal IN (${view.selectedJournals.map(()=>'?').join(',')})`);

@@ -23,7 +23,7 @@ jobs:
        github.event.workflow_run.head_branch == 'main' &&
        github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 20
     steps:
       - name: Checkout current main
         uses: actions/checkout@v4
@@ -43,6 +43,24 @@ jobs:
           BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
           LITERATURE_INDEX_SHADOW_REPORT: ${{ runner.temp }}/literature-catalog-index-shadow-report.json
         run: node scripts/sync-literature-catalog-index-shadow.mjs
+
+      - name: Enrich the ready DOI-matched index with abstracts and approved interpretations
+        env:
+          SITE_URL: https://gallery.gczhouwld.com/
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev/
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+          SEARCH_ENRICHMENT_REPORT: ${{ runner.temp }}/literature-search-enrichment-report.json
+        run: node scripts/sync-literature-search-enrichment.mjs
+
+      - name: Preserve abstract search coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: literature-search-enrichment-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/literature-search-enrichment-report.json
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Preserve search-index shadow parity report
         if: always()

@@ -1,5 +1,5 @@
 {
-  "requestId": "wechat-2026-10-10-r4-source-link-doi-focus-after-gallery-pr469",
+  "requestId": "wechat-2026-10-10-r4-read-original-link-only-safe-recovery-after-pr470",
   "publicationDate": "2026-10-10",
   "action": "sync_daily_draft",
   "editorialRevision": "2026-10-10-r4",
@@ -16,5 +16,9 @@
   "draftOnly": true,
   "requireDraftGetReadback": true,
   "publicSendAuthorized": false,
-  "reason": "User explicitly approved repairing WeChat 阅读原文 selected DOI and card focus glow. Gallery PR469 merged + mobile Chromium verified legacy date links and exact DOI focus without summary overlay. Update SAME existing October10 two-article WeChat draft source links ONLY using deployed create-draft.py gallery_original_url; first = date+Angew DOI+summary=0, second = Nature Synthesis DOI+summary=0. Preserve both article texts, 52 reviewed source assets incl both covers, image order, 23 formal 08:00 DOI release, media_id, title; no new draft, NO public send. Require live draft/get source_url readback and fresh real preview."
+  "reason": "Owner approved repairing 阅读原文 direct DOI focus and halo. First attempted original media ID returned draft/get 40007; merged PR470 verified link-only safe recovery: no new drafts, no reupload and no freepublish. Read current WeChat draft list only if 40007, recover only UNIQUE existing double-article draft with exact first Angew/second Nature Synthesis titles and both DOI in full stored content, otherwise fail closed. Only change content_source_url to date+Angew DOI+summary=0 and retro DOI+summary=0; preserve both titles, content, author, digest, cover thumbnail IDs, all images, article count and 23-paper Gallery release. Require post-update draft/get, independent source readback and fresh preview. No public send.",
+  "linkOnly": true,
+  "requireExactSameArticleReadback": true,
+  "recoveryPolicy": "draft_batchget_unique_exact_title_order_both_doi_or_fail",
+  "publisherImplementation": "PR470"
 }

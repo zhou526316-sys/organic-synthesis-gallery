@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "request": "owner-approved-immediate-abstract-backfill",
+  "requestedDate": "2026-10-10",
+  "scope": "all-current-reviewed-dois",
+  "currentCatalogId": "e6d7952281ab733ca87520e378408f54df1493f361f8040d9ca9ebeddee6bc20",
+  "readOnlySources": [
+    "openalex",
+    "crossref"
+  ],
+  "protectedLiteratureWrites": 0,
+  "description": "Immediate retry after production Worker deploy; nightly schedule remains 23:20 Beijing, 08:00 literature admission unchanged."
+}

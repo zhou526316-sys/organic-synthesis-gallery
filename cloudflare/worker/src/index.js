@@ -50,6 +50,7 @@ import {
   queryLiteratureCatalogView,
   queryPublishedLiteratureCatalogView,
 } from './literature-catalog-index.js';
+import { beginSearchEnrichment, importSearchEnrichment, finalizeSearchEnrichment, getSearchAbstract, getSearchEnrichmentCoverage, refreshSearchEnrichmentAbstracts } from './literature-search-enrichment.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus, userLibraryRowShadowEnabled } from './user-library-shadow.js';
 import {
@@ -128,6 +129,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/title-translations/zh',
   '/api/literature/supplement',
   '/api/literature/catalog-view',
+  '/api/literature/abstract',
   '/api/toc',
   '/api/article-figures',
   '/api/article-figures/staged',
@@ -407,6 +409,43 @@ async function handleApi(request, env, ctx) {
     }));
   }
 
+  if (request.method === 'GET' && url.pathname === '/api/literature/abstract') {
+    if (!literatureCatalogIndexReadEnabled(env))
+      return json({error:'literature_catalog_index_read_disabled'}, {status:503,headers:cors});
+    return resultResponse(await getSearchAbstract(env,{
+      catalogId:url.searchParams.get('catalogId')||'',doi:url.searchParams.get('doi')||'',
+    }),cors);
+  }
+  if (request.method === 'GET' && url.pathname === '/api/admin/literature-search-enrichment/coverage') {
+    const authError=requireWriteAuthorization(request,env);
+    if(authError) return authError;
+    return resultResponse(await getSearchEnrichmentCoverage(env,{
+      catalogId:url.searchParams.get('catalogId')||'',
+      afterDoi:url.searchParams.get('afterDoi')||'',
+      limit:url.searchParams.get('limit')||'100'
+    }),cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/literature-search-enrichment/refresh') {
+    const authError=requireWriteAuthorization(request,env);
+    if(authError) return authError;
+    return resultResponse(await refreshSearchEnrichmentAbstracts(env,await readJson(request)),cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/literature-search-enrichment/begin') {
+    const authError=requireWriteAuthorization(request,env);
+    if(authError) return authError;
+    return resultResponse(await beginSearchEnrichment(env,await readJson(request)),cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/literature-search-enrichment/import') {
+    const authError=requireWriteAuthorization(request,env);
+    if(authError) return authError;
+    return resultResponse(await importSearchEnrichment(env,await readJson(request)),cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/literature-search-enrichment/finalize') {
+    const authError=requireWriteAuthorization(request,env);
+    if(authError) return authError;
+    return resultResponse(await finalizeSearchEnrichment(env,await readJson(request)),cors);
+  }
+
   if (request.method === 'POST' && url.pathname === '/api/literature/catalog-view') {
     return resultResponse(await queryPublishedLiteratureCatalogView(env, await readJson(request)), cors);
   }
@@ -456,7 +495,9 @@ async function handleApi(request, env, ctx) {
   if (request.method === 'POST' && url.pathname === '/api/admin/literature-catalog-index/view') {
     const authError = requireWriteAuthorization(request, env);
     if (authError) return authError;
-    return resultResponse(await queryLiteratureCatalogView(env, await readJson(request)));
+    // Parity audits compare only the baseline DOI/title/date index. Public
+    // queries still include the separately verified original-abstract FTS.
+    return resultResponse(await queryLiteratureCatalogView(env, await readJson(request), {baseOnly:true}));
   }
 
   if (request.method === 'GET' && url.pathname === '/api/admin/user-library-shadow/status') {
