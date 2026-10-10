@@ -1,5 +1,40 @@
 # Real Tencent PDF gateway acceptance — 2026-10-10
 
+## LIVE owner account authorized Range 206 evidence — 2026-10-10
+
+The owner supplied a screenshot of the **actual browser Console result** from
+the reviewed canary running on the Gallery origin against Tencent ingress:
+
+| Field | Observed value |
+|---|---|
+| gatewayHealth | HTTP200_verified |
+| authorizeHTTP | 200 |
+| available | true |
+| fileHTTP | 206 |
+| range206 | true |
+| pdfMagic | true |
+| error | none |
+| elapsedMs | 4400 |
+| session | not_checked (script leaves placeholder; not an authentication error) |
+
+Assessment: LIVE PASS for this logged-in account + this known stored DOI:
+Gateway reachability, authorized `open` response and first **16 actual PDF
+bytes** with `Content-Range` and `%PDF-` magic verified through the Tencent
+HTTPS ingress. This upgrades Stage B from 'simulated' to 'live observed'.
+`elapsedMs` covers health + authorization + 16-byte Range and is NOT
+PDF page render, full download or throughput benchmarking.
+
+**Still pending (no implied success):** phone cellular from the separately
+authorized second account, denial from a truly unauthorized account,
+revoked-session isolation, multiple real PDF ranges/trailer, page 1/page 2
+and continuous scrolling, native open, and download. Unentitled account
+negative test must not be confused with a second entitled account.
+Production feature flag must remain `enabled:false` and PR #420 remain
+unmerged until current main-compatible integration and approval.
+No DOI, tokens, signed URL, cookies or PDF bytes were stored in this report.
+
+---
+
 ## Verified live deployment (not yet enabled in Gallery)
 
 The owner installed the independent HTTPS gateway on the EXISTING Tencent VM. Its
