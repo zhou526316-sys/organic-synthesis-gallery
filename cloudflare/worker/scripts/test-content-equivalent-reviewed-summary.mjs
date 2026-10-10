@@ -70,7 +70,7 @@ assert.equal(equivalent.body.reviewedAt,approved[doi].reviewedAt);
 
 // A forged/corrupt packet cannot be re-attested even if it copies the
 // originally reviewed sourceHash. The source and full packet must both rehash.
-const parsed=JSON.parse((await r2.get(key)).text());
+const parsed=JSON.parse(await (await r2.get(key)).text());
 await r2.put(key,JSON.stringify({...parsed,articleUrl:'https://pubs.acs.org/doi/'+doi+'?changed'}));
 const corrupt=await getArticleSummary(env,doi);
 assert.equal(corrupt.body.available,false);
