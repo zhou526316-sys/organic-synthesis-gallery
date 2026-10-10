@@ -197,13 +197,13 @@ jobs:
           npx wrangler d1 execute "$D1_NAME" --remote --file=../private-pdf-reader-grants.sql >/tmp/private-pdf-reader-grants-migration.txt
           npx wrangler d1 execute "$D1_NAME" --remote --file=../private-pdf-audit-v1.sql >/tmp/private-pdf-audit-v1-migration.txt
           npx wrangler d1 execute "$D1_NAME" --remote --file=../private-pdf-audit-v2.sql >/tmp/private-pdf-audit-v2-migration.txt
-          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('user_capabilities','private_pdf_documents','private_pdf_access_tokens','private_pdf_capture_leases','private_pdf_verifications') ORDER BY name;" --json >/tmp/private-pdf-schema-check.json
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('user_capabilities','private_pdf_documents','private_pdf_access_tokens','private_pdf_capture_leases','private_pdf_verifications','private_pdf_audit_entries_v2') ORDER BY name;" --json >/tmp/private-pdf-schema-check.json
           node - <<'NODE'
           const fs=require('fs');
           const data=JSON.parse(fs.readFileSync('/tmp/private-pdf-schema-check.json','utf8'));
           const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
           const names=rows.map(x=>x.name).sort();
-          const expected=['private_pdf_access_tokens','private_pdf_capture_leases','private_pdf_documents','private_pdf_verifications','user_capabilities'];
+          const expected=['private_pdf_access_tokens','private_pdf_audit_entries_v2','private_pdf_capture_leases','private_pdf_documents','private_pdf_verifications','user_capabilities'];
           if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('private PDF schema migration incomplete: '+JSON.stringify(names));
           console.log(JSON.stringify({privatePdfSchemaReady:true,tables:names}));
           NODE
