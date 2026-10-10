@@ -113,3 +113,31 @@ one SSH/WeChat QR, dedicated app service, no paid resources and route
 and Windows PowerShell 5.1 raw URL parse are mandatory before the owner retries.
 The owner's retry uses the updated one-session launcher at an immutable branch
 commit, pinned to the installer-source commit `bc50cc94f6a83fdd85a579442b8c4a5ee6b10784`.
+
+## 2026-10-10 additional owner install report: still local 404 after 127.0.0.1 listener fix
+
+The owner supplied a third Tencent one-SSH install log. The ACME file had 0644
+and its ancestors 0755; nginx -t succeeded, and the live HTTP sockets were
+0.0.0.0:80 and [::]:80. Nevertheless, Nginx returned HTTP 404 on the local
+Host-based canary. Certbot was NOT invoked and the PDF-only Nginx changes were
+rolled back. The previous isolated 127.0.0.1:80 precedence reproducer does not
+establish the cause of this live failure.
+
+The installer now checks that its uniquely marked PDF vhost appears in the
+effective nginx -T include graph before attempting the ACME request, fixing
+a missed failure class: nginx -t can succeed even if a newly created
+sites-enabled symlink is not included by the actual configuration. On failure,
+a filtered diagnostic prints only loaded config file paths, listen/server_name
+directives, nginx service state and HTTP listener process data. It NEVER prints
+entire nginx.conf contents, authentication tokens or request URLs. The
+alphanumeric canary now uses Bash's numeric $$ PID, removing the confusing
+literal dollar-sign suffix. The Nginx include test has a 404 -> 200 regression.
+
+Next safe real-server action: run -Mode Diagnose from the one-session
+Windows launcher. This is read-only and only needs one WeChat QR SSH login;
+it does not change Nginx, obtain a certificate, or enable the route. Capture
+the [DIAG] section. Then adapt the Nginx target configuration according
+to observed effective includes/listener mapping rather than repeatedly guessing.
+Only run -Mode Install after the effective route issue is understood.
+No PDF chunk-size, resolution, continuous scroll or account authorization code
+changes are part of this step.
