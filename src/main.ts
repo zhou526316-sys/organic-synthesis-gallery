@@ -1049,7 +1049,10 @@ function restoreMedia(): void {
   for (const target of visibleMediaTargets()) {
     const key = target.doi.toLowerCase();
     const toc = tocCache.get(key);
-    if (toc && now - toc.fetchedAt < MEDIA_TTL && toc.result.available) renderToc(target.toc, toc.result);
+    if (toc && now - toc.fetchedAt < MEDIA_TTL) {
+      if (toc.result.available && toc.result.imageUrl) renderToc(target.toc, toc.result);
+      else renderTocPending(target.toc);
+    }
     const figures = figureCache.get(key);
     if (target.figures && figures && now - figures.fetchedAt < MEDIA_TTL && figures.result.available) renderFigures(target.figures, figures.result);
   }
@@ -1088,42 +1091,58 @@ async function hydrateMediaBatch(): Promise<void> {
     const response = await api.post('/api/media/batch', { dois });
     const payload = response.data as { items?: MediaBatchItem[] };
     const liveMediaUnavailable = response.headers.get('x-gallery-media-source') === 'static-fallback';
+    const requested = new Set(dois.map(doi => doi.toLowerCase()));
+    const received = new Set<string>();
     for (const item of payload.items || []) {
-      const doi = normalizeDoi(item.doi);
-      if (!doi) continue;
+      const doi = normalizeDoi(item?.doi);
+      if (!doi || !requested.has(doi)) continue;
       const key = doi.toLowerCase();
-      mediaCheckedAt.set(key, Date.now());
-      tocCache.set(key, { result: item.toc, fetchedAt: Date.now() });
-      figureCache.set(key, { result: item.figures, fetchedAt: Date.now() });
+      received.add(key);
+      // An API outage plus an empty static index is not a confirmed media miss.
+      // Cache only verified positives from fallback; negative answers need an
+      // actual successful canonical API response to be considered authoritative.
+      if (!liveMediaUnavailable) {
+        mediaCheckedAt.set(key, Date.now());
+        tocCache.set(key, { result: item.toc, fetchedAt: Date.now() });
+        figureCache.set(key, { result: item.figures, fetchedAt: Date.now() });
+      } else {
+        mediaCheckedAt.set(key, Date.now()); // 20s throttle; manual retry overrides this
+        if (item.toc?.available && item.toc.imageUrl)
+          tocCache.set(key, { result: item.toc, fetchedAt: Date.now() });
+        else tocCache.delete(key);
+        if (item.figures?.available) figureCache.set(key, { result: item.figures, fetchedAt: Date.now() });
+        else figureCache.delete(key);
+      }
       document.querySelectorAll<HTMLElement>('.toc-slot[data-doi]').forEach(slot => {
         if ((slot.dataset.doi || '').toLowerCase() !== key) return;
         if (item.toc?.available && item.toc.imageUrl) renderToc(slot, item.toc);
         else if (liveMediaUnavailable) renderTocUnavailable(slot, 'service');
-        else if (!slot.querySelector('img.toc-image')) {
-          const pending = slot.querySelector<HTMLElement>('.generated-graphic-status');
-          if (pending) pending.textContent = language === 'zh' ? '原始主图待补齐' : 'Original graphic pending';
-          slot.dataset.state = 'not-yet-available';
-        }
+        else renderTocPending(slot);
       });
       document.querySelectorAll<HTMLElement>('.figure-strip-slot[data-figure-doi]').forEach(slot => {
         if ((slot.dataset.figureDoi || '').toLowerCase() === key) renderFigures(slot, item.figures);
       });
     }
+    // Incomplete responses do not prove that a DOI has no graphic. Keep the
+    // service-retry path, but never overwrite a previously displayed image.
     if (liveMediaUnavailable) {
-      // A failed canonical API read may return an empty static snapshot.
-      // Do not leave those visible cards pretending that a capture is still running.
-      const requested = new Set(dois.map(doi => doi.toLowerCase()));
-      for (const target of targets) {
-        if (!requested.has(target.doi.toLowerCase())) continue;
-        if (tocCache.get(target.doi.toLowerCase())?.result.available) continue;
-        renderTocUnavailable(target.toc, 'service');
-      }
+      for (const key of requested) mediaCheckedAt.set(key, Date.now());
     }
+    for (const target of targets) {
+      const key = target.doi.toLowerCase();
+      if (!requested.has(key)) continue;
+      if (received.has(key) && !liveMediaUnavailable) continue;
+      if (tocCache.get(key)?.result.available) continue;
+      renderTocUnavailable(target.toc, 'service');
+    }
+
   } catch {
-    // Preserve the existing static compatibility fallback, but expose a retry
-    // instead of leaving the visible card stuck in the generated-pending state.
+    // A transport failure cannot establish that an original graphic is absent.
     for (const target of targets) {
       if (!dois.includes(target.doi)) continue;
+      const key = target.doi.toLowerCase();
+      mediaCheckedAt.set(key, Date.now()); // avoid retry storms on scroll
+      if (!tocCache.get(key)?.result.available) tocCache.delete(key);
       renderTocUnavailable(target.toc, 'service');
     }
     window.dispatchEvent(new CustomEvent('gallery-media-static-fallback'));
@@ -1136,6 +1155,26 @@ async function hydrateMediaBatch(): Promise<void> {
       scheduleMediaBatch(40);
     }
   }
+}
+
+function renderTocPending(slot: HTMLElement): void {
+  // A genuine cache_miss is different from network failure. Replace stale
+  // retry controls, including on a long-lived tab that previously saw HTTP 503.
+  // Never discard a verified original graphic already displayed in the card.
+  if (slot.querySelector('img.toc-image')) return;
+  const message = language === 'zh' ? '原始主图待补齐' : 'Original graphic pending';
+  const existing = slot.querySelector<HTMLElement>('.generated-graphic-status');
+  if (existing && !slot.querySelector('.toc-retry')) {
+    existing.textContent = message;
+  } else {
+    const status = document.createElement('span');
+    status.className = 'toc-pending-status';
+    status.textContent = message;
+    slot.replaceChildren(status);
+  }
+  slot.classList.remove('generated', 'pending', 'preparing', 'unavailable');
+  slot.classList.add('loaded');
+  slot.dataset.state = 'not-yet-available';
 }
 
 function renderTocUnavailable(slot: HTMLElement, reason: 'service' | 'image'): void {
@@ -1916,6 +1955,17 @@ window.addEventListener('resize', () => {
   }
   scheduleMediaBatch(60);
 });
+// Media arrives independently of the 08:00 article release. Recheck only
+// visible cards which are still missing a graphic or had a transport failure;
+// a hidden/background tab or an already-rendered card does no polling.
+window.setInterval(() => {
+  if (document.hidden) return;
+  if (!visibleMediaTargets().some(target => [
+    'not-yet-available', 'service-error',
+  ].includes(target.toc.dataset.state || ''))) return;
+  scheduleMediaBatch(0);
+}, MEDIA_TTL);
+
 window.addEventListener('gallery-assets-updated', event => {
   const detail = event instanceof CustomEvent ? event.detail as { doi?: unknown } : undefined;
   const doi = normalizeDoi(typeof detail?.doi === 'string' ? detail.doi : null);

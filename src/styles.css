@@ -924,6 +924,15 @@ select {
   font-size: 11px;
   line-height: 1.4;
 }
+.toc-pending-status {
+  display: block;
+  max-width: calc(100% - 32px);
+  padding: 12px 16px;
+  color: #667085;
+  font: 500 12px/1.6 system-ui, sans-serif;
+  text-align: center;
+}
+
 .toc-retry {
   max-width: calc(100% - 28px);
   border: 1px solid #cbd5e1;

@@ -262,3 +262,51 @@ test('failed static body figures do not trigger an unbounded recovery loop', () 
   assert.match(recovery, /delete slot\.dataset\.runtimeFigureErrorKey/);
   assert.match(recovery, /figures\.slice\(0, 10\)\.map\(figure => figure\.imageUrl\)/);
 });
+
+const RSC_SCREENSHOT_DOIS = [
+  '10.1039/d6sc06374h',
+  '10.1039/d6gc04458a',
+  '10.1039/d6gc05783g',
+];
+
+test('confirmed RSC cache misses are returned as verified dynamic negative media, not transport errors', async () => {
+  const dynamicItems = RSC_SCREENSHOT_DOIS.map(doi => ({
+    doi,
+    toc: { available: false, doi, reason: 'cache_miss' },
+    figures: { available: false, doi, figures: [] },
+  }));
+  const x = mock('gallery.gczhouwld.com', { staticItems: {}, dynamicItems });
+  const reply = await x.api.post('/api/media/batch', { dois: RSC_SCREENSHOT_DOIS });
+  assert.equal(reply.headers.get('x-gallery-media-source'), 'dynamic');
+  assert.deepEqual(
+    [...reply.data.items].map(item => item.doi).sort(),
+    [...RSC_SCREENSHOT_DOIS].sort(),
+  );
+  for (const item of reply.data.items) {
+    assert.equal(item.toc.available, false);
+    assert.equal(item.toc.reason, 'cache_miss');
+    assert.equal(item.figures.available, false);
+  }
+  assert.equal(x.calls.filter(row => row.method === 'POST').length, 1);
+  assert.equal(x.warnings.length, 0);
+});
+
+test('canonical outage without any static media is not reported as a confirmed missing TOC', async () => {
+  const x = mock('gallery.gczhouwld.com', {
+    staticItems: {}, dynamicItems: [], rejectRemote: true,
+  });
+  const reply = await x.api.post('/api/media/batch', { dois: RSC_SCREENSHOT_DOIS });
+  assert.equal(reply.headers.get('x-gallery-media-source'), 'static-fallback');
+  assert.equal(reply.data.items.length, 0);
+  assert.equal(x.warnings.length, 1);
+});
+
+test('UI media state is revalidated only for visible pending/error cards, not every already loaded TOC', () => {
+  const main = readFileSync('src/main.ts', 'utf8');
+  assert.match(main, /function renderTocPending\(slot: HTMLElement\)/);
+  assert.match(main, /slot\.replaceChildren\(status\)/);
+  assert.match(main, /renderTocPending\(target\.toc\)/);
+  assert.match(main, /if \(document\.hidden\) return;/);
+  assert.match(main, /'not-yet-available', 'service-error'/);
+  assert.match(main, /\}, MEDIA_TTL\);/);
+});
