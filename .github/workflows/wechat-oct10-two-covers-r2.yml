@@ -1,0 +1,61 @@
+name: WeChat Oct10 Two Cover R2 Review
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/wechat-oct10-two-covers-r2.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-oct10-two-cover-r2-source-review
+  cancel-in-progress: false
+
+jobs:
+  review-two-covers-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 4
+      - name: Validate exact user intent and protected old revisions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          q=json.load(open('audit/automation-triggers/wechat-oct10-two-covers-r2.json'))
+          assert q['action']=='replace_oct10_two_reviewed_covers_only'
+          assert q['fromRevision']=='2026-10-10-r1' and q['toRevision']=='2026-10-10-r2'
+          assert q['dois']==['10.1002/anie.3306470','10.1038/s44160-026-01128-y']
+          assert q['draftOnly'] is True and q['publicSendAuthorized'] is False
+          assert q['existingMediaId']=='KhELYUzvwADwB_l1xH1SWFOfn60HSWWcYlciDjMIDj7HKSul-GJJti3u0OIKFcyL'
+          assert q['images']['daily']['sha256']=='f60cf50ffbfa044ec9ddefc98603a982d92aa7beed4e1799ee51afb89a4a4ded'
+          assert q['images']['retrospective']['sha256']=='8748213670c0caeff07f5cf030390ba44e8878eb32982b20b0675ee34804c814'
+          PY
+      - name: Raster QA requirements
+        run: python3 -m pip install -q 'Pillow>=10,<13'
+      - name: Import exact cover bytes and review same-day draft manifest without API write
+        run: python3 ops/wechat-publisher/replace-oct10-covers-r2.py
+      - name: Verify final independent source review receipt
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          q=json.load(open('audit/wechat-working/2026-10-10-r2-cover-review-and-qa.json'))
+          g=json.load(open('audit/wechat-working/2026-10-10-review-gate.json'))
+          assert q['status']=='review_pass' and q['revision']=='2026-10-10-r2'
+          assert q['retrospectiveCover']['exactUserSubmittedBytes'] is True
+          assert q['dailyCover']['navyTitleAreaStartsAtY']==515
+          assert q['unchangedBodyImageCounts']==[18,31]
+          assert q['originalSourceImageBytesPreserved'] is True
+          assert q['publisherReviewGate']=='pass'
+          assert q['articleRendererAndParagraphImageMap']=='pass'
+          assert q['all51RasterHashes']=='pass'
+          assert g['textReview']=='pass' and g['imageReview']=='pass'
+          assert g['publicSendAuthorized'] is False
+          assert q['draftWritten'] is False
+          print('R2 two covers source-reviewed and committed; next step must be same-media fixed-IP draft/update + draft/get, never mass send.')
+          PY
