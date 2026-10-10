@@ -164,7 +164,8 @@ await test('owner open returns only a short-lived opaque file URL',async()=>{
     assert.match(timing,/total;dur=\d+/);
     assert.doesNotMatch(timing,/fixture|pdf1|owner|token|private-pdf|10\.1021|https/i);
   }
-  assert.ok(!JSON.stringify(r.headers).includes('fixture-token'));
+  assert.ok(!JSON.stringify(r.headers || {}).includes('fixture-token'),
+    'expired diagnostics must never leak bearer, raw ticket or document identifiers');
 });
 await test('timing is disabled without diagnostic feature flag',async()=>{
   env.PRIVATE_PDF_OPEN_TIMING_ENABLED='0';
