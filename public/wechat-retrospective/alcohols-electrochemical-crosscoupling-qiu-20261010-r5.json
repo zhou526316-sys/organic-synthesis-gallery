@@ -817,14 +817,14 @@
     },
     {
       "id": "retro-cover",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/nature-synthesis-author-name-corrected-r5.png",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-r2/nature-synthesis-user-selected-exact-square.png",
       "caption": "",
       "body": false,
       "display_width_pct": 100,
       "source_figure": "Nature Synthesis Fig. 1c original source molecular cutouts",
       "source_doi": "10.1038/s44160-026-01128-y",
-      "source_kind": "source_exact_cutouts_on_nonmolecular_concept_background",
-      "source_adjustment": "Same user-approved R4 chemistry and layout; lower author name corrected to 仇友爱. The chemical panel pixels remain unchanged."
+      "source_kind": "user_selected_exact_unmodified_cover_png",
+      "source_adjustment": "Byte-for-byte identical 1254x1254 image explicitly supplied by owner in the Oct10 conversation, no recomposition/redrawing/resizing. Bottom author label: 仇友爱等 · 2026."
     }
   ],
   "cover": {
@@ -836,9 +836,9 @@
     },
     "crop_1_1": "0_0_1_1",
     "crop_235_1": "0_0.287234_1_0.712766",
-    "description": "R4 single restrained graphical title, electrochemical Fe(+)/Ni foam(-) and C(sp3)-C(sp3) concept; source-authentic two fully intact Fig.1c structures. No drawn molecular structures or artificial orbitals; retains native square WeChat crop. Original molecular structures preserved; author label corrected to 仇友爱."
+    "description": "Exact owner-selected dark-blue Nature Synthesis conceptual PNG with electrodes, multiple structures and Chinese 仇友爱 author credit. Shown unmodified as the square second-article thumbnail."
   },
   "ai_notice": "本文根据作者公开论文正文与 251 页补充材料独立整理。分子结构、谱图与数据采用原文裁切；概念封面仅用于辅助理解，不作为机理证据。",
-  "editorialRevision": "2026-10-10-r1",
+  "editorialRevision": "2026-10-10-r2",
   "targetDateBeijing": "2026-10-10"
 }

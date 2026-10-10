@@ -1,6 +1,6 @@
 {
   "date": "2026-10-10",
-  "revision": "2026-10-10-r1",
+  "revision": "2026-10-10-r2",
   "articleCount": 2,
   "selectionAuthority": "explicit_user_selection",
   "selectionDois": [
@@ -18,18 +18,18 @@
   "sources": [
     {
       "path": "public/wechat-featured/2026-10-10.json",
-      "blobSha": "7df97bc95d311bec1c278f69b275df742c3750b6",
-      "sha256": "07de5d04b05a66756547f67b09c46c7bed9c5fd09382816691eeb6f13a0e8937"
+      "blobSha": "1d629f4cccfcfeb34a41bdeb93b92157ae9187f3",
+      "sha256": "7b8d46a0793c435b93de63be86a46268de3aaf29f2c76262fc8b2b70c9e0bd95"
     },
     {
       "path": "public/wechat-retrospective/alcohols-electrochemical-crosscoupling-qiu-20261010-r5.json",
-      "blobSha": "5ed7fadfcbc7b5eb02cfc5602ac11bc5d3dfde37",
-      "sha256": "6f99e94ebaab0e7094fca2c7502d4f7ba585b49e9c6db44e431bf3d6ade88331"
+      "blobSha": "2a1302a9c5b554964a989af0e955f83f4ff0f25e",
+      "sha256": "de362d4abb7865a538279b391cc437f1e0d8c022feab6fafb0b5e0797261a2e9"
     },
     {
       "path": "public/wechat-editions/2026-10-10.json",
-      "blobSha": "cc54817bd580088e682c5ec5f22924d36a01c07b",
-      "sha256": "4b73c540f645ea2d376fe61113e2831a36f49afe9204206febb93ad111e7f975"
+      "blobSha": "b2e03a9b8d17bf16b1b2ef77eab92b276d51d85a",
+      "sha256": "ef5a7770c3ffe74ef65c201f772a1adecd233a8447c122eb580048a668c12e88"
     },
     {
       "path": "audit/wechat-working/2026-10-10-r1-text-only.md",
@@ -38,8 +38,8 @@
     },
     {
       "path": "audit/wechat-working/2026-10-10-r1-images-only.md",
-      "blobSha": "3dcb028e038bdc6b2dd88fc6c2445e769c97f742",
-      "sha256": "f9a27c7a1e36c1d5e2e5ce386a1d16d7d172bf7ed1e746168cff9ddcf21e3a09"
+      "blobSha": "8fc007eebd9b40525aa6c70f91f488cfb443f7af",
+      "sha256": "e7811499f40bc8e06bd3feaa979835be40d537b4aafe9396f0727a7782309fd6"
     },
     {
       "path": "audit/wechat-working/2026-10-10-r1-editorial-plan.json",
@@ -49,9 +49,9 @@
   ],
   "assets": [
     {
-      "path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/anie3306470-toc-source-authentic-title-safe.png",
-      "blobSha": "22feb8ce5fdaeac0ac5cca52958f13218623e1a8",
-      "sha256": "ea107193569fe43fbdf549c21016bbd6f02cb16bdd6f9d10fa8edc5130f3ea8d",
+      "path": "public/wechat-assets/reviewed/2026-10-10-r2/anie3306470-original-scheme1b-enlarged-title-safe.png",
+      "blobSha": "d75b17f755e8549a2758663a32ad41a558c617b9",
+      "sha256": "f60cf50ffbfa044ec9ddefc98603a982d92aa7beed4e1799ee51afb89a4a4ded",
       "width": 1880,
       "height": 800
     },
@@ -322,9 +322,9 @@
       "height": 456
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/nature-synthesis-author-name-corrected-r5.png",
-      "blobSha": "05300e652b408c5f4724214df57211ae66bc7c28",
-      "sha256": "b6430216d5bc0144ac9bbcfb31f0680e303677bad421a21b4a594a0b77ec89ae",
+      "path": "public/wechat-assets/reviewed/2026-10-10-r2/nature-synthesis-user-selected-exact-square.png",
+      "blobSha": "056bde6e609eed004491cab7286c68dfa109a065",
+      "sha256": "8748213670c0caeff07f5cf030390ba44e8878eb32982b20b0675ee34804c814",
       "width": 1254,
       "height": 1254
     },
@@ -407,7 +407,7 @@
     }
   ],
   "publicSendAuthorized": false,
-  "draftReadback": "pending",
+  "draftReadback": "pending-R2",
   "reviewNotes": [
     "2026-10-10 08:00 formal review selected the exact user-submitted Angew DOI, 23 accepted, Gallery productionCards>=938.",
     "First article 10 sections, 35 research paragraphs, 18 source-authentic Scheme/SI numbered scientific figures.",
@@ -415,6 +415,7 @@
     "Unnumbered SI illustrations not invented as numbered source figures; SI EMF graphs which rasterized incorrectly are not published.",
     "10.10 native full-title follows header-free cover. Square 1:1 and full 2.35:1 source chemical diagram region retained.",
     "2026-10-10 Fig placement and captions mapped by paragraph; independent source SHA256 for 51 exact decoded assets.",
-    "This import is source-only. Draft publisher may run once only after approval, then perform actual draft/get. No public send."
+    "This import is source-only. Draft publisher may run once only after approval, then perform actual draft/get. No public send.",
+    "R2 cover-only: full title unchanged; first cover PDF source Scheme1B enlarged 996x500 safely above y515 native title band; second cover EXACT user-selected 1254 square bytes; the 49 science body figures and article text unchanged. One same-media draft/update and draft/get required, publicSendAuthorized=false."
   ]
 }

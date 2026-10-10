@@ -74,8 +74,8 @@
   - 原文：SI Fig. S12 / Angew SI DOCX
   - 补充信息 SI Fig. S12｜Fe(OAc)₂/羧酸/CHP 混合物受 390 nm 光照前后的紫外–可见吸收变化。
   - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/si_fig_s12.png / 1856×1167 / SHA256 f00e098d7a365cf6d504bc249e699b9e6cb97b214f2a2d1b483fd93142d38475
-- 封面：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/anie3306470-toc-source-authentic-title-safe.png
-- 仇友爱往期精选封面：public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/nature-synthesis-author-name-corrected-r5.png（仅中文作者字形区域修改，化学结构无改动）
+- 封面：public/wechat-assets/reviewed/2026-10-10-r2/anie3306470-original-scheme1b-enlarged-title-safe.png
+- 仇友爱往期精选封面：public/wechat-assets/reviewed/2026-10-10-r2/nature-synthesis-user-selected-exact-square.png（仅中文作者字形区域修改，化学结构无改动）
 
 ## Nature Synthesis 往期精选 · 已审核的全套31张源图
 
@@ -110,4 +110,10 @@
 - s16｜SI 中最有价值的反面证据：交叉选择性需要付出什么？第2段｜SI Table S11（节选）｜按产物统计电荷投入，标准条件多数为约 18.7 F mol⁻¹。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s16.png
 - s08｜SI 中最有价值的反面证据：交叉选择性需要付出什么？第3段｜SI Fig. S7（下半部）｜反应边界：不适用的官能团及反应体系，报告低效或未检出。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s08.png
 - 先导图：f01
-- 第二篇封面作者姓名校正版：public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/nature-synthesis-author-name-corrected-r5.png
+- 第二篇封面作者姓名校正版：public/wechat-assets/reviewed/2026-10-10-r2/nature-synthesis-user-selected-exact-square.png
+
+
+## 10.10 R2 仅封面资产修正（正文图片与科学描述原样保留）
+- 今日精选：原文 Scheme 1B 无损完整图重新等比例显示，放大且不进入标题底色区。SHA256：f60cf50ffbfa044ec9ddefc98603a982d92aa7beed4e1799ee51afb89a4a4ded
+- 往期精选：作者指定封面原字节替换，不使用任何图像模型重绘。SHA256：8748213670c0caeff07f5cf030390ba44e8878eb32982b20b0675ee34804c814
+- 18+31 张正文原始科学图及正文段落全部未改。
