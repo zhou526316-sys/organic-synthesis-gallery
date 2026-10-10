@@ -1,6 +1,7 @@
 // Read-only, DOI-complete gap audit. No paper admission, reviewer writes,
 // publisher fetch, PDF, SI or media acquisition.
 import {writeFile} from 'node:fs/promises';
+import {classifyPublishedAbstractGap} from './lib/classify-gallery-abstract-gap.mjs';
 const SITE=new URL(process.env.GALLERY_SITE_URL||'https://gallery.gczhouwld.com/');
 const API=new URL(process.env.GALLERY_API_URL||'https://api.gczhouwld.com/');
 const TOKEN=String(process.env.BRIDGE_WRITE_TOKEN||'').trim();
@@ -75,9 +76,9 @@ try{
   assert(cov.original+cov.missing===allowed.size,'abstract_source_count_parity');
   const papers=new Map((liveRegistry.articles||[]).map(x=>[norm(x.doi),x]));
   assert(papers.size===allowed.size&&[...papers.keys()].every(x=>allowed.has(x)),'registry_generation_mismatch');
-  const approved=new Set(Object.entries(summaries.items||{})
+  const approved=new Map(Object.entries(summaries.items||{})
     .filter(([doi,item])=>item?.status==='approved'&&allowed.has(norm(doi)))
-    .map(([doi])=>norm(doi)));
+    .map(([doi,item])=>[norm(doi),item]));
   const gaps=[];
   const raw=await mapLimited(cov.rows,4,async row=>{
     const p=papers.get(row.doi);
@@ -88,11 +89,14 @@ try{
       return {row,p,ui};
     }catch(error){return {row,p,ui:null,error:String(error?.message||error).slice(0,140)}}
   });
-  const journal={};const states={};let recorded=0,liveAvailable=0,liveErrors=0;
+  const journal={};const states={},evidenceCategories={},failureReasons={};
+  let recorded=0,liveAvailable=0,liveErrors=0;
   for(const item of raw){
     const row=item.row,p=item.p;
-    const rec=approved.has(row.doi);
+    const record=approved.get(row.doi)||null;
+    const rec=Boolean(record);
     const uiReady=item.ui?.available===true;
+    const classification=classifyPublishedAbstractGap(record,item.ui,item.error);
     if(rec)recorded++;
     if(uiReady)liveAvailable++;
     if(item.error)liveErrors++;
@@ -103,11 +107,13 @@ try{
     if(uiReady)journal[name].liveAvailable++;
     const state=item.error?'api_read_failed':uiReady?'summary_live_available':'no_live_summary';
     states[state]=(states[state]||0)+1;
+    evidenceCategories[classification.category]=(evidenceCategories[classification.category]||0)+1;
+    if(classification.reason)failureReasons[classification.reason]=(failureReasons[classification.reason]||0)+1;
     gaps.push({doi:row.doi,revision:row.revision,
       journal:name,firstOnlineDate:p.date||null,addedDate:p.addedDate||null,
       title:String(p.title||'').slice(0,220),approvedSummaryRecord:rec,
       liveSummaryAvailable:uiReady,liveSource:item.ui?.source||null,
-      state,...(item.error?{error:item.error}:{})});
+      state,...classification,...(item.error?{error:item.error}:{})});
   }
   report.catalogId=catalogId;
   report.publishedDoiCount=allowed.size;
@@ -118,7 +124,9 @@ try{
   report.liveSummaryAvailableAcrossMissing=liveAvailable;
   report.withoutOriginalOrLiveSummary=cov.missing-liveAvailable-liveErrors;
   report.liveSummaryApiErrors=liveErrors;
-  report.byJournal=journal;report.byCardState=states;report.missingDois=gaps;
+  report.byJournal=journal;report.byCardState=states;
+  report.byEvidenceReason=evidenceCategories;report.byApiReason=failureReasons;
+  report.missingDois=gaps;
   report.ok=liveErrors===0;report.finishedAt=new Date().toISOString();
   if(!report.ok)process.exitCode=1;
 }catch(error){
@@ -134,6 +142,7 @@ try{
     missingWithLiveSummary:report.liveSummaryAvailableAcrossMissing,
     missingWithNeither:report.withoutOriginalOrLiveSummary,
     errors:report.liveSummaryApiErrors,journals:report.byJournal,
+    evidenceReasons:report.byEvidenceReason,apiReasons:report.byApiReason,
     error:report.error
   }));
 }
