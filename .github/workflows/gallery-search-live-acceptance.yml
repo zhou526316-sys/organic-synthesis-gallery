@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/gallery-search-live-acceptance.yml'
       - 'scripts/verify-gallery-search-live-acceptance.mjs'
+      - 'scripts/verify-gallery-search-browser.mjs'
       - 'cloudflare/worker/src/literature-search-enrichment.js'
       - 'cloudflare/worker/src/literature-catalog-index.js'
   push:
@@ -53,3 +54,33 @@ jobs:
           path: ${{ runner.temp }}/gallery-search-live-acceptance.json
           if-no-files-found: warn
           retention-days: 21
+
+  live-browser-readonly:
+    needs: live-search-readonly
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout reviewed browser acceptance
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || 'main' }}
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install pinned Chromium acceptance runner
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps chromium > /tmp/gallery-search-browser-install.log 2>&1 || { tail -70 /tmp/gallery-search-browser-install.log; exit 1; }
+      - name: Check published Gallery search cards on desktop and mobile
+        env:
+          GALLERY_SEARCH_BROWSER_OUTPUT: ${{ runner.temp }}/gallery-search-browser
+        run: node scripts/verify-gallery-search-browser.mjs
+      - name: Preserve browser result and any failure screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-search-browser-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gallery-search-browser/
+          if-no-files-found: warn
+          retention-days: 14
