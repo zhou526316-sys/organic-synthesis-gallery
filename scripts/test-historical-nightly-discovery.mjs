@@ -284,3 +284,269 @@ test('Crossref HTTP 429 blocks the historical root without splitting or touching
     await rm(root,{recursive:true,force:true});
   }
 });
+
+
+
+// Extended adversarial/regression matrix — production remains staging-only.
+async function isolatedHistoricalRun(fn,{queue=null,release=null,priorState=null}={}){
+  const root=await mkdtemp(join(tmpdir(),'gallery-history-adversarial-'));
+  const cwd=process.cwd(),originalFetch=global.fetch,originalExit=process.exitCode;
+  const keys=['HISTORICAL_STAGING_ONLY','HISTORICAL_STAGING_BRANCH','GITHUB_REF_NAME','MAX_UNITS','API_REQUEST_LIMIT'];
+  const old=Object.fromEntries(keys.map(k=>[k,process.env[k]]));
+  const baseQueue=queue||{webpageDoiCount:1,articles:[{doi:'10.1021/jacs.6c00001'}]};
+  const baseMarker=release||{productionCards:baseQueue.webpageDoiCount};
+  try{
+    await mkdir(join(root,'public'),{recursive:true});
+    await mkdir(join(root,'audit'),{recursive:true});
+    await writeFile(join(root,'public/toc-demand-live.json'),JSON.stringify(baseQueue));
+    await writeFile(join(root,'audit/publication-release-state.json'),JSON.stringify(baseMarker));
+    if(priorState){
+      await mkdir(join(root,'audit/historical-staging'),{recursive:true});
+      await writeFile(join(root,'audit/historical-staging/state.json'),JSON.stringify(priorState));
+    }
+    process.chdir(root);
+    Object.assign(process.env,{HISTORICAL_STAGING_ONLY:'1',
+      HISTORICAL_STAGING_BRANCH:'1',GITHUB_REF_NAME:'pull_request',
+      MAX_UNITS:'1',API_REQUEST_LIMIT:'80'});
+    return await fn({root,queue:baseQueue,release:baseMarker,
+      readState:async()=>JSON.parse(await readFile(join(root,'audit/historical-staging/state.json'))),
+      readBatch:async id=>JSON.parse(await readFile(join(root,'audit/historical-staging/batches/'+id+'.json'))),
+      write:async(path,value)=>{
+        await mkdir(join(root,path.split('/').slice(0,-1).join('/')),{recursive:true});
+        await writeFile(join(root,path),JSON.stringify(value));
+      }
+    });
+  }finally{
+    process.exitCode=originalExit;global.fetch=originalFetch;process.chdir(cwd);
+    for(const k of keys){
+      if(old[k]===undefined)delete process.env[k];else process.env[k]=old[k];
+    }
+    await rm(root,{recursive:true,force:true});
+  }
+}
+const emptyCrossref=()=>({ok:true,json:async()=>({message:{'total-results':0,items:[]}})});
+const emptyOpenAlex=()=>({ok:true,json:async()=>({meta:{count:0},results:[]})});
+const stage0=()=>({schema:SCHEMA,mode:'candidate_discovery_only',
+  cursor:{range:{from:'2026-09-22',to:'2026-09-30'},journalIndex:0},
+  completed:[],attempts:[],publishedMembershipSnapshot:1});
+const completeCrossref=(items=[])=>({ok:true,json:async()=>({message:{'total-results':items.length,items}})});
+const completeOpenalex=(items=[])=>({ok:true,json:async()=>({meta:{count:items.length},results:items})});
+function saturatedCrossref(u){
+  const cursor=u.searchParams.get('cursor');
+  const page=cursor==='*'?0:Number(cursor.slice(1));
+  if(!Number.isInteger(page)||page<0||page>9)throw Error('unbounded_page');
+  return {ok:true,json:async()=>({message:{'total-results':1001,
+    items:Array.from({length:100},(_,i)=>({
+      DOI:'10.1021/jacs.6c'+String(page*100+i).padStart(5,'0'),
+      title:['Batch exceeded pagination ceiling']
+    })), 'next-cursor':'p'+(page+1)}})};
+}
+const crRow=(doi,title='Historical electrochemical coupling')=>({
+  DOI:doi,title:[title],published:{'date-parts':[[2026,9,23]]}});
+const oaRow=(doi)=>({doi:'https://doi.org/'+doi,
+  display_name:'Historical electrochemical coupling',publication_date:'2026-09-23'});
+
+test('two healthy zero-result sources close one root, retain 16-journal cursor and zero admissions',async()=>{
+  await isolatedHistoricalRun(async({readState,readBatch,queue,release,root})=>{
+    const seen=[];
+    global.fetch=async url=>{const u=new URL(url);seen.push(u);return u.hostname==='api.crossref.org'
+      ?emptyCrossref():emptyOpenAlex()};
+    const report=await runNightly(),state=await readState();
+    assert.equal(report.completeWindows,1);
+    assert.equal(report.blocked,false);
+    assert.equal(report.noPublication,true);
+    assert.equal(report.noPdf,true);
+    assert.equal(state.cursor.journalIndex,1);
+    const batch=await readBatch('2026-09-22_2026-09-30_jacs');
+    assert.equal(batch.candidateCount,0);
+    assert.equal(batch.status,'source_enumeration_complete');
+    assert.equal(batch.consistency.complete,true);
+    assert.equal(seen.length,3);
+    assert.deepEqual(JSON.parse(await readFile(join(root,'public/toc-demand-live.json'))),queue);
+    assert.deepEqual(JSON.parse(await readFile(join(root,'audit/publication-release-state.json'))),release);
+  });
+});
+
+test('source fault matrix: OpenAlex 429, Crossref 403, and transport failure never close or split',async()=>{
+  for(const fault of ['openalex_429','crossref_403','transport_error']){
+    await isolatedHistoricalRun(async({readState,readBatch})=>{
+      global.fetch=async url=>{
+        const u=new URL(url),isCr=u.hostname==='api.crossref.org';
+        if(fault==='openalex_429'&&!isCr)return{ok:false,status:429};
+        if(fault==='crossref_403'&&isCr)return{ok:false,status:403};
+        if(fault==='transport_error'&&isCr)throw Error('simulated abort');
+        return isCr?emptyCrossref():emptyOpenAlex();
+      };
+      const x=await runNightly(),state=await readState();
+      assert.equal(x.blocked,true, fault);
+      assert.equal(x.completeWindows,0,fault);
+      assert.equal(x.activeSplit,null,fault);
+      assert.equal(state.cursor.journalIndex,0,fault);
+      assert.equal(state.completed.length,0,fault);
+      const batch=await readBatch('2026-09-22_2026-09-30_jacs');
+      assert.equal(batch.status,'incomplete_sources',fault);
+      assert.equal(batch.consistency.complete,false,fault);
+      assert.ok(batch.consistency.issues.length,fault);
+    });
+  }
+});
+
+test('malformed Crossref cursor and changing total-results remain incomplete instead of splitting',async()=>{
+  for(const fault of ['missing_cursor','changing_total']){
+    await isolatedHistoricalRun(async({readState,readBatch})=>{
+      global.fetch=async url=>{
+        const u=new URL(url);
+        if(u.hostname==='api.openalex.org')return emptyOpenalex();
+        const page=u.searchParams.get('cursor')==='*'?0:1;
+        const total=fault==='changing_total'&&page===1?999:1001;
+        return {ok:true,json:async()=>({message:{'total-results':total,
+          items:Array.from({length:100},(_,i)=>crRow('10.1021/jacs.6c'+String(page*100+i).padStart(5,'0'))),
+          ...(fault==='missing_cursor'?{}:{'next-cursor':'p1'})}})};
+      };
+      const x=await runNightly();
+      assert.equal(x.blocked,true,fault);
+      assert.equal(x.completeWindows,0,fault);
+      assert.equal(x.activeSplit,null,fault);
+      assert.equal((await readState()).cursor.journalIndex,0,fault);
+      const batch=await readBatch('2026-09-22_2026-09-30_jacs');
+      assert.match(batch.consistency.issues.join('|'),fault==='missing_cursor'?'missing_next_cursor':'total_changed');
+    });
+  }
+});
+
+test('one-day saturated publisher results cannot bisect and never become falsely complete',async()=>{
+  const state=stage0();
+  state.cursor.range={from:'2026-09-23',to:'2026-09-23'};
+  await isolatedHistoricalRun(async({readBatch,readState})=>{
+    global.fetch=async url=>{
+      const u=new URL(url);
+      return u.hostname==='api.crossref.org'?saturatedCrossref(u):emptyOpenalex();
+    };
+    const x=await runNightly();
+    assert.equal(x.blocked,true);
+    assert.equal(x.completeWindows,0);
+    assert.equal(x.activeSplit,null);
+    assert.deepEqual((await readState()).cursor.range,{from:'2026-09-23',to:'2026-09-23'});
+    const root=await readBatch('2026-09-23_2026-09-23_jacs');
+    assert.equal(root.status,'incomplete_sources');
+    assert.match(root.consistency.issues.join('|'),/truncated_or_inconsistent/);
+  },{priorState:state});
+});
+
+test('nested truncations resume across three rounds and close root only after all leaves complete',async()=>{
+  await isolatedHistoricalRun(async({readState,readBatch})=>{
+    process.env.MAX_UNITS='2';
+    const seen=[];
+    global.fetch=async url=>{
+      const u=new URL(url);seen.push(u);
+      const filter=u.searchParams.get('filter')||'';
+      const root=filter.includes('2026-09-22,until-pub-date:2026-09-30');
+      const left=filter.includes('2026-09-22,until-pub-date:2026-09-25');
+      if(u.hostname==='api.openalex.org')return emptyOpenalex();
+      if((root||left)&&u.pathname.includes('0002-7863'))return saturatedCrossref(u);
+      const doi=filter.includes('2026-09-22,until-pub-date:2026-09-23')
+        ?'10.1021/jacs.6c11111':filter.includes('2026-09-24,until-pub-date:2026-09-25')
+          ?'10.1021/jacs.6c22222':'10.1021/jacs.6c33333';
+      return completeCrossref(u.pathname.includes('0002-7863')?[crRow(doi)]:[]);
+    };
+    const first=await runNightly();
+    assert.equal(first.processed,2);
+    assert.equal(first.completeWindows,0);
+    assert.equal(first.activeSplit.pendingSegments,3);
+    assert.equal((await readState()).cursor.journalIndex,0);
+    process.env.MAX_UNITS='1';
+    const second=await runNightly();
+    assert.equal(second.completeWindows,0);
+    assert.equal(second.activeSplit.pendingSegments,2);
+    process.env.MAX_UNITS='2';
+    const third=await runNightly();
+    assert.equal(third.completeWindows,1);
+    assert.equal(third.activeSplit,null);
+    assert.equal(third.next.journalIndex,1);
+    const root=await readBatch('2026-09-22_2026-09-30_jacs');
+    assert.equal(root.status,'source_enumeration_complete');
+    assert.equal(root.completedBySubwindows,true);
+    assert.deepEqual(root.records.map(x=>x.doi),
+      ['10.1021/jacs.6c11111','10.1021/jacs.6c22222','10.1021/jacs.6c33333']);
+    assert.equal(root.sourceStatus.splitSegments.length,3);
+    assert.ok(seen.length>=20);
+  });
+});
+
+test('parent closure must reject a checkpoint omitting earlier calendar days',async()=>{
+  const state=stage0(),rootId='2026-09-22_2026-09-30_jacs';
+  state.activeSplit={rootId,rootRange:state.cursor.range,journalName:'JACS',
+    completed:[],pending:[{from:'2026-09-26',to:'2026-09-30'}]};
+  await isolatedHistoricalRun(async({readState})=>{
+    global.fetch=async url=>new URL(url).hostname==='api.crossref.org'
+      ?emptyCrossref():emptyOpenalex();
+    await assert.rejects(runNightly(),/split_segment_coverage_gap_or_overlap/);
+    assert.equal((await readState()).completed.length,0);
+    assert.equal((await readState()).cursor.journalIndex,0);
+  },{priorState:state});
+});
+
+test('root aggregation must reject a completed segment outside the root and preserve the cursor',async()=>{
+  const state=stage0(),rootId='2026-09-22_2026-09-30_jacs';
+  state.activeSplit={rootId,rootRange:state.cursor.range,journalName:'JACS',
+    completed:[],pending:[{from:'2026-09-22',to:'2026-09-21'}]};
+  await isolatedHistoricalRun(async()=>{
+    global.fetch=async()=>{throw Error('should_not_fetch')};
+    await assert.rejects(runNightly(),/invalid_pending_split_range|invalid_existing_split_state/);
+  },{priorState:state});
+});
+
+test('finished split candidates must recheck DOI membership after an intervening 08:00 publication',async()=>{
+  await isolatedHistoricalRun(async({readBatch,write})=>{
+    process.env.MAX_UNITS='2';
+    global.fetch=async url=>{
+      const u=new URL(url),filter=u.searchParams.get('filter')||'';
+      if(u.hostname==='api.openalex.org')return emptyOpenalex();
+      if(filter.includes('from-pub-date:2026-09-22,until-pub-date:2026-09-30')
+        &&u.pathname.includes('0002-7863'))return saturatedCrossref(u);
+      const first=filter.includes('from-pub-date:2026-09-22,until-pub-date:2026-09-25');
+      return completeCrossref(u.pathname.includes('0002-7863')
+        ?[crRow(first?'10.1021/jacs.6c11111':'10.1021/jacs.6c22222')]:[]);
+    };
+    const one=await runNightly();
+    assert.equal(one.completeWindows,0);
+    await write('public/toc-demand-live.json',{webpageDoiCount:2,
+      articles:[{doi:'10.1021/jacs.6c00001'},{doi:'10.1021/jacs.6c11111'}]});
+    await write('audit/publication-release-state.json',{productionCards:2});
+    process.env.MAX_UNITS='1';
+    const two=await runNightly();
+    assert.equal(two.completeWindows,1);
+    const batch=await readBatch('2026-09-22_2026-09-30_jacs');
+    assert.equal(batch.candidateCount,2);
+    assert.equal(batch.alreadyPublished,1);
+    assert.equal(batch.unreviewed,1);
+    assert.equal(batch.records.find(x=>x.doi==='10.1021/jacs.6c11111').reviewStatus,'already_published');
+  });
+});
+
+test('duplicate live DOI registry rejects preflight before any Crossref/OpenAlex requests',async()=>{
+  const duplicate={webpageDoiCount:2,articles:[{doi:'10.1021/jacs.6c00001'},{doi:'10.1021/jacs.6c00001'}]};
+  await isolatedHistoricalRun(async({root})=>{
+    let calls=0;global.fetch=async()=>{calls++;return emptyCrossref()};
+    await assert.rejects(runNightly(),/published_registry_invalid_or_duplicate/);
+    assert.equal(calls,0);
+    assert.equal(await readFile(join(root,'audit/publication-release-state.json'),'utf8'),
+      JSON.stringify({productionCards:2}));
+    await assert.rejects(readFile(join(root,'audit/historical-staging/state.json')),/ENOENT/);
+  },{queue:duplicate,release:{productionCards:2}});
+});
+
+test('saved completed leaf missing on disk prevents false root promotion',async()=>{
+  const state=stage0(),rootId='2026-09-22_2026-09-30_jacs';
+  state.activeSplit={rootId,rootRange:state.cursor.range,journalName:'JACS',
+    completed:[rootId+'__2026-09-22_2026-09-25'],
+    pending:[{from:'2026-09-26',to:'2026-09-30'}]};
+  await isolatedHistoricalRun(async({readState})=>{
+    global.fetch=async url=>new URL(url).hostname==='api.crossref.org'
+      ?emptyCrossref():emptyOpenalex();
+    await assert.rejects(runNightly(),/split_segment_evidence_incomplete/);
+    const x=await readState();
+    assert.equal(x.cursor.journalIndex,0);
+    assert.equal(x.completed.length,0);
+  },{priorState:state});
+});
