@@ -18,7 +18,7 @@ function simulate({figure1=true,officialAvailable=false,permission=false}={}) {
  let job;
  const ctx=vm.createContext({
    URL,Date,Math,Map,Set,Number,String,Boolean,Promise,Error,console,
-   VERSION:'6.2.20',CONTROLLER_REVISION:'2.2.41',autoReportJob:null,
+   VERSION:'6.2.20',CONTROLLER_REVISION:'2.2.41',CAPTURE_OBSERVABILITY_REVISION:'fixture',autoReportJob:null,
    location:{href:'https://pubs.acs.org/doi/10.1021/acs.joc.6c01847'},
    assertBoundCaptureJob:j=>assert.equal(j.doi,doi),
    writeToken:()=> '测试授权占位符',
