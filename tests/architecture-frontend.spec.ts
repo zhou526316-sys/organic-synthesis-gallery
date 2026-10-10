@@ -844,6 +844,65 @@ test('a burst of search keystrokes does not rebuild gallery cards or schedule st
   expect(result.childRebuilds).toBeLessThanOrEqual(2);
 });
 
+test('latest indexed search wins over delayed obsolete responses and repeats use short-lived cache', async ({ page }) => {
+  const data = fixture();
+  const queries: string[] = [];
+  let delayedCancelled = false;
+  await stubOptionalApi(page);
+  await page.route('**/api/_healthcheck', async route => {
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+      literatureCatalogIndexShadowEnabled: true,
+      literatureCatalogIndexReadEnabled: true,
+      literatureCatalogIndexReadPathConfigured: true,
+      literatureCatalogIndexReadPathActive: true,
+      literatureCatalogIndexDb: true,
+    }) });
+  });
+  await page.route('**/api/literature/catalog-view', async route => {
+    const body = route.request().postDataJSON() as any;
+    queries.push(String(body.query || ''));
+    if (body.query === 'LMCT') {
+      await new Promise(resolve => setTimeout(resolve, 750));
+    }
+    const item = body.query === 'LMCT' ? data.indexedItems[1] : data.indexedItems[0];
+    try {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+        version: 1, schemaVersion: 'literature-catalog-index-v1',
+        enabled: true, readPathActive: true, catalogId: data.catalogId,
+        matched: 1, count: 1, limit: body.limit, hasMore: false, nextCursor: null,
+        sort: 'newest', items: [item],
+      }) });
+    } catch {
+      if (body.query === 'LMCT') delayedCancelled = true;
+    }
+  });
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+    { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''),
+    { timeout: 30000 }).toBe('architecture-v1');
+  await page.locator('#search').fill('LMCT');
+  await expect.poll(() => queries.includes('LMCT'), { timeout: 10000 }).toBe(true);
+  await page.locator('#search').fill('nickel');
+  await expect.poll(() => queries.includes('nickel'), { timeout: 10000 }).toBe(true);
+  await expect(page.locator('#gallery .card[data-doi]')).toHaveCount(1);
+  await expect(page.locator('#gallery .card').first()).toHaveAttribute('data-doi', data.indexedItems[0].doi);
+  await page.waitForTimeout(850); // Old delayed response must never repaint the new results.
+  await expect(page.locator('#gallery .card').first()).toHaveAttribute('data-doi', data.indexedItems[0].doi);
+  const before = queries.filter(query => query === 'nickel').length;
+  await page.locator('#search').fill('');
+  await page.locator('#search').fill('nickel');
+  await expect(page.locator('#resultCount')).toHaveText('1');
+  await expect(page.locator('#gallery .card').first()).toHaveAttribute('data-doi', data.indexedItems[0].doi);
+  expect(queries.filter(query => query === 'nickel')).toHaveLength(before);
+  expect(delayedCancelled || queries.filter(query => query === 'LMCT').length === 1).toBeTruthy();
+  const durations = await page.evaluate(() => ({
+    network: document.documentElement.dataset.catalogSearchNetworkMs,
+    total: document.documentElement.dataset.catalogSearchTotalMs,
+  }));
+  expect(Number(durations.network)).toBeGreaterThanOrEqual(0);
+  expect(Number(durations.total)).toBeGreaterThanOrEqual(0);
+});
+
 test('short chemistry terms remain on static reader-sort compatibility path', async ({ page }) => {
   let indexedViewRequests = 0;
   await page.route('**/api/_healthcheck', async route => {
