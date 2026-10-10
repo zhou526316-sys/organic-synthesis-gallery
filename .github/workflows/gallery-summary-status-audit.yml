@@ -13,7 +13,7 @@ concurrency:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 9
     env:
       GH_TOKEN: ${{ github.token }}
       BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
@@ -122,3 +122,20 @@ jobs:
           path: summary-status-report/status.json
           retention-days: 7
           if-no-files-found: error
+      - name: Check all published DOI abstract-source gaps and live card availability
+        if: always()
+        env:
+          GALLERY_SITE_URL: https://gallery.gczhouwld.com/
+          GALLERY_API_URL: https://api.gczhouwld.com/
+          GALLERY_ABSTRACT_GAP_REPORT: ${{ runner.temp }}/gallery-basic-abstract-gap.json
+        run: |
+          node --check scripts/audit-gallery-abstract-gaps.mjs
+          node scripts/audit-gallery-abstract-gaps.mjs
+      - name: Retain DOI-specific source gaps separately from review records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-basic-abstract-gap-audit-${{ github.run_id }}
+          path: ${{ runner.temp }}/gallery-basic-abstract-gap.json
+          retention-days: 21
+          if-no-files-found: warn
