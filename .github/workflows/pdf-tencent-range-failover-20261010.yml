@@ -32,7 +32,7 @@ jobs:
           node --check scripts/pdf-private-range-comparison-console.js
           node tests/pdf-private-range-comparison-console.test.cjs
           node cloudflare/worker/scripts/test-private-pdf.mjs
-          node --input-type=module -e "import fs from 'node:fs';const x=JSON.parse(fs.readFileSync('public/pdf-gateway-routing.json','utf8'));if(x.enabled!==false||x.origin!=='https://pdf.gczhouwld.com')process.exit(1)"
+          node --input-type=module -e "import fs from 'node:fs';const x=JSON.parse(fs.readFileSync('public/pdf-gateway-routing.json','utf8'));if(x.enabled!==false||x.manualCanary!==true||x.origin!=='https://pdf.gczhouwld.com')process.exit(1)"
       - name: Build latest owner PDF reader and preserve continuous viewer
         run: |
           npm install --no-audit --no-fund
