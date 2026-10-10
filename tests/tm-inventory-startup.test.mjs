@@ -4,9 +4,9 @@ import vm from 'node:vm';
 import { test } from 'node:test';
 
 const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
-assert.ok(source.includes("// @version      6.2.63"));
-assert.ok(source.includes("var INSTALL_REVISION = '6.2.63';"));
-assert.ok(source.includes("INVENTORY_STARTUP_REVISION = '20261007-inventory-warmstart-hedge-v1'"));
+assert.ok(source.includes("// @version      6.2.64"));
+assert.ok(source.includes("var INSTALL_REVISION = '6.2.64';"));
+assert.ok(source.includes("INVENTORY_STARTUP_REVISION = '20261011-historical-official-toc-cache-v2'"));
 assert.ok(source.includes("INVENTORY_PLAN_CACHE_TTL_MS = 10 * 60 * 1000"));
 assert.ok(source.includes("if(dois.length<=1200)"));
 assert.ok(source.includes("for(var i=0;i<dois.length;i+=30)"));
