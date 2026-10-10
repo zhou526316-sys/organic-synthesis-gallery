@@ -8,7 +8,7 @@ const OCT_FULL_START = '2026-10-01';
 const day = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : '';
 
 export function isHistoricalBackfill(paper) {
-  return paper?.ingestionChannel === 'historical_backfill';
+  return paper?.ingestionChannel === 'historical_backfill' || paper?.paper?.ingestionChannel === 'historical_backfill';
 }
 
 export function isJulSepPaper(paper) {
