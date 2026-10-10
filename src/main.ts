@@ -230,7 +230,6 @@ let architectureLandingPapers: Paper[] = [];
 let hotBootstrapTotal = 0;
 let hotFullLoadPromise: Promise<void> | null = null;
 let architectureMemberDois: string[] | null = null;
-let architectureEarliestDate = '';
 let latestCollectionDate = '';
 let architectureRefreshTimer: number | null = null;
 let architectureRefreshSerial = 0;
@@ -882,10 +881,9 @@ function mount(): void {
   const extraJournals = [...new Set(papers.map(paper => paper.journal).filter(journal => !targetSet.has(journal)))].sort();
   const journals = [...targetJournals, ...extraJournals];
   const dates = papers.map(paper => paper.date).filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
-  const earliest = (architectureClient || architectureFallbackActive) ? architectureEarliestDate : (dates[0] || '');
   const latest = latestCollectionDate || dates[dates.length - 1] || '';
   document.title = t('title');
-  app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='hero-latest'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 && excludedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => { const hidden = excludedJournals.has(journal); return `<div class='journal-option-row${hidden ? ' excluded' : ''}'><label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}${hidden ? ' disabled' : ''}><span>${escapeHtml(journal)}</span></label><button class='journal-exclude${hidden ? ' active' : ''}' data-journal-exclude='${escapeHtml(journal)}' type='button' aria-pressed='${hidden ? 'true' : 'false'}' aria-label='${escapeHtml(`${hidden ? t('restoreJournal') : t('hideJournal')} ${journal}`)}'>${escapeHtml(hidden ? t('restoreJournal') : t('hideJournal'))}</button></div>`; }).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option><option value='readers'${sort === 'readers' ? ' selected' : ''}>${escapeHtml(t('mostRead'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><section class='range-filter' aria-label='${escapeHtml(t('clearFilters'))}'><label class='date-field'><span>${escapeHtml(t('dateFrom'))}</span><input id='dateFrom' type='date' value='${escapeHtml(dateFrom)}'${earliest ? ` min='${escapeHtml(earliest)}'` : ''}${(dateTo || latest) ? ` max='${escapeHtml(dateTo || latest)}'` : ''}></label><label class='date-field'><span>${escapeHtml(t('dateTo'))}</span><input id='dateTo' type='date' value='${escapeHtml(dateTo)}'${(dateFrom || earliest) ? ` min='${escapeHtml(dateFrom || earliest)}'` : ''}${latest ? ` max='${escapeHtml(latest)}'` : ''}></label><button id='clearCustomFilters' class='clear-custom-filters' type='button'${selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo ? ' disabled' : ''}>${escapeHtml(t('clearFilters'))}</button></section><div class='resultline'><div class='result-count'><span id='resultScopeLabel' class='result-scope'>${escapeHtml(resultScopeIsDefaultRecent() ? t('recentScope') : t('currentScope'))}</span><span class='result-separator' aria-hidden='true'>·</span><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div></div>${architectureReadLimited || (architectureBootstrapPending && !resultScopeIsDefaultRecent()) ? `<div class='architecture-read-limited' role='status'>${escapeHtml(t('limitedRead'))}</div>` : ''}<section id='gallery' class='gallery' aria-live='polite'></section><nav id='resultWindowControls' class='result-window-controls' aria-label='${escapeHtml(language === 'zh' ? '文献分页' : 'Paper pagination')}' hidden><div id='resultWindowStatus' class='result-window-status' aria-live='polite'></div><div class='result-pagination-main'><button id='previousResultPage' class='result-page-button' type='button' data-available='false' aria-label='${escapeHtml(language === 'zh' ? '上一页' : 'Previous page')}'><span class='result-page-arrow' aria-hidden='true'>←</span><span class='result-page-button-label'>${escapeHtml(language === 'zh' ? '上一页' : 'Previous')}</span></button><div id='resultPageNumbers' class='result-page-numbers' role='group' aria-label='${escapeHtml(language === 'zh' ? '选择页码' : 'Choose page')}'></div><button id='nextResultPage' class='result-page-button' type='button' data-available='false' aria-label='${escapeHtml(language === 'zh' ? '下一页' : 'Next page')}'><span class='result-page-button-label'>${escapeHtml(language === 'zh' ? '下一页' : 'Next')}</span><span class='result-page-arrow' aria-hidden='true'>→</span></button></div><form id='resultPageJump' class='result-page-jump'><label for='resultPageJumpInput'>${escapeHtml(language === 'zh' ? '跳至' : 'Go to')} <input id='resultPageJumpInput' class='result-page-jump-input' type='number' min='1' step='1' inputmode='numeric' aria-label='${escapeHtml(language === 'zh' ? '跳转页码' : 'Page number')}'><span>${escapeHtml(language === 'zh' ? '页' : '')}</span></label><button id='resultPageJumpButton' class='result-page-jump-button' type='submit'>${escapeHtml(language === 'zh' ? '前往' : 'Go')}</button></form></nav><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
+  app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='hero-latest'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 && excludedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => { const hidden = excludedJournals.has(journal); return `<div class='journal-option-row${hidden ? ' excluded' : ''}'><label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}${hidden ? ' disabled' : ''}><span>${escapeHtml(journal)}</span></label><button class='journal-exclude${hidden ? ' active' : ''}' data-journal-exclude='${escapeHtml(journal)}' type='button' aria-pressed='${hidden ? 'true' : 'false'}' aria-label='${escapeHtml(`${hidden ? t('restoreJournal') : t('hideJournal')} ${journal}`)}'>${escapeHtml(hidden ? t('restoreJournal') : t('hideJournal'))}</button></div>`; }).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option><option value='readers'${sort === 'readers' ? ' selected' : ''}>${escapeHtml(t('mostRead'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><section class='range-filter' aria-label='${escapeHtml(t('clearFilters'))}'><label class='date-field'><span>${escapeHtml(t('dateFrom'))}</span><input id='dateFrom' type='date' value='${escapeHtml(dateFrom)}'></label><label class='date-field'><span>${escapeHtml(t('dateTo'))}</span><input id='dateTo' type='date' value='${escapeHtml(dateTo)}'></label><button id='clearCustomFilters' class='clear-custom-filters' type='button'${selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo ? ' disabled' : ''}>${escapeHtml(t('clearFilters'))}</button></section><div class='resultline'><div class='result-count'><span id='resultScopeLabel' class='result-scope'>${escapeHtml(resultScopeIsDefaultRecent() ? t('recentScope') : t('currentScope'))}</span><span class='result-separator' aria-hidden='true'>·</span><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div></div>${architectureReadLimited || (architectureBootstrapPending && !resultScopeIsDefaultRecent()) ? `<div class='architecture-read-limited' role='status'>${escapeHtml(t('limitedRead'))}</div>` : ''}<section id='gallery' class='gallery' aria-live='polite'></section><nav id='resultWindowControls' class='result-window-controls' aria-label='${escapeHtml(language === 'zh' ? '文献分页' : 'Paper pagination')}' hidden><div id='resultWindowStatus' class='result-window-status' aria-live='polite'></div><div class='result-pagination-main'><button id='previousResultPage' class='result-page-button' type='button' data-available='false' aria-label='${escapeHtml(language === 'zh' ? '上一页' : 'Previous page')}'><span class='result-page-arrow' aria-hidden='true'>←</span><span class='result-page-button-label'>${escapeHtml(language === 'zh' ? '上一页' : 'Previous')}</span></button><div id='resultPageNumbers' class='result-page-numbers' role='group' aria-label='${escapeHtml(language === 'zh' ? '选择页码' : 'Choose page')}'></div><button id='nextResultPage' class='result-page-button' type='button' data-available='false' aria-label='${escapeHtml(language === 'zh' ? '下一页' : 'Next page')}'><span class='result-page-button-label'>${escapeHtml(language === 'zh' ? '下一页' : 'Next')}</span><span class='result-page-arrow' aria-hidden='true'>→</span></button></div><form id='resultPageJump' class='result-page-jump'><label for='resultPageJumpInput'>${escapeHtml(language === 'zh' ? '跳至' : 'Go to')} <input id='resultPageJumpInput' class='result-page-jump-input' type='number' min='1' step='1' inputmode='numeric' aria-label='${escapeHtml(language === 'zh' ? '跳转页码' : 'Page number')}'><span>${escapeHtml(language === 'zh' ? '页' : '')}</span></label><button id='resultPageJumpButton' class='result-page-jump-button' type='submit'>${escapeHtml(language === 'zh' ? '前往' : 'Go')}</button></form></nav><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
   mountUserShell(app, language);
 
   document.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach(button => button.addEventListener('click', () => {
@@ -1561,8 +1559,6 @@ async function ensureFullHotCorpus(): Promise<void> {
     .then(fallback => {
       const rows = normalizeArchitectureRows(fallback.papers);
       architectureLandingPapers = rows;
-      architectureEarliestDate = rows.map(paper => paper.date)
-        .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort()[0] || architectureEarliestDate;
       setArchitectureCorpus(rows);
       hotBootstrapTotal = 0;
       architectureReadLimited = false;
@@ -1594,16 +1590,9 @@ async function activateArchitectureClientInBackground(siteBase: string): Promise
     architectureBootstrapPending = false;
     architectureReadLimited = false;
     architectureMemberDois = [...client.memberDois];
-    architectureEarliestDate = client.earliestDate || architectureEarliestDate;
     document.documentElement.dataset.catalogRead = 'architecture-v1';
     syncLiteratureDoiRegistry();
 
-    const fromInput = document.querySelector<HTMLInputElement>('#dateFrom');
-    const toInput = document.querySelector<HTMLInputElement>('#dateTo');
-    if (architectureEarliestDate) {
-      if (fromInput) fromInput.min = architectureEarliestDate;
-      if (toInput && !dateFrom) toInput.min = architectureEarliestDate;
-    }
     document.querySelector('.architecture-read-limited')?.remove();
 
     if (query.trim() || dateFrom || dateTo) scheduleArchitectureCorpusRefresh(0);
@@ -1624,8 +1613,6 @@ function installFastHotFallback(fallback: Awaited<ReturnType<typeof loadPublishe
   architectureBootstrapPending = true;
   architectureReadLimited = false;
   architectureMemberDois = null;
-  architectureEarliestDate = fallbackRows.map(paper => paper.date)
-    .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort()[0] || '';
   architectureLandingPapers = fallbackRows;
   const dates = fallbackRows.map(paper => paper.date)
     .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
@@ -1664,7 +1651,6 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
     architectureBootstrapPending = false;
     architectureReadLimited = false;
     architectureMemberDois = [...client.memberDois];
-    architectureEarliestDate = client.earliestDate || '';
     architectureLandingPapers = mergePapers(landingRows, editionRows);
     hotBootstrapTotal = 0;
     const architectureDates = architectureLandingPapers.map(paper => paper.date)
@@ -1693,8 +1679,6 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
       architectureBootstrapPending = false;
       architectureReadLimited = true;
       architectureMemberDois = null;
-      architectureEarliestDate = orderedFallback.map(paper => paper.date)
-        .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort()[0] || '';
       architectureLandingPapers = orderedFallback;
       hotBootstrapTotal = 0;
       const dates = orderedFallback.map(paper => paper.date)
@@ -1716,7 +1700,6 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
       architectureBootstrapPending = false;
       architectureReadLimited = false;
       architectureMemberDois = null;
-      architectureEarliestDate = '';
       architectureLandingPapers = [];
       latestCollectionDate = '';
       if (deliveryUnavailableLocally) {

@@ -813,3 +813,58 @@ test('mobile D1 catalog search sends limit 12 and keeps its cursor when moving f
     expect(requests.at(-1).cursor).toBe(`mobile:${MOBILE_RESULT_WINDOW_SIZE}`);
   });
 });
+
+
+test('mobile date pickers allow dates before the first indexed paper and keep a valid range', async ({ page }, info) => {
+  await observeResponsiveBrowser(page, info, async () => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await stubOptionalApi(page);
+    await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+    // The async all-time membership initialization previously reintroduced the old minimum.
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 }).toBe('architecture-v1');
+    for (const id of ['#dateFrom', '#dateTo']) {
+      await expect(page.locator(id)).toHaveAttribute('type', 'date');
+      await expect(page.locator(id)).not.toHaveAttribute('min', /.+/);
+      await expect(page.locator(id)).not.toHaveAttribute('max', /.+/);
+    }
+
+    await page.locator('#dateFrom').fill('1900-01-01');
+    await page.locator('#dateFrom').dispatchEvent('change');
+    await expect(page.locator('#dateFrom')).toHaveValue('1900-01-01');
+    await page.locator('#dateTo').fill('1900-12-31');
+    await page.locator('#dateTo').dispatchEvent('change');
+    await expect(page.locator('#dateTo')).toHaveValue('1900-12-31');
+
+    // Date ordering is still enforced by the existing change handlers, not catalog limits.
+    await page.locator('#dateFrom').fill('1901-02-03');
+    await page.locator('#dateFrom').dispatchEvent('change');
+    await expect(page.locator('#dateFrom')).toHaveValue('1901-02-03');
+    await expect(page.locator('#dateTo')).toHaveValue('1901-02-03');
+    await page.locator('#dateTo').fill('1899-06-04');
+    await page.locator('#dateTo').dispatchEvent('change');
+    await expect(page.locator('#dateFrom')).toHaveValue('1899-06-04');
+    await expect(page.locator('#dateTo')).toHaveValue('1899-06-04');
+
+    await page.locator('#clearCustomFilters').click();
+    await expect(page.locator('#dateFrom')).toHaveValue('');
+    await expect(page.locator('#dateTo')).toHaveValue('');
+    await expect(page.locator('#dateFrom')).not.toHaveAttribute('min', /.+/);
+    await expect(page.locator('#dateTo')).not.toHaveAttribute('max', /.+/);
+  });
+});
+
+test('mobile historical date selection fetches a matching Archive paper, not just the Hot landing', async ({ page }, info) => {
+  await observeResponsiveBrowser(page, info, async () => {
+    const data = fixture();
+    await page.setViewportSize({ width: 390, height: 844 });
+    await stubOptionalApi(page);
+    await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 }).toBe('architecture-v1');
+    await page.locator('#dateFrom').fill(data.archiveDate);
+    await page.locator('#dateFrom').dispatchEvent('change');
+    await page.locator('#dateTo').fill(data.archiveDate);
+    await page.locator('#dateTo').dispatchEvent('change');
+    await expect.poll(() => page.locator(`#gallery > .card[data-doi="${data.archiveDoi}"]:not([hidden])`).count(), { timeout: 30000 }).toBe(1);
+    await expect(page.locator('#resultScopeLabel')).toHaveText(/当前筛选|Current filter/);
+  });
+});
