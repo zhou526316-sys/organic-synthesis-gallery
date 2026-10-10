@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
-import { isHistoricalBackfill, isJulSepTocOnly, paperMediaPolicy, shouldShowDailyNew, isOctoberFullCapturePaper } from '../shared/historical-literature-policy.js';
+import { isHistoricalBackfill, isJulSepTocOnly, paperMediaPolicy, shouldShowDailyNew, isOctoberFullCapturePaper, isRetrospectiveAdmission } from '../shared/historical-literature-policy.js';
 import { isHotLandingEligible } from '../shared/literature-landing.mjs';
 import { verifiedHistoricalTitle, VERIFIED_HISTORICAL_TITLE_COUNT } from '../shared/verified-historical-title-repairs.js';
 
@@ -13,6 +13,11 @@ const regular = {doi:'10.1234/new-oct',date:'2026-10-09',addedDate:recentDay};
 const legacy = {doi:'10.1234/original-september',date:'2026-09-25',addedDate:'2026-09-26'};
 
 assert.equal(isHistoricalBackfill(preJuly),true);
+assert.equal(isRetrospectiveAdmission(preJuly),true);
+assert.equal(isRetrospectiveAdmission(july),true);
+assert.equal(isRetrospectiveAdmission(lateSep),true);
+assert.equal(isRetrospectiveAdmission(regular),false);
+assert.equal(isRetrospectiveAdmission(legacy),false);
 assert.equal(paperMediaPolicy(preJuly),'metadata_only');
 assert.equal(paperMediaPolicy(july),'toc_only');
 assert.equal(paperMediaPolicy(lateSep),'toc_only');
@@ -28,7 +33,7 @@ assert.equal(shouldShowDailyNew(lateSep,recentDay),false); // late July–Septem
 assert.equal(shouldShowDailyNew(regular,recentDay),true);
 assert.equal(isHotLandingEligible(july,recentDay),false);
 assert.equal(isHotLandingEligible(preJuly,recentDay),false);
-assert.equal(isHotLandingEligible(lateSep,recentDay),true);
+assert.equal(isHotLandingEligible(lateSep,recentDay),false);
 assert.equal(isHotLandingEligible(regular,recentDay),true);
 
 const map = new Map([
