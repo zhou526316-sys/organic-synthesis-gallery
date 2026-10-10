@@ -1,0 +1,56 @@
+name: WeChat Oct10 Pair Source Review Import
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/wechat-oct10-pair-reviewed-import.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-oct10-reviewed-pair-source
+  cancel-in-progress: false
+
+jobs:
+  review-import-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 4
+      - name: Validate request is source-only and not a public send
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('audit/automation-triggers/wechat-oct10-pair-reviewed-import.json'))
+          assert r['action']=='review_and_import_oct10_daily_pair'
+          assert r['revision']=='2026-10-10-r1'
+          assert r['dois']==['10.1002/anie.3306470','10.1038/s44160-026-01128-y']
+          assert r['draftOnly'] is True and r['publicSendAuthorized'] is False
+          assert r['oldRetroManifestBlobSha']=='930d83111be384940f6dd9cc6f9bed79eeba031e'
+          assert r['oldRetroGateBlobSha']=='4dff349df8f90a300522e702e9f86644cdd1962b'
+          PY
+      - name: Install science-raster validation dependency
+        run: python3 -m pip install -q 'Pillow>=10,<13'
+      - name: Import exact images and independently review both article renderings without WeChat API
+        run: python3 ops/wechat-publisher/import-oct10-pair-r1.py
+      - name: Review import receipt and exact article count
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          q=json.load(open('audit/wechat-working/2026-10-10-r1-import-and-qa.json'))
+          g=json.load(open('audit/wechat-working/2026-10-10-review-gate.json'))
+          assert q['status']=='source_review_pass' and q['mainBodyImages']==18 and q['retroBodyImages']==31
+          assert q['reviewedAssets']==51
+          assert q['renderedHtmlCheck']=='pass' and q['shaPinning']=='pass'
+          assert q['retroChineseAuthor']=='仇友爱'
+          assert g['textReview']==g['imageReview']=='pass'
+          assert g['selectionDois']==['10.1002/anie.3306470','10.1038/s44160-026-01128-y']
+          assert g['publicSendAuthorized'] is False and q['draftWritten'] is False
+          print('Source review complete; no WeChat draft write, no public send')
+          PY
