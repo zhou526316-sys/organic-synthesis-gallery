@@ -1,13 +1,15 @@
 {
   "schemaVersion": 1,
-  "request": "owner-approved-immediate-abstract-backfill",
+  "request": "approved-publisher-abstract-routes-recovery-20261010",
   "requestedDate": "2026-10-10",
   "scope": "all-current-reviewed-dois",
-  "currentCatalogId": "e6d7952281ab733ca87520e378408f54df1493f361f8040d9ca9ebeddee6bc20",
+  "currentCatalogId": "f5853af95d5ea395cbe7e529a747ce75701eb0a22aad023c8e907f6b2fdf0c6d",
   "readOnlySources": [
     "openalex",
-    "crossref"
+    "crossref",
+    "publisher_metadata"
   ],
   "protectedLiteratureWrites": 0,
-  "description": "Immediate retry after production Worker deploy; nightly schedule remains 23:20 Beijing, 08:00 literature admission unchanged."
+  "description": "Recheck original abstract gaps after PR #507 canonical CCS/Nature and trusted Elsevier publisher redirect fix. Staging/full-body/TOC/PDF and 08:00 unique literature admission untouched. Reuse the existing metadata-only incremental workflow; no concurrent duplicate runs.",
+  "requestedAt": "2026-10-10T13:47:39.530Z"
 }
