@@ -111,7 +111,7 @@ const papers=Array.from({length:72},(_,index)=>({
 const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
 async function contextWith(capabilities,openResult={available:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=opaque'},options={}){
  const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900},locale:options.locale||'en-US'});
- const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,rangeInFlight:0,maxConcurrentRanges:0,primaryFileFailures:0,tencentRangeCalls:0,tencentOpenCalls:0,tencentMaxRangeBytes:0,openModes:[],openOrigins:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map(),slowMiddleHits:0};
+ const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,tencentOwnerSessionProbes:0,tencentQuotaFailures:0,privateFullFileCalls:0,privateFileDownloads:0,rangeInFlight:0,maxConcurrentRanges:0,primaryFileFailures:0,tencentRangeCalls:0,tencentOpenCalls:0,tencentMaxRangeBytes:0,openModes:[],openOrigins:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map(),slowMiddleHits:0};
  const filePdf=options.tailHeavyPdf?tailHeavyPdf:(options.largePdf?largeCardPdf:cardPdf);
  if(options.pendingQueue)state.queueRows.set('fixture-owner',new Map(papers.map(paper=>[paper.doi,{doi:paper.doi,state:'pending',revision:1,createdAt:Date.now(),updatedAt:Date.now()}])));
  await context.addInitScript(fixtureOrigin=>{
@@ -147,10 +147,12 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
   if(pathname==='/release-delivery.json')return route.fulfill({status:404,body:'fixture selects local legacy catalog'});
   if(pathname.startsWith('/architecture-v1/')){await new Promise(resolve=>setTimeout(resolve,50));return route.fulfill({status:404,body:'fixture'});}
   if(pathname==='/pdf-gateway-routing.json' &&
-      (options.tencentEnabled!==undefined || options.tencentCanary===true))
+      (options.tencentEnabled!==undefined || options.tencentCanary===true ||
+       options.ownerPriorityPilot===true))
    return route.fulfill({status:200,contentType:'application/json',
     body:JSON.stringify({schemaVersion:1,enabled:options.tencentEnabled===true,
       manualCanary:options.tencentCanary===true,
+      ownerPriorityPilot:options.ownerPriorityPilot===true,
       origin:'https://pdf.gczhouwld.com'})});
   if(pathname==='/papers.gz.b64')return route.fulfill({status:200,body:encodedPapers});
   if(['/total-synthesis.json','/manual-supplement.json','/final-audit-supplement.json'].includes(pathname))
@@ -163,9 +165,17 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
   if(url.pathname==='/api/user-ui/auth/session'){
    const token=String(route.request().headers().authorization||'').replace(/^Bearer /,'');
    state.authTokens.push(token);state.authSessionChecks++;
+   if(url.origin==='https://pdf.gczhouwld.com')state.tencentOwnerSessionProbes++;
+   if(options.tencentSessionStatus && url.origin==='https://pdf.gczhouwld.com')
+     return route.fulfill({status:options.tencentSessionStatus,
+       contentType:'application/json',
+       headers:{'access-control-allow-origin':base},
+       body:'{"authenticated":false,"user":null}'});
    if(state.sessionUnavailable)return route.fulfill({status:503,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:'{"error":"temporary_unavailable"}'});
    if(Number(options.transientFalseSessions||0)>=state.authSessionChecks)return reply({authenticated:false,user:null});
-   const allowed=token==='fixture-session'?state.capabilities:[];
+   let allowed=token==='fixture-session'?state.capabilities:[];
+   if(options.tencentOwnerRoleFalse && url.origin==='https://pdf.gczhouwld.com')
+     allowed=allowed.filter(role=>role!=='private_pdf_owner');
    if(options.holdOwner&&token==='fixture-session'){
     await new Promise(resolve=>state.pendingOwner.push(resolve));state.releasedOwner++;
    }
@@ -208,6 +218,13 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
     state.maxConcurrentRanges=Math.max(state.maxConcurrentRanges,state.rangeInFlight);
    }
    try {
+    if(options.tencentFileStatus && url.origin==='https://pdf.gczhouwld.com'){
+      state.tencentQuotaFailures++;
+      return route.fulfill({status:options.tencentFileStatus,
+        contentType:'application/json',
+        headers:{'access-control-allow-origin':base},
+        body:'{"error":"gateway_transfer_quota_exhausted"}'});
+    }
     if(options.fileDelayMs)await new Promise(resolve=>setTimeout(resolve,Number(options.fileDelayMs)));
     if(options.slowMiddleMs && range) {
       const match=/^bytes=(\d+)-/.exec(range);
