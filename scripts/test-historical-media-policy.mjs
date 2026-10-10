@@ -68,13 +68,12 @@ for(const old of titleGapAudit.records){
 const main=readFileSync('src/main.ts','utf8');
 const queue=readFileSync('cloudflare/scripts/build-live-toc-demand-queue.mjs','utf8');
 const tm=readFileSync('public/toc-mainline.user.js','utf8');
-assert.ok(main.includes('!isHistoricalBackfill(paper)')
-  && main.includes("validAddedDate(paper.addedDate) || '') >= '2026-10-01'"), 'history may appear new');
+assert.ok(main.includes('!isRetrospectiveAdmission(paper) && isNewTodayDate(paper.addedDate)'), 'history may appear new');
 assert.ok(main.includes("mediaMode === 'metadata_only' ? '' : tocMarkup(paper)"), 'old history must not queue TOC');
 assert.ok(main.includes("mediaMode === 'standard' ? figureMarkup(paper) : ''"), 'TOC-only figure slot leak');
 assert.ok(main.includes('doi && !retrospectiveCard ? `/pdf/'), 'backfill PDF action leak');
 assert.ok(main.includes('doi && !retrospectiveCard ? `/pdf-vault/'), 'backfill local PDF action leak');
-assert.ok(queue.includes("filter(paper => !isHistoricalBackfill(paper))"), 'history included in latestAddedDate');
+assert.ok(queue.includes("filter(paper => !isRetrospectiveAdmission(paper))"), 'history included in latestAddedDate');
 assert.ok(queue.includes("isHistoricalBackfill(paper) || paperMediaPolicy(paper) === 'toc_only'"), 'history in figure-gap queue');
 assert.ok(queue.includes('mediaPolicy: paperMediaPolicy(paper)'), 'TOC queue lacks capture policy');
 assert.ok(tm.includes('&&recentFullCaptureEligible(job);'), 'PDF inventory guard lacks publisher-date cutoff');
