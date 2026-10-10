@@ -208,7 +208,8 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
     (['primary', 'backup', 'tencent'].includes(fileRoute) ? ` · 文件线路:${fileRoute}` : '') +
     (['headers', 'body', 'verified'].includes(rangeStage) ? ` · 分段阶段:${rangeStage}` : '');
   status.appendChild(diagnostic);
-  if (['pdf_authorize_timeout','pdf_authorize_network_error','pdf_authorize_body_timeout'].includes(detail)) {
+  if (['pdf_authorize_timeout','pdf_authorize_network_error','pdf_authorize_body_timeout',
+       'open_http_500','open_http_502','open_http_503','open_http_504'].includes(detail)) {
     const attempts = document.documentElement.dataset.privatePdfAuthAttempts || '';
     if (attempts && attempts.length < 360) {
       const breakdown = document.createElement('small');
@@ -1042,6 +1043,9 @@ function showReaderError(error, prefix = 'PDF 读取失败') {
   else if (code === 'pdf_invalid_bytes' || code === 'pdf_wrong_content_type') message = '文件响应并非有效 PDF，已阻止打开错误页面。';
   else if (code === 'pdf_range_unavailable') message = 'PDF 文件服务不支持分段读取，暂时无法可靠打开。';
   else if (code === 'file_http_404') message = '私有 PDF 文件未找到，下载记录可能需要修复。';
+  else if (/^open_http_(500|502|503|504)$/.test(code)) message =
+    'PDF 授权服务暂时不可用（'+code.replace('open_http_','HTTP ')+
+    '），尚未开始传输文件。已检查备用授权线路，请查看下方线路诊断或使用腾讯线路试读。';
   else if (code === 'pdf_authorize_timeout') message = 'PDF 授权接口在15秒内未响应，尚未开始传输文件。请稍后重新读取。';
   else if (code === 'pdf_authorize_body_timeout') message = 'PDF 授权接口已返回 HTTP 200，但授权数据未能完整传输；已尝试备用线路和一次受限重试。';
   else if (code === 'pdf_authorize_network_error') message = 'PDF 授权接口连接失败，尚未开始传输文件。请检查网络或稍后重试。';
