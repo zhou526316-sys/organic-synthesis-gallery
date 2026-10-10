@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.62
+// @version      6.2.63
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.62';
+  var INSTALL_REVISION = '6.2.63';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261010-rsc-articleid-semantic-and-acs-figure1-v2';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -3845,7 +3845,7 @@ function embeddedJobDois(value) {
         return {status:packet.fulltextStatus==='invalid'?'invalid':'empty',reason:String(packet.reason||'evidence_unavailable'),chars:Number(packet.chars||0),sections:Number(packet.sections||0)};
       }
       captureLiveUpdate(job,'uploading',{label:packet.fulltextStatus==='abstract_only'?'Abstract':'全文证据'});
-      var uploadTimeout=String(job.mediaNeed||'')==='evidence'?10000:job.publisher==='rsc'?9000:4000;
+      var uploadTimeout=String(job.mediaNeed||'')==='evidence'?10000:job.publisher==='rsc'?9000:job.publisher==='elsevier'?12000:4000;
       var receipt = await postArticleEvidence(packet,token,uploadTimeout);
       if (!receipt || receipt.stored !== true || receipt.doi !== normalizeDoi(job.doi) || receipt.schemaVersion !== EVIDENCE_SCHEMA_VERSION) {
         throw new Error('evidence_receipt_invalid');
@@ -6204,9 +6204,19 @@ function embeddedJobDois(value) {
       replayOneDeferredImage().catch(function(){});
       window.alert('已检查待补传图片。只有原 DOI 与存储回执符合要求时才会清除本地暂存。');
     });
-    GM_registerMenuCommand('使用 owner 授权补传本机暂存私人PDF', function () {
-      replayOneOwnerPdf().catch(function(){});
-      window.alert('已检查 owner 授权和云端 PDF 库存，仅确认真正缺失时上传；本机文件直到存储回执确认后才清除。');
+    GM_registerMenuCommand('使用 owner 授权补传本机暂存私人PDF', async function () {
+      var before=pendingOwnerPdfKeys().length;
+      if(!before){window.alert('本机暂时没有等待补传的私人 PDF。');return;}
+      var success=false;
+      try{success=await replayOneOwnerPdf();}catch(_){success=false;}
+      var remaining=pendingOwnerPdfKeys().length;
+      // An uploader being scheduled is not a cloud receipt. Report only the
+      // awaited result, without revealing PDF bytes, hashes or lease tokens.
+      if(success){
+        window.alert('已完成一次 owner 私人 PDF 补传／云端存在核验。待补传 '+remaining+' 篇；PDF 仍需通过云端处理与可阅读验收。');
+      }else{
+        window.alert('尚未确认本次补传。待补传 '+remaining+' 篇；请确认 owner 授权有效、当前无抓取任务，并保留此 Gallery 页面以便安全重试。');
+      }
     });
     GM_registerMenuCommand('上传本地 TOC 日志', function () {
       uploadLocalDiagnostics().catch(function () {});
@@ -6974,12 +6984,42 @@ function embeddedJobDois(value) {
       url.searchParams.set('doi',row.doi);url.searchParams.set('publisher',row.publisher);
       url.searchParams.set('articleUrl',row.articleUrl);url.searchParams.set('sourceUrl',row.sourceUrl);
       url.searchParams.set('versionKind','unknown');url.searchParams.set('controllerRevision',CONTROLLER_REVISION);
-      var abort=new AbortController(),timer=setTimeout(function(){abort.abort();},90000),response;
+      // This Gallery-owned replay is for bytes already downloaded through the
+      // authorized publisher session. No publisher re-fetch. Prefer native
+      // same-site upload, then one GM transport on network failure only.
+      var startedUpload=Date.now(),abort=new AbortController(),nativeTimeout=false,response=null,nativeFailure=null;
+      var timer=setTimeout(function(){nativeTimeout=true;abort.abort();},50000);
       try{
         response=await fetch(url.href,{method:'POST',mode:'cors',credentials:'omit',cache:'no-store',
           signal:abort.signal,headers:{'content-type':'application/pdf',authorization:'Bearer '+lease.token},body:bytes.buffer});
-      }finally{clearTimeout(timer);}
-      var receipt={};try{receipt=await response.json();}catch(_){}
+      }catch(error){nativeFailure=error;}finally{clearTimeout(timer);}
+      var receipt={};
+      if(nativeFailure){
+        var failureText=String(nativeFailure&&nativeFailure.message||nativeFailure||'');
+        if(!nativeTimeout&&!/Failed to fetch|NetworkError|network request failed|TypeError|AbortError/i.test(failureText))
+          throw nativeFailure;
+        // Never retry a publisher authorization refusal or Worker HTTP
+        // 401/403/429. Only a missing HTTP response permits the alternate
+        // transfer; the content-addressed private API is idempotent.
+        var remainingBudget=Math.min(40000,90000-(Date.now()-startedUpload));
+        if(remainingBudget<3000)throw nativeFailure;
+        var gm=await gmRequest({method:'POST',url:url.href,timeout:remainingBudget,
+          headers:{'content-type':'application/pdf',authorization:'Bearer '+lease.token},
+          data:bytes.buffer},true);
+        var finalUrl=new URL(String(gm&&gm.finalUrl||gm&&gm.responseURL||url.href));
+        if(finalUrl.origin+finalUrl.pathname!==PRIVATE_PDF_CAPTURE_ENDPOINT)
+          throw new Error('owner_pdf_gallery_redirect_rejected');
+        var gmStatus=Number(gm&&gm.status||0);
+        if(gmStatus<200||gmStatus>=300)
+          throw new Error('owner_pdf_gallery_gm_http_'+gmStatus);
+        try{receipt=JSON.parse(String(gm&&gm.responseText||'{}'));}catch(_){}
+        response={ok:true,status:gmStatus};
+      }else{
+        var returnedUrl=new URL(String(response&&response.url||url.href));
+        if(returnedUrl.origin+returnedUrl.pathname!==PRIVATE_PDF_CAPTURE_ENDPOINT)
+          throw new Error('owner_pdf_gallery_redirect_rejected');
+        try{receipt=await response.json();}catch(_){}
+      }
       if(!response.ok||receipt.stored!==true||normalizeDoi(receipt.doi)!==row.doi
         ||receipt.contentHash!==row.sha256||Number(receipt.byteLength||0)!==row.byteLength)
         throw new Error('owner_pdf_gallery_receipt_unconfirmed_'+response.status);
