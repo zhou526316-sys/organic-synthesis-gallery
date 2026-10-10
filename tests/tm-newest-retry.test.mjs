@@ -33,7 +33,14 @@ await test('latest TOC leads, then latest PDF, then historical TOCs',()=>{
 });
 await test('historical Nature then Science then other TOCs remain ordered',()=>assert.deepEqual(Array.from(api.selectBatchJobs(old,3,latest),x=>x.journal),['Nature','Science','JACS']));
 await test('figure/text-only legacy jobs have no queue priority',()=>{assert.equal(api.captureQueueTier({mediaNeed:'figures',captureFigures:true},latest),5);assert.equal(api.captureQueueTier({mediaNeed:'evidence',captureEvidence:true},latest),5);});
-await test('publisher access cooldown still excludes latest articles',()=>{const h=harness();h.data.set('osg-toc-v6:publisher-access-cooldown:acs',{until:Date.now()+60000});assert.equal(h.api.selectBatchJobs([today[0]],1,latest).length,0);});
+await test('single-DOI publisher access gate excludes only that DOI; unrelated ACS tasks remain eligible',()=>{
+ const h=harness(),doi=today[0].doi;
+ h.data.set('osg-toc-v6:doi-access-cooldown-v1:'+encodeURIComponent(doi),{
+   revision:'20261010-doi-first-authoritative-global-v1',scope:'doi',
+   publisher:'acs',doi,reason:'publisher_access_gate',at:Date.now(),until:Date.now()+60000
+ });
+ assert.deepEqual(Array.from(h.api.selectBatchJobs([today[0],today[1]],2,latest),x=>x.doi),[today[1].doi]);
+});
 await test('reordered same registry does not restart',()=>assert.equal(api.queueRegistryChanged({latestAddedDate:latest,articles:today},{latestAddedDate:latest,articles:[...today].reverse()}),false));
 await test('added DOI restarts between articles',()=>assert.equal(api.queueRegistryChanged({articles:today},{articles:[...today,old[0]]}),true));
 await test('removed DOI restarts between articles',()=>assert.equal(api.queueRegistryChanged({articles:today},{articles:today.slice(1)}),true));
