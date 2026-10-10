@@ -231,6 +231,27 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
   retry.textContent = '重新读取';
   retry.addEventListener('click', () => location.reload());
   status.appendChild(retry);
+  // Offer an explicit Tencent trial only for transport-related failures.
+  // A 401/403/invalid-file denial NEVER offers a route around entitlement.
+  const tencentRecoverable = new Set([
+    'pdf_authorize_timeout','pdf_authorize_body_timeout',
+    'pdf_authorize_network_error','pdf_transfer_timeout',
+    'pdf_first_page_timeout','file_http_502','file_http_503','file_http_504',
+  ]);
+  if (!manualTencentTrial && tencentRecoverable.has(detail)) {
+    void tencentPdfRouteEnabled(undefined, 1200, {manual:true}).then(allowed => {
+      if (!allowed || destroyed || !status.contains(retry)) return;
+      const href = new URL(location.href);
+      href.searchParams.set('pdfIngress', 'tencent');
+      const alternative = document.createElement('a');
+      alternative.id = 'tencent-manual-trial';
+      alternative.className = 'download';
+      alternative.href = href.toString();
+      alternative.textContent = '使用腾讯线路试读';
+      alternative.title = '重新申请 PDF 授权并通过腾讯线路读取；不绕过账号权限';
+      retry.insertAdjacentElement('afterend', alternative);
+    }).catch(() => {});
+  }
   if (url) {
     const link = document.createElement('a');
     link.id = 'publisher-fallback';
