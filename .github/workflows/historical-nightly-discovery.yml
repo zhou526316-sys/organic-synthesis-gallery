@@ -53,6 +53,10 @@ jobs:
       - name: Continue dedicated historical staging ref, merge newest main locally
         run: |
           set -euo pipefail
+          # A merge commit may be required because staging intentionally
+          # carries its own state.json. Configure the runner identity first.
+          git config user.name "gallery-history-staging[bot]"
+          git config user.email "gallery-history-staging@users.noreply.github.com"
           git fetch origin main --no-tags
           if git ls-remote --exit-code origin "refs/heads/$STAGING_REF" >/dev/null; then
             git fetch origin "$STAGING_REF" --no-tags
