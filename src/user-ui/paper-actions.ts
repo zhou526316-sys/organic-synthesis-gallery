@@ -267,7 +267,8 @@ export class GalleryPaperActions extends HTMLElement {
       // Metadata abstracts are not deep reviewed summaries, and deposited
       // publisher text must not be rendered as an unrestricted full abstract.
       const attribution = data.abstractSource === 'openalex' ? 'OpenAlex'
-        : data.abstractSource === 'crossref' ? 'Crossref' : 'DOI metadata';
+        : data.abstractSource === 'crossref' ? 'Crossref'
+          : data.abstractSource === 'publisher_metadata' ? this.tr('出版社网页元数据', 'Publisher article metadata') : 'DOI metadata';
       const source = data.originalArticleUrl
         ? `<a class='summary-open' href='${escapeHtml(data.originalArticleUrl)}' target='_blank' rel='noopener noreferrer'>${this.tr('查看原始摘要 ↗','Read source abstract ↗')}</a>`
         : '';

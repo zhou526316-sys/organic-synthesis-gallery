@@ -2,6 +2,7 @@
 // changes literature admission, static cards, dates, media or PDF inventories.
 import {createHash} from 'node:crypto';
 import {writeFile} from 'node:fs/promises';
+import {fetchPublisherMetadataAbstract} from './lib/publisher-abstract-metadata.mjs';
 
 const SITE=new URL(process.env.SITE_URL||'https://gallery.gczhouwld.com/');
 const WORKER=new URL(process.env.WORKER_URL||'https://organic-synthesis-gallery.zhou526316.workers.dev/');
@@ -164,6 +165,35 @@ async function hydrateAbstracts(dois,report){
   report.crossrefAttempted=crossrefLimit;
   report.crossref429Retries=crossref429Retries;
   report.unattemptedOpenAlexMisses=misses.length-crossrefLimit;
+  // Genuine DOI-verified publisher <head> metadata is a last resort for
+  // Crossref/OpenAlex misses. Never acquire historical article body, SI or PDF.
+  // Bound each run and rotate the missing-DOI cursor across nightly passes.
+  const publisherMissing=batch.filter(doi=>!found.has(doi));
+  const publisherLimit=Math.min(publisherMissing.length,
+    Math.max(0,Math.min(60,Number(process.env.PUBLISHER_ABSTRACT_LIMIT??'60'))));
+  // Daily rotating offset: even if none of the first 60 DOI can be resolved,
+  // the other DOI must still be sampled on subsequent scheduled runs.
+  const publisherWindows=publisherLimit>0?Math.ceil(publisherMissing.length/publisherLimit):0;
+  const publisherWindow=publisherWindows>0?Math.floor(Date.now()/86400000)%publisherWindows:0;
+  const publisherBatch=publisherMissing.slice(
+    publisherWindow*publisherLimit,(publisherWindow+1)*publisherLimit);
+  report.publisherMetadataAttempted=publisherBatch.length;
+  report.publisherMetadataWindow={number:publisherWindow+1,windows:publisherWindows,
+    totalMissing:publisherMissing.length};
+  report.publisherMetadataRecovered=0;
+  report.publisherMetadataErrors=[];
+  for(const doi of publisherBatch){
+    try{
+      const abstract=await fetchPublisherMetadataAbstract(doi);
+      if(abstract){
+        found.set(doi,{abstract,source:'publisher_metadata'});
+        report.publisherMetadataRecovered++;
+      }
+    }catch(error){
+      report.publisherMetadataErrors.push({doi,error:String(error?.message||error).slice(0,150)});
+    }
+    await pause(350);
+  }
   return found;
 }
 // Bounded paged administrative read; public read never exposes raw full abstracts.

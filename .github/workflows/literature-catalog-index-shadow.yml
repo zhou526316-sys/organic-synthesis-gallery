@@ -44,6 +44,9 @@ jobs:
           LITERATURE_INDEX_SHADOW_REPORT: ${{ runner.temp }}/literature-catalog-index-shadow-report.json
         run: node scripts/sync-literature-catalog-index-shadow.mjs
 
+      - name: Validate metadata-only publisher fallback parser
+        run: node --test scripts/test-publisher-abstract-metadata.mjs
+
       - name: Enrich the ready DOI-matched index with abstracts and approved interpretations
         env:
           SITE_URL: https://gallery.gczhouwld.com/
@@ -51,6 +54,7 @@ jobs:
           BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
           OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
           SEARCH_ENRICHMENT_REPORT: ${{ runner.temp }}/literature-search-enrichment-report.json
+          PUBLISHER_ABSTRACT_LIMIT: '45'
         run: node scripts/sync-literature-search-enrichment.mjs
 
       - name: Preserve abstract search coverage report

@@ -29,7 +29,7 @@ export interface ArticleSummaryResult {
   abstractAvailable?: boolean;
   abstractExcerpt?: string;
   abstractExcerptOnly?: boolean;
-  abstractSource?: 'openalex' | 'crossref';
+  abstractSource?: 'openalex' | 'crossref' | 'publisher_metadata';
   originalArticleUrl?: string;
   cached?: boolean;
   zh?: string;

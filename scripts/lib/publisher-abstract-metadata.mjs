@@ -1,0 +1,115 @@
+// Publisher HEAD metadata only: no browser cookies, paywall bypass, PDF, SI,
+// body figures or full-text storage. Accept only publisher DOI-verified abstract
+// fields; generic page descriptions are never accepted as scientific abstracts.
+const DOI=/^10\.\d{4,9}\/\S+$/i;
+const ORIGIN=/^(?:www\.)?(?:nature\.com|science\.org|pubs\.acs\.org|onlinelibrary\.wiley\.com|rsc\.org|pubs\.rsc\.org|sciencedirect\.com|cell\.com|ccschemistry\.org)$/i;
+function doi(value){
+  const v=String(value||'').trim().toLowerCase().replace(/^https?:\/\/(?:dx\.)?doi\.org\//,'').replace(/^doi:\s*/,'');
+  return DOI.test(v)?v:'';
+}
+function decodeEntities(value){
+  const entities={amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:' '};
+  return String(value||'').replace(/&(#x[\da-f]+|#\d+|[a-z]+);/gi,(original,x)=>{
+    const t=x.toLowerCase();
+    if(t.startsWith('#')){
+      const v=t.startsWith('#x')?parseInt(t.slice(2),16):parseInt(t.slice(1),10);
+      return Number.isInteger(v)&&v>=32&&v<=0x10ffff?String.fromCodePoint(v):' ';
+    }
+    return entities[t]??original;
+  });
+}
+function metaAttributes(tag){
+  const obj={};
+  const re=/([a-z_:][\w:.-]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi;
+  let match;
+  while((match=re.exec(tag))!==null){
+    obj[match[1].toLowerCase()]=decodeEntities(match[2]??match[3]??match[4]??'').trim();
+  }
+  return obj;
+}
+export function publisherMetadataAbstract(html,expectedDoi){
+  const target=doi(expectedDoi);
+  if(!target||typeof html!=='string')return '';
+  // Restrict to <head>, so the article body and unrelated sidebars cannot
+  // be accidentally turned into an "abstract".
+  const prefix=html.slice(0,900000);
+  const start=/<head(?:\s[^>]*)?>/i.exec(prefix);
+  if(!start)return '';
+  const remainder=prefix.slice(start.index+start[0].length);
+  const end=/<\/head\s*>|<body\b/i.exec(remainder);
+  if(!end)return '';
+  const head=remainder.slice(0,end.index);
+  const tags=[...head.matchAll(/<meta\b[^>]*>/gi)].map(match=>metaAttributes(match[0]));
+  const references=tags.filter(meta=>['citation_doi','dc.identifier','prism.doi'].includes(
+    String(meta.name||meta.property||'').toLowerCase())).map(meta=>doi(meta.content));
+  if(!references.includes(target))return '';
+  const priority=['citation_abstract','dc.description'];
+  for(const name of priority){
+    for(const tag of tags){
+      if(String(tag.name||tag.property||'').toLowerCase()!==name)continue;
+      const content=String(tag.content||'').replace(/<[^>]*>/g,' ')
+        .replace(/\s+/g,' ').trim();
+      if(content.length>=140&&content.length<=16000
+        &&content.split(/\s+/).length>=25
+        &&!/^https?:\/\//i.test(content))return content;
+    }
+  }
+  return '';
+}
+export async function fetchPublisherMetadataAbstract(inputDoi,{
+  timeout=9000,maxHeadBytes=900000,fetchImpl=fetch
+}={}){
+  const normalized=doi(inputDoi);
+  if(!normalized)throw Error('publisher_abstract_invalid_doi');
+  const headers={
+    accept:'text/html,application/xhtml+xml;q=0.9',
+    'user-agent':'OrganicSynthesisGallery-PublisherAbstractMetadata/1.0 (DOI-head-only)'
+  };
+  let address='https://doi.org/'+normalized.split('/').map(encodeURIComponent).join('/');
+  const signal=AbortSignal.timeout(timeout);
+  for(let hop=0;hop<6;hop++){
+    const current=new URL(address);
+    const publisher=ORIGIN.test(current.hostname);
+    const resolver=current.hostname==='doi.org'||current.hostname==='dx.doi.org';
+    // Do not follow DOI-mediated redirects into arbitrary hosts/networks;
+    // private/local IP and authenticated bypass routes are never fetched.
+    if(current.protocol!=='https:'||current.port||current.username||current.password
+      ||(!resolver&&!publisher))throw Error('publisher_metadata_redirect_host_unrecognized');
+    const response=await fetchImpl(address,{redirect:'manual',headers,signal});
+    if([301,302,303,307,308].includes(response.status)){
+      const location=response.headers.get('location');
+      if(!location)throw Error('publisher_metadata_redirect_location_missing');
+      address=new URL(location,address).href;
+      await response.body?.cancel().catch(()=>{});
+      continue;
+    }
+    if(!response.ok)throw Error('publisher_metadata_http_'+response.status);
+    if(!publisher)throw Error('publisher_metadata_resolution_unfinished');
+    const type=response.headers.get('content-type')||'';
+    if(!/text\/html|application\/xhtml\+xml/i.test(type))
+      throw Error('publisher_metadata_not_html');
+    if(!response.body)return '';
+    const reader=response.body.getReader();
+    const decoder=new TextDecoder();
+    let html='',bytes=0,closed=false;
+    try{
+      while(bytes<maxHeadBytes){
+        const {value,done}=await reader.read();
+        if(done)break;
+        bytes+=value.byteLength;
+        if(bytes>maxHeadBytes)throw Error('publisher_metadata_head_too_large');
+        html+=decoder.decode(value,{stream:true});
+        // Check the accumulated string: </head> may straddle chunks.
+        if(/<\/head\s*>|<body\b/i.test(html)){
+          closed=true;
+          break;
+        }
+      }
+    }finally{
+      await reader.cancel().catch(()=>{});
+    }
+    if(!closed&&bytes>=maxHeadBytes)throw Error('publisher_metadata_head_too_large');
+    return publisherMetadataAbstract(html,normalized);
+  }
+  throw Error('publisher_metadata_redirect_limit');
+}
