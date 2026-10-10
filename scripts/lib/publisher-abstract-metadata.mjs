@@ -41,6 +41,31 @@ function metaAttributes(tag){
   }
   return obj;
 }
+
+// Nature's openly displayed Abstract may be absent from <head> metadata.
+// Accept only the labelled abstract section, never sections titled Main,
+// Methods, Results or an arbitrary paragraph from the article body.
+// The exact DOI is checked independently against publisher <head> metadata.
+function natureAbstractHeading(html){
+  return /<h2\b[^>]*\bid\s*=\s*["']Abs1["'][^>]*>\s*(?:<[^>]*>\s*)*Abstract\s*(?:<\/[^>]*>\s*)*<\/h2>/i.exec(html);
+}
+export function extractNaturePublicAbstract(html){
+  const heading=natureAbstractHeading(html);
+  if(!heading)return '';
+  const after=html.slice(heading.index+heading[0].length,
+    heading.index+heading[0].length+16000);
+  const boundary=/<\/section\s*>|<h2\b[^>]*>/i.exec(after);
+  if(!boundary)return '';
+  const content=after.slice(0,boundary.index);
+  const paragraphs=[...content.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p\s*>/gi)]
+    .map(match=>decodeEntities(match[1].replace(/<[^>]*>/g,' '))
+      .replace(/\s+/g,' ').trim()).filter(Boolean);
+  const abstract=paragraphs.join(' ').trim();
+  if(abstract.length<140||abstract.length>16000||abstract.split(/\s+/).length<25
+    ||/(?:verify you are human|access denied|this is a preview of subscription content)/i.test(abstract))
+    return '';
+  return abstract;
+}
 export function publisherMetadataAbstract(html,expectedDoi){
   const target=doi(expectedDoi);
   if(!target||typeof html!=='string')return '';
@@ -68,6 +93,9 @@ export function publisherMetadataAbstract(html,expectedDoi){
         &&!/^https?:\/\//i.test(content))return content;
     }
   }
+  // Preserve access controls: this fallback uses only Nature's explicitly
+  // labelled *public* Abstract, not the article's Main/Methods or PDF.
+  if(target.startsWith('10.1038/'))return extractNaturePublicAbstract(prefix);
   return '';
 }
 export async function fetchPublisherMetadataAbstract(inputDoi,{
@@ -106,6 +134,7 @@ export async function fetchPublisherMetadataAbstract(inputDoi,{
     const reader=response.body.getReader();
     const decoder=new TextDecoder();
     let html='',bytes=0,closed=false;
+    const nature=normalized.startsWith('10.1038/');
     try{
       while(bytes<maxHeadBytes){
         const {value,done}=await reader.read();
@@ -113,10 +142,20 @@ export async function fetchPublisherMetadataAbstract(inputDoi,{
         bytes+=value.byteLength;
         if(bytes>maxHeadBytes)throw Error('publisher_metadata_head_too_large');
         html+=decoder.decode(value,{stream:true});
-        // Check the accumulated string: </head> may straddle chunks.
-        if(/<\/head\s*>|<body\b/i.test(html)){
-          closed=true;
-          break;
+        // For standard sources retain head-only acquisition. Nature may
+        // expose the public Abstract only as an explicitly labelled section.
+        // Stop as soon as the Abstract section closes; no full-body traversal.
+        const headDone=/<\/head\s*>|<body\b/i.test(html);
+        if(!nature&&headDone){closed=true;break;}
+        if(nature&&headDone){
+          if(publisherMetadataAbstract(html,normalized)){closed=true;break;}
+          const heading=natureAbstractHeading(html);
+          if(heading){
+            const after=html.slice(heading.index+heading[0].length);
+            if(/<\/section\s*>|<h2\b[^>]*>/i.test(after)){
+              closed=true;break;
+            }
+          }
         }
       }
     }finally{
