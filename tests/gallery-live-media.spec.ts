@@ -265,3 +265,24 @@ test('an incomplete live response is not proof that a missing TOC is pending', a
   await expect(slot.locator('.toc-pending-status')).toHaveCount(0);
   expect(fixture.errors).toEqual([]);
 });
+
+test('visible pending TOC is rechecked after five minutes without a page reload or new publisher visit', async ({ page }) => {
+  test.setTimeout(90000);
+  await page.clock.install();
+  const doi = RSC_MISSING[2];
+  const fixture = await openCanonical(page, doi, { initialMediaStatus: 'missing' });
+  const slot = fixture.card.locator('.toc-slot');
+  await expect(slot).toHaveAttribute('data-state', 'not-yet-available', { timeout: 25000 });
+  const initialBatches = fixture.calls.filter(row => row.url === API + '/api/media/batch').length;
+
+  fixture.setMediaStatus('available');
+  // Advance only browser time. The live UI interval should poll visible
+  // pending cards when their media TTL expires, not when a user clicks.
+  await page.clock.fastForward(5 * 60_000 + 1000);
+  await page.clock.runFor(400);
+  const img = slot.locator('img.toc-image');
+  await expect(img).toBeVisible({ timeout: 25000 });
+  await expect.poll(async () => img.evaluate(node => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  expect(fixture.calls.filter(row => row.url === API + '/api/media/batch').length).toBeGreaterThan(initialBatches);
+  expect(fixture.errors).toEqual([]);
+});
