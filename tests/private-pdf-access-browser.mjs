@@ -197,7 +197,7 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    const range=String(route.request().headers().range||'');
    if(url.origin==='https://pdf.gczhouwld.com'&&range){
     state.tencentRangeCalls++;
-    const pieces=/^bytes=(\\d+)-(\\d+)$/.exec(range);
+    const pieces=/^bytes=(\d+)-(\d+)$/.exec(range);
     if(pieces)state.tencentMaxRangeBytes=Math.max(state.tencentMaxRangeBytes,
       Number(pieces[2])-Number(pieces[1])+1);
    }
