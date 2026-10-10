@@ -65,8 +65,6 @@ def add_include(raw, relay=RELAY_INCLUDE, pdf=PDF_INCLUDE):
 def remove_include(raw, pdf=PDF_INCLUDE):
     """Remove only our exactly marked line, preserving unrelated config bytes."""
     lines = raw.splitlines(keepends=True)
-    managed = _line_regex(pdf + b"; # " + MARKER)
-    # _line_regex builds an include directive; special-case the marker below.
     regex = re.compile(rb"^[ \t]*include[ \t]+" + re.escape(pdf) +
                        rb"[ \t]*;[ \t]*#[ \t]*" + MARKER + rb"[ \t]*$")
     matches = [i for i, line in enumerate(lines)
