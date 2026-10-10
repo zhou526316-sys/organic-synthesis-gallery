@@ -52,7 +52,7 @@ import {
 } from './literature-catalog-index.js';
 import { parseCatalogViewGetParams } from './literature-catalog-get-query.js';
 import { beginSearchEnrichment, importSearchEnrichment, finalizeSearchEnrichment, getSearchAbstract, getSearchEnrichmentCoverage, refreshSearchEnrichmentAbstracts } from './literature-search-enrichment.js';
-import { importBasicAbstractReviews, listBasicAbstractReviewCandidates } from './literature-basic-abstracts.js';
+import { getBasicAbstractCoverage, importBasicAbstractReviews, listBasicAbstractReviewCandidates } from './literature-basic-abstracts.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus, userLibraryRowShadowEnabled } from './user-library-shadow.js';
 import {
@@ -425,6 +425,13 @@ async function handleApi(request, env, ctx) {
       catalogId:url.searchParams.get('catalogId')||'',
       afterDoi:url.searchParams.get('afterDoi')||'',
       limit:url.searchParams.get('limit')||'8'
+    }),cors);
+  }
+  if (request.method === 'GET' && url.pathname === '/api/admin/literature-basic-abstracts/coverage') {
+    const authError=requireWriteAuthorization(request,env);
+    if(authError)return authError;
+    return resultResponse(await getBasicAbstractCoverage(env,{
+      catalogId:url.searchParams.get('catalogId')||''
     }),cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/admin/literature-basic-abstracts/import') {
