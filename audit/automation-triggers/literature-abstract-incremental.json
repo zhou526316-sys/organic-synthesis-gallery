@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "request": "approved-nature-public-abstract-only-rescue-20261010",
-  "requestedDate": "2026-10-10",
+  "request": "authorized-scholar-429-retry-smoke-20261011",
+  "requestedDate": "2026-10-11",
   "scope": "all-current-reviewed-dois",
   "currentCatalogId": "f5853af95d5ea395cbe7e529a747ce75701eb0a22aad023c8e907f6b2fdf0c6d",
   "readOnlySources": [
@@ -9,10 +9,10 @@
     "crossref",
     "semantic_scholar",
     "europe_pmc",
-    "publisher_metadata",
-    "nature_public_abstract_section"
+    "springer_nature_meta",
+    "publisher_metadata"
   ],
   "protectedLiteratureWrites": 0,
-  "description": "After CI-passed PR #515 Nature DOI-bound public Abstract parser, retry only missing original abstracts. Public short attribution/excerpt limit, do not retrieve historic body/SI/images/PDF or bypass journal authentication. Single authorized metadata-only increment, preserve 08:00 admission and archive staging.",
-  "requestedAt": "2026-10-10T15:48:14.200Z"
+  "description": "After CI passed PR #531, one metadata-only run to check bounded 429 retry and optional academic API key, not to change paper release, TOC, body images, PDF, or summary hash verification. Leave 08:00 sole formal new publication slot unchanged.",
+  "requestedAt": "2026-10-10T17:49:24.839Z"
 }
