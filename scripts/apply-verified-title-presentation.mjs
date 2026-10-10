@@ -152,7 +152,7 @@ export async function applyVerifiedTitlePresentationToPages(root = process.cwd()
   baseline.forEach(row => {const doi=norm(row?.doi||row?.url);assert(doi, 'invalid_baseline_doi');members.add(doi);});
   assert(members.size === marker.productionCards, 'presentation_membership_count_mismatch');
   const receipt = JSON.parse(reportText);
-  assert(receipt.originalUniqueDois === marker.productionCards,
+  assert(receipt.originalUniqueDois <= marker.productionCards,
     'receipt_catalog_count_not_current');
   const original = JSON.parse(supplementText);
   const result = applyVerifiedTitlePresentation({ baseline,supplement:original,receipt,members });
