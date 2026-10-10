@@ -313,13 +313,30 @@ function workerRequest<T>(method: string, path: string, body?: unknown): Promise
   return rawRequest<T>(method, `${WORKER_ORIGIN}${path}`, body);
 }
 
+// For China-first Gallery literature search, the first-party custom domain is
+// the canonical cross-origin API. workers.dev is only a transport fallback:
+// a temporary CDN/DNS/CORS failure must not permanently suppress abstract FTS.
+async function literatureReadWithFailover<T>(method: 'GET' | 'POST', path: string, body?: unknown): Promise<ApiResponse<T>> {
+  try {
+    return await rawRequest<T>(method, `${MEDIA_API_ORIGIN}${path}`, body);
+  } catch (primaryError) {
+    try {
+      const fallback = await workerRequest<T>(method, path, body);
+      return fallback;
+    } catch (backupError) {
+      console.warn('[Gallery search] Both public literature API transports unavailable', primaryError, backupError);
+      throw backupError;
+    }
+  }
+}
+
 function canonicalMediaRequest<T>(path: string, body?: unknown): Promise<ApiResponse<T>> {
   return rawRequest<T>('POST', `${MEDIA_API_ORIGIN}${path}`, body);
 }
 
 async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResponse<T>> {
   if (!localDevelopmentHost() && path === '/api/literature/catalog-view') {
-    return workerRequest<T>('POST', path, body);
+    return literatureReadWithFailover<T>('POST', path, body);
   }
 
   const requested = body && typeof body === 'object' && Array.isArray((body as { dois?: unknown }).dois)
@@ -452,7 +469,7 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
 
 async function request<T>(method: string, path: string, body?: unknown): Promise<ApiResponse<T>> {
   if (method === 'GET' && !localDevelopmentHost() && path === '/api/_healthcheck') {
-    return workerRequest<T>('GET', path);
+    return literatureReadWithFailover<T>('GET', path);
   }
   if (method === 'GET' && staticFrontendOnly() && path === '/api/literature/supplement') {
     const data = await fetchStaticJson<unknown>('literature-supplement.json', { papers: [] }, 'no-cache');
