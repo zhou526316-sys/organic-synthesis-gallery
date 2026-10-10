@@ -48,10 +48,9 @@ export function nextOwnerPdfFileOrigin(activeOrigin, tencentEnabled = false) {
   return '';
 }
 
-/** Both R2 identity AND the ticket's own host are required before splicing. */
-export function isMatchingOwnerPdfFileSource(source, origin, expectedHash, byteLength) {
-  if (!source || typeof source !== 'object' || source.headerVerified !== true ||
-      !SHA256.test(String(expectedHash || '')) ||
+/** Exact owner document identity and host are required for independent preflight. */
+export function isMatchingOwnerPdfFileIdentity(source, origin, expectedHash, byteLength) {
+  if (!source || typeof source !== 'object' || !SHA256.test(String(expectedHash || '')) ||
       source.contentHash !== expectedHash ||
       !Number.isSafeInteger(byteLength) || byteLength < 16 ||
       source.byteLength !== byteLength)
@@ -66,6 +65,15 @@ export function isMatchingOwnerPdfFileSource(source, origin, expectedHash, byteL
   } catch {
     return false;
   }
+}
+
+/** Strong R2 header proof is mandatory before Range-byte stitching.
+ * For a deferred /open header use the identity helper followed by actual
+ * credentialed 206 + %PDF- validation, never automatic approval.
+ */
+export function isMatchingOwnerPdfFileSource(source, origin, expectedHash, byteLength) {
+  return source?.headerVerified === true &&
+    isMatchingOwnerPdfFileIdentity(source, origin, expectedHash, byteLength);
 }
 
 /** Explicit routes only, never expose signed URLs in telemetry. */
