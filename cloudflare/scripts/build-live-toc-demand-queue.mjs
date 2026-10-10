@@ -2,7 +2,7 @@ import { gunzipSync } from 'node:zlib';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { isExcludedDoi } from '../../shared/literature-policy.js';
-import { isHistoricalBackfill, paperMediaPolicy } from '../../shared/historical-literature-policy.js';
+import { isHistoricalBackfill, isRetrospectiveAdmission, paperMediaPolicy } from '../../shared/historical-literature-policy.js';
 
 const ROOT = process.cwd();
 const PUBLIC = path.join(ROOT, 'public');
@@ -222,11 +222,12 @@ async function main() {
     fetchLocalCaptureIndex(),
     loadDisplayGapOverrides(),
   ]);
-  const inventory = await fetchMediaInventory([...papers.keys()]);
-  const addedDates = [...papers.values()].filter(paper => !isHistoricalBackfill(paper))
+  const inventory = await fetchMediaInventory([...papers.values()]
+    .filter(paper => paperMediaPolicy(paper) !== 'metadata_only').map(paper => paper.doi));
+  const addedDates = [...papers.values()].filter(paper => !isRetrospectiveAdmission(paper))
     .map(paper => String(paper.addedDate || '')).filter(Boolean).sort();
   const latestAddedDate = addedDates.length ? addedDates[addedDates.length - 1] : '';
-  const latestAddedCount = latestAddedDate ? [...papers.values()].filter(paper => !isHistoricalBackfill(paper) && paper.addedDate === latestAddedDate).length : 0;
+  const latestAddedCount = latestAddedDate ? [...papers.values()].filter(paper => !isRetrospectiveAdmission(paper) && paper.addedDate === latestAddedDate).length : 0;
   const allMissingOfficial = [];
   const displayGaps = [];
   const officialUpgrade = [];
