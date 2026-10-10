@@ -290,7 +290,7 @@ def main():
         assert fact in daily,("missing Angew source fact",fact)
     for fact in ["Ni(I)","Ni(0)","−1.69 V","−2.06 V","18.7 F mol⁻¹","78%","1.16 g","仇友爱","SI Fig. S14"]:
         assert fact in retro,("missing Nature source fact",fact)
-    assert "100% 化学收率" in daily and "不是化学收率达到 100%" in daily
+    assert "同位素标记比例" in daily and "不是化学收率达到 100%" in daily
     assert "无法" in retro or "不能" in retro
     assert len(overlay["featured"]["sections"])==10 and len(overlay["retrospective"]["sections"])==11
     assert all(len(p)>=85 for s in f["sections"]+r["sections"] for p in s["paragraphs"])
