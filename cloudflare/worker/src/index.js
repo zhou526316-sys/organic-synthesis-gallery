@@ -107,6 +107,10 @@ import { managePrivatePdfReaderGrant } from './private-pdf-reader-grants.js';
 import { bootstrapPrivatePdfOwner, importPrivatePdf, issuePrivatePdfCaptureLease, privatePdfCaptureInventory, openPrivatePdf, privatePdfStatus, revokePrivatePdfCaptureLeases, servePrivatePdf } from './private-pdf.js';
 import { applyPrivatePdfVerification, listPrivatePdfProcessingQueue, privatePdfProcessingStatus, servePrivatePdfProcessingFile } from './private-pdf-processing.js';
 import { readPdfVaultQueue, mutatePdfVaultQueue } from './pdf-vault-queue.js';
+import {
+  beginPrivatePdfAudit, ingestPrivatePdfAudit, finishPrivatePdfAudit,
+  probePrivatePdfAudit, readOwnerPdfAudit, recordOwnerPdfBrowserCheck,
+} from './private-pdf-audit.js';
 
 const json = (value, init = {}) => new Response(JSON.stringify(value), {
   ...init,
@@ -593,6 +597,33 @@ async function handleApi(request, env, ctx) {
     if (request.method === 'POST') return resultResponse(await mutatePdfVaultQueue(request, env), queueHeaders);
     return resultResponse({ status: 405, body: { error: 'method_not_allowed' } }, queueHeaders);
   }
+  if (url.pathname.startsWith('/api/admin/private-pdf/audit/')) {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    if (request.method !== 'POST') return resultResponse({ status: 405, body: { error: 'method_not_allowed' } });
+    const command = url.pathname.slice('/api/admin/private-pdf/audit/'.length);
+    if (!['begin', 'ingest', 'finish', 'probe'].includes(command))
+      return resultResponse({ status: 404, body: { error: 'not_found' } });
+    const payload = await readJson(request);
+    const result = command === 'begin' ? await beginPrivatePdfAudit(env, payload)
+      : command === 'ingest' ? await ingestPrivatePdfAudit(env, payload)
+      : command === 'finish' ? await finishPrivatePdfAudit(env, payload)
+      : await probePrivatePdfAudit(env, payload);
+    return resultResponse(result);
+  }
+  if (url.pathname === '/api/user-ui/private-pdf/audit') {
+    if (request.method !== 'GET') return resultResponse({ status: 405, body: { error: 'method_not_allowed' } }, cors);
+    return resultResponse(await readOwnerPdfAudit(request, env), {
+      ...cors, 'cache-control': 'private, no-store', 'vary': 'Origin, Authorization',
+    });
+  }
+  if (url.pathname === '/api/user-ui/private-pdf/audit/reading') {
+    if (request.method !== 'POST') return resultResponse({ status: 405, body: { error: 'method_not_allowed' } }, cors);
+    return resultResponse(await recordOwnerPdfBrowserCheck(request, env, await readJson(request)), {
+      ...cors, 'cache-control': 'private, no-store', 'vary': 'Origin, Authorization',
+    });
+  }
+
   if (url.pathname === '/api/admin/private-pdf/processing/status' && request.method === 'GET') {
     const authError = requireWriteAuthorization(request, env);
     if (authError) return authError;

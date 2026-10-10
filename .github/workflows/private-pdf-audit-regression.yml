@@ -1,0 +1,56 @@
+name: Owner PDF complete-catalog audit and admin isolation regression
+on:
+  push:
+    branches: [feature/private-pdf-all-library-audit-20261010]
+    paths:
+      - 'cloudflare/private-pdf-audit-v1.sql'
+      - 'cloudflare/worker/src/private-pdf-audit.js'
+      - 'cloudflare/worker/src/index.js'
+      - 'cloudflare/worker/scripts/test-private-pdf-audit.mjs'
+      - 'scripts/audit-private-pdf-library.mjs'
+      - 'tests/private-pdf-library-source.test.mjs'
+      - 'public/pdf-audit.html'
+      - 'public/pdf-audit-dashboard.js'
+      - 'tests/pdf-owner-audit-dashboard-browser.mjs'
+      - '.github/workflows/private-pdf-library-audit.yml'
+      - '.github/workflows/private-pdf-audit-regression.yml'
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  audited-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+      - name: Check Worker, scheduler and browser sources
+        run: |
+          node --check cloudflare/worker/src/private-pdf-audit.js
+          node --check cloudflare/worker/src/index.js
+          node --check scripts/audit-private-pdf-library.mjs
+          node --check public/pdf-audit-dashboard.js
+      - name: Exercise real main DOI catalog and isolated private database authorization
+        run: |
+          node --test tests/private-pdf-library-source.test.mjs
+          node --test cloudflare/worker/scripts/test-private-pdf-audit.mjs
+          node --test cloudflare/worker/scripts/test-private-pdf-processing.mjs
+      - name: Build static administrator interface without exposing session secrets
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+          test -s dist/pdf-audit.html
+          test -s dist/pdf-audit-dashboard.js
+          grep -F 'PDF 全库验收' dist/pdf-audit.html
+      - name: Run real browser owner-only report and export isolation cases
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.1
+          npx playwright install --with-deps chromium
+          node tests/pdf-owner-audit-dashboard-browser.mjs
+      - name: Keep downstream publishing and Tencent failover separate
+        run: |
+          node --input-type=module -e "import fs from 'node:fs';const p=JSON.parse(fs.readFileSync('public/pdf-gateway-routing.json','utf8'));if(p.enabled!==false)process.exit(1)"
+          ! grep -Fq 'Fixed-slot literature release writer' .github/workflows/private-pdf-library-audit.yml
+          ! grep -Fq '18:00' .github/workflows/private-pdf-library-audit.yml

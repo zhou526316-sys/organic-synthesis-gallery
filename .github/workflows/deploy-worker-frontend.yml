@@ -29,6 +29,8 @@ on:
       - 'cloudflare/summary-candidate-index-v1.sql'
       - 'cloudflare/literature-catalog-index-v1.sql'
       - 'cloudflare/private-pdf-v3.sql'
+      - 'cloudflare/private-pdf-audit-v1.sql'
+      - 'cloudflare/worker/scripts/test-private-pdf-audit.mjs'
       - 'cloudflare/private-pdf-reader-grants.sql'
       - 'cloudflare/worker/scripts/test-private-pdf-reader-grants.mjs'
       - 'scripts/private-pdf-readable-verifier.mjs'
@@ -114,6 +116,12 @@ jobs:
         timeout-minutes: 2
         run: node --test cloudflare/worker/scripts/test-private-pdf-processing.mjs
 
+      - name: Verify all-DOI PDF evidence and owner-only audit security
+        timeout-minutes: 2
+        run: |
+          node --check cloudflare/worker/src/private-pdf-audit.js
+          node --test cloudflare/worker/scripts/test-private-pdf-audit.mjs
+
       - name: Install frontend dependencies
         run: npm install --no-audit --no-fund
 
@@ -186,6 +194,7 @@ jobs:
           npx wrangler d1 execute "$D1_NAME" --remote --file=../private-pdf-v2.sql >/tmp/private-pdf-v2-migration.txt
           npx wrangler d1 execute "$D1_NAME" --remote --file=../private-pdf-v3.sql >/tmp/private-pdf-v3-migration.txt
           npx wrangler d1 execute "$D1_NAME" --remote --file=../private-pdf-reader-grants.sql >/tmp/private-pdf-reader-grants-migration.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --file=../private-pdf-audit-v1.sql >/tmp/private-pdf-audit-v1-migration.txt
           npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('user_capabilities','private_pdf_documents','private_pdf_access_tokens','private_pdf_capture_leases','private_pdf_verifications') ORDER BY name;" --json >/tmp/private-pdf-schema-check.json
           node - <<'NODE'
           const fs=require('fs');

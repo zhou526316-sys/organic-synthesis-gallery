@@ -1,0 +1,49 @@
+name: Owner-only PDF library inventory and R2 evidence audit
+on:
+  workflow_dispatch: {}
+  schedule:
+    # 09:17 Asia/Shanghai, after the only formal 08:00 literature slot.
+    # Independent of and never triggers the literature writer.
+    - cron: '17 1 * * *'
+  workflow_run:
+    workflows: ['Deploy Worker frontend assets']
+    types: [completed]
+permissions:
+  contents: read
+concurrency:
+  group: private-pdf-library-evidence-audit
+  cancel-in-progress: false
+jobs:
+  audit:
+    # First run only AFTER the canonical Worker has applied the D1 audit schema
+    # and deployed matching API routes. Never use a failed/foreign deployment.
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+      PRIVATE_PDF_AUDIT_PROBE_MAX: '120'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+      - name: Validate audit catalog identity and privacy contracts
+        run: |
+          node --check scripts/audit-private-pdf-library.mjs
+          node --test tests/private-pdf-library-source.test.mjs
+          node --test cloudflare/worker/scripts/test-private-pdf-audit.mjs
+      - name: Incremental per-DOI inventory and limited R2 prefix/trailer proofs
+        env:
+          PRIVATE_PDF_AUDIT_OUTPUT: ${{ runner.temp }}/private-pdf-audit/summary.json
+        run: node scripts/audit-private-pdf-library.mjs
+      - name: Preserve aggregates only; never include private per-DOI rows
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-audit-summary-${{ github.run_id }}
+          path: ${{ runner.temp }}/private-pdf-audit/summary.json
+          if-no-files-found: warn
+          retention-days: 15

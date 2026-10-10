@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta http-equiv="Referrer-Policy" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src https://api.gczhouwld.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<title>PDF 全库验收 · 管理员 · Organic Synthesis Gallery</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Microsoft YaHei",Arial,sans-serif;color:#182432;background:#f5f7fa}
+*{box-sizing:border-box}body{margin:0 auto;max-width:1320px;padding:24px 18px 70px;line-height:1.55}
+header{display:flex;gap:16px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+h1{font-size:clamp(1.35rem,3vw,1.9rem);margin:.3em 0}h2{font-size:1.05rem;margin:0 0 8px}
+a{color:#215cbb;text-decoration:none}a:hover{text-decoration:underline}
+.card{border:1px solid #dbe1e9;background:white;border-radius:12px;padding:18px;margin-top:18px}
+.muted{color:#606d7d}.small{font-size:.83rem}
+#summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+.metric{padding:10px;border:1px solid #e6e9ef;border-radius:8px;background:#fbfcfe}
+.metric strong{display:block;font-size:1.55rem;font-variant-numeric:tabular-nums}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+button,input,select{font:inherit;border:1px solid #ced6e2;border-radius:8px;padding:9px 11px;background:white;color:inherit}
+input{min-width:190px;max-width:100%}button{cursor:pointer}
+button:disabled{opacity:.4;cursor:wait}.primary{background:#235bb6;border-color:#235bb6;color:white}
+#notice{min-height:26px;margin:10px 0;color:#465e78}
+table{width:100%;border-collapse:collapse;font-size:.91rem}
+th,td{border-bottom:1px solid #eef0f3;text-align:left;padding:10px 8px;vertical-align:top}
+th{background:#f9fafc;position:sticky;top:0}
+.doi{font-family:ui-monospace,Consolas,monospace;overflow-wrap:anywhere}
+.pass{color:#176645}.fail{color:#a0392f}.pending{color:#885e16}
+.flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.actions button{font-size:.8rem;padding:5px 7px}
+.tablewrap{overflow:auto;max-height:min(62vh,760px)}
+footer{margin:20px 0;color:#657386;font-size:.82rem}
+@media(max-width:740px){body{padding:12px}th,td{padding:7px 5px;font-size:.78rem}.card{padding:12px}.toolbar{display:grid;grid-template-columns:1fr 1fr}.doi{min-width:170px}}
+</style>
+</head>
+<body>
+<header>
+ <div><div class="small muted">Organic Synthesis Gallery · 管理员专用</div>
+ <h1>PDF 全库验收</h1></div>
+ <a href="https://gallery.gczhouwld.com/">← 返回文献网站</a>
+</header>
+<div class="card">
+ <h2>验收定义与安全边界</h2>
+ <p class="muted small">只对管理员账号返回逐篇结果。后端存储检查表示 R2 内部已读取文件头尾，<strong>并不等于</strong>公网 HTTP 206、手机可访问或 PDF 已渲染。真实浏览器成功另列为“管理员人工确认”，未经验证的一律显示“未验证”。不展示 PDF 内容、签名 URL、R2 路径或访问凭据。</p>
+ <div id="notice" role="status" aria-live="polite">正在检查管理员权限…</div>
+ <div id="metadata" class="small muted"></div>
+</div>
+<div class="card">
+ <h2>验收总览</h2>
+ <div id="summary"><span class="muted">读取中…</span></div>
+</div>
+<section class="card" aria-label="逐篇状态">
+ <h2>逐篇结果</h2>
+ <div class="toolbar">
+  <label>结果筛选 <select id="filter">
+   <option value="all">全部 DOI</option>
+   <option value="ready">已入库</option>
+   <option value="pending">待处理</option>
+   <option value="failed">入库失败</option>
+   <option value="missing">尚未入库</option>
+   <option value="probe_pass">R2 头尾通过</option>
+   <option value="probe_failed">R2 头尾失败</option>
+   <option value="unprobed">R2 尚未检查</option>
+   <option value="browser_pass">人工确认两页通过</option>
+  </select></label>
+  <label>DOI / 期刊 <input id="query" placeholder="例如 jacs 或 10.1038" maxlength="80"></label>
+  <button id="search" class="primary">查询</button>
+  <button id="export">导出筛选结果 CSV</button>
+ </div>
+ <div class="tablewrap"><table>
+  <thead><tr><th>DOI / 期刊</th><th>入库 / 文件身份</th><th>R2 头尾</th><th>真实阅读</th><th>操作</th></tr></thead>
+  <tbody id="results"><tr><td colspan="5">等待管理员授权…</td></tr></tbody>
+ </table></div>
+ <div class="flex" style="justify-content:space-between;padding-top:16px">
+   <span id="pageinfo" class="muted small"></span><button id="next">加载下一页</button>
+ </div>
+</section>
+<footer>本页不会向普通账号公开任何逐篇结果。每日 09:17（北京时间）进行批量库存及限量 R2 轻量检查；网络整篇阅读需另行实测。所有失败 DOI 保留诊断原因，不会以抽样通过代替全库成功。</footer>
+<script type="module" src="/pdf-audit-dashboard.js"></script>
+</body>
+</html>
