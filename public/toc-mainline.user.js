@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.59
+// @version      6.2.60
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.59';
+  var INSTALL_REVISION = '6.2.60';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261008-rsc-silverchair-and-acs-toc-route-v1';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -103,7 +103,7 @@
   var INVENTORY_PLAN_CACHE_TTL_MS = 10 * 60 * 1000;
   var INVENTORY_HEDGE_DELAY_MS = 900;
   var INVENTORY_TRANSPORT_REPAIR_REVISION = '20261008-bounded-layers-labeled-aborts-v1';
-  var INVENTORY_REQUEST_TIMEOUT_MS = 20000; // Browser-read timeout observed at 12s; bounded hedge preserved.
+  var INVENTORY_REQUEST_TIMEOUT_MS = 16000; // A failed browser+GM hedge is bounded; no 20s x repeated inventory rounds.
   var ARCHITECTURE_MEMBERSHIP_STATE_KEY = P + 'architecture-membership-shadow-v1';
   var ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY = P + 'architecture-membership-observer-v1';
   var TOKEN_KEY = P + 'write-token';
@@ -118,6 +118,8 @@
   var HEARTBEAT_KEY = P + 'publisher-heartbeat';
   var PUBLISHER_ACCESS_COOLDOWN_PREFIX = P + 'publisher-access-cooldown:';
   var PUBLISHER_ACCESS_COOLDOWN_MS = 30 * 60 * 1000;
+  var PUBLISHER_DOI_COOLDOWN_PREFIX = P + 'doi-access-cooldown-v1:';
+  var PUBLISHER_COOLDOWN_POLICY_REVISION = '20261010-doi-first-authoritative-global-v1';
   var PUBLISHER_LAST_DISPATCH_PREFIX = P + 'publisher-last-dispatch:';
   var SCIENCE_MIN_DISPATCH_GAP_MS = 90 * 1000;
   var FAILURE_COOLDOWN_MS = 6 * 60 * 60 * 1000;
@@ -270,7 +272,7 @@
   function captureLiveText(s) {
     var phaseNames = {
       starting:'正在生成缺项队列', between_jobs:'本控制页持有任务，等待下一篇', other_controller:'任务由另一控制页持有，等待其继续', interrupted:'上次任务已中断，等待恢复', waiting_controller:'仍有待办，等待控制器继续', inventory_partial:'缺项队列已结束，部分库存未确认',
-      retry_wait:'等待必要访问间隔，随后自动继续', cooldown_wait:'出版社访问受限，保留待办并等待冷却结束后安全重试', queue_refresh:'正在读取最新文献队列', inventory_refresh:'正在核对已有图片、全文和 PDF 库存', inventory_retry:'库存连接恢复中，待办未丢弃', blocked_remaining:'仍有未补齐或未确认项（请核对实际尝试次数和受阻原因）', all_resolved:'本轮已确认缺项全部补齐', page_loading:'等待出版社页面加载', evidence_capture:'读取文章文本', resume_wait:'等待旧任务收尾后自动恢复', idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
+      retry_wait:'等待必要访问间隔，随后自动继续', cooldown_wait:'部分论文处于访问冷却；其他可访问任务继续处理', queue_refresh:'正在读取最新文献队列', inventory_refresh:'正在核对已有图片、全文和 PDF 库存', inventory_retry:'库存连接恢复中，待办未丢弃', blocked_remaining:'仍有未补齐或未确认项（请核对实际尝试次数和受阻原因）', all_resolved:'本轮已确认缺项全部补齐', page_loading:'等待出版社页面加载', evidence_capture:'读取文章文本', resume_wait:'等待旧任务收尾后自动恢复', idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
       awaiting_publisher:'已开任务页，等待出版社脚本', discovering:'识别 TOC 和正文图',
       auth_wait:'等待出版社登录', challenge_wait:'等待出版社验证', downloading:'获取图片候选',
       comparing:'比较清晰度／矢量结构', uploading:'上传并等待存储回执', saved:'已收到存储回执',
@@ -302,7 +304,10 @@
       working:s.active?(s.row&&/全文|Abstract|文本/.test(s.row.label)?'文本':s.row&&s.row.label?s.row.label:s.need||'加载文章'):'—',
       evidence:s.activeJob&&(s.activeJob.captureEvidence||s.activeJob.opportunisticEvidence)?'随当前任务顺带抓取文本':s.activeJob&&s.activeJob.existingEvidenceLevel?captureEvidenceLevelText(s.activeJob.existingEvidenceLevel)+'，不作为队列缺项':'—',
       gaps:s.scopeRevision!==OCT1_SCOPE_QUEUE_REVISION&&s.coverageRevision?'旧版全量统计已停用；请重新按 10 月 1 日起生成缺项队列。':/^(?:starting|inventory_refresh)$/.test(s.phase||'')&&s.total===0?'仅处理 10 月 1 日之后收录文献；正在核对库存…':s.coverageRevision&&s.phase!=='starting'?'10.1起 '+s.scopeCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇（待执行 '+Math.max(0,s.pendingMissing-s.deferredCount)+'／冷却等待 '+s.deferredCount+'／访问受阻 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／确实缺PDF '+Number(s.remainingNeeds.pdf||0)+'；PDF云端 已齐 '+Number(s.ownerPdfInventory.ready||0)+'／待验证 '+(Number(s.ownerPdfInventory.pending||0)+Number(s.ownerPdfInventory.failed||0))+'／未知 '+Number(s.ownerPdfInventory.unknown||0):s.missingOnly?(s.phase==='starting'?'正在核对10.1以后文献…':'仅10.1以后 '+s.scopeCount+' 篇 · 待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)):'—',
-      blocked:(s.deferredPreview||[]).map(function(r){return r.doi+' · '+r.need+' · '+String(r.publisher||'')+' 冷却至 '+new Date(r.until).toLocaleTimeString()+'（尚未访问）';})
+      blocked:(s.deferredPreview||[]).map(function(r){return r.doi+' · '+r.need+' · '+String(r.publisher||'')
+          +' · '+(r.scope==='publisher'?'出版社限流':'本篇访问验证')
+          +' · 触发 '+String(r.triggerDoi||r.doi)+' · '+String(r.reason||'')
+          +' · 冷却至 '+new Date(r.until).toLocaleTimeString()+'（尚未访问）';})
         .concat((s.blockedPreview||[]).map(function(r){return r.doi+' · '+r.need+' · 已访问受阻 · '+r.reason;})).join('\n'),
       inventory:inventoryProgressText(s.inventoryProgress,s.inventoryWarmStart,s.inventoryFreshPending)+'；PDF核对：'+pdfInventoryNotice+(s.inventoryUnknown?'；另有 '+s.inventoryUnknown+' 篇存在未确认项，不冒充已齐全或全部缺失':'')+(s.inventoryErrors.length?'；'+s.inventoryErrors.join('；'):''),
       queue:(s.pendingPreview||[]).map(function(j){return j.addedDate+' · '+j.journal+' · '+j.need+'\n'+j.doi;}).join('\n\n'),
@@ -940,30 +945,50 @@ function embeddedJobDois(value) {
     return PUBLISHER_ACCESS_COOLDOWN_PREFIX + String(publisher || '').toLowerCase();
   }
 
-  function markPublisherAccessCooldown(job, reason) {
-    var publisher = String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))).toLowerCase();
-    if (!publisher) return null;
-    var row = {
-      publisher: publisher,
-      doi: normalizeDoi(job && job.doi),
-      reason: String(reason || 'publisher_access_gate').slice(0,80),
-      at: Date.now(),
-      until: Date.now() + PUBLISHER_ACCESS_COOLDOWN_MS
-    };
-    GM_setValue(publisherAccessCooldownKey(publisher), row);
+  function publisherDoiCooldownKey(job) {
+    return PUBLISHER_DOI_COOLDOWN_PREFIX + encodeURIComponent(normalizeDoi(job && job.doi));
+  }
+
+  // A visible access-verification page is proof only for this DOI. An entire
+  // publisher may be cooled only with an authoritative, publisher-wide HTTP
+  // 429 / Retry-After receipt. The legacy single-page publisher cooldowns
+  // have no such provenance and are not carried across this policy revision.
+  function markPublisherAccessCooldown(job, reason, evidence) {
+    var doi=normalizeDoi(job && job.doi);
+    var publisher=String(job && job.publisher || publisherForDoi(doi)).toLowerCase();
+    if(!doi||!publisher)return null;
+    var global=Boolean(evidence&&evidence.publisherWide===true&&evidence.verified===true
+      &&Number(evidence.httpStatus)===429&&Number(evidence.retryAfterMs)>0);
+    var duration=global?Math.max(PUBLISHER_ACCESS_COOLDOWN_MS,Number(evidence.retryAfterMs)):PUBLISHER_ACCESS_COOLDOWN_MS;
+    var row={revision:PUBLISHER_COOLDOWN_POLICY_REVISION,scope:global?'publisher':'doi',
+      publisher:publisher,doi:doi,reason:String(reason||'publisher_access_gate').slice(0,80),
+      at:Date.now(),until:Date.now()+duration};
+    GM_setValue(global?publisherAccessCooldownKey(publisher):publisherDoiCooldownKey(job),row);
     return row;
   }
 
-  function publisherAccessCooldownUntil(job) {
-    var publisher = String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))).toLowerCase();
-    if (!publisher) return 0;
-    var key = publisherAccessCooldownKey(publisher);
-    var row = GM_getValue(key, null), until = Number(row && row.until || 0);
-    if (!Number.isFinite(until) || until <= Date.now()) {
-      if (row) GM_deleteValue(key);
-      return 0;
+  function publisherAccessCooldownDetail(job) {
+    var doi=normalizeDoi(job && job.doi);
+    var publisher=String(job && job.publisher || publisherForDoi(doi)).toLowerCase();
+    if(!doi||!publisher)return null;
+    function read(key,scope) {
+      var row=GM_getValue(key,null),until=Number(row&&row.until||0);
+      if(!row)return null;
+      if(row.revision!==PUBLISHER_COOLDOWN_POLICY_REVISION||row.scope!==scope
+        ||row.publisher!==publisher||!Number.isFinite(until)||until<=Date.now()) {
+        GM_deleteValue(key);return null;
+      }
+      return row;
     }
-    return until;
+    var global=read(publisherAccessCooldownKey(publisher),'publisher');
+    if(global)return global;
+    var local=read(publisherDoiCooldownKey(job),'doi');
+    return local&&local.doi===doi?local:null;
+  }
+
+  function publisherAccessCooldownUntil(job) {
+    var row=publisherAccessCooldownDetail(job);
+    return row?Number(row.until):0;
   }
 
   function publisherAccessCooling(job) {
@@ -5122,7 +5147,10 @@ function embeddedJobDois(value) {
           cache.set(key,x);updateInventoryProgress(run,layer,'done',started,(meta(x).transport||'')+(attempt?';retry='+attempt:''));
           return x;
         }catch(e){
-          if(attempt+1<maxAttempts&&coverageTransient(e.message)&&!Number(e.retryAfterMs||0)){await sleep(750);continue;}
+          if(attempt+1<maxAttempts&&coverageTransient(e.message)&&!Number(e.retryAfterMs||0)
+            &&!/\b(?:inventory_transport_failed|inventory_deadline)\b/i.test(String(e.message||''))){
+            await sleep(750);continue;
+          }
           errors.push(name+':'+captureLiveError(e.message||e)+(cache.has(key)?'（保留本轮上次有效库存）':''));
           var old=cache.get(key)||null;updateInventoryProgress(run,layer,old?'cached':'error',started);
           return old;
@@ -5179,14 +5207,17 @@ function embeddedJobDois(value) {
         function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count)&&x.truncated!==true;},'evidence',2);},
       function(){return readOwnerPdfInventory(queue.articles,run);}
     ];
-    // Limit publisher-browser inventory read pressure: each metadata read
-    // can use a browser + extension hedge, so five simultaneous layers can
-    // create ten or more overlapping requests and obscure true abort causes.
-    var all=new Array(tasks.length);
-    for(var start=0;start<tasks.length;start+=2){
-      var segment=await Promise.all(tasks.slice(start,start+2).map(function(fn){return fn();}));
-      segment.forEach(function(value,index){all[start+index]=value;});
-    }
+    // Run at most two inventory layers concurrently without fixed-pair head
+    // blocking. The owner PDF snapshot often takes >50s; start it early while
+    // the second lane verifies media/TOC/figures/text in turn. No unknown data
+    // may be treated as an actual missing image or private PDF.
+    var all=new Array(tasks.length),order=[4,0,1,2,3],cursor=0;
+    await Promise.all([0,1].map(async function(){
+      while(cursor<order.length){
+        var i=order[cursor++];
+        all[i]=await tasks[i]();
+      }
+    }));
     if(!all[4].complete&&all[4].reason&&!/^owner_lease_/.test(all[4].reason))errors.push(all[4].reason);
     return {media:all[0],tocs:all[1],figures:all[2],evidence:all[3],pdf:all[4],errors:errors,readAt:nowIso()};
   }
@@ -5430,13 +5461,15 @@ function embeddedJobDois(value) {
     s.attemptCount=s.results.length;s.fullyResolved=rows.filter(function(r){return r.state==='resolved';}).length;
     s.unresolvedCount=left.length;s.blockedCount=left.filter(function(r){return r.state==='blocked';}).length;
     s.pendingMissing=left.filter(function(r){return r.state==='pending'||r.state==='active';}).length;
-    var deferred=left.filter(function(r){return r.state==='pending'&&r.deferReason==='publisher_access_cooldown'
+    var deferred=left.filter(function(r){return r.state==='pending'
+      &&/^(?:publisher|doi)_access_cooldown$/.test(String(r.deferReason||''))
       &&Number(r.deferUntil||0)>Date.now();});
     s.deferredCount=deferred.length;
     s.deferredNextAt=deferred.length?Math.min.apply(null,deferred.map(function(r){return r.deferUntil;})):0;
     s.deferredPreview=deferred.slice(0,12).map(function(r){return {doi:r.job.doi,
       publisher:r.job.publisher,need:captureNeedText(r.job),until:Number(r.deferUntil||0),
-      reason:'publisher_access_cooldown'};});
+      scope:r.deferScope==='publisher'?'publisher':'doi',triggerDoi:String(r.deferTriggerDoi||r.job.doi),
+      reason:String(r.deferCause||'access_check').slice(0,80)};});
     s.remainingNeeds={toc:0,figures:0,evidence:0,pdf:0};
     left.forEach(function(r){if(r.job.captureToc)s.remainingNeeds.toc++;if(r.job.captureFigures)s.remainingNeeds.figures++;if(r.job.captureEvidence)s.remainingNeeds.evidence++;if(r.job.capturePrivatePdf)s.remainingNeeds.pdf++;});
     s.pendingPreview=coveragePending(run).slice(0,12).map(function(r){var j=r.job;return {doi:j.doi,journal:j.journal,addedDate:captureBatchDate(j),need:captureNeedText(j)};});
@@ -5502,16 +5535,19 @@ function embeddedJobDois(value) {
         var candidates=coveragePending(run),row=null;
         for(var i=0;i<candidates.length;i++){
           var candidate=candidates[i],job=candidate.job;
-          var cooldownUntil=publisherAccessCooldownUntil(job);
-          if(cooldownUntil){
-            // A publisher-level access gate is neither a DOI visit nor a failed
-            // capture. Preserve the obligation and its exact safe retry time.
-            candidate.deferReason='publisher_access_cooldown';
-            candidate.deferUntil=cooldownUntil;
-            candidate.retryAt=Math.max(Number(candidate.retryAt||0),cooldownUntil);
+          var cooldown=publisherAccessCooldownDetail(job);
+          if(cooldown){
+            // Only verified publisher-wide rate limiting can hold unrelated DOIs.
+            // An article access page defers this DOI while others may proceed.
+            candidate.deferReason=cooldown.scope==='publisher'?'publisher_access_cooldown':'doi_access_cooldown';
+            candidate.deferScope=cooldown.scope;
+            candidate.deferCause=cooldown.reason;
+            candidate.deferTriggerDoi=cooldown.doi;
+            candidate.deferUntil=cooldown.until;
+            candidate.retryAt=Math.max(Number(candidate.retryAt||0),cooldown.until);
             continue;
           }
-          candidate.deferReason='';candidate.deferUntil=0;
+          candidate.deferReason='';candidate.deferScope='';candidate.deferUntil=0;
           if(candidate.retryAt<=Date.now()&&!publisherPacingCooling(job)){row=candidate;break;}
         }
         if(!row){
@@ -5520,7 +5556,7 @@ function embeddedJobDois(value) {
             var current=Date.now(),nextDue=candidates.reduce(function(soon,c){
               var due=Number(c.retryAt||0);return due>current?Math.min(soon,due):soon;
             },Number.POSITIVE_INFINITY);
-            s.phase=candidates.some(function(c){return c.deferReason==='publisher_access_cooldown';})
+            s.phase=candidates.some(function(c){return /^(?:publisher|doi)_access_cooldown$/.test(String(c.deferReason||''));})
               ?'cooldown_wait':'retry_wait';
             coverageStats(run);manualSummary(run);
             // Remain interruptible and renew the controller lease, while avoiding
@@ -6249,8 +6285,10 @@ function embeddedJobDois(value) {
         GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:waitState,at:nowIso(),url:location.href,version:VERSION,host:location.hostname});
         if (state.accessGate && Date.now()-accessGateStarted >= 12000) {
           var cooldown=markPublisherAccessCooldown(job,'publisher_access_gate');
-          pushTrace(trace,{stage:'publisher_access',event:'cooldown',status:'skipped',url:location.href,
-            message:'publisher='+String(job.publisher||'')+';cooldownMs='+String(PUBLISHER_ACCESS_COOLDOWN_MS)+';until='+String(cooldown&&cooldown.until||0)});
+          pushTrace(trace,{stage:'publisher_access',event:'doi_cooldown',status:'skipped',url:location.href,
+            message:'scope=doi;publisher='+String(job.publisher||'')+';triggerDoi='+normalizeDoi(job.doi)
+              +';reason=publisher_access_gate;cooldownMs='+String(PUBLISHER_ACCESS_COOLDOWN_MS)
+              +';until='+String(cooldown&&cooldown.until||0)});
           throw new Error('publisher_access_gate');
         }
         await sleep(1500); continue;
