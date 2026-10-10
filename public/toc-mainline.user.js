@@ -2612,6 +2612,25 @@ function embeddedJobDois(value) {
         url:url.origin+'/'+code+'/PlatformArticle/ArticleAbstractAjax?articleId='+match[3]+'&layAbstract=false'};
     }catch(_){return null;}
   }
+  function rscVerifiedSilverchairMedia(job,value) {
+    // Accept only a same-article DOI/ArticleId asset actually present in the
+    // authenticated Silverchair DOM. No fabricated CDN paths or PDF previews.
+    var article=rscNativeAjaxBoundRoute(job),doi=normalizeDoi(job&&job.doi);
+    if(!article||!candidateBelongsToJob(value,job)||rscPdfPreviewUrl(value)
+        ||reject('',value))return false;
+    try{
+      var u=new URL(String(value||''),location.href),host=u.hostname.toLowerCase();
+      if(u.protocol!=='https:'||!(host==='pubs.rsc.org'||host.endsWith('.silverchair-cdn.com')))return false;
+      if(!/\.(?:svg|png|jpe?g|webp|gif)(?:[?#]|$)/i.test(u.href))return false;
+      var decoded=decodeURIComponent(u.pathname+u.search).toLowerCase();
+      var suffix=doi.split('/')[1]||'';
+      if(suffix&&decoded.indexOf(suffix)>=0)return true;
+      var id=article.articleId;
+      return new RegExp('(?:^|[^0-9])'+id+'(?:[^0-9]|$)').test(decoded)
+        && !/\/(?:logo|icon|banner|cover|avatar|site-asset)\b/i.test(decoded);
+    }catch(_){return false;}
+  }
+
   async function rscNativeAjaxGraphicalAbstractCandidates(job,trace) {
     var route=rscNativeAjaxBoundRoute(job);
     if(!route)return [];
@@ -2640,7 +2659,11 @@ function embeddedJobDois(value) {
         return [];
       }
       var doc=new DOMParser().parseFromString(payload.Html,'text/html');
-      var imgs=Array.from(doc.querySelectorAll('.graphical-abstract img,.fig-graphic img,.graphicalAbstract img')).slice(0,10);
+      var imgs=Array.from(doc.querySelectorAll(
+        '.graphical-abstract img,.fig-graphic img,.graphicalAbstract img,'
+        +'[class*="visual-abstract" i] img,[id*="visual-abstract" i] img,'
+        +'[class*="article-abstract" i] [class*="graphical" i] img'
+      )).slice(0,16);
       var seen=new Set(),rows=[];
       imgs.forEach(function(img){
         var parent=img.closest('.graphical-abstract,.fig-graphic,.graphicalAbstract');
@@ -2664,6 +2687,16 @@ function embeddedJobDois(value) {
             score:990-rank,text:'RSC official article graphical abstract',
             source:'rsc_silverchair_abstract_ajax',element:null});
         });
+      });
+      // Official AJAX responses can contain SVG <object>, <source>, and
+      // CSS background assets rather than a plain <img>. Only the bound
+      // DOI/ArticleId DOM and publisher-hosted figure assets may qualify.
+      rscSilverchairVisualCandidates(job,doc,location.href).forEach(function(row){
+        if(seen.has(row.url))return;
+        if(!rscVerifiedSilverchairMedia(job,row.url)
+          &&String(row.url||'').toLowerCase().indexOf(route.doi.split('/')[1])<0)return;
+        seen.add(row.url);
+        rows.push(Object.assign({},row,{source:'rsc_verified_abstract_ajax_dom'}));
       });
       pushTrace(trace,{stage:'rsc_native_abstract_ajax',event:'semantic_scan',status:rows.length?'found':'none',
         url:route.url,message:'doi='+route.doi+';articleId='+route.articleId+
@@ -2724,7 +2757,8 @@ function embeddedJobDois(value) {
         if(!/\.(?:svg|png|jpe?g|webp|gif)(?:$|[?#])/i.test(u.href))return false;
         // A generic logo or a different article's visual is never a DOI asset.
         return u.href.toLowerCase().indexOf(suffix)>=0
-          || embeddedJobDois(u.href).indexOf(doi)>=0;
+          || embeddedJobDois(u.href).indexOf(doi)>=0
+          || rscVerifiedSilverchairMedia(job,u.href);
       }catch(_){return false;}
     }
     Array.prototype.slice.call(sections).slice(0,50).forEach(function(block){
