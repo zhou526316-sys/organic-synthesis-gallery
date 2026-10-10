@@ -42,6 +42,9 @@ Let N be the number of papers released at 08:00.
 - When N > 5, the text list still stays compressed to journal counts only, but the Gallery jump card may show **3–4 real miniatures** from that day's new papers. These miniatures are navigation/visual context, not a substitute for re-enumerating the full list.
 - **2026-10-10 用户批准：公众号「阅读原文」必须定位精选论文，而非仅跳到日期列表。** 今日精选使用 `https://gallery.gczhouwld.com/?edition=YYYY-MM-DD&doi=ENCODED_FEATURED_DOI&summary=0`；往期精选使用 `https://gallery.gczhouwld.com/?doi=ENCODED_RETROSPECTIVE_DOI&summary=0`。微信中的两篇应分别锁定自己的 DOI 卡片、自动滚动至卡片、显示完整卡片的动态高亮光效；默认不弹摘要遮挡正文。只有明确 `summary=1` 的用户主动分享链接才自动打开摘要。
 - **历史文章兼容**：已发送的 `?edition=YYYY-MM-DD` 老链接应读取当天原有编辑清单的 `featured` 或 `featuredDoi`，解析精选 DOI，进入对应卡片并显示光效；不能依赖编辑清单同时存在 `dois`。包含日期和 DOI 的链接必须以明确的 DOI 为先，避免日期页自动滚动抢走目标。异步重绘、手机分页和低动态模式不得丢失定位，低动态模式保留静态发光描边。
+- **2026-10-10 起的发布端强制门禁**：所有新制作的今日精选、往期精选（含单篇往期精选草稿）必须有已核对 DOI。若 DOI 缺失或无效，写稿器必须拒绝生成“阅读原文”并中止该精选草稿，不得静默回退 Gallery 首页或日期列表。两个栏目分别生成自身的 DOI 精准链接；当期日期只用于今日精选的 `edition` 辅助参数，`summary=0` 明确禁止自动摘要遮挡。
+- **微信草稿回读验收**：实际 `draft/add` 或 `draft/update` 之后，必须通过 `draft/get` 验证两篇文章的数量与顺序、`content_source_url` 与当前审核源稿生成的完整精准链接逐字一致；日期页、首页、错误/互换 DOI、缺少 `summary=0` 或任何单篇不一致都判定验收失败，不得标记草稿更新成功或提供新预览链接。这个检查独立于 Gallery 前端卡片/光效回归测试。
+- **历史草稿与过期恢复任务**：此前已发送推文不逐篇重写；留在仓库中的旧日期 `linkOnly` 修复指令在下一期必须失效，不能拦截新一期正常写稿。错误或未来日期指令仍应拒绝，避免误写；草稿不存在或身份无法唯一确认时不得擅自补建、覆盖或群发。
 - **今日全部文献仍有独立入口**：公众号正文中的 Gallery 日期索引卡和 QR 使用 `?edition=YYYY-MM-DD`，继续支持浏览当天新增、期刊筛选及检索；这与两篇文章各自的「阅读原文」精准 DOI 链接是不同用途。不可因为修复精选深链而移除当日列表入口。
 
 ## Gallery jump card

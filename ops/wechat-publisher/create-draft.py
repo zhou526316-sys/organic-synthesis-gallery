@@ -276,12 +276,44 @@ def gallery_original_url(doi: str | None, edition: str = "") -> str:
     """
     verified = normalize_doi(doi)
     if not re.fullmatch(r"10\.\d{4,9}/\S+", verified):
-        return DEFAULT_SOURCE_URL
+        raise RuntimeError("WeChat 阅读原文 requires a verified DOI; refusing a homepage fallback")
     params = []
     if re.fullmatch(r"\d{4}-\d{2}-\d{2}", edition):
         params.append(("edition", edition))
     params.extend([("doi", verified), ("summary", "0")])
     return DEFAULT_SOURCE_URL + "?" + urllib.parse.urlencode(params)
+
+
+def assert_draft_source_links(draft: dict, expected_urls: list[str]) -> None:
+    """Verify the real WeChat draft/get URLs for every selected article, in order.
+
+    A successfully saved draft is not accepted if it still navigates to a date
+    listing, the Gallery homepage, the wrong DOI, or opens a summary overlay.
+    """
+    items = draft.get("news_item") if isinstance(draft, dict) else None
+    if not isinstance(items, list) or len(items) != len(expected_urls):
+        raise RuntimeError("draft/get article count mismatch for 阅读原文 source-link acceptance")
+    for index, (item, expected) in enumerate(zip(items, expected_urls)):
+        actual = str(item.get("content_source_url") or "") if isinstance(item, dict) else ""
+        if actual != expected:
+            raise RuntimeError(
+                f"draft/get 阅读原文 mismatch at article {index + 1}: expected DOI-locked URL"
+            )
+
+
+def is_current_link_only_request(request: dict, publication_date: str) -> bool:
+    """Expired recovery requests must not hijack the next day's normal draft.
+
+    Do not silently ignore malformed, current or future-dated recovery commands.
+    """
+    if not isinstance(request, dict) or request.get("linkOnly") is not True:
+        return False
+    request_date = str(request.get("publicationDate") or "").strip()
+    if request_date == publication_date:
+        return True
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", request_date) and request_date < publication_date:
+        return False
+    raise RuntimeError("link-only draft request has invalid or future publicationDate; no write")
 
 
 def load_featured(date: str):
@@ -2965,6 +2997,7 @@ def main() -> int:
             raise RuntimeError("retrospective draft write succeeded but no media_id is available")
 
         draft = get_draft(token, media_id)
+        assert_draft_source_links(draft, [source_url])
         preview_path, preview_url = write_draft_preview(
             draft,
             media_id=media_id,
@@ -3020,6 +3053,14 @@ def main() -> int:
         else args.source_url
     )
     retrospective_slug = str(edition.get("retrospective") or "").strip()
+    expected_source_links = [source_url]
+    if retrospective_slug:
+        retrospective_selection = load_retrospective_slug(retrospective_slug)
+        if not isinstance(retrospective_selection, dict):
+            raise RuntimeError("selected retrospective manifest unavailable")
+        expected_source_links.append(
+            gallery_original_url((retrospective_selection.get("paper") or {}).get("doi"))
+        )
 
     if not args.create:
         print(json.dumps({
@@ -3055,7 +3096,7 @@ def main() -> int:
     source_link_request_path = ROOT / "audit" / "automation-triggers" / "wechat-publisher-request.json"
     if source_link_request_path.exists():
         source_link_request = json.loads(source_link_request_path.read_text(encoding="utf-8"))
-        if source_link_request.get("linkOnly") is True:
+        if is_current_link_only_request(source_link_request, publication_date):
             return update_verified_original_links_only(
                 token, publication_date=publication_date, slot=slot, papers=papers,
                 featured=featured, edition=edition, retrospective_slug=retrospective_slug,
@@ -3130,7 +3171,7 @@ def main() -> int:
                 "author": "化之岛",
                 "digest": str(retro.get("digest") or ""),
                 "content": retro_content,
-                "content_source_url": gallery_original_url((retro.get("paper") or {}).get("doi")),
+                "content_source_url": expected_source_links[1],
                 "thumb_media_id": retro_thumb,
                 "need_open_comment": 0,
                 "only_fans_can_comment": 0,
@@ -3179,6 +3220,15 @@ def main() -> int:
     if not media_id:
         raise RuntimeError("draft write succeeded but no media_id is available")
 
+
+    draft = get_draft(token, media_id)
+    assert_draft_source_links(draft, expected_source_links)
+    preview_path, preview_url = write_draft_preview(
+        draft,
+        media_id=media_id,
+        preview_dir=Path(args.preview_dir),
+        base_url=args.preview_base_url,
+    )
     save_state(
         DEFAULT_STATE,
         {
@@ -3189,14 +3239,6 @@ def main() -> int:
             "articleCount": len(articles),
             "retrospective": retrospective_slug or None,
         },
-    )
-
-    draft = get_draft(token, media_id)
-    preview_path, preview_url = write_draft_preview(
-        draft,
-        media_id=media_id,
-        preview_dir=Path(args.preview_dir),
-        base_url=args.preview_base_url,
     )
 
     output_payload = {

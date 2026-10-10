@@ -4,12 +4,14 @@ on:
     paths:
       - 'ops/wechat-publisher/create-draft.py'
       - 'tests/test-wechat-source-link-only-recovery.py'
+      - 'tests/test-wechat-original-link-contract.py'
       - '.github/workflows/wechat-source-link-only-recovery-ci.yml'
   push:
     branches: [main]
     paths:
       - 'ops/wechat-publisher/create-draft.py'
       - 'tests/test-wechat-source-link-only-recovery.py'
+      - 'tests/test-wechat-original-link-contract.py'
       - '.github/workflows/wechat-source-link-only-recovery-ci.yml'
 permissions:
   contents: read
@@ -23,9 +25,11 @@ jobs:
         with:
           python-version: '3.12'
       - name: Check publisher and test syntax
-        run: python -m py_compile ops/wechat-publisher/create-draft.py tests/test-wechat-source-link-only-recovery.py
+        run: python -m py_compile ops/wechat-publisher/create-draft.py tests/test-wechat-source-link-only-recovery.py tests/test-wechat-original-link-contract.py
       - name: Enforce source-link only and draft identity readback
         run: python tests/test-wechat-source-link-only-recovery.py -v
+      - name: Require precise DOI original links for both standard draft paths
+        run: python tests/test-wechat-original-link-contract.py -v
       - name: No duplicate drafts or public sends in recovery implementation
         run: |
           python - <<'PY'
