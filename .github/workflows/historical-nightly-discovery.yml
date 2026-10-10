@@ -1,0 +1,106 @@
+name: Historical DOI candidate discovery (23:00 Beijing, staging only)
+
+on:
+  schedule:
+    # GitHub Actions cron is UTC; Beijing uses UTC+08 year-round.
+    - cron: '0 15 * * *'
+  workflow_dispatch:
+    inputs:
+      max_units:
+        description: 'Historical journal/date windows to inspect, max 16'
+        required: false
+        type: number
+        default: 8
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gallery-historical-candidates-staging
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    env:
+      STAGING_REF: staging/historical-archive-nightly
+    steps:
+      - name: Read main as sole production authority
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify script and source protection
+        run: |
+          set -euo pipefail
+          node --check scripts/historical-nightly-discovery.mjs
+          node --test scripts/test-historical-nightly-discovery.mjs
+          grep -F "HISTORICAL_STAGING_ONLY" scripts/historical-nightly-discovery.mjs
+          grep -F "candidate_discovery_only" scripts/historical-nightly-discovery.mjs
+      - name: Continue dedicated historical staging ref, merge newest main locally
+        run: |
+          set -euo pipefail
+          git fetch origin main --no-tags
+          if git ls-remote --exit-code origin "refs/heads/$STAGING_REF" >/dev/null; then
+            git fetch origin "$STAGING_REF" --no-tags
+            git switch -C historical-staging "origin/$STAGING_REF"
+            git merge --no-edit origin/main
+          else
+            git switch -C historical-staging origin/main
+          fi
+          # Main must remain untouched: only this staging branch may be pushed.
+          test "$(git branch --show-current)" = historical-staging
+      - name: Discover and check source completeness (no website/media writes)
+        id: collect
+        env:
+          HISTORICAL_STAGING_ONLY: '1'
+          HISTORICAL_STAGING_BRANCH: '1'
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+          MAX_UNITS: ${{ inputs.max_units || '8' }}
+          API_REQUEST_LIMIT: '80'
+        run: |
+          set +e
+          node scripts/historical-nightly-discovery.mjs
+          status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Commit candidate metadata only to historical staging
+        if: always() && steps.collect.outcome == 'success'
+        run: |
+          set -euo pipefail
+          git config user.name "gallery-history-staging[bot]"
+          git config user.email "gallery-history-staging@users.noreply.github.com"
+          git add -- audit/historical-staging
+          # Seven protected literature inputs, main, and media/PDF objects
+          # are NEVER staged or committed by the nightly job.
+          if git diff --cached --name-only | grep -Ev '^audit/historical-staging/' ; then
+            echo "Unsafe path in historical staging commit" >&2
+            exit 1
+          fi
+          if ! git diff --cached --quiet; then
+            git commit -m "audit(history): stage nightly candidate DOI metadata and coverage checkpoint"
+          fi
+          test -z "$(git diff --name-only origin/main HEAD -- . ':(exclude)audit/historical-staging/**')"
+          git push origin "HEAD:refs/heads/$STAGING_REF"
+      - name: Preserve staging evidence as build artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-historical-nightly-coverage
+          path: |
+            audit/historical-staging/state.json
+            audit/historical-staging/batches/*.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Do not mark an incomplete source window as successful
+        if: always() && steps.collect.outcome == 'success'
+        env:
+          COLLECT_STATUS: ${{ steps.collect.outputs.status }}
+        run: |
+          test "$COLLECT_STATUS" = 0
