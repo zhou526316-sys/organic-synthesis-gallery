@@ -5,6 +5,9 @@ on:
     # 09:17 Asia/Shanghai, after the only formal 08:00 literature slot.
     # Independent of and never triggers the literature writer.
     - cron: '17 1 * * *'
+  workflow_run:
+    workflows: ['Deploy Worker frontend assets']
+    types: [completed]
 permissions:
   contents: read
 concurrency:
@@ -12,6 +15,9 @@ concurrency:
   cancel-in-progress: false
 jobs:
   audit:
+    # First run only AFTER the canonical Worker has applied the D1 audit schema
+    # and deployed matching API routes. Never use a failed/foreign deployment.
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 18
     env:
