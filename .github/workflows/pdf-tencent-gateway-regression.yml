@@ -45,7 +45,8 @@ jobs:
           bash deploy/pdf-gateway/test_acme_permissions.sh
           bash deploy/pdf-gateway/test_acme_vhost_precedence.sh
           bash deploy/pdf-gateway/test_nginx_effective_include.sh
-          python -m py_compile deploy/pdf-gateway/gateway.py deploy/pdf-gateway/test_gateway.py
+          python -m py_compile deploy/pdf-gateway/gateway.py deploy/pdf-gateway/test_gateway.py deploy/pdf-gateway/nginx_include.py deploy/pdf-gateway/test_nginx_include.py
+          python -m unittest discover -s deploy/pdf-gateway -p 'test_nginx_include.py' -v
           python -m unittest discover -s deploy/pdf-gateway -p 'test_gateway.py' -v
 
   windows-powershell51:
