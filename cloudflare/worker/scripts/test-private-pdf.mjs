@@ -150,10 +150,9 @@ await test('owner open returns only a short-lived opaque file URL',async()=>{
   assert.equal(r.body.contentHash,'a'.repeat(64),'authenticated open pins immutable PDF content identity');
   assert.equal(bucket.headCalls,0,'initial open does not issue a separate R2 HEAD');
   const timing=r.headers?.['server-timing']||'';
-  // The short-lived production diagnostic expired on Oct 10 Beijing.
-  // A fixed-date flag must stay off after expiry, even if the test fixture
-  // still contains PRIVATE_PDF_OPEN_TIMING_ENABLED='1'.
-  if (Date.now() >= Date.parse('2026-10-10T00:00:00+08:00')) {
+  // New scoped diagnostics self-expire Oct 12 18:00 Beijing. The feature
+  // flag alone can never leave them enabled after this deadline.
+  if (Date.now() >= Date.parse('2026-10-12T18:00:00+08:00')) {
     assert.equal(timing,'','expired PDF authorization timings must remain disabled');
   } else {
     assert.match(timing,/session;dur=\d+/);
@@ -180,6 +179,84 @@ await test('owner PDF timing is not exposed to a denied ordinary account',async(
   assert.equal(r.status,403);
   assert.equal(r.headers?.['server-timing'],undefined);
 });
+await test('PDF open never awaits optional device last-seen D1 write',async()=>{
+  const previous=db.prepare.bind(db);
+  let attemptedTouches=0;
+  db.prepare=sql=>{
+    if(String(sql).includes('UPDATE user_session_devices SET last_seen_at')) {
+      attemptedTouches++;
+      return {bind:()=>({run:()=>new Promise(()=>{})})};
+    }
+    return previous(sql);
+  };
+  try {
+    const opened=await Promise.race([
+      openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345',
+        'owner-token',{method:'POST'}),env),
+      new Promise((_,reject)=>setTimeout(()=>reject(Error('PDF open blocked on optional D1 touch')),1400)),
+    ]);
+    assert.equal(opened.status,200);
+    assert.equal(opened.body.available,true);
+    assert.equal(attemptedTouches,0,'PDF open must not invoke unnecessary session device writes');
+  } finally { db.prepare=previous; }
+});
+
+await test('R2 prefix stall defers WITHOUT claiming header proof; signed 206 must still work',async()=>{
+  const originalGet=bucket.get.bind(bucket);
+  let attempted=0;
+  bucket.get=async()=>{attempted++;return new Promise(()=>{});};
+  let opened,elapsed=0;
+  try{
+    const began=Date.now();
+    opened=await openPrivatePdf(await authRequest(
+      '/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345',
+      'owner-token',{method:'POST'}),env);
+    elapsed=Date.now()-began;
+  } finally { bucket.get=originalGet; }
+  assert.equal(opened.status,200);
+  assert.equal(opened.body.available,true);
+  assert.equal(opened.body.headerVerified,false,'timeout must not masquerade as R2 verification');
+  assert.equal(opened.body.contentHash,'a'.repeat(64));
+  assert.equal(attempted,1);
+  assert(elapsed>=1650&&elapsed<4000,'only a bounded R2 wait is permitted: '+elapsed);
+  if(Date.now()<Date.parse('2026-10-12T18:00:00+08:00')){
+    assert.match(opened.headers?.['server-timing']||'',/r2_defer;dur=1800/);
+  }
+  const bytes=await servePrivatePdf(new Request(opened.body.url,{
+    headers:{range:'bytes=0-15'}
+  }),env,{});
+  assert.equal(bytes.status,206);
+  assert.equal(bytes.headers.get('content-range'),`bytes 0-15/${pdf.length}`);
+  assert.equal(Buffer.from(await bytes.arrayBuffer()).subarray(0,5).toString(),'%PDF-');
+});
+
+await test('stalled document D1 lookup fails closed within server budget, never claiming readiness',async()=>{
+  const originalPrepare=db.prepare.bind(db);
+  db.prepare=sql=>{
+    if(String(sql).includes('FROM private_pdf_documents') &&
+       String(sql).includes('WHERE doi = ?'))
+      return {bind:()=>({first:()=>new Promise(()=>{})})};
+    return originalPrepare(sql);
+  };
+  let result,elapsed;
+  try{
+    const started=Date.now();
+    result=await openPrivatePdf(await authRequest(
+      '/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345',
+      'owner-token',{method:'POST'}),env);
+    elapsed=Date.now()-started;
+  } finally { db.prepare=originalPrepare; }
+  assert.equal(result.status,503);
+  assert.equal(result.body.error,'private_pdf_document_lookup_unavailable');
+  assert.equal(result.body.available,undefined);
+  assert(elapsed>=4000&&elapsed<6500,'document lookup must not hang past budget: '+elapsed);
+  const timings=result.headers?.['server-timing']||'';
+  if(Date.now()<Date.parse('2026-10-12T18:00:00+08:00')){
+    assert.match(timings,/db_timeout;dur=4500/);
+    assert.doesNotMatch(timings,/owner|fixture|10\\.1021|private-pdf|token=/i);
+  }
+});
+
 await test('temporary URL serves inline PDF bytes with no-store',async()=>{
   const res=await servePrivatePdf(new Request(accessUrl),env,{});
   assert.equal(res.status,200);assert.equal(res.headers.get('content-type'),'application/pdf');assert.match(res.headers.get('content-disposition'),/^inline/);assert.equal(res.headers.get('cache-control'),'private, no-store');
