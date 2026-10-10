@@ -796,7 +796,9 @@ for (const width of [390, 1280]) {
     };
 
     await openSuggestions();
-    await page.locator('h1').click();
+    // Keep the click near the input; jumping to the hero creates unrelated
+    // viewport movement during the suggestion-lifecycle test.
+    await page.locator('.resultline').click();
     await expect(popover).toHaveCount(0);
 
     await openSuggestions();
@@ -844,6 +846,60 @@ for (const width of [390, 1280]) {
 
     await openSuggestions();
     await page.locator('[data-lang="en"]').click();
+    await expect(popover).toHaveCount(0);
+  });
+}
+
+for (const width of [390, 1280]) {
+  test(`search suggestions recover after async candidate hydration at ${width}px without reopening after Escape`, async ({page}) => {
+    await stubOptionalApi(page);
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+      { waitUntil: 'domcontentloaded' });
+    const gallery = page.locator('#gallery');
+    await expect(gallery.locator('.card').first()).toBeVisible({ timeout: 30000 });
+    // Scope this lifecycle test to the suggestion controller, not an API
+    // request or page navigation that may replace the whole search input.
+    await page.evaluate(() => {
+      document.querySelector('#app')?.addEventListener('gallery-corpus-query',
+        event => event.stopImmediatePropagation(), true);
+      const node = document.querySelector('#gallery');
+      if (!node) return;
+      (window as any).__searchHydrationSaved = [...node.childNodes];
+      node.replaceChildren();
+    });
+    // Allow the candidate cache to observe the empty window before typing.
+    await page.evaluate(() => new Promise<void>(resolve =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+    const search = page.locator('#search');
+    const popover = page.locator('.user-search-popover');
+    await search.scrollIntoViewIfNeeded();
+    await search.fill('10.');
+    await expect(search).toBeFocused();
+    await expect(popover).toHaveCount(0);
+    // The verified paper cards arrive AFTER the input event.
+    await page.evaluate(() => {
+      const gallery = document.querySelector('#gallery');
+      const saved = (window as any).__searchHydrationSaved as Node[] | undefined;
+      if (gallery && saved) gallery.replaceChildren(...saved);
+    });
+    await expect(gallery.locator('.card').first()).toBeVisible();
+    await expect(popover.locator('button').first()).toBeVisible({ timeout: 15000 });
+    await search.press('Escape');
+    await expect(popover).toHaveCount(0);
+    // An explicit dismissal must survive later card mutations.
+    await page.evaluate(() => {
+      const gallery = document.querySelector('#gallery');
+      if (gallery?.firstChild) gallery.appendChild(gallery.firstChild);
+    });
+    await page.evaluate(() => new Promise<void>(resolve =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+    await expect(popover).toHaveCount(0);
+    // A fresh user edit re-enables suggestions without stale orphaned DOM.
+    await search.fill('10');
+    await search.fill('10.');
+    await expect(popover.locator('button').first()).toBeVisible({ timeout: 10000 });
+    await page.locator('.resultline').click();
     await expect(popover).toHaveCount(0);
   });
 }
