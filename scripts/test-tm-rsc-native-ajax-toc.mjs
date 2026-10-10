@@ -71,6 +71,13 @@ try{
  fixture.html='<div class="fig-graphic"><img alt="Scheme 3 Substrate scope" src="'+gaImage+'"></div>';
  response=await read(sc);
  test('numbered substrate scope never becomes official TOC',response.rows.length===0);
+ fixture.html='<div class="graphical-abstract"><img alt="Graphical abstract" src="https://pubs.rsc.org/image/common/rsc-logo.png"></div>';
+ response=await read(sc);
+ test('generic first-party RSC logo without DOI/ArticleId is not a valid article TOC',response.rows.length===0);
+ fixture.html='<div class="graphical-abstract"><img alt="Graphical abstract" src="https://rscj.silverchair-cdn.com/rscj/content_public/journal/sc/1367242/ga/verified-graphic.svg"></div>';
+ response=await read(sc);
+ test('real ArticleId-only Silverchair visual from the DOI-bound page is accepted',
+   response.rows.some(x=>x.kind==='official'&&x.source==='rsc_silverchair_abstract_ajax'));
  fixture.html='<div class="graphical-abstract"><img src="https://evil.example/graphic.png"></div>';
  response=await read(sc);
  test('foreign publisher image source denied',response.rows.length===0);
