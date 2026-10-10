@@ -71,8 +71,9 @@ await test('unverified legacy publisher cooldown is cleared so unrelated ACS and
  x.put(key,{until:x.clock.now+30*60000,reason:'publisher_access_gate'});
  await x.T.forceStartFromHead();
  assert.equal(x.opened.length,3);
- assert.equal(x.opened.filter(o=>o.j.publisher==='acs').length,2);
+ assert.equal(x.opened.filter(o=>o.j.publisher==='acs').length,1);
  assert.equal(x.opened.filter(o=>o.j.publisher==='nature').length,1);
+ assert.equal(x.opened.filter(o=>o.j.publisher==='wiley').length,1);
  assert.equal(x.store.has(key),false);
  assert.equal(x.store.get(P+'last-run-summary').skipped,0);
  assert.equal(x.store.get(P+'last-run-summary').visitedCount,3);
