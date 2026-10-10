@@ -1,0 +1,21 @@
+{
+  "requestId": "wechat-oct10-r3-expert-level-two-article-text-review-no-image-change",
+  "action": "review_source_only_oct10_two_article_r3",
+  "date": "2026-10-10",
+  "revision": "2026-10-10-r3",
+  "dois": [
+    "10.1002/anie.3306470",
+    "10.1038/s44160-026-01128-y"
+  ],
+  "expectedOverlayBlobSha": "cc6671a22e61b611405f7bd1d66d95d8b9193240",
+  "existingMediaId": "KhELYUzvwADwB_l1xH1SWFOfn60HSWWcYlciDjMIDj7HKSul-GJJti3u0OIKFcyL",
+  "expectedFirstTitle": "有机合成文献日报｜10.10｜今日精选｜Angew.：铁–LMCT/镍–SH₂协同催化游离羧酸直接甲基编辑",
+  "expectedSecondTitle": "往期精选｜Nature Synthesis｜仇友爱等：醇与醇的电化学脱羟基交叉偶联",
+  "expectedArticleCount": 2,
+  "expectedSourceBodyImages": 49,
+  "expectedSourceCovers": 2,
+  "draftOnly": true,
+  "publicSendAuthorized": false,
+  "requireOneLaterSameMediaDraftUpdate": true,
+  "note": "The owner requested expert-level more insightful scientific reasoning and polished natural Chinese prose in both existing Oct10 Official Account articles. Keep exact original article selection, titles, two approved cover PNGs, 49 body scientific figure assets and 23 published literature cards unchanged. Rewrite all 35 + 31 research paragraphs preserving image placement; calibrate LMCT/SH2 vs observed Ni intermediate evidence, isotopes, HER and Ni(I)/Ni(0), tradeoffs. This step builds independent full prose review, runs production safety gate and source-locked Git commit ONLY. After pass, execute one fixed-IP draft/update of original same-media dual draft, followed by draft/get; do not publicly send."
+}
