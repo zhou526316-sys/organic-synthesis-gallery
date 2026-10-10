@@ -1,23 +1,20 @@
 {
-  "requestId": "wechat-2026-10-10-r4-complete-source-fig5e-and-two-page-table-s11-same-media",
+  "requestId": "wechat-2026-10-10-r4-source-link-doi-focus-after-gallery-pr469",
   "publicationDate": "2026-10-10",
   "action": "sync_daily_draft",
   "editorialRevision": "2026-10-10-r4",
   "approvedGate": "audit/wechat-working/2026-10-10-review-gate.json",
-  "prePublishQA": "audit/wechat-working/2026-10-10-r4-source-figure-completeness-qa.json",
   "expectedArticleCount": 2,
   "expectedDois": [
     "10.1002/anie.3306470",
     "10.1038/s44160-026-01128-y"
   ],
   "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWFOfn60HSWWcYlciDjMIDj7HKSul-GJJti3u0OIKFcyL",
+  "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-10&doi=10.1002%2Fanie.3306470&summary=0",
+  "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01128-y&summary=0",
   "expectedReviewedBodyImages": 50,
-  "expectedArticleTitles": [
-    "有机合成文献日报｜10.10｜今日精选｜Angew.：铁–LMCT/镍–SH₂协同催化游离羧酸直接甲基编辑",
-    "往期精选｜Nature Synthesis｜仇友爱等：醇与醇的电化学脱羟基交叉偶联"
-  ],
   "draftOnly": true,
   "requireDraftGetReadback": true,
   "publicSendAuthorized": false,
-  "reason": "User explicitly ordered REPLACE IN THE REAL WECHAT DRAFT two incomplete figures. R4 source-only review passed: fully source-authentic original Nature Synthesis Fig5e p7 Ni(I)/Ni(II)/Ni(III) cycle incl both bottom/left nodes, and FULL two-page original SI Table S11 printed pp18/19 as consecutive images s16 and s16b with all table headings/data/charge formula. Other 47 body science images, 2 covers, all text, titles and 08:00 Gallery 23-paper release untouched. One controlled draft/update to SAME media_id, required draft/get and real new preview; absolutely NO mass send, publish or duplicate draft."
+  "reason": "User explicitly approved repairing WeChat 阅读原文 selected DOI and card focus glow. Gallery PR469 merged + mobile Chromium verified legacy date links and exact DOI focus without summary overlay. Update SAME existing October10 two-article WeChat draft source links ONLY using deployed create-draft.py gallery_original_url; first = date+Angew DOI+summary=0, second = Nature Synthesis DOI+summary=0. Preserve both article texts, 52 reviewed source assets incl both covers, image order, 23 formal 08:00 DOI release, media_id, title; no new draft, NO public send. Require live draft/get source_url readback and fresh real preview."
 }

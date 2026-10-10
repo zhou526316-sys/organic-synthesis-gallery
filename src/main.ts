@@ -6,7 +6,7 @@ import { mountUserShell } from './user-shell';
 import { beijingDate, earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
 import { compareDailyGalleryCards } from '../shared/daily-gallery-order.mjs';
-import { isHistoricalBackfill, paperMediaPolicy } from '../shared/historical-literature-policy.js';
+import { isHistoricalBackfill, isRetrospectiveAdmission, paperMediaPolicy } from '../shared/historical-literature-policy.js';
 import { verifiedHistoricalTitle } from '../shared/verified-historical-title-repairs.js';
 import { correctedPublisherDateForDisplay } from '../shared/publisher-date-display-fix.mjs';
 import { RESULT_WINDOW_SIZE as DESKTOP_RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE, resultPaginationItems, resultWindowState } from '../shared/result-window.js';
@@ -481,17 +481,27 @@ function editionIdFromLocation(): string | null {
 
 async function loadEditionManifest(): Promise<WechatEditionManifest | null> {
   const editionId = editionIdFromLocation();
+  delete document.documentElement.dataset.galleryEditionFeaturedDoi;
   if (!editionId) return null;
   try {
     const response = await fetch(`./wechat-editions/${encodeURIComponent(editionId)}.json`, { cache: 'no-store' });
     if (!response.ok) return null;
-    const raw = await response.json() as Partial<WechatEditionManifest>;
-    const featuredDoi = normalizeDoi(typeof raw.featuredDoi === 'string' ? raw.featuredDoi : null);
+    // Editorial manifests store "featured"; older/static manifests may use
+    // "featuredDoi". A missing DOI list is not a reason to lose the pick.
+    const raw = await response.json() as Partial<WechatEditionManifest> & { featured?: unknown };
+    const featuredDoi = normalizeDoi(
+      typeof raw.featuredDoi === 'string' ? raw.featuredDoi
+      : typeof raw.featured === 'string' ? raw.featured : null,
+    );
     const dois = Array.isArray(raw.dois)
       ? raw.dois.map(value => normalizeDoi(typeof value === 'string' ? value : null)).filter((value): value is string => Boolean(value))
       : [];
-    if (!featuredDoi || !dois.length) return null;
+    if (!featuredDoi) return null;
     const ordered = [featuredDoi, ...dois.filter(doi => doi.toLowerCase() !== featuredDoi.toLowerCase())];
+    // The share/focus module is loaded after first-content-rendered. Publish
+    // the validated featured DOI before rendering so legacy ?edition links
+    // resolve to the same exact paper without changing the URL or editor data.
+    document.documentElement.dataset.galleryEditionFeaturedDoi = featuredDoi.toLowerCase();
     return {
       id: editionId,
       date: typeof raw.date === 'string' ? raw.date : editionId,
@@ -607,9 +617,7 @@ function visibleTitle(paper: Paper): string {
 }
 
 function isNewToday(paper: Paper): boolean {
-  return !isHistoricalBackfill(paper)
-    && !(paper.date >= '2026-07-01' && paper.date <= '2026-09-30' && (validAddedDate(paper.addedDate) || '') >= '2026-10-01')
-    && isNewTodayDate(paper.addedDate);
+  return !isRetrospectiveAdmission(paper) && isNewTodayDate(paper.addedDate);
 }
 
 function scheduleNewnessBoundary(): void {
@@ -661,18 +669,26 @@ function filteredPapers(): Paper[] {
       return compareDailyGalleryCards(a, b);
     });
 
+  const sharedDoi = sharedDoiFromLocation()?.toLowerCase();
   if (activeEdition?.dois.length) {
     const ordered = activeEdition.dois.flatMap(doi => {
       const paper = papers.find(item => paperDoi(item)?.toLowerCase() === doi.toLowerCase());
       return paper ? [paper] : [];
     });
-    if (ordered.length) {
-      const selected = new Set(ordered);
-      return [...ordered, ...filtered.filter(paper => !selected.has(paper))];
+    // For links carrying both an edition and a DOI (including retrospective
+    // picks), the explicitly requested paper must win the first-page slot.
+    const requested = sharedDoi
+      ? papers.find(item => paperDoi(item)?.toLowerCase() === sharedDoi)
+      : undefined;
+    const front = requested
+      ? [requested, ...ordered.filter(paper => paper !== requested)]
+      : ordered;
+    if (front.length) {
+      const selected = new Set(front);
+      return [...front, ...filtered.filter(paper => !selected.has(paper))];
     }
   }
 
-  const sharedDoi = sharedDoiFromLocation()?.toLowerCase();
   if (!sharedDoi) return filtered;
   const sharedPaper = papers.find(paper => paperDoi(paper)?.toLowerCase() === sharedDoi);
   if (!sharedPaper) return filtered;
@@ -826,12 +842,7 @@ function renderCards(): void {
     const isFeaturedPaper = Boolean(doiKey && featuredDoi && doiKey === featuredDoi);
     const editionClass = isFeaturedPaper ? ' edition-featured' : isEditionPaper ? ' edition-highlight' : '';
     const historicalBackfill = isHistoricalBackfill(paper);
-    const lateJulSepBackfill = paper.date >= '2026-07-01' && paper.date <= '2026-09-30'
-      && (validAddedDate(paper.addedDate) || '') >= '2026-10-01';
-    const retrospectiveCard = historicalBackfill || lateJulSepBackfill;
-    // Retain already-published regular July–September PDF/figures; a newly
-    // backfilled old-date DOI must be rendered as TOC-only even if its source
-    // flag was omitted by a legacy importer.
+    const retrospectiveCard = isRetrospectiveAdmission(paper);
     const mediaMode = retrospectiveCard ? paperMediaPolicy(paper) : 'standard';
     const editionBadge = isFeaturedPaper
       ? `<span class='tag edition-featured'>${language === 'zh' ? '每日精选' : 'Featured'}</span>`
@@ -852,12 +863,12 @@ function renderCards(): void {
     const localPdfButton = localPdfHref
       ? `<a class='local-pdf-button' href='${escapeHtml(localPdfHref)}' target='_blank' rel='noopener noreferrer' aria-label='${escapeHtml(`${language === 'zh' ? '管理本地 PDF' : 'Manage local PDF'}: ${visibleTitle(paper)}`)}'>${language === 'zh' ? '本地 PDF' : 'Local PDF'}</a>`
       : '';
-    return `<article class='card${editionClass}${historicalBackfill ? ' historical-backfill-card' : ''}' data-media-policy='${mediaMode}' data-ingestion-channel='${historicalBackfill ? 'historical_backfill' : 'normal'}' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(paper.date)}' data-doi='${escapeHtml(doi || '')}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'>${editionBadge}<span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date, paper.dateUnverified === true || paper.date > beijingDate()))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${mediaMode === 'metadata_only' ? '' : tocMarkup(paper)}${mediaMode === 'standard' ? figureMarkup(paper) : ''}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div><div class='card-actions'><button class='share-card' type='button' data-card-share ${doi ? '' : 'disabled'} aria-label='${escapeHtml(`${t('share')}: ${visibleTitle(paper)}`)}'>${escapeHtml(t('share'))}</button>${localPdfButton}${pdfButton}${pdfMore}${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></div></article>`;
+    return `<article class='card${editionClass}${retrospectiveCard ? ' historical-backfill-card' : ''}' data-media-policy='${mediaMode}' data-retrospective='${retrospectiveCard ? 'true' : 'false'}' data-ingestion-channel='${historicalBackfill ? 'historical_backfill' : 'normal'}' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(paper.date)}' data-doi='${escapeHtml(doi || '')}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'>${editionBadge}<span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date, paper.dateUnverified === true || paper.date > beijingDate()))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${mediaMode === 'metadata_only' ? '' : tocMarkup(paper)}${mediaMode === 'standard' ? figureMarkup(paper) : ''}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div><div class='card-actions'><button class='share-card' type='button' data-card-share ${doi ? '' : 'disabled'} aria-label='${escapeHtml(`${t('share')}: ${visibleTitle(paper)}`)}'>${escapeHtml(t('share'))}</button>${localPdfButton}${pdfButton}${pdfMore}${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></div></article>`;
   }).join('') : `<div class='empty'>${escapeHtml(t('noResults'))}</div>`;
   restoreMedia();
   scheduleMediaBatch(0);
   schedulePdfVaultCardsRefresh(gallery, language);
-  if (activeEdition && !editionAutoScrolled) {
+  if (activeEdition && !editionAutoScrolled && !sharedDoiFromLocation()) {
     editionAutoScrolled = true;
     requestAnimationFrame(() => {
       document.querySelector<HTMLElement>('.card.edition-featured, .card.edition-highlight')

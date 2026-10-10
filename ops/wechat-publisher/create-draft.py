@@ -268,6 +268,22 @@ def slot_label(slot: str) -> str:
     return f"{date} {time}".strip()
 
 
+def gallery_original_url(doi: str | None, edition: str = "") -> str:
+    """Gallery paper locator for WeChat's 阅读原文; no automatic summary overlay.
+
+    The daily journal-list QR keeps its separate ?edition=YYYY-MM-DD URL.
+    Never construct a target without a verified DOI.
+    """
+    verified = normalize_doi(doi)
+    if not re.fullmatch(r"10\.\d{4,9}/\S+", verified):
+        return DEFAULT_SOURCE_URL
+    params = []
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", edition):
+        params.append(("edition", edition))
+    params.extend([("doi", verified), ("summary", "0")])
+    return DEFAULT_SOURCE_URL + "?" + urllib.parse.urlencode(params)
+
+
 def load_featured(date: str):
     path = FEATURED_DIR / f"{date}.json"
     if not path.exists():
@@ -2699,7 +2715,7 @@ def main() -> int:
         slug = str(data.get("slug") or request.get("slug") or "retrospective").strip()
         title = str(data.get("title") or "").strip()
         digest = str(data.get("digest") or "").strip()
-        source_url = str(data.get("source_url") or DEFAULT_SOURCE_URL).strip()
+        source_url = gallery_original_url((data.get("paper") or {}).get("doi"))
         if not title or not digest:
             raise RuntimeError("retrospective title/digest missing")
 
@@ -2820,7 +2836,7 @@ def main() -> int:
         )
     )
     source_url = (
-        f"https://gallery.gczhouwld.com/?edition={urllib.parse.quote(publication_date)}"
+        gallery_original_url((featured.get("paper") or {}).get("doi"), publication_date)
         if featured
         else args.source_url
     )
@@ -2923,7 +2939,7 @@ def main() -> int:
                 "author": "化之岛",
                 "digest": str(retro.get("digest") or ""),
                 "content": retro_content,
-                "content_source_url": str(retro.get("source_url") or DEFAULT_SOURCE_URL),
+                "content_source_url": gallery_original_url((retro.get("paper") or {}).get("doi")),
                 "thumb_media_id": retro_thumb,
                 "need_open_comment": 0,
                 "only_fans_can_comment": 0,
