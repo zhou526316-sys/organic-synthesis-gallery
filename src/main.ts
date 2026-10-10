@@ -1,5 +1,5 @@
 import { api } from './platform-api';
-import { chineseTitle, validChineseTitle } from '../shared/chinese-title-overrides.js';
+import { chineseTitle, titleKey, validChineseTitle } from '../shared/chinese-title-overrides.js';
 import './styles.css';
 import './pdf-vault/card-entry.css';
 import { mountUserShell } from './user-shell';
@@ -218,6 +218,11 @@ const excludedJournals = new Set<string>();
 let dateFrom = '';
 let dateTo = '';
 const zhTitleCache = new Map<string, string>();
+const requestedZhTranslations = new Set<string>();
+let titleTranslationRequestActive = false;
+let titleTranslationRescanRequested = false;
+let titleTranslationRefreshTimer: number | null = null;
+
 const resolvedTitleCache = new Map<string, { title: string; doi?: string }>();
 const tocCache = new Map<string, { result: TocResponse; fetchedAt: number }>();
 const figureCache = new Map<string, { result: FigureResponse; fetchedAt: number }>();
@@ -1539,21 +1544,64 @@ async function resolveTitles(): Promise<void> {
   }
 }
 
+function scheduleMissingChineseTitleTranslations(delay = 180): void {
+  // The archive and D1 indexed result pages are loaded after first paint.
+  // A one-time startup fetch cannot translate those newly visible records.
+  titleTranslationRescanRequested = true;
+  if (titleTranslationRefreshTimer !== null) window.clearTimeout(titleTranslationRefreshTimer);
+  titleTranslationRefreshTimer = window.setTimeout(() => {
+    titleTranslationRefreshTimer = null;
+    void loadTranslations();
+  }, Math.max(0, delay));
+}
+
 async function loadTranslations(): Promise<void> {
-  const missing = [...new Set(papers.filter(paper => !chineseTitle(paper, zhTitleCache)).map(paper => paper.title).filter((title): title is string => Boolean(title)))];
-  for (let offset = 0; offset < missing.length; offset += 100) {
-    try {
-      const response = await api.post('/api/title-translations/zh', { titles: missing.slice(offset, offset + 100) });
-      const payload = response.data as { translations?: Array<{ title?: unknown; zh?: unknown }> };
-      for (const item of payload.translations || []) {
-        if (typeof item.title === 'string' && validChineseTitle(item.zh)) zhTitleCache.set(item.title, String(item.zh).trim());
+  if (titleTranslationRequestActive) {
+    titleTranslationRescanRequested = true;
+    return;
+  }
+  titleTranslationRequestActive = true;
+  let changed = false;
+  try {
+    do {
+      titleTranslationRescanRequested = false;
+      const missing = new Map<string,string>();
+      for (const paper of papers) {
+        if (!paper.title || chineseTitle(paper, zhTitleCache)) continue;
+        const key = titleKey(paper.title);
+        if (key && !requestedZhTranslations.has(key)) missing.set(key, paper.title);
       }
-    } catch {
-      // English titles remain valid fallback.
+      const titles = [...missing.values()];
+      // Keep each API call bounded and deduplicate on normalized English title.
+      // A rejected or blocked API request must not hold the article view open.
+      for (let offset = 0; offset < titles.length; offset += 100) {
+        const batch = titles.slice(offset, offset + 100);
+        const batchKeys = new Set(batch.map(titleKey));
+        batchKeys.forEach(key => requestedZhTranslations.add(key));
+        try {
+          const response = await api.post('/api/title-translations/zh', { titles: batch });
+          const payload = response.data as { translations?: Array<{ title?: unknown; zh?: unknown }> };
+          for (const item of payload.translations || []) {
+            if (typeof item.title !== 'string' || !batchKeys.has(titleKey(item.title))
+                || !validChineseTitle(item.zh)) continue;
+            const zh = String(item.zh).trim();
+            if (zhTitleCache.get(item.title) === zh) continue;
+            zhTitleCache.set(item.title, zh);
+            changed = true;
+          }
+        } catch {
+          // Offline and bounded fallback: retain the verified English title.
+          // The next page load can retry; never forge a Chinese translation.
+        }
+      }
+    } while (titleTranslationRescanRequested);
+  } finally {
+    titleTranslationRequestActive = false;
+    if (changed) {
+      persistCaches();
+      if (language === 'zh') renderCards();
     }
   }
-  persistCaches();
-  if (language === 'zh') renderCards();
 }
 
 async function loadStaticPapers(): Promise<Paper[]> {
@@ -1623,6 +1671,7 @@ function normalizeArchitectureRows(value: unknown): Paper[] {
 function setArchitectureCorpus(rows: Paper[]): void {
   papers = mergePapers([], rows).filter(paper => !isExcludedDoi(paperDoi(paper)));
   applyResolvedTitles();
+  scheduleMissingChineseTitleTranslations();
 }
 
 async function ensureFullHotCorpus(): Promise<void> {
