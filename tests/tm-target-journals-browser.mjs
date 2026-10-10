@@ -199,7 +199,7 @@ try{
     assert.ok(source.includes("';verifiedFigure1='+recovered.filter(function(r){return r.kind==='figure1';}).length+';persisted=1'"));
     assert.ok(source.includes("if(job.publisher!=='ccs')rows.sort"));
     assert.ok(source.includes("stage:'ccs_figure_label',event:'conflict',status:'rejected'"));
-    assert.ok(source.includes("allowFigureOne:!official"));
+    assert.ok(source.includes("allowFigureOne:!tocOnlyCaptureEligible(raw)&&!official"), 'July–September TOC-only jobs cannot silently use a non-official Figure 1');
     assert.ok(source.includes("allowFigureOne && publisher !== 'ccs'"));
   });
 
