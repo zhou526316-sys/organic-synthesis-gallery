@@ -24,15 +24,22 @@ export function isJulSepTocOnly(paper) {
   return isJulSepPaper(paper);
 }
 
-export function paperMediaPolicy(paper) {
-  if (isJulSepTocOnly(paper)) return 'toc_only';
-  if (isHistoricalBackfill(paper)) return 'metadata_only';
-  return 'standard';
+export function isRetrospectiveAdmission(paper) {
+  // Late admission is not a new paper even if a legacy importer lost the
+  // historical source marker. This includes pre-July metadata-only records.
+  const published = day(paper?.firstOnlineDate || paper?.date);
+  return isHistoricalBackfill(paper)
+    || Boolean(published && published < OCT_FULL_START
+      && day(paper?.addedDate) >= OCT_FULL_START);
 }
 
-export function isRetrospectiveAdmission(paper) {
-  return isHistoricalBackfill(paper)
-    || (isJulSepPaper(paper) && day(paper?.addedDate) >= OCT_FULL_START);
+export function paperMediaPolicy(paper) {
+  if (isJulSepTocOnly(paper)) return 'toc_only';
+  const published = day(paper?.firstOnlineDate || paper?.date);
+  if (isHistoricalBackfill(paper)
+    || Boolean(published && published < JUL_SEP_START
+      && day(paper?.addedDate) >= OCT_FULL_START)) return 'metadata_only';
+  return 'standard';
 }
 
 export function shouldShowDailyNew(paper, asOfDay) {
