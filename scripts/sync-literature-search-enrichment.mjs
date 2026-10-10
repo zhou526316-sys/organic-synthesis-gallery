@@ -129,24 +129,40 @@ async function hydrateAbstracts(dois,report){
   const crossrefLimit=Math.min(misses.length,Math.max(1,Math.min(400,
     Number(process.env.CROSSREF_FALLBACK_LIMIT??'280'))));
   const batch=misses.slice(0,crossrefLimit);
-  let cursor=0;
-  await Promise.all(Array.from({length:Math.min(5,batch.length)},async()=>{
+  let cursor=0,crossref429Retries=0;
+  // Crossref's public API enforces rate limits. Two ordinary HTTPS workers,
+  // a short inter-request pause and bounded exponential 429 backoff give
+  // better DOI coverage without using any bypass, proxy or paid endpoint.
+  await Promise.all(Array.from({length:Math.min(2,batch.length)},async()=>{
     for(;;){
       const position=cursor++;
       if(position>=batch.length)return;
       const doi=batch[position];
-      try{
-        const response=await request('https://api.crossref.org/works/'+encodeURIComponent(doi),{retries:1});
-        const record=response.message;
-        if(normalizeDoi(record?.DOI)!==doi)continue;
-        const abstract=crossrefAbstract(record.abstract);
-        if(abstract)found.set(doi,{abstract,source:'crossref'});
-      }catch(error){
-        report.crossrefErrors.push({doi,error:String(error.message||error).slice(0,150)});
+      for(let attempt=0;attempt<3;attempt++){
+        try{
+          const response=await request('https://api.crossref.org/works/'+encodeURIComponent(doi),{retries:0});
+          const record=response.message;
+          if(normalizeDoi(record?.DOI)===doi){
+            const abstract=crossrefAbstract(record.abstract);
+            if(abstract)found.set(doi,{abstract,source:'crossref'});
+          }
+          break;
+        }catch(error){
+          const message=String(error?.message||error);
+          if(message.includes('metadata_http_429')&&attempt<2){
+            crossref429Retries++;
+            await pause(attempt===0?4000:10000);
+            continue;
+          }
+          report.crossrefErrors.push({doi,error:message.slice(0,150)});
+          break;
+        }
       }
+      await pause(450);
     }
   }));
   report.crossrefAttempted=crossrefLimit;
+  report.crossref429Retries=crossref429Retries;
   report.unattemptedOpenAlexMisses=misses.length-crossrefLimit;
   return found;
 }
