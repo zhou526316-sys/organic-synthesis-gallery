@@ -59,6 +59,35 @@ export function nextCursor(cursor,journals=orderedJournals()) {
   const prior=previousPeriod(cursor.range);
   return prior?{range:prior,journalIndex:0}:null;
 }
+
+const DAY_MS=86_400_000;
+const dateText=millis=>new Date(millis).toISOString().slice(0,10);
+const validDate=value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)
+  &&Number.isFinite(Date.parse(value+'T00:00:00Z'))
+  &&dateText(Date.parse(value+'T00:00:00Z'))===value;
+
+/** Split an inclusive date interval with no missing or overlapping calendar days. */
+export function bisectDateRange(range){
+  if(!validDate(range?.from)||!validDate(range?.to)||range.from>range.to)
+    throw Error('invalid_history_slice_range');
+  if(range.from===range.to)return null;
+  const start=Date.parse(range.from+'T00:00:00Z'),end=Date.parse(range.to+'T00:00:00Z');
+  const leftDays=Math.floor(((end-start)/DAY_MS+1)/2);
+  const leftEnd=start+(leftDays-1)*DAY_MS;
+  return [
+    {from:range.from,to:dateText(leftEnd)},
+    {from:dateText(leftEnd+DAY_MS),to:range.to}
+  ];
+}
+
+/** Only genuine source-result truncation merits splitting; 429/transport errors remain blocked. */
+export function isTruncationOnly(status){
+  return status?.complete===false&&Array.isArray(status.issues)&&status.issues.length>0
+    &&status.issues.every(issue=>/(?:crossref|openalex):truncated_or_inconsistent$/.test(String(issue)));
+}
+const journalBatchId=(range,journal)=>range.from+'_'+range.to+'_'
+  +journal.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+
 export function mediaPolicy(firstOnlineDate){
   return firstOnlineDate>='2026-07-01'&&firstOnlineDate<='2026-09-30'?'toc_only':'metadata_only';
 }
@@ -231,6 +260,44 @@ async function publishedSet(){
   if(ids.some(x=>!x)||new Set(ids).size!==ids.length)throw Error('published_registry_invalid_or_duplicate');
   return new Set(ids);
 }
+
+/**
+ * Only promote a split root after every non-overlapping leaf has complete source coverage.
+ * Leaf files are audit evidence, not separate admission/search candidates.
+ */
+async function finalizeSplitRoot(split,journal){
+  const merged=new Map(),segments=[];
+  let crossrefCount=0,openalexCount=0,duplicateDois=0;
+  for(const id of split.completed){
+    const batch=await loadJson(STAGE_ROOT+'/batches/'+id+'.json',null);
+    if(!batch||batch.recordType!=='historical_discovery_segment_evidence'
+      ||batch.parentBatchId!==split.rootId||batch.status!=='source_enumeration_complete'
+      ||batch.consistency?.complete!==true||!Array.isArray(batch.records))
+      throw Error('split_segment_evidence_incomplete:'+id);
+    crossrefCount+=batch.consistency.sourceCounts?.crossref||0;
+    openalexCount+=batch.consistency.sourceCounts?.openalex||0;
+    segments.push({id,range:batch.range,candidates:batch.candidateCount});
+    for(const record of batch.records){
+      if(!record?.doi)throw Error('split_segment_invalid_doi');
+      if(merged.has(record.doi))duplicateDois++;
+      else merged.set(record.doi,record);
+    }
+  }
+  const rows=[...merged.values()].sort((a,b)=>a.doi.localeCompare(b.doi));
+  const rootRecord={
+    schema:SCHEMA,recordType:'historical_discovery_candidate_only',
+    journal:journal.name,issns:journal.issns,range:split.rootRange,
+    checkedAt:new Date().toISOString(),status:'source_enumeration_complete',
+    sourceStatus:{splitSegments:segments},
+    consistency:{complete:true,issues:[],sourceCounts:{crossref:crossrefCount,openalex:openalexCount}},
+    candidateCount:rows.length,alreadyPublished:rows.filter(x=>x.existingGalleryRecord).length,
+    unreviewed:rows.filter(x=>x.reviewStatus==='unfinished').length,
+    records:rows,completedBySubwindows:true,duplicateDoisAcrossSubwindows:duplicateDois,
+    noFormalPublication:true,noMediaWrites:true,noPDFAcquisition:true,abstractTextsCopied:false,
+  };
+  await saveJson(STAGE_ROOT+'/batches/'+split.rootId+'.json',rootRecord);
+}
+
 export async function runNightly() {
   if(process.env.HISTORICAL_STAGING_ONLY!=='1')throw Error('staging_only_guard_required');
   if(process.env.GITHUB_REF_NAME==='main'&&process.env.HISTORICAL_STAGING_BRANCH!=='1')
@@ -242,27 +309,49 @@ export async function runNightly() {
     completed:[],attempts:[],publishedMembershipSnapshot:articles.size
   });
   if(state.schema!==SCHEMA||state.mode!=='candidate_discovery_only'
-    ||!Array.isArray(state.completed)||!Array.isArray(state.attempts))throw Error('invalid_existing_staging_state');
+    ||!Array.isArray(state.completed)||!Array.isArray(state.attempts))
+    throw Error('invalid_existing_staging_state');
   const journals=orderedJournals();
-  const maxUnits=Math.max(1,Math.min(16,Math.floor(Number(process.env.MAX_UNITS||8))));
-  const budget=new Budget(Math.max(4,Math.min(160,Math.floor(Number(process.env.API_REQUEST_LIMIT||65)))));
-  let processed=0,blocked=false;
+  const maxUnits=Math.max(1,Math.min(64,Math.floor(Number(process.env.MAX_UNITS||8))));
+  const budget=new Budget(Math.max(4,Math.min(320,Math.floor(Number(process.env.API_REQUEST_LIMIT||65)))));
+  let processed=0,blocked=false,deferredBudget=false;
   state.publishedMembershipSnapshot=articles.size;
   state.lastRunStarted=now;
   while(processed<maxUnits&&state.cursor){
-    const range=state.cursor.range,journal=journals[state.cursor.journalIndex];
-    const id=range.from+'_'+range.to+'_'+journal.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+    // Reserve the minimum three calls before beginning an unsplittable source pair.
+    if(budget.max-budget.count<3){deferredBudget=true;break;}
+    const rootRange=state.cursor.range,journal=journals[state.cursor.journalIndex];
+    if(!journal)throw Error('invalid_history_cursor_journal');
+    const rootId=journalBatchId(rootRange,journal);
+    const split=state.activeSplit;
+    if(split&&(
+      split.rootId!==rootId||split.journalName!==journal.name
+      ||!Array.isArray(split.pending)||!split.pending.length
+      ||!Array.isArray(split.completed)))
+      throw Error('invalid_existing_split_state');
+    const range=split?split.pending[0]:rootRange;
+    if(!validDate(range?.from)||!validDate(range?.to)
+      ||range.from<rootRange.from||range.to>rootRange.to)
+      throw Error('invalid_pending_split_range');
+    const id=split?rootId+'__'+range.from+'_'+range.to:rootId;
     const [cr,oa]=await Promise.all([
       crossrefWindow(journal,range,budget),
       openalexWindow(journal,range,budget)
     ]);
     const status=completeStatus(cr,oa);
     const rows=mergeCandidates(cr.rows,oa.rows,articles,range);
+    const slices=isTruncationOnly(status)?bisectDateRange(range):null;
     const record={
-      schema:SCHEMA,recordType:'historical_discovery_candidate_only',journal:journal.name,issns:journal.issns,
-      range,checkedAt:new Date().toISOString(),status:status.complete?'source_enumeration_complete':'incomplete_sources',
+      schema:SCHEMA,
+      recordType:split?'historical_discovery_segment_evidence':'historical_discovery_candidate_only',
+      ...(split?{parentBatchId:rootId}:{}),
+      journal:journal.name,issns:journal.issns,
+      range,checkedAt:new Date().toISOString(),
+      status:status.complete?'source_enumeration_complete'
+        :(slices?'superseded_by_subwindow_split':'incomplete_sources'),
       sourceStatus:{crossref:cr.byIssn,openalex:{total:oa.total,count:oa.count,pages:oa.pages,issues:oa.issues}},
-      consistency:status,candidateCount:rows.length,alreadyPublished:rows.filter(x=>x.existingGalleryRecord).length,
+      consistency:status,candidateCount:rows.length,
+      alreadyPublished:rows.filter(x=>x.existingGalleryRecord).length,
       unreviewed:rows.filter(x=>x.reviewStatus==='unfinished').length,
       records:rows,
       noFormalPublication:true,noMediaWrites:true,noPDFAcquisition:true,abstractTextsCopied:false,
@@ -273,24 +362,47 @@ export async function runNightly() {
     state.attempts=state.attempts.slice(-300);
     processed++;
     if(status.complete){
-      state.completed.push(id);
-      state.cursor=nextCursor(state.cursor,journals);
+      if(split){
+        split.completed.push(id);
+        split.pending.shift();
+        if(!split.pending.length){
+          await finalizeSplitRoot(split,journal);
+          state.completed.push(rootId);
+          state.cursor=nextCursor(state.cursor,journals);
+          delete state.activeSplit;
+        }
+      }else{
+        state.completed.push(rootId);
+        state.cursor=nextCursor(state.cursor,journals);
+      }
+    }else if(slices){
+      if(split)split.pending.splice(0,1,...slices);
+      else state.activeSplit={rootId,rootRange,journalName:journal.name,
+        pending:slices,completed:[]};
     }else{blocked=true}
     await saveJson(staging,state);
     console.log('HISTORICAL_STAGING_WINDOW '+JSON.stringify({id,status:record.status,candidates:record.candidateCount,
-      alreadyPublished:record.alreadyPublished,unreviewed:record.unreviewed,requests:budget.count,errors:status.issues}));
+      alreadyPublished:record.alreadyPublished,unreviewed:record.unreviewed,
+      splitPending:state.activeSplit?.pending.length||0,
+      requests:budget.count,errors:status.issues}));
     if(blocked)break;
     await delay(300);
   }
   state.lastRunFinished=new Date().toISOString();
-  state.lastRun={processed,blocked,requests:budget.count,next:state.cursor,
+  state.lastRun={processed,blocked,deferredBudget,requests:budget.count,next:state.cursor,
     verifiedPublishedDois:articles.size,completeWindows:state.completed.length,
+    activeSplit:state.activeSplit?{
+      rootId:state.activeSplit.rootId,
+      completedSegments:state.activeSplit.completed.length,
+      pendingSegments:state.activeSplit.pending.length
+    }:null,
     noPublication:true,noPdf:true};
   await saveJson(staging,state);
   console.log('HISTORICAL_NIGHTLY_SUMMARY '+JSON.stringify(state.lastRun));
   if(blocked)process.exitCode=2;
   return state.lastRun;
 }
+
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   try{await runNightly()}catch(e){console.error('HISTORICAL_NIGHTLY_BLOCKED',String(e?.message||e));process.exitCode=1}
 }

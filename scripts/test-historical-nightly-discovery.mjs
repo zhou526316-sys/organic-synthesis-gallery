@@ -5,6 +5,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {
   SCHEMA,normDoi,previousPeriod,orderedJournals,nextCursor,mediaPolicy,
+  bisectDateRange,isTruncationOnly,
   fromCrossref,fromOpenAlex,mergeCandidates,completeStatus,runNightly
 } from './historical-nightly-discovery.mjs';
 
@@ -127,6 +128,106 @@ test('read-only mocked network stages DOI candidates and advances without formal
     assert.deepEqual(JSON.parse(await readFile(join(root,'audit/publication-release-state.json'))),release);
   } finally {
     global.fetch=originalFetch;process.chdir(originalCwd);
+    for(const [key,value] of Object.entries(env)){
+      if(value===undefined)delete process.env[key];else process.env[key]=value;
+    }
+    await rm(root,{recursive:true,force:true});
+  }
+});
+
+
+test('date bisection exactly partitions an inclusive window and never masks source 429',()=>{
+  const [a,b]=bisectDateRange({from:'2026-09-22',to:'2026-09-30'});
+  assert.deepEqual(a,{from:'2026-09-22',to:'2026-09-25'});
+  assert.deepEqual(b,{from:'2026-09-26',to:'2026-09-30'});
+  assert.equal(bisectDateRange({from:'2026-09-22',to:'2026-09-22'}),null);
+  assert.throws(()=>bisectDateRange({from:'2026-02-30',to:'2026-03-02'}),/invalid_history_slice_range/);
+  assert.equal(isTruncationOnly({complete:false,issues:['issn_0002-7863:crossref:truncated_or_inconsistent']}),true);
+  assert.equal(isTruncationOnly({complete:false,issues:['openalex:truncated_or_inconsistent']}),true);
+  assert.equal(isTruncationOnly({complete:false,issues:['crossref:http_429']}),false);
+  assert.equal(isTruncationOnly({complete:false,issues:['openalex:truncated_or_inconsistent','crossref:http_429']}),false);
+});
+
+test('truncated root persists resumable split leaves and only closes on all source-complete leaves',async()=>{
+  const root=await mkdtemp(join(tmpdir(),'gallery-history-split-'));
+  const cwd=process.cwd(),oldFetch=global.fetch,oldExit=process.exitCode;
+  const env={HISTORICAL_STAGING_ONLY:process.env.HISTORICAL_STAGING_ONLY,
+    GITHUB_REF_NAME:process.env.GITHUB_REF_NAME,
+    HISTORICAL_STAGING_BRANCH:process.env.HISTORICAL_STAGING_BRANCH,
+    MAX_UNITS:process.env.MAX_UNITS,API_REQUEST_LIMIT:process.env.API_REQUEST_LIMIT};
+  try{
+    await mkdir(join(root,'public'),{recursive:true});
+    await mkdir(join(root,'audit'),{recursive:true});
+    const published={webpageDoiCount:1,articles:[{doi:'10.1021/jacs.6c00001'}]};
+    const marker={productionCards:1};
+    await writeFile(join(root,'public/toc-demand-live.json'),JSON.stringify(published));
+    await writeFile(join(root,'audit/publication-release-state.json'),JSON.stringify(marker));
+    process.chdir(root);
+    Object.assign(process.env,{HISTORICAL_STAGING_ONLY:'1',GITHUB_REF_NAME:'pull_request',
+      HISTORICAL_STAGING_BRANCH:'1',MAX_UNITS:'2',API_REQUEST_LIMIT:'80'});
+    const requests=[];
+    global.fetch=async url=>{
+      const u=new URL(url);requests.push(u);
+      const filter=u.searchParams.get('filter')||'';
+      const parent=filter.includes('from-pub-date:2026-09-22,until-pub-date:2026-09-30');
+      if(u.hostname==='api.crossref.org'){
+        const firstIssn=u.pathname.includes('0002-7863');
+        if(parent&&firstIssn){
+          const cursor=u.searchParams.get('cursor'),page=cursor==='*'?0:Number(cursor.slice(1));
+          assert.ok(page>=0&&page<10);
+          return {ok:true,json:async()=>({message:{'total-results':1001,
+            items:Array.from({length:100},(_,i)=>({DOI:'10.1021/jacs.6c'+String(page*100+i).padStart(5,'0'),
+              title:['Truncated parent'] })), 'next-cursor':'p'+(page+1)}})};
+        }
+        const doi=filter.includes('from-pub-date:2026-09-22,until-pub-date:2026-09-25')
+          ?'10.1021/jacs.6c11111':'10.1021/jacs.6c22222';
+        return {ok:true,json:async()=>({message:{
+          'total-results':firstIssn?1:0,items:firstIssn?[{DOI:doi,title:['Split leaf verified'],
+            published:{'date-parts':[[2026,9,25]]}}]:[]}})};
+      }
+      if(u.hostname==='api.openalex.org'){
+        const empty=parent;
+        const left=filter.includes('from_publication_date:2026-09-22,to_publication_date:2026-09-25');
+        return {ok:true,json:async()=>({meta:{count:empty?0:1},
+          results:empty?[]:[{doi:'https://doi.org/'+(left?'10.1021/jacs.6c11111':'10.1021/jacs.6c22222'),
+            display_name:'Split leaf verified',publication_date:'2026-09-25'}]})};
+      }
+      throw Error('unexpected_source');
+    };
+    const first=await runNightly();
+    assert.equal(first.processed,2);
+    assert.equal(first.blocked,false);
+    assert.equal(first.completeWindows,0);
+    assert.equal(first.activeSplit.completedSegments,1);
+    assert.equal(first.activeSplit.pendingSegments,1);
+    let state=JSON.parse(await readFile(join(root,'audit/historical-staging/state.json')));
+    assert.equal(state.completed.length,0);
+    assert.equal(state.cursor.journalIndex,0);
+    assert.deepEqual(state.activeSplit.pending,[{from:'2026-09-26',to:'2026-09-30'}]);
+    process.env.MAX_UNITS='1';
+    const second=await runNightly();
+    assert.equal(second.blocked,false);
+    assert.equal(second.completeWindows,1);
+    assert.equal(second.activeSplit,null);
+    assert.equal(second.next.journalIndex,1);
+    state=JSON.parse(await readFile(join(root,'audit/historical-staging/state.json')));
+    assert.equal(state.activeSplit,undefined);
+    assert.equal(state.completed.length,1);
+    const rootBatch=JSON.parse(await readFile(join(root,'audit/historical-staging/batches/2026-09-22_2026-09-30_jacs.json')));
+    assert.equal(rootBatch.status,'source_enumeration_complete');
+    assert.equal(rootBatch.recordType,'historical_discovery_candidate_only');
+    assert.equal(rootBatch.completedBySubwindows,true);
+    assert.equal(rootBatch.sourceStatus.splitSegments.length,2);
+    assert.deepEqual(rootBatch.records.map(x=>x.doi),['10.1021/jacs.6c11111','10.1021/jacs.6c22222']);
+    assert.equal(rootBatch.unreviewed,2);
+    assert.equal(rootBatch.noFormalPublication,true);
+    assert.equal(rootBatch.noPDFAcquisition,true);
+    assert.equal(requests.filter(u=>u.hostname==='api.crossref.org').length,14);
+    assert.deepEqual(JSON.parse(await readFile(join(root,'public/toc-demand-live.json'))),published);
+    assert.deepEqual(JSON.parse(await readFile(join(root,'audit/publication-release-state.json'))),marker);
+  } finally {
+    process.exitCode=oldExit;
+    global.fetch=oldFetch;process.chdir(cwd);
     for(const [key,value] of Object.entries(env)){
       if(value===undefined)delete process.env[key];else process.env[key]=value;
     }
