@@ -1,0 +1,40 @@
+name: Verify 125 bilingual DOI title repairs
+
+on:
+  push:
+    branches:
+      - fix/bilingual-verified-title-backfill-20261010
+    paths:
+      - '.github/workflows/verify-bilingual-title-backfill.yml'
+      - 'audit/title-backfill/verified-title-zh-20261010-part*.json'
+      - 'scripts/apply-verified-chinese-title-presentation.mjs'
+      - 'scripts/test-verified-chinese-title-presentation.mjs'
+      - 'cloudflare/scripts/merge-curated-pages.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-bilingual-title:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact branch revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify fixed-slot data authorization remains unchanged
+        run: |
+          node scripts/validate-production-literature-release-slot.mjs
+          node scripts/validate-pages-literature-authorization.mjs
+      - name: Verify all 125 Chinese/English titles and negative cases
+        run: |
+          node --check scripts/apply-verified-chinese-title-presentation.mjs
+          node --check cloudflare/scripts/merge-curated-pages.mjs
+          node scripts/test-backfill-pending-titles.mjs
+          node scripts/test-verified-title-presentation.mjs
+          node scripts/test-verified-chinese-title-presentation.mjs
