@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "beijingTime": "2026-10-10 09:11:48",
+  "feedbackId": "PDF-20261010-EDGE-CAMPUS-GHELPER-RANGE-206",
+  "suppliedEnvironment": {
+    "network": "campus network",
+    "browser": "Microsoft Edge",
+    "extension": "Ghelper",
+    "proxyMode": "规则代理 (rule based)",
+    "upstreamExit": "United States node",
+    "bothPublicApiHealthPagesFromUserBrowser": "cannot open, also after Ghelper disabled",
+    "doNotNeedSchoolNameOrIp": true
+  },
+  "userScreenshot": {
+    "requestType": "fetch",
+    "requestPath": "/api/user-ui/private-pdf/file",
+    "count": 3,
+    "httpStatus": [
+      206,
+      206,
+      206
+    ],
+    "durationsSec": [
+      8.99,
+      9.01,
+      12
+    ],
+    "sizesShown": [
+      "180 kB",
+      "257 B",
+      "591 B"
+    ],
+    "requestQueryContainedSensitiveSignedToken": true,
+    "tokenIntentionallyOmitted": true
+  },
+  "currentRepo": {
+    "mainAtReview": "64d9d8c606e2ff085260981c4e567ce6cdac1b7f",
+    "readerBlob": "043397a98f04bed55b8c94d130c0db4b0e38eb4a",
+    "workerBlob": "39d23f6a49d01034e072e0ec23580801e8bd6584",
+    "warmupTimeoutMs": 9000,
+    "firstRangeTimeoutMs": 12000,
+    "alternateRangeTimeoutMs": 15000,
+    "firstPageTimeoutMs": 45000,
+    "prefetchCandidateBytes": 1048576,
+    "rangeBodyRead": "await response.arrayBuffer(); must read complete response before the Range is accepted"
+  },
+  "publicReadOnlyExternalProbe": {
+    "source": "TinyFish public unauthenticated HTTP fetch",
+    "hosts": [
+      "https://api.gczhouwld.com/api/_healthcheck",
+      "https://organic-synthesis-gallery.zhou526316.workers.dev/api/_healthcheck"
+    ],
+    "bothOkTrue": true,
+    "roundtripApproxMs": [
+      259,
+      257
+    ],
+    "note": "This is not a China user route or authenticated PDF bytes check"
+  },
+  "understanding": {
+    "confirmed": "206 means response headers were returned; it does not guarantee full ranged PDF body was successfully consumed.",
+    "supported": "8.99/9.01/12.00s closely coincide with configured 9s warmup and 12s first Range timeout and indicate attempts timing out on received/streamed data.",
+    "likely": "Broken/slow China campus-to-Cloudflare route and possible Ghelper per-domain split; extension-off direct path also unavailable, so cannot ascribe all failures to Ghelper alone.",
+    "notProven": "Ghelper node exclusively at fault, which URL was actually proxied, each Content-Range length and completed response body bytes, actual fallback ticket attempts, any permission defect",
+    "majorConstraint": "Both API_BASE and API_BACKUP use Cloudflare; Tencent PR#420 still draft and routing.enabled=false, so existing 'backup' does not provide a China-independent ingress."
+  },
+  "nextStepsSubjectToUserApproval": [
+    "Add smaller adaptive first/trailer Range fetch sizes based on slow data/abort; collect sanitized actual byte-progress and failure reason without signed URLs.",
+    "Optional owner network A/B: one Ghelper global-proxy test with same campus network, no system proxy modifications, and screenshot of selected 206 request Timing and Content-Range with token URL hidden.",
+    "Independent Tencent HTTPS/authorized PDF routing remains a separate production acceptance requiring verified TLS+owner SSH; do not enable without tests."
+  ],
+  "productionCodeChangedInThisTurn": false,
+  "awaitingNewFeedbackApproval": true,
+  "credentialsCollected": false
+}
