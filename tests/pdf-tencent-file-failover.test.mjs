@@ -12,6 +12,19 @@ const fixture = async (url, options) => {
   return {ok:true,status:200,json:async()=>config};
 };
 assert.equal(await tencentPdfRouteEnabled(fixture),true);
+assert.equal(await tencentPdfRouteEnabled(async()=>({
+  ok:true,status:200,json:async()=>({...config,enabled:false,manualCanary:true}),
+})),false,'automatic Tencent routing must remain closed');
+assert.equal(await tencentPdfRouteEnabled(async()=>({
+  ok:true,status:200,json:async()=>({...config,enabled:false,manualCanary:true}),
+}),1200,{manual:true}),true,'explicit owner canary allowed only when configured');
+assert.equal(await tencentPdfRouteEnabled(async()=>({
+  ok:true,status:200,json:async()=>({...config,enabled:false,manualCanary:false}),
+}),1200,{manual:true}),false,'unconfigured manual canary stays closed');
+assert.equal(await tencentPdfRouteEnabled(async()=>({
+  ok:true,status:200,json:async()=>({...config,enabled:false,manualCanary:true,origin:'https://evil.example'}),
+}),1200,{manual:true}),false,'untrusted origin never allowed');
+
 assert.equal(calls.length,1);
 assert.equal(calls[0].url,'/pdf-gateway-routing.json');
 assert.equal(calls[0].options.credentials,'same-origin');
