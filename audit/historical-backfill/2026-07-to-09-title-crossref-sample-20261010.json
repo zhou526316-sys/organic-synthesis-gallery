@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "gallery-title-source-audit-v1",
+  "checkedAt": "2026-10-10T07:17:47.344Z",
+  "scope": {
+    "publicationPeriod": "2026-07-01..2026-09-30",
+    "purpose": "verify_three_pending_title_identifiers",
+    "authority": "evidence_stage_only_no_production_mutation"
+  },
+  "notes": [
+    "Crossref reported exact DOI and title; final production title repair still requires DOI consistency checks with existing accepted record and publisher/OpenAlex evidence.",
+    "Original authored punctuation, chemical stereochemical characters, and case must be preserved. Do not auto-generate titleZh from English.",
+    "The 83-entry prior list is a static merge audit, not a final live miss count."
+  ],
+  "items": [
+    {
+      "doi": "10.1021/acs.orglett.6c02216",
+      "title": "Cobalt/Photoredox Dual-Catalyzed Alkylation of Indole with Unactivated Alkenes",
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02216",
+      "sourceStatus": "Crossref ok",
+      "publisherSecondSourceChecked": false,
+      "productionWritten": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01106-4",
+      "title": "β-Selective C(sp3)–H functionalization of alkyl boronates using photoredox catalysis",
+      "source": "https://api.crossref.org/works/10.1038%2Fs44160-026-01106-4",
+      "sourceStatus": "Crossref ok",
+      "publisherSecondSourceChecked": false,
+      "productionWritten": false
+    },
+    {
+      "doi": "10.1038/s41467-026-77437-9",
+      "title": "Zipper polydefluorination-monoborylation of perfluoroalkyl chains",
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-77437-9",
+      "sourceStatus": "Crossref ok",
+      "publisherSecondSourceChecked": false,
+      "productionWritten": false
+    }
+  ]
+}
