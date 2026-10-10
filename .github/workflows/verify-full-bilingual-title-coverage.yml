@@ -1,0 +1,44 @@
+name: Complete bilingual literature title coverage (938 baseline)
+
+on:
+  push:
+    branches: [fix/full-938-zh-title-coverage-20261010]
+    paths:
+      - 'audit/title-backfill/2026-10-10-editorial-zh-part*.json'
+      - 'scripts/apply-full-bilingual-title-coverage.mjs'
+      - 'scripts/test-full-bilingual-title-coverage.mjs'
+      - 'src/main.ts'
+      - 'cloudflare/scripts/merge-curated-pages.mjs'
+      - '.github/workflows/verify-full-bilingual-title-coverage.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Check protected 08:00 literature release authorization
+        run: |
+          node scripts/validate-production-literature-release-slot.mjs
+          node scripts/validate-pages-literature-authorization.mjs
+      - name: Verify generated Chinese and English titles for the full approved DOI set
+        run: |
+          node --check scripts/apply-full-bilingual-title-coverage.mjs
+          node --check cloudflare/scripts/merge-curated-pages.mjs
+          node scripts/test-backfill-pending-titles.mjs
+          node scripts/test-verified-title-presentation.mjs
+          node scripts/test-verified-chinese-title-presentation.mjs
+          node scripts/test-full-bilingual-title-coverage.mjs
+      - name: Check current frontend compiles with indexed translation refresh
+        run: |
+          npm install --ignore-scripts --no-fund --no-audit
+          npx tsc --noEmit
