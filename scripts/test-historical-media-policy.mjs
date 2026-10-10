@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { isHistoricalBackfill, isJulSepTocOnly, paperMediaPolicy, shouldShowDailyNew, isOctoberFullCapturePaper } from '../shared/historical-literature-policy.js';
 import { isHotLandingEligible } from '../shared/literature-landing.mjs';
-import { verifiedHistoricalTitle } from '../shared/verified-historical-title-repairs.js';
+import { verifiedHistoricalTitle, VERIFIED_HISTORICAL_TITLE_COUNT } from '../shared/verified-historical-title-repairs.js';
 
 const recentDay = '2026-10-10';
 const preJuly = {doi:'10.1234/historical-old',date:'1967-03-08',addedDate:recentDay,ingestionChannel:'historical_backfill'};
@@ -38,6 +38,22 @@ const map = new Map([
 ]);
 for(const [doi,title] of map)assert.equal(verifiedHistoricalTitle(doi),title);
 assert.equal(verifiedHistoricalTitle('10.1021/acs.orglett.fake'),null);
+const titleGapAudit=JSON.parse(readFileSync('audit/historical-backfill/2026-07-to-09-title-gaps-static-20261010.json','utf8'));
+const crossrefAudit=JSON.parse(readFileSync('audit/historical-backfill/2026-07-to-09-title-crossref-evidence-20261010.json','utf8'));
+const publisherAudit=JSON.parse(readFileSync('audit/historical-backfill/2026-07-to-09-title-publisher-rescues-20261010.json','utf8'));
+assert.equal(titleGapAudit.records.length,83);
+assert.equal(VERIFIED_HISTORICAL_TITLE_COUNT,83);
+const evidenceDoi=new Set([
+  ...crossrefAudit.records.filter(x=>x.verified).map(x=>x.doi),
+  ...publisherAudit.records.map(x=>x.doi),
+]);
+assert.equal(evidenceDoi.size,83,'all 83 English titles must have real evidence');
+for(const old of titleGapAudit.records){
+ const actual=verifiedHistoricalTitle(old.doi);
+ assert.ok(typeof actual==='string'&&actual.length>10,'unverified historical English title: '+old.doi);
+ assert.ok(evidenceDoi.has(old.doi),'title without Crossref/publisher DOI receipt: '+old.doi);
+}
+
 
 const main=readFileSync('src/main.ts','utf8');
 const queue=readFileSync('cloudflare/scripts/build-live-toc-demand-queue.mjs','utf8');
@@ -46,8 +62,8 @@ assert.ok(main.includes('!isHistoricalBackfill(paper)')
   && main.includes("validAddedDate(paper.addedDate) || '') >= '2026-10-01'"), 'history may appear new');
 assert.ok(main.includes("mediaMode === 'metadata_only' ? '' : tocMarkup(paper)"), 'old history must not queue TOC');
 assert.ok(main.includes("mediaMode === 'standard' ? figureMarkup(paper) : ''"), 'TOC-only figure slot leak');
-assert.ok(main.includes('doi && !historicalBackfill ? `/pdf/'), 'backfill PDF action leak');
-assert.ok(main.includes('doi && !historicalBackfill ? `/pdf-vault/'), 'backfill local PDF action leak');
+assert.ok(main.includes('doi && !retrospectiveCard ? `/pdf/'), 'backfill PDF action leak');
+assert.ok(main.includes('doi && !retrospectiveCard ? `/pdf-vault/'), 'backfill local PDF action leak');
 assert.ok(queue.includes("filter(paper => !isHistoricalBackfill(paper))"), 'history included in latestAddedDate');
 assert.ok(queue.includes("isHistoricalBackfill(paper) || paperMediaPolicy(paper) === 'toc_only'"), 'history in figure-gap queue');
 assert.ok(queue.includes('mediaPolicy: paperMediaPolicy(paper)'), 'TOC queue lacks capture policy');
