@@ -322,3 +322,45 @@ explicit YES and Tencent QR; require local `LOCAL_TLS_SNI_PASS`,
 Gallery routing remains `enabled:false` until cross-account and owner PDF
 Range 206 / domestic mobile data acceptance. Keep PDF quality, chunk size
 and continuous scroll unchanged.
+
+## 2026-10-10 — LIVE Tencent HTTPS gateway installed and externally verified
+
+Owner's **real** `-Mode Install` now succeeded on the existing Tencent VM.
+The returned log includes:
+
+- `[CHECK] TLS already ready` (existing free domain certificate reused);
+- `[CHECK] LOCAL_GATEWAY_READY` on localhost 18867, attempt 2;
+- `[CHECK] LOCAL_TLS_SNI_PASS` with normal trusted certificate/hostname, attempt 2;
+- `[SUCCESS] Tencent PDF gateway HTTPS installed, Gallery failover NOT switched on.`;
+- `[COMPLETE] Gateway stage: --install`;
+- `[WINDOWS HTTPS PASS]` public health returned 200, correct Gallery CORS
+  and trusted TLS (elapsed 1396ms, health only);
+- `[WINDOWS SECURITY PASS]` private-file request with **no ticket** returned 401.
+
+The WeChat relay vhost hash was the same as in earlier checks and install
+did not edit it. Nginx config was valid and source/gateway revision stayed
+pinned. Do not repeat installer, request a new certificate or alter nginx
+unless further evidence requires it.
+
+**Important distinction:** real Tencent HTTPS gateway installation is now
+confirmed. The Gallery frontend's automatic alternative ingress remains
+**disabled/not merged**. A bare/no-ticket 401 proves only anonymous ticket
+rejection; it is not a live authorized PDF 206 proof or cross-account
+entitlement verification. Windows health latency is not PDF loading latency.
+
+Owner browser canary `owner-acceptance-console.js` and tested checklist
+`LIVE_ACCEPTANCE_2026-10-10.md` are available in this feature branch. The
+read-only canary starts on an authenticated gallery.gczhouwld.com page,
+requests only 16 PDF bytes using first-party pdf.gczhouwld.com and reports
+sanitized status/timing. No bearer, signed ticket, DOI or PDF bytes are
+logged. CI tests simulate pass, denied account, malicious URL and wrong
+origin; simulated tests are not live entitlement proof.
+
+Before enabling the existing independent ingress in Gallery, complete
+real stored-owner DOI Range 206, unauthorized second/third account 403,
+mobile cellular (not campus VPN) and actual first/second page acceptance.
+Also forward-port the fallback onto current `main` rather than wholesale
+merging PR420's older PDF reader: the main reader has independent newer
+authorization-body and file-transfer fixes. Never overwrite these.
+Production fallback and user permissions remain unchanged. No additional
+paid service or full private-PDF mirror is authorized.
