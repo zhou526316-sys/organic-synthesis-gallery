@@ -30,7 +30,7 @@ catch(error){
 const SESSION_KEY='organic-gallery-session-v1';
 const TEST_SCOPE=String(process.env.PRIVATE_PDF_BROWSER_SCOPE||'all');
 const MOCK_PDF_HASH='a'.repeat(64);
-const API_ROUTE=/^https:\/\/(?:api\.gczhouwld\.com|organic-synthesis-gallery\.zhou526316\.workers\.dev)\//;
+const API_ROUTE=/^https:\/\/(?:api\.gczhouwld\.com|organic-synthesis-gallery\.zhou526316\.workers\.dev|pdf\.gczhouwld\.com)\//;
 const activeContexts=new Set(),cases=[];
 let passed=0,currentCase=null;
 const boundedPush=(rows,value)=>{if(rows.length<80)rows.push(value);};
@@ -111,7 +111,7 @@ const papers=Array.from({length:72},(_,index)=>({
 const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
 async function contextWith(capabilities,openResult={available:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=opaque'},options={}){
  const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900},locale:options.locale||'en-US'});
- const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,rangeInFlight:0,maxConcurrentRanges:0,primaryFileFailures:0,openModes:[],openOrigins:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map(),slowMiddleHits:0};
+ const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,rangeInFlight:0,maxConcurrentRanges:0,primaryFileFailures:0,tencentRangeCalls:0,tencentOpenCalls:0,tencentMaxRangeBytes:0,openModes:[],openOrigins:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map(),slowMiddleHits:0};
  const filePdf=options.tailHeavyPdf?tailHeavyPdf:(options.largePdf?largeCardPdf:cardPdf);
  if(options.pendingQueue)state.queueRows.set('fixture-owner',new Map(papers.map(paper=>[paper.doi,{doi:paper.doi,state:'pending',revision:1,createdAt:Date.now(),updatedAt:Date.now()}])));
  await context.addInitScript(fixtureOrigin=>{
@@ -146,6 +146,10 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
   const pathname=new URL(route.request().url()).pathname;
   if(pathname==='/release-delivery.json')return route.fulfill({status:404,body:'fixture selects local legacy catalog'});
   if(pathname.startsWith('/architecture-v1/')){await new Promise(resolve=>setTimeout(resolve,50));return route.fulfill({status:404,body:'fixture'});}
+  if(pathname==='/pdf-gateway-routing.json'&&options.tencentEnabled!==undefined)
+   return route.fulfill({status:200,contentType:'application/json',
+    body:JSON.stringify({schemaVersion:1,enabled:options.tencentEnabled===true,
+      origin:'https://pdf.gczhouwld.com'})});
   if(pathname==='/papers.gz.b64')return route.fulfill({status:200,body:encodedPapers});
   if(['/total-synthesis.json','/manual-supplement.json','/final-audit-supplement.json'].includes(pathname))
    return route.fulfill({status:200,contentType:'application/json',body:'{"papers":[]}'});
@@ -191,6 +195,12 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
   if(url.pathname==='/api/user-ui/private-pdf/file'){
    state.privateFileCalls++;
    const range=String(route.request().headers().range||'');
+   if(url.origin==='https://pdf.gczhouwld.com'&&range){
+    state.tencentRangeCalls++;
+    const pieces=/^bytes=(\\d+)-(\\d+)$/.exec(range);
+    if(pieces)state.tencentMaxRangeBytes=Math.max(state.tencentMaxRangeBytes,
+      Number(pieces[2])-Number(pieces[1])+1);
+   }
    if(range){
     state.rangeInFlight++;
     state.maxConcurrentRanges=Math.max(state.maxConcurrentRanges,state.rangeInFlight);
@@ -233,6 +243,7 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    }
   }
   if(url.pathname==='/api/user-ui/private-pdf/open'){
+   if(url.origin==='https://pdf.gczhouwld.com')state.tencentOpenCalls++;
    if(route.request().method()==='OPTIONS'){
     return route.fulfill({status:204,headers:{
      'access-control-allow-origin':base,
@@ -250,6 +261,10 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
     return route.fulfill({status:options.primaryOpenStatus,contentType:'application/json',
      headers:{'access-control-allow-origin':base},body:JSON.stringify({error:'fixture_denied'})});
    }
+   if(url.origin==='https://pdf.gczhouwld.com' && options.tencentOpenStatus) {
+    return route.fulfill({status:options.tencentOpenStatus,contentType:'application/json',
+     headers:{'access-control-allow-origin':base},body:JSON.stringify({error:'fixture_denied'})});
+   }
    if(url.origin==='https://organic-synthesis-gallery.zhou526316.workers.dev' && options.backupOpenStatus) {
     return route.fulfill({status:options.backupOpenStatus,contentType:'application/json',
      headers:{'access-control-allow-origin':base},body:JSON.stringify({error:'fixture_unavailable'})});
@@ -259,15 +274,18 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    }
    if(openResult?.available!==true)return reply(openResult);
    const source=new URL(openResult.url);
-   if(url.origin==='https://organic-synthesis-gallery.zhou526316.workers.dev') {
-    // Both authorized gateways return a signed ticket on their own host.
+   if(url.origin==='https://organic-synthesis-gallery.zhou526316.workers.dev' ||
+      url.origin==='https://pdf.gczhouwld.com') {
+    // New ticket from each allowlisted host; never replay across issuers.
     source.host=url.host;
    }
    if(mode==='download')source.searchParams.set('download','1');
    else source.searchParams.delete('download');
    try {
     const data={...openResult,mode,url:source.toString(),
-     contentHash: url.origin==='https://organic-synthesis-gallery.zhou526316.workers.dev'
+     contentHash: url.origin==='https://pdf.gczhouwld.com' && options.tencentContentHash
+       ? options.tencentContentHash :
+       url.origin==='https://organic-synthesis-gallery.zhou526316.workers.dev'
        && options.backupContentHash ? options.backupContentHash : MOCK_PDF_HASH,
      ...(options.omitByteLength?{}:{byteLength:filePdf.length})};
     if(options.withOpenTiming){
