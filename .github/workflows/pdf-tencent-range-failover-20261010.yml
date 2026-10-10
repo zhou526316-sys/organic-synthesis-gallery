@@ -9,6 +9,8 @@ on:
       - 'public/pdf-gateway-routing.json'
       - 'tests/pdf-tencent-file-failover.test.mjs'
       - 'tests/private-pdf-access-browser.mjs'
+      - 'tests/pdf-private-range-comparison-console.test.cjs'
+      - 'scripts/pdf-private-range-comparison-console.js'
       - '.github/workflows/pdf-tencent-range-failover-20261010.yml'
   workflow_dispatch: {}
 permissions:
@@ -27,6 +29,8 @@ jobs:
           node --check src/private-pdf-reader.mjs
           node --check src/pdf-tencent-file-failover.mjs
           node tests/pdf-tencent-file-failover.test.mjs
+          node --check scripts/pdf-private-range-comparison-console.js
+          node tests/pdf-private-range-comparison-console.test.cjs
           node cloudflare/worker/scripts/test-private-pdf.mjs
           node --input-type=module -e "import fs from 'node:fs';const x=JSON.parse(fs.readFileSync('public/pdf-gateway-routing.json','utf8'));if(x.enabled!==false||x.origin!=='https://pdf.gczhouwld.com')process.exit(1)"
       - name: Build latest owner PDF reader and preserve continuous viewer
