@@ -5094,7 +5094,8 @@ function embeddedJobDois(value) {
     return /^\d{4}-\d{2}-\d{2}$/.test(added)&&added>=RECENT_FULL_CAPTURE_CUTOFF
       &&String(job&&job.ingestionChannel||'')!=='historical_backfill'
       &&String(job&&job.mediaPolicy||'')!=='toc_only'
-      &&!(published>='2026-07-01'&&published<='2026-09-30');
+      // Only genuinely October-published papers enter the full-text/PDF bundle.
+      &&!(published&&published<'2026-10-01');
   }
   function captureJobEligible(job) {
     return recentFullCaptureEligible(job)||tocOnlyCaptureEligible(job);
@@ -5386,7 +5387,8 @@ function embeddedJobDois(value) {
     // A verified Figure 1 fallback is accepted as the card's primary visual for
     // every journal; it does not need a later official-TOC replacement.
     var figureOneCompletesQueue=verifiedFigureOneSatisfiesQueue(raw,fallback);
-    var tocNeeded=tocKnown&&!productionOfficial&&!figureOneCompletesQueue;
+    var tocNeeded=tocKnown&&!productionOfficial
+      &&(tocOnlyCaptureEligible(raw)||!figureOneCompletesQueue);
     var ownerPdfStatus=privatePdfServerStatus(inventory.pdfMap,doi);
     var pdfNeeded=privatePdfQueueNeeded(Object.assign({},raw,{privatePdfServerStatus:ownerPdfStatus}),Date.now(),true);
     var bundleVisit=Boolean(recentFullCaptureEligible(raw)&&(tocNeeded||pdfNeeded));
