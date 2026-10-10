@@ -16,6 +16,23 @@ assert.equal(await tencentPdfRouteEnabled(async()=>({
   ok:true,status:200,json:async()=>({...config,enabled:false,manualCanary:true}),
 })),false,'automatic Tencent routing must remain closed');
 assert.equal(await tencentPdfRouteEnabled(async()=>({
+  ok:true,status:200,json:async()=>({...config,enabled:false,manualCanary:true,ownerPriorityPilot:true}),
+}),1200,{ownerPriority:true}),true,'owner preference may activate without enabling global Tencent');
+for(const bad of [
+ {...config,enabled:false,manualCanary:true},
+ {...config,enabled:false,ownerPriorityPilot:'true'},
+ {...config,enabled:false,ownerPriorityPilot:false},
+ {...config,enabled:false,ownerPriorityPilot:true,origin:'https://evil.example'},
+ {...config,enabled:true,ownerPriorityPilot:true},
+]){
+ assert.equal(await tencentPdfRouteEnabled(async()=>({
+  ok:true,status:200,json:async()=>bad
+ }),1200,{ownerPriority:true}),false,'owner-priority activation must be explicit and isolated');
+}
+assert.equal(await tencentPdfRouteEnabled(async()=>({
+ ok:true,status:200,json:async()=>({...config,enabled:false,ownerPriorityPilot:true}),
+}),1200,{ownerPriority:true,manual:true}),false);
+assert.equal(await tencentPdfRouteEnabled(async()=>({
   ok:true,status:200,json:async()=>({...config,enabled:false,manualCanary:true}),
 }),1200,{manual:true}),true,'explicit owner canary allowed only when configured');
 assert.equal(await tencentPdfRouteEnabled(async()=>({

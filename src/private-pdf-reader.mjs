@@ -2,6 +2,7 @@ import {scanPdfFigureRescue,preparePdfOriginalCropManifest} from './pdf-vault/fi
 import {createContinuousPdfViewer} from './pdf-continuous-viewer.mjs';
 import {waitForPdfFirstPage} from './pdf-first-page-watchdog.mjs';
 import {readBoundedPdfOpenJson} from './pdf-authorize-response.mjs';
+import {cachedOwnerHint, liveOwnerTencentPriority} from './pdf-tencent-owner-priority.mjs';
 import {
   TENCENT_PDF_ORIGIN, tencentPdfRouteEnabled, nextOwnerPdfFileOrigin,
   isMatchingOwnerPdfFileSource, isMatchingOwnerPdfFileIdentity, ownerPdfRouteLabel,
@@ -35,6 +36,7 @@ async function loadPdfEngine() {
 }
 
 const SESSION_KEY = 'organic-gallery-session-v1';
+const SESSION_USER_KEY = 'organic-gallery-session-user-v1';
 const API_BASE = 'https://api.gczhouwld.com';
 // Same deployed owner Worker, used only if the canonical API is unusually slow.
 // Never accept arbitrary redirects or a file URL from an unlisted host.
@@ -42,6 +44,10 @@ const API_BACKUP = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
 const OPEN_HEDGE_DELAY_MS = 3_500;
 const OPEN_BODY_RETRY_DELAY_MS = 1_800;
 const OPEN_TENCENT_HEDGE_DELAY_MS = 5_000;
+// Restricted administrator pilot. Tencent gets the first /open, and a
+// transport-only failure switches to the established Cloudflare path.
+// Never increase the gateway's independent 256 MiB/month reservation cap.
+const OWNER_TENCENT_OPEN_BUDGET_MS = 5_000;
 const OPEN_TOTAL_TIMEOUT_MS = 15_000;
 const ASSET_BASE = '/pdf-vault-assets/6.4.299/';
 const MAX_PDF_BYTES = 60 * 1024 * 1024;
@@ -112,6 +118,8 @@ let cropSelection = null;
 let sourceUrl = '';
 let declaredPdfBytes = 0;
 let activePdfContentHash = '';
+let ownerTencentPilotActive = false;
+let ownerTencentPilotSuppressed = false;
 let transferController = null;
 let activeRangeTransport = null;
 let rangeFailure = null;
@@ -386,7 +394,7 @@ async function fetchAuthorizedSource(origin, sessionToken, mode, controller, onH
   };
 }
 
-async function getPdfSource(sessionToken, mode = 'view') {
+async function getCanonicalPdfSource(sessionToken, mode = 'view') {
   if (manualTencentTrial) {
     // Deliberate first-party canary, never a global automatic activation.
     // The canonical Worker independently authorizes each account/DOI.
@@ -541,6 +549,70 @@ async function getPdfSource(sessionToken, mode = 'view') {
   document.documentElement.dataset.privatePdfDeclaredBytes = String(declaredPdfBytes);
   return { url: result.url, headerVerified: result.headerVerified, contentHash: result.contentHash };
 }
+
+function ownerTencentTransportFailure(error) {
+  const message = String(error?.message || '');
+  return error?.name === 'TypeError' || error?.name === 'TimeoutError' ||
+    error?.name === 'AbortError' ||
+    /^open_http_(429|500|502|503|504)$/.test(message) ||
+    message === 'pdf_authorize_network_error' || message === 'pdf_authorize_timeout' ||
+    message === 'pdf_authorize_body_timeout';
+}
+
+async function getPdfSource(sessionToken, mode = 'view') {
+  if (manualTencentTrial || mode !== 'view' || ownerTencentPilotSuppressed) {
+    return getCanonicalPdfSource(sessionToken, mode);
+  }
+  // A public first-party manifest only enables the OPT-IN PILOT. It is never
+  // an entitlement grant. The admin role must be freshly validated by the
+  // real Worker through Tencent's existing /auth/session pass-through.
+  let knownNonOwner = false;
+  try { knownNonOwner = cachedOwnerHint(localStorage.getItem(SESSION_USER_KEY)) === false; }
+  catch { /* missing cache is unknown; only live server may affirm owner */ }
+  const candidate = !knownNonOwner && await tencentPdfRouteEnabled(undefined, 1200,
+    {ownerPriority:true});
+  if (!candidate || sessionToken !== token() ||
+      !await liveOwnerTencentPriority(sessionToken) || sessionToken !== token()) {
+    ownerTencentPilotActive = false;
+    return getCanonicalPdfSource(sessionToken, mode);
+  }
+  ownerTencentPilotActive = true;
+  document.documentElement.dataset.privatePdfOwnerRoute = 'tencent-first';
+  const controller = new AbortController();
+  const started = performance.now();
+  const kill = setTimeout(() => controller.abort('owner_pilot_open_timeout'),
+    OWNER_TENCENT_OPEN_BUDGET_MS);
+  try {
+    const source = await fetchAuthorizedSource(
+      TENCENT_PDF_ORIGIN, sessionToken, mode, controller);
+    if (sessionToken !== token()) throw new Error('pdf_authorize_network_error');
+    declaredPdfBytes = source.byteLength;
+    activePdfContentHash = source.contentHash;
+    document.documentElement.dataset.privatePdfDeclaredBytes = String(declaredPdfBytes);
+    document.documentElement.dataset.privatePdfAuthorizePath = 'tencent';
+    document.documentElement.dataset.privatePdfAuthAttempts =
+      'tencent:完成/' + Math.round(performance.now() - started) + 'ms';
+    return {url:source.url,headerVerified:source.headerVerified,
+      contentHash:source.contentHash};
+  } catch(error) {
+    // Quota-exhausted 429, network errors, 5xx and bounded timeouts recover
+    // through a FRESH Cloudflare /open ticket. A 401/403, missing document or
+    // malformed source NEVER allows switching around the canonical authority.
+    const reason = controller.signal.aborted &&
+      controller.signal.reason === 'owner_pilot_open_timeout'
+        ? new Error('pdf_authorize_timeout') : error;
+    if (sessionToken !== token()) throw new Error('pdf_source_invalid');
+    if (!ownerTencentTransportFailure(reason)) throw reason;
+    ownerTencentPilotActive = false;
+    ownerTencentPilotSuppressed = true;
+    document.documentElement.dataset.privatePdfOwnerRoute = 'cloudflare-backup';
+    document.documentElement.dataset.privatePdfTencentPilotFailure =
+      /^open_http_(429|500|502|503|504)$/.test(String(reason?.message))
+        ? String(reason.message) : 'network_or_timeout';
+    return getCanonicalPdfSource(sessionToken, mode);
+  } finally { clearTimeout(kill); }
+}
+
 async function checkPdfHeader(fileUrl, timeoutMs = 15_000) {
   // Check the actual PDF bytes rather than treating an iframe DOM node or a
   // header-only 200 as evidence of a readable document. Credentialed fetch
@@ -667,21 +739,43 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
         // gateway. Never replay the original Worker-issued signed file URL.
         const onTencent = new URL(this.fileUrl).origin === TENCENT_PDF_ORIGIN;
         const renew = onTencent
-          ? tencentPdfRouteEnabled(undefined, 1200, {manual:manualTencentTrial}).then(allowed => {
+          ? tencentPdfRouteEnabled(undefined, 1200, {
+            manual:manualTencentTrial,ownerPriority:ownerTencentPilotActive,
+          }).then(async allowed => {
             if (!allowed) throw new Error('pdf_source_invalid');
-            return fetchAuthorizedSource(TENCENT_PDF_ORIGIN, sessionToken, 'view',
-              {signal:AbortSignal.timeout(FALLBACK_AUTHORIZE_TIMEOUT_MS)});
+            // A manual trial must never silently become a Cloudflare success.
+            // The approved owner pilot can recover on quota 429, 5xx or
+            // network failure using an independently authorized Worker ticket.
+            try {
+              return await fetchAuthorizedSource(TENCENT_PDF_ORIGIN, sessionToken,
+                'view',{signal:AbortSignal.timeout(FALLBACK_AUTHORIZE_TIMEOUT_MS)});
+            } catch(error) {
+              if (!ownerTencentPilotActive || manualTencentTrial ||
+                  !ownerTencentTransportFailure(error)) throw error;
+              ownerTencentPilotSuppressed = true;
+              ownerTencentPilotActive = false;
+              return getCanonicalPdfSource(sessionToken,'view');
+            }
           })
           : getPdfSource(sessionToken, 'view');
-        this.refreshPromise = renew.then(source => {
-          if (declaredPdfBytes !== byteLength ||
-              (this.expectedHash && source.contentHash !== this.expectedHash) ||
-              (onTencent && !isMatchingOwnerPdfFileSource(source,
-                TENCENT_PDF_ORIGIN, this.expectedHash, byteLength)))
+        this.refreshPromise = renew.then(async source => {
+          if (destroyed || sessionToken !== token() ||
+              declaredPdfBytes !== byteLength || !this.expectedHash)
             throw new Error('pdf_source_invalid');
+          const renewedOrigin = new URL(source.url).origin;
+          if (!isMatchingOwnerPdfFileIdentity(source, renewedOrigin,
+            this.expectedHash, byteLength)) throw new Error('pdf_source_invalid');
+          // Old or stalled R2 header checks never count as proof. A new
+          // signed ticket without edge proof requires an actual 206 check.
+          if (!source.headerVerified) await checkPdfHeader(source.url,9000);
           this.fileUrl = source.url;
+          if (onTencent && renewedOrigin !== TENCENT_PDF_ORIGIN) {
+            ownerTencentPilotActive = false;
+            ownerTencentPilotSuppressed = true;
+            document.documentElement.dataset.privatePdfOwnerRoute = 'cloudflare-backup';
+          }
           document.documentElement.dataset.privatePdfFileRoute =
-            ownerPdfRouteLabel(new URL(source.url).origin);
+            ownerPdfRouteLabel(renewedOrigin);
           return this.fileUrl;
         }).finally(() => { this.refreshPromise = null; });
       }
@@ -722,12 +816,18 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
         const source = await fetchAuthorizedSource(alternate, sessionToken, 'view',
           {signal: AbortSignal.timeout(FALLBACK_AUTHORIZE_TIMEOUT_MS)});
         if (destroyed || sessionToken !== token()) throw new Error('pdf_transfer_timeout');
-        // Never merge chunks from different documents, even when both
-        // responses are 206. The Worker must affirm exactly the same hash,
-        // byte length and verified short-lived ticket on the target host.
-        if (!isMatchingOwnerPdfFileSource(source, alternate,
+        // Never merge chunks from different documents. If this fresh
+        // Worker authorization had a delayed R2 prefix, prove real HTTP206
+        // with the same SHA/size identity before changing the Range source.
+        if (!isMatchingOwnerPdfFileIdentity(source, alternate,
           this.expectedHash, byteLength)) throw new Error('pdf_source_invalid');
+        if (!source.headerVerified) await checkPdfHeader(source.url,9000);
         this.fileUrl = source.url;
+        if (activeOrigin === TENCENT_PDF_ORIGIN && alternate !== TENCENT_PDF_ORIGIN) {
+          ownerTencentPilotActive = false;
+          ownerTencentPilotSuppressed = true;
+          document.documentElement.dataset.privatePdfOwnerRoute = 'cloudflare-backup';
+        }
         this.fileFailovers += 1;
         document.documentElement.dataset.privatePdfFileFailovers = String(this.fileFailovers);
         document.documentElement.dataset.privatePdfFileRoute =
@@ -752,7 +852,10 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
             result.error?.message === 'pdf_wrong_content_type') throw result.error;
         if (this.expectedHash && (
             result.error?.message === 'pdf_transfer_timeout' ||
-            /^file_http_50[0234]$/.test(String(result.error?.message || '')))) {
+            /^file_http_50[0234]$/.test(String(result.error?.message || '')) ||
+            (ownerTencentPilotActive &&
+              new URL(this.fileUrl).origin === TENCENT_PDF_ORIGIN &&
+              result.error?.message === 'file_http_429'))) {
           await this.authorizeAlternateFileRoute();
         }
       }
@@ -786,6 +889,9 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
           }
           const recoverable = lastError?.message === 'pdf_transfer_timeout' ||
             /^file_http_50[0234]$/.test(String(lastError?.message || '')) ||
+            (ownerTencentPilotActive &&
+              new URL(this.fileUrl).origin === TENCENT_PDF_ORIGIN &&
+              lastError?.message === 'file_http_429') ||
             error?.name === 'TypeError';
           if (attempt === 0 && recoverable) {
             if (this.expectedHash) await this.authorizeAlternateFileRoute();
@@ -1010,6 +1116,11 @@ async function verifiedPdfSource(sessionToken, mode = 'view', forceBrowserPrefli
               throw new Error('pdf_source_invalid');
             await checkPdfHeader(alternate.url, 10_000);
             document.documentElement.dataset.privatePdfPreflight = 'browser-alternate';
+            if (activeOrigin === TENCENT_PDF_ORIGIN && alternateOrigin !== TENCENT_PDF_ORIGIN) {
+              ownerTencentPilotActive = false;
+              ownerTencentPilotSuppressed = true;
+              document.documentElement.dataset.privatePdfOwnerRoute = 'cloudflare-backup';
+            }
             document.documentElement.dataset.privatePdfFileRoute =
               ownerPdfRouteLabel(alternateOrigin);
             document.documentElement.dataset.privatePdfFileFailovers = '1';
@@ -1123,8 +1234,14 @@ async function start() {
     // Older, browser-preflight/opaque tickets retain the proven buffered
     // fallback. Explicit "full=1" remains available for unusual publishers.
     const edgeVerified = document.documentElement.dataset.privatePdfPreflight === 'edge';
+    // All owner-pilot Tencent reads use bounded Range, including small PDFs:
+    // this preserves verified byte identity and permits Cloudflare recovery
+    // when the gateway's existing 256 MiB monthly quota returns 429.
+    const pilotTencentFile = ownerTencentPilotActive &&
+      new URL(sourceUrl).origin === TENCENT_PDF_ORIGIN;
     const rangeMode = declaredPdfBytes > 0 && (compatibilityMode ||
-      (!forceFull && (declaredPdfBytes > ADAPTIVE_RANGE_THRESHOLD_BYTES ||
+      (!forceFull && (pilotTencentFile ||
+        declaredPdfBytes > ADAPTIVE_RANGE_THRESHOLD_BYTES ||
         (edgeVerified && declaredPdfBytes >= SMALL_PDF_PARALLEL_THRESHOLD_BYTES))));
     const buffered = !rangeMode;
     const parallelSmall = buffered && !forceFull &&

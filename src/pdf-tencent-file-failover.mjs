@@ -16,7 +16,7 @@ const SHA256 = /^[a-f0-9]{64}$/;
  * malformed, slow, redirected or not explicitly enabled for exactly our host.
  * This function never sends a session token, DOI or PDF URL.
  */
-export async function tencentPdfRouteEnabled(fetcher = fetch, timeoutMs = 1200, {manual = false} = {}) {
+export async function tencentPdfRouteEnabled(fetcher = fetch, timeoutMs = 1200, {manual = false, ownerPriority = false} = {}) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort('manifest_timeout'),
     Math.min(5000, Math.max(200, Number(timeoutMs) || 1200)));
@@ -27,9 +27,15 @@ export async function tencentPdfRouteEnabled(fetcher = fetch, timeoutMs = 1200, 
     });
     if (response.status !== 200 || !response.ok) return false;
     const config = await response.json();
-    return config !== null && typeof config === 'object' && !Array.isArray(config) &&
-      config.schemaVersion === 1 && config.origin === TENCENT_PDF_ORIGIN &&
-      (config.enabled === true || (manual === true && config.manualCanary === true));
+    if(config === null || typeof config !== 'object' || Array.isArray(config) ||
+       config.schemaVersion !== 1 || config.origin !== TENCENT_PDF_ORIGIN)
+      return false;
+    // Owner pilot is a separate route preference, not global Tencent enablement.
+    // General users still use Cloudflare first; neither missing nor malformed
+    // flags turn the priority on.
+    if (ownerPriority) return !manual && config.enabled === false &&
+      config.ownerPriorityPilot === true;
+    return config.enabled === true || (manual === true && config.manualCanary === true);
   } catch {
     return false;
   } finally {

@@ -111,7 +111,7 @@ const papers=Array.from({length:72},(_,index)=>({
 const encodedPapers=gzipSync(JSON.stringify(papers)).toString('base64');
 async function contextWith(capabilities,openResult={available:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=opaque'},options={}){
  const context=await newTrackedContext({viewport:options.viewport||{width:1280,height:900},locale:options.locale||'en-US'});
- const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,privateFullFileCalls:0,privateFileDownloads:0,rangeInFlight:0,maxConcurrentRanges:0,primaryFileFailures:0,tencentRangeCalls:0,tencentOpenCalls:0,tencentMaxRangeBytes:0,openModes:[],openOrigins:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map(),slowMiddleHits:0};
+ const state={privateCalls:0,privateFileCalls:0,privateRangeCalls:0,privateHeaderProbeCalls:0,tencentOwnerSessionProbes:0,tencentQuotaFailures:0,privateFullFileCalls:0,privateFileDownloads:0,rangeInFlight:0,maxConcurrentRanges:0,primaryFileFailures:0,tencentRangeCalls:0,tencentOpenCalls:0,tencentMaxRangeBytes:0,openModes:[],openOrigins:[],authTokens:[],authSessionChecks:0,sessionUnavailable:false,capabilities:[...capabilities],pendingOwner:[],releasedOwner:0,queueReads:[],pendingQueue:[],releasedQueue:0,holdQueue:Boolean(options.holdQueue),queueRows:new Map(),slowMiddleHits:0};
  const filePdf=options.tailHeavyPdf?tailHeavyPdf:(options.largePdf?largeCardPdf:cardPdf);
  if(options.pendingQueue)state.queueRows.set('fixture-owner',new Map(papers.map(paper=>[paper.doi,{doi:paper.doi,state:'pending',revision:1,createdAt:Date.now(),updatedAt:Date.now()}])));
  await context.addInitScript(fixtureOrigin=>{
@@ -147,10 +147,12 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
   if(pathname==='/release-delivery.json')return route.fulfill({status:404,body:'fixture selects local legacy catalog'});
   if(pathname.startsWith('/architecture-v1/')){await new Promise(resolve=>setTimeout(resolve,50));return route.fulfill({status:404,body:'fixture'});}
   if(pathname==='/pdf-gateway-routing.json' &&
-      (options.tencentEnabled!==undefined || options.tencentCanary===true))
+      (options.tencentEnabled!==undefined || options.tencentCanary===true ||
+       options.ownerPriorityPilot===true))
    return route.fulfill({status:200,contentType:'application/json',
     body:JSON.stringify({schemaVersion:1,enabled:options.tencentEnabled===true,
       manualCanary:options.tencentCanary===true,
+      ownerPriorityPilot:options.ownerPriorityPilot===true,
       origin:'https://pdf.gczhouwld.com'})});
   if(pathname==='/papers.gz.b64')return route.fulfill({status:200,body:encodedPapers});
   if(['/total-synthesis.json','/manual-supplement.json','/final-audit-supplement.json'].includes(pathname))
@@ -163,9 +165,17 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
   if(url.pathname==='/api/user-ui/auth/session'){
    const token=String(route.request().headers().authorization||'').replace(/^Bearer /,'');
    state.authTokens.push(token);state.authSessionChecks++;
+   if(url.origin==='https://pdf.gczhouwld.com')state.tencentOwnerSessionProbes++;
+   if(options.tencentSessionStatus && url.origin==='https://pdf.gczhouwld.com')
+     return route.fulfill({status:options.tencentSessionStatus,
+       contentType:'application/json',
+       headers:{'access-control-allow-origin':base},
+       body:'{"authenticated":false,"user":null}'});
    if(state.sessionUnavailable)return route.fulfill({status:503,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:'{"error":"temporary_unavailable"}'});
    if(Number(options.transientFalseSessions||0)>=state.authSessionChecks)return reply({authenticated:false,user:null});
-   const allowed=token==='fixture-session'?state.capabilities:[];
+   let allowed=token==='fixture-session'?state.capabilities:[];
+   if(options.tencentOwnerRoleFalse && url.origin==='https://pdf.gczhouwld.com')
+     allowed=allowed.filter(role=>role!=='private_pdf_owner');
    if(options.holdOwner&&token==='fixture-session'){
     await new Promise(resolve=>state.pendingOwner.push(resolve));state.releasedOwner++;
    }
@@ -208,6 +218,13 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
     state.maxConcurrentRanges=Math.max(state.maxConcurrentRanges,state.rangeInFlight);
    }
    try {
+    if(options.tencentFileStatus && url.origin==='https://pdf.gczhouwld.com'){
+      state.tencentQuotaFailures++;
+      return route.fulfill({status:options.tencentFileStatus,
+        contentType:'application/json',
+        headers:{'access-control-allow-origin':base},
+        body:'{"error":"gateway_transfer_quota_exhausted"}'});
+    }
     if(options.fileDelayMs)await new Promise(resolve=>setTimeout(resolve,Number(options.fileDelayMs)));
     if(options.slowMiddleMs && range) {
       const match=/^bytes=(\d+)-/.exec(range);
@@ -485,6 +502,116 @@ try{
   assert.equal(state.privateHeaderProbeCalls,0,
     'mismatched alternate must never be allowed to provide PDF bytes');
  });
+
+ await test('owner pilot sends first /open to Tencent and renders two actual pages',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=owner-pilot'};
+  const {context,state}=await contextWith(['private_pdf_owner','private_pdf_read'],source,{
+    ownerPriorityPilot:true,tencentEnabled:false,tencentCanary:true,largePdf:true,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:16000});
+  assert.ok(state.tencentOwnerSessionProbes>=1,'role comes from a LIVE Worker session over Tencent');
+  assert.equal(state.openOrigins[0],'https://pdf.gczhouwld.com');
+  assert.equal(state.tencentOpenCalls,1);
+  assert.equal(state.openOrigins.filter(x=>x==='https://api.gczhouwld.com').length,0,
+    'healthy Tencent avoids extra Cloudflare /open work');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'tencent');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-owner-route'),'tencent-first');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-route'),'tencent');
+  assert.ok(state.tencentMaxRangeBytes>=512*1024);
+  await scrollPdfToPage(target,2);
+  assert.equal(await target.locator('#page-count').textContent(),'第 2 / 2 页');
+ });
+
+ await test('reader-only account keeps canonical Cloudflare even when owner priority flag is set',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=read-only'};
+  const {context,state}=await contextWith(['private_pdf_read'],source,{
+    ownerPriorityPilot:true,tencentEnabled:false,tencentCanary:true,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:12000});
+  assert.deepEqual(state.openOrigins,['https://api.gczhouwld.com']);
+  assert.equal(state.tencentOpenCalls,0);
+  assert.equal(state.tencentRangeCalls,0);
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'primary');
+ });
+
+ await test('stale owner hint never bypasses fresh server owner validation',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=stale-owner'};
+  const {context,state}=await contextWith(['private_pdf_owner','private_pdf_read'],source,{
+    ownerPriorityPilot:true,tencentEnabled:false,tencentCanary:true,tencentOwnerRoleFalse:true,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:12000});
+  assert.ok(state.tencentOwnerSessionProbes>=1);
+  assert.deepEqual(state.openOrigins,['https://api.gczhouwld.com']);
+  assert.equal(state.tencentOpenCalls,0);
+ });
+
+ await test('Tencent owner pilot quota 429 on open immediately uses independently authorized Cloudflare',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=pilot-429'};
+  const {context,state}=await contextWith(['private_pdf_owner','private_pdf_read'],source,{
+    ownerPriorityPilot:true,tencentEnabled:false,tencentCanary:true,tencentOpenStatus:429,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:12000});
+  assert.deepEqual(state.openOrigins.slice(0,2),
+    ['https://pdf.gczhouwld.com','https://api.gczhouwld.com']);
+  assert.equal(state.tencentOpenCalls,1);
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-route'),'primary');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-owner-route'),'cloudflare-backup');
+  await scrollPdfToPage(target,2);
+  assert.equal(await target.locator('#page-count').textContent(),'第 2 / 2 页');
+ });
+
+ await test('Tencent pilot quota 429 during large Range safely switches to Cloudflare',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=pilot-range'};
+  const {context,state}=await contextWith(['private_pdf_owner','private_pdf_read'],source,{
+    ownerPriorityPilot:true,tencentEnabled:false,tencentCanary:true,
+    largePdf:true,tencentFileStatus:429,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:18000});
+  assert.equal(state.openOrigins[0],'https://pdf.gczhouwld.com');
+  assert.ok(state.openOrigins.includes('https://api.gczhouwld.com'),
+    'quota-exhausted Tencent must mint a new canonical Worker ticket');
+  assert.ok(state.tencentQuotaFailures>=1);
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-route'),'primary');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-failovers'),'1');
+  await scrollPdfToPage(target,2);
+  assert.equal(await target.locator('#page-count').textContent(),'第 2 / 2 页');
+ });
+
+ await test('Tencent owner pilot 403 is authoritative and cannot use Cloudflare as permission bypass',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=denied-owner'};
+  const {context,state}=await contextWith(['private_pdf_owner','private_pdf_read'],source,{
+    ownerPriorityPilot:true,tencentEnabled:false,tencentCanary:true,tencentOpenStatus:403,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',
+    undefined,{timeout:12000});
+  assert.deepEqual(state.openOrigins,['https://pdf.gczhouwld.com']);
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/open_http_403/);
+  assert.equal(state.privateFileCalls,0);
+ });
+
  await test('HTTP200 with partial open JSON and no response EOF recovers using one same-host authorized retry',async()=>{
   const authorized={available:true,headerVerified:true,
     url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
