@@ -1,0 +1,67 @@
+name: PDF Tencent authenticated large-Range gated fallback
+on:
+  push:
+    branches: [fix/pdf-tencent-range-fallback-20261010]
+    paths:
+      - 'src/private-pdf-reader.mjs'
+      - 'src/pdf-tencent-file-failover.mjs'
+      - 'pdf/index.html'
+      - 'public/pdf-gateway-routing.json'
+      - 'tests/pdf-tencent-file-failover.test.mjs'
+      - 'tests/private-pdf-access-browser.mjs'
+      - 'tests/pdf-private-range-comparison-console.test.cjs'
+      - 'scripts/pdf-private-range-comparison-console.js'
+      - '.github/workflows/pdf-tencent-range-failover-20261010.yml'
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  manifest-security-and-builder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+      - name: Validate disabled route, secure source selection and private ticket contract
+        run: |
+          node --check src/private-pdf-reader.mjs
+          node --check src/pdf-tencent-file-failover.mjs
+          node tests/pdf-tencent-file-failover.test.mjs
+          node --check scripts/pdf-private-range-comparison-console.js
+          node tests/pdf-private-range-comparison-console.test.cjs
+          node cloudflare/worker/scripts/test-private-pdf.mjs
+          node --input-type=module -e "import fs from 'node:fs';const x=JSON.parse(fs.readFileSync('public/pdf-gateway-routing.json','utf8'));if(x.enabled!==false||x.manualCanary!==true||x.origin!=='https://pdf.gczhouwld.com')process.exit(1)"
+      - name: Build latest owner PDF reader and preserve continuous viewer
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+  chromium-owner-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+      - name: Build with secure Tencent host allowed but route disabled
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+      - name: Install isolated Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Browser PDF.js Range, Tencent authorized fallback and page two
+        run: node tests/private-pdf-access-browser.mjs
+      - name: Local PDF Vault continuity regression
+        run: node tests/pdf-vault-local-browser.mjs
+      - name: Preserve limited failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tencent-pdf-range-browser-failure
+          path: test-results/private-pdf-access-browser
+          retention-days: 3
+          if-no-files-found: ignore

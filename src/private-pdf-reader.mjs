@@ -2,6 +2,10 @@ import {scanPdfFigureRescue,preparePdfOriginalCropManifest} from './pdf-vault/fi
 import {createContinuousPdfViewer} from './pdf-continuous-viewer.mjs';
 import {waitForPdfFirstPage} from './pdf-first-page-watchdog.mjs';
 import {readBoundedPdfOpenJson} from './pdf-authorize-response.mjs';
+import {
+  TENCENT_PDF_ORIGIN, tencentPdfRouteEnabled, nextOwnerPdfFileOrigin,
+  isMatchingOwnerPdfFileSource, ownerPdfRouteLabel,
+} from './pdf-tencent-file-failover.mjs';
 
 const PDF_ENGINE_LOAD_TIMEOUT_MS = 25_000;
 let pdfEngine = null;
@@ -37,6 +41,7 @@ const API_BASE = 'https://api.gczhouwld.com';
 const API_BACKUP = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
 const OPEN_HEDGE_DELAY_MS = 3_500;
 const OPEN_BODY_RETRY_DELAY_MS = 1_800;
+const OPEN_TENCENT_HEDGE_DELAY_MS = 5_000;
 const OPEN_TOTAL_TIMEOUT_MS = 15_000;
 const ASSET_BASE = '/pdf-vault-assets/6.4.299/';
 const MAX_PDF_BYTES = 60 * 1024 * 1024;
@@ -65,6 +70,8 @@ const compatibilityMode = params.get('compat') === '1';
 const nativeMode = params.get('native') === '1' && !compatibilityMode;
 const forceFull = params.get('full') === '1' && !nativeMode && !compatibilityMode;
 const downloadOnOpen = params.get('mode') === 'download';
+// Explicit user-triggered Tencent canary. The public automatic route stays OFF.
+const manualTencentTrial = params.get('pdfIngress') === 'tencent';
 let canvas = null;
 const main = document.querySelector('#pdf-scroll-container');
 const stage = document.querySelector('#stage');
@@ -183,7 +190,8 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
     ['privatePdfEngineMs', '阅读组件', 'ms'],
     ['privatePdfTransferMs', '文件传输', 'ms'],
     ['privatePdfRangeCalls', '分段请求', '次'],
-    ['privatePdfRangeHeaderMs', '分段响应', 'ms'],
+    ['privatePdfRangeHeaderMs', '分段响应头', 'ms'],
+    ['privatePdfRangeBodyMs', '分段完整数据', 'ms'],
     ['privatePdfRangeBytes', '已读字节', 'B'],
     ['privatePdfRangeNetworkBytes', '传输字节', 'B'],
     ['privatePdfFileFailovers', '文件线路切换', '次'],
@@ -192,9 +200,13 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
     return /^\d{1,12}$/.test(value) ? [`${label}:${value}${unit}`] : [];
   });
   const route = document.documentElement.dataset.privatePdfAuthorizePath || '';
+  const fileRoute = document.documentElement.dataset.privatePdfFileRoute || '';
+  const rangeStage = document.documentElement.dataset.privatePdfRangeStage || '';
   diagnostic.textContent = `阶段：${phase} · ${detail || 'unknown'} · ${(elapsed / 1000).toFixed(1)}s` +
     (timingDetails.length ? ' · ' + timingDetails.join(' · ') : '') +
-    (['primary', 'backup', 'both-failed'].includes(route) ? ` · 授权线路:${route}` : '');
+    (['primary', 'backup', 'tencent', 'both-failed'].includes(route) ? ` · 授权线路:${route}` : '') +
+    (['primary', 'backup', 'tencent'].includes(fileRoute) ? ` · 文件线路:${fileRoute}` : '') +
+    (['headers', 'body', 'verified'].includes(rangeStage) ? ` · 分段阶段:${rangeStage}` : '');
   status.appendChild(diagnostic);
   if (['pdf_authorize_timeout','pdf_authorize_network_error','pdf_authorize_body_timeout'].includes(detail)) {
     const attempts = document.documentElement.dataset.privatePdfAuthAttempts || '';
@@ -219,6 +231,28 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
   retry.textContent = '重新读取';
   retry.addEventListener('click', () => location.reload());
   status.appendChild(retry);
+  // Offer an explicit Tencent trial only for transport-related failures.
+  // A 401/403/invalid-file denial NEVER offers a route around entitlement.
+  const tencentRecoverable = new Set([
+    'pdf_authorize_timeout','pdf_authorize_body_timeout',
+    'pdf_authorize_network_error','pdf_transfer_timeout',
+    'pdf_first_page_timeout','open_http_500','open_http_502','open_http_503',
+    'open_http_504','file_http_502','file_http_503','file_http_504',
+  ]);
+  if (!manualTencentTrial && tencentRecoverable.has(detail)) {
+    void tencentPdfRouteEnabled(undefined, 1200, {manual:true}).then(allowed => {
+      if (!allowed || destroyed || !status.contains(retry)) return;
+      const href = new URL(location.href);
+      href.searchParams.set('pdfIngress', 'tencent');
+      const alternative = document.createElement('a');
+      alternative.id = 'tencent-manual-trial';
+      alternative.className = 'download';
+      alternative.href = href.toString();
+      alternative.textContent = '使用腾讯线路试读';
+      alternative.title = '重新申请 PDF 授权并通过腾讯线路读取；不绕过账号权限';
+      retry.insertAdjacentElement('afterend', alternative);
+    }).catch(() => {});
+  }
   if (url) {
     const link = document.createElement('a');
     link.id = 'publisher-fallback';
@@ -352,16 +386,46 @@ async function fetchAuthorizedSource(origin, sessionToken, mode, controller, onH
 }
 
 async function getPdfSource(sessionToken, mode = 'view') {
-  const origins = [API_BASE, API_BACKUP];
-  const controllers = Array.from({length:3}, () => new AbortController());
+  if (manualTencentTrial) {
+    // Deliberate first-party canary, never a global automatic activation.
+    // The canonical Worker independently authorizes each account/DOI.
+    const permitted = await tencentPdfRouteEnabled(undefined, 1200, {manual:true});
+    if (!permitted) throw new Error('pdf_authorize_network_error');
+    const controller = new AbortController();
+    const timeout = window.setTimeout(
+      () => controller.abort('manual_tencent_authorize_timeout'), OPEN_TOTAL_TIMEOUT_MS);
+    document.documentElement.dataset.privatePdfAuthorizePath = 'tencent';
+    try {
+      const source = await fetchAuthorizedSource(
+        TENCENT_PDF_ORIGIN, sessionToken, mode, controller);
+      declaredPdfBytes = source.byteLength;
+      activePdfContentHash = source.contentHash;
+      document.documentElement.dataset.privatePdfDeclaredBytes = String(declaredPdfBytes);
+      return {url:source.url,headerVerified:source.headerVerified,
+        contentHash:source.contentHash};
+    } catch(error) {
+      if (controller.signal.aborted) throw new Error('pdf_authorize_timeout');
+      throw error;
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }
+  // Check the Gallery-published switch without sending account data.
+  // Do this in parallel with canonical authorization: the primary request
+  // must not wait for a slow/missing manifest.
+  const tencentEligibility = tencentPdfRouteEnabled();
+  const origins = [API_BASE, API_BACKUP, API_BASE, TENCENT_PDF_ORIGIN];
+  const controllers = Array.from({length:origins.length}, () => new AbortController());
   document.documentElement.dataset.privatePdfAuthorizePath = '';
-  let hedgeTimer = null, deadlineTimer = null, retryTimer = null;
+  let hedgeTimer = null, tencentTimer = null, deadlineTimer = null, retryTimer = null;
   let backupStarted = false, pending = 0, finished = false;
+  let tencentReady = null, tencentDue = false;
   const errors = [];
   const attempts = [
     { label: 'primary', started: 0, elapsed: 0, result: '未发起', stages: '' },
     { label: 'backup', started: 0, elapsed: 0, result: '未发起', stages: '' },
     { label: 'primary-retry', started: 0, elapsed: 0, result: '未发起', stages: '' },
+    { label: 'tencent', started: 0, elapsed: 0, result: '未发起', stages: '' },
   ];
   const saveAttempts = () => {
     const at = performance.now();
@@ -378,6 +442,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
       if (finished) return;
       finished = true;
       if (hedgeTimer !== null) clearTimeout(hedgeTimer);
+      if (tencentTimer !== null) clearTimeout(tencentTimer);
       if (deadlineTimer !== null) clearTimeout(deadlineTimer);
       if (retryTimer !== null) clearTimeout(retryTimer);
       document.documentElement.dataset.privatePdfAuthorizePath = route ||
@@ -387,43 +452,54 @@ async function getPdfSource(sessionToken, mode = 'view') {
       if (error) reject(error);
       else resolve(value);
     };
+    const statusError = () => errors.find(error =>
+      /^open_http_(5\d\d|429)$/.test(error?.message || ''));
+    const maybeFinish = () => {
+      if (finished || pending > 0 || !backupStarted ||
+          (retryTimer !== null && !attempts[2].started) ||
+          tencentReady === null) return;
+      if (tencentReady && !attempts[3].started) {
+        launch(3);
+        return;
+      }
+      const reported = statusError();
+      finish(null, new Error(reported?.message || 'pdf_authorize_network_error'));
+    };
     const launch = index => {
-      if (finished || (index === 1 && backupStarted) || (index === 2 && attempts[2].started)) return;
+      if (finished || attempts[index].started ||
+          (index === 3 && tencentReady !== true)) return;
       if (index === 1) backupStarted = true;
       const attempt = attempts[index];
       attempt.started = performance.now();
       attempt.result = '等待';
       pending++;
-      const targetOrigin = index === 2 ? origins[0] : origins[index];
-      void fetchAuthorizedSource(targetOrigin, sessionToken, mode, controllers[index],
+      void fetchAuthorizedSource(origins[index], sessionToken, mode, controllers[index],
         (status, stages) => {
           attempt.result = 'HTTP' + status + '(headers)';
           attempt.stages = stages;
           if (index === 0 && status === 200 && !finished && retryTimer === null) {
-            // If the trusted origin sends 200 headers but the JSON body stalls,
-            // remint at most once rather than waiting indefinitely. This is
-            // the same authenticated endpoint, never a permission bypass.
+            // Preserve the current independent retry for a 200 header whose
+            // JSON body stalls, without extending the total authorization limit.
             retryTimer = setTimeout(() => launch(2), OPEN_BODY_RETRY_DELAY_MS);
           }
         })
         .then(source => {
+          if (finished) return;
           attempt.elapsed = Math.round(performance.now() - attempt.started);
           attempt.result = '完成';
-          finish(source, null, index === 1 ? 'backup' : 'primary');
+          pending--;
+          finish(source, null, attempt.label === 'primary-retry' ? 'primary' : attempt.label);
         })
         .catch(error => {
           if (finished) return;
           attempt.elapsed = Math.round(performance.now() - attempt.started);
           if (attempt.result === '等待') attempt.result = '网络失败';
           pending--;
-          // Never route around an explicit permission denial or a verified
-          // absence of a private file. Both endpoints enforce the same policy.
+          // Canonical 401/403, missing object, and invalid authorization
+          // stop everything. Tencent is an ingress, NEVER an entitlement bypass.
           const explicitDenial = error?.notAvailable ||
             /^open_http_(401|403)$/.test(error?.message || '') ||
             error?.message === 'pdf_source_invalid';
-          // The canonical endpoint is authoritative. A secondary gateway
-          // may be temporarily out of sync: never let its denial cancel a
-          // still-running canonical request. A primary denial is final.
           if ((index === 0 || index === 2) && explicitDenial) {
             finish(null, error, 'primary');
             return;
@@ -433,10 +509,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
             if (hedgeTimer !== null) clearTimeout(hedgeTimer);
             launch(1);
           }
-          if (pending === 0 && backupStarted && (retryTimer === null || attempts[2].started)) {
-            const status = errors.find(e => /^open_http_(5\d\d|429)$/.test(e?.message || ''));
-            finish(null, new Error(status?.message || 'pdf_authorize_network_error'));
-          }
+          maybeFinish();
         });
     };
     deadlineTimer = setTimeout(() => {
@@ -445,6 +518,20 @@ async function getPdfSource(sessionToken, mode = 'view') {
         ? 'pdf_authorize_body_timeout' : 'pdf_authorize_timeout'));
     }, OPEN_TOTAL_TIMEOUT_MS);
     hedgeTimer = setTimeout(() => launch(1), OPEN_HEDGE_DELAY_MS);
+    tencentTimer = setTimeout(() => {
+      tencentDue = true;
+      if (tencentReady === true) launch(3);
+      else maybeFinish();
+    }, OPEN_TENCENT_HEDGE_DELAY_MS);
+    void tencentEligibility.then(enabled => {
+      if (finished) return;
+      tencentReady = enabled === true;
+      if (tencentReady && tencentDue) launch(3);
+      maybeFinish();
+    }, () => {
+      tencentReady = false;
+      maybeFinish();
+    });
     launch(0);
   });
 
@@ -487,6 +574,7 @@ async function checkPdfHeader(fileUrl) {
 }
 async function fetchValidatedPdfRange(fileUrl, byteLength, begin, end, controller) {
   const requestStarted = performance.now();
+  document.documentElement.dataset.privatePdfRangeStage = 'headers';
   privatePdfRangeNetworkCalls += 1;
   document.documentElement.dataset.privatePdfRangeCalls = String(privatePdfRangeNetworkCalls);
   const response = await fetch(fileUrl, {
@@ -507,8 +595,12 @@ async function fetchValidatedPdfRange(fileUrl, byteLength, begin, end, controlle
       Number(match[3]) !== byteLength) {
     throw new Error('pdf_range_unavailable');
   }
+  document.documentElement.dataset.privatePdfRangeStage = 'body';
   const chunk = new Uint8Array(await response.arrayBuffer());
+  document.documentElement.dataset.privatePdfRangeBodyMs =
+    String(Math.round(performance.now() - requestStarted));
   if (chunk.byteLength !== end - begin) throw new Error('pdf_incomplete_bytes');
+  document.documentElement.dataset.privatePdfRangeStage = 'verified';
   privatePdfRangeNetworkBytes += chunk.byteLength;
   document.documentElement.dataset.privatePdfRangeNetworkBytes = String(privatePdfRangeNetworkBytes);
   return chunk;
@@ -570,11 +662,25 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
     }
     async refreshUrl() {
       if (!this.refreshPromise) {
-        this.refreshPromise = getPdfSource(sessionToken, 'view').then(source => {
+        // Renew a Tencent file ticket only on Tencent's verified first-party
+        // gateway. Never replay the original Worker-issued signed file URL.
+        const onTencent = new URL(this.fileUrl).origin === TENCENT_PDF_ORIGIN;
+        const renew = onTencent
+          ? tencentPdfRouteEnabled(undefined, 1200, {manual:manualTencentTrial}).then(allowed => {
+            if (!allowed) throw new Error('pdf_source_invalid');
+            return fetchAuthorizedSource(TENCENT_PDF_ORIGIN, sessionToken, 'view',
+              {signal:AbortSignal.timeout(FALLBACK_AUTHORIZE_TIMEOUT_MS)});
+          })
+          : getPdfSource(sessionToken, 'view');
+        this.refreshPromise = renew.then(source => {
           if (declaredPdfBytes !== byteLength ||
-              (this.expectedHash && source.contentHash !== this.expectedHash))
+              (this.expectedHash && source.contentHash !== this.expectedHash) ||
+              (onTencent && !isMatchingOwnerPdfFileSource(source,
+                TENCENT_PDF_ORIGIN, this.expectedHash, byteLength)))
             throw new Error('pdf_source_invalid');
           this.fileUrl = source.url;
+          document.documentElement.dataset.privatePdfFileRoute =
+            ownerPdfRouteLabel(new URL(source.url).origin);
           return this.fileUrl;
         }).finally(() => { this.refreshPromise = null; });
       }
@@ -600,27 +706,34 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
     async authorizeAlternateFileRoute() {
       if (this.failoverPromise) return this.failoverPromise;
       if (!this.expectedHash || this.fileFailovers > 0) throw new Error('pdf_source_invalid');
-      const activeOrigin = new URL(this.fileUrl).origin;
-      const alternate = activeOrigin === API_BASE ? API_BACKUP :
-        activeOrigin === API_BACKUP ? API_BASE : '';
-      if (!alternate) throw new Error('pdf_source_invalid');
-      // A fresh, owner-entitled ticket must be minted on the other known
-      // Worker hostname. Never replay a signed token to another origin.
-      this.failoverPromise = fetchAuthorizedSource(alternate, sessionToken, 'view',
-        { signal: AbortSignal.timeout(FALLBACK_AUTHORIZE_TIMEOUT_MS) }).then(source => {
+      // Multiple simultaneous Range failures must share one new owner-ticket
+      // request. Resolve the disabled-by-default Gallery flag *inside* this
+      // promise so another Range cannot mint a second ticket while it loads.
+      this.failoverPromise = (async () => {
+        const activeOrigin = new URL(this.fileUrl).origin;
+        // A manual canary must not silently switch to Cloudflare and report
+        // apparent Tencent success after a failed PDF Range transfer.
+        if (manualTencentTrial && activeOrigin === TENCENT_PDF_ORIGIN)
+          throw new Error('pdf_transfer_timeout');
+        const tencentReady = await tencentPdfRouteEnabled();
+        const alternate = nextOwnerPdfFileOrigin(activeOrigin, tencentReady);
+        if (!alternate) throw new Error('pdf_source_invalid');
+        const source = await fetchAuthorizedSource(alternate, sessionToken, 'view',
+          {signal: AbortSignal.timeout(FALLBACK_AUTHORIZE_TIMEOUT_MS)});
         if (destroyed || sessionToken !== token()) throw new Error('pdf_transfer_timeout');
-        if (source.contentHash !== this.expectedHash ||
-            source.byteLength !== byteLength || !source.headerVerified) {
-          throw new Error('pdf_source_invalid');
-        }
+        // Never merge chunks from different documents, even when both
+        // responses are 206. The Worker must affirm exactly the same hash,
+        // byte length and verified short-lived ticket on the target host.
+        if (!isMatchingOwnerPdfFileSource(source, alternate,
+          this.expectedHash, byteLength)) throw new Error('pdf_source_invalid');
         this.fileUrl = source.url;
         this.fileFailovers += 1;
         document.documentElement.dataset.privatePdfFileFailovers = String(this.fileFailovers);
         document.documentElement.dataset.privatePdfFileRoute =
-          alternate === API_BASE ? 'primary' : 'backup';
+          ownerPdfRouteLabel(alternate);
         this.warmup?.abort();
         return this.fileUrl;
-      });
+      })();
       return this.failoverPromise;
     }
     async fetchRange(begin, end, controller) {
@@ -945,6 +1058,8 @@ async function start() {
     const authorizeStarted = performance.now();
     try {
       sourceUrl = await verifiedPdfSource(sessionToken, 'view', nativeMode);
+      document.documentElement.dataset.privatePdfFileRoute =
+        ownerPdfRouteLabel(new URL(sourceUrl).origin);
     } finally {
       document.documentElement.dataset.privatePdfAuthorizeMs =
         String(Math.round(performance.now() - authorizeStarted));
