@@ -88,7 +88,7 @@ function normalizeEnrichmentRow(input) {
   const summaryEn = textField(input.summaryEn,12000,'summaryEn');
   const summaryZh = textField(input.summaryZh,12000,'summaryZh');
   const source = String(input.abstractSource || '');
-  if (!['','crossref','openalex','publisher_metadata'].includes(source) || (source && !abstract)) {
+  if (!['','crossref','openalex','publisher_metadata','semantic_scholar','europe_pmc'].includes(source) || (source && !abstract)) {
     throw new Error('search_enrichment_abstract_source_invalid');
   }
   const searchable = [abstract,summaryEn,summaryZh].filter(Boolean).join(' ').toLowerCase();
@@ -229,7 +229,7 @@ export async function refreshSearchEnrichmentAbstracts(env,payload={}) {
   try{normalized=rows.map(normalizeEnrichmentRow);}
   catch(error){return {status:400,body:{error:safeError(error)}};}
   if(new Set(normalized.map(row=>row.doi)).size!==normalized.length
-    ||normalized.some(row=>!row.abstract||!['openalex','crossref','publisher_metadata'].includes(row.source)
+    ||normalized.some(row=>!row.abstract||!['openalex','crossref','publisher_metadata','semantic_scholar','europe_pmc'].includes(row.source)
       ||row.summaryEn||row.summaryZh))
     return {status:400,body:{error:'search_enrichment_refresh_original_only_required'}};
   const placeholders=normalized.map(()=>'?').join(',');

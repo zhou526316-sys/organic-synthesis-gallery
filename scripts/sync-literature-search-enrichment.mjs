@@ -3,6 +3,7 @@
 import {createHash} from 'node:crypto';
 import {writeFile} from 'node:fs/promises';
 import {fetchPublisherMetadataAbstract} from './lib/publisher-abstract-metadata.mjs';
+import {boundedMetadataWindow,matchEuropePmcAbstracts,matchSemanticScholarAbstracts} from './lib/doi-scholarly-abstract-metadata.mjs';
 
 const SITE=new URL(process.env.SITE_URL||'https://gallery.gczhouwld.com/');
 const WORKER=new URL(process.env.WORKER_URL||'https://organic-synthesis-gallery.zhou526316.workers.dev/');
@@ -165,21 +166,82 @@ async function hydrateAbstracts(dois,report){
   report.crossrefAttempted=crossrefLimit;
   report.crossref429Retries=crossref429Retries;
   report.unattemptedOpenAlexMisses=misses.length-crossrefLimit;
+  // Additional free DOI-exact metadata sources are checked without
+  // authenticated publisher sessions or any article-body/PDF acquisition.
+  const epochDay=Math.floor(Date.now()/86400000);
+  const outerWindows=report.incrementalWindow?.windows||1;
+  const afterCrossref=dois.filter(doi=>!found.has(doi));
+  const scholarWindow=boundedMetadataWindow(afterCrossref,
+    Number(process.env.SEMANTIC_SCHOLAR_LIMIT||60),epochDay,outerWindows);
+  report.semanticScholarAttempted=scholarWindow.selected.length;
+  report.semanticScholarRecovered=0;
+  report.semanticScholarWindow={number:scholarWindow.number,windows:scholarWindow.windows,
+    totalMissing:afterCrossref.length};
+  report.semanticScholarErrors=[];
+  if(scholarWindow.selected.length){
+    try{
+      const url='https://api.semanticscholar.org/graph/v1/paper/batch?fields=externalIds,abstract,title';
+      const records=await request(url,{method:'POST',body:{
+        ids:scholarWindow.selected.map(doi=>'DOI:'+doi)
+      },retries:0});
+      if(!Array.isArray(records))throw Error('semantic_scholar_invalid_response');
+      const matched=matchSemanticScholarAbstracts(scholarWindow.selected,records);
+      for(const [doi,abstract] of matched){
+        found.set(doi,{abstract,source:'semantic_scholar'});
+        report.semanticScholarRecovered++;
+      }
+    }catch(error){
+      report.semanticScholarErrors.push({
+        reason:String(error?.message||error).slice(0,160),
+        count:scholarWindow.selected.length
+      });
+    }
+  }
+  const afterScholar=dois.filter(doi=>!found.has(doi));
+  const pmcWindow=boundedMetadataWindow(afterScholar,
+    Number(process.env.EUROPEPMC_LIMIT||60),epochDay,outerWindows);
+  report.europePmcAttempted=pmcWindow.selected.length;
+  report.europePmcRecovered=0;
+  report.europePmcWindow={number:pmcWindow.number,windows:pmcWindow.windows,
+    totalMissing:afterScholar.length};
+  report.europePmcErrors=[];
+  for(let i=0;i<pmcWindow.selected.length;i+=15){
+    const batch=pmcWindow.selected.slice(i,i+15);
+    try{
+      const endpoint=new URL('https://www.ebi.ac.uk/europepmc/webservices/rest/search');
+      endpoint.searchParams.set('query','('+batch.map(doi=>'DOI:'+doi).join(' OR ')+')');
+      endpoint.searchParams.set('format','json');
+      endpoint.searchParams.set('resultType','core');
+      endpoint.searchParams.set('pageSize','50');
+      const payload=await request(endpoint,{retries:0});
+      if(payload?.errCode)throw Error('europe_pmc_service_'+String(payload.errCode));
+      const matched=matchEuropePmcAbstracts(batch,payload);
+      for(const [doi,abstract] of matched){
+        if(!found.has(doi)){
+          found.set(doi,{abstract,source:'europe_pmc'});
+          report.europePmcRecovered++;
+        }
+      }
+    }catch(error){
+      report.europePmcErrors.push({offset:i,count:batch.length,
+        reason:String(error?.message||error).slice(0,160)});
+    }
+    await pause(350);
+  }
   // Genuine DOI-verified publisher <head> metadata is a last resort for
   // Crossref/OpenAlex misses. Never acquire historical article body, SI or PDF.
   // Bound each run and rotate the missing-DOI cursor across nightly passes.
-  const publisherMissing=batch.filter(doi=>!found.has(doi));
+  const publisherMissing=dois.filter(doi=>!found.has(doi));
   const publisherLimit=Math.min(publisherMissing.length,
     Math.max(0,Math.min(60,Number(process.env.PUBLISHER_ABSTRACT_LIMIT??'60'))));
   // Daily rotating offset: even if none of the first 60 DOI can be resolved,
   // the other DOI must still be sampled on subsequent scheduled runs.
-  const publisherWindows=publisherLimit>0?Math.ceil(publisherMissing.length/publisherLimit):0;
-  const publisherWindow=publisherWindows>0?Math.floor(Date.now()/86400000)%publisherWindows:0;
-  const publisherBatch=publisherMissing.slice(
-    publisherWindow*publisherLimit,(publisherWindow+1)*publisherLimit);
+  const publisherSelection=publisherLimit>0?boundedMetadataWindow(
+    publisherMissing,publisherLimit,epochDay,outerWindows):{selected:[],number:0,windows:0};
+  const publisherBatch=publisherSelection.selected;
   report.publisherMetadataAttempted=publisherBatch.length;
-  report.publisherMetadataWindow={number:publisherWindow+1,windows:publisherWindows,
-    totalMissing:publisherMissing.length};
+  report.publisherMetadataWindow={number:publisherSelection.number,
+    windows:publisherSelection.windows,totalMissing:publisherMissing.length};
   report.publisherMetadataRecovered=0;
   report.publisherMetadataErrors=[];
   for(const doi of publisherBatch){

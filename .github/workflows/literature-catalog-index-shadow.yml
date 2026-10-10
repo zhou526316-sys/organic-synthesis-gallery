@@ -44,6 +44,9 @@ jobs:
           LITERATURE_INDEX_SHADOW_REPORT: ${{ runner.temp }}/literature-catalog-index-shadow-report.json
         run: node scripts/sync-literature-catalog-index-shadow.mjs
 
+      - name: Validate alternative scholarly DOI metadata
+        run: node --test scripts/test-doi-scholarly-abstract-metadata.mjs
+
       - name: Validate metadata-only publisher fallback parser
         run: node --test scripts/test-publisher-abstract-metadata.mjs
 
@@ -54,7 +57,9 @@ jobs:
           BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
           OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
           SEARCH_ENRICHMENT_REPORT: ${{ runner.temp }}/literature-search-enrichment-report.json
-          PUBLISHER_ABSTRACT_LIMIT: '45'
+          PUBLISHER_ABSTRACT_LIMIT: '60'
+          SEMANTIC_SCHOLAR_LIMIT: '60'
+          EUROPEPMC_LIMIT: '60'
         run: node scripts/sync-literature-search-enrichment.mjs
 
       - name: Preserve abstract search coverage report
