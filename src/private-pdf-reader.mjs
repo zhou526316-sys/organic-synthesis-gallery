@@ -70,6 +70,8 @@ const compatibilityMode = params.get('compat') === '1';
 const nativeMode = params.get('native') === '1' && !compatibilityMode;
 const forceFull = params.get('full') === '1' && !nativeMode && !compatibilityMode;
 const downloadOnOpen = params.get('mode') === 'download';
+// Explicit user-triggered Tencent canary. The public automatic route stays OFF.
+const manualTencentTrial = params.get('pdfIngress') === 'tencent';
 let canvas = null;
 const main = document.querySelector('#pdf-scroll-container');
 const stage = document.querySelector('#stage');
@@ -202,7 +204,7 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
   const rangeStage = document.documentElement.dataset.privatePdfRangeStage || '';
   diagnostic.textContent = `阶段：${phase} · ${detail || 'unknown'} · ${(elapsed / 1000).toFixed(1)}s` +
     (timingDetails.length ? ' · ' + timingDetails.join(' · ') : '') +
-    (['primary', 'backup', 'both-failed'].includes(route) ? ` · 授权线路:${route}` : '') +
+    (['primary', 'backup', 'tencent', 'both-failed'].includes(route) ? ` · 授权线路:${route}` : '') +
     (['primary', 'backup', 'tencent'].includes(fileRoute) ? ` · 文件线路:${fileRoute}` : '') +
     (['headers', 'body', 'verified'].includes(rangeStage) ? ` · 分段阶段:${rangeStage}` : '');
   status.appendChild(diagnostic);
@@ -362,6 +364,30 @@ async function fetchAuthorizedSource(origin, sessionToken, mode, controller, onH
 }
 
 async function getPdfSource(sessionToken, mode = 'view') {
+  if (manualTencentTrial) {
+    // Deliberate first-party canary, never a global automatic activation.
+    // The canonical Worker independently authorizes each account/DOI.
+    const permitted = await tencentPdfRouteEnabled(undefined, 1200, {manual:true});
+    if (!permitted) throw new Error('pdf_authorize_network_error');
+    const controller = new AbortController();
+    const timeout = window.setTimeout(
+      () => controller.abort('manual_tencent_authorize_timeout'), OPEN_TOTAL_TIMEOUT_MS);
+    document.documentElement.dataset.privatePdfAuthorizePath = 'tencent';
+    try {
+      const source = await fetchAuthorizedSource(
+        TENCENT_PDF_ORIGIN, sessionToken, mode, controller);
+      declaredPdfBytes = source.byteLength;
+      activePdfContentHash = source.contentHash;
+      document.documentElement.dataset.privatePdfDeclaredBytes = String(declaredPdfBytes);
+      return {url:source.url,headerVerified:source.headerVerified,
+        contentHash:source.contentHash};
+    } catch(error) {
+      if (controller.signal.aborted) throw new Error('pdf_authorize_timeout');
+      throw error;
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }
   // Check the Gallery-published switch without sending account data.
   // Do this in parallel with canonical authorization: the primary request
   // must not wait for a slow/missing manifest.
