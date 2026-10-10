@@ -11,6 +11,7 @@ on:
       - scripts/validate-tm220-artifacts.mjs
       - tests/tm-acs-throughput.test.mjs
       - tests/tm-cooldown-inventory-20261010.test.mjs
+      - tests/tm-inventory-startup.test.mjs
       - tests/tm-controller-read-transport.test.mjs
       - tests/tm-rsc-acs-inventory-20261008.test.mjs
       - tests/tm-image-outbox-recovery-20261008.test.mjs
@@ -39,6 +40,7 @@ jobs:
           node --check cloudflare/worker/src/local-captures.js
           node --test tests/tm-acs-throughput.test.mjs
           node --test tests/tm-cooldown-inventory-20261010.test.mjs
+          node --test tests/tm-inventory-startup.test.mjs
           node tests/tm-controller-read-transport.test.mjs
           node --test tests/tm-rsc-acs-inventory-20261008.test.mjs
           node --test tests/tm-image-outbox-recovery-20261008.test.mjs
