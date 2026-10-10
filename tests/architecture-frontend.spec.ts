@@ -803,6 +803,7 @@ for (const width of [390, 1280]) {
 
     await openSuggestions();
     await popover.locator('button').first().dispatchEvent('pointerdown', { pointerType: 'touch' });
+    await popover.locator('button').first().dispatchEvent('click', { detail: 1 });
     await expect(popover).toHaveCount(0);
     // Selection synchronously dispatches another input event; an obsolete
     // suggestion popover must never be orphaned in document.body.
