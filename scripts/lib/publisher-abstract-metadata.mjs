@@ -2,10 +2,24 @@
 // body figures or full-text storage. Accept only publisher DOI-verified abstract
 // fields; generic page descriptions are never accepted as scientific abstracts.
 const DOI=/^10\.\d{4,9}\/\S+$/i;
-const ORIGIN=/^(?:www\.)?(?:nature\.com|science\.org|pubs\.acs\.org|onlinelibrary\.wiley\.com|rsc\.org|pubs\.rsc\.org|sciencedirect\.com|cell\.com|ccschemistry\.org)$/i;
+// Explicit scholarly publisher and DOI intermediary host allowlist.
+// No wildcard subdomains or arbitrary URL destinations.
+const ORIGIN=/^(?:www\.)?(?:nature\.com|science\.org|pubs\.acs\.org|onlinelibrary\.wiley\.com|rsc\.org|pubs\.rsc\.org|sciencedirect\.com|cell\.com|ccschemistry\.org|chinesechemsoc\.org|link\.springer\.com|linkinghub\.elsevier\.com|linkinghub\.sdcontent\.elsevier\.com)$/i;
 function doi(value){
   const v=String(value||'').trim().toLowerCase().replace(/^https?:\/\/(?:dx\.)?doi\.org\//,'').replace(/^doi:\s*/,'');
   return DOI.test(v)?v:'';
+}
+// Crossref/OpenAlex can lack abstracts even when the official abstract-only
+// landing page exists. Bypass noncanonical DOI intermediaries for exactly
+// identifiable publishers while staying in metadata/abstract-only scope.
+export function publisherMetadataEntryUrl(value){
+  const id=doi(value);
+  if(!id)return '';
+  if(id.startsWith('10.31635/ccschem.'))
+    return 'https://www.chinesechemsoc.org/doi/abs/'+id;
+  if(id.startsWith('10.1038/'))
+    return 'https://www.nature.com/articles/'+encodeURIComponent(id.slice(8));
+  return 'https://doi.org/'+id.split('/').map(encodeURIComponent).join('/');
 }
 function decodeEntities(value){
   const entities={amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:' '};
@@ -65,7 +79,7 @@ export async function fetchPublisherMetadataAbstract(inputDoi,{
     accept:'text/html,application/xhtml+xml;q=0.9',
     'user-agent':'OrganicSynthesisGallery-PublisherAbstractMetadata/1.0 (DOI-head-only)'
   };
-  let address='https://doi.org/'+normalized.split('/').map(encodeURIComponent).join('/');
+  let address=publisherMetadataEntryUrl(normalized);
   const signal=AbortSignal.timeout(timeout);
   for(let hop=0;hop<6;hop++){
     const current=new URL(address);
@@ -74,7 +88,7 @@ export async function fetchPublisherMetadataAbstract(inputDoi,{
     // Do not follow DOI-mediated redirects into arbitrary hosts/networks;
     // private/local IP and authenticated bypass routes are never fetched.
     if(current.protocol!=='https:'||current.port||current.username||current.password
-      ||(!resolver&&!publisher))throw Error('publisher_metadata_redirect_host_unrecognized');
+      ||(!resolver&&!publisher))throw Error('publisher_metadata_redirect_host_unrecognized:'+current.hostname.slice(0,120));
     const response=await fetchImpl(address,{redirect:'manual',headers,signal});
     if([301,302,303,307,308].includes(response.status)){
       const location=response.headers.get('location');
