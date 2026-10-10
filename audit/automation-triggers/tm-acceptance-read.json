@@ -1,8 +1,8 @@
 {
-  "requestId": "tm-20261009-2202-owner-newlog-full-gap-forensics",
+  "requestId": "tm-20261010-0955-owner-screen-gm-timeout-read",
+  "requestedAt": "2026-10-10T01:55:00Z",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "requestedAt": "2026-10-09T14:02:00Z",
-  "context": "Owner uploaded NEW Tampermonkey diagnostic logs around Beijing 22:02. Read current R2 uploadedAt, task summary, per-DOI failures, trace and latest result; focus all missing TOC, body figures, full text evidence and private PDFs for Gallery DOI addedDate 2026-10-01+. Confirm actual version 2.2.77/6.2.58 or newer, distinguish owner browser execution from installer update; prioritize 10.1039/d6sc06407h, 10.1039/d6gc03748h, Chem 103008/103043, Angew 4335022. NO publisher visits, media write, deletion, promotion, literature release.",
+  "context": "User shared 2026-10-10 09:52 Beijing Bridge 2.2.77/engine 6.2.58 screenshot: Status stopped gm_request_timeout before any DOI page, 10 visible gaps, inventory fields awaiting. User says newest owner diagnostic log uploaded. Read LATEST R2 uploadedAt, engine/install revision, run start, exact fatal reason and progress/trace even if summary empty. Scope TOC/body/PDF for Oct1+ and RSC Chemical Science 10.1039/d6sc06407h, Green Chemistry 10.1039/d6gc03748h; compare actual owner script against deployed 2.2.78/6.2.59. Diagnose only; no live publisher visits/media writes/scheduling changes.",
   "targetDois": [
     "10.1039/d6sc06407h",
     "10.1039/d6gc03748h",
@@ -10,8 +10,8 @@
     "10.1016/j.chempr.2026.103043",
     "10.1002/anie.4335022"
   ],
-  "expectedBridgeVersion": "2.2.77",
-  "expectedInstallRevision": "6.2.58",
+  "expectedBridgeVersion": "2.2.78",
+  "expectedInstallRevision": "6.2.59",
   "readOnly": true,
   "allowCapture": false,
   "allowMediaWrite": false,
