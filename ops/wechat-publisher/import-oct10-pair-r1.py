@@ -139,8 +139,12 @@ def main():
     edition["retrospective"]=retro["slug"]
     for p,obj in [(NEW_RETRO,retro),(EDITION,edition)]:
         f=ROOT/p
-        assert not f.exists()
-        write(p,encoded(obj),written)
+        if p==NEW_RETRO:
+            assert not f.exists(), "New retrospective slug already exists"
+            write(p,encoded(obj),written)
+        else:
+            assert p==EDITION and p in written, "Only the staged new edition may be refined"
+            f.write_bytes(encoded(obj))
 
     # The final independent text/image review artifacts cover BOTH full articles.
     text_md=read(TEXT).decode()
