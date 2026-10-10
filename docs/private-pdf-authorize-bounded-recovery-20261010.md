@@ -20,4 +20,9 @@ Owner-provided screenshot (2026-10-10 17:40 Asia/Shanghai) reports `authorize ·
 - Runtime `/open` failure must never be declared fixed solely from R2 storage probes, anonymous 401, compiler checks or mocked browser runs. Live acceptance additionally requires at least one real owner-authorized `/open`, signed real 206 bytes, full visible first+second pages and continuous scrolling from the owner's actual network; target a small representative sample rather than hundreds of manual opens. Independently check an unentitled account remains rejected.
 - Do not change the sole daily 08:00 literature publishing slot, PDF 1 MiB Range chunking, figure quality, PDF files, historical scraping or WeChat.
 
+## CI scope preflight and upstream merge-base correction
+
+- The first site-quality run on the PDF PR inherited a stale local architecture browser test expecting workers.dev failover on localhost. This environment assumption was independently corrected by the separate search team's merged [PR #487](https://github.com/zhou526316-sys/organic-synthesis-gallery/pull/487), whose quality gate passed. Recheck the PDF PR against updated canonical main; do not change search code, disable the site-quality gate, or treat the old test's failure as a private-PDF authorization result.
+- The PDF-specific regression [#38043563955](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38043563955) passed the live-session stall protections, R2 deferral/206 correctness, 53/53 Chromium fixtures and Worker dry-run on its tested head. This is still not end-user live authorization proof.
+
 This is a targeted independent repair of reader authorization. PR #473's audit-table snapshot changes are separate and should not be bundled or misrepresented as browser-read fixes.
