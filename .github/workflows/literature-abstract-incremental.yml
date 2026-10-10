@@ -27,6 +27,8 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
+      - name: Verify official Springer Nature metadata adapter
+        run: node --test scripts/test-springer-nature-meta-abstract.mjs
       - name: Verify scholarly DOI-only source adapters
         run: node --test scripts/test-doi-scholarly-abstract-metadata.mjs
       - name: Verify publisher metadata DOI and redirect constraints
@@ -39,12 +41,14 @@ jobs:
           WORKER_URL: https://api.gczhouwld.com/
           BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
           OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+          SPRINGER_NATURE_API_KEY: ${{ secrets.SPRINGER_NATURE_API_KEY }}
           SEARCH_ENRICHMENT_REPORT: ${{ runner.temp }}/abstract-recovery-report.json
           SEARCH_ABSTRACT_RETRY_LIMIT: '300'
           CROSSREF_FALLBACK_LIMIT: '300'
           PUBLISHER_ABSTRACT_LIMIT: '60'
           SEMANTIC_SCHOLAR_LIMIT: '60'
           EUROPEPMC_LIMIT: '60'
+          SPRINGER_NATURE_META_LIMIT: '30'
         run: node scripts/sync-literature-search-enrichment.mjs
       - uses: actions/upload-artifact@v4
         if: always()

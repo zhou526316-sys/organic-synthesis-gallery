@@ -270,7 +270,8 @@ export class GalleryPaperActions extends HTMLElement {
         : data.abstractSource === 'crossref' ? 'Crossref'
           : data.abstractSource === 'publisher_metadata' ? this.tr('出版社网页元数据', 'Publisher article metadata')
           : data.abstractSource === 'semantic_scholar' ? 'Semantic Scholar'
-          : data.abstractSource === 'europe_pmc' ? 'Europe PMC' : 'DOI metadata';
+          : data.abstractSource === 'europe_pmc' ? 'Europe PMC'
+          : data.abstractSource === 'springer_nature_meta' ? 'Springer Nature Meta API' : 'DOI metadata';
       const source = data.originalArticleUrl
         ? `<a class='summary-open' href='${escapeHtml(data.originalArticleUrl)}' target='_blank' rel='noopener noreferrer'>${this.tr('查看原始摘要 ↗','Read source abstract ↗')}</a>`
         : '';
