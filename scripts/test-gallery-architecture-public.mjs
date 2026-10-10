@@ -78,6 +78,36 @@ test('public architecture publishes a bounded hash-bound Hot fallback object', (
 });
 
 
+test('Hot fallback count uses admitted rows after historical exclusions', () => {
+  const asOfDate = '2026-10-10';
+  const rows = [
+    {doi:'10.9999/ordinary-oct',date:'2026-10-09',addedDate:'2026-10-10'},
+    {doi:'10.9999/ordinary-sept',date:'2026-09-25',addedDate:'2026-09-26'},
+    {doi:'10.9999/late-sept',date:'2026-09-25',addedDate:'2026-10-10'},
+    {doi:'10.9999/tagged-sept',date:'2026-09-24',addedDate:'2026-10-10',
+      ingestionChannel:'historical_backfill'},
+    {doi:'10.9999/tagged-early',date:'2026-08-01',addedDate:'2026-10-10',
+      ingestionChannel:'historical_backfill'},
+  ].map(row=>({ title:'Synthetic example for Hot filtering',journal:'JACS',
+    authors:['Test Author'],...row }));
+  const snapshot=buildCatalog(rows,{asOfDate,
+    source:{commit:'a'.repeat(40),datasetSha256:'b'.repeat(64)}});
+  const candidates=new Set([...snapshot.partitions.hot,...snapshot.partitions.future,
+    ...snapshot.partitions.date_unknown]);
+  const admitted=snapshot.records.filter(row=>candidates.has(row.doi)&&isHotLandingEligible(row,asOfDate));
+  assert.ok(candidates.size>admitted.length,'test must include deliberately excluded history');
+  assert.deepEqual(admitted.map(row=>row.doi),[
+    '10.9999/ordinary-oct','10.9999/ordinary-sept']);
+  const builder=readFileSync('scripts/build-gallery-architecture-public.mjs','utf8');
+  assert.ok(builder.includes('count: hotCandidateRecords.length,'),
+    'generator must declare actual post-filter count or fallback validation fails');
+  assert.ok(!builder.includes('count: hotCandidateDois.size,'),
+    'unfiltered candidate size is not valid as Hot fallback record count');
+  const reader=readFileSync('architecture/published-reader.mjs','utf8');
+  assert.ok(reader.includes('payload.count === payload.records.length'),
+    'read-path generation validation must not be weakened');
+});
+
 test('recently admitted undated and future-dated papers appear without changing date provenance', () => {
   const asOfDate = '2026-10-08';
   const make = (doi, date, addedDate) => ({
