@@ -1,6 +1,12 @@
 import { test, expect, type Page } from '@playwright/test';
 
 test.use({ serviceWorkers: 'block' });
+// The full Gallery imports background modules. A read-only card fixture may
+// finish before those unrelated static reads settle; stop route callbacks
+// before Playwright tears down the page, without weakening in-test assertions.
+test.afterEach(async ({ page }) => {
+  await page.unrouteAll({ behavior: 'ignoreErrors' });
+});
 const GALLERY = 'https://gallery.gczhouwld.com';
 const API = 'https://api.gczhouwld.com';
 const LOCAL_PREVIEW = 'http://127.0.0.1:4174';
