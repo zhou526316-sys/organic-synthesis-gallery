@@ -683,3 +683,83 @@ test('date boundaries preserve leap day and stage-only guard refuses an unapprov
     assert.equal(remoteCalls,0);
   });
 });
+
+
+
+test('all 16 registered journals traverse one historical window and roll over in correct order',async()=>{
+  await isolatedHistoricalRun(async({readState,readBatch,queue,release,root})=>{
+    process.env.MAX_UNITS='16';
+    process.env.API_REQUEST_LIMIT='80';
+    const crIssns=[],oaFilters=[];
+    global.fetch=async url=>{
+      const u=new URL(url);
+      if(u.hostname==='api.crossref.org'){
+        const match=u.pathname.match(/\/journals\/([^/]+)\/works$/);
+        assert.ok(match,'Crossref journal ISSN path must be canonical');
+        crIssns.push(decodeURIComponent(match[1]));
+        assert.match(u.searchParams.get('filter')||'',/from-pub-date:2026-09-22/);
+        return emptyCrossref();
+      }
+      oaFilters.push(u.searchParams.get('filter')||'');
+      return emptyOpenAlex();
+    };
+    const result=await runNightly();
+    assert.equal(result.blocked,false);
+    assert.equal(result.deferredBudget,false);
+    assert.equal(result.processed,16);
+    assert.equal(result.completeWindows,16);
+    assert.deepEqual(result.next,{range:{from:'2026-09-15',to:'2026-09-21'},journalIndex:0});
+    assert.equal(result.noPublication,true);
+    assert.equal(result.noPdf,true);
+    const names=orderedJournals(),allIssns=names.flatMap(j=>j.issns);
+    assert.deepEqual(crIssns,allIssns);
+    assert.equal(oaFilters.length,16);
+    for(const journal of names){
+      const id='2026-09-22_2026-09-30_'+journal.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+      const batch=await readBatch(id);
+      assert.equal(batch.status,'source_enumeration_complete',journal.name);
+      assert.equal(batch.journal,journal.name);
+      assert.deepEqual(batch.issns,journal.issns);
+      assert.equal(batch.candidateCount,0);
+      assert.equal(batch.consistency.complete,true);
+      assert.equal(batch.noFormalPublication,true);
+      assert.equal(batch.noPDFAcquisition,true);
+      assert.equal(batch.noMediaWrites,true);
+    }
+    assert.equal((await readState()).completed.length,16);
+    assert.deepEqual(JSON.parse(await readFile(join(root,'public/toc-demand-live.json'))),queue);
+    assert.deepEqual(JSON.parse(await readFile(join(root,'audit/publication-release-state.json'))),release);
+  });
+});
+
+test('before July 2026 historical DOI is metadata-only and never stores protected abstract text',async()=>{
+  const state=stage0();state.cursor.range={from:'2026-06-01',to:'2026-06-30'};
+  await isolatedHistoricalRun(async({readBatch})=>{
+    global.fetch=async url=>{
+      const u=new URL(url);
+      if(u.hostname==='api.openalex.org')return emptyOpenAlex();
+      return completeCrossref(u.pathname.includes('0002-7863')?[{
+        DOI:'10.1021/jacs.6c77777',
+        title:['An older catalyst-controlled C–C bond construction'],
+        published:{'date-parts':[[2026,6,15]]},
+        abstract:'PROTECTED_PUBLISHER_ABSTRACT_DO_NOT_STORE',
+        author:[{given:'A',family:'Chen'}],page:'123-129',volume:'148'
+      }]:[]);
+    };
+    const result=await runNightly();
+    assert.equal(result.completeWindows,1);
+    const batch=await readBatch('2026-06-01_2026-06-30_jacs');
+    assert.equal(batch.records.length,1);
+    const paper=batch.records[0];
+    assert.equal(paper.mediaPolicy,'metadata_only');
+    assert.equal(paper.ingestionChannel,'historical_backfill');
+    assert.equal(paper.abstract.available,true);
+    assert.equal(paper.abstract.displayPermission,'not_verified');
+    assert.equal(paper.abstract.storedText,false);
+    assert.equal('abstractText' in paper,false);
+    assert.equal(paper.citation.pages,'123-129');
+    assert.equal(JSON.stringify(batch).includes('PROTECTED_PUBLISHER_ABSTRACT_DO_NOT_STORE'),false);
+    assert.equal(batch.noPDFAcquisition,true);
+    assert.equal(batch.noMediaWrites,true);
+  },{priorState:state});
+});
