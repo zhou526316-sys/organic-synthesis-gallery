@@ -100,10 +100,13 @@ test('original publisher abstract and reviewed Chinese/English interpretation re
   const original=await getSearchAbstract(env,{catalogId:GEN.catalogId,doi:'10.1234/a'});
   assert.equal(original.status,200);
   assert.equal(original.body.abstractSource,'openalex');
+  assert.equal(original.body.abstractAvailable,true);
+  assert.match(original.body.abstractExcerpt,/ligand-to-metal charge transfer/);
+  assert.equal(Object.hasOwn(original.body,'abstract'),false);
   assert.equal(original.body.reviewedSummaryEn,null);
   const interpreted=await getSearchAbstract(env,{catalogId:GEN.catalogId,doi:'10.1234/b'});
   assert.equal(interpreted.status,200);
-  assert.equal(interpreted.body.abstract,null);
+  assert.equal(interpreted.body.abstractAvailable,false);
   assert.match(interpreted.body.reviewedSummaryEn,/LMCT/);
 });
 test('cross DOI injection, conflicting generation source and stale revisions fail closed',async t=>{
