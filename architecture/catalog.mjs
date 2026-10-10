@@ -63,6 +63,7 @@ export function buildCatalog(papers, { asOfDate, source, withdrawn = [], grants 
       for (const r of chunk) locator[r.doi] = { shard: ref.path, revision: r.revision, status: 'published' };
       const entries = chunk.map(r => ({ doi: r.doi, title: r.paper.title ?? r.paper.titleEn ?? '', titleZh: r.paper.titleZh ?? '',
         authors: r.paper.authors ?? [], journal: r.paper.journal ?? '', date: r.firstOnlineDate,
+        abstract: r.paper.abstract ?? '', searchTerms: r.paper.searchTerms ?? [],
         synthesisType: r.paper.synthesisType ?? null, shard: ref.path, revision: r.revision }));
       search.push({ ...put(`search/${month}`, { schema: SCHEMA, entries }), count: entries.length, month });
       chunk = [];
