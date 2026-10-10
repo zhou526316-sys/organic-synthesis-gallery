@@ -68,3 +68,63 @@ nginx -T -c "$tmp/nginx.conf" 2>/dev/null | grep -F 'GALLERY_PDF_GATEWAY_MANAGED
 test "$(probe)" = 200
 test "$(cat "$tmp/body")" = 'expected-http01-body'
 echo 'PDF_ACME_EFFECTIVE_INCLUDE_PASS: unused site=404; effective nginx include=200'
+
+
+# Real Nginx exact-include scenario: only the relay is referenced by
+# nginx.conf, so the staged sibling PDF site gives 404 until one additive,
+# marked include is inserted. The relay file must remain byte-identical.
+nginx -s stop -c "$tmp/nginx.conf" >/dev/null 2>&1
+sleep 0.15
+cat > "$tmp/sites-enabled/osg-wechat-relay" <<CONF
+server {
+ listen 127.0.0.1:$port default_server;
+ server_name relay.gczhouwld.com;
+ location / { return 404; }
+}
+CONF
+relay_sha_before="$(sha256sum "$tmp/sites-enabled/osg-wechat-relay" | awk '{print $1}')"
+cat > "$tmp/nginx.conf" <<CONF
+pid $tmp/nginx.pid;
+error_log $tmp/logs/error.log warn;
+events { worker_connections 16; }
+http {
+ access_log off;
+ include $tmp/sites-enabled/osg-wechat-relay;
+}
+CONF
+nginx -t -c "$tmp/nginx.conf"
+nginx -c "$tmp/nginx.conf"
+sleep 0.2
+test "$(probe)" = 404
+python3 - "$tmp/nginx.conf" "$tmp/sites-enabled/osg-wechat-relay" "$tmp/sites-enabled/pdf" "$(dirname "$source_file")" <<'PY'
+import sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[4])
+from nginx_include import add_include
+path=Path(sys.argv[1])
+raw=path.read_bytes()
+patched=add_include(raw, relay=sys.argv[2].encode(), pdf=sys.argv[3].encode())
+path.write_bytes(patched)
+PY
+nginx -t -c "$tmp/nginx.conf"
+nginx -s reload -c "$tmp/nginx.conf"
+sleep 0.25
+nginx -T -c "$tmp/nginx.conf" 2>/dev/null | grep -F 'GALLERY_PDF_GATEWAY_MANAGED_V1' >/dev/null
+test "$(probe)" = 200
+test "$(cat "$tmp/body")" = 'expected-http01-body'
+python3 - "$tmp/nginx.conf" "$tmp/sites-enabled/pdf" "$(dirname "$source_file")" <<'PY'
+import sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[3])
+from nginx_include import remove_include
+path=Path(sys.argv[1])
+updated, removed=remove_include(path.read_bytes(), pdf=sys.argv[2].encode())
+assert removed
+path.write_bytes(updated)
+PY
+nginx -t -c "$tmp/nginx.conf"
+nginx -s reload -c "$tmp/nginx.conf"
+sleep 0.25
+test "$(probe)" = 404
+test "$(sha256sum "$tmp/sites-enabled/osg-wechat-relay" | awk '{print $1}')" = "$relay_sha_before"
+echo 'PDF_ACME_EXPLICIT_RELAY_INCLUDE_PASS: 404->200->404, unchanged relay'
