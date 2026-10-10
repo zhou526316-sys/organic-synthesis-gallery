@@ -2702,7 +2702,7 @@ function embeddedJobDois(value) {
         candidates.slice(0,5).forEach(function(value,rank){
           var url=normalizeUrl(value,route.url);
           if(!url||seen.has(url)||rscPdfPreviewUrl(url)||reject(text,url)
-              ||!candidateBelongsToJob(url,job))return;
+              ||!rscVerifiedSilverchairMedia(job,url))return;
           try{
             var u=new URL(url);
             if(u.protocol!=='https:'||!(u.hostname==='pubs.rsc.org'||u.hostname.endsWith('.rsc.org')))return;
