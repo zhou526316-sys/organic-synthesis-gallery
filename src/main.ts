@@ -477,17 +477,27 @@ function editionIdFromLocation(): string | null {
 
 async function loadEditionManifest(): Promise<WechatEditionManifest | null> {
   const editionId = editionIdFromLocation();
+  delete document.documentElement.dataset.galleryEditionFeaturedDoi;
   if (!editionId) return null;
   try {
     const response = await fetch(`./wechat-editions/${encodeURIComponent(editionId)}.json`, { cache: 'no-store' });
     if (!response.ok) return null;
-    const raw = await response.json() as Partial<WechatEditionManifest>;
-    const featuredDoi = normalizeDoi(typeof raw.featuredDoi === 'string' ? raw.featuredDoi : null);
+    // Editorial manifests store "featured"; older/static manifests may use
+    // "featuredDoi". A missing DOI list is not a reason to lose the pick.
+    const raw = await response.json() as Partial<WechatEditionManifest> & { featured?: unknown };
+    const featuredDoi = normalizeDoi(
+      typeof raw.featuredDoi === 'string' ? raw.featuredDoi
+      : typeof raw.featured === 'string' ? raw.featured : null,
+    );
     const dois = Array.isArray(raw.dois)
       ? raw.dois.map(value => normalizeDoi(typeof value === 'string' ? value : null)).filter((value): value is string => Boolean(value))
       : [];
-    if (!featuredDoi || !dois.length) return null;
+    if (!featuredDoi) return null;
     const ordered = [featuredDoi, ...dois.filter(doi => doi.toLowerCase() !== featuredDoi.toLowerCase())];
+    // The share/focus module is loaded after first-content-rendered. Publish
+    // the validated featured DOI before rendering so legacy ?edition links
+    // resolve to the same exact paper without changing the URL or editor data.
+    document.documentElement.dataset.galleryEditionFeaturedDoi = featuredDoi.toLowerCase();
     return {
       id: editionId,
       date: typeof raw.date === 'string' ? raw.date : editionId,
@@ -652,18 +662,26 @@ function filteredPapers(): Paper[] {
       return compareDailyGalleryCards(a, b);
     });
 
+  const sharedDoi = sharedDoiFromLocation()?.toLowerCase();
   if (activeEdition?.dois.length) {
     const ordered = activeEdition.dois.flatMap(doi => {
       const paper = papers.find(item => paperDoi(item)?.toLowerCase() === doi.toLowerCase());
       return paper ? [paper] : [];
     });
-    if (ordered.length) {
-      const selected = new Set(ordered);
-      return [...ordered, ...filtered.filter(paper => !selected.has(paper))];
+    // For links carrying both an edition and a DOI (including retrospective
+    // picks), the explicitly requested paper must win the first-page slot.
+    const requested = sharedDoi
+      ? papers.find(item => paperDoi(item)?.toLowerCase() === sharedDoi)
+      : undefined;
+    const front = requested
+      ? [requested, ...ordered.filter(paper => paper !== requested)]
+      : ordered;
+    if (front.length) {
+      const selected = new Set(front);
+      return [...front, ...filtered.filter(paper => !selected.has(paper))];
     }
   }
 
-  const sharedDoi = sharedDoiFromLocation()?.toLowerCase();
   if (!sharedDoi) return filtered;
   const sharedPaper = papers.find(paper => paperDoi(paper)?.toLowerCase() === sharedDoi);
   if (!sharedPaper) return filtered;
@@ -840,7 +858,7 @@ function renderCards(): void {
   restoreMedia();
   scheduleMediaBatch(0);
   schedulePdfVaultCardsRefresh(gallery, language);
-  if (activeEdition && !editionAutoScrolled) {
+  if (activeEdition && !editionAutoScrolled && !sharedDoiFromLocation()) {
     editionAutoScrolled = true;
     requestAnimationFrame(() => {
       document.querySelector<HTMLElement>('.card.edition-featured, .card.edition-highlight')

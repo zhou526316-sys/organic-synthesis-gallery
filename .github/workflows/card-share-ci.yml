@@ -74,7 +74,7 @@ jobs:
           grep -F "navigator.clipboard.write" src/card-share.ts
           grep -F "summary=1" dist/assets/card-share-*.js
           grep -F "openSummaryFromDeepLink" dist/assets/card-share-*.js
-          grep -F "url.searchParams.get('summary') !== '0'" src/card-share.ts
+          grep -F "url.searchParams.get('summary') === '1'" src/card-share.ts
           grep -F "sharev=" dist/assets/card-share-*.js
 
       - name: Verify canonical Gallery routing
@@ -113,6 +113,21 @@ jobs:
           }
           throw new Error('preview server did not start');
           NODE
+      - name: WeChat source DOI encoding regression
+        run: |
+          python3 - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          path=Path('ops/wechat-publisher/create-draft.py')
+          spec=importlib.util.spec_from_file_location('wechat_source_url_check',path)
+          module=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          assert module.gallery_original_url('10.1002/anie.3306470','2026-10-10') == 'https://gallery.gczhouwld.com/?edition=2026-10-10&doi=10.1002%2Fanie.3306470&summary=0'
+          assert module.gallery_original_url('10.1038/s44160-026-01128-y') == 'https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01128-y&summary=0'
+          assert module.gallery_original_url('not-a-doi') == module.DEFAULT_SOURCE_URL
+          print('WeChat 阅读原文 source URLs validated; day-list QR unaffected')
+          PY
+
       - name: Playwright card share smoke
         run: |
           node - <<'NODE'
@@ -167,8 +182,8 @@ jobs:
             await panel.locator('[data-share-action="copy-title-doi"]').waitFor({ state: 'visible' });
             await panel.locator('[data-share-action="copy-link"]').waitFor({ state: 'visible' });
 
-            // Backward compatibility matters: older shared links only carried the DOI.
-            // Every DOI deep link now opens the summary unless explicitly opted out with summary=0.
+            // Old DOI-only links must focus the paper, NOT cover it with a
+            // summary drawer. Explicit summary=1 links still auto-open it.
             await page.goto('http://127.0.0.1:4173/?doi=' + encodeURIComponent(doi), { waitUntil: 'domcontentloaded' });
             const targeted = page.locator('.card.shared-card-target');
             await targeted.waitFor({ state: 'visible', timeout: 30000 });
@@ -176,7 +191,9 @@ jobs:
             if ((targetedDoi || '').toLowerCase() !== doi.toLowerCase()) {
               throw new Error('deep-link target DOI mismatch: ' + targetedDoi + ' vs ' + doi);
             }
-            await targeted.locator('gallery-paper-actions .drawer.summary-drawer').waitFor({ state: 'visible', timeout: 10000 });
+            if (await targeted.locator('gallery-paper-actions .drawer.summary-drawer').count()) {
+              throw new Error('bare DOI link unexpectedly obscured the target with a summary');
+            }
             const haloAnimation = await targeted.evaluate(element => getComputedStyle(element).animationName);
             if (!haloAnimation.includes('gallery-shared-card-halo')) {
               throw new Error('shared card does not have the continuous halo animation: ' + haloAnimation);
@@ -191,7 +208,15 @@ jobs:
             }
             if (pageErrors.length) throw new Error('page errors: ' + pageErrors.join(' | '));
             if (failedSameOrigin.length) throw new Error('same-origin request failures: ' + failedSameOrigin.join(' | '));
-            console.log(JSON.stringify({ cardShare: true, deepLink: true, autoSummary: true, backwardCompatibleDoiLink: true, doi, externalConsoleErrors: consoleErrors.length }));
+            await page.goto('http://127.0.0.1:4173/?doi=' + encodeURIComponent(doi) + '&summary=1', { waitUntil: 'domcontentloaded' });
+            const explicitSummaryCard = page.locator('.card.shared-card-target');
+            await explicitSummaryCard.waitFor({ state: 'visible', timeout: 30000 });
+            await explicitSummaryCard.locator('gallery-paper-actions .drawer.summary-drawer')
+              .waitFor({ state: 'visible', timeout: 10000 });
+            console.log(JSON.stringify({ cardShare: true, deepLink: true, explicitSummaryOnly: true, legacyDoiWithoutPopup: true, doi, externalConsoleErrors: consoleErrors.length }));
             await browser.close();
           })().catch(error => { console.error(error); process.exit(1); });
           NODE
+
+      - name: Browser-check archived WeChat edition and selected DOI light effects
+        run: node tests/wechat-original-deeplink-browser.mjs
