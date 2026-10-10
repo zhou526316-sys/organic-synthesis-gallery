@@ -40,13 +40,13 @@
     "note": "Consolidated the polymer-method scope correction and subsequent late-indexed candidates. Current audit reports galleryDois=503, missingFromGallery=0, unresolved=0."
   },
   "lastWebsiteSync": {
-    "finishedAt": "2026-10-10T13:45:05.714Z",
+    "finishedAt": "2026-10-10T13:57:29.234Z",
     "dataCommitSha": "630b8eb2ecda8a286bacefc127d5a23725dcd31b",
     "capabilityFingerprint": "cf1965ec987e8d226af927b2b81c4a06f4059d354882a2797e93b464510b7377",
     "deployment": "success-live-verified",
     "verification": {
-      "pagesRun": 38055865387,
-      "deploymentSourceCommit": "db67e132cd51199593dfcee1095affcc7e120625",
+      "pagesRun": 38056483318,
+      "deploymentSourceCommit": "2089d4333a138fb160f8e67e6b4b6f5a73d13785",
       "publicationSlot": "2026-10-10T08:00:00+08:00",
       "markerBlobSha": "56ed469282fd3405e704c73996dbe8a0d0e47b6f",
       "totalGalleryCards": 938,
@@ -246,7 +246,7 @@
       "sites": [
         {
           "site": "https://gallery.gczhouwld.com/",
-          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=38055865387-1791639904185",
+          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=38056483318-1791640647729",
           "filesVerified": [
             "papers.gz.b64",
             "total-synthesis.json",
@@ -263,9 +263,9 @@
           "architectureFilesVerified": [
             "architecture-v1/acquisition-basis.edac4736f3699f3024d55b9ea5466e450d1c9a96b8ef6d72377d560f4dc673dd.json",
             "architecture-v1/current.json",
-            "architecture-v1/hot-fallback.6f3b8422de254c57fb17701215c9ae5b6d02d578e00fba2e852cbd902978c16d.json",
-            "architecture-v1/hot-head.19af641ce64a1b1e4d3bdeea50e4dbedbab6d125acf85ccbbd3bd682c9d51c3c.json",
-            "architecture-v1/lifecycle/snapshot.d4a852498b9684c749294377b153808efcf58c1c7c7a81e68755c333109ba494.json",
+            "architecture-v1/hot-fallback.faad862beeb9063c1916e465b3e02b490bae5cbc851f730c00f182bc989f0611.json",
+            "architecture-v1/hot-head.bb857245348506e55a7a75d47b8fd150b2fabea7b90abff5cce573502bad314d.json",
+            "architecture-v1/lifecycle/snapshot.b41bed0a3688d8825b4a02fe97bb87cb053c2c37bce094c49f6d72ccab2e8248.json",
             "architecture-v1/locator/0.8f1e39fb160542de3c557678277e3dec23349174e1a27a774d8fe13038027ddc.json",
             "architecture-v1/locator/1.0cc24e70dc4f4db08ae56e9a8f0c6da3f60c84f786c5a3e021be50b3982cfbd7.json",
             "architecture-v1/locator/2.8d5390210495975e6885398ae4b1c2df51547ab8374ab742e217a045adb42ab7.json",
@@ -282,9 +282,9 @@
             "architecture-v1/locator/d.ac52c373075d96963d554d28c24d5f595905738431fb90decc9b9cdd40a7a0b1.json",
             "architecture-v1/locator/e.c4e0b803ae1837e1847f5ad5f882e371bc0729b0f85f001cf9c0717dfc68e17f.json",
             "architecture-v1/locator/f.7988eafba2ab609586af7d9a6fffd7c9e1be8e742736bcdf9d602019056de9eb.json",
-            "architecture-v1/membership.3a7e08edb7c241d7310df3d9701cdd345ea145e5f32dda18b49bc9620ff8bbfc.json",
+            "architecture-v1/membership.7e23fb209a30c6efd3cb49c6064899ae9fbcee775e2dfc506cc465ada52ced87.json",
             "architecture-v1/membership/all-time.9073d6c4bba312ebc2d5325dba5a3e94b6d481e8524ca8d502d97e32fc8b239b.json",
-            "architecture-v1/releases/catalog.b660bb91aef3767e1aabc8058dcbbd2e0f80404f4cea34ca997fc274ccc33292.json",
+            "architecture-v1/releases/catalog.520a2b28335233b9fa5f50bfa2743e688a922cd2e7c6514a3ecc637e2903b1bf.json",
             "architecture-v1/search/2026-07.7a0408436435d3de8170ca3849bd25733033ded3816417a59230fe276f757154.json",
             "architecture-v1/search/2026-08.c251b200c626fce6edabf956776d8127c69aefbf55f0a9e563115f4792bb09ee.json",
             "architecture-v1/search/2026-09.07afaf7b5529a0a47ffd09914407cbc8b6c8c09448cd742e9ab1843208984b6b.json",
@@ -297,14 +297,14 @@
             "architecture-v1/shards/2026-09.c9ae5436af7186d02efceb74cd65dd11f353386b6870a38ce9e20b75604c01a9.json",
             "architecture-v1/shards/2026-10.6dcf357e0e1baff7318e8f44fe30fd1ff4273b60e36161ff465cc3479cd11061.json",
             "architecture-v1/shards/undated.fb79c7650bb1d4ecfbc80c5c07c042f70e8754909108316f06b58f9eab79726f.json",
-            "architecture-v1/title-presentation.a6a6c67961e46edcee5a87fa207119250e595983bb7d7fef061f886eb8ac049d.json",
-            "architecture-v1/work/preview.d1dd473b797cbaf7a05879e7ce00ff7278e2c96faf5e98d6502d4e9afef4166b.json"
+            "architecture-v1/title-presentation.022a6c1d84d2549312750a8e9e8de66b1dc4fe818346536d9a5261ebcf455ac7.json",
+            "architecture-v1/work/preview.989f943e789f03291ca1914f1ee59a68731ae23bc1d82ccb710c300e2f9fb1ff.json"
           ],
           "attempts": 1
         },
         {
           "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
-          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=38055865387-1791639905172",
+          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=38056483318-1791640648510",
           "filesVerified": [
             "papers.gz.b64",
             "total-synthesis.json",
@@ -321,9 +321,9 @@
           "architectureFilesVerified": [
             "architecture-v1/acquisition-basis.edac4736f3699f3024d55b9ea5466e450d1c9a96b8ef6d72377d560f4dc673dd.json",
             "architecture-v1/current.json",
-            "architecture-v1/hot-fallback.6f3b8422de254c57fb17701215c9ae5b6d02d578e00fba2e852cbd902978c16d.json",
-            "architecture-v1/hot-head.19af641ce64a1b1e4d3bdeea50e4dbedbab6d125acf85ccbbd3bd682c9d51c3c.json",
-            "architecture-v1/lifecycle/snapshot.d4a852498b9684c749294377b153808efcf58c1c7c7a81e68755c333109ba494.json",
+            "architecture-v1/hot-fallback.faad862beeb9063c1916e465b3e02b490bae5cbc851f730c00f182bc989f0611.json",
+            "architecture-v1/hot-head.bb857245348506e55a7a75d47b8fd150b2fabea7b90abff5cce573502bad314d.json",
+            "architecture-v1/lifecycle/snapshot.b41bed0a3688d8825b4a02fe97bb87cb053c2c37bce094c49f6d72ccab2e8248.json",
             "architecture-v1/locator/0.8f1e39fb160542de3c557678277e3dec23349174e1a27a774d8fe13038027ddc.json",
             "architecture-v1/locator/1.0cc24e70dc4f4db08ae56e9a8f0c6da3f60c84f786c5a3e021be50b3982cfbd7.json",
             "architecture-v1/locator/2.8d5390210495975e6885398ae4b1c2df51547ab8374ab742e217a045adb42ab7.json",
@@ -340,9 +340,9 @@
             "architecture-v1/locator/d.ac52c373075d96963d554d28c24d5f595905738431fb90decc9b9cdd40a7a0b1.json",
             "architecture-v1/locator/e.c4e0b803ae1837e1847f5ad5f882e371bc0729b0f85f001cf9c0717dfc68e17f.json",
             "architecture-v1/locator/f.7988eafba2ab609586af7d9a6fffd7c9e1be8e742736bcdf9d602019056de9eb.json",
-            "architecture-v1/membership.3a7e08edb7c241d7310df3d9701cdd345ea145e5f32dda18b49bc9620ff8bbfc.json",
+            "architecture-v1/membership.7e23fb209a30c6efd3cb49c6064899ae9fbcee775e2dfc506cc465ada52ced87.json",
             "architecture-v1/membership/all-time.9073d6c4bba312ebc2d5325dba5a3e94b6d481e8524ca8d502d97e32fc8b239b.json",
-            "architecture-v1/releases/catalog.b660bb91aef3767e1aabc8058dcbbd2e0f80404f4cea34ca997fc274ccc33292.json",
+            "architecture-v1/releases/catalog.520a2b28335233b9fa5f50bfa2743e688a922cd2e7c6514a3ecc637e2903b1bf.json",
             "architecture-v1/search/2026-07.7a0408436435d3de8170ca3849bd25733033ded3816417a59230fe276f757154.json",
             "architecture-v1/search/2026-08.c251b200c626fce6edabf956776d8127c69aefbf55f0a9e563115f4792bb09ee.json",
             "architecture-v1/search/2026-09.07afaf7b5529a0a47ffd09914407cbc8b6c8c09448cd742e9ab1843208984b6b.json",
@@ -355,8 +355,8 @@
             "architecture-v1/shards/2026-09.c9ae5436af7186d02efceb74cd65dd11f353386b6870a38ce9e20b75604c01a9.json",
             "architecture-v1/shards/2026-10.6dcf357e0e1baff7318e8f44fe30fd1ff4273b60e36161ff465cc3479cd11061.json",
             "architecture-v1/shards/undated.fb79c7650bb1d4ecfbc80c5c07c042f70e8754909108316f06b58f9eab79726f.json",
-            "architecture-v1/title-presentation.a6a6c67961e46edcee5a87fa207119250e595983bb7d7fef061f886eb8ac049d.json",
-            "architecture-v1/work/preview.d1dd473b797cbaf7a05879e7ce00ff7278e2c96faf5e98d6502d4e9afef4166b.json"
+            "architecture-v1/title-presentation.022a6c1d84d2549312750a8e9e8de66b1dc4fe818346536d9a5261ebcf455ac7.json",
+            "architecture-v1/work/preview.989f943e789f03291ca1914f1ee59a68731ae23bc1d82ccb710c300e2f9fb1ff.json"
           ],
           "attempts": 1
         }
@@ -365,7 +365,7 @@
     },
     "tocVerification": {
       "webpageDoiCount": 938,
-      "verifiedAt": "2026-10-10T13:45:05.714Z",
+      "verifiedAt": "2026-10-10T13:57:29.234Z",
       "note": "Queue membership count verified; this job does not obtain or publish media."
     }
   },
@@ -2287,9 +2287,9 @@
       "10.1016/j.chempr.2026.103025",
       "10.1039/d6sc06879k"
     ],
-    "pagesRun": 38055865387,
-    "deploymentSourceCommit": "db67e132cd51199593dfcee1095affcc7e120625",
-    "deploymentVerifiedAt": "2026-10-10T13:45:05.714Z"
+    "pagesRun": 38056483318,
+    "deploymentSourceCommit": "2089d4333a138fb160f8e67e6b4b6f5a73d13785",
+    "deploymentVerifiedAt": "2026-10-10T13:57:29.234Z"
   },
   "lastQualityGate": {
     "runId": 37713174970,
@@ -2646,9 +2646,9 @@
   "lastDeploymentAttempt": {
     "schemaVersion": 2,
     "ok": true,
-    "runId": 38055865387,
+    "runId": 38056483318,
     "runAttempt": 1,
-    "sourceCommit": "db67e132cd51199593dfcee1095affcc7e120625",
+    "sourceCommit": "2089d4333a138fb160f8e67e6b4b6f5a73d13785",
     "markerCommit": "630b8eb2ecda8a286bacefc127d5a23725dcd31b",
     "markerBlobSha": "56ed469282fd3405e704c73996dbe8a0d0e47b6f",
     "publicationSlot": "2026-10-10T08:00:00+08:00",
@@ -2850,7 +2850,7 @@
     "sites": [
       {
         "site": "https://gallery.gczhouwld.com/",
-        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=38055865387-1791639904185",
+        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=38056483318-1791640647729",
         "filesVerified": [
           "papers.gz.b64",
           "total-synthesis.json",
@@ -2867,9 +2867,9 @@
         "architectureFilesVerified": [
           "architecture-v1/acquisition-basis.edac4736f3699f3024d55b9ea5466e450d1c9a96b8ef6d72377d560f4dc673dd.json",
           "architecture-v1/current.json",
-          "architecture-v1/hot-fallback.6f3b8422de254c57fb17701215c9ae5b6d02d578e00fba2e852cbd902978c16d.json",
-          "architecture-v1/hot-head.19af641ce64a1b1e4d3bdeea50e4dbedbab6d125acf85ccbbd3bd682c9d51c3c.json",
-          "architecture-v1/lifecycle/snapshot.d4a852498b9684c749294377b153808efcf58c1c7c7a81e68755c333109ba494.json",
+          "architecture-v1/hot-fallback.faad862beeb9063c1916e465b3e02b490bae5cbc851f730c00f182bc989f0611.json",
+          "architecture-v1/hot-head.bb857245348506e55a7a75d47b8fd150b2fabea7b90abff5cce573502bad314d.json",
+          "architecture-v1/lifecycle/snapshot.b41bed0a3688d8825b4a02fe97bb87cb053c2c37bce094c49f6d72ccab2e8248.json",
           "architecture-v1/locator/0.8f1e39fb160542de3c557678277e3dec23349174e1a27a774d8fe13038027ddc.json",
           "architecture-v1/locator/1.0cc24e70dc4f4db08ae56e9a8f0c6da3f60c84f786c5a3e021be50b3982cfbd7.json",
           "architecture-v1/locator/2.8d5390210495975e6885398ae4b1c2df51547ab8374ab742e217a045adb42ab7.json",
@@ -2886,9 +2886,9 @@
           "architecture-v1/locator/d.ac52c373075d96963d554d28c24d5f595905738431fb90decc9b9cdd40a7a0b1.json",
           "architecture-v1/locator/e.c4e0b803ae1837e1847f5ad5f882e371bc0729b0f85f001cf9c0717dfc68e17f.json",
           "architecture-v1/locator/f.7988eafba2ab609586af7d9a6fffd7c9e1be8e742736bcdf9d602019056de9eb.json",
-          "architecture-v1/membership.3a7e08edb7c241d7310df3d9701cdd345ea145e5f32dda18b49bc9620ff8bbfc.json",
+          "architecture-v1/membership.7e23fb209a30c6efd3cb49c6064899ae9fbcee775e2dfc506cc465ada52ced87.json",
           "architecture-v1/membership/all-time.9073d6c4bba312ebc2d5325dba5a3e94b6d481e8524ca8d502d97e32fc8b239b.json",
-          "architecture-v1/releases/catalog.b660bb91aef3767e1aabc8058dcbbd2e0f80404f4cea34ca997fc274ccc33292.json",
+          "architecture-v1/releases/catalog.520a2b28335233b9fa5f50bfa2743e688a922cd2e7c6514a3ecc637e2903b1bf.json",
           "architecture-v1/search/2026-07.7a0408436435d3de8170ca3849bd25733033ded3816417a59230fe276f757154.json",
           "architecture-v1/search/2026-08.c251b200c626fce6edabf956776d8127c69aefbf55f0a9e563115f4792bb09ee.json",
           "architecture-v1/search/2026-09.07afaf7b5529a0a47ffd09914407cbc8b6c8c09448cd742e9ab1843208984b6b.json",
@@ -2901,14 +2901,14 @@
           "architecture-v1/shards/2026-09.c9ae5436af7186d02efceb74cd65dd11f353386b6870a38ce9e20b75604c01a9.json",
           "architecture-v1/shards/2026-10.6dcf357e0e1baff7318e8f44fe30fd1ff4273b60e36161ff465cc3479cd11061.json",
           "architecture-v1/shards/undated.fb79c7650bb1d4ecfbc80c5c07c042f70e8754909108316f06b58f9eab79726f.json",
-          "architecture-v1/title-presentation.a6a6c67961e46edcee5a87fa207119250e595983bb7d7fef061f886eb8ac049d.json",
-          "architecture-v1/work/preview.d1dd473b797cbaf7a05879e7ce00ff7278e2c96faf5e98d6502d4e9afef4166b.json"
+          "architecture-v1/title-presentation.022a6c1d84d2549312750a8e9e8de66b1dc4fe818346536d9a5261ebcf455ac7.json",
+          "architecture-v1/work/preview.989f943e789f03291ca1914f1ee59a68731ae23bc1d82ccb710c300e2f9fb1ff.json"
         ],
         "attempts": 1
       },
       {
         "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
-        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=38055865387-1791639905172",
+        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=38056483318-1791640648510",
         "filesVerified": [
           "papers.gz.b64",
           "total-synthesis.json",
@@ -2925,9 +2925,9 @@
         "architectureFilesVerified": [
           "architecture-v1/acquisition-basis.edac4736f3699f3024d55b9ea5466e450d1c9a96b8ef6d72377d560f4dc673dd.json",
           "architecture-v1/current.json",
-          "architecture-v1/hot-fallback.6f3b8422de254c57fb17701215c9ae5b6d02d578e00fba2e852cbd902978c16d.json",
-          "architecture-v1/hot-head.19af641ce64a1b1e4d3bdeea50e4dbedbab6d125acf85ccbbd3bd682c9d51c3c.json",
-          "architecture-v1/lifecycle/snapshot.d4a852498b9684c749294377b153808efcf58c1c7c7a81e68755c333109ba494.json",
+          "architecture-v1/hot-fallback.faad862beeb9063c1916e465b3e02b490bae5cbc851f730c00f182bc989f0611.json",
+          "architecture-v1/hot-head.bb857245348506e55a7a75d47b8fd150b2fabea7b90abff5cce573502bad314d.json",
+          "architecture-v1/lifecycle/snapshot.b41bed0a3688d8825b4a02fe97bb87cb053c2c37bce094c49f6d72ccab2e8248.json",
           "architecture-v1/locator/0.8f1e39fb160542de3c557678277e3dec23349174e1a27a774d8fe13038027ddc.json",
           "architecture-v1/locator/1.0cc24e70dc4f4db08ae56e9a8f0c6da3f60c84f786c5a3e021be50b3982cfbd7.json",
           "architecture-v1/locator/2.8d5390210495975e6885398ae4b1c2df51547ab8374ab742e217a045adb42ab7.json",
@@ -2944,9 +2944,9 @@
           "architecture-v1/locator/d.ac52c373075d96963d554d28c24d5f595905738431fb90decc9b9cdd40a7a0b1.json",
           "architecture-v1/locator/e.c4e0b803ae1837e1847f5ad5f882e371bc0729b0f85f001cf9c0717dfc68e17f.json",
           "architecture-v1/locator/f.7988eafba2ab609586af7d9a6fffd7c9e1be8e742736bcdf9d602019056de9eb.json",
-          "architecture-v1/membership.3a7e08edb7c241d7310df3d9701cdd345ea145e5f32dda18b49bc9620ff8bbfc.json",
+          "architecture-v1/membership.7e23fb209a30c6efd3cb49c6064899ae9fbcee775e2dfc506cc465ada52ced87.json",
           "architecture-v1/membership/all-time.9073d6c4bba312ebc2d5325dba5a3e94b6d481e8524ca8d502d97e32fc8b239b.json",
-          "architecture-v1/releases/catalog.b660bb91aef3767e1aabc8058dcbbd2e0f80404f4cea34ca997fc274ccc33292.json",
+          "architecture-v1/releases/catalog.520a2b28335233b9fa5f50bfa2743e688a922cd2e7c6514a3ecc637e2903b1bf.json",
           "architecture-v1/search/2026-07.7a0408436435d3de8170ca3849bd25733033ded3816417a59230fe276f757154.json",
           "architecture-v1/search/2026-08.c251b200c626fce6edabf956776d8127c69aefbf55f0a9e563115f4792bb09ee.json",
           "architecture-v1/search/2026-09.07afaf7b5529a0a47ffd09914407cbc8b6c8c09448cd742e9ab1843208984b6b.json",
@@ -2959,13 +2959,13 @@
           "architecture-v1/shards/2026-09.c9ae5436af7186d02efceb74cd65dd11f353386b6870a38ce9e20b75604c01a9.json",
           "architecture-v1/shards/2026-10.6dcf357e0e1baff7318e8f44fe30fd1ff4273b60e36161ff465cc3479cd11061.json",
           "architecture-v1/shards/undated.fb79c7650bb1d4ecfbc80c5c07c042f70e8754909108316f06b58f9eab79726f.json",
-          "architecture-v1/title-presentation.a6a6c67961e46edcee5a87fa207119250e595983bb7d7fef061f886eb8ac049d.json",
-          "architecture-v1/work/preview.d1dd473b797cbaf7a05879e7ce00ff7278e2c96faf5e98d6502d4e9afef4166b.json"
+          "architecture-v1/title-presentation.022a6c1d84d2549312750a8e9e8de66b1dc4fe818346536d9a5261ebcf455ac7.json",
+          "architecture-v1/work/preview.989f943e789f03291ca1914f1ee59a68731ae23bc1d82ccb710c300e2f9fb1ff.json"
         ],
         "attempts": 1
       }
     ],
-    "verifiedAt": "2026-10-10T13:45:05.714Z",
+    "verifiedAt": "2026-10-10T13:57:29.234Z",
     "status": "success-live-verified"
   },
   "lastPrepublishReview": {
