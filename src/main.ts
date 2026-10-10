@@ -6,6 +6,8 @@ import { mountUserShell } from './user-shell';
 import { beijingDate, earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
 import { compareDailyGalleryCards } from '../shared/daily-gallery-order.mjs';
+import { isHistoricalBackfill, paperMediaPolicy } from '../shared/historical-literature-policy.js';
+import { verifiedHistoricalTitle } from '../shared/verified-historical-title-repairs.js';
 import { correctedPublisherDateForDisplay } from '../shared/publisher-date-display-fix.mjs';
 import { RESULT_WINDOW_SIZE as DESKTOP_RESULT_WINDOW_SIZE, MOBILE_RESULT_WINDOW_SIZE, resultPaginationItems, resultWindowState } from '../shared/result-window.js';
 import { store } from './user-ui/shared';
@@ -25,6 +27,8 @@ interface Paper {
   url: string | null;
   new: boolean;
   addedDate?: string;
+  ingestionChannel?: 'historical_backfill' | 'normal';
+  mediaPolicy?: 'toc_only' | 'metadata_only' | 'standard';
   dateUnverified?: boolean;
   authors: string[];
   synthesisType?: 'total' | 'formal';
@@ -514,11 +518,14 @@ function pendingTitle(value: string | null | undefined): boolean {
 }
 
 function normalizePaper(paper: Paper): Paper {
+  const canonicalDoi = normalizeDoi(paper.doi);
+  const verifiedRepair = pendingTitle(paper.title) ? verifiedHistoricalTitle(canonicalDoi) : null;
   const normalized: Paper = {
     ...paper,
     journal: canonicalJournal(paper.journal),
-    title: pendingTitle(paper.title) ? null : paper.title?.trim() || null,
-    doi: normalizeDoi(paper.doi),
+    title: pendingTitle(paper.title) ? verifiedRepair : paper.title?.trim() || null,
+    doi: canonicalDoi,
+    ingestionChannel: paper.ingestionChannel === 'historical_backfill' ? 'historical_backfill' : undefined,
     addedDate: validAddedDate(paper.addedDate) || undefined,
     authors: Array.isArray(paper.authors)
       ? paper.authors.filter((author): author is string => typeof author === 'string').map(author => author.trim()).filter(Boolean)
@@ -600,7 +607,7 @@ function visibleTitle(paper: Paper): string {
 }
 
 function isNewToday(paper: Paper): boolean {
-  return isNewTodayDate(paper.addedDate);
+  return !isHistoricalBackfill(paper) && isNewTodayDate(paper.addedDate);
 }
 
 function scheduleNewnessBoundary(): void {
@@ -816,26 +823,28 @@ function renderCards(): void {
     const isEditionPaper = Boolean(doiKey && editionSet.has(doiKey));
     const isFeaturedPaper = Boolean(doiKey && featuredDoi && doiKey === featuredDoi);
     const editionClass = isFeaturedPaper ? ' edition-featured' : isEditionPaper ? ' edition-highlight' : '';
+    const historicalBackfill = isHistoricalBackfill(paper);
+    const mediaMode = historicalBackfill ? paperMediaPolicy(paper) : 'standard';
     const editionBadge = isFeaturedPaper
       ? `<span class='tag edition-featured'>${language === 'zh' ? '每日精选' : 'Featured'}</span>`
       : isEditionPaper
         ? `<span class='tag edition'>${language === 'zh' ? '本期文献' : 'This edition'}</span>`
         : '';
     const href = doi ? `https://doi.org/${doi}` : (paper.url || '');
-    const pdfHref = doi ? `/pdf/?${new URLSearchParams({ doi, fallback: href })}` : '';
+    const pdfHref = doi && !historicalBackfill ? `/pdf/?${new URLSearchParams({ doi, fallback: href })}` : '';
     const pdfButton = pdfHref
       ? `<a class='private-pdf-button' href='${escapeHtml(pdfHref)}' target='_blank' rel='noopener noreferrer' aria-label='${escapeHtml(`${language === 'zh' ? '查看 PDF' : 'Read PDF'}: ${visibleTitle(paper)}`)}'>PDF</a>`
       : '';
-    const pdfDownloadHref = doi ? `/pdf/?${new URLSearchParams({ doi, fallback: href, mode: 'download' })}` : '';
-    const pdfCompatHref = doi ? `/pdf/?${new URLSearchParams({ doi, fallback: href, compat: '1' })}` : '';
+    const pdfDownloadHref = doi && !historicalBackfill ? `/pdf/?${new URLSearchParams({ doi, fallback: href, mode: 'download' })}` : '';
+    const pdfCompatHref = doi && !historicalBackfill ? `/pdf/?${new URLSearchParams({ doi, fallback: href, compat: '1' })}` : '';
     const pdfMore = pdfHref
       ? `<details class='private-pdf-more'><summary aria-label='${language === 'zh' ? 'PDF 更多操作' : 'More PDF options'}' title='${language === 'zh' ? 'PDF 下载或兼容模式' : 'Download or compatibility mode'}'>⋯</summary><div class='private-pdf-menu'><a class='private-pdf-download-button' href='${escapeHtml(pdfDownloadHref)}' target='_blank' rel='noopener noreferrer'>${language === 'zh' ? '下载 PDF' : 'Download PDF'}</a><a class='private-pdf-compat-button' href='${escapeHtml(pdfCompatHref)}' target='_blank' rel='noopener noreferrer'>${language === 'zh' ? '兼容模式' : 'Compatibility'}</a></div></details>`
       : '';
-    const localPdfHref = doi ? `/pdf-vault/?${new URLSearchParams({ doi })}` : '';
+    const localPdfHref = doi && !historicalBackfill ? `/pdf-vault/?${new URLSearchParams({ doi })}` : '';
     const localPdfButton = localPdfHref
       ? `<a class='local-pdf-button' href='${escapeHtml(localPdfHref)}' target='_blank' rel='noopener noreferrer' aria-label='${escapeHtml(`${language === 'zh' ? '管理本地 PDF' : 'Manage local PDF'}: ${visibleTitle(paper)}`)}'>${language === 'zh' ? '本地 PDF' : 'Local PDF'}</a>`
       : '';
-    return `<article class='card${editionClass}' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(paper.date)}' data-doi='${escapeHtml(doi || '')}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'>${editionBadge}<span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date, paper.dateUnverified === true || paper.date > beijingDate()))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div><div class='card-actions'><button class='share-card' type='button' data-card-share ${doi ? '' : 'disabled'} aria-label='${escapeHtml(`${t('share')}: ${visibleTitle(paper)}`)}'>${escapeHtml(t('share'))}</button>${localPdfButton}${pdfButton}${pdfMore}${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></div></article>`;
+    return `<article class='card${editionClass}${historicalBackfill ? ' historical-backfill-card' : ''}' data-media-policy='${mediaMode}' data-ingestion-channel='${historicalBackfill ? 'historical_backfill' : 'normal'}' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(paper.date)}' data-doi='${escapeHtml(doi || '')}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'>${editionBadge}<span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date, paper.dateUnverified === true || paper.date > beijingDate()))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${mediaMode === 'metadata_only' ? '' : tocMarkup(paper)}${mediaMode === 'standard' ? figureMarkup(paper) : ''}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div><div class='card-actions'><button class='share-card' type='button' data-card-share ${doi ? '' : 'disabled'} aria-label='${escapeHtml(`${t('share')}: ${visibleTitle(paper)}`)}'>${escapeHtml(t('share'))}</button>${localPdfButton}${pdfButton}${pdfMore}${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></div></article>`;
   }).join('') : `<div class='empty'>${escapeHtml(t('noResults'))}</div>`;
   restoreMedia();
   scheduleMediaBatch(0);
@@ -1518,6 +1527,8 @@ function normalizeArchitectureRows(value: unknown): Paper[] {
       url: typeof paper.url === 'string' ? paper.url : null,
       new: paper.new === true,
       addedDate: typeof paper.addedDate === 'string' ? paper.addedDate : undefined,
+      ingestionChannel: paper.ingestionChannel === 'historical_backfill' ? 'historical_backfill' : undefined,
+      mediaPolicy: paper.mediaPolicy === 'toc_only' || paper.mediaPolicy === 'metadata_only' ? paper.mediaPolicy : undefined,
       dateUnverified: paper.dateUnverified === true,
       authors: paper.authors as string[],
       synthesisType: paper.synthesisType === 'formal' || paper.synthesisType === 'total' ? paper.synthesisType : undefined,
