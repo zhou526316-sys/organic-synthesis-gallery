@@ -1,0 +1,444 @@
+{
+  "selectionAuthority": "explicit_user_selection",
+  "editorialRevision": "2026-10-10-r1",
+  "paper": {
+    "doi": "10.1002/anie.3306470",
+    "title": "Cooperative Fe–LMCT and Ni–SH₂ Catalysis for Native Carboxylic Acid Methyl Editing",
+    "journal": "Angew",
+    "authors": "Mohammad Jaber, Mikaël Le Roch, Gaël Tran, Abderrahmane Amgoune",
+    "publicationDate": "2026-10-09"
+  },
+  "headline": "铁–LMCT/镍–SH₂协同催化游离羧酸直接甲基编辑",
+  "kicker": "今日精选｜Angew.",
+  "lead_figure_id": "f02",
+  "lead_figure_position": "after_first_quick_point",
+  "quick_points": [
+    {
+      "label": "30 秒看懂反应",
+      "text": "游离羧酸直接脱羧，原羧基连接位置被一个甲基取代。Fe–LMCT 生成烷基自由基，Ni–SH₂ 负责甲基与烷基自由基的交叉选择性。"
+    },
+    {
+      "label": "关键不只是两个催化剂",
+      "text": "异丙苯过氧化氢 CHP 同时促进铁循环、提供甲基自由基并帮助形成铁羧酸盐，把两条反应路线耦合在一起。"
+    },
+    {
+      "label": "真正值得关注的证据",
+      "text": "三级、二级、一级羧酸及 CD₃ 编辑均被展示；DMSO 也能成为甲基自由基的来源，CV 与光谱支持铁循环，但不能独立确定全部镍中间体。"
+    }
+  ],
+  "sections": [
+    {
+      "heading": "1｜为什么“羧酸换甲基”并不只是脱羧反应？",
+      "paragraphs": [
+        "在药物化学中，末端多装一个甲基，往往就能改变分子构象、疏水性或结合方式。常见思路是寻找可以发生 C–H 甲基化的位置，但位点选择性受键解离能、邻近杂原子和空间环境影响。若复杂分子已有一个明确的游离羧基，能否把它当成“定位手柄”，将 –CO₂H 所在的位置直接换成 –CH₃，而不必先把酸制成活化酯、烷基卤化物或其他预官能化衍生物？这是本文问题的起点。",
+        "原文 Scheme 1A 把三类路线并排：C–H 甲基化可以直接，却受 C–H 位点反应性支配；传统官能团置换可以准确选择位置，但常依赖卤素、活化醇或活化羧酸；本工作则把游离羧酸直接用于脱羧甲基编辑。这里所谓“原生”或“天然”羧酸，是指未预先衍生化的游离羧酸，而非“来自天然产物的羧酸”。",
+        "这也决定了评价标准：一方面要从羧酸高效产生烷基自由基，另一方面要避免自由基落入还原、氯化、质子化、二聚或其他副反应通道，并且不能顺手去甲基化药物骨架中那些更容易发生氢原子转移的 C–H 位点。作者选择让自由羧酸负责定位，而把交叉选择性的任务交给镍催化。"
+      ],
+      "figures": [
+        "f01"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "f01"
+        ]
+      }
+    },
+    {
+      "heading": "2｜双催化设计：两个自由基需要不同的处理方式",
+      "paragraphs": [
+        "铁–LMCT 路线已有较成熟的羧酸自由基化基础：羧酸与 Fe(III) 形成可发生配体到金属电荷转移的络合物，光激发后 Fe–O₂CR 键发生均裂，羧酸根脱去 CO₂，形成碳中心自由基，同时 Fe(III) 被还原为 Fe(II)。从这里到甲基化产物，还隔着一道不小的选择性障碍：另一个自由基——甲基自由基——也极容易发生非目标反应。",
+        "Ni–SH₂ 的任务不是再制造一个普通的还原性环境，而是“分流”两类碳自由基。按作者提出的模型，配位镍物种对体积较小的 Me• 有偏好的捕获能力；形成甲基镍中间体后，较大的 R• 通过双分子均裂取代（SH₂）形成 R–Me 键，从而避免两个自由基在溶液中无序组合。前文原文 Scheme 1B 的左右两侧分别对应 Fe–LMCT 与 Ni–SH₂，中央则给出了把两者连接起来的过氧化物。",
+        "这项设计最需要防止的误读是“只要同时生成两种自由基，就能交叉偶联”。产率和选择性并不只取决于自由基能否产生，还取决于它们各自的生成速率、寿命、镍物种浓度及竞争捕获过程是否匹配。单靠 Fe–LMCT 或单靠 Ni–SH₂ 都不能回答这道协同匹配的问题。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    },
+    {
+      "heading": "3｜异丙苯过氧化氢：同一试剂承担三项任务",
+      "paragraphs": [
+        "作者没有把氧化剂与甲基自由基前体分开添加，而选用异丙苯过氧化氢（cumyl hydroperoxide，CHP）。根据 Scheme 1B 提出的路径，CHP 与 Fe(II) 发生类似 Fenton 的反应，帮助将其重新氧化为 Fe(III)；反应中形成的枯基氧自由基（cumyloxy radical）经 β-甲基裂解生成 Me•；过氧化物转化中产生的碱性物种又有利于羧酸脱质子并与铁结合，补足 Fe–羧酸盐形成这一环。",
+        "因此它既不是“普通氧化剂”，也不是单纯替换一种甲基自由基供体。一个试剂把铁催化循环、甲基自由基供应和底物的原位配位活化耦合在了一起，减少了彼此矛盾的额外试剂要求。Fe–LMCT 与 Ni–SH₂ 的协同关系首先体现在这里：两个催化循环共享同一个可以维持物质流和电子流的试剂节点。",
+        "不过这里仍需留出证据边界：氢氧化铁(III)等物种的写法、甲基捕获的相对速率以及具体镍中间体主要来源于提出的机理与相关先例，不能把整套示意循环都等同于逐一观察到的实验事实。后文的控制实验和光谱、电化学证据，才是评价这一设计合理性的依据。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    },
+    {
+      "heading": "4｜条件优化：提高收率与提高交叉选择性并非同一件事",
+      "paragraphs": [
+        "以 N-Cbz 保护的哌啶羧酸为模型，作者在 395 nm 光照下将其与 CHP 反应，得到对应脱羧甲基化产物。最终用于底物范围的条件为 Fe(OAc)₂（10 mol%）、Ni(acac)₂（15 mol%）与三吡唑基硼酸钾配体 KTp*（22.5 mol%），DMSO 为溶剂，CHP 用量 1.5 当量。原文 Scheme 2 顶部准确列出了起始羧酸、主产物 3 以及质子化或卤素/乙酸根捕获等竞争副产物 4–6。",
+        "原文 Scheme 2A 中，FeCl₃ 初筛给出 51% 的产物收率，而 Fe(OAc)₂ 提高到 70%，且主产物对主要副产物的比例为 89:11；CeCl₃ 仅给出 18%。由此可见不同 LMCT 金属盐在这套具有过氧化物的网络中并不能简单互换。这里的 70% 是筛选所用的 GC–MS 收率，底物范围图中化合物 3 的分离收率为 66%，两者不能混写。",
+        "原文 Scheme 2B 更直观地暴露了镍配体的影响。Ni(acac)₂/KTp* 给出 70% 收率和较好的交叉选择性；Ni(OAc)₂·4H₂O/KTp* 的测得收率可达 83%，但副产物增加、分离变难；把较拥挤的 KTp* 换成 KTp，产率降至 50%。与其说作者找到了“最高产率条件”，不如说是对产率、交叉选择性和产物分离可行性进行折中。",
+        "控制实验同样重要。无铁、无镍、无光或无 CHP 时，产物只在 0–5% 范围内；外加 K₃PO₄ 反而使效率降到 44%。用叔丁基过氧化氢、二叔丁基过氧化物或过氧化二枯基替代 CHP，均显著降低收率。上述结果支持双催化体系及 CHP 的特定匹配关系，但不能仅凭“缺一不可”就证明全部拟议中间体的结构。",
+        "补充信息 SI Table S1 进一步给出了 3、4、5、6 的相对比例。特别值得注意的是，同样叫“收率提高”，有时只是某一产物的 GC–MS 定量增加；对自由基交叉偶联，必须把副产物通道与分离收率一起比较，才知道条件究竟改善了什么。"
+      ],
+      "figures": [
+        "f03",
+        "f04",
+        "f05",
+        "f06",
+        "f13"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "f03"
+        ],
+        "2": [
+          "f04"
+        ],
+        "3": [
+          "f05"
+        ],
+        "4": [
+          "f06"
+        ],
+        "5": [
+          "f13"
+        ]
+      }
+    },
+    {
+      "heading": "5｜三级羧酸：在拥挤的季碳中心实现甲基引入",
+      "paragraphs": [
+        "原文 Scheme 3A 首先展示三级羧酸的脱羧甲基化。这类底物形成的三级自由基往往较为稳定，但目标产物需要构建拥挤的 C(sp³)–C(sp³) 键。模型 3 的分离收率为 66%，多种环状或芳基取代的三级羧酸也能得到对应甲基化产物。",
+        "这里的合成价值不是把“脱羧”本身变成反应终点，而是直接在原先羧基所在的碳上形成新的甲基取代结构。例如吉非贝齐衍生物 11 的分离收率为 73%，苯扎贝特衍生物 12 为 74%，展示了复杂分子末端骨架重塑的可操作性。",
+        "从选择性看，作者强调对易发生氢原子转移的苄位及杂原子邻位 C–H 未观察到过度甲基化。这个观察支撑了“用羧酸定义反应位点”与“直接在分子上找 C–H 位点”这两条策略的互补性，但不意味着所有可能被 HAT 的位点都已逐一证明完全惰性。"
+      ],
+      "figures": [
+        "f07"
+      ],
+      "figures_after_paragraph": {
+        "3": [
+          "f07"
+        ]
+      }
+    },
+    {
+      "heading": "6｜二级羧酸：从简单骨架走向药物样分子",
+      "paragraphs": [
+        "二级羧酸部分对应原文 Scheme 3B。作者不仅考察了环状和链状底物，还引入苄位、α-杂原子位、受保护胺及其他多种容易发生竞争反应的结构。比如萘普生骨架衍生物 15 可达 83% 分离收率，Z-Ser(Bzl)-OH 衍生物 19 得到 52%，这些例子展示了不同自由基电子性质和官能团共存时仍能形成目标键。",
+        "这一组更能体现方法学的选择性价值。Ketorolac、Ambrisentan 与 Zaltoprofen 衍生物分别给出 46%、84% 和 63% 收率。它们并不都处于高收率区间，但反应能够面对富杂原子、拥挤、芳杂环或含硫骨架，说明体系不完全依赖简单烃基自由基。",
+        "读这类底物范围时应避免两个常见混淆：可得到可分离的目标产物，不等于该底物没有任何竞争过程；在某一原料中保留了敏感官能团，也不等于这类官能团普遍具有相同耐受性。具体收率、纯化与对映/非对映信息仍应以图注和 SI 为准。"
+      ],
+      "figures": [
+        "f08"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "f08"
+        ]
+      }
+    },
+    {
+      "heading": "7｜一级羧酸：自由基更难被选择性引导",
+      "paragraphs": [
+        "一级羧酸是这篇文章范围拓展中较有说服力的一部分，见原文 Scheme 3C。与二级或三级烷基自由基相比，部分一级烷基自由基更容易参与非目标途径，且与甲基自由基选择性交叉更具挑战。作者报告一级底物对应的烷基自由基二聚副产物仅检测到少量（GC–MS 收率低于 5%），与这套镍介导自由基分流设计相一致。",
+        "从结果看，简单芳烷基体系 23 为 51%，保留芳基碘的 24 为 71%，邻位双氯取代的 28 为 88%，α,α-二氟底物 29 为 54%，含噻唑或吲哚等杂芳环的底物也能反应。酯、氰基和 BPin 等基团并未在所有例子中被破坏，为后续化学衍生化保留了操作空间。",
+        "真正具有辨识度的是天然产物与糖衍生物：石胆酸衍生物 36 得到 45%，D-半乳吡喃糖衍生物 37 得到 63%，作者报告复杂手性骨架未发生差向异构化。不过 45% 或 38% 这样的分离收率也同时说明，能够覆盖不同一级自由基不等于对每个复杂底物都已有理想效率。"
+      ],
+      "figures": [
+        "f09"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "f09"
+        ]
+      }
+    },
+    {
+      "heading": "8｜三氘甲基的实验，反而暴露了一个隐藏的甲基来源",
+      "paragraphs": [
+        "用六氘代异丙苯过氧化氢 2-d₆ 代替普通 CHP，理论上可把供给的甲基自由基变成 CD₃•。Scheme 3D 显示这种同位素编辑可以沿用同一催化框架，生成多个 CD₃ 标记产物，其中 18-d₃ 在 DMSO-d₆ 中达到 64% 分离收率和完全的 CD₃ 引入。",
+        "困难出现在普通 DMSO 中：初期实验观察到 CH₃/CD₃ 约为 15:85。原文把这个比例进一步追踪到溶剂参与的副途径；SI Table S2 系统比较了铁盐和溶剂，改用 DMSO-d₆ 后可消除非氘代甲基混入，并得到定量的 CD₃ 引入。这里“100% CD₃”说的是标记比例，不能误写成“100% 化学收率”。",
+        "作者提出的解释是：Fenton 型条件产生的羟基自由基可能与 DMSO 反应，形成可裂解的中间体，并额外释放甲基自由基，见 SI Fig. S2。这意味着常被认为是溶剂的 DMSO，在强氧化性自由基体系中也可能成为反应物；仅根据主试剂的同位素组成推断自由基来源并不充分。",
+        "为检验这条竞争途径，作者在 DMSO-d₆ 中用 H₂O₂ 取代 CHP 进行对照（SI Fig. S3），仍检测到 18% GC–MS 收率的三氘甲基化产物。结合 DMSO-d₆ 切换实验，这些结果为“溶剂提供一部分甲基自由基”提供了有力支持，但具体羟基自由基加成与裂解步骤仍属于提出的机理路径。"
+      ],
+      "figures": [
+        "f10",
+        "f14",
+        "f15",
+        "f16"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "f10"
+        ],
+        "2": [
+          "f14"
+        ],
+        "3": [
+          "f15"
+        ],
+        "4": [
+          "f16"
+        ]
+      }
+    },
+    {
+      "heading": "9｜CV 与反应检测：能证明催化网络的哪些环节？",
+      "paragraphs": [
+        "原文 Scheme 4A 针对铁体系开展 CV 测试：Fe(OAc)₂ 在 MeCN 中呈现较弱、不可逆的还原响应；加入羧酸后曲线变化，说明铁周围的配位环境可能改变；继续加入 CHP 出现更强的阴极响应，与 Fe(II) 被氧化生成含 Fe(III) 物种的解释相符。随后的 390 nm 光照使该信号减弱，支持照射条件下 Fe(III) 物种发生光还原。",
+        "必须强调作者自己的谨慎限定：初始溶液中铁物种比例复杂，CV 中的还原波并没有被逐一分配给确定结构的 Fe(III)/Fe(II) 分子对。反应前后不同价态铁物种浓度未必可比，因此峰电流不能被简单当作可直接相除的“催化周转速度”。CV 最强的证据是体系内的氧化还原行为随羧酸、CHP 和光照连续变化，而不是单独确证了某个可分离的高价铁结构。",
+        "补充材料 SI Fig. S11 的 GC–MS 对照在光照前检测到过氧化物分解相关产物，光照后出现原酸脱羧产物、二聚与乙腈捕获相关信号；SI Fig. S12 的 UV–Vis 光谱也显示 Fe/羧酸/CHP 混合物受光照后的吸收变化。这两类证据与 CV 相互补充，支持铁羧酸盐的光致自由基生成过程，但单独任何一张谱图都不能确定所有可能的铁配位形式。",
+        "原文 Scheme 4B 据此提出 Fe(II) 经 CHP 氧化、生成 Fe(III) 羧酸盐，光激发后释放烷基自由基并返回 Fe(II)；并联的枯基氧自由基裂解释放 Me•，后者先与镍位点作用，再与 R• 发生 SH₂ 反应形成 R–Me。这里涉及镍中间体的具体结构和捕获先后，主要借助与此前镍–SH₂ 文献相符的反应模型推断，不等于本文已经独立分离或原位表征了全部镍价态。",
+        "对这类多催化循环最合理的证据分层是：有/无催化组分对照说明体系依赖性；同位素和副产物支持自由基来源；CV、UV–Vis 支持铁物种响应；完整 Fe/Ni 运行路径则是与这些现象相符的机理解释。区分“看到了什么”和“怎样解释”并不会削弱文章的价值，反而让协同催化的设计贡献更清楚。"
+      ],
+      "figures": [
+        "f11",
+        "f17",
+        "f18",
+        "f12"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "f11"
+        ],
+        "3": [
+          "f17",
+          "f18"
+        ],
+        "4": [
+          "f12"
+        ]
+      }
+    },
+    {
+      "heading": "10｜合成价值、实际代价，以及下一步值得追问的问题",
+      "paragraphs": [
+        "这套方法最鲜明的意义，是把原来常需要先做成活化酯或卤代烷烃的羧酸位点，转变成能直接参与甲基替换的合成手柄，并跨越一级、二级和三级羧酸几类自由基。与普遍从 C–H 键出发的甲基化相比，它把位点选择性提前交给可辨认的官能团；与简单自由基混合相比，又用 Ni–SH₂ 为两种不同自由基安排了反应顺序。",
+        "与此同时，应用边界应同样准确表达。文章主要在 0.2 mmol 规模、无水除氧条件、395 nm 光照下考察；镍催化剂 15 mol% 与 KTp* 配体 22.5 mol% 的用量不低，CHP 用量 1.5 当量。部分含硝基芳环底物生成复杂混合物，孤立烯烃底物虽然发生甲基化却难以获得纯品；进一步扩展为非甲基烷基化时，SI §3.3 中的对照出现明显选择性和收率损失。因此暂不能把“具有通用设计启发”直接等同于“已建立任意自由基组合都适用的工业合成平台”。",
+        "如果把本文放进更广的自由基交叉偶联研究中，它留下的更有意思的问题不是还能换多少个羧酸，而是能否让一种添加剂同时控制多个催化循环的关键节点，并通过催化剂结构对生成速度不一的自由基进行动力学分流。未来若能以定量动力学、原位光谱或对镍中间体的直接检测进一步划分支路贡献，这套协同策略的可预测性还会更强。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    }
+  ],
+  "figures": [
+    {
+      "id": "f01",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme1a_context.png",
+      "caption": "原文 Scheme 1A｜常见 C–H 甲基化、先活化官能团置换，与游离羧酸直接编辑的策略比较。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Scheme 1A",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "exact_source_original_pdf_clip",
+      "source_file": "Angew PDF"
+    },
+    {
+      "id": "f02",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme1b_design.png",
+      "caption": "原文 Scheme 1B｜Fe–LMCT 与 Ni–SH₂ 双循环的协同设计；CHP 的三重角色属于作者提出的反应模型。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Scheme 1B",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "exact_source_original_pdf_clip",
+      "source_file": "Angew PDF"
+    },
+    {
+      "id": "f03",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme2_standard.png",
+      "caption": "原文 Scheme 2（反应总览）｜模型羧酸 1、CHP 2 与产物 3，及主要竞争产物 4–6。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Scheme 2",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "exact_source_original_pdf_clip",
+      "source_file": "Angew PDF"
+    },
+    {
+      "id": "f04",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme2a_iron.png",
+      "caption": "原文 Scheme 2A｜铁/铈催化剂筛选。Fe(OAc)₂ 的 70% 为 GC–MS 收率，勿与 66% 分离收率混淆。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Scheme 2A",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "exact_source_original_pdf_clip",
+      "source_file": "Angew PDF"
+    },
+    {
+      "id": "f05",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme2b_nickel.png",
+      "caption": "原文 Scheme 2B｜Ni(acac)₂/KTp*、Ni(OAc)₂·4H₂O 与配体位阻对效率、交叉选择性的影响。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Scheme 2B",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "exact_source_original_pdf_clip",
+      "source_file": "Angew PDF"
+    },
+    {
+      "id": "f06",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme2c_controls.png",
+      "caption": "原文 Scheme 2C｜缺少铁、镍、光或 CHP 及不同过氧化物对照，支持催化网络的组分依赖。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Scheme 2C",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "exact_source_original_pdf_clip",
+      "source_file": "Angew PDF"
+    },
+    {
+      "id": "f07",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme3a_tertiary.png",
+      "caption": "原文 Scheme 3A｜三级羧酸范围和季碳中心构建，包括吉非贝齐、苯扎贝特衍生物。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Scheme 3A",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "exact_source_original_pdf_clip",
+      "source_file": "Angew PDF"
+    },
+    {
+      "id": "f08",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme3b_secondary.png",
+      "caption": "原文 Scheme 3B｜二级羧酸、药物样片段及富杂原子底物。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Scheme 3B",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "exact_source_original_pdf_clip",
+      "source_file": "Angew PDF"
+    },
+    {
+      "id": "f09",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme3c_primary.png",
+      "caption": "原文 Scheme 3C｜一级羧酸及复杂官能团范围；石胆酸/糖衍生物是有效但收率不均的例子。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Scheme 3C",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "exact_source_original_pdf_clip",
+      "source_file": "Angew PDF"
+    },
+    {
+      "id": "f10",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme3d_isotopes.png",
+      "caption": "原文 Scheme 3D｜CH₃/CD₃ 切换，DMSO-d₆ 可抑制未标记甲基的竞争来源。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Scheme 3D",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "exact_source_original_pdf_clip",
+      "source_file": "Angew PDF"
+    },
+    {
+      "id": "f11",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme4a_cv.png",
+      "caption": "原文 Scheme 4A｜羧酸、CHP 和光照改变铁体系 CV 的响应；峰不可直接定性为单一铁物种。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Scheme 4A",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "exact_source_original_pdf_clip",
+      "source_file": "Angew PDF"
+    },
+    {
+      "id": "f12",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme4b_cycle.png",
+      "caption": "原文 Scheme 4B｜作者提出的 Fe–LMCT/Ni–SH₂ 协同机理，并非全部中间体已直接观察。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "Scheme 4B",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "exact_source_original_pdf_clip",
+      "source_file": "Angew PDF"
+    },
+    {
+      "id": "f13",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/si_table_s1.png",
+      "caption": "补充信息 SI Table S1｜更加完整的筛选收率、反应副产物比例与催化剂筛选结果。",
+      "body": true,
+      "display_width_pct": 92,
+      "source_figure": "SI Table S1",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "unaltered_source_OOXML_embedded_figure_raster",
+      "source_file": "Angew SI DOCX"
+    },
+    {
+      "id": "f14",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/si_table_s2.png",
+      "caption": "补充信息 SI Table S2｜甲基同位素标记与溶剂对照，区分收率和标记比例。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "SI Table S2",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "unaltered_source_OOXML_embedded_figure_raster",
+      "source_file": "Angew SI DOCX"
+    },
+    {
+      "id": "f15",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/si_fig_s2.png",
+      "caption": "补充信息 SI Fig. S2｜作者提出的 DMSO 参与甲基自由基生成的竞争路径。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "SI Fig. S2",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "unaltered_source_OOXML_embedded_figure_raster",
+      "source_file": "Angew SI DOCX"
+    },
+    {
+      "id": "f16",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/si_fig_s3.png",
+      "caption": "补充信息 SI Fig. S3｜DMSO-d₆/H₂O₂ 对照中仍检出 CD₃ 产物，支持溶剂参与。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "SI Fig. S3",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "unaltered_source_OOXML_embedded_figure_raster",
+      "source_file": "Angew SI DOCX"
+    },
+    {
+      "id": "f17",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/si_fig_s11.png",
+      "caption": "补充信息 SI Fig. S11｜光照前后 GC–MS 对照，用于识别光致脱羧及过氧化物分解相关物质。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "SI Fig. S11",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "unaltered_source_OOXML_embedded_figure_raster",
+      "source_file": "Angew SI DOCX"
+    },
+    {
+      "id": "f18",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/si_fig_s12.png",
+      "caption": "补充信息 SI Fig. S12｜Fe(OAc)₂/羧酸/CHP 混合物受 390 nm 光照前后的紫外–可见吸收变化。",
+      "body": true,
+      "display_width_pct": 100,
+      "source_figure": "SI Fig. S12",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "unaltered_source_OOXML_embedded_figure_raster",
+      "source_file": "Angew SI DOCX"
+    },
+    {
+      "id": "fcover",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/anie3306470-toc-source-authentic-title-safe.png",
+      "caption": "",
+      "body": false,
+      "source_figure": "Scheme 1B",
+      "source_doi": "10.1002/anie.3306470",
+      "source_kind": "exact_source_scheme1b_on_native_title_safe_background",
+      "source_adjustment": "Original Scheme 1B complete 3x PDF crop, RGB resampled as intact image to 780x409, placed at x550 y45 on white upper field; deep navy title safe region begins y494; zero molecular redrawing or image-baked heading."
+    }
+  ],
+  "cover": {
+    "source_figure_id": "fcover",
+    "canvas": {
+      "width": 1880,
+      "height": 800,
+      "background": "#FFFFFF"
+    },
+    "crop_235_1": "0_0_1_1",
+    "crop_1_1": "0.287234_0_0.712766_1",
+    "description": "Wide WeChat main-card image with native article title area, source-authentic Scheme 1B scaled to maximum safe size inside center 1:1 crop; no embedded headline."
+  },
+  "takehome_heading": "实验结果支持什么，尚未回答什么？",
+  "takehome": [
+    "文章建立了 Fe–LMCT 与 Ni–SH₂ 协同实现羧酸脱羧甲基编辑的合成框架，使用游离羧酸作位点手柄。",
+    "CHP 三重作用由对照、同位素及铁物种实验共同支持；具体镍–SH₂ 中间体仍以作者的模型及既有文献为依据。",
+    "一级底物、药物样骨架与 CD₃ 标记展示实用方向；较高催化剂/配体用量、过氧化物、安全性和底物失效范围仍需权衡。"
+  ],
+  "ai_notice": "根据 Angew. Chem. Int. Ed. 论文正文及作者提供的 Supplementary Information 撰写；所有分子结构、反应图、光谱和数据图均从原稿裁取或嵌入原图，无生成式化学结构重绘。"
+}

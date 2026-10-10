@@ -1,0 +1,113 @@
+# 10 月 10 日独立图片审阅 · 2026-10-10-r1
+所有正文图来自原始 Angew PDF 或 SI DOCX 中嵌入的原图；封面图源为主文 Scheme 1B，零分子重绘。
+第二篇唯一视觉修改：将方形概念封面下方「邱友爱」改为「仇友爱」，主图及 31 张正文原图不变。
+
+- f01 | 1｜为什么“羧酸换甲基”并不只是脱羧反应？ / 段落2
+  - 原文：Scheme 1A / Angew PDF
+  - 原文 Scheme 1A｜常见 C–H 甲基化、先活化官能团置换，与游离羧酸直接编辑的策略比较。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme1a_context.png / 1476×609 / SHA256 a1efe3136f139250730620dad72d321eec01c63707cf59a3c613c78b0cd9e5a9
+- f02 | 开篇速览首图
+  - 原文：Scheme 1B / Angew PDF
+  - 原文 Scheme 1B｜Fe–LMCT 与 Ni–SH₂ 双循环的协同设计；CHP 的三重角色属于作者提出的反应模型。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme1b_design.png / 1389×729 / SHA256 7ac123f09ec4f508cb071516cb8e6497618890c6949a5192bcdca22cdea4995f
+- f03 | 4｜条件优化：提高收率与提高交叉选择性并非同一件事 / 段落1
+  - 原文：Scheme 2 / Angew PDF
+  - 原文 Scheme 2（反应总览）｜模型羧酸 1、CHP 2 与产物 3，及主要竞争产物 4–6。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme2_standard.png / 699×186 / SHA256 54f8a5612062a0f77ddb3f8cba3517521373ca7fab790a37eba69440d51c4daa
+- f04 | 4｜条件优化：提高收率与提高交叉选择性并非同一件事 / 段落2
+  - 原文：Scheme 2A / Angew PDF
+  - 原文 Scheme 2A｜铁/铈催化剂筛选。Fe(OAc)₂ 的 70% 为 GC–MS 收率，勿与 66% 分离收率混淆。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme2a_iron.png / 702×264 / SHA256 5443b3e21236b1da34d612b6f3e0255d283e7ee48d0dc27d564710f9e6b9dc26
+- f05 | 4｜条件优化：提高收率与提高交叉选择性并非同一件事 / 段落3
+  - 原文：Scheme 2B / Angew PDF
+  - 原文 Scheme 2B｜Ni(acac)₂/KTp*、Ni(OAc)₂·4H₂O 与配体位阻对效率、交叉选择性的影响。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme2b_nickel.png / 702×531 / SHA256 47201b1402624ad5a12c61bb682848e907e7745786a76f8fcc7e22f5640fc679
+- f06 | 4｜条件优化：提高收率与提高交叉选择性并非同一件事 / 段落4
+  - 原文：Scheme 2C / Angew PDF
+  - 原文 Scheme 2C｜缺少铁、镍、光或 CHP 及不同过氧化物对照，支持催化网络的组分依赖。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme2c_controls.png / 702×348 / SHA256 1ae93df94046f066990be5579714f7dd7484efea093435f76b0324776be1cf7a
+- f07 | 5｜三级羧酸：在拥挤的季碳中心实现甲基引入 / 段落3
+  - 原文：Scheme 3A / Angew PDF
+  - 原文 Scheme 3A｜三级羧酸范围和季碳中心构建，包括吉非贝齐、苯扎贝特衍生物。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme3a_tertiary.png / 720×423 / SHA256 88aed03aa84b8833d7ee3ad07a29ed95e771e0e6942239f0b205d269a4430fa5
+- f08 | 6｜二级羧酸：从简单骨架走向药物样分子 / 段落2
+  - 原文：Scheme 3B / Angew PDF
+  - 原文 Scheme 3B｜二级羧酸、药物样片段及富杂原子底物。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme3b_secondary.png / 720×522 / SHA256 10ed5fd8f8fc22705ba688ec3d59817f0fefee733168d5e9b5e15d6bc6a0d766
+- f09 | 7｜一级羧酸：自由基更难被选择性引导 / 段落2
+  - 原文：Scheme 3C / Angew PDF
+  - 原文 Scheme 3C｜一级羧酸及复杂官能团范围；石胆酸/糖衍生物是有效但收率不均的例子。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme3c_primary.png / 726×957 / SHA256 f9896cd85c3f85cb27128bf1d83326219ff3d02c26b2221756ef41b6a80a3a01
+- f10 | 8｜三氘甲基的实验，反而暴露了一个隐藏的甲基来源 / 段落1
+  - 原文：Scheme 3D / Angew PDF
+  - 原文 Scheme 3D｜CH₃/CD₃ 切换，DMSO-d₆ 可抑制未标记甲基的竞争来源。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme3d_isotopes.png / 1473×369 / SHA256 0f29197835535194576d5036a87d32782fa17c85ca52b2ef9c03be61a58b350a
+- f11 | 9｜CV 与反应检测：能证明催化网络的哪些环节？ / 段落1
+  - 原文：Scheme 4A / Angew PDF
+  - 原文 Scheme 4A｜羧酸、CHP 和光照改变铁体系 CV 的响应；峰不可直接定性为单一铁物种。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme4a_cv.png / 1497×597 / SHA256 46b699d21d51a9708b42f8d0d18c62f2abaf3af13dae36c8113c4222de6a09c6
+- f12 | 9｜CV 与反应检测：能证明催化网络的哪些环节？ / 段落4
+  - 原文：Scheme 4B / Angew PDF
+  - 原文 Scheme 4B｜作者提出的 Fe–LMCT/Ni–SH₂ 协同机理，并非全部中间体已直接观察。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/scheme4b_cycle.png / 1497×519 / SHA256 2087b7bf1c18fa43033f6ce139261a41c59d390459a932804326ddd04b7c3c39
+- f13 | 4｜条件优化：提高收率与提高交叉选择性并非同一件事 / 段落5
+  - 原文：SI Table S1 / Angew SI DOCX
+  - 补充信息 SI Table S1｜更加完整的筛选收率、反应副产物比例与催化剂筛选结果。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/si_table_s1.png / 1550×2437 / SHA256 707eedf1b56abc2d0469db34a51a128e2d1b86c7ce779fa7dde313c77e5c3db1
+- f14 | 8｜三氘甲基的实验，反而暴露了一个隐藏的甲基来源 / 段落2
+  - 原文：SI Table S2 / Angew SI DOCX
+  - 补充信息 SI Table S2｜甲基同位素标记与溶剂对照，区分收率和标记比例。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/si_table_s2.png / 1550×777 / SHA256 bdae212ee8c5e8acbff3c028076396325cd44162b9d481c04483d56bea95000b
+- f15 | 8｜三氘甲基的实验，反而暴露了一个隐藏的甲基来源 / 段落3
+  - 原文：SI Fig. S2 / Angew SI DOCX
+  - 补充信息 SI Fig. S2｜作者提出的 DMSO 参与甲基自由基生成的竞争路径。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/si_fig_s2.png / 1550×243 / SHA256 2af945249e30fffd2c028ff60fc4867b8446faad1d3f64e7ff1f1b08f66e164c
+- f16 | 8｜三氘甲基的实验，反而暴露了一个隐藏的甲基来源 / 段落4
+  - 原文：SI Fig. S3 / Angew SI DOCX
+  - 补充信息 SI Fig. S3｜DMSO-d₆/H₂O₂ 对照中仍检出 CD₃ 产物，支持溶剂参与。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/si_fig_s3.png / 1550×491 / SHA256 e6c499d478769844181562c24db32107fac8de043eee513265e942d909c99b1f
+- f17 | 9｜CV 与反应检测：能证明催化网络的哪些环节？ / 段落3
+  - 原文：SI Fig. S11 / Angew SI DOCX
+  - 补充信息 SI Fig. S11｜光照前后 GC–MS 对照，用于识别光致脱羧及过氧化物分解相关物质。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/si_fig_s11.png / 1550×1159 / SHA256 bb296aec1559fa771998459957734f126515ffb0158861851b0145fd90b3de4d
+- f18 | 9｜CV 与反应检测：能证明催化网络的哪些环节？ / 段落3
+  - 原文：SI Fig. S12 / Angew SI DOCX
+  - 补充信息 SI Fig. S12｜Fe(OAc)₂/羧酸/CHP 混合物受 390 nm 光照前后的紫外–可见吸收变化。
+  - 文件：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/si_fig_s12.png / 1856×1167 / SHA256 f00e098d7a365cf6d504bc249e699b9e6cb97b214f2a2d1b483fd93142d38475
+- 封面：public/wechat-assets/reviewed/2026-10-10-anie3306470-r1/anie3306470-toc-source-authentic-title-safe.png
+- 仇友爱往期精选封面：public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/nature-synthesis-author-name-corrected-r5.png（仅中文作者字形区域修改，化学结构无改动）
+
+## Nature Synthesis 往期精选 · 已审核的全套31张源图
+
+- f02｜从容易得到的醇出发，最难的为什么不是“有无催化剂”？第1段｜原文 Fig. 1a｜各种烷基前体的供应和交叉偶联使用情况：醇的原料优势。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f02.png
+- f03｜从容易得到的醇出发，最难的为什么不是“有无催化剂”？第1段｜原文 Fig. 1b｜Mitsunobu、NHC 与 CEBO 原位脱羟基活化策略及其副产物。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f03.png
+- f04｜真正让“醇–醇偶联”走起来的，是哪一步化学活化？第1段｜原文 Fig. 2 顶部｜A-1–A-5 活化剂筛选与模型醇甲基化；78% 为筛选测定值。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f04.png
+- s01｜真正让“醇–醇偶联”走起来的，是哪一步化学活化？第1段｜SI Table S1｜Vilsmeier 活化剂 A-1–A-13 与无活化剂对照；目标产物和均偶联副产物。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s01.png
+- s03｜真正让“醇–醇偶联”走起来的，是哪一步化学活化？第3段｜SI Table S3｜溶剂对照：DMF、DMA、NMP、MeCN、DMSO。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s03.png
+- f19｜一个反常的时间序列：为什么电流先去析氢，随后才大量成键？第1段｜原文 Fig. 5d｜活化卤代烷烃快速生成、初始 HER 及后期偶联增长的时间轨迹。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f19.png
+- s10｜一个反常的时间序列：为什么电流先去析氢，随后才大量成键？第1段｜SI Fig. S8｜3 分钟即生成卤代物的时间追踪，随后偶联逐渐开始。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s10.png
+- s13｜一个反常的时间序列：为什么电流先去析氢，随后才大量成键？第3段｜SI Fig. S14｜A-3 反应中阴极工作电位随时间由较正转向 Ni(II)/Ni(I) 还原区域。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s13.png
+- f16｜Ni(I) 还是 Ni(0)：哪些实验证据足以约束催化循环？第1段｜原文 Fig. 5a｜镍配合物在烷基溴化物、碘化物存在下的不同伏安响应。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f16.png
+- s11｜Ni(I) 还是 Ni(0)：哪些实验证据足以约束催化循环？第1段｜SI Fig. S9｜镍配合物 Ni(II)/Ni(I) 与 Ni(I)/Ni(0) 的伏安窗口和峰值。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s11.png
+- f18｜Ni(I) 还是 Ni(0)：哪些实验证据足以约束催化循环？第2段｜原文 Fig. 5c｜预制 Ni(0)、Ni(I)、Ni(II) 与烷基镍配合物的化学计量对照。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f18.png
+- f20｜Ni(I) 还是 Ni(0)：哪些实验证据足以约束催化循环？第3段｜原文 Fig. 5e｜作者提出的 Ni(I)/Ni(II)/Ni(III) 催化循环，属于工作模型。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f20.png
+- s14｜Ni(I) 还是 Ni(0)：哪些实验证据足以约束催化循环？第3段｜SI Fig. S15｜A-2 条件下阴极更负的电位历程，可能涉及 Ni(0)。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s14.png
+- f17｜是两条自由基相遇，还是镍把两种烷基片段组织到一起？第1段｜原文 Fig. 5b｜自由基钟：环化与环丙基开环实验。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f17.png
+- f05｜从 MeOH 到 CD₃OD：这项方法在“甲基效应”方面能做什么？第1段｜原文 Fig. 2 主体｜MeOH 与 CD₃OD 作为甲基及氘代甲基来源的底物适用范围。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f05.png
+- f06｜从 MeOH 到 CD₃OD：这项方法在“甲基效应”方面能做什么？第2段｜原文 Fig. 2 下部｜药物片段和多环骨架的后期氘代甲基化及 dr 边界。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f06.png
+- f11｜从 MeOH 到 CD₃OD：这项方法在“甲基效应”方面能做什么？第3段｜原文 Fig. 4a｜糖、天然产物、药物片段的氘代甲基化应用；甾体体系具有 dr 限制。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f11.png
+- f07｜醇的配对能走多远？四类组合不应被写成“一套通用条件”第1段｜原文 Fig. 3 顶部｜不同醇类型的交叉偶联通式、Fe/Ni 电极和配体 L1/L3。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f07.png
+- f08｜醇的配对能走多远？四类组合不应被写成“一套通用条件”第1段｜原文 Fig. 3 伯醇上部｜伯醇–伯醇的链延长、含氮杂环和含氧环结构。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f08.png
+- f09｜醇的配对能走多远？四类组合不应被写成“一套通用条件”第1段｜原文 Fig. 3 伯醇下部及伯仲醇｜官能团容忍、羟基选择性及伯仲醇偶联实例。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f09.png
+- f10｜醇的配对能走多远？四类组合不应被写成“一套通用条件”第2段｜原文 Fig. 3 底部｜仲醇–仲醇以及三级–一级醇的扩展条件与不同收率。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f10.png
+- f12｜合成应用证明了什么，哪些结论还不能外推？第1段｜原文 Fig. 4b(i)｜从手性哌啶醇出发构建吲哚并喹嗪生物碱前体。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f12.png
+- f13｜合成应用证明了什么，哪些结论还不能外推？第1段｜原文 Fig. 4b(ii)｜CD₃OD 参与合成含氘吲哚并喹嗪衍生物。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f13.png
+- f14｜合成应用证明了什么，哪些结论还不能外推？第2段｜原文 Fig. 4b(iii)｜醇与芳基碘化物偶联构建 CCR3 拮抗剂前体：不是醇–醇偶联。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f14.png
+- f15｜合成应用证明了什么，哪些结论还不能外推？第2段｜原文 Fig. 4b(iv)｜rac-traumatic lactone 的偶联与后续水解合成路线。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/f15.png
+- s07｜合成应用证明了什么，哪些结论还不能外推？第3段｜SI Fig. S2｜4 mmol、1.16 g 放大的装置及条件；Fe/Ni 电极与实际操作。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s07.png
+- s05｜SI 中最有价值的反面证据：交叉选择性需要付出什么？第1段｜SI Table S6｜降低 MeOH 当量后目标收率下降、均偶联增加。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s05.png
+- s04｜SI 中最有价值的反面证据：交叉选择性需要付出什么？第2段｜SI Table S4｜电极材料对照：Fe 阳极和泡沫镍阴极更有效。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s04.png
+- s16｜SI 中最有价值的反面证据：交叉选择性需要付出什么？第2段｜SI Table S11（节选）｜按产物统计电荷投入，标准条件多数为约 18.7 F mol⁻¹。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s16.png
+- s08｜SI 中最有价值的反面证据：交叉选择性需要付出什么？第3段｜SI Fig. S7（下半部）｜反应边界：不适用的官能团及反应体系，报告低效或未检出。｜public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/s08.png
+- 先导图：f01
+- 第二篇封面作者姓名校正版：public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/nature-synthesis-author-name-corrected-r5.png
