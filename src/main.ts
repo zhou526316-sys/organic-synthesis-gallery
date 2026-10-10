@@ -823,7 +823,8 @@ function renderCards(): void {
   const pageJumpInput = document.querySelector<HTMLInputElement>('#resultPageJumpInput');
   const pageJumpButton = document.querySelector<HTMLButtonElement>('#resultPageJumpButton');
   const loadingPage = Boolean(indexed?.loading);
-  const searching = indexedSearchPending && !indexed && Boolean(indexedViewRequest(''));
+  const searching = indexedSearchPending && !indexed
+    && (Boolean(indexedViewRequest('')) || architectureBootstrapPending);
   count.textContent = searching ? '…' : String(totalMatched);
   if (windowControls) windowControls.hidden = searching || totalMatched === 0 || totalPages <= 1;
   if (windowStatus) {
@@ -962,7 +963,8 @@ function mount(): void {
     }
     if (!query.trim()) readersSortAdjustedForSearch = false;
     resetResultWindow();
-    indexedSearchPending = Boolean(indexedViewRequest(''));
+    indexedSearchPending = [...query.trim()].length >= 3
+      && (Boolean(indexedViewRequest('')) || architectureBootstrapPending);
     renderCards();
     scheduleArchitectureCorpusRefresh();
   });
@@ -1643,7 +1645,14 @@ async function ensureFullHotCorpus(): Promise<void> {
 }
 
 function renderAfterScopeChange(): void {
-  indexedSearchPending = Boolean(indexedViewRequest(''));
+  if (sort === 'readers' && [...query.trim()].length >= 3) {
+    indexedSearchPending = false;
+    indexedViewDegraded = false;
+    mount(); // Explain that most-read mode does not support abstract FTS.
+    return;
+  }
+  indexedSearchPending = Boolean(indexedViewRequest(''))
+    || (architectureBootstrapPending && [...query.trim()].length >= 3);
   if (indexedSearchPending) {
     renderCards();
     scheduleArchitectureCorpusRefresh(0);
@@ -1673,10 +1682,14 @@ async function activateArchitectureClientInBackground(siteBase: string): Promise
 
     document.querySelector('.architecture-read-limited')?.remove();
 
-    if (query.trim() || dateFrom || dateTo) scheduleArchitectureCorpusRefresh(0);
+    if (query.trim() || dateFrom || dateTo) {
+      indexedSearchPending = [...query.trim()].length >= 3 && sort !== 'readers';
+      scheduleArchitectureCorpusRefresh(0);
+    }
   } catch (error) {
     architectureBootstrapPending = false;
     architectureReadLimited = true;
+    indexedSearchPending = false;
     document.documentElement.dataset.catalogRead = 'architecture-hot-fallback';
     console.warn('architecture-v1 background initialization unavailable; retaining verified Hot landing', error);
     mount();
