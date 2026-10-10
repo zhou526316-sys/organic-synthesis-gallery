@@ -1,0 +1,46 @@
+name: Complete missing scholarly abstracts
+on:
+  schedule:
+    # Independent metadata-only follow-up at 23:20 Asia/Shanghai.
+    - cron: '20 15 * * *'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/literature-abstract-incremental.yml'
+      - 'audit/automation-triggers/literature-abstract-incremental.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: literature-abstract-incremental
+  cancel-in-progress: false
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Validate true DOI-bound abstract recovery and term search
+        run: node --test cloudflare/worker/scripts/test-literature-search-enrichment.mjs
+      - name: Incrementally recover original abstracts without republishing papers
+        env:
+          SITE_URL: https://gallery.gczhouwld.com/
+          WORKER_URL: https://api.gczhouwld.com/
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+          SEARCH_ENRICHMENT_REPORT: ${{ runner.temp }}/abstract-recovery-report.json
+          SEARCH_ABSTRACT_RETRY_LIMIT: '300'
+          CROSSREF_FALLBACK_LIMIT: '300'
+        run: node scripts/sync-literature-search-enrichment.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gallery-abstract-recovery-${{ github.run_id }}
+          path: ${{ runner.temp }}/abstract-recovery-report.json
+          retention-days: 14
+          if-no-files-found: warn

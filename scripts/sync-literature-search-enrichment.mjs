@@ -124,20 +124,99 @@ async function hydrateAbstracts(dois,report){
   // Prefer deposited Crossref abstracts for a bounded sample of OpenAlex misses.
   // Later published generations can retry unresolved DOI metadata.
   const misses=dois.filter(doi=>!found.has(doi));
-  const crossrefLimit=Math.min(75,Math.max(0,Number(process.env.CROSSREF_FALLBACK_LIMIT??'40')));
-  for(const doi of misses.slice(0,crossrefLimit)){
-    try{
-      const response=await request('https://api.crossref.org/works/'+encodeURIComponent(doi),{retries:1});
-      const record=response.message;
-      if(normalizeDoi(record?.DOI)!==doi)continue;
-      const abstract=crossrefAbstract(record.abstract);
-      if(abstract)found.set(doi,{abstract,source:'crossref'});
-    }catch(error){
-      report.crossrefErrors.push({doi,error:String(error.message||error).slice(0,150)});
+  // Fetch all initially missing DOI metadata across bounded nightly passes,
+  // rather than silently limiting fallback to the first 40 forever.
+  const crossrefLimit=Math.min(misses.length,Math.max(1,Math.min(400,
+    Number(process.env.CROSSREF_FALLBACK_LIMIT??'280'))));
+  const batch=misses.slice(0,crossrefLimit);
+  let cursor=0;
+  await Promise.all(Array.from({length:Math.min(5,batch.length)},async()=>{
+    for(;;){
+      const position=cursor++;
+      if(position>=batch.length)return;
+      const doi=batch[position];
+      try{
+        const response=await request('https://api.crossref.org/works/'+encodeURIComponent(doi),{retries:1});
+        const record=response.message;
+        if(normalizeDoi(record?.DOI)!==doi)continue;
+        const abstract=crossrefAbstract(record.abstract);
+        if(abstract)found.set(doi,{abstract,source:'crossref'});
+      }catch(error){
+        report.crossrefErrors.push({doi,error:String(error.message||error).slice(0,150)});
+      }
     }
-  }
+  }));
+  report.crossrefAttempted=crossrefLimit;
+  report.unattemptedOpenAlexMisses=misses.length-crossrefLimit;
   return found;
 }
+// Bounded paged administrative read; public read never exposes raw full abstracts.
+async function currentMissingAbstractRows(catalogId){
+  const items=[];let afterDoi='',previous=null;
+  for(let page=0;page<500;page++){
+    const params=new URLSearchParams({catalogId,limit:'200'});
+    if(afterDoi)params.set('afterDoi',afterDoi);
+    const status=await api('/api/admin/literature-search-enrichment/coverage?'+params);
+    assert(status.ok===true&&status.catalogId===catalogId&&status.ready===true,
+      'search_enrichment_coverage_unavailable');
+    if(previous===null)previous=status;
+    else assert(status.total===previous.total && status.missingOriginalAbstracts===previous.missingOriginalAbstracts,
+      'search_enrichment_coverage_generation_changed');
+    for(const row of status.items||[]){
+      const doi=normalizeDoi(row.doi);
+      assert(doi&&SHA.test(row.revision)&&(!items.length||items.at(-1).doi<doi),
+        'search_enrichment_coverage_cursor_invalid');
+      items.push({doi,revision:row.revision});
+    }
+    if(!status.hasMore){
+      assert(items.length===status.missingOriginalAbstracts,'search_enrichment_missing_list_incomplete');
+      return {items,totals:status};
+    }
+    assert(status.nextAfterDoi&&status.nextAfterDoi!==afterDoi,'search_enrichment_coverage_cursor_stalled');
+    afterDoi=status.nextAfterDoi;
+  }
+  throw new Error('search_enrichment_coverage_page_limit');
+}
+async function replenishReadyGeneration(catalogId,sourceHash,report){
+  const coverage=await currentMissingAbstractRows(catalogId);
+  const max=Math.min(400,Math.max(1,Number(process.env.SEARCH_ABSTRACT_RETRY_LIMIT||300)));
+  // Rotate across ALL missing DOI windows. Rechecking the first 300 gaps
+  // every night would permanently starve the rest if those 300 have no
+  // deposited abstract in either metadata source.
+  const windows=Math.max(1,Math.ceil(coverage.items.length/max));
+  const epochDay=Math.floor(Date.now()/86400000);
+  const windowIndex=epochDay%windows;
+  const selected=coverage.items.slice(windowIndex*max,(windowIndex+1)*max);
+  report.incrementalWindow={number:windowIndex+1,windows,selected:selected.length,
+    totalMissing:coverage.items.length};
+  const found=await hydrateAbstracts(selected.map(row=>row.doi),report);
+  const readyRows=selected.filter(row=>found.has(row.doi)).map(row=>({
+    ...row,abstract:found.get(row.doi).abstract,
+    abstractSource:found.get(row.doi).source,summaryEn:'',summaryZh:''
+  }));
+  let refreshed=0;
+  for(let i=0;i<readyRows.length;i+=LIMIT){
+    const result=await api('/api/admin/literature-search-enrichment/refresh',{
+      method:'POST',body:{catalogId,sourceHash,rows:readyRows.slice(i,i+LIMIT)}
+    });
+    assert(result.ok===true&&result.ready===true,
+      'search_enrichment_refresh_failed_'+i);
+    refreshed+=Number(result.refreshed||0);
+    if(i%80===0)console.log('SEARCH_ABSTRACT_REFRESH',JSON.stringify({refreshed,requested:readyRows.length}));
+  }
+  const after=await api('/api/admin/literature-search-enrichment/coverage?'+
+    new URLSearchParams({catalogId,limit:'1'}));
+  assert(after.ready===true&&after.total===coverage.totals.total
+    &&after.originalAbstracts>=coverage.totals.originalAbstracts,'search_enrichment_refresh_parity');
+  Object.assign(report,{ok:true,alreadyReady:true,catalogId,recordCount:coverage.totals.total,
+    originalAbstracts:after.originalAbstracts,originalAbstractsBefore:coverage.totals.originalAbstracts,
+    remainingWithoutOriginalAbstract:after.missingOriginalAbstracts,
+    approvedDescriptions:after.approvedDescriptions,
+    incrementalChecked:selected.length,incrementalRecovered:refreshed,
+    metadataAvailableIncomplete:after.missingOriginalAbstracts>0,
+    currentPublishedGeneration:true,finishedAt:new Date().toISOString()});
+}
+
 async function main(){
   assert(TOKEN,'BRIDGE_WRITE_TOKEN_required');
   const report={startedAt:new Date().toISOString(),ok:false,
@@ -164,8 +243,7 @@ async function main(){
       method:'POST',body:{catalogId,sourceHash},
     });
     if(begin.ready){
-      Object.assign(report,{ok:true,alreadyReady:true,catalogId,recordCount:rows.length,finishedAt:new Date().toISOString()});
-      await writeFile(REPORT,JSON.stringify(report,null,2)+'\n');
+      await replenishReadyGeneration(catalogId,sourceHash,report);
       return;
     }
     const abstracts=await hydrateAbstracts(publishedDois,report);

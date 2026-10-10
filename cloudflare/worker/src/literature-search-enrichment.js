@@ -178,6 +178,97 @@ export async function finalizeSearchEnrichment(env,payload={}) {
     .bind(count,Date.now(),catalogId).run();
   return {status:200,body:{ok:true,ready:true,catalogId,recordCount:count}};
 }
+// Metadata coverage is distinct from DOI membership coverage.
+export async function getSearchEnrichmentCoverage(env,payload={}) {
+  const catalogId=String(payload.catalogId||'').toLowerCase();
+  const afterDoi=payload.afterDoi?normalizeDoi(payload.afterDoi):'';
+  if(!HASH.test(catalogId)||(payload.afterDoi&&!afterDoi))
+    return {status:400,body:{error:'search_enrichment_coverage_request_invalid'}};
+  if(!await searchEnrichmentReady(env,catalogId))
+    return {status:409,body:{error:'search_enrichment_generation_not_ready'}};
+  const db=env.LITERATURE_INDEX_DB;
+  const totals=await db.prepare('SELECT COUNT(*) AS total,'
+      +' SUM(CASE WHEN length(e.abstract_text)>0 THEN 1 ELSE 0 END) AS originals,'
+      +' SUM(CASE WHEN length(e.reviewed_summary_en)>0 OR length(e.reviewed_summary_zh)>0 THEN 1 ELSE 0 END) AS reviewed,'
+      +' SUM(CASE WHEN length(e.abstract_text)=0 THEN 1 ELSE 0 END) AS missing'
+      +' FROM literature_search_enrichment e'
+      +' JOIN literature_catalog_index i ON i.catalog_id=e.catalog_id'
+      +' AND i.doi=e.doi AND i.revision=e.revision WHERE e.catalog_id=?')
+    .bind(catalogId).first();
+  const limit=Math.max(1,Math.min(200,Math.floor(Number(payload.limit||100))));
+  const rows=await db.prepare('SELECT e.doi,e.revision FROM literature_search_enrichment e'
+      +' JOIN literature_catalog_index i ON i.catalog_id=e.catalog_id AND i.doi=e.doi AND i.revision=e.revision'
+      +' WHERE e.catalog_id=? AND length(e.abstract_text)=0 AND e.doi>? ORDER BY e.doi ASC LIMIT ?')
+    .bind(catalogId,afterDoi,limit+1).all();
+  const hasMore=(rows.results||[]).length>limit;
+  const selected=(rows.results||[]).slice(0,limit);
+  return {status:200,body:{ok:true,catalogId,ready:true,
+    total:Number(totals?.total||0),originalAbstracts:Number(totals?.originals||0),
+    approvedDescriptions:Number(totals?.reviewed||0),
+    missingOriginalAbstracts:Number(totals?.missing||0),count:selected.length,
+    hasMore,nextAfterDoi:hasMore?selected.at(-1)?.doi:null,
+    items:selected.map(row=>({doi:row.doi,revision:row.revision}))}};
+}
+// Replenish only genuinely empty abstracts under the exact reviewed DOI/revision.
+// The atomic D1 batch preserves existing author, title, reviews and membership.
+export async function refreshSearchEnrichmentAbstracts(env,payload={}) {
+  const catalogId=String(payload.catalogId||'').toLowerCase();
+  const sourceHash=String(payload.sourceHash||'').toLowerCase();
+  if(!HASH.test(catalogId)||!HASH.test(sourceHash))
+    return {status:400,body:{error:'search_enrichment_identity_invalid'}};
+  const rows=payload.rows;
+  if(!Array.isArray(rows)||rows.length<1||rows.length>SEARCH_ENRICHMENT_BATCH_MAX)
+    return {status:400,body:{error:'search_enrichment_refresh_batch_invalid'}};
+  if(!await searchEnrichmentReady(env,catalogId))
+    return {status:409,body:{error:'search_enrichment_not_ready_for_refresh'}};
+  const db=env.LITERATURE_INDEX_DB,gen=await enrichmentGeneration(db,catalogId);
+  if(gen?.source_hash!==sourceHash)
+    return {status:409,body:{error:'search_enrichment_refresh_source_conflict'}};
+  let normalized;
+  try{normalized=rows.map(normalizeEnrichmentRow);}
+  catch(error){return {status:400,body:{error:safeError(error)}};}
+  if(new Set(normalized.map(row=>row.doi)).size!==normalized.length
+    ||normalized.some(row=>!row.abstract||!['openalex','crossref'].includes(row.source)
+      ||row.summaryEn||row.summaryZh))
+    return {status:400,body:{error:'search_enrichment_refresh_original_only_required'}};
+  const placeholders=normalized.map(()=>'?').join(',');
+  const current=await db.prepare('SELECT e.doi,e.revision,e.abstract_text,e.reviewed_summary_en,e.reviewed_summary_zh'
+    +' FROM literature_search_enrichment e JOIN literature_catalog_index i'
+    +' ON i.catalog_id=e.catalog_id AND i.doi=e.doi AND i.revision=e.revision'
+    +' WHERE e.catalog_id=? AND e.doi IN ('+placeholders+')')
+    .bind(catalogId,...normalized.map(row=>row.doi)).all();
+  const existing=new Map((current.results||[]).map(row=>[row.doi,row]));
+  if(normalized.some(row=>!existing.has(row.doi)
+    ||existing.get(row.doi).revision!==row.revision))
+    return {status:409,body:{error:'search_enrichment_refresh_member_revision_mismatch'}};
+  const changes=normalized.filter(row=>!String(existing.get(row.doi).abstract_text||''));
+  if(!changes.length)return {status:200,body:{ok:true,catalogId,refreshed:0,skipped:rows.length,ready:true}};
+  const now=Date.now(),statements=[];
+  for(const row of changes){
+    const old=existing.get(row.doi);
+    const searchable=[row.abstract,old.reviewed_summary_en,old.reviewed_summary_zh]
+      .filter(Boolean).join(' ').toLowerCase();
+    if(bytes(searchable)>48000)return {status:400,body:{error:'search_enrichment_refresh_searchable_over_budget'}};
+    statements.push(
+      db.prepare('UPDATE literature_search_enrichment SET abstract_text=?,abstract_source=?,'
+        +' searchable_text=?,updated_at=? WHERE catalog_id=? AND doi=? AND revision=? AND length(abstract_text)=0')
+        .bind(row.abstract,row.source,searchable,now,catalogId,row.doi,row.revision),
+      db.prepare('DELETE FROM literature_search_enrichment_fts WHERE catalog_id=? AND doi=?')
+        .bind(catalogId,row.doi),
+      db.prepare('INSERT INTO literature_search_enrichment_fts(catalog_id,doi,searchable_text) VALUES(?,?,?)')
+        .bind(catalogId,row.doi,searchable)
+    );
+  }
+  try{
+    await db.batch(statements);
+    return {status:200,body:{ok:true,catalogId,ready:true,
+      refreshed:changes.length,skipped:rows.length-changes.length,
+      dois:changes.map(row=>row.doi)}};
+  }catch(error){
+    return {status:500,body:{error:'search_enrichment_refresh_failed',detail:safeError(error)}};
+  }
+}
+
 export async function getSearchAbstract(env,payload={}) {
   const catalogId=String(payload.catalogId || '').toLowerCase();
   const doi=normalizeDoi(payload.doi);
@@ -212,13 +303,13 @@ const synonyms = {
   '铈催化':['cerium catalyzed','cerium-catalyzed','cerium catalysis'],
 };
 function phrase(value){return '"'+String(value).replaceAll('"','""')+'"';}
-export function searchFtsExpression(query) {
+export function searchTermAlternatives(query){
   const raw=String(query||'').trim().toLowerCase();
-  if(!raw||[...raw].length<3) return '';
-  // Preserve legacy exact-substring behavior for every unregistered query,
-  // including multiword titles and author names. Only vetted chemical terms
-  // broaden into a small, explicitly reviewed OR group.
-  const alternatives=[raw,...(synonyms[raw]||[])];
-  const unique=[...new Set(alternatives.filter(term=>[...term].length>=3))];
-  return unique.length>1?'('+unique.map(phrase).join(' OR ')+')':phrase(raw);
+  if(!raw||[...raw].length<3)return [];
+  return [...new Set([raw,...(synonyms[raw]||[])].filter(term=>[...term].length>=3))];
+}
+export function searchFtsExpression(query) {
+  const unique=searchTermAlternatives(query);
+  // Preserve the legacy substring scope and only expand reviewed terms.
+  return unique.length>1?'('+unique.map(phrase).join(' OR ')+')':unique.length?phrase(unique[0]):'';
 }
