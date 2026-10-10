@@ -221,8 +221,8 @@ install_new(){
    local acme_name acme_expect acme_result
    # A URL-safe disposable challenge identifier; the old literal trailing
    # "$" was ambiguous when diagnosing a 404 through multiple vhosts.
-   acme_name="gallery-acme-probe-$(date +%s)-$"
-   acme_expect="gallery-private-pdf-http01-$"
+   acme_name="gallery-acme-probe-$(date +%s)-$$"
+   acme_expect="gallery-private-pdf-http01-$$"
    printf '%s' "$acme_expect" > "$WEBROOT/.well-known/acme-challenge/$acme_name"
    chmod 0644 "$WEBROOT/.well-known/acme-challenge/$acme_name"
    # Confirm the running Nginx worker can traverse all parent directories,
