@@ -112,6 +112,14 @@ const { applyVerifiedChineseTitlePresentationToPages } =
   await import('../../scripts/apply-verified-chinese-title-presentation.mjs');
 await applyVerifiedChineseTitlePresentationToPages();
 
+// Convert every approved DOI to a durable bilingual card/search record, not
+// an ephemeral browser-local translation. This reads six DOI/title-locked
+// editorial manifests and refuses a build with any untranslated member.
+const { applyFullBilingualTitleCoverageToPages } =
+  await import('../../scripts/apply-full-bilingual-title-coverage.mjs');
+await applyFullBilingualTitleCoverageToPages();
+
+
 console.log(`CURATED_MERGE_SUMMARY ${JSON.stringify({
   curated: curated?.papers?.length || 0,
   automation: automation?.papers?.length || 0,

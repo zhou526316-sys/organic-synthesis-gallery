@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
+import {createHash} from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
 import {
   beginLiteratureCatalogGeneration,importLiteratureCatalogIndexBatch,
@@ -10,6 +11,8 @@ import {
   getSearchAbstract,searchEnrichmentReady,searchFtsExpression,
   getSearchEnrichmentCoverage,refreshSearchEnrichmentAbstracts,
 } from '../src/literature-search-enrichment.js';
+import {getBasicAbstractCoverage,importBasicAbstractReviews,
+  listBasicAbstractReviewCandidates} from '../src/literature-basic-abstracts.js';
 
 class Statement {
   constructor(db,sql){this.db=db;this.sql=sql;this.args=[];}
@@ -203,4 +206,118 @@ test('authenticated baseline view parity excludes only enrichment, while public 
   const date=await queryLiteratureCatalogView(env,{catalogId:GEN.catalogId,
     dateFrom:'2026-10-07',dateTo:'2026-10-07'},{baseOnly:true});
   assert.equal(date.body.matched,1);
+});
+
+const abstractHash=txt=>createHash('sha256').update(String(txt)).digest('hex');
+test('the current published catalog serves attributed historical excerpts without R2 Evidence',async t=>{
+  const env=await fixture(t);
+  await insert(env,enr);
+  await finalize(env);
+  const result=await getSearchAbstract(env,{doi:'10.1234/a'});
+  assert.equal(result.status,200);
+  assert.equal(result.body.catalogId,GEN.catalogId);
+  assert.equal(result.body.abstractAvailable,true);
+  assert.equal(result.body.abstractExcerptOnly,true);
+  assert.equal(Object.hasOwn(result.body,'abstract'),false);
+  assert.equal(result.body.basicSummaryZh,null);
+  const missing=await getSearchAbstract(env,{doi:'10.1234/not-in-gallery'});
+  assert.equal(missing.status,404);
+  const history=await getSearchAbstract(env,{doi:'10.1234/b'});
+  assert.equal(history.body.abstractAvailable,false);
+});
+test('privileged metadata reviewer imports only double-reviewed DOI+revision+source-hash summaries',async t=>{
+  const env=await fixture(t);
+  await insert(env,enr);await finalize(env);
+  const first=await listBasicAbstractReviewCandidates(env,{catalogId:GEN.catalogId,limit:2});
+  assert.equal(first.status,200);
+  assert.equal(first.body.count,2);
+  assert.deepEqual(first.body.items.map(x=>x.doi),['10.1234/a','10.1234/c']);
+  assert.equal(first.body.items[0].reviewState,'pending');
+  const item={doi:'10.1234/a',revision:papers[0].revision,
+    abstractSource:'openalex',abstractSha256:abstractHash(enr[0].abstract),
+    zh:'基于原始英文摘要：该研究采用金属络合物促进羧酸盐光活化，涉及配体到金属电荷转移过程。',
+    en:'Abstract-based: an iron complex enables carboxylate photoactivation through a ligand-to-metal charge transfer pathway.',
+    status:'approved',reviewPasses:2,reviewedAt:'2026-10-10T11:00:00.000Z'};
+  const write=payload=>importBasicAbstractReviews(env,{catalogId:GEN.catalogId,rows:payload});
+  assert.equal((await write([{...item,reviewPasses:1}])).status,400);
+  assert.equal((await write([{...item,doi:'10.1234/foreign'}])).status,409);
+  assert.equal((await write([{...item,revision:'b'.repeat(64)}])).status,409);
+  assert.equal((await write([{...item,abstractSha256:'f'.repeat(64)}])).status,409);
+  assert.equal((await write([item,item])).status,400);
+  const inserted=await write([item]);
+  assert.equal(inserted.status,200);
+  assert.deepEqual(inserted.body.dois,['10.1234/a']);
+  const publicView=await getSearchAbstract(env,{doi:item.doi});
+  assert.equal(publicView.body.basicSummaryZh,item.zh);
+  assert.equal(publicView.body.basicSummaryEn,item.en);
+  assert.equal(publicView.body.basicSummaryBasis,'abstract_metadata_reviewed_v1');
+  assert.equal(Object.hasOwn(publicView.body,'abstract'),false);
+  const reviewed=await listBasicAbstractReviewCandidates(env,{catalogId:GEN.catalogId,limit:1});
+  assert.equal(reviewed.body.items[0].reviewState,'approved_current');
+  const coverage=await getBasicAbstractCoverage(env,{catalogId:GEN.catalogId});
+  assert.equal(coverage.body.total,3);
+  assert.equal(coverage.body.originalAbstracts,2);
+  assert.equal(coverage.body.reviewedBilingualCandidates,1);
+  assert.equal(coverage.body.reviewedCountRequiresPerDoiHashCheck,true);
+  // Changing deposited text without a re-review invalidates only the basic
+  // synopsis. Deep Evidence protection and official DOI membership are intact.
+  env.LITERATURE_INDEX_DB.sqlite.prepare(
+    'UPDATE literature_search_enrichment SET abstract_text=? WHERE catalog_id=? AND doi=?'
+  ).run(enr[0].abstract+' A changed conclusion.',GEN.catalogId,item.doi);
+  const stale=await getSearchAbstract(env,{doi:item.doi});
+  assert.equal(stale.body.basicSummaryZh,null);
+  assert.equal(stale.body.abstractAvailable,true);
+});
+test('newer catalog prevents stale previous-generation abstracts leaking after DOI deletion',async t=>{
+  const env=await fixture(t);
+  await insert(env,enr);await finalize(env);
+  assert.equal((await getSearchAbstract(env,{doi:'10.1234/a'})).status,200);
+  const next={...GEN,catalogId:'b'.repeat(64),doiSetHash:'c'.repeat(64),
+    publicationSlot:'2026-10-11T08:00:00+08:00',recordCount:1};
+  const retained=[papers[1]];
+  assert.equal((await beginLiteratureCatalogGeneration(env,next)).status,200);
+  assert.equal((await importLiteratureCatalogIndexBatch(env,{generation:next,rows:retained})).status,200);
+  assert.equal((await finalizeLiteratureCatalogGeneration(env,next.catalogId)).body.ready,true);
+  // No complete new abstract index yet: never resurrect the old generation.
+  assert.equal((await getSearchAbstract(env,{doi:'10.1234/a'})).status,503);
+  assert.equal((await getSearchAbstract(env,{doi:'10.1234/b'})).status,503);
+});
+
+test('academic metadata alternatives may fill source gaps only for the exact original DOI revision',async t=>{
+  const env=await fixture(t);
+  await insert(env,enr);await finalize(env);
+  const text='A verified DOI-bound electrochemical hydrocarbon coupling abstract reports a highly selective reaction strategy for preparing synthetically useful organic compounds from common feedstocks.';
+  const base={doi:papers[1].doi,revision:papers[1].revision,
+    abstract:text,summaryEn:'',summaryZh:''};
+  const fill=(source,rows)=>refreshSearchEnrichmentAbstracts(env,{
+    catalogId:GEN.catalogId,sourceHash:sh,rows:rows??[{...base,abstractSource:source}]
+  });
+  assert.equal((await fill('semantic_scholar',[
+    {...base,abstractSource:'semantic_scholar',doi:'10.1234/foreign'}
+  ])).status,409);
+  const done=await fill('semantic_scholar');
+  assert.equal(done.status,200);
+  assert.equal(done.body.refreshed,1);
+  const visible=await getSearchAbstract(env,{doi:papers[1].doi});
+  assert.equal(visible.body.abstractSource,'semantic_scholar');
+  assert.match(visible.body.abstractExcerpt,/electrochemical hydrocarbon coupling/);
+  assert.equal(Object.hasOwn(visible.body,'abstract'),false);
+  assert.equal((await query(env,'hydrocarbon coupling')).body.matched,1);
+  const duplicate=await fill('europe_pmc');
+  assert.equal(duplicate.body.refreshed,0);
+});
+test('Europe PMC alone can independently repair a missing current DOI without changing approved text',async t=>{
+  const env=await fixture(t);await insert(env,enr);await finalize(env);
+  const fill=await refreshSearchEnrichmentAbstracts(env,{
+    catalogId:GEN.catalogId,sourceHash:sh,rows:[{
+      doi:papers[1].doi,revision:papers[1].revision,
+      abstract:'A novel catalytic selective carbon–carbon formation approach provides practical access to functionalized organic intermediates across multiple substrate families.',
+      abstractSource:'europe_pmc',summaryZh:'',summaryEn:''
+    }]
+  });
+  assert.equal(fill.status,200);
+  assert.equal(fill.body.refreshed,1);
+  assert.equal((await getSearchAbstract(env,{doi:papers[1].doi})).body.abstractSource,'europe_pmc');
+  const coverage=await getSearchEnrichmentCoverage(env,{catalogId:GEN.catalogId});
+  assert.equal(coverage.body.originalAbstracts,3);
 });

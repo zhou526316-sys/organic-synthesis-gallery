@@ -309,17 +309,31 @@ function viewScopeKey(catalogId,view){
     f:view.dateFrom,t:view.dateTo,a:view.addedDate,o:view.sort,
   });
 }
+function encodeUtf8Cursor(payload) {
+  // btoa only accepts single-byte code points. The cursor scope contains
+  // Unicode chemistry terms, so base64url encode explicit UTF-8 bytes.
+  // ASCII cursor bytes remain identical to the previous v1 encoding.
+  const bytes=new TextEncoder().encode(payload);
+  let binary='';
+  for (const byte of bytes) binary+=String.fromCharCode(byte);
+  return btoa(binary).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'');
+}
+function decodeUtf8Cursor(value) {
+  const normalized=value.replaceAll('-','+').replaceAll('_','/');
+  const padded=normalized+'='.repeat((4-normalized.length%4)%4);
+  const binary=atob(padded);
+  const bytes=Uint8Array.from(binary,char=>char.charCodeAt(0));
+  return new TextDecoder('utf-8',{fatal:true}).decode(bytes);
+}
 function encodeViewCursor(row,scopeKey){
   const payload=JSON.stringify({s:scopeKey,d:String(row?.first_online_date||''),i:normalizeDoi(row?.doi)});
-  return btoa(payload).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'');
+  return encodeUtf8Cursor(payload);
 }
 function decodeViewCursor(value,scopeKey){
   const raw=safe(value,4000);
   if(!raw) return null;
   try{
-    const normalized=raw.replaceAll('-','+').replaceAll('_','/');
-    const padded=normalized+'='.repeat((4-normalized.length%4)%4);
-    const parsed=JSON.parse(atob(padded));
+    const parsed=JSON.parse(decodeUtf8Cursor(raw));
     const date=parsed?.d===''?'':(validDate(parsed?.d)?parsed.d:null);
     const doi=normalizeDoi(parsed?.i);
     if(date===null||!doi||String(parsed?.s||'')!==scopeKey) throw new Error('scope');
@@ -333,15 +347,13 @@ function encodeCursor(row,catalogId,queryText){
   const payload=JSON.stringify({
     c:catalogId,q:queryText,d:String(row?.first_online_date||''),i:normalizeDoi(row?.doi),
   });
-  return btoa(payload).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'');
+  return encodeUtf8Cursor(payload);
 }
 function decodeCursor(value,catalogId,queryText){
   const raw=safe(value,1000);
   if(!raw) return null;
   try{
-    const normalized=raw.replaceAll('-','+').replaceAll('_','/');
-    const padded=normalized+'='.repeat((4-normalized.length%4)%4);
-    const parsed=JSON.parse(atob(padded));
+    const parsed=JSON.parse(decodeUtf8Cursor(raw));
     const date=parsed?.d===''?'':(validDate(parsed?.d)?parsed.d:null);
     const doi=normalizeDoi(parsed?.i);
     if(date===null||!doi||hash64(parsed?.c)!==catalogId||String(parsed?.q||'')!==queryText){

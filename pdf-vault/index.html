@@ -73,8 +73,11 @@
     <footer class="vault-footer">文件由你保管，阅读从这里继续。</footer>
 
     <dialog class="reader-dialog" data-testid="pdf-vault-reader" aria-labelledby="reader-title">
-      <div class="reader-heading"><div><span class="eyebrow">本地阅读</span><h2 id="reader-title">PDF 阅读器</h2></div><button type="button" class="quiet-button" data-testid="pdf-vault-reader-close" aria-label="关闭 PDF 阅读器">关闭</button></div>
-      <div class="reader-toolbar" aria-label="阅读工具"><div class="reader-paging"><span data-testid="pdf-vault-reader-pagecount" aria-live="polite">正在载入…</span><span class="reader-mode-caption">连续滚动</span></div><div class="reader-zoom"><button type="button" class="quiet-button" data-testid="pdf-vault-reader-zoom-out" aria-label="缩小">−</button><span id="reader-zoom-value">100%</span><button type="button" class="quiet-button" data-testid="pdf-vault-reader-zoom-in" aria-label="放大">＋</button><button type="button" class="quiet-button" data-testid="pdf-vault-reader-export">导出 PDF</button></div></div>
+      <div class="reader-topbar" role="toolbar" aria-label="本地 PDF 阅读工具">
+        <div class="reader-heading"><div><span class="eyebrow">本地 PDF</span><h2 id="reader-title">PDF 阅读器</h2></div></div>
+        <div class="reader-toolbar" aria-label="阅读工具"><div class="reader-paging"><span data-testid="pdf-vault-reader-pagecount" aria-live="polite">正在载入…</span><span class="reader-mode-caption">连续滚动</span></div><div class="reader-zoom"><button type="button" class="quiet-button" data-testid="pdf-vault-reader-zoom-out" aria-label="缩小">−</button><span id="reader-zoom-value">100%</span><button type="button" class="quiet-button" data-testid="pdf-vault-reader-zoom-in" aria-label="放大">＋</button><button type="button" class="quiet-button" data-testid="pdf-vault-reader-export">导出 PDF</button></div></div>
+        <button type="button" class="reader-exit quiet-button" data-testid="pdf-vault-reader-close" aria-label="关闭 PDF 阅读器并返回文献库">返回文献库</button>
+      </div>
       <p class="reader-status" data-testid="pdf-vault-reader-status" role="status" aria-live="polite"></p>
       <div class="reader-stage"><div class="reader-scroll-container" aria-label="连续滚动 PDF 页面" tabindex="0"><div id="local-pdf-continuous" class="pdfViewer"></div></div></div>
     </dialog>

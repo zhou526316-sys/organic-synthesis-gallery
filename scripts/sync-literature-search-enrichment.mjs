@@ -2,11 +2,17 @@
 // changes literature admission, static cards, dates, media or PDF inventories.
 import {createHash} from 'node:crypto';
 import {writeFile} from 'node:fs/promises';
+import {fetchPublisherMetadataAbstract} from './lib/publisher-abstract-metadata.mjs';
+import {matchSpringerNatureMetaAbstract,springerNatureMetadataEndpoint} from './lib/springer-nature-meta-abstract.mjs';
+import {boundedMetadataWindow,matchEuropePmcAbstracts,matchSemanticScholarAbstracts} from './lib/doi-scholarly-abstract-metadata.mjs';
+import {fetchSemanticScholarAbstractBatch} from './lib/semantic-scholar-abstract-client.mjs';
 
 const SITE=new URL(process.env.SITE_URL||'https://gallery.gczhouwld.com/');
 const WORKER=new URL(process.env.WORKER_URL||'https://organic-synthesis-gallery.zhou526316.workers.dev/');
 const TOKEN=String(process.env.BRIDGE_WRITE_TOKEN||'').trim();
 const OPENALEX_KEY=String(process.env.OPENALEX_API_KEY||'').trim();
+const SPRINGER_NATURE_META_KEY=String(process.env.SPRINGER_NATURE_API_KEY||'').trim();
+const SEMANTIC_SCHOLAR_KEY=String(process.env.SEMANTIC_SCHOLAR_API_KEY||'').trim();
 const REPORT=process.env.SEARCH_ENRICHMENT_REPORT||'/tmp/literature-search-enrichment-report.json';
 const SHA=/^[a-f0-9]{64}$/;
 const DOI=/^10\.\d{4,9}\/\S+$/;
@@ -37,7 +43,18 @@ async function request(url,{method='GET',body,authorized=false,retries=2}={}){
         if(n<retries&&[429,500,502,503,504].includes(result.status)){
           await pause(700*(n+1));continue;
         }
-        throw new Error('metadata_http_'+result.status+':'+address.host+address.pathname);
+        // Report sanitized Worker error codes (never tokens, query strings,
+        // response bodies or source abstracts) to distinguish deployment
+        // version mismatch from an actually invalid DOI-bound payload.
+        let code='';
+        if(authorized && [400,409,422,503].includes(result.status)){
+          try{
+            const payload=await result.clone().json();
+            code=String(payload?.error||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,100);
+          }catch{ /* preserve HTTP-only failure */ }
+        }
+        throw new Error('metadata_http_'+result.status+':'+address.host+address.pathname
+          +(code?':'+code:''));
       }
       return result.json();
     }catch(error){
@@ -164,6 +181,137 @@ async function hydrateAbstracts(dois,report){
   report.crossrefAttempted=crossrefLimit;
   report.crossref429Retries=crossref429Retries;
   report.unattemptedOpenAlexMisses=misses.length-crossrefLimit;
+  // Additional free DOI-exact metadata sources are checked without
+  // authenticated publisher sessions or any article-body/PDF acquisition.
+  const epochDay=Math.floor(Date.now()/86400000);
+  const outerWindows=report.incrementalWindow?.windows||1;
+  const afterCrossref=dois.filter(doi=>!found.has(doi));
+  const scholarWindow=boundedMetadataWindow(afterCrossref,
+    Number(process.env.SEMANTIC_SCHOLAR_LIMIT||60),epochDay,outerWindows);
+  report.semanticScholarAttempted=scholarWindow.selected.length;
+  report.semanticScholarRecovered=0;
+  report.semanticScholarAuthenticated=Boolean(SEMANTIC_SCHOLAR_KEY);
+  report.semanticScholarRetries=0;
+  report.semanticScholarWindow={number:scholarWindow.number,windows:scholarWindow.windows,
+    totalMissing:afterCrossref.length};
+  report.semanticScholarErrors=[];
+  if(scholarWindow.selected.length){
+    try{
+      const response=await fetchSemanticScholarAbstractBatch(scholarWindow.selected,{
+        key:SEMANTIC_SCHOLAR_KEY
+      });
+      report.semanticScholarRetries=response.retries;
+      const matched=matchSemanticScholarAbstracts(scholarWindow.selected,response.records);
+      for(const [doi,abstract] of matched){
+        found.set(doi,{abstract,source:'semantic_scholar'});
+        report.semanticScholarRecovered++;
+      }
+    }catch(error){
+      const message=String(error?.message||error);
+      report.semanticScholarErrors.push({
+        reason:message.slice(0,160),
+        count:scholarWindow.selected.length,
+        throttled:message.includes('429')
+      });
+    }
+  }
+  const afterScholar=dois.filter(doi=>!found.has(doi));
+  const pmcWindow=boundedMetadataWindow(afterScholar,
+    Number(process.env.EUROPEPMC_LIMIT||60),epochDay,outerWindows);
+  report.europePmcAttempted=pmcWindow.selected.length;
+  report.europePmcRecovered=0;
+  report.europePmcWindow={number:pmcWindow.number,windows:pmcWindow.windows,
+    totalMissing:afterScholar.length};
+  report.europePmcErrors=[];
+  for(let i=0;i<pmcWindow.selected.length;i+=15){
+    const batch=pmcWindow.selected.slice(i,i+15);
+    try{
+      const endpoint=new URL('https://www.ebi.ac.uk/europepmc/webservices/rest/search');
+      endpoint.searchParams.set('query','('+batch.map(doi=>'DOI:'+doi).join(' OR ')+')');
+      endpoint.searchParams.set('format','json');
+      endpoint.searchParams.set('resultType','core');
+      endpoint.searchParams.set('pageSize','50');
+      const payload=await request(endpoint,{retries:0});
+      if(payload?.errCode)throw Error('europe_pmc_service_'+String(payload.errCode));
+      const matched=matchEuropePmcAbstracts(batch,payload);
+      for(const [doi,abstract] of matched){
+        if(!found.has(doi)){
+          found.set(doi,{abstract,source:'europe_pmc'});
+          report.europePmcRecovered++;
+        }
+      }
+    }catch(error){
+      report.europePmcErrors.push({offset:i,count:batch.length,
+        reason:String(error?.message||error).slice(0,160)});
+    }
+    await pause(350);
+  }
+  // Springer Nature's official metadata API can return Nature journal
+  // abstracts even when publisher HTML is only an identity/SPA shell.
+  // Optional free-tier key; no key means no network calls, no paid fallback.
+  const springerMissing=dois.filter(doi=>doi.startsWith('10.1038/')&&!found.has(doi));
+  const springerLimit=Math.min(springerMissing.length,
+    Math.max(0,Math.min(40,Number(process.env.SPRINGER_NATURE_META_LIMIT||'30'))));
+  const springerSelection=springerLimit>0?boundedMetadataWindow(
+    springerMissing,springerLimit,epochDay,outerWindows):{selected:[],number:0,windows:0};
+  report.springerNatureMetaConfigured=Boolean(SPRINGER_NATURE_META_KEY);
+  report.springerNatureMetaAttempted=0;
+  report.springerNatureMetaRecovered=0;
+  report.springerNatureMetaErrors=[];
+  report.springerNatureMetaWindow={number:springerSelection.number,
+    windows:springerSelection.windows,totalMissing:springerMissing.length};
+  if(SPRINGER_NATURE_META_KEY){
+    for(const doi of springerSelection.selected){
+      report.springerNatureMetaAttempted++;
+      try{
+        const url=springerNatureMetadataEndpoint(doi,SPRINGER_NATURE_META_KEY);
+        const data=await request(url,{retries:0});
+        const abstract=matchSpringerNatureMetaAbstract(doi,data);
+        if(abstract){
+          found.set(doi,{abstract,source:'springer_nature_meta'});
+          report.springerNatureMetaRecovered++;
+        }
+      }catch(error){
+        report.springerNatureMetaErrors.push({doi,
+          error:String(error?.message||error).slice(0,130)});
+        if(/metadata_http_(?:401|403|429)/.test(String(error?.message||'')))break;
+      }
+      await pause(900);
+    }
+  }
+  // Genuine DOI-verified publisher <head> metadata is a last resort for
+  // Crossref/OpenAlex misses. Never acquire historical article body, SI or PDF.
+  // Bound each run and rotate the missing-DOI cursor across nightly passes.
+  const publisherMissing=dois.filter(doi=>!found.has(doi));
+  const publisherLimit=Math.min(publisherMissing.length,
+    Math.max(0,Math.min(60,Number(process.env.PUBLISHER_ABSTRACT_LIMIT??'60'))));
+  // Daily rotating offset: even if none of the first 60 DOI can be resolved,
+  // the other DOI must still be sampled on subsequent scheduled runs.
+  const publisherSelection=publisherLimit>0?boundedMetadataWindow(
+    publisherMissing,publisherLimit,epochDay,outerWindows):{selected:[],number:0,windows:0};
+  const publisherBatch=publisherSelection.selected;
+  report.publisherMetadataAttempted=publisherBatch.length;
+  report.publisherMetadataWindow={number:publisherSelection.number,
+    windows:publisherSelection.windows,totalMissing:publisherMissing.length};
+  report.publisherMetadataRecovered=0;
+  report.publisherMetadataErrors=[];
+  report.publisherEmptyAbstractDiagnostics=[];
+  for(const doi of publisherBatch){
+    try{
+      const abstract=await fetchPublisherMetadataAbstract(doi,{
+        onDiagnostic:diagnostic=>{
+          report.publisherEmptyAbstractDiagnostics.push({doi,...diagnostic});
+        },
+      });
+      if(abstract){
+        found.set(doi,{abstract,source:'publisher_metadata'});
+        report.publisherMetadataRecovered++;
+      }
+    }catch(error){
+      report.publisherMetadataErrors.push({doi,error:String(error?.message||error).slice(0,150)});
+    }
+    await pause(350);
+  }
   return found;
 }
 // Bounded paged administrative read; public read never exposes raw full abstracts.

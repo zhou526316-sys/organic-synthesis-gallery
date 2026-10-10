@@ -2,17 +2,20 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {mkdir,writeFile,readFile,readdir} from 'node:fs/promises';
 import {chromium} from 'playwright';
-const base='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
+import {safeLiveVerificationRequest} from './gallery-live-readonly-post.mjs';
+import {liveCardArticleByDoi,liveCardModeForDoi} from '../shared/live-media-card-visibility.mjs';
+const base='https://gallery.gczhouwld.com/';
 const out=process.env.RUNNER_TEMP+'/body-live';await mkdir(out,{recursive:true});
 async function get(p){const r=await fetch(new URL(p,base),{headers:{'cache-control':'no-cache'},signal:AbortSignal.timeout(25000)});assert.equal(r.status,200,p);return Buffer.from(await r.arrayBuffer());}
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const key=(doi,id,sha)=>doi+'|'+id+'|'+sha;
 const report={checkedAt:new Date().toISOString(),productionWrites:0,files:[],cards:[],browserRenderingVerified:false,browserErrors:[],failureSnapshot:null};
 try{
- const [statusBytes,ledgerBytes,mediaBytes]=await Promise.all([
-  get('body-batches-status.json?audit='+Date.now()),get('body-publication-ledger.json?audit='+Date.now()),get('media-index.json?audit='+Date.now())
+ const [statusBytes,ledgerBytes,mediaBytes,queueBytes]=await Promise.all([
+  get('body-batches-status.json?audit='+Date.now()),get('body-publication-ledger.json?audit='+Date.now()),get('media-index.json?audit='+Date.now()),get('toc-demand-live.json?audit='+Date.now())
  ]);
  const status=JSON.parse(statusBytes),ledger=JSON.parse(ledgerBytes),media=JSON.parse(mediaBytes);
+ const byDoi=liveCardArticleByDoi(JSON.parse(queueBytes));
  assert.equal(status.schemaVersion,1);assert.equal(status.quarantineUnchanged,true);assert.equal(status.stagingWrites,0);assert.equal(status.stagingDeletes,0);
  assert.equal(ledger.schemaVersion,1);assert.equal(ledger.mediaGeneration,1790082000000);
  const dir='audit/media-recovery/body-batches';
@@ -45,18 +48,32 @@ try{
  const ranked=[];
  for(const batch of batches)for(const item of batch.items||[])ranked.push({doi:item.doi,reviewedAt:Date.parse(item.review?.reviewedAt||0)});
  ranked.sort((a,b)=>b.reviewedAt-a.reviewedAt||a.doi.localeCompare(b.doi));
- const selected=[];for(const x of ranked)if(!selected.includes(x.doi)&&selected.length<5)selected.push(x.doi);
+ const eligiblePublished=new Set(publishedRows.map(x=>x.doi));
+ const selected=[];for(const x of ranked)if(eligiblePublished.has(x.doi)&&byDoi.has(x.doi)&&!selected.includes(x.doi)&&selected.length<5)selected.push(x.doi);
+ assert.ok(selected.length>0,'no verified published DOI eligible for live card inspection');
  const browser=await chromium.launch({headless:true});
  try{
   const context=await browser.newContext({viewport:{width:1360,height:1000}});
-  await context.route('**/*',route=>{const r=route.request();if(!['GET','HEAD','OPTIONS'].includes(r.method()))return route.fulfill({status:503,body:'read-only browser acceptance; production write blocked'});return route.continue();});
+  await context.route('**/*',route=>{const r=route.request();if(!safeLiveVerificationRequest(r.method(),r.url()))return route.fulfill({status:503,body:'read-only browser acceptance; production write blocked'});return route.continue();});
   const page=await context.newPage();page.on('pageerror',e=>report.browserErrors.push(String(e.message).slice(0,500)));
   await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});await page.locator('#search').waitFor({timeout:30000});
   for(const [i,doi] of selected.entries()){
    const selector='.figure-strip-slot[data-figure-doi="'+doi+'"]',record=media.items?.[doi];assert.ok(record);
+   const mode=liveCardModeForDoi(byDoi,doi);
    const expected=publishedRows.filter(x=>x.doi===doi),expectedCount=record.figures?.figures?.length||0;assert.ok(expected.length>0);assert.ok(expectedCount>=expected.length);
    try{
-    await page.locator('#search').fill(doi);await page.locator('#search').press('Escape');
+    await page.locator('#search').fill(doi);
+    const card=page.locator('.card[data-doi="'+doi+'"]');
+    await card.waitFor({timeout:25000});
+    assert.equal(await card.getAttribute('data-media-policy'),mode,'card_media_policy_mismatch:'+doi);
+    if(mode!=='standard'){
+      assert.equal(await card.locator('.figure-strip-slot').count(),0,'retro_body_strip_leak:'+doi);
+      assert.equal(await card.locator('.private-pdf-button,.local-pdf-button').count(),0,'retro_pdf_action_leak:'+doi);
+      assert.equal(await card.locator('.toc-slot').count(),mode==='toc_only'?1:0,'retro_toc_policy_mismatch:'+doi);
+      report.cards.push({doi,mediaMode:mode,sourceAssetsVerified:true,
+        figureStripSuppressed:true,privatePdfSuppressed:true,tocVisible:mode==='toc_only'});
+      continue;
+    }
     const strip=page.locator(selector);await strip.waitFor({timeout:20000});await strip.scrollIntoViewIfNeeded();
     await page.waitForFunction(({doi,n})=>document.querySelectorAll('.figure-strip-slot[data-figure-doi="'+doi+'"] .figure-thumb img').length===n,{doi,n:expectedCount},{timeout:20000});
     await strip.locator('.figure-thumb img').evaluateAll(images=>images.forEach(image=>{image.loading='eager';}));
@@ -64,7 +81,7 @@ try{
     const figures=await strip.locator('.figure-thumb img').evaluateAll(images=>images.map(x=>({label:x.alt,url:x.currentSrc||x.src,width:x.naturalWidth,height:x.naturalHeight})));
     assert.equal(figures.length,expectedCount);assert.ok(await strip.isVisible());const rect=await strip.boundingBox();assert.ok(rect&&rect.height>0&&rect.width>0);
     for(const row of expected){const hit=figures.find(f=>new URL(f.url).pathname.endsWith('/'+row.imageUrl));assert.ok(hit,'card missing exact published image '+doi+' '+row.id);assert.ok(hit.width>0&&hit.height>0);}
-    const card=strip.locator('xpath=ancestor::article[1]');await card.screenshot({path:out+'/card-'+i+'.png'});
+    const stripCard=strip.locator('xpath=ancestor::article[1]');await stripCard.screenshot({path:out+'/card-'+i+'.png'});
     report.cards.push({doi,visible:true,figures:figures.length,approvedImagesChecked:expected.length,allImagesDecoded:true,tocAvailable:Boolean(record.toc?.available),lazyImagesMadeEagerForDecodeCheck:true,images:figures,screenshot:'card-'+i+'.png'});
    }catch(e){report.failureSnapshot=await page.evaluate(({selector,doi})=>({doi,search:document.querySelector('#search')?.value,count:document.querySelectorAll(selector+' .figure-thumb img').length,html:document.querySelector(selector)?.outerHTML?.slice(0,20000)}),{selector,doi});await page.screenshot({path:out+'/failure.png'});throw e;}
   }

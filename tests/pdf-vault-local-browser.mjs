@@ -143,12 +143,12 @@ async function pageWaitNoQueue(page) {
 }
 async function queueAdd(page) { await by(page, 'queue-doi').fill(DOI); await by(page, 'queue-add').click(); await waitQueueStatus(page, 'success'); }
 
-async function trackedContext({ width = 1280, holdAuth = false, folderPicker = true, queue = queueFixture(), indexedDb = true } = {}) {
+async function trackedContext({ width = 1280, holdAuth = false, folderPicker = true, queue = queueFixture(), indexedDb = true, stallIndexedDb = false, authResponses = [] } = {}) {
   const context = await browser.newContext({ viewport: { width, height: 900 }, acceptDownloads: true });
   contexts.add(context); context.setDefaultTimeout(7000); context.setDefaultNavigationTimeout(12000);
   await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
   const diagnostic = activeCase;
-  const state = { holdAuth, allowAuthCancellation: false, pendingAuth: [], authCalls: [], requests: [], queue };
+  const state = { holdAuth, allowAuthCancellation: false, pendingAuth: [], authCalls: [], authResponses: [...authResponses], requests: [], queue };
   context.on('close', () => contexts.delete(context));
   context.on('response', response => {
     try { const url = new URL(response.url()); if (url.origin === base && response.status() === 200 && !url.pathname.startsWith('/api/')) observedStaticPaths.add(url.pathname); } catch {}
@@ -158,7 +158,8 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
     page.on('console', message => {
       if (message.type() !== 'error') return;
       let pathname = ''; try { pathname = new URL(message.location().url).pathname; } catch {}
-      const expected = pathname === '/api/user-ui/pdf-vault/queue' && diagnostic.expectedQueueStatuses.some(status => message.text().includes(String(status)));
+      const expected = (pathname === '/api/user-ui/pdf-vault/queue' && diagnostic.expectedQueueStatuses.some(status => message.text().includes(String(status)))) ||
+        (pathname === '/api/user-ui/auth/session' && diagnostic.expectedAuthStatuses.some(status => message.text().includes(String(status))));
       bounded(expected ? diagnostic.expectedHttpErrors : diagnostic.consoleErrors, message.text());
     });
     page.on('requestfailed', request => {
@@ -184,6 +185,11 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       }
       const token = String(request.headers().authorization || '').replace(/^Bearer /, '');
       state.authCalls.push(token);
+      const forced = state.authResponses.shift();
+      if (forced) {
+        if (forced.status >= 400) diagnostic.expectedAuthStatuses.push(forced.status);
+        return route.fulfill({ status: forced.status, contentType: forced.contentType || 'application/json', headers: { 'access-control-allow-origin': '*', 'access-control-allow-headers': 'authorization,content-type' }, body: typeof forced.body === 'string' ? forced.body : JSON.stringify(forced.body ?? { error: 'fixture_session_outage' }) });
+      }
       if (state.holdAuth && token === TOKENS.a) await new Promise(resolve => state.pendingAuth.push(resolve));
       const who = token === TOKENS.a ? 'a' : token === TOKENS.b ? 'b' : null;
       return route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*', 'access-control-allow-headers': 'authorization,content-type' }, body: JSON.stringify({ authenticated: Boolean(who), user: who ? { id: USERS[who], displayName: '测试账号 ' + who.toUpperCase(), email: who + '@example.invalid', capabilities: [] } : null }) });
@@ -192,13 +198,13 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
     bounded(diagnostic.unexpectedNetwork, { url: request.url(), method: request.method() });
     return route.fulfill({ status: 503, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: '{"error":"unexpected_network_blocked_by_fixture"}' });
   });
-  await context.addInitScript(({ origin, sessionKey, token, folderPicker, indexedDb }) => {
+  await context.addInitScript(({ origin, sessionKey, token, folderPicker, indexedDb, stallIndexedDb }) => {
     if (location.origin !== origin) return;
     if (!localStorage.getItem('gallery-local-vault-fixture-seeded')) {
       localStorage.setItem(sessionKey, token);
       localStorage.setItem('gallery-local-vault-fixture-seeded', '1');
     }
-    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false };
+    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false, stallIndexedDb };
     const nativeFetch = window.fetch.bind(window);
     window.fetch = (input, init) => {
       const pathname = new URL(typeof input === 'string' ? input : input.url, location.href).pathname;
@@ -218,6 +224,18 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
     };
     if (!folderPicker) window.showDirectoryPicker = undefined;
     if (!indexedDb) Object.defineProperty(window, 'indexedDB', { value: undefined, configurable: true });
+    else if (stallIndexedDb) {
+      // Synthetic IDB open request whose callbacks never fire. Simulates a
+      // blocked/unresponsive storage service without touching real user data.
+      const nativeIndexedDb = window.indexedDB;
+      Object.defineProperty(window, 'indexedDB', {
+        configurable: true, value: {
+          open(...args) {
+            return window.__pdfVaultFixture.stallIndexedDb ? {} : nativeIndexedDb.open(...args);
+          },
+        },
+      });
+    }
     const prototype = FileSystemDirectoryHandle.prototype;
     const query = prototype.queryPermission, request = prototype.requestPermission;
     prototype.queryPermission = function (options) { return (this.name === 'picked-directory' || this.name.startsWith('library-')) ? Promise.resolve(window.__pdfVaultFixture.permission) : query.call(this, options); };
@@ -231,7 +249,7 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       }
       return createWritable.call(this, options);
     };
-  }, { origin: base, sessionKey: SESSION_KEY, token: TOKENS.a, folderPicker, indexedDb });
+  }, { origin: base, sessionKey: SESSION_KEY, token: TOKENS.a, folderPicker, indexedDb, stallIndexedDb });
   return { context, state };
 }
 
@@ -315,6 +333,25 @@ async function saveVisual(page, name) {
   if (name.endsWith('library')) await page.evaluate(() => scrollTo(0, 0));
   await page.screenshot({ path: path.join(directory, name + '.png'), fullPage: false });
 }
+async function assertFullViewportReader(page) {
+  const viewport = page.viewportSize();
+  const geometry = await by(page, 'reader').evaluate(dialog => {
+    const rect = dialog.getBoundingClientRect();
+    const scroll = dialog.querySelector('.reader-scroll-container')?.getBoundingClientRect();
+    const toolbar = dialog.querySelector('.reader-topbar')?.getBoundingClientRect();
+    return {
+      x: rect.x, y: rect.y, width: rect.width, height: rect.height,
+      scrollHeight: scroll?.height || 0, toolbarHeight: toolbar?.height || 0,
+      borderRadius: getComputedStyle(dialog).borderRadius,
+    };
+  });
+  assert.ok(Math.abs(geometry.x) <= 1 && Math.abs(geometry.y) <= 1, 'PDF reader begins at viewport origin: ' + JSON.stringify(geometry));
+  assert.ok(Math.abs(geometry.width - viewport.width) <= 1, 'PDF reader covers viewport width: ' + JSON.stringify(geometry));
+  assert.ok(Math.abs(geometry.height - viewport.height) <= 1, 'PDF reader covers viewport height: ' + JSON.stringify(geometry));
+  assert.equal(geometry.borderRadius, '0px', 'browser-style viewer has no floating dialog corners');
+  assert.ok(geometry.scrollHeight > viewport.height * 0.55, 'continuous PDF scroll area uses the viewport: ' + JSON.stringify(geometry));
+  assert.ok(geometry.toolbarHeight > 30 && geometry.toolbarHeight < 120, 'PDF toolbar is visible and compact');
+}
 async function assertNoReader(page) { assert.equal(await by(page, 'reader').isVisible(), false, 'failed or stale open must not expose the reader'); }
 async function waitUntil(predicate, description) {
   for (let i = 0; i < 140; i++) { if (predicate()) return; await new Promise(resolve => setTimeout(resolve, 25)); }
@@ -322,7 +359,7 @@ async function waitUntil(predicate, description) {
 }
 
 async function test(name, work) {
-  const record = { name, status: 'running', pageErrors: [], consoleErrors: [], failedRequests: [], unexpectedNetwork: [], privateNetworkLeaks: [], expectedQueueStatuses: [], expectedHttpErrors: [], responses: [] };
+  const record = { name, status: 'running', pageErrors: [], consoleErrors: [], failedRequests: [], unexpectedNetwork: [], privateNetworkLeaks: [], expectedQueueStatuses: [], expectedAuthStatuses: [], expectedHttpErrors: [], responses: [] };
   cases.push(record); activeCase = record; const start = Date.now();
   try {
     await work();
@@ -348,10 +385,85 @@ async function test(name, work) {
 try {
   base = process.env.PDF_VAULT_BASE_URL ? new URL(process.env.PDF_VAULT_BASE_URL).origin : await staticServer();
   browser = await chromium.launch({ headless: true });
+  await test('temporary 503 and HTML 403 from the account API retry without claiming logout', async () => {
+    for (const firstResponse of [
+      { status: 503, body: { error: 'temporary_unavailable' } },
+      { status: 403, contentType: 'text/html', body: '<html><title>Temporary edge challenge</title></html>' },
+    ]) {
+      const { context, state } = await trackedContext({ authResponses: [firstResponse] });
+      const page = await pageFor(context);
+      assert.ok(state.authCalls.length >= 2, 'bounded retry must reach the valid session');
+      assert.equal(await page.evaluate(() => document.documentElement.dataset.pdfVaultAuth), 'authenticated');
+      assert.equal(await page.evaluate(key => localStorage.getItem(key), SESSION_KEY), TOKENS.a);
+      assert.ok((await by(page, 'account').innerText()).includes('账号已验证'));
+      await context.close();
+    }
+  });
+  await test('persistent 503 is a recoverable service error, never a forced sign-out', async () => {
+    const { context, state } = await trackedContext({ authResponses: [
+      { status: 503, body: { error: 'temporary_unavailable' } },
+      { status: 503, body: { error: 'temporary_unavailable' } },
+    ] });
+    const page = await pageFor(context, { authenticated: false });
+    await page.waitForFunction(() => document.documentElement.dataset.pdfVaultAuth === 'error');
+    assert.equal(state.authCalls.length, 2);
+    assert.match(await by(page, 'status').innerText(), /HTTP 503|接口暂时/);
+    assert.equal(await page.evaluate(key => localStorage.getItem(key), SESSION_KEY), TOKENS.a);
+    assert.equal(await page.locator('#sign-in-link').isVisible(), false, 'transport errors must not demand a new login');
+    await by(page, 'session-refresh').click();
+    await waitAccount(page, 'a');
+    assert.equal(await page.evaluate(key => localStorage.getItem(key), SESSION_KEY), TOKENS.a);
+  });
+  await test('only an explicit authenticated false response is a signed-out session', async () => {
+    const { context } = await trackedContext({ authResponses: [
+      { status: 200, body: { authenticated: false, user: null } },
+    ] });
+    const page = await pageFor(context, { authenticated: false });
+    await page.waitForFunction(() => document.documentElement.dataset.pdfVaultAuth === 'signed-out');
+    assert.match(await by(page, 'account').innerText(), /登录已失效/);
+    assert.equal(await page.evaluate(key => localStorage.getItem(key), SESSION_KEY), TOKENS.a);
+    assert.equal(await copyRows(page).count(), 0);
+  });
+  await test('manual same-token recheck keeps saved copies on network failure', async () => {
+    const { context, state } = await trackedContext();
+    const page = await pageFor(context);
+    await importGood(page);
+    const copyId = await copyRows(page).first().getAttribute('data-copy-id');
+    state.authResponses.push({ status: 503, body: { error: 'temporary_unavailable' } });
+    await by(page, 'session-refresh').click();
+    await waitStatus(page, 'error');
+    assert.match(await by(page, 'status').innerText(), /HTTP 503|接口暂时/);
+    assert.equal(await copyRows(page).first().getAttribute('data-copy-id'), copyId);
+    assert.equal(await page.evaluate(key => localStorage.getItem(key), SESSION_KEY), TOKENS.a);
+    await by(page, 'session-refresh').click();
+    await waitStatus(page, 'success');
+    await openFirst(page);
+    await assertRendered(page);
+  });
+  await test('confirmed account never stays checking when IndexedDB open never responds', async () => {
+    const { context, state } = await trackedContext({ stallIndexedDb: true });
+    const page = await pageFor(context, { authenticated: false });
+    await page.waitForFunction(() => document.documentElement.dataset.pdfVaultAuth === 'loading-local');
+    assert.match(await by(page, 'account').innerText(), /账号已验证/);
+    await page.waitForFunction(() => document.documentElement.dataset.pdfVaultAuth === 'storage-error', null, { timeout: 15_000 });
+    assert.match(await by(page, 'status').innerText(), /本地文献索引|8 秒/);
+    assert.match(await by(page, 'account').innerText(), /账号已验证/);
+    assert.equal(await page.evaluate(key => localStorage.getItem(key), SESSION_KEY), TOKENS.a, 'session is never discarded');
+    assert.equal(await page.locator('#sign-in-link').isVisible(), false, 'local storage stall must not request sign in');
+    assert.equal(await page.getByTestId('pdf-vault-session-refresh').isEnabled(), true, 'manual recovery must be available');
+    assert.equal(await copyRows(page).count(), 0, 'a stalled database does not invent saved PDF records');
+    const apiCalls = state.authCalls.length;
+    await page.evaluate(() => { window.__pdfVaultFixture.stallIndexedDb = false; });
+    await by(page, 'session-refresh').click();
+    await waitAccount(page, 'a');
+    assert.equal(await page.evaluate(() => document.documentElement.dataset.pdfVaultAuth), 'authenticated');
+    assert.ok(state.authCalls.length > apiCalls, 'retry revalidates the account, not a cached identity');
+    assert.equal(await page.evaluate(key => localStorage.getItem(key), SESSION_KEY), TOKENS.a);
+  });
   await test('real OPFS import is read back and reopened after reload', async () => {
     const { context } = await trackedContext(); const page = await pageFor(context); await importGood(page);
     let copies = await localCopies(page); assert.equal(copies.length, 1); assert.equal(copies[0].content_hash, PDF_HASH); assert.equal(copies[0].byte_length, PDF.length); assert.equal(copies[0].hasDirectoryHandle, true);
-    await openFirst(page); await assertRendered(page); await saveVisual(page, 'desktop-reader'); await by(page, 'reader-close').click();
+    await openFirst(page); await assertRendered(page); await assertFullViewportReader(page); await saveVisual(page, 'desktop-reader'); await by(page, 'reader-close').click();
     await page.reload({ waitUntil: 'domcontentloaded' }); await waitAccount(page, 'a');
     assert.equal(await copyRows(page).count(), 1); await openFirst(page); await assertRendered(page);
     copies = await localCopies(page); assert.equal(copies.length, 1, 'opening a stored PDF does not import another copy');
@@ -507,7 +619,7 @@ try {
     await importFile(page); await waitStatus(page, 'error'); assert.equal(await copyRows(page).count(), 0); assert.equal((await localCopies(page)).length, 0); await assertNoReader(page);
   });
   await test('390px local library and PDF reader fit the mobile viewport', async () => {
-    const { context } = await trackedContext({ width: 390, folderPicker: false }); const page = await pageFor(context); assert.equal(await by(page, 'directory').isDisabled(), true); assert.equal(await by(page, 'opfs').isEnabled(), true); await importGood(page); await saveVisual(page, 'mobile-library'); await openFirst(page); await assertRendered(page); await saveVisual(page, 'mobile-reader');
+    const { context } = await trackedContext({ width: 390, folderPicker: false }); const page = await pageFor(context); assert.equal(await by(page, 'directory').isDisabled(), true); assert.equal(await by(page, 'opfs').isEnabled(), true); await importGood(page); await saveVisual(page, 'mobile-library'); await openFirst(page); await assertRendered(page); await assertFullViewportReader(page); await saveVisual(page, 'mobile-reader');
     const metrics = await page.evaluate(() => ({ width: innerWidth, document: document.documentElement.scrollWidth, body: document.body.scrollWidth, overflows: [...document.querySelectorAll('body *')].map(element => ({ tag: element.tagName, className: String(element.className || ''), testId: element.dataset?.testid || '', left: element.getBoundingClientRect().left, right: element.getBoundingClientRect().right })).filter(item => item.left < -1 || item.right > innerWidth + 1).slice(0, 12) }));
     activeCase.layout = metrics;
     assert.ok(metrics.document <= metrics.width + 1 && metrics.body <= metrics.width + 1, 'no page-level horizontal overflow: ' + JSON.stringify(metrics));

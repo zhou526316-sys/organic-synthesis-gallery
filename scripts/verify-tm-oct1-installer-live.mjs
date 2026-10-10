@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import path from 'node:path';
-const VERSION='2.2.81',INSTALL='6.2.62';
+const VERSION='2.2.83',INSTALL='6.2.64';
 const origin='https://api.gczhouwld.com';
 const targets=[['gallery','https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js'],
   ['api','https://api.gczhouwld.com/gallery-vpn-bridge.user.js']];
@@ -32,6 +32,8 @@ async function check(key,url){
       assert.ok(raw.includes('function captureJobEligible(job)'), 'capture_split_guard_absent');
       assert.ok(raw.includes('if(!captureJobEligible(batch[i])){summary.skipped+=1;continue;}'), 'capture_dispatch_guard_absent');
       assert.ok(raw.includes('opportunisticFigures:!tocOnlyCaptureEligible(raw)'), 'historical_body_guard_absent');
+      assert.ok(raw.includes('return Boolean(hasFigureOne) && !tocOnlyCaptureEligible(job);'), 'historical_official_toc_need_lost');
+      assert.ok(raw.includes('var historicOfficialRequired=tocOnlyCaptureEligible(job);'), 'historical_official_receipt_guard_missing');
       assert.ok(raw.includes('&&recentFullCaptureEligible(job);'), 'historical_pdf_guard_absent');
       const result={key,ok:true,bytes:raw.length,httpStatus:res.status,attempts:i,
         hasScope:true,hasOwnerPdf:true,historicalTocOnlyGuard:true,install:INSTALL};

@@ -1,0 +1,77 @@
+name: Gallery historical basic abstract regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cloudflare/worker/src/literature-basic-abstracts.js'
+      - 'cloudflare/worker/src/literature-search-enrichment.js'
+      - 'cloudflare/worker/src/index.js'
+      - 'cloudflare/worker/scripts/test-literature-search-enrichment.mjs'
+      - 'src/user-ui/shared.ts'
+      - 'scripts/lib/publisher-abstract-metadata.mjs'
+      - 'scripts/sync-literature-search-enrichment.mjs'
+      - 'scripts/test-publisher-abstract-metadata.mjs'
+      - 'scripts/lib/doi-scholarly-abstract-metadata.mjs'
+      - 'scripts/test-doi-scholarly-abstract-metadata.mjs'
+      - 'scripts/lib/semantic-scholar-abstract-client.mjs'
+      - 'scripts/test-semantic-scholar-abstract-client.mjs'
+      - 'scripts/lib/springer-nature-meta-abstract.mjs'
+      - 'scripts/test-springer-nature-meta-abstract.mjs'
+      - 'scripts/test-abstract-recovery-deploy-order.mjs'
+      - 'scripts/audit-gallery-abstract-gaps.mjs'
+      - 'scripts/lib/classify-gallery-abstract-gap.mjs'
+      - 'scripts/test-gallery-abstract-gap-classification.mjs'
+      - 'scripts/audit-gallery-approved-summaries-live.mjs'
+      - '.github/workflows/literature-abstract-incremental.yml'
+      - 'src/user-ui/paper-actions.ts'
+      - 'scripts/sync-literature-search-enrichment.mjs'
+      - 'scripts/lib/publisher-abstract-metadata.mjs'
+      - 'scripts/test-publisher-abstract-metadata.mjs'
+      - '.github/workflows/gallery-basic-abstracts-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: gallery-basic-abstracts-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  abstract-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Check Worker JavaScript syntax
+        run: |
+          node --check cloudflare/worker/src/literature-basic-abstracts.js
+          node --check cloudflare/worker/src/literature-search-enrichment.js
+          node --check cloudflare/worker/src/index.js
+          node --check scripts/sync-literature-search-enrichment.mjs
+          node --check scripts/lib/publisher-abstract-metadata.mjs
+      - name: Test publisher HEAD metadata acquisition safety
+        run: |
+          node --check scripts/lib/publisher-abstract-metadata.mjs
+          node --check scripts/sync-literature-search-enrichment.mjs
+          node --test scripts/test-publisher-abstract-metadata.mjs
+          node --test scripts/test-doi-scholarly-abstract-metadata.mjs
+          node --test scripts/test-semantic-scholar-abstract-client.mjs
+          node --test scripts/test-springer-nature-meta-abstract.mjs
+          node --test scripts/test-abstract-recovery-deploy-order.mjs
+      - name: Check DOI membership, source hash and all-time excerpt regression
+        run: node --test cloudflare/worker/scripts/test-literature-search-enrichment.mjs
+      - name: Verify protected publisher HEAD metadata parsing without body capture
+        run: node --test scripts/test-publisher-abstract-metadata.mjs
+      - name: Verify no stale or missing Evidence is silently promoted
+        run: |
+          node --check scripts/audit-gallery-abstract-gaps.mjs
+          node --check scripts/audit-gallery-approved-summaries-live.mjs
+          node --test scripts/test-gallery-abstract-gap-classification.mjs
+      - name: Install dependencies and validate card type safety
+        run: |
+          npm install --no-audit --no-fund
+          npx tsc --noEmit
+          npm run build

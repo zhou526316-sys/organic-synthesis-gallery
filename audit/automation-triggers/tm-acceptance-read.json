@@ -1,8 +1,8 @@
 {
-  "requestId": "tm-20261010-0955-owner-screen-gm-timeout-read",
-  "requestedAt": "2026-10-10T01:55:00Z",
+  "requestId": "tm-20261011-0020-bridge282-real-run-30blocked",
+  "requestedAt": "2026-10-10T16:24:11.526Z",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "context": "User shared 2026-10-10 09:52 Beijing Bridge 2.2.77/engine 6.2.58 screenshot: Status stopped gm_request_timeout before any DOI page, 10 visible gaps, inventory fields awaiting. User says newest owner diagnostic log uploaded. Read LATEST R2 uploadedAt, engine/install revision, run start, exact fatal reason and progress/trace even if summary empty. Scope TOC/body/PDF for Oct1+ and RSC Chemical Science 10.1039/d6sc06407h, Green Chemistry 10.1039/d6gc03748h; compare actual owner script against deployed 2.2.78/6.2.59. Diagnose only; no live publisher visits/media writes/scheduling changes.",
+  "context": "User screenshot at Beijing 2026-10-11 around 00:19 shows deployed VPN Bridge 2.2.82 / engine 6.2.63 / controller 2.2.41; explicit missing-only pass visited 30 of 139 eligible papers, 43 attempts, 30 unresolved (27 TOC / 3 truly missing owner PDFs), 0 queued/cooling, 0 fully resolved, 2 new body images. Determine latest uploadedAt/version and whether R2 diagnostic latest matches this run, inspect DOI error categories and publication/stage receipts, and keep old snapshots distinguishable. Read only; no publisher page visits, no media/PDF writes, no promotion, no queue or 08:00 release changes.",
   "targetDois": [
     "10.1039/d6sc06407h",
     "10.1039/d6gc03748h",
@@ -10,8 +10,8 @@
     "10.1016/j.chempr.2026.103043",
     "10.1002/anie.4335022"
   ],
-  "expectedBridgeVersion": "2.2.78",
-  "expectedInstallRevision": "6.2.59",
+  "expectedBridgeVersion": "2.2.82",
+  "expectedInstallRevision": "6.2.63",
   "readOnly": true,
   "allowCapture": false,
   "allowMediaWrite": false,

@@ -1,0 +1,39 @@
+name: Published media card scope regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'shared/live-media-card-visibility.mjs'
+      - 'shared/historical-literature-policy.js'
+      - 'scripts/verify-new-body-auto-live.mjs'
+      - 'scripts/verify-reviewed-body-live.mjs'
+      - '.github/workflows/new-body31-live.yml'
+      - 'tests/live-media-card-visibility.test.mjs'
+      - '.github/workflows/live-media-scope-ci.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'shared/live-media-card-visibility.mjs'
+      - 'scripts/verify-new-body-auto-live.mjs'
+      - 'scripts/verify-reviewed-body-live.mjs'
+      - '.github/workflows/new-body31-live.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Enforce immutable published bytes and correct historical card visibility
+        run: |
+          set -euo pipefail
+          node --check shared/live-media-card-visibility.mjs
+          node --check scripts/verify-new-body-auto-live.mjs
+          node --check scripts/verify-reviewed-body-live.mjs
+          node --test tests/live-media-card-visibility.test.mjs
+          node scripts/test-historical-media-policy.mjs
+          git diff --check

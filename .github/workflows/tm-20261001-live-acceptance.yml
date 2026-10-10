@@ -31,9 +31,9 @@ jobs:
         run: |
           node --input-type=module <<'JS'
           import {writeFile} from 'node:fs/promises';
-          const expectedVersion='2.2.81';
+          const expectedVersion='2.2.83';
           const expectedController='2.2.41';
-          const expectedInstall='6.2.62';
+          const expectedInstall='6.2.64';
           const report={readOnly:true,publisherRequests:0,mediaWrites:0,expectedVersion,expectedController,expectedInstall,http:[],errors:[]};
           const wait=ms=>new Promise(r=>setTimeout(r,ms));
           async function probe(key,url,init={}){
@@ -44,7 +44,7 @@ jobs:
               if(key.includes('installer')){
                 row.version=(text.match(/@version\s+(\S+)/)||[])[1]||'';
                 row.controller=text.includes("var CONTROLLER_REVISION = '2.2.41';");
-                row.install=text.includes("var INSTALL_REVISION = '6.2.62';");
+                row.install=text.includes("var INSTALL_REVISION = '6.2.64';");
                 row.bundle=text.includes("RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1'")&&text.includes("RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01'");
                 row.pdf=text.includes("PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-bundle-v6'");
                 row.ccsMatch=text.includes('// @match        https://www.chinesechemsoc.org/*');

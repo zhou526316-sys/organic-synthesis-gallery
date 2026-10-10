@@ -44,13 +44,30 @@ jobs:
           LITERATURE_INDEX_SHADOW_REPORT: ${{ runner.temp }}/literature-catalog-index-shadow-report.json
         run: node scripts/sync-literature-catalog-index-shadow.mjs
 
+      - name: Verify official Springer Nature metadata schema and DOI
+        run: node --test scripts/test-springer-nature-meta-abstract.mjs
+
+      - name: Validate rate-limited scholarly DOI source
+        run: node --test scripts/test-semantic-scholar-abstract-client.mjs
+      - name: Validate alternative scholarly DOI metadata
+        run: node --test scripts/test-doi-scholarly-abstract-metadata.mjs
+
+      - name: Validate metadata-only publisher fallback parser
+        run: node --test scripts/test-publisher-abstract-metadata.mjs
+
       - name: Enrich the ready DOI-matched index with abstracts and approved interpretations
         env:
           SITE_URL: https://gallery.gczhouwld.com/
           WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev/
           BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
           OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+          SEMANTIC_SCHOLAR_API_KEY: ${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}
+          SPRINGER_NATURE_API_KEY: ${{ secrets.SPRINGER_NATURE_API_KEY }}
           SEARCH_ENRICHMENT_REPORT: ${{ runner.temp }}/literature-search-enrichment-report.json
+          PUBLISHER_ABSTRACT_LIMIT: '60'
+          SEMANTIC_SCHOLAR_LIMIT: '60'
+          EUROPEPMC_LIMIT: '60'
+          SPRINGER_NATURE_META_LIMIT: '30'
         run: node scripts/sync-literature-search-enrichment.mjs
 
       - name: Preserve abstract search coverage report

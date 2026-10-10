@@ -6,7 +6,9 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/workflows/literature-abstract-incremental.yml'
+      # Explicit recovery must be requested only after production Worker
+      # deploy and ready DOI/revision index. Code pushes alone race the old
+      # API's source enum and falsely fail on newly added metadata sources.
       - 'audit/automation-triggers/literature-abstract-incremental.json'
   workflow_dispatch:
 permissions:
@@ -25,6 +27,14 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
+      - name: Verify official Springer Nature metadata adapter
+        run: node --test scripts/test-springer-nature-meta-abstract.mjs
+      - name: Verify scholarly DOI-only source adapters
+        run: node --test scripts/test-doi-scholarly-abstract-metadata.mjs
+      - name: Validate authenticated DOI-only scholar metadata rate-limit handling
+        run: node --test scripts/test-semantic-scholar-abstract-client.mjs
+      - name: Verify publisher metadata DOI and redirect constraints
+        run: node --test scripts/test-publisher-abstract-metadata.mjs
       - name: Validate true DOI-bound abstract recovery and term search
         run: node --test cloudflare/worker/scripts/test-literature-search-enrichment.mjs
       - name: Incrementally recover original abstracts without republishing papers
@@ -33,9 +43,15 @@ jobs:
           WORKER_URL: https://api.gczhouwld.com/
           BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
           OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+          SEMANTIC_SCHOLAR_API_KEY: ${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}
+          SPRINGER_NATURE_API_KEY: ${{ secrets.SPRINGER_NATURE_API_KEY }}
           SEARCH_ENRICHMENT_REPORT: ${{ runner.temp }}/abstract-recovery-report.json
           SEARCH_ABSTRACT_RETRY_LIMIT: '300'
           CROSSREF_FALLBACK_LIMIT: '300'
+          PUBLISHER_ABSTRACT_LIMIT: '60'
+          SEMANTIC_SCHOLAR_LIMIT: '60'
+          EUROPEPMC_LIMIT: '60'
+          SPRINGER_NATURE_META_LIMIT: '30'
         run: node scripts/sync-literature-search-enrichment.mjs
       - uses: actions/upload-artifact@v4
         if: always()

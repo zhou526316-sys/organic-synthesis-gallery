@@ -7,6 +7,7 @@ on:
       - '.github/workflows/gallery-search-live-acceptance.yml'
       - 'scripts/verify-gallery-search-live-acceptance.mjs'
       - 'scripts/verify-gallery-search-browser.mjs'
+      - 'scripts/verify-gallery-basic-abstracts-live.mjs'
       - 'cloudflare/worker/src/literature-search-enrichment.js'
       - 'cloudflare/worker/src/literature-catalog-index.js'
   push:
@@ -46,6 +47,22 @@ jobs:
         env:
           SEARCH_LIVE_REPORT: ${{ runner.temp }}/gallery-search-live-acceptance.json
         run: node scripts/verify-gallery-search-live-acceptance.mjs
+      - name: Verify public abstract and card linkage after production index publication
+        if: github.event_name == 'workflow_run'
+        env:
+          GALLERY_API_URL: https://api.gczhouwld.com/
+          GALLERY_SITE_URL: https://gallery.gczhouwld.com/
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+          BASIC_ABSTRACT_LIVE_REPORT: ${{ runner.temp }}/gallery-basic-abstract-live-acceptance.json
+        run: node scripts/verify-gallery-basic-abstracts-live.mjs
+      - name: Preserve DOI-level basic abstract proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-basic-abstract-live-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gallery-basic-abstract-live-acceptance.json
+          retention-days: 21
+          if-no-files-found: ignore
       - name: Preserve DOI-level search proof
         if: always()
         uses: actions/upload-artifact@v4
@@ -56,6 +73,9 @@ jobs:
           retention-days: 21
 
   live-browser-readonly:
+    # A PR cannot change the already deployed site. Run full public-browser
+    # acceptance only after production sync/deployment, not against old code.
+    if: github.event_name != 'pull_request'
     needs: live-search-readonly
     strategy:
       fail-fast: false

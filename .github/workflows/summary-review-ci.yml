@@ -8,6 +8,7 @@ on:
       - 'cloudflare/worker/src/scheduled-summary-handoff.js'
       - 'cloudflare/worker/src/index.js'
       - 'cloudflare/worker/scripts/test-article-summary.mjs'
+      - 'cloudflare/worker/scripts/test-content-equivalent-reviewed-summary.mjs'
       - 'cloudflare/worker/scripts/test-scheduled-summary-handoff.mjs'
       - 'cloudflare/worker/package.json'
       - 'public/scheduled-article-summaries.json'
@@ -61,6 +62,7 @@ jobs:
         working-directory: cloudflare/worker
         run: |
           npm run test:article-summary
+          node scripts/test-content-equivalent-reviewed-summary.mjs
           npm run test:scheduled-summary-handoff
       - name: Wrangler dry-run
         working-directory: cloudflare/worker

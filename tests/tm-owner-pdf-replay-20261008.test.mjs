@@ -127,3 +127,91 @@ test('private PDF upload never queues unauthorized, cancelled, oversized or pre-
   assert.equal(await h.ctx.O.retainOwnerPdfAfterUploadFailure(h.job,big,err),false);
   assert.equal(h.ctx.O.pendingOwnerPdfKeys().length,0);
 });
+
+
+test('Gallery retries downloaded bytes once through GM after a native network failure, preserving DOI and SHA',async()=>{
+  const h=fixture();
+  await h.ctx.O.retainOwnerPdfAfterUploadFailure(h.job,h.pdf,new Error('gm_request_timeout'));
+  h.makeReady();
+  h.ctx.fetch=async(url,options)=>{
+    h.network.push({kind:'native_failed',url,options});
+    throw new TypeError('Failed to fetch');
+  };
+  let gmCount=0;
+  h.ctx.gmRequest=async(options,skipNativeFallback)=>{
+    gmCount++;
+    assert.equal(skipNativeFallback,true);
+    assert.equal(options.method,'POST');
+    assert.equal(options.headers.authorization,'Bearer 测试专属PDF捕获授权占位符');
+    const bytes=options.data,hash=await webcrypto.subtle.digest('SHA-256',bytes);
+    const digest=[...new Uint8Array(hash)].map(x=>x.toString(16).padStart(2,'0')).join('');
+    h.network.push({kind:'gm_upload',url:options.url,bytes:bytes.byteLength});
+    return {status:201,finalUrl:options.url,responseText:JSON.stringify({
+      stored:true,doi:h.doi,byteLength:bytes.byteLength,contentHash:digest
+    })};
+  };
+  assert.equal(await h.ctx.O.replayOneOwnerPdf(),true);
+  assert.equal(gmCount,1);
+  assert.equal(h.ctx.O.pendingOwnerPdfKeys().length,0);
+  assert.equal(h.network.filter(x=>x.kind==='native_failed').length,1);
+  assert.equal(h.network.filter(x=>x.kind==='gm_upload').length,1);
+});
+test('Gallery PDF replay respects explicit Worker HTTP 403 without alternate transport',async()=>{
+  const h=fixture();
+  await h.ctx.O.retainOwnerPdfAfterUploadFailure(h.job,h.pdf,new Error('gm_request_timeout'));
+  h.makeReady();
+  let gmCalls=0;
+  h.ctx.fetch=async(url,options)=>({ok:false,status:403,url,
+    json:async()=>({error:'fixture_not_entitled'})});
+  h.ctx.gmRequest=async()=>{gmCalls++;throw Error('GM must not run after 403');};
+  assert.equal(await h.ctx.O.replayOneOwnerPdf(),false);
+  assert.equal(gmCalls,0);
+  assert.equal(h.ctx.O.pendingOwnerPdfKeys().length,1);
+});
+test('Gallery PDF GM replay refuses foreign redirects and keeps local bytes',async()=>{
+  const h=fixture();
+  await h.ctx.O.retainOwnerPdfAfterUploadFailure(h.job,h.pdf,new Error('gm_request_timeout'));
+  h.makeReady();
+  h.ctx.fetch=async()=>{throw new TypeError('Failed to fetch');};
+  h.ctx.gmRequest=async options=>({status:201,finalUrl:'https://example.invalid/receive',
+    responseText:JSON.stringify({stored:true,doi:h.doi,byteLength:2048,contentHash:'a'.repeat(64)})});
+  assert.equal(await h.ctx.O.replayOneOwnerPdf(),false);
+  assert.equal(h.ctx.O.pendingOwnerPdfKeys().length,1);
+});
+test('Chem body-evidence upload uses a bounded 12s budget without changing RSC/ACS budgets',async()=>{
+  const from=source.indexOf('  async function tryCaptureArticleEvidence(');
+  const to=source.indexOf('\n  function mergeFallbackCandidates(',from);
+  assert.ok(from>0&&to>from);
+  const body=source.slice(from,to);
+  for(const [publisher,mediaNeed,expected] of [
+    ['elsevier','toc+figures+evidence',12000],
+    ['rsc','toc+figures+evidence',9000],
+    ['acs','toc+figures+evidence',4000],
+    ['elsevier','evidence',10000]
+  ]){
+    let actualTimeout=0;
+    const ctx={
+      Number,String,Date,location:{href:'https://example.invalid/article'},
+      evidenceCaptureEligible:()=>true,
+      captureLiveUpdate:()=>{},
+      buildArticleEvidencePacket:()=>({fulltextStatus:'partial',_metrics:{chars:2000,sections:2}}),
+      postArticleEvidence:async(payload,token,timeout)=>{
+        actualTimeout=timeout;return {stored:true,doi:'10.1016/j.chempr.2026.103043',
+          schemaVersion:'article-evidence-v2',evidenceLevel:'partial',chars:2000,sections:2};
+      },
+      pushTrace:()=>{},normalizeDoi:v=>v,EVIDENCE_SCHEMA_VERSION:'article-evidence-v2'
+    };
+    vm.createContext(ctx);
+    vm.runInContext(body+'\n globalThis.run=tryCaptureArticleEvidence;',ctx);
+    const res=await ctx.run({doi:'10.1016/j.chempr.2026.103043',publisher,mediaNeed},[],'fixture',0);
+    assert.equal(res.status,'stored');
+    assert.equal(actualTimeout,expected,publisher+' '+mediaNeed);
+  }
+});
+test('owner manual PDF menu waits for a real retry result before reporting success',()=>{
+  const match=source.match(/GM_registerMenuCommand\('使用 owner 授权补传本机暂存私人PDF', async function \(\) \{([\s\S]*?)\n    \}\);/);
+  assert.ok(match,'async owner menu command missing');
+  assert.match(match[1],/success=await replayOneOwnerPdf\(\)/);
+  assert.match(match[1],/if\(success\)/);
+  assert.doesNotMatch(match[1],/window\.alert\('已检查/);
+});

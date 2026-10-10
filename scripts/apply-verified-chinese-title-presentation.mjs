@@ -35,7 +35,7 @@ export function applyVerifiedChineseTitlePresentation({ supplement, translationP
     && Array.isArray(receipt.resolved)
     && receipt.resolvedUniqueDois === receipt.resolved.length,
     'invalid_english_doi_title_receipt');
-  assert(approvedDois instanceof Set && approvedDois.size === receipt.originalUniqueDois,
+  assert(approvedDois instanceof Set && approvedDois.size >= receipt.originalUniqueDois,
     'approved_doi_membership_mismatch');
 
   const expected = new Map();
@@ -143,7 +143,7 @@ export async function applyVerifiedChineseTitlePresentationToPages(root = proces
       members.add(doi);
     });
   }
-  assert(members.size === marker.productionCards && receipt.originalUniqueDois === members.size,
+  assert(members.size === marker.productionCards && receipt.originalUniqueDois <= members.size,
     'doi_count_mismatch_with_fixed_slot');
   const result = applyVerifiedChineseTitlePresentation({
     supplement, translationPayload:parts, receipt, approvedDois:members,

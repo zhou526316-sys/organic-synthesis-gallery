@@ -33,3 +33,79 @@
 .reader-scroll-container>.pdfViewer .page canvas{max-width:none;margin:0}
 .reader-scroll-container:focus-visible{outline:2px solid #588f72;outline-offset:-3px}
 @media(max-width:680px){.reader-scroll-container{padding:8px}.reader-mode-caption{font-size:11px}}
+
+/*
+ * Full-browser-viewport PDF reading, like a normal browser PDF tab.
+ * This is intentionally viewport-filling rather than an OS fullscreen request:
+ * browser tabs, escape/back behavior, and the current PDF permissions stay intact.
+ */
+.reader-dialog{
+  position:fixed;inset:0;margin:0;padding:0;
+  width:100vw;max-width:100vw;height:100vh;height:100dvh;
+  max-height:100vh;max-height:100dvh;min-width:0;min-height:0;
+  border:0;border-radius:0;box-shadow:none;
+  background:#525659;color:#f5f5f5;
+  overflow:hidden;
+}
+.reader-dialog[open]{display:flex;flex-direction:column}
+.reader-dialog::backdrop{background:transparent;backdrop-filter:none}
+.reader-topbar{
+  position:relative;z-index:1;flex:none;display:flex;align-items:center;
+  width:100%;min-height:58px;padding:7px 16px;gap:18px;
+  background:#323639;color:#f6f7f8;box-shadow:0 2px 8px #0004;
+}
+.reader-topbar .reader-heading{
+  flex:1 1 160px;min-width:0;display:block;padding:0;background:transparent;
+}
+.reader-topbar .reader-heading .eyebrow{color:#bec7c9;font-size:10px}
+.reader-topbar .reader-heading h2{
+  max-width:100%;color:#f6f7f8;overflow:hidden;white-space:nowrap;
+  text-overflow:ellipsis;font-size:14px;margin:0;font-weight:600;
+}
+.reader-topbar .reader-toolbar{
+  flex:0 1 auto;min-width:0;display:flex;align-items:center;
+  justify-content:center;flex-wrap:nowrap;gap:18px;
+  padding:0;border:0;background:transparent;color:#f6f7f8;
+}
+.reader-topbar .reader-paging,.reader-topbar .reader-zoom{gap:7px}
+.reader-topbar .reader-paging>span,
+.reader-topbar .reader-zoom>span{color:#f6f7f8;font-size:12px}
+.reader-topbar .reader-paging>span{min-width:0}
+.reader-topbar .reader-mode-caption{color:#c4cbd0}
+.reader-topbar .reader-toolbar button,
+.reader-topbar .reader-exit{
+  min-height:35px;padding:5px 10px;border:1px solid #53595c;border-radius:5px;
+  background:#454b4e;color:#f6f7f8;font-size:12px;white-space:nowrap;
+}
+.reader-topbar .reader-toolbar button:hover:not(:disabled),
+.reader-topbar .reader-exit:hover:not(:disabled){
+  background:#5a6368;border-color:#69747a;color:#fff;
+}
+.reader-topbar .reader-exit{flex:none;margin-left:auto}
+.reader-stage{background:#525659;padding:0;min-height:0;text-align:left}
+.reader-scroll-container{
+  padding:16px 20px;scrollbar-color:#898d90 #525659;
+  overscroll-behavior:contain;
+}
+.reader-scroll-container>.pdfViewer .page{
+  margin:0 auto 14px!important;box-shadow:0 3px 12px #15171955;
+}
+.reader-status{background:#45494b;color:#f3f4f5}
+.reader-status:not(:empty){border-bottom:1px solid #6e7375}
+.reader-status[data-status=error]{color:#ffdfcf}
+@media(max-width:720px){
+  .reader-topbar{flex-wrap:wrap;min-height:0;gap:2px 8px;padding:6px 10px 5px}
+  .reader-topbar .reader-heading{flex:1 1 0;min-width:0}
+  .reader-topbar .reader-heading h2{font-size:12px}
+  .reader-topbar .reader-exit{order:1;min-height:34px;padding:5px 8px;margin-left:0}
+  .reader-topbar .reader-toolbar{
+    order:2;flex:1 1 100%;width:100%;justify-content:space-between;
+    gap:4px;padding:3px 0 0;
+  }
+  .reader-topbar .reader-paging,.reader-topbar .reader-zoom{gap:3px}
+  .reader-topbar .reader-toolbar button{min-height:34px;padding:4px 7px}
+  .reader-topbar .reader-mode-caption{display:none}
+  .reader-topbar .reader-paging>span,.reader-topbar .reader-zoom>span{font-size:11px}
+  .reader-scroll-container{padding:8px 4px max(8px,env(safe-area-inset-bottom))}
+  .reader-scroll-container>.pdfViewer .page{margin-bottom:10px!important}
+}

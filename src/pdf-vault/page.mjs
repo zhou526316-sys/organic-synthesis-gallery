@@ -7,6 +7,10 @@ const SESSION_KEY = 'organic-gallery-session-v1';
 const SESSION_PATH = '/api/user-ui/auth/session';
 const SESSION_ENDPOINT = `https://api.gczhouwld.com${SESSION_PATH}`;
 const TOKEN_WATCH_MS = 800;
+const SESSION_REQUEST_TIMEOUT_MS = 6_500;
+const SESSION_INITIAL_ATTEMPTS = 2;
+const SESSION_INITIAL_TIMEOUT_MS = 16_000;
+const LOCAL_LIBRARY_INITIAL_TIMEOUT_MS = 8_000;
 const $ = selector => document.querySelector(selector);
 const byTestId = name => $(`[data-testid="pdf-vault-${name}"]`);
 const workspace = $('#vault-workspace');
@@ -132,6 +136,7 @@ function errorMessage(error) {
     file_changed: '这份文件的内容与保存记录不一致，已停止打开。请核对文件后重新导入。',
     quota_exceeded: '浏览器可用存储空间不足，未完成保存。可以选择真实文件夹后重试。',
     storage_unavailable: '此浏览器无法打开本地文献记录，请检查站点存储权限后重试。',
+    storage_timeout: '账号已验证，但本地文献索引在 8 秒内没有响应。可能有其他标签页占用浏览器数据库。请关闭其他 Gallery 标签页，再点击“重新验证账号”；无需清空网站数据或删除 PDF。',
     storage_failed: '本地保存未完成。请检查文件夹权限和可用空间后重试。',
     persistence_failed: '浏览器未能持久保存文献记录，不能确认导入完成。请检查站点存储权限。',
     crypto_unavailable: '此浏览器无法安全校验文件，请使用更新后的 Edge 或 Chrome。',
@@ -328,25 +333,87 @@ function openRequestedCopy(context) {
   }
 }
 
+function sessionReadError(code, httpStatus = 0) {
+  const error = new Error(code);
+  error.code = code;
+  error.httpStatus = httpStatus;
+  return error;
+}
+
+function sessionFailureMessage(error) {
+  if (error?.code === 'session_timeout') return '账号验证接口响应超时；当前登录令牌没有被清除。请检查网络后重试。';
+  if (error?.code === 'session_network') return '无法连接账号验证接口。请检查当前网络或代理，再点击“重新验证账号”。';
+  if (error?.code === 'session_http') {
+    const status = Number(error.httpStatus) || 0;
+    return `账号接口暂时无法正常验证（HTTP ${status || '异常'}）。这不等于登录失效，请稍后重试。`;
+  }
+  if (error?.code === 'session_invalid_response') return '账号接口返回了异常数据，暂时无法判断登录是否有效。请稍后重试。';
+  return '账号验证暂时未完成。请检查网络并重试；不需要清除浏览器的本地 PDF 文件。';
+}
+
 async function readSession(token, controller) {
   if (controller.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-  // The public frontend is static. Use its existing account API directly;
-  // probing /api on GitHub Pages would always create an avoidable 404.
-  const response = await fetch(SESSION_ENDPOINT, { headers: { authorization: `Bearer ${token}` }, cache: 'no-store', credentials: 'omit', redirect: 'error', signal: controller.signal });
-  if (response.status === 401 || response.status === 403) return null;
-  if (!response.ok) throw new Error('session_unavailable');
-  const data = await response.json();
-  if (data?.authenticated !== true) return null;
-  if (typeof data?.user?.id !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(data.user.id)) throw new Error('session_unavailable');
-  return data.user;
+  const attempt = new AbortController();
+  const forwardAbort = () => attempt.abort();
+  controller.signal.addEventListener('abort', forwardAbort, { once: true });
+  const timeout = window.setTimeout(() => attempt.abort(), SESSION_REQUEST_TIMEOUT_MS);
+  try {
+    // The public frontend is static; /api on GitHub Pages would be a 404.
+    const response = await fetch(SESSION_ENDPOINT, {
+      headers: { authorization: `Bearer ${token}` },
+      cache: 'no-store', credentials: 'omit', redirect: 'error', signal: attempt.signal,
+    });
+    // This endpoint explicitly reports invalid sessions as HTTP 200 with
+    // { authenticated: false, user: null }. HTTP 403 can instead be an edge
+    // challenge; it must not be mistaken for a revoked account token.
+    if (!response.ok) throw sessionReadError('session_http', response.status);
+    let data;
+    try { data = await response.json(); }
+    catch { throw sessionReadError('session_invalid_response'); }
+    if (data?.authenticated === false && data?.user === null) return null;
+    if (data?.authenticated !== true ||
+        typeof data?.user?.id !== 'string' ||
+        !/^[A-Za-z0-9_-]{1,128}$/.test(data.user.id)) {
+      throw sessionReadError('session_invalid_response');
+    }
+    return data.user;
+  } catch (error) {
+    if (controller.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+    // DOMException AbortError may have the numeric legacy code 20; classify
+    // the attempt's own timer before treating a code as our application error.
+    if (attempt.signal.aborted) throw sessionReadError('session_timeout');
+    if (typeof error?.code === 'string') throw error;
+    throw sessionReadError('session_network');
+  } finally {
+    window.clearTimeout(timeout);
+    controller.signal.removeEventListener('abort', forwardAbort);
+  }
+}
+
+async function readSessionWithRetry(token, controller) {
+  let lastError;
+  for (let attempt = 0; attempt < SESSION_INITIAL_ATTEMPTS; attempt += 1) {
+    try { return await readSession(token, controller); }
+    catch (error) {
+      if (controller.signal.aborted) throw error;
+      lastError = error;
+      if (attempt === SESSION_INITIAL_ATTEMPTS - 1) break;
+      // Do not hammer the endpoint when the failure is clearly permanent.
+      if (error?.code === 'session_http' && ![403, 408, 429, 500, 502, 503, 504].includes(error.httpStatus)) break;
+      await new Promise(resolve => window.setTimeout(resolve, 250));
+      if (controller.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+    }
+  }
+  throw lastError;
 }
 
 // Revalidate the *same* session without destroying an open local document.
  // Token changes and explicit logout still use verifySession's immediate
  // revocation path. Temporary network outages are not evidence of logout.
-async function revalidateCurrentSession() {
+async function revalidateCurrentSession({ manual = false } = {}) {
   const context = active;
   if (!context || !current(context) || verifying) return;
+  if (manual) showStatus('正在重新验证当前账号…', 'busy');
   const stamp = generation;
   verifying = true;
   sessionRefresh.disabled = true;
@@ -363,9 +430,11 @@ async function revalidateCurrentSession() {
     context.user = user;
     lastVerified = Date.now();
     accountLabel.textContent = `${user.displayName || user.email || 'Gallery 用户'} · 账号已验证`;
-  } catch {
+    if (manual) showStatus('账号验证成功，本地文献仍可使用。', 'success');
+  } catch (error) {
     if (current(context) && stamp === generation) {
       $('#account-help').textContent = '网络暂时无法重新确认账号，现有本地阅读不受影响；账号切换时仍会立即关闭。';
+      if (manual) showStatus(sessionFailureMessage(error), 'error');
     }
   } finally {
     clearTimeout(timeout);
@@ -377,16 +446,37 @@ async function revalidateCurrentSession() {
   }
 }
 
+/** Bound asynchronous initialization stages even when a platform API never
+ * resolves and ignores AbortController. This does not relax account checks. */
+async function withDeadline(promise, milliseconds, makeError, onTimeout = () => {}) {
+  let timeout;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        timeout = window.setTimeout(() => {
+          reject(makeError());
+          try { onTimeout(); } catch { /* The timeout remains authoritative. */ }
+        }, milliseconds);
+      }),
+    ]);
+  } finally {
+    window.clearTimeout(timeout);
+  }
+}
+
 async function verifySession() {
   const token = sessionToken();
   observedToken = token;
   revokeCurrent();
   const checkGeneration = generation;
+  let verifiedUser = false;
   verifying = true;
   sessionRefresh.disabled = true;
   $('#sign-in-link').hidden = true;
   document.documentElement.dataset.pdfVaultAuth = 'checking';
-  $('#account-help').textContent = '验证完成后，可查看此账号在当前浏览器保存的文献。';
+  $('#account-help').textContent = '正在连接账号验证接口。若网络正常，随后会加载本机文献索引。';
+  showStatus(token ? '正在向 Gallery 验证账号…' : '', token ? 'busy' : 'idle');
   if (!token) {
     verifying = false;
     document.documentElement.dataset.pdfVaultAuth = 'signed-out';
@@ -398,17 +488,25 @@ async function verifySession() {
   }
   const controller = new AbortController();
   authController = controller;
-  const timeout = window.setTimeout(() => controller.abort(), 12_000);
   try {
-    const user = await readSession(token, controller);
+    const user = await withDeadline(
+      readSessionWithRetry(token, controller), SESSION_INITIAL_TIMEOUT_MS,
+      () => sessionReadError('session_timeout'), () => controller.abort(),
+    );
     if (checkGeneration !== generation || token !== sessionToken()) return;
     if (!user) {
       document.documentElement.dataset.pdfVaultAuth = 'signed-out';
       accountLabel.textContent = '登录已失效，请重新登录';
       $('#account-help').textContent = '请返回主站完成登录，再重新验证账号。';
       $('#sign-in-link').hidden = false;
+      showStatus('账号接口明确表示当前会话已失效，请重新登录。', 'error');
       return;
     }
+    verifiedUser = true;
+    document.documentElement.dataset.pdfVaultAuth = 'loading-local';
+    accountLabel.textContent = `${user.displayName || user.email || 'Gallery 用户'} · 账号已验证`;
+    $('#account-help').textContent = '账号验证通过，正在读取本机文献索引…';
+    showStatus('账号验证成功，正在加载本地 PDF 文献库…', 'busy');
     queuePanel = mountPdfQueuePanel({
       userId: user.id, token, initialDoi: doiInput.value,
       assertCurrent: () => {
@@ -437,7 +535,11 @@ async function verifySession() {
     $('#directory-support').textContent = context.capabilities.directoryPicker ? '' : '此浏览器暂不支持选择真实目录，可明确选择浏览器内存储。';
     $('#opfs-support').textContent = context.capabilities.opfs ? '' : '此浏览器不支持浏览器内文件存储。';
     $('#file-limit').textContent = `每次导入一份 PDF，最大 ${Math.floor(context.capabilities.maxBytes / 1024 / 1024)} MB。`;
-    await refreshSnapshot(context);
+    await withDeadline(
+      refreshSnapshot(context), LOCAL_LIBRARY_INITIAL_TIMEOUT_MS,
+      () => new LocalPdfVaultError('storage_timeout'),
+      () => context.vault?.close(),
+    );
     requireCurrent(context);
     lastVerified = Date.now();
     workspace.hidden = false;
@@ -451,12 +553,13 @@ async function verifySession() {
     active = null;
     list.replaceChildren();
     workspace.hidden = true;
-    document.documentElement.dataset.pdfVaultAuth = 'error';
-    accountLabel.textContent = queuePanel ? '账号已验证 · 本地存储暂不可用' : '暂时无法打开本地文献库';
-    $('#account-help').textContent = queuePanel ? '仍可使用待电脑获取队列。已有磁盘文件不受影响，请在支持的浏览器中导入和阅读。' : '已有磁盘文件不受影响，请检查网络或浏览器设置后重试。';
-    showStatus(error instanceof LocalPdfVaultError ? errorMessage(error) : '账号验证未完成。请检查网络后点击“重新验证账号”。', 'error');
+    document.documentElement.dataset.pdfVaultAuth = verifiedUser ? 'storage-error' : 'error';
+    accountLabel.textContent = verifiedUser ? '账号已验证 · 本地文献库暂不可用' : '账号暂时无法验证';
+    $('#account-help').textContent = verifiedUser
+      ? '账号验证已通过；本地存储无法读取。待电脑获取队列仍可使用，已保存的磁盘 PDF 不会被删除。'
+      : '当前无法确认账号状态。已保留浏览器中的登录令牌和本地 PDF 记录，请检查网络后重试。';
+    showStatus(error instanceof LocalPdfVaultError ? errorMessage(error) : verifiedUser ? '账号已验证，但本地文献库初始化失败。请重试；无需清除网站数据。' : sessionFailureMessage(error), 'error');
   } finally {
-    clearTimeout(timeout);
     if (checkGeneration === generation) {
       verifying = false;
       authController = null;
@@ -467,7 +570,12 @@ async function verifySession() {
 }
 
 doiInput.value = initialDoi;
-sessionRefresh.addEventListener('click', () => void verifySession());
+sessionRefresh.addEventListener('click', () => {
+  // Rechecking a valid same-token session must not close the reader or erase
+  // the existing local-file state if the API is temporarily unreachable.
+  if (active && current(active)) void revalidateCurrentSession({ manual: true });
+  else void verifySession();
+});
 byTestId('directory').addEventListener('click', () => void action('请选择文献文件夹…', context => context.vault.selectDirectory(), '已选择真实文献文件夹。现在可以导入 PDF。'));
 byTestId('opfs').addEventListener('click', () => void action('正在准备浏览器内存储…', context => context.vault.useOpfs(), '已选择浏览器内存储。清除网站数据可能丢失文件，请及时导出备份。'));
 byTestId('restore').addEventListener('click', () => void action('正在恢复文件夹权限…', context => context.vault.restorePermission(), '权限已恢复。打开文献时仍会重新检查文件。'));

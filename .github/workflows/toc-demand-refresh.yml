@@ -9,6 +9,7 @@ on:
     paths:
       - 'TOC_DEMAND_REFRESH'
       - 'cloudflare/scripts/build-live-toc-demand-queue.mjs'
+      - 'shared/verified-historical-title-repairs.js'
       - 'shared/literature-journals.js'
       - '.github/workflows/toc-demand-refresh.yml'
       - 'public/papers.gz.b64'

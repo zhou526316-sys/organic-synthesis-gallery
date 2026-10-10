@@ -29,6 +29,70 @@ export class UserSearchController {
   private aliasKey = '';
   private readFilterKey = '';
   private stopped = false;
+  private selectingSuggestion = false;
+  // Remember user intent while the asynchronous card window hydrates.
+  private suggestionIntent = false;
+  private blurDismissTimer: number | null = null;
+  private readonly dismissSuggestions = (): void => {
+    this.popover?.remove();
+    this.popover = null;
+  };
+  private readonly stopSuggestions = (): void => {
+    this.suggestionIntent = false;
+    this.dismissSuggestions();
+  };
+  private readonly onSearchFocus = (): void => {
+    // A pending blur-dismiss timer belongs to the previous focus cycle.
+    // Cancel it before rendering suggestions for the newly focused input.
+    // Otherwise a fast outside-click and re-focus can close a fresh popup.
+    if (this.blurDismissTimer !== null) {
+      window.clearTimeout(this.blurDismissTimer);
+      this.blurDismissTimer = null;
+    }
+    this.suggestionIntent = this.fullQuery.trim().length >= 2;
+    this.renderSuggestions();
+  };
+  private readonly onSearchChange = (): void => { store.addHistory(this.fullQuery); };
+  private readonly onSearchBlur = (): void => {
+    if (this.blurDismissTimer !== null) window.clearTimeout(this.blurDismissTimer);
+    this.blurDismissTimer = window.setTimeout(() => {
+      this.blurDismissTimer = null;
+      if (document.activeElement !== this.searchInput && !this.popover?.contains(document.activeElement))
+        this.stopSuggestions();
+    }, 120);
+  };
+  private readonly onSearchKeyDown = (event: KeyboardEvent): void => {
+    if (event.key === 'Enter') {
+      store.addHistory(this.fullQuery);
+      this.stopSuggestions();
+    }
+    if (event.key === 'Escape') {
+      if (this.popover) {
+        event.preventDefault();
+        this.stopSuggestions();
+      } else if (this.fullQuery) {
+        event.preventDefault();
+        this.setSearch('');
+      }
+    }
+  };
+  private readonly onOuterPointerDown = (event: PointerEvent): void => {
+    const target = event.target;
+    if (!(target instanceof Node) || this.searchInput?.contains(target) || this.popover?.contains(target)) return;
+    this.stopSuggestions();
+  };
+  private readonly onUserScrollIntent = (event: Event): void => {
+    // An automated focus, a TOC/image reflow, or a browser scroll adjustment
+    // may emit 'scroll' just after a suggestion opens. None of those indicate
+    // that the reader wants to close it. Wheel and touchmove indicate an
+    // intentional gesture; pointerdown-outside covers scrollbar dragging.
+    // Scrolling inside the suggestions is still allowed.
+    if (event.target instanceof Node && this.popover?.contains(event.target)) return;
+    this.stopSuggestions();
+  };
+  private readonly onTabVisibility = (): void => {
+    if (document.hidden) this.stopSuggestions();
+  };
   private readonly storeChanged = (): void => this.refreshPreferences();
   private readonly refreshCounts = (): void => {
     if (!this.stopped && document.visibilityState !== 'hidden') void store.loadCounts(this.metas.flatMap(meta => meta.doi ? [meta.doi] : []));
@@ -43,6 +107,7 @@ export class UserSearchController {
     this.fullQuery = this.searchInput.value;
     this.updateShellQuery();
     if (this.composing || (event instanceof InputEvent && event.isComposing)) return;
+    this.suggestionIntent = !this.selectingSuggestion && this.fullQuery.trim().length >= 2;
     this.root.dispatchEvent(new CustomEvent('gallery-corpus-query', { detail: { query: this.fullQuery } }));
     // The corpus layer may synchronously replace the rendered result window.
     // Refresh in a microtask so highlighting/decorations bind to the new cards,
@@ -55,6 +120,7 @@ export class UserSearchController {
     this.composing = false;
     if (!this.searchInput) return;
     this.fullQuery = this.searchInput.value;
+    this.suggestionIntent = !this.selectingSuggestion && this.fullQuery.trim().length >= 2;
     this.updateShellQuery();
     this.root.dispatchEvent(new CustomEvent('gallery-corpus-query', { detail: { query: this.fullQuery } }));
     // The corpus layer may synchronously replace the rendered result window.
@@ -77,23 +143,21 @@ export class UserSearchController {
     this.searchInput.addEventListener('input', this.onInput, { capture: true });
     this.searchInput.addEventListener('compositionstart', this.onCompositionStart);
     this.searchInput.addEventListener('compositionend', this.onCompositionEnd);
-    this.searchInput.addEventListener('keydown', event => {
-      if (event.key === 'Enter') store.addHistory(this.fullQuery);
-      if (event.key === 'Escape' && this.fullQuery) {
-        event.preventDefault();
-        this.setSearch('');
-      }
-    });
-    this.searchInput.addEventListener('change', () => store.addHistory(this.fullQuery));
-    this.searchInput.addEventListener('focus', () => this.renderSuggestions());
-    this.searchInput.addEventListener('blur', () => window.setTimeout(() => { this.popover?.remove(); this.popover = null; }, 150));
+    this.searchInput.addEventListener('keydown', this.onSearchKeyDown);
+    this.searchInput.addEventListener('change', this.onSearchChange);
+    this.searchInput.addEventListener('focus', this.onSearchFocus);
+    this.searchInput.addEventListener('blur', this.onSearchBlur);
+    document.addEventListener('pointerdown', this.onOuterPointerDown, true);
     this.root.addEventListener('gallery-search', this.handleSearch as EventListener);
     this.root.addEventListener('gallery-similar', this.handleSimilar as EventListener);
     store.addEventListener('change', this.storeChanged);
     window.addEventListener('resize', this.resize);
     window.addEventListener('focus', this.refreshCounts);
     document.addEventListener('visibilitychange', this.refreshCounts);
+    document.addEventListener('visibilitychange', this.onTabVisibility);
     window.addEventListener('scroll', this.resize, true);
+    window.addEventListener('wheel', this.onUserScrollIntent, { capture: true, passive: true });
+    window.addEventListener('touchmove', this.onUserScrollIntent, { capture: true, passive: true });
     this.observer = new MutationObserver(() => this.queueRefresh());
     this.observer.observe(this.gallery, { childList: true });
     this.updateShellQuery();
@@ -107,14 +171,26 @@ export class UserSearchController {
     this.searchInput?.removeEventListener('input', this.onInput, true);
     this.searchInput?.removeEventListener('compositionstart', this.onCompositionStart);
     this.searchInput?.removeEventListener('compositionend', this.onCompositionEnd);
+    this.searchInput?.removeEventListener('keydown', this.onSearchKeyDown);
+    this.searchInput?.removeEventListener('change', this.onSearchChange);
+    this.searchInput?.removeEventListener('focus', this.onSearchFocus);
+    this.searchInput?.removeEventListener('blur', this.onSearchBlur);
+    document.removeEventListener('pointerdown', this.onOuterPointerDown, true);
+    if (this.blurDismissTimer !== null) {
+      window.clearTimeout(this.blurDismissTimer);
+      this.blurDismissTimer = null;
+    }
     this.root.removeEventListener('gallery-search', this.handleSearch as EventListener);
     this.root.removeEventListener('gallery-similar', this.handleSimilar as EventListener);
     store.removeEventListener('change', this.storeChanged);
     window.removeEventListener('resize', this.resize);
     window.removeEventListener('focus', this.refreshCounts);
     document.removeEventListener('visibilitychange', this.refreshCounts);
+    document.removeEventListener('visibilitychange', this.onTabVisibility);
     window.removeEventListener('scroll', this.resize, true);
-    this.popover?.remove(); this.popover = null;
+    window.removeEventListener('wheel', this.onUserScrollIntent, true);
+    window.removeEventListener('touchmove', this.onUserScrollIntent, true);
+    this.stopSuggestions();
   }
   currentSearch(): string { return this.fullQuery; }
 
@@ -165,12 +241,23 @@ export class UserSearchController {
     try {
       this.cards = [...this.gallery.querySelectorAll<HTMLElement>('.card')];
       this.metas = this.cards.flatMap(card => { const meta = this.decorate(card); return meta ? [meta] : []; });
-      this.buildCandidates(this.metas);
+      // While the indexed search is pending, the cards have been replaced by
+      // a loading indicator. Retain the last candidate set rather than losing
+      // suggestions until the new search results arrive.
+      if (this.metas.length || this.root.querySelector('#resultCount')?.textContent !== '…')
+        this.buildCandidates(this.metas);
       this.aliasKey = JSON.stringify(store.state.aliases);
       this.applyFilters(this.cards);
       this.readFilterKey = this.currentReadFilterKey();
     } finally { this.observer?.observe(this.gallery, { childList: true }); }
     this.refreshCounts();
+    // Candidate metadata is rebuilt when the bounded DOM card window arrives.
+    // Reopen suggestions only if a still-focused input requested them;
+    // Enter/Escape/outside click/scroll clear intent and cannot be resurrected.
+    if (this.suggestionIntent && !this.selectingSuggestion
+      && this.searchInput && document.activeElement === this.searchInput) {
+      this.renderSuggestions();
+    }
   }
 
   private paintStatus(card: HTMLElement): void {
@@ -281,6 +368,9 @@ export class UserSearchController {
   }
 
   private renderSearchSummary(tokens: string[], visible: number): void {
+    const indexed = document.documentElement.dataset.catalogQueryRead === 'd1-index'
+      && document.documentElement.dataset.catalogIndexedQuery === this.fullQuery.trim().toLowerCase();
+    const fullCount = Number(this.root.querySelector<HTMLElement>('#resultCount')?.textContent || '');
     const existing = this.root.querySelector<HTMLElement>('.user-search-summary');
     if (!tokens.length) { existing?.remove(); return; }
     const summary = existing || document.createElement('div');
@@ -289,9 +379,13 @@ export class UserSearchController {
     const text = document.createElement('span');
     const prefix = this.language === 'zh' ? '搜索结果' : 'Search results';
     const windowed = Boolean(this.root.querySelector('#resultWindowControls'));
-    const suffix = this.language === 'zh'
-      ? `${windowed ? '本页 ' : ''}${visible} 篇`
-      : `${visible} papers${windowed ? ' on this page' : ''}`;
+    const suffix = indexed && Number.isSafeInteger(fullCount) && fullCount >= visible
+      ? (this.language === 'zh'
+        ? `全库匹配 ${fullCount} 篇 · 本页可见 ${visible} 篇${store.state.hideRead ? '（已隐藏已读）' : ''}`
+        : `${fullCount} indexed matches · ${visible} visible on this page${store.state.hideRead ? ' (read papers hidden)' : ''}`)
+      : this.language === 'zh'
+        ? `${windowed ? '本页 ' : ''}${visible} 篇`
+        : `${visible} papers${windowed ? ' on this page' : ''}`;
     text.append(`${prefix}：“`);
     const strong = document.createElement('strong');
     strong.textContent = this.fullQuery.trim();
@@ -306,6 +400,18 @@ export class UserSearchController {
 
   private applyFilters(cards: HTMLElement[]): void {
     const tokens = queryTokens(this.fullQuery); let visible = 0;
+    const indexed = document.documentElement.dataset.catalogQueryRead === 'd1-index'
+      && document.documentElement.dataset.catalogIndexedQuery === this.fullQuery.trim().toLowerCase();
+    // The Gallery's server index matches original abstracts and reviewed
+    // interpretations. Those strings are intentionally absent from DOM titles.
+    // The secondary user UI must never hide verified indexed results merely
+    // because their visible title does not contain the typed acronym.
+    const searchPending = this.root.querySelector<HTMLElement>('#resultCount')?.textContent?.trim() === '…';
+    if (searchPending) {
+      this.root.querySelector('.user-search-summary')?.remove();
+      this.gallery?.querySelector('.user-search-empty')?.remove();
+      return;
+    }
     for (const card of cards) {
       card.querySelector('.user-hit-reason')?.remove();
       this.clearSearchHighlights(card);
@@ -316,10 +422,11 @@ export class UserSearchController {
       const topics = card.dataset.topics || '';
       const searchable = [title, authors, topics, meta?.journal || '', meta?.doi || ''].join(' ').toLowerCase();
       const normalized = normalizeSearch(searchable);
-      const hidden = !tokens.every(token => this.expanded(token).some(term => {
+      const locallyMatched = tokens.every(token => this.expanded(token).some(term => {
         const lower = term.toLowerCase();
         return searchable.includes(lower) || normalized.includes(normalizeSearch(lower));
-      })) || (store.state.hideRead && store.isRead(id));
+      }));
+      const hidden = (!indexed && !locallyMatched) || (store.state.hideRead && store.isRead(id));
       card.hidden = hidden;
       if (hidden) continue;
       visible += 1;
@@ -336,7 +443,12 @@ export class UserSearchController {
         });
         const hit = document.createElement('div');
         hit.className = 'user-hit-reason';
-        hit.textContent = `${this.language === 'zh' ? '命中' : 'Matched'}：${reasons.join(' · ')}`;
+        const description = indexed && !locallyMatched
+          ? (this.language === 'zh'
+            ? '文献索引命中（标题、摘要或审核解读）'
+            : 'Indexed match (title, abstract, or reviewed description)')
+          : `${this.language === 'zh' ? '命中' : 'Matched'}：${reasons.join(' · ')}`;
+        hit.textContent = description;
         card.querySelector(PAPER_ACTION_ELEMENT)?.before(hit);
       }
     }
@@ -354,11 +466,60 @@ export class UserSearchController {
     return this.candidates.flatMap(candidate => { const match = suggestionMatch(this.fullQuery, candidate.value); return match ? [{ ...candidate, ...match, score: match.score + Math.min(8, candidate.frequency) }] : []; }).sort((a, b) => b.score - a.score || a.value.localeCompare(b.value)).slice(0, 8);
   }
   private renderSuggestions(): void {
-    this.popover?.remove(); this.popover = null; const suggestions = this.suggestions(); if (!suggestions.length || !this.searchInput) return;
-    const popover = document.createElement('div'); popover.className = 'user-search-popover'; const typeLabel = (type: SuggestionType): string => type === 'author' ? (this.language === 'zh' ? '作者' : 'Author') : type === 'journal' ? (this.language === 'zh' ? '期刊' : 'Journal') : type === 'doi' ? 'DOI' : (this.language === 'zh' ? '关键词' : 'Keyword'); const hint = (value: Suggestion['hint']): string => value === 'spelling' ? (this.language === 'zh' ? '拼写纠正' : 'Spelling') : value === 'prefix' ? (this.language === 'zh' ? '前缀匹配' : 'Prefix') : value === 'contains' ? (this.language === 'zh' ? '包含匹配' : 'Contains') : (this.language === 'zh' ? '完全匹配' : 'Exact');
-    popover.innerHTML = suggestions.map((item, index) => `<button type='button' data-index='${index}'><span class='kind'>${typeLabel(item.type)}</span><strong>${item.value.replace(/[&<>"']/g, '')}</strong><small>${hint(item.hint)}</small></button>`).join('');
-    popover.querySelectorAll<HTMLButtonElement>('button').forEach(button => button.addEventListener('mousedown', event => { event.preventDefault(); const item = suggestions[Number(button.dataset.index || 0)]; if (!item) return; const words = this.fullQuery.trim().replace(/"/g, '').split(/\s+/).filter(Boolean); const keep = words.slice(0, Math.max(0, words.length - Math.max(1, item.replaceWords))); this.setSearch([...keep, queryTerm(item.value)].join(' ')); popover.remove(); this.popover = null; }));
-    document.body.appendChild(popover); this.popover = popover; this.positionPopover();
+    this.dismissSuggestions();
+    if (!this.suggestionIntent || this.selectingSuggestion || this.composing || !this.searchInput
+        || document.activeElement !== this.searchInput) return;
+    const suggestions = this.suggestions();
+    if (!suggestions.length) return;
+    const popover = document.createElement('div');
+    popover.className = 'user-search-popover';
+    popover.setAttribute('role', 'listbox');
+    popover.setAttribute('aria-label', this.language === 'zh' ? '搜索建议' : 'Search suggestions');
+    const typeLabel = (type: SuggestionType): string => type === 'author'
+      ? (this.language === 'zh' ? '作者' : 'Author')
+      : type === 'journal' ? (this.language === 'zh' ? '期刊' : 'Journal')
+      : type === 'doi' ? 'DOI'
+      : (this.language === 'zh' ? '关键词' : 'Keyword');
+    const hint = (value: Suggestion['hint']): string => value === 'spelling'
+      ? (this.language === 'zh' ? '拼写纠正' : 'Spelling')
+      : value === 'prefix' ? (this.language === 'zh' ? '前缀匹配' : 'Prefix')
+      : value === 'contains' ? (this.language === 'zh' ? '包含匹配' : 'Contains')
+      : (this.language === 'zh' ? '完全匹配' : 'Exact');
+    popover.innerHTML = suggestions.map((item, index) =>
+      `<button type='button' role='option' data-index='${index}'><span class='kind'>${typeLabel(item.type)}</span><strong>${item.value.replace(/[&<>"']/g, '')}</strong><small>${hint(item.hint)}</small></button>`
+    ).join('');
+
+    const select = (item: Suggestion): void => {
+      if (this.selectingSuggestion) return;
+      this.selectingSuggestion = true;
+      try {
+        // Selecting emits an input event. Suppress suggestions during it, then
+        // close the *current* popover rather than an obsolete captured node.
+        const words = this.fullQuery.trim().replace(/"/g, '').split(/\s+/).filter(Boolean);
+        const keep = words.slice(0, Math.max(0, words.length - Math.max(1, item.replaceWords)));
+        this.setSearch([...keep, queryTerm(item.value)].join(' '));
+      } finally {
+        this.stopSuggestions();
+        this.selectingSuggestion = false;
+      }
+    };
+    popover.querySelectorAll<HTMLButtonElement>('button').forEach(button => {
+      const item = suggestions[Number(button.dataset.index || 0)];
+      if (!item) return;
+      button.addEventListener('pointerdown', event => {
+        // Keep the search field focused; do not detach the target before
+        // click is dispatched (particularly important for mobile WebKit).
+        event.preventDefault();
+      });
+      button.addEventListener('click', event => {
+        // Pointer, touch and keyboard activation all select exactly once.
+        event.preventDefault();
+        select(item);
+      });
+    });
+    document.body.appendChild(popover);
+    this.popover = popover;
+    this.positionPopover();
   }
   private positionPopover(): void { if (!this.popover || !this.searchInput) return; const rect = this.searchInput.getBoundingClientRect(); this.popover.style.left = `${Math.max(8, rect.left)}px`; this.popover.style.top = `${rect.bottom + 6}px`; this.popover.style.width = `${Math.max(280, rect.width)}px`; this.popover.style.maxWidth = `calc(100vw - ${Math.max(16, rect.left + 8)}px)`; }
 }
