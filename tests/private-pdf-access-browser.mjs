@@ -502,6 +502,116 @@ try{
   assert.equal(state.privateHeaderProbeCalls,0,
     'mismatched alternate must never be allowed to provide PDF bytes');
  });
+
+ await test('owner pilot sends first /open to Tencent and renders two actual pages',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=owner-pilot'};
+  const {context,state}=await contextWith(['private_pdf_owner','private_pdf_read'],source,{
+    ownerPriorityPilot:true,tencentEnabled:false,tencentCanary:true,largePdf:true,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:16000});
+  assert.ok(state.tencentOwnerSessionProbes>=1,'role comes from a LIVE Worker session over Tencent');
+  assert.equal(state.openOrigins[0],'https://pdf.gczhouwld.com');
+  assert.equal(state.tencentOpenCalls,1);
+  assert.equal(state.openOrigins.filter(x=>x==='https://api.gczhouwld.com').length,0,
+    'healthy Tencent avoids extra Cloudflare /open work');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'tencent');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-owner-route'),'tencent-first');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-route'),'tencent');
+  assert.ok(state.tencentMaxRangeBytes>=512*1024);
+  await scrollPdfToPage(target,2);
+  assert.equal(await target.locator('#page-count').textContent(),'第 2 / 2 页');
+ });
+
+ await test('reader-only account keeps canonical Cloudflare even when owner priority flag is set',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=read-only'};
+  const {context,state}=await contextWith(['private_pdf_read'],source,{
+    ownerPriorityPilot:true,tencentEnabled:false,tencentCanary:true,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:12000});
+  assert.deepEqual(state.openOrigins,['https://api.gczhouwld.com']);
+  assert.equal(state.tencentOpenCalls,0);
+  assert.equal(state.tencentRangeCalls,0);
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'primary');
+ });
+
+ await test('stale owner hint never bypasses fresh server owner validation',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=stale-owner'};
+  const {context,state}=await contextWith(['private_pdf_owner','private_pdf_read'],source,{
+    ownerPriorityPilot:true,tencentEnabled:false,tencentCanary:true,tencentOwnerRoleFalse:true,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:12000});
+  assert.ok(state.tencentOwnerSessionProbes>=1);
+  assert.deepEqual(state.openOrigins,['https://api.gczhouwld.com']);
+  assert.equal(state.tencentOpenCalls,0);
+ });
+
+ await test('Tencent owner pilot quota 429 on open immediately uses independently authorized Cloudflare',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=pilot-429'};
+  const {context,state}=await contextWith(['private_pdf_owner','private_pdf_read'],source,{
+    ownerPriorityPilot:true,tencentEnabled:false,tencentCanary:true,tencentOpenStatus:429,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:12000});
+  assert.deepEqual(state.openOrigins.slice(0,2),
+    ['https://pdf.gczhouwld.com','https://api.gczhouwld.com']);
+  assert.equal(state.tencentOpenCalls,1);
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-route'),'primary');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-owner-route'),'cloudflare-backup');
+  await scrollPdfToPage(target,2);
+  assert.equal(await target.locator('#page-count').textContent(),'第 2 / 2 页');
+ });
+
+ await test('Tencent pilot quota 429 during large Range safely switches to Cloudflare',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=pilot-range'};
+  const {context,state}=await contextWith(['private_pdf_owner','private_pdf_read'],source,{
+    ownerPriorityPilot:true,tencentEnabled:false,tencentCanary:true,
+    largePdf:true,tencentFileStatus:429,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:18000});
+  assert.equal(state.openOrigins[0],'https://pdf.gczhouwld.com');
+  assert.ok(state.openOrigins.includes('https://api.gczhouwld.com'),
+    'quota-exhausted Tencent must mint a new canonical Worker ticket');
+  assert.ok(state.tencentQuotaFailures>=1);
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-route'),'primary');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-failovers'),'1');
+  await scrollPdfToPage(target,2);
+  assert.equal(await target.locator('#page-count').textContent(),'第 2 / 2 页');
+ });
+
+ await test('Tencent owner pilot 403 is authoritative and cannot use Cloudflare as permission bypass',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=denied-owner'};
+  const {context,state}=await contextWith(['private_pdf_owner','private_pdf_read'],source,{
+    ownerPriorityPilot:true,tencentEnabled:false,tencentCanary:true,tencentOpenStatus:403,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',
+    undefined,{timeout:12000});
+  assert.deepEqual(state.openOrigins,['https://pdf.gczhouwld.com']);
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/open_http_403/);
+  assert.equal(state.privateFileCalls,0);
+ });
+
  await test('HTTP200 with partial open JSON and no response EOF recovers using one same-host authorized retry',async()=>{
   const authorized={available:true,headerVerified:true,
     url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
