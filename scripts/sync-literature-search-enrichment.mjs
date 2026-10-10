@@ -255,9 +255,14 @@ async function hydrateAbstracts(dois,report){
     windows:publisherSelection.windows,totalMissing:publisherMissing.length};
   report.publisherMetadataRecovered=0;
   report.publisherMetadataErrors=[];
+  report.publisherEmptyAbstractDiagnostics=[];
   for(const doi of publisherBatch){
     try{
-      const abstract=await fetchPublisherMetadataAbstract(doi);
+      const abstract=await fetchPublisherMetadataAbstract(doi,{
+        onDiagnostic:diagnostic=>{
+          report.publisherEmptyAbstractDiagnostics.push({doi,...diagnostic});
+        },
+      });
       if(abstract){
         found.set(doi,{abstract,source:'publisher_metadata'});
         report.publisherMetadataRecovered++;

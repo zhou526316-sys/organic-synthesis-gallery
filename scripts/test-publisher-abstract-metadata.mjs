@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {publisherMetadataAbstract,fetchPublisherMetadataAbstract,publisherMetadataEntryUrl,extractNaturePublicAbstract} from './lib/publisher-abstract-metadata.mjs';
+import {publisherMetadataAbstract,fetchPublisherMetadataAbstract,publisherMetadataEntryUrl,extractNaturePublicAbstract,inspectPublisherAbstractEnvelope} from './lib/publisher-abstract-metadata.mjs';
 const DOI='10.1038/s41586-026-11043-z';
 const TEXT='We describe a new bond construction enabling selective functionalization of aliphatic compounds under mild conditions. The method offers a broad substrate range and is supported by mechanistic control experiments with radical probes.';
 const head=(doi,extra='')=>`<html><head><meta name="citation_doi" content="${doi}">${extra}</head><body><div>UNLICENSED COMPLETE FULL TEXT MUST NOT BE READ</div></body></html>`;
@@ -131,4 +131,31 @@ test('Nature public Abstract-only stream stops before downstream article section
   };
   assert.equal(await fetchPublisherMetadataAbstract(DOI,{fetchImpl}),TEXT);
   assert.equal(emitted,2);
+});
+
+test('empty Nature Abstract diagnostics expose structure booleans without article words',async()=>{
+  const html=head(DOI).replace('</body>',
+    '<section><h2 id="Abs1">Abstract</h2><p>'+TEXT+'</p></section></body>');
+  const parsed=inspectPublisherAbstractEnvelope(html,DOI);
+  assert.equal(parsed.validHead,true);
+  assert.equal(parsed.doiMetadataMatches,true);
+  assert.equal(parsed.hasAbs1Heading,true);
+  assert.equal(parsed.hasSectionBoundary,true);
+  assert.equal(parsed.paragraphTagCountInFirstSection,1);
+  assert.doesNotMatch(JSON.stringify(parsed),/boron|Enantioconvergent|UNLICENSED|bond construction/);
+  const unbound=inspectPublisherAbstractEnvelope(html,'10.1038/s41586-026-other');
+  assert.equal(unbound.doiMetadataMatches,false);
+});
+test('missing public Abstract returns diagnostic metadata, never raw body text',async()=>{
+  const html=head(DOI).replace('</body>','<section><h2 id="Main">Main</h2><p>'+TEXT+'</p></section></body>');
+  let result=null;
+  const text=await fetchPublisherMetadataAbstract(DOI,{fetchImpl:async()=>new Response(html,{
+    status:200,headers:{'content-type':'text/html'}
+  }),onDiagnostic:value=>{result=value;}});
+  assert.equal(text,'');
+  assert.ok(result);
+  assert.equal(result.hasAbs1Heading,false);
+  assert.equal(result.doiMetadataMatches,true);
+  assert.equal(result.finalHost,'www.nature.com');
+  assert.doesNotMatch(JSON.stringify(result),/UNLICENSED|bond construction|aliphatic compounds/);
 });

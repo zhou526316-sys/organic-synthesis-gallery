@@ -66,6 +66,35 @@ export function extractNaturePublicAbstract(html){
     return '';
   return abstract;
 }
+// Operational envelope only: no raw publisher text, head content, or headers
+// are logged. Diagnoses empty public Nature abstracts without bypassing auth.
+export function inspectPublisherAbstractEnvelope(html,expectedDoi){
+  const target=doi(expectedDoi),raw=typeof html==='string'?html:'';
+  const prefix=raw.slice(0,900000),start=/<head(?:\s[^>]*)?>/i.exec(prefix);
+  if(!target||!start)return {validHead:false,doiMetadataMatches:false,
+    hasAbstractHeading:false,hasAbs1Heading:false,hasSectionBoundary:false,bodyLength:raw.length};
+  const remainder=prefix.slice(start.index+start[0].length);
+  const end=/<\/head\s*>|<body\b/i.exec(remainder);
+  const head=end?remainder.slice(0,end.index):'';
+  const tags=[...head.matchAll(/<meta\b[^>]*>/gi)].map(m=>metaAttributes(m[0]));
+  const references=tags.filter(tag=>['citation_doi','dc.identifier','prism.doi']
+    .includes(String(tag.name||tag.property||'').toLowerCase()))
+    .map(tag=>doi(tag.content));
+  const heading=natureAbstractHeading(prefix);
+  const after=heading?prefix.slice(heading.index+heading[0].length):'';
+  return {
+    validHead:Boolean(end),
+    doiMetadataMatches:references.includes(target),
+    matchedReferenceCount:references.filter(value=>value===target).length,
+    hasAbstractHeading:/<h[1-6]\b[^>]*>\s*(?:<[^>]*>\s*)*Abstract\s*(?:<\/[^>]*>\s*)*<\/h[1-6]>/i.test(prefix),
+    hasAbs1Heading:Boolean(heading),
+    hasSectionBoundary:Boolean(heading&&/<\/section\s*>|<h2\b[^>]*>/i.test(after)),
+    paragraphTagCountInFirstSection:heading
+      ? (after.split(/<\/section\s*>|<h2\b[^>]*>/i,1)[0].match(/<p\b/gi)||[]).length:0,
+    bodyLength:raw.length,
+    challengeMarker:Boolean(/(?:verify you are human|access denied|checking your browser|captcha)/i.test(prefix))
+  };
+}
 export function publisherMetadataAbstract(html,expectedDoi){
   const target=doi(expectedDoi);
   if(!target||typeof html!=='string')return '';
@@ -99,7 +128,7 @@ export function publisherMetadataAbstract(html,expectedDoi){
   return '';
 }
 export async function fetchPublisherMetadataAbstract(inputDoi,{
-  timeout=9000,maxHeadBytes=900000,fetchImpl=fetch
+  timeout=9000,maxHeadBytes=900000,fetchImpl=fetch,onDiagnostic=null
 }={}){
   const normalized=doi(inputDoi);
   if(!normalized)throw Error('publisher_abstract_invalid_doi');
@@ -162,7 +191,11 @@ export async function fetchPublisherMetadataAbstract(inputDoi,{
       await reader.cancel().catch(()=>{});
     }
     if(!closed&&bytes>=maxHeadBytes)throw Error('publisher_metadata_head_too_large');
-    return publisherMetadataAbstract(html,normalized);
+    const parsed=publisherMetadataAbstract(html,normalized);
+    if(!parsed&&nature&&typeof onDiagnostic==='function')
+      onDiagnostic({finalHost:current.hostname,status:response.status,
+        ...inspectPublisherAbstractEnvelope(html,normalized)});
+    return parsed;
   }
   throw Error('publisher_metadata_redirect_limit');
 }
