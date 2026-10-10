@@ -57,7 +57,8 @@ try {
         const uri = new URL(request.url());
         if (uri.pathname !== '/api/literature/catalog-view') return;
         const body = request.method() === 'POST' ? JSON.parse(request.postData() || '{}') : {};
-        result.network.push({event:status,query:body.query||null,method:request.method(),
+        const currentQuery = request.method() === 'GET' ? uri.searchParams.get('query') : body.query;
+        result.network.push({event:status,query:currentQuery||null,method:request.method(),
           failure:failure||null,at:new Date().toISOString()});
       } catch { /* diagnostics must never change request execution */ }
     };
@@ -67,8 +68,9 @@ try {
     await page.route('**/*', async route => {
       const request = route.request(), method = request.method();
       const pathname = new URL(request.url()).pathname;
-      // The catalog query is a public POST read. All other browser POST/PUT/DELETE
-      // endpoints are isolated from the acceptance browser to prohibit side effects.
+      // The catalog query is a public GET (or compatible POST read).
+      // All other browser POST/PUT/DELETE endpoints are isolated from
+      // the acceptance browser to prohibit production side effects.
       if (['GET','HEAD','OPTIONS'].includes(method) ||
         (method === 'POST' && pathname === '/api/literature/catalog-view')) {
         await route.continue();
@@ -94,9 +96,12 @@ try {
         const matching = sources.get(term);
         const input = page.locator('#search');
         const responseAwaited = page.waitForResponse(response => {
-          if (!response.url().includes('/api/literature/catalog-view')
-            || response.request().method() !== 'POST') return false;
-          try { return JSON.parse(response.request().postData() || '{}').query === term; }
+          const request = response.request();
+          const url = new URL(response.url());
+          if (url.pathname !== '/api/literature/catalog-view') return false;
+          if (request.method() === 'GET') return url.searchParams.get('query') === term;
+          if (request.method() !== 'POST') return false;
+          try { return JSON.parse(request.postData() || '{}').query === term; }
           catch { return false; }
         }, { timeout: 45000 });
         await input.fill(term);
@@ -125,7 +130,8 @@ try {
           cards.map(card => String(card.getAttribute('data-doi') || '').toLowerCase()));
         assert(hiddenDois.length === 0, 'indexed_match_hidden_by_secondary_search:' + term + ':' + width + ':' + hiddenDois.join(','));
         result.checks.push({ query: term, matched: payload.matched, shown: displayed.length,
-          source: 'd1-index', firstDoi: displayed[0] || null });
+          source: 'd1-index', method: apiResponse.request().method(),
+          firstDoi: displayed[0] || null });
       }
       assert(!result.errors.length, 'browser_javascript_errors:' + result.errors.slice(0, 3).join('|'));
       result.catalogRead = await page.evaluate(() => document.documentElement.dataset.catalogRead || null);
