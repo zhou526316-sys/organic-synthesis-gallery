@@ -848,6 +848,44 @@ for (const width of [390, 1280]) {
   });
 }
 
+test('search suggestions recover after late DOI candidate hydration without reopening after Escape', async ({ page }) => {
+  await stubOptionalApi(page);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+    { waitUntil: 'domcontentloaded' });
+  const gallery = page.locator('#gallery');
+  await expect(gallery.locator('.card').first()).toBeVisible({ timeout: 30000 });
+  await page.evaluate(() => {
+    document.querySelector('#app')?.addEventListener(
+      'gallery-corpus-query', event => event.stopImmediatePropagation(), true,
+    );
+    const node = document.querySelector('#gallery');
+    if (!node) return;
+    (window as any).__savedGalleryNodes = [...node.childNodes];
+    node.replaceChildren();
+  });
+  // Complete a microtask refresh while no candidates are available. The input
+  // arrives first; card metadata is deliberately restored after the input.
+  await page.waitForTimeout(100);
+  const search = page.locator('#search');
+  await search.fill('10.');
+  await expect(search).toBeFocused();
+  await page.evaluate(() => {
+    const node = document.querySelector('#gallery');
+    const originals = (window as any).__savedGalleryNodes as Node[] | undefined;
+    if (node && originals) node.replaceChildren(...originals);
+  });
+  await expect(gallery.locator('.card').first()).toBeVisible();
+  await expect(page.locator('.user-search-popover button').first()).toBeVisible({ timeout: 10000 });
+  await search.press('Escape');
+  await expect(page.locator('.user-search-popover')).toHaveCount(0);
+  await page.evaluate(() => {
+    const gallery = document.querySelector('#gallery');
+    if (gallery?.firstChild) gallery.appendChild(gallery.firstChild);
+  });
+  await expect(page.locator('.user-search-popover')).toHaveCount(0);
+});
+
 test('a burst of search keystrokes does not rebuild gallery cards or schedule stale indexed renders', async ({ page }) => {
   await stubOptionalApi(page);
   await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
