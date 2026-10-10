@@ -522,6 +522,24 @@ try{
   await scrollPdfToPage(target,2);
   assert.equal(await target.locator('#page-count').textContent(),'第 2 / 2 页');
  });
+
+ await test('a disabled owner canary never mints Tencent tickets',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],source,{
+    tencentEnabled:false,tencentCanary:false,
+  });
+  const page=await gallery(context,true);
+  const href=new URL(await page.locator('.card .private-pdf-button').first().getAttribute('href'),base);
+  href.searchParams.set('pdfIngress','tencent');
+  const target=await context.newPage();
+  await target.goto(href.toString(),{waitUntil:'domcontentloaded'});
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',
+    undefined,{timeout:10000});
+  assert.equal(state.tencentOpenCalls,0);
+  assert.equal(state.tencentRangeCalls,0);
+  assert.deepEqual(state.openOrigins,[]);
+ });
  await test('manual Tencent trial does not bypass a denied account',async()=>{
   const source={available:true,headerVerified:true,
     url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
