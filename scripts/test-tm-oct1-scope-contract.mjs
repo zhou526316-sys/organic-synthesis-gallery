@@ -17,8 +17,7 @@ const functionSource=(s,name)=>{
   return s.slice(from,from+match[0].length+end+'\n  }\n'.length);
 };
 const protectedFunctions=[
-  'articleFigureResolution','collectArticleFigureCandidates',
-  'rscBodyFigureContext','svgQuality',
+  'articleFigureResolution','svgQuality',
   'acquireBestVisual','privatePdfHostAllowed',
   'discoverExplicitPdfCandidates','privatePdfBytesValid',
   'waitForPrivatePdfCandidates','fetchExplicitPdf','uploadPrivatePdf'
@@ -27,6 +26,16 @@ for(const name of protectedFunctions){
   assert.equal(functionSource(source,name),functionSource(original,name),
     'published acquisition code unexpectedly modified: '+name);
 }
+// The 2026-10-10 owner approved targeted RSC-only SVG/source access to
+// DOI/ArticleId-bound numbered figures; other pinned functions remain exact.
+const boundedRscBody=functionSource(source,'collectArticleFigureCandidates');
+const boundedRscContext=functionSource(source,'rscBodyFigureContext');
+assert.ok(boundedRscBody.includes("job.publisher==='rsc'") &&
+  boundedRscBody.includes("rscPdfPreviewUrl(url)") &&
+  boundedRscBody.includes("rscVerifiedSilverchairMedia(job,url)") &&
+  boundedRscBody.includes("candidateBelongsToJob(url,job)"));
+assert.ok(boundedRscBody.includes("node.getAttribute('data')") &&
+  boundedRscContext.includes('[data-figure-id]'));
 // The owner's 2026-10-10 approval changes ONLY the final publisher access
 // cooldown trace to DOI-scoped; all other acquisition/identity/discovery code
 // in the protected visual-wait function must stay byte-for-byte identical.
