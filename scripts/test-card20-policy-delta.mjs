@@ -7,10 +7,17 @@ const original=JSON.parse(execFileSync('git',['show',base+':audit/media-auto-pol
   encoding:'utf8',maxBuffer:100000
 }));
 const current=JSON.parse(await readFile('audit/media-auto-policy.json','utf8'));
-assert.equal(original.maxFiguresPerCard,10,'baseline card cap must be exactly 10');
-assert.equal(current.maxFiguresPerCard,20,'approved card cap must be exactly 20');
 const appendix=' Publish at most 20 semantically distinct figures per card, aligned with the existing 20-figure Tampermonkey acquisition limit and horizontal lazy-loaded figure gallery.';
-assert.equal(current.notes,original.notes+appendix,'only explanatory publication note may be appended');
+assert.equal(current.maxFiguresPerCard,20,'approved card cap must remain exactly 20');
+if(original.maxFiguresPerCard===10){
+  // Historical one-time expansion: preserve the original 10 -> 20 gate.
+  assert.equal(current.notes,original.notes+appendix,'only explanatory publication note may be appended');
+}else{
+  // Current main has already adopted 20. Subsequent scoped PRs must leave
+  // the policy completely unchanged, not pretend the old delta is repeated.
+  assert.equal(original.maxFiguresPerCard,20,'unexpected baseline cap');
+  assert.deepEqual(current,original,'established 20-figure publication policy changed');
+}
 const old={...original},now={...current};delete old.notes;delete old.maxFiguresPerCard;delete now.notes;delete now.maxFiguresPerCard;
 assert.deepEqual(now,old,'all other media publication/authenticity constraints must remain byte-for-byte identical');
 const merge=await readFile('cloudflare/scripts/merge-new-body-auto.mjs','utf8');
@@ -22,5 +29,5 @@ const gallery=await readFile('src/main.ts','utf8');
 assert.ok(gallery.includes('for (const figure of result.figures)')&&gallery.includes("image.loading = 'lazy'")&&gallery.includes("strip.className = 'figure-strip'"),
   'the horizontal lazy figure strip must still render every published figure without truncation');
 console.log('TM_BODY_CARD20_POLICY_DELTA '+JSON.stringify({passed:true,approvedChangeOnly:true,
-  oldLimit:10,newLimit:20,publisherCodeUnchanged:true,completePacketStillRequired:true,
+  oldLimit:original.maxFiguresPerCard,newLimit:20,publisherCodeUnchanged:true,completePacketStillRequired:true,
   noPDFOrLiteratureReleaseChange:true}));
