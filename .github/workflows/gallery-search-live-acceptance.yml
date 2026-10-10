@@ -1,0 +1,55 @@
+name: Gallery all-time search live acceptance
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/gallery-search-live-acceptance.yml'
+      - 'scripts/verify-gallery-search-live-acceptance.mjs'
+      - 'cloudflare/worker/src/literature-search-enrichment.js'
+      - 'cloudflare/worker/src/literature-catalog-index.js'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/gallery-search-live-acceptance.yml'
+      - 'scripts/verify-gallery-search-live-acceptance.mjs'
+  workflow_run:
+    workflows: ['Literature catalog index shadow sync']
+    types: [completed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gallery-search-live-acceptance-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  live-search-readonly:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Checkout main for production verification
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || 'main' }}
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify live search with public, read-only APIs
+        env:
+          SEARCH_LIVE_REPORT: ${{ runner.temp }}/gallery-search-live-acceptance.json
+        run: node scripts/verify-gallery-search-live-acceptance.mjs
+      - name: Preserve DOI-level search proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-search-live-acceptance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gallery-search-live-acceptance.json
+          if-no-files-found: warn
+          retention-days: 21
