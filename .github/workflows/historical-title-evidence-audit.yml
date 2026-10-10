@@ -1,0 +1,25 @@
+name: Historical 2026 Jul-Sep title evidence audit
+# The 83-DOI proof was collected on run 38035669087 and committed under
+# audit/historical-backfill. Avoid repeating the same public metadata calls on
+# every unrelated PR synchronization; a manual rerun remains available.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Read-only verify Crossref DOI title and author metadata
+        run: node scripts/audit-julsep-title-provenance.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historic-julsep-title-evidence
+          path: artifacts/historical-title-evidence/
+          retention-days: 30

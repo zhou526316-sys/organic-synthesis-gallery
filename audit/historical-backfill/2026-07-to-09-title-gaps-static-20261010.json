@@ -1,0 +1,1889 @@
+{
+  "schemaVersion": "gallery-jul-sep-static-title-gap-audit-v1",
+  "generatedAt": "2026-10-10T07:15:54.613Z",
+  "scope": {
+    "from": "2026-07-01",
+    "to": "2026-09-30",
+    "dateField": "source publication date",
+    "mode": "read_only_static_snapshot",
+    "liveSiteAndRuntimeTitleCacheChecked": false
+  },
+  "policy": {
+    "existingAcceptedDoisAreNotNewAdmissions": true,
+    "requiresSourceTitleVerification": true,
+    "historicalBackfillNewCardsMediaPolicy": "toc_only",
+    "noNewBodyFigures": true,
+    "noNewPdf": true,
+    "retainExistingMedia": true,
+    "excludeHistoricalBackfillFromDailyNew": true,
+    "independent0800ReleaseUnchanged": true
+  },
+  "inputFiles": [
+    {
+      "path": "public/papers.gz.b64",
+      "blobSha": "85a62cf86f1b87047386e2fc4c30bf9eeb4c2353"
+    },
+    {
+      "path": "public/total-synthesis.json",
+      "blobSha": "d5ef10b1c02ce8237a8e14be262598b2833426a8"
+    },
+    {
+      "path": "public/manual-supplement.json",
+      "blobSha": "f4cac04a6ae5b4bf8e19edfc228124b88559afff"
+    },
+    {
+      "path": "public/final-audit-supplement.json",
+      "blobSha": "e77ad07dc077104abb0eb468434c72113d62f03c"
+    },
+    {
+      "path": "public/curated-supplement.json",
+      "blobSha": "9ed78104fb209d2de2facd90059c7bf28b4eaa58"
+    },
+    {
+      "path": "public/automation-supplement.json",
+      "blobSha": "03c348df0bf78619e2090aaf83be520e2e39796b"
+    },
+    {
+      "path": "public/rolling-supplement.json",
+      "blobSha": "8520abeec7522c0f02fbbac3a8431c74d6297717"
+    }
+  ],
+  "summary": {
+    "sourceRecordCounts": [
+      {
+        "file": "public/papers.gz.b64",
+        "count": 289
+      },
+      {
+        "file": "public/total-synthesis.json",
+        "count": 28
+      },
+      {
+        "file": "public/manual-supplement.json",
+        "count": 67
+      },
+      {
+        "file": "public/final-audit-supplement.json",
+        "count": 110
+      },
+      {
+        "file": "public/curated-supplement.json",
+        "count": 39
+      },
+      {
+        "file": "public/automation-supplement.json",
+        "count": 60
+      },
+      {
+        "file": "public/rolling-supplement.json",
+        "count": 436
+      }
+    ],
+    "distinctJulSepDois": 733,
+    "emptyEnglishTitlesInBase": 125,
+    "pendingEnglishAfterStaticMerge": 83,
+    "missingTitleZhAfterStaticMerge": 425,
+    "byMonth": {
+      "2026-07": 51,
+      "2026-08": 25,
+      "2026-09": 7
+    },
+    "byJournal": {
+      "Organic Letters": 55,
+      "Nature Communications": 26,
+      "Nature Synthesis": 2
+    }
+  },
+  "evidenceStatus": "candidate_title_reconciliation_only_not_publisher_verified",
+  "records": [
+    {
+      "doi": "10.1021/acs.orglett.6c02216",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-01",
+      "authors": [
+        "Honglin Dong",
+        "Xingru Yan",
+        "Mengzhe Liang",
+        "Meitong Qu",
+        "Ge Zhang",
+        "Qian Zhang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02234",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-01",
+      "authors": [
+        "Yanan Liu",
+        "Qiang Tang",
+        "Pui Ying Choy",
+        "Yangzilin Kong",
+        "Ni Gu",
+        "Susuo Lu",
+        "Yongjia Shang",
+        "Fuk Yee Kwong",
+        "Xinwei He"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02459",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-01",
+      "authors": [
+        "Chayan Kumar Kundu",
+        "Jitendra Kumar Tiwari",
+        "Sudhir Muduli",
+        "Piyush Kumar Singhal",
+        "Shubham",
+        "Sreenivas Katukojvala"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02473",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-01",
+      "authors": [
+        "Xuehan Yu",
+        "Yu-Xuan Ni",
+        "Yue-Liu-Ting Fu",
+        "Qi Li",
+        "Liang-Qiu Lu",
+        "Caixian Yan",
+        "Ying Cheng",
+        "Qiaowen Chang",
+        "Wen-Jing Xiao"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02752",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-01",
+      "authors": [
+        "Ying Tang",
+        "Yong-Yu Jiang",
+        "Wen-Mei Luo",
+        "Chen Li",
+        "Jin-Bao Peng",
+        "Zhiyuan Tan",
+        "Jun Ying"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c01753",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-04",
+      "authors": [
+        "Yanni Yue",
+        "ShuaiShuai Zhao",
+        "Xuying Sun",
+        "Jian Zhang",
+        "Fei Xue",
+        "Yu Zhang",
+        "Chao Feng"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02012",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-06",
+      "authors": [
+        "Anshu Yadav",
+        "Milton R. Smith III",
+        "Robert E. Maleczka Jr."
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02293",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-06",
+      "authors": [
+        "Agnuru Theja",
+        "Krishn Kumar Maravi",
+        "Chada Raji Reddy"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02333",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-06",
+      "authors": [
+        "Zhongyu Yi",
+        "Yishan Xiong",
+        "Lin Li",
+        "Lei Xiao",
+        "Fan Wu",
+        "Jin Wang",
+        "Douglas W. Stephan",
+        "Jing Guo"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02461",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-06",
+      "authors": [
+        "Song-Hua Li",
+        "Xue-Ning Li",
+        "Sheng-Nan Liu",
+        "Chun-Jing Liang",
+        "Kun-Han Xu",
+        "Dong-Jiao Wang",
+        "Kun-Feng Ru",
+        "Xiao-Jian Ren",
+        "Zhi-Xiang Wang",
+        "Ting Qi"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02635",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-06",
+      "authors": [
+        "Jia-Tian Jiang",
+        "Pei-Yuan Zhang",
+        "Hua-Hong Chen",
+        "Fu-Shuai Li",
+        "Gongde Wu",
+        "Long-Wu Ye",
+        "Bo Zhou"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02649",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-06",
+      "authors": [
+        "Yixia Wang",
+        "Zhuoya Chen",
+        "Yunfangting Wei",
+        "Tao Chen",
+        "Ze-Feng Xu",
+        "Mingming Yu",
+        "Chuan-Ying Li"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02198",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-07",
+      "authors": [
+        "Xiu-Hui Sun",
+        "Ji-Xun Guan",
+        "Chun-Xiao Cui",
+        "Ping Tian",
+        "Yun-Xuan Tan"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02550",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-07",
+      "authors": [
+        "Yi-Jun Xiang",
+        "Bai-Yu Qian",
+        "Li-Yang Wan",
+        "Ji-Chang Xiao",
+        "Jin-Hong Lin"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-75338-5",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-08",
+      "authors": [
+        "Jiefeng Hu",
+        "Kun Zhang",
+        "Jiahao Zhang",
+        "Daojing Li",
+        "Yongkai Su",
+        "Shuangru Chen",
+        "Qinqi He",
+        "Die Deng",
+        "Jing Zhang",
+        "Guoqiang Wang",
+        "Su Jing"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02403",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-09",
+      "authors": [
+        "Ziyi Wang",
+        "Tingyao Li",
+        "Ming Zhang",
+        "Hanlin Wei",
+        "Qian Cai"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01116-2",
+      "journal": "Nature Synthesis",
+      "publicationDate": "2026-07-09",
+      "authors": [
+        "Yuanbiao An",
+        "Yifei Zhu",
+        "Xingxing Ma",
+        "Peiyu Zhang",
+        "Qiuling Song"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02318",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-10",
+      "authors": [
+        "Mingruo Ding",
+        "Min Liu",
+        "Zenghui Ye",
+        "Zhenkun Chen",
+        "Yanqi Wu",
+        "Fengzhi Zhang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02443",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-10",
+      "authors": [
+        "Ying Jiang",
+        "Xiaoming Chen",
+        "Yu Zhou",
+        "Wei Huang",
+        "Qiao Cao",
+        "Feng-Hua Zhang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02607",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-10",
+      "authors": [
+        "Yuchen Li",
+        "Hua Shao",
+        "Zhe Dong",
+        "Dawei Ma"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01106-4",
+      "journal": "Nature Synthesis",
+      "publicationDate": "2026-07-10",
+      "authors": [
+        "Partha Sarathi Hazra",
+        "Makaya Robinson",
+        "M. Kevin Brown"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02568",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-11",
+      "authors": [
+        "Jiahui Yu",
+        "Tiancheng Xu",
+        "Zaozao Qiu"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-75499-3",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-11",
+      "authors": [
+        "Francesco Mele",
+        "Ana M. Constantin",
+        "Marco Barezzi",
+        "Leonardo Rossi",
+        "Alex Ergasti",
+        "Tomaso Fontanini",
+        "Sofia Civardi",
+        "Remie M. Sundermann",
+        "Paolo P. Mazzeo",
+        "Raimondo Maggi",
+        "Nicola Della Ca’",
+        "Andrea Prati",
+        "Luca Capaldo"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02215",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-13",
+      "authors": [
+        "Yang Fu",
+        "Qingyou Yu",
+        "Quan Wang",
+        "Bin Feng",
+        "Qing Shen",
+        "Junjun Tian",
+        "Jiahong Li"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02351",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-13",
+      "authors": [
+        "Shumpei Shimoji",
+        "Ren Hibino",
+        "Tsukasa Shimakawa",
+        "Masanori Nagatomo"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02388",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-13",
+      "authors": [
+        "Chhanda Debnath",
+        "Shikha Gandhi"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02551",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-13",
+      "authors": [
+        "Fan Gong",
+        "Shao-Hua Wu",
+        "De-Yi Kong",
+        "Ling-Xiang Yu",
+        "Rong Wang",
+        "Zhu Cao",
+        "Qing-Hai Deng"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02647",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-14",
+      "authors": [
+        "Trisha Chakraborty",
+        "Masilamani Jeganmohan"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-75432-8",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-15",
+      "authors": [
+        "Kashif Hussain",
+        "Fukai Xie",
+        "Hui Hui luo",
+        "Wen Dai"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02004",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-16",
+      "authors": [
+        "Xin-Ke Guo",
+        "Ryan Zili Qin",
+        "Hua-Li Qin"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-75467-x",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-16",
+      "authors": [
+        "Yuanfang Kong",
+        "Delong Mu"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02899",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-17",
+      "authors": [
+        "Vivien Herrscher",
+        "Agathe Martinez",
+        "Alexis Vallée",
+        "Anthony Abou Dib",
+        "Jean-Bernard Behr"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-75633-1",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-17",
+      "authors": [
+        "Qigang Li",
+        "Wannan Zhang",
+        "Jiaxin Liu",
+        "Jun Yang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02283",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-20",
+      "authors": [
+        "Zhiyue Li",
+        "Xiaoquan Qiu",
+        "Haojie Gao",
+        "Jing Chen",
+        "Yushuang Chen",
+        "Hui Yao",
+        "Linxuan Li",
+        "Zhong-Yan Cao",
+        "Nianyu Huang",
+        "Nengzhong Wang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-75768-1",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-20",
+      "authors": [
+        "Yongjian Yang",
+        "Xuening Li",
+        "Qianyong He",
+        "Yun Tan",
+        "Meiqi Hu",
+        "Shican Peng",
+        "Yinghua Yu",
+        "Zhi-Xiang Wang",
+        "Xueliang Huang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-75769-0",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-20",
+      "authors": [
+        "Zhiyong Song",
+        "Xinyu Li",
+        "Xinchen Wang",
+        "Asif Rasool",
+        "You Wang",
+        "Shaolin Zhu"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02604",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-21",
+      "authors": [
+        "Soumalya Panja",
+        "Pratap Kumar Mandal",
+        "Subhra Kanti Mahato",
+        "Sumayya S",
+        "Arijit Banerjee",
+        "Amit Kumar Simlandy"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-75774-3",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-21",
+      "authors": [
+        "Qi-Qi Hu",
+        "Yao Xiang",
+        "Zhaobo Ying",
+        "Yu Zhou",
+        "Hui Zhou",
+        "Youwei Xie"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02449",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-22",
+      "authors": [
+        "Qing Liu",
+        "Honglan Liu",
+        "Ran Wang",
+        "Zhihang Tang",
+        "Shengqing Yu",
+        "Tianle Huang",
+        "Hui Song",
+        "Zhongzhen Yang",
+        "Li Hai",
+        "Guanghui Lv",
+        "Yong Wu"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-75858-0",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-22",
+      "authors": [
+        "Kakeru Matsukuma",
+        "Masanori Tayu",
+        "Kento Muto",
+        "Ryota Itai",
+        "Masahiro Noji",
+        "Satoshi Hayashi",
+        "Sayaka Ohrui",
+        "Nozomi Saito"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-76036-y",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-24",
+      "authors": [
+        "Zhihuang Chen",
+        "Wen-Yan Tong",
+        "Jiye Shu",
+        "Junliang Zhang",
+        "Xiaodong Xiong"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02881",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-25",
+      "authors": [
+        "Amirah S. Mat Lani",
+        "Hui Ling Saw",
+        "Taku Wakabayashi",
+        "David F. Fernández",
+        "María González-Esguevillas",
+        "Philipp C. Roosen",
+        "Shunsuke Chiba"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-75906-9",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-25",
+      "authors": [
+        "Mathew L. Piotrowski",
+        "Lauren C. Irwin",
+        "Patrick Darveau",
+        "Xiong Zhang",
+        "Sabrina Hoford",
+        "Srini Vemulapalli",
+        "Kaitlyn Breault",
+        "Jarrod W. Johnson",
+        "Travis Dudding",
+        "Jakob Magolan"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-75280-6",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-28",
+      "authors": [
+        "Junichiro Hirano",
+        "Tomoyuki Ikai",
+        "Shinpei Kusaka",
+        "Ryotaro Matsuda",
+        "Hiroshi Shinokubo",
+        "Norihito Fukui"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-75878-w",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-29",
+      "authors": [
+        "Nengcong Yang",
+        "Yi Shu",
+        "Zhian Chen",
+        "Zhuwei Cao",
+        "Haiqun Cao",
+        "Sheng Ye",
+        "Yujie Xiong"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-76124-z",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-29",
+      "authors": [
+        "Jun Sun",
+        "Qin-Yuan Ni",
+        "Yu-Cheng Gu",
+        "Jin-Hong Lin",
+        "Ji-Chang Xiao"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02884",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-30",
+      "authors": [
+        "Wenkai Li",
+        "Pengfei Jia",
+        "Ke Yang",
+        "Xiaoli Gu",
+        "Shanshan Shi",
+        "Yuhan Zhou",
+        "Jingping Qu",
+        "Baomin Wang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-76238-4",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-30",
+      "authors": [
+        "Ying-Qi Zhang",
+        "Shuo-Han Li",
+        "Ming Joo Koh"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02598",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-07-31",
+      "authors": [
+        "Yi-Nan Lu",
+        "Hui Wang",
+        "Jia-Yin Wang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-76150-x",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-31",
+      "authors": [
+        "Ziyang Li",
+        "Qing Sun",
+        "Jiangtao Lin",
+        "Zou Chen",
+        "Ligang Huang",
+        "Yu Jia",
+        "Mingqian Zhou",
+        "You Wu",
+        "Mengjia Wang",
+        "Chao Shu"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-76290-0",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-07-31",
+      "authors": [
+        "Chandrima Maitra",
+        "Debashis Barik",
+        "Ting-You Wu",
+        "Chia-Jung Yang",
+        "Mu-Jeng Cheng",
+        "William A. Goddard III",
+        "Rai-Shung Liu"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03053",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-05",
+      "authors": [
+        "Keyi Deng",
+        "Kai Chen",
+        "Yu Zheng",
+        "Hua Yang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02828",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-12",
+      "authors": [
+        "Zhi-Hao Xu",
+        "Yi-Fei Liu",
+        "Xiao Liang",
+        "Si-Han Gu",
+        "Qiang Li",
+        "Yukai Liu",
+        "Kai Sun",
+        "Zhi-Chao Qi",
+        "Feng Li",
+        "Chong Li"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03355",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-12",
+      "authors": [
+        "Pan Huang",
+        "Duo Zhang",
+        "Lianmin Yang",
+        "Shuli Wang",
+        "Guodong Zhang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02753",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-14",
+      "authors": [
+        "Shasha Ye",
+        "Jiayi Zou",
+        "Chunhua Ma",
+        "Xinying Zhang",
+        "Xuesen Fan"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03179",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-14",
+      "authors": [
+        "Zhi-Lin Ren",
+        "Ke-Ji Li",
+        "Cheng-Cheng Ding",
+        "Shan-Shan Liu",
+        "Peng Yang",
+        "Ying-Min Liu",
+        "You Zhou",
+        "Zi-Qiang Wang",
+        "Ping He",
+        "Long Wang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02972",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-15",
+      "authors": [
+        "Chenchen Jiao",
+        "Qingfeng Liu",
+        "Lanfeng Shen",
+        "Zhiguo Zhang",
+        "Xingjie Zhang",
+        "Guisheng Zhang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03051",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-17",
+      "authors": [
+        "Yuanxin Liu",
+        "Xuanrui Liu",
+        "Dengfeng Shu",
+        "Xiaxia Zhu",
+        "Min Chen"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-76655-5",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-08-17",
+      "authors": [
+        "Xin-Xin Yang",
+        "Peng-Bo Bai",
+        "Fan-Rong Yan",
+        "Yi-Ming Wang",
+        "Peng-Fei Zhou",
+        "Xianglu Peng",
+        "Gang-Wei Wang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02837",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-19",
+      "authors": [
+        "Zhe Qi",
+        "Xian-Hua Pan",
+        "Li-Fang Wang",
+        "Xin Qi",
+        "Jing-Yang Fan",
+        "Ming-Jie Xu",
+        "Li-Ping Huo",
+        "Lu-Lu Zhou",
+        "Lei Guo"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03027",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-19",
+      "authors": [
+        "Aaron M. Whittaker",
+        "Feng Peng",
+        "Eric Sirota",
+        "Mark McLaughlin",
+        "Hongming Li",
+        "Charles Orella",
+        "Lushi Tan",
+        "Wenjun Liu",
+        "Thomas P. Vickery",
+        "Daniel Bishara",
+        "Nicholas J. Rogus",
+        "Jongrock Kong",
+        "Cyndi Qixin He",
+        "Zhiguo J. Song",
+        "Kevin M. Maloney",
+        "Steven Crossley",
+        "Xiao Wang",
+        "Chaohui Song",
+        "Guangxin Shao",
+        "Lianjie Li",
+        "Aijie Zhao",
+        "Lu Chen"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-76282-0",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-08-19",
+      "authors": [
+        "Wenhao Su",
+        "Suman Pradhan",
+        "Jun Hu",
+        "Peng Ren",
+        "Nils Rockstroh",
+        "Alina Skorynina",
+        "Piotr Kuśtrowski",
+        "Susanna Monti",
+        "Giovanni Barcaro",
+        "Chaoqin Zeng",
+        "Jabor Rabeah",
+        "Aleksander Jaworski",
+        "Laura Simonelli",
+        "Adam Slabon",
+        "Shoubhik Das"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02844",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-20",
+      "authors": [
+        "Gourishankar B. Swami",
+        "Padmavathy V. K. Nair",
+        "Bhakti M. Bate",
+        "Abhijit V. More",
+        "Himani Priya",
+        "Manikandan Paranjothy",
+        "Boopathy Gnanaprakasam"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03283",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-20",
+      "authors": [
+        "Zhenda Su",
+        "Tingtao Yan",
+        "Kelu Yan",
+        "Xinkai Shi",
+        "Bingwen Li",
+        "Mingming Yu",
+        "Dandan Li",
+        "Jianjing Yang",
+        "Jiangwei Wen"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03371",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-20",
+      "authors": [
+        "Ling Xiong",
+        "Jiaming Chen",
+        "Jiaming Li",
+        "Yang Xing",
+        "Lei Guo",
+        "Yanli Yuan",
+        "Xiaojun Zeng"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-76749-0",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-08-20",
+      "authors": [
+        "Evan F. W. Chen",
+        "Ruofei Cheng",
+        "Faraz Alaghemand",
+        "Rustam Z. Khaliullin",
+        "Chao-Jun Li"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-76924-3",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-08-21",
+      "authors": [
+        "Dan Hu",
+        "Yu Huang",
+        "Wenxuan Lin",
+        "Tao Zhang",
+        "Penghui Li",
+        "Zihao Jiao",
+        "Linghui Qian",
+        "Yu Lan",
+        "Xin Li",
+        "Jia-Yu Liao"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02781",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-24",
+      "authors": [
+        "Qin Luo",
+        "Meng-Zhen Wei",
+        "Yi-Ting Wang",
+        "Zhi-Bo Xie",
+        "Jin Liu",
+        "Sheng-Jiao Yan"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03002",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-24",
+      "authors": [
+        "Shuhei Yasuda",
+        "Prakash Kafle",
+        "Upasana Chatterjee",
+        "Indrajeet Sharma"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03164",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-24",
+      "authors": [
+        "Shuaiyu Chen",
+        "Liujing Zhu",
+        "Bingru Song",
+        "Xi Zhou",
+        "Xi-Jia Liu",
+        "Jinming Zhou",
+        "Xiaoli Han"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03446",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-24",
+      "authors": [
+        "Jingyu Liu",
+        "Zilin Huang",
+        "Xinxin Qi",
+        "Xiao-Feng Wu"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-76455-x",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-08-25",
+      "authors": [
+        "Wenle Zhu",
+        "Xin Sun",
+        "Dong Tian",
+        "Shanshan Cao",
+        "Xiaowei Zhao",
+        "Zhiyong Jiang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-77092-0",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-08-25",
+      "authors": [
+        "Chenglong Li",
+        "Qihang Tan",
+        "Qiang Wu",
+        "Yun Fu",
+        "Yongmei Wang",
+        "Bin Song",
+        "Tianzeng Huang",
+        "Long Liu",
+        "Michal Szostak",
+        "Tieqiao Chen"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-77185-w",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-08-25",
+      "authors": [
+        "Prakash Kafle",
+        "Shuhei Yasuda",
+        "Deacon Herndon",
+        "Daniel Nilson",
+        "Rylan C. Fox",
+        "Novruz G. Akhmedov",
+        "Indrajeet Sharma"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03187",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-30",
+      "authors": [
+        "Jatin Patra",
+        "Kousik Saha",
+        "Chandra M. R. Volla"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03219",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-08-31",
+      "authors": [
+        "Haoxiang Wan",
+        "Yi Dai",
+        "Meng Sun",
+        "Pengyong Fang",
+        "Jinguo Long",
+        "Xianjie Fang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03388",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-09-01",
+      "authors": [
+        "William A. Carrick",
+        "Alexandra D. Handlin",
+        "Shubin Liu",
+        "Jeffrey S. Johnson"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02889",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-09-02",
+      "authors": [
+        "Sen Yang",
+        "Zhuo Chen",
+        "Sha-sha Cai",
+        "Ming Chen"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03304",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-09-02",
+      "authors": [
+        "Marcos Humanes",
+        "Jaime Mateos-Gil",
+        "Francisco Mendicuti",
+        "Manuel A. Fernández-Rodríguez",
+        "Patricia García-García"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02989",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-09-03",
+      "authors": [
+        "Li Zhang",
+        "Xueyan Yang",
+        "Xiaofan Wu",
+        "Miao-Lin Ke",
+        "Yuan Tao",
+        "Zedu Huang",
+        "Fener Chen"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-77336-z",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-09-03",
+      "authors": [
+        "Qing Yan",
+        "Jian-Wei Chen",
+        "Benxuan Gao",
+        "Gregory R. Alvey",
+        "Andrey Shatskiy",
+        "Elena V. Stepanova",
+        "David L. Avetian",
+        "Jian-Quan Liu",
+        "Peter Dinér",
+        "Markus D. Kärkäs",
+        "Xiang-Shan Wang"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03344",
+      "journal": "Organic Letters",
+      "publicationDate": "2026-09-04",
+      "authors": [
+        "Khushboo Gupta",
+        "Chhavi Khajuria",
+        "Nidhi Saini",
+        "Vinod K. Singh"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    },
+    {
+      "doi": "10.1038/s41467-026-77437-9",
+      "journal": "Nature Communications",
+      "publicationDate": "2026-09-04",
+      "authors": [
+        "Sanne L. Albers",
+        "Johanna K. Harzendorf",
+        "Marie Deliaval",
+        "Johanne Köllmann",
+        "Jan Streuff"
+      ],
+      "title": null,
+      "titleZh": null,
+      "origins": [
+        "public/papers.gz.b64"
+      ],
+      "titleStatus": "unresolved_static_no_verified_english_title",
+      "nextAction": "crossref_openalex_publisher_title_provenance_check",
+      "reviewed": false
+    }
+  ]
+}

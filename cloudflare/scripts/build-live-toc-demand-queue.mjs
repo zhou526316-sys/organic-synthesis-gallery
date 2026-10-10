@@ -2,6 +2,7 @@ import { gunzipSync } from 'node:zlib';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { isExcludedDoi } from '../../shared/literature-policy.js';
+import { isHistoricalBackfill, isRetrospectiveAdmission, paperMediaPolicy } from '../../shared/historical-literature-policy.js';
 
 const ROOT = process.cwd();
 const PUBLIC = path.join(ROOT, 'public');
@@ -113,6 +114,7 @@ async function loadPapers() {
       title: typeof raw?.title === 'string' ? raw.title : '',
       date: typeof raw?.date === 'string' ? raw.date : '',
       addedDate: typeof raw?.addedDate === 'string' ? raw.addedDate : '',
+      ingestionChannel: raw?.ingestionChannel === 'historical_backfill' ? 'historical_backfill' : undefined,
     };
     const prev = merged.get(doi);
     if (!prev) merged.set(doi, paper);
@@ -124,6 +126,9 @@ async function loadPapers() {
         title: prev.title || paper.title,
         date: prev.date || paper.date,
         addedDate: knownAddedDates[0] || '',
+        // A duplicate DOI already in the regular catalog cannot be silently
+        // reclassified as a fresh historical admission by a later input file.
+        ingestionChannel: prev.ingestionChannel,
       });
     }
   }
@@ -217,14 +222,17 @@ async function main() {
     fetchLocalCaptureIndex(),
     loadDisplayGapOverrides(),
   ]);
-  const inventory = await fetchMediaInventory([...papers.keys()]);
-  const addedDates = [...papers.values()].map(paper => String(paper.addedDate || '')).filter(Boolean).sort();
+  const inventory = await fetchMediaInventory([...papers.values()]
+    .filter(paper => paperMediaPolicy(paper) !== 'metadata_only').map(paper => paper.doi));
+  const addedDates = [...papers.values()].filter(paper => !isRetrospectiveAdmission(paper))
+    .map(paper => String(paper.addedDate || '')).filter(Boolean).sort();
   const latestAddedDate = addedDates.length ? addedDates[addedDates.length - 1] : '';
-  const latestAddedCount = latestAddedDate ? [...papers.values()].filter(paper => paper.addedDate === latestAddedDate).length : 0;
+  const latestAddedCount = latestAddedDate ? [...papers.values()].filter(paper => !isRetrospectiveAdmission(paper) && paper.addedDate === latestAddedDate).length : 0;
   const allMissingOfficial = [];
   const displayGaps = [];
   const officialUpgrade = [];
   for (const [doi, paper] of papers) {
+    if (paperMediaPolicy(paper) === 'metadata_only') continue;
     const record = media[doi] || null;
     const liveCapture = localCaptures.get(doi) || null;
     const manualGapReason = displayGapOverrides.get(doi) || '';
@@ -248,6 +256,8 @@ async function main() {
       title: paper.title,
       date: paper.date,
       addedDate: paper.addedDate || '',
+      ingestionChannel: paper.ingestionChannel,
+      mediaPolicy: paperMediaPolicy(paper),
       publisher: publisherFor(doi),
       state: anyVisual ? 'fallback_only' : 'no_visual',
       existingReason,
@@ -258,6 +268,7 @@ async function main() {
   }
   const figureGaps = [];
   for (const [doi, paper] of papers) {
+    if (isHistoricalBackfill(paper) || paperMediaPolicy(paper) === 'toc_only') continue;
     const item = inventory.get(doi);
     const figureCount = Math.max(0, Number(item?.figureCount || 0));
     const highQualityFigureCount = Math.max(0, Number(item?.highQualityFigureCount || 0));
@@ -355,7 +366,7 @@ async function main() {
     version: 3,
     pairedCaptureRegistry: true,
     mediaGeneration: 1790082000000,
-    articles: [...papers.values()].map(paper => ({...paper, publisher: publisherFor(paper.doi)})),
+    articles: [...papers.values()].map(paper => ({...paper, mediaPolicy: paperMediaPolicy(paper), publisher: publisherFor(paper.doi)})),
     generatedAt: summary.generatedAt,
     webpageDoiCount: summary.webpageDoiCount,
     latestAddedDate: summary.latestAddedDate,

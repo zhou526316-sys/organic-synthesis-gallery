@@ -124,7 +124,12 @@ jobs:
           spec.loader.exec_module(module)
           assert module.gallery_original_url('10.1002/anie.3306470','2026-10-10') == 'https://gallery.gczhouwld.com/?edition=2026-10-10&doi=10.1002%2Fanie.3306470&summary=0'
           assert module.gallery_original_url('10.1038/s44160-026-01128-y') == 'https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01128-y&summary=0'
-          assert module.gallery_original_url('not-a-doi') == module.DEFAULT_SOURCE_URL
+          try:
+              module.gallery_original_url('not-a-doi')
+          except RuntimeError as exc:
+              assert 'verified DOI' in str(exc), str(exc)
+          else:
+              raise AssertionError('invalid WeChat source DOI must fail closed, not link to the homepage')
           print('WeChat 阅读原文 source URLs validated; day-list QR unaffected')
           PY
 

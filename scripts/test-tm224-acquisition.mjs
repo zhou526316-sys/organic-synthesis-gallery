@@ -72,16 +72,16 @@ try{
 
  const ordering=await page.evaluate(()=>{
    const q={mediaGeneration:1790082000000,latestAddedDate:'2026-10-02',webpageDoiCount:10,articles:[
-     {doi:'10.1021/jacs.6c00001',journal:'JACS',date:'2026-09-23',addedDate:'2026-10-02'},
-     {doi:'10.1021/acs.joc.6c00002',journal:'JOC',date:'2026-09-24',addedDate:'2026-10-01'},
-     {doi:'10.1038/s41586-026-10001-1',journal:'Nature',date:'2026-09-20',addedDate:'2026-10-01'},
-     {doi:'10.1126/science.abc0001',journal:'Science',date:'2026-09-21',addedDate:'2026-10-01'},
-     {doi:'10.1038/s41557-026-02001-1',journal:'Nature Chemistry',date:'2026-09-22',addedDate:'2026-10-01'},
-     {doi:'10.1126/sciadv.abc0002',journal:'Science Advances',date:'2026-09-22',addedDate:'2026-10-01'},
-     {doi:'10.1021/jacs.6c00003',journal:'JACS',date:'2026-09-22',addedDate:'2026-10-01'},
-     {doi:'10.1002/anie.202600003',journal:'Angew',date:'2026-09-23',addedDate:'2026-10-01'},
-     {doi:'10.1016/j.chempr.2026.00004',journal:'Chem',date:'2026-09-23',addedDate:'2026-10-01'},
-     {doi:'10.1021/acs.orglett.6c00005',journal:'Organic Letters',date:'2026-09-24',addedDate:'2026-10-01'}]};
+     {doi:'10.1021/jacs.6c00001',journal:'JACS',date:'2026-09-23',addedDate:'2026-10-02',mediaPolicy:'toc_only'},
+     {doi:'10.1021/acs.joc.6c00002',journal:'JOC',date:'2026-09-24',addedDate:'2026-10-01',mediaPolicy:'toc_only'},
+     {doi:'10.1038/s41586-026-10001-1',journal:'Nature',date:'2026-09-20',addedDate:'2026-10-01',mediaPolicy:'toc_only'},
+     {doi:'10.1126/science.abc0001',journal:'Science',date:'2026-09-21',addedDate:'2026-10-01',mediaPolicy:'toc_only'},
+     {doi:'10.1038/s41557-026-02001-1',journal:'Nature Chemistry',date:'2026-09-22',addedDate:'2026-10-01',mediaPolicy:'toc_only'},
+     {doi:'10.1126/sciadv.abc0002',journal:'Science Advances',date:'2026-09-22',addedDate:'2026-10-01',mediaPolicy:'toc_only'},
+     {doi:'10.1021/jacs.6c00003',journal:'JACS',date:'2026-09-22',addedDate:'2026-10-01',mediaPolicy:'toc_only'},
+     {doi:'10.1002/anie.202600003',journal:'Angew',date:'2026-09-23',addedDate:'2026-10-01',mediaPolicy:'toc_only'},
+     {doi:'10.1016/j.chempr.2026.00004',journal:'Chem',date:'2026-09-23',addedDate:'2026-10-01',mediaPolicy:'toc_only'},
+     {doi:'10.1021/acs.orglett.6c00005',journal:'Organic Letters',date:'2026-09-24',addedDate:'2026-10-01',mediaPolicy:'toc_only'}]};
    const media={items:{
      '10.1021/acs.joc.6c00002':{toc:{available:true,imageUrl:'toc.svg'}},
      '10.1021/acs.orglett.6c00005':{toc:{available:true,imageUrl:'toc.svg'}}
@@ -92,7 +92,7 @@ try{
  test('latest missing TOC leads the queue',ordering[0].doi==='10.1021/jacs.6c00001');
  test('other recent missing-TOC tier follows Nature, Science, Nature children, Science children, JACS, Angew, Chem',JSON.stringify(ordering.slice(1).map(x=>x.journal))===JSON.stringify([
    'Nature','Science','Nature Chemistry','Science Advances','JACS','Angew','Chem']));
- test('every paired media job is a TOC obligation with non-blocking opportunistic body capture',ordering.every(x=>x.captureToc===true&&x.captureFigures===false&&x.opportunisticFigures===true&&x.mediaNeed==='toc'));
+ test('7–9 TOC-only jobs never schedule opportunistic body capture',ordering.every(x=>x.captureToc===true&&x.captureFigures===false&&x.opportunisticFigures===false&&x.mediaNeed==='toc'));
 
  const routes=await page.evaluate(()=>({
    acsFigure:__tm224.articleUrl({doi:'10.1021/acs.orglett.6c03487',publisher:'acs',mediaNeed:'figures'}),

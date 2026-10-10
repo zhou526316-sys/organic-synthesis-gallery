@@ -1,0 +1,35 @@
+name: Historical Jul-Sep TOC-only safety regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/main.ts'
+      - 'shared/historical-literature-policy.js'
+      - 'shared/verified-historical-title-repairs.js'
+      - 'shared/literature-landing.mjs'
+      - 'cloudflare/scripts/build-live-toc-demand-queue.mjs'
+      - 'public/toc-mainline.user.js'
+      - 'scripts/test-historical-media-policy.mjs'
+      - 'scripts/test-tm-oct1-scope-contract.mjs'
+      - 'PROJECT_RULES.md'
+      - '.github/workflows/historical-toc-only-regression.yml'
+permissions:
+  contents: read
+jobs:
+  historic-capture-guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund --no-package-lock
+      - name: Verify historical identity, title, newness and media policy
+        run: node scripts/test-historical-media-policy.mjs
+      - name: Protect live publisher acquisition and PDF guards
+        run: node scripts/test-tm-oct1-scope-contract.mjs
+      - name: Build browser assets
+        run: npm run build

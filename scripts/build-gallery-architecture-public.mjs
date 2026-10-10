@@ -123,7 +123,10 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
     sourceCommit,
     generatedAsOfDate: asOfDate,
     scope: 'hot-plus-future-candidates',
-    count: hotCandidateDois.size,
+    // The retrospective exclusion is deliberate. The declared payload count
+    // must match the records actually materialized, not the pre-filter
+    // lifecycle candidate set, or the verified Hot fallback fails closed.
+    count: hotCandidateRecords.length,
     records: hotCandidateRecords,
   };
   const hotFallbackText = stable(hotFallbackBody) + '\n';

@@ -380,7 +380,7 @@
     queueTitle.textContent='接下来补什么（最多显示 12 篇）';queueText.style.whiteSpace='pre-wrap';queueText.id='queue';fields.queue=queueText;
     queueDetails.appendChild(queueTitle);queueDetails.appendChild(queueText);main.appendChild(queueDetails);
     var note = document.createElement('small');
-    note.textContent = '仅处理 Gallery addedDate 不早于 2026-10-01 的文献。已入库PDF不重新下载；待验证/库存未知不计为缺失。官方TOC或已验证Figure 1主图均可闭环；正文图与全文只随真实缺项访问顺带抓取。';
+    note.textContent = '常规处理10月起新文献；7–9月历史补录及10月补入的旧文献仅采TOC，不新增正文图/全文/PDF。已有文件不删除；未知库存不计缺失。官方TOC或已验证Figure 1主图均可闭环；正文图与全文只随真实缺项访问顺带抓取。';
     main.appendChild(note);
     details.appendChild(main); root.appendChild(details);
     (document.body || document.documentElement).appendChild(host);
@@ -1251,7 +1251,7 @@ function embeddedJobDois(value) {
   function queueRegistryChanged(a,b) {
     if (String(a.latestAddedDate||'')!==String(b.latestAddedDate||'')) return true;
     function identity(q) {
-      return (q.articles||[]).map(function(x){return normalizeDoi(x.doi)+'|'+String(x.addedDate||'')+'|'+String(x.date||'')+'|'+String(x.journal||'');}).sort().join('\n');
+      return (q.articles||[]).map(function(x){return normalizeDoi(x.doi)+'|'+String(x.addedDate||'')+'|'+String(x.date||'')+'|'+String(x.journal||'')+'|'+String(x.mediaPolicy||'')+'|'+String(x.ingestionChannel||'');}).sort().join('\n');
     }
     return identity(a)!==identity(b);
   }
@@ -5114,9 +5114,22 @@ function embeddedJobDois(value) {
     // Site addition date first; original publication date is only the legacy fallback.
     return String(job.addedDate||job.date||'');
   }
+  function tocOnlyCaptureEligible(job) {
+    var published=String(job&&job.date||''),added=String(job&&job.addedDate||'');
+    return String(job&&job.mediaPolicy||'')==='toc_only'
+      &&published>='2026-07-01'&&published<='2026-09-30';
+  }
   function recentFullCaptureEligible(job) {
-    var added=String(job&&job.addedDate||'').trim();
-    return /^\d{4}-\d{2}-\d{2}$/.test(added)&&added>=RECENT_FULL_CAPTURE_CUTOFF;
+    var added=String(job&&job.addedDate||'').trim(),published=String(job&&job.date||'');
+    // A July–September paper admitted in October is still TOC-only.
+    return /^\d{4}-\d{2}-\d{2}$/.test(added)&&added>=RECENT_FULL_CAPTURE_CUTOFF
+      &&String(job&&job.ingestionChannel||'')!=='historical_backfill'
+      &&String(job&&job.mediaPolicy||'')!=='toc_only'
+      // Only genuinely October-published papers enter the full-text/PDF bundle.
+      &&!(published&&published<'2026-10-01');
+  }
+  function captureJobEligible(job) {
+    return recentFullCaptureEligible(job)||tocOnlyCaptureEligible(job);
   }
   function captureMediaNeed(job) {
     return [job&&job.captureToc?'toc':'',
@@ -5156,7 +5169,7 @@ function embeddedJobDois(value) {
     if(!row||row.revision!==INVENTORY_STARTUP_REVISION||now-Number(row.savedAt||0)>INVENTORY_PLAN_CACHE_TTL_MS
       ||String(row.queueGeneratedAt||'')!==String(queue&&queue.generatedAt||'')
       ||Number(row.queueCount||0)!==Number(queue&&queue.articles&&queue.articles.length||0)||!Array.isArray(row.jobs))return null;
-    var allowed=new Set((queue.articles||[]).filter(recentFullCaptureEligible).map(function(x){return normalizeDoi(x.doi);}));
+    var allowed=new Set((queue.articles||[]).filter(captureJobEligible).map(function(x){return normalizeDoi(x.doi);}));
     var jobs=[];
     for(var i=0;i<row.jobs.length;i++){
       var raw=row.jobs[i],doi=normalizeDoi(raw&&raw.doi);
@@ -5275,7 +5288,7 @@ function embeddedJobDois(value) {
 
   async function readMissingCaptureInventory(queue,run) {
     var errors=[],mediaRows=[],cache=run?(run.inventoryCache||(run.inventoryCache=new Map())):new Map();
-    var dois=queue.articles.filter(recentFullCaptureEligible).map(function(x){return normalizeDoi(x.doi);});
+    var dois=queue.articles.filter(captureJobEligible).map(function(x){return normalizeDoi(x.doi);});
     function meta(payload){return payload&&payload.__inventoryMeta||{};}
     async function safe(name,layer,request,valid,key,maxAttempts) {
       key=key||name;var started=Date.now();updateInventoryProgress(run,layer,'loading',started);
@@ -5405,7 +5418,8 @@ function embeddedJobDois(value) {
     // A verified Figure 1 fallback is accepted as the card's primary visual for
     // every journal; it does not need a later official-TOC replacement.
     var figureOneCompletesQueue=verifiedFigureOneSatisfiesQueue(raw,fallback);
-    var tocNeeded=tocKnown&&!productionOfficial&&!figureOneCompletesQueue;
+    var tocNeeded=tocKnown&&!productionOfficial
+      &&(tocOnlyCaptureEligible(raw)||!figureOneCompletesQueue);
     var ownerPdfStatus=privatePdfServerStatus(inventory.pdfMap,doi);
     var pdfNeeded=privatePdfQueueNeeded(Object.assign({},raw,{privatePdfServerStatus:ownerPdfStatus}),Date.now(),true);
     var bundleVisit=Boolean(recentFullCaptureEligible(raw)&&(tocNeeded||pdfNeeded));
@@ -5418,13 +5432,13 @@ function embeddedJobDois(value) {
       // Companion images/text do not create independent publisher visits.
       captureFigures:false,
       captureEvidence:false,
-      opportunisticFigures:Boolean(bundleVisit||tocNeeded),
+      opportunisticFigures:Boolean(!tocOnlyCaptureEligible(raw)&&(bundleVisit||tocNeeded)),
       opportunisticEvidence:Boolean(bundleVisit&&textLevel!=='complete'),
       // Only owner-verified cloud absence may generate a PDF download.
       capturePrivatePdf:Boolean(pdfNeeded),privatePdfServerStatus:ownerPdfStatus,
       expectedFigureCount:expected,figureCoverageUnconfirmed:Boolean(tocNeeded&&inspectFigures),missingFigureCount:expected>0?Math.max(0,expected-knownCount):0,
       capturedFigures:figs,existingEvidenceLevel:textLevel,existingTocKind:productionOfficial?'official':localOfficial?'official_local':fallback?'figure1':localFigureOne?'figure1_local':'',
-      unknownNeeds:unknown,nonQueueUnknownNeeds:nonQueueUnknown,allowFigureOne:Boolean(tocNeeded&&!official&&!fallback)});
+      unknownNeeds:unknown,nonQueueUnknownNeeds:nonQueueUnknown,allowFigureOne:Boolean(!tocOnlyCaptureEligible(raw)&&tocNeeded&&!official&&!fallback)});
     job.mediaNeed=captureMediaNeed(job);
     job.state=job.captureToc?'no_visual':job.captureFigures?'figure_gap':job.captureEvidence?'evidence_gap':'private_pdf_gap';
     return job;
@@ -5715,7 +5729,7 @@ function embeddedJobDois(value) {
           break;
         }
         s.phase='running';row.state='active';
-        if(!recentFullCaptureEligible(row.job)){row.state='removed';coverageStats(run);manualSummary(run);continue;}
+        if(!captureJobEligible(row.job)){row.state='removed';coverageStats(run);manualSummary(run);continue;}
         var job=Object.assign({},row.job,{jobId:crypto.randomUUID(),controllerId:manualLeaseOwner(run),controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:row.attempts+1});
         coverageStats(run);manualSummary(run);
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);
@@ -5843,7 +5857,7 @@ function embeddedJobDois(value) {
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var architectureMembership=await observeArchitectureMembership(queue);
       var queueCheckedAt=Date.now();
-      var scopedArticles=queue.articles.filter(recentFullCaptureEligible);
+      var scopedArticles=queue.articles.filter(captureJobEligible);
       var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),
         {dois:scopedArticles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
       var media=productionMediaSnapshot(productionInventory);
@@ -5908,8 +5922,8 @@ function embeddedJobDois(value) {
           // A 2026-10-01+ visit is a one-page acquisition bundle: TOC when
           // needed, body figures, missing/incomplete full text and PDF when
           // not already stored. Older records keep the previous behavior.
-          job.opportunisticFigures=Boolean(job.opportunisticFigures||recent);
-          job.opportunisticEvidence=Boolean(evidenceMissing.has(doi));
+          job.opportunisticFigures=Boolean(!tocOnlyCaptureEligible(job)&&(job.opportunisticFigures||recent));
+          job.opportunisticEvidence=Boolean(!tocOnlyCaptureEligible(job)&&evidenceMissing.has(doi));
           job.captureEvidence=false;
           job.capturePrivatePdf=privatePdfQueueNeeded(job,Date.now());
           job.mediaNeed=captureMediaNeed(job);
@@ -5976,7 +5990,7 @@ function embeddedJobDois(value) {
         var attemptGeneration=pdfOnly?pdfGeneration:evidenceOnly?evidenceGeneration:generation;
         var attemptKind=pdfOnly?'pdf':evidenceOnly?'evidence':'figures';
         var priorAttempt=GM_getValue(attemptKey(batch[i].doi,attemptGeneration,attemptKind),null);
-        if(!recentFullCaptureEligible(batch[i])){summary.skipped+=1;continue;}
+        if(!captureJobEligible(batch[i])){summary.skipped+=1;continue;}
         var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,controllerRevision:CONTROLLER_REVISION,installRevision:INSTALL_REVISION,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
         markPublisherDispatch(job);
@@ -6510,7 +6524,8 @@ function embeddedJobDois(value) {
 
   function privatePdfCaptureEligibleByAddedDate(job) {
     var addedDate=String(job&&job.addedDate||'').trim();
-    return /^\d{4}-\d{2}-\d{2}$/.test(addedDate)&&addedDate>=PRIVATE_PDF_ADDED_DATE_CUTOFF;
+    return /^\d{4}-\d{2}-\d{2}$/.test(addedDate)&&addedDate>=PRIVATE_PDF_ADDED_DATE_CUTOFF
+      &&recentFullCaptureEligible(job);
   }
 
   function privatePdfQueueNeeded(job,now,ignoreCooldown) {
@@ -7167,14 +7182,14 @@ function embeddedJobDois(value) {
       if (!doi||seen.has(doi)) throw new Error('paired_queue_invalid_or_duplicate_doi');seen.add(doi);
       // Keep the complete registry for DOI integrity but schedule only papers
       // actually added to Gallery on/after October 1, never historical/undated.
-      if(!recentFullCaptureEligible(raw))return null;
+      if(!captureJobEligible(raw))return null;
       var record=(media.items||{})[doi]||{};
       var toc=record.toc||{};
       var hasVisual=Boolean(toc.available && toc.imageUrl);
       var official=Boolean(hasVisual && !/fallback/i.test(toc.reason||''));
       var natureScienceFamily=isNatureScienceFamilyJob(raw);
       var acceptedFallback=Boolean(hasVisual && /fallback/i.test(toc.reason||''));
-      var visualSatisfied=official||acceptedFallback;
+      var visualSatisfied=official||(acceptedFallback&&!tocOnlyCaptureEligible(raw));
       var latestAddedDate=String(queue.latestAddedDate||'');
       var isLatest=Boolean(latestAddedDate && String(raw.addedDate||'')===latestAddedDate);
       if(visualSatisfied)return null;
@@ -7189,10 +7204,10 @@ function embeddedJobDois(value) {
         captureToc:true,
         captureFigures:false,
         captureEvidence:false,
-        opportunisticFigures:true,
+        opportunisticFigures:!tocOnlyCaptureEligible(raw),
         opportunisticEvidence:false,
         capturePrivatePdf:false,
-        allowFigureOne:!official,
+        allowFigureOne:!tocOnlyCaptureEligible(raw)&&!official,
         _queueIndex:index
       });
     });
@@ -7217,7 +7232,7 @@ function embeddedJobDois(value) {
       // new one-visit bundle; use the open page to try to reach complete text.
       if(!recentFullCaptureEligible(raw)||String(row.evidenceLevel||'')==='complete')existing.add(doi);
     });
-    return new Set((queue&&Array.isArray(queue.articles)?queue.articles:[]).map(function(raw){return normalizeDoi(raw&&raw.doi);})
+    return new Set((queue&&Array.isArray(queue.articles)?queue.articles:[]).filter(recentFullCaptureEligible).map(function(raw){return normalizeDoi(raw&&raw.doi);})
       .filter(function(doi){return doi&&!existing.has(doi);}));
   }
 

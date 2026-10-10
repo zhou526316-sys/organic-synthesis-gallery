@@ -108,9 +108,9 @@ assert.equal(withoutOneDoiGuard.slice(0,first)+withoutOneDoiGuard.slice(last),or
 
 assert.ok(source.includes("OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1'"));
 assert.ok(source.includes("PRIVATE_PDF_INVENTORY_ENDPOINT = WORKER + '/api/private-pdf/capture-inventory'"));
-assert.ok(source.includes("var scopedArticles=queue.articles.filter(recentFullCaptureEligible)"));
-assert.ok(source.includes("if(!recentFullCaptureEligible(batch[i])){summary.skipped+=1;continue;}"));
-assert.ok(source.includes("if(!recentFullCaptureEligible(row.job)){row.state='removed'"));
+assert.ok(source.includes("var scopedArticles=queue.articles.filter(captureJobEligible)"));
+assert.ok(source.includes("if(!captureJobEligible(batch[i])){summary.skipped+=1;continue;}"));
+assert.ok(source.includes("if(!captureJobEligible(row.job)){row.state='removed'"));
 assert.ok(source.includes("captureFigures:false,"));
 assert.ok(source.includes("if(String(job&&job.privatePdfServerStatus||'')!=='missing')return false"));
 const context={
@@ -129,10 +129,12 @@ const context={
 vm.createContext(context);
 const live=[
   functionSource(source,'recentFullCaptureEligible'),
+  functionSource(source,'tocOnlyCaptureEligible'),
+  functionSource(source,'captureJobEligible'),
   functionSource(source,'pairedJobs'),
   functionSource(source,'privatePdfCaptureEligibleByAddedDate'),
   functionSource(source,'privatePdfQueueNeeded'),
-  'globalThis.T={pairedJobs,privatePdfQueueNeeded,recentFullCaptureEligible};'
+  'globalThis.T={pairedJobs,privatePdfQueueNeeded,recentFullCaptureEligible,tocOnlyCaptureEligible,captureJobEligible};'
 ].join('\n');
 vm.runInContext(live,context);
 const papers=Array.from({length:887},(_,i)=>({
@@ -146,6 +148,38 @@ const jobs=context.T.pairedJobs(q,{items:{}});
 assert.equal(jobs.length,177,'historic/undated DOI entered Oct-1 queue');
 assert.ok(jobs.every(j=>j.addedDate>='2026-10-01'&&j.captureToc===true));
 assert.equal(q.articles.length,887,'registry must remain intact');
+
+const julyBackfill={
+  doi:'10.1021/acs.orglett.6c02216',journal:'Organic Letters',
+  date:'2026-07-01',addedDate:'2026-10-10',
+  ingestionChannel:'historical_backfill',mediaPolicy:'toc_only',
+};
+const lateJuly={...julyBackfill,doi:'10.1021/acs.orglett.6c02234',ingestionChannel:undefined};
+const preJuly={...julyBackfill,doi:'10.1021/acs.orglett.6c02293',date:'2026-06-30',mediaPolicy:'metadata_only'};
+const freshOct={...julyBackfill,doi:'10.1021/acs.orglett.6c02550',date:'2026-10-09',ingestionChannel:undefined,mediaPolicy:'standard'};
+for(const row of [julyBackfill,lateJuly]){
+  assert.equal(context.T.tocOnlyCaptureEligible(row),true);
+  assert.equal(context.T.recentFullCaptureEligible(row),false);
+  assert.equal(context.T.captureJobEligible(row),true);
+  assert.equal(context.T.privatePdfQueueNeeded({...row,privatePdfServerStatus:'missing'},Date.now(),true),false);
+}
+assert.equal(context.T.captureJobEligible(preJuly),false);
+assert.equal(context.T.recentFullCaptureEligible(freshOct),true);
+const historicQueue={articles:[julyBackfill,lateJuly,preJuly,freshOct],
+  webpageDoiCount:4,mediaGeneration:1790082000000,latestAddedDate:'2026-10-10'};
+const scoped=context.T.pairedJobs(historicQueue,{items:{}});
+assert.equal(scoped.length,3,'pre-July historical metadata-only DOI must not dispatch');
+for(const row of scoped.filter(j=>j.date<'2026-10-01')){
+  assert.equal(row.captureToc,true);
+  assert.equal(row.capturePrivatePdf,false);
+  assert.equal(row.opportunisticFigures,false);
+  assert.equal(row.opportunisticEvidence,false);
+  assert.equal(row.allowFigureOne,false);
+  assert.equal(row.mediaNeed,'toc');
+}
+assert.equal(scoped.find(j=>j.doi===freshOct.doi).opportunisticFigures,true,
+  'real Oct papers retain the current full-capture companion behavior');
+
 assert.equal(context.T.recentFullCaptureEligible({date:'2026-10-08',addedDate:''}),false,
   'publication date must not substitute for Gallery addedDate');
 assert.equal(context.T.recentFullCaptureEligible({addedDate:'2026-09-30'}),false);
