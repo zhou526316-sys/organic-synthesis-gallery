@@ -38,4 +38,4 @@
 
 1. 仍需可信原始摘要：34 篇。优先由已设计并通过测试的 Springer Nature Meta API、Semantic Scholar 官方API或作者公开版本等**真实可用且授权的来源**补齐。API Key 必须由仓库所有者通过 GitHub Actions Secrets 设置，绝不能粘贴到公开代码或日志；没有配置时不可宣称补齐。
 2. 仍需有效审核解读的复核：20 篇。必须对当前 Evidence V2 执行双遍事实核验，当前 `sourceHash` 与 `evidencePacketHash` 均不匹配，禁止只改哈希“恢复”旧摘要。可在独立经过授权的审稿流程处理，不得无视现有10月1日后深度解读范围契约。
-3. 用户最终目标“未来历史文献全部有摘要”仍**未达到**。每一条未来 DOI 必须保留 `source_available`、`reviewed_bilingual_available`、`rights_status`、`pending_reason` 和展示端实际可读状态，不得凭标题生成研究数据或混淆“索引含200字节选”与“完整审核双语摘要”。
+3. 用户最终目标“未来历史文献全部有摘要”仍**未达到**。每一条未来 DOI 必须保留 `source_available`、`reviewed_bilingual_available`、`rights_status`、`pending_reason` 和展示端实际可读状态，不得凭标题生成研究数据或混淆“索引含200字符节选”与“完整审核双语摘要”。
