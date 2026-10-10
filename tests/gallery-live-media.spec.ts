@@ -62,7 +62,10 @@ async function openCanonical(page: Page, doi: string, { figure1 = false, imageFa
         });
         return;
       }
-      if (url.pathname === '/media-index.json' && initialMediaStatus !== 'available') {
+      // For a deliberate image-failure case, keep the independent static
+      // snapshot empty; otherwise a *valid* static TOC correctly rescues the
+      // image and the fixture's expected retry button must not appear.
+      if (url.pathname === '/media-index.json' && (initialMediaStatus !== 'available' || imageFailure)) {
         calls.push({ url: url.href, method });
         await route.fulfill({
           status: 200, contentType: 'application/json',
