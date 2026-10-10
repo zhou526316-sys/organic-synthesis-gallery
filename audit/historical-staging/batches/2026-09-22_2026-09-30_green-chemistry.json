@@ -1,0 +1,55 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Green Chemistry",
+  "issns": [
+    "1463-9262",
+    "1463-9270"
+  ],
+  "range": {
+    "from": "2026-09-22",
+    "to": "2026-09-30"
+  },
+  "checkedAt": "2026-10-10T19:05:10.615Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "1463-9262",
+        "total": 0,
+        "count": 0,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1463-9270",
+        "total": 0,
+        "count": 0,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 0,
+      "count": 0,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 0,
+      "openalex": 0
+    }
+  },
+  "candidateCount": 0,
+  "alreadyPublished": 0,
+  "unreviewed": 0,
+  "records": [],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

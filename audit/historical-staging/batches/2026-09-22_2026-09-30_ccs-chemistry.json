@@ -1,0 +1,539 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "CCS Chemistry",
+  "issns": [
+    "2096-5745"
+  ],
+  "range": {
+    "from": "2026-09-22",
+    "to": "2026-09-30"
+  },
+  "checkedAt": "2026-10-10T19:05:08.213Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2096-5745",
+        "total": 9,
+        "count": 9,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 8,
+      "count": 8,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 9,
+      "openalex": 8
+    }
+  },
+  "candidateCount": 11,
+  "alreadyPublished": 1,
+  "unreviewed": 10,
+  "records": [
+    {
+      "doi": "10.31635/ccschem.026.202600921ed1",
+      "title": "Editorial",
+      "authors": [],
+      "date": "2026-09-29",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "8",
+        "issue": "10",
+        "pages": "4727-4734",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202600921ed1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.026.202600921ed1",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202600921ed2",
+      "title": "Author Spotlight",
+      "authors": [],
+      "date": "2026-09-29",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "8",
+        "issue": "10",
+        "pages": "4735-4740",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202600921ed2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.026.202600921ed2",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608210",
+      "title": "Frustrated Lewis Pair-Driven Targeted Li–O Bonds Activation for Efficient Li 2 CO 3 Decomposition",
+      "authors": [
+        "Limin Liu",
+        "Weiping Li",
+        "Ruien Cao",
+        "Dongyang Zhang",
+        "Jiuhong Wang",
+        "Libo Zhao",
+        "Yaqiong Su",
+        "Shujiang Ding"
+      ],
+      "date": "2026-09-23",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-11",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608210"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.026.202608210",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608262",
+      "title": "Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
+      "authors": [
+        "Liang-Min Xiong",
+        "Cong Ma",
+        "Jian-Feng Guo",
+        "Yi-Fan Chen",
+        "Zi-Meng Li",
+        "Hai-Qi Li",
+        "Hao Xu",
+        "Tian-Sheng Mei"
+      ],
+      "date": "2026-09-22",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-19",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608262"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.026.202608262",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608315",
+      "title": "Enantiodivergent Total Syntheses of Minfiensine Enantiomers Enable Comparative Anticancer Profiling in Breast Cancer Cell Models",
+      "authors": [
+        "Fuhao Zhang",
+        "Songbo Xie",
+        "Wan Su",
+        "Fuxu Zhan",
+        "Tianhao Mu",
+        "Yuanyuan Li",
+        "Tala Fnu",
+        "Sijin Wu",
+        "Jun Zhou",
+        "Guangxin Liang"
+      ],
+      "date": "2026-09-23",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-10",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608315"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.026.202608315",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608341",
+      "title": "Ultrabroadband Omnidirectional Super-Black Hierarchical Metamaterials",
+      "authors": [
+        "Xin Jia",
+        "Baiqi Gao",
+        "Junlin Li",
+        "Sainan Liu",
+        "Guangyao Hou",
+        "Wei Qin",
+        "Xinzhi Wang",
+        "Lin Guo",
+        "Xiaohong Wu"
+      ],
+      "date": "2026-09-23",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-14",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608341"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.026.202608341",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608342",
+      "title": "Nanopatterning Strategy Based on Triphenyl Tin Carboxylate and Photoacid Generator-Assisted Unlocking of Dual-Tone Lithography",
+      "authors": [
+        "Riyao Cong",
+        "Yingdong Zhao",
+        "Xiaofeng Gong",
+        "Wenzheng Li",
+        "Pengzhong Chen",
+        "Xiaojun Peng"
+      ],
+      "date": "2026-09-23",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-14",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608342"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.026.202608342",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608355",
+      "title": "Metal–Organic Framework-Assisted Structure Determination Techniques",
+      "authors": [
+        "Shang Li",
+        "Yitao Wu",
+        "Feihe Huang"
+      ],
+      "date": "2026-09-23",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-12",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608355"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.026.202608355",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608434",
+      "title": "Atomically Precise Fluoroalkylation Engineering of Titanium-Oxo Clusters for Tailored Lithography Performance",
+      "authors": [
+        "Zuohu Zhou",
+        "Dongao Mao",
+        "Zeqi Yu",
+        "Siming Qi",
+        "Ni Zhen",
+        "Lanjun Guo",
+        "Yanfeng Bi",
+        "Wolfgang Schmitt",
+        "Lei Zhang"
+      ],
+      "date": "2026-09-25",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-29",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608434"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.026.202608434",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608469",
+      "title": "Point-Group Symmetry Enables Record Magneto-Optical Response in Lanthanide Complexes",
+      "authors": [
+        "Yu-Hong Song",
+        "Pei-Ming Cheng",
+        "Gui-Lin Zhuang",
+        "Xiang-Jian Kong",
+        "Lan-Sun Zheng",
+        "La-Sheng Long"
+      ],
+      "date": "2026-09-25",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-20",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608469"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.026.202608469",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608472",
+      "title": "From Non-Aqueous to Aqueous: Water-Engaged In Situ Electrochemical Reconstruction of Carbazoles",
+      "authors": [
+        "Jiayao Li",
+        "Wenjing Huang",
+        "Liya Ma",
+        "Zhejun Li"
+      ],
+      "date": "2026-09-27",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-31",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608472"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.026.202608472",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-22",
+        "to": "2026-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
