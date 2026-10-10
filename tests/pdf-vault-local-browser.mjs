@@ -315,6 +315,25 @@ async function saveVisual(page, name) {
   if (name.endsWith('library')) await page.evaluate(() => scrollTo(0, 0));
   await page.screenshot({ path: path.join(directory, name + '.png'), fullPage: false });
 }
+async function assertFullViewportReader(page) {
+  const viewport = page.viewportSize();
+  const geometry = await by(page, 'reader').evaluate(dialog => {
+    const rect = dialog.getBoundingClientRect();
+    const scroll = dialog.querySelector('.reader-scroll-container')?.getBoundingClientRect();
+    const toolbar = dialog.querySelector('.reader-topbar')?.getBoundingClientRect();
+    return {
+      x: rect.x, y: rect.y, width: rect.width, height: rect.height,
+      scrollHeight: scroll?.height || 0, toolbarHeight: toolbar?.height || 0,
+      borderRadius: getComputedStyle(dialog).borderRadius,
+    };
+  });
+  assert.ok(Math.abs(geometry.x) <= 1 && Math.abs(geometry.y) <= 1, 'PDF reader begins at viewport origin: ' + JSON.stringify(geometry));
+  assert.ok(Math.abs(geometry.width - viewport.width) <= 1, 'PDF reader covers viewport width: ' + JSON.stringify(geometry));
+  assert.ok(Math.abs(geometry.height - viewport.height) <= 1, 'PDF reader covers viewport height: ' + JSON.stringify(geometry));
+  assert.equal(geometry.borderRadius, '0px', 'browser-style viewer has no floating dialog corners');
+  assert.ok(geometry.scrollHeight > viewport.height * 0.55, 'continuous PDF scroll area uses the viewport: ' + JSON.stringify(geometry));
+  assert.ok(geometry.toolbarHeight > 30 && geometry.toolbarHeight < 120, 'PDF toolbar is visible and compact');
+}
 async function assertNoReader(page) { assert.equal(await by(page, 'reader').isVisible(), false, 'failed or stale open must not expose the reader'); }
 async function waitUntil(predicate, description) {
   for (let i = 0; i < 140; i++) { if (predicate()) return; await new Promise(resolve => setTimeout(resolve, 25)); }
@@ -351,7 +370,7 @@ try {
   await test('real OPFS import is read back and reopened after reload', async () => {
     const { context } = await trackedContext(); const page = await pageFor(context); await importGood(page);
     let copies = await localCopies(page); assert.equal(copies.length, 1); assert.equal(copies[0].content_hash, PDF_HASH); assert.equal(copies[0].byte_length, PDF.length); assert.equal(copies[0].hasDirectoryHandle, true);
-    await openFirst(page); await assertRendered(page); await saveVisual(page, 'desktop-reader'); await by(page, 'reader-close').click();
+    await openFirst(page); await assertRendered(page); await assertFullViewportReader(page); await saveVisual(page, 'desktop-reader'); await by(page, 'reader-close').click();
     await page.reload({ waitUntil: 'domcontentloaded' }); await waitAccount(page, 'a');
     assert.equal(await copyRows(page).count(), 1); await openFirst(page); await assertRendered(page);
     copies = await localCopies(page); assert.equal(copies.length, 1, 'opening a stored PDF does not import another copy');
@@ -507,7 +526,7 @@ try {
     await importFile(page); await waitStatus(page, 'error'); assert.equal(await copyRows(page).count(), 0); assert.equal((await localCopies(page)).length, 0); await assertNoReader(page);
   });
   await test('390px local library and PDF reader fit the mobile viewport', async () => {
-    const { context } = await trackedContext({ width: 390, folderPicker: false }); const page = await pageFor(context); assert.equal(await by(page, 'directory').isDisabled(), true); assert.equal(await by(page, 'opfs').isEnabled(), true); await importGood(page); await saveVisual(page, 'mobile-library'); await openFirst(page); await assertRendered(page); await saveVisual(page, 'mobile-reader');
+    const { context } = await trackedContext({ width: 390, folderPicker: false }); const page = await pageFor(context); assert.equal(await by(page, 'directory').isDisabled(), true); assert.equal(await by(page, 'opfs').isEnabled(), true); await importGood(page); await saveVisual(page, 'mobile-library'); await openFirst(page); await assertRendered(page); await assertFullViewportReader(page); await saveVisual(page, 'mobile-reader');
     const metrics = await page.evaluate(() => ({ width: innerWidth, document: document.documentElement.scrollWidth, body: document.body.scrollWidth, overflows: [...document.querySelectorAll('body *')].map(element => ({ tag: element.tagName, className: String(element.className || ''), testId: element.dataset?.testid || '', left: element.getBoundingClientRect().left, right: element.getBoundingClientRect().right })).filter(item => item.left < -1 || item.right > innerWidth + 1).slice(0, 12) }));
     activeCase.layout = metrics;
     assert.ok(metrics.document <= metrics.width + 1 && metrics.body <= metrics.width + 1, 'no page-level horizontal overflow: ' + JSON.stringify(metrics));
