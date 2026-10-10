@@ -8,6 +8,8 @@ on:
     paths:
       - '.github/workflows/literature-abstract-incremental.yml'
       - 'audit/automation-triggers/literature-abstract-incremental.json'
+      - 'scripts/sync-literature-search-enrichment.mjs'
+      - 'scripts/lib/doi-scholarly-abstract-metadata.mjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -25,6 +27,8 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
+      - name: Verify scholarly DOI-only source adapters
+        run: node --test scripts/test-doi-scholarly-abstract-metadata.mjs
       - name: Verify publisher metadata DOI and redirect constraints
         run: node --test scripts/test-publisher-abstract-metadata.mjs
       - name: Validate true DOI-bound abstract recovery and term search
@@ -38,7 +42,9 @@ jobs:
           SEARCH_ENRICHMENT_REPORT: ${{ runner.temp }}/abstract-recovery-report.json
           SEARCH_ABSTRACT_RETRY_LIMIT: '300'
           CROSSREF_FALLBACK_LIMIT: '300'
-          PUBLISHER_ABSTRACT_LIMIT: '45'
+          PUBLISHER_ABSTRACT_LIMIT: '60'
+          SEMANTIC_SCHOLAR_LIMIT: '60'
+          EUROPEPMC_LIMIT: '60'
         run: node scripts/sync-literature-search-enrichment.mjs
       - uses: actions/upload-artifact@v4
         if: always()
