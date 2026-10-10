@@ -41,6 +41,7 @@ const API_BASE = 'https://api.gczhouwld.com';
 const API_BACKUP = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
 const OPEN_HEDGE_DELAY_MS = 3_500;
 const OPEN_BODY_RETRY_DELAY_MS = 1_800;
+const OPEN_TENCENT_HEDGE_DELAY_MS = 5_000;
 const OPEN_TOTAL_TIMEOUT_MS = 15_000;
 const ASSET_BASE = '/pdf-vault-assets/6.4.299/';
 const MAX_PDF_BYTES = 60 * 1024 * 1024;
@@ -361,16 +362,22 @@ async function fetchAuthorizedSource(origin, sessionToken, mode, controller, onH
 }
 
 async function getPdfSource(sessionToken, mode = 'view') {
-  const origins = [API_BASE, API_BACKUP];
-  const controllers = Array.from({length:3}, () => new AbortController());
+  // Check the Gallery-published switch without sending account data.
+  // Do this in parallel with canonical authorization: the primary request
+  // must not wait for a slow/missing manifest.
+  const tencentEligibility = tencentPdfRouteEnabled();
+  const origins = [API_BASE, API_BACKUP, API_BASE, TENCENT_PDF_ORIGIN];
+  const controllers = Array.from({length:origins.length}, () => new AbortController());
   document.documentElement.dataset.privatePdfAuthorizePath = '';
-  let hedgeTimer = null, deadlineTimer = null, retryTimer = null;
+  let hedgeTimer = null, tencentTimer = null, deadlineTimer = null, retryTimer = null;
   let backupStarted = false, pending = 0, finished = false;
+  let tencentReady = null, tencentDue = false;
   const errors = [];
   const attempts = [
     { label: 'primary', started: 0, elapsed: 0, result: '未发起', stages: '' },
     { label: 'backup', started: 0, elapsed: 0, result: '未发起', stages: '' },
     { label: 'primary-retry', started: 0, elapsed: 0, result: '未发起', stages: '' },
+    { label: 'tencent', started: 0, elapsed: 0, result: '未发起', stages: '' },
   ];
   const saveAttempts = () => {
     const at = performance.now();
@@ -387,6 +394,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
       if (finished) return;
       finished = true;
       if (hedgeTimer !== null) clearTimeout(hedgeTimer);
+      if (tencentTimer !== null) clearTimeout(tencentTimer);
       if (deadlineTimer !== null) clearTimeout(deadlineTimer);
       if (retryTimer !== null) clearTimeout(retryTimer);
       document.documentElement.dataset.privatePdfAuthorizePath = route ||
@@ -396,43 +404,54 @@ async function getPdfSource(sessionToken, mode = 'view') {
       if (error) reject(error);
       else resolve(value);
     };
+    const statusError = () => errors.find(error =>
+      /^open_http_(5\d\d|429)$/.test(error?.message || ''));
+    const maybeFinish = () => {
+      if (finished || pending > 0 || !backupStarted ||
+          (retryTimer !== null && !attempts[2].started) ||
+          tencentReady === null) return;
+      if (tencentReady && !attempts[3].started) {
+        launch(3);
+        return;
+      }
+      const reported = statusError();
+      finish(null, new Error(reported?.message || 'pdf_authorize_network_error'));
+    };
     const launch = index => {
-      if (finished || (index === 1 && backupStarted) || (index === 2 && attempts[2].started)) return;
+      if (finished || attempts[index].started ||
+          (index === 3 && tencentReady !== true)) return;
       if (index === 1) backupStarted = true;
       const attempt = attempts[index];
       attempt.started = performance.now();
       attempt.result = '等待';
       pending++;
-      const targetOrigin = index === 2 ? origins[0] : origins[index];
-      void fetchAuthorizedSource(targetOrigin, sessionToken, mode, controllers[index],
+      void fetchAuthorizedSource(origins[index], sessionToken, mode, controllers[index],
         (status, stages) => {
           attempt.result = 'HTTP' + status + '(headers)';
           attempt.stages = stages;
           if (index === 0 && status === 200 && !finished && retryTimer === null) {
-            // If the trusted origin sends 200 headers but the JSON body stalls,
-            // remint at most once rather than waiting indefinitely. This is
-            // the same authenticated endpoint, never a permission bypass.
+            // Preserve the current independent retry for a 200 header whose
+            // JSON body stalls, without extending the total authorization limit.
             retryTimer = setTimeout(() => launch(2), OPEN_BODY_RETRY_DELAY_MS);
           }
         })
         .then(source => {
+          if (finished) return;
           attempt.elapsed = Math.round(performance.now() - attempt.started);
           attempt.result = '完成';
-          finish(source, null, index === 1 ? 'backup' : 'primary');
+          pending--;
+          finish(source, null, attempt.label === 'primary-retry' ? 'primary' : attempt.label);
         })
         .catch(error => {
           if (finished) return;
           attempt.elapsed = Math.round(performance.now() - attempt.started);
           if (attempt.result === '等待') attempt.result = '网络失败';
           pending--;
-          // Never route around an explicit permission denial or a verified
-          // absence of a private file. Both endpoints enforce the same policy.
+          // Canonical 401/403, missing object, and invalid authorization
+          // stop everything. Tencent is an ingress, NEVER an entitlement bypass.
           const explicitDenial = error?.notAvailable ||
             /^open_http_(401|403)$/.test(error?.message || '') ||
             error?.message === 'pdf_source_invalid';
-          // The canonical endpoint is authoritative. A secondary gateway
-          // may be temporarily out of sync: never let its denial cancel a
-          // still-running canonical request. A primary denial is final.
           if ((index === 0 || index === 2) && explicitDenial) {
             finish(null, error, 'primary');
             return;
@@ -442,10 +461,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
             if (hedgeTimer !== null) clearTimeout(hedgeTimer);
             launch(1);
           }
-          if (pending === 0 && backupStarted && (retryTimer === null || attempts[2].started)) {
-            const status = errors.find(e => /^open_http_(5\d\d|429)$/.test(e?.message || ''));
-            finish(null, new Error(status?.message || 'pdf_authorize_network_error'));
-          }
+          maybeFinish();
         });
     };
     deadlineTimer = setTimeout(() => {
@@ -454,6 +470,20 @@ async function getPdfSource(sessionToken, mode = 'view') {
         ? 'pdf_authorize_body_timeout' : 'pdf_authorize_timeout'));
     }, OPEN_TOTAL_TIMEOUT_MS);
     hedgeTimer = setTimeout(() => launch(1), OPEN_HEDGE_DELAY_MS);
+    tencentTimer = setTimeout(() => {
+      tencentDue = true;
+      if (tencentReady === true) launch(3);
+      else maybeFinish();
+    }, OPEN_TENCENT_HEDGE_DELAY_MS);
+    void tencentEligibility.then(enabled => {
+      if (finished) return;
+      tencentReady = enabled === true;
+      if (tencentReady && tencentDue) launch(3);
+      maybeFinish();
+    }, () => {
+      tencentReady = false;
+      maybeFinish();
+    });
     launch(0);
   });
 
