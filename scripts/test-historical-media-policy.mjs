@@ -11,6 +11,7 @@ const july = {doi:'10.1234/historical-july',date:'2026-07-20',addedDate:recentDa
 const lateSep = {doi:'10.1234/late-september',date:'2026-09-20',addedDate:recentDay};
 const regular = {doi:'10.1234/new-oct',date:'2026-10-09',addedDate:recentDay};
 const legacy = {doi:'10.1234/original-september',date:'2026-09-25',addedDate:'2026-09-26'};
+const oldLate = {doi:'10.1234/pre-july-late',date:'1980-06-01',addedDate:recentDay};
 
 assert.equal(isHistoricalBackfill(preJuly),true);
 assert.equal(isRetrospectiveAdmission(preJuly),true);
@@ -18,10 +19,12 @@ assert.equal(isRetrospectiveAdmission(july),true);
 assert.equal(isRetrospectiveAdmission(lateSep),true);
 assert.equal(isRetrospectiveAdmission(regular),false);
 assert.equal(isRetrospectiveAdmission(legacy),false);
+assert.equal(isRetrospectiveAdmission(oldLate),true);
 assert.equal(paperMediaPolicy(preJuly),'metadata_only');
 assert.equal(paperMediaPolicy(july),'toc_only');
 assert.equal(paperMediaPolicy(lateSep),'toc_only');
 assert.equal(paperMediaPolicy(legacy),'toc_only');
+assert.equal(paperMediaPolicy(oldLate),'metadata_only');
 assert.equal(paperMediaPolicy(regular),'standard');
 assert.equal(isJulSepTocOnly(july),true);
 assert.equal(isOctoberFullCapturePaper(july),false);
@@ -31,8 +34,10 @@ assert.equal(shouldShowDailyNew(preJuly,recentDay),false);
 assert.equal(shouldShowDailyNew(july,recentDay),false);
 assert.equal(shouldShowDailyNew(lateSep,recentDay),false); // late July–September DOI is retrospective
 assert.equal(shouldShowDailyNew(regular,recentDay),true);
+assert.equal(shouldShowDailyNew(oldLate,recentDay),false);
 assert.equal(isHotLandingEligible(july,recentDay),false);
 assert.equal(isHotLandingEligible(preJuly,recentDay),false);
+assert.equal(isHotLandingEligible(oldLate,recentDay),false);
 assert.equal(isHotLandingEligible(lateSep,recentDay),false);
 assert.equal(isHotLandingEligible(regular,recentDay),true);
 
