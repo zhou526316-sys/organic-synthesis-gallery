@@ -5,12 +5,14 @@ import {writeFile} from 'node:fs/promises';
 import {fetchPublisherMetadataAbstract} from './lib/publisher-abstract-metadata.mjs';
 import {matchSpringerNatureMetaAbstract,springerNatureMetadataEndpoint} from './lib/springer-nature-meta-abstract.mjs';
 import {boundedMetadataWindow,matchEuropePmcAbstracts,matchSemanticScholarAbstracts} from './lib/doi-scholarly-abstract-metadata.mjs';
+import {fetchSemanticScholarAbstractBatch} from './lib/semantic-scholar-abstract-client.mjs';
 
 const SITE=new URL(process.env.SITE_URL||'https://gallery.gczhouwld.com/');
 const WORKER=new URL(process.env.WORKER_URL||'https://organic-synthesis-gallery.zhou526316.workers.dev/');
 const TOKEN=String(process.env.BRIDGE_WRITE_TOKEN||'').trim();
 const OPENALEX_KEY=String(process.env.OPENALEX_API_KEY||'').trim();
 const SPRINGER_NATURE_META_KEY=String(process.env.SPRINGER_NATURE_API_KEY||'').trim();
+const SEMANTIC_SCHOLAR_KEY=String(process.env.SEMANTIC_SCHOLAR_API_KEY||'').trim();
 const REPORT=process.env.SEARCH_ENRICHMENT_REPORT||'/tmp/literature-search-enrichment-report.json';
 const SHA=/^[a-f0-9]{64}$/;
 const DOI=/^10\.\d{4,9}\/\S+$/;
@@ -188,25 +190,28 @@ async function hydrateAbstracts(dois,report){
     Number(process.env.SEMANTIC_SCHOLAR_LIMIT||60),epochDay,outerWindows);
   report.semanticScholarAttempted=scholarWindow.selected.length;
   report.semanticScholarRecovered=0;
+  report.semanticScholarAuthenticated=Boolean(SEMANTIC_SCHOLAR_KEY);
+  report.semanticScholarRetries=0;
   report.semanticScholarWindow={number:scholarWindow.number,windows:scholarWindow.windows,
     totalMissing:afterCrossref.length};
   report.semanticScholarErrors=[];
   if(scholarWindow.selected.length){
     try{
-      const url='https://api.semanticscholar.org/graph/v1/paper/batch?fields=externalIds,abstract,title';
-      const records=await request(url,{method:'POST',body:{
-        ids:scholarWindow.selected.map(doi=>'DOI:'+doi)
-      },retries:0});
-      if(!Array.isArray(records))throw Error('semantic_scholar_invalid_response');
-      const matched=matchSemanticScholarAbstracts(scholarWindow.selected,records);
+      const response=await fetchSemanticScholarAbstractBatch(scholarWindow.selected,{
+        key:SEMANTIC_SCHOLAR_KEY
+      });
+      report.semanticScholarRetries=response.retries;
+      const matched=matchSemanticScholarAbstracts(scholarWindow.selected,response.records);
       for(const [doi,abstract] of matched){
         found.set(doi,{abstract,source:'semantic_scholar'});
         report.semanticScholarRecovered++;
       }
     }catch(error){
+      const message=String(error?.message||error);
       report.semanticScholarErrors.push({
-        reason:String(error?.message||error).slice(0,160),
-        count:scholarWindow.selected.length
+        reason:message.slice(0,160),
+        count:scholarWindow.selected.length,
+        throttled:message.includes('429')
       });
     }
   }
