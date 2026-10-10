@@ -1,0 +1,62 @@
+{
+  "schema": "gallery-live-bilingual-title-acceptance-v1",
+  "verifiedAt": "2026-10-10T12:29:49.144Z",
+  "timezone": "Asia/Shanghai",
+  "productionSite": "https://gallery.gczhouwld.com/",
+  "publicManifest": "https://gallery.gczhouwld.com/bilingual-title-coverage.json",
+  "releaseDelivery": "https://gallery.gczhouwld.com/release-delivery.json",
+  "translatedCorpus": "https://gallery.gczhouwld.com/literature-supplement.json",
+  "translationCache": "https://gallery.gczhouwld.com/title-translations-zh.json",
+  "releaseSourceCommit": "53b4dea674faafe40e5d51cac8d2f5d222daaa1a",
+  "mergedFixCommit": "2b0162efdbe7e98963fb9603401561975a5cfebb",
+  "successfulPagesRun": 38048981114,
+  "checks": {
+    "pagesBuild": "success",
+    "pagesDeploy": "success",
+    "fixCommitAncestry": "ahead_by_16_behind_by_0",
+    "approvedDOIs": 938,
+    "releaseDOIs": 938,
+    "derivedRows": 938,
+    "derivedUniqueDOIs": 938,
+    "releasedEnglishTitles": 938,
+    "releasedChineseTitles": 938,
+    "missingChineseTitles": 0,
+    "missingEnglishTitles": 0,
+    "duplicateDOIs": 0,
+    "addedUnauthorizedDOIs": 0,
+    "approvedDOIsMissingInDerivedData": 0,
+    "translationCacheEntries": 949,
+    "liveCacheMismatchToDerivedTitleZh": 0,
+    "original278TranslationRecovery": "present",
+    "original125BackfillTranslations": "present"
+  },
+  "browserAcceptance": {
+    "runUrl": "https://agent.tinyfish.ai/runs/b0428c9f-73d0-4f25-8b79-713a998e4d57",
+    "status": "success",
+    "testedNatureDoi": "10.1038/s41586-026-11043-z",
+    "testedAcsCatalysisDoi": "10.1021/acscatal.6c02761",
+    "chineseToEnglishToggle": "pass",
+    "englishToChineseToggle": "pass",
+    "DOIKeywordSearchToChineseTitle": "pass",
+    "exactRenderedGlyphNote": "The browser agent narrative transcribed the Nature card Chinese title as 杂质原子 (extra 质); the actual live derived DOI row and live translation JSON consistently show 杂原子. This is a report-text discrepancy, not a demonstrated data mismatch. Exact screenshot glyph not independently adjudicated."
+  },
+  "testedDoiSamples": [
+    {
+      "doi": "10.1038/s41586-026-11043-z",
+      "title": "Dialkyl ether synthesis through heteroatom homolytic substitution",
+      "titleZh": "通过杂原子均裂取代合成二烷基醚"
+    },
+    {
+      "doi": "10.1021/acscatal.6c02761",
+      "title": "Iron(III) Photoredox-Catalyzed Regiodivergent Nitrone-Styrene [3+2] Cycloaddition",
+      "titleZh": "铁(III)光氧化还原催化硝酮与苯乙烯的区域发散式 [3+2] 环加成"
+    },
+    {
+      "doi": "10.1021/jacs.6c10362",
+      "title": "Copper-Catalyzed Cross-Nucleophile Coupling of Organoboranes",
+      "titleZh": "铜催化有机硼烷的交叉亲核试剂偶联"
+    }
+  ],
+  "scopeLimitations": "These checks prove live published JSON completeness and sampled browser behavior, not a manual visual visit of every one of 938 cards or full translation scientific correctness. No protected literature data sources or TOC/PDF records were changed.",
+  "status": "production_assets_verified_and_browser_sample_pass"
+}
