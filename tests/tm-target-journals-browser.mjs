@@ -195,7 +195,8 @@ try{
     assert.ok(source.includes('var toc=[],figures=[],recoveredOfficialToc=[];'));
     assert.ok(source.includes('if(wantsToc&&!toc.length&&recoveredOfficialToc.length)toc=recoveredOfficialToc.slice();'));
     assert.ok(source.includes('recoveredOfficialToc=recovered.slice();'));
-    assert.ok(source.includes("message:'official='+String(toc.length)+';persisted=1'"));
+    assert.ok(source.includes("message:'official='+recovered.filter(function(r){return r.kind==='official';}).length"));
+    assert.ok(source.includes("';verifiedFigure1='+recovered.filter(function(r){return r.kind==='figure1';}).length+';persisted=1'"));
     assert.ok(source.includes("if(job.publisher!=='ccs')rows.sort"));
     assert.ok(source.includes("stage:'ccs_figure_label',event:'conflict',status:'rejected'"));
     assert.ok(source.includes("allowFigureOne:!official"));
