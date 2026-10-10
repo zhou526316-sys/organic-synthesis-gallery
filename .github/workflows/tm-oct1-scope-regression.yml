@@ -55,9 +55,24 @@ jobs:
         run: |
           set -euo pipefail
           BASE="$(git merge-base HEAD origin/main)"
+          # Literature release inputs are protected for EVERY change.
           git diff --exit-code "$BASE" HEAD -- \
             PROJECT_RULES.md shared/literature-journals.js docs/literature-update-protocol.md \
             docs/literature-scope-contract.md public/papers.gz.b64 \
-            src/private-pdf-reader.mjs src/pdf-vault \
             .github/workflows/literature-audit.yml
+          # Prevent a Tampermonkey CAPTURE change from silently altering owner
+          # PDF reading semantics. An independently approved PDF /open repair
+          # (private-pdf.js + reader) is instead gated by the comprehensive
+          # private-pdf-access-v1 and browser/R2/permission regressions. This
+          # guard must not misclassify an explicit reader-only PDF fix as a
+          # Tampermonkey acquisition change.
+          CAPTURE_CHANGED="$(git diff --name-only "$BASE" HEAD -- \
+            public/toc-mainline.user.js scripts/test-tm-oct1-scope-contract.mjs \
+            scripts/test-tm-stage-first.mjs tests/tm-gap-recovery.test.mjs \
+            tests/tm-missing-only.test.mjs tests/tm-queue-coverage.test.mjs \
+            tests/tm-immediate-restart.test.mjs)"
+          if [ -n "$CAPTURE_CHANGED" ]; then
+            git diff --exit-code "$BASE" HEAD -- \
+              src/private-pdf-reader.mjs src/pdf-vault
+          fi
           git diff --check

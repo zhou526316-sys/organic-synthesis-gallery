@@ -4,7 +4,7 @@ import {waitForPdfFirstPage} from './pdf-first-page-watchdog.mjs';
 import {readBoundedPdfOpenJson} from './pdf-authorize-response.mjs';
 import {
   TENCENT_PDF_ORIGIN, tencentPdfRouteEnabled, nextOwnerPdfFileOrigin,
-  isMatchingOwnerPdfFileSource, ownerPdfRouteLabel,
+  isMatchingOwnerPdfFileSource, isMatchingOwnerPdfFileIdentity, ownerPdfRouteLabel,
 } from './pdf-tencent-file-failover.mjs';
 
 const PDF_ENGINE_LOAD_TIMEOUT_MS = 25_000;
@@ -208,7 +208,8 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
     (['primary', 'backup', 'tencent'].includes(fileRoute) ? ` · 文件线路:${fileRoute}` : '') +
     (['headers', 'body', 'verified'].includes(rangeStage) ? ` · 分段阶段:${rangeStage}` : '');
   status.appendChild(diagnostic);
-  if (['pdf_authorize_timeout','pdf_authorize_network_error','pdf_authorize_body_timeout'].includes(detail)) {
+  if (['pdf_authorize_timeout','pdf_authorize_network_error','pdf_authorize_body_timeout',
+       'open_http_500','open_http_502','open_http_503','open_http_504'].includes(detail)) {
     const attempts = document.documentElement.dataset.privatePdfAuthAttempts || '';
     if (attempts && attempts.length < 360) {
       const breakdown = document.createElement('small');
@@ -342,7 +343,7 @@ async function checkAnonymousGatewayHealth() {
 
 function sanitizedOpenServerTiming(raw) {
   const allowed = new Set(['session','capability','document','r2_get','r2_body',
-    'ticket_create','ticket_check','legacy_write','total']);
+    'ticket_create','ticket_check','legacy_write','r2_defer','db_timeout','total']);
   if (typeof raw !== 'string' || raw.length > 500) return '';
   return raw.split(',').flatMap(segment => {
     const m = /^\s*([a-z0-9_]+);dur=(\d{1,6})\s*$/.exec(segment);
@@ -540,7 +541,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
   document.documentElement.dataset.privatePdfDeclaredBytes = String(declaredPdfBytes);
   return { url: result.url, headerVerified: result.headerVerified, contentHash: result.contentHash };
 }
-async function checkPdfHeader(fileUrl) {
+async function checkPdfHeader(fileUrl, timeoutMs = 15_000) {
   // Check the actual PDF bytes rather than treating an iframe DOM node or a
   // header-only 200 as evidence of a readable document. Credentialed fetch
   // also establishes a secure, HttpOnly native-reading continuation cookie.
@@ -549,7 +550,7 @@ async function checkPdfHeader(fileUrl) {
     headers: { range: 'bytes=0-15' },
     credentials: 'include',
     cache: 'no-store',
-    signal: AbortSignal.timeout(15000),
+    signal: AbortSignal.timeout(timeoutMs),
   });
   if (!response.ok) throw new Error('file_http_' + response.status);
   if (response.status !== 206) {
@@ -964,29 +965,70 @@ async function fetchPdfSingleTransfer(fileUrl, sessionToken) {
     if (transferController === controller) transferController = null;
   }
 }
+function isRecoverablePdfHeaderTransport(error) {
+  const code = String(error?.message || '');
+  return error?.name === 'TypeError' || error?.name === 'AbortError' ||
+    error?.name === 'TimeoutError' || /^file_http_(500|502|503|504|429)$/.test(code) ||
+    code === 'pdf_transfer_timeout';
+}
 async function verifiedPdfSource(sessionToken, mode = 'view', forceBrowserPreflight = false) {
   let lastError;
   for (let attempt = 0; attempt < 2; attempt += 1) {
     const source = await getPdfSource(sessionToken, mode);
-    // The updated Worker has already checked R2 object size, the %PDF-
-    // signature and a self-tested v2 ticket within the authorized POST.
-    // Avoid a second China-to-edge roundtrip. An older Worker or a legacy
-    // opaque ticket must still use the independent 206 file preflight.
+    // A fast Worker may have already validated the R2 signature. When that
+    // specific step was slow, the Worker MUST say headerVerified:false; the
+    // browser performs a real 16-byte HTTP206 check before trusting the file.
     if (source.headerVerified && !forceBrowserPreflight) {
       document.documentElement.dataset.privatePdfPreflight = 'edge';
       return source.url;
     }
     try {
       setPhase('preflight', mode === 'download' ? '正在确认下载文件…' : '正在确认 PDF 文件响应…');
-      await checkPdfHeader(source.url);
+      await checkPdfHeader(source.url, source.headerVerified ? 15_000 : 9_000);
       document.documentElement.dataset.privatePdfPreflight = 'browser';
       return source.url;
     } catch (error) {
       lastError = error;
-      // Refresh a rejected short-lived ticket once, but never loop on 404,
-      // invalid bytes or broken Range support. No raw URL is logged or shown.
-      if (attempt === 0 && /^file_http_(401|403)$/.test(String(error?.message))) continue;
-      throw error;
+      // Keep 401/403/404, malformed Content-Range and non-PDF bytes fail
+      // closed. For a transport-only preflight failure, a view can obtain ONE
+      // separately authorized ticket at the other known Worker host. Metadata
+      // must match AND a new real 206 preflight must pass before navigation.
+      if (mode === 'view' && !manualTencentTrial && !source.headerVerified &&
+          isRecoverablePdfHeaderTransport(error) &&
+          /^[a-f0-9]{64}$/.test(String(source.contentHash || '')) &&
+          Number.isSafeInteger(declaredPdfBytes) && declaredPdfBytes >= 16) {
+        const activeOrigin = new URL(source.url).origin;
+        const alternateOrigin = nextOwnerPdfFileOrigin(
+          activeOrigin, await tencentPdfRouteEnabled());
+        if (alternateOrigin && alternateOrigin !== activeOrigin) {
+          try {
+            const alternate = await fetchAuthorizedSource(
+              alternateOrigin, sessionToken, mode,
+              {signal: AbortSignal.timeout(FALLBACK_AUTHORIZE_TIMEOUT_MS)});
+            if (!isMatchingOwnerPdfFileIdentity(
+              alternate, alternateOrigin, source.contentHash, declaredPdfBytes))
+              throw new Error('pdf_source_invalid');
+            await checkPdfHeader(alternate.url, 10_000);
+            document.documentElement.dataset.privatePdfPreflight = 'browser-alternate';
+            document.documentElement.dataset.privatePdfFileRoute =
+              ownerPdfRouteLabel(alternateOrigin);
+            document.documentElement.dataset.privatePdfFileFailovers = '1';
+            return alternate.url;
+          } catch (fallbackError) {
+            // Explicit denial, malformed ticket, or document mismatch on the
+            // alternate host must not be hidden or bypassed.
+            if (/^open_http_(401|403)$/.test(String(fallbackError?.message || '')) ||
+                fallbackError?.message === 'pdf_source_invalid')
+              throw fallbackError;
+            lastError = fallbackError;
+          }
+        }
+      }
+      // A stale 401 ticket may be refreshed once on the SAME authorized
+      // origin. A 403 is an explicit denial and must fail closed immediately,
+      // never retry via an alternate gateway or a refreshed ticket.
+      if (attempt === 0 && error?.message === 'file_http_401') continue;
+      throw lastError;
     }
   }
   throw lastError;
@@ -1002,6 +1044,9 @@ function showReaderError(error, prefix = 'PDF 读取失败') {
   else if (code === 'pdf_invalid_bytes' || code === 'pdf_wrong_content_type') message = '文件响应并非有效 PDF，已阻止打开错误页面。';
   else if (code === 'pdf_range_unavailable') message = 'PDF 文件服务不支持分段读取，暂时无法可靠打开。';
   else if (code === 'file_http_404') message = '私有 PDF 文件未找到，下载记录可能需要修复。';
+  else if (/^open_http_(500|502|503|504)$/.test(code)) message =
+    'PDF 授权服务暂时不可用（'+code.replace('open_http_','HTTP ')+
+    '），尚未开始传输文件。已检查备用授权线路，请查看下方线路诊断或使用腾讯线路试读。';
   else if (code === 'pdf_authorize_timeout') message = 'PDF 授权接口在15秒内未响应，尚未开始传输文件。请稍后重新读取。';
   else if (code === 'pdf_authorize_body_timeout') message = 'PDF 授权接口已返回 HTTP 200，但授权数据未能完整传输；已尝试备用线路和一次受限重试。';
   else if (code === 'pdf_authorize_network_error') message = 'PDF 授权接口连接失败，尚未开始传输文件。请检查网络或稍后重试。';

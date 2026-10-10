@@ -16,7 +16,9 @@ on:
       - 'public/private-pdf-owner-setup.html'
       - 'pdf/**'
       - 'src/private-pdf-reader.mjs'
+      - 'src/pdf-tencent-file-failover.mjs'
       - 'tests/private-pdf-access-browser.mjs'
+      - 'tests/pdf-tencent-file-failover.test.mjs'
       - '.github/workflows/deploy-worker-frontend.yml'
       - '.github/workflows/private-pdf-access-v1.yml'
   pull_request:
@@ -32,7 +34,9 @@ on:
       - 'public/private-pdf-owner-setup.html'
       - 'pdf/**'
       - 'src/private-pdf-reader.mjs'
+      - 'src/pdf-tencent-file-failover.mjs'
       - 'tests/private-pdf-access-browser.mjs'
+      - 'tests/pdf-tencent-file-failover.test.mjs'
       - '.github/workflows/deploy-worker-frontend.yml'
       - '.github/workflows/private-pdf-access-v1.yml'
 
@@ -93,7 +97,10 @@ jobs:
           node --check cloudflare/worker/src/private-pdf.js
           node --check cloudflare/worker/src/integrations.js
           node --check cloudflare/worker/src/index.js
+          node --check src/private-pdf-reader.mjs
+          node --check src/pdf-tencent-file-failover.mjs
           node cloudflare/worker/scripts/test-private-pdf.mjs
+          node tests/pdf-tencent-file-failover.test.mjs
       - name: Validate full schema and isolated migration from scratch
         run: |
           sqlite3 /tmp/private-pdf-schema.db < cloudflare/schema.sql
