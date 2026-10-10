@@ -3,7 +3,7 @@
 // Public callers may read approved paraphrases, never the deposited full abstract.
 const HASH=/^[a-f0-9]{64}$/;
 const DOI=/^10\.\d{4,9}\/\S+$/i;
-const SOURCE=new Set(['openalex','crossref','publisher_metadata','semantic_scholar','europe_pmc']);
+const SOURCE=new Set(['openalex','crossref','publisher_metadata','semantic_scholar','europe_pmc','springer_nature_meta']);
 const normalizeDoi=value=>{
   const doi=String(value||'').trim().toLowerCase().replace(/^https?:\/\/(?:dx\.)?doi\.org\//,'');
   return DOI.test(doi)?doi:'';
