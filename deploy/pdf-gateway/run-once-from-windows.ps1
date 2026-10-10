@@ -5,7 +5,7 @@ This script does not install software on Windows or read personal PDF data.
 #>
 [CmdletBinding()]
 param(
-    [ValidateSet('Preflight','Install','Rollback')]
+    [ValidateSet('Preflight','Diagnose','Install','Rollback')]
     [string]$Mode = 'Preflight',
     [string]$SshUser = 'ubuntu'
 )
@@ -15,14 +15,16 @@ if (-not (Get-Command ssh.exe -ErrorAction SilentlyContinue)) {
     throw 'Windows OpenSSH client not found: ssh.exe'
 }
 $Server = $SshUser + '@relay.gczhouwld.com'
-$PinnedSource = 'bc50cc94f6a83fdd85a579442b8c4a5ee6b10784'
+$PinnedSource = 'b36ef315849d4e1bdb4ddc412d0388dd1d659ef0'
 $GithubRaw = 'https://raw.githubusercontent.com/zhou526316-sys/organic-synthesis-gallery/' + $PinnedSource + '/deploy/pdf-gateway'
 $RemoteMode = switch ($Mode) {
     'Preflight' { '--preflight' }
+    'Diagnose' { '--diagnose' }
     'Install' { '--install' }
     'Rollback' { '--rollback' }
 }
 Write-Host ('Gallery PDF: ' + $Mode + ' / one SSH login / no new paid service')
+if ($Mode -eq 'Diagnose') { Write-Host '[DIAG] Read-only nginx virtual-host report; no certificate request, PDF access or config changes.' }
 if ($Mode -eq 'Install') {
     Write-Host 'This installs a private PDF gateway on the EXISTING Tencent VM.'
     Write-Host 'It may obtain a free TLS certificate and gracefully reload Nginx.'
