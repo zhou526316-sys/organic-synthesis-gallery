@@ -759,7 +759,7 @@ test('search entered after most-read ordering explicitly switches to indexed lat
   await expect(page.locator('.architecture-read-limited')).toContainText(/完整摘要|complete abstract/);
 });
 
-test('reader-count sorting remains on static compatibility path even when D1 capability is active', async ({ page }) => {
+test('short chemistry terms remain on static reader-sort compatibility path', async ({ page }) => {
   let indexedViewRequests = 0;
   await page.route('**/api/_healthcheck', async route => {
     await route.fulfill({
@@ -782,8 +782,12 @@ test('reader-count sorting remains on static compatibility path even when D1 cap
   await stubOptionalApi(page);
   await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
   await page.locator('#sort').selectOption('readers');
-  await page.locator('#search').fill('organic');
+  // Reader-count sorting remains a compatibility-only path for two-character
+  // chemistry terms, which the current D1 trigram index cannot safely match.
+  // Longer words such as LMCT now intentionally switch to indexed discovery.
+  await page.locator('#search').fill('Ni');
   await expect.poll(async () => page.locator('#gallery > .card').count(), { timeout: 30000 }).toBeGreaterThan(0);
+  await expect(page.locator('#sort')).toHaveValue('readers');
   expect(indexedViewRequests).toBe(0);
 });
 
