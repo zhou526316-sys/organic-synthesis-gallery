@@ -1,0 +1,37 @@
+name: Historical staging-only 23:00 collection regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/historical-nightly-discovery.mjs'
+      - 'scripts/test-historical-nightly-discovery.mjs'
+      - '.github/workflows/historical-nightly-discovery.yml'
+      - '.github/workflows/historical-nightly-regression.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/historical-nightly-discovery.mjs'
+      - 'scripts/test-historical-nightly-discovery.mjs'
+      - '.github/workflows/historical-nightly-discovery.yml'
+      - '.github/workflows/historical-nightly-regression.yml'
+permissions:
+  contents: read
+jobs:
+  staging-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --check scripts/historical-nightly-discovery.mjs
+      - run: node --test scripts/test-historical-nightly-discovery.mjs
+      - name: Verify isolated schedule and do-not-publish contract
+        run: |
+          set -euo pipefail
+          grep -F "cron: '0 15 * * *'" .github/workflows/historical-nightly-discovery.yml
+          grep -F "STAGING_REF: staging/historical-archive-nightly" .github/workflows/historical-nightly-discovery.yml
+          grep -F "HISTORICAL_STAGING_ONLY" scripts/historical-nightly-discovery.mjs
+          grep -F "noFormalPublication:true,noMediaWrites:true,noPDFAcquisition:true" scripts/historical-nightly-discovery.mjs
+          ! grep -E 'git push origin (main|HEAD:main)' .github/workflows/historical-nightly-discovery.yml
