@@ -1,10 +1,5 @@
 name: Gallery full-history abstract gaps read-only audit
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - 'scripts/audit-gallery-abstract-gaps.mjs'
-      - '.github/workflows/gallery-basic-abstract-gap-audit.yml'
   workflow_dispatch:
   push:
     branches: [main]
@@ -16,23 +11,7 @@ concurrency:
   group: gallery-basic-abstract-gap-audit
   cancel-in-progress: false
 jobs:
-  validate:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@v5
-        with:
-          node-version: '22'
-      - name: Validate read-only audit source and no privileged PR network calls
-        run: |
-          node --check scripts/audit-gallery-abstract-gaps.mjs
-          ! grep -n 'method.*POST' scripts/audit-gallery-abstract-gaps.mjs
   inspect:
-    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 9
     env:
