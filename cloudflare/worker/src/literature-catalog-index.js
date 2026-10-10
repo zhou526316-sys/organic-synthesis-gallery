@@ -446,9 +446,7 @@ export async function queryLiteratureCatalogView(env,{
     // Every candidate is also bound to this exact published generation.
     const fields=['title','title_zh','doi','journal','authors_text','first_online_date'];
     const termsSql=terms.map(()=>fields.map(field=>
-      'instr(lower(COALESCE(i.'+field+",'')),?)>0').join(' OR ')).join(' OR ');
-    // Replace the placeholder-fallback spacing above with the intended
-    // SQLite expression: COALESCE(column,'') (an empty string).
+      `instr(lower(COALESCE(i.${field},'')),?)>0`).join(' OR ')).join(' OR ');
     const originalCandidate='i.doi IN (SELECT f.doi FROM literature_catalog_fts f'
       +' WHERE f.catalog_id=? AND literature_catalog_fts MATCH ?)';
     const enriched=await searchEnrichmentReady(env,catalogId);
