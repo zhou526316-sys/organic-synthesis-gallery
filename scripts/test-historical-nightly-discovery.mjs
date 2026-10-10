@@ -396,7 +396,7 @@ test('malformed Crossref cursor and changing total-results remain incomplete ins
     await isolatedHistoricalRun(async({readState,readBatch})=>{
       global.fetch=async url=>{
         const u=new URL(url);
-        if(u.hostname==='api.openalex.org')return emptyOpenalex();
+        if(u.hostname==='api.openalex.org')return emptyOpenAlex();
         const page=u.searchParams.get('cursor')==='*'?0:1;
         const total=fault==='changing_total'&&page===1?999:1001;
         return {ok:true,json:async()=>({message:{'total-results':total,
@@ -409,7 +409,7 @@ test('malformed Crossref cursor and changing total-results remain incomplete ins
       assert.equal(x.activeSplit,null,fault);
       assert.equal((await readState()).cursor.journalIndex,0,fault);
       const batch=await readBatch('2026-09-22_2026-09-30_jacs');
-      assert.match(batch.consistency.issues.join('|'),fault==='missing_cursor'?'missing_next_cursor':'total_changed');
+      assert.match(batch.consistency.issues.join('|'),fault==='missing_cursor'?/missing_next_cursor/:/total_changed/);
     });
   }
 });
@@ -420,7 +420,7 @@ test('one-day saturated publisher results cannot bisect and never become falsely
   await isolatedHistoricalRun(async({readBatch,readState})=>{
     global.fetch=async url=>{
       const u=new URL(url);
-      return u.hostname==='api.crossref.org'?saturatedCrossref(u):emptyOpenalex();
+      return u.hostname==='api.crossref.org'?saturatedCrossref(u):emptyOpenAlex();
     };
     const x=await runNightly();
     assert.equal(x.blocked,true);
@@ -442,7 +442,7 @@ test('nested truncations resume across three rounds and close root only after al
       const filter=u.searchParams.get('filter')||'';
       const root=filter.includes('2026-09-22,until-pub-date:2026-09-30');
       const left=filter.includes('2026-09-22,until-pub-date:2026-09-25');
-      if(u.hostname==='api.openalex.org')return emptyOpenalex();
+      if(u.hostname==='api.openalex.org')return emptyOpenAlex();
       if((root||left)&&u.pathname.includes('0002-7863'))return saturatedCrossref(u);
       const doi=filter.includes('2026-09-22,until-pub-date:2026-09-23')
         ?'10.1021/jacs.6c11111':filter.includes('2026-09-24,until-pub-date:2026-09-25')
@@ -479,7 +479,7 @@ test('parent closure must reject a checkpoint omitting earlier calendar days',as
     completed:[],pending:[{from:'2026-09-26',to:'2026-09-30'}]};
   await isolatedHistoricalRun(async({readState})=>{
     global.fetch=async url=>new URL(url).hostname==='api.crossref.org'
-      ?emptyCrossref():emptyOpenalex();
+      ?emptyCrossref():emptyOpenAlex();
     await assert.rejects(runNightly(),/split_segment_coverage_gap_or_overlap/);
     assert.equal((await readState()).completed.length,0);
     assert.equal((await readState()).cursor.journalIndex,0);
@@ -501,7 +501,7 @@ test('finished split candidates must recheck DOI membership after an intervening
     process.env.MAX_UNITS='2';
     global.fetch=async url=>{
       const u=new URL(url),filter=u.searchParams.get('filter')||'';
-      if(u.hostname==='api.openalex.org')return emptyOpenalex();
+      if(u.hostname==='api.openalex.org')return emptyOpenAlex();
       if(filter.includes('from-pub-date:2026-09-22,until-pub-date:2026-09-30')
         &&u.pathname.includes('0002-7863'))return saturatedCrossref(u);
       const first=filter.includes('from-pub-date:2026-09-22,until-pub-date:2026-09-25');
@@ -543,7 +543,7 @@ test('saved completed leaf missing on disk prevents false root promotion',async(
     pending:[{from:'2026-09-26',to:'2026-09-30'}]};
   await isolatedHistoricalRun(async({readState})=>{
     global.fetch=async url=>new URL(url).hostname==='api.crossref.org'
-      ?emptyCrossref():emptyOpenalex();
+      ?emptyCrossref():emptyOpenAlex();
     await assert.rejects(runNightly(),/split_segment_evidence_incomplete/);
     const x=await readState();
     assert.equal(x.cursor.journalIndex,0);
