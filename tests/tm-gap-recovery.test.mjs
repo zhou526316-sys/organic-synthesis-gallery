@@ -59,7 +59,7 @@ test('verified Figure 1 closes primary-visual gap across journals',()=>{
 test('partial figure coverage is handled only on a genuine publisher visit',()=>{
   assert.ok(source.includes('var explicitFigureGap=expected>0&&knownCount<expected;'));
   assert.ok(source.includes('captureFigures:false,'));
-  assert.ok(source.includes('opportunisticFigures:Boolean(bundleVisit||tocNeeded)'));
+  assert.ok(source.includes('opportunisticFigures:Boolean(!tocOnlyCaptureEligible(raw)&&(bundleVisit||tocNeeded))'));
   assert.ok(source.includes('capturePrivatePdf:Boolean(pdfNeeded),privatePdfServerStatus:ownerPdfStatus'));
   assert.ok(source.includes('if(job.captureToc||job.captureFigures||job.captureEvidence||job.capturePrivatePdf)'));
   assert.ok(source.includes('job.mediaNeed=captureMediaNeed(job);'));
