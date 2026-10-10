@@ -25,7 +25,8 @@ export interface ArticleSummaryResult {
   evidenceLevel?: 'abstract_only' | 'partial' | 'complete' | 'unknown';
   state?: 'missing' | 'legacy_fulltext' | 'evidence_ready' | 'superseded' | 'published';
   reason?: 'fulltext_missing' | 'evidence_v2_required' | 'scheduled_summary_pending' | 'summary_pending' | 'summary_not_reviewed' | 'summary_stale' | 'summary_invalid';
-  source?: 'reviewed_evidence_v2' | 'scheduled_reviewed_evidence_v2' | 'reviewed_metadata_abstract_v1';
+  source?: 'reviewed_evidence_v2' | 'scheduled_reviewed_evidence_v2' | 'scheduled_reviewed_source_equivalent_v2' | 'reviewed_metadata_abstract_v1';
+  contentEquivalentReviewed?: boolean;
   abstractAvailable?: boolean;
   abstractExcerpt?: string;
   abstractExcerptOnly?: boolean;
