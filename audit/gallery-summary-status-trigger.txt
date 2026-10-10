@@ -1,0 +1,8 @@
+request: authorized-full-current-summary-equivalence-postdeploy-audit
+production_worker_commit: 349ff7608e65d9957df476be0f50718c57393e6b
+deployed_by: https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38068147022
+scope: all current formal DOI and all stored approved bilingual summaries
+checks: DOI membership; strict vs full-packet-content-equivalent vs stale; original abstract sources
+read_only: true
+formal_new_literature_slots_unchanged: Asia/Shanghai 08:00
+triggered_utc: 2026-10-10T16:39:29.932Z
