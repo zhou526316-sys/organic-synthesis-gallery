@@ -189,7 +189,12 @@ export async function getSearchAbstract(env,payload={}) {
     JOIN literature_catalog_index i ON i.catalog_id=e.catalog_id AND i.doi=e.doi AND i.revision=e.revision
     WHERE e.catalog_id=? AND e.doi=?`).bind(catalogId,doi).first();
   if(!row) return {status:404,body:{error:'search_abstract_unavailable'}};
-  return {status:200,body:{doi,abstract:row.abstract_text||null,abstractSource:row.abstract_source||null,
+  // The scholarly abstract can carry publisher copyright; index it for
+  // discovery, but return only a bounded excerpt and DOI attribution publicly.
+  const abstract=String(row.abstract_text||'');
+  const abstractExcerpt=abstract?([...abstract].slice(0,200).join('')+( [...abstract].length>200?'…':'')):null;
+  return {status:200,body:{doi,abstractAvailable:Boolean(abstract),abstractExcerpt,
+    abstractSource:row.abstract_source||null,originalArticleUrl:'https://doi.org/'+doi,
     reviewedSummaryEn:row.reviewed_summary_en||null,reviewedSummaryZh:row.reviewed_summary_zh||null,
     sourceSeparation:true}};
 }
