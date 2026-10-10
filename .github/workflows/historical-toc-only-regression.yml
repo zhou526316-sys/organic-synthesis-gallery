@@ -26,8 +26,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
-      - run: npm ci --no-audit --no-fund
+      - run: npm install --no-audit --no-fund --no-package-lock
       - name: Verify historical identity, title, newness and media policy
         run: node scripts/test-historical-media-policy.mjs
       - name: Protect live publisher acquisition and PDF guards
