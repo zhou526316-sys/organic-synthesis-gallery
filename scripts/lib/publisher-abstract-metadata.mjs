@@ -32,7 +32,13 @@ export function publisherMetadataAbstract(html,expectedDoi){
   if(!target||typeof html!=='string')return '';
   // Restrict to <head>, so the article body and unrelated sidebars cannot
   // be accidentally turned into an "abstract".
-  const head=html.slice(0,900000).split(/<\/head\s*>/i)[0];
+  const prefix=html.slice(0,900000);
+  const start=/<head(?:\s[^>]*)?>/i.exec(prefix);
+  if(!start)return '';
+  const remainder=prefix.slice(start.index+start[0].length);
+  const end=/<\/head\s*>|<body\b/i.exec(remainder);
+  if(!end)return '';
+  const head=remainder.slice(0,end.index);
   const tags=[...head.matchAll(/<meta\b[^>]*>/gi)].map(match=>metaAttributes(match[0]));
   const references=tags.filter(meta=>['citation_doi','dc.identifier','prism.doi'].includes(
     String(meta.name||meta.property||'').toLowerCase())).map(meta=>doi(meta.content));
@@ -50,35 +56,60 @@ export function publisherMetadataAbstract(html,expectedDoi){
   }
   return '';
 }
-export async function fetchPublisherMetadataAbstract(inputDoi,{timeout=9000,maxHeadBytes=900000}={}){
+export async function fetchPublisherMetadataAbstract(inputDoi,{
+  timeout=9000,maxHeadBytes=900000,fetchImpl=fetch
+}={}){
   const normalized=doi(inputDoi);
   if(!normalized)throw Error('publisher_abstract_invalid_doi');
-  const url='https://doi.org/'+normalized.split('/').map(encodeURIComponent).join('/');
-  const response=await fetch(url,{redirect:'follow',headers:{
+  const headers={
     accept:'text/html,application/xhtml+xml;q=0.9',
     'user-agent':'OrganicSynthesisGallery-PublisherAbstractMetadata/1.0 (DOI-head-only)'
-  },signal:AbortSignal.timeout(timeout)});
-  if(!response.ok)throw Error('publisher_metadata_http_'+response.status);
-  const host=new URL(response.url).hostname;
-  if(!ORIGIN.test(host))throw Error('publisher_metadata_unrecognized_host');
-  const type=response.headers.get('content-type')||'';
-  if(!/text\/html|application\/xhtml\+xml/i.test(type))
-    throw Error('publisher_metadata_not_html');
-  if(!response.body)return '';
-  const reader=response.body.getReader();
-  const chunks=[];let length=0;let closed=false;
-  try{
-    while(length<maxHeadBytes){
-      const {value,done}=await reader.read();
-      if(done)break;
-      chunks.push(value);length+=value.byteLength;
-      const tail=new TextDecoder().decode(value);
-      if(/<\/head\s*>/i.test(tail)){closed=true;break;}
+  };
+  let address='https://doi.org/'+normalized.split('/').map(encodeURIComponent).join('/');
+  const signal=AbortSignal.timeout(timeout);
+  for(let hop=0;hop<6;hop++){
+    const current=new URL(address);
+    const publisher=ORIGIN.test(current.hostname);
+    const resolver=current.hostname==='doi.org'||current.hostname==='dx.doi.org';
+    // Do not follow DOI-mediated redirects into arbitrary hosts/networks;
+    // private/local IP and authenticated bypass routes are never fetched.
+    if(current.protocol!=='https:'||current.port||current.username||current.password
+      ||(!resolver&&!publisher))throw Error('publisher_metadata_redirect_host_unrecognized');
+    const response=await fetchImpl(address,{redirect:'manual',headers,signal});
+    if([301,302,303,307,308].includes(response.status)){
+      const location=response.headers.get('location');
+      if(!location)throw Error('publisher_metadata_redirect_location_missing');
+      address=new URL(location,address).href;
+      await response.body?.cancel().catch(()=>{});
+      continue;
     }
-  }finally{
-    await reader.cancel().catch(()=>{});
+    if(!response.ok)throw Error('publisher_metadata_http_'+response.status);
+    if(!publisher)throw Error('publisher_metadata_resolution_unfinished');
+    const type=response.headers.get('content-type')||'';
+    if(!/text\/html|application\/xhtml\+xml/i.test(type))
+      throw Error('publisher_metadata_not_html');
+    if(!response.body)return '';
+    const reader=response.body.getReader();
+    const decoder=new TextDecoder();
+    let html='',bytes=0,closed=false;
+    try{
+      while(bytes<maxHeadBytes){
+        const {value,done}=await reader.read();
+        if(done)break;
+        bytes+=value.byteLength;
+        if(bytes>maxHeadBytes)throw Error('publisher_metadata_head_too_large');
+        html+=decoder.decode(value,{stream:true});
+        // Check the accumulated string: </head> may straddle chunks.
+        if(/<\/head\s*>|<body\b/i.test(html)){
+          closed=true;
+          break;
+        }
+      }
+    }finally{
+      await reader.cancel().catch(()=>{});
+    }
+    if(!closed&&bytes>=maxHeadBytes)throw Error('publisher_metadata_head_too_large');
+    return publisherMetadataAbstract(html,normalized);
   }
-  if(!closed&&length>=maxHeadBytes)throw Error('publisher_metadata_head_too_large');
-  const html=new TextDecoder().decode(Buffer.concat(chunks.map(v=>Buffer.from(v))));
-  return publisherMetadataAbstract(html,normalized);
+  throw Error('publisher_metadata_redirect_limit');
 }
