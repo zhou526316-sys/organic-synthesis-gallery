@@ -12,6 +12,7 @@ on:
       - tests/tm-acs-throughput.test.mjs
       - tests/tm-cooldown-inventory-20261010.test.mjs
       - tests/tm-oct10-rsc-inventory-recovery.test.mjs
+      - tests/tm-oct10-joc-figure1-fallback.test.mjs
       - shared/body-packet-completion.mjs
       - cloudflare/worker/src/article-summary.js
       - tests/tm-inventory-startup.test.mjs
@@ -44,6 +45,7 @@ jobs:
           node --test tests/tm-acs-throughput.test.mjs
           node --test tests/tm-cooldown-inventory-20261010.test.mjs
           node --test tests/tm-oct10-rsc-inventory-recovery.test.mjs
+          node --test tests/tm-oct10-joc-figure1-fallback.test.mjs
           node --test tests/tm-inventory-startup.test.mjs
           node tests/tm-controller-read-transport.test.mjs
           node --test tests/tm-rsc-acs-inventory-20261008.test.mjs
