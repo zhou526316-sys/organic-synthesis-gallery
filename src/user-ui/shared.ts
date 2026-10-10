@@ -29,7 +29,7 @@ export interface ArticleSummaryResult {
   abstractAvailable?: boolean;
   abstractExcerpt?: string;
   abstractExcerptOnly?: boolean;
-  abstractSource?: 'openalex' | 'crossref' | 'publisher_metadata' | 'semantic_scholar' | 'europe_pmc';
+  abstractSource?: 'openalex' | 'crossref' | 'publisher_metadata' | 'semantic_scholar' | 'europe_pmc' | 'springer_nature_meta';
   originalArticleUrl?: string;
   cached?: boolean;
   zh?: string;
