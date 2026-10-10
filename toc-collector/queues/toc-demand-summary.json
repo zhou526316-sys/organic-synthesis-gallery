@@ -1,30 +1,30 @@
 {
-  "generatedAt": "2026-10-09T17:01:50.460Z",
+  "generatedAt": "2026-10-10T00:00:18.446Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
   "liveLocalCaptures": 891,
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
-  "mediaInventoryCount": 915,
-  "webpageDoiCount": 915,
-  "latestAddedDate": "2026-10-09",
-  "latestAddedCount": 28,
+  "mediaInventoryCount": 938,
+  "webpageDoiCount": 938,
+  "latestAddedDate": "2026-10-10",
+  "latestAddedCount": 23,
   "mediaRecordCount": 893,
-  "visibleGapTotal": 26,
-  "demandTotal": 26,
-  "noVisual": 26,
+  "visibleGapTotal": 49,
+  "demandTotal": 49,
+  "noVisual": 49,
   "fallbackOnlyNeedsOfficialUpgrade": 125,
-  "missingOfficialTotal": 151,
-  "figureGapTotal": 915,
-  "zeroFigureGapTotal": 915,
+  "missingOfficialTotal": 174,
+  "figureGapTotal": 938,
+  "zeroFigureGapTotal": 938,
   "lowResolutionFigureGapTotal": 0,
   "unknownQualityFigureGapTotal": 0,
   "sparseFigureGapTotal": 0,
   "byPublisher": {
-    "acs": 11,
-    "wiley": 0,
-    "nature": 1,
+    "acs": 30,
+    "wiley": 1,
+    "nature": 4,
     "science": 0,
     "rsc": 14,
     "elsevier": 0,
@@ -42,14 +42,27 @@
     "other": 0
   },
   "byJournal": {
-    "ACS Catalysis": 2,
-    "JOC": 1,
-    "Organic Letters": 8,
+    "ACS Catalysis": 3,
+    "JACS": 5,
+    "JOC": 7,
+    "Organic Letters": 15,
     "Nature": 1,
+    "Nature Communications": 3,
     "Chemical Science": 8,
-    "Green Chemistry": 6
+    "Green Chemistry": 6,
+    "Angew": 1
   },
   "sample": [
+    {
+      "doi": "10.1021/acscatal.6c07172",
+      "journal": "ACS Catalysis",
+      "title": "Synthesis of Chiral α-Aminophosphonate Derivatives through Copper(I)-Catalyzed Enantioselective Alkylation",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
     {
       "doi": "10.1021/acscatal.6c02761",
       "journal": "ACS Catalysis",
@@ -71,11 +84,191 @@
       "existingReason": ""
     },
     {
+      "doi": "10.1021/jacs.6c10578",
+      "journal": "JACS",
+      "title": "Synergistic RhFe Single-Atom Alloy and Nanoalloy Sites for Highly Efficient and Robust Heterogeneous Hydroformylation",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/jacs.6c14452",
+      "journal": "JACS",
+      "title": "Copper-Catalyzed Chemo- and Enantioselective Radical 1,2-Carbosulfenylation of Diverse Alkenes with Broad Radical and Sulfur Compatibility",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/jacs.6c14950",
+      "journal": "JACS",
+      "title": "General Asymmetric Synthesis of Noncanonical Amino Acids",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/jacs.6c16767",
+      "journal": "JACS",
+      "title": "A Substrate-Permissive Vanadium Haloperoxidase in Type II Polyketide Biosynthesis Unlocks Non-Native Halogenation across Diverse Substrate Scaffolds",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/jacs.6c17448",
+      "journal": "JACS",
+      "title": "Closed-Loop CO2-Mediated Ultrafast and Controlled Synthesis of Amino Acid Polymers toward a Circular Carbon and Polymer Economy",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01167",
+      "journal": "JOC",
+      "title": "Asymmetric Metal-Templated Synthesis of Congested Proline Derivatives via [3 + 2] Cycloaddition Reaction",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01591",
+      "journal": "JOC",
+      "title": "CAN-Promoted Boc2O-Mediated Cascade Conversion of Aziridines to Oxazolidinones",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01656",
+      "journal": "JOC",
+      "title": "Copper-Catalyzed Regioselective Synthesis of Fluorescent Indazolo[2,3- a ]quinazolines and Their Photophysical Studies",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01675",
+      "journal": "JOC",
+      "title": "Pd-Catalyzed Reductive Cyclization Using CO Surrogates: Selective N–N Bond Formation and Access to Indazolo[3,2- a ]isoquinolines",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01921",
+      "journal": "JOC",
+      "title": "Cu(I)-Photosensitizer Catalysis: A Tool for Conjunctive Olefination of Aldehydes",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01979",
+      "journal": "JOC",
+      "title": "Synthesis of Pyrroloquinazolinones via Base-Promoted Domino Reaction of 7-Vinylindoles with In Situ Formed Isocyanates from Dioxazolones",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
       "doi": "10.1021/acs.joc.6c01847",
       "journal": "JOC",
       "title": "Visible-Light-Mediated Diastereoselective Hydrophosphorylation of Cyclopropenes",
       "date": "2026-10-01",
       "addedDate": "2026-10-02",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03432",
+      "journal": "Organic Letters",
+      "title": "Electrochemical Oxidative Dearomatization of Indole with Carboxylic Acid via 1,2-Acyloxy Migration for the Synthesis of C2-Quaternary Indolin-3-ones",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03572",
+      "journal": "Organic Letters",
+      "title": "On-DNA Synthesis of Arylhydrazones via Aryl Diazonium-Mediated Diazenylation",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03749",
+      "journal": "Organic Letters",
+      "title": "Dehydrogenative Aminooxygenation of Cyclopropylamides Enabled by Cooperative Electrocatalysis",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03828",
+      "journal": "Organic Letters",
+      "title": "Modular Cyano-fluoroalkylation of Unactivated Alkenes Enabled by Photoinduced Fe-LMCT Catalysis",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03886",
+      "journal": "Organic Letters",
+      "title": "Copper-Photocatalyzed 1,2-Boron Migrative Alkylation of β-Boryl NHPI Esters with Cyclopropanols",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03915",
+      "journal": "Organic Letters",
+      "title": "An ″α-Methylsulfone″ Transfer Agent: Synthesis and Application of γ-Ketosulfones",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03964",
+      "journal": "Organic Letters",
+      "title": "Access to Axially Chiral Biaryl Aldehydes via Enantioselective Imine Condensation",
+      "date": "2026-10-09",
+      "addedDate": "2026-10-10",
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
@@ -107,196 +300,6 @@
       "date": "2026-07-01",
       "addedDate": "",
       "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c02234",
-      "journal": "Organic Letters",
-      "title": "",
-      "date": "2026-07-01",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c02319",
-      "journal": "Organic Letters",
-      "title": "Generation of Carbon and Phosphine Stereocenters via Cobaltaphotoredox-Catalyzed Enantioselective C–H Annulation",
-      "date": "2026-07-01",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": "user_observed_no_image"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c02431",
-      "journal": "Organic Letters",
-      "title": "Chiral Hydroxamic Ester-Enabled Asymmetric Catellani Reaction for the Synthesis of P-Stereogenic Phosphepine Oxides",
-      "date": "2026-07-01",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c02459",
-      "journal": "Organic Letters",
-      "title": "",
-      "date": "2026-07-01",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c02752",
-      "journal": "Organic Letters",
-      "title": "",
-      "date": "2026-07-01",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1038/s41586-026-11169-0",
-      "journal": "Nature",
-      "title": "Chiral oxazolidinones via biocatalytic aziridination of unactivated alkenes",
-      "date": "2026-09-23",
-      "addedDate": "2026-09-24",
-      "publisher": "nature",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1039/d6sc05829a",
-      "journal": "Chemical Science",
-      "title": "Harnessing phosphine oxides interactions with HF and HBF 4 to enable the hydrofluorination of alkynes",
-      "date": "2026-10-06",
-      "addedDate": "2026-10-07",
-      "publisher": "rsc",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1039/d6sc06573b",
-      "journal": "Chemical Science",
-      "title": "Control of Axial Stereochemistry for the Enantioselective Construction of QUINAP Library",
-      "date": "2026-10-06",
-      "addedDate": "2026-10-07",
-      "publisher": "rsc",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1039/d6sc06421c",
-      "journal": "Chemical Science",
-      "title": "Unlocking Catalytic Asymmetric Transformations of Sulfilimidoyl Fluorides toward Chiral Sulfinimidate Esters",
-      "date": "2026-10-05",
-      "addedDate": "2026-10-06",
-      "publisher": "rsc",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1039/d6sc06246f",
-      "journal": "Chemical Science",
-      "title": "Modular Synthesis of 3,3-Diarylpropylamines via the Photo- and Copper-Catalyzed 1,3-Aminoarylation of Cyclopropanes",
-      "date": "2026-10-01",
-      "addedDate": "2026-10-05",
-      "publisher": "rsc",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1039/d6sc03717h",
-      "journal": "Chemical Science",
-      "title": "Base-Catalyzed Intramolecular C−H Annulation Reactions of o-Carboranes Containing Nitriles, Alkynes, and Alkenes",
-      "date": "",
-      "addedDate": "2026-10-08",
-      "publisher": "rsc",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1039/d6sc05761f",
-      "journal": "Chemical Science",
-      "title": "Metal-Free CO 2 Fixation: Conversion of Epoxides to Cyclic Carbonates by a Highly Efficient Bifunctional Boron-Tethered N-Heterocyclic Nitrenium Catalyst",
-      "date": "",
-      "addedDate": "2026-10-08",
-      "publisher": "rsc",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1039/d6sc06374h",
-      "journal": "Chemical Science",
-      "title": "Enantioselective Synthesis of β-Aryl-β-acyl Esters as Unsymmetrical 1,4-Dicarbonyl Compounds via Oxidative Aryl Rearrangement Using λ 3 -Perchrolate Iodane",
-      "date": "",
-      "addedDate": "2026-10-08",
-      "publisher": "rsc",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1039/d6sc06407h",
-      "journal": "Chemical Science",
-      "title": "Harnessing Carbyne Reactivity from Stabilized Phosphorus Ylides: Skeletal Editing of Indenes via Single-Carbon Insertion",
-      "date": "",
-      "addedDate": "2026-10-09",
-      "publisher": "rsc",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1039/d6gc04087j",
-      "journal": "Green Chemistry",
-      "title": "From Isomannide to Versatile Platform Molecules: Bayesian Optimization to Enable Selective Biomass Valorization",
-      "date": "2026-10-06",
-      "addedDate": "2026-10-07",
-      "publisher": "rsc",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1039/d6gc04772f",
-      "journal": "Green Chemistry",
-      "title": "Catalyst-free divergent [3+1+2] annulation for the sustainable synthesis of polyfunctionalized 3-sulfenylpyridines with potent antibacterial activity",
-      "date": "2026-10-06",
-      "addedDate": "2026-10-07",
-      "publisher": "rsc",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1039/d6gc03161g",
-      "journal": "Green Chemistry",
-      "title": "Intensified Flow Hydrochlorination of Biobased Glycerol with Downstream Upgrading to Epoxides",
-      "date": "2026-10-05",
-      "addedDate": "2026-10-06",
-      "publisher": "rsc",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1039/d6gc03748h",
-      "journal": "Green Chemistry",
-      "title": "Green Synthesis of Dihydropyranone Intermediates via Combined Flow Chemistry and Photocatalysis",
-      "date": "",
-      "addedDate": "2026-10-09",
-      "publisher": "rsc",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1039/d6gc04458a",
-      "journal": "Green Chemistry",
-      "title": "Continuous-Flow Hydrogenative Conversion of Biomass-Derived Lactone to Cyclic Ether by Pt Catalysts on Zr-Doped Silicoaluminophosphate",
-      "date": "",
-      "addedDate": "2026-10-08",
-      "publisher": "rsc",
       "state": "no_visual",
       "existingReason": ""
     }
