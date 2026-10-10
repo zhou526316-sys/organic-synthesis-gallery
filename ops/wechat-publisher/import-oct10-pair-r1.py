@@ -132,7 +132,7 @@ def main():
     assert package["newRetroCover"]=="public/wechat-assets/reviewed/2026-10-10-qiu-alcohols/nature-synthesis-author-name-corrected-r5.png"
     assert sha(read(package["newRetroCover"]))==package["newRetroCoverSHA256"]
     finalcover["repo_path"]=package["newRetroCover"]
-    finalcover["source_adjustment"]="Same user-approved R4 chemistry and layout; only lower author name changed from 邱友爱 to 仇友爱. The chemical panel pixels remain unchanged."
+    finalcover["source_adjustment"]="Same user-approved R4 chemistry and layout; lower author name corrected to 仇友爱. The chemical panel pixels remain unchanged."
     retro["cover"]["description"]=retro["cover"].get("description","")+" Original molecular structures preserved; author label corrected to 仇友爱."
     assert old_body==[(f["id"],f["repo_path"],f["caption"]) for f in retro["figures"] if f.get("body") is not False]
     assert "邱友爱" not in json.dumps(retro,ensure_ascii=False)
