@@ -1,0 +1,57 @@
+name: Backfill published literature abstracts
+on:
+  schedule:
+    # 23:20 Beijing, after the separately approved 23:00 historical discovery job.
+    - cron: '20 15 * * *'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/literature-abstract-backfill.yml'
+      - 'audit/automation-triggers/literature-abstract-backfill.json'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: literature-abstract-backfill
+  cancel-in-progress: false
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Check abstract contracts without network writes
+        run: node --test tests/literature-abstracts.test.mjs
+      - name: Resolve only DOI-bound public metadata (never new literature admissions)
+        env:
+          ABSTRACT_BACKFILL_LIMIT: '1200'
+          ABSTRACT_FETCH_CONCURRENCY: '5'
+        run: node scripts/backfill-literature-abstracts.mjs
+      - name: Publish independent search metadata without changing literature marker
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'gallery-abstract-bot'
+          git config user.email 'gallery-abstract-bot@users.noreply.github.com'
+          git add -- public/literature-abstracts.json audit/abstract-coverage.json
+          if git diff --cached --quiet; then
+            echo 'ABSTRACT_NO_METADATA_CHANGE'
+            exit 0
+          fi
+          git commit -m 'data(abstracts): update DOI-verified searchable metadata and coverage'
+          git fetch origin main --no-tags
+          git rebase origin/main
+          git push origin HEAD:main
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gallery-abstract-coverage
+          path: audit/abstract-coverage.json
+          retention-days: 14
+          if-no-files-found: warn
