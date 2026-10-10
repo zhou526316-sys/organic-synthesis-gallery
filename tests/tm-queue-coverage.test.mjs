@@ -215,7 +215,7 @@ await test('verified 429 publisher limit defers 23 items without fabricated visi
    assert.equal(snap.blockedCount,0);assert.equal(snap.deferredCount,23);
    assert.equal(snap.deferredNextAt,until);assert.equal(x.opened.length,0);
    const text=x.T.captureLiveText(x.T.captureLiveSnapshot(x.ctx.Date.now()));
-   assert.match(text.batch,/实际访问 0／23/);
+   assert.match(text.batch,/本轮缺项 23 篇 · 实际访问 0 篇/);
    assert.match(text.gaps,/冷却等待 23/);
    assert.doesNotMatch(text.state,/已遍历全部/);
  }finally{release();}
@@ -271,6 +271,6 @@ await test('pre-opening task failure is an attempt but never a publisher visit',
  assert.equal(s.attemptCount,1);assert.equal(s.visitedCount,0);
  assert.equal(s.blockedCount,1);assert.equal(x.opened.length,0);
  const panel=x.T.captureLiveText(x.T.captureLiveSnapshot(x.ctx.Date.now()));
- assert.match(panel.batch,/实际访问 0／1/);
+ assert.match(panel.batch,/本轮缺项 1 篇 · 实际访问 0 篇/);
 });
 console.log(JSON.stringify({passed,revision:'20261008-cooldown-deferred-v1',realPublisherRequests:0,productionWrites:0}));
