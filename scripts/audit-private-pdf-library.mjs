@@ -13,8 +13,8 @@ const token = String(process.env.BRIDGE_WRITE_TOKEN || '');
 const output = String(process.env.PRIVATE_PDF_AUDIT_OUTPUT || '');
 const probeMax = Math.max(0,Math.min(180,Number(process.env.PRIVATE_PDF_AUDIT_PROBE_MAX || 120)));
 if(!token) throw new Error('audit_maintenance_credential_unavailable');
-const mainSha = String(process.env.GITHUB_SHA ||
-  execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim());
+// GitHub's event SHA can differ from main by the time checkout completes.
+const mainSha = execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 if(!/^[a-f0-9]{40}$/.test(mainSha)) throw new Error('audit_snapshot_invalid');
 const inputs=Object.fromEntries(DATA_FILES.map(file=>[file,fs.readFileSync('public/'+file,'utf8')]));
 const marker=JSON.parse(fs.readFileSync('audit/publication-release-state.json','utf8'));
@@ -26,7 +26,15 @@ const items=[...papers.values()].map(item=>({
   addedDate:/^\d{4}-\d{2}-\d{2}$/.test(String(item.addedDate||''))?item.addedDate:'',
 })).sort((a,b)=>a.doi.localeCompare(b.doi,'en'));
 if(items.length!==new Set(items.map(p=>p.doi)).size)throw Error('audit_duplicate_doi');
-const catalogId=crypto.createHash('sha256').update(items.map(p=>p.doi).join('\n')).digest('hex');
+const catalogHash=crypto.createHash('sha256').update(items.map(p=>p.doi).join('\\n')).digest('hex');
+// Every invocation uses a separate generation, even if its DOI set is
+// identical to yesterday's. A failed 24-DOI batch cannot mutate the
+// currently published completed snapshot.
+const runKey=/^\\d+$/.test(String(process.env.GITHUB_RUN_ID||''))?
+  String(process.env.GITHUB_RUN_ID)+':'+String(process.env.GITHUB_RUN_ATTEMPT||'1'):
+  crypto.randomUUID();
+const catalogId=crypto.createHash('sha256')
+  .update(catalogHash+'\\n'+mainSha+'\\n'+runKey).digest('hex');
 const report={schemaVersion:1,suite:'private-pdf-library-audit-v1',ok:false,
   sourceCommit:mainSha,catalogId,expectedCount:items.length,
   submitted:0,batches:0,probed:0,storagePass:0,storageFail:0,
