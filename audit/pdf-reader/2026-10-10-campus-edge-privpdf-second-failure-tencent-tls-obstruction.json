@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "observedAtBeijing": "2026-10-10 10:37:45",
+  "source": "User screenshot of current Gallery private PDF viewer",
+  "userReportedData": {
+    "doiInConversation": "10.1021/acscatal.6c05658",
+    "phase": "parse",
+    "error": "pdf_transfer_timeout",
+    "totalElapsedSec": 24.6,
+    "authorizationMs": 1581,
+    "pdfEngineMs": 494,
+    "rangeCalls": 3,
+    "authorizedRoute": "primary",
+    "fileFailoverSuccessCounterDisplayed": false
+  },
+  "verifiedCode": {
+    "readerBlob": "71601a081bc36e91679e1c78bd04366efef74e46",
+    "workerBlob": "39d23f6a49d01034e072e0ec23580801e8bd6584",
+    "firstPrefetchMiB": 1,
+    "prefetchTimeoutMs": 9000,
+    "firstRangeTimeoutMs": 12000,
+    "secondRangeTimeoutMs": 15000,
+    "alternateAuthorizationTimeoutMs": 10000,
+    "fileSwitchCounterBehavior": "privatePdfFileFailovers increments only after successful authenticated alternate open with equal SHA256 and byteLength; absent screenshot count cannot prove switch attempted or not attempted.",
+    "cloudflareOnlyOrigins": [
+      "api.gczhouwld.com",
+      "organic-synthesis-gallery.zhou526316.workers.dev"
+    ]
+  },
+  "liveGatewayProof": {
+    "readOnlyGithubRun": 37891507915,
+    "rerunJobId": 114111168080,
+    "runAtUtc": "2026-10-10T02:36:28.629Z",
+    "pdfDnsA": [
+      "43.135.32.73"
+    ],
+    "relayDnsA": [
+      "43.135.32.73"
+    ],
+    "pdfHttps": "ERR_TLS_CERT_ALTNAME_INVALID",
+    "presentedCertCommonName": "relay.gczhouwld.com",
+    "presentedCertDnsNames": [
+      "relay.gczhouwld.com"
+    ],
+    "containsPdfHostname": false,
+    "productionMutations": false,
+    "publicTinyFishPdfGateway": "target_unreachable",
+    "canonicalApiHealth": "ok:true",
+    "backupWorkerHealth": "ok:true"
+  },
+  "limitations": [
+    "No owner session or signed PDF URL used for diagnostics; no actual private transfer measured from assistant.",
+    "Local campus+school VPN+Ghelper USA route may not reach Cloudflare and/or Tencent; no all-networks success claim.",
+    "Tencent PDF gateway PR420 remains draft with public/pdf-gateway-routing.json enabled:false.",
+    "User explicitly vetoed any small-range strategy that risks scrolling fluidity; keep 1MiB chunks unchanged."
+  ],
+  "next": "Owner runs already reviewed immutable single-QR SSH Windows install of dedicated pdf.gczhouwld.com TLS/vhost using existing VM, then ChatGPT repeats public TLS/401/CORS and real owner 206 acceptance before enabling PR420 routing.",
+  "productionCodeChangesMadeNow": false,
+  "accountPermissionsModifiedNow": false
+}
