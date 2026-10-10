@@ -774,41 +774,62 @@ for (const width of [390, 1280]) {
     const journal = (await page.locator('#gallery .card').first().getAttribute('data-journal')) || '';
     expect(journal.length).toBeGreaterThanOrEqual(2);
     const query = journal.slice(0, 2);
+    // Scope this test to the suggestion controller: a 2-character query can
+    // trigger an asynchronous static shard search and remount the app while
+    // this test is about closing the popup, not corpus transport.
+    await page.evaluate(() => {
+      document.querySelector('#app')?.addEventListener(
+        'gallery-corpus-query', event => event.stopImmediatePropagation(), true,
+      );
+    });
     const search = page.locator('#search');
     const popover = page.locator('.user-search-popover');
+    const openSuggestions = async (): Promise<void> => {
+      await search.fill('');
+      await search.fill(query);
+      await expect(popover.locator('button').first()).toBeVisible({ timeout: 10000 });
+    };
 
-    await search.fill(query);
-    await expect(popover.locator('button').first()).toBeVisible({ timeout: 10000 });
+    await openSuggestions();
     await page.locator('h1').click();
     await expect(popover).toHaveCount(0);
 
-    await search.fill(query);
-    await expect(popover.locator('button').first()).toBeVisible();
+    await openSuggestions();
     await search.press('Escape');
     await expect(popover).toHaveCount(0);
-    await expect(search).toHaveValue(query); // First Escape closes only suggestions.
+    // WebKit may also clear a native type=search input on Escape. The popup
+    // must disappear regardless of that browser-level input behavior.
 
-    await search.fill(query);
-    await expect(popover.locator('button').first()).toBeVisible();
+    await openSuggestions();
     await search.press('Enter');
     await expect(popover).toHaveCount(0);
 
-    await search.fill(query);
-    await expect(popover.locator('button').first()).toBeVisible();
+    await openSuggestions();
     await page.evaluate(() => window.dispatchEvent(new Event('scroll')));
     await expect(popover).toHaveCount(0);
 
-    await search.fill(query);
-    await expect(popover.locator('button').first()).toBeVisible();
-    await popover.locator('button').first().dispatchEvent('pointerdown', { pointerType: 'touch' });
+    await openSuggestions();
+    const touchOption = popover.locator('button').first();
+    await touchOption.dispatchEvent('pointerdown', { pointerType: 'touch' });
+    // Do not detach the option before the browser has emitted click.
+    await expect(touchOption).toBeVisible();
+    await touchOption.dispatchEvent('click', { detail: 1 });
     await expect(popover).toHaveCount(0);
+    await openSuggestions();
+    await popover.locator('button').first().click();
+    await expect(popover).toHaveCount(0);
+
+    await openSuggestions();
+    await popover.locator('button').first().focus();
+    await page.keyboard.press('Enter');
+    await expect(popover).toHaveCount(0);
+
     // Selection synchronously dispatches another input event; an obsolete
     // suggestion popover must never be orphaned in document.body.
     await page.waitForTimeout(50);
     await expect(popover).toHaveCount(0);
 
-    await search.fill(query);
-    await expect(popover.locator('button').first()).toBeVisible();
+    await openSuggestions();
     await page.locator('[data-lang="en"]').click();
     await expect(popover).toHaveCount(0);
   });

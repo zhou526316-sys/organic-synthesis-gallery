@@ -65,7 +65,11 @@ export class UserSearchController {
     if (!(target instanceof Node) || this.searchInput?.contains(target) || this.popover?.contains(target)) return;
     this.dismissSuggestions();
   };
-  private readonly onPageScroll = (): void => { this.dismissSuggestions(); };
+  private readonly onPageScroll = (event: Event): void => {
+    // Scrolling the suggestion list itself must not dismiss it before selection.
+    if (event.target instanceof Node && this.popover?.contains(event.target)) return;
+    this.dismissSuggestions();
+  };
   private readonly onTabVisibility = (): void => {
     if (document.hidden) this.dismissSuggestions();
   };
@@ -470,13 +474,14 @@ export class UserSearchController {
       const item = suggestions[Number(button.dataset.index || 0)];
       if (!item) return;
       button.addEventListener('pointerdown', event => {
+        // Keep the search field focused; do not detach the target before
+        // click is dispatched (particularly important for mobile WebKit).
         event.preventDefault();
-        select(item);
       });
       button.addEventListener('click', event => {
-        // Keyboard activation has no preceding pointerdown; normal clicks have
-        // already selected and removed the popover at pointerdown.
-        if (event.detail === 0) select(item);
+        // Pointer, touch and keyboard activation all select exactly once.
+        event.preventDefault();
+        select(item);
       });
     });
     document.body.appendChild(popover);
