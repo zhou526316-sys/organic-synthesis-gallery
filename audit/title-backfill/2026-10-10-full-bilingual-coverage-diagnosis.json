@@ -1,0 +1,2055 @@
+{
+  "schema": "gallery-bilingual-title-gap-diagnostic-v1",
+  "generatedAt": "2026-10-10T18:53:00+08:00",
+  "status": "read_only_verification_pending_user_approval",
+  "scope": "approved_production_doi_union_main_snapshot",
+  "limitations": [
+    "Counts reflect repository-persisted titleZh, three DOI-verified translation manifests, and exact-title matching in bundled overrides. Transient browser translation cache or live API responses were not measured.",
+    "No live user browser/network verification, since site was inaccessible through available network check; Pages deployment status assessed independently.",
+    "No production source files were modified. Feedback approval gate remains in force."
+  ],
+  "inputBlobs": {
+    "public/papers.gz.b64": "85a62cf86f1b87047386e2fc4c30bf9eeb4c2353",
+    "public/total-synthesis.json": "d5ef10b1c02ce8237a8e14be262598b2833426a8",
+    "public/manual-supplement.json": "f4cac04a6ae5b4bf8e19edfc228124b88559afff",
+    "public/final-audit-supplement.json": "e77ad07dc077104abb0eb468434c72113d62f03c",
+    "public/curated-supplement.json": "9ed78104fb209d2de2facd90059c7bf28b4eaa58",
+    "public/automation-supplement.json": "03c348df0bf78619e2090aaf83be520e2e39796b",
+    "public/rolling-supplement.json": "8520abeec7522c0f02fbbac3a8431c74d6297717",
+    "audit/title-backfill/verified-titles-20261010.json": "420aa7635262e6871f392d3fc1901349fb5ae9d8",
+    "audit/title-backfill/verified-title-zh-20261010-part1.json": "df3778c08ef57d87ce25bdbfcac380badc3b395a",
+    "audit/title-backfill/verified-title-zh-20261010-part2.json": "4608dcf0a5d9705a3dc46256402a5bf32428a4b7",
+    "audit/title-backfill/verified-title-zh-20261010-part3.json": "aca6335e6c065d4b35a3ec560370b13562021571",
+    "shared/chinese-title-overrides.js": "7fb25ccb26f2893b45fe36c60353177f6f3565d8"
+  },
+  "summary": {
+    "totalPublishedDois": 938,
+    "doisWithSavedChineseTitle": 660,
+    "doisMissingSavedChineseTitle": 278,
+    "coveragePercent": 70.36,
+    "sourceBreakdown": {
+      "repositoryRaw": 513,
+      "doiBackfill125": 125,
+      "bundledVerified": 22
+    },
+    "byJournal": {
+      "Nature": {
+        "total": 11,
+        "missing": 9
+      },
+      "Science": {
+        "total": 8,
+        "missing": 3
+      },
+      "Nature Chemistry": {
+        "total": 15,
+        "missing": 11
+      },
+      "Nature Synthesis": {
+        "total": 20,
+        "missing": 5
+      },
+      "Nature Catalysis": {
+        "total": 13,
+        "missing": 5
+      },
+      "Nature Communications": {
+        "total": 61,
+        "missing": 8
+      },
+      "JACS": {
+        "total": 164,
+        "missing": 82
+      },
+      "Angewandte Chemie International Edition": {
+        "total": 18,
+        "missing": 18
+      },
+      "Angew": {
+        "total": 94,
+        "missing": 16
+      },
+      "ACS Catalysis": {
+        "total": 70,
+        "missing": 30
+      },
+      "Organic Letters": {
+        "total": 349,
+        "missing": 91
+      },
+      "JOC": {
+        "total": 77,
+        "missing": 0
+      },
+      "CCS Chemistry": {
+        "total": 10,
+        "missing": 0
+      },
+      "Science Advances": {
+        "total": 3,
+        "missing": 0
+      },
+      "Chem": {
+        "total": 4,
+        "missing": 0
+      },
+      "Chemical Science": {
+        "total": 12,
+        "missing": 0
+      },
+      "Green Chemistry": {
+        "total": 9,
+        "missing": 0
+      }
+    },
+    "missingEnglishTitles": 0
+  },
+  "missingTitles": [
+    {
+      "doi": "10.1021/acscatal.6c02761",
+      "titleEn": "Iron(III) Photoredox-Catalyzed Regiodivergent Nitrone-Styrene [3+2] Cycloaddition",
+      "journal": "ACS Catalysis",
+      "date": "2026-07-02",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c02896",
+      "titleEn": "Diverse Bicyclic Heterocyclic Scaffolds via Palladium-Catalyzed C(sp3)–H Activation of Amides and Amines",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c02931",
+      "titleEn": "Cellulose-Stabilized BiOBr Enables Light-Mediated Radical-Polar Crossover of Unactivated Alkenes to Achieve Cyclopropanes",
+      "journal": "ACS Catalysis",
+      "date": "2026-07-20",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c03020",
+      "titleEn": "α-C−H Alkylation of α-Silyl Alcohols: Hydrogen Atom Transfer Catalysis Preserving Labile C−Si Bonds",
+      "journal": "ACS Catalysis",
+      "date": "2026-07-02",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c03214",
+      "titleEn": "Chiral iron-porphyrin-catalyzed asymmetric cyclopropanation with α-methyl-α-diazoesters",
+      "journal": "ACS Catalysis",
+      "date": "2026-07-16",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c03556",
+      "titleEn": "Aldehyde/Triazolium-Catalyzed Transformation of C(sp3)–H Bonds via HAT Photocatalysis and Electron-Shuttle Process: Unexplored Merging of Aldehyde and Triazolium",
+      "journal": "ACS Catalysis",
+      "date": "2026-07-21",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c03656",
+      "titleEn": "Asymmetric Synthesis of Heterohelicenes via Cobalt-Catalyzed Enantioselective C–H Activation",
+      "journal": "ACS Catalysis",
+      "date": "2026-07-09",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c03795",
+      "titleEn": "NHC-Catalyzed Desymmetrization of Bishydroxymethylphosphines to Access P-Stereogenic Compounds",
+      "journal": "ACS Catalysis",
+      "date": "2026-07-15",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c03885",
+      "titleEn": "Photothermal C–N cross-coupling",
+      "journal": "ACS Catalysis",
+      "date": "2026-07-25",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c03898",
+      "titleEn": "Radical 1,5-Carbonyl Migration Enabled by Energy-Transfer Catalysis",
+      "journal": "ACS Catalysis",
+      "date": "2026-07-03",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c04193",
+      "titleEn": "Enantioselective C(sp3)–H Sulfilimination via Dual Photoredox/Copper Catalysis",
+      "journal": "ACS Catalysis",
+      "date": "2026-07-22",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c04222",
+      "titleEn": "Sterically Controlled Chemoselective Synthesis of Chiral [3.3.1]-Bridged N-Heterocycles via Organocatalytic Asymmetric Multicomponent Dearomatization",
+      "journal": "ACS Catalysis",
+      "date": "2026-08-24",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c04310",
+      "titleEn": "Photoredox/Copper-Catalyzed Enantioselective S-Alkylation of Sulfenamides with Hydrocarbons Enabled by Commercial BOX Ligands",
+      "journal": "ACS Catalysis",
+      "date": "2026-07-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c04479",
+      "titleEn": "Catalytic Enantioselective Allenylation of Zincke Imine",
+      "journal": "ACS Catalysis",
+      "date": "2026-07-27",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c04640",
+      "titleEn": "Suzuki–Miyaura Cross-Coupling Using Ketones for the Synthesis of Multisubstituted Alkenes",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-05",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c04800",
+      "titleEn": "Metallaphotocatalytic Assembly of Unsymmetrical 1,4-Diketones via Dual Acyl Units: Divergent Initiation of Carboxylic Acids and Aldehydes",
+      "journal": "ACS Catalysis",
+      "date": "2026-08-13",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c04974",
+      "titleEn": "Photochemical Cobalt-Catalyzed Selective Olefin Hydrogenation and One-Bond Transposition",
+      "journal": "ACS Catalysis",
+      "date": "2026-08-14",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c05002",
+      "titleEn": "Photoinduced Iron-Catalyzed Intermolecular Dearomative Hydroalkylation of Unactivated Indoles with Alkanes",
+      "journal": "ACS Catalysis",
+      "date": "2026-08-26",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c05079",
+      "titleEn": "Highly Enantioselective Synthesis of Boron-Stereogenic Scaffolds via Bioinspired Bisphosphonium Salt-Catalyzed SNAr Reaction",
+      "journal": "ACS Catalysis",
+      "date": "2026-08-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c05099",
+      "titleEn": "Ir-catalyzed enantioselective nucleophilic coupling of sulfoxonium ylides with ylide retention",
+      "journal": "ACS Catalysis",
+      "date": "2026-08-22",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c05106",
+      "titleEn": "Visible Light-Mediated Decarboxylative Annulations of Oxamic Acids and Alkynes via Hydrogen Atom Transfer",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-09",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c05271",
+      "titleEn": "Enantioselective Synthesis of P(V)-Stereogenic Phosphacycles by N-Heterocyclic Carbene (NHC)-Catalyzed Desymmetric Annulation",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-09",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c05384",
+      "titleEn": "Adaptive Photocatalytic Regimes Enabled by CO2·– and Two-Photon Excitation Synergy: Cyclization-Carboxylation of Aryl Halides with CO2",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-09",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c05584",
+      "titleEn": "Aerobic Oxidative Cascade Reaction of ortho-Alkenylphenols for Asymmetric Synthesis of Benzoxanthenones",
+      "journal": "ACS Catalysis",
+      "date": "2026-08-25",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c05596",
+      "titleEn": "Regiodivergent olefin-transfer hydrothiocarbonylation",
+      "journal": "ACS Catalysis",
+      "date": "2026-08-25",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c05675",
+      "titleEn": "Organocatalytic Enantioselective [3+3] Annulation toward Chromene-Fused Helicenes Bearing Central and Helical Chirality With Chiroptical Properties",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c05682",
+      "titleEn": "Intermolecular Formal [2 + 1] Cycloaddition with Sulfoxonium Ylides via Energy Transfer Photocatalysis",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-05",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c05701",
+      "titleEn": "Lewis Acid Catalyzed Cross-Coupling of Electronically Different Bicyclo[1.1.0]butanes (BCBs)",
+      "journal": "ACS Catalysis",
+      "date": "2026-08-13",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c06151",
+      "titleEn": "Construction of Axial Chirality via Amino-Acid-Catalyzed Asymmetric Reductive Desymmetrization of 2-Aryl-isophthalaldehydes",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-09",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acscatal.6c06367",
+      "titleEn": "Synthesis of Chiral Benzylamines via Nickel-Catalyzed Enantioselective C–H Alkynylation",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-02",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.1324586",
+      "titleEn": "Electrochemical Cobalt/Vanadium Relay Catalysis: Enantioselective Markovnikov Hydrooxygenation of Alkenes",
+      "journal": "Angew",
+      "date": "2026-09-02",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.1344095",
+      "titleEn": "Accessing all Four Stereoisomers of β-Fluoroamines by Engineered Imine Reductase-Mediated Dynamic Kinetic Reductive Amination",
+      "journal": "Angew",
+      "date": "2026-09-04",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.1803920",
+      "titleEn": "Desymmetric Hydroacyloxylation of Paracyclophyne by Catalytic Coordination-Induced Asymmetric Addition",
+      "journal": "Angew",
+      "date": "2026-09-01",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.2110292",
+      "titleEn": "Asymmetric Total Synthesis of (+)-Ineleganolide",
+      "journal": "Angew",
+      "date": "2026-07-13",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.2246600",
+      "titleEn": "Electricity-Driven Radical Carbonyl Catalysis for Asymmetric Synthesis of α-Tertiary Amino Esters",
+      "journal": "Angew",
+      "date": "2026-08-05",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.3574678",
+      "titleEn": "Photoredox Nickel-Catalyzed Dehydrogenative Alkoxycarbonylation of Benzylic C─H Bonds",
+      "journal": "Angew",
+      "date": "2026-09-08",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.3945602",
+      "titleEn": "Enantioselective Total Synthesis of (+)-Dracocephalone A, (+)-Dracocequinone A, and (−)-Dracocequinone B by Oxabridge Construction With Oxygen",
+      "journal": "Angew",
+      "date": "2026-08-29",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.4023427",
+      "titleEn": "Ligand-Controlled Chemodivergent Telomerization and Hydrofunctionalization of Isoprene With Hydrazones Under Ni Catalysis",
+      "journal": "Angew",
+      "date": "2026-09-03",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.5126293",
+      "titleEn": "Recyclable Pt-Catalyzed Biphase Hydrosilylation on Water: From Functionalized Monomers to Polymer Materials",
+      "journal": "Angew",
+      "date": "2026-07-21",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.5419423",
+      "titleEn": "Bioinspired Total Synthesis of Myltayloriones A-B and Mylnudones A–D",
+      "journal": "Angew",
+      "date": "2026-07-21",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.6219487",
+      "titleEn": "Intramolecular Nickel-Catalyzed Reductive Coupling: Enantioselective Synthesis of Tetrahydroisoquinolines and Related Heterocycles",
+      "journal": "Angew",
+      "date": "2026-09-02",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.6268409",
+      "titleEn": "Total Synthesis of ent-Kaurenoic Acid Diterpenoids Enabled by Distal Conformational Control in Photoredox Radical Polyene Cyclization",
+      "journal": "Angew",
+      "date": "2026-08-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.6933953",
+      "titleEn": "A Unified Strategy for Catalytic Asymmetric Allylation and Mukaiyama Aldol Reactions of 1,2-Dicarbonyl Compounds",
+      "journal": "Angew",
+      "date": "2026-08-12",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.7800916",
+      "titleEn": "Probing Into Asymmetric Dearomatizing Photocycloadditions of 2-Naphthalene Derivatives With Alkenes: [2 + 2] and [4 + 2] Pathways",
+      "journal": "Angew",
+      "date": "2026-07-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.8336123",
+      "titleEn": "Organocatalytic Enantioselective Addition of Malonates to Cyclic Imines: A Short Total Synthesis of Tetraponerine T-1",
+      "journal": "Angew",
+      "date": "2026-07-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.9925574",
+      "titleEn": "Palladium-Catalyzed Asymmetric Synthesis of Methylidene Cyclobutanes via Enantioselective Intramolecular Heck-Type Reactions",
+      "journal": "Angew",
+      "date": "2026-08-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.1402106",
+      "titleEn": "Machine-Learning-Enabled Rapid Evolution of Photoenzymes for the Asymmetric Synthesis of gem-Difluorophosphonates",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-07-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.1425075",
+      "titleEn": "Silver-Catalyzed Vinylogous C(sp³)–C(sp³) Coupling of Bicyclo[1.1.0]Butanes With Vinylcarbenes",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-08-05",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.1850136",
+      "titleEn": "P-Directed and Lewis Acid-Assisted Pd-Catalyzed Si–Me Bond Activation Enabling Alkyl Exchange at Silicon",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-08-24",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.1974825",
+      "titleEn": "Synthesis of Chiral Bowl-Shaped N-Heterocycles via Pd-Catalyzed Enantioselective Intramolecular C–H Arylation",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-08-05",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.2451961",
+      "titleEn": "Radical Sulfinamidation of Alkenes Enabled by a PCET–HAT Relay",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-09-01",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.2539581",
+      "titleEn": "Late-Stage Annulative Imidazolation for Expanding Histidine-Analogous Side Chains in Peptides and Proteins",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-09-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.2936884",
+      "titleEn": "A de-novo Approach Towards Divergent [3+2π/σ] Photocycloadditions of Nitrones via Assembly-Controlled Kinetic Electron Transfer Gating",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-08-27",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.3086835",
+      "titleEn": "Skeletal Reorganization of Cycloalkylamines Into Angular Azatetracyclic Scaffolds",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-07-17",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.3691732",
+      "titleEn": "Biosynthesis of Fluorinated Aromatic Polyketides Through Directed Evolution of Fused Type III PKS",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-07-30",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.4582039",
+      "titleEn": "Umpolung at the meta-Positions of Oxazino-Pyridines Enabling Nucleophilic Pyridine Functionalization",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-09-14",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.4947785",
+      "titleEn": "2-CF₂H(D)-Imidazolium Salts: A Reagent Platform for Bis(Deuterio)Difluoromethylation of Alkenes Under Copper/Photoredox Dual Catalysis",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-08-05",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.6267376",
+      "titleEn": "Cobalt-Catalyzed Enantioselective Vinyl Carbene Annulation: A Versatile Platform for Semisaturated Heterocycles",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-08-22",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.6479535",
+      "titleEn": "Nickel-Catalyzed H₂-Enabled Asymmetric Olefin Isomerization: Direct Access to P-Stereogenic Phospholenes With Adjacent Stereocenters",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-08-17",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.7471740",
+      "titleEn": "Lewis Acid/Base Au–Mn Pairs in Metal Nanoclusters for Enhanced Photocatalytic C(sp²)–H Arylation",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-07-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.8611979",
+      "titleEn": "Cobalt-Catalyzed Migratory E-Selective Asymmetric Aza-Nozaki–Hiyama–Kishi Coupling",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-07-03",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.8724182",
+      "titleEn": "Oxygen-Radical Capture Enabled Nickel-Catalyzed Carbon(sp²)-Heteroatom Coupling of Two Nucleophiles",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-07-29",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.8922921",
+      "titleEn": "Nickel(0)-Catalyzed Enantioselective Three-Component Imino–Ene-Type Coupling of Aldehydes, Sulfonamides, and Alkenes",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-08-26",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1002/anie.9090329",
+      "titleEn": "Photochemical Cascade Nitrile Activation via a Carbene-Nitrene Relay",
+      "journal": "Angewandte Chemie International Edition",
+      "date": "2026-07-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c04756",
+      "titleEn": "A Photoredox C–H Arene Functionalization toward Substituted Methyls",
+      "journal": "JACS",
+      "date": "2026-07-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c05089",
+      "titleEn": "Base-Free C–N Cross-Electrophile Coupling",
+      "journal": "JACS",
+      "date": "2026-07-31",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c05240",
+      "titleEn": "Catalytic Asymmetric Metallocyclopropanation Reactions Using Chloroform as a Carbyne Equivalent",
+      "journal": "JACS",
+      "date": "2026-07-25",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c05405",
+      "titleEn": "Cobalt-Catalyzed Cyclohydrocarbonylations: Syntheses of Saturated Heterocycles Promoted by Light",
+      "journal": "JACS",
+      "date": "2026-07-08",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c05412",
+      "titleEn": "Skipped Dienes via Radical Allylic Heck Reaction",
+      "journal": "JACS",
+      "date": "2026-07-06",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c05580",
+      "titleEn": "Total Synthesis of Benthol A: Evidence for a Structure Revision",
+      "journal": "JACS",
+      "date": "2026-07-16",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c05583",
+      "titleEn": "Total Synthesis of Benthol A: The Nominal and the Actual Natural Product",
+      "journal": "JACS",
+      "date": "2026-07-16",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c05911",
+      "titleEn": "Conformation-Guided Remote C–H Functionalization of Aromatic Compounds",
+      "journal": "JACS",
+      "date": "2026-07-20",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c06459",
+      "titleEn": "Photocatalytic Denitrative Homo- and Cross-Coupling of Nitroalkanes toward the Synthesis of Alkenes",
+      "journal": "JACS",
+      "date": "2026-07-16",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c07049",
+      "titleEn": "SuFEx Cyclization Enables DNA-Encoded Macrocyclic Peptide Libraries for Drug Discovery",
+      "journal": "JACS",
+      "date": "2026-09-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c07102",
+      "titleEn": "Synthesis of Iodinated Semisaturated Heterobicycles via a Temporal Dual Metal-Catalyzed Cycloaddition/Photochemical Carbohalogenation",
+      "journal": "JACS",
+      "date": "2026-07-01",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c07119",
+      "titleEn": "Conformationally Dictated Divergent Triplet Reactivity of Conjugated Dienes: Visible-Light-Induced Electrocyclization, 1,5-HAT, and Cycloaddition",
+      "journal": "JACS",
+      "date": "2026-08-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c07345",
+      "titleEn": "Efficient Synthesis of N-Bridged Annulenes",
+      "journal": "JACS",
+      "date": "2026-07-15",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c07493",
+      "titleEn": "Traversing the Regioselectivity of Intermolecular Pericyclic Aryne Reactions: Total Syntheses of Laetevirenol A and Isoampelopsin D",
+      "journal": "JACS",
+      "date": "2026-08-04",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c07657",
+      "titleEn": "B/Pd-Catalyzed Asymmetric Propargylic Substitution for Vicinal Quaternary/Tertiary Stereocenters",
+      "journal": "JACS",
+      "date": "2026-08-17",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c07870",
+      "titleEn": "A Synthetic Method to Hydrogen Radicals",
+      "journal": "JACS",
+      "date": "2026-08-25",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c07989",
+      "titleEn": "Divergent Assembly of Polycyclic Structures via Cascade Asymmetric Dearomatization of Indoles/Aza-Prins Cyclization/Selective Transformations of Phenonium-like Intermediates",
+      "journal": "JACS",
+      "date": "2026-07-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c08262",
+      "titleEn": "Formal Markovnikov Hydroazolation of Alkenes via Reductive Activation of Alkylthianthrenium Salts",
+      "journal": "JACS",
+      "date": "2026-07-23",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c08353",
+      "titleEn": "Catalytic Asymmetric Cationic Geranyl Cyclizations",
+      "journal": "JACS",
+      "date": "2026-07-20",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c08426",
+      "titleEn": "Palladium-Catalyzed Enantioselective C–H Activation Reaction of Undirected Arenes with Cyclopentenes",
+      "journal": "JACS",
+      "date": "2026-07-08",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c08483",
+      "titleEn": "Unlocking Azulene Functionalization via Strain-Induced Azulyne Intermediates",
+      "journal": "JACS",
+      "date": "2026-07-03",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c08521",
+      "titleEn": "Diazoborane-Promoted Boron Insertion into Olefinic C–H Bonds",
+      "journal": "JACS",
+      "date": "2026-07-22",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c08584",
+      "titleEn": "Highly Selective and Modular Assembly of Densely Substituted Tetrahydrofurans",
+      "journal": "JACS",
+      "date": "2026-07-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c08636",
+      "titleEn": "Grignard Reagents Unlock Three-Dimensional Nitrogen Heterocycles via Single-Carbon-Atom Insertion",
+      "journal": "JACS",
+      "date": "2026-09-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c08696",
+      "titleEn": "Electrochemical Cross-Coupling of Electron-Deficient Olefins",
+      "journal": "JACS",
+      "date": "2026-08-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c08818",
+      "titleEn": "Copper-Mediated Radical Transformation of Protection-Free Glycosylsulfonohydrazide for Access to Diverse Glycosides",
+      "journal": "JACS",
+      "date": "2026-07-08",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c08848",
+      "titleEn": "Ground-State Flavin-Dependent Enzymatic Catalysis for Formal Hydrophosphinylation of Alkenes",
+      "journal": "JACS",
+      "date": "2026-08-20",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c09100",
+      "titleEn": "Carbenylative Buchwald–Hartwig Coupling of Aryl Halides, N-Tosylhydrazones, and Anilines",
+      "journal": "JACS",
+      "date": "2026-08-25",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c09105",
+      "titleEn": "Diradical Character of Cyclic Allenes Enables Their Thermal (2+2) Cycloadditions",
+      "journal": "JACS",
+      "date": "2026-08-18",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c09322",
+      "titleEn": "Total Synthesis of the Diterpene Alkaloid Thelepogine through Enyne Hydroamination",
+      "journal": "JACS",
+      "date": "2026-07-22",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c09592",
+      "titleEn": "Palladium-Catalyzed Asymmetric Remote Hydroamination of Internal Alkenes",
+      "journal": "JACS",
+      "date": "2026-08-05",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c09683",
+      "titleEn": "Asymmetric Radical Sulfinylation via Stereoablative Sulfinyl Radical Generation",
+      "journal": "JACS",
+      "date": "2026-07-31",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c09936",
+      "titleEn": "“Store-and-Release” Strategy Enables Nickel-Catalyzed Deaminative Migratory Arylation of Aliphatic Amines",
+      "journal": "JACS",
+      "date": "2026-09-08",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c09969",
+      "titleEn": "Singlet Photoredox Catalysis via Supramolecular Host–Guest Interactions",
+      "journal": "JACS",
+      "date": "2026-09-08",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c09975",
+      "titleEn": "Enantioselective Organocatalytic Construction of N-Bridged Tricyclic Normorphan Skeleton: Application to the Total Synthesis of (+)-Peduncularine",
+      "journal": "JACS",
+      "date": "2026-08-28",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10096",
+      "titleEn": "Unlocking Free α-Trifluoromethoxy Carbene Reactivity from Aldehyde",
+      "journal": "JACS",
+      "date": "2026-08-17",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10100",
+      "titleEn": "Chiral-Ligand-Modulated Nickel-Catalyzed Stereoselective Radical Migratory C2-Arylation of Carbohydrates",
+      "journal": "JACS",
+      "date": "2026-07-03",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10123",
+      "titleEn": "Synthesis of Chiral Cyclophanes via Pd(II)-Catalyzed Atroposelective C–H Macrocyclization: Total Synthesis of Isoplagiochin D",
+      "journal": "JACS",
+      "date": "2026-07-01",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10180",
+      "titleEn": "Synthesis of Chiral Triarylmethanes via Catalytic Asymmetric Skeletal Editing",
+      "journal": "JACS",
+      "date": "2026-07-14",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10183",
+      "titleEn": "Synthesis of Siccanin by Computational Subtarget Selection",
+      "journal": "JACS",
+      "date": "2026-09-12",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10280",
+      "titleEn": "Cross-Metathesis of an Iron Carbene with Diazenes",
+      "journal": "JACS",
+      "date": "2026-08-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10362",
+      "titleEn": "Copper-Catalyzed Cross-Nucleophile Coupling of Organoboranes",
+      "journal": "JACS",
+      "date": "2026-09-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10406",
+      "titleEn": "Enantioselective Deaminative Cross-Coupling of Amino Acid Derivatives with Alkylzirconocenes",
+      "journal": "JACS",
+      "date": "2026-07-28",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10600",
+      "titleEn": "Late-Stage Carbonyl Removal via Sequential Double C–C Bond Cleavage",
+      "journal": "JACS",
+      "date": "2026-07-04",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10641",
+      "titleEn": "Dynamic Kinetic Resolution-Based Asymmetric Hydrogenation of Pyridines",
+      "journal": "JACS",
+      "date": "2026-07-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10645",
+      "titleEn": "NHC-Mediated Olefin Amidoacylation via Amidyl Radical Intermediates Leading to 5- and 6-Membered Keto-Lactams",
+      "journal": "JACS",
+      "date": "2026-07-29",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10795",
+      "titleEn": "A Unified Platform for Direct Alkynylation from Alcohols via Deoxygenative Metallaphotoredox Catalysis",
+      "journal": "JACS",
+      "date": "2026-07-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10799",
+      "titleEn": "Intermolecular Reductive Coupling of Ketones and Alkenes under Ferrioxalate Photocatalysis",
+      "journal": "JACS",
+      "date": "2026-07-13",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10830",
+      "titleEn": "Pd/Mo-Catalyzed ortho-Dihydroxylation of Aromatic Rings: Dual-Metal-Mediated C(sp²)–H Functionalization",
+      "journal": "JACS",
+      "date": "2026-07-15",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10840",
+      "titleEn": "Iron-Catalyzed Dealkenylative Borylation of Alkenes via Ozonolysis",
+      "journal": "JACS",
+      "date": "2026-08-05",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10864",
+      "titleEn": "Divergent Pyridine-to-Pyrazole Conversion via Carbon-Retentive Skeletal Editing",
+      "journal": "JACS",
+      "date": "2026-07-23",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10875",
+      "titleEn": "Catalytic Enantioselective Aziridination of Z-Disubstituted Alkenes with Aspartyl β-Turn-Based Dirhodium(II) Metallopeptides",
+      "journal": "JACS",
+      "date": "2026-08-20",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c10980",
+      "titleEn": "Enantioselective Hydroarylation via Chiral Transient Directing Groups: Access to Chiral Benzo-Fused Heterocycles with Collaborative Enantiomeric Control",
+      "journal": "JACS",
+      "date": "2026-07-25",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c11012",
+      "titleEn": "Synthesis of Carborane-Modified Sugars and Nucleosides via Pd(II)-Catalyzed B–H Bond Activation",
+      "journal": "JACS",
+      "date": "2026-08-28",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c11054",
+      "titleEn": "Chiral Phosphoric Acid-Catalyzed Asymmetric Hydrogenolysis of C–O Bonds",
+      "journal": "JACS",
+      "date": "2026-07-27",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c11149",
+      "titleEn": "Synthesis of Less-Substituted Borirenes Enabled by a Crystalline Arylhalohydroborane Reagent",
+      "journal": "JACS",
+      "date": "2026-08-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c11244",
+      "titleEn": "Programmable Triple Functionalization of Benzenes by Merging Dearomative Functionalization and Skeletal Editing",
+      "journal": "JACS",
+      "date": "2026-07-22",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c11300",
+      "titleEn": "Controlled Synthesis of Chiral β-Chloramines and Aziridines via an Organo- and Biocatalytic Cascade",
+      "journal": "JACS",
+      "date": "2026-07-13",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c11380",
+      "titleEn": "Substituent Control of Peri- and Regioselectivity in Enantioselective Aminocatalyzed Cycloadditions of Tropone Derivatives",
+      "journal": "JACS",
+      "date": "2026-07-28",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c11390",
+      "titleEn": "Enantioselective and Divergent Synthesis of Propargylamides and Allenamides from Alkynyl Diazoketones and Anilines via Organocatalytic Wolff Rearrangements",
+      "journal": "JACS",
+      "date": "2026-09-05",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c11534",
+      "titleEn": "Stereoselective C2′-Alkylation of Nucleosides Enabled by Electrochemical Ni-Catalyzed C(sp3)–C(sp3) Cross-Coupling",
+      "journal": "JACS",
+      "date": "2026-09-08",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c11571",
+      "titleEn": "Controlled Precursor Differentiation Enables Palladium-Catalyzed Divergent Carbonylation of Cyclobutenols",
+      "journal": "JACS",
+      "date": "2026-07-17",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c12130",
+      "titleEn": "Synthesis of Mucononitriles by a pH-Dependent Periodate Oxidative Cleavage and Their Unconventional Cyclization to Pyridines",
+      "journal": "JACS",
+      "date": "2026-08-25",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c12383",
+      "titleEn": "Thiophenol-Based Designer Enzymes for Asymmetric Hydrogen/Deuterium Atom Transfer",
+      "journal": "JACS",
+      "date": "2026-09-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c12391",
+      "titleEn": "Enantioselective Decarboxylative Synthesis of Chiral α-Silylamines and α-Germylamines",
+      "journal": "JACS",
+      "date": "2026-08-28",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c12509",
+      "titleEn": "Alkyl-to-Alkyl Palladium Migration Enables Remote C–C Bond Formation",
+      "journal": "JACS",
+      "date": "2026-08-24",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c12593",
+      "titleEn": "Total Synthesis of (±)-Stemocurtisine via Catalytic Carbonylation",
+      "journal": "JACS",
+      "date": "2026-08-25",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c12595",
+      "titleEn": "Direct Decarboxylative Borylation via Radical-Organometallic Relay",
+      "journal": "JACS",
+      "date": "2026-08-21",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c12740",
+      "titleEn": "Copper-Catalyzed Late-Stage C(sp3)–H Amination of N-Terminal Glycine Peptides with Secondary Alkylamines",
+      "journal": "JACS",
+      "date": "2026-09-12",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c12914",
+      "titleEn": "The Catalytic Asymmetric Alkylation of Olefins with Alcohol Derivatives",
+      "journal": "JACS",
+      "date": "2026-08-17",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c12963",
+      "titleEn": "Concise Asymmetric Total Synthesis of (−)-Cribrostatin 4 via Development of a Rh-Catalyzed Asymmetric Hydrogenation of 2,5-Diketopiperazine-Derived Enamides",
+      "journal": "JACS",
+      "date": "2026-08-24",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c12973",
+      "titleEn": "A Cu Single-Atom Catalyst as an Intrinsic Hydrogen Atom Transfer Mediator for Electrooxidation of C(sp³)–H Bonds",
+      "journal": "JACS",
+      "date": "2026-08-17",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c12994",
+      "titleEn": "Local pH Control Promotes Oxygen-Atom Transfer Electrosynthesis",
+      "journal": "JACS",
+      "date": "2026-09-04",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c13015",
+      "titleEn": "Total Synthesis and Structural Confirmation of Curcusone I",
+      "journal": "JACS",
+      "date": "2026-08-06",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c13556",
+      "titleEn": "Cobalt-Catalyzed, Aminoquinoline-Directed Functionalization of Nonactivated C(sp³)–H Bonds under Mild Conditions",
+      "journal": "JACS",
+      "date": "2026-09-03",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c13855",
+      "titleEn": "Abstracting Complementarity for the Design of Stereoselective Acid Catalysts",
+      "journal": "JACS",
+      "date": "2026-09-09",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c13866",
+      "titleEn": "General C(sp3)–C(sp3) Cross-Coupling of Primary Amines via in Situ Diazene Formation",
+      "journal": "JACS",
+      "date": "2026-08-17",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c14390",
+      "titleEn": "Copper-Catalyzed Enantioselective Vinylogous Hydroxylation with Nitrosobenzene",
+      "journal": "JACS",
+      "date": "2026-08-06",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c14447",
+      "titleEn": "Rewiring the Target Landscape of Bioactive Natural Products by Photocatalytic Single-Atom Editing",
+      "journal": "JACS",
+      "date": "2026-09-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c14548",
+      "titleEn": "Nickel-Electrocatalyzed Anodic Enantioselective Acyloxylation and Cathodic Deacyloxylation of C–O Bonds",
+      "journal": "JACS",
+      "date": "2026-08-31",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c14940",
+      "titleEn": "Cobalt-Catalyzed Enantioselective Intermolecular C–H Carboamination with Racemic Allenes",
+      "journal": "JACS",
+      "date": "2026-09-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/jacs.6c14965",
+      "titleEn": "Potassium Amide-Promoted Direct Synthesis of α-Aryl Nitriles from α-Aryl Alkenes",
+      "journal": "JACS",
+      "date": "2026-09-01",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41586-026-10897-7",
+      "titleEn": "Selectivity emerges from indiscriminate photoreduction",
+      "journal": "Nature",
+      "date": "2026-07-15",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41586-026-10930-9",
+      "titleEn": "Pyridoxal photoenzymes for asymmetric radical–radical cross-couplings",
+      "journal": "Nature",
+      "date": "2026-07-27",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41586-026-10931-8",
+      "titleEn": "Entangled dual-site migration through boracycle rearrangement",
+      "journal": "Nature",
+      "date": "2026-07-28",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41586-026-10933-6",
+      "titleEn": "Synthesis of pyrroles from isoxazoles by an O-to-C skeletal edit",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41586-026-10991-w",
+      "titleEn": "Phosphine-mediated azine C–H couplings with water and ammonia",
+      "journal": "Nature",
+      "date": "2026-08-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41586-026-11006-4",
+      "titleEn": "Positional isomerisation of pyridine via nitrogen transposition",
+      "journal": "Nature",
+      "date": "2026-08-17",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41586-026-11009-1",
+      "titleEn": "Programmable remodelling of carbon–nitrogen connectivity in amines",
+      "journal": "Nature",
+      "date": "2026-08-17",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41586-026-11043-z",
+      "titleEn": "Dialkyl ether synthesis through heteroatom homolytic substitution",
+      "journal": "Nature",
+      "date": "2026-08-20",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41586-026-11091-5",
+      "titleEn": "Ketone homologation via palladium-catalysed decarboxylative rearrangement",
+      "journal": "Nature",
+      "date": "2026-09-03",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41929-026-01557-0",
+      "titleEn": "Multifunctional chiral bis(amidine) organocatalysts enable stereoselective synthesis of phosphorothioate oligonucleotides",
+      "journal": "Nature Catalysis",
+      "date": "2026-08-05",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41929-026-01560-5",
+      "titleEn": "Rapid screening platform for peptide prenyltransferases to diversify pseudo-natural prenylated peptides",
+      "journal": "Nature Catalysis",
+      "date": "2026-07-01",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41929-026-01576-x",
+      "titleEn": "A tailored CoA ligase–N-acyltransferase cascade for on-DNA amide bond formation gives access to broad substrate scope",
+      "journal": "Nature Catalysis",
+      "date": "2026-07-17",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41929-026-01587-8",
+      "titleEn": "Protein-confined imidazolium intermediates enable diverse biocatalytic C–C and C–N bond formations",
+      "journal": "Nature Catalysis",
+      "date": "2026-07-31",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41929-026-01600-0",
+      "titleEn": "Anti-Markovnikov alkene hydroalkylation via iron photocatalysis",
+      "journal": "Nature Catalysis",
+      "date": "2026-09-15",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41557-026-02195-6",
+      "titleEn": "Genetically targeted photocatalytic organic dyes for spatiotemporally controlled organic synthesis in specific living cells",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-08",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41557-026-02204-8",
+      "titleEn": "Programmable arene ring opening unlocks the diversification of phenols",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-14",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41557-026-02206-6",
+      "titleEn": "Electrophilic amination-induced 1,2-boronate migration for the modular synthesis of β-amino boronic esters",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-13",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41557-026-02212-8",
+      "titleEn": "Highly chemoselective access to alkyl-sulfur compounds via N2 extrusion of alkyl hydrazines",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-22",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41557-026-02213-7",
+      "titleEn": "Oxetane-to-azetidine skeletal editing",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-13",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41557-026-02214-6",
+      "titleEn": "A versatile strategy for oligonucleotide functionalization via on-support phosphitylation",
+      "journal": "Nature Chemistry",
+      "date": "2026-07-22",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41557-026-02224-4",
+      "titleEn": "Nitrene generation and transfer for unnatural biosynthesis in living cells",
+      "journal": "Nature Chemistry",
+      "date": "2026-08-18",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41557-026-02231-5",
+      "titleEn": "Regiospecific α-arylation of diverse carbonyl compounds using an organobismuth transporter",
+      "journal": "Nature Chemistry",
+      "date": "2026-08-18",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41557-026-02233-3",
+      "titleEn": "Modulating endergonic triplet photosensitization for cycloadditions between bicyclo[1.1.0]butanes and alkenes",
+      "journal": "Nature Chemistry",
+      "date": "2026-08-18",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41557-026-02238-y",
+      "titleEn": "Programmable regiodivergent light-driven cyclization of acyclic 1,5-dienes unlocks rigid bicyclic architectures",
+      "journal": "Nature Chemistry",
+      "date": "2026-08-27",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41557-026-02242-2",
+      "titleEn": "Programmable alkene skeleton construction via switchable radical and organometallic sorting",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-01",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41467-026-74319-y",
+      "titleEn": "Catalyst-controlled site-selective dehydrogenation, a stepping stone for C–H oxidations in complex terpenes synthesis",
+      "journal": "Nature Communications",
+      "date": "2026-07-14",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41467-026-74378-1",
+      "titleEn": "Copper-catalyzed enantioselective allylation of cyclic anhydrides for generation of multiple chiral centers",
+      "journal": "Nature Communications",
+      "date": "2026-08-26",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41467-026-75059-9",
+      "titleEn": "Intracellular assembly of artificial enzymes for cytoplasmic enantioselective Mannich reactions",
+      "journal": "Nature Communications",
+      "date": "2026-07-02",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41467-026-76125-y",
+      "titleEn": "Enantioselective synthesis of ring-constrained biaryls via a twist-expand-seal strategy",
+      "journal": "Nature Communications",
+      "date": "2026-07-27",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41467-026-76222-y",
+      "titleEn": "Divergent concerted and stepwise cycloadditions via enantioselective cross-conjugated iminium-ion catalysis",
+      "journal": "Nature Communications",
+      "date": "2026-08-03",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41467-026-76869-7",
+      "titleEn": "Data-driven construction of an imine reductase library capable of broad-scope reductive amination at equimolar substrate concentrations",
+      "journal": "Nature Communications",
+      "date": "2026-08-22",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41467-026-77436-w",
+      "titleEn": "Catalytic Asymmetric Spiroannulation to Access Polycyclic Spiro Enones via Transient Axial-to-Point Chirality Induction and Transfer",
+      "journal": "Nature Communications",
+      "date": "2026-09-12",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s41467-026-77739-y",
+      "titleEn": "Difunctionalization of unsaturated hydrocarbons via EDA complexes to access pentafluorosulfanyl thioethers",
+      "journal": "Nature Communications",
+      "date": "2026-09-14",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s44160-026-01096-3",
+      "titleEn": "Hyperspace exploration using robotics for discovery of mechanistically distinct transformations...",
+      "journal": "Nature Synthesis",
+      "date": "2026-07-02",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s44160-026-01121-5",
+      "titleEn": "Ferricyanide-mediated direct ligation of peptide hydrazides in neutral water",
+      "journal": "Nature Synthesis",
+      "date": "2026-07-24",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s44160-026-01143-z",
+      "titleEn": "Traceless sortase ligation for chemical protein synthesis",
+      "journal": "Nature Synthesis",
+      "date": "2026-08-20",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s44160-026-01144-y",
+      "titleEn": "Access to all stereoisomers of chiral alcohols with multiple stereocentres enabled by machine learning-empowered protein engineering",
+      "journal": "Nature Synthesis",
+      "date": "2026-08-21",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1038/s44160-026-01147-9",
+      "titleEn": "Enantioselective synthesis of chiral 2-azaspiro[3.3]heptanes and their application as piperidine bioisosteres",
+      "journal": "Nature Synthesis",
+      "date": "2026-09-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c01934",
+      "titleEn": "Lewis Acid-Catalyzed Alkoxylation/1,3-Nitrogen Migration/Reduction Cascade for Stereoselective Synthesis of 3-Aminotetrahydrofuran",
+      "journal": "Organic Letters",
+      "date": "2026-07-09",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c01984",
+      "titleEn": "NHC-Catalyzed Asymmetric Photoinduced [4 + 2] Cycloaddition: Access to Chiral Spiro[oxindole-3,4′-pyrano[2,3-c]pyrazoles]",
+      "journal": "Organic Letters",
+      "date": "2026-07-13",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02049",
+      "titleEn": "Total Syntheses of BE-54238A and -B",
+      "journal": "Organic Letters",
+      "date": "2026-07-03",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02063",
+      "titleEn": "Organophosphine-Promoted Decarbynylative Hydrocarbenylation of the Carbon–Carbon Triple Bond",
+      "journal": "Organic Letters",
+      "date": "2026-07-03",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02081",
+      "titleEn": "Total Synthesis of (+)-Psychotrimine and Formal Synthesis of (+)-Psychotetramine via Late-Stage Ni(II)-Photoredox N-Arylation",
+      "journal": "Organic Letters",
+      "date": "2026-08-17",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02237",
+      "titleEn": "Photocatalytic Annulation of Primary Amines to δ-Lactams",
+      "journal": "Organic Letters",
+      "date": "2026-07-17",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02266",
+      "titleEn": "Ultrafast Access to Indole-Fused Isocoumarin with Tunable Emission via Cascade Dual C–H/C–H Cross-Coupling",
+      "journal": "Organic Letters",
+      "date": "2026-07-13",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02300",
+      "titleEn": "Halogen-Bonding Complexes of Iodonium Ylides for Halogen Atom Transfer: C–H Alkylation of Heterocycles",
+      "journal": "Organic Letters",
+      "date": "2026-07-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02319",
+      "titleEn": "Generation of Carbon and Phosphine Stereocenters via Cobaltaphotoredox-Catalyzed Enantioselective C–H Annulation",
+      "journal": "Organic Letters",
+      "date": "2026-07-01",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02323",
+      "titleEn": "Total Synthesis of Voratin C: Formation of the [6,5]-Spiroketal Core through Acid-Mediated Epoxide Cascade Opening",
+      "journal": "Organic Letters",
+      "date": "2026-07-02",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02329",
+      "titleEn": "Amine-Enabled Electron Donor–Acceptor Complex Catalysis for Cyclopropanation",
+      "journal": "Organic Letters",
+      "date": "2026-07-02",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02331",
+      "titleEn": "Total Synthesis and Structural Revision of Bonnevillamides B and C",
+      "journal": "Organic Letters",
+      "date": "2026-07-09",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02347",
+      "titleEn": "Pd-Catalyzed Selective Alkylation of 2-Alkynyl Allyl Ethers with Hydrazones via HOME-Chemistry",
+      "journal": "Organic Letters",
+      "date": "2026-07-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02348",
+      "titleEn": "Cobalt-Photoredox-Catalyzed C–H Annulation of N-Aryl Benzamides with 2,5-Dihydrofuran: Double Stereo Induction",
+      "journal": "Organic Letters",
+      "date": "2026-08-19",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02436",
+      "titleEn": "Total Syntheses and Structural Revision of Menominins A and B",
+      "journal": "Organic Letters",
+      "date": "2026-08-19",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02438",
+      "titleEn": "Synthesis of 9-(Piperidin-3-yl)purine Derivatives via [4+2] Cycloaddition of Aza-π-allylpalladium 1,4-Dipole",
+      "journal": "Organic Letters",
+      "date": "2026-07-09",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02458",
+      "titleEn": "Total Synthesis of the Proposed Structure of Cyclodepsipeptide Menominin B and Its Structural Revision",
+      "journal": "Organic Letters",
+      "date": "2026-07-20",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02463",
+      "titleEn": "Sulfonamide-Controlled Pd(II)-Catalyzed [5+2] Rollover Annulation to Access (Hetero)pyrido-Fused 1-Benzazepines",
+      "journal": "Organic Letters",
+      "date": "2026-07-27",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02490",
+      "titleEn": "Photocatalytic Synthesis of Indene Carbohydrazides via Skeletal Editing of Cyclic α-Diazo Ketones",
+      "journal": "Organic Letters",
+      "date": "2026-07-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02503",
+      "titleEn": "Cobalt-Catalyzed Regioselective Deoxygenative Triborylation of α,β-Unsaturated Aldehydes",
+      "journal": "Organic Letters",
+      "date": "2026-07-23",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02511",
+      "titleEn": "S-Aminodibenzo[b]thiophenium Salts as Precursors for the Photoredox-Catalyzed Generation of Sulfamoyl Radicals",
+      "journal": "Organic Letters",
+      "date": "2026-07-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02520",
+      "titleEn": "Iron-Catalyzed Regioselective Phosphorylation of trans-Vicinal Diols in Glycosides",
+      "journal": "Organic Letters",
+      "date": "2026-07-09",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02527",
+      "titleEn": "Palladium-Catalyzed Unsymmetrical bis-Allylation of Active Methylene Compounds Using Vinyl Sulfoxonium Ylides and Allyl Esters",
+      "journal": "Organic Letters",
+      "date": "2026-07-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02530",
+      "titleEn": "Palladium-Catalyzed (4 + 3) Cycloadditions of Salicylimines and 1,4-Enynes: Access to Benzazepines",
+      "journal": "Organic Letters",
+      "date": "2026-07-13",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02537",
+      "titleEn": "Photocatalytic Remote Radical-Polar Crossover Reaction: Access of Organofluorine Compounds via 1,2-Carbonyl Migration",
+      "journal": "Organic Letters",
+      "date": "2026-07-08",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02545",
+      "titleEn": "Directed Heterodimerization: Total Synthesis of (−)-Folicangine, (−)-Voafolidine, (−)-Isovoafolidine, and (−)-Tabernaesine B",
+      "journal": "Organic Letters",
+      "date": "2026-07-17",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02560",
+      "titleEn": "Total Synthesis of (±)-Caryopincaolide A",
+      "journal": "Organic Letters",
+      "date": "2026-08-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02578",
+      "titleEn": "Deacylative SN2′-Type Alkylation of Monochloro- and gem-Dichlorocyclobutenones Mediated by Pro-aromatic Intermediates",
+      "journal": "Organic Letters",
+      "date": "2026-07-25",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02588",
+      "titleEn": "E-Selective Iodobis(trifluoromethyl)carbinolation of Arylalkynes Enabled by Red or Green Light Irradiation",
+      "journal": "Organic Letters",
+      "date": "2026-07-08",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02617",
+      "titleEn": "Integrated Chemoenzymatic Synthesis of Dolabellane-Type Diterpenes",
+      "journal": "Organic Letters",
+      "date": "2026-07-14",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02629",
+      "titleEn": "Enantioselective Total Synthesis of (−)-Verarine via Late-Stage Bond Ablation",
+      "journal": "Organic Letters",
+      "date": "2026-08-21",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02634",
+      "titleEn": "Asymmetric Synthesis of Uncinatone, Bracteatum A, Trichotomone F, and Caryopterisoid C",
+      "journal": "Organic Letters",
+      "date": "2026-07-30",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02641",
+      "titleEn": "Photoinduced Regioselective Sulfonylation/Cyclization of N-Cinnamylenamides toward Sulfonylated Tetrahydropyridines via Catalytic Electron Donor–Acceptor Complexes",
+      "journal": "Organic Letters",
+      "date": "2026-07-03",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02670",
+      "titleEn": "Total Synthesis of the Proposed Structure of Threoglucin A",
+      "journal": "Organic Letters",
+      "date": "2026-07-16",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02695",
+      "titleEn": "Access to Functionalized Isocoumarin Via Palladium-Catalyzed Tandem Heck Cyclization/Lactonization",
+      "journal": "Organic Letters",
+      "date": "2026-07-15",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02705",
+      "titleEn": "Photoinduced Pyridine N-Oxide Catalysis for C–H Alkylation of Azauracils and Quinoxalinones with Alkyl Boronic Acids",
+      "journal": "Organic Letters",
+      "date": "2026-08-20",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02732",
+      "titleEn": "Photo/Cerium Co-Catalyzed Hydroalkylation of Alkynes Via Decarboxylative Ring-Opening of Cyclic Carboxylic Acids",
+      "journal": "Organic Letters",
+      "date": "2026-07-08",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02820",
+      "titleEn": "Ring-Retentive SN2′-Type Alkylation of gem-Dichlorocyclobutenones Enabled by Alkene-to-Radical Relay",
+      "journal": "Organic Letters",
+      "date": "2026-07-21",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02883",
+      "titleEn": "Synthesis of Bispidine–Isoxazolidine-Fused Multicyclic Scaffolds via Nitrone [3+2] Cycloaddition: Toward “Hetero-Lupine Alkaloids”",
+      "journal": "Organic Letters",
+      "date": "2026-09-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02887",
+      "titleEn": "Kinetic Resolution of α,β-Unsaturated Sulfoxides via Rh-Catalyzed Asymmetric Hydrogenation",
+      "journal": "Organic Letters",
+      "date": "2026-08-02",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02907",
+      "titleEn": "Asymmetric Total Synthesis of Fleminchalcone C: A Tyrosinase Inhibitor from Flemingia philippinensis",
+      "journal": "Organic Letters",
+      "date": "2026-07-25",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02944",
+      "titleEn": "Photoredox-Catalyzed Single-Carbon Insertion for De Novo Indene Synthesis from Tetrasubstituted Alkenes",
+      "journal": "Organic Letters",
+      "date": "2026-07-30",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02945",
+      "titleEn": "Enantioselective Total Synthesis of Rhodocoranes C, D, and E by Chiral Lithium Amide Alkylation and Gold-Catalyzed Spirocyclization",
+      "journal": "Organic Letters",
+      "date": "2026-07-29",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03001",
+      "titleEn": "Photoinduced Palladium-Catalyzed Cross-Coupling of Chloroacetamides with Alkenes and Heteroarenes",
+      "journal": "Organic Letters",
+      "date": "2026-09-05",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03039",
+      "titleEn": "Strain-Release-Driven Ring Opening of Vinyl-Azabicyclobutanes: A Platform for Allylic Functionalization",
+      "journal": "Organic Letters",
+      "date": "2026-09-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03062",
+      "titleEn": "Hydrogen Atom Transfer-Triggered Enantioselective Hydroalkylation of 1,3-Enynes to Chiral Allenes",
+      "journal": "Organic Letters",
+      "date": "2026-07-31",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03082",
+      "titleEn": "Photoredox-Catalyzed Radical Hexafluoroisopropoxylation of Arenes and Heteroarenes",
+      "journal": "Organic Letters",
+      "date": "2026-08-06",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03083",
+      "titleEn": "Photoredox-Catalyzed Trifunctionalization of β,γ-Unsaturated Ketones Enabled by Four-Component 1,2-Carbonyl Migration/Radical-Polar Crossover Cascade",
+      "journal": "Organic Letters",
+      "date": "2026-09-03",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03157",
+      "titleEn": "Biomimetic Total Syntheses of Dixiamycins A, B, and C via Riboflavin-Catalyzed Oxidative C–N and N–N Bond Formations",
+      "journal": "Organic Letters",
+      "date": "2026-08-26",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03168",
+      "titleEn": "Lewis Acid Catalyzed Solvent Switching Enabled Diastereodivergent Hydroimination of Bicyclo[1.1.0]butanes",
+      "journal": "Organic Letters",
+      "date": "2026-09-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03173",
+      "titleEn": "Formal Total Synthesis of (±)-Isoalantolactone",
+      "journal": "Organic Letters",
+      "date": "2026-08-19",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03180",
+      "titleEn": "Palladium-Catalyzed Direct β-C(sp3)–H Hydroxylation of Aliphatic Amides with Aqueous H2O2",
+      "journal": "Organic Letters",
+      "date": "2026-09-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03204",
+      "titleEn": "Photocatalytic [3 + 2] Annulation of Diazoketones with Enamides via Triplet Carbene Transfer",
+      "journal": "Organic Letters",
+      "date": "2026-09-02",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03213",
+      "titleEn": "Nickel-Catalyzed Strain-Release Alkyl–Alkyl Cross-Coupling of N-Chlorocyclopropamides with Tertiary α-Bromo Esters",
+      "journal": "Organic Letters",
+      "date": "2026-09-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03216",
+      "titleEn": "Photoredox-Enabled Difluoromethylation Cyclization and Quinoxalin-2(1H)-one Integration: Access to gem-Difluoro-Quinolines",
+      "journal": "Organic Letters",
+      "date": "2026-09-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03259",
+      "titleEn": "Micro Water-Initiated and Cu(OTf)2-Catalyzed Oxygen Transfer-Insertion-Mannich-Type Reaction of α-Carbonyl Diazos with Benzo-N,O-acetals",
+      "journal": "Organic Letters",
+      "date": "2026-09-04",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03265",
+      "titleEn": "Whole-Cell LkADH-Catalyzed Asymmetric Reduction Enables Direct Access to Cyclohexylidene Axially Chiral Alcohols",
+      "journal": "Organic Letters",
+      "date": "2026-09-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03293",
+      "titleEn": "PIII-Chelation-Enabled Ni(0)-Catalyzed Alkenylation of Nonacidic C–H in Biarylphosphines with Alkynes",
+      "journal": "Organic Letters",
+      "date": "2026-09-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03295",
+      "titleEn": "Dehydroxylative Cross-Electrophile Couplings of 4-Hydroxypyridines with Disulfides for Pyridyl Thioether Synthesis",
+      "journal": "Organic Letters",
+      "date": "2026-09-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03299",
+      "titleEn": "Asymmetric Synthesis of Sulfur-Containing Quaternary Stereocenters via Dual Nickel/Photoredox Synergistic Catalysis",
+      "journal": "Organic Letters",
+      "date": "2026-09-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03300",
+      "titleEn": "Rhodium-Catalyzed Three-Component C(sp3)–H Activation of 8-Methyl Quinolines with Diazo Compounds and Formaldehyde/Formaldimine to Access Dual C(sp3)–C(sp3) Bonds",
+      "journal": "Organic Letters",
+      "date": "2026-09-12",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03308",
+      "titleEn": "One-Pot Reaction of α-Diazo Phosphonates via Iodine-Catalyzed Cascade Radical Aerobic Oxidation and C–P Bond Cleavage",
+      "journal": "Organic Letters",
+      "date": "2026-08-27",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03325",
+      "titleEn": "Direct Synthesis of 1,2-Benzoisoxazol-3-amines from 2-Fluorobenzonitriles with Hydroxylamine Hydrochloride",
+      "journal": "Organic Letters",
+      "date": "2026-09-04",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03333",
+      "titleEn": "Sterically Congested 2,2-Dimethylphenylacetate Glycosyl Donors for Versatile Protecting-Group Manipulations and Orthogonal Glycosylations",
+      "journal": "Organic Letters",
+      "date": "2026-09-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03347",
+      "titleEn": "Aminohalogenation of Alkenes Enabled by I(I)/I(III) Catalysis",
+      "journal": "Organic Letters",
+      "date": "2026-09-12",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03348",
+      "titleEn": "Photocatalytic Synthesis of Medium-Sized Lactams via Cascade Ring Expansion Reaction of Unstrained Cyclic Amines with NHC-Borane",
+      "journal": "Organic Letters",
+      "date": "2026-09-05",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03352",
+      "titleEn": "Lanthanum-Catalyzed Skeletal Editing of Cycloalkanols: Oxidative C–C Cleavage to 1,n-Dicarbonyls",
+      "journal": "Organic Letters",
+      "date": "2026-09-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03389",
+      "titleEn": "Photoredox/Cobalt-Catalyzed SO2-Retaining Truce–Smiles Rearrangement Induced by Hydrogen Atom Transfer (HAT)",
+      "journal": "Organic Letters",
+      "date": "2026-09-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03399",
+      "titleEn": "Remote Quaternary Stereocenter Construction toward Crinine-Type Alkaloids Via Chiral Organoiodine-Mediated Biomimetic Oxidative para-Dearomative C–C Coupling",
+      "journal": "Organic Letters",
+      "date": "2026-09-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03438",
+      "titleEn": "Rh(III)-Catalyzed Sequential Intermolecular [4 + 2] Cycloadditions toward Functionalized Indeno[1,2-c]isoquinolines",
+      "journal": "Organic Letters",
+      "date": "2026-09-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03439",
+      "titleEn": "Remote Generation of Pyramidalized N–N Axial Chirality via a Copper-Catalyzed Friedel–Crafts Reaction",
+      "journal": "Organic Letters",
+      "date": "2026-09-02",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03445",
+      "titleEn": "Access to Structurally Diverse 1-Boraphenalenes via the Nucleophilic Hydroboration Reaction",
+      "journal": "Organic Letters",
+      "date": "2026-09-07",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03460",
+      "titleEn": "Regio- and Chemoselective 1,2-Reduction of Quinolines Mediated by Borane and a Base",
+      "journal": "Organic Letters",
+      "date": "2026-09-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03461",
+      "titleEn": "Sulfonylation of Cyclic Allylborates with DABSO: Synthesis of Allylic Sulfones Having an Allylic Boronate Moiety",
+      "journal": "Organic Letters",
+      "date": "2026-09-09",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03469",
+      "titleEn": "Divergent Three-Component Assembly of Difluoromethyl 1,3,4-Oxadiazoles",
+      "journal": "Organic Letters",
+      "date": "2026-09-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03484",
+      "titleEn": "Preparation of Alkyl N-Alkylphosphonamidates by the Microwave-Assisted Selective Monoaminolysis of Dialkyl Phosphites",
+      "journal": "Organic Letters",
+      "date": "2026-09-09",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03485",
+      "titleEn": "Oxetanyl Trichloroacetimidates Enable a General Synthesis of 3-Aryloxetane 3-carboxylic Acids",
+      "journal": "Organic Letters",
+      "date": "2026-09-01",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03508",
+      "titleEn": "Tapping Water as an Oxygen Source: Visible-Light-Driven Synthesis of 4H-Pyrans from 5-Alkynyl Ketones and Sulfonyl Chlorides",
+      "journal": "Organic Letters",
+      "date": "2026-09-12",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03521",
+      "titleEn": "Rh(I)/Bisoxazolinephosphine-Catalyzed Regio- and Enantioselective Allylation of Indenes",
+      "journal": "Organic Letters",
+      "date": "2026-09-08",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03526",
+      "titleEn": "Highly Stereoselective α-Glycosylation by Acid–Base Catalysis with the Help of Two Additives: The Counterion of the Acid and a Heterocyclic Base",
+      "journal": "Organic Letters",
+      "date": "2026-09-09",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03536",
+      "titleEn": "Visible-Light-Mediated Tandem Heck-Type Arylation/[4+2] Electrocyclization Process to Access 9,10-Dihydronaphthalene",
+      "journal": "Organic Letters",
+      "date": "2026-09-12",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03543",
+      "titleEn": "Conformational Locking Enables Chemoselective Direct 2-Deoxyglycosylation of C-4 Equatorial Glycals under Bi-Catalysis",
+      "journal": "Organic Letters",
+      "date": "2026-09-12",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03561",
+      "titleEn": "Unlocking the Latent Dienophile Reactivity of Neutral Ketimines through Ketimine–Enamine Tautomerism: A Diastereoselective Povarov Reaction between Two Neutral Imines",
+      "journal": "Organic Letters",
+      "date": "2026-09-09",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03562",
+      "titleEn": "Direct C2 Acylation of Free (N–H) Indoles Enabled by Pd(II)/Norbornene Cooperative Catalysis",
+      "journal": "Organic Letters",
+      "date": "2026-09-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03564",
+      "titleEn": "Halogen Sources for the Controlled Dihalotrifluoroethoxylation and Dihalogenation of Alkynylsilanes in a Trifluoroethanol Aqueous Solution",
+      "journal": "Organic Letters",
+      "date": "2026-09-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03567",
+      "titleEn": "Polysubstituted Fluoroalkylalkene Formation through Photoredox/Copper Dual Catalysis",
+      "journal": "Organic Letters",
+      "date": "2026-09-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03604",
+      "titleEn": "Heteroarylation of Functionalized Alkenes via Hexafluoroisopropanol-Assisted Redox Activation of Areneazo-2-(2-nitro)propanes",
+      "journal": "Organic Letters",
+      "date": "2026-09-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03628",
+      "titleEn": "Synthesis of Axially and Centrally Chiral Alkylidenecyclobutanes Enabled by Catalytic Enantioselective Allylboration",
+      "journal": "Organic Letters",
+      "date": "2026-09-12",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03651",
+      "titleEn": "A General Method to Prepare α,β-Dehydroamino Acid Esters from the Addition of β-Ketoesters to Nitrosobenzenes",
+      "journal": "Organic Letters",
+      "date": "2026-09-10",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03712",
+      "titleEn": "Water-Phase Synthesis of 2,5-Methanobenzo[d][1,3,6]oxadiazocine with Low Catalyst Loading",
+      "journal": "Organic Letters",
+      "date": "2026-09-11",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03773",
+      "titleEn": "Chiral Boron Complex-Catalyzed Asymmetric [2π+2σ] Cycloaddition of β-Fluoroalkyl-α,β-Unsaturated Ketones with Bicyclo[1.1.0]butanes",
+      "journal": "Organic Letters",
+      "date": "2026-09-12",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1126/science.aec6298",
+      "titleEn": "Catalytic Appel fluorination of alcohols with potassium fluoride",
+      "journal": "Science",
+      "date": "2026-07-30",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1126/science.aef0766",
+      "titleEn": "Vicinal disubstitution of alkyl C–X synthons via alkene radical cation generation",
+      "journal": "Science",
+      "date": "2026-08-06",
+      "addedDate": null
+    },
+    {
+      "doi": "10.1126/science.aej0194",
+      "titleEn": "Iron-catalyzed [1+1+1] cyclopropanation by sequential coupling of an ester to two carbenes",
+      "journal": "Science",
+      "date": "2026-08-27",
+      "addedDate": null
+    }
+  ]
+}
