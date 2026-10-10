@@ -23,7 +23,7 @@ assert.equal(isOctoberFullCapturePaper(lateSep),false);
 assert.equal(isOctoberFullCapturePaper(regular),true);
 assert.equal(shouldShowDailyNew(preJuly,recentDay),false);
 assert.equal(shouldShowDailyNew(july,recentDay),false);
-assert.equal(shouldShowDailyNew(lateSep,recentDay),true); // normal newly admitted remains distinct
+assert.equal(shouldShowDailyNew(lateSep,recentDay),false); // late July–September DOI is retrospective
 assert.equal(shouldShowDailyNew(regular,recentDay),true);
 assert.equal(isHotLandingEligible(july,recentDay),false);
 assert.equal(isHotLandingEligible(preJuly,recentDay),false);
