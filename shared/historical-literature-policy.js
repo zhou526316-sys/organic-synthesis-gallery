@@ -31,7 +31,10 @@ export function paperMediaPolicy(paper) {
 }
 
 export function shouldShowDailyNew(paper, asOfDay) {
-  return !isHistoricalBackfill(paper)
+  // A July–September paper first catalogued in October is a retrospective
+  // correction, not a new October paper, even without an explicit old flag.
+  const lateJulySep = isJulSepPaper(paper) && day(paper?.addedDate) >= OCT_FULL_START;
+  return !isHistoricalBackfill(paper) && !lateJulySep
     && Boolean(day(paper?.addedDate) && paper.addedDate === asOfDay);
 }
 
