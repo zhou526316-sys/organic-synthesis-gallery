@@ -5086,9 +5086,7 @@ function embeddedJobDois(value) {
   function tocOnlyCaptureEligible(job) {
     var published=String(job&&job.date||''),added=String(job&&job.addedDate||'');
     return String(job&&job.mediaPolicy||'')==='toc_only'
-      &&published>='2026-07-01'&&published<='2026-09-30'
-      &&(String(job&&job.ingestionChannel||'')==='historical_backfill'
-        ||added>=RECENT_FULL_CAPTURE_CUTOFF);
+      &&published>='2026-07-01'&&published<='2026-09-30';
   }
   function recentFullCaptureEligible(job) {
     var added=String(job&&job.addedDate||'').trim(),published=String(job&&job.date||'');
