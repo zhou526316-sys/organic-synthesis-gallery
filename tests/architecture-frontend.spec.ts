@@ -616,7 +616,150 @@ test('two transient failed search transports cannot permanently demote abstract 
   await expect(page.locator('.architecture-read-limited')).toHaveCount(0);
 });
 
-test('reader-count sorting remains on static compatibility path even when D1 capability is active', async ({ page }) => {
+for (const entry of ['doi', 'edition'] as const) {
+  test(`LMCT-length indexed search is global even after a featured ${entry} deep link`, async ({ page }) => {
+    const data = fixture();
+    const queryRequests: any[] = [];
+    await stubOptionalApi(page);
+    await page.route('**/api/_healthcheck', route => route.fulfill({
+      status: 200, contentType: 'application/json', body: JSON.stringify({
+        literatureCatalogIndexShadowEnabled: true, literatureCatalogIndexReadEnabled: true,
+        literatureCatalogIndexReadPathConfigured: true, literatureCatalogIndexReadPathActive: true,
+        literatureCatalogIndexDb: true,
+      }),
+    }));
+    await page.route('**/api/literature/catalog-view', async route => {
+      const body = route.request().postDataJSON() as any;
+      queryRequests.push(body);
+      const items = data.indexedItems.slice(0, body.limit);
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+        version: 1, schemaVersion: 'literature-catalog-index-v1', enabled: true, readPathActive: true,
+        catalogId: data.catalogId, matched: data.memberCount, count: items.length, limit: body.limit,
+        hasMore: data.memberCount > items.length, nextCursor: data.memberCount > items.length ? 'fixture:next' : null,
+        sort: 'newest', items,
+      }) });
+    });
+    const base = process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174';
+    if (entry === 'edition') {
+      await page.route('**/wechat-editions/2099-01-01.json', route => route.fulfill({
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify({ id: '2099-01-01', date: '2099-01-01',
+          featuredDoi: data.archiveDoi, dois: [data.archiveDoi] }),
+      }));
+    }
+    const href = entry === 'doi'
+      ? `${base}/?doi=${encodeURIComponent(data.archiveDoi)}`
+      : `${base}/?edition=2099-01-01`;
+    await page.goto(href, { waitUntil: 'domcontentloaded' });
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
+      .toBe('architecture-v1');
+    if (entry === 'doi') {
+      await expect(page.locator('#gallery > .card').first()).toHaveAttribute('data-doi', data.archiveDoi);
+    } else {
+      await expect(page.locator('#gallery > .card.edition-featured').first()).toHaveAttribute('data-doi', data.archiveDoi);
+    }
+    await page.locator('#search').fill('LMCT');
+    await expect.poll(() => queryRequests.filter(x => x.query === 'LMCT').length, { timeout: 30000 })
+      .toBeGreaterThan(0);
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''), { timeout: 30000 })
+      .toBe('d1-index');
+    await expect(page.locator('#resultCount')).toHaveText(String(data.memberCount));
+    await expect(page.locator('#gallery > .card')).toHaveCount(Math.min(data.memberCount, RESULT_WINDOW_SIZE));
+    // The optional UserSearchController must not re-hide abstract-indexed
+    // papers simply because LMCT is absent from their visible titles.
+    await expect(page.locator('#gallery > .card:not([hidden])')).toHaveCount(Math.min(data.memberCount, RESULT_WINDOW_SIZE));
+    await expect(page.locator('#gallery > .card').first()).toHaveAttribute('data-doi', data.indexedItems[0].doi);
+    expect(queryRequests.at(-1)?.query).toBe('LMCT');
+    expect(queryRequests.at(-1)?.selectedJournals).toEqual([]);
+    expect(queryRequests.at(-1)?.addedDate).toBe('');
+  });
+}
+
+test('changing only-new and journal filters refreshes the indexed query and allows clearing all search restrictions', async ({ page }) => {
+  const data = fixture();
+  const requests: any[] = [];
+  const journal = data.indexedItems[0].journal;
+  await stubOptionalApi(page);
+  await page.route('**/api/_healthcheck', route => route.fulfill({
+    status: 200, contentType: 'application/json', body: JSON.stringify({
+      literatureCatalogIndexShadowEnabled: true, literatureCatalogIndexReadEnabled: true,
+      literatureCatalogIndexReadPathConfigured: true, literatureCatalogIndexReadPathActive: true,
+      literatureCatalogIndexDb: true,
+    }),
+  }));
+  await page.route('**/api/literature/catalog-view', async route => {
+    const body = route.request().postDataJSON() as any;
+    requests.push(body);
+    const filtered = data.indexedItems.filter(item =>
+      (!body.addedDate || item.addedDate === body.addedDate)
+      && (!body.selectedJournals?.length || body.selectedJournals.includes(item.journal)));
+    const items = filtered.slice(0, body.limit);
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+      version: 1, schemaVersion: 'literature-catalog-index-v1', enabled: true, readPathActive: true,
+      catalogId: data.catalogId, matched: filtered.length, count: items.length, limit: body.limit,
+      hasMore: filtered.length > items.length, nextCursor: filtered.length > items.length ? 'fixture:next' : null,
+      sort: 'newest', items,
+    }) });
+  });
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
+    .toBe('architecture-v1');
+  await page.locator('#search').fill('LMCT');
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''), { timeout: 30000 })
+    .toBe('d1-index');
+  await expect(page.locator('#resultCount')).toHaveText(String(data.memberCount));
+  await page.locator('#newOnly').check();
+  await expect.poll(() => requests.filter(x => x.query === 'LMCT' && x.addedDate).length, { timeout: 30000 })
+    .toBeGreaterThan(0);
+  const newestRequest = requests.filter(x => x.query === 'LMCT').at(-1);
+  expect(newestRequest.addedDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  await expect(page.locator('#clearSearchScope')).toBeVisible();
+  await page.locator('#clearSearchScope').click();
+  await expect.poll(() => requests.filter(x => x.query === 'LMCT' && !x.addedDate).length, { timeout: 30000 })
+    .toBeGreaterThanOrEqual(2);
+  await expect(page.locator('#newOnly')).not.toBeChecked();
+  await expect(page.locator('#resultCount')).toHaveText(String(data.memberCount));
+  await page.locator('.journal-picker summary').click();
+  await page.locator(`input[data-journal-option][value="${journal}"]`).check();
+  await expect.poll(() => requests.filter(x => x.query === 'LMCT' && x.selectedJournals?.includes(journal)).length, { timeout: 30000 })
+    .toBeGreaterThan(0);
+  await expect(page.locator('#clearSearchScope')).toBeVisible();
+  await page.locator('#clearSearchScope').click();
+  await expect.poll(() => requests.filter(x => x.query === 'LMCT' && x.selectedJournals?.length === 0).length, { timeout: 30000 })
+    .toBeGreaterThanOrEqual(3);
+  await expect(page.locator('#resultCount')).toHaveText(String(data.memberCount));
+});
+
+test('search entered after most-read ordering explicitly switches to indexed latest search', async ({ page }) => {
+  const data = fixture();
+  let indexed = 0;
+  await stubOptionalApi(page);
+  await page.route('**/api/_healthcheck', route => route.fulfill({ status: 200, contentType: 'application/json',
+    body: JSON.stringify({ literatureCatalogIndexShadowEnabled: true, literatureCatalogIndexReadEnabled: true,
+      literatureCatalogIndexReadPathConfigured: true, literatureCatalogIndexReadPathActive: true,
+      literatureCatalogIndexDb: true }) }));
+  await page.route('**/api/literature/catalog-view', async route => {
+    indexed += 1;
+    const body = route.request().postDataJSON() as any;
+    const items = data.indexedItems.slice(0, body.limit);
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+      version: 1, schemaVersion: 'literature-catalog-index-v1', enabled: true, readPathActive: true,
+      catalogId: data.catalogId, matched: data.memberCount, count: items.length, limit: body.limit,
+      hasMore: data.memberCount > items.length, nextCursor: 'fixture:next', sort: 'newest', items,
+    }) });
+  });
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
+    .toBe('architecture-v1');
+  await page.locator('#sort').selectOption('readers');
+  await page.locator('#search').fill('LMCT');
+  await expect(page.locator('#sort')).toHaveValue('newest');
+  await expect.poll(() => indexed, { timeout: 30000 }).toBeGreaterThan(0);
+  await expect(page.locator('#resultCount')).toHaveText(String(data.memberCount));
+  await expect(page.locator('.architecture-read-limited')).toContainText(/完整摘要|complete abstract/);
+});
+
+test('short chemistry terms remain on static reader-sort compatibility path', async ({ page }) => {
   let indexedViewRequests = 0;
   await page.route('**/api/_healthcheck', async route => {
     await route.fulfill({
@@ -639,8 +782,12 @@ test('reader-count sorting remains on static compatibility path even when D1 cap
   await stubOptionalApi(page);
   await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
   await page.locator('#sort').selectOption('readers');
-  await page.locator('#search').fill('organic');
+  // Reader-count sorting remains a compatibility-only path for two-character
+  // chemistry terms, which the current D1 trigram index cannot safely match.
+  // Longer words such as LMCT now intentionally switch to indexed discovery.
+  await page.locator('#search').fill('Ni');
   await expect.poll(async () => page.locator('#gallery > .card').count(), { timeout: 30000 }).toBeGreaterThan(0);
+  await expect(page.locator('#sort')).toHaveValue('readers');
   expect(indexedViewRequests).toBe(0);
 });
 

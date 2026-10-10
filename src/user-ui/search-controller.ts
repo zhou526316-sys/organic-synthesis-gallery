@@ -281,6 +281,9 @@ export class UserSearchController {
   }
 
   private renderSearchSummary(tokens: string[], visible: number): void {
+    const indexed = document.documentElement.dataset.catalogQueryRead === 'd1-index'
+      && document.documentElement.dataset.catalogIndexedQuery === this.fullQuery.trim().toLowerCase();
+    const fullCount = Number(this.root.querySelector<HTMLElement>('#resultCount')?.textContent || '');
     const existing = this.root.querySelector<HTMLElement>('.user-search-summary');
     if (!tokens.length) { existing?.remove(); return; }
     const summary = existing || document.createElement('div');
@@ -289,9 +292,13 @@ export class UserSearchController {
     const text = document.createElement('span');
     const prefix = this.language === 'zh' ? '搜索结果' : 'Search results';
     const windowed = Boolean(this.root.querySelector('#resultWindowControls'));
-    const suffix = this.language === 'zh'
-      ? `${windowed ? '本页 ' : ''}${visible} 篇`
-      : `${visible} papers${windowed ? ' on this page' : ''}`;
+    const suffix = indexed && Number.isSafeInteger(fullCount) && fullCount >= visible
+      ? (this.language === 'zh'
+        ? `全库匹配 ${fullCount} 篇 · 本页可见 ${visible} 篇${store.state.hideRead ? '（已隐藏已读）' : ''}`
+        : `${fullCount} indexed matches · ${visible} visible on this page${store.state.hideRead ? ' (read papers hidden)' : ''}`)
+      : this.language === 'zh'
+        ? `${windowed ? '本页 ' : ''}${visible} 篇`
+        : `${visible} papers${windowed ? ' on this page' : ''}`;
     text.append(`${prefix}：“`);
     const strong = document.createElement('strong');
     strong.textContent = this.fullQuery.trim();
@@ -306,6 +313,18 @@ export class UserSearchController {
 
   private applyFilters(cards: HTMLElement[]): void {
     const tokens = queryTokens(this.fullQuery); let visible = 0;
+    const indexed = document.documentElement.dataset.catalogQueryRead === 'd1-index'
+      && document.documentElement.dataset.catalogIndexedQuery === this.fullQuery.trim().toLowerCase();
+    // The Gallery's server index matches original abstracts and reviewed
+    // interpretations. Those strings are intentionally absent from DOM titles.
+    // The secondary user UI must never hide verified indexed results merely
+    // because their visible title does not contain the typed acronym.
+    const searchPending = this.root.querySelector<HTMLElement>('#resultCount')?.textContent?.trim() === '…';
+    if (searchPending) {
+      this.root.querySelector('.user-search-summary')?.remove();
+      this.gallery?.querySelector('.user-search-empty')?.remove();
+      return;
+    }
     for (const card of cards) {
       card.querySelector('.user-hit-reason')?.remove();
       this.clearSearchHighlights(card);
@@ -316,10 +335,11 @@ export class UserSearchController {
       const topics = card.dataset.topics || '';
       const searchable = [title, authors, topics, meta?.journal || '', meta?.doi || ''].join(' ').toLowerCase();
       const normalized = normalizeSearch(searchable);
-      const hidden = !tokens.every(token => this.expanded(token).some(term => {
+      const locallyMatched = tokens.every(token => this.expanded(token).some(term => {
         const lower = term.toLowerCase();
         return searchable.includes(lower) || normalized.includes(normalizeSearch(lower));
-      })) || (store.state.hideRead && store.isRead(id));
+      }));
+      const hidden = (!indexed && !locallyMatched) || (store.state.hideRead && store.isRead(id));
       card.hidden = hidden;
       if (hidden) continue;
       visible += 1;
@@ -336,7 +356,12 @@ export class UserSearchController {
         });
         const hit = document.createElement('div');
         hit.className = 'user-hit-reason';
-        hit.textContent = `${this.language === 'zh' ? '命中' : 'Matched'}：${reasons.join(' · ')}`;
+        const description = indexed && !locallyMatched
+          ? (this.language === 'zh'
+            ? '文献索引命中（标题、摘要或审核解读）'
+            : 'Indexed match (title, abstract, or reviewed description)')
+          : `${this.language === 'zh' ? '命中' : 'Matched'}：${reasons.join(' · ')}`;
+        hit.textContent = description;
         card.querySelector(PAPER_ACTION_ELEMENT)?.before(hit);
       }
     }

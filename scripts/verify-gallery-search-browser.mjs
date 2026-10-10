@@ -121,6 +121,9 @@ try {
           .toEqual(displayExpected);
         const displayed = await shownDois();
         assert(displayed.length === new Set(displayed).size, 'duplicate_browser_cards:' + term);
+        const hiddenDois = await page.locator('#gallery .card[data-doi][hidden]').evaluateAll(cards =>
+          cards.map(card => String(card.getAttribute('data-doi') || '').toLowerCase()));
+        assert(hiddenDois.length === 0, 'indexed_match_hidden_by_secondary_search:' + term + ':' + width + ':' + hiddenDois.join(','));
         result.checks.push({ query: term, matched: payload.matched, shown: displayed.length,
           source: 'd1-index', firstDoi: displayed[0] || null });
       }
