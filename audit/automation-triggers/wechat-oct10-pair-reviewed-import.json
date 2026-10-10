@@ -1,5 +1,5 @@
 {
-  "requestId": "wechat-2026-10-10-anie3306470-qiu-naturesyn-dual-r1-reviewed-import-source-qa2",
+  "requestId": "wechat-2026-10-10-anie3306470-qiu-naturesyn-dual-r1-reviewed-import-source-qa3",
   "requestedAt": "2026-10-10T10:02:00+08:00",
   "action": "review_and_import_oct10_daily_pair",
   "revision": "2026-10-10-r1",
@@ -17,5 +17,5 @@
   "draftOnly": true,
   "publicSendAuthorized": false,
   "nextStep": "one controlled sync_daily_draft and draft/get after this independent review import has actually passed",
-  "note": "Second source-only import attempt. Fixed non-scientific audit wording preserving corrected surname 仇友爱 and improved the SI Fig. S12 source original vector rendering via LibreOffice-based PDF to preserve COMPLETE UV-Vis traces rather than a truncated EMF export. All original chemistry source figures remain unchanged and verified. No draft/send until review gate passes."
+  "note": "Correct the review-only importer to refine only the newly staged October 10 edition JSON (not an existing repository source); full source SHA pinned to Adobe asset remains identical. Restore once-only exact science image gate; no WeChat write until source review passes."
 }
