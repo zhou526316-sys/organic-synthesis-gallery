@@ -11,6 +11,7 @@ on:
       - 'tests/private-pdf-library-source.test.mjs'
       - 'public/pdf-audit.html'
       - 'public/pdf-audit-dashboard.js'
+      - 'tests/pdf-owner-audit-dashboard-browser.mjs'
       - '.github/workflows/private-pdf-library-audit.yml'
       - '.github/workflows/private-pdf-audit-regression.yml'
   workflow_dispatch: {}
@@ -19,7 +20,7 @@ permissions:
 jobs:
   audited-contracts:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with: {persist-credentials: false}
@@ -43,6 +44,11 @@ jobs:
           test -s dist/pdf-audit.html
           test -s dist/pdf-audit-dashboard.js
           grep -F 'PDF 全库验收' dist/pdf-audit.html
+      - name: Run real browser owner-only report and export isolation cases
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.1
+          npx playwright install --with-deps chromium
+          node tests/pdf-owner-audit-dashboard-browser.mjs
       - name: Keep downstream publishing and Tencent failover separate
         run: |
           node --input-type=module -e "import fs from 'node:fs';const p=JSON.parse(fs.readFileSync('public/pdf-gateway-routing.json','utf8'));if(p.enabled!==false)process.exit(1)"
