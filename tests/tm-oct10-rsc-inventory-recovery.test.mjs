@@ -150,4 +150,48 @@ test('completed companion packet can promote figures only when labels, source an
  assert.equal(completedBodyPacket(pdf403),true);
  assert.equal(completedBodyPacket({...pdf403,reason:pdf403.reason.replace('403','200')}),false);
 });
+test('native-browser RSC listing is tried before GM, protects 403 and foreign redirects',async()=>{
+ const j={doi:'10.1039/d6sc06421c',publisher:'rsc'};
+ const listing='https://pubs.rsc.org/en/results?searchtext=10.1039%2Fd6sc06421c';
+ let requests=[],gmCalls=0,parsed=0,traces=[];
+ const html='<!doctype html><html><head></head><body><main>Verified RSC issue card</main></body></html>';
+ const c=vm.createContext({
+   URL,Number,String,Array,Promise,RegExp,Error,AbortController,setTimeout,clearTimeout,
+   location:{href:'https://pubs.rsc.org/sc/article/doi/10.1039/D6SC06421C/1364831/test'},
+   captureLiveError:x=>String(x),pushTrace:(_t,x)=>{traces.push(x);},
+   normalizeDoi:x=>String(x||'').toLowerCase(),
+   rscIssueTocCandidatesFromDocument:(_job,doc,url)=>{
+     parsed+=1;assert.ok(url===listing);assert.equal(doc.marker,'verified');
+     return [{url:'https://rscj.silverchair-cdn.com/rscj/content_public/journal/sc/pap/10.1039_d6sc06421c/1/m_d6sc06421c-ga.png',kind:'official'}];
+   },
+   DOMParser:class{parseFromString(content,format){assert.equal(format,'text/html');assert.equal(content,html);return {marker:'verified'};}},
+   fetch:async(url,opt)=>{
+     requests.push({url,opt});return {status:200,url,ok:true,
+       headers:{get:()=>String(html.length)},text:async()=>html};
+   },
+   gmRequest:async()=>{gmCalls++;throw Error('unexpected GM request');}
+ });
+ vm.runInContext(extract('rscPublisherListingHtmlCandidates'),c);
+ let rows=await c.rscPublisherListingHtmlCandidates(j,traces,listing);
+ assert.equal(rows.length,1);assert.equal(gmCalls,0);assert.equal(parsed,1);
+ assert.equal(requests.length,1);assert.equal(requests[0].opt.credentials,'same-origin');
+ assert.equal(requests[0].opt.method,'GET');
+ assert.ok(traces.some(x=>x.event==='native_browser_response'&&x.httpStatus===200));
+ c.fetch=async(url)=>({status:403,url,ok:false,headers:{get:()=>null},text:async()=>{throw Error('must not read 403')}});
+ rows=await c.rscPublisherListingHtmlCandidates(j,traces,listing);
+ assert.equal(rows.length,0);assert.equal(gmCalls,0);
+ assert.ok(traces.some(x=>x.event==='access_denied'&&/403/.test(x.message)));
+ c.fetch=async(url)=>{throw new TypeError('ordinary first-party transport unavailable');};
+ c.gmRequest=async options=>{gmCalls++;return {status:200,responseURL:listing,responseText:html};};
+ rows=await c.rscPublisherListingHtmlCandidates(j,traces,listing);
+ assert.equal(rows.length,1);assert.equal(gmCalls,1);
+ c.fetch=async()=>({status:200,url:'https://accounts.example.invalid/login',ok:true,
+   headers:{get:()=>String(html.length)},text:async()=>html});
+ const beforeParsed=parsed;
+ rows=await c.rscPublisherListingHtmlCandidates(j,traces,listing);
+ assert.equal(rows.length,0);assert.equal(parsed,beforeParsed);
+ const beforeRequests=requests.length;
+ assert.equal(await c.rscPublisherListingHtmlCandidates(j,traces,'https://publisher.attacker.invalid/en/results?doi=10.1039/d6sc06421c'),null);
+ assert.equal(requests.length,beforeRequests);
+});
 console.log('TM_OCT10_RSC_INVENTORY_REGRESSION',JSON.stringify({tests:6,productionWrites:0,publisherNetworkRequests:0}));
