@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import path from 'node:path';
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { DATA_FILES, collectPapers, assertPartition } from './pages-release-delivery.mjs';
@@ -32,7 +33,7 @@ const report={schemaVersion:1,suite:'private-pdf-library-audit-v1',ok:false,
   startedAt:new Date().toISOString(),status:'not_started'};
 function save(){
   if(!output)return;
-  fs.mkdirSync(new URL('.', 'file://'+output).pathname,{recursive:true});
+  fs.mkdirSync(path.dirname(output),{recursive:true});
   fs.writeFileSync(output,JSON.stringify(report,null,2)+'\n');
 }
 async function maintenance(command,payload){
