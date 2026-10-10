@@ -2,7 +2,7 @@ import {scanPdfFigureRescue,preparePdfOriginalCropManifest} from './pdf-vault/fi
 import {createContinuousPdfViewer} from './pdf-continuous-viewer.mjs';
 import {waitForPdfFirstPage} from './pdf-first-page-watchdog.mjs';
 import {readBoundedPdfOpenJson} from './pdf-authorize-response.mjs';
-import {liveOwnerTencentPriority} from './pdf-tencent-owner-priority.mjs';
+import {cachedOwnerHint, liveOwnerTencentPriority} from './pdf-tencent-owner-priority.mjs';
 import {
   TENCENT_PDF_ORIGIN, tencentPdfRouteEnabled, nextOwnerPdfFileOrigin,
   isMatchingOwnerPdfFileSource, isMatchingOwnerPdfFileIdentity, ownerPdfRouteLabel,
@@ -36,6 +36,7 @@ async function loadPdfEngine() {
 }
 
 const SESSION_KEY = 'organic-gallery-session-v1';
+const SESSION_USER_KEY = 'organic-gallery-session-user-v1';
 const API_BASE = 'https://api.gczhouwld.com';
 // Same deployed owner Worker, used only if the canonical API is unusually slow.
 // Never accept arbitrary redirects or a file URL from an unlisted host.
@@ -564,7 +565,10 @@ async function getPdfSource(sessionToken, mode = 'view') {
   // A public first-party manifest only enables the OPT-IN PILOT. It is never
   // an entitlement grant. The admin role must be freshly validated by the
   // real Worker through Tencent's existing /auth/session pass-through.
-  const candidate = await tencentPdfRouteEnabled(undefined, 1200,
+  let knownNonOwner = false;
+  try { knownNonOwner = cachedOwnerHint(localStorage.getItem(SESSION_USER_KEY)) === false; }
+  catch { /* missing cache is unknown; only live server may affirm owner */ }
+  const candidate = !knownNonOwner && await tencentPdfRouteEnabled(undefined, 1200,
     {ownerPriority:true});
   if (!candidate || sessionToken !== token() ||
       !await liveOwnerTencentPriority(sessionToken) || sessionToken !== token()) {
@@ -596,6 +600,7 @@ async function getPdfSource(sessionToken, mode = 'view') {
     const reason = controller.signal.aborted &&
       controller.signal.reason === 'owner_pilot_open_timeout'
         ? new Error('pdf_authorize_timeout') : error;
+    if (sessionToken !== token()) throw new Error('pdf_source_invalid');
     if (!ownerTencentTransportFailure(reason)) throw reason;
     document.documentElement.dataset.privatePdfOwnerRoute = 'cloudflare-backup';
     document.documentElement.dataset.privatePdfTencentPilotFailure =
