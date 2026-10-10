@@ -665,6 +665,9 @@ for (const entry of ['doi', 'edition'] as const) {
       .toBe('d1-index');
     await expect(page.locator('#resultCount')).toHaveText(String(data.memberCount));
     await expect(page.locator('#gallery > .card')).toHaveCount(Math.min(data.memberCount, RESULT_WINDOW_SIZE));
+    // The optional UserSearchController must not re-hide abstract-indexed
+    // papers simply because LMCT is absent from their visible titles.
+    await expect(page.locator('#gallery > .card:not([hidden])')).toHaveCount(Math.min(data.memberCount, RESULT_WINDOW_SIZE));
     await expect(page.locator('#gallery > .card').first()).toHaveAttribute('data-doi', data.indexedItems[0].doi);
     expect(queryRequests.at(-1)?.query).toBe('LMCT');
     expect(queryRequests.at(-1)?.selectedJournals).toEqual([]);
