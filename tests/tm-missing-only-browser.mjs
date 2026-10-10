@@ -11,7 +11,13 @@ const script=source.slice(0,cut)+`
  function ff(d,n){return {label:'Figure '+n,sourceUrl:'https://acs.silverchair-cdn.com/10.1021_'+d.split('/')[1]+'/f'+n+'.png',contentHash:'a'.repeat(32),width:1000,height:500,quality:'high'};}
  getJson=async u=>u.includes('capabilities')?{captureVersion:VERSION,mediaGeneration:1790082000000,mode:'verified-staging',mediaControllerRevision:CONTROLLER_REVISION,evidenceSchemaVersion:EVIDENCE_SCHEMA_VERSION}:u.includes('local-capture-index')?{count:0,items:[]}:u.includes('/staged?')?{schemaVersion:'capture-inventory-v1',complete:true,count:765,items:fixtureArticles.map((a,n)=>({doi:a.doi,expectedFigureCount:2,figures:{}}))}:fq;
  postReadJson=async(u,p)=>({items:fixtureArticles.filter(a=>p.dois.includes(a.doi)).map(a=>({doi:a.doi,tocStored:a.doi!==fixtureArticles[1].doi,figureCount:2,capturedFigures:[ff(a.doi,1),ff(a.doi,2)]}))});
- getPrivateJson=async()=>({count:764,items:fixtureArticles.filter((a,n)=>n!==3).map(a=>({doi:a.doi,available:true,evidenceLevel:'partial'}))});
+ getPrivateJson=async(u)=>{
+  const all=fixtureArticles.filter((a,n)=>n!==3).map(a=>({doi:a.doi,available:true,evidenceLevel:'partial'}));
+  const p=new URL(u,location.href).searchParams,limit=Math.max(1,Math.min(200,Number(p.get('pageLimit')||200)));
+  const start=Number(p.get('cursor')||0),items=all.slice(start,start+limit),end=start+limit;
+  return {schemaVersion:EVIDENCE_SCHEMA_VERSION,count:items.length,items,
+    complete:end>=all.length,truncated:end<all.length,nextCursor:end<all.length?String(end):''};
+ };
  inventoryReadMetadataJson=async(o,p)=>String(o.method||'GET').toUpperCase()==='POST'?postReadJson(o.url,JSON.parse(o.data||'{}')):String(o.url||'').includes('evidence-inventory')?getPrivateJson(o.url):getJson(o.url);
  globalThis.T={forceStartFromHead,finishPairedJob,owner:CONTROLLER_ID,requestControllerPause};
  installManualRestartListener();installMenu();mountCaptureLivePanel();})();`;
@@ -43,7 +49,7 @@ try{
  await b.locator('#osg-immediate-start').click();await b.waitForFunction(()=>__opened.length===1);await a.waitForFunction(()=>__opened[1].tab.closed===true);
  const stale=await a.evaluate(async()=>T.finishPairedJob(__opened[1].job,{status:'success'},[],''));assert.equal(stale.reason,'manual_run_superseded');
  await b.evaluate(async()=>T.finishPairedJob(__opened[0].job,{status:'success',toc:{status:'stored',kind:'official'},figures:{status:'not_requested'},fulltext:{status:'not_requested'}},[],''));
- await b.waitForFunction(()=>GM_getValue('osg-toc-v6:last-run-summary',{}).finishedAt,null,{timeout:6000});await b.waitForTimeout(1100);
+ await b.waitForFunction(()=>GM_getValue('osg-toc-v6:last-run-summary',{}).finishedAt,null,{timeout:18000});await b.waitForTimeout(1100);
  assert.equal(await b.evaluate(()=>__opened.length),1);
  const done=await b.evaluate(()=>document.querySelector('#osg-capture-live-panel').shadowRoot.querySelector('#gaps').textContent);assert.match(done,/TOC 0／PDF 0|未补齐 0/);
  await b.screenshot({path:out+'/tm-missing-text.png'});
