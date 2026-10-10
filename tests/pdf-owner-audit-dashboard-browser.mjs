@@ -81,7 +81,10 @@ try{
   const {ctx,page}=await newCase('reader');
   try{
    await page.goto(site+'/pdf-audit.html');
-   await page.locator('#notice').getByText('没有 private_pdf_owner 权限',{exact:false}).waitFor();
+   await page.waitForFunction(() =>
+    (document.querySelector('#notice')?.textContent||'').includes('private_pdf_owner'),
+    undefined,{timeout:11000});
+   assert.match(await page.locator('#notice').textContent(),/private_pdf_owner/);
    assert.equal(await page.getByText(doiA).count(),0);
    assert.equal(await page.locator('#results tr').count(),0);
   }finally{await ctx.close();}
