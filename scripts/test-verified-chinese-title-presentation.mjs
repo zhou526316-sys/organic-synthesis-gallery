@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, readFile, writeFile, copyFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import {gunzipSync} from 'node:zlib';
 import { applyVerifiedTitlePresentationToPages } from './apply-verified-title-presentation.mjs';
 import { applyVerifiedChineseTitlePresentationToPages,
   applyVerifiedChineseTitlePresentation, ZH_PARTS, ENGLISH_RECEIPT
@@ -72,7 +73,14 @@ try {
   for(let i=0;i<before.length;i++)assert.deepEqual(after[i],before[i],
     'protected source modified: '+originals[i]);
 
-  const members=new Set([...byDoi.keys()]);
+  const members=new Set();
+  for (const name of originals) {
+    const raw=await readFile(path.join(tmp,name),'utf8');
+    const rows=name.endsWith('.b64')
+      ? JSON.parse(gunzipSync(Buffer.from(raw.trim(),'base64')).toString('utf8'))
+      : JSON.parse(raw).papers;
+    for (const paper of rows) members.add(paper.doi.toLowerCase());
+  }
   assert.equal(members.size,938,'source fixture unexpectedly incomplete');
   const payload={supplement:updated,translationPayload:translations,receipt:report,approvedDois:members};
   const fail=p=>assert.throws(()=>applyVerifiedChineseTitlePresentation(p));
