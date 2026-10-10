@@ -186,4 +186,41 @@ def relevant_traces():
     return out[-25:]
 report["perDoiTraceSummary"]=relevant_traces()
 
+
+def focused_trace():
+    selected={
+      "10.1021/acs.joc.6c01847",
+      "10.1039/d6sc06407h",
+      "10.1039/d6gc03161g",
+    }
+    traces=d.get("traces") if isinstance(d.get("traces"),list) else []
+    result={}
+    for t in traces:
+        if not isinstance(t,dict):continue
+        doi=safe_doi(t.get("doi"))
+        if doi not in selected:continue
+        out=[]
+        for ev in t.get("trace",[]) if isinstance(t.get("trace"),list) else []:
+            if not isinstance(ev,dict):continue
+            stage=safe_enum(ev.get("stage"))
+            if not stage or not re.search(r"toc|candidate|figure|image|quality|rsc|upload|acqui|r2|filter|abstract|page",stage):continue
+            event=safe_enum(ev.get("event"))
+            row={"stage":stage,"event":event,"status":safe_enum(ev.get("status"))}
+            for name in ("candidateKind","candidateSource"):
+                value=safe_enum(ev.get(name))
+                if value:row[name]=value
+            for name in ("httpStatus","candidateScore","imageWidth","imageHeight","byteLength"):
+                v=ev.get(name)
+                if isinstance(v,(int,float)) and v>=0 and v<50000000:row[name]=int(v)
+            msg=str(ev.get("message") or "")
+            whitelisted=re.findall(r"(?:semanticImages|accepted|candidateCount|candidates|downloaded|usable|filtered|rejected|total|official|figure1|verified|discovered|stored|failed|tocCount|imageCount|scanned|valid)=\d+",msg)
+            if whitelisted:row["metrics"]=whitelisted[:10]
+            # Known reason codes only; never print arbitrary diagnostic messages.
+            codes=reason_codes(msg)
+            if codes:row["codes"]=codes
+            out.append(row)
+        result[doi]=out[-75:]
+    return result
+report["focusedTocTrace"]=focused_trace()
+
 print("TM_OCT10_BOOTSTRAP_FORENSICS "+json.dumps(report,ensure_ascii=False,separators=(",",":")),flush=True)
