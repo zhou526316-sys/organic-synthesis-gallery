@@ -186,6 +186,7 @@ test('five inventory layers never start more than two concurrent network tasks',
    WORKER:'https://api.test',
    EVIDENCE_INVENTORY_ENDPOINT:'https://api.test/evidence-inventory',
    writeToken:()=> '测试授权占位符',
+   EVIDENCE_SCHEMA_VERSION:'article-evidence-v2',encodeURIComponent,
    readOwnerPdfInventory:async()=>{
      active++;peak=Math.max(peak,active);started.push('pdf');
      await new Promise(resolve=>setImmediate(resolve));active--;
@@ -197,12 +198,12 @@ test('five inventory layers never start more than two concurrent network tasks',
      if(options.url.includes('/media/inventory'))return {items:papers.map(x=>({doi:x.doi}))};
      if(options.url.includes('/local-capture-index'))return {items:[],count:0};
      if(options.url.includes('/staged?'))return {schemaVersion:'capture-inventory-v1',complete:true,count:0,items:[]};
-     if(options.url.includes('evidence-inventory'))return {count:0,items:[]};
+     if(options.url.includes('evidence-inventory'))return {schemaVersion:'article-evidence-v2',complete:true,truncated:false,nextCursor:'',count:0,items:[]};
      throw Error('unexpected URL');
    }
  };
  vm.createContext(ctx);
- vm.runInContext(extract('readMissingCaptureInventory')+'\n globalThis.load=readMissingCaptureInventory;',ctx);
+ vm.runInContext(extract('readEvidenceInventoryPaged')+'\n'+extract('readMissingCaptureInventory')+'\n globalThis.load=readMissingCaptureInventory;',ctx);
  const result=await ctx.load({articles:papers});
  assert.ok(peak>=1&&peak<=2,'inventory layers must not exceed two simultaneous requests');
  assert.equal(started.length,5);
