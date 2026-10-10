@@ -1,0 +1,79 @@
+name: WeChat Oct10 Complete Fig5e and SI Table S11 R4
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/wechat-oct10-complete-fig5e-s11-r4.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-oct10-figure-completeness-source
+  cancel-in-progress: false
+
+jobs:
+  source-review-and-import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 4
+      - name: Enforce exact source-only draft request
+        run: |
+          python3 - <<'PY'
+          import json
+          r=json.load(open('audit/automation-triggers/wechat-oct10-complete-fig5e-s11-r4.json'))
+          assert r['action']=='replace_truncated_source_figures_only'
+          assert r['date']=='2026-10-10'
+          assert r['revisionFrom']=='2026-10-10-r3'
+          assert r['revisionTo']=='2026-10-10-r4'
+          assert r['selectedDois']==['10.1002/anie.3306470','10.1038/s44160-026-01128-y']
+          assert r['existingMediaId']=='KhELYUzvwADwB_l1xH1SWFOfn60HSWWcYlciDjMIDj7HKSul-GJJti3u0OIKFcyL'
+          assert r['draftOnly'] is True and r['publicSendAuthorized'] is False
+          assert len(r['reviewedSourcePaths'])==3
+          PY
+      - name: Install image decoding dependency
+        run: python3 -m pip install -q 'Pillow>=10,<13'
+      - name: Verify complete original figure PDFs source crops, independent figure and label gate
+        run: python3 ops/wechat-publisher/repair-oct10-retro-figure-completeness-r4.py
+      - name: Independent result verification
+        run: |
+          python3 - <<'PY'
+          import hashlib, io, json
+          from pathlib import Path
+          from PIL import Image
+          qa=json.load(open('audit/wechat-working/2026-10-10-r4-source-figure-completeness-qa.json'))
+          retro=json.load(open('public/wechat-retrospective/alcohols-electrochemical-crosscoupling-qiu-20261010-r5.json'))
+          feature=json.load(open('public/wechat-featured/2026-10-10.json'))
+          edition=json.load(open('public/wechat-editions/2026-10-10.json'))
+          gate=json.load(open('audit/wechat-working/2026-10-10-review-gate.json'))
+          assert feature['editorialRevision']==retro['editorialRevision']==edition['editorialRevision']==gate['revision']=='2026-10-10-r4'
+          assert qa['status']=='source_review_pass' and qa['draftWritten'] is False
+          assert qa['scienceImageCounts']=={'before':[18,31],'after':[18,32]}
+          assert qa['unchangedBodyImageCount']==47
+          assert qa['fig5eAllIntermediatesAndBothSides'] is True
+          assert qa['siTableS11TwoSourcePagesFull'] is True
+          assert qa['siTableHasCompleteHeadersRowsFormula'] is True
+          assert qa['titleAndAuthorsUnchanged'] and qa['allProseUnchanged'] and qa['twoCoverImagesIdentical']
+          assert qa['independentPublisherReviewGate']=='pass'
+          assert qa['htmlParagraphImageSequence']=='pass'
+          assert qa['all52AssetFingerprints']=='pass'
+          assert gate['textReview']==gate['imageReview']=='pass'
+          assert len(gate['assets'])==52
+          s=retro['sections'][9]
+          assert s['figures_after_paragraph']['2'][-2:]==['s16','s16b']
+          assert any(x['id']=='f20' and '完整' in x['caption'] for x in retro['figures'])
+          assert '邱友爱' not in retro['title']
+          assert edition['publicationMode']=='draft_only_manual_final_send'
+          assert qa['publicSendAuthorized'] is False
+          for row in gate['sources']+gate['assets']:
+            data=Path(row['path']).read_bytes()
+            assert hashlib.sha256(data).hexdigest()==row['sha256']
+            assert hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()==row['blobSha']
+            if row in gate['assets']:
+              with Image.open(io.BytesIO(data)) as im:im.load()
+          print('Oct10 Fig5e and full two-page TableS11 R4 source integrity PASS; no WeChat write yet')
+          PY
