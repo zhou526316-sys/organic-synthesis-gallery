@@ -6,6 +6,7 @@
  */
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { gzipSync, gunzipSync } from 'node:zlib';
+import { pathToFileURL } from 'node:url';
 import { normalizeDoi } from '../shared/literature-identity.mjs';
 
 const SOURCE_PATHS = [
@@ -192,7 +193,7 @@ export async function run({ apply = false, lookup = lookupOfficialTitle, reportP
   }
   return report;
 }
-if (process.argv[1] && import.meta.url === new URL('file://' + process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const apply = process.argv.includes('--apply');
   const report = await run({ apply });
   console.log(pretty({
