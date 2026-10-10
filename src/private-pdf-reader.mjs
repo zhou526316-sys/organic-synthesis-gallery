@@ -736,21 +736,36 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
         // gateway. Never replay the original Worker-issued signed file URL.
         const onTencent = new URL(this.fileUrl).origin === TENCENT_PDF_ORIGIN;
         const renew = onTencent
-          ? tencentPdfRouteEnabled(undefined, 1200, {manual:manualTencentTrial}).then(allowed => {
+          ? tencentPdfRouteEnabled(undefined, 1200, {
+            manual:manualTencentTrial,ownerPriority:ownerTencentPilotActive,
+          }).then(async allowed => {
             if (!allowed) throw new Error('pdf_source_invalid');
-            return fetchAuthorizedSource(TENCENT_PDF_ORIGIN, sessionToken, 'view',
-              {signal:AbortSignal.timeout(FALLBACK_AUTHORIZE_TIMEOUT_MS)});
+            // A manual trial must never silently become a Cloudflare success.
+            // The approved owner pilot can recover on quota 429, 5xx or
+            // network failure using an independently authorized Worker ticket.
+            try {
+              return await fetchAuthorizedSource(TENCENT_PDF_ORIGIN, sessionToken,
+                'view',{signal:AbortSignal.timeout(FALLBACK_AUTHORIZE_TIMEOUT_MS)});
+            } catch(error) {
+              if (!ownerTencentPilotActive || manualTencentTrial ||
+                  !ownerTencentTransportFailure(error)) throw error;
+              return getCanonicalPdfSource(sessionToken,'view');
+            }
           })
           : getPdfSource(sessionToken, 'view');
-        this.refreshPromise = renew.then(source => {
-          if (declaredPdfBytes !== byteLength ||
-              (this.expectedHash && source.contentHash !== this.expectedHash) ||
-              (onTencent && !isMatchingOwnerPdfFileSource(source,
-                TENCENT_PDF_ORIGIN, this.expectedHash, byteLength)))
+        this.refreshPromise = renew.then(async source => {
+          if (destroyed || sessionToken !== token() ||
+              declaredPdfBytes !== byteLength || !this.expectedHash)
             throw new Error('pdf_source_invalid');
+          const renewedOrigin = new URL(source.url).origin;
+          if (!isMatchingOwnerPdfFileIdentity(source, renewedOrigin,
+            this.expectedHash, byteLength)) throw new Error('pdf_source_invalid');
+          // Old or stalled R2 header checks never count as proof. A new
+          // signed ticket without edge proof requires an actual 206 check.
+          if (!source.headerVerified) await checkPdfHeader(source.url,9000);
           this.fileUrl = source.url;
           document.documentElement.dataset.privatePdfFileRoute =
-            ownerPdfRouteLabel(new URL(source.url).origin);
+            ownerPdfRouteLabel(renewedOrigin);
           return this.fileUrl;
         }).finally(() => { this.refreshPromise = null; });
       }
@@ -791,11 +806,12 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
         const source = await fetchAuthorizedSource(alternate, sessionToken, 'view',
           {signal: AbortSignal.timeout(FALLBACK_AUTHORIZE_TIMEOUT_MS)});
         if (destroyed || sessionToken !== token()) throw new Error('pdf_transfer_timeout');
-        // Never merge chunks from different documents, even when both
-        // responses are 206. The Worker must affirm exactly the same hash,
-        // byte length and verified short-lived ticket on the target host.
-        if (!isMatchingOwnerPdfFileSource(source, alternate,
+        // Never merge chunks from different documents. If this fresh
+        // Worker authorization had a delayed R2 prefix, prove real HTTP206
+        // with the same SHA/size identity before changing the Range source.
+        if (!isMatchingOwnerPdfFileIdentity(source, alternate,
           this.expectedHash, byteLength)) throw new Error('pdf_source_invalid');
+        if (!source.headerVerified) await checkPdfHeader(source.url,9000);
         this.fileUrl = source.url;
         this.fileFailovers += 1;
         document.documentElement.dataset.privatePdfFileFailovers = String(this.fileFailovers);
@@ -821,7 +837,10 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
             result.error?.message === 'pdf_wrong_content_type') throw result.error;
         if (this.expectedHash && (
             result.error?.message === 'pdf_transfer_timeout' ||
-            /^file_http_50[0234]$/.test(String(result.error?.message || '')))) {
+            /^file_http_50[0234]$/.test(String(result.error?.message || '')) ||
+            (ownerTencentPilotActive &&
+              new URL(this.fileUrl).origin === TENCENT_PDF_ORIGIN &&
+              result.error?.message === 'file_http_429'))) {
           await this.authorizeAlternateFileRoute();
         }
       }
@@ -855,6 +874,9 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
           }
           const recoverable = lastError?.message === 'pdf_transfer_timeout' ||
             /^file_http_50[0234]$/.test(String(lastError?.message || '')) ||
+            (ownerTencentPilotActive &&
+              new URL(this.fileUrl).origin === TENCENT_PDF_ORIGIN &&
+              lastError?.message === 'file_http_429') ||
             error?.name === 'TypeError';
           if (attempt === 0 && recoverable) {
             if (this.expectedHash) await this.authorizeAlternateFileRoute();
@@ -1192,8 +1214,14 @@ async function start() {
     // Older, browser-preflight/opaque tickets retain the proven buffered
     // fallback. Explicit "full=1" remains available for unusual publishers.
     const edgeVerified = document.documentElement.dataset.privatePdfPreflight === 'edge';
+    // All owner-pilot Tencent reads use bounded Range, including small PDFs:
+    // this preserves verified byte identity and permits Cloudflare recovery
+    // when the gateway's existing 256 MiB monthly quota returns 429.
+    const pilotTencentFile = ownerTencentPilotActive &&
+      new URL(sourceUrl).origin === TENCENT_PDF_ORIGIN;
     const rangeMode = declaredPdfBytes > 0 && (compatibilityMode ||
-      (!forceFull && (declaredPdfBytes > ADAPTIVE_RANGE_THRESHOLD_BYTES ||
+      (!forceFull && (pilotTencentFile ||
+        declaredPdfBytes > ADAPTIVE_RANGE_THRESHOLD_BYTES ||
         (edgeVerified && declaredPdfBytes >= SMALL_PDF_PARALLEL_THRESHOLD_BYTES))));
     const buffered = !rangeMode;
     const parallelSmall = buffered && !forceFull &&
