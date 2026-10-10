@@ -4,10 +4,10 @@ import vm from 'node:vm';
 import {test} from 'node:test';
 
 const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
-assert.ok(source.includes("// @version      6.2.63"));
-assert.ok(source.includes("var INSTALL_REVISION = '6.2.63';"));
+assert.ok(source.includes("// @version      6.2.64"));
+assert.ok(source.includes("var INSTALL_REVISION = '6.2.64';"));
 assert.ok(source.includes("GAP_RECOVERY_REVISION = '20261008-gap-recovery-v1'"));
-assert.ok(source.includes("FIGURE_ONE_QUEUE_POLICY_REVISION = '20261008-verified-figure1-complete-v2'"));
+assert.ok(source.includes("FIGURE_ONE_QUEUE_POLICY_REVISION = '20261011-historical-official-toc-exception-v3'"));
 
 const articleStart=source.indexOf('  function articleUrl(job) {');
 const articleEnd=source.indexOf('\n  function publisherArticleHostAllowed',articleStart);
@@ -48,12 +48,14 @@ test('Elsevier evidence provenance uses actual ScienceDirect route',()=>{
 const policyStart=source.indexOf("  var FIGURE_ONE_QUEUE_POLICY_REVISION");
 const policyEnd=source.indexOf('\n\n  function captureQueueTier',policyStart);
 assert.ok(policyStart>0&&policyEnd>policyStart);
-const pctx=vm.createContext({String,Boolean});
+const pctx=vm.createContext({String,Boolean,tocOnlyCaptureEligible:row=>row&&row.mediaPolicy==='toc_only'&&row.date>='2026-07-01'&&row.date<='2026-09-30'});
 vm.runInContext(source.slice(policyStart,policyEnd),pctx);
 const accept=vm.runInContext('verifiedFigureOneSatisfiesQueue',pctx);
 test('verified Figure 1 closes primary-visual gap across journals',()=>{
   for(const journal of ['JACS','Organic Letters','Green Chemistry','Chemical Science','Nature Chemistry'])assert.equal(accept({journal},true),true,journal);
   assert.equal(accept({journal:'JACS'},false),false);
+  assert.equal(accept({journal:'Nature',date:'2026-09-18',mediaPolicy:'toc_only'},true),false);
+  assert.equal(accept({journal:'Nature',date:'2026-10-05',mediaPolicy:'standard'},true),true);
 });
 
 test('partial figure coverage is handled only on a genuine publisher visit',()=>{
