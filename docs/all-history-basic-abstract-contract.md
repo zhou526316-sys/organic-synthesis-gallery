@@ -36,3 +36,10 @@
 - 全库检索继续基于原始英文摘要和已经审核的解读索引；本次基础双语概述存放在独立审核表，不自动冒充 Deep Evidence 的已批准记录，也不擅自修改文献收录范围或每日热门数据。
 - **必须区分“已存审核记录”和“线上可读解读”**。发布目录 `scheduled-article-summaries.json` 中的 `approved` 不代表当前 Evidence v2 必然匹配。摘要状态审计每轮需核对全部（当前 443 条）批准的 DOI，按真实 `/api/user-ui/article-summary` 返回的 `available`、`source`、`sourceHash` 与 `evidencePacketHash` 统计深度解读可读数量；不以首 80 条抽样冒充全库可读。记录了旧审核、但 Evidence 与审核证据指纹不一致时必须重新核对当前 Evidence，不能直接修改哈希、公开旧解读或访问历史付费正文。
 - 审计对数量超过单轮 500 DOI 的情况必须明确报告 `completeCurrentReviewCoverage=false` 和当前窗口，不可声称完成全量。审计只读取公开摘要状态、目录与已公开的审核记录，输出必要 DOI 和哈希比较布尔值，不发布全文或凭证。
+
+## Nature 系列期刊官方元数据摘要兜底（2026-10-11）
+
+- 当 OpenAlex、Crossref、Semantic Scholar、Europe PMC 均未得到 DOI 可信来源，且 Nature 网页返回约 3,036 字符的无 DOI/无 Abstract 页面壳时，可以尝试出版方官方 Springer Nature **Meta API v2** 的 DOI 元数据接口。此接口专用于摘要/标题/DOI 元数据，不获取正文、登录态、图、SI 或 PDF。
+- 在 GitHub Actions 的 `SPRINGER_NATURE_API_KEY` Secret 内配置**用户自行申请的免费元数据密钥**，代码中不写明文密钥；配置缺失时自动跳过，不暂停现有摘要或每日 08:00 文献发布。密钥不允许输出到脚本日志、URL 错误文本、仓库文件或报告中。无需付费升级。申请入口：<https://dev.springernature.com/>；官方 Meta API 文档：<https://dev.springernature.com/docs/api-endpoints/meta-api/>。
+- 仅请求 `10.1038/` 文献 DOI，一次最多 30 项；每次实际调用间隔约 0.9 秒，遇 401/403/429 停止本来源本轮后续请求。响应必须 `records[].doi` / `identifier` 与目标 DOI **完全一致**，且存在显式 `abstract`，才允许作为 `springer_nature_meta` 来源进入私人搜索索引。公开端仍最多展示 200 字符原文节选；双语概述仍需要独立科学审核。
+- 正式覆盖率只能基于入库后 `originalAbstracts` 和逐 DOI 线上卡片验收变化宣称；已配置密钥、运行成功或获得 200 HTTP 响应都不代表补齐成功。
