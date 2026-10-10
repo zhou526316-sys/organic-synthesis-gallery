@@ -8,6 +8,7 @@ import {
 import {
   beginSearchEnrichment,importSearchEnrichment,finalizeSearchEnrichment,
   getSearchAbstract,searchEnrichmentReady,searchFtsExpression,
+  getSearchEnrichmentCoverage,refreshSearchEnrichmentAbstracts,
 } from '../src/literature-search-enrichment.js';
 
 class Statement {
@@ -128,4 +129,57 @@ test('metadata-only search and date filters retain legacy results when enrichmen
   const date=await queryLiteratureCatalogView(env,{catalogId:GEN.catalogId,dateFrom:'2026-10-07',dateTo:'2026-10-07'});
   assert.equal(date.body.matched,1);
   assert.equal(date.body.items[0].doi,'10.1234/b');
+});
+
+
+test('missing abstracts can be recovered after ready without changing DOI count or approved descriptions',async t=>{
+  const env=await fixture(t);await insert(env,enr);await finalize(env);
+  const before=await getSearchEnrichmentCoverage(env,{catalogId:GEN.catalogId,limit:1});
+  assert.equal(before.status,200);
+  assert.equal(before.body.total,3);
+  assert.equal(before.body.originalAbstracts,2);
+  assert.equal(before.body.missingOriginalAbstracts,1);
+  assert.equal(before.body.hasMore,false);
+  assert.deepEqual(before.body.items.map(x=>x.doi),['10.1234/b']);
+  assert.equal((await query(env,'carbonyl hydrosilylation')).body.matched,0);
+  const recovered={doi:'10.1234/b',revision:papers[1].revision,
+    abstract:'A novel electrochemical carbonyl hydrosilylation reaction allows direct organic synthesis.',
+    abstractSource:'crossref',summaryEn:'',summaryZh:''};
+  const result=await refreshSearchEnrichmentAbstracts(env,{
+    catalogId:GEN.catalogId,sourceHash:sh,rows:[recovered]
+  });
+  assert.equal(result.status,200);
+  assert.equal(result.body.refreshed,1);
+  const after=await getSearchEnrichmentCoverage(env,{catalogId:GEN.catalogId});
+  assert.equal(after.body.total,3);
+  assert.equal(after.body.originalAbstracts,3);
+  assert.equal(after.body.missingOriginalAbstracts,0);
+  assert.equal(await searchEnrichmentReady(env,GEN.catalogId),true);
+  assert.equal((await query(env,'carbonyl hydrosilylation')).body.matched,1);
+  assert.equal((await query(env,'LMCT')).body.matched,2);
+  const source=await getSearchAbstract(env,{catalogId:GEN.catalogId,doi:'10.1234/b'});
+  assert.equal(source.body.abstractSource,'crossref');
+  assert.match(source.body.reviewedSummaryEn,/verified LMCT/);
+  const retry=await refreshSearchEnrichmentAbstracts(env,{
+    catalogId:GEN.catalogId,sourceHash:sh,rows:[{...recovered,abstract:'a different unreviewed replacement'}]
+  });
+  assert.equal(retry.status,200);
+  assert.equal(retry.body.refreshed,0);
+  assert.equal((await query(env,'unreviewed replacement')).body.matched,0);
+});
+test('no unauthorized abstract refresh: reject foreign DOI, wrong revision, summary substitution and wrong source hash',async t=>{
+  const env=await fixture(t);await insert(env,enr);await finalize(env);
+  const row={doi:'10.1234/b',revision:papers[1].revision,
+    abstract:'Valid original manuscript description with enough textual content.',
+    abstractSource:'openalex',summaryEn:'',summaryZh:''};
+  const refresh=rows=>refreshSearchEnrichmentAbstracts(env,{catalogId:GEN.catalogId,sourceHash:sh,rows});
+  assert.equal((await refresh([{...row,doi:'10.1234/foreign'}])).status,409);
+  assert.equal((await refresh([{...row,revision:'9'.repeat(64)}])).status,409);
+  assert.equal((await refresh([{...row,summaryZh:'伪造的审核摘要'}])).status,400);
+  assert.equal((await refresh([{...row,abstractSource:'unsafe'}])).status,400);
+  assert.equal((await refresh([row,row])).status,400);
+  assert.equal((await refreshSearchEnrichmentAbstracts(env,{catalogId:GEN.catalogId,sourceHash:'1'.repeat(64),rows:[row]})).status,409);
+  assert.equal((await getSearchEnrichmentCoverage(env,{catalogId:GEN.catalogId,afterDoi:'not-a-doi'})).status,400);
+  assert.equal((await getSearchEnrichmentCoverage(env,{catalogId:'b'.repeat(64)})).status,409);
+  assert.equal((await getSearchEnrichmentCoverage(env,{catalogId:GEN.catalogId})).body.originalAbstracts,2);
 });
