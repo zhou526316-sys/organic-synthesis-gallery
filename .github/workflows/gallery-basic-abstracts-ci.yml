@@ -13,6 +13,8 @@ on:
       - 'scripts/test-publisher-abstract-metadata.mjs'
       - 'scripts/lib/doi-scholarly-abstract-metadata.mjs'
       - 'scripts/test-doi-scholarly-abstract-metadata.mjs'
+      - 'scripts/lib/semantic-scholar-abstract-client.mjs'
+      - 'scripts/test-semantic-scholar-abstract-client.mjs'
       - 'scripts/lib/springer-nature-meta-abstract.mjs'
       - 'scripts/test-springer-nature-meta-abstract.mjs'
       - 'scripts/test-abstract-recovery-deploy-order.mjs'
@@ -56,6 +58,7 @@ jobs:
           node --check scripts/sync-literature-search-enrichment.mjs
           node --test scripts/test-publisher-abstract-metadata.mjs
           node --test scripts/test-doi-scholarly-abstract-metadata.mjs
+          node --test scripts/test-semantic-scholar-abstract-client.mjs
           node --test scripts/test-springer-nature-meta-abstract.mjs
           node --test scripts/test-abstract-recovery-deploy-order.mjs
       - name: Check DOI membership, source hash and all-time excerpt regression
