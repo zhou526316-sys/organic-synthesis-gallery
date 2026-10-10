@@ -10,5 +10,6 @@ export function isHistoricalBackfill(paper: HistoricalPaperMeta | null | undefin
 export function isJulSepPaper(paper: HistoricalPaperMeta | null | undefined): boolean;
 export function isJulSepTocOnly(paper: HistoricalPaperMeta | null | undefined): boolean;
 export function paperMediaPolicy(paper: HistoricalPaperMeta | null | undefined): 'metadata_only' | 'toc_only' | 'standard';
+export function isRetrospectiveAdmission(paper: HistoricalPaperMeta | null | undefined): boolean;
 export function shouldShowDailyNew(paper: HistoricalPaperMeta | null | undefined, asOfDay: string): boolean;
 export function isOctoberFullCapturePaper(paper: HistoricalPaperMeta | null | undefined): boolean;
