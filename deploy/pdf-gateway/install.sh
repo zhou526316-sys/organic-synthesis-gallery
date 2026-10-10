@@ -128,6 +128,9 @@ write_tls(){
  cat >> "$VHOST" <<'NGINX'
 server {
  listen 443 ssl;
+ # Join a possible more-specific loopback:443 listener group owned by relay,
+ # without changing the existing WeChat vhost, ports or certificate.
+ listen 127.0.0.1:443 ssl;
  listen [::]:443 ssl;
  server_name pdf.gczhouwld.com;
  ssl_certificate /etc/letsencrypt/live/pdf.gczhouwld.com/fullchain.pem;
@@ -185,6 +188,53 @@ SYSTEMD
 }
 # Wait for the actual Python HTTP listener, not systemd's Type=simple
 # process spawn. Keep all probes localhost-only, anonymous and bounded.
+# Trusted localhost HTTPS probe; never disable certificate validation.
+# Check both routing and exact anonymous gateway health before public exposure.
+verify_local_tls(){
+ local attempt response last_rc current_fingerprint served_fingerprint effective_dump
+ response=""
+ last_rc=0
+ for attempt in 1 2 3 4 5 6 7 8; do
+   last_rc=0
+   response="$(curl --noproxy '*' --http1.1 --fail --silent \
+     --connect-timeout 2 --max-time 5 \
+     --resolve "$HOST:443:127.0.0.1" \
+     "https://$HOST/_pdf_gateway_health" 2>/dev/null)" || last_rc=$?
+   if (( last_rc == 0 )) &&
+      [[ "$response" == '{"ok":true,"role":"private-pdf-ingress","authenticated":false}' ]]; then
+     echo "[CHECK] LOCAL_TLS_SNI_PASS: trusted HTTPS PDF hostname and exact gateway health (attempt $attempt)."
+     return 0
+   fi
+   (( attempt < 8 )) && sleep 1
+ done
+ echo "[DIAG] LOCAL_TLS_SNI_FAILED after bounded checks, curl_exit=$last_rc; expected PDF vhost not proven." >&2
+ echo '[DIAG] HTTPS :443 listener addresses (no Nginx config body):' >&2
+ ss -ltnH '( sport = :443 )' 2>/dev/null | head -8 >&2 || true
+ echo '[DIAG] HTTPS Nginx listen directives from loaded PDF and relay vhosts:' >&2
+ effective_dump="$(nginx -T 2>/dev/null || true)"
+ printf '%s\n' "$effective_dump" | awk '
+   /^# configuration file / { file=$0; sub(/^# configuration file /,"",file); sub(/:$/,"",file) }
+   /^[[:space:]]*listen[[:space:]]/ && /443/ &&
+     (file ~ /gallery-pdf-gateway$/ || file ~ /osg-wechat-relay$/) {
+       line=$0; sub(/^[[:space:]]*/,"",line);
+       if (length(line) < 180) print file " " line
+   }' | head -20 >&2 || true
+ # Compare public certificate fingerprints; never emit PEM, key or tokens.
+ current_fingerprint="$(openssl x509 -in "$CERT" -noout -fingerprint -sha256 2>/dev/null || true)"
+ served_fingerprint="$(timeout 6 openssl s_client -connect 127.0.0.1:443 \
+   -servername "$HOST" < /dev/null 2>/dev/null |
+   openssl x509 -noout -fingerprint -sha256 2>/dev/null || true)"
+ if [[ -n "$current_fingerprint" && -n "$served_fingerprint" ]]; then
+   if [[ "$current_fingerprint" == "$served_fingerprint" ]]; then
+     echo '[DIAG] TLS_LOOPBACK_LEAF_MATCH: peer presented PDF certificate; investigate trust or upstream response.' >&2
+   else
+     echo '[DIAG] TLS_LOOPBACK_CERT_MISMATCH: local peer presented another certificate despite SNI.' >&2
+   fi
+ else
+   echo '[DIAG] TLS_LOOPBACK_CERT_UNAVAILABLE: peer leaf or installed certificate could not be inspected.' >&2
+ fi
+ return 1
+}
 wait_local_gateway(){
  local try_number response journal_snippet signature
  for try_number in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
@@ -376,8 +426,9 @@ install_new(){
  if (( ! ADDED )); then ln -s "$VHOST" "$LINK";ADDED=1;fi
  nginx -t;systemctl reload nginx;RELOADED=1
  [[ "$(we_chat_hash)" == "$wechat_before" ]] || abort 'WeChat site changed unexpectedly'
- curl -fsS --max-time 8 --resolve "$HOST:443:127.0.0.1" \
-  "https://$HOST/_pdf_gateway_health" >/dev/null || abort 'TLS health failed'
+ if ! verify_local_tls; then
+   abort 'TLS health failed with trusted SNI/Host check; PDF fallback remains DISABLED'
+ fi
  trap - ERR EXIT INT TERM
  echo '[SUCCESS] Tencent PDF gateway HTTPS installed, Gallery failover NOT switched on.'
 }
