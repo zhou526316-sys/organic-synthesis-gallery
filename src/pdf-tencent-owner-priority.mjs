@@ -13,9 +13,9 @@ export function cachedOwnerHint(raw) {
     const user = JSON.parse(String(raw || 'null'));
     // A cached negative can skip this optional Tencent preference entirely.
     // A positive is never trusted without a fresh live-server check.
-    return user && Array.isArray(user.capabilities) &&
-      user.capabilities.includes(OWNER_ROLE) ? true : false;
-  } catch { return false; }
+    return user && Array.isArray(user.capabilities)
+      ? user.capabilities.includes(OWNER_ROLE) : null;
+  } catch { return null; }
 }
 
 export async function liveOwnerTencentPriority(sessionToken, fetcher = fetch,
