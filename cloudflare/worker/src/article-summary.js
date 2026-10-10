@@ -406,7 +406,19 @@ export async function getArticleSummary(env, doiValue) {
     };
   }
 
-  const scheduled = await getScheduledSummaryForEvidence(env, doi, evidence);
+  const scheduled = await getScheduledSummaryForEvidence(env, doi, evidence,
+    async current => {
+      const publisher = publisherForDoi(doi);
+      if (!publisher || current.publisher !== publisher
+        || normalizeDoi(current.pageDoi) !== doi
+        || !publisherUrlAllowed(publisher, current.articleUrl)
+        || !publisherUrlAllowed(publisher, current.sourceUrl)
+        || !publisherArticleUrlBindsDoi(publisher, current.articleUrl, doi)
+        || !Array.isArray(current.sections) || !Array.isArray(current.captions)
+        || !Array.isArray(current.tables)) return false;
+      const reconstructed = canonicalSourceText(current.sections, current.captions, current.tables);
+      return (await sha256Hex(reconstructed)) === current.sourceHash;
+    });
   if (scheduled) {
     return {
       status: 200,
@@ -417,7 +429,10 @@ export async function getArticleSummary(env, doiValue) {
         evidenceAvailable: true,
         cached: true,
         state: 'published',
-        source: 'scheduled_reviewed_evidence_v2',
+        source: scheduled.contentEquivalentReviewed
+          ? 'scheduled_reviewed_source_equivalent_v2'
+          : 'scheduled_reviewed_evidence_v2',
+        contentEquivalentReviewed: scheduled.contentEquivalentReviewed === true,
         zh: scheduled.zh.trim(),
         en: scheduled.en.trim(),
         generatedAt: Number(scheduled.generatedAt || 0),

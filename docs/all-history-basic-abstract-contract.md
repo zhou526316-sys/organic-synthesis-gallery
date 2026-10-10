@@ -11,7 +11,7 @@
 
 ## 读取优先级
 
-1. `GET /api/user-ui/article-summary?doi=...` 首先走现有 Evidence v2 深度解读及其严格的 sourceHash/evidencePacketHash 验证。
+1. `GET /api/user-ui/article-summary?doi=...` 首先走现有 Evidence v2 深度解读，严格核对 DOI、审核记录、正文证据内容指纹与证据等级。通常要求 `sourceHash` 和 `evidencePacketHash` 均匹配。唯一允许的**非语义重采集例外**：如果重新抓取只使 `capturedAt`、`jobId`、`controllerRevision` 等证据包元信息改变，而旧审核 `sourceHash` 与当前文本指纹相同、`evidenceLevel` 一致，必须现场重新计算当前 sections/captions/tables 的规范化 SHA-256、再次验证 DOI/出版社链接身份与 `textProcessingPolicy`，才能按 `scheduled_reviewed_source_equivalent_v2` 复用原先已经审核通过的**同一科学文本**，并明确记录等价判定。**旧审核记录的哈希本身保持不变**。任何源文本哈希改变、证据等级变更、缺失审核来源或禁止外部模型政策都要拒绝复用，进入重新审核。
 2. 若深度解读缺失、待审核或证据版本过期，则尝试独立的当前正式目录 `literature_search_enrichment`。只按最新 ready 的正式 catalog generation、DOI 和 revision 一致的成员读取，绝不从已经撤下/失效的旧版本兜底。
 3. 如存在 `literature_basic_abstract_reviews`、中英文本均非空、来源类型和 DOI/revision 一致，且当前原始摘要 SHA-256 与审核时完全一致，才返回独立基础双语概述，页面标注“基于原始 Abstract 的审核概述”。
 4. 若尚无审核双语概述但有来源原始摘要，返回至多 200 字符的原文节选及 DOI 来源。页面明确说明中文概述待审核；不要包装为全文解读。

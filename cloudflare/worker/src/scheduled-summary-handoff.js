@@ -216,15 +216,33 @@ export async function readScheduledSummaryAsset(env) {
   }
 }
 
-export async function getScheduledSummaryForEvidence(env, doiValue, evidence) {
+export async function getScheduledSummaryForEvidence(env, doiValue, evidence, verifyCurrentSourceText = null) {
   const doi = normalizeDoi(doiValue);
-  if (!doi || !evidence) return null;
+  if (!doi || !evidence || evidence.doi !== doi || evidence.schemaVersion !== 'article-evidence-v2') return null;
   const asset = await readScheduledSummaryAsset(env);
   const row = asset.items?.[doi];
-  if (!row || row.schemaVersion !== SCHEDULED_SUMMARY_SCHEMA_VERSION || row.status !== 'approved') return null;
-  if (row.sourceHash !== evidence.sourceHash || row.evidencePacketHash !== evidence.evidencePacketHash) return null;
+  if (!row || row.doi !== doi || row.schemaVersion !== SCHEDULED_SUMMARY_SCHEMA_VERSION || row.status !== 'approved') return null;
   if (typeof row.zh !== 'string' || typeof row.en !== 'string' || !row.zh.trim() || !row.en.trim()) return null;
-  return row;
+  if (!/^[a-f0-9]{64}$/.test(String(row.sourceHash || ''))
+    || !/^[a-f0-9]{64}$/.test(String(row.evidencePacketHash || ''))
+    || !/^[a-f0-9]{64}$/.test(String(evidence.evidencePacketHash || ''))) return null;
+  if (row.sourceHash !== evidence.sourceHash) return null;
+  if (row.evidencePacketHash === evidence.evidencePacketHash) return row;
+  // A recapture may change the packet hash solely through capturedAt, jobId,
+  // controllerRevision or queueGeneratedAt without changing any source text.
+  // Never rewrite the archived reviewed hash. Explicitly revalidate the
+  // canonical content digest and review evidence level instead.
+  if (row.evidenceLevel !== (evidence.evidenceLevel || evidence.fulltextStatus)
+    || evidence.textProcessingPolicy === 'no_external_ai'
+    || typeof row.auditVersion !== 'string' || !row.auditVersion.trim()
+    || !Number.isFinite(Number(row.reviewedAt)) || Number(row.reviewedAt) <= 0
+    || typeof verifyCurrentSourceText !== 'function') return null;
+  try {
+    if (await verifyCurrentSourceText(evidence) !== true) return null;
+  } catch {
+    return null;
+  }
+  return { ...row, contentEquivalentReviewed: true };
 }
 
 async function currentLegacySummaryMatches(env, doi, evidencePacketHash, sourceHash) {

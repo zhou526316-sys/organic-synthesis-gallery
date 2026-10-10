@@ -3,6 +3,9 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'cloudflare/worker/src/article-summary.js'
+      - 'cloudflare/worker/src/scheduled-summary-handoff.js'
+      - 'cloudflare/worker/scripts/test-scheduled-source-equivalent.mjs'
       - 'cloudflare/worker/src/literature-basic-abstracts.js'
       - 'cloudflare/worker/src/literature-search-enrichment.js'
       - 'cloudflare/worker/src/index.js'
@@ -62,6 +65,8 @@ jobs:
         run: |
           node --check scripts/audit-gallery-abstract-gaps.mjs
           node --test scripts/test-gallery-abstract-gap-classification.mjs
+      - name: Test content-equivalent approved Evidence with strict DOI and policy guards
+        run: node --test cloudflare/worker/scripts/test-scheduled-source-equivalent.mjs
       - name: Install dependencies and validate card type safety
         run: |
           npm install --no-audit --no-fund
