@@ -141,3 +141,42 @@ to observed effective includes/listener mapping rather than repeatedly guessing.
 Only run -Mode Install after the effective route issue is understood.
 No PDF chunk-size, resolution, continuous scroll or account authorization code
 changes are part of this step.
+
+## 2026-10-10 exact-only Nginx parent include fallback (owner read-only diagnosis)
+
+Owner read-only Diagnose printed a healthy Nginx MainPID 18637, wildcard HTTP
+80 sockets and exactly two effective configuration files after rollback:
+`/etc/nginx/nginx.conf` and `/etc/nginx/sites-enabled/osg-wechat-relay`.
+The fact that only the relay is listed after rollback is not by itself
+proof of an exact include directive rather than a glob. It does, however,
+prioritize the original installer's unverified `sites-enabled/*` assumption.
+
+Now, while staging the isolated PDF vhost but **before nginx reload or certbot**,
+the installer inspects `nginx -T` to verify that the marked PDF site is actually
+loaded. If yes, the unchanged existing include path is used. If not, a tightly
+restricted Python helper may add precisely one reversible marked line beside
+one exact, existing relay include in `/etc/nginx/nginx.conf`, after a private
+root-only backup. It refuses unknown/duplicate/missing anchors, pre-existing
+unmanaged PDF includes, or a symlinked main config. The relay vhost bytes
+are not modified. The helper updates the main config atomically and validates
+`nginx -t` and `nginx -T` again BEFORE a graceful reload. Failure removes
+only the marker-owned parent line and dedicated PDF vhost; unrelated changes
+are not overwritten. `--rollback` removes the marker before deleting the
+isolated PDF site. No raw nginx.conf content, tickets or credentials are logged.
+
+An isolated Nginx regression covers explicit relay include 404 -> added PDF
+include 200 -> exact rollback 404 while relay vhost SHA remains identical.
+Six Python safety/unit tests protect byte-exact include round trips, duplicate
+and unknown configs. Linux and Windows PS 5.1 jobs PASSED:
+https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38020555346
+
+Immutable launcher revision: e2b52071b9eb80b23170e896639a78e54c949b31.
+Pinned source revision: 22bf1a51c85201b691d5bf07b6c28a7b458c1a02
+(gateway.py, install.sh and nginx_include.py were compared byte-for-byte
+against the CI revision).
+
+Live installation is **not** proved by CI. The Tencent HTTPS domain and
+actual mobile/cellular PDF login+Range remain unaccepted and routing flag
+`enabled:false` MUST remain. The parent edit requires the owner's existing
+`-Mode Install` YES confirmation and one Tencent WeChat QR SSH authorization.
+Do not change PDF chunk sizing, quality, continuous scrolling or rights.
