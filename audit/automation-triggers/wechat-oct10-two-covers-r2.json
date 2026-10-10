@@ -1,0 +1,38 @@
+{
+  "requestId": "wechat-2026-10-10-two-user-requested-covers-R2-same-draft-source-review",
+  "action": "replace_oct10_two_reviewed_covers_only",
+  "date": "2026-10-10",
+  "fromRevision": "2026-10-10-r1",
+  "toRevision": "2026-10-10-r2",
+  "dois": [
+    "10.1002/anie.3306470",
+    "10.1038/s44160-026-01128-y"
+  ],
+  "existingMediaId": "KhELYUzvwADwB_l1xH1SWFOfn60HSWWcYlciDjMIDj7HKSul-GJJti3u0OIKFcyL",
+  "expectedFirstTitle": "有机合成文献日报｜10.10｜今日精选｜Angew.：铁–LMCT/镍–SH₂协同催化游离羧酸直接甲基编辑",
+  "expectedSecondTitle": "往期精选｜Nature Synthesis｜仇友爱等：醇与醇的电化学脱羟基交叉偶联",
+  "originalCoverSha256": {
+    "daily": "ea107193569fe43fbdf549c21016bbd6f02cb16bdd6f9d10fa8edc5130f3ea8d",
+    "retrospective": "b6430216d5bc0144ac9bbcfb31f0680e303677bad421a21b4a594a0b77ec89ae"
+  },
+  "images": {
+    "daily": {
+      "url": "https://at.adobe.com/rnI2wpa6oIgfxb2x",
+      "sha256": "f60cf50ffbfa044ec9ddefc98603a982d92aa7beed4e1799ee51afb89a4a4ded",
+      "width": 1880,
+      "height": 800,
+      "description": "Exact Angew main PDF Scheme1B enlarged to 996x500 within top y7:507 on white; full native title safe navy starts y515."
+    },
+    "retrospective": {
+      "url": "https://at.adobe.com/MDIGyj46Y3eq9INR",
+      "sha256": "8748213670c0caeff07f5cf030390ba44e8878eb32982b20b0675ee34804c814",
+      "width": 1254,
+      "height": 1254,
+      "description": "Exact user-uploaded Nature Synthesis 1254x1254 image(20261010-022740).png; direct replacement without any edits."
+    }
+  },
+  "draftOnly": true,
+  "publicSendAuthorized": false,
+  "oneSameMediaDraftUpdateAfterGate": true,
+  "note": "Replace exactly two covers on the existing 2026-10-10 two-article WeChat draft, no other science figures or article text. Publisher fixed-IP API already available; run source validation first, then use existing once-only draft/update and draft/get. Never mass send."
+}
