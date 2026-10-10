@@ -415,7 +415,7 @@ try{
     let first=true;
     const originalFetch=window.fetch.bind(window);
     window.fetch=(input,init)=>{
-      const url=new URL(typeof input==='string'?input:input.url,location.href);
+      const url=new URL(typeof input==='string'?input:(input?.url||String(input)),location.href);
       if(location.pathname==='/pdf/' && first &&
           url.origin==='https://api.gczhouwld.com' &&
           url.pathname==='/api/user-ui/private-pdf/open') {
