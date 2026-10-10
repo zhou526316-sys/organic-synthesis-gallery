@@ -30,10 +30,18 @@ export class UserSearchController {
   private readFilterKey = '';
   private stopped = false;
   private selectingSuggestion = false;
+  // A query may be entered before the asynchronously rendered card window
+  // has supplied DOI/journal/author candidates. Retain only the intent to
+  // show suggestions, never stale candidates or a dismissed popup.
+  private suggestionIntent = false;
   private blurDismissTimer: number | null = null;
   private readonly dismissSuggestions = (): void => {
     this.popover?.remove();
     this.popover = null;
+  };
+  private readonly stopSuggestions = (): void => {
+    this.suggestionIntent = false;
+    this.dismissSuggestions();
   };
   private readonly onSearchFocus = (): void => {
     // A pending blur-dismiss timer belongs to the previous focus cycle.
@@ -43,6 +51,7 @@ export class UserSearchController {
       window.clearTimeout(this.blurDismissTimer);
       this.blurDismissTimer = null;
     }
+    this.suggestionIntent = this.fullQuery.trim().length >= 2;
     this.renderSuggestions();
   };
   private readonly onSearchChange = (): void => { store.addHistory(this.fullQuery); };
@@ -51,18 +60,18 @@ export class UserSearchController {
     this.blurDismissTimer = window.setTimeout(() => {
       this.blurDismissTimer = null;
       if (document.activeElement !== this.searchInput && !this.popover?.contains(document.activeElement))
-        this.dismissSuggestions();
+        this.stopSuggestions();
     }, 120);
   };
   private readonly onSearchKeyDown = (event: KeyboardEvent): void => {
     if (event.key === 'Enter') {
       store.addHistory(this.fullQuery);
-      this.dismissSuggestions();
+      this.stopSuggestions();
     }
     if (event.key === 'Escape') {
       if (this.popover) {
         event.preventDefault();
-        this.dismissSuggestions();
+        this.stopSuggestions();
       } else if (this.fullQuery) {
         event.preventDefault();
         this.setSearch('');
@@ -72,7 +81,7 @@ export class UserSearchController {
   private readonly onOuterPointerDown = (event: PointerEvent): void => {
     const target = event.target;
     if (!(target instanceof Node) || this.searchInput?.contains(target) || this.popover?.contains(target)) return;
-    this.dismissSuggestions();
+    this.stopSuggestions();
   };
   private readonly onUserScrollIntent = (event: Event): void => {
     // An automated focus, a TOC/image reflow, or a browser scroll adjustment
@@ -81,10 +90,10 @@ export class UserSearchController {
     // intentional gesture; pointerdown-outside covers scrollbar dragging.
     // Scrolling inside the suggestions is still allowed.
     if (event.target instanceof Node && this.popover?.contains(event.target)) return;
-    this.dismissSuggestions();
+    this.stopSuggestions();
   };
   private readonly onTabVisibility = (): void => {
-    if (document.hidden) this.dismissSuggestions();
+    if (document.hidden) this.stopSuggestions();
   };
   private readonly storeChanged = (): void => this.refreshPreferences();
   private readonly refreshCounts = (): void => {
@@ -100,6 +109,7 @@ export class UserSearchController {
     this.fullQuery = this.searchInput.value;
     this.updateShellQuery();
     if (this.composing || (event instanceof InputEvent && event.isComposing)) return;
+    this.suggestionIntent = !this.selectingSuggestion && this.fullQuery.trim().length >= 2;
     this.root.dispatchEvent(new CustomEvent('gallery-corpus-query', { detail: { query: this.fullQuery } }));
     // The corpus layer may synchronously replace the rendered result window.
     // Refresh in a microtask so highlighting/decorations bind to the new cards,
@@ -112,6 +122,7 @@ export class UserSearchController {
     this.composing = false;
     if (!this.searchInput) return;
     this.fullQuery = this.searchInput.value;
+    this.suggestionIntent = !this.selectingSuggestion && this.fullQuery.trim().length >= 2;
     this.updateShellQuery();
     this.root.dispatchEvent(new CustomEvent('gallery-corpus-query', { detail: { query: this.fullQuery } }));
     // The corpus layer may synchronously replace the rendered result window.
@@ -181,7 +192,7 @@ export class UserSearchController {
     window.removeEventListener('scroll', this.resize, true);
     window.removeEventListener('wheel', this.onUserScrollIntent, true);
     window.removeEventListener('touchmove', this.onUserScrollIntent, true);
-    this.dismissSuggestions();
+    this.stopSuggestions();
   }
   currentSearch(): string { return this.fullQuery; }
 
@@ -242,6 +253,13 @@ export class UserSearchController {
       this.readFilterKey = this.currentReadFilterKey();
     } finally { this.observer?.observe(this.gallery, { childList: true }); }
     this.refreshCounts();
+    // If the user typed before the candidate index was hydrated, refresh the
+    // suggestions after that indexed window settles. Explicit dismiss actions
+    // clear suggestionIntent, so later card mutations cannot reopen the popup.
+    if (this.suggestionIntent && !this.selectingSuggestion &&
+        this.searchInput && document.activeElement === this.searchInput) {
+      this.renderSuggestions();
+    }
   }
 
   private paintStatus(card: HTMLElement): void {
@@ -483,7 +501,7 @@ export class UserSearchController {
         const keep = words.slice(0, Math.max(0, words.length - Math.max(1, item.replaceWords)));
         this.setSearch([...keep, queryTerm(item.value)].join(' '));
       } finally {
-        this.dismissSuggestions();
+        this.stopSuggestions();
         this.selectingSuggestion = false;
       }
     };
