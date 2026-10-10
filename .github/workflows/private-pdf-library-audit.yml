@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 18
     env:
-      BRIDGE_WRITE_TOKEN: ${'${{ secrets.BRIDGE_WRITE_TOKEN }}'}
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
       PRIVATE_PDF_AUDIT_PROBE_MAX: '120'
     steps:
       - uses: actions/checkout@v4
@@ -31,13 +31,13 @@ jobs:
           node --test cloudflare/worker/scripts/test-private-pdf-audit.mjs
       - name: Incremental per-DOI inventory and limited R2 prefix/trailer proofs
         env:
-          PRIVATE_PDF_AUDIT_OUTPUT: ${'${{ runner.temp }}/private-pdf-audit/summary.json'}
+          PRIVATE_PDF_AUDIT_OUTPUT: ${{ runner.temp }}/private-pdf-audit/summary.json
         run: node scripts/audit-private-pdf-library.mjs
       - name: Preserve aggregates only; never include private per-DOI rows
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pdf-audit-summary-${'${{ github.run_id }}'}
-          path: ${'${{ runner.temp }}/private-pdf-audit/summary.json'}
+          name: pdf-audit-summary-${{ github.run_id }}
+          path: ${{ runner.temp }}/private-pdf-audit/summary.json
           if-no-files-found: warn
           retention-days: 15
