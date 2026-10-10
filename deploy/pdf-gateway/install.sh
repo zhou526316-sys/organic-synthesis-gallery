@@ -183,6 +183,40 @@ UMask=0077
 WantedBy=multi-user.target
 SYSTEMD
 }
+# Wait for the actual Python HTTP listener, not systemd's Type=simple
+# process spawn. Keep all probes localhost-only, anonymous and bounded.
+wait_local_gateway(){
+ local try_number response journal_snippet signature
+ for try_number in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
+   response="$(curl --noproxy '*' --http1.1 --silent --fail \
+     --connect-timeout 1 --max-time 2 -H "Host: $HOST" \
+     http://127.0.0.1:18867/_pdf_gateway_health 2>/dev/null || true)"
+   if [[ "$response" == '{"ok":true,"role":"private-pdf-ingress","authenticated":false}' ]]; then
+     echo "[CHECK] LOCAL_GATEWAY_READY: private PDF service health HTTP 200 with exact anonymous response (attempt $try_number)."
+     return 0
+   fi
+   if (( try_number < 15 )); then sleep 1; fi
+ done
+ echo '[DIAG] LOCAL_GATEWAY_NOT_READY after bounded health retries; no public PDF routing enabled.' >&2
+ echo '[DIAG] systemd state (service-only metadata; no full journal):' >&2
+ systemctl show "$SERVICE" --no-pager -p ActiveState -p SubState -p Result \
+   -p ExecMainCode -p ExecMainStatus -p NRestarts -p MainPID >&2 || true
+ echo '[DIAG] Local TCP listener:' >&2
+ ss -ltnH '( sport = :18867 )' 2>/dev/null | head -3 >&2 || true
+ # Read a short, recent portion of this service's journal but emit ONLY
+ # whitelisted error CLASS NAMES, never raw traceback, URL, cookie or token.
+ journal_snippet="$(journalctl -u "$SERVICE" --since '-90 seconds' \
+   --no-pager -o cat 2>/dev/null | tail -40 || true)"
+ for signature in PermissionError FileNotFoundError ModuleNotFoundError \
+   ImportError SyntaxError MemoryError sqlite3.OperationalError \
+   AddressInUseError ConnectionRefusedError 'Failed at step' \
+   'Operation not permitted' 'Read-only file system'; do
+   if grep -Fq "$signature" <<< "$journal_snippet"; then
+     echo "[DIAG] SERVICE_ERROR_CLASS=$signature" >&2
+   fi
+ done
+ return 1
+}
 on_error(){
  local rc=$?
  trap - ERR EXIT INT TERM
@@ -334,9 +368,9 @@ install_new(){
  python3 -m py_compile "$APP/gateway.py"
  write_unit;UNIT_CREATED=1;chmod 0644 "$UNIT";systemctl daemon-reload
  STARTED=1;systemctl enable --now "$SERVICE"
- systemctl is-active --quiet "$SERVICE" || abort 'Local PDF service failed'
- curl -fsS --max-time 3 -H "Host: $HOST" \
-  http://127.0.0.1:18867/_pdf_gateway_health >/dev/null || abort 'Local health failed'
+ if ! wait_local_gateway; then
+   abort 'Local PDF gateway did not become ready; service-only diagnostics above, PDF fallback remains DISABLED'
+ fi
  write_tls
  if (( ! ADDED )); then ln -s "$VHOST" "$LINK";ADDED=1;fi
  nginx -t;systemctl reload nginx;RELOADED=1
