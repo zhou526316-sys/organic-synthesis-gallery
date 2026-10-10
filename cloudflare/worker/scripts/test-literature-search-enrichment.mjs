@@ -282,3 +282,42 @@ test('newer catalog prevents stale previous-generation abstracts leaking after D
   assert.equal((await getSearchAbstract(env,{doi:'10.1234/a'})).status,503);
   assert.equal((await getSearchAbstract(env,{doi:'10.1234/b'})).status,503);
 });
+
+test('academic metadata alternatives may fill source gaps only for the exact original DOI revision',async t=>{
+  const env=await fixture(t);
+  await insert(env,enr);await finalize(env);
+  const text='A verified DOI-bound electrochemical hydrocarbon coupling abstract reports a highly selective reaction strategy for preparing synthetically useful organic compounds from common feedstocks.';
+  const base={doi:papers[1].doi,revision:papers[1].revision,
+    abstract:text,summaryEn:'',summaryZh:''};
+  const fill=(source,rows)=>refreshSearchEnrichmentAbstracts(env,{
+    catalogId:GEN.catalogId,sourceHash:sh,rows:rows??[{...base,abstractSource:source}]
+  });
+  assert.equal((await fill('semantic_scholar',[
+    {...base,abstractSource:'semantic_scholar',doi:'10.1234/foreign'}
+  ])).status,409);
+  const done=await fill('semantic_scholar');
+  assert.equal(done.status,200);
+  assert.equal(done.body.refreshed,1);
+  const visible=await getSearchAbstract(env,{doi:papers[1].doi});
+  assert.equal(visible.body.abstractSource,'semantic_scholar');
+  assert.match(visible.body.abstractExcerpt,/electrochemical hydrocarbon coupling/);
+  assert.equal(Object.hasOwn(visible.body,'abstract'),false);
+  assert.equal((await query(env,'hydrocarbon coupling')).body.matched,1);
+  const duplicate=await fill('europe_pmc');
+  assert.equal(duplicate.body.refreshed,0);
+});
+test('Europe PMC alone can independently repair a missing current DOI without changing approved text',async t=>{
+  const env=await fixture(t);await insert(env,enr);await finalize(env);
+  const fill=await refreshSearchEnrichmentAbstracts(env,{
+    catalogId:GEN.catalogId,sourceHash:sh,rows:[{
+      doi:papers[1].doi,revision:papers[1].revision,
+      abstract:'A novel catalytic selective carbon–carbon formation approach provides practical access to functionalized organic intermediates across multiple substrate families.',
+      abstractSource:'europe_pmc',summaryZh:'',summaryEn:''
+    }]
+  });
+  assert.equal(fill.status,200);
+  assert.equal(fill.body.refreshed,1);
+  assert.equal((await getSearchAbstract(env,{doi:papers[1].doi})).body.abstractSource,'europe_pmc');
+  const coverage=await getSearchEnrichmentCoverage(env,{catalogId:GEN.catalogId});
+  assert.equal(coverage.body.originalAbstracts,3);
+});
