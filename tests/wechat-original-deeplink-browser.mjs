@@ -1,6 +1,7 @@
 // Browser regression for WeChat "阅读原文" selected-paper links.
 // Runs against local Vite preview, without WeChat credentials or publication writes.
 import { createRequire } from 'node:module';
+import fs from 'node:fs';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 
@@ -9,10 +10,46 @@ const ANWEG = '10.1002/anie.3306470';
 const RETRO = '10.1038/s44160-026-01128-y';
 const SCIENCE = '10.1126/science.aef3001';
 
+// CI's Vite-preview legacy corpus is currently capped at the Sep 15 static
+// fixture (409 records), not Oct 10's authoritative 938-card release. Add
+// only the actual, formally accepted DOI records to the test transport;
+// never publish synthetic literature or modify the production catalog.
+function reviewedPaper(filename, doi, addedDate) {
+  const review = JSON.parse(fs.readFileSync(filename, 'utf8'));
+  const published = (review.accepted || []).find(item => item.doi === doi);
+  if (!published) throw new Error('DOI not accepted in formal release: ' + doi);
+  return {
+    doi, journal: published.journal, title: published.title,
+    titleZh: published.titleZh || '', authors: published.authors,
+    date: published.date, url: 'https://doi.org/' + doi,
+    addedDate, new: true,
+  };
+}
+const baseManual = JSON.parse(fs.readFileSync('dist/manual-supplement.json', 'utf8'));
+const retrospective = JSON.parse(fs.readFileSync(
+  'public/wechat-retrospective/alcohols-electrochemical-crosscoupling-qiu-20261010-r5.json', 'utf8',
+));
+const retroPaper = {
+  doi: RETRO, title: retrospective.paper.title, journal: retrospective.paper.journal,
+  authors: retrospective.paper.authors.split(',').map(value => value.trim()),
+  date: retrospective.paper.publishedOnline,
+  url: 'https://doi.org/' + RETRO, addedDate: '2026-07-24', new: false,
+};
+const fixturePapers = [
+  ...(baseManual.papers || []),
+  reviewedPaper('audit/review-2026-10-10-0800.json', ANWEG, '2026-10-10'),
+  reviewedPaper('audit/review-2026-10-09-0800.json', SCIENCE, '2026-10-09'),
+  retroPaper,
+];
+const fixtureManualBody = JSON.stringify({ ...baseManual, papers: fixturePapers });
+
 async function visit(browser, title, suffix, doi, width, height, reducedMotion = false) {
   const page = await browser.newPage({ viewport: { width, height }, reducedMotion: reducedMotion ? 'reduce' : 'no-preference' });
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(String(error)));
+  await page.route('**/manual-supplement.json', route => route.fulfill({
+    status: 200, contentType: 'application/json', body: fixtureManualBody,
+  }));
   try {
     await page.goto(ORIGIN + suffix, { waitUntil: 'domcontentloaded', timeout: 25000 });
     await page.locator('html[data-card-share-ready="true"]').waitFor({ state: 'attached', timeout: 35000 });
