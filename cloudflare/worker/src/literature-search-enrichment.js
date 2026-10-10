@@ -88,7 +88,7 @@ function normalizeEnrichmentRow(input) {
   const summaryEn = textField(input.summaryEn,12000,'summaryEn');
   const summaryZh = textField(input.summaryZh,12000,'summaryZh');
   const source = String(input.abstractSource || '');
-  if (!['','crossref','openalex'].includes(source) || (source && !abstract)) {
+  if (!['','crossref','openalex','publisher_metadata'].includes(source) || (source && !abstract)) {
     throw new Error('search_enrichment_abstract_source_invalid');
   }
   const searchable = [abstract,summaryEn,summaryZh].filter(Boolean).join(' ').toLowerCase();
