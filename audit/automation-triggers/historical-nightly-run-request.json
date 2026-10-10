@@ -1,0 +1,12 @@
+{
+  "schema": "gallery-historical-nightly-rescue-v1",
+  "requestedAt": "2026-10-11T01:39:00+08:00",
+  "reason": "user-approved live staging-only historical capture after missed scheduled run",
+  "mode": "candidate_discovery_only",
+  "targetBranch": "staging/historical-archive-nightly",
+  "budget": {
+    "maxUnits": 8,
+    "requestLimit": 80
+  },
+  "safety": "Does not change 08:00 release, article acceptance, TOC, figures or PDF"
+}
