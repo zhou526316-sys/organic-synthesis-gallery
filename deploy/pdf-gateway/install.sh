@@ -67,6 +67,10 @@ write_acme(){
 # GALLERY_PDF_GATEWAY_MANAGED_V1
 server {
  listen 80;
+ # Existing relays may bind 127.0.0.1:80 specifically. Such a listener
+ # takes precedence over the wildcard 0.0.0.0:80 virtual host even when
+ # the HTTP Host header names this PDF vhost. Match both address groups.
+ listen 127.0.0.1:80;
  listen [::]:80;
  server_name pdf.gczhouwld.com;
  root /var/www/gallery-pdf-acme;
@@ -180,13 +184,31 @@ install_new(){
    # HTTP-01 challenge before requesting a public CA certificate.
    # This does not contact Let's Encrypt and cannot consume a CA limit.
    local acme_name acme_expect acme_result
-   acme_name="gallery-acme-probe-$"
+   # A URL-safe disposable challenge identifier; the old literal trailing
+   # "$" was ambiguous when diagnosing a 404 through multiple vhosts.
+   acme_name="gallery-acme-probe-$(date +%s)-$"
    acme_expect="gallery-private-pdf-http01-$"
    printf '%s' "$acme_expect" > "$WEBROOT/.well-known/acme-challenge/$acme_name"
    chmod 0644 "$WEBROOT/.well-known/acme-challenge/$acme_name"
+   # Confirm the running Nginx worker can traverse all parent directories,
+   # not only the three 0755 directories reported by prior preflight logs.
+   local worker_user
+   worker_user="$(ps -eo user=,args= | awk '/nginx: worker process/{print $1; exit}' || true)"
+   if [[ -n "$worker_user" ]] && command -v runuser >/dev/null &&
+      ! runuser -u "$worker_user" -- test -r "$WEBROOT/.well-known/acme-challenge/$acme_name"; then
+     echo '[DIAG] ACME file is not readable by the active Nginx worker; directory ancestry:' >&2
+     namei -l "$WEBROOT/.well-known/acme-challenge/$acme_name" >&2 || true
+     rm -f "$WEBROOT/.well-known/acme-challenge/$acme_name"
+     abort 'Nginx worker cannot read ACME challenge; certbot was NOT called'
+   fi
    if ! acme_result="$(curl --noproxy '*' --fail --silent --show-error \
      --connect-timeout 3 --max-time 8 --resolve "$HOST:80:127.0.0.1" \
      "http://$HOST/.well-known/acme-challenge/$acme_name")"; then
+     echo '[DIAG] Nginx HTTP-01 routing probe failed; this is before certificate issuance.' >&2
+     echo '[DIAG] HTTP :80 listener addresses (no Nginx config secrets):' >&2
+     ss -ltnH '( sport = :80 )' 2>/dev/null | head -8 >&2 || true
+     echo '[DIAG] File ancestry:' >&2
+     namei -l "$WEBROOT/.well-known/acme-challenge/$acme_name" >&2 || true
      rm -f "$WEBROOT/.well-known/acme-challenge/$acme_name"
      abort 'Local ACME webroot challenge returned an error; certbot was NOT called'
    fi

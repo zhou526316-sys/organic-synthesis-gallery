@@ -14,7 +14,7 @@ permissions:
 jobs:
   gateway-security:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,11 +32,18 @@ jobs:
             'deploy/pdf-gateway/run-from-windows.ps1',
             [ref]$tokens, [ref]$errors) | Out-Null
           if ($errors.Count -gt 0) { throw "PowerShell launcher syntax invalid" }
+      - name: Install isolated Nginx binary for HTTP-01 address-precedence regression
+        run: |
+          if ! command -v nginx >/dev/null; then
+            sudo apt-get update -qq
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y nginx
+          fi
       - name: Syntax and owner PDF gateway security regression
         run: |
           set -euo pipefail
-          bash -n deploy/pdf-gateway/install.sh deploy/pdf-gateway/test_acme_permissions.sh
+          bash -n deploy/pdf-gateway/install.sh deploy/pdf-gateway/test_acme_permissions.sh deploy/pdf-gateway/test_acme_vhost_precedence.sh
           bash deploy/pdf-gateway/test_acme_permissions.sh
+          bash deploy/pdf-gateway/test_acme_vhost_precedence.sh
           python -m py_compile deploy/pdf-gateway/gateway.py deploy/pdf-gateway/test_gateway.py
           python -m unittest discover -s deploy/pdf-gateway -p 'test_gateway.py' -v
 
