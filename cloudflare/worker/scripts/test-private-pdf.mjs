@@ -257,6 +257,31 @@ await test('stalled document D1 lookup fails closed within server budget, never 
   }
 });
 
+await test('stalled live session lookup cannot issue a private PDF ticket or expose owner timings',async()=>{
+  const originalPrepare=db.prepare.bind(db);
+  db.prepare=sql=>{
+    if(String(sql).includes('FROM user_sessions WHERE token_hash = ?'))
+      return {bind:()=>({first:()=>new Promise(()=>{})})};
+    return originalPrepare(sql);
+  };
+  let result,elapsed;
+  const beforeGet=bucket.getCalls;
+  try {
+    const began=Date.now();
+    result=await openPrivatePdf(await authRequest(
+      '/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345',
+      'owner-token',{method:'POST'}),env);
+    elapsed=Date.now()-began;
+  } finally { db.prepare=originalPrepare; }
+  assert.equal(result.status,503);
+  assert.equal(result.body.error,'private_pdf_authorization_unavailable');
+  assert.equal(result.body.url,undefined,'no signed ticket before a verified session');
+  assert.equal(result.headers?.['server-timing'],undefined,
+    'identity-unverified sessions must not receive internal timing details');
+  assert.equal(bucket.getCalls,beforeGet,'session timeout must never touch R2 bytes');
+  assert(elapsed>=4000&&elapsed<6500,'session timeout must be bounded: '+elapsed);
+});
+
 await test('temporary URL serves inline PDF bytes with no-store',async()=>{
   const res=await servePrivatePdf(new Request(accessUrl),env,{});
   assert.equal(res.status,200);assert.equal(res.headers.get('content-type'),'application/pdf');assert.match(res.headers.get('content-disposition'),/^inline/);assert.equal(res.headers.get('cache-control'),'private, no-store');
