@@ -1,0 +1,74 @@
+name: Verify release-safe literature title presentation
+on:
+  push:
+    branches:
+      - fix/release-safe-title-backfill-overlay-20261010
+    paths:
+      - 'public/papers.gz.b64'
+      - 'scripts/apply-verified-title-presentation.mjs'
+      - 'scripts/test-verified-title-presentation.mjs'
+      - 'cloudflare/scripts/merge-curated-pages.mjs'
+      - '.github/workflows/verify-title-presentation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Guard authorized daily 08:00 literature release
+        run: |
+          node scripts/validate-production-literature-release-slot.mjs
+          node scripts/validate-pages-literature-authorization.mjs
+      - name: Test metadata receipt, strict DOI matching and build-time overlay
+        run: |
+          node --check scripts/apply-verified-title-presentation.mjs
+          node --check cloudflare/scripts/merge-curated-pages.mjs
+          node scripts/test-backfill-pending-titles.mjs
+          node scripts/test-verified-title-presentation.mjs
+      - name: Run complete real-corpus title presentation in isolated directory
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import {mkdtemp,mkdir,copyFile,readFile,writeFile,rm} from 'node:fs/promises';
+          import {tmpdir} from 'node:os';
+          import path from 'node:path';
+          import assert from 'node:assert/strict';
+          import {applyVerifiedTitlePresentationToPages} from './scripts/apply-verified-title-presentation.mjs';
+          const dir=await mkdtemp(path.join(tmpdir(),'verified-title-pages-'));
+          try {
+            await mkdir(path.join(dir,'audit/title-backfill'),{recursive:true});
+            await mkdir(path.join(dir,'public'),{recursive:true});
+            for(const name of [
+              'audit/publication-release-state.json',
+              'audit/title-backfill/verified-titles-20261010.json',
+              'public/papers.gz.b64',
+              'public/total-synthesis.json','public/manual-supplement.json',
+              'public/final-audit-supplement.json','public/curated-supplement.json',
+              'public/automation-supplement.json','public/rolling-supplement.json'
+            ]) await copyFile(name,path.join(dir,name));
+            const r=JSON.parse(await readFile('public/rolling-supplement.json','utf8'));
+            const a=JSON.parse(await readFile('public/automation-supplement.json','utf8'));
+            const c=JSON.parse(await readFile('public/curated-supplement.json','utf8'));
+            const papers=[...new Map([...c.papers,...a.papers,...r.papers]
+              .map(row=>[row.doi.toLowerCase(),row])).values()];
+            await writeFile(path.join(dir,'public/literature-supplement.json'),
+              JSON.stringify({papers,generatedAt:'isolated_test'}));
+            const originalBase=await readFile('public/papers.gz.b64');
+            const summary=await applyVerifiedTitlePresentationToPages(dir);
+            assert.equal(summary.originalApprovedDois,938);
+            assert.equal(summary.baselineTitleGaps,125);
+            assert.equal(summary.verifiedReceipts,125);
+            assert.equal(summary.newLiteratureAdmissions,0);
+            assert.equal(summary.protectedFilesModified,0);
+            assert.deepEqual(await readFile(path.join(dir,'public/papers.gz.b64')),originalBase);
+            console.log(JSON.stringify({ok:true,summary},null,2));
+          } finally {await rm(dir,{recursive:true,force:true});}
+          NODE
