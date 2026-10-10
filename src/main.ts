@@ -782,6 +782,8 @@ function resetResultWindow(): void {
   if (indexedViewState && architectureLandingPapers.length) setArchitectureCorpus(architectureLandingPapers);
   indexedViewState = null;
   indexedSearchPending = false;
+  document.documentElement.dataset.catalogQueryRead = 'local';
+  delete document.documentElement.dataset.catalogIndexedQuery;
 }
 
 function resultScopeIsDefaultRecent(): boolean {
@@ -1881,6 +1883,7 @@ async function loadIndexedViewPage(
   indexedViewRetryKey = '';
   indexedViewRetryCount = 0;
   setArchitectureCorpus(indexedPapers);
+  document.documentElement.dataset.catalogIndexedQuery = query.trim().toLowerCase();
   document.documentElement.dataset.catalogQueryRead = 'd1-index';
   mount();
   return true;
@@ -1988,6 +1991,7 @@ async function goToIndexedResultPage(requestedPage: number): Promise<void> {
       loading: false,
     };
     setArchitectureCorpus(indexedPapers);
+    document.documentElement.dataset.catalogIndexedQuery = query.trim().toLowerCase();
     document.documentElement.dataset.catalogQueryRead = 'd1-index';
     mount();
     document.querySelector<HTMLElement>('#gallery')?.scrollIntoView({ block: 'start', behavior: 'auto' });
