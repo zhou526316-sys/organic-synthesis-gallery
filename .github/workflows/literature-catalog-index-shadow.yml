@@ -49,6 +49,7 @@ jobs:
           SITE_URL: https://gallery.gczhouwld.com/
           WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev/
           BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
           SEARCH_ENRICHMENT_REPORT: ${{ runner.temp }}/literature-search-enrichment-report.json
         run: node scripts/sync-literature-search-enrichment.mjs
 
