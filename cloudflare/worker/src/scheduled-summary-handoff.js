@@ -216,15 +216,24 @@ export async function readScheduledSummaryAsset(env) {
   }
 }
 
-export async function getScheduledSummaryForEvidence(env, doiValue, evidence) {
+export async function getScheduledSummaryForEvidence(env, doiValue, evidence, options = {}) {
   const doi = normalizeDoi(doiValue);
-  if (!doi || !evidence) return null;
+  if (!doi || !evidence || evidence.doi !== doi) return null;
   const asset = await readScheduledSummaryAsset(env);
   const row = asset.items?.[doi];
-  if (!row || row.schemaVersion !== SCHEDULED_SUMMARY_SCHEMA_VERSION || row.status !== 'approved') return null;
-  if (row.sourceHash !== evidence.sourceHash || row.evidencePacketHash !== evidence.evidencePacketHash) return null;
+  if (!row || row.doi !== doi || row.schemaVersion !== SCHEDULED_SUMMARY_SCHEMA_VERSION || row.status !== 'approved') return null;
   if (typeof row.zh !== 'string' || typeof row.en !== 'string' || !row.zh.trim() || !row.en.trim()) return null;
-  return row;
+  if (row.sourceHash !== evidence.sourceHash) return null;
+  if (row.evidencePacketHash === evidence.evidencePacketHash) return row;
+  // A metadata-only re-capture can change EvidencePacketHash while retaining
+  // the exact chemistry-bearing source text. This is NOT a hash bypass:
+  // independently re-hash and provenance-check the entire current Evidence
+  // packet before accepting the previously twice-reviewed interpretation.
+  // No hook is supplied to administrative handoff paths: they stay strict.
+  if (row.evidenceLevel !== (evidence.evidenceLevel || evidence.fulltextStatus)
+    || typeof options.verifyContentEquivalent !== 'function') return null;
+  const verified = await options.verifyContentEquivalent(evidence, row, doi);
+  return verified ? { ...row, contentEquivalentRevalidated: true } : null;
 }
 
 async function currentLegacySummaryMatches(env, doi, evidencePacketHash, sourceHash) {

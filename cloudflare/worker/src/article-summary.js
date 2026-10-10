@@ -247,6 +247,67 @@ async function readEvidence(env, doi) {
   }
 }
 
+const CONTENT_SHA256 = /^[a-f0-9]{64}$/;
+async function verifyCurrentContentEquivalentEvidence(evidence, approved, doi) {
+  try {
+    if (!evidence || !approved || evidence.schemaVersion !== EVIDENCE_SCHEMA_VERSION
+      || evidence.doi !== doi || approved.doi !== doi
+      || evidence.sourceHash !== approved.sourceHash
+      || !CONTENT_SHA256.test(String(evidence.sourceHash || ''))
+      || !CONTENT_SHA256.test(String(evidence.evidencePacketHash || ''))
+      || (evidence.evidenceLevel || evidence.fulltextStatus) !== approved.evidenceLevel
+      || evidence.fulltextStatus !== evidence.evidenceLevel
+      || validateProvenance(evidence, doi).error
+      || !Array.isArray(evidence.sections) || !Array.isArray(evidence.captions)
+      || !Array.isArray(evidence.tables)) return false;
+
+    const allRows = [...evidence.sections, ...evidence.captions, ...evidence.tables];
+    if (!allRows.length || allRows.length > 1200) return false;
+    for (const row of allRows) {
+      if (!row || typeof row.text !== 'string'
+        || !CONTENT_SHA256.test(String(row.hash || ''))
+        || await sha256Hex(row.text) !== row.hash) return false;
+    }
+    const canonical = canonicalSourceText(evidence.sections, evidence.captions, evidence.tables);
+    if (canonical.length > 2_000_000
+      || Number(evidence.chars) !== canonical.length
+      || Number(evidence.sectionCount) !== evidence.sections.length
+      || Number(evidence.captionCount) !== evidence.captions.length
+      || Number(evidence.tableCount) !== evidence.tables.length
+      || CHALLENGE_TEXT.test(canonical.slice(0,12_000))
+      || await sha256Hex(canonical) !== evidence.sourceHash) return false;
+
+    // Check the entire current V2 packet, including DOI, scholarly provenance,
+    // policy, capture identifiers and every current evidence row. An unchanged
+    // text hash alone is never sufficient to approve a changed/corrupt packet.
+    const packetCore = {
+      schemaVersion: evidence.schemaVersion,
+      doi: evidence.doi,
+      title: evidence.title,
+      journal: evidence.journal,
+      publisher: evidence.publisher,
+      articleUrl: evidence.articleUrl,
+      sourceUrl: evidence.sourceUrl,
+      pageDoi: evidence.pageDoi,
+      captureVersion: evidence.captureVersion,
+      controllerRevision: evidence.controllerRevision,
+      jobId: evidence.jobId,
+      queueGeneratedAt: evidence.queueGeneratedAt,
+      capturedAt: evidence.capturedAt,
+      fulltextStatus: evidence.fulltextStatus,
+      evidenceLevel: evidence.evidenceLevel,
+      textProcessingPolicy: evidence.textProcessingPolicy,
+      sourceHash: evidence.sourceHash,
+      sections: evidence.sections,
+      captions: evidence.captions,
+      tables: evidence.tables,
+    };
+    return await sha256Hex(JSON.stringify(packetCore)) === evidence.evidencePacketHash;
+  } catch {
+    return false;
+  }
+}
+
 async function legacyFulltextAvailable(env, doi) {
   if (!env?.MEDIA) return false;
   const keys = await keysForDoi(doi);
@@ -406,7 +467,9 @@ export async function getArticleSummary(env, doiValue) {
     };
   }
 
-  const scheduled = await getScheduledSummaryForEvidence(env, doi, evidence);
+  const scheduled = await getScheduledSummaryForEvidence(env, doi, evidence, {
+    verifyContentEquivalent: verifyCurrentContentEquivalentEvidence,
+  });
   if (scheduled) {
     return {
       status: 200,
@@ -418,6 +481,7 @@ export async function getArticleSummary(env, doiValue) {
         cached: true,
         state: 'published',
         source: 'scheduled_reviewed_evidence_v2',
+        contentEquivalentRevalidated: scheduled.contentEquivalentRevalidated === true,
         zh: scheduled.zh.trim(),
         en: scheduled.en.trim(),
         generatedAt: Number(scheduled.generatedAt || 0),
