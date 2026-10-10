@@ -17,7 +17,20 @@ async function visit(browser, title, suffix, doi, width, height, reducedMotion =
     await page.goto(ORIGIN + suffix, { waitUntil: 'domcontentloaded', timeout: 25000 });
     await page.locator('html[data-card-share-ready="true"]').waitFor({ state: 'attached', timeout: 35000 });
     const card = page.locator('#gallery > article.card[data-doi="' + doi + '"]');
-    await card.waitFor({ state: 'visible', timeout: 35000 });
+    try {
+      await card.waitFor({ state: 'visible', timeout: 25000 });
+    } catch (error) {
+      const diagnostics = await page.evaluate(() => ({
+        featured: document.documentElement.dataset.galleryEditionFeaturedDoi || null,
+        catalogRead: document.documentElement.dataset.catalogRead || null,
+        galleryCards: [...document.querySelectorAll('#gallery > .card[data-doi]')].slice(0, 25)
+          .map(element => element.getAttribute('data-doi')),
+        resultCount: document.querySelector('#resultCount')?.textContent,
+        visibleText: document.querySelector('#app')?.textContent?.slice(0, 250),
+      }));
+      console.error(JSON.stringify({ title, doi, diagnostics, pageErrors }));
+      throw error;
+    }
     await page.waitForFunction(target => {
       const node = [...document.querySelectorAll('#gallery > .card[data-doi]')]
         .find(item => item.getAttribute('data-doi')?.toLowerCase() === target);
