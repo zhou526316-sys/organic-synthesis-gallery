@@ -1,0 +1,41 @@
+name: Gallery full-history abstract gaps read-only audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/literature-basic-abstract-gap-audit.json'
+permissions:
+  contents: read
+concurrency:
+  group: gallery-basic-abstract-gap-audit
+  cancel-in-progress: false
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    env:
+      GALLERY_SITE_URL: https://gallery.gczhouwld.com/
+      GALLERY_API_URL: https://api.gczhouwld.com/
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+      GALLERY_ABSTRACT_GAP_REPORT: ${{ runner.temp }}/gallery-basic-abstract-gap-audit.json
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Check read-only DOI audit syntax
+        run: node --check scripts/audit-gallery-abstract-gaps.mjs
+      - name: Verify current catalog and DOI-by-DOI abstract gaps
+        run: node scripts/audit-gallery-abstract-gaps.mjs
+      - name: Preserve exact missing DOI, journal, and live-card reason
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-basic-abstract-gap-audit-${{ github.run_id }}
+          path: ${{ runner.temp }}/gallery-basic-abstract-gap-audit.json
+          retention-days: 21
+          if-no-files-found: error
