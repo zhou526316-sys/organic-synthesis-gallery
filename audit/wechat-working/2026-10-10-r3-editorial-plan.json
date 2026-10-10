@@ -1,0 +1,547 @@
+{
+  "date": "2026-10-10",
+  "revision": "2026-10-10-r3",
+  "selectedDois": [
+    "10.1002/anie.3306470",
+    "10.1038/s44160-026-01128-y"
+  ],
+  "draftOnly": true,
+  "publicSendAuthorized": false,
+  "textMethod": "Primary source grounded, causal high-level synthesis and clearly calibrated evidence strength",
+  "scientificReview": {
+    "method": "Retain exact source-backed empirical data and numbered-source figure placement; rewrite for causal hierarchy and calibrated inference, not added rhetoric.",
+    "sourceMain": [
+      "Angew Chem Int Ed 2026, e3306470, DOI 10.1002/anie.3306470, 8 pages",
+      "Nature Synthesis 2026, DOI 10.1038/s44160-026-01128-y, 10 pages"
+    ],
+    "sourceSupporting": [
+      "anie75240-sup-0001-suppmat.docx",
+      "44160_2026_1128_MOESM1_ESM.pdf, 251 pages"
+    ],
+    "status": "authored_pending_independent_git_review",
+    "doNotTreatAsObserved": [
+      "exclusive Ni oxidation state",
+      "absolute radical rate or Ni speciation",
+      "full iron complex identity",
+      "quantitative timeline causal flux",
+      "universal sustainability"
+    ],
+    "strongerEditorialFocus": [
+      "regioselectivity via native functional group",
+      "orthogonal control of radical generation vs sorting",
+      "multifunctional reagent coupling",
+      "reaction potential timeline and HER temporal gating",
+      "operational tradeoffs and catalyst loading"
+    ]
+  },
+  "articles": [
+    {
+      "label": "今日精选（Angew）",
+      "doi": "10.1002/anie.3306470",
+      "headline": "铁–LMCT/镍–SH₂协同催化游离羧酸直接甲基编辑",
+      "quickPoints": 3,
+      "bodyImageCount": 18,
+      "paragraphs": 35,
+      "structure": [
+        {
+          "sectionIndex": 0,
+          "heading": "1｜把官能团变成定位信息：为什么选择游离羧酸？",
+          "paragraphCount": 3,
+          "figureAfterParagraph": {
+            "2": [
+              "f01"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f01",
+              "caption": "原文 Scheme 1A｜常见 C–H 甲基化、先活化官能团置换，与游离羧酸直接编辑的策略比较。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 1,
+          "heading": "2｜自由基不缺生成方法，缺的是选择性汇合",
+          "paragraphCount": 3,
+          "figureAfterParagraph": {},
+          "figureEvidence": []
+        },
+        {
+          "sectionIndex": 2,
+          "heading": "3｜CHP 的角色：把两套催化循环连接成一套反应网络",
+          "paragraphCount": 3,
+          "figureAfterParagraph": {},
+          "figureEvidence": []
+        },
+        {
+          "sectionIndex": 3,
+          "heading": "4｜条件筛选读什么：产率、交叉选择性与可分离性",
+          "paragraphCount": 5,
+          "figureAfterParagraph": {
+            "1": [
+              "f03"
+            ],
+            "2": [
+              "f04"
+            ],
+            "3": [
+              "f05"
+            ],
+            "4": [
+              "f06"
+            ],
+            "5": [
+              "f13"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f03",
+              "caption": "原文 Scheme 2（反应总览）｜模型羧酸 1、CHP 2 与产物 3，及主要竞争产物 4–6。"
+            },
+            {
+              "id": "f04",
+              "caption": "原文 Scheme 2A｜铁/铈催化剂筛选。Fe(OAc)₂ 的 70% 为 GC–MS 收率，勿与 66% 分离收率混淆。"
+            },
+            {
+              "id": "f05",
+              "caption": "原文 Scheme 2B｜Ni(acac)₂/KTp*、Ni(OAc)₂·4H₂O 与配体位阻对效率、交叉选择性的影响。"
+            },
+            {
+              "id": "f06",
+              "caption": "原文 Scheme 2C｜缺少铁、镍、光或 CHP 及不同过氧化物对照，支持催化网络的组分依赖。"
+            },
+            {
+              "id": "f13",
+              "caption": "补充信息 SI Table S1｜更加完整的筛选收率、反应副产物比例与催化剂筛选结果。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 4,
+          "heading": "5｜三级羧酸：拥挤季碳成键与位点预设的价值",
+          "paragraphCount": 3,
+          "figureAfterParagraph": {
+            "3": [
+              "f07"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f07",
+              "caption": "原文 Scheme 3A｜三级羧酸范围和季碳中心构建，包括吉非贝齐、苯扎贝特衍生物。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 5,
+          "heading": "6｜二级羧酸：越接近药物结构，越要看竞争反应",
+          "paragraphCount": 3,
+          "figureAfterParagraph": {
+            "2": [
+              "f08"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f08",
+              "caption": "原文 Scheme 3B｜二级羧酸、药物样片段及富杂原子底物。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 6,
+          "heading": "7｜一级羧酸：自由基分流是否经得起反应性改变？",
+          "paragraphCount": 3,
+          "figureAfterParagraph": {
+            "2": [
+              "f09"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f09",
+              "caption": "原文 Scheme 3C｜一级羧酸及复杂官能团范围；石胆酸/糖衍生物是有效但收率不均的例子。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 7,
+          "heading": "8｜同位素实验让溶剂现身：甲基从哪里来？",
+          "paragraphCount": 4,
+          "figureAfterParagraph": {
+            "1": [
+              "f10"
+            ],
+            "2": [
+              "f14"
+            ],
+            "3": [
+              "f15"
+            ],
+            "4": [
+              "f16"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f10",
+              "caption": "原文 Scheme 3D｜CH₃/CD₃ 切换，DMSO-d₆ 可抑制未标记甲基的竞争来源。"
+            },
+            {
+              "id": "f14",
+              "caption": "补充信息 SI Table S2｜甲基同位素标记与溶剂对照，区分收率和标记比例。"
+            },
+            {
+              "id": "f15",
+              "caption": "补充信息 SI Fig. S2｜作者提出的 DMSO 参与甲基自由基生成的竞争路径。"
+            },
+            {
+              "id": "f16",
+              "caption": "补充信息 SI Fig. S3｜DMSO-d₆/H₂O₂ 对照中仍检出 CD₃ 产物，支持溶剂参与。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 8,
+          "heading": "9｜从 CV、光谱到双循环：证据如何一层层收束？",
+          "paragraphCount": 5,
+          "figureAfterParagraph": {
+            "1": [
+              "f11"
+            ],
+            "3": [
+              "f17",
+              "f18"
+            ],
+            "4": [
+              "f12"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f11",
+              "caption": "原文 Scheme 4A｜羧酸、CHP 和光照改变铁体系 CV 的响应；峰不可直接定性为单一铁物种。"
+            },
+            {
+              "id": "f17",
+              "caption": "补充信息 SI Fig. S11｜光照前后 GC–MS 对照，用于识别光致脱羧及过氧化物分解相关物质。"
+            },
+            {
+              "id": "f18",
+              "caption": "补充信息 SI Fig. S12｜Fe(OAc)₂/羧酸/CHP 混合物受 390 nm 光照前后的紫外–可见吸收变化。"
+            },
+            {
+              "id": "f12",
+              "caption": "原文 Scheme 4B｜作者提出的 Fe–LMCT/Ni–SH₂ 协同机理，并非全部中间体已直接观察。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 9,
+          "heading": "10｜从一项转化看方法学：可迁移的原则与未解决的成本",
+          "paragraphCount": 3,
+          "figureAfterParagraph": {},
+          "figureEvidence": []
+        }
+      ],
+      "sourcePolicy": "Original figures and cover pixels immutable from R2; evidentiary figure order unchanged."
+    },
+    {
+      "label": "往期精选（Nature Synthesis）",
+      "doi": "10.1038/s44160-026-01128-y",
+      "headline": "醇与醇的电化学脱羟基交叉偶联",
+      "quickPoints": 3,
+      "bodyImageCount": 31,
+      "paragraphs": 31,
+      "structure": [
+        {
+          "sectionIndex": 0,
+          "heading": "从两种醇到一根 C–C 键：问题表面简单，实则层层受限",
+          "paragraphCount": 2,
+          "figureAfterParagraph": {},
+          "figureEvidence": []
+        },
+        {
+          "sectionIndex": 1,
+          "heading": "1｜活化醇：能否不把难题转嫁给下一步催化？",
+          "paragraphCount": 2,
+          "figureAfterParagraph": {
+            "1": [
+              "f02",
+              "f03"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f02",
+              "caption": "原文 Fig. 1a｜各种烷基前体的供应和交叉偶联使用情况：醇的原料优势。"
+            },
+            {
+              "id": "f03",
+              "caption": "原文 Fig. 1b｜Mitsunobu、NHC 与 CEBO 原位脱羟基活化策略及其副产物。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 2,
+          "heading": "2｜A-3 的意义：原位生成碘代物，而非绕过化学活化",
+          "paragraphCount": 3,
+          "figureAfterParagraph": {
+            "1": [
+              "f04",
+              "s01"
+            ],
+            "3": [
+              "s03"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f04",
+              "caption": "原文 Fig. 2 顶部｜A-1–A-5 活化剂筛选与模型醇甲基化；78% 为筛选测定值。"
+            },
+            {
+              "id": "s01",
+              "caption": "SI Table S1｜Vilsmeier 活化剂 A-1–A-13 与无活化剂对照；目标产物和均偶联副产物。"
+            },
+            {
+              "id": "s03",
+              "caption": "SI Table S3｜溶剂对照：DMF、DMA、NMP、MeCN、DMSO。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 3,
+          "heading": "3｜时间是隐藏的反应参数：析氢如何改变偶联起跑线？",
+          "paragraphCount": 3,
+          "figureAfterParagraph": {
+            "1": [
+              "f19",
+              "s10"
+            ],
+            "3": [
+              "s13"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f19",
+              "caption": "原文 Fig. 5d｜活化卤代烷烃快速生成、初始 HER 及后期偶联增长的时间轨迹。"
+            },
+            {
+              "id": "s10",
+              "caption": "SI Fig. S8｜3 分钟即生成卤代物的时间追踪，随后偶联逐渐开始。"
+            },
+            {
+              "id": "s13",
+              "caption": "SI Fig. S14｜A-3 反应中阴极工作电位随时间由较正转向 Ni(II)/Ni(I) 还原区域。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 4,
+          "heading": "4｜Ni(I) 与 Ni(0) 不是非此即彼：证据取决于底物与操作窗口",
+          "paragraphCount": 4,
+          "figureAfterParagraph": {
+            "1": [
+              "f16",
+              "s11"
+            ],
+            "2": [
+              "f18"
+            ],
+            "3": [
+              "f20",
+              "s14"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f16",
+              "caption": "原文 Fig. 5a｜镍配合物在烷基溴化物、碘化物存在下的不同伏安响应。"
+            },
+            {
+              "id": "s11",
+              "caption": "SI Fig. S9｜镍配合物 Ni(II)/Ni(I) 与 Ni(I)/Ni(0) 的伏安窗口和峰值。"
+            },
+            {
+              "id": "f18",
+              "caption": "原文 Fig. 5c｜预制 Ni(0)、Ni(I)、Ni(II) 与烷基镍配合物的化学计量对照。"
+            },
+            {
+              "id": "f20",
+              "caption": "原文 Fig. 5e｜作者提出的 Ni(I)/Ni(II)/Ni(III) 催化循环，属于工作模型。"
+            },
+            {
+              "id": "s14",
+              "caption": "SI Fig. S15｜A-2 条件下阴极更负的电位历程，可能涉及 Ni(0)。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 5,
+          "heading": "5｜自由基钟告诉我们什么，又没有告诉我们什么？",
+          "paragraphCount": 2,
+          "figureAfterParagraph": {
+            "1": [
+              "f17"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f17",
+              "caption": "原文 Fig. 5b｜自由基钟：环化与环丙基开环实验。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 6,
+          "heading": "6｜从 MeOH 到 CD₃OD：位点编辑与立体信息保留",
+          "paragraphCount": 3,
+          "figureAfterParagraph": {
+            "1": [
+              "f05"
+            ],
+            "2": [
+              "f06"
+            ],
+            "3": [
+              "f11"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f05",
+              "caption": "原文 Fig. 2 主体｜MeOH 与 CD₃OD 作为甲基及氘代甲基来源的底物适用范围。"
+            },
+            {
+              "id": "f06",
+              "caption": "原文 Fig. 2 下部｜药物片段和多环骨架的后期氘代甲基化及 dr 边界。"
+            },
+            {
+              "id": "f11",
+              "caption": "原文 Fig. 4a｜糖、天然产物、药物片段的氘代甲基化应用；甾体体系具有 dr 限制。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 7,
+          "heading": "7｜从甲基化扩展到醇–醇偶联：适用性以条件转换为代价",
+          "paragraphCount": 3,
+          "figureAfterParagraph": {
+            "1": [
+              "f07",
+              "f08",
+              "f09"
+            ],
+            "2": [
+              "f10"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f07",
+              "caption": "原文 Fig. 3 顶部｜不同醇类型的交叉偶联通式、Fe/Ni 电极和配体 L1/L3。"
+            },
+            {
+              "id": "f08",
+              "caption": "原文 Fig. 3 伯醇上部｜伯醇–伯醇的链延长、含氮杂环和含氧环结构。"
+            },
+            {
+              "id": "f09",
+              "caption": "原文 Fig. 3 伯醇下部及伯仲醇｜官能团容忍、羟基选择性及伯仲醇偶联实例。"
+            },
+            {
+              "id": "f10",
+              "caption": "原文 Fig. 3 底部｜仲醇–仲醇以及三级–一级醇的扩展条件与不同收率。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 8,
+          "heading": "8｜合成应用：既要看目标分子，也要看路线代价",
+          "paragraphCount": 3,
+          "figureAfterParagraph": {
+            "1": [
+              "f12",
+              "f13"
+            ],
+            "2": [
+              "f14",
+              "f15"
+            ],
+            "3": [
+              "s07"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "f12",
+              "caption": "原文 Fig. 4b(i)｜从手性哌啶醇出发构建吲哚并喹嗪生物碱前体。"
+            },
+            {
+              "id": "f13",
+              "caption": "原文 Fig. 4b(ii)｜CD₃OD 参与合成含氘吲哚并喹嗪衍生物。"
+            },
+            {
+              "id": "f14",
+              "caption": "原文 Fig. 4b(iii)｜醇与芳基碘化物偶联构建 CCR3 拮抗剂前体：不是醇–醇偶联。"
+            },
+            {
+              "id": "f15",
+              "caption": "原文 Fig. 4b(iv)｜rac-traumatic lactone 的偶联与后续水解合成路线。"
+            },
+            {
+              "id": "s07",
+              "caption": "SI Fig. S2｜4 mmol、1.16 g 放大的装置及条件；Fe/Ni 电极与实际操作。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 9,
+          "heading": "9｜SI 的反面证据：选择性从来不是没有代价的",
+          "paragraphCount": 3,
+          "figureAfterParagraph": {
+            "1": [
+              "s05"
+            ],
+            "2": [
+              "s04",
+              "s16"
+            ],
+            "3": [
+              "s08"
+            ]
+          },
+          "figureEvidence": [
+            {
+              "id": "s05",
+              "caption": "SI Table S6｜降低 MeOH 当量后目标收率下降、均偶联增加。"
+            },
+            {
+              "id": "s04",
+              "caption": "SI Table S4｜电极材料对照：Fe 阳极和泡沫镍阴极更有效。"
+            },
+            {
+              "id": "s16",
+              "caption": "SI Table S11（节选）｜按产物统计电荷投入，标准条件多数为约 18.7 F mol⁻¹。"
+            },
+            {
+              "id": "s08",
+              "caption": "SI Fig. S7（下半部）｜反应边界：不适用的官能团及反应体系，报告低效或未检出。"
+            }
+          ]
+        },
+        {
+          "sectionIndex": 10,
+          "heading": "10｜这项研究留下的真正方法学启示",
+          "paragraphCount": 3,
+          "figureAfterParagraph": {},
+          "figureEvidence": []
+        }
+      ],
+      "sourcePolicy": "Original figures and cover pixels immutable from R2; evidentiary figure order unchanged."
+    }
+  ]
+}
