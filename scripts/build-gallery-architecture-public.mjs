@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { DATA_FILES, collectPapers, assertPartition, sameSet, markerPublicationSlot } from './pages-release-delivery.mjs';
 import { buildCatalog, verifyCatalog, stable, digest } from '../architecture/catalog.mjs';
 import { buildLegacyTitlePresentation } from '../architecture/title-presentation.mjs';
+import { ABSTRACT_SCHEMA,validAbstractRecord,abstractSearchTerms } from '../shared/literature-abstracts.mjs';
 import { loadScopeCorrections } from './lib/scope-corrections.mjs';
 import { isExcludedDoi } from '../shared/literature-policy.js';
 import { beijingDate } from '../shared/literature-lifecycle.mjs';
@@ -88,12 +89,29 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   const sourceCommit = git('rev-parse', 'HEAD');
   const markerBlobSha = blobSha(markerText);
   const datasetSha256 = sha256(pretty(sourceDois));
-  const bundle = buildCatalog([...built.values()], {
+  // Public original abstract metadata is indexed separately from the frozen
+  // 08:00 literature admission dataset: no DOI can be admitted by this overlay.
+  const abstractIndex = await json('public/literature-abstracts.json');
+  assert(abstractIndex.schemaVersion === ABSTRACT_SCHEMA
+    && abstractIndex.items && typeof abstractIndex.items === 'object'
+    && !Array.isArray(abstractIndex.items), 'abstract_index_schema_invalid');
+  const known = new Set(sourceDois);
+  for (const [doi,row] of Object.entries(abstractIndex.items)) {
+    assert(known.has(doi) && validAbstractRecord(doi,row), 'abstract_source_or_membership_invalid:'+doi);
+  }
+  const enriched = [...built.values()].map(paper => {
+    const doi=String(paper.doi||'').toLowerCase(),entry=abstractIndex.items[doi];
+    const abstract=entry?.abstract||'';
+    const searchTerms=abstractSearchTerms(paper.title||'',abstract);
+    return {...paper,...(abstract?{abstract,abstractSource:entry.source,
+      abstractSourceUrl:entry.sourceUrl}:{ }),...(searchTerms.length?{searchTerms}:{})};
+  });
+  const bundle = buildCatalog(enriched, {
     asOfDate,
     source: { commit: sourceCommit, datasetSha256, publicationSlot, markerBlobSha, parityBasis:'pages-authorized-public-build' },
     withdrawn,
   });
-  const verification = verifyCatalog(bundle.files, [...built.values()]);
+  const verification = verifyCatalog(bundle.files, enriched);
   assert(verification.records === marker.productionCards, 'catalog_count_marker_mismatch');
 
   const groups = TITLE_PRECEDENCE.map(name => parsePapers(name, texts[name]));
