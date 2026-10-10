@@ -11,6 +11,9 @@ on:
       - scripts/validate-tm220-artifacts.mjs
       - tests/tm-acs-throughput.test.mjs
       - tests/tm-cooldown-inventory-20261010.test.mjs
+      - tests/tm-oct10-rsc-inventory-recovery.test.mjs
+      - shared/body-packet-completion.mjs
+      - cloudflare/worker/src/article-summary.js
       - tests/tm-inventory-startup.test.mjs
       - tests/tm-controller-read-transport.test.mjs
       - tests/tm-rsc-acs-inventory-20261008.test.mjs
@@ -40,6 +43,7 @@ jobs:
           node --check cloudflare/worker/src/local-captures.js
           node --test tests/tm-acs-throughput.test.mjs
           node --test tests/tm-cooldown-inventory-20261010.test.mjs
+          node --test tests/tm-oct10-rsc-inventory-recovery.test.mjs
           node --test tests/tm-inventory-startup.test.mjs
           node tests/tm-controller-read-transport.test.mjs
           node --test tests/tm-rsc-acs-inventory-20261008.test.mjs
@@ -55,7 +59,7 @@ jobs:
           node scripts/test-stage-storage.mjs
           node scripts/validate-tm220-artifacts.mjs source
           git diff --check
-      - name: Build Bridge 2.2.79
+      - name: Build Bridge 2.2.80
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
@@ -66,8 +70,8 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.79' public/gallery-vpn-bridge.user.js
-          grep -F "var INSTALL_REVISION = '6.2.60';" public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.80' public/gallery-vpn-bridge.user.js
+          grep -F "var INSTALL_REVISION = '6.2.61';" public/gallery-vpn-bridge.user.js
           grep -F "ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1'" public/gallery-vpn-bridge.user.js
       - uses: actions/upload-artifact@v4
         if: always()
