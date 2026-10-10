@@ -5,6 +5,7 @@ import {sha256,exactKey,evidenceKey,validateNewBodyMetadata,validateNewBodyBytes
 import {selectLiveVerificationBatch} from './select-new-body-live-dois.mjs';
 import {liveMediaPrimaryProof} from './live-media-primary-proof.mjs';
 import {safeLiveVerificationRequest} from './gallery-live-readonly-post.mjs';
+import {liveCardArticleByDoi,liveCardModeForDoi} from '../shared/live-media-card-visibility.mjs';
 const base='https://gallery.gczhouwld.com/';
 const baseUrl=new URL(base);
 const out=process.env.RUNNER_TEMP+'/new-body-auto-live';await mkdir(out,{recursive:true});
@@ -15,6 +16,8 @@ try{
  const snapshot=JSON.parse(await get('auto-body-publication.json?t='+Date.now()));
  const media=JSON.parse(await get('media-index.json?t='+Date.now()));
  const ledger=JSON.parse(await get('body-publication-ledger.json?t='+Date.now()));
+ const queue=JSON.parse(await get('toc-demand-live.json?t='+Date.now()));
+ const verifiedArticleByDoi=liveCardArticleByDoi(queue);
  const policy=JSON.parse(await readFile('audit/media-auto-policy.json','utf8'));
  assert.equal(status.policyId,policy.policyId);assert.equal(snapshot.policyId,policy.policyId);assert.ok(Number.isInteger(policy.minNewArticles)&&policy.minNewArticles>=1&&policy.minNewArticles<=policy.maxNewArticles);assert.ok(Number.isInteger(policy.maxNewArticles)&&policy.maxNewArticles>=1&&policy.maxNewArticles<=25);assert.equal(policy.requireOfficialTocInBuild,true);
  assert.equal(snapshot.count,snapshot.items.length);assert.equal(status.autoPublishedCount,snapshot.count);assert.ok(snapshot.count>0,'no actual automatically published figure yet');
@@ -86,6 +89,23 @@ try{
    await page.locator('#search').fill(doi);
    await page.waitForFunction(value=>document.querySelector('#search')?.value===value,
      doi,{timeout:5000});
+   const mode=liveCardModeForDoi(verifiedArticleByDoi,doi);
+   const card=page.locator('.card[data-doi="'+doi+'"]');
+   await card.waitFor({timeout:25000});
+   assert.equal(await card.getAttribute('data-media-policy'),mode,'card_media_scope_mismatch:'+doi);
+   if(mode!=='standard'){
+     // A September publication first admitted in October is TOC-only.
+     // Existing published figure bytes remain checked above, but an empty
+     // figure-strip DOM is the REQUIRED policy, not a capture failure.
+     assert.equal(await card.locator('.figure-strip-slot').count(),0,'retro_body_strip_leak:'+doi);
+     assert.equal(await card.locator('.private-pdf-button,.local-pdf-button').count(),0,
+       'retro_private_pdf_action_leak:'+doi);
+     assert.equal(await card.locator('.toc-slot').count(),mode==='toc_only'?1:0,
+       'retro_toc_policy_mismatch:'+doi);
+     result.cards.push({doi,mediaMode:mode,sourceAssetsVerified:true,
+       figureStripSuppressed:true,privatePdfSuppressed:true,tocVisible:mode==='toc_only'});
+     continue;
+   }
    const selector='.figure-strip-slot[data-figure-doi="'+doi+'"]',strip=page.locator(selector);
    try{
      await strip.waitFor({timeout:25000});
