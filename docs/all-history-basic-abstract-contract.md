@@ -31,6 +31,7 @@
 
 - 对 Nature 官方公开 Article 文章页，若经 `citation_doi` 等出版元数据精确验证 DOI，且 HTML 头部没有原始摘要，可以只读取并解析公开且明确标记 `Abstract` / `Abs1` 的区块。流式读取到 Abstract 结束即取消，不允许读取或持久化后面的 Main、Methods、Figure、SI、PDF 或身份认证内容；该文字依然属于原始摘要证据，公开展示仍需遵守最多 200 字符节选与授权限制。
 
+- Semantic Scholar 无身份请求属于共享限额，HTTP 429 时只按官方 `Retry-After` 或保守退避重试有限次数；不得无限重试或增加 IP 代理。仓库可选使用 GitHub Actions Secret `SEMANTIC_SCHOLAR_API_KEY`，仅以 `x-api-key` HTTP 头传递，不写入日志、URL、Git 或网页。未配置时继续可用匿名模式，并如实报告限流而非视为“无摘要”。Springer Nature 免费基础元数据 API 的 `SPRINGER_NATURE_API_KEY` 同样可选，没有密钥时不可虚报 Nature 摘要补全。此类 API 提供元数据不自动授予原文全文公开展示许可。
 - 对身份验证、403、429、未知跳转和验证码，只记录真实失败原因后继续下一 DOI，不绕过登录。对历史回溯的多层滚动 DOI 窗口，来源补抓的轮换索引按外层周期推进，不让较早 DOI 永久饥饿。
 - 对快速增长的长历史目录，需要优化首次重建时的旧 DOI 源缓存复用及可恢复分批，不允许凭成功导入空字符串宣布完整；每轮须报告 `originalAbstracts`、`missingOriginalAbstracts`、`reviewedBilingualCandidates` 和实际通过 DOI 抽查的显示数。
 - 全库检索继续基于原始英文摘要和已经审核的解读索引；本次基础双语概述存放在独立审核表，不自动冒充 Deep Evidence 的已批准记录，也不擅自修改文献收录范围或每日热门数据。
