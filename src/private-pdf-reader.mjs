@@ -2,6 +2,10 @@ import {scanPdfFigureRescue,preparePdfOriginalCropManifest} from './pdf-vault/fi
 import {createContinuousPdfViewer} from './pdf-continuous-viewer.mjs';
 import {waitForPdfFirstPage} from './pdf-first-page-watchdog.mjs';
 import {readBoundedPdfOpenJson} from './pdf-authorize-response.mjs';
+import {
+  TENCENT_PDF_ORIGIN, tencentPdfRouteEnabled, nextOwnerPdfFileOrigin,
+  isMatchingOwnerPdfFileSource, ownerPdfRouteLabel,
+} from './pdf-tencent-file-failover.mjs';
 
 const PDF_ENGINE_LOAD_TIMEOUT_MS = 25_000;
 let pdfEngine = null;
@@ -183,7 +187,8 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
     ['privatePdfEngineMs', '阅读组件', 'ms'],
     ['privatePdfTransferMs', '文件传输', 'ms'],
     ['privatePdfRangeCalls', '分段请求', '次'],
-    ['privatePdfRangeHeaderMs', '分段响应', 'ms'],
+    ['privatePdfRangeHeaderMs', '分段响应头', 'ms'],
+    ['privatePdfRangeBodyMs', '分段完整数据', 'ms'],
     ['privatePdfRangeBytes', '已读字节', 'B'],
     ['privatePdfRangeNetworkBytes', '传输字节', 'B'],
     ['privatePdfFileFailovers', '文件线路切换', '次'],
@@ -192,9 +197,13 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
     return /^\d{1,12}$/.test(value) ? [`${label}:${value}${unit}`] : [];
   });
   const route = document.documentElement.dataset.privatePdfAuthorizePath || '';
+  const fileRoute = document.documentElement.dataset.privatePdfFileRoute || '';
+  const rangeStage = document.documentElement.dataset.privatePdfRangeStage || '';
   diagnostic.textContent = `阶段：${phase} · ${detail || 'unknown'} · ${(elapsed / 1000).toFixed(1)}s` +
     (timingDetails.length ? ' · ' + timingDetails.join(' · ') : '') +
-    (['primary', 'backup', 'both-failed'].includes(route) ? ` · 授权线路:${route}` : '');
+    (['primary', 'backup', 'both-failed'].includes(route) ? ` · 授权线路:${route}` : '') +
+    (['primary', 'backup', 'tencent'].includes(fileRoute) ? ` · 文件线路:${fileRoute}` : '') +
+    (['headers', 'body', 'verified'].includes(rangeStage) ? ` · 分段阶段:${rangeStage}` : '');
   status.appendChild(diagnostic);
   if (['pdf_authorize_timeout','pdf_authorize_network_error','pdf_authorize_body_timeout'].includes(detail)) {
     const attempts = document.documentElement.dataset.privatePdfAuthAttempts || '';
@@ -487,6 +496,7 @@ async function checkPdfHeader(fileUrl) {
 }
 async function fetchValidatedPdfRange(fileUrl, byteLength, begin, end, controller) {
   const requestStarted = performance.now();
+  document.documentElement.dataset.privatePdfRangeStage = 'headers';
   privatePdfRangeNetworkCalls += 1;
   document.documentElement.dataset.privatePdfRangeCalls = String(privatePdfRangeNetworkCalls);
   const response = await fetch(fileUrl, {
@@ -507,8 +517,12 @@ async function fetchValidatedPdfRange(fileUrl, byteLength, begin, end, controlle
       Number(match[3]) !== byteLength) {
     throw new Error('pdf_range_unavailable');
   }
+  document.documentElement.dataset.privatePdfRangeStage = 'body';
   const chunk = new Uint8Array(await response.arrayBuffer());
+  document.documentElement.dataset.privatePdfRangeBodyMs =
+    String(Math.round(performance.now() - requestStarted));
   if (chunk.byteLength !== end - begin) throw new Error('pdf_incomplete_bytes');
+  document.documentElement.dataset.privatePdfRangeStage = 'verified';
   privatePdfRangeNetworkBytes += chunk.byteLength;
   document.documentElement.dataset.privatePdfRangeNetworkBytes = String(privatePdfRangeNetworkBytes);
   return chunk;
@@ -570,11 +584,25 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
     }
     async refreshUrl() {
       if (!this.refreshPromise) {
-        this.refreshPromise = getPdfSource(sessionToken, 'view').then(source => {
+        // Renew a Tencent file ticket only on Tencent's verified first-party
+        // gateway. Never replay the original Worker-issued signed file URL.
+        const onTencent = new URL(this.fileUrl).origin === TENCENT_PDF_ORIGIN;
+        const renew = onTencent
+          ? tencentPdfRouteEnabled().then(allowed => {
+            if (!allowed) throw new Error('pdf_source_invalid');
+            return fetchAuthorizedSource(TENCENT_PDF_ORIGIN, sessionToken, 'view',
+              {signal:AbortSignal.timeout(FALLBACK_AUTHORIZE_TIMEOUT_MS)});
+          })
+          : getPdfSource(sessionToken, 'view');
+        this.refreshPromise = renew.then(source => {
           if (declaredPdfBytes !== byteLength ||
-              (this.expectedHash && source.contentHash !== this.expectedHash))
+              (this.expectedHash && source.contentHash !== this.expectedHash) ||
+              (onTencent && !isMatchingOwnerPdfFileSource(source,
+                TENCENT_PDF_ORIGIN, this.expectedHash, byteLength)))
             throw new Error('pdf_source_invalid');
           this.fileUrl = source.url;
+          document.documentElement.dataset.privatePdfFileRoute =
+            ownerPdfRouteLabel(new URL(source.url).origin);
           return this.fileUrl;
         }).finally(() => { this.refreshPromise = null; });
       }
@@ -600,27 +628,30 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
     async authorizeAlternateFileRoute() {
       if (this.failoverPromise) return this.failoverPromise;
       if (!this.expectedHash || this.fileFailovers > 0) throw new Error('pdf_source_invalid');
-      const activeOrigin = new URL(this.fileUrl).origin;
-      const alternate = activeOrigin === API_BASE ? API_BACKUP :
-        activeOrigin === API_BACKUP ? API_BASE : '';
-      if (!alternate) throw new Error('pdf_source_invalid');
-      // A fresh, owner-entitled ticket must be minted on the other known
-      // Worker hostname. Never replay a signed token to another origin.
-      this.failoverPromise = fetchAuthorizedSource(alternate, sessionToken, 'view',
-        { signal: AbortSignal.timeout(FALLBACK_AUTHORIZE_TIMEOUT_MS) }).then(source => {
+      // Multiple simultaneous Range failures must share one new owner-ticket
+      // request. Resolve the disabled-by-default Gallery flag *inside* this
+      // promise so another Range cannot mint a second ticket while it loads.
+      this.failoverPromise = (async () => {
+        const activeOrigin = new URL(this.fileUrl).origin;
+        const tencentReady = await tencentPdfRouteEnabled();
+        const alternate = nextOwnerPdfFileOrigin(activeOrigin, tencentReady);
+        if (!alternate) throw new Error('pdf_source_invalid');
+        const source = await fetchAuthorizedSource(alternate, sessionToken, 'view',
+          {signal: AbortSignal.timeout(FALLBACK_AUTHORIZE_TIMEOUT_MS)});
         if (destroyed || sessionToken !== token()) throw new Error('pdf_transfer_timeout');
-        if (source.contentHash !== this.expectedHash ||
-            source.byteLength !== byteLength || !source.headerVerified) {
-          throw new Error('pdf_source_invalid');
-        }
+        // Never merge chunks from different documents, even when both
+        // responses are 206. The Worker must affirm exactly the same hash,
+        // byte length and verified short-lived ticket on the target host.
+        if (!isMatchingOwnerPdfFileSource(source, alternate,
+          this.expectedHash, byteLength)) throw new Error('pdf_source_invalid');
         this.fileUrl = source.url;
         this.fileFailovers += 1;
         document.documentElement.dataset.privatePdfFileFailovers = String(this.fileFailovers);
         document.documentElement.dataset.privatePdfFileRoute =
-          alternate === API_BASE ? 'primary' : 'backup';
+          ownerPdfRouteLabel(alternate);
         this.warmup?.abort();
         return this.fileUrl;
-      });
+      })();
       return this.failoverPromise;
     }
     async fetchRange(begin, end, controller) {
@@ -945,6 +976,8 @@ async function start() {
     const authorizeStarted = performance.now();
     try {
       sourceUrl = await verifiedPdfSource(sessionToken, 'view', nativeMode);
+      document.documentElement.dataset.privatePdfFileRoute =
+        ownerPdfRouteLabel(new URL(sourceUrl).origin);
     } finally {
       document.documentElement.dataset.privatePdfAuthorizeMs =
         String(Math.round(performance.now() - authorizeStarted));
