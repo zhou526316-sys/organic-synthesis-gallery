@@ -1024,9 +1024,10 @@ async function verifiedPdfSource(sessionToken, mode = 'view', forceBrowserPrefli
           }
         }
       }
-      // Refresh a rejected short-lived ticket once, but never loop on 404,
-      // invalid bytes or broken Range support. No raw URL is logged or shown.
-      if (attempt === 0 && /^file_http_(401|403)$/.test(String(error?.message))) continue;
+      // A stale 401 ticket may be refreshed once on the SAME authorized
+      // origin. A 403 is an explicit denial and must fail closed immediately,
+      // never retry via an alternate gateway or a refreshed ticket.
+      if (attempt === 0 && error?.message === 'file_http_401') continue;
       throw lastError;
     }
   }
