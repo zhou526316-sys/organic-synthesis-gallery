@@ -2,6 +2,7 @@ import {scanPdfFigureRescue,preparePdfOriginalCropManifest} from './pdf-vault/fi
 import {createContinuousPdfViewer} from './pdf-continuous-viewer.mjs';
 import {waitForPdfFirstPage} from './pdf-first-page-watchdog.mjs';
 import {readBoundedPdfOpenJson} from './pdf-authorize-response.mjs';
+import {liveOwnerTencentPriority} from './pdf-tencent-owner-priority.mjs';
 import {
   TENCENT_PDF_ORIGIN, tencentPdfRouteEnabled, nextOwnerPdfFileOrigin,
   isMatchingOwnerPdfFileSource, isMatchingOwnerPdfFileIdentity, ownerPdfRouteLabel,
@@ -42,6 +43,10 @@ const API_BACKUP = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
 const OPEN_HEDGE_DELAY_MS = 3_500;
 const OPEN_BODY_RETRY_DELAY_MS = 1_800;
 const OPEN_TENCENT_HEDGE_DELAY_MS = 5_000;
+// Restricted administrator pilot. Tencent gets the first /open, and a
+// transport-only failure switches to the established Cloudflare path.
+// Never increase the gateway's independent 256 MiB/month reservation cap.
+const OWNER_TENCENT_OPEN_BUDGET_MS = 5_000;
 const OPEN_TOTAL_TIMEOUT_MS = 15_000;
 const ASSET_BASE = '/pdf-vault-assets/6.4.299/';
 const MAX_PDF_BYTES = 60 * 1024 * 1024;
@@ -112,6 +117,7 @@ let cropSelection = null;
 let sourceUrl = '';
 let declaredPdfBytes = 0;
 let activePdfContentHash = '';
+let ownerTencentPilotActive = false;
 let transferController = null;
 let activeRangeTransport = null;
 let rangeFailure = null;
@@ -386,7 +392,7 @@ async function fetchAuthorizedSource(origin, sessionToken, mode, controller, onH
   };
 }
 
-async function getPdfSource(sessionToken, mode = 'view') {
+async function getCanonicalPdfSource(sessionToken, mode = 'view') {
   if (manualTencentTrial) {
     // Deliberate first-party canary, never a global automatic activation.
     // The canonical Worker independently authorizes each account/DOI.
@@ -541,6 +547,64 @@ async function getPdfSource(sessionToken, mode = 'view') {
   document.documentElement.dataset.privatePdfDeclaredBytes = String(declaredPdfBytes);
   return { url: result.url, headerVerified: result.headerVerified, contentHash: result.contentHash };
 }
+
+function ownerTencentTransportFailure(error) {
+  const message = String(error?.message || '');
+  return error?.name === 'TypeError' || error?.name === 'TimeoutError' ||
+    error?.name === 'AbortError' ||
+    /^open_http_(429|500|502|503|504)$/.test(message) ||
+    message === 'pdf_authorize_network_error' || message === 'pdf_authorize_timeout' ||
+    message === 'pdf_authorize_body_timeout';
+}
+
+async function getPdfSource(sessionToken, mode = 'view') {
+  if (manualTencentTrial || mode !== 'view') {
+    return getCanonicalPdfSource(sessionToken, mode);
+  }
+  // A public first-party manifest only enables the OPT-IN PILOT. It is never
+  // an entitlement grant. The admin role must be freshly validated by the
+  // real Worker through Tencent's existing /auth/session pass-through.
+  const candidate = await tencentPdfRouteEnabled(undefined, 1200,
+    {ownerPriority:true});
+  if (!candidate || sessionToken !== token() ||
+      !await liveOwnerTencentPriority(sessionToken) || sessionToken !== token()) {
+    ownerTencentPilotActive = false;
+    return getCanonicalPdfSource(sessionToken, mode);
+  }
+  ownerTencentPilotActive = true;
+  document.documentElement.dataset.privatePdfOwnerRoute = 'tencent-first';
+  const controller = new AbortController();
+  const started = performance.now();
+  const kill = setTimeout(() => controller.abort('owner_pilot_open_timeout'),
+    OWNER_TENCENT_OPEN_BUDGET_MS);
+  try {
+    const source = await fetchAuthorizedSource(
+      TENCENT_PDF_ORIGIN, sessionToken, mode, controller);
+    if (sessionToken !== token()) throw new Error('pdf_authorize_network_error');
+    declaredPdfBytes = source.byteLength;
+    activePdfContentHash = source.contentHash;
+    document.documentElement.dataset.privatePdfDeclaredBytes = String(declaredPdfBytes);
+    document.documentElement.dataset.privatePdfAuthorizePath = 'tencent';
+    document.documentElement.dataset.privatePdfAuthAttempts =
+      'tencent:完成/' + Math.round(performance.now() - started) + 'ms';
+    return {url:source.url,headerVerified:source.headerVerified,
+      contentHash:source.contentHash};
+  } catch(error) {
+    // Quota-exhausted 429, network errors, 5xx and bounded timeouts recover
+    // through a FRESH Cloudflare /open ticket. A 401/403, missing document or
+    // malformed source NEVER allows switching around the canonical authority.
+    const reason = controller.signal.aborted &&
+      controller.signal.reason === 'owner_pilot_open_timeout'
+        ? new Error('pdf_authorize_timeout') : error;
+    if (!ownerTencentTransportFailure(reason)) throw reason;
+    document.documentElement.dataset.privatePdfOwnerRoute = 'cloudflare-backup';
+    document.documentElement.dataset.privatePdfTencentPilotFailure =
+      /^open_http_(429|500|502|503|504)$/.test(String(reason?.message))
+        ? String(reason.message) : 'network_or_timeout';
+    return getCanonicalPdfSource(sessionToken, mode);
+  } finally { clearTimeout(kill); }
+}
+
 async function checkPdfHeader(fileUrl, timeoutMs = 15_000) {
   // Check the actual PDF bytes rather than treating an iframe DOM node or a
   // header-only 200 as evidence of a readable document. Credentialed fetch
