@@ -158,7 +158,7 @@ export async function applyVerifiedChineseTitlePresentationToPages(root = proces
   catch(error){if(error.code!=='ENOENT') throw error;}
   assert(Array.isArray(cache.translations), 'invalid_existing_translations');
   const merged = new Map(cache.translations
-    .filter(row=>typeof row?.title==='string' && validZh(row?.zh))
+    .filter(row=>typeof row?.title==='string' && validChineseTitle(row?.zh))
     .map(row => [titleKey(row.title), {title:row.title,zh:row.zh}]));
   result.translations.forEach(row => merged.set(titleKey(row.title),row));
   await writeFile(at('public/literature-supplement.json'),
