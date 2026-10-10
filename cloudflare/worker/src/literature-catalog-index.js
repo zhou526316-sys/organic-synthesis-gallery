@@ -1,4 +1,4 @@
-import { searchEnrichmentReady, searchFtsExpression } from './literature-search-enrichment.js';
+import { searchEnrichmentReady, searchFtsExpression, searchTermAlternatives } from './literature-search-enrichment.js';
 export const LITERATURE_CATALOG_INDEX_SCHEMA_VERSION = 'literature-catalog-index-v1';
 export const LITERATURE_INDEX_IMPORT_BATCH_MAX = 8;
 const schemaReadyBindings = new WeakSet();
@@ -437,23 +437,28 @@ export async function queryLiteratureCatalogView(env,{
   }
 
   const exactOnlineDate=view.dateFrom&&view.dateFrom===view.dateTo?view.dateFrom:'';
-  const joins=[],where=[],args=[];
+  const joins=[],where=['i.catalog_id=?'],args=[catalogId];
   if(view.queryText){
     const match=searchFtsExpression(view.queryText);
-    // Enrichment becomes visible only after every DOI/revision has passed a
-    // whole-generation parity gate. Until then the original title index stays usable.
+    const terms=searchTermAlternatives(view.queryText);
+    // FTS first narrows candidate DOIs. Preserve the legacy frontend's
+    // substring fields: synthesis_type alone is NOT an ordinary search hit.
+    // Every candidate is also bound to this exact published generation.
+    const fields=['title','title_zh','doi','journal','authors_text','first_online_date'];
+    const termsSql=terms.map(()=>fields.map(field=>
+      'instr(lower(COALESCE(i.'+field+",'')),?)>0').join(' OR ')).join(' OR ');
+    // Replace the placeholder-fallback spacing above with the intended
+    // SQLite expression: COALESCE(column,'') (an empty string).
+    const originalCandidate='i.doi IN (SELECT f.doi FROM literature_catalog_fts f'
+      +' WHERE f.catalog_id=? AND literature_catalog_fts MATCH ?)';
     const enriched=await searchEnrichmentReady(env,catalogId);
-    where.push(`i.doi IN (
-      SELECT f.doi FROM literature_catalog_fts f
-        WHERE f.catalog_id=? AND literature_catalog_fts MATCH ?
-      ${enriched?`UNION SELECT e.doi FROM literature_search_enrichment_fts e
-        WHERE e.catalog_id=? AND literature_search_enrichment_fts MATCH ?`:''}
-    )`);
+    const enrichmentCandidate='i.doi IN (SELECT e.doi FROM literature_search_enrichment_fts e'
+      +' WHERE e.catalog_id=? AND literature_search_enrichment_fts MATCH ?)';
+    where.push('(('+originalCandidate+' AND ('+termsSql+'))'
+      +(enriched?' OR '+enrichmentCandidate:'')+')');
     args.push(catalogId,match);
-    if(enriched) args.push(catalogId,match);
-  }else{
-    where.push('i.catalog_id=?');
-    args.push(catalogId);
+    for(const term of terms)for(const _ of fields)args.push(term);
+    if(enriched)args.push(catalogId,match);
   }
   if(view.selectedJournals.length){
     where.push(`i.journal IN (${view.selectedJournals.map(()=>'?').join(',')})`);
