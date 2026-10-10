@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-05T09:25:00+08:00",
-  "policy": "Explicit, evidenced scope exclusions override historical includes. Confirmed removals may execute immediately under the user-authorized deletion-only correction gate; new literature admissions remain at 08:00/18:00. Do not treat a queued exclusion as already removed.",
+  "updatedAt": "2026-10-10T01:26:47.860Z",
+  "policy": "Explicit, evidenced DOI-level exclusions override historical includes and pending intent. Confirmed production removals may execute immediately only via deletion-only authorized correction gate; new literature admissions are allowed at 08:00 Asia/Shanghai once daily only. Do not treat a queued exclusion as already removed.",
   "items": [
     {
       "doi": "10.1021/jacs.6c13517",
@@ -132,6 +132,70 @@
         "sourceEvidence": "2026-10-05 prepublish review cites the RSC DOI/article page and records the publisher abstract facts about continuous glycolysis, PET/polycotton feed, and twin-screw extrusion.",
         "boundaryChallenge": "Chemical depolymerization and scale-up are genuine synthetic chemistry operations, but the explicit DOI-level user decision excludes this process-engineering/recycling article without creating a category-wide ban."
       }
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01600",
+      "title": "Umpolung Amide Synthesis with Nitrosoalkane Electrophiles: Pursuit of the Elusive N -Acyl Nitrone for Dipolar Cycloadditions",
+      "journal": "JOC",
+      "date": "2026-10-08",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "User-confirmed DOI-level scope exclusion, recorded after 2026-10-10 08:00 release; this DOI was pending and was not a published card.",
+      "evidenceBasis": "摘要显示反极性酰胺合成涉及真实分子间C–N成键形成短寿命N-酰基硝酮，迅速发生N→O酰基转移为O-酰基肟；原审核没有得到可迁移的环加成/制备范围。排除为用户明确DOI级选择，并非断言没有化学合成。",
+      "challengeReason": "反向挑战：N-酰基硝酮路径确有新成键和O-酰基肟产物，但现有摘要仍以瞬态物种/重排行为为显著结论；即使继续取得底物表，也应保留用户明确的本DOI排除，不抹去合成事实。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.joc.6c01600"
+      ],
+      "evidenceLevel": "formal_review_full_abstract",
+      "source": "explicit_user_doi_decision_and_article_specific_evidence_2026-10-10",
+      "userInstruction": "10.1021/acs.joc.6c01600：排除",
+      "scopeRulesVersion": "scope-2026-10-02-v1",
+      "scopeRulesFile": "docs/literature-scope-contract.md",
+      "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+      "supersedesReviewFile": "audit/review-2026-10-10-0800.json",
+      "scopeAssessment": {
+        "primaryContribution": "N-酰基硝酮与O-酰基肟反应路径、瞬态中间体行为",
+        "preparativeTransformation": "反极性酰胺合成中C–N成键生成N-酰基硝酮，继而N→O酰基转移至O-酰基肟",
+        "generalityEvidence": "可推广底物/产物范围尚未从全文取得，不能假称无产品",
+        "sourceEvidence": "摘要显示反极性酰胺合成涉及真实分子间C–N成键形成短寿命N-酰基硝酮，迅速发生N→O酰基转移为O-酰基肟；原审核没有得到可迁移的环加成/制备范围。排除为用户明确DOI级选择，并非断言没有化学合成。",
+        "boundaryChallenge": "本条为用户明确DOI排除，保留真实合成操作与未取得的细节，不构成类别全面排除"
+      },
+      "requiresImmediateRemoval": false,
+      "removalStatusAtDecision": "not_in_production_pending_at_fixed_slot",
+      "nextReviewSlot": "2026-10-11T08:00:00+08:00"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103025",
+      "title": "Bimetallic synergistic catalysis in MOFs toward transforming CO2 into carbonates with a record turnover number",
+      "journal": "Chem",
+      "date": "2026-10-08",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "User-confirmed DOI-level scope exclusion, recorded after 2026-10-10 08:00 release; this DOI was pending and was not a published card.",
+      "evidenceBasis": "出版社摘要记录Cu/In双金属MOF催化CO₂与有机反应伙伴制备非对称碳酸酯，真实有机制备不应被否认；主要创新聚焦材料双金属协同、高TON及稳定性。用户特指此DOI排除，不泛化至其他催化合成。",
+      "challengeReason": "反向挑战：CO₂与醇/有机伙伴生成碳酸酯是一项真实的有机转化；不能用单纯材料类别排除所有多相催化，但该论文强调MOF协同、高TON，且用户明确将此单篇排除。",
+      "evidencePages": [
+        "https://www.sciencedirect.com/science/article/pii/S2451929426000914"
+      ],
+      "evidenceLevel": "publisher_full_html_summary_highlights",
+      "source": "explicit_user_doi_decision_and_article_specific_evidence_2026-10-10",
+      "userInstruction": "10.1016/j.chempr.2026.103025：排除",
+      "scopeRulesVersion": "scope-2026-10-02-v1",
+      "scopeRulesFile": "docs/literature-scope-contract.md",
+      "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+      "supersedesReviewFile": "audit/review-2026-10-10-0800.json",
+      "scopeAssessment": {
+        "primaryContribution": "双金属MOF协同催化CO₂转化制备有机碳酸酯与材料催化效能",
+        "preparativeTransformation": "CO₂与有机伙伴在双金属MOF催化下生成非对称碳酸酯",
+        "generalityEvidence": "有机碳酸酯转化已由出版社摘要支持，但材料催化TON与稳定性不能独立证明Gallery要求的一般合成方法贡献",
+        "sourceEvidence": "出版社摘要记录Cu/In双金属MOF催化CO₂与有机反应伙伴制备非对称碳酸酯，真实有机制备不应被否认；主要创新聚焦材料双金属协同、高TON及稳定性。用户特指此DOI排除，不泛化至其他催化合成。",
+        "boundaryChallenge": "本条为用户明确DOI排除，保留真实合成操作与未取得的细节，不构成类别全面排除"
+      },
+      "requiresImmediateRemoval": false,
+      "removalStatusAtDecision": "not_in_production_pending_at_fixed_slot",
+      "nextReviewSlot": "2026-10-11T08:00:00+08:00"
     }
   ]
 }
