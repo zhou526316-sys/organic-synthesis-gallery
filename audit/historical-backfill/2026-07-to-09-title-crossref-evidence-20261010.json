@@ -1,0 +1,1547 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-10T07:48:43.822Z",
+  "workflowRun": 38035669087,
+  "workflowJob": 114165451724,
+  "inputFile": "audit/historical-backfill/2026-07-to-09-title-gaps-static-20261010.json",
+  "summary": {
+    "candidate": 83,
+    "metadataMatched": 73,
+    "sourceRateLimited": 10,
+    "independentPublisherPageVerified": 3,
+    "canonicalLiteratureUpdated": false
+  },
+  "note": "Crossref data is publisher-deposited DOI metadata, independently checked against original July-Sep static first-author/journal/year. 73 Crossref metadata matches, but only three were also independently verified against original publisher pages. 10 rate-limited DOI candidates remain not verified; no title invented or production literature altered.",
+  "records": [
+    {
+      "doi": "10.1021/acs.orglett.6c02216",
+      "verified": true,
+      "title": "Cobalt/Photoredox Dual-Catalyzed Alkylation of Indole with Unactivated Alkenes",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Dong",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02216",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02216",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02234",
+      "verified": true,
+      "title": "Divergent Three-Component Assembly of Densely Functionalized Dibenzofurans via ZnCl _2 -Mediated Cascade Annulation",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Liu",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02234",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02234",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02459",
+      "verified": true,
+      "title": "Harnessing Light-Mediated Free Carbene Reactivity of Vinyldiazo Ketones: Direct Access to Mono-, Bi-, and Tricyclic 2,3-Dihydrofurans",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Kundu",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02459",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02459",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02752",
+      "verified": false,
+      "status": "http_429",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02473",
+      "verified": true,
+      "title": "Construction of β-Hydroxysulfones via a Photoinduced Four-Component Reaction",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Yu",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02473",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02473",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c01753",
+      "verified": true,
+      "title": "Desilylative Ring-Opening Strategy for Skipped 1,5-Diene Synthesis Under Synergistic Photoredox/Nickel Catalysis",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Yue",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c01753",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c01753",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02293",
+      "verified": false,
+      "status": "http_429",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02012",
+      "verified": true,
+      "title": "Regioselective Amidine-Directed Iridium-Catalyzed C(sp ^3 )–H Borylation by Attuning Boronic Esters",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Yadav",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02012",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02012",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02333",
+      "verified": true,
+      "title": "B(C _6 F _5 ) _3 -Catalyzed Ring-Opening Reaction of Bicyclo[1.1.0]butanes with Silyl Ketene Imines",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Yi",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02333",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02333",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02461",
+      "verified": true,
+      "title": "Access to ( Z )-1,2-Dicyanoethylenes via Desulfurization of 2,5-Dinitrothiophene",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Li",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02461",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02461",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02635",
+      "verified": true,
+      "title": "Chiral Phosphoric Acid-Catalyzed Enantioselective Dearomative Spirocyclization of Phenol-Ynamides by Kinetic Resolution",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Jiang",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02635",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02635",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02649",
+      "verified": true,
+      "title": "N -Sulfonylaminophthalimide-Catalyzed Aerobic Oxidative Cleavage of α-C(sp ^3 )–H and β,γ-C(sp ^3 )–C(sp ^3 ) Bonds of Tertiary Amines",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Wang",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02649",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02649",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02198",
+      "verified": true,
+      "title": "Cobalt-Catalyzed Selective Hydroboration/Cyclization of 1,6-Diynes",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Sun",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02198",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02198",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02550",
+      "verified": true,
+      "title": "Ir-Catalyzed Formal 1,2-Fluorine Migration in Fluorocarbenes",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Xiang",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02550",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02550",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-75338-5",
+      "verified": true,
+      "title": "Selenium atom transfer enables selective bridged alkene-arylamine cycloaddition",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Hu",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-75338-5",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-75338-5",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02403",
+      "verified": true,
+      "title": "Dearomatization-Triggered Boulton–Katritzky Rearrangement for the Synthesis of 1,3-Diazaspiro[4.5]decane Derivatives",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Wang",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02403",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02403",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s44160-026-01116-2",
+      "verified": true,
+      "title": "Synthesis of Z‑allylamines via masked alkenyl anions from alkynyl tetracoordinate boron compounds",
+      "journal": "Nature Synthesis",
+      "publishedYear": 2026,
+      "firstFamily": "An",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs44160-026-01116-2",
+      "publisherUrl": "https://doi.org/10.1038/s44160-026-01116-2",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02318",
+      "verified": true,
+      "title": "Pd/Norbornene-Catalyzed Tandem o -C–H Alkylation or Acylation/ ipso -Intramolecular Direct Arylation of Aryl Bromides",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Ding",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02318",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02318",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02443",
+      "verified": true,
+      "title": "Substrate-Controlled Co-MHAT Catalyzed 1,4- and 1,2-Hydropyridination of 1,3-Enynes",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Jiang",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02443",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02443",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02607",
+      "verified": true,
+      "title": "Copper-Catalyzed Arylation of Diverse N-Heterocycles with (Hetero)aryl Chlorides",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Li",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02607",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02607",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s44160-026-01106-4",
+      "verified": true,
+      "title": "β-Selective C(sp3)–H functionalization of alkyl boronates using photoredox catalysis",
+      "journal": "Nature Synthesis",
+      "publishedYear": 2026,
+      "firstFamily": "Hazra",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs44160-026-01106-4",
+      "publisherUrl": "https://doi.org/10.1038/s44160-026-01106-4",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-75499-3",
+      "verified": false,
+      "status": "http_429",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02568",
+      "verified": true,
+      "title": "Iridium-Catalyzed Decarboxylative Annulation of 2- o -Carboranylbenzoic Acids with Internal Alkynes",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Yu",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02568",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02568",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02215",
+      "verified": true,
+      "title": "Modulation of Excited-State Reactivity of o -Nitroaryl Alkynes via Solvent Effects: Toward Controllable Synthesis of o -Aminobenzoic Acid and Benzoxazinone Derivatives",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Fu",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02215",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02215",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02351",
+      "verified": true,
+      "title": "Skeletal Metamorphosis of 2-Oxabicyclo[3.3.0]octenes into Bridged Bicyclo[3.2.1]octenes: A Strategy for Complex Architecture Synthesis",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Shimoji",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02351",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02351",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02388",
+      "verified": true,
+      "title": "N -Heterocyclic Carbene/Ni Synergistically Catalyzed Allylation of Aldehydes with Morita–Baylis–Hillman Carbonates",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Debnath",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02388",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02388",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02551",
+      "verified": true,
+      "title": "Photoelectrochemical Dehydrogenative Cross-Coupling of Aliphatic C–H Bonds via an In-Situ-Generated Hypervalent Iodine Mediator",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Gong",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02551",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02551",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02647",
+      "verified": true,
+      "title": "Diastereoselective Pyrrolidine Formation via Pd(II)-Catalyzed Cyclization of γ -C(sp ^3 )–H Bond of Substituted Amino Acids with Morita–Baylis–Hillman Acetate",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Chakraborty",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02647",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02647",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-75432-8",
+      "verified": true,
+      "title": "Direct Amidation of Alkynes with Nitroarenes via Heterogeneous Semiconductor TiO₂ Nanotubes",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Hussain",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-75432-8",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-75432-8",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02004",
+      "verified": true,
+      "title": "A Chemo-Selective [4 + 2] Annulation for the Construction of 3,1-Benzothiazine and Tetrahydroquinazoline Functionalized Sulfonyl Fluoride Pharmacophores",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Guo",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02004",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02004",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-75467-x",
+      "verified": true,
+      "title": "Base-catalyzed regioselective C(sp3)–Si bond activation of silacyclobutanes and benzosilacyclobutenes",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Kong",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-75467-x",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-75467-x",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02899",
+      "verified": true,
+      "title": "Toward a Click-to-Click Strategy Enabled by Sequential Reverse Cope Cyclization and Strain-Promoted Alkyne–Nitrone Cycloaddition of In Situ Generated Nitrones",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Herrscher",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02899",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02899",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-75633-1",
+      "verified": true,
+      "title": "Reforging Mitsunobu reaction via sulfoxides-catalyzed C(sp3)-O bond activation of alkanols",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Li",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-75633-1",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-75633-1",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02283",
+      "verified": true,
+      "title": "Base-Promoted Domino Reaction of o -Amino/Hydroxy Chalcones with In Situ Formed Isocyanates from Dioxazolones: Divergent Synthesis of Quinazolinones and Benzoxazinones",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Li",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02283",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02283",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-75768-1",
+      "verified": true,
+      "title": "Alkyne Migratory Insertion Enabled Dynamic Kinetic Asymmetric Dearomatization of Unactivated Racemic Biaryls",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Yang",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-75768-1",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-75768-1",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-75769-0",
+      "verified": true,
+      "title": "Ligand relay catalysis enables asymmetric migratory dearomative annulation of N-heteroarenes",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Song",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-75769-0",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-75769-0",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02604",
+      "verified": true,
+      "title": "Cu-Catalyzed Regioselective Synthesis of Sterically Congested N -Aryl Pyrazoles Using a Traceless Protecting Group Strategy",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Panja",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02604",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02604",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-75774-3",
+      "verified": true,
+      "title": "Catalytic electrophilic arene C–H chlorination by rethinking the century-old Willgerodt reagent",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Hu",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-75774-3",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-75774-3",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02449",
+      "verified": true,
+      "title": "Photo-Fenton-Like (Trideutero)methylsulfonylation/Remote (Benzo)thiazolyl Migration Cascade of Unactivated Alkenes with DMSO(- d 6)",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Liu",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02449",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02449",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-76036-y",
+      "verified": false,
+      "status": "http_429",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-75858-0",
+      "verified": true,
+      "title": "Association-gated multiphoton activation of inert haloarenes via sequential electron donor–acceptor assembly",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Matsukuma",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-75858-0",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-75858-0",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02881",
+      "verified": true,
+      "title": "Carboxylation of Heteroarenes with Carbon Dioxide under Polysulfide Anion Photocatalysis",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Mat Lani",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02881",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02881",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-75906-9",
+      "verified": true,
+      "title": "Alumina-Templated ortho-Prenylation of Phenols",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Piotrowski",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-75906-9",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-75906-9",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-75280-6",
+      "verified": true,
+      "title": "Skeletal transformation to chiral nanocarbon molecules",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Hirano",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-75280-6",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-75280-6",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-75878-w",
+      "verified": true,
+      "title": "High-entropy photocatalyst enabling collaborative cascade C–N coupling for converting benzyl alcohol to imine",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Yang",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-75878-w",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-75878-w",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02884",
+      "verified": false,
+      "status": "http_429",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-76124-z",
+      "verified": true,
+      "title": "Bis(trifluoromethylthio)carbene as a toolbox for versatile carbene transformations",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Sun",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-76124-z",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-76124-z",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-76238-4",
+      "verified": true,
+      "title": "Skeletal restructuring of oxetanes through photoinduced oxygen deletion",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Zhang",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-76238-4",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-76238-4",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-76150-x",
+      "verified": false,
+      "status": "http_429",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02598",
+      "verified": true,
+      "title": "Photocatalytic Deoxygenative Hydroalkylation Enables Modular Access to CF3-Substituted Oxetanes",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Lu",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02598",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02598",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-76290-0",
+      "verified": true,
+      "title": "Three-site cycloadditions within one reaction intermediate with site-selectivity controlled by electronic and size bias",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Maitra",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-76290-0",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-76290-0",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02828",
+      "verified": false,
+      "status": "http_429",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03053",
+      "verified": true,
+      "title": "Photoinduced Cobalt-Catalyzed Alkyl Radical-Initiated Polarity Cross-Coupling Cyclization of Unactivated Olefins to Access Saturated Heterocycles",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Deng",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c03053",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c03053",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03355",
+      "verified": true,
+      "title": "Organophotocatalytic Aryl Radical-Mediated Deoxygenative Imination of Alcohols",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Huang",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c03355",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c03355",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03179",
+      "verified": false,
+      "status": "http_429",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02753",
+      "verified": true,
+      "title": "Synthesis of Pyridin-2(1 H )-ones and Isoquinolin-1(2 H )-ones Using Calcium Carbide as an Acetylene Source under Redox-Neutral Conditions",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Ye",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02753",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02753",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02972",
+      "verified": true,
+      "title": "Dehydroxylative Cross-Electrophile Coupling of Aromatic Acids with Glycosyl Chlorides Enables Rapid C -Acyl Glycoside Synthesis",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Jiao",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02972",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02972",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03051",
+      "verified": true,
+      "title": "Divergent C3–C4 Bond Cleavage of Spiro β-Lactams for the Switchable Synthesis of 3,3-Disubstituted Oxindoles and 2-Arylacrylamides",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Liu",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c03051",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c03051",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-76655-5",
+      "verified": true,
+      "title": "Dynamic “Deactivation” mechanism enables epoxides ring-opening to prepare α-substituted alcohols",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Yang",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-76655-5",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-76655-5",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02837",
+      "verified": true,
+      "title": "General Method for Selective C(sp2)–H Trifluoromethylation of Enamides via Visible Light Dual Photoredox/Nickel Catalysis",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Qi",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02837",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02837",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-76282-0",
+      "verified": false,
+      "status": "http_429",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03027",
+      "verified": true,
+      "title": "Stereoselective Synthesis of MK-8527 Enabled by a Dynamic Kinetic Resolution Mitsunobu Glycosylation",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Whittaker",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c03027",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c03027",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02844",
+      "verified": true,
+      "title": "From Esters to Benzodiazepines: A Two-Step Nickel–Iridium Catalytic Pathway via Amide Intermediates",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Swami",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02844",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02844",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03283",
+      "verified": true,
+      "title": "Hydrogen-Bonded Electron Donor–Acceptor Complex Enables Markovnikov Hydroarylation and Hydroxyalkylation of N -Acyl Enamines",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Su",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c03283",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c03283",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03371",
+      "verified": true,
+      "title": "Diboron-Enabled Copper-Catalyzed Modular Synthesis of Difluoromethylated and Perfluoroalkylated Oxazolines",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Xiong",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c03371",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c03371",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-76749-0",
+      "verified": true,
+      "title": "A ligand-controlled regiodivergent three-component Heck-Tsuji reaction utilizing umpolung hydrazones enabled by palladium catalysis",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Chen",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-76749-0",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-76749-0",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-76924-3",
+      "verified": true,
+      "title": "A unified and desymmetric approach to axially chiral atropisomers",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Hu",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-76924-3",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-76924-3",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02781",
+      "verified": true,
+      "title": "Rh(III)-Catalyzed Multicomponent Formal [4 + 2+1]/[4 + 1] Annulation for the Synthesis of Benzo[ d ]pyrazolo[1,5- a ]azepin-4-ones",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Luo",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02781",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02781",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03002",
+      "verified": true,
+      "title": "Overcoming Reactive-Pair Mismatch to Access Functionalized Pyrimidines from Readily Accessible Pyrroles",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Yasuda",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c03002",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c03002",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03164",
+      "verified": true,
+      "title": "Direct 2-Amination of Pyridines via Dearomatization/Rearomatization Strategy",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Chen",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c03164",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c03164",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03446",
+      "verified": true,
+      "title": "Nickel-Catalyzed 1,2-Trifluoromethylation Carbonylation of Alkenes: Access to β-Trifluoromethylated Alkyl Aryl Ketones",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Liu",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c03446",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c03446",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-76455-x",
+      "verified": true,
+      "title": "Regiospecific de mayo reactions of enamino ketones",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Zhu",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-76455-x",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-76455-x",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-77185-w",
+      "verified": false,
+      "status": "http_429",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-77092-0",
+      "verified": true,
+      "title": "Amide synthesis via molecular shuffling of carboxylic acids",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Li",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-77092-0",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-77092-0",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03187",
+      "verified": true,
+      "title": "EDA-Driven Radical Relay Strategy for the Strain-Release Functionalization of Bicyclobutanes",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Patra",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c03187",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c03187",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03219",
+      "verified": true,
+      "title": "Pd-Catalyzed Asymmetric Bicyclization/Cyanation of Propargylic Esters-Alkenes: Construction of Chiral Aza[3.1.0]bicycles Containing Alkenyl Nitriles",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Wan",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c03219",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c03219",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03388",
+      "verified": true,
+      "title": "Arene-Selective Asymmetric Buchner Dearomatization of Biaryl Compounds",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Carrick",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c03388",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c03388",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02889",
+      "verified": true,
+      "title": "Single-Electron Palladium Catalysis Enables Tandem Amidyl-Radical Cyclization/Radical Heck-Type Coupling to Allylated γ-Lactams",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Yang",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02889",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02889",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03304",
+      "verified": true,
+      "title": "Cascade Synthesis of Structurally Diverse B–X-Doped Polycyclic Aromatic Hydrocarbons",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Humanes",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c03304",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c03304",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02989",
+      "verified": true,
+      "title": "Kinetic Resolution of Racemic γ,γ-Disubstituted Cyclohexenones Enabled by Artificial Carboligase-Catalyzed Stereoselective Michael Addition",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Zhang",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c02989",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c02989",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-77336-z",
+      "verified": true,
+      "title": "General access to azoles through tailored nitrogen–nitrogen bond construction",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Yan",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-77336-z",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-77336-z",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03344",
+      "verified": true,
+      "title": "Organocatalytic Asymmetric Formal [2 + 1] Cycloaddition Reactions for the Synthesis of Spiro-cyclopropane-pyrazolones",
+      "journal": "Organic Letters",
+      "publishedYear": 2026,
+      "firstFamily": "Gupta",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1021%2Facs.orglett.6c03344",
+      "publisherUrl": "https://doi.org/10.1021/acs.orglett.6c03344",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    },
+    {
+      "doi": "10.1038/s41467-026-77437-9",
+      "verified": true,
+      "title": "Zipper polydefluorination-monoborylation of perfluoroalkyl chains",
+      "journal": "Nature Communications",
+      "publishedYear": 2026,
+      "firstFamily": "Albers",
+      "checks": {
+        "sameDoi": true,
+        "sameJournal": true,
+        "sameYear": true,
+        "sameFirst": true,
+        "titleLegible": true
+      },
+      "source": "https://api.crossref.org/works/10.1038%2Fs41467-026-77437-9",
+      "publisherUrl": "https://doi.org/10.1038/s41467-026-77437-9",
+      "metadataType": "journal-article",
+      "scope": "crossref_metadata_title_probe",
+      "checkedBy": "doi_journal_year_first_author"
+    }
+  ]
+}
