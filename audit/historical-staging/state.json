@@ -1,0 +1,17 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "mode": "candidate_discovery_only",
+  "createdAt": "2026-10-10T11:06:54.916Z",
+  "cursor": {
+    "range": {
+      "from": "2026-09-22",
+      "to": "2026-09-30"
+    },
+    "journalIndex": 0
+  },
+  "completed": [],
+  "attempts": [],
+  "publishedMembershipSnapshot": 938,
+  "lastRun": null,
+  "note": "Initialization only. No historical candidate window has yet been crawled or approved. Exact 23:00 scheduled acquisition runs from main and writes exclusively to this staging branch."
+}
