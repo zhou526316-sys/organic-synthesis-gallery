@@ -25,7 +25,7 @@ jobs:
       - name: Check publisher and test syntax
         run: python -m py_compile ops/wechat-publisher/create-draft.py tests/test-wechat-source-link-only-recovery.py
       - name: Enforce source-link only and draft identity readback
-        run: python -m unittest discover -s tests -p 'test-wechat-source-link-only-recovery.py' -v
+        run: python tests/test-wechat-source-link-only-recovery.py -v
       - name: No duplicate drafts or public sends in recovery implementation
         run: |
           python - <<'PY'
