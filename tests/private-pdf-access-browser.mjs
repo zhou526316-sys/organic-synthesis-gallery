@@ -499,6 +499,43 @@ try{
  });
 
 
+
+ await test('an authorized transport failure offers explicit Tencent retry and renders page two',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],source,{
+    largePdf:true,primaryOpenStatus:503,backupOpenStatus:503,
+    tencentEnabled:false,tencentCanary:true,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',
+    undefined,{timeout:12000});
+  const link=target.locator('#tencent-manual-trial');
+  await link.waitFor({timeout:7000});
+  assert.match(await link.getAttribute('href'),/pdfIngress=tencent/);
+  await link.click();
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:15000});
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'tencent');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-route'),'tencent');
+  assert.equal(state.tencentOpenCalls,1);
+  await scrollPdfToPage(target,2);
+  assert.equal(await target.locator('#page-count').textContent(),'第 2 / 2 页');
+ });
+ await test('canonical permission denial must not offer Tencent retry',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context}=await contextWith(['private_pdf_read'],source,{
+    primaryOpenStatus:403,tencentEnabled:false,tencentCanary:true,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',
+    undefined,{timeout:11000});
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/open_http_403/);
+  assert.equal(await target.locator('#tencent-manual-trial').count(),0);
+ });
  await test('manual Tencent owner trial reads real-sized ranges and scrolls to page two without Cloudflare substitution',async()=>{
   const source={available:true,headerVerified:true,
     url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
