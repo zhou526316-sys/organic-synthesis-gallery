@@ -180,3 +180,50 @@ actual mobile/cellular PDF login+Range remain unaccepted and routing flag
 `enabled:false` MUST remain. The parent edit requires the owner's existing
 `-Mode Install` YES confirmation and one Tencent WeChat QR SSH authorization.
 Do not change PDF chunk sizing, quality, continuous scrolling or rights.
+
+## 2026-10-10 live installed-vhost ACME 404 after include was proven
+
+Third real `-Mode Install` log disproved the previous include hypothesis:
+the staged PDF vhost was present in effective `nginx -T`, both nginx includes
+were already globbed by `/etc/nginx/nginx.conf`, Nginx had live 0.0.0.0:80
+and [::]:80 listeners, and a disposable ACME challenge file and all parent
+directory modes were readable (0644, 0755). Despite that, the immediate
+localhost `curl --resolve pdf.gczhouwld.com:80:127.0.0.1` returned 404.
+The original nginx.conf additive include helper did not need to run.
+No certificate was requested, installer rolled back, PDF routing stayed off.
+
+Root cause of that 404 is still **not proven**: effective config inclusion
+does not prove the HTTP request actually selected that vhost, nor that the
+Nginx worker resolved the file. Avoid naming the network, Cloudflare,
+permissions or the include path as proven root cause.
+
+New `write_acme` adds a harmless local/public-only route marker
+`/_gallery_pdf_route_probe` with constant response
+`gallery-pdf-acme-vhost-ready`. After `nginx -t`, `nginx -T`, and graceful
+reload, installer first makes a bounded localhost HTTP-1.1 request for this
+marker. `LIVE_VHOST_ROUTE_MISMATCH` proves the running server has not served
+the expected vhost (listen/Host/reload path). Only after route proof does it
+read the 0644 canary from a precisely scoped `alias` static ACME directory.
+`ACME_STATIC_FILE_FAILED` classifies static-path/worker-read issues separately.
+Each probe retries at most six times with a short delay; Certbot remains
+blocked until the exact challenge bytes are returned via HTTP. No fallback
+to sending unsigned PDF bytes, no changes to authorization, PDF chunking,
+image quality, continuous scrolling, or owner account entitlements.
+
+An isolated Nginx regression matches the production listen topology
+(wildcard IPv4/IPv6 with a specific loopback listener), proving:
+relay-only route 404, PDF marker 200, bad alias ACME 404, correct alias
+ACME 200, non-ACME path 404, unchanged relay hash. Linux security test and
+Windows PowerShell 5.1 one-SSH launcher test both passed in:
+https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38021041184
+
+Verified installer and helper source pin:
+`6afee5f44c1ee68b813232eba0036cb0053a541a`.
+Verified Windows one-session launcher:
+`4fb5bea62d9f324401c73dc18ac29784239c69f7`.
+The 3 installed source files match exactly between source pin and launcher
+head. Live Tencent post-change behavior remains untested and the independent
+PR remains unmerged. Owner `-Mode Install` + explicit YES and QR is required
+for the real diagnostic/deployment. Do not activate Gallery `enabled:false`
+route until actual HTTPS security, cross-account authorization, owner Range
+206 and mobile mainland-carrier acceptance are all proven.
