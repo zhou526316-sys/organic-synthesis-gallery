@@ -103,6 +103,7 @@ test('inventory does not start second full hedge after one exhausted browser+GM 
     RECENT_FULL_CAPTURE_CUTOFF:'2026-10-01',
     normalizeDoi:x=>String(x||'').toLowerCase(),
     recentFullCaptureEligible:x=>x.addedDate>='2026-10-01',
+    captureJobEligible:x=>x.addedDate>='2026-10-01',
     updateInventoryProgress:()=>{},nowIso:()=>new Date().toISOString(),
     manualExecutionCurrent:()=>true,controllerPaused:()=>false,
     captureLiveError:x=>String(x),coverageTransient:x=>/timeout|deadline/.test(x),
