@@ -2478,6 +2478,178 @@ def get_draft(token: str, media_id: str):
     return result
 
 
+def exact_draft_identity(draft: dict, expected_titles: list[str], expected_dois: list[str]) -> bool:
+    """Fail closed: preserve article order and prove both paper identities."""
+    items = draft.get("news_item") if isinstance(draft, dict) else None
+    if not isinstance(items, list) or len(items) != len(expected_titles):
+        return False
+    for item, title, doi in zip(items, expected_titles, expected_dois):
+        if not isinstance(item, dict) or str(item.get("title") or "").strip() != title:
+            return False
+        text = str(item.get("content") or "") + " " + str(item.get("content_source_url") or "")
+        normalized = doi.lower()
+        encoded = urllib.parse.quote(normalized, safe="")
+        if normalized not in text.lower() and encoded.lower() not in text.lower():
+            return False
+    return True
+
+
+def find_unique_readable_draft(
+    token: str, expected_titles: list[str], expected_dois: list[str],
+    *, max_items: int = 100,
+) -> tuple[str, dict]:
+    """Read-only batchget discovery, never guess an alternate media_id.
+
+    Only adopt a unique draft whose titles AND stored DOI evidence match the
+    two approved articles. If the list is inaccessible, larger than a bounded
+    scan, empty, or ambiguous, fail instead of creating another draft.
+    """
+    url = "https://api.weixin.qq.com/cgi-bin/draft/batchget?" + urllib.parse.urlencode(
+        {"access_token": token}
+    )
+    matches: list[tuple[str, dict]] = []
+    offset = 0
+    count = 20
+    while offset < max_items:
+        result = json_request(url, method="POST", payload={
+            "offset": offset, "count": count, "no_content": 1,
+        })
+        if result.get("errcode") not in (None, 0):
+            raise RuntimeError("draft recovery list unavailable: errcode="
+                               + str(result.get("errcode")))
+        items = result.get("item")
+        if not isinstance(items, list):
+            raise RuntimeError("draft recovery cannot verify WeChat batchget shape")
+        for row in items:
+            if not isinstance(row, dict):
+                continue
+            media_id = str(row.get("media_id") or "").strip()
+            content = row.get("content") if isinstance(row.get("content"), dict) else {}
+            candidates = content.get("news_item") if isinstance(content.get("news_item"), list) else []
+            titles = [str(x.get("title") or "").strip() for x in candidates if isinstance(x, dict)]
+            if not media_id or titles != expected_titles:
+                continue
+            # Batchget no_content=1 does not establish the DOI. A fresh
+            # draft/get must verify full text/DOI against both publications.
+            full = get_draft(token, media_id)
+            if exact_draft_identity(full, expected_titles, expected_dois):
+                matches.append((media_id, full))
+                if len(matches) > 1:
+                    raise RuntimeError("draft recovery ambiguous: multiple exact two-article drafts")
+        offset += len(items)
+        total = result.get("total_count")
+        if not items:
+            break
+        if isinstance(total, int) and offset >= total:
+            break
+        if len(items) < count:
+            break
+    if not matches:
+        raise RuntimeError("old media_id invalid; no unique matching WeChat draft found; no draft created")
+    if len(matches) > 1:
+        raise RuntimeError("draft recovery ambiguous: no draft updated")
+    return matches[0]
+
+
+def preserve_draft_article_with_new_source(item: dict, target_url: str) -> dict:
+    """Copy the already stored article, updating only content_source_url."""
+    fields = (
+        "article_type", "title", "author", "digest", "content",
+        "thumb_media_id", "content_source_url",
+        "need_open_comment", "only_fans_can_comment",
+        "pic_crop_235_1", "pic_crop_1_1",
+    )
+    if not all(str(item.get(key) or "").strip() for key in ("title", "content", "thumb_media_id")):
+        raise RuntimeError("draft recovery lacks original title/content/thumb; refuse write")
+    copied = {key: item[key] for key in fields if key in item}
+    copied.setdefault("article_type", "news")
+    copied.setdefault("need_open_comment", 0)
+    copied.setdefault("only_fans_can_comment", 0)
+    copied["content_source_url"] = target_url
+    return copied
+
+
+def update_verified_original_links_only(
+    token: str, *, publication_date: str, slot: str, papers: list[dict],
+    featured: dict, edition: dict, retrospective_slug: str,
+    request: dict, args: argparse.Namespace,
+) -> int:
+    """One controlled 2-article draft/update with fresh draft/get evidence.
+
+    No PDF, figure, cover or digest uploading. No draft/add or freepublish.
+    """
+    expected_id = str(request.get("expectedExistingMediaId") or "").strip()
+    if (request.get("action") != "sync_daily_draft"
+        or request.get("publicationDate") != publication_date
+        or request.get("draftOnly") is not True
+        or request.get("publicSendAuthorized") is not False
+        or request.get("requireDraftGetReadback") is not True
+        or not expected_id):
+        raise RuntimeError("unsafe link-only draft trigger; no write")
+    retro = load_retrospective_slug(retrospective_slug)
+    if not isinstance(retro, dict) or not isinstance(featured, dict):
+        raise RuntimeError("both user-selected editorial manifests required")
+    dois = [normalize_doi((featured.get("paper") or {}).get("doi")),
+            normalize_doi((retro.get("paper") or {}).get("doi"))]
+    titles = [str(edition.get("title") or "").strip(), str(retro.get("title") or "").strip()]
+    urls = [gallery_original_url(dois[0], publication_date),
+            gallery_original_url(dois[1])]
+    if (len(set(dois)) != 2
+        or any(not re.fullmatch(r"10\.\d{4,9}/\S+", doi) for doi in dois)
+        or any(not title for title in titles)
+        or request.get("expectedDois") != dois
+        or request.get("expectedFirstReadOriginalUrl") != urls[0]
+        or request.get("expectedSecondReadOriginalUrl") != urls[1]):
+        raise RuntimeError("selected DOI/title/link contract mismatched")
+    state = load_state(DEFAULT_STATE)
+    if (str(state.get("publicationDate") or "") != publication_date
+        or str(state.get("media_id") or "") != expected_id):
+        raise RuntimeError("same-day stored draft authority mismatched; no write")
+    try:
+        old = get_draft(token, expected_id)
+        media_id = expected_id
+        recovered = False
+    except RuntimeError as exc:
+        if not re.search(r'"errcode"\s*:\s*40007\b', str(exc)):
+            raise
+        media_id, old = find_unique_readable_draft(token, titles, dois)
+        recovered = media_id != expected_id
+    if not exact_draft_identity(old, titles, dois):
+        raise RuntimeError("draft/get identity differs from approved two-paper edition; no write")
+    before = old["news_item"]
+    # Read-only verification has finished. Only now is a remote write allowed.
+    payloads = [preserve_draft_article_with_new_source(x, url)
+                for x, url in zip(before, urls)]
+    for index, article in enumerate(payloads):
+        update_draft(token, media_id, article, index=index)
+    after = get_draft(token, media_id)
+    if not exact_draft_identity(after, titles, dois):
+        raise RuntimeError("post-update draft identity mismatch; requires manual review")
+    for before_item, after_item, desired in zip(before, after["news_item"], urls):
+        if str(after_item.get("content_source_url") or "") != desired:
+            raise RuntimeError("post-update 阅读原文 URL mismatch")
+        for key in ("title", "author", "digest", "content", "thumb_media_id"):
+            if before_item.get(key) != after_item.get(key):
+                raise RuntimeError("post-update non-URL article field changed: " + key)
+    save_state(DEFAULT_STATE, {
+        **state, "publicationDate": publication_date, "publicationSlot": slot,
+        "media_id": media_id, "articleCount": 2, "retrospective": retrospective_slug,
+    })
+    preview_path, preview_url = write_draft_preview(
+        after, media_id=media_id,
+        preview_dir=Path(args.preview_dir), base_url=args.preview_base_url,
+    )
+    print(json.dumps({
+        "stage": "draft_update", "mode": "daily", "media_id": media_id,
+        "paper_count": len(papers), "article_count": 2, "publicationSlot": slot,
+        "draft_readback": "ok", "preview_path": str(preview_path),
+        "preview_url": preview_url, "content_source_url": urls[0],
+        "retrospective_source_url": urls[1],
+        "recoveredExistingDraft": recovered, "publish_id": None,
+    }, ensure_ascii=False))
+    return 0
+
+
 def preview_slug(media_id: str, draft: dict | None = None) -> str:
     key = os.environ.get("RELAY_SHARED_KEY", "").encode("utf-8")
     if not key:
@@ -2870,6 +3042,18 @@ def main() -> int:
 
     load_env(Path(args.env_file))
     token = get_access_token()
+    # A source-link repair explicitly approved by the owner must update only
+    # the two source URL fields of the original draft. It must not regenerate
+    # article content, reupload any media or create a replacement draft.
+    source_link_request_path = ROOT / "audit" / "automation-triggers" / "wechat-publisher-request.json"
+    if source_link_request_path.exists():
+        source_link_request = json.loads(source_link_request_path.read_text(encoding="utf-8"))
+        if source_link_request.get("linkOnly") is True:
+            return update_verified_original_links_only(
+                token, publication_date=publication_date, slot=slot, papers=papers,
+                featured=featured, edition=edition, retrospective_slug=retrospective_slug,
+                request=source_link_request, args=args,
+            )
     uploaded_urls, local_images = upload_featured_images(token, featured, args.featured_pdf)
     uploaded_urls["__gallery_cards__"] = upload_gallery_card_visuals(token, papers, featured, 4)
     gallery_target_url = f"https://gallery.gczhouwld.com/?edition={urllib.parse.quote(publication_date)}"
