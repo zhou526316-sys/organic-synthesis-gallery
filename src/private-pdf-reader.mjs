@@ -119,6 +119,7 @@ let sourceUrl = '';
 let declaredPdfBytes = 0;
 let activePdfContentHash = '';
 let ownerTencentPilotActive = false;
+let ownerTencentPilotSuppressed = false;
 let transferController = null;
 let activeRangeTransport = null;
 let rangeFailure = null;
@@ -559,7 +560,7 @@ function ownerTencentTransportFailure(error) {
 }
 
 async function getPdfSource(sessionToken, mode = 'view') {
-  if (manualTencentTrial || mode !== 'view') {
+  if (manualTencentTrial || mode !== 'view' || ownerTencentPilotSuppressed) {
     return getCanonicalPdfSource(sessionToken, mode);
   }
   // A public first-party manifest only enables the OPT-IN PILOT. It is never
@@ -602,6 +603,8 @@ async function getPdfSource(sessionToken, mode = 'view') {
         ? new Error('pdf_authorize_timeout') : error;
     if (sessionToken !== token()) throw new Error('pdf_source_invalid');
     if (!ownerTencentTransportFailure(reason)) throw reason;
+    ownerTencentPilotActive = false;
+    ownerTencentPilotSuppressed = true;
     document.documentElement.dataset.privatePdfOwnerRoute = 'cloudflare-backup';
     document.documentElement.dataset.privatePdfTencentPilotFailure =
       /^open_http_(429|500|502|503|504)$/.test(String(reason?.message))
@@ -749,6 +752,8 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
             } catch(error) {
               if (!ownerTencentPilotActive || manualTencentTrial ||
                   !ownerTencentTransportFailure(error)) throw error;
+              ownerTencentPilotSuppressed = true;
+              ownerTencentPilotActive = false;
               return getCanonicalPdfSource(sessionToken,'view');
             }
           })
@@ -764,6 +769,11 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
           // signed ticket without edge proof requires an actual 206 check.
           if (!source.headerVerified) await checkPdfHeader(source.url,9000);
           this.fileUrl = source.url;
+          if (onTencent && renewedOrigin !== TENCENT_PDF_ORIGIN) {
+            ownerTencentPilotActive = false;
+            ownerTencentPilotSuppressed = true;
+            document.documentElement.dataset.privatePdfOwnerRoute = 'cloudflare-backup';
+          }
           document.documentElement.dataset.privatePdfFileRoute =
             ownerPdfRouteLabel(renewedOrigin);
           return this.fileUrl;
@@ -813,6 +823,11 @@ function makeAuthenticatedRangeTransport(engine, fileUrl, byteLength, sessionTok
           this.expectedHash, byteLength)) throw new Error('pdf_source_invalid');
         if (!source.headerVerified) await checkPdfHeader(source.url,9000);
         this.fileUrl = source.url;
+        if (activeOrigin === TENCENT_PDF_ORIGIN && alternate !== TENCENT_PDF_ORIGIN) {
+          ownerTencentPilotActive = false;
+          ownerTencentPilotSuppressed = true;
+          document.documentElement.dataset.privatePdfOwnerRoute = 'cloudflare-backup';
+        }
         this.fileFailovers += 1;
         document.documentElement.dataset.privatePdfFileFailovers = String(this.fileFailovers);
         document.documentElement.dataset.privatePdfFileRoute =
@@ -1101,6 +1116,11 @@ async function verifiedPdfSource(sessionToken, mode = 'view', forceBrowserPrefli
               throw new Error('pdf_source_invalid');
             await checkPdfHeader(alternate.url, 10_000);
             document.documentElement.dataset.privatePdfPreflight = 'browser-alternate';
+            if (activeOrigin === TENCENT_PDF_ORIGIN && alternateOrigin !== TENCENT_PDF_ORIGIN) {
+              ownerTencentPilotActive = false;
+              ownerTencentPilotSuppressed = true;
+              document.documentElement.dataset.privatePdfOwnerRoute = 'cloudflare-backup';
+            }
             document.documentElement.dataset.privatePdfFileRoute =
               ownerPdfRouteLabel(alternateOrigin);
             document.documentElement.dataset.privatePdfFileFailovers = '1';
