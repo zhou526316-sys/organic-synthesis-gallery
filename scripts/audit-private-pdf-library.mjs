@@ -26,15 +26,15 @@ const items=[...papers.values()].map(item=>({
   addedDate:/^\d{4}-\d{2}-\d{2}$/.test(String(item.addedDate||''))?item.addedDate:'',
 })).sort((a,b)=>a.doi.localeCompare(b.doi,'en'));
 if(items.length!==new Set(items.map(p=>p.doi)).size)throw Error('audit_duplicate_doi');
-const catalogHash=crypto.createHash('sha256').update(items.map(p=>p.doi).join('\\n')).digest('hex');
+const catalogHash=crypto.createHash('sha256').update(items.map(p=>p.doi).join('\n')).digest('hex');
 // Every invocation uses a separate generation, even if its DOI set is
 // identical to yesterday's. A failed 24-DOI batch cannot mutate the
 // currently published completed snapshot.
-const runKey=/^\\d+$/.test(String(process.env.GITHUB_RUN_ID||''))?
+const runKey=/^\d+$/.test(String(process.env.GITHUB_RUN_ID||''))?
   String(process.env.GITHUB_RUN_ID)+':'+String(process.env.GITHUB_RUN_ATTEMPT||'1'):
   crypto.randomUUID();
 const catalogId=crypto.createHash('sha256')
-  .update(catalogHash+'\\n'+mainSha+'\\n'+runKey).digest('hex');
+  .update(catalogHash+'\n'+mainSha+'\n'+runKey).digest('hex');
 const report={schemaVersion:1,suite:'private-pdf-library-audit-v1',ok:false,
   sourceCommit:mainSha,catalogId,expectedCount:items.length,
   submitted:0,batches:0,probed:0,storagePass:0,storageFail:0,
