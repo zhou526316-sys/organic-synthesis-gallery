@@ -33,8 +33,10 @@ jobs:
           import {readFile,writeFile,mkdir} from 'node:fs/promises';
           import {chromium} from 'playwright';
           import {canonicalBodyEvidence,buildBodyReviewMarker} from './shared/body-media-evidence.js';
-          const base='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
-          const worker='https://organic-synthesis-gallery.zhou526316.workers.dev';
+          import {liveCardArticleByDoi,liveCardModeForDoi} from './shared/live-media-card-visibility.mjs';
+          import {safeLiveVerificationRequest} from './scripts/gallery-live-readonly-post.mjs';
+          const base='https://gallery.gczhouwld.com/';
+          const worker='https://api.gczhouwld.com';
           const out=process.env.RUNNER_TEMP+'/new-body31-live';await mkdir(out,{recursive:true});
           const sha=b=>createHash('sha256').update(b).digest('hex');
           const report={checkedAt:new Date().toISOString(),readOnly:true,productionWrites:0,files:[],cards:[],realMarkerSamples:[],browserRenderingVerified:false};
@@ -46,6 +48,7 @@ jobs:
             const media=JSON.parse(await get('media-index.json?verify='+Date.now()));
             const ledger=JSON.parse(await get('body-publication-ledger.json?verify='+Date.now()));
             const status=JSON.parse(await get('body-batches-status.json?verify='+Date.now()));
+            const byDoi=liveCardArticleByDoi(JSON.parse(await get('toc-demand-live.json?verify='+Date.now())));
             assert.ok(Array.isArray(ledger.items));
             for(const item of approved){
               const figure=media.items[item.doi]?.figures?.figures?.find(f=>f.id===item.id);assert.ok(figure,item.doi+' '+item.id);
@@ -73,11 +76,22 @@ jobs:
             const browser=await chromium.launch();
             try{
               const ctx=await browser.newContext({viewport:{width:1360,height:1000}});
-              await ctx.route('**/*',route=>!['GET','HEAD','OPTIONS'].includes(route.request().method())?route.fulfill({status:503,body:'read-only acceptance blocks production writes'}):route.continue());
+              await ctx.route('**/*',route=>!safeLiveVerificationRequest(route.request().method(),route.request().url())?route.fulfill({status:503,body:'read-only acceptance blocks production writes'}):route.continue());
               const page=await ctx.newPage();await page.goto(base,{waitUntil:'domcontentloaded'});await page.locator('#search').waitFor({timeout:30000});
               const dois=[...new Set(approved.map(r=>r.doi))];assert.equal(dois.length,6);
               for(const [i,doi] of dois.entries()){
-                await page.locator('#search').fill(doi);await page.locator('#search').press('Escape');
+                await page.locator('#search').fill(doi);
+                const mode=liveCardModeForDoi(byDoi,doi);
+                const card=page.locator('.card[data-doi="'+doi+'"]');await card.waitFor({timeout:25000});
+                assert.equal(await card.getAttribute('data-media-policy'),mode,'card_policy_mismatch:'+doi);
+                if(mode!=='standard'){
+                  assert.equal(await card.locator('.figure-strip-slot').count(),0,'retro_body_strip_leak:'+doi);
+                  assert.equal(await card.locator('.private-pdf-button,.local-pdf-button').count(),0,'retro_pdf_action_leak:'+doi);
+                  assert.equal(await card.locator('.toc-slot').count(),mode==='toc_only'?1:0,'retro_toc_policy_mismatch:'+doi);
+                  report.cards.push({doi,mediaMode:mode,sourceAssetsVerified:true,
+                    figureStripSuppressed:true,privatePdfSuppressed:true,tocVisible:mode==='toc_only'});
+                  continue;
+                }
                 const s='.figure-strip-slot[data-figure-doi="'+doi+'"]',strip=page.locator(s);await strip.waitFor({timeout:20000});await strip.scrollIntoViewIfNeeded();
                 const wanted=approved.filter(r=>r.doi===doi).length;
                 await page.waitForFunction(({s,n})=>document.querySelectorAll(s+' .figure-thumb img').length>=n,{s,n:wanted},{timeout:20000});
