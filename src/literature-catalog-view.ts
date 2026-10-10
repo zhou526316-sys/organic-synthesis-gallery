@@ -121,10 +121,28 @@ export async function literatureCatalogIndexedReadActive(): Promise<boolean> {
   }
 }
 
+const SEARCH_CACHE_TTL_MS = 30_000;
+const SEARCH_CACHE_MAX = 32;
+const validatedSearchCache = new Map<string, { until: number; result: LiteratureCatalogViewResponse }>();
+
 export async function fetchLiteratureCatalogView(
   request: LiteratureCatalogViewRequest,
+  signal?: AbortSignal,
 ): Promise<LiteratureCatalogViewResponse> {
   assert(HASH64.test(request.catalogId), 'literature_catalog_view_request_catalog_invalid');
-  const response = await api.post<unknown>('/api/literature/catalog-view', request);
-  return validateLiteratureCatalogViewResponse(response.data, request);
+  if (signal?.aborted) throw new DOMException('Search superseded', 'AbortError');
+  // The generation and every filter/cursor are part of the key. Repeated
+  // identical searches can reuse an already validated answer for 30 seconds;
+  // errors, partial responses, and cancelled requests are never cached.
+  const key = JSON.stringify(request);
+  const existing = validatedSearchCache.get(key);
+  if (existing && existing.until > Date.now()) return existing.result;
+  if (existing) validatedSearchCache.delete(key);
+  const response = await api.catalogView<unknown>(request, signal);
+  if (signal?.aborted) throw new DOMException('Search superseded', 'AbortError');
+  const result = validateLiteratureCatalogViewResponse(response.data, request);
+  if (validatedSearchCache.size >= SEARCH_CACHE_MAX)
+    validatedSearchCache.delete(validatedSearchCache.keys().next().value!);
+  validatedSearchCache.set(key, { until: Date.now() + SEARCH_CACHE_TTL_MS, result });
+  return result;
 }
