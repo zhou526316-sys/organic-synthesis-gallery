@@ -201,7 +201,7 @@ async function openalexWindow(journal,range,budget) {
       u.searchParams.set('filter','primary_location.source.issn:'+journal.issns.join('|')
         +',from_publication_date:'+range.from+',to_publication_date:'+range.to);
       u.searchParams.set('per_page',String(MAX_ROWS));u.searchParams.set('cursor',cursor);
-      u.searchParams.set('select','id,doi,display_name,publication_date,authorships,primary_location,biblio,has_abstract,type');
+      u.searchParams.set('select','id,doi,display_name,publication_date,authorships,primary_location,biblio,abstract_inverted_index,type');
       if(process.env.OPENALEX_API_KEY)u.searchParams.set('api_key',process.env.OPENALEX_API_KEY);
       const data=await request(u,budget,'openalex');
       if(!Array.isArray(data.results)||!data.meta)throw Error('openalex:invalid_response');
