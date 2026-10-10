@@ -64,7 +64,7 @@ try{
     report.submitted+=chunk.length;report.batches++;
     save();
   }
-  const commit=await maintenance('finish',{catalogId});
+  const commit=await maintenance('finish',{catalogId,sourceCommit:mainSha});
   if(commit.checkedCount!==items.length)throw new Error('audit_catalog_not_complete');
   report.status='storage_probing';save();
   for(let done=0;done<probeMax;done+=6){
