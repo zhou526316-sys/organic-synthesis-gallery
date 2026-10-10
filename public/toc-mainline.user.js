@@ -2705,7 +2705,7 @@ function embeddedJobDois(value) {
               ||!rscVerifiedSilverchairMedia(job,url))return;
           try{
             var u=new URL(url);
-            if(u.protocol!=='https:'||!(u.hostname==='pubs.rsc.org'||u.hostname.endsWith('.rsc.org')))return;
+            if(u.protocol!=='https:'||!(u.hostname==='pubs.rsc.org'||u.hostname.endsWith('.rsc.org')||u.hostname.endsWith('.silverchair-cdn.com')))return;
             if(!/\.(?:png|jpe?g|webp|gif|svg)(?:$|[?#])/i.test(url))return;
           }catch(_){return;}
           seen.add(url);
