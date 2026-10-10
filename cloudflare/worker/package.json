@@ -22,7 +22,7 @@
     "test:scheduled-handoff-index": "node scripts/test-scheduled-handoff-index.mjs",
     "test:evidence-index": "node scripts/test-evidence-index.mjs",
     "test:summary-candidate-index": "node scripts/test-summary-candidate-index.mjs",
-    "test:literature-catalog-index": "node scripts/test-literature-catalog-index.mjs"
+    "test:literature-catalog-index": "node --test scripts/test-literature-catalog-index.mjs scripts/test-literature-search-enrichment.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.37.1"

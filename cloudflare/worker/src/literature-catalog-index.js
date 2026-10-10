@@ -1,3 +1,4 @@
+import { searchEnrichmentReady, searchFtsExpression } from './literature-search-enrichment.js';
 export const LITERATURE_CATALOG_INDEX_SCHEMA_VERSION = 'literature-catalog-index-v1';
 export const LITERATURE_INDEX_IMPORT_BATCH_MAX = 8;
 const schemaReadyBindings = new WeakSet();
@@ -438,19 +439,18 @@ export async function queryLiteratureCatalogView(env,{
   const exactOnlineDate=view.dateFrom&&view.dateFrom===view.dateTo?view.dateFrom:'';
   const joins=[],where=[],args=[];
   if(view.queryText){
-    const match=phraseQuery(view.queryText);
-    joins.push('JOIN literature_catalog_fts f ON f.catalog_id=i.catalog_id AND f.doi=i.doi');
-    where.push('literature_catalog_fts MATCH ?','f.catalog_id=?','i.catalog_id=?');
-    args.push(match,catalogId,catalogId);
-    where.push(`(
-      instr(lower(COALESCE(i.title,'')),?)>0 OR
-      instr(lower(COALESCE(i.title_zh,'')),?)>0 OR
-      instr(lower(COALESCE(i.doi,'')),?)>0 OR
-      instr(lower(COALESCE(i.journal,'')),?)>0 OR
-      instr(lower(COALESCE(i.authors_text,'')),?)>0 OR
-      instr(lower(COALESCE(i.first_online_date,'')),?)>0
+    const match=searchFtsExpression(view.queryText);
+    // Enrichment becomes visible only after every DOI/revision has passed a
+    // whole-generation parity gate. Until then the original title index stays usable.
+    const enriched=await searchEnrichmentReady(env,catalogId);
+    where.push(`i.doi IN (
+      SELECT f.doi FROM literature_catalog_fts f
+        WHERE f.catalog_id=? AND literature_catalog_fts MATCH ?
+      ${enriched?`UNION SELECT e.doi FROM literature_search_enrichment_fts e
+        WHERE e.catalog_id=? AND literature_search_enrichment_fts MATCH ?`:''}
     )`);
-    args.push(...Array(6).fill(view.queryText));
+    args.push(catalogId,match);
+    if(enriched) args.push(catalogId,match);
   }else{
     where.push('i.catalog_id=?');
     args.push(catalogId);

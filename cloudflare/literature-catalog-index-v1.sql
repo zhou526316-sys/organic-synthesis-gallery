@@ -45,3 +45,35 @@ CREATE VIRTUAL TABLE IF NOT EXISTS literature_catalog_fts USING fts5(
   searchable_text,
   tokenize='trigram'
 );
+
+-- Generation-fenced, DOI/revision-matched semantic search supplement.
+-- Abstracts and approved explanatory summaries remain separately attributed.
+CREATE TABLE IF NOT EXISTS literature_search_enrichment_generations (
+  catalog_id TEXT PRIMARY KEY,
+  source_hash TEXT NOT NULL,
+  expected_rows INTEGER NOT NULL,
+  imported_rows INTEGER NOT NULL DEFAULT 0,
+  ready INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS literature_search_enrichment (
+  catalog_id TEXT NOT NULL,
+  doi TEXT NOT NULL,
+  revision TEXT NOT NULL,
+  abstract_text TEXT NOT NULL DEFAULT '',
+  abstract_source TEXT NOT NULL DEFAULT '',
+  reviewed_summary_en TEXT NOT NULL DEFAULT '',
+  reviewed_summary_zh TEXT NOT NULL DEFAULT '',
+  searchable_text TEXT NOT NULL DEFAULT '',
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (catalog_id, doi)
+);
+
+CREATE VIRTUAL TABLE IF NOT EXISTS literature_search_enrichment_fts USING fts5(
+  catalog_id UNINDEXED,
+  doi UNINDEXED,
+  searchable_text,
+  tokenize='trigram'
+);

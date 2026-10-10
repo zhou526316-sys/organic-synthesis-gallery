@@ -15,6 +15,7 @@ on:
       - 'cloudflare/worker/package.json'
       - 'cloudflare/worker/scripts/test-site-analytics-materialized.mjs'
       - 'cloudflare/worker/scripts/test-literature-catalog-index.mjs'
+      - 'cloudflare/worker/scripts/test-literature-search-enrichment.mjs'
       - 'cloudflare/worker/scripts/test-user-library-v3.mjs'
       - 'cloudflare/worker/scripts/test-user-library-shadow.mjs'
       - 'cloudflare/worker/scripts/test-user-library-v3-shadow.mjs'
@@ -95,7 +96,7 @@ jobs:
 
       - name: Verify date-scoped literature queries and cursor integrity
         timeout-minutes: 2
-        run: node --test cloudflare/worker/scripts/test-literature-catalog-index.mjs
+        run: node --test cloudflare/worker/scripts/test-literature-catalog-index.mjs cloudflare/worker/scripts/test-literature-search-enrichment.mjs
 
       - name: Verify user library migration and deployment contracts
         timeout-minutes: 2
