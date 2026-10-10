@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {publisherMetadataAbstract,fetchPublisherMetadataAbstract,publisherMetadataEntryUrl} from './lib/publisher-abstract-metadata.mjs';
+import {publisherMetadataAbstract,fetchPublisherMetadataAbstract,publisherMetadataEntryUrl,extractNaturePublicAbstract} from './lib/publisher-abstract-metadata.mjs';
 const DOI='10.1038/s41586-026-11043-z';
 const TEXT='We describe a new bond construction enabling selective functionalization of aliphatic compounds under mild conditions. The method offers a broad substrate range and is supported by mechanistic control experiments with radical probes.';
 const head=(doi,extra='')=>`<html><head><meta name="citation_doi" content="${doi}">${extra}</head><body><div>UNLICENSED COMPLETE FULL TEXT MUST NOT BE READ</div></body></html>`;
@@ -90,4 +90,43 @@ test('CCS canonical abstract page response remains DOI-verified',async()=>{
   };
   assert.equal(await fetchPublisherMetadataAbstract(id,{fetchImpl}),TEXT);
   assert.equal(hits,1);
+});
+
+test('Nature public Abstract section is accepted only with exact publisher DOI and explicit Abs1 heading',()=>{
+  const html=head(DOI).replace('</body>',
+    '<section aria-labelledby="Abs1"><h2 id="Abs1">Abstract</h2>'
+    +'<div id="Abs1-content"><p>'+TEXT+'</p></div></section>'
+    +'<section><h2 id="Main">Main</h2><p>CONFIDENTIAL ARTICLE BODY MUST NOT BE INDEXED</p></section></body>');
+  assert.equal(publisherMetadataAbstract(html,DOI),TEXT);
+  assert.equal(publisherMetadataAbstract(html,'10.1038/s41586-026-wrong'),'');
+  assert.equal(extractNaturePublicAbstract(html),TEXT);
+  assert.doesNotMatch(extractNaturePublicAbstract(html),/CONFIDENTIAL/);
+});
+test('Nature parser never treats arbitrary body or headline as abstract',()=>{
+  const fake=head(DOI).replace('</body>',
+    '<section><h2 id="Main">Main</h2><p>'+TEXT+'</p></section></body>');
+  assert.equal(publisherMetadataAbstract(fake,DOI),'');
+  const wrong=head(DOI).replace('</body>',
+    '<section><h2 id="Abs1">Results</h2><p>'+TEXT+'</p></section></body>');
+  assert.equal(publisherMetadataAbstract(wrong,DOI),'');
+});
+test('Nature public Abstract-only stream stops before downstream article sections',async()=>{
+  const chunks=[
+    '<html><head><meta name="citation_doi" content="'+DOI+'"></head><body>',
+    '<section aria-labelledby="Abs1"><h2 id="Abs1">Abstract</h2><div>'
+      +'<p>'+TEXT+'</p></div></section>',
+    '<section><h2 id="Main">Main</h2><p>PRIVATE ARTICLE BODY MUST NOT BE READ</p></section></body></html>',
+  ];
+  let emitted=0;
+  const fetchImpl=async(url,options)=>{
+    assert.equal(url,publisherMetadataEntryUrl(DOI));
+    assert.equal(options.redirect,'manual');
+    const stream=new ReadableStream({pull(controller){
+      if(emitted>=chunks.length){controller.close();return}
+      controller.enqueue(new TextEncoder().encode(chunks[emitted++]));
+    }});
+    return new Response(stream,{status:200,headers:{'content-type':'text/html'}});
+  };
+  assert.equal(await fetchPublisherMetadataAbstract(DOI,{fetchImpl}),TEXT);
+  assert.equal(emitted,2);
 });
