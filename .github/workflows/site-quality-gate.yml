@@ -176,10 +176,10 @@ jobs:
       - name: Install site dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Install Playwright WebKit
+      - name: Install Playwright WebKit and Chromium
         run: |
           npm install --no-save --no-package-lock @playwright/test@1.55.1
-          npx playwright install --with-deps webkit
+          npx playwright install --with-deps webkit chromium
 
       - name: Build legacy interaction fixture
         run: npm run build
@@ -232,6 +232,11 @@ jobs:
         env:
           ARCHITECTURE_PREVIEW_BASE: http://127.0.0.1:4174
         run: npx playwright test tests/architecture-frontend.spec.ts --reporter=line --workers=1
+
+      - name: Verify Chromium search suggestions and late candidate hydration
+        env:
+          ARCHITECTURE_PREVIEW_BASE: http://127.0.0.1:4174
+        run: npx playwright test tests/architecture-frontend.spec.ts --browser=chromium --grep 'search suggestions|visible journal candidate window' --reporter=line --workers=1
 
   api-smoke:
     name: Production API smoke
