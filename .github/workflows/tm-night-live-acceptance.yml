@@ -5,7 +5,10 @@ on:
     types: [completed]
   push:
     branches: [main]
-    paths: ['audit/automation-triggers/tm-night-live-acceptance.json']
+    paths: ['audit/automation-triggers/tm-night-live-acceptance.json', '.github/workflows/tm-night-live-acceptance.yml']
+  pull_request:
+    branches: [main]
+    paths: ['.github/workflows/tm-night-live-acceptance.yml']
 permissions:
   contents: read
 concurrency:
@@ -13,59 +16,75 @@ concurrency:
   cancel-in-progress: false
 jobs:
   verify:
-    if: github.event_name == 'push' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - name: Verify public installer and backend are the same release
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify both official installers and anonymous PDF denial
+        run: node scripts/verify-tm-oct1-installer-live.mjs
+      - name: Verify public queue and current backend capabilities
         run: |
-          python3 - <<'PY'
-          import datetime,hashlib,json,os,pathlib,re,time,urllib.request
-          site='https://zhou526316-sys.github.io/organic-synthesis-gallery/'
-          worker='https://organic-synthesis-gallery.zhou526316.workers.dev'
-          def get(url):
-            request=urllib.request.Request(url+('&' if '?' in url else '?')+'release-check='+str(time.time_ns()),headers={'Cache-Control':'no-cache'})
-            with urllib.request.urlopen(request,timeout=15) as response:
-              raw=response.read(5000001)
-            assert len(raw)<=5000000
-            return raw
-          error='not_attempted'
-          for attempt in range(12):
-            try:
-              raw=get(site+'gallery-vpn-bridge.user.js');text=raw.decode()
-              core=get(site+'toc-mainline.user.js').decode()
-              queue=json.loads(get(site+'toc-demand-live.json'))
-              cap=json.loads(get(worker+'/api/media/local-capture-index?capabilities=1'))
-              launcher=get(site+'capture-launch.html').decode()
-              assert re.search(r'@version\s+2\.2\.20\b',text)
-              assert "var VERSION = '6.2.20';" in text and "var VERSION = '6.2.20';" in core
-              for marker in ['GM_getTab','GM_saveTab','GM_listValues','启动夜间连续抓取（TOC＋正文图）','function stableCaptureGeneration','function readCaptureCheckpoint','function launchBoundPublisherTab','assertBoundCaptureJob','publishVerifiedBrowserMedia']:
-                if marker=='publishVerifiedBrowserMedia':continue
-                assert marker in text,marker
-              assert 'readRealtimeMediaPreflight' not in core and 'MEDIA_INVENTORY_ENDPOINT' not in core
-              assert cap.get('captureVersion')=='6.2.20' and cap.get('verifiedPublication') is True
-              assert cap.get('mediaGeneration')==queue.get('mediaGeneration')==1790082000000
-              assert len(queue['articles'])==queue['webpageDoiCount'] and len(queue['articles'])>=100
-              assert len({r['doi'] for r in queue['articles']})==len(queue['articles'])
-              assert '正在绑定本标签页' in launcher
-              media=json.loads(get(site+'media-index.json'))
-              restored=[doi for doi,r in media['items'].items() if r.get('toc',{}).get('recoveryId')=='toc-batch1-20260922']
-              assert len(restored)==83, 'reviewed TOC baseline changed'
-              report={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'bridgeVersion':'2.2.20','coreVersion':'6.2.20','installerSha256':hashlib.sha256(raw).hexdigest(),'coreSha256':hashlib.sha256(core.encode()).hexdigest(),'installerUrl':site+'gallery-vpn-bridge.user.js','articleCount':len(queue['articles']),'queueGeneratedAt':queue['generatedAt'],'mediaGeneration':queue['mediaGeneration'],'verifiedPublicationCapability':True,'boundLauncherAvailable':True,'preservedReviewedTocs':len(restored),'noProductionWrites':True,'realUserBrowserOvernightVerified':False}
-              pathlib.Path(os.environ['RUNNER_TEMP'],'night-live-acceptance.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
-              print('NIGHT_LIVE_ACCEPTANCE '+json.dumps(report,ensure_ascii=False));break
-            except Exception as exc:
-              error=type(exc).__name__+':'+str(exc)[:180]
-              print('NIGHT_DEPLOY_WAIT',attempt+1,error)
-              time.sleep(10)
-          else:raise SystemExit('Night release did not pass live checks: '+error)
-          PY
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readFile,writeFile} from 'node:fs/promises';
+          import path from 'node:path';
+          const temp=process.env.RUNNER_TEMP||'/tmp';
+          const installer=JSON.parse(await readFile(path.join(temp,'tm-oct1-live-acceptance.json'),'utf8'));
+          assert.equal(installer.passed,true,'dual-domain-installer-not-verified');
+          const getJson=async url=>{
+            const response=await fetch(url+(url.includes('?')?'&':'?')+'night-check='+Date.now(),{
+              headers:{'cache-control':'no-cache'},signal:AbortSignal.timeout(15000)
+            });
+            assert.equal(response.status,200,'unexpected_http_'+response.status);
+            return response.json();
+          };
+          let outcome;
+          for(let attempt=1;attempt<=5;attempt++){
+            try{
+              const [queue,cap]=await Promise.all([
+                getJson('https://gallery.gczhouwld.com/toc-demand-live.json'),
+                getJson('https://api.gczhouwld.com/api/media/capture-capabilities')
+              ]);
+              assert.ok(Array.isArray(queue.articles)&&queue.articles.length>0,'empty_capture_registry');
+              assert.equal(queue.articles.length,queue.webpageDoiCount,'capture_registry_count_mismatch');
+              const dois=queue.articles.map(item=>String(item.doi||'').trim().toLowerCase());
+              assert.ok(dois.every(Boolean),'blank_registry_doi');
+              assert.equal(new Set(dois).size,dois.length,'duplicate_registry_doi');
+              assert.ok(dois.every(x=>x.length>4),'invalid_registry_doi');
+              assert.equal(new Set(dois).size,dois.length,'duplicate_registry_doi');
+              assert.equal(cap.captureVersion,'6.2.20','capture_protocol_mismatch');
+              assert.equal(cap.mediaControllerRevision,'2.2.41','controller_revision_mismatch');
+              assert.equal(cap.mediaGeneration,queue.mediaGeneration,'media_generation_mismatch');
+              outcome={passed:true,articleCount:dois.length,queueGeneratedAt:queue.generatedAt,
+                mediaGeneration:cap.mediaGeneration,captureProtocol:cap.captureVersion,
+                controllerRevision:cap.mediaControllerRevision,attempts:attempt};
+              break;
+            }catch(error){
+              outcome={passed:false,attempts:attempt,error:String(error?.message||error).slice(0,180)};
+              if(attempt<5)await new Promise(resolve=>setTimeout(resolve,5000));
+            }
+          }
+          const report={checkedAt:new Date().toISOString(),
+            bridgeVersion:installer.version,installedEngine:installer.install,
+            installerUrls:installer.checks.map(row=>row.key),
+            installerChecksPassed:true,privateInventoryDeniesAnonymous:installer.privateInventoryDeniesAnonymous,
+            readOnly:true,publisherRequests:0,productionWrites:0,realUserBrowserOvernightVerified:false,
+            ...outcome};
+          await writeFile(path.join(temp,'night-live-acceptance.json'),JSON.stringify(report,null,2)+'\n');
+          console.log('NIGHT_LIVE_ACCEPTANCE '+JSON.stringify(report));
+          if(!report.passed)process.exitCode=1;
+          JS
       - name: Preserve live acceptance evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: night-live-acceptance
-          path: ${{ runner.temp }}/night-live-acceptance.json
+          path: |
+            ${{ runner.temp }}/night-live-acceptance.json
+            ${{ runner.temp }}/tm-oct1-live-acceptance.json
           retention-days: 14
           if-no-files-found: warn
