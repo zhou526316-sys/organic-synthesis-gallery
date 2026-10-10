@@ -3285,9 +3285,42 @@ function embeddedJobDois(value) {
     if(requested.protocol!=='https:' || requested.hostname.toLowerCase()!=='pubs.rsc.org'
         || !/(?:\/results(?:[/?#]|$)|\/issue\/|\/journals\/journalissues\/)/i.test(requested.pathname))return null;
     try{
-      var response=await gmRequest({method:'GET',url:requested.href,timeout:10000,
-        headers:{Accept:'text/html,application/xhtml+xml;q=0.9,*/*;q=0.1'}},true);
-      var status=Number(response&&response.status||0);
+      // native_listing_browser_first: a publisher-tab same-origin GET uses the
+      // authenticated browser's ordinary cookies. GM requests can return 403
+      // even when that same tab is permitted to read the publisher's listing.
+      // No new hostname, invented image URL, or response-level auth bypass.
+      var status=0,finalUrl=requested.href,html='';
+      try{
+        var abort=new AbortController(),timer=setTimeout(function(){abort.abort();},10000);
+        try{
+          var nativeResponse=await fetch(requested.href,{method:'GET',credentials:'same-origin',
+            redirect:'follow',headers:{Accept:'text/html,application/xhtml+xml;q=0.9,*/*;q=0.1'},
+            signal:abort.signal});
+          status=Number(nativeResponse&&nativeResponse.status||0);
+          finalUrl=String(nativeResponse&&nativeResponse.url||requested.href);
+          if(status>=200&&status<300){
+            var declared=Number(nativeResponse.headers&&nativeResponse.headers.get('content-length')||0);
+            if(declared>4000000)throw new Error('rsc_listing_native_oversize');
+            html=await nativeResponse.text();
+          }
+          pushTrace(trace,{stage:'rsc_listing_html',event:'native_browser_response',
+            status:status>=200&&status<300?'ok':'failed',httpStatus:status,
+            message:'same_origin_authenticated_bounded_get;no_auth_bypass'});
+        }finally{clearTimeout(timer);}
+      }catch(error){
+        if(String(error&&error.message||'')==='rsc_listing_native_oversize')return [];
+        pushTrace(trace,{stage:'rsc_listing_html',event:'native_transport_failed',status:'failed',
+          message:captureLiveError(error&&error.message||error)});
+      }
+      // A transport failure may use the original bounded GM read; explicit
+      // publisher 401/403/429 MUST stop without a second authorization attempt.
+      if(!status){
+        var response=await gmRequest({method:'GET',url:requested.href,timeout:10000,
+          headers:{Accept:'text/html,application/xhtml+xml;q=0.9,*/*;q=0.1'}},true);
+        status=Number(response&&response.status||0);
+        finalUrl=String(response&&(response.finalUrl||response.responseURL)||requested.href);
+        html=String(response&&response.responseText||'');
+      }
       if(status===401||status===403||status===429){
         pushTrace(trace,{stage:'rsc_listing_html',event:'access_denied',status:'failed',
           message:'publisher_http_'+status+';no_auth_bypass_or_retry'});
@@ -3297,14 +3330,12 @@ function embeddedJobDois(value) {
         pushTrace(trace,{stage:'rsc_listing_html',event:'http_failed',status:'failed',message:'publisher_http_'+status});
         return null;
       }
-      var finalUrl=String(response&&(response.finalUrl||response.responseURL)||requested.href);
       var final=new URL(finalUrl);
       if(final.protocol!=='https:'||final.hostname.toLowerCase()!=='pubs.rsc.org'
           ||!/(?:\/results(?:[/?#]|$)|\/issue\/|\/journals\/journalissues\/)/i.test(final.pathname)){
         pushTrace(trace,{stage:'rsc_listing_html',event:'redirect_rejected',status:'none',message:'not_a_publisher_listing'});
         return [];
       }
-      var html=String(response&&response.responseText||'');
       if(!/^\s*(?:<!doctype\s+html|<html\b|<head\b|<body\b)/i.test(html.slice(0,500))||html.length>4000000){
         pushTrace(trace,{stage:'rsc_listing_html',event:'non_html',status:'none',message:'empty_or_unexpected_response'});
         return [];
