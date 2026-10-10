@@ -35,7 +35,7 @@ const runKey=/^\d+$/.test(String(process.env.GITHUB_RUN_ID||''))?
   crypto.randomUUID();
 const catalogId=crypto.createHash('sha256')
   .update(catalogHash+'\n'+mainSha+'\n'+runKey).digest('hex');
-const report={schemaVersion:1,suite:'private-pdf-library-audit-v1',ok:false,
+const report={schemaVersion:2,suite:'private-pdf-library-audit-v2',ok:false,
   sourceCommit:mainSha,catalogId,expectedCount:items.length,
   submitted:0,batches:0,probed:0,storagePass:0,storageFail:0,
   startedAt:new Date().toISOString(),status:'not_started'};
