@@ -23,6 +23,8 @@ let deepLinkSummaryOpening = false;
 let focusTimer: number | null = null;
 let highlightUntil = 0;
 let highlightExpiryTimer: number | null = null;
+let lastFocusedCard: HTMLElement | null = null;
+let firstFocusAt = 0;
 
 const qrModulePromise = import('qrcode');
 const posterCache = new Map<string, Promise<Blob>>();
@@ -637,14 +639,26 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
 }
 
 function deepLinkDoi(): string | null {
-  try { return normalizeDoi(new URL(window.location.href).searchParams.get('doi')); }
-  catch { return null; }
+  try {
+    const url = new URL(window.location.href);
+    const explicit = normalizeDoi(url.searchParams.get('doi'));
+    if (explicit) return explicit;
+    // Backwards compatibility: already sent Official Account articles used
+    // only ?edition=YYYY-MM-DD, so the gallery must resolve their featured
+    // DOI from the validated editorial manifest and show the matching card.
+    if (/^\d{4}-\d{2}-\d{2}$/.test(url.searchParams.get('edition') || '')) {
+      return normalizeDoi(document.documentElement.dataset.galleryEditionFeaturedDoi);
+    }
+    return null;
+  } catch { return null; }
 }
 
 function deepLinkSummaryRequested(): boolean {
   try {
     const url = new URL(window.location.href);
-    return Boolean(normalizeDoi(url.searchParams.get('doi'))) && url.searchParams.get('summary') !== '0';
+    // The editorial "阅读原文" goes to the card itself. Only explicit
+    // summary=1 share links open the overlay; legacy DOI-only links stay clear.
+    return Boolean(normalizeDoi(url.searchParams.get('doi'))) && url.searchParams.get('summary') === '1';
   } catch {
     return false;
   }
@@ -693,6 +707,12 @@ function scheduleSharedHighlightExpiry(): void {
 function focusDeepLinkCard(): void {
   const doi = deepLinkDoi();
   if (!doi) {
+    // The edition JSON may still be loading; do not permanently give up on
+    // a valid old "阅读原文" edition link before its featured DOI is ready.
+    const waitingForEdition = /^\d{4}-\d{2}-\d{2}$/.test(
+      new URL(window.location.href).searchParams.get('edition') || '',
+    );
+    if (waitingForEdition) return;
     deepLinkFocused = true;
     clearSharedHighlight();
     return;
@@ -703,12 +723,28 @@ function focusDeepLinkCard(): void {
   if (!card) return;
 
   const firstFocus = !deepLinkFocused;
+  const cardReplaced = lastFocusedCard !== null && lastFocusedCard !== card;
+  if (cardReplaced) lastFocusedCard?.classList.remove('shared-card-target');
+  lastFocusedCard = card;
   if (firstFocus) {
     deepLinkFocused = true;
+    firstFocusAt = Date.now();
     highlightUntil = Date.now() + SHARED_CARD_HIGHLIGHT_MS;
     const title = card.querySelector<HTMLElement>('.title')?.textContent?.trim();
     if (title) document.title = `${title} | Organic Synthesis Gallery`;
-    requestAnimationFrame(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+  }
+  // First landing must scroll to the exact paper; during the first seconds,
+  // keep the same target centred if asynchronous rendering replaces its DOM.
+  // Do not keep pulling the reader back after deliberate manual scrolling.
+  if (firstFocus || (cardReplaced && Date.now() - firstFocusAt < 3500)) {
+    requestAnimationFrame(() => {
+      if (card.isConnected) {
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        card.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' });
+      }
+    });
+  }
+  if (firstFocus) {
     if (isWeChatBrowser() && isWeChatJsSdkHost()) {
       const shareButton = card.querySelector<HTMLElement>('[data-card-share]');
       const info = shareButton ? infoFromButton(shareButton) : null;
