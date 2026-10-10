@@ -413,7 +413,7 @@ export async function queryLiteratureCatalogIndex(env,{catalogId:catalogIdValue,
 export async function queryLiteratureCatalogView(env,{
   catalogId:catalogIdValue,query='',selectedJournals=[],excludedJournals=[],
   dateFrom='',dateTo='',addedDate='',sort='newest',limit=60,cursor=''
-}={}){
+}={}, {baseOnly=false}={}){
   if(!literatureCatalogIndexShadowEnabled(env)) return {status:409,body:{error:'literature_catalog_index_shadow_disabled',enabled:false,readPathActive:false}};
   if(!env?.LITERATURE_INDEX_DB) return {status:503,body:{error:'literature_catalog_index_db_missing'}};
   await ensureLiteratureCatalogIndexSchema(env);
@@ -449,7 +449,7 @@ export async function queryLiteratureCatalogView(env,{
       `instr(lower(COALESCE(i.${field},'')),?)>0`).join(' OR ')).join(' OR ');
     const originalCandidate='i.doi IN (SELECT f.doi FROM literature_catalog_fts f'
       +' WHERE f.catalog_id=? AND literature_catalog_fts MATCH ?)';
-    const enriched=await searchEnrichmentReady(env,catalogId);
+    const enriched=!baseOnly && await searchEnrichmentReady(env,catalogId);
     const enrichmentCandidate='i.doi IN (SELECT e.doi FROM literature_search_enrichment_fts e'
       +' WHERE e.catalog_id=? AND literature_search_enrichment_fts MATCH ?)';
     where.push('(('+originalCandidate+' AND ('+termsSql+'))'
