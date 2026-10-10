@@ -4,13 +4,13 @@ import vm from 'node:vm';
 import { test } from 'node:test';
 
 const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
-assert.ok(source.includes("// @version      6.2.63"));
-assert.ok(source.includes("var INSTALL_REVISION = '6.2.63';"));
-assert.ok(source.includes("INVENTORY_STARTUP_REVISION = '20261007-inventory-warmstart-hedge-v1'"));
+assert.ok(source.includes("// @version      6.2.64"));
+assert.ok(source.includes("var INSTALL_REVISION = '6.2.64';"));
+assert.ok(source.includes("INVENTORY_STARTUP_REVISION = '20261011-historical-official-toc-cache-v2'"));
 assert.ok(source.includes("INVENTORY_PLAN_CACHE_TTL_MS = 10 * 60 * 1000"));
 assert.ok(source.includes("if(dois.length<=1200)"));
 assert.ok(source.includes("for(var i=0;i<dois.length;i+=30)"));
-assert.ok(source.includes("仅处理 10 月 1 日之后收录文献；正在核对库存…"));
+assert.ok(source.includes("正在核对10月起常规文献与7—9月历史官方TOC库存…"));
 assert.ok(source.includes("已用最近库存先生成待办；后台复核中"));
 assert.ok(source.includes("beginFreshInventory();s.phase='running'"));
 assert.ok(!source.includes("if(!await refresh())return;s.phase='running';"));

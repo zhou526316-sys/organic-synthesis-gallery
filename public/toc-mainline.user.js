@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.63
+// @version      6.2.64
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.63';
+  var INSTALL_REVISION = '6.2.64';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261010-rsc-articleid-semantic-and-acs-figure1-v2';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -98,7 +98,7 @@
   var EVIDENCE_INVENTORY_ENDPOINT = WORKER + '/api/article-summary/evidence-inventory';
   var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';
   var P = 'osg-toc-v6:';
-  var INVENTORY_STARTUP_REVISION = '20261007-inventory-warmstart-hedge-v1';
+  var INVENTORY_STARTUP_REVISION = '20261011-historical-official-toc-cache-v2';
   var INVENTORY_PLAN_CACHE_KEY = P + 'inventory-plan-cache-v1';
   var INVENTORY_PLAN_CACHE_TTL_MS = 10 * 60 * 1000;
   var INVENTORY_HEDGE_DELAY_MS = 900;
@@ -237,7 +237,9 @@
       return at >= runStartedAt ? Math.max(latest, at) : latest;
     }, 0);
     return {
-      coverageRevision:summary.queueCoverageRevision||'',scopeRevision:summary.scopeRevision||'',scopeCount:Number(summary.scopeCount||0),ownerPdfInventory:summary.ownerPdfInventory||{},ownerPdfInventoryState:String(summary.ownerPdfInventoryState||'checking'),fullyResolved:Number(summary.fullyResolved||0),unresolvedCount:Number(summary.unresolvedCount||0),blockedCount:Number(summary.blockedCount||0),deferredCount:Number(summary.deferredCount||0),deferredNextAt:Number(summary.deferredNextAt||0),deferredPreview:summary.deferredPreview||[],attemptCount:Number(summary.attemptCount||0),blockedPreview:summary.blockedPreview||[],
+      coverageRevision:summary.queueCoverageRevision||'',scopeRevision:summary.scopeRevision||'',scopeCount:Number(summary.scopeCount||0),
+      scopeRecentCount:Number(summary.scopeRecentCount||0),scopeHistoricalCount:Number(summary.scopeHistoricalCount||0),scopeExcludedCount:Number(summary.scopeExcludedCount||0),candidateCount:Number(summary.candidateCount||0),
+      inventoryAlreadySatisfiedCount:Number(summary.inventoryAlreadySatisfiedCount||0),ownerPdfInventory:summary.ownerPdfInventory||{},ownerPdfInventoryState:String(summary.ownerPdfInventoryState||'checking'),fullyResolved:Number(summary.fullyResolved||0),unresolvedCount:Number(summary.unresolvedCount||0),blockedCount:Number(summary.blockedCount||0),deferredCount:Number(summary.deferredCount||0),deferredNextAt:Number(summary.deferredNextAt||0),deferredPreview:summary.deferredPreview||[],attemptCount:Number(summary.attemptCount||0),blockedPreview:summary.blockedPreview||[],
       phase:summary.phase||'',missingOnly:summary.mode==='missing_only',need:active?captureNeedText(active):'—',activeJob:active,
       pendingMissing:Number(summary.pendingMissing||0),remainingNeeds:summary.remainingNeeds||{},inventoryUnknown:Number(summary.inventoryUnknown||0),inventoryErrors:summary.inventoryErrors||[],pendingPreview:summary.pendingPreview||[],
       inventoryProgress:summary.inventoryProgress||{},inventoryWarmStart:Boolean(summary.inventoryWarmStart),inventoryFreshPending:Boolean(summary.inventoryFreshPending),
@@ -289,7 +291,7 @@
   function captureLiveText(s) {
     var phaseNames = {
       starting:'正在生成缺项队列', between_jobs:'本控制页持有任务，等待下一篇', other_controller:'任务由另一控制页持有，等待其继续', interrupted:'上次任务已中断，等待恢复', waiting_controller:'仍有待办，等待控制器继续', inventory_partial:'缺项队列已结束，部分库存未确认',
-      retry_wait:'等待必要访问间隔，随后自动继续', cooldown_wait:'部分论文处于访问冷却；其他可访问任务继续处理', queue_refresh:'正在读取最新文献队列', inventory_refresh:'正在核对已有图片、全文和 PDF 库存', inventory_retry:'库存连接恢复中，待办未丢弃', blocked_remaining:'仍有未补齐或未确认项（请核对实际尝试次数和受阻原因）', all_resolved:'本轮已确认缺项全部补齐', page_loading:'等待出版社页面加载', evidence_capture:'读取文章文本', resume_wait:'等待旧任务收尾后自动恢复', idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
+      retry_wait:'等待必要访问间隔，随后自动继续', cooldown_wait:'部分论文处于访问冷却；其他可访问任务继续处理', queue_refresh:'正在读取最新文献队列', inventory_refresh:'正在核对已有图片、全文和 PDF 库存', inventory_retry:'库存连接恢复中，待办未丢弃', blocked_remaining:'仍有未补齐或未确认项（请核对实际尝试次数和受阻原因）', all_resolved:'本轮已核对：计划缺项现有有效回执', page_loading:'等待出版社页面加载', evidence_capture:'读取文章文本', resume_wait:'等待旧任务收尾后自动恢复', idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
       awaiting_publisher:'已开任务页，等待出版社脚本', discovering:'识别 TOC 和正文图',
       auth_wait:'等待出版社登录', challenge_wait:'等待出版社验证', downloading:'获取图片候选',
       comparing:'比较清晰度／矢量结构', uploading:'上传并等待存储回执', saved:'已收到存储回执',
@@ -315,12 +317,16 @@
       read_failed:'云端 PDF 库存请求失败或不完整；禁止将未知视为缺失、禁止盲目重抓',
       checking:'云端 PDF 库存尚未核验'
     })[s.ownerPdfInventoryState]||'云端 PDF 库存尚未核验';
+    var captureScopeLabel=s.scopeRecentCount||s.scopeHistoricalCount
+      ?'目录 '+s.scopeCount+' 篇（10月起常规 '+s.scopeRecentCount+'／7—9月历史仅补官方TOC '+s.scopeHistoricalCount
+        +(s.scopeExcludedCount?'／其他不派发 '+s.scopeExcludedCount:'')+'）'
+      :'目录 '+s.scopeCount+' 篇（范围仍待复核）';
     return {
       state: phaseNames[s.state] || ('已停止：' + captureLiveError(s.state)),
       needs:s.need||'—',
       working:s.active?(s.row&&/全文|Abstract|文本/.test(s.row.label)?'文本':s.row&&s.row.label?s.row.label:s.need||'加载文章'):'—',
       evidence:s.activeJob&&(s.activeJob.captureEvidence||s.activeJob.opportunisticEvidence)?'随当前任务顺带抓取文本':s.activeJob&&s.activeJob.existingEvidenceLevel?captureEvidenceLevelText(s.activeJob.existingEvidenceLevel)+'，不作为队列缺项':'—',
-      gaps:s.scopeRevision!==OCT1_SCOPE_QUEUE_REVISION&&s.coverageRevision?'旧版全量统计已停用；请重新按 10 月 1 日起生成缺项队列。':/^(?:starting|inventory_refresh)$/.test(s.phase||'')&&s.total===0?'仅处理 10 月 1 日之后收录文献；正在核对库存…':s.coverageRevision&&s.phase!=='starting'?'10.1起 '+s.scopeCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇（待执行 '+Math.max(0,s.pendingMissing-s.deferredCount)+'／冷却等待 '+s.deferredCount+'／未补齐待诊断 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／确实缺PDF '+Number(s.remainingNeeds.pdf||0)+'；PDF云端 已齐 '+Number(s.ownerPdfInventory.ready||0)+'／待验证 '+(Number(s.ownerPdfInventory.pending||0)+Number(s.ownerPdfInventory.failed||0))+'／未知 '+Number(s.ownerPdfInventory.unknown||0):s.missingOnly?(s.phase==='starting'?'正在核对10.1以后文献…':'仅10.1以后 '+s.scopeCount+' 篇 · 待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)):'—',
+      gaps:s.scopeRevision!==OCT1_SCOPE_QUEUE_REVISION&&s.coverageRevision?'旧版全量统计已停用；请重新按 10 月 1 日起生成缺项队列。':/^(?:starting|inventory_refresh)$/.test(s.phase||'')&&s.total===0?'正在核对10月起常规文献与7—9月历史官方TOC库存…':s.coverageRevision&&s.phase!=='starting'?captureScopeLabel+' · 未补齐 '+s.unresolvedCount+' 篇（待执行 '+Math.max(0,s.pendingMissing-s.deferredCount)+'／冷却等待 '+s.deferredCount+'／未补齐待诊断 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／确实缺PDF '+Number(s.remainingNeeds.pdf||0)+'；PDF云端 已齐 '+Number(s.ownerPdfInventory.ready||0)+'／待验证 '+(Number(s.ownerPdfInventory.pending||0)+Number(s.ownerPdfInventory.failed||0))+'／未知 '+Number(s.ownerPdfInventory.unknown||0):s.missingOnly?(s.phase==='starting'?'正在核对常规新增与历史TOC-only文献…':'当前目录 '+s.scopeCount+' 篇 · 待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)):'—',
       blocked:(s.deferredPreview||[]).map(function(r){return r.doi+' · '+r.need+' · '+String(r.publisher||'')
           +' · '+(r.scope==='publisher'?'出版社限流':'本篇访问验证')
           +' · 触发 '+String(r.triggerDoi||r.doi)+' · '+String(r.reason||'')
@@ -333,7 +339,7 @@
       figures: r ? '已保存 ' + r.stored + '／' + (r.discoveryDone ? r.discovered : '识别中') + ' · 失败 ' + r.failed : '等待本篇数据',
       receipts: r ? '本次暂存回执 ' + r.stagedReceipts + ' · 断点复用 ' + r.reused : '—',
       quality: r ? (quality[r.quality] || '尚未测量') + (r.width && r.height ? ' · ' + r.width + '×' + r.height : '') : '—',
-      batch: s.coverageRevision&&s.phase!=='starting'?'实际访问 '+s.completed+'／'+s.total+' 篇 · 冷却等待 '+s.deferredCount+' · 确认补齐 '+s.fullyResolved+' 篇 · 尝试 '+s.attemptCount+' 次 · 新主图 '+s.batchToc+' · 新正文图 '+s.batchStaged:s.missingOnly&&s.phase==='starting'?'正在生成缺项队列…':(s.missingOnly?'缺项任务已结束 ':'已结束 ') + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · 部分完成 ' + Number(s.batchPartial||0) + ' · 失败 ' + s.batchFailed + ' · 跳过 ' + s.batchSkipped,
+      batch: s.coverageRevision&&s.phase!=='starting'?'本轮缺项 '+s.total+' 篇 · 实际访问 '+s.completed+' 篇 · 确认补齐 '+s.fullyResolved+' 篇 · 库存核实已齐 '+s.inventoryAlreadySatisfiedCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇 · 冷却等待 '+s.deferredCount+' · 尝试 '+s.attemptCount+' 次 · 新主图 '+s.batchToc+' · 新正文图 '+s.batchStaged:s.missingOnly&&s.phase==='starting'?'正在生成缺项队列…':(s.missingOnly?'缺项任务已结束 ':'已结束 ') + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · 部分完成 ' + Number(s.batchPartial||0) + ' · 失败 ' + s.batchFailed + ' · 跳过 ' + s.batchSkipped,
       started: s.runStartedAt ? new Date(s.runStartedAt).toLocaleTimeString() : '尚未开始本轮',
       last: s.lastAt ? new Date(s.lastAt).toLocaleTimeString() + ' · ' + captureLiveAgeText(s.ageSeconds) : '尚无采集进展',
       stale: s.active && s.ageSeconds >= 45 ? '一段时间没有新进展：可能正在等待网络或页面验证，不等于抓取失败。' : '',
@@ -1224,14 +1230,17 @@ function embeddedJobDois(value) {
     return 7;
   }
 
-  var FIGURE_ONE_QUEUE_POLICY_REVISION = '20261008-verified-figure1-complete-v2';
+  var FIGURE_ONE_QUEUE_POLICY_REVISION = '20261011-historical-official-toc-exception-v3';
   function isNatureScienceFamilyJob(job) {
     var journal = String(job && job.journal || '').trim();
     return journal === 'Nature' || journal === 'Science'
       || /^Nature\s+/i.test(journal) || /^Science\s+/i.test(journal);
   }
   function verifiedFigureOneSatisfiesQueue(job, hasFigureOne) {
-    return Boolean(hasFigureOne);
+    // An accepted Figure 1 is a primary visual, not an *official* TOC.
+    // July–September TOC-only retrospective requests stay open until the
+    // publisher's verified official TOC is promoted to production.
+    return Boolean(hasFigureOne) && !tocOnlyCaptureEligible(job);
   }
 
   function captureQueueTier(job, latestAddedDate) {
@@ -5459,7 +5468,13 @@ function embeddedJobDois(value) {
     if(run.summary){
       var statuses=rows.reduce(function(stats,row){var status=privatePdfServerStatus(inventory.pdfMap,row.doi);stats[status]++;return stats;},
         {ready:0,pending:0,failed:0,missing:0,unknown:0});
-      run.summary.scopeCount=rows.length;run.summary.ownerPdfInventory=statuses;
+      // Registry-wide count is not the October-only acquisition scope.
+      // Keep the historical TOC-only policy separate from full-bundle visits.
+      run.summary.scopeCount=(queue.articles||[]).length;
+      run.summary.scopeHistoricalCount=(queue.articles||[]).filter(tocOnlyCaptureEligible).length;
+      run.summary.scopeRecentCount=(queue.articles||[]).filter(recentFullCaptureEligible).length;
+      run.summary.scopeExcludedCount=Math.max(0,run.summary.scopeCount-run.summary.scopeHistoricalCount-run.summary.scopeRecentCount);
+      run.summary.candidateCount=rows.length;run.summary.ownerPdfInventory=statuses;
       run.summary.ownerPdfInventoryState=inv.pdf&&inv.pdf.complete===true?'verified'
         :/^owner_lease_/.test(String(inv.pdf&&inv.pdf.reason||''))?String(inv.pdf.reason):'read_failed';
       run.summary.inventoryUnknown=unknownDois;run.summary.inventoryUnknownLayers=unknownLayers;
@@ -5542,8 +5557,14 @@ function embeddedJobDois(value) {
     var row=run.coverage.get(job.doi),next=Object.assign({},job),before=Object.keys(job.capturedFigures||{}).length;
     row.attempts++;row.lastReason=coverageReason(result);row.lastResult=result;
     var gained=0,figures=result.figures||{},toc=result.toc||{},text=result.fulltext||{};
-    if(job.captureToc && (toc.status==='already_available'
-      ||toc.status==='stored'&&(toc.kind!=='figure1'||toc.productionFallbackStored===true))){
+    var historicOfficialRequired=tocOnlyCaptureEligible(job);
+    // Historical TOC-only tasks need a *production-backed official* TOC.
+    // A Figure 1 fallback may remain visible but cannot complete that need.
+    var tocVerified=(!historicOfficialRequired&&toc.status==='already_available')
+      ||toc.status==='stored'&&(historicOfficialRequired
+        ?toc.kind==='official'&&toc.productionTocStored===true
+        :toc.kind!=='figure1'||toc.productionFallbackStored===true);
+    if(job.captureToc && tocVerified){
       next.captureToc=false;row.done.captureToc=true;gained++;
     }
     if(job.captureEvidence && text.status==='stored'){
@@ -5559,7 +5580,10 @@ function embeddedJobDois(value) {
     next.expectedFigureCount=Math.max(Number(job.expectedFigureCount||0),Number(figures.discovered||0));
     var saved=Math.max(Object.keys(next.capturedFigures).length,Number(figures.stored||0));
     next.missingFigureCount=Math.max(0,next.expectedFigureCount-saved);
-    gained+=Math.max(0,Object.keys(next.capturedFigures).length-before);
+    // Historical TOC-only work cannot use an incidental figure receipt to
+    // justify another publisher visit. Only an official TOC receipt advances it.
+    if(!tocOnlyCaptureEligible(job)&&(job.captureFigures||job.opportunisticFigures))
+      gained+=Math.max(0,Object.keys(next.capturedFigures).length-before);
     // Only proof of completion clears an image obligation, not partial/failed.
     if(job.captureFigures && figures.discovered>0 && figures.stored>=figures.discovered && Number(figures.failed||0)===0 && saved>=next.expectedFigureCount){
       next.captureFigures=false;row.done.captureFigures=true;gained++;
@@ -5612,7 +5636,11 @@ function embeddedJobDois(value) {
     var s=run.summary,rows=Array.from(run.coverage.values()),left=rows.filter(function(r){return coverageHasNeeds(r.job)&&r.state!=='removed';});
     s.total=rows.filter(function(r){return r.state!=='removed';}).length;
     s.visitedCount=rows.filter(function(r){return r.openedPublisherTab===true&&r.state!=='removed';}).length;
-    s.attemptCount=s.results.length;s.fullyResolved=rows.filter(function(r){return r.state==='resolved';}).length;
+    s.attemptCount=s.results.length;
+    // Only DOI tasks actually attempted in this pass count as newly verified
+    // completions. Independent inventory reconciliation is shown separately.
+    s.fullyResolved=rows.filter(function(r){return r.state==='resolved'&&r.attempts>0;}).length;
+    s.inventoryAlreadySatisfiedCount=rows.filter(function(r){return r.state==='resolved'&&r.attempts===0;}).length;
     s.unresolvedCount=left.length;s.blockedCount=left.filter(function(r){return r.state==='blocked';}).length;
     s.pendingMissing=left.filter(function(r){return r.state==='pending'||r.state==='active';}).length;
     var deferred=left.filter(function(r){return r.state==='pending'
@@ -5783,7 +5811,7 @@ function embeddedJobDois(value) {
         var stored=GM_getValue(MANUAL_RUN_KEY,null);if(stored&&stored.id===run.id){stored.completedAt=s.finishedAt;GM_setValue(MANUAL_RUN_KEY,stored);}
         var finishedMessage=controllerPaused()?'已暂停：本轮已访问 '+s.visitedCount+' 篇'
           :s.attemptCount===0?'没有实际访问论文：待执行 '+s.pendingMissing+' 篇；已访问受阻 '+s.blockedCount+' 篇'
-          :'实际尝试 '+s.attemptCount+' 次；确认补齐 '+s.fullyResolved+' 篇；未补齐 '+s.unresolvedCount+' 篇';
+          :'实际尝试 '+s.attemptCount+' 次；本轮确认补齐 '+s.fullyResolved+' 篇；库存核实已齐 '+s.inventoryAlreadySatisfiedCount+' 篇；未补齐 '+s.unresolvedCount+' 篇';
         badge(finishedMessage,'#374151');
       }
     }catch(error){
