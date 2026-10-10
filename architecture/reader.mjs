@@ -97,7 +97,8 @@ export class CatalogReader {
         const rows = (await this.read(ref, signal)).entries;
         for (const row of rows) {
           if (scope === 'hot' && classifyDate(row.date, asOfDate) !== 'hot') continue;
-          if ([row.doi, row.title, row.titleZh, ...(row.authors || []), row.journal, row.date, row.synthesisType].join(' ').toLowerCase().includes(needle)) {
+          if ([row.doi, row.title, row.titleZh, ...(row.authors || []), row.journal, row.date,
+            row.synthesisType, row.abstract || '', ...(row.searchTerms || [])].join(' ').toLowerCase().includes(needle)) {
             matched++; if (results.length < limit) results.push(row);
           }
         }
