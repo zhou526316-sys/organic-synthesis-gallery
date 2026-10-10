@@ -108,7 +108,17 @@ server {
  server_name pdf.gczhouwld.com;
  root /var/www/gallery-pdf-acme;
  access_log off;
- location ^~ /.well-known/acme-challenge/ { try_files $uri =404; }
+ # Independent route marker: proves runtime Host+listen selection, no disk IO.
+ location = /_gallery_pdf_route_probe {
+  default_type text/plain;
+  return 200 "gallery-pdf-acme-vhost-ready";
+ }
+ # Explicitly scoped public ACME directory; never exposes private state.
+ location ^~ /.well-known/acme-challenge/ {
+  alias /var/www/gallery-pdf-acme/.well-known/acme-challenge/;
+  default_type text/plain;
+  add_header X-Gallery-Pdf-ACME pdf-static always;
+ }
  location / { return 404; }
 }
 NGINX
@@ -243,6 +253,24 @@ install_new(){
    fi
    echo '[CHECK] Managed PDF vhost found in effective nginx -T configuration.'
    nginx -t;systemctl reload nginx;RELOADED=1
+   # nginx -T only proves that the candidate configuration parses. Confirm
+   # the live master/worker is actually serving THIS vhost, not the relay's
+   # 404 response (for example during an incomplete graceful reload).
+   local route_expect route_result route_i
+   route_expect="gallery-pdf-acme-vhost-ready"
+   route_result=""
+   for route_i in 1 2 3 4 5 6; do
+     route_result="$(curl --noproxy '*' --http1.1 --silent        --connect-timeout 2 --max-time 4        --resolve "$HOST:80:127.0.0.1"        "http://$HOST/_gallery_pdf_route_probe" || true)"
+     [[ "$route_result" == "$route_expect" ]] && break
+     (( route_i < 6 )) && sleep 1
+   done
+   if [[ "$route_result" != "$route_expect" ]]; then
+     echo '[DIAG] LIVE_VHOST_ROUTE_MISMATCH: marked PDF vhost loaded by nginx -T but route marker was NOT served.' >&2
+     echo '[DIAG] Host/port selection or running nginx worker config is mismatched; certbot was NOT called.' >&2
+     dump_http_route_diagnostic
+     abort 'Runtime PDF vhost route marker failed; certbot was NOT called'
+   fi
+   echo '[CHECK] LIVE_VHOST_ROUTE_PASS: running Nginx returned exact PDF-vhost marker.'
    # Confirm that the actual unprivileged Nginx listener serves a real
    # HTTP-01 challenge before requesting a public CA certificate.
    # This does not contact Let's Encrypt and cannot consume a CA limit.
@@ -264,10 +292,19 @@ install_new(){
      rm -f "$WEBROOT/.well-known/acme-challenge/$acme_name"
      abort 'Nginx worker cannot read ACME challenge; certbot was NOT called'
    fi
-   if ! acme_result="$(curl --noproxy '*' --fail --silent --show-error \
-     --connect-timeout 3 --max-time 8 --resolve "$HOST:80:127.0.0.1" \
-     "http://$HOST/.well-known/acme-challenge/$acme_name")"; then
-     echo '[DIAG] Nginx HTTP-01 routing probe failed; this is before certificate issuance.' >&2
+   # File readiness can lag a graceful Nginx reload; bound the local check
+   # to six attempts and never call the public CA without exact byte match.
+   local acme_i
+   acme_result=""
+   for acme_i in 1 2 3 4 5 6; do
+     acme_result="$(curl --noproxy '*' --http1.1 --silent \
+       --connect-timeout 2 --max-time 4 --resolve "$HOST:80:127.0.0.1" \
+       "http://$HOST/.well-known/acme-challenge/$acme_name" || true)"
+     [[ "$acme_result" == "$acme_expect" ]] && break
+     (( acme_i < 6 )) && sleep 1
+   done
+   if [[ "$acme_result" != "$acme_expect" ]]; then
+     echo '[DIAG] LIVE_VHOST_ROUTE_PASS but ACME_STATIC_FILE_FAILED: static alias, Nginx filesystem policy or worker access needs review.' >&2
      echo '[DIAG] HTTP :80 listener addresses (no Nginx config secrets):' >&2
      ss -ltnH '( sport = :80 )' 2>/dev/null | head -8 >&2 || true
      echo '[DIAG] File ancestry:' >&2
