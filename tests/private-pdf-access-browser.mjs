@@ -272,6 +272,8 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    if(url.origin==='https://api.gczhouwld.com' && options.primaryOpenDelayMs) {
     await new Promise(resolve=>setTimeout(resolve,options.primaryOpenDelayMs));
    }
+   if(url.origin==='https://organic-synthesis-gallery.zhou526316.workers.dev' && options.backupOpenDelayMs)
+    await new Promise(resolve=>setTimeout(resolve,options.backupOpenDelayMs));
    if(openResult?.available!==true)return reply(openResult);
    const source=new URL(openResult.url);
    if(url.origin==='https://organic-synthesis-gallery.zhou526316.workers.dev' ||
@@ -299,7 +301,8 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
    } catch(error) {
     // Browser may cancel a delayed losing authorization request after the
     // verified secondary gateway has already won.
-    if(options.primaryOpenDelayMs && url.origin==='https://api.gczhouwld.com') return;
+    if((options.primaryOpenDelayMs && url.origin==='https://api.gczhouwld.com') ||
+      (options.backupOpenDelayMs && url.origin==='https://organic-synthesis-gallery.zhou526316.workers.dev')) return;
     throw error;
    }
   }
@@ -491,6 +494,66 @@ try{
   assert.ok(state.openOrigins.includes('https://api.gczhouwld.com'));
   assert.ok(state.openOrigins.includes('https://organic-synthesis-gallery.zhou526316.workers.dev'));
   assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
+ });
+
+ await test('Tencent separately authorized open recovers when both Worker hostnames stall',async()=>{
+  const owner={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],owner,{
+    primaryOpenDelayMs:9700,backupOpenDelayMs:9700,tencentEnabled:true,largePdf:true,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:16000});
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'tencent');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-route'),'tencent');
+  assert.ok(state.openOrigins.includes('https://api.gczhouwld.com'));
+  assert.ok(state.openOrigins.includes('https://organic-synthesis-gallery.zhou526316.workers.dev'));
+  assert.equal(state.tencentOpenCalls,1,'one bounded Tencent /open');
+  assert.ok(state.tencentMaxRangeBytes>=512*1024,'realistic PDF.js Range request');
+  await scrollPdfToPage(target,2);
+  assert.equal(await target.locator('#page-count').textContent(),'第 2 / 2 页');
+ });
+ await test('closed Tencent manifest cannot attempt fallback owner authorization',async()=>{
+  const owner={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],owner,{
+    primaryOpenStatus:503,backupOpenStatus:503,tencentEnabled:false,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',
+    undefined,{timeout:11000});
+  assert.equal(state.tencentOpenCalls,0);
+  assert.equal(state.tencentRangeCalls,0);
+ });
+ await test('canonical PDF open 403 refuses Tencent even with failover manifest enabled',async()=>{
+  const owner={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],owner,{
+    primaryOpenStatus:403,tencentEnabled:true,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',
+    undefined,{timeout:11000});
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/open_http_403/);
+  assert.equal(state.tencentOpenCalls,0);
+  assert.equal(state.tencentRangeCalls,0);
+ });
+ await test('Tencent authorization 403 does not cancel a slower valid canonical session',async()=>{
+  const owner={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],owner,{
+    primaryOpenDelayMs:7500,backupOpenStatus:503,tencentOpenStatus:403,tencentEnabled:true,
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:14500});
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'primary');
+  assert.ok(state.tencentOpenCalls>=1,'Tencent 403 was actually tested');
  });
  await test('explicit PDF permission denial never initiates backup authorization',async()=>{
   const {context,state}=await contextWith(['private_pdf_read'],
