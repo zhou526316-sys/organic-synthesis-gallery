@@ -42,7 +42,7 @@ http {
  }
 }
 CONF
-  nginx -t -c "$tmp/nginx.conf" >/dev/null 2>&1
+  nginx -t -c "$tmp/nginx.conf"
 }
 probe(){
  curl --noproxy '*' -sS --max-time 3 \
