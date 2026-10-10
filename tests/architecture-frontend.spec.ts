@@ -848,6 +848,60 @@ for (const width of [390, 1280]) {
   });
 }
 
+for (const width of [390, 1280]) {
+  test(`search suggestions hydrate after a late card window and stay closed after Escape at ${width}px`, async ({ page }) => {
+    await stubOptionalApi(page);
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+      { waitUntil: 'domcontentloaded' });
+    const gallery = page.locator('#gallery');
+    await expect(gallery.locator('.card').first()).toBeVisible({ timeout: 30000 });
+    // Do not start a real D1 search while simulating asynchronous candidate
+    // hydration; this case must measure only the suggestion controller.
+    await page.evaluate(() => {
+      document.querySelector('#app')?.addEventListener(
+        'gallery-corpus-query', event => event.stopImmediatePropagation(), true,
+      );
+      const node = document.querySelector('#gallery');
+      if (!node) return;
+      (window as any).__savedSuggestionWindow = [...node.childNodes];
+      node.replaceChildren();
+    });
+    await expect(gallery.locator('.card')).toHaveCount(0);
+    await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => resolve())));
+    const input = page.locator('#search');
+    const popover = page.locator('.user-search-popover');
+    await input.fill('10.');
+    await expect(input).toBeFocused();
+    await expect(popover).toHaveCount(0);
+
+    // The DOI-verified cards arrive only after the input event. The journal,
+    // author and DOI candidates should be regenerated while focus remains.
+    await page.evaluate(() => {
+      const node = document.querySelector('#gallery');
+      const originals = (window as any).__savedSuggestionWindow as Node[] | undefined;
+      if (node && originals) node.replaceChildren(...originals);
+    });
+    await expect(gallery.locator('.card').first()).toBeVisible();
+    await expect(popover.locator('button').first()).toBeVisible({ timeout: 10000 });
+    await input.press('Escape');
+    await expect(popover).toHaveCount(0);
+
+    // An unrelated subsequent card mutation cannot resurrect the dismissed
+    // suggestions; the user must focus/type again to open a new menu.
+    await page.evaluate(() => {
+      const node = document.querySelector('#gallery');
+      if (node?.firstChild) node.appendChild(node.firstChild);
+    });
+    await expect(popover).toHaveCount(0);
+    await input.fill('');
+    await input.fill('10.');
+    await expect(popover.locator('button').first()).toBeVisible({ timeout: 10000 });
+    await page.locator('.resultline').click();
+    await expect(popover).toHaveCount(0);
+  });
+}
+
 test('a burst of search keystrokes does not rebuild gallery cards or schedule stale indexed renders', async ({ page }) => {
   await stubOptionalApi(page);
   await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
