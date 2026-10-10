@@ -377,8 +377,10 @@ async function readSession(token, controller) {
     return data.user;
   } catch (error) {
     if (controller.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-    if (error?.code) throw error;
+    // DOMException AbortError may have the numeric legacy code 20; classify
+    // the attempt's own timer before treating a code as our application error.
     if (attempt.signal.aborted) throw sessionReadError('session_timeout');
+    if (typeof error?.code === 'string') throw error;
     throw sessionReadError('session_network');
   } finally {
     window.clearTimeout(timeout);
