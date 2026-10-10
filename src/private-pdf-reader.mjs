@@ -993,7 +993,7 @@ async function verifiedPdfSource(sessionToken, mode = 'view', forceBrowserPrefli
       // closed. For a transport-only preflight failure, a view can obtain ONE
       // separately authorized ticket at the other known Worker host. Metadata
       // must match AND a new real 206 preflight must pass before navigation.
-      if (mode === 'view' && !manualTencentTrial &&
+      if (mode === 'view' && !manualTencentTrial && !source.headerVerified &&
           isRecoverablePdfHeaderTransport(error) &&
           /^[a-f0-9]{64}$/.test(String(source.contentHash || '')) &&
           Number.isSafeInteger(declaredPdfBytes) && declaredPdfBytes >= 16) {
