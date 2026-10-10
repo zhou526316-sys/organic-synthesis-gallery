@@ -1,0 +1,1417 @@
+{
+  "schema": "gallery-verified-title-backfill-v1",
+  "generatedAt": "2026-10-10T09:51:29.149Z",
+  "scope": "existing_approved_dois_only",
+  "mode": "apply",
+  "sources": [
+    "public/papers.gz.b64",
+    "public/total-synthesis.json",
+    "public/manual-supplement.json",
+    "public/final-audit-supplement.json",
+    "public/curated-supplement.json",
+    "public/automation-supplement.json",
+    "public/rolling-supplement.json"
+  ],
+  "originalUniqueDois": 938,
+  "originalRows": 1029,
+  "pendingUniqueDoisBefore": 125,
+  "pendingRowsBefore": 125,
+  "resolvedUniqueDois": 125,
+  "resolvedRows": 125,
+  "pendingUniqueDoisAfter": 0,
+  "pendingRowsAfter": 0,
+  "doiMembershipUnchanged": true,
+  "publicationDatesUnchanged": true,
+  "titleZhUnchanged": true,
+  "newLiteraturePublished": false,
+  "resolved": [
+    {
+      "doi": "10.1021/acs.orglett.6c01513",
+      "title": "Direct Electrochemical Synthesis of Tetrahydroisoquinolines through Shono-Type Oxidation",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c01753",
+      "title": "Desilylative Ring-Opening Strategy for Skipped 1,5-Diene Synthesis Under Synergistic Photoredox/Nickel Catalysis",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c01982",
+      "title": "Enantioselective Construction of Inherently Chiral Saddle-Shaped Azepines via Palladium-Catalyzed Intramolecular C–H Arylation",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02004",
+      "title": "A Chemo-Selective [4 + 2] Annulation for the Construction of 3,1-Benzothiazine and Tetrahydroquinazoline Functionalized Sulfonyl Fluoride Pharmacophores",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02012",
+      "title": "Regioselective Amidine-Directed Iridium-Catalyzed C(sp 3 )–H Borylation by Attuning Boronic Esters",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02198",
+      "title": "Cobalt-Catalyzed Selective Hydroboration/Cyclization of 1,6-Diynes",
+      "source": "openalex",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:HTTP_429",
+        "openalex:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02215",
+      "title": "Modulation of Excited-State Reactivity of o -Nitroaryl Alkynes via Solvent Effects: Toward Controllable Synthesis of o -Aminobenzoic Acid and Benzoxazinone Derivatives",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02216",
+      "title": "Cobalt/Photoredox Dual-Catalyzed Alkylation of Indole with Unactivated Alkenes",
+      "source": "openalex",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:HTTP_429",
+        "openalex:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02234",
+      "title": "Divergent Three-Component Assembly of Densely Functionalized Dibenzofurans via ZnCl 2 -Mediated Cascade Annulation",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02283",
+      "title": "Base-Promoted Domino Reaction of o -Amino/Hydroxy Chalcones with In Situ Formed Isocyanates from Dioxazolones: Divergent Synthesis of Quinazolinones and Benzoxazinones",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02293",
+      "title": "Electrochemical Dearomative ipso -Cyclization of Indolyl-ynones: A Direct Access to Trifluoromethyl/Selenyl-Spirooxindoles",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02318",
+      "title": "Pd/Norbornene-Catalyzed Tandem o -C–H Alkylation or Acylation/ ipso -Intramolecular Direct Arylation of Aryl Bromides",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02333",
+      "title": "B(C 6 F 5 ) 3 -Catalyzed Ring-Opening Reaction of Bicyclo[1.1.0]butanes with Silyl Ketene Imines",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02351",
+      "title": "Skeletal Metamorphosis of 2-Oxabicyclo[3.3.0]octenes into Bridged Bicyclo[3.2.1]octenes: A Strategy for Complex Architecture Synthesis",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02388",
+      "title": "N -Heterocyclic Carbene/Ni Synergistically Catalyzed Allylation of Aldehydes with Morita–Baylis–Hillman Carbonates",
+      "source": "openalex",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:HTTP_429",
+        "openalex:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02403",
+      "title": "Dearomatization-Triggered Boulton–Katritzky Rearrangement for the Synthesis of 1,3-Diazaspiro[4.5]decane Derivatives",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02411",
+      "title": "Electrochemical Dehydroxylative Thiolation of Alkyl Alcohols with Disulfides",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02431",
+      "title": "Chiral Hydroxamic Ester-Enabled Asymmetric Catellani Reaction for the Synthesis of P-Stereogenic Phosphepine Oxides",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02434",
+      "title": "Stereoselective C-Aryl and C-Vinyl Glycosylation via Iron-Catalyzed Reductive Coupling",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02443",
+      "title": "Substrate-Controlled Co-MHAT Catalyzed 1,4- and 1,2-Hydropyridination of 1,3-Enynes",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02449",
+      "title": "Photo-Fenton-Like (Trideutero)methylsulfonylation/Remote (Benzo)thiazolyl Migration Cascade of Unactivated Alkenes with DMSO(- d 6)",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02459",
+      "title": "Harnessing Light-Mediated Free Carbene Reactivity of Vinyldiazo Ketones: Direct Access to Mono-, Bi-, and Tricyclic 2,3-Dihydrofurans",
+      "source": "openalex",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:HTTP_429",
+        "openalex:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02461",
+      "title": "Access to ( Z )-1,2-Dicyanoethylenes via Desulfurization of 2,5-Dinitrothiophene",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02473",
+      "title": "Construction of β-Hydroxysulfones via a Photoinduced Four-Component Reaction",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02502",
+      "title": "Base-Promoted Transfer Hydrogenation of Difluoroalkenes with Hantzsch Ester",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02509",
+      "title": "PCET-Enabled Photocatalytic and Electrosynthetic Ketyl Radical Cyclopropanation: Stereoselective Synthesis of Tetrahydronaphthalene-Fused Cyclopropa[1,2-b]furanones",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02518",
+      "title": "A General Photocatalytic Decarboxylative Hydrogenation of Carboxylic Acids in Batch and Flow under Metal-Free Conditions",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02541",
+      "title": "Hydropersulfide-Mediated Stereoselective and Regioselective Hydrothiolation of P-alkynes",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02546",
+      "title": "Modular Synthesis of Five-Membered Cyclic Sulfinamides via Photoexcited Radical [3+2] Cycloaddition of Arylidenecyclopropanes with N-Sulfinylamines",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02550",
+      "title": "Ir-Catalyzed Formal 1,2-Fluorine Migration in Fluorocarbenes",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02551",
+      "title": "Photoelectrochemical Dehydrogenative Cross-Coupling of Aliphatic C–H Bonds via an In-Situ-Generated Hypervalent Iodine Mediator",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02568",
+      "title": "Iridium-Catalyzed Decarboxylative Annulation of 2- o -Carboranylbenzoic Acids with Internal Alkynes",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02573",
+      "title": "Nickel-Catalyzed Electrophilic Cross-Coupling Reaction of a Pyridylsulfonyl Monofluoro Reagent with Aromatic Bromides",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02598",
+      "title": "Photocatalytic Deoxygenative Hydroalkylation Enables Modular Access to CF3-Substituted Oxetanes",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02604",
+      "title": "Cu-Catalyzed Regioselective Synthesis of Sterically Congested N -Aryl Pyrazoles Using a Traceless Protecting Group Strategy",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02607",
+      "title": "Copper-Catalyzed Arylation of Diverse N-Heterocycles with (Hetero)aryl Chlorides",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02608",
+      "title": "[5+5] Cross-Annulation Based on Site-Selective Bonding-Formed Dual Intermediates: Synthesis of Fully Substituted 1,7-Naphthyridine Derivatives",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02623",
+      "title": "Highly Stereoselective Synthesis of β-Glycosyl Esters via N-Heterocyclic Carbene Catalysis under Aerobic Conditions",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02635",
+      "title": "Chiral Phosphoric Acid-Catalyzed Enantioselective Dearomative Spirocyclization of Phenol-Ynamides by Kinetic Resolution",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02647",
+      "title": "Diastereoselective Pyrrolidine Formation via Pd(II)-Catalyzed Cyclization of γ -C(sp 3 )–H Bond of Substituted Amino Acids with Morita–Baylis–Hillman Acetate",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02649",
+      "title": "N -Sulfonylaminophthalimide-Catalyzed Aerobic Oxidative Cleavage of α-C(sp 3 )–H and β,γ-C(sp 3 )–C(sp 3 ) Bonds of Tertiary Amines",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02656",
+      "title": "Visible-Light-Induced Hydrosilylation Enabled by an In Situ Assembled Photoactive Complex",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02685",
+      "title": "Cycloaddition Reactions of Sulfo-Biginelli Derived Thiadiazines",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02752",
+      "title": "Pd-Catalyzed Regioselective Activation of gem -Difluorinated Spiro[2.2]pentanes: An Approach to 2-Fluorinated 1,3-Dienes",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02753",
+      "title": "Synthesis of Pyridin-2(1 H )-ones and Isoquinolin-1(2 H )-ones Using Calcium Carbide as an Acetylene Source under Redox-Neutral Conditions",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02781",
+      "title": "Rh(III)-Catalyzed Multicomponent Formal [4 + 2+1]/[4 + 1] Annulation for the Synthesis of Benzo[ d ]pyrazolo[1,5- a ]azepin-4-ones",
+      "source": "openalex",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:HTTP_429",
+        "openalex:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02828",
+      "title": "Visible-Light-Catalyzed Synthesis of α-Naphthol Derivatives via a Radical Cascade Reaction of Phosphorus Ylides",
+      "source": "openalex",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:HTTP_429",
+        "openalex:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02837",
+      "title": "General Method for Selective C(sp2)–H Trifluoromethylation of Enamides via Visible Light Dual Photoredox/Nickel Catalysis",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02844",
+      "title": "From Esters to Benzodiazepines: A Two-Step Nickel–Iridium Catalytic Pathway via Amide Intermediates",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02877",
+      "title": "Synthesis of Diarylheptanoids Using Acetone and Alcohols via a Catalytic Borrowing Alkylation Strategy",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02881",
+      "title": "Carboxylation of Heteroarenes with Carbon Dioxide under Polysulfide Anion Photocatalysis",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02884",
+      "title": "Enantioselective Synthesis of Spirocyclic γ-Lactams Featuring Dual Central and N–N Axial Chirality via Cobalt-Catalyzed Stereochemical Induction",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02889",
+      "title": "Single-Electron Palladium Catalysis Enables Tandem Amidyl-Radical Cyclization/Radical Heck-Type Coupling to Allylated γ-Lactams",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02899",
+      "title": "Toward a Click-to-Click Strategy Enabled by Sequential Reverse Cope Cyclization and Strain-Promoted Alkyne–Nitrone Cycloaddition of In Situ Generated Nitrones",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02902",
+      "title": "Enantioselective Synthesis of Chiral Sulfoxides via Copper-Catalyzed Asymmetric Alkyne–Azide Cycloaddition",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02972",
+      "title": "Dehydroxylative Cross-Electrophile Coupling of Aromatic Acids with Glycosyl Chlorides Enables Rapid C -Acyl Glycoside Synthesis",
+      "source": "openalex",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:HTTP_429",
+        "openalex:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02989",
+      "title": "Kinetic Resolution of Racemic γ,γ-Disubstituted Cyclohexenones Enabled by Artificial Carboligase-Catalyzed Stereoselective Michael Addition",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03002",
+      "title": "Overcoming Reactive-Pair Mismatch to Access Functionalized Pyrimidines from Readily Accessible Pyrroles",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03027",
+      "title": "Stereoselective Synthesis of MK-8527 Enabled by a Dynamic Kinetic Resolution Mitsunobu Glycosylation",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03051",
+      "title": "Divergent C3–C4 Bond Cleavage of Spiro β-Lactams for the Switchable Synthesis of 3,3-Disubstituted Oxindoles and 2-Arylacrylamides",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03053",
+      "title": "Photoinduced Cobalt-Catalyzed Alkyl Radical-Initiated Polarity Cross-Coupling Cyclization of Unactivated Olefins to Access Saturated Heterocycles",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03090",
+      "title": "N-Phenylhydroxylamine-Induced Radical Relay for the Synthesis of α-Trifluoromethyl Ketones",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03111",
+      "title": "Synthesis of Chiral α-Substituted β-Carboxyethylphosphonic Acids by Palladium-Catalyzed Hydroesterification",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03164",
+      "title": "Direct 2-Amination of Pyridines via Dearomatization/Rearomatization Strategy",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03179",
+      "title": "Site-Selective Sequential Isocyanide Insertion at Dual sp3- and sp2-Carbon Centers Enables Divergent Access to N/O-Containing Heterocycles",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03187",
+      "title": "EDA-Driven Radical Relay Strategy for the Strain-Release Functionalization of Bicyclobutanes",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03219",
+      "title": "Pd-Catalyzed Asymmetric Bicyclization/Cyanation of Propargylic Esters-Alkenes: Construction of Chiral Aza[3.1.0]bicycles Containing Alkenyl Nitriles",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03283",
+      "title": "Hydrogen-Bonded Electron Donor–Acceptor Complex Enables Markovnikov Hydroarylation and Hydroxyalkylation of N -Acyl Enamines",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03304",
+      "title": "Cascade Synthesis of Structurally Diverse B–X-Doped Polycyclic Aromatic Hydrocarbons",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03312",
+      "title": "Cyanamide-Induced Desulfhydration Enables Access to α,β-Dehydropeptides",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03344",
+      "title": "Organocatalytic Asymmetric Formal [2 + 1] Cycloaddition Reactions for the Synthesis of Spiro-cyclopropane-pyrazolones",
+      "source": "openalex",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:HTTP_429",
+        "openalex:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03355",
+      "title": "Organophotocatalytic Aryl Radical-Mediated Deoxygenative Imination of Alcohols",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03371",
+      "title": "Diboron-Enabled Copper-Catalyzed Modular Synthesis of Difluoromethylated and Perfluoroalkylated Oxazolines",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03388",
+      "title": "Arene-Selective Asymmetric Buchner Dearomatization of Biaryl Compounds",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03446",
+      "title": "Nickel-Catalyzed 1,2-Trifluoromethylation Carbonylation of Alkenes: Access to β-Trifluoromethylated Alkyl Aryl Ketones",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75280-6",
+      "title": "Skeletal transformation to chiral nanocarbon molecules",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75338-5",
+      "title": "Selenium atom transfer enables selective bridged alkene-arylamine cycloaddition",
+      "source": "openalex",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:HTTP_429",
+        "openalex:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75432-8",
+      "title": "Direct Amidation of Alkynes with Nitroarenes via Heterogeneous Semiconductor TiO₂ Nanotubes",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75467-x",
+      "title": "Base-catalyzed regioselective C(sp3)–Si bond activation of silacyclobutanes and benzosilacyclobutenes",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75499-3",
+      "title": "Machine learning-assisted development of a fast Mechanochemical Johnson–Corey–Chaykovsky reaction",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75633-1",
+      "title": "Reforging Mitsunobu reaction via sulfoxides-catalyzed C(sp3)-O bond activation of alkanols",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75644-y",
+      "title": "Amine/ammonium buffering enables efficient anti-Markovnikov hydroamination of olefins with alkylamines",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75768-1",
+      "title": "Alkyne Migratory Insertion Enabled Dynamic Kinetic Asymmetric Dearomatization of Unactivated Racemic Biaryls",
+      "source": "openalex",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:HTTP_429",
+        "openalex:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75769-0",
+      "title": "Ligand relay catalysis enables asymmetric migratory dearomative annulation of N-heteroarenes",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75774-3",
+      "title": "Catalytic electrophilic arene C–H chlorination by rethinking the century-old Willgerodt reagent",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75854-4",
+      "title": "Nickel catalysis enables chemoselectivity in radiation chemistry",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75858-0",
+      "title": "Association-gated multiphoton activation of inert haloarenes via sequential electron donor–acceptor assembly",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75878-w",
+      "title": "High-entropy photocatalyst enabling collaborative cascade C–N coupling for converting benzyl alcohol to imine",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75906-9",
+      "title": "Alumina-Templated ortho-Prenylation of Phenols",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-75992-9",
+      "title": "Substituent-rebound skeletal editing for precise boron-to-carbon single-atom swapping",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-76036-y",
+      "title": "Counteranion-mediated dynamic kinetic asymmetric fluorination to access sulfur-stereogenic center",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-76124-z",
+      "title": "Bis(trifluoromethylthio)carbene as a toolbox for versatile carbene transformations",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-76150-x",
+      "title": "Decarboxylative epoxidation of carboxylic acids for accelerating synthesis of oxiranes and derivatives",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-76238-4",
+      "title": "Skeletal restructuring of oxetanes through photoinduced oxygen deletion",
+      "source": "openalex",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:HTTP_429",
+        "openalex:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-76282-0",
+      "title": "An Atomically Dispersed Copper-Catalyst Lights the Way to Selective N-Demethylations",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-76290-0",
+      "title": "Three-site cycloadditions within one reaction intermediate with site-selectivity controlled by electronic and size bias",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-76455-x",
+      "title": "Regiospecific de mayo reactions of enamino ketones",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-76655-5",
+      "title": "Dynamic “Deactivation” mechanism enables epoxides ring-opening to prepare α-substituted alcohols",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-76749-0",
+      "title": "A ligand-controlled regiodivergent three-component Heck-Tsuji reaction utilizing umpolung hydrazones enabled by palladium catalysis",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-76924-3",
+      "title": "A unified and desymmetric approach to axially chiral atropisomers",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-77092-0",
+      "title": "Amide synthesis via molecular shuffling of carboxylic acids",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-77184-x",
+      "title": "Stereoselective synthesis of E-shaped double helicene analogues via organocatalytic intermolecular cycloaddition",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-77185-w",
+      "title": "Scaffold hopping of furans into 3-cyanopyridines",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-77228-2",
+      "title": "Catalyst-controlled regiodivergence in enantioselective synthesis of spirocyclic γ- versus δ-lactams",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-77336-z",
+      "title": "General access to azoles through tailored nitrogen–nitrogen bond construction",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-77403-5",
+      "title": "Excitation of acyclic trisubstituted alkenes via triplet energy transfer for diastereo- and enantioselective [2+2] photocycloaddition",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-77437-9",
+      "title": "Zipper polydefluorination-monoborylation of perfluoroalkyl chains",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-77468-2",
+      "title": "Visible light-mediated Alder-ene reaction of bicyclobutanes with cyclohexynes to access skipped dienes and skeletal remodeling to tetralines",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-77482-4",
+      "title": "Cobalt-catalyzed Markovnikov-selective hydrophosphonylation of unactivated alkenes enabled by phthalimidyl phosphite reagents",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01566-z",
+      "title": "Triple energy transfer-enabled dearomative cycloaddition/rearrangement cascade of bicyclic azaarenes to structurally complex products",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01573-0",
+      "title": "Ligand-mediated radical orientation enables asymmetric cyanation of unstabilized alkyl C-radicals",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01578-9",
+      "title": "Direct copper-catalysed deaminative cyanation of aliphatic primary amines",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01579-8",
+      "title": "Unlocking ketene–Heck coupling via activation energy modulation in Pd catalysis",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01589-6",
+      "title": "Catalytic asymmetric intermolecular carbonyl–ene-type reactions of unactivated aldehydes and alkenes",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01593-w",
+      "title": "Bimodal multiphoton catalysis via structural regeneration",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01602-y",
+      "title": "Harnessing through-space orbital interactions for multicentred organosulfur catalysis",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s44160-026-01106-4",
+      "title": "β-Selective C(sp3)–H functionalization of alkyl boronates using photoredox catalysis",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s44160-026-01107-3",
+      "title": "Enantioconvergent alkylation of boron-stabilized organomagnesiums with unactivated alkyl halides using nickel catalysis",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s44160-026-01116-2",
+      "title": "Synthesis of Z‑allylamines via masked alkenyl anions from alkynyl tetracoordinate boron compounds",
+      "source": "crossref",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "crossref:verified_doi"
+      ]
+    },
+    {
+      "doi": "10.1038/s44160-026-01118-0",
+      "title": "Enantioselective single-atom skeletal editing of bicyclo[1.1.0]butanes by carbene insertion",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s44160-026-01127-z",
+      "title": "Aziridination of inert alkanes via photo-mediated double hydrogen atom transfer",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s44160-026-01128-y",
+      "title": "Electrochemical C(sp3)–C(sp3) cross-coupling of alcohols",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s44160-026-01134-0",
+      "title": "Asymmetric α-arylation and alkenylation of amines and ethers by a sequential metalation and enantioselective cross-coupling strategy",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s44160-026-01140-2",
+      "title": "Orthogonal hydrogenation of alkenes enabled by multifunctional phosphine",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    },
+    {
+      "doi": "10.1038/s44160-026-01149-7",
+      "title": "Modular assembly of bioisosteric bridged aza-frameworks via ring strain release",
+      "source": "existing_same_doi",
+      "affectedFiles": [
+        "public/papers.gz.b64"
+      ],
+      "evidence": [
+        "matching_doi_published_row"
+      ]
+    }
+  ],
+  "unresolved": [],
+  "inventory": []
+}

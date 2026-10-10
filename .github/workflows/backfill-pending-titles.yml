@@ -1,0 +1,83 @@
+name: Verified pending title backfill
+
+on:
+  push:
+    branches:
+      - fix/backfill-pending-verified-titles-20261010
+    paths:
+      - 'scripts/backfill-pending-titles.mjs'
+      - 'scripts/test-backfill-pending-titles.mjs'
+      - '.github/workflows/backfill-pending-titles.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: verified-pending-title-backfill-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Static validation
+        run: |
+          node --check scripts/backfill-pending-titles.mjs
+          node scripts/test-backfill-pending-titles.mjs
+      - name: Inventory existing published DOI title gaps
+        run: node scripts/backfill-pending-titles.mjs --inventory > /tmp/pending-title-inventory.json
+      - name: Verify and backfill against DOI metadata
+        id: apply
+        continue-on-error: true
+        run: node scripts/backfill-pending-titles.mjs --apply
+      - name: Commit DOI-verified metadata, preserving literature release membership
+        if: steps.apply.outcome == 'success' || steps.apply.outcome == 'failure'
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if [ ! -f audit/title-backfill/verified-titles-20261010.json ]; then
+            echo "No completed backfill report; no data write will be committed."
+            exit 1
+          fi
+          git add -- public/papers.gz.b64 public/total-synthesis.json \
+            public/manual-supplement.json public/final-audit-supplement.json \
+            public/curated-supplement.json public/automation-supplement.json \
+            public/rolling-supplement.json audit/title-backfill/verified-titles-20261010.json
+          if git diff --cached --quiet; then
+            echo "No metadata modifications."
+            exit 0
+          fi
+          old_head=$(git rev-parse HEAD)
+          git fetch --no-tags origin "$TARGET_BRANCH"
+          if [ "$(git rev-parse "origin/$TARGET_BRANCH")" != "$old_head" ]; then
+            echo "Branch changed concurrently; aborting stale metadata write."
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "data(literature): backfill only DOI-verified missing English titles"
+          git push origin "HEAD:$TARGET_BRANCH"
+      - name: Require complete title coverage in published sources
+        run: |
+          node -e 'const r=require("./audit/title-backfill/verified-titles-20261010.json"); console.log(JSON.stringify({uniqueDois:r.originalUniqueDois,pendingBefore:r.pendingUniqueDoisBefore,resolved:r.resolvedUniqueDois,pendingAfter:r.pendingUniqueDoisAfter})); if(!r.doiMembershipUnchanged||!r.publicationDatesUnchanged||r.pendingRowsAfter) process.exit(1)'
+          node scripts/backfill-pending-titles.mjs --inventory | head -n 15
+      - name: Preserve title inventory and DOI evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-pending-titles-${{ github.run_id }}
+          path: |
+            /tmp/pending-title-inventory.json
+            audit/title-backfill/verified-titles-20261010.json
+          if-no-files-found: warn
+          retention-days: 30
