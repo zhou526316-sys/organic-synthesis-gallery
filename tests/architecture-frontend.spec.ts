@@ -759,6 +759,91 @@ test('search entered after most-read ordering explicitly switches to indexed lat
   await expect(page.locator('.architecture-read-limited')).toContainText(/完整摘要|complete abstract/);
 });
 
+for (const width of [390, 1280]) {
+  test(`search suggestions close on selection, outside click, keyboard, scroll and remount at ${width}px`, async ({ page }) => {
+    await stubOptionalApi(page);
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+      { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('#gallery .card').first()).toBeVisible({ timeout: 30000 });
+    const journal = (await page.locator('#gallery .card').first().getAttribute('data-journal')) || '';
+    expect(journal.length).toBeGreaterThanOrEqual(2);
+    const query = journal.slice(0, 2);
+    const search = page.locator('#search');
+    const popover = page.locator('.user-search-popover');
+
+    await search.fill(query);
+    await expect(popover.locator('button').first()).toBeVisible({ timeout: 10000 });
+    await page.locator('h1').click();
+    await expect(popover).toHaveCount(0);
+
+    await search.fill(query);
+    await expect(popover.locator('button').first()).toBeVisible();
+    await search.press('Escape');
+    await expect(popover).toHaveCount(0);
+    await expect(search).toHaveValue(query); // First Escape closes only suggestions.
+
+    await search.fill(query);
+    await expect(popover.locator('button').first()).toBeVisible();
+    await search.press('Enter');
+    await expect(popover).toHaveCount(0);
+
+    await search.fill(query);
+    await expect(popover.locator('button').first()).toBeVisible();
+    await page.evaluate(() => window.dispatchEvent(new Event('scroll')));
+    await expect(popover).toHaveCount(0);
+
+    await search.fill(query);
+    await expect(popover.locator('button').first()).toBeVisible();
+    await popover.locator('button').first().dispatchEvent('pointerdown', { pointerType: 'touch' });
+    await expect(popover).toHaveCount(0);
+    // Selection synchronously dispatches another input event; an obsolete
+    // suggestion popover must never be orphaned in document.body.
+    await page.waitForTimeout(50);
+    await expect(popover).toHaveCount(0);
+
+    await search.fill(query);
+    await expect(popover.locator('button').first()).toBeVisible();
+    await page.locator('[data-lang="en"]').click();
+    await expect(popover).toHaveCount(0);
+  });
+}
+
+test('a burst of search keystrokes does not rebuild gallery cards or schedule stale indexed renders', async ({ page }) => {
+  await stubOptionalApi(page);
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+    { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''),
+    { timeout: 30000 }).toBe('architecture-v1');
+  await expect(page.locator('#gallery .card').first()).toBeVisible();
+  const result = await page.evaluate(async () => {
+    const input = document.querySelector<HTMLInputElement>('#search')!;
+    const gallery = document.querySelector<HTMLElement>('#gallery')!;
+    let childRebuilds = 0;
+    const observer = new MutationObserver(records => {
+      childRebuilds += records.filter(record => record.type === 'childList').length;
+    });
+    observer.observe(gallery, { childList: true });
+    for (const query of ['LMC', 'LMCT', 'LMCTx', 'LMCTxy', 'LMCTxyz']) {
+      input.value = query;
+      input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+    }
+    await Promise.resolve();
+    await Promise.resolve();
+    observer.disconnect();
+    return {
+      childRebuilds,
+      loading: gallery.dataset.searchPending === 'true',
+      count: document.querySelector('#resultCount')?.textContent,
+      cards: gallery.querySelectorAll('.card').length,
+    };
+  });
+  expect(result.loading).toBe(true);
+  expect(result.count).toBe('…');
+  expect(result.cards).toBe(0);
+  expect(result.childRebuilds).toBeLessThanOrEqual(2);
+});
+
 test('short chemistry terms remain on static reader-sort compatibility path', async ({ page }) => {
   let indexedViewRequests = 0;
   await page.route('**/api/_healthcheck', async route => {
