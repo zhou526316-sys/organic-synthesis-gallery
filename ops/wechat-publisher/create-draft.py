@@ -275,7 +275,7 @@ def gallery_original_url(doi: str | None, edition: str = "") -> str:
     Never construct a target without a verified DOI.
     """
     verified = normalize_doi(doi)
-    if not verified:
+    if not re.fullmatch(r"10\.\d{4,9}/\S+", verified):
         return DEFAULT_SOURCE_URL
     params = []
     if re.fullmatch(r"\d{4}-\d{2}-\d{2}", edition):
