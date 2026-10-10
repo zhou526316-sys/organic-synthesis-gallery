@@ -39,7 +39,18 @@ async function request(url,{method='GET',body,authorized=false,retries=2}={}){
         if(n<retries&&[429,500,502,503,504].includes(result.status)){
           await pause(700*(n+1));continue;
         }
-        throw new Error('metadata_http_'+result.status+':'+address.host+address.pathname);
+        // Report sanitized Worker error codes (never tokens, query strings,
+        // response bodies or source abstracts) to distinguish deployment
+        // version mismatch from an actually invalid DOI-bound payload.
+        let code='';
+        if(authorized && [400,409,422,503].includes(result.status)){
+          try{
+            const payload=await result.clone().json();
+            code=String(payload?.error||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,100);
+          }catch{ /* preserve HTTP-only failure */ }
+        }
+        throw new Error('metadata_http_'+result.status+':'+address.host+address.pathname
+          +(code?':'+code:''));
       }
       return result.json();
     }catch(error){
