@@ -514,7 +514,7 @@ function bearerToken(request) {
   return header.replace(/^Bearer\s+/i, '').trim();
 }
 
-async function sessionRow(request, env) {
+async function sessionRow(request, env, {touch = true} = {}) {
   const token = bearerToken(request);
   if (!token) return null;
   const hash = await sha256Hex(token);
@@ -524,13 +524,18 @@ async function sessionRow(request, env) {
     await env.DB.prepare('DELETE FROM user_sessions WHERE token_hash = ?').bind(hash).run();
     return null;
   }
-  try { await touchBearerSession(env, row.token_hash); } catch { /* Preserve authentication during transient metadata failures. */ }
+  // PDF /open validates the live session but must not wait for the optional
+  // last-seen metadata write. Normal account/session endpoints still touch.
+  if (touch) {
+    try { await touchBearerSession(env, row.token_hash); }
+    catch { /* Preserve authentication during transient metadata failures. */ }
+  }
   return row;
 }
 
-export async function authenticatedSessionUserId(request, env) {
+export async function authenticatedSessionUserId(request, env, {touch = true} = {}) {
   if (!env?.DB) return null;
-  const row = await sessionRow(request, env);
+  const row = await sessionRow(request, env, {touch});
   return row?.user_id || null;
 }
 
