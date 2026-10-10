@@ -6,10 +6,10 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/workflows/literature-abstract-incremental.yml'
+      # Explicit recovery must be requested only after production Worker
+      # deploy and ready DOI/revision index. Code pushes alone race the old
+      # API's source enum and falsely fail on newly added metadata sources.
       - 'audit/automation-triggers/literature-abstract-incremental.json'
-      - 'scripts/sync-literature-search-enrichment.mjs'
-      - 'scripts/lib/doi-scholarly-abstract-metadata.mjs'
   workflow_dispatch:
 permissions:
   contents: read
