@@ -25,9 +25,16 @@ async function check(key,url){
       assert.ok(raw.includes("var INSTALL_REVISION = '"+INSTALL+"';"),'stale_install_revision');
       assert.ok(raw.includes("OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1'"),'scope_guard_absent');
       assert.ok(raw.includes("PRIVATE_PDF_INVENTORY_ENDPOINT = WORKER + '/api/private-pdf/capture-inventory'"),'PDF_authority_absent');
-      assert.ok(raw.includes("if(!recentFullCaptureEligible(batch[i])){summary.skipped+=1;continue;}"),'old_DOI_final_gate_absent');
+      // The user-approved Jul–Sep retrospective TOC-only branch replaced the
+      // former Oct-only dispatch predicate. The old assertion was a false
+      // negative even when both production installers were current.
+      assert.ok(raw.includes('function tocOnlyCaptureEligible(job)'), 'historical_toc_policy_absent');
+      assert.ok(raw.includes('function captureJobEligible(job)'), 'capture_split_guard_absent');
+      assert.ok(raw.includes('if(!captureJobEligible(batch[i])){summary.skipped+=1;continue;}'), 'capture_dispatch_guard_absent');
+      assert.ok(raw.includes('opportunisticFigures:!tocOnlyCaptureEligible(raw)'), 'historical_body_guard_absent');
+      assert.ok(raw.includes('&&recentFullCaptureEligible(job);'), 'historical_pdf_guard_absent');
       const result={key,ok:true,bytes:raw.length,httpStatus:res.status,attempts:i,
-        hasScope:true,hasOwnerPdf:true,install:INSTALL};
+        hasScope:true,hasOwnerPdf:true,historicalTocOnlyGuard:true,install:INSTALL};
       report.checks.push(result);return result;
     }catch(e){last=String(e?.message||e).slice(0,180);if(i<14)await pause(5000);}
   }
