@@ -45,9 +45,15 @@ async function enrichmentGeneration(db, catalogId) {
 }
 export async function searchEnrichmentReady(env, catalogId) {
   if (!env?.LITERATURE_INDEX_DB || !HASH.test(String(catalogId || ''))) return false;
-  await ensureSearchEnrichmentSchema(env);
-  const row = await enrichmentGeneration(env.LITERATURE_INDEX_DB, catalogId);
-  return Boolean(row && Number(row.ready) === 1 && Number(row.expected_rows) === Number(row.imported_rows));
+  // Public search is strictly read-only; schema creation is confined to the
+  // authenticated importer. An old pre-enrichment deployment is non-fatal.
+  try {
+    const row = await enrichmentGeneration(env.LITERATURE_INDEX_DB, catalogId);
+    return Boolean(row && Number(row.ready) === 1 && Number(row.expected_rows) === Number(row.imported_rows));
+  } catch (error) {
+    if (/no such table|D1_ERROR/i.test(String(error?.message || ''))) return false;
+    throw error;
+  }
 }
 export async function beginSearchEnrichment(env, payload = {}) {
   if (!env?.LITERATURE_INDEX_DB) return {status:503,body:{error:'literature_catalog_index_db_missing'}};
