@@ -133,6 +133,22 @@ jobs:
         run: |
           node --check scripts/audit-gallery-abstract-gaps.mjs
           node scripts/audit-gallery-abstract-gaps.mjs
+      - name: Reconcile every approved bilingual review against the live DOI summary interface
+        env:
+          GALLERY_SITE_URL: https://gallery.gczhouwld.com/
+          GALLERY_API_URL: https://api.gczhouwld.com/
+          GALLERY_APPROVED_SUMMARY_AUDIT_REPORT: ${{ runner.temp }}/gallery-approved-summary-live.json
+        run: |
+          node --check scripts/audit-gallery-approved-summaries-live.mjs
+          node scripts/audit-gallery-approved-summaries-live.mjs
+      - name: Preserve full-current reviewed-summary evidence-status audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-approved-summary-live-${{ github.run_id }}
+          path: ${{ runner.temp }}/gallery-approved-summary-live.json
+          retention-days: 21
+          if-no-files-found: warn
       - name: Retain DOI-specific source gaps separately from review records
         if: always()
         uses: actions/upload-artifact@v4
