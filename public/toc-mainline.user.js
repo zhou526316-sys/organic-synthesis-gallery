@@ -5188,6 +5188,37 @@ function embeddedJobDois(value) {
       count:items.length,items:items,unknown:dois.length-items.length,errors:errors,
       reason:errors[0]||''};
   }
+  async function readEvidenceInventoryPaged() {
+    // Every page is individually bounded. No partially read evidence index
+    // may be mistaken for a complete zero/missing inventory.
+    var seen=new Map(),cursor='';
+    for(var page=0;page<20;page++){
+      var url=EVIDENCE_INVENTORY_ENDPOINT+'?pageLimit=200'
+        +(cursor?'&cursor='+encodeURIComponent(cursor):'');
+      var packet=await inventoryReadMetadataJson({method:'GET',url:url,
+        timeout:INVENTORY_REQUEST_TIMEOUT_MS,
+        headers:{authorization:'Bearer '+String(writeToken()||'')}},'private');
+      if(!packet||packet.schemaVersion!==EVIDENCE_SCHEMA_VERSION
+        ||!Array.isArray(packet.items)||packet.items.length!==Number(packet.count)
+        ||typeof packet.complete!=='boolean'||typeof packet.truncated!=='boolean')
+        throw new Error('evidence_inventory_page_invalid');
+      for(var i=0;i<packet.items.length;i++){
+        var item=packet.items[i],doi=normalizeDoi(item&&item.doi);
+        if(!doi||seen.has(doi))throw new Error('evidence_inventory_duplicate_or_unbound_doi');
+        seen.set(doi,item);
+      }
+      if(packet.complete===true&&packet.truncated===false)
+        return {schemaVersion:EVIDENCE_SCHEMA_VERSION,count:seen.size,
+          items:Array.from(seen.values()),complete:true,truncated:false};
+      if(packet.complete!==false||packet.truncated!==true
+        ||typeof packet.nextCursor!=='string'||!packet.nextCursor
+        ||packet.nextCursor===cursor||packet.nextCursor.length>2048)
+        throw new Error('evidence_inventory_cursor_invalid');
+      cursor=packet.nextCursor;
+    }
+    throw new Error('evidence_inventory_page_limit_exceeded');
+  }
+
   async function readMissingCaptureInventory(queue,run) {
     var errors=[],mediaRows=[],cache=run?(run.inventoryCache||(run.inventoryCache=new Map())):new Map();
     var dois=queue.articles.filter(recentFullCaptureEligible).map(function(x){return normalizeDoi(x.doi);});
@@ -5257,9 +5288,9 @@ function embeddedJobDois(value) {
         function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count);},'toc',2);},
       function(){return safe('正文图库存','figures',function(){return inventoryReadMetadataJson({method:'GET',url:WORKER+'/api/article-figures/staged?inventory=1&ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{}},'queue');},
         function(x){return x&&x.schemaVersion==='capture-inventory-v1'&&x.complete===true&&Array.isArray(x.items)&&x.items.length===Number(x.count);},'figures',2);},
-      function(){return safe('文本库存','evidence',function(){return inventoryReadMetadataJson({method:'GET',url:EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,
-        headers:{authorization:'Bearer '+String(writeToken()||'')}},'private');},
-        function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count)&&x.truncated!==true;},'evidence',2);},
+      function(){return safe('文本库存','evidence',readEvidenceInventoryPaged,
+        function(x){return x&&x.schemaVersion===EVIDENCE_SCHEMA_VERSION&&x.complete===true
+          &&Array.isArray(x.items)&&x.items.length===Number(x.count)&&x.truncated!==true;},'evidence',1);},
       function(){return readOwnerPdfInventory(queue.articles,run);}
     ];
     // Run at most two inventory layers concurrently without fixed-pair head
