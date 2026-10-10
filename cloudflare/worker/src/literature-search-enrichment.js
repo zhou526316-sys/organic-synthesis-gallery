@@ -215,11 +215,10 @@ function phrase(value){return '"'+String(value).replaceAll('"','""')+'"';}
 export function searchFtsExpression(query) {
   const raw=String(query||'').trim().toLowerCase();
   if(!raw||[...raw].length<3) return '';
-  const terms=Object.hasOwn(synonyms,raw)?[raw]:raw.split(/\s+/).filter(Boolean);
-  const groups=terms.map(term=>{
-    const alternatives=[term,...(synonyms[term]||[])];
-    const uniq=[...new Set(alternatives.filter(x=>[...x].length>=3))];
-    return uniq.length>1?'('+uniq.map(phrase).join(' OR ')+')':phrase(uniq[0]||term);
-  });
-  return groups.join(' AND ');
+  // Preserve legacy exact-substring behavior for every unregistered query,
+  // including multiword titles and author names. Only vetted chemical terms
+  // broaden into a small, explicitly reviewed OR group.
+  const alternatives=[raw,...(synonyms[raw]||[])];
+  const unique=[...new Set(alternatives.filter(term=>[...term].length>=3))];
+  return unique.length>1?'('+unique.map(phrase).join(' OR ')+')':phrase(raw);
 }
