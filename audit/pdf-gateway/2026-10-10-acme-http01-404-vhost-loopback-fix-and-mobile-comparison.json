@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "timeBeijing": "2026-10-10 10:56:37",
+  "event": "A second registered Gallery reader reported a phone-on-mobile-data PDF test; image is present in user chat but exact error code could not be reliably extracted from current mounted artifact. Do not claim that mobile failure mode equals laptop's.",
+  "comparedWith": {
+    "desktop": {
+      "network": "campus network + campus VPN + Edge Ghelper rules proxy via US",
+      "ownerPdfFailure": "pdf_transfer_timeout after successful authorize",
+      "observedRangeTimeouts": true
+    },
+    "mobile": {
+      "network": "independent phone cellular data",
+      "account": "recently granted reader-only PDF capability (user-reported)",
+      "status": "specific mobile diagnostic code unverified",
+      "privacy": "email omitted"
+    }
+  },
+  "tencentFailure": {
+    "userSSHInstall": "One SSH accepted, nginx -t and DNS and upstream passed, localhost ACME test returned HTTP 404, no certbot, rolled back",
+    "childAcmeDirModes": "0755",
+    "wechatVhostShaBefore": "984b34cc48e88e4b88a1547858dc1a0cf7d252f43acb466e59038e78e0b6fb18",
+    "testedHypothesis": "Address-specific 127.0.0.1:80 vhost precedence can route localhost challenge to existing relay instead of wildcard PDF vhost; nginx isolated fixture reproduces 404->200 with explicit PDF loopback binding. Does not prove actual Tencent listen topology.",
+    "alternativeHypotheses": [
+      "/var/www parent directory unreadable by nginx worker",
+      "other :80 address binding or vhost misrouting"
+    ],
+    "certbotInvoked": false,
+    "tencentGatewayActivated": false,
+    "productionChanged": false
+  },
+  "changesOnDraftPr420": {
+    "branch": "feature/owner-private-pdf-dual-ingress-20261008",
+    "branchHead": "eecbc931d1c94f3723628ab300a6a1d1a384ce94",
+    "launcherPath": "deploy/pdf-gateway/run-once-from-windows.ps1",
+    "launcherPinnedSource": "bc50cc94f6a83fdd85a579442b8c4a5ee6b10784",
+    "installerFix": "Explicit localhost HTTP:80 address listen + unambiguous ACME canary + nginx-worker readable file check + parent namei/ss diagnostic on failure; certbot only after byte-identical local 200",
+    "gitWorkflowRun": 38018606704,
+    "securityLinux": "success",
+    "windowsPowershell51": "success",
+    "scope": "Only isolated PR draft; no change on main or production/tencent server in this turn.",
+    "readOnlyPublicHealthPrior": "Tencent TLS still mismatched relay-only cert and routing.enabled false",
+    "alternativeRoutes": "Both active Worker API routes are Cloudflare; no new paid services."
+  },
+  "next": [
+    "Use owner-only, one QR SSH Windows launcher pinned to immutable corrected code, only after testing accepted",
+    "After owner install, test public TLS and 401/CORS, then actual logged-in owner and second-reader 206 Range without leaking tokens",
+    "Use actual diagnostic phase on mobile to differentiate capability/login failures vs data transport",
+    "Do not enable Tencent routing until certificate, carrier reachability and permission acceptance have passed."
+  ],
+  "limits": {
+    "noSmallRangeChanges": true,
+    "keepPdfjsContinuousAndQuality": true,
+    "keepWechatRelayUnchanged": true,
+    "noPrivacySecrets": true
+  }
+}
