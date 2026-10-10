@@ -10,7 +10,7 @@ assert.ok(source.includes("INVENTORY_STARTUP_REVISION = '20261011-historical-off
 assert.ok(source.includes("INVENTORY_PLAN_CACHE_TTL_MS = 10 * 60 * 1000"));
 assert.ok(source.includes("if(dois.length<=1200)"));
 assert.ok(source.includes("for(var i=0;i<dois.length;i+=30)"));
-assert.ok(source.includes("仅处理 10 月 1 日之后收录文献；正在核对库存…"));
+assert.ok(source.includes("正在核对10月起常规文献与7—9月历史官方TOC库存…"));
 assert.ok(source.includes("已用最近库存先生成待办；后台复核中"));
 assert.ok(source.includes("beginFreshInventory();s.phase='running'"));
 assert.ok(!source.includes("if(!await refresh())return;s.phase='running';"));
