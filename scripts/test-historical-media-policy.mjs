@@ -15,7 +15,7 @@ assert.equal(isHistoricalBackfill(preJuly),true);
 assert.equal(paperMediaPolicy(preJuly),'metadata_only');
 assert.equal(paperMediaPolicy(july),'toc_only');
 assert.equal(paperMediaPolicy(lateSep),'toc_only');
-assert.equal(paperMediaPolicy(legacy),'standard');
+assert.equal(paperMediaPolicy(legacy),'toc_only');
 assert.equal(paperMediaPolicy(regular),'standard');
 assert.equal(isJulSepTocOnly(july),true);
 assert.equal(isOctoberFullCapturePaper(july),false);
