@@ -1,19 +1,22 @@
 {
-  "requestId": "wechat-2026-10-10-r2-two-covers-same-draft-real-update",
+  "requestId": "wechat-2026-10-10-r3-two-expert-science-prose-same-media-draft-update",
   "publicationDate": "2026-10-10",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-10-r2",
+  "editorialRevision": "2026-10-10-r3",
   "approvedGate": "audit/wechat-working/2026-10-10-review-gate.json",
-  "prePublishQA": "audit/wechat-working/2026-10-10-r2-cover-review-and-qa.json",
+  "prePublishQA": "audit/wechat-working/2026-10-10-r3-prose-qa.json",
   "expectedArticleCount": 2,
   "expectedDois": [
     "10.1002/anie.3306470",
     "10.1038/s44160-026-01128-y"
   ],
   "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWFOfn60HSWWcYlciDjMIDj7HKSul-GJJti3u0OIKFcyL",
-  "expectedReviewedBodyImages": 49,
+  "expectedFirstTitle": "有机合成文献日报｜10.10｜今日精选｜Angew.：铁–LMCT/镍–SH₂协同催化游离羧酸直接甲基编辑",
+  "expectedSecondTitle": "往期精选｜Nature Synthesis｜仇友爱等：醇与醇的电化学脱羟基交叉偶联",
+  "expectedSourceBodyImages": 49,
+  "expectedSourceCovers": 2,
   "draftOnly": true,
-  "requireDraftGetReadback": true,
   "publicSendAuthorized": false,
-  "reason": "Actual user-directed cover-only replacement in SAME existing Oct10 dual-article WeChat draft. R2 review PASS: first Angew PDF Scheme1B enlarged to 996x500 with navy title zone below y515; second Nature Synthesis cover EXACT 1254x1254 owner image bytes SHA256 8748213670c0caeff07f5cf030390ba44e8878eb32982b20b0675ee34804c814. All 49 body images, full two titles, article prose and 23 released papers unchanged. Perform one draft/update, require draft/get and a fresh real preview. Do not mass send."
+  "requireDraftGetReadback": true,
+  "reason": "The user requested scientific-editorial deeper content, not superficial adjectives. Fully source-reviewed R3 updates 35 paragraphs Angew Fe-LMCT Ni-SH2 and 31 paragraphs Nature Synthesis electrochemical alcohol C(sp3)-C(sp3), with stronger causal hierarchy and evidence calibration. Keep original two user-approved cover bytes, 49 exact science figures and their source captions/positions, all titles and 23 Gallery article cards unchanged. Update SAME existing WeChat media_id once using fixed-IP API, perform draft/get, give real preview, NEVER mass send."
 }
