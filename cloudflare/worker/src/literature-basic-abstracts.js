@@ -136,3 +136,33 @@ export async function importBasicAbstractReviews(env,payload={}){
   return {status:200,body:{ok:true,catalogId,approved:normalized.length,
     dois:normalized.map(row=>row.doi)}};
 }
+
+export async function getBasicAbstractCoverage(env,payload={}){
+  const catalogId=String(payload.catalogId||'').toLowerCase();
+  if(!HASH.test(catalogId))return {status:400,body:{error:'basic_abstract_catalog_invalid'}};
+  if(!env?.LITERATURE_INDEX_DB)return {status:503,body:{error:'basic_abstract_db_unavailable'}};
+  const generation=await env.LITERATURE_INDEX_DB.prepare(`SELECT e.ready AS enriched,g.ready AS published
+    FROM literature_search_enrichment_generations e JOIN literature_catalog_generations g
+    ON g.catalog_id=e.catalog_id WHERE e.catalog_id=?`).bind(catalogId).first();
+  if(!generation||Number(generation.enriched)!==1||Number(generation.published)!==1)
+    return {status:409,body:{error:'basic_abstract_catalog_not_ready'}};
+  await ensureBasicAbstractSchema(env);
+  const row=await env.LITERATURE_INDEX_DB.prepare(`SELECT COUNT(*) AS total,
+    SUM(CASE WHEN length(e.abstract_text)>0 THEN 1 ELSE 0 END) AS original_count,
+    SUM(CASE WHEN b.doi IS NOT NULL AND b.revision=e.revision
+      AND b.abstract_source=e.abstract_source AND length(b.summary_zh)>0
+      AND length(b.summary_en)>0 THEN 1 ELSE 0 END) AS reviewed_candidates
+    FROM literature_search_enrichment e
+    JOIN literature_catalog_index i ON i.catalog_id=e.catalog_id
+      AND i.doi=e.doi AND i.revision=e.revision
+    LEFT JOIN literature_basic_abstract_reviews b ON b.doi=e.doi
+    WHERE e.catalog_id=?`).bind(catalogId).first();
+  const total=Number(row?.total||0);
+  return {status:200,body:{ok:true,catalogId,total,
+    originalAbstracts:Number(row?.original_count||0),
+    missingOriginalAbstracts:total-Number(row?.original_count||0),
+    reviewedBilingualCandidates:Number(row?.reviewed_candidates||0),
+    // Aggregation does not recompute SHA-256. The per-DOI public read does.
+    reviewedCountRequiresPerDoiHashCheck:true,
+    allPapersHaveVerifiedAbstract:false}};
+}
