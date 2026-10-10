@@ -62,7 +62,7 @@ export function isMatchingOwnerPdfFileSource(source, origin, expectedHash, byteL
         url.protocol !== 'https:' || url.username || url.password || url.hash) return false;
     const names = [...url.searchParams.keys()];
     return names.length === 1 && names[0] === 'token' &&
-      url.searchParams.get('token')?.length >= 32;
+      Boolean(url.searchParams.get('token'));
   } catch {
     return false;
   }
