@@ -1,11 +1,9 @@
 name: Historical 2026 Jul-Sep title evidence audit
+# The 83-DOI proof was collected on run 38035669087 and committed under
+# audit/historical-backfill. Avoid repeating the same public metadata calls on
+# every unrelated PR synchronization; a manual rerun remains available.
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - 'scripts/audit-julsep-title-provenance.mjs'
-      - 'audit/historical-backfill/2026-07-to-09-title-gaps-static-20261010.json'
-      - '.github/workflows/historical-title-evidence-audit.yml'
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
