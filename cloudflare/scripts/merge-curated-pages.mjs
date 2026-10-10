@@ -101,6 +101,11 @@ await writeFile(finalAuditPath, JSON.stringify({
 
 await writeFile(translationsPath, JSON.stringify({ translations: [...translations.values()] }));
 
+// Present already-approved DOI titles from a verified metadata receipt; the seven
+// fixed-slot-authorized literature inputs stay unchanged in git.
+const { applyVerifiedTitlePresentationToPages } = await import('../../scripts/apply-verified-title-presentation.mjs');
+await applyVerifiedTitlePresentationToPages();
+
 console.log(`CURATED_MERGE_SUMMARY ${JSON.stringify({
   curated: curated?.papers?.length || 0,
   automation: automation?.papers?.length || 0,
