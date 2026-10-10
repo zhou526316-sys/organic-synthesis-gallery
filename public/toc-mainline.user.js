@@ -5580,7 +5580,10 @@ function embeddedJobDois(value) {
     next.expectedFigureCount=Math.max(Number(job.expectedFigureCount||0),Number(figures.discovered||0));
     var saved=Math.max(Object.keys(next.capturedFigures).length,Number(figures.stored||0));
     next.missingFigureCount=Math.max(0,next.expectedFigureCount-saved);
-    gained+=Math.max(0,Object.keys(next.capturedFigures).length-before);
+    // Historical TOC-only work cannot use an incidental figure receipt to
+    // justify another publisher visit. Only an official TOC receipt advances it.
+    if(!tocOnlyCaptureEligible(job)&&(job.captureFigures||job.opportunisticFigures))
+      gained+=Math.max(0,Object.keys(next.capturedFigures).length-before);
     // Only proof of completion clears an image obligation, not partial/failed.
     if(job.captureFigures && figures.discovered>0 && figures.stored>=figures.discovered && Number(figures.failed||0)===0 && saved>=next.expectedFigureCount){
       next.captureFigures=false;row.done.captureFigures=true;gained++;
