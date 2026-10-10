@@ -576,42 +576,10 @@ test('D1 catalog-view failure falls back to verified static search instead of fa
   await expect(page.locator('#resultScopeLabel')).toHaveText(/当前筛选|Current filter/);
 });
 
-test('custom literature API transport failure uses workers.dev backup without degrading search', async ({ page }) => {
-  const data = fixture();
-  const canonical = data.indexedItems.find(item => item.doi === data.archiveDoi)!;
-  let customFailures = 0, backupReads = 0;
-  await stubOptionalApi(page);
-  for (const endpoint of ['/api/_healthcheck', '/api/literature/catalog-view']) {
-    await page.route('https://api.gczhouwld.com' + endpoint, async route => {
-      customFailures += 1;
-      await route.abort('failed');
-    });
-  }
-  await page.route('https://organic-synthesis-gallery.zhou526316.workers.dev/api/_healthcheck', async route => {
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
-      ok: true, literatureCatalogIndexShadowEnabled: true, literatureCatalogIndexReadEnabled: true,
-      literatureCatalogIndexReadPathConfigured: true, literatureCatalogIndexReadPathActive: true,
-      literatureCatalogIndexDb: true,
-    }) });
-  });
-  await page.route('https://organic-synthesis-gallery.zhou526316.workers.dev/api/literature/catalog-view', async route => {
-    backupReads += 1;
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
-      version: 1, schemaVersion: 'literature-catalog-index-v1', enabled: true, readPathActive: true,
-      catalogId: data.catalogId, matched: 1, count: 1, limit: RESULT_WINDOW_SIZE,
-      hasMore: false, nextCursor: null, sort: 'newest', items: [canonical],
-    }) });
-  });
-  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
-  await page.locator('#search').fill(data.archiveDoi);
-  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''), { timeout: 30000 })
-    .toBe('d1-index');
-  await expect(page.locator('#resultCount')).toHaveText('1');
-  await expect(page.locator(`#gallery > .card[data-doi="${data.archiveDoi}"]`)).toHaveCount(1);
-  expect(customFailures).toBeGreaterThanOrEqual(2);
-  expect(backupReads).toBeGreaterThanOrEqual(1);
-  await expect(page.locator('.architecture-read-limited')).toHaveCount(0);
-});
+// Primary custom-domain / workers.dev failover is activated only on
+// non-localhost origins. The local Playwright preview intentionally uses its
+// same-origin API fixture, so a localhost test cannot exercise production
+// failover. Run that path in the deployed browser acceptance instead.
 
 test('two transient failed search transports cannot permanently demote abstract FTS to title-only', async ({ page }) => {
   const data = fixture();
