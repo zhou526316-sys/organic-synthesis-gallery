@@ -133,3 +133,44 @@ test('read-only mocked network stages DOI candidates and advances without formal
     await rm(root,{recursive:true,force:true});
   }
 });
+
+
+test('GitHub history workflow has 23:00, 23:09 dedup and a main-only one-shot recovery trigger',async()=>{
+  const yaml=await readFile(new URL('../.github/workflows/historical-nightly-discovery.yml',import.meta.url),'utf8');
+  assert.match(yaml,/- cron: '0 15 \* \* \*'/);
+  assert.match(yaml,/- cron: '9 15 \* \* \*'/);
+  assert.match(yaml,/push:\s*\n\s+branches: \[main\]\s*\n\s+paths:\s*\n\s+- 'audit\/automation-triggers\/historical-nightly-run-request\.json'/);
+  assert.match(yaml,/concurrency:\s*\n\s+group: gallery-historical-candidates-staging\s*\n\s+cancel-in-progress: false/);
+  assert.match(yaml,/GALLERY_HISTORY_EVENT: \$\{\{ github.event_name \}\}/);
+  assert.match(yaml,/if: steps.night_gate.outputs.run == 'true'/);
+  assert.match(yaml,/if: always\(\) && steps.night_gate.outputs.run == 'true' && steps.collect.outcome == 'success'/);
+  assert.match(yaml,/STAGING_REF: staging\/historical-archive-nightly/);
+  assert.doesNotMatch(yaml,/git push origin (?:main|HEAD:main)/);
+  const {shouldRunHistoricalNight}=await import('./historical-nightly-schedule-gate.mjs');
+  const at='2026-10-11T15:09:00Z';
+  assert.equal(shouldRunHistoricalNight('schedule',{lastRunStarted:'2026-10-11T15:00:05Z'},at),false);
+  assert.equal(shouldRunHistoricalNight('schedule',{lastRunStarted:'2026-10-11T15:07:59Z'},at),false);
+  assert.equal(shouldRunHistoricalNight('schedule',{lastRunStarted:'2026-10-10T15:00:05Z'},at),true);
+  assert.equal(shouldRunHistoricalNight('schedule',{lastRunStarted:'2026-10-10T17:45:00Z'},at),true);
+  assert.equal(shouldRunHistoricalNight('push',{lastRunStarted:'2026-10-11T15:00:05Z'},at),true);
+  assert.equal(shouldRunHistoricalNight('workflow_dispatch',{lastRunStarted:'2026-10-11T15:00:05Z'},at),true);
+  assert.throws(()=>shouldRunHistoricalNight('schedule',{lastRunStarted:'bad'},at),/invalid_timestamp/);
+});
+
+test('historical schedule gate writes exact GitHub Actions output',async()=>{
+  const temp=await mkdtemp(join(tmpdir(),'gallery-history-schedule-'));
+  try{
+    const {runHistoricalScheduleGate}=await import('./historical-nightly-schedule-gate.mjs');
+    const state=join(temp,'state.json'),output=join(temp,'output.txt');
+    await writeFile(output,'');
+    await writeFile(state,JSON.stringify({lastRunStarted:'2026-10-11T15:00:00Z'}));
+    assert.equal(await runHistoricalScheduleGate({eventName:'schedule',now:'2026-10-11T15:09:00Z',path:state,output}),false);
+    assert.equal(await readFile(output,'utf8'),'run=false\n');
+    await writeFile(output,'');
+    assert.equal(await runHistoricalScheduleGate({eventName:'push',now:'2026-10-11T15:09:00Z',path:state,output}),true);
+    assert.equal(await readFile(output,'utf8'),'run=true\n');
+    await writeFile(output,'');
+    assert.equal(await runHistoricalScheduleGate({eventName:'schedule',now:'2026-10-12T15:00:00Z',path:state,output}),true);
+    assert.equal(await readFile(output,'utf8'),'run=true\n');
+  }finally{await rm(temp,{recursive:true,force:true})}
+});

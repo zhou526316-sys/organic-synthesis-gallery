@@ -4,6 +4,13 @@ on:
   schedule:
     # GitHub Actions cron is UTC; Beijing uses UTC+08 year-round.
     - cron: '0 15 * * *'
+    # Fallback avoids GitHub's top-of-hour schedule drops; idempotently
+    # skip this job if tonight's 23:00 attempt already reached staging.
+    - cron: '9 15 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/historical-nightly-run-request.json'
   workflow_dispatch:
     inputs:
       max_units:
@@ -56,7 +63,13 @@ jobs:
           fi
           # Main must remain untouched: only this staging branch may be pushed.
           test "$(git branch --show-current)" = historical-staging
+      - name: Enforce at-most-one scheduled collection per Beijing night
+        id: night_gate
+        env:
+          GALLERY_HISTORY_EVENT: ${{ github.event_name }}
+        run: node scripts/historical-nightly-schedule-gate.mjs
       - name: Discover and check source completeness (no website/media writes)
+        if: steps.night_gate.outputs.run == 'true'
         id: collect
         env:
           HISTORICAL_STAGING_ONLY: '1'
@@ -71,7 +84,7 @@ jobs:
           echo "status=$status" >> "$GITHUB_OUTPUT"
           exit 0
       - name: Commit candidate metadata only to historical staging
-        if: always() && steps.collect.outcome == 'success'
+        if: always() && steps.night_gate.outputs.run == 'true' && steps.collect.outcome == 'success'
         run: |
           set -euo pipefail
           git config user.name "gallery-history-staging[bot]"
@@ -89,7 +102,7 @@ jobs:
           test -z "$(git diff --name-only origin/main HEAD -- . ':(exclude)audit/historical-staging/**')"
           git push origin "HEAD:refs/heads/$STAGING_REF"
       - name: Preserve staging evidence as build artifact
-        if: always()
+        if: always() && steps.night_gate.outputs.run == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: gallery-historical-nightly-coverage
@@ -99,7 +112,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
       - name: Do not mark an incomplete source window as successful
-        if: always() && steps.collect.outcome == 'success'
+        if: always() && steps.night_gate.outputs.run == 'true' && steps.collect.outcome == 'success'
         env:
           COLLECT_STATUS: ${{ steps.collect.outputs.status }}
         run: |
