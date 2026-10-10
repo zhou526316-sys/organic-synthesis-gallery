@@ -106,6 +106,12 @@ await writeFile(translationsPath, JSON.stringify({ translations: [...translation
 const { applyVerifiedTitlePresentationToPages } = await import('../../scripts/apply-verified-title-presentation.mjs');
 await applyVerifiedTitlePresentationToPages();
 
+// The English DOI backfill and the Chinese editorial title set must publish
+// as one bilingual derived metadata layer. Never mutate protected 08:00 inputs.
+const { applyVerifiedChineseTitlePresentationToPages } =
+  await import('../../scripts/apply-verified-chinese-title-presentation.mjs');
+await applyVerifiedChineseTitlePresentationToPages();
+
 console.log(`CURATED_MERGE_SUMMARY ${JSON.stringify({
   curated: curated?.papers?.length || 0,
   automation: automation?.papers?.length || 0,
