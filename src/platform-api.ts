@@ -276,10 +276,11 @@ function inventoryRank(status: InventoryItem['status']): number {
   return 0;
 }
 
-async function rawRequest<T>(method: string, path: string, body?: unknown): Promise<ApiResponse<T>> {
+async function rawRequest<T>(method: string, path: string, body?: unknown, signal?: AbortSignal): Promise<ApiResponse<T>> {
   const absolute = /^https?:\/\//i.test(path);
   const response = await fetch(path, {
     method,
+    signal,
     credentials: absolute ? 'omit' : 'same-origin',
     headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
     body: body === undefined ? undefined : JSON.stringify(body),
@@ -309,22 +310,27 @@ async function rawRequest<T>(method: string, path: string, body?: unknown): Prom
   };
 }
 
-function workerRequest<T>(method: string, path: string, body?: unknown): Promise<ApiResponse<T>> {
-  return rawRequest<T>(method, `${WORKER_ORIGIN}${path}`, body);
+function workerRequest<T>(method: string, path: string, body?: unknown, signal?: AbortSignal): Promise<ApiResponse<T>> {
+  return rawRequest<T>(method, `${WORKER_ORIGIN}${path}`, body, signal);
 }
 
 // For China-first Gallery literature search, the first-party custom domain is
 // the canonical cross-origin API. workers.dev is only a transport fallback:
 // a temporary CDN/DNS/CORS failure must not permanently suppress abstract FTS.
-async function literatureReadWithFailover<T>(method: 'GET' | 'POST', path: string, body?: unknown): Promise<ApiResponse<T>> {
+async function literatureReadWithFailover<T>(
+  method: 'GET' | 'POST', path: string, body?: unknown, signal?: AbortSignal,
+): Promise<ApiResponse<T>> {
+  if (signal?.aborted) throw new DOMException('Search superseded', 'AbortError');
   try {
-    return await rawRequest<T>(method, `${MEDIA_API_ORIGIN}${path}`, body);
+    return await rawRequest<T>(method, `${MEDIA_API_ORIGIN}${path}`, body, signal);
   } catch (primaryError) {
+    // A superseded query is not a network failure: do not retry its fallback
+    // requests after the user has typed a new term.
+    if (signal?.aborted || (primaryError instanceof Error && primaryError.name === 'AbortError')) throw primaryError;
     try {
-      const fallback = await workerRequest<T>(method, path, body);
-      return fallback;
+      return await workerRequest<T>(method, path, body, signal);
     } catch (backupError) {
-      console.warn('[Gallery search] Both public literature API transports unavailable', primaryError, backupError);
+      if (!signal?.aborted) console.warn('[Gallery search] Both public literature API transports unavailable', primaryError, backupError);
       throw backupError;
     }
   }
@@ -355,19 +361,20 @@ function catalogViewGetPath(body?: unknown): string | null {
   return encoded.length <= 3500 ? '/api/literature/catalog-view?' + encoded : null;
 }
 
-async function publicCatalogView<T>(body?: unknown): Promise<ApiResponse<T>> {
+async function publicCatalogView<T>(body?: unknown, signal?: AbortSignal): Promise<ApiResponse<T>> {
   // A GET cannot carry a JSON body, so the browser issues one simple CORS
   // request without OPTIONS. Retain POST for older Worker versions, oversized
   // filters and environments where an intermediary refuses GET.
   const readPath = catalogViewGetPath(body);
   if (readPath) {
     try {
-      return await literatureReadWithFailover<T>('GET', readPath);
+      return await literatureReadWithFailover<T>('GET', readPath, undefined, signal);
     } catch (error) {
+      if (signal?.aborted || (error instanceof Error && error.name === 'AbortError')) throw error;
       console.warn('[Gallery search] GET transport unavailable; trying compatible POST', error);
     }
   }
-  return literatureReadWithFailover<T>('POST', '/api/literature/catalog-view', body);
+  return literatureReadWithFailover<T>('POST', '/api/literature/catalog-view', body, signal);
 }
 
 
@@ -521,6 +528,12 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
 }
 
 export const api = {
+  // Cancellation is limited to verified public catalog reads. Other account,
+  // PDF and media transport semantics are unchanged.
+  catalogView<T = unknown>(body: unknown, signal?: AbortSignal): Promise<ApiResponse<T>> {
+    if (localDevelopmentHost()) return rawRequest<T>('POST', '/api/literature/catalog-view', body, signal);
+    return publicCatalogView<T>(body, signal);
+  },
   get<T = unknown>(path: string): Promise<ApiResponse<T>> {
     return request<T>('GET', path);
   },

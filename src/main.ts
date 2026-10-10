@@ -298,6 +298,8 @@ let resultWindowPage = 1;
 let lastResultWindowSize = resultWindowSize();
 let indexedViewCapability: boolean | null = null;
 let indexedSearchPending = false;
+let indexedSearchRequest: AbortController | null = null;
+let searchInputStartedAt = 0;
 let readersSortAdjustedForSearch = false;
 let indexedViewDegraded = false;
 let indexedViewRetryKey = '';
@@ -321,6 +323,7 @@ store.addEventListener('counts', () => {
 
 function processCorpusSearchInput(nextQuery: string): void {
   query = nextQuery;
+  searchInputStartedAt = performance.now();
   // The modern UserSearchController intercepts the native input event in the
   // capture phase and forwards gallery-corpus-query. Apply identical indexing
   // and sorting rules to BOTH paths; the old input listener alone is not live.
@@ -784,6 +787,9 @@ function syncLiteratureDoiRegistry(): void {
 function resetResultWindow(): void {
   resultWindowPage = 1;
   indexedViewSerial += 1;
+  // The old request and its fallback transport cannot hold up a newer term.
+  indexedSearchRequest?.abort();
+  indexedSearchRequest = null;
   if (indexedViewState && architectureLandingPapers.length) setArchitectureCorpus(architectureLandingPapers);
   indexedViewState = null;
   indexedSearchPending = false;
@@ -815,11 +821,29 @@ function paginationButtonsMarkup(currentPage: number, totalPages: number, loadin
 }
 
 function renderCards(): void {
-  syncLiteratureDoiRegistry();
   const gallery = document.querySelector<HTMLElement>('#gallery');
   const count = document.querySelector<HTMLElement>('#resultCount');
   const scope = document.querySelector<HTMLElement>('#resultScopeLabel');
   if (!gallery || !count) return;
+  // This is deliberately lightweight: do not rebuild 12/24 chemistry cards,
+  // resolve TOC images, schedule media/PDF work, or rebind the user shell for
+  // each keystroke while a real all-time index query is pending.
+  if (indexedSearchPending && !indexedViewState
+      && (Boolean(indexedViewRequest('')) || architectureBootstrapPending)) {
+    count.textContent = '…';
+    if (scope) scope.textContent = t('searchingAllTime');
+    const controls = document.querySelector<HTMLElement>('#resultWindowControls');
+    if (controls) controls.hidden = true;
+    if (gallery.dataset.searchPending !== 'true') {
+      gallery.dataset.searchPending = 'true';
+      gallery.innerHTML = `<div class='empty' role='status'>${escapeHtml(t('searchingAllTime'))}</div>`;
+    }
+    gallery.setAttribute('aria-busy', 'true');
+    return;
+  }
+  gallery.dataset.searchPending = 'false';
+  gallery.removeAttribute('aria-busy');
+  syncLiteratureDoiRegistry();
   const indexed = indexedViewState;
   const list = indexed ? indexed.papers : filteredPapers();
   const windowSize = indexed?.limit || resultWindowSize();
@@ -1903,15 +1927,22 @@ async function loadIndexedViewPage(
   request: LiteratureCatalogViewRequest,
   page: number,
   cursors: string[],
+  signal?: AbortSignal,
 ): Promise<boolean> {
   const client = architectureClient;
   if (!client || request.catalogId !== client.catalogId) return false;
   const requestKey = indexedViewRequestKey(request);
-  const response = await fetchLiteratureCatalogView(request);
+  const requestAt = performance.now();
+  const response = await fetchLiteratureCatalogView(request, signal);
+  const requestElapsed = Math.round(performance.now() - requestAt);
   if (serial !== architectureRefreshSerial && page === 1) return false;
   if (page > 1 && serial !== indexedViewSerial) return false;
   if (architectureClient !== client) return false;
   const indexedPapers = normalizeArchitectureRows(await client.resolveIndexed(response.items));
+  // Static content-addressed shard resolution can still be pending after the
+  // API returned. Guard this await too, not just the network response.
+  if (signal?.aborted || (page === 1 && serial !== architectureRefreshSerial)
+      || (page > 1 && serial !== indexedViewSerial) || architectureClient !== client) return false;
   if (indexedPapers.length !== response.items.length) throw new Error('literature_catalog_view_excluded_member');
   const pageCursors = [...cursors];
   if (response.hasMore && response.nextCursor) pageCursors[page] = response.nextCursor;
@@ -1935,6 +1966,11 @@ async function loadIndexedViewPage(
   document.documentElement.dataset.catalogIndexedQuery = query.trim().toLowerCase();
   document.documentElement.dataset.catalogQueryRead = 'd1-index';
   mount();
+  // Read-only timing probes for browser perf regressions: do not include DOI,
+  // title, query or user information in these document attributes.
+  document.documentElement.dataset.catalogSearchNetworkMs = String(requestElapsed);
+  if (searchInputStartedAt > 0)
+    document.documentElement.dataset.catalogSearchTotalMs = String(Math.round(performance.now() - searchInputStartedAt));
   return true;
 }
 
@@ -1973,10 +2009,12 @@ async function tryIndexedArchitectureView(serial: number): Promise<boolean> {
       return false;
     }
   }
+  const pending = new AbortController();
+  indexedSearchRequest = pending;
   try {
-    return await loadIndexedViewPage(serial, request, 1, ['']);
+    return await loadIndexedViewPage(serial, request, 1, [''], pending.signal);
   } catch (error) {
-    if (serial !== architectureRefreshSerial) return false;
+    if (pending.signal.aborted || serial !== architectureRefreshSerial) return false;
     indexedViewCapability = null;
     indexedViewState = null;
     indexedViewDegraded = true;
@@ -1986,6 +2024,8 @@ async function tryIndexedArchitectureView(serial: number): Promise<boolean> {
     scheduleIndexedViewRecovery(serial, request);
     console.warn('D1 literature view temporarily unavailable; static metadata results are incomplete', error);
     return false;
+  } finally {
+    if (indexedSearchRequest === pending) indexedSearchRequest = null;
   }
 }
 
@@ -2086,8 +2126,10 @@ async function refreshArchitectureCorpus(serial: number): Promise<void> {
   }
 }
 
-function scheduleArchitectureCorpusRefresh(delay = 220): void {
+function scheduleArchitectureCorpusRefresh(delay = 135): void {
   if (!architectureClient) return;
+  indexedSearchRequest?.abort();
+  indexedSearchRequest = null;
   architectureRefreshSerial += 1;
   const serial = architectureRefreshSerial;
   if (architectureRefreshTimer !== null) window.clearTimeout(architectureRefreshTimer);

@@ -422,10 +422,14 @@ test('active D1 catalog view keeps all-time search server-paged and avoids stati
       expect(viewRequests.at(-1).cursor).toBe(`fixture:${RESULT_WINDOW_SIZE * 2}`);
     }
 
+    const readsBeforeReturn = viewRequests.length;
     await page.locator('#resultPageJumpInput').fill('1');
     await page.locator('#resultPageJumpButton').click();
     await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )1\//);
-    expect(viewRequests.at(-1).cursor || '').toBe('');
+    await expect(page.locator('#gallery > .card').first()).toHaveAttribute('data-doi', firstDoi);
+    // Page one was already validated. Returning within the bounded cache TTL
+    // should not need another API request or manufacture a stale page-three cursor.
+    expect(viewRequests.length).toBe(readsBeforeReturn);
   }
 });
 
@@ -715,19 +719,20 @@ test('changing only-new and journal filters refreshes the indexed query and allo
   expect(newestRequest.addedDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   await expect(page.locator('#clearSearchScope')).toBeVisible();
   await page.locator('#clearSearchScope').click();
-  await expect.poll(() => requests.filter(x => x.query === 'LMCT' && !x.addedDate).length, { timeout: 30000 })
-    .toBeGreaterThanOrEqual(2);
+  // Clearing only-new restores the previously verified unfiltered query.
+  // It may be served from the short-lived search cache without a fresh POST.
   await expect(page.locator('#newOnly')).not.toBeChecked();
   await expect(page.locator('#resultCount')).toHaveText(String(data.memberCount));
+  await expect(page.locator('#gallery .card').first()).toHaveAttribute('data-doi', data.indexedItems[0].doi);
   await page.locator('.journal-picker summary').click();
   await page.locator(`input[data-journal-option][value="${journal}"]`).check();
   await expect.poll(() => requests.filter(x => x.query === 'LMCT' && x.selectedJournals?.includes(journal)).length, { timeout: 30000 })
     .toBeGreaterThan(0);
   await expect(page.locator('#clearSearchScope')).toBeVisible();
   await page.locator('#clearSearchScope').click();
-  await expect.poll(() => requests.filter(x => x.query === 'LMCT' && x.selectedJournals?.length === 0).length, { timeout: 30000 })
-    .toBeGreaterThanOrEqual(3);
   await expect(page.locator('#resultCount')).toHaveText(String(data.memberCount));
+  await expect(page.locator('#gallery .card').first()).toHaveAttribute('data-doi', data.indexedItems[0].doi);
+  await expect(page.locator(`input[data-journal-option][value="${journal}"]`)).not.toBeChecked();
 });
 
 test('search entered after most-read ordering explicitly switches to indexed latest search', async ({ page }) => {
@@ -757,6 +762,150 @@ test('search entered after most-read ordering explicitly switches to indexed lat
   await expect.poll(() => indexed, { timeout: 30000 }).toBeGreaterThan(0);
   await expect(page.locator('#resultCount')).toHaveText(String(data.memberCount));
   await expect(page.locator('.architecture-read-limited')).toContainText(/完整摘要|complete abstract/);
+});
+
+for (const width of [390, 1280]) {
+  test(`search suggestions close on selection, outside click, keyboard, scroll and remount at ${width}px`, async ({ page }) => {
+    await stubOptionalApi(page);
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+      { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('#gallery .card').first()).toBeVisible({ timeout: 30000 });
+    const journal = (await page.locator('#gallery .card').first().getAttribute('data-journal')) || '';
+    expect(journal.length).toBeGreaterThanOrEqual(2);
+    const query = journal.slice(0, 2);
+    const search = page.locator('#search');
+    const popover = page.locator('.user-search-popover');
+
+    await search.fill(query);
+    await expect(popover.locator('button').first()).toBeVisible({ timeout: 10000 });
+    await page.locator('h1').click();
+    await expect(popover).toHaveCount(0);
+
+    await search.fill(query);
+    await expect(popover.locator('button').first()).toBeVisible();
+    await search.press('Escape');
+    await expect(popover).toHaveCount(0);
+    await expect(search).toHaveValue(query); // First Escape closes only suggestions.
+
+    await search.fill(query);
+    await expect(popover.locator('button').first()).toBeVisible();
+    await search.press('Enter');
+    await expect(popover).toHaveCount(0);
+
+    await search.fill(query);
+    await expect(popover.locator('button').first()).toBeVisible();
+    await page.evaluate(() => window.dispatchEvent(new Event('scroll')));
+    await expect(popover).toHaveCount(0);
+
+    await search.fill(query);
+    await expect(popover.locator('button').first()).toBeVisible();
+    await popover.locator('button').first().dispatchEvent('pointerdown', { pointerType: 'touch' });
+    await expect(popover).toHaveCount(0);
+    // Selection synchronously dispatches another input event; an obsolete
+    // suggestion popover must never be orphaned in document.body.
+    await page.waitForTimeout(50);
+    await expect(popover).toHaveCount(0);
+
+    await search.fill(query);
+    await expect(popover.locator('button').first()).toBeVisible();
+    await page.locator('[data-lang="en"]').click();
+    await expect(popover).toHaveCount(0);
+  });
+}
+
+test('a burst of search keystrokes does not rebuild gallery cards or schedule stale indexed renders', async ({ page }) => {
+  await stubOptionalApi(page);
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+    { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''),
+    { timeout: 30000 }).toBe('architecture-v1');
+  await expect(page.locator('#gallery .card').first()).toBeVisible();
+  const result = await page.evaluate(async () => {
+    const input = document.querySelector<HTMLInputElement>('#search')!;
+    const gallery = document.querySelector<HTMLElement>('#gallery')!;
+    let childRebuilds = 0;
+    const observer = new MutationObserver(records => {
+      childRebuilds += records.filter(record => record.type === 'childList').length;
+    });
+    observer.observe(gallery, { childList: true });
+    for (const query of ['LMC', 'LMCT', 'LMCTx', 'LMCTxy', 'LMCTxyz']) {
+      input.value = query;
+      input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+    }
+    await Promise.resolve();
+    await Promise.resolve();
+    observer.disconnect();
+    return {
+      childRebuilds,
+      loading: gallery.dataset.searchPending === 'true',
+      count: document.querySelector('#resultCount')?.textContent,
+      cards: gallery.querySelectorAll('.card').length,
+    };
+  });
+  expect(result.loading).toBe(true);
+  expect(result.count).toBe('…');
+  expect(result.cards).toBe(0);
+  expect(result.childRebuilds).toBeLessThanOrEqual(2);
+});
+
+test('latest indexed search wins over delayed obsolete responses and repeats use short-lived cache', async ({ page }) => {
+  const data = fixture();
+  const queries: string[] = [];
+  let delayedCancelled = false;
+  await stubOptionalApi(page);
+  await page.route('**/api/_healthcheck', async route => {
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+      literatureCatalogIndexShadowEnabled: true,
+      literatureCatalogIndexReadEnabled: true,
+      literatureCatalogIndexReadPathConfigured: true,
+      literatureCatalogIndexReadPathActive: true,
+      literatureCatalogIndexDb: true,
+    }) });
+  });
+  await page.route('**/api/literature/catalog-view', async route => {
+    const body = route.request().postDataJSON() as any;
+    queries.push(String(body.query || ''));
+    if (body.query === 'LMCT') {
+      await new Promise(resolve => setTimeout(resolve, 750));
+    }
+    const item = body.query === 'LMCT' ? data.indexedItems[1] : data.indexedItems[0];
+    try {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+        version: 1, schemaVersion: 'literature-catalog-index-v1',
+        enabled: true, readPathActive: true, catalogId: data.catalogId,
+        matched: 1, count: 1, limit: body.limit, hasMore: false, nextCursor: null,
+        sort: 'newest', items: [item],
+      }) });
+    } catch {
+      if (body.query === 'LMCT') delayedCancelled = true;
+    }
+  });
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+    { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''),
+    { timeout: 30000 }).toBe('architecture-v1');
+  await page.locator('#search').fill('LMCT');
+  await expect.poll(() => queries.includes('LMCT'), { timeout: 10000 }).toBe(true);
+  await page.locator('#search').fill('nickel');
+  await expect.poll(() => queries.includes('nickel'), { timeout: 10000 }).toBe(true);
+  await expect(page.locator('#gallery .card[data-doi]')).toHaveCount(1);
+  await expect(page.locator('#gallery .card').first()).toHaveAttribute('data-doi', data.indexedItems[0].doi);
+  await page.waitForTimeout(850); // Old delayed response must never repaint the new results.
+  await expect(page.locator('#gallery .card').first()).toHaveAttribute('data-doi', data.indexedItems[0].doi);
+  const before = queries.filter(query => query === 'nickel').length;
+  await page.locator('#search').fill('');
+  await page.locator('#search').fill('nickel');
+  await expect(page.locator('#resultCount')).toHaveText('1');
+  await expect(page.locator('#gallery .card').first()).toHaveAttribute('data-doi', data.indexedItems[0].doi);
+  expect(queries.filter(query => query === 'nickel')).toHaveLength(before);
+  expect(delayedCancelled || queries.filter(query => query === 'LMCT').length === 1).toBeTruthy();
+  const durations = await page.evaluate(() => ({
+    network: document.documentElement.dataset.catalogSearchNetworkMs,
+    total: document.documentElement.dataset.catalogSearchTotalMs,
+  }));
+  expect(Number(durations.network)).toBeGreaterThanOrEqual(0);
+  expect(Number(durations.total)).toBeGreaterThanOrEqual(0);
 });
 
 test('short chemistry terms remain on static reader-sort compatibility path', async ({ page }) => {

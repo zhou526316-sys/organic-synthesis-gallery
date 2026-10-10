@@ -29,6 +29,46 @@ export class UserSearchController {
   private aliasKey = '';
   private readFilterKey = '';
   private stopped = false;
+  private selectingSuggestion = false;
+  private blurDismissTimer: number | null = null;
+  private readonly dismissSuggestions = (): void => {
+    this.popover?.remove();
+    this.popover = null;
+  };
+  private readonly onSearchFocus = (): void => { this.renderSuggestions(); };
+  private readonly onSearchChange = (): void => { store.addHistory(this.fullQuery); };
+  private readonly onSearchBlur = (): void => {
+    if (this.blurDismissTimer !== null) window.clearTimeout(this.blurDismissTimer);
+    this.blurDismissTimer = window.setTimeout(() => {
+      this.blurDismissTimer = null;
+      if (document.activeElement !== this.searchInput && !this.popover?.contains(document.activeElement))
+        this.dismissSuggestions();
+    }, 120);
+  };
+  private readonly onSearchKeyDown = (event: KeyboardEvent): void => {
+    if (event.key === 'Enter') {
+      store.addHistory(this.fullQuery);
+      this.dismissSuggestions();
+    }
+    if (event.key === 'Escape') {
+      if (this.popover) {
+        event.preventDefault();
+        this.dismissSuggestions();
+      } else if (this.fullQuery) {
+        event.preventDefault();
+        this.setSearch('');
+      }
+    }
+  };
+  private readonly onOuterPointerDown = (event: PointerEvent): void => {
+    const target = event.target;
+    if (!(target instanceof Node) || this.searchInput?.contains(target) || this.popover?.contains(target)) return;
+    this.dismissSuggestions();
+  };
+  private readonly onPageScroll = (): void => { this.dismissSuggestions(); };
+  private readonly onTabVisibility = (): void => {
+    if (document.hidden) this.dismissSuggestions();
+  };
   private readonly storeChanged = (): void => this.refreshPreferences();
   private readonly refreshCounts = (): void => {
     if (!this.stopped && document.visibilityState !== 'hidden') void store.loadCounts(this.metas.flatMap(meta => meta.doi ? [meta.doi] : []));
@@ -77,23 +117,19 @@ export class UserSearchController {
     this.searchInput.addEventListener('input', this.onInput, { capture: true });
     this.searchInput.addEventListener('compositionstart', this.onCompositionStart);
     this.searchInput.addEventListener('compositionend', this.onCompositionEnd);
-    this.searchInput.addEventListener('keydown', event => {
-      if (event.key === 'Enter') store.addHistory(this.fullQuery);
-      if (event.key === 'Escape' && this.fullQuery) {
-        event.preventDefault();
-        this.setSearch('');
-      }
-    });
-    this.searchInput.addEventListener('change', () => store.addHistory(this.fullQuery));
-    this.searchInput.addEventListener('focus', () => this.renderSuggestions());
-    this.searchInput.addEventListener('blur', () => window.setTimeout(() => { this.popover?.remove(); this.popover = null; }, 150));
+    this.searchInput.addEventListener('keydown', this.onSearchKeyDown);
+    this.searchInput.addEventListener('change', this.onSearchChange);
+    this.searchInput.addEventListener('focus', this.onSearchFocus);
+    this.searchInput.addEventListener('blur', this.onSearchBlur);
+    document.addEventListener('pointerdown', this.onOuterPointerDown, true);
     this.root.addEventListener('gallery-search', this.handleSearch as EventListener);
     this.root.addEventListener('gallery-similar', this.handleSimilar as EventListener);
     store.addEventListener('change', this.storeChanged);
     window.addEventListener('resize', this.resize);
     window.addEventListener('focus', this.refreshCounts);
     document.addEventListener('visibilitychange', this.refreshCounts);
-    window.addEventListener('scroll', this.resize, true);
+    document.addEventListener('visibilitychange', this.onTabVisibility);
+    window.addEventListener('scroll', this.onPageScroll, true);
     this.observer = new MutationObserver(() => this.queueRefresh());
     this.observer.observe(this.gallery, { childList: true });
     this.updateShellQuery();
@@ -107,14 +143,24 @@ export class UserSearchController {
     this.searchInput?.removeEventListener('input', this.onInput, true);
     this.searchInput?.removeEventListener('compositionstart', this.onCompositionStart);
     this.searchInput?.removeEventListener('compositionend', this.onCompositionEnd);
+    this.searchInput?.removeEventListener('keydown', this.onSearchKeyDown);
+    this.searchInput?.removeEventListener('change', this.onSearchChange);
+    this.searchInput?.removeEventListener('focus', this.onSearchFocus);
+    this.searchInput?.removeEventListener('blur', this.onSearchBlur);
+    document.removeEventListener('pointerdown', this.onOuterPointerDown, true);
+    if (this.blurDismissTimer !== null) {
+      window.clearTimeout(this.blurDismissTimer);
+      this.blurDismissTimer = null;
+    }
     this.root.removeEventListener('gallery-search', this.handleSearch as EventListener);
     this.root.removeEventListener('gallery-similar', this.handleSimilar as EventListener);
     store.removeEventListener('change', this.storeChanged);
     window.removeEventListener('resize', this.resize);
     window.removeEventListener('focus', this.refreshCounts);
     document.removeEventListener('visibilitychange', this.refreshCounts);
-    window.removeEventListener('scroll', this.resize, true);
-    this.popover?.remove(); this.popover = null;
+    document.removeEventListener('visibilitychange', this.onTabVisibility);
+    window.removeEventListener('scroll', this.onPageScroll, true);
+    this.dismissSuggestions();
   }
   currentSearch(): string { return this.fullQuery; }
 
@@ -165,7 +211,11 @@ export class UserSearchController {
     try {
       this.cards = [...this.gallery.querySelectorAll<HTMLElement>('.card')];
       this.metas = this.cards.flatMap(card => { const meta = this.decorate(card); return meta ? [meta] : []; });
-      this.buildCandidates(this.metas);
+      // While the indexed search is pending, the cards have been replaced by
+      // a loading indicator. Retain the last candidate set rather than losing
+      // suggestions until the new search results arrive.
+      if (this.metas.length || this.root.querySelector('#resultCount')?.textContent !== '…')
+        this.buildCandidates(this.metas);
       this.aliasKey = JSON.stringify(store.state.aliases);
       this.applyFilters(this.cards);
       this.readFilterKey = this.currentReadFilterKey();
@@ -379,11 +429,59 @@ export class UserSearchController {
     return this.candidates.flatMap(candidate => { const match = suggestionMatch(this.fullQuery, candidate.value); return match ? [{ ...candidate, ...match, score: match.score + Math.min(8, candidate.frequency) }] : []; }).sort((a, b) => b.score - a.score || a.value.localeCompare(b.value)).slice(0, 8);
   }
   private renderSuggestions(): void {
-    this.popover?.remove(); this.popover = null; const suggestions = this.suggestions(); if (!suggestions.length || !this.searchInput) return;
-    const popover = document.createElement('div'); popover.className = 'user-search-popover'; const typeLabel = (type: SuggestionType): string => type === 'author' ? (this.language === 'zh' ? '作者' : 'Author') : type === 'journal' ? (this.language === 'zh' ? '期刊' : 'Journal') : type === 'doi' ? 'DOI' : (this.language === 'zh' ? '关键词' : 'Keyword'); const hint = (value: Suggestion['hint']): string => value === 'spelling' ? (this.language === 'zh' ? '拼写纠正' : 'Spelling') : value === 'prefix' ? (this.language === 'zh' ? '前缀匹配' : 'Prefix') : value === 'contains' ? (this.language === 'zh' ? '包含匹配' : 'Contains') : (this.language === 'zh' ? '完全匹配' : 'Exact');
-    popover.innerHTML = suggestions.map((item, index) => `<button type='button' data-index='${index}'><span class='kind'>${typeLabel(item.type)}</span><strong>${item.value.replace(/[&<>"']/g, '')}</strong><small>${hint(item.hint)}</small></button>`).join('');
-    popover.querySelectorAll<HTMLButtonElement>('button').forEach(button => button.addEventListener('mousedown', event => { event.preventDefault(); const item = suggestions[Number(button.dataset.index || 0)]; if (!item) return; const words = this.fullQuery.trim().replace(/"/g, '').split(/\s+/).filter(Boolean); const keep = words.slice(0, Math.max(0, words.length - Math.max(1, item.replaceWords))); this.setSearch([...keep, queryTerm(item.value)].join(' ')); popover.remove(); this.popover = null; }));
-    document.body.appendChild(popover); this.popover = popover; this.positionPopover();
+    this.dismissSuggestions();
+    if (this.selectingSuggestion || this.composing || !this.searchInput
+        || document.activeElement !== this.searchInput) return;
+    const suggestions = this.suggestions();
+    if (!suggestions.length) return;
+    const popover = document.createElement('div');
+    popover.className = 'user-search-popover';
+    popover.setAttribute('role', 'listbox');
+    popover.setAttribute('aria-label', this.language === 'zh' ? '搜索建议' : 'Search suggestions');
+    const typeLabel = (type: SuggestionType): string => type === 'author'
+      ? (this.language === 'zh' ? '作者' : 'Author')
+      : type === 'journal' ? (this.language === 'zh' ? '期刊' : 'Journal')
+      : type === 'doi' ? 'DOI'
+      : (this.language === 'zh' ? '关键词' : 'Keyword');
+    const hint = (value: Suggestion['hint']): string => value === 'spelling'
+      ? (this.language === 'zh' ? '拼写纠正' : 'Spelling')
+      : value === 'prefix' ? (this.language === 'zh' ? '前缀匹配' : 'Prefix')
+      : value === 'contains' ? (this.language === 'zh' ? '包含匹配' : 'Contains')
+      : (this.language === 'zh' ? '完全匹配' : 'Exact');
+    popover.innerHTML = suggestions.map((item, index) =>
+      `<button type='button' role='option' data-index='${index}'><span class='kind'>${typeLabel(item.type)}</span><strong>${item.value.replace(/[&<>"']/g, '')}</strong><small>${hint(item.hint)}</small></button>`
+    ).join('');
+
+    const select = (item: Suggestion): void => {
+      if (this.selectingSuggestion) return;
+      this.selectingSuggestion = true;
+      try {
+        // Selecting emits an input event. Suppress suggestions during it, then
+        // close the *current* popover rather than an obsolete captured node.
+        const words = this.fullQuery.trim().replace(/"/g, '').split(/\s+/).filter(Boolean);
+        const keep = words.slice(0, Math.max(0, words.length - Math.max(1, item.replaceWords)));
+        this.setSearch([...keep, queryTerm(item.value)].join(' '));
+      } finally {
+        this.dismissSuggestions();
+        this.selectingSuggestion = false;
+      }
+    };
+    popover.querySelectorAll<HTMLButtonElement>('button').forEach(button => {
+      const item = suggestions[Number(button.dataset.index || 0)];
+      if (!item) return;
+      button.addEventListener('pointerdown', event => {
+        event.preventDefault();
+        select(item);
+      });
+      button.addEventListener('click', event => {
+        // Keyboard activation has no preceding pointerdown; normal clicks have
+        // already selected and removed the popover at pointerdown.
+        if (event.detail === 0) select(item);
+      });
+    });
+    document.body.appendChild(popover);
+    this.popover = popover;
+    this.positionPopover();
   }
   private positionPopover(): void { if (!this.popover || !this.searchInput) return; const rect = this.searchInput.getBoundingClientRect(); this.popover.style.left = `${Math.max(8, rect.left)}px`; this.popover.style.top = `${rect.bottom + 6}px`; this.popover.style.width = `${Math.max(280, rect.width)}px`; this.popover.style.maxWidth = `calc(100vw - ${Math.max(16, rect.left + 8)}px)`; }
 }
