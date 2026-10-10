@@ -39,8 +39,12 @@ try {
   report.matched = Object.fromEntries(terms.map(term => [term, sources.get(term).matched]));
   browser = await chromium.launch({ headless: true });
 
-  for (const width of [1280, 390]) {
-    const result = { width, checks: [], blockedMutations: 0, errors: [], catalogRead: null };
+  const viewportValue = Number(process.env.GALLERY_SEARCH_BROWSER_VIEWPORT || 0);
+  const viewports = viewportValue ? [viewportValue] : [1280, 390];
+  assert(viewports.every(width => [390, 1280].includes(width)), 'unsupported_search_viewport');
+  for (const width of viewports) {
+    const result = { width, checks: [], blockedMutations: 0, errors: [], catalogRead: null,
+      network: [] };
     report.viewports.push(result);
     const context = await browser.newContext({
       viewport: { width, height: 900 }, locale: 'zh-CN', timezoneId: 'Asia/Shanghai',
@@ -48,6 +52,18 @@ try {
     });
     const page = await context.newPage();
     page.on('pageerror', error => result.errors.push(error.message));
+    const track = (request, status, failure = '') => {
+      try {
+        const uri = new URL(request.url());
+        if (uri.pathname !== '/api/literature/catalog-view') return;
+        const body = request.method() === 'POST' ? JSON.parse(request.postData() || '{}') : {};
+        result.network.push({event:status,query:body.query||null,method:request.method(),
+          failure:failure||null,at:new Date().toISOString()});
+      } catch { /* diagnostics must never change request execution */ }
+    };
+    page.on('request', request => track(request,'started'));
+    page.on('requestfailed', request => track(request,'failed',request.failure()?.errorText||''));
+    page.on('response', response => track(response.request(),'response_'+response.status()));
     await page.route('**/*', async route => {
       const request = route.request(), method = request.method();
       const pathname = new URL(request.url()).pathname;
@@ -97,12 +113,14 @@ try {
 
         const pageLimit = width <= 680 ? 12 : 24;
         const displayExpected = matching.items.slice(0, pageLimit).map(row => row.doi.toLowerCase());
-        await expect(page.locator('#gallery .card[data-doi]')).toHaveCount(displayExpected.length, { timeout: 30000 });
-        const displayed = await page.locator('#gallery .card[data-doi]').evaluateAll(cards =>
+        const shownDois = () => page.locator('#gallery .card[data-doi]').evaluateAll(cards =>
           cards.map(card => String(card.getAttribute('data-doi') || '').toLowerCase()));
+        // The D1 response precedes content-addressed shard resolution. Do not
+        // mistake a previous query with the same matched count for current cards.
+        await expect.poll(shownDois, { timeout: 30000, intervals: [100, 200, 500, 1000] })
+          .toEqual(displayExpected);
+        const displayed = await shownDois();
         assert(displayed.length === new Set(displayed).size, 'duplicate_browser_cards:' + term);
-        assert(JSON.stringify(displayed) === JSON.stringify(displayExpected),
-          'browser_result_order_or_membership_mismatch:' + term + ':' + width);
         result.checks.push({ query: term, matched: payload.matched, shown: displayed.length,
           source: 'd1-index', firstDoi: displayed[0] || null });
       }
@@ -111,6 +129,14 @@ try {
       result.ok = true;
     } catch (error) {
       result.error = String(error?.message || error).slice(0, 2200);
+      result.debugState = await page.evaluate(() => ({
+        search: document.querySelector('#search')?.value || '',
+        count: document.querySelector('#resultCount')?.textContent || '',
+        cards: [...document.querySelectorAll('#gallery .card[data-doi]')].slice(0,14).map(x=>x.getAttribute('data-doi')),
+        reader: document.documentElement.dataset.catalogRead || null,
+        capability: document.documentElement.dataset.catalogIndexCapability || null,
+        queryPath: document.documentElement.dataset.catalogQueryRead || null,
+      })).catch(()=>({ unavailable:true }));
       await page.screenshot({ path: DIR + '/failure-' + width + '.png', fullPage: false }).catch(() => {});
       throw error;
     } finally {
