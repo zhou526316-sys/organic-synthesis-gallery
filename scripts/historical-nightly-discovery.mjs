@@ -15,7 +15,7 @@ const FLOOR='1850-01-01';
 const MAX_ROWS=100, MAX_PAGES=10;
 
 export function normDoi(value) {
-  let s=String(value||'').trim().toLowerCase().replace(/^https?:\/\/(?:dx\.)?doi\.org\//,'');
+  let s=String(value||'').trim().toLowerCase().replace(/^https?:\/\/(?:dx\.)?doi\.org\//i,'');
   try{s=decodeURIComponent(s);}catch{}
   return /^10\.\d{4,9}\/\S+$/.test(s)?s:null;
 }
@@ -26,7 +26,7 @@ export function previousPeriod(current) {
   const time=new Date(current.from+'T00:00:00Z').getTime()-86400000;
   if(!Number.isFinite(time))throw Error('invalid_history_cursor_date');
   const d=new Date(time),y=d.getUTCFullYear(),m=d.getUTCMonth()+1,n=d.getUTCDate();
-  if(y<1850)return null;
+  if(iso(y,m,n)<FLOOR)return null;
   if(iso(y,m,n)>='2026-07-01'){
     const from=n<=7?1:n<=14?8:n<=21?15:22;
     const to=n<=7?7:n<=14?14:n<=21?21:lastDay(y,m);
@@ -239,7 +239,7 @@ export async function runNightly() {
   const now=new Date().toISOString(),staging=STAGE_ROOT+'/state.json';
   const state=await loadJson(staging,{
     schema:SCHEMA,mode:'candidate_discovery_only',cursor:{range:START,journalIndex:0},
-    completed:[],pendingReview:0,attempts:[],publishedMembershipSnapshot:articles.size
+    completed:[],attempts:[],publishedMembershipSnapshot:articles.size
   });
   if(state.schema!==SCHEMA||state.mode!=='candidate_discovery_only'
     ||!Array.isArray(state.completed)||!Array.isArray(state.attempts))throw Error('invalid_existing_staging_state');
@@ -276,7 +276,6 @@ export async function runNightly() {
       state.completed.push(id);
       state.cursor=nextCursor(state.cursor,journals);
     }else{blocked=true}
-    state.pendingReview=(state.pendingReview||0)+rows.filter(x=>x.reviewStatus==='unfinished').length;
     await saveJson(staging,state);
     console.log('HISTORICAL_STAGING_WINDOW '+JSON.stringify({id,status:record.status,candidates:record.candidateCount,
       alreadyPublished:record.alreadyPublished,unreviewed:record.unreviewed,requests:budget.count,errors:status.issues}));
