@@ -22,7 +22,7 @@ connections and therefore prompts multiple QR scans. **Use the new
 The one-session launcher runs on the user's **local Windows PowerShell**.
 It creates a short UTF-8 Bash command, sends it in Base64 over **one SSH
 session**, downloads reviewed Python/Bash payloads at the immutable Git commit
-`5693dd5a43f46cc9fd35842983b308b4c9c08fb5` on the existing Tencent VM,
+`bc50cc94f6a83fdd85a579442b8c4a5ee6b10784` on the existing Tencent VM,
 and runs `sudo bash install.sh --preflight` or `--install` inside that same
 session. It also supports `--rollback`. No SCP connections, API keys, or
 separate server purchase are involved.
@@ -87,3 +87,29 @@ The origin Worker generates 5-minute signed tickets, a view absolute window of 9
 ## Limitations
 
 Independently routed Tencent client ingress still depends on the **same Cloudflare upstream** for entitlement and storage. A total upstream outage cannot be fixed without a second private upstream (outside zero-cost approved scope). Neither US GitHub test success nor Tencent->Cloudflare health establishes domestic all-carrier availability. Strict quota and existing VM's total monthly WeChat traffic remain a condition: 256MiB gateway cap is a safety throttle, not an absolute guarantee of ¥0 if **other traffic** exhausts the shared 512GB allowance. Provider hard account quota would be needed for a mathematical guarantee.
+
+## 2026-10-10 second ACME 404 (permissions already 0755)
+
+The owner's next one-QR install again stopped at the **LOCAL, before-certbot**
+HTTP-01 canary with HTTP 404, even though dedicated ACME directories were 0755,
+upstream health 200 and `nginx -t` passed. This makes the previously diagnosed
+0700 *child-directory* issue insufficient to explain this occurrence.
+
+A real isolated Nginx reproducer now proves a different possible routing cause:
+when an existing server listens specifically on `127.0.0.1:80`, it can take
+precedence over the new vhost's wildcard `listen 80` for localhost requests;
+a request with the correct PDF Host can then receive 404. Adding an explicit
+`listen 127.0.0.1:80` for the PDF vhost resolves the reproducer (404->200).
+**This is a verified Nginx behavior, not yet proof of the actual Tencent Nginx
+listener topology.**
+
+The new isolated installer also uses an unambiguous alphanumeric ACME canary
+instead of a literal trailing '$', tests active Nginx-worker file readability,
+and on failed localhost HTTP-01 checks reports bound HTTP ports and parent path
+permissions before rolling back. **Certbot is never called before a correct
+200 with byte-for-byte challenge verification.** WeChat vhost hash preservation,
+one SSH/WeChat QR, dedicated app service, no paid resources and route
+`enabled:false` are unchanged. Linux isolated-vhost precedence regression
+and Windows PowerShell 5.1 raw URL parse are mandatory before the owner retries.
+The owner's retry uses the updated one-session launcher at an immutable branch
+commit, pinned to the installer-source commit `bc50cc94f6a83fdd85a579442b8c4a5ee6b10784`.
