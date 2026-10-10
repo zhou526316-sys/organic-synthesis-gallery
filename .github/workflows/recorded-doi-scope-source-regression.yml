@@ -1,0 +1,24 @@
+name: Explicit DOI correction source compatibility regression
+on:
+  push:
+    branches: [fix/scope-validator-recorded-doi-exclusions-20261010]
+    paths:
+      - 'scripts/lib/scope-corrections.mjs'
+      - 'scripts/test-recorded-doi-scope-source-20261010.mjs'
+      - '.github/workflows/recorded-doi-scope-source-regression.yml'
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  correction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+      - name: Validate recorded explicit user DOI exclusions without changing registry
+        run: |
+          node --check scripts/lib/scope-corrections.mjs
+          node scripts/test-recorded-doi-scope-source-20261010.mjs
