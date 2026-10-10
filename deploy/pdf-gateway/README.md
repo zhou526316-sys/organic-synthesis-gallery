@@ -227,3 +227,47 @@ PR remains unmerged. Owner `-Mode Install` + explicit YES and QR is required
 for the real diagnostic/deployment. Do not activate Gallery `enabled:false`
 route until actual HTTPS security, cross-account authorization, owner Range
 206 and mobile mainland-carrier acceptance are all proven.
+
+## 2026-10-10 live Tencent certificate issued; gateway local startup refused
+
+The owner ran another one-QR `-Mode Install` on existing Tencent VM. Real
+`nginx -T` included managed PDF site; `LIVE_VHOST_ROUTE_PASS` confirmed the
+running Nginx routed by Host; ACME HTTP-01 served the correct disposable bytes
+with HTTP 200. Certbot then SUCCESSFULLY issued the free certificate for
+`pdf.gczhouwld.com`, expiration **2027-01-08**, with system renewal timer.
+No new paid instance or certificate was purchased.
+
+The remaining failure moved to localhost Python service on
+`127.0.0.1:18867`: after `systemctl enable --now`, an immediate single
+`curl` returned ECONNREFUSED. The installer rolled back PDF vhost and service
+and kept Gallery routing disabled. Certificate files remain installed, and
+on the next attempt `cert_ok` should reuse them (no redundant Certbot call).
+Unknown whether Python failed to start or systemd marked Type=simple active
+before the interpreter finished startup; status metadata and journal were
+not emitted by the old installer, so a startup race is a plausible but NOT
+proven cause. Do not change PDFs/authorization based on this failure.
+
+Revised installer replaces the immediate request with at most 15 bounded
+localhost-only health checks, each requiring exact anonymous JSON body and
+HTTP 200, never treating mere systemd active state as readiness. Once ready
+it proceeds with the existing TLS health/security checks. If still not ready
+it emits service-specific systemd state (ActiveState/SubState/Result, restart
+count, exit status, PID), localhost listener status, and ALLOWLISTED error
+class labels extracted from a short recent service journal. Raw traceback,
+cookies, login credentials, file tickets and PDF URLs are never copied into
+user-facing diagnostics. It then aborts and rolls back safely.
+
+An isolated deterministic Linux test mocks two delayed/unready responses
+(ECONNREFUSED and invalid JSON) then validates a healthy third attempt;
+it independently asserts a permanent failure emits only safe service
+metadata and error class. Existing Nginx ACME, Python gateway security,
+Windows PowerShell 5.1, and one-SSH tests remain in CI.
+
+Reviewed source revision (with wait/sanitized startup diagnostics):
+`19fc7851114e6862ef3fb05a51af5b2355726b0b`.
+User-facing launcher and full CI revision:
+`c494e4ed22e37faf8196bd1cb42ae5beecfcf9b0`.
+Do not call this a live success before the owner's real run produces
+`LOCAL_GATEWAY_READY`, `[SUCCESS]`, and Windows HTTPS/security checks.
+Private PDF routing remains disabled pending real mainland mobile owner
+authentication, Range 206, account isolation and reader validation.
