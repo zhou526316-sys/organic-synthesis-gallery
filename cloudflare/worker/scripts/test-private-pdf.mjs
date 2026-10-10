@@ -150,13 +150,20 @@ await test('owner open returns only a short-lived opaque file URL',async()=>{
   assert.equal(r.body.contentHash,'a'.repeat(64),'authenticated open pins immutable PDF content identity');
   assert.equal(bucket.headCalls,0,'initial open does not issue a separate R2 HEAD');
   const timing=r.headers?.['server-timing']||'';
-  assert.match(timing,/session;dur=\d+/);
-  assert.match(timing,/capability;dur=\d+/);
-  assert.match(timing,/document;dur=\d+/);
-  assert.match(timing,/r2_get;dur=\d+/);
-  assert.match(timing,/ticket_create;dur=\d+/);
-  assert.match(timing,/total;dur=\d+/);
-  assert.doesNotMatch(timing,/fixture|pdf1|owner|token|private-pdf|10\.1021|https/i);
+  // The short-lived production diagnostic expired on Oct 10 Beijing.
+  // A fixed-date flag must stay off after expiry, even if the test fixture
+  // still contains PRIVATE_PDF_OPEN_TIMING_ENABLED='1'.
+  if (Date.now() >= Date.parse('2026-10-10T00:00:00+08:00')) {
+    assert.equal(timing,'','expired PDF authorization timings must remain disabled');
+  } else {
+    assert.match(timing,/session;dur=\d+/);
+    assert.match(timing,/capability;dur=\d+/);
+    assert.match(timing,/document;dur=\d+/);
+    assert.match(timing,/r2_get;dur=\d+/);
+    assert.match(timing,/ticket_create;dur=\d+/);
+    assert.match(timing,/total;dur=\d+/);
+    assert.doesNotMatch(timing,/fixture|pdf1|owner|token|private-pdf|10\.1021|https/i);
+  }
   assert.ok(!JSON.stringify(r.headers).includes('fixture-token'));
 });
 await test('timing is disabled without diagnostic feature flag',async()=>{
