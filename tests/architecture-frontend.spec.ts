@@ -771,9 +771,9 @@ for (const width of [390, 1280]) {
     await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
       { waitUntil: 'domcontentloaded' });
     await expect(page.locator('#gallery .card').first()).toBeVisible({ timeout: 30000 });
-    const journal = (await page.locator('#gallery .card').first().getAttribute('data-journal')) || '';
-    expect(journal.length).toBeGreaterThanOrEqual(2);
-    const query = journal.slice(0, 2);
+    // A DOI prefix is present on every approved card; unlike the first card's
+    // journal, it cannot change as the Hot bootstrap and title refresh settle.
+    const query = '10.';
     // Scope this test to the suggestion controller: a 2-character query can
     // trigger an asynchronous static shard search and remount the app while
     // this test is about closing the popup, not corpus transport.
@@ -787,6 +787,7 @@ for (const width of [390, 1280]) {
     const openSuggestions = async (): Promise<void> => {
       // Use an explicit focus cycle when reopening after an outside click.
       // WebKit may defer focus while the previous blur callback is pending.
+      await search.scrollIntoViewIfNeeded();
       await search.focus();
       await search.fill('');
       await search.fill(query);
@@ -809,7 +810,15 @@ for (const width of [390, 1280]) {
     await expect(popover).toHaveCount(0);
 
     await openSuggestions();
+    // Layout reflow and browser auto-scrolling must not instantly dismiss a
+    // newly focused suggestion menu. User gestures must dismiss it.
     await page.evaluate(() => window.dispatchEvent(new Event('scroll')));
+    await expect(popover.locator('button').first()).toBeVisible();
+    await page.evaluate(() => window.dispatchEvent(new WheelEvent('wheel', { deltaY: 180, bubbles: true })));
+    await expect(popover).toHaveCount(0);
+
+    await openSuggestions();
+    await page.evaluate(() => window.dispatchEvent(new Event('touchmove', { bubbles: true })));
     await expect(popover).toHaveCount(0);
 
     await openSuggestions();

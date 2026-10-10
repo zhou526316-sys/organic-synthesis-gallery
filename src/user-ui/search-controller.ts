@@ -74,8 +74,12 @@ export class UserSearchController {
     if (!(target instanceof Node) || this.searchInput?.contains(target) || this.popover?.contains(target)) return;
     this.dismissSuggestions();
   };
-  private readonly onPageScroll = (event: Event): void => {
-    // Scrolling the suggestion list itself must not dismiss it before selection.
+  private readonly onUserScrollIntent = (event: Event): void => {
+    // An automated focus, a TOC/image reflow, or a browser scroll adjustment
+    // may emit 'scroll' just after a suggestion opens. None of those indicate
+    // that the reader wants to close it. Wheel and touchmove indicate an
+    // intentional gesture; pointerdown-outside covers scrollbar dragging.
+    // Scrolling inside the suggestions is still allowed.
     if (event.target instanceof Node && this.popover?.contains(event.target)) return;
     this.dismissSuggestions();
   };
@@ -142,7 +146,9 @@ export class UserSearchController {
     window.addEventListener('focus', this.refreshCounts);
     document.addEventListener('visibilitychange', this.refreshCounts);
     document.addEventListener('visibilitychange', this.onTabVisibility);
-    window.addEventListener('scroll', this.onPageScroll, true);
+    window.addEventListener('scroll', this.resize, true);
+    window.addEventListener('wheel', this.onUserScrollIntent, { capture: true, passive: true });
+    window.addEventListener('touchmove', this.onUserScrollIntent, { capture: true, passive: true });
     this.observer = new MutationObserver(() => this.queueRefresh());
     this.observer.observe(this.gallery, { childList: true });
     this.updateShellQuery();
@@ -172,7 +178,9 @@ export class UserSearchController {
     window.removeEventListener('focus', this.refreshCounts);
     document.removeEventListener('visibilitychange', this.refreshCounts);
     document.removeEventListener('visibilitychange', this.onTabVisibility);
-    window.removeEventListener('scroll', this.onPageScroll, true);
+    window.removeEventListener('scroll', this.resize, true);
+    window.removeEventListener('wheel', this.onUserScrollIntent, true);
+    window.removeEventListener('touchmove', this.onUserScrollIntent, true);
     this.dismissSuggestions();
   }
   currentSearch(): string { return this.fullQuery; }
