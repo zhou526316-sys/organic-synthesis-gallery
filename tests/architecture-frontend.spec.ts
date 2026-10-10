@@ -776,30 +776,32 @@ for (const width of [390, 1280]) {
     const query = journal.slice(0, 2);
     const search = page.locator('#search');
     const popover = page.locator('.user-search-popover');
+    const openSuggestions = async (): Promise<void> => {
+      // Playwright does not dispatch an input event when filling the same value
+      // into an already identical input. Clear it first to test a real edit.
+      await search.fill('');
+      await search.fill(query);
+      await expect(popover.locator('button').first()).toBeVisible({ timeout: 10000 });
+    };
 
-    await search.fill(query);
-    await expect(popover.locator('button').first()).toBeVisible({ timeout: 10000 });
+    await openSuggestions();
     await page.locator('h1').click();
     await expect(popover).toHaveCount(0);
 
-    await search.fill(query);
-    await expect(popover.locator('button').first()).toBeVisible();
+    await openSuggestions();
     await search.press('Escape');
     await expect(popover).toHaveCount(0);
     await expect(search).toHaveValue(query); // First Escape closes only suggestions.
 
-    await search.fill(query);
-    await expect(popover.locator('button').first()).toBeVisible();
+    await openSuggestions();
     await search.press('Enter');
     await expect(popover).toHaveCount(0);
 
-    await search.fill(query);
-    await expect(popover.locator('button').first()).toBeVisible();
+    await openSuggestions();
     await page.evaluate(() => window.dispatchEvent(new Event('scroll')));
     await expect(popover).toHaveCount(0);
 
-    await search.fill(query);
-    await expect(popover.locator('button').first()).toBeVisible();
+    await openSuggestions();
     await popover.locator('button').first().dispatchEvent('pointerdown', { pointerType: 'touch' });
     await expect(popover).toHaveCount(0);
     // Selection synchronously dispatches another input event; an obsolete
@@ -807,8 +809,7 @@ for (const width of [390, 1280]) {
     await page.waitForTimeout(50);
     await expect(popover).toHaveCount(0);
 
-    await search.fill(query);
-    await expect(popover.locator('button').first()).toBeVisible();
+    await openSuggestions();
     await page.locator('[data-lang="en"]').click();
     await expect(popover).toHaveCount(0);
   });
