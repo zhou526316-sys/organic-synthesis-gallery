@@ -77,7 +77,7 @@ test('only authoritative publisher-wide 429 plus Retry-After can hold other DOI 
   assert.equal(T.publisherAccessCooldownUntil(acsOther),0);
 });
 test('real publisher access gate is still detected and respects original wait threshold',()=>{
-  const f=between('  async function waitForPairedVisuals(', '  function captureFigureCoverage(');
+  const f=between('  async function waitForPairedVisuals(', '  function privatePdfCaptureEligibleByAddedDate(');
   assert.match(f,/state\.auth \|\| state\.challenge/);
   assert.match(f,/state\.accessGate && Date\.now\(\)-accessGateStarted >= 12000/);
   assert.match(f,/markPublisherAccessCooldown\(job,'publisher_access_gate'\)/);
