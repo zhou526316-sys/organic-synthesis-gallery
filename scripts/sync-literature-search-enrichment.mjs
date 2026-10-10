@@ -180,7 +180,15 @@ async function currentMissingAbstractRows(catalogId){
 async function replenishReadyGeneration(catalogId,sourceHash,report){
   const coverage=await currentMissingAbstractRows(catalogId);
   const max=Math.min(400,Math.max(1,Number(process.env.SEARCH_ABSTRACT_RETRY_LIMIT||300)));
-  const selected=coverage.items.slice(0,max);
+  // Rotate across ALL missing DOI windows. Rechecking the first 300 gaps
+  // every night would permanently starve the rest if those 300 have no
+  // deposited abstract in either metadata source.
+  const windows=Math.max(1,Math.ceil(coverage.items.length/max));
+  const epochDay=Math.floor(Date.now()/86400000);
+  const windowIndex=epochDay%windows;
+  const selected=coverage.items.slice(windowIndex*max,(windowIndex+1)*max);
+  report.incrementalWindow={number:windowIndex+1,windows,selected:selected.length,
+    totalMissing:coverage.items.length};
   const found=await hydrateAbstracts(selected.map(row=>row.doi),report);
   const readyRows=selected.filter(row=>found.has(row.doi)).map(row=>({
     ...row,abstract:found.get(row.doi).abstract,
