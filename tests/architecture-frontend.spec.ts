@@ -122,35 +122,6 @@ async function stubOptionalApi(page: import('@playwright/test').Page): Promise<v
   });
 }
 
-// Capture click targeting and Hot fallback warnings only for failing regression assertions.
-async function debugPagination(page: import('@playwright/test').Page): Promise<() => Promise<void>> {
-  const notices: string[] = [];
-  page.on('console', m => { if (m.type()==='warning'||m.type()==='error') notices.push(m.text().slice(0,700)); });
-  page.on('pageerror', e => notices.push('pageerror:'+e.message));
-  await page.evaluate(() => {
-    const w=window as unknown as { __pageProbe?: string[] };
-    w.__pageProbe=[];
-    ['pointerdown','pointerup','click'].forEach(type=>document.addEventListener(type,e=>{
-      const target=e.target instanceof Element?e.target:null;
-      if(target?.closest('#resultWindowControls')) w.__pageProbe?.push(type+':'+(target.getAttribute('data-result-page')||target.id||target.tagName));
-    },true));
-  });
-  return async()=>{
-    const info=await page.evaluate(()=>{
-      const w=window as unknown as { __pageProbe?: string[] };
-      const button=document.querySelector<HTMLButtonElement>('#resultPageNumbers [data-result-page="2"]');
-      return {events:w.__pageProbe,status:document.querySelector('#resultWindowStatus')?.textContent,
-        cards:document.querySelectorAll('#gallery > .card').length,
-        disabled:button?.disabled,read:document.documentElement.dataset.catalogRead};
-    });
-    console.log('PAGINATION_DEBUG_1',JSON.stringify({info,notices}));
-    const button=page.locator('#resultPageNumbers [data-result-page="2"]');
-    if(await button.count())await button.evaluate(x=>(x as HTMLButtonElement).click());
-    await page.waitForTimeout(800);
-    console.log('PAGINATION_DEBUG_2',JSON.stringify({status:await page.locator('#resultWindowStatus').textContent(),notices}));
-  };
-}
-
 // Feedback #42: a status editor near the lower edge must open upward rather
 // than squeeze into a small 220px region below its triggering button.
 for (const [device, width, height] of [
@@ -341,10 +312,8 @@ test('result pagination keeps DOM cardinality bounded across pages', async ({ pa
     await expect(next).toBeEnabled();
     await expect(page.locator('#resultPageNumbers [data-result-page="1"]')).toHaveAttribute('aria-current', 'page');
     await expect(page.locator('#resultPageNumbers [data-result-page="2"]')).toBeVisible();
-    const diagnoseDesktop=await debugPagination(page);
     await page.locator('#resultPageNumbers [data-result-page="2"]').click();
-    try { await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )2\//); }
-    catch(e) { await diagnoseDesktop(); throw e; }
+    await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )2\//);
     await expect(page.locator('#previousResultPage')).toBeEnabled();
     await expect(page.locator('#resultPageNumbers [data-result-page="2"]')).toHaveAttribute('aria-current', 'page');
     await expect(page.locator('#resultPageJumpInput')).toHaveValue('2');
@@ -782,10 +751,8 @@ test('mobile shows 12 papers per page and keeps next/previous pagination complet
     const first = await page.locator('#gallery > .card').first().getAttribute('data-doi');
     const firstDois = await page.locator('#gallery > .card').evaluateAll(cards => cards.map(card => card.getAttribute('data-doi')));
     await page.locator('#nextResultPage').scrollIntoViewIfNeeded();
-    const diagnoseMobile=await debugPagination(page);
     await page.locator('#nextResultPage').click();
-    try { await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )2\//); }
-    catch(e) { await diagnoseMobile(); throw e; }
+    await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )2\//);
     await expect(page.locator('#gallery > .card')).toHaveCount(Math.min(MOBILE_RESULT_WINDOW_SIZE, data.hotCount - MOBILE_RESULT_WINDOW_SIZE));
     const secondDois = await page.locator('#gallery > .card').evaluateAll(cards => cards.map(card => card.getAttribute('data-doi')));
     expect(secondDois.some(doi => firstDois.includes(doi))).toBe(false);
