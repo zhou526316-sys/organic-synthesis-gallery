@@ -10,6 +10,7 @@ const TOKEN_WATCH_MS = 800;
 const SESSION_REQUEST_TIMEOUT_MS = 6_500;
 const SESSION_INITIAL_ATTEMPTS = 2;
 const SESSION_INITIAL_TIMEOUT_MS = 16_000;
+const LOCAL_LIBRARY_INITIAL_TIMEOUT_MS = 8_000;
 const $ = selector => document.querySelector(selector);
 const byTestId = name => $(`[data-testid="pdf-vault-${name}"]`);
 const workspace = $('#vault-workspace');
@@ -135,6 +136,7 @@ function errorMessage(error) {
     file_changed: '这份文件的内容与保存记录不一致，已停止打开。请核对文件后重新导入。',
     quota_exceeded: '浏览器可用存储空间不足，未完成保存。可以选择真实文件夹后重试。',
     storage_unavailable: '此浏览器无法打开本地文献记录，请检查站点存储权限后重试。',
+    storage_timeout: '账号已验证，但本地文献索引在 8 秒内没有响应。可能有其他标签页占用浏览器数据库。请关闭其他 Gallery 标签页，再点击“重新验证账号”；无需清空网站数据或删除 PDF。',
     storage_failed: '本地保存未完成。请检查文件夹权限和可用空间后重试。',
     persistence_failed: '浏览器未能持久保存文献记录，不能确认导入完成。请检查站点存储权限。',
     crypto_unavailable: '此浏览器无法安全校验文件，请使用更新后的 Edge 或 Chrome。',
@@ -444,16 +446,37 @@ async function revalidateCurrentSession({ manual = false } = {}) {
   }
 }
 
+/** Bound asynchronous initialization stages even when a platform API never
+ * resolves and ignores AbortController. This does not relax account checks. */
+async function withDeadline(promise, milliseconds, makeError, onTimeout = () => {}) {
+  let timeout;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        timeout = window.setTimeout(() => {
+          reject(makeError());
+          try { onTimeout(); } catch { /* The timeout remains authoritative. */ }
+        }, milliseconds);
+      }),
+    ]);
+  } finally {
+    window.clearTimeout(timeout);
+  }
+}
+
 async function verifySession() {
   const token = sessionToken();
   observedToken = token;
   revokeCurrent();
   const checkGeneration = generation;
+  let verifiedUser = false;
   verifying = true;
   sessionRefresh.disabled = true;
   $('#sign-in-link').hidden = true;
   document.documentElement.dataset.pdfVaultAuth = 'checking';
-  $('#account-help').textContent = '验证完成后，可查看此账号在当前浏览器保存的文献。';
+  $('#account-help').textContent = '正在连接账号验证接口。若网络正常，随后会加载本机文献索引。';
+  showStatus(token ? '正在向 Gallery 验证账号…' : '', token ? 'busy' : 'idle');
   if (!token) {
     verifying = false;
     document.documentElement.dataset.pdfVaultAuth = 'signed-out';
@@ -465,17 +488,25 @@ async function verifySession() {
   }
   const controller = new AbortController();
   authController = controller;
-  const timeout = window.setTimeout(() => controller.abort(), SESSION_INITIAL_TIMEOUT_MS);
   try {
-    const user = await readSessionWithRetry(token, controller);
+    const user = await withDeadline(
+      readSessionWithRetry(token, controller), SESSION_INITIAL_TIMEOUT_MS,
+      () => sessionReadError('session_timeout'), () => controller.abort(),
+    );
     if (checkGeneration !== generation || token !== sessionToken()) return;
     if (!user) {
       document.documentElement.dataset.pdfVaultAuth = 'signed-out';
       accountLabel.textContent = '登录已失效，请重新登录';
       $('#account-help').textContent = '请返回主站完成登录，再重新验证账号。';
       $('#sign-in-link').hidden = false;
+      showStatus('账号接口明确表示当前会话已失效，请重新登录。', 'error');
       return;
     }
+    verifiedUser = true;
+    document.documentElement.dataset.pdfVaultAuth = 'loading-local';
+    accountLabel.textContent = `${user.displayName || user.email || 'Gallery 用户'} · 账号已验证`;
+    $('#account-help').textContent = '账号验证通过，正在读取本机文献索引…';
+    showStatus('账号验证成功，正在加载本地 PDF 文献库…', 'busy');
     queuePanel = mountPdfQueuePanel({
       userId: user.id, token, initialDoi: doiInput.value,
       assertCurrent: () => {
@@ -504,7 +535,11 @@ async function verifySession() {
     $('#directory-support').textContent = context.capabilities.directoryPicker ? '' : '此浏览器暂不支持选择真实目录，可明确选择浏览器内存储。';
     $('#opfs-support').textContent = context.capabilities.opfs ? '' : '此浏览器不支持浏览器内文件存储。';
     $('#file-limit').textContent = `每次导入一份 PDF，最大 ${Math.floor(context.capabilities.maxBytes / 1024 / 1024)} MB。`;
-    await refreshSnapshot(context);
+    await withDeadline(
+      refreshSnapshot(context), LOCAL_LIBRARY_INITIAL_TIMEOUT_MS,
+      () => new LocalPdfVaultError('storage_timeout'),
+      () => context.vault?.close(),
+    );
     requireCurrent(context);
     lastVerified = Date.now();
     workspace.hidden = false;
@@ -518,12 +553,13 @@ async function verifySession() {
     active = null;
     list.replaceChildren();
     workspace.hidden = true;
-    document.documentElement.dataset.pdfVaultAuth = 'error';
-    accountLabel.textContent = queuePanel ? '账号已验证 · 本地存储暂不可用' : '暂时无法打开本地文献库';
-    $('#account-help').textContent = queuePanel ? '仍可使用待电脑获取队列。已有磁盘文件不受影响，请在支持的浏览器中导入和阅读。' : '已有磁盘文件不受影响，请检查网络或浏览器设置后重试。';
-    showStatus(error instanceof LocalPdfVaultError ? errorMessage(error) : sessionFailureMessage(error), 'error');
+    document.documentElement.dataset.pdfVaultAuth = verifiedUser ? 'storage-error' : 'error';
+    accountLabel.textContent = verifiedUser ? '账号已验证 · 本地文献库暂不可用' : '账号暂时无法验证';
+    $('#account-help').textContent = verifiedUser
+      ? '账号验证已通过；本地存储无法读取。待电脑获取队列仍可使用，已保存的磁盘 PDF 不会被删除。'
+      : '当前无法确认账号状态。已保留浏览器中的登录令牌和本地 PDF 记录，请检查网络后重试。';
+    showStatus(error instanceof LocalPdfVaultError ? errorMessage(error) : verifiedUser ? '账号已验证，但本地文献库初始化失败。请重试；无需清除网站数据。' : sessionFailureMessage(error), 'error');
   } finally {
-    clearTimeout(timeout);
     if (checkGeneration === generation) {
       verifying = false;
       authController = null;
