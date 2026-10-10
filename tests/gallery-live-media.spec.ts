@@ -9,9 +9,17 @@ const OFFICIAL = '10.1021/acscatal.6c06476';
 const SCIENCE = '10.1126/science.aef3001';
 const CONFIRMED_BAD_ANGeW = '10.1002/anie.4335022';
 const WRONG_TOC_HASH = '35f10c5321cd43179a4c71c73e388da8';
+const RSC_MISSING = [
+  '10.1039/d6sc06374h',
+  '10.1039/d6gc04458a',
+  '10.1039/d6gc05783g',
+] as const;
+type MediaStatus = 'available' | 'missing' | 'network-error' | 'incomplete';
 
-async function openCanonical(page: Page, doi: string, { figure1 = false, imageFailure = false, staleStatic = false } = {}) {
+async function openCanonical(page: Page, doi: string, { figure1 = false, imageFailure = false, staleStatic = false,
+  initialMediaStatus = 'available' as MediaStatus } = {}) {
   let imageUnavailable = imageFailure;
+  let mediaStatus: MediaStatus = initialMediaStatus;
   const calls: Array<{ url: string; method: string }> = [];
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -48,6 +56,14 @@ async function openCanonical(page: Page, doi: string, { figure1 = false, imageFa
         });
         return;
       }
+      if (url.pathname === '/media-index.json' && initialMediaStatus !== 'available') {
+        calls.push({ url: url.href, method });
+        await route.fulfill({
+          status: 200, contentType: 'application/json',
+          body: JSON.stringify({ version: 2, generatedAt: 1, items: {} }),
+        });
+        return;
+      }
       if (url.pathname.startsWith('/api/')) {
         calls.push({ url: url.href, method });
         await route.fulfill({ status: 404, body: 'Gallery is static Pages, not the media API' });
@@ -73,14 +89,20 @@ async function openCanonical(page: Page, doi: string, { figure1 = false, imageFa
       }
       if (url.pathname === '/api/media/batch' && method === 'POST') {
         calls.push({ url: url.href, method });
+        if (mediaStatus === 'network-error') {
+          await route.fulfill({ status: 503, headers, contentType: 'application/json',
+            body: JSON.stringify({ error: 'upstream_media_unavailable' }) });
+          return;
+        }
         const requested = JSON.parse(request.postData() || '{}').dois || [];
-        const found = requested.includes(doi) ? [{
+        const found = requested.includes(doi) && mediaStatus !== 'incomplete' ? [{
           doi,
-          toc: figure1 ? {
-            available: true, imageUrl: API + '/media/original.png',
-            reason: 'figure1_fallback',
-            primary: { kind: 'figure1', label: 'Figure 1', imageUrl: API + '/media/original.png' },
-          } : { available: true, imageUrl: API + '/media/original.png', reason: 'imported' },
+          toc: mediaStatus === 'missing' ? { available: false, doi, reason: 'cache_miss' } :
+            figure1 ? {
+              available: true, imageUrl: API + '/media/original.png',
+              reason: 'figure1_fallback',
+              primary: { kind: 'figure1', label: 'Figure 1', imageUrl: API + '/media/original.png' },
+            } : { available: true, imageUrl: API + '/media/original.png', reason: 'imported' },
           figures: { available: false, doi, figures: [] },
         }] : [];
         await route.fulfill({
@@ -146,7 +168,11 @@ async function openCanonical(page: Page, doi: string, { figure1 = false, imageFa
   }, doi);
   const card = page.locator('[data-gallery-media-test] .card[data-doi="' + doi + '"]').first();
   await expect(card).toBeVisible({ timeout: 10000 });
-  return { card, calls, errors, restoreImage: () => { imageUnavailable = false; } };
+  return {
+    card, calls, errors,
+    restoreImage: () => { imageUnavailable = false; },
+    setMediaStatus: (next: MediaStatus) => { mediaStatus = next; },
+  };
 }
 
 for (const [doi, figure1] of [[OFFICIAL, false], [SCIENCE, true]] as const) {
@@ -186,5 +212,56 @@ test('corrected Angew media from live API overrides the previously published wro
   await expect(img).toHaveAttribute('src', API + '/media/original.png');
   expect(fixture.calls.filter(row => row.url === GALLERY + '/media-index.json').length).toBe(1);
   expect(fixture.calls.some(row => row.url === API + '/api/media/batch' && row.method === 'POST')).toBe(true);
+  expect(fixture.errors).toEqual([]);
+});
+
+for (const doi of RSC_MISSING) {
+  test('RSC missing original ' + doi + ' is pending rather than falsely reporting service failure', async ({ page }) => {
+    test.setTimeout(90000);
+    const fixture = await openCanonical(page, doi, { initialMediaStatus: 'missing' });
+    const slot = fixture.card.locator('.toc-slot');
+    await expect(slot).toHaveAttribute('data-state', 'not-yet-available', { timeout: 25000 });
+    await expect(slot.locator('.toc-retry')).toHaveCount(0);
+    await expect(slot).toContainText(/原始主图待补齐|Original graphic pending/);
+    expect(fixture.calls.some(row => row.url === API + '/api/media/batch')).toBe(true);
+    expect(fixture.errors).toEqual([]);
+  });
+}
+
+test('network failure -> confirmed cache miss -> newly uploaded TOC restores the same visible card', async ({ page }) => {
+  test.setTimeout(90000);
+  const doi = RSC_MISSING[0];
+  const fixture = await openCanonical(page, doi, { initialMediaStatus: 'network-error' });
+  const slot = fixture.card.locator('.toc-slot');
+  const retry = slot.locator('.toc-retry');
+  await expect(retry).toBeVisible({ timeout: 25000 });
+  await expect(retry).toContainText(/主图服务暂不可用|Graphic service unavailable/);
+  expect(fixture.calls.some(row => row.url === API + '/api/media/batch')).toBe(true);
+
+  fixture.setMediaStatus('missing');
+  await retry.click();
+  await expect(slot).toHaveAttribute('data-state', 'not-yet-available', { timeout: 25000 });
+  await expect(slot.locator('.toc-retry')).toHaveCount(0);
+  await expect(slot).toContainText(/原始主图待补齐|Original graphic pending/);
+
+  fixture.setMediaStatus('available');
+  await page.evaluate(target => {
+    window.dispatchEvent(new CustomEvent('gallery-assets-updated', { detail: { doi: target } }));
+  }, doi);
+  const img = slot.locator('[data-state="done"] img.toc-image, img.toc-image');
+  await expect(img).toBeVisible({ timeout: 25000 });
+  await expect.poll(async () => img.evaluate(node => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  await expect(slot.locator('.toc-retry')).toHaveCount(0);
+  expect(fixture.calls.filter(row => row.url === API + '/api/media/batch').length).toBeGreaterThanOrEqual(3);
+  expect(fixture.errors).toEqual([]);
+});
+
+test('an incomplete live response is not proof that a missing TOC is pending', async ({ page }) => {
+  test.setTimeout(90000);
+  const fixture = await openCanonical(page, RSC_MISSING[1], { initialMediaStatus: 'incomplete' });
+  const slot = fixture.card.locator('.toc-slot');
+  await expect(slot.locator('.toc-retry')).toBeVisible({ timeout: 25000 });
+  await expect(slot).not.toHaveAttribute('data-state', 'not-yet-available');
+  await expect(slot.locator('.toc-pending-status')).toHaveCount(0);
   expect(fixture.errors).toEqual([]);
 });
