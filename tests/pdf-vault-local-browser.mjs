@@ -143,7 +143,7 @@ async function pageWaitNoQueue(page) {
 }
 async function queueAdd(page) { await by(page, 'queue-doi').fill(DOI); await by(page, 'queue-add').click(); await waitQueueStatus(page, 'success'); }
 
-async function trackedContext({ width = 1280, holdAuth = false, folderPicker = true, queue = queueFixture(), indexedDb = true, authResponses = [] } = {}) {
+async function trackedContext({ width = 1280, holdAuth = false, folderPicker = true, queue = queueFixture(), indexedDb = true, stallIndexedDb = false, authResponses = [] } = {}) {
   const context = await browser.newContext({ viewport: { width, height: 900 }, acceptDownloads: true });
   contexts.add(context); context.setDefaultTimeout(7000); context.setDefaultNavigationTimeout(12000);
   await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
@@ -204,7 +204,7 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       localStorage.setItem(sessionKey, token);
       localStorage.setItem('gallery-local-vault-fixture-seeded', '1');
     }
-    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false };
+    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false, stallIndexedDb };
     const nativeFetch = window.fetch.bind(window);
     window.fetch = (input, init) => {
       const pathname = new URL(typeof input === 'string' ? input : input.url, location.href).pathname;
@@ -224,6 +224,18 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
     };
     if (!folderPicker) window.showDirectoryPicker = undefined;
     if (!indexedDb) Object.defineProperty(window, 'indexedDB', { value: undefined, configurable: true });
+    else if (stallIndexedDb) {
+      // Synthetic IDB open request whose callbacks never fire. Simulates a
+      // blocked/unresponsive storage service without touching real user data.
+      const nativeIndexedDb = window.indexedDB;
+      Object.defineProperty(window, 'indexedDB', {
+        configurable: true, value: {
+          open(...args) {
+            return window.__pdfVaultFixture.stallIndexedDb ? {} : nativeIndexedDb.open(...args);
+          },
+        },
+      });
+    }
     const prototype = FileSystemDirectoryHandle.prototype;
     const query = prototype.queryPermission, request = prototype.requestPermission;
     prototype.queryPermission = function (options) { return (this.name === 'picked-directory' || this.name.startsWith('library-')) ? Promise.resolve(window.__pdfVaultFixture.permission) : query.call(this, options); };
@@ -237,7 +249,7 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       }
       return createWritable.call(this, options);
     };
-  }, { origin: base, sessionKey: SESSION_KEY, token: TOKENS.a, folderPicker, indexedDb });
+  }, { origin: base, sessionKey: SESSION_KEY, token: TOKENS.a, folderPicker, indexedDb, stallIndexedDb });
   return { context, state };
 }
 
@@ -427,6 +439,26 @@ try {
     await waitStatus(page, 'success');
     await openFirst(page);
     await assertRendered(page);
+  });
+  await test('confirmed account never stays checking when IndexedDB open never responds', async () => {
+    const { context, state } = await trackedContext({ stallIndexedDb: true });
+    const page = await pageFor(context, { authenticated: false });
+    await page.waitForFunction(() => document.documentElement.dataset.pdfVaultAuth === 'loading-local');
+    assert.match(await by(page, 'account').innerText(), /账号已验证/);
+    await page.waitForFunction(() => document.documentElement.dataset.pdfVaultAuth === 'storage-error', null, { timeout: 15_000 });
+    assert.match(await by(page, 'status').innerText(), /本地文献索引|8 秒/);
+    assert.match(await by(page, 'account').innerText(), /账号已验证/);
+    assert.equal(await page.evaluate(key => localStorage.getItem(key), SESSION_KEY), TOKENS.a, 'session is never discarded');
+    assert.equal(await page.locator('#sign-in-link').isVisible(), false, 'local storage stall must not request sign in');
+    assert.equal(await page.getByTestId('pdf-vault-session-refresh').isEnabled(), true, 'manual recovery must be available');
+    assert.equal(await copyRows(page).count(), 0, 'a stalled database does not invent saved PDF records');
+    const apiCalls = state.authCalls.length;
+    await page.evaluate(() => { window.__pdfVaultFixture.stallIndexedDb = false; });
+    await by(page, 'session-refresh').click();
+    await waitAccount(page, 'a');
+    assert.equal(await page.evaluate(() => document.documentElement.dataset.pdfVaultAuth), 'authenticated');
+    assert.ok(state.authCalls.length > apiCalls, 'retry revalidates the account, not a cached identity');
+    assert.equal(await page.evaluate(key => localStorage.getItem(key), SESSION_KEY), TOKENS.a);
   });
   await test('real OPFS import is read back and reopened after reload', async () => {
     const { context } = await trackedContext(); const page = await pageFor(context); await importGood(page);
