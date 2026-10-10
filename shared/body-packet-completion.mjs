@@ -2,11 +2,20 @@
 // A separate, verified primary visual plus per-asset validation is mandatory.
 export function completedBodyPacket(row) {
   if (!row || row.final !== true || row.captureVersion !== '6.2.20'
-    || !/^[a-z0-9-]{16,80}$/i.test(String(row.jobId || ''))
-    || !String(row.mediaNeed || '').includes('figures')) return false;
+    || !/^[a-z0-9-]{16,80}$/i.test(String(row.jobId || ''))) return false;
+  const need=String(row.mediaNeed||'');
+  // Oct-1+ publisher visits may be triggered by TOC/PDF, with genuine body
+  // figures collected opportunistically in the SAME DOI-bound visit.
+  const companion=!need.includes('figures');
+  if(companion&&!['toc','pdf','private_pdf_gap','toc+pdf','pdf_gap'].includes(need))return false;
   const discovered = Number(row.figuresDiscovered);
   const stored = Number(row.figuresStored);
   if (!Number.isInteger(discovered) || discovered < 1 || stored !== discovered) return false;
+  if(companion){
+    const labels=Array.isArray(row.figureLabels)?row.figureLabels.map(String):[];
+    if(labels.length!==discovered||new Set(labels).size!==discovered
+      ||!['stored','already_available'].includes(String(row.tocStatus||'')))return false;
+  }
   if (row.status === 'success') return true;
   // Only an independent, explicitly identified PDF HTTP 403 can turn an
   // otherwise complete capture into an acceptable partial body packet.
