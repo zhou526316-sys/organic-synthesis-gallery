@@ -7,6 +7,13 @@ const ACCESS_TTL_MS = 5 * 60 * 1000;
 const VIEW_ABSOLUTE_TTL_MS = 90 * 60 * 1000;
 const VIEW_COOKIE_IDLE_SECONDS = 60 * 60;
 const FAST_TICKET_VERSION = 'v2';
+// Live authorization must not be held hostage by optional account metadata
+// writes or an R2 prefix read. A deferred prefix is always verified by the
+// authenticated 206 browser preflight before file bytes are trusted.
+const PDF_OPEN_R2_PROBE_BUDGET_MS = 1800;
+const PDF_OPEN_DB_PHASE_BUDGET_MS = 4500;
+const PDF_OPEN_DB_TOTAL_BUDGET_MS = 9000;
+const PDF_OPEN_DIAGNOSTIC_UNTIL = Date.parse('2026-10-12T18:00:00+08:00');
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
 
@@ -198,12 +205,37 @@ export async function privatePdfStatus(request, env) {
   return { status: 200, body: { enabled: true, authenticated: true, entitled: true, available: Boolean(doc && env.PDF_PRIVATE), doi,
     document: doc ? { id: doc.id, versionKind: doc.version_kind, byteLength: Number(doc.byte_length || 0), capturedAt: Number(doc.captured_at || 0), processingState: doc.processing_state || 'raw' } : null } };
 }
+async function boundedPrivatePdfHeaderProbe(env, doc, measure) {
+  // Check genuine R2 bytes where quickly available. If the storage operation
+  // stalls, issue ONLY an unverified ticket: the browser must independently
+  // validate GET Range 0-15, HTTP 206, content-range and the %PDF- signature.
+  // This is not storage evidence and must never be labeled headerVerified.
+  const read = async () => {
+    try {
+      const object = await measure('r2_get', () =>
+        env.PDF_PRIVATE.get(doc.r2_key, { range: { offset: 0, length: 16 } }));
+      if (!object || Number(object.size) !== Number(doc.byte_length)) return 'unavailable';
+      const first = new Uint8Array(await measure('r2_body', () => object.arrayBuffer()));
+      return first.length === 16 &&
+        String.fromCharCode(...first.subarray(0, 5)) === '%PDF-' ? 'verified' : 'invalid';
+    } catch { return 'storage_error'; }
+  };
+  let timer;
+  try {
+    return await Promise.race([
+      read(),
+      new Promise(resolve => { timer = setTimeout(
+        () => resolve('deferred'), PDF_OPEN_R2_PROBE_BUDGET_MS); }),
+    ]);
+  } finally { clearTimeout(timer); }
+}
+
 export async function openPrivatePdf(request, env) {
   // Short-lived diagnostics, gated by the canonical production deployment.
   // Never expose tokens, user IDs, R2 object keys, DOI, raw database rows,
   // request headers, or signed URLs in either Server-Timing or slow logs.
   const diagnose = String(env?.PRIVATE_PDF_OPEN_TIMING_ENABLED || '') === '1' &&
-    Date.now() < Date.parse('2026-10-10T00:00:00+08:00');
+    Date.now() < PDF_OPEN_DIAGNOSTIC_UNTIL;
   const started = Date.now();
   const timings = Object.create(null);
   let entitled = false;
@@ -217,7 +249,8 @@ export async function openPrivatePdf(request, env) {
     if (!diagnose || !entitled) return { status, body };
     const total = Math.max(0, Math.min(600000, Date.now() - started));
     const measures = { ...timings, total };
-    const allowed = ['session','capability','document','r2_get','r2_body','ticket_create','ticket_check','legacy_write','total'];
+    const allowed = ['session','capability','document','r2_get','r2_body','r2_defer',
+      'db_timeout','ticket_create','ticket_check','legacy_write','total'];
     const serverTiming = allowed.filter(name => Number.isFinite(measures[name]))
       .map(name => `${name};dur=${Math.round(measures[name])}`).join(', ');
     if (total >= 2500) {
@@ -242,32 +275,57 @@ export async function openPrivatePdf(request, env) {
   if (!enabled(env, 'PRIVATE_PDF_READ_ENABLED') || !env.PDF_PRIVATE) {
     return reply(200, { available: false, doi, reason: 'private_pdf_unavailable' });
   }
-  const userId = await measure('session', () => authenticatedSessionUserId(request, env));
+  // A verified session lookup and READ capability remain mandatory. Limit
+  // serial D1 reads under a single 9s budget so a stalled lookup yields a
+  // distinct, fail-closed 503 rather than hanging until the browser's 15s cap.
+  // Device last-seen writes are nonessential here; regular session endpoints
+  // still perform them.
+  const dbDeadline = Date.now() + PDF_OPEN_DB_TOTAL_BUDGET_MS;
+  const dbPhase = async (label, operation) => {
+    const budget = Math.max(1, Math.min(
+      PDF_OPEN_DB_PHASE_BUDGET_MS, dbDeadline - Date.now()));
+    let timer;
+    try {
+      return await Promise.race([
+        measure(label, operation),
+        new Promise((_, reject) => { timer = setTimeout(
+          () => reject(new Error('pdf_open_db_phase_timeout')), budget); }),
+      ]);
+    } catch (error) {
+      if (diagnose && error?.message === 'pdf_open_db_phase_timeout')
+        timings.db_timeout = budget;
+      throw error;
+    } finally { clearTimeout(timer); }
+  };
+  let userId;
+  try {
+    userId = await dbPhase('session', () =>
+      authenticatedSessionUserId(request, env, {touch:false}));
+  } catch { return reply(503, { error: 'private_pdf_authorization_unavailable' }); }
   if (!userId) return reply(401, { error: 'not_authenticated' });
-  entitled = await measure('capability', () => hasCapability(env, userId, READ_CAPABILITY));
+  try {
+    entitled = await dbPhase('capability', () =>
+      hasCapability(env, userId, READ_CAPABILITY));
+  } catch { return reply(503, { error: 'private_pdf_authorization_unavailable' }); }
   if (!entitled) return reply(403, { error: 'private_pdf_not_entitled' });
 
-  const doc = await measure('document', () => selectedDocument(env, doi));
+  let doc;
+  try { doc = await dbPhase('document', () => selectedDocument(env, doi)); }
+  catch { return reply(503, { error: 'private_pdf_document_lookup_unavailable' }); }
   if (!doc) return reply(200, { available: false, doi, reason: 'pdf_not_stored' });
   if (!safePrivateR2Key(doc.r2_key) ||
       !Number.isSafeInteger(Number(doc.byte_length)) || Number(doc.byte_length) < 8) {
     return reply(200, { available: false, doi, reason: 'pdf_storage_metadata_invalid' });
   }
-  let firstBytes;
-  try {
-    const object = await measure('r2_get', () =>
-      env.PDF_PRIVATE.get(doc.r2_key, { range: { offset: 0, length: 16 } }));
-    if (!object || Number(object.size) !== Number(doc.byte_length)) {
-      return reply(200, { available: false, doi, reason: 'pdf_object_unavailable' });
-    }
-    firstBytes = new Uint8Array(await measure('r2_body', () => object.arrayBuffer()));
-  } catch {
-    return reply(503, { error: 'private_pdf_storage_unavailable' });
-  }
-  if (firstBytes.length !== 16 ||
-      String.fromCharCode(...firstBytes.subarray(0, 5)) !== '%PDF-') {
+  const headerState = await boundedPrivatePdfHeaderProbe(env, doc, measure);
+  if (headerState === 'unavailable')
+    return reply(200, { available: false, doi, reason: 'pdf_object_unavailable' });
+  if (headerState === 'invalid')
     return reply(200, { available: false, doi, reason: 'pdf_header_invalid' });
-  }
+  if (headerState === 'storage_error')
+    return reply(503, { error: 'private_pdf_storage_unavailable' });
+  if (headerState === 'deferred' && diagnose)
+    timings.r2_defer = PDF_OPEN_R2_PROBE_BUDGET_MS;
   const now = Date.now(), expiresAt = now + ACCESS_TTL_MS;
   const loginBearer = String(request.headers.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
   if (!loginBearer) return reply(401, { error: 'not_authenticated' });
@@ -302,7 +360,7 @@ export async function openPrivatePdf(request, env) {
     // R2 object keys, source URLs and private file contents stay hidden.
     contentHash: /^[a-f0-9]{64}$/i.test(String(doc.content_hash || ''))
       ? String(doc.content_hash).toLowerCase() : null,
-    headerVerified: ticketMode === 'stateless-v2' });
+    headerVerified: ticketMode === 'stateless-v2' && headerState === 'verified' });
 }
 function parseRange(header, size) {
   const match = /^bytes=(\d*)-(\d*)$/.exec(String(header || '').trim());
