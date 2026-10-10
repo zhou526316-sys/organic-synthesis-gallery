@@ -121,10 +121,12 @@ test('Nature public Abstract-only stream stops before downstream article section
   const fetchImpl=async(url,options)=>{
     assert.equal(url,publisherMetadataEntryUrl(DOI));
     assert.equal(options.redirect,'manual');
+    // Disable eager stream prefetch; this measures reader consumption rather
+    // than producer scheduling beyond the Abstract boundary.
     const stream=new ReadableStream({pull(controller){
       if(emitted>=chunks.length){controller.close();return}
       controller.enqueue(new TextEncoder().encode(chunks[emitted++]));
-    }});
+    }},{highWaterMark:0});
     return new Response(stream,{status:200,headers:{'content-type':'text/html'}});
   };
   assert.equal(await fetchPublisherMetadataAbstract(DOI,{fetchImpl}),TEXT);
