@@ -1,0 +1,136 @@
+{
+  "schemaVersion": "gallery-current-evidence-summary-recheck-v1",
+  "sourceAuditRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38066508914",
+  "sourceCatalogId": "f5853af95d5ea395cbe7e529a747ce75701eb0a22aad023c8e907f6b2fdf0c6d",
+  "auditedApprovedRecords": 443,
+  "initialLiveReviewed": 345,
+  "changedSourceReviewCount": 20,
+  "sameTextMetadataRepackagingCandidates": 78,
+  "sourceTextChangedAndPacketChanged": true,
+  "procedure": "Read the existing current licensed Evidence v2 through the authorized handoff, independently audit each new source, then publish an updated approved summary through existing review governance. Never modify an old hash to approve the prior text; never obtain historical PDF or text outside media policy.",
+  "note": "This list is a frozen read-only triage from the full 2026-10-10 audit. Recheck the live DOI/source hashes before authorizing any review or publication; current active membership is not implied.",
+  "doNotModifyFormalAdmission": true,
+  "doNotRecaptureHistoricalPDF": true,
+  "rows": [
+    {
+      "doi": "10.1021/jacs.6c07021",
+      "journal": "JACS",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.1021/jacs.6c08663",
+      "journal": "JACS",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.1021/jacs.6c12391",
+      "journal": "JACS",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.1021/jacs.6c13515",
+      "journal": "JACS",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.1021/jacs.6c13713",
+      "journal": "JACS",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.1021/jacs.6c13760",
+      "journal": "JACS",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.1021/jacs.6c15393",
+      "journal": "JACS",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.1021/jacs.6c15694",
+      "journal": "JACS",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.1038/s41557-026-02206-6",
+      "journal": "Nature Chemistry",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.1038/s41557-026-02212-8",
+      "journal": "Nature Chemistry",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.1038/s41557-026-02214-6",
+      "journal": "Nature Chemistry",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.1039/d6gc03748h",
+      "journal": "Green Chemistry",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.1126/science.aef5175",
+      "journal": "Science",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202507094",
+      "journal": "CCS Chemistry",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202507282",
+      "journal": "CCS Chemistry",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607330",
+      "journal": "CCS Chemistry",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607499",
+      "journal": "CCS Chemistry",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607611",
+      "journal": "CCS Chemistry",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607659",
+      "journal": "CCS Chemistry",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607682",
+      "journal": "CCS Chemistry",
+      "state": "current_scientific_source_hash_changed",
+      "requiredAction": "two_pass_re_review_against_current_evidence_v2"
+    }
+  ]
+}
