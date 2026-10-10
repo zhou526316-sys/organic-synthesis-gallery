@@ -35,7 +35,16 @@ export class UserSearchController {
     this.popover?.remove();
     this.popover = null;
   };
-  private readonly onSearchFocus = (): void => { this.renderSuggestions(); };
+  private readonly onSearchFocus = (): void => {
+    // A pending blur-dismiss timer belongs to the previous focus cycle.
+    // Cancel it before rendering suggestions for the newly focused input.
+    // Otherwise a fast outside-click and re-focus can close a fresh popup.
+    if (this.blurDismissTimer !== null) {
+      window.clearTimeout(this.blurDismissTimer);
+      this.blurDismissTimer = null;
+    }
+    this.renderSuggestions();
+  };
   private readonly onSearchChange = (): void => { store.addHistory(this.fullQuery); };
   private readonly onSearchBlur = (): void => {
     if (this.blurDismissTimer !== null) window.clearTimeout(this.blurDismissTimer);
