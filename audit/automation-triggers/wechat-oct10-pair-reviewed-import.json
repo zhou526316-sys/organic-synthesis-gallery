@@ -1,5 +1,5 @@
 {
-  "requestId": "wechat-2026-10-10-anie3306470-qiu-naturesyn-dual-r1-reviewed-import",
+  "requestId": "wechat-2026-10-10-anie3306470-qiu-naturesyn-dual-r1-reviewed-import-source-qa2",
   "requestedAt": "2026-10-10T10:02:00+08:00",
   "action": "review_and_import_oct10_daily_pair",
   "revision": "2026-10-10-r1",
@@ -7,8 +7,8 @@
     "10.1002/anie.3306470",
     "10.1038/s44160-026-01128-y"
   ],
-  "packageUrl": "https://at.adobe.com/0U6O0JAB6FS6F1rb",
-  "packageSha256": "a657d3f7b123a2acc3e8d69b4d7dfe463446ab49c6797c883e6387408746a4cc",
+  "packageUrl": "https://at.adobe.com/dbOTS9gk4G9A7TsZ",
+  "packageSha256": "3c38fba8b428b2b6eaf290e2cb420f173c6698e7a87c24e8ad0de2fa21a642c7",
   "oldRetroManifestBlobSha": "930d83111be384940f6dd9cc6f9bed79eeba031e",
   "oldRetroGateBlobSha": "4dff349df8f90a300522e702e9f86644cdd1962b",
   "publicationSlot": "2026-10-10T08:00:00+08:00",
@@ -17,5 +17,5 @@
   "draftOnly": true,
   "publicSendAuthorized": false,
   "nextStep": "one controlled sync_daily_draft and draft/get after this independent review import has actually passed",
-  "note": "User specifically selected today Angew 10.1002/anie.3306470 and retrospective Nature Synthesis 10.1038/s44160-026-01128-y. 18 exact source Angew Scheme/SI images, native title safe original graphic cover; retro 31 original figures same pixels, fix Chinese surname 邱友爱 to 仇友爱 in title, text and bottom cover without molecular redraw. Do not modify Gallery's 08:00 release. No public send."
+  "note": "Second source-only import attempt. Fixed non-scientific audit wording preserving corrected surname 仇友爱 and improved the SI Fig. S12 source original vector rendering via LibreOffice-based PDF to preserve COMPLETE UV-Vis traces rather than a truncated EMF export. All original chemistry source figures remain unchanged and verified. No draft/send until review gate passes."
 }
