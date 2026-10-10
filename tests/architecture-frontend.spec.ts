@@ -785,8 +785,12 @@ for (const width of [390, 1280]) {
     const search = page.locator('#search');
     const popover = page.locator('.user-search-popover');
     const openSuggestions = async (): Promise<void> => {
+      // Use an explicit focus cycle when reopening after an outside click.
+      // WebKit may defer focus while the previous blur callback is pending.
+      await search.focus();
       await search.fill('');
       await search.fill(query);
+      await expect(search).toBeFocused();
       await expect(popover.locator('button').first()).toBeVisible({ timeout: 10000 });
     };
 
