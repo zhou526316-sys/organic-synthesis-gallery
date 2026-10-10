@@ -17,6 +17,9 @@ on:
       - 'pdf/**'
       - 'src/private-pdf-reader.mjs'
       - 'src/pdf-tencent-file-failover.mjs'
+      - 'src/pdf-tencent-owner-priority.mjs'
+      - 'public/pdf-gateway-routing.json'
+      - 'tests/pdf-tencent-owner-priority.test.mjs'
       - 'tests/private-pdf-access-browser.mjs'
       - 'tests/pdf-tencent-file-failover.test.mjs'
       - '.github/workflows/deploy-worker-frontend.yml'
@@ -35,6 +38,9 @@ on:
       - 'pdf/**'
       - 'src/private-pdf-reader.mjs'
       - 'src/pdf-tencent-file-failover.mjs'
+      - 'src/pdf-tencent-owner-priority.mjs'
+      - 'public/pdf-gateway-routing.json'
+      - 'tests/pdf-tencent-owner-priority.test.mjs'
       - 'tests/private-pdf-access-browser.mjs'
       - 'tests/pdf-tencent-file-failover.test.mjs'
       - '.github/workflows/deploy-worker-frontend.yml'
@@ -101,6 +107,8 @@ jobs:
           node --check src/pdf-tencent-file-failover.mjs
           node cloudflare/worker/scripts/test-private-pdf.mjs
           node tests/pdf-tencent-file-failover.test.mjs
+          node tests/pdf-tencent-owner-priority.test.mjs
+          node --input-type=module -e "import fs from 'node:fs';const x=JSON.parse(fs.readFileSync('public/pdf-gateway-routing.json','utf8'));if(x.enabled!==false||x.manualCanary!==true||x.ownerPriorityPilot!==true||x.origin!=='https://pdf.gczhouwld.com')process.exit(1)"
       - name: Validate full schema and isolated migration from scratch
         run: |
           sqlite3 /tmp/private-pdf-schema.db < cloudflare/schema.sql
