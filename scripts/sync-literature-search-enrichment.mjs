@@ -77,7 +77,7 @@ function crossrefAbstract(xml) {
 async function openalexBatch(dois){
   const url=new URL('https://api.openalex.org/works');
   url.searchParams.set('filter','doi:'+dois.map(doi=>'https://doi.org/'+doi).join('|'));
-  url.searchParams.set('per_page','50');
+  url.searchParams.set('per-page','50');
   url.searchParams.set('select','doi,abstract_inverted_index');
   if(OPENALEX_KEY)url.searchParams.set('api_key',OPENALEX_KEY);
   const data=await request(url,{retries:1});
