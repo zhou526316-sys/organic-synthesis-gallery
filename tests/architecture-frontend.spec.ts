@@ -422,10 +422,14 @@ test('active D1 catalog view keeps all-time search server-paged and avoids stati
       expect(viewRequests.at(-1).cursor).toBe(`fixture:${RESULT_WINDOW_SIZE * 2}`);
     }
 
+    const readsBeforeReturn = viewRequests.length;
     await page.locator('#resultPageJumpInput').fill('1');
     await page.locator('#resultPageJumpButton').click();
     await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )1\//);
-    expect(viewRequests.at(-1).cursor || '').toBe('');
+    await expect(page.locator('#gallery > .card').first()).toHaveAttribute('data-doi', firstDoi);
+    // Page one was already validated. Returning within the bounded cache TTL
+    // should not need another API request or manufacture a stale page-three cursor.
+    expect(viewRequests.length).toBe(readsBeforeReturn);
   }
 });
 
@@ -715,19 +719,20 @@ test('changing only-new and journal filters refreshes the indexed query and allo
   expect(newestRequest.addedDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   await expect(page.locator('#clearSearchScope')).toBeVisible();
   await page.locator('#clearSearchScope').click();
-  await expect.poll(() => requests.filter(x => x.query === 'LMCT' && !x.addedDate).length, { timeout: 30000 })
-    .toBeGreaterThanOrEqual(2);
+  // Clearing only-new restores the previously verified unfiltered query.
+  // It may be served from the short-lived search cache without a fresh POST.
   await expect(page.locator('#newOnly')).not.toBeChecked();
   await expect(page.locator('#resultCount')).toHaveText(String(data.memberCount));
+  await expect(page.locator('#gallery .card').first()).toHaveAttribute('data-doi', data.indexedItems[0].doi);
   await page.locator('.journal-picker summary').click();
   await page.locator(`input[data-journal-option][value="${journal}"]`).check();
   await expect.poll(() => requests.filter(x => x.query === 'LMCT' && x.selectedJournals?.includes(journal)).length, { timeout: 30000 })
     .toBeGreaterThan(0);
   await expect(page.locator('#clearSearchScope')).toBeVisible();
   await page.locator('#clearSearchScope').click();
-  await expect.poll(() => requests.filter(x => x.query === 'LMCT' && x.selectedJournals?.length === 0).length, { timeout: 30000 })
-    .toBeGreaterThanOrEqual(3);
   await expect(page.locator('#resultCount')).toHaveText(String(data.memberCount));
+  await expect(page.locator('#gallery .card').first()).toHaveAttribute('data-doi', data.indexedItems[0].doi);
+  await expect(page.locator(`input[data-journal-option][value="${journal}"]`)).not.toBeChecked();
 });
 
 test('search entered after most-read ordering explicitly switches to indexed latest search', async ({ page }) => {
