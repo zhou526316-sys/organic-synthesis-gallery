@@ -1106,7 +1106,7 @@ async function hydrateMediaBatch(): Promise<void> {
         tocCache.set(key, { result: item.toc, fetchedAt: Date.now() });
         figureCache.set(key, { result: item.figures, fetchedAt: Date.now() });
       } else {
-        mediaCheckedAt.delete(key);
+        mediaCheckedAt.set(key, Date.now()); // 20s throttle; manual retry overrides this
         if (item.toc?.available && item.toc.imageUrl)
           tocCache.set(key, { result: item.toc, fetchedAt: Date.now() });
         else tocCache.delete(key);
@@ -1125,6 +1125,9 @@ async function hydrateMediaBatch(): Promise<void> {
     }
     // Incomplete responses do not prove that a DOI has no graphic. Keep the
     // service-retry path, but never overwrite a previously displayed image.
+    if (liveMediaUnavailable) {
+      for (const key of requested) mediaCheckedAt.set(key, Date.now());
+    }
     for (const target of targets) {
       const key = target.doi.toLowerCase();
       if (!requested.has(key)) continue;
@@ -1138,7 +1141,7 @@ async function hydrateMediaBatch(): Promise<void> {
     for (const target of targets) {
       if (!dois.includes(target.doi)) continue;
       const key = target.doi.toLowerCase();
-      mediaCheckedAt.delete(key);
+      mediaCheckedAt.set(key, Date.now()); // avoid retry storms on scroll
       if (!tocCache.get(key)?.result.available) tocCache.delete(key);
       renderTocUnavailable(target.toc, 'service');
     }
