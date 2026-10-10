@@ -217,6 +217,56 @@ test('finalize rejects equal-count FTS corruption when DOI sets differ',async t=
   assert.equal(finalized.body.orphanFtsRows,0);
 });
 
+test('Unicode search terms paginate without btoa errors and preserve cursor scope',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
+  const g=generation({recordCount:3});
+  const axial=[
+    row('10.1234/axial-a','Axial asymmetric catalysis A',
+      {titleZh:'轴手性不对称催化 A',firstOnlineDate:'2026-10-07'}),
+    row('10.1234/axial-b','Axial asymmetric catalysis B',
+      {titleZh:'轴手性不对称催化 B',firstOnlineDate:'2026-10-06'}),
+    row('10.1234/axial-c','Axial asymmetric catalysis C',
+      {titleZh:'轴手性不对称催化 C',firstOnlineDate:'2026-10-05'}),
+  ];
+  await importLiteratureCatalogIndexBatch(env,{generation:g,rows:axial});
+  const finalized=await finalizeLiteratureCatalogGeneration(env,g.catalogId);
+  assert.equal(finalized.body.ready,true);
+
+  const view={catalogId:g.catalogId,query:'轴手性',limit:1,sort:'newest'};
+  const a=await queryLiteratureCatalogView(env,view);
+  assert.equal(a.status,200);assert.equal(a.body.matched,3);
+  assert.equal(a.body.hasMore,true);
+  assert.equal(a.body.items.length,1);
+  assert.ok(a.body.nextCursor);
+  const b=await queryLiteratureCatalogView(env,{...view,cursor:a.body.nextCursor});
+  assert.equal(b.status,200);assert.equal(b.body.matched,3);
+  assert.notEqual(a.body.items[0].doi,b.body.items[0].doi);
+  const c=await queryLiteratureCatalogView(env,{...view,cursor:b.body.nextCursor});
+  assert.equal(c.status,200);assert.equal(c.body.hasMore,false);
+  assert.deepEqual([a,b,c].map(value=>value.body.items[0].doi),
+    axial.map(value=>value.doi));
+  const wrong=await queryLiteratureCatalogView(env,{
+    ...view,query:'手性磷酸',cursor:a.body.nextCursor,
+  });
+  assert.equal(wrong.status,400);
+  assert.equal(wrong.body.error,'literature_catalog_view_cursor_scope_mismatch');
+  const invalid=await queryLiteratureCatalogView(env,{...view,cursor:'not-base64url'});
+  assert.equal(invalid.status,400);
+  assert.equal(invalid.body.error,'literature_catalog_view_cursor_invalid');
+
+  const legacyA=await queryLiteratureCatalogIndex(env,{
+    catalogId:g.catalogId,query:'轴手性',limit:1,
+  });
+  assert.equal(legacyA.status,200);
+  assert.equal(legacyA.body.hasMore,true);
+  const legacyB=await queryLiteratureCatalogIndex(env,{
+    catalogId:g.catalogId,query:'轴手性',limit:1,cursor:legacyA.body.nextCursor,
+  });
+  assert.equal(legacyB.status,200);
+  assert.notEqual(legacyA.body.items[0].doi,legacyB.body.items[0].doi);
+});
+
 test('filtered view shadow preserves current frontend filters and bounded keyset paging',async t=>{
   const db=new D1();t.after(()=>db.close());
   const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
