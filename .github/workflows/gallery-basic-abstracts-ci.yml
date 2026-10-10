@@ -8,6 +8,9 @@ on:
       - 'cloudflare/worker/src/index.js'
       - 'cloudflare/worker/scripts/test-literature-search-enrichment.mjs'
       - 'src/user-ui/shared.ts'
+      - 'scripts/lib/publisher-abstract-metadata.mjs'
+      - 'scripts/sync-literature-search-enrichment.mjs'
+      - 'scripts/test-publisher-abstract-metadata.mjs'
       - 'src/user-ui/paper-actions.ts'
       - 'scripts/sync-literature-search-enrichment.mjs'
       - 'scripts/lib/publisher-abstract-metadata.mjs'
@@ -37,6 +40,11 @@ jobs:
           node --check cloudflare/worker/src/index.js
           node --check scripts/sync-literature-search-enrichment.mjs
           node --check scripts/lib/publisher-abstract-metadata.mjs
+      - name: Test publisher HEAD metadata acquisition safety
+        run: |
+          node --check scripts/lib/publisher-abstract-metadata.mjs
+          node --check scripts/sync-literature-search-enrichment.mjs
+          node --test scripts/test-publisher-abstract-metadata.mjs
       - name: Check DOI membership, source hash and all-time excerpt regression
         run: node --test cloudflare/worker/scripts/test-literature-search-enrichment.mjs
       - name: Verify protected publisher HEAD metadata parsing without body capture
