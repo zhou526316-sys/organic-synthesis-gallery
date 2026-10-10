@@ -796,9 +796,10 @@ for (const width of [390, 1280]) {
     };
 
     await openSuggestions();
-    // Keep the click near the input; jumping to the hero creates unrelated
-    // viewport movement during the suggestion-lifecycle test.
-    await page.locator('.resultline').click();
+    // Click the exposed upper-left viewport corner. This is a real pointer
+    // outside the fixed search popup, but cannot auto-scroll to a hidden
+    // element or hit the popup overlay itself.
+    await page.mouse.click(2, 2);
     await expect(popover).toHaveCount(0);
 
     await openSuggestions();
@@ -899,7 +900,7 @@ for (const width of [390, 1280]) {
     await search.fill('10');
     await search.fill('10.');
     await expect(popover.locator('button').first()).toBeVisible({ timeout: 10000 });
-    await page.locator('.resultline').click();
+    await page.mouse.click(2, 2);
     await expect(popover).toHaveCount(0);
   });
 }
