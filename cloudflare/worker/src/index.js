@@ -52,6 +52,7 @@ import {
 } from './literature-catalog-index.js';
 import { parseCatalogViewGetParams } from './literature-catalog-get-query.js';
 import { beginSearchEnrichment, importSearchEnrichment, finalizeSearchEnrichment, getSearchAbstract, getSearchEnrichmentCoverage, refreshSearchEnrichmentAbstracts } from './literature-search-enrichment.js';
+import { getBasicAbstractCoverage, importBasicAbstractReviews, listBasicAbstractReviewCandidates } from './literature-basic-abstracts.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus, userLibraryRowShadowEnabled } from './user-library-shadow.js';
 import {
@@ -417,6 +418,27 @@ async function handleApi(request, env, ctx) {
       catalogId:url.searchParams.get('catalogId')||'',doi:url.searchParams.get('doi')||'',
     }),cors);
   }
+  if (request.method === 'GET' && url.pathname === '/api/admin/literature-basic-abstracts/candidates') {
+    const authError=requireWriteAuthorization(request,env);
+    if(authError)return authError;
+    return resultResponse(await listBasicAbstractReviewCandidates(env,{
+      catalogId:url.searchParams.get('catalogId')||'',
+      afterDoi:url.searchParams.get('afterDoi')||'',
+      limit:url.searchParams.get('limit')||'8'
+    }),cors);
+  }
+  if (request.method === 'GET' && url.pathname === '/api/admin/literature-basic-abstracts/coverage') {
+    const authError=requireWriteAuthorization(request,env);
+    if(authError)return authError;
+    return resultResponse(await getBasicAbstractCoverage(env,{
+      catalogId:url.searchParams.get('catalogId')||''
+    }),cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/literature-basic-abstracts/import') {
+    const authError=requireWriteAuthorization(request,env);
+    if(authError)return authError;
+    return resultResponse(await importBasicAbstractReviews(env,await readJson(request)),cors);
+  }
   if (request.method === 'GET' && url.pathname === '/api/admin/literature-search-enrichment/coverage') {
     const authError=requireWriteAuthorization(request,env);
     if(authError) return authError;
@@ -601,7 +623,44 @@ async function handleApi(request, env, ctx) {
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
-    return resultResponse(await getArticleSummary(env, url.searchParams.get('doi')), cors);
+    const doi=url.searchParams.get('doi');
+    const deep=await getArticleSummary(env,doi);
+    if(deep.status===400||deep.body?.available===true)return resultResponse(deep,cors);
+    // A historical metadata-only paper has no R2 fulltext Evidence. Give it
+    // the verified abstract read path without weakening deep-summary hashes.
+    let basic=null;
+    try{basic=await getSearchAbstract(env,{doi});}
+    catch(error){console.warn('BASIC_ABSTRACT_FALLBACK_READ_FAILED',String(error?.message||error).slice(0,140));}
+    if(basic?.status===200){
+      const b=basic.body;
+      if(b.basicSummaryZh&&b.basicSummaryEn){
+        return resultResponse({status:200,body:{
+          doi:b.doi,available:true,state:'published',cached:true,
+          fulltextAvailable:deep.body?.fulltextAvailable===true,
+          evidenceAvailable:deep.body?.evidenceAvailable===true,
+          evidenceLevel:'abstract_only',source:'reviewed_metadata_abstract_v1',
+          zh:b.basicSummaryZh,en:b.basicSummaryEn,
+          generatedAt:Date.parse(b.basicSummaryReviewedAt)||0,
+          reviewedAt:Date.parse(b.basicSummaryReviewedAt)||0,
+          abstractSource:b.abstractSource,abstractExcerpt:b.abstractExcerpt,
+          abstractExcerptOnly:true,originalArticleUrl:b.originalArticleUrl,
+        }},cors);
+      }
+      if(b.abstractAvailable&&b.abstractExcerpt){
+        return resultResponse({status:200,body:{
+          ...(deep.status===200?deep.body:{}),
+          doi:b.doi,available:false,
+          fulltextAvailable:deep.body?.fulltextAvailable===true,
+          evidenceAvailable:deep.body?.evidenceAvailable===true,
+          state:deep.status===200?deep.body?.state||'missing':'missing',
+          reason:deep.status===200?deep.body?.reason||'fulltext_missing':'fulltext_missing',
+          abstractAvailable:true,abstractExcerpt:b.abstractExcerpt,
+          abstractExcerptOnly:true,abstractSource:b.abstractSource,
+          originalArticleUrl:b.originalArticleUrl,
+        }},cors);
+      }
+    }
+    return resultResponse(deep,cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts') {
     return resultResponse(await readerCounts(env, await readJson(request), ctx), cors);

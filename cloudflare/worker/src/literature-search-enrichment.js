@@ -1,3 +1,4 @@
+import { findBasicAbstractReview } from './literature-basic-abstracts.js';
 // DOI-fenced supplementary search evidence. No literature admission, withdrawal,
 // media acquisition or primary-D1 writes occur through this module.
 export const SEARCH_ENRICHMENT_BATCH_MAX = 8;
@@ -270,23 +271,43 @@ export async function refreshSearchEnrichmentAbstracts(env,payload={}) {
 }
 
 export async function getSearchAbstract(env,payload={}) {
-  const catalogId=String(payload.catalogId || '').toLowerCase();
+  let catalogId=String(payload.catalogId || '').toLowerCase();
   const doi=normalizeDoi(payload.doi);
-  if(!HASH.test(catalogId)||!doi) return {status:400,body:{error:'search_abstract_invalid_request'}};
-  if(!await searchEnrichmentReady(env,catalogId))
+  if(!doi||(catalogId&&!HASH.test(catalogId)))
+    return {status:400,body:{error:'search_abstract_invalid_request'}};
+  if(!env?.LITERATURE_INDEX_DB)
+    return {status:503,body:{error:'search_abstract_db_unavailable'}};
+  if(!catalogId){
+    // Use only the newest officially indexed ready generation. Never fall
+    // through to an older generation whose DOI may have been removed.
+    const latest=await env.LITERATURE_INDEX_DB.prepare(`SELECT catalog_id
+      FROM literature_catalog_generations WHERE ready=1
+      ORDER BY publication_slot DESC,updated_at DESC LIMIT 1`).first();
+    catalogId=String(latest?.catalog_id||'');
+  }
+  if(!HASH.test(catalogId)||!await searchEnrichmentReady(env,catalogId))
     return {status:503,body:{error:'search_abstract_not_ready'}};
-  const row=await env.LITERATURE_INDEX_DB.prepare(`SELECT e.abstract_text,e.abstract_source,e.reviewed_summary_en,e.reviewed_summary_zh
+  const row=await env.LITERATURE_INDEX_DB.prepare(`SELECT e.doi,e.revision,e.abstract_text,e.abstract_source,
+    e.reviewed_summary_en,e.reviewed_summary_zh
     FROM literature_search_enrichment e
-    JOIN literature_catalog_index i ON i.catalog_id=e.catalog_id AND i.doi=e.doi AND i.revision=e.revision
+    JOIN literature_catalog_index i ON i.catalog_id=e.catalog_id
+      AND i.doi=e.doi AND i.revision=e.revision
     WHERE e.catalog_id=? AND e.doi=?`).bind(catalogId,doi).first();
-  if(!row) return {status:404,body:{error:'search_abstract_unavailable'}};
-  // The scholarly abstract can carry publisher copyright; index it for
-  // discovery, but return only a bounded excerpt and DOI attribution publicly.
+  if(!row)return {status:404,body:{error:'search_abstract_unavailable'}};
+  const approved=await findBasicAbstractReview(env,row);
+  // Deposited abstracts may be copyrighted. Public access remains an
+  // attributed excerpt; independently reviewed paraphrases are separate.
   const abstract=String(row.abstract_text||'');
-  const abstractExcerpt=abstract?([...abstract].slice(0,200).join('')+( [...abstract].length>200?'…':'')):null;
-  return {status:200,body:{doi,abstractAvailable:Boolean(abstract),abstractExcerpt,
+  const excerpt=abstract?[...abstract].slice(0,200).join(''):'';
+  const abstractExcerpt=excerpt+(abstract.length>[...excerpt].length?'…':'');
+  return {status:200,body:{doi,catalogId,abstractAvailable:Boolean(abstract),
+    abstractExcerpt:abstractExcerpt||null,abstractExcerptOnly:true,
     abstractSource:row.abstract_source||null,originalArticleUrl:'https://doi.org/'+doi,
-    reviewedSummaryEn:row.reviewed_summary_en||null,reviewedSummaryZh:row.reviewed_summary_zh||null,
+    reviewedSummaryEn:row.reviewed_summary_en||null,
+    reviewedSummaryZh:row.reviewed_summary_zh||null,
+    basicSummaryZh:approved?.zh||null,basicSummaryEn:approved?.en||null,
+    basicSummaryBasis:approved?'abstract_metadata_reviewed_v1':null,
+    basicSummaryReviewedAt:approved?.reviewedAt||null,
     sourceSeparation:true}};
 }
 // Conservative, chemistry-specific terminology expansion; synonyms do not

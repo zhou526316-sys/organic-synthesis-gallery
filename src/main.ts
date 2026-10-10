@@ -2138,10 +2138,25 @@ document.addEventListener('visibilitychange', () => {
 window.addEventListener('resize', () => {
   const nextWindowSize = resultWindowSize();
   if (nextWindowSize !== lastResultWindowSize) {
+    // A mobile/desktop page-size change replaces card DOM. Preserve the
+    // currently open abstract drawer by verified DOI, instead of silently
+    // closing the user's reading context during a viewport resize.
+    const activeSummary = [...document.querySelectorAll<HTMLElement>('gallery-paper-actions[data-drawer-open="true"]')]
+      .find(el => Boolean(el.shadowRoot?.querySelector('.summary-drawer')));
+    const openedDoi = activeSummary?.closest<HTMLElement>('.card')?.dataset.doi?.toLowerCase() || '';
     lastResultWindowSize = nextWindowSize;
     resetResultWindow();
     renderCards();
     scheduleArchitectureCorpusRefresh(0);
+    if (openedDoi) {
+      requestAnimationFrame(() => {
+        const target = [...document.querySelectorAll<HTMLElement>('gallery-paper-actions')]
+          .find(el => el.closest<HTMLElement>('.card')?.dataset.doi?.toLowerCase() === openedDoi);
+        if (target && !target.shadowRoot?.querySelector('.summary-drawer')) {
+          target.dispatchEvent(new CustomEvent('gallery-open-summary'));
+        }
+      });
+    }
   }
   scheduleMediaBatch(60);
 });

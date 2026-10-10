@@ -25,7 +25,12 @@ export interface ArticleSummaryResult {
   evidenceLevel?: 'abstract_only' | 'partial' | 'complete' | 'unknown';
   state?: 'missing' | 'legacy_fulltext' | 'evidence_ready' | 'superseded' | 'published';
   reason?: 'fulltext_missing' | 'evidence_v2_required' | 'scheduled_summary_pending' | 'summary_pending' | 'summary_not_reviewed' | 'summary_stale' | 'summary_invalid';
-  source?: 'reviewed_evidence_v2' | 'scheduled_reviewed_evidence_v2';
+  source?: 'reviewed_evidence_v2' | 'scheduled_reviewed_evidence_v2' | 'reviewed_metadata_abstract_v1';
+  abstractAvailable?: boolean;
+  abstractExcerpt?: string;
+  abstractExcerptOnly?: boolean;
+  abstractSource?: 'openalex' | 'crossref';
+  originalArticleUrl?: string;
   cached?: boolean;
   zh?: string;
   en?: string;
@@ -337,7 +342,7 @@ class Store extends EventTarget {
   readerCounts: Record<string, number> = readReaderCountsCache();
   private feedbackFlushRunning = false;
   private readerOpenFlushRunning = false;
-  private readonly summaryCache = new Map<string, ArticleSummaryResult>();
+  private readonly summaryCache = new Map<string, { data: ArticleSummaryResult; fetchedAt: number }>();
   private metadataSaveQueued = false;
   private readonly countLoader = new ReaderCountLoader(
     async dois => (await workerPost<{ counts?: Record<string, number> }>('/api/user-ui/reader-counts', { dois })).counts,
@@ -428,10 +433,11 @@ class Store extends EventTarget {
     if (!normalized) throw new Error('invalid_doi');
     if (!refresh) {
       const cached = this.summaryCache.get(normalized);
-      if (cached) return cached;
+      const maxAge = cached?.data.available ? 5 * 60_000 : 20_000;
+      if (cached && Date.now() - cached.fetchedAt < maxAge) return cached.data;
     }
     const data = await workerGet<ArticleSummaryResult>(`/api/user-ui/article-summary?doi=${encodeURIComponent(normalized)}`);
-    this.summaryCache.set(normalized, data);
+    this.summaryCache.set(normalized, { data, fetchedAt: Date.now() });
     return data;
   }
 
