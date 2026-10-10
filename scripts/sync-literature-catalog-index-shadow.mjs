@@ -91,9 +91,10 @@ function paperProjection(record) {
   // Historical acquisitions may happen on the same day as a public release.
   // The D1 indexed "Only new" filter must not infer newness from that timestamp.
   const retrospective = paper.ingestionChannel === 'historical_backfill';
-  const julySepLate = firstOnlineDate >= '2026-07-01' && firstOnlineDate <= '2026-09-30'
+  const previouslyPublishedLate = typeof firstOnlineDate === 'string'
+    && firstOnlineDate < '2026-10-01'
     && typeof record?.addedDate === 'string' && record.addedDate >= '2026-10-01';
-  const addedDate = !retrospective && !julySepLate
+  const addedDate = !retrospective && !previouslyPublishedLate
     && typeof record?.addedDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(record.addedDate)
       ? record.addedDate : null;
   const synthesisType = ['methodology','total','formal'].includes(String(paper.synthesisType || ''))
