@@ -230,7 +230,6 @@ let architectureLandingPapers: Paper[] = [];
 let hotBootstrapTotal = 0;
 let hotFullLoadPromise: Promise<void> | null = null;
 let architectureMemberDois: string[] | null = null;
-let architectureEarliestDate = '';
 let latestCollectionDate = '';
 let architectureRefreshTimer: number | null = null;
 let architectureRefreshSerial = 0;
@@ -1560,8 +1559,6 @@ async function ensureFullHotCorpus(): Promise<void> {
     .then(fallback => {
       const rows = normalizeArchitectureRows(fallback.papers);
       architectureLandingPapers = rows;
-      architectureEarliestDate = rows.map(paper => paper.date)
-        .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort()[0] || architectureEarliestDate;
       setArchitectureCorpus(rows);
       hotBootstrapTotal = 0;
       architectureReadLimited = false;
@@ -1593,7 +1590,6 @@ async function activateArchitectureClientInBackground(siteBase: string): Promise
     architectureBootstrapPending = false;
     architectureReadLimited = false;
     architectureMemberDois = [...client.memberDois];
-    architectureEarliestDate = client.earliestDate || architectureEarliestDate;
     document.documentElement.dataset.catalogRead = 'architecture-v1';
     syncLiteratureDoiRegistry();
 
@@ -1617,8 +1613,6 @@ function installFastHotFallback(fallback: Awaited<ReturnType<typeof loadPublishe
   architectureBootstrapPending = true;
   architectureReadLimited = false;
   architectureMemberDois = null;
-  architectureEarliestDate = fallbackRows.map(paper => paper.date)
-    .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort()[0] || '';
   architectureLandingPapers = fallbackRows;
   const dates = fallbackRows.map(paper => paper.date)
     .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
@@ -1657,7 +1651,6 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
     architectureBootstrapPending = false;
     architectureReadLimited = false;
     architectureMemberDois = [...client.memberDois];
-    architectureEarliestDate = client.earliestDate || '';
     architectureLandingPapers = mergePapers(landingRows, editionRows);
     hotBootstrapTotal = 0;
     const architectureDates = architectureLandingPapers.map(paper => paper.date)
@@ -1686,8 +1679,6 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
       architectureBootstrapPending = false;
       architectureReadLimited = true;
       architectureMemberDois = null;
-      architectureEarliestDate = orderedFallback.map(paper => paper.date)
-        .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort()[0] || '';
       architectureLandingPapers = orderedFallback;
       hotBootstrapTotal = 0;
       const dates = orderedFallback.map(paper => paper.date)
@@ -1709,7 +1700,6 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
       architectureBootstrapPending = false;
       architectureReadLimited = false;
       architectureMemberDois = null;
-      architectureEarliestDate = '';
       architectureLandingPapers = [];
       latestCollectionDate = '';
       if (deliveryUnavailableLocally) {
