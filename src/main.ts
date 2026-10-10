@@ -123,6 +123,7 @@ const copy = {
     currentScope: '当前筛选',
     recentScopeTitle: '默认首页按首次在线发表日期显示滚动近三个月；最近七天新增但发表日期待核实的论文也展示在首页，不将收录日期冒充发表日期。',
     limitedRead: '当前仅使用已验证的近三个月安全数据；历史 DOI、全库搜索和历史日期检索暂不可用，当前结果不代表全库无匹配。',
+    indexedDegraded: '摘要索引连接暂不可用；下方是标题等元数据的临时匹配，并非完整检索结果。请稍后重试或刷新页面。',
     shown: '篇文献',
     titlePending: '正在核验标题…',
     doiPending: 'DOI 待核验',
@@ -162,6 +163,7 @@ const copy = {
     currentScope: 'Current filter',
     recentScopeTitle: 'The default landing view uses a rolling three-calendar-month window by first-online date, plus recently added records with unverified publication dates. Inclusion dates are not represented as publication dates.',
     limitedRead: 'Only the verified rolling three-month safety set is available right now. Archive DOI lookup, global search, and historical date retrieval are unavailable, so an empty result is not an all-time negative result.',
+    indexedDegraded: 'The abstract index is temporarily unavailable. The metadata-only matches below are incomplete; retry or reload.',
     shown: 'papers shown',
     titlePending: 'Verifying title…',
     doiPending: 'DOI pending',
@@ -278,6 +280,9 @@ function schedulePdfVaultCardsRefresh(container: HTMLElement, lang: Language): v
 let resultWindowPage = 1;
 let lastResultWindowSize = resultWindowSize();
 let indexedViewCapability: boolean | null = null;
+let indexedViewDegraded = false;
+let indexedViewRetryKey = '';
+let indexedViewRetryCount = 0;
 let indexedViewSerial = 0;
 let indexedViewState: {
   requestKey: string;
@@ -882,8 +887,12 @@ function mount(): void {
   const journals = [...targetJournals, ...extraJournals];
   const dates = papers.map(paper => paper.date).filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
   const latest = latestCollectionDate || dates[dates.length - 1] || '';
+  const scopeNotice = architectureReadLimited || (architectureBootstrapPending && !resultScopeIsDefaultRecent())
+    ? t('limitedRead')
+    : indexedViewDegraded && Boolean(query.trim() || dateFrom || dateTo)
+      ? t('indexedDegraded') : '';
   document.title = t('title');
-  app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='hero-latest'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 && excludedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => { const hidden = excludedJournals.has(journal); return `<div class='journal-option-row${hidden ? ' excluded' : ''}'><label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}${hidden ? ' disabled' : ''}><span>${escapeHtml(journal)}</span></label><button class='journal-exclude${hidden ? ' active' : ''}' data-journal-exclude='${escapeHtml(journal)}' type='button' aria-pressed='${hidden ? 'true' : 'false'}' aria-label='${escapeHtml(`${hidden ? t('restoreJournal') : t('hideJournal')} ${journal}`)}'>${escapeHtml(hidden ? t('restoreJournal') : t('hideJournal'))}</button></div>`; }).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option><option value='readers'${sort === 'readers' ? ' selected' : ''}>${escapeHtml(t('mostRead'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><section class='range-filter' aria-label='${escapeHtml(t('clearFilters'))}'><label class='date-field'><span>${escapeHtml(t('dateFrom'))}</span><input id='dateFrom' type='date' value='${escapeHtml(dateFrom)}'></label><label class='date-field'><span>${escapeHtml(t('dateTo'))}</span><input id='dateTo' type='date' value='${escapeHtml(dateTo)}'></label><button id='clearCustomFilters' class='clear-custom-filters' type='button'${selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo ? ' disabled' : ''}>${escapeHtml(t('clearFilters'))}</button></section><div class='resultline'><div class='result-count'><span id='resultScopeLabel' class='result-scope'>${escapeHtml(resultScopeIsDefaultRecent() ? t('recentScope') : t('currentScope'))}</span><span class='result-separator' aria-hidden='true'>·</span><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div></div>${architectureReadLimited || (architectureBootstrapPending && !resultScopeIsDefaultRecent()) ? `<div class='architecture-read-limited' role='status'>${escapeHtml(t('limitedRead'))}</div>` : ''}<section id='gallery' class='gallery' aria-live='polite'></section><nav id='resultWindowControls' class='result-window-controls' aria-label='${escapeHtml(language === 'zh' ? '文献分页' : 'Paper pagination')}' hidden><div id='resultWindowStatus' class='result-window-status' aria-live='polite'></div><div class='result-pagination-main'><button id='previousResultPage' class='result-page-button' type='button' data-available='false' aria-label='${escapeHtml(language === 'zh' ? '上一页' : 'Previous page')}'><span class='result-page-arrow' aria-hidden='true'>←</span><span class='result-page-button-label'>${escapeHtml(language === 'zh' ? '上一页' : 'Previous')}</span></button><div id='resultPageNumbers' class='result-page-numbers' role='group' aria-label='${escapeHtml(language === 'zh' ? '选择页码' : 'Choose page')}'></div><button id='nextResultPage' class='result-page-button' type='button' data-available='false' aria-label='${escapeHtml(language === 'zh' ? '下一页' : 'Next page')}'><span class='result-page-button-label'>${escapeHtml(language === 'zh' ? '下一页' : 'Next')}</span><span class='result-page-arrow' aria-hidden='true'>→</span></button></div><form id='resultPageJump' class='result-page-jump'><label for='resultPageJumpInput'>${escapeHtml(language === 'zh' ? '跳至' : 'Go to')} <input id='resultPageJumpInput' class='result-page-jump-input' type='number' min='1' step='1' inputmode='numeric' aria-label='${escapeHtml(language === 'zh' ? '跳转页码' : 'Page number')}'><span>${escapeHtml(language === 'zh' ? '页' : '')}</span></label><button id='resultPageJumpButton' class='result-page-jump-button' type='submit'>${escapeHtml(language === 'zh' ? '前往' : 'Go')}</button></form></nav><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
+  app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='hero-latest'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 && excludedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => { const hidden = excludedJournals.has(journal); return `<div class='journal-option-row${hidden ? ' excluded' : ''}'><label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}${hidden ? ' disabled' : ''}><span>${escapeHtml(journal)}</span></label><button class='journal-exclude${hidden ? ' active' : ''}' data-journal-exclude='${escapeHtml(journal)}' type='button' aria-pressed='${hidden ? 'true' : 'false'}' aria-label='${escapeHtml(`${hidden ? t('restoreJournal') : t('hideJournal')} ${journal}`)}'>${escapeHtml(hidden ? t('restoreJournal') : t('hideJournal'))}</button></div>`; }).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option><option value='readers'${sort === 'readers' ? ' selected' : ''}>${escapeHtml(t('mostRead'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><section class='range-filter' aria-label='${escapeHtml(t('clearFilters'))}'><label class='date-field'><span>${escapeHtml(t('dateFrom'))}</span><input id='dateFrom' type='date' value='${escapeHtml(dateFrom)}'></label><label class='date-field'><span>${escapeHtml(t('dateTo'))}</span><input id='dateTo' type='date' value='${escapeHtml(dateTo)}'></label><button id='clearCustomFilters' class='clear-custom-filters' type='button'${selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo ? ' disabled' : ''}>${escapeHtml(t('clearFilters'))}</button></section><div class='resultline'><div class='result-count'><span id='resultScopeLabel' class='result-scope'>${escapeHtml(resultScopeIsDefaultRecent() ? t('recentScope') : t('currentScope'))}</span><span class='result-separator' aria-hidden='true'>·</span><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div></div>${scopeNotice ? `<div class='architecture-read-limited' role='status'>${escapeHtml(scopeNotice)}</div>` : ''}<section id='gallery' class='gallery' aria-live='polite'></section><nav id='resultWindowControls' class='result-window-controls' aria-label='${escapeHtml(language === 'zh' ? '文献分页' : 'Paper pagination')}' hidden><div id='resultWindowStatus' class='result-window-status' aria-live='polite'></div><div class='result-pagination-main'><button id='previousResultPage' class='result-page-button' type='button' data-available='false' aria-label='${escapeHtml(language === 'zh' ? '上一页' : 'Previous page')}'><span class='result-page-arrow' aria-hidden='true'>←</span><span class='result-page-button-label'>${escapeHtml(language === 'zh' ? '上一页' : 'Previous')}</span></button><div id='resultPageNumbers' class='result-page-numbers' role='group' aria-label='${escapeHtml(language === 'zh' ? '选择页码' : 'Choose page')}'></div><button id='nextResultPage' class='result-page-button' type='button' data-available='false' aria-label='${escapeHtml(language === 'zh' ? '下一页' : 'Next page')}'><span class='result-page-button-label'>${escapeHtml(language === 'zh' ? '下一页' : 'Next')}</span><span class='result-page-arrow' aria-hidden='true'>→</span></button></div><form id='resultPageJump' class='result-page-jump'><label for='resultPageJumpInput'>${escapeHtml(language === 'zh' ? '跳至' : 'Go to')} <input id='resultPageJumpInput' class='result-page-jump-input' type='number' min='1' step='1' inputmode='numeric' aria-label='${escapeHtml(language === 'zh' ? '跳转页码' : 'Page number')}'><span>${escapeHtml(language === 'zh' ? '页' : '')}</span></label><button id='resultPageJumpButton' class='result-page-jump-button' type='submit'>${escapeHtml(language === 'zh' ? '前往' : 'Go')}</button></form></nav><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
   mountUserShell(app, language);
 
   document.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach(button => button.addEventListener('click', () => {
@@ -1777,28 +1786,60 @@ async function loadIndexedViewPage(
     loading: false,
   };
   architectureReadLimited = false;
+  indexedViewDegraded = false;
+  indexedViewRetryKey = '';
+  indexedViewRetryCount = 0;
   setArchitectureCorpus(indexedPapers);
   document.documentElement.dataset.catalogQueryRead = 'd1-index';
   mount();
   return true;
 }
 
+function scheduleIndexedViewRecovery(serial: number, request: LiteratureCatalogViewRequest): void {
+  const key = indexedViewRequestKey(request);
+  if (indexedViewRetryKey !== key) {
+    indexedViewRetryKey = key;
+    indexedViewRetryCount = 0;
+  }
+  // A transient transport failure must not permanently disable all-time FTS
+  // for this browser tab. Retry twice per query with bounded backoff.
+  if (indexedViewRetryCount >= 2) return;
+  const delay = ++indexedViewRetryCount === 1 ? 900 : 2200;
+  window.setTimeout(() => {
+    if (serial !== architectureRefreshSerial || !architectureClient) return;
+    const current = indexedViewRequest('');
+    if (!current || indexedViewRequestKey(current) !== key) return;
+    scheduleArchitectureCorpusRefresh(0);
+  }, delay);
+}
+
 async function tryIndexedArchitectureView(serial: number): Promise<boolean> {
   const request = indexedViewRequest('');
   if (!request) return false;
-  if (indexedViewCapability === null) {
-    indexedViewCapability = await literatureCatalogIndexedReadActive();
-    document.documentElement.dataset.catalogIndexCapability = indexedViewCapability ? 'active' : 'inactive';
+  if (indexedViewCapability !== true) {
+    // A failed health request and a genuinely disabled feature are both
+    // non-definitive for discovery; a later user query may check again.
+    const available = await literatureCatalogIndexedReadActive();
+    if (serial !== architectureRefreshSerial) return false;
+    indexedViewCapability = available ? true : null;
+    document.documentElement.dataset.catalogIndexCapability = available ? 'active' : 'degraded';
+    if (!available) {
+      indexedViewDegraded = true;
+      scheduleIndexedViewRecovery(serial, request);
+      return false;
+    }
   }
-  if (!indexedViewCapability) return false;
   try {
     return await loadIndexedViewPage(serial, request, 1, ['']);
   } catch (error) {
-    indexedViewCapability = false;
+    if (serial !== architectureRefreshSerial) return false;
+    indexedViewCapability = null;
     indexedViewState = null;
+    indexedViewDegraded = true;
     document.documentElement.dataset.catalogIndexCapability = 'degraded';
     document.documentElement.dataset.catalogQueryRead = 'static-segments';
-    console.warn('D1 literature view unavailable; using verified static catalog reader', error);
+    scheduleIndexedViewRecovery(serial, request);
+    console.warn('D1 literature view temporarily unavailable; static metadata results are incomplete', error);
     return false;
   }
 }
@@ -1860,7 +1901,8 @@ async function goToIndexedResultPage(requestedPage: number): Promise<void> {
   } catch (error) {
     if (token !== indexedViewSerial) return;
     console.warn('D1 literature page unavailable; returning to verified static catalog reader', error);
-    indexedViewCapability = false;
+    indexedViewCapability = null;
+    indexedViewDegraded = true;
     indexedViewState = null;
     resultWindowPage = 1;
     document.documentElement.dataset.catalogIndexCapability = 'degraded';
