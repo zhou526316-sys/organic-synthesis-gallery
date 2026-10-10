@@ -303,13 +303,13 @@ const synonyms = {
   '铈催化':['cerium catalyzed','cerium-catalyzed','cerium catalysis'],
 };
 function phrase(value){return '"'+String(value).replaceAll('"','""')+'"';}
-export function searchFtsExpression(query) {
+export function searchTermAlternatives(query){
   const raw=String(query||'').trim().toLowerCase();
-  if(!raw||[...raw].length<3) return '';
-  // Preserve legacy exact-substring behavior for every unregistered query,
-  // including multiword titles and author names. Only vetted chemical terms
-  // broaden into a small, explicitly reviewed OR group.
-  const alternatives=[raw,...(synonyms[raw]||[])];
-  const unique=[...new Set(alternatives.filter(term=>[...term].length>=3))];
-  return unique.length>1?'('+unique.map(phrase).join(' OR ')+')':phrase(raw);
+  if(!raw||[...raw].length<3)return [];
+  return [...new Set([raw,...(synonyms[raw]||[])].filter(term=>[...term].length>=3))];
+}
+export function searchFtsExpression(query) {
+  const unique=searchTermAlternatives(query);
+  // Preserve the legacy substring scope and only expand reviewed terms.
+  return unique.length>1?'('+unique.map(phrase).join(' OR ')+')':unique.length?phrase(unique[0]):'';
 }
