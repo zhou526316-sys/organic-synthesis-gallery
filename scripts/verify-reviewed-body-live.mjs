@@ -81,7 +81,7 @@ try{
     const figures=await strip.locator('.figure-thumb img').evaluateAll(images=>images.map(x=>({label:x.alt,url:x.currentSrc||x.src,width:x.naturalWidth,height:x.naturalHeight})));
     assert.equal(figures.length,expectedCount);assert.ok(await strip.isVisible());const rect=await strip.boundingBox();assert.ok(rect&&rect.height>0&&rect.width>0);
     for(const row of expected){const hit=figures.find(f=>new URL(f.url).pathname.endsWith('/'+row.imageUrl));assert.ok(hit,'card missing exact published image '+doi+' '+row.id);assert.ok(hit.width>0&&hit.height>0);}
-    const card=strip.locator('xpath=ancestor::article[1]');await card.screenshot({path:out+'/card-'+i+'.png'});
+    const stripCard=strip.locator('xpath=ancestor::article[1]');await stripCard.screenshot({path:out+'/card-'+i+'.png'});
     report.cards.push({doi,visible:true,figures:figures.length,approvedImagesChecked:expected.length,allImagesDecoded:true,tocAvailable:Boolean(record.toc?.available),lazyImagesMadeEagerForDecodeCheck:true,images:figures,screenshot:'card-'+i+'.png'});
    }catch(e){report.failureSnapshot=await page.evaluate(({selector,doi})=>({doi,search:document.querySelector('#search')?.value,count:document.querySelectorAll(selector+' .figure-thumb img').length,html:document.querySelector(selector)?.outerHTML?.slice(0,20000)}),{selector,doi});await page.screenshot({path:out+'/failure.png'});throw e;}
   }
