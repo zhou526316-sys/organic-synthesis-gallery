@@ -17,6 +17,7 @@ on:
       - 'scripts/audit-gallery-abstract-gaps.mjs'
       - 'scripts/lib/classify-gallery-abstract-gap.mjs'
       - 'scripts/test-gallery-abstract-gap-classification.mjs'
+      - 'scripts/audit-gallery-approved-summaries-live.mjs'
       - '.github/workflows/literature-abstract-incremental.yml'
       - 'src/user-ui/paper-actions.ts'
       - 'scripts/sync-literature-search-enrichment.mjs'
@@ -61,6 +62,7 @@ jobs:
       - name: Verify no stale or missing Evidence is silently promoted
         run: |
           node --check scripts/audit-gallery-abstract-gaps.mjs
+          node --check scripts/audit-gallery-approved-summaries-live.mjs
           node --test scripts/test-gallery-abstract-gap-classification.mjs
       - name: Install dependencies and validate card type safety
         run: |
