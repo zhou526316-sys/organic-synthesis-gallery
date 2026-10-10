@@ -615,7 +615,20 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await privatePdfStatus(request, env), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/private-pdf/open') {
-    return resultResponse(await openPrivatePdf(request, env), cors);
+    const result = await openPrivatePdf(request, env);
+    // The authorized ticket payload is always a small, finite JSON response.
+    // A precise byte length helps proxying browsers distinguish a complete
+    // response from a 200 whose connection never ends; never cache tickets.
+    const body = JSON.stringify(result.body);
+    return new Response(body, {
+      status: result.status || 200,
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        'cache-control': 'private, no-store',
+        'content-length': String(new TextEncoder().encode(body).byteLength),
+        ...(result.headers || {}), ...cors,
+      },
+    });
   }
   if ((request.method === 'GET' || request.method === 'HEAD') && url.pathname === '/api/user-ui/private-pdf/file') {
     return servePrivatePdf(request, env, cors);
