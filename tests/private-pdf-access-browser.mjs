@@ -404,6 +404,47 @@ try{
   assert.deepEqual(state.openModes,['view']);
   await target.close();
  });
+ await test('HTTP200 with partial open JSON and no response EOF recovers using one same-host authorized retry',async()=>{
+  const authorized={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],authorized);
+  // Simulate the user's actual transport symptom inside the Gallery reader:
+  // first /open gets HTTP200 headers and part of JSON, but an intermediary
+  // never completes the body. Retry must not wait for the original stream EOF.
+  await context.addInitScript(()=>{
+    let first=true;
+    const originalFetch=window.fetch.bind(window);
+    window.fetch=(input,init)=>{
+      const url=new URL(typeof input==='string'?input:input.url,location.href);
+      if(location.pathname==='/pdf/' && first &&
+          url.origin==='https://api.gczhouwld.com' &&
+          url.pathname==='/api/user-ui/private-pdf/open') {
+        first=false;
+        window.__fixtureStalledOpenHeaders=1;
+        const hanging=new ReadableStream({
+          start(controller) {
+            controller.enqueue(new TextEncoder().encode('{"available":true,'));
+            init?.signal?.addEventListener('abort',()=>controller.error(new Error('cancelled')), {once:true});
+          },
+        });
+        return Promise.resolve(new Response(hanging,{status:200,
+          headers:{'content-type':'application/json','cache-control':'no-store'}}));
+      }
+      return originalFetch(input,init);
+    };
+  });
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:12000});
+  assert.equal(await target.evaluate(()=>window.__fixtureStalledOpenHeaders),1);
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'primary');
+  assert.match(await target.locator('html').getAttribute('data-private-pdf-auth-attempts')||'',
+    /primary-retry:完成/);
+  assert.equal(state.openOrigins.filter(x=>x==='https://api.gczhouwld.com').length,1,
+    'after synthetic hung first open, one trusted primary retry issues fresh v2 ticket');
+  assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
+ });
  await test('slow primary PDF authorization falls back to the same owner Worker without bypassing entitlement',async()=>{
   const owner={available:true,headerVerified:true,url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
   const {context,state}=await contextWith(['private_pdf_read'],owner,{primaryOpenDelayMs:8000});

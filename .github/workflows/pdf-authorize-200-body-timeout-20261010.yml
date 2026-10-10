@@ -1,0 +1,48 @@
+name: PDF authorization HTTP200 stalled-body recovery regression
+on:
+  push:
+    branches: [fix/pdf-authorize-200-body-timeout-20261010]
+    paths:
+      - 'src/pdf-authorize-response.mjs'
+      - 'src/private-pdf-reader.mjs'
+      - 'cloudflare/worker/src/index.js'
+      - 'tests/pdf-authorize-response.test.mjs'
+      - 'tests/private-pdf-access-browser.mjs'
+      - '.github/workflows/pdf-authorize-200-body-timeout-20261010.yml'
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+      - name: Test complete small JSON response without stream EOF and reject incomplete bodies
+        run: |
+          node --check src/private-pdf-reader.mjs
+          node --check cloudflare/worker/src/index.js
+          node --test tests/pdf-authorize-response.test.mjs
+          grep -F 'const FIRST_PAGE_RANGE_CHUNK_BYTES = 1024 * 1024' src/private-pdf-reader.mjs
+      - name: Build regular Gallery frontend without release
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+      - name: Real Chromium fault injection and owner-private PDF browser regression
+        env:
+          PRIVATE_PDF_BROWSER_OUTPUT: ${{ runner.temp }}/pdf-auth-stall-browser
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.1
+          npx playwright install --with-deps chromium
+          node tests/private-pdf-access-browser.mjs
+      - name: Preserve sanitized bounded browser results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-auth-stalled-body-browser-evidence
+          path: ${{ runner.temp }}/pdf-auth-stall-browser
+          retention-days: 5
+          if-no-files-found: ignore
