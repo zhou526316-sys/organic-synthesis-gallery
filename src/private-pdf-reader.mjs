@@ -236,7 +236,8 @@ function fallbackView(message = '该论文暂时无法读取私有 PDF。', deta
   const tencentRecoverable = new Set([
     'pdf_authorize_timeout','pdf_authorize_body_timeout',
     'pdf_authorize_network_error','pdf_transfer_timeout',
-    'pdf_first_page_timeout','file_http_502','file_http_503','file_http_504',
+    'pdf_first_page_timeout','open_http_500','open_http_502','open_http_503',
+    'open_http_504','file_http_502','file_http_503','file_http_504',
   ]);
   if (!manualTencentTrial && tencentRecoverable.has(detail)) {
     void tencentPdfRouteEnabled(undefined, 1200, {manual:true}).then(allowed => {
