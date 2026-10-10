@@ -1,0 +1,67 @@
+name: WeChat Oct10 Expert Prose R3 Review
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/wechat-oct10-r3-prose-reviewed.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-oct10-r3-prose-source-reviewed
+  cancel-in-progress: false
+
+jobs:
+  review-source-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 4
+      - name: Pin user instructions and immutable original WeChat draft
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          q=json.load(open('audit/automation-triggers/wechat-oct10-r3-prose-reviewed.json'))
+          assert q['action']=='review_source_only_oct10_two_article_r3'
+          assert q['date']=='2026-10-10' and q['revision']=='2026-10-10-r3'
+          assert q['dois']==['10.1002/anie.3306470','10.1038/s44160-026-01128-y']
+          assert q['draftOnly'] is True and q['publicSendAuthorized'] is False
+          assert q['existingMediaId']=='KhELYUzvwADwB_l1xH1SWFOfn60HSWWcYlciDjMIDj7HKSul-GJJti3u0OIKFcyL'
+          assert q['expectedOverlayBlobSha']=='cc6671a22e61b611405f7bd1d66d95d8b9193240'
+          PY
+      - name: Install science image audit
+        run: python3 -m pip install --quiet 'Pillow>=10,<13'
+      - name: Apply full two-paper prose and validate production figure relationships
+        run: python3 ops/wechat-publisher/apply-oct10-r3-reviewed-prose.py
+      - name: Verify science evidence, 49 source images and two original covers retained
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          q=json.load(open('audit/wechat-working/2026-10-10-r3-prose-qa.json'))
+          g=json.load(open('audit/wechat-working/2026-10-10-review-gate.json'))
+          f=json.load(open('public/wechat-featured/2026-10-10.json'))
+          r=json.load(open('public/wechat-retrospective/alcohols-electrochemical-crosscoupling-qiu-20261010-r5.json'))
+          e=json.load(open('public/wechat-editions/2026-10-10.json'))
+          assert q['revision']==g['revision']==f['editorialRevision']==r['editorialRevision']==e['editorialRevision']=='2026-10-10-r3'
+          assert q['status']=='prose_source_review_pass'
+          assert q['preDraftReviewGate']=='pass' and q['realPublisherHTMLRender']=='pass'
+          assert q['coverPathsAndBytesUnchanged'] and q['sourceCaptionAndImagePlacementsUnchanged']
+          assert q['scienceImageCounts']==[18,31] and q['reviewedAssets']==51
+          assert q['dailyParagraphs']==35 and q['retroParagraphs']==31
+          assert g['textReview']==g['imageReview']=='pass'
+          assert g['publicSendAuthorized'] is False
+          assert q['draftWritten'] is False
+          assert f['paper']['doi']=='10.1002/anie.3306470'
+          assert r['paper']['doi']=='10.1038/s44160-026-01128-y'
+          assert '仇友爱' in r['title'] and '邱友爱' not in r['title']
+          assert e['date']=='2026-10-10' and e['publicationMode']=='draft_only_manual_final_send'
+          assert g['artifacts']['textOnly']=='audit/wechat-working/2026-10-10-r3-text-only.md'
+          print('R3 reviewer PASS: two updated texts, source-verified claims, 49 original science images + two immutable covers; WeChat still draft-only.')
+          PY
