@@ -220,6 +220,14 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
     const download=url.searchParams.get('download')==='1';
     if(download)state.privateFileDownloads++;
     const common={'access-control-allow-origin':base,'access-control-allow-credentials':'true','access-control-allow-headers':'range, authorization','access-control-expose-headers':'content-length, content-range, accept-ranges, content-type, x-gallery-pdf-status','accept-ranges':'bytes','cache-control':'private, no-store','content-disposition':download?'attachment; filename="fixture.pdf"':'inline; filename="fixture.pdf"'};
+    if(options.primaryPreflightStatus && url.origin==='https://api.gczhouwld.com' &&
+       range==='bytes=0-15'){
+      state.primaryPreflightFailures=(state.primaryPreflightFailures||0)+1;
+      return route.fulfill({status:options.primaryPreflightStatus,
+        contentType:'application/json',
+        headers:{...common,'x-gallery-pdf-status':'synthetic_preflight_failure'},
+        body:'{"error":"synthetic_preflight_failure"}'});
+    }
     if(options.primaryFileStatus && url.origin==='https://api.gczhouwld.com' && range && range!=='bytes=0-15'){
      state.primaryFileFailures++;
      return route.fulfill({status:options.primaryFileStatus,contentType:'application/json',
@@ -426,6 +434,56 @@ try{
   assert.equal(state.privateHeaderProbeCalls,0,'edge-verified signed ticket must not fetch bytes 0-15 a second time');
   assert.deepEqual(state.openModes,['view']);
   await target.close();
+ });
+ await test('deferred R2 prefix uses true 206 and independently authorized backup after primary preflight 503',async()=>{
+  const deferred={available:true,headerVerified:false,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-deferred'};
+  const {context,state}=await contextWith(['private_pdf_read'],deferred,
+    {primaryPreflightStatus:503});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:14000});
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-preflight'),
+    'browser-alternate');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-route'),
+    'backup');
+  assert.equal(state.primaryPreflightFailures,1);
+  assert.equal(state.openOrigins.filter(x=>x.includes('workers.dev')).length,1,
+    'backup must be independently authorized, never reuse primary ticket');
+  assert.ok(state.privateHeaderProbeCalls>=1,
+    'backup GET must actually return 206 bytes=0-15');
+  await scrollPdfToPage(target,2);
+  assert.equal(await target.locator('#page-count').textContent(),'第 2 / 2 页');
+ });
+
+ await test('deferred PDF preflight 403 denies without any second authorized route',async()=>{
+  const deferred={available:true,headerVerified:false,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-deferred'};
+  const {context,state}=await contextWith(['private_pdf_read'],deferred,
+    {primaryPreflightStatus:403});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',
+    undefined,{timeout:12000});
+  assert.equal(state.primaryPreflightFailures,1);
+  assert.deepEqual(state.openOrigins,['https://api.gczhouwld.com'],
+    '403 must not be retried through a different Worker');
+ });
+
+ await test('deferred PDF preflight refuses mismatched alternate document hash',async()=>{
+  const deferred={available:true,headerVerified:false,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-deferred'};
+  const {context,state}=await contextWith(['private_pdf_read'],deferred,
+    {primaryPreflightStatus:503,backupContentHash:'b'.repeat(64)});
+  const page=await gallery(context,true);
+  const target=await popup(page,page.locator('.card .private-pdf-button').first());
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',
+    undefined,{timeout:12000});
+  assert.equal(state.primaryPreflightFailures,1);
+  assert.equal(state.openOrigins.filter(x=>x.includes('workers.dev')).length,1);
+  assert.equal(state.privateHeaderProbeCalls,0,
+    'mismatched alternate must never be allowed to provide PDF bytes');
  });
  await test('HTTP200 with partial open JSON and no response EOF recovers using one same-host authorized retry',async()=>{
   const authorized={available:true,headerVerified:true,
