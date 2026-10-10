@@ -55,7 +55,6 @@ jobs:
               assert.ok(dois.every(Boolean),'blank_registry_doi');
               assert.equal(new Set(dois).size,dois.length,'duplicate_registry_doi');
               assert.ok(dois.every(x=>x.length>4),'invalid_registry_doi');
-              assert.equal(new Set(dois).size,dois.length,'duplicate_registry_doi');
               assert.equal(cap.captureVersion,'6.2.20','capture_protocol_mismatch');
               assert.equal(cap.mediaControllerRevision,'2.2.41','controller_revision_mismatch');
               assert.equal(cap.mediaGeneration,queue.mediaGeneration,'media_generation_mismatch');
