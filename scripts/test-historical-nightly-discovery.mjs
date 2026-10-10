@@ -169,7 +169,8 @@ test('truncated root persists resumable split leaves and only closes on all sour
     global.fetch=async url=>{
       const u=new URL(url);requests.push(u);
       const filter=u.searchParams.get('filter')||'';
-      const parent=filter.includes('from-pub-date:2026-09-22,until-pub-date:2026-09-30');
+      const parent=filter.includes('from-pub-date:2026-09-22,until-pub-date:2026-09-30')
+        ||filter.includes('from_publication_date:2026-09-22,to_publication_date:2026-09-30');
       if(u.hostname==='api.crossref.org'){
         const firstIssn=u.pathname.includes('0002-7863');
         if(parent&&firstIssn){
@@ -228,6 +229,55 @@ test('truncated root persists resumable split leaves and only closes on all sour
   } finally {
     process.exitCode=oldExit;
     global.fetch=oldFetch;process.chdir(cwd);
+    for(const [key,value] of Object.entries(env)){
+      if(value===undefined)delete process.env[key];else process.env[key]=value;
+    }
+    await rm(root,{recursive:true,force:true});
+  }
+});
+
+
+test('Crossref HTTP 429 blocks the historical root without splitting or touching publication files',async()=>{
+  const root=await mkdtemp(join(tmpdir(),'gallery-history-429-'));
+  const cwd=process.cwd(),oldFetch=global.fetch,oldExit=process.exitCode;
+  const env={HISTORICAL_STAGING_ONLY:process.env.HISTORICAL_STAGING_ONLY,
+    GITHUB_REF_NAME:process.env.GITHUB_REF_NAME,
+    HISTORICAL_STAGING_BRANCH:process.env.HISTORICAL_STAGING_BRANCH,
+    MAX_UNITS:process.env.MAX_UNITS,API_REQUEST_LIMIT:process.env.API_REQUEST_LIMIT};
+  try{
+    await mkdir(join(root,'public'),{recursive:true});
+    await mkdir(join(root,'audit'),{recursive:true});
+    const published={webpageDoiCount:1,articles:[{doi:'10.1021/jacs.6c00001'}]};
+    const marker={productionCards:1};
+    await writeFile(join(root,'public/toc-demand-live.json'),JSON.stringify(published));
+    await writeFile(join(root,'audit/publication-release-state.json'),JSON.stringify(marker));
+    process.chdir(root);
+    Object.assign(process.env,{HISTORICAL_STAGING_ONLY:'1',GITHUB_REF_NAME:'pull_request',
+      HISTORICAL_STAGING_BRANCH:'1',MAX_UNITS:'1',API_REQUEST_LIMIT:'8'});
+    global.fetch=async url=>{
+      const u=new URL(url);
+      if(u.hostname==='api.crossref.org')return {ok:false,status:429};
+      if(u.hostname==='api.openalex.org')return {ok:true,json:async()=>({meta:{count:0},results:[]})};
+      throw Error('unexpected_source');
+    };
+    const result=await runNightly();
+    assert.equal(result.blocked,true);
+    assert.equal(result.completeWindows,0);
+    assert.equal(result.activeSplit,null);
+    assert.equal(result.next.journalIndex,0);
+    const state=JSON.parse(await readFile(join(root,'audit/historical-staging/state.json')));
+    assert.equal(state.completed.length,0);
+    assert.equal(state.activeSplit,undefined);
+    const parent=JSON.parse(await readFile(join(root,'audit/historical-staging/batches/2026-09-22_2026-09-30_jacs.json')));
+    assert.equal(parent.status,'incomplete_sources');
+    assert.equal(parent.consistency.complete,false);
+    assert.match(parent.consistency.issues.join('|'),/429/);
+    assert.equal(parent.noFormalPublication,true);
+    assert.equal(parent.noPDFAcquisition,true);
+    assert.deepEqual(JSON.parse(await readFile(join(root,'public/toc-demand-live.json'))),published);
+    assert.deepEqual(JSON.parse(await readFile(join(root,'audit/publication-release-state.json'))),marker);
+  } finally {
+    process.exitCode=oldExit;global.fetch=oldFetch;process.chdir(cwd);
     for(const [key,value] of Object.entries(env)){
       if(value===undefined)delete process.env[key];else process.env[key]=value;
     }
