@@ -2311,14 +2311,21 @@ function embeddedJobDois(value) {
   function collectArticleFigureCandidates(job, trace, root, baseUrl, sourceName) {
     var scope = root || document, rows = [], seen = new Set();
     var diag={nodes:0,noContext:0,official:0,pdfPreview:0,noLabel:0,duplicate:0,doiMismatch:0,rejected:0,accepted:0};
-    scope.querySelectorAll('img,object[type^="image"]').forEach(function (node) {
+    scope.querySelectorAll(job.publisher==='rsc'
+      ? 'img,source,object[type^="image"],object[data]'
+      : 'img,object[type^="image"]').forEach(function (node) {
       diag.nodes++;
       var context = visualScope(node);
       if(job.publisher==='wiley')context=wileyBodyFigureContext(node,context);
       if(job.publisher==='rsc')context=rscBodyFigureContext(node,context);
       if(!context){diag.noContext++;return;}
       if(context.official){diag.official++;return;}
-      visualUrls(node, context.block, baseUrl || location.href).forEach(function (url, rank) {
+      var urls=visualUrls(node, context.block, baseUrl || location.href);
+      if(job.publisher==='rsc' && node.getAttribute && node.getAttribute('data')){
+        var objectUrl=normalizeUrl(node.getAttribute('data'),baseUrl||location.href);
+        if(objectUrl && urls.indexOf(objectUrl)<0)urls.unshift(objectUrl);
+      }
+      urls.forEach(function (url, rank) {
         if(job.publisher==='rsc'&&rscPdfPreviewUrl(url)){
           diag.pdfPreview++;pushTrace(trace,{stage:'rsc_figure_candidate',event:'pdf_preview_rejected',status:'rejected',url:url,message:'page-preview asset cannot be a numbered body figure'});return;
         }
@@ -2336,6 +2343,8 @@ function embeddedJobDois(value) {
         if(seen.has(key)){diag.duplicate++;return;}
         if(reject(context.caption,url)){diag.rejected++;return;}
         if(!candidateBelongsToJob(url,job)){diag.doiMismatch++;return;}
+        if(job.publisher==='rsc'&&rscSilverchairArticleForJob(job,location.href)
+          &&!rscVerifiedSilverchairMedia(job,url)){diag.doiMismatch++;return;}
         seen.add(key);diag.accepted++;
         rows.push({url:url,kind:'article_figure',assetType:'article_figure',label:label,text:context.caption||label,source:job.publisher==='ccs'?'ccs_caption_asset_bound':'isolated_figure_caption',score:100-rank,element:node.tagName.toLowerCase()==='img'?node:null});
       });
@@ -2713,7 +2722,7 @@ function embeddedJobDois(value) {
     if(!node||!node.closest)return original;
     if(original&&(original.label||original.official))return original;
     if(node.closest('aside,nav,header,footer,[class*="recommend" i],[class*="related" i],[class*="reference" i],[class*="citation" i]'))return null;
-    var block=node.closest('.image_table,.image-table,.img-tbl,.article-figure,.figure,figure,[class*="figure-container" i]');
+    var block=node.closest('.image_table,.image-table,.img-tbl,.article-figure,.figure,figure,[class*="figure-container" i],.fig-section,[data-figure-id],[class*="fig-section" i]');
     if(!block)return original;
     var texts=Array.from(block.querySelectorAll(
       '.image_title,.image-title,.figure-title,figcaption,.caption,[class*="caption" i]'
@@ -4500,6 +4509,16 @@ function embeddedJobDois(value) {
           var officials=discovered.toc.filter(function(c){return c.kind==='official';});
           var candidates=officials.length?officials:discovered.toc;
           var best=await acquireBestVisual(job,candidates,trace,cache,'toc');
+          // A found but unusable official candidate must not prevent a genuine,
+          // DOI-verified Figure 1 from serving as a primary visual.
+          if(!best&&officials.length&&job.allowFigureOne!==false){
+            var figuresOne=discovered.toc.filter(function(c){return c.kind==='figure1';});
+            if(figuresOne.length){
+              pushTrace(trace,{stage:'toc_fallback',event:'official_unusable_try_figure1',status:'start',
+                message:'official='+officials.length+';figure1='+figuresOne.length});
+              best=await acquireBestVisual(job,figuresOne,trace,cache,'toc');
+            }
+          }
           if (best) {
             var receipt=await uploadCapture(job,best.candidate,best.image,trace,token);
             result.toc={status:'stored',kind:best.candidate.kind,quality:best.quality.quality,imageUrl:receipt.imageUrl,productionTocStored:best.candidate.kind==='official'?receipt.productionTocStored===true:false,productionFallbackStored:best.candidate.kind==='figure1'?receipt.productionFallbackStored===true:false};
