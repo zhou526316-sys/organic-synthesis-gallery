@@ -25,6 +25,8 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
+      - name: Verify publisher metadata DOI and redirect constraints
+        run: node --test scripts/test-publisher-abstract-metadata.mjs
       - name: Validate true DOI-bound abstract recovery and term search
         run: node --test cloudflare/worker/scripts/test-literature-search-enrichment.mjs
       - name: Incrementally recover original abstracts without republishing papers
@@ -36,6 +38,7 @@ jobs:
           SEARCH_ENRICHMENT_REPORT: ${{ runner.temp }}/abstract-recovery-report.json
           SEARCH_ABSTRACT_RETRY_LIMIT: '300'
           CROSSREF_FALLBACK_LIMIT: '300'
+          PUBLISHER_ABSTRACT_LIMIT: '45'
         run: node scripts/sync-literature-search-enrichment.mjs
       - uses: actions/upload-artifact@v4
         if: always()
