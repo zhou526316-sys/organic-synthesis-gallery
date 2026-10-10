@@ -85,7 +85,9 @@ jobs:
           grep -F "PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'" public/gallery-vpn-bridge.user.js
           grep -F "ccs_toc_index_key_image" public/gallery-vpn-bridge.user.js
           grep -F "rsc_graphical_abstract" public/gallery-vpn-bridge.user.js
-          grep -F "RSC_NATIVE_ABSTRACT_AJAX_REVISION = '20261009-two-doi-ajax-source-v1'" public/gallery-vpn-bridge.user.js
+          grep -F "RSC_NATIVE_ABSTRACT_AJAX_REVISION = '20261010-doi-article-id-semantic-v2'" public/gallery-vpn-bridge.user.js
+          grep -F "function rscVerifiedSilverchairMedia(job,value)" public/gallery-vpn-bridge.user.js
+          node --test tests/tm-oct10-rsc-inventory-recovery.test.mjs
           mkdir -p "$RUNNER_TEMP/target-journals"
           cp public/gallery-vpn-bridge.user.js "$RUNNER_TEMP/target-journals/"
           sha256sum public/gallery-vpn-bridge.user.js > "$RUNNER_TEMP/target-journals/sha256.txt"

@@ -14,7 +14,7 @@ function publisherHostsAllowed(doi,pageHost,sourceHost){
   if(doi.startsWith('10.1002/'))return hostIs(pageHost,'onlinelibrary.wiley.com')&&(hostIs(sourceHost,'wiley.com')||hostIs(sourceHost,'wiley.com.cn'));
   if(doi.startsWith('10.1038/'))return hostIs(pageHost,'nature.com')&&(hostIs(sourceHost,'nature.com')||hostIs(sourceHost,'springernature.com'));
   if(doi.startsWith('10.1126/'))return hostIs(pageHost,'science.org')&&hostIs(sourceHost,'science.org');
-  if(doi.startsWith('10.1039/'))return hostIs(pageHost,'rsc.org')&&hostIs(sourceHost,'rsc.org');
+  if(doi.startsWith('10.1039/'))return hostIs(pageHost,'rsc.org')&&(hostIs(sourceHost,'rsc.org')||hostIs(sourceHost,'silverchair-cdn.com'));
   if(doi.startsWith('10.1016/'))return (hostIs(pageHost,'sciencedirect.com')||hostIs(pageHost,'cell.com'))&&(hostIs(sourceHost,'sciencedirect.com')||hostIs(sourceHost,'cell.com')||hostIs(sourceHost,'els-cdn.com'));
   if(doi.startsWith('10.31635/'))return hostIs(pageHost,'ccspublishing.org.cn')&&hostIs(sourceHost,'ccspublishing.org.cn');
   return false;
@@ -31,6 +31,20 @@ export async function validateNewBodyMetadata(row,policy,now=Date.now()){
   const page=url(row.articleUrl),source=url(row.sourceUrl);
   const doi=String(row.doi||'').toLowerCase();
   requireBody(publisherHostsAllowed(doi,page.hostname,source.hostname),'auto_publisher_host_not_enabled');
+  if(doi.startsWith('10.1039/')&&hostIs(source.hostname,'silverchair-cdn.com')){
+    // New Silverchair assets are allowed only when the publisher article page
+    // and media bytes carry the SAME explicit DOI suffix or bound ArticleId.
+    // Generic issue pictures and PDF first-page GIFs are not figure assets.
+    const pageMatch=page.pathname.match(/^\/(sc|gc)\/article\/doi\/10\.1039\/([^/]+)\/(\d{5,10})(?:\/|$)/i);
+    requireBody(pageMatch&&('10.1039/'+pageMatch[2]).toLowerCase()===doi,
+      'auto_rsc_page_articleid_unverified');
+    const sourcePath=decodeURIComponent(source.pathname).toLowerCase();
+    const suffix=doi.split('/')[1];
+    requireBody((sourcePath.includes(suffix)
+       ||new RegExp('(?:^|[^0-9])'+pageMatch[3]+'(?:[^0-9]|$)').test(sourcePath))
+       &&!/(?:^|\/)[^/]+\.pdf\.(?:gif|png|jpe?g|webp)$/.test(sourcePath),
+       'auto_rsc_source_article_identity_unverified');
+  }
   if(doi.startsWith('10.1021/')){
     const article=doi.match(/^10\.1021\/(jacs|acscatal|acs\.orglett|acs\.joc)\.([0-9]c[0-9]{5})$/);
     requireBody(article,'auto_acs_article_identity');

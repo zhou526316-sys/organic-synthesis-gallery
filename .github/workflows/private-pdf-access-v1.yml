@@ -58,28 +58,33 @@ jobs:
             docs/literature-scope-contract.md docs/literature-update-protocol.md \
             .github/workflows/literature-audit.yml .github/workflows/github-pages.yml \
             .github/workflows/new-body-continuous.yml \
-            public/papers.gz.b64 public/rolling-supplement.json cloudflare/worker/src/article-summary.js
+            public/papers.gz.b64 public/rolling-supplement.json
           ! git diff "$BASE" HEAD -- . ':!audit/**' | grep -F 'wuliangdao@njfu.edu.cn'
+          # The owner explicitly approved changes to acquisition and to
+          # evidence-inventory paging. Check private PDF authorization/capture
+          # functions byte-for-byte rather than vetoing all source changes.
           python - <<'PY'
-          import pathlib, subprocess
+          import pathlib,re,subprocess
           base=subprocess.check_output(['git','merge-base','HEAD','origin/main'],text=True).strip()
-          before=subprocess.check_output(['git','show',f'{base}:public/toc-mainline.user.js'],text=True)
-          after=pathlib.Path('public/toc-mainline.user.js').read_text()
-          if before != after:
-              start=after.find('  // Private PDF capture is an optional owner-only side channel.')
-              end=after.find('  async function finishPairedJob(job,result,trace,token) {', start)
-              if start < 0 or end < 0:
-                  raise SystemExit('private PDF runtime markers missing')
-              normalized=after[:start]+after[end:]
-              hook_start=normalized.find("    try {\n      var privatePdfResult=await maybeCapturePrivatePdf(job,trace);")
-              hook_end=normalized.find("    if(job.missingOnly&&result.figures&&result.figures.discovered>0)",hook_start)
-              if hook_start < 0 or hook_end < 0:
-                  raise SystemExit('private PDF finish hook markers missing')
-              normalized=normalized[:hook_start]+normalized[hook_end:]
-              normalized=normalized.replace('  installPrivatePdfLeaseReceiver();\n','',1)
-              if normalized != before:
-                  raise SystemExit('collector changed outside isolated private PDF side-channel')
-          print('PRIVATE_PDF_COLLECTOR_SCOPE_OK')
+          old=subprocess.check_output(['git','show',f'{base}:public/toc-mainline.user.js'],text=True)
+          current=pathlib.Path('public/toc-mainline.user.js').read_text()
+          def fun(code,name):
+              m=re.search(r'^  (?:async )?function '+re.escape(name)+r'\(',code,re.M)
+              assert m, 'private PDF function missing: '+name
+              end=code.find('\n  }\n',m.start())
+              assert end>=0, 'private PDF function incomplete: '+name
+              return code[m.start():end+5]
+          for name in ['privatePdfHostAllowed','discoverExplicitPdfCandidates','privatePdfBytesValid',
+                       'waitForPrivatePdfCandidates','fetchExplicitPdf','uploadPrivatePdf']:
+              assert fun(old,name)==fun(current,name),'Private PDF authorization or capture changed: '+name
+          before=subprocess.check_output(['git','show',f'{base}:cloudflare/worker/src/article-summary.js'],text=True)
+          after=pathlib.Path('cloudflare/worker/src/article-summary.js').read_text()
+          start='export async function getArticleEvidenceInventory('
+          suffix='\nexport const ARTICLE_EVIDENCE_SCHEMA_VERSION'
+          assert start in before and start in after and suffix in before and suffix in after
+          assert before[:before.index(start)]==after[:after.index(start)],'Other evidence/summary code changed'
+          assert before[before.index(suffix):]==after[after.index(suffix):], 'Evidence schema exports changed'
+          print('PRIVATE_PDF_PROTECTED_FUNCTIONS_AND_PAGED_EVIDENCE_SCOPE_OK')
           PY
           grep -F 'PRIVATE_PDF_CAPTURE_ENABLED = "1"' .github/workflows/deploy-worker-frontend.yml
           grep -F 'PRIVATE_PDF_PROCESSING_ENABLED = "1"' .github/workflows/deploy-worker-frontend.yml

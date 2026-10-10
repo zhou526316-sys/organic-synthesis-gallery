@@ -79,7 +79,9 @@ jobs:
           grep -F "if(visualSatisfied)return null;" public/toc-mainline.user.js
           grep -F "captureFigures:false" public/toc-mainline.user.js
           grep -F "opportunisticFigures:true" public/toc-mainline.user.js
-          grep -F "mediaNeed.includes('figures')" cloudflare/scripts/merge-new-body-auto.mjs
+          grep -F "completedBodyPacket(row)" cloudflare/scripts/merge-new-body-auto.mjs
+          grep -F "need.includes('figures')" shared/body-packet-completion.mjs
+          node --test tests/tm-oct10-rsc-inventory-recovery.test.mjs
           grep -F "var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';" public/toc-mainline.user.js
           grep -F "function evidenceCaptureEligible" public/toc-mainline.user.js
           grep -F "function buildArticleEvidencePacket" public/toc-mainline.user.js

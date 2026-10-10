@@ -17,8 +17,7 @@ const functionSource=(s,name)=>{
   return s.slice(from,from+match[0].length+end+'\n  }\n'.length);
 };
 const protectedFunctions=[
-  'articleFigureResolution','collectArticleFigureCandidates',
-  'rscBodyFigureContext','svgQuality',
+  'articleFigureResolution','svgQuality',
   'acquireBestVisual','privatePdfHostAllowed',
   'discoverExplicitPdfCandidates','privatePdfBytesValid',
   'waitForPrivatePdfCandidates','fetchExplicitPdf','uploadPrivatePdf'
@@ -27,6 +26,16 @@ for(const name of protectedFunctions){
   assert.equal(functionSource(source,name),functionSource(original,name),
     'published acquisition code unexpectedly modified: '+name);
 }
+// The 2026-10-10 owner approved targeted RSC-only SVG/source access to
+// DOI/ArticleId-bound numbered figures; other pinned functions remain exact.
+const boundedRscBody=functionSource(source,'collectArticleFigureCandidates');
+const boundedRscContext=functionSource(source,'rscBodyFigureContext');
+assert.ok(boundedRscBody.includes("job.publisher==='rsc'") &&
+  boundedRscBody.includes("rscPdfPreviewUrl(url)") &&
+  boundedRscBody.includes("rscVerifiedSilverchairMedia(job,url)") &&
+  boundedRscBody.includes("candidateBelongsToJob(url,job)"));
+assert.ok(boundedRscBody.includes("node.getAttribute('data')") &&
+  boundedRscContext.includes('[data-figure-id]'));
 // The owner's 2026-10-10 approval changes ONLY the final publisher access
 // cooldown trace to DOI-scoped; all other acquisition/identity/discovery code
 // in the protected visual-wait function must stay byte-for-byte identical.
@@ -43,12 +52,26 @@ const actualGate=segment(actualVisualWait),baselineGate=segment(originalVisualWa
 const gatePatch=actualVisualWait.slice(actualGate.start,actualGate.end);
 assert.ok(gatePatch.includes("event:'doi_cooldown'")&&gatePatch.includes("scope=doi;publisher="));
 assert.ok(gatePatch.includes("triggerDoi=")&&gatePatch.includes("cooldownMs="));
-assert.equal(
-  actualVisualWait.slice(0,actualGate.start)
-    +originalVisualWait.slice(baselineGate.start,baselineGate.end)
-    +actualVisualWait.slice(actualGate.end),originalVisualWait,
-  'Unapproved publisher acquisition behavior changed beyond the single approved access-cooldown trace'
-);
+// 2026-10-10 second approval explicitly authorizes passing a genuine DOI-bound
+// RSC Figure1 returned by the official AJAX into the primary-image fallback.
+const withLegacyCooldown=actualVisualWait.slice(0,actualGate.start)
+  +originalVisualWait.slice(baselineGate.start,baselineGate.end)
+  +actualVisualWait.slice(actualGate.end);
+const iframeStart="        var recovered=iframeRows.filter(";
+const iframeEnd="      var figureSignature=";
+function restoreApprovedRscIframe(actual,baseline){
+  const a=actual.indexOf(iframeStart),b=actual.indexOf(iframeEnd,a);
+  const c=baseline.indexOf(iframeStart),d=baseline.indexOf(iframeEnd,c);
+  assert.ok(a>0&&b>a&&c>0&&d>c,'RSC recovery frame anchors missing');
+  const approved=actual.slice(a,b);
+  assert.ok(approved.includes("row.kind==='figure1'&&job.allowFigureOne!==false")
+    &&approved.includes('verifiedFigure1='),
+    'RSC verified Figure1 handoff guard not preserved');
+  return actual.slice(0,a)+baseline.slice(c,d)+actual.slice(b);
+}
+assert.equal(restoreApprovedRscIframe(withLegacyCooldown,originalVisualWait),
+  originalVisualWait,
+  'Unapproved publisher acquisition changes beyond scoped cooling and verified RSC Figure1 handoff');
 // Only two user-approved Wiley-only exception blocks may diverge from pinned
 // general candidate discovery: official GA semantic gate + an exact DOI/asset
 // quarantine of one visually confirmed substrate-scope image.

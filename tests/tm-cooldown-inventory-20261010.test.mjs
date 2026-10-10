@@ -133,7 +133,9 @@ test('inventory does not start second full hedge after one exhausted browser+GM 
          :'queue_inventory_transport_failed;browser:controller_native_timeout_16000ms;gm:gm_request_timeout');
     }
   });
-  vm.runInContext(init+'\n globalThis.load=readMissingCaptureInventory;',ctx);
+  const evidence=between('  async function readEvidenceInventoryPaged(', '  async function readMissingCaptureInventory(');
+  ctx.EVIDENCE_SCHEMA_VERSION='article-evidence-v2';
+  vm.runInContext(evidence+'\n'+init+'\n globalThis.load=readMissingCaptureInventory;',ctx);
   const output=await ctx.load({articles:documents,generatedAt:'2026-10-10T00:00:00Z'});
   assert.equal(calls.media,1);
   assert.equal(calls.toc,1,'TOC exhausted transport must not retry immediately');

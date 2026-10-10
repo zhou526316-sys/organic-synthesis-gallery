@@ -313,7 +313,10 @@ async function handleApi(request, env, ctx) {
   if (request.method === 'GET' && url.pathname === '/api/article-summary/evidence-inventory') {
     if (!env.BRIDGE_WRITE_TOKEN) return json({ error: 'write_token_not_configured' }, { status: 503, headers: cors });
     if (!writeAuthorized(request, env)) return json({ error: 'unauthorized' }, { status: 401, headers: cors });
-    return resultResponse(await getArticleEvidenceInventory(env), cors);
+    return resultResponse(await getArticleEvidenceInventory(env, {
+      pageLimit:url.searchParams.get('pageLimit'),
+      cursor:url.searchParams.get('cursor')
+    }), cors);
   }
 
   if (request.method === 'GET' && url.pathname === '/api/article-summary/scheduled-handoff') {

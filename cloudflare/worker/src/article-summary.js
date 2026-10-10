@@ -486,14 +486,23 @@ export async function getArticleSummary(env, doiValue) {
   };
 }
 
-export async function getArticleEvidenceInventory(env) {
+export async function getArticleEvidenceInventory(env, options = {}) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'summary_storage_unavailable' } };
+  // The optional paged route is token-protected and returns one bounded list
+  // page. Older callers with no pageLimit retain their historical response.
+  const requestedLimit = Number(options?.pageLimit || 0);
+  const paged = Number.isInteger(requestedLimit) && requestedLimit >= 1 && requestedLimit <= 250;
+  const startCursor = String(options?.cursor || '');
+  if (paged && (startCursor.length > 2048 || /[\s\x00-\x1f]/.test(startCursor))) {
+    return { status: 400, body: { error: 'invalid_inventory_cursor' } };
+  }
   const items = [];
-  let cursor;
-  for (let pageNo = 0; pageNo < 10; pageNo += 1) {
+  let cursor = paged ? startCursor : '';
+  let nextCursor = '';
+  for (let pageNo = 0; pageNo < (paged ? 1 : 10); pageNo += 1) {
     const page = await env.MEDIA.list({
       prefix: EVIDENCE_PREFIX,
-      limit: 1000,
+      limit: paged ? requestedLimit : 1000,
       ...(cursor ? { cursor } : {}),
       include: ['customMetadata'],
     });
@@ -513,6 +522,11 @@ export async function getArticleEvidenceInventory(env) {
         evidenceLevel: safeSingleLine(meta.evidenceLevel || 'unknown', 40),
       });
     }
+    if (paged) {
+      nextCursor = page?.truncated ? String(page?.cursor || '') : '';
+      if (page?.truncated && !nextCursor) return { status: 503, body: { error: 'evidence_inventory_missing_cursor' } };
+      break;
+    }
     if (!page?.truncated || !page?.cursor) break;
     cursor = page.cursor;
   }
@@ -524,6 +538,7 @@ export async function getArticleEvidenceInventory(env) {
       schemaVersion: EVIDENCE_SCHEMA_VERSION,
       count: items.length,
       items,
+      ...(paged ? { complete: !nextCursor, truncated: Boolean(nextCursor), nextCursor } : {}),
     },
   };
 }

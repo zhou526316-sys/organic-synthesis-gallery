@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.60
+// @version      6.2.61
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,9 +57,9 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.60';
+  var INSTALL_REVISION = '6.2.61';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
-  var PUBLISHER_ROUTE_REPAIR_REVISION = '20261008-rsc-silverchair-and-acs-toc-route-v1';
+  var PUBLISHER_ROUTE_REPAIR_REVISION = '20261010-rsc-articleid-semantic-and-acs-figure1-v2';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
   var IMAGE_UPLOAD_MAX_BUDGET_MS = 48000;
   var IMAGE_OUTBOX_PREFIX = 'osg-toc-v6:pending-image-transfer-v1:';
@@ -269,6 +269,23 @@
     return prefix+parts.join(' / ');
   }
 
+  function captureBlockCategory(reason) {
+    // A completed publisher visit with no usable TOC is NOT an access denial;
+    // PDF HTTP403 is independent of successfully staged body figures.
+    var text=String(reason||''),labels=[];
+    if(/publisher_access_gate|challenge_not_completed|auth_not_completed|page_doi_unverified|access_gate/i.test(text))
+      labels.push('出版社访问验证');
+    if(/(?:private_pdf_http_40[13]|private_pdf_failed|private_pdf_not_found|pdf=private_pdf_http_403)/i.test(text))
+      labels.push('PDF 权限或获取受阻');
+    if(/no_usable_official_or_figure1|toc=(?:not_found|failed)|no_toc_candidate|toc_candidate_unavailable/i.test(text))
+      labels.push('TOC/主图未获取');
+    if(/upload_http_|image_upload_budget|figure_stage.*failed|r2_upload.*failed|gm_request_timeout/i.test(text))
+      labels.push('媒体传输或上传失败');
+    if(/figures=\d+\/\d+|no_usable_figure_variant|article_figure.*failed/i.test(text)
+      &&!/figures=0\/0/.test(text))labels.push('正文图待核实');
+    return labels.length?labels.join('＋'):'其他待核实问题';
+  }
+
   function captureLiveText(s) {
     var phaseNames = {
       starting:'正在生成缺项队列', between_jobs:'本控制页持有任务，等待下一篇', other_controller:'任务由另一控制页持有，等待其继续', interrupted:'上次任务已中断，等待恢复', waiting_controller:'仍有待办，等待控制器继续', inventory_partial:'缺项队列已结束，部分库存未确认',
@@ -303,12 +320,12 @@
       needs:s.need||'—',
       working:s.active?(s.row&&/全文|Abstract|文本/.test(s.row.label)?'文本':s.row&&s.row.label?s.row.label:s.need||'加载文章'):'—',
       evidence:s.activeJob&&(s.activeJob.captureEvidence||s.activeJob.opportunisticEvidence)?'随当前任务顺带抓取文本':s.activeJob&&s.activeJob.existingEvidenceLevel?captureEvidenceLevelText(s.activeJob.existingEvidenceLevel)+'，不作为队列缺项':'—',
-      gaps:s.scopeRevision!==OCT1_SCOPE_QUEUE_REVISION&&s.coverageRevision?'旧版全量统计已停用；请重新按 10 月 1 日起生成缺项队列。':/^(?:starting|inventory_refresh)$/.test(s.phase||'')&&s.total===0?'仅处理 10 月 1 日之后收录文献；正在核对库存…':s.coverageRevision&&s.phase!=='starting'?'10.1起 '+s.scopeCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇（待执行 '+Math.max(0,s.pendingMissing-s.deferredCount)+'／冷却等待 '+s.deferredCount+'／访问受阻 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／确实缺PDF '+Number(s.remainingNeeds.pdf||0)+'；PDF云端 已齐 '+Number(s.ownerPdfInventory.ready||0)+'／待验证 '+(Number(s.ownerPdfInventory.pending||0)+Number(s.ownerPdfInventory.failed||0))+'／未知 '+Number(s.ownerPdfInventory.unknown||0):s.missingOnly?(s.phase==='starting'?'正在核对10.1以后文献…':'仅10.1以后 '+s.scopeCount+' 篇 · 待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)):'—',
+      gaps:s.scopeRevision!==OCT1_SCOPE_QUEUE_REVISION&&s.coverageRevision?'旧版全量统计已停用；请重新按 10 月 1 日起生成缺项队列。':/^(?:starting|inventory_refresh)$/.test(s.phase||'')&&s.total===0?'仅处理 10 月 1 日之后收录文献；正在核对库存…':s.coverageRevision&&s.phase!=='starting'?'10.1起 '+s.scopeCount+' 篇 · 未补齐 '+s.unresolvedCount+' 篇（待执行 '+Math.max(0,s.pendingMissing-s.deferredCount)+'／冷却等待 '+s.deferredCount+'／未补齐待诊断 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／确实缺PDF '+Number(s.remainingNeeds.pdf||0)+'；PDF云端 已齐 '+Number(s.ownerPdfInventory.ready||0)+'／待验证 '+(Number(s.ownerPdfInventory.pending||0)+Number(s.ownerPdfInventory.failed||0))+'／未知 '+Number(s.ownerPdfInventory.unknown||0):s.missingOnly?(s.phase==='starting'?'正在核对10.1以后文献…':'仅10.1以后 '+s.scopeCount+' 篇 · 待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)):'—',
       blocked:(s.deferredPreview||[]).map(function(r){return r.doi+' · '+r.need+' · '+String(r.publisher||'')
           +' · '+(r.scope==='publisher'?'出版社限流':'本篇访问验证')
           +' · 触发 '+String(r.triggerDoi||r.doi)+' · '+String(r.reason||'')
           +' · 冷却至 '+new Date(r.until).toLocaleTimeString()+'（尚未访问）';})
-        .concat((s.blockedPreview||[]).map(function(r){return r.doi+' · '+r.need+' · 已访问受阻 · '+r.reason;})).join('\n'),
+        .concat((s.blockedPreview||[]).map(function(r){return r.doi+' · '+r.need+' · '+(r.category||captureBlockCategory(r.reason))+' · '+r.reason;})).join('\n'),
       inventory:inventoryProgressText(s.inventoryProgress,s.inventoryWarmStart,s.inventoryFreshPending)+'；PDF核对：'+pdfInventoryNotice+(s.inventoryUnknown?'；另有 '+s.inventoryUnknown+' 篇存在未确认项，不冒充已齐全或全部缺失':'')+(s.inventoryErrors.length?'；'+s.inventoryErrors.join('；'):''),
       queue:(s.pendingPreview||[]).map(function(j){return j.addedDate+' · '+j.journal+' · '+j.need+'\n'+j.doi;}).join('\n\n'),
       doi: s.doi || '当前没有任务页', journal: s.journal,
@@ -2311,14 +2328,21 @@ function embeddedJobDois(value) {
   function collectArticleFigureCandidates(job, trace, root, baseUrl, sourceName) {
     var scope = root || document, rows = [], seen = new Set();
     var diag={nodes:0,noContext:0,official:0,pdfPreview:0,noLabel:0,duplicate:0,doiMismatch:0,rejected:0,accepted:0};
-    scope.querySelectorAll('img,object[type^="image"]').forEach(function (node) {
+    scope.querySelectorAll(job.publisher==='rsc'
+      ? 'img,source,object[type^="image"],object[data]'
+      : 'img,object[type^="image"]').forEach(function (node) {
       diag.nodes++;
       var context = visualScope(node);
       if(job.publisher==='wiley')context=wileyBodyFigureContext(node,context);
       if(job.publisher==='rsc')context=rscBodyFigureContext(node,context);
       if(!context){diag.noContext++;return;}
       if(context.official){diag.official++;return;}
-      visualUrls(node, context.block, baseUrl || location.href).forEach(function (url, rank) {
+      var urls=visualUrls(node, context.block, baseUrl || location.href);
+      if(job.publisher==='rsc' && node.getAttribute && node.getAttribute('data')){
+        var objectUrl=normalizeUrl(node.getAttribute('data'),baseUrl||location.href);
+        if(objectUrl && urls.indexOf(objectUrl)<0)urls.unshift(objectUrl);
+      }
+      urls.forEach(function (url, rank) {
         if(job.publisher==='rsc'&&rscPdfPreviewUrl(url)){
           diag.pdfPreview++;pushTrace(trace,{stage:'rsc_figure_candidate',event:'pdf_preview_rejected',status:'rejected',url:url,message:'page-preview asset cannot be a numbered body figure'});return;
         }
@@ -2336,6 +2360,8 @@ function embeddedJobDois(value) {
         if(seen.has(key)){diag.duplicate++;return;}
         if(reject(context.caption,url)){diag.rejected++;return;}
         if(!candidateBelongsToJob(url,job)){diag.doiMismatch++;return;}
+        if(job.publisher==='rsc'&&rscSilverchairArticleForJob(job,location.href)
+          &&!rscVerifiedSilverchairMedia(job,url)){diag.doiMismatch++;return;}
         seen.add(key);diag.accepted++;
         rows.push({url:url,kind:'article_figure',assetType:'article_figure',label:label,text:context.caption||label,source:job.publisher==='ccs'?'ccs_caption_asset_bound':'isolated_figure_caption',score:100-rank,element:node.tagName.toLowerCase()==='img'?node:null});
       });
@@ -2595,21 +2621,42 @@ function embeddedJobDois(value) {
   // when the RSC article shell lacks the original TOC/figure DOM. This is a
   // bounded, first-party, same-session fallback for TWO verified Oct-09 gaps.
   // A PDF first-page preview, generic image, or foreign article is never TOC.
-  var RSC_NATIVE_ABSTRACT_AJAX_REVISION = '20261009-two-doi-ajax-source-v1';
+  var RSC_NATIVE_ABSTRACT_AJAX_REVISION = '20261010-doi-article-id-semantic-v2';
   function rscNativeAjaxBoundRoute(job) {
     var doi=normalizeDoi(job&&job.doi);
-    if(doi!=='10.1039/d6sc06407h'&&doi!=='10.1039/d6gc03748h')return null;
+    if(!/^10\.1039\/[a-z][0-9][a-z]{2}[a-z0-9]+$/i.test(doi)
+      ||String(job&&job.publisher||publisherForDoi(doi))!=='rsc')return null;
     try{
       var url=new URL(location.href),path=url.pathname;
       if(url.protocol!=='https:'||url.hostname.toLowerCase()!=='pubs.rsc.org')return null;
       var match=/^\/(sc|gc)\/article\/doi\/10\.1039\/([^/]+)\/(\d{5,10})(?:\/|$)/i.exec(path);
       if(!match||normalizeDoi('10.1039/'+match[2])!==doi)return null;
       var code=match[1].toLowerCase();
-      if(code!==(doi.indexOf('/d6sc')>=0?'sc':'gc'))return null;
+      var parts=rscRouteParts(job);
+      if(!parts||parts.code!==code)return null;
       return {doi:doi,code:code,articleId:match[3],
         url:url.origin+'/'+code+'/PlatformArticle/ArticleAbstractAjax?articleId='+match[3]+'&layAbstract=false'};
     }catch(_){return null;}
   }
+  function rscVerifiedSilverchairMedia(job,value) {
+    // Accept only a same-article DOI/ArticleId asset actually present in the
+    // authenticated Silverchair DOM. No fabricated CDN paths or PDF previews.
+    var article=rscNativeAjaxBoundRoute(job),doi=normalizeDoi(job&&job.doi);
+    if(!article||!candidateBelongsToJob(value,job)||rscPdfPreviewUrl(value)
+        ||reject('',value))return false;
+    try{
+      var u=new URL(String(value||''),location.href),host=u.hostname.toLowerCase();
+      if(u.protocol!=='https:'||!(host==='pubs.rsc.org'||host.endsWith('.silverchair-cdn.com')))return false;
+      if(!/\.(?:svg|png|jpe?g|webp|gif)(?:[?#]|$)/i.test(u.href))return false;
+      var decoded=decodeURIComponent(u.pathname+u.search).toLowerCase();
+      var suffix=doi.split('/')[1]||'';
+      if(suffix&&decoded.indexOf(suffix)>=0)return true;
+      var id=article.articleId;
+      return new RegExp('(?:^|[^0-9])'+id+'(?:[^0-9]|$)').test(decoded)
+        && !/\/(?:logo|icon|banner|cover|avatar|site-asset)\b/i.test(decoded);
+    }catch(_){return false;}
+  }
+
   async function rscNativeAjaxGraphicalAbstractCandidates(job,trace) {
     var route=rscNativeAjaxBoundRoute(job);
     if(!route)return [];
@@ -2638,7 +2685,11 @@ function embeddedJobDois(value) {
         return [];
       }
       var doc=new DOMParser().parseFromString(payload.Html,'text/html');
-      var imgs=Array.from(doc.querySelectorAll('.graphical-abstract img,.fig-graphic img,.graphicalAbstract img')).slice(0,10);
+      var imgs=Array.from(doc.querySelectorAll(
+        '.graphical-abstract img,.fig-graphic img,.graphicalAbstract img,'
+        +'[class*="visual-abstract" i] img,[id*="visual-abstract" i] img,'
+        +'[class*="article-abstract" i] [class*="graphical" i] img'
+      )).slice(0,16);
       var seen=new Set(),rows=[];
       imgs.forEach(function(img){
         var parent=img.closest('.graphical-abstract,.fig-graphic,.graphicalAbstract');
@@ -2651,10 +2702,10 @@ function embeddedJobDois(value) {
         candidates.slice(0,5).forEach(function(value,rank){
           var url=normalizeUrl(value,route.url);
           if(!url||seen.has(url)||rscPdfPreviewUrl(url)||reject(text,url)
-              ||!candidateBelongsToJob(url,job))return;
+              ||!rscVerifiedSilverchairMedia(job,url))return;
           try{
             var u=new URL(url);
-            if(u.protocol!=='https:'||!(u.hostname==='pubs.rsc.org'||u.hostname.endsWith('.rsc.org')))return;
+            if(u.protocol!=='https:'||!(u.hostname==='pubs.rsc.org'||u.hostname.endsWith('.rsc.org')||u.hostname.endsWith('.silverchair-cdn.com')))return;
             if(!/\.(?:png|jpe?g|webp|gif|svg)(?:$|[?#])/i.test(url))return;
           }catch(_){return;}
           seen.add(url);
@@ -2662,6 +2713,16 @@ function embeddedJobDois(value) {
             score:990-rank,text:'RSC official article graphical abstract',
             source:'rsc_silverchair_abstract_ajax',element:null});
         });
+      });
+      // Official AJAX responses can contain SVG <object>, <source>, and
+      // CSS background assets rather than a plain <img>. Only the bound
+      // DOI/ArticleId DOM and publisher-hosted figure assets may qualify.
+      rscSilverchairVisualCandidates(job,doc,location.href).forEach(function(row){
+        if(seen.has(row.url))return;
+        if(!rscVerifiedSilverchairMedia(job,row.url)
+          &&String(row.url||'').toLowerCase().indexOf(route.doi.split('/')[1])<0)return;
+        seen.add(row.url);
+        rows.push(Object.assign({},row,{source:'rsc_verified_abstract_ajax_dom'}));
       });
       pushTrace(trace,{stage:'rsc_native_abstract_ajax',event:'semantic_scan',status:rows.length?'found':'none',
         url:route.url,message:'doi='+route.doi+';articleId='+route.articleId+
@@ -2678,7 +2739,7 @@ function embeddedJobDois(value) {
     if(!node||!node.closest)return original;
     if(original&&(original.label||original.official))return original;
     if(node.closest('aside,nav,header,footer,[class*="recommend" i],[class*="related" i],[class*="reference" i],[class*="citation" i]'))return null;
-    var block=node.closest('.image_table,.image-table,.img-tbl,.article-figure,.figure,figure,[class*="figure-container" i]');
+    var block=node.closest('.image_table,.image-table,.img-tbl,.article-figure,.figure,figure,[class*="figure-container" i],.fig-section,[data-figure-id],[class*="fig-section" i]');
     if(!block)return original;
     var texts=Array.from(block.querySelectorAll(
       '.image_title,.image-title,.figure-title,figcaption,.caption,[class*="caption" i]'
@@ -2722,7 +2783,8 @@ function embeddedJobDois(value) {
         if(!/\.(?:svg|png|jpe?g|webp|gif)(?:$|[?#])/i.test(u.href))return false;
         // A generic logo or a different article's visual is never a DOI asset.
         return u.href.toLowerCase().indexOf(suffix)>=0
-          || embeddedJobDois(u.href).indexOf(doi)>=0;
+          || embeddedJobDois(u.href).indexOf(doi)>=0
+          || rscVerifiedSilverchairMedia(job,u.href);
       }catch(_){return false;}
     }
     Array.prototype.slice.call(sections).slice(0,50).forEach(function(block){
@@ -2744,6 +2806,12 @@ function embeddedJobDois(value) {
       var nodes=block.querySelectorAll('img,source,a[href],object[data],[style*="background-image" i]');
       Array.prototype.slice.call(nodes).slice(0,28).forEach(function(node){
         var urls=articleFigureImageUrls(node,base).slice();
+        // Silverchair can embed the actual numbered SVG in <object data>.
+        var objectData=node.getAttribute&&node.getAttribute('data');
+        if(objectData){
+          var objectAsset=normalizeUrl(objectData,base);
+          if(objectAsset&&urls.indexOf(objectAsset)<0)urls.unshift(objectAsset);
+        }
         // Silverchair also renders DOI-associated visuals as CSS background
         // images. Only read URLs embedded in the ACTUAL article block.
         var inline=String(node.getAttribute&&node.getAttribute('style')||'');
@@ -4464,6 +4532,16 @@ function embeddedJobDois(value) {
           var officials=discovered.toc.filter(function(c){return c.kind==='official';});
           var candidates=officials.length?officials:discovered.toc;
           var best=await acquireBestVisual(job,candidates,trace,cache,'toc');
+          // A found but unusable official candidate must not prevent a genuine,
+          // DOI-verified Figure 1 from serving as a primary visual.
+          if(!best&&officials.length&&job.allowFigureOne!==false){
+            var figuresOne=discovered.toc.filter(function(c){return c.kind==='figure1';});
+            if(figuresOne.length){
+              pushTrace(trace,{stage:'toc_fallback',event:'official_unusable_try_figure1',status:'start',
+                message:'official='+officials.length+';figure1='+figuresOne.length});
+              best=await acquireBestVisual(job,figuresOne,trace,cache,'toc');
+            }
+          }
           if (best) {
             var receipt=await uploadCapture(job,best.candidate,best.image,trace,token);
             result.toc={status:'stored',kind:best.candidate.kind,quality:best.quality.quality,imageUrl:receipt.imageUrl,productionTocStored:best.candidate.kind==='official'?receipt.productionTocStored===true:false,productionFallbackStored:best.candidate.kind==='figure1'?receipt.productionFallbackStored===true:false};
@@ -5133,6 +5211,37 @@ function embeddedJobDois(value) {
       count:items.length,items:items,unknown:dois.length-items.length,errors:errors,
       reason:errors[0]||''};
   }
+  async function readEvidenceInventoryPaged() {
+    // Every page is individually bounded. No partially read evidence index
+    // may be mistaken for a complete zero/missing inventory.
+    var seen=new Map(),cursor='';
+    for(var page=0;page<20;page++){
+      var url=EVIDENCE_INVENTORY_ENDPOINT+'?pageLimit=200'
+        +(cursor?'&cursor='+encodeURIComponent(cursor):'');
+      var packet=await inventoryReadMetadataJson({method:'GET',url:url,
+        timeout:INVENTORY_REQUEST_TIMEOUT_MS,
+        headers:{authorization:'Bearer '+String(writeToken()||'')}},'private');
+      if(!packet||packet.schemaVersion!==EVIDENCE_SCHEMA_VERSION
+        ||!Array.isArray(packet.items)||packet.items.length!==Number(packet.count)
+        ||typeof packet.complete!=='boolean'||typeof packet.truncated!=='boolean')
+        throw new Error('evidence_inventory_page_invalid');
+      for(var i=0;i<packet.items.length;i++){
+        var item=packet.items[i],doi=normalizeDoi(item&&item.doi);
+        if(!doi||seen.has(doi))throw new Error('evidence_inventory_duplicate_or_unbound_doi');
+        seen.set(doi,item);
+      }
+      if(packet.complete===true&&packet.truncated===false)
+        return {schemaVersion:EVIDENCE_SCHEMA_VERSION,count:seen.size,
+          items:Array.from(seen.values()),complete:true,truncated:false};
+      if(packet.complete!==false||packet.truncated!==true
+        ||typeof packet.nextCursor!=='string'||!packet.nextCursor
+        ||packet.nextCursor===cursor||packet.nextCursor.length>2048)
+        throw new Error('evidence_inventory_cursor_invalid');
+      cursor=packet.nextCursor;
+    }
+    throw new Error('evidence_inventory_page_limit_exceeded');
+  }
+
   async function readMissingCaptureInventory(queue,run) {
     var errors=[],mediaRows=[],cache=run?(run.inventoryCache||(run.inventoryCache=new Map())):new Map();
     var dois=queue.articles.filter(recentFullCaptureEligible).map(function(x){return normalizeDoi(x.doi);});
@@ -5202,9 +5311,9 @@ function embeddedJobDois(value) {
         function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count);},'toc',2);},
       function(){return safe('正文图库存','figures',function(){return inventoryReadMetadataJson({method:'GET',url:WORKER+'/api/article-figures/staged?inventory=1&ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,headers:{}},'queue');},
         function(x){return x&&x.schemaVersion==='capture-inventory-v1'&&x.complete===true&&Array.isArray(x.items)&&x.items.length===Number(x.count);},'figures',2);},
-      function(){return safe('文本库存','evidence',function(){return inventoryReadMetadataJson({method:'GET',url:EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),timeout:INVENTORY_REQUEST_TIMEOUT_MS,
-        headers:{authorization:'Bearer '+String(writeToken()||'')}},'private');},
-        function(x){return x&&Array.isArray(x.items)&&x.items.length===Number(x.count)&&x.truncated!==true;},'evidence',2);},
+      function(){return safe('文本库存','evidence',readEvidenceInventoryPaged,
+        function(x){return x&&x.schemaVersion===EVIDENCE_SCHEMA_VERSION&&x.complete===true
+          &&Array.isArray(x.items)&&x.items.length===Number(x.count)&&x.truncated!==true;},'evidence',1);},
       function(){return readOwnerPdfInventory(queue.articles,run);}
     ];
     // Run at most two inventory layers concurrently without fixed-pair head
@@ -5473,7 +5582,7 @@ function embeddedJobDois(value) {
     s.remainingNeeds={toc:0,figures:0,evidence:0,pdf:0};
     left.forEach(function(r){if(r.job.captureToc)s.remainingNeeds.toc++;if(r.job.captureFigures)s.remainingNeeds.figures++;if(r.job.captureEvidence)s.remainingNeeds.evidence++;if(r.job.capturePrivatePdf)s.remainingNeeds.pdf++;});
     s.pendingPreview=coveragePending(run).slice(0,12).map(function(r){var j=r.job;return {doi:j.doi,journal:j.journal,addedDate:captureBatchDate(j),need:captureNeedText(j)};});
-    s.blockedPreview=left.filter(function(r){return r.state==='blocked';}).slice(0,12).map(function(r){return {doi:r.job.doi,need:captureNeedText(r.job),reason:captureLiveError(r.lastReason||'本次没有新进展')};});
+    s.blockedPreview=left.filter(function(r){return r.state==='blocked';}).slice(0,12).map(function(r){return {doi:r.job.doi,need:captureNeedText(r.job),reason:captureLiveError(r.lastReason||'本次没有新进展'),category:captureBlockCategory(r.lastReason)};});
     return s;
   }
   async function coverageWait(run,until) {
@@ -6322,11 +6431,15 @@ function embeddedJobDois(value) {
           (job.publisher==='acs'||job.publisher==='wiley'||job.publisher==='rsc'||job.publisher==='ccs')) {
         iframeAttempted=true;
         var iframeRows=await iframeCandidates(job,trace);
-        var recovered=iframeRows.filter(function(row){return row&&row.kind==='official';});
+        var recovered=iframeRows.filter(function(row){
+          return row&&(row.kind==='official'||row.kind==='figure1'&&job.allowFigureOne!==false);
+        });
         if(recovered.length){
           recoveredOfficialToc=recovered.slice();
           toc=recoveredOfficialToc.slice();
-          pushTrace(trace,{stage:'paired_toc_fallback',event:'iframe_recovery',status:'found',message:'official='+String(toc.length)+';persisted=1'});
+          pushTrace(trace,{stage:'paired_toc_fallback',event:'iframe_recovery',status:'found',
+            message:'official='+recovered.filter(function(r){return r.kind==='official';}).length
+              +';verifiedFigure1='+recovered.filter(function(r){return r.kind==='figure1';}).length+';persisted=1'});
         }
       }
       var figureSignature=figures.map(function(x){return x.label+'|'+x.url;}).join('|');
