@@ -146,9 +146,11 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
   const pathname=new URL(route.request().url()).pathname;
   if(pathname==='/release-delivery.json')return route.fulfill({status:404,body:'fixture selects local legacy catalog'});
   if(pathname.startsWith('/architecture-v1/')){await new Promise(resolve=>setTimeout(resolve,50));return route.fulfill({status:404,body:'fixture'});}
-  if(pathname==='/pdf-gateway-routing.json'&&options.tencentEnabled!==undefined)
+  if(pathname==='/pdf-gateway-routing.json' &&
+      (options.tencentEnabled!==undefined || options.tencentCanary===true))
    return route.fulfill({status:200,contentType:'application/json',
     body:JSON.stringify({schemaVersion:1,enabled:options.tencentEnabled===true,
+      manualCanary:options.tencentCanary===true,
       origin:'https://pdf.gczhouwld.com'})});
   if(pathname==='/papers.gz.b64')return route.fulfill({status:200,body:encodedPapers});
   if(['/total-synthesis.json','/manual-supplement.json','/final-audit-supplement.json'].includes(pathname))
@@ -496,6 +498,47 @@ try{
   assert.equal(await target.locator('#pdf-canvas').getAttribute('data-rendered-page'),'1');
  });
 
+
+ await test('manual Tencent owner trial reads real-sized ranges and scrolls to page two without Cloudflare substitution',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],source,{
+    largePdf:true,tencentEnabled:false,tencentCanary:true,
+  });
+  const page=await gallery(context,true);
+  const href=new URL(await page.locator('.card .private-pdf-button').first().getAttribute('href'),base);
+  href.searchParams.set('pdfIngress','tencent');
+  const target=await context.newPage();
+  await target.goto(href.toString(),{waitUntil:'domcontentloaded'});
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='ready',
+    undefined,{timeout:17000});
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-authorize-path'),'tencent');
+  assert.equal(await target.locator('html').getAttribute('data-private-pdf-file-route'),'tencent');
+  assert.equal(state.tencentOpenCalls,1);
+  assert.equal(state.openOrigins.filter(x=>x==='https://api.gczhouwld.com').length,0,
+    'manual test must not silently download from the canonical Worker');
+  assert.ok(state.tencentMaxRangeBytes>=512*1024);
+  assert.equal(state.privateFullFileCalls,0);
+  await scrollPdfToPage(target,2);
+  assert.equal(await target.locator('#page-count').textContent(),'第 2 / 2 页');
+ });
+ await test('manual Tencent trial does not bypass a denied account',async()=>{
+  const source={available:true,headerVerified:true,
+    url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
+  const {context,state}=await contextWith(['private_pdf_read'],source,{
+    tencentEnabled:false,tencentCanary:true,tencentOpenStatus:403,
+  });
+  const page=await gallery(context,true);
+  const href=new URL(await page.locator('.card .private-pdf-button').first().getAttribute('href'),base);
+  href.searchParams.set('pdfIngress','tencent');
+  const target=await context.newPage();
+  await target.goto(href.toString(),{waitUntil:'domcontentloaded'});
+  await target.waitForFunction(()=>document.documentElement.dataset.privatePdfViewer==='error',
+    undefined,{timeout:12000});
+  assert.match(await target.locator('#pdf-diagnostic').textContent(),/open_http_403/);
+  assert.equal(state.tencentRangeCalls,0,'denied account must not fetch file bytes');
+  assert.deepEqual(state.openOrigins,['https://pdf.gczhouwld.com']);
+ });
  await test('Tencent separately authorized open recovers when both Worker hostnames stall',async()=>{
   const owner={available:true,headerVerified:true,
     url:'https://api.gczhouwld.com/api/user-ui/private-pdf/file?token=fixture-fast'};
