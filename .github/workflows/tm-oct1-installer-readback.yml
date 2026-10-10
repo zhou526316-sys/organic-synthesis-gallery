@@ -1,5 +1,10 @@
 name: Tampermonkey Oct-1 postdeploy installer readback
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/verify-tm-oct1-installer-live.mjs'
+      - '.github/workflows/tm-oct1-installer-readback.yml'
   push:
     branches: [main]
     paths:
@@ -14,7 +19,7 @@ permissions:
   contents: read
 jobs:
   readback:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    if: github.event_name == 'pull_request' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 4
     steps:
