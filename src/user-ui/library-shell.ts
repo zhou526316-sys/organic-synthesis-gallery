@@ -1,3 +1,4 @@
+import { recordVerifiedPdfSession, clearPdfSessionReceipt } from '../../shared/pdf-vault-session-receipt.mjs';
 import { escapeHtml, makeId, SHAPES, statusLabel, store, styleVars, WORKER_API_BASE, type ActionKey, type Language, type Shape, type StyleDef } from './shared';
 
 import { hydrateStatusImages, statusImageError, statusImageTag, viewStatusImage } from './status-image-assets';
@@ -36,6 +37,11 @@ function cacheSessionUser(user: AuthUser | null): void {
     if (user?.id) localStorage.setItem(SESSION_USER_KEY, JSON.stringify(user));
     else localStorage.removeItem(SESSION_USER_KEY);
   } catch { /* optional */ }
+  // This function is called after successful server login/session validation.
+  // Publish only a bounded, token-hashed hint for opening the user's own PDF
+  // in another tab. A later negative auth response still revokes the session.
+  if (user?.id) void recordVerifiedPdfSession(sessionToken(), user.id);
+  else clearPdfSessionReceipt();
 }
 function saveSessionToken(value: string, user: AuthUser | null = null): void {
   try {
