@@ -2079,7 +2079,6 @@ async function goToIndexedResultPage(requestedPage: number): Promise<void> {
   } catch (error) {
     if (token !== indexedViewSerial) return;
     console.warn('D1 literature page unavailable; returning to verified static catalog reader', error);
-    indexedViewCapability = null;
     indexedViewDegraded = true;
     indexedViewState = null;
     resultWindowPage = 1;
