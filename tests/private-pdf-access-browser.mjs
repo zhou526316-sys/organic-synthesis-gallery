@@ -1133,7 +1133,7 @@ try{
    const card=page.locator('.card').first(),local=card.locator('a.local-pdf-button');
    assert.equal(await local.isVisible(),true,'ordinary users can manage their own local PDF');
    const localUrl=new URL(await local.getAttribute('href'),base);
-   assert.equal(localUrl.pathname,'/pdf-vault/');
+   assert.equal(localUrl.pathname,'/pdf-vault/open/');
    assert.equal(localUrl.searchParams.get('doi'),await card.getAttribute('data-doi'));
    assert.deepEqual([...localUrl.searchParams.keys()],['doi'],'the card URL must contain no session or file data');
    const original=page.locator('.card a.open').first();await original.evaluate(anchor=>{anchor.href='/publisher-fallback.html';});
@@ -1334,17 +1334,21 @@ try{
  await test('real local import updates another tab and missing or expired evidence downgrades cards',async()=>{
   const {context,state}=await contextWith([],undefined,{locale:'zh-CN'});const page=await gallery(context,false);
   const card=page.locator('.card').first(),doi=await card.getAttribute('data-doi');
-  const local=await popup(page,card.locator('a.local-pdf-button'));
+  const firstNative=await popup(page,card.locator('a.local-pdf-button'));
+  await firstNative.waitForFunction(()=>document.documentElement.dataset.nativePdfState==='unlinked',undefined,{timeout:12000});
+  assert.equal(await firstNative.getByTestId('native-pdf-frame').isVisible(),false,'unlinked DOI does not expose any other PDF');
+  await firstNative.close();
+  const local=await context.newPage();
+  await local.goto(base+'/pdf-vault/?doi='+encodeURIComponent(doi),{waitUntil:'domcontentloaded'});
   await local.waitForFunction(()=>document.documentElement.dataset.pdfVaultAuth==='authenticated');
-  assert.equal(await vaultBy(local,'doi').inputValue(),doi,'the card opens its own DOI management page');
-  assert.equal(await vaultBy(local,'reader').isVisible(),false,'card navigation does not read or render a PDF');
+  assert.equal(await vaultBy(local,'doi').inputValue(),doi,'the optional management page keeps the DOI association');
   await vaultBy(local,'opfs').click();await waitLocalStatus(local,'success');
   await importCardPdf(local,doi);await waitCardState(page,doi,'local');
   assert.match(await card.locator('.local-pdf-button').textContent(),/PDF · 本机/);
-  assert.equal(new URL(await card.locator('.local-pdf-button').getAttribute('href'),base).searchParams.get('open'),'1','readable local copies deep-link directly to the reader');
+  assert.equal(new URL(await card.locator('.local-pdf-button').getAttribute('href'),base).pathname,'/pdf-vault/open/','saved DOI links directly to browser native PDF tab');
   const quick=await popup(page,card.locator('.local-pdf-button'));
-  await quick.waitForFunction(()=>document.querySelector('[data-testid="pdf-vault-reader"]')?.open === true,undefined,{timeout:7000});
-  await quick.waitForFunction(()=>document.querySelector('[data-testid="pdf-vault-reader-canvas"]')?.dataset.renderedPage === '1',undefined,{timeout:7000});
+  await quick.waitForFunction(()=>document.documentElement.dataset.nativePdfState==='reading',undefined,{timeout:12000});
+  assert.match(await quick.getByTestId('native-pdf-frame').getAttribute('src'),/^blob:/,'the existing copy is shown in the browser PDF viewer');
   await quick.close();
   await assertNoCardFileIo(page);await assertPdfHidden(page);assert.equal(state.privateCalls,0);
   const signal=await page.evaluate(()=>localStorage.getItem('gallery-pdf-vault-local-change-v1'));
@@ -1371,7 +1375,7 @@ try{
   },doi);
   state.holdQueue=false;for(const release of state.pendingQueue.splice(0))release();
   await waitCardState(page,doi,'check');
-  assert.equal(new URL(await card.locator('.local-pdf-button').getAttribute('href'),base).searchParams.has('open'),false,'unverified local copies never keep the quick-open hint');
+  assert.equal(new URL(await card.locator('.local-pdf-button').getAttribute('href'),base).pathname,'/pdf-vault/open/','missing PDF keeps the DOI route so the user can re-associate its file');
   assert.equal(await page.evaluate(()=>window.__localStateAfterDenial.includes('local')),false,'an older pending queue response cannot repaint a rejected local receipt');
   assert.equal(await vaultBy(local,'reader').isVisible(),false);await assertNoCardFileIo(page);
   await importCardPdf(local,doi);await waitCardState(page,doi,'local');
