@@ -74,6 +74,13 @@ try {
   assert.equal(row.result.readyToPublish, true);
   cases.push('fully_finalized_fixture_passes_strict_mode');
 
+  const unresolvedAsInclude = structuredClone(complete);
+  unresolvedAsInclude.decisions[0].evidenceBasis = '按用户明确决定记录其题名所示的有机转化或合成贡献；未取得的新实验细节保持未知。该描述并未证明一般制备范围。';
+  row = await run(unresolvedAsInclude, handoff, latest, true);
+  assert.equal(row.status, 1);
+  assert.ok(row.result.failures.some(failure => failure.includes('include_promoted_from_unresolved_evidence')));
+  cases.push('manual_include_intent_cannot_replace_preparative_evidence');
+
   row = await run(complete, handoff, { ...latest, generatedAt: '2026-09-22T14:00:00.000Z' }, true);
   assert.equal(row.status, 1);
   assert.equal(row.result.readyToPublish, false);

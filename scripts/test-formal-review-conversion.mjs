@@ -158,6 +158,9 @@ test('full_finalized_batch_has_empty_deferred_queue', () => {
   f.staging.qualityControl.openEvidenceGaps = 0; f.staging.qualityControl.allHandoffCandidatesFinalized = true;
   const out = convertPrepublishReview(f.staging, f.handoff, options);
   assert.equal(out.formalReview.reviewComplete, true); assert.deepEqual(out.pendingQueue.items, []);
+  assert.equal(out.markerFields.pendingQueueFile, out.pendingQueueFile);
+  assert.equal(out.markerFields.pendingQueueBlobSha, gitBlobSha(serialize(out.pendingQueue)));
+  assert.deepEqual(validateFormalPartition(f.staging, out.formalReview, out.markerFields, out.pendingQueue), []);
 });
 
 const root = await mkdtemp(path.join(tmpdir(), 'gallery-conversion-test-'));
