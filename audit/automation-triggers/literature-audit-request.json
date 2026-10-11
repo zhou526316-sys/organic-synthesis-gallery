@@ -1,9 +1,11 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-11T02:10:48.645Z",
-  "requestedBy": "post-release-doi-union-20261011-0800",
+  "requestedAt": "2026-10-11T02:13:48.035Z",
+  "requestedBy": "postrelease-after-four-late-doi-reviews-20261011",
   "publicationSlot": "2026-10-11T08:00:00+08:00",
   "productionMarkerBlobSha": "b48192fcc7a1acb3ba87190283c74432623e9ecd",
   "expectedProductionCards": 959,
-  "reason": "Run real post-release machine DOI-union audit against the 959-paper immutable 2026-10-11 formal release. Preserve 3-day main window, 7-day safety tail, Crossref multi-ISSN online/published/created, OpenAlex, late deposits and verifiedThrough catch-up; do not add papers, trigger another writer, change schedule or claim closure with unexplained missing DOI."
+  "reviewFile": "audit/review-2026-10-11-postrelease-late-0800.json",
+  "reviewBlobSha": "0bda64738c7ce458a8d21e3e4cfb5279c3028482",
+  "reason": "Rebuild post-release DOI union after finalized two-pass late DOI review: three independently evidenced non-synthesis exclusions and one exact next-slot thiophene hydrogenation inclusion carryover. Verify production 959, no unknown unresolved; preserve publisher source anomalies and verifiedThrough closure limits. No new literature admission outside original fixed slot."
 }
