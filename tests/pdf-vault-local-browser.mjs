@@ -519,6 +519,15 @@ try {
     await page.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
     assert.equal(await page.evaluate(() => document.documentElement.dataset.nativePdfState), 'unlinked');
   });
+  await test('legacy local-library import refuses a PDF whose embedded DOI does not match', async () => {
+    const { context } = await trackedContext();
+    const page = await pageFor(context);
+    await selectDestination(page, 'opfs');
+    await importFile(page, WRONG_PDF, 'unrelated.pdf');
+    await waitStatus(page, 'error');
+    assert.match(await by(page, 'status').innerText(), /DOI.*不一致/);
+    assert.equal((await localCopies(page)).filter(x => x.state === 'available').length, 0);
+  });
   await test('wrong DOI PDF cannot be linked, correct DOI can replace it, and unlink is reversible', async () => {
     const { context } = await trackedContext();
     const page = await context.newPage();
