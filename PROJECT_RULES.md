@@ -54,6 +54,20 @@ Effective from the user's 2026-10-06 instruction: **for a Gallery paper whose `a
 7. A PDF failure remains independent of successfully captured TOC/body/text media and does not invalidate those receipts. The controller must continue to later DOI jobs rather than stall on one failed PDF.
 8. Old in-memory controllers must fail closed after a controller-generation cutover. Stale controller final reports and private-PDF uploads must not overwrite current completion truth.
 
+## Canonical WeChat editorial master rules · 2026-10-11
+
+**MANDATORY for ALL conversations/windows in this project:** before creating, editing, reviewing, or updating any Official Account “今日精选 / 往期精选” content, fully read **[docs/wechat-editorial-master-rules.md](docs/wechat-editorial-master-rules.md)**. It is the single authoritative *current* editorial/cover/science-image/deeplink/draft QA baseline. An older sample draft, this file's historical per-cover exception, or a new window's incomplete recollection cannot override the master. The user's explicit current request remains authoritative; general safety and no-unauthorized-publication constraints are never relaxed.
+
+Particularly important non-negotiable defaults:
+
+1. **Today's full WeChat-native featured headline** is \`有机合成文献日报｜MM.DD｜今日精选｜期刊：忠实自然的中文论文标题\`; removing the column/date and leaving only the paper title is an **obsolete default**, not a current rule. The featured cover prioritizes the largest safe original TOC without adding a duplicated \`今日精选·期刊\` header.
+2. **Separate two-card edition**: first user-selected daily featured, second user-selected retrospective; no invented choice or mixed body. The website's sole official new-literature publication slot remains **08:00 Beijing**.
+3. **Original chemistry source integrity**: original main-text/SI figures only, exact chemical structures cropped (never generatively repainted), complete source labels/tables/mechanism cycles and semantic paragraph-to-image placement. Do not repeat the past truncated Fig.5e, two-page SI Table S11 or misplaced Fig.4B mistakes.
+4. **“阅读原文”**: separate verified-DOI links for both articles, \`summary=0\`, exact card scroll/lock and ~20-second blue highlight; the daily-index QR remains date-scoped.
+5. **Real delivery, no false completion**: text-only and images-only independent reviews with hash-locked gate; one controlled fixed-IP WeChat \`draft/add\` or same-media \`draft/update\`, \`draft/get\` readback, then an authentic new preview link. Image generation, Markdown, code, ZIP, or a CI pass alone do not mean the WeChat draft is updated. Do not claim API access is absent without checking the already configured relay. **Never mass-send without separate explicit authorization.**
+
+Older instructions anywhere that say “the native title is the paper title only whenever the cover contains 今日精选·JACS” are *historical single-cover exceptions*. They no longer set the default for future articles. Newer specific user instructions may authorize an exception for one named paper, but they do not silently replace the long-term baseline.
+
 ## WeChat draft editorial gate
 
 Effective from the user's 2026-10-06 instruction: **公众号草稿不得从正在编辑的源稿直接写入微信。先生成纯文字审阅稿与纯图片审阅稿，分别审核通过后，才允许合成并写入公众号草稿。**
@@ -135,5 +149,5 @@ For any WeChat image/cover correction, default to the following end-to-end flow 
 
 If the task cannot reach draft/get success, state the exact blocker; do not stop at image generation and say that the user can copy it manually.
 
-User override on cover + article title: when the cover includes “今日精选·JACS”/“今日精选·期刊”, the main article’s actual native title is the **paper Chinese title only**, without duplicating the cover label/date prefix. Keep a white/light original-color TOC when the user requests it, with only a sufficiently high-contrast bottom strip for native white title and no chemistry glyphs beneath the title.
+Historical cover-specific exception (NOT the current default): some old user-approved covers printed “今日精选·JACS/期刊” and temporarily used a paper-only native title. **Superseded by the 2026-10-11 master**: all NEW daily featured titles use the full “有机合成文献日报｜日期｜今日精选｜期刊：中文题目” format unless the user explicitly overrides the individual paper. Current cover defaults remove redundant top-column lettering, maximize the original verified TOC, and reserve only the title-safe backing needed for the full native headline; never cover chemistry.
 
