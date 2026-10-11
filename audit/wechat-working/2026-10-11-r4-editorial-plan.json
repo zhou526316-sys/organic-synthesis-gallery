@@ -1,0 +1,261 @@
+{
+  "date": "2026-10-11",
+  "revision": "2026-10-11-r4",
+  "editorialReason": "User asked to further enlarge the JACS source TOC without encroaching on native title and to end the mandatory generic three-box intro across all papers. Every title must match its associated science and evidence.",
+  "unchangedSelectedDois": [
+    "10.1021/jacs.6c15886",
+    "10.1038/s44160-026-01127-z"
+  ],
+  "introductionStructure": {
+    "JACS": "two paper-specific, evidence-matched summary callouts",
+    "Nature Synthesis": "no opening generic boxes; one natural science-led section after original lead image"
+  },
+  "fixedTemplateLabelsRemoved": [
+    "30秒看懂反应",
+    "30 秒看懂反应",
+    "反应真正难在哪里",
+    "为什么值得研究",
+    "值得研究的机理问题"
+  ],
+  "allHeadingsEvidenceAligned": true,
+  "cover": {
+    "source": "JACS original graphical abstract already source-verified in R3",
+    "oldWidth": 790,
+    "newWidth": 810,
+    "scaleFactor": 1.025,
+    "newBottomY": 464,
+    "nativeDarkBandStartY": 514,
+    "pixelDiscrepancy": "only uniform high-quality interpolation of original source pixels; no chemistry redrawn",
+    "centerSquareQA": "needs actual source-pixel check for original atom+legend at both extremes",
+    "nativeAppScreenshot": "not available"
+  },
+  "figures": {
+    "JACS": [
+      {
+        "figure_id": "jacs_lead",
+        "location": "immediately_after_paper_heading_before_prose",
+        "caption": "原文 Scheme 1d｜气态烷烃、缺电子烯烃和芳基溴化物的三组分不对称双碳官能团化；来源为作者论文原始反应图。"
+      },
+      {
+        "figure_id": "jacs_prior",
+        "section": "从轻质气态烷烃到手性 α-芳基羰基产物",
+        "after_paragraph": 2,
+        "preceding_text": "原文 Scheme 1a–c 回顾气态烷烃进入不对称合成的既有途径，而开篇 Scheme 1d 给出本文的三组分设计：TBADT 介导烷烃的氢原子转移，烷基片段先加成缺电子烯烃，芳基溴化物通过镍催化体系提供第二个成键片段，从而制得手性 α-芳基羰基化合物。把既有工作的局限和这篇论文真正做成的反应分开来看，才能理解后文为什么要分别讨论区域选择性和对映选择性。",
+        "caption": "原文 Scheme 1a–c｜既有气态烷烃不对称转化中区域/对映选择性的代表性限制；与本工作数据区分。"
+      },
+      {
+        "figure_id": "jacs_f02",
+        "section": "TBADT 与镍催化的分工及反应优化",
+        "after_paragraph": 2,
+        "preceding_text": "模型反应用丙烷（6 bar）、丙烯酸叔丁酯、对溴苯甲腈、TBADT（3 mol%）、NiCl₂·DME（10 mol%）、L4（15 mol%）、K₃PO₄ 和丙酮进行。390 nm 光照 16 h 后，目标产物 3 的分离收率为 76%，对映体比例 96:4，支链/直链产物比超过 20:1。Table 1 中不加光、不加 TBADT 或不加镍，均只能得到痕",
+        "caption": "原文 Table 1｜催化条件与光照/配体/压力对照。"
+      },
+      {
+        "figure_id": "jacs_s01",
+        "section": "TBADT 与镍催化的分工及反应优化",
+        "after_paragraph": 3,
+        "preceding_text": "这里必须区分三个指标：76% 为产物 3 的分离收率，96:4 是对映体比例 er（对应 92% ee），大于 20:1 是区域异构体比例 rr。原文 Table 1 中将 370 nm 改为 390 nm，收率由 69% 提高至 76%，er 由 94:6 提高到 96:4；改用更拥挤的 L5，er 可达 98:2，但收率降至 56%。这些不是“某个配体绝",
+        "caption": "补充信息 SI Table S5–S6｜镍盐、压力和配体变动及无光/无镍对照。"
+      },
+      {
+        "figure_id": "jacs_s03",
+        "section": "键强度之外：丙酮溶剂与氢原子转移的极性效应",
+        "after_paragraph": 2,
+        "preceding_text": "这个现象提醒我们，氢原子转移的竞争不仅取决于键强度，还受极性匹配和具体反应动力学影响。SI Table S1 中乙腈使模型收率降为 20%、er 降至 77:23，而乙酸乙酯（EtOAc）未得到目标产物；它只说明本套光照/催化/气体压力组合下的筛选结果，不能推广为“乙酸乙酯不适合所有 HAT 或镍催化反应”。",
+        "caption": "补充信息 SI Table S1｜丙烷模型反应的溶剂筛选：乙酸乙酯无目标产物。"
+      },
+      {
+        "figure_id": "jacs_f03",
+        "section": "丙烯酸酯结构影响收率、区域选择性与 er",
+        "after_paragraph": 1,
+        "preceding_text": "原文 Scheme 2 表明，改变缺电子烯烃的酯基，会同时改变反应效率、区域异构体比例与 er。丙烯酸叔丁酯给产物 3：76% 分离收率、>20:1 rr、96:4 er；换成丙烯酸甲酯，产物 4 降为 52%、9:1 rr 和 77:23 er。实验直接说明烯烃结构对三个指标均有影响，但单靠这组筛选，无法区分位阻、电子效应与镍物种分布各自贡献了多少。",
+        "caption": "原文 Scheme 2｜不同缺电子烯烃作为自由基受体时的收率、区域选择性和对映选择性。"
+      },
+      {
+        "figure_id": "jacs_f04",
+        "section": "芳基溴化物范围与含氮杂芳环的选择性边界",
+        "after_paragraph": 1,
+        "preceding_text": "原文 Scheme 3 上半完整列出丙烷与不同芳基溴化物的反应，包括带氰基、酯、砜、三氟甲基、氯和杂芳环的底物。17、18 分别得到 72%、78% 收率与 95:5、98:2 er；这些例子支持官能团兼容范围，但不能把某一种芳基底物的 er 外推到全部底物。酮洛芬相关骨架及薄荷醇、葡萄糖、α-生育酚、胆固醇衍生物展示了复杂分子的后期修饰可能性：须同时核对其",
+        "caption": "原文 Scheme 3（丙烷反应完整区块）｜包括标准反应条件、芳基溴化物范围和复杂分子实例；每项收率、rr、er、dr 应按原图区分。"
+      },
+      {
+        "figure_id": "jacs_s02",
+        "section": "芳基溴化物范围与含氮杂芳环的选择性边界",
+        "after_paragraph": 3,
+        "preceding_text": "SI §6 报告了未反应的芳基溴化物。延长反应至 48 h 或增加光源后仍观察到芳基溴化物回收，作者认为可能受限于镍对这些芳基溴化物的氧化加成。它限定了这套反应的芳基卤化物适用范围，不应把广泛官能团兼容误读成所有芳基溴化物都能使用。",
+        "caption": "原文 Scheme 3 的适用边界｜补充信息第 6 节的未成功芳基溴化物（原 SI 第 50 页）。"
+      },
+      {
+        "figure_id": "jacs_f05",
+        "section": "从异丁烷到乙烷：重新优化反应条件",
+        "after_paragraph": 1,
+        "preceding_text": "更换气态烷烃后，反应需要重新寻找条件。异丁烷在约 1 bar 下得到代表性产物 29：63% 分离收率、98:2 er、13:1 rr；与丙烷模型反应的 >20:1 rr 并不相同。这提示烷基自由基结构会改变反应网络，但目前的数据不能单独归因于某一个镍中间体的稳定性。",
+        "caption": "原文 Scheme 3（异丁烷及乙烷反应完整区块）｜不同气态烷烃所需压力、芳基底物与区域／对映选择性。"
+      },
+      {
+        "figure_id": "jacs_f06",
+        "section": "6:1 的捕获产物与大于 20:1 的偶联产物为何不同？",
+        "after_paragraph": 1,
+        "preceding_text": "原文 Scheme 4 用 TEMPO 捕获丙烷活化后产生的碳自由基，所得二级/一级相关捕获产物比例约为 6:1；在标准三组分条件下，最终支链/直链产物比大于 20:1。**这两个比例来自不同的实验体系**，不应将前者当成已经精确定量的本征 HAT 速率常数。但它们的差异至少说明：只用第一步夺氢的位点偏好，很难充分解释最终产物分布，烯烃加成及金属介导的后续过",
+        "caption": "原文 Scheme 4｜TEMPO 捕获：自由基比约 6:1 与产物大于20:1 的差别。"
+      },
+      {
+        "figure_id": "jacs_f07",
+        "section": "Ni–C 结合可逆性：DFT 如何连接抽氢与区域选择性？",
+        "after_paragraph": 1,
+        "preceding_text": "原文 Fig. 1a 从烯烃配位的 Ni(0) 物种 A 出发，计算异丙基与正丙基自由基的结合及再解离。两个路径均可能形成 Ni(I)–烷基物种；所用模型中，异丙基和正丙基相关最低点的相对自由能分别约为 −4.1 与 −12.2 kcal mol⁻¹。更低的正丙基路径支持其结合态相对稳定的解释，但这些能量并不等于直接测得的 Ni–C 解离速率；不能仅根据两个",
+        "caption": "原文 Fig. 1a｜DFT 自由基储库：镍–碳键可逆性与竞争成键路径。"
+      },
+      {
+        "figure_id": "jacs_f08",
+        "section": "手性芳基镍捕获步骤的立体选择性计算模型",
+        "after_paragraph": 1,
+        "preceding_text": "原文 Fig. 1b 用计算讨论 α-酯自由基 G 与手性芳基镍物种的后续反应。作者提出 Ni(0) 氧化加成芳基溴化物生成 Ni(II) 芳基物种，经过自旋态变化后捕获自由基，形成 Ni(III) 中间体，并通过还原消除给出手性产物。论文还比较了镍直接介导加成、Ni(I)–烷基迁移插入等竞争路径，计算势垒较不利。这里的路径筛选是特定模型下的理论比较，不能写",
+        "caption": "原文 Fig. 1b｜DFT 计算支持的镍催化成键循环。"
+      },
+      {
+        "figure_id": "jacs_f09",
+        "section": "手性芳基镍捕获步骤的立体选择性计算模型",
+        "after_paragraph": 2,
+        "preceding_text": "这一路径将对映选择性的主要来源定位在 α-酯自由基与 Ni(II) 芳基中间体发生不可逆捕获的步骤，而不是丙烷最初被抽氢的时刻。Fig. 2 比较两个手性过渡态，计算得到约 1.7 kcal mol⁻¹ 的自由能差；非共价相互作用与形变–相互作用分析提示，配体与异丙基/芳基之间的位阻排斥和结构形变共同影响构型选择。",
+        "caption": "原文 Fig. 2｜两种自由基捕获过渡态的非共价相互作用和形变分析。"
+      }
+    ],
+    "Nature Synthesis": [
+      {
+        "figure_id": "ns_lead",
+        "location": "immediately_after_paper_heading_before_prose",
+        "caption": "原文 Fig. 1d｜从惰性烷烃经双次氢原子转移生成烯烃、再发生氮杂环丙烷化的研究设计；图示为作者提出的模型。"
+      },
+      {
+        "figure_id": "ns_intro_ab",
+        "section": "不预先制备烯烃，直接从烷烃构建氮杂环丙烷",
+        "after_paragraph": 2,
+        "preceding_text": "原文 Fig. 1a–b 概述单次 HAT 所产生的碳自由基及此前邻位官能化的局限；Fig. 1c 说明连续夺氢与竞争副反应的困难；开篇 Fig. 1d 则呈现本文从惰性烷烃经烯烃中间体形成氮杂环丙烷的设计。本文希望不预先分离烯烃，而在同一光化学体系中完成烷烃活化与氮转移。原文对不同反应路径的验证程度并不相同，因此需要从后面的控制实验逐层判断。",
+        "caption": "原文 Fig. 1a–b｜单次夺氢与传统邻位双官能化的区别；后者往往依赖预先存在的活化基团。"
+      },
+      {
+        "figure_id": "ns_intro_c",
+        "section": "不预先制备烯烃，直接从烷烃构建氮杂环丙烷",
+        "after_paragraph": 3,
+        "preceding_text": "这项设计的价值不是发明了一种新的烯烃氮杂环丙烷化试剂，而是把此前困难的“烷烃 → 烯烃”双氢原子转移接入已知的氮杂环丙烷化反应。随之而来的核心判断是：烯烃真的是参与反应的中间体吗？两次 HAT 由哪一类活性物种完成？",
+        "caption": "原文 Fig. 1c｜此前双次夺氢策略的局限；不能把设想路径当成实验证实。"
+      },
+      {
+        "figure_id": "ns_f02",
+        "section": "模型反应的关键条件：光照、PhIO 与氮宾前体",
+        "after_paragraph": 1,
+        "preceding_text": "作者以环己烷和对叔丁基苯磺酰胺为模型，在 456 nm 蓝光、−20 °C、Ir[dF(CF₃)ppy]₂(dtbbpy)PF₆（2 mol%）、PhIO（4 equiv.）、Na₂CO₃、DCE/tBuOH（10:1）下反应 20 h，得到目标氮杂环丙烷 3，核磁收率 64%、分离收率 60%，单次 C–H 胺化副产物约 2%。这里催化剂、PhIO 和低温",
+        "caption": "原文 Table 1｜环己烷氮杂环丙烷化的条件和严格对照。"
+      },
+      {
+        "figure_id": "ns_f03",
+        "section": "从环烷烃到链状烷烃：位点选择性的收益与边界",
+        "after_paragraph": 1,
+        "preceding_text": "原文 Fig. 2 覆盖五至八元环烷烃、十二元环、双环和苄位底物等。部分小环烷烃以特定顺式氮杂环丙烷为主，桥环底物给出可辨认的 exo 产物；但长链烷烃往往存在多个可以被双次 HAT 的位点，因而混合物的区域与非对映选择性不一。图中标示的位置比值和总分离收率，不能当成每个单一异构体的分离收率。",
+        "caption": "原文 Fig. 2（上部完整逻辑区块）｜环状与代表性简单脂肪烃的底物、收率及异构体比例。"
+      },
+      {
+        "figure_id": "ns_f04",
+        "section": "从环烷烃到链状烷烃：位点选择性的收益与边界",
+        "after_paragraph": 2,
+        "preceding_text": "原文 Fig. 2 的链状烷烃实例包含含卤素、酯、酮、腈和酰亚胺等官能团的底物。部分相邻亚甲基的反应倾向与氢原子转移的极性效应相容，但当可竞争位点较多时，仍会产生区域或非对映异构体混合物；不能将总体分离收率写成单一目标异构体的收率，更不能把这些例子外推为对任意复杂分子都具有精确位点选择性。",
+        "caption": "原文 Fig. 2（中部完整逻辑区块）｜链状及带卤素、酯、酮、腈等官能团的烷烃，标示各竞争位点的比例。"
+      },
+      {
+        "figure_id": "ns_f05",
+        "section": "从环烷烃到链状烷烃：位点选择性的收益与边界",
+        "after_paragraph": 3,
+        "preceding_text": "天然产物来源的桉叶油醇衍生物、葑酮、硬尾醇内酯与 celestolide 等复杂骨架展示了后期修饰可能性；但不能忽略非对映异构体并存以及部分位点的选择性限制。尤其重要的反例是四氢吡喃类醚：其氧原子 α 位 C–H 更容易发生单次胺化，得到产物 41，却未实现所希望的双次 HAT 氮杂环丙烷化。它显示从非活化烷烃拓展到所有含氧有机分子并不直接成立。",
+        "caption": "原文 Fig. 2（下部完整逻辑区块）｜生物活性骨架衍生物以及醚底物的单次 C–H 胺化边界。"
+      },
+      {
+        "figure_id": "ns_f06",
+        "section": "磺酰胺氮源的适用范围与含药物片段的底物",
+        "after_paragraph": 1,
+        "preceding_text": "原文 Fig. 3a 表明，对位、间位、邻位取代的芳基磺酰胺、萘基磺酰胺、杂芳基磺酰胺以及一部分烷基磺酰胺，都可与环己烷参与反应。与 celecoxib、deracoxib、valdecoxib 相关的磺酰胺片段也提供了实例，但目前产生的主要是带磺酰基保护的氮杂环丙烷，不能把这些结构直接称作已经完成药效验证的新药分子。",
+        "caption": "原文 Fig. 3a｜磺酰胺范围与药物相关砜酰胺。"
+      },
+      {
+        "figure_id": "ns_f07",
+        "section": "十克级循环流动制备与装置设计",
+        "after_paragraph": 1,
+        "preceding_text": "原文 Fig. 3b 的高速循环流动光化学系统制得约 12.95 g 产物 3（63%）、10.40 g 的 celestolide 衍生物 40（57%）及由异丁烷获得的 5.89 g 产物 16（37%）。补充材料 Supplementary Fig. 39 给出蠕动泵、储液器、冷却盘管、光源和连接管路的整体照片。因 Na₂CO₃、PhIO 在体系中形成",
+        "caption": "原文 Fig. 3b｜高速循环流动装置与十克级合成。"
+      },
+      {
+        "figure_id": "ns_si39",
+        "section": "十克级循环流动制备与装置设计",
+        "after_paragraph": 1,
+        "preceding_text": "原文 Fig. 3b 的高速循环流动光化学系统制得约 12.95 g 产物 3（63%）、10.40 g 的 celestolide 衍生物 40（57%）及由异丁烷获得的 5.89 g 产物 16（37%）。补充材料 Supplementary Fig. 39 给出蠕动泵、储液器、冷却盘管、光源和连接管路的整体照片。因 Na₂CO₃、PhIO 在体系中形成",
+        "caption": "补充材料 Supplementary Fig. 39（装置完整图）｜高速循环流动光反应系统的蠕动泵、储液器、冷却中的盘管反应器与光源及实物照片。"
+      },
+      {
+        "figure_id": "ns_fig4_de",
+        "section": "环己烯的检测与投料实验为中间体路径提供什么证据？",
+        "after_paragraph": 1,
+        "preceding_text": "原文 Fig. 4d 的时间曲线中观察到少量环己烯；Fig. 4e 则显示，将环己烯单独置于标准条件，可得到 75% 分离收率的氮杂环丙烷。相比之下，单次 C–H 胺化物及邻位二胺在相应投料实验中不能转化为目标产物。把这三项结果放在一起，烯烃作为中间体的解释比“先胺化、再闭环”更符合实验，但这仍不是对两次 HAT 活性物种及全部微观步骤的直接观察。",
+        "caption": "原文 Fig. 4d–e（完整时间曲线和中间体对照）｜反应期间环己烯出现，以及环己烯、单次胺化物和邻位二胺的独立投料结果。"
+      },
+      {
+        "figure_id": "ns_fig4_fg",
+        "section": "环己烯的检测与投料实验为中间体路径提供什么证据？",
+        "after_paragraph": 3,
+        "preceding_text": "原文 Fig. 4f–g 考察了含碘物种替代反应路径及不对称烷烃／烯烃的竞争结果。例如用 I₂ 取代 PhIO 并不能给出相应氮杂环丙烷；另外，产物来源与竞争底物的转化也为判断脱氢路线提供限制。这些对照降低了特定替代机制在标准条件下占主导的可能，但既不能排除微量并行过程，也不能单凭一张控制图断言双次 HAT 的每一步已经完全确定。",
+        "caption": "原文 Fig. 4f–g（完整含碘对照及烷烃／烯烃竞争图组）｜碘相关替代路径与不对称底物的竞争结果；包含原图最后一行产物 86。"
+      },
+      {
+        "figure_id": "ns_f10",
+        "section": "TEMPO 捕获、同位素效应与副产酮",
+        "after_paragraph": 1,
+        "preceding_text": "原文 Fig. 5 的 TEMPO 对照使氮杂环丙烷产物无法检测，并分离得到双 TEMPO 相关捕获产物 88。这为反应中存在碳自由基特征过程提供支持，但自由基清除剂也可能重塑反应网络，因而捕获结果不能直接给出正常催化条件下各活性物种的稳态浓度。原文的光开关实验及 SI 量子产率测量支持持续光照的重要性，尚不足以唯一判定是否存在短程自由基链传播。",
+        "caption": "原文 Fig. 5｜TEMPO 捕获、KIE 及酮副产物分布。"
+      },
+      {
+        "figure_id": "ns_s01",
+        "section": "TEMPO 捕获、同位素效应与副产酮",
+        "after_paragraph": 2,
+        "preceding_text": "环己烷/d₁₂-环己烷的同瓶竞争给出约 5.4 的氢/氘产物比，平行实验对应约 2.4 的动力学同位素效应。两个数值测量方式不同，不应机械合并成一个“精确 KIE”。它们共同支持 C–H 断裂与控制反应速率的步骤有关；具体哪一次 HAT 更慢，还需要结合计算和其它实验。",
+        "caption": "补充信息 SI Fig. 22｜环己烷与氘代环己烷同瓶 KIE。"
+      },
+      {
+        "figure_id": "ns_fig4_abc",
+        "section": "光谱与淬灭实验支持的敏化过程",
+        "after_paragraph": 1,
+        "preceding_text": "原文 Fig. 4a–c 与补充材料 SI Fig. 3–4 显示，磺酰亚胺碘烷 75 能淬灭铱光敏剂的磷光，拟一级淬灭关系给出的双分子常数约为 1.87 × 10⁷ M⁻¹ s⁻¹。淬灭浓度趋势与短程能量转移的解释相容，光敏剂表现也提示三重态能量具有重要作用。它们为敏化产生三重态氮宾提供光物理依据，但并未直接记录每一次能量转移或排除并行的直接光激发。",
+        "caption": "原文 Fig. 4a–c（完整光谱与淬灭图组）｜吸收光谱、磷光淬灭浓度关系和用于讨论 Dexter 型能量转移的浓度分析；相关性不等于直接观察到所有中间体。"
+      },
+      {
+        "figure_id": "ns_s04",
+        "section": "光谱与淬灭实验支持的敏化过程",
+        "after_paragraph": 1,
+        "preceding_text": "原文 Fig. 4a–c 与补充材料 SI Fig. 3–4 显示，磺酰亚胺碘烷 75 能淬灭铱光敏剂的磷光，拟一级淬灭关系给出的双分子常数约为 1.87 × 10⁷ M⁻¹ s⁻¹。淬灭浓度趋势与短程能量转移的解释相容，光敏剂表现也提示三重态能量具有重要作用。它们为敏化产生三重态氮宾提供光物理依据，但并未直接记录每一次能量转移或排除并行的直接光激发。",
+        "caption": "补充信息 SI Fig. 3–4｜磺酰亚胺碘烷对铱催化剂磷光淬灭及相应拟合。"
+      },
+      {
+        "figure_id": "ns_f11",
+        "section": "双次夺氢与直接 C–N 偶联的竞争：三条计算路径",
+        "after_paragraph": 1,
+        "preceding_text": "原文 Fig. 6–7 的计算讨论三种双次氢原子转移路径：游离三重态氮宾直接连续抽氢，以及氮宾与 PhIO 相关加合物经不同活性中心启动的路径。作者比较了普通过渡态、最小能量交叉点（MECP）和竞争的 C–N 自由基偶联过程。计算的作用是约束“哪些路径在能量上有可能”，而非直接确定反应液中每种物种的浓度与寿命。",
+        "caption": "原文 Fig. 6｜三条双次HAT途径及后续氮杂环丙烷形成的计算模型。"
+      },
+      {
+        "figure_id": "ns_f12",
+        "section": "双次夺氢与直接 C–N 偶联的竞争：三条计算路径",
+        "after_paragraph": 2,
+        "preceding_text": "路径 3 提出了氧中心先参与 HAT、氮中心随后夺取邻位第二个氢原子的机制。作者计算的第二次 HAT 与竞争 C–N 偶联微观速率分别约为 5.4 × 10¹¹ 和 6.6 × 10⁹ s⁻¹，前者更有利，与目标氮杂环丙烷相对于单次胺化产物占优的现象相容。**这两个数值是特定计算模型的微观速率，不是实验测得的表观反应速率**；路径 1、2 在不同前体缔合假设",
+        "caption": "原文 Fig. 7｜DFT 势能曲线与自旋态交叉动力学。"
+      },
+      {
+        "figure_id": "ns_s02",
+        "section": "双次夺氢与直接 C–N 偶联的竞争：三条计算路径",
+        "after_paragraph": 3,
+        "preceding_text": "补充材料 SI Fig. 31 的 Smiles 重排支持氮宾相关活性过程，与 PhIO 参与的设想相容，却不是加合物结构被直接分离鉴定的证据。论文讨论了前体预缔合对首次夺氢的影响，因此多条路径仍需进一步验证。若未来要区分它们，关键是获得能够直接报告活性物种或相对速率的证据，而不是仅增加另一组优化产率。",
+        "caption": "补充信息 SI Fig. 31｜Smiles 重排对氮宾–PhIO 配合物的旁证。"
+      }
+    ]
+  },
+  "unchangedRetrospectiveCoverSHA256": "81da90ed5620710abe7d1f2955a27548c3badfe22d3b4b1bc0f3b0fb04aa7a84",
+  "draftOnly": true,
+  "publicSendAuthorized": false
+}
