@@ -174,15 +174,15 @@ jobs:
                           raise RuntimeError('Invalid replaceExisting map')
                       old_sha = str(allowed_replacements.get(rel) or '')
                       allowed_mutable = {gate_rel, 'public/wechat-featured/2026-10-08.json', 'public/wechat-retrospective/os1-multicentred-sulfur-20261008.json', 'public/wechat-editions/2026-10-08.json'}
-                      # One pinned, date-scoped correction for the owner's Oct11 R2
+                      # Pinned, date-scoped corrections for the owner's Oct11 R2/R3
                       # full two-article editorial review. Never relax the SHA lease.
-                      if req.get('revision') == '2026-10-11-r2':
+                      if req.get('revision') in ('2026-10-11-r2', '2026-10-11-r3'):
                           selected = ['10.1021/jacs.6c15886', '10.1038/s44160-026-01127-z']
                           if (req.get('targetDateBeijing') != '2026-10-11'
                               or req.get('expectedDois') != selected
                               or gate.get('selectionDois') != selected
                               or gate.get('date') != '2026-10-11'):
-                              raise RuntimeError('Oct11 R2 DOI/date scope mismatch; refuse replacement')
+                              raise RuntimeError('Oct11 reviewed R2/R3 DOI/date scope mismatch; refuse replacement')
                           allowed_mutable.update({
                               'public/wechat-featured/2026-10-11.json',
                               'public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json',
