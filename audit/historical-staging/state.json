@@ -7,7 +7,7 @@
       "from": "2026-09-15",
       "to": "2026-09-21"
     },
-    "journalIndex": 0
+    "journalIndex": 8
   },
   "completed": [
     "2026-09-22_2026-09-30_jacs",
@@ -25,7 +25,15 @@
     "2026-09-22_2026-09-30_ccs-chemistry",
     "2026-09-22_2026-09-30_science-advances",
     "2026-09-22_2026-09-30_green-chemistry",
-    "2026-09-22_2026-09-30_joc"
+    "2026-09-22_2026-09-30_joc",
+    "2026-09-15_2026-09-21_jacs",
+    "2026-09-15_2026-09-21_angew",
+    "2026-09-15_2026-09-21_nature",
+    "2026-09-15_2026-09-21_science",
+    "2026-09-15_2026-09-21_nature-catalysis",
+    "2026-09-15_2026-09-21_nature-synthesis",
+    "2026-09-15_2026-09-21_nature-chemistry",
+    "2026-09-15_2026-09-21_nature-communications"
   ],
   "attempts": [
     {
@@ -219,26 +227,122 @@
       "count": 53,
       "errors": [],
       "at": "2026-10-10T19:05:11.362Z"
+    },
+    {
+      "id": "2026-09-15_2026-09-21_jacs",
+      "journal": "JACS",
+      "range": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 89,
+      "errors": [],
+      "at": "2026-10-11T19:17:23.034Z"
+    },
+    {
+      "id": "2026-09-15_2026-09-21_angew",
+      "journal": "Angew",
+      "range": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 132,
+      "errors": [],
+      "at": "2026-10-11T19:17:24.444Z"
+    },
+    {
+      "id": "2026-09-15_2026-09-21_nature",
+      "journal": "Nature",
+      "range": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 86,
+      "errors": [],
+      "at": "2026-10-11T19:17:25.253Z"
+    },
+    {
+      "id": "2026-09-15_2026-09-21_science",
+      "journal": "Science",
+      "range": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 38,
+      "errors": [],
+      "at": "2026-10-11T19:17:25.934Z"
+    },
+    {
+      "id": "2026-09-15_2026-09-21_nature-catalysis",
+      "journal": "Nature Catalysis",
+      "range": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 2,
+      "errors": [],
+      "at": "2026-10-11T19:17:26.393Z"
+    },
+    {
+      "id": "2026-09-15_2026-09-21_nature-synthesis",
+      "journal": "Nature Synthesis",
+      "range": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 3,
+      "errors": [],
+      "at": "2026-10-11T19:17:26.804Z"
+    },
+    {
+      "id": "2026-09-15_2026-09-21_nature-chemistry",
+      "journal": "Nature Chemistry",
+      "range": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 4,
+      "errors": [],
+      "at": "2026-10-11T19:17:27.288Z"
+    },
+    {
+      "id": "2026-09-15_2026-09-21_nature-communications",
+      "journal": "Nature Communications",
+      "range": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 213,
+      "errors": [],
+      "at": "2026-10-11T19:17:28.558Z"
     }
   ],
-  "publishedMembershipSnapshot": 938,
+  "publishedMembershipSnapshot": 959,
   "lastRun": {
     "processed": 8,
     "blocked": false,
-    "requests": 21,
+    "requests": 28,
     "next": {
       "range": {
         "from": "2026-09-15",
         "to": "2026-09-21"
       },
-      "journalIndex": 0
+      "journalIndex": 8
     },
-    "verifiedPublishedDois": 938,
-    "completeWindows": 16,
+    "verifiedPublishedDois": 959,
+    "completeWindows": 24,
     "noPublication": true,
     "noPdf": true
   },
   "note": "Initialization only. No historical candidate window has yet been crawled or approved. Exact 23:00 scheduled acquisition runs from main and writes exclusively to this staging branch.",
-  "lastRunStarted": "2026-10-10T19:05:02.893Z",
-  "lastRunFinished": "2026-10-10T19:05:11.662Z"
+  "lastRunStarted": "2026-10-11T19:17:22.206Z",
+  "lastRunFinished": "2026-10-11T19:17:28.861Z"
 }

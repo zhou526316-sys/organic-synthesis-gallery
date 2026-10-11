@@ -1,0 +1,180 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2026-09-15",
+    "to": "2026-09-21"
+  },
+  "checkedAt": "2026-10-11T19:17:26.804Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "total": 3,
+        "count": 3,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 3,
+      "count": 3,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 3,
+      "openalex": 3
+    }
+  },
+  "candidateCount": 3,
+  "alreadyPublished": 1,
+  "unreviewed": 2,
+  "records": [
+    {
+      "doi": "10.1038/s44160-026-01151-z",
+      "title": "Rethinking selectivity in alkene hydrogenation",
+      "authors": [
+        "Maria Koutiva",
+        "Christopher J. Teskey"
+      ],
+      "date": "2026-09-16",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01151-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01151-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01158-6",
+      "title": "Chemoselective Ni-catalysed directed C(sp2)–H alkylation at low temperature using alkyl sulfonylhydrazides",
+      "authors": [
+        "Shuanghu Wang",
+        "David A. Cagan",
+        "Yilin Cao",
+        "Benjamin P. Vokits",
+        "Maximilian D. Palkowitz",
+        "Yu Kawamata",
+        "Phil S. Baran",
+        "Keary M. Engle"
+      ],
+      "date": "2026-09-17",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01158-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01158-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01159-5",
+      "title": "Through-space conductive pathways for polyoxometalate electronics",
+      "authors": [
+        "Lin-Mei Zhang",
+        "Tao Wu"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01159-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01159-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
