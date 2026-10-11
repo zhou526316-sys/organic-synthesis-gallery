@@ -20,7 +20,7 @@ const cases = [], contexts = new Set(), observedStaticPaths = new Set();
 let browser, server, base, activeCase, fatalError;
 await fs.mkdir(OUTPUT, { recursive: true });
 
-function vectorPdf(shade = '0.2') {
+function vectorPdf(shade = '0.2', documentDoi = DOI) {
   const objects = [
     '<< /Type /Catalog /Pages 2 0 R >>',
     '<< /Type /Pages /Kids [3 0 R 5 0 R] /Count 2 >>',
@@ -31,7 +31,7 @@ function vectorPdf(shade = '0.2') {
     '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
   ];
   for (const [index, color] of [[3, shade + ' 0.5 0.8'], [5, '0.8 ' + shade + ' 0.4']]) {
-    const stream = 'q ' + color + ' rg 30 40 280 360 re f 0 0 0 RG 3 w 25 25 m 330 450 l S BT /F1 18 Tf 0 0 0 rg 50 430 Td (Gallery local PDF page ' + (index === 3 ? 1 : 2) + ') Tj ET Q\n';
+    const stream = 'q ' + color + ' rg 30 40 280 360 re f 0 0 0 RG 3 w 25 25 m 330 450 l S BT /F1 18 Tf 0 0 0 rg 50 430 Td (Gallery local PDF page ' + (index === 3 ? 1 : 2) + ') Tj 0 -25 Td (DOI: ' + documentDoi + ') Tj ET Q\n';
     objects[index] = '<< /Length ' + Buffer.byteLength(stream) + ' >>\nstream\n' + stream + 'endstream';
   }
   let body = '%PDF-1.7\n% Gallery synthetic two-page vector and Helvetica fixture. No publisher content.\n';
@@ -43,7 +43,7 @@ function vectorPdf(shade = '0.2') {
   body += 'trailer\n<< /Size ' + (objects.length + 1) + ' /Root 1 0 R >>\nstartxref\n' + start + '\n%%EOF\n';
   return Buffer.from(body);
 }
-const PDF = vectorPdf(), CHANGED_PDF = vectorPdf('0.7');
+const PDF = vectorPdf(), CHANGED_PDF = vectorPdf('0.7'), WRONG_PDF = vectorPdf('0.4', '10.9999/wrong-paper-fixture');
 assert.equal(PDF.length, CHANGED_PDF.length, 'changed fixture preserves size so a size-only probe cannot pass');
 const PDF_HASH = createHash('sha256').update(PDF).digest('hex');
 const forbiddenNetworkValues = [PDF_HASH, PDF.toString('base64'), '%PDF-', 'fixture-private-document.pdf', 'picked-directory'];
@@ -211,7 +211,7 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       localStorage.setItem(sessionKey, token);
       localStorage.setItem('gallery-local-vault-fixture-seeded', '1');
     }
-    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, filePickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false, stallIndexedDb, nativeAuthMode };
+    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, filePickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false, stallIndexedDb, nativeAuthMode, chosenBytes: null };
     const nativeFetch = window.fetch.bind(window);
     window.fetch = (input, init) => {
       const pathname = new URL(typeof input === 'string' ? input : input.url, location.href).pathname;
@@ -246,7 +246,7 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       const handle = await folder.getFileHandle('already-downloaded-anywhere.pdf', { create: true });
       if (!state.externalFileReady) {
         const writer = await handle.createWritable();
-        await writer.write(new Uint8Array(pdfBytes));
+        await writer.write(new Uint8Array(state.chosenBytes || pdfBytes));
         await writer.close();
         state.externalFileReady = true;
       }
