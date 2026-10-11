@@ -519,6 +519,72 @@ try {
     await page.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
     assert.equal(await page.evaluate(() => document.documentElement.dataset.nativePdfState), 'unlinked');
   });
+  await test('wrong DOI PDF cannot be linked, correct DOI can replace it, and unlink is reversible', async () => {
+    const { context } = await trackedContext();
+    const page = await context.newPage();
+    await page.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await page.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
+    await page.evaluate(bytes => { window.__pdfVaultFixture.chosenBytes = bytes; }, [...WRONG_PDF]);
+    await page.getByTestId('native-pdf-link').click();
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'file-error');
+    assert.match(await page.getByTestId('native-pdf-status').innerText(), /DOI.*不一致/);
+    assert.equal((await localCopies(page)).length, 0, 'mismatched PDF must never be stored');
+    await page.evaluate(bytes => {
+      window.__pdfVaultFixture.externalFileReady = false;
+      window.__pdfVaultFixture.chosenBytes = bytes;
+    }, [...PDF]);
+    await page.getByTestId('native-pdf-link').click();
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading');
+    assert.equal((await localCopies(page)).filter(x => x.state === 'available').length, 1);
+    await page.locator('#native-tools-toggle').click();
+    await page.getByTestId('native-pdf-unlink').click();
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'unlinked');
+    assert.equal((await localCopies(page)).filter(x => x.state === 'available').length, 0,
+      'cancel must revoke the association without deleting the disk file');
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
+    assert.equal(await page.getByTestId('native-pdf-frame').isVisible(), false);
+  });
+  await test('one read-only folder grant automatically discovers a newly downloaded PDF', async () => {
+    const { context } = await trackedContext();
+    const page = await context.newPage();
+    await page.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await page.getByTestId('native-pdf-download-folder').waitFor({ state: 'visible' });
+    await page.getByTestId('native-pdf-download-folder').click();
+    await page.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
+    await page.evaluate(async bytes => {
+      const root = await navigator.storage.getDirectory();
+      const folder = await root.getDirectoryHandle('picked-directory', { create: true });
+      const handle = await folder.getFileHandle('publisher-article.pdf', { create: true });
+      const writer = await handle.createWritable();
+      await writer.write(new Uint8Array(bytes));
+      await writer.close();
+    }, [...PDF]);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading',
+      null, { timeout: 30000 });
+    const rows = await localCopies(page);
+    assert.equal(rows.filter(x => x.state === 'available').length, 1);
+    assert.equal(rows.find(x => x.state === 'available')?.hasFileHandle, true);
+    assert.equal(await page.evaluate(() => window.__pdfVaultFixture.pickerCalls), 0,
+      'once authorized, a new DOI tab must not request a folder picker');
+  });
+  await test('fresh server-verified receipt opens the next native tab before a blocked API recheck', async () => {
+    const { context, state } = await trackedContext();
+    const page = await pageFor(context);
+    await importGood(page);
+    const first = await context.newPage();
+    await first.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await first.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading');
+    await first.waitForFunction(() => Boolean(localStorage.getItem('gallery-pdf-vault-session-receipt-v1')));
+    state.holdAuth = true;
+    const second = await context.newPage();
+    await second.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await second.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading', null, { timeout: 10000 });
+    assert.equal(await second.getByTestId('native-pdf-frame').isVisible(), true);
+    state.holdAuth = false;
+    for (const release of state.pendingAuth.splice(0)) release();
+  });
   await test('direct DOI PDF tab opens a saved local copy in the browser native viewer', async () => {
     const { context } = await trackedContext();
     const page = await pageFor(context);
