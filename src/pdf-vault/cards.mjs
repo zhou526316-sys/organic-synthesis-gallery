@@ -13,13 +13,16 @@ const anchors = () => root ? [...root.querySelectorAll('a.local-pdf-button')] : 
 function setLabel(anchor, state, zh, en, titleZh, titleEn) {
   const text = language === 'zh' ? zh : en;
   anchor.textContent = text; anchor.dataset.pdfVaultState = state;
-  // A verified this-device copy should open from the literature card in one
-  // action. Unknown/missing copies still go to the management/import page.
-  const target = new URL(anchor.getAttribute('href') || '/pdf-vault/', location.origin);
-  if (target.origin === location.origin && target.pathname === '/pdf-vault/') {
-    if (state === 'local') target.searchParams.set('open', '1');
-    else target.searchParams.delete('open');
-    anchor.setAttribute('href', target.pathname + target.search + target.hash);
+  // Every DOI card opens a dedicated browser-native PDF tab. That tab reads
+  // only the PDF explicitly bound to the DOI and verified for this account.
+  // If no handle is bound yet, it offers a file picker and the journal link.
+  // This remains a normal anchor (middle click, Ctrl-click, copy link work).
+  const existing = new URL(anchor.getAttribute('href') || '/pdf-vault/', location.origin);
+  const doi = normalizeDoi(anchor.closest('.card')?.dataset.doi || existing.searchParams.get('doi') || '');
+  if (doi) {
+    anchor.href = '/pdf-vault/open/?doi=' + encodeURIComponent(doi);
+    anchor.target = '_blank';
+    anchor.rel = 'noopener noreferrer';
   }
   anchor.title = language === 'zh' ? titleZh : titleEn;
   anchor.setAttribute('aria-label', `${text}: ${anchor.closest('.card')?.querySelector('.title')?.textContent || ''}`);
@@ -78,11 +81,11 @@ function present(context, snapshot) {
       setLabel(anchor, 'local', 'PDF · 本机', 'PDF · This device', '最近已检查本机文件；打开时会再次核对', 'Recently checked on this device; opening verifies it again');
       for (const probe of probes) if (probe.status === 'readable' && probe.checked_at + PDF_PROBE_MAX_AGE_MS + 1 > now) expirations.push(probe.checked_at + PDF_PROBE_MAX_AGE_MS + 1);
     } else if (copies.length) {
-      setLabel(anchor, 'check', 'PDF · 待检查', 'PDF · Check copy', '此设备有保存记录，请打开文献库检查文件或恢复权限', 'A local record exists; check the file or restore its permission');
+      setLabel(anchor, 'check', 'PDF · 待检查', 'PDF · Check copy', '已有本地关联记录；点击后会验证原文件或提示重新选择', 'A file association exists; verify or reselect its source');
     } else if (context.queueItems.get(doi)?.state === 'pending' && now - (context.queueChecked.get(doi) || 0) <= 30_000) {
       setLabel(anchor, 'queue', 'PDF · 待电脑', 'PDF · Queued', '已加入此账号的待电脑获取队列', 'In this account’s desktop acquisition queue');
       expirations.push(context.queueChecked.get(doi) + 30_001);
-    } else setLabel(anchor, 'none', '本地 PDF', 'Local PDF', '打开本地 PDF 文献库', 'Open your local PDF library');
+    } else setLabel(anchor, 'none', '本地 PDF', 'Local PDF', '若未关联，可选择任意位置的已下载 PDF 或前往期刊获取', 'Choose an existing PDF from any location or visit the journal');
   }
   const displayRevision = revision;
   if (expirations.length) expiry = setTimeout(() => { if (displayRevision === revision) present(context, snapshot); }, Math.max(1, Math.min(...expirations) - now));

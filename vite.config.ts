@@ -18,6 +18,7 @@ export default defineConfig({
         gallery: 'index.html',
         ownerPdf: 'pdf/index.html',
         pdfVault: 'pdf-vault/index.html',
+        pdfVaultNative: 'pdf-vault/open/index.html',
       },
       maxParallelFileOps: 128,
     },
