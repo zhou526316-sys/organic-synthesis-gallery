@@ -3200,6 +3200,19 @@ def main() -> int:
         and str(state.get("media_id") or "").strip()
     )
     media_id = requested_media_id or (str(state.get("media_id")) if same_day_state else "")
+    # Owner-approved corrections must update the exact existing same-day draft.
+    # Fail closed if the persisted draft ID or number of articles differs.
+    reviewed_request = {}
+    if source_link_request_path.exists():
+        reviewed_request = json.loads(source_link_request_path.read_text(encoding="utf-8"))
+    pinned_media = ""
+    if (isinstance(reviewed_request, dict)
+        and str(reviewed_request.get("publicationDate") or "") == publication_date
+        and reviewed_request.get("draftOnly") is True
+        and reviewed_request.get("publicSendAuthorized") is False):
+        pinned_media = str(reviewed_request.get("expectedExistingMediaId") or "").strip()
+    if pinned_media and (not same_day_state or media_id != pinned_media):
+        raise RuntimeError("approved same-day media_id mismatch; refusing duplicate draft")
 
     if media_id:
         existing = get_draft(token, media_id)
@@ -3218,6 +3231,8 @@ def main() -> int:
             result = {"errcode": 0, "errmsg": "ok"}
             stage = "draft_update"
         else:
+            if pinned_media:
+                raise RuntimeError("existing two-article draft identity/count mismatch; refusing replacement")
             result = create_draft(token, articles)
             media_id = str(result.get("media_id") or "")
             stage = "draft_add_bundle_replacement"
