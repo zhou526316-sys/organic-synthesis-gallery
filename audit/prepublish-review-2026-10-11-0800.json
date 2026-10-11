@@ -4,7 +4,7 @@
   "executionMode": "scheduled_github_main_only",
   "publicationSlot": "2026-10-11T08:00:00+08:00",
   "createdAt": "2026-10-10T23:17:00.000Z",
-  "updatedAt": "2026-10-11T02:04:36.764Z",
+  "updatedAt": "2026-10-11T02:07:39.176Z",
   "status": "ready_to_publish",
   "phase": "ready_to_publish",
   "reviewComplete": true,
@@ -1755,7 +1755,7 @@
       "doi": "10.1016/j.chempr.2026.103076",
       "journal": "Chem",
       "title": "Atropisomerism at the carbon–phosphorus bond",
-      "date": "",
+      "date": "2026-10-08",
       "type": "journal-article",
       "activeFrom": "2026-09-19",
       "dateUnverified": true,
@@ -1786,7 +1786,10 @@
         "userConfirmedAt": "2026-10-11",
         "articleType": "journal-article",
         "unverifiedDetailsRemainUnknown": true
-      }
+      },
+      "originalDate": "2026-10-08",
+      "dateEvidenceSource": "audit/review-2026-10-10-0800.json exact DOI historical date 2026-10-08, originally dateUnverified=true; NOT createdDate",
+      "dateReconciliationNote": "Previous 2026-10-10 formal review recorded originalDate 2026-10-08. Current compact has no verified publication date and Crossref createdDate 2026-05-28. Keep user-visible original date from historical source with explicit dateUnverified=true, do not use createdDate."
     },
     {
       "doi": "10.1039/d6sc06879k",
@@ -2273,7 +2276,7 @@
     "rejected": 50,
     "pending": 0,
     "sameGenerationAndCountsVerified": true,
-    "notes": "Full DOI set reconciled to genuine paired 09:23 Beijing audit. Chem C-P paper retains original unverified official publication date, no invented date."
+    "notes": "10.1016/j.chempr.2026.103076 carries originalDate 2026-10-08 from pinned 10/10 formal review and remains explicitly dateUnverified. Current blank Crossref date and createdDate 2026-05-28 are not asserted as official published date; 71 DOI sets remain unchanged."
   },
   "summary": {
     "reviewed": 71,
