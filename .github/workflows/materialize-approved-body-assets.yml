@@ -85,7 +85,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add audit/media-recovery/body-batches
           if git diff --cached --quiet; then exit 0; fi
-          if git diff --cached --name-only | grep -Ev '^audit/media-recovery/body-batches/([a-z0-9-]+\.json|assets/[a-f0-9]{64}\.(svg|png|webp))$'; then exit 1; fi
+          if git diff --cached --name-only | grep -Ev '^audit/media-recovery/body-batches/([a-z0-9-]+\.json|assets/[a-f0-9]{64}\.(svg|png|webp|jpg|jpeg))$'; then exit 1; fi
           git commit -m 'media: preserve individually reviewed frozen body assets and canonical approvals'
           git push origin HEAD:"${GITHUB_REF_NAME}"
       - uses: actions/upload-artifact@v4
