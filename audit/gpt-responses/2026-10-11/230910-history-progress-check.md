@@ -1,0 +1,14 @@
+# Historical literature retrospective — 2026-10-11 evening status
+- Beijing checked at: 2026-10-11T23:09:10+08:00
+- Repo: zhou526316-sys/organic-synthesis-gallery; main commit at audit read: e197bce80e4fc2ce6892638e233441c0cdf326f4
+- Latest staging source: `staging/historical-archive-nightly/audit/historical-staging/state.json`, blob SHA `f34680941eeb28e1fe0a5eae7db2f888ea0a4ddf`
+- `completed=16`, `attempts=16`, `lastRunFinished=2026-10-10T19:05:11.662Z` (2026-10-11 03:05:11 Beijing), `lastRun.blocked=false`.
+- All 16 journals have one completed DOI metadata enumeration for 2026-09-22..2026-09-30, aggregate 1,206 unique DOI candidates; 230 already in Gallery; 976 awaiting article-specific two-pass scope review. Not 1,206 accepted publications.
+- Next cursor: 2026-09-15..2026-09-21, JACS index 0. No further staging progress was detected this evening when checked.
+- Confirmed scheduled GitHub historical workflow run #38078364170 completed successfully after 2026-10-11 03:04 Beijing: https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38078364170.
+- Current main `.github/workflows/historical-nightly-discovery.yml` has 23:00 and 23:09 Beijing schedule events (UTC 15:00/15:09), with idempotency gate, and a restricted push trigger.
+- As of 2026-10-11T23:09:10 Beijing on 2026-10-11, Actions event=schedule list showed no run created for tonight's 23:00 historical invocation. This is NOT evidence the 23:09 fallback is definitively lost; it might be queued/delayed.
+- `scripts/historical-nightly-schedule-gate.mjs`: scheduled gate de-duplicates only a prior staging `lastRunStarted` in the same Beijing day with hour>=22. Existing last run at 03:05 Beijing does not block tonight 23:00/23:09.
+- Staging writes are independent from all formal 08:00 publications; no protected DOI/media/PDF files modified by this status check.
+- Journal coverage caveat: two 0-result Crossref/OpenAlex windows (Chemical Science / Green Chemistry) warrant external publisher/source coverage review, not an assertion those journals published zero relevant papers.
+- Verdict: **Historical backfill started and has successful actual archival candidates, but has not yet advanced beyond Sep22-30. Tonight's 23:00 continuation has not been seen as of the read time; 23:09 backup may still trigger or be delayed.** Continue to assess actual Actions and staging receipt rather than equating scheduled configuration with successful execution.
