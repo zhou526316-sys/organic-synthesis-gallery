@@ -322,7 +322,7 @@ export function createLocalPdfVault(options = {}) {
         const request = store.get(userId);
         request.onsuccess = guarded(() => {
           const row = request.result || { user_id: userId, namespace: randomId('library-'), destination: null };
-          const downloaded = { directory_handle: directory, device_id: deviceId,
+          const downloaded = { id: randomId('dest_'), directory_handle: directory, device_id: deviceId,
             name: directory.name || '已授权 PDF 下载目录', selected_at: now() };
           store.put({ ...row, downloads: downloaded });
           result({ name: downloaded.name });
@@ -344,7 +344,7 @@ export function createLocalPdfVault(options = {}) {
       const linked = row.downloads;
       if (!linked?.directory_handle || linked.device_id !== deviceId) return null;
       await boundary(permission(linked.directory_handle, 'local_folder', 'read'));
-      return { handle: linked.directory_handle, name: linked.name || 'PDF 下载目录' };
+      return { handle: linked.directory_handle, name: linked.name || 'PDF 下载目录', id: linked.id || '' };
     });
   }
 
@@ -355,7 +355,7 @@ export function createLocalPdfVault(options = {}) {
       if (!selected?.directory_handle || selected.device_id !== deviceId) return { selected: false, name: '' };
       const state = typeof selected.directory_handle.queryPermission === 'function'
         ? await boundary(selected.directory_handle.queryPermission({ mode: 'read' })) : 'prompt';
-      return { selected: true, name: selected.name || 'PDF 下载目录', permission: state };
+      return { selected: true, name: selected.name || 'PDF 下载目录', permission: state, id: selected.id || '' };
     });
   }
 
@@ -376,11 +376,12 @@ export function createLocalPdfVault(options = {}) {
     return operation(async () => {
       const doi = normalizeDoi(rawDoi);
       if (!doi) throw new LocalPdfVaultError('invalid_doi');
-      const count = await boundary(transact(['copies', 'documents'], 'readwrite', (tx, result, guarded) => {
+      const details = await boundary(transact(['copies', 'documents'], 'readwrite', (tx, result, guarded) => {
         const store = tx.objectStore('copies');
         const request = store.index('by_document').getAll([userId, doi]);
         request.onsuccess = guarded(() => {
           let removed = 0;
+          const names = [];
           const removedHashes = new Set();
           for (const value of request.result || []) {
             if (value.user_id !== userId || value.device_id !== deviceId ||
@@ -388,6 +389,7 @@ export function createLocalPdfVault(options = {}) {
             store.put({ ...value, state: 'revoked', local_revision: (value.local_revision || 0) + 1,
               updated_at: now(value.updated_at) });
             removedHashes.add(value.content_hash);
+            if (typeof value.file_name === 'string') names.push(value.file_name);
             copiesCache.delete(value.id);
             probes.delete(value.id);
             removed += 1;
@@ -400,12 +402,12 @@ export function createLocalPdfVault(options = {}) {
               docs.put({ ...value, preferred_content_hash: null, preferred_version_kind: null,
                 updated_at: now(value.updated_at) });
             }
-            result(removed);
+            result({ count: removed, names });
           });
         });
       }));
-      if (count) publishChange();
-      return { count };
+      if (details.count) publishChange();
+      return details;
     });
   }
 
