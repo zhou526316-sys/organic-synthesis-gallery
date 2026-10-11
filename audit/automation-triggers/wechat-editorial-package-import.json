@@ -1,12 +1,12 @@
 {
-  "requestId": "wechat-2026-10-11-r2-source-import-correct-gate-lease-and-final-captions",
-  "requestedAt": "2026-10-11T12:02:00+08:00",
+  "requestId": "wechat-2026-10-11-r3-owner-concept-cover-science-prose-complete-crops",
+  "requestedAt": "2026-10-11T13:35:00+08:00",
   "action": "import_reviewed_editorial_package",
-  "revision": "2026-10-11-r2",
+  "revision": "2026-10-11-r3",
   "doi": "10.1038/s44160-026-01127-z",
   "targetDateBeijing": "2026-10-11",
-  "packageUrl": "https://at.adobe.com/eFjrj6lRubs9HImB",
-  "packageSha256": "67ad32537f90b27c95c41131ec0cf242270dfa1274cc9dabb2bf6f81c2aeffdc",
+  "packageUrl": "https://at.adobe.com/dTAkYJbdkWam5MEb",
+  "packageSha256": "4d405f6ebfa192146d366a4797b8fc5880873ddb7f9c449e24cc056dd9bac8f3",
   "manifestPath": "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json",
   "gatePath": "audit/wechat-working/2026-10-11-review-gate.json",
   "expectedArticleCount": 2,
@@ -15,14 +15,14 @@
     "10.1038/s44160-026-01127-z"
   ],
   "replaceExisting": {
-    "public/wechat-featured/2026-10-11.json": "37185bbd6d93335a92d98e09d585e117df18a45c",
-    "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json": "884f27ff6e8c7d4aa91fb467d8027d8f62c37746",
-    "public/wechat-editions/2026-10-11.json": "231ae9bf40bfb5cdb5bb53df97c60d8c1a983890",
-    "audit/wechat-working/2026-10-11-review-gate.json": "25d8d30c2d3ba8285b1091e89373ebf0952dbd63"
+    "public/wechat-featured/2026-10-11.json": "4fb168addcbc3f089d34138f7180af69b9a16c92",
+    "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json": "19287635ece0e826f0e2853cba49e512b8c45315",
+    "public/wechat-editions/2026-10-11.json": "26189bbc1e4e8c065d839e527a7e0af29fcce9f3",
+    "audit/wechat-working/2026-10-11-review-gate.json": "ce8442559d5a8d0fa7cc4ff99d46ed8724fbcad0"
   },
   "thisStepWritesDraft": false,
   "publicSendAuthorized": false,
   "sourceOnly": true,
   "preserveOldWeChatMediaId": true,
-  "note": "Exactly 45 full review package files, 35 original source-verified image assets, 33 in-article body figures +2 covers, 2 DOI-locked manifests, full editorial text. Strict old SHA leases for edition/featured/retrospective/gate; no publisher or public send. Reupload fixes strict import gate replacement fingerprint and final figure cropping/wording review."
+  "note": "User explicitly approved Oct11 R3: original owner-selected blue concept cover (archived original + pixel-identical lossless production), restore one missing SI 39 figure, re-crop incomplete JACS Scheme3/Nature Fig2/Fig4 complete logical blocks, rewrite prose evidence-grounded Chinese accuracy/logic. Import only, no draft write or mass send; gate pins 9 sources and 35 images, 32 body images."
 }
