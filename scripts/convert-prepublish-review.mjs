@@ -142,7 +142,9 @@ export function convertPrepublishReview(staging, handoff, { generatedAt, sourceS
     releasePolicy: 'per-doi', publicationSlot: slot, handoffGeneratedAt: handoff.generatedAt,
     reviewFile: formalReviewFile, reviewBlobSha: gitBlobSha(serialize(formalReview)),
     publishableDois: accepted.map(row => row.doi), rejectedDois: rejected.map(row => row.doi), deferredDois: pending.map(row => row.doi),
-    ...(pending.length ? { pendingQueueFile, pendingQueueBlobSha: gitBlobSha(serialize(pendingQueue)) } : {}),
+    // The writer and atomic marker always persist a queue, including its empty (zero-pending) form.
+    // Bind the exact UTF-8 JSON bytes in both cases; never replace a missing hash with a dummy.
+    pendingQueueFile, pendingQueueBlobSha: gitBlobSha(serialize(pendingQueue)),
   };
   const partitionFailures = validateFormalPartition(staging, formalReview, markerFields, pendingQueue);
   requireValue(partitionFailures.length === 0, `formal_partition_rejected:${partitionFailures.join(';')}`);

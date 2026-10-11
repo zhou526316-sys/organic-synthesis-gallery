@@ -44,6 +44,16 @@ test('newer marker is never overwritten', () => assert.equal(slotState(slot, at,
 test('arbitrary slot time rejected', () => assert.throws(() => slotState('2026-10-02T09:00:00+08:00', at)));
 test('early future gate cannot arm outside 65 minutes', () => assert.throws(() => slotState(slot, at - 66 * 60_000)));
 test('strict reviewed subset allows evidence-scoped pending', () => assert.equal(validateEvidence(...fixture()).deferredDois.length, 1));
+test('zero-pending strict bundle requires the real, hashed empty queue', () => {
+  const f = fixture();
+  f[2].pendingQueue.items = [];
+  f[2].markerFields.deferredDois = [];
+  f[2].markerFields.pendingQueueBlobSha = blobSha(f[2].pendingQueue);
+  for (const part of [f[0], f[1], f[2].preflight]) part.deferredDois = [];
+  assert.deepEqual(validateEvidence(...f).deferredDois, []);
+  delete f[2].markerFields.pendingQueueBlobSha;
+  assert.throws(() => validateEvidence(...f), /invalid_evidence_sha:pendingQueueBlobSha/);
+});
 test('ordinary validationOk is not publication permission', () => { const f = fixture(); f[0].readyToPublish = false; f[0].validationOk = true; assert.throws(() => validateEvidence(...f), /record_gate/); });
 for (const key of ['publicationReady', 'snapshotFreshForSlot', 'semanticReady', 'recordValidationPassed']) {
   test(`missing ${key} cannot release`, () => { const f = fixture(); f[1][key] = false; assert.throws(() => validateEvidence(...f), /slot_gate/); });
