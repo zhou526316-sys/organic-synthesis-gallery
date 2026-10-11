@@ -36,7 +36,7 @@ export function safePath(value) {
   return value;
 }
 
-function validateInputs(browser, manifest) {
+export function validateInputs(browser, manifest) {
   check(browser?.schemaVersion === 1 && browser.suite === 'pdf-vault-local-browser' && browser.ok === true, 'browser_gate_not_successful');
   check(Number.isSafeInteger(browser.total) && browser.total >= 17 && browser.total <= 100 && browser.passed === browser.total, 'browser_case_count_mismatch');
   check(Array.isArray(browser.cases) && browser.cases.length === browser.total && browser.cases.every(item => item.status === 'passed'), 'browser_cases_not_all_passed');
