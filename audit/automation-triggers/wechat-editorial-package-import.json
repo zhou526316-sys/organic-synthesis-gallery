@@ -1,12 +1,12 @@
 {
-  "requestId": "wechat-2026-10-11-r2-full-body-title-covers-reviewed-import",
+  "requestId": "wechat-2026-10-11-r2-source-import-correct-gate-lease-and-final-captions",
   "requestedAt": "2026-10-11T12:02:00+08:00",
   "action": "import_reviewed_editorial_package",
   "revision": "2026-10-11-r2",
   "doi": "10.1038/s44160-026-01127-z",
   "targetDateBeijing": "2026-10-11",
-  "packageUrl": "https://at.adobe.com/J2G899AxqjbLE3nd",
-  "packageSha256": "2e9dddfdf7a7f033cb92f2ca29c37a5ce84a301e2bb593d961d3321cf4ed44d6",
+  "packageUrl": "https://at.adobe.com/eFjrj6lRubs9HImB",
+  "packageSha256": "67ad32537f90b27c95c41131ec0cf242270dfa1274cc9dabb2bf6f81c2aeffdc",
   "manifestPath": "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json",
   "gatePath": "audit/wechat-working/2026-10-11-review-gate.json",
   "expectedArticleCount": 2,
@@ -17,11 +17,12 @@
   "replaceExisting": {
     "public/wechat-featured/2026-10-11.json": "37185bbd6d93335a92d98e09d585e117df18a45c",
     "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json": "884f27ff6e8c7d4aa91fb467d8027d8f62c37746",
-    "public/wechat-editions/2026-10-11.json": "231ae9bf40bfb5cdb5bb53df97c60d8c1a983890"
+    "public/wechat-editions/2026-10-11.json": "231ae9bf40bfb5cdb5bb53df97c60d8c1a983890",
+    "audit/wechat-working/2026-10-11-review-gate.json": "25d8d30c2d3ba8285b1091e89373ebf0952dbd63"
   },
   "thisStepWritesDraft": false,
   "publicSendAuthorized": false,
   "sourceOnly": true,
   "preserveOldWeChatMediaId": true,
-  "note": "User instructed that whole body, title and covers follow previously accepted Oct08 R9 / Oct09 R2 / Oct10 R4 editorial rules. R2 includes complete previously broken Nature Fig4 panels, lead above quick points, rigorous scientific/Chinese evidence review and layout; no draft write until checked."
+  "note": "Exactly 45 full review package files, 35 original source-verified image assets, 33 in-article body figures +2 covers, 2 DOI-locked manifests, full editorial text. Strict old SHA leases for edition/featured/retrospective/gate; no publisher or public send. Reupload fixes strict import gate replacement fingerprint and final figure cropping/wording review."
 }
