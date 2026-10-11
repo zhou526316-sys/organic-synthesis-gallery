@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260924-1318",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-24T05:18:30Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10789591366,
+  "evidenceArchiveSha256": "80603e8ecfb3b23e1f230ba9aa539b55490bf117afdc4eec711d46571032ba33",
+  "evidenceRunId": 35952911184,
+  "approvedCount": 20,
+  "reviewMethod": "All 20 selected stored files across five current-corpus articles were independently rehashed against the frozen read-only GitHub evidence artifact, checked for exact task/page/article/source DOI identity using stage binding plus report/index and DOI-bearing article/source URLs, original Figure/Scheme identity and independent caption, captureVersion 6.2.20, job identity, fixed media generation 1790082000000, content-addressed R2 key, actual byte length/type/dimensions, duplicate source/hash ownership and frozen public media-index state. SVG files were rendered and checked for active/external content; PNG files were decoded. Every image was visually reviewed against its caption and paper theme for role, unrelated/recommendation contamination, duplicate risk and legibility. Capture success/partial markers were treated only as provenance evidence. No publisher request, R2/D1 write, server-side direct import/repair, literature/card/title/scope mutation, userscript change or media-generation change was performed.",
+  "quality": "The 20 files are exact stored bytes: seventeen self-contained SVGs and three decoded PNGs, all within configured size bounds and with unique selected content hashes. Frozen public media-index records contain no same-ID body figures for these five DOI; their existing official TOCs are distinct and preserved, so this packet is additive and body-only. JACS 10.1021/jacs.6c07049 has stored Figure 2 and Figure 6 from an earlier 2/7 partial attempt while the newest report is 0/7, and JACS 10.1021/jacs.6c08636 remains partial 1/7; only the exact stored files reviewed here are approved and missing figures are not inferred approved. Historical controller/transport failures are retained as provenance and are not attributed to VPN, R2, quota or another cause without evidence.",
+  "decisions": [
+    {
+      "doi": "10.1021/acs.orglett.6c03773",
+      "images": [
+        ["next-006", "scheme-1", "Viewed the literature context and this work’s chiral boron-complex-catalyzed enantioselective [2π+2σ] cycloaddition design for bicyclo[2.1.1]hexane formation; content matches Scheme 1."],
+        ["next-035", "scheme-2", "Viewed the β-fluoroalkyl enone and bicyclo[1.1.0]butane substrate scope with product structures, yields and ee values; content matches Scheme 2."],
+        ["next-036", "scheme-3", "Viewed the scale-up experiment and downstream synthetic transformations of the enantioenriched cycloadduct; content matches Scheme 3."],
+        ["next-037", "scheme-4", "Viewed control experiments, substrate-activation evidence and the proposed chiral boron-complex catalytic mechanism; content matches Scheme 4."]
+      ]
+    },
+    {
+      "doi": "10.1021/jacs.6c07049",
+      "images": [
+        ["next-007", "figure-2", "Viewed optimization and kinetic/LC analysis of on-DNA SuFEx macrocyclization, including coupling, pH and solvent effects; content matches Figure 2."],
+        ["next-038", "figure-6", "Viewed conformational tuning of macrocyclic peptides with biaryl sulfonate linkers, including linkage geometry, NMR constraints and modeled conformers; content matches Figure 6."]
+      ]
+    },
+    {
+      "doi": "10.1021/jacs.6c08636",
+      "images": [
+        ["next-008", "scheme-2", "Viewed the single-carbon-atom insertion reaction design and comparison of aromatic versus saturated 1,2,4-triazines/triazinanes, including bioactive examples; content matches Scheme 2."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03180",
+      "images": [
+        ["next-009", "figure-1", "Viewed the ligand screen for palladium-catalyzed β-C(sp3)–H hydroxylation of aliphatic amides; structures and reported yields match Figure 1."],
+        ["next-039", "scheme-1", "Viewed bioactive β-hydroxy amide context, prior multistep approaches and this work’s direct native-amide C–H hydroxylation strategy; content matches Scheme 1."],
+        ["next-040", "scheme-2", "Viewed the first portion of the native aliphatic amide substrate scope under the reported Pd/H2O2 conditions; products and yields match Scheme 2."],
+        ["next-041", "scheme-3", "Viewed the complementary substrate scope including cyclic and complex amide examples; products and yields match Scheme 3."],
+        ["next-042", "scheme-4", "Viewed H/D exchange, kinetic isotope and control experiments used for mechanistic interrogation; content matches Scheme 4."],
+        ["next-043", "scheme-5", "Viewed the proposed palladium catalytic cycle for β-C(sp3)–H activation, peroxide oxidation and hydroxylation; content matches Scheme 5."],
+        ["next-044", "scheme-6", "Viewed postsynthetic transformations of β-hydroxy amide products including reduction, oxidation, lactamization, fluorination, alkylation and click chemistry; content matches Scheme 6."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03293",
+      "images": [
+        ["next-010", "scheme-1", "Viewed prior transition-metal C–H functionalization context and this work’s nickel-catalyzed alkenylation of nonacidic biarylphosphine C–H bonds; content matches Scheme 1."],
+        ["next-045", "scheme-2", "Viewed reaction optimization for nickel-catalyzed alkenylation, including solvent, temperature and nickel-source effects; content matches Scheme 2."],
+        ["next-046", "scheme-3", "Viewed the biarylphosphine substrate scope with substituted phosphines and isolated yields; content matches Scheme 3."],
+        ["next-047", "scheme-4", "Viewed the alkyne scope for the nickel-catalyzed C–H alkenylation with varied aryl and alkyl substituents; content matches Scheme 4."],
+        ["next-048", "scheme-5", "Viewed gram-scale/synthetic applications and deuterium/crossover/competition mechanistic experiments; content matches Scheme 5."],
+        ["next-049", "scheme-6", "Viewed the proposed nickel catalytic pathways involving oxidative addition or ligand-to-ligand hydrogen transfer and alkenylation; content matches Scheme 6."]
+      ]
+    }
+  ]
+}

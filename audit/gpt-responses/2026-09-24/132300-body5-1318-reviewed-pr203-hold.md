@@ -1,0 +1,13 @@
+本轮继续推进正文图增量核验，完成 **5 篇、20 张**逐图通过并冻结审批，但没有绕过既有质量门禁，因此新增 `published=0`。
+
+本轮复用仍有效的只读冻结证据 run `35952911184` / artifact `10789591366`，archive SHA256 `80603e8ecfb3b23e1f230ba9aa539b55490bf117afdc4eec711d46571032ba33`，没有重复启动同一轮证据读取。通过的 5 篇为：`10.1021/acs.orglett.6c03773` Scheme 1–4；`10.1021/jacs.6c07049` Figure 2、Figure 6；`10.1021/jacs.6c08636` Scheme 2；`10.1021/acs.orglett.6c03180` Figure 1、Scheme 1–6；`10.1021/acs.orglett.6c03293` Scheme 1–6。JACS `6c07049` 只批准历史 partial 2/7 中实际保存并逐字节核验的两张，较新 0/7 报告不覆盖其冻结字节；`6c08636` 仍为 partial 1/7，只批准 Scheme 2。缺失图片均未推定通过，历史 controller/transport/status 异常也未被臆测为 VPN、R2 或配额问题。
+
+20 张全部核对了 DOI/page/article/source 证据、原始图号、独立图注、真实冻结字节、完整 SHA256、R2 content-addressed key、capture/job identity、文章主题和图像角色、重复/推荐图风险以及冻结 public media-index。格式为 17 个 SVG + 3 个 PNG；SVG 全部渲染并通过 active/external-content 检查，PNG 全部解码成功。冻结 public media-index 中这 5 篇没有同号正文图，现有官方 TOC 均为独立对象/哈希并保持不变；`6c03180` 的 Figure 1 明确作为正文 Figure 1，未冒充 TOC。
+
+审批 packet 为 `body5-20260924-1318`，首个 packet commit `b88ac3e4c3b91373a5173abc5cf854a0fa550faf`。现有 `Materialize approved body assets` run `35959336758` / job `107504330549` 已成功：`EXACT_REVIEW_PACKET_VERIFIED files=20`、`captionMutationRejected=20`、`productionWrites=0`；canonical batch 为 `body5-20260924-1318-01`，bot asset/manifest commit `71ee68146f41abe2977ea0afa4ef1526be5477da`，artifact `10791458362`，digest `sha256:2418fd569852503f4ea9e92eeb6d3c6f652dff7eb4eb1e52f33fc3515ffa01b9`。同轮 builder 为 `alreadyPublished=[]`、`retainedDifferentFile=[]`、`notInCurrentCorpus=[]`、`quarantineUnchanged=true`、`stagingWrites=0`、`stagingDeletes=0`；没有 publisher 请求或 R2/D1 写入。
+
+已建立 draft PR **#203 `Media: preserve 20 newly reviewed body figures`**。正文媒体门禁 run `35959468864` / job `107504738560` 已通过。Site quality gate run `35959468952` 仍非绿：Production API smoke `107504738597` 成功，Worker dry-run `107504738774` 成功，但 Frontend build and typecheck `107504738651` 在 `Type-check frontend` 步骤失败；当前 main 仍保留此前已知的 `src/card-share.ts` 中 `galleryDeepLink` helper，本媒体任务没有修改或绕过无关前端代码。Playwright 在本记录写入时仍在执行，但前端必需门禁已失败，因此不满足合并条件。
+
+同时 PR #192 的 reviewed-over-auto ownership handoff 仍 open/unmerged。合并前最终重读 main 仍为 `7909b43eecc30327341a8f3305b6facd906e45f6`，没有发现本轮期间新的 main 竞争写入；但由于质量门禁与 #192 条件未满足，#203 保持 draft，不合并、不触发生产 Pages，也不把 build-time `added` 冒充上线。
+
+当前准确状态：本轮新增 `reviewed_pending_merge=20` / 5 篇，新增 `published=0`。按同一冻结队列计数，前两批共消耗 42 条后约余 25 条绑定记录留待后续小批逐图审核。隔离世代仍为 `1790082000000`；文献卡片、中文标题、收录范围、生产文献数据、08:00/18:00 任务和 userscript 均未修改。本轮结果不代表正文图全库复核完成。
