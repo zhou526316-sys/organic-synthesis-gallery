@@ -1,5 +1,5 @@
 {
-  "requestId": "wechat-2026-10-11-r1-jacs15886-natsynth1127-reviewed-two-paper-draft-only",
+  "requestId": "wechat-2026-10-11-r1b-jacs15886-natsynth1127-27fig-reviewed",
   "publicationDate": "2026-10-11",
   "action": "sync_daily_draft",
   "editorialRevision": "2026-10-11-r1",
@@ -11,7 +11,7 @@
   ],
   "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-11&doi=10.1021%2Fjacs.6c15886&summary=0",
   "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01127-z&summary=0",
-  "expectedReviewedBodyImages": 28,
+  "expectedReviewedBodyImages": 27,
   "expectedReviewedAssets": 30,
   "sourceImportRunId": 38107169727,
   "draftOnly": true,
@@ -19,5 +19,6 @@
   "requireArticleOrderAndExactDois": true,
   "publicSendAuthorized": false,
   "linkOnly": false,
-  "reason": "2026-10-11 user-supplied primary/SI PDFs select JACS gas alkane asymmetric dicarbofunctionalization as first WeChat article, Nature Synthesis double HAT aziridination as second. Reviewed text/images and precise original source figures imported and verified; update/new draft only, no group send. Validate final original links and newly generated relay preview against actual draft/get. Do not reuse the invalid 2026-10-10 media ID."
+  "reason": "Retry of user-requested Oct11 two-paper draft only after fail-closed preflight: corrected exact source caption for SI §6 relative to Scheme3; removed only redundant >1MB SI Fig39 apparatus screenshot from body, main Fig3b and other SI remain. Strict figure/label checks passed 12 JACS + 15 Nature body figures. Both source manifests re-pinned to pass gate. Require real 2-item draft/get and fresh relay preview; no public send and no invalid Oct10 media ID.",
+  "reviewerGateRecheckedAt": "2026-10-11T11:12:00+08:00"
 }
