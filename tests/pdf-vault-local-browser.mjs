@@ -165,7 +165,14 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
     page.on('requestfailed', request => {
       const reason = request.failure()?.errorText || '';
       const pathname = new URL(request.url()).pathname;
-      const expected = ((state.allowAuthCancellation && pathname === '/api/user-ui/auth/session') || (queue.expectCancellation && pathname === '/api/user-ui/pdf-vault/queue')) && request.headers().authorization === 'Bearer ' + TOKENS.a && /(?:net::ERR_ABORTED|NS_BINDING_ABORTED)/.test(reason);
+      const nativePdfEmbedCancelled = request.url().startsWith('blob:' + base + '/') &&
+        /(?:net::ERR_ABORTED|NS_BINDING_ABORTED)/.test(reason);
+      // Headless Chromium can abort an embedded native PDF plugin's blob load
+      // when the test tab closes. No HTTP or external file failures are ignored.
+      const expected = ((((state.allowAuthCancellation && pathname === '/api/user-ui/auth/session') ||
+        (queue.expectCancellation && pathname === '/api/user-ui/pdf-vault/queue')) &&
+        request.headers().authorization === 'Bearer ' + TOKENS.a) ||
+        nativePdfEmbedCancelled) && /(?:net::ERR_ABORTED|NS_BINDING_ABORTED)/.test(reason);
       bounded(diagnostic.failedRequests, { url: request.url(), reason, expected: Boolean(expected) });
     });
     page.on('response', response => { if (response.url().includes('/api/')) bounded(diagnostic.responses, { url: response.url(), status: response.status() }); });
