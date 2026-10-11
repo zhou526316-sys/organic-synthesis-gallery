@@ -23,6 +23,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Validate publisher Python syntax
+        shell: bash
+        run: python3 -m py_compile ops/wechat-publisher/create-draft.py
+
       - name: Run publisher on fixed-IP relay
         id: publish
         shell: bash
@@ -50,6 +54,9 @@ jobs:
             exit 1
           fi
           jq -e '.ok == true and .result.draft_readback == "ok" and (.result.preview_url | length > 0)' /tmp/wechat-publisher-response.json >/dev/null
+          if jq -e '.action == "verify_cloud_draft" and .readbackOnly == true' audit/automation-triggers/wechat-publisher-request.json >/dev/null; then
+            jq -e '.result.stage == "cloud_readback_only" and .result.cloud_draft_modified == false and .result.readback_only == true' /tmp/wechat-publisher-response.json >/dev/null
+          fi
 
       - name: Write latest publisher receipt
         shell: bash
@@ -80,11 +87,21 @@ jobs:
               "article_id": result.get("article_id"),
               "article_url": result.get("article_url"),
               "content_source_url": result.get("content_source_url"),
+              "cloud_matches_last_successful_preview": result.get("cloud_matches_last_successful_preview"),
+              "cloud_image_tags_by_article": result.get("cloud_image_tags_by_article"),
+              "cover_matches_server_upload_cache": result.get("cover_matches_server_upload_cache"),
+              "cloud_draft_modified": result.get("cloud_draft_modified"),
+              "mobile_local_copy_inspected": result.get("mobile_local_copy_inspected"),
+              "readback_only": result.get("readback_only"),
           }
           target = (
-              Path("audit/wechat-publisher/retrospective-latest.json")
-              if receipt["mode"] == "retrospective"
-              else Path("audit/wechat-publisher/latest.json")
+              Path("audit/wechat-publisher/cloud-diagnostic-latest.json")
+              if receipt["stage"] == "cloud_readback_only"
+              else (
+                  Path("audit/wechat-publisher/retrospective-latest.json")
+                  if receipt["mode"] == "retrospective"
+                  else Path("audit/wechat-publisher/latest.json")
+              )
           )
           payload = json.dumps(receipt, ensure_ascii=False, indent=2) + "\n"
           target.write_text(payload, encoding="utf-8")
