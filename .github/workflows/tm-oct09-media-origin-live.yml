@@ -1,0 +1,62 @@
+name: Oct-09 Tampermonkey media origin live audit
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/verify-tm-oct09-media-origin-live.mjs'
+      - 'scripts/audit-tm-wiley-published-toc-images.mjs'
+      - '.github/workflows/tm-oct09-media-origin-live.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/verify-tm-oct09-media-origin-live.mjs'
+      - 'scripts/audit-tm-wiley-published-toc-images.mjs'
+      - '.github/workflows/tm-oct09-media-origin-live.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tm-oct09-media-origin-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  read-only-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify no mutation and inspect current public media
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/verify-tm-oct09-media-origin-live.mjs
+          node scripts/verify-tm-oct09-media-origin-live.mjs | tee "$RUNNER_TEMP/tm-oct09-media-origin-read.log"
+          grep -F '"status":"read_only_complete"' "$RUNNER_TEMP/tm-oct09-media-origin-read.log"
+      - name: Check publicly published Angew image bytes and keep temporary pixels
+        shell: bash
+        if: always()
+        run: |
+          set -euo pipefail
+          node --check scripts/audit-tm-wiley-published-toc-images.mjs
+          node scripts/audit-tm-wiley-published-toc-images.mjs | tee "$RUNNER_TEMP/wiley-public-ga-readback.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-wiley-public-ga-images
+          path: ${{ runner.temp }}/tm-wiley-public-toc-images/
+          retention-days: 1
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-oct09-media-origin-readonly
+          path: |
+            ${{ runner.temp }}/tm-oct09-media-origin-live.json
+            ${{ runner.temp }}/tm-oct09-media-origin-read.log
+          retention-days: 7
+          if-no-files-found: warn
