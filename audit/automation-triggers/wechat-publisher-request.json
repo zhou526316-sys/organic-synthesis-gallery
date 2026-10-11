@@ -25,5 +25,7 @@
   "noReuploadImages": true,
   "noRewriteChemistry": true,
   "noDeleteOldDraft": true,
-  "reason": "The user specifically approved a new 2-article WeChat Official Account draft to bypass the Android local-copy save warning. The original Oct11 R5 cloud version was verified at 15:51 Beijing, with exact content HMAC, 2 accepted articles, correct cover media IDs. Create exactly one distinct new media ID by copying the two already stored cloud articles and existing thumb/body media URLs; preserve original; require exact content/title/cover/DOI equality and draft/get of both before announcing. NEVER publish or group send. Retries must reuse created media ID, not duplicate."
+  "reason": "The user specifically approved a new 2-article WeChat Official Account draft to bypass the Android local-copy save warning. The original Oct11 R5 cloud version was verified at 15:51 Beijing, with exact content HMAC, 2 accepted articles, correct cover media IDs. Create exactly one distinct new media ID by copying the two already stored cloud articles and existing thumb/body media URLs; preserve original; require exact content/title/cover/DOI equality and draft/get of both before announcing. NEVER publish or group send. Retries must reuse created media ID, not duplicate.",
+  "retryDiagnostic": 1,
+  "lastAttemptFailure": "微信 draft/add 已分配新 media_id 并写入幂等状态；首次 draft/get 的 HTML 字节不一致。只复查已经生成的新草稿，接受微信正常的 HTML 格式重排前必须核对文字、图片、链接和标题结构。严禁再次新建。"
 }
