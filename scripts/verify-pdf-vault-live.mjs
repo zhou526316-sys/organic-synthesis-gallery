@@ -28,10 +28,10 @@ const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 const message = error => String(error?.message || error).slice(0, 400);
 const check = (condition, code) => assert.ok(condition, code);
 
-function safePath(value) {
+export function safePath(value) {
   check(typeof value === 'string' && value.length <= 256 && /^[A-Za-z0-9_./-]+$/.test(value), 'invalid_static_path');
   check(!value.startsWith('/') && value.split('/').every(part => part && part !== '.' && part !== '..'), 'unsafe_static_path');
-  check(value === 'pdf-vault/index.html' || /^assets\/[A-Za-z0-9_.-]+\.(?:js|mjs|css)$/.test(value) || /^pdf-vault-assets\/[0-9.]+\/(?:cmaps|standard_fonts|wasm|iccs)\/[A-Za-z0-9_.-]+$/.test(value), 'non_vault_static_path');
+  check(['pdf-vault/index.html', 'pdf-vault/open/index.html'].includes(value) || /^assets\/[A-Za-z0-9_.-]+\.(?:js|mjs|css)$/.test(value) || /^pdf-vault-assets\/[0-9.]+\/(?:cmaps|standard_fonts|wasm|iccs)\/[A-Za-z0-9_.-]+$/.test(value), 'non_vault_static_path');
   check(new URL('/' + value, ORIGIN).origin === ORIGIN, 'unexpected_static_origin');
   return value;
 }
@@ -56,6 +56,17 @@ function validateInputs(browser, manifest) {
   check(seen.has('pdf-vault/index.html'), 'vault_html_not_verified_by_browser');
   check(files.some(file => /^assets\/pdfVault-.+\.js$/.test(file.path)) && files.some(file => /^assets\/pdfVault-.+\.css$/.test(file.path)), 'vault_entry_assets_missing');
   check(files.some(file => /^assets\/reader-.+\.js$/.test(file.path)) && files.some(file => /^assets\/pdf\.worker.+\.mjs$/.test(file.path)), 'reader_assets_missing');
+  // Native browser PDF tabs were added after the original P1 browser suite.
+  // If that suite ran, all three native entry artifacts must be verified.
+  const nativeSuite = browser.cases.some(item =>
+    /^direct DOI PDF tab opens /.test(item.name || '') ||
+    /^first DOI visit links a PDF from anywhere /.test(item.name || ''));
+  const nativeHtml = seen.has('pdf-vault/open/index.html');
+  if (nativeSuite || nativeHtml) {
+    check(nativeHtml, 'native_pdf_html_not_verified_by_browser');
+    check(files.some(file => /^assets\/pdfVaultNative-.+\.js$/.test(file.path)), 'native_pdf_js_missing');
+    check(files.some(file => /^assets\/pdfVaultNative-.+\.css$/.test(file.path)), 'native_pdf_css_missing');
+  }
   // A valid synthetic PDF can render with system fonts: no font GET is then
   // visible in the Chromium request log. Independently probe the hosted font
   // after validating the deployment manifest; do not invent a browser hit.
@@ -100,10 +111,10 @@ export async function verifyPdfVaultLive({ browser, manifest, fetchImpl = fetch,
         const signal = AbortSignal.timeout(Math.max(1, Math.min(REQUEST_TIMEOUT_MS, remaining)));
         activeRequests++; peakRequests = Math.max(peakRequests, activeRequests);
         try {
-          const requestedPath = relative === 'pdf-vault/index.html' ? 'pdf-vault/' : relative;
+          const requestedPath = relative === 'pdf-vault/index.html' ? 'pdf-vault/' : relative === 'pdf-vault/open/index.html' ? 'pdf-vault/open/' : relative;
           const requestUrl = new URL('/' + requestedPath, ORIGIN);
           check(requestUrl.origin === ORIGIN, 'unexpected_request_origin');
-          if (relative === 'release-delivery.json' || relative === 'pdf-vault/index.html') requestUrl.searchParams.set('vault_verify', String(Date.now()) + '-' + attempt);
+          if (relative === 'release-delivery.json' || relative === 'pdf-vault/index.html' || relative === 'pdf-vault/open/index.html') requestUrl.searchParams.set('vault_verify', String(Date.now()) + '-' + attempt);
           const response = await fetchImpl(requestUrl.href, { method: 'GET', redirect: 'error', credentials: 'omit', cache: 'no-store', headers: { 'cache-control': 'no-cache' }, signal });
           if (response.status !== 200) { await response.body?.cancel().catch(() => {}); throw new Error('http_status_' + response.status); }
           const bytes = await readBounded(response, maxBytes);
@@ -138,7 +149,7 @@ export async function verifyPdfVaultLive({ browser, manifest, fetchImpl = fetch,
     await Promise.all(Array.from({ length: Math.min(3, files.length) }, async () => {
       for (;;) {
         const item = files[index++]; if (!item) return;
-        const result = { path: item.path, requestedPath: item.path === 'pdf-vault/index.html' ? '/pdf-vault/' : '/' + item.path, ok: false, expectedSha256: item.sha256, expectedBytes: item.bytes };
+        const result = { path: item.path, requestedPath: item.path === 'pdf-vault/index.html' ? '/pdf-vault/' : item.path === 'pdf-vault/open/index.html' ? '/pdf-vault/open/' : '/' + item.path, ok: false, expectedSha256: item.sha256, expectedBytes: item.bytes };
         report.files.push(result);
         try {
           Object.assign(result, await get(item.path, Math.min(MAX_FILE_BYTES, item.bytes + 1), bytes => {
