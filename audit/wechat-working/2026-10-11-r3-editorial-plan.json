@@ -1,0 +1,231 @@
+{
+  "date": "2026-10-11",
+  "revision": "2026-10-11-r3",
+  "authority": "owner_selected_JACS_plus_Nature_Synthesis",
+  "paperSources": [
+    {
+      "doi": "10.1021/jacs.6c15886",
+      "main": "jacs.6c15886.pdf",
+      "SI": "ja6c15886_si_001.pdf"
+    },
+    {
+      "doi": "10.1038/s44160-026-01127-z",
+      "main": "s44160-026-01127-z.pdf",
+      "SI": "44160_2026_1127_MOESM1_ESM.pdf"
+    }
+  ],
+  "evidenceMatrix": [
+    {
+      "article": "JACS",
+      "claim": "Scheme 4 TEMPO ratio approx 6:1; final regioselectivity above 20:1",
+      "level": "observed_in_different_conditions",
+      "source": "Scheme 4, Table 1, scope; not intrinsic KIE"
+    },
+    {
+      "article": "JACS",
+      "claim": "Ni(I)–nPr vs Ni(I)–iPr different thermodynamic favorability",
+      "level": "computation_plus_compatible_observation",
+      "source": "Fig. 1a"
+    },
+    {
+      "article": "JACS",
+      "claim": "enantiodetermining alpha-carbonyl radical capture",
+      "level": "author_computational_model",
+      "source": "Fig. 1b–2"
+    },
+    {
+      "article": "Nature Synthesis",
+      "claim": "cyclohexene observed and independently enters aziridination",
+      "level": "experiment_supports_alkene_intermediate",
+      "source": "Fig. 4d–e"
+    },
+    {
+      "article": "Nature Synthesis",
+      "claim": "energy transfer to iminoiodinane and nitrene",
+      "level": "photophysical_indirect_evidence",
+      "source": "Fig. 4a–c; SI Fig. 3–4"
+    },
+    {
+      "article": "Nature Synthesis",
+      "claim": "PhIO-assisted double-HAT pathway and relative micro rates",
+      "level": "DFT_model_not_observed",
+      "source": "Figs. 6–7 and calculations"
+    },
+    {
+      "article": "Nature Synthesis",
+      "claim": "flow scale-up and practical engineering limits",
+      "level": "isolated_products_and_source_apparatus",
+      "source": "Fig. 3b; SI Fig. 39"
+    }
+  ],
+  "figureMap": [
+    {
+      "id": "jacs_lead",
+      "source": "Scheme 1d",
+      "argumentPosition": "opening before quick points"
+    },
+    {
+      "id": "jacs_prior",
+      "source": "Scheme 1a–c",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "jacs_f02",
+      "source": "Table 1",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "jacs_s01",
+      "source": "SI Table S5–S6",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "jacs_s03",
+      "source": "SI Table S1",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "jacs_f03",
+      "source": "Scheme 2",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "jacs_f04",
+      "source": "Scheme 3 propane region",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "jacs_s02",
+      "source": "SI §6",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "jacs_f05",
+      "source": "Scheme 3 isobutane/ethane region",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "jacs_f06",
+      "source": "Scheme 4",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "jacs_f07",
+      "source": "Fig. 1a",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "jacs_f08",
+      "source": "Fig. 1b",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "jacs_f09",
+      "source": "Fig. 2",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_lead",
+      "source": "Fig. 1d",
+      "argumentPosition": "opening before quick points"
+    },
+    {
+      "id": "ns_intro_ab",
+      "source": "Fig. 1a–b",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_intro_c",
+      "source": "Fig. 1c",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_f02",
+      "source": "Table 1",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_f03",
+      "source": "Fig. 2",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_f04",
+      "source": "Fig. 2",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_f05",
+      "source": "Fig. 2",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_f06",
+      "source": "Fig. 3a",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_f07",
+      "source": "Fig. 3b",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_si39",
+      "source": "Supplementary Fig. 39",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_fig4_de",
+      "source": "Fig. 4d–e",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_fig4_fg",
+      "source": "Fig. 4f–g",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_f10",
+      "source": "Fig. 5",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_s01",
+      "source": "SI Fig. 22",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_fig4_abc",
+      "source": "Fig. 4a–c",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_s04",
+      "source": "SI Fig. 3–4",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_f11",
+      "source": "Fig. 6",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_f12",
+      "source": "Fig. 7",
+      "argumentPosition": "after supporting paragraph"
+    },
+    {
+      "id": "ns_s02",
+      "source": "SI Fig. 31",
+      "argumentPosition": "after supporting paragraph"
+    }
+  ],
+  "userCover": {
+    "originalSHA256": "ad691b685826c383f66d61d2f32018796d44070d9ac53501d731801d70c44f66",
+    "productionSHA256": "81da90ed5620710abe7d1f2955a27548c3badfe22d3b4b1bc0f3b0fb04aa7a84",
+    "losslessRGBA": true,
+    "noEvidenceClaim": true
+  },
+  "draftOnly": true,
+  "publisherNotTriggered": true
+}
