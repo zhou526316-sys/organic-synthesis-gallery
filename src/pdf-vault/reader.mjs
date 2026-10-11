@@ -59,7 +59,11 @@ export async function validateLocalPdf(file, { assertCurrent = () => true, signa
   try {
     check();
     if (!file || typeof file.arrayBuffer !== 'function' || file.size < 8) throw pdfError('invalid_pdf');
-    const data = bytes instanceof Uint8Array ? bytes : new Uint8Array(await file.arrayBuffer());
+    // PDF.js may transfer/detach its input ArrayBuffer to a worker. When the
+    // caller already hashed these bytes, validate a clone so the unchanged
+    // original can be passed straight to the native/continuous reader without
+    // calling File.arrayBuffer() a second time.
+    const data = bytes instanceof Uint8Array ? bytes.slice() : new Uint8Array(await file.arrayBuffer());
     check();
     task = getDocument(options(data));
     const pdf = await task.promise;
