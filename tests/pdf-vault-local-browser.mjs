@@ -497,11 +497,13 @@ try {
     assert.match(await page.getByTestId('native-pdf-status').innerText(), /超时|未清除/);
     assert.equal(await page.evaluate(key => localStorage.getItem(key), SESSION_KEY), TOKENS.a, 'timeout never logs out');
     assert.equal(await page.getByTestId('native-pdf-frame').isVisible(), false);
-    assert.equal((await localCopies(page)).length, 0, 'no fabricated readable record');
+    // The auth timeout occurs before the vault database is opened; reading it
+    // here would create an empty DB with no schema and invalidate the retry.
     await page.evaluate(() => { window.__pdfVaultFixture.nativeAuthMode = 'normal'; });
     await page.getByTestId('native-pdf-retry').click();
     await page.getByTestId('native-pdf-link').waitFor({ state: 'visible', timeout: 10000 });
     assert.equal(await page.evaluate(() => document.documentElement.dataset.nativePdfState), 'unlinked');
+    assert.equal((await localCopies(page)).length, 0, 'retry must not invent a saved PDF');
     assert.ok(state.authCalls.includes(TOKENS.a), 'retry verifies the same account with the server');
   });
   await test('native DOI verification treats transient HTTP 403 as a network error, not logout', async () => {
