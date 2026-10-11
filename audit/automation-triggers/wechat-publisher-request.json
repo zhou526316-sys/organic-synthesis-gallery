@@ -1,24 +1,23 @@
 {
-  "requestId": "wechat-2026-10-10-r4-read-original-link-only-safe-recovery-after-pr470",
-  "publicationDate": "2026-10-10",
+  "requestId": "wechat-2026-10-11-r1-jacs15886-natsynth1127-reviewed-two-paper-draft-only",
+  "publicationDate": "2026-10-11",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-10-r4",
-  "approvedGate": "audit/wechat-working/2026-10-10-review-gate.json",
+  "editorialRevision": "2026-10-11-r1",
+  "approvedGate": "audit/wechat-working/2026-10-11-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
-    "10.1002/anie.3306470",
-    "10.1038/s44160-026-01128-y"
+    "10.1021/jacs.6c15886",
+    "10.1038/s44160-026-01127-z"
   ],
-  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWFOfn60HSWWcYlciDjMIDj7HKSul-GJJti3u0OIKFcyL",
-  "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-10&doi=10.1002%2Fanie.3306470&summary=0",
-  "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01128-y&summary=0",
-  "expectedReviewedBodyImages": 50,
+  "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-11&doi=10.1021%2Fjacs.6c15886&summary=0",
+  "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01127-z&summary=0",
+  "expectedReviewedBodyImages": 28,
+  "expectedReviewedAssets": 30,
+  "sourceImportRunId": 38107169727,
   "draftOnly": true,
   "requireDraftGetReadback": true,
+  "requireArticleOrderAndExactDois": true,
   "publicSendAuthorized": false,
-  "reason": "Owner approved repairing 阅读原文 direct DOI focus and halo. First attempted original media ID returned draft/get 40007; merged PR470 verified link-only safe recovery: no new drafts, no reupload and no freepublish. Read current WeChat draft list only if 40007, recover only UNIQUE existing double-article draft with exact first Angew/second Nature Synthesis titles and both DOI in full stored content, otherwise fail closed. Only change content_source_url to date+Angew DOI+summary=0 and retro DOI+summary=0; preserve both titles, content, author, digest, cover thumbnail IDs, all images, article count and 23-paper Gallery release. Require post-update draft/get, independent source readback and fresh preview. No public send.",
-  "linkOnly": true,
-  "requireExactSameArticleReadback": true,
-  "recoveryPolicy": "draft_batchget_unique_exact_title_order_both_doi_or_fail",
-  "publisherImplementation": "PR470"
+  "linkOnly": false,
+  "reason": "2026-10-11 user-supplied primary/SI PDFs select JACS gas alkane asymmetric dicarbofunctionalization as first WeChat article, Nature Synthesis double HAT aziridination as second. Reviewed text/images and precise original source figures imported and verified; update/new draft only, no group send. Validate final original links and newly generated relay preview against actual draft/get. Do not reuse the invalid 2026-10-10 media ID."
 }
