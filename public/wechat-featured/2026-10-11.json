@@ -1,0 +1,356 @@
+{
+  "date": "2026-10-11",
+  "selectionAuthority": "explicit_user_uploaded_pair",
+  "editorialRevision": "2026-10-11-r1",
+  "paper": {
+    "doi": "10.1021/jacs.6c15886",
+    "title": "Regio- and Enantioselective Functionalization of Gaseous Alkanes via Nickel-Catalyzed Alkene Dicarbofunctionalization",
+    "journal": "JACS",
+    "authors": "Sergio Barbeira-Arán, Akshay M. Nair, Jose M. Malga, Xia Hu, Ángel Rentería-Gómez, Yaning Liu, Achyut R. Gogoi, Osvaldo Gutierrez, Cristina Nevado, Martín Fañanás-Mastral"
+  },
+  "headline": "镍催化烯烃双碳官能团化实现气态烷烃的区域与对映选择性官能化",
+  "kicker": "今日精选｜JACS",
+  "quick_points": [
+    {
+      "label": "30秒看懂反应",
+      "text": "丙烷、异丁烷或乙烷作为烷基来源，与烯烃、芳基溴化物三组分偶联，合成手性 α-芳基羰基化合物；模型丙烷反应 76% 分离收率、96:4 er，最佳实例可达 99:1 er。"
+    },
+    {
+      "label": "反应真正难在哪里",
+      "text": "丙烷的自由基捕获位点比约 6:1，但最终主产物的支链/直链比例可超过 20:1；初始抽氢的选择性不足以解释产物分布。"
+    },
+    {
+      "label": "值得研究的机理问题",
+      "text": "镍的计算角色兼具自由基动态储库与立体决定性捕获：不同 Ni–C 解离可逆性放大区域选择性，手性 Ni(II) 捕获 α-酯自由基影响 er。"
+    }
+  ],
+  "lead_figure_id": "jacs_f01",
+  "lead_figure_position": "after_first_quick_point",
+  "sections": [
+    {
+      "heading": "从一瓶气体到一个手性中心：难点不止是断开 C–H 键",
+      "paragraphs": [
+        "乙烷、丙烷和异丁烷便宜、来源广，但作为合成原料时有三重障碍：C(sp³)–H 键难活化，气态底物在溶剂中的有效浓度受限，而一个烷烃往往有不止一种可以被抽取的氢原子。即使成功得到烷基自由基，仍要控制它与哪一种烯烃位点成键，以及最后新形成的手性中心属于哪一种构型。",
+        "原文 Scheme 1 把先前工作与本文放在同一坐标下。较早的金属卡宾插入和光催化不对称加成证明了气态烷烃能够进入手性合成，但气体底物的收率、区域与对映选择性难以兼顾。本文则让烷烃、缺电子烯烃、芳基溴化物一次参与三组分反应：烷烃提供烷基片段，烯烃提供可形成新手性 α-碳的骨架，芳基溴化物贡献芳基，最终得到手性 α-芳基羰基化合物。",
+        "这一步是双碳官能团化：烯烃原有的 C=C 两端分别建立新 C–C 键。手性中心并非由起始烷烃本身预先携带，而是在与芳基发生后续成键时形成。因此反应必须把“抽氢选择性、自由基参与机会、对映面区分”连接起来。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    },
+    {
+      "heading": "两个催化循环各自做什么，为什么又不能相互独立",
+      "paragraphs": [
+        "设计上，十钨酸四丁基铵（TBADT）吸光后通过氢原子转移（HAT）从气态烷烃抽氢，生成烷基自由基；手性双咪唑啉配体 L4 与镍构成另一套催化体系，用于下游三组分偶联及立体控制。只把两者理解为“一个出自由基、一个成键”还不够，因为本文的区域选择性恰恰与镍对上游自由基的动态调控有关。",
+        "模型反应用丙烷（6 bar）、丙烯酸叔丁酯、对溴苯甲腈、TBADT（3 mol%）、NiCl₂·DME（10 mol%）、L4（15 mol%）、K₃PO₄ 和丙酮进行。390 nm 光照 16 h 后，目标产物 3 的分离收率为 76%，对映体比例 96:4，支链/直链产物比超过 20:1。Table 1 中不加光、不加 TBADT 或不加镍，均只能得到痕量目标产物，确认这几种要素在该模型反应中不可缺少。",
+        "这里的 76% 是分离收率，96:4 是 er，不是 96% ee；两者反映不同的反应性能。把光源从 370 nm 改为 390 nm，分离收率从 69% 提高到 76%，er 从 94:6 到 96:4。使用更拥挤的 L5 时则是 56% 收率和 98:2 er，说明追求更高对映选择性需要付出效率代价。 SI Tables S5–S6 也记录了镍盐、配体等变动的详细结果。"
+      ],
+      "figures": [
+        "jacs_f02",
+        "jacs_s01"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "jacs_f02"
+        ],
+        "3": [
+          "jacs_s01"
+        ]
+      }
+    },
+    {
+      "heading": "为什么丙酮可以做溶剂：键能并不能代替实际抽氢选择性",
+      "paragraphs": [
+        "丙酮含有 C–H 键，作者给出的键解离能约为 96.0 kcal mol⁻¹，甚至低于丙烷二级 C–H 键的 98.1 kcal mol⁻¹。如果只比较键能，丙酮似乎应该大量消耗活化的光催化剂；实际结果却是丙酮最适合当前体系。作者将这种差异归因于极性不匹配：激发十钨酸盐所表现的亲电性氧中心抽氢位点与丙酮极化 C–H 键的相互作用不利。",
+        "这个现象提醒我们，氢原子转移的竞争不仅取决于键强度，还受极性匹配和具体反应动力学影响。SI Table S1 中乙腈使模型收率降为 20%、er 降至 77:23，而乙酸乙酯（EtOAc）未得到目标产物；它只说明本套光照/催化/气体压力组合下的筛选结果，不能推广为“乙酸乙酯不适合所有 HAT 或镍催化反应”。",
+        "此外，降低丙烷压力至 3 bar，目标产物从 76% 降到 60%，却维持 96:4 er。压力首先影响气态原料的有效供应，与催化剂的立体识别不是同一个变量。"
+      ],
+      "figures": [
+        "jacs_s03"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "jacs_s03"
+        ]
+      }
+    },
+    {
+      "heading": "烯烃的酯基不仅影响手性，也改变位点分布",
+      "paragraphs": [
+        "原文 Scheme 2 不是简单列举烯烃兼容性。丙烯酸叔丁酯对应产物 3 为 76% 收率、超过 20:1 的区域选择性和 96:4 er；换成丙烯酸甲酯，产物 4 则为 52%、9:1 区域选择性和 77:23 er。把酯上的烷氧基换掉，不只改变镍周围的空间环境，还改变主产物的支链/直链比例。",
+        "更拥挤的丙烯酸酯也不保证所有指标一起改善，例如 2,4-二甲基戊-3-基酯产物 6 的 er 达 98:2，但区域选择性只有 10:1。丙烯酰胺产物 11 虽有 69% 分离收率，er 仅 61:39。作者在计算部分把这些变化与不同烯烃对镍–烷基自由基“锁定”程度的影响相联系，但烯烃种类、催化剂状态与立体过渡态的影响在实验中并未被单独完全拆开。"
+      ],
+      "figures": [
+        "jacs_f03"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "jacs_f03"
+        ]
+      }
+    },
+    {
+      "heading": "真正的底物范围：丙烷表现稳健，含氮杂芳基更具挑战",
+      "paragraphs": [
+        "原文 Scheme 3 展示多种芳基溴化物：氰基、酯、砜、三氟甲基、氯取代及联苯等能够参与，间位二取代底物 17、18 分别给出 72%、78% 收率和 95:5、98:2 er。药物相关酮洛芬类似物以及薄荷醇、葡萄糖、α-生育酚、胆固醇衍生物进一步展示了合成用途；这些复杂分子例子应同时看产率和非对映选择性，而不是简单用“耐受性好”概括。",
+        "局限同样清楚。邻位氟取代的产物 19 只有 30% 收率和 83:17 er；6-喹啉基产物 21 的 er 降至 60:40，氰基吡啶产物 22 为 64:36，而三氟甲基取代吡啶 23 回升到 86:14。作者提出杂芳环氮原子可能与镍中心竞争配位，进而损害手性控制；这是与底物趋势相符的解释，并非配位模式已被直接检测。",
+        "SI §6 报告了未反应的芳基溴化物。延长反应至 48 h 或增加光源后仍观察到芳基溴化物回收，作者认为可能受限于镍对这些芳基溴化物的氧化加成。它限定了这套反应的芳基卤化物适用范围，不应把广泛官能团兼容误读成所有芳基溴化物都能使用。"
+      ],
+      "figures": [
+        "jacs_f04",
+        "jacs_s02"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "jacs_f04"
+        ],
+        "3": [
+          "jacs_s02"
+        ]
+      }
+    },
+    {
+      "heading": "从丙烷到异丁烷，再到乙烷：每换一种气体，反应窗口都变了",
+      "paragraphs": [
+        "异丁烷反应在约 1 bar 下就能进行，代表产物 29 为 63% 分离收率、98:2 er，支链/直链比为 13:1；部分芳基溴化物也有较高的 er。但它的区域选择性并非与丙烷的超过 20:1 相同，说明不同烷基自由基在镍体系中的行为不能简单类推。",
+        "原文 Scheme 3 下半部分显示，乙烷更难：最初以丙烯酸叔丁酯为受体并不成功。作者改用丙烯酸甲酯，在 34 bar 乙烷、370 nm 光、KI 添加剂与重优化的催化剂/溶剂条件下，得到产物 34 和 35，分离收率分别为 42% 和 39%，均为 87:13 er。甲烷则未实现反应。乙烷能够进入不对称三组分合成，是该方法的重要延伸；但其压力、收率与 er 也暴露出当前方法的边界。",
+        "SI 中将乙烷与丙烷放在同一反应器竞争，最终观察到来自丙烷的产物，而未检测到乙烷产物。作者同时提到本征反应性和气体溶解度，因此这项竞争实验不能被单独用来换算两种 C–H 键的反应速率常数。"
+      ],
+      "figures": [
+        "jacs_f05"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "jacs_f05"
+        ]
+      }
+    },
+    {
+      "heading": "第一个机理问题：抽氢只有 6:1，产物为什么超过 20:1？",
+      "paragraphs": [
+        "原文 Scheme 4 的 TEMPO 自由基捕获是全文的关键实验。丙烷的二级与一级碳自由基被捕获后，二者大约呈 6:1；在正常三组分反应中，支链产物与直链产物之比却超过 20:1。这个“自由基生成比例”和“最终产品比例”明显不一致，说明后续步骤对两类自由基施加了额外筛选，而非 HAT 自身就有超过 20:1 的位点选择性。",
+        "TEMPO 对照支持两类自由基的出现，却没有直接观测到它们与镍之间的所有配合物。寻找额外筛选来源，仍需结合理论计算以及烯烃变化对区域选择性的影响。"
+      ],
+      "figures": [
+        "jacs_f06"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "jacs_f06"
+        ]
+      }
+    },
+    {
+      "heading": "计算给出的自由基储库：锁住一级自由基，放出二级自由基",
+      "paragraphs": [
+        "原文 Fig. 1a 的计算从烯烃 π 配位的 Ni(0) 物种 A 出发，比较异丙基自由基（iPr•）和正丙基自由基（nPr•）的捕获与再解离。两类自由基都可能形成 Ni(I)–烷基物种，但异丙基物种相对更容易回到游离自由基状态，正丙基物种则更倾向于被镍结合。计算的相对自由能最低点中，异丙基路径约为 −4.1 kcal mol⁻¹，正丙基约为 −12.2 kcal mol⁻¹，提供了两者可逆性差异的依据。",
+        "作者据此提出一个“自由基动态储库”：Ni(0)–烯烃配合物相对抑制一级自由基的有效浓度，却允许二级自由基持续释放；后者通过较快的非金属 Giese 加成与烯烃结合，转化为 α-酯自由基。丙烯酸叔丁酯和甲酯造成不同的锁定程度，也与两种烯烃实际观察到的区域选择性差异相呼应。",
+        "这里仍是由计算建立、与产物分布及 TEMPO 实验相容的模型。不能写成“原位捕捉到 Ni–nPr 储存库”或“已直接测得一次自由基解离速率”，因为文中没有提供这样的直接证据。"
+      ],
+      "figures": [
+        "jacs_f07"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "jacs_f07"
+        ]
+      }
+    },
+    {
+      "heading": "第二个机理问题：哪个步骤真正决定 er？",
+      "paragraphs": [
+        "Fig. 1b 的作者计算模型进一步让已经形成的 α-酯自由基 G 与手性镍中间体相遇。所提出的主路径包括 Ni(0) 对芳基溴化物氧化加成形成 Ni(II) 芳基物种，再经构型和自旋态变化进入能够捕获自由基的三重态 Ni(II) 物种 D′；G 被捕获形成 Ni(III) 中间体，随后还原消除产生 α-芳基羰基产物。其它把烷基直接插入 Ni–烯烃键的路径也计算过，但相对能量不利。",
+        "这一路径将对映选择性的主要来源定位在 α-酯自由基与 Ni(II) 芳基中间体发生不可逆捕获的步骤，而不是丙烷最初被抽氢的时刻。Fig. 2 比较两个手性过渡态，计算得到约 1.7 kcal mol⁻¹ 的自由能差；非共价相互作用与形变–相互作用分析提示，配体与异丙基/芳基之间的位阻排斥和结构形变共同影响构型选择。",
+        "因此镍在本文中有两种彼此不同的选择性任务：调节一级、二级自由基被“暂存和释放”的机会，影响区域选择性；在芳基镍捕获 α-酯自由基时区分两个对映面，影响 er。这是一个有理论和实验趋势支撑的工作模型，但不同价态镍物种的绝对浓度和所有微观动力学过程仍未被直接确定。"
+      ],
+      "figures": [
+        "jacs_f08",
+        "jacs_f09"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "jacs_f08"
+        ],
+        "2": [
+          "jacs_f09"
+        ]
+      }
+    },
+    {
+      "heading": "可以迁移到其他方法学设计中的判断",
+      "paragraphs": [
+        "第一，HAT 的本征位点选择性不一定是最终产物位点选择性的上限。当后续金属配合物对不同自由基表现出不同结合/解离可逆性时，产物分布可以与初始自由基分布显著不同。但使用这一策略前，应通过自由基捕获与产物比例的对照确认是否确有“选择性放大”。",
+        "第二，区域选择性和对映选择性可能发生在两个不同的反应阶段。优化烯烃受体、气体压力与催化剂配体时，应分别追踪 rr、er、分离收率和副产物，而不是只用一个指标概括体系。第三，机制图可以指导实验，但必须保持证据层级：TEMPO 是实验观察，Ni–自由基储库及手性 Ni(II) 捕获路径主要由计算与间接实验支持。",
+        "本文证明了三种轻质气态烷烃可以作为手性 α-芳基羰基化合物的碳源，但乙烷仍需高压和专门条件，甲烷未成功，含氮杂芳基的立体控制也存在明显短板。这些限制正是下一轮方法开发有价值的设计起点。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    }
+  ],
+  "figures": [
+    {
+      "id": "jacs_f01",
+      "source_pdf_page": 2,
+      "source_figure": "Scheme 1",
+      "caption": "原文 Scheme 1｜对照既有气态烷烃不对称官能化与本文三组分策略。",
+      "body": true,
+      "sha256": "263502e73978aef462cabd81b2aac44ccde36f92bf39b9a9a0384ad02c6ee606",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-jacs_f01.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1021/jacs.6c15886",
+      "display_width_pct": 100
+    },
+    {
+      "id": "jacs_f02",
+      "source_pdf_page": 2,
+      "source_figure": "Table 1",
+      "caption": "原文 Table 1｜催化条件与光照/配体/压力对照。",
+      "body": true,
+      "sha256": "82f9635e4a7a4411e448186f87f1cfa97f4d3efe51ce4f18025b6dc8325fe519",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-jacs_f02.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1021/jacs.6c15886",
+      "display_width_pct": 100
+    },
+    {
+      "id": "jacs_s01",
+      "source_pdf_page": 9,
+      "source_figure": "SI Table S5–S6",
+      "caption": "补充信息 SI Table S5–S6｜镍盐、压力和配体变动及无光/无镍对照。",
+      "body": true,
+      "sha256": "623263b720fe3b6c313572e181474f0671d99bf0facb1ed23e734c6c8146b0a6",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-jacs_s01.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1021/jacs.6c15886",
+      "display_width_pct": 100
+    },
+    {
+      "id": "jacs_s03",
+      "source_pdf_page": 7,
+      "source_figure": "SI Table S1",
+      "caption": "补充信息 SI Table S1｜丙烷模型反应的溶剂筛选：乙酸乙酯无目标产物。",
+      "body": true,
+      "sha256": "79061da8d0a0c767158e047a763b29a33027ee35ba1a01b7e74f7e59659feb96",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-jacs_s03.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1021/jacs.6c15886",
+      "display_width_pct": 100
+    },
+    {
+      "id": "jacs_f03",
+      "source_pdf_page": 3,
+      "source_figure": "Scheme 2",
+      "caption": "原文 Scheme 2｜不同烯烃亲核受体的产率、区域与对映选择性。",
+      "body": true,
+      "sha256": "caac8bbc12a29b90415763eaadb1eea7451f046f69706ad644bc4e2a553bdd2c",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-jacs_f03.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1021/jacs.6c15886",
+      "display_width_pct": 100
+    },
+    {
+      "id": "jacs_f04",
+      "source_pdf_page": 4,
+      "source_figure": "Scheme 3 上半",
+      "caption": "原文 Scheme 3 上半｜丙烷与芳基溴化物的底物拓展、药物类似物和天然产物衍生物。",
+      "body": true,
+      "sha256": "c1bcea5140ab1fd71527a06d805ace4d5eecb0efb20ddf32840fdb294d2c7925",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-jacs_f04.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1021/jacs.6c15886",
+      "display_width_pct": 100
+    },
+    {
+      "id": "jacs_s02",
+      "source_pdf_page": 50,
+      "source_figure": "SI §6",
+      "caption": "补充信息 SI §6｜未成功底物（尽量完整原始范围）。",
+      "body": true,
+      "sha256": "9c59b8127bb6c5c407b770a880488469cc3edd738f543d46ae537020d55647d9",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-jacs_s02.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1021/jacs.6c15886",
+      "display_width_pct": 100
+    },
+    {
+      "id": "jacs_f05",
+      "source_pdf_page": 4,
+      "source_figure": "Scheme 3 下半",
+      "caption": "原文 Scheme 3 下半｜异丁烷及乙烷的双碳官能团化。",
+      "body": true,
+      "sha256": "93fa57af0651dae48d0803822573da04d9ef3e80ef6388ef8cc7acd99a24307b",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-jacs_f05.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1021/jacs.6c15886",
+      "display_width_pct": 100
+    },
+    {
+      "id": "jacs_f06",
+      "source_pdf_page": 5,
+      "source_figure": "Scheme 4",
+      "caption": "原文 Scheme 4｜TEMPO 捕获：自由基比约 6:1 与产物大于20:1 的差别。",
+      "body": true,
+      "sha256": "e1b47b1fa71dc3a6a0ced79e74a929db5b4daf0decfb178f7f87e82e647d3a7b",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-jacs_f06.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1021/jacs.6c15886",
+      "display_width_pct": 100
+    },
+    {
+      "id": "jacs_f07",
+      "source_pdf_page": 6,
+      "source_figure": "Fig. 1a",
+      "caption": "原文 Fig. 1a｜DFT 自由基储库：镍–碳键可逆性与竞争成键路径。",
+      "body": true,
+      "sha256": "69eb68a39ca58e79ce7f04bdc3e442e6eb0c845400b0fccc9e9d6d0562bdfb93",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-jacs_f07.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1021/jacs.6c15886",
+      "display_width_pct": 100
+    },
+    {
+      "id": "jacs_f08",
+      "source_pdf_page": 6,
+      "source_figure": "Fig. 1b",
+      "caption": "原文 Fig. 1b｜DFT 计算支持的镍催化成键循环。",
+      "body": true,
+      "sha256": "7ff298d548461135660c1f69981bab49145e097eef0e2e84d8f74606ea10d9e3",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-jacs_f08.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1021/jacs.6c15886",
+      "display_width_pct": 100
+    },
+    {
+      "id": "jacs_f09",
+      "source_pdf_page": 7,
+      "source_figure": "Fig. 2",
+      "caption": "原文 Fig. 2｜两种自由基捕获过渡态的非共价相互作用和形变分析。",
+      "body": true,
+      "sha256": "36a5490e85c7e478b52ef9ab2db84250612b86edc0c94bbe09a9cfdedaf76da5",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-jacs_f09.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1021/jacs.6c15886",
+      "display_width_pct": 100
+    },
+    {
+      "id": "jacs_cover",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-cover.png",
+      "source_doi": "10.1021/jacs.6c15886",
+      "body": false,
+      "source_kind": "original_figures_composited_unmodified",
+      "caption": "由原始论文图片与排版组合的封面；化学结构来自原PDF",
+      "display_width_pct": 100
+    }
+  ],
+  "cover": {
+    "source_figure_id": "jacs_cover",
+    "canvas": {
+      "width": 1880,
+      "height": 800,
+      "background": "#FFFFFF"
+    },
+    "crop_1_1": "0.287234_0_0.712766_1",
+    "crop_235_1": "0_0_1_1",
+    "description": "Chemistry-motif sourced from exact primary PDF, no AI redraw, with title-safe area."
+  },
+  "ai_notice": ""
+}

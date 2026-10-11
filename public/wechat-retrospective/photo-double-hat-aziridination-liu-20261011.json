@@ -1,0 +1,409 @@
+{
+  "date": "2026-10-11",
+  "selectionAuthority": "explicit_user_uploaded_pair",
+  "editorialRevision": "2026-10-11-r1",
+  "paper": {
+    "doi": "10.1038/s44160-026-01127-z",
+    "title": "Aziridination of inert alkanes via photo-mediated double hydrogen atom transfer",
+    "journal": "Nature Synthesis",
+    "authors": "Ming-Shang Liu, Hwee Ting Ang, Qing-Yang Zhou, Chu Wang, Xiao-Ye Yu, Jun-Li Ao, Gan Wang, Zi-Hao Jiao, Kendall N. Houk, Jie Wu"
+  },
+  "headline": "光介导双次氢原子转移实现惰性烷烃的氮杂环丙烷化",
+  "kicker": "往期精选｜Nature Synthesis",
+  "quick_points": [
+    {
+      "label": "30秒看懂反应",
+      "text": "以磺酰胺为氮源，在可见光下将惰性烷烃相邻两个 C–H 键转化为氮杂环丙烷；环己烷模型分离收率为 60%。"
+    },
+    {
+      "label": "反应设计中的关键",
+      "text": "三重态磺酰氮宾和 PhIO 参与双次氢原子转移，原位生成烯烃，再发生氮杂环丙烷化，而非简单一次 C–H 胺化。"
+    },
+    {
+      "label": "机理结论的边界",
+      "text": "烯烃中间体由多项对照支持；计算更偏向 PhIO 辅助的氧中心先夺氢路径，但多条路径仍可能并存。"
+    }
+  ],
+  "lead_figure_id": "ns_f01",
+  "lead_figure_position": "after_first_quick_point",
+  "sections": [
+    {
+      "heading": "从一根饱和 C–C 键，直接变成含氮三元环",
+      "paragraphs": [
+        "环己烷与磺酰胺发生反应，产物却不是简单的 C–H 胺化物，而是跨越相邻两个碳的氮杂环丙烷（aziridine）。等价地说，烷烃的两根相邻 C(sp³)–H 键被用于一次邻位双官能化，最终建立一个张力较高的 C–N–C 三元环。氮杂环丙烷还能进一步开环或重排，是具有合成用途的含氮中间体。",
+        "原文 Fig. 1 对比了普通单次 HAT 与这一类双次 HAT：前者能得到一个碳自由基，后者必须在相邻位置连续移除两个氢原子，同时避免第一步自由基直接被氮中心截获而形成普通胺化产物。作者不是先准备一个烯烃底物再氮杂环丙烷化，而是希望从未活化的烷烃起步，在同一反应过程中原位生成烯烃，再实现氮转移。",
+        "这项设计的价值不是发明了一种新的烯烃氮杂环丙烷化试剂，而是把此前困难的“烷烃 → 烯烃”双氢原子转移接入已知的氮杂环丙烷化反应。随之而来的核心判断是：烯烃真的是参与反应的中间体吗？两次 HAT 由哪一类活性物种完成？"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    },
+    {
+      "heading": "反应条件里的两个关键角色：三重态磺酰氮宾与 PhIO",
+      "paragraphs": [
+        "作者以环己烷和对叔丁基苯磺酰胺为模型，在 456 nm 蓝光、−20 °C、Ir[dF(CF₃)ppy]₂(dtbbpy)PF₆（2 mol%）、PhIO（4 equiv.）、Na₂CO₃、DCE/tBuOH（10:1）下反应 20 h，得到目标氮杂环丙烷 3，核磁收率 64%、分离收率 60%，单次 C–H 胺化副产物约 2%。这里催化剂、PhIO 和低温各有具体用途，不能简单把体系叫作“常规光氧化还原胺化”。",
+        "磺酰胺与 PhIO 原位生成磺酰亚胺碘烷（iminoiodinane）；作者认为它经光敏化产生三重态磺酰氮宾。三重态氮宾具有双自由基特性，提供了连续夺取氢原子的可能。PhIO 除了参与生成氮宾前体，在作者提出的双次 HAT 工作模型中还有更直接的角色。",
+        "无光时目标产物无法检测；不用 Ir 光催化剂仍能得到 28% 的核磁收率，说明光催化剂大幅提高效率但体系还存在不依赖外加光敏剂的光化学反应通道。降低 PhIO 用量或改为 PhI(OAc)₂ 明显损害产率；升温则增加胺化副产物。条件优化指向的是一个兼顾氮宾生成、双次 HAT 与烯烃捕获的狭窄操作区间。"
+      ],
+      "figures": [
+        "ns_f02"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "ns_f02"
+        ]
+      }
+    },
+    {
+      "heading": "底物适用性：能反应不意味着位点选择性都很好",
+      "paragraphs": [
+        "原文 Fig. 2 覆盖五至八元环烷烃、十二元环、双环和苄位底物等。部分小环烷烃以特定顺式氮杂环丙烷为主，桥环底物给出可辨认的 exo 产物；但长链烷烃往往存在多个可以被双次 HAT 的位点，因而混合物的区域与非对映选择性不一。图中标示的位置比值和总分离收率，不能当成每个单一异构体的分离收率。",
+        "作者还考察了多种链状烷烃及含氯、溴、酯、酮、腈、酰亚胺、砜等官能团的底物（Fig. 2），可观察到远离吸电子基团一侧的反应位点受到偏好，这与 HAT 的极性效应相容。不过多个亚甲基并存时，区域选择性通常没有达到单一位点的水平；这和需要精确定位的后期官能化仍存在距离。",
+        "天然产物来源的桉叶油醇衍生物、葑酮、硬尾醇内酯与 celestolide 等复杂骨架展示了后期修饰可能性；但不能忽略非对映异构体并存以及部分位点的选择性限制。尤其重要的反例是四氢吡喃类醚：其氧原子 α 位 C–H 更容易发生单次胺化，得到产物 41，却未实现所希望的双次 HAT 氮杂环丙烷化。它显示从非活化烷烃拓展到所有含氧有机分子并不直接成立。"
+      ],
+      "figures": [
+        "ns_f03",
+        "ns_f04",
+        "ns_f05"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "ns_f03"
+        ],
+        "2": [
+          "ns_f04"
+        ],
+        "3": [
+          "ns_f05"
+        ]
+      }
+    },
+    {
+      "heading": "氮来源能变，真正影响应用的还有流动反应器",
+      "paragraphs": [
+        "原文 Fig. 3a 表明，对位、间位、邻位取代的芳基磺酰胺、萘基磺酰胺、杂芳基磺酰胺以及一部分烷基磺酰胺，都可与环己烷参与反应。与 celecoxib、deracoxib、valdecoxib 相关的磺酰胺片段也提供了实例，但目前产生的主要是带磺酰基保护的氮杂环丙烷，不能把这些结构直接称作已经完成药效验证的新药分子。",
+        "放大制备是该论文的另一项实质成果。Fig. 3b 中，作者使用高速循环流动光化学系统获得约 12.95 g 的环己烷氮杂环丙烷产物 3（63%）、10.40 g 的 celestolide 衍生物 40（57%），并以异丁烷气体获得 5.89 g 产物 16（37%）。SI Fig. 39 进一步给出泵、光源、冷却和管路的装置照片。反应体系存在不溶的 Na₂CO₃ 和过量 PhIO，循环流速约 120 mL min⁻¹ 以缓解沉积堵塞；这些具体工程条件比笼统说“可以放大”更重要。",
+        "但高循环流速并不等于每单位能量的转化效率已达到工业最优。PhIO 四当量、低温冷却与一定比例的混合异构体，都仍是需要评价的原料和能耗代价。"
+      ],
+      "figures": [
+        "ns_f06",
+        "ns_f07",
+        "ns_s03"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "ns_f06"
+        ],
+        "2": [
+          "ns_f07",
+          "ns_s03"
+        ]
+      }
+    },
+    {
+      "heading": "先证明烯烃在路上，再判断它是否一定由双次 HAT 生成",
+      "paragraphs": [
+        "原文 Fig. 4 的反应时间监测中可以观察到少量环己烯；将预先制备的环己烯放入标准条件，目标氮杂环丙烷以 75% 分离收率得到。相反，把单次 C–H 胺化物或邻位二胺作为潜在中间体投入，并未得到相应氮杂环丙烷。这一组对照使“烷烃 → 烯烃 → 氮杂环丙烷”比“先 C–H 胺化再闭环”更符合观察结果。",
+        "不同构型的戊-2-烯能够给出与戊烷来源相近的最终产物非对映异构体比例；烯烃/烷烃竞争实验也表明烯烃更快被消耗。它们支持烯烃作为具有动力学竞争力的中间体，但单凭这些结果并不能区分究竟是哪一类氮宾或 PhIO 辅助物种完成第二次 HAT。",
+        "含碘离子的自由基—极性交叉过程与经碳正离子脱除的另一种脱氢途径，也需要排除。作者的 I₂ 替换和 I₂ 生成检测、非对称烷烃的结构选择以及中间烯烃竞争对照，降低了这些替代路径作为主过程的可能性（Fig. 4f–g）。这些排除有反应条件依赖性，不能等同于穷尽所有微观副反应。"
+      ],
+      "figures": [
+        "ns_f08",
+        "ns_f09"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "ns_f08",
+          "ns_f09"
+        ]
+      }
+    },
+    {
+      "heading": "TEMPO、同位素效应和酮副产物分别说明什么",
+      "paragraphs": [
+        "原文 Fig. 5 的 TEMPO 实验使目标产物不能被检测，并分离出双 TEMPO 捕获相关产物 88，其结构经单晶衍射确认。这是支持含自由基中间体的较直接证据，但不意味着被捕获物就是正常催化循环中唯一高丰度活性物种。",
+        "环己烷/d₁₂-环己烷的同瓶竞争给出约 5.4 的氢/氘产物比，平行实验对应约 2.4 的动力学同位素效应。两个数值测量方式不同，不应机械合并成一个“精确 KIE”。它们共同支持 C–H 断裂与控制反应速率的步骤有关；具体哪一次 HAT 更慢，还需要结合计算和其它实验。",
+        "标准反应中还能观察到约 19% 环己酮副产物，而省去磺酰胺或 PhIO 的相关对照不能得到该酮。PhIO 的角色因此不像只是提供一个“普通氧化剂当量”；其对氮宾相关夺氢物种和副反应的影响，是作者建立后续计算模型的重要依据。"
+      ],
+      "figures": [
+        "ns_f10",
+        "ns_s01"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "ns_f10"
+        ],
+        "2": [
+          "ns_s01"
+        ]
+      }
+    },
+    {
+      "heading": "能量转移而非简单电子转移：证据到哪一步",
+      "paragraphs": [
+        "磺酰亚胺碘烷 75 能淬灭铱光敏剂的磷光，拟一级分析得到的双分子淬灭常数约为 1.87 × 10⁷ M⁻¹ s⁻¹。原文 Fig. 4 和 SI Fig. 3–4 的淬灭关系，在所考察的浓度区间更接近 Dexter 型短程能量转移特征；不同光敏剂的表现也更随三重态能量而变化，而不只与氧化还原电势相关。",
+        "这些证据支持敏化形成三重态磺酰氮宾的路径，但不表示实测到了每一个单独的能量转移中间体。值得注意的是，在无铱催化剂而有蓝光时仍有 28% 收率，因此直接光激发贡献不能完全忽略。选择使用“主要支持能量转移”而非“排除了所有电子转移可能”的措辞，才符合数据范围。"
+      ],
+      "figures": [
+        "ns_s04"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "ns_s04"
+        ]
+      }
+    },
+    {
+      "heading": "为什么第二次 HAT 比自由基耦合更有机会：三条计算路径",
+      "paragraphs": [
+        "原文 Fig. 6–7 讨论三种由三重态磺酰氮宾出发的路径。路径 1 是游离氮宾连续抽取两个相邻氢原子；路径 2 与路径 3 则考虑氮宾同 PhIO 形成具有双自由基特征的加合物，分别通过氮中心或氧中心先进行第一次 HAT。计算既比较普通过渡态，也比较自旋态转换所涉及的最小能量交叉点（MECP），因为某些关键步骤不是单一自旋面上的简单过渡态。",
+        "按论文给出的计算，路径 1 虽然能走通，但其竞争的自由基耦合会形成较多单次胺化物，与实验中这类副产物很少不完全吻合；路径 2 能解释部分酮副产物；路径 3 中先由氧中心参与 HAT，再由氮中心参与邻位第二次 HAT，在所用模型里对氮杂环丙烷主产物的偏好最符合实验。这里还不能写成“通过实验确定路径 3 是唯一机制”。",
+        "作者明确指出，在考虑前体预缔合后，多条路径仍有动力学可行性；实验主要通过 PhIO 用量与有无对照支持 PhIO 辅助路径的重要性。SI Fig. 31 中的氮宾相关 Smiles 重排实验为氮宾–PhIO 加合模式提供旁证，却不是直接分离该加合物。其结果同样应作为机制相容性证据，而非结构确证。"
+      ],
+      "figures": [
+        "ns_f11",
+        "ns_f12",
+        "ns_s02"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "ns_f11"
+        ],
+        "2": [
+          "ns_f12"
+        ],
+        "3": [
+          "ns_s02"
+        ]
+      }
+    },
+    {
+      "heading": "从这篇工作得到的三条方法学判断",
+      "paragraphs": [
+        "第一，惰性烷烃邻位双官能化可以先以“两次定向夺氢产生烯烃”的方式解决，再把烯烃导入更成熟的氮转移反应；但烯烃生成速度必须超过自由基回合和单次胺化副反应。",
+        "第二，参与氮宾前体生成的氧化剂，可能同时改变实际 HAT 物种的电子结构和竞争路径。因此评价“氧化剂效应”不能只比较氧化性强弱，还要考虑前体形成、三重态能量转移与氧中心自由基的可能性。第三，放大光反应不能只解决光穿透，还必须同时解决固体分散、循环流速和温度管理。",
+        "这项工作已经提供了多类惰性烷烃的氮杂环丙烷化及十克级实例；但混合区域异构体、−20 °C 条件、过量 PhIO 与双次 HAT 机理的未决细节，仍限制着它被直接视为普适的邻位 C–H 双官能化平台。"
+      ],
+      "figures": [],
+      "figures_after_paragraph": {}
+    }
+  ],
+  "figures": [
+    {
+      "id": "ns_f01",
+      "source_pdf_page": 2,
+      "source_figure": "Fig. 1",
+      "caption": "原文 Fig. 1｜双次氢原子转移和惰性烷烃氮杂环丙烷化的设计。",
+      "body": true,
+      "sha256": "fc9db0b42479f63ec856c98d48d0ea65f94eaf54319e27948c5a9d169908444f",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f01.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_f02",
+      "source_pdf_page": 2,
+      "source_figure": "Table 1",
+      "caption": "原文 Table 1｜环己烷氮杂环丙烷化的条件和严格对照。",
+      "body": true,
+      "sha256": "20a36eaf81bd1347d6397b3815e86fc32de38f563da7ecf9423938884adcd74b",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f02.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_f03",
+      "source_pdf_page": 3,
+      "source_figure": "Fig. 2 上部",
+      "caption": "原文 Fig. 2 上部｜环烷烃、苄位及环状烷烃的区域/非对映选择性。",
+      "body": true,
+      "sha256": "aef9687729b0afca7a7c4f70914b05a815d12bec91ab6cbacbd28e99c7cc3672",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f03.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_f04",
+      "source_pdf_page": 3,
+      "source_figure": "Fig. 2 中部",
+      "caption": "原文 Fig. 2 中部｜链状烷烃及官能团化底物的位点选择性。",
+      "body": true,
+      "sha256": "58140815ce53c7c96f7c77939cfab71dd6c22e366622dda83a5cd928aeb74534",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f04.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_f05",
+      "source_pdf_page": 3,
+      "source_figure": "Fig. 2 下部",
+      "caption": "原文 Fig. 2 下部｜复杂天然产物衍生物和醚底物的单次氢原子转移边界。",
+      "body": true,
+      "sha256": "f03b0091d48e0a7c3db5251de28c441f9c36f0710cf263657a687ea558e8e5a5",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f05.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_f06",
+      "source_pdf_page": 4,
+      "source_figure": "Fig. 3a",
+      "caption": "原文 Fig. 3a｜磺酰胺范围与药物相关砜酰胺。",
+      "body": true,
+      "sha256": "6eb604bbf67376105ea1e9670ee53e995850a5b8c569b8d4515a01ee5d6c3fd5",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f06.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_f07",
+      "source_pdf_page": 4,
+      "source_figure": "Fig. 3b",
+      "caption": "原文 Fig. 3b｜高速循环流动装置与十克级合成。",
+      "body": true,
+      "sha256": "6f25f854dbde8601388d32ceea5e391d927f91772b3f7d31891a4a28c51e7480",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f07.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_s03",
+      "source_pdf_page": 100,
+      "source_figure": "SI Fig. 39",
+      "caption": "补充信息 SI Fig. 39｜高速循环流动装置细节。",
+      "body": true,
+      "sha256": "2984f5f37646572c2b6935ddee7c4cdf517530c4dba77e96241efc0505d9f844",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_s03.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_f08",
+      "source_pdf_page": 5,
+      "source_figure": "Fig. 4a–d",
+      "caption": "原文 Fig. 4a–d｜UV-vis、磷光淬灭与动力学时间序列。",
+      "body": true,
+      "sha256": "b4363fc6ae651f4a6608b1c381bf2dfc2499f7888fbbcddb97acee96ded8565d",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f08.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_f09",
+      "source_pdf_page": 5,
+      "source_figure": "Fig. 4e–g",
+      "caption": "原文 Fig. 4e–g｜环己烯与 I2 对照以及排除简单碳正离子途径。",
+      "body": true,
+      "sha256": "6976c8276ea977d1a9350b8a7f3a2287827622ba877546fb2dc31b79cf2c1796",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f09.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_f10",
+      "source_pdf_page": 6,
+      "source_figure": "Fig. 5",
+      "caption": "原文 Fig. 5｜TEMPO 捕获、KIE 及酮副产物分布。",
+      "body": true,
+      "sha256": "4ab7a91cdaf592b8d0e949b838539fb571915482f0d569f691f3f219313e5447",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f10.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_s01",
+      "source_pdf_page": 36,
+      "source_figure": "SI Fig. 22",
+      "caption": "补充信息 SI Fig. 22｜环己烷与氘代环己烷同瓶 KIE。",
+      "body": true,
+      "sha256": "c55f735d0ec073dd9001142626a66e4bba2b9d97aba70f5e8c111ec394a86cdd",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_s01.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_s04",
+      "source_pdf_page": 25,
+      "source_figure": "SI Fig. 3–4",
+      "caption": "补充信息 SI Fig. 3–4｜磺酰亚胺碘烷对铱催化剂磷光淬灭及相应拟合。",
+      "body": true,
+      "sha256": "6516e65c5fa296ded70bd28eacc62bf042c97df73b2d2c517d86a0f3815ab3d1",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_s04.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_f11",
+      "source_pdf_page": 7,
+      "source_figure": "Fig. 6",
+      "caption": "原文 Fig. 6｜三条双次HAT途径及后续氮杂环丙烷形成的计算模型。",
+      "body": true,
+      "sha256": "ee0a95647d957758dfd5785fb825320a4398444c1523495285dd8d354fc56e0b",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f11.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_f12",
+      "source_pdf_page": 8,
+      "source_figure": "Fig. 7",
+      "caption": "原文 Fig. 7｜DFT 势能曲线与自旋态交叉动力学。",
+      "body": true,
+      "sha256": "ff304b3f65b0a4dfd0000c1ca3cdb8f40a36c1ce0ed46d5ba1b9ea9c0d7068df",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f12.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_s02",
+      "source_pdf_page": 46,
+      "source_figure": "SI Fig. 31",
+      "caption": "补充信息 SI Fig. 31｜Smiles 重排对氮宾–PhIO 配合物的旁证。",
+      "body": true,
+      "sha256": "15b80f9e260f9a67cd0b2f9c9da7e416d429464caab5ad024078daa44ed04093",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_s02.png",
+      "source_kind": "exact_source_pdf_original_crop",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_cover",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-cover.png",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "body": false,
+      "source_kind": "original_figures_composited_unmodified",
+      "caption": "由原始论文图片与排版组合的封面；化学结构来自原PDF",
+      "display_width_pct": 100
+    }
+  ],
+  "cover": {
+    "source_figure_id": "ns_cover",
+    "canvas": {
+      "width": 1254,
+      "height": 1254,
+      "background": "#18334b"
+    },
+    "crop_1_1": "0_0_1_1",
+    "crop_235_1": "0_0.287234_1_0.712766",
+    "description": "Chemistry-motif sourced from exact primary PDF, no AI redraw, with title-safe area."
+  },
+  "ai_notice": "",
+  "title": "光介导双次氢原子转移实现惰性烷烃的氮杂环丙烷化",
+  "slug": "photo-double-hat-aziridination-liu-20261011",
+  "digest": "三重态磺酰氮宾与 PhIO 协同推动惰性烷烃相邻双次夺氢，原位生成烯烃并制备氮杂环丙烷。",
+  "source_url": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01127-z&summary=0"
+}
