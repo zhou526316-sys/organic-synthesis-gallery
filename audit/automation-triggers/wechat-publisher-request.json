@@ -1,9 +1,10 @@
 {
-  "requestId": "wechat-2026-10-11-r5b-repeat-disclosure-cleanup-final-draft-get",
+  "requestId": "wechat-2026-10-11-1546-mobile-local-save-error-live-cloud-readback-no-write",
+  "action": "verify_cloud_draft",
+  "readbackOnly": true,
+  "draftOnly": true,
+  "publicSendAuthorized": false,
   "publicationDate": "2026-10-11",
-  "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-11-r5",
-  "approvedGate": "audit/wechat-working/2026-10-11-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
     "10.1021/jacs.6c15886",
@@ -12,15 +13,6 @@
   "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWOG4MGfh55oHCc7llEvIMhvXq9BhWLWVfRRRPx3yKyH7",
   "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-11&doi=10.1021%2Fjacs.6c15886&summary=0",
   "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01127-z&summary=0",
-  "expectedReviewedBodyImages": 32,
-  "expectedReviewedAssets": 35,
-  "sourceImportRunId": 38119068546,
-  "draftOnly": true,
-  "publicSendAuthorized": false,
-  "requireDraftGetReadback": true,
-  "requireArticleOrderAndExactDois": true,
-  "linkOnly": false,
-  "updatePolicy": "strict_existing_oct11_media_id_only_no_duplicates",
-  "userSelectedRetrospectiveCover": "pixel_identical_lossless_of_image(20261011-052758).png",
-  "reason": "R5 source remains unchanged and independent review gate remains valid. Official same-media draft/get succeeded in previous run. Independent real HTML QA found two identical purpose disclosures at each article end: ai_notice + fixed original statement. Publisher code commit d26d8725ad78e6a5327ed8bcf680e8372ff2e754 skips the redundant ai_notice when it duplicates the legally required fixed original statement, retaining one accurate authorship and AI-assisted disclosure. Reuse existing Oct11 draft only, both articles, exact DOI links, no public send; require another draft/get and fresh relay preview."
+  "expectedLastPreview": "https://relay.gczhouwld.com/wechat-preview/0c6a5b8965d6401973a288b4.html",
+  "reason": "Owner explicitly requests repair of subscription-assistant mobile draft local-save abnormal and synchronization. Safeguard: first perform live authenticated cloud draft/get without any remote cloud update, media upload, draft creation or public send. Detect whether the cloud draft was altered after 14:49 R5 success, compare version HMAC and server media caches; preserve local unsynced content. If mobile local cache differs, server cannot force mobile app local storage updates and must not blindly rewrite."
 }
