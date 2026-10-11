@@ -36,28 +36,26 @@ function supportingInformation(firstPageText, name = '') {
     /(?:^|[._-])(?:si|supporting|supplementary)(?:[._-]|$)/i.test(filename);
 }
 
-export function evaluatePdfDoiIdentity({ metadataText = '', firstPageText = '', filename = '' } = {}, doi) {
-  const target = normalizeDoi(doi);
-  if (!target) return { status: 'unknown', doi: null, foundDois: [] };
+export function inferPdfDoiIdentity({ metadataText = '', firstPageText = '', filename = '' } = {}) {
   const meta = extractPdfDois(metadataText);
   const page = extractPdfDois(firstPageText);
   const found = [...new Set([...meta, ...page])];
   if (supportingInformation(firstPageText, filename)) {
-    return { status: 'supporting', doi: target, foundDois: found };
+    return { status: 'supporting', doi: meta[0] || page[0] || null, foundDois: found };
   }
-  // A publisher-supplied unique DOI in the metadata takes precedence over
-  // incidental DOIs mentioned on page one; contradictory metadata fails.
-  if (meta.length === 1 && meta[0] === target) {
-    return { status: 'match', doi: target, foundDois: found, evidence: 'metadata' };
-  }
-  if (meta.length > 1) return { status: 'ambiguous', doi: target, foundDois: found };
-  if (meta.length === 1 && meta[0] !== target) {
-    return { status: 'mismatch', doi: target, foundDois: found };
-  }
-  if (page.length === 1 && page[0] === target) {
-    return { status: 'match', doi: target, foundDois: found, evidence: 'first_page' };
-  }
-  if (page.length > 1) return { status: 'ambiguous', doi: target, foundDois: found };
-  if (page.length === 1) return { status: 'mismatch', doi: target, foundDois: found };
-  return { status: 'unknown', doi: target, foundDois: [] };
+  if (meta.length > 1) return { status: 'ambiguous', doi: null, foundDois: found };
+  if (meta.length === 1) return { status: 'match', doi: meta[0], foundDois: found, evidence: 'metadata' };
+  if (page.length > 1) return { status: 'ambiguous', doi: null, foundDois: found };
+  if (page.length === 1) return { status: 'match', doi: page[0], foundDois: found, evidence: 'first_page' };
+  return { status: 'unknown', doi: null, foundDois: [] };
+}
+
+export function evaluatePdfDoiIdentity(document, doi) {
+  const target = normalizeDoi(doi);
+  if (!target) return { status: 'unknown', doi: null, foundDois: [] };
+  const result = inferPdfDoiIdentity(document);
+  if (result.status !== 'match') return { ...result, expectedDoi: target };
+  return result.doi === target
+    ? { ...result, expectedDoi: target }
+    : { ...result, status: 'mismatch', expectedDoi: target };
 }
