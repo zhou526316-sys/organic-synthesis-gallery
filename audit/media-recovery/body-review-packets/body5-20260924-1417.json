@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260924-1417",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-24T06:17:30Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10789591366,
+  "evidenceArchiveSha256": "80603e8ecfb3b23e1f230ba9aa539b55490bf117afdc4eec711d46571032ba33",
+  "evidenceRunId": 35952911184,
+  "approvedCount": 20,
+  "reviewMethod": "All 20 selected stored files across five current-corpus Organic Letters articles were independently rehashed against the frozen read-only GitHub evidence artifact, checked for exact task/page/article/source DOI identity using the stage binding plus report/index and DOI-bearing article/source URLs, original Figure/Scheme identity and independent caption, captureVersion 6.2.20, job identity, fixed media generation 1790082000000, content-addressed R2 key, actual byte length/type/dimensions, duplicate source/hash ownership and frozen public media-index state. Every SVG was rendered and checked for active/external content. Every image was visually reviewed against its owning caption and paper theme for source role, unrelated/recommendation contamination, duplicate risk and legibility. Capture success/partial markers were treated only as provenance evidence. No publisher request, R2/D1 write, server-side direct import/repair, literature/card/title/scope mutation, userscript change or media-generation change was performed.",
+  "quality": "The 20 files are exact stored self-contained SVG bytes, all within configured size bounds, all with unique selected full SHA256 and source identities. Frozen public media-index records contain no same-ID body figures for these five DOI; each article has a distinct existing official TOC that is preserved, so this packet is additive and body-only. 10.1021/acs.orglett.6c03389 remains article-level partial 4/5 because Scheme 4 was quality-insufficient; only Scheme 1, Scheme 2, Scheme 3 and Scheme 5 are approved and the missing Scheme 4 is not inferred approved. Historical transport or application/octet-stream fetch failures are retained as provenance and are not attributed to VPN, R2, quota or another cause without evidence.",
+  "decisions": [
+    {
+      "doi": "10.1021/acs.orglett.6c03295",
+      "images": [
+        ["next-011", "figure-1", "Viewed representative bioactive/functional pyridyl thioethers and the comparison of prior pyridyl-thioether syntheses with this work; content matches Figure 1 and the article theme."],
+        ["next-050", "figure-2", "Viewed the proposed dehydroxylative cross-electrophile coupling mechanism involving phosphite/disulfide activation and pyridyl substitution; content matches Figure 2."],
+        ["next-051", "scheme-1", "Viewed the diselenide extension, 3 mmol scale-up, comparative thiol study and preliminary mechanistic control experiments; content matches Scheme 1."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03389",
+      "images": [
+        ["next-012", "scheme-1", "Viewed the literature context for radical Truce–Smiles rearrangements and this work’s HAT-enabled SO2-retaining photoredox/cobalt design; content matches Scheme 1."],
+        ["next-052", "scheme-2", "Viewed the substrate scope of the SO2-retaining Truce–Smiles rearrangement with varied heteroaryl migration groups and electrophiles; content matches Scheme 2."],
+        ["next-053", "scheme-3", "Viewed the 1.0 mmol scale-up experiment converting the allyl sulfone substrate with benzyl bromide to the rearranged product; content matches Scheme 3."],
+        ["next-054", "scheme-5", "Viewed the proposed photoredox/cobalt HAT catalytic mechanism with radical generation, heteroaryl migration and electrophile trapping; content matches Scheme 5."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03438",
+      "images": [
+        ["next-013", "figure-1", "Viewed representative biologically active indeno[1,2-c]isoquinoline-related scaffolds; structures match Figure 1 and the article’s IIQL target class."],
+        ["next-055", "scheme-1", "Viewed the Rh(III)-catalyzed sequential intermolecular [4+2] cycloaddition strategy that builds functionalized indenoisoquinolines and its stated synthetic features; content matches Scheme 1."],
+        ["next-056", "scheme-2", "Viewed deuterium-labeling/mechanistic experiments and the gram-scale synthesis under the reported Rh(III) conditions; content matches Scheme 2."],
+        ["next-057", "scheme-3", "Viewed the proposed cascade mechanism with sequential C–H activation, carbene/alkyne insertion, cyclization and second annulation; content matches Scheme 3."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03460",
+      "images": [
+        ["next-014", "scheme-1", "Viewed prior hydroboration/hydrosilylation and ammonia-borane reductions of quinolines alongside this work’s borane/base metal-free 1,2-reduction concept; content matches Scheme 1."],
+        ["next-058", "scheme-2", "Viewed deuterium-labeling experiments and downstream synthetic applications of the 1,2-dihydroquinoline products; content matches Scheme 2."],
+        ["next-059", "scheme-3", "Viewed the proposed stepwise borane/base mechanism for selective quinoline reduction, including the observed borohydride-related intermediates; content matches Scheme 3."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03469",
+      "images": [
+        ["next-015", "figure-1", "Viewed representative bioactive difluoromethyl compounds and 1,3,4-oxadiazole derivatives motivating the target scaffold; content matches Figure 1."],
+        ["next-060", "scheme-1", "Viewed prior and current approaches to forming difluoromethyl 1,3,4-oxadiazoles from hydrazides and fluorinating reagents; content matches Scheme 1."],
+        ["next-061", "scheme-2", "Viewed the substrate scope for constructing 3-difluoromethyl-1,3,4-oxadiazole-2-thiones with varied aryl/heteroaryl hydrazides; content matches Scheme 2."],
+        ["next-062", "scheme-3", "Viewed the complementary scope for 2-[(difluoromethyl)thio]-1,3,4-oxadiazoles with varied substituents; content matches Scheme 3."],
+        ["next-063", "scheme-4", "Viewed radical/additive and stepwise control experiments used to probe the divergent three-component assembly; content matches Scheme 4."],
+        ["next-064", "scheme-5", "Viewed the proposed base/CS2-mediated mechanism leading to divergent difluoromethyl thione or thioether oxadiazole products; content matches Scheme 5."]
+      ]
+    }
+  ]
+}
