@@ -44,9 +44,12 @@ for(const name of ['src','shared','architecture','public','index.html','package.
 await symlink(path.join(root,'node_modules'),path.join(work,'node_modules'),'dir');
 // Only a temporary preview copy is instrumented; no repository source file is changed.
 let main=await readFile(path.join(work,'src/main.ts'),'utf8');
-for(const anchor of ['void load();','void resolveTitles().then(() => resolveTitles());','void loadTranslations();']) assert.ok(main.includes(anchor),`legacy_hook_anchor_missing:${anchor}`);
-main=main.replace('void resolveTitles().then(() => resolveTitles());','await resolveTitles(); await resolveTitles();')
-  .replace('void loadTranslations();','await loadTranslations();');
+// Modify only the awaited calls in async load(); replacing the first bare
+// "void loadTranslations();" can incorrectly target a non-async setTimeout.
+const loadAnchors='    void resolveTitles().then(() => resolveTitles());\n    void loadTranslations();';
+assert.ok(main.includes('void load();') && main.includes(loadAnchors),'legacy_async_load_hook_missing');
+main=main.replace(loadAnchors,
+  '    await resolveTitles(); await resolveTitles();\n    await loadTranslations();');
 const hooks=`
 (globalThis as any).__archBridge = {
   async replace(rows: Paper[]) {
