@@ -2,6 +2,7 @@ import { createLocalPdfVault, LocalPdfVaultError } from './local-vault.mjs';
 import { getPdfVaultDeviceIdentity } from '../../shared/pdf-vault-device.mjs';
 import { normalizeDoi, resolvePdfCardState, PDF_PROBE_MAX_AGE_MS } from '../../shared/pdf-vault-v1.mjs';
 import { mountPdfQueuePanel } from './queue-panel.mjs';
+import { recordVerifiedPdfSession } from '../../shared/pdf-vault-session-receipt.mjs';
 
 const SESSION_KEY = 'organic-gallery-session-v1';
 const SESSION_PATH = '/api/user-ui/auth/session';
@@ -129,6 +130,10 @@ function errorMessage(error) {
   const messages = {
     invalid_doi: '请填写有效的文献 DOI，并核对它与所选 PDF 一致。',
     invalid_pdf: '这份文件无法作为完整 PDF 解析，未保存。请检查下载是否完整后重试。',
+    pdf_doi_mismatch: '所选 PDF 的 DOI 与当前文献不一致，已拒绝保存／打开。',
+    pdf_doi_unknown: '未从 PDF 首页或元数据识别出 DOI。为防止误关联，未保存／打开此文件。',
+    pdf_doi_ambiguous: 'PDF 首页出现多个 DOI，无法确认文件身份。请使用对应期刊正文 PDF。',
+    pdf_doi_supporting: '这是一份补充信息（SI），不是对应论文正文；请另选正文 PDF。',
     pdf_password: '这份 PDF 需要密码，当前无法导入。请先用本地阅读器处理后重试。',
     pdf_too_large: '文件超过当前允许的大小，请选择不超过 50 MB 的 PDF。',
     permission_required: '文件夹权限尚未授予或已失效。请点击“恢复文件夹权限”后再试。',
@@ -306,6 +311,17 @@ function copyAction(name, copyId) {
     requireCurrent(context);
     const module = await import('./reader.mjs');
     requireCurrent(context);
+    try {
+      await module.validateLocalPdf(result.file, { bytes: result.bytes,
+        expectedDoi: result.copy.doi, assertCurrent: () => requireCurrent(context),
+        signal: context.abortController.signal });
+    } catch (error) {
+      if (/^pdf_doi_/.test(error?.code || '')) {
+        await context.vault.disableCopy(copyId);
+      }
+      throw error;
+    }
+    requireCurrent(context);
     clearReader();
     reader = module.createLocalPdfReader({
       dialog: readerDialog,
@@ -376,6 +392,7 @@ async function readSession(token, controller) {
         !/^[A-Za-z0-9_-]{1,128}$/.test(data.user.id)) {
       throw sessionReadError('session_invalid_response');
     }
+    void recordVerifiedPdfSession(token, data.user.id);
     return data.user;
   } catch (error) {
     if (controller.signal.aborted) throw new DOMException('Aborted', 'AbortError');
@@ -593,7 +610,8 @@ $('#import-form').addEventListener('submit', event => {
     if (file.size > context.capabilities.maxBytes) throw new LocalPdfVaultError('pdf_too_large');
     const module = await import('./reader.mjs');
     requireCurrent(context);
-    await module.validateLocalPdf(file, { assertCurrent: () => requireCurrent(context), signal: context.abortController.signal });
+    await module.validateLocalPdf(file, { expectedDoi: doi,
+      assertCurrent: () => requireCurrent(context), signal: context.abortController.signal });
     requireCurrent(context);
     await context.vault.importPdf({ doi, file, versionKind });
     requireCurrent(context);

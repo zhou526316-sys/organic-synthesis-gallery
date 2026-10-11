@@ -74,7 +74,7 @@ function present(context, snapshot) {
   const now = Date.now(), expirations = [];
   for (const anchor of anchors()) {
     const doi = normalizeDoi(anchor.closest('.card')?.dataset.doi || '');
-    const copies = snapshot.copies.filter(copy => copy.doi === doi);
+    const copies = snapshot.copies.filter(copy => copy.doi === doi && !['deleted', 'revoked'].includes(copy.state));
     const probes = snapshot.probes.filter(probe => probe.doi === doi);
     const result = resolvePdfCardState({ user_id: context.userId, device_id: context.deviceId, doi, now, copies, probes });
     if (result.state === 'local') {

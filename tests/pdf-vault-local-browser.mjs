@@ -20,7 +20,7 @@ const cases = [], contexts = new Set(), observedStaticPaths = new Set();
 let browser, server, base, activeCase, fatalError;
 await fs.mkdir(OUTPUT, { recursive: true });
 
-function vectorPdf(shade = '0.2') {
+function vectorPdf(shade = '0.2', documentDoi = DOI) {
   const objects = [
     '<< /Type /Catalog /Pages 2 0 R >>',
     '<< /Type /Pages /Kids [3 0 R 5 0 R] /Count 2 >>',
@@ -31,7 +31,7 @@ function vectorPdf(shade = '0.2') {
     '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
   ];
   for (const [index, color] of [[3, shade + ' 0.5 0.8'], [5, '0.8 ' + shade + ' 0.4']]) {
-    const stream = 'q ' + color + ' rg 30 40 280 360 re f 0 0 0 RG 3 w 25 25 m 330 450 l S BT /F1 18 Tf 0 0 0 rg 50 430 Td (Gallery local PDF page ' + (index === 3 ? 1 : 2) + ') Tj ET Q\n';
+    const stream = 'q ' + color + ' rg 30 40 280 360 re f 0 0 0 RG 3 w 25 25 m 330 450 l S BT /F1 18 Tf 0 0 0 rg 50 430 Td (Gallery local PDF page ' + (index === 3 ? 1 : 2) + ') Tj 0 -25 Td (DOI: ' + documentDoi + ') Tj ET Q\n';
     objects[index] = '<< /Length ' + Buffer.byteLength(stream) + ' >>\nstream\n' + stream + 'endstream';
   }
   let body = '%PDF-1.7\n% Gallery synthetic two-page vector and Helvetica fixture. No publisher content.\n';
@@ -43,7 +43,7 @@ function vectorPdf(shade = '0.2') {
   body += 'trailer\n<< /Size ' + (objects.length + 1) + ' /Root 1 0 R >>\nstartxref\n' + start + '\n%%EOF\n';
   return Buffer.from(body);
 }
-const PDF = vectorPdf(), CHANGED_PDF = vectorPdf('0.7');
+const PDF = vectorPdf(), CHANGED_PDF = vectorPdf('0.7'), WRONG_PDF = vectorPdf('0.4', '10.9999/wrong-paper-fixture');
 assert.equal(PDF.length, CHANGED_PDF.length, 'changed fixture preserves size so a size-only probe cannot pass');
 const PDF_HASH = createHash('sha256').update(PDF).digest('hex');
 const forbiddenNetworkValues = [PDF_HASH, PDF.toString('base64'), '%PDF-', 'fixture-private-document.pdf', 'picked-directory'];
@@ -211,7 +211,7 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       localStorage.setItem(sessionKey, token);
       localStorage.setItem('gallery-local-vault-fixture-seeded', '1');
     }
-    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, filePickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false, stallIndexedDb, nativeAuthMode };
+    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, filePickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false, stallIndexedDb, nativeAuthMode, chosenBytes: null };
     const nativeFetch = window.fetch.bind(window);
     window.fetch = (input, init) => {
       const pathname = new URL(typeof input === 'string' ? input : input.url, location.href).pathname;
@@ -246,7 +246,7 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       const handle = await folder.getFileHandle('already-downloaded-anywhere.pdf', { create: true });
       if (!state.externalFileReady) {
         const writer = await handle.createWritable();
-        await writer.write(new Uint8Array(pdfBytes));
+        await writer.write(new Uint8Array(state.chosenBytes || pdfBytes));
         await writer.close();
         state.externalFileReady = true;
       }
@@ -518,6 +518,98 @@ try {
     await page.getByTestId('native-pdf-retry').click();
     await page.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
     assert.equal(await page.evaluate(() => document.documentElement.dataset.nativePdfState), 'unlinked');
+  });
+  await test('legacy local-library import refuses a PDF whose embedded DOI does not match', async () => {
+    const { context } = await trackedContext();
+    const page = await pageFor(context);
+    await selectDestination(page, 'opfs');
+    await importFile(page, WRONG_PDF, 'unrelated.pdf');
+    await waitStatus(page, 'error');
+    assert.match(await by(page, 'status').innerText(), /DOI.*不一致/);
+    assert.equal((await localCopies(page)).filter(x => x.state === 'available').length, 0);
+  });
+  await test('wrong DOI PDF cannot be linked, correct DOI can replace it, and unlink is reversible', async () => {
+    const { context } = await trackedContext();
+    const page = await context.newPage();
+    await page.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await page.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
+    await page.evaluate(bytes => { window.__pdfVaultFixture.chosenBytes = bytes; }, [...WRONG_PDF]);
+    await page.getByTestId('native-pdf-link').click();
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'file-error');
+    assert.match(await page.getByTestId('native-pdf-status').innerText(), /DOI.*不一致/);
+    assert.equal((await localCopies(page)).length, 0, 'mismatched PDF must never be stored');
+    await page.evaluate(bytes => {
+      window.__pdfVaultFixture.externalFileReady = false;
+      window.__pdfVaultFixture.chosenBytes = bytes;
+    }, [...PDF]);
+    await page.getByTestId('native-pdf-link').click();
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading');
+    assert.equal((await localCopies(page)).filter(x => x.state === 'available').length, 1);
+    await page.locator('#native-tools-toggle').click();
+    await page.getByTestId('native-pdf-unlink').click();
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'unlinked');
+    assert.equal((await localCopies(page)).filter(x => x.state === 'available').length, 0,
+      'cancel must revoke the association without deleting the disk file');
+    // Verify persistence with a separate DOI tab. Do not unload an active
+    // browser-native PDF plugin while its static worker assets may be loading.
+    const reopened = await context.newPage();
+    await reopened.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await reopened.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
+    assert.equal(await reopened.getByTestId('native-pdf-frame').isVisible(), false);
+  });
+  await test('one read-only folder grant automatically discovers a newly downloaded PDF', async () => {
+    const { context } = await trackedContext();
+    const page = await context.newPage();
+    await page.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await page.getByTestId('native-pdf-download-folder').waitFor({ state: 'visible' });
+    await page.getByTestId('native-pdf-download-folder').click();
+    await page.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
+    await page.evaluate(async bytes => {
+      const root = await navigator.storage.getDirectory();
+      const folder = await root.getDirectoryHandle('picked-directory', { create: true });
+      const handle = await folder.getFileHandle('publisher-article.pdf', { create: true });
+      const writer = await handle.createWritable();
+      await writer.write(new Uint8Array(bytes));
+      await writer.close();
+    }, [...PDF]);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading',
+      null, { timeout: 30000 });
+    const rows = await localCopies(page);
+    assert.equal(rows.filter(x => x.state === 'available').length, 1);
+    assert.equal(rows.find(x => x.state === 'available')?.hasFileHandle, true);
+    assert.equal(await page.evaluate(() => window.__pdfVaultFixture.pickerCalls), 0,
+      'once authorized, a new DOI tab must not request a folder picker');
+  });
+  await test('recent verified receipt avoids duplicate auth calls and older receipt never blocks the PDF', async () => {
+    const { context, state } = await trackedContext();
+    const page = await pageFor(context);
+    await importGood(page);
+    const first = await context.newPage();
+    await first.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await first.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading');
+    await first.waitForFunction(() => Boolean(localStorage.getItem('gallery-pdf-vault-session-receipt-v1')));
+    const initialCalls = state.authCalls.length;
+    state.holdAuth = true;
+    const second = await context.newPage();
+    await second.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await second.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading', null, { timeout: 10000 });
+    assert.equal(await second.getByTestId('native-pdf-frame').isVisible(), true);
+    await second.waitForTimeout(100);
+    assert.equal(state.authCalls.length, initialCalls, 'fresh verified tabs must not re-call auth');
+    await second.evaluate(() => {
+      const key = 'gallery-pdf-vault-session-receipt-v1';
+      const row = JSON.parse(localStorage.getItem(key));
+      row.verifiedAt = Date.now() - 65_000;
+      localStorage.setItem(key, JSON.stringify(row));
+    });
+    const third = await context.newPage();
+    await third.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await third.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading', null, { timeout: 10000 });
+    await waitUntil(() => state.pendingAuth.length > 0, 'background revalidation pending');
+    assert.equal(await third.getByTestId('native-pdf-frame').isVisible(), true);
+    state.holdAuth = false;
+    for (const release of state.pendingAuth.splice(0)) release();
   });
   await test('direct DOI PDF tab opens a saved local copy in the browser native viewer', async () => {
     const { context } = await trackedContext();

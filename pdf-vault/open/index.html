@@ -19,7 +19,10 @@
         <p id="native-doi" class="doi"></p>
         <p data-testid="native-pdf-status" id="native-status" role="status" aria-live="polite">正在验证账号并查找这篇 PDF…</p>
         <div class="actions">
-          <button type="button" data-testid="native-pdf-link" id="link-file" hidden>选择电脑上已有的 PDF</button>
+          <button type="button" data-testid="native-pdf-download-folder" id="download-folder" hidden>首次授权 PDF 下载目录</button>
+          <button type="button" data-testid="native-pdf-folder-restore" id="download-folder-restore" hidden>恢复下载目录读取权限</button>
+          <button type="button" data-testid="native-pdf-folder-scan" id="download-folder-scan" hidden>重新搜索已下载 PDF</button>
+          <button type="button" data-testid="native-pdf-link" id="link-file" hidden>手动选择或更换 PDF</button>
           <button type="button" data-testid="native-pdf-restore" id="restore-file" hidden>恢复原文件权限</button>
           <button type="button" data-testid="native-pdf-retry" id="retry-open" hidden>重试打开</button>
           <a id="publisher-link" target="_blank" rel="noopener noreferrer" hidden>前往期刊文章页面下载</a>
@@ -32,6 +35,15 @@
     <section id="native-viewer" hidden aria-label="浏览器内置 PDF 阅读器">
       <iframe data-testid="native-pdf-frame" id="native-frame" title="浏览器内置 PDF 阅读器" referrerpolicy="no-referrer"></iframe>
     </section>
+    <nav id="native-tools" class="native-tools" hidden aria-label="本地 PDF 关联管理">
+      <button type="button" id="native-tools-toggle" aria-expanded="false">管理此 PDF</button>
+      <div id="native-tools-panel" hidden>
+        <button type="button" id="native-replace" data-testid="native-pdf-replace">更换本地 PDF</button>
+        <button type="button" id="native-unlink" data-testid="native-pdf-unlink">取消该 DOI 的关联</button>
+        <button type="button" id="native-rescan">重新搜索下载目录</button>
+        <p id="native-tools-message" role="status"></p>
+      </div>
+    </nav>
     <script type="module" src="/src/pdf-vault/open.mjs"></script>
   </body>
 </html>
