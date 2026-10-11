@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN" data-native-pdf-state="checking">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.gczhouwld.com; img-src 'self' blob:; frame-src blob:; object-src 'none'; base-uri 'none'; form-action 'none';" />
+    <title>本地 PDF · Organic Synthesis Gallery</title>
+    <link rel="stylesheet" href="/src/pdf-vault/open.css" />
+  </head>
+  <body>
+    <main id="native-shell" class="shell">
+      <header class="heading">
+        <a href="/" class="brand">Organic Synthesis Gallery</a>
+        <span class="split" aria-hidden="true"></span>
+        <h1>本地 PDF</h1>
+      </header>
+      <div class="content">
+        <p id="native-doi" class="doi"></p>
+        <p data-testid="native-pdf-status" id="native-status" role="status" aria-live="polite">正在验证账号并查找这篇 PDF…</p>
+        <div class="actions">
+          <button type="button" data-testid="native-pdf-link" id="link-file" hidden>选择电脑上已有的 PDF</button>
+          <button type="button" data-testid="native-pdf-restore" id="restore-file" hidden>恢复原文件权限</button>
+          <button type="button" data-testid="native-pdf-retry" id="retry-open" hidden>重试打开</button>
+          <a id="publisher-link" target="_blank" rel="noopener noreferrer" hidden>前往期刊文章页面下载</a>
+          <a id="manager-link" hidden>管理我的 PDF</a>
+          <a href="/" id="sign-in-link" hidden>返回 Gallery 登录</a>
+        </div>
+        <p id="native-help" class="hint">浏览器只会读取你明确选择过的文件。原始 PDF 不会被移动、改名、复制到服务器或上传。</p>
+      </div>
+    </main>
+    <section id="native-viewer" hidden aria-label="浏览器内置 PDF 阅读器">
+      <iframe data-testid="native-pdf-frame" id="native-frame" title="浏览器内置 PDF 阅读器" referrerpolicy="no-referrer"></iframe>
+    </section>
+    <script type="module" src="/src/pdf-vault/open.mjs"></script>
+  </body>
+</html>
