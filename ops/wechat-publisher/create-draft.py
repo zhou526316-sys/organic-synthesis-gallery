@@ -695,7 +695,7 @@ def build_content(
             parts.append("</section>")
 
         notice = featured.get("ai_notice")
-        if notice:
+        if notice and not ("本文由“化之岛”原创策划与整理" in str(notice) and "AI 辅助生成" in str(notice)):
             parts.append(
                 "<section style='border-top:1px solid #eee;margin-top:24px;padding-top:14px;'>"
                 "<p style='font-size:11px;color:#888;line-height:1.7;margin:0;'><strong>创作说明：</strong>"
@@ -808,7 +808,7 @@ def build_retrospective_content(data: dict, uploaded_urls: dict[str, str] | None
         parts.append("</section>")
 
     notice = data.get("ai_notice")
-    if notice:
+    if notice and not ("本文由“化之岛”原创策划与整理" in str(notice) and "AI 辅助生成" in str(notice)):
         parts.append(
             "<section style='border-top:1px solid #eee;margin-top:24px;padding-top:14px;'>"
             "<p style='font-size:11px;color:#888;line-height:1.7;margin:0;'><strong>创作说明：</strong>"
