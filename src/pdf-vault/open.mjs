@@ -9,6 +9,7 @@ import { discoverDownloadedPdf, suppressDownloadedNames, unsuppressDownloadedDoi
 const SESSION_KEY = 'organic-gallery-session-v1';
 const API_SESSION = 'https://api.gczhouwld.com/api/user-ui/auth/session';
 const DOI = normalizeDoi(new URLSearchParams(location.search).get('doi') || '');
+const BACKGROUND_RECHECK_AFTER_MS = 60_000;
 const $ = id => document.getElementById(id);
 const status = $('native-status');
 const shell = $('native-shell');
@@ -363,7 +364,9 @@ async function start() {
     if (stamp !== generation || originalToken !== token()) return;
     if (cached) {
       const init = initializeAccount(cached, originalToken, stamp);
-      if (account) void revalidateCachedAccount(account);
+      if (account && Date.now() - cached.verifiedAt >= BACKGROUND_RECHECK_AFTER_MS) {
+        void revalidateCachedAccount(account);
+      }
       await init;
       return;
     }
