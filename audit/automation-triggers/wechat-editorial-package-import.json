@@ -1,12 +1,11 @@
 {
-  "requestId": "wechat-2026-10-11-r3-owner-concept-cover-science-prose-complete-crops",
-  "requestedAt": "2026-10-11T13:35:00+08:00",
+  "requestId": "wechat-2026-10-11-r4-semantic-headings-no-mandatory-three-box-toc-safe-zoom",
   "action": "import_reviewed_editorial_package",
-  "revision": "2026-10-11-r3",
+  "revision": "2026-10-11-r4",
   "doi": "10.1038/s44160-026-01127-z",
   "targetDateBeijing": "2026-10-11",
-  "packageUrl": "https://at.adobe.com/dTAkYJbdkWam5MEb",
-  "packageSha256": "4d405f6ebfa192146d366a4797b8fc5880873ddb7f9c449e24cc056dd9bac8f3",
+  "packageUrl": "https://at.adobe.com/AfKVjWNGkoGkHwg9",
+  "packageSha256": "a9e6e0fc24ea106ce4362ea4b18b24700a6d808f27e833c4053883059e325f01",
   "manifestPath": "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json",
   "gatePath": "audit/wechat-working/2026-10-11-review-gate.json",
   "expectedArticleCount": 2,
@@ -15,14 +14,14 @@
     "10.1038/s44160-026-01127-z"
   ],
   "replaceExisting": {
-    "public/wechat-featured/2026-10-11.json": "4fb168addcbc3f089d34138f7180af69b9a16c92",
-    "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json": "19287635ece0e826f0e2853cba49e512b8c45315",
-    "public/wechat-editions/2026-10-11.json": "26189bbc1e4e8c065d839e527a7e0af29fcce9f3",
-    "audit/wechat-working/2026-10-11-review-gate.json": "ce8442559d5a8d0fa7cc4ff99d46ed8724fbcad0"
+    "public/wechat-featured/2026-10-11.json": "b0f5fd1af15863cffaad75bf55c6e179c689b186",
+    "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json": "1f571992539922db53f96481ddf12d7b6b7ee1d1",
+    "public/wechat-editions/2026-10-11.json": "8aa17ce9fd413b53d36cde37373a8053b2fdd165",
+    "audit/wechat-working/2026-10-11-review-gate.json": "a028264b21e132b6af4e901b2140c381260e1afc"
   },
   "thisStepWritesDraft": false,
   "publicSendAuthorized": false,
   "sourceOnly": true,
   "preserveOldWeChatMediaId": true,
-  "note": "User explicitly approved Oct11 R3: original owner-selected blue concept cover (archived original + pixel-identical lossless production), restore one missing SI 39 figure, re-crop incomplete JACS Scheme3/Nature Fig2/Fig4 complete logical blocks, rewrite prose evidence-grounded Chinese accuracy/logic. Import only, no draft write or mass send; gate pins 9 sources and 35 images, 32 body images."
+  "note": "User explicit Oct11 R4 repair: original JACS TOC safely enlarged only within native-title and complete 1:1 square-chemistry clearance; end fixed three-box openers; JACS 2 evidence-matched lead boxes, Nature no boxes; independently audit science-specific section titles, splitting unrelated nitrogen-source and flow content; all 32 R3 science body figures unchanged, user-selected Nature blue square cover unchanged; source-only import then strict same-media draft update and draft/get."
 }
