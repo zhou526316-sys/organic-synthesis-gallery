@@ -832,6 +832,15 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
     source = local_images.get(fig_id) if fig_id else None
     if not source:
         return None
+    # Upload the explicitly owner-selected concept image in its reviewed,
+    # pixel-identical, lossless PNG form, without generic JPEG recomposition.
+    if (cover.get("production_cover_image") == "user_selected"
+        and cover.get("pixel_equivalence") == "lossless_rgba_same_pixels"):
+        expected_sha = str(cover.get("delivery_image_sha256") or "").strip().lower()
+        actual_sha = hashlib.sha256(source.read_bytes()).hexdigest()
+        if not re.fullmatch(r"[0-9a-f]{64}", expected_sha) or actual_sha != expected_sha:
+            raise RuntimeError("owner-selected cover SHA-256 mismatch; no upload")
+        return source
     portrait_id = str(cover.get("portrait_figure_id") or "").strip()
     portrait = local_images.get(portrait_id) if portrait_id else None
     try:
