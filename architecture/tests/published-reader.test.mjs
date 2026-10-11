@@ -170,8 +170,9 @@ test('incorrect D1 date hint never changes the canonical static card', async () 
     doi: paper.doi, revision: client.membership.members[paper.doi],
     firstOnlineDate: paper.date, datePrecision: 'day',
   }));
-  // A malicious or stale index sends one October DOI into the July shard.
-  indexed[0].firstOnlineDate = '2026-07-01';
+  // A malicious or stale index claims that the July DOI belongs to October.
+  // The actual July shard is absent from the fast-path hint set, so fall back.
+  indexed[indexed.length - 1].firstOnlineDate = '2026-10-03';
   const cards = await client.resolveIndexed(indexed);
   assert.deepEqual(cards.map(paper => paper.title), sourcePapers.map(paper => paper.title));
   assert.ok(paths.some(path => path.includes('/architecture-v1/locator/')),
