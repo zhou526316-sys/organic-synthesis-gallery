@@ -3206,7 +3206,8 @@ def main() -> int:
     cloud_check_request_path = ROOT / "audit" / "automation-triggers" / "wechat-publisher-request.json"
     if cloud_check_request_path.exists():
         check = json.loads(cloud_check_request_path.read_text(encoding="utf-8"))
-        if isinstance(check, dict) and check.get("action") == "verify_cloud_draft":
+        if (isinstance(check, dict) and check.get("action") == "verify_cloud_draft"
+            and str(check.get("publicationDate") or "") == publication_date):
             load_env(Path(args.env_file))
             return audit_live_wechat_draft_read_only(
                 check,
