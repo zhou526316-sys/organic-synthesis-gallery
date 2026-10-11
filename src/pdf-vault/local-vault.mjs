@@ -69,6 +69,7 @@ export function createLocalPdfVault(options = {}) {
   let dbPromise;
   let connection;
   let destinationCache;
+  let downloadPermissionHandle = null;
   const transactions = new Set();
   const copiesCache = new Map();
   const probes = new Map();
@@ -329,6 +330,7 @@ export function createLocalPdfVault(options = {}) {
         });
       }));
       const retained = await boundary(account());
+      downloadPermissionHandle = retained.downloads?.directory_handle || null;
       if (retained.downloads?.device_id !== deviceId ||
           retained.downloads?.directory_handle?.kind !== 'directory') {
         throw new LocalPdfVaultError('persistence_failed');
@@ -343,6 +345,7 @@ export function createLocalPdfVault(options = {}) {
       const row = await boundary(account());
       const linked = row.downloads;
       if (!linked?.directory_handle || linked.device_id !== deviceId) return null;
+      downloadPermissionHandle = linked.directory_handle;
       await boundary(permission(linked.directory_handle, 'local_folder', 'read'));
       return { handle: linked.directory_handle, name: linked.name || 'PDF 下载目录', id: linked.id || '' };
     });
@@ -352,6 +355,7 @@ export function createLocalPdfVault(options = {}) {
     return operation(async () => {
       const row = await boundary(account());
       const selected = row.downloads;
+      downloadPermissionHandle = selected?.device_id === deviceId ? selected.directory_handle : null;
       if (!selected?.directory_handle || selected.device_id !== deviceId) return { selected: false, name: '' };
       const state = typeof selected.directory_handle.queryPermission === 'function'
         ? await boundary(selected.directory_handle.queryPermission({ mode: 'read' })) : 'prompt';
@@ -360,12 +364,22 @@ export function createLocalPdfVault(options = {}) {
   }
 
   function restoreDownloadPermission() {
+    check();
+    // requestPermission must be called directly inside the click gesture.
+    // downloadDirectoryInfo preloads this handle before enabling the button.
+    const handle = downloadPermissionHandle;
+    if (!handle?.requestPermission) return Promise.reject(new LocalPdfVaultError('permission_required'));
+    let choice;
+    try { choice = handle.requestPermission({ mode: 'read' }); }
+    catch (error) { return Promise.reject(failure(error)); }
     return operation(async () => {
-      const row = await boundary(account());
-      const directory = row.downloads?.device_id === deviceId ? row.downloads.directory_handle : null;
-      if (!directory?.requestPermission) throw new LocalPdfVaultError('permission_required');
-      const state = await boundary(directory.requestPermission({ mode: 'read' }));
+      const state = await boundary(choice);
       if (state !== 'granted') throw new LocalPdfVaultError('permission_required');
+      const row = await boundary(account());
+      if (row.downloads?.device_id !== deviceId ||
+          row.downloads?.directory_handle?.kind !== 'directory') {
+        throw new LocalPdfVaultError('account_changed');
+      }
       publishChange();
       return { granted: true };
     });
