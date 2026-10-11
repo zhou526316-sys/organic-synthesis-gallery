@@ -1,8 +1,8 @@
 {
-  "requestId": "wechat-2026-10-11-r3-owner-selected-concept-full-figures-refined-copy-existing-media-only",
+  "requestId": "wechat-2026-10-11-r4-enlarge-JACS-TOC-flexible-scientific-headings-same-draft",
   "publicationDate": "2026-10-11",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-11-r3",
+  "editorialRevision": "2026-10-11-r4",
   "approvedGate": "audit/wechat-working/2026-10-11-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -14,14 +14,13 @@
   "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01127-z&summary=0",
   "expectedReviewedBodyImages": 32,
   "expectedReviewedAssets": 35,
-  "sourceImportRunId": 38115799397,
+  "sourceImportRunId": 38117270491,
   "draftOnly": true,
   "publicSendAuthorized": false,
   "requireDraftGetReadback": true,
   "requireArticleOrderAndExactDois": true,
   "linkOnly": false,
-  "updatePolicy": "strict_existing_oct11_media_id_only_no_duplicate",
+  "updatePolicy": "strict_existing_oct11_media_id_only_no_duplicate_on_mismatch",
   "userSelectedRetrospectiveCover": "pixel_identical_lossless_of_image(20261011-052758).png",
-  "userOriginalCoverSHA256": "ad691b685826c383f66d61d2f32018796d44070d9ac53501d731801d70c44f66",
-  "reason": "User explicitly approved Oct11 R3 full text/source image overhaul and user-selected concept cover. Reviewed exact-source R3 package imported successfully, 32 body images + two covers; restored SI Fig39; JACS Scheme3/Nature Fig2/Fig4 logical blocks full and no split remnants; Chinese fact-level precision, causal structure, evidence limits. Update only existing two-article Oct11 media ID via configured fixed IP API; draft/get readback and new relay preview required. Absolutely no public send."
+  "reason": "Owner explicitly approved fix: JACS authentic TOC max safely enlarge while retaining full native-title non-overlap and source chemical labels, remove mandatory three identical introductory boxes from all articles, rewrite heading/body semantic relationships across both reviewed papers. Strictly preserve all 32 R3 source body figures and selected Nature square cover; same original two-item WeChat draft only; actual draft/get and new preview mandatory; NEVER publish."
 }
