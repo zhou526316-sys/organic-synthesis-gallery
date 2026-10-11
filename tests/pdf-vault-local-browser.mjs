@@ -198,13 +198,13 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
     bounded(diagnostic.unexpectedNetwork, { url: request.url(), method: request.method() });
     return route.fulfill({ status: 503, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: '{"error":"unexpected_network_blocked_by_fixture"}' });
   });
-  await context.addInitScript(({ origin, sessionKey, token, folderPicker, indexedDb, stallIndexedDb }) => {
+  await context.addInitScript(({ origin, sessionKey, token, folderPicker, indexedDb, stallIndexedDb, pdfBytes }) => {
     if (location.origin !== origin) return;
     if (!localStorage.getItem('gallery-local-vault-fixture-seeded')) {
       localStorage.setItem(sessionKey, token);
       localStorage.setItem('gallery-local-vault-fixture-seeded', '1');
     }
-    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false, stallIndexedDb };
+    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, filePickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false, stallIndexedDb };
     const nativeFetch = window.fetch.bind(window);
     window.fetch = (input, init) => {
       const pathname = new URL(typeof input === 'string' ? input : input.url, location.href).pathname;
@@ -223,6 +223,20 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       return (await navigator.storage.getDirectory()).getDirectoryHandle('picked-directory', { create: true });
     };
     if (!folderPicker) window.showDirectoryPicker = undefined;
+    window.showOpenFilePicker = async () => {
+      const state = window.__pdfVaultFixture;
+      state.filePickerCalls++;
+      if (state.pickerMode === 'cancel') throw new DOMException('Fixture file picker cancelled', 'AbortError');
+      const folder = await navigator.storage.getDirectory();
+      const handle = await folder.getFileHandle('already-downloaded-anywhere.pdf', { create: true });
+      if (!state.externalFileReady) {
+        const writer = await handle.createWritable();
+        await writer.write(new Uint8Array(pdfBytes));
+        await writer.close();
+        state.externalFileReady = true;
+      }
+      return [handle];
+    };
     if (!indexedDb) Object.defineProperty(window, 'indexedDB', { value: undefined, configurable: true });
     else if (stallIndexedDb) {
       // Synthetic IDB open request whose callbacks never fire. Simulates a
@@ -249,7 +263,7 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       }
       return createWritable.call(this, options);
     };
-  }, { origin: base, sessionKey: SESSION_KEY, token: TOKENS.a, folderPicker, indexedDb, stallIndexedDb });
+  }, { origin: base, sessionKey: SESSION_KEY, token: TOKENS.a, folderPicker, indexedDb, stallIndexedDb, pdfBytes: [...PDF] });
   return { context, state };
 }
 
@@ -292,7 +306,7 @@ async function importGood(page, { destination = 'opfs' } = {}) {
 async function localCopies(page, user = USERS.a) {
   return page.evaluate(async ({ name, user }) => {
     const db = await new Promise((resolve, reject) => { const request = indexedDB.open(name, 1); request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error); });
-    try { return await new Promise((resolve, reject) => { const request = db.transaction('copies', 'readonly').objectStore('copies').getAll(); request.onsuccess = () => resolve(request.result.filter(row => row.user_id === user).map(({ directory_handle, ...row }) => ({ ...row, hasDirectoryHandle: Boolean(directory_handle && directory_handle.kind === 'directory') }))); request.onerror = () => reject(request.error); }); }
+    try { return await new Promise((resolve, reject) => { const request = db.transaction('copies', 'readonly').objectStore('copies').getAll(); request.onsuccess = () => resolve(request.result.filter(row => row.user_id === user).map(({ directory_handle, file_handle, ...row }) => ({ ...row, hasDirectoryHandle: Boolean(directory_handle && directory_handle.kind === 'directory'), hasFileHandle: Boolean(file_handle && file_handle.kind === 'file') }))); request.onerror = () => reject(request.error); }); }
     finally { db.close(); }
   }, { name: DB_NAME, user });
 }
@@ -459,6 +473,50 @@ try {
     assert.equal(await page.evaluate(() => document.documentElement.dataset.pdfVaultAuth), 'authenticated');
     assert.ok(state.authCalls.length > apiCalls, 'retry revalidates the account, not a cached identity');
     assert.equal(await page.evaluate(key => localStorage.getItem(key), SESSION_KEY), TOKENS.a);
+  });
+  await test('direct DOI PDF tab opens a saved local copy in the browser native viewer', async () => {
+    const { context } = await trackedContext();
+    const page = await pageFor(context);
+    await importGood(page);
+    const native = await context.newPage();
+    await native.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await native.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading');
+    assert.match(await native.getByTestId('native-pdf-frame').getAttribute('src'), /^blob:/);
+    const frame = await native.getByTestId('native-pdf-frame').boundingBox();
+    assert.ok(frame && frame.width >= 1200 && frame.height >= 850, 'built-in PDF viewer fills its browser tab');
+    assert.equal(await native.getByTestId('native-pdf-link').isVisible(), false, 'no redundant selection for a linked DOI');
+    const copies = await localCopies(native);
+    assert.equal(copies.length, 1, 'native open does not duplicate or export a local PDF');
+  });
+  await test('first DOI visit links a PDF from anywhere without copying or renaming its source', async () => {
+    const { context } = await trackedContext();
+    const page = await context.newPage();
+    await page.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await page.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
+    assert.equal(await page.getByTestId('native-pdf-frame').isVisible(), false);
+    await page.getByTestId('native-pdf-link').click();
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading');
+    const copies = await localCopies(page);
+    assert.equal(copies.length, 1);
+    assert.equal(copies[0].doi, DOI);
+    assert.equal(copies[0].storage_kind, 'local_folder');
+    assert.equal(copies[0].hasFileHandle, true, 'original FileSystemFileHandle persists in IndexedDB');
+    assert.equal(copies[0].hasDirectoryHandle, false, 'no Gallery-managed copy or folder was created');
+    assert.equal(copies[0].file_name, 'already-downloaded-anywhere.pdf');
+    assert.equal(copies[0].content_hash, PDF_HASH);
+    assert.equal(await page.evaluate(() => window.__pdfVaultFixture.filePickerCalls), 1);
+    // Closing/reopening this tab still resolves DOI -> original file handle.
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading');
+    assert.equal(await page.evaluate(() => window.__pdfVaultFixture.filePickerCalls), 0);
+    assert.equal((await localCopies(page)).length, 1, 'reopen must not add copies');
+    await page.evaluate(key => {
+      localStorage.removeItem(key);
+      window.dispatchEvent(new Event('gallery-auth-session-changed'));
+    }, SESSION_KEY);
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'signed-out');
+    assert.equal(await page.getByTestId('native-pdf-frame').isVisible(), false, 'logout immediately hides native PDF bytes');
+    assert.equal((await localCopies(page)).length, 1, 'logout does not delete on-disk PDF associations');
   });
   await test('real OPFS import is read back and reopened after reload', async () => {
     const { context } = await trackedContext(); const page = await pageFor(context); await importGood(page);
