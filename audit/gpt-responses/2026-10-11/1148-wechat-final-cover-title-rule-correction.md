@@ -1,7 +1,7 @@
 # Oct 11 WeChat cover/title precedence correction and prior draft evidence
 
 - Context: current WeChat Official Account work line, user challenges incorrect recollection of selected final artwork/title style.
-- Beijing date/time: 2026-10-11 11:48 +08:00 (descriptive record; not a clock sync)
+- Beijing date/time: 2026-10-11 11:44:49 +08:00 (time tool confirmed)
 - Read-only sources: docs/wechat-editorial-contract.md (line 8 earlier conditional, line 9 later override), 2026-10-08-r8-native-title-qa.json, 2026-10-08-r9-cover-qa.json, 2026-10-09-r2-correction-qa.json, public/wechat-editions/2026-10-08.json and 2026-10-09.json, and both 2026-10-11 cover and manifest files.
 - Oct 8 R9 verified archived draft preview: https://relay.gczhouwld.com/wechat-preview/b6af235f8d6233cd495b20ae.html
 - Oct 9 R2 verified archived draft preview: https://relay.gczhouwld.com/wechat-preview/a02dad693ef23a37e6fdfef0.html
