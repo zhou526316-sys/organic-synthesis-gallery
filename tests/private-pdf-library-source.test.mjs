@@ -34,3 +34,18 @@ test('runtime refuses to expose private tokens or raw PDF content in summary',()
  assert.doesNotMatch(source,/console\.log\(.*token\b/);
  assert.match(source,/assertPartition\(marker,\[\.\.\.papers\.keys\(\)\]\)/);
 });
+
+test('PDF audit runs only on daily/manual trigger and stamps actual checked-out commit',()=>{
+ const workflow=fs.readFileSync(new URL('../.github/workflows/private-pdf-library-audit.yml',import.meta.url),'utf8');
+ const runner=fs.readFileSync(new URL('../scripts/audit-private-pdf-library.mjs',import.meta.url),'utf8');
+ const worker=fs.readFileSync(new URL('../cloudflare/worker/src/private-pdf-audit.js',import.meta.url),'utf8');
+ const deploy=fs.readFileSync(new URL('../.github/workflows/deploy-worker-frontend.yml',import.meta.url),'utf8');
+ assert.match(workflow,/cron: '17 1 \* \* \*'/);
+ assert.match(workflow,/workflow_dispatch:/);
+ assert.doesNotMatch(workflow,/workflow_run:/);
+ assert.match(runner,/GITHUB_RUN_ID/);
+ assert.match(runner,/git'\s*,\s*\['rev-parse','HEAD'\]/);
+ assert.match(runner,/maintenance\('finish',\{catalogId,sourceCommit:mainSha\}\)/);
+ assert.match(worker,/private_pdf_audit_entries_v2/);
+ assert.match(deploy,/private-pdf-audit-v2\.sql/);
+});

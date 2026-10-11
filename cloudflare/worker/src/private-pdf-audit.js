@@ -74,6 +74,20 @@ export async function ingestPrivatePdfAudit(env,data) {
     if(docs?.success===false || !Array.isArray(docs?.results)) throw Error('db_results_invalid');
     const versions=new Map(items.map(i=>[i.doi,[]]));
     for(const doc of docs.results) versions.get(String(doc.doi))?.push(doc);
+    // Preserve proven evidence across a changed DOI catalog, but only for
+    // exactly the same active PDF document identity. In-progress generations
+    // can never donate evidence to a public completed report.
+    const previous=await latest(env),retained=new Map();
+    if(previous) {
+      const result=await env.DB.prepare(
+        `SELECT doi,inventory_status,document_id,content_hash,byte_length,
+          backend_probe,probe_reason,probed_at,browser_status,browser_checked_at
+         FROM private_pdf_audit_entries_v2
+         WHERE catalog_id=? AND doi IN (${params})`
+      ).bind(previous.catalog_id,...items.map(i=>i.doi)).all();
+      if(result?.success===false || !Array.isArray(result?.results)) throw Error('prior_audit_results_invalid');
+      for(const row of result.results) retained.set(row.doi,row);
+    }
     const versionScore={version_of_record:4,accepted_manuscript:3,preprint:2,unknown:1};
     const writes=[];
     for(const item of items) {
@@ -88,47 +102,56 @@ export async function ingestPrivatePdfAudit(env,data) {
         Number(doc.verified_pages||0):0;
       const identity=Boolean(doc && HASH.test(String(doc.content_hash||'')) &&
         pages>0 && safeInt(Number(doc.byte_length),16,60*1024*1024));
-      const row=[item.doi,item.journal,item.addedDate,inv,String(doc?.id||''),
+      const prior=retained.get(item.doi);
+      const samePdf=Boolean(doc && prior?.inventory_status==='ready' &&
+        prior.document_id===String(doc.id||'') &&
+        prior.content_hash===String(doc.content_hash||'') &&
+        Number(prior.byte_length)===Number(doc.byte_length));
+      const row=[id,item.doi,item.journal,item.addedDate,inv,String(doc?.id||''),
         String(doc?.content_hash||''),Number(doc?.byte_length||0),Number(identity),
-        pages,Date.now()];
+        pages,
+        samePdf?prior.backend_probe:'untested',samePdf?prior.probe_reason:'',
+        samePdf?Number(prior.probed_at||0):0,
+        samePdf?prior.browser_status:'untested',samePdf?Number(prior.browser_checked_at||0):0,
+        Date.now()];
       writes.push(env.DB.prepare(
-        `INSERT INTO private_pdf_audit_rows
-          (doi,journal,added_date,inventory_status,document_id,content_hash,byte_length,
-          identity_verified,pdf_pages,inventory_checked_at)
-         VALUES(?,?,?,?,?,?,?,?,?,?)
-         ON CONFLICT(doi) DO UPDATE SET
+        `INSERT INTO private_pdf_audit_entries_v2
+          (catalog_id,doi,journal,added_date,inventory_status,document_id,content_hash,
+          byte_length,identity_verified,pdf_pages,backend_probe,probe_reason,probed_at,
+          browser_status,browser_checked_at,inventory_checked_at)
+         VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+         ON CONFLICT(catalog_id,doi) DO UPDATE SET
          journal=excluded.journal,added_date=excluded.added_date,
          inventory_status=excluded.inventory_status,
-         backend_probe=CASE WHEN private_pdf_audit_rows.document_id=excluded.document_id
-           AND private_pdf_audit_rows.content_hash=excluded.content_hash
-           AND private_pdf_audit_rows.byte_length=excluded.byte_length
+         backend_probe=CASE WHEN private_pdf_audit_entries_v2.document_id=excluded.document_id
+           AND private_pdf_audit_entries_v2.content_hash=excluded.content_hash
+           AND private_pdf_audit_entries_v2.byte_length=excluded.byte_length
            AND excluded.inventory_status='ready'
-           THEN private_pdf_audit_rows.backend_probe ELSE 'untested' END,
-         probe_reason=CASE WHEN private_pdf_audit_rows.document_id=excluded.document_id
-           AND private_pdf_audit_rows.content_hash=excluded.content_hash
-           AND private_pdf_audit_rows.byte_length=excluded.byte_length
+           THEN private_pdf_audit_entries_v2.backend_probe ELSE excluded.backend_probe END,
+         probe_reason=CASE WHEN private_pdf_audit_entries_v2.document_id=excluded.document_id
+           AND private_pdf_audit_entries_v2.content_hash=excluded.content_hash
+           AND private_pdf_audit_entries_v2.byte_length=excluded.byte_length
            AND excluded.inventory_status='ready'
-           THEN private_pdf_audit_rows.probe_reason ELSE '' END,
-         probed_at=CASE WHEN private_pdf_audit_rows.document_id=excluded.document_id
-           AND private_pdf_audit_rows.content_hash=excluded.content_hash
-           AND private_pdf_audit_rows.byte_length=excluded.byte_length
+           THEN private_pdf_audit_entries_v2.probe_reason ELSE excluded.probe_reason END,
+         probed_at=CASE WHEN private_pdf_audit_entries_v2.document_id=excluded.document_id
+           AND private_pdf_audit_entries_v2.content_hash=excluded.content_hash
+           AND private_pdf_audit_entries_v2.byte_length=excluded.byte_length
            AND excluded.inventory_status='ready'
-           THEN private_pdf_audit_rows.probed_at ELSE 0 END,
-         browser_status=CASE WHEN private_pdf_audit_rows.document_id=excluded.document_id
-           AND private_pdf_audit_rows.content_hash=excluded.content_hash
-           AND private_pdf_audit_rows.byte_length=excluded.byte_length
-           THEN private_pdf_audit_rows.browser_status ELSE 'untested' END,
-         browser_checked_at=CASE WHEN private_pdf_audit_rows.document_id=excluded.document_id
-           AND private_pdf_audit_rows.content_hash=excluded.content_hash
-           AND private_pdf_audit_rows.byte_length=excluded.byte_length
-           THEN private_pdf_audit_rows.browser_checked_at ELSE 0 END,
+           THEN private_pdf_audit_entries_v2.probed_at ELSE excluded.probed_at END,
+         browser_status=CASE WHEN private_pdf_audit_entries_v2.document_id=excluded.document_id
+           AND private_pdf_audit_entries_v2.content_hash=excluded.content_hash
+           AND private_pdf_audit_entries_v2.byte_length=excluded.byte_length
+           AND excluded.inventory_status='ready'
+           THEN private_pdf_audit_entries_v2.browser_status ELSE excluded.browser_status END,
+         browser_checked_at=CASE WHEN private_pdf_audit_entries_v2.document_id=excluded.document_id
+           AND private_pdf_audit_entries_v2.content_hash=excluded.content_hash
+           AND private_pdf_audit_entries_v2.byte_length=excluded.byte_length
+           AND excluded.inventory_status='ready'
+           THEN private_pdf_audit_entries_v2.browser_checked_at ELSE excluded.browser_checked_at END,
          document_id=excluded.document_id,content_hash=excluded.content_hash,
          byte_length=excluded.byte_length,identity_verified=excluded.identity_verified,
          pdf_pages=excluded.pdf_pages,inventory_checked_at=excluded.inventory_checked_at`
       ).bind(...row));
-      writes.push(env.DB.prepare(
-        'INSERT OR IGNORE INTO private_pdf_audit_members(catalog_id,doi) VALUES(?,?)'
-      ).bind(id,item.doi));
     }
     await env.DB.batch(writes);
     return reply(200,{ok:true,accepted:items.length});
@@ -137,20 +160,21 @@ export async function ingestPrivatePdfAudit(env,data) {
 
 export async function finishPrivatePdfAudit(env,data){
   if(!env?.DB) return reply(503,{error:'audit_database_unavailable'});
-  const id=str(data?.catalogId,70);
-  if(!HASH.test(id)) return reply(400,{error:'audit_catalog_invalid'});
+  const id=str(data?.catalogId,70),sourceCommit=str(data?.sourceCommit,45);
+  if(!HASH.test(id)||!COMMIT.test(sourceCommit)) return reply(400,{error:'audit_catalog_invalid'});
   try{
     const gen=await generation(env,id);
     if(!gen) return reply(409,{error:'audit_generation_missing'});
     const row=await env.DB.prepare(
-      'SELECT COUNT(*) AS count FROM private_pdf_audit_members WHERE catalog_id=?'
+      'SELECT COUNT(*) AS count FROM private_pdf_audit_entries_v2 WHERE catalog_id=?'
     ).bind(id).first();
     const count=Number(row?.count||0);
     if(count!==Number(gen.expected_count))
       return reply(409,{error:'audit_catalog_incomplete',expected:gen.expected_count,observed:count});
+    // Do not publish a new provenance commit until the full DOI snapshot is complete.
     await env.DB.prepare(
-      'UPDATE private_pdf_audit_generations SET completed_at=? WHERE catalog_id=?'
-    ).bind(Date.now(),id).run();
+      'UPDATE private_pdf_audit_generations SET source_commit=?,completed_at=? WHERE catalog_id=?'
+    ).bind(sourceCommit,Date.now(),id).run();
     return reply(200,{ok:true,catalogId:id,checkedCount:count});
   }catch{return reply(503,{error:'audit_catalog_commit_failed'});}
 }
@@ -192,34 +216,42 @@ export async function probePrivatePdfAudit(env,data={}){
   try{
     const g=await latest(env);
     if(!g) return reply(409,{error:'audit_catalog_not_ready'});
-    const stale=Date.now()-30*86400000;
+    const now=Date.now(),stale=now-30*86400000;
+    const transientRetry=now-24*3600000,persistentRetry=now-7*86400000;
     const result=await env.DB.prepare(
       `SELECT a.doi,a.document_id,a.content_hash,a.byte_length,
            d.r2_key,d.processing_state,d.active
-         FROM private_pdf_audit_members m
-         JOIN private_pdf_audit_rows a ON a.doi=m.doi
+         FROM private_pdf_audit_entries_v2 a
          JOIN private_pdf_documents d ON d.id=a.document_id AND d.content_hash=a.content_hash
-         WHERE m.catalog_id=? AND a.inventory_status='ready'
+         WHERE a.catalog_id=? AND a.inventory_status='ready'
            AND d.processing_state='ready' AND d.active=1
-           AND (a.backend_probe='untested' OR a.probed_at<?)
-         ORDER BY CASE WHEN a.backend_probe='untested' THEN 0 ELSE 1 END,
+           AND (a.backend_probe='untested'
+             OR (a.backend_probe='fail' AND (
+               (a.probe_reason IN ('r2_range_error','r2_range_missing','r2_range_incomplete')
+                 AND a.probed_at<?)
+               OR (a.probe_reason NOT IN ('r2_range_error','r2_range_missing','r2_range_incomplete')
+                 AND a.probed_at<?)))
+             OR (a.backend_probe='pass' AND a.probed_at<?))
+         ORDER BY CASE a.backend_probe WHEN 'untested' THEN 0 WHEN 'fail' THEN 1 ELSE 2 END,
            CASE WHEN a.added_date>='2026-10-01' THEN 0 ELSE 1 END,
            a.probed_at ASC,a.added_date DESC,a.doi ASC LIMIT ?`
-    ).bind(g.catalog_id,stale,limit).all();
+    ).bind(g.catalog_id,transientRetry,persistentRetry,stale,limit).all();
     if(result?.success===false||!Array.isArray(result?.results)) throw Error('probe_query');
     const outcomes=[],writes=[];
     for(const row of result.results) {
       const probe=await probeDocument(env.PDF_PRIVATE,row);
       outcomes.push({status:probe.status,reason:probe.reason});
       writes.push(env.DB.prepare(
-        `UPDATE private_pdf_audit_rows SET backend_probe=?,probe_reason=?,probed_at=?
-         WHERE doi=? AND document_id=? AND content_hash=? AND byte_length=? AND inventory_status='ready'`
-      ).bind(probe.status,probe.reason,Date.now(),row.doi,row.document_id,row.content_hash,row.byte_length));
+        `UPDATE private_pdf_audit_entries_v2 SET backend_probe=?,probe_reason=?,probed_at=?
+         WHERE catalog_id=? AND doi=? AND document_id=? AND content_hash=?
+           AND byte_length=? AND inventory_status='ready'`
+      ).bind(probe.status,probe.reason,Date.now(),g.catalog_id,row.doi,
+        row.document_id,row.content_hash,row.byte_length));
     }
     if(writes.length) await env.DB.batch(writes);
     return reply(200,{ok:true,probed:outcomes.length,passed:outcomes.filter(o=>o.status==='pass').length,
       failed:outcomes.filter(o=>o.status!=='pass').length,
-      // Aggregate only, no R2 key, signed ticket, raw bytes or per-document private inventory in CI logs.
+      // Aggregate only. No R2 key, signed ticket, bytes or per-DOI metadata in logs.
       moreLikely:outcomes.length===limit});
   }catch{return reply(503,{error:'audit_probe_failed'});}
 }
@@ -258,7 +290,7 @@ export async function readOwnerPdfAudit(request,env){
        SUM(CASE WHEN a.backend_probe='pass' THEN 1 ELSE 0 END) AS r2_head_tail_pass,
        SUM(CASE WHEN a.backend_probe='fail' THEN 1 ELSE 0 END) AS r2_head_tail_failed,
        SUM(CASE WHEN a.browser_status='owner_reported_pass' THEN 1 ELSE 0 END) AS owner_reported_browser_pass
-       FROM private_pdf_audit_members m JOIN private_pdf_audit_rows a ON a.doi=m.doi WHERE m.catalog_id=?`
+       FROM private_pdf_audit_entries_v2 a WHERE a.catalog_id=?`
     ).bind(gen.catalog_id).first();
     const filters={
       ready:"a.inventory_status='ready'",pending:"a.inventory_status='pending'",
@@ -268,7 +300,7 @@ export async function readOwnerPdfAudit(request,env){
       browser_pass:"a.browser_status='owner_reported_pass'",
     };
     const args=[gen.catalog_id];
-    let where="m.catalog_id=?";
+    let where="a.catalog_id=?";
     if(after){where+=" AND a.doi>?";args.push(after);}
     if(q){where+=" AND (instr(lower(a.doi),?)>0 OR instr(lower(a.journal),?)>0)";args.push(q,q);}
     if(filters[filter])where+=" AND "+filters[filter];
@@ -276,7 +308,7 @@ export async function readOwnerPdfAudit(request,env){
       `SELECT a.doi,a.journal,a.added_date,a.inventory_status,a.byte_length,
         a.identity_verified,a.pdf_pages,a.backend_probe,a.probe_reason,a.probed_at,
         a.browser_status,a.browser_checked_at,a.inventory_checked_at
-        FROM private_pdf_audit_members m JOIN private_pdf_audit_rows a ON a.doi=m.doi
+        FROM private_pdf_audit_entries_v2 a
         WHERE ${where} ORDER BY a.doi ASC LIMIT ?`
     ).bind(...args,limit+1).all();
     if(rows?.success===false||!Array.isArray(rows?.results)) throw Error('audit_list');
@@ -308,14 +340,14 @@ export async function recordOwnerPdfBrowserCheck(request,env,data) {
     const gen=await latest(env);
     if(!gen) return reply(409,{error:'audit_catalog_not_ready'});
     const row=await env.DB.prepare(
-      `SELECT a.doi FROM private_pdf_audit_members m JOIN private_pdf_audit_rows a ON a.doi=m.doi
-       WHERE m.catalog_id=? AND a.doi=? AND a.inventory_status='ready'`
+      `SELECT a.doi FROM private_pdf_audit_entries_v2 a
+       WHERE a.catalog_id=? AND a.doi=? AND a.inventory_status='ready'`
     ).bind(gen.catalog_id,doi).first();
     if(!row) return reply(409,{error:'audit_document_not_ready'});
     // Owner-attested UX result, not cryptographic proof or a global guarantee.
     await env.DB.prepare(
-      "UPDATE private_pdf_audit_rows SET browser_status='owner_reported_pass',browser_checked_at=? WHERE doi=?"
-    ).bind(Date.now(),doi).run();
+      "UPDATE private_pdf_audit_entries_v2 SET browser_status='owner_reported_pass',browser_checked_at=? WHERE catalog_id=? AND doi=?"
+    ).bind(Date.now(),gen.catalog_id,doi).run();
     return reply(200,{ok:true,doi,classification:'owner_reported_not_independent'});
   }catch{return reply(503,{error:'audit_browser_record_unavailable'});}
 }

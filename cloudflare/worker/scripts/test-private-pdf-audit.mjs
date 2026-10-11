@@ -8,7 +8,8 @@ import {
  probePrivatePdfAudit,readOwnerPdfAudit,recordOwnerPdfBrowserCheck,
 } from '../src/private-pdf-audit.js';
 
-const SQL=fs.readFileSync(new URL('../../private-pdf-audit-v1.sql',import.meta.url),'utf8');
+const SQL1=fs.readFileSync(new URL('../../private-pdf-audit-v1.sql',import.meta.url),'utf8');
+const SQL2=fs.readFileSync(new URL('../../private-pdf-audit-v2.sql',import.meta.url),'utf8');
 class Statement {
  constructor(db,sql){this.db=db;this.sql=sql;this.args=[]}
  bind(...v){this.args=v;return this}
@@ -22,7 +23,7 @@ class DB {
   this.sqlite.exec('CREATE TABLE private_pdf_documents (id TEXT PRIMARY KEY,doi TEXT,publisher TEXT,version_kind TEXT,content_hash TEXT,r2_key TEXT,byte_length INTEGER,processing_state TEXT,active INTEGER,captured_at INTEGER);'+
     'CREATE TABLE private_pdf_verifications(document_id TEXT,content_hash TEXT,status TEXT,page_count INTEGER);'+
     'CREATE TABLE user_sessions(token_hash TEXT PRIMARY KEY,user_id TEXT,expires_at INTEGER);'+
-    'CREATE TABLE user_capabilities(user_id TEXT,capability TEXT);'+SQL);
+    'CREATE TABLE user_capabilities(user_id TEXT,capability TEXT);'+SQL1+SQL2);
  }
  prepare(sql){return new Statement(this,sql)}
  async batch(stmts){this.sqlite.exec('BEGIN IMMEDIATE');try{
@@ -45,6 +46,7 @@ const pdf=new TextEncoder().encode('%PDF-1.7\n'+ 'X'.repeat(1300)+'\n%%EOF\n');
 const hash=sha(pdf);
 function envOf(t,bad=false){
  const D=new DB(),env={DB:D};t.after(()=>D.close());
+ let failMode=bad;env.setPdfFailureMode=value=>{failMode=Boolean(value);};
  const insert=(id,doi,status,active,size,key,digest)=>D.sqlite.prepare(
   'INSERT INTO private_pdf_documents VALUES(?,?,?,?,?,?,?,?,?,?)').run(
    id,doi,'acs','version_of_record',digest,key,size,status,active,Date.now());
@@ -62,7 +64,7 @@ function envOf(t,bad=false){
   async get(key,{range}){
    if(key!=='private/docA.pdf')return null;
    const b=pdf.subarray(range.offset,range.offset+range.length);
-   return{arrayBuffer:async()=>bad?new Uint8Array(0).buffer:
+   return{arrayBuffer:async()=>failMode?new Uint8Array(0).buffer:
     b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength)};
   },
  };
@@ -74,15 +76,15 @@ const request=(token,params='')=>new Request(
 async function complete(env){
  assert.equal((await beginPrivatePdfAudit(env,{catalogId:catalog,sourceCommit:commit,expectedCount:4})).status,200);
  assert.equal((await ingestPrivatePdfAudit(env,{catalogId:catalog,items})).body.accepted,4);
- assert.equal((await finishPrivatePdfAudit(env,{catalogId:catalog})).status,200);
+ assert.equal((await finishPrivatePdfAudit(env,{catalogId:catalog,sourceCommit:commit})).status,200);
 }
 test('catalog cannot claim partial coverage or accept duplicates',async t=>{
  const env=envOf(t);
  assert.equal((await beginPrivatePdfAudit(env,{catalogId:catalog,sourceCommit:commit,expectedCount:4})).status,200);
- assert.equal((await finishPrivatePdfAudit(env,{catalogId:catalog})).status,409);
+ assert.equal((await finishPrivatePdfAudit(env,{catalogId:catalog,sourceCommit:commit})).status,409);
  assert.equal((await ingestPrivatePdfAudit(env,{catalogId:catalog,items:[items[0],items[0]]})).status,400);
  assert.equal((await ingestPrivatePdfAudit(env,{catalogId:catalog,items})).body.accepted,4);
- assert.equal((await finishPrivatePdfAudit(env,{catalogId:catalog})).body.checkedCount,4);
+ assert.equal((await finishPrivatePdfAudit(env,{catalogId:catalog,sourceCommit:commit})).body.checkedCount,4);
  assert.equal((await beginPrivatePdfAudit(env,{catalogId:catalog,sourceCommit:commit,expectedCount:5})).status,409);
  assert.equal((await beginPrivatePdfAudit(env,{catalogId:catalog,sourceCommit:commit,expectedCount:4})).body.alreadyComplete,true);
 });
@@ -140,4 +142,112 @@ test('different PDF version clears old R2 and owner browser success',async t=>{
  assert.equal(report.body.items[0].storageProbe,'untested');
  assert.equal(report.body.items[0].browser,'untested');
  assert.equal(report.body.items[0].identityVerified,false);
+});
+
+
+test('v2 migration adopts existing verified records without replacing v1 owner evidence',t=>{
+ const old=new DatabaseSync(':memory:');t.after(()=>old.close());
+ old.exec(SQL1);
+ old.prepare('INSERT INTO private_pdf_audit_generations VALUES(?,?,?,?,?)').run(
+  catalog,commit,1,Date.now(),Date.now());
+ old.prepare('INSERT INTO private_pdf_audit_rows '+
+  '(doi,journal,inventory_status,document_id,content_hash,byte_length,identity_verified,'+
+  'pdf_pages,backend_probe,probe_reason,probed_at,browser_status,browser_checked_at) '+
+  'VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)').run(
+  doiA,'JACS','ready','docA',hash,pdf.byteLength,1,12,'pass',
+  'r2_head_tail_verified',Date.now(),'owner_reported_pass',Date.now());
+ old.prepare('INSERT INTO private_pdf_audit_members VALUES(?,?)').run(catalog,doiA);
+ old.exec(SQL2);old.exec(SQL2); // idempotent canonical deployment
+ const row=old.prepare('SELECT * FROM private_pdf_audit_entries_v2 WHERE catalog_id=? AND doi=?')
+  .get(catalog,doiA);
+ assert(row);
+ assert.equal(row.backend_probe,'pass');
+ assert.equal(row.browser_status,'owner_reported_pass');
+ assert.equal(old.prepare('SELECT COUNT(*) AS n FROM private_pdf_audit_entries_v2').get().n,1);
+});
+
+test('provenance changes only on successful full finish, even with unchanged DOI set',async t=>{
+ const env=envOf(t);await complete(env);
+ const nextCommit='c'.repeat(40);
+ await beginPrivatePdfAudit(env,{catalogId:catalog,sourceCommit:nextCommit,expectedCount:4});
+ let old=await readOwnerPdfAudit(request('owner-secret'),env);
+ assert.equal(old.body.sourceCommit,commit);
+ assert.equal((await finishPrivatePdfAudit(env,{catalogId:catalog,sourceCommit:'invalid'})).status,400);
+ old=await readOwnerPdfAudit(request('owner-secret'),env);
+ assert.equal(old.body.sourceCommit,commit);
+ assert.equal((await finishPrivatePdfAudit(env,{catalogId:catalog,sourceCommit:nextCommit})).status,200);
+ const after=await readOwnerPdfAudit(request('owner-secret'),env);
+ assert.equal(after.body.sourceCommit,nextCommit);
+});
+
+test('partial new catalog leaves prior completed snapshot immutable and available',async t=>{
+ const env=envOf(t);await complete(env);
+ await probePrivatePdfAudit(env,{limit:6});
+ await recordOwnerPdfBrowserCheck(request('owner-secret'),env,{doi:doiA,result:'two_pages_rendered'});
+ const newCatalog='c'.repeat(64),newCommit='d'.repeat(40);
+ env.DB.sqlite.prepare("UPDATE private_pdf_documents SET processing_state='failed',active=0 WHERE id='docA'").run();
+ assert.equal((await beginPrivatePdfAudit(env,{catalogId:newCatalog,sourceCommit:newCommit,expectedCount:4})).status,200);
+ await ingestPrivatePdfAudit(env,{catalogId:newCatalog,items:items.slice(0,2)});
+ assert.equal((await finishPrivatePdfAudit(env,{catalogId:newCatalog,sourceCommit:newCommit})).status,409);
+ let old=await readOwnerPdfAudit(request('owner-secret','?status=ready'),env);
+ assert.equal(old.body.catalogId,catalog);
+ assert.equal(old.body.summary.r2_head_tail_pass,1);
+ assert.equal(old.body.summary.owner_reported_browser_pass,1);
+ assert.equal(old.body.items[0].inventory,'ready');
+ await ingestPrivatePdfAudit(env,{catalogId:newCatalog,items:items.slice(2)});
+ assert.equal((await finishPrivatePdfAudit(env,{catalogId:newCatalog,sourceCommit:newCommit})).status,200);
+ const fresh=await readOwnerPdfAudit(request('owner-secret'),env);
+ assert.equal(fresh.body.catalogId,newCatalog);
+ assert.equal(fresh.body.sourceCommit,newCommit);
+ assert.equal(fresh.body.summary.failed,2);
+ assert.equal(fresh.body.summary.r2_head_tail_pass,0);
+ assert.equal(fresh.body.summary.owner_reported_browser_pass,0);
+});
+
+test('new catalog inherits R2 and owner browser proof only for unchanged PDF identity',async t=>{
+ const env=envOf(t);await complete(env);
+ await probePrivatePdfAudit(env,{limit:6});
+ await recordOwnerPdfBrowserCheck(request('owner-secret'),env,{doi:doiA,result:'two_pages_rendered'});
+ const newCatalog='e'.repeat(64),newCommit='f'.repeat(40);
+ const added={doi:'10.1002/anie.202609999',journal:'Angew',addedDate:'2026-10-11'};
+ await beginPrivatePdfAudit(env,{catalogId:newCatalog,sourceCommit:newCommit,expectedCount:5});
+ await ingestPrivatePdfAudit(env,{catalogId:newCatalog,items:[...items,added]});
+ assert.equal((await finishPrivatePdfAudit(env,{catalogId:newCatalog,sourceCommit:newCommit})).status,200);
+ const report=await readOwnerPdfAudit(request('owner-secret','?status=probe_pass'),env);
+ assert.equal(report.body.summary.total,5);
+ assert.equal(report.body.summary.r2_head_tail_pass,1);
+ assert.equal(report.body.summary.owner_reported_browser_pass,1);
+ assert.equal(report.body.items[0].doi,doiA);
+ assert.equal(report.body.items[0].storageProbe,'pass');
+});
+
+test('transient R2 failures retry after one day, not immediately or after 30 days',async t=>{
+ const env=envOf(t,true);await complete(env);
+ let result=await probePrivatePdfAudit(env,{limit:6});
+ assert.equal(result.body.failed,1);
+ env.setPdfFailureMode(false);
+ result=await probePrivatePdfAudit(env,{limit:6});
+ assert.equal(result.body.probed,0);
+ env.DB.sqlite.prepare(
+  'UPDATE private_pdf_audit_entries_v2 SET probed_at=? WHERE catalog_id=? AND doi=?'
+ ).run(Date.now()-25*3600000,catalog,doiA);
+ result=await probePrivatePdfAudit(env,{limit:6});
+ assert.equal(result.body.probed,1);
+ assert.equal(result.body.passed,1);
+});
+
+test('persistent R2 failures retry no earlier than seven days',async t=>{
+ const env=envOf(t);await complete(env);
+ await probePrivatePdfAudit(env,{limit:6});
+ env.DB.sqlite.prepare(
+  "UPDATE private_pdf_audit_entries_v2 SET backend_probe='fail',probe_reason='r2_length_mismatch',probed_at=? WHERE catalog_id=? AND doi=?"
+ ).run(Date.now()-6*86400000,catalog,doiA);
+ let result=await probePrivatePdfAudit(env,{limit:6});
+ assert.equal(result.body.probed,0);
+ env.DB.sqlite.prepare(
+  'UPDATE private_pdf_audit_entries_v2 SET probed_at=? WHERE catalog_id=? AND doi=?'
+ ).run(Date.now()-8*86400000,catalog,doiA);
+ result=await probePrivatePdfAudit(env,{limit:6});
+ assert.equal(result.body.probed,1);
+ assert.equal(result.body.passed,1);
 });

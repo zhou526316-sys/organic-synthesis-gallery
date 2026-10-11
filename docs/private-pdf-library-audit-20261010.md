@@ -2,7 +2,7 @@
 
 ## Scope and truthful evidence levels
 
-The administrator asked for verifiable *library-wide* PDF readiness, not a promise that a few manually opened Tencent PDFs imply universal success. The canonical denominator is the deduplicated and policy-filtered union of `DATA_FILES` from `scripts/pages-release-delivery.mjs`. The signed `audit/publication-release-state.json` must match this exact DOI count before a generation is accepted. Removed/excluded DOI do not silently count toward coverage.
+The administrator asked for verifiable *library-wide* PDF readiness, not a promise that a few manually opened Tencent PDFs imply universal success. The canonical denominator is the deduplicated and policy-filtered union of `DATA_FILES` from `scripts/pages-release-delivery.mjs`. The signed `audit/publication-release-state.json` must match this exact DOI count before a generation is accepted. Since v2, each execution uses a unique run-scoped generation ID derived from the DOI-set fingerprint, the actual checked-out `main` SHA and GitHub Actions run ID/attempt; unchanged DOI sets still produce new immutable snapshots. Removed/excluded DOI do not silently count toward coverage.
 
 Four levels must never be conflated:
 
@@ -21,10 +21,10 @@ All maintenance POST routes under `/api/admin/private-pdf/audit/{begin,ingest,fi
 
 ## Daily lifecycle
 
-- Scheduler: 09:17 Asia/Shanghai / 01:17 UTC after the sole 08:00 fixed literature release, independently of publisher capture and literature writer. A successful canonical Worker deployment triggers an initial run once schema/routes are online; the workflow never triggers an 18:00 literature release.
+- Scheduler: 09:17 Asia/Shanghai / 01:17 UTC after the sole 08:00 fixed literature release, independently of publisher capture and literature writer. The one-time production bootstrap ran successfully on 2026-10-10. Subsequent scans run only via daily cron or manual workflow dispatch, never after each routine Worker deployment, and never trigger an 18:00 literature release.
 - GitHub checkout uses current `main` and exact publication marker. The runner refuses a DOI-set/production-count mismatch rather than publishing partial catalog coverage.
 - `begin -> ingest <=24 DOI/batch -> finish`: snapshot generation becomes complete only when all expected DOI memberships are present; a failed batch leaves previous completed snapshot usable.
-- Each run limits to 120 R2 head/tail probes, six per Worker request, prioritizing untested and 2026-10-01+ documents. Older ready PDFs are processed progressively; stale results may be revisited after 30 days. Backend probes never use the Tencent HTTPS relay and do not consume its strict 256MiB/month reserve; they do consume bounded R2/D1 operations under existing provider quotas.
+- Each run limits to 120 R2 head/tail probes, six per Worker request, prioritizing untested and 2026-10-01+ documents. Older ready PDFs are processed progressively; successful probes become due again after 30 days. Failed transient range reads become eligible for bounded retry after 24 hours; persistent object/header/hash failures after seven days. Untested entries always take priority. Backend probes never use the Tencent HTTPS relay and do not consume its strict 256MiB/month reserve; they do consume bounded R2/D1 operations under existing provider quotas.
 - Broken or unavailable R2 objects are recorded as `fail` and stay visible. A new PDF version/hash/size invalidates previous probe and manual read evidence. Failures never downgrade existing legitimate `private_pdf_documents` status or affect user reading permissions.
 - GitHub Actions logs/artifacts contain only aggregate counts, never DOI-by-DOI private inventory or credentials. Per-DOI results are stored in the private D1 and served to owner only.
 
@@ -42,3 +42,10 @@ PDF bytes, 1MiB Range size, rendering quality, existing continuous-scroll PDF.js
 ### Deployed-state verification
 
 Confirm the canonical Worker deployment applied `cloudflare/private-pdf-audit-v1.sql` and served protected audit routes. Confirm the GitHub Pages deployment actually includes `/pdf-audit.html` and `/pdf-audit-dashboard.js`; an anonymous report request must not expose any DOI inventory. Confirm the first all-DOI action finishes before quoting counts, as prior sample successes give no valid library-wide numerator.
+
+## V2 production migration and acceptance (2026-10-10)
+
+- Canonical Worker deployment applies `private-pdf-audit-v1.sql` then the **additive, idempotent** `private-pdf-audit-v2.sql` before serving the new Worker. Only complete v1 generations and their prior evidence are imported; v1 tables are retained for rollback provenance and no PDF bytes are copied.
+- A separate v2 row exists per `(catalog_id,doi)`. Until `finish` reconciles every expected DOI, the owner report continues to show the last successfully completed generation. The completed `sourceCommit` is written only upon successful `finish`.
+- Fresh generations inherit R2 and owner-two-page attestations from the last complete generation only if `document_id`, `content_hash`, `byte_length` and READY status all match. Different PDF versions start untested.
+- Existing PDF 1 MiB HTTP Range, external 206 acceptance, end-user continuous vertical scroll, permissions and the Tencent relay budget remain unchanged; this is **not** a claim of universal PDF availability.
