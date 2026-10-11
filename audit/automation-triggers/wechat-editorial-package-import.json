@@ -1,12 +1,12 @@
 {
-  "requestId": "wechat-2026-10-11-jacs-gas-alkane-natsynth-double-hat-r1-reviewed-source-import",
-  "requestedAt": "2026-10-11T11:00:00+08:00",
+  "requestId": "wechat-2026-10-11-r2-full-body-title-covers-reviewed-import",
+  "requestedAt": "2026-10-11T12:02:00+08:00",
   "action": "import_reviewed_editorial_package",
-  "revision": "2026-10-11-r1",
+  "revision": "2026-10-11-r2",
   "doi": "10.1038/s44160-026-01127-z",
   "targetDateBeijing": "2026-10-11",
-  "packageUrl": "https://at.adobe.com/jShxzmnByGbRuTzN",
-  "packageSha256": "004d9f3df05c991af1294164835ee96a56508fba93bc2c8ac3ff30b734f53477",
+  "packageUrl": "https://at.adobe.com/J2G899AxqjbLE3nd",
+  "packageSha256": "2e9dddfdf7a7f033cb92f2ca29c37a5ce84a301e2bb593d961d3321cf4ed44d6",
   "manifestPath": "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json",
   "gatePath": "audit/wechat-working/2026-10-11-review-gate.json",
   "expectedArticleCount": 2,
@@ -14,7 +14,14 @@
     "10.1021/jacs.6c15886",
     "10.1038/s44160-026-01127-z"
   ],
+  "replaceExisting": {
+    "public/wechat-featured/2026-10-11.json": "37185bbd6d93335a92d98e09d585e117df18a45c",
+    "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json": "884f27ff6e8c7d4aa91fb467d8027d8f62c37746",
+    "public/wechat-editions/2026-10-11.json": "231ae9bf40bfb5cdb5bb53df97c60d8c1a983890"
+  },
   "thisStepWritesDraft": false,
   "publicSendAuthorized": false,
-  "note": "Import exact user-supplied JACS and Nature Synthesis 2026-10-11 two-paper reviewed image/text package only. 28 original main/SI PDF clipped figures and two independently reviewed covers. Gate covers daily/retro/edition manifests; do not write, create, update, or publicly send WeChat until publisher review gate readback. 10/10 old media ID is obsolete and must not be reused."
+  "sourceOnly": true,
+  "preserveOldWeChatMediaId": true,
+  "note": "User instructed that whole body, title and covers follow previously accepted Oct08 R9 / Oct09 R2 / Oct10 R4 editorial rules. R2 includes complete previously broken Nature Fig4 panels, lead above quick points, rigorous scientific/Chinese evidence review and layout; no draft write until checked."
 }
