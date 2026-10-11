@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-11",
+  "authority": "User explicitly requested a NEW WeChat Official Account draft after Android local-save conflict; retain original",
+  "sourceRevision": "2026-10-11-r5",
+  "sourceMediaId": "KhELYUzvwADwB_l1xH1SWOG4MGfh55oHCc7llEvIMhvXq9BhWLWVfRRRPx3yKyH7",
+  "newMediaId": "KhELYUzvwADwB_l1xH1SWDDwVx5ED70Hc4618UW3hFa5y091yX1hRRYLDP41XEXa",
+  "newPreviewUrl": "https://relay.gczhouwld.com/wechat-preview/8189151aedc49f115131ce8b.html",
+  "sourcePreviewUrl": "https://relay.gczhouwld.com/wechat-preview/0c6a5b8965d6401973a288b4.html",
+  "firstAttemptRun": 38123439181,
+  "finalVerifyRun": 38123546886,
+  "finalStage": "draft_clone_resumed",
+  "failureFirstAttempt": "WeChat draft/add succeeded and new media_id was immediately persisted, then strict HTML byte equality failed for article 1; no duplicate draft issued.",
+  "resumption": "Reused persisted new media_id; no second draft/add; compared semantic text checksum, ordered image sources, article links and heading/table structure despite WeChat HTML normalization",
+  "sourcePreserved": true,
+  "newDraftCreated": true,
+  "distinctMediaId": true,
+  "createdAnotherDuringRetry": false,
+  "officialDraftGet": "ok",
+  "cloneFidelity": "pass",
+  "articleCount": 2,
+  "bodyImageCounts": [
+    14,
+    19
+  ],
+  "originalDailyCount": 21,
+  "twoExpectedDois": [
+    "10.1021/jacs.6c15886",
+    "10.1038/s44160-026-01127-z"
+  ],
+  "sourceUrls": [
+    "https://gallery.gczhouwld.com/?edition=2026-10-11&doi=10.1021%2Fjacs.6c15886&summary=0",
+    "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01127-z&summary=0"
+  ],
+  "sourceAndNewPreviewBothMatch": true,
+  "bothMainAndRetrospectiveTitlesMatch": true,
+  "sameWeChatBodyImageLinks": true,
+  "bothCoverMediaIdsCopied": true,
+  "noNewMediaUploads": true,
+  "noMassSend": true,
+  "publishId": null,
+  "mobileNativeSyncState": "not_observed_in_user_device; refresh subscription assistant list to find the new separate cloud draft",
+  "draftCountNote": "There will be two distinct Oct11 double-article drafts until the user explicitly approves deletion of the old one.",
+  "futureAutoDraftState": "relay DEFAULT_STATE now points to new media ID, preserving previous media ID as previous_media_id",
+  "linkToSuccessfulActions": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38123546886"
+}
