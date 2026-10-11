@@ -24,8 +24,8 @@
 - `jacs_f04`：figures/jacs_f04.png（Scheme 3 上半，PDF 第 4 页）
   - 内容与用途：原文 Scheme 3 上半｜丙烷与芳基溴化物的底物拓展、药物类似物和天然产物衍生物。
   - sha256：c1bcea5140ab1fd71527a06d805ace4d5eecb0efb20ddf32840fdb294d2c7925
-- `jacs_s02`：figures/jacs_s02.png（SI §6，PDF 第 50 页）
-  - 内容与用途：补充信息 SI §6｜未成功底物（尽量完整原始范围）。
+- `jacs_s02`：figures/jacs_s02.png（Scheme 3 的适用边界；补充信息第 6 节，PDF 第 50 页）
+  - 内容与用途：原文 Scheme 3 的适用边界｜补充信息第 6 节的未成功芳基溴化物（原 SI 第 50 页）。
   - sha256：9c59b8127bb6c5c407b770a880488469cc3edd738f543d46ae537020d55647d9
 - `jacs_f05`：figures/jacs_f05.png（Scheme 3 下半，PDF 第 4 页）
   - 内容与用途：原文 Scheme 3 下半｜异丁烷及乙烷的双碳官能团化。
