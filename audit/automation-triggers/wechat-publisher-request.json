@@ -1,18 +1,29 @@
 {
-  "requestId": "wechat-2026-10-11-1546-mobile-local-save-error-live-cloud-readback-no-write",
-  "action": "verify_cloud_draft",
-  "readbackOnly": true,
+  "requestId": "wechat-2026-10-11-user-authorized-new-two-article-cloud-clone-v1",
+  "action": "clone_existing_draft",
+  "explicitNewDraftAuthorized": true,
+  "preserveOriginalDraft": true,
   "draftOnly": true,
   "publicSendAuthorized": false,
   "publicationDate": "2026-10-11",
   "expectedArticleCount": 2,
+  "expectedDailyReleaseCount": 21,
   "expectedDois": [
     "10.1021/jacs.6c15886",
     "10.1038/s44160-026-01127-z"
   ],
   "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWOG4MGfh55oHCc7llEvIMhvXq9BhWLWVfRRRPx3yKyH7",
+  "expectedSourcePreviewSlug": "0c6a5b8965d6401973a288b4",
   "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-11&doi=10.1021%2Fjacs.6c15886&summary=0",
   "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01127-z&summary=0",
-  "expectedLastPreview": "https://relay.gczhouwld.com/wechat-preview/0c6a5b8965d6401973a288b4.html",
-  "reason": "Owner explicitly requests repair of subscription-assistant mobile draft local-save abnormal and synchronization. Safeguard: first perform live authenticated cloud draft/get without any remote cloud update, media upload, draft creation or public send. Detect whether the cloud draft was altered after 14:49 R5 success, compare version HMAC and server media caches; preserve local unsynced content. If mobile local cache differs, server cannot force mobile app local storage updates and must not blindly rewrite."
+  "sourceReviewRevision": "2026-10-11-r5",
+  "expectedBodyImageTagsByArticle": [
+    14,
+    19
+  ],
+  "copyOnlyCloudSourceAssets": true,
+  "noReuploadImages": true,
+  "noRewriteChemistry": true,
+  "noDeleteOldDraft": true,
+  "reason": "The user specifically approved a new 2-article WeChat Official Account draft to bypass the Android local-copy save warning. The original Oct11 R5 cloud version was verified at 15:51 Beijing, with exact content HMAC, 2 accepted articles, correct cover media IDs. Create exactly one distinct new media ID by copying the two already stored cloud articles and existing thumb/body media URLs; preserve original; require exact content/title/cover/DOI equality and draft/get of both before announcing. NEVER publish or group send. Retries must reuse created media ID, not duplicate."
 }
