@@ -482,15 +482,24 @@ export async function queryLiteratureCatalogView(env,{
     // A day view must seek its catalog/date index instead of filtering the whole generation.
     where.push('i.first_online_date=?');args.push(exactOnlineDate);
   }else{
-    if(view.dateFrom){where.push("COALESCE(i.first_online_date,'')>=?");args.push(view.dateFrom);}
-    if(view.dateTo){where.push("COALESCE(i.first_online_date,'')<=?");args.push(view.dateTo);}
+    // A concrete lower date bound excludes unknown dates. Avoid COALESCE
+    // around the indexed column so SQLite/D1 can perform an indexed range
+    // seek rather than scan every row in the published generation.
+    if(view.dateFrom){where.push('i.first_online_date>=?');args.push(view.dateFrom);}
+    if(view.dateTo){
+      where.push(view.dateFrom ? 'i.first_online_date<=?' : "COALESCE(i.first_online_date,'')<=?");
+      args.push(view.dateTo);
+    }
   }
   if(view.addedDate){where.push('i.added_date=?');args.push(view.addedDate);}
 
   const base=`FROM literature_catalog_index i ${joins.join(' ')} WHERE ${where.join(' AND ')}`;
   const total=await env.LITERATURE_INDEX_DB.prepare(`SELECT COUNT(*) AS c ${base}`).bind(...args).first();
 
-  const dateExpr="COALESCE(i.first_online_date,'')";
+  // Lower-bound filtering rules out NULL, so raw column order and keyset
+  // comparison are identical to COALESCE but retain the catalog/date index.
+  // Date-to-only queries keep the legacy unknown-date ordering unchanged.
+  const dateExpr=view.dateFrom?'i.first_online_date':"COALESCE(i.first_online_date,'')";
   const cursorArgs=[];
   let cursorClause='';
   if(after){
