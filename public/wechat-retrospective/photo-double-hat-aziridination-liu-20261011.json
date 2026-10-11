@@ -1,7 +1,7 @@
 {
   "date": "2026-10-11",
   "selectionAuthority": "explicit_user_uploaded_pair",
-  "editorialRevision": "2026-10-11-r1",
+  "editorialRevision": "2026-10-11-r2",
   "paper": {
     "doi": "10.1038/s44160-026-01127-z",
     "title": "Aziridination of inert alkanes via photo-mediated double hydrogen atom transfer",
@@ -12,20 +12,20 @@
   "kicker": "往期精选｜Nature Synthesis",
   "quick_points": [
     {
-      "label": "30秒看懂反应",
-      "text": "以磺酰胺为氮源，在可见光下将惰性烷烃相邻两个 C–H 键转化为氮杂环丙烷；环己烷模型分离收率为 60%。"
+      "label": "30 秒看懂反应",
+      "text": "光照条件下，惰性烷烃相邻两根 C(sp³)–H 键经双次氢原子转移被去除，生成烯烃中间体，再由磺酰氮宾参与环化形成氮杂环丙烷；环己烷模型产物的分离收率为 60%。"
     },
     {
-      "label": "反应设计中的关键",
-      "text": "三重态磺酰氮宾和 PhIO 参与双次氢原子转移，原位生成烯烃，再发生氮杂环丙烷化，而非简单一次 C–H 胺化。"
+      "label": "反应真正难在哪里",
+      "text": "常规单次夺氢容易停在碳自由基阶段并被氮源直接胺化；要获得邻位双官能化产物，第二次夺氢必须与自由基耦合等竞争过程相抗衡，且两次夺氢位置必须相邻。"
     },
     {
-      "label": "机理结论的边界",
-      "text": "烯烃中间体由多项对照支持；计算更偏向 PhIO 辅助的氧中心先夺氢路径，但多条路径仍可能并存。"
+      "label": "为什么值得研究",
+      "text": "实验通过烯烃捕获、自由基抑制、氘代竞争与光敏化对照约束反应网络；计算进一步比较游离三重态氮宾及 PhIO 辅助路径。关键是厘清何种证据支持双次 HAT，哪些路径尚未直接证实。"
     }
   ],
-  "lead_figure_id": "ns_f01",
-  "lead_figure_position": "after_first_quick_point",
+  "lead_figure_id": "ns_lead",
+  "lead_figure_position": "before_quick_points",
   "sections": [
     {
       "heading": "从一根饱和 C–C 键，直接变成含氮三元环",
@@ -34,8 +34,18 @@
         "原文 Fig. 1 对比了普通单次 HAT 与这一类双次 HAT：前者能得到一个碳自由基，后者必须在相邻位置连续移除两个氢原子，同时避免第一步自由基直接被氮中心截获而形成普通胺化产物。作者不是先准备一个烯烃底物再氮杂环丙烷化，而是希望从未活化的烷烃起步，在同一反应过程中原位生成烯烃，再实现氮转移。",
         "这项设计的价值不是发明了一种新的烯烃氮杂环丙烷化试剂，而是把此前困难的“烷烃 → 烯烃”双氢原子转移接入已知的氮杂环丙烷化反应。随之而来的核心判断是：烯烃真的是参与反应的中间体吗？两次 HAT 由哪一类活性物种完成？"
       ],
-      "figures": [],
-      "figures_after_paragraph": {}
+      "figures": [
+        "ns_intro_ab",
+        "ns_intro_c"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "ns_intro_ab"
+        ],
+        "3": [
+          "ns_intro_c"
+        ]
+      }
     },
     {
       "heading": "反应条件里的两个关键角色：三重态磺酰氮宾与 PhIO",
@@ -100,25 +110,29 @@
     {
       "heading": "先证明烯烃在路上，再判断它是否一定由双次 HAT 生成",
       "paragraphs": [
-        "原文 Fig. 4 的反应时间监测中可以观察到少量环己烯；将预先制备的环己烯放入标准条件，目标氮杂环丙烷以 75% 分离收率得到。相反，把单次 C–H 胺化物或邻位二胺作为潜在中间体投入，并未得到相应氮杂环丙烷。这一组对照使“烷烃 → 烯烃 → 氮杂环丙烷”比“先 C–H 胺化再闭环”更符合观察结果。",
+        "原文 Fig. 4d 的反应时间监测中可以观察到少量环己烯；如 Fig. 4e 所示，将预先制备的环己烯放入标准条件，目标氮杂环丙烷以 75% 分离收率得到。相反，把单次 C–H 胺化物或邻位二胺作为潜在中间体投入，并未得到相应氮杂环丙烷。这一组对照使“烷烃 → 烯烃 → 氮杂环丙烷”比“先 C–H 胺化再闭环”更符合观察结果。",
         "不同构型的戊-2-烯能够给出与戊烷来源相近的最终产物非对映异构体比例；烯烃/烷烃竞争实验也表明烯烃更快被消耗。它们支持烯烃作为具有动力学竞争力的中间体，但单凭这些结果并不能区分究竟是哪一类氮宾或 PhIO 辅助物种完成第二次 HAT。",
-        "含碘离子的自由基—极性交叉过程与经碳正离子脱除的另一种脱氢途径，也需要排除。作者的 I₂ 替换和 I₂ 生成检测、非对称烷烃的结构选择以及中间烯烃竞争对照，降低了这些替代路径作为主过程的可能性（Fig. 4f–g）。这些排除有反应条件依赖性，不能等同于穷尽所有微观副反应。"
+        "含碘离子的自由基—极性交叉过程与经碳正离子脱除的另一种脱氢途径，也需要排除。作者的 I₂ 替换和 I₂ 生成检测、非对称烷烃的结构选择以及中间烯烃竞争对照，降低了这些替代路径作为主过程的可能性（原文 Fig. 4f–g）。这些排除有反应条件依赖性，不能等同于穷尽所有微观副反应。"
       ],
       "figures": [
-        "ns_f08",
-        "ns_f09"
+        "ns_fig4_time",
+        "ns_fig4_alkene",
+        "ns_fig4_alternative"
       ],
       "figures_after_paragraph": {
         "1": [
-          "ns_f08",
-          "ns_f09"
+          "ns_fig4_time",
+          "ns_fig4_alkene"
+        ],
+        "3": [
+          "ns_fig4_alternative"
         ]
       }
     },
     {
       "heading": "TEMPO、同位素效应和酮副产物分别说明什么",
       "paragraphs": [
-        "原文 Fig. 5 的 TEMPO 实验使目标产物不能被检测，并分离出双 TEMPO 捕获相关产物 88，其结构经单晶衍射确认。这是支持含自由基中间体的较直接证据，但不意味着被捕获物就是正常催化循环中唯一高丰度活性物种。",
+        "原文 Fig. 5 的 TEMPO 实验使目标产物不能被检测，并分离出双 TEMPO 捕获相关产物 88，其结构经单晶衍射确认。这是支持含自由基中间体的较直接证据，但不意味着被捕获物就是正常催化循环中唯一高丰度活性物种。 光开关对照与 SI Fig. 28 的量子产率还表明反应需要持续光照；这支持光促进过程，但不足以在自由基链长和并行直接激发之间给出唯一解。",
         "环己烷/d₁₂-环己烷的同瓶竞争给出约 5.4 的氢/氘产物比，平行实验对应约 2.4 的动力学同位素效应。两个数值测量方式不同，不应机械合并成一个“精确 KIE”。它们共同支持 C–H 断裂与控制反应速率的步骤有关；具体哪一次 HAT 更慢，还需要结合计算和其它实验。",
         "标准反应中还能观察到约 19% 环己酮副产物，而省去磺酰胺或 PhIO 的相关对照不能得到该酮。PhIO 的角色因此不像只是提供一个“普通氧化剂当量”；其对氮宾相关夺氢物种和副反应的影响，是作者建立后续计算模型的重要依据。"
       ],
@@ -138,14 +152,18 @@
     {
       "heading": "能量转移而非简单电子转移：证据到哪一步",
       "paragraphs": [
-        "磺酰亚胺碘烷 75 能淬灭铱光敏剂的磷光，拟一级分析得到的双分子淬灭常数约为 1.87 × 10⁷ M⁻¹ s⁻¹。原文 Fig. 4 和 SI Fig. 3–4 的淬灭关系，在所考察的浓度区间更接近 Dexter 型短程能量转移特征；不同光敏剂的表现也更随三重态能量而变化，而不只与氧化还原电势相关。",
-        "这些证据支持敏化形成三重态磺酰氮宾的路径，但不表示实测到了每一个单独的能量转移中间体。值得注意的是，在无铱催化剂而有蓝光时仍有 28% 收率，因此直接光激发贡献不能完全忽略。选择使用“主要支持能量转移”而非“排除了所有电子转移可能”的措辞，才符合数据范围。"
+        "磺酰亚胺碘烷 75 能淬灭铱光敏剂的磷光，拟一级分析得到的双分子淬灭常数约为 1.87 × 10⁷ M⁻¹ s⁻¹。原文 Fig. 4a–c 和 SI Fig. 3–4 的淬灭关系，在所考察的浓度区间更接近 Dexter 型短程能量转移特征；不同光敏剂的表现也更随三重态能量而变化，而不只与氧化还原电势相关。",
+        "这些证据支持敏化形成三重态磺酰氮宾的路径，但不表示实测到了每一个单独的能量转移中间体。值得注意的是，在无铱催化剂而有蓝光时仍有 28% 收率，因此直接光激发贡献不能完全忽略。选择使用“主要支持能量转移”而非“排除了所有电子转移可能”的措辞，才符合数据范围。 补充材料 SI Fig. 28 测得约 0.57% 的表观反应量子产率，与非链式或仅有短链传播的光化学过程相容，但量子产率本身不能证明不存在任何自由基链。"
       ],
       "figures": [
+        "ns_fig4_uv",
+        "ns_fig4_quench",
         "ns_s04"
       ],
       "figures_after_paragraph": {
         "1": [
+          "ns_fig4_uv",
+          "ns_fig4_quench",
           "ns_s04"
         ]
       }
@@ -154,8 +172,8 @@
       "heading": "为什么第二次 HAT 比自由基耦合更有机会：三条计算路径",
       "paragraphs": [
         "原文 Fig. 6–7 讨论三种由三重态磺酰氮宾出发的路径。路径 1 是游离氮宾连续抽取两个相邻氢原子；路径 2 与路径 3 则考虑氮宾同 PhIO 形成具有双自由基特征的加合物，分别通过氮中心或氧中心先进行第一次 HAT。计算既比较普通过渡态，也比较自旋态转换所涉及的最小能量交叉点（MECP），因为某些关键步骤不是单一自旋面上的简单过渡态。",
-        "按论文给出的计算，路径 1 虽然能走通，但其竞争的自由基耦合会形成较多单次胺化物，与实验中这类副产物很少不完全吻合；路径 2 能解释部分酮副产物；路径 3 中先由氧中心参与 HAT，再由氮中心参与邻位第二次 HAT，在所用模型里对氮杂环丙烷主产物的偏好最符合实验。这里还不能写成“通过实验确定路径 3 是唯一机制”。",
-        "作者明确指出，在考虑前体预缔合后，多条路径仍有动力学可行性；实验主要通过 PhIO 用量与有无对照支持 PhIO 辅助路径的重要性。SI Fig. 31 中的氮宾相关 Smiles 重排实验为氮宾–PhIO 加合模式提供旁证，却不是直接分离该加合物。其结果同样应作为机制相容性证据，而非结构确证。"
+        "按论文给出的计算，路径 1 虽然能走通，但其竞争的自由基耦合会形成较多单次胺化物，与实验中这类副产物很少不完全吻合；路径 2 能解释部分酮副产物；路径 3 中先由氧中心参与 HAT，再由氮中心参与邻位第二次 HAT，在所用模型里对氮杂环丙烷主产物的偏好最符合实验。这里还不能写成“通过实验确定路径 3 是唯一机制”。 以作者的路径 3 计算模型为例，第一步氧中心夺氢后的第二次氮中心夺氢速率约 5.4 × 10¹¹ s⁻¹，而相应竞争 C–N 自由基耦合约为 6.6 × 10⁹ s⁻¹；两者是计算的微观速率，并非实验测得的表观速率常数。对比这一竞争关系，才能理解为何路径 3 与较低的单次胺化副产物相容。",
+        "作者明确指出，在考虑前体预缔合后，多条路径仍有动力学可行性；实验主要通过 PhIO 用量与有无对照支持 PhIO 辅助路径的重要性。SI Fig. 31 中的氮宾相关 Smiles 重排实验为氮宾–PhIO 加合模式提供旁证，却不是直接分离该加合物。其结果同样应作为机制相容性证据，而非结构确证。 作者同时指出，将前体预缔合计入后，三条路径的第一次夺氢都可能成为动力学上的困难步骤。因此不能仅凭一幅能量图排除路径 1、2。"
       ],
       "figures": [
         "ns_f11",
@@ -187,15 +205,83 @@
   ],
   "figures": [
     {
-      "id": "ns_f01",
-      "source_pdf_page": 2,
-      "source_figure": "Fig. 1",
-      "caption": "原文 Fig. 1｜双次氢原子转移和惰性烷烃氮杂环丙烷化的设计。",
-      "body": true,
-      "sha256": "fc9db0b42479f63ec856c98d48d0ea65f94eaf54319e27948c5a9d169908444f",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f01.png",
-      "source_kind": "exact_source_pdf_original_crop",
+      "id": "ns_lead",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig1d-lead.png",
+      "source_figure": "Fig. 1d",
+      "caption": "原文 Fig. 1d｜从惰性烷烃经双次氢原子转移生成烯烃、再发生氮杂环丙烷化的研究设计；图示为作者提出的模型。",
       "source_doi": "10.1038/s44160-026-01127-z",
+      "source_kind": "pixel_exact_crop_from_user_supplied_final_pdf",
+      "body": true,
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_intro_ab",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig1ab-context.png",
+      "source_figure": "Fig. 1a–b",
+      "caption": "原文 Fig. 1a–b｜单次夺氢与传统邻位双官能化的区别；后者往往依赖预先存在的活化基团。",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "source_kind": "pixel_exact_crop_from_user_supplied_final_pdf",
+      "body": true,
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_intro_c",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig1c-prior.png",
+      "source_figure": "Fig. 1c",
+      "caption": "原文 Fig. 1c｜此前双次夺氢策略的局限；不能把设想路径当成实验证实。",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "source_kind": "pixel_exact_crop_from_user_supplied_final_pdf",
+      "body": true,
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_fig4_time",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig4d-timecourse.png",
+      "source_figure": "Fig. 4d",
+      "caption": "原文 Fig. 4d｜时间监测中少量环己烯与氮杂环丙烷产物的变化；曲线并不单独确定双次 HAT 的具体物种。",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "source_kind": "pixel_exact_crop_from_user_supplied_final_pdf",
+      "body": true,
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_fig4_alkene",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig4e-alkene-probes.png",
+      "source_figure": "Fig. 4e",
+      "caption": "原文 Fig. 4e｜环己烯和 E/Z-戊-2-烯的独立投料对照；支持烯烃位于产物形成路径中。",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "source_kind": "pixel_exact_crop_from_user_supplied_final_pdf",
+      "body": true,
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_fig4_alternative",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig4fg-alternatives.png",
+      "source_figure": "Fig. 4f–g",
+      "caption": "原文 Fig. 4f–g｜I₂ 替换和非对称烷烃对照，约束碘介导与碳正离子路径的解释。",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "source_kind": "pixel_exact_crop_from_user_supplied_final_pdf",
+      "body": true,
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_fig4_uv",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig4a-uv.png",
+      "source_figure": "Fig. 4a",
+      "caption": "原文 Fig. 4a｜光敏剂与磺酰亚胺碘烷等组分的吸收行为，解释 456 nm 光照下可被激发的组分。",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "source_kind": "pixel_exact_crop_from_user_supplied_final_pdf",
+      "body": true,
+      "display_width_pct": 100
+    },
+    {
+      "id": "ns_fig4_quench",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig4bc-sensitization.png",
+      "source_figure": "Fig. 4b–c",
+      "caption": "原文 Fig. 4b–c｜铱光敏剂淬灭拟合及 Dexter 型能量转移相关性；属光谱与拟合支持，不是物种的直接分离。",
+      "source_doi": "10.1038/s44160-026-01127-z",
+      "source_kind": "pixel_exact_crop_from_user_supplied_final_pdf",
+      "body": true,
       "display_width_pct": 100
     },
     {
@@ -266,30 +352,6 @@
       "body": true,
       "sha256": "6f25f854dbde8601388d32ceea5e391d927f91772b3f7d31891a4a28c51e7480",
       "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f07.png",
-      "source_kind": "exact_source_pdf_original_crop",
-      "source_doi": "10.1038/s44160-026-01127-z",
-      "display_width_pct": 100
-    },
-    {
-      "id": "ns_f08",
-      "source_pdf_page": 5,
-      "source_figure": "Fig. 4a–d",
-      "caption": "原文 Fig. 4a–d｜UV-vis、磷光淬灭与动力学时间序列。",
-      "body": true,
-      "sha256": "b4363fc6ae651f4a6608b1c381bf2dfc2499f7888fbbcddb97acee96ded8565d",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f08.png",
-      "source_kind": "exact_source_pdf_original_crop",
-      "source_doi": "10.1038/s44160-026-01127-z",
-      "display_width_pct": 100
-    },
-    {
-      "id": "ns_f09",
-      "source_pdf_page": 5,
-      "source_figure": "Fig. 4e–g",
-      "caption": "原文 Fig. 4e–g｜环己烯与 I2 对照以及排除简单碳正离子途径。",
-      "body": true,
-      "sha256": "6976c8276ea977d1a9350b8a7f3a2287827622ba877546fb2dc31b79cf2c1796",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f09.png",
       "source_kind": "exact_source_pdf_original_crop",
       "source_doi": "10.1038/s44160-026-01127-z",
       "display_width_pct": 100
@@ -368,12 +430,9 @@
     },
     {
       "id": "ns_cover",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-cover.png",
-      "source_doi": "10.1038/s44160-026-01127-z",
-      "body": false,
-      "source_kind": "original_figures_composited_unmodified",
-      "caption": "由原始论文图片与排版组合的封面；化学结构来自原PDF",
-      "display_width_pct": 100
+      "repo_path": "public/wechat-assets/reviewed/2026-10-11-r2/nature-synthesis-source-fig1d-square.png",
+      "caption": "原文 Fig. 1d 真实反应图的方形卡片裁切；无额外概括性副标题。",
+      "body": false
     }
   ],
   "cover": {
@@ -381,14 +440,14 @@
     "canvas": {
       "width": 1254,
       "height": 1254,
-      "background": "#18334b"
+      "background": "#19334B"
     },
-    "crop_1_1": "0_0_1_1",
     "crop_235_1": "0_0.287234_1_0.712766",
-    "description": "Chemistry-motif sourced from exact primary PDF, no AI redraw, with title-safe area."
+    "crop_1_1": "0_0_1_1",
+    "description": "R2 source-exact Fig. 1d centered on dedicated square cover, only 往期精选 + Nature Synthesis as minimal card identity; no extra native-title duplicate or subtitle."
   },
   "ai_notice": "",
-  "title": "光介导双次氢原子转移实现惰性烷烃的氮杂环丙烷化",
+  "title": "往期精选｜Nature Synthesis：光介导双次氢原子转移实现惰性烷烃的氮杂环丙烷化",
   "slug": "photo-double-hat-aziridination-liu-20261011",
   "digest": "三重态磺酰氮宾与 PhIO 协同推动惰性烷烃相邻双次夺氢，原位生成烯烃并制备氮杂环丙烷。",
   "source_url": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01127-z&summary=0"

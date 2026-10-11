@@ -1,0 +1,88 @@
+{
+  "revision": "2026-10-11-r2",
+  "sourceDois": [
+    "10.1021/jacs.6c15886",
+    "10.1038/s44160-026-01127-z"
+  ],
+  "perArticleFigureCount": {
+    "JACS": 13,
+    "Nature Synthesis": 20
+  },
+  "nativeFirstTitle": "有机合成文献日报｜10.11｜今日精选｜JACS：镍催化烯烃双碳官能团化实现气态烷烃的区域与对映选择性官能化",
+  "nativeSecondTitle": "往期精选｜Nature Synthesis：光介导双次氢原子转移实现惰性烷烃的氮杂环丙烷化",
+  "figurePlacement": {
+    "JACS": [
+      "jacs_lead",
+      "jacs_prior",
+      "jacs_f02",
+      "jacs_s01",
+      "jacs_s03",
+      "jacs_f03",
+      "jacs_f04",
+      "jacs_s02",
+      "jacs_f05",
+      "jacs_f06",
+      "jacs_f07",
+      "jacs_f08",
+      "jacs_f09"
+    ],
+    "Nature Synthesis": [
+      "ns_lead",
+      "ns_intro_ab",
+      "ns_intro_c",
+      "ns_f02",
+      "ns_f03",
+      "ns_f04",
+      "ns_f05",
+      "ns_f06",
+      "ns_f07",
+      "ns_fig4_time",
+      "ns_fig4_alkene",
+      "ns_fig4_alternative",
+      "ns_f10",
+      "ns_s01",
+      "ns_fig4_uv",
+      "ns_fig4_quench",
+      "ns_s04",
+      "ns_f11",
+      "ns_f12",
+      "ns_s02"
+    ]
+  },
+  "correctedFindings": [
+    "old Oct11 header-on-cover plus paper-only native title contradicts 2026-10-08 R9 final precedent",
+    "two old leads appeared after first quick point despite top-before-quick-box rule",
+    "JACS Scheme1a-c was mixed into the lead reaction; split from Scheme1d",
+    "Nature Fig1d separated from historical background panels",
+    "Nature Fig4a-d and 4e-g cross-broken panels and mismatched evidence; re-cropped into complete a, b-c, d, e, f-g panels and rearranged by argument",
+    "Nature intro quick boxes adjusted to result-bottleneck-methodology value",
+    "Nature evidence commentary refined for photoquenching, micro rates and isotope constraints"
+  ],
+  "primarySources": [
+    "jacs.6c15886.pdf",
+    "ja6c15886_si_001.pdf",
+    "s44160-026-01127-z.pdf",
+    "44160_2026_1127_MOESM1_ESM.pdf"
+  ],
+  "strictParagraphPlacement": "pass",
+  "originalChemistryRedrawn": false,
+  "releaseSlot": "2026-10-11T08:00:00+08:00",
+  "draftOnly": true,
+  "publicSendAuthorized": false,
+  "newWeChatDraftReadback": "NOT_RUN",
+  "actualNativeWeChatScreenshot": "NOT_VERIFIED",
+  "notes": "Source scientific figures should be read at phone width. Live preview and client crop must be independently checked before accepted.",
+  "sourceSha256": {
+    "/mnt/data/jacs.6c15886.pdf": "3d0c96aa74d60ece1d0eef7ec497cc9453514a0260d04760c5f720c033b7a351",
+    "/mnt/data/ja6c15886_si_001.pdf": "c0aa1c00d6a1e40fbdcf943533729e8ce2cc10dfec30954fc2b844997b90685d",
+    "/mnt/data/s44160-026-01127-z.pdf": "c8b93ba67e4cda22d752cb5b6ec1e7d91bc3f99f2928dd604cefee4d22722702",
+    "/mnt/data/44160_2026_1127_MOESM1_ESM.pdf": "871cd24ecbf21493e6bd32ead78669d4f374c07502fa638279398f52c41b8092"
+  },
+  "allFiguresDecodable": true,
+  "assets": 35,
+  "newR2Rasters": 12,
+  "singleImageMaxBytes": 871161,
+  "textReview": "pass",
+  "imageReview": "pass",
+  "finalNativeMobileClientQA": "pending_actual_app_view"
+}

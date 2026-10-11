@@ -1,6 +1,6 @@
 {
   "date": "2026-10-11",
-  "revision": "2026-10-11-r1",
+  "revision": "2026-10-11-r2",
   "articleCount": 2,
   "selectionAuthority": "explicit_user_uploaded_pair",
   "selectionDois": [
@@ -12,61 +12,57 @@
   "materializedCropReviewRequired": true,
   "strictFigurePlacement": true,
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-11-r1-text-jacs.md",
-    "imagesOnly": "audit/wechat-working/2026-10-11-r1-images-jacs.md"
+    "textOnly": "audit/wechat-working/2026-10-11-r2-jacs-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-11-r2-jacs-images-only.md"
   },
   "sources": [
     {
       "path": "public/wechat-featured/2026-10-11.json",
-      "blobSha": "37185bbd6d93335a92d98e09d585e117df18a45c"
+      "blobSha": "4fb168addcbc3f089d34138f7180af69b9a16c92",
+      "sha256": "4a4b22e063d90c086db280fd81b26308808106ff99cb326d80fde6ff2a642e5b"
     },
     {
       "path": "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json",
-      "blobSha": "884f27ff6e8c7d4aa91fb467d8027d8f62c37746"
+      "blobSha": "19287635ece0e826f0e2853cba49e512b8c45315",
+      "sha256": "31c847d390d32c34409e9479d2c26b58cd8c2aa9a93140605d27d7135f73c88a"
     },
     {
       "path": "public/wechat-editions/2026-10-11.json",
-      "blobSha": "231ae9bf40bfb5cdb5bb53df97c60d8c1a983890",
-      "sha256": "9629eb8ecc860c2b222cf6aba696af4b09993fce8eac92792cee954add291ca3"
+      "blobSha": "26189bbc1e4e8c065d839e527a7e0af29fcce9f3",
+      "sha256": "0bb5ac9af38a75b7517caab39a158f4c789e7dd8dc939eef2256fbeb09b5d064"
     },
     {
-      "path": "audit/wechat-working/2026-10-11-r1-text-jacs.md",
-      "blobSha": "c42024168286c2b4d7e51b18bdb7d8326b88bee5",
-      "sha256": "fcf8731ba216d1cd79bf1c46fca922873ad033bcc3bdbf7ffa4038e4e173c1be"
+      "path": "audit/wechat-working/2026-10-11-r2-jacs-text-only.md",
+      "blobSha": "94866d710320a98bc43e2fb6ac796fd0ee18cd24",
+      "sha256": "79ab76563a2957745ef2e120e512bb1aaaad51e1aed3377e2edb6c1d2e7ee29c"
     },
     {
-      "path": "audit/wechat-working/2026-10-11-r1-images-jacs.md",
-      "blobSha": "43a756cc30aa5d514e46cc4cb494a1db40cc5380"
+      "path": "audit/wechat-working/2026-10-11-r2-jacs-images-only.md",
+      "blobSha": "fc1b0564ec249f40da30efd0a56a7d5b006b4ef7",
+      "sha256": "fbba01996f4b28c9448f8382229f0862bfc10e5412cf36e53b2bc2a8799b3b65"
     },
     {
-      "path": "audit/wechat-working/2026-10-11-r1-text-ns.md",
-      "blobSha": "05faec4334eaf7ad8c645b557664a251118d26d9"
+      "path": "audit/wechat-working/2026-10-11-r2-nature-synthesis-text-only.md",
+      "blobSha": "489af85ef576b9f0ee4e5583616302de5e4b80c8",
+      "sha256": "6bbe90289f0b3eabffd11c21bd3c30c83445f7d121d08f737b572fbdb64be6b2"
     },
     {
-      "path": "audit/wechat-working/2026-10-11-r1-images-ns.md",
-      "blobSha": "15b7f7d67c641499671fdc151df317eb2a896973"
+      "path": "audit/wechat-working/2026-10-11-r2-nature-synthesis-images-only.md",
+      "blobSha": "70910f14bb6daf83d2d3d6d9b378b774976fb190",
+      "sha256": "212fb98ad0134d409bd2d6ff5cae1d6e394c5ad1c1ac4c885204abba9632846a"
     },
     {
-      "path": "audit/wechat-working/2026-10-11-r1-editorial-plan.json",
-      "blobSha": "4d653325fe08604a0b7f939f22faf93559aa7f39",
-      "sha256": "a7f1942131c8283732568e7fdd256af40d6f2f4153ce45221ec1e0bb04c921c8"
+      "path": "audit/wechat-working/2026-10-11-r2-editorial-plan.json",
+      "blobSha": "38ee4845eb662033839b45711808d6b36ac7dab8",
+      "sha256": "9f8d2e9a1c81c17df1921d22da39e2f1b4f4a41f9fc93e8a673ac0f2fc0c78b1"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-11-r2-science-layout-qa.json",
+      "blobSha": "8062419ec8ccb808234903b2d79a2f328f2549f2",
+      "sha256": "35c9f0e131d803a35501afa06ab9df888916459b35738f1d0a15d592d0931bc8"
     }
   ],
   "assets": [
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-cover.png",
-      "blobSha": "e84bb6d6dacc35fd67d6ea5c0b9fbaf7be681356",
-      "sha256": "26fb1ed8b26aa914f6c3bcbde046cf128493748187448495f3a8306cc8876159",
-      "width": 1880,
-      "height": 800
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-jacs_f01.png",
-      "blobSha": "39f3559f0a38375b9b25804bfe59cbcc92439d06",
-      "sha256": "263502e73978aef462cabd81b2aac44ccde36f92bf39b9a9a0384ad02c6ee606",
-      "width": 1850,
-      "height": 1375
-    },
     {
       "path": "public/wechat-assets/reviewed/2026-10-11-r1/jacs-jacs_f02.png",
       "blobSha": "4929ce660c16d968fda6028d539cf829b73797a7",
@@ -145,20 +141,6 @@
       "height": 1227
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-cover.png",
-      "blobSha": "6f4c662280e8373eb7d76b8822425bc1d3ae6fbe",
-      "sha256": "21f090041904f8ffc19823569fa02f154064175947239f9b58ec7a757bceb3ec",
-      "width": 1254,
-      "height": 1254
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f01.png",
-      "blobSha": "f52f58dfcc93d943110baa94a674ff0d3f0f129d",
-      "sha256": "fc9db0b42479f63ec856c98d48d0ea65f94eaf54319e27948c5a9d169908444f",
-      "width": 1850,
-      "height": 1159
-    },
-    {
       "path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f02.png",
       "blobSha": "6b842dccf0fa9838ff1b97520afd576983be8a57",
       "sha256": "20a36eaf81bd1347d6397b3815e86fc32de38f563da7ecf9423938884adcd74b",
@@ -201,20 +183,6 @@
       "height": 1016
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f08.png",
-      "blobSha": "44d596ee01e21740c681100632cd4ec5025a6f34",
-      "sha256": "b4363fc6ae651f4a6608b1c381bf2dfc2499f7888fbbcddb97acee96ded8565d",
-      "width": 1850,
-      "height": 992
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f09.png",
-      "blobSha": "f2ed73b73a5cf9bf0ef64d6073ae1ce5aa298ae0",
-      "sha256": "6976c8276ea977d1a9350b8a7f3a2287827622ba877546fb2dc31b79cf2c1796",
-      "width": 1850,
-      "height": 1081
-    },
-    {
       "path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_f10.png",
       "blobSha": "73394bff1645531e33d5472a56b2025d3d5c95dd",
       "sha256": "4ab7a91cdaf592b8d0e949b838539fb571915482f0d569f691f3f219313e5447",
@@ -250,22 +218,103 @@
       "height": 1110
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_s03.png",
-      "blobSha": "cb47310deb442ead5fc905652b3e7111a9681da1",
-      "sha256": "2984f5f37646572c2b6935ddee7c4cdf517530c4dba77e96241efc0505d9f844",
-      "width": 1801,
-      "height": 1637
-    },
-    {
       "path": "public/wechat-assets/reviewed/2026-10-11-r1/ns-ns_s04.png",
       "blobSha": "8be27384dc90b86db12defebee95caffd4450590",
       "sha256": "6516e65c5fa296ded70bd28eacc62bf042c97df73b2d2c517d86a0f3815ab3d1",
       "width": 1808,
       "height": 2501
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-11-r2/jacs-original-TOC-no-editorial-banner.png",
+      "blobSha": "d909194fef003d4ea07c232d6c33dca2f4bcad8c",
+      "sha256": "e28fbbfc0bcd172f68f3aa76552de81bf567ed57e45eec5648ea6a1a67b9056b",
+      "width": 1880,
+      "height": 800
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-11-r2/jacs-scheme1abc-prior.png",
+      "blobSha": "24e29c0eb131e2f50c27706816faadb90472d6cb",
+      "sha256": "a09a76e7b43eb0a1a86469881e4661ad20cdf8264fd3133174afe22e750a7cc0",
+      "width": 1762,
+      "height": 1044
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-11-r2/jacs-scheme1d-lead.png",
+      "blobSha": "e11dfe99f849a73a285566f3fd3af91c6bc7e2ce",
+      "sha256": "80428f6e6a0fbeb6f4d851c08868d9c6b9d34b051f239117ad0e52914d7b6226",
+      "width": 1762,
+      "height": 245
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-11-r2/nature-synthesis-source-fig1d-square.png",
+      "blobSha": "f38cf79f0d659123c72f7d3a02e60331f7114ace",
+      "sha256": "0353faf46b8fcdf20bd6cd1a90b04d0f0058b127f82616fcd3ef9cd6395e4d41",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig1ab-context.png",
+      "blobSha": "1a774c17529d180c5da99421bd27cf0358dab4ff",
+      "sha256": "fb23fe8b10565a4fd1cbb369e1efb67c2981ce7befa10d81d6200cad61bb4110",
+      "width": 1750,
+      "height": 510
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig1c-prior.png",
+      "blobSha": "373b4667c349505cf70c4232473235078d61a27c",
+      "sha256": "64c983940c5b8d09938055a158596cabff585ddfde9c0ca6e4be35db5686d25b",
+      "width": 665,
+      "height": 494
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig1d-lead.png",
+      "blobSha": "509725ad66e899af6a2db47fff930ff37d0e4ead",
+      "sha256": "d0c6f8ff5ae0e47dbbdbc219399be56f2d1046d3713490bb8d78ef9ddd610987",
+      "width": 1056,
+      "height": 510
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig4a-uv.png",
+      "blobSha": "a561a9c868e5dc63b792601cd87f0de23ba00326",
+      "sha256": "a973fb16a5519a9acbff2722da1c17dd08456b1094c9708f62ad12e27fb7d427",
+      "width": 688,
+      "height": 560
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig4bc-sensitization.png",
+      "blobSha": "59a83626be8c8e50c02ec5f058d9f37d59e376f6",
+      "sha256": "c083c5a6951f986e2f3fb2ae11127a2e2e67b816273e0a57cd786c82a4562659",
+      "width": 1356,
+      "height": 576
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig4d-timecourse.png",
+      "blobSha": "736a5fd7d4d73defa7f7363c8a8edc0aaa18ef68",
+      "sha256": "83670db502c5b242ff7579092505c89e3647059f283104ccef6b476b077ce3ef",
+      "width": 692,
+      "height": 742
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig4e-alkene-probes.png",
+      "blobSha": "742ccb731e73a657c8829e8bf98013b15c5e59a9",
+      "sha256": "466b6a72262bc1c98bdc57fae07cbb406bf9f1e8e7180b271eed2e12f490ff80",
+      "width": 1352,
+      "height": 774
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-11-r2/ns-fig4fg-alternatives.png",
+      "blobSha": "3e29f74e18e73be2226b51112b4cd59f29189d62",
+      "sha256": "dc40bd00f2d400c59ab96f164afefb65698e5f1a682cccb61036ce42ff03f9d8",
+      "width": 1700,
+      "height": 712
     }
   ],
   "publicSendAuthorized": false,
   "draftOnly": true,
-  "draftReadback": "not_run",
-  "note": "Source-checked scientific captions and figure placement. Nature SI Fig.39 photo not embedded because its original PNG exceeds WeChat's <1MB in-body upload limit and main Fig.3b already retains device. 27 selected body figures + 2 covers. Both source reviews pass; draft/get mandatory."
+  "draftReadback": "pending_next_revision",
+  "sourceReview": "main_text_and_SI",
+  "independentSourceAndChineseReview": "pass",
+  "independentImageCropReview": "pass",
+  "pending": "same-media draft/update, draft/get, real preview and native-client cover crop (do not assert until checked)",
+  "note": "Oct11 R2: user reasserted final content, cover and title rules. Full independent dual-article revision, 33 body figures and 2 source-authentic covers. No reused half panels. External images exact source pixels; original chemistry not AI redrawn."
 }
