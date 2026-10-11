@@ -371,7 +371,7 @@ export function createLocalPdfVault(options = {}) {
     });
   }
 
-  /** Disable original-file associations only; never touch disk contents. */
+  /** Disable this DOI's local associations only; never delete on-disk bytes. */
   function unlinkDoiExternal(rawDoi) {
     return operation(async () => {
       const doi = normalizeDoi(rawDoi);
@@ -385,7 +385,7 @@ export function createLocalPdfVault(options = {}) {
           const removedHashes = new Set();
           for (const value of request.result || []) {
             if (value.user_id !== userId || value.device_id !== deviceId ||
-                value.linked_external !== true || value.state !== 'available') continue;
+                value.storage_kind !== 'local_folder' && value.storage_kind !== 'opfs' || value.state !== 'available') continue;
             store.put({ ...value, state: 'revoked', local_revision: (value.local_revision || 0) + 1,
               updated_at: now(value.updated_at) });
             removedHashes.add(value.content_hash);
@@ -582,7 +582,7 @@ export function createLocalPdfVault(options = {}) {
           // external association as a fallback candidate.
           for (const old of oldRequest.result || []) {
             if (old.user_id === userId && old.device_id === deviceId &&
-                old.linked_external === true && old.state === 'available') {
+                ['local_folder', 'opfs'].includes(old.storage_kind) && old.state === 'available') {
               copies.put({ ...old, state: 'revoked', local_revision: (old.local_revision || 0) + 1,
                 updated_at: now(old.updated_at) });
               copiesCache.delete(old.id);
