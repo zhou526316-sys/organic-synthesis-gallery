@@ -355,6 +355,7 @@ async function start() {
     return;
   }
   setState('checking', '正在读取本机 PDF 文献索引…');
+  let initialAuthController = null;
   try {
     // A fresh receipt was written after a real server validation in the main
     // tab. Opening another DOI now need not synchronously wait for the API.
@@ -368,6 +369,7 @@ async function start() {
     }
     setState('checking', '首次打开正在静默确认 Gallery 登录…');
     const controller = new AbortController();
+    initialAuthController = controller;
     pendingAuth = controller;
     const user = await loadSession(originalToken, controller);
     if (stamp !== generation || originalToken !== token()) return;
@@ -389,7 +391,7 @@ async function start() {
         : '当前无法确认账号，会保留本地文件和登录记录；请检查网络后重试。');
       retryButton.hidden = false;
     }
-  } finally { if (stamp === generation) pendingAuth = null; }
+  } finally { if (stamp === generation && pendingAuth === initialAuthController) pendingAuth = null; }
 }
 
 // Invoke native pickers synchronously in each user click before awaiting any
