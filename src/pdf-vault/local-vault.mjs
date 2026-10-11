@@ -432,6 +432,66 @@ export function createLocalPdfVault(options = {}) {
     });
   }
 
+  /**
+   * Associate a user-chosen PDF *in its original location* with this DOI.
+   * The persistent FileSystemFileHandle is structured-cloned into this
+   * account's IndexedDB copies store. We do not duplicate, rename, move,
+   * upload, or scan the user's files. Call showOpenFilePicker directly from a
+   * real user gesture before invoking this asynchronous operation.
+   */
+  function linkPdfHandle({ doi: rawDoi, handle, versionKind = 'unknown' } = {}) {
+    return operation(async () => {
+      const doi = normalizeDoi(rawDoi);
+      if (!doi || doi.length > 512) throw new LocalPdfVaultError('invalid_doi');
+      if (!PDF_VERSION_KINDS.includes(versionKind)) throw new LocalPdfVaultError('invalid_version');
+      if (!handle || handle.kind !== 'file' || typeof handle.getFile !== 'function') {
+        throw new LocalPdfVaultError('invalid_pdf');
+      }
+      await boundary(permission(handle, 'local_folder', 'read'));
+      const file = await boundary(handle.getFile());
+      const verified = await boundary(inspectFile(file));
+      const id = randomId('copy_');
+      const timestamp = now();
+      const copy = toCopyManifest({
+        id, user_id: userId, doi, storage_kind: 'local_folder',
+        device_id: deviceId, provider: null, provider_ref: null,
+        content_hash: verified.hash, byte_length: verified.byteLength,
+        version_kind: versionKind, state: 'available',
+        acquired_at: timestamp, last_verified_at: timestamp,
+        created_at: timestamp, updated_at: timestamp,
+      });
+      const probe = receipt(copy, 'readable');
+      const local = {
+        ...copy, file_name: handle.name, file_handle: handle,
+        linked_external: true, local_probe: probe, local_revision: 1,
+      };
+      const document = await boundary(transact(['documents', 'copies'], 'readwrite', (tx, result, guarded) => {
+        const documents = tx.objectStore('documents');
+        const request = documents.get([userId, doi]);
+        request.onsuccess = guarded(() => {
+          const previous = request.result;
+          const doc = toDocumentManifest({
+            user_id: userId, doi, preferred_content_hash: copy.content_hash,
+            preferred_version_kind: versionKind,
+            created_at: previous?.created_at ?? timestamp,
+            updated_at: now(previous?.updated_at ?? timestamp),
+          });
+          tx.objectStore('copies').add(local);
+          documents.put(doc);
+          result(doc);
+        });
+      }));
+      const retained = await boundary(readCopy(id));
+      if (retained.content_hash !== copy.content_hash ||
+          typeof retained.file_handle?.getFile !== 'function') {
+        throw new LocalPdfVaultError('persistence_failed');
+      }
+      probes.set(id, probe);
+      publishChange();
+      return { copy: toCopyManifest(retained), document, probe: currentProbe(retained) };
+    });
+  }
+
   /** Home-card metadata query: bounded visible DOI lookups in one read-only
    * transaction. Never opens a PDF, probes permission, hashes bytes, selects a
    * directory, initialises an account row or makes a network request. */
@@ -512,8 +572,10 @@ export function createLocalPdfVault(options = {}) {
     return operation(async () => {
       const value = await boundary(readCopy(id));
       try {
-        await boundary(permission(value.directory_handle, value.storage_kind, 'read'));
-        const handle = await boundary(value.directory_handle.getFileHandle(value.file_name));
+        const handle = value.file_handle ||
+          (value.directory_handle && await boundary(value.directory_handle.getFileHandle(value.file_name)));
+        if (!handle?.getFile) throw new LocalPdfVaultError('file_missing');
+        await boundary(permission(value.file_handle ? handle : value.directory_handle, value.storage_kind, 'read'));
         const file = await boundary(handle.getFile());
         const inspected = await boundary(inspectFile(file));
         if (inspected.hash !== value.content_hash || inspected.byteLength !== value.byte_length) {
@@ -562,12 +624,14 @@ export function createLocalPdfVault(options = {}) {
         let value;
         if (id) value = copiesCache.get(id) || await boundary(readCopy(id));
         else value = destinationCache || (await boundary(account())).destination;
-        const handle = value?.directory_handle;
+        const handle = value?.file_handle || value?.directory_handle;
         const kind = value?.storage_kind || value?.kind;
         if (!handle) throw new LocalPdfVaultError('destination_required');
         if (kind === 'opfs') return { granted: true };
         if (typeof handle.requestPermission !== 'function') throw new LocalPdfVaultError('permission_required');
-        const state = await boundary(handle.requestPermission({ mode: 'readwrite' }));
+        // A linked external file needs read permission only. Never request
+        // write permission for a file the user downloaded elsewhere.
+        const state = await boundary(handle.requestPermission({ mode: value?.file_handle ? 'read' : 'readwrite' }));
         if (state !== 'granted') throw new LocalPdfVaultError('permission_required');
         // A permission grant is not a file-readability probe. openPdf rechecks bytes.
         return { granted: true };
@@ -602,7 +666,7 @@ export function createLocalPdfVault(options = {}) {
       indexedDB: typeof idb?.open === 'function', crypto: Boolean(crypto?.subtle?.digest && crypto?.getRandomValues),
       maxBytes: PDF_VAULT_MAX_BYTES,
     }),
-    selectDirectory, useOpfs, getDestination, importPdf, listCopies, describe, describeCards,
+    selectDirectory, useOpfs, getDestination, importPdf, linkPdfHandle, listCopies, describe, describeCards,
     openPdf, exportFile: openPdf, restorePermission, close,
   });
 }
