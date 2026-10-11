@@ -1,0 +1,4629 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Science Advances",
+  "issns": [
+    "2375-2548"
+  ],
+  "range": {
+    "from": "2026-09-15",
+    "to": "2026-09-21"
+  },
+  "checkedAt": "2026-10-11T19:28:00.615Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2375-2548",
+        "total": 93,
+        "count": 93,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 93,
+      "count": 93,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 93,
+      "openalex": 93
+    }
+  },
+  "candidateCount": 93,
+  "alreadyPublished": 0,
+  "unreviewed": 93,
+  "records": [
+    {
+      "doi": "10.1126/sciadv.adx0731",
+      "title": "Targeting glial PD-1/PD-L1 restores microglial homeostasis and reduces neuronal hyperactivity in an Alzheimer’s disease model",
+      "authors": [
+        "Taeyoung Park",
+        "Leechung Chang",
+        "Seung Won Chung",
+        "Seowoo Lee",
+        "Sungjun Bae",
+        "Carlo Condello",
+        "Yong Ho Kim",
+        "Jaecheol Lee",
+        "Han-Joo Kim",
+        "Ho-Keun Kwon",
+        "Minah Suh"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eadx0731",
+        "doi": "10.1126/sciadv.adx0731"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.adx0731",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeb3077",
+      "title": "High-speed reservoir computing using photonic integrated circuit optical parametric oscillators",
+      "authors": [
+        "Midya Parto",
+        "Gordon H. Y. Li",
+        "Ryoto Sekine",
+        "Robert M. Gray",
+        "Luis L. Ledezma",
+        "James Williams",
+        "Arkadev Roy",
+        "Alireza Marandi"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeb3077",
+        "doi": "10.1126/sciadv.aeb3077"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeb3077",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeb3563",
+      "title": "Hierarchical repeating earthquakes with strong downward directivity",
+      "authors": [
+        "Dawei Gao",
+        "Satoshi Ide"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeb3563",
+        "doi": "10.1126/sciadv.aeb3563"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeb3563",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeb4813",
+      "title": "Metabolic sensor AMPK licenses intestinal CD103 + DCs to induce T reg responses",
+      "authors": [
+        "Thiago A. Patente",
+        "Julian van Duijvenvoorde",
+        "Graham A. Heieis",
+        "Eline C. Brombacher",
+        "Leonard R. Pelgrom",
+        "Joost Lambooij",
+        "Anna Zawistowska-Deniziak",
+        "Martina Erbì",
+        "Frank Otto",
+        "Arifa Ozir-Fazalalikhan",
+        "Sara Barnhoorn",
+        "José J. Fernández",
+        "Johan van der Reijden",
+        "Alwin J. van der Ham",
+        "Lukas J. A. C. Hawinkels",
+        "Bruno A. Guigas",
+        "José A. M. Barbuto",
+        "Rick M. Maizels",
+        "Bart Everts"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeb4813",
+        "doi": "10.1126/sciadv.aeb4813"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeb4813",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeb7653",
+      "title": "The body temperature of Tyrannosaurus rex",
+      "authors": [
+        "Randon J. Flores",
+        "Robert A. Eagle",
+        "Robin B. Trayler",
+        "Gabriele Larocca Conte",
+        "Sora L. Kim",
+        "Alfio Alessandro Chiarenza",
+        "Alex Farnsworth",
+        "Paul J. Valdes",
+        "Luis Chiappe",
+        "Aradhna Tripati"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeb7653",
+        "doi": "10.1126/sciadv.aeb7653"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeb7653",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeb8359",
+      "title": "Omnidirectional bending sensor with three-fold structural symmetry enables decoupling of bending angle and direction",
+      "authors": [
+        "Yanzhen Li",
+        "Zheren Cai",
+        "Yongli He",
+        "Zhihua Liu",
+        "Cong Wang",
+        "Jiaofu Li",
+        "Wenlong Li",
+        "Nuan Chen",
+        "Dong Wu",
+        "Huajian Gao",
+        "Xiaodong Chen"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeb8359",
+        "doi": "10.1126/sciadv.aeb8359"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeb8359",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aec0722",
+      "title": "A high-density CRISPR activation platform for mapping cancer dependencies and resistance pathways ex vivo and in vivo",
+      "authors": [
+        "Sarah T. Diepstraten",
+        "Yexuan Deng",
+        "Margaret A. Potts",
+        "Amy Heidersbach",
+        "Christina König",
+        "Kristel M. Dorighi",
+        "Lin Tai",
+        "Andrew J. Kueh",
+        "Lauren Whelan",
+        "Catherine Chang",
+        "Felix Brown",
+        "Gemma L. Kelly",
+        "Jean-Philippe Fortin",
+        "Benjamin Haley",
+        "John E. La Marca",
+        "Marco J. Herold"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaec0722",
+        "doi": "10.1126/sciadv.aec0722"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aec0722",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aec3939",
+      "title": "Star formation powers optical line emission from the CGM",
+      "authors": [
+        "Huanian Zhang",
+        "Lizhi Xie",
+        "Zhijie Qu",
+        "Dennis Zaritsky",
+        "Luis C. Ho",
+        "Min Bao",
+        "Fabio Fontanot",
+        "Michaela Hirschmann",
+        "Chenxu Liu",
+        "Gabriella De Lucia",
+        "Enci Wang",
+        "Haoyan Zheng"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaec3939",
+        "doi": "10.1126/sciadv.aec3939"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aec3939",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aec9007",
+      "title": "α-Parvin regulation of cell rearrangement is critical for ureteric bud branching morphogenesis",
+      "authors": [
+        "Xinyu Dong",
+        "Fabian Bock",
+        "Ali Hashmi",
+        "Nada Bulus",
+        "Glenda Mernaugh",
+        "Gema Bolas",
+        "Shensen Li",
+        "Wanying Zhu",
+        "Meiling Melzer",
+        "Kyle Brown",
+        "Colton Miller",
+        "Olga Viquéz",
+        "Eloi Montañez",
+        "Ambra Pozzi",
+        "Sara A. Wickström",
+        "Roy Zent"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaec9007",
+        "doi": "10.1126/sciadv.aec9007"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aec9007",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aec9727",
+      "title": "SPIRAL: A versatile online single time-point circadian analysis platform for rice",
+      "authors": [
+        "Yabo Shi",
+        "Li Yao",
+        "Zhenxian Han",
+        "Yingke Ma",
+        "Yufeng Xu",
+        "Xingwei Wang",
+        "Zhaoxiong Jiang",
+        "Shuyu Wang",
+        "Mian Zhou",
+        "Dong Zou",
+        "Zhang Zhang",
+        "Wei Wang"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaec9727",
+        "doi": "10.1126/sciadv.aec9727"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aec9727",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aed0880",
+      "title": "PAX3-SIX2 muscle stem cell heterogeneity drives muscle-specific repair dynamics diversification",
+      "authors": [
+        "Virginia Zoglio",
+        "Sarah Chebouti",
+        "Fayez Issa",
+        "Théo Massard",
+        "Benjamin Polin",
+        "Sylvie Manin",
+        "Pascal Maire",
+        "Dawon Choi",
+        "Indigo T.C. Chan",
+        "Tom H. Cheung",
+        "Joana Esteves de Lima",
+        "Frederic Relaix"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaed0880",
+        "doi": "10.1126/sciadv.aed0880"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aed0880",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aed1961",
+      "title": "Endothelial C/EBPβ/AEP pathway drives vascular deterioration and systemic aging",
+      "authors": [
+        "Bowei Li",
+        "Shuke Nie",
+        "Mengmeng Wang",
+        "Jiawei An",
+        "Zhengjiang Qian",
+        "Xin Meng",
+        "Laura E. Edgington-Mitchell",
+        "Zhentao Zhang",
+        "Xifei Yang",
+        "Keqiang Ye"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaed1961",
+        "doi": "10.1126/sciadv.aed1961"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aed1961",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aed3711",
+      "title": "Diversity of electron-bifurcating CO 2 -fixing supercomplexes in methanogens",
+      "authors": [
+        "Pablo San Segundo-Acosta",
+        "Shunsuke Nomura",
+        "Joao Pedro Fernandes-Queiroz",
+        "Evgenii Protasov",
+        "Jörg Kahnt",
+        "Masanori Kaneko",
+        "Georg Hochberg",
+        "Seigo Shima",
+        "Bonnie J. Murphy"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaed3711",
+        "doi": "10.1126/sciadv.aed3711"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aed3711",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aed3966",
+      "title": "Dietary records in cosmopolitan copepod Calanus spp. revealed large contribution of dinoflagellates in subarctic Pacific",
+      "authors": [
+        "Hyuntae Choi",
+        "Bohyung Choi",
+        "Jee-Hoon Kim",
+        "Nayeon Park",
+        "Haemin Won",
+        "Jieun Kim",
+        "Jinyoung Jung",
+        "Youngju Lee",
+        "Eun Jin Yang",
+        "Min-Seob Kim",
+        "Wonseok Yang",
+        "Yeonjung Lee",
+        "Dong Han Choi",
+        "Jae Hoon Noh",
+        "Brian N. Popp",
+        "Kyung-Hoon Shin"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaed3966",
+        "doi": "10.1126/sciadv.aed3966"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aed3966",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aed5546",
+      "title": "Ultrahigh flow strength in shocked nanopolycrystalline diamond",
+      "authors": [
+        "Anirudh Hari",
+        "Kento Katagiri",
+        "Wanghui Li",
+        "Dorian P. Luccioni",
+        "Rayen Lin",
+        "Sophie E. Parsons",
+        "Zipeng Xu",
+        "Rohit Hari",
+        "Tharun Reddy",
+        "Ernest W. Cubit",
+        "Alexis Amouretti",
+        "Jon H. Eggert",
+        "Yuichi Inubushi",
+        "Tetsuo Irifune",
+        "Sara J. Irvine",
+        "Ryosuke Kodama",
+        "Michel Koenig",
+        "Laura Madril",
+        "Takeshi Matsuoka",
+        "Kohei Miyanishi",
+        "Hirotaka Nakamura",
+        "Norimasa Nishiyama",
+        "Takuo Okuchi",
+        "Masato Ota",
+        "Toshimori Sekine",
+        "Yusuke Seto",
+        "Toru Shinmei",
+        "Keiichi Sueda",
+        "Yoshinori Tange",
+        "Sota Takagi",
+        "Tadashi Togashi",
+        "Yuhei Umeda",
+        "Yifan Wang",
+        "Makina Yabashi",
+        "Toshinori Yabuuchi",
+        "Norimasa Ozaki",
+        "Leora E. Dresselhaus-Marais"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaed5546",
+        "doi": "10.1126/sciadv.aed5546"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aed5546",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aed5787",
+      "title": "A plagioclase-rich protocrust on Mars formed by magma ocean crystallization",
+      "authors": [
+        "Xue Wang",
+        "Yanhao Lin",
+        "Wim van Westrenen"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaed5787",
+        "doi": "10.1126/sciadv.aed5787"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aed5787",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aed8061",
+      "title": "Nonresonant SABRE provides an additional versatile hyperpolarization approach in magnetic resonance",
+      "authors": [
+        "Loren L. Smith",
+        "Warren S. Warren"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaed8061",
+        "doi": "10.1126/sciadv.aed8061"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aed8061",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aee4171",
+      "title": "Stratospheric wave predictability enhances surface forecasts over North America",
+      "authors": [
+        "Xiuyuan Ding",
+        "Baoqiang Xiang",
+        "Gang Chen",
+        "Liping Wang"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaee4171",
+        "doi": "10.1126/sciadv.aee4171"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aee4171",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aee5269",
+      "title": "Extremely low thermal conductivity in rigid layered hybrid perovskites",
+      "authors": [
+        "Ziqi Wang",
+        "Liang Yan",
+        "Ankit Negi",
+        "Qingxuan Wang",
+        "Zarif Ahmad Razin Bhuiyan",
+        "Xiaowei Zhong",
+        "Andrew H. Comstock",
+        "Subhrangsu Mukherjee",
+        "Yeonju Yu",
+        "Cong Yang",
+        "Aryan Jouneghaninaseri",
+        "Shehzad Khan",
+        "Tyler Wang",
+        "Saqlain Raza",
+        "Jun Hu",
+        "Yoji Nabei",
+        "Xiaokun Gu",
+        "Hezhu Shao",
+        "Mengxia Liu",
+        "Qing Tu",
+        "Harald Ade",
+        "Jun Zhou",
+        "Dali Sun",
+        "Wei You",
+        "Jun Liu"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaee5269",
+        "doi": "10.1126/sciadv.aee5269"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aee5269",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aee5421",
+      "title": "Secreted ORF8 reprograms macrophages to enhance SARS-CoV-2 infection of lung epithelial cells",
+      "authors": [
+        "Yusuke Matsui",
+        "Rahul K. Suryawanshi",
+        "Mauricio Montano",
+        "Taha Y. Taha",
+        "Mir M. Khalid",
+        "Limeng Sun",
+        "Kanika Khanna",
+        "Jin Tang",
+        "Yuan Zhou",
+        "Robyn M. Kaake",
+        "Xiaohui Fang",
+        "Mazharul Maishan",
+        "Michael A. Matthay",
+        "Nevan J. Krogan",
+        "Melanie Ott"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaee5421",
+        "doi": "10.1126/sciadv.aee5421"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aee5421",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aee6038",
+      "title": "Bidirectional optoelectronic switching in protein by photoinduced phase transition",
+      "authors": [
+        "Guangdong Zhou",
+        "Xiuxia Wang",
+        "Xuesen Xie",
+        "Ye Zhou",
+        "Bai Sun",
+        "Yang Chai"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaee6038",
+        "doi": "10.1126/sciadv.aee6038"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aee6038",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aee8251",
+      "title": "Epigenetic training licenses naïve CD8 + T cell metabolic fitness and function",
+      "authors": [
+        "Mengjie Lv",
+        "Jiyu Ding",
+        "Haizhen Long",
+        "Qian Chai",
+        "Lili Xu",
+        "Caiwei Jin",
+        "Wei Liang",
+        "Liwei Zhang",
+        "Bangmin Zhang",
+        "Zhihan Lv",
+        "Jicheng Zhao",
+        "Guohong Li",
+        "Mingzhao Zhu"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaee8251",
+        "doi": "10.1126/sciadv.aee8251"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aee8251",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aee8907",
+      "title": "Ultrafast laser-driven topological phase patterning",
+      "authors": [
+        "Jianyu Wu",
+        "Arthur Niedermayr",
+        "Gaolong Cao",
+        "Oscar Grånäs",
+        "Jonas Weissenrieder"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaee8907",
+        "doi": "10.1126/sciadv.aee8907"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aee8907",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aee9026",
+      "title": "Visualizing the barely detectable: Particle characteristics of the elusive aquatic gel phase in the northeastern subtropical Atlantic",
+      "authors": [
+        "Huanqing Huang",
+        "María Couret",
+        "Santiago Hernández-León",
+        "Alexander B. Bochdansky"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaee9026",
+        "doi": "10.1126/sciadv.aee9026"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aee9026",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef0431",
+      "title": "Spin effects in superfluidity, neutron matter, and neutron stars",
+      "authors": [
+        "Armen Sedrakian",
+        "Peter B. Rau"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef0431",
+        "doi": "10.1126/sciadv.aef0431"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef0431",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef1022",
+      "title": "Quantum coherent dynamics in allophycocyanin trimer complex",
+      "authors": [
+        "Tianrui Chen",
+        "Junhua Zhou",
+        "Dehao Yuan",
+        "Enhu He",
+        "Xiangmei Duan",
+        "Fulu Zheng",
+        "R. J. Dwayne Miller",
+        "Ajay Jha",
+        "Hong-Guang Duan"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef1022",
+        "doi": "10.1126/sciadv.aef1022"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef1022",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef2194",
+      "title": "Will there be a warning for the next pandemic?",
+      "authors": [
+        "Justin Lessler",
+        "C. Jessica E. Metcalf"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef2194",
+        "doi": "10.1126/sciadv.aef2194"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef2194",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef3031",
+      "title": "In situ–generated PdH x promotes electrochemical CO 2 conversion to CO",
+      "authors": [
+        "Yifan Zhang",
+        "Xiaoyuan Wang",
+        "Yu-Ling Zou",
+        "Yujing Xu",
+        "Xiaoju Yang",
+        "Linfeng Li",
+        "Li Zhang",
+        "Zhiming Wei",
+        "Yueming Zhai",
+        "Fu-Zhen Xuan",
+        "Wei Wang",
+        "Bowei Zhang",
+        "Xuan Yang"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef3031",
+        "doi": "10.1126/sciadv.aef3031"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef3031",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef3254",
+      "title": "Investigations of spin textures at small length and short timescales with neutron, x-ray, and optical methods",
+      "authors": [
+        "Peter Fischer",
+        "Collin Broholm",
+        "Charles C. Tam",
+        "Stephen D. Wilson",
+        "Theo Rasing",
+        "Alexey V. Kimel"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef3254",
+        "doi": "10.1126/sciadv.aef3254"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef3254",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef3538",
+      "title": "A suite of fluorescent timers for visualizing protein spatiotemporal dynamics in plants",
+      "authors": [
+        "Yukihiro Nagashima",
+        "Xin Qiao",
+        "Suji Ye",
+        "Qiaochu Shen",
+        "Jun Liu",
+        "Delui Liu",
+        "Fausto Andrés Ortiz-Morea",
+        "Xue Ding",
+        "Vinita Sharma",
+        "Juan Dong",
+        "Libo Shan",
+        "Hisashi Koiwa"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef3538",
+        "doi": "10.1126/sciadv.aef3538"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef3538",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef4949",
+      "title": "Symmetry-based pulsed DNP and EPR sequences",
+      "authors": [
+        "Zhenfeng Pang",
+        "Giuseppe Sicoli",
+        "Benoit Driesschaert",
+        "Jean-Paul Amoureux",
+        "Hervé Vezin",
+        "Kong Ooi Tan"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef4949",
+        "doi": "10.1126/sciadv.aef4949"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef4949",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef5358",
+      "title": "Thalamic modulation of cortical linearity across arousal states",
+      "authors": [
+        "Eli J. Müller",
+        "Brandon R. Munn",
+        "Giulia Baracchini",
+        "Ben D. Fulcher",
+        "Vicente Medel",
+        "Michelle J. Redinbaugh",
+        "Yuri B. Saalmann",
+        "Jordan J. Wehrman",
+        "Robert D. Sanders",
+        "Bingni W. Brunton",
+        "Steven L. Brunton",
+        "James M. Shine"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef5358",
+        "doi": "10.1126/sciadv.aef5358"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef5358",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef5691",
+      "title": "A global decline in atmospheric dust during the 21st century",
+      "authors": [
+        "Ashok Kumar Gupta",
+        "Jasper F. Kok",
+        "Vassilis Amiridis",
+        "Antonis Gkikas",
+        "Konstantinos Rizos",
+        "Emmanouil Proestakis",
+        "Stavros-Andreas Logothetis",
+        "Eleni Marinou",
+        "Carlos Pérez García-Pando"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef5691",
+        "doi": "10.1126/sciadv.aef5691"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef5691",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef6546",
+      "title": "An automated high-resolution screening platform identifies regulators of anchor cell invasion in C. elegans",
+      "authors": [
+        "Simon Berger",
+        "Silvan Spiri",
+        "Evelyn Lattmann",
+        "Stefanie Engleitner",
+        "Mitchell P. Levesque",
+        "Andrew deMello",
+        "Alex Hajnal"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef6546",
+        "doi": "10.1126/sciadv.aef6546"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef6546",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef6686",
+      "title": "Direct spectroscopic observation of matter falling onto a compact stellar object",
+      "authors": [
+        "Roi Rahin",
+        "Ralf Ballhausen",
+        "Nazma Islam",
+        "Maurice A. Leutenegger",
+        "Ehud Behar",
+        "Daisy Zamora",
+        "Joel Coley",
+        "Natalie Hell",
+        "Tim Kallman",
+        "Maximilian Lorenz",
+        "Pragati Pradhan",
+        "Joern Wilms",
+        "Aafia Zainab"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef6686",
+        "doi": "10.1126/sciadv.aef6686"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef6686",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef6767",
+      "title": "Rejuvenating endogenous antitumor immunity via a chimeric receptor-engineered oncolytic virus targeting tumor-associated macrophages",
+      "authors": [
+        "Chaolong Lin",
+        "Shaopeng Li",
+        "Rui Lou",
+        "Wenzhong Teng",
+        "Yang Tian",
+        "Chenxi Feng",
+        "Naizhen Wang",
+        "Yipeng Rao",
+        "Yaning Qin",
+        "Lu Li",
+        "Xiaoxuan Huang",
+        "Yisen Lin",
+        "Jun Zhang",
+        "Ningshao Xia",
+        "Chenghao Huang"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef6767",
+        "doi": "10.1126/sciadv.aef6767"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef6767",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef7347",
+      "title": "Aliphatic chains as physical realizations of one-dimensional spin chains supporting magnetically silent spin waves",
+      "authors": [
+        "Kirill F. Sheberstov"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef7347",
+        "doi": "10.1126/sciadv.aef7347"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef7347",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef7492",
+      "title": "Real-time, cross-modal genotype mapping of free-moving Drosophila larvae via simultaneous mechano-electrophysiological recording",
+      "authors": [
+        "Kairu Dong",
+        "Hao Song",
+        "Qianhui Zhao",
+        "Zhiying Song",
+        "Fu Lv",
+        "Siouwen Wan",
+        "Tianyu Zheng",
+        "Yunlong Fan",
+        "Wen-Che Liu",
+        "Shaomin Zhang",
+        "Yongjun Wu",
+        "Yuhui Huang",
+        "Jizhou Song",
+        "Zhefeng Gong",
+        "Nenggan Zheng",
+        "Kewang Nan"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef7492",
+        "doi": "10.1126/sciadv.aef7492"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef7492",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef7756",
+      "title": "Systems biology framework for the rational design of operational conditions for in vitro/in vivo translation of tissue models",
+      "authors": [
+        "Jose L. Cadavid",
+        "Nikolaos Meimetis",
+        "Tyler Matsuzaki",
+        "Erin N. Tevonian",
+        "Linda G. Griffith",
+        "Douglas A. Lauffenburger"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef7756",
+        "doi": "10.1126/sciadv.aef7756"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef7756",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aef9030",
+      "title": "Universal synthesis of high-entropy alloy nanostructures with femtosecond lasers",
+      "authors": [
+        "Zikang Su",
+        "Lan Jiang",
+        "Yiheng Dai",
+        "Shilong Yuan",
+        "Xianze Zhang",
+        "Haozhe Gai",
+        "Xingdong Wang",
+        "Jihan Zhou",
+        "Xueqiang Zhang"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaef9030",
+        "doi": "10.1126/sciadv.aef9030"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aef9030",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg0169",
+      "title": "EPR spectroscopy 80 years after its discovery",
+      "authors": [
+        "Daniella Goldfarb",
+        "Gunnar Jeschke",
+        "Eric J. L. McInnes",
+        "Thomas Prisner",
+        "Olav Schiemann",
+        "Stefan Stoll"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg0169",
+        "doi": "10.1126/sciadv.aeg0169"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg0169",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg0779",
+      "title": "Maternal-fetal immune conflict contributes to male-specific impairments in a mouse model of neurodevelopmental disorders",
+      "authors": [
+        "Irene Sanchez-Martin",
+        "Bharti Kukreja",
+        "Paige Henderson",
+        "Qianyu Lin",
+        "Daniel DiMartino",
+        "Valerie Bagan",
+        "Justin Park",
+        "Brian T. Kalish",
+        "Lucas Cheadle"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg0779",
+        "doi": "10.1126/sciadv.aeg0779"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg0779",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg0974",
+      "title": "Magnetic resonance searches for Earth-sourced exotic nuclear spin–dependent interactions",
+      "authors": [
+        "Yuanhong Wang",
+        "Xingming Huang",
+        "Jiaxi Li",
+        "Wenzhong Wang",
+        "Xiang Kang",
+        "Yuanxing Liu",
+        "Lei Cong",
+        "Dmitry Budker",
+        "Min Jiang",
+        "Xinhua Peng"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg0974",
+        "doi": "10.1126/sciadv.aeg0974"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg0974",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg1490",
+      "title": "One-third of global lake nitrous oxide emissions are concentrated in the northern temperate zone (40°N–50°N)",
+      "authors": [
+        "Yujie Zhou",
+        "Jilin Huang",
+        "Yang Gao",
+        "Qingsong Jiang",
+        "Yue Qin",
+        "Zhen Wu",
+        "Yong Liu"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg1490",
+        "doi": "10.1126/sciadv.aeg1490"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg1490",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg2521",
+      "title": "Kinetic hindrance of phase transformations in dense MgSiO 3 polymorphs under shock compression",
+      "authors": [
+        "Sota Takagi",
+        "Donghoon Kim",
+        "Yingwei Fei",
+        "Sally June Tracy"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg2521",
+        "doi": "10.1126/sciadv.aeg2521"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg2521",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg3206",
+      "title": "Amine-rich cross-linking templates enabling toughened self-assembled monolayer for stable perovskite solar modules",
+      "authors": [
+        "Zhinan Zhang",
+        "Sifan Chen",
+        "Chuan Peng",
+        "Yinghao Xu",
+        "Shaofu Wang",
+        "Wenbo Li",
+        "Yang Zheng",
+        "Wei Wang",
+        "Shengjie Du",
+        "Fuyi Zhou",
+        "Haimeng Xin",
+        "Sixiong Li",
+        "Xingzhong Zhao",
+        "Ti Wang",
+        "Zhenyi Ni",
+        "Zhenhua Yu"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg3206",
+        "doi": "10.1126/sciadv.aeg3206"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg3206",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg3937",
+      "title": "Additive manufacturing–facilitated blow molding for functional thin-walled polymeric structures",
+      "authors": [
+        "Junyu Chen",
+        "Dotan Ilssar",
+        "Dennis M. Kochmann"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg3937",
+        "doi": "10.1126/sciadv.aeg3937"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg3937",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg4913",
+      "title": "Divergent drainage-scale responses to lithological heterogeneity",
+      "authors": [
+        "Yifei Li",
+        "Huiping Zhang",
+        "Xudong Zhao",
+        "Mikael Attal",
+        "Simon M. Mudd",
+        "Peizhen Zhang"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg4913",
+        "doi": "10.1126/sciadv.aeg4913"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg4913",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg5281",
+      "title": "Human cardiac measurements with diamond magnetometers",
+      "authors": [
+        "Muhib Omar",
+        "Magnus Benke",
+        "Shaowen Zhang",
+        "Jixing Zhang",
+        "Yihua Wang",
+        "Michael Kuebler",
+        "Pouya Sharbati",
+        "Ara Rahimpour",
+        "Arno Gück",
+        "Maryna Kapitonova",
+        "Devyani Kadam",
+        "Carlos René Izquierdo Geiser",
+        "Jens Haller",
+        "Arno Trautmann",
+        "Katharina Jag-Lauber",
+        "Robert Rölver",
+        "Thanh-Duc Nguyen",
+        "Leonardo Gizzi",
+        "Michelle Schweizer",
+        "Mena Abdelsayed",
+        "Ingo Wickenbrock",
+        "Andrew M. Edmonds",
+        "Matthew Markham",
+        "Peter A. Koss",
+        "Oliver Schnell",
+        "Ulrich G. Hofmann",
+        "Tonio Ball",
+        "Jürgen Beck",
+        "Dmitry Budker",
+        "Joerg Wrachtrup",
+        "Arne Wickenbrock"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg5281",
+        "doi": "10.1126/sciadv.aeg5281"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg5281",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg5510",
+      "title": "Serpin-driven green camouflage and NIR fluorescence in frogs",
+      "authors": [
+        "Ravichandran Vignesh",
+        "Tri Vu",
+        "Grace Harvey",
+        "Luca Menozzi",
+        "Jesse Delia",
+        "William White",
+        "Pohan Lin",
+        "Erini Galatis",
+        "Sönke Johnsen",
+        "Junjie Yao",
+        "Carlos Taboada"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg5510",
+        "doi": "10.1126/sciadv.aeg5510"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg5510",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg6021",
+      "title": "Jupiter’s brightest auroras are powered by locally generated Alfvén waves",
+      "authors": [
+        "Ali H. Sulaiman",
+        "Barry H. Mauk",
+        "Robert L. Lysak",
+        "Nicholas S. Kruegler",
+        "Yash Sarkango",
+        "Jamey R. Szalay",
+        "Scott J. Bolton",
+        "George Clark",
+        "Peter A. Damiano",
+        "Wondwossen W. Eshetu",
+        "Sadie S. Elliott",
+        "William S. Kurth",
+        "Evan A. Skinner"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg6021",
+        "doi": "10.1126/sciadv.aeg6021"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg6021",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg6398",
+      "title": "Cobalt-mediated suppression of IFN-γ–JAK–STAT1 signaling reprograms IDO1-driven immunosuppression for metalloimmunotherapy",
+      "authors": [
+        "Tianyi Jiang",
+        "Xiaowan Huang",
+        "Zhixin Wu",
+        "Gulinaizaier Abudusaimaiti",
+        "Yang Song",
+        "Hongtao Duan",
+        "Yuping Zhou",
+        "Yaoxu Chen",
+        "Sitong Du",
+        "Hao Zhang",
+        "Jieying Qian",
+        "Yunjiao Zhang"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg6398",
+        "doi": "10.1126/sciadv.aeg6398"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg6398",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg6581",
+      "title": "Concurrent excitation and detection in magnetic resonance using voltage-controlled oscillators",
+      "authors": [
+        "Zhibin Zhao",
+        "Michal Kern",
+        "Weiyi Zhang",
+        "Qing Yang",
+        "Katja Drerup",
+        "Felix Schuderer",
+        "Samuel Wazynski",
+        "Bernhard Blümich",
+        "Klaus Lips",
+        "Klaus Scheffler",
+        "Jens Anders"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg6581",
+        "doi": "10.1126/sciadv.aeg6581"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg6581",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg6766",
+      "title": "Magnetic resonance imaging",
+      "authors": [
+        "Bernhard Blümich",
+        "Nicolas Boulant",
+        "Michael Garwood",
+        "David Parker",
+        "Nicola Rogers",
+        "Daniel Topgaard",
+        "Kamil Uğurbil"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg6766",
+        "doi": "10.1126/sciadv.aeg6766"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg6766",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg7503",
+      "title": "Mitigating aviation’s environmental impact through alternative fuels and cleaner engines",
+      "authors": [
+        "Rebecca Dischl",
+        "Daniel Sauer",
+        "Christiane Voigt",
+        "Raphael Märkl",
+        "Gregor Neumann",
+        "Tiziana Bräuer",
+        "Theresa Harlaß",
+        "Stefan Kaufmann",
+        "Monika Scheibe",
+        "Anke Roiger",
+        "Katharina Seeliger",
+        "Charles Renard",
+        "Amandine Roche",
+        "Georg Eckel"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg7503",
+        "doi": "10.1126/sciadv.aeg7503"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg7503",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg7753",
+      "title": "Multiple quantum 19 F electron-nuclear double resonance (ENDOR) for distance measurements with multifluorinated spin probes",
+      "authors": [
+        "Sergei Kuzin",
+        "Lucca Sielaff",
+        "Karoline Goldschmidt",
+        "Marina Bennati"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg7753",
+        "doi": "10.1126/sciadv.aeg7753"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg7753",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg8187",
+      "title": "A compact, wireless fluorimeter system for continuous, real-time monitoring of tissue perfusion via in vivo fluorescence signals",
+      "authors": [
+        "Tae Wan Park",
+        "Haohui Zhang",
+        "Chanho Park",
+        "Seth D. Goldstein",
+        "Lindsey Wade",
+        "Eric Rytkin",
+        "Alicia J. McLuckie",
+        "Yalcin Kulahci",
+        "Ramu Janarthanan",
+        "Tae Yeon Kim",
+        "Min-Seung Jo",
+        "Bedreddin Sazoglu",
+        "Zeynep Demir",
+        "Omer Dirican",
+        "Fatma Esra Demir",
+        "Woo-Youl Maeng",
+        "Seonggwang Yoo",
+        "Peter Saba",
+        "Kaiqing Zhang",
+        "Hak-Young Ahn",
+        "Jong Uk Kim",
+        "Jamin Lee",
+        "Anthony Banks",
+        "Seyong Oh",
+        "Kyeongha Kwon",
+        "Alan Nugent",
+        "Igor R. Efimov",
+        "Vijay S. Gorantla",
+        "Andrew Pelech",
+        "Yonggang Huang",
+        "John A. Rogers"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg8187",
+        "doi": "10.1126/sciadv.aeg8187"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg8187",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg8394",
+      "title": "Microwave diffractive neural network chips for sensing and computing",
+      "authors": [
+        "Lei Chen",
+        "Qian Wen Wu",
+        "Ze Gu",
+        "Qian Ma",
+        "Lei Xiao",
+        "Zhao Tian",
+        "Wen Qi Su",
+        "Hao Yang Cui",
+        "Jian Wei You",
+        "Tie Jun Cui"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg8394",
+        "doi": "10.1126/sciadv.aeg8394"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg8394",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg8564",
+      "title": "Topology, imaging, and emergent phenomena of spin textures",
+      "authors": [
+        "Achim Rosch",
+        "Christian Pfleiderer",
+        "Manfred Fiebig",
+        "Xiuzhen Yu",
+        "Yoshinori Tokura",
+        "Naoto Nagaosa"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg8564",
+        "doi": "10.1126/sciadv.aeg8564"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg8564",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeg9893",
+      "title": "Viscoelastic nanomechanical devices for neuromorphic information processing",
+      "authors": [
+        "Peter F. Satterthwaite",
+        "Sarah O. Spector",
+        "Maxwell Conte",
+        "Teddy Hsieh",
+        "Eduard O. Bobylev",
+        "Srinidhi Venkatesh",
+        "Jeremiah A. Johnson",
+        "Farnaz Niroui"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeg9893",
+        "doi": "10.1126/sciadv.aeg9893"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeg9893",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh0227",
+      "title": "Ubiquitin receptor–mediated, ubiquitin-independent targeted protein degradation via 26 S proteasomes",
+      "authors": [
+        "Seh Hoon Park",
+        "Yejin Jang",
+        "Soo-Yeon Lee",
+        "Eunseo Kim",
+        "Dawon Jeong",
+        "Insuk Byun",
+        "Jiseong Kim",
+        "Jisoo Yang",
+        "Chang-Han Lee",
+        "Dohyun Han",
+        "Jae-Hwan Nam",
+        "Min Jae Lee"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh0227",
+        "doi": "10.1126/sciadv.aeh0227"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh0227",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh0260",
+      "title": "Multiomics profiling identifies molecular and cellular signatures of regular exercise in human peripheral blood",
+      "authors": [
+        "Xuemei Song",
+        "Jingzhi Lv",
+        "Siliang Ge",
+        "Sihan Xu",
+        "Yisha Wu",
+        "Yuhui Zheng",
+        "Wenwen Zhou",
+        "Lifeng Li",
+        "Yan Zhang",
+        "Jiaqiang Zhang",
+        "Zhen-xia Chen",
+        "Peng Gao",
+        "Pengbin Yin",
+        "Jianhua Yin",
+        "Chuanyu Liu"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh0260",
+        "doi": "10.1126/sciadv.aeh0260"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh0260",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh1411",
+      "title": "Altermagnetic spin textures: Emergent electrodynamics, quantum geometry, and probes",
+      "authors": [
+        "Constantin Schrade",
+        "Mathias S. Scheurer"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh1411",
+        "doi": "10.1126/sciadv.aeh1411"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh1411",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh1752",
+      "title": "Proportional limb strengths signal an adaptive shift in arboreality in early human evolution",
+      "authors": [
+        "Kristian J. Carlson",
+        "Christopher B. Ruff",
+        "M. Loring Burgess",
+        "Adam D. Sylvester",
+        "Tea Jashashvili",
+        "Jason L. Heaton",
+        "Travis R. Pickering",
+        "Lauren Sarringhaus",
+        "Timothy M. Ryan",
+        "Amélie Beaudet",
+        "Robin H. Crompton",
+        "A. J. Heile",
+        "Dominic Stratford",
+        "Kathleen Kuman",
+        "David Lordkipanidze",
+        "Ronald J. Clarke"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh1752",
+        "doi": "10.1126/sciadv.aeh1752"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh1752",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh1978",
+      "title": "Optimal control of spin systems",
+      "authors": [
+        "Steffen J. Glaser",
+        "Christiane Koch",
+        "Niels Chr. Nielsen",
+        "Dominique Sugny",
+        "Dieter Suter"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh1978",
+        "doi": "10.1126/sciadv.aeh1978"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh1978",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh1991",
+      "title": "Spin in quantum chromodynamics",
+      "authors": [
+        "Abhay Deshpande",
+        "Dmitri E. Kharzeev",
+        "Jinfeng Liao"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh1991",
+        "doi": "10.1126/sciadv.aeh1991"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh1991",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh2779",
+      "title": "Geometry-controlled instability pathway selection in elastic helices enables fast, efficient robotic locomotion",
+      "authors": [
+        "Dezhong Tong",
+        "Jiaqi Wang",
+        "Zexiong Chen",
+        "Andy Borum",
+        "Weicheng Huang",
+        "Xiaonan Huang",
+        "M. Khalid Jawed"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh2779",
+        "doi": "10.1126/sciadv.aeh2779"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh2779",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh2967",
+      "title": "Applied spintronics: From spin transport to spin-charge interconversion and emerging devices",
+      "authors": [
+        "Manuel Bibes",
+        "Olena Gomonay",
+        "Timo Kuschel",
+        "Jairo Sinova",
+        "Mathias Weiler",
+        "Shunsuke Fukami",
+        "Mathias Kläui"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh2967",
+        "doi": "10.1126/sciadv.aeh2967"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh2967",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh4467",
+      "title": "In situ learning-based spin engineering of pulsed dynamic nuclear polarization",
+      "authors": [
+        "Filip V. Jensen",
+        "José P. Carvalho",
+        "Nino Wili",
+        "Asbjørn Holk Thomsen",
+        "David L. Goodwin",
+        "Lukas Trottner",
+        "Claudia Strauch",
+        "Anders Bodholt Nielsen",
+        "Niels Chr. Nielsen"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh4467",
+        "doi": "10.1126/sciadv.aeh4467"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh4467",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh4592",
+      "title": "Wafer-scale 2D semimetal heterostructures enabling mid-infrared motion tracking with in-sensor perceptual compression",
+      "authors": [
+        "Xue Li",
+        "Tianyue Wang",
+        "Dongyang Wu",
+        "Di Wu",
+        "Pei Lin",
+        "Wenxiao Wang",
+        "Haiyan Wang",
+        "Xinjian Li",
+        "Yuen Hong Tsang",
+        "Shu Ping Lau",
+        "Jiewei Chen",
+        "Longhui Zeng"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh4592",
+        "doi": "10.1126/sciadv.aeh4592"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh4592",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh4755",
+      "title": "Functional diversity of natural human IFNB1 variants in innate immunity",
+      "authors": [
+        "Samira Schiefer",
+        "David Jones",
+        "Florence Kwaschik",
+        "Benjamin G. Hale"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh4755",
+        "doi": "10.1126/sciadv.aeh4755"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh4755",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh5112",
+      "title": "Ultrabright NIR-II fluorophores enabled by noncovalent conformational locking for in vivo inflammation imaging",
+      "authors": [
+        "Xiaofei Miao",
+        "Mingxuan Jia",
+        "Weiyun Yao",
+        "Ruizhe Chen",
+        "Xiaomei Lu",
+        "Zizi Wu",
+        "Wenbo Hu",
+        "Quli Fan"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh5112",
+        "doi": "10.1126/sciadv.aeh5112"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh5112",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh5401",
+      "title": "Direct visualization of interfacial defect effects on polarization switching in BaTiO 3 tunnel junctions",
+      "authors": [
+        "Jeehun Jeong",
+        "Jinho Byun",
+        "Xiaoshan Xu",
+        "Alexei Gruverman",
+        "Jaekwang Lee",
+        "Sang Ho Oh"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh5401",
+        "doi": "10.1126/sciadv.aeh5401"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh5401",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh6139",
+      "title": "One hundred years of spin: Fundamental physics, dark matter, exotic interactions, and all that",
+      "authors": [
+        "Dmitry Budker",
+        "Tim Chupp",
+        "Klaus Kirch",
+        "W. Mike Snow"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh6139",
+        "doi": "10.1126/sciadv.aeh6139"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh6139",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh6203",
+      "title": "Gas-permeable and stretchable nanoscale anisotropic conductive film for room-temperature, pressure-free interconnections",
+      "authors": [
+        "Shumpei Katayama",
+        "Lulu Sun",
+        "Tomoki Shigehara",
+        "Daishi Inoue",
+        "Daisuke Hashizume",
+        "Shinjiro Umezu",
+        "Kenjiro Fukuda",
+        "Sunghoon Lee",
+        "Takao Someya"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh6203",
+        "doi": "10.1126/sciadv.aeh6203"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh6203",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh7029",
+      "title": "A built-in brake for plant immunity: Resistance (R) protein–mediated immunity is fine-tuned by R gene analogs",
+      "authors": [
+        "Jiahui Nie",
+        "Lang Liu",
+        "Yetong Qi",
+        "Chengyu Zhu",
+        "Zeng Liu",
+        "Xinya Wu",
+        "Jing Zhou",
+        "Jie Wu",
+        "Meng Xu",
+        "Hongjun Li",
+        "Xinyuan Sun",
+        "Mingshuo Fan",
+        "Ruimin Yu",
+        "Huishan Qiu",
+        "Qingguo Sun",
+        "Shengxuan Liu",
+        "Paul R. J. Birch",
+        "Zhendong Tian"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh7029",
+        "doi": "10.1126/sciadv.aeh7029"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh7029",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh7812",
+      "title": "A new 222-m diameter lunar crater",
+      "authors": [
+        "Mark S. Robinson",
+        "Aaron K. Boyd",
+        "Prasun Mahanti",
+        "Madeleine R. Manheim",
+        "Emerson J. Speyerer",
+        "Julie D. Stopar",
+        "Robert V. Wagner"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh7812",
+        "doi": "10.1126/sciadv.aeh7812"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh7812",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh8258",
+      "title": "GTPase cycle and ER membrane regulate cargo handover during cotranslational protein targeting",
+      "authors": [
+        "Ruilin Qian",
+        "Radoslaw J. Gora",
+        "SangYoon Chung",
+        "Jae Ho Lee",
+        "Sowmya Chandrasekar",
+        "Max Feng-Yu Wang",
+        "Shimon Weiss",
+        "Shu-ou Shan"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh8258",
+        "doi": "10.1126/sciadv.aeh8258"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh8258",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aeh9568",
+      "title": "New lunar crater reveals extensive distal regolith modification",
+      "authors": [
+        "Tyler M. Powell",
+        "Benjamin T. Greenhagen",
+        "Tyler Horvath",
+        "Jean-Pierre Williams",
+        "Elisha Jhoti",
+        "Emerson J. Speyerer",
+        "Catherine M. Elder",
+        "David A. Paige"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaeh9568",
+        "doi": "10.1126/sciadv.aeh9568"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aeh9568",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aei0638",
+      "title": "Renal-clearable fluorescent probe for early detection of pancreatic cancer in living murine models",
+      "authors": [
+        "Minrong Huang",
+        "Zhe Zhou",
+        "Tong Zhang",
+        "Xiaofeng Xia",
+        "Wei Chen",
+        "Erfei Wang",
+        "Feiyi Wang",
+        "Jun Ren"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaei0638",
+        "doi": "10.1126/sciadv.aei0638"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aei0638",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aei0972",
+      "title": "Structural principles underlying the evolution of SWI/SNF chromatin remodelers",
+      "authors": [
+        "Shengsheng Ma",
+        "Mingdong Liu",
+        "Wancheng Xu",
+        "Quanmeng Wang",
+        "Xiaoman Wang",
+        "Yaoguang Huang",
+        "Muchun Li",
+        "Chihang Li",
+        "Qing-Tao Shen",
+        "Yong Chen"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaei0972",
+        "doi": "10.1126/sciadv.aei0972"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aei0972",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aei6187",
+      "title": "High-frequency dynamic nuclear polarization in rotating solids",
+      "authors": [
+        "Ravi Shankar Palani",
+        "Richard J. Temkin",
+        "Robert G. Griffin"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaei6187",
+        "doi": "10.1126/sciadv.aei6187"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aei6187",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aei6934",
+      "title": "Microbiota-derived indole limits Campylobacter jejuni colonization by inhibiting respiration and metabolism",
+      "authors": [
+        "Ritam Sinha",
+        "Barsha Bhattarai",
+        "Cristina Kraemer Zimpel",
+        "Elizabeth Ottosen",
+        "Rhiannon M. LeVeque",
+        "Pallavi Singh",
+        "Victor J. DiRita"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaei6934",
+        "doi": "10.1126/sciadv.aei6934"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aei6934",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aei7742",
+      "title": "Fentanyl purity and overdose decline: A reexamination of geographic trends",
+      "authors": [
+        "Nabarun Dasgupta",
+        "Adams Sibley",
+        "Paula Gildner",
+        "Katherine Gora Combs",
+        "Lori A. Post",
+        "Sam Tobias",
+        "Alex H. Kral",
+        "Rosalie Liccardo Pacula"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaei7742",
+        "doi": "10.1126/sciadv.aei7742"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aei7742",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aei8554",
+      "title": "Broadband backscattering confocal microscopy enables label-free 3D live cell nanoscale sensitive imaging",
+      "authors": [
+        "Mark F. Coughlan",
+        "Lei Zhang",
+        "Rebecca T. Perelman",
+        "Umar Khan",
+        "Xuejun Zhang",
+        "Paul K. Upputuri",
+        "Yuri N. Zakharov",
+        "Le Qiu",
+        "Lev T. Perelman"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaei8554",
+        "doi": "10.1126/sciadv.aei8554"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aei8554",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aej0175",
+      "title": "Dipole–dipole interaction facilitates anion-rich solvation structures in polymer electrolytes for solid-state lithium metal batteries",
+      "authors": [
+        "Zong-Yao Shuang",
+        "Chen-Zi Zhao",
+        "Xue-Yan Huang",
+        "Yu-Chen Gao",
+        "Pan Xu",
+        "Fang Fu",
+        "Young Oh",
+        "Wei-Jin Kong",
+        "Wen-Ze Huang",
+        "Yong-Feng Li",
+        "Zi-You Wang",
+        "Zi-Xuan Wang",
+        "Xiang Chen",
+        "Chen Ling",
+        "Jia-Qi Huang",
+        "Qiang Zhang"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaej0175",
+        "doi": "10.1126/sciadv.aej0175"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aej0175",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aej0852",
+      "title": "Pseudotime uncovers restructuring dynamics and mitigators of metal catalyst deactivation",
+      "authors": [
+        "Wenhao Yuan",
+        "Zhilong Wang",
+        "Fengqi You"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaej0852",
+        "doi": "10.1126/sciadv.aej0852"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aej0852",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aek5988",
+      "title": "Wired for life: Intracellular electron nanowires help methane-producing microbes grow",
+      "authors": [
+        "Sibel Ebru Yalcin",
+        "Nikhil S. Malvankar"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaek5988",
+        "doi": "10.1126/sciadv.aek5988"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aek5988",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.ael7019",
+      "title": "Erratum for the Research Article “Intratumoral delivery of CCL25 enhances immunotherapy against triple-negative breast cancer by recruiting CCR9 + T cells” by H. Chen et al .",
+      "authors": [],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eael7019",
+        "doi": "10.1126/sciadv.ael7019"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.ael7019",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aem0112",
+      "title": "Erratum for the Research Article, “Wireless, skin-interfaced multimodal sensing system for continuous psychophysiological monitoring—A wearable polygraph device” by S.H. Kim et al .",
+      "authors": [],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaem0112",
+        "doi": "10.1126/sciadv.aem0112"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aem0112",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aem0114",
+      "title": "Erratum for the Research Article, “Coinhibition of topoisomerase 1 and BRD4-mediated pause release selectively kills pancreatic cancer via readthrough transcription” by D. Cameron et al .",
+      "authors": [],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaem0114",
+        "doi": "10.1126/sciadv.aem0114"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aem0114",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aem0444",
+      "title": "The next century of spin",
+      "authors": [
+        "Ilya Kuprov",
+        "Warren S. Warren"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaem0444",
+        "doi": "10.1126/sciadv.aem0444"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aem0444",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/sciadv.aem1185",
+      "title": "Retraction",
+      "authors": [
+        "H. Holden Thorp"
+      ],
+      "date": "2026-09-18",
+      "datePrecision": "unknown",
+      "journal": "Science Advances",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "38",
+        "pages": "",
+        "articleNumber": "eaem1185",
+        "doi": "10.1126/sciadv.aem1185"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/sciadv.aem1185",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-15",
+        "to": "2026-09-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
