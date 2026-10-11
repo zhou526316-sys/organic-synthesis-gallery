@@ -14,7 +14,6 @@ import { store } from './user-ui/shared';
 import { PublishedCatalogClient, loadPublishedHotFallback } from '../architecture/published-reader.mjs';
 import {
   fetchLiteratureCatalogView,
-  literatureCatalogIndexedReadActive,
   type LiteratureCatalogViewRequest,
 } from './literature-catalog-view';
 
@@ -296,7 +295,6 @@ function schedulePdfVaultCardsRefresh(container: HTMLElement, lang: Language): v
 
 let resultWindowPage = 1;
 let lastResultWindowSize = resultWindowSize();
-let indexedViewCapability: boolean | null = null;
 let indexedSearchPending = false;
 let indexedSearchRequest: AbortController | null = null;
 let searchInputStartedAt = 0;
@@ -1934,11 +1932,13 @@ async function loadIndexedViewPage(
   const requestKey = indexedViewRequestKey(request);
   const requestAt = performance.now();
   const response = await fetchLiteratureCatalogView(request, signal);
-  const requestElapsed = Math.round(performance.now() - requestAt);
+  const apiElapsed = Math.round(performance.now() - requestAt);
+  const resolveAt = performance.now();
   if (serial !== architectureRefreshSerial && page === 1) return false;
   if (page > 1 && serial !== indexedViewSerial) return false;
   if (architectureClient !== client) return false;
-  const indexedPapers = normalizeArchitectureRows(await client.resolveIndexed(response.items));
+  const indexedPapers = normalizeArchitectureRows(await client.resolveIndexed(response.items, signal));
+  const shardElapsed = Math.round(performance.now() - resolveAt);
   // Static content-addressed shard resolution can still be pending after the
   // API returned. Guard this await too, not just the network response.
   if (signal?.aborted || (page === 1 && serial !== architectureRefreshSerial)
@@ -1968,7 +1968,9 @@ async function loadIndexedViewPage(
   mount();
   // Read-only timing probes for browser perf regressions: do not include DOI,
   // title, query or user information in these document attributes.
-  document.documentElement.dataset.catalogSearchNetworkMs = String(requestElapsed);
+  document.documentElement.dataset.catalogSearchNetworkMs = String(Math.round(performance.now() - requestAt));
+  document.documentElement.dataset.catalogSearchApiMs = String(apiElapsed);
+  document.documentElement.dataset.catalogSearchShardMs = String(shardElapsed);
   if (searchInputStartedAt > 0)
     document.documentElement.dataset.catalogSearchTotalMs = String(Math.round(performance.now() - searchInputStartedAt));
   return true;
@@ -1995,27 +1997,17 @@ function scheduleIndexedViewRecovery(serial: number, request: LiteratureCatalogV
 async function tryIndexedArchitectureView(serial: number): Promise<boolean> {
   const request = indexedViewRequest('');
   if (!request) return false;
-  if (indexedViewCapability !== true) {
-    // A failed health request and a genuinely disabled feature are both
-    // non-definitive for discovery; a later user query may check again.
-    const available = await literatureCatalogIndexedReadActive();
-    if (serial !== architectureRefreshSerial) return false;
-    indexedViewCapability = available ? true : null;
-    document.documentElement.dataset.catalogIndexCapability = available ? 'active' : 'degraded';
-    if (!available) {
-      indexedViewDegraded = true;
-      indexedSearchPending = false;
-      scheduleIndexedViewRecovery(serial, request);
-      return false;
-    }
-  }
+  // Query the DOI/revision-bound endpoint directly. A separate healthcheck
+  // adds an unnecessary serial network round trip and can fail even when the
+  // actual search API is healthy. Response validation is the capability check.
   const pending = new AbortController();
   indexedSearchRequest = pending;
   try {
-    return await loadIndexedViewPage(serial, request, 1, [''], pending.signal);
+    const loaded = await loadIndexedViewPage(serial, request, 1, [''], pending.signal);
+    if (loaded) document.documentElement.dataset.catalogIndexCapability = 'active';
+    return loaded;
   } catch (error) {
     if (pending.signal.aborted || serial !== architectureRefreshSerial) return false;
-    indexedViewCapability = null;
     indexedViewState = null;
     indexedViewDegraded = true;
     indexedSearchPending = false;
