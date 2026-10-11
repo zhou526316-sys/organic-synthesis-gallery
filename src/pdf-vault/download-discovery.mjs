@@ -52,13 +52,19 @@ export function resetDownloadedIndex(scope) {
 
 async function collectFiles(directory, assertCurrent) {
   const entries = [];
-  let overflow = false;
+  let overflow = false, visited = 0;
+  const started = Date.now();
   const walk = async (handle, depth, prefix) => {
     for await (const entry of handle.values()) {
       assertCurrent();
-      if (entries.length >= MAX_ENTRIES) { overflow = true; return; }
+      visited += 1;
+      if (entries.length >= MAX_ENTRIES || visited > MAX_ENTRIES * 4 ||
+          Date.now() - started > MAX_SCAN_MS) { overflow = true; return; }
       if (entry.kind === 'directory') {
-        if (depth === 0) await walk(entry, 1, prefix + entry.name + '/');
+        if (depth === 0) {
+          await walk(entry, 1, prefix + entry.name + '/');
+          if (overflow) return;
+        }
       } else if (entry.kind === 'file' && /\.pdf$/i.test(entry.name) &&
                  entry.name.length <= 260) {
         entries.push({ handle: entry, name: entry.name, relativeName: prefix + entry.name });
