@@ -3201,7 +3201,7 @@ def clone_existing_cloud_draft_as_new(
         "source_preserved": True,
         "source_preview_slug": source_slug,
         "article_count": 2,
-        "paper_count": 2,
+        "paper_count": 21,  # verified 2026-10-11 08:00 release, not article count
         "publicationSlot": slot,
         "draft_readback": "ok",
         "preview_path": str(preview_path),
