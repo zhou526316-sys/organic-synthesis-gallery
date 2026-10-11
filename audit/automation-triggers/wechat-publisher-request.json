@@ -1,24 +1,31 @@
 {
-  "requestId": "wechat-2026-10-10-r4-read-original-link-only-safe-recovery-after-pr470",
-  "publicationDate": "2026-10-10",
-  "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-10-r4",
-  "approvedGate": "audit/wechat-working/2026-10-10-review-gate.json",
-  "expectedArticleCount": 2,
-  "expectedDois": [
-    "10.1002/anie.3306470",
-    "10.1038/s44160-026-01128-y"
-  ],
-  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWFOfn60HSWWcYlciDjMIDj7HKSul-GJJti3u0OIKFcyL",
-  "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-10&doi=10.1002%2Fanie.3306470&summary=0",
-  "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01128-y&summary=0",
-  "expectedReviewedBodyImages": 50,
+  "requestId": "wechat-2026-10-11-user-authorized-new-two-article-cloud-clone-v1",
+  "action": "clone_existing_draft",
+  "explicitNewDraftAuthorized": true,
+  "preserveOriginalDraft": true,
   "draftOnly": true,
-  "requireDraftGetReadback": true,
   "publicSendAuthorized": false,
-  "reason": "Owner approved repairing 阅读原文 direct DOI focus and halo. First attempted original media ID returned draft/get 40007; merged PR470 verified link-only safe recovery: no new drafts, no reupload and no freepublish. Read current WeChat draft list only if 40007, recover only UNIQUE existing double-article draft with exact first Angew/second Nature Synthesis titles and both DOI in full stored content, otherwise fail closed. Only change content_source_url to date+Angew DOI+summary=0 and retro DOI+summary=0; preserve both titles, content, author, digest, cover thumbnail IDs, all images, article count and 23-paper Gallery release. Require post-update draft/get, independent source readback and fresh preview. No public send.",
-  "linkOnly": true,
-  "requireExactSameArticleReadback": true,
-  "recoveryPolicy": "draft_batchget_unique_exact_title_order_both_doi_or_fail",
-  "publisherImplementation": "PR470"
+  "publicationDate": "2026-10-11",
+  "expectedArticleCount": 2,
+  "expectedDailyReleaseCount": 21,
+  "expectedDois": [
+    "10.1021/jacs.6c15886",
+    "10.1038/s44160-026-01127-z"
+  ],
+  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWOG4MGfh55oHCc7llEvIMhvXq9BhWLWVfRRRPx3yKyH7",
+  "expectedSourcePreviewSlug": "0c6a5b8965d6401973a288b4",
+  "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-11&doi=10.1021%2Fjacs.6c15886&summary=0",
+  "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01127-z&summary=0",
+  "sourceReviewRevision": "2026-10-11-r5",
+  "expectedBodyImageTagsByArticle": [
+    14,
+    19
+  ],
+  "copyOnlyCloudSourceAssets": true,
+  "noReuploadImages": true,
+  "noRewriteChemistry": true,
+  "noDeleteOldDraft": true,
+  "reason": "The user specifically approved a new 2-article WeChat Official Account draft to bypass the Android local-copy save warning. The original Oct11 R5 cloud version was verified at 15:51 Beijing, with exact content HMAC, 2 accepted articles, correct cover media IDs. Create exactly one distinct new media ID by copying the two already stored cloud articles and existing thumb/body media URLs; preserve original; require exact content/title/cover/DOI equality and draft/get of both before announcing. NEVER publish or group send. Retries must reuse created media ID, not duplicate.",
+  "retryDiagnostic": 1,
+  "lastAttemptFailure": "微信 draft/add 已分配新 media_id 并写入幂等状态；首次 draft/get 的 HTML 字节不一致。只复查已经生成的新草稿，接受微信正常的 HTML 格式重排前必须核对文字、图片、链接和标题结构。严禁再次新建。"
 }

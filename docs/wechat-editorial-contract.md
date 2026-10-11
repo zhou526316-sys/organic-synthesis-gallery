@@ -1,14 +1,16 @@
 # WeChat Editorial Contract
 
-Updated: 2026-10-08
+Updated: 2026-10-11
 Status: active
+
+**Current single-source editorial authority:** [wechat-editorial-master-rules.md](wechat-editorial-master-rules.md). This contract supplies detail only where consistent with the Oct-11 master and the user's latest explicit instructions; old case-specific title or cover examples are not defaults.
 
 ## Daily publication shape
 
-- **Title de-duplication (user override 2026-10-08):** when the first cover already visibly says “今日精选·JACS” (or “今日精选·[期刊]”), the WeChat native article title MUST be **only the paper’s faithful Chinese title**. Never repeat “有机合成文献日报”, date, “今日精选”, or the journal label in that native title. The daily literature count/date remain in the article body and edition metadata. If the cover lacks this label, use an editorially appropriate concise journal/date title only when explicitly requested.
+- **2026-10-11 current default, superseding historical paper-only title cases:** all NEW “今日精选” WeChat-native titles must use `有机合成文献日报｜MM.DD｜今日精选｜JOURNAL：忠实且自然的中文论文标题`. The featured cover normally contains no extra top `今日精选·期刊` banner; maximize verified original TOC and keep only the minimal title-safe backing required by the complete native title. A past single-cover exception that used a paper-only title is historical and can apply again only upon the user's explicit instruction for that named paper.
 - **Header-free cover: restore full native title (user override 2026-10-08, subsequent clarification):** When the user intentionally removes the “今日精选 · 期刊” line from the cover to enlarge the original TOC, the Official Account native article title **must include the full column identity, date, journal and paper Chinese title**, formatted `有机合成文献日报｜MM.DD｜今日精选｜JOURNAL：论文中文标题`. For the 2026-10-08 JACS draft this is exactly `有机合成文献日报｜10.08｜今日精选｜JACS：α-氯代烷基硼酸酯与偕二硼烷的立体选择性1,2-迁移重排`. This explicit instruction supersedes the paper-only and concise-title fallback for header-free covers. **Do not repaint the header on the cover image**, and preserve the source-authentic TOC and native headline-safe dark lower backing. Actual mobile title wrapping/cropping remains subject to client verification.
 
-The 10:00 Asia/Shanghai WeChat update is one multi-article push with two editorial entries:
+The daily WeChat **editorial edition/draft** ordinarily has two independent articles in the order below. The historical 10:00 preparation/push wording does **not** authorize timed public sending; draft creation/update is allowed, but any public send remains a separate, explicit user action:
 
 1. **今日更新 + 每日精选**
    - Uses only the verified 08:00 Gallery release for that Beijing date.
@@ -138,12 +140,13 @@ Both “每日精选” and “往期精选” use the same deep-reading standar
 ## Featured-paper editorial QA
 
 - Use the previous successfully published featured article as the structural baseline: result first, then why the chemistry is difficult, the decisive design/optimization, scope, synthetic application, mechanism, practical limitations, and a concise take-home.
-- The three opening boxes must form one causal reading path rather than three generic selling points: **what was achieved -> what bottleneck was actually solved -> why the paper is worth studying as a method/mechanism story**.
+- **2026-10-11 current user override: no fixed three-box opening.** Begin with a coherent result → scientific constraint → evidence path, but select **zero, one, two, or more** context-specific introduction blocks only when each improves the actual paper's reading flow. Never mandate visible labels such as “30 秒看懂反应”“真正难在哪里”“值得研究的问题”; ensure any chosen heading accurately describes the adjacent paragraph and its source-evidence strength.
 - The first paper figure belongs immediately above the opening “做了什么” block.
 - Every original-paper body figure must be a clean crop from the final paper or SI; separately labeled educational concept diagrams follow the visual standard above: no journal header, footer, page number, neighbouring paragraph, half-cut caption, or unrelated panel unless that context is explicitly needed.
+- **2026-10-11 binding image-integrity check:** the actual pinned raster, not its filename or crop coordinates, must preserve full mechanism nodes, arrows and charges, spectra axes/curves, complete table title/headers/data and last-page formulas. Multi-page originals (for example Nature Synthesis SI Table S11) must be shown as consecutive verified page images or a genuinely self-contained, explicitly labeled excerpt. Each source figure has a single correct argument location after its explanatory paragraph (except an intentionally approved opening lead figure).
 - Prefer final-PDF crops over screenshots. Render at high resolution before cropping; do not enlarge a low-resolution screenshot.
 - Do not include spectra merely because they are present in SI. A spectrum is used only when the article text explicitly teaches the reader what feature in that spectrum is evidence for the claim. Otherwise explain the conclusion in prose or use a more interpretable table/scheme.
-- Never reuse one figure for two different claims. Each image must have one clear evidentiary role and its explanation goes below the image.
+- Never reuse one figure for unrelated claims. Each image must have one clear evidentiary role and be located **after the paragraph that explains its evidence, followed by an explicit source-number caption**, except one deliberately approved opening lead-image exception. When prose references a different figure, do not move unrelated images to the end as filler.
 - Keep “chemical space” discussion paper-specific. For the 2026-10-05 bundle, the chemical-space discussion belongs to the MacMillan retrospective, not the JACS daily pick.
 
 ## Internal editorial assembly before WeChat

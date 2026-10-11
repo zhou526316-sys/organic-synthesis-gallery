@@ -1,0 +1,322 @@
+{
+  "date": "2026-10-11",
+  "revision": "2026-10-11-r2",
+  "selectionAuthority": "user_uploaded_pair_order",
+  "scope": "today JACS and Nature Synthesis retrospective",
+  "sources": [
+    {
+      "doi": "10.1021/jacs.6c15886",
+      "main_pdf": "jacs.6c15886.pdf",
+      "si_pdf": "ja6c15886_si_001.pdf",
+      "scientific_question": "How does nickel amplify propane radical regioselectivity beyond the 6:1 HAT ratio and control ee separately?"
+    },
+    {
+      "doi": "10.1038/s44160-026-01127-z",
+      "main_pdf": "s44160-026-01127-z.pdf",
+      "si_pdf": "44160_2026_1127_MOESM1_ESM.pdf",
+      "scientific_question": "Which evidence supports alkene intermediates and PhIO-assisted double-HAT vs direct amination, and what remains hypothetical?"
+    }
+  ],
+  "figure_map": [
+    {
+      "article": "JACS",
+      "id": "jacs_lead",
+      "location": "before_quick_points",
+      "source": "Scheme 1d",
+      "role": "原文 Scheme 1d｜气态烷烃、缺电子烯烃和芳基溴化物的三组分不对称双碳官能团化；来源为作者论文原始反应图。"
+    },
+    {
+      "article": "JACS",
+      "id": "jacs_prior",
+      "section": "从一瓶气体到一个手性中心：难点不止是断开 C–H 键",
+      "after_paragraph": 2,
+      "source": "Scheme 1a–c",
+      "role": "原文 Scheme 1a–c｜既有气态烷烃不对称转化中区域/对映选择性的代表性限制；与本工作数据区分。"
+    },
+    {
+      "article": "JACS",
+      "id": "jacs_f02",
+      "section": "两个催化循环各自做什么，为什么又不能相互独立",
+      "after_paragraph": 2,
+      "source": "Table 1",
+      "role": "原文 Table 1｜催化条件与光照/配体/压力对照。"
+    },
+    {
+      "article": "JACS",
+      "id": "jacs_s01",
+      "section": "两个催化循环各自做什么，为什么又不能相互独立",
+      "after_paragraph": 3,
+      "source": "SI Table S5–S6",
+      "role": "补充信息 SI Table S5–S6｜镍盐、压力和配体变动及无光/无镍对照。"
+    },
+    {
+      "article": "JACS",
+      "id": "jacs_s03",
+      "section": "为什么丙酮可以做溶剂：键能并不能代替实际抽氢选择性",
+      "after_paragraph": 2,
+      "source": "SI Table S1",
+      "role": "补充信息 SI Table S1｜丙烷模型反应的溶剂筛选：乙酸乙酯无目标产物。"
+    },
+    {
+      "article": "JACS",
+      "id": "jacs_f03",
+      "section": "烯烃的酯基不仅影响手性，也改变位点分布",
+      "after_paragraph": 1,
+      "source": "Scheme 2",
+      "role": "原文 Scheme 2｜不同缺电子烯烃作为自由基受体时的收率、区域选择性和对映选择性。"
+    },
+    {
+      "article": "JACS",
+      "id": "jacs_f04",
+      "section": "真正的底物范围：丙烷表现稳健，含氮杂芳基更具挑战",
+      "after_paragraph": 1,
+      "source": "Scheme 3 上半",
+      "role": "原文 Scheme 3 上半｜丙烷与芳基溴化物的底物拓展、药物类似物和天然产物衍生物。"
+    },
+    {
+      "article": "JACS",
+      "id": "jacs_s02",
+      "section": "真正的底物范围：丙烷表现稳健，含氮杂芳基更具挑战",
+      "after_paragraph": 3,
+      "source": "SI §6",
+      "role": "原文 Scheme 3 的适用边界｜补充信息第 6 节的未成功芳基溴化物（原 SI 第 50 页）。"
+    },
+    {
+      "article": "JACS",
+      "id": "jacs_f05",
+      "section": "从丙烷到异丁烷，再到乙烷：每换一种气体，反应窗口都变了",
+      "after_paragraph": 1,
+      "source": "Scheme 3 下半",
+      "role": "原文 Scheme 3 下半｜异丁烷及乙烷的双碳官能团化。"
+    },
+    {
+      "article": "JACS",
+      "id": "jacs_f06",
+      "section": "第一个机理问题：抽氢只有 6:1，产物为什么超过 20:1？",
+      "after_paragraph": 1,
+      "source": "Scheme 4",
+      "role": "原文 Scheme 4｜TEMPO 捕获：自由基比约 6:1 与产物大于20:1 的差别。"
+    },
+    {
+      "article": "JACS",
+      "id": "jacs_f07",
+      "section": "计算给出的自由基储库：锁住一级自由基，放出二级自由基",
+      "after_paragraph": 1,
+      "source": "Fig. 1a",
+      "role": "原文 Fig. 1a｜DFT 自由基储库：镍–碳键可逆性与竞争成键路径。"
+    },
+    {
+      "article": "JACS",
+      "id": "jacs_f08",
+      "section": "第二个机理问题：哪个步骤真正决定 er？",
+      "after_paragraph": 1,
+      "source": "Fig. 1b",
+      "role": "原文 Fig. 1b｜DFT 计算支持的镍催化成键循环。"
+    },
+    {
+      "article": "JACS",
+      "id": "jacs_f09",
+      "section": "第二个机理问题：哪个步骤真正决定 er？",
+      "after_paragraph": 2,
+      "source": "Fig. 2",
+      "role": "原文 Fig. 2｜两种自由基捕获过渡态的非共价相互作用和形变分析。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_lead",
+      "location": "before_quick_points",
+      "source": "Fig. 1d",
+      "role": "原文 Fig. 1d｜从惰性烷烃经双次氢原子转移生成烯烃、再发生氮杂环丙烷化的研究设计；图示为作者提出的模型。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_intro_ab",
+      "section": "从一根饱和 C–C 键，直接变成含氮三元环",
+      "after_paragraph": 2,
+      "source": "Fig. 1a–b",
+      "role": "原文 Fig. 1a–b｜单次夺氢与传统邻位双官能化的区别；后者往往依赖预先存在的活化基团。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_intro_c",
+      "section": "从一根饱和 C–C 键，直接变成含氮三元环",
+      "after_paragraph": 3,
+      "source": "Fig. 1c",
+      "role": "原文 Fig. 1c｜此前双次夺氢策略的局限；不能把设想路径当成实验证实。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_f02",
+      "section": "反应条件里的两个关键角色：三重态磺酰氮宾与 PhIO",
+      "after_paragraph": 1,
+      "source": "Table 1",
+      "role": "原文 Table 1｜环己烷氮杂环丙烷化的条件和严格对照。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_f03",
+      "section": "底物适用性：能反应不意味着位点选择性都很好",
+      "after_paragraph": 1,
+      "source": "Fig. 2 上部",
+      "role": "原文 Fig. 2 上部｜环烷烃、苄位及环状烷烃的区域/非对映选择性。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_f04",
+      "section": "底物适用性：能反应不意味着位点选择性都很好",
+      "after_paragraph": 2,
+      "source": "Fig. 2 中部",
+      "role": "原文 Fig. 2 中部｜链状烷烃及官能团化底物的位点选择性。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_f05",
+      "section": "底物适用性：能反应不意味着位点选择性都很好",
+      "after_paragraph": 3,
+      "source": "Fig. 2 下部",
+      "role": "原文 Fig. 2 下部｜复杂天然产物衍生物和醚底物的单次氢原子转移边界。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_f06",
+      "section": "氮来源能变，真正影响应用的还有流动反应器",
+      "after_paragraph": 1,
+      "source": "Fig. 3a",
+      "role": "原文 Fig. 3a｜磺酰胺范围与药物相关砜酰胺。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_f07",
+      "section": "氮来源能变，真正影响应用的还有流动反应器",
+      "after_paragraph": 2,
+      "source": "Fig. 3b",
+      "role": "原文 Fig. 3b｜高速循环流动装置与十克级合成。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_fig4_time",
+      "section": "先证明烯烃在路上，再判断它是否一定由双次 HAT 生成",
+      "after_paragraph": 1,
+      "source": "Fig. 4d",
+      "role": "原文 Fig. 4d｜时间监测中少量环己烯与氮杂环丙烷产物的变化；曲线并不单独确定双次 HAT 的具体物种。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_fig4_alkene",
+      "section": "先证明烯烃在路上，再判断它是否一定由双次 HAT 生成",
+      "after_paragraph": 1,
+      "source": "Fig. 4e",
+      "role": "原文 Fig. 4e｜环己烯和 E/Z-戊-2-烯的独立投料对照；支持烯烃位于产物形成路径中。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_fig4_alternative",
+      "section": "先证明烯烃在路上，再判断它是否一定由双次 HAT 生成",
+      "after_paragraph": 3,
+      "source": "Fig. 4f–g",
+      "role": "原文 Fig. 4f–g｜I₂ 替换和非对称烷烃对照，约束碘介导与碳正离子路径的解释。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_f10",
+      "section": "TEMPO、同位素效应和酮副产物分别说明什么",
+      "after_paragraph": 1,
+      "source": "Fig. 5",
+      "role": "原文 Fig. 5｜TEMPO 捕获、KIE 及酮副产物分布。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_s01",
+      "section": "TEMPO、同位素效应和酮副产物分别说明什么",
+      "after_paragraph": 2,
+      "source": "SI Fig. 22",
+      "role": "补充信息 SI Fig. 22｜环己烷与氘代环己烷同瓶 KIE。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_fig4_uv",
+      "section": "能量转移而非简单电子转移：证据到哪一步",
+      "after_paragraph": 1,
+      "source": "Fig. 4a",
+      "role": "原文 Fig. 4a｜光敏剂与磺酰亚胺碘烷等组分的吸收行为，解释 456 nm 光照下可被激发的组分。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_fig4_quench",
+      "section": "能量转移而非简单电子转移：证据到哪一步",
+      "after_paragraph": 1,
+      "source": "Fig. 4b–c",
+      "role": "原文 Fig. 4b–c｜铱光敏剂淬灭拟合及 Dexter 型能量转移相关性；属光谱与拟合支持，不是物种的直接分离。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_s04",
+      "section": "能量转移而非简单电子转移：证据到哪一步",
+      "after_paragraph": 1,
+      "source": "SI Fig. 3–4",
+      "role": "补充信息 SI Fig. 3–4｜磺酰亚胺碘烷对铱催化剂磷光淬灭及相应拟合。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_f11",
+      "section": "为什么第二次 HAT 比自由基耦合更有机会：三条计算路径",
+      "after_paragraph": 1,
+      "source": "Fig. 6",
+      "role": "原文 Fig. 6｜三条双次HAT途径及后续氮杂环丙烷形成的计算模型。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_f12",
+      "section": "为什么第二次 HAT 比自由基耦合更有机会：三条计算路径",
+      "after_paragraph": 2,
+      "source": "Fig. 7",
+      "role": "原文 Fig. 7｜DFT 势能曲线与自旋态交叉动力学。"
+    },
+    {
+      "article": "Nature Synthesis",
+      "id": "ns_s02",
+      "section": "为什么第二次 HAT 比自由基耦合更有机会：三条计算路径",
+      "after_paragraph": 3,
+      "source": "SI Fig. 31",
+      "role": "补充信息 SI Fig. 31｜Smiles 重排对氮宾–PhIO 配合物的旁证。"
+    }
+  ],
+  "evidence_matrix": [
+    {
+      "claim": "HAT radical ratio ~6:1 vs branched/linear product >20:1",
+      "level": "observed",
+      "source": "JACS Scheme 4 and SI GC-MS; Scheme 3 product"
+    },
+    {
+      "claim": "Ni0 π-alkene captures alkyl radicals and differential Ni–C reversibility biases selectivity",
+      "level": "computation plus author_model",
+      "source": "JACS Fig.1a; SI DFT Section 9"
+    },
+    {
+      "claim": "Chiral NiII radical capture controls enantioselectivity; ΔΔG‡ ~1.7 kcal/mol",
+      "level": "computation plus author_model",
+      "source": "JACS Fig. 1b and Fig. 2"
+    },
+    {
+      "claim": "Alkene is a kinetically competent intermediate",
+      "level": "supports",
+      "source": "Nature Synthesis Fig.4d/e; SI Fig.8–13"
+    },
+    {
+      "claim": "Sensitization related to triplet energy and Dexter-type quenching",
+      "level": "spectroscopy/correlation supports",
+      "source": "Nature Synthesis Fig.4a–c; SI Fig.3–6/Table 11"
+    },
+    {
+      "claim": "Pathway3 likely favoured over coupling but not conclusively unique",
+      "level": "computation plus unresolved",
+      "source": "Nature Synthesis Figs.6–7; SI DFT Section 9"
+    },
+    {
+      "claim": "Apparent quantum yield 0.57%",
+      "level": "observed as reported",
+      "source": "Nature Synthesis SI Fig.28 and quantum yield calculation"
+    }
+  ],
+  "notes": "Opening figure precedes quick boxes. For the two original Fig4 fragments of prior revision, no half-cut panel remains: complete a, b/c, d, e, f/g crops pinned independently. Chinese semantic/cause-and-evidence edits are integrated."
+}

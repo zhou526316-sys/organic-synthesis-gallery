@@ -31,6 +31,7 @@ DEFAULT_ENV = Path("/etc/osg-wechat-relay/env")
 DEFAULT_COVER = ROOT / "public" / "share-default.png"
 DEFAULT_CACHE = Path("/var/lib/osg-wechat-publisher/cover-media.json")
 DEFAULT_STATE = Path("/var/lib/osg-wechat-publisher/draft-state.json")
+DEFAULT_CLONE_STATE = Path("/var/lib/osg-wechat-publisher/clone-state.json")
 DEFAULT_PUBLISH_STATE = Path("/var/lib/osg-wechat-publisher/publish-state.json")
 PUBLISH_TRIGGER = ROOT / "audit" / "automation-triggers" / "wechat-publish-request.json"
 RETROSPECTIVE_TRIGGER = ROOT / "audit" / "automation-triggers" / "wechat-retrospective-request.json"
@@ -695,7 +696,7 @@ def build_content(
             parts.append("</section>")
 
         notice = featured.get("ai_notice")
-        if notice:
+        if notice and not ("本文由“化之岛”原创策划与整理" in str(notice) and "AI 辅助生成" in str(notice)):
             parts.append(
                 "<section style='border-top:1px solid #eee;margin-top:24px;padding-top:14px;'>"
                 "<p style='font-size:11px;color:#888;line-height:1.7;margin:0;'><strong>创作说明：</strong>"
@@ -808,7 +809,7 @@ def build_retrospective_content(data: dict, uploaded_urls: dict[str, str] | None
         parts.append("</section>")
 
     notice = data.get("ai_notice")
-    if notice:
+    if notice and not ("本文由“化之岛”原创策划与整理" in str(notice) and "AI 辅助生成" in str(notice)):
         parts.append(
             "<section style='border-top:1px solid #eee;margin-top:24px;padding-top:14px;'>"
             "<p style='font-size:11px;color:#888;line-height:1.7;margin:0;'><strong>创作说明：</strong>"
@@ -832,6 +833,15 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
     source = local_images.get(fig_id) if fig_id else None
     if not source:
         return None
+    # Upload the explicitly owner-selected concept image in its reviewed,
+    # pixel-identical, lossless PNG form, without generic JPEG recomposition.
+    if (cover.get("production_cover_image") == "user_selected"
+        and cover.get("pixel_equivalence") == "lossless_rgba_same_pixels"):
+        expected_sha = str(cover.get("delivery_image_sha256") or "").strip().lower()
+        actual_sha = hashlib.sha256(source.read_bytes()).hexdigest()
+        if not re.fullmatch(r"[0-9a-f]{64}", expected_sha) or actual_sha != expected_sha:
+            raise RuntimeError("owner-selected cover SHA-256 mismatch; no upload")
+        return source
     portrait_id = str(cover.get("portrait_figure_id") or "").strip()
     portrait = local_images.get(portrait_id) if portrait_id else None
     try:
@@ -2906,6 +2916,385 @@ def pending_publish_request(publication_date: str):
     return request
 
 
+
+def audit_live_wechat_draft_read_only(
+    request: dict,
+    *,
+    publication_date: str,
+    slot: str,
+    featured: dict | None,
+    edition: dict,
+    retrospective_slug: str,
+    expected_source_links: list[str],
+    args,
+) -> int:
+    """Read the live WeChat cloud draft without material upload, draft/update, or send.
+
+    This intentionally does not attempt to clear a mobile app's local draft: a
+    local-only failed save is not accessible through the Official Account API.
+    """
+    if (
+        args.publish
+        or request.get("action") != "verify_cloud_draft"
+        or request.get("readbackOnly") is not True
+        or request.get("draftOnly") is not True
+        or request.get("publicSendAuthorized") is not False
+        or request.get("publicationDate") != publication_date
+        or request.get("expectedArticleCount") != 2
+    ):
+        raise RuntimeError("cloud readback request invalid or could authorize a write")
+    original_id = str(request.get("expectedExistingMediaId") or "").strip()
+    if not original_id or args.media_id:
+        raise RuntimeError("cloud readback requires pinned media_id from approved request")
+    state = load_state(DEFAULT_STATE)
+    if (
+        str(state.get("publicationDate") or "") != publication_date
+        or str(state.get("media_id") or "").strip() != original_id
+        or int(state.get("articleCount") or 0) != 2
+    ):
+        raise RuntimeError("read-only cloud check: local draft identity mismatch")
+    if not featured or not retrospective_slug or len(expected_source_links) != 2:
+        raise RuntimeError("read-only cloud check needs the selected two-paper edition")
+    retrospective = load_retrospective_slug(retrospective_slug)
+    selected_dois = [
+        normalize_doi((featured.get("paper") or {}).get("doi")),
+        normalize_doi((retrospective.get("paper") or {}).get("doi")),
+    ]
+    selected_titles = [
+        str(edition.get("title") or "").strip(),
+        str(retrospective.get("title") or "").strip(),
+    ]
+    if (
+        request.get("expectedDois") != selected_dois
+        or request.get("expectedFirstReadOriginalUrl") != expected_source_links[0]
+        or request.get("expectedSecondReadOriginalUrl") != expected_source_links[1]
+        or not all(selected_titles)
+    ):
+        raise RuntimeError("read-only cloud check DOI/title/link scope mismatch")
+
+    # One live, authenticated API call. There are NO draft writes on this path.
+    cloud = get_draft(get_access_token(), original_id)
+    if not exact_draft_identity(cloud, selected_titles, selected_dois):
+        raise RuntimeError("live cloud draft no longer matches selected two-article identity")
+    assert_draft_source_links(cloud, expected_source_links)
+
+    cloud_items = cloud["news_item"]
+    image_counts = [
+        len(re.findall(r"<img\b", str(item.get("content") or ""), re.I))
+        for item in cloud_items
+    ]
+    cloud_slug = preview_slug(original_id, cloud)
+    prior_receipt_path = ROOT / "audit/wechat-publisher/latest.json"
+    prior_receipt = (
+        json.loads(prior_receipt_path.read_text(encoding="utf-8"))
+        if prior_receipt_path.exists()
+        else {}
+    )
+    old_preview = str(prior_receipt.get("preview_url") or "")
+    prior_slug = old_preview.rsplit("/", 1)[-1].removesuffix(".html") if old_preview else ""
+    cover_caches = [
+        load_json_cache(DEFAULT_CACHE),
+        load_json_cache(DEFAULT_RETROSPECTIVE_COVER_CACHE),
+    ]
+    cover_match = [
+        bool(cache.get("media_id"))
+        and str(cache.get("media_id")) == str(item.get("thumb_media_id") or "")
+        for cache, item in zip(cover_caches, cloud_items)
+    ]
+
+    # Only a derived HTML preview is refreshed; no cloud draft or app data changes.
+    preview_path, preview_url = write_draft_preview(
+        cloud,
+        media_id=original_id,
+        preview_dir=Path(args.preview_dir),
+        base_url=args.preview_base_url,
+    )
+    result = {
+        "stage": "cloud_readback_only",
+        "errcode": 0,
+        "errmsg": "ok",
+        "media_id": original_id,
+        "publicationSlot": slot,
+        "paper_count": 2,
+        "article_count": len(cloud_items),
+        "draft_readback": "ok",
+        "preview_path": str(preview_path),
+        "preview_url": preview_url,
+        "content_source_url": expected_source_links[0],
+        "cloud_matches_last_successful_preview": cloud_slug == prior_slug,
+        "cloud_image_tags_by_article": image_counts,
+        "cover_matches_server_upload_cache": cover_match,
+        "cloud_draft_modified": False,
+        "mobile_local_copy_inspected": False,
+        "readback_only": True,
+    }
+    print(json.dumps(result, ensure_ascii=False))
+    return 0
+
+
+
+
+def summarize_wechat_article_html(markup: str) -> dict:
+    """Check scientific prose, embedded images, links, and section hierarchy.
+
+    WeChat draft/add may normalize HTML markup on ingestion, so comparing its
+    byte representation is too strict. This tracks content-bearing semantics
+    independently from attribute order, style rewriting, or src/data-src.
+    """
+    from collections import Counter
+    from html.parser import HTMLParser
+
+    class ArticleParser(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=True)
+            self.words = []
+            self.images = []
+            self.links = []
+            self.structure = Counter()
+            self.skip_depth = 0
+
+        def handle_starttag(self, tag, attrs):
+            tag = tag.lower()
+            self.structure[tag] += 1
+            att = dict(attrs)
+            if tag in ("script", "style"):
+                self.skip_depth += 1
+            if tag == "img":
+                source = att.get("data-src") or att.get("src") or ""
+                parsed = urllib.parse.urlsplit(html.unescape(str(source)))
+                if parsed.hostname in ("mmbiz.qpic.cn", "mp.weixin.qq.com"):
+                    source = parsed.path
+                else:
+                    source = source.split("#")[0]
+                self.images.append(str(source))
+            if tag == "a":
+                self.links.append(html.unescape(str(att.get("href") or "")))
+
+        def handle_startendtag(self, tag, attrs):
+            self.handle_starttag(tag, attrs)
+
+        def handle_endtag(self, tag):
+            if tag.lower() in ("script", "style") and self.skip_depth:
+                self.skip_depth -= 1
+
+        def handle_data(self, data):
+            if not self.skip_depth:
+                self.words.append(data)
+
+    parser = ArticleParser()
+    parser.feed(str(markup or ""))
+    prose = re.sub(r"\s+", "", "".join(parser.words))
+    return {
+        "prose_sha256": hashlib.sha256(prose.encode("utf-8")).hexdigest(),
+        "prose_length": len(prose),
+        "images": parser.images,
+        "links": parser.links,
+        "headings": [parser.structure.get(x, 0) for x in ("h1", "h2", "h3")],
+        "tables": [parser.structure.get(x, 0) for x in ("table", "tr", "td")],
+    }
+
+
+def clone_existing_cloud_draft_as_new(
+    request: dict,
+    *,
+    publication_date: str,
+    slot: str,
+    featured: dict | None,
+    edition: dict,
+    retrospective_slug: str,
+    expected_source_links: list[str],
+    args,
+) -> int:
+    """Explicit, idempotent two-article draft/add; preserve the original.
+
+    Copy exact reviewed WeChat cloud article HTML and existing uploaded image
+    media IDs without re-rendering chemical images or reconstructing prose.
+    The user has expressly approved creating a NEW draft to recover from the
+    mobile subscription-assistant local-copy sync failure. Never publish.
+    """
+    if (
+        args.publish or args.media_id or not args.create
+        or request.get("action") != "clone_existing_draft"
+        or request.get("explicitNewDraftAuthorized") is not True
+        or request.get("preserveOriginalDraft") is not True
+        or request.get("draftOnly") is not True
+        or request.get("publicSendAuthorized") is not False
+        or request.get("publicationDate") != publication_date
+        or request.get("expectedArticleCount") != 2
+        or request.get("expectedDois") != [
+            "10.1021/jacs.6c15886", "10.1038/s44160-026-01127-z",
+        ]
+    ):
+        raise RuntimeError("clone request is not the explicit two-paper user authorization")
+    request_id = str(request.get("requestId") or "").strip()
+    original_id = str(request.get("expectedExistingMediaId") or "").strip()
+    if not request_id or not original_id or not featured or not retrospective_slug:
+        raise RuntimeError("clone request must pin request, source media ID, and both papers")
+    if len(expected_source_links) != 2:
+        raise RuntimeError("clone requires exactly two DOI-locked source links")
+
+    retro = load_retrospective_slug(retrospective_slug)
+    expected_titles = [
+        str(edition.get("title") or "").strip(),
+        str(retro.get("title") or "").strip(),
+    ]
+    expected_dois = [
+        normalize_doi((featured.get("paper") or {}).get("doi")),
+        normalize_doi((retro.get("paper") or {}).get("doi")),
+    ]
+    if (
+        not all(expected_titles)
+        or request.get("expectedDois") != expected_dois
+        or request.get("expectedFirstReadOriginalUrl") != expected_source_links[0]
+        or request.get("expectedSecondReadOriginalUrl") != expected_source_links[1]
+    ):
+        raise RuntimeError("clone source identity/title/DOI links changed; stop")
+
+    # Source and images must still match the independently approved R5 gate.
+    require_editorial_review_gate(
+        EDITORIAL_GATE_DIR / f"{publication_date}-review-gate.json",
+        [
+            EDITION_DIR / f"{publication_date}.json",
+            FEATURED_DIR / f"{publication_date}.json",
+            RETROSPECTIVE_DIR / f"{retrospective_slug}.json",
+        ],
+    )
+
+    old_state = load_state(DEFAULT_STATE)
+    clone_state = load_state(DEFAULT_CLONE_STATE)
+    if clone_state.get("requestId") and clone_state.get("requestId") != request_id:
+        raise RuntimeError("an earlier new-draft request already exists; refuse another")
+    if clone_state.get("requestId") and clone_state.get("originalMediaId") != original_id:
+        raise RuntimeError("stored clone source media ID mismatch; refuse")
+    prior_clone_id = str(clone_state.get("newMediaId") or "").strip()
+    current_media = str(old_state.get("media_id") or "").strip()
+    if (
+        str(old_state.get("publicationDate") or "") != publication_date
+        or int(old_state.get("articleCount") or 0) != 2
+        or current_media not in (original_id, prior_clone_id)
+        or not current_media
+    ):
+        raise RuntimeError("local original/new draft identity changed unexpectedly")
+
+    # Live WeChat draft/get is the source, not an archived relay preview.
+    token = get_access_token()
+    source = get_draft(token, original_id)
+    if not exact_draft_identity(source, expected_titles, expected_dois):
+        raise RuntimeError("source draft does not match approved user-selected papers")
+    assert_draft_source_links(source, expected_source_links)
+    expected_source_slug = str(request.get("expectedSourcePreviewSlug") or "").strip()
+    source_slug = preview_slug(original_id, source)
+    if not re.fullmatch(r"[0-9a-f]{24}", expected_source_slug) or source_slug != expected_source_slug:
+        raise RuntimeError("source draft differs from last independently accepted R5")
+    original_items = source["news_item"]
+    img_counts = [len(re.findall(r"<img\b", str(x.get("content") or ""), flags=re.I))
+                  for x in original_items]
+    if img_counts != [14, 19]:
+        raise RuntimeError("source draft images do not match the R5 14/19 verified figures")
+    caches = [load_json_cache(DEFAULT_CACHE), load_json_cache(DEFAULT_RETROSPECTIVE_COVER_CACHE)]
+    if not all(str(cache.get("media_id") or "") == str(item.get("thumb_media_id") or "")
+               and bool(cache.get("media_id")) for cache, item in zip(caches, original_items)):
+        raise RuntimeError("source draft thumb assets differ from reviewed production covers")
+
+    if prior_clone_id:
+        new_media_id = prior_clone_id
+        stage = "draft_clone_resumed"
+    else:
+        cloned_articles = [
+            preserve_draft_article_with_new_source(item, url)
+            for item, url in zip(original_items, expected_source_links)
+        ]
+        result = create_draft(token, cloned_articles)  # One authorized draft/add.
+        new_media_id = str(result.get("media_id") or "").strip()
+        if not new_media_id or new_media_id == original_id:
+            raise RuntimeError("draft/add failed to return a distinct new media_id")
+        # Record immediately after API success so retries NEVER create a second copy.
+        save_state(DEFAULT_CLONE_STATE, {
+            "requestId": request_id,
+            "publicationDate": publication_date,
+            "originalMediaId": original_id,
+            "newMediaId": new_media_id,
+            "status": "created_pending_readback",
+        })
+        stage = "draft_clone_add"
+
+    clone = get_draft(token, new_media_id)
+    if not exact_draft_identity(clone, expected_titles, expected_dois):
+        raise RuntimeError("new draft article titles/order/DOIs fail strict identity check")
+    assert_draft_source_links(clone, expected_source_links)
+    html_roundtrip_normalized = [False, False]
+    for i, (orig, copy) in enumerate(zip(original_items, clone["news_item"])):
+        for field in ("title", "author", "digest", "thumb_media_id", "content_source_url"):
+            if str(orig.get(field) or "") != str(copy.get(field) or ""):
+                raise RuntimeError(f"new draft substantive field mismatch article {i+1} field {field}")
+        original_html = str(orig.get("content") or "")
+        copied_html = str(copy.get("content") or "")
+        if original_html != copied_html:
+            source_semantics = summarize_wechat_article_html(original_html)
+            clone_semantics = summarize_wechat_article_html(copied_html)
+            mismatch = [
+                k for k in ("prose_sha256", "images", "links", "headings", "tables")
+                if source_semantics[k] != clone_semantics[k]
+            ]
+            if mismatch:
+                raise RuntimeError(
+                    f"new draft round-trip article {i+1} semantic mismatch keys={mismatch}; "
+                    f"prose lengths={source_semantics['prose_length']}/{clone_semantics['prose_length']}, "
+                    f"image counts={len(source_semantics['images'])}/{len(clone_semantics['images'])}, "
+                    f"headings={source_semantics['headings']}/{clone_semantics['headings']}, "
+                    f"tables={source_semantics['tables']}/{clone_semantics['tables']}"
+                )
+            html_roundtrip_normalized[i] = True
+    # Check the existing original is not altered by the new-draft operation.
+    original_after = get_draft(token, original_id)
+    if preview_slug(original_id, original_after) != source_slug:
+        raise RuntimeError("source draft changed during cloning; preserve and investigate")
+
+    preview_path, preview_url = write_draft_preview(
+        clone, media_id=new_media_id,
+        preview_dir=Path(args.preview_dir), base_url=args.preview_base_url,
+    )
+    save_state(DEFAULT_CLONE_STATE, {
+        "requestId": request_id,
+        "publicationDate": publication_date,
+        "originalMediaId": original_id,
+        "newMediaId": new_media_id,
+        "status": "verified",
+        "newPreview": preview_url,
+        "sourcePreviewSlug": source_slug,
+    })
+    save_state(DEFAULT_STATE, {
+        "publicationDate": publication_date,
+        "publicationSlot": slot,
+        "media_id": new_media_id,
+        "previous_media_id": original_id,
+        "title": expected_titles[0],
+        "articleCount": 2,
+        "retrospective": retrospective_slug,
+    })
+    print(json.dumps({
+        "stage": stage,
+        "errcode": 0,
+        "errmsg": "ok",
+        "media_id": new_media_id,
+        "source_media_id": original_id,
+        "source_preserved": True,
+        "source_preview_slug": source_slug,
+        "article_count": 2,
+        "paper_count": 21,  # verified 2026-10-11 08:00 release, not article count
+        "publicationSlot": slot,
+        "draft_readback": "ok",
+        "preview_path": str(preview_path),
+        "preview_url": preview_url,
+        "content_source_url": expected_source_links[0],
+        "clone_fidelity_pass": True,
+        "html_roundtrip_normalized": html_roundtrip_normalized,
+        "created_new_draft": stage == "draft_clone_add",
+        "public_send": False,
+    }, ensure_ascii=False))
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--create", action="store_true", help="create or update the WeChat draft, then read it back and build the preview")
@@ -3075,6 +3464,47 @@ def main() -> int:
         }, ensure_ascii=False))
         return 0
 
+    # Clone ONLY when the user explicitly asks for a new two-paper draft.
+    # The clone uses already-approved cloud content and reuses image media IDs;
+    # it never updates/deletes the original or submits a public release.
+    clone_request_path = ROOT / "audit" / "automation-triggers" / "wechat-publisher-request.json"
+    if clone_request_path.exists():
+        clone_request = json.loads(clone_request_path.read_text(encoding="utf-8"))
+        if (isinstance(clone_request, dict)
+            and clone_request.get("action") == "clone_existing_draft"
+            and str(clone_request.get("publicationDate") or "") == publication_date):
+            load_env(Path(args.env_file))
+            return clone_existing_cloud_draft_as_new(
+                clone_request,
+                publication_date=publication_date,
+                slot=slot,
+                featured=featured,
+                edition=edition,
+                retrospective_slug=retrospective_slug,
+                expected_source_links=expected_source_links,
+                args=args,
+            )
+
+    # Explicit read-only diagnosis: stop before uploads and all draft writes.
+    # The fixed-IP relay runs this same script with --create, but the approved
+    # request switches execution to a cloud-only draft/get audit.
+    cloud_check_request_path = ROOT / "audit" / "automation-triggers" / "wechat-publisher-request.json"
+    if cloud_check_request_path.exists():
+        check = json.loads(cloud_check_request_path.read_text(encoding="utf-8"))
+        if (isinstance(check, dict) and check.get("action") == "verify_cloud_draft"
+            and str(check.get("publicationDate") or "") == publication_date):
+            load_env(Path(args.env_file))
+            return audit_live_wechat_draft_read_only(
+                check,
+                publication_date=publication_date,
+                slot=slot,
+                featured=featured,
+                edition=edition,
+                retrospective_slug=retrospective_slug,
+                expected_source_links=expected_source_links,
+                args=args,
+            )
+
     required_review_sources = []
     edition_path = EDITION_DIR / f"{publication_date}.json"
     if edition_path.exists():
@@ -3191,6 +3621,19 @@ def main() -> int:
         and str(state.get("media_id") or "").strip()
     )
     media_id = requested_media_id or (str(state.get("media_id")) if same_day_state else "")
+    # Owner-approved corrections must update the exact existing same-day draft.
+    # Fail closed if the persisted draft ID or number of articles differs.
+    reviewed_request = {}
+    if source_link_request_path.exists():
+        reviewed_request = json.loads(source_link_request_path.read_text(encoding="utf-8"))
+    pinned_media = ""
+    if (isinstance(reviewed_request, dict)
+        and str(reviewed_request.get("publicationDate") or "") == publication_date
+        and reviewed_request.get("draftOnly") is True
+        and reviewed_request.get("publicSendAuthorized") is False):
+        pinned_media = str(reviewed_request.get("expectedExistingMediaId") or "").strip()
+    if pinned_media and (not same_day_state or media_id != pinned_media):
+        raise RuntimeError("approved same-day media_id mismatch; refusing duplicate draft")
 
     if media_id:
         existing = get_draft(token, media_id)
@@ -3209,6 +3652,8 @@ def main() -> int:
             result = {"errcode": 0, "errmsg": "ok"}
             stage = "draft_update"
         else:
+            if pinned_media:
+                raise RuntimeError("existing two-article draft identity/count mismatch; refusing replacement")
             result = create_draft(token, articles)
             media_id = str(result.get("media_id") or "")
             stage = "draft_add_bundle_replacement"

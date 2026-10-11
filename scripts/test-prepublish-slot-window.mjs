@@ -5,6 +5,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
+import { slotGraceMinutes } from './lib/literature-slot-window.mjs';
 
 // Synthetic fixtures only: no real paper, production file or network request.
 const script = fileURLToPath(new URL('./check-prepublish-readiness.mjs', import.meta.url));
@@ -85,6 +86,9 @@ try {
   assert.equal(result.exit, 1);
   assert.equal(result.body.snapshotFreshForSlot, false);
   passed.push('0900_plus_one_millisecond_not_a_valid_snapshot');
+  assert.equal(slotGraceMinutes('2026-10-11T08:00:00+08:00'), 240);
+  assert.equal(slotGraceMinutes('2026-10-12T08:00:00+08:00'), 60);
+  passed.push('only_oct11_technical_grace_through_noon');
 
   data = fixture();
   data.review.publicationSlot = '2026-09-23T08:05:00+08:00';

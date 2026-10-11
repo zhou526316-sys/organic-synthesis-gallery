@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-11",
+  "status": "cloud_verified_mobile_client_refresh_not_yet_observed",
+  "userReported": "第1篇草稿保存异常，已保留本地副本",
+  "screenshotLocalTime": "15:27 Asia/Shanghai",
+  "cloudLiveReadbackUtc": "2026-10-11T07:51:39.555392Z",
+  "cloudLiveReadbackBeijing": "2026-10-11 15:51:39+08:00",
+  "cloudCheckRunId": 38122783756,
+  "cloudCheckAction": "verify_cloud_draft",
+  "cloudCheckReadbackOnly": true,
+  "cloudDraftModified": false,
+  "originalDraftMediaIdReused": true,
+  "originalR5PreviewUrl": "https://relay.gczhouwld.com/wechat-preview/0c6a5b8965d6401973a288b4.html",
+  "cloudVersionHmacExactlyMatchesR5": true,
+  "articles": 2,
+  "bodyImageTags": [
+    14,
+    19
+  ],
+  "coversBothMatchServerUploadCache": true,
+  "latestSuccessfulPublisherReceiptPreserved": true,
+  "observedMobileBehavior": "local save warning; first article appears to show stale green-box thumbnail despite cloud R5 without green box",
+  "assessment": "Server-side cloud draft is intact and identical to verified R5; Android 订阅号助手 retains stale/local-only draft or sync error; local device cannot be remotely refreshed using WeChat Official Account draft API.",
+  "rootCauseNotYetProven": "Specific Android local save error code and local cache implementation unavailable. No evidence to decide between persistent local draft state, device sync/network issue, or mobile client HTML save incompatibility.",
+  "completedRemediation": [
+    "Added authenticated readbackOnly cloud draft/get verifier before upload/update/add in existing fixed-IP WeChat publisher.",
+    "Introduced separate cloud-diagnostic-latest.json and retained latest successful R5 publisher receipt.",
+    "Confirmed full cloud HMAC and both cover upload caches match after reported app error.",
+    "Guarded readbackOnly request against previous date to avoid blocking future 08:00 WeChat draft runs.",
+    "Added safety protocol to current main editorial rules; no data-destroying repair or duplicate draft writes."
+  ],
+  "needsUserDeviceToComplete": [
+    "Do not edit or save local conflict copy; preserve it as fallback.",
+    "Force-stop Android 订阅号助手 app WITHOUT clearing app storage/data.",
+    "Reopen app and pull to refresh cloud draft list; compare first article thumbnail to green-free R5.",
+    "If still stale, preserve user-only local edits then consider clear cache (not data) and app update/relogin only with explicit user approval/confirmed backup."
+  ],
+  "mustNotDo": [
+    "do not mass-send",
+    "do not delete original cloud draft",
+    "do not create duplicate draft",
+    "do not clear app storage/data or uninstall without local backup",
+    "do not claim Android sync success until actual screenshot"
+  ],
+  "statusLabelForUser": "云端已校验正确，手机本地刷新待用户操作/实机确认"
+}

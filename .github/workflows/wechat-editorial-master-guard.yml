@@ -1,0 +1,38 @@
+name: WeChat Editorial Long-term Master Guard
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'PROJECT_RULES.md'
+      - 'docs/wechat-editorial-master-rules.md'
+      - 'docs/wechat-editorial-contract.md'
+      - 'docs/wechat-editorial-production-playbook.md'
+      - 'docs/wechat-draft-editorial-gate.md'
+      - 'scripts/test-wechat-editorial-master-contract.mjs'
+      - '.github/workflows/wechat-editorial-master-guard.yml'
+  pull_request:
+    paths:
+      - 'PROJECT_RULES.md'
+      - 'docs/wechat-editorial-master-rules.md'
+      - 'docs/wechat-editorial-contract.md'
+      - 'docs/wechat-editorial-production-playbook.md'
+      - 'docs/wechat-draft-editorial-gate.md'
+      - 'scripts/test-wechat-editorial-master-contract.mjs'
+      - '.github/workflows/wechat-editorial-master-guard.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wechat-editorial-longterm-rules
+  cancel-in-progress: true
+
+jobs:
+  prevent-historical-rule-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enforce canonical Oct11 WeChat editorial master contract
+        run: node scripts/test-wechat-editorial-master-contract.mjs

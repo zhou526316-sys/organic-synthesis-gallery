@@ -1,0 +1,161 @@
+{
+  "date": "2026-10-11",
+  "revision": "2026-10-11-r5",
+  "selectionDois": [
+    "10.1021/jacs.6c15886",
+    "10.1038/s44160-026-01127-z"
+  ],
+  "selectionAuthority": "explicit-user-selection",
+  "objective": "Make an organic synthesis graduate student correctly reconstruct the scientific problem, catalyst logic, evidence, mechanistic limits and design takeaways from both papers without mechanically translating sequential figures",
+  "scienceStandard": "Every causal/high-level claim anchored to verified main text/SI; never assert calculations as experimental confirmation",
+  "sourceEvidenceMatrix": {
+    "JACS": [
+      {
+        "topic": "synthetic capability vs previous asymmetric transformations",
+        "source": "JACS main p1–3; Scheme 1a–d",
+        "level": "observed/literature-context",
+        "claim": "three-component asymmetric dicarbofunctionalization of ethane, propane, isobutane"
+      },
+      {
+        "topic": "TBADT/Ni optimized conditions and catalyst necessity",
+        "source": "JACS main p2–3 Table 1; SI conditions",
+        "level": "observed",
+        "claim": "3 76% isolated /96:4 er / >20:1 rr; 3 mol% TBADT, 10 mol% NiCl2·DME"
+      },
+      {
+        "topic": "acetone competition polarity explanation",
+        "source": "JACS main p3; SI Table S1",
+        "level": "observed plus author rationale",
+        "claim": "BDE acetone 96.0 vs propane sec 98.1; ester solvent screen negative under this combination"
+      },
+      {
+        "topic": "acceptor-dependent rr/er",
+        "source": "JACS main p3–5 Scheme 2",
+        "level": "observed; cause unresolved",
+        "claim": "tert-butyl vs methyl  >20:1 vs 9:1 rr and er changes"
+      },
+      {
+        "topic": "aryl bromide and negative scope",
+        "source": "JACS main p4–5 Scheme 3; SI §6",
+        "level": "observed plus hypothesis",
+        "claim": "heteroaryl er loss possibly nickel N coordination; some aryl bromides fail"
+      },
+      {
+        "topic": "gaseous feedstock boundary",
+        "source": "JACS main p5 Scheme 3, SI optimization",
+        "level": "observed",
+        "claim": "isobutane lower gas pressure; ethane reoptimized; methane failed"
+      },
+      {
+        "topic": "6:1 TEMPO trap vs >20:1 product rr",
+        "source": "JACS main p5 Scheme 4",
+        "level": "observed under different experimental contexts",
+        "claim": "cannot read trap product ratio as intrinsic rate constants"
+      },
+      {
+        "topic": "Ni radical reservoir and Giese step",
+        "source": "JACS main p7 Fig. 1a/b; SI DFT",
+        "level": "computation+compatible experimental trend",
+        "claim": "Ni-I nPr lower by ~12.2 vs Ni-I iPr ~4.1 kcal/mol; lifetime not measured"
+      },
+      {
+        "topic": "enantioselective radical capture",
+        "source": "JACS main p8 Figs.1b–2; SI conformer search",
+        "level": "computation+experimental er",
+        "claim": "computed triplet Ni-II capture and 1.7 kcal/mol stereochemical TS difference"
+      }
+    ],
+    "Nature Synthesis": [
+      {
+        "topic": "previous monofunctionalization vs double HAT design",
+        "source": "Nature main p1–4 Fig.1a–d",
+        "level": "literature-context and author model",
+        "claim": "proposes alkane to alkene intermediate to aziridine"
+      },
+      {
+        "topic": "optimization and product selectivity",
+        "source": "Nature main p2,4–5 Table1",
+        "level": "observed",
+        "claim": "cyclohexane 60% isolated, ~2% mono amination, −20C, 456nm, PhIO 4equiv"
+      },
+      {
+        "topic": "site and sulfonamide scope limits",
+        "source": "Nature main p3–6 Figs.2–3a",
+        "level": "observed",
+        "claim": "some scopes isomeric mixtures, tetrahydropyran monoamination"
+      },
+      {
+        "topic": "circulation flow feasibility",
+        "source": "Nature main p4,6 Fig.3b; SI Fig39",
+        "level": "observed",
+        "claim": "12.95g/10.40g/5.89g, 120ml/min, slurry/temperature handling"
+      },
+      {
+        "topic": "alkene intermediate support",
+        "source": "Nature main p7 Fig4d–e, SI competition",
+        "level": "observed and supports intermediate",
+        "claim": "trace cyclohexene, alkene input forms product, monoamine and diamine controls fail"
+      },
+      {
+        "topic": "alternatives iodine/polar",
+        "source": "Nature main p7 Fig4f–g",
+        "level": "control support (not universal exclusion)",
+        "claim": "I2 replacements and carbocation-predicted regio trends mismatch"
+      },
+      {
+        "topic": "carbon/radical properties and KIE",
+        "source": "Nature main p6–8 Fig5; SI Fig22",
+        "level": "observed with interpretation bounds",
+        "claim": "TEMPO trap, one-pot 5.4 parallel 2.4, ~19% cyclohexanone"
+      },
+      {
+        "topic": "triplet sensitization",
+        "source": "Nature main p6–7 Fig4a–c; SI Figs3–6",
+        "level": "spectroscopy and correlation",
+        "claim": "kQ 1.87e7 M-1s-1, sensitization supported, uncatalyzed photochemistry exists"
+      },
+      {
+        "topic": "DFT pathways and competition",
+        "source": "Nature main p8–9 Figs6–7; SI quantum/computations",
+        "level": "theoretical comparison",
+        "claim": "path3 5.4e11 vs 6.6e9 s-1 model rate, not experimental; paths1/2 not excluded"
+      }
+    ]
+  },
+  "narrativeArc": {
+    "JACS": [
+      "three filters/selection problems",
+      "concrete catalyst design and calibrated performance",
+      "hard variables solvent and Michael acceptor",
+      "aryl and gas scope define mechanistic limits",
+      "6:1 vs >20:1 demands post-HAT selection",
+      "Ni reversible radical reservoir is a DFT-backed model",
+      "chiral Ni radical capture is distinct stereodetermining hypothesis",
+      "methodology lessons and unresolved conditions"
+    ],
+    "Nature Synthesis": [
+      "why two vicinal H removals must outcompete mono-amination",
+      "triplet sulfonyl nitrene/PhIO condition design",
+      "substrate site limits and nitrogen precursor boundaries",
+      "meaningful 10g-scale flow constraints",
+      "alkene intermediate evaluated with kinetics and control experiments",
+      "radical/kinetic isotopic constraints and triplet sensitization",
+      "compare all three computed double-HAT routes without asserting unique mechanism",
+      "transferable but bounded reaction-network ideas"
+    ]
+  },
+  "bodyFigureCounts": {
+    "JACS": 13,
+    "Nature Synthesis": 19
+  },
+  "coverUserChoice": "Retrospective owner-selected blue concept image is untouched; JACS main original chemistry exact crop enlarged per explicit smartphone screenshot feedback",
+  "allFigureIdPositionsUnique": true,
+  "leadException": true,
+  "openers": "Both articles begin with original lead source reaction and an original explanatory paragraph, without forced three-point template",
+  "publishedToWeChat": false,
+  "publicSendAuthorized": false,
+  "limits": [
+    "the first-card JACS main cover maximizes chemistry as explicitly requested; centered 1:1 crop will not show all end reagents and is not claimed as fully safe",
+    "native WeChat client rendered headline height requires observation for final verification"
+  ]
+}

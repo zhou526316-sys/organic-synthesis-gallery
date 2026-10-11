@@ -38,12 +38,30 @@ test('exact slot admits guarded execution', () => assert.equal(slotState(slot, a
 test('execution remains open at 59 minutes', () => assert.equal(slotState(slot, at + 59 * 60_000), 'slot_open'));
 test('execution remains open at exactly 60 minutes', () => assert.equal(slotState(slot, at + 60 * 60_000), 'slot_open'));
 test('expired slot is not replayed', () => assert.equal(slotState(slot, at + 60 * 60_000 + 1), 'expired_slot'));
+test('Oct11 one-time noon deadline does not extend later days', () => {
+  const special = '2026-10-11T08:00:00+08:00', t = Date.parse(special);
+  assert.equal(slotState(special, t + 61 * 60_000), 'slot_open');
+  assert.equal(slotState(special, t + 240 * 60_000), 'slot_open');
+  assert.equal(slotState(special, t + 240 * 60_000 + 1), 'expired_slot');
+  const next = '2026-10-12T08:00:00+08:00';
+  assert.equal(slotState(next, Date.parse(next) + 60 * 60_000 + 1), 'expired_slot');
+});
 test('next-day invocation cannot backfill yesterday', () => assert.equal(slotState(slot, at + 24 * 3600_000), 'expired_slot'));
 test('same slot is idempotent', () => assert.equal(slotState(slot, at, slot), 'already_published_or_superseded'));
 test('newer marker is never overwritten', () => assert.equal(slotState(slot, at, '2026-10-03T08:00:00+08:00'), 'already_published_or_superseded'));
 test('arbitrary slot time rejected', () => assert.throws(() => slotState('2026-10-02T09:00:00+08:00', at)));
 test('early future gate cannot arm outside 65 minutes', () => assert.throws(() => slotState(slot, at - 66 * 60_000)));
 test('strict reviewed subset allows evidence-scoped pending', () => assert.equal(validateEvidence(...fixture()).deferredDois.length, 1));
+test('zero-pending strict bundle requires the real, hashed empty queue', () => {
+  const f = fixture();
+  f[2].pendingQueue.items = [];
+  f[2].markerFields.deferredDois = [];
+  f[2].markerFields.pendingQueueBlobSha = blobSha(f[2].pendingQueue);
+  for (const part of [f[0], f[1], f[2].preflight]) part.deferredDois = [];
+  assert.deepEqual(validateEvidence(...f).deferredDois, []);
+  delete f[2].markerFields.pendingQueueBlobSha;
+  assert.throws(() => validateEvidence(...f), /invalid_evidence_sha:pendingQueueBlobSha/);
+});
 test('ordinary validationOk is not publication permission', () => { const f = fixture(); f[0].readyToPublish = false; f[0].validationOk = true; assert.throws(() => validateEvidence(...f), /record_gate/); });
 for (const key of ['publicationReady', 'snapshotFreshForSlot', 'semanticReady', 'recordValidationPassed']) {
   test(`missing ${key} cannot release`, () => { const f = fixture(); f[1][key] = false; assert.throws(() => validateEvidence(...f), /slot_gate/); });

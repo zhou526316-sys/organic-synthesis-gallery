@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-11",
+  "articles": [
+    {
+      "doi": "10.1021/jacs.6c15886",
+      "core_question": "镍催化自由基储库如何在 HAT 后实现区域选择性放大，并在独立的 Ni(II) 自由基捕获阶段控制对映选择性？",
+      "30s_result": "轻质气态烷烃、烯烃与芳基溴化物实现手性α-芳基羰基合成",
+      "evidence": [
+        "Scheme4 TEMPO 6:1 vs >20:1",
+        "Fig1 Ni0 radical reservoir DFT",
+        "Fig2 stereodetermining radical capture DFT"
+      ],
+      "failure_boundary": [
+        "methane no conversion",
+        "ethane 34 bar lower yields",
+        "N-heteroaryls er erosion"
+      ]
+    },
+    {
+      "doi": "10.1038/s44160-026-01127-z",
+      "core_question": "三重态磺酰氮宾/PhIO 如何完成相邻两次 HAT，避免单次胺化并生成烯烃？",
+      "30s_result": "未活化烷烃在蓝光下直接氮杂环丙烷化",
+      "evidence": [
+        "Fig4 alkene intermediate controls",
+        "Fig5 TEMPO and KIE",
+        "Fig6-7 PhIO-assisted HAT models"
+      ],
+      "failure_boundary": [
+        "ethers monoamination",
+        "PhIO 4 eq",
+        "-20 C cooling"
+      ]
+    }
+  ],
+  "sourceAuthority": "user_supplied_main_and_SI_PDFs",
+  "peerReviewSupplied": false,
+  "noUnverifiedReviewerClaims": true
+}

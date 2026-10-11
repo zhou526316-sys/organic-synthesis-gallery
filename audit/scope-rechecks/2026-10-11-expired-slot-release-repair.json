@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "kind": "missed_fixed_slot_diagnostic_and_next_slot_review_handoff",
+  "createdAt": "2026-10-11T01:32:43.758Z",
+  "repo": "zhou526316-sys/organic-synthesis-gallery",
+  "baseCommit": "e6233f7de84cbd4dd770405e64b07e42752baa6a",
+  "sourcePolicy": "daily 08:00 Asia/Shanghai only; release commit grace <=09:00 same day",
+  "failedSlot": "2026-10-11T08:00:00+08:00",
+  "deadline": "2026-10-11T09:00:00+08:00",
+  "writerRunId": 38094778877,
+  "gateRunId": 38094754470,
+  "writerError": "invalid_evidence_sha:pendingQueueBlobSha",
+  "productionCommitCreated": false,
+  "repair": {
+    "pullRequest": 534,
+    "mergeCommit": "e6233f7de84cbd4dd770405e64b07e42752baa6a",
+    "codeFix": "always include pendingQueueFile and exact Git blob SHA even when pending=0",
+    "scopeGuard": "reject unresolved/manual-only inclusion placeholders",
+    "unitRegressionPassed": true,
+    "completeRealWriterRunNotRetestedOutsideSlot": true
+  },
+  "sourceArtifacts": {
+    "morningStaging": {
+      "file": "audit/prepublish-review-2026-10-11-0800.json",
+      "blobSha": "801cd50bc25a94dd8156585630d1ca75d40116fb",
+      "generatedAt": "2026-10-10T23:10:26.020Z",
+      "count": 69,
+      "include": 21,
+      "exclude": 48,
+      "pending": 0
+    },
+    "newestPaired": {
+      "compactFile": "audit/unresolved-latest.json",
+      "compactBlobSha": "afb58fbe09bc85a5cf8188c2989beed40f9c0756",
+      "latestFile": "audit/latest.json",
+      "latestBlobSha": "9cc4eaeee71963f2e71aa12ade182cd2cd2050e7",
+      "generatedAt": "2026-10-11T01:23:07.618Z",
+      "count": 71
+    },
+    "currentMarker": {
+      "file": "audit/publication-release-state.json",
+      "blobSha": "56ed469282fd3405e704c73996dbe8a0d0e47b6f",
+      "slot": "2026-10-10T08:00:00+08:00",
+      "cards": 938
+    },
+    "scopeCorrectionsBlobSha": "74978d92a16d353271f16f111425d09e4de84f07",
+    "durableBacklogCount": 12
+  },
+  "newlyDiscoveredUnreviewed": [
+    {
+      "doi": "10.1038/s41467-026-78603-9",
+      "journal": "Nature Communications",
+      "title": "Asymmetric bloom lengthening drives high-latitude ocean chlorophyll accumulation imbalance",
+      "date": "2026-10-11",
+      "status": "not_reviewed_in_expired_staging"
+    },
+    {
+      "doi": "10.1038/s41467-026-78575-w",
+      "journal": "Nature Communications",
+      "title": "In situ reduction-driven formation of sub-nanometer alternating heterostructures",
+      "date": "2026-10-11",
+      "status": "not_reviewed_in_expired_staging"
+    }
+  ],
+  "morningTemplatedIncludes": [
+    "10.31635/ccschem.026.202608189",
+    "10.31635/ccschem.026.202608019",
+    "10.1021/acscatal.6c06578",
+    "10.31635/ccschem.026.202608090",
+    "10.31635/ccschem.026.202607590",
+    "10.31635/ccschem.026.202607612",
+    "10.31635/ccschem.026.202608472",
+    "10.31635/ccschem.026.202608262",
+    "10.1016/j.chempr.2026.103076",
+    "10.1039/d6sc06879k"
+  ],
+  "pendingFurtherSubstantiveEvidence": [
+    "10.31635/ccschem.026.202608189",
+    "10.31635/ccschem.026.202608019",
+    "10.1021/acscatal.6c06578",
+    "10.31635/ccschem.026.202608090",
+    "10.31635/ccschem.026.202607590",
+    "10.31635/ccschem.026.202607612",
+    "10.31635/ccschem.026.202608472",
+    "10.31635/ccschem.026.202608262",
+    "10.1039/d6sc06879k"
+  ],
+  "manualIncludeWithSpecificPositiveEvidenceButInvalidCopiedRationale": [
+    "10.1016/j.chempr.2026.103076"
+  ],
+  "carriedHistoricalExcludeDois": [
+    "10.1021/acs.joc.6c01600",
+    "10.1016/j.chempr.2026.103025"
+  ],
+  "nextSlot": "2026-10-12T08:00:00+08:00",
+  "nextAction": "Produce fresh 2026-10-12 paired latest/compact; audit complete union including post-slot DOIs and historical pending; evidence-based two-pass semantic review and reliable Chinese titles. Only fresh --allow-deferred --require-ready evidence plus same-slot original writer may admit. No 10-11 backfill.",
+  "publicationStatus": "publication_missed; no release after expired slot",
+  "productionChanged": false,
+  "stagingModified": false,
+  "formalReviewModified": false,
+  "scheduleModified": false
+}

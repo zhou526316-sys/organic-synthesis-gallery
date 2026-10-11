@@ -2,6 +2,9 @@
 
 This contract separates editorial QA from WeChat transport.
 
+**Mandatory parent:** [wechat-editorial-master-rules.md](wechat-editorial-master-rules.md) (2026-10-11). This gate implements the long-term rules for every project window. Its requirements apply to every new draft and revision; older examples that passed a weaker figure or title check are not precedents.
+
+
 ## Required sequence
 
 1. Build the editorial source manifests.
@@ -27,6 +30,9 @@ The publisher must refuse to write a draft when:
 - a reviewed source file no longer matches the recorded Git blob SHA;
 - any required local raster asset cannot be decoded;
 - a figure referenced by article layout is missing from the reviewed image manifest.
+- any expected image has a clipped header, structure, mechanism node, arrow, plot axis/curve, table data or continuation formula, or the figure is semantically misplaced;
+- a new daily-feature native title omits the full `有机合成文献日报｜日期｜今日精选｜期刊：中文题目` identity without explicit per-paper user override;
+- the selected DOI is missing or `content_source_url` would not point to the exact selected card with `summary=0`.
 
 Any source edit invalidates the gate and requires a new export/review cycle.
 
@@ -64,7 +70,9 @@ A successful pre-draft review does not prove the WeChat transport is correct. Af
 - image dimensions/crops;
 - captions;
 - article order in the multi-article bundle;
-- source links.
+- source links: **each article's actual `content_source_url` must exactly match its reviewed DOI link**, including `summary=0` and today's edition parameter for 今日精选; a date-only or Gallery homepage link cannot pass;
+- confirm **same existing `media_id`** on ordinary revisions, exact featured/retrospective DOI/order, expected image URLs, and `publish_id=null` (no public send);
+- distinguish a relay-generated web preview from direct observation in the native WeChat mobile UI.
 
 The final preview is therefore a transport/layout check, not the primary editorial review.
 
@@ -92,6 +100,9 @@ Effective from the 2026-10-06 crop failures, production WeChat figures follow a 
 7. For multi-panel scope figures, prefer complete logical blocks or split them into two or more reviewed assets. Never use a narrow crop merely to make the image smaller.
 8. Keep a small visual safety margin around chemical structures and labels. Tight trimming may remove empty page space, but it must not trim chemical meaning.
 9. Production review should be based on the pinned raster itself, not on crop coordinates, filenames, or the source figure alone.
+10. **Image completeness, not just crop hash:** the exact pinned raster must contain every meaningful structure, bond, arrow, intermediate, spectrum trace/axis, table title/header/row, and formula needed by the adjacent scientific claim. Verify at mobile width; add margin/split logically rather than clip facts.
+11. **Multi-page tables and schemes:** if the original SI Table, mechanism or data extends onto subsequent PDF pages, preserve those complete parts as consecutive original-source crops in their correct order. A truncated top half is never made acceptable merely by adding the label “节选”. The Oct-10 Fig. 5e / two-page SI Table S11 repair is the known regression case.
+12. **Authentic cover thumbnails:** 今日精选 uses the maximum safe original TOC and full native headline; 往期精选 uses a paper-specific square concept visual whose chemical structures, if present, were directly cut from the original publication; never generatively repaint molecular structures.
 
 ## Figure-reference and placement rule
 

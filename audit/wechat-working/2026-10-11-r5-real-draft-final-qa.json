@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-11",
+  "revision": "2026-10-11-r5",
+  "checkedAtBeijing": "2026-10-11 14:50:53",
+  "status": "full_scientific_editorial_review_then_same_media_real_wechat_draft_get_confirmed",
+  "sourceMainRuleCommit": "f40f144a91ee800a5993ba121fe4e4e75c6859c1",
+  "selectedDois": [
+    "10.1021/jacs.6c15886",
+    "10.1038/s44160-026-01127-z"
+  ],
+  "sourceImportRunId": 38119068546,
+  "initialPublisherRunId": 38119131758,
+  "finalPublisherRunId": 38119295417,
+  "originalMediaIdReused": "KhELYUzvwADwB_l1xH1SWOG4MGfh55oHCc7llEvIMhvXq9BhWLWVfRRRPx3yKyH7",
+  "stage": "draft_update",
+  "officialDraftGetReadback": "ok",
+  "articleCount": 2,
+  "publicSendAuthorized": false,
+  "publishId": null,
+  "newRealPreview": "https://relay.gczhouwld.com/wechat-preview/0c6a5b8965d6401973a288b4.html",
+  "sourceLinks": [
+    "https://gallery.gczhouwld.com/?edition=2026-10-11&doi=10.1021%2Fjacs.6c15886&summary=0",
+    "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01127-z&summary=0"
+  ],
+  "reviewedMainPdfAndSI": [
+    "jacs.6c15886.pdf",
+    "ja6c15886_si_001.pdf",
+    "s44160-026-01127-z.pdf",
+    "44160_2026_1127_MOESM1_ESM.pdf"
+  ],
+  "textReview": "pass",
+  "imageReview": "pass",
+  "bodyFigureCount": {
+    "JACS": 13,
+    "NatureSynthesis": 19,
+    "total": 32
+  },
+  "relayImageUrlCounts": {
+    "bodyAndQR": 33,
+    "covers": 2,
+    "total": 35
+  },
+  "articleSections": {
+    "JACS": 10,
+    "NatureSynthesis": 10
+  },
+  "originalProofreadParagraphCount": {
+    "JACS": 29,
+    "NatureSynthesis": 29
+  },
+  "narrative": "Innovation-first synthesis reasoning: problem, concrete authors' design, discriminating experiments, alternatives, mechanisms separated by evidence grade, scope failures and bounded transferable lessons. No mechanical per-figure chronological rewrite, no fixed 3 box intros.",
+  "jacsCover": {
+    "asset": "public/wechat-assets/reviewed/2026-10-11-r5/jacs-reaction-full-white-no-green.png",
+    "localSha256": "12fb162ad8ca43247a723a7cefc6dafa0e6d8274cfdb19d5b9e49452923a757d",
+    "canvas": [
+      1880,
+      800
+    ],
+    "photoSourceCrop": [
+      539,
+      107,
+      1326,
+      300
+    ],
+    "scaledOriginalChemistry": [
+      1700,
+      417
+    ],
+    "position": [
+      90,
+      48
+    ],
+    "blueTitleStartY": 514,
+    "spaceToTitlePx": 49,
+    "greenPromotionalPanelRemoved": true,
+    "sourceReactionAndMeHKeyRetained": true,
+    "noGenerativeChemicalRedraw": true,
+    "main235Crop": "reviewed source large first card",
+    "centerSquareAspect": "would crop side reactants at this owner-prioritized first-card magnification; do not represent as preserving entire chemistry",
+    "nativeMobileAppImage": "not_verified_no_new_device_screenshot"
+  },
+  "retroOwnerSelectedConceptCover": {
+    "path": "public/wechat-assets/reviewed/2026-10-11-r3/nature-synthesis-owner-selected-lossless-20261011.png",
+    "sourceUnchanged": true,
+    "actualWeChatCDNLinkSameAsR4": true
+  },
+  "contents": {
+    "noFixedIntroModules": true,
+    "JACSCoreQuestion": "TEMPO trapped isopropyl/n-propyl 6:1 vs final branched/linear >20:1, DFT nickel radical reservoir vs chiral Ni capture and theoretical limits",
+    "NatureCoreQuestion": "whether olefin is intermediate, how nitrene/PhIO double HAT outcompetes monoamination, how independent evidence and computations constrain path",
+    "oneOriginalAndAiDisclosurePerArticle": true,
+    "noRepeatedCreativeDisclosure": true
+  },
+  "comparisonToR4": "new main cover asset URL, same retrofit owner-selected cover URL and body 32 figure counts; article titles and two DOI precise source URLs unchanged.",
+  "galleryDailyPublishedPapers": 21,
+  "nativeWeChatMobileCropVerified": false,
+  "regressionRisk": "WeChat preview and original pixel crop verified, native phone overlay/crop still requires actual device observation; user's full first-card zoom prioritized over square 1:1 complete chemistry."
+}

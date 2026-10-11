@@ -81,7 +81,15 @@ for (const item of decisions) {
   const candidate = expectedByDoi.get(doi);
   check(['include','exclude','pending'].includes(decision), `semantic: invalid decision for ${doi}`);
   check(Boolean(String(item?.title || candidate?.title || '').trim()), `semantic: title missing for ${doi}`);
-  if (decision === 'include') included.push(doi);
+  if (decision === 'include') {
+    // A human DOI-level preference is not evidence for preparative generality. Fail closed
+    // on unresolved/pending placeholders mistakenly promoted into an include assessment.
+    const claim = [item.reason, item.evidenceBasis, item.scopeAssessment?.primaryContribution,
+      item.scopeAssessment?.preparativeTransformation].map(value => String(value || '')).join(' ');
+    check(!/按用户明确决定记录其题名所示|已完成两遍范围检查，但(?:缺少|当前证据不足)|当前证据不足以作出可靠纳入或排除决定/.test(claim),
+      `semantic: include_promoted_from_unresolved_evidence:${doi}`);
+    included.push(doi);
+  }
   if (decision === 'exclude') excluded.push(doi);
   if (decision === 'pending') deferred.push(doi);
   const needsChallenge = decision === 'include' || (decision === 'exclude' && candidate?.reviewPriority === 'high');

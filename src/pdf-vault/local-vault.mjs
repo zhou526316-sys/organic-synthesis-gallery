@@ -69,6 +69,7 @@ export function createLocalPdfVault(options = {}) {
   let dbPromise;
   let connection;
   let destinationCache;
+  let downloadPermissionHandle = null;
   const transactions = new Set();
   const copiesCache = new Map();
   const probes = new Map();
@@ -302,6 +303,128 @@ export function createLocalPdfVault(options = {}) {
     return operation(async () => prepareDestination(await boundary(chosen), 'local_folder'));
   }
 
+  /**
+   * Choose one explicit READ-ONLY download directory for this account/device.
+   * The picker must run synchronously within the user's button click.
+   * Browser storage never receives a path, PDF bytes or write permission.
+   */
+  function selectDownloadDirectory() {
+    check();
+    if (!picker) return Promise.reject(new LocalPdfVaultError('directory_picker_unavailable'));
+    let chosen;
+    try { chosen = picker({ id: 'gallery-pdf-downloads', startIn: 'downloads', mode: 'read' }); }
+    catch (error) { return Promise.reject(failure(error)); }
+    return operation(async () => {
+      const directory = await boundary(chosen);
+      if (directory?.kind !== 'directory') throw new LocalPdfVaultError('destination_required');
+      await boundary(permission(directory, 'local_folder', 'read'));
+      await boundary(transact(['accounts'], 'readwrite', (tx, result, guarded) => {
+        const store = tx.objectStore('accounts');
+        const request = store.get(userId);
+        request.onsuccess = guarded(() => {
+          const row = request.result || { user_id: userId, namespace: randomId('library-'), destination: null };
+          const downloaded = { id: randomId('dest_'), directory_handle: directory, device_id: deviceId,
+            name: directory.name || '已授权 PDF 下载目录', selected_at: now() };
+          store.put({ ...row, downloads: downloaded });
+          result({ name: downloaded.name });
+        });
+      }));
+      const retained = await boundary(account());
+      downloadPermissionHandle = retained.downloads?.directory_handle || null;
+      if (retained.downloads?.device_id !== deviceId ||
+          retained.downloads?.directory_handle?.kind !== 'directory') {
+        throw new LocalPdfVaultError('persistence_failed');
+      }
+      publishChange();
+      return { name: retained.downloads.name };
+    });
+  }
+
+  function getDownloadDirectory() {
+    return operation(async () => {
+      const row = await boundary(account());
+      const linked = row.downloads;
+      if (!linked?.directory_handle || linked.device_id !== deviceId) return null;
+      downloadPermissionHandle = linked.directory_handle;
+      await boundary(permission(linked.directory_handle, 'local_folder', 'read'));
+      return { handle: linked.directory_handle, name: linked.name || 'PDF 下载目录', id: linked.id || '' };
+    });
+  }
+
+  function downloadDirectoryInfo() {
+    return operation(async () => {
+      const row = await boundary(account());
+      const selected = row.downloads;
+      downloadPermissionHandle = selected?.device_id === deviceId ? selected.directory_handle : null;
+      if (!selected?.directory_handle || selected.device_id !== deviceId) return { selected: false, name: '' };
+      const state = typeof selected.directory_handle.queryPermission === 'function'
+        ? await boundary(selected.directory_handle.queryPermission({ mode: 'read' })) : 'prompt';
+      return { selected: true, name: selected.name || 'PDF 下载目录', permission: state, id: selected.id || '' };
+    });
+  }
+
+  function restoreDownloadPermission() {
+    check();
+    // requestPermission must be called directly inside the click gesture.
+    // downloadDirectoryInfo preloads this handle before enabling the button.
+    const handle = downloadPermissionHandle;
+    if (!handle?.requestPermission) return Promise.reject(new LocalPdfVaultError('permission_required'));
+    let choice;
+    try { choice = handle.requestPermission({ mode: 'read' }); }
+    catch (error) { return Promise.reject(failure(error)); }
+    return operation(async () => {
+      const state = await boundary(choice);
+      if (state !== 'granted') throw new LocalPdfVaultError('permission_required');
+      const row = await boundary(account());
+      if (row.downloads?.device_id !== deviceId ||
+          row.downloads?.directory_handle?.kind !== 'directory') {
+        throw new LocalPdfVaultError('account_changed');
+      }
+      publishChange();
+      return { granted: true };
+    });
+  }
+
+  /** Disable this DOI's local associations only; never delete on-disk bytes. */
+  function unlinkDoiExternal(rawDoi) {
+    return operation(async () => {
+      const doi = normalizeDoi(rawDoi);
+      if (!doi) throw new LocalPdfVaultError('invalid_doi');
+      const details = await boundary(transact(['copies', 'documents'], 'readwrite', (tx, result, guarded) => {
+        const store = tx.objectStore('copies');
+        const request = store.index('by_document').getAll([userId, doi]);
+        request.onsuccess = guarded(() => {
+          let removed = 0;
+          const names = [];
+          const removedHashes = new Set();
+          for (const value of request.result || []) {
+            if (value.user_id !== userId || value.device_id !== deviceId ||
+                value.storage_kind !== 'local_folder' && value.storage_kind !== 'opfs' || value.state !== 'available') continue;
+            store.put({ ...value, state: 'revoked', local_revision: (value.local_revision || 0) + 1,
+              updated_at: now(value.updated_at) });
+            removedHashes.add(value.content_hash);
+            if (typeof value.file_name === 'string') names.push(value.file_name);
+            copiesCache.delete(value.id);
+            probes.delete(value.id);
+            removed += 1;
+          }
+          const docs = tx.objectStore('documents');
+          const docReq = docs.get([userId, doi]);
+          docReq.onsuccess = guarded(() => {
+            const value = docReq.result;
+            if (value && removedHashes.has(value.preferred_content_hash)) {
+              docs.put({ ...value, preferred_content_hash: null, preferred_version_kind: null,
+                updated_at: now(value.updated_at) });
+            }
+            result({ count: removed, names });
+          });
+        });
+      }));
+      if (details.count) publishChange();
+      return details;
+    });
+  }
+
   function useOpfs() {
     return operation(async () => {
       if (!nav?.storage?.getDirectory) throw new LocalPdfVaultError('opfs_unavailable');
@@ -432,6 +555,81 @@ export function createLocalPdfVault(options = {}) {
     });
   }
 
+  /**
+   * Associate a user-chosen PDF *in its original location* with this DOI.
+   * The persistent FileSystemFileHandle is structured-cloned into this
+   * account's IndexedDB copies store. We do not duplicate, rename, move,
+   * upload, or scan the user's files. Call showOpenFilePicker directly from a
+   * real user gesture before invoking this asynchronous operation.
+   */
+  function linkPdfHandle({ doi: rawDoi, handle, versionKind = 'unknown' } = {}) {
+    return operation(async () => {
+      const doi = normalizeDoi(rawDoi);
+      if (!doi || doi.length > 512) throw new LocalPdfVaultError('invalid_doi');
+      if (!PDF_VERSION_KINDS.includes(versionKind)) throw new LocalPdfVaultError('invalid_version');
+      if (!handle || handle.kind !== 'file' || typeof handle.getFile !== 'function') {
+        throw new LocalPdfVaultError('invalid_pdf');
+      }
+      await boundary(permission(handle, 'local_folder', 'read'));
+      const file = await boundary(handle.getFile());
+      const verified = await boundary(inspectFile(file));
+      const id = randomId('copy_');
+      const timestamp = now();
+      const copy = toCopyManifest({
+        id, user_id: userId, doi, storage_kind: 'local_folder',
+        device_id: deviceId, provider: null, provider_ref: null,
+        content_hash: verified.hash, byte_length: verified.byteLength,
+        version_kind: versionKind, state: 'available',
+        acquired_at: timestamp, last_verified_at: timestamp,
+        created_at: timestamp, updated_at: timestamp,
+      });
+      const probe = receipt(copy, 'readable');
+      const local = {
+        ...copy, file_name: handle.name, file_handle: handle,
+        linked_external: true, local_probe: probe, local_revision: 1,
+      };
+      const document = await boundary(transact(['documents', 'copies'], 'readwrite', (tx, result, guarded) => {
+        const copies = tx.objectStore('copies');
+        const oldRequest = copies.index('by_document').getAll([userId, doi]);
+        oldRequest.onsuccess = guarded(() => {
+          // Replacing a chosen original must never leave an older incorrect
+          // external association as a fallback candidate.
+          for (const old of oldRequest.result || []) {
+            if (old.user_id === userId && old.device_id === deviceId &&
+                ['local_folder', 'opfs'].includes(old.storage_kind) && old.state === 'available') {
+              copies.put({ ...old, state: 'revoked', local_revision: (old.local_revision || 0) + 1,
+                updated_at: now(old.updated_at) });
+              copiesCache.delete(old.id);
+              probes.delete(old.id);
+            }
+          }
+          const documents = tx.objectStore('documents');
+          const request = documents.get([userId, doi]);
+          request.onsuccess = guarded(() => {
+            const previous = request.result;
+            const doc = toDocumentManifest({
+              user_id: userId, doi, preferred_content_hash: copy.content_hash,
+              preferred_version_kind: versionKind,
+              created_at: previous?.created_at ?? timestamp,
+              updated_at: now(previous?.updated_at ?? timestamp),
+            });
+            copies.add(local);
+            documents.put(doc);
+            result(doc);
+          });
+        });
+      }));
+      const retained = await boundary(readCopy(id));
+      if (retained.content_hash !== copy.content_hash ||
+          typeof retained.file_handle?.getFile !== 'function') {
+        throw new LocalPdfVaultError('persistence_failed');
+      }
+      probes.set(id, probe);
+      publishChange();
+      return { copy: toCopyManifest(retained), document, probe: currentProbe(retained) };
+    });
+  }
+
   /** Home-card metadata query: bounded visible DOI lookups in one read-only
    * transaction. Never opens a PDF, probes permission, hashes bytes, selects a
    * directory, initialises an account row or makes a network request. */
@@ -508,12 +706,26 @@ export function createLocalPdfVault(options = {}) {
     });
   }
 
+  /** Quarantine one mismatched document association without touching disk. */
+  function disableCopy(id) {
+    return operation(async () => {
+      const value = await boundary(readCopy(id));
+      await boundary(updateCopy(value, { state: 'revoked' }));
+      probes.delete(id);
+      copiesCache.delete(id);
+      publishChange();
+      return { id, doi: value.doi, fileName: value.file_name || '' };
+    });
+  }
+
   function openPdf(id) {
     return operation(async () => {
       const value = await boundary(readCopy(id));
       try {
-        await boundary(permission(value.directory_handle, value.storage_kind, 'read'));
-        const handle = await boundary(value.directory_handle.getFileHandle(value.file_name));
+        const handle = value.file_handle ||
+          (value.directory_handle && await boundary(value.directory_handle.getFileHandle(value.file_name)));
+        if (!handle?.getFile) throw new LocalPdfVaultError('file_missing');
+        await boundary(permission(value.file_handle ? handle : value.directory_handle, value.storage_kind, 'read'));
         const file = await boundary(handle.getFile());
         const inspected = await boundary(inspectFile(file));
         if (inspected.hash !== value.content_hash || inspected.byteLength !== value.byte_length) {
@@ -562,12 +774,14 @@ export function createLocalPdfVault(options = {}) {
         let value;
         if (id) value = copiesCache.get(id) || await boundary(readCopy(id));
         else value = destinationCache || (await boundary(account())).destination;
-        const handle = value?.directory_handle;
+        const handle = value?.file_handle || value?.directory_handle;
         const kind = value?.storage_kind || value?.kind;
         if (!handle) throw new LocalPdfVaultError('destination_required');
         if (kind === 'opfs') return { granted: true };
         if (typeof handle.requestPermission !== 'function') throw new LocalPdfVaultError('permission_required');
-        const state = await boundary(handle.requestPermission({ mode: 'readwrite' }));
+        // A linked external file needs read permission only. Never request
+        // write permission for a file the user downloaded elsewhere.
+        const state = await boundary(handle.requestPermission({ mode: value?.file_handle ? 'read' : 'readwrite' }));
         if (state !== 'granted') throw new LocalPdfVaultError('permission_required');
         // A permission grant is not a file-readability probe. openPdf rechecks bytes.
         return { granted: true };
@@ -602,7 +816,8 @@ export function createLocalPdfVault(options = {}) {
       indexedDB: typeof idb?.open === 'function', crypto: Boolean(crypto?.subtle?.digest && crypto?.getRandomValues),
       maxBytes: PDF_VAULT_MAX_BYTES,
     }),
-    selectDirectory, useOpfs, getDestination, importPdf, listCopies, describe, describeCards,
+    selectDirectory, selectDownloadDirectory, getDownloadDirectory, downloadDirectoryInfo,
+    restoreDownloadPermission, unlinkDoiExternal, disableCopy, useOpfs, getDestination, importPdf, linkPdfHandle, listCopies, describe, describeCards,
     openPdf, exportFile: openPdf, restorePermission, close,
   });
 }
