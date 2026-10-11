@@ -38,6 +38,14 @@ test('exact slot admits guarded execution', () => assert.equal(slotState(slot, a
 test('execution remains open at 59 minutes', () => assert.equal(slotState(slot, at + 59 * 60_000), 'slot_open'));
 test('execution remains open at exactly 60 minutes', () => assert.equal(slotState(slot, at + 60 * 60_000), 'slot_open'));
 test('expired slot is not replayed', () => assert.equal(slotState(slot, at + 60 * 60_000 + 1), 'expired_slot'));
+test('Oct11 one-time noon deadline does not extend later days', () => {
+  const special = '2026-10-11T08:00:00+08:00', t = Date.parse(special);
+  assert.equal(slotState(special, t + 61 * 60_000), 'slot_open');
+  assert.equal(slotState(special, t + 240 * 60_000), 'slot_open');
+  assert.equal(slotState(special, t + 240 * 60_000 + 1), 'expired_slot');
+  const next = '2026-10-12T08:00:00+08:00';
+  assert.equal(slotState(next, Date.parse(next) + 60 * 60_000 + 1), 'expired_slot');
+});
 test('next-day invocation cannot backfill yesterday', () => assert.equal(slotState(slot, at + 24 * 3600_000), 'expired_slot'));
 test('same slot is idempotent', () => assert.equal(slotState(slot, at, slot), 'already_published_or_superseded'));
 test('newer marker is never overwritten', () => assert.equal(slotState(slot, at, '2026-10-03T08:00:00+08:00'), 'already_published_or_superseded'));

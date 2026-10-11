@@ -2,13 +2,13 @@ import { readFile } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import path from 'node:path';
+import { slotGraceMinutes } from './lib/literature-slot-window.mjs';
 
 const execFileAsync = promisify(execFile);
 const ROOT = process.cwd();
 const MARKER = path.resolve(ROOT, 'audit/publication-release-state.json');
 const BOOTSTRAP_ID = 'fixed-slots-cutover-2026-09-22';
 const BOOTSTRAP_MARKER_COMMIT = '3c9bcd16ab34a24fcbe0efda5a7e1d5905ca71fa';
-const SLOT_GRACE_MINUTES = 60;
 const SINGLE_DAILY_SLOT_CUTOVER_COMMIT = '0a88cd948049081479d33040b93ea20a80d83ca9';
 
 const marker = JSON.parse(await readFile(MARKER, 'utf8'));
@@ -127,8 +127,8 @@ if (mode === 'bootstrap') {
     check(Number.isFinite(deltaMinutes), 'release-slot: cannot compute marker commit time');
     check(deltaMinutes >= 0,
       `release-slot: publication marker was committed before the fixed slot (${deltaMinutes.toFixed(2)} min)`);
-    check(deltaMinutes <= SLOT_GRACE_MINUTES,
-      `release-slot: publication marker was committed too late for the fixed slot (${deltaMinutes.toFixed(2)} min > ${SLOT_GRACE_MINUTES})`);
+    check(deltaMinutes <= slotGraceMinutes(slot),
+      `release-slot: publication marker was committed too late for the fixed slot (${deltaMinutes.toFixed(2)} min > ${slotGraceMinutes(slot)})`);
   } catch (error) {
     failures.push(`release-slot: cannot read publication marker commit time: ${error.message}`);
   }
@@ -142,7 +142,7 @@ const result = {
   publicationSlot: marker?.publicationSlot || null,
   productionCards: marker?.productionCards ?? null,
   protectedFiles: files.length,
-  slotGraceMinutes: SLOT_GRACE_MINUTES,
+  slotGraceMinutes: slotGraceMinutes(String(marker?.publicationSlot || '')),
   singleDailySlotCutoverCommit: SINGLE_DAILY_SLOT_CUTOVER_COMMIT,
   markerCommitSha,
   receiptBackedBaseline,

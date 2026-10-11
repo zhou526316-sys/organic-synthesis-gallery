@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { slotGraceMinutes } from './lib/literature-slot-window.mjs';
 
 export const REQUEST = 'audit/automation-triggers/literature-release-request.json';
 export const MARKER = 'audit/publication-release-state.json';
@@ -30,7 +31,7 @@ export function slotState(slot, now, publishedSlot) {
   assert(Number.isFinite(now), 'invalid_clock');
   if (Date.parse(publishedSlot || '') >= Date.parse(slot)) return 'already_published_or_superseded';
   const delta = now - Date.parse(slot);
-  if (delta > 60 * 60_000) return 'expired_slot';
+  if (delta > slotGraceMinutes(slot) * 60_000) return 'expired_slot';
   assert(delta >= -65 * 60_000, 'slot_not_in_arming_window');
   return delta < 0 ? 'waiting_for_slot' : 'slot_open';
 }

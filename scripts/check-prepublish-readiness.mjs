@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { slotGraceMinutes } from './lib/literature-slot-window.mjs';
 
 // Read-only. --allow-deferred changes the unit of publication, never source/freshness gates.
 const args = process.argv.slice(2);
@@ -90,7 +91,7 @@ async function evaluate() {
   const generated = Date.parse(handoff.generatedAt || '');
   const slotTime = Date.parse(slot);
   const snapshotFreshForSlot = slotValid && Number.isFinite(generated)
-    && generated >= slotTime - 65 * 60 * 1000 && generated <= slotTime + 60 * 60 * 1000
+    && generated >= slotTime - 65 * 60 * 1000 && generated <= slotTime + slotGraceMinutes(slot) * 60 * 1000
     && generated <= Date.now()
     && handoff.endDate === slot.slice(0, 10) && latest.endDate === slot.slice(0, 10);
   block(slotValid, 'invalid_publication_slot');

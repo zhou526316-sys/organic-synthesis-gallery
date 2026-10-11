@@ -6,6 +6,7 @@ import { loadScopeCorrections } from './lib/scope-corrections.mjs';
 import { applyApprovedPublicationDateCorrections } from './lib/approved-publication-date-corrections.mjs';
 import path from 'node:path';
 import { isExcludedDoi } from '../shared/literature-policy.js';
+import { slotGraceMinutes } from './lib/literature-slot-window.mjs';
 
 const ROOT = process.cwd();
 const REQUEST = process.argv[2] || 'audit/automation-triggers/literature-release-request.json';
@@ -48,7 +49,7 @@ const stagingFile = String(request.stagingReviewFile || '');
 assert(/^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(slot), 'invalid publicationSlot');
 assert(/^audit\/prepublish-review-\d{4}-\d{2}-\d{2}-0800\.json$/.test(stagingFile), 'invalid stagingReviewFile');
 const deltaMinutes = (Date.now() - Date.parse(slot)) / 60000;
-assert(deltaMinutes >= 0 && deltaMinutes <= 60, `release request outside fixed-slot execution window: ${deltaMinutes.toFixed(2)} min`);
+assert(deltaMinutes >= 0 && deltaMinutes <= slotGraceMinutes(slot), `release request outside fixed-slot execution window: ${deltaMinutes.toFixed(2)} min`);
 assert(beijingDate() === slot.slice(0, 10), 'release request Beijing date mismatch');
 
 const stagingBlob = git(['hash-object', '--', stagingFile]);
