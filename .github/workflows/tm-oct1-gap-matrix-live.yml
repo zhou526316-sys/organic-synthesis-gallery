@@ -1,0 +1,43 @@
+name: Live Oct-1 Tampermonkey capture gap matrix
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/audit-tm-oct1-media-gap-matrix-live.mjs'
+      - '.github/workflows/tm-oct1-gap-matrix-live.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/audit-tm-oct1-media-gap-matrix-live.mjs'
+      - '.github/workflows/tm-oct1-gap-matrix-live.yml'
+
+permissions:
+  contents: read
+concurrency:
+  group: tm-oct1-gap-matrix-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Read production TOC and body inventories without publisher or PDF requests
+        run: |
+          set -euo pipefail
+          node --check scripts/audit-tm-oct1-media-gap-matrix-live.mjs
+          node scripts/audit-tm-oct1-media-gap-matrix-live.mjs | tee "$RUNNER_TEMP/tm-oct1-gap-matrix-summary.log"
+          grep -F '"complete":"read_only_complete"' "$RUNNER_TEMP/tm-oct1-gap-matrix-summary.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-oct1-gap-matrix-no-mutation
+          path: |
+            ${{ runner.temp }}/tm-oct1-media-gap-matrix-live.json
+            ${{ runner.temp }}/tm-oct1-gap-matrix-summary.log
+          retention-days: 7
+          if-no-files-found: warn
