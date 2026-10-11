@@ -1,8 +1,8 @@
 {
   "date": "2026-10-11",
-  "revision": "2026-10-11-r4",
+  "revision": "2026-10-11-r5",
   "articleCount": 2,
-  "selectionAuthority": "explicit_user_uploaded_pair",
+  "selectionAuthority": "explicit_user_uploaded_pair_and_cover_feedback",
   "selectionDois": [
     "10.1021/jacs.6c15886",
     "10.1038/s44160-026-01127-z"
@@ -11,56 +11,56 @@
   "imageReview": "pass",
   "strictFigurePlacement": true,
   "materializedCropReviewRequired": true,
-  "reviewedAtBeijing": "2026-10-11T14:10:49.192662+08:00",
+  "reviewedAtBeijing": "2026-10-11T14:43:20.927077+08:00",
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-11-r4-jacs-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-11-r4-jacs-images-only.md"
+    "textOnly": "audit/wechat-working/2026-10-11-r5-jacs-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-11-r5-jacs-images-only.md"
   },
   "sources": [
     {
       "path": "public/wechat-featured/2026-10-11.json",
-      "blobSha": "b5ae01e27e47465ea871d78079ac6c82f33d9fb5",
-      "sha256": "194cb1ee4a05dc47cbad4e6d758cb83944ac5fd4f0bb0ade07fdd38bb843fa95"
+      "blobSha": "2c2f33f30ee606739fe251cdce2698333b5d0c86",
+      "sha256": "aa0e8d6a00182a13d6451e03f8be980a88982967371ff2a58bbe584d7081c748"
     },
     {
       "path": "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json",
-      "blobSha": "f4356fca36a20ec85fd77f64ea51d3ab986a19d8",
-      "sha256": "dd382d96d03d0fe2f7d737badc6d841973953d65bcdb4e183891c34a878fc465"
+      "blobSha": "72b1f9635de8c7e3305548a8e74ae9969455b17f",
+      "sha256": "84fb8a9d8059ea5e86928461a271be9c8f064e091ccf9b8783d816ecb1f0ba7e"
     },
     {
       "path": "public/wechat-editions/2026-10-11.json",
-      "blobSha": "d259911b23070037b9e73a40520a8bae31013063",
-      "sha256": "e32d69c580a8ac5ebb2ff6368eb10c8d78ad89ba99957ddca7608ba24453d2e4"
+      "blobSha": "549b64c9a9f4fc18d770df01ac98a903ec61b8b0",
+      "sha256": "81754b757a8d28ed463959e70c31c22647fc5794dcf73b79380bd3cb5828113a"
     },
     {
-      "path": "audit/wechat-working/2026-10-11-r4-jacs-text-only.md",
-      "blobSha": "94d429ca93281006df62306a1217d0ff164c4472",
-      "sha256": "db29b8f682fd91c907cb124d348516c82377554d234c6946e62babb76ffd464a"
+      "path": "audit/wechat-working/2026-10-11-r5-jacs-text-only.md",
+      "blobSha": "03878c07deb314db02138297959a1894d2f55fd3",
+      "sha256": "4e3b876c7be09194a33295606d059dc9168f4aa63b929593d33a55746080a50a"
     },
     {
-      "path": "audit/wechat-working/2026-10-11-r4-jacs-images-only.md",
-      "blobSha": "bb1cfbc95c63cbab0fbbf2591ff39a351b1a6477",
-      "sha256": "0bdcbfdd909e24cd72c0dd68833c1d62fc274ae5a1a9171a07c02f920b41bd18"
+      "path": "audit/wechat-working/2026-10-11-r5-jacs-images-only.md",
+      "blobSha": "d0618c7124374390ac23a9749c23455c61e26773",
+      "sha256": "23efad804f0993351acd60d34ef80f57080a11a4fa168145529633f70ad5f536"
     },
     {
-      "path": "audit/wechat-working/2026-10-11-r4-nature-synthesis-text-only.md",
-      "blobSha": "27539cf10a6d894ac1ed1e924971f7e633d83a18",
-      "sha256": "5022f045b33950b91ede7b927f6037197c2bb95031536e650abe98d907b15036"
+      "path": "audit/wechat-working/2026-10-11-r5-nature-synthesis-text-only.md",
+      "blobSha": "61917f055f979407dd4e4ca3a634c97f2bd3a410",
+      "sha256": "8f56919e9ef96af1a7aee5d8023198351618a36a4d5f31f84afcdb81b4462f19"
     },
     {
-      "path": "audit/wechat-working/2026-10-11-r4-nature-synthesis-images-only.md",
-      "blobSha": "18f8955a58d873b1e4e8a4b009562b84f457ffeb",
-      "sha256": "982fa5ba79de1c232d4b5b811bf11d0824473acd32c68edcce72d9cf601aa86d"
+      "path": "audit/wechat-working/2026-10-11-r5-nature-synthesis-images-only.md",
+      "blobSha": "97d1156f536c41ab79dbe54ceaa2654d3d760511",
+      "sha256": "b555a9cc2bbadcf0890c71237f69fd4206fe836c7585f6481bb9377d47a9c35f"
     },
     {
-      "path": "audit/wechat-working/2026-10-11-r4-editorial-plan.json",
-      "blobSha": "abc56d1327cfe52c49282ce82ab7c6d37000f545",
-      "sha256": "c58134846eac930a67000f9023c6523e9b271882738e915a909e0260b59b4522"
+      "path": "audit/wechat-working/2026-10-11-r5-editorial-plan.json",
+      "blobSha": "41f6070064630dfd648d15a52bb78e28b1229e40",
+      "sha256": "b3121ba0aeff8a94b4048909b683419f56ba04a51acfce8192f7a099e98ec0a5"
     },
     {
-      "path": "audit/wechat-working/2026-10-11-r4-semantic-and-cover-qa.json",
-      "blobSha": "ec3c7c0051d307b021eb3cfac0c0cbf9e632dc20",
-      "sha256": "a6a109aa9ec501a6e60ede87f4ffed31a83903c342cf8d62f5b4b328c42e8299"
+      "path": "audit/wechat-working/2026-10-11-r5-science-and-cover-qa.json",
+      "blobSha": "1ce50aaf6d314e8680b1cff170c478e519a42b21",
+      "sha256": "da9fe3d0aeeccff827177bf2a0b355570ba6508bf40b05b6fd67d49638aa1c99"
     }
   ],
   "assets": [
@@ -303,13 +303,13 @@
       "height": 758
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-11-r4/jacs-original-TOC-zoom-max-safe.png",
-      "blobSha": "4b67cf96d2c858f0ba98d3dc97bec4e8b2bd475d",
-      "sha256": "5deae5a9cb0aa73c6b27e990a8a0adddf4f62f69adeefc31e53c6791e8cca9d1",
+      "path": "public/wechat-assets/reviewed/2026-10-11-r5/jacs-reaction-full-white-no-green.png",
+      "blobSha": "e0bcfe0492b3f198708f769c1a281579076a9b9d",
+      "sha256": "12fb162ad8ca43247a723a7cefc6dafa0e6d8274cfdb19d5b9e49452923a757d",
       "width": 1880,
       "height": 800
     }
   ],
   "publicSendAuthorized": false,
-  "notes": "User-requested enlargement of authentic TOC and paper-specific opening. JACS 2 evidence-matched intro boxes; Nature 0 boxes. All 32 body original figures unchanged; no invented chemistry. First and second article titles and precise DOI links unchanged. Centered thumbnail and bottom title-safe region individually inspected; true native app not observed."
+  "notes": "R5 full, user-approved scientific narrative reconstruction grounded to main+SI, no caption-by-caption translation; JACS TOC 1700px without green marketing box, user-prioritized full main cover; source-verified body figs preserved; 1:1 central main crop is not claimed complete due user-directed 2.35 main magnification."
 }

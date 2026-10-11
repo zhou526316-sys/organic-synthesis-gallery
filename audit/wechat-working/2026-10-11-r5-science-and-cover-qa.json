@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-11",
+  "revision": "2026-10-11-r5",
+  "selectedDois": [
+    "10.1021/jacs.6c15886",
+    "10.1038/s44160-026-01127-z"
+  ],
+  "scientificReview": "pass",
+  "ChineseResearchProseReview": "pass",
+  "causalNarrativeReview": "pass",
+  "contextAndAlternativesReview": "pass",
+  "figureReferencePlacementReview": "pass",
+  "actualSourcePixelsReview": "pass",
+  "nativeClientScreenshot": "not_observed",
+  "JACSMainCover": {
+    "sourceR4": "public/wechat-assets/reviewed/2026-10-11-r4/jacs-original-TOC-zoom-max-safe.png",
+    "renderR5": "public/wechat-assets/reviewed/2026-10-11-r5/jacs-reaction-full-white-no-green.png",
+    "cropSourcePx": [
+      539,
+      107,
+      1326,
+      300
+    ],
+    "resampledWidthPx": 1700,
+    "resampledHeightPx": 417,
+    "pastedAt": [
+      90,
+      48
+    ],
+    "blueNativeTitleBackingY": 514,
+    "whiteGapBeforeBluePx": 49,
+    "greenInformationPromoRemoved": true,
+    "MeHLegendPreserved": true,
+    "sourceChemistryRedrawn": false,
+    "firstCard235Crop": "visually_pass",
+    "centerSquare1to1": "partial_reagents_after_explicit_user_preferred_maximal_first_card; not represented as full chemistry",
+    "nativeAppRealScreenshot": "awaiting_genuine_phone_observation"
+  },
+  "NatureUserApprovedCover": "preserved byte-for-byte r3 image",
+  "textChapters": {
+    "JACS": 10,
+    "Nature": 10
+  },
+  "paragraphs": {
+    "JACS": 29,
+    "Nature": 29
+  },
+  "bodyFigures": 32,
+  "reviewNotes": "New writing centers on chemical novelty and evidence discrimination rather than captions. Source facts all separately verified against the 4 user PDFs. No fixed three-point introduction. Figure IDs and SHA remain unchanged from R4 for body. R5 JACS cover has first-card visual priority by explicit user override; square crop cannot independently contain horizontal reaction at this requested zoom. Never falsely claim otherwise.",
+  "publicSendAuthorized": false,
+  "wechatDraftGet": "not_run"
+}
