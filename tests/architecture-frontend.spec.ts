@@ -433,6 +433,63 @@ test('active D1 catalog view keeps all-time search server-paged and avoids stati
   }
 });
 
+for (const width of [1280, 390]) {
+  test(`one-sided start-date search bypasses health preflight and renders the complete indexed result at ${width}px`, async ({ page }) => {
+    const data = fixture();
+    const cutoff = '2026-07-01';
+    const windowSize = width === 390 ? MOBILE_RESULT_WINDOW_SIZE : RESULT_WINDOW_SIZE;
+    const eligible = data.indexedItems.filter(item => item.firstOnlineDate && item.firstOnlineDate >= cutoff);
+    const viewRequests: any[] = [];
+    let healthRequests = 0;
+    await page.setViewportSize({ width, height: 900 });
+    await stubOptionalApi(page);
+    // Health may be delayed or unavailable while the actual index read is
+    // healthy. The direct D1 search must not be gated on this separate API.
+    await page.route('**/api/_healthcheck', route => {
+      healthRequests += 1;
+      return route.fulfill({ status: 503, contentType: 'application/json', body: '{}' });
+    });
+    await page.route('**/api/literature/catalog-view', async route => {
+      const body = route.request().postDataJSON() as any;
+      viewRequests.push(body);
+      expect(body.catalogId).toBe(data.catalogId);
+      expect(body.query).toBe('');
+      expect(body.dateFrom).toBe(cutoff);
+      expect(body.dateTo).toBe('');
+      expect(body.limit).toBe(windowSize);
+      const items = eligible.slice(0, windowSize);
+      const hasMore = eligible.length > windowSize;
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+        version: 1, schemaVersion: 'literature-catalog-index-v1',
+        enabled: true, readPathActive: true, catalogId: data.catalogId,
+        matched: eligible.length, count: items.length, limit: windowSize,
+        hasMore, nextCursor: hasMore ? 'date:next' : null,
+        sort: 'newest', items,
+      }) });
+    });
+    await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`,
+      { waitUntil: 'domcontentloaded' });
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogRead || ''),
+      { timeout: 30000 }).toBe('architecture-v1');
+    await page.locator('#dateFrom').fill(cutoff);
+    await page.locator('#dateFrom').dispatchEvent('change');
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.catalogQueryRead || ''),
+      { timeout: 30000 }).toBe('d1-index');
+    await expect(page.locator('#dateTo')).toHaveValue('');
+    await expect(page.locator('#resultCount')).toHaveText(String(eligible.length));
+    await expect(page.locator('#gallery > .card')).toHaveCount(Math.min(windowSize, eligible.length));
+    await expect(page.locator('#gallery > .card').first()).toHaveAttribute('data-doi', eligible[0].doi);
+    expect(viewRequests.length).toBeGreaterThanOrEqual(1);
+    expect(healthRequests).toBe(0);
+    const metrics = await page.evaluate(() => ({
+      api: Number(document.documentElement.dataset.catalogSearchApiMs),
+      shard: Number(document.documentElement.dataset.catalogSearchShardMs),
+    }));
+    expect(Number.isFinite(metrics.api) && metrics.api >= 0).toBeTruthy();
+    expect(Number.isFinite(metrics.shard) && metrics.shard >= 0).toBeTruthy();
+  });
+}
+
 test('D1 metadata is discovery-only and card content comes from the verified static revision', async ({ page }) => {
   const data = fixture();
   const canonical = data.indexedItems.find(item => item.doi === data.archiveDoi);
