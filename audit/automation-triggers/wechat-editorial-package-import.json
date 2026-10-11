@@ -1,19 +1,20 @@
 {
-  "requestId": "wechat-2026-10-10-qiu-r3-exact-fig-identifiers-import",
-  "requestedAt": "2026-10-09T23:05:00+08:00",
+  "requestId": "wechat-2026-10-11-jacs-gas-alkane-natsynth-double-hat-r1-reviewed-source-import",
+  "requestedAt": "2026-10-11T11:00:00+08:00",
   "action": "import_reviewed_editorial_package",
-  "revision": "2026-10-10-qiu-r3",
-  "doi": "10.1038/s44160-026-01128-y",
-  "targetDateBeijing": "2026-10-10",
-  "packageUrl": "https://at.adobe.com/AOaaHNB20PiMVocU",
-  "packageSha256": "c51ff8af54966ac77ac47117c05cb343956fe933663c102f6046df5fafbe4170",
-  "manifestPath": "public/wechat-retrospective/alcohols-electrochemical-crosscoupling-qiu-20261010-r3.json",
-  "gatePath": "audit/wechat-working/retrospective-alcohols-electrochemical-crosscoupling-qiu-20261010-r3-review-gate.json",
-  "expectedArticleCount": 1,
+  "revision": "2026-10-11-r1",
+  "doi": "10.1038/s44160-026-01127-z",
+  "targetDateBeijing": "2026-10-11",
+  "packageUrl": "https://at.adobe.com/jShxzmnByGbRuTzN",
+  "packageSha256": "004d9f3df05c991af1294164835ee96a56508fba93bc2c8ac3ff30b734f53477",
+  "manifestPath": "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json",
+  "gatePath": "audit/wechat-working/2026-10-11-review-gate.json",
+  "expectedArticleCount": 2,
   "expectedDois": [
-    "10.1038/s44160-026-01128-y"
+    "10.1021/jacs.6c15886",
+    "10.1038/s44160-026-01127-z"
   ],
   "thisStepWritesDraft": false,
   "publicSendAuthorized": false,
-  "note": "R3 complete strict publisher caption regex preflight: all 31 numbered source figures valid. Deliberately omit unnumbered SI section 5.7 illustration while retaining its factual discussion. 31 main/SI original body figures plus 1 source-locked cover. This import is source-only, and user did not select Oct10 daily feature."
+  "note": "Import exact user-supplied JACS and Nature Synthesis 2026-10-11 two-paper reviewed image/text package only. 28 original main/SI PDF clipped figures and two independently reviewed covers. Gate covers daily/retro/edition manifests; do not write, create, update, or publicly send WeChat until publisher review gate readback. 10/10 old media ID is obsolete and must not be reused."
 }
