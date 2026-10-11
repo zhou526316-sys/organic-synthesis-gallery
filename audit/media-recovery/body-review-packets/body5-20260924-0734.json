@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260924-0734",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-23T23:34:21Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10781649022,
+  "evidenceArchiveSha256": "73f5281cbf04a6443168a03b154881ebe37894b01b7c7070903e188e3ed930c9",
+  "evidenceRunId": 35933700007,
+  "evidenceBaseSha": "7fff22f3c31236ecd650aa80366cc53a887ec08f",
+  "stageIndexSha256": "c1085c100e7628b4eedda0e15dc812cbc9fe77f6b3f5d10a5d6398f8b4f6fe7a",
+  "approvedCount": 12,
+  "reviewMethod": "Each selected stored file was independently re-hashed from the frozen GitHub evidence archive and visually inspected against its owning caption and paper theme. Task/page/article/source DOI binding, original figure identity, capture protocol 6.2.20, fixed media generation, direct ACS article/source paths, image role, clarity, duplicate/same-ID publication risk and current-corpus continuity were checked. All selected SVGs were checked for self-contained references and absence of active script/foreignObject content; PNG signatures and dimensions were checked against the stored metadata. Capture success and review markers were treated only as provenance evidence. Partial article-level captures were not expanded beyond the exact individually verified stored files. No publisher recrawl, R2 write, server-side direct import/repair, literature-data change or userscript change was performed. The sixth remaining paper in the frozen evidence set was intentionally deferred to preserve the five-paper semantic-review cap for this round.",
+  "decisions": [
+    {
+      "doi": "10.1021/acscatal.6c05029",
+      "images": [
+        ["next-031", "scheme-1", "Viewed the aryl-iodide/olefin substrate-scope panel, product series and crystallographic example; chemistry and labels match Scheme 1 and the caption 'Substrate Scope of Aryl Iodides and Olefins'. Exact 1,718,495-byte self-contained SVG re-hashes to de2bae592923be4cd39b7471418e2438ca43d2b2baf2559d57d62614d5764d28 and has no same-ID public figure."],
+        ["next-032", "scheme-2", "Viewed the ferrocenyl-halide substrate-scope matrix with kinetic-resolution products, yields and ee values; content matches Scheme 2 and its caption. Exact 174,959-byte PNG re-hashes to 7168f32e59ddd8f29ea75695ab595be154ff6e3d2ab8df4964b79218328736c8 with verified 520 x 748 dimensions. The article-level capture is partial, so only these exact reviewed files are approved."]
+      ]
+    },
+    {
+      "doi": "10.1021/acscatal.6c05787",
+      "images": [
+        ["next-033", "scheme-2", "Viewed the postsynthetic modification network and medicinal-chemistry applications derived from the alcohol-transformation products; structures and transformations match Scheme 2 and its caption. Exact 1,127,698-byte self-contained SVG re-hashes to 7b39266fe1b94fad87114b774645022869efb5d819b3cfdffce9b69dc026da28."],
+        ["next-034", "scheme-3", "Viewed radical-quenching, BHT trapping and hydrogen-atom-transfer control experiments for the zinc-catalyzed alcohol transformations; experiments and labels match Scheme 3 and its caption. Exact 1,124,318-byte self-contained SVG re-hashes to c08aa1df66c7c3a1fdade12371c8797d77e295605ab45676bbf3b278f359dac6."],
+        ["next-035", "scheme-4", "Viewed the intermediate-detection experiments for the deoxygenation and acceptorless-dehydrogenation reactions; substrates, products and control outcomes match Scheme 4 and its caption. Exact 624,309-byte self-contained SVG re-hashes to ba2f0fa4747a3541341151604e02577b49d3ec9f15124c0c2ca2efa86fac5f42. The article report is partial, so unverified missing figures remain unapproved."]
+      ]
+    },
+    {
+      "doi": "10.1021/acscatal.6c05293",
+      "images": [
+        ["next-036", "figure-3", "Viewed the Ni2Mn catalyst XPS/XANES/EXAFS, acidity/basicity and structure-performance correlation panels; plots and annotations match Figure 3 and its caption. Exact 215,031-byte PNG re-hashes to 2d049a2a44f2a687689186ceb759c0e74fc17d3946f1b0d46c1a391912a53df9 with verified 520 x 624 dimensions."],
+        ["next-037", "figure-4", "Viewed the tetrahydroquinoline hydroxylation substrate-scope and synthetic-application panel; product structures and scope organization match Figure 4 and its caption. Exact 1,558,294-byte self-contained SVG re-hashes to 994b31dd8d4c5c42d1f0fc12b32f783c890946706682059b33feefe6aeee6b8d."],
+        ["next-038", "figure-5", "Viewed the scale-up experiment graphic with oxygen, HA-Ni2Mn catalyst loading and hydroxylated product; content matches Figure 5 and its scale-up caption. Exact 105,226-byte self-contained SVG re-hashes to a27a173c5bc146a0eaad569b74db806d483c1a57d9b67d3ae0f92bc10ef556f1."],
+        ["next-039", "figure-6", "Viewed mechanistic controls, EPR spin trapping, calculated energy profiles and the proposed catalytic pathway; panels match Figure 6 and its mechanistic caption. Exact 117,068-byte PNG re-hashes to fa66c7c6c6c07f784d33f8c5bf11c052b23f5ad84a654320acd0b80f19d87d87 with verified 520 x 729 dimensions. This partial capture is not extrapolated to missing figures."]
+      ]
+    },
+    {
+      "doi": "10.1021/acscatal.6c04996",
+      "images": [
+        ["next-040", "scheme-2", "Viewed the broad substrate-scope panel for the nickel-catalyzed enantioconvergent reductive coupling that builds CF2H-bearing stereocenters; product series, reaction header and stereochemical examples match Scheme 2 and its caption. Exact 2,402,972-byte self-contained SVG re-hashes to dad0763357c06111c921b26cd7611b4faded9a78a688b549df89b33986807bf9."],
+        ["next-041", "scheme-3", "Viewed synthetic applications and mechanistic studies including stereochemical probes, radical-trapping controls, linear ee relationship and selectivity analysis; content matches Scheme 3 and its caption. Exact 1,736,961-byte self-contained SVG re-hashes to b89f6051eb61ffa68f6da7142f4a4beada669dc9624cdee8256f3247bd1a2818. It does not duplicate the previously reviewed Scheme 1."]
+      ]
+    },
+    {
+      "doi": "10.1021/acscatal.6c05422",
+      "images": [
+        ["next-042", "figure-4", "Viewed ligand-yield comparisons for hindered Suzuki-Miyaura examples and the DiploPhos versus ProPhos time-course plot; structures, yield table and kinetic comparison match Figure 4 and its caption. Exact 95,379-byte PNG re-hashes to 71bfbe949bbf201a0eba2097ba7af0d44b52438d210191b820993c31b8312310 with verified 520 x 743 dimensions. The article report is partial, so only this exact reviewed figure is approved."]
+      ]
+    }
+  ]
+}
