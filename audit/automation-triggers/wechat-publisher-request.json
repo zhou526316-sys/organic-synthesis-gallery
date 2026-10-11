@@ -1,8 +1,8 @@
 {
-  "requestId": "wechat-2026-10-11-r2-reviewed-full-editorial-single-draft-update",
+  "requestId": "wechat-2026-10-11-r3-owner-selected-concept-full-figures-refined-copy-existing-media-only",
   "publicationDate": "2026-10-11",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-11-r2",
+  "editorialRevision": "2026-10-11-r3",
   "approvedGate": "audit/wechat-working/2026-10-11-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -12,16 +12,16 @@
   "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWOG4MGfh55oHCc7llEvIMhvXq9BhWLWVfRRRPx3yKyH7",
   "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-11&doi=10.1021%2Fjacs.6c15886&summary=0",
   "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01127-z&summary=0",
-  "expectedReviewedBodyImages": 33,
+  "expectedReviewedBodyImages": 32,
   "expectedReviewedAssets": 35,
-  "sourceImportRunId": 38110452880,
+  "sourceImportRunId": 38115799397,
   "draftOnly": true,
   "publicSendAuthorized": false,
   "requireDraftGetReadback": true,
   "requireArticleOrderAndExactDois": true,
   "linkOnly": false,
-  "reviewStatus": "scientific_text_and_source_figures_pass",
-  "coverStatus": "source_raster_and_crop_review_pass_native_app_observation_pending",
-  "updatePolicy": "same_existing_oct11_draft_only_fail_closed_on_old_media_id_invalid",
-  "reason": "User Oct11 requested restoration of every previously accepted WeChat editorial rule, not only title and cover. After full two-paper source+SI text and image review, strict R2 source import passed. Update the *existing* Oct11 two-item draft once (same media ID; if missing, fail closed). First title full 有机合成文献日报|10.11|今日精选|JACS and source authentic maximum TOC without header; second source-valid Nature Synthesis square. Both article lead source figures before quick points, narrative result-to-mechanistic-evidence, correct Fig4 panel placements, 33 body images, precise DOI link. No public send; post-write draft/get and fresh real preview required."
+  "updatePolicy": "strict_existing_oct11_media_id_only_no_duplicate",
+  "userSelectedRetrospectiveCover": "pixel_identical_lossless_of_image(20261011-052758).png",
+  "userOriginalCoverSHA256": "ad691b685826c383f66d61d2f32018796d44070d9ac53501d731801d70c44f66",
+  "reason": "User explicitly approved Oct11 R3 full text/source image overhaul and user-selected concept cover. Reviewed exact-source R3 package imported successfully, 32 body images + two covers; restored SI Fig39; JACS Scheme3/Nature Fig2/Fig4 logical blocks full and no split remnants; Chinese fact-level precision, causal structure, evidence limits. Update only existing two-article Oct11 media ID via configured fixed IP API; draft/get readback and new relay preview required. Absolutely no public send."
 }
