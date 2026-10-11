@@ -70,6 +70,21 @@ try {
   const all = await search(catalogId, '', { limit: 1 });
   assert(all.matched === memberDois.size, 'all_time_membership_count_mismatch');
 
+  // User-observed 2026-07-01 lower-bound filter: assert real published D1
+  // range correctness and record latency, not an arbitrary timeout budget.
+  const dateRangeStart = performance.now();
+  const oneSidedDate = await search(catalogId, '', { dateFrom: '2026-07-01', limit: 24 });
+  const oneSidedDateMs = Math.round(performance.now() - dateRangeStart);
+  assert(oneSidedDate.matched > 0 && oneSidedDate.matched <= memberDois.size,
+    'one_sided_date_result_count_invalid');
+  assert(oneSidedDate.count === Math.min(24, oneSidedDate.matched),
+    'one_sided_date_result_page_invalid');
+  assert(oneSidedDate.items.every(item => typeof item.firstOnlineDate === 'string'
+    && item.firstOnlineDate >= '2026-07-01' && memberDois.has(doiKey(item.doi))),
+    'one_sided_date_filter_or_membership_invalid');
+  report.oneSidedDate = { dateFrom: '2026-07-01', matched: oneSidedDate.matched,
+    count: oneSidedDate.count, apiDurationMs: oneSidedDateMs };
+
   const lmct = await search(catalogId, 'LMCT');
   const english = await search(catalogId, 'ligand-to-metal charge transfer');
   const chinese = await search(catalogId, '配体到金属电荷转移');
