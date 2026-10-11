@@ -2915,6 +2915,122 @@ def pending_publish_request(publication_date: str):
     return request
 
 
+
+def audit_live_wechat_draft_read_only(
+    request: dict,
+    *,
+    publication_date: str,
+    slot: str,
+    featured: dict | None,
+    edition: dict,
+    retrospective_slug: str,
+    expected_source_links: list[str],
+    args,
+) -> int:
+    """Read the live WeChat cloud draft without material upload, draft/update, or send.
+
+    This intentionally does not attempt to clear a mobile app's local draft: a
+    local-only failed save is not accessible through the Official Account API.
+    """
+    if (
+        args.publish
+        or request.get("action") != "verify_cloud_draft"
+        or request.get("readbackOnly") is not True
+        or request.get("draftOnly") is not True
+        or request.get("publicSendAuthorized") is not False
+        or request.get("publicationDate") != publication_date
+        or request.get("expectedArticleCount") != 2
+    ):
+        raise RuntimeError("cloud readback request invalid or could authorize a write")
+    original_id = str(request.get("expectedExistingMediaId") or "").strip()
+    if not original_id or args.media_id:
+        raise RuntimeError("cloud readback requires pinned media_id from approved request")
+    state = load_state(DEFAULT_STATE)
+    if (
+        str(state.get("publicationDate") or "") != publication_date
+        or str(state.get("media_id") or "").strip() != original_id
+        or int(state.get("articleCount") or 0) != 2
+    ):
+        raise RuntimeError("read-only cloud check: local draft identity mismatch")
+    if not featured or not retrospective_slug or len(expected_source_links) != 2:
+        raise RuntimeError("read-only cloud check needs the selected two-paper edition")
+    retrospective = load_retrospective_slug(retrospective_slug)
+    selected_dois = [
+        normalize_doi((featured.get("paper") or {}).get("doi")),
+        normalize_doi((retrospective.get("paper") or {}).get("doi")),
+    ]
+    selected_titles = [
+        str(edition.get("title") or "").strip(),
+        str(retrospective.get("title") or "").strip(),
+    ]
+    if (
+        request.get("expectedDois") != selected_dois
+        or request.get("expectedFirstReadOriginalUrl") != expected_source_links[0]
+        or request.get("expectedSecondReadOriginalUrl") != expected_source_links[1]
+        or not all(selected_titles)
+    ):
+        raise RuntimeError("read-only cloud check DOI/title/link scope mismatch")
+
+    # One live, authenticated API call. There are NO draft writes on this path.
+    cloud = get_draft(get_access_token(), original_id)
+    if not exact_draft_identity(cloud, selected_titles, selected_dois):
+        raise RuntimeError("live cloud draft no longer matches selected two-article identity")
+    assert_draft_source_links(cloud, expected_source_links)
+
+    cloud_items = cloud["news_item"]
+    image_counts = [
+        len(re.findall(r"<img\b", str(item.get("content") or ""), re.I))
+        for item in cloud_items
+    ]
+    cloud_slug = preview_slug(original_id, cloud)
+    prior_receipt_path = ROOT / "audit/wechat-publisher/latest.json"
+    prior_receipt = (
+        json.loads(prior_receipt_path.read_text(encoding="utf-8"))
+        if prior_receipt_path.exists()
+        else {}
+    )
+    old_preview = str(prior_receipt.get("preview_url") or "")
+    prior_slug = old_preview.rsplit("/", 1)[-1].removesuffix(".html") if old_preview else ""
+    cover_caches = [
+        load_json_cache(DEFAULT_CACHE),
+        load_json_cache(DEFAULT_RETROSPECTIVE_COVER_CACHE),
+    ]
+    cover_match = [
+        bool(cache.get("media_id"))
+        and str(cache.get("media_id")) == str(item.get("thumb_media_id") or "")
+        for cache, item in zip(cover_caches, cloud_items)
+    ]
+
+    # Only a derived HTML preview is refreshed; no cloud draft or app data changes.
+    preview_path, preview_url = write_draft_preview(
+        cloud,
+        media_id=original_id,
+        preview_dir=Path(args.preview_dir),
+        base_url=args.preview_base_url,
+    )
+    result = {
+        "stage": "cloud_readback_only",
+        "errcode": 0,
+        "errmsg": "ok",
+        "media_id": original_id,
+        "publicationSlot": slot,
+        "paper_count": 2,
+        "article_count": len(cloud_items),
+        "draft_readback": "ok",
+        "preview_path": str(preview_path),
+        "preview_url": preview_url,
+        "content_source_url": expected_source_links[0],
+        "cloud_matches_last_successful_preview": cloud_slug == prior_slug,
+        "cloud_image_tags_by_article": image_counts,
+        "cover_matches_server_upload_cache": cover_match,
+        "cloud_draft_modified": False,
+        "mobile_local_copy_inspected": False,
+        "readback_only": True,
+    }
+    print(json.dumps(result, ensure_ascii=False))
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--create", action="store_true", help="create or update the WeChat draft, then read it back and build the preview")
@@ -3083,6 +3199,25 @@ def main() -> int:
             "note": "No preview URL is created before the WeChat draft is written.",
         }, ensure_ascii=False))
         return 0
+
+    # Explicit read-only diagnosis: stop before uploads and all draft writes.
+    # The fixed-IP relay runs this same script with --create, but the approved
+    # request switches execution to a cloud-only draft/get audit.
+    cloud_check_request_path = ROOT / "audit" / "automation-triggers" / "wechat-publisher-request.json"
+    if cloud_check_request_path.exists():
+        check = json.loads(cloud_check_request_path.read_text(encoding="utf-8"))
+        if isinstance(check, dict) and check.get("action") == "verify_cloud_draft":
+            load_env(Path(args.env_file))
+            return audit_live_wechat_draft_read_only(
+                check,
+                publication_date=publication_date,
+                slot=slot,
+                featured=featured,
+                edition=edition,
+                retrospective_slug=retrospective_slug,
+                expected_source_links=expected_source_links,
+                args=args,
+            )
 
     required_review_sources = []
     edition_path = EDITION_DIR / f"{publication_date}.json"
