@@ -706,6 +706,18 @@ export function createLocalPdfVault(options = {}) {
     });
   }
 
+  /** Quarantine one mismatched document association without touching disk. */
+  function disableCopy(id) {
+    return operation(async () => {
+      const value = await boundary(readCopy(id));
+      await boundary(updateCopy(value, { state: 'revoked' }));
+      probes.delete(id);
+      copiesCache.delete(id);
+      publishChange();
+      return { id, doi: value.doi, fileName: value.file_name || '' };
+    });
+  }
+
   function openPdf(id) {
     return operation(async () => {
       const value = await boundary(readCopy(id));
@@ -805,7 +817,7 @@ export function createLocalPdfVault(options = {}) {
       maxBytes: PDF_VAULT_MAX_BYTES,
     }),
     selectDirectory, selectDownloadDirectory, getDownloadDirectory, downloadDirectoryInfo,
-    restoreDownloadPermission, unlinkDoiExternal, useOpfs, getDestination, importPdf, linkPdfHandle, listCopies, describe, describeCards,
+    restoreDownloadPermission, unlinkDoiExternal, disableCopy, useOpfs, getDestination, importPdf, linkPdfHandle, listCopies, describe, describeCards,
     openPdf, exportFile: openPdf, restorePermission, close,
   });
 }
