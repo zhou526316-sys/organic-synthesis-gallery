@@ -108,22 +108,43 @@ function showFileError(error) {
 }
 
 async function loadSession(initialToken, abort) {
-  const timeout = setTimeout(() => abort.abort(), 10000);
-  try {
+  // A network stack or proxy may ignore AbortController, including while
+  // response.json() waits for an incomplete HTTP-200 body. Bound the entire
+  // verification stage independently, and never treat a timeout as logout.
+  const request = (async () => {
     const response = await fetch(API_SESSION, {
       headers: { authorization: 'Bearer ' + initialToken },
       cache: 'no-store', redirect: 'error', credentials: 'omit', signal: abort.signal,
     });
     if (!response.ok) throw new Error('account_api_http_' + response.status);
     const data = await response.json();
-    if (data?.authenticated === false) return null;
+    if (data?.authenticated === false && data?.user === null) return null;
     if (data?.authenticated !== true ||
         typeof data.user?.id !== 'string' ||
         !/^[A-Za-z0-9_-]{1,128}$/.test(data.user.id)) {
       throw new Error('account_response_invalid');
     }
     return data.user;
-  } finally { clearTimeout(timeout); }
+  })();
+  let timer, timedOut = false;
+  try {
+    return await Promise.race([
+      request,
+      new Promise((_, reject) => {
+        timer = window.setTimeout(() => {
+          timedOut = true;
+          abort.abort();
+          reject(new LocalPdfVaultError('session_timeout'));
+        }, 10000);
+      }),
+    ]);
+  } catch (error) {
+    // An abort-aware fetch can reject before the timeout promise does.
+    if (timedOut) throw new LocalPdfVaultError('session_timeout');
+    throw error;
+  } finally {
+    window.clearTimeout(timer);
+  }
 }
 
 function showNativePdf(file, context) {
@@ -236,9 +257,9 @@ async function start() {
       if (error?.code === 'account_changed') return;
       showFileError(error);
     } else {
-      setState('auth-error', error?.name === 'AbortError'
-        ? '账号验证超时，请检查网络后点击重试。'
-        : '账号接口暂时无法确认当前会话，请检查网络后重试。');
+      setState('auth-error', error?.code === 'session_timeout' || error?.name === 'AbortError'
+        ? '账号验证超时。登录令牌及本地 PDF 未清除，请检查网络后点击重试。'
+        : '账号接口暂时无法确认当前会话，这不代表登录失效；请检查网络后重试。');
       retryButton.hidden = false;
     }
   } finally {
