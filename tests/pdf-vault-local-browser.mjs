@@ -544,19 +544,18 @@ try {
     }, [...PDF]);
     await page.getByTestId('native-pdf-link').click();
     await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading');
-    await page.waitForLoadState('networkidle', { timeout: 10000 });
     assert.equal((await localCopies(page)).filter(x => x.state === 'available').length, 1);
     await page.locator('#native-tools-toggle').click();
     await page.getByTestId('native-pdf-unlink').click();
     await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'unlinked');
     assert.equal((await localCopies(page)).filter(x => x.state === 'available').length, 0,
       'cancel must revoke the association without deleting the disk file');
-    // Finish lazy static PDF worker/style fetches before intentionally
-    // navigating away. Do not whitelist real failed asset requests in QA.
-    await page.waitForLoadState('networkidle', { timeout: 10000 });
-    await page.reload({ waitUntil: 'domcontentloaded' });
-    await page.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
-    assert.equal(await page.getByTestId('native-pdf-frame').isVisible(), false);
+    // Verify persistence with a separate DOI tab. Do not unload an active
+    // browser-native PDF plugin while its static worker assets may be loading.
+    const reopened = await context.newPage();
+    await reopened.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await reopened.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
+    assert.equal(await reopened.getByTestId('native-pdf-frame').isVisible(), false);
   });
   await test('one read-only folder grant automatically discovers a newly downloaded PDF', async () => {
     const { context } = await trackedContext();
