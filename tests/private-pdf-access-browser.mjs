@@ -139,7 +139,22 @@ async function contextWith(capabilities,openResult={available:true,url:'https://
   File.prototype.arrayBuffer=function(...args){window.__vaultIo.arrayBuffer++;return arrayBuffer.apply(this,args);};
   if(window.crypto?.subtle){
    const digest=crypto.subtle.digest.bind(crypto.subtle);
-   crypto.subtle.digest=(...args)=>{window.__vaultIo.digest++;return digest(...args);};
+   // A SHA-256 of the exact authenticated session token is not PDF file I/O.
+   // Track it separately, while every other digest is still forbidden when
+   // merely rendering Gallery cards (even if there was no File.getFile call).
+   window.__sessionReceiptDigests=0;
+   crypto.subtle.digest=(algorithm,data)=>{
+    const current=localStorage.getItem('organic-gallery-session-v1')||'';
+    const expected=new TextEncoder().encode(current);
+    const bytes=data instanceof ArrayBuffer?new Uint8Array(data):
+     ArrayBuffer.isView(data)?new Uint8Array(data.buffer,data.byteOffset,data.byteLength):null;
+    const sessionReceipt=Boolean(bytes&&expected.length>0&&bytes.length===expected.length&&
+     expected.every((value,index)=>bytes[index]===value)&&
+     (String(algorithm).toUpperCase()==='SHA-256'||algorithm?.name==='SHA-256'));
+    if(sessionReceipt)window.__sessionReceiptDigests++;
+    else window.__vaultIo.digest++;
+    return digest(algorithm,data);
+   };
   }
  },base);
  await context.route(base+'/**',async route=>{
