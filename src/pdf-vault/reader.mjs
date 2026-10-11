@@ -1,6 +1,7 @@
 import { AnnotationMode, GlobalWorkerOptions, getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import workerUrl from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
 import { createContinuousPdfViewer } from '../pdf-continuous-viewer.mjs';
+import { inferPdfDoiIdentity, evaluatePdfDoiIdentity } from './doi-identity.mjs';
 
 // All parser support assets are a pinned part of the same Gallery release.
 // No URL, credentials, PDF hash, file path or bytes are sent to a remote viewer.
@@ -46,7 +47,7 @@ function discard(task) {
 
 /** Parse a real local PDF before retaining a successful import record. This
  * validates a page tree/page, not the publication's DOI or copyright licence. */
-export async function validateLocalPdf(file, { assertCurrent = () => true, signal } = {}) {
+export async function validateLocalPdf(file, { assertCurrent = () => true, signal, bytes, expectedDoi, identityOnly = false } = {}) {
   let task = null;
   let disposed = false;
   const check = () => {
@@ -58,7 +59,7 @@ export async function validateLocalPdf(file, { assertCurrent = () => true, signa
   try {
     check();
     if (!file || typeof file.arrayBuffer !== 'function' || file.size < 8) throw pdfError('invalid_pdf');
-    const data = new Uint8Array(await file.arrayBuffer());
+    const data = bytes instanceof Uint8Array ? bytes : new Uint8Array(await file.arrayBuffer());
     check();
     task = getDocument(options(data));
     const pdf = await task.promise;
@@ -68,11 +69,29 @@ export async function validateLocalPdf(file, { assertCurrent = () => true, signa
     check();
     const viewport = page.getViewport({ scale: 1 });
     if (!(viewport.width > 0 && viewport.height > 0 && Number.isFinite(viewport.width) && Number.isFinite(viewport.height))) throw pdfError('invalid_pdf');
-    return { pageCount: pdf.numPages };
+    if (!expectedDoi && !identityOnly) return { pageCount: pdf.numPages };
+    let metadataText = '';
+    try {
+      const metadata = await pdf.getMetadata();
+      check();
+      const info = metadata?.info || {};
+      metadataText = [info.DOI, info.Title, info.Subject, info.Keywords,
+        metadata?.metadata?.get?.('dc:identifier'), metadata?.metadata?.get?.('prism:doi')]
+        .filter(value => typeof value === 'string').join(' ');
+    } catch { check(); /* A missing metadata dictionary is not a DOI. */ }
+    const first = await page.getTextContent();
+    check();
+    const firstPageText = (first.items || []).map(item => item.str || '').join(' ').slice(0, 24000);
+    const source = { metadataText, firstPageText, filename: file.name || '' };
+    const identity = expectedDoi ? evaluatePdfDoiIdentity(source, expectedDoi) : inferPdfDoiIdentity(source);
+    if (expectedDoi && identity.status !== 'match') {
+      throw pdfError('pdf_doi_' + identity.status);
+    }
+    return { pageCount: pdf.numPages, identity };
   } catch (error) {
     check();
     if (error?.name === 'PasswordException') throw pdfError('pdf_password');
-    if (error?.code === 'account_changed') throw error;
+    if (error?.code === 'account_changed' || /^pdf_doi_/.test(error?.code || '')) throw error;
     throw pdfError('invalid_pdf');
   } finally {
     signal?.removeEventListener('abort', abort);
