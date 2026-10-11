@@ -1,8 +1,9 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-10T23:10:00.000Z",
-  "requestedBy": "prepublish-primary-20261011-0800",
+  "requestedAt": "2026-10-11T02:10:48.645Z",
+  "requestedBy": "post-release-doi-union-20261011-0800",
   "publicationSlot": "2026-10-11T08:00:00+08:00",
-  "baselineMainSha": "0da6156a0be541d697e4eb34d81e78c4d8ab88a6",
-  "reason": "The sole daily 08:00 prepublish review found no valid 06:55 same-slot machine audit: main still carries generatedAt 2026-10-09T23:13:13.867Z with endDate 2026-10-10, while the required 2026-10-11 snapshot and same-slot run are absent. Run the canonical 3-day Asia/Shanghai discovery window plus 7-day safety scan, multi-ISSN Crossref online/published/created, OpenAlex and created/deposit rescue with verifiedThrough catch-up. Refresh audit/latest.json and audit/unresolved-latest.json atomically for publicationSlot 2026-10-11T08:00:00+08:00; do not modify production literature, formal review, TOC media, historical archive staging or schedules."
+  "productionMarkerBlobSha": "b48192fcc7a1acb3ba87190283c74432623e9ecd",
+  "expectedProductionCards": 959,
+  "reason": "Run real post-release machine DOI-union audit against the 959-paper immutable 2026-10-11 formal release. Preserve 3-day main window, 7-day safety tail, Crossref multi-ISSN online/published/created, OpenAlex, late deposits and verifiedThrough catch-up; do not add papers, trigger another writer, change schedule or claim closure with unexplained missing DOI."
 }
