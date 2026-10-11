@@ -3033,6 +3033,67 @@ def audit_live_wechat_draft_read_only(
 
 
 
+
+def summarize_wechat_article_html(markup: str) -> dict:
+    """Check scientific prose, embedded images, links, and section hierarchy.
+
+    WeChat draft/add may normalize HTML markup on ingestion, so comparing its
+    byte representation is too strict. This tracks content-bearing semantics
+    independently from attribute order, style rewriting, or src/data-src.
+    """
+    from collections import Counter
+    from html.parser import HTMLParser
+
+    class ArticleParser(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=True)
+            self.words = []
+            self.images = []
+            self.links = []
+            self.structure = Counter()
+            self.skip_depth = 0
+
+        def handle_starttag(self, tag, attrs):
+            tag = tag.lower()
+            self.structure[tag] += 1
+            att = dict(attrs)
+            if tag in ("script", "style"):
+                self.skip_depth += 1
+            if tag == "img":
+                source = att.get("data-src") or att.get("src") or ""
+                parsed = urllib.parse.urlsplit(html.unescape(str(source)))
+                if parsed.hostname in ("mmbiz.qpic.cn", "mp.weixin.qq.com"):
+                    source = parsed.path
+                else:
+                    source = source.split("#")[0]
+                self.images.append(str(source))
+            if tag == "a":
+                self.links.append(html.unescape(str(att.get("href") or "")))
+
+        def handle_startendtag(self, tag, attrs):
+            self.handle_starttag(tag, attrs)
+
+        def handle_endtag(self, tag):
+            if tag.lower() in ("script", "style") and self.skip_depth:
+                self.skip_depth -= 1
+
+        def handle_data(self, data):
+            if not self.skip_depth:
+                self.words.append(data)
+
+    parser = ArticleParser()
+    parser.feed(str(markup or ""))
+    prose = re.sub(r"\s+", "", "".join(parser.words))
+    return {
+        "prose_sha256": hashlib.sha256(prose.encode("utf-8")).hexdigest(),
+        "prose_length": len(prose),
+        "images": parser.images,
+        "links": parser.links,
+        "headings": [parser.structure.get(x, 0) for x in ("h1", "h2", "h3")],
+        "tables": [parser.structure.get(x, 0) for x in ("table", "tr", "td")],
+    }
+
+
 def clone_existing_cloud_draft_as_new(
     request: dict,
     *,
@@ -3161,10 +3222,29 @@ def clone_existing_cloud_draft_as_new(
     if not exact_draft_identity(clone, expected_titles, expected_dois):
         raise RuntimeError("new draft article titles/order/DOIs fail strict identity check")
     assert_draft_source_links(clone, expected_source_links)
+    html_roundtrip_normalized = [False, False]
     for i, (orig, copy) in enumerate(zip(original_items, clone["news_item"])):
-        for field in ("title", "author", "digest", "content", "thumb_media_id", "content_source_url"):
+        for field in ("title", "author", "digest", "thumb_media_id", "content_source_url"):
             if str(orig.get(field) or "") != str(copy.get(field) or ""):
-                raise RuntimeError(f"new draft content mismatch article {i+1} field {field}")
+                raise RuntimeError(f"new draft substantive field mismatch article {i+1} field {field}")
+        original_html = str(orig.get("content") or "")
+        copied_html = str(copy.get("content") or "")
+        if original_html != copied_html:
+            source_semantics = summarize_wechat_article_html(original_html)
+            clone_semantics = summarize_wechat_article_html(copied_html)
+            mismatch = [
+                k for k in ("prose_sha256", "images", "links", "headings", "tables")
+                if source_semantics[k] != clone_semantics[k]
+            ]
+            if mismatch:
+                raise RuntimeError(
+                    f"new draft round-trip article {i+1} semantic mismatch keys={mismatch}; "
+                    f"prose lengths={source_semantics['prose_length']}/{clone_semantics['prose_length']}, "
+                    f"image counts={len(source_semantics['images'])}/{len(clone_semantics['images'])}, "
+                    f"headings={source_semantics['headings']}/{clone_semantics['headings']}, "
+                    f"tables={source_semantics['tables']}/{clone_semantics['tables']}"
+                )
+            html_roundtrip_normalized[i] = True
     # Check the existing original is not altered by the new-draft operation.
     original_after = get_draft(token, original_id)
     if preview_slug(original_id, original_after) != source_slug:
@@ -3208,6 +3288,7 @@ def clone_existing_cloud_draft_as_new(
         "preview_url": preview_url,
         "content_source_url": expected_source_links[0],
         "clone_fidelity_pass": True,
+        "html_roundtrip_normalized": html_roundtrip_normalized,
         "created_new_draft": stage == "draft_clone_add",
         "public_send": False,
     }, ensure_ascii=False))
