@@ -110,6 +110,74 @@ test('indexed discovery resolves only revision-bound content records', async () 
   );
 });
 
+test('indexed date-range page reuses one hash-verified month shard instead of 24 DOI locator reads', async () => {
+  const sourcePapers = Array.from({ length: 24 }, (_, index) => ({
+    doi: `10.1234/batch-${String(index).padStart(3, '0')}`,
+    title: `Indexed nickel chemistry ${index}`,
+    titleZh: `镍催化反应${index}`,
+    authors: ['A', 'B'],
+    journal: 'JACS',
+    date: '2026-10-03',
+    url: `https://doi.org/10.1234/batch-${String(index).padStart(3, '0')}`,
+    new: true,
+    addedDate: '2026-10-04',
+  }));
+  const source = fixture({ sourcePapers });
+  const requestedPaths = [];
+  const fetcher = async (url, init) => {
+    requestedPaths.push(new URL(url).pathname);
+    return source.fetcher(url, init);
+  };
+  const client = await new PublishedCatalogClient('https://example.invalid/', { fetcher }).open();
+  const indexed = sourcePapers.map(paper => ({
+    doi: paper.doi, revision: client.membership.members[paper.doi],
+    firstOnlineDate: paper.date, datePrecision: 'day',
+    title: 'UNTRUSTED INDEX TITLE', authors: ['Wrong Person'],
+  }));
+  const cards = await client.resolveIndexed(indexed);
+  assert.deepEqual(cards.map(paper => paper.doi), sourcePapers.map(paper => paper.doi));
+  assert.deepEqual(cards.map(paper => paper.title), sourcePapers.map(paper => paper.title));
+  const shardReads = requestedPaths.filter(path => path.includes('/architecture-v1/shards/'));
+  const locatorReads = requestedPaths.filter(path => path.includes('/architecture-v1/locator/'));
+  assert.equal(shardReads.length, 1, 'same-month index page needs one verified shard request');
+  assert.equal(locatorReads.length, 0, 'no per-DOI locator fan-out');
+  await client.resolveIndexed(indexed);
+  assert.equal(requestedPaths.filter(path => path.includes('/architecture-v1/shards/')).length, 1,
+    'repeat page should reuse SHA-verified shard cache');
+});
+
+test('incorrect D1 date hint never changes the canonical static card', async () => {
+  const sourcePapers = [
+    ...Array.from({ length: 23 }, (_, index) => ({
+      doi: `10.1234/batch-stale-${index}`,
+      title: `Canonical chemistry ${index}`, authors: ['A'], journal: 'JACS',
+      date: '2026-10-03', url: `https://doi.org/10.1234/batch-stale-${index}`,
+      new: true, addedDate: '2026-10-04',
+    })),
+    {
+      doi: '10.1234/batch-july',
+      title: 'July canonical record', authors: ['A'], journal: 'JACS',
+      date: '2026-07-01', url: 'https://doi.org/10.1234/batch-july',
+      new: false, addedDate: '2026-07-01',
+    },
+  ];
+  const source = fixture({ sourcePapers });
+  const paths = [];
+  const client = await new PublishedCatalogClient('https://example.invalid/', {
+    fetcher: async url => { paths.push(new URL(url).pathname); return source.fetcher(url); },
+  }).open();
+  const indexed = sourcePapers.map(paper => ({
+    doi: paper.doi, revision: client.membership.members[paper.doi],
+    firstOnlineDate: paper.date, datePrecision: 'day',
+  }));
+  // A malicious or stale index sends one October DOI into the July shard.
+  indexed[0].firstOnlineDate = '2026-07-01';
+  const cards = await client.resolveIndexed(indexed);
+  assert.deepEqual(cards.map(paper => paper.title), sourcePapers.map(paper => paper.title));
+  assert.ok(paths.some(path => path.includes('/architecture-v1/locator/')),
+    'mismatched date hint must fall back to the verified locator');
+});
+
 test('global search resolves Archive records on demand', async () => {
   const client = await new PublishedCatalogClient('https://example.invalid/', fixture()).open();
   const rows = await client.search('Archive nickel');
