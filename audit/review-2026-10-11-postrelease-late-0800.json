@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-11T02:13:27.604Z",
+  "timeZone": "Asia/Shanghai",
+  "type": "postrelease-late-candidate-review",
+  "discoveryGeneratedAt": "2026-10-11T02:11:51.960Z",
+  "handoffFile": "audit/unresolved-latest.json",
+  "handoffBlobSha": "17e626e794a19cf9e4ca0daf4dd2c85acd770324",
+  "scopeRulesVersion": "scope-2026-10-02-v1",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "74978d92a16d353271f16f111425d09e4de84f07",
+  "sourcePublicationSlot": "2026-10-11T08:00:00+08:00",
+  "nextPublicationSlot": "2026-10-12T08:00:00+08:00",
+  "summary": {
+    "reviewed": 4,
+    "accepted": 1,
+    "rejected": 3,
+    "pending": 0
+  },
+  "accepted": [
+    {
+      "doi": "10.1021/acscatal.6c06048",
+      "journal": "ACS Catalysis",
+      "title": "Mild Heterogeneous Thiophene Hydrogenation Enabled by a Modified Palladium Catalyst",
+      "titleZh": "经修饰钯催化剂实现噻吩的温和多相氢化",
+      "date": "2026-10-10",
+      "originalDate": "2026-10-10",
+      "reviewPriority": "high",
+      "authors": [
+        "Steffen Heuvel",
+        "Marie-Christin Leusmann",
+        "Julius Wiener",
+        "Arne Nalop",
+        "Bonnie J. Tyler",
+        "Mathis J. Karrasch",
+        "Frank Glorius"
+      ],
+      "decision": "include",
+      "status": "ready_for_next_slot",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "经氯仿预处理修饰的Pd(OH)₂/C催化剂在温和氢化条件下将噻吩转化为饱和含硫五元环，具有明确的有机合成用途和底物范围。",
+      "evidenceBasis": "本次发布后Crossref摘要明确报告烷基、硅基、芳基和苯并稠合噻吩可氢化成相应硫杂环戊烷衍生物，并讨论功能团耐受与空间隔离条件，支持可迁移的制备方法；无具体收率编造。",
+      "challengeReason": "虽然文章涉及Pd催化剂表面改性和XPS/ToF-SIMS表征，但核心贡献包括噻吩→饱和硫杂环的可分离转化、不同底物类型和官能团适用性，因此区别于单纯材料性能研究。",
+      "evidenceSource": "2026-10-11 post-release compact Crossref publisher abstract",
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c06048"
+      ],
+      "sourceEvidence": [
+        "audit/unresolved-latest.json@17e626e794a19cf9e4ca0daf4dd2c85acd770324",
+        "Crossref abstract collected in post-release DOI union"
+      ],
+      "scopeAssessment": {
+        "primaryContribution": "通过氯仿诱导的Pd(OH)₂/C表面改性实现噻吩等含硫杂芳烃在温和条件下的催化氢化。",
+        "preparativeTransformation": "噻吩杂芳烃环氢化成饱和硫杂环戊烷/稠合含硫杂环，避免脱硫副反应。",
+        "generalityEvidence": "公开摘要直接列出烷基、硅基、芳基、苯并稠合底物；功能团耐受评估与结构间隔要求；未主张任何未知产率或底物数量。",
+        "sourceEvidence": "Crossref的ACS Catalysis文章摘要以及本次准确的 DOI/日期来源快照。",
+        "boundaryChallenge": "最大反向观点是文章同时重点报道多相Pd表面氯化与催化剂表征，但制备性底物范围与含硫杂环合成是独立主要贡献之一，符合方法学收录边界。"
+      },
+      "sourceReviewFile": "audit/review-2026-10-11-postrelease-late-0800.json",
+      "nextPublicationSlot": "2026-10-12T08:00:00+08:00"
+    }
+  ],
+  "rejected": [
+    {
+      "doi": "10.1038/s41467-026-78616-4",
+      "journal": "Nature Communications",
+      "date": "2026-10-11",
+      "title": "A method quantifying soil melanin to understand fungal impacts on soil carbon stability",
+      "decision": "exclude",
+      "reviewPriority": "normal",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "该文提出土壤真菌黑色素的液相色谱定量方法，研究土壤碳稳定性，属于环境分析方法而非有机物制备。",
+      "evidenceBasis": "Crossref全文摘要说明基于LC对真菌黑色素定量并相关分析土壤有机碳，没有开发有机合成转化或分离制备路线。",
+      "challengeReason": "虽然包含色谱分析方法及有机色素对象，分析测定与可推广底物到产物的制备合成不同，因此排除。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78616-4"
+      ],
+      "sourceReviewFile": "audit/review-2026-10-11-postrelease-late-0800.json",
+      "evidenceSource": "2026-10-11 post-release paired Crossref article abstract"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05210",
+      "journal": "ACS Catalysis",
+      "date": "2026-10-10",
+      "title": "Curvature-Induced Electric-Field Effects Govern Controllable N2 Electrocatalysis on Single-Atom Catalysts",
+      "decision": "exclude",
+      "reviewPriority": "high",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "论文主要建立曲率诱导电场及单原子催化剂对氮气电还原活性和热力学影响的模型，不是一般有机合成。",
+      "evidenceBasis": "Crossref摘要含数值模拟、恒电位微观动力学和机器学习，研究M–N–C单原子催化剂局部电场调控N₂电还原，核心评价是反应动力学和限制电位。",
+      "challengeReason": "虽涉及电催化反应，但没有以一般有机制备产品、底物范围或合成路线为主要成果，区别于可纳入的有机电合成。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c05210"
+      ],
+      "sourceReviewFile": "audit/review-2026-10-11-postrelease-late-0800.json",
+      "evidenceSource": "2026-10-11 post-release paired Crossref article abstract"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05837",
+      "journal": "ACS Catalysis",
+      "date": "2026-10-10",
+      "title": "Diffusion-Selective Modulation Strategy for Enhanced Propane Dehydrogenation via Mixing Inert CHA Zeolite",
+      "decision": "exclude",
+      "reviewPriority": "high",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "惰性CHA沸石混合催化床改善丙烷脱氢至丙烯的扩散和工业转化效率，属于反应工程优化。",
+      "evidenceBasis": "Crossref摘要说明该文采用计算与实验验证选择性扩散调控，工业PDH转化率提高1–5%，强调装置改造便利而非通用有机制备方法。",
+      "challengeReason": "工业PDH确实产生丙烯，但单一大宗化工转换及催化床传质工程不是以多样分子制备路线为贡献，不能凭有有机产物就收录。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c05837"
+      ],
+      "sourceReviewFile": "audit/review-2026-10-11-postrelease-late-0800.json",
+      "evidenceSource": "2026-10-11 post-release paired Crossref article abstract"
+    }
+  ],
+  "pending": [],
+  "qualityControl": {
+    "secondPassCompleted": true,
+    "unresolvedDisagreements": 0,
+    "allCandidatesReviewed": true,
+    "offSlotProductionWrites": 0,
+    "titleZhChecked": true,
+    "scopeAssessmentComplete": true,
+    "note": "All four late-indexed DOI were reviewed against their actual abstracts. Thiophene hydrogenation retained as next-slot carryover only; three non-synthetic subject papers excluded with specific reasons. No second Oct11 writer."
+  }
+}
