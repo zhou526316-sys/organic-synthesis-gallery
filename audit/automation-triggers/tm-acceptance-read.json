@@ -1,8 +1,8 @@
 {
-  "requestId": "tm-20261011-0020-bridge282-real-run-30blocked",
-  "requestedAt": "2026-10-10T16:24:11.526Z",
+  "requestId": "tm-20261011-0932-bridge283-real-browser-evidence",
+  "requestedAt": "2026-10-11T01:33:50.534Z",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "context": "User screenshot at Beijing 2026-10-11 around 00:19 shows deployed VPN Bridge 2.2.82 / engine 6.2.63 / controller 2.2.41; explicit missing-only pass visited 30 of 139 eligible papers, 43 attempts, 30 unresolved (27 TOC / 3 truly missing owner PDFs), 0 queued/cooling, 0 fully resolved, 2 new body images. Determine latest uploadedAt/version and whether R2 diagnostic latest matches this run, inspect DOI error categories and publication/stage receipts, and keep old snapshots distinguishable. Read only; no publisher page visits, no media/PDF writes, no promotion, no queue or 08:00 release changes.",
+  "context": "After user-approved PR #530 deployed, read current R2 local-captures/diagnostics/latest.json and Tampermonkey report-index/stage-index/capture-index only. Determine newest owner log upload time, user-installed Bridge 2.2.83 / integrated 6.2.64 if present, changes from 2026-10-10 screenshot of 30 unresolved (TOC27/PDF3, visits30/139, 43 attempts), and per-DOI reasons for RSC/Chem/ACS, distinguishing old per-DOI reports and historical TOC-only from Oct regular. Never claim live-user success from public CI.",
   "targetDois": [
     "10.1039/d6sc06407h",
     "10.1039/d6gc03748h",
@@ -10,8 +10,8 @@
     "10.1016/j.chempr.2026.103043",
     "10.1002/anie.4335022"
   ],
-  "expectedBridgeVersion": "2.2.82",
-  "expectedInstallRevision": "6.2.63",
+  "expectedBridgeVersion": "2.2.83",
+  "expectedInstallRevision": "6.2.64",
   "readOnly": true,
   "allowCapture": false,
   "allowMediaWrite": false,
