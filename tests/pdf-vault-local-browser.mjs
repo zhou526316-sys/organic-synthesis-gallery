@@ -143,7 +143,7 @@ async function pageWaitNoQueue(page) {
 }
 async function queueAdd(page) { await by(page, 'queue-doi').fill(DOI); await by(page, 'queue-add').click(); await waitQueueStatus(page, 'success'); }
 
-async function trackedContext({ width = 1280, holdAuth = false, folderPicker = true, queue = queueFixture(), indexedDb = true, stallIndexedDb = false, authResponses = [] } = {}) {
+async function trackedContext({ width = 1280, holdAuth = false, folderPicker = true, queue = queueFixture(), indexedDb = true, stallIndexedDb = false, nativeAuthMode = 'normal', authResponses = [] } = {}) {
   const context = await browser.newContext({ viewport: { width, height: 900 }, acceptDownloads: true });
   contexts.add(context); context.setDefaultTimeout(7000); context.setDefaultNavigationTimeout(12000);
   await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
@@ -205,16 +205,24 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
     bounded(diagnostic.unexpectedNetwork, { url: request.url(), method: request.method() });
     return route.fulfill({ status: 503, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: '{"error":"unexpected_network_blocked_by_fixture"}' });
   });
-  await context.addInitScript(({ origin, sessionKey, token, folderPicker, indexedDb, stallIndexedDb, pdfBytes }) => {
+  await context.addInitScript(({ origin, sessionKey, token, folderPicker, indexedDb, stallIndexedDb, nativeAuthMode, pdfBytes }) => {
     if (location.origin !== origin) return;
     if (!localStorage.getItem('gallery-local-vault-fixture-seeded')) {
       localStorage.setItem(sessionKey, token);
       localStorage.setItem('gallery-local-vault-fixture-seeded', '1');
     }
-    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, filePickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false, stallIndexedDb };
+    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, filePickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false, stallIndexedDb, nativeAuthMode };
     const nativeFetch = window.fetch.bind(window);
     window.fetch = (input, init) => {
       const pathname = new URL(typeof input === 'string' ? input : input.url, location.href).pathname;
+      // The native DOI tab must leave its checking state even if a proxy or
+      // browser ignores abort during fetch or an incomplete HTTP-200 JSON body.
+      if (location.pathname === '/pdf-vault/open/' && pathname === '/api/user-ui/auth/session') {
+        if (window.__pdfVaultFixture.nativeAuthMode === 'request') return new Promise(() => {});
+        if (window.__pdfVaultFixture.nativeAuthMode === 'body') {
+          return Promise.resolve({ ok: true, status: 200, json: () => new Promise(() => {}) });
+        }
+      }
       // Fault injection for a response whose completion is already queued
       // when account revocation aborts the request. The real client must still
       // reject it using its account fence; storage remains entirely real.
@@ -270,7 +278,7 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       }
       return createWritable.call(this, options);
     };
-  }, { origin: base, sessionKey: SESSION_KEY, token: TOKENS.a, folderPicker, indexedDb, stallIndexedDb, pdfBytes: [...PDF] });
+  }, { origin: base, sessionKey: SESSION_KEY, token: TOKENS.a, folderPicker, indexedDb, stallIndexedDb, nativeAuthMode, pdfBytes: [...PDF] });
   return { context, state };
 }
 
@@ -480,6 +488,34 @@ try {
     assert.equal(await page.evaluate(() => document.documentElement.dataset.pdfVaultAuth), 'authenticated');
     assert.ok(state.authCalls.length > apiCalls, 'retry revalidates the account, not a cached identity');
     assert.equal(await page.evaluate(key => localStorage.getItem(key), SESSION_KEY), TOKENS.a);
+  });
+  await test('native DOI verification times out despite a hung HTTP-200 body and retries without logout', async () => {
+    const { context, state } = await trackedContext({ nativeAuthMode: 'body' });
+    const page = await context.newPage();
+    await page.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'auth-error', null, { timeout: 15000 });
+    assert.match(await page.getByTestId('native-pdf-status').innerText(), /超时|未清除/);
+    assert.equal(await page.evaluate(key => localStorage.getItem(key), SESSION_KEY), TOKENS.a, 'timeout never logs out');
+    assert.equal(await page.getByTestId('native-pdf-frame').isVisible(), false);
+    assert.equal((await localCopies(page)).length, 0, 'no fabricated readable record');
+    await page.evaluate(() => { window.__pdfVaultFixture.nativeAuthMode = 'normal'; });
+    await page.getByTestId('native-pdf-retry').click();
+    await page.getByTestId('native-pdf-link').waitFor({ state: 'visible', timeout: 10000 });
+    assert.equal(await page.evaluate(() => document.documentElement.dataset.nativePdfState), 'unlinked');
+    assert.ok(state.authCalls.includes(TOKENS.a), 'retry verifies the same account with the server');
+  });
+  await test('native DOI verification treats transient HTTP 403 as a network error, not logout', async () => {
+    const { context } = await trackedContext({
+      authResponses: [{ status: 403, contentType: 'text/html', body: 'Temporary gateway challenge' }],
+    });
+    const page = await context.newPage();
+    await page.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'auth-error');
+    assert.match(await page.getByTestId('native-pdf-status').innerText(), /不代表登录失效/);
+    assert.equal(await page.evaluate(key => localStorage.getItem(key), SESSION_KEY), TOKENS.a);
+    await page.getByTestId('native-pdf-retry').click();
+    await page.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
+    assert.equal(await page.evaluate(() => document.documentElement.dataset.nativePdfState), 'unlinked');
   });
   await test('direct DOI PDF tab opens a saved local copy in the browser native viewer', async () => {
     const { context } = await trackedContext();
