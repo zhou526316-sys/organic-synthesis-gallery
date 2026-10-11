@@ -18,13 +18,11 @@
   "sources": [
     {
       "path": "public/wechat-featured/2026-10-11.json",
-      "blobSha": "91f8106159665052d4c36f08076e640d3db986e6",
-      "sha256": "031e48a91ae4dfdea3495725c5925c3390ce58203297020ef01cffc2c2118f51"
+      "blobSha": "37185bbd6d93335a92d98e09d585e117df18a45c"
     },
     {
       "path": "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json",
-      "blobSha": "70c0a87c33821d26ce89b9de119fdf8e4cfca12e",
-      "sha256": "299205850ea555c80e77a77d8ca47c0cb42f606221902dae7f910f8534bdb2b6"
+      "blobSha": "884f27ff6e8c7d4aa91fb467d8027d8f62c37746"
     },
     {
       "path": "public/wechat-editions/2026-10-11.json",
@@ -38,18 +36,15 @@
     },
     {
       "path": "audit/wechat-working/2026-10-11-r1-images-jacs.md",
-      "blobSha": "a461d1a6a15852151f74200eca78b3c3b73a2edd",
-      "sha256": "7aac9acd940db93634bff49783dc72331df6078bcb1b4b4e5f70a9974c5d14ca"
+      "blobSha": "43a756cc30aa5d514e46cc4cb494a1db40cc5380"
     },
     {
       "path": "audit/wechat-working/2026-10-11-r1-text-ns.md",
-      "blobSha": "9fa17580a51614b907d7e5e64b66f749c9874841",
-      "sha256": "a995e4b230eb5f2e27224c81c3572d22e1483c6bbfb0618bf6710f5152abe798"
+      "blobSha": "05faec4334eaf7ad8c645b557664a251118d26d9"
     },
     {
       "path": "audit/wechat-working/2026-10-11-r1-images-ns.md",
-      "blobSha": "9d7ae9a0cf1d40671600088dc67c07b76b29acbf",
-      "sha256": "33c539c48408774f71c013e605734c765ece5f47ecde9a458ab7fa76144382f2"
+      "blobSha": "15b7f7d67c641499671fdc151df317eb2a896973"
     },
     {
       "path": "audit/wechat-working/2026-10-11-r1-editorial-plan.json",
@@ -272,5 +267,5 @@
   "publicSendAuthorized": false,
   "draftOnly": true,
   "draftReadback": "not_run",
-  "note": "Local editorial and raster reviews passed; publisher may only write after complete package import; draft/get required for success."
+  "note": "Source-checked scientific captions and figure placement. Nature SI Fig.39 photo not embedded because its original PNG exceeds WeChat's <1MB in-body upload limit and main Fig.3b already retains device. 27 selected body figures + 2 covers. Both source reviews pass; draft/get mandatory."
 }
