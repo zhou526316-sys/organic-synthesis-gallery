@@ -569,7 +569,7 @@ try {
     assert.equal(await page.evaluate(() => window.__pdfVaultFixture.pickerCalls), 0,
       'once authorized, a new DOI tab must not request a folder picker');
   });
-  await test('fresh server-verified receipt opens the next native tab before a blocked API recheck', async () => {
+  await test('recent verified receipt avoids duplicate auth calls and older receipt never blocks the PDF', async () => {
     const { context, state } = await trackedContext();
     const page = await pageFor(context);
     await importGood(page);
@@ -577,11 +577,25 @@ try {
     await first.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
     await first.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading');
     await first.waitForFunction(() => Boolean(localStorage.getItem('gallery-pdf-vault-session-receipt-v1')));
+    const initialCalls = state.authCalls.length;
     state.holdAuth = true;
     const second = await context.newPage();
     await second.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
     await second.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading', null, { timeout: 10000 });
     assert.equal(await second.getByTestId('native-pdf-frame').isVisible(), true);
+    await second.waitForTimeout(100);
+    assert.equal(state.authCalls.length, initialCalls, 'fresh verified tabs must not re-call auth');
+    await second.evaluate(() => {
+      const key = 'gallery-pdf-vault-session-receipt-v1';
+      const row = JSON.parse(localStorage.getItem(key));
+      row.verifiedAt = Date.now() - 65_000;
+      localStorage.setItem(key, JSON.stringify(row));
+    });
+    const third = await context.newPage();
+    await third.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await third.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading', null, { timeout: 10000 });
+    await waitUntil(() => state.pendingAuth.length > 0, 'background revalidation pending');
+    assert.equal(await third.getByTestId('native-pdf-frame').isVisible(), true);
     state.holdAuth = false;
     for (const release of state.pendingAuth.splice(0)) release();
   });
