@@ -175,6 +175,17 @@ export async function discoverDownloadedPdf({
     if (processed % 12 === 0) onProgress({ processed, total: fileEntries.length, parsed });
     if (record?.status === 'match' && record.doi === doi) {
       assertCurrent();
+      // A cached size/mtime is a scanning hint, never identity proof. Verify
+      // the actual bytes again before making or replacing an association.
+      const confirmed = await identify(entry.file, assertCurrent);
+      assertCurrent();
+      if (confirmed.identity?.status !== 'match' || confirmed.identity.doi !== doi) {
+        cache.files[entry.relativeName] = {
+          size: entry.file.size, lastModified: entry.file.lastModified || 0,
+          doi: null, status: confirmed.identity?.status || 'unknown', seenAt: Date.now(),
+        };
+        continue;
+      }
       // Both the original-file handle and its file bytes remain on this device.
       // linkPdfHandle independently rehashes the actual file before committing.
       const saved = await vault.linkPdfHandle({ doi, handle: entry.handle });
