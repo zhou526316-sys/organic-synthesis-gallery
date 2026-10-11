@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-11T02:11:51.960Z",
+  "generatedAt": "2026-10-11T02:14:40.329Z",
   "auditVersion": 5,
   "timeZone": "Asia/Shanghai",
   "startDate": "2026-09-19",
@@ -10,16 +10,16 @@
     "galleryDois": 959,
     "sourceRecords": 2584,
     "rawMissingFromGallery": 2101,
-    "previouslyReviewedExcluded": 2097,
-    "missingFromGallery": 4,
-    "potentialGaps": 3,
+    "previouslyReviewedExcluded": 2100,
+    "missingFromGallery": 1,
+    "potentialGaps": 1,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 4,
     "closureCoverageAnomalies": 5,
     "historicalCoverageLosses": 0,
     "historicalNonJournalRecords": 0,
-    "unresolved": 4,
+    "unresolved": 1,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
@@ -434,100 +434,6 @@
   ],
   "unresolved": [
     {
-      "doi": "10.1038/s41467-026-78616-4",
-      "journal": "Nature Communications",
-      "title": "A method quantifying soil melanin to understand fungal impacts on soil carbon stability",
-      "abstract": "Abstract Fungal necromass, particularly dead microbial cells rich in melanin, is an important contributor to long-term soil carbon stabilization. Progress in understanding the role of soil melanin is limited by the lack of validated analytical methods. DNA-based approaches estimate only the genetic potential for melanin production and therefore provide indirect evidence of melanin occurrence. To directly assess soil melanin, we evaluated spectroscopic and spectrophotometric assays; however, both approaches proved insufficiently specific due to interference from chemically related compounds. Here, we introduce a liquid chromatography method that enables quantification of major fungal melanin types in soils. By enabling direct quantification of fungal melanin in soil, this framework allows longstanding hypotheses regarding melanized fungal necromass and soil carbon stabilization to be tested mechanistically. Here, we show with the proposed method that soil melanin concentrations are strongly correlated with total soil carbon, supporting a central role for fungal melanin in long-term soil carbon stabilization.",
-      "date": "2026-10-11",
-      "type": "journal-article",
-      "authors": [
-        "Sylwia Adamczyk",
-        "Bartosz Adamczyk"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "onlineDate": "2026-10-11",
-      "publishedDate": "2026-10-11",
-      "createdDate": "2026-10-11",
-      "onlineDatePrecision": "day",
-      "publishedDatePrecision": "day",
-      "dateConflict": "",
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1021/acscatal.6c05210",
-      "journal": "ACS Catalysis",
-      "title": "Curvature-Induced Electric-Field Effects Govern Controllable N2 Electrocatalysis on Single-Atom Catalysts",
-      "abstract": "Abstract Electric field-enhanced electrocatalysis represents an innovative strategy for improving the efficiency of electrochemical transformations. However, quantitative evaluation of microscopic electric-field effects under operando conditions remains challenging, limiting a rigorous, predictive understanding of field-mediated reaction regulation. Here, by integrating rigorous numerical methods, constant-potential microkinetic simulations, and machine learning models, we establish electric-field intensity as a quantitative descriptor that directly correlates local fields with catalytic performance. Using curvature-engineered M–N–C single-atom catalysts as a model platform, we demonstrate that curvature-induced electric fields modulate electron occupation at active sites and shift the potential of zero charge in a controllable manner. This field-driven electronic perturbation selectively tunes adsorbate binding energetics, thereby dictating limiting potentials, steering reaction pathways, and governing the thermodynamics and kinetics of interfacial proton-coupled electron transfer in nitrogen electroreduction. Notably, we uncover an inverted volcano–type dependence of catalytic activity on curvature, wherein optimal activity is achieved within a moderate field-strength window. This nonmonotonic trend underscores the necessity of balanced curvature regulation, rather than simpl",
-      "date": "2026-10-10",
-      "type": "journal-article",
-      "authors": [
-        "Nana Hu",
-        "Xingshuai Lv",
-        "Thomas Frauenheim",
-        "Shuwei Xia",
-        "Liangzhi Kou"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "crossref:2155-5435:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "onlineDate": "2026-10-10",
-      "publishedDate": "2026-10-10",
-      "createdDate": "2026-10-11",
-      "onlineDatePrecision": "day",
-      "publishedDatePrecision": "day",
-      "dateConflict": "",
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acscatal.6c05837",
-      "journal": "ACS Catalysis",
-      "title": "Diffusion-Selective Modulation Strategy for Enhanced Propane Dehydrogenation via Mixing Inert CHA Zeolite",
-      "abstract": "Abstract Achieving a high propane conversion in propane dehydrogenation to propylene (PDH) carries tremendous scientific and economic value, particularly if achievable with established industrial units. Here we propose a diffusion-selective modulation strategy driven by large-scale machine-learning computation, where the key to success lies in finding auxiliary materials to drive the PDH reaction forward by enlarging the diffusion-rate difference between H2 and C3 species. This strategy is demonstrated theoretically via high-throughput computation and then validated experimentally through the introduction of inert siliceous CHA zeolites as a diffusion-selective modulator within the catalyst bed. By simply physically mixing CHA with various PDH catalysts, we show that the single-pass propane conversion can increase by 1–5% from industrial space velocities (10 h–1) to significantly higher throughputs (256 h–1), consistently improving performance across multiple reported catalysts without compromising stability. This “plug-and-play” methodology can be directly implemented in existing industrial PDH units without altering either the catalyst formulation or the reactor configuration, providing a readily implementable and scalable route for upgrading current PDH infrastructure.",
-      "date": "2026-10-10",
-      "type": "journal-article",
-      "authors": [
-        "Qian-Cheng Zhao",
-        "Yu-Long Zheng",
-        "Lin Chen",
-        "Cheng Shang",
-        "Sicong Ma",
-        "Zhi-Pan Liu"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "crossref:2155-5435:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "onlineDate": "2026-10-10",
-      "publishedDate": "2026-10-10",
-      "createdDate": "2026-10-11",
-      "onlineDatePrecision": "day",
-      "publishedDatePrecision": "day",
-      "dateConflict": "",
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
       "doi": "10.1021/acscatal.6c06048",
       "journal": "ACS Catalysis",
       "title": "Mild Heterogeneous Thiophene Hydrogenation Enabled by a Modified Palladium Catalyst",
@@ -563,8 +469,6 @@
     }
   ],
   "potentialGapDois": [
-    "10.1021/acscatal.6c05210",
-    "10.1021/acscatal.6c05837",
     "10.1021/acscatal.6c06048"
   ]
 }
