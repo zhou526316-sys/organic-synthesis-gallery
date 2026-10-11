@@ -388,7 +388,7 @@ async function start() {
     } else {
       setState('auth-error', error?.code === 'session_timeout' || error?.name === 'AbortError'
         ? '登录检查超时，未清除本地文件或登录令牌；请检查网络后重试。'
-        : '当前无法确认账号，会保留本地文件和登录记录；请检查网络后重试。');
+        : '当前无法确认账号，这不代表登录失效；已保留本地文件和登录记录，请检查网络后重试。');
       retryButton.hidden = false;
     }
   } finally { if (stamp === generation && pendingAuth === initialAuthController) pendingAuth = null; }
