@@ -52,7 +52,7 @@ try{
     if(facts.contentOverflow)throw new Error(type+' horizontal overflow');
     const density=summary.chineseAndSymbolChars/summary.bodyImages;
     if(density<220)throw new Error(type+' discussion:image density still too small '+density);
-    if(facts.h2.length!== (type==='acs'?7:8))throw new Error(type+' wrong scientific headings');
+    if(facts.h2.length!== (type==='acs'?8:9))throw new Error(type+' wrong scientific headings');
     report.sections.push({type,bodyImageCount:expected,bodyTextChars:summary.chineseAndSymbolChars,
        paragraphCount:summary.paragraphs,textCharsPerImage:Math.round(density),
        viewport:390,horizontalOverflow:false,loadedImages:expected,
