@@ -210,9 +210,11 @@ async function request(url,budget,source){
 }
 async function crossrefWindow(journal,range,budget){
   const map=new Map(),issues=[],byIssn=[];
-  const lanes=requiresRscCreationRescue(journal)?['publication','created']:['publication'];
-  // Publication-date first for all journals. RSC needs created-date rescue
-  // because its published-online date is often registered as year only.
+  const lanes=requiresRscCreationRescue(journal)?['created']:['publication'];
+  // RSC year-only publication dates may all collapse to January 1 (over
+  // 1,300 works in one day). Its bounded authoritative discovery lane is
+  // Crossref created-date; the publisher must verify actual first-online
+  // date before any historical publication/admission.
   for(const issn of journal.issns){
     for(const lane of lanes){
       let cursor='*',page=0,total=null,count=0;
