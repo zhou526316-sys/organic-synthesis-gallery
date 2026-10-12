@@ -6,7 +6,8 @@ import {join} from 'node:path';
 import {
   SCHEMA,normDoi,previousPeriod,orderedJournals,nextCursor,mediaPolicy,
   bisectDateRange,isTruncationOnly,
-  fromCrossref,fromOpenAlex,mergeCandidates,completeStatus,runNightly
+  fromCrossref,fromOpenAlex,mergeCandidates,completeStatus,runNightly,
+  requiresRscCreationRescue,RSC_CREATION_RESCUE_VERSION
 } from './historical-nightly-discovery.mjs';
 
 test('journal order starts with JACS/Angew but keeps the full registry',()=>{
@@ -788,4 +789,130 @@ test('bounded high-throughput 48-window collection preserves publication inputs'
     assert.deepEqual(JSON.parse(await readFile(join(root,'public/toc-demand-live.json'))),queue);
     assert.deepEqual(JSON.parse(await readFile(join(root,'audit/publication-release-state.json'))),release);
   });
+});
+
+
+
+test('confirmed 2026 RSC year-only deposit date is NOT fabricated into Jan 1 publication',()=>{
+  const row=fromCrossref({
+    DOI:'10.1039/d6sc04874a',title:['Ion-pair cooperativity in common neutral salts promotes methanolysis'],
+    'container-title':['Chemical Science'],ISSN:['2041-6520','2041-6539'],
+    'published-online':{'date-parts':[[2026]]},published:{'date-parts':[[2026]]},
+    created:{'date-parts':[[2026,9,15]]}
+  });
+  assert.equal(row.date,'');
+  assert.equal(row.datePrecision,'unknown');
+  assert.equal(row.createdDate,'2026-09-15');
+  assert.equal(row.citation.year,2026);
+  assert.equal(row.needsPublisherDateVerification,true);
+  const oa=fromOpenAlex({doi:'https://doi.org/10.1039/d6sc04874a',
+    display_name:'Ion-pair cooperativity',publication_date:'2026-01-01',
+    publication_year:2026,authorships:[]},{rscYearOnlyRisk:true});
+  assert.equal(oa.date,'');
+  assert.equal(oa.needsPublisherDateVerification,true);
+  assert.equal(fromOpenAlex({doi:'https://doi.org/10.1021/jacs.6c00010',
+    publication_date:'2026-01-01'}).date,'2026-01-01');
+  const merged=mergeCandidates([row],[oa],new Set(),{from:'2026-09-15',to:'2026-09-21'});
+  assert.equal(merged[0].date,'');
+  assert.equal(merged[0].mediaPolicy,'metadata_only');
+  assert.equal(merged[0].publicationDateMayDiffer,true);
+  assert.equal(merged[0].needsPublisherDateVerification,true);
+  assert.equal(merged[0].createdDate,'2026-09-15');
+});
+
+test('both RSC journals use created-date rescue in addition to publication-date source',()=>{
+  assert.equal(requiresRscCreationRescue({name:'Chemical Science'}),true);
+  assert.equal(requiresRscCreationRescue({name:'Green Chemistry'}),true);
+  assert.equal(requiresRscCreationRescue({name:'JACS'}),false);
+  assert.equal(RSC_CREATION_RESCUE_VERSION,'rsc-created-date-rescue-20261012-v1');
+});
+
+test('retrospective RSC zero-source root is safely rechecked without moving chronological cursor',async()=>{
+  const state=stage0(),oldId='2026-09-15_2026-09-21_chemical-science';
+  state.completed=[oldId];
+  await isolatedHistoricalRun(async({write,readState,readBatch,root,queue,release})=>{
+    await write('audit/historical-staging/batches/'+oldId+'.json',{
+      schema:SCHEMA,recordType:'historical_discovery_candidate_only',journal:'Chemical Science',
+      range:{from:'2026-09-15',to:'2026-09-21'},status:'source_enumeration_complete',
+      consistency:{complete:true,issues:[],sourceCounts:{crossref:0,openalex:0}},
+      candidateCount:0,records:[]
+    });
+    const urls=[];
+    global.fetch=async url=>{
+      const u=new URL(url);urls.push(u);
+      if(u.hostname==='api.openalex.org')return emptyOpenAlex();
+      const filter=u.searchParams.get('filter')||'';
+      const created=filter.includes('from-created-date:2026-09-15');
+      if(created&&u.pathname.includes('2041-6520'))return completeCrossref([{
+        DOI:'10.1039/d6sc04874a',
+        title:['Ion-pair cooperativity in common neutral salts promotes methanolysis'],
+        author:[{given:'A',family:'Huang'}],volume:'17',page:'1-9',
+        'container-title':['Chemical Science'],
+        'published-online':{'date-parts':[[2026]]},
+        created:{'date-parts':[[2026,9,15]]},
+        abstract:'PUBLISHER_PROTECTED_FULL_ABSTRACT_DO_NOT_COPY'
+      }]);
+      return emptyCrossref();
+    };
+    const result=await runNightly(),saved=await readState();
+    assert.equal(result.blocked,false);
+    assert.equal(result.completeWindows,1);
+    assert.equal(result.rscCreatedRecheck.completed,1);
+    assert.equal(result.rscCreatedRecheck.remaining,0);
+    assert.equal(saved.completed.length,1);
+    assert.deepEqual(saved.cursor,state.cursor);
+    assert.deepEqual(saved.rscCreatedRescue.done,[oldId]);
+    const batch=await readBatch(oldId);
+    assert.equal(batch.candidateCount,1);
+    assert.equal(batch.status,'source_enumeration_complete');
+    assert.equal(batch.consistency.complete,true);
+    assert.equal(batch.records[0].date,'');
+    assert.equal(batch.records[0].createdDate,'2026-09-15');
+    assert.equal(batch.records[0].citation.year,2026);
+    assert.equal(batch.records[0].mediaPolicy,'metadata_only');
+    assert.equal(batch.records[0].needsPublisherDateVerification,true);
+    assert.equal(batch.noFormalPublication,true);
+    assert.equal(batch.noMediaWrites,true);
+    assert.equal(batch.noPDFAcquisition,true);
+    assert.equal(JSON.stringify(batch).includes('PUBLISHER_PROTECTED_FULL_ABSTRACT_DO_NOT_COPY'),false);
+    assert.equal(urls.filter(u=>u.hostname==='api.crossref.org').length,4);
+    assert.equal(urls.filter(u=>u.hostname==='api.openalex.org').length,1);
+    assert.equal(urls.filter(u=>u.searchParams.get('filter')?.includes('from-created-date:2026-09-15')).length,2);
+    assert.equal(saved.attempts[0].attemptKind,'rsc_created_recheck');
+    assert.deepEqual(JSON.parse(await readFile(join(root,'public/toc-demand-live.json'))),queue);
+    assert.deepEqual(JSON.parse(await readFile(join(root,'audit/publication-release-state.json'))),release);
+  },{priorState:state});
+});
+
+test('failed RSC created-date lane keeps old root intact and flags recheck pending',async()=>{
+  const state=stage0(),oldId='2026-09-15_2026-09-21_green-chemistry';
+  state.completed=[oldId];
+  await isolatedHistoricalRun(async({write,readState,readBatch,root})=>{
+    const previous={
+      schema:SCHEMA,recordType:'historical_discovery_candidate_only',journal:'Green Chemistry',
+      range:{from:'2026-09-15',to:'2026-09-21'},status:'source_enumeration_complete',
+      consistency:{complete:true,issues:[],sourceCounts:{crossref:0,openalex:0}},
+      candidateCount:0,records:[]
+    };
+    await write('audit/historical-staging/batches/'+oldId+'.json',previous);
+    global.fetch=async url=>{
+      const u=new URL(url);
+      if(u.hostname==='api.openalex.org')return emptyOpenAlex();
+      if((u.searchParams.get('filter')||'').includes('from-created-date'))
+        return {ok:false,status:429};
+      return emptyCrossref();
+    };
+    const x=await runNightly(),s=await readState();
+    assert.equal(x.blocked,true);
+    assert.equal(x.completeWindows,1);
+    assert.equal(x.rscCreatedRecheck.remaining,1);
+    assert.equal(s.rscCreatedRescue.done.length,0);
+    assert.deepEqual(s.cursor,state.cursor);
+    assert.equal(s.completed.length,1);
+    assert.deepEqual(await readBatch(oldId),previous);
+    const receipt=JSON.parse(await readFile(join(root,'audit/historical-staging/rechecks/'+oldId+'.json')));
+    assert.equal(receipt.status,'incomplete_sources');
+    assert.match(receipt.consistency.issues.join('|'),/http_429/);
+    assert.equal(receipt.consistency.complete,false);
+  },{priorState:state});
 });
