@@ -1,9 +1,10 @@
 // ==UserScript==
-// @name         Gallery Historical Text Search — Local Pilot
+// @name         Gallery Historical Text Search — Isolated Batch
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.1.0
-// @description  Manually export DOI-verified historical article text for local, rights-gated search testing; no PDF/figure download or text upload.
+// @version      0.2.0
+// @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
+// @match        https://gallery.gczhouwld.com/*
 // @match        https://pubs.acs.org/*
 // @match        https://onlinelibrary.wiley.com/*
 // @match        https://*.onlinelibrary.wiley.com/*
@@ -21,6 +22,10 @@
 // @run-at       document-idle
 // @noframes
 // @grant        GM_registerMenuCommand
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_deleteValue
+// @grant        GM_openInTab
 // @grant        GM_xmlhttpRequest
 // @connect      gallery.gczhouwld.com
 // ==/UserScript==
@@ -187,5 +192,345 @@
       window.alert('已生成本地正文文本包：'+doi+'。尚未上传或加入 Gallery 公共全文检索。');
     }catch(error){window.alert('Gallery 历史正文试验：'+String(error?.message||error).slice(0,170));}
   }
-  GM_registerMenuCommand('Gallery：本地导出此历史论文正文（手动）',()=>{void exportCurrent();});
+
+  // Isolated batch protocol. Never share storage keys, leases, queue writes or
+  // controller lifecycle with the production TOC/figure/private-PDF scripts.
+  const BATCH_PREFIX='gallery-historical-text-batch-v2:';
+  const BATCH_STATE=BATCH_PREFIX+'state';
+  const BATCH_JOB=BATCH_PREFIX+'job';
+  const BATCH_RESULT=BATCH_PREFIX+'result';
+  const BATCH_LEASE=BATCH_PREFIX+'lease';
+  const BATCH_DB='gallery-historical-text-local-v2';
+  const BATCH_LIMIT_MS=24000;
+  const BATCH_LEASE_MS=40000;
+  const BATCH_RETRY_MS=24*3600*1000;
+  const BATCH_MAX_RESPONSE_CHARS=350000;
+  const BATCH_MIN_GAP_MS=2000;
+  const BATCH_DOI_LIMIT=100000;
+  const BATCH_ERRORS=new Set(['doi_unverified','publisher_unreachable','page_unavailable',
+    'license_not_verified','body_missing','too_large','timeout','invalid_response','storage_failure',
+    'response_hash_mismatch','capture_failed','unsupported_publisher']);
+  let batchActive=false,batchPaused=false,batchTab=null,batchStatus=null,batchRunId='',batchUi=null;
+  const batchWait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  function batchId(){
+    const bytes=new Uint8Array(12);
+    crypto.getRandomValues(bytes);
+    return [...bytes].map(x=>x.toString(16).padStart(2,'0')).join('');
+  }
+  function batchHistoricalPapers(catalog){
+    if(!catalog||catalog.pairedCaptureRegistry!==true
+      ||!Array.isArray(catalog.articles)||catalog.articles.length>BATCH_DOI_LIMIT
+      ||Number(catalog.webpageDoiCount)!==catalog.articles.length)
+      throw Error('正式 DOI 目录不一致，停止补抓');
+    const groups=new Map(),seen=new Set();
+    for(const raw of catalog.articles){
+      const doi=normalizeDoi(raw?.doi);
+      const date=String(raw?.date||'');
+      if(!doi||seen.has(doi)||!/^\d{4}-\d{2}-\d{2}$/.test(date)||date>=CUTOFF)continue;
+      const journal=String(raw.journal||'').trim();
+      if(!journal)continue;
+      seen.add(doi);
+      const entry={doi,publication:date,journal,title:String(raw.title||'').slice(0,1000)};
+      if(!groups.has(journal))groups.set(journal,[]);
+      groups.get(journal).push(entry);
+    }
+    const buckets=[...groups].sort(([a],[b])=>a.localeCompare(b))
+      .map(([,items])=>items.sort((a,b)=>a.publication.localeCompare(b.publication)||a.doi.localeCompare(b.doi)));
+    const chosen=[];
+    while(chosen.length<seen.size){
+      let took=false;
+      for(const b of buckets){if(b.length){chosen.push(b.shift());took=true;}}
+      if(!took)break;
+    }
+    return chosen;
+  }
+  function batchLicenseEvidence(root){
+    const candidates=[];
+    document.querySelectorAll('link[rel="license" i],meta[name="citation_license_url" i],meta[name="dc.rights" i],meta[name="license" i],meta[property="article:license" i]').forEach(el=>{
+      const raw=String(el.content||el.href||el.getAttribute('href')||'');
+      if(raw)candidates.push(raw);
+    });
+    if(root){
+      root.querySelectorAll('[itemprop="license"] a[href],a[rel="license"][href],a[href*="creativecommons.org/licenses/"],a[href*="creativecommons.org/publicdomain/zero/"]').forEach(el=>{
+        if(!excluded(el,true))candidates.push(String(el.href||el.getAttribute('href')||''));
+      });
+    }
+    const matches=candidates.map(raw=>{
+      try{const url=new URL(raw,location.origin);
+        if(url.protocol!=='https:'||url.hostname!=='creativecommons.org')return null;
+        if(/^\/licenses\/by\/(?:3\.0|4\.0)\/?$/.test(url.pathname))
+          return {kind:'cc-by',licenseUrl:url.origin+url.pathname};
+        if(/^\/publicdomain\/zero\/1\.0\/?$/.test(url.pathname))
+          return {kind:'cc0',licenseUrl:url.origin+url.pathname};
+      }catch(_){}
+      return null;
+    }).filter(Boolean);
+    // Source URI alone is not authorization to publish raw fulltext. Batch
+    // storage remains device-only pending a separate source/version review.
+    const distinct=[...new Set(matches.map(x=>x.licenseUrl))];
+    return distinct.length===1?matches[0]:null;
+  }
+  function batchOpenDb(){
+    return new Promise((resolve,reject)=>{
+      if(typeof indexedDB==='undefined')return reject(Error('IndexedDB unavailable'));
+      const req=indexedDB.open(BATCH_DB,1);
+      req.onupgradeneeded=()=>{
+        const db=req.result;
+        if(!db.objectStoreNames.contains('packets'))db.createObjectStore('packets',{keyPath:'doi'});
+        if(!db.objectStoreNames.contains('attempts'))db.createObjectStore('attempts',{keyPath:'doi'});
+      };
+      req.onsuccess=()=>resolve(req.result);
+      req.onerror=()=>reject(req.error||Error('local_storage_failed'));
+    });
+  }
+  function batchDbOp(db,store,method,value){
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction(store,method==='get'||method==='getAllKeys'?'readonly':'readwrite');
+      const request=method==='getAllKeys'?tx.objectStore(store).getAllKeys()
+        :tx.objectStore(store)[method](value);
+      request.onsuccess=()=>resolve(request.result);
+      request.onerror=()=>reject(request.error||Error('local_db_request_failed'));
+      tx.onabort=()=>reject(tx.error||Error('local_db_transaction_failed'));
+    });
+  }
+  function batchStatusWrite(patch){
+    batchStatus=Object.assign({},batchStatus||{},patch,{at:Date.now()});
+    GM_setValue(BATCH_STATE,batchStatus);
+    if(batchUi)batchUi.refresh();
+  }
+  function batchPanel(){
+    if(document.getElementById('osg-historical-batch'))return null;
+    const root=document.createElement('div');
+    root.id='osg-historical-batch';
+    root.style.cssText='position:fixed;left:12px;bottom:12px;z-index:2147482500;width:300px;max-width:calc(100vw - 24px);background:#fff;color:#172439;border:1px solid #b7c9dd;border-radius:12px;box-shadow:0 4px 18px #15263c33;padding:10px;font:13px/1.5 system-ui,sans-serif';
+    const head=document.createElement('div');
+    head.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:8px';
+    const label=document.createElement('strong');label.textContent='历史正文 · 独立补抓';
+    const hide=document.createElement('button');hide.textContent='−';hide.title='折叠';
+    const panel=document.createElement('div');
+    const message=document.createElement('div');
+    message.style.cssText='margin:7px 0;font-size:12px;line-height:1.5;color:#41576e;white-space:pre-wrap';
+    const controls=document.createElement('div');controls.style.cssText='display:flex;gap:6px;flex-wrap:wrap';
+    const start=document.createElement('button');start.textContent='一键补抓全部缺项';
+    const pause=document.createElement('button');pause.textContent='暂停';
+    const search=document.createElement('input');search.placeholder='检索本机正文（LMCT/CO₂等）';
+    search.style.cssText='width:100%;box-sizing:border-box;margin:8px 0 4px;padding:5px';
+    const results=document.createElement('div');
+    results.style.cssText='max-height:140px;overflow:auto;font-size:12px;word-break:break-word';
+    for(const btn of [start,pause,hide]){
+      btn.style.cssText='cursor:pointer;background:#eaf1f9;border:1px solid #b8c9df;border-radius:6px;padding:4px 8px;color:#172439';
+    }
+    controls.append(start,pause);
+    panel.append(message,controls,search,results);
+    head.append(label,hide);root.append(head,panel);
+    document.body.append(root);
+    let collapsed=false;hide.addEventListener('click',()=>{
+      collapsed=!collapsed;panel.style.display=collapsed?'none':'block';hide.textContent=collapsed?'+':'−';
+    });
+    const refresh=()=>{
+      const s=GM_getValue(BATCH_STATE,{})||{};
+      const progress=[s.state==='running'?'运行中':s.state==='paused'?'已暂停':s.state==='finished'?'本轮结束':'未启动',
+        '已尝试 '+Number(s.attempted||0)+' / '+Number(s.total||0),
+        '本机新增 '+Number(s.saved||0)+'；已存在 '+Number(s.existing||0),
+        '无权限/无许可 '+Number(s.rightsPending||0)+'；其他受阻 '+Number(s.failed||0),
+        s.lastDoi?'当前/最近：'+s.lastDoi:''].filter(Boolean);
+      message.textContent=progress.join('\n');
+      start.disabled=batchActive;
+      pause.disabled=!batchActive;
+      pause.textContent=batchPaused?'准备暂停…':'暂停';
+    };
+    start.addEventListener('click',()=>void batchStart().catch(error=>{
+      batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
+    }));
+    pause.addEventListener('click',()=>{batchPaused=true;pause.disabled=true;batchStatusWrite({state:'pausing'});});
+    let searchToken=0;
+    search.addEventListener('keydown',event=>{
+      if(event.key!=='Enter')return;
+      event.preventDefault();
+      const ticket=++searchToken;
+      void batchSearchLocal(search.value,results).catch(()=>{
+        if(ticket===searchToken)results.textContent='本机索引读取失败';
+      });
+    });
+    GM_registerMenuCommand('Gallery：打开历史正文一键补抓面板',()=>{
+      collapsed=false;panel.style.display='block';hide.textContent='−';root.scrollIntoView({block:'nearest'});
+    });
+    return {refresh};
+  }
+  async function batchSearchLocal(query,area){
+    const needle=cleanText(query,100).toLocaleLowerCase();
+    if(needle.length<2){area.textContent='至少输入两个字符';return;}
+    area.textContent='查询本机索引…';
+    const db=await batchOpenDb();
+    const hits=[];
+    await new Promise((resolve,reject)=>{
+      const req=db.transaction('packets','readonly').objectStore('packets').openCursor();
+      req.onerror=()=>reject(req.error||Error('cursor'));
+      req.onsuccess=()=>{
+        const cur=req.result;
+        if(!cur||hits.length>=20)return resolve();
+        const packet=cur.value.packet;
+        for(const sec of packet?.sections||[]){
+          const raw=String(sec.text||'');
+          const idx=raw.toLocaleLowerCase().indexOf(needle);
+          if(idx!==-1){hits.push({doi:packet.doi,heading:sec.heading||'正文',fragment:raw.slice(Math.max(0,idx-35),idx+100)});break;}
+        }
+        cur.continue();
+      };
+    });
+    db.close();
+    area.textContent='';
+    if(!hits.length){area.textContent='本机尚无命中（不能代表全站无文献）';return;}
+    for(const item of hits){
+      const a=document.createElement('a');a.href='https://doi.org/'+item.doi;a.target='_blank';a.rel='noopener noreferrer';
+      a.textContent=item.doi+' · '+item.heading;
+      const desc=document.createElement('div');desc.textContent=item.fragment;
+      const row=document.createElement('div');row.style.cssText='border-top:1px solid #ddd;padding:5px 0';row.append(a,desc);area.append(row);
+    }
+  }
+  async function batchAwaitResponse(job){
+    const start=Date.now();
+    while(Date.now()-start<BATCH_LIMIT_MS){
+      if(batchPaused)return {status:'paused'};
+      const value=GM_getValue(BATCH_RESULT,null);
+      if(value&&value.token===job.token&&value.doi===job.doi
+        &&value.runId===job.runId)return value;
+      await batchWait(350);
+    }
+    return {status:'timeout'};
+  }
+  async function batchStart(){
+    if(batchActive)return;
+    const current=GM_getValue(BATCH_LEASE,null);
+    if(current&&current.until>Date.now()){
+      window.alert('已有一个历史正文批次在当前浏览器运行；请在原页面暂停后操作。');
+      return;
+    }
+    const catalog=await loadCatalog();
+    const papers=batchHistoricalPapers(catalog);
+    if(!papers.length){window.alert('正式目录中暂无 2026-10-01 前的文献');return;}
+    if(!window.confirm('开始独立补抓 '+papers.length+' 篇正式历史 DOI？\n将逐篇在后台打开出版社页面，仅在明确可验证的 CC BY/CC0 许可下保存文本到当前浏览器；不抓 PDF/正文图/SI，不上传原文，也不修改 TOC 队列。浏览器需要保持开启。'))return;
+    const db=await batchOpenDb();
+    const existing=new Set(await batchDbOp(db,'packets','getAllKeys'));
+    const runId=batchId();
+    batchRunId=runId;batchActive=true;batchPaused=false;
+    let attempted=0,saved=0,rightsPending=0,failed=0,skipped=0;
+    const leaseTimer=setInterval(()=>{
+      if(batchActive)GM_setValue(BATCH_LEASE,{runId,until:Date.now()+BATCH_LEASE_MS});
+    },4000);
+    GM_setValue(BATCH_LEASE,{runId,until:Date.now()+BATCH_LEASE_MS});
+    batchStatusWrite({state:'running',runId,total:papers.length,attempted:0,
+      saved:0,existing:existing.size,rightsPending:0,failed:0,skipped:0,startedAt:Date.now(),lastDoi:''});
+    try{
+      for(const paper of papers){
+        if(batchPaused)break;
+        if(existing.has(paper.doi)){skipped++;continue;}
+        const prior=await batchDbOp(db,'attempts','get',paper.doi);
+        if(prior&&Date.now()-Number(prior.checkedAt||0)<BATCH_RETRY_MS
+          &&prior.status!=='storage_failure'&&prior.status!=='paused'){skipped++;continue;}
+        const token=batchId();
+        const job={runId,token,doi:paper.doi,publication:paper.publication,
+          title:paper.title,journal:paper.journal,expiresAt:Date.now()+BATCH_LIMIT_MS};
+        GM_deleteValue(BATCH_RESULT);GM_setValue(BATCH_JOB,job);
+        batchStatusWrite({lastDoi:paper.doi});
+        let result={status:'publisher_unreachable'};
+        try{
+          batchTab=GM_openInTab('https://doi.org/'+paper.doi+'#gallery-historical-job='+token,
+            {active:false,insert:false,setParent:true});
+          result=await batchAwaitResponse(job);
+        }catch(_){result={status:'publisher_unreachable'};}
+        finally{
+          try{batchTab?.close?.();}catch(_){}
+          batchTab=null;GM_deleteValue(BATCH_JOB);GM_deleteValue(BATCH_RESULT);
+        }
+        if(result.status==='paused')break;
+        attempted++;
+        let status=BATCH_ERRORS.has(result.status)?result.status:'invalid_response';
+        if(result.status==='ok'){
+          const packet=result.packet;
+          if(packet?.doi===paper.doi&&packet?.publication===paper.publication
+             &&packet?.sourceSha256===result.sourceSha256
+             &&packet?.rightsStatus==='local_only_permission_to_be_verified'
+             &&packet?.publicUploadAllowed===false
+             &&packet?.pdfDownloaded===false&&packet?.mediaDownloaded===false
+             &&JSON.stringify(packet).length<=BATCH_MAX_RESPONSE_CHARS){
+            try{
+              await batchDbOp(db,'packets','put',{doi:paper.doi,packet,checkedAt:Date.now()});
+              saved++;existing.add(paper.doi);status='saved_local';
+            }catch(_){status='storage_failure';}
+          }
+        }
+        if(status==='license_not_verified')rightsPending++;
+        else if(status!=='saved_local')failed++;
+        await batchDbOp(db,'attempts','put',{doi:paper.doi,status,checkedAt:Date.now()});
+        batchStatusWrite({attempted,saved,rightsPending,failed,skipped,lastDoi:paper.doi});
+        // One article tab, bounded requests and non-overlapping registry/lease.
+        // This delay avoids monopolizing publisher traffic alongside media capture.
+        if(!batchPaused)await batchWait(BATCH_MIN_GAP_MS);
+      }
+    }finally{
+      clearInterval(leaseTimer);
+      if(GM_getValue(BATCH_LEASE,null)?.runId===runId)GM_deleteValue(BATCH_LEASE);
+      GM_deleteValue(BATCH_JOB);GM_deleteValue(BATCH_RESULT);
+      db.close();batchActive=false;
+      batchStatusWrite({state:batchPaused?'paused':'finished',attempted,saved,
+        rightsPending,failed,skipped,finishedAt:Date.now()});
+      batchPaused=false;
+    }
+  }
+  async function batchWorker(){
+    if(typeof GM_getValue!=='function')return;
+    const job=GM_getValue(BATCH_JOB,null);
+    if(!job||job.expiresAt<Date.now()||!publisher(location.hostname)||!job.token||!job.runId)return;
+    const storeResult=data=>{
+      const current=GM_getValue(BATCH_JOB,null);
+      if(current?.runId!==job.runId||current?.token!==job.token)return;
+      GM_setValue(BATCH_RESULT,{runId:job.runId,token:job.token,doi:job.doi,
+        at:Date.now(),...data});
+    };
+    // No need to inherit URL fragments across publisher redirects. The only
+    // active tab is DOI-bound and only the explicitly started, live job may run.
+    let doi=pageDoi(),capture=null,reason='';
+    for(let i=0;i<8;i++){
+      if(doi&&doi!==job.doi){storeResult({status:'doi_unverified'});return;}
+      if(doi===job.doi){
+        const root=document.querySelector('main article, article, main, [role="main"]');
+        const license=batchLicenseEvidence(root);
+        if(license){
+          try{capture=gather();if(capture.characterCount>=250)break;}catch(e){reason=String(e?.message||e);}
+        }else if(i>=2){storeResult({status:'license_not_verified'});return;}
+      }
+      await batchWait(700);
+      doi=pageDoi();
+    }
+    if(doi!==job.doi){storeResult({status:'doi_unverified'});return;}
+    const root=document.querySelector('main article, article, main, [role="main"]');
+    const license=batchLicenseEvidence(root);
+    if(!license){storeResult({status:'license_not_verified'});return;}
+    if(!capture){storeResult({status:'body_missing',reason:reason.slice(0,90)});return;}
+    const canonical=[...capture.sections.map(s=>s.heading+'\n'+s.text),
+      ...capture.captions.map(s=>s.label+'\n'+s.text),
+      ...capture.tables.map(s=>s.label+'\n'+s.text)].join('\n');
+    const sourceSha256=await sha256(canonical);
+    const packet={schemaVersion:SCHEMA,doi:job.doi,publication:job.publication,
+      journal:job.journal,title:job.title,publisher:publisher(location.hostname),
+      sourceUrl:location.origin+location.pathname,capturedAt:new Date().toISOString(),
+      sourceSha256,rightsStatus:'local_only_permission_to_be_verified',
+      rightsBasis:license.kind,licenseUrl:license.licenseUrl,
+      indexEligibility:'local_pilot_only',publicUploadAllowed:false,
+      pdfDownloaded:false,mediaDownloaded:false,paragraphs:capture.paragraphCount,
+      characters:capture.characterCount,sections:capture.sections,
+      captions:capture.captions,tables:capture.tables};
+    if(JSON.stringify(packet).length>BATCH_MAX_RESPONSE_CHARS){
+      storeResult({status:'too_large'});return;
+    }
+    storeResult({status:'ok',packet,sourceSha256});
+  }
+
+  if(location.hostname==='gallery.gczhouwld.com'){
+    batchUi=batchPanel();batchUi?.refresh();
+  }else{
+    GM_registerMenuCommand('Gallery：本地导出此历史论文正文（手动）',()=>{void exportCurrent();});
+    void batchWorker().catch(()=>{});
+  }
 })();
