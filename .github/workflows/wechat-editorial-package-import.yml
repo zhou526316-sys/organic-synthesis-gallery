@@ -188,6 +188,21 @@ jobs:
                               'public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json',
                               'public/wechat-editions/2026-10-11.json',
                           })
+                      # Explicit owner-requested same-day visual QA fix only: Oct12 R2
+                      # can replace the exactly matching first draft manifests, but
+                      # cannot touch the old figure bytes or unrelated publications.
+                      if req.get('revision') == '2026-10-12-r2':
+                          selected = ['10.1021/acscatal.6c06048', '10.1021/jacs.6c10406']
+                          if (req.get('targetDateBeijing') != '2026-10-12'
+                              or req.get('expectedDois') != selected
+                              or gate.get('selectionDois') != selected
+                              or gate.get('date') != '2026-10-12'):
+                              raise RuntimeError('Oct12 R2 specific DOI/date scope mismatch')
+                          allowed_mutable.update({
+                              'public/wechat-featured/2026-10-12.json',
+                              'public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json',
+                              'public/wechat-editions/2026-10-12.json',
+                          })
                       if rel not in allowed_mutable or not re.fullmatch(r'[a-f0-9]{40}', old_sha) or blob(target.read_bytes()) != old_sha:
                           raise RuntimeError('Refusing to replace non-matching existing content: '+rel)
                   target.parent.mkdir(parents=True,exist_ok=True); target.write_bytes(payload)
