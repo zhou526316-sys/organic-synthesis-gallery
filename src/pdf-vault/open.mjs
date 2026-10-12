@@ -3,6 +3,7 @@ import { getPdfVaultDeviceIdentity } from '../../shared/pdf-vault-device.mjs';
 import { normalizeDoi } from '../../shared/pdf-vault-v1.mjs';
 import { recordVerifiedPdfSession, readVerifiedPdfSession, clearPdfSessionReceipt } from '../../shared/pdf-vault-session-receipt.mjs';
 import { discoverDownloadedPdf, suppressDownloadedNames, unsuppressDownloadedDoi } from './download-discovery.mjs';
+import { getPdfFolderProvider, PDF_FOLDER_PROVIDERS, isPdfFolderProvider } from './storage-providers.mjs';
 
 // PDF contents and FileSystemHandles remain strictly local. The URL contains
 // the DOI only, while the session receipt is a bounded UX hint, not a read grant.
@@ -20,6 +21,16 @@ const linkButton = $('link-file');
 const retryButton = $('retry-open');
 const restoreButton = $('restore-file');
 const downloadButton = $('download-folder');
+const folderModal = $('native-folder-modal');
+const folderClose = $('native-folder-close');
+const folderCancel = $('native-folder-cancel');
+const folderConfirm = $('native-folder-confirm');
+const folderOfficial = $('native-folder-official');
+const folderProviderName = $('native-folder-provider-name');
+const folderProviderSummary = $('native-folder-provider-summary');
+const folderProviderSteps = $('native-folder-provider-steps');
+const folderFeedback = $('native-folder-feedback');
+const folderProviderButtons = [...folderModal.querySelectorAll('[data-folder-provider]')];
 const downloadRestoreButton = $('download-folder-restore');
 const downloadScanButton = $('download-folder-scan');
 const publisherLink = $('publisher-link');
@@ -36,6 +47,9 @@ let pendingAuth = null;
 let pdfUrl = null;
 let lastCopyId = '';
 let busy = false;
+let folderProvider = 'local';
+let preferredFolderProvider = 'local';
+let folderOpenBy = null;
 
 function token() {
   try { return localStorage.getItem(SESSION_KEY) || ''; } catch { return ''; }
@@ -58,6 +72,41 @@ function hideActions() {
   for (const item of [linkButton, retryButton, restoreButton, signInLink,
     downloadButton, downloadRestoreButton, downloadScanButton]) item.hidden = true;
 }
+function closeFolderChooser({ restoreFocus = true } = {}) {
+  if (folderModal.hidden) return;
+  folderModal.hidden = true;
+  folderFeedback.textContent = '';
+  if (restoreFocus && folderOpenBy?.isConnected && !folderOpenBy.hidden) folderOpenBy.focus();
+  folderOpenBy = null;
+}
+function setFolderProvider(value) {
+  if (!isPdfFolderProvider(value)) return;
+  folderProvider = value;
+  const provider = getPdfFolderProvider(value);
+  for (const button of folderProviderButtons) {
+    button.setAttribute('aria-pressed', String(button.dataset.folderProvider === value));
+  }
+  folderProviderName.textContent = provider.name;
+  folderProviderSummary.textContent = provider.summary;
+  folderProviderSteps.textContent = provider.steps;
+  folderOfficial.hidden = !provider.officialUrl;
+  if (provider.officialUrl) {
+    folderOfficial.href = provider.officialUrl;
+    folderOfficial.textContent = '前往' + provider.name + '官方页面登录或安装客户端';
+  } else {
+    folderOfficial.removeAttribute('href');
+  }
+  folderConfirm.textContent = value === 'local'
+    ? '选择本机 PDF 文件夹' : '选择已保存在电脑的' + provider.name + '文件夹';
+  folderFeedback.textContent = '';
+}
+function openFolderChooser(context) {
+  if (!context || context !== account || busy || !folderModal.hidden) return;
+  folderOpenBy = document.activeElement;
+  setFolderProvider(preferredFolderProvider);
+  folderModal.hidden = false;
+  folderProviderButtons.find(button => button.dataset.folderProvider === folderProvider)?.focus();
+}
 function clearPdf() {
   viewer.hidden = true;
   shell.hidden = false;
@@ -78,6 +127,7 @@ function revoke() {
   account = null;
   lastCopyId = '';
   busy = false;
+  closeFolderChooser({ restoreFocus: false });
   clearPdf();
   hideActions();
 }
@@ -143,7 +193,13 @@ async function updateFolderActions(context) {
       setState('unlinked', '首次使用请先选择 PDF 保存文件夹；之后到出版社下载正文并保存进该目录。再次点击本地 PDF 即可检索和打开。');
     }
     if (info.selected) {
+      preferredFolderProvider = getPdfFolderProvider(info.provider).id;
       downloadButton.textContent = '更换下载目录';
+      if (preferredFolderProvider !== 'local') {
+        $('native-help').textContent = '当前选择：' +
+          getPdfFolderProvider(preferredFolderProvider).name +
+          '的本机文件夹（并非已连接云端账号）。只有实际下载到电脑的 PDF 才能自动读取；请在官方客户端完成登录及同步。';
+      }
       if (info.permission === 'granted') downloadScanButton.hidden = false;
       else downloadRestoreButton.hidden = false;
     }
@@ -479,21 +535,56 @@ function pickCorrectPdf() {
 
 linkButton.addEventListener('click', pickCorrectPdf);
 $('native-replace').addEventListener('click', pickCorrectPdf);
-downloadButton.addEventListener('click', () => {
+downloadButton.addEventListener('click', () => openFolderChooser(account));
+for (const button of folderProviderButtons) {
+  button.addEventListener('click', () => {
+    if (!busy && !folderModal.hidden) setFolderProvider(button.dataset.folderProvider);
+  });
+}
+folderClose.addEventListener('click', () => { if (!busy) closeFolderChooser(); });
+folderCancel.addEventListener('click', () => { if (!busy) closeFolderChooser(); });
+folderModal.addEventListener('click', event => {
+  if (event.target === folderModal && !busy) closeFolderChooser();
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !folderModal.hidden && !busy) {
+    event.preventDefault();
+    closeFolderChooser();
+  }
+});
+folderConfirm.addEventListener('click', () => {
   const context = account;
-  if (!context || busy) return;
-  // selectDownloadDirectory invokes showDirectoryPicker BEFORE its first await.
-  const selected = context.vault.selectDownloadDirectory();
+  if (!context || busy || folderModal.hidden) return;
+  const provider = folderProvider;
+  // Browser transient activation requires this call to invoke
+  // showDirectoryPicker SYNCHRONOUSLY in the user's click.
+  let selected;
+  try {
+    selected = context.vault.selectDownloadDirectory({ provider });
+  } catch (error) {
+    folderFeedback.textContent = messageFor(error);
+    return;
+  }
   busy = true;
-  downloadButton.disabled = true;
+  folderConfirm.disabled = true;
+  folderFeedback.textContent = '正在等待浏览器确认本机文件夹读取权限…';
   void (async () => {
     try {
-      await selected;
+      const selectedDirectory = await selected;
       assertCurrent(context);
+      preferredFolderProvider = getPdfFolderProvider(selectedDirectory.provider).id;
+      closeFolderChooser();
       await inspectSaved(context);
     } catch (error) {
-      if (error?.code !== 'account_changed') showFileError(error);
-    } finally { busy = false; downloadButton.disabled = false; }
+      if (error?.code !== 'account_changed') {
+        folderFeedback.textContent = error?.code === 'operation_cancelled' ||
+          error?.name === 'AbortError'
+          ? '已取消选择，原保存文件夹保持不变。' : messageFor(error);
+      }
+    } finally {
+      busy = false;
+      folderConfirm.disabled = false;
+    }
   })();
 });
 downloadRestoreButton.addEventListener('click', () => {

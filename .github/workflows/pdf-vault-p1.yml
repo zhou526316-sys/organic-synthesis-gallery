@@ -9,6 +9,7 @@ on:
       - 'shared/pdf-vault-*.mjs'
       - 'scripts/test-pdf-vault-local.mjs'
       - 'scripts/test-pdf-vault-doi-identity.mjs'
+      - 'scripts/test-pdf-vault-folder-providers.mjs'
       - 'scripts/test-pdf-vault-queue-client.mjs'
       - 'scripts/pdf-vault-assets.mjs'
       - 'tests/pdf-vault-local-browser.mjs'
@@ -27,6 +28,7 @@ on:
       - 'shared/pdf-vault-*.mjs'
       - 'scripts/test-pdf-vault-local.mjs'
       - 'scripts/test-pdf-vault-doi-identity.mjs'
+      - 'scripts/test-pdf-vault-folder-providers.mjs'
       - 'scripts/test-pdf-vault-queue-client.mjs'
       - 'scripts/pdf-vault-assets.mjs'
       - 'tests/pdf-vault-local-browser.mjs'
@@ -52,7 +54,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: {node-version: 22}
       - name: Verify local contracts and account boundaries
-        run: node --test scripts/test-pdf-vault-v1.mjs scripts/test-pdf-vault-device.mjs scripts/test-pdf-vault-local.mjs scripts/test-pdf-vault-queue-client.mjs scripts/test-pdf-vault-doi-identity.mjs cloudflare/worker/scripts/test-pdf-vault-queue.mjs
+        run: node --test scripts/test-pdf-vault-v1.mjs scripts/test-pdf-vault-device.mjs scripts/test-pdf-vault-local.mjs scripts/test-pdf-vault-queue-client.mjs scripts/test-pdf-vault-doi-identity.mjs scripts/test-pdf-vault-folder-providers.mjs cloudflare/worker/scripts/test-pdf-vault-queue.mjs
       - name: Install fixed reader and browser dependencies
         run: |
           npm install --no-audit --no-fund --package-lock=false
