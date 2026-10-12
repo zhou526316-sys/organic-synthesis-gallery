@@ -1,0 +1,134 @@
+{
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r7",
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/e38f40b7cd44a006df026b92.html",
+  "status": "content_urls_and_image_count_pass",
+  "readOnly": true,
+  "source": "Playwright in GitHub Actions against real post-draft/get relay HTML",
+  "notNativeWeChatClient": true,
+  "massSent": false,
+  "checkedAt": "2026-10-12T11:20:24.894Z",
+  "articles": [
+    "有机合成文献日报｜10.12｜今日精选｜ACS Catalysis：氯仿诱导钯催化剂表面改性，实现噻吩的温和非均相加氢",
+    "往期精选｜JACS：烷基锆参与的氨基酸衍生物不对称脱氨交叉偶联"
+  ],
+  "sourceLinks": [
+    "https://gallery.gczhouwld.com/?edition=2026-10-12&doi=10.1021%2Facscatal.6c06048&summary=0",
+    "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0"
+  ],
+  "images": {
+    "total": 27,
+    "byArticle": [
+      15,
+      10
+    ],
+    "covers": 2,
+    "expected": [
+      27,
+      14,
+      10,
+      2
+    ],
+    "imageLoadReport": {
+      "observed": 27,
+      "loaded": 27,
+      "missing": [],
+      "coversLoaded": 2
+    }
+  },
+  "evidence": [
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-live-preview/mobile-first-screen.png",
+      "sha256": "b78be0846013c9e79ac4ef2850379c89cfaf91d25042d1c8569e42dd8b2a68f1",
+      "bytes": 301793
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-live-preview/mobile-primary-cover.png",
+      "sha256": "2ff0a0a48b83cb7bb06289cf4ef3d7f0354a959e58b21d72e09324f9aaaa0170",
+      "bytes": 97010
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-live-preview/mobile-retrospective-cover.png",
+      "sha256": "d2e947bcb176c226ee09a1e04f2d589695b926cc462598f87b41356990731e5d",
+      "bytes": 106030
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-live-preview/mobile-ACS-scientific-reasoning.png",
+      "sha256": "2006f96798f435f6df4e95e5201d0663c0efbabe21d4005aa165dc257b15e11a",
+      "bytes": 299519
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-live-preview/mobile-JACS-scientific-reasoning.png",
+      "sha256": "c31878c0a33f71c3f2d6978612770eb21bf9e204c7d450ef7fd4f60024844475",
+      "bytes": 335126
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-live-preview/mobile-ACS-SI-Table-S9.png",
+      "sha256": "4c00a2e793282d7db1234fb5acf58e368784ad52c146a3fef7e79f545629a91a",
+      "bytes": 157583
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-live-preview/mobile-JACS-Fig2-scope.png",
+      "sha256": "383ec9c5ef9fed06b11a7c7bfd611987d0a2735f5f4580339de7764cbda9e237",
+      "bytes": 190065
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-live-preview/mobile-JACS-Fig3A-minimal.png",
+      "sha256": "a09544fc71e26c5c7a94e619e327f17d7cbe76c7067264505898c6d1b190b4dc",
+      "bytes": 80869
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-live-preview/mobile-JACS-Fig4-mechanism.png",
+      "sha256": "1aef733ddfa55a3de1e98df41a9060099f6dfcce6be7c271010f2a2b513b9a9a",
+      "bytes": 95463
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-live-preview/desktop-two-cover-header.png",
+      "sha256": "78ba09669fe02e5564060c317a4cfd57fa00dd5b38a1ffa88e5f6c6f7756672f",
+      "bytes": 96790
+    }
+  ],
+  "journalCountOnly": true,
+  "ACS_SI_TableS9": true,
+  "contentSectionHeadings": [
+    [
+      "氯仿诱导钯催化剂表面改性，实现噻吩的温和非均相加氢",
+      "将噻吩还原为四氢噻吩，难点不只是芳香性",
+      "氯仿的特殊效果，先由对照实验确立",
+      "官能团兼容性，必须分别看主反应与添加剂的命运",
+      "底物拓展的关键，是官能团所处的位置",
+      "决定性检验：移走氯仿，活性还能保留吗",
+      "XPS 和 ToF-SIMS 将表面变化推进到哪一层证据",
+      "方法学启示与代价：可设计的表面，不等于可循环的催化剂"
+    ],
+    [
+      "烷基锆参与的氨基酸衍生物不对称脱氨交叉偶联",
+      "从氨基酸出发，为什么难在区分两条相似的烷基链",
+      "烷基锆把自由基供给和还原能力装在同一反应伙伴中",
+      "配体筛选揭示：提高转化率并不等于建立立体控制",
+      "底物范围的价值，在于同时展示高 ee 与失效边界",
+      "合成应用检验了两件不同的事：原料汇聚与步骤兼容",
+      "哪些实验支持自由基参与，哪些仍不足以指定电子转移路径",
+      "Ni(0)–Ni(III) 催化循环：能解释结果，但还不是被逐步拍到的过程",
+      "方法学意义：自由基可以由两个来源供给，立体选择性必须由环境建立"
+    ]
+  ],
+  "scienceImageBalance": [
+    {
+      "article": "ACS Catalysis",
+      "charsIncludingCaptions": 4837,
+      "scientificHeadings": 8,
+      "hasVariableFigureWidths": false,
+      "noAllWideImages": true
+    },
+    {
+      "article": "JACS",
+      "charsIncludingCaptions": 4514,
+      "scientificHeadings": 9,
+      "hasVariableFigureWidths": false,
+      "noAllWideImages": true
+    }
+  ],
+  "imageDisplayNetworkStatus": "all_loaded",
+  "publicSend": false
+}
