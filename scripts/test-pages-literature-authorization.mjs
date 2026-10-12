@@ -110,6 +110,58 @@ run('different_snapshot_or_slot_is_blocked', () => {
   assert.ok(failures.includes('formal_slot_mismatch'));
   assert.ok(failures.includes('formal_handoff_generation_mismatch'));
 });
+
+const historical = JSON.parse(await readFile(new URL('../audit/historical-reviewed/approved-admissions.json', import.meta.url),'utf8'));
+const historicDoi=historical.accepted[0].doi;
+const markerWithHistory={
+  ...marker,
+  historicalReviewFile:'audit/historical-reviewed/approved-admissions.json',
+  historicalReviewBlobSha:'a'.repeat(40),
+  historicalAdmittedDois:[historicDoi],
+  dailyPublishableDois:[included.doi],
+  publishableDois:[included.doi,historicDoi]
+};
+run('one independently reviewed historical DOI may join daily release only with frozen marker',()=>{
+  assert.deepEqual(validateFormalPartition(staging,formal,markerWithHistory,queue,historical),[]);
+});
+run('historic marker cannot distort or omit the separate frozen daily DOI subset',()=>{
+  const noDaily={...markerWithHistory,dailyPublishableDois:[]};
+  assert.ok(validateFormalPartition(staging,formal,noDaily,queue,historical)
+    .includes('release_daily_allowlist_mismatch'));
+  const noKey={...markerWithHistory};
+  delete noKey.dailyPublishableDois;
+  assert.ok(validateFormalPartition(staging,formal,noKey,queue,historical)
+    .includes('historical_release_daily_allowlist_missing'));
+});
+run('history marker alone without review proof cannot bypass publisher scope checks',()=>{
+  assert.ok(validateFormalPartition(staging,formal,markerWithHistory,queue,null)
+    .some(x=>x.startsWith('historical_review_invalid:')));
+});
+run('historic DOI not approved by its separate two-pass review is rejected',()=>{
+  const wrong={...markerWithHistory,historicalAdmittedDois:['10.5555/unapproved'],
+    publishableDois:[included.doi,'10.5555/unapproved']};
+  assert.ok(validateFormalPartition(staging,formal,wrong,queue,historical)
+    .includes('historical_review_not_in_approved_manifest'));
+});
+run('historical candidate cannot overlap daily accepted/rejected/pending snapshot',()=>{
+  for(const doi of [included.doi,excluded.doi,pending.doi]){
+    const wrong={...markerWithHistory,historicalAdmittedDois:[doi],
+      publishableDois:[included.doi,doi]};
+    assert.ok(validateFormalPartition(staging,formal,wrong,queue,historical)
+      .includes('historical_review_doi_overlaps_formal'));
+  }
+});
+run('historic manifest cannot be silently stripped from bound marker',()=>{
+  const x={...markerWithHistory,historicalAdmittedDois:[],publishableDois:[included.doi]};
+  assert.ok(validateFormalPartition(staging,formal,x,queue,historical)
+    .includes('historical_review_unreferenced_manifest'));
+});
+run('historic DOI must be a member of the combined atomic release allowlist',()=>{
+  const x={...markerWithHistory,publishableDois:[included.doi]};
+  assert.ok(validateFormalPartition(staging,formal,x,queue,historical)
+    .includes('release_allowlist_mismatch:publishableDois'));
+});
+
 const workflow = await readFile(new URL('../.github/workflows/github-pages.yml', import.meta.url), 'utf8');
 run('pages_build_and_deploy_depend_on_real_gate', () => {
   const job = name => {

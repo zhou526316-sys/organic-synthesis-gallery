@@ -1,0 +1,69 @@
+name: Historical reviewed archive admission authorization regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/lib/historical-admission.mjs'
+      - 'scripts/test-historical-admission.mjs'
+      - 'scripts/test-pages-literature-authorization.mjs'
+      - 'scripts/validate-pages-literature-authorization.mjs'
+      - 'scripts/apply-fixed-slot-literature-release.mjs'
+      - 'scripts/fixed-slot-release-handoff.mjs'
+      - 'scripts/pages-release-delivery.mjs'
+      - 'scripts/finalize-fixed-slot-literature-state.mjs'
+      - 'scripts/test-pages-release-delivery.mjs'
+      - 'audit/historical-reviewed/**'
+      - '.github/workflows/historical-admission-regression.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/lib/historical-admission.mjs'
+      - 'scripts/test-historical-admission.mjs'
+      - 'scripts/validate-pages-literature-authorization.mjs'
+      - 'scripts/apply-fixed-slot-literature-release.mjs'
+      - 'scripts/fixed-slot-release-handoff.mjs'
+      - 'scripts/pages-release-delivery.mjs'
+      - 'scripts/finalize-fixed-slot-literature-state.mjs'
+      - 'scripts/test-pages-release-delivery.mjs'
+      - '.github/workflows/historical-admission-regression.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify syntax and two-pass-reviewed immutable pilot manifest
+        run: |
+          set -euo pipefail
+          node --check scripts/lib/historical-admission.mjs
+          node --check scripts/apply-fixed-slot-literature-release.mjs
+          node --check scripts/validate-pages-literature-authorization.mjs
+          node --check scripts/fixed-slot-release-handoff.mjs
+          node --check scripts/pages-release-delivery.mjs
+          node --check scripts/finalize-fixed-slot-literature-state.mjs
+          node --test scripts/test-historical-admission.mjs
+      - name: Verify old and new Pages marker partition, historical media policy
+        run: |
+          set -euo pipefail
+          node scripts/test-pages-literature-authorization.mjs
+          node --test scripts/test-pages-release-delivery.mjs
+          node scripts/test-historical-media-policy.mjs
+          node --test scripts/test-fixed-slot-release-handoff.mjs
+      - name: Protected literature and 08-only publication hard gates
+        run: |
+          set -euo pipefail
+          grep -F "deltaMinutes >= 0" scripts/apply-fixed-slot-literature-release.mjs
+          grep -F "release request Beijing date mismatch" scripts/apply-fixed-slot-literature-release.mjs
+          grep -F "HISTORICAL_ADMISSION_HELD" scripts/apply-fixed-slot-literature-release.mjs
+          grep -F "historicCard(historyRow)" scripts/apply-fixed-slot-literature-release.mjs
+          grep -F "historicalReviewBlobSha" scripts/validate-pages-literature-authorization.mjs
+          grep -F "historical_publication_card_contract_mismatch" scripts/validate-pages-literature-authorization.mjs
+          grep -F "historicalPublishedDois" scripts/finalize-fixed-slot-literature-state.mjs
+          grep -F "dailyPublishedDois" scripts/pages-release-delivery.mjs

@@ -97,7 +97,8 @@ function bindings(ref, staging) {
     'docs/literature-scope-contract.md', 'docs/literature-update-protocol.md',
     'docs/publication-release-contract.md', 'docs/formal-review-conversion.md',
     'audit/literature-scope-corrections.json', 'audit/scope-removal-authority.json',
-    MARKER, staging, 'audit/unresolved-latest.json', 'audit/latest.json', ...Object.keys(marker.protectedBlobs || {})];
+    MARKER, staging, 'audit/unresolved-latest.json', 'audit/latest.json',
+    'audit/historical-reviewed/approved-admissions.json', ...Object.keys(marker.protectedBlobs || {})];
   assert(Object.keys(marker.protectedBlobs || {}).length === 8, 'invalid_protected_file_count');
   return Object.fromEntries([...new Set(files)].map(file => [file, git('rev-parse', `${ref}:${file}`)]));
 }
