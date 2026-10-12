@@ -118,10 +118,20 @@ const markerWithHistory={
   historicalReviewFile:'audit/historical-reviewed/approved-admissions.json',
   historicalReviewBlobSha:'a'.repeat(40),
   historicalAdmittedDois:[historicDoi],
+  dailyPublishableDois:[included.doi],
   publishableDois:[included.doi,historicDoi]
 };
 run('one independently reviewed historical DOI may join daily release only with frozen marker',()=>{
   assert.deepEqual(validateFormalPartition(staging,formal,markerWithHistory,queue,historical),[]);
+});
+run('historic marker cannot distort or omit the separate frozen daily DOI subset',()=>{
+  const noDaily={...markerWithHistory,dailyPublishableDois:[]};
+  assert.ok(validateFormalPartition(staging,formal,noDaily,queue,historical)
+    .includes('release_daily_allowlist_mismatch'));
+  const noKey={...markerWithHistory};
+  delete noKey.dailyPublishableDois;
+  assert.ok(validateFormalPartition(staging,formal,noKey,queue,historical)
+    .includes('historical_release_daily_allowlist_missing'));
 });
 run('history marker alone without review proof cannot bypass publisher scope checks',()=>{
   assert.ok(validateFormalPartition(staging,formal,markerWithHistory,queue,null)
