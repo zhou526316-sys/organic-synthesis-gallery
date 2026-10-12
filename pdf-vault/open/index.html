@@ -33,6 +33,51 @@
         <p id="native-scan-report" class="hint" data-testid="native-pdf-scan-report" role="status" aria-live="polite"></p>
       </div>
     </main>
+    <section id="native-folder-modal" class="folder-modal" role="dialog" aria-modal="true" aria-labelledby="native-folder-title" hidden>
+      <div class="folder-modal-panel">
+        <header class="folder-modal-head">
+          <div>
+            <h2 id="native-folder-title">选择 PDF 保存位置</h2>
+            <p>本机文件夹或云盘的本地同步目录</p>
+          </div>
+          <button id="native-folder-close" type="button" aria-label="关闭保存位置选择">关闭</button>
+        </header>
+        <div class="folder-provider-grid" role="group" aria-label="保存位置类型">
+          <button type="button" data-folder-provider="local" data-testid="native-folder-provider-local" aria-pressed="true">
+            <span class="folder-provider-name">本机文件夹</span>
+            <span class="folder-provider-sub">直接选电脑目录</span>
+          </button>
+          <button type="button" data-folder-provider="baidu" data-testid="native-folder-provider-baidu" aria-pressed="false">
+            <span class="folder-provider-name">百度网盘</span>
+            <span class="folder-provider-sub">登录官方客户端，再选同步目录</span>
+          </button>
+          <button type="button" data-folder-provider="quark" data-testid="native-folder-provider-quark" aria-pressed="false">
+            <span class="folder-provider-name">夸克网盘</span>
+            <span class="folder-provider-sub">登录并选择电脑本地文件夹</span>
+          </button>
+          <button type="button" data-folder-provider="aliyun" data-testid="native-folder-provider-aliyun" aria-pressed="false">
+            <span class="folder-provider-name">阿里云盘</span>
+            <span class="folder-provider-sub">选择已下载或同步的目录</span>
+          </button>
+          <button type="button" data-folder-provider="onedrive" data-testid="native-folder-provider-onedrive" aria-pressed="false">
+            <span class="folder-provider-name">OneDrive</span>
+            <span class="folder-provider-sub">选择已在本机可用的同步目录</span>
+          </button>
+        </div>
+        <div id="native-folder-instructions" class="folder-instructions">
+          <h3 id="native-folder-provider-name">本机文件夹</h3>
+          <p id="native-folder-provider-summary"></p>
+          <p id="native-folder-provider-steps"></p>
+          <a id="native-folder-official" target="_blank" rel="noopener noreferrer" hidden>前往官方页面登录或安装</a>
+          <p id="native-folder-privacy">Gallery 不收集云盘账号密码，也不连接云盘 API。选择同步文件夹可能使 PDF 经云盘客户端上传到第三方云端；请自行核对文件许可。仅能读取已下载到电脑的完整 PDF。</p>
+        </div>
+        <div class="folder-modal-actions">
+          <button type="button" id="native-folder-confirm" data-testid="native-pdf-folder-choose">选择电脑上的文件夹</button>
+          <button type="button" id="native-folder-cancel">取消</button>
+        </div>
+        <p id="native-folder-feedback" role="status" aria-live="polite"></p>
+      </div>
+    </section>
     <section id="native-viewer" hidden aria-label="浏览器内置 PDF 阅读器">
       <iframe data-testid="native-pdf-frame" id="native-frame" title="浏览器内置 PDF 阅读器" referrerpolicy="no-referrer"></iframe>
     </section>
