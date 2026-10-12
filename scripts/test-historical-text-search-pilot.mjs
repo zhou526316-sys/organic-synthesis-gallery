@@ -71,7 +71,7 @@ async function simulateTampermonkey({confirm=true,doiTags=[historicDoi],actualDa
   const messages=[];
   const nodes=[
     fakeHeading('Abstract'),
-    fakeParagraph('Ligand-to-metal charge transfer initiates the transformation. '.repeat(5)),
+    fakeParagraph('This study describes a new catalytic coupling reaction and its synthetic utility. '.repeat(5)),
     fakeHeading('Results and Discussion'),
     fakeParagraph('LMCT enables a cross coupling through controlled electron transfer. '.repeat(5)),
     fakeHeading('Mechanistic Studies'),
@@ -147,6 +147,7 @@ test('Tampermonkey manually exports DOI-bound structured text locally without up
   assert.ok(checked.text.includes('Ligand-to-metal charge transfer'));
   const term=evaluatePackets([checked],['lmct'])[0];
   assert.equal(term.titleHits,0);
+  assert.equal(term.abstractOrTitleHits,0);
   assert.equal(term.bodyHits,1);
   assert.equal(term.bodyOnly,1);
   const local=await mkdtemp(join(tmpdir(),'gallery-text-eval-'));
