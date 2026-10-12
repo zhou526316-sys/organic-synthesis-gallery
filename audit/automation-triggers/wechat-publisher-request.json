@@ -1,8 +1,8 @@
 {
-  "requestId": "wechat-2026-10-12-r2-correct-acs-first-cover-keep-two-article-media",
+  "requestId": "wechat-2026-10-12-r4-final-user-reaffirmed-acs-catalysis-jacs-deep-reading",
   "publicationDate": "2026-10-12",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-12-r2",
+  "editorialRevision": "2026-10-12-r4",
   "approvedGate": "audit/wechat-working/2026-10-12-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -14,12 +14,13 @@
   "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0",
   "expectedReviewedBodyImages": 24,
   "expectedReviewedAssets": 26,
-  "sourceImportRunId": 38203184649,
+  "sourceImportRunId": 38216980439,
   "draftOnly": true,
   "publicSendAuthorized": false,
   "requireDraftGetReadback": true,
   "requireArticleOrderAndExactDois": true,
   "linkOnly": false,
-  "updatePolicy": "same_date_same_media_only_fail_closed_on_missing_id",
-  "reason": "User authorized complete Oct12 double article draft. First API draft/add and readback already passed, final visual QA discovered one broken ACS figure header/caption crop in 2.35 cover. Independently reviewed SHA-locked R2 replaces ONLY source verified lead and first cover with complete, clean actual reaction and native title safety. Retain all other scientifically vetted 23+28 paragraphs, 22 other source figures and user Ni/Zr concept cover; exact 2 DOI source links, same original 2-article Oct12 media ID only, draft/update/get, absolutely no group send."
+  "updatePolicy": "update_exact_existing_2026_10_12_media_id_only_fail_closed_no_duplicates",
+  "userSelectedRetrospectiveCover": "latest 1254x1254 Ni/Zr blue abstract artwork with no molecular bond schemes; exact SHA256 96ca40c385776838e7d5ce4f59f1ffbc483a8c54604d1adf428497c9d8829a4d",
+  "reason": "User reiterated actual WeChat API access; user final selection: two Oct12 articles, ACS Catalysis 10.1021/acscatal.6c06048 and JACS 10.1021/jacs.6c10406. Disregard UNPUBLISHED Oct12 R3 site-features candidate. R4 reviewed exact original Fig1C ACS cover, 14 ACS + 10 JACS source figures, approved deep science text, user-selected square blue abstract Ni/Zr cover no invented molecular structure. 5 real daily release cards still lead in first body. Reuse exact existing Oct12 double-article media ID; official draft/update and draft/get + new unique preview; never mass-send."
 }
