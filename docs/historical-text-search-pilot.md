@@ -69,3 +69,16 @@ node scripts/historical-text-local-evaluator.mjs --dir="D:\文献全文试验" -
 ### 真实验收
 
 由专属 `scripts/test-historical-text-batch.mjs` 测试历史 DOI 去重、有效年月、CC BY/CC0 来源、非商业禁止修改条款、不明许可、跨标签串扰与不触碰已有媒体接口。网站真实版本必须经正式 Pages 构建/部署并通过 URL @version 0.2.0 回读才能说已经可安装。用户浏览器实际运行（开启授权院校访问环境等）需要另行验收，不能把 CI 模拟当作真实跑完全文。
+
+
+## 2026-10-12 — 0.2.1 全历史 DOI 来源与正文科学性修正
+
+0.2.0 上线后经真实线上核查确认：`toc-demand-live.json` 为**媒体任务队列**，其构建器明确排除 `metadata_only` 文献，不能成为历史检索全文采集的唯一 DOI 清单。正式网站 `release-delivery.json` 含有 `architectureCatalogId` 和经版本核对的 DOI 成员；线上 `GET https://api.gczhouwld.com/api/literature/catalog-view?catalogId=...&dateTo=2026-09-30&sort=oldest&limit=100` 已证实可返回同一正式目录的有界分页。
+
+0.2.1 因此只针对**独立历史采集批次**替换来源：
+1. 先读取 Pages 正式发布版本和 DOI 成员哈希；再以该 `catalogId` 分页读取正式 D1 搜索索引，逐行比较 DOI 是否确实是正式成员、revision 是否有效，保证严格游标前进、总量、去重、每批最大数量和发布版本一致。不能在索引尚未 ready 或分页中出现错误时回退到只覆盖 TOC 的队列。
+2. 只选 `firstOnlineDate < 2026-10-01` 且有核验日期的文章；发表日期未知的正式 DOI 显示待核验，不计为“正文完成”。保留既有手动本机导出的旧接口作为兼容，不把它当批量权威源。正式未来新增的 `metadata_only` 条目也可纳入历史批次，但不允许访问额外图片或 PDF。
+3. 真实 Springer Nature 页面可能在 `Rights and permissions` 栏以 `http://creativecommons.org/licenses/by/4.0/` **文字**形式声明该文章 CC BY（不是带 `rel=license` 的链接）。允许把这类专属的文章授权声明**仅作为本机文本处理候选**，先确认当前出版社文章 DOI 绑定；不由 OA 元数据猜许可证，也不以通用网页脚注/参考文献里的 CC 许可误判本文。
+4. 正文提取明确排除 `Rights and permissions`、`About this article`、`Author information`、`Additional information` 等法律、引用与行政信息。不得把这些长段或孤立 Abstract 当成有效 Results/Methods/Mechanism。标记 `stored` 要求至少有实质科学研究章节文字，不满足则 `body_missing`。
+5. 保留与现有 TOC/正文图/PDF controller、队列、回执、上传路径完全独立，不增加 PDF 请求、正文图下载、SI 下载、服务器全文复制或全库正式发行时刻。
+6. 以最新 userscript `@version 0.2.1` 显式更新，要求相应 Pages 构建与线上原始脚本版本回读；0.2.0 的成功构建不代表修订已上线。

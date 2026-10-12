@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.0
+// @version      0.2.1
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -28,6 +28,7 @@
 // @grant        GM_openInTab
 // @grant        GM_xmlhttpRequest
 // @connect      gallery.gczhouwld.com
+// @connect      api.gczhouwld.com
 // @updateURL    https://gallery.gczhouwld.com/gallery-historical-text-pilot.user.js
 // @downloadURL  https://gallery.gczhouwld.com/gallery-historical-text-pilot.user.js
 // ==/UserScript==
@@ -35,10 +36,15 @@
 (() => {
   'use strict';
   const CUTOFF='2026-10-01';
-  const CATALOG_URL='https://gallery.gczhouwld.com/toc-demand-live.json';
+  const CATALOG_URL='https://gallery.gczhouwld.com/toc-demand-live.json'; // Legacy manual-only fallback
+  const CANONICAL_RELEASE_URL='https://gallery.gczhouwld.com/release-delivery.json';
+  const CANONICAL_INDEX_URL='https://api.gczhouwld.com/api/literature/catalog-view';
+  const SOURCE_PAGE_LIMIT=100;
+  const SOURCE_MAX_PAGES=2500;
+  const SOURCE_RESULT_MAX_BYTES=5000000;
   const SCHEMA='gallery-historical-local-text-pilot-v1';
   const DOI=/^10\.\d{4,9}\/\S+$/;
-  const EXCLUDE_HEADING=/^(?:references?|bibliography|acknowledg(?:e)?ments?|author information|associated content|supplementary information|supporting information|funding|conflicts? of interest|data availability)\b/i;
+  const EXCLUDE_HEADING=/^(?:references?|bibliography|acknowledg(?:e)?ments?|author information|author contributions?|author notes?|corresponding author|associated content|supplementary information|supporting information|funding|conflicts? of interest|competing interests?|data availability|code availability|additional information|rights and permissions|licen[cs](?:e|ing)?|open access|about this article|peer review (?:file|information)|reprints?|ethics (?:declarations?|approval)|publisher(?:'s)? note|article information)\b/i;
   const EXCLUDE_CONTEXT=/(?:^|[\s_-])(?:reference|bibliography|related|recommended|navigation|share|cookie|social|advert|footer)(?:$|[\s_-])/i;
   const KNOWN_HOSTS={
     'pubs.acs.org': 'acs',
@@ -102,7 +108,7 @@
       consumed+=value.length;paragraphCount++;
       const key=heading.toLowerCase();
       if(!group.has(key)){
-        const row={type:/abstract/i.test(heading)?'abstract':/mechanis/i.test(heading)?'mechanism':/result|scope|discussion/i.test(heading)?'results':/experimental|methods/i.test(heading)?'experimental':'other',
+        const row={type:/^abstract\b/i.test(heading)?'abstract':/mechanis|control experiments?|catalytic cycle/i.test(heading)?'mechanism':/result|scope|discussion|screening|optimization|structure.reactivity/i.test(heading)?'results':/experimental|methods|materials and methods|procedure/i.test(heading)?'experimental':/introduct|background/i.test(heading)?'introduction':/conclusion|outlook|summary/i.test(heading)?'conclusion':'other',
           heading,text:'',order:sections.length};
         group.set(key,row);sections.push(row);
       }
@@ -219,6 +225,82 @@
     crypto.getRandomValues(bytes);
     return [...bytes].map(x=>x.toString(16).padStart(2,'0')).join('');
   }
+  function batchFetchJson(url){
+    return new Promise((resolve,reject)=>{
+      GM_xmlhttpRequest({
+        method:'GET',url,timeout:16000,headers:{accept:'application/json'},
+        onload(response){
+          try{
+            const body=String(response.responseText||'');
+            if(response.status!==200||body.length>SOURCE_RESULT_MAX_BYTES)
+              throw Error('正式目录读取受阻 HTTP '+String(response.status));
+            const parsed=JSON.parse(body);
+            if(!parsed||typeof parsed!=='object')throw Error('正式目录数据格式错误');
+            resolve(parsed);
+          }catch(error){reject(error);}
+        },
+        onerror(){reject(Error('正式文献索引网络访问失败'));},
+        ontimeout(){reject(Error('正式文献索引请求超时'))}
+      });
+    });
+  }
+  async function batchLoadCanonicalCatalog(){
+    const release=await batchFetchJson(CANONICAL_RELEASE_URL);
+    const catalogId=String(release.architectureCatalogId||'');
+    if(!/^[0-9a-f]{64}$/.test(catalogId)
+      ||!Array.isArray(release.dois)
+      ||!Number.isSafeInteger(release.productionCards)
+      ||release.dois.length!==release.productionCards
+      ||release.dois.length>BATCH_DOI_LIMIT)
+      throw Error('正式 Pages 文献目录版本不可信');
+    const members=new Set();
+    for(const raw of release.dois){
+      const doi=normalizeDoi(raw);
+      if(!doi||members.has(doi))throw Error('正式 DOI 清单不一致');
+      members.add(doi);
+    }
+    const articles=[],seen=new Set();
+    let cursor='',matched=null;
+    for(let page=0;page<SOURCE_MAX_PAGES;page++){
+      const q=new URLSearchParams({
+        catalogId,sort:'oldest',dateTo:'2026-09-30',
+        limit:String(SOURCE_PAGE_LIMIT)
+      });
+      if(cursor)q.set('cursor',cursor);
+      const response=await batchFetchJson(CANONICAL_INDEX_URL+'?'+q.toString());
+      if(response.readPathActive!==true||response.enabled!==true
+        ||response.catalogId!==catalogId||!Array.isArray(response.items)
+        ||!Number.isSafeInteger(response.matched)
+        ||response.items.length>SOURCE_PAGE_LIMIT)
+        throw Error('正式文献索引未就绪或目录版本不一致');
+      if(matched===null)matched=response.matched;
+      else if(matched!==response.matched)throw Error('正式目录分页数量发生变化');
+      for(const row of response.items){
+        const doi=normalizeDoi(row?.doi);
+        if(!doi||!members.has(doi)||seen.has(doi)
+          ||!/^[0-9a-f]{64}$/.test(String(row?.revision||''))
+          ||!String(row?.journal||'').trim())
+          throw Error('正式 DOI 分页存在未知或重复论文');
+        seen.add(doi);
+        articles.push({doi,date:String(row.firstOnlineDate||''),
+          title:String(row.title||'').slice(0,1000),journal:String(row.journal||'').slice(0,140),
+          revision:row.revision});
+      }
+      if(articles.length>matched||articles.length>BATCH_DOI_LIMIT)
+        throw Error('正式文献目录容量或去重异常');
+      if(response.hasMore!==true){
+        if(articles.length!==matched||response.nextCursor)
+          throw Error('正式 DOI 分页缺项');
+        return {pairedCaptureRegistry:true,webpageDoiCount:articles.length,
+          formalCount:release.dois.length,publishedCatalogId:catalogId,articles};
+      }
+      if(!response.nextCursor||response.nextCursor===cursor||!response.items.length)
+        throw Error('正式文献索引分页无法前进');
+      cursor=response.nextCursor;
+    }
+    throw Error('正式文献索引分页超过保护上限');
+  }
+
   function batchHistoricalPapers(catalog){
     if(!catalog||catalog.pairedCaptureRegistry!==true
       ||!Array.isArray(catalog.articles)||catalog.articles.length>BATCH_DOI_LIMIT
@@ -256,22 +338,38 @@
       root.querySelectorAll('[itemprop="license"] a[href],a[rel="license"][href],a[href*="creativecommons.org/licenses/"],a[href*="creativecommons.org/publicdomain/zero/"]').forEach(el=>{
         if(!excluded(el,true))candidates.push(String(el.href||el.getAttribute('href')||''));
       });
+      // On verified publisher article pages, the CC URL is frequently written
+      // as plain text (including the publisher's legacy http:// permalink)
+      // under "Rights and permissions" rather than as a <link rel=license>.
+      // Only accept this exact article-scoped legal notice, never a reference
+      // section, citation, recommended article or generic page footer.
+      root.querySelectorAll('section').forEach(section=>{
+        const title=cleanText(section.querySelector('h2,h3,h4')?.textContent||'',120);
+        if(!/^(?:rights and permissions|open access|licen[cs](?:e|ing)?|copyright)\b/i.test(title))return;
+        const text=cleanText(section.textContent,10000);
+        if(!/\bthis article is licensed under a creative commons\b/i.test(text))return;
+        const urls=text.match(/https?:\/\/creativecommons\.org\/(?:licenses\/[\w.-]+(?:\/[\w.-]+)*|publicdomain\/zero\/1\.0)\/?/ig)||[];
+        candidates.push(...urls);
+      });
     }
     const matches=candidates.map(raw=>{
-      try{const url=new URL(raw,location.origin);
-        if(url.protocol!=='https:'||url.hostname!=='creativecommons.org')return null;
+      try{
+        const url=new URL(raw,location.origin);
+        // Creative Commons often uses http in its published license notice.
+        // Normalize ONLY an exact Creative Commons host/path; never fetch it.
+        if(!['http:','https:'].includes(url.protocol)||url.hostname!=='creativecommons.org')
+          return null;
         if(/^\/licenses\/by\/(?:3\.0|4\.0)\/?$/.test(url.pathname))
-          return {kind:'cc-by',licenseUrl:url.origin+url.pathname};
+          return {kind:'cc-by',licenseUrl:'https://creativecommons.org'+url.pathname};
         if(/^\/publicdomain\/zero\/1\.0\/?$/.test(url.pathname))
-          return {kind:'cc0',licenseUrl:url.origin+url.pathname};
+          return {kind:'cc0',licenseUrl:'https://creativecommons.org'+url.pathname};
       }catch(_){}
       return null;
     }).filter(Boolean);
-    // Source URI alone is not authorization to publish raw fulltext. Batch
-    // storage remains device-only pending a separate source/version review.
     const distinct=[...new Set(matches.map(x=>x.licenseUrl))];
     return distinct.length===1?matches[0]:null;
   }
+
   function batchOpenDb(){
     return new Promise((resolve,reject)=>{
       if(typeof indexedDB==='undefined')return reject(Error('IndexedDB unavailable'));
@@ -408,7 +506,7 @@
       window.alert('已有一个历史正文批次在当前浏览器运行；请在原页面暂停后操作。');
       return;
     }
-    const catalog=await loadCatalog();
+    const catalog=await batchLoadCanonicalCatalog();
     const papers=batchHistoricalPapers(catalog);
     if(!papers.length){window.alert('正式目录中暂无 2026-10-01 前的文献');return;}
     if(!window.confirm('开始独立补抓 '+papers.length+' 篇正式历史 DOI？\n将逐篇在后台打开出版社页面，仅在明确可验证的 CC BY/CC0 许可下保存文本到当前浏览器；不抓 PDF/正文图/SI，不上传原文，也不修改 TOC 队列。浏览器需要保持开启。'))return;
@@ -524,10 +622,10 @@
     const license=batchLicenseEvidence(root);
     if(!license){storeResult({status:'license_not_verified'});return;}
     if(!capture){storeResult({status:'body_missing',reason:reason.slice(0,90)});return;}
-    const nonAbstractChars=capture.sections.filter(row=>row.type!=='abstract'
-      && !/^abstract$/i.test(String(row.heading||'').trim()))
+    const evidenceChars=capture.sections.filter(row=>
+      ['results','mechanism','experimental'].includes(row.type))
       .reduce((total,row)=>total+String(row.text||'').length,0);
-    if(nonAbstractChars<250){storeResult({status:'body_missing',reason:'abstract_only_or_insufficient_body'});return;}
+    if(evidenceChars<250){storeResult({status:'body_missing',reason:'scientific_results_or_methods_missing'});return;}
     const canonical=[...capture.sections.map(s=>s.heading+'\n'+s.text),
       ...capture.captions.map(s=>s.label+'\n'+s.text),
       ...capture.tables.map(s=>s.label+'\n'+s.text)].join('\n');
