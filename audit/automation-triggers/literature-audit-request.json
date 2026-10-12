@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-11T23:04:07.853Z",
-  "requestedBy": "prepublish-primary-20261012-0800",
-  "publicationSlot": "2026-10-12T08:00:00+08:00",
-  "expectedProductionCards": 959,
-  "reviewFile": "audit/review-2026-10-11-postrelease-late-0800.json",
-  "reviewBlobSha": "0bda64738c7ce458a8d21e3e4cfb5279c3028482",
-  "reason": "Fresh 2026-10-12 06:55 paired audit is missing at prepublish start. Generate the current Beijing-date DOI union using the canonical 16-journal registry, three-day window, seven-day safety tail, created/deposit rescue and verifiedThrough catch-up. Preserve the reviewed next-slot carryover and do not mutate production."
+  "requestedAt": "2026-10-12T23:11:49.541Z",
+  "requestedBy": "prepublish-primary-20261013-0800",
+  "publicationSlot": "2026-10-13T08:00:00+08:00",
+  "expectedProductionCards": 964,
+  "reviewFile": "audit/review-2026-10-12-0800.json",
+  "reviewBlobSha": "a28ee7d6049157ff1c700a617a34f4eeb563274f",
+  "reason": "Fresh 2026-10-13 06:55 paired audit is missing at prepublish start. Generate the current Beijing-date DOI union using the canonical 16-journal registry, three-day window, seven-day safety tail, multi-ISSN Crossref online/published/created, OpenAlex, created/deposit rescue and verifiedThrough catch-up. Preserve reviewed history and do not mutate production."
 }
