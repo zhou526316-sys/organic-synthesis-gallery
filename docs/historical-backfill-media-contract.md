@@ -45,3 +45,15 @@ new-paper capture or the sole 08:00 publication slot.
 ## Scope and implementation guard
 
 This independent contract is subordinate to PROJECT_RULES.md and the currently authorized daily 08:00 release and literature-scope contracts. A nightly 23:00 collection task may only stage candidates. Changes must be verified in the user-facing cards, TOC queue, Tampermonkey inventory, D1 search index and release gates before declaring production-ready. Candidate discovery, reviewed include, committed admission, and live search visibility are distinct statuses.
+
+## 2026-10-12 — 用户批准的历史全文检索试验，独立于媒体采集
+
+用户批准“官方开放全文优先 + Tampermonkey 对旧文献合法的正文补缺 + 不永久保存旧 PDF”的第一阶段。此批准**不把原有历史 `metadata_only` / `toc_only` 自动媒体政策修改为全文媒体抓取**，而是允许独立、严格受控的文本检索试验：
+
+1. 官方来源首先只审计当前正式 DOI 的可用 TEI/XML/HTML 元数据与条目许可；不把尚未通过范围审核的夜间 staging 候选写入正式检索。
+2. 经用户手动触发且获得许可的浏览器正文文本提取，可以导出只保存在用户本机的结构化数据包；独立 Tampermonkey 脚本不得自动访问旧 DOI、抓取 PDF、SI、正文图或向现有 Evidence v2 私人库上传未经授权的历史全文。
+3. 旧论文以实际最早发表日期早于 2026-10-01 判定，不能以补录 `addedDate` 绕过媒体队列；正式现存历史 TOC、图片及 PDF 不删除、不降级。
+4. 在线全文检索、全文存储、Snippet 展示或双语解读发布都是独立权利与学术审核门禁；作者允许普通阅读不等于允许集中转载全文。无许可或者仅依赖校园订阅的内容维持本机试验/待许可状态，不能传入公开 D1/FTS。
+5. 使用单独试验工作流和小范围真实样本验收 DOI、许可、正文覆盖、化学术语额外召回、索引体积；不得用流水线成功或本地导出成功冒充生产检索已经上线。
+
+详细流程见 `docs/historical-text-search-pilot.md`。北京时间每日08:00唯一正式新增、历史 staging 与正常 Oct-1+ 媒体规则不受影响。
