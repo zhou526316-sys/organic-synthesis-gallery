@@ -274,11 +274,24 @@ export function mergeDeliveryState(state, evidence, current) {
   for (const name of ['publishableDois', 'rejectedDois', 'deferredDois']) {
     assert(sameSet(evidence[name], current[name] || []), `receipt_partition_mismatch:${name}`);
   }
+  const historicalPublishedDois=(current.historicalAdmittedDois||[]).map(normalizeDoi);
+  const dailyPublishedDois=(current.dailyPublishableDois||[]).map(normalizeDoi);
+  if(current.dailyPublishableDois===undefined){
+    // Legacy marker has no separate historic admissions.
+    dailyPublishedDois.push(...(evidence.publishableDois||[]).map(normalizeDoi)
+      .filter(id=>!historicalPublishedDois.includes(id)));
+  }
+  assert(!historicalPublishedDois.some(id=>dailyPublishedDois.includes(id)),
+    'historical_delivery_partition_did_not_match');
+  assert(sameSet([...(evidence.publishableDois||[])].map(normalizeDoi),
+    [...dailyPublishedDois,...historicalPublishedDois]),
+    'historical_delivery_partition_did_not_match');
   next.lastDeploymentAttempt = { ...evidence, status: 'success-live-verified' };
   next.lastPublication = { ...(state.lastPublication?.publicationSlot === evidence.publicationSlot ? state.lastPublication : {}),
     publicationSlot: evidence.publicationSlot, publicationCommit: evidence.markerCommit,
     reviewFile: current.reviewFile, reviewBlobSha: current.reviewBlobSha,
-    productionCards: evidence.productionCards, publishedDois: evidence.publishableDois,
+    productionCards: evidence.productionCards, publishedDois:dailyPublishedDois,
+    historicalPublishedDois,allPublishedDois:evidence.publishableDois,
     rejectedDois: evidence.rejectedDois, deferredDois: evidence.deferredDois,
     pagesRun: evidence.runId, deploymentSourceCommit: evidence.sourceCommit, deploymentVerifiedAt: evidence.verifiedAt };
   next.lastWebsiteSync = {
@@ -286,7 +299,9 @@ export function mergeDeliveryState(state, evidence, current) {
     finishedAt: evidence.verifiedAt, dataCommitSha: evidence.markerCommit, deployment: 'success-live-verified',
     verification: { pagesRun: evidence.runId, deploymentSourceCommit: evidence.sourceCommit, publicationSlot: evidence.publicationSlot,
       markerBlobSha: evidence.markerBlobSha, totalGalleryCards: evidence.productionCards, galleryDois: evidence.productionCards,
-      newlyAcceptedDoisPresent: evidence.publishableDois, rejectedDoisAbsent: evidence.rejectedDois, deferredDoisAbsent: evidence.deferredDois,
+      newlyAcceptedDoisPresent:dailyPublishedDois,historicalArchiveDoisPresent:historicalPublishedDois,
+      allAuthorizedDoisPresent:evidence.publishableDois,
+      rejectedDoisAbsent:evidence.rejectedDois, deferredDoisAbsent:evidence.deferredDois,
       chineseTitlesVerified: true, datasetSha256: evidence.datasetSha256, sites: evidence.sites,
       note: 'Exact built/live bytes and complete authorized DOI union verified. This delivery receipt does not assert discovery closure or advance verifiedThrough.' },
   };

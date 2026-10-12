@@ -47,7 +47,16 @@ for (const row of carryoverRows) {
   assert(/^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(String(row.nextPublicationSlot || ''))
     && Date.parse(row.nextPublicationSlot) > Date.parse(marker.publicationSlot), `invalid next-slot carryover time: ${doi}`);
 }
-assert(formal.summary?.accepted === marker.publishableDois.length, 'formal accepted count mismatch');
+const historicalPublishedDois=(marker.historicalAdmittedDois||[]).map(norm);
+const dailyPublishedDois=(formal.accepted||[]).map(row=>norm(row.doi));
+if(marker.dailyPublishableDois!==undefined)
+  assert(sameSet((marker.dailyPublishableDois||[]).map(norm),dailyPublishedDois),
+    'historic_fixed_slot_daily_allowlist_mismatch');
+assert(sameSet((marker.publishableDois||[]).map(norm),
+  [...dailyPublishedDois,...historicalPublishedDois]),
+  'formal_plus_historical_published_set_mismatch');
+assert(formal.summary?.accepted===dailyPublishedDois.length,
+  'formal accepted count mismatch');
 assert(formal.summary?.pending === marker.deferredDois.length, 'formal pending count mismatch');
 
 state.phase = deferredDois.length ? 'synced_with_pending' : (carryoverDois.length ? 'synced_with_carryover' : 'synced');
@@ -107,7 +116,9 @@ state.lastPublication = {
   tocRefreshRun: request.tocRefreshRunId,
   tocDemandCommit: request.tocDemandCommit,
   productionCards: marker.productionCards,
-  publishedDois: marker.publishableDois,
+  publishedDois:dailyPublishedDois,
+  historicalPublishedDois,
+  allPublishedDois:marker.publishableDois,
   deferredDois: marker.deferredDois,
   nextSlotPublicationDois: carryoverDois,
   rejectedDois: marker.rejectedDois,
@@ -126,7 +137,9 @@ state.lastWebsiteSync = {
     pagesRun: request.pagesRunId,
     qualityGateRun: request.qualityGateRunId,
     deploymentTriggerCommit: request.deploymentTriggerCommit,
-    newlyAcceptedDoisPresent: marker.publishableDois,
+    newlyAcceptedDoisPresent:dailyPublishedDois,
+    historicalArchiveDoisPresent:historicalPublishedDois,
+    allAuthorizedDoisPresent:marker.publishableDois,
     rejectedDoisAbsent: marker.rejectedDois,
     deferredDoisAbsent: marker.deferredDois,
     totalGalleryCards: marker.productionCards,
@@ -200,7 +213,9 @@ const result = {
   postReleaseAuditRun: request.postReleaseAuditRunId,
   postReleaseAuditGeneratedAt: compact.generatedAt,
   productionCards: marker.productionCards,
-  published: marker.publishableDois.length,
+  published:dailyPublishedDois.length,
+  historicalPublished:historicalPublishedDois.length,
+  totalPublished:marker.publishableDois.length,
   deferred: marker.deferredDois.length,
   nextSlotCarryover: carryoverDois.length,
   tocDemandCommit: request.tocDemandCommit,
