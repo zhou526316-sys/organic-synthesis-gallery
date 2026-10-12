@@ -25,7 +25,21 @@ try{
     window.GM_registerMenuCommand=()=>{};
     window.GM_xmlhttpRequest=options=>{
       window.__requests.push({method:options.method,url:options.url});
-      queueMicrotask(()=>options.onload({status:200,responseText:JSON.stringify(registry)}));
+      const url=new URL(options.url),id='a'.repeat(64);
+      let payload;
+      if(url.pathname.endsWith('/release-delivery.json'))
+        payload={architectureCatalogId:id,productionCards:registry.articles.length,
+          dois:registry.articles.map(x=>x.doi)};
+      else if(url.pathname==='/api/literature/catalog-view'){
+        const old=registry.articles.filter(x=>x.date<'2026-10-01');
+        const slice=url.searchParams.get('cursor')==='page2'?old.slice(1):old.slice(0,1);
+        payload={readPathActive:true,enabled:true,catalogId:id,matched:old.length,
+          hasMore:url.searchParams.get('cursor')!=='page2',
+          nextCursor:url.searchParams.get('cursor')==='page2'?null:'page2',
+          items:slice.map(x=>({doi:x.doi,revision:'b'.repeat(64),title:x.title,
+            firstOnlineDate:x.date,journal:x.journal}))};
+      }else throw Error('unexpected historical network request '+options.url);
+      queueMicrotask(()=>options.onload({status:200,responseText:JSON.stringify(payload)}));
     };
     window.GM_openInTab=(url,opts)=>{
       window.__opened.push({url,active:opts.active});
@@ -70,7 +84,13 @@ try{
   assert.equal(status.state.rightsPending,0);
   assert.equal(status.remainingJob,null);
   assert.ok(status.opened.every(x=>x.active===false&&x.url.startsWith('https://doi.org/')));
-  assert.deepEqual(status.requests,[{method:'GET',url:'https://gallery.gczhouwld.com/toc-demand-live.json'}]);
+  assert.equal(status.requests.length,3);
+  assert.ok(status.requests.every(x=>x.method==='GET'));
+  assert.equal(new URL(status.requests[0].url).pathname,'/release-delivery.json');
+  assert.ok(status.requests.slice(1).every(x=>
+    new URL(x.url).pathname==='/api/literature/catalog-view'
+    &&new URL(x.url).searchParams.get('dateTo')==='2026-09-30'));
+  assert.equal(status.requests.some(x=>x.url.includes('toc-demand-live')),false);
   const search=page.getByPlaceholder('检索本机正文（LMCT/CO₂等）');
   await search.fill('LMCT');
   await search.press('Enter');
@@ -92,6 +112,6 @@ try{
   await pdfPage.close();
   console.log('HISTORICAL_TEXT_BATCH_BROWSER_PASS '+JSON.stringify({
     uniqueHistorical:2,filesSaved:status.state.saved,closed:status.closed,
-    publisherTabsForeground:false,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false
+    publisherTabsForeground:false,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false
   }));
 }finally{await browser.close();}
