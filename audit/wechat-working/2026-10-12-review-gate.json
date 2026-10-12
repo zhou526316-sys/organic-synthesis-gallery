@@ -1,6 +1,6 @@
 {
   "date": "2026-10-12",
-  "revision": "2026-10-12-r4",
+  "revision": "2026-10-12-r5",
   "articleCount": 2,
   "selectionAuthority": "latest_explicit_user_reaffirmed_acs_catalysis_plus_jacs_and_no_invented_chemistry_cover",
   "selectionDois": [
@@ -8,59 +8,45 @@
     "10.1021/jacs.6c10406"
   ],
   "textReview": "pass",
-  "imageReview": "pass",
+  "imageReview": "pending_user_reported_incomplete_crops_and_offcenter_cover",
   "strictFigurePlacement": true,
   "materializedCropReviewRequired": true,
-  "reviewedAtBeijing": "2026-10-12T15:16:20.315686+08:00",
+  "reviewedAtBeijing": null,
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-12-r4-acs-catalysis-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-12-r4-acs-catalysis-images-only.md"
+    "textOnly": "audit/wechat-working/2026-10-12-r5-acs-catalysis-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-12-r5-acs-catalysis-images-only.md",
+    "retrospectiveTextOnly": "audit/wechat-working/2026-10-12-r5-jacs-text-only.md",
+    "retrospectiveImagesOnly": "audit/wechat-working/2026-10-12-r5-jacs-images-only.md",
+    "qa": "audit/wechat-working/2026-10-12-r5-science-layout-qa.json"
   },
   "sources": [
     {
       "path": "public/wechat-featured/2026-10-12.json",
-      "blobSha": "563c6318108bc3f4db80b1e762d39235363b3255",
-      "sha256": "8b1f975b17b435b9590cdebf96c0c83e993551bfe0b4f9b6e2040a0af9181da8"
+      "blobSha": "655fec81f99b2685c2063f848124a534e00d0dd9"
     },
     {
       "path": "public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json",
-      "blobSha": "8067055b6711b530e3f1d669c79363b6d70b0f3d",
-      "sha256": "e80dd18885efcc34cdd1a41b73cba733ca99c1ef3e3caf042e8d079233f4667c"
+      "blobSha": "edc95b832ccdcd7f156e293bb4481167f458b515"
     },
     {
       "path": "public/wechat-editions/2026-10-12.json",
-      "blobSha": "58fb026ae19d072e94f3ce07ebfa870d71507662",
-      "sha256": "f64ba04bdf592c84895dba943c29ce706ebdcbf172f01da4c4df9e0be146a530"
+      "blobSha": "8968cc1d7ad6d6cf1e73a357eb201b64f0fb25bd"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r4-acs-catalysis-text-only.md",
-      "blobSha": "c4dd968eb547164099ad96062a7c6d9230b82558",
-      "sha256": "063d554912b66d364eea443087fa5f1759745048a69b47232ab0583a5a103c16"
+      "path": "audit/wechat-working/2026-10-12-r5-acs-catalysis-text-only.md",
+      "blobSha": "33a4aa16f961c83bec5fdef710e7b1d51ff42e7b"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r4-jacs-text-only.md",
-      "blobSha": "a8f36cb0aee106c17cdfb4a860c4f3d45b470967",
-      "sha256": "e214140e44d9746c7db92a44c3c243af23242957dbb59ac66015a2acbd617aab"
+      "path": "audit/wechat-working/2026-10-12-r5-jacs-text-only.md",
+      "blobSha": "2f90b9eaa115fff2e40ddeade17451c6b2aca5a1"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r4-acs-catalysis-images-only.md",
-      "blobSha": "2253b97c6751e74f54b10728abf503972695f3ec",
-      "sha256": "10e3647a79ef90634c370faefc6ed422a015773b010e896d0f989fbb4d6b3344"
+      "path": "audit/wechat-working/2026-10-12-r5-acs-catalysis-images-only.md",
+      "blobSha": "ef5307ec2c9c9a4e2e3ca93445add223fe8b8617"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r4-jacs-images-only.md",
-      "blobSha": "6a333b7325d3bd15a586c4992b76aabf471c8c7a",
-      "sha256": "f4bee408e6ab0b5e41f503c2e7dbdab7861f39cfd84c9b95ec77c20419fcdd02"
-    },
-    {
-      "path": "audit/wechat-working/2026-10-12-r4-editorial-plan.json",
-      "blobSha": "77392165815dd2c129fc499caf901a5e8d2f121c",
-      "sha256": "61aeaf56483f98d1a63c0fae8d4b0d3039b405fb666765cce1fabf2d881191c0"
-    },
-    {
-      "path": "audit/wechat-working/2026-10-12-r4-science-image-qa.json",
-      "blobSha": "eb373adf26ab4297ca925f0a29e8e808fa0f44c1",
-      "sha256": "7077b06e83b26be91ea097e95f654fad7349d86f85deeabdb26bae020f13df27"
+      "path": "audit/wechat-working/2026-10-12-r5-jacs-images-only.md",
+      "blobSha": "570a30669e8bdfde6d707d41688438a55a263bd7"
     }
   ],
   "assets": [
@@ -248,5 +234,5 @@
     }
   ],
   "publicSendAuthorized": false,
-  "notes": "Reverted UNPUBLISHED R3 Gallery feature digest to latest explicitly selected Oct12 ACS Catalysis + JACS. Same R2 source-authentic ACS figure cover, exact science narrative and 24 full main/SI evidence figures. JACS cover now latest user-chosen abstract Ni/Zr artwork with no fabricated molecule bonds; user-supplied bytes retained. Independent hashes and figure placement verified; no WeChat write in import."
+  "notes": "R5 prose rewrite and figure placement accepted; image-level visual QA explicitly REOPENED after user rejected R4 crops/featured cover. Fail closed: no new WeChat draft update until complete source image and cover recenter review. Existing R4 remains unsent."
 }
