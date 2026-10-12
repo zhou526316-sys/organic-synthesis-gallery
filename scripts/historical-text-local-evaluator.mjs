@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {normalizedDoi,CUT_OFF} from './historical-text-source-audit.mjs';
 
-const MAX_FILE_BYTES=1024*1024, MAX_DOCS=100;
+const MAX_FILE_BYTES=2*1024*1024, MAX_DOCS=100;
 export function canonicalText(packet){
   return [...(packet.sections||[]).map(x=>x.heading+'\n'+x.text),
     ...(packet.captions||[]).map(x=>x.label+'\n'+x.text),
@@ -36,8 +36,10 @@ export function validateLocalPacket(packet,registry){
   const text=canonicalText(packet);
   if(text.length<250||text.length>350000||hash(text)!==packet.sourceSha256)
     throw Error('content_hash_mismatch');
+  const abstract=(packet.sections||[]).filter(x=>x.type==='abstract')
+    .map(x=>String(x.text||'')).join('\n');
   return {doi,journal:String(matches[0].journal||''),
-    sourceSha256:packet.sourceSha256,text,
+    sourceSha256:packet.sourceSha256,text,abstract,
     title:String(matches[0].title||''),characters:text.length};
 }
 export const CHEMICAL_EQUIVALENTS=Object.freeze({
@@ -56,9 +58,11 @@ export function matchTerms(text,term){
 export function evaluatePackets(records,terms=Object.keys(CHEMICAL_EQUIVALENTS)){
   return terms.map(term=>{
     const titleHits=records.filter(r=>matchTerms(r.title,term)).length;
+    const abstractOrTitleHits=records.filter(r=>matchTerms((r.title||'')+' '+(r.abstract||''),term)).length;
     const bodyHits=records.filter(r=>matchTerms(r.text,term)).length;
-    const bodyOnly=records.filter(r=>!matchTerms(r.title,term)&&matchTerms(r.text,term)).length;
-    return {term,titleHits,bodyHits,bodyOnly};
+    const bodyOnly=records.filter(r=>!matchTerms((r.title||'')+' '+(r.abstract||''),term)
+      &&matchTerms(r.text,term)).length;
+    return {term,titleHits,abstractOrTitleHits,bodyHits,bodyOnly};
   });
 }
 export async function runLocal({dir,registryPath='public/toc-demand-live.json',
