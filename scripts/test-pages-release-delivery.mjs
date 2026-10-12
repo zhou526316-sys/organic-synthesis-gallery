@@ -97,7 +97,7 @@ test('canonical Pages requires owner PDF button browser verification on the buil
 test('historical archive DOI remains separate from daily new in deployment receipt',()=>{
   const history='10.1021/acs.joc.6c01608';
   const marked={...marker,productionCards:2,
-    publishableDois:[a,history],historicalAdmittedDois:[history]};
+    publishableDois:[a,history],dailyPublishableDois:[a],historicalAdmittedDois:[history]};
   const receipt={...evidence,productionCards:2,publishableDois:[a,history]};
   const state=mergeDeliveryState({},receipt,marked);
   assert.deepEqual(state.lastPublication.publishedDois,[a]);
@@ -108,6 +108,6 @@ test('historical archive DOI remains separate from daily new in deployment recei
   assert.deepEqual(state.lastWebsiteSync.verification.allAuthorizedDoisPresent,[a,history]);
 });
 test('same DOI cannot count in daily new and historical receipt simultaneously',()=>{
-  const bad={...marker,historicalAdmittedDois:[a]};
+  const bad={...marker,dailyPublishableDois:[a],historicalAdmittedDois:[a]};
   assert.throws(()=>mergeDeliveryState({},evidence,bad),/historical_delivery_partition_did_not_match/);
 });
