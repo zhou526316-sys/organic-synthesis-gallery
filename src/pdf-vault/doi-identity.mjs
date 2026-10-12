@@ -13,8 +13,15 @@ function prepareEvidence(value) {
     // PDF.js sometimes separates an ACS DOI suffix after a punctuation mark.
     // Only reconnect a DOI token already ending in DOI punctuation, never
     // arbitrary neighboring words or citations.
-    .replace(/(10\.\d{4,9}\/[-._;()/:a-z0-9%]{2,90}[._/-])\s+([a-z0-9]{2,24})\b/gi, '$1$2')
-    .replace(/(10\.\d{4,9}\/[-._;()/:a-z0-9%]{2,90}\d[a-z]?)\s+(\d{3,7})\b/gi, '$1$2');
+    .replace(/(10\.\d{4,9}\/[-._;()/:a-z0-9%]{2,90}\.)\s+([a-z0-9]{2,24})\b/gi,
+      (original, prefix, continuation) => {
+        // "acscatal. 6c06048" is a split DOI, but "6c06048. Article"
+        // is ordinary prose punctuation and must never be joined.
+        const parts = prefix.slice(prefix.indexOf('/') + 1).split('.');
+        const beforeDot = parts[parts.length - 2] || '';
+        return /^[a-z]{3,24}$/i.test(beforeDot) ? prefix + continuation : original;
+      })
+    .replace(/(10\.\d{4,9}\/[-._;()/:a-z0-9%]{2,90}\d[a-z])\s+(\d{3,7})\b/gi, '$1$2');
 }
 
 function collect(source, regex) {
