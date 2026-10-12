@@ -1115,7 +1115,7 @@ function embeddedJobDois(value) {
     try {
       if (typeof GM_listValues === 'function') keys = GM_listValues();
     } catch (_) {}
-    var traces = keys.filter(function (key) {
+    var allTraces = keys.filter(function (key) {
       return String(key).indexOf(P + 'trace:') === 0;
     }).map(function (key) {
       var item = GM_getValue(key, null);
@@ -1127,9 +1127,26 @@ function embeddedJobDois(value) {
         finishedAt: String(item.finishedAt || ''),
         trace: sanitizeLocalTrace(item.trace)
       };
-    }).filter(Boolean).sort(function (a, b) {
-      return String(b.finishedAt || '').localeCompare(String(a.finishedAt || ''));
-    }).slice(0, 24);
+    }).filter(Boolean).sort(function (a,b) {
+      return String(b.finishedAt||'').localeCompare(String(a.finishedAt||''));
+    });
+    // Retain a compact, DOI-specific RSC and Chem failure sample even when a
+    // long historical Nature pass fills the last-24 trace window. Never
+    // upload raw HTML, PDF data, tokens or unbounded detailed traces.
+    var selectedTraces=allTraces.slice(0,24),selectedDoi=new Set(selectedTraces.map(function(t){return t.doi;}));
+    [['rsc',8],['elsevier',4]].forEach(function(group){
+      var count=0;
+      allTraces.forEach(function(t){
+        if(count>=group[1]||selectedDoi.has(t.doi)||publisherForDoi(t.doi)!==group[0])return;
+        selectedDoi.add(t.doi);
+        var keep=/^(?:rsc_|toc_|figure_|page_|publisher_access|dom_snapshot|candidate_discovery|paired_result|route_plan|capture_timing)/;
+        selectedTraces.push(Object.assign({},t,{trace:t.trace.filter(function(e){
+          return keep.test(String(e.stage||''))||e.event==='failed'||Number(e.httpStatus||0)>=400;
+        }).slice(-40)}));
+        count++;
+      });
+    });
+    var traces=selectedTraces.slice(0,36);
 
     var activeJob = GM_getValue(ACTIVE_JOB_KEY, null);
     var activeDoi = normalizeDoi(activeJob && activeJob.doi);
