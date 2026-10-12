@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 1,
+  "kind": "read_only_off_slot_source_completeness_crosscheck",
+  "date": "2026-10-12",
+  "targetSlot": "2026-10-12T08:00:00+08:00",
+  "reviewWindow": {
+    "timeZone": "Asia/Shanghai",
+    "from": "2026-10-10",
+    "through": "2026-10-12",
+    "note": "October 12 is not yet an entire completed publication day; metadata can arrive later."
+  },
+  "mainReview": {
+    "sourceSnapshotGeneratedAt": "2026-10-11T23:05:10.898Z",
+    "latestBlobSha": "1c2c3aefb3944e4883b2cec7aecf65ef0d7bde96",
+    "compactBlobSha": "42d13b4caf79d540dc5ef0df2e04b8a7f29721b0",
+    "publishedReviewBlobSha": "a28ee7d6049157ff1c700a617a34f4eeb563274f",
+    "rawSourceRecordsExtendedCatchup": 2604,
+    "previouslyReviewedExclusions": 2101,
+    "newReviewCandidates": 20,
+    "included": 5,
+    "excluded": 15,
+    "pending": 0,
+    "actualPublication": 5,
+    "verifiedThrough": "2026-09-18",
+    "sourceCoverageAnomalies": 4,
+    "closureCoverageAnomalies": 1,
+    "note": "Formal publication success verifies the reviewed subset, not the absence of publisher-only DOI or errors in reused historical exclusions."
+  },
+  "crossrefIndependentCheck": {
+    "source": "https://api.crossref.org/journals/{ISSN}/works",
+    "dateFilters": [
+      "from-created-date/until-created-date",
+      "from-online-pub-date/until-online-pub-date",
+      "from-pub-date/until-pub-date"
+    ],
+    "exactDateRange": "2026-10-10..2026-10-12",
+    "registryIssnCount": 25,
+    "queries": 75,
+    "allRequestsSucceeded": true,
+    "unionDistinctDois": 84,
+    "results": [
+      {
+        "journal": "Nature",
+        "count": 0
+      },
+      {
+        "journal": "Science",
+        "count": 0
+      },
+      {
+        "journal": "Nature Catalysis",
+        "count": 0
+      },
+      {
+        "journal": "Nature Synthesis",
+        "count": 0
+      },
+      {
+        "journal": "Nature Chemistry",
+        "count": 0
+      },
+      {
+        "journal": "Nature Communications",
+        "count": 28
+      },
+      {
+        "journal": "JACS",
+        "count": 13
+      },
+      {
+        "journal": "Angew",
+        "count": 27
+      },
+      {
+        "journal": "ACS Catalysis",
+        "count": 5
+      },
+      {
+        "journal": "Organic Letters",
+        "count": 9
+      },
+      {
+        "journal": "Chem",
+        "count": 0
+      },
+      {
+        "journal": "Chemical Science",
+        "count": 0
+      },
+      {
+        "journal": "CCS Chemistry",
+        "count": 0
+      },
+      {
+        "journal": "Science Advances",
+        "count": 0
+      },
+      {
+        "journal": "Green Chemistry",
+        "count": 0
+      },
+      {
+        "journal": "JOC",
+        "count": 2
+      }
+    ],
+    "unaccountedDoisAfterFormalAndPostreleaseReviews": [],
+    "differencesVsFourMostRecentFormalReviews": [
+      {
+        "doi": "10.1038/s41467-026-78616-4",
+        "resolution": "exclude",
+        "sourceReviewFile": "audit/review-2026-10-11-postrelease-late-0800.json",
+        "reason": "soil melanin quantitation/environmental analysis, not preparative organic synthesis"
+      },
+      {
+        "doi": "10.1021/acscatal.6c05837",
+        "resolution": "exclude",
+        "sourceReviewFile": "audit/review-2026-10-11-postrelease-late-0800.json",
+        "reason": "propane dehydrogenation reaction-engineering/diffusion optimization"
+      },
+      {
+        "doi": "10.1021/acscatal.6c05210",
+        "resolution": "exclude",
+        "sourceReviewFile": "audit/review-2026-10-11-postrelease-late-0800.json",
+        "reason": "single-atom catalyst N2 electrocatalysis/modeling"
+      }
+    ],
+    "limitation": "No new DOI missing from these review files means no newly unreviewed Crossref-registered DOI in the checked window; it does not prove publisher lists, late DOI deposits, OpenAlex indexing or past scope exclusions are complete."
+  },
+  "publisherIndependentListings": {
+    "fetchedPublisherJournalListings": 6,
+    "failedOrBlocked": 10,
+    "results": [
+      {
+        "journal": "Nature",
+        "status": "page_read_recent_research_list",
+        "latestVisibleDate": "2026-10-07",
+        "url": "https://www.nature.com/nature/research-articles?searchType=journalSearch&sort=PubDate&page=1"
+      },
+      {
+        "journal": "Nature Catalysis",
+        "status": "page_read_recent_research_list",
+        "latestVisibleDate": "2026-10-09",
+        "url": "https://www.nature.com/natcatal/research-articles?searchType=journalSearch&sort=PubDate&page=1"
+      },
+      {
+        "journal": "Nature Synthesis",
+        "status": "page_read_recent_research_list",
+        "latestVisibleDate": "2026-10-08",
+        "url": "https://www.nature.com/natsynth/research-articles?searchType=journalSearch&sort=PubDate&page=1"
+      },
+      {
+        "journal": "Nature Chemistry",
+        "status": "page_read_recent_research_list",
+        "latestVisibleDate": "2026-10-09",
+        "url": "https://www.nature.com/nchem/research-articles?searchType=journalSearch&sort=PubDate&page=1"
+      },
+      {
+        "journal": "Nature Communications",
+        "status": "page_read_first_two_research_list_pages",
+        "latestVisibleDate": "2026-10-11",
+        "observedOct10": 20,
+        "observedOct11": 8,
+        "crossrefSameWindow": 28,
+        "url": "https://www.nature.com/ncomms/research-articles?searchType=journalSearch&sort=PubDate&page=1",
+        "secondPage": "https://www.nature.com/ncomms/research-articles?searchType=journalSearch&sort=PubDate&page=2"
+      },
+      {
+        "journal": "CCS Chemistry",
+        "status": "page_read_then_later_requests_bot_blocked",
+        "latestVisibleDate": "2026-10-09",
+        "url": "https://www.chinesechemsoc.org/journal/ccschem"
+      }
+    ],
+    "blockedJournals": [
+      "Science",
+      "Science Advances",
+      "JACS",
+      "ACS Catalysis",
+      "Organic Letters",
+      "JOC",
+      "Angew",
+      "Chem",
+      "Chemical Science",
+      "Green Chemistry"
+    ],
+    "limitation": "Nature lists inspected here are research-article lists, not every article type or a proof of historical completeness; intermittently blocked CCS page only supplies observed evidence."
+  },
+  "historicalExclusionSpotChecks": [
+    {
+      "doi": "10.31635/ccschem.026.202608315",
+      "status": "confirmed previously included",
+      "file": "audit/review-2026-09-24-0800.json",
+      "topic": "enantiodivergent total syntheses of Minfiensine"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608392",
+      "status": "confirmed previously included",
+      "file": "audit/review-2026-10-04-0800.json",
+      "topic": "enantioselective bicyclo[2.1.1]hexane synthesis"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608407",
+      "status": "confirmed previously included",
+      "file": "audit/review-2026-10-04-0800.json",
+      "topic": "photocatalytic polystyrene upcycling to benzoic acid"
+    },
+    {
+      "doi": "10.1039/d6gc04702e",
+      "status": "exclusion supported by original abstract",
+      "evidence": "Crossref abstract explicitly describes this as a review of 2020–2026 photochemical/electrochemical dearomatization literature"
+    },
+    {
+      "doi": "10.1038/s41467-026-78648-w",
+      "status": "exclusion supported by publisher full abstract",
+      "evidence": "Nature article describes OSAR automated NRPS cluster refactoring/assembly with peptide production, rather than general substrate-to-product synthetic reaction."
+    },
+    {
+      "doi": "10.1002/anie.2052342",
+      "status": "historical exclude merits targeted preparative-scope recheck",
+      "evidence": "Scholl electrochemical condition-switching changes products but retrieved abstract emphasizes mechanistic discrimination and a small number of demonstration scaffolds; uninspected full SI could clarify generality.",
+      "nextAction": "Read publisher SI/substrate table before any DOI decision change"
+    }
+  ],
+  "conclusion": {
+    "crossrefRecentRegistrationCompleteness": "no_unreviewed_dois_in_75_queries",
+    "directPublisherCompleteness": "not_closed",
+    "historicalExclusionSemanticCompleteness": "not_closed",
+    "eligibleTotal": "unknown_beyond_proven_five",
+    "confirmedToday08NewCards": 5,
+    "claimOfExactlyFiveEligible": false,
+    "noOffSlotAdmission": true,
+    "noProductionMutation": true,
+    "noScheduleChange": true,
+    "nextActions": [
+      "Find independent accessible publisher full TOC/online-first listings for ten blocked journals and compare their DOI sets",
+      "Target prior exclusions with changed metadata/rules and high synthetic relevance for evidence-based challenge",
+      "Continue verifiedThrough closure and safety-tail scans without backdating late indexes",
+      "Preserve sole Beijing 08:00 slot for any newly confirmed include"
+    ]
+  }
+}
