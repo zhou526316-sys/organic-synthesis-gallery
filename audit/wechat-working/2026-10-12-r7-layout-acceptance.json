@@ -1,0 +1,119 @@
+{
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r7",
+  "status": "independent_source_and_offline_visual_review_pass",
+  "reviewMode": "manual original-publisher scientific fact check + R7 exact-source HTML simulated WeChat body at mobile390/desktop740",
+  "scienceArtifact": "audit/wechat-working/2026-10-12-r7-science-text-review.json",
+  "scienceBlobSha": "83766f8f61f30fedc5145af7c6a0209e68a91744",
+  "browserArtifact": "audit/wechat-working/2026-10-12-r7-offline-preview/offline-preview-qa.json",
+  "browserBlobSha": "1b04c9f289c9fb885e7aeb52fe3bfe9afaebfd3d",
+  "scientificTextReview": "pass",
+  "imageSourceReview": "pass_r6_exact_unchanged_bytes",
+  "imageLayoutReview": "pass_offline_mobile_and_desktop",
+  "comparison": {
+    "R6": {
+      "acsChars": 1916,
+      "acsImages": 14,
+      "jacsChars": 1950,
+      "jacsImages": 10,
+      "allSourceImage100Pct": true
+    },
+    "R7": [
+      {
+        "article": "acs",
+        "chars": 3513,
+        "paragraphs": 31,
+        "bodyImages": 14,
+        "textCharactersPerImage": 251,
+        "loadedImages": 14,
+        "horizontalOverflow": false
+      },
+      {
+        "article": "jacs",
+        "chars": 3628,
+        "paragraphs": 32,
+        "bodyImages": 10,
+        "textCharactersPerImage": 363,
+        "loadedImages": 10,
+        "horizontalOverflow": false
+      }
+    ]
+  },
+  "visualPassCriteria": [
+    "All 24 source figures loaded and decoded on 390 CSS pixel mobile preview; no horizontal overflow",
+    "ACS Fig3 robustness remains legible at natural aspect and 81% source scale; SI Table S9 retains both full data columns at 92% and is intended for tap-to-zoom",
+    "JACS Table1 retains ligand structures, complete conditions and ee numbers at 82%; dense JACS Fig2 scope 94% for mobile data preservation",
+    "Body prose appears before and after appropriate evidence figures rather than continuous unrelated images",
+    "Article science review includes original control and evidence limitations with explicit source references, not generic photo captions",
+    "Unchanged original chemistry pixels, source paths and DOI landing links; cover image bytes unchanged."
+  ],
+  "manualReviewFocus": [
+    "acs-mobile-sample-1.png",
+    "acs-mobile-sample-2.png",
+    "acs-mobile-sample-3.png",
+    "jacs-mobile-sample-1.png",
+    "jacs-mobile-sample-2.png",
+    "jacs-mobile-sample-3.png"
+  ],
+  "visualScreenshotEvidence": [
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-offline-preview/acs-mobile-full.png",
+      "sha256": "87fa6a6b39c84466dc8d565e71b243235a516814348d3b3c7939c326b41453b0",
+      "bytes": 1424375
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-offline-preview/acs-mobile-sample-1.png",
+      "sha256": "57409bc774b8ff339ac3601178269279e8c2efb81dc50b929ec7e8e9d298bf66",
+      "bytes": 115482
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-offline-preview/acs-mobile-sample-2.png",
+      "sha256": "36e03a9d30e835bccfd37166bffacce696e7dd114b0f32fd9c1a298d608a5e47",
+      "bytes": 132748
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-offline-preview/acs-mobile-sample-3.png",
+      "sha256": "3f8ac753724aa9f5fc419ec7128e2734e2418d1a3d6833b45aa0c6e7b636d019",
+      "bytes": 130313
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-offline-preview/acs-desktop-first-screen.png",
+      "sha256": "b6033c81d042d0fb5de968019f24c305d6408c8046bd3b7cf08a9f215a39104b",
+      "bytes": 207780
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-offline-preview/jacs-mobile-full.png",
+      "sha256": "117a17eeb094aec41f5ca1ae746144eb73365d23f2a86f85f15e361d4e0a546b",
+      "bytes": 1375451
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-offline-preview/jacs-mobile-sample-1.png",
+      "sha256": "05c60f90ca0b6f7e85d98382ebb59b90b365c313a281187ea04623f2d621bdd9",
+      "bytes": 123953
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-offline-preview/jacs-mobile-sample-2.png",
+      "sha256": "2e4a447a4eb8c92c9ff5589383449badf476bb6eb2e64a253c3e9eb3ffd3dced",
+      "bytes": 146200
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-offline-preview/jacs-mobile-sample-3.png",
+      "sha256": "49ced3fa84d4714c441d5af3502dced838a0126217509064dc8e1a987945ae7a",
+      "bytes": 116520
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r7-offline-preview/jacs-desktop-first-screen.png",
+      "sha256": "83ce4de3ec2265db49451da217842bd74204b1819d795b19c913eaa3d4be699b",
+      "bytes": 208355
+    }
+  ],
+  "actualWeChatDraftUpdated": false,
+  "readbackStatus": "not_yet_performed_for_R7",
+  "existingMediaId": "KhELYUzvwADwB_l1xH1SWIIQfl5GSB19jduNK2sdIdguH6OMYYfkuM8zO65yvnWs",
+  "publicSendAuthorized": false,
+  "published": false,
+  "limitations": [
+    "Offline preview exercises the article HTML builder with actual local source images, not the final WeChat cloud ingest/rewrite nor physical mobile app. A separate true draft/update, draft/get and relay screenshot acceptance is required.",
+    "Do not claim all individual readers will get the same network performance or native app crop."
+  ]
+}

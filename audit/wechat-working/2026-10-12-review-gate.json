@@ -1,74 +1,71 @@
 {
   "date": "2026-10-12",
-  "revision": "2026-10-12-r6",
+  "revision": "2026-10-12-r7",
   "articleCount": 2,
-  "selectionAuthority": "latest_user_explicit_2026_10_12_dual_article_and_science_source_pixel_integrity",
+  "selectionAuthority": "latest_user_2026_10_12_evening_explicit_critic_of_R6_text_too_little_images_too_large_restore_oct5_science_discussion_rhythm",
   "selectionDois": [
     "10.1021/acscatal.6c06048",
     "10.1021/jacs.6c10406"
   ],
   "textReview": "pass",
   "imageReview": "pass",
-  "reviewedAtBeijing": "2026-10-12T18:40:53.564605+08:00",
+  "reviewedAtBeijing": "2026-10-12T19:14:09+08:00",
+  "reviewedAtUTC": "2026-10-12T11:14:09.422Z",
   "materializedCropReviewRequired": true,
   "strictFigurePlacement": true,
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-12-r6-acs-catalysis-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-12-r6-acs-catalysis-images-only.md",
-    "jacsTextOnly": "audit/wechat-working/2026-10-12-r6-jacs-text-only.md",
-    "jacsImagesOnly": "audit/wechat-working/2026-10-12-r6-jacs-images-only.md",
-    "scienceLayoutQA": "audit/wechat-working/2026-10-12-r6-science-layout-qa.json"
+    "textOnly": "audit/wechat-working/2026-10-12-r7-acs-catalysis-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-12-r7-acs-catalysis-images-only.md",
+    "retrospectiveTextOnly": "audit/wechat-working/2026-10-12-r7-jacs-text-only.md",
+    "retrospectiveImagesOnly": "audit/wechat-working/2026-10-12-r7-jacs-images-only.md",
+    "science": "audit/wechat-working/2026-10-12-r7-science-text-review.json",
+    "visual": "audit/wechat-working/2026-10-12-r7-layout-acceptance.json",
+    "offlinePreview": "audit/wechat-working/2026-10-12-r7-offline-preview/offline-preview-qa.json"
   },
   "sources": [
     {
       "path": "public/wechat-editions/2026-10-12.json",
-      "blobSha": "adee539cbc546cb86ef4be4deabfdeb01c611299",
-      "sha256": "25e2458bf9229a9b179d1111d1981b2417b147f2e2ba99ef5c6a93c0d62fa5ad"
+      "blobSha": "a3ff6a00b6b0e11da83727fca4c1b9ec74ce09e7"
     },
     {
       "path": "public/wechat-featured/2026-10-12.json",
-      "blobSha": "7e2398275fe0ff5443836f0a3697f9e9292e40ac",
-      "sha256": "39fd9a4cbc8bdb892b34640ee561d3f7d2d4c653effe29a56a06d77b971e8952"
+      "blobSha": "439c4ea0103e46cd5a89cc54f61b48f06e5510a2"
     },
     {
       "path": "public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json",
-      "blobSha": "e8f57e249ae9f399355afe3e22c038bda2f8ff45",
-      "sha256": "801427264edb5f8315dd3c1965d3adbe7665f851e3a368954988569a8d12ab9b"
+      "blobSha": "6a6174f86085edd60ec14c135d2e8f627cb67d62"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r6-acs-catalysis-text-only.md",
-      "blobSha": "117de575cfe2d4777587c4f61396ac27fd24aec0",
-      "sha256": "c5e13bffcc4b65ff2b393c1a58d51dc17adf296fa09218b3b597885c757a8f72"
+      "path": "audit/wechat-working/2026-10-12-r7-acs-catalysis-text-only.md",
+      "blobSha": "7c9864c13bbcb119712ec903aae34f3ac3be841b"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r6-jacs-text-only.md",
-      "blobSha": "c1d8c75e32ba1942342b13a1b7536821f43f4867",
-      "sha256": "ef7bddf9a384fedba8e6e502185ec3c0aa93eb4155ec9b187d370a59c03d73f5"
+      "path": "audit/wechat-working/2026-10-12-r7-acs-catalysis-images-only.md",
+      "blobSha": "3551833f433ce89151d902c26797c1039cf5f3b4"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r6-acs-catalysis-images-only.md",
-      "blobSha": "e3d5dab45f7396bf8b4240f5ae19436be187fe16",
-      "sha256": "1885f6585ef71ee6fd2fd9c457b399c506a0b1c9a6bc59f0f12d6bbb516781aa"
+      "path": "audit/wechat-working/2026-10-12-r7-jacs-text-only.md",
+      "blobSha": "d47bea8dc0b424d2d8b41a4e0b191ad70d5c0eed"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r6-jacs-images-only.md",
-      "blobSha": "3bcfddc62f064b0727925528d0a000ba0c71fdbd",
-      "sha256": "616a374a6f4cf333895e0bb9e83267dec658b12e2e8c102d5e14eea324cad0eb"
+      "path": "audit/wechat-working/2026-10-12-r7-jacs-images-only.md",
+      "blobSha": "5c5da826cee795b25ff013601f1899d5cec3a75a"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r6-science-layout-qa.json",
-      "blobSha": "c92746d7768e42d74e0e7e993e7f174c99c85870",
-      "sha256": "496e782eaf117e25e07ec948d6f371667d934c20975b12fe49658078d9863360"
+      "path": "audit/wechat-working/2026-10-12-r7-science-text-review.json",
+      "blobSha": "83766f8f61f30fedc5145af7c6a0209e68a91744"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r6-visual-acceptance.json",
-      "blobSha": "d0a31bd2d2706785b8bc920bca8c4ff4cff21392",
-      "sha256": "068c46920030b3acc6b1930b3e852151570728b02ee00c99f15f6b4174231a8c"
+      "path": "audit/wechat-working/2026-10-12-r7-offline-preview/offline-preview-qa.json",
+      "blobSha": "1b04c9f289c9fb885e7aeb52fe3bfe9afaebfd3d"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r6-source-crop-candidates/source-crop-review-qa.json",
-      "blobSha": "1d9e28e52d2791f817d0ebd885a809d24b06fa7c",
-      "sha256": "595784785e075583180ff8130ed37efe95302bc25e0219ee09b6f7ecbc66b013"
+      "path": "audit/wechat-working/2026-10-12-r7-layout-acceptance.json",
+      "blobSha": "38d1aadac0710162a0bf2611ed433f65f65d97bf"
+    },
+    {
+      "path": "docs/wechat-editorial-master-rules.md",
+      "blobSha": "7c55f90372609aa3b7d63cf74601eaa3ce07f4e7"
     }
   ],
   "assets": [
@@ -255,10 +252,27 @@
       "height": 1254
     }
   ],
-  "approvedSourceCandidateCount": 20,
-  "totalReviewedBodyImages": 24,
-  "totalReviewedAssets": 26,
+  "expectedImageCount": {
+    "acs": 14,
+    "jacs": 10,
+    "cover": 2,
+    "all": 26
+  },
+  "expectedScientificProse": {
+    "acsChars": 3513,
+    "jacsChars": 3628,
+    "acsParagraphs": 31,
+    "jacsParagraphs": 32
+  },
+  "allFigureOriginalBytesUnchangedFromR6": true,
+  "imageWidthsCaseSpecificFromVisualApproval": true,
   "originalWeChatMediaId": "KhELYUzvwADwB_l1xH1SWIIQfl5GSB19jduNK2sdIdguH6OMYYfkuM8zO65yvnWs",
+  "expectedLinks": [
+    "https://gallery.gczhouwld.com/?edition=2026-10-12&doi=10.1021%2Facscatal.6c06048&summary=0",
+    "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0"
+  ],
+  "R7OfflineBrowserStatus": "all_24_images_loaded_390px_mobile_desktop_no_overflow",
+  "R7OfflineReviewer": "all evidence paragraphs, captions and picture widths independently inspected before WeChat draft update",
   "publicSendAuthorized": false,
-  "notes": "Independent per-image source PDF visual crop approval in R6 acceptance; JACS bottom products and all other panels complete, ACS cropped original chemical information intact, ACS SI Table S9 restored; accurate journal counts/card-only lead; preserve exact DOI links and unchanged user-selected JACS square concept cover. Production draft remains pending until separately triggered and read back."
+  "notes": "R6 prior image-text review invalidated by explicit user. After R7 native SCIENCE review and offline responsive image layout pass, may update only existing cloud draft under approved DOI and mediaId. Must recheck actual draft/get and new relay mobile preview, not mass publish. No source figure pixels or covers changed."
 }

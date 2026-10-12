@@ -1,0 +1,78 @@
+name: WeChat Oct12 R7 pre-draft science and proportional image preview
+on:
+  push:
+    branches: [wechat-oct12-r7-science-text-image-balance]
+    paths:
+      - audit/automation-triggers/wechat-oct12-r7-offline-preview-request.json
+permissions:
+  contents: write
+concurrency:
+  group: wechat-20261012-r7-predraft-visual
+  cancel-in-progress: false
+jobs:
+  text-and-images-before-wechat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate strict scope before any actions
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('audit/automation-triggers/wechat-oct12-r7-offline-preview-request.json').read_text())
+          a=json.loads(Path('public/wechat-featured/2026-10-12.json').read_text())
+          b=json.loads(Path('public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json').read_text())
+          e=json.loads(Path('public/wechat-editions/2026-10-12.json').read_text())
+          assert r['action']=='render_reviewed_candidate_locally_without_wechat'
+          assert r['revision']=='2026-10-12-r7'
+          assert r['draftWriteAuthorized'] is False and r['publicSendAuthorized'] is False
+          assert r['expectedMediaId']=='KhELYUzvwADwB_l1xH1SWIIQfl5GSB19jduNK2sdIdguH6OMYYfkuM8zO65yvnWs'
+          assert a['editorialRevision']==b['editorialRevision']==e['editorialRevision']==r['revision']
+          assert [a['paper']['doi'],b['paper']['doi']]==['10.1021/acscatal.6c06048','10.1021/jacs.6c10406']
+          assert all(75<=f['display_width_pct']<=95 for m in (a,b) for f in m['figures'] if f.get('body') is not False)
+          print('Pre-draft R7 scoped read-only acceptance; no WeChat API or publish permissions')
+          PY
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Recreate EXACT intended WeChat HTML locally
+        run: python3 ops/wechat-publisher/render-oct12-r7-local-preview.py
+      - name: Install pinned headless Chromium for independent visual review
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps chromium > /tmp/wechat-r7-install.log 2>&1 || { tail -80 /tmp/wechat-r7-install.log; exit 1; }
+      - name: Audit layout at real 390px mobile and desktop widths
+        run: node scripts/wechat-oct12-r7-offline-preview-qa.mjs
+      - name: Archive candidate-only screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wechat-20261012-r7-offline-science-image-review
+          path: audit/wechat-working/2026-10-12-r7-offline-preview/
+          retention-days: 30
+      - name: Persist read-only screenshots on the R7 REVIEW BRANCH, never main
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/r7-offline
+          cp -a audit/wechat-working/2026-10-12-r7-offline-preview/. /tmp/r7-offline/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          BR='wechat-oct12-r7-science-text-image-balance'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$BR"
+            git reset --hard "origin/$BR"
+            mkdir -p audit/wechat-working/2026-10-12-r7-offline-preview
+            cp -a /tmp/r7-offline/. audit/wechat-working/2026-10-12-r7-offline-preview/
+            git add -- audit/wechat-working/2026-10-12-r7-offline-preview/
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'audit: capture independent Oct12 R7 balanced narrative review screenshots'
+            if git push origin HEAD:"$BR"; then exit 0; fi
+            sleep 2
+          done
+          exit 1
