@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r6",
+  "status": "source_candidates_not_approved",
+  "sourceDoi": "10.1021/jacs.6c10406",
+  "sourcePdfSHA256": "78da09472d4cf1b6dece3e11b671991ea340f438fffe19c18f4226ed78ae9000",
+  "source": "owner-provided original JACS publisher PDF, rendered original PDF pages only",
+  "output": {
+    "fig2": {
+      "name": "jacs-fig2-full-figure-source-candidate.png",
+      "pdfPage": 4,
+      "sourcePageSize": [
+        1856,
+        2448
+      ],
+      "normalizedBounds": [
+        0.04,
+        0.05,
+        0.96,
+        0.95
+      ],
+      "width": 1708,
+      "height": 2204,
+      "sha256": "0b6497efb17a5f00d75467ac3392c997937fc57b8e563414fb273bb135d9f78f",
+      "byteCount": 865705
+    },
+    "fig3": {
+      "name": "jacs-fig3-full-figure-source-candidate.png",
+      "pdfPage": 5,
+      "sourcePageSize": [
+        1856,
+        2448
+      ],
+      "normalizedBounds": [
+        0.04,
+        0.05,
+        0.96,
+        0.95
+      ],
+      "width": 1708,
+      "height": 2204,
+      "sha256": "1731803b692fc1b622caf1c1425760cb2b50df3cd37712027975966e3226da7d",
+      "byteCount": 736418
+    }
+  },
+  "imageApproval": false,
+  "draftUpdated": false,
+  "publicSend": false,
+  "warning": "Large original-source figure crops are candidates pending per-pixel inspection for all structures, reaction arrows, yields and ee. Do NOT mark old JACS rasters complete."
+}
