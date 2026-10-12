@@ -20,7 +20,7 @@ function h(q=queue([]),inventory=inv([]),opts={}){
     const base=u.includes('local-capture-index')?inventory.tocs:inventory.figures;
     if(!raw)return base;
     const rows=(base.items||[]).filter(x=>requested.includes(x.doi.toLowerCase()));
-    return {...base,version:base.version||1,count:rows.length,items:rows,invalidFiltered:0,
+    return {...base,version:base.version||1,mediaGeneration:EPOCH,count:rows.length,items:rows,invalidFiltered:0,
       complete:true,scopeRevision:'doi-scoped-inventory-v1',scopeRequestedCount:requested.length,
       requestedDois:requested};
   }
@@ -55,7 +55,7 @@ await test('verified Figure1 closes the TOC obligation without future replacemen
 await test('local official TOC receipt does not hide missing production promotion',()=>{const ar=[article(1)],i=inv(ar);i.media.items[0].tocStored=false;i.tocs.items=[{doi:ar[0].doi,mediaGeneration:EPOCH,kind:'official',imageUrl:'https://api.gczhouwld.com/media/local-only',contentHash:'b'.repeat(32)}];i.tocs.count=1;const j=h(queue(ar),i).plan().jobs[0];assert.equal(j.captureToc,true);assert.equal(j.existingTocKind,'official_local');assert.match(h().T.captureNeedText(j),/待网页同步/)});
 await test('unknown body-figure completeness never creates a discovery queue item',()=>{const i=inv(three);i.figures.items[0].expectedFigureCount=0;const x=h(queue(three),i).plan();assert.equal(x.jobs.length,0);assert.equal(x.summary.inventoryUnknown,0)});
 await test('unreadable inventory is unknown and never converted to全站缺失',()=>{const x=h().plan(three,{errors:['offline']});assert.equal(x.jobs.length,0);assert.equal(x.summary.inventoryUnknown,3)});
-await test('evidence401 does not turn every existing text into缺全文',async()=>{const x=h(queue(three),inv(three),{evidenceError:true});const i=await x.T.readMissingCaptureInventory(queue(three));const p=x.plan(three,i);assert.equal(p.jobs.length,0);assert.equal(p.summary.inventoryUnknownLayers.evidence,0);assert.ok(i.errors[0].includes('401'))});
+await test('evidence401 does not turn every existing text into缺全文',async()=>{const x=h(queue(three),inv(three),{evidenceError:true});const i=await x.T.readMissingCaptureInventory(queue(three));const p=x.plan(three,i);assert.equal(p.jobs.length,0);assert.equal(p.summary.inventoryUnknownLayers.evidence,0);assert.ok(i.errors.some(x=>x.includes('401')))});
 await test('TOC queue sorts newest additions before journal priority',()=>{const ar=[article(1,{journal:'Nature',addedDate:'2026-09-28'}),article(2,{journal:'Organic Letters',addedDate:'2026-10-01'}),article(3,{journal:'Angew',addedDate:'2026-09-30'})],i=inv(ar);i.media.items.forEach(x=>x.tocStored=false);assert.deepEqual(h(queue(ar),i).plan().jobs.map(j=>j.doi),[ar[1].doi])});
 await test('same-batch TOC gaps keep Nature Science Nature-sub Science-sub JACS Angew Chem order',()=>{const names=['Chem','Angew','JACS','Science Advances','Nature Catalysis','Science','Nature'],ar=names.map((journal,n)=>article(n,{journal})),i=inv(ar);i.media.items.forEach(x=>x.tocStored=false);assert.deepEqual(h(queue(ar),i).plan().jobs.map(j=>j.journal),names.reverse())});
 await test('removed DOI in stale inventory never enters the TOC queue',()=>{const i=inv(three);i.media.items[0].tocStored=false;assert.equal(h().plan([three[0]],i).jobs.length,1)});
