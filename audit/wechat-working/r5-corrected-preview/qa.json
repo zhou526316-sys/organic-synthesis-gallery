@@ -1,0 +1,65 @@
+[
+  {
+    "id": "acs_cover",
+    "from": "public/wechat-assets/reviewed/2026-10-12-r2/acs-catalysis-fig1c-native-cover.png",
+    "to": "public/wechat-assets/reviewed/2026-10-12-r5/acs-catalysis-fig1c-center-preserved.png",
+    "geometry": {
+      "dx": 165,
+      "ink_bbox_source": [
+        250,
+        159,
+        1300,
+        334
+      ],
+      "keep_y_unchanged": [
+        508,
+        800
+      ]
+    },
+    "source_sha256": "512e1eb8b93ec143efa7e94b73d2ec21c4289c1a9543c7bc86b9d94f37e5a249",
+    "sizeBytes": 109923,
+    "sha256": "3bbe4c0c13627bc3de150345dfe97f5494ced3c67100afbca6a0d54cb974ed47"
+  },
+  {
+    "id": "acs_scope_alkyl",
+    "from": "public/wechat-assets/reviewed/2026-10-12-r1/acs_scope_alkyl.jpg",
+    "to": "public/wechat-assets/reviewed/2026-10-12-r5/acs_scope_alkyl-panel-complete.jpg",
+    "geometry": {
+      "x0": 0,
+      "y0": 0,
+      "x1": 1194,
+      "y1": 412
+    },
+    "source_sha256": "a3706ae0530f0fbdf7af1385e66a27d2dfcd2d34dce0a71374b68c94b219c009",
+    "sizeBytes": 75986,
+    "sha256": "804c2f33e313ccd49edb1641ad660646a13c501f7e2036f377222bb516572574"
+  },
+  {
+    "id": "acs_scope_aryl",
+    "from": "public/wechat-assets/reviewed/2026-10-12-r1/acs_scope_aryl.jpg",
+    "to": "public/wechat-assets/reviewed/2026-10-12-r5/acs_scope_aryl-panel-complete.jpg",
+    "geometry": {
+      "x0": 0,
+      "y0": 0,
+      "x1": 1172,
+      "y1": 548
+    },
+    "source_sha256": "aa35c6b335c4a8b5af48ea4e7f6ce88998e3fdc80c33f59f4fd101fc6cefbfe2",
+    "sizeBytes": 86741,
+    "sha256": "854855983500504a64a356749cd89ec334a3261d38616a406b4f51527fc87072"
+  },
+  {
+    "id": "acs_scope_spacer",
+    "from": "public/wechat-assets/reviewed/2026-10-12-r1/acs_scope_spacer.jpg",
+    "to": "public/wechat-assets/reviewed/2026-10-12-r5/acs_scope_spacer-panel-complete.jpg",
+    "geometry": {
+      "x0": 0,
+      "y0": 0,
+      "x1": 1195,
+      "y1": 414
+    },
+    "source_sha256": "fc90bdd32d83fb9164814ded1ff9ec2ccfb460f05897da2195d9d46579fdbc47",
+    "sizeBytes": 62458,
+    "sha256": "13abd8391acdf66594c8af744bf274473caaa3df602058297311e3d393f37783"
+  }
+]
