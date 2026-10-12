@@ -14,9 +14,9 @@ const report={date:'2026-10-12',revision:'2026-10-12-r7',
   screenshots:[],lastSuccessfulR6CloudDraftUnchanged:true};
 await mkdir(OUT,{recursive:true});
 
-async function capture(page,name,locator){
+async function capture(page,name,locator,{fullPage=false}={}){
   const shot=locator?await locator.screenshot({timeout:35000,animations:'disabled'}):
-                     await page.screenshot({timeout:35000,fullPage:true,animations:'disabled'});
+                     await page.screenshot({timeout:35000,fullPage,animations:'disabled'});
   const file=OUT+'/'+name+'.png';
   await writeFile(file,shot);
   report.screenshots.push({path:file,bytes:shot.length,sha256:hash(shot)});
@@ -57,7 +57,7 @@ try{
        paragraphCount:summary.paragraphs,textCharsPerImage:Math.round(density),
        viewport:390,horizontalOverflow:false,loadedImages:expected,
        imageSizes:facts.images,headings:facts.h2});
-    await capture(page,type+'-mobile-full',null);
+    await capture(page,type+'-mobile-full',null,{fullPage:true});
     for(const [idx,needle] of headingMatches.entries()){
        const h=page.locator('h2').filter({hasText:needle}).first();
        if(await h.count()){
