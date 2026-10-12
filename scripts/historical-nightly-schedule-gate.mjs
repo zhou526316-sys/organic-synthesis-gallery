@@ -20,8 +20,14 @@ export function beijingParts(value){
 export function shouldRunHistoricalNight(eventName,state,now=new Date()){
   if(eventName!=='schedule')return true;
   if(!state||!state.lastRunStarted)return true;
-  const previous=beijingParts(state.lastRunStarted),current=beijingParts(now);
-  return !(previous.day===current.day&&previous.hour>=22);
+  const prev=beijingParts(state.lastRunStarted);
+  // Scheduled GitHub runs may occur after local midnight: assign the
+  // 00:00-11:59 interval to the previous Beijing night.
+  const nightKey=value=>beijingParts(new Date(new Date(value).getTime()-12*3600000)).day;
+  const sameNight=nightKey(state.lastRunStarted)===nightKey(now);
+  // Explicit daytime rescue runs must not suppress the regular 23:00 slot.
+  const eligiblePrevious=prev.hour>=22||prev.hour<12;
+  return !(sameNight&&eligiblePrevious);
 }
 
 export async function runHistoricalScheduleGate({

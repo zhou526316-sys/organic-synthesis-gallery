@@ -6,6 +6,7 @@ on:
       - 'scripts/historical-nightly-discovery.mjs'
       - 'scripts/historical-nightly-schedule-gate.mjs'
       - 'scripts/test-historical-nightly-discovery.mjs'
+      - 'scripts/test-historical-nightly-schedule-gate.mjs'
       - '.github/workflows/historical-nightly-discovery.yml'
       - '.github/workflows/historical-nightly-regression.yml'
   push:
@@ -14,6 +15,7 @@ on:
       - 'scripts/historical-nightly-discovery.mjs'
       - 'scripts/historical-nightly-schedule-gate.mjs'
       - 'scripts/test-historical-nightly-discovery.mjs'
+      - 'scripts/test-historical-nightly-schedule-gate.mjs'
       - '.github/workflows/historical-nightly-discovery.yml'
       - '.github/workflows/historical-nightly-regression.yml'
 permissions:
@@ -28,7 +30,7 @@ jobs:
         with:
           node-version: 22
       - run: node --check scripts/historical-nightly-discovery.mjs
-      - run: node --test scripts/test-historical-nightly-discovery.mjs
+      - run: node --test scripts/test-historical-nightly-discovery.mjs scripts/test-historical-nightly-schedule-gate.mjs
       - name: Verify isolated schedule and do-not-publish contract
         run: |
           set -euo pipefail
