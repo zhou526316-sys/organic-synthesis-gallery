@@ -49,6 +49,9 @@ for (const row of carryoverRows) {
 }
 const historicalPublishedDois=(marker.historicalAdmittedDois||[]).map(norm);
 const dailyPublishedDois=(formal.accepted||[]).map(row=>norm(row.doi));
+if(marker.dailyPublishableDois!==undefined)
+  assert(sameSet((marker.dailyPublishableDois||[]).map(norm),dailyPublishedDois),
+    'historic_fixed_slot_daily_allowlist_mismatch');
 assert(sameSet((marker.publishableDois||[]).map(norm),
   [...dailyPublishedDois,...historicalPublishedDois]),
   'formal_plus_historical_published_set_mismatch');
