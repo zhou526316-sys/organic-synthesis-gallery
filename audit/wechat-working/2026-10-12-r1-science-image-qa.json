@@ -1,0 +1,26 @@
+{
+  "reviewStatus": "pass",
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r1",
+  "scienceReview": "pass",
+  "languageReview": "pass",
+  "narrativeReview": "pass",
+  "imageVisualReview": "pass",
+  "scienceChecks": [
+    "ACS only first model 25C10bar, scope90C10bar",
+    "Fig6 first pretreat 120C30bar then 90C10bar, 91 GC vs33 GC and 75 isolated separately",
+    "Fig7/8 correlate organochlorine residue with activity but exact active surface structure unknown",
+    "SI 2.7 recovery ~5%",
+    "Fig4 canagliflozin not actually tested",
+    "JACS 79% NMR in Table1 not mistaken for isolation; detailed Ni cycles author model"
+  ],
+  "cropChecks": [
+    "All source main/SI figure images rendered from original PDFs",
+    "Fig5 ACS each domain block with full molecules/labels",
+    "Fig4 JACS each natural panel complete",
+    "SI FigS6 a full logic block",
+    "No AI regenerated atom-bond chemistry in body"
+  ],
+  "publicationStatus": "draft_not_published",
+  "authorMandate": "user-selected both selected DOIs and previous concept cover"
+}
