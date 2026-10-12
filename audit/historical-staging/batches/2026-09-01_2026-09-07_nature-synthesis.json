@@ -1,0 +1,181 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2026-09-01",
+    "to": "2026-09-07"
+  },
+  "checkedAt": "2026-10-12T05:10:23.859Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "total": 3,
+        "count": 3,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 3,
+      "count": 3,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 3,
+      "openalex": 3
+    }
+  },
+  "candidateCount": 3,
+  "alreadyPublished": 1,
+  "unreviewed": 2,
+  "records": [
+    {
+      "doi": "10.1038/s44160-026-01149-7",
+      "title": "Modular assembly of bioisosteric bridged aza-frameworks via ring strain release",
+      "authors": [
+        "Haotian Jiang",
+        "Yuxia Dai",
+        "Kai Tang",
+        "Bo Pan",
+        "Hongming Jin",
+        "Xiangyang Chen",
+        "Yangyang Yang"
+      ],
+      "date": "2026-09-02",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01149-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01149-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-01",
+        "to": "2026-09-07"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01165-7",
+      "title": "Author Correction: Accelerating synthesis at scale requires a coordinated ecosystem",
+      "authors": [
+        "Brandon R. Sutherland",
+        "Varinia Bernales",
+        "Alán Aspuru-Guzik"
+      ],
+      "date": "2026-09-02",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1658-1658",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01165-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01165-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-01",
+        "to": "2026-09-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01166-6",
+      "title": "Author Correction: Gram-per-litre-scale production of lutein by engineered Corynebacterium",
+      "authors": [
+        "Hyunmin Eun",
+        "Cindy Pricilia Surya Prabowo",
+        "Sang Yup Lee"
+      ],
+      "date": "2026-09-07",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1659-1659",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01166-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01166-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-01",
+        "to": "2026-09-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

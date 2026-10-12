@@ -1,0 +1,260 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2026-09-01",
+    "to": "2026-09-07"
+  },
+  "checkedAt": "2026-10-12T05:10:20.234Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "total": 4,
+        "count": 4,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 4,
+      "count": 4,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 4,
+      "openalex": 4
+    }
+  },
+  "candidateCount": 4,
+  "alreadyPublished": 1,
+  "unreviewed": 3,
+  "records": [
+    {
+      "doi": "10.1038/s41929-026-01602-y",
+      "title": "Harnessing through-space orbital interactions for multicentred organosulfur catalysis",
+      "authors": [
+        "Woojin Lee",
+        "Jason Kim",
+        "Hyunji Lee",
+        "Yujeong Hwang",
+        "Jiseong Park",
+        "Seunghoon Lee",
+        "Jongwoo Lim",
+        "Seung Youn Hong"
+      ],
+      "date": "2026-09-02",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01602-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01602-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-01",
+        "to": "2026-09-07"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01605-9",
+      "title": "The role of individual nickel surface species in the hydrogen evolution reaction on nickel in alkaline electrolytes",
+      "authors": [
+        "Dzevad K. Kozlica",
+        "Matjaž Finšgar",
+        "Pedro Farinazzo Bergamo Dias Martins",
+        "Matej Huš",
+        "Boštjan Genorio",
+        "Justin G. Connell",
+        "Milena Martins",
+        "Matěj Hývl",
+        "Taja Žibert",
+        "Katja Andrina Varda",
+        "Azra Osmić",
+        "Marjan Bele",
+        "Blaž Likozar",
+        "Blaž Tomc",
+        "Miran Gaberšček",
+        "Dušan Strmčnik"
+      ],
+      "date": "2026-09-07",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "9",
+        "pages": "1036-1047",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01605-9"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01605-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-01",
+        "to": "2026-09-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01609-5",
+      "title": "Unlocking reaction pathways for CO2 and CO electrocatalytic reduction to C3+ hydrocarbons and oxygenates using plasma activation",
+      "authors": [
+        "Ji-Yong Kim",
+        "Omar Biondo",
+        "Yuanzuo Gao",
+        "Kelby Anderson",
+        "Julia Simon",
+        "Yingzheng Fan",
+        "Hailiang Wang",
+        "Annemie Bogaerts",
+        "Lea R. Winter"
+      ],
+      "date": "2026-09-07",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01609-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01609-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-01",
+        "to": "2026-09-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01611-x",
+      "title": "Enzymatic skeletal editing reaction forming the 1,3,5-triazine core during biosynthesis of the anticancer nucleoside analogue 5-azacytidine",
+      "authors": [
+        "Akari Umezawa",
+        "Takeshi Tsunoda",
+        "Yu Nakashima",
+        "Yung-Lin Wang",
+        "Tomoki Yoneda",
+        "Chitose Maruyama",
+        "Ning-Shian Hsu",
+        "Taro Matsuyama",
+        "Kazunori Miyamoto",
+        "Hajime Sato",
+        "Asuha Shimose",
+        "Reo Takazawa",
+        "Yoshimitsu Hamano",
+        "Tsung-Lin Li",
+        "Yasuhide Inokuma",
+        "Masanobu Uchiyama",
+        "Yasushi Ogasawara",
+        "Hiroyuki Morita",
+        "Tohru Dairi"
+      ],
+      "date": "2026-09-07",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01611-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01611-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-01",
+        "to": "2026-09-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

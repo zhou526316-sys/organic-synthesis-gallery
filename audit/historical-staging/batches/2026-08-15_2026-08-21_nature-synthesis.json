@@ -1,0 +1,287 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2026-08-15",
+    "to": "2026-08-21"
+  },
+  "checkedAt": "2026-10-12T05:11:04.217Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "total": 5,
+        "count": 5,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 5,
+      "count": 5,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 5,
+      "openalex": 5
+    }
+  },
+  "candidateCount": 5,
+  "alreadyPublished": 2,
+  "unreviewed": 3,
+  "records": [
+    {
+      "doi": "10.1038/s44160-026-01139-9",
+      "title": "Chlorine-mediated electrosynthesis of hydrazine from urea",
+      "authors": [
+        "Pengtang Wang",
+        "Xiaowan Bai",
+        "Zhong-Shuai Zhu",
+        "Xintong Gao",
+        "Yao Zheng",
+        "Shi-Zhang Qiao"
+      ],
+      "date": "2026-08-17",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01139-9"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01139-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01141-1",
+      "title": "Rapid and sustainable MXene synthesis",
+      "authors": [],
+      "date": "2026-08-20",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01141-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01141-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01142-0",
+      "title": "An enthalpy–entropy competition strategy enables moisture-stable and scalable perovskite photovoltaics",
+      "authors": [
+        "Zhaoyang Chu",
+        "Junliang Li",
+        "Jiaju Gao",
+        "Sihao Li",
+        "Baojin Fan",
+        "Zongyi Gu",
+        "Yihuan Xie",
+        "Yaling Luo",
+        "Zhi Xing",
+        "Xiangchuan Meng",
+        "Hongxiang Li",
+        "Xiaotian Hu",
+        "Yiwang Chen"
+      ],
+      "date": "2026-08-17",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01142-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01142-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01143-z",
+      "title": "Traceless sortase ligation for chemical protein synthesis",
+      "authors": [
+        "Yong-Kang Zhou",
+        "Dong-Liang Huang",
+        "Weichen Wang",
+        "Shi-Jun Zou",
+        "Guo-Xia Yu",
+        "Long-Jie Wang",
+        "Leilei Shi",
+        "Shan Tang",
+        "Ji-Shen Zheng"
+      ],
+      "date": "2026-08-20",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01143-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01143-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01144-y",
+      "title": "Access to all stereoisomers of chiral alcohols with multiple stereocentres enabled by machine learning-empowered protein engineering",
+      "authors": [
+        "Zhenyu Lu",
+        "Jiahui Zhou",
+        "Tao Han",
+        "Zhaoyuan Zhang",
+        "Weihua Xu",
+        "Yixin Cen",
+        "Cheng Jiang",
+        "Jingxin Zhang",
+        "Yue Guo",
+        "Chunyang Cao",
+        "Meilan Huang",
+        "Qi Wu"
+      ],
+      "date": "2026-08-21",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01144-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01144-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

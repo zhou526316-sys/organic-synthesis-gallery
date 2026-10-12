@@ -1,0 +1,89 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Chem",
+  "issns": [
+    "2451-9294"
+  ],
+  "range": {
+    "from": "2026-08-22",
+    "to": "2026-08-31"
+  },
+  "checkedAt": "2026-10-12T05:10:49.868Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2451-9294",
+        "total": 0,
+        "count": 0,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 1,
+      "count": 1,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 0,
+      "openalex": 1
+    }
+  },
+  "candidateCount": 1,
+  "alreadyPublished": 0,
+  "unreviewed": 1,
+  "records": [
+    {
+      "doi": "10.1016/j.chempr.2026.103206",
+      "title": "Molecular-scale engineering of sulfide solid electrolytes for all-solid-state batteries: Prospects and challenges",
+      "authors": [
+        "Leonie Braks",
+        "Jang Wook Choi",
+        "Ali Coşkun"
+      ],
+      "date": "2026-08-24",
+      "datePrecision": "day",
+      "journal": "Chem",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "9",
+        "pages": "103206-103206",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2026.103206"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1016/j.chempr.2026.103206",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-22",
+        "to": "2026-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

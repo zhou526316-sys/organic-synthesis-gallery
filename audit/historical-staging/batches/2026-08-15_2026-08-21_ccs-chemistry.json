@@ -1,0 +1,410 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "CCS Chemistry",
+  "issns": [
+    "2096-5745"
+  ],
+  "range": {
+    "from": "2026-08-15",
+    "to": "2026-08-21"
+  },
+  "checkedAt": "2026-10-12T05:11:12.978Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2096-5745",
+        "total": 3,
+        "count": 3,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 6,
+      "count": 6,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 3,
+      "openalex": 6
+    }
+  },
+  "candidateCount": 8,
+  "alreadyPublished": 1,
+  "unreviewed": 7,
+  "records": [
+    {
+      "doi": "10.31635/ccschem.026.202607806",
+      "title": "Asymmetric Dearomatizing Amination of Arenols into Spiropyrrolidines Enabled by Copper or Lithium-Based Catalyst",
+      "authors": [
+        "Aying Yihuo",
+        "Maoping Pu",
+        "Xin He",
+        "Xiaoming Feng",
+        "Shunxi Dong",
+        "Xiaohua Liu"
+      ],
+      "date": "2026-08-19",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-12",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202607806"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.026.202607806",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607900",
+      "title": "OrgAIcat: Leveraging Literature Data for Enantioselectivity Prediction and Rapid Optimization in Organocatalysis",
+      "authors": [
+        "Qi Yang",
+        "Yidi Liu",
+        "Wenxuan Zhang",
+        "Long Zhang",
+        "Yufei Chen",
+        "Sanzhong Luo"
+      ],
+      "date": "2026-08-19",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-13",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202607900"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.026.202607900",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607936",
+      "title": "Machine Learning-Assisted Optimization of Chiral Catalysts and Reagents for Enantioselective Carbon–Sulfenylation and Carbon–Disulfuration Reactions of Alkynes",
+      "authors": [
+        "Li-Miao Yang",
+        "Qing-Yun Cai",
+        "Yu-Xuan Huo",
+        "Yu-Shu Ding",
+        "Deng Zhu",
+        "Dong-Zhi Li",
+        "Hui-Yun Luo",
+        "Xue-Qing Gong",
+        "Zhi-Min Chen"
+      ],
+      "date": "2026-08-19",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-17",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202607936"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.026.202607936",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607991",
+      "title": "Universal Dangling OH Bonds at Electrochemically Tunable Aromatic-Water Interfaces",
+      "authors": [
+        "Chong-hui Jiang",
+        "Sheng−Jie Qian",
+        "Yang‐Gang Wang"
+      ],
+      "date": "2026-08-20",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-11",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202607991"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.026.202607991",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608275",
+      "title": "Development of 3,5-Dinitropyridin-2-ylthio (DNPyS) as a Next-Generation Thiol-Labile α-Amino Protecting Group for High-Fidelity Peptide Synthesis",
+      "authors": [
+        "Yifei Zhou",
+        "Linhai Yan",
+        "Hongjun Li",
+        "Yifu Wang",
+        "Haifeng Zhang",
+        "Junxi Li",
+        "Peiyu Sun",
+        "Tianxing Wang",
+        "Jindi Han",
+        "Gong Chen",
+        "Zhen Xi",
+        "Chuanzheng Zhou"
+      ],
+      "date": "2026-08-15",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-10",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608275"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.026.202608275",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608290",
+      "title": "Enabling High-Mobility Conjugated Polymers with Exceptional Stretchability and Cyclic Stability by Elastomer Blending and Sequential Doping",
+      "authors": [
+        "Yiting Liu",
+        "Rui Chen",
+        "Yuan Jiang",
+        "Hongxiang Li",
+        "Zhongxiang Peng",
+        "Xiaozheng Duan",
+        "Zicheng Ding",
+        "Yanchun Han"
+      ],
+      "date": "2026-08-15",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-16",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608290"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.026.202608290",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608300",
+      "title": "Radiation-Induced Molecular Recognition via Electron Catalysis",
+      "authors": [
+        "Yue Zhang",
+        "Jian Wang",
+        "Jing Zeng",
+        "Xiaobo Yang",
+        "Yang Jiao",
+        "Wei Cao"
+      ],
+      "date": "2026-08-18",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-12",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608300"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.026.202608300",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608407",
+      "title": "Upcycling of Polystyrene via Synergistically Catenary Photocatalysis",
+      "authors": [
+        "Haiyang Song",
+        "Jiaolong Meng",
+        "Shuang Li",
+        "Chengliang Li",
+        "Yujie Song",
+        "Xuefeng Jiang"
+      ],
+      "date": "2026-08-18",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-12",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608407"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.026.202608407",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

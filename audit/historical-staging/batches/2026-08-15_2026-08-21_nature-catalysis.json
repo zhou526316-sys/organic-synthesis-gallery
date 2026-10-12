@@ -1,0 +1,272 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2026-08-15",
+    "to": "2026-08-21"
+  },
+  "checkedAt": "2026-10-12T05:11:03.075Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "total": 5,
+        "count": 5,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 5,
+      "count": 5,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 5,
+      "openalex": 5
+    }
+  },
+  "candidateCount": 5,
+  "alreadyPublished": 0,
+  "unreviewed": 5,
+  "records": [
+    {
+      "doi": "10.1038/s41929-026-01581-0",
+      "title": "Phosphines beyond lone pairs",
+      "authors": [
+        "Camilla Callegari",
+        "Davide Ravelli"
+      ],
+      "date": "2026-08-20",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "8",
+        "pages": "792-794",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01581-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01581-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01583-y",
+      "title": "Getting real about transient electrocatalysis",
+      "authors": [
+        "Mijndert van der Spek"
+      ],
+      "date": "2026-08-20",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "8",
+        "pages": "788-789",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01583-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01583-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01588-7",
+      "title": "Enzyme cascade transforms DNA-encoded chemical libraries",
+      "authors": [
+        "Yizhou Li",
+        "Xiaoyu Li"
+      ],
+      "date": "2026-08-20",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "8",
+        "pages": "790-791",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01588-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01588-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01601-z",
+      "title": "Nanoconfined supersaturated reactors for efficient CO2-to-ethanol electroreduction",
+      "authors": [
+        "Zhaoyong Jin",
+        "Tianrong Han",
+        "Mingzi Sun",
+        "Kun Qi",
+        "Xinren Chen",
+        "Yilong Dong",
+        "Dongxu Jiao",
+        "Shuai Ding",
+        "Lin Liu",
+        "Jinchang Fan",
+        "Lei Zhang",
+        "Zikang Li",
+        "Tong Wu",
+        "Ruquan Ye",
+        "Damien Voiry",
+        "Xuyang Zhou",
+        "Bolong Huang",
+        "Xiaoqiang Cui"
+      ],
+      "date": "2026-08-17",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "9",
+        "pages": "965-975",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01601-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01601-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01606-8",
+      "title": "Solar coproduction in an artificial leaf",
+      "authors": [
+        "Saunak Das"
+      ],
+      "date": "2026-08-20",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "8",
+        "pages": "783-783",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01606-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01606-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

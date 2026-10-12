@@ -1,0 +1,492 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Chemistry",
+  "issns": [
+    "1755-4330",
+    "1755-4349"
+  ],
+  "range": {
+    "from": "2026-08-15",
+    "to": "2026-08-21"
+  },
+  "checkedAt": "2026-10-12T05:11:05.702Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "1755-4330",
+        "total": 9,
+        "count": 9,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1755-4349",
+        "total": 9,
+        "count": 9,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 9,
+      "count": 9,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 9,
+      "openalex": 9
+    }
+  },
+  "candidateCount": 9,
+  "alreadyPublished": 3,
+  "unreviewed": 6,
+  "records": [
+    {
+      "doi": "10.1038/s41557-026-02219-1",
+      "title": "Understanding and suppressing gas evolution in lithium metal batteries with ether-based electrolytes",
+      "authors": [
+        "Samantha T. Hung",
+        "Yuchun Wang",
+        "Ziman Cai",
+        "Chongzhen Wang",
+        "Zirui Shao",
+        "Juanjuan Sun",
+        "Haoran Li",
+        "Jinding Liang",
+        "Lu Bai",
+        "Erxiao Wu",
+        "Ulderico Ulissi",
+        "Xiaolin Yan",
+        "Fangyun Chen",
+        "Falin Zhu",
+        "Junhao He",
+        "Xiaonan Luo",
+        "Na Liu",
+        "Hansen Wang",
+        "Chuying Ouyang"
+      ],
+      "date": "2026-08-20",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1809-1818",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02219-1"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02219-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02222-6",
+      "title": "A protein–foldamer supramolecular synthon for self-assembled hybrid architectures",
+      "authors": [
+        "Johannes Sigl",
+        "Vasily Morozov",
+        "Lingfei Wang",
+        "Janine Sachs",
+        "Eric Merlet",
+        "Eric Largy",
+        "Niklas Geue",
+        "Nicklas Österlund",
+        "Sunbum Kwon",
+        "Florian Sanchez",
+        "Léo Candela",
+        "Simon Huet",
+        "Kevin Pagel",
+        "Yann Ferrand",
+        "Céline Douat",
+        "Cameron D. Mackereth",
+        "Ivan Huc"
+      ],
+      "date": "2026-08-17",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1819-1827",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02222-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02222-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02224-4",
+      "title": "Nitrene generation and transfer for unnatural biosynthesis in living cells",
+      "authors": [
+        "Isaac Donnell",
+        "Andrew Quest",
+        "Jeremy Tang",
+        "Maodun Zhang",
+        "Brandon Bloomer",
+        "Douglas S. Clark",
+        "Aindrila Mukhopadhyay",
+        "John Hartwig",
+        "Jay D. Keasling"
+      ],
+      "date": "2026-08-18",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02224-4"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02224-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02225-3",
+      "title": "Signal-induced recruitment and dispatchment in reconfigurable phase-separated protocell networks",
+      "authors": [
+        "Zhuping Yin",
+        "Rui Sun",
+        "Mei Li",
+        "Stephen Mann"
+      ],
+      "date": "2026-08-18",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1828-1837",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02225-3"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02225-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02230-6",
+      "title": "Genetically targeted dyes light up cell-specific abiotic synthesis",
+      "authors": [
+        "Ting Wu",
+        "Zhaowei Chen",
+        "Huanghao Yang"
+      ],
+      "date": "2026-08-21",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1531-1533",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02230-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02230-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02231-5",
+      "title": "Regiospecific α-arylation of diverse carbonyl compounds using an organobismuth transporter",
+      "authors": [
+        "Li Li",
+        "Filippo Carpaneto",
+        "Pan-Pan Chen",
+        "K. N. Houk",
+        "Viresh H. Rawal"
+      ],
+      "date": "2026-08-18",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02231-5"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02231-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02233-3",
+      "title": "Modulating endergonic triplet photosensitization for cycloadditions between bicyclo[1.1.0]butanes and alkenes",
+      "authors": [
+        "Wing Yi Tang",
+        "Jun Guo",
+        "Shaowei Nie",
+        "Jingyu Yang",
+        "Chong-Lei Ji",
+        "Xue-Zhi Wang",
+        "Hongzhi Zhou",
+        "Yuanhui Liu",
+        "Xu Sun",
+        "Meng-Ying Sun",
+        "Yao Zhang",
+        "Dongyi Liu",
+        "Zekun Li",
+        "Juan Du",
+        "Jun Yang",
+        "Jian He"
+      ],
+      "date": "2026-08-18",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02233-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02233-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02239-x",
+      "title": "When pathways trump orbitals in electrolyte design",
+      "authors": [
+        "Zheng Li",
+        "Chunsheng Wang"
+      ],
+      "date": "2026-08-20",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1534-1536",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02239-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02239-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02250-2",
+      "title": "Publisher Correction: How webby is the wood-wide web?",
+      "authors": [
+        "Bruce C. Gibb"
+      ],
+      "date": "2026-08-20",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1838-1838",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02250-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02250-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-15",
+        "to": "2026-08-21"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

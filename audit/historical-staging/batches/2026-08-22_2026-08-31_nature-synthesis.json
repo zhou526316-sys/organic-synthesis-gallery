@@ -1,0 +1,359 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2026-08-22",
+    "to": "2026-08-31"
+  },
+  "checkedAt": "2026-10-12T05:10:43.124Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "total": 7,
+        "count": 7,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 7,
+      "count": 7,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 7,
+      "openalex": 7
+    }
+  },
+  "candidateCount": 7,
+  "alreadyPublished": 0,
+  "unreviewed": 7,
+  "records": [
+    {
+      "doi": "10.1038/s44160-026-01124-2",
+      "title": "A fast and energy-efficient catalytic pathway for stainless steel synthesis",
+      "authors": [
+        "Williams Lefebvre"
+      ],
+      "date": "2026-08-26",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1308-1309",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01124-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01124-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-22",
+        "to": "2026-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01130-4",
+      "title": "Designing heterogeneous electrocatalytic sites using reticular chemistry",
+      "authors": [
+        "Arnab Ghatak",
+        "G. Shiva Shanker",
+        "Ran Shimoni",
+        "Idan Hod"
+      ],
+      "date": "2026-08-28",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1316-1326",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01130-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01130-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-22",
+        "to": "2026-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01133-1",
+      "title": "Accelerating synthesis at scale requires a coordinated ecosystem",
+      "authors": [
+        "Brandon R. Sutherland",
+        "Varinia Bernales",
+        "Alán Aspuru-Guzik"
+      ],
+      "date": "2026-08-26",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1472-1474",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01133-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01133-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-22",
+        "to": "2026-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01138-w",
+      "title": "Conductive three-dimensional molecular-cluster networks via rare-earth-directed assembly",
+      "authors": [
+        "Zhihao Lu",
+        "Qingshun Fan",
+        "Song Lin",
+        "Cuiming Ren",
+        "Changdong Liu",
+        "Mingbu Luo",
+        "Lehua Zhang",
+        "Li Xu",
+        "Wei-Hui Fang"
+      ],
+      "date": "2026-08-26",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01138-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01138-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-22",
+        "to": "2026-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01145-x",
+      "title": "Machine learning-empowered enzyme evolution unlocks all stereoisomers of chiral alcohols",
+      "authors": [
+        "Zhenyu Lu",
+        "Jiahui Zhou",
+        "Tao Han",
+        "Zhaoyuan Zhang",
+        "Weihua Xu",
+        "Yixin Cen",
+        "Cheng Jiang",
+        "Jingxin Zhang",
+        "Xue Guo",
+        "Cao, Chunyang",
+        "Meilan; id_orcid 0000-0001-9063-8056 Huang",
+        "Qi Wu"
+      ],
+      "date": "2026-08-24",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01145-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01145-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-22",
+        "to": "2026-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01154-w",
+      "title": "Combining CO2 and bicycloalkanes for polyester production",
+      "authors": [
+        "Thomas West"
+      ],
+      "date": "2026-08-27",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1306-1306",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01154-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01154-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-22",
+        "to": "2026-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01156-8",
+      "title": "Nanoconfined electrocatalytic CO2 reduction",
+      "authors": [
+        "Alexandra R. Groves"
+      ],
+      "date": "2026-08-27",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1307-1307",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01156-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01156-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-22",
+        "to": "2026-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
