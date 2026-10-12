@@ -1,0 +1,1 @@
+Metadata QA in last persisted 26 batches: missing author list 203, empty title 5, core citation gaps 115, uncertain publication date 636, single-source records 940. Abstract availability marker in 5370 records, verified abstract display permission in 0.
