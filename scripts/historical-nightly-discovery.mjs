@@ -88,6 +88,11 @@ export function isTruncationOnly(status){
   return status?.complete===false&&Array.isArray(status.issues)&&status.issues.length>0
     &&status.issues.every(issue=>/(?:crossref|openalex):truncated_or_inconsistent$/.test(String(issue)));
 }
+/** Hitting our per-run request ceiling is expected, not a publisher-source outage. */
+export function isBudgetOnlyExhaustion(status){
+  return status?.complete===false&&Array.isArray(status.issues)&&status.issues.length>0
+    &&status.issues.every(issue=>/nightly_api_budget_exceeded$/.test(String(issue)));
+}
 const journalBatchId=(range,journal)=>range.from+'_'+range.to+'_'
   +journal.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
 
@@ -422,6 +427,18 @@ export async function runNightly() {
       openalexWindow(journal,range,budget)
     ]);
     const status=completeStatus(cr,oa);
+    // Publisher 429/transport/malformed data still fails closed; only a pure
+    // local request-budget boundary is deferred. No partial batch is promoted,
+    // no cursor advances, and a resumable split/recheck receipt stays untouched.
+    if(isBudgetOnlyExhaustion(status)){
+      deferredBudget=true;
+      console.log('HISTORICAL_STAGING_BUDGET_DEFERRED '+JSON.stringify({
+        id,requests:budget.count,maxRequests:budget.max,
+        cursor:state.cursor,splitPending:state.activeSplit?.pending?.length||0,
+        rscRechecksRemaining:state.rscCreatedRescue?.pending?.length||0
+      }));
+      break;
+    }
     const rows=mergeCandidates(cr.rows,oa.rows,articles,range);
     const slices=isTruncationOnly(status)?bisectDateRange(range):null;
     const record={
