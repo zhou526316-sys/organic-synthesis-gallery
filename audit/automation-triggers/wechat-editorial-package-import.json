@@ -1,27 +1,32 @@
 {
-  "requestId": "wechat-2026-10-12-r2-acs-catalysis-cover-no-clipped-labels",
+  "requestId": "wechat-2026-10-12-r3-five-new-cards-gallery-local-pdf-guide-retro-jacs",
   "action": "import_reviewed_editorial_package",
-  "revision": "2026-10-12-r2",
+  "revision": "2026-10-12-r3",
   "doi": "10.1021/jacs.6c10406",
   "targetDateBeijing": "2026-10-12",
-  "packageUrl": "https://at.adobe.com/yN6v17ZQXsjcgWqH",
-  "packageSha256": "279aa6dc648a125a091a32ba72fd1e196918bc769d7b4c1322bdceb4a5fafe47",
+  "packageUrl": "https://at.adobe.com/ggcrm7tIho38xWpS",
+  "packageSha256": "2642270c0a118b65d7979e4e4b5a4cfca97d752e14350e948ef85ad0e86ec74f",
   "manifestPath": "public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json",
   "gatePath": "audit/wechat-working/2026-10-12-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
-    "10.1021/acscatal.6c06048",
     "10.1021/jacs.6c10406"
   ],
+  "expectedDailyReleaseDois": [
+    "10.1021/acs.joc.6c02017",
+    "10.1021/acs.orglett.6c04095",
+    "10.1021/acs.orglett.6c04010",
+    "10.1021/acs.orglett.6c03971",
+    "10.1021/acscatal.6c06048"
+  ],
   "replaceExisting": {
-    "public/wechat-featured/2026-10-12.json": "13be6916f4d3910e8eb5e54c57b06650e233c880",
-    "public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json": "2790c430e258e54d439cb3c539901a13e8f29b15",
-    "public/wechat-editions/2026-10-12.json": "c1f705f4dbe77a59d08bc068474d2315ebd94bf2",
-    "audit/wechat-working/2026-10-12-review-gate.json": "9a5e9ea66eff274982dfe137cb80c5bc636000be"
+    "public/wechat-featured/2026-10-12.json": "a1400f66d6cd0f1c954a13f83d573cbefd7a5223",
+    "public/wechat-editions/2026-10-12.json": "d55563f5cbfeea41f64c4be2c96f221f71840d0a",
+    "audit/wechat-working/2026-10-12-review-gate.json": "e9f8ba283ed61dcc9f6ba579dd3901cb636a1185"
   },
   "thisStepWritesDraft": false,
   "publicSendAuthorized": false,
   "sourceOnly": true,
   "preserveOldWeChatMediaId": true,
-  "reason": "Post-draft visual review found cropped partial Fig1C English header and caption remnant in featured ACS Catalysis cover. R2 original publisher PDF crop keeps complete reaction, original conditions and no clipped extraneous text; corrected full Fig1C lead image. Same JACS blue concept cover and both scientifically reviewed bodies. Exact SHA-locked source replacement only; no WeChat write or group send at import."
+  "note": "Owner explicitly cancels the ACS Catalysis paper-only featured deep read, retains its DOI as one of FIVE published Oct12 Gallery cards and replaces first WeChat article with tested Gallery user-side feature newsletter. Focus local PDF: user-controlled folder, DOI verification, native scroll/find, privacy, corrections; other user-facing favorites/search/read state and honest future history/multidisciplinary/personal-library API boundaries. JACS retrospective scientific text/figures and owner-selected blue concept cover unchanged. R3 source/hash gate pass. Import ONLY; later same Oct12 media draft/update + real draft/get, no public send."
 }
