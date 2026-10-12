@@ -224,7 +224,7 @@ async function openCopy(copyId, context) {
   lastCopyId = copyId;
   showNativePdf(result.file, context);
 }
-async function scanDownloads(context, { preserveReader = false } = {}) {
+async function scanDownloads(context, { preserveReader = false, forceRetry = false } = {}) {
   assertCurrent(context);
   const info = await context.vault.downloadDirectoryInfo();
   assertCurrent(context);
@@ -236,7 +236,7 @@ async function scanDownloads(context, { preserveReader = false } = {}) {
   const result = await discoverDownloadedPdf({
     vault: context.vault, doi: DOI, scope: scopeFor(context, info),
     assertCurrent: () => assertCurrent(context),
-    onProgress: progress => {
+    forceRetry, onProgress: progress => {
       if (context === account && viewer.hidden) {
         setState('scanning', '正在按 DOI 核查本地 PDF：已处理 ' + progress.processed + ' / ' + progress.total + '…');
       }
@@ -482,7 +482,7 @@ async function manuallyScan() {
   busy = true;
   try {
     const keep = !viewer.hidden;
-    const found = await scanDownloads(context, { preserveReader: keep });
+    const found = await scanDownloads(context, { preserveReader: keep, forceRetry: true });
     if (!keep && found.status !== 'matched') {
       showMissing(found.status === 'partial'
         ? '目录较大，已扫描一批文献；再次点击可继续扫描。'
