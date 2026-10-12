@@ -1,8 +1,8 @@
 {
-  "requestId": "wechat-2026-10-12-r4-final-user-reaffirmed-acs-catalysis-jacs-deep-reading",
+  "requestId": "wechat-2026-10-12-r6-verified-complete-original-figures-and-refined-narrative",
   "publicationDate": "2026-10-12",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-12-r4",
+  "editorialRevision": "2026-10-12-r6",
   "approvedGate": "audit/wechat-working/2026-10-12-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -14,7 +14,7 @@
   "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0",
   "expectedReviewedBodyImages": 24,
   "expectedReviewedAssets": 26,
-  "sourceImportRunId": 38216980439,
+  "sourceImportRunId": 38237814986,
   "draftOnly": true,
   "publicSendAuthorized": false,
   "requireDraftGetReadback": true,
@@ -22,5 +22,7 @@
   "linkOnly": false,
   "updatePolicy": "update_exact_existing_2026_10_12_media_id_only_fail_closed_no_duplicates",
   "userSelectedRetrospectiveCover": "latest 1254x1254 Ni/Zr blue abstract artwork with no molecular bond schemes; exact SHA256 96ca40c385776838e7d5ce4f59f1ffbc483a8c54604d1adf428497c9d8829a4d",
-  "reason": "User reiterated actual WeChat API access; user final selection: two Oct12 articles, ACS Catalysis 10.1021/acscatal.6c06048 and JACS 10.1021/jacs.6c10406. Disregard UNPUBLISHED Oct12 R3 site-features candidate. R4 reviewed exact original Fig1C ACS cover, 14 ACS + 10 JACS source figures, approved deep science text, user-selected square blue abstract Ni/Zr cover no invented molecular structure. 5 real daily release cards still lead in first body. Reuse exact existing Oct12 double-article media ID; official draft/update and draft/get + new unique preview; never mass-send."
+  "reason": "Owner authorized replacement of existing Oct12 draft ACS Catalysis/JACS R4 with R6 source-verified, visually complete, scientifically reviewed text and original main/SI figures. 14 ACS body and 10 JACS body including fully restored source original ACS SI Table S9; daily totals only + actual Gallery cards; original user-selected ACS-centered cover and square JACS Ni/Zr conceptual cover. Strict same original media ID, selected exact DOI URLs and two article order, fail closed on identity mismatches; do NOT draft/add or group send. Require new live draft/get readback and fresh relay preview.",
+  "imageOriginalShaReview": "audit/wechat-working/2026-10-12-r6-visual-acceptance.json",
+  "publisherSourceQa": "audit/wechat-working/2026-10-12-r6-science-layout-qa.json"
 }
