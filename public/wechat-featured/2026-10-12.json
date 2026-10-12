@@ -61,15 +61,11 @@
       ],
       "figures": [
         "acs_robustness",
-        "acs_si_robust",
         "acs_si_limit"
       ],
       "figures_after_paragraph": {
         "1": [
           "acs_robustness"
-        ],
-        "2": [
-          "acs_si_robust"
         ],
         "3": [
           "acs_si_limit"
@@ -223,36 +219,39 @@
     },
     {
       "id": "acs_scope_alkyl",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_scope_alkyl.jpg",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r5/acs_scope_alkyl-panel-complete.jpg",
       "source_figure": "Fig. 5（烷基、硅基）",
       "source_doi": "10.1021/acscatal.6c06048",
       "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
       "body": true,
       "caption": "原文 Fig. 5 上部｜烷基、硅基取代噻吩的制备底物范围（90 °C、10 bar H₂）。",
       "display_width_pct": 100,
-      "source_pdf_page": 6
+      "source_pdf_page": 6,
+      "materialized_source_revision": "2026-10-12-r5"
     },
     {
       "id": "acs_scope_aryl",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_scope_aryl.jpg",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r5/acs_scope_aryl-panel-complete.jpg",
       "source_figure": "Fig. 5（芳基取代）",
       "source_doi": "10.1021/acscatal.6c06048",
       "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
       "body": true,
       "caption": "原文 Fig. 5 中部｜芳基取代系列；芳基腈 24%、芳基酯 38% 等低产率同样保留。",
       "display_width_pct": 100,
-      "source_pdf_page": 6
+      "source_pdf_page": 6,
+      "materialized_source_revision": "2026-10-12-r5"
     },
     {
       "id": "acs_scope_spacer",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_scope_spacer.jpg",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r5/acs_scope_spacer-panel-complete.jpg",
       "source_figure": "Fig. 5（间隔链与苯并噻吩）",
       "source_doi": "10.1021/acscatal.6c06048",
       "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
       "body": true,
       "caption": "原文 Fig. 5 下部｜间隔链效应及苯并噻吩，部分底物失败或产物产率下降。",
       "display_width_pct": 100,
-      "source_pdf_page": 6
+      "source_pdf_page": 6,
+      "materialized_source_revision": "2026-10-12-r5"
     },
     {
       "id": "acs_pretreatment",
@@ -304,21 +303,24 @@
       "source_figure": "SI Table S9",
       "source_doi": "10.1021/acscatal.6c06048",
       "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
-      "body": true,
+      "body": false,
       "caption": "补充信息 SI Table S9｜添加剂回收和产物生成分别报告；部分添加剂被消耗。",
       "display_width_pct": 100,
-      "source_pdf_page": 30
+      "source_pdf_page": 30,
+      "optionalEvidenceImage": true,
+      "imageReview": "excluded_missing_right_table_column_not_raster_safe"
     },
     {
       "id": "acs_cover",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r2/acs-catalysis-fig1c-native-cover.png",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r5/acs-catalysis-fig1c-center-preserved.png",
       "source_figure": "Fig. 1C 原文裁切与无字深色原生标题安全区",
       "source_doi": "10.1021/acscatal.6c06048",
       "source_kind": "editorial_cover",
       "body": false,
       "caption": "今日精选封面：原文 Fig.1C 未重画的反应式在白色主图面板中等比展示，下方仅原生标题承托区。",
       "display_width_pct": 100,
-      "source_pdf_page": 2
+      "source_pdf_page": 2,
+      "materialized_source_revision": "2026-10-12-r5"
     }
   ],
   "cover": {
@@ -330,7 +332,7 @@
     },
     "crop_235_1": "0_0_1_1",
     "crop_1_1": "0.287234_0_0.712766_1",
-    "description": "Original Fig1C exact reaction-only crop on white 1880x800, no clipped English title, green badge or caption remnants, no additional “今日精选 ACS Catalysis” label, dark space only below at y≥508 for native white headline; 1:1 center crop may show partial contextual edges"
+    "description": "Exact-source ACS Fig. 1C reaction+conditions, unchanged chemical pixel content, translated +165 px into actual visual centre of 1880×800 frame. Lower title-safe dark region unchanged. Mobile 1:1 centre crop remains to be verified; no schematic redrawing."
   },
   "ai_notice": "本文由“化之岛”原创策划与整理，AI 辅助生成与校核；数据、结构、光谱和机理证据均以原文及补充材料为准。",
   "editorialIntent": "Focus on CHCl3/H2-persistent modified Pd catalyst surface and evidence hierarchy. Model mild conditions distinct from 90°C scope; no unproven chlorinated-active-site assignment."
