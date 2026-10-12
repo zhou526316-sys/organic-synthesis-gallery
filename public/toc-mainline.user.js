@@ -5409,7 +5409,7 @@ function embeddedJobDois(value) {
             var status=Number(error&&error.httpStatus||0);
             // One bounded subdivision for transient failures only. An
             // owner-auth/rate-limit denial never triggers additional requests.
-            if(depth===0&&part.length>12&&![401,403,429].includes(status)
+            if(depth===0&&part.length>6&&![401,403,429].includes(status)
                 && /timeout|deadline|aborted|network|failed to fetch|transport|incomplete/i.test(msg)){
               var mid=Math.ceil(part.length/2);
               await sleep(300);
