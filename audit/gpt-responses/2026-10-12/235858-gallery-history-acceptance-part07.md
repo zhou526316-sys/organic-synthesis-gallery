@@ -1,0 +1,1 @@
+Provisional exclude: 10.1021/acscatal.5c06067 (electro-Fenton pollutant degradation), 10.1038/s44160-026-01014-7 (NRPS mechanistic structure). Independent pending: 10.1021/acscatal.5c07673, need real organic substrate scope and isolated yields. All six remain collector unfinished; no formal publication.
