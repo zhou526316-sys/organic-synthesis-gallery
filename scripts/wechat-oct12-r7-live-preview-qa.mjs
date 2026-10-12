@@ -96,8 +96,10 @@ try {
   await capture('mobile-first-screen');
   await capture('mobile-primary-cover',page.locator('.push-card-main'));
   await capture('mobile-retrospective-cover',page.locator('.push-card-sub'));
-  await capture('mobile-ACS-scientific-reasoning',page.locator('.article-block').first().locator('h2').filter({hasText:'移走氯仿'}));
-  await capture('mobile-JACS-scientific-reasoning',page.locator('.article-block').nth(1).locator('h2').filter({hasText:'哪些实验支持自由基'}));
+  await page.locator('.article-block').first().locator('h2').filter({hasText:'移走氯仿'}).scrollIntoViewIfNeeded();
+  await capture('mobile-ACS-scientific-reasoning');
+  await page.locator('.article-block').nth(1).locator('h2').filter({hasText:'哪些实验支持自由基'}).scrollIntoViewIfNeeded();
+  await capture('mobile-JACS-scientific-reasoning');
   const selected=[
     {name:'mobile-ACS-SI-Table-S9',article:0,caption:'补充信息 SI Table S9'},
     {name:'mobile-JACS-Fig2-scope',article:1,caption:'原文 Fig. 2｜酰胺'},
