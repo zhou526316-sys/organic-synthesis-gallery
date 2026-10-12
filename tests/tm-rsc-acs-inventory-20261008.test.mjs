@@ -26,7 +26,7 @@ function routeContext(){
   };
   vm.createContext(ctx);
   vm.runInContext(['articleUrl','captureRouteClass','rscSilverchairArticleForJob',
-    'rscSilverchairVisualCandidates','rscGraphicalAbstractCandidates']
+    'rscSemanticCardPublisherAsset','rscSilverchairVisualCandidates','rscGraphicalAbstractCandidates']
     .map(extract).join('\n')+'\n globalThis.testFns={articleUrl,captureRouteClass,rscSilverchairArticleForJob,rscSilverchairVisualCandidates,rscGraphicalAbstractCandidates};',ctx);
   return ctx;
 }
