@@ -410,6 +410,10 @@
     const papers=batchHistoricalPapers(catalog);
     if(!papers.length){window.alert('正式目录中暂无 2026-10-01 前的文献');return;}
     if(!window.confirm('开始独立补抓 '+papers.length+' 篇正式历史 DOI？\n将逐篇在后台打开出版社页面，仅在明确可验证的 CC BY/CC0 许可下保存文本到当前浏览器；不抓 PDF/正文图/SI，不上传原文，也不修改 TOC 队列。浏览器需要保持开启。'))return;
+    const competing=GM_getValue(BATCH_LEASE,null);
+    if(competing&&competing.until>Date.now()){
+      window.alert('已有历史正文批次正在运行，未建立第二个队列。');return;
+    }
     const db=await batchOpenDb();
     const existing=new Set(await batchDbOp(db,'packets','getAllKeys'));
     const runId=batchId();
@@ -455,6 +459,11 @@
              &&packet?.pdfDownloaded===false&&packet?.mediaDownloaded===false
              &&JSON.stringify(packet).length<=BATCH_MAX_RESPONSE_CHARS){
             try{
+              const canonical=[...packet.sections.map(x=>x.heading+'\n'+x.text),
+                ...packet.captions.map(x=>x.label+'\n'+x.text),
+                ...packet.tables.map(x=>x.label+'\n'+x.text)].join('\n');
+              if(await sha256(canonical)!==packet.sourceSha256)
+                throw Error('response_hash_mismatch');
               await batchDbOp(db,'packets','put',{doi:paper.doi,packet,checkedAt:Date.now()});
               saved++;existing.add(paper.doi);status='saved_local';
             }catch(_){status='storage_failure';}
@@ -490,9 +499,14 @@
     };
     // No need to inherit URL fragments across publisher redirects. The only
     // active tab is DOI-bound and only the explicitly started, live job may run.
+    const fragment=/^#gallery-historical-job=([a-f0-9]{24})$/.exec(location.hash||'');
+    if(fragment&&fragment[1]!==job.token)return;
     let doi=pageDoi(),capture=null,reason='';
+    // Other article tabs must never claim the queue's response slot.
+    if(doi&&doi!==job.doi)return;
+    if(!doi&&!fragment)return;
     for(let i=0;i<8;i++){
-      if(doi&&doi!==job.doi){storeResult({status:'doi_unverified'});return;}
+      if(doi&&doi!==job.doi)return;
       if(doi===job.doi){
         const root=document.querySelector('main article, article, main, [role="main"]');
         const license=batchLicenseEvidence(root);
