@@ -2,7 +2,7 @@
   "action": "restore_original_source_pdf_image_page_candidates_only",
   "date": "2026-10-12",
   "revision": "2026-10-12-r6",
-  "requestId": "oct12-r6-complete-figure-page-audit-20261012-1808",
+  "requestId": "oct12-r6-original-page-add-ACS-Fig5-review",
   "sources": {
     "jacs": {
       "doi": "10.1021/jacs.6c10406",
@@ -21,6 +21,7 @@
       "pages": [
         4,
         5,
+        6,
         7,
         8,
         9
@@ -38,5 +39,5 @@
   },
   "draftWriteAuthorized": false,
   "publicSendAuthorized": false,
-  "note": "Visual audit of unmodified original owner-provided JACS/ACS full journal PDFs and ACS SI; intermediate coarse page previews under audit only. Do not write draft, do not publish, never store full PDF in git."
+  "note": "Add original ACS main Fig5 page6 to independent visual review because cropped spacer heading is incomplete. Still no draft/publish."
 }
