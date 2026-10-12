@@ -1,0 +1,59 @@
+name: WeChat R5 Pixel Inspection (read-only export on isolated branch)
+
+on:
+  push:
+    branches:
+      - audit/wechat-r5-pixel-inspection-20261012
+    paths:
+      - .github/workflows/wechat-r5-pixel-review.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-r5-pixel-review-20261012
+  cancel-in-progress: false
+
+jobs:
+  source-pixel-export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Export base64 copies of already-public exact source rasters for human visual QA
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64, json
+          from pathlib import Path
+          root=Path('.')
+          a=json.loads((root/'public/wechat-featured/2026-10-12.json').read_text())
+          b=json.loads((root/'public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json').read_text())
+          index={x['id']:x['repo_path'] for x in a['figures']+b['figures']}
+          selected=['acs_cover','acs_lead','acs_scope_alkyl','acs_scope_aryl','acs_scope_spacer',
+                    'acs_robustness','acs_si_robust','jacs_scope','jacs_minimal','jacs_cover']
+          dest=root/'audit/wechat-working/r5-visual-source-20261012'
+          dest.mkdir(parents=True,exist_ok=True)
+          rows=[]
+          for key in selected:
+              if key not in index: raise RuntimeError('figure not found: '+key)
+              src=root/index[key]
+              payload=src.read_bytes()
+              if len(payload)>3_000_000: raise RuntimeError('overlong source image: '+key)
+              encoded=base64.b64encode(payload).decode('ascii')
+              (dest/(key+'.b64.txt')).write_text(encoded+'\n')
+              rows.append({'id':key,'path':str(src),'sizeBytes':len(payload),
+                           'base64Path':str(dest/(key+'.b64.txt'))})
+          (dest/'manifest.json').write_text(json.dumps({'sourceOnly':True,'noPixelModification':True,'images':rows},indent=2))
+          print(json.dumps({'exported':len(rows),'totalBytes':sum(r['sizeBytes'] for r in rows)}))
+          PY
+      - name: Save pixel-only review intermediates on isolated inspection branch
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add audit/wechat-working/r5-visual-source-20261012
+          git commit -m 'audit: export source-identical images for R5 human pixel QA'
+          git push origin HEAD:audit/wechat-r5-pixel-inspection-20261012
