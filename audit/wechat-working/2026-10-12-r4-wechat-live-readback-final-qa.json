@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r4",
+  "context": "User resumed a connection-interrupted WeChat Oct12 ACS Catalysis daily featured and JACS retrospective two-paper draft update",
+  "status": "cloud_draft_update_and_get_verified",
+  "selectedDoiOrder": [
+    "10.1021/acscatal.6c06048",
+    "10.1021/jacs.6c10406"
+  ],
+  "originalMediaIdReused": true,
+  "WeChatDraftMediaId": "KhELYUzvwADwB_l1xH1SWIIQfl5GSB19jduNK2sdIdguH6OMYYfkuM8zO65yvnWs",
+  "wechatReceipt": {
+    "status": "ok",
+    "stage": "draft_update",
+    "readback": "ok",
+    "generatedAt": "2026-10-12T07:20:02.953852Z",
+    "articleCount": 2,
+    "paperCount": 5,
+    "publishId": null
+  },
+  "sourceImportRunId": 38216980439,
+  "sourceImportResult": {
+    "fingerprints": "pass",
+    "templateAssembly": "pass",
+    "paragraphsAndCaptionsPresent": "pass",
+    "imageOrder": "pass",
+    "sourceAssets": 26,
+    "bodyImages": {
+      "acscatal": 14,
+      "jacs": 10
+    }
+  },
+  "sourceReviewedGate": "audit/wechat-working/2026-10-12-review-gate.json",
+  "reviewFlags": {
+    "text": "pass",
+    "images": "pass"
+  },
+  "coverAssets": {
+    "today": {
+      "type": "original-paper Figure 1C exact pixel crop",
+      "path": "public/wechat-assets/reviewed/2026-10-12-r2/acs-catalysis-fig1c-native-cover.png",
+      "size": [
+        1880,
+        800
+      ],
+      "productionPreviewUrlSameAsR2": true
+    },
+    "retrospective": {
+      "type": "owner-approved Ni/Zr abstract 1:1 concept with no concrete fabricated molecule-bond structures",
+      "path": "public/wechat-assets/reviewed/2026-10-12-r4/jacs-ni-zr-concept-original-no-invented-chemistry.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "96ca40c385776838e7d5ce4f59f1ffbc483a8c54604d1adf428497c9d8829a4d",
+      "productionPreviewUrlChangedSinceR2": true
+    }
+  },
+  "authenticPreviewUrl": "https://relay.gczhouwld.com/wechat-preview/57fdb53234a770e276663713.html",
+  "independentLivePreview": {
+    "twoOrderedTitlesVerified": true,
+    "articleCount": 2,
+    "weChatImages": 27,
+    "bodyFigures": 24,
+    "covers": 2,
+    "qr": 1,
+    "sameImageCountAsR2": true,
+    "oldSiteFeatureGuideNotInPreview": true,
+    "dateNewCardsCount": 5,
+    "sourceLinks": [
+      "https://gallery.gczhouwld.com/?edition=2026-10-12&doi=10.1021%2Facscatal.6c06048&summary=0",
+      "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0"
+    ]
+  },
+  "safety": {
+    "noDuplicateDraft": true,
+    "noMassSend": true,
+    "mediaIdSameAsEarlierOct12": true,
+    "nativeWeChatMobileScreenshotObtained": false
+  },
+  "userNotice": "The user can open the relay preview. Native WeChat mobile cropping remains to be checked in their app if desired. No need to re-trigger publisher."
+}

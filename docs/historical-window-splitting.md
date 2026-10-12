@@ -11,3 +11,9 @@ Archive formal admission requires separate DOI-specific two-pass synthesis scope
 Publication date decides July–September toc_only or pre-July metadata_only media policy.
 Candidate metadata may not be counted as reviewed/published; title matching is not sufficient evidence.
 Track actual source coverage/rate limits, and slow down if live publisher APIs block.
+
+When the configured source-request budget is reached mid-window **without any publisher failure**,
+the collector reports `deferredBudget=true` and exits normally after saving its existing checkpoint.
+It never writes or marks a partially enumerated root/leaf as source complete; a future run
+retries it from the same cursor. Genuine 429/403/network errors remain blocking failures
+and must not be relabeled as a local budget deferral.
