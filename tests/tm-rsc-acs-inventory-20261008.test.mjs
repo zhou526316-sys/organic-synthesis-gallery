@@ -197,8 +197,12 @@ test('five inventory layers never start more than two concurrent network tasks',
      active++;peak=Math.max(peak,active);started.push(options.url);
      await new Promise(resolve=>setImmediate(resolve));active--;
      if(options.url.includes('/media/inventory'))return {items:papers.map(x=>({doi:x.doi}))};
-     if(options.url.includes('/local-capture-index'))return {items:[],count:0};
-     if(options.url.includes('/staged?'))return {schemaVersion:'capture-inventory-v1',complete:true,count:0,items:[]};
+     if(options.url.includes('/local-capture-index')||options.url.includes('/staged?')){
+       const part=new URL(options.url).searchParams.get('dois').split(',');
+       return {version:1,scopeRevision:'doi-scoped-inventory-v1',complete:true,
+         scopeRequestedCount:part.length,requestedDois:part,invalidFiltered:0,count:0,items:[],
+         ...(options.url.includes('/staged?')?{schemaVersion:'capture-inventory-v1',mediaGeneration:1790082000000}:{})};
+     }
      if(options.url.includes('evidence-inventory'))return {schemaVersion:'article-evidence-v2',complete:true,truncated:false,nextCursor:'',count:0,items:[]};
      throw Error('unexpected URL');
    }
@@ -232,7 +236,7 @@ test('PDF owner inventory reads 177 DOI in batches of at most two and preserves 
  };
  vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\n globalThis.load=readOwnerPdfInventory;',ctx);
  const result=await ctx.load(papers,null);
- assert.equal(peak,2);assert.equal(calls,Math.ceil(177/25));
+ assert.equal(peak,2);assert.equal(calls,Math.ceil(177/12));
  assert.equal(result.complete,true);assert.equal(result.items.length,177);
  assert.equal(result.unknown,0);
 });
