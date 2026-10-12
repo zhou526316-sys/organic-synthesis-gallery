@@ -125,6 +125,8 @@
   var SCIENCE_MIN_DISPATCH_GAP_MS = 90 * 1000;
   var FAILURE_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000;
+  var NATURE_OFFICIAL_SOURCE_REVISION = '20261012-bound-issue-source-v1';
+  var NATURE_OFFICIAL_RECHECK_MS = 72 * 60 * 60 * 1000;
   var SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000;
   var SUMMARY_EVIDENCE_RETRY_BASE_MS = 5 * 60 * 1000;
   var FAILURE_ENGINE_REVISION = VERSION + ':20260928-science-access-prevention';
@@ -3120,6 +3122,125 @@ function embeddedJobDois(value) {
     return rows.sort(function(a,b){return b.score-a.score;});
   }
 
+  // A historical Nature article may have normal Figures but no official
+  // graphical TOC. A first-party, DOI-linked issue card is the only alternate
+  // source we may use; never turn Figure 1 or a recommendation image into TOC.
+  function natureLinkedOfficialIssueUrls(job,doc,base) {
+    var doi=normalizeDoi(job&&job.doi),article=doi.split('/')[1]||'',found=[],scope=doc||document;
+    if(!article||!scope||!scope.querySelectorAll)return found;
+    try{
+      var url=new URL(base||location.href);
+      if(url.hostname!=='www.nature.com'||url.pathname!=='/articles/'+article)return found;
+      Array.from(scope.querySelectorAll('a[href],link[href]')).slice(0,250).forEach(function(node){
+        var u=normalizeUrl(node.getAttribute('href'),url.href);if(!u)return;
+        try{
+          var link=new URL(u);
+          if(link.protocol==='https:'&&link.hostname==='www.nature.com'
+             &&/^\/[a-z0-9-]+\/volumes\/\d+\/issues\/[a-z0-9-]+\/?$/i.test(link.pathname)
+             &&found.indexOf(link.href)<0)found.push(link.href);
+        }catch(_){}
+      });
+    }catch(_){}
+    return found.slice(0,1);
+  }
+  function natureOfficialIssueCardCandidates(job,doc,base) {
+    var doi=normalizeDoi(job&&job.doi),article=doi.split('/')[1]||'',rows=[],seen=new Set();
+    if(!article||!doc||!doc.querySelectorAll)return rows;
+    var anchors=Array.from(doc.querySelectorAll('a[href]')).filter(function(a){
+      try{var u=new URL(a.getAttribute('href'),base);
+        return u.hostname==='www.nature.com'&&u.pathname==='/articles/'+article;}catch(_){return false;}
+    });
+    anchors.forEach(function(anchor){
+      var card=anchor.parentElement;
+      for(var depth=0;card&&depth<6;depth++,card=card.parentElement){
+        if(!card.querySelectorAll||!card.querySelector('img'))continue;
+        var articles=Array.from(card.querySelectorAll('a[href*="/articles/"]'))
+          .map(function(a){try{return new URL(a.getAttribute('href'),base).pathname;}catch(_){return '';}})
+          .filter(Boolean);
+        if(articles.some(function(p){return p!=='/articles/'+article;}))return;
+        Array.from(card.querySelectorAll('img')).slice(0,12).forEach(function(img){
+          var parent=img.parentElement,local=[img.alt,img.title,img.getAttribute('aria-label'),
+            parent&&parent.getAttribute('class'),parent&&parent.getAttribute('aria-label')]
+            .filter(Boolean).join(' ');
+          if(!/graphical[-_\s]*abstract|visual[-_\s]*abstract|toc[-_\s]*(?:graphic|image)/i.test(local)
+            ||/\bFig(?:ure)?[.\s_-]*1\b/i.test(local))return;
+          articleFigureImageUrls(img,base).forEach(function(asset,rank){
+            var url=normalizeUrl(asset,base);
+            if(!url||seen.has(url)||!candidateBelongsToJob(url,job)||reject(local,url))return;
+            try{
+              var u=new URL(url),h=u.hostname.toLowerCase(),path=u.pathname.toLowerCase();
+              if(u.protocol!=='https:'||!(h==='media.springernature.com'||h==='www.nature.com')
+                ||/_fig0*1[_-]|\/figures\/1(?:[./_-]|$)|(?:logo|banner|avatar|advert|cover)/i.test(path)
+                ||! /\.(?:svg|png|jpe?g|webp)$/i.test(path))return;
+            }catch(_){return;}
+            seen.add(url);rows.push({url:url,kind:'official',assetType:'graphical_abstract',
+              score:930-rank,source:'nature_doi_bound_official_issue_card',
+              text:'Publisher-issued graphical abstract',element:null});
+          });
+        });
+        // Never widen to an ancestor containing other articles.
+        return;
+      }
+    });
+    return rows;
+  }
+  async function natureAuthoritativeIssueCandidates(job,trace) {
+    var doi=normalizeDoi(job&&job.doi),article=doi.split('/')[1]||'',base=location.href;
+    if(job.publisher!=='nature'||!tocOnlyCaptureEligible(job)
+      ||location.hostname!=='www.nature.com'||location.pathname!=='/articles/'+article)
+      return {checked:false,rows:[],reason:'article_identity_not_verified'};
+    var issueUrls=natureLinkedOfficialIssueUrls(job,document,base);
+    if(!issueUrls.length){
+      pushTrace(trace,{stage:'nature_official_source',event:'no_linked_issue',status:'none',
+        message:'article_verified;graphic_not_in_article;no_publisher_issue_link'});
+      return {checked:true,rows:[],reason:'article_page_no_official_graphic_no_linked_issue'};
+    }
+    var url=issueUrls[0],abort=new AbortController(),timer=setTimeout(function(){abort.abort();},5500);
+    try{
+      var response=await fetch(url,{method:'GET',credentials:'same-origin',redirect:'follow',
+        headers:{Accept:'text/html'},signal:abort.signal});
+      if([401,403,429].includes(response.status)){
+        pushTrace(trace,{stage:'nature_official_source',event:'access_denied',status:'failed',
+          httpStatus:response.status,message:'no_auth_bypass_or_retry'});
+        return {checked:false,rows:[],reason:'issue_access_denied'};
+      }
+      if(!response.ok||new URL(response.url).hostname!=='www.nature.com'){
+        pushTrace(trace,{stage:'nature_official_source',event:'issue_http_failed',status:'failed',
+          httpStatus:response.status});
+        return {checked:false,rows:[],reason:'issue_not_verifiable'};
+      }
+      var html=await response.text();
+      if(html.length>1200000||!/^\s*(?:<!doctype\s+html|<html\b|<head\b|<body\b)/i.test(html.slice(0,250)))
+        return {checked:false,rows:[],reason:'issue_html_invalid'};
+      var doc=new DOMParser().parseFromString(html,'text/html');
+      var rows=natureOfficialIssueCardCandidates(job,doc,response.url);
+      pushTrace(trace,{stage:'nature_official_source',event:'issue_checked',status:rows.length?'found':'none',
+        message:'doi='+doi+';verifiedIssue=1;accepted='+rows.length});
+      return {checked:true,rows:rows,reason:rows.length?'verified_official_issue_image':'issue_no_semantic_doi_bound_graphic'};
+    }catch(error){
+      pushTrace(trace,{stage:'nature_official_source',event:'issue_transport_failed',status:'failed',
+        message:captureLiveError(error&&error.message||error)});
+      return {checked:false,rows:[],reason:'issue_transport_unverified'};
+    }finally{clearTimeout(timer);}
+  }
+  function natureSourceRecheckKey(job) {
+    return P+'nature-official-source-check-v1:'+encodeURIComponent(normalizeDoi(job&&job.doi));
+  }
+  function natureOfficialRecheckDeferred(job) {
+    if(!tocOnlyCaptureEligible(job)||String(job&&job.publisher||'')!=='nature')return null;
+    var value=GM_getValue(natureSourceRecheckKey(job),null);
+    return value&&value.revision===NATURE_OFFICIAL_SOURCE_REVISION
+      &&Number(value.recheckAt||0)>Date.now()?value:null;
+  }
+  function noteNatureOfficialNotObserved(job,reason) {
+    if(!tocOnlyCaptureEligible(job)||String(job&&job.publisher||'')!=='nature')return;
+    if(!currentCaptureJob(job))return;
+    GM_setValue(natureSourceRecheckKey(job),{revision:NATURE_OFFICIAL_SOURCE_REVISION,
+      doi:normalizeDoi(job.doi),checkedAt:Date.now(),recheckAt:Date.now()+NATURE_OFFICIAL_RECHECK_MS,
+      reason:String(reason||'official_toc_not_seen_in_checked_sources').slice(0,120),
+      officialTocStored:false,notPermanentExclusion:true});
+  }
+
   function natureDeterministicFigureOneCandidates(job) {
     if (String(job && job.publisher || '') !== 'nature' || job.allowFigureOne === false) return [];
     var doi = normalizeDoi(job && job.doi);
@@ -4588,6 +4709,12 @@ function embeddedJobDois(value) {
       }
       var discoveryStartedAt=Date.now();
       var discovered=await waitForPairedVisuals(job,trace);
+      if(wantsToc && job.publisher==='nature' && tocOnlyCaptureEligible(job)
+        &&!discovered.toc.some(function(c){return c.kind==='official';})){
+        var verifiedNature=await natureAuthoritativeIssueCandidates(job,trace);
+        if(verifiedNature.rows.length)discovered.toc=discovered.toc.concat(verifiedNature.rows);
+        else if(verifiedNature.checked)noteNatureOfficialNotObserved(job,verifiedNature.reason);
+      }
       job._captureTiming.discoveryMs=Math.max(0,Date.now()-discoveryStartedAt);
       job._liveDiscoveryDone=true;
       result.figures.discovered=new Set(discovered.figures.map(function(c){return c.label;})).size;
@@ -5778,6 +5905,14 @@ function embeddedJobDois(value) {
         var candidates=coveragePending(run),row=null;
         for(var i=0;i<candidates.length;i++){
           var candidate=candidates[i],job=candidate.job;
+          var sourceChecked=natureOfficialRecheckDeferred(job);
+          if(sourceChecked){
+            // Preserve official-TOC obligation but avoid revisiting a verified
+            // unchanged Nature article every manual pass.
+            candidate.lastReason='nature_official_source_not_observed;recheck_after='+sourceChecked.recheckAt;
+            candidate.state='blocked';candidate.retryAt=0;
+            continue;
+          }
           var cooldown=publisherAccessCooldownDetail(job);
           if(cooldown){
             // Only verified publisher-wide rate limiting can hold unrelated DOIs.
