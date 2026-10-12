@@ -1,4 +1,5 @@
 import { readFile, mkdir, mkdtemp, writeFile, rm } from 'node:fs/promises';
+import {HISTORICAL_APPROVED_PATH, validateHistoricalApproval, historicCard} from './lib/historical-admission.mjs';
 import { authorizeScopeCorrection } from './lib/immediate-scope-correction.mjs';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -51,7 +52,7 @@ export function validateProtectedInputs(marker, actual) {
   return failures;
 }
 
-export function validateFormalPartition(staging, formal, marker, pendingQueue = null) {
+export function validateFormalPartition(staging, formal, marker, pendingQueue = null, historicalReview = null) {
   const failures = [];
   const decisions = list(staging?.decisions);
   if (!Array.isArray(staging?.decisions)) failures.push('staging_decisions_missing');
@@ -79,8 +80,29 @@ export function validateFormalPartition(staging, formal, marker, pendingQueue = 
   if (staging?.publicationSlot !== marker?.publicationSlot || formal?.publicationSlot !== marker?.publicationSlot) failures.push('formal_slot_mismatch');
   if (staging?.handoffGeneratedAt !== marker?.handoffGeneratedAt || formal?.handoffGeneratedAt !== marker?.handoffGeneratedAt) failures.push('formal_handoff_generation_mismatch');
   if (!['per-doi', 'full-review-closure'].includes(marker?.releasePolicy)) failures.push('release_policy_missing');
+  const historicDois=list(marker?.historicalAdmittedDois).map(normalize);
+  if(historicDois.length){
+    if(marker.historicalReviewFile!==HISTORICAL_APPROVED_PATH
+      ||!shaPattern.test(String(marker.historicalReviewBlobSha||'')))
+      failures.push('historical_review_frozen_reference_invalid');
+    if(new Set(historicDois).size!==historicDois.length
+      ||historicDois.some(doi=>!/^10\.\d{4,9}\/\S+$/.test(doi)
+        ||allDois.includes(doi)))
+      failures.push('historical_review_doi_overlaps_formal');
+    try{
+      const allowed=new Set(validateHistoricalApproval(historicalReview).map(row=>normalize(row.doi)));
+      if(historicDois.some(doi=>!allowed.has(doi)))
+        failures.push('historical_review_not_in_approved_manifest');
+    }catch(error){
+      failures.push('historical_review_invalid:'+String(error?.message||error).slice(0,110));
+    }
+  }else if(marker?.historicalReviewFile||marker?.historicalReviewBlobSha){
+    failures.push('historical_review_unreferenced_manifest');
+  }
+  const expectedPublishable=[...expected.include,...historicDois];
   for (const [field, kind] of [['publishableDois', 'include'], ['rejectedDois', 'exclude'], ['deferredDois', 'pending']]) {
-    if (!Array.isArray(marker?.[field]) || !sameSet(marker[field].map(normalize), expected[kind])) failures.push(`release_allowlist_mismatch:${field}`);
+    const truth=field==='publishableDois'?expectedPublishable:expected[kind];
+    if (!Array.isArray(marker?.[field]) || !sameSet(marker[field].map(normalize),truth)) failures.push(`release_allowlist_mismatch:${field}`);
   }
   if (expected.pending.length) {
     if (marker?.releasePolicy !== 'per-doi') failures.push('pending_requires_explicit_per_doi_release');
@@ -146,6 +168,8 @@ export async function authorize(root = process.cwd()) {
       ['handoffFile', 'handoffBlobSha', 'handoff'], ['auditFile', 'auditBlobSha', 'audit'],
     ];
     if (list(marker.deferredDois).length) references.push(['pendingQueueFile', 'pendingQueueBlobSha', 'queue']);
+    if (list(marker.historicalAdmittedDois).length)
+      references.push(['historicalReviewFile','historicalReviewBlobSha','historical']);
     for (const [fileKey, shaKey, key] of references) {
       const file = marker[fileKey];
       if (!auditPath(file) || !shaPattern.test(String(marker[shaKey] || ''))) { failures.push(`frozen_reference_missing:${fileKey}`); continue; }
@@ -154,7 +178,26 @@ export async function authorize(root = process.cwd()) {
     }
     if (!failures.length) {
       formal = frozen.formal;
-      failures.push(...validateFormalPartition(frozen.staging, frozen.formal, marker, frozen.queue));
+      failures.push(...validateFormalPartition(frozen.staging,frozen.formal,marker,frozen.queue,frozen.historical));
+      // A historical DOI may be indexed for Archive search, but must never
+      // become an addedDate/Today card or gain private-PDF/body eligibility.
+      if(list(marker.historicalAdmittedDois).length){
+        try{
+          const rows=JSON.parse(git(['show',markerCommit+':public/rolling-supplement.json'])).papers||[];
+          for(const id of marker.historicalAdmittedDois){
+            const matches=rows.filter(row=>normalize(row?.doi||row?.url)===normalize(id));
+            const reviewed=frozen.historical.accepted.find(row=>row.doi===id);
+            if(matches.length!==1||!reviewed){
+              failures.push('historical_published_card_missing_or_duplicate:'+id);continue;
+            }
+            const card=matches[0],expectedCard=historicCard(reviewed);
+            for(const key of ['doi','ingestionChannel','mediaPolicy','addedDate','date','title','titleZh','new']){
+              if(card[key]!==expectedCard[key])
+                failures.push('historical_publication_card_contract_mismatch:'+id+':'+key);
+            }
+          }
+        }catch(error){failures.push('historical_published_card_read_failed:'+String(error?.message||error).slice(0,110))}
+      }
       const dir = await mkdtemp(path.join(tmpdir(), 'gallery-frozen-release-'));
       try {
         await mkdir(path.join(dir, 'audit'));
