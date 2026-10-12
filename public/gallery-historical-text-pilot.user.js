@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Gallery Historical Text Search — Isolated Batch
+// @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
 // @version      0.2.0
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
@@ -28,6 +28,8 @@
 // @grant        GM_openInTab
 // @grant        GM_xmlhttpRequest
 // @connect      gallery.gczhouwld.com
+// @updateURL    https://gallery.gczhouwld.com/gallery-historical-text-pilot.user.js
+// @downloadURL  https://gallery.gczhouwld.com/gallery-historical-text-pilot.user.js
 // ==/UserScript==
 
 (() => {
