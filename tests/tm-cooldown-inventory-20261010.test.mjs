@@ -107,7 +107,7 @@ test('inventory does not start second full hedge after one exhausted browser+GM 
     updateInventoryProgress:()=>{},nowIso:()=>new Date().toISOString(),
     manualExecutionCurrent:()=>true,controllerPaused:()=>false,
     captureLiveError:x=>String(x),coverageTransient:x=>/timeout|deadline/.test(x),
-    sleep:async()=>{},INVENTORY_REQUEST_TIMEOUT_MS:16000,
+    sleep:async()=>{},INVENTORY_REQUEST_TIMEOUT_MS:16000,INVENTORY_SCOPED_BATCH_SIZE:80,
     MEDIA_INVENTORY_ENDPOINT:'https://api.test/api/media/inventory',
     CAPTURE_INDEX_URL:'https://api.test/api/media/local-capture-index',
     WORKER:'https://api.test',
@@ -146,8 +146,8 @@ test('inventory does not start second full hedge after one exhausted browser+GM 
   assert.ok(peak<=2,'no more than two inventory layers may run simultaneously');
   assert.ok(tocWhilePdf,'fast inventory lane must not be blocked behind slow PDF inventory');
   assert.equal(output.pdf.complete,true);
-  assert.equal(output.tocs,null);
-  assert.equal(output.figures,null);
+  assert.equal(output.tocs.complete,false);
+  assert.equal(output.figures.complete,false);
   assert.equal(output.evidence,null);
   assert.equal(output.errors.length,3,'unknown inventory remains an explicit failure');
 });
