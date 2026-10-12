@@ -1,8 +1,8 @@
 {
-  "requestId": "wechat-2026-10-12-r6-verified-complete-original-figures-and-refined-narrative",
+  "requestId": "wechat-2026-10-12-r7-restore-research-discussion-and-scaled-original-figures",
   "publicationDate": "2026-10-12",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-12-r6",
+  "editorialRevision": "2026-10-12-r7",
   "approvedGate": "audit/wechat-working/2026-10-12-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -14,7 +14,7 @@
   "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0",
   "expectedReviewedBodyImages": 24,
   "expectedReviewedAssets": 26,
-  "sourceImportRunId": 38237814986,
+  "sourceImportRunId": 38240990420,
   "draftOnly": true,
   "publicSendAuthorized": false,
   "requireDraftGetReadback": true,
@@ -22,7 +22,11 @@
   "linkOnly": false,
   "updatePolicy": "update_exact_existing_2026_10_12_media_id_only_fail_closed_no_duplicates",
   "userSelectedRetrospectiveCover": "latest 1254x1254 Ni/Zr blue abstract artwork with no molecular bond schemes; exact SHA256 96ca40c385776838e7d5ce4f59f1ffbc483a8c54604d1adf428497c9d8829a4d",
-  "reason": "Owner authorized replacement of existing Oct12 draft ACS Catalysis/JACS R4 with R6 source-verified, visually complete, scientifically reviewed text and original main/SI figures. 14 ACS body and 10 JACS body including fully restored source original ACS SI Table S9; daily totals only + actual Gallery cards; original user-selected ACS-centered cover and square JACS Ni/Zr conceptual cover. Strict same original media ID, selected exact DOI URLs and two article order, fail closed on identity mismatches; do NOT draft/add or group send. Require new live draft/get readback and fresh relay preview.",
-  "imageOriginalShaReview": "audit/wechat-working/2026-10-12-r6-visual-acceptance.json",
-  "publisherSourceQa": "audit/wechat-working/2026-10-12-r6-science-layout-qa.json"
+  "reason": "Owner expressly requests a balanced expert-level scientific narrative instead of R6 text starvation and 100% wide pictures. R7 independently source-checked, ACS 3513/JACS 3628 characters with 14/10 unchanged source figures sized according to content (78-94%). Pre-draft 390px/740px Playwright visual QA passed, 24/24 images decoded without overflow; user-approved source-only covers unchanged. STRICTLY UPDATE EXISTING Oct12 TWO-ARTICLE DRAFT ONLY; keep original media_id, two DOI/summary=0 read-original URLs, article order and accurate journal counts. No draft/add, no clone, no send; require draft/get and fresh real relay preview.",
+  "imageOriginalShaReview": "audit/wechat-working/2026-10-12-r7-layout-acceptance.json",
+  "publisherSourceQa": "audit/wechat-working/2026-10-12-r7-science-text-review.json",
+  "expectedSourceTextChars": {
+    "acs": 3513,
+    "jacs": 3628
+  }
 }
