@@ -1,25 +1,25 @@
 {
-  "requestId": "wechat-2026-10-12-r1-draft-add-acs-catalysis-thiophene-jacs-zr-asymmetric",
+  "requestId": "wechat-2026-10-12-r2-correct-acs-first-cover-keep-two-article-media",
   "publicationDate": "2026-10-12",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-12-r1",
+  "editorialRevision": "2026-10-12-r2",
   "approvedGate": "audit/wechat-working/2026-10-12-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
     "10.1021/acscatal.6c06048",
     "10.1021/jacs.6c10406"
   ],
+  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWIIQfl5GSB19jduNK2sdIdguH6OMYYfkuM8zO65yvnWs",
   "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-12&doi=10.1021%2Facscatal.6c06048&summary=0",
   "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0",
   "expectedReviewedBodyImages": 24,
   "expectedReviewedAssets": 26,
-  "sourceImportRunId": 38202787664,
+  "sourceImportRunId": 38203184649,
   "draftOnly": true,
   "publicSendAuthorized": false,
   "requireDraftGetReadback": true,
   "requireArticleOrderAndExactDois": true,
   "linkOnly": false,
-  "updatePolicy": "create_exactly_one_new_2026-10-12_two_article_draft_no_duplicates",
-  "author": "化之岛",
-  "reason": "User explicitly requested direct official-account TWO-article DRAFT today Oct12. Today ACS Catalysis paper 10.1021/acscatal.6c06048 is one of 5 formally published DOI at sole Beijing 08:00 slot; retrospective user-selected JACS 10.1021/jacs.6c10406. Full original main/SI read; both deep literature commentaries separately reviewed; 24 complete source PDF evidence figures and two covers; concept cover is exact image just generated and factual chemistry figures only PDF crops. Preserve precise Gallery DOI scroll links summary=0. Single fixed-IP draft/add only if today's media state absent, then actual draft/get/readback and real relay preview. No public send."
+  "updatePolicy": "same_date_same_media_only_fail_closed_on_missing_id",
+  "reason": "User authorized complete Oct12 double article draft. First API draft/add and readback already passed, final visual QA discovered one broken ACS figure header/caption crop in 2.35 cover. Independently reviewed SHA-locked R2 replaces ONLY source verified lead and first cover with complete, clean actual reaction and native title safety. Retain all other scientifically vetted 23+28 paragraphs, 22 other source figures and user Ni/Zr concept cover; exact 2 DOI source links, same original 2-article Oct12 media ID only, draft/update/get, absolutely no group send."
 }
