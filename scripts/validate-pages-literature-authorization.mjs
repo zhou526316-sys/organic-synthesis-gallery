@@ -99,6 +99,12 @@ export function validateFormalPartition(staging, formal, marker, pendingQueue = 
   }else if(marker?.historicalReviewFile||marker?.historicalReviewBlobSha){
     failures.push('historical_review_unreferenced_manifest');
   }
+  if(marker?.dailyPublishableDois!==undefined
+    &&(!Array.isArray(marker.dailyPublishableDois)
+      ||!sameSet(marker.dailyPublishableDois.map(normalize),expected.include)))
+    failures.push('release_daily_allowlist_mismatch');
+  if(historicDois.length&&!Array.isArray(marker.dailyPublishableDois))
+    failures.push('historical_release_daily_allowlist_missing');
   const expectedPublishable=[...expected.include,...historicDois];
   for (const [field, kind] of [['publishableDois', 'include'], ['rejectedDois', 'exclude'], ['deferredDois', 'pending']]) {
     const truth=field==='publishableDois'?expectedPublishable:expected[kind];
