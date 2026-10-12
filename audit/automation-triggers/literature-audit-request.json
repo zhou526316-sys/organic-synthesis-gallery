@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-12T23:11:49.541Z",
-  "requestedBy": "prepublish-primary-20261013-0800",
+  "requestedAt": "2026-10-12T23:14:27.271Z",
+  "requestedBy": "prepublish-primary-recovery-20261013-0800",
   "publicationSlot": "2026-10-13T08:00:00+08:00",
   "expectedProductionCards": 964,
   "reviewFile": "audit/review-2026-10-12-0800.json",
   "reviewBlobSha": "a28ee7d6049157ff1c700a617a34f4eeb563274f",
-  "reason": "Fresh 2026-10-13 06:55 paired audit is missing at prepublish start. Generate the current Beijing-date DOI union using the canonical 16-journal registry, three-day window, seven-day safety tail, multi-ISSN Crossref online/published/created, OpenAlex, created/deposit rescue and verifiedThrough catch-up. Preserve reviewed history and do not mutate production."
+  "reason": "Recovery refresh after audit run 38320850560 persisted criticalSourceFailures=2 from transient Crossref 429 requests (Green Chemistry created on ISSN 1463-9270 and JOC published on ISSN 0022-3263). Regenerate one serialized paired snapshot for the same 2026-10-13 slot; preserve all candidate coverage and do not mutate production."
 }
