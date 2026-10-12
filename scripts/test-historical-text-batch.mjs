@@ -9,7 +9,7 @@ const anchor="  if(location.hostname==='gallery.gczhouwld.com'){";
 assert.ok(original.includes(anchor));
 const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker};\n"+anchor);
 const DOI='10.1021/jacs.6c08636',TOKEN='a'.repeat(24),RUN='b'.repeat(24);
-function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI}={}){
+function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false}={}){
   const values=new Map([['gallery-historical-text-batch-v2:job',{
     doi:DOI,publication:'2026-09-14',journal:'JACS',
     title:'A catalytic process',runId:RUN,token:TOKEN,expiresAt:Date.now()+20000
@@ -17,8 +17,10 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
   const nodes=[
     {tagName:'H2',textContent:'Abstract'},
     {tagName:'P',textContent:'A methodology addresses selective carbon-carbon bond forming reactions. '.repeat(5)},
-    {tagName:'H2',textContent:'Mechanistic Studies'},
-    {tagName:'P',textContent:'LMCT ligands modulate radical pathways in experimental investigations. '.repeat(5)}
+    ...(abstractOnly?[]:[
+      {tagName:'H2',textContent:'Mechanistic Studies'},
+      {tagName:'P',textContent:'LMCT ligands modulate radical pathways in experimental investigations. '.repeat(5)}
+    ])
   ];
   const footer={id:'',className:'',parentElement:null};
   for(const n of nodes)Object.assign(n,{id:'',className:'',parentElement:footer,closest(){return null;}});
@@ -105,6 +107,11 @@ test('worker cannot claim another tab, expired job, or unlicensed article',async
   expired.values.delete('gallery-historical-text-batch-v2:result');
   await expired.context.__batchTest.batchWorker();
   assert.equal(expired.values.has('gallery-historical-text-batch-v2:result'),false);
+});
+test('abstract-only pages are not falsely accepted as historical fulltext',async()=>{
+  const x=fixture({abstractOnly:true});
+  await x.context.__batchTest.batchWorker();
+  assert.equal(x.values.get('gallery-historical-text-batch-v2:result')?.status,'body_missing');
 });
 test('historical batch does not write into media, PDF or Evidence interfaces',()=>{
   const body=original.replace(/\/\/ ==UserScript==[\s\S]*?\/\/ ==\/UserScript==/,'');
