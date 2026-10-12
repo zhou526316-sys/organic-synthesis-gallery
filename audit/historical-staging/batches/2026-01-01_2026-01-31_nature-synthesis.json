@@ -1,0 +1,1598 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2026-01-01",
+    "to": "2026-01-31"
+  },
+  "checkedAt": "2026-10-12T22:22:27.352Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "lane": "publication",
+        "total": 32,
+        "count": 32,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 32,
+      "count": 32,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 32,
+      "openalex": 32
+    }
+  },
+  "candidateCount": 32,
+  "alreadyPublished": 0,
+  "unreviewed": 32,
+  "records": [
+    {
+      "doi": "10.1038/s44160-025-00947-9",
+      "title": "Diastereodivergent construction of disubstituted cyclobutanes via electrochemical cobalt-catalysed reductive coupling",
+      "authors": [
+        "Jie Yang",
+        "Hengxu Li",
+        "Qiong Wang",
+        "Qiang Liu"
+      ],
+      "date": "2026-01-05",
+      "datePrecision": "day",
+      "createdDate": "2026-01-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "4",
+        "pages": "544-555",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00947-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00947-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00948-8",
+      "title": "meta-Selective radical halogenation of pyridines",
+      "authors": [
+        "Nirmala Mohanta",
+        "Jacquelyne A. Read"
+      ],
+      "date": "2026-01-05",
+      "datePrecision": "day",
+      "createdDate": "2026-01-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "1",
+        "pages": "4-5",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00948-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00948-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00951-z",
+      "title": "Catalytic asymmetric activation of bicyclobutanes",
+      "authors": [
+        "Fuxing Shi",
+        "Nils Frank",
+        "Markus Leutzsch",
+        "Chendan Zhu",
+        "Nobuya Tsuji",
+        "Benjamin List"
+      ],
+      "date": "2026-01-05",
+      "datePrecision": "day",
+      "createdDate": "2026-01-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "4",
+        "pages": "527-533",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00951-z"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00951-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00954-w",
+      "title": "Amino-acid-encoded assembly of programmable chiral Solomon links",
+      "authors": [
+        "Shuai-Liang Yang",
+        "Liang Qiao",
+        "Bingyu Liu",
+        "Rui Yao",
+        "Xiao Wang",
+        "Wei Gong",
+        "Yan Liu",
+        "Jinqiao Dong",
+        "Anthony P. Davis",
+        "Yong Cui"
+      ],
+      "date": "2026-01-16",
+      "datePrecision": "day",
+      "createdDate": "2026-01-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "4",
+        "pages": "575-587",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00954-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00954-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00955-9",
+      "title": "Synthesis of discrete oligoethylenes towards chemically recyclable polyolefins",
+      "authors": [
+        "Rui Tan",
+        "Yanru An",
+        "Yuxin Liu",
+        "Xiaojie Yang",
+        "Qinmeng Zhong",
+        "Xinyue Yan",
+        "Yuxiao Hu",
+        "Minglong Chen",
+        "Jie Cen",
+        "Xiaoman Huang",
+        "Gefei Wang",
+        "Jinming Hu",
+        "Shiyong Liu",
+        "Zhengbiao Zhang"
+      ],
+      "date": "2026-01-02",
+      "datePrecision": "day",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "4",
+        "pages": "565-574",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00955-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00955-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00957-7",
+      "title": "Organocatalytic asymmetric hydroalkoxylation of bicyclobutanes",
+      "authors": [],
+      "date": "2026-01-05",
+      "datePrecision": "day",
+      "createdDate": "2026-01-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "4",
+        "pages": "487-488",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00957-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00957-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00958-6",
+      "title": "Synthesis of wafer-scale uniaxially oriented tellurium films via molecular engineering",
+      "authors": [
+        "Shuhui Li",
+        "Haoyu Wei",
+        "Yutong Xiong",
+        "Zhenxing Wang",
+        "Feng Wang",
+        "Pengyu Zhang",
+        "Yuchen Cai",
+        "Yuhan Zhu",
+        "Xueying Zhan",
+        "Qingdao Zeng",
+        "Zhenpeng Hu",
+        "Jun He"
+      ],
+      "date": "2026-01-06",
+      "datePrecision": "day",
+      "createdDate": "2026-01-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "680-689",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00958-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00958-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00959-5",
+      "title": "Synthesis of goldene comprising single-atom layer gold",
+      "authors": [
+        "Sudhir Kumar Sharma",
+        "Ramesh Jagannathan"
+      ],
+      "date": "2026-01-02",
+      "datePrecision": "day",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "3",
+        "pages": "330-331",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00959-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00959-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00960-y",
+      "title": "Reply to: Synthesis of goldene comprising single-atom layer gold",
+      "authors": [
+        "Shun Kashiwaya",
+        "Yuchen Shi",
+        "Jun Lu",
+        "Davide G. Sangiovanni",
+        "Grzegorz Greczynski",
+        "Martin Magnuson",
+        "Mike Andersson",
+        "Johanna Rosen",
+        "Lars Hultman"
+      ],
+      "date": "2026-01-02",
+      "datePrecision": "day",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "3",
+        "pages": "332-334",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00960-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00960-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00961-x",
+      "title": "Artificial synthesis of carbohydrates from electrochemically fixed carbon dioxide",
+      "authors": [
+        "Jing Li",
+        "Kedang Chen",
+        "Nathan E. Soland",
+        "Jindou Yang",
+        "Yuanzuo Gao",
+        "Seonjeong Cheon",
+        "Yuming Su",
+        "Peidong Yang",
+        "Hailiang Wang"
+      ],
+      "date": "2026-01-02",
+      "datePrecision": "day",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "4",
+        "pages": "588-595",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00961-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00961-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00965-7",
+      "title": "Customized cycloparaphenylene skeletons prepared via the intramolecular coupling of extended biphen[n]arenes",
+      "authors": [
+        "Xu-Sheng Du",
+        "Pei-Pei Meng",
+        "Rui Xiong",
+        "Yu-Ting Liu",
+        "Feng-Qi Ren",
+        "Kun Liu",
+        "Zhe Zheng",
+        "Xin-Ao Mao",
+        "Kang Cai",
+        "Dong-Sheng Guo",
+        "Jonathan L. Sessler",
+        "Chunju Li"
+      ],
+      "date": "2026-01-06",
+      "datePrecision": "day",
+      "createdDate": "2026-01-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "4",
+        "pages": "608-617",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00965-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00965-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00966-6",
+      "title": "Sulfur enhances electrochemical CO2 reduction over porphyrin catalysts",
+      "authors": [
+        "Karl Adrian Gandionco",
+        "Zhiyuan Zhang",
+        "Jongwoo Lim"
+      ],
+      "date": "2026-01-05",
+      "datePrecision": "day",
+      "createdDate": "2026-01-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "2",
+        "pages": "156-157",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00966-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00966-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00967-5",
+      "title": "Direct oxygen-to-sulfur single-atom substitution of oxazoles and isoxazoles",
+      "authors": [
+        "Chenzhe Yun",
+        "Xiao Chen",
+        "Hongxia Song",
+        "Hui-Mei Jiang",
+        "Ziyu Xia",
+        "Li-Ping Xu",
+        "Hao Wei"
+      ],
+      "date": "2026-01-05",
+      "datePrecision": "day",
+      "createdDate": "2026-01-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "4",
+        "pages": "618-628",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00967-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00967-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00968-4",
+      "title": "Parallel paired electrolysis of industrial exhaust SO2 and diols for value-added sulfite esters synthesis",
+      "authors": [
+        "Jingcheng Hu",
+        "Jiayu Hu",
+        "Yatao Wang",
+        "Chen Zeng",
+        "Heng Zhang",
+        "Zhenwei Wei",
+        "Wu Li",
+        "Hong Yi",
+        "Aiwen Lei"
+      ],
+      "date": "2026-01-16",
+      "datePrecision": "day",
+      "createdDate": "2026-01-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "4",
+        "pages": "629-637",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00968-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00968-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00970-w",
+      "title": "Triphasic synthesis of MXenes with uniform and controlled halogen terminations",
+      "authors": [
+        "Dongqi Li",
+        "Wenhao Zheng",
+        "Mahdi Ghorbani-Asl",
+        "Juliane Scheiter",
+        "Kamil Sobczak",
+        "Silvan Kretschmer",
+        "Josef Polčák",
+        "Pranjali Hirasing Jadhao",
+        "Paweł P. Michałowski",
+        "Ruoling Yu",
+        "Jiaxu Zhang",
+        "Jinxin Liu",
+        "Jingwei Du",
+        "Quanquan Guo",
+        "Ehrenfried Zschech",
+        "Tomáš Šikola",
+        "Mischa Bonn",
+        "Nicolás Pérez",
+        "Kornelius Nielsch",
+        "Arkady V. Krasheninnikov",
+        "Hai I. Wang",
+        "Minghao Yu",
+        "Xinliang Feng"
+      ],
+      "date": "2026-01-06",
+      "datePrecision": "day",
+      "createdDate": "2026-01-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "4",
+        "pages": "516-526",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00970-w"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00970-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00971-9",
+      "title": "Catalytic asymmetric hydroalkylation of 1,1-dialkyl-substituted alkenes with unactivated alkyl electrophiles",
+      "authors": [
+        "Shucheng Ma",
+        "Lihan Zhu",
+        "Jianjun Yin",
+        "Lianghua Wang",
+        "Xiuping Yuan",
+        "Simin Wang",
+        "Dazhen Shi",
+        "Qian Zhang",
+        "Tao Xiong"
+      ],
+      "date": "2026-01-13",
+      "datePrecision": "day",
+      "createdDate": "2026-01-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "4",
+        "pages": "534-543",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00971-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00971-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00972-8",
+      "title": "Synthesis covered in 2025",
+      "authors": [],
+      "date": "2026-01-13",
+      "datePrecision": "day",
+      "createdDate": "2026-01-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "1",
+        "pages": "1-1",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00972-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00972-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00973-7",
+      "title": "Nanoemulsion modular assembly for the synthesis of functional mesoporous nanomaterials",
+      "authors": [
+        "Liang Peng",
+        "Huarong Peng",
+        "Yongjiu Yuan",
+        "Yuxin Song",
+        "Xiao Yang",
+        "Pengcheng Sun",
+        "Yingying Yin",
+        "Steven Wang",
+        "Zhengxiao Guo",
+        "Dongyuan Zhao",
+        "Zuankai Wang"
+      ],
+      "date": "2026-01-20",
+      "datePrecision": "day",
+      "createdDate": "2026-01-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "2",
+        "pages": "162-179",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00973-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00973-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00974-6",
+      "title": "Synthesis of fused pyridines through photothermal cascade activation of arylhydrazines",
+      "authors": [],
+      "date": "2026-01-30",
+      "datePrecision": "day",
+      "createdDate": "2026-01-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "649-650",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00974-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00974-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00975-5",
+      "title": "Scalable light-driven deuteration of N-heteroarenes over atomically dispersed palladium",
+      "authors": [
+        "Jie Xu",
+        "Rui Cao",
+        "Shao-Zhen Yang",
+        "Yi-Ming Guo",
+        "Tong Xia",
+        "Da Zhao",
+        "Tingrui Pan",
+        "K. M. Liew",
+        "Flemming Besenbacher",
+        "Yi-Tao Dai"
+      ],
+      "date": "2026-01-26",
+      "datePrecision": "day",
+      "createdDate": "2026-01-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "690-701",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00975-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00975-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00976-4",
+      "title": "Photoinduced benzene ring contraction of arylhydrazines for the synthesis of fused pyridines",
+      "authors": [
+        "Kun Li",
+        "Yin Zeng",
+        "Kai-Hang Li",
+        "Yifan Yang",
+        "Jinhui Shen",
+        "Huifeng Guo",
+        "Yingfei Tan",
+        "Jing-Jing Guo",
+        "Anhua Hu"
+      ],
+      "date": "2026-01-30",
+      "datePrecision": "day",
+      "createdDate": "2026-01-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "702-709",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00976-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00976-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00977-3",
+      "title": "A terminal germanium oxido dianion",
+      "authors": [
+        "Bei Zhang"
+      ],
+      "date": "2026-01-05",
+      "datePrecision": "day",
+      "createdDate": "2026-01-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "1",
+        "pages": "3-3",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00977-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00977-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00978-2",
+      "title": "Scalable photocatalytic deuteration of N-heteroarenes",
+      "authors": [],
+      "date": "2026-01-26",
+      "datePrecision": "day",
+      "createdDate": "2026-01-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "647-648",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00978-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00978-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00979-1",
+      "title": "Concerted 1,3-migration through regiodivergent consecutive 1,2-rearrangements using palladium catalysis",
+      "authors": [
+        "Jing Gong",
+        "Qian Wang",
+        "Jieping Zhu"
+      ],
+      "date": "2026-01-30",
+      "datePrecision": "day",
+      "createdDate": "2026-01-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "721-729",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00979-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00979-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00980-8",
+      "title": "Photocatalytic coupling of unprotected sugars and N-heteroarenes",
+      "authors": [
+        "Qian-Yi Zhou",
+        "Daniel Zhi Wei Ng",
+        "Jun Wu",
+        "Wei Liang Leow",
+        "Songge Li",
+        "Eric Chun Yong Chan",
+        "Ming Joo Koh"
+      ],
+      "date": "2026-01-19",
+      "datePrecision": "day",
+      "createdDate": "2026-01-19",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "710-720",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00980-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00980-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00981-7",
+      "title": "A crystalline isodiazomethyl anion",
+      "authors": [
+        "Hongyu Wang",
+        "Jiancheng Li",
+        "Liu Leo Liu"
+      ],
+      "date": "2026-01-27",
+      "datePrecision": "day",
+      "createdDate": "2026-01-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "6",
+        "pages": "863-870",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00981-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00981-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00982-6",
+      "title": "Isolation of an isodiazomethyl anion as a nitrene synthon",
+      "authors": [],
+      "date": "2026-01-30",
+      "datePrecision": "day",
+      "createdDate": "2026-01-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "6",
+        "pages": "817-818",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00982-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00982-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00983-5",
+      "title": "A practical inverse design approach for high-entropy catalysts using generative AI",
+      "authors": [
+        "Donglai Zhou",
+        "Ruyu Yang",
+        "Zijin Jia",
+        "Yuhai Cai",
+        "Luyuan Zhao",
+        "Lulu Guo",
+        "Guilin Ye",
+        "Song Wang",
+        "Linjiang Chen",
+        "Daobin Liu",
+        "Pieter E. S. Smith",
+        "Yan Huang",
+        "Qing Zhu",
+        "Jun Jiang"
+      ],
+      "date": "2026-01-29",
+      "datePrecision": "day",
+      "createdDate": "2026-01-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "730-739",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00983-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00983-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00984-4",
+      "title": "Ammonia synthesis over AuRu alloys",
+      "authors": [
+        "Alexandra R. Groves"
+      ],
+      "date": "2026-01-05",
+      "datePrecision": "day",
+      "createdDate": "2026-01-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "1",
+        "pages": "2-2",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00984-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00984-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00985-3",
+      "title": "Enantio- and linear-selective allylic radical addition to imines using reductive cobalt catalysis",
+      "authors": [
+        "Xianqing Wu",
+        "Yue Shi",
+        "Chenhuan Zhang",
+        "Kejie Xu",
+        "Tingting Xia",
+        "Genping Huang",
+        "Jingping Qu",
+        "Yifeng Chen"
+      ],
+      "date": "2026-01-19",
+      "datePrecision": "day",
+      "createdDate": "2026-01-19",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "740-749",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00985-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00985-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00989-z",
+      "title": "Structural and mechanistic insights into iminium-catalysed macrocyclization by nuclear transport factor 2-like enzymes",
+      "authors": [
+        "Cheng Li Liu",
+        "Bo Zhang",
+        "Cheng Yuan Yuan",
+        "Zi Jie Wang",
+        "Ao Zhu",
+        "Si Yuan Wang",
+        "Zhang Yuan Yan",
+        "Andrey Lebedev",
+        "Yasuhiro Igarashi",
+        "Ren Xiang Tan",
+        "Hui Ming Ge"
+      ],
+      "date": "2026-01-29",
+      "datePrecision": "day",
+      "createdDate": "2026-01-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "775-789",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00989-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00989-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-00992-y",
+      "title": "CO2 electroreduction under elevated conditions",
+      "authors": [
+        "Bei Zhang"
+      ],
+      "date": "2026-01-27",
+      "datePrecision": "day",
+      "createdDate": "2026-01-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "2",
+        "pages": "155-155",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-00992-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-00992-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

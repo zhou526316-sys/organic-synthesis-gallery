@@ -1,0 +1,928 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2026-02-01",
+    "to": "2026-02-28"
+  },
+  "checkedAt": "2026-10-12T22:21:34.666Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "lane": "publication",
+        "total": 17,
+        "count": 17,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 17,
+      "count": 17,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 17,
+      "openalex": 17
+    }
+  },
+  "candidateCount": 17,
+  "alreadyPublished": 0,
+  "unreviewed": 17,
+  "records": [
+    {
+      "doi": "10.1038/s41929-025-01477-5",
+      "title": "Unveiling active sites and the cooperative role of non-thermal plasma and copper–zinc catalysts in the hydrogenation of CO2 to methanol",
+      "authors": [
+        "Shanshan Xu",
+        "Matthew E. Potter",
+        "Raquel Simancas",
+        "Lucy Costley-Wood",
+        "Boya Qiu",
+        "Xuzhao Liu",
+        "Cristina Stere",
+        "M. Asunción Molina",
+        "Danial Farooq",
+        "Floriana Tuna",
+        "Dingyue Zhang",
+        "Shuanglin Zhang",
+        "Huanhao Chen",
+        "Shengzhe Ding",
+        "Xinrui Wang",
+        "Sarayute Chansai",
+        "Matthew Lindley",
+        "Sarah J. Haigh",
+        "Armando Ibraliu",
+        "Lan Lan",
+        "Piu Chawdhury",
+        "Mariyam Bi",
+        "Otis Leahair",
+        "Yilai Jiao",
+        "Min Hu",
+        "Qiang Liu",
+        "Toru Wakihara",
+        "Xiaolei Fan",
+        "Andrew M. Beale",
+        "Christopher Hardacre"
+      ],
+      "date": "2026-02-13",
+      "datePrecision": "day",
+      "createdDate": "2026-02-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "2",
+        "pages": "134-147",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01477-5"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01477-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01478-y",
+      "title": "A geometric foundation model for enzyme retrieval with evolutionary insights",
+      "authors": [
+        "Yong Liu",
+        "Chenqing Hua",
+        "Menglong Xu",
+        "Tao Zeng",
+        "Jiahua Rao",
+        "Zhongyue Zhang",
+        "Ruibo Wu",
+        "Jing-Ke Weng",
+        "Connor W. Coley",
+        "Shuangjia Zheng"
+      ],
+      "date": "2026-02-12",
+      "datePrecision": "day",
+      "createdDate": "2026-02-12",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "2",
+        "pages": "148-160",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01478-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01478-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01479-x",
+      "title": "Roadmap for transforming heterogeneous catalysis with artificial intelligence",
+      "authors": [
+        "Hongliang Xin",
+        "John R. Kitchin",
+        "Núria López",
+        "Neil M. Schweitzer",
+        "Nongnuch Artrith",
+        "Fanglin Che",
+        "Lars C. Grabow",
+        "G. T. Kasun Kalhara Gunasooriya",
+        "Heather J. Kulik",
+        "Teodoro Laino",
+        "Hao Li",
+        "Suljo Linic",
+        "Andrew J. Medford",
+        "Randall J. Meyer",
+        "Jiayu Peng",
+        "Cory Phillips",
+        "Jin Qian",
+        "Long Qi",
+        "Wendy J. Shaw",
+        "Zachary W. Ulissi",
+        "Siwen Wang",
+        "Xiaonan Wang"
+      ],
+      "date": "2026-02-16",
+      "datePrecision": "day",
+      "createdDate": "2026-02-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "2",
+        "pages": "102-111",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01479-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01479-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01481-3",
+      "title": "Harnessing thia-Rh-carbenes for the enantioselective synthesis of chiral α,α-diheteroatomic carboxylic acids",
+      "authors": [
+        "Yajie Xing",
+        "Yuqi Fang",
+        "Yicheng Zhao",
+        "Jiean Chen",
+        "Yong Huang"
+      ],
+      "date": "2026-02-06",
+      "datePrecision": "day",
+      "createdDate": "2026-02-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "2",
+        "pages": "173-183",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01481-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01481-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01482-2",
+      "title": "Regulating in situ gaseous deposition to construct highly durable Fe–N–C oxygen-reduction fuel cell catalysts",
+      "authors": [
+        "Yachao Zeng",
+        "Manman Qi",
+        "Jiashun Liang",
+        "Raphael P. Hermann",
+        "Haoran Yu",
+        "Michael J. Zachman",
+        "Chun-Wai Chang",
+        "Marcos Lucero",
+        "Zhenxing Feng",
+        "David A. Cullen",
+        "Deborah J. Myers",
+        "Jean-Pol Dodelet",
+        "Gang Wu"
+      ],
+      "date": "2026-02-06",
+      "datePrecision": "day",
+      "createdDate": "2026-02-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "2",
+        "pages": "196-210",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01482-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01482-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01487-x",
+      "title": "Azobenzene-derived coordination polymers for redox-mediated integration of CO2 capture and electrolysis",
+      "authors": [
+        "Yanjie Fang",
+        "Mengjie Li",
+        "Yingke Wen",
+        "Peng Li",
+        "Yifan Gao",
+        "Tianyi Ma",
+        "Bing Shan"
+      ],
+      "date": "2026-02-23",
+      "datePrecision": "day",
+      "createdDate": "2026-02-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "2",
+        "pages": "211-222",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01487-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01487-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01488-w",
+      "title": "Mixed-valence Co0/IIOx clusters on silicalite-1 facilitate propane dehydrogenation to propene",
+      "authors": [
+        "Qiyang Zhang",
+        "Yuming Li",
+        "Xinxin Tian",
+        "Vita A. Kondratenko",
+        "Elizaveta A. Fedorova",
+        "Tong Yang",
+        "Xiangnong Ding",
+        "Dmitry E. Doronkin",
+        "Dan Zhao",
+        "Chun Deng",
+        "Huihui Chen",
+        "Shutao Xu",
+        "Anna Zanina",
+        "Stephan Bartling",
+        "Tatiana Otroshchenko",
+        "Yajun Wang",
+        "Zhen Zhao",
+        "Chunming Xu",
+        "Guiyuan Jiang",
+        "Haijun Jiao",
+        "Evgenii V. Kondratenko"
+      ],
+      "date": "2026-02-23",
+      "datePrecision": "day",
+      "createdDate": "2026-02-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "269-280",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01488-w"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01488-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01490-2",
+      "title": "Lanthanides save non-noble catalysts in acid",
+      "authors": [
+        "Wei Hu",
+        "Ailong Li"
+      ],
+      "date": "2026-02-26",
+      "datePrecision": "day",
+      "createdDate": "2026-02-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "2",
+        "pages": "98-99",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01490-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01490-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01493-z",
+      "title": "Structure–function and mechanistic analyses of nickel-dependent sulfonamide synthase",
+      "authors": [
+        "Yuhao Zhu",
+        "Takahiro Mori",
+        "Henrik P. H. Wong",
+        "Takayoshi Awakawa",
+        "Sam P. de Visser",
+        "Ikuro Abe"
+      ],
+      "date": "2026-02-23",
+      "datePrecision": "day",
+      "createdDate": "2026-02-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "295-306",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01493-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01493-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01494-y",
+      "title": "Synthesis of α,α-diheteroatomic carboxylic acids",
+      "authors": [],
+      "date": "2026-02-12",
+      "datePrecision": "day",
+      "createdDate": "2026-02-12",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "2",
+        "pages": "100-101",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01494-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01494-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01495-x",
+      "title": "Publisher Correction: Continuity of reaction kinetics across the pressure and materials gaps in CO oxidation on FeO–Pt interfaces",
+      "authors": [
+        "Weipeng Shao",
+        "Yanxiao Ning",
+        "Wenjie Liao",
+        "Xin Yu",
+        "Bowen Zhu",
+        "Yun Liu",
+        "Yi Zhang",
+        "Liang Yu",
+        "Qingfei Liu",
+        "Hao Chen",
+        "Lunjia Zhang",
+        "Weiwen Meng",
+        "Xuan Wang",
+        "Mingshu Chen",
+        "Qiang Fu",
+        "Ping Liu",
+        "Fan Yang",
+        "Xinhe Bao"
+      ],
+      "date": "2026-02-02",
+      "datePrecision": "day",
+      "createdDate": "2026-02-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "2",
+        "pages": "224-224",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01495-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01495-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01496-w",
+      "title": "Iron-catalysed carbene and carbene radical cascade reactions for the synthesis of carbocyclic molecules",
+      "authors": [
+        "Xinke Zhang",
+        "Minghan Yao",
+        "Kewei Chen",
+        "Yuecheng Weng",
+        "Wenhua Zhang",
+        "Andreas W. Ehlers",
+        "Bas de Bruin",
+        "Xinfang Xu"
+      ],
+      "date": "2026-02-20",
+      "datePrecision": "day",
+      "createdDate": "2026-02-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "2",
+        "pages": "184-195",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01496-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01496-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01499-7",
+      "title": "Quantum-sensing-enabled in situ imaging of free radicals in chemical reactions",
+      "authors": [
+        "Yibo Yang",
+        "Zengrong Zhou",
+        "Yang Xu",
+        "Sijin Li",
+        "Feihao Zhang",
+        "Zihan Mao",
+        "Chunxiao Zhao",
+        "Wenjing Duan",
+        "Shiyang Lyu",
+        "Yunze Zhou",
+        "Ziqing Zhang",
+        "Wenxin Zhu",
+        "Jiandong Feng"
+      ],
+      "date": "2026-02-27",
+      "datePrecision": "day",
+      "createdDate": "2026-02-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "319-327",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01499-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01499-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01500-3",
+      "title": "Author Correction: Co3O4 as full-solar-spectrum photocatalyst for selective methane conversion through reactive oxygen species control",
+      "authors": [
+        "Feiyan Xu",
+        "Luoxuan Zheng",
+        "Jianjun Zhang",
+        "Ying He",
+        "Heng Cao",
+        "Xusheng Zheng",
+        "Hermenegildo García",
+        "Jiaguo Yu"
+      ],
+      "date": "2026-02-04",
+      "datePrecision": "day",
+      "createdDate": "2026-02-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "363-363",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01500-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01500-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01502-1",
+      "title": "Mimicking enzymes",
+      "authors": [
+        "Francesco Zamberlan"
+      ],
+      "date": "2026-02-26",
+      "datePrecision": "day",
+      "createdDate": "2026-02-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "2",
+        "pages": "95-95",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01502-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01502-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01503-0",
+      "title": "A holistic view of PEC",
+      "authors": [
+        "Benjamin Martindale"
+      ],
+      "date": "2026-02-26",
+      "datePrecision": "day",
+      "createdDate": "2026-02-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "2",
+        "pages": "96-96",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01503-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01503-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01504-z",
+      "title": "Degradation through filaments",
+      "authors": [
+        "Marçal Capdevila-Cortada"
+      ],
+      "date": "2026-02-26",
+      "datePrecision": "day",
+      "createdDate": "2026-02-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "2",
+        "pages": "97-97",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01504-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01504-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-02-01",
+        "to": "2026-02-28"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
