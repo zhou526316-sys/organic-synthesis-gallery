@@ -19,7 +19,7 @@ function h(q=queue([]),inventory=inv([]),opts={}){
     const base=u.includes('local-capture-index')?inventory.tocs:inventory.figures;
     if(!raw)return base;
     const rows=(base.items||[]).filter(x=>requested.includes(x.doi.toLowerCase()));
-    return {...base,version:base.version||1,count:rows.length,items:rows,invalidFiltered:0,
+    return {...base,version:base.version||1,mediaGeneration:EPOCH,count:rows.length,items:rows,invalidFiltered:0,
       complete:true,scopeRevision:'doi-scoped-inventory-v1',scopeRequestedCount:requested.length,
       requestedDois:requested};
   }
@@ -164,7 +164,7 @@ await test('transient failure retries once then remains visibly blocked',()=>{
 await test('unavailable metadata is unknown, not an empty inventory',async()=>{
  let failed=false;const ar=[article(1)],i=inv(ar),x=h(queue(ar),i,{get:(u,g)=>{if(failed&&u.includes('/staged?'))throw Error('queue_http_503');return g(u)}});
  const first=await x.T.readMissingCaptureInventory(queue(ar));assert.equal(first.figures.complete,true);
- failed=true;const second=await x.T.readMissingCaptureInventory(queue(ar));assert.equal(second.figures,null);assert.ok(second.errors.some(e=>e.includes('503')));
+ failed=true;const second=await x.T.readMissingCaptureInventory(queue(ar));assert.equal(second.figures.complete,false);assert.ok(second.errors.some(e=>e.includes('503')));
 });
 await test('initial transient stage inventory503 recovers in same click',async()=>{
  let fails=0;const ar=[article(1)],i=inv(ar);i.media.items[0].tocStored=false;
