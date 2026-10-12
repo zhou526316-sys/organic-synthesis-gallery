@@ -1,0 +1,861 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2026-03-01",
+    "to": "2026-03-31"
+  },
+  "checkedAt": "2026-10-12T09:07:02.450Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "lane": "publication",
+        "total": 17,
+        "count": 17,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 17,
+      "count": 17,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 17,
+      "openalex": 17
+    }
+  },
+  "candidateCount": 17,
+  "alreadyPublished": 0,
+  "unreviewed": 17,
+  "records": [
+    {
+      "doi": "10.1038/s41929-026-01486-y",
+      "title": "Electrochemical imaging of thermochemical catalysis",
+      "authors": [
+        "Xiangdong Xu",
+        "William C. Howland",
+        "Daniel Martín-Yerga",
+        "Cole S. Cadaram",
+        "Deiaa M. Harraz",
+        "Geoff D. West",
+        "Patrick R. Unwin",
+        "Yogesh Surendranath"
+      ],
+      "date": "2026-03-05",
+      "datePrecision": "day",
+      "createdDate": "2026-03-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "307-318",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01486-y"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01486-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01489-9",
+      "title": "Structural insights into metallocluster trafficking in the nitrogenase assembly scaffold NifEN",
+      "authors": [
+        "Bryan Neumann",
+        "Kristal A. Brandon",
+        "Robert Quechol",
+        "Diana S. Suder",
+        "Chi Chung Lee",
+        "Yimo Yang",
+        "Kamil Górecki",
+        "Jared A. Wiig",
+        "Yilin Hu",
+        "Shane Gonen",
+        "Markus W. Ribbe"
+      ],
+      "date": "2026-03-03",
+      "datePrecision": "day",
+      "createdDate": "2026-03-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "281-294",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01489-9"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01489-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01492-0",
+      "title": "The return of the nickel(I) isocyanide",
+      "authors": [
+        "Ting-Hsuan Wang",
+        "Chen-Hsun Hung",
+        "Tiow-Gan Ong"
+      ],
+      "date": "2026-03-27",
+      "datePrecision": "day",
+      "createdDate": "2026-03-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "234-236",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01492-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01492-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01498-8",
+      "title": "Gating the nitrogenase cofactor",
+      "authors": [
+        "Fang Liu",
+        "Zehong Zhao",
+        "Youjun Zhang"
+      ],
+      "date": "2026-03-26",
+      "datePrecision": "day",
+      "createdDate": "2026-03-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "240-241",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01498-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01498-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01501-2",
+      "title": "Strain boosts propanol electrosynthesis from CO on copper",
+      "authors": [
+        "Min Wang",
+        "Anna Loiudice",
+        "Enric Ibáñez-Alé",
+        "Krishna Kumar",
+        "Dragos Stoian",
+        "Zan Lian",
+        "Ali Shayesteh Zeraati",
+        "Xiaodong Li",
+        "Petru Albertini",
+        "Ludovic Zaza",
+        "Jari Leemans",
+        "David Sinton",
+        "Núria López",
+        "Raffaella Buonsanti"
+      ],
+      "date": "2026-03-16",
+      "datePrecision": "day",
+      "createdDate": "2026-03-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "378-388",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01501-2"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01501-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01505-y",
+      "title": "Enantioselective difluoromethylation of unactivated alkyl halides via a formal nickel(II/IV) cycle",
+      "authors": [
+        "Xian Zhao",
+        "Lingfeng Yin",
+        "Chia-Jung Yang",
+        "Andrew T. Poore",
+        "Xinyu Zhang",
+        "Stephen C. Yachuw",
+        "Chao Wang",
+        "Xiao Wang",
+        "Hairong Guan",
+        "Jeanette A. Krause",
+        "Mu-Jeng Cheng",
+        "Shiliang Tian",
+        "Wei Liu"
+      ],
+      "date": "2026-03-09",
+      "datePrecision": "day",
+      "createdDate": "2026-03-09",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "328-337",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01505-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01505-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01506-x",
+      "title": "Exploring the landscape of methanol-to-hydrocarbons conversion catalysts",
+      "authors": [
+        "Vladimir Paunović",
+        "Georg Liesche",
+        "Kai Sundmacher",
+        "Jeroen A. van Bokhoven"
+      ],
+      "date": "2026-03-23",
+      "datePrecision": "day",
+      "createdDate": "2026-03-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "348-362",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01506-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01506-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01507-w",
+      "title": "Photo-enhanced spillover hydrogenation over semiconductor-supported Pd nanocatalysts",
+      "authors": [
+        "Baoying Yang",
+        "Kunlong Liu",
+        "Shengyang Zhong",
+        "Meirong Huang",
+        "Jian-Jie Ma",
+        "Yi-Yu Chen",
+        "Sung-Fu Hung",
+        "Yidong Hou",
+        "Masakazu Anpo",
+        "Jimmy C. Yu",
+        "Jinshui Zhang",
+        "Xinchen Wang"
+      ],
+      "date": "2026-03-09",
+      "datePrecision": "day",
+      "createdDate": "2026-03-09",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "338-347",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01507-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01507-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01508-9",
+      "title": "Enabling open and FAIR catalysis data with standardized data structures",
+      "authors": [
+        "Julia Schumann",
+        "Hampus Näsström",
+        "Michael Götte",
+        "Lauri Himanen",
+        "Abdulrhman Moshantaf",
+        "Markus Scheidgen",
+        "José A. Márquez",
+        "Claudia Draxl",
+        "Annette Trunschke"
+      ],
+      "date": "2026-03-27",
+      "datePrecision": "day",
+      "createdDate": "2026-03-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "225-229",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01508-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01508-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01509-8",
+      "title": "A new era in operando",
+      "authors": [
+        "Sungin Kim",
+        "Haichuan Zhang",
+        "Qian Chen",
+        "Jungwon Park",
+        "Dongsheng Li",
+        "Yao Yang"
+      ],
+      "date": "2026-03-27",
+      "datePrecision": "day",
+      "createdDate": "2026-03-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "245-247",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01509-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01509-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01510-1",
+      "title": "Reality check on propane dehydrogenation",
+      "authors": [
+        "Giovanni Pampararo",
+        "Michiel Dusselier"
+      ],
+      "date": "2026-03-27",
+      "datePrecision": "day",
+      "createdDate": "2026-03-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "237-239",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01510-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01510-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01511-0",
+      "title": "Nickel-driven sulfonamide biosynthesis",
+      "authors": [
+        "Fabian Willenborg",
+        "Amy E. Fraley"
+      ],
+      "date": "2026-03-27",
+      "datePrecision": "day",
+      "createdDate": "2026-03-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "242-244",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01511-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01511-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01512-z",
+      "title": "Molecular-scale interactions in heterogeneous (photo)electrocatalysis",
+      "authors": [
+        "Arnold Gaje",
+        "Reshma Rao",
+        "Camilo A. Mesa",
+        "Niels Keller",
+        "Laia Francàs",
+        "James R. Durrant",
+        "Ernest Pastor"
+      ],
+      "date": "2026-03-27",
+      "datePrecision": "day",
+      "createdDate": "2026-03-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "248-256",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01512-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01512-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01516-9",
+      "title": "Catalysis shines on arsenic minerals",
+      "authors": [
+        "Jan-Stefan Völler"
+      ],
+      "date": "2026-03-27",
+      "datePrecision": "day",
+      "createdDate": "2026-03-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "233-233",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01516-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01516-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01517-8",
+      "title": "Diastereocontrolling macrocylization",
+      "authors": [
+        "Francesco Zamberlan"
+      ],
+      "date": "2026-03-27",
+      "datePrecision": "day",
+      "createdDate": "2026-03-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "231-231",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01517-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01517-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01518-7",
+      "title": "And yet it catalyses",
+      "authors": [
+        "Davide Esposito"
+      ],
+      "date": "2026-03-27",
+      "datePrecision": "day",
+      "createdDate": "2026-03-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "232-232",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01518-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01518-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01519-6",
+      "title": "Overlapping fields",
+      "authors": [
+        "Marçal Capdevila-Cortada"
+      ],
+      "date": "2026-03-27",
+      "datePrecision": "day",
+      "createdDate": "2026-03-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "3",
+        "pages": "230-230",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01519-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01519-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

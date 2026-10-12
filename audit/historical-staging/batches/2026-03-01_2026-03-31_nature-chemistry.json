@@ -1,0 +1,1463 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Chemistry",
+  "issns": [
+    "1755-4330",
+    "1755-4349"
+  ],
+  "range": {
+    "from": "2026-03-01",
+    "to": "2026-03-31"
+  },
+  "checkedAt": "2026-10-12T09:07:04.846Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "1755-4330",
+        "lane": "publication",
+        "total": 29,
+        "count": 29,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1755-4349",
+        "lane": "publication",
+        "total": 29,
+        "count": 29,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 29,
+      "count": 29,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 29,
+      "openalex": 29
+    }
+  },
+  "candidateCount": 29,
+  "alreadyPublished": 0,
+  "unreviewed": 29,
+  "records": [
+    {
+      "doi": "10.1038/s41557-026-02064-2",
+      "title": "Mineral-to-molecule arsenic transfer via photoredox catalysis",
+      "authors": [
+        "Yandong Wang",
+        "Chengzhi Ge",
+        "Frank Glorius",
+        "Zhuangzhi Shi"
+      ],
+      "date": "2026-03-03",
+      "datePrecision": "day",
+      "createdDate": "2026-03-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "707-714",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02064-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02064-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02065-1",
+      "title": "Photocatalytic synthesis of organoarsenicals directly from minerals",
+      "authors": [],
+      "date": "2026-03-04",
+      "datePrecision": "day",
+      "createdDate": "2026-03-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "623-624",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02065-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02065-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02078-w",
+      "title": "Quantum interference between direct and indirect reaction paths in the photodissociation of HOD",
+      "authors": [
+        "Junyan Wang",
+        "Zijie Luo",
+        "Linsen Zhou",
+        "Xixi Hu",
+        "Zhenxing Li",
+        "Hua Guo",
+        "Shanyu Han",
+        "Daiqian Xie",
+        "Kaijun Yuan",
+        "Xueming Yang"
+      ],
+      "date": "2026-03-03",
+      "datePrecision": "day",
+      "createdDate": "2026-03-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "749-755",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02078-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02078-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02080-2",
+      "title": "A natural neurotransmitter with negative consequences",
+      "authors": [
+        "Lata Gautam",
+        "Michael D. Cole",
+        "Agatha Grela"
+      ],
+      "date": "2026-03-06",
+      "datePrecision": "day",
+      "createdDate": "2026-03-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "3",
+        "pages": "606-606",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02080-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02080-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02081-1",
+      "title": "A seminar story",
+      "authors": [
+        "Shira Joudan"
+      ],
+      "date": "2026-03-06",
+      "datePrecision": "day",
+      "createdDate": "2026-03-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "3",
+        "pages": "429-430",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02081-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02081-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02082-0",
+      "title": "Generating extended foldamer dye stacks and unravelling their evolving exciton dynamics",
+      "authors": [
+        "Leander Ernst",
+        "Yongseok Hong",
+        "Hongwei Song",
+        "Wei Zhang",
+        "Elisabeth Lass",
+        "Dongho Kim",
+        "Frank Würthner"
+      ],
+      "date": "2026-03-23",
+      "datePrecision": "day",
+      "createdDate": "2026-03-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "5",
+        "pages": "923-930",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02082-0"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02082-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02084-y",
+      "title": "Recoding multiple rare codons enables the simultaneous incorporation of up to five distinct noncanonical amino acids",
+      "authors": [
+        "Yu Fang",
+        "Wei Yu",
+        "Junjie Li",
+        "Lihui Lao",
+        "Ying Yuan",
+        "Yulin Chen",
+        "Wenlong Ding",
+        "Shixian Lin"
+      ],
+      "date": "2026-03-13",
+      "datePrecision": "day",
+      "createdDate": "2026-03-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "695-706",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02084-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02084-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02085-x",
+      "title": "Redefining the mammalian genetic code to add five distinct synthetic amino acids",
+      "authors": [],
+      "date": "2026-03-18",
+      "datePrecision": "day",
+      "createdDate": "2026-03-18",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "621-622",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02085-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02085-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02086-w",
+      "title": "Biocatalytic site- and stereoselective carbonyl desaturation for late-stage functionalization of cyclic ketones",
+      "authors": [
+        "Shixuan Cao",
+        "Yueyue Zhu",
+        "Jincheng Lei",
+        "Rupeng Dai",
+        "Tianyu Zhu",
+        "Yuxuan Ye"
+      ],
+      "date": "2026-03-13",
+      "datePrecision": "day",
+      "createdDate": "2026-03-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "731-740",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02086-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02086-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02087-9",
+      "title": "Superspreading and ultra-infiltrative coacervate mediates strong underwater adhesion on hydrated and lipidic substrates",
+      "authors": [
+        "Bo Yi",
+        "Hao Li",
+        "Sirong Chen",
+        "Honghui Lian",
+        "Fengming Tan",
+        "Haiyang Yao",
+        "Xiayi Xu",
+        "Kunyu Zhang",
+        "Pengchao Zhao",
+        "Liming Bian"
+      ],
+      "date": "2026-03-30",
+      "datePrecision": "day",
+      "createdDate": "2026-03-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "790-799",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02087-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02087-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02088-8",
+      "title": "Radical water opens parallel pathways in CO2 electrocatalysis",
+      "authors": [
+        "Alessandro Senocrate"
+      ],
+      "date": "2026-03-18",
+      "datePrecision": "day",
+      "createdDate": "2026-03-18",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "611-612",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02088-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02088-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02089-7",
+      "title": "Photoinduced electron-transfer distance is controlled by the driving force in solid-state organic donor–acceptor systems",
+      "authors": [
+        "Leo Romanetz",
+        "Melissa K. Gish",
+        "Taylor J. Aubry",
+        "Garry Rumbles",
+        "Obadiah G. Reid"
+      ],
+      "date": "2026-03-25",
+      "datePrecision": "day",
+      "createdDate": "2026-03-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "5",
+        "pages": "949-958",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02089-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02089-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02090-0",
+      "title": "Amino acid composition drives aggregation during peptide synthesis",
+      "authors": [
+        "Bálint Tamás",
+        "Marvin Alberts",
+        "Teodoro Laino",
+        "Nina Hartrampf"
+      ],
+      "date": "2026-03-20",
+      "datePrecision": "day",
+      "createdDate": "2026-03-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "677-685",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02090-0"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02090-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02091-z",
+      "title": "Spontaneous trisulfide metathesis in polar aprotic solvents",
+      "authors": [
+        "Harshal D. Patel",
+        "Alfrets D. Tikoalu",
+        "James N. Smith",
+        "Zhipeng Pei",
+        "Samuel J. Tonkin",
+        "Ryan Shapter",
+        "Peiyao Yan",
+        "Steven Tsoukatos",
+        "Witold M. Bloch",
+        "Martin R. Johnston",
+        "Jeffrey R. Harmer",
+        "Christopher T. Gibson",
+        "Michael V. Perkins",
+        "Tom Hasell",
+        "Michelle L. Coote",
+        "Zhongfan Jia",
+        "Justin M. Chalker"
+      ],
+      "date": "2026-03-13",
+      "datePrecision": "day",
+      "createdDate": "2026-03-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1249-1258",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02091-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02091-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02092-y",
+      "title": "On-surface radical ring-opening polymerization produces ultralong poly(para-phenylene) for access to non-benzenoid carbon nanoribbons",
+      "authors": [
+        "Qitang Fan",
+        "Qigang Zhong",
+        "Jan-Niclas Luy",
+        "Jakob Schramm",
+        "Lukas Ruppenthal",
+        "Wenhui Leng",
+        "Daniel Ebeling",
+        "Ralf Tonner-Zech",
+        "André Schirmeisen",
+        "J.Michael Gottfried"
+      ],
+      "date": "2026-03-16",
+      "datePrecision": "day",
+      "createdDate": "2026-03-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "5",
+        "pages": "959-966",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02092-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02092-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02093-x",
+      "title": "Discovery of chirally dependent protein modifications by D- and L-2-hydroxyglutarates",
+      "authors": [
+        "Zheng Zhang",
+        "Yi-Kai Liu",
+        "Zhuojun Luo",
+        "Meng-Ju Wu",
+        "Claudia N. Evans",
+        "Zihan Qu",
+        "Fanglei Xue",
+        "Zhijian Wang",
+        "Lia Stanciu",
+        "Zhong-Yin Zhang",
+        "Elizabeth I. Parkinson",
+        "Nabeel Bardeesy",
+        "W. Andy Tao"
+      ],
+      "date": "2026-03-17",
+      "datePrecision": "day",
+      "createdDate": "2026-03-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "6",
+        "pages": "1033-1041",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02093-x"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02093-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02095-9",
+      "title": "Organocatalytic enantioselective synthesis of S(IV)-stereogenic sulfinamides enabled by an air-stable chiral phosphine",
+      "authors": [
+        "Chenxiao Qian",
+        "Yuyang Chen",
+        "Baocheng Wang",
+        "Tao Wang",
+        "Chaoshen Zhang",
+        "Zhenyang Lin",
+        "Jianwei Sun"
+      ],
+      "date": "2026-03-10",
+      "datePrecision": "day",
+      "createdDate": "2026-03-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "6",
+        "pages": "1102-1111",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02095-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02095-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02096-8",
+      "title": "Chemical recycling of hydrofluorocarbons by transfer fluorination",
+      "authors": [
+        "Niko A. Jenek",
+        "Sarah L. Brock",
+        "Jiahuang Mao",
+        "Amanda A. Fogh",
+        "Andreas Phanopoulos",
+        "Mark R. Crimmin"
+      ],
+      "date": "2026-03-13",
+      "datePrecision": "day",
+      "createdDate": "2026-03-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "5",
+        "pages": "899-904",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02096-8"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02096-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02097-7",
+      "title": "Collective synthesis of 1,2,4-trisubstituted, meta- and ortho-substituted arene bioisosteres from bicyclobutanes",
+      "authors": [
+        "Feng Wu",
+        "Ji-Jie Wang",
+        "Yuanjiu Xiao",
+        "Quanxin Peng",
+        "Yu-Jie Li",
+        "Keren Peng",
+        "Qianlan Han",
+        "Mengran Wei",
+        "Yu Qian",
+        "Wei Zhang",
+        "Guoqiang Wang",
+        "Jian-Jun Feng"
+      ],
+      "date": "2026-03-03",
+      "datePrecision": "day",
+      "createdDate": "2026-03-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "6",
+        "pages": "1062-1074",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02097-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02097-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02101-0",
+      "title": "Supramolecular assembly of molecular wires alternating crown ethers and metal–halide complexes",
+      "authors": [
+        "Heqing Zhu",
+        "Cheng Zhu",
+        "Han K. D. Le",
+        "Daniel Chabeda",
+        "Bernard Field",
+        "Chuxi Wen",
+        "Alexander M. Oddo",
+        "Yuxin Jiang",
+        "Lihini Jayasinghe",
+        "Yu Shan",
+        "Lior Verbitsky",
+        "Harishankar Jayakumar",
+        "Sinéad M. Griffin",
+        "Eran Rabani",
+        "Peidong Yang"
+      ],
+      "date": "2026-03-30",
+      "datePrecision": "day",
+      "createdDate": "2026-03-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "639-647",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02101-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02101-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02102-z",
+      "title": "Non-genetic DNAs as programmable molecular baits",
+      "authors": [],
+      "date": "2026-03-17",
+      "datePrecision": "day",
+      "createdDate": "2026-03-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "6",
+        "pages": "990-991",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02102-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02102-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02103-y",
+      "title": "Distinguishing concerted and sequential proton–electron transfer",
+      "authors": [
+        "Evan Z. Carlson",
+        "William C. Chueh"
+      ],
+      "date": "2026-03-24",
+      "datePrecision": "day",
+      "createdDate": "2026-03-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "615-616",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02103-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02103-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02104-x",
+      "title": "Isolated and H2-reduced Anderson clusters catalyse low-temperature hydrogenation of CO2 to methanol",
+      "authors": [
+        "Qin Liu",
+        "S. M. Gulam Rabbani",
+        "Zhenhao Hou",
+        "Zhihengyu Chen",
+        "Haofan Yang",
+        "Wentuan Bi",
+        "Karena W. Chapman",
+        "Rachel B. Getman",
+        "Joseph T. Hupp"
+      ],
+      "date": "2026-03-23",
+      "datePrecision": "day",
+      "createdDate": "2026-03-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "6",
+        "pages": "1142-1150",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02104-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02104-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02105-w",
+      "title": "Expanding diversity in chemical space",
+      "authors": [
+        "Guillermo Restrepo"
+      ],
+      "date": "2026-03-19",
+      "datePrecision": "day",
+      "createdDate": "2026-03-19",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "607-608",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02105-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02105-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02106-9",
+      "title": "Exploring bacterial cytochrome P450s for selective activation of aliphatic C–H bonds in pentacyclic triterpenoids",
+      "authors": [
+        "Xiaowei Zhang",
+        "Hongwei Chen",
+        "Yaxin Wang",
+        "Shihan Xie",
+        "Zengyuan Wang",
+        "Jialiang Qian",
+        "Xiaoxu Lin",
+        "Fang-Ru Li",
+        "Xingming Pan",
+        "Hui-Min Xu",
+        "Yong Liang",
+        "Liao-Bin Dong"
+      ],
+      "date": "2026-03-30",
+      "datePrecision": "day",
+      "createdDate": "2026-03-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "6",
+        "pages": "1133-1141",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02106-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02106-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02108-7",
+      "title": "A stable, crystalline nitrogen chain radical",
+      "authors": [
+        "Michael J. Zdilla"
+      ],
+      "date": "2026-03-31",
+      "datePrecision": "day",
+      "createdDate": "2026-03-31",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "619-620",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02108-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02108-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02109-6",
+      "title": "A photochargeable semiconductor for highly efficient dehydrogenative coupling of amines",
+      "authors": [
+        "Jie Luo",
+        "Xinyu Chen",
+        "Lihini Jayasinghe",
+        "Nathan Edward Soland",
+        "Yu Shan",
+        "Arifin Luthfi Maulana",
+        "Heqing Zhu",
+        "Maria Fonseca Guzman",
+        "Alexander M. Oddo",
+        "Kiran M. Donnelly",
+        "Jihoon Choi",
+        "Julian Feijoo",
+        "Bernd Schaefer",
+        "Matthias Schmalzbauer",
+        "Rui Zhang",
+        "Fabian Seeler",
+        "Carlos Lizandara-Pueyo",
+        "Richard D. Schaller",
+        "Peidong Yang"
+      ],
+      "date": "2026-03-30",
+      "datePrecision": "day",
+      "createdDate": "2026-03-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "6",
+        "pages": "1014-1022",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02109-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02109-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02111-y",
+      "title": "Degradation of G-quadruplex-binding proteins in chromatin using G4-ligand-based proteolysis-targeting chimeras",
+      "authors": [
+        "Zixuan Wang",
+        "Xuan He",
+        "Xiaoyun Zhang",
+        "Jochen Spiegel",
+        "Sean M. Flynn",
+        "Shankar Balasubramanian"
+      ],
+      "date": "2026-03-19",
+      "datePrecision": "day",
+      "createdDate": "2026-03-19",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "6",
+        "pages": "1092-1101",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02111-y"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02111-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02119-4",
+      "title": "Machine learning-based prediction of peptide aggregation during chemical synthesis",
+      "authors": [
+        "Vikram Khipple Mulligan"
+      ],
+      "date": "2026-03-27",
+      "datePrecision": "day",
+      "createdDate": "2026-03-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "617-618",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02119-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02119-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-03-01",
+        "to": "2026-03-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
