@@ -213,6 +213,7 @@ const marker = {
   handoffFile: bundle.markerFields.handoffFile, handoffBlobSha: bundle.markerFields.handoffBlobSha,
   auditFile: bundle.markerFields.auditFile, auditBlobSha: bundle.markerFields.auditBlobSha,
   publishableDois: allPublishableDois,
+  dailyPublishableDois:bundle.markerFields.publishableDois,
   ...(historicalAdmitted.length?{
     historicalReviewFile:HISTORICAL_APPROVED_PATH,
     historicalReviewBlobSha,
