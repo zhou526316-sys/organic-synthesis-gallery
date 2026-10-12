@@ -6,6 +6,7 @@ on:
       - 'scripts/historical-text-source-audit.mjs'
       - 'scripts/historical-text-local-evaluator.mjs'
       - 'scripts/test-historical-text-search-pilot.mjs'
+      - 'scripts/test-historical-text-batch.mjs'
       - 'public/gallery-historical-text-pilot.user.js'
       - 'docs/historical-backfill-media-contract.md'
       - 'docs/historical-text-search-pilot.md'
@@ -41,9 +42,10 @@ jobs:
           node --check scripts/historical-text-source-audit.mjs
           node --check scripts/historical-text-local-evaluator.mjs
           node --check scripts/test-historical-text-search-pilot.mjs
+          node --check scripts/test-historical-text-batch.mjs
           node --check public/gallery-historical-text-pilot.user.js
       - name: Test DOI, rights, local-only media and benchmark contracts
-        run: node --test scripts/test-historical-text-search-pilot.mjs
+        run: node --test scripts/test-historical-text-search-pilot.mjs scripts/test-historical-text-batch.mjs
       - name: Choose 50 historic formal DOI without fetching any articles
         run: |
           node scripts/historical-text-source-audit.mjs --dry-run --limit=50 --output="$RUNNER_TEMP/historical-source-selection.json"
