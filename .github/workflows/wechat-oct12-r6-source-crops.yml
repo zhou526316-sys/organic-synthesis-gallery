@@ -1,0 +1,45 @@
+name: WeChat Oct12 R6 exact original figure crop candidates
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/wechat-oct12-r6-source-crops.json'
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct12-r6-original-figure-crops-only
+  cancel-in-progress: false
+jobs:
+  source-figure-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install source rasterizer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+          python3 -m pip install -q 'Pillow>=10,<13'
+      - name: Rasterize verified original-PDF chemical figures for VISUAL REVIEW ONLY
+        run: python3 ops/wechat-publisher/restore-oct12-source-crop-candidates-r6.py
+      - name: Commit image candidates ONLY to audit directory, no publisher or source manifest changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          DEST='audit/wechat-working/2026-10-12-r6-source-crop-candidates'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p "$DEST"
+            cp -a /tmp/wechat-oct12-r6-pixel-source/candidates/. "$DEST/"
+            git add -- "$DEST"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'audit: stage SHA-pinned original publication figure crops for Oct12 visual review'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
