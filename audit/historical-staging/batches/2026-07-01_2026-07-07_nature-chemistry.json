@@ -1,0 +1,275 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Chemistry",
+  "issns": [
+    "1755-4330",
+    "1755-4349"
+  ],
+  "range": {
+    "from": "2026-07-01",
+    "to": "2026-07-07"
+  },
+  "checkedAt": "2026-10-12T05:34:51.863Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "1755-4330",
+        "total": 5,
+        "count": 5,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1755-4349",
+        "total": 5,
+        "count": 5,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 5,
+      "count": 5,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 5,
+      "openalex": 5
+    }
+  },
+  "candidateCount": 5,
+  "alreadyPublished": 0,
+  "unreviewed": 5,
+  "records": [
+    {
+      "doi": "10.1038/s41557-026-02187-6",
+      "title": "First ladies of chemistry",
+      "authors": [
+        "Michelle Francl"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1156-1157",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02187-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02187-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02192-9",
+      "title": "How isoprene connects plants to global climate",
+      "authors": [
+        "Nanna Myllys",
+        "Dominika Pasik"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1348-1348",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02192-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02192-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02199-2",
+      "title": "A rechargeable non-aqueous Mg–O2 battery based on magnesium peroxide chemistry",
+      "authors": [
+        "Nan Wang",
+        "Chunyu Cui",
+        "Runjing Xu",
+        "Xiaofang Wang",
+        "Chaoxin Wu",
+        "Qihao Pu",
+        "Wentao Wang",
+        "Yongjie Cao",
+        "Mochou Liao",
+        "Fengmei Wang",
+        "Yonggang Wang",
+        "Yuhui Chen",
+        "Xiao Ji",
+        "Yongyao Xia",
+        "Fei Wang"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1669-1677",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02199-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02199-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02205-7",
+      "title": "Setting a direction for molecular motors",
+      "authors": [],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1153-1153",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02205-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02205-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02210-w",
+      "title": "Driving movement in the field of molecular machines",
+      "authors": [
+        "Joel Cejas-Sánchez",
+        "Kathryn Ashe"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1154-1155",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02210-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02210-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

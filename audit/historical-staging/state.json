@@ -4,8 +4,8 @@
   "createdAt": "2026-10-10T11:06:54.916Z",
   "cursor": {
     "range": {
-      "from": "2026-07-15",
-      "to": "2026-07-21"
+      "from": "2026-06-01",
+      "to": "2026-06-30"
     },
     "journalIndex": 0
   },
@@ -153,7 +153,55 @@
     "2026-07-22_2026-07-31_ccs-chemistry",
     "2026-07-22_2026-07-31_science-advances",
     "2026-07-22_2026-07-31_green-chemistry",
-    "2026-07-22_2026-07-31_joc"
+    "2026-07-22_2026-07-31_joc",
+    "2026-07-15_2026-07-21_jacs",
+    "2026-07-15_2026-07-21_angew",
+    "2026-07-15_2026-07-21_nature",
+    "2026-07-15_2026-07-21_science",
+    "2026-07-15_2026-07-21_nature-catalysis",
+    "2026-07-15_2026-07-21_nature-synthesis",
+    "2026-07-15_2026-07-21_nature-chemistry",
+    "2026-07-15_2026-07-21_nature-communications",
+    "2026-07-15_2026-07-21_acs-catalysis",
+    "2026-07-15_2026-07-21_organic-letters",
+    "2026-07-15_2026-07-21_chem",
+    "2026-07-15_2026-07-21_chemical-science",
+    "2026-07-15_2026-07-21_ccs-chemistry",
+    "2026-07-15_2026-07-21_science-advances",
+    "2026-07-15_2026-07-21_green-chemistry",
+    "2026-07-15_2026-07-21_joc",
+    "2026-07-08_2026-07-14_jacs",
+    "2026-07-08_2026-07-14_angew",
+    "2026-07-08_2026-07-14_nature",
+    "2026-07-08_2026-07-14_science",
+    "2026-07-08_2026-07-14_nature-catalysis",
+    "2026-07-08_2026-07-14_nature-synthesis",
+    "2026-07-08_2026-07-14_nature-chemistry",
+    "2026-07-08_2026-07-14_nature-communications",
+    "2026-07-08_2026-07-14_acs-catalysis",
+    "2026-07-08_2026-07-14_organic-letters",
+    "2026-07-08_2026-07-14_chem",
+    "2026-07-08_2026-07-14_chemical-science",
+    "2026-07-08_2026-07-14_ccs-chemistry",
+    "2026-07-08_2026-07-14_science-advances",
+    "2026-07-08_2026-07-14_green-chemistry",
+    "2026-07-08_2026-07-14_joc",
+    "2026-07-01_2026-07-07_jacs",
+    "2026-07-01_2026-07-07_angew",
+    "2026-07-01_2026-07-07_nature",
+    "2026-07-01_2026-07-07_science",
+    "2026-07-01_2026-07-07_nature-catalysis",
+    "2026-07-01_2026-07-07_nature-synthesis",
+    "2026-07-01_2026-07-07_nature-chemistry",
+    "2026-07-01_2026-07-07_nature-communications",
+    "2026-07-01_2026-07-07_acs-catalysis",
+    "2026-07-01_2026-07-07_organic-letters",
+    "2026-07-01_2026-07-07_chem",
+    "2026-07-01_2026-07-07_chemical-science",
+    "2026-07-01_2026-07-07_ccs-chemistry",
+    "2026-07-01_2026-07-07_science-advances",
+    "2026-07-01_2026-07-07_green-chemistry",
+    "2026-07-01_2026-07-07_joc"
   ],
   "attempts": [
     {
@@ -1883,6 +1931,582 @@
       "count": 50,
       "errors": [],
       "at": "2026-10-12T05:32:20.771Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_jacs",
+      "journal": "JACS",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 111,
+      "errors": [],
+      "at": "2026-10-12T05:34:14.703Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_angew",
+      "journal": "Angew",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 129,
+      "errors": [],
+      "at": "2026-10-12T05:34:16.392Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_nature",
+      "journal": "Nature",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 73,
+      "errors": [],
+      "at": "2026-10-12T05:34:17.391Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_science",
+      "journal": "Science",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 46,
+      "errors": [],
+      "at": "2026-10-12T05:34:18.891Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_nature-catalysis",
+      "journal": "Nature Catalysis",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 2,
+      "errors": [],
+      "at": "2026-10-12T05:34:19.419Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_nature-synthesis",
+      "journal": "Nature Synthesis",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 6,
+      "errors": [],
+      "at": "2026-10-12T05:34:20.169Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_nature-chemistry",
+      "journal": "Nature Chemistry",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 4,
+      "errors": [],
+      "at": "2026-10-12T05:34:20.784Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_nature-communications",
+      "journal": "Nature Communications",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 264,
+      "errors": [],
+      "at": "2026-10-12T05:34:23.938Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_acs-catalysis",
+      "journal": "ACS Catalysis",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 38,
+      "errors": [],
+      "at": "2026-10-12T05:34:24.902Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_organic-letters",
+      "journal": "Organic Letters",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 52,
+      "errors": [],
+      "at": "2026-10-12T05:34:25.772Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_chem",
+      "journal": "Chem",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 0,
+      "errors": [],
+      "at": "2026-10-12T05:34:26.311Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_chemical-science",
+      "journal": "Chemical Science",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 0,
+      "errors": [],
+      "at": "2026-10-12T05:34:27.001Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_ccs-chemistry",
+      "journal": "CCS Chemistry",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 8,
+      "errors": [],
+      "at": "2026-10-12T05:34:27.548Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_science-advances",
+      "journal": "Science Advances",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 91,
+      "errors": [],
+      "at": "2026-10-12T05:34:28.718Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_green-chemistry",
+      "journal": "Green Chemistry",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 0,
+      "errors": [],
+      "at": "2026-10-12T05:34:29.321Z"
+    },
+    {
+      "id": "2026-07-15_2026-07-21_joc",
+      "journal": "JOC",
+      "range": {
+        "from": "2026-07-15",
+        "to": "2026-07-21"
+      },
+      "status": "source_enumeration_complete",
+      "count": 22,
+      "errors": [],
+      "at": "2026-10-12T05:34:30.167Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_jacs",
+      "journal": "JACS",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 111,
+      "errors": [],
+      "at": "2026-10-12T05:34:31.656Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_angew",
+      "journal": "Angew",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 112,
+      "errors": [],
+      "at": "2026-10-12T05:34:33.171Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_nature",
+      "journal": "Nature",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 75,
+      "errors": [],
+      "at": "2026-10-12T05:34:34.579Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_science",
+      "journal": "Science",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 43,
+      "errors": [],
+      "at": "2026-10-12T05:34:35.571Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_nature-catalysis",
+      "journal": "Nature Catalysis",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 7,
+      "errors": [],
+      "at": "2026-10-12T05:34:36.077Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_nature-synthesis",
+      "journal": "Nature Synthesis",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 6,
+      "errors": [],
+      "at": "2026-10-12T05:34:36.603Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_nature-chemistry",
+      "journal": "Nature Chemistry",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 6,
+      "errors": [],
+      "at": "2026-10-12T05:34:37.399Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_nature-communications",
+      "journal": "Nature Communications",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 280,
+      "errors": [],
+      "at": "2026-10-12T05:34:39.523Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_acs-catalysis",
+      "journal": "ACS Catalysis",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 37,
+      "errors": [],
+      "at": "2026-10-12T05:34:40.153Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_organic-letters",
+      "journal": "Organic Letters",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 72,
+      "errors": [],
+      "at": "2026-10-12T05:34:41.119Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_chem",
+      "journal": "Chem",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 1,
+      "errors": [],
+      "at": "2026-10-12T05:34:41.599Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_chemical-science",
+      "journal": "Chemical Science",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 1,
+      "errors": [],
+      "at": "2026-10-12T05:34:42.380Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_ccs-chemistry",
+      "journal": "CCS Chemistry",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 16,
+      "errors": [],
+      "at": "2026-10-12T05:34:43.038Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_science-advances",
+      "journal": "Science Advances",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 77,
+      "errors": [],
+      "at": "2026-10-12T05:34:43.930Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_green-chemistry",
+      "journal": "Green Chemistry",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 1,
+      "errors": [],
+      "at": "2026-10-12T05:34:44.476Z"
+    },
+    {
+      "id": "2026-07-08_2026-07-14_joc",
+      "journal": "JOC",
+      "range": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 41,
+      "errors": [],
+      "at": "2026-10-12T05:34:45.355Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_jacs",
+      "journal": "JACS",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 113,
+      "errors": [],
+      "at": "2026-10-12T05:34:47.050Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_angew",
+      "journal": "Angew",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 105,
+      "errors": [],
+      "at": "2026-10-12T05:34:48.476Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_nature",
+      "journal": "Nature",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 70,
+      "errors": [],
+      "at": "2026-10-12T05:34:49.404Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_science",
+      "journal": "Science",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 50,
+      "errors": [],
+      "at": "2026-10-12T05:34:50.214Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_nature-catalysis",
+      "journal": "Nature Catalysis",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 3,
+      "errors": [],
+      "at": "2026-10-12T05:34:50.816Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_nature-synthesis",
+      "journal": "Nature Synthesis",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 4,
+      "errors": [],
+      "at": "2026-10-12T05:34:51.271Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_nature-chemistry",
+      "journal": "Nature Chemistry",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 5,
+      "errors": [],
+      "at": "2026-10-12T05:34:51.863Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_nature-communications",
+      "journal": "Nature Communications",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 252,
+      "errors": [],
+      "at": "2026-10-12T05:34:54.080Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_acs-catalysis",
+      "journal": "ACS Catalysis",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 41,
+      "errors": [],
+      "at": "2026-10-12T05:34:54.925Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_organic-letters",
+      "journal": "Organic Letters",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 64,
+      "errors": [],
+      "at": "2026-10-12T05:34:55.885Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_chem",
+      "journal": "Chem",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 49,
+      "errors": [],
+      "at": "2026-10-12T05:34:56.432Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_chemical-science",
+      "journal": "Chemical Science",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 0,
+      "errors": [],
+      "at": "2026-10-12T05:34:57.188Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_ccs-chemistry",
+      "journal": "CCS Chemistry",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 48,
+      "errors": [],
+      "at": "2026-10-12T05:34:57.884Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_science-advances",
+      "journal": "Science Advances",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 74,
+      "errors": [],
+      "at": "2026-10-12T05:34:58.908Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_green-chemistry",
+      "journal": "Green Chemistry",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 0,
+      "errors": [],
+      "at": "2026-10-12T05:34:59.787Z"
+    },
+    {
+      "id": "2026-07-01_2026-07-07_joc",
+      "journal": "JOC",
+      "range": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "status": "source_enumeration_complete",
+      "count": 40,
+      "errors": [],
+      "at": "2026-10-12T05:35:00.668Z"
     }
   ],
   "publishedMembershipSnapshot": 964,
@@ -1890,21 +2514,21 @@
     "processed": 48,
     "blocked": false,
     "deferredBudget": false,
-    "requests": 162,
+    "requests": 153,
     "next": {
       "range": {
-        "from": "2026-07-15",
-        "to": "2026-07-21"
+        "from": "2026-06-01",
+        "to": "2026-06-30"
       },
       "journalIndex": 0
     },
     "verifiedPublishedDois": 964,
-    "completeWindows": 144,
+    "completeWindows": 192,
     "activeSplit": null,
     "noPublication": true,
     "noPdf": true
   },
   "note": "Initialization only. No historical candidate window has yet been crawled or approved. Exact 23:00 scheduled acquisition runs from main and writes exclusively to this staging branch.",
-  "lastRunStarted": "2026-10-12T05:31:10.115Z",
-  "lastRunFinished": "2026-10-12T05:32:21.073Z"
+  "lastRunStarted": "2026-10-12T05:34:12.409Z",
+  "lastRunFinished": "2026-10-12T05:35:00.970Z"
 }

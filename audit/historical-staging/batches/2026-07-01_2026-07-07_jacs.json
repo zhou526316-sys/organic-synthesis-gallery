@@ -1,0 +1,5579 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "JACS",
+  "issns": [
+    "0002-7863",
+    "1520-5126"
+  ],
+  "range": {
+    "from": "2026-07-01",
+    "to": "2026-07-07"
+  },
+  "checkedAt": "2026-10-12T05:34:47.050Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "0002-7863",
+        "total": 113,
+        "count": 113,
+        "pages": 2,
+        "complete": true
+      },
+      {
+        "issn": "1520-5126",
+        "total": 113,
+        "count": 113,
+        "pages": 2,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 113,
+      "count": 113,
+      "pages": 2,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 113,
+      "openalex": 113
+    }
+  },
+  "candidateCount": 113,
+  "alreadyPublished": 6,
+  "unreviewed": 107,
+  "records": [
+    {
+      "doi": "10.1021/jacs.5c21118",
+      "title": "Controlled Amine-Borane Dehydropolymerization Enabled by Mechanistic Insight Using the Ir( t Bu-POCOP)H 2 Catalyst",
+      "authors": [
+        "Chloe M. Van Beek",
+        "M. Arif Sajjad",
+        "Joe C. Goodall",
+        "Catherine L. Lyall",
+        "John P. Lowe",
+        "Simon B. Duckett",
+        "J. Scott McIndoe",
+        "Charles Killeen",
+        "Guy C. Lloyd-Jones",
+        "Ulrich Hintermair",
+        "Stuart A. Macgregor",
+        "Richard E. Douthwaite",
+        "Andrew S. Weller"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "29669-29683",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.5c21118"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.5c21118",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.5c23329",
+      "title": "Quantitative Polyethylene Upcycling to Liquid Olefins over Ru-Containing Layered Zeolites",
+      "authors": [
+        "Malin Eqi",
+        "Yuqing Yang",
+        "Jiashuo Zheng",
+        "Guangjun Wu",
+        "Yuchao Chai",
+        "Landong Li"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28110-28121",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.5c23329"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.5c23329",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c00217",
+      "title": "Multiscale Neural Network Potential with Anisotropic Message Passing for the Fast and Accurate Simulation of Protein Dynamics and Enzymatic Reactions",
+      "authors": [
+        "Moritz Thürlemann",
+        "Felix Pultar",
+        "Igor Gordiy",
+        "Enrico Ruijsenaars",
+        "Sereina Riniker"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28133-28156",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c00217"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c00217",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c01728",
+      "title": "Enzyme-Responsive Chemiluminescent Probes Assembled with Iridium(III) Photosensitizers via Host–Guest Chemistry for Chemiluminescence-Induced Photodynamic Therapy",
+      "authors": [
+        "Jia-Hao Wang",
+        "Lawrence Cho-Cheung Lee",
+        "Alex Man-Hei Yip",
+        "Justin Shum",
+        "Qi-Hang Cheng",
+        "Eunice Chiu-Lam Mak",
+        "Kenneth Kam-Wing Lo"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28238-28253",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c01728"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c01728",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c01781",
+      "title": "Statistical AI Enables Precise Screening of Multielement Catalysts",
+      "authors": [
+        "Chengbo Li",
+        "Mingzhe Li",
+        "Nian Ran",
+        "Yuzhen Lv",
+        "Wei Zhou",
+        "Jianjun Liu"
+      ],
+      "date": "2026-07-04",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28254-28265",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c01781"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c01781",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c02471",
+      "title": "Systematic Catalyst Variation for Improved Stereoselective Epoxide Polymerization: Subtle Modifications Resulting in Superior Efficiency",
+      "authors": [
+        "Bai-Hao Ren",
+        "Bryce M. Lipinski",
+        "Lilliana S. Morris",
+        "Anna C. Overholts",
+        "Judy Pan",
+        "Xiao-Bing Lu",
+        "Geoffrey W. Coates"
+      ],
+      "date": "2026-07-05",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28276-28282",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c02471"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c02471",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c03149",
+      "title": "Dirac-Like Ferrimagnet Ce 3 Au 4 Ge 2 Bi 4 as a Member of a Homologous Series of Square-Net Topological Materials",
+      "authors": [
+        "Atsushi Yamashita",
+        "Ryota Mizuno",
+        "Masayuki Ochi",
+        "Tatsuhiro Kojima",
+        "Hiraku Saito",
+        "Taro Nakajima",
+        "Akiko Nakao",
+        "Motoi Kimata",
+        "Masaki Kondo",
+        "Masashi Tokunaga",
+        "Takanori Kida",
+        "Masayuki Hagiwara",
+        "Masaki Nishi",
+        "Hiroshi Murakawa",
+        "Noriaki Hanasaki",
+        "Hideaki Sakai"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28302-28309",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c03149"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c03149",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c03240",
+      "title": "Copper-Catalyzed trans -Selective Aryl-Allylation of Ynamide: An Unconventional Route to Skipped Dienes",
+      "authors": [
+        "Avijit Maity",
+        "Manoj Sethi",
+        "Vincent Gandon",
+        "Akhila K. Sahoo"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28319-28331",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c03240"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c03240",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c03392",
+      "title": "An Oxazine-Locked Covalent Organic Framework by a Tandem Pinner/Schiff Base Reaction for Hydrogen Peroxide Photosynthesis",
+      "authors": [
+        "Shijie Pan",
+        "Aodi Wang",
+        "Chao Luo",
+        "Xueling Song",
+        "Haijiao Xie",
+        "Lei Wang"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28356-28365",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c03392"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c03392",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c03722",
+      "title": "Solvent-Driven Biphasic Architectures in Polymer Gels via Polymerization-Induced Solvent Phase Separation",
+      "authors": [
+        "Yuji Kamiyama",
+        "Ryota Tamate"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "34",
+        "pages": "36414-36422",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c03722"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c03722",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c03748",
+      "title": "Bulk Ferromagnetic Icosahedral Quasicrystals without Rapid Quenching",
+      "authors": [
+        "Ryuji Tamura",
+        "Farid Labib",
+        "Kazuki Inagaki",
+        "Ryo Takeuchi",
+        "Takafumi Tsugawa",
+        "Takenori Fujii",
+        "Shintaro Suzuki",
+        "Asuka Ishikawa",
+        "Chang Liu",
+        "Minoru Kusaba",
+        "Ryo Yoshida"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "32",
+        "pages": "34154-34160",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c03748"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c03748",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c03820",
+      "title": "Alternating Magnetic Field Promotes Ammonia Cracking by Disrupting the Sabatier Limitation of Ruthenium Catalytic Species",
+      "authors": [
+        "Alexander Adogwa",
+        "Hajar Hosseini",
+        "Abby Gardner",
+        "Jacob DeWitt",
+        "Gabriel Thompson",
+        "Sijie Guo",
+        "Ewa Chukwu",
+        "Suvra S. Laha",
+        "Caiqi Wang",
+        "Santosh Kiran Balijepalli",
+        "Dominik Wierzbicki",
+        "Michael J. Zachman",
+        "Sungsik Lee",
+        "Carsten Sievers",
+        "Zili Wu",
+        "O. Thompson Mefford",
+        "Matthew M. Montemore",
+        "Ming Yang"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "29603-29609",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c03820"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c03820",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c04024",
+      "title": "Electrosynthesis of C 6 Chemicals by Propylene Oxidative Coupling on Au Surface",
+      "authors": [
+        "Meng-Jia Li",
+        "Zhuo-Wei Cheng",
+        "Dan-Dan Song",
+        "Zhi-Ming Zhang",
+        "Jin-Yu Ye",
+        "Zhi-You Zhou",
+        "Shi-Gang Sun",
+        "Tao Wang"
+      ],
+      "date": "2026-07-04",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28426-28435",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c04024"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c04024",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c04025",
+      "title": "Engineering a Thiamine-Dependent Benzoylformate Decarboxylase for Stereodivergent Radical C(sp 3 )–C(sp 3 ) Bond Formation",
+      "authors": [
+        "Zhouping Wu",
+        "Yuyan Bao",
+        "Jianlin Chun",
+        "Ruobin Sun",
+        "Yang Ming",
+        "Zihao Guo",
+        "Zhongqiu Xing",
+        "Yue Zhao",
+        "Xiaoqiang Huang"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28414-28425",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c04025"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c04025",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c04090",
+      "title": "Open- and Closed-Shell Roles of Sensitizer and Annihilator in Pseudo-Single Component Mixtures for Upconversion",
+      "authors": [
+        "Kieran D. Richards",
+        "Wenzhao Wang",
+        "Philipp Thielert",
+        "James D. Green",
+        "John M. Hudson",
+        "Claire Tonnelé",
+        "David Casanova",
+        "Yoann Olivier",
+        "Timothy J. H. Hele",
+        "Sabine Richert",
+        "Feng Li",
+        "Emrys W. Evans"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "33",
+        "pages": "35375-35385",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c04090"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c04090",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c04148",
+      "title": "Plasma-Electrocatalytic Nitrogen Reduction for Ammonia Synthesis",
+      "authors": [
+        "Tianqi Zhang",
+        "Rusen Zhou",
+        "Jungmi Hong",
+        "Jingyi Luo",
+        "Yufei Xue",
+        "Qiang Song",
+        "Haoxuan Jiang",
+        "Yuting Gao",
+        "Jieping Fan",
+        "Tianyu Li",
+        "Shuai Zhang",
+        "Jing Sun",
+        "Guoping Gao",
+        "Dingxin Liu",
+        "Tao Shao",
+        "Renwu Zhou",
+        "Patrick Cullen"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "29846-29853",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c04148"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c04148",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c04407",
+      "title": "Ampere-Level Acetylene-to-Ethylene Electrosynthesis by a Spillover-Storage-Relaxation Hydrogenation Mechanism to Overcome the Activity-Selectivity Constraint",
+      "authors": [
+        "Fanpeng Chen",
+        "Yichen He",
+        "Bo-Hang Zhao",
+        "Chuanqi Cheng",
+        "Bin Zhang"
+      ],
+      "date": "2026-07-04",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28436-28444",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c04407"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c04407",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c04469",
+      "title": "How the Unconventional Oxidation State Au 2+ Is Stabilized in the Halide Perovskite Cs 4 Au 3 Cl 12 : A First-Principles Study of Its Polaron Crystal Nature",
+      "authors": [
+        "Kazuki Morita",
+        "Andrew M. Rappe"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28454-28460",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c04469"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c04469",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c04487",
+      "title": "Catalytic Dehydrogenation Enhanced by Controlling Platinum Nanoparticle Density",
+      "authors": [
+        "Yike Wang",
+        "Wenlong Li",
+        "Liang Wang",
+        "Qilong Feng",
+        "Hang Zhou",
+        "Wentao Yuan",
+        "Hong Wang",
+        "Zhandong Wang",
+        "Peng He",
+        "Yihan Zhu",
+        "Xiao-Ming Cao",
+        "Liang Wang"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28445-28453",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c04487"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c04487",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c04559",
+      "title": "Efficient Light-Driven CO 2 Capture and Reversible Release Enabled by Metastable Photoacid-Decorated Metal–Organic Frameworks",
+      "authors": [
+        "Ao Li",
+        "Junkai Cai",
+        "Quan Xiao",
+        "Mingyu Yang",
+        "Tianqiong Ma",
+        "Chunying Duan"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28019-28024",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c04559"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c04559",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c04705",
+      "title": "Entropy-Driven Assembly of Low-Density Superlattices via Shape Camouflage",
+      "authors": [
+        "Zhiwei Sun",
+        "Tongtong Ding",
+        "Jincheng Liu",
+        "Rongqing Tan",
+        "Zhiping Zheng",
+        "Yuqiang Shi",
+        "Cong Shen",
+        "Yujiao Xiahou",
+        "Hongpeng He",
+        "Zhaoxiong Xie",
+        "Haixin Lin"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28474-28483",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c04705"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c04705",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c04898",
+      "title": "Structurally Defined Low-Coordination Single-Atom Strategy for CO 2 Photoconversion to Formic Acid",
+      "authors": [
+        "Jiajing Zhang",
+        "Yi Zhang",
+        "Mei Zheng",
+        "Yao Wu",
+        "Jun Xiong",
+        "Longcheng Zhang",
+        "Pengfei Song",
+        "Pin Song",
+        "Molly Meng-Jung Li",
+        "Wei Jiang",
+        "Jun Di",
+        "Zhichuan J. Xu"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28498-28506",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c04898"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c04898",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05074",
+      "title": "Dynamic Proton Sharing and Second-Sphere Gating Control Catalytic States in [NiFe] Hydrogenase",
+      "authors": [
+        "Shruti Moorthy",
+        "Gaurav Joshi",
+        "Abhishek Sirohiwal"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28526-28544",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05074"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05074",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05171",
+      "title": "Radical Cascades on Seawater Microdroplets Drive Atmospheric Mercury Oxidation",
+      "authors": [
+        "Qingyuan Song",
+        "Fengjie Chen",
+        "Yong Liang",
+        "Bolei Chen",
+        "Yongguang Yin",
+        "Maoyong Song",
+        "Yong Cai",
+        "Guibin Jiang"
+      ],
+      "date": "2026-07-05",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28573-28582",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05171"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05171",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05182",
+      "title": "A General Strategy for the Degradation of Nitrile-Containing Plastics and Rubbers via Nickel-Catalyzed Decyanation and Sequential Ethenolysis",
+      "authors": [
+        "Chenfei Liu",
+        "Marius D. R. Lutz",
+        "Rin Seki",
+        "Kohei Takahashi",
+        "Kyoko Nozaki"
+      ],
+      "date": "2026-07-05",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28545-28552",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05182"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05182",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05322",
+      "title": "In Situ Raman Spectroscopy Reveals the Dynamic Evolution and Ethanol Dependence of SEI Structure in Li-Mediated N 2 Reduction Reaction",
+      "authors": [
+        "En-Hui Ma",
+        "Wen-Xuan Li",
+        "Hai-Sheng Su",
+        "Yuan-Hui Xiao",
+        "Hong-Wei Li",
+        "Jin-Rui Liao",
+        "Joanna Profic-Paczkowska",
+        "Xiang Wang",
+        "Bin Ren"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28583-28591",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05322"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05322",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05402",
+      "title": "Symmetry-Enabled Optical Spin Initialization of Luminescent Organic Radical Doublet States",
+      "authors": [
+        "Sebastian M. Kopp",
+        "Yong Rui Poh",
+        "Shubham Tiwari",
+        "Ranadeb Ball",
+        "Ryan M. Young",
+        "Matthew D. Krzyaniak",
+        "Joel Yuen-Zhou",
+        "Michael R. Wasielewski"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28616-28626",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05402"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05402",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05412",
+      "title": "Skipped Dienes via Radical Allylic Heck Reaction",
+      "authors": [
+        "Anastasiia Dubrovina",
+        "Pranav Shridhar Mahulkar",
+        "Pokhriyal Yamini",
+        "Vladimir Gevorgyan"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28025-28030",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05412"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05412",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05413",
+      "title": "Large Thermo- and Mechanosalient Actuation via Cooperative Twist Elasticity-Induced Packing Motif Conversion",
+      "authors": [
+        "Kyoungtae Hwang",
+        "Indranil Bhattacharjee",
+        "Sooyeon Ra",
+        "Jin Hyeok Jang",
+        "Jinwoo Park",
+        "Haseong Kim",
+        "Minwoo Jang",
+        "Min Wook Lee",
+        "Dong Ryeol Whang",
+        "Dohyun Moon",
+        "Johannes Gierschner",
+        "Hyungbum Park",
+        "Sang Kyu Park"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28602-28615",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05413"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05413",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05502",
+      "title": "Solvent Esterification and Stoichiometric Control in Ambient-Grown FAPbI 3 Single-Crystal Solar Cells",
+      "authors": [
+        "Parinaz Moazzezi",
+        "I Teng Cheong",
+        "Kushal Dhake",
+        "Yafeng Xu",
+        "Vishal Yeddu",
+        "Mohammad Reza Kokaba",
+        "Antoine Pavesic Junior",
+        "Sergey Dayneko",
+        "Augusto Amaro",
+        "Selene Matta",
+        "Daniela Marongiu",
+        "David C. Leitch",
+        "Omar F. Mohammed",
+        "Makhsud I. Saidaminov"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28642-28650",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05502"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05502",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05735",
+      "title": "Deciphering the Halide Chemistry of Cl – and Br – in Enhancing Kinetics of Mg Plating/Stripping",
+      "authors": [
+        "Xiaochen Liu",
+        "Jiaxin Wen",
+        "Xingwang Zhao",
+        "Bo Shang",
+        "Jinglei Lei",
+        "Lingjie Li",
+        "Fusheng Pan"
+      ],
+      "date": "2026-07-04",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28660-28672",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05735"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05735",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05767",
+      "title": "Size-Selective CO 2 Activation at Rhodium Cluster Anions",
+      "authors": [
+        "Christian T. Haakansson",
+        "David J. Vesty",
+        "Peter T. Rubli",
+        "Peter D. Watson",
+        "Ellen A. Jones",
+        "Jasmin P. Justen",
+        "André Fielicke",
+        "Joost M. Bakker",
+        "Stuart R. Mackenzie"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28682-28690",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05767"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05767",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05869",
+      "title": "Photoregulated Structural Memory in Supramolecular Polymers",
+      "authors": [
+        "Franziska Helmrich",
+        "Alejandro Martínez-Manjarrés",
+        "Antonia Albers",
+        "Mario Valverde",
+        "Olivier Galangau",
+        "Gustavo Fernández"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28691-28701",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05869"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05869",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05938",
+      "title": "Enantiopurity-Controlled Magnetism in a Two-Dimensional Organic–Inorganic Material",
+      "authors": [
+        "P. Garrett Hegel",
+        "Oscar Gonzalez",
+        "Mingrui Li",
+        "Shannon S. Fender",
+        "Harishankar Jayakumar",
+        "Archana Raja",
+        "Sikhumbuzo M. Masina",
+        "Ariana Ray",
+        "Isaac M. Craig",
+        "Kevin H. Stone",
+        "D. Kwabena Bediako"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28714-28723",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05938"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05938",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05964",
+      "title": "Topological Control of Dual Protonic–Electronic Conduction in Metal–Organic Frameworks",
+      "authors": [
+        "Huilin Qing",
+        "Priyanshu Chandra",
+        "Joseph Y. M. Chan",
+        "Richard J. Staples",
+        "Tai-De Li",
+        "Weiyang Li",
+        "Katherine A. Mirica"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28742-28753",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05964"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05964",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05971",
+      "title": "Reappraising Dichloromethane: Uncovering a Hidden Coupling Reagent for Activating Carboxylic Acids in Direct Amide Synthesis",
+      "authors": [
+        "Nithin Pootheri",
+        "Abbas Haruna Umar",
+        "Sunwoo Lee"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28733-28741",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05971"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05971",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c05989",
+      "title": "Superior Selective and Fast NH 3 Adsorption of Soft Porous MOF/Ionic Liquid Composites with Ordering Phase Transitions",
+      "authors": [
+        "Haiyan Jiang",
+        "Kuilin Peng",
+        "Lu Bai",
+        "Jochi Tseng",
+        "Kun Lu",
+        "Sai Chu",
+        "Guoxiong Zhan",
+        "Shaojuan Zeng",
+        "Kenichi Otake",
+        "Ming-Shui Yao",
+        "Xiangping Zhang",
+        "Susumu Kitagawa"
+      ],
+      "date": "2026-07-05",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28724-28732",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05989"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c05989",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06009",
+      "title": "Linker Engineering toward NIR-II Metal–Organic Framework with Maximal Emission beyond 1000 nm for Inflammatory Bowel Disease Imaging",
+      "authors": [
+        "Lei Wang",
+        "Zhen-Sha Ma",
+        "Yu Chen",
+        "Jian Zhang",
+        "Kai-Yue Liu",
+        "Kang Zhou",
+        "Yuxin Guo",
+        "Lu-Lu Qu",
+        "Xiao-Yuan Liu"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28031-28036",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06009"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06009",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06089",
+      "title": "A General Strategy for Developing Si-Rhodamine-Based Fluorogenic Dyes for Advanced Bioimaging and Biosensing",
+      "authors": [
+        "Zhengda Chen",
+        "Yajie Shi",
+        "Li Jiang",
+        "Yuxin Yin",
+        "Lipeng Yang",
+        "Xinyi Huang",
+        "Ling Jiang",
+        "Wenjie Guo",
+        "Xiaoyu Liu",
+        "Rong Fu",
+        "Huining Liu",
+        "Bingkun Bao",
+        "Qiuning Lin",
+        "Yuzheng Zhao",
+        "Xianjun Chen",
+        "Yi Yang",
+        "Linyong Zhu"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28764-28775",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06089"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06089",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06120",
+      "title": "Accelerated Directional Proton-Coupled Electron Transfer Enabled by Intrinsic Dipole Field in Biomimetic α-Helical Structure",
+      "authors": [
+        "Hengyuan Bai",
+        "Weiran Zhang",
+        "Yang Li",
+        "Yutong Tang",
+        "Hao Xiong",
+        "Baige Yang",
+        "Hang Yin",
+        "Yu-Mo Zhang",
+        "Sean Xiao-An Zhang"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28812-28823",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06120"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06120",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06164",
+      "title": "Impact of Metal Heterogeneity on Multivariate and High-Entropy MOF SBUs",
+      "authors": [
+        "Rajan R. Bhawnani",
+        "Prem K. Reddy",
+        "Meagan Phister",
+        "Ankit Dhakal",
+        "Michael L. Barsoum",
+        "Naveen K. Dandu",
+        "Orlando Mendible Barreto",
+        "Roberto dos Reis",
+        "Kalpani Werellapatha",
+        "Ryan Davis",
+        "Kevin H. Stone",
+        "Yamil Colón",
+        "Anh T. Ngo",
+        "Gaurav Giri",
+        "Vinayak P. Dravid",
+        "Meenesh R. Singh"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28788-28801",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06164"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06164",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06165",
+      "title": "Observing Kinetic Selectivity in Anthracene Photodimerization through Selective Quenching by Excited States of Proximate Rare Earth Cations",
+      "authors": [
+        "Kevin P. Ruoff",
+        "Mitchell H. Zembower",
+        "Tyler G. Gong",
+        "Tuna Sagdan",
+        "Morgan K. Noody",
+        "Gary Chen",
+        "Michael R. Gau",
+        "Alexandra M. Bacon",
+        "Cherie R. Kagan",
+        "Eric J. Schelter"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28802-28811",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06165"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06165",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06376",
+      "title": "Correlating Interfacial Li + Exchange Rate with Reversible Cycling of Lithium Metal Anodes",
+      "authors": [
+        "Mingming Tao",
+        "Hongxin Lin",
+        "Wenhao Wu",
+        "Cong Zhong",
+        "Yingao Zhou",
+        "Yuxi Deng",
+        "Weilin Huang",
+        "Peizhao Shan",
+        "Junning Chen",
+        "Haoyue Zhong",
+        "Danhui Zhao",
+        "Yanxin Chen",
+        "Yanting Jin",
+        "Xuefeng Wang",
+        "Riqiang Fu",
+        "Yong Yang"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28824-28837",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06376"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06376",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06402",
+      "title": "Utilizing Vibrational Probes to Monitor Polaron–Anion Interactions during Polymer Electrochemical Doping",
+      "authors": [
+        "Ryan J. Spencer",
+        "Dominic A. Fico",
+        "Lucas Q. Flagg",
+        "Zainab A. Adeoluwa",
+        "Caitlyn Clark",
+        "Abdul Rashid Umar",
+        "Steven O. Mansoorabadi",
+        "Christopher Grieco"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30037-30050",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06402"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06402",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06437",
+      "title": "Interfacial Nucleation Pathways Governing Polymorph Selection Revealed by Synchrotron-Based In Situ GIWAXS and Molecular Simulations",
+      "authors": [
+        "Yu Liu",
+        "Xu Zhang",
+        "Xingfan Zhang",
+        "Mingdong Zhou",
+        "Xiaolong Li",
+        "Fumin Wang",
+        "Xubin Zhang",
+        "Alexey A. Sokol",
+        "You Lu",
+        "Thomas W. Keal",
+        "Weiwei Tang",
+        "C. Richard A. Catlow",
+        "Junbo Gong"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30224-30237",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06437"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06437",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06488",
+      "title": "Stereoselective C1-Arylation of Native Sugars via Ligand-Promoted Nickel Catalysis",
+      "authors": [
+        "Heng Lu",
+        "Yuxin Li",
+        "Ning Ma",
+        "Ran Chen",
+        "Yang Wang",
+        "Mingjie Chen",
+        "Wenliang Zhang",
+        "Xiaoqin Wang",
+        "Haojie Jin",
+        "Chunyong Ding",
+        "Shijie Chen",
+        "Ao Zhang",
+        "Zhoulong Fan"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28848-28857",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06488"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06488",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06496",
+      "title": "Direct Evidence of Photoinduced Protonation-Site Switching in Flavins",
+      "authors": [
+        "Sotaro Ohara",
+        "Temma Yazawa",
+        "Keisuke Hirata",
+        "Jun-Hao Yu",
+        "Qian-Rui Huang",
+        "Jer-Lai Kuo",
+        "Gilles Grégoire",
+        "Masaaki Fujii",
+        "Otto Dopfer",
+        "Shun-ichi Ishiuchi"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "34",
+        "pages": "36640-36647",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06496"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06496",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06612",
+      "title": "Optically Detected Magnetic Resonance of a Cerium-Doped Nanocrystal: Toward the Generality of a Direct Spin-Optical Interface",
+      "authors": [
+        "Xing-Quan Tao",
+        "Geng-Yuan Li",
+        "Yu-Ying Liu",
+        "Qing-Song Deng",
+        "Yu-Qian Liu",
+        "Yin Wu",
+        "Yuan-Kai Guo",
+        "Xiao-Ming Wei",
+        "Yuzhen Wang",
+        "Zhiguo Xia",
+        "Dengfeng Yang",
+        "Wei Zheng",
+        "Yi-Lan Jiang",
+        "Yu Han",
+        "Zheng Liu",
+        "Song Gao",
+        "Shang-Da Jiang",
+        "Ye-Xin Wang"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28914-28926",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06612"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06612",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06642",
+      "title": "Unlocking Electronic Spatiotemporal Confinement to Activate FeMn-Based Phosphates for High Energy Density and Ultra-Wide Temperature Na Storage",
+      "authors": [
+        "Yan Liu",
+        "Xiao-Tong Wang",
+        "Heng Zhang",
+        "Jin-Ling Liu",
+        "Miao Du",
+        "Han-Hao Liu",
+        "Xin-Yi Zhang",
+        "Dai-Huo Liu",
+        "Zhen-Yi Gu",
+        "Xing-Long Wu"
+      ],
+      "date": "2026-07-05",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28893-28904",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06642"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06642",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06671",
+      "title": "Record Carrier Diffusion Lengths in Large, Dense Nonfullerene Electron Acceptor Crystals Grown from Polar Aromatic Solvents",
+      "authors": [
+        "Tamir Halevi",
+        "Thomas A. L. Romain",
+        "Paul A. Hume",
+        "Peter N. Horton",
+        "Simon J. Coles",
+        "Robert L. Harniman",
+        "Ava Blandford",
+        "James A. Smith",
+        "Richard Cousins",
+        "Dominic Alibhai",
+        "Andrew J. Orr-Ewing",
+        "Simon R. Hall",
+        "Michael B. Price"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28881-28892",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06671"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06671",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06683",
+      "title": "Spatially Decoupled Capture-Conversion Architectures for Photocatalytic Uranium Extraction from Dilute Wastewater",
+      "authors": [
+        "Zhichao Lin",
+        "Weijian Xiao",
+        "Xiaohang Zong",
+        "Daochuan Jiang",
+        "Hongzhi Zheng",
+        "Miao Yu",
+        "Xiaojun Wang",
+        "Jia Zhu"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30102-30111",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06683"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06683",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06776",
+      "title": "Topologically Programmed Dual-Channel Covalent Organic Frameworks Decouple Gas and Ion Fluxes for Acidic CO 2 Electroreduction",
+      "authors": [
+        "Kai Lei",
+        "Xin Zi",
+        "Jianrui Zhang",
+        "Yanteng Xiao",
+        "Yaqiong Su",
+        "Min Liu",
+        "Bao Yu Xia"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28927-28936",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06776"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06776",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c06938",
+      "title": "Pressure-Induced Superconductivity at 15 K in van-der-Waals Ferroelectric CuInP 2 S 6",
+      "authors": [
+        "Yuqing Zhang",
+        "Bin Lei",
+        "Yikang Li",
+        "Yanjun Li",
+        "Qingyuan Liu",
+        "Rongqi Wu",
+        "Xiaopei Cao",
+        "Ruoxuan Xi",
+        "Fangzhou Jiang",
+        "Quan Zhuang",
+        "Haohao Hong",
+        "Zhao Liu",
+        "Jianjun Ying",
+        "Xianhui Chen"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28965-28973",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c06938"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c06938",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07093",
+      "title": "Gas–Responsive Metal–Organic Frameworks for Adaptive Thermal Energy Storage with Tunable Charge–Discharge Temperatures",
+      "authors": [
+        "María Gelpi",
+        "David González-Novo",
+        "Lorena Alonso-Marañón",
+        "Javier García-Ben",
+        "Álvaro Baaliña",
+        "Sonia Zaragoza",
+        "Julian Walker",
+        "Charles James McMonagle",
+        "Socorro Castro-García",
+        "María Antonia Señarís-Rodríguez",
+        "Manuel Sánchez-Andújar",
+        "Juan Manuel Bermúdez-García"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "35",
+        "pages": "37779-37788",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07093"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07093",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07102",
+      "title": "Synthesis of Iodinated Semisaturated Heterobicycles via a Temporal Dual Metal-Catalyzed Cycloaddition/Photochemical Carbohalogenation",
+      "authors": [
+        "Philip Samokhin",
+        "Arthur Flaget",
+        "Julian K. Fernback",
+        "Mark Lautens"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28986-28995",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07102"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07102",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07167",
+      "title": "Structural Transformation of Hydrated Excess Protons at the Water Surface",
+      "authors": [
+        "Mohammed Ahmed",
+        "Tatsuya Ishiyama",
+        "Satoshi Nihonyanagi",
+        "Ken-ichi Inoue",
+        "Akihiro Morita",
+        "Tahei Tahara"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29009-29018",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07167"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07167",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07207",
+      "title": "Proton-Gated Torsional Spring for Molecular Energy Storage",
+      "authors": [
+        "Xiaolong Huang",
+        "Binzhou Lin",
+        "Hao Liu",
+        "Hai Zhao",
+        "Senuri Fernando",
+        "Perry J. Pellechia",
+        "Ken D. Shimizu"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29019-29024",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07207"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07207",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07386",
+      "title": "Carbene Analogues of Group 15: Reduction of s-Hydrindacene-Based Chloropnictogenium Ions To Access an Antimony Hydride Monocation and a Trinuclear Bismuth Dication",
+      "authors": [
+        "Marvin Janssen",
+        "Marian Olaru",
+        "Enno Lork",
+        "Jens Beckmann",
+        "Emanuel Hupf"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29177-29185",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07386"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07386",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07393",
+      "title": "Time-Scale Renormalization of Correlation Decay Governs Li-Ion Transport in Garnet Solid Electrolytes",
+      "authors": [
+        "Saumya Ranjan Mahanta",
+        "Swastika Banerjee"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29050-29063",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07393"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07393",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07500",
+      "title": "Modular Dearomative 1,4-Addition to Simple Arenes with Dual Nucleophiles: Overriding the Inherent 1,2-Selectivity via η 6 -Coordination",
+      "authors": [
+        "Ming-Yang Wang",
+        "Yi Jin",
+        "Xing-Yan Jiang",
+        "Wei Li"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29064-29074",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07500"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07500",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07591",
+      "title": "Tumor Acidity-Activatable Ionizable Lipid Nanoparticles for Selective Oncolytic Therapy",
+      "authors": [
+        "Houbing Zhang",
+        "Rupei Du",
+        "Zhiyi Luo",
+        "Junqi Ge",
+        "Chanjuan Su",
+        "Huosheng Zhou",
+        "Fuxiang Wang",
+        "Yan Bao",
+        "Dun Luo",
+        "Dong Luo",
+        "Menghua Xiong"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30184-30193",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07591"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07591",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07628",
+      "title": "Biocatalytic C3 β- O -Glycosylation of Triterpenes and Sterols to Synthesize Natural and Unnatural Saponins",
+      "authors": [
+        "Peter H. Winegar",
+        "Graham A. Hudson",
+        "Riley P. Benedict",
+        "Corey Z. Sy",
+        "T. Yesung Han",
+        "David M. FitzGerald",
+        "Rudy S. Mahajan",
+        "Parker J. Gravel",
+        "Jacob B. Roberts",
+        "Nathan Lanclos",
+        "Marco Huang",
+        "Anthony T. Iavarone",
+        "Jay D. Keasling"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29124-29137",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07628"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07628",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07701",
+      "title": "Sequence-Dependent Folding of Recognition-Encoded Melamine Oligomers",
+      "authors": [
+        "Anca-Luiza Cotîrlan",
+        "Cecilia J. Anderson",
+        "Nia E. J. Eyre",
+        "Daniil O. Soloviev",
+        "Ben Iddon",
+        "Federica Balduzzi",
+        "Christopher A. Hunter"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29094-29106",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07701"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07701",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07703",
+      "title": "Photocatalytic Controlled Halodefluorination of Perfluoroalkyl Compounds Using N -Arylphenothiazines",
+      "authors": [
+        "Michael G. J. Doyle",
+        "Maria Elgaard Jespersen",
+        "Shana Noureen",
+        "Zijun Chen",
+        "Theodore L. Jefferson",
+        "Caitlin A. Baptista",
+        "Marie Houot",
+        "Job J. C. Struijs",
+        "Christopher A. Goult",
+        "Artem A. Bakulin",
+        "Robert S. Paton",
+        "Alyssa-Jennifer Avestro",
+        "Véronique Gouverneur"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29084-29093",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07703"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07703",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07735",
+      "title": "Temperature-Dependent Menthol Binding across TRPM8 Conformational States",
+      "authors": [
+        "Leonardo Cirqueira",
+        "Guilherme Lucas",
+        "Carmen Domene"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29195-29205",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07735"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07735",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07743",
+      "title": "pH-Dependent Vibrational Dynamics Drives Excited-State Quenching in the Phycobiliprotein Complex PC645",
+      "authors": [
+        "Sayan Maity",
+        "Yue Hu",
+        "Dongyu Lyu",
+        "Jingyun Wu",
+        "Coral O’Brien",
+        "Michael H. Hecht",
+        "Leah C. Spangler",
+        "Gregory D. Scholes",
+        "Ulrich Kleinekathöfer"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29107-29123",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07743"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07743",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07820",
+      "title": "Controlled Axial Growth and Morphological Evolution of Three-Dimensional Covalent Organic Frameworks Unveiled by Single-Crystal X-ray Diffraction",
+      "authors": [
+        "Shijiao Fan",
+        "Chenyang Yan",
+        "Hanzhen Liu",
+        "Xinyao Zhang",
+        "Xiaoya Feng",
+        "Junxia Chai",
+        "Guixin Li",
+        "Weigang Fan"
+      ],
+      "date": "2026-07-04",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29186-29194",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07820"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07820",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07833",
+      "title": "Interfacial Reverse Charge Transfer Enabling Near 100% Selectivity of Glycerol Photooxidation into Formate over Schottky’s Au/TiO 2",
+      "authors": [
+        "Zhonghao Wang",
+        "Hayoung Jeong",
+        "Yuan Gao",
+        "Yuan Lu",
+        "Jeong Hyun Hwang",
+        "Jeong Woo Han",
+        "Botao Qiao",
+        "Kan Zhang",
+        "Jong Hyeok Park"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29167-29176",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07833"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07833",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07884",
+      "title": "Triple Pancake Bonding in Neutral π-Conjugated Dimers: a Computational Study",
+      "authors": [
+        "Li-juan Cui",
+        "Miklos Kertesz",
+        "Zhong-hua Cui"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29146-29155",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07884"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07884",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07923",
+      "title": "Chemically Programmable Liquid-to-Solid Transitions and Spatial Dynamics in Synthetic Coacervates",
+      "authors": [
+        "Zixuan Wu",
+        "Mengyue Zhu",
+        "Peiyong Song",
+        "Zhetong Liu",
+        "Jianming Li",
+        "Rong Huang",
+        "Yan Qiao",
+        "Yiyang Lin"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29220-29230",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07923"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07923",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07942",
+      "title": "Direct α-Trifluoromethyl Amidation and Three-Component Alkene Trifluoroalkylamidation via Merging Halogen-Atom Transfer and Nickel-Mediated Nitrenoid Transfer",
+      "authors": [
+        "Xiushan Liu",
+        "Cai Zhai",
+        "Yong Jiang",
+        "Jianru Xie",
+        "Baihui Liang",
+        "Chen Zhu",
+        "and Huifeng Yue"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30238-30251",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07942"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07942",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c07978",
+      "title": "Water-Mediated Ion Selectivity in 2D MXene Channels",
+      "authors": [
+        "Yuan Zhang",
+        "Ming Chen",
+        "Teng Zhang",
+        "Tetiana Parker",
+        "Danzhen Zhang",
+        "Ruocun Wang",
+        "Hyunho Kim",
+        "Paweł Piotr Michałowski",
+        "Alexei Kornyshev",
+        "Yury Gogotsi"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "29",
+        "pages": "31253-31262",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c07978"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c07978",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08223",
+      "title": "Two-Dimensional van der Waals Polar Metal MoOBr 2",
+      "authors": [
+        "Xuzhou Sun",
+        "Fengfeng Ye",
+        "Yuqiang Fang",
+        "Jiapeng Wang",
+        "Lixuan Xu",
+        "Yongliang Lin",
+        "Yiwei Li",
+        "Ruize Lu",
+        "Zhiqin Li",
+        "Hui Li",
+        "Gaoyang Gou",
+        "Yang Li",
+        "Fuqiang Huang"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30278-30286",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08223"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08223",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08250",
+      "title": "Switching Site Selectivity in Alkoxyamine Hydration: From Lone-Pair Direction to Solvent Network Dominance",
+      "authors": [
+        "Filippo Baroncelli",
+        "Luca Evangelisti",
+        "Juan Carlos López",
+        "Susana Blanco",
+        "Assimo Maris",
+        "Sonia Melandri"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "36",
+        "pages": "38731-38739",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08250"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08250",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08303",
+      "title": "Photoinduced Disproportionation Enables Oxidative Addition of Aryl Iodides at a Gallium(I) Center",
+      "authors": [
+        "Nijito Mukai",
+        "Sota Iwasaki",
+        "Manaya Kawasaki",
+        "Ryohei Kishi",
+        "Manabu Abe",
+        "Takuya Kodama",
+        "Mamoru Tobisu"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29253-29261",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08303"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08303",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08338",
+      "title": "Growth-Coupled Assembly of Hydrogen-Bonded Organic Framework Membranes on Cell Surfaces",
+      "authors": [
+        "Mengchu Feng",
+        "Qiuyan Sun",
+        "Yehao Jin",
+        "Chen Li",
+        "Bixiao Li",
+        "Senjun Wang",
+        "Yajiao Su",
+        "Ji Wu",
+        "Jin Zhu",
+        "Kun Jing",
+        "Xiao Feng",
+        "Xudong Feng",
+        "Yuanyuan Zhang",
+        "Bo Wang"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29241-29252",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08338"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08338",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08386",
+      "title": "Plasmonic Re-Excitation Enables Superoxide-Mediated Ethane Conversion to Acetic Acid under Visible Light",
+      "authors": [
+        "Lei Luo",
+        "Donghui Li",
+        "Zongxu Wu",
+        "Yejun Xiao",
+        "Xiaoju Cui",
+        "Xiangyang Guo",
+        "Zhaochao Xu",
+        "Zhaochi Feng",
+        "Fuxiang Zhang"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29275-29281",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08386"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08386",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08451",
+      "title": "Electron Affinity of UF 6",
+      "authors": [
+        "Burak A. Tufekci",
+        "Shiying Wang",
+        "Lan Cheng",
+        "Kit H. Bowen"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29262-29266",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08451"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08451",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08452",
+      "title": "Intrinsic Stabilization of High-Order Van Hove Singularity in 2D Rashba Superconductor",
+      "authors": [
+        "Yuriy E. Vekovshinin",
+        "Leonid V. Bondarenko",
+        "Alexandra Y. Tupchaya",
+        "Nikita V. Denisov",
+        "Tatiana V. Utas",
+        "Vyacheslav S. Zhdanov",
+        "Alexey N. Mihalyuk",
+        "Dimitry V. Gruznev",
+        "Andrey V. Zotov",
+        "Alexander A. Saranin"
+      ],
+      "date": "2026-07-04",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29267-29274",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08452"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08452",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08483",
+      "title": "Unlocking Azulene Functionalization via Strain-Induced Azulyne Intermediates",
+      "authors": [
+        "Xiaoling Yuan",
+        "Liyun Zhang",
+        "Qingshuang Zhang",
+        "Hanxue Fu",
+        "Mei Zuo",
+        "Junxiang Liu",
+        "Yuetian Wang",
+        "Lianggui Li",
+        "Dachuan Qiu",
+        "Yang Li"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29282-29292",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08483"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08483",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08499",
+      "title": "In Situ and Operando Studies as Mechanistic Toolbox for Redox Flow Batteries, Redox Targeting, and CO2 Capture Systems: Progress and Perspective",
+      "authors": [
+        "Donghwi Ko",
+        "Vikram Singh",
+        "Hye Ryung Byon"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "27989-28009",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08499"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08499",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08552",
+      "title": "Higher Excited-State Reactivity of a Charge-Neutral Organic Radical",
+      "authors": [
+        "Elena Bassan",
+        "Bruno Lazarevski",
+        "Oliver S. Wenger"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29304-29316",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08552"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08552",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08611",
+      "title": "Abnormal Multistep Charge Transfer in a 2D Single-Crystalline Covalent Organic Framework Photocatalyst",
+      "authors": [
+        "Yucheng Jin",
+        "Heyuan Liu",
+        "Qixin Zhou",
+        "Xiaoning Zhan",
+        "Boce Cui",
+        "Hailong Wang",
+        "Dongdong Qi",
+        "Zhiying Chen",
+        "Baoqiu Yu",
+        "Xiaonan Pang",
+        "Bin Liu",
+        "Jianzhuang Jiang"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30327-30337",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08611"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08611",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08703",
+      "title": "A Robust Carbon Overlayer as Hydrogen Spillover Highway and CO-Binding Barrier Enhances Reverse Water–Gas Shift",
+      "authors": [
+        "Zhihao Wang",
+        "Zhen Wang",
+        "Yonghui Zhao",
+        "Jiawei Hu",
+        "Yikang Zhao",
+        "Hao Xu",
+        "Xiaodong Wang",
+        "Na Ta",
+        "Chuande Huang",
+        "Lu Chen",
+        "Wei Wei"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30338-30349",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08703"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08703",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08726",
+      "title": "Toward a Comparable Reactivity Framework for Type I Photoinitiators in Photocleavage, Photopolymerization and Light-Driven Additive Manufacturing",
+      "authors": [
+        "Michael-Phillip Smith",
+        "Federica Sbordone",
+        "Elizabeth A. Recker",
+        "Zachariah A. Page",
+        "Christopher Barner-Kowollik"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "29585-29597",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08726"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08726",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08868",
+      "title": "Discovery and Biosynthesis of Lanthipeptides Featuring an Azepinoindole Scaffold by Radical S -Adenosylmethionine Enzyme-Catalyzed C–C Bond Formation",
+      "authors": [
+        "Hong-Yan Wang",
+        "Xiao-Tong Gong",
+        "Jin-Long Lu",
+        "Hang Xu",
+        "Wei-Kang Zhai",
+        "Jiang Xiong",
+        "Mingshuo Hu",
+        "Jiao-Jiao Cui",
+        "Kun Gao",
+        "Xinxiang Lei",
+        "Huan Qi",
+        "Lie-Feng Ma",
+        "Zha-Jun Zhan",
+        "Tao Yu",
+        "Jianye Dai",
+        "Shangwen Luo",
+        "Jian-Min Yue",
+        "Shi-Hui Dong"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29336-29353",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08868"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08868",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08942",
+      "title": "The Selective Routing of Plasmonic Interface Charge Transfer in Enhanced Raman Spectroscopy or Chemical Reaction",
+      "authors": [
+        "Shu-Yi Zhu",
+        "Xia-Guang Zhang",
+        "Qing-Chen Bai",
+        "Feng Xue",
+        "Ri-Jing Yang",
+        "Jin Yang",
+        "Jin-Hui Zhong",
+        "Li-Jun Wang",
+        "Wei-Jie Liu",
+        "Si-Fan Cheng",
+        "Zhong-Qun Tian",
+        "Chao Zhan"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30362-30370",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08942"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08942",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c08969",
+      "title": "High-Precision Intrinsic Interactome Elucidation of Chimeric Antigen Receptors via Photocatalytic Micromapping (μMap-CAR)",
+      "authors": [
+        "Sean W. Huth",
+        "Chenmengxiao Roderick Pan",
+        "Philip Raftopoulos",
+        "Ciaran P. Seath",
+        "Gabrielle H. Lovett",
+        "Beryl Li",
+        "Sushma Yechan Gunja",
+        "Vaishali Agarwal",
+        "Yuka Amako",
+        "Harris Bell-Temin",
+        "Helen Pham",
+        "Helen Evans",
+        "Jennifer X. Qiao",
+        "Haibo Liu",
+        "Brook Barajas",
+        "David W.C. MacMillan"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29361-29371",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08969"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c08969",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c09099",
+      "title": "Alternating Current-Driven Hydrogen Isotope Labeling of Aliphatic Amines Using 1,3-Propanedithiol as an Efficient Hydrogen Atom Transfer Reagent",
+      "authors": [
+        "Nibedita Behera",
+        "Nhu H. Quach",
+        "Rajendra Maity",
+        "Dan Lehnherr",
+        "Sumei Ren",
+        "Jingwei Li",
+        "Matthew Neurock",
+        "Long Luo"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30393-30405",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c09099"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c09099",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c09589",
+      "title": "Navigating Inner Helmholtz Plane Reactions Enables Robust Lithium Metal Anodes for 500 Wh kg -1 Pouch Cells",
+      "authors": [
+        "Jiangning Liu",
+        "Baoyu Sun",
+        "Tuo Zhao",
+        "Caitian Lin",
+        "Zhishuo Zang",
+        "Caiwang Mao",
+        "Lingjie Meng",
+        "Jingying Xie",
+        "Jiangxuan Song"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30429-30443",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c09589"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c09589",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c09649",
+      "title": "A Ni-Mediated Cross-Coupling Approach to Deuterated 18 F- Fluoromethylated (Hetero)arenes",
+      "authors": [
+        "Maddison Lovell",
+        "Sebastiano Ortalli",
+        "Raquel Sánchez-Bento",
+        "Matthew Tredwell",
+        "Joseph Ford",
+        "Véronique Gouverneur"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28049-28054",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c09649"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c09649",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c09675",
+      "title": "Dynamic Valence-State-Adaptive Ta Single-Atom Sites for Artificial H 2 O 2 Photosynthesis",
+      "authors": [
+        "Xu Zhang",
+        "Ying Tao",
+        "Chenyu Yang",
+        "Qixin Zhou",
+        "Laiyu Luo",
+        "Bing Wang",
+        "Jie Ding",
+        "Taoran Chen",
+        "Caoyu Yang",
+        "Jiaxing Wang",
+        "Yueshuai Wang",
+        "Hanwen Hu",
+        "Shuowen Bo",
+        "Xiangbo Feng",
+        "Jiaqi Zhao",
+        "Qinghua Liu",
+        "Kun Zheng",
+        "Hongli Sun",
+        "Lingyue Liu",
+        "Chenliang Su",
+        "Tierui Zhang",
+        "Bin Liu"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29419-29429",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c09675"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c09675",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c09813",
+      "title": "Decoding Galectin–Glycan Recognition with 19 F-Tagged Lectins: from Simple Glycans to the Cellular Glycocalyx",
+      "authors": [
+        "Milena Bartoloni",
+        "Diego del Balzo",
+        "Mirane Florencio-Zabaleta",
+        "Marcello Mercogliano",
+        "Sara Bertuzzi",
+        "Sandra Delgado",
+        "Iker Hernández",
+        "Mikel Oiarbide",
+        "Aitor Landa",
+        "Tammo Diercks",
+        "Luca Unione",
+        "Jesús Jiménez-Barbero",
+        "Ana Ardá"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29441-29450",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c09813"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c09813",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c09845",
+      "title": "Alternating-Polarity Electrolysis Enables Efficient Enantioselective Semipinacol Rearrangement Using Sodium Chloride",
+      "authors": [
+        "Zhijie Zhou",
+        "Qiaolin Yan",
+        "Zherui Zhang",
+        "Minhua Shao",
+        "Chaoshen Zhang",
+        "Jianwei Sun"
+      ],
+      "date": "2026-07-04",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29464-29474",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c09845"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c09845",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c09884",
+      "title": "Energy Transfer-Enabled Diradical Carbonylative Cyclization of Bicyclo[1.1.0]butanes with CO and Alkenes/Alkynes",
+      "authors": [
+        "Guo-Feng Li",
+        "Zi-Qing Li",
+        "Zhihan Zhang",
+        "Jie Zhao",
+        "Jia-Rong Chen",
+        "Wen-Jing Xiao"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29451-29463",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c09884"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c09884",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c09972",
+      "title": "A Topotactic Leap: 2D Layers to 3D Large-Pore Zeolite",
+      "authors": [
+        "Aimin Gong",
+        "Yuanhao Li",
+        "Yifei Yan",
+        "Ye Song",
+        "Yida Zhou",
+        "Jianguo Ding",
+        "Lisu Bai",
+        "Delun Ren",
+        "Qingfang Lin",
+        "Xiaobo Chen",
+        "Hua Deng",
+        "Shutao Xu",
+        "Wei Lin",
+        "Peng Guo",
+        "Fei-Jian Chen",
+        "Hong He",
+        "Zhongmin Liu",
+        "Jihong Yu"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "36",
+        "pages": "38856-38863",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c09972"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c09972",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c10089",
+      "title": "Solid-Phase Glycolipid Synthesis Expedites Liposome Functionalization",
+      "authors": [
+        "Marilet Sigler",
+        "Calvin Hon",
+        "Kai G. Pohl",
+        "Leif E. Sander",
+        "Manuel G. Ricardo",
+        "Peter H. Seeberger"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30486-30493",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c10089"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c10089",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c10100",
+      "title": "Chiral-Ligand-Modulated Nickel-Catalyzed Stereoselective Radical Migratory C2-Arylation of Carbohydrates",
+      "authors": [
+        "Hang Chen",
+        "Jaclyn N. Mauro",
+        "Mithun C. Madhusudhanan",
+        "Rufai A. Madiu",
+        "Arman Khosravi",
+        "Saba Gulzar",
+        "Gaoyuan Zhao",
+        "Jik Chin",
+        "Peng Liu",
+        "Ming-Yu Ngai"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29475-29487",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c10100"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c10100",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c10123",
+      "title": "Synthesis of Chiral Cyclophanes via Pd(II)-Catalyzed Atroposelective C–H Macrocyclization: Total Synthesis of Isoplagiochin D",
+      "authors": [
+        "Lei Wang",
+        "Yuan Xu",
+        "Wen-Kui Yuan",
+        "Hui-Nan Ren",
+        "Jia-Yi Bi",
+        "Lu-Chen Jiang",
+        "Xu Wu",
+        "Fei Yao",
+        "Qi-Jun Yao",
+        "Bing-Feng Shi"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29497-29505",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c10123"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c10123",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c10139",
+      "title": "A Discrete, Iterative Type I Polyketide Synthase System Catalyzing the Formation of Unusual Fatty Acid Chains",
+      "authors": [
+        "Hao Xu",
+        "Taro Shiraishi",
+        "Tomohisa Kuzuyama"
+      ],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29488-29496",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c10139"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c10139",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c10600",
+      "title": "Late-Stage Carbonyl Removal via Sequential Double Carbon–Carbon Bond Cleavage",
+      "authors": [
+        "Zining Zhang",
+        "Guangbin Dong"
+      ],
+      "date": "2026-07-04",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28061-28067",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c10600"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c10600",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c10644",
+      "title": "Arylboron Tetraphenylethylene-Analog AIEgens Enabling Reversible Closed-Shell/Open-Shell Switching",
+      "authors": [
+        "Haoyu Gao",
+        "Yan Tang",
+        "Pengchao Liu",
+        "Mengzhen Li",
+        "Zixin Li",
+        "Xin Zheng",
+        "Yanyan Liu",
+        "Bing Han",
+        "Lijie Liu",
+        "Zheng Zhao",
+        "Laurent Maron",
+        "Ben Zhong Tang"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29526-29536",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c10644"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c10644",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c10647",
+      "title": "Engineering Organelle-Gated Reporters for Imaging Subcellular Enzyme Activity in Living Cells",
+      "authors": [
+        "Yang Shen",
+        "Wei Li",
+        "Hanqing Zhao",
+        "Sulai Liu",
+        "Lu Wang",
+        "Xiao-Bing Zhang",
+        "Lin Yuan"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30521-30532",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c10647"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c10647",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c10750",
+      "title": "Iridium-Catalyzed Enantioselective C4-Alkylation of Indoles with α-Olefins and Styrenes",
+      "authors": [
+        "Kai Wang",
+        "Kai-Yuan Tian",
+        "Wen-Yao Wang",
+        "Zhen-Yu Song",
+        "Chao Fan",
+        "Qi-Lin Zhou"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "28068-28074",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c10750"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c10750",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c10847",
+      "title": "Enhanced Hydrogen Evolution over Single-Atom Catalysts via Electrostatic Polarization in Contact-electro-catalysis",
+      "authors": [
+        "Xueyan Yang",
+        "Ziming Wang",
+        "Zeyang Yu",
+        "Ning Wu",
+        "Jiajin Liu",
+        "Dongjian Jiang",
+        "Kaiyang Shi",
+        "Xuanli Dong",
+        "Yurou Feng",
+        "Zhong Lin Wang"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30607-30616",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c10847"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c10847",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c10903",
+      "title": "Multicentered p–s–p* Antibonding Interaction Induces Strong Anharmonicity and High Thermoelectric Performance in Complex Metal Chalcohalide Tl 5 Te 2 I",
+      "authors": [
+        "Anustoop Das",
+        "R Bhuvaneswari",
+        "Subarna Das",
+        "Vaishali Taneja",
+        "Priyanka Garg",
+        "Umesh V. Waghmare",
+        "Kanishka Biswas"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29537-29547",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c10903"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c10903",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c11029",
+      "title": "Atomic-Scale Insights into the FeO-Mediated Oxide Growth during Iron Oxidation",
+      "authors": [
+        "Mingzi Chen",
+        "Yuhui Chen",
+        "Jinkai Hu",
+        "Zhongkang Han",
+        "Wentao Yuan",
+        "Ying Jiang",
+        "Yong Wang"
+      ],
+      "date": "2026-07-04",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29548-29557",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c11029"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c11029",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c11186",
+      "title": "Coordination-Constraint-Driven Enhanced Chirality Induction in Perovskite Quantum Dot Solids",
+      "authors": [
+        "Cong Geng",
+        "Ruiyang Yin",
+        "Wenda Sun",
+        "Linyue Gao",
+        "Zijin Ding",
+        "Xue Han",
+        "Keyu Wei",
+        "Changjiu Sun",
+        "Yicheng Sui",
+        "Yimu Chen",
+        "Xiyan Li",
+        "Thamraa Alshahrani",
+        "Wen-Di Li",
+        "Xiao-Ye Wang",
+        "Yuanzhi Jiang",
+        "Mingjian Yuan"
+      ],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29558-29568",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c11186"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c11186",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c11269",
+      "title": "Transporter-Mimicking MXene for Uric Acid Capture and Sensing in Biofluids",
+      "authors": [
+        "Ziyi Zhao",
+        "Weitao Qi",
+        "Hongyu Chen",
+        "Lin Zhou",
+        "Bin Su"
+      ],
+      "date": "2026-07-07",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30594-30606",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c11269"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c11269",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c11579",
+      "title": "Correction to “Peptide-Mimicking Poly(2-oxazoline)s Possessing Potent Antifungal Activity and BBB Penetrating Property to Treat Invasive Infections and Meningitis”",
+      "authors": [
+        "Weinan Jiang",
+        "Min Zhou",
+        "Sheng Chen",
+        "Jiayang Xie",
+        "Minzhang Chen",
+        "Haodong Zhang",
+        "Yueming Wu",
+        "Xin Chen",
+        "Runhui Liu"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "27",
+        "pages": "29582-29582",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c11579"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c11579",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jacs.6c12281",
+      "title": "Negatively Curved Chiral Bilayer Nanographene",
+      "authors": [
+        "Yang-Yang Ju",
+        "Yu-Dong Huang",
+        "Jiang-Feng Xing",
+        "Qing-Song Deng",
+        "Xin-Jing Zhao",
+        "Guo-Hui Nie",
+        "Bin Zhang",
+        "Yuan-Zhi Tan"
+      ],
+      "date": "2026-07-06",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "28",
+        "pages": "30639-30648",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c12281"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jacs.6c12281",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jav148i025_2097159",
+      "title": "Issue Publication Information",
+      "authors": [],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "25",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1021/jav148i025_2097159"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jav148i025_2097159",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jav148i025_2097160",
+      "title": "Issue Editorial Masthead",
+      "authors": [],
+      "date": "2026-07-01",
+      "datePrecision": "day",
+      "journal": "Journal of the American Chemical Society",
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "25",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1021/jav148i025_2097160"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jav148i025_2097160",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

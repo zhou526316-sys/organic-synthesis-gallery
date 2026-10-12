@@ -1,0 +1,401 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2026-07-08",
+    "to": "2026-07-14"
+  },
+  "checkedAt": "2026-10-12T05:34:36.077Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "total": 7,
+        "count": 7,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 7,
+      "count": 7,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 7,
+      "openalex": 7
+    }
+  },
+  "candidateCount": 7,
+  "alreadyPublished": 4,
+  "unreviewed": 3,
+  "records": [
+    {
+      "doi": "10.1038/s41929-026-01566-z",
+      "title": "Triple energy transfer-enabled dearomative cycloaddition/rearrangement cascade of bicyclic azaarenes to structurally complex products",
+      "authors": [
+        "Preeti Chahar",
+        "Utpal Kundu",
+        "Subhabrata Dutta",
+        "Niklas Hölter",
+        "Florian Boser",
+        "Fabian M. Hugel",
+        "Luca Stadtmann",
+        "Constantin G. Daniliuc",
+        "Frank Glorius"
+      ],
+      "date": "2026-07-09",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "7",
+        "pages": "750-760",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01566-z"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01566-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01573-0",
+      "title": "Ligand-mediated radical orientation enables asymmetric cyanation of unstabilized alkyl C-radicals",
+      "authors": [
+        "Xin Chen",
+        "Wenzheng Fan",
+        "Junfeng Wang",
+        "Pinhong Chen",
+        "Guosheng Liu"
+      ],
+      "date": "2026-07-10",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "7",
+        "pages": "773-781",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01573-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01573-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01574-z",
+      "title": "Copper-catalysed carbon monoxide electrolysis under dynamic operation",
+      "authors": [
+        "Wanyu Deng",
+        "Ahryeon Lee",
+        "Soonho Kwon",
+        "Zhaoxi Wang",
+        "Yifei Xu",
+        "Siyang Xing",
+        "Bingjun Xu",
+        "Ryan Rasmussen",
+        "William Andrew Goddard",
+        "Feng Jiao"
+      ],
+      "date": "2026-07-08",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "8",
+        "pages": "823-833",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01574-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01574-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01578-9",
+      "title": "Direct copper-catalysed deaminative cyanation of aliphatic primary amines",
+      "authors": [
+        "Jiang-Hao Xue",
+        "Shuang Lin",
+        "Jiawu Huang",
+        "Taeseok Kang",
+        "Bumsu Park",
+        "Mark D. Levin",
+        "Myojeong Kim",
+        "Honggen Wang"
+      ],
+      "date": "2026-07-10",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "9",
+        "pages": "934-942",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01578-9"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01578-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01579-8",
+      "title": "Unlocking ketene–Heck coupling via activation energy modulation in Pd catalysis",
+      "authors": [
+        "Binlin Zhao",
+        "Changping Fang",
+        "Pei Gu",
+        "Xiaowu Fang",
+        "Mengning Wang",
+        "Qiuzhu Wang",
+        "Mengtao Ma",
+        "Minyan Wang",
+        "Zhuangzhi Shi"
+      ],
+      "date": "2026-07-13",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "9",
+        "pages": "943-952",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01579-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01579-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01590-z",
+      "title": "Publisher Correction: Atomically precise layer-by-layer titration of perovskite oxides reveals the termination-specific reactivity in oxygen electrocatalysis",
+      "authors": [
+        "Hongyang Su",
+        "Jie Zheng",
+        "Wenxiang Mu",
+        "Zixuan Guan",
+        "Pei Wang",
+        "Ziyun Zhang",
+        "Fanqi Meng",
+        "Xiaoying Yan",
+        "Peng Liu",
+        "Guiping Ji",
+        "Tianxiang Nan",
+        "Hui Zhang",
+        "Yidan Cao",
+        "Zhi Liu",
+        "Yuan-Hua Lin",
+        "Wei-Xue Li",
+        "William C. Chueh",
+        "Sulei Hu",
+        "Di Chen"
+      ],
+      "date": "2026-07-09",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "8",
+        "pages": "924-924",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01590-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01590-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01591-y",
+      "title": "Author Correction: Bifunctional molecular additives enable efficient oxygen reduction reaction on platinum electrodes in the presence of strongly binding anions",
+      "authors": [
+        "Kaiyue Zhao",
+        "Linke Fu",
+        "Zelong Qiao",
+        "Yuke Li",
+        "Chaoran Huang",
+        "Bingyuan Chen",
+        "Zihan Jin",
+        "Xiaoqing Cao",
+        "Junrong Zheng",
+        "Shaojun Guo",
+        "Dapeng Cao",
+        "Xiaoxia Chang",
+        "Bingjun Xu"
+      ],
+      "date": "2026-07-13",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "9",
+        "pages": "1048-1048",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01591-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01591-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-08",
+        "to": "2026-07-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

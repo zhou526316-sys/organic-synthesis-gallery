@@ -1,0 +1,219 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2026-07-01",
+    "to": "2026-07-07"
+  },
+  "checkedAt": "2026-10-12T05:34:51.271Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "total": 4,
+        "count": 4,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 4,
+      "count": 4,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 4,
+      "openalex": 4
+    }
+  },
+  "candidateCount": 4,
+  "alreadyPublished": 1,
+  "unreviewed": 3,
+  "records": [
+    {
+      "doi": "10.1038/s44160-026-01096-3",
+      "title": "Hyperspace exploration using robotics for the discovery of mechanistically distinct transformations and complex functional products",
+      "authors": [
+        "Daniel Matuszczyk",
+        "Rafał Frydrych",
+        "Wai-Shing Wong",
+        "Yankai Jia",
+        "Yaroslav I. Sobolev",
+        "Jan Hanus",
+        "Juhyeong Lee",
+        "Bartosz A. Grzybowski"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1532-1541",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01096-3"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01096-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01098-1",
+      "title": "Automated exploration of the Biginelli reaction hyperspace",
+      "authors": [
+        "Theodore Tyrikos-Ergas",
+        "Eric T. Sletten"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1488-1489",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01098-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01098-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01103-7",
+      "title": "Electrophotocatalysis for direct vicinal dichlorination of carboxylic acids",
+      "authors": [
+        "Luca Massaro",
+        "Helena Lundberg"
+      ],
+      "date": "2026-07-02",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1310-1311",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01103-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01103-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01110-8",
+      "title": "Programmable assembly lines in E. coli enable the synthesis of macrolide antibiotics",
+      "authors": [],
+      "date": "2026-07-03",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01110-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01110-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
