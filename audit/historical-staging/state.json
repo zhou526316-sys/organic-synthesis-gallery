@@ -4,10 +4,10 @@
   "createdAt": "2026-10-10T11:06:54.916Z",
   "cursor": {
     "range": {
-      "from": "2026-09-08",
-      "to": "2026-09-14"
+      "from": "2026-09-01",
+      "to": "2026-09-07"
     },
-    "journalIndex": 8
+    "journalIndex": 0
   },
   "completed": [
     "2026-09-22_2026-09-30_jacs",
@@ -49,7 +49,15 @@
     "2026-09-08_2026-09-14_nature-catalysis",
     "2026-09-08_2026-09-14_nature-synthesis",
     "2026-09-08_2026-09-14_nature-chemistry",
-    "2026-09-08_2026-09-14_nature-communications"
+    "2026-09-08_2026-09-14_nature-communications",
+    "2026-09-08_2026-09-14_acs-catalysis",
+    "2026-09-08_2026-09-14_organic-letters",
+    "2026-09-08_2026-09-14_chem",
+    "2026-09-08_2026-09-14_chemical-science",
+    "2026-09-08_2026-09-14_ccs-chemistry",
+    "2026-09-08_2026-09-14_science-advances",
+    "2026-09-08_2026-09-14_green-chemistry",
+    "2026-09-08_2026-09-14_joc"
   ],
   "attempts": [
     {
@@ -531,26 +539,122 @@
       "count": 201,
       "errors": [],
       "at": "2026-10-12T04:43:03.782Z"
+    },
+    {
+      "id": "2026-09-08_2026-09-14_acs-catalysis",
+      "journal": "ACS Catalysis",
+      "range": {
+        "from": "2026-09-08",
+        "to": "2026-09-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 52,
+      "errors": [],
+      "at": "2026-10-12T04:44:46.985Z"
+    },
+    {
+      "id": "2026-09-08_2026-09-14_organic-letters",
+      "journal": "Organic Letters",
+      "range": {
+        "from": "2026-09-08",
+        "to": "2026-09-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 54,
+      "errors": [],
+      "at": "2026-10-12T04:44:48.363Z"
+    },
+    {
+      "id": "2026-09-08_2026-09-14_chem",
+      "journal": "Chem",
+      "range": {
+        "from": "2026-09-08",
+        "to": "2026-09-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 0,
+      "errors": [],
+      "at": "2026-10-12T04:44:48.790Z"
+    },
+    {
+      "id": "2026-09-08_2026-09-14_chemical-science",
+      "journal": "Chemical Science",
+      "range": {
+        "from": "2026-09-08",
+        "to": "2026-09-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 0,
+      "errors": [],
+      "at": "2026-10-12T04:44:49.545Z"
+    },
+    {
+      "id": "2026-09-08_2026-09-14_ccs-chemistry",
+      "journal": "CCS Chemistry",
+      "range": {
+        "from": "2026-09-08",
+        "to": "2026-09-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 13,
+      "errors": [],
+      "at": "2026-10-12T04:44:50.119Z"
+    },
+    {
+      "id": "2026-09-08_2026-09-14_science-advances",
+      "journal": "Science Advances",
+      "range": {
+        "from": "2026-09-08",
+        "to": "2026-09-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 85,
+      "errors": [],
+      "at": "2026-10-12T04:44:51.451Z"
+    },
+    {
+      "id": "2026-09-08_2026-09-14_green-chemistry",
+      "journal": "Green Chemistry",
+      "range": {
+        "from": "2026-09-08",
+        "to": "2026-09-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 0,
+      "errors": [],
+      "at": "2026-10-12T04:44:52.295Z"
+    },
+    {
+      "id": "2026-09-08_2026-09-14_joc",
+      "journal": "JOC",
+      "range": {
+        "from": "2026-09-08",
+        "to": "2026-09-14"
+      },
+      "status": "source_enumeration_complete",
+      "count": 38,
+      "errors": [],
+      "at": "2026-10-12T04:44:53.090Z"
     }
   ],
   "publishedMembershipSnapshot": 964,
   "lastRun": {
     "processed": 8,
     "blocked": false,
-    "requests": 27,
+    "requests": 20,
     "next": {
       "range": {
-        "from": "2026-09-08",
-        "to": "2026-09-14"
+        "from": "2026-09-01",
+        "to": "2026-09-07"
       },
-      "journalIndex": 8
+      "journalIndex": 0
     },
     "verifiedPublishedDois": 964,
-    "completeWindows": 40,
+    "completeWindows": 48,
     "noPublication": true,
     "noPdf": true
   },
   "note": "Initialization only. No historical candidate window has yet been crawled or approved. Exact 23:00 scheduled acquisition runs from main and writes exclusively to this staging branch.",
-  "lastRunStarted": "2026-10-12T04:42:50.827Z",
-  "lastRunFinished": "2026-10-12T04:43:04.086Z"
+  "lastRunStarted": "2026-10-12T04:44:46.251Z",
+  "lastRunFinished": "2026-10-12T04:44:53.392Z"
 }
