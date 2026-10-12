@@ -1,7 +1,7 @@
 {
   "schema": "gallery-historical-nightly-rescue-v1",
-  "requestedAt": "2026-10-12T05:09:19.182Z",
-  "reason": "User-authorized expedited retrospective 16-journal archive discovery; use now-deployed 48-window 220-request bounded budget, staging candidates only, no 08:00 publication bypass",
+  "requestedAt": "2026-10-12T05:30:22.841Z",
+  "reason": "User authorized continuous 16-journal history catch-up to journal founding: safely collect next bounded 48 staging-only journal/date units after first 96 completed windows.",
   "mode": "candidate_discovery_only",
   "targetBranch": "staging/historical-archive-nightly",
   "budget": {
@@ -10,5 +10,5 @@
   },
   "safety": "Candidate-only; keep main publication strictly 08:00 Beijing; do not alter accepted DOI, media or PDF",
   "triggerScope": "user_authorized_manual_catchup",
-  "previousTriggerAt": "2026-10-12T04:44:26.350Z"
+  "previousTriggerAt": "2026-10-12T05:09:19.182Z"
 }
