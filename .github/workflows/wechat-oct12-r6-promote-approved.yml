@@ -1,0 +1,92 @@
+name: WeChat Oct12 R6 Promote Independently Reviewed Original Figures
+on:
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/wechat-oct12-r6-promotion-request.json']
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct12-r6-promotion
+  cancel-in-progress: false
+jobs:
+  promote-reviewed-science-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 11
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify promotion request is source-reviewed and draft-safe
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('audit/automation-triggers/wechat-oct12-r6-promotion-request.json').read_text())
+          assert r['date']=='2026-10-12' and r['revision']=='2026-10-12-r6'
+          assert r['action']=='promote_source_complete_reviewed_figures_without_wechat_mutation'
+          assert r['draftWriteAuthorized'] is False and r['publicSendAuthorized'] is False
+          assert r['selectionDois']==['10.1021/acscatal.6c06048','10.1021/jacs.6c10406']
+          assert r['reviewedFigureCount']==20
+          acc=json.loads(Path('audit/wechat-working/2026-10-12-r6-visual-acceptance.json').read_text())
+          assert acc['imageReview']=='pass' and len(acc['approvedFigureHashes'])==20
+          print('R6 owner science/image source is ready; draft and public send forbidden')
+          PY
+      - name: Install raster verification dependency
+        run: python3 -m pip install -q 'Pillow>=10,<13'
+      - name: Materialize exact reviewed images and gate; NO WeChat tokens
+        run: python3 ops/wechat-publisher/promote-oct12-reviewed-source-r6.py
+      - name: Check publisher's image layout and journal-count-only lead offline
+        run: |
+          python3 -m py_compile ops/wechat-publisher/create-draft.py
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          from html.parser import HTMLParser
+          from collections import Counter
+          p=Path('public')
+          featured=json.loads((p/'wechat-featured/2026-10-12.json').read_text())
+          retro=json.loads((p/'wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json').read_text())
+          edition=json.loads((p/'wechat-editions/2026-10-12.json').read_text())
+          gate=json.loads(Path('audit/wechat-working/2026-10-12-review-gate.json').read_text())
+          assert gate['revision']==featured['editorialRevision']==retro['editorialRevision']==edition['editorialRevision']=='2026-10-12-r6'
+          assert len([x for x in featured['figures'] if x.get('body') is not False])==14
+          assert len([x for x in retro['figures'] if x.get('body') is not False])==10
+          assert gate['textReview']=='pass' and gate['imageReview']=='pass'
+          s=Path('ops/wechat-publisher/create-draft.py').read_text()
+          assert 'if len(papers) > 5:' not in s[s.index('def build_content('):s.index('def build_retrospective_content(')]
+          assert 'build_gallery_jump_card' in s
+          assert 'figures_after_paragraph' in s
+          assert edition['featured']==featured['paper']['doi']
+          assert edition['retrospective']==retro['slug']
+          print('R6 off-line verified: 14+10 body images, 2 covers, 2 articles, counts+cards lead only, no WeChat mutation')
+          PY
+      - name: Commit only Oct12 reviewed editorial source + exact reviewed figure bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- public/wechat-editions/2026-10-12.json
+          git add -- public/wechat-featured/2026-10-12.json
+          git add -- public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json
+          git add -- public/wechat-assets/reviewed/2026-10-12-r6/
+          git add -- audit/wechat-working/2026-10-12-review-gate.json
+          git add -- audit/wechat-working/2026-10-12-r6-acs-catalysis-text-only.md
+          git add -- audit/wechat-working/2026-10-12-r6-jacs-text-only.md
+          git add -- audit/wechat-working/2026-10-12-r6-acs-catalysis-images-only.md
+          git add -- audit/wechat-working/2026-10-12-r6-jacs-images-only.md
+          git add -- audit/wechat-working/2026-10-12-r6-science-layout-qa.json
+          git diff --cached --stat
+          if git diff --cached --quiet; then
+            echo 'Already promoted'
+            exit 0
+          fi
+          git commit -m 'editorial: pin complete original ACS/JACS figures and Oct12 R6 review gate'
+          for attempt in 1 2 3 4; do
+            if git push origin HEAD:main; then exit 0; fi
+            git fetch origin main
+            git rebase origin/main
+            sleep 1
+          done
+          echo 'Failed to commit Oct12 verified source without conflict' >&2
+          exit 1
