@@ -366,6 +366,22 @@ export async function runNightly() {
     ||!Array.isArray(state.completed)||!Array.isArray(state.attempts))
     throw Error('invalid_existing_staging_state');
   const journals=orderedJournals();
+  // Once: reopen previously closed RSC publication-date-only windows.
+  // Their source "0 results" was not a reliable source-coverage receipt.
+  if(!state.rscCreatedRescue){
+    const pending=state.completed.map(id=>{
+      const match=/^(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})_(chemical-science|green-chemistry)$/.exec(id);
+      if(!match)return null;
+      const name=match[3]==='chemical-science'?'Chemical Science':'Green Chemistry';
+      const journalIndex=journals.findIndex(j=>j.name===name);
+      return journalIndex<0?null:{range:{from:match[1],to:match[2]},journalIndex};
+    }).filter(Boolean);
+    state.rscCreatedRescue={version:RSC_CREATION_RESCUE_VERSION,pending,done:[],total:pending.length};
+  }
+  if(state.rscCreatedRescue.version!==RSC_CREATION_RESCUE_VERSION
+    ||!Array.isArray(state.rscCreatedRescue.pending)
+    ||!Array.isArray(state.rscCreatedRescue.done))
+    throw Error('invalid_existing_rsc_created_rescue_state');
   const maxUnits=Math.max(1,Math.min(64,Math.floor(Number(process.env.MAX_UNITS||8))));
   const budget=new Budget(Math.max(4,Math.min(320,Math.floor(Number(process.env.API_REQUEST_LIMIT||65)))));
   let processed=0,blocked=false,deferredBudget=false;
@@ -374,7 +390,15 @@ export async function runNightly() {
   while(processed<maxUnits&&state.cursor){
     // Reserve the minimum three calls before beginning an unsplittable source pair.
     if(budget.max-budget.count<3){deferredBudget=true;break;}
-    const rootRange=state.cursor.range,journal=journals[state.cursor.journalIndex];
+    const rescue=state.rscCreatedRescue,nextRecheck=rescue.pending[0];
+    const recheckJournal=nextRecheck&&journals[nextRecheck.journalIndex];
+    const recheckRoot=nextRecheck&&recheckJournal
+      ?journalBatchId(nextRecheck.range,recheckJournal):null;
+    // Complete any previous chronological split before beginning RSC repairs.
+    const recovering=Boolean(nextRecheck
+      &&(!state.activeSplit||state.activeSplit.rootId===recheckRoot));
+    const activeCursor=recovering?nextRecheck:state.cursor;
+    const rootRange=activeCursor.range,journal=journals[activeCursor.journalIndex];
     if(!journal)throw Error('invalid_history_cursor_journal');
     if(!validDate(rootRange?.from)||!validDate(rootRange?.to)||rootRange.from>rootRange.to)
       throw Error('invalid_history_cursor_date_range');
@@ -413,8 +437,15 @@ export async function runNightly() {
       records:rows,
       noFormalPublication:true,noMediaWrites:true,noPDFAcquisition:true,abstractTextsCopied:false,
     };
-    await saveJson(STAGE_ROOT+'/batches/'+id+'.json',record);
-    state.attempts.push({id,journal:journal.name,range,status:record.status,
+    // A failed recheck must not overwrite an older root until a complete
+    // source enumeration is available. Leaf evidence goes to batch files.
+    const recordTarget=recovering&&!split
+      ?STAGE_ROOT+'/rechecks/'+id+'.json'
+      :STAGE_ROOT+'/batches/'+id+'.json';
+    await saveJson(recordTarget,record);
+    state.attempts.push({id,journal:journal.name,range,
+      attemptKind:recovering?'rsc_created_recheck':'chronological',
+      status:record.status,
       count:record.candidateCount,errors:status.issues,at:record.checkedAt});
     state.attempts=state.attempts.slice(-300);
     processed++;
@@ -424,10 +455,13 @@ export async function runNightly() {
         split.pending.shift();
         if(!split.pending.length){
           await finalizeSplitRoot(split,journal,articles);
-          state.completed.push(rootId);
-          state.cursor=nextCursor(state.cursor,journals);
+          if(recovering){rescue.done.push(rootId);rescue.pending.shift()}
+          else {state.completed.push(rootId);state.cursor=nextCursor(state.cursor,journals)}
           delete state.activeSplit;
         }
+      }else if(recovering){
+        await saveJson(STAGE_ROOT+'/batches/'+rootId+'.json',record);
+        rescue.done.push(rootId);rescue.pending.shift();
       }else{
         state.completed.push(rootId);
         state.cursor=nextCursor(state.cursor,journals);
@@ -441,6 +475,7 @@ export async function runNightly() {
     console.log('HISTORICAL_STAGING_WINDOW '+JSON.stringify({id,status:record.status,candidates:record.candidateCount,
       alreadyPublished:record.alreadyPublished,unreviewed:record.unreviewed,
       splitPending:state.activeSplit?.pending.length||0,
+      recoveringRsc:recovering,rscRechecksRemaining:rescue.pending.length,
       requests:budget.count,errors:status.issues}));
     if(blocked)break;
     await delay(300);
@@ -453,6 +488,8 @@ export async function runNightly() {
       completedSegments:state.activeSplit.completed.length,
       pendingSegments:state.activeSplit.pending.length
     }:null,
+    rscCreatedRecheck:{remaining:state.rscCreatedRescue.pending.length,
+      completed:state.rscCreatedRescue.done.length,total:state.rscCreatedRescue.total},
     noPublication:true,noPdf:true};
   await saveJson(staging,state);
   console.log('HISTORICAL_NIGHTLY_SUMMARY '+JSON.stringify(state.lastRun));
