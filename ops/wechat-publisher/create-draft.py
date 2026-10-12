@@ -540,6 +540,7 @@ def build_content(
     gallery_qr_url: str = "",
 ) -> str:
     uploaded_urls = uploaded_urls or {}
+    daily_guide_mode = bool((featured or {}).get('contentType') == 'gallery_daily_product_update')
     grouped: dict[str, list[dict]] = {}
     for paper in papers:
         grouped.setdefault(str(paper["journal"]), []).append(paper)
@@ -608,6 +609,8 @@ def build_content(
             f"<p style='font-size:12px;color:#888;line-height:1.65;margin:0 0 18px;'>{esc(paper.get('authors') or '')} · {esc(paper.get('journal') or '')} · DOI {esc(paper.get('doi') or '')}</p>",
         ])
 
+        if daily_guide_mode:
+            parts[-1] = "<p style='font-size:12px;color:#888;line-height:1.65;margin:0 0 18px;'>gallery.gczhouwld.com · 功能介绍，不属于单篇精选论文</p>"
         rendered_figures = set()
         lead_figure_id = (
             str(featured.get("lead_figure_id") or "").strip()
@@ -2062,7 +2065,7 @@ def build_gallery_jump_card(
             str(p.get("titleZh") or p.get("title") or ""),
         )
     )
-    shown = ordered[:4]
+    shown = ordered[:5] if bool((featured or {}).get('contentType') == 'gallery_daily_product_update') else ordered[:4]
 
     def card_cell(card: dict) -> str:
         doi = normalize_doi(card.get("doi"))
@@ -3424,6 +3427,9 @@ def main() -> int:
     publication_date = slot[:10]
     featured = load_featured(publication_date)
     edition = load_edition(publication_date)
+    daily_guide = bool((featured or {}).get('contentType') == 'gallery_daily_product_update')
+    if daily_guide and not (edition.get('dailyContentType') == 'gallery_daily_product_update' and edition.get('featured') is None):
+        raise RuntimeError('daily product guide must explicitly remove the scientific featured paper')
     title = str(
         edition.get("title")
         or f"{args.title_prefix}有机合成文献日报｜{publication_date} · 每日精选"
@@ -3437,10 +3443,12 @@ def main() -> int:
         )
     )
     source_url = (
-        gallery_original_url((featured.get("paper") or {}).get("doi"), publication_date)
-        if featured
+        str(edition.get('dailySourceUrl') or '').strip() if daily_guide
+        else gallery_original_url((featured.get('paper') or {}).get('doi'), publication_date) if featured
         else args.source_url
     )
+    if daily_guide and source_url != f'https://gallery.gczhouwld.com/?edition={publication_date}&summary=0':
+        raise RuntimeError('daily roundup link must go only to this verified edition')
     retrospective_slug = str(edition.get("retrospective") or "").strip()
     expected_source_links = [source_url]
     if retrospective_slug:
@@ -3533,7 +3541,7 @@ def main() -> int:
                 request=source_link_request, args=args,
             )
     uploaded_urls, local_images = upload_featured_images(token, featured, args.featured_pdf)
-    uploaded_urls["__gallery_cards__"] = upload_gallery_card_visuals(token, papers, featured, 4)
+    uploaded_urls["__gallery_cards__"] = upload_gallery_card_visuals(token, papers, featured, 5 if daily_guide else 4)
     gallery_target_url = f"https://gallery.gczhouwld.com/?edition={urllib.parse.quote(publication_date)}"
     qr_local = prepare_gallery_qr_image(gallery_target_url)
     gallery_qr_url = upload_local_body_image(
