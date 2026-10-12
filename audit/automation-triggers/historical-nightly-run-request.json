@@ -1,7 +1,7 @@
 {
   "schema": "gallery-historical-nightly-rescue-v1",
-  "requestedAt": "2026-10-12T05:33:24.341Z",
-  "reason": "User-approved long historical retrospective to founding: continue bounded Crossref/OpenAlex windows beyond July 2026 with strict pre-July metadata-only policy and no formal publication.",
+  "requestedAt": "2026-10-12T05:38:11.186Z",
+  "reason": "User-authorized 16-journal all-history recall: scan pre-July 2026 metadata-only source windows with bounded pagination and source coverage checks, no formal DOI admission.",
   "mode": "candidate_discovery_only",
   "targetBranch": "staging/historical-archive-nightly",
   "budget": {
@@ -10,5 +10,5 @@
   },
   "safety": "Candidate-only; keep main publication strictly 08:00 Beijing; do not alter accepted DOI, media or PDF",
   "triggerScope": "user_authorized_manual_catchup",
-  "previousTriggerAt": "2026-10-12T05:30:22.841Z"
+  "previousTriggerAt": "2026-10-12T05:33:24.341Z"
 }
