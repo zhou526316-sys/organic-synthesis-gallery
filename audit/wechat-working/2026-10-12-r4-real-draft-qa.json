@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r4",
+  "checkedAtBeijing": "2026-10-12 15:21:55",
+  "status": "source_review_pass_and_existing_wechat_draft_updated_and_readback_verified",
+  "userFinalSelection": [
+    "10.1021/acscatal.6c06048",
+    "10.1021/jacs.6c10406"
+  ],
+  "sourceImportRunId": 38216980439,
+  "publisherRunId": 38217107107,
+  "sourceImportStatus": "success",
+  "wechatPublisherStatus": "success",
+  "wechatDraftStage": "draft_update",
+  "wechatDraftGet": "ok",
+  "originalMediaIdReused": "KhELYUzvwADwB_l1xH1SWIIQfl5GSB19jduNK2sdIdguH6OMYYfkuM8zO65yvnWs",
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/57fdb53234a770e276663713.html",
+  "publishId": null,
+  "publicSend": false,
+  "articleCount": 2,
+  "articleTitles": [
+    "有机合成文献日报｜10.12｜今日精选｜ACS Catalysis：氯仿诱导钯催化剂表面改性，实现噻吩的温和非均相加氢",
+    "往期精选｜JACS：烷基锆参与的氨基酸衍生物不对称脱氨交叉偶联"
+  ],
+  "sourceUrls": [
+    "https://gallery.gczhouwld.com/?edition=2026-10-12&doi=10.1021%2Facscatal.6c06048&summary=0",
+    "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0"
+  ],
+  "dailyReleaseCount": 5,
+  "dailyReleaseSource": "audit/literature-update-state.json lastPublication 2026-10-12T08:00+08:00",
+  "counts": {
+    "acsBody": 14,
+    "jacsBody": 10,
+    "bothCovers": 2,
+    "dailyQr": 1,
+    "actualPreviewImageUrls": 27
+  },
+  "covers": {
+    "acs": {
+      "source": "Original JACS? NO: ACS Catalysis original Fig.1C materialized source-crop image",
+      "sourceAsset": "public/wechat-assets/reviewed/2026-10-12-r2/acs-catalysis-fig1c-native-cover.png",
+      "dimensions": [
+        1880,
+        800
+      ],
+      "noGenerativeChemistry": true
+    },
+    "jacs": {
+      "asset": "public/wechat-assets/reviewed/2026-10-12-r4/jacs-ni-zr-concept-original-no-invented-chemistry.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "sha256": "96ca40c385776838e7d5ce4f59f1ffbc483a8c54604d1adf428497c9d8829a4d",
+      "originalUserChosenBytesPreserved": true,
+      "noMoleculeBondStructure": true,
+      "editorialConceptOnly": true
+    }
+  },
+  "review": {
+    "gate": "audit/wechat-working/2026-10-12-review-gate.json",
+    "text": "pass",
+    "image": "pass",
+    "pinnedAssets": 26,
+    "pinnedSourceFiles": 9,
+    "importReceipt": "audit/wechat-working/2026-10-12-r4-import-receipt.json"
+  },
+  "independentRelayPreviewVerification": {
+    "readOnly": true,
+    "articleTags": 2,
+    "titlesExact": true,
+    "sourceUrlsExact": true,
+    "sourceProofMentionsACS": true,
+    "sourceProofMentionsJACS": true,
+    "r3GalleryFeatureGuideAbsent": true,
+    "images": 27
+  },
+  "mobileNativeWeChatClientActualScreenshot": "not_verified",
+  "siteChanges": false,
+  "wechatGroupSend": false,
+  "notes": "The previous R3 Gallery features/newsletter was an unpublished intermediate source and was replaced by the user final selection. Official WeChat backend R4 was updated in place, no duplicate draft. No public sending was attempted. The 'real preview' is a relay rendering of the official draft/get result, not a native WeChat phone screenshot."
+}

@@ -51,3 +51,34 @@ node scripts/historical-text-local-evaluator.mjs --dir="D:\文献全文试验" -
 - 本阶段公网写入字节=0，历史 PDF 新抓取=0，历史正文图片/补充材料新抓取=0；无新增 Cron 或外部付费机器。
 - 使用已有 GitHub Actions 进行只读来源扫描，不占用腾讯 256 MiB/月 PDF 阅读网关预算，不在 2GB 腾讯 VM 上做批量 OCR/GROBID。
 - 后续需要权利明确的服务器端持久化之前，再按实际内容大小和 D1/R2 配额测算，而不能从 PDF 平均大小猜测真实索引成本。
+
+## 2026-10-12 用户修订：一键全量历史正文补抓（隔离模式）
+
+用户明确要求：**不逐篇手动抓取，而是在网站上多一个按钮，一键补抓所有需要的历史正文；绝不能干涉已有 TOC、正文图及私人 PDF 的采集。** 该要求覆盖上文“仅支持逐篇手动导出”作为默认入口的旧描述，但不扩大对出版社全文的复制、存储或公开传播权限。
+
+### 用户操作
+
+- 更新独立的 `gallery-historical-text-pilot.user.js` 至 **0.2.0** 后，在 Gallery 正式域名页面左下角看到「历史正文 · 独立补抓」浮动小面板，主按钮「**一键补抓全部缺项**」，同时提供暂停和本机正文检索框。
+- 首次点击主按钮会读取 `toc-demand-live.json` 的当前**正式 DOI** 集（不碰 23:00 staging），仅选原发表日期在 2026-10-01 以前的论文，去重后按期刊轮询，一次确认即可自动完成本批，不需要对每个 DOI 手工打开页面。
+- 一次只启用**一个后台论文标签页**（利用 Tampermonkey `GM_openInTab`，而不是启动另一个媒体 controller）；论文页严格核验唯一 DOI 与任务票据/有效期，检查许可证信息，并只在找到 **CC BY 3.0/4.0 或 CC0 1.0** 的明确本文许可证时提取结构化段落、图注与表格文字。没有明确可采集授权、页面无法访问、DOI 不匹配、挑战/登录、只有 Abstract 或正文不足均跳过并计入真实失败分类；不绕过登录或扩张自动抓取许可。非免费许可出版社条目不能因为校园 VPN 可阅读就自动复制进入公共库。
+- 成功项通过专属 `gallery-historical-text-batch-v2:` GM 临时跨标签通信写入**当前 Gallery 浏览器同源 IndexedDB**；该数据可在浮动面板本机全文检索，但**不能自动等同于全站在线 FTS5 已收录**。先前成功捕获的数据再次点击会跳过，失败项在有界间隔后才允许重试；可以暂停，然后再次点击继续未完成项。关闭浏览器不会云端继续运行。
+- 任务不抓 PDF、不抓 SI、不抓正文图片、不触碰现有 `osg-toc-v6:` 队列、原有 Tampermonkey controller、`/api/article-summary/fulltext/import` 或私人 PDF 接口。不追加每日 08:00 以外的正式文献发布任务，不要求安装第二台服务器。
+- 当前采用严格的、单页面低并发访问节奏，约每 DOI 完成/失败后留 2 秒间隔；跨脚本排队不会共享锁。网络带宽及同出版社并发访问存在现实竞争，不能将“不修改媒体队列”误报为“任何情况下不会占用出版社资源”；如媒体采集出现访问限制，可主动暂停本独立批次。
+- 逐条 `sourceSha256`、`publication`、`rightsBasis`、`licenseUrl`、`sourceUrl` 留在浏览器本机供核验；上传原始全文、给其他用户展示正文和生成正式深度双语解读仍需独立许可证及来源审核后才能推进。
+
+### 真实验收
+
+由专属 `scripts/test-historical-text-batch.mjs` 测试历史 DOI 去重、有效年月、CC BY/CC0 来源、非商业禁止修改条款、不明许可、跨标签串扰与不触碰已有媒体接口。网站真实版本必须经正式 Pages 构建/部署并通过 URL @version 0.2.0 回读才能说已经可安装。用户浏览器实际运行（开启授权院校访问环境等）需要另行验收，不能把 CI 模拟当作真实跑完全文。
+
+
+## 2026-10-12 — 0.2.1 全历史 DOI 来源与正文科学性修正
+
+0.2.0 上线后经真实线上核查确认：`toc-demand-live.json` 为**媒体任务队列**，其构建器明确排除 `metadata_only` 文献，不能成为历史检索全文采集的唯一 DOI 清单。正式网站 `release-delivery.json` 含有 `architectureCatalogId` 和经版本核对的 DOI 成员；线上 `GET https://api.gczhouwld.com/api/literature/catalog-view?catalogId=...&dateTo=2026-09-30&sort=oldest&limit=100` 已证实可返回同一正式目录的有界分页。
+
+0.2.1 因此只针对**独立历史采集批次**替换来源：
+1. 先读取 Pages 正式发布版本和 DOI 成员哈希；再以该 `catalogId` 分页读取正式 D1 搜索索引，逐行比较 DOI 是否确实是正式成员、revision 是否有效，保证严格游标前进、总量、去重、每批最大数量和发布版本一致。不能在索引尚未 ready 或分页中出现错误时回退到只覆盖 TOC 的队列。
+2. 只选 `firstOnlineDate < 2026-10-01` 且有核验日期的文章；发表日期未知的正式 DOI 显示待核验，不计为“正文完成”。保留既有手动本机导出的旧接口作为兼容，不把它当批量权威源。正式未来新增的 `metadata_only` 条目也可纳入历史批次，但不允许访问额外图片或 PDF。
+3. 真实 Springer Nature 页面可能在 `Rights and permissions` 栏以 `http://creativecommons.org/licenses/by/4.0/` **文字**形式声明该文章 CC BY（不是带 `rel=license` 的链接）。允许把这类专属的文章授权声明**仅作为本机文本处理候选**，先确认当前出版社文章 DOI 绑定；不由 OA 元数据猜许可证，也不以通用网页脚注/参考文献里的 CC 许可误判本文。
+4. 正文提取明确排除 `Rights and permissions`、`About this article`、`Author information`、`Additional information` 等法律、引用与行政信息。不得把这些长段或孤立 Abstract 当成有效 Results/Methods/Mechanism。标记 `stored` 要求至少有实质科学研究章节文字，不满足则 `body_missing`。
+5. 保留与现有 TOC/正文图/PDF controller、队列、回执、上传路径完全独立，不增加 PDF 请求、正文图下载、SI 下载、服务器全文复制或全库正式发行时刻。
+6. 以最新 userscript `@version 0.2.1` 显式更新，要求相应 Pages 构建与线上原始脚本版本回读；0.2.0 的成功构建不代表修订已上线。

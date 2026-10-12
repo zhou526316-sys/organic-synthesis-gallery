@@ -12,7 +12,18 @@ function h(q=queue([]),inventory=inv([]),opts={}){
  const store=new Map(),opened=[],calls=[],timers=new Map();let now=EPOCH+12*86400000,id=0;
  class D extends Date{constructor(...args){super(...(args.length?args:[now]))}static now(){return now}}
  const get=u=>{calls.push(u);if(u.includes('capture-capabilities'))return {captureVersion:'6.2.20',mediaControllerRevision:'2.2.41',mediaGeneration:EPOCH,evidenceSchemaVersion:'article-evidence-v2',mode:'verified-staging'};
-  if(u.includes('toc-demand'))return q;if(u.includes('local-capture-index'))return inventory.tocs;if(u.includes('/staged?'))return inventory.figures;throw Error('unexpected get '+u)};
+  if(u.includes('toc-demand'))return q;
+  if(u.includes('local-capture-index')||u.includes('/staged?')){
+    const url=new URL(u),raw=url.searchParams.get('dois');
+    const requested=raw?raw.split(',').map(x=>x.toLowerCase()):[];
+    const base=u.includes('local-capture-index')?inventory.tocs:inventory.figures;
+    if(!raw)return base;
+    const rows=(base.items||[]).filter(x=>requested.includes(x.doi.toLowerCase()));
+    return {...base,version:base.version||1,mediaGeneration:EPOCH,count:rows.length,items:rows,invalidFiltered:0,
+      complete:true,scopeRevision:'doi-scoped-inventory-v1',scopeRequestedCount:requested.length,
+      requestedDois:requested};
+  }
+  throw Error('unexpected get '+u)};
  const ctx=vm.createContext({console,Date:D,URL,Map,Set,document:{},crypto:{randomUUID},location:{hostname:'gallery.gczhouwld.com',pathname:'/',href:'https://gallery.gczhouwld.com/',hash:''},window:{open(){},close(){},alert(){},prompt(){return null}},
  GM_getValue:(k,d)=>store.has(k)?structuredClone(store.get(k)):d,GM_setValue:(k,v)=>store.set(k,structuredClone(v)),GM_deleteValue:k=>store.delete(k),GM_listValues:()=>[...store.keys()],GM_registerMenuCommand(){},
  setTimeout:(f,ms)=>{timers.set(++id,{f,ms});return id},clearTimeout:i=>timers.delete(i),setInterval:(f,ms)=>{timers.set(++id,{f,ms,interval:true});return id},clearInterval:i=>timers.delete(i),
@@ -153,7 +164,7 @@ await test('transient failure retries once then remains visibly blocked',()=>{
 await test('unavailable metadata is unknown, not an empty inventory',async()=>{
  let failed=false;const ar=[article(1)],i=inv(ar),x=h(queue(ar),i,{get:(u,g)=>{if(failed&&u.includes('/staged?'))throw Error('queue_http_503');return g(u)}});
  const first=await x.T.readMissingCaptureInventory(queue(ar));assert.equal(first.figures.complete,true);
- failed=true;const second=await x.T.readMissingCaptureInventory(queue(ar));assert.equal(second.figures,null);assert.ok(second.errors.some(e=>e.includes('503')));
+ failed=true;const second=await x.T.readMissingCaptureInventory(queue(ar));assert.equal(second.figures.complete,false);assert.ok(second.errors.some(e=>e.includes('503')));
 });
 await test('initial transient stage inventory503 recovers in same click',async()=>{
  let fails=0;const ar=[article(1)],i=inv(ar);i.media.items[0].tocStored=false;

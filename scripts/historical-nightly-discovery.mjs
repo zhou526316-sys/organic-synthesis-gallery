@@ -13,6 +13,9 @@ export const STAGE_ROOT='audit/historical-staging';
 export const START={from:'2026-09-22',to:'2026-09-30'};
 const FLOOR='1850-01-01';
 const MAX_ROWS=100, MAX_PAGES=10;
+export const RSC_CREATION_RESCUE_VERSION='rsc-created-date-rescue-20261012-v1';
+const RSC_JOURNALS=new Set(['Chemical Science','Green Chemistry']);
+export const requiresRscCreationRescue=journal=>RSC_JOURNALS.has(journal?.name);
 
 export function normDoi(value) {
   let s=String(value||'').trim().toLowerCase().replace(/^https?:\/\/(?:dx\.)?doi\.org\//i,'');
@@ -97,10 +100,15 @@ function textValue(value){
     .replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>')
     .replace(/\s+/g,' ').trim().slice(0,850);
 }
-function dateParts(value) {
+function dateParts(value){
   const parts=value?.['date-parts']?.[0]||[];
-  if(!Array.isArray(parts)||!Number.isInteger(parts[0]))return '';
-  return iso(parts[0],parts[1]||1,parts[2]||1);
+  if(!Array.isArray(parts)||parts.length!==3||!parts.every(Number.isInteger))return '';
+  const exact=iso(parts[0],parts[1],parts[2]);
+  return validDate(exact)?exact:'';
+}
+function yearPart(value){
+  const y=value?.['date-parts']?.[0]?.[0];
+  return Number.isInteger(y)&&y>=1850&&y<=2100?y:null;
 }
 function authorName(row){
   return textValue([row?.given,row?.family].filter(Boolean).join(' ')||row?.name);
@@ -109,26 +117,33 @@ export function fromCrossref(row){
   const doi=normDoi(row?.DOI);
   if(!doi)return null;
   const title=textValue(Array.isArray(row.title)?row.title[0]:row.title);
-  const date=dateParts(row?.['published-online'])||dateParts(row?.published)||dateParts(row?.issued)||'';
-  const datePrecision=row?.['published-online']?.['date-parts']?.[0]?.length===3?'day':'unknown';
+  // Year-only registration is NOT a first-online date: never invent January 1.
+  const date=dateParts(row?.['published-online'])||dateParts(row?.published)||dateParts(row?.issued);
+  const datePrecision=date?'day':'unknown';
+  const createdDate=dateParts(row?.created);
+  const year=yearPart(row?.['published-online'])||yearPart(row?.published)
+    ||yearPart(row?.issued)||yearPart(row?.created);
   return {doi,title,authors:(Array.isArray(row.author)?row.author:[]).map(authorName).filter(Boolean).slice(0,75),
-    date,datePrecision,
+    date,datePrecision,createdDate,needsPublisherDateVerification:!date,
     journal:textValue(Array.isArray(row['container-title'])?row['container-title'][0]:row['container-title']),
-    citation:{year:Number(date.slice(0,4))||null,volume:nonempty(row.volume),issue:nonempty(row.issue),
+    citation:{year,volume:nonempty(row.volume),issue:nonempty(row.issue),
       pages:nonempty(row.page),articleNumber:nonempty(row['article-number']),doi},
     abstract:{available:Boolean(row.abstract),displayPermission:'not_verified',source:'crossref',storedText:false},
     source:'crossref',url:nonempty(row.URL)||'https://doi.org/'+doi};
 }
-export function fromOpenAlex(row){
+export function fromOpenAlex(row,{rscYearOnlyRisk=false}={}){
   const doi=normDoi(row?.doi);
   if(!doi)return null;
   const title=textValue(row.display_name||row.title);
   const names=(Array.isArray(row.authorships)?row.authorships:[]).map(a=>textValue(a?.author?.display_name)).filter(Boolean).slice(0,75);
-  const date=/^\d{4}-\d{2}-\d{2}$/.test(row.publication_date||'')?row.publication_date:'';
+  let date=validDate(row.publication_date)?row.publication_date:'';
+  // OpenAlex has normalized RSC year-only publication dates to Jan 1.
+  if(rscYearOnlyRisk&&date.endsWith('-01-01'))date='';
   const b=row.biblio||{};
   return {doi,title,authors:names,date,datePrecision:date?'day':'unknown',
+    needsPublisherDateVerification:!date,
     journal:textValue(row?.primary_location?.source?.display_name),
-    citation:{year:Number(date.slice(0,4))||null,volume:nonempty(b.volume),issue:nonempty(b.issue),
+    citation:{year:Number(row.publication_year)||Number(String(row.publication_date||'').slice(0,4))||null,volume:nonempty(b.volume),issue:nonempty(b.issue),
       pages:[b.first_page,b.last_page].filter(Boolean).join('-'),articleNumber:'',doi},
     abstract:{available:row.has_abstract===true||Boolean(row.abstract_inverted_index),
       displayPermission:'not_verified',source:'openalex',storedText:false},
@@ -145,6 +160,8 @@ export function mergeCandidates(crossref,openalex,published=new Set(),range=STAR
       map.set(record.doi,{
         ...prev,title:prev.title||record.title,authors:prev.authors.length?prev.authors:record.authors,
         date:prev.date||record.date,journal:prev.journal||record.journal,
+        createdDate:prev.createdDate||record.createdDate||'',
+        needsPublisherDateVerification:!(prev.date||record.date),
         abstract:{available:prev.abstract.available||record.abstract.available,
           displayPermission:'not_verified',source:sources.join('+'),storedText:false},
         sources, titleSourceConflict:Boolean(prev.title&&record.title
@@ -153,7 +170,8 @@ export function mergeCandidates(crossref,openalex,published=new Set(),range=STAR
     }
   }
   return [...map.values()].sort((a,b)=>a.doi.localeCompare(b.doi)).map(row=>({
-    ...row,ingestionChannel:'historical_backfill',mediaPolicy:mediaPolicy(row.date||range.from),
+    ...row,ingestionChannel:'historical_backfill',mediaPolicy:mediaPolicy(row.date),
+    needsPublisherDateVerification:!row.date,
     discoveredIn:range,existingGalleryRecord:published.has(row.doi),
     reviewStatus:published.has(row.doi)?'already_published':'unfinished',
     needsArticleEvidence:!published.has(row.doi),
@@ -179,7 +197,7 @@ async function loadJson(path,fallback){
 }
 class Budget {
   constructor(max){this.max=max;this.count=0}
-  use(){if(++this.count>this.max)throw Error('nightly_api_budget_exceeded')}
+  use(){if(this.count>=this.max)throw Error('nightly_api_budget_exceeded');this.count++}
 }
 async function request(url,budget,source){
   budget.use();
@@ -190,38 +208,46 @@ async function request(url,budget,source){
   if(!response.ok)throw Error(source+':http_'+response.status);
   try{return await response.json()}catch{throw Error(source+':invalid_json')}
 }
-async function crossrefWindow(journal,range,budget) {
+async function crossrefWindow(journal,range,budget){
   const map=new Map(),issues=[],byIssn=[];
+  const lanes=requiresRscCreationRescue(journal)?['created']:['publication'];
+  // RSC year-only publication dates may all collapse to January 1 (over
+  // 1,300 works in one day). Its bounded authoritative discovery lane is
+  // Crossref created-date; the publisher must verify actual first-online
+  // date before any historical publication/admission.
   for(const issn of journal.issns){
-    let cursor='*',page=0,total=null,count=0;
-    try{
-      while(page<MAX_PAGES){
-        const u=new URL('https://api.crossref.org/journals/'+encodeURIComponent(issn)+'/works');
-        u.searchParams.set('filter','from-pub-date:'+range.from+',until-pub-date:'+range.to+',type:journal-article');
-        u.searchParams.set('rows',String(MAX_ROWS));u.searchParams.set('cursor',cursor);
-        const response=await request(u,budget,'crossref');
-        if(!response?.message||!Array.isArray(response.message.items))throw Error('crossref:invalid_items');
-        const items=response.message.items;
-        const reported=Number(response.message['total-results']);
-        if(!Number.isSafeInteger(reported)||reported<0)throw Error('crossref:invalid_total');
-        if(total!==null&&total!==reported)throw Error('crossref:total_changed');
-        total=reported;count+=items.length;page++;
-        for(const raw of items){const row=fromCrossref(raw);if(row)map.set(row.doi,row)}
-        if(items.length<MAX_ROWS || count>=reported)break;
-        const next=response.message['next-cursor'];
-        if(typeof next!=='string'||!next||next===cursor)throw Error('crossref:missing_next_cursor');
-        cursor=next;
+    for(const lane of lanes){
+      let cursor='*',page=0,total=null,count=0;
+      try{
+        while(page<MAX_PAGES){
+          const u=new URL('https://api.crossref.org/journals/'+encodeURIComponent(issn)+'/works');
+          const axis=lane==='created'?'created-date':'pub-date';
+          u.searchParams.set('filter','from-'+axis+':'+range.from+',until-'+axis+':'+range.to+',type:journal-article');
+          u.searchParams.set('rows',String(MAX_ROWS));u.searchParams.set('cursor',cursor);
+          const res=await request(u,budget,'crossref');
+          if(!res?.message||!Array.isArray(res.message.items))throw Error('crossref:invalid_items');
+          const items=res.message.items,reported=Number(res.message['total-results']);
+          if(!Number.isSafeInteger(reported)||reported<0)throw Error('crossref:invalid_total');
+          if(total!==null&&total!==reported)throw Error('crossref:total_changed');
+          total=reported;count+=items.length;page++;
+          for(const raw of items){const row=fromCrossref(raw);if(row)map.set(row.doi,row)}
+          if(items.length<MAX_ROWS||count>=reported)break;
+          const next=res.message['next-cursor'];
+          if(typeof next!=='string'||!next||next===cursor)throw Error('crossref:missing_next_cursor');
+          cursor=next;
+        }
+        if(count<(total||0))throw Error('crossref:truncated_or_inconsistent');
+        byIssn.push({issn,lane,total,count,pages:page,complete:true});
+      }catch(e){
+        issues.push('issn_'+issn+':'+lane+':'+String(e?.message||e).slice(0,100));
+        byIssn.push({issn,lane,total,count,pages:page,complete:false});
+        return {rows:[...map.values()],issues,byIssn};
       }
-      if(count<(total||0))throw Error('crossref:truncated_or_inconsistent');
-      byIssn.push({issn,total,count,pages:page,complete:true});
-    }catch(e){
-      issues.push('issn_'+issn+':'+String(e?.message||e).slice(0,100));
-      byIssn.push({issn,total,count,pages:page,complete:false});
-      break; // Don't mislabel a failed ISSN as an empty collection.
     }
   }
   return {rows:[...map.values()],issues,byIssn};
 }
+
 async function openalexWindow(journal,range,budget) {
   const map=new Map(),issues=[];let cursor='*',count=0,pages=0,total=null;
   try{
@@ -238,7 +264,10 @@ async function openalexWindow(journal,range,budget) {
       if(!Number.isSafeInteger(reported)||reported<0)throw Error('openalex:invalid_total');
       if(total!==null&&total!==reported)throw Error('openalex:total_changed');
       total=reported;count+=data.results.length;pages++;
-      for(const raw of data.results){const row=fromOpenAlex(raw);if(row)map.set(row.doi,row)}
+      for(const raw of data.results){
+        const row=fromOpenAlex(raw,{rscYearOnlyRisk:requiresRscCreationRescue(journal)});
+        if(row)map.set(row.doi,row);
+      }
       if(data.results.length<MAX_ROWS||count>=reported)break;
       const next=data.meta.next_cursor;
       if(typeof next!=='string'||!next||next===cursor)throw Error('openalex:missing_next_cursor');
@@ -339,6 +368,22 @@ export async function runNightly() {
     ||!Array.isArray(state.completed)||!Array.isArray(state.attempts))
     throw Error('invalid_existing_staging_state');
   const journals=orderedJournals();
+  // Once: reopen previously closed RSC publication-date-only windows.
+  // Their source "0 results" was not a reliable source-coverage receipt.
+  if(!state.rscCreatedRescue){
+    const pending=state.completed.map(id=>{
+      const match=/^(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})_(chemical-science|green-chemistry)$/.exec(id);
+      if(!match)return null;
+      const name=match[3]==='chemical-science'?'Chemical Science':'Green Chemistry';
+      const journalIndex=journals.findIndex(j=>j.name===name);
+      return journalIndex<0?null:{range:{from:match[1],to:match[2]},journalIndex};
+    }).filter(Boolean);
+    state.rscCreatedRescue={version:RSC_CREATION_RESCUE_VERSION,pending,done:[],total:pending.length};
+  }
+  if(state.rscCreatedRescue.version!==RSC_CREATION_RESCUE_VERSION
+    ||!Array.isArray(state.rscCreatedRescue.pending)
+    ||!Array.isArray(state.rscCreatedRescue.done))
+    throw Error('invalid_existing_rsc_created_rescue_state');
   const maxUnits=Math.max(1,Math.min(64,Math.floor(Number(process.env.MAX_UNITS||8))));
   const budget=new Budget(Math.max(4,Math.min(320,Math.floor(Number(process.env.API_REQUEST_LIMIT||65)))));
   let processed=0,blocked=false,deferredBudget=false;
@@ -347,7 +392,15 @@ export async function runNightly() {
   while(processed<maxUnits&&state.cursor){
     // Reserve the minimum three calls before beginning an unsplittable source pair.
     if(budget.max-budget.count<3){deferredBudget=true;break;}
-    const rootRange=state.cursor.range,journal=journals[state.cursor.journalIndex];
+    const rescue=state.rscCreatedRescue,nextRecheck=rescue.pending[0];
+    const recheckJournal=nextRecheck&&journals[nextRecheck.journalIndex];
+    const recheckRoot=nextRecheck&&recheckJournal
+      ?journalBatchId(nextRecheck.range,recheckJournal):null;
+    // Complete any previous chronological split before beginning RSC repairs.
+    const recovering=Boolean(nextRecheck
+      &&(!state.activeSplit||state.activeSplit.rootId===recheckRoot));
+    const activeCursor=recovering?nextRecheck:state.cursor;
+    const rootRange=activeCursor.range,journal=journals[activeCursor.journalIndex];
     if(!journal)throw Error('invalid_history_cursor_journal');
     if(!validDate(rootRange?.from)||!validDate(rootRange?.to)||rootRange.from>rootRange.to)
       throw Error('invalid_history_cursor_date_range');
@@ -386,8 +439,15 @@ export async function runNightly() {
       records:rows,
       noFormalPublication:true,noMediaWrites:true,noPDFAcquisition:true,abstractTextsCopied:false,
     };
-    await saveJson(STAGE_ROOT+'/batches/'+id+'.json',record);
-    state.attempts.push({id,journal:journal.name,range,status:record.status,
+    // A failed recheck must not overwrite an older root until a complete
+    // source enumeration is available. Leaf evidence goes to batch files.
+    const recordTarget=recovering&&!split
+      ?STAGE_ROOT+'/rechecks/'+id+'.json'
+      :STAGE_ROOT+'/batches/'+id+'.json';
+    await saveJson(recordTarget,record);
+    state.attempts.push({id,journal:journal.name,range,
+      attemptKind:recovering?'rsc_created_recheck':'chronological',
+      status:record.status,
       count:record.candidateCount,errors:status.issues,at:record.checkedAt});
     state.attempts=state.attempts.slice(-300);
     processed++;
@@ -397,10 +457,13 @@ export async function runNightly() {
         split.pending.shift();
         if(!split.pending.length){
           await finalizeSplitRoot(split,journal,articles);
-          state.completed.push(rootId);
-          state.cursor=nextCursor(state.cursor,journals);
+          if(recovering){rescue.done.push(rootId);rescue.pending.shift()}
+          else {state.completed.push(rootId);state.cursor=nextCursor(state.cursor,journals)}
           delete state.activeSplit;
         }
+      }else if(recovering){
+        await saveJson(STAGE_ROOT+'/batches/'+rootId+'.json',record);
+        rescue.done.push(rootId);rescue.pending.shift();
       }else{
         state.completed.push(rootId);
         state.cursor=nextCursor(state.cursor,journals);
@@ -414,6 +477,7 @@ export async function runNightly() {
     console.log('HISTORICAL_STAGING_WINDOW '+JSON.stringify({id,status:record.status,candidates:record.candidateCount,
       alreadyPublished:record.alreadyPublished,unreviewed:record.unreviewed,
       splitPending:state.activeSplit?.pending.length||0,
+      recoveringRsc:recovering,rscRechecksRemaining:rescue.pending.length,
       requests:budget.count,errors:status.issues}));
     if(blocked)break;
     await delay(300);
@@ -426,6 +490,8 @@ export async function runNightly() {
       completedSegments:state.activeSplit.completed.length,
       pendingSegments:state.activeSplit.pending.length
     }:null,
+    rscCreatedRecheck:{remaining:state.rscCreatedRescue.pending.length,
+      completed:state.rscCreatedRescue.done.length,total:state.rscCreatedRescue.total},
     noPublication:true,noPdf:true};
   await saveJson(staging,state);
   console.log('HISTORICAL_NIGHTLY_SUMMARY '+JSON.stringify(state.lastRun));

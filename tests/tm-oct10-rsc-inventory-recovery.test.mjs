@@ -79,7 +79,7 @@ test('20-page evidence inventory aborts rather than treating missing pages as co
    inventoryReadMetadataJson:async options=>{
      calls++;
      const url=new URL(options.url);
-     assert.equal(url.searchParams.get('pageLimit'),'200');
+     assert.equal(url.searchParams.get('pageLimit'),'120');
      assert.equal(options.headers.authorization,'Bearer 测试授权占位符');
      return calls===1
       ?{schemaVersion:'article-evidence-v2',count:1,items:[{doi:'10.1039/d6sc06407h'}],

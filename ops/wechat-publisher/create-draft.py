@@ -839,7 +839,7 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
     # Upload the explicitly owner-selected concept image in its reviewed,
     # pixel-identical, lossless PNG form, without generic JPEG recomposition.
     if (cover.get("production_cover_image") == "user_selected"
-        and cover.get("pixel_equivalence") == "lossless_rgba_same_pixels"):
+        and cover.get("pixel_equivalence") in ("lossless_rgba_same_pixels", "exact_source_bytes")):
         expected_sha = str(cover.get("delivery_image_sha256") or "").strip().lower()
         actual_sha = hashlib.sha256(source.read_bytes()).hexdigest()
         if not re.fullmatch(r"[0-9a-f]{64}", expected_sha) or actual_sha != expected_sha:
