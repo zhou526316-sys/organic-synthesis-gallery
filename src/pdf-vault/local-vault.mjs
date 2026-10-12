@@ -1,4 +1,5 @@
 import { normalizeDoi, toCopyManifest, toDocumentManifest, PDF_VERSION_KINDS, PDF_PROBE_MAX_AGE_MS } from '../../shared/pdf-vault-v1.mjs';
+import { isPdfFolderProvider } from './storage-providers.mjs';
 
 export const PDF_VAULT_LOCAL_DB = 'gallery-pdf-vault-local-v1';
 export const PDF_VAULT_MAX_BYTES = 50 * 1024 * 1024;
@@ -308,8 +309,9 @@ export function createLocalPdfVault(options = {}) {
    * The picker must run synchronously within the user's button click.
    * Browser storage never receives a path, PDF bytes or write permission.
    */
-  function selectDownloadDirectory() {
+  function selectDownloadDirectory({ provider = 'local' } = {}) {
     check();
+    if (!isPdfFolderProvider(provider)) return Promise.reject(new LocalPdfVaultError('invalid_folder_provider'));
     if (!picker) return Promise.reject(new LocalPdfVaultError('directory_picker_unavailable'));
     let chosen;
     try { chosen = picker({ id: 'gallery-pdf-downloads', startIn: 'downloads', mode: 'read' }); }
@@ -324,7 +326,7 @@ export function createLocalPdfVault(options = {}) {
         request.onsuccess = guarded(() => {
           const row = request.result || { user_id: userId, namespace: randomId('library-'), destination: null };
           const downloaded = { id: randomId('dest_'), directory_handle: directory, device_id: deviceId,
-            name: directory.name || '已授权 PDF 下载目录', selected_at: now() };
+            provider, name: directory.name || '已授权 PDF 下载目录', selected_at: now() };
           store.put({ ...row, downloads: downloaded });
           result({ name: downloaded.name });
         });
@@ -336,7 +338,7 @@ export function createLocalPdfVault(options = {}) {
         throw new LocalPdfVaultError('persistence_failed');
       }
       publishChange();
-      return { name: retained.downloads.name };
+      return { name: retained.downloads.name, provider: retained.downloads.provider || 'local' };
     });
   }
 
@@ -359,7 +361,8 @@ export function createLocalPdfVault(options = {}) {
       if (!selected?.directory_handle || selected.device_id !== deviceId) return { selected: false, name: '' };
       const state = typeof selected.directory_handle.queryPermission === 'function'
         ? await boundary(selected.directory_handle.queryPermission({ mode: 'read' })) : 'prompt';
-      return { selected: true, name: selected.name || 'PDF 下载目录', permission: state, id: selected.id || '' };
+      return { selected: true, name: selected.name || 'PDF 下载目录', permission: state,
+        id: selected.id || '', provider: isPdfFolderProvider(selected.provider) ? selected.provider : 'local' };
     });
   }
 
