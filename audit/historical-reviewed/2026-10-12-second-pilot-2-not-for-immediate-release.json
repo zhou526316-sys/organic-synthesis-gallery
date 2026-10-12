@@ -1,0 +1,122 @@
+{
+  "schemaVersion": "gallery-historical-two-pass-evidence-sidecar-v1",
+  "mode": "reviewed_sidecar_not_release_allowlist",
+  "reviewedAt": "2026-10-12T05:36:32.778Z",
+  "scopeContract": "scope-2026-10-02-v1",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+  "origin": "user-authorized_16_journal_historical_backfill",
+  "statement": "This audit is independent from approved-admissions.json. It DOES NOT add papers to the 2026-10-13 08:00 release until exact-source reconciliation, formal history manifest inclusion, and current fixed-slot authorization succeed.",
+  "summary": {
+    "checked": 2,
+    "firstPassIncluded": 2,
+    "challengeIncluded": 2,
+    "held": 0,
+    "formallyPublished": 0
+  },
+  "noFullOriginalAbstract": true,
+  "noFullText": true,
+  "noPdf": true,
+  "noFigure": true,
+  "decisions": [
+    {
+      "doi": "10.1021/acs.joc.6c00602",
+      "journal": "JOC",
+      "date": "2026-09-11",
+      "title": "Alkoxide Base-Mediated Methyl Boration of Aryl Alkenes and Arylidenecyclopropanes",
+      "titleZh": "醇盐碱介导芳基烯烃和芳叉环丙烷的无过渡金属甲基硼化",
+      "authors": [
+        "Ximei Tian",
+        "Lipeng Wu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12785-12791",
+        "doi": "10.1021/acs.joc.6c00602"
+      },
+      "firstPassDecision": "include",
+      "secondPassDecision": "include",
+      "reviewPasses": 2,
+      "decision": "include",
+      "scopeAssessment": {
+        "primaryContribution": "提供不依赖过渡金属催化的烯烃甲基硼化反应，使芳基烯烃与芳叉环丙烷能够转化为有机制备价值明确的硼酸酯衍生物。",
+        "preparativeTransformation": "使用叔丁醇钾作为单一媒介，以双联频哪醇硼酸酯和碘甲烷处理苯乙烯类及芳叉环丙烷；后者可在保留环丙基结构的情况下生成叔烷基硼酸酯。",
+        "generalityEvidence": "ACS官方摘要明确提及苯乙烯类烯烃及芳叉环丙烷两类底物，并突出环丙烷保留和叔硼酸酯合成；未从已读摘要推断未给出的产率范围或克级实验。",
+        "sourceEvidence": "ACS正式文章页和摘要 https://pubs.acs.org/doi/10.1021/acs.joc.6c00602 ，标示 Published Online 2026-09-11；与历史JOC暂存批次Crossref/OpenAlex DOI、作者、日期及引文一致，批次SHA c5604566a1a9763ce4fbbd2233b424db5c960517。",
+        "boundaryChallenge": "关键边界是该工作是否仅展示结构化硼试剂的个别制备，而没有可推广新方法；出版社摘要明确对比既有过渡金属甲基硼化路线，且涵盖不同烯烃类别并保留环丙基，支持其一般合成贡献，但不据此推断所有官能团适用性。"
+      },
+      "challengeReason": "第二遍独立核对无过渡金属主张与底物类别，并区分作者对阴离子中间体的机理解释和实验证明；不臆造分离收率、反应温度或不对称选择性。",
+      "evidence": {
+        "publisherUrl": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00602",
+        "onlineDate": "2026-09-11",
+        "stageBatch": "2026-09-08_2026-09-14_joc",
+        "stageBatchSha": "c5604566a1a9763ce4fbbd2233b424db5c960517",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "rights": "not_verified_no_full_abstract_republication"
+      },
+      "publication": {
+        "ingestionChannel": "historical_backfill",
+        "mediaPolicy": "toc_only",
+        "new": false,
+        "addedDate": "",
+        "status": "not_published_reviewed_sidecar"
+      }
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03154",
+      "journal": "Organic Letters",
+      "date": "2026-09-10",
+      "title": "Oxidative Fluorination of β-Ketoamides: Guanidinium Iodides as Iodoarene Alternatives",
+      "titleZh": "胍鎓碘盐催化β-酮酰胺的氧化氟化：替代碘代芳烃的反应策略",
+      "authors": [
+        "Toma Osawa",
+        "Hayate Ishizuka",
+        "Takashi Yamazaki",
+        "Kazuo Nagasawa",
+        "Dominique Cahard"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "38",
+        "pages": "11867-11871",
+        "doi": "10.1021/acs.orglett.6c03154"
+      },
+      "firstPassDecision": "include",
+      "secondPassDecision": "include",
+      "reviewPasses": 2,
+      "decision": "include",
+      "scopeAssessment": {
+        "primaryContribution": "以廉价碘盐取代传统碘代芳烃的氧化氟化催化策略，建立β-酮酰胺α位碳-氟键形成的直接制备方法，属于有机含氟方法学。",
+        "preparativeTransformation": "胍鎓碘盐作为催化组分，吡啶氢氟酸作为氟来源，mCPBA作为氧化剂，在二氯乙烷中实现β-酮酰胺α位亲电氟化并形成含季碳中心的α-氟-β-酮酰胺。",
+        "generalityEvidence": "官方摘要称方法适用于芳香、脂肪族及非环状底物，报告产物最高收率92%；这里仅将92%记为最高值，不视作整体平均，也不将其误称为对映选择性结果。",
+        "sourceEvidence": "ACS正式文章页与摘要 https://pubs.acs.org/doi/10.1021/acs.orglett.6c03154 ，标示 Published Online 2026-09-10；与历史Organic Letters批次Crossref/OpenAlex DOI、作者、日期及引文一致，批次SHA 36d41e331c1163bd4e26004ce2c179d4d6e8cec0。",
+        "boundaryChallenge": "主要反向疑点在于碘盐活性种与胍鎓阳离子效应的机理分析可能只是催化体系机理，而不是合成方法；但摘要有明确底物拓展、可分离目标含氟有机物类别及最高收率，因此方法学贡献成立。"
+      },
+      "challengeReason": "第二遍将HOI/HIO₂催化活性种的作者推定与已直接证明的合成转化分开；未报告ee的数据不得标为不对称氟化，且不把SI中的尝试等同于成功结果。",
+      "evidence": {
+        "publisherUrl": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03154",
+        "onlineDate": "2026-09-10",
+        "stageBatch": "2026-09-08_2026-09-14_organic-letters",
+        "stageBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ],
+        "rights": "not_verified_no_full_abstract_republication"
+      },
+      "publication": {
+        "ingestionChannel": "historical_backfill",
+        "mediaPolicy": "toc_only",
+        "new": false,
+        "addedDate": "",
+        "status": "not_published_reviewed_sidecar"
+      }
+    }
+  ]
+}
