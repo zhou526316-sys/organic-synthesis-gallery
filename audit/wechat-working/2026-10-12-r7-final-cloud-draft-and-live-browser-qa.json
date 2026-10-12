@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r7",
+  "status": "source_science_text_review_and_real_wechat_cloud_draft_live_desktop_mobile_preview_pass",
+  "selectionDois": [
+    "10.1021/acscatal.6c06048",
+    "10.1021/jacs.6c10406"
+  ],
+  "draftState": {
+    "stage": "draft_update",
+    "mediaId": "KhELYUzvwADwB_l1xH1SWIIQfl5GSB19jduNK2sdIdguH6OMYYfkuM8zO65yvnWs",
+    "sameOriginalR4AndR6Media": true,
+    "existingArticleCount": 2,
+    "readback": "ok",
+    "previewUrl": "https://relay.gczhouwld.com/wechat-preview/e38f40b7cd44a006df026b92.html",
+    "publishId": null,
+    "duplicatedDraft": false,
+    "published": false
+  },
+  "R7ScienceProse": {
+    "acsChars": 3513,
+    "jacsChars": 3628,
+    "acsParagraphs": 31,
+    "jacsParagraphs": 32,
+    "sourceOriginalFactReview": "pass",
+    "vsR6": {
+      "acsChars": 1916,
+      "jacsChars": 1950
+    },
+    "jacs3lCorrectedTo": "64.9% isolated yield, 69.8% ee"
+  },
+  "sourceMedia": {
+    "bodyOriginalImages": {
+      "acs": 14,
+      "jacs": 10
+    },
+    "covers": 2,
+    "qr": 1,
+    "allImageElementsLoaded": 27,
+    "brokenImageCount": 0,
+    "sameOriginalFigureBytesAndSelectedCoverHashes": true,
+    "displayWidths": "case-specific 78–94 percent, natural aspect ratio, no truncation, confirmed via offline and real live screenshots"
+  },
+  "actualBrowserScreens": {
+    "mobile": "390 × 844 CSS px",
+    "desktop": "980 × 940 CSS px",
+    "offline": "390/740 px",
+    "liveImageStatus": "all_loaded",
+    "actualImagesRead": 27,
+    "horizontalOverflowOffline": false,
+    "proofScreenshots": [
+      "audit/wechat-working/2026-10-12-r7-live-preview/mobile-first-screen.png",
+      "audit/wechat-working/2026-10-12-r7-live-preview/mobile-primary-cover.png",
+      "audit/wechat-working/2026-10-12-r7-live-preview/mobile-retrospective-cover.png",
+      "audit/wechat-working/2026-10-12-r7-live-preview/mobile-ACS-scientific-reasoning.png",
+      "audit/wechat-working/2026-10-12-r7-live-preview/mobile-JACS-scientific-reasoning.png",
+      "audit/wechat-working/2026-10-12-r7-live-preview/mobile-ACS-SI-Table-S9.png",
+      "audit/wechat-working/2026-10-12-r7-live-preview/mobile-JACS-Fig2-scope.png",
+      "audit/wechat-working/2026-10-12-r7-live-preview/mobile-JACS-Fig3A-minimal.png",
+      "audit/wechat-working/2026-10-12-r7-live-preview/mobile-JACS-Fig4-mechanism.png",
+      "audit/wechat-working/2026-10-12-r7-live-preview/desktop-two-cover-header.png"
+    ]
+  },
+  "dailyJournalCountsOnly": "ACS Catalysis 1, JOC 1, Organic Letters 3; 5 published at 08:00 Beijing",
+  "links": [
+    "https://gallery.gczhouwld.com/?edition=2026-10-12&doi=10.1021%2Facscatal.6c06048&summary=0",
+    "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0"
+  ],
+  "linksMatchChosenDois": true,
+  "published": false,
+  "sourceRefs": {
+    "gateSha": "49e7425ac441da1f722346be2b55db5b0126a377",
+    "cloudReceiptSha": "822ba1f465b662f47aa66523f3584a1c04489ab0",
+    "offlineQaSha": "1b04c9f289c9fb885e7aeb52fe3bfe9afaebfd3d",
+    "liveQaSha": "fbe6c8045870dbff284ab615bb4737d4ab2c5009",
+    "scienceReviewSha": "83766f8f61f30fedc5145af7c6a0209e68a91744"
+  },
+  "runRefs": {
+    "R7offlinePreDraft": 38240990420,
+    "latestDraftUpdate": 38241569523,
+    "R7realLiveReadOnly": 38241925239
+  },
+  "limitations": [
+    "True Official Account cloud draft_get and relay browser viewport inspected, but no physical mobile WeChat app screenshot (native card crop not guaranteed).",
+    "The separate daily new-paper thumbnails can still use placeholders when Gallery TOC is unavailable; not the object of this scientific prose/figure-ratio correction.",
+    "No further background work or public publication authorized."
+  ]
+}
