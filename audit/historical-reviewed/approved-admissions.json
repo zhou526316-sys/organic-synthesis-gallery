@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-12T04:54:22.141Z",
+  "generatedAt": "2026-10-12T08:53:53.405Z",
   "nextEligiblePublicationSlot": "2026-10-13T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 964
   },
   "summary": {
-    "checked": 7,
-    "include": 5,
+    "checked": 10,
+    "include": 8,
     "pending": 2,
     "published": 0,
     "sourceCollision": 0
@@ -318,6 +318,171 @@
         "pdfFetched": false
       },
       "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00602",
+      "journal": "JOC",
+      "title": "Alkoxide Base-Mediated Methyl Boration of Aryl Alkenes and Arylidenecyclopropanes",
+      "titleZh": "醇盐碱介导的芳基烯烃及芳亚甲基环丙烷甲基硼化",
+      "date": "2026-09-11",
+      "authors": [
+        "Ximei Tian",
+        "Lipeng Wu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12785-12791",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00602"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以叔丁醇钾为唯一反应介导试剂，使芳基烯烃发生甲基和硼基双官能团化，形成可进一步转化的有机硼酸酯。",
+      "evidenceBasis": "DOI、期刊、作者、首次在线日期与原批次 2026-09-08_2026-09-14_joc 的 Crossref/OpenAlex 来源交叉核验，且与出版社官方文章页一致；JOC 出版社文章页 DOI 10.1021/acs.joc.6c00602，Published Online 2026-09-11，摘要明确叔丁醇钾/B₂pin₂/MeI及苯乙烯、芳亚甲基环丙烷的合成范围与保环特征；Crossref/OpenAlex 两家书目记录匹配。",
+      "challengeReason": "独立第二遍核对：摘要支持两类芳基取代底物与环丙烷保留的实证描述，却没有证明完全无金属残留、普适于所有烯烃，也没有给出具体总产率；机理提到阴离子中间体，不能将其写为已排除全部自由基路径。",
+      "scopeAssessment": {
+        "primaryContribution": "以叔丁醇钾为唯一反应介导试剂，使芳基烯烃发生甲基和硼基双官能团化，形成可进一步转化的有机硼酸酯。",
+        "preparativeTransformation": "苯乙烯类及芳亚甲基环丙烷与甲基碘、联硼酸频哪醇酯在叔丁醇钾介导下反应，生成甲基硼化产物，且芳亚甲基环丙烷底物保留环丙烷环并得到叔碳硼酸酯。",
+        "generalityEvidence": "官方摘要明确比较苯乙烯和芳亚甲基环丙烷两类底物，后者保持三元环结构构建叔碳硼酸酯；相较以往用过渡金属的同类转化，此法强调无过渡金属条件。",
+        "sourceEvidence": "JOC 出版社文章页 DOI 10.1021/acs.joc.6c00602，Published Online 2026-09-11，摘要明确叔丁醇钾/B₂pin₂/MeI及苯乙烯、芳亚甲基环丙烷的合成范围与保环特征；Crossref/OpenAlex 两家书目记录匹配。 原始历史批次 2026-09-08_2026-09-14_joc Git blob c5604566a1a9763ce4fbbd2233b424db5c960517，仅复核原始公开摘要事实，未复制其完整英文正文。",
+        "boundaryChallenge": "该方法可能限于苯乙烯类型的活化烯烃，不能凭标题推断脂肪族非活化烯烃同样适用；然而跨苯乙烯和芳亚甲基环丙烷两类底物、实现不同骨架的甲基硼化，已构成可迁移制备转化。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00602",
+        "publisherOnlineDate": "2026-09-11",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_joc",
+        "stageBatchSha": "c5604566a1a9763ce4fbbd2233b424db5c960517",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05426",
+      "journal": "ACS Catalysis",
+      "title": "Catalytic Enantioselective De Novo Synthesis of C 1-Symmetric Inherently Chiral Cages",
+      "titleZh": "催化对映选择性从头构筑 C₁ 对称的固有手性分子笼",
+      "date": "2026-09-09",
+      "authors": [
+        "Xin-Ge Wang",
+        "Qing-Hui Guo",
+        "Ruimao Hua",
+        "Mei-Xiang Wang",
+        "Shuo Tong"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "18",
+        "pages": "18495-18503",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c05426"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过手性相转移催化下的双芳香亲核取代，从非手性宏环构建 C₁ 对称固有手性分子笼，属于立体选择性构筑新分子拓扑的制备方法。",
+      "evidenceBasis": "DOI、期刊、作者、首次在线日期与原批次 2026-09-08_2026-09-14_acs-catalysis 的 Crossref/OpenAlex 来源交叉核验，且与出版社官方文章页一致；ACS Catalysis 出版社 DOI 10.1021/acscatal.6c05426 的 Published Online 为 2026-09-09；摘要明示 3+1 前体环化、双 SNAr、金鸡纳类相转移催化、最高 98% ee 和手性笼应用；Crossref/OpenAlex 书目一致。",
+      "challengeReason": "第二遍质疑：98% ee 是最高值不是每个分子的统一值，不能臆造底物条目或放大产量；后续利用手性笼催化铵盐去质子化是应用展示，不应被夸成所有手性反应都能催化，但其主贡献仍是催化不对称构筑。",
+      "scopeAssessment": {
+        "primaryContribution": "通过手性相转移催化下的双芳香亲核取代，从非手性宏环构建 C₁ 对称固有手性分子笼，属于立体选择性构筑新分子拓扑的制备方法。",
+        "preparativeTransformation": "先通过 3+1 环化构建 Cs 对称 ABAC 型氧杂高杯芳烃/三嗪宏环前体，再与线性双苄醇连接体发生双重芳香亲核取代，形成固有手性的笼状有机分子。",
+        "generalityEvidence": "官方摘要展示由宏环和双苄醇连接体合成笼状产物，金鸡纳生物碱衍生手性相转移催化剂给出最高 98% ee，所得手性笼亦用于手性伯铵盐的立体选择性去质子化催化。",
+        "sourceEvidence": "ACS Catalysis 出版社 DOI 10.1021/acscatal.6c05426 的 Published Online 为 2026-09-09；摘要明示 3+1 前体环化、双 SNAr、金鸡纳类相转移催化、最高 98% ee 和手性笼应用；Crossref/OpenAlex 书目一致。 原始历史批次 2026-09-08_2026-09-14_acs-catalysis Git blob 7b6d4fb5482e73f01549dd695b2eb8cee8a6feba，仅复核原始公开摘要事实，未复制其完整英文正文。",
+        "boundaryChallenge": "固有手性笼也可能属于超分子结构/材料性质研究，不能只凭笼体形貌或 ee 就收录；此文核心明确给出宏环前体合成、双 SNAr 构筑手性拓扑和催化选择性的可操作制备序列，支持有机合成范围。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acscatal.6c05426",
+        "publisherOnlineDate": "2026-09-09",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_acs-catalysis",
+        "stageBatchSha": "7b6d4fb5482e73f01549dd695b2eb8cee8a6feba",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03154",
+      "journal": "Organic Letters",
+      "title": "Oxidative Fluorination of β-Ketoamides: Guanidinium Iodides as Iodoarene Alternatives",
+      "titleZh": "胍鎓碘盐替代碘代芳烃催化 β-酮酰胺的氧化氟化",
+      "date": "2026-09-10",
+      "authors": [
+        "Toma Osawa",
+        "Hayate Ishizuka",
+        "Takashi Yamazaki",
+        "Kazuo Nagasawa",
+        "Dominique Cahard"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "38",
+        "pages": "11867-11871",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03154"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过胍鎓碘盐参与的原位氧化氟化实现 β-酮酰胺的 α 位 C–F 键构筑，提供不依赖碘代芳烃的官能团化方法。",
+      "evidenceBasis": "DOI、期刊、作者、首次在线日期与原批次 2026-09-08_2026-09-14_organic-letters 的 Crossref/OpenAlex 来源交叉核验，且与出版社官方文章页一致；Organic Letters 出版社文章 DOI 10.1021/acs.orglett.6c03154 标注 Published Online 2026-09-10；摘要明确氟源、氧化剂、胍鎓碘盐及芳基/脂肪族/非环状范围与最高 92% 收率，Crossref/OpenAlex 书目一致。",
+      "challengeReason": "第二遍核验：92% 为最高单例产率，不应宣称每个底物均高产；次碘酸/碘酸物种属于机理研究所支持的活性候选，不能把其绝对身份或存在比例写为无争议定论；该体系没有宣称不对称氟化。",
+      "scopeAssessment": {
+        "primaryContribution": "通过胍鎓碘盐参与的原位氧化氟化实现 β-酮酰胺的 α 位 C–F 键构筑，提供不依赖碘代芳烃的官能团化方法。",
+        "preparativeTransformation": "以 β-酮酰胺为底物，使用胍鎓碘盐催化体系、HF·吡啶为氟源并以 mCPBA 为氧化剂，在 α 位发生氧化氟化得到季碳 α-氟-β-酮酰胺。",
+        "generalityEvidence": "官方摘要声称芳基、脂肪族以及非环状底物均适用，最高产率达 92%；指出胍鎓阳离子改善碘化物溶解性和反应性，支持替代经典碘代芳烃体系的制备应用。",
+        "sourceEvidence": "Organic Letters 出版社文章 DOI 10.1021/acs.orglett.6c03154 标注 Published Online 2026-09-10；摘要明确氟源、氧化剂、胍鎓碘盐及芳基/脂肪族/非环状范围与最高 92% 收率，Crossref/OpenAlex 书目一致。 原始历史批次 2026-09-08_2026-09-14_organic-letters Git blob 36d41e331c1163bd4e26004ce2c179d4d6e8cec0，仅复核原始公开摘要事实，未复制其完整英文正文。",
+        "boundaryChallenge": "需排除仅为化学氧化剂筛选或单一母核材料性质研究的可能；摘要明确给出不同底物类别、C–F 键形成的产物结构和反应范围，因此主要贡献是可推广的有机制备。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03154",
+        "publisherOnlineDate": "2026-09-10",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_organic-letters",
+        "stageBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
     }
   ],
   "pending": [
@@ -360,5 +525,5 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "Two-pass academic scope assessment completed for five DOI, but not yet formal gallery admissions. Pending DOI are not excluded. Site visibility and authorized release are separate gates."
+  "note": "First five freeze-preserved; three additional DOI have independent two-pass synthesis scope review from verified publisher abstracts and staged Crossref/OpenAlex identity. Source or rights gaps remain fail-closed; no off-slot release."
 }
