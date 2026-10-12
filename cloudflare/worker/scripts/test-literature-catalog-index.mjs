@@ -410,6 +410,40 @@ test('exact online day count and cursor reads seek the existing catalog/date ind
   assert.match(cursorPlan,/doi>\?/);
 });
 
+test('one-sided lower date bound seeks D1 index and paginates without dropping or duplicating results',async t=>{
+  const {db,env,g}=await exactOnlineDayFixture(t);
+  for(const sort of ['newest','oldest']){
+    const found=[];
+    let cursor='';
+    for(let page=0;page<3;page++){
+      const output=await queryPublishedLiteratureCatalogView(env,{
+        catalogId:g.catalogId,dateFrom:'2026-07-01',sort,limit:3,cursor,
+      });
+      assert.equal(output.status,200);
+      assert.equal(output.body.matched,8);
+      assert.ok(output.body.items.every(item=>item.firstOnlineDate>='2026-07-01'));
+      found.push(...output.body.items.map(item=>item.doi));
+      cursor=output.body.nextCursor;
+      assert.equal(Boolean(cursor),page<2);
+    }
+    assert.equal(new Set(found).size,8);
+    const day=Array.from({length:6},(_,i)=>`10.1234/day-${i}`);
+    assert.deepEqual(found,sort==='newest'
+      ? ['10.1234/day-after',...day,'10.1234/day-before']
+      : ['10.1234/day-before',...day,'10.1234/day-after']);
+  }
+  const reads=db.reads.filter(read=>/FROM literature_catalog_index i\b/.test(read.sql));
+  assert.equal(reads.length,12);
+  for(const read of reads){
+    const plan=db.sqlite.prepare('EXPLAIN QUERY PLAN '+read.sql).all(...read.args)
+      .map(item=>item.detail).join('\n');
+    assert.match(plan,/USING (?:COVERING )?INDEX idx_literature_catalog_date \(catalog_id=\? AND first_online_date>\?/);
+    assert.doesNotMatch(plan,/SCAN i\b/);
+    if(read.sql.includes('ORDER BY i.first_online_date DESC, i.doi ASC'))
+      assert.doesNotMatch(plan,/USE TEMP B-TREE FOR ORDER BY/);
+  }
+});
+
 test('exact online day preserves journal, search, added-date, empty-day and calendar-boundary behavior',async t=>{
   const {env,g,day}=await exactOnlineDayFixture(t);
   const options={catalogId:g.catalogId,dateFrom:day,dateTo:day,query:'nickel',

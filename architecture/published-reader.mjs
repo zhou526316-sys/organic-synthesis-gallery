@@ -355,6 +355,40 @@ export class PublishedCatalogClient {
     for (const item of expected) {
       assert(this.membership?.members?.[item.doi] === item.revision, `indexed_membership_revision_mismatch:${item.doi}`);
     }
+
+    // The D1 page supplies only discovery hints; original card content still
+    // comes exclusively from SHA-256 verified Pages shards. For a date-filter
+    // page, several DOIs usually share one or two month shards. Read each shard
+    // once instead of doing 8-way per-DOI locator + shard lookups (and fetching
+    // the same shard repeatedly while all reads are still in flight).
+    const catalog = await reader.open(signal);
+    const months = new Set(items.map(item =>
+      item?.datePrecision === 'day' && typeof item?.firstOnlineDate === 'string'
+        && /^\d{4}-\d{2}-\d{2}$/.test(item.firstOnlineDate)
+        ? item.firstOnlineDate.slice(0, 7) : 'undated'
+    ));
+    const batchRefs = catalog.shards.filter(ref => months.has(ref.month));
+    const batchBytes = batchRefs.reduce((bytes, ref) => bytes + ref.bytes, 0);
+    const haveAllMonths = new Set(batchRefs.map(ref => ref.month)).size === months.size;
+    if (expected.length >= 4 && batchRefs.length > 0 && batchRefs.length <= 8
+        && batchBytes <= 2 * 1024 * 1024 && haveAllMonths) {
+      const verifiedShards = await Promise.all(batchRefs.map(ref => reader.read(ref, signal)));
+      const verifiedByDoi = new Map();
+      for (const shard of verifiedShards) {
+        assert(Array.isArray(shard.records), 'indexed_verified_shard_records_invalid');
+        for (const record of shard.records) {
+          const doi = normalizeDoi(record?.doi);
+          assert(doi && !verifiedByDoi.has(doi), 'indexed_verified_shard_duplicate_doi');
+          verifiedByDoi.set(doi, record);
+        }
+      }
+      // A stale or inaccurate D1 date hint must not hide an otherwise valid
+      // record. Resolve only that exceptional case through the old per-DOI
+      // verified locator path; never trust D1 title/author text for rendering.
+      if (expected.every(item => verifiedByDoi.get(item.doi)?.revision === item.revision)) {
+        return recordPapers(expected.map(item => verifiedByDoi.get(item.doi)));
+      }
+    }
     const plan = await resolveDoisPlan(reader, expected.map(item => item.doi), {
       asOfDate: this.asOfDate,
       signal,
