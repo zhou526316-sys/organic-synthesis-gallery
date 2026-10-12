@@ -310,9 +310,12 @@ export async function discoverDownloadedPdf({
   // On the next click, process files left by a previous bounded traversal
   // *before* enumerating additional directories. Nothing is thrown away at a
   // deadline, and a large root directory cannot block deeper subdirectories.
+  let exhaustedTraversal = false;
   while (Date.now() < deadline && stats.parsed < MAX_PARSE_PER_PASS) {
     if (!cache.pendingFiles?.length) {
+      if (exhaustedTraversal) break;
       await collectBatch(directory.handle, cache, deadline, assertCurrent, stats);
+      exhaustedTraversal = !cache.walk?.queue?.length;
       if (!cache.pendingFiles?.length) break;
     }
     cache.pendingFiles.sort((a, b) =>
