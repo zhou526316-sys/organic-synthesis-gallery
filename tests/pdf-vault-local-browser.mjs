@@ -217,7 +217,7 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       localStorage.setItem(sessionKey, token);
       localStorage.setItem('gallery-local-vault-fixture-seeded', '1');
     }
-    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, filePickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false, stallIndexedDb, nativeAuthMode, chosenBytes: null };
+    window.__pdfVaultFixture = { pickerMode: 'real', writeMode: 'real', permission: 'granted', pickerCalls: 0, pickerModes: [], filePickerCalls: 0, writesStarted: 0, releaseWrites: [], ignoreQueueCancellation: false, stallIndexedDb, nativeAuthMode, chosenBytes: null };
     const nativeFetch = window.fetch.bind(window);
     window.fetch = (input, init) => {
       const pathname = new URL(typeof input === 'string' ? input : input.url, location.href).pathname;
@@ -237,8 +237,9 @@ async function trackedContext({ width = 1280, holdAuth = false, folderPicker = t
       }
       return nativeFetch(input, init);
     };
-    window.showDirectoryPicker = async () => {
+    window.showDirectoryPicker = async options => {
       const state = window.__pdfVaultFixture; state.pickerCalls++;
+      state.pickerModes.push({ mode: options?.mode, startIn: options?.startIn });
       if (state.pickerMode === 'cancel') throw new DOMException('Fixture picker cancellation', 'AbortError');
       if (state.pickerMode === 'deny') throw new DOMException('Fixture picker denial', 'NotAllowedError');
       return (await navigator.storage.getDirectory()).getDirectoryHandle('picked-directory', { create: true });
@@ -563,12 +564,98 @@ try {
     await reopened.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
     assert.equal(await reopened.getByTestId('native-pdf-frame').isVisible(), false);
   });
+  await test('cloud provider chooser links only to official sites and stores a local directory handle', async () => {
+    const { context, state } = await trackedContext();
+    const page = await context.newPage();
+    await page.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await page.getByTestId('native-pdf-download-folder').waitFor({ state: 'visible' });
+    await page.getByTestId('native-pdf-download-folder').click();
+    await page.locator('#native-folder-modal').waitFor({ state: 'visible' });
+    const providers = [
+      ['baidu', 'https://yun.baidu.com/download'],
+      ['quark', 'https://pan.quark.cn/'],
+      ['aliyun', 'https://www.aliyundrive.com/download'],
+      ['onedrive', 'https://www.microsoft.com/zh-cn/microsoft-365/onedrive/download'],
+    ];
+    for (const [id, url] of providers) {
+      await page.getByTestId('native-folder-provider-' + id).click();
+      assert.equal(await page.locator('#native-folder-official').getAttribute('href'), url,
+        'official link is provider-specific and never points to Gallery credential collection');
+      assert.equal(await page.locator('#native-folder-official').getAttribute('rel'), 'noopener noreferrer');
+      assert.equal(await page.locator('[data-folder-provider="' + id + '"]').getAttribute('aria-pressed'), 'true');
+    }
+    assert.match(await page.locator('#native-folder-privacy').innerText(), /不收集云盘账号密码/);
+    assert.equal(await page.evaluate(() => window.__pdfVaultFixture.pickerCalls), 0,
+      'choosing a brand must not silently open the native picker or request any cloud data');
+    await page.getByTestId('native-folder-provider-baidu').click();
+    await page.getByTestId('native-pdf-folder-choose').click();
+    await page.locator('#native-folder-modal').waitFor({ state: 'hidden' });
+    await page.getByTestId('native-pdf-folder-scan').waitFor({ state: 'visible' });
+    const linked = await page.evaluate(async user => {
+      const req = indexedDB.open('gallery-pdf-vault-local-v1', 1);
+      const db = await new Promise((resolve, reject) => {
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+      try {
+        const row = await new Promise((resolve, reject) => {
+          const r = db.transaction('accounts', 'readonly').objectStore('accounts').get(user);
+          r.onsuccess = () => resolve(r.result);
+          r.onerror = () => reject(r.error);
+        });
+        return { provider: row.downloads.provider,
+          directory: row.downloads.directory_handle?.kind, name: row.downloads.name,
+          hasThirdPartyToken: 'cloudToken' in row.downloads };
+      } finally { db.close(); }
+    }, USERS.a);
+    assert.equal(linked.provider, 'baidu');
+    assert.equal(linked.directory, 'directory');
+    assert.equal(linked.hasThirdPartyToken, false);
+    assert.equal(await page.evaluate(() => window.__pdfVaultFixture.pickerCalls), 1);
+    assert.deepEqual(await page.evaluate(() => window.__pdfVaultFixture.pickerModes[0]), {
+      mode: 'read', startIn: 'downloads',
+    });
+
+    // Provider selection persists on this device, but a cancelled replacement
+    // must neither overwrite the old association nor report cloud login.
+    await page.getByTestId('native-pdf-download-folder').click();
+    await page.locator('#native-folder-modal').waitFor({ state: 'visible' });
+    assert.equal(await page.getByTestId('native-folder-provider-baidu').getAttribute('aria-pressed'), 'true');
+    await page.getByTestId('native-folder-provider-aliyun').click();
+    await page.evaluate(() => { window.__pdfVaultFixture.pickerMode = 'cancel'; });
+    await page.getByTestId('native-pdf-folder-choose').click();
+    await page.locator('#native-folder-feedback').getByText(/已取消选择/).waitFor({ state: 'visible' });
+    await page.locator('#native-folder-close').click();
+    assert.equal(await page.locator('#native-folder-modal').isVisible(), false);
+    assert.equal(await page.getByTestId('native-pdf-folder-scan').isVisible(), true);
+    await page.getByTestId('native-pdf-download-folder').click();
+    assert.equal(await page.getByTestId('native-folder-provider-baidu').getAttribute('aria-pressed'), 'true');
+    await page.locator('#native-folder-cancel').click();
+    assert.equal(state.requests.filter(item => /(?:baidu|quark|aliyun|onedrive)/i.test(item.url)).length, 0,
+      'choosing a cloud provider does not send credentials or traffic to that provider');
+  });
+  await test('local and cloud choices remain usable in a 390px viewport without remote OAuth', async () => {
+    const { context } = await trackedContext({ width: 390 });
+    const page = await context.newPage();
+    await page.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
+    await page.getByTestId('native-pdf-download-folder').waitFor({ state: 'visible' });
+    await page.getByTestId('native-pdf-download-folder').click();
+    await page.getByTestId('native-folder-provider-local').click();
+    assert.equal(await page.locator('#native-folder-official').isVisible(), false);
+    const modal = await page.locator('#native-folder-modal .folder-modal-panel').boundingBox();
+    assert.ok(modal && modal.x >= -1 && modal.x + modal.width <= 391,
+      'cloud folder chooser fits a narrow mobile viewport');
+    await page.getByTestId('native-pdf-folder-choose').click();
+    await page.locator('#native-folder-modal').waitFor({ state: 'hidden' });
+    assert.equal(await page.evaluate(() => window.__pdfVaultFixture.pickerCalls), 1);
+  });
   await test('one read-only folder grant automatically discovers a newly downloaded PDF', async () => {
     const { context } = await trackedContext();
     const page = await context.newPage();
     await page.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
     await page.getByTestId('native-pdf-download-folder').waitFor({ state: 'visible' });
     await page.getByTestId('native-pdf-download-folder').click();
+    await page.getByTestId('native-pdf-folder-choose').click();
     // The initial account-scoped scan must finish before this fixture
     // simulates a new download followed by navigation. Merely seeing the
     // file-picker button is not proof that its lazy PDF.js requests ended.
@@ -601,6 +688,7 @@ try {
       { waitUntil: 'domcontentloaded' });
     await page.getByTestId('native-pdf-download-folder').waitFor({ state: 'visible' });
     await page.getByTestId('native-pdf-download-folder').click();
+    await page.getByTestId('native-pdf-folder-choose').click();
     // The initial account-scoped scan must finish before this fixture
     // simulates a new download followed by navigation. Merely seeing the
     // file-picker button is not proof that its lazy PDF.js requests ended.
