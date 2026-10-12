@@ -1420,7 +1420,7 @@
     "closureCoverageAnomalies": 1,
     "note": "No off-slot admission or deletion-only correction was performed. The next publication slot remains the normal 18:00 Beijing slot."
   },
-  "updatedAt": "2026-10-12T23:26:05.200Z",
+  "updatedAt": "2026-10-12T23:36:22.000Z",
   "lastDeploymentAttempt": {
     "schemaVersion": 2,
     "ok": true,
@@ -1589,13 +1589,13 @@
     "accepted": 7,
     "rejected": 86,
     "pending": 5,
-    "updatedAt": "2026-10-12T23:26:05.200Z",
-    "publicationChecksPassed": false,
-    "reviewCommitSha": null,
-    "reviewBlobSha": "a6a2bf895cb6827ae055737dc0fb77acc4fb2875",
-    "gateRunId": null,
-    "gateJobId": null,
-    "gateConclusion": "pending",
+    "updatedAt": "2026-10-12T23:36:22.000Z",
+    "publicationChecksPassed": true,
+    "reviewCommitSha": "c514b1fe43a7c51b8d73ba7fc3d94067b0f4cc52",
+    "reviewBlobSha": "395cce1348e0b56d486422b9f9795a4dce7efc3a",
+    "gateRunId": 38322837772,
+    "gateJobId": 115054645671,
+    "gateConclusion": "success",
     "gateFailure": null
   },
   "discoveryCoverageRepair": {
