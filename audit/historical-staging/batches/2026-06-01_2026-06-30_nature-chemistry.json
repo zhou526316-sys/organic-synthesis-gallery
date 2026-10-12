@@ -1,0 +1,1720 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Chemistry",
+  "issns": [
+    "1755-4330",
+    "1755-4349"
+  ],
+  "range": {
+    "from": "2026-06-01",
+    "to": "2026-06-30"
+  },
+  "checkedAt": "2026-10-12T05:39:19.497Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "1755-4330",
+        "total": 35,
+        "count": 35,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1755-4349",
+        "total": 35,
+        "count": 35,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 35,
+      "count": 35,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 35,
+      "openalex": 35
+    }
+  },
+  "candidateCount": 35,
+  "alreadyPublished": 0,
+  "unreviewed": 35,
+  "records": [
+    {
+      "doi": "10.1038/s41557-026-02141-6",
+      "title": "A supercharged molecular motor operating by constitutional alteration and proton transfer",
+      "authors": [
+        "Pronay Kumar Biswas",
+        "Ani Ozcelik",
+        "Martina Hartinger",
+        "Nico Groß",
+        "Frank Hampel",
+        "Carolin Müller",
+        "Henry Dube"
+      ],
+      "date": "2026-06-03",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1186-1194",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02141-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02141-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02142-5",
+      "title": "A photochemical rotor bias in dual molecular motors",
+      "authors": [
+        "Carlijn L. F. van Beek",
+        "Eric Sidler",
+        "Ben L. Feringa"
+      ],
+      "date": "2026-06-03",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1195-1202",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02142-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02142-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02148-z",
+      "title": "Copper-catalysed site-selective arylation of pyrazoles",
+      "authors": [
+        "Minghao Wang",
+        "Xintong Hou",
+        "Stephanie A. Corio",
+        "Lori Digal",
+        "Jennifer S. Hirschi",
+        "Vy M. Dong"
+      ],
+      "date": "2026-06-12",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1487-1495",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02148-z"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02148-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02155-0",
+      "title": "Aromatic ring flips reveal reshaping of protein dynamics in crystals and complexes",
+      "authors": [
+        "Lea M. Becker",
+        "Haohao Fu",
+        "Ben P. Tatman",
+        "Matthias Dreydoppel",
+        "Anna Kapitonova",
+        "Daniel M. Balazs",
+        "Ulrich Weininger",
+        "Sylvain Engilberge",
+        "Christophe Chipot",
+        "Paul Schanda"
+      ],
+      "date": "2026-06-10",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1221-1230",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02155-0"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02155-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02156-z",
+      "title": "Modular diastereoselective synthesis of hindered cyclobutane amino nitriles through triplet nitrene-mediated ring expansion",
+      "authors": [
+        "Jun-Jie Yin",
+        "Su-Ge Xin",
+        "Hengyi Cao",
+        "Lumin Zhang"
+      ],
+      "date": "2026-06-01",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1422-1430",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02156-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02156-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02158-x",
+      "title": "Free-standing ultrathin two-dimensional peptide crystals",
+      "authors": [
+        "Xiao Wang",
+        "Rui Yao",
+        "Shuai-Liang Yang",
+        "Meng Jin",
+        "Bingyu Liu",
+        "Liang Qiao",
+        "Xing Zhang",
+        "Jie Liu",
+        "Peijie Wu",
+        "Luofei Wei",
+        "Wenqiang Zhang",
+        "Wei Gong",
+        "Yan Liu",
+        "Kecheng Cao",
+        "Guozan Yuan",
+        "Jinqiao Dong",
+        "Yong Cui"
+      ],
+      "date": "2026-06-01",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1717-1728",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02158-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02158-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02162-1",
+      "title": "Designed for forever",
+      "authors": [
+        "Yuanqiang Sun",
+        "Daniel Reddy",
+        "Lishen Zhang"
+      ],
+      "date": "2026-06-05",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "6",
+        "pages": "1152-1152",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02162-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02162-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02163-0",
+      "title": "Distinct energetic blueprints diversify function of conserved protein folds",
+      "authors": [
+        "Malcolm L. Wells",
+        "Chenlin Lu",
+        "Daniel Sultanov",
+        "Kyle C. Weber",
+        "Erin Ahern",
+        "Zhen Gong",
+        "Ethan Chen",
+        "Anum Glasgow"
+      ],
+      "date": "2026-06-05",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1496-1506",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02163-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02163-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02164-z",
+      "title": "Divergent and precise alkaloid remodelling with a small suite of reactions",
+      "authors": [
+        "Shibo Xu",
+        "Harrison Judd",
+        "Xin Zhi Sui",
+        "Peng Liu",
+        "Amir H. Hoveyda"
+      ],
+      "date": "2026-06-05",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1507-1518",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02164-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02164-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02167-w",
+      "title": "Catalytic endo-stereoselective [2+2] cycloaddition of norbornadienes with internal alkynes",
+      "authors": [
+        "Longji Dai",
+        "Gufeng Yin",
+        "Zekun Tuo",
+        "Zhichao Chang",
+        "Xinye Xia",
+        "Zhongjin Zuo",
+        "Yongchun Hu",
+        "Shuangshuang Li",
+        "Shugen Kuang",
+        "Yunfei Lai",
+        "Tzumei Wang",
+        "Chao Wang",
+        "Chong Qin",
+        "Xinyao Li",
+        "Wang Zhou"
+      ],
+      "date": "2026-06-05",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1393-1403",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02167-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02167-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02169-8",
+      "title": "Cation-directed assembly and sequential functionalization enable superprotonic polyanion–organic frameworks for high-power fuel cells",
+      "authors": [
+        "Qixin Zhao",
+        "Bo Li",
+        "Dhruv Menon",
+        "Chunmei Zhu",
+        "Mohammad Reza Alizadeh Kiapi",
+        "Xu Chen",
+        "De-Liang Long",
+        "Jianfeng Liu",
+        "Zhou Xiao",
+        "Dongsheng Yang",
+        "David Fairen-Jimenez",
+        "Hong-Ying Zang",
+        "Weimin Xuan"
+      ],
+      "date": "2026-06-01",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1231-1241",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02169-8"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02169-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02172-z",
+      "title": "Cyclophane-based shielding strategy for singly dispersed graphene nanoribbons",
+      "authors": [
+        "Jin-Jiang Zhang",
+        "Jian Zhang",
+        "Guanzhao Wen",
+        "Silvio Osella",
+        "Zhenlin Qiu",
+        "Steffen Böckmann",
+        "Xu Wang",
+        "Britta Maib",
+        "Yubin Fu",
+        "Xiuling Yu",
+        "Michael Ryan Hansen",
+        "Janina Maultzsch",
+        "Michel Calame",
+        "Mickael L. Perrin",
+        "Hai I. Wang",
+        "Mischa Bonn",
+        "Ji Ma",
+        "Klaus Müllen",
+        "Xinliang Feng"
+      ],
+      "date": "2026-06-05",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1602-1610",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02172-z"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02172-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02173-y",
+      "title": "Unlocking congested 3D molecular architectures for drug discovery",
+      "authors": [],
+      "date": "2026-06-01",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1364-1365",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02173-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02173-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02174-x",
+      "title": "Isotropic zero thermal expansion in sodalite crystals from 11 to 893 K",
+      "authors": [
+        "Youquan Liu",
+        "Xingxing Jiang",
+        "Maxim S. Molokeev",
+        "Mikhail Plyaskin",
+        "Zhenhuang Su",
+        "Qianru Lin",
+        "Jie Sheng",
+        "Wen Wen",
+        "Xingyu Gao",
+        "M. T. Dove",
+        "Zheshuai Lin"
+      ],
+      "date": "2026-06-16",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1620-1627",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02174-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02174-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02175-w",
+      "title": "Charge transport through linear carbon atomic chains",
+      "authors": [
+        "James M. F. Morris",
+        "Jarred Potter",
+        "Elena Gorenskaia",
+        "R. Tom Abram",
+        "Masnun Naher",
+        "Chiara E. Spano",
+        "Roberto Listo",
+        "Eloise L. Dixon",
+        "Amit Sil",
+        "Élodie Rousset",
+        "Simon J. Higgins",
+        "Richard J. Nichols",
+        "Paul J. Low",
+        "Andrea Vezzoli"
+      ],
+      "date": "2026-06-12",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1574-1581",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02175-w"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02175-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02177-8",
+      "title": "Ligand-modulated metal–radical polarity match enables general 1,2-dicarbofunctionalization of ethylene",
+      "authors": [
+        "Zhexuan Lei",
+        "Chu Wang",
+        "Anwei Wang",
+        "Tao Liu",
+        "Zhe Dong",
+        "Weigang Zhang",
+        "Jie Wu"
+      ],
+      "date": "2026-06-10",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1628-1638",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02177-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02177-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02178-7",
+      "title": "An alkyl-swap platform for late-stage modification of secondary N-methylamines",
+      "authors": [
+        "Uroš Vezonik",
+        "Giulia Iannelli",
+        "Daniel Kaiser",
+        "Nuno Maulide"
+      ],
+      "date": "2026-06-15",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1650-1657",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02178-7"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02178-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02179-6",
+      "title": "Long live the triplet germylene",
+      "authors": [
+        "Terrance J. Hadlington"
+      ],
+      "date": "2026-06-26",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1167-1168",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02179-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02179-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02180-z",
+      "title": "Programming stacking order in conducting van der Waals metal–organic frameworks through ligand aggregation",
+      "authors": [
+        "Yunlong Fan",
+        "Jinkun Guo",
+        "Ze-Fan Yao",
+        "Zhenghan Zhang",
+        "Haoyang Zhang",
+        "Xing Huang",
+        "Zhichao Pan",
+        "Luming Yang",
+        "Chao Ma",
+        "Xinyan Wu",
+        "Khoa N. Le",
+        "Tianyang Chen",
+        "Zhichen Xu",
+        "Ling Zhang",
+        "Hao Chen",
+        "Tongyang Zhao",
+        "Shuo Qiao",
+        "Tingsong Zhang",
+        "Qingqing Ji",
+        "Yu-Qing Zheng",
+        "Lei Sun",
+        "Grigorii Skorupskii",
+        "Maxx Q. Arguilla",
+        "Yuanping Yi",
+        "Christopher H. Hendon",
+        "Mircea Dincă",
+        "Jian Li",
+        "Jin-Hu Dou"
+      ],
+      "date": "2026-06-18",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1543-1552",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02180-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02180-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02181-y",
+      "title": "Ketones to ketyls by radical relocation",
+      "authors": [
+        "Adam Noble"
+      ],
+      "date": "2026-06-25",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1163-1164",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02181-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02181-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02182-x",
+      "title": "Potent and biased agonists of class B1 GPCRs from a heterochiral design strategy",
+      "authors": [
+        "Ruslan Gibadullin",
+        "Lauren My-Linh Tran",
+        "Jiani Niu",
+        "Rylie K. Morris",
+        "Ariel J. Kuhn",
+        "John A. Mannone",
+        "Tae Wook Kim",
+        "Giuseppe Deganutti",
+        "Samuel H. Gellman"
+      ],
+      "date": "2026-06-16",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1639-1649",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02182-x"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02182-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02183-w",
+      "title": "A tectonic shift in supramolecular proton highways",
+      "authors": [
+        "Graham N. Newton"
+      ],
+      "date": "2026-06-22",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1165-1166",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02183-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02183-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02184-9",
+      "title": "Discovery and characterization of a nickel enzyme family that catalyses intermolecular hydride shuttling",
+      "authors": [
+        "Zoë L. Semersky",
+        "Conor G. Raymond",
+        "John M. Rossi",
+        "Heike Hofstetter",
+        "Pranav Rao",
+        "Monica E. Neugebauer"
+      ],
+      "date": "2026-06-17",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1582-1592",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02184-9"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02184-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02185-8",
+      "title": "Discovering nickel enzymes within the aldo-keto reductase superfamily",
+      "authors": [],
+      "date": "2026-06-19",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1539-1540",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02185-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02185-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02186-7",
+      "title": "Singlet fission mediates carotenoid-to-bacteriochlorophyll energy transfer in purple photosynthetic bacteria",
+      "authors": [
+        "Shuangqing Wang",
+        "George A. Sutherland",
+        "James P. Pidgeon",
+        "Mateja Šmitran",
+        "David J. K. Swainsbury",
+        "Elizabeth C. Martin",
+        "Cvetelin Vasilev",
+        "Andrew Hitchcock",
+        "Daniel J. Gillard",
+        "Ravi Kumar Venkatraman",
+        "Dimitri Chekulaev",
+        "Alexander I. Tartakovskii",
+        "C. Neil Hunter",
+        "Jenny Clark"
+      ],
+      "date": "2026-06-23",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1611-1619",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02186-7"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02186-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02188-5",
+      "title": "Inverted metal-free active template synthesis of rotaxanes via axle‑mediated macrocyclization",
+      "authors": [
+        "Jiankang Zhong",
+        "Axel Troncossi",
+        "Enzo Olivieri",
+        "Emily Cramp",
+        "Chuan Gao",
+        "Patrick Zwick",
+        "George F. S. Whitehead",
+        "David A. Leigh"
+      ],
+      "date": "2026-06-29",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1658-1668",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02188-5"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02188-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02189-4",
+      "title": "Molecular rotary motors switch direction",
+      "authors": [
+        "Beatrice S. L. Collins"
+      ],
+      "date": "2026-06-25",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1160-1162",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02189-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02189-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02191-w",
+      "title": "Serendipitous twist in a hemithioindigo molecular motor enables energy storage",
+      "authors": [
+        "Emma V. Puttock",
+        "Jos C. M. Kistemaker"
+      ],
+      "date": "2026-06-29",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1158-1159",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02191-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02191-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02193-8",
+      "title": "Covalency control of photomagnetic relaxation in a manganese(II) photoswitch",
+      "authors": [
+        "Sandra Kronenberger",
+        "Robert Naumann",
+        "Christoph Förster",
+        "Jan Klett",
+        "Dieter Schollmeyer",
+        "Luca M. Carrella",
+        "Eva Rentschler",
+        "Katja Heinze"
+      ],
+      "date": "2026-06-29",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1729-1736",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02193-8"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02193-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02194-7",
+      "title": "Molecular neighbours reshape protein dynamics",
+      "authors": [
+        "Lars V. Schäfer"
+      ],
+      "date": "2026-06-25",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1169-1170",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02194-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02194-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02196-5",
+      "title": "Concise synthesis and strain-release diversification of bridgehead-substituted [2]-ladderanes",
+      "authors": [
+        "Zongbin Jia",
+        "Hugo A. Salazar",
+        "Jet Tsien",
+        "Yixuan Ma",
+        "Olivia L. Coyle",
+        "Eric Crossley",
+        "Ricardo Alvarado",
+        "Yuzuru Kanda",
+        "Noelle Williams",
+        "Shuming Chen",
+        "Tian Qin"
+      ],
+      "date": "2026-06-26",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1404-1412",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02196-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02196-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02197-4",
+      "title": "Trefoil polymers from a knotted synthon",
+      "authors": [
+        "Chenchen Du",
+        "Zhi Chen",
+        "Changqing Xu",
+        "Zhanhu Sun",
+        "Zhi-Hui Zhang",
+        "Xian-Guang Liu",
+        "Binhua Chen",
+        "Chenxin Zhang",
+        "Zhikai Li",
+        "Yin Rao",
+        "Deao Xu",
+        "Ningjin Zhang",
+        "Qiaowei Li",
+        "Heng Wang",
+        "Hai Qian",
+        "Liang Dai",
+        "Xiaopeng Li",
+        "David A. Leigh",
+        "Liang Zhang"
+      ],
+      "date": "2026-06-29",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1708-1716",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02197-4"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02197-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02198-3",
+      "title": "Author Correction: [2+2] Photocycloaddition reactions of sulfinylamines with alkenes to access β-sultam derivatives",
+      "authors": [
+        "Yin Yuan",
+        "Xinyu Zhu",
+        "Zhixiao Cheng",
+        "Zijian Zhao",
+        "Ke Hu",
+        "Junliang Zhang",
+        "Junfeng Yang"
+      ],
+      "date": "2026-06-10",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1526-1526",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02198-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02198-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02202-w",
+      "title": "Author Correction: Modular diastereoselective synthesis of hindered cyclobutane amino nitriles through triplet nitrene-mediated ring expansion",
+      "authors": [
+        "Jun-Jie Yin",
+        "Su-Ge Xin",
+        "Hengyi Cao",
+        "Lumin Zhang"
+      ],
+      "date": "2026-06-18",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1527-1527",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02202-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02202-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02203-9",
+      "title": "One-dimensional carbon chains free of end-capping groups",
+      "authors": [],
+      "date": "2026-06-30",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1541-1542",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02203-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02203-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

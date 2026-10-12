@@ -1,0 +1,345 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2026-05-01",
+    "to": "2026-05-31"
+  },
+  "checkedAt": "2026-10-12T05:40:05.299Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "total": 6,
+        "count": 6,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 6,
+      "count": 6,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 6,
+      "openalex": 6
+    }
+  },
+  "candidateCount": 6,
+  "alreadyPublished": 0,
+  "unreviewed": 6,
+  "records": [
+    {
+      "doi": "10.1038/s41929-026-01535-6",
+      "title": "Direct electrochemical propylene epoxidation over amorphized perovskite oxide in non-halogenated aqueous electrolyte",
+      "authors": [
+        "Kalipada Koner",
+        "Jason S. Adams",
+        "Evan V. Miu",
+        "Spencer P. Delgado-Kukuczka",
+        "Chenyu Jiang",
+        "Jung Tae Kim",
+        "Hayoung Park",
+        "Justin C. Bui",
+        "Paul H. Oyala",
+        "Yuzhang Li",
+        "Karthish Manthiram"
+      ],
+      "date": "2026-05-12",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "5",
+        "pages": "542-551",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01535-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01535-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01538-3",
+      "title": "Subnanometre PtSn alloyed clusters encapsulated in silicalite-1 sustain high productivity in propane dehydrogenation",
+      "authors": [
+        "Shangchen Lu",
+        "Yaxin Tang",
+        "Bingqing Yao",
+        "Yishui Ding",
+        "Huanhuan Yang",
+        "Shibo Xi",
+        "Kang Hui Lim",
+        "Chaokai Xu",
+        "Yankun Du",
+        "Xingjie Fu",
+        "Shengdong Tan",
+        "Binbin Zhao",
+        "Wenhao Yuan",
+        "C. Austin Wade",
+        "Dali Yang",
+        "Lu Ma",
+        "Sheng Dai",
+        "Sibudjing Kawi",
+        "Ning Yan",
+        "Jiong Lu",
+        "Wei Chen",
+        "Guangfu Luo",
+        "Qian He"
+      ],
+      "date": "2026-05-26",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "5",
+        "pages": "552-564",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01538-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01538-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01540-9",
+      "title": "Dynamic clusters unlock propane dehydrogenation",
+      "authors": [
+        "Anna Clara Noguti",
+        "Francine Bertella",
+        "Christian Wittee Lopes"
+      ],
+      "date": "2026-05-28",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "5",
+        "pages": "485-486",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01540-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01540-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01541-8",
+      "title": "Microbes have a favourite facet",
+      "authors": [
+        "Lihini Jayasinghe",
+        "Peidong Yang"
+      ],
+      "date": "2026-05-28",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "5",
+        "pages": "483-484",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01541-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01541-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01543-6",
+      "title": "Bridging gaps for sustainability at the frontiers of catalysis",
+      "authors": [
+        "Felicia Zaar"
+      ],
+      "date": "2026-05-28",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "5",
+        "pages": "487-489",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01543-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01543-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01544-5",
+      "title": "Non-metal-hybridized platinum-based compositionally complex alloys for efficient oxygen reduction reaction in fuel cells",
+      "authors": [
+        "Pengyu Gao",
+        "Xuyao Li",
+        "De Zhang",
+        "Junjian Li",
+        "Li Zhong",
+        "Min Liu",
+        "Carlo Franke",
+        "Zongyan Gao",
+        "Lina Zhou",
+        "Guangfeng Wei",
+        "Tong Li",
+        "Hao Liu",
+        "Yongxin Cheng",
+        "Lihan Zhang",
+        "Pengfei Yan",
+        "Zhan Shi",
+        "Tao Liu"
+      ],
+      "date": "2026-05-22",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "6",
+        "pages": "584-597",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01544-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01544-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

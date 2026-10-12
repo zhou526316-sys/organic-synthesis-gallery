@@ -1,0 +1,1169 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2026-05-01",
+    "to": "2026-05-31"
+  },
+  "checkedAt": "2026-10-12T05:40:05.949Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "total": 24,
+        "count": 24,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 24,
+      "count": 24,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 24,
+      "openalex": 24
+    }
+  },
+  "candidateCount": 24,
+  "alreadyPublished": 0,
+  "unreviewed": 24,
+  "records": [
+    {
+      "doi": "10.1038/s44160-026-01027-2",
+      "title": "Closing the synthesis gap in computational materials design",
+      "authors": [
+        "Hyunsoo Park",
+        "Kinga O. Mastej",
+        "Panyalak Detrattanawichai",
+        "Ryan Nduma",
+        "Aron Walsh"
+      ],
+      "date": "2026-05-06",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "651-659",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01027-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01027-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01061-0",
+      "title": "Photo-initiated pyridine position swap",
+      "authors": [
+        "Charles S. Yeung"
+      ],
+      "date": "2026-05-07",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "8",
+        "pages": "1138-1139",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01061-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01061-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01064-x",
+      "title": "Catalytic enantioselective tandem B–H insertion and [3,3]-sigmatropic rearrangement",
+      "authors": [
+        "Weici Xu",
+        "Peilin Tian",
+        "Liangfu Li",
+        "Ming-Hua Xu"
+      ],
+      "date": "2026-05-04",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1436-1445",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01064-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01064-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01068-7",
+      "title": "Constructing asymmetrically coordinated transition metal single atoms with high loadings for ammonia electrosynthesis",
+      "authors": [
+        "Hele Guo",
+        "Xu Zhang",
+        "Jing Lyu",
+        "Kexin Wang",
+        "Miao Tian",
+        "Zhongyuan Guo",
+        "Johan Hofkens",
+        "Feili Lai",
+        "Guo Qin Xu"
+      ],
+      "date": "2026-05-12",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1601-1611",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01068-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01068-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01069-6",
+      "title": "Light-enabled nitrogen spillover in ammonia synthesis",
+      "authors": [
+        "Laura Collado",
+        "Javier Fermoso"
+      ],
+      "date": "2026-05-11",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "7",
+        "pages": "969-970",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01069-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01069-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01070-z",
+      "title": "Selective iodoplumbate cold casting for kinetically stabilized perovskites leading to high-efficiency photovoltaic modules",
+      "authors": [
+        "Yeoun-Woo Jang",
+        "Seungmin Lee",
+        "Yongseok Yoo",
+        "Isaac Metcalf",
+        "Hee Jeong Park",
+        "Byeongjun Gil",
+        "Jihun Jang",
+        "Faiz Mandani",
+        "Jared Fletcher",
+        "Byungsoo Kang",
+        "Jianlin Zhou",
+        "Oui Jin Oh",
+        "Seunghwan Bae",
+        "Miyoung Kim",
+        "Jun Hong Noh",
+        "Mercouri G. Kanatzidis",
+        "Jacky Even",
+        "Mansoo Choi",
+        "Aditya D. Mohite"
+      ],
+      "date": "2026-05-12",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1446-1456",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01070-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01070-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01071-y",
+      "title": "Preparation of single-chain one-dimensional van der Waals materials",
+      "authors": [
+        "Pengxin Zhan",
+        "Hao Wu",
+        "Peilin Yang",
+        "Zebin Ren",
+        "Xueping Cui",
+        "Ruian Li",
+        "Lu Wang",
+        "Ping He",
+        "Bo Guan",
+        "Lingxin Luo",
+        "Dong Wang",
+        "Jichen Dong",
+        "Yunqi Liu",
+        "Xuefeng Guo",
+        "Jian Zheng"
+      ],
+      "date": "2026-05-06",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1457-1465",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01071-y"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01071-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01072-x",
+      "title": "A permanently porous chalcogen-bonded organic framework",
+      "authors": [
+        "Brian J. Eckstein",
+        "Hannah R. Martin",
+        "Michael P. Moghadasnia",
+        "Arijit Halder",
+        "Parker S. Brodale",
+        "Pierre Le Magueres",
+        "Patrick W. V. Butler",
+        "Katherine A. Forrest",
+        "Logan Ritter",
+        "Ryan A. Klein",
+        "Hyun June Moon",
+        "Cheng Li",
+        "Scott E. Massimi",
+        "Yongqiang Cheng",
+        "Christopher H. Hendon",
+        "Graeme M. Day",
+        "Brian Space",
+        "Craig M. Brown",
+        "C. Michael McGuirk"
+      ],
+      "date": "2026-05-15",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1327-1339",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01072-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01072-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01074-9",
+      "title": "Thiamine-based photobiocatalysis for the enantioselective construction of all-carbon quaternary stereocentres with two minimally different alkyl groups",
+      "authors": [
+        "Jintong Bai",
+        "Yuanyuan Xu",
+        "Ruobin Sun",
+        "Fuhua Che",
+        "Guohui Shang",
+        "Guangtao Zhang",
+        "Xiaoqiang Huang",
+        "Chunshuai Huang"
+      ],
+      "date": "2026-05-15",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "6",
+        "pages": "846-853",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01074-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01074-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01077-6",
+      "title": "One-pot synthesis of hierarchically integrated covalent organic framework heterojunctions for photocatalysis",
+      "authors": [
+        "Wen-Zhuang Wang",
+        "Ya Lu",
+        "Chao Liu",
+        "Yubin Fu",
+        "Xin Zhao",
+        "Hong-Xin Xu",
+        "Fei Song",
+        "Jing-Yuan Ma",
+        "Yi-Xue Xu",
+        "Shun-Feng Li",
+        "Qiao-Yan Qi",
+        "Shun-Qi Xu",
+        "Xin Zhao"
+      ],
+      "date": "2026-05-22",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1565-1574",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01077-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01077-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01078-5",
+      "title": "Chalcogen bonding shapes framework assembly and properties",
+      "authors": [],
+      "date": "2026-05-15",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1312-1313",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01078-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01078-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01079-4",
+      "title": "Constructing artificial methylotrophic S. cerevisiae for chondroitin sulfate production using a multidimensional combinatorial strategy",
+      "authors": [
+        "Lei Li",
+        "Yixun Jiang",
+        "Wenjie Ma",
+        "Chenying Li",
+        "Ruirui Shi",
+        "Guangyao Tang",
+        "Yaxin He",
+        "Jiaqi Li",
+        "Zepin Guo",
+        "Yuxin Zhang",
+        "Shuhong Mao",
+        "Mingdong Yao",
+        "Zhengqiang Jiang",
+        "Fuping Lu",
+        "Hui-Min Qin"
+      ],
+      "date": "2026-05-22",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1575-1588",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01079-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01079-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01080-x",
+      "title": "Photoenzymatic catalysis through computation",
+      "authors": [
+        "Thomas West"
+      ],
+      "date": "2026-05-22",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "6",
+        "pages": "804-805",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01080-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01080-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01081-w",
+      "title": "Bridging interfacial electron transfer for efficient electrocatalytic coupling reactions",
+      "authors": [
+        "Chengdong Yang",
+        "Yun Gao",
+        "Wenshuo Shang",
+        "Wenwen Cai",
+        "Yueqing Wang",
+        "Jizhen Ma",
+        "Yi Wang",
+        "Jintao Zhang"
+      ],
+      "date": "2026-05-22",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1589-1600",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01081-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01081-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01082-9",
+      "title": "Probing CO2 hydrogenation catalyst dynamics",
+      "authors": [
+        "Bei Zhang"
+      ],
+      "date": "2026-05-06",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "639-639",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01082-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01082-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01083-8",
+      "title": "Classifying oxidative reactivity in semiconductor photocatalysts",
+      "authors": [
+        "Eric J. Piechota"
+      ],
+      "date": "2026-05-07",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "640-640",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01083-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01083-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01084-7",
+      "title": "Self-driving labs for research and development in industry",
+      "authors": [
+        "Jet-Sing Lee"
+      ],
+      "date": "2026-05-22",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1478-1480",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01084-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01084-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01085-6",
+      "title": "Topological anionic confinement enables synthesis of 2D high-entropy molybdates under mild conditions",
+      "authors": [
+        "Bin Chen",
+        "Qicheng Zhang",
+        "Honglin Du",
+        "Pengwei Zhao",
+        "Weipeng Zhao",
+        "Mingjun Cen",
+        "Zhuo Chen",
+        "Shuya Zhang",
+        "Linjie Guan",
+        "Yizhe Hu",
+        "Tianhao Niu",
+        "Lin Gu",
+        "Danyun Xu",
+        "Wenchao Peng",
+        "Yang Li",
+        "Junliang Sun",
+        "Xiaobin Fan"
+      ],
+      "date": "2026-05-22",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1542-1551",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01085-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01085-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01087-4",
+      "title": "Challenges and opportunities in integrating biocatalysis with photo- and electrocatalysis for scalable synthesis",
+      "authors": [
+        "Monica Brachi",
+        "Vamshi Krishna Kamaja",
+        "Shelley D. Minteer"
+      ],
+      "date": "2026-05-22",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "6",
+        "pages": "801-803",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01087-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01087-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01088-3",
+      "title": "Electrophotocatalytic decarboxylative vicinal dichlorination of aliphatic carboxylic acids",
+      "authors": [
+        "Kun Cui",
+        "Yajuan Li",
+        "Shu-Fan He",
+        "Guoying Zhang",
+        "Daixi Li",
+        "Tao Shen"
+      ],
+      "date": "2026-05-26",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1349-1359",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01088-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01088-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01090-9",
+      "title": "Shining light on all-carbon quaternary stereocentre synthesis",
+      "authors": [
+        "Francesca Paradisi"
+      ],
+      "date": "2026-05-20",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "6",
+        "pages": "815-816",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01090-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01090-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01091-8",
+      "title": "Enantioselective synthesis of sulfur-stereogenic alkyl sulfilimines with C(sp3)–H-derived alkyl radicals using copper catalysis",
+      "authors": [
+        "Li-Wen Fan",
+        "Li Qin",
+        "Chen-Yu Xiao",
+        "Jun-Bin Tang",
+        "Hang Lv",
+        "Qiao Song",
+        "Fu Liu",
+        "Jia-Peng Wang",
+        "Yu-Shuai Zhang",
+        "Dai-Lei Yuan",
+        "Jun-Qian Bian",
+        "Qiang-Shuai Gu",
+        "Xin-Yuan Liu"
+      ],
+      "date": "2026-05-22",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1623-1633",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01091-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01091-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01093-6",
+      "title": "Synthesis of two-dimensional high-entropy molybdates under mild conditions",
+      "authors": [],
+      "date": "2026-05-26",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1492-1493",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01093-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01093-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01094-5",
+      "title": "Stereoselective cross-coupling using photoredox and metalloenzyme catalysis",
+      "authors": [
+        "Peter W. Seavill"
+      ],
+      "date": "2026-05-27",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "6",
+        "pages": "810-810",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01094-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01094-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-05-01",
+        "to": "2026-05-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

@@ -1,0 +1,553 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Green Chemistry",
+  "issns": [
+    "1463-9262",
+    "1463-9270"
+  ],
+  "range": {
+    "from": "2026-06-01",
+    "to": "2026-06-30"
+  },
+  "checkedAt": "2026-10-12T05:39:45.236Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "1463-9262",
+        "total": 0,
+        "count": 0,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1463-9270",
+        "total": 0,
+        "count": 0,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 12,
+      "count": 12,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 0,
+      "openalex": 12
+    }
+  },
+  "candidateCount": 12,
+  "alreadyPublished": 0,
+  "unreviewed": 12,
+  "records": [
+    {
+      "doi": "10.1201/9781003642589-1",
+      "title": "Green Chemistry, Efficiency, and Sustainability",
+      "authors": [
+        "Anand D. Sawant",
+        "Namdeo R. Jadhav"
+      ],
+      "date": "2026-06-11",
+      "datePrecision": "day",
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-22",
+        "articleNumber": "",
+        "doi": "10.1201/9781003642589-1"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1201/9781003642589-1",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1201/9781003642589-10",
+      "title": "Biogas (Methane, Biohydrogen)",
+      "authors": [
+        "Gülbahar Bilgiç"
+      ],
+      "date": "2026-06-11",
+      "datePrecision": "day",
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "216-229",
+        "articleNumber": "",
+        "doi": "10.1201/9781003642589-10"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1201/9781003642589-10",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1201/9781003642589-11",
+      "title": "Financial and Techno-economic Aspects of Green Chemistry",
+      "authors": [
+        "Valentin Romanovski"
+      ],
+      "date": "2026-06-11",
+      "datePrecision": "day",
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "230-254",
+        "articleNumber": "",
+        "doi": "10.1201/9781003642589-11"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1201/9781003642589-11",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1201/9781003642589-12",
+      "title": "Economic and Technological Drivers of Green Chemistry",
+      "authors": [
+        "Sadia Abdullah",
+        "Mamoona Munir",
+        "Mushtaq Ahmad",
+        "Bisma Javed",
+        "Shazia Sultana",
+        "Nigar Mursal"
+      ],
+      "date": "2026-06-11",
+      "datePrecision": "day",
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "255-286",
+        "articleNumber": "",
+        "doi": "10.1201/9781003642589-12"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1201/9781003642589-12",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1201/9781003642589-2",
+      "title": "Principles of Green Chemistry",
+      "authors": [
+        "Camila de Moura Strieder",
+        "Domingos Lusitâneo Pier Macuvele",
+        "Natan Padoin",
+        "Humberto Gracher Riella",
+        "Cíntia Soares"
+      ],
+      "date": "2026-06-11",
+      "datePrecision": "day",
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "23-52",
+        "articleNumber": "",
+        "doi": "10.1201/9781003642589-2"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1201/9781003642589-2",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1201/9781003642589-3",
+      "title": "Design, Synthesis, and Analysis of Green Chemical Processes",
+      "authors": [
+        "Ömer Faruk Sarıoğlu"
+      ],
+      "date": "2026-06-11",
+      "datePrecision": "day",
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "53-72",
+        "articleNumber": "",
+        "doi": "10.1201/9781003642589-3"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1201/9781003642589-3",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1201/9781003642589-4",
+      "title": "Re-refining Technologies for Circularity and Sustainability in the Oil and Gas Supply Chain",
+      "authors": [
+        "Abdolvahhab Fetanat",
+        "Mohsen Tayebi"
+      ],
+      "date": "2026-06-11",
+      "datePrecision": "day",
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "73-88",
+        "articleNumber": "",
+        "doi": "10.1201/9781003642589-4"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1201/9781003642589-4",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1201/9781003642589-5",
+      "title": "From Formation to Remediation",
+      "authors": [
+        "Abeera Gul",
+        "Mushtaq Ahmad",
+        "Mamoona Munir",
+        "Shazia Sultana",
+        "Nigar Mursal"
+      ],
+      "date": "2026-06-11",
+      "datePrecision": "day",
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "89-114",
+        "articleNumber": "",
+        "doi": "10.1201/9781003642589-5"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1201/9781003642589-5",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1201/9781003642589-6",
+      "title": "Production of Chemicals Using Microbial Consortia",
+      "authors": [
+        "Bisma Javed",
+        "Mamoona Munir",
+        "Sadia Abdullah",
+        "Mushtaq Ahmad",
+        "Shazia Sultana",
+        "Nigar Mursal",
+        "Maliha Asma"
+      ],
+      "date": "2026-06-11",
+      "datePrecision": "day",
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "115-154",
+        "articleNumber": "",
+        "doi": "10.1201/9781003642589-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1201/9781003642589-6",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1201/9781003642589-7",
+      "title": "Sustainable Biohydrogen Production from Waste via Dark Fermentation and Its Efficient Disposal",
+      "authors": [
+        "Ashwini S. Thakre",
+        "Diwakar Z. Shende",
+        "Kailas Lachchhuram Wasewar"
+      ],
+      "date": "2026-06-11",
+      "datePrecision": "day",
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "155-173",
+        "articleNumber": "",
+        "doi": "10.1201/9781003642589-7"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1201/9781003642589-7",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1201/9781003642589-8",
+      "title": "Bioethanol and Biobutanol",
+      "authors": [
+        "Panchamoorthy Saravanan",
+        "R. Rajeshkannan",
+        "M. Rajasimman"
+      ],
+      "date": "2026-06-11",
+      "datePrecision": "day",
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "174-195",
+        "articleNumber": "",
+        "doi": "10.1201/9781003642589-8"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1201/9781003642589-8",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1201/9781003642589-9",
+      "title": "Biogas Process Optimization for Green Methane and Biohydrogen Generation and Sustainable Disposal Strategies",
+      "authors": [
+        "Mumna Munir",
+        "Mushtaq Ahmad",
+        "Mamoona Munir",
+        "Shazia Sultana",
+        "Nigar Mursal"
+      ],
+      "date": "2026-06-11",
+      "datePrecision": "day",
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "196-215",
+        "articleNumber": "",
+        "doi": "10.1201/9781003642589-9"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1201/9781003642589-9",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-06-01",
+        "to": "2026-06-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
