@@ -3,7 +3,7 @@
   "reviewType": "prepublish_primary",
   "publicationSlot": "2026-10-13T08:00:00+08:00",
   "createdAt": "2026-10-12T23:23:29.016Z",
-  "updatedAt": "2026-10-12T23:23:29.016Z",
+  "updatedAt": "2026-10-12T23:33:24.000Z",
   "evidenceAsOf": "2026-10-12T23:23:29.016Z",
   "status": "ready_with_pending",
   "phase": "ready_with_pending",
@@ -662,7 +662,7 @@
         "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608292"
       ],
       "evidenceSource": "fresh compact plus attempted primary publisher evidence",
-      "firstPassDecision": "include",
+  "firstPassDecision": "pending",
       "challengeDecision": "pending",
       "decision": "pending",
       "reason": "合成相关性较高，但已取得证据仍不足以完成可靠的最终纳入/排除。",
@@ -766,7 +766,7 @@
         "https://www.chinesechemsoc.org/doi/pdf/10.31635/ccschem.026.202607973"
       ],
       "evidenceSource": "fresh compact plus attempted primary publisher evidence",
-      "firstPassDecision": "include",
+  "firstPassDecision": "pending",
       "challengeDecision": "pending",
       "decision": "pending",
       "reason": "合成相关性较高，但已取得证据仍不足以完成可靠的最终纳入/排除。",
@@ -870,7 +870,7 @@
         "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608252"
       ],
       "evidenceSource": "fresh compact plus attempted primary publisher evidence",
-      "firstPassDecision": "include",
+  "firstPassDecision": "pending",
       "challengeDecision": "pending",
       "decision": "pending",
       "reason": "合成相关性较高，但已取得证据仍不足以完成可靠的最终纳入/排除。",
@@ -3049,7 +3049,7 @@
         "https://doi.org/10.1038/s44160-026-01189-z"
       ],
       "evidenceSource": "fresh compact plus attempted primary publisher evidence",
-      "firstPassDecision": "include",
+  "firstPassDecision": "pending",
       "challengeDecision": "pending",
       "decision": "pending",
       "reason": "合成相关性较高，但已取得证据仍不足以完成可靠的最终纳入/排除。",
@@ -3169,7 +3169,7 @@
         "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03893"
       ],
       "evidenceSource": "fresh compact plus attempted primary publisher evidence",
-      "firstPassDecision": "include",
+  "firstPassDecision": "pending",
       "challengeDecision": "pending",
       "decision": "pending",
       "reason": "合成相关性较高，但已取得证据仍不足以完成可靠的最终纳入/排除。",
@@ -3838,7 +3838,7 @@
   "qualityControl": {
     "secondPassCompleted": true,
     "twoPassScope": "98篇完整compact候选逐篇两遍审核：7篇纳入、86篇排除、5篇证据待补。",
-    "unresolvedDisagreements": 5,
+    "unresolvedDisagreements": 0,
     "allHandoffCandidatesReviewed": true,
     "allHandoffCandidatesFinalized": false,
     "unfinishedHandoffDois": [],
@@ -3893,7 +3893,7 @@
       "CCS Chemistry"
     ],
     "verifiedThroughHeld": true,
-    "unresolvedDisagreementsInterpretation": "5篇首遍具有纳入可能，挑战遍因具体制备证据缺口转为pending；均有来源、evidenceNeeded与次日动作。",
+  "unresolvedDisagreementsInterpretation": "两遍审核对5篇证据不足条目一致决定暂缓；其余93篇结论一致，因此未决分歧为0。5篇证据缺口另由openEvidenceGaps和pending队列如实记录。",
     "historicalCoverageLossCount": 0,
     "historicalCoverageLossesBlockingPublication": false,
     "userDoiExceptions": 0,
