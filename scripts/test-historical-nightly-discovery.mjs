@@ -698,7 +698,7 @@ test('all 16 registered journals traverse one historical window and roll over in
         const match=u.pathname.match(/\/journals\/([^/]+)\/works$/);
         assert.ok(match,'Crossref journal ISSN path must be canonical');
         crIssns.push(decodeURIComponent(match[1]));
-        assert.match(u.searchParams.get('filter')||'',/from-pub-date:2026-09-22/);
+        assert.match(u.searchParams.get('filter')||'',/from-(?:pub-date|created-date):2026-09-22/);
         return emptyCrossref();
       }
       oaFilters.push(u.searchParams.get('filter')||'');
@@ -712,7 +712,8 @@ test('all 16 registered journals traverse one historical window and roll over in
     assert.deepEqual(result.next,{range:{from:'2026-09-15',to:'2026-09-21'},journalIndex:0});
     assert.equal(result.noPublication,true);
     assert.equal(result.noPdf,true);
-    const names=orderedJournals(),allIssns=names.flatMap(j=>j.issns);
+    const names=orderedJournals(),allIssns=names.flatMap(j=>
+      j.issns.flatMap(issn=>requiresRscCreationRescue(j)?[issn,issn]:[issn]));
     assert.deepEqual(crIssns,allIssns);
     assert.equal(oaFilters.length,16);
     for(const journal of names){
