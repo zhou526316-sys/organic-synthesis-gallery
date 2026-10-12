@@ -75,6 +75,62 @@ jobs:
           summary = local.get('summary') or {}
           emit('SUMMARY', pick(summary,['version','controllerRevision','architectureMembershipRevision','queueGeneratedAt','startedAt','finishedAt','queueTotal','batchSize','total','visible','upgrades','figureGaps','success','failed','skipped','aborted','cooldownSkipped']))
           emit('ARCHITECTURE_SUMMARY', pick(summary.get('architectureMembership'),['ok','revision','serial','publicationSlot','catalogId','membershipSha256','asOfDate','cutoff','memberCount','hotCount','archiveCount','verifiedAt','error']))
+          # Read-only run-scoped diagnostic aggregation; no PDF bytes, credentials,
+          # HTML body, signed URL or private inventory rows are printed.
+          def safe_num(obj,key): return int((obj or {}).get(key) or 0)
+          run_start = str(summary.get('startedAt') or '')
+          run_start_ms = int(datetime.datetime.fromisoformat(run_start.replace('Z','+00:00')).timestamp()*1000) if run_start else 0
+          scope_fields=['queueCoverageRevision','scopeRevision','phase','startedAt','finishedAt','controllerRevision','queueGeneratedAt','scopeCount',
+            'scopeHistoricalCount','scopeRecentCount','scopeExcludedCount','candidateCount','total','visitedCount','attemptCount',
+            'fullyResolved','inventoryAlreadySatisfiedCount','unresolvedCount','blockedCount','pendingMissing','deferredCount',
+            'tocStored','figuresStaged','evidenceStored','success','partial','failed','aborted','stopReason','ownerPdfInventoryState','inventoryUnknown']
+          scope=pick(summary,scope_fields)
+          for label in ['remainingNeeds','ownerPdfInventory']:
+              scope[label]={k:safe_num(summary.get(label),k) for k in ['toc','figures','evidence','pdf'] if label=='remainingNeeds' or k in ['ready','pending','failed','missing','unknown']}
+              if label=='ownerPdfInventory':
+                  scope[label]={k:safe_num(summary.get(label),k) for k in ['ready','pending','failed','missing','unknown']}
+          scope['inventoryErrors']=[clean(v) for v in (summary.get('inventoryErrors') or [])[:6]]
+          emit('RUN_COVERAGE',scope)
+          results=summary.get('results') or []
+          grouped={}
+          for result in results:
+              status=str(result.get('status') or 'unknown')
+              grouped[status]=grouped.get(status,0)+1
+          emit('RUN_RESULT_COUNTS',{'resultRows':len(results),'counts':grouped,'readOnly':True})
+          for r in sorted(results,key=lambda x:str(x.get('finishedAt') or ''))[-100:]:
+              toc=r.get('toc') or {};pdf=r.get('privatePdf') or {};fig=r.get('figures') or {};fulltext=r.get('fulltext') or {}
+              emit('RUN_DOI',{'doi':clean(r.get('doi')),'status':clean(r.get('status')),'reason':clean(r.get('reason')),
+                'finishedAt':clean(r.get('finishedAt')),'requestedNeeds':clean(r.get('requestedNeeds')),
+                'tocStatus':clean(toc.get('status')),'tocKind':clean(toc.get('kind')),
+                'officialProductionStored':toc.get('productionTocStored') is True,'fallbackProductionStored':toc.get('productionFallbackStored') is True,
+                'figuresDiscovered':safe_num(fig,'discovered'),'figuresStored':safe_num(fig,'stored'),'figuresFailed':safe_num(fig,'failed'),
+                'fulltextStatus':clean(fulltext.get('status')),'pdfStatus':clean(pdf.get('status')),'pdfError':clean(pdf.get('reason') or pdf.get('error'))})
+          for row in (summary.get('blockedPreview') or [])[:12]:
+              emit('BLOCKED_DOI',pick(row,['doi','need','reason','category']))
+          traceStats={}
+          for tr in (local.get('traces') or []):
+              for ev in (tr.get('trace') or []):
+                  st=str(ev.get('stage') or 'unknown')
+                  traceStats[st]=traceStats.get(st,0)+1
+          emit('TRACE_STAGE_COUNTS',{'eventsByStage':traceStats,'retained':len(local.get('traces') or [])})
+          usefulStages={'dom_snapshot','toc_filter_summary','figure_filter_summary','candidate_discovery',
+            'toc_fallback','rsc_toc_candidate','rsc_search_toc','rsc_issue_toc','rsc_ajax','rsc_article_ajax',
+            'page_doi_guard','page_identity','publisher_access','figure_quality','figure_upload','r2_upload',
+            'capture_timing','paired_result','private_pdf_upload','pdf_fetch','evidence_result'}
+          for tr in sorted(local.get('traces') or [],key=lambda z:str(z.get('finishedAt') or ''),reverse=True)[:24]:
+              events=[e for e in (tr.get('trace') or []) if e.get('stage') in usefulStages or e.get('event') in ['failed','scan_complete','none']]
+              for ev in events[-8:]:
+                  emit('TRACE_DIAGNOSTIC',{'doi':clean(tr.get('doi')),
+                    **pick(ev,['at','stage','event','status','httpStatus','message','imageWidth','imageHeight','byteLength'])})
+          # Correlate writes since the run started without treating updated rows
+          # as definitive promotion or PDF readability evidence.
+          for kind,name in [('toc_index','captures'),('figure_stage','staged')]:
+              body=load(name)
+              relevant=[r for r in rows(body) if isinstance(r,dict) and float(r.get('updatedAt') or 0)>=run_start_ms] if body and run_start_ms else []
+              dois=sorted({str(r.get('doi') or '').lower() for r in relevant if r.get('doi')})
+              emit('RUN_ASSET_ACTIVITY',{'kind':kind,'indexRowsUpdatedSinceStart':len(relevant),
+                'distinctDois':len(dois),'sampleDois':dois[:25],
+                'notProofOfPublication':True})
           result_keys = ['doi','version','status','reason','finishedAt','kind','assetType','figuresImported','figuresStaged','diagnosticUploaded','articleUrl','sourceUrl','imageUrl']
           for r in (summary.get('results') or [])[:12]: emit('BATCH_RESULT',pick(r,result_keys))
           for name in ['activeJob','progress','publisherHeartbeat']:

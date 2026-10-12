@@ -1,0 +1,86 @@
+name: Historical text-only search pilot (read-only)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/historical-text-source-audit.mjs'
+      - 'scripts/historical-text-local-evaluator.mjs'
+      - 'scripts/test-historical-text-search-pilot.mjs'
+      - 'public/gallery-historical-text-pilot.user.js'
+      - 'docs/historical-backfill-media-contract.md'
+      - 'docs/historical-text-search-pilot.md'
+      - '.github/workflows/historical-text-search-pilot.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/historical-text-search-pilot.yml'
+  workflow_dispatch:
+    inputs:
+      metadata_audit:
+        description: 'Run read-only OpenAlex historical DOI source audit (up to 50 records)'
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: historical-text-pilot-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  safety-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Confirm scripts parse
+        run: |
+          node --check scripts/historical-text-source-audit.mjs
+          node --check scripts/historical-text-local-evaluator.mjs
+          node --check scripts/test-historical-text-search-pilot.mjs
+          node --check public/gallery-historical-text-pilot.user.js
+      - name: Test DOI, rights, local-only media and benchmark contracts
+        run: node --test scripts/test-historical-text-search-pilot.mjs
+      - name: Choose 50 historic formal DOI without fetching any articles
+        run: |
+          node scripts/historical-text-source-audit.mjs --dry-run --limit=50 --output="$RUNNER_TEMP/historical-source-selection.json"
+          node -e "const x=require(process.env.RUNNER_TEMP+'/historical-source-selection.json');if(x.pdfRequests!==0||x.articleTextRequests!==0||x.productionWrites!==0||x.historicalCandidates>50)process.exit(1)"
+      - name: Preserve existing historical media scope
+        run: |
+          node scripts/test-historical-media-policy.mjs
+          node scripts/test-tm-oct1-scope-contract.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gallery-historical-text-selection-${{ github.run_id }}
+          path: ${{ runner.temp }}/historical-source-selection.json
+          retention-days: 7
+          if-no-files-found: warn
+
+  official-source-metadata-audit:
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.metadata_audit)
+    needs: safety-regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Inspect 50 verified historical DOI against official OpenAlex METADATA only
+        env:
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+        run: |
+          node scripts/historical-text-source-audit.mjs --limit=50 --output="$RUNNER_TEMP/historical-openalex-source-report.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gallery-historical-text-openalex-${{ github.run_id }}
+          path: ${{ runner.temp }}/historical-openalex-source-report.json
+          retention-days: 14
+          if-no-files-found: warn

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "source": "actual public website via Playwright Chromium in GitHub Actions",
+  "notUserAuthenticated": true,
+  "notWindowsPickerVerified": true,
+  "notLocalPdfReadVerified": true,
+  "privateDataCapture": false,
+  "blockedMutationRequests": 4,
+  "site": "https://gallery.gczhouwld.com/",
+  "captured": [
+    {
+      "name": "live-home-desktop",
+      "file": "audit/wechat-working/2026-10-12-live-ui/live-home-desktop.png",
+      "kind": "live_public_page",
+      "notes": "2026-10-12 actual Gallery desktop page; no login",
+      "sha256": "7bde2d0ce00482ddebe38b83e08b54d37b693688b2a8b595b987f7e2972dbdc1",
+      "bytes": 780734,
+      "url": "https://gallery.gczhouwld.com/?edition=2026-10-12",
+      "timestamp": "2026-10-12T04:44:40.505Z"
+    },
+    {
+      "name": "live-search-controls",
+      "file": "audit/wechat-working/2026-10-12-live-ui/live-search-controls.png",
+      "kind": "live_public_page",
+      "notes": "Actual public text search and journal/date controls, screenshot after scrolling",
+      "sha256": "4df224f7563aae0b2630581658b357f486c71abdb6f31a4f10952577b4317e91",
+      "bytes": 2033851,
+      "url": "https://gallery.gczhouwld.com/?edition=2026-10-12",
+      "timestamp": "2026-10-12T04:44:42.427Z"
+    },
+    {
+      "name": "live-paper-card",
+      "file": "audit/wechat-working/2026-10-12-live-ui/live-paper-card.png",
+      "kind": "live_public_page",
+      "notes": "Actual ACS Catalysis card with user operations and figure strip",
+      "sha256": "45c6571f99f3c18ab10b05ee3effd17d511678a86b1990f51367c79fa2680966",
+      "bytes": 222803,
+      "url": "https://gallery.gczhouwld.com/?edition=2026-10-12",
+      "timestamp": "2026-10-12T04:44:43.117Z"
+    },
+    {
+      "name": "live-local-pdf-button",
+      "file": "audit/wechat-working/2026-10-12-live-ui/live-local-pdf-button.png",
+      "kind": "live_public_page",
+      "notes": "Actual Local PDF card entry, not a signed-in/authorized PDF file",
+      "sha256": "c39d210c2f534ca3f433c2c6985674a6ff36aa68ba890dc5d2547bf0ce64925b",
+      "bytes": 8638,
+      "url": "https://gallery.gczhouwld.com/?edition=2026-10-12",
+      "timestamp": "2026-10-12T04:44:43.725Z"
+    },
+    {
+      "name": "live-pdf-guest-entry",
+      "file": "audit/wechat-working/2026-10-12-live-ui/live-pdf-guest-entry.png",
+      "kind": "live_public_page_guest",
+      "notes": "Real public /pdf-vault/open page while NOT signed in; not proof of Windows folder permission or PDF download.",
+      "sha256": "5c36df3776a7f3c8d6cd2bbf351e414406d313fec2385b4da8078e146a196a1a",
+      "bytes": 101193,
+      "url": "https://gallery.gczhouwld.com/pdf-vault/open/?doi=10.1021%2Facscatal.6c06048",
+      "timestamp": "2026-10-12T04:44:44.932Z"
+    },
+    {
+      "name": "live-mobile-home",
+      "file": "audit/wechat-working/2026-10-12-live-ui/live-mobile-home.png",
+      "kind": "live_public_page",
+      "notes": "Actual 390px phone viewport, not user phone",
+      "sha256": "ea9f466c5fed201a316344328ce266488fa1a5430b7ae36b1c85e360da435c32",
+      "bytes": 423908,
+      "url": "https://gallery.gczhouwld.com/?edition=2026-10-12",
+      "timestamp": "2026-10-12T04:44:47.260Z"
+    }
+  ]
+}
