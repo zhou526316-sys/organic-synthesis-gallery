@@ -124,7 +124,6 @@ def main():
     assert [f['paper']['doi'],j['paper']['doi']]==EXPECTED_DOIS
     assert e['featured']==EXPECTED_DOIS[0] and e['retrospective']==RETRO.stem
     assert f['editorialRevision']=='2026-10-12-r5' and j['editorialRevision']=='2026-10-12-r5'
-    assert sha((ROOT/j['cover']['source_figure_id']).read_bytes()) if False else True
     old_cover=next(x for x in j["figures"] if x["id"]=="jacs_cover")
     assert sha((ROOT/old_cover["repo_path"]).read_bytes())==ORIG_COVER_SHA
     assert f["cover"]["source_figure_id"]=="acs_cover"
