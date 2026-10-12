@@ -6,6 +6,7 @@ import { loadScopeCorrections } from './lib/scope-corrections.mjs';
 import { applyApprovedPublicationDateCorrections } from './lib/approved-publication-date-corrections.mjs';
 import path from 'node:path';
 import { isExcludedDoi } from '../shared/literature-policy.js';
+import {HISTORICAL_APPROVED_PATH, selectHistoricalAdmissions, historicCard} from './lib/historical-admission.mjs';
 import { slotGraceMinutes } from './lib/literature-slot-window.mjs';
 
 const ROOT = process.cwd();
@@ -72,6 +73,40 @@ assert(bundle.markerFields?.auditBlobSha === auditBlob, 'strict bundle audit SHA
 
 const scopeCorrections = await loadScopeCorrections(ROOT);
 const beforeProductionDois = await loadProductionDois();
+// Histories never enter the daily handoff. This source-bound, two-pass-reviewed
+// annex can only be written by the already-authorized fixed 08:00 writer.
+// On invalid history, fail closed for histories and preserve the daily batch.
+let historicalAdmitted=[],historicalReviewBlobSha=null,historicalHold=null;
+try{
+  const history=await readJson(HISTORICAL_APPROVED_PATH);
+  const fileSha=git(['hash-object','--',HISTORICAL_APPROVED_PATH]);
+  assert(fileSha===git(['rev-parse','HEAD:'+HISTORICAL_APPROVED_PATH]),
+    'historical_review_source_not_committed');
+  assert(history.scopeRulesBlobSha===git(['rev-parse','HEAD:docs/literature-scope-contract.md'])
+    &&history.scopeCorrectionsBlobSha===git(['rev-parse','HEAD:audit/literature-scope-corrections.json']),
+    'historical_review_scope_contract_changed');
+  const publishedAndDaily=new Set([
+    ...beforeProductionDois,...(bundle.markerFields.publishableDois||[])
+  ].map(normalizeDoi));
+  const forbiddenDaily=new Set([
+    ...(bundle.markerFields.rejectedDois||[]),...(bundle.markerFields.deferredDois||[])
+  ].map(normalizeDoi));
+  historicalAdmitted=selectHistoricalAdmissions(history,{
+    published:publishedAndDaily,
+    excluded:new Set(scopeCorrections.map(row=>normalizeDoi(row.doi))),
+    dailyDois:forbiddenDaily
+  });
+  for(const row of historicalAdmitted){
+    assert(validChineseTitle(row.titleZh),'historical_review_invalid_chinese_title:'+row.doi);
+    assert(!isExcludedDoi(row.doi),'historical_review_excluded_by_policy:'+row.doi);
+  }
+  if(historicalAdmitted.length)historicalReviewBlobSha=fileSha;
+}catch(error){
+  historicalHold=String(error?.message||error).slice(0,400);
+  historicalAdmitted=[];
+  historicalReviewBlobSha=null;
+  console.error('HISTORICAL_ADMISSION_HELD '+historicalHold);
+}
 for (const correction of scopeCorrections) {
   const doi = normalizeDoi(correction.doi);
   assert(!(bundle.markerFields.publishableDois || []).includes(doi), `explicitly excluded DOI cannot be restored: ${doi}`);
@@ -110,6 +145,13 @@ for (const row of bundle.formalReview.accepted || []) {
   assert(validChineseTitle(card.titleZh), `missing reviewed Chinese title for accepted DOI: ${doi}`);
   if (row.totalSynthesis === true) { card.totalSynthesis = true; card.cardLabel = row.cardLabel || 'Total Synthesis'; }
   byDoi.set(doi, card);
+}
+// Historical cards have no daily new marker, no publisher PDF/body acquisition,
+// and are referenced by an independent frozen review SHA in the formal marker.
+for(const historyRow of historicalAdmitted){
+  const doi=normalizeDoi(historyRow.doi);
+  assert(!byDoi.has(doi),'historical_review_duplicate_current_catalog:'+doi);
+  byDoi.set(doi,historicCard(historyRow));
 }
 // User-approved publisher-date fixes are applied only here, inside the same
 // authorized 08:00 atomic literature transaction as the release marker.
@@ -152,6 +194,14 @@ for (const doi of bundle.markerFields.publishableDois || []) assert(productionDo
 for (const doi of bundle.markerFields.rejectedDois || []) assert(!productionDois.has(normalizeDoi(doi)), `rejected DOI present in production: ${doi}`);
 for (const doi of bundle.markerFields.deferredDois || []) assert(!productionDois.has(normalizeDoi(doi)), `deferred DOI leaked into production: ${doi}`);
 
+const allPublishableDois=[
+  ...(bundle.markerFields.publishableDois||[]),
+  ...historicalAdmitted.map(row=>normalizeDoi(row.doi))
+];
+assert(new Set(allPublishableDois).size===allPublishableDois.length,
+  'historical_review_publishable_duplicate');
+for(const id of historicalAdmitted.map(row=>normalizeDoi(row.doi)))
+  assert(productionDois.has(id),'historical_review_missing_from_production:'+id);
 const protectedBlobs = {};
 for (const file of PROTECTED_FILES) protectedBlobs[file] = git(['hash-object', '--', file]);
 const marker = {
@@ -162,7 +212,12 @@ const marker = {
   stagingReviewFile: bundle.markerFields.stagingReviewFile, stagingReviewBlobSha: bundle.markerFields.stagingReviewBlobSha,
   handoffFile: bundle.markerFields.handoffFile, handoffBlobSha: bundle.markerFields.handoffBlobSha,
   auditFile: bundle.markerFields.auditFile, auditBlobSha: bundle.markerFields.auditBlobSha,
-  publishableDois: bundle.markerFields.publishableDois,
+  publishableDois: allPublishableDois,
+  ...(historicalAdmitted.length?{
+    historicalReviewFile:HISTORICAL_APPROVED_PATH,
+    historicalReviewBlobSha,
+    historicalAdmittedDois:historicalAdmitted.map(row=>normalizeDoi(row.doi))
+  }:{}),
   rejectedDois: bundle.markerFields.rejectedDois,
   deferredDois: bundle.markerFields.deferredDois,
   pendingQueueFile: queuePath, pendingQueueBlobSha: bundle.markerFields.pendingQueueBlobSha,
@@ -174,7 +229,8 @@ const result = {
   ok: true, publicationSlot: slot,
   reviewed: bundle.formalReview.summary.reviewed, accepted: bundle.formalReview.summary.accepted,
   rejected: bundle.formalReview.summary.rejected, pending: bundle.formalReview.summary.pending,
-  productionCards: productionDois.size, publishableDois: bundle.markerFields.publishableDois,
+  productionCards: productionDois.size,publishableDois:allPublishableDois,
+  historicalAdmittedDois:historicalAdmitted.map(row=>normalizeDoi(row.doi)),historicalHold,
   approvedPublicationDateCorrections: dateCorrectionResult,
   deferredDois: bundle.markerFields.deferredDois, formalReviewFile: formalPath,
   formalReviewBlobSha: bundle.markerFields.reviewBlobSha, pendingQueueFile: queuePath,
