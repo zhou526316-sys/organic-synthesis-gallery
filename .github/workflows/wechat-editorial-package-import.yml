@@ -228,6 +228,32 @@ jobs:
                               'public/wechat-featured/2026-10-12.json',
                               'public/wechat-editions/2026-10-12.json',
                           })
+                      # Exact, user-authorized Oct12 re-selection: return from
+                      # UNPUBLISHED Gallery site guide R3 to published ACS Catalysis
+                      # featured + confirmed JACS retrospective. Source hashes are
+                      # pinned in replaceExisting; no other day or article permitted.
+                      if req.get('revision') == '2026-10-12-r4':
+                          selected = ['10.1021/acscatal.6c06048', '10.1021/jacs.6c10406']
+                          fg = json.loads((staged / 'public/wechat-featured/2026-10-12.json').read_text())
+                          ed = json.loads((staged / 'public/wechat-editions/2026-10-12.json').read_text())
+                          retro = json.loads((staged / 'public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json').read_text())
+                          cv = retro.get('cover') or {}
+                          if (req.get('targetDateBeijing') != '2026-10-12'
+                              or req.get('expectedDois') != selected
+                              or gate.get('date') != '2026-10-12'
+                              or gate.get('selectionDois') != selected
+                              or fg.get('paper', {}).get('doi') != selected[0]
+                              or ed.get('featured') != selected[0]
+                              or ed.get('retrospective') != 'alkylzirconocene-deaminative-asymmetric-ke-20261012'
+                              or retro.get('paper', {}).get('doi') != selected[1]
+                              or cv.get('production_cover_image') != 'user_selected'
+                              or cv.get('pixel_equivalence') != 'exact_source_bytes'):
+                              raise RuntimeError('Oct12 R4 approved DOI/cover scope mismatch')
+                          allowed_mutable.update({
+                              'public/wechat-featured/2026-10-12.json',
+                              'public/wechat-editions/2026-10-12.json',
+                              'public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json',
+                          })
                       if rel not in allowed_mutable or not re.fullmatch(r'[a-f0-9]{40}', old_sha) or blob(target.read_bytes()) != old_sha:
                           raise RuntimeError('Refusing to replace non-matching existing content: '+rel)
                   target.parent.mkdir(parents=True,exist_ok=True); target.write_bytes(payload)
