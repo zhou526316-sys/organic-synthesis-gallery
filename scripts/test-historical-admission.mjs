@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {validChineseTitle} from '../shared/chinese-title-overrides.js';
 import {test} from 'node:test';
 import {validateHistoricalApproval,selectHistoricalAdmissions,historicCard,HISTORICAL_APPROVED_PATH}
   from './lib/historical-admission.mjs';
@@ -79,4 +80,10 @@ test('review scope SHA and evidence are mandatory',()=>{
   assert.throws(()=>validateHistoricalApproval(x),/historical_review_scope_fingerprint_missing/);
   const y=clone();y.accepted[0].scopeAssessment.generalityEvidence='';
   assert.throws(()=>validateHistoricalApproval(y),/historical_review_scope_evidence_missing/);
+});
+
+
+test('each historic Chinese title passes actual 08:00 writer input validation',()=>{
+  for(const row of root.accepted)
+    assert.equal(validChineseTitle(row.titleZh),true,row.doi);
 });
