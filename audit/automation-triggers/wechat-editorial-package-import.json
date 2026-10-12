@@ -1,12 +1,11 @@
 {
-  "requestId": "wechat-2026-10-12-r1-acs-catalysis-jacs-deepread-two-paper-reviewed",
-  "requestedAt": "2026-10-12T12:15:00+08:00",
+  "requestId": "wechat-2026-10-12-r2-acs-catalysis-cover-no-clipped-labels",
   "action": "import_reviewed_editorial_package",
-  "revision": "2026-10-12-r1",
+  "revision": "2026-10-12-r2",
   "doi": "10.1021/jacs.6c10406",
   "targetDateBeijing": "2026-10-12",
-  "packageUrl": "https://at.adobe.com/fdFKe1LejqzjPeKD",
-  "packageSha256": "423d4884c58e45c81404e5d8ccfdce4b41c7079758d33daae6772b38c569adf1",
+  "packageUrl": "https://at.adobe.com/yN6v17ZQXsjcgWqH",
+  "packageSha256": "279aa6dc648a125a091a32ba72fd1e196918bc769d7b4c1322bdceb4a5fafe47",
   "manifestPath": "public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json",
   "gatePath": "audit/wechat-working/2026-10-12-review-gate.json",
   "expectedArticleCount": 2,
@@ -14,8 +13,15 @@
     "10.1021/acscatal.6c06048",
     "10.1021/jacs.6c10406"
   ],
+  "replaceExisting": {
+    "public/wechat-featured/2026-10-12.json": "13be6916f4d3910e8eb5e54c57b06650e233c880",
+    "public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json": "2790c430e258e54d439cb3c539901a13e8f29b15",
+    "public/wechat-editions/2026-10-12.json": "c1f705f4dbe77a59d08bc068474d2315ebd94bf2",
+    "audit/wechat-working/2026-10-12-review-gate.json": "9a5e9ea66eff274982dfe137cb80c5bc636000be"
+  },
   "thisStepWritesDraft": false,
   "publicSendAuthorized": false,
   "sourceOnly": true,
-  "description": "User selected today's published ACS Catalysis 10.1021/acscatal.6c06048 new article, and yesterday's chosen JACS 10.1021/jacs.6c10406 retrospective with exact generated Ni/Zr cover. Package includes both scientific manuscripts, 24 original-paper/SI figure rasters, two covers, source hashes and independent dual QA. Import alone must not create WeChat draft or send."
+  "preserveOldWeChatMediaId": true,
+  "reason": "Post-draft visual review found cropped partial Fig1C English header and caption remnant in featured ACS Catalysis cover. R2 original publisher PDF crop keeps complete reaction, original conditions and no clipped extraneous text; corrected full Fig1C lead image. Same JACS blue concept cover and both scientifically reviewed bodies. Exact SHA-locked source replacement only; no WeChat write or group send at import."
 }
