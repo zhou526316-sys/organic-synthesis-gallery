@@ -12,7 +12,18 @@ function h(q=queue([]),inventory=inv([]),opts={}){
  const store=new Map(),opened=[],calls=[],timers=new Map();let now=EPOCH+12*86400000,id=0;
  class D extends Date{constructor(...args){super(...(args.length?args:[now]))}static now(){return now}}
  const get=u=>{calls.push(u);if(u.includes('capture-capabilities'))return {captureVersion:'6.2.20',mediaControllerRevision:'2.2.41',mediaGeneration:EPOCH,evidenceSchemaVersion:'article-evidence-v2',mode:'verified-staging'};
-  if(u.includes('toc-demand'))return q;if(u.includes('local-capture-index'))return inventory.tocs;if(u.includes('/staged?'))return inventory.figures;throw Error('unexpected get '+u)};
+  if(u.includes('toc-demand'))return q;
+  if(u.includes('local-capture-index')||u.includes('/staged?')){
+    const url=new URL(u),raw=url.searchParams.get('dois');
+    const requested=raw?raw.split(',').map(x=>x.toLowerCase()):[];
+    const base=u.includes('local-capture-index')?inventory.tocs:inventory.figures;
+    if(!raw)return base;
+    const rows=(base.items||[]).filter(x=>requested.includes(x.doi.toLowerCase()));
+    return {...base,version:base.version||1,count:rows.length,items:rows,invalidFiltered:0,
+      complete:true,scopeRevision:'doi-scoped-inventory-v1',scopeRequestedCount:requested.length,
+      requestedDois:requested};
+  }
+  throw Error('unexpected get '+u)};
  const ctx=vm.createContext({console,Date:D,URL,Map,Set,document:{},crypto:{randomUUID},location:{hostname:'gallery.gczhouwld.com',pathname:'/',href:'https://gallery.gczhouwld.com/',hash:''},window:{open(){},close(){},alert(){},prompt(){return null}},
  GM_getValue:(k,d)=>store.has(k)?structuredClone(store.get(k)):d,GM_setValue:(k,v)=>store.set(k,structuredClone(v)),GM_deleteValue:k=>store.delete(k),GM_listValues:()=>[...store.keys()],GM_registerMenuCommand(){},
  setTimeout:(f,ms)=>{timers.set(++id,{f,ms});return id},clearTimeout:i=>timers.delete(i),setInterval:(f,ms)=>{timers.set(++id,{f,ms,interval:true});return id},clearInterval:i=>timers.delete(i),
