@@ -7,7 +7,7 @@ import vm from 'node:vm';
 const original=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
 const anchor="  if(location.hostname==='gallery.gczhouwld.com'){";
 assert.ok(original.includes(anchor));
-const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker};\n"+anchor);
+const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog};\n"+anchor);
 const DOI='10.1021/jacs.6c08636',TOKEN='a'.repeat(24),RUN='b'.repeat(24);
 function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false}={}){
   const values=new Map([['gallery-historical-text-batch-v2:job',{
@@ -53,7 +53,7 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
   const context={
     location:{hostname:'pubs.acs.org',origin:'https://pubs.acs.org',
       pathname:'/doi/'+DOI,hash:'#gallery-historical-job='+TOKEN},
-    document,window:{alert(){},confirm:()=>true},TextEncoder,Blob,crypto:webcrypto,URL,
+    document,window:{alert(){},confirm:()=>true},TextEncoder,Blob,crypto:webcrypto,URL,URLSearchParams,
     GM_getValue:(key,def)=>values.has(key)?values.get(key):def,
     GM_setValue:(key,value)=>values.set(key,value),
     GM_deleteValue:key=>values.delete(key),
@@ -78,6 +78,53 @@ test('batch only selects unique formal historical DOI',()=>{
   assert.equal(new Set(rows.map(x=>x.doi)).size,3);
   assert.ok(rows.every(x=>x.publication<'2026-10-01'));
   assert.throws(()=>context.__batchTest.batchHistoricalPapers({...registry,webpageDoiCount:100}),/目录不一致/);
+});
+test('official catalog API paginates formal DOI and includes metadata-only history',async()=>{
+  const {context}=fixture();
+  const f='a'.repeat(64),rev='b'.repeat(64);
+  const official=[
+    {doi:DOI,title:'historical JACS',firstOnlineDate:'2026-09-14',journal:'JACS',revision:rev},
+    {doi:'10.1234/unknown-date',title:'undated article',firstOnlineDate:null,journal:'JOC',revision:rev},
+    {doi:'10.1038/s44160-026-01100-1',title:'historic archive',firstOnlineDate:'2021-02-02',journal:'Nature Synthesis',revision:rev},
+  ];
+  const releaseDois=official.map(x=>x.doi).concat('10.1002/anie.2026new');
+  const calls=[];
+  context.GM_xmlhttpRequest=opts=>{
+    calls.push(opts.url);
+    const u=new URL(opts.url);
+    const data=u.pathname==='/release-delivery.json'
+      ?{architectureCatalogId:f,dois:releaseDois,productionCards:releaseDois.length}
+      :{catalogId:f,readPathActive:true,enabled:true,matched:3,
+        items:u.searchParams.get('cursor')==='next'?official.slice(2):official.slice(0,2),
+        hasMore:u.searchParams.get('cursor')!=='next',
+        nextCursor:u.searchParams.get('cursor')==='next'?null:'next'};
+    queueMicrotask(()=>opts.onload({status:200,responseText:JSON.stringify(data)}));
+  };
+  const catalog=await context.__batchTest.batchLoadCanonicalCatalog();
+  assert.equal(catalog.formalCount,4);
+  assert.equal(catalog.articles.length,3);
+  assert.equal(context.__batchTest.batchHistoricalPapers(catalog).length,2);
+  assert.equal(calls.length,3);
+  assert.ok(calls.every(x=>!x.includes('toc-demand-live')));
+  assert.equal(new URL(calls[1]).searchParams.get('dateTo'),'2026-09-30');
+});
+
+test('canonical DOI loader rejects stale index version and unpublished entries',async()=>{
+  const {context}=fixture(),catalogId='a'.repeat(64);
+  const releaseDois=[DOI],rev='b'.repeat(64);
+  const source=()=>({architectureCatalogId:catalogId,dois:releaseDois,productionCards:1});
+  for(const bad of [
+    {catalogId:'c'.repeat(64),readPathActive:true,enabled:true,matched:1,
+      items:[{doi:DOI,journal:'JACS',revision:rev,firstOnlineDate:'2026-09-14'}],hasMore:false,nextCursor:null},
+    {catalogId,readPathActive:true,enabled:true,matched:1,
+      items:[{doi:'10.1234/unpublished',journal:'JACS',revision:rev,firstOnlineDate:'2026-09-14'}],hasMore:false,nextCursor:null},
+  ]){
+    context.GM_xmlhttpRequest=opts=>{
+      const json=new URL(opts.url).pathname==='/release-delivery.json'?source():bad;
+      queueMicrotask(()=>opts.onload({status:200,responseText:JSON.stringify(json)}));
+    };
+    await assert.rejects(()=>context.__batchTest.batchLoadCanonicalCatalog(),/版本不一致|未知或重复/);
+  }
 });
 test('explicit article license gate allows BY/CC0 and excludes NC-ND or unlicensed',()=>{
   assert.equal(fixture().context.__batchTest.batchLicenseEvidence(fixture().root)?.kind,'cc-by');
