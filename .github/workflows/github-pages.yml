@@ -269,7 +269,8 @@ jobs:
           node scripts/validate-tm220-artifacts.mjs dist
           test -s dist/gallery-historical-text-pilot.user.js
           node --check dist/gallery-historical-text-pilot.user.js
-          grep -F "// @version      0.1.0" dist/gallery-historical-text-pilot.user.js
+          grep -F "// @version      0.2.0" dist/gallery-historical-text-pilot.user.js
+          grep -F "一键补抓全部缺项" dist/gallery-historical-text-pilot.user.js
           grep -F "publicUploadAllowed:false" dist/gallery-historical-text-pilot.user.js
           grep -F "gallery-literature-doi-registry" src/main.ts
           grep -F "readOnly: true" cloudflare/scripts/build-live-toc-demand-queue.mjs
