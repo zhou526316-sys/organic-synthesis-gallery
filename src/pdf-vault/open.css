@@ -23,3 +23,28 @@ body:has(#native-viewer:not([hidden])){overflow:hidden;background:#525659}
 @media(max-width:600px){.native-tools{right:9px;bottom:9px}#native-tools-panel{bottom:45px}#native-tools-toggle{font-size:12px;padding:7px 10px}}
 
 #native-scan-report{margin-top:11px;margin-bottom:0;font-size:12px;color:#40594d;max-width:760px;line-height:1.7;white-space:normal;overflow-wrap:anywhere}
+
+
+/* Only the user's chosen *local* folder is authorized; cloud brands here are
+   onboarding instructions, not a cloud account connection. */
+.folder-modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:16px;background:rgba(20,35,28,.62)}
+.folder-modal-panel{width:min(760px,100%);max-height:calc(100dvh - 32px);overflow:auto;overscroll-behavior:contain;padding:22px;border-radius:16px;background:#fff;box-shadow:0 16px 42px rgba(0,0,0,.23)}
+.folder-modal-head{display:flex;justify-content:space-between;gap:12px;align-items:start;margin-bottom:16px}
+.folder-modal-head h2{font-size:20px;line-height:1.4;margin:0 0 5px}
+.folder-modal-head p{margin:0;color:#5b6f61;font-size:13px}
+.folder-modal-head button,#native-folder-cancel{background:#f6f8f6;color:#244c3a;border-color:#d5e1d8;min-height:36px}
+.folder-provider-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.folder-provider-grid button{display:flex;flex-direction:column;align-items:flex-start;gap:4px;background:#fafcfb;color:#244435;border:1px solid #d5e1da;padding:13px;border-radius:10px;text-align:left;min-height:73px}
+.folder-provider-grid button[aria-pressed="true"]{border-color:#1e795a;background:#eaf6ef;box-shadow:inset 0 0 0 1px #1e795a}
+.folder-provider-grid button:hover{background:#edf7f0}
+.folder-provider-name{font-size:15px;font-weight:750}
+.folder-provider-sub{font-size:11px;font-weight:400;color:#52675b;line-height:1.5}
+.folder-instructions{padding:12px 14px;margin-top:13px;border:1px solid #e1e8e3;border-radius:10px;background:#f8faf8;color:#435449;font-size:12px;line-height:1.75}
+.folder-instructions h3{margin:0;font-size:15px;color:#214b36}
+.folder-instructions p{margin:8px 0 0}
+.folder-instructions #native-folder-privacy{color:#6b5643}
+.folder-instructions a{display:inline-block;margin-top:10px;color:#126043;font-weight:700}
+.folder-modal-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+.folder-modal-actions button:disabled{opacity:.55;cursor:wait}
+#native-folder-feedback{min-height:1em;color:#8a4c20;font-size:12px;margin:8px 0 0}
+@media(max-width:520px){.folder-modal{padding:8px}.folder-modal-panel{padding:14px;max-height:calc(100dvh - 16px)}.folder-modal-head h2{font-size:17px}.folder-provider-grid{grid-template-columns:1fr;gap:7px}.folder-provider-grid button{min-height:53px;padding:9px}.folder-instructions{margin-top:10px;padding:10px}.folder-modal-actions{display:grid;grid-template-columns:1fr 1fr}.folder-modal-actions button{padding:8px;font-size:12px}}
