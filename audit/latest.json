@@ -1,16 +1,16 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-10-11T02:14:40.329Z",
+  "generatedAt": "2026-10-12T01:53:58.658Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-with-catchup",
   "lookbackDays": 3,
   "lateDepositRescueDays": 7,
-  "baseStartDate": "2026-10-09",
-  "lateDepositRescueStartDate": "2026-10-05",
+  "baseStartDate": "2026-10-10",
+  "lateDepositRescueStartDate": "2026-10-06",
   "catchupStartDate": "2026-09-19",
   "startDate": "2026-09-19",
-  "endDate": "2026-10-11",
-  "closureDate": "2026-10-10",
+  "endDate": "2026-10-12",
+  "closureDate": "2026-10-11",
   "policy": "Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default three-calendar-day Beijing primary semantic-review window, seven-calendar-day machine-only multi-source safety tail, and real source-query catch-up from the first unverified date when verifiedThrough falls behind. Crossref created dates are preserved separately from publication dates so late deposits and future issue-date conflicts remain reviewable instead of disappearing. Raw-source to post-filter collapse is a coverage anomaly. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.",
   "targetJournals": [
     {
@@ -21,7 +21,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "Science",
@@ -31,7 +31,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "Nature Catalysis",
@@ -40,7 +40,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "Nature Synthesis",
@@ -49,7 +49,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "Nature Chemistry",
@@ -59,7 +59,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "Nature Communications",
@@ -68,7 +68,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "JACS",
@@ -78,7 +78,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "Angew",
@@ -88,7 +88,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "ACS Catalysis",
@@ -97,7 +97,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "Organic Letters",
@@ -107,7 +107,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "Chem",
@@ -116,7 +116,7 @@
       ],
       "activeFrom": "2026-09-19",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "Chemical Science",
@@ -126,7 +126,7 @@
       ],
       "activeFrom": "2026-10-01",
       "effectiveStart": "2026-10-01",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "CCS Chemistry",
@@ -135,7 +135,7 @@
       ],
       "activeFrom": "2026-09-19",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "Science Advances",
@@ -144,7 +144,7 @@
       ],
       "activeFrom": "2026-09-19",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "Green Chemistry",
@@ -154,7 +154,7 @@
       ],
       "activeFrom": "2026-10-01",
       "effectiveStart": "2026-10-01",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     },
     {
       "name": "JOC",
@@ -164,34 +164,34 @@
       ],
       "activeFrom": "2026-09-22",
       "effectiveStart": "2026-09-22",
-      "lateDepositRescueStart": "2026-10-05"
+      "lateDepositRescueStart": "2026-10-06"
     }
   ],
   "summary": {
-    "galleryDois": 959,
-    "sourceRecords": 2584,
-    "rawMissingFromGallery": 2101,
-    "previouslyReviewedExcluded": 2100,
-    "missingFromGallery": 1,
-    "potentialGaps": 1,
+    "galleryDois": 964,
+    "sourceRecords": 2604,
+    "rawMissingFromGallery": 2116,
+    "previouslyReviewedExcluded": 2116,
+    "missingFromGallery": 0,
+    "potentialGaps": 0,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 4,
-    "closureCoverageAnomalies": 5,
+    "closureCoverageAnomalies": 1,
     "historicalCoverageLosses": 0,
     "historicalNonJournalRecords": 0,
-    "unresolved": 1,
+    "unresolved": 0,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
   "closure": {
-    "date": "2026-10-10",
+    "date": "2026-10-11",
     "status": "blocked-source-coverage-anomaly",
-    "sourceRecords": 54,
-    "rawMissingFromGallery": 44,
-    "previouslyReviewedExcluded": 43,
-    "missingFromGallery": 1,
-    "potentialGaps": 1,
+    "sourceRecords": 14,
+    "rawMissingFromGallery": 10,
+    "previouslyReviewedExcluded": 10,
+    "missingFromGallery": 0,
+    "potentialGaps": 0,
     "criticalSourceFailures": 0,
     "sourceCoverageAnomalies": [
       {
@@ -205,122 +205,18 @@
         "crossrefHealthy": true,
         "openAlexHealthy": true,
         "queryStart": "2026-09-19",
-        "rawCrossrefCandidateRecords": 581,
-        "rawOpenAlexCandidateRecords": 555,
-        "rawUnionCandidateRecords": 581,
+        "rawCrossrefCandidateRecords": 586,
+        "rawOpenAlexCandidateRecords": 579,
+        "rawUnionCandidateRecords": 587,
         "rawToUnionCollapse": false,
-        "unionCandidateRecords": 581,
-        "crossrefCandidateRecords": 581,
-        "openAlexCandidateRecords": 555,
-        "multiSourceCandidateRecords": 555,
-        "closureUnionRecords": 20,
-        "closureCrossrefRecords": 20,
-        "closureOpenAlexRecords": 0,
-        "closureMultiSourceRecords": 0,
-        "coverageWarning": false,
-        "closureCoverageWarning": true
-      },
-      {
-        "journal": "JACS",
-        "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-19",
-        "crossrefRequests": 6,
-        "crossrefFailures": 0,
-        "openAlexRequests": 1,
-        "openAlexFailures": 0,
-        "crossrefHealthy": true,
-        "openAlexHealthy": true,
-        "queryStart": "2026-09-19",
-        "rawCrossrefCandidateRecords": 334,
-        "rawOpenAlexCandidateRecords": 323,
-        "rawUnionCandidateRecords": 334,
-        "rawToUnionCollapse": false,
-        "unionCandidateRecords": 334,
-        "crossrefCandidateRecords": 334,
-        "openAlexCandidateRecords": 323,
-        "multiSourceCandidateRecords": 323,
-        "closureUnionRecords": 11,
-        "closureCrossrefRecords": 11,
+        "unionCandidateRecords": 587,
+        "crossrefCandidateRecords": 586,
+        "openAlexCandidateRecords": 579,
+        "multiSourceCandidateRecords": 578,
+        "closureUnionRecords": 8,
+        "closureCrossrefRecords": 8,
         "closureOpenAlexRecords": 3,
         "closureMultiSourceRecords": 3,
-        "coverageWarning": false,
-        "closureCoverageWarning": true
-      },
-      {
-        "journal": "Angew",
-        "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-19",
-        "crossrefRequests": 6,
-        "crossrefFailures": 0,
-        "openAlexRequests": 1,
-        "openAlexFailures": 0,
-        "crossrefHealthy": true,
-        "openAlexHealthy": true,
-        "queryStart": "2026-09-19",
-        "rawCrossrefCandidateRecords": 380,
-        "rawOpenAlexCandidateRecords": 358,
-        "rawUnionCandidateRecords": 380,
-        "rawToUnionCollapse": false,
-        "unionCandidateRecords": 380,
-        "crossrefCandidateRecords": 380,
-        "openAlexCandidateRecords": 358,
-        "multiSourceCandidateRecords": 358,
-        "closureUnionRecords": 11,
-        "closureCrossrefRecords": 11,
-        "closureOpenAlexRecords": 0,
-        "closureMultiSourceRecords": 0,
-        "coverageWarning": false,
-        "closureCoverageWarning": true
-      },
-      {
-        "journal": "ACS Catalysis",
-        "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-19",
-        "crossrefRequests": 3,
-        "crossrefFailures": 0,
-        "openAlexRequests": 1,
-        "openAlexFailures": 0,
-        "crossrefHealthy": true,
-        "openAlexHealthy": true,
-        "queryStart": "2026-09-19",
-        "rawCrossrefCandidateRecords": 132,
-        "rawOpenAlexCandidateRecords": 114,
-        "rawUnionCandidateRecords": 132,
-        "rawToUnionCollapse": false,
-        "unionCandidateRecords": 124,
-        "crossrefCandidateRecords": 124,
-        "openAlexCandidateRecords": 114,
-        "multiSourceCandidateRecords": 114,
-        "closureUnionRecords": 5,
-        "closureCrossrefRecords": 5,
-        "closureOpenAlexRecords": 0,
-        "closureMultiSourceRecords": 0,
-        "coverageWarning": false,
-        "closureCoverageWarning": true
-      },
-      {
-        "journal": "Organic Letters",
-        "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-19",
-        "crossrefRequests": 6,
-        "crossrefFailures": 0,
-        "openAlexRequests": 1,
-        "openAlexFailures": 0,
-        "crossrefHealthy": true,
-        "openAlexHealthy": true,
-        "queryStart": "2026-09-19",
-        "rawCrossrefCandidateRecords": 179,
-        "rawOpenAlexCandidateRecords": 174,
-        "rawUnionCandidateRecords": 179,
-        "rawToUnionCollapse": false,
-        "unionCandidateRecords": 179,
-        "crossrefCandidateRecords": 179,
-        "openAlexCandidateRecords": 174,
-        "multiSourceCandidateRecords": 174,
-        "closureUnionRecords": 6,
-        "closureCrossrefRecords": 6,
-        "closureOpenAlexRecords": 2,
-        "closureMultiSourceRecords": 2,
         "coverageWarning": false,
         "closureCoverageWarning": true
       }
@@ -539,20 +435,20 @@
       }
     },
     "2026-10-02": {
-      "sourceRecords": 165,
+      "sourceRecords": 166,
       "crossrefOnly": 1,
-      "openAlexOnly": 0,
+      "openAlexOnly": 1,
       "multiSource": 164,
       "coveredByGallery": 23,
-      "rawMissingFromGallery": 142,
-      "previouslyReviewedExcluded": 142,
+      "rawMissingFromGallery": 143,
+      "previouslyReviewedExcluded": 143,
       "missingFromGallery": 0,
       "potentialGaps": 0,
       "byJournal": {
         "Nature": 10,
         "Nature Synthesis": 1,
         "Nature Chemistry": 1,
-        "Nature Communications": 15,
+        "Nature Communications": 16,
         "JACS": 14,
         "Angew": 12,
         "ACS Catalysis": 7,
@@ -650,9 +546,9 @@
     },
     "2026-10-09": {
       "sourceRecords": 204,
-      "crossrefOnly": 8,
+      "crossrefOnly": 5,
       "openAlexOnly": 0,
-      "multiSource": 196,
+      "multiSource": 199,
       "coveredByGallery": 26,
       "rawMissingFromGallery": 178,
       "previouslyReviewedExcluded": 178,
@@ -793,36 +689,39 @@
       }
     },
     "2026-10-10": {
-      "sourceRecords": 54,
-      "crossrefOnly": 49,
+      "sourceRecords": 62,
+      "crossrefOnly": 0,
       "openAlexOnly": 0,
-      "multiSource": 5,
-      "coveredByGallery": 10,
-      "rawMissingFromGallery": 44,
-      "previouslyReviewedExcluded": 43,
-      "missingFromGallery": 1,
-      "potentialGaps": 1,
+      "multiSource": 62,
+      "coveredByGallery": 11,
+      "rawMissingFromGallery": 51,
+      "previouslyReviewedExcluded": 51,
+      "missingFromGallery": 0,
+      "potentialGaps": 0,
       "byJournal": {
         "Nature Communications": 20,
         "JACS": 11,
-        "Angew": 11,
+        "Angew": 19,
         "ACS Catalysis": 5,
         "Organic Letters": 6,
         "JOC": 1
       }
     },
     "2026-10-11": {
-      "sourceRecords": 3,
-      "crossrefOnly": 3,
+      "sourceRecords": 14,
+      "crossrefOnly": 11,
       "openAlexOnly": 0,
-      "multiSource": 0,
-      "coveredByGallery": 0,
-      "rawMissingFromGallery": 3,
-      "previouslyReviewedExcluded": 3,
+      "multiSource": 3,
+      "coveredByGallery": 4,
+      "rawMissingFromGallery": 10,
+      "previouslyReviewedExcluded": 10,
       "missingFromGallery": 0,
       "potentialGaps": 0,
       "byJournal": {
-        "Nature Communications": 3
+        "Nature Communications": 8,
+        "JACS": 2,
+        "Organic Letters": 3,
+        "JOC": 1
       }
     },
     "2026-09-27": {
@@ -860,9 +759,9 @@
     },
     "2026-10-12": {
       "sourceRecords": 1,
-      "crossrefOnly": 1,
+      "crossrefOnly": 0,
       "openAlexOnly": 0,
-      "multiSource": 0,
+      "multiSource": 1,
       "coveredByGallery": 0,
       "rawMissingFromGallery": 1,
       "previouslyReviewedExcluded": 1,
@@ -1019,16 +918,16 @@
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
       "queryStart": "2026-09-19",
-      "rawSourceRecords": 581,
-      "sourceRecords": 581,
-      "crossrefOnly": 26,
-      "openAlexOnly": 0,
-      "multiSource": 555,
+      "rawSourceRecords": 587,
+      "sourceRecords": 587,
+      "crossrefOnly": 8,
+      "openAlexOnly": 1,
+      "multiSource": 578,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 15,
-      "rawMissingFromGallery": 566,
-      "previouslyReviewedExcluded": 566,
+      "rawMissingFromGallery": 572,
+      "previouslyReviewedExcluded": 572,
       "missingFromGallery": 0,
       "potentialGaps": 0
     },
@@ -1036,16 +935,16 @@
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
       "queryStart": "2026-09-19",
-      "rawSourceRecords": 334,
-      "sourceRecords": 334,
-      "crossrefOnly": 11,
+      "rawSourceRecords": 336,
+      "sourceRecords": 336,
+      "crossrefOnly": 5,
       "openAlexOnly": 0,
-      "multiSource": 323,
+      "multiSource": 331,
       "lateIndexed": 3,
       "safetyTail": 0,
       "coveredByGallery": 70,
-      "rawMissingFromGallery": 264,
-      "previouslyReviewedExcluded": 264,
+      "rawMissingFromGallery": 266,
+      "previouslyReviewedExcluded": 266,
       "missingFromGallery": 0,
       "potentialGaps": 0
     },
@@ -1053,16 +952,16 @@
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
       "queryStart": "2026-09-19",
-      "rawSourceRecords": 380,
-      "sourceRecords": 380,
-      "crossrefOnly": 22,
+      "rawSourceRecords": 388,
+      "sourceRecords": 388,
+      "crossrefOnly": 7,
       "openAlexOnly": 0,
-      "multiSource": 358,
+      "multiSource": 381,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 65,
-      "rawMissingFromGallery": 315,
-      "previouslyReviewedExcluded": 315,
+      "rawMissingFromGallery": 323,
+      "previouslyReviewedExcluded": 323,
       "missingFromGallery": 0,
       "potentialGaps": 0
     },
@@ -1072,29 +971,29 @@
       "queryStart": "2026-09-19",
       "rawSourceRecords": 132,
       "sourceRecords": 124,
-      "crossrefOnly": 10,
+      "crossrefOnly": 5,
       "openAlexOnly": 0,
-      "multiSource": 114,
+      "multiSource": 119,
       "lateIndexed": 5,
       "safetyTail": 0,
-      "coveredByGallery": 34,
-      "rawMissingFromGallery": 90,
+      "coveredByGallery": 35,
+      "rawMissingFromGallery": 89,
       "previouslyReviewedExcluded": 89,
-      "missingFromGallery": 1,
-      "potentialGaps": 1
+      "missingFromGallery": 0,
+      "potentialGaps": 0
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
       "queryStart": "2026-09-19",
-      "rawSourceRecords": 179,
-      "sourceRecords": 179,
-      "crossrefOnly": 5,
+      "rawSourceRecords": 182,
+      "sourceRecords": 182,
+      "crossrefOnly": 4,
       "openAlexOnly": 0,
-      "multiSource": 174,
+      "multiSource": 178,
       "lateIndexed": 1,
       "safetyTail": 0,
-      "coveredByGallery": 158,
+      "coveredByGallery": 161,
       "rawMissingFromGallery": 21,
       "previouslyReviewedExcluded": 21,
       "missingFromGallery": 0,
@@ -1189,14 +1088,14 @@
       "activeFrom": "2026-09-22",
       "effectiveStart": "2026-09-22",
       "queryStart": "2026-09-22",
-      "rawSourceRecords": 95,
-      "sourceRecords": 94,
+      "rawSourceRecords": 96,
+      "sourceRecords": 95,
       "crossrefOnly": 1,
       "openAlexOnly": 0,
-      "multiSource": 93,
+      "multiSource": 94,
       "lateIndexed": 0,
       "safetyTail": 0,
-      "coveredByGallery": 77,
+      "coveredByGallery": 78,
       "rawMissingFromGallery": 17,
       "previouslyReviewedExcluded": 17,
       "missingFromGallery": 0,
@@ -1339,18 +1238,18 @@
       "crossrefHealthy": true,
       "openAlexHealthy": true,
       "queryStart": "2026-09-19",
-      "rawCrossrefCandidateRecords": 581,
-      "rawOpenAlexCandidateRecords": 555,
-      "rawUnionCandidateRecords": 581,
+      "rawCrossrefCandidateRecords": 586,
+      "rawOpenAlexCandidateRecords": 579,
+      "rawUnionCandidateRecords": 587,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 581,
-      "crossrefCandidateRecords": 581,
-      "openAlexCandidateRecords": 555,
-      "multiSourceCandidateRecords": 555,
-      "closureUnionRecords": 20,
-      "closureCrossrefRecords": 20,
-      "closureOpenAlexRecords": 0,
-      "closureMultiSourceRecords": 0,
+      "unionCandidateRecords": 587,
+      "crossrefCandidateRecords": 586,
+      "openAlexCandidateRecords": 579,
+      "multiSourceCandidateRecords": 578,
+      "closureUnionRecords": 8,
+      "closureCrossrefRecords": 8,
+      "closureOpenAlexRecords": 3,
+      "closureMultiSourceRecords": 3,
       "coverageWarning": false,
       "closureCoverageWarning": true
     },
@@ -1364,20 +1263,20 @@
       "crossrefHealthy": true,
       "openAlexHealthy": true,
       "queryStart": "2026-09-19",
-      "rawCrossrefCandidateRecords": 334,
-      "rawOpenAlexCandidateRecords": 323,
-      "rawUnionCandidateRecords": 334,
+      "rawCrossrefCandidateRecords": 336,
+      "rawOpenAlexCandidateRecords": 331,
+      "rawUnionCandidateRecords": 336,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 334,
-      "crossrefCandidateRecords": 334,
-      "openAlexCandidateRecords": 323,
-      "multiSourceCandidateRecords": 323,
-      "closureUnionRecords": 11,
-      "closureCrossrefRecords": 11,
-      "closureOpenAlexRecords": 3,
-      "closureMultiSourceRecords": 3,
+      "unionCandidateRecords": 336,
+      "crossrefCandidateRecords": 336,
+      "openAlexCandidateRecords": 331,
+      "multiSourceCandidateRecords": 331,
+      "closureUnionRecords": 2,
+      "closureCrossrefRecords": 2,
+      "closureOpenAlexRecords": 0,
+      "closureMultiSourceRecords": 0,
       "coverageWarning": false,
-      "closureCoverageWarning": true
+      "closureCoverageWarning": false
     },
     "Angew": {
       "activeFrom": "2026-07-01",
@@ -1389,20 +1288,20 @@
       "crossrefHealthy": true,
       "openAlexHealthy": true,
       "queryStart": "2026-09-19",
-      "rawCrossrefCandidateRecords": 380,
-      "rawOpenAlexCandidateRecords": 358,
-      "rawUnionCandidateRecords": 380,
+      "rawCrossrefCandidateRecords": 388,
+      "rawOpenAlexCandidateRecords": 381,
+      "rawUnionCandidateRecords": 388,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 380,
-      "crossrefCandidateRecords": 380,
-      "openAlexCandidateRecords": 358,
-      "multiSourceCandidateRecords": 358,
-      "closureUnionRecords": 11,
-      "closureCrossrefRecords": 11,
+      "unionCandidateRecords": 388,
+      "crossrefCandidateRecords": 388,
+      "openAlexCandidateRecords": 381,
+      "multiSourceCandidateRecords": 381,
+      "closureUnionRecords": 0,
+      "closureCrossrefRecords": 0,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
-      "closureCoverageWarning": true
+      "closureCoverageWarning": false
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
@@ -1415,19 +1314,19 @@
       "openAlexHealthy": true,
       "queryStart": "2026-09-19",
       "rawCrossrefCandidateRecords": 132,
-      "rawOpenAlexCandidateRecords": 114,
+      "rawOpenAlexCandidateRecords": 119,
       "rawUnionCandidateRecords": 132,
       "rawToUnionCollapse": false,
       "unionCandidateRecords": 124,
       "crossrefCandidateRecords": 124,
-      "openAlexCandidateRecords": 114,
-      "multiSourceCandidateRecords": 114,
-      "closureUnionRecords": 5,
-      "closureCrossrefRecords": 5,
+      "openAlexCandidateRecords": 119,
+      "multiSourceCandidateRecords": 119,
+      "closureUnionRecords": 0,
+      "closureCrossrefRecords": 0,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
-      "closureCoverageWarning": true
+      "closureCoverageWarning": false
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
@@ -1439,20 +1338,20 @@
       "crossrefHealthy": true,
       "openAlexHealthy": true,
       "queryStart": "2026-09-19",
-      "rawCrossrefCandidateRecords": 179,
-      "rawOpenAlexCandidateRecords": 174,
-      "rawUnionCandidateRecords": 179,
+      "rawCrossrefCandidateRecords": 182,
+      "rawOpenAlexCandidateRecords": 178,
+      "rawUnionCandidateRecords": 182,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 179,
-      "crossrefCandidateRecords": 179,
-      "openAlexCandidateRecords": 174,
-      "multiSourceCandidateRecords": 174,
-      "closureUnionRecords": 6,
-      "closureCrossrefRecords": 6,
-      "closureOpenAlexRecords": 2,
-      "closureMultiSourceRecords": 2,
+      "unionCandidateRecords": 182,
+      "crossrefCandidateRecords": 182,
+      "openAlexCandidateRecords": 178,
+      "multiSourceCandidateRecords": 178,
+      "closureUnionRecords": 3,
+      "closureCrossrefRecords": 3,
+      "closureOpenAlexRecords": 0,
+      "closureMultiSourceRecords": 0,
       "coverageWarning": false,
-      "closureCoverageWarning": true
+      "closureCoverageWarning": false
     },
     "Chem": {
       "activeFrom": "2026-09-19",
@@ -1589,14 +1488,14 @@
       "crossrefHealthy": true,
       "openAlexHealthy": true,
       "queryStart": "2026-09-22",
-      "rawCrossrefCandidateRecords": 95,
-      "rawOpenAlexCandidateRecords": 93,
-      "rawUnionCandidateRecords": 95,
+      "rawCrossrefCandidateRecords": 96,
+      "rawOpenAlexCandidateRecords": 94,
+      "rawUnionCandidateRecords": 96,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 94,
-      "crossrefCandidateRecords": 94,
-      "openAlexCandidateRecords": 93,
-      "multiSourceCandidateRecords": 93,
+      "unionCandidateRecords": 95,
+      "crossrefCandidateRecords": 95,
+      "openAlexCandidateRecords": 94,
+      "multiSourceCandidateRecords": 94,
       "closureUnionRecords": 1,
       "closureCrossrefRecords": 1,
       "closureOpenAlexRecords": 0,
@@ -1724,122 +1623,18 @@
       "crossrefHealthy": true,
       "openAlexHealthy": true,
       "queryStart": "2026-09-19",
-      "rawCrossrefCandidateRecords": 581,
-      "rawOpenAlexCandidateRecords": 555,
-      "rawUnionCandidateRecords": 581,
+      "rawCrossrefCandidateRecords": 586,
+      "rawOpenAlexCandidateRecords": 579,
+      "rawUnionCandidateRecords": 587,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 581,
-      "crossrefCandidateRecords": 581,
-      "openAlexCandidateRecords": 555,
-      "multiSourceCandidateRecords": 555,
-      "closureUnionRecords": 20,
-      "closureCrossrefRecords": 20,
-      "closureOpenAlexRecords": 0,
-      "closureMultiSourceRecords": 0,
-      "coverageWarning": false,
-      "closureCoverageWarning": true
-    },
-    {
-      "journal": "JACS",
-      "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "crossrefRequests": 6,
-      "crossrefFailures": 0,
-      "openAlexRequests": 1,
-      "openAlexFailures": 0,
-      "crossrefHealthy": true,
-      "openAlexHealthy": true,
-      "queryStart": "2026-09-19",
-      "rawCrossrefCandidateRecords": 334,
-      "rawOpenAlexCandidateRecords": 323,
-      "rawUnionCandidateRecords": 334,
-      "rawToUnionCollapse": false,
-      "unionCandidateRecords": 334,
-      "crossrefCandidateRecords": 334,
-      "openAlexCandidateRecords": 323,
-      "multiSourceCandidateRecords": 323,
-      "closureUnionRecords": 11,
-      "closureCrossrefRecords": 11,
+      "unionCandidateRecords": 587,
+      "crossrefCandidateRecords": 586,
+      "openAlexCandidateRecords": 579,
+      "multiSourceCandidateRecords": 578,
+      "closureUnionRecords": 8,
+      "closureCrossrefRecords": 8,
       "closureOpenAlexRecords": 3,
       "closureMultiSourceRecords": 3,
-      "coverageWarning": false,
-      "closureCoverageWarning": true
-    },
-    {
-      "journal": "Angew",
-      "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "crossrefRequests": 6,
-      "crossrefFailures": 0,
-      "openAlexRequests": 1,
-      "openAlexFailures": 0,
-      "crossrefHealthy": true,
-      "openAlexHealthy": true,
-      "queryStart": "2026-09-19",
-      "rawCrossrefCandidateRecords": 380,
-      "rawOpenAlexCandidateRecords": 358,
-      "rawUnionCandidateRecords": 380,
-      "rawToUnionCollapse": false,
-      "unionCandidateRecords": 380,
-      "crossrefCandidateRecords": 380,
-      "openAlexCandidateRecords": 358,
-      "multiSourceCandidateRecords": 358,
-      "closureUnionRecords": 11,
-      "closureCrossrefRecords": 11,
-      "closureOpenAlexRecords": 0,
-      "closureMultiSourceRecords": 0,
-      "coverageWarning": false,
-      "closureCoverageWarning": true
-    },
-    {
-      "journal": "ACS Catalysis",
-      "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "crossrefRequests": 3,
-      "crossrefFailures": 0,
-      "openAlexRequests": 1,
-      "openAlexFailures": 0,
-      "crossrefHealthy": true,
-      "openAlexHealthy": true,
-      "queryStart": "2026-09-19",
-      "rawCrossrefCandidateRecords": 132,
-      "rawOpenAlexCandidateRecords": 114,
-      "rawUnionCandidateRecords": 132,
-      "rawToUnionCollapse": false,
-      "unionCandidateRecords": 124,
-      "crossrefCandidateRecords": 124,
-      "openAlexCandidateRecords": 114,
-      "multiSourceCandidateRecords": 114,
-      "closureUnionRecords": 5,
-      "closureCrossrefRecords": 5,
-      "closureOpenAlexRecords": 0,
-      "closureMultiSourceRecords": 0,
-      "coverageWarning": false,
-      "closureCoverageWarning": true
-    },
-    {
-      "journal": "Organic Letters",
-      "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "crossrefRequests": 6,
-      "crossrefFailures": 0,
-      "openAlexRequests": 1,
-      "openAlexFailures": 0,
-      "crossrefHealthy": true,
-      "openAlexHealthy": true,
-      "queryStart": "2026-09-19",
-      "rawCrossrefCandidateRecords": 179,
-      "rawOpenAlexCandidateRecords": 174,
-      "rawUnionCandidateRecords": 179,
-      "rawToUnionCollapse": false,
-      "unionCandidateRecords": 179,
-      "crossrefCandidateRecords": 179,
-      "openAlexCandidateRecords": 174,
-      "multiSourceCandidateRecords": 174,
-      "closureUnionRecords": 6,
-      "closureCrossrefRecords": 6,
-      "closureOpenAlexRecords": 2,
-      "closureMultiSourceRecords": 2,
       "coverageWarning": false,
       "closureCoverageWarning": true
     }
@@ -2134,7 +1929,7 @@
       "mode": "online",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 581,
+      "count": 586,
       "note": ""
     },
     {
@@ -2144,7 +1939,7 @@
       "mode": "published",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 581,
+      "count": 586,
       "note": ""
     },
     {
@@ -2154,7 +1949,7 @@
       "mode": "created",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 580,
+      "count": 585,
       "note": ""
     },
     {
@@ -2162,7 +1957,7 @@
       "journal": "Nature Communications",
       "sourceId": "S64187185",
       "ok": true,
-      "count": 555,
+      "count": 579,
       "note": ""
     },
     {
@@ -2172,7 +1967,7 @@
       "mode": "online",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 331,
+      "count": 333,
       "note": ""
     },
     {
@@ -2182,7 +1977,7 @@
       "mode": "published",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 331,
+      "count": 333,
       "note": ""
     },
     {
@@ -2192,7 +1987,7 @@
       "mode": "created",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 334,
+      "count": 336,
       "note": ""
     },
     {
@@ -2202,7 +1997,7 @@
       "mode": "online",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 331,
+      "count": 333,
       "note": ""
     },
     {
@@ -2212,7 +2007,7 @@
       "mode": "published",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 331,
+      "count": 333,
       "note": ""
     },
     {
@@ -2222,7 +2017,7 @@
       "mode": "created",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 334,
+      "count": 336,
       "note": ""
     },
     {
@@ -2230,7 +2025,7 @@
       "journal": "JACS",
       "sourceId": "S111155417",
       "ok": true,
-      "count": 323,
+      "count": 331,
       "note": ""
     },
     {
@@ -2240,7 +2035,7 @@
       "mode": "online",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 376,
+      "count": 384,
       "note": ""
     },
     {
@@ -2250,7 +2045,7 @@
       "mode": "published",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 379,
+      "count": 388,
       "note": ""
     },
     {
@@ -2260,7 +2055,7 @@
       "mode": "created",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 380,
+      "count": 388,
       "note": ""
     },
     {
@@ -2270,7 +2065,7 @@
       "mode": "online",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 376,
+      "count": 384,
       "note": ""
     },
     {
@@ -2280,7 +2075,7 @@
       "mode": "published",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 379,
+      "count": 388,
       "note": ""
     },
     {
@@ -2290,7 +2085,7 @@
       "mode": "created",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 380,
+      "count": 388,
       "note": ""
     },
     {
@@ -2298,7 +2093,7 @@
       "journal": "Angew",
       "sourceId": "S67393510",
       "ok": true,
-      "count": 358,
+      "count": 381,
       "note": ""
     },
     {
@@ -2336,7 +2131,7 @@
       "journal": "ACS Catalysis",
       "sourceId": "S37391459",
       "ok": true,
-      "count": 116,
+      "count": 121,
       "note": ""
     },
     {
@@ -2346,7 +2141,7 @@
       "mode": "online",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 178,
+      "count": 181,
       "note": ""
     },
     {
@@ -2356,7 +2151,7 @@
       "mode": "published",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 178,
+      "count": 181,
       "note": ""
     },
     {
@@ -2366,7 +2161,7 @@
       "mode": "created",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 179,
+      "count": 182,
       "note": ""
     },
     {
@@ -2376,7 +2171,7 @@
       "mode": "online",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 178,
+      "count": 181,
       "note": ""
     },
     {
@@ -2386,7 +2181,7 @@
       "mode": "published",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 178,
+      "count": 181,
       "note": ""
     },
     {
@@ -2396,7 +2191,7 @@
       "mode": "created",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 179,
+      "count": 182,
       "note": ""
     },
     {
@@ -2404,7 +2199,7 @@
       "journal": "Organic Letters",
       "sourceId": "S201989124",
       "ok": true,
-      "count": 174,
+      "count": 178,
       "note": ""
     },
     {
@@ -2664,7 +2459,7 @@
       "mode": "online",
       "queryStart": "2026-09-22",
       "ok": true,
-      "count": 94,
+      "count": 95,
       "note": ""
     },
     {
@@ -2674,7 +2469,7 @@
       "mode": "published",
       "queryStart": "2026-09-22",
       "ok": true,
-      "count": 94,
+      "count": 95,
       "note": ""
     },
     {
@@ -2684,7 +2479,7 @@
       "mode": "created",
       "queryStart": "2026-09-22",
       "ok": true,
-      "count": 95,
+      "count": 96,
       "note": ""
     },
     {
@@ -2694,7 +2489,7 @@
       "mode": "online",
       "queryStart": "2026-09-22",
       "ok": true,
-      "count": 94,
+      "count": 95,
       "note": ""
     },
     {
@@ -2704,7 +2499,7 @@
       "mode": "published",
       "queryStart": "2026-09-22",
       "ok": true,
-      "count": 94,
+      "count": 95,
       "note": ""
     },
     {
@@ -2714,7 +2509,7 @@
       "mode": "created",
       "queryStart": "2026-09-22",
       "ok": true,
-      "count": 95,
+      "count": 96,
       "note": ""
     },
     {
@@ -2722,82 +2517,10 @@
       "journal": "JOC",
       "sourceId": "S205050996",
       "ok": true,
-      "count": 93,
+      "count": 94,
       "note": ""
     }
   ],
-  "missingCandidates": [
-    {
-      "doi": "10.1021/acscatal.6c06048",
-      "journal": "ACS Catalysis",
-      "title": "Mild Heterogeneous Thiophene Hydrogenation Enabled by a Modified Palladium Catalyst",
-      "abstract": "Abstract Thiophenes are readily available sulfur heteroarenes and prominent motifs in medicinal and synthetic chemistry, but their direct heterogeneous hydrogenation to thiolanes remains challenging due to sulfur-induced catalyst deactivation and competing hydrodesulfurization. Here, we report a chloroform-induced surface modification strategy that enables the heterogeneous Pd(OH)2/C-catalyzed hydrogenation of thiophenes to saturated sulfur heterocycles. The method proceeds under mild hydrogenation conditions and provides access to a range of alkyl-, silyl-, aryl-, and benzofused thiolane derivatives. A hydrogenation-focused robustness assessment revealed compatibility with several functional groups that are commonly sensitive under Pd/H2 conditions, while preparative scope studies showed that functional-group-containing thiophenes can be converted when potentially interfering motifs are separated from the thiophene core by suitable alkyl or aryl spacers. Mechanistic experiments indicate that CHCl3 is not merely a beneficial solvent: CHCl3/H2 pretreatment of Pd(OH)2/C generates a catalytically competent material whose activity is retained after replacing CHCl3 with 2-MeTHF. X-ray photoelectron spectroscopy (XPS) and time-of-flight secondary ion mass spectrometry (ToF-SIMS) analyses support the formation of persistent chloroform-derived organochlorine/C–Cl-type surface environments and chlorocarbon fragments. These findings establish solvent-induced catalyst modification as a useful design principle for challenging heterogeneous hydrogenations of sulfur-containing heteroarenes.",
-      "date": "2026-10-10",
-      "onlineDate": "2026-10-10",
-      "publishedDate": "2026-10-10",
-      "createdDate": "2026-10-11",
-      "onlineDatePrecision": "day",
-      "publishedDatePrecision": "day",
-      "createdDatePrecision": "day",
-      "type": "journal-article",
-      "authors": [
-        "Steffen Heuvel",
-        "Marie-Christin Leusmann",
-        "Julius Wiener",
-        "Arne Nalop",
-        "Bonnie J. Tyler",
-        "Mathis J. Karrasch",
-        "Frank Glorius"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "crossref:2155-5435:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "dateConflict": "",
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    }
-  ],
-  "potentialGaps": [
-    {
-      "doi": "10.1021/acscatal.6c06048",
-      "journal": "ACS Catalysis",
-      "title": "Mild Heterogeneous Thiophene Hydrogenation Enabled by a Modified Palladium Catalyst",
-      "abstract": "Abstract Thiophenes are readily available sulfur heteroarenes and prominent motifs in medicinal and synthetic chemistry, but their direct heterogeneous hydrogenation to thiolanes remains challenging due to sulfur-induced catalyst deactivation and competing hydrodesulfurization. Here, we report a chloroform-induced surface modification strategy that enables the heterogeneous Pd(OH)2/C-catalyzed hydrogenation of thiophenes to saturated sulfur heterocycles. The method proceeds under mild hydrogenation conditions and provides access to a range of alkyl-, silyl-, aryl-, and benzofused thiolane derivatives. A hydrogenation-focused robustness assessment revealed compatibility with several functional groups that are commonly sensitive under Pd/H2 conditions, while preparative scope studies showed that functional-group-containing thiophenes can be converted when potentially interfering motifs are separated from the thiophene core by suitable alkyl or aryl spacers. Mechanistic experiments indicate that CHCl3 is not merely a beneficial solvent: CHCl3/H2 pretreatment of Pd(OH)2/C generates a catalytically competent material whose activity is retained after replacing CHCl3 with 2-MeTHF. X-ray photoelectron spectroscopy (XPS) and time-of-flight secondary ion mass spectrometry (ToF-SIMS) analyses support the formation of persistent chloroform-derived organochlorine/C–Cl-type surface environments and chlorocarbon fragments. These findings establish solvent-induced catalyst modification as a useful design principle for challenging heterogeneous hydrogenations of sulfur-containing heteroarenes.",
-      "date": "2026-10-10",
-      "onlineDate": "2026-10-10",
-      "publishedDate": "2026-10-10",
-      "createdDate": "2026-10-11",
-      "onlineDatePrecision": "day",
-      "publishedDatePrecision": "day",
-      "createdDatePrecision": "day",
-      "type": "journal-article",
-      "authors": [
-        "Steffen Heuvel",
-        "Marie-Christin Leusmann",
-        "Julius Wiener",
-        "Arne Nalop",
-        "Bonnie J. Tyler",
-        "Mathis J. Karrasch",
-        "Frank Glorius"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "crossref:2155-5435:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "dateConflict": "",
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    }
-  ]
+  "missingCandidates": [],
+  "potentialGaps": []
 }

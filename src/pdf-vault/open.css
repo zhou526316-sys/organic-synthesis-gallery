@@ -21,3 +21,5 @@ body:has(#native-viewer:not([hidden])){overflow:hidden;background:#525659}
 #native-tools-panel button:hover:not(:disabled){background:#e5eee8;color:#123b2d}
 #native-tools-message{margin:0;color:#5a4938;overflow-wrap:anywhere;white-space:normal;font-size:12px}
 @media(max-width:600px){.native-tools{right:9px;bottom:9px}#native-tools-panel{bottom:45px}#native-tools-toggle{font-size:12px;padding:7px 10px}}
+
+#native-scan-report{margin-top:11px;margin-bottom:0;font-size:12px;color:#40594d;max-width:760px;line-height:1.7;white-space:normal;overflow-wrap:anywhere}

@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r2",
+  "selectionDois": [
+    "10.1021/acscatal.6c06048",
+    "10.1021/jacs.6c10406"
+  ],
+  "papers": {
+    "10.1021/acscatal.6c06048": {
+      "core": "CHCl3/H2 exposure persistently alters supported Pd catalysis; thiophene sulfur poisoning/HDS overcome under bounded conditions",
+      "causalEvidence": [
+        "Table1 CHCl3 effect",
+        "Fig6 transfer 91 vs 33",
+        "Fig7 XPS",
+        "Fig8 ToF-SIMS"
+      ],
+      "boundaries": [
+        "25C model vs 90C scope",
+        "not tested canagliflozin",
+        "additive screen not preparative scope",
+        "recycle ~5% second run"
+      ]
+    },
+    "10.1021/jacs.6c10406": {
+      "core": "Dual alkylzirconocene role and chiral Ni-mediated radical-radical coupling create weakly differentiated chiral amide centers",
+      "causalEvidence": [
+        "Fig1C chemistry",
+        "Table1 BOX ligand",
+        "Fig3A nearly identical alkyl groups",
+        "Fig4 A–D radical clock/convergence/models"
+      ],
+      "boundaries": [
+        "one-pot 34%",
+        "3o ee 34.8%",
+        "zirconocene stoichiometric",
+        "Ni detailed valence cycle a model"
+      ]
+    }
+  },
+  "paperPdfSHA256": {
+    "ACS Catalysis original main": "22315092e88e6ee323bfb261cd92c6c490414b7ad662235321c240ca875b7e99",
+    "ACS Catalysis original SI": "afb372f65369a2195de68b45fbf9f157c89f8fb3176d11bb81e65415311a37d5",
+    "JACS original main": "78da09472d4cf1b6dece3e11b671991ea340f438fffe19c18f4226ed78ae9000",
+    "JACS original SI": "e64c6f13080bbe8af2995e94913592c35618409f4173b1705ba1ac7ac8a9118f"
+  },
+  "coverSources": {
+    "featured": "main Fig1C original factual reaction cropped pixel-exactly",
+    "retrospective": "owner previously approved generated Ni/Zr blue conceptual cover; not experimental"
+  }
+}

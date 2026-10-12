@@ -1,0 +1,87 @@
+{
+  "checkedAtBeijing": "2026-10-12T12:37:32.539791+08:00",
+  "version": "2026-10-12-r3",
+  "mode": "daily_gallery_feature_guide_with_one_pinned_JACS_retrospective",
+  "paperSelection": {
+    "featured": null,
+    "retrospective": "10.1021/jacs.6c10406"
+  },
+  "visibleCounts": {
+    "newPapers": 5,
+    "officialCardCount": 964,
+    "releaseJournals": {
+      "Organic Letters": 3,
+      "JOC": 1,
+      "ACS Catalysis": 1
+    }
+  },
+  "headline": "有机合成文献日报｜10.12｜5篇新文献与本地 PDF 实用指南",
+  "imageQA": {
+    "guideBody": 3,
+    "guideCover": 1,
+    "jacsBody": 10,
+    "jacsCover": 1,
+    "noGeneratedChemicalStructures": true,
+    "allMaterialized": true,
+    "leadSource": "illustration",
+    "graphicsNeverPretendRealSiteScreenshots": true
+  },
+  "evidence": [
+    {
+      "claim": "Oct 12 five releases and issue inventory 964",
+      "source": "audit/literature-update-state.json lastPublication publicationSlot 2026-10-12T08:00+08",
+      "confidence": "production release verified"
+    },
+    {
+      "claim": "Local PDF button maps DOI to on-device file chosen by user and may search approved folder",
+      "source": "docs/pdf-vault-native-local-open.md 2026-10-11 and 2026-10-12 sections; src/pdf-vault/open.mjs and download-discovery.mjs",
+      "confidence": "implemented path; real end-user permission depends on device"
+    },
+    {
+      "claim": "No automatic cross-device byte/path sync, only current browser permission",
+      "source": "docs/pdf-vault-native-local-open.md Browser and Privacy boundary",
+      "confidence": "explicit limitation"
+    },
+    {
+      "claim": "Source identity validates first-page/metadata DOI and rejects SI/mismatches",
+      "source": "src/pdf-vault/reader.mjs and docs/pdf-vault-native-local-open.md",
+      "confidence": "implemented identity safety"
+    },
+    {
+      "claim": "Native PDF reader continuous scrolling, Ctrl+F in opened PDF",
+      "source": "docs/pdf-vault-native-local-open.md, src/pdf-vault/open.mjs",
+      "confidence": "implemented browser native reader; Ctrl+F depends on browser settings"
+    },
+    {
+      "claim": "Search titles authors DOI and available abstracts; filters",
+      "source": "src/user-ui/search-controller.ts and docs/search-abstract-recall-contract.md",
+      "confidence": "current implemented, coverage not uniformly 100%"
+    },
+    {
+      "claim": "favorites private notes reading status and followed search",
+      "source": "src/user-ui/library-shell.ts verified labels",
+      "confidence": "user-visible; account sync extent not asserted"
+    },
+    {
+      "claim": "personal-cloud storage interfaces, multi-disciplinary and full historical corpus",
+      "source": "architecture/PDF-VAULT-CHINA-V1.md P3-P5 and user future vision",
+      "confidence": "aspirational only; no deployed functionality"
+    }
+  ],
+  "specialRule": {
+    "dateOnlySourceForNonFeaturedDaily": "https://gallery.gczhouwld.com/?edition=2026-10-12&summary=0",
+    "retrospectiveDoiSource": "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0",
+    "selectedFeaturedPaperWithdrawn": true,
+    "fiveDailyDoiRetained": true
+  },
+  "qaVerdicts": {
+    "scientificNumbersAndSource": "pass",
+    "ChineseProseAndReaderLogic": "pass",
+    "FeatureLiveVsFutureBoundary": "pass",
+    "VisualCropsReadable": "pass",
+    "ReviewJACSSourceHashUnchanged": "pass",
+    "DOILinkScope": "pass"
+  },
+  "visualClientNativeWeChat": "pending_after_draft_get",
+  "noPublicSend": true
+}

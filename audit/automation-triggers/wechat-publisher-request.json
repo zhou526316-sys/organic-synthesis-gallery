@@ -1,31 +1,25 @@
 {
-  "requestId": "wechat-2026-10-11-user-authorized-new-two-article-cloud-clone-v1",
-  "action": "clone_existing_draft",
-  "explicitNewDraftAuthorized": true,
-  "preserveOriginalDraft": true,
+  "requestId": "wechat-2026-10-12-r2-correct-acs-first-cover-keep-two-article-media",
+  "publicationDate": "2026-10-12",
+  "action": "sync_daily_draft",
+  "editorialRevision": "2026-10-12-r2",
+  "approvedGate": "audit/wechat-working/2026-10-12-review-gate.json",
+  "expectedArticleCount": 2,
+  "expectedDois": [
+    "10.1021/acscatal.6c06048",
+    "10.1021/jacs.6c10406"
+  ],
+  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWIIQfl5GSB19jduNK2sdIdguH6OMYYfkuM8zO65yvnWs",
+  "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-12&doi=10.1021%2Facscatal.6c06048&summary=0",
+  "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0",
+  "expectedReviewedBodyImages": 24,
+  "expectedReviewedAssets": 26,
+  "sourceImportRunId": 38203184649,
   "draftOnly": true,
   "publicSendAuthorized": false,
-  "publicationDate": "2026-10-11",
-  "expectedArticleCount": 2,
-  "expectedDailyReleaseCount": 21,
-  "expectedDois": [
-    "10.1021/jacs.6c15886",
-    "10.1038/s44160-026-01127-z"
-  ],
-  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWOG4MGfh55oHCc7llEvIMhvXq9BhWLWVfRRRPx3yKyH7",
-  "expectedSourcePreviewSlug": "0c6a5b8965d6401973a288b4",
-  "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-11&doi=10.1021%2Fjacs.6c15886&summary=0",
-  "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs44160-026-01127-z&summary=0",
-  "sourceReviewRevision": "2026-10-11-r5",
-  "expectedBodyImageTagsByArticle": [
-    14,
-    19
-  ],
-  "copyOnlyCloudSourceAssets": true,
-  "noReuploadImages": true,
-  "noRewriteChemistry": true,
-  "noDeleteOldDraft": true,
-  "reason": "The user specifically approved a new 2-article WeChat Official Account draft to bypass the Android local-copy save warning. The original Oct11 R5 cloud version was verified at 15:51 Beijing, with exact content HMAC, 2 accepted articles, correct cover media IDs. Create exactly one distinct new media ID by copying the two already stored cloud articles and existing thumb/body media URLs; preserve original; require exact content/title/cover/DOI equality and draft/get of both before announcing. NEVER publish or group send. Retries must reuse created media ID, not duplicate.",
-  "retryDiagnostic": 1,
-  "lastAttemptFailure": "微信 draft/add 已分配新 media_id 并写入幂等状态；首次 draft/get 的 HTML 字节不一致。只复查已经生成的新草稿，接受微信正常的 HTML 格式重排前必须核对文字、图片、链接和标题结构。严禁再次新建。"
+  "requireDraftGetReadback": true,
+  "requireArticleOrderAndExactDois": true,
+  "linkOnly": false,
+  "updatePolicy": "same_date_same_media_only_fail_closed_on_missing_id",
+  "reason": "User authorized complete Oct12 double article draft. First API draft/add and readback already passed, final visual QA discovered one broken ACS figure header/caption crop in 2.35 cover. Independently reviewed SHA-locked R2 replaces ONLY source verified lead and first cover with complete, clean actual reaction and native title safety. Retain all other scientifically vetted 23+28 paragraphs, 22 other source figures and user Ni/Zr concept cover; exact 2 DOI source links, same original 2-article Oct12 media ID only, draft/update/get, absolutely no group send."
 }

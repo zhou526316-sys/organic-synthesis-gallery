@@ -39,3 +39,41 @@ test('new-page metadata inference does not need a filename hint', () => {
   assert.equal(result.doi, DOI);
   assert.equal(filenameDoiHint('download-27.pdf', DOI), false);
 });
+
+test('ACS Catalysis DOI wraps after a period in extracted first-page text', () => {
+  const doi = '10.1021/acscatal.6c06048';
+  const text = 'ACS Catalysis\nArticle\nhttps://doi.org/10.1021/acscatal. 6c06048\n'
+    + 'Supporting information is linked elsewhere.';
+  const result = evaluatePdfDoiIdentity({ filename: 'download (3).pdf', firstPageText: text }, doi);
+  assert.equal(result.status, 'match');
+  assert.equal(result.evidence, 'first_page_label');
+  assert.deepEqual(extractPdfDois(text), [doi]);
+});
+
+test('ACS first-page labelled DOI outweighs incidental unlabelled reference', () => {
+  const doi = '10.1021/acscatal.6c06048';
+  const result = evaluatePdfDoiIdentity({
+    firstPageText: 'ACS Catalysis Article\nhttps://doi.org/10.1021/acscatal.6c06048\n'
+      + 'Prior methodology was reported in 10.1021/jacs.6c15886.',
+  }, doi);
+  assert.equal(result.status, 'match');
+  assert.equal(result.doi, doi);
+});
+
+test('two different labelled DOI values remain ambiguous', () => {
+  const result = evaluatePdfDoiIdentity({
+    firstPageText: 'DOI: 10.1021/acscatal.6c06048\nDOI: 10.1021/jacs.6c15886',
+  }, '10.1021/acscatal.6c06048');
+  assert.equal(result.status, 'ambiguous');
+});
+
+test('wrong ACS journal DOI and real supporting-information PDF must not open as article', () => {
+  const doi = '10.1021/acscatal.6c06048';
+  assert.equal(evaluatePdfDoiIdentity({
+    firstPageText: 'ACS Catalysis DOI: 10.1021/acscatal.6c06049', filename: 'acscatal.6c06048.pdf',
+  }, doi).status, 'mismatch');
+  assert.equal(evaluatePdfDoiIdentity({
+    firstPageText: 'Supporting Information DOI: 10.1021/acscatal.6c06048',
+    filename: 'acscatal.6c06048_si_001.pdf',
+  }, doi).status, 'supporting');
+});

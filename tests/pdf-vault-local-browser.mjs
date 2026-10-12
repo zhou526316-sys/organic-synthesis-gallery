@@ -20,7 +20,7 @@ const cases = [], contexts = new Set(), observedStaticPaths = new Set();
 let browser, server, base, activeCase, fatalError;
 await fs.mkdir(OUTPUT, { recursive: true });
 
-function vectorPdf(shade = '0.2', documentDoi = DOI) {
+function vectorPdf(shade = '0.2', documentDoi = DOI, { splitDoi = false } = {}) {
   const objects = [
     '<< /Type /Catalog /Pages 2 0 R >>',
     '<< /Type /Pages /Kids [3 0 R 5 0 R] /Count 2 >>',
@@ -31,7 +31,11 @@ function vectorPdf(shade = '0.2', documentDoi = DOI) {
     '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
   ];
   for (const [index, color] of [[3, shade + ' 0.5 0.8'], [5, '0.8 ' + shade + ' 0.4']]) {
-    const stream = 'q ' + color + ' rg 30 40 280 360 re f 0 0 0 RG 3 w 25 25 m 330 450 l S BT /F1 18 Tf 0 0 0 rg 50 430 Td (Gallery local PDF page ' + (index === 3 ? 1 : 2) + ') Tj 0 -25 Td (DOI: ' + documentDoi + ') Tj ET Q\n';
+    const splitPoint = documentDoi.lastIndexOf('.') + 1;
+    const doiText = splitDoi && splitPoint > 0
+      ? '(DOI: ' + documentDoi.slice(0, splitPoint) + ') Tj 0 -20 Td (' + documentDoi.slice(splitPoint) + ') Tj'
+      : '(DOI: ' + documentDoi + ') Tj';
+    const stream = 'q ' + color + ' rg 30 40 280 360 re f 0 0 0 RG 3 w 25 25 m 330 450 l S BT /F1 18 Tf 0 0 0 rg 50 430 Td (Gallery local PDF page ' + (index === 3 ? 1 : 2) + ') Tj 0 -25 Td ' + doiText + ' ET Q\n';
     objects[index] = '<< /Length ' + Buffer.byteLength(stream) + ' >>\nstream\n' + stream + 'endstream';
   }
   let body = '%PDF-1.7\n% Gallery synthetic two-page vector and Helvetica fixture. No publisher content.\n';
@@ -44,6 +48,8 @@ function vectorPdf(shade = '0.2', documentDoi = DOI) {
   return Buffer.from(body);
 }
 const PDF = vectorPdf(), CHANGED_PDF = vectorPdf('0.7'), WRONG_PDF = vectorPdf('0.4', '10.9999/wrong-paper-fixture');
+const ACS_DOI = '10.1021/acscatal.6c06048';
+const ACS_SPLIT_PDF = vectorPdf('0.25', ACS_DOI, { splitDoi: true });
 assert.equal(PDF.length, CHANGED_PDF.length, 'changed fixture preserves size so a size-only probe cannot pass');
 const PDF_HASH = createHash('sha256').update(PDF).digest('hex');
 const forbiddenNetworkValues = [PDF_HASH, PDF.toString('base64'), '%PDF-', 'fixture-private-document.pdf', 'picked-directory'];
@@ -563,7 +569,14 @@ try {
     await page.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
     await page.getByTestId('native-pdf-download-folder').waitFor({ state: 'visible' });
     await page.getByTestId('native-pdf-download-folder').click();
-    await page.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
+    // The initial account-scoped scan must finish before this fixture
+    // simulates a new download followed by navigation. Merely seeing the
+    // file-picker button is not proof that its lazy PDF.js requests ended.
+    await page.waitForFunction(() =>
+      document.documentElement.dataset.nativePdfState === 'unlinked' &&
+      document.getElementById('download-folder')?.disabled === false &&
+      document.getElementById('download-folder-scan')?.hidden === false,
+    null, { timeout: 18000 });
     await page.evaluate(async bytes => {
       const root = await navigator.storage.getDirectory();
       const folder = await root.getDirectoryHandle('picked-directory', { create: true });
@@ -580,6 +593,66 @@ try {
     assert.equal(rows.find(x => x.state === 'available')?.hasFileHandle, true);
     assert.equal(await page.evaluate(() => window.__pdfVaultFixture.pickerCalls), 0,
       'once authorized, a new DOI tab must not request a folder picker');
+  });
+  await test('ACS Catalysis PDF in a third-level folder is retried after stale negative evidence', async () => {
+    const { context } = await trackedContext();
+    const page = await context.newPage();
+    await page.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(ACS_DOI),
+      { waitUntil: 'domcontentloaded' });
+    await page.getByTestId('native-pdf-download-folder').waitFor({ state: 'visible' });
+    await page.getByTestId('native-pdf-download-folder').click();
+    // The initial account-scoped scan must finish before this fixture
+    // simulates a new download followed by navigation. Merely seeing the
+    // file-picker button is not proof that its lazy PDF.js requests ended.
+    await page.waitForFunction(() =>
+      document.documentElement.dataset.nativePdfState === 'unlinked' &&
+      document.getElementById('download-folder')?.disabled === false &&
+      document.getElementById('download-folder-scan')?.hidden === false,
+    null, { timeout: 18000 });
+
+    await page.evaluate(async ({ bytes, user, doi }) => {
+      const root = await navigator.storage.getDirectory();
+      let folder = await root.getDirectoryHandle('picked-directory', { create: true });
+      for (const level of ['papers', '2026', 'ACS-Catalysis']) {
+        folder = await folder.getDirectoryHandle(level, { create: true });
+      }
+      const handle = await folder.getFileHandle('publisher-paper.pdf', { create: true });
+      const writer = await handle.createWritable();
+      await writer.write(new Uint8Array(bytes));
+      await writer.close();
+      const pdf = await handle.getFile();
+      const db = await new Promise((resolve, reject) => {
+        const request = indexedDB.open('gallery-pdf-vault-local-v1', 1);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+      const account = await new Promise((resolve, reject) => {
+        const request = db.transaction('accounts', 'readonly').objectStore('accounts').get(user);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+      db.close();
+      const device = localStorage.getItem('gallery.pdf_vault.device.v1');
+      const key = 'gallery-pdf-vault-download-index-v1:' +
+        [user, device, account.downloads.id].join(':');
+      localStorage.setItem(key, JSON.stringify({
+        version: 3, suppressed: {}, walk: null, pendingFiles: [],
+        files: { 'papers/2026/ACS-Catalysis/publisher-paper.pdf': {
+          size: pdf.size, lastModified: pdf.lastModified, status: 'unknown',
+          doi: null, seenAt: Date.now(),
+        } },
+      }));
+    }, { bytes: [...ACS_SPLIT_PDF], user: USERS.a, doi: ACS_DOI });
+
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.getByTestId('native-pdf-folder-scan').waitFor({ state: 'visible' });
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'unlinked', null, { timeout: 20000 });
+    assert.match(await page.getByTestId('native-pdf-scan-report').innerText(), /此前识别结果待重试/);
+    await page.getByTestId('native-pdf-folder-scan').click();
+    await page.waitForFunction(() => document.documentElement.dataset.nativePdfState === 'reading', null, { timeout: 30000 });
+    assert.equal((await localCopies(page)).filter(row => row.state === 'available' && row.doi === ACS_DOI).length, 1);
+    assert.equal(await page.evaluate(() => window.__pdfVaultFixture.pickerCalls), 0,
+      'manual retry must keep the one-time directory authorization');
   });
   await test('recent verified receipt avoids duplicate auth calls and older receipt never blocks the PDF', async () => {
     const { context, state } = await trackedContext();

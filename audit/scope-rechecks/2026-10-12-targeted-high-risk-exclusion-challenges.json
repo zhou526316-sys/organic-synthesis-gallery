@@ -1,0 +1,325 @@
+{
+  "schemaVersion": 1,
+  "reviewType": "targeted_historical_scope_challenge_read_only",
+  "createdAtBeijing": "2026-10-12T09:17:00+08:00",
+  "mainRef": "main",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+  "scopeRulesVersion": "scope-2026-10-02-v1",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "74978d92a16d353271f16f111425d09e4de84f07",
+  "scope": "High-synthesis-relevance historical excludes from 2026-09-19..2026-10-12 existing reviews, prioritized from exact titles and rechecked on primary Crossref abstracts and when available publisher article content. Not a 2101-DOI global reset and not an authoritative new formal review.",
+  "summary": {
+    "doisExamined": 12,
+    "provisionalExclusionsSupportedByCurrentPrimaryEvidence": 8,
+    "substantiveOpenEvidenceQuestions": 4,
+    "automaticPromotions": 0,
+    "productionRemovals": 0,
+    "publishingBeyondSole0800": 0,
+    "fullSiAccessForOpenCases": false
+  },
+  "rows": [
+    {
+      "doi": "10.1021/jacs.6c11537",
+      "journal": "JACS",
+      "sourceReviewFile": "audit/review-2026-10-11-0800.json",
+      "existingDecision": "exclude",
+      "firstPassDecision": "needs_targeted_recheck",
+      "primaryContribution": "Ru/W0.4ZrOx-catalyzed consecutive decarboxylation converts waste PET to benzene and controls substrate/catalyst selectivity",
+      "preparativeTransformation": "PET-derived aromatic polycarboxylate C8 framework -> benzene C6 (reported 83.3% benzene yield)",
+      "generalityEvidence": "Primary abstract confirms treatment of multiple real-world PET waste streams, not necessarily distinct chemical substrates. Publisher's SI listing explicitly says supporting tables S1-S40 include 'substrate extension' as well as product distributions, but table identities, yields and separability were not retrieved.",
+      "sourceEvidence": [
+        {
+          "url": "https://doi.org/10.1021/jacs.6c11537",
+          "type": "Crossref actual abstract",
+          "facts": "benzene 83.3%, one feedstock class PET and heterogeneous catalyst engineering"
+        },
+        {
+          "url": "https://pubs.acs.org/jacsat/article-abstract/doi/10.1021/jacs.6c11537/5448499/Selective-Consecutive-Decarboxylation-Enables?redirectedFrom=fulltext",
+          "type": "publisher indexed article/SI description",
+          "facts": "SI tables include substrate extension; exact identities unknown"
+        }
+      ],
+      "challengeDecision": "scope_question_open_no_formal_decision_change",
+      "boundaryChallenge": "The existing exclusion describes a single PET waste stream, but supplementary materials explicitly mention substrate extension. This cannot be dismissed without the actual substrate table. Product type, catalyst vs chemistry novelty and isolated scope remain the deciding facts.",
+      "evidenceNeeded": [
+        "Obtain actual SI substrate-extension table and product distribution/isolated production data",
+        "Determine whether distinct aromatic polycarboxylates beyond PET are converted through a transferable synthesis"
+      ],
+      "nextAction": "Reassess against general substrate-to-product scope in dedicated prepublication recheck; do not change formal exclude without evidence."
+    },
+    {
+      "doi": "10.1021/acscatal.6c06150",
+      "journal": "ACS Catalysis",
+      "sourceReviewFile": "audit/review-2026-10-06-0800.json",
+      "existingDecision": "exclude",
+      "firstPassDecision": "needs_targeted_recheck",
+      "primaryContribution": "Integrated eCO2R with CO-tolerant Pd phosphinosulfonate-borane catalysts for ethylene oligomerization and ethylene–CO copolymerization into hydrocarbons",
+      "preparativeTransformation": "Ethylene/CO gas -> CO–ethylene solid copolymer and internal olefin oligomers C4-C28; publisher body explicitly states 34 mg isolated alternating copolymer and experiments with several Ar phosphinosulfonate variants",
+      "generalityEvidence": "Publisher section 2.1 varies aryl-phosphine substituents and olefin distribution/CO tolerance; monomer/organic substrate diversity beyond ethylene/CO not established. These are actual polymer chemistry experiments, not merely an incidental single fuel readout.",
+      "sourceEvidence": [
+        {
+          "url": "https://pubs.acs.org/accacs/article/doi/10.1021/acscatal.6c06150/5444656/Conversion-of-CO2-to-Hydrocarbons-in-Gasoline-Jet",
+          "type": "indexed original ACS article body section 2.1, Scheme 1, Figure 2",
+          "facts": "Pd catalyst structures and oligomer distributions; 34 mg isolated copolymer in test; integrated CO2 fuels process"
+        },
+        {
+          "url": "https://doi.org/10.1021/acscatal.6c06150",
+          "type": "Crossref original abstract",
+          "facts": "C4-C28 hydrocarbons, CO-tolerant ligand catalyst, fuels target"
+        }
+      ],
+      "challengeDecision": "scope_question_open_no_formal_decision_change",
+      "boundaryChallenge": "An integrated energy-process paper can still have a genuine new polymerization catalysis contribution. However, borane-adduct Pd phosphinosulfonates were previously used for oligomerization; need determine whether novelty is merely CO-tolerant reactor integration rather than general new synthesis mode.",
+      "evidenceNeeded": [
+        "Confirm novelty relative to cited Pd phosphinosulfonate/borane oligomerization literature",
+        "Determine scope of isolated oligomers/polymers and whether catalytic mode is general beyond impure single monomer feed"
+      ],
+      "nextAction": "Perform scope-specific secondary reading of catalyst comparison and SI; no offslot promotion."
+    },
+    {
+      "doi": "10.1002/anie.2052342",
+      "journal": "Angew",
+      "sourceReviewFile": "audit/review-2026-10-12-0800.json",
+      "existingDecision": "exclude",
+      "firstPassDecision": "needs_targeted_recheck",
+      "primaryContribution": "Electrochemically switch Scholl aromatic C–C cyclodehydrogenation between arenium and radical-cation paths",
+      "preparativeTransformation": "3,3'-diphenyl-2,2'-binaphthalene electrocatalytic regimes can give different products; tetracene-derived substrate undergoes arenium-path cyclodehydrogenation",
+      "generalityEvidence": "Abstract explicitly states 'most substrates can react via both pathways', but only concrete representative product examples are reported in the abstract. Distinguish multiscaffold controlled synthesis versus experiments mainly proving intermediates.",
+      "sourceEvidence": [
+        {
+          "url": "https://doi.org/10.1002/anie.2052342",
+          "type": "Crossref original full abstract",
+          "facts": "LPA vs HPN pathway switching, two described substrates, corrected computational assignment"
+        }
+      ],
+      "challengeDecision": "scope_question_open_no_formal_decision_change",
+      "boundaryChallenge": "Pathway-switchable products may be synthetically valuable, but the primary thesis is mechanistic re-assignment. Substrate scope and isolated product generality from SI are necessary to classify as new organic synthesis rather than pure mechanistic study.",
+      "evidenceNeeded": [
+        "Original SI examples, isolated yields and structural products for LPA vs HPN across substrate classes"
+      ],
+      "nextAction": "Read SI tables before changing exclusion; respect original publication date."
+    },
+    {
+      "doi": "10.1021/acscatal.6c07255",
+      "journal": "ACS Catalysis",
+      "sourceReviewFile": "audit/review-2026-10-10-0800.json",
+      "existingDecision": "exclude",
+      "firstPassDecision": "needs_targeted_recheck",
+      "primaryContribution": "Support-crystal-phase engineering in Ir/Nb2O5 determines carbonyl-selective hydrogenation of α,β-unsaturated aldehydes",
+      "preparativeTransformation": "α,β-unsaturated aldehydes -> unsaturated allylic alcohols by selective C=O hydrogenation",
+      "generalityEvidence": "Publisher/metadata abstract describes aldehydes in plural and selective product class, but no article-specific substrate table, isolated yields or structural diversity was retrieved.",
+      "sourceEvidence": [
+        {
+          "url": "https://doi.org/10.1021/acscatal.6c07255",
+          "type": "Crossref original abstract",
+          "facts": "Ir supported on Nb2O5 crystal phase, EMSI, H2 spillover, carbonyl over alkene hydrogenation"
+        }
+      ],
+      "challengeDecision": "scope_question_open_no_formal_decision_change",
+      "boundaryChallenge": "Main contribution is catalyst interface design, but published text does not rule out real preparative series; avoid asserting 'no extra substrate examples' until SI checked.",
+      "evidenceNeeded": [
+        "Publisher/SI organic substrate-scope and isolation table",
+        "Article-specific contribution vs material-performance experiment"
+      ],
+      "nextAction": "Resolve existence and breadth of separate aldehyde products before confirm/overturn exclude."
+    },
+    {
+      "doi": "10.1002/anie.8769472",
+      "journal": "Angew",
+      "sourceReviewFile": "audit/review-2026-09-25-1800.json",
+      "existingDecision": "exclude",
+      "firstPassDecision": "exclude",
+      "primaryContribution": "ZnOx/black silicon photocathode interface charge buffering to improve photoelectrochemical oxime selectivity",
+      "preparativeTransformation": "Cyclohexanone plus electrogenerated nitrogen-centered intermediates -> cyclohexanone oxime",
+      "generalityEvidence": "Actual abstract provides 94.6% Faradaic efficiency and 99.9% cyclohexanone-to-oxime selectivity, which are not separable products or substrate generality; no distinct oxime scope established.",
+      "sourceEvidence": [
+        {
+          "url": "https://doi.org/10.1002/anie.8769472",
+          "type": "Crossref abstract",
+          "facts": "single cyclohexanone oxime benchmark, photoelectrode engineering and kinetic design"
+        }
+      ],
+      "challengeDecision": "exclude_supported_on_available_evidence",
+      "boundaryChallenge": "A real C–N product exists; main advance is electrode interfacial electron kinetics and single target production rather than general organic preparation.",
+      "nextAction": "Reopen only if new SI substrate/product series is verified."
+    },
+    {
+      "doi": "10.1002/anie.3109518",
+      "journal": "Angew",
+      "sourceReviewFile": "audit/review-2026-09-19.json",
+      "existingDecision": "exclude",
+      "firstPassDecision": "exclude",
+      "primaryContribution": "MOF interpenetration transformations align diacetylene units for solid-state topochemical polymerization with nonlinear optical performance",
+      "preparativeTransformation": "Diacetylene units in CAS-22 MOF undergo thermally induced solid-state 1,4-addition polymerization",
+      "generalityEvidence": "True polymerization is explicitly present, but evidence describes one family of interpenetrated MOFs and links polymerization to optical coefficient (~69x versus CAS-20), not transferable monomer/chain sequence synthetic utility.",
+      "sourceEvidence": [
+        {
+          "url": "https://doi.org/10.1002/anie.3109518",
+          "type": "Crossref original abstract",
+          "facts": "CAS-20/CAS-22 transformation, 1,4-polymerization and optical performance"
+        }
+      ],
+      "challengeDecision": "exclude_supported_on_available_evidence",
+      "boundaryChallenge": "The occurrence of a covalent polymerization is acknowledged; the article primarily solves MOF alignment and device property, and broad preparative range remains unsupported.",
+      "nextAction": "Keep prior scope decision unless distinct transferable polymerization series is evidenced."
+    },
+    {
+      "doi": "10.1002/anie.7938626",
+      "journal": "Angew",
+      "sourceReviewFile": "audit/review-2026-10-08-0800.json",
+      "existingDecision": "exclude",
+      "firstPassDecision": "exclude",
+      "primaryContribution": "Electron/proton dual modulation of M–N–C single-atom catalysts for O2 activation and lignin breakdown",
+      "preparativeTransformation": "Native birch lignin oxidative bond cleavage reduces molecular weight and breaks β-O-4, β-β, β-5 linkages",
+      "generalityEvidence": "Reported generality is metal active site Mn,Co,Ni,Cu,Sn,Ir,Pt, not a broad class of isolated aromatic synthesis products. The abstract identifies reduced molecular weight rather than separable product panel.",
+      "sourceEvidence": [
+        {
+          "url": "https://doi.org/10.1002/anie.7938626",
+          "type": "Crossref original abstract",
+          "facts": "O2 activation 2.8-fold Vmax, 7 alternative metal active sites, birch lignin cleavage"
+        }
+      ],
+      "challengeDecision": "exclude_supported_on_available_evidence",
+      "boundaryChallenge": "Lignin chemical cleavage is real, and metal variation is real; however general catalyst performance is not equivalent to general small-molecule preparation.",
+      "nextAction": "Only revise if downstream product isolation and diverse substrate-to-product preparation are demonstrated."
+    },
+    {
+      "doi": "10.1021/acscatal.6c05113",
+      "journal": "ACS Catalysis",
+      "sourceReviewFile": "audit/review-2026-09-26-1800.json",
+      "existingDecision": "exclude",
+      "firstPassDecision": "exclude",
+      "primaryContribution": "Bench-stable Rh/Chiraphos complex advances recyclability and mechanism of citral asymmetric hydrogenation in l-menthol industrial route",
+      "preparativeTransformation": "Citral selective asymmetric hydrogenation under [Rh(chiraphos)2]Cl",
+      "generalityEvidence": "Existing abstract gives over 10 recycles and TON up to 10,000 for citral; those are catalyst performance, not distinct organic substrates or general scope.",
+      "sourceEvidence": [
+        {
+          "url": "https://doi.org/10.1021/acscatal.6c05113",
+          "type": "Crossref original abstract",
+          "facts": "citral, air-stable Rh catalyst, 10 recycles and mechanistic head-group recognition"
+        }
+      ],
+      "challengeDecision": "exclude_supported_on_available_evidence",
+      "boundaryChallenge": "Meaningful industrial stereoselective organic reaction exists, but article-specific generality remains one citral transformation, with catalyst stability central.",
+      "nextAction": "Retain exclusion absent actual broad synthetic route or substrate range."
+    },
+    {
+      "doi": "10.1021/jacs.6c11741",
+      "journal": "JACS",
+      "sourceReviewFile": "audit/review-2026-09-19.json",
+      "existingDecision": "exclude",
+      "firstPassDecision": "exclude",
+      "primaryContribution": "Surface-confined stereospecific cycloaromatization to iso[4]triangulene",
+      "preparativeTransformation": "Syn triethyltruxene on Cu(111) -> surface-adsorbed iso[4]triangulene; anti form yields a defective structure",
+      "generalityEvidence": "Surface STM/AFM characterization and single-member iso[n]triangulene family; no isolated broadly usable building blocks or preparative scale.",
+      "sourceEvidence": [
+        {
+          "url": "https://doi.org/10.1021/jacs.6c11741",
+          "type": "Crossref original abstract",
+          "facts": "Cu(111) cycloaromatization and planar chirality from one tailored precursor"
+        }
+      ],
+      "challengeDecision": "exclude_supported_on_available_evidence",
+      "boundaryChallenge": "Novel chemical C–C transformations genuinely occur; their context is single surface-adsorbed nanographene and fundamental electronic structure.",
+      "nextAction": "No change."
+    },
+    {
+      "doi": "10.1021/acscatal.6c04525",
+      "journal": "ACS Catalysis",
+      "sourceReviewFile": "audit/review-2026-09-30-0800.json",
+      "existingDecision": "exclude",
+      "firstPassDecision": "exclude",
+      "primaryContribution": "Protein residue position and electric-field mechanism govern polyurethane-hydrolyzing urethanase",
+      "preparativeTransformation": "PU chain hydrolysis and low molecular weight dicarbamate hydrolysis by enzyme mutants",
+      "generalityEvidence": "Actually contains two substrate contexts and substrate-dependent mutagenesis, so do not assert absence of any distinct substrates; however primary output is protein mechanistic design, not preparative isolated organic products.",
+      "sourceEvidence": [
+        {
+          "url": "https://doi.org/10.1021/acscatal.6c04525",
+          "type": "Crossref original abstract",
+          "facts": "UMG-SP2 loop mutations, QM/MM/MD, low-MW dicarbamate and PU depolymerization"
+        }
+      ],
+      "challengeDecision": "exclude_supported_on_available_evidence",
+      "boundaryChallenge": "Enzyme catalytic transformations are real and eligible as a category, but variant optimization and degradation assays here do not establish synthetic scope.",
+      "nextAction": "No change absent actual preparative product scope."
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03849",
+      "journal": "Organic Letters",
+      "sourceReviewFile": "audit/review-2026-10-10-0800.json",
+      "existingDecision": "exclude",
+      "firstPassDecision": "exclude",
+      "primaryContribution": "Planar-chiral cyclophane structural element induces single handedness in quinoline foldamers",
+      "preparativeTransformation": "Cyclophane-derived quinoline trimers synthesized and enantiomeric helical conformers separated",
+      "generalityEvidence": "One family foldamer design with NMR/chiral HPLC/X-ray/CD/VT-NMR conformational results; no general reaction/multibuilding-block synthesis demonstrated.",
+      "sourceEvidence": [
+        {
+          "url": "https://doi.org/10.1021/acs.orglett.6c03849",
+          "type": "Crossref original abstract",
+          "facts": "PCP planar chirality to stable P/M helices and chemical conformer separation"
+        }
+      ],
+      "challengeDecision": "exclude_supported_on_available_evidence",
+      "boundaryChallenge": "The paper makes and separates chiral compounds; still primary novelty is conformational control, not transferable synthesis methodology.",
+      "nextAction": "No change."
+    },
+    {
+      "doi": "10.1021/acscatal.6c05090",
+      "journal": "ACS Catalysis",
+      "sourceReviewFile": "audit/review-2026-09-19.json",
+      "existingDecision": "exclude",
+      "firstPassDecision": "exclude",
+      "primaryContribution": "Machine-learning workflow predicting reactivity and enantioselectivity in low data asymmetric Mg catalysis",
+      "preparativeTransformation": "Magnesium-catalyzed chalcone epoxidation and thia-Michael addition used as experimentally grounded case studies, with prospective substrates tested",
+      "generalityEvidence": "New methodological advance is ML decision support; substrate examples and prospective validation are real, but it does not establish a novel synthetic transformation beyond modeled reactions.",
+      "sourceEvidence": [
+        {
+          "url": "https://doi.org/10.1021/acscatal.6c05090",
+          "type": "Crossref original abstract",
+          "facts": "two reaction case studies, prospective substrate validation, computational scope prioritization"
+        }
+      ],
+      "challengeDecision": "exclude_supported_on_available_evidence",
+      "boundaryChallenge": "Must acknowledge genuine reaction experiments, but they validate prediction rather than introduce a transferable chemical transformation.",
+      "nextAction": "No change."
+    }
+  ],
+  "relatedExistingBoundaryReviews": [
+    {
+      "doi": "10.1021/acs.joc.6c01559",
+      "status": "previously retain while broader preparative scope recheck; no new exclusion",
+      "priorSource": "audit/scope-rechecks/2026-09-23-morning-24.json"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03499",
+      "status": "previously retain while evidence for on-demand ring opening and general cycloadduct scope; no new deletion",
+      "priorSource": "audit/scope-rechecks/2026-09-23-morning-24.json"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03386",
+      "status": "AF fragment not completed total synthesis; independently bench-stable aldehyde-to-nitrile reagent must be evaluated, no automatic scope reversal",
+      "priorSource": "audit/scope-rechecks/2026-09-23-morning-24.json"
+    },
+    {
+      "doi": "10.1002/anie.7101768",
+      "status": "original 2026-09-19 exclude later superseded by user scope clarification and formal include on 2026-09-22; do not treat old exclude as current",
+      "reviewSource": "audit/review-2026-09-22-am.json"
+    },
+    {
+      "doi": "10.1021/jacs.6c13641",
+      "status": "original 2026-09-22 early exclude subsequently included in 2026-09-22 later review; do not treat stale old decision as current"
+    }
+  ],
+  "qualityControl": {
+    "performedRealPrimaryAbstractReviews": true,
+    "additionalOriginalPublisherArticleReadFor": "10.1021/acscatal.6c06150 and 10.1021/jacs.6c11537 SI index",
+    "fullSupportingInformationReadForUnresolved": false,
+    "notAReplacementForOfficialReview": true,
+    "notADeletionAuthorization": true,
+    "all2101HistoricalExcludesReviewed": false,
+    "stagedForNextScheduledScopeChallengeOnly": true,
+    "productionDataModified": false,
+    "pagesDeploymentRequested": false
+  }
+}

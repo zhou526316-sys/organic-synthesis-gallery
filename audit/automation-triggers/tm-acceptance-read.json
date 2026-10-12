@@ -1,8 +1,8 @@
 {
-  "requestId": "tm-20261011-0932-bridge283-real-browser-evidence",
-  "requestedAt": "2026-10-11T01:33:50.534Z",
+  "requestId": "tm-20261012-1240-new-owner-log-recheck",
+  "requestedAt": "2026-10-12T04:41:18.496Z",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
-  "context": "After user-approved PR #530 deployed, read current R2 local-captures/diagnostics/latest.json and Tampermonkey report-index/stage-index/capture-index only. Determine newest owner log upload time, user-installed Bridge 2.2.83 / integrated 6.2.64 if present, changes from 2026-10-10 screenshot of 30 unresolved (TOC27/PDF3, visits30/139, 43 attempts), and per-DOI reasons for RSC/Chem/ACS, distinguishing old per-DOI reports and historical TOC-only from Oct regular. Never claim live-user success from public CI.",
+  "context": "User says newest Tampermonkey logs uploaded October 12 Beijing 12:40. Read latest R2 local-diagnostics latest.json, Tampermonkey per-DOI report-index, local-captures index and figure stage-index without publisher network requests or production writes. Verify latest uploadedAt, Bridge installRevision / TOC engine / controller and whether this is a new 6.2.64 or later real browser pass. Summarize all available same-run 30 prior blocked DOI evidence and per-DOI RSC, Chem, ACS TOC/body/fulltext/owner-private-PDF capture statuses; separate publisher failures, staged receipts, review/publication, and remaining actual gaps. Do not misclassify historical toc_only or treat unverified PDFs as missing. No source or media modification.",
   "targetDois": [
     "10.1039/d6sc06407h",
     "10.1039/d6gc03748h",
