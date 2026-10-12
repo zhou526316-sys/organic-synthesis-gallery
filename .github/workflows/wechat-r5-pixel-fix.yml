@@ -1,0 +1,91 @@
+name: WeChat R5 Source-Faithful Visual Correction (isolated branch)
+
+on:
+  push:
+    branches:
+      - audit/wechat-r5-pixel-inspection-20261012
+    paths:
+      - .github/workflows/wechat-r5-pixel-fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  exact-pixel-correction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Prepare image reader
+        run: python3 -m pip -q install pillow
+      - name: Recenter source-preserved chemistry and remove unrelated clipped neighboring labels
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageChops
+          import base64, hashlib, json
+          root=Path('.')
+          old=root/'public/wechat-assets/reviewed'
+          out=old/'2026-10-12-r5'
+          preview=root/'audit/wechat-working/r5-corrected-preview'
+          out.mkdir(parents=True,exist_ok=True)
+          preview.mkdir(parents=True,exist_ok=True)
+          results=[]
+          src=old/'2026-10-12-r2/acs-catalysis-fig1c-native-cover.png'
+          with Image.open(src) as im:
+              im.load(); im=im.convert('RGB')
+              assert im.size==(1880,800),im.size
+              top=im.crop((0,0,1880,508))
+              # Detect actual dark chemistry/text pixels, not the wide white canvas.
+              gray=top.convert('L')
+              ink=gray.point(lambda x:255 if x<190 else 0)
+              box=ink.getbbox()
+              assert box is not None
+              xmid=(box[0]+box[2])//2
+              dx=940-xmid
+              assert 60<=dx<=260,(box,dx)
+              assert box[0]+dx>=32 and box[2]+dx<=1848,(box,dx)
+              centered=Image.new('RGB',top.size,'white')
+              centered.paste(top,(dx,0))
+              fixed=im.copy();fixed.paste(centered,(0,0))
+              final=out/'acs-catalysis-fig1c-center-preserved.png'
+              fixed.save(final,format='PNG',optimize=True)
+              results.append({'id':'acs_cover','from':str(src),'to':str(final),
+                'geometry':{'dx':dx,'ink_bbox_source':box,'keep_y_unchanged':[508,800]},
+                'source_sha256':hashlib.sha256(src.read_bytes()).hexdigest()})
+          mapping={
+              'acs_scope_alkyl':('2026-10-12-r1/acs_scope_alkyl.jpg',412),
+              'acs_scope_aryl':('2026-10-12-r1/acs_scope_aryl.jpg',548),
+              'acs_scope_spacer':('2026-10-12-r1/acs_scope_spacer.jpg',414),
+          }
+          for key,(rel,height) in mapping.items():
+              src=old/rel
+              with Image.open(src) as im:
+                  im.load();im=im.convert('RGB')
+                  assert height<im.height
+                  # Readjust only the crop boundary; no chemical pixels are repainted.
+                  im=im.crop((0,0,im.width,height))
+                  path=out/(key+'-panel-complete.jpg')
+                  im.save(path,quality=97,subsampling=0,optimize=True)
+                  results.append({'id':key,'from':str(src),'to':str(path),
+                    'geometry':{'x0':0,'y0':0,'x1':im.width,'y1':height},
+                    'source_sha256':hashlib.sha256(src.read_bytes()).hexdigest()})
+          for obj in results:
+              raw=Path(obj['to']).read_bytes()
+              key=obj['id'];obj['sizeBytes']=len(raw)
+              obj['sha256']=hashlib.sha256(raw).hexdigest()
+              (preview/(key+'.b64.txt')).write_text(base64.b64encode(raw).decode('ascii')+'\n')
+          (preview/'qa.json').write_text(json.dumps(results,indent=2)+'\n')
+          print(json.dumps(results))
+          PY
+      - name: Save isolated visual outputs without editing production
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/wechat-assets/reviewed/2026-10-12-r5 audit/wechat-working/r5-corrected-preview
+          git commit -m 'audit: prepare visually reviewable source-pixel-corrected ACS panels'
+          git push origin HEAD:audit/wechat-r5-pixel-inspection-20261012
