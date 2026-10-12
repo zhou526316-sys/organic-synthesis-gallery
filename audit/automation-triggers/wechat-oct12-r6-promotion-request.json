@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r6",
+  "action": "promote_source_complete_reviewed_figures_without_wechat_mutation",
+  "selectionDois": [
+    "10.1021/acscatal.6c06048",
+    "10.1021/jacs.6c10406"
+  ],
+  "reviewedFigureCount": 20,
+  "bodyImageCount": 24,
+  "coverCount": 2,
+  "approvedSource": "audit/wechat-working/2026-10-12-r6-visual-acceptance.json",
+  "approvedSourceQa": "audit/wechat-working/2026-10-12-r6-source-crop-candidates/source-crop-review-qa.json",
+  "oldWeChatDraftMediaId": "KhELYUzvwADwB_l1xH1SWIIQfl5GSB19jduNK2sdIdguH6OMYYfkuM8zO65yvnWs",
+  "draftWriteAuthorized": false,
+  "publicSendAuthorized": false,
+  "note": "Promote only source-exact reviewed 20 restored figures, restore the complete original SI Table S9, retain 4 intact legacy ACS main-figure assets and both original covers, pin R6 text/source/image gate, never access fixed-IP WeChat relay or publish."
+}
