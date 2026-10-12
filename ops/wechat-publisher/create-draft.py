@@ -520,12 +520,12 @@ def figure_html(fig_id: str, figures: dict[str, dict], uploaded_urls: dict[str, 
     width_pct = max(45, min(100, width_pct))
     image_style = (
         f"display:block;width:{width_pct}%;max-width:100%;height:auto;"
-        "margin:0 auto;"
+        "margin:0 auto;object-fit:contain;"
     )
-    caption_margin = "7px auto 0"
+    caption_margin = "6px auto 0"
     caption_width = f"{width_pct}%"
     return (
-        "<section style='margin:20px 0 24px;'>"
+        "<section style='margin:14px 0 19px;'>"
         f"<img src='{esc(source)}' style='{image_style}'/>"
         f"<p style='font-size:11px;color:#777;line-height:1.65;margin:{caption_margin};width:{caption_width};max-width:100%;'>{caption}</p>"
         "</section>"
@@ -552,40 +552,18 @@ def build_content(
         "</p>",
     ]
 
-    if len(papers) > 5:
-        summary = " · ".join(
-            f"{esc(journal)} {len(items)} 篇"
-            for journal, items in grouped.items()
-        )
-        parts.append(
-            "<p style='font-size:13px;line-height:1.8;color:#3f4650;margin:0 0 12px;'>"
-            + summary
-            + "</p>"
-        )
-    else:
-        for journal, items in grouped.items():
-            parts.append(
-                "<h2 style='font-size:16px;line-height:1.45;margin:19px 0 7px;"
-                "padding-left:8px;border-left:3px solid #222;'>"
-                f"{esc(journal)} <span style='font-size:10px;font-weight:400;color:#999;'>"
-                f"{len(items)} 篇</span></h2>"
-            )
-            for paper in items:
-                badge = ""
-                if featured and normalize_doi(featured.get("paper", {}).get("doi")) == paper["doi"]:
-                    badge = "<span style='display:inline-block;font-size:9px;color:#8b5a08;background:#fff0cf;border-radius:8px;padding:1px 5px;margin-right:5px;'>每日精选</span>"
-                authors = str(paper.get("authors") or "").strip()
-                author_html = (
-                    f"<div style='font-size:10px;color:#9aa2ad;line-height:1.45;margin-top:2px;'>{esc(authors)}</div>"
-                    if authors else ""
-                )
-                parts.append(
-                    "<section style='margin:0 0 10px;padding:0 0 9px;border-bottom:1px solid #f0f1f3;'>"
-                    f"<div style='font-size:14px;font-weight:700;line-height:1.5;margin-bottom:2px;'>{badge}{esc(paper['titleZh'])}</div>"
-                    f"<div style='font-size:10px;color:#8a93a3;line-height:1.45;'>{esc(paper['title'])}</div>"
-                    + author_html
-                    + "</section>"
-                )
+    # Editorial standard (2026-10-12): regardless of the number of released papers,
+    # present journal totals, followed by actual Gallery mini-card visuals.
+    # Do not enumerate paper titles/authors/DOIs in the daily-introduction section.
+    summary = " · ".join(
+        f"{esc(journal)} {len(items)} 篇"
+        for journal, items in grouped.items()
+    )
+    parts.append(
+        "<p style='font-size:13px;line-height:1.8;color:#3f4650;margin:0 0 12px;'>"
+        + summary
+        + "</p>"
+    )
 
     if gallery_qr_url:
         card_visuals = uploaded_urls.get("__gallery_cards__", {}) if isinstance(uploaded_urls.get("__gallery_cards__"), dict) else {}
@@ -644,12 +622,12 @@ def build_content(
         for section in featured.get("sections", []):
             parts.append(
                 f"<p style='font-size:11px;letter-spacing:.08em;color:#32675f;font-weight:700;margin:26px 0 5px;'>{esc(section.get('eyebrow') or '')}</p>"
-                f"<h2 style='font-size:19px;line-height:1.55;margin:0 0 10px;'>{esc(section.get('heading') or '')}</h2>"
+                f"<h2 style='font-size:18px;line-height:1.5;margin:0 0 10px;'>{esc(section.get('heading') or '')}</h2>"
             )
             figure_positions = section.get("figures_after_paragraph") if isinstance(section.get("figures_after_paragraph"), dict) else {}
             for paragraph_index, paragraph in enumerate(section.get("paragraphs", []), start=1):
                 parts.append(
-                    f"<p style='font-size:15px;line-height:1.88;margin:0 0 12px;text-align:justify;'>{esc(paragraph)}</p>"
+                    f"<p style='font-size:15px;line-height:1.75;margin:0 0 12px;text-align:justify;'>{esc(paragraph)}</p>"
                 )
                 inline_ids = figure_positions.get(str(paragraph_index), figure_positions.get(paragraph_index, []))
                 if isinstance(inline_ids, str):
@@ -757,12 +735,12 @@ def build_retrospective_content(data: dict, uploaded_urls: dict[str, str] | None
     for section in data.get("sections", []):
         parts.append(
             f"<p style='font-size:11px;letter-spacing:.08em;color:#32675f;font-weight:700;margin:27px 0 5px;'>{esc(section.get('eyebrow') or '')}</p>"
-            f"<h2 style='font-size:19px;line-height:1.55;margin:0 0 10px;'>{esc(section.get('heading') or '')}</h2>"
+            f"<h2 style='font-size:18px;line-height:1.5;margin:0 0 10px;'>{esc(section.get('heading') or '')}</h2>"
         )
         figure_positions = section.get("figures_after_paragraph") if isinstance(section.get("figures_after_paragraph"), dict) else {}
         for paragraph_index, paragraph in enumerate(section.get("paragraphs", []), start=1):
             parts.append(
-                f"<p style='font-size:15px;line-height:1.88;margin:0 0 12px;text-align:justify;'>{esc(paragraph)}</p>"
+                f"<p style='font-size:15px;line-height:1.75;margin:0 0 12px;text-align:justify;'>{esc(paragraph)}</p>"
             )
             inline_ids = figure_positions.get(str(paragraph_index), figure_positions.get(paragraph_index, []))
             if isinstance(inline_ids, str):
@@ -2068,40 +2046,34 @@ def build_gallery_jump_card(
     shown = ordered[:5] if bool((featured or {}).get('contentType') == 'gallery_daily_product_update') else ordered[:4]
 
     def card_cell(card: dict) -> str:
+        # The original Gallery preview thumbnail itself is the requested card.
+        # Do not render a full article listing inside a WeChat daily digest.
         doi = normalize_doi(card.get("doi"))
         is_featured = bool(featured_doi and doi == featured_doi)
-        title = str(card.get("titleZh") or card.get("title") or doi or "")
         journal = str(card.get("journal") or "")
         visual = card_visuals.get(doi or "", "")
         border = "#d7a446" if is_featured else "#dfe5ef"
         bg = "#fffdf7" if is_featured else "#ffffff"
         badge = (
-            "<span style='display:inline-block;font-size:7px;font-weight:700;color:#8b5a08;"
-            "background:#fff0cf;border-radius:999px;padding:2px 5px;margin-right:3px;'>每日精选</span>"
-            if is_featured else
-            "<span style='display:inline-block;font-size:7px;font-weight:700;color:#3159bd;"
-            "background:#edf3ff;border-radius:999px;padding:2px 5px;margin-right:3px;'>本期文献</span>"
+            "<span style='display:inline-block;font-size:8px;color:#8b5a08;"
+            "background:#fff0cf;border-radius:8px;padding:2px 5px;margin-right:4px;'>今日精选</span>"
+            if is_featured else ""
         )
         visual_html = (
-            f"<img src='{esc(visual)}' style='display:block;width:100%;height:66px;"
-            "object-fit:contain;background:#fff;border:1px solid #e7eaf0;border-radius:6px;"
-            "margin:5px 0 6px;'/>"
-            if visual else ""
+            f"<img src='{esc(visual)}' style='display:block;width:100%;height:auto;"
+            "max-height:120px;object-fit:contain;background:#fff;border:1px solid #e7eaf0;"
+            "border-radius:6px;margin:7px 0 0;'/>"
+            if visual else
+            "<p style='height:34px;margin:7px 0 0;background:#f3f5f8;border-radius:6px;'></p>"
         )
-        min_h = "154px" if visual else "96px"
         return (
-            f"<section style='min-height:{min_h};background:{bg};border:1px solid {border};"
-            "border-radius:8px;padding:7px;margin:0;'>"
-            "<p style='margin:0 0 3px;line-height:1.2;'>"
+            f"<section style='background:{bg};border:1px solid {border};"
+            "border-radius:8px;padding:8px;margin:0;'>"
+            "<p style='margin:0;line-height:1.4;'>"
             + badge
-            + f"<span style='font-size:7px;font-weight:700;color:#3159bd;"
-              f"background:#eef3ff;border-radius:999px;padding:2px 5px;'>{esc(journal)}</span>"
+            + f"<span style='font-size:10px;font-weight:700;color:#3159bd;'>{esc(journal)}</span>"
             + "</p>"
             + visual_html
-            + f"<p style='font-size:9px;line-height:1.35;font-weight:700;color:#222;"
-              f"margin:0 0 3px;'>{esc(title)}</p>"
-            + f"<p style='font-size:6.5px;line-height:1.25;color:#98a2b3;margin:0;"
-              f"word-break:break-all;'>DOI {esc(doi)}</p>"
             + "</section>"
         )
 

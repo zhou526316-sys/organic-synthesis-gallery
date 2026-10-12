@@ -1,0 +1,99 @@
+name: WeChat Oct12 R6 original source page evidence workbench
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/wechat-oct12-r6-source-page-workbench.json'
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct12-r6-original-source-page-evidence
+  cancel-in-progress: false
+jobs:
+  render-original-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate exact owner-supplied sources, no draft mutation
+        run: |
+          python3 - <<'PY'
+          import json
+          from urllib.parse import urlsplit
+          r=json.load(open('audit/automation-triggers/wechat-oct12-r6-source-page-workbench.json'))
+          assert r['action']=='restore_original_source_pdf_image_page_candidates_only'
+          assert r['revision']=='2026-10-12-r6'
+          assert r['draftWriteAuthorized'] is False and r['publicSendAuthorized'] is False
+          assert set(r['sources'])=={'jacs','acscatal','acscatal_si'}
+          for k,row in r['sources'].items():
+              assert urlsplit(row['adobeDownloadUrl']).hostname=='at.adobe.com'
+              assert len(row['sha256'])==64
+              assert all(isinstance(p,int) and 1<=p<80 for p in row['pages'])
+          assert r['sources']['jacs']['sha256']=='78da09472d4cf1b6dece3e11b671991ea340f438fffe19c18f4226ed78ae9000'
+          assert r['sources']['acscatal']['sha256']=='22315092e88e6ee323bfb261cd92c6c490414b7ad662235321c240ca875b7e99'
+          assert r['sources']['acscatal_si']['sha256']=='afb372f65369a2195de68b45fbf9f157c89f8fb3176d11bb81e65415311a37d5'
+          print('All source identifiers and safety gates verified. No WeChat access.')
+          PY
+      - name: Install PDF source raster tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+          python3 -m pip install -q 'Pillow>=10,<13'
+      - name: Download original source PDFs with frozen hashes and stage page previews
+        run: |
+          python3 - <<'PY'
+          import pathlib,json,subprocess,hashlib
+          from PIL import Image
+          r=json.load(open('audit/automation-triggers/wechat-oct12-r6-source-page-workbench.json'))
+          dest=pathlib.Path('/tmp/wechat-oct12-r6-source-pages')
+          dest.mkdir(exist_ok=True)
+          out=pathlib.Path('/tmp/wechat-oct12-r6-source-review')
+          out.mkdir(exist_ok=True)
+          qa={'status':'original_source_pages_for_independent_visual_review_only','revision':r['revision'],
+              'sourceFiles':{},'figureCandidates':[], 'approval':False,'draftWrite':False,'publicSend':False}
+          for k,src in r['sources'].items():
+              pdf=dest/(k+'.pdf')
+              subprocess.run(['curl','-fsSL','--retry','2','--retry-delay','2',
+                              '--connect-timeout','15','--max-time','120',
+                              '--output',str(pdf),src['adobeDownloadUrl']],check=True)
+              payload=pdf.read_bytes()
+              assert payload.startswith(b'%PDF-')
+              assert hashlib.sha256(payload).hexdigest()==src['sha256'],f'Source SHA256 mismatch for {k}'
+              qa['sourceFiles'][k]={'sha256':src['sha256'],'bytes':len(payload),'originalDoi':src['doi']}
+              for p in src['pages']:
+                  target=dest/f'{k}-p{p:02d}'
+                  subprocess.run(['pdftoppm','-f',str(p),'-l',str(p),'-r','140',
+                                  '-png','-singlefile',str(pdf),str(target)],check=True,stdout=subprocess.DEVNULL)
+                  with Image.open(str(target)+'.png') as image:
+                      image.load()
+                      w,h=image.size
+                      cropped=image.crop((int(w*.035),int(h*.045),int(w*.965),int(h*.955)))
+                      dst=out/f'{k}-page-{p:02d}-full-source-review.jpg'
+                      cropped.convert('RGB').save(dst,'JPEG',quality=90,optimize=True)
+                      qa['figureCandidates'].append({'source':k,'page':p,'path':dst.name,
+                         'width':cropped.width,'height':cropped.height,
+                         'sha256':hashlib.sha256(dst.read_bytes()).hexdigest()})
+          (out/'review-only-qa.json').write_text(json.dumps(qa,indent=2,ensure_ascii=False)+'\n')
+          print(json.dumps({'verifiedSources':qa['sourceFiles'],'candidatePages':len(qa['figureCandidates']),
+              'draftUpdated':False},ensure_ascii=False))
+          PY
+      - name: Push page evidence for independent visual review (no production assets)
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          TARGET='audit/wechat-working/2026-10-12-r6-original-page-review'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p "$TARGET"
+            cp -a /tmp/wechat-oct12-r6-source-review/. "$TARGET/"
+            git add -- "$TARGET"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'audit: stage original PDF page visuals for Oct12 figure completeness QA'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1

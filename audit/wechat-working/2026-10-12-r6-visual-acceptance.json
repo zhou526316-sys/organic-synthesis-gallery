@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r6",
+  "status": "source_pixel_visual_review_pass",
+  "imageReview": "pass",
+  "sourceQaBlobSha": "1d9e28e52d2791f817d0ebd885a809d24b06fa7c",
+  "approvedFigureHashes": {
+    "jacs_background": "77a84dfc170e218a1a850569c6500462da99da330ecc1ed5ffd9436c09d00a11",
+    "jacs_lead": "85ab0147d572082ab24767216d09553da12ae561ee3495ea595d990cce156545",
+    "jacs_table1": "6912d9deb584ad65bc8593584c85e9033f50b75992e7ba623ca36f9697e5ee72",
+    "jacs_scope": "222f11aefa072176fa76f422b2f78c2a18f41c795b63a508b6b05dfa53e59f90",
+    "jacs_minimal": "33386c1815a0b65ddd81c7b86ecf7e54e29594ebb236542ff8357781f63e374d",
+    "jacs_application": "03133e358a3afad2e0cbbc2d06621e001f241ffb33d77fc354ced8e50a652f1c",
+    "jacs_mech_ab": "c4b6fcc65c88631485015816e7d66d92f0d7a4fcb5cf4d7a34a30b916536fcee",
+    "jacs_mech_c": "0296b7cefb078e0fe4dbb95ca7f51611fd2724e93862da2c3ef8b819535f11be",
+    "jacs_mech_d": "5ee591028da8f5941d8e641afe042901842378b0c5ddf75d049e381b83b34884",
+    "jacs_si_onepot": "7acca00eb47c6bb68d1ad27387926a5b741df1c33feddd653b9ce73f0e7037e2",
+    "acs_sensitivity": "2644142cad789b4a79ab96e3aa624985bb9f133328d6108aa707c030da7e81a3",
+    "acs_drugconcept": "c78926439fa25a4acaf6fb181200028d5c2689c8368312797293d64e43dcfd4e",
+    "acs_scope_alkyl": "13809477266f1a159d596bdd375eb29668fc7556fca56e51a4a6d7153d78f829",
+    "acs_scope_aryl": "5d30ce6de6eaf7583f2f33e678e2c9da8bb73d3ce4b3e5bbece5e33706cd16e3",
+    "acs_scope_spacer": "5f66c2ff5617d69aef7499ce2337bc1ad9d38ebcfa340598f13084059528dce6",
+    "acs_pretreatment": "51db22f5a9ec5b0961181df646ce97c6275c9a52dd846ecf6102bcdca21fb3e6",
+    "acs_xps": "669a19a1315d99242dbf0f32d4bddd2b3e7122267cdbaee9cf41ac58387c93c9",
+    "acs_tofsims": "742129524789d04831fa51d9a8a4761cba013f4469e8d6a3784d74baa0ec0c1a",
+    "acs_si_limit": "4a258ded49b81dc12c2ff95199ffc72d9e59a49ca70a61df39adfefad139f761",
+    "acs_si_robust": "dded558e8a5280deac4ce716c4eb49255689fa2e456dc7deea8c49ee2f431687"
+  },
+  "signedOffWithoutGenerativeChemistry": true,
+  "visualReviewMethod": "Independent inspection of exact 20 materialized source rasters against high-level complete publisher PDF pages and supplementary original S2/Table S9; reviewed replacement 11 crops for previous clipping/neighbor-panel artifact; verified structures, arrows, legend, yield/ee, full axes and SI table columns.",
+  "sourceConsistency": [
+    "JACS Fig 2 all three categories including last product row, yield/ee values and original footnote region complete.",
+    "JACS Fig 3A all examples 7a–7m, full molecular fragments and yield/ee; Fig 3B–D entire single experimental panels no neighbor chemistry.",
+    "JACS Fig 4A/B all three probe and control rows including right products, Fig 4C complete ee chart, Fig 4D complete high-valent Ni working cycle.",
+    "JACS Fig 1A/B complete prior-reaction context; Fig 1C complete current approach; Table 1 catalyst, ligand blue panel, footnotes and yield/ee complete.",
+    "ACS Fig 2 complete labels/data table; Fig 3 robust screen retained previously audited exact figure; Fig 4 original canagliflozin caption says hypothetical only.",
+    "ACS Fig 5 all alkyl/aryl/spacer/benzothiophene subpanels with all product numbers, structures, yield and conditions.",
+    "ACS Fig 6 reaction and operating conditions intact, original full English caption replaced with source-matched Chinese caption as caption contained cut line after figure.",
+    "ACS Fig 7 XPS Cl 2p all four plots incl axes/peaks/legends; Fig 8 full ToF-SIMS axes and fragment isotopologues.",
+    "ACS SI Fig S2 complete reaction, failure structures, conditions and source notes; SI Table S9 complete left AND right data groups, entries 0–27 plus source notes."
+  ],
+  "editorialConstraints": {
+    "preserveOriginalScience": true,
+    "noAIRegeneratedChemistry": true,
+    "publisherRasterExactBytes": true,
+    "noRuntimeCropping": true,
+    "noLongTextClumps": true,
+    "figureAfterParagraph": true,
+    "dailyJournalCountsAndCardOnly": true,
+    "acsCoverKeepR5CenterCorrection": true,
+    "jacsSquareCoverExactOldHash": "96ca40c385776838e7d5ce4f59f1ffbc483a8c54604d1adf428497c9d8829a4d",
+    "selectedDois": [
+      "10.1021/acscatal.6c06048",
+      "10.1021/jacs.6c10406"
+    ]
+  },
+  "caveats": [
+    "Original chemical main/SI source figures are visually complete; native WeChat mobile cover crop not yet available, require readback and preview checks and do not claim phone-native screenshot.",
+    "This acceptance covers source PDF pixel completeness. It does not authorize a draft write, draft duplication or group publication."
+  ],
+  "wechatDraftWriteAuthorized": false,
+  "publicSendAuthorized": false
+}

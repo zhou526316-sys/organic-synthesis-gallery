@@ -1,8 +1,8 @@
 {
-  "requestId": "wechat-2026-10-12-r4-final-user-reaffirmed-acs-catalysis-jacs-deep-reading",
+  "requestId": "wechat-2026-10-12-r7-restore-research-discussion-and-scaled-original-figures",
   "publicationDate": "2026-10-12",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-12-r4",
+  "editorialRevision": "2026-10-12-r7",
   "approvedGate": "audit/wechat-working/2026-10-12-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -14,7 +14,7 @@
   "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0",
   "expectedReviewedBodyImages": 24,
   "expectedReviewedAssets": 26,
-  "sourceImportRunId": 38216980439,
+  "sourceImportRunId": 38240990420,
   "draftOnly": true,
   "publicSendAuthorized": false,
   "requireDraftGetReadback": true,
@@ -22,5 +22,11 @@
   "linkOnly": false,
   "updatePolicy": "update_exact_existing_2026_10_12_media_id_only_fail_closed_no_duplicates",
   "userSelectedRetrospectiveCover": "latest 1254x1254 Ni/Zr blue abstract artwork with no molecular bond schemes; exact SHA256 96ca40c385776838e7d5ce4f59f1ffbc483a8c54604d1adf428497c9d8829a4d",
-  "reason": "User reiterated actual WeChat API access; user final selection: two Oct12 articles, ACS Catalysis 10.1021/acscatal.6c06048 and JACS 10.1021/jacs.6c10406. Disregard UNPUBLISHED Oct12 R3 site-features candidate. R4 reviewed exact original Fig1C ACS cover, 14 ACS + 10 JACS source figures, approved deep science text, user-selected square blue abstract Ni/Zr cover no invented molecular structure. 5 real daily release cards still lead in first body. Reuse exact existing Oct12 double-article media ID; official draft/update and draft/get + new unique preview; never mass-send."
+  "reason": "Owner expressly requests a balanced expert-level scientific narrative instead of R6 text starvation and 100% wide pictures. R7 independently source-checked, ACS 3513/JACS 3628 characters with 14/10 unchanged source figures sized according to content (78-94%). Pre-draft 390px/740px Playwright visual QA passed, 24/24 images decoded without overflow; user-approved source-only covers unchanged. STRICTLY UPDATE EXISTING Oct12 TWO-ARTICLE DRAFT ONLY; keep original media_id, two DOI/summary=0 read-original URLs, article order and accurate journal counts. No draft/add, no clone, no send; require draft/get and fresh real relay preview.",
+  "imageOriginalShaReview": "audit/wechat-working/2026-10-12-r7-layout-acceptance.json",
+  "publisherSourceQa": "audit/wechat-working/2026-10-12-r7-science-text-review.json",
+  "expectedSourceTextChars": {
+    "acs": 3513,
+    "jacs": 3628
+  }
 }

@@ -1,0 +1,114 @@
+name: WeChat Oct12 JACS original Figure 2 and Figure 3 R6 staging
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/wechat-oct12-r6-jacs-source.json'
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct12-r6-jacs-source-only
+  cancel-in-progress: false
+jobs:
+  render-source-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify scoped source-render request
+        run: |
+          python3 - <<'PY'
+          import json, re
+          from urllib.parse import urlsplit
+          r=json.load(open('audit/automation-triggers/wechat-oct12-r6-jacs-source.json'))
+          assert r['action']=='render_owner_pdf_figures_for_review_only'
+          assert r['date']=='2026-10-12'
+          assert r['revision']=='2026-10-12-r6'
+          assert r['doi']=='10.1021/jacs.6c10406'
+          assert r['sourcePdfSha256']=='78da09472d4cf1b6dece3e11b671991ea340f438fffe19c18f4226ed78ae9000'
+          u=urlsplit(r['sourceAdobeUrl'])
+          assert u.scheme=='https' and u.hostname=='at.adobe.com' and re.fullmatch(r'/[A-Za-z0-9]{10,30}',u.path)
+          assert r['publicSendAuthorized'] is False and r['draftWriteAuthorized'] is False
+          assert set(r['candidateBounds'])=={'fig2','fig3'}
+          for item in r['candidateBounds'].values():
+              assert item['pdfPage'] in (4,5)
+              box=item['bounds']
+              assert len(box)==4 and 0 <= box[0] < box[2] <= 1 and 0 <= box[1] < box[3] <= 1
+          print('Scoped restoration request accepted; source PDF URL redacted')
+          PY
+      - name: Download exact owner-provided publisher PDF; verify original checksum
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/wechat-oct12-r6
+          SOURCE_URL="$(python3 - <<'PY'
+          import json
+          print(json.load(open('audit/automation-triggers/wechat-oct12-r6-jacs-source.json'))['sourceAdobeUrl'])
+          PY
+          )"
+          curl -fsSL --retry 2 --retry-delay 2 --connect-timeout 15 --max-time 120 --output /tmp/wechat-oct12-r6/article.pdf "$SOURCE_URL"
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+          p=Path('/tmp/wechat-oct12-r6/article.pdf')
+          digest=hashlib.sha256(p.read_bytes()).hexdigest()
+          assert p.read_bytes()[:5]==b'%PDF-', 'Source is not a PDF'
+          assert digest=='78da09472d4cf1b6dece3e11b671991ea340f438fffe19c18f4226ed78ae9000', 'Original PDF SHA256 mismatch'
+          print('Owner-provided JACS publisher PDF SHA256 verified; bytes:',p.stat().st_size)
+          PY
+      - name: Render pages from original PDF without AI redraw
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+          pdftoppm -f 4 -l 4 -r 220 -png -singlefile /tmp/wechat-oct12-r6/article.pdf /tmp/wechat-oct12-r6/page-4
+          pdftoppm -f 5 -l 5 -r 220 -png -singlefile /tmp/wechat-oct12-r6/article.pdf /tmp/wechat-oct12-r6/page-5
+          python3 -m pip install -q 'Pillow>=10,<13'
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+          from PIL import Image
+          r=json.load(open('audit/automation-triggers/wechat-oct12-r6-jacs-source.json'))
+          out=Path('/tmp/wechat-oct12-r6/reviewed')
+          out.mkdir(parents=True,exist_ok=True)
+          images={}
+          for fig,name in [('fig2','jacs-fig2-full-figure-source-candidate.png'),('fig3','jacs-fig3-full-figure-source-candidate.png')]:
+              spec=r['candidateBounds'][fig]
+              source=Path('/tmp/wechat-oct12-r6/page-%d.png'%spec['pdfPage'])
+              with Image.open(source) as im:
+                  im.load()
+                  x0,y0,x1,y1=spec['bounds']
+                  crop=im.crop((round(im.width*x0),round(im.height*y0),round(im.width*x1),round(im.height*y1)))
+                  target=out/name
+                  crop.save(target,'PNG')
+                  images[fig]={'name':name,'pdfPage':spec['pdfPage'],'sourcePageSize':list(im.size),
+                               'normalizedBounds':spec['bounds'],'width':crop.width,'height':crop.height,
+                               'sha256':hashlib.sha256(target.read_bytes()).hexdigest(),'byteCount':target.stat().st_size}
+          qa={'date':'2026-10-12','revision':'2026-10-12-r6','status':'source_candidates_not_approved',
+              'sourceDoi':'10.1021/jacs.6c10406',
+              'sourcePdfSHA256':'78da09472d4cf1b6dece3e11b671991ea340f438fffe19c18f4226ed78ae9000',
+              'source':'owner-provided original JACS publisher PDF, rendered original PDF pages only',
+              'output':images,'imageApproval':False,'draftUpdated':False,'publicSend':False,
+              'warning':'Large original-source figure crops are candidates pending per-pixel inspection for all structures, reaction arrows, yields and ee. Do NOT mark old JACS rasters complete.'}
+          (out/'source-candidate-qa.json').write_text(json.dumps(qa,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps({'sourceShaPass':True,'figures':images,'draftWrite':False}))
+          PY
+      - name: Commit only candidate figure renders for independent visual review
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          TARGET='audit/wechat-working/2026-10-12-r6-jacs-source-candidates'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p "$TARGET"
+            cp -a /tmp/wechat-oct12-r6/reviewed/. "$TARGET/"
+            git add -- "$TARGET"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'audit: stage original JACS source figure candidates for crop QA'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1

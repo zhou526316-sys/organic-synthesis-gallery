@@ -1,0 +1,83 @@
+{
+  "stage": "offline_preview_only",
+  "revision": "2026-10-12-r7",
+  "files": [
+    "acs-local-review.html",
+    "jacs-local-review.html"
+  ],
+  "selectedDois": [
+    "10.1021/acscatal.6c06048",
+    "10.1021/jacs.6c10406"
+  ],
+  "body": {
+    "acs": {
+      "paragraphs": 31,
+      "chineseAndSymbolChars": 3513,
+      "bodyImages": 14,
+      "widthPct": {
+        "acs_lead": 91,
+        "acs_background": 86,
+        "acs_table1": 92,
+        "acs_sensitivity": 83,
+        "acs_robustness": 81,
+        "acs_drugconcept": 78,
+        "acs_scope_alkyl": 89,
+        "acs_scope_aryl": 90,
+        "acs_scope_spacer": 88,
+        "acs_pretreatment": 83,
+        "acs_xps": 86,
+        "acs_tofsims": 84,
+        "acs_si_limit": 86,
+        "acs_si_robust": 92
+      },
+      "sourceFigurePaths": [
+        "public/wechat-assets/reviewed/2026-10-12-r2/acs_lead.jpg",
+        "public/wechat-assets/reviewed/2026-10-12-r1/acs_background.jpg",
+        "public/wechat-assets/reviewed/2026-10-12-r1/acs_table1.jpg",
+        "public/wechat-assets/reviewed/2026-10-12-r6/acs_sensitivity.png",
+        "public/wechat-assets/reviewed/2026-10-12-r1/acs_robustness.jpg",
+        "public/wechat-assets/reviewed/2026-10-12-r6/acs_drugconcept.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/acs_scope_alkyl.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/acs_scope_aryl.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/acs_scope_spacer.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/acs_pretreatment.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/acs_xps.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/acs_tofsims.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/acs_si_limit.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/acs_si_robust.png"
+      ]
+    },
+    "jacs": {
+      "paragraphs": 32,
+      "chineseAndSymbolChars": 3628,
+      "bodyImages": 10,
+      "widthPct": {
+        "jacs_lead": 88,
+        "jacs_background": 84,
+        "jacs_table1": 82,
+        "jacs_scope": 94,
+        "jacs_minimal": 92,
+        "jacs_application": 89,
+        "jacs_si_onepot": 86,
+        "jacs_mech_ab": 85,
+        "jacs_mech_c": 79,
+        "jacs_mech_d": 85
+      },
+      "sourceFigurePaths": [
+        "public/wechat-assets/reviewed/2026-10-12-r6/jacs_lead.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/jacs_background.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/jacs_table1.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/jacs_scope.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/jacs_minimal.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/jacs_application.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/jacs_si_onepot.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/jacs_mech_ab.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/jacs_mech_c.png",
+        "public/wechat-assets/reviewed/2026-10-12-r6/jacs_mech_d.png"
+      ]
+    }
+  },
+  "coverByteEdits": false,
+  "wechatDraftModified": false,
+  "publicSent": false
+}

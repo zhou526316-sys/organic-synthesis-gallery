@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r7",
+  "status": "source_text_science_review_pass_image_layout_pending",
+  "feedback": "R6 about 1916/1950 Chinese source characters and 14/10 full-width images did not explain underlying chemistry enough; user rejected that extreme.",
+  "selectedDois": [
+    "10.1021/acscatal.6c06048",
+    "10.1021/jacs.6c10406"
+  ],
+  "facts": {
+    "ACS": {
+      "characters": 3513,
+      "paragraphs": 31,
+      "figures": 14
+    },
+    "JACS": {
+      "characters": 3628,
+      "paragraphs": 32,
+      "figures": 10
+    }
+  },
+  "scientificTextReview": "pass",
+  "scienceChecks": {
+    "ACS_CHCl3_special": true,
+    "ACS_robustness_and_scope": true,
+    "ACS_surface_and_limit": true,
+    "JACS_Katritzky_and_stoich": true,
+    "JACS_yield_conventions": true,
+    "JACS_mechanism_limits": true,
+    "Same_DOIs": true,
+    "No_incorrect_3l": true
+  },
+  "evidence": {
+    "ACS": "Publisher DOI 10.1021/acscatal.6c06048, verified original main PDF SHA-256 22315092e88e6ee323bfb261cd92c6c490414b7ad662235321c240ca875b7e99, original Table1/Fig1–8 and SI FigS2/TableS9.",
+    "JACS": "Publisher DOI 10.1021/jacs.6c10406, verified original main PDF SHA-256 78da09472d4cf1b6dece3e11b671991ea340f438fffe19c18f4226ed78ae9000, Table1/Fig1–4, SI FigS6.",
+    "correction": "JACS Fig2 product 3l is 69.8% ee with 64.9% yield, R6 mistakenly wrote 71.0% ee."
+  },
+  "retainedMedia": "All R6 source-authentic 24 body images and 2 covers remain byte-for-byte unchanged; only display_width_pct and surrounding paper-specific scientific prose changed.",
+  "figureLayoutReview": "pending pre-WeChat R7 mobile and desktop screenshots",
+  "authorizedWeChatDraftWrite": false,
+  "publicSendAuthorized": false,
+  "evidenceHierarchy": "Distinguishes measurement, controls, XPS/ToF-SIMS fingerprint correlation, catalytic work models and unverified mechanistic interpretation.",
+  "userMandate": "Neither extreme of giant source images and minimal prose nor excessive text piles; source-grounded interpretation followed by evidentiary figures and accessible explanatory discussion; compare Oct5 readable narrative."
+}

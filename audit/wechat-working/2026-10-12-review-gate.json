@@ -1,138 +1,87 @@
 {
   "date": "2026-10-12",
-  "revision": "2026-10-12-r4",
+  "revision": "2026-10-12-r7",
   "articleCount": 2,
-  "selectionAuthority": "latest_explicit_user_reaffirmed_acs_catalysis_plus_jacs_and_no_invented_chemistry_cover",
+  "selectionAuthority": "latest_user_2026_10_12_evening_explicit_critic_of_R6_text_too_little_images_too_large_restore_oct5_science_discussion_rhythm",
   "selectionDois": [
     "10.1021/acscatal.6c06048",
     "10.1021/jacs.6c10406"
   ],
   "textReview": "pass",
   "imageReview": "pass",
-  "strictFigurePlacement": true,
+  "reviewedAtBeijing": "2026-10-12T19:14:09+08:00",
+  "reviewedAtUTC": "2026-10-12T11:14:09.422Z",
   "materializedCropReviewRequired": true,
-  "reviewedAtBeijing": "2026-10-12T15:16:20.315686+08:00",
+  "strictFigurePlacement": true,
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-12-r4-acs-catalysis-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-12-r4-acs-catalysis-images-only.md"
+    "textOnly": "audit/wechat-working/2026-10-12-r7-acs-catalysis-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-12-r7-acs-catalysis-images-only.md",
+    "retrospectiveTextOnly": "audit/wechat-working/2026-10-12-r7-jacs-text-only.md",
+    "retrospectiveImagesOnly": "audit/wechat-working/2026-10-12-r7-jacs-images-only.md",
+    "science": "audit/wechat-working/2026-10-12-r7-science-text-review.json",
+    "visual": "audit/wechat-working/2026-10-12-r7-layout-acceptance.json",
+    "offlinePreview": "audit/wechat-working/2026-10-12-r7-offline-preview/offline-preview-qa.json"
   },
   "sources": [
     {
+      "path": "public/wechat-editions/2026-10-12.json",
+      "blobSha": "a3ff6a00b6b0e11da83727fca4c1b9ec74ce09e7"
+    },
+    {
       "path": "public/wechat-featured/2026-10-12.json",
-      "blobSha": "563c6318108bc3f4db80b1e762d39235363b3255",
-      "sha256": "8b1f975b17b435b9590cdebf96c0c83e993551bfe0b4f9b6e2040a0af9181da8"
+      "blobSha": "439c4ea0103e46cd5a89cc54f61b48f06e5510a2"
     },
     {
       "path": "public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json",
-      "blobSha": "8067055b6711b530e3f1d669c79363b6d70b0f3d",
-      "sha256": "e80dd18885efcc34cdd1a41b73cba733ca99c1ef3e3caf042e8d079233f4667c"
+      "blobSha": "6a6174f86085edd60ec14c135d2e8f627cb67d62"
     },
     {
-      "path": "public/wechat-editions/2026-10-12.json",
-      "blobSha": "58fb026ae19d072e94f3ce07ebfa870d71507662",
-      "sha256": "f64ba04bdf592c84895dba943c29ce706ebdcbf172f01da4c4df9e0be146a530"
+      "path": "audit/wechat-working/2026-10-12-r7-acs-catalysis-text-only.md",
+      "blobSha": "7c9864c13bbcb119712ec903aae34f3ac3be841b"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r4-acs-catalysis-text-only.md",
-      "blobSha": "c4dd968eb547164099ad96062a7c6d9230b82558",
-      "sha256": "063d554912b66d364eea443087fa5f1759745048a69b47232ab0583a5a103c16"
+      "path": "audit/wechat-working/2026-10-12-r7-acs-catalysis-images-only.md",
+      "blobSha": "3551833f433ce89151d902c26797c1039cf5f3b4"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r4-jacs-text-only.md",
-      "blobSha": "a8f36cb0aee106c17cdfb4a860c4f3d45b470967",
-      "sha256": "e214140e44d9746c7db92a44c3c243af23242957dbb59ac66015a2acbd617aab"
+      "path": "audit/wechat-working/2026-10-12-r7-jacs-text-only.md",
+      "blobSha": "d47bea8dc0b424d2d8b41a4e0b191ad70d5c0eed"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r4-acs-catalysis-images-only.md",
-      "blobSha": "2253b97c6751e74f54b10728abf503972695f3ec",
-      "sha256": "10e3647a79ef90634c370faefc6ed422a015773b010e896d0f989fbb4d6b3344"
+      "path": "audit/wechat-working/2026-10-12-r7-jacs-images-only.md",
+      "blobSha": "5c5da826cee795b25ff013601f1899d5cec3a75a"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r4-jacs-images-only.md",
-      "blobSha": "6a333b7325d3bd15a586c4992b76aabf471c8c7a",
-      "sha256": "f4bee408e6ab0b5e41f503c2e7dbdab7861f39cfd84c9b95ec77c20419fcdd02"
+      "path": "audit/wechat-working/2026-10-12-r7-science-text-review.json",
+      "blobSha": "83766f8f61f30fedc5145af7c6a0209e68a91744"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r4-editorial-plan.json",
-      "blobSha": "77392165815dd2c129fc499caf901a5e8d2f121c",
-      "sha256": "61aeaf56483f98d1a63c0fae8d4b0d3039b405fb666765cce1fabf2d881191c0"
+      "path": "audit/wechat-working/2026-10-12-r7-offline-preview/offline-preview-qa.json",
+      "blobSha": "1b04c9f289c9fb885e7aeb52fe3bfe9afaebfd3d"
     },
     {
-      "path": "audit/wechat-working/2026-10-12-r4-science-image-qa.json",
-      "blobSha": "eb373adf26ab4297ca925f0a29e8e808fa0f44c1",
-      "sha256": "7077b06e83b26be91ea097e95f654fad7349d86f85deeabdb26bae020f13df27"
+      "path": "audit/wechat-working/2026-10-12-r7-layout-acceptance.json",
+      "blobSha": "38d1aadac0710162a0bf2611ed433f65f65d97bf"
+    },
+    {
+      "path": "docs/wechat-editorial-master-rules.md",
+      "blobSha": "7c55f90372609aa3b7d63cf74601eaa3ce07f4e7"
     }
   ],
   "assets": [
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r2/acs_lead.jpg",
+      "blobSha": "87817b033c13a6b4f5cc4fc7b1f25f7dcc5331ac",
+      "sha256": "fbbfea75b6f5183a0c2fe092a193fa862eec8d7b28318d5aa54c4d5dd6e17a1a",
+      "width": 1283,
+      "height": 250
+    },
     {
       "path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_background.jpg",
       "blobSha": "a44f0b1f58339407514d9f44cf9b1438a2955436",
       "sha256": "d61bb5fc68ddba730e6f94251f67cb325b9a6b1583f3dfcd9a8781707f102f88",
       "width": 1111,
       "height": 695
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_drugconcept.jpg",
-      "blobSha": "dc82358195f4b0ec4ccab8bc7a814889a4245798",
-      "sha256": "04711ce74c69d28413e60a8beae5524b106366ebe7ff4ad98524e17730ce03ad",
-      "width": 753,
-      "height": 344
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_pretreatment.jpg",
-      "blobSha": "ac637e26112cfe9c24eb02b1e08a3363c0524e91",
-      "sha256": "60b29e4d914c6c0b9d6f06192f10945f89b2470a3100308852f11bc76039e824",
-      "width": 1054,
-      "height": 538
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_robustness.jpg",
-      "blobSha": "007afaca62aa0ba82d7bde51ff3a7e928caa9559",
-      "sha256": "89f5466828984193e94a19ab6cef1bf46713b49e6d5d64fffef98fcb6efe913c",
-      "width": 772,
-      "height": 1552
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_scope_alkyl.jpg",
-      "blobSha": "690441fdfa4d41dec153aed42c214ed6d025a896",
-      "sha256": "a3706ae0530f0fbdf7af1385e66a27d2dfcd2d34dce0a71374b68c94b219c009",
-      "width": 1194,
-      "height": 452
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_scope_aryl.jpg",
-      "blobSha": "5de721903fba9a4e7815088f6093c34d56a15693",
-      "sha256": "aa35c6b335c4a8b5af48ea4e7f6ce88998e3fdc80c33f59f4fd101fc6cefbfe2",
-      "width": 1172,
-      "height": 579
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_scope_spacer.jpg",
-      "blobSha": "63c750e56e623a7dcb7a48fabfb6701f122fbd80",
-      "sha256": "fc90bdd32d83fb9164814ded1ff9ec2ccfb460f05897da2195d9d46579fdbc47",
-      "width": 1195,
-      "height": 490
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_sensitivity.jpg",
-      "blobSha": "ab6002ab80f0b269f91ba625e93d6fba0cac19b1",
-      "sha256": "06b51e1f57ccca6015e50244d0fde8e1339584b6148b79017ddf297610197eb3",
-      "width": 967,
-      "height": 612
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_si_limit.jpg",
-      "blobSha": "213859e6b330f44dc65e7b1ed064778f1bf842f5",
-      "sha256": "d49ad2a3f7e82b85cf37566d70ff808dc998b572c21b33d481d763974592d48c",
-      "width": 1220,
-      "height": 1633
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_si_robust.jpg",
-      "blobSha": "8a325afd3829a20e77adfb36d571605da9857826",
-      "sha256": "860ec27330d3186299761c69f47266fb4115d31d99f3dbe373bebf559116ef02",
-      "width": 1275,
-      "height": 2110
     },
     {
       "path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_table1.jpg",
@@ -142,18 +91,158 @@
       "height": 919
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_tofsims.jpg",
-      "blobSha": "5ecead758c0c339e7b32f8ad2464fada6a4e9f25",
-      "sha256": "d235a7b33262f5a67bfb180a6e848c1a0680f5382508c136fc058c18ee942b6e",
-      "width": 1082,
-      "height": 974
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_sensitivity.png",
+      "blobSha": "f06d43845b242e3d4b739d2f38b765388dc0ac1b",
+      "sha256": "2644142cad789b4a79ab96e3aa624985bb9f133328d6108aa707c030da7e81a3",
+      "width": 1019,
+      "height": 528
     },
     {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_xps.jpg",
-      "blobSha": "67b9bed5044180e30d535245037901d09b783a26",
-      "sha256": "a8a227e11054844766ff2c4c2d23ce7869dace60fd1e49f422721370a5f89ee4",
-      "width": 1084,
-      "height": 954
+      "path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_robustness.jpg",
+      "blobSha": "007afaca62aa0ba82d7bde51ff3a7e928caa9559",
+      "sha256": "89f5466828984193e94a19ab6cef1bf46713b49e6d5d64fffef98fcb6efe913c",
+      "width": 772,
+      "height": 1552
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_drugconcept.png",
+      "blobSha": "12445b9854dc3c9062511a8eca7db5715a014c15",
+      "sha256": "c78926439fa25a4acaf6fb181200028d5c2689c8368312797293d64e43dcfd4e",
+      "width": 778,
+      "height": 397
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_scope_alkyl.png",
+      "blobSha": "9c0a2fd7232444c5aab27dc1baeb27caa78ab481",
+      "sha256": "13809477266f1a159d596bdd375eb29668fc7556fca56e51a4a6d7153d78f829",
+      "width": 1098,
+      "height": 428
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_scope_aryl.png",
+      "blobSha": "d855913e6db7bd5ae35154b5f7e770a3234c750d",
+      "sha256": "5d30ce6de6eaf7583f2f33e678e2c9da8bb73d3ce4b3e5bbece5e33706cd16e3",
+      "width": 1098,
+      "height": 597
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_scope_spacer.png",
+      "blobSha": "f3f7256de14d13345efb33821c91bb197b04eefe",
+      "sha256": "5f66c2ff5617d69aef7499ce2337bc1ad9d38ebcfa340598f13084059528dce6",
+      "width": 1098,
+      "height": 414
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_pretreatment.png",
+      "blobSha": "5f8d98d4a7721d063ea6f448acea311be0843c10",
+      "sha256": "51db22f5a9ec5b0961181df646ce97c6275c9a52dd846ecf6102bcdca21fb3e6",
+      "width": 1032,
+      "height": 458
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_xps.png",
+      "blobSha": "624bc4801bf11e40599873579f562bc07bd0d6ad",
+      "sha256": "669a19a1315d99242dbf0f32d4bddd2b3e7122267cdbaee9cf41ac58387c93c9",
+      "width": 1038,
+      "height": 780
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_tofsims.png",
+      "blobSha": "9ad3fb17a46d4005ea861248e44e549e9aebf84f",
+      "sha256": "742129524789d04831fa51d9a8a4761cba013f4469e8d6a3784d74baa0ec0c1a",
+      "width": 1100,
+      "height": 920
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_si_limit.png",
+      "blobSha": "43f1533bcbe8d04a453c945c13a5d504ad524913",
+      "sha256": "4a258ded49b81dc12c2ff95199ffc72d9e59a49ca70a61df39adfefad139f761",
+      "width": 1562,
+      "height": 1979
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_si_robust.png",
+      "blobSha": "f4ab269405f7caf010b8700a72971066aebbaed4",
+      "sha256": "dded558e8a5280deac4ce716c4eb49255689fa2e456dc7deea8c49ee2f431687",
+      "width": 1564,
+      "height": 1989
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r5/acs-catalysis-fig1c-center-preserved.png",
+      "blobSha": "d491d9f5de22d0674b6d25641d6f05569c5495f9",
+      "sha256": "3bbe4c0c13627bc3de150345dfe97f5494ced3c67100afbca6a0d54cb974ed47",
+      "width": 1880,
+      "height": 800
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/jacs_lead.png",
+      "blobSha": "d6cbd5d4ecea7780de80840083913162d19757b7",
+      "sha256": "85ab0147d572082ab24767216d09553da12ae561ee3495ea595d990cce156545",
+      "width": 1144,
+      "height": 527
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/jacs_background.png",
+      "blobSha": "04a056b27f8b94f4edcb8137aa02f0e200b95442",
+      "sha256": "77a84dfc170e218a1a850569c6500462da99da330ecc1ed5ffd9436c09d00a11",
+      "width": 1144,
+      "height": 676
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/jacs_table1.png",
+      "blobSha": "bdde2bfdeaa0a8727aeb163468a6d9b0324ecbc7",
+      "sha256": "6912d9deb584ad65bc8593584c85e9033f50b75992e7ba623ca36f9697e5ee72",
+      "width": 767,
+      "height": 1424
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/jacs_scope.png",
+      "blobSha": "fc6d72669f352f30b8c8c8147dd65b6b25887ee7",
+      "sha256": "222f11aefa072176fa76f422b2f78c2a18f41c795b63a508b6b05dfa53e59f90",
+      "width": 1580,
+      "height": 1667
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/jacs_minimal.png",
+      "blobSha": "3183ccb4e51d470315a3c13889a98414e4823635",
+      "sha256": "33386c1815a0b65ddd81c7b86ecf7e54e29594ebb236542ff8357781f63e374d",
+      "width": 1578,
+      "height": 825
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/jacs_application.png",
+      "blobSha": "db15e4df09dd1e7af06832fcb218fdef98d91b3c",
+      "sha256": "03133e358a3afad2e0cbbc2d06621e001f241ffb33d77fc354ced8e50a652f1c",
+      "width": 1578,
+      "height": 810
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/jacs_si_onepot.png",
+      "blobSha": "a147848961fb1bdba87c70bc4d7a95d6343374b2",
+      "sha256": "7acca00eb47c6bb68d1ad27387926a5b741df1c33feddd653b9ce73f0e7037e2",
+      "width": 1213,
+      "height": 794
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/jacs_mech_ab.png",
+      "blobSha": "2512939efd6258bd7869270fc28d91e377a56078",
+      "sha256": "c4b6fcc65c88631485015816e7d66d92f0d7a4fcb5cf4d7a34a30b916536fcee",
+      "width": 907,
+      "height": 1116
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/jacs_mech_c.png",
+      "blobSha": "64f4b8584f73994718dbb333cdb21a4890d46668",
+      "sha256": "0296b7cefb078e0fe4dbb95ca7f51611fd2724e93862da2c3ef8b819535f11be",
+      "width": 667,
+      "height": 568
+    },
+    {
+      "path": "public/wechat-assets/reviewed/2026-10-12-r6/jacs_mech_d.png",
+      "blobSha": "14ef33ffaf60c7a29f38e2e5d4438eede0e83ac7",
+      "sha256": "5ee591028da8f5941d8e641afe042901842378b0c5ddf75d049e381b83b34884",
+      "width": 669,
+      "height": 566
     },
     {
       "path": "public/wechat-assets/reviewed/2026-10-12-r4/jacs-ni-zr-concept-original-no-invented-chemistry.png",
@@ -161,92 +250,29 @@
       "sha256": "96ca40c385776838e7d5ce4f59f1ffbc483a8c54604d1adf428497c9d8829a4d",
       "width": 1254,
       "height": 1254
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/jacs_application.jpg",
-      "blobSha": "ff2cc2d25e30a7e6253be545ef34a18ad210238b",
-      "sha256": "501f3a82f739bcf35fa1ef5d6933598de987d72655aaa62e8b1b5793158c1751",
-      "width": 1547,
-      "height": 808
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/jacs_background.jpg",
-      "blobSha": "e1acf3cbcc3c381893a4cdb415cc78ef869626f4",
-      "sha256": "11913e25f7e8daeb152a886a2b2aa4df8ad971c88699830b6663e1547c0a2c8b",
-      "width": 1235,
-      "height": 639
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/jacs_lead.jpg",
-      "blobSha": "654f597507779e7f8ebd217ea648b820e0dc53e0",
-      "sha256": "1bc54eb1a0b7d4fc0c34b527514acc06e8214eb9073f90eac5ec234ab18f1292",
-      "width": 1235,
-      "height": 435
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/jacs_mech_ab.jpg",
-      "blobSha": "262f542e16f6e66ce8b95dc0c52c4d3554d52551",
-      "sha256": "d9959f2cfe6eea91b4c708a125ee04aa562fafc75f431654a8896ac73a982f36",
-      "width": 883,
-      "height": 1147
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/jacs_mech_c.jpg",
-      "blobSha": "e54fa990cb808c83470e5fd36d2d0ec12a21754d",
-      "sha256": "ec1389ed8dc8ff72ff73ab1ceed388fd1286e712c07f1d6e0f164d9b9bb68185",
-      "width": 690,
-      "height": 577
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/jacs_mech_d.jpg",
-      "blobSha": "102187dc99f6c69f7036ea9740ff94b9fdd6e488",
-      "sha256": "3662957ba260d2d10e02441f8cecb9b41884c2af390f2732daaff458f398fce1",
-      "width": 691,
-      "height": 601
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/jacs_minimal.jpg",
-      "blobSha": "071470a223943b368e96ad6fc7e0db782544b7a4",
-      "sha256": "951ed792175be962cf848e3f300914cd55972ff5fddf2753cb676400295b2e9c",
-      "width": 1547,
-      "height": 689
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/jacs_scope.jpg",
-      "blobSha": "329775e60633c6b6831796bb2d3471dd1523eac1",
-      "sha256": "9b3e19e11b6c77b7980942abc28a4d2f0be117603f74dba1b3f9265baf779ec9",
-      "width": 1570,
-      "height": 1499
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/jacs_si_onepot.jpg",
-      "blobSha": "f7790fd750eb0375a83b46a178686efe5cdd18fb",
-      "sha256": "b900a4b51ba7e9effec56d3fe74594961faedb682a9d5dac84e2dc8fb8495f1f",
-      "width": 1258,
-      "height": 1062
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r1/jacs_table1.jpg",
-      "blobSha": "dcd51519e0fade979a4fa9f4761e1e5af4af3c95",
-      "sha256": "3d3fb564341a6ea890da4eabe5240647ad26ed7deea352f098aa10f1ace8b89e",
-      "width": 690,
-      "height": 1263
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r2/acs-catalysis-fig1c-native-cover.png",
-      "blobSha": "9b14abce1f95a583f779f1505e7d1b9c55b504bc",
-      "sha256": "512e1eb8b93ec143efa7e94b73d2ec21c4289c1a9543c7bc86b9d94f37e5a249",
-      "width": 1880,
-      "height": 800
-    },
-    {
-      "path": "public/wechat-assets/reviewed/2026-10-12-r2/acs_lead.jpg",
-      "blobSha": "87817b033c13a6b4f5cc4fc7b1f25f7dcc5331ac",
-      "sha256": "fbbfea75b6f5183a0c2fe092a193fa862eec8d7b28318d5aa54c4d5dd6e17a1a",
-      "width": 1283,
-      "height": 250
     }
   ],
+  "expectedImageCount": {
+    "acs": 14,
+    "jacs": 10,
+    "cover": 2,
+    "all": 26
+  },
+  "expectedScientificProse": {
+    "acsChars": 3513,
+    "jacsChars": 3628,
+    "acsParagraphs": 31,
+    "jacsParagraphs": 32
+  },
+  "allFigureOriginalBytesUnchangedFromR6": true,
+  "imageWidthsCaseSpecificFromVisualApproval": true,
+  "originalWeChatMediaId": "KhELYUzvwADwB_l1xH1SWIIQfl5GSB19jduNK2sdIdguH6OMYYfkuM8zO65yvnWs",
+  "expectedLinks": [
+    "https://gallery.gczhouwld.com/?edition=2026-10-12&doi=10.1021%2Facscatal.6c06048&summary=0",
+    "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0"
+  ],
+  "R7OfflineBrowserStatus": "all_24_images_loaded_390px_mobile_desktop_no_overflow",
+  "R7OfflineReviewer": "all evidence paragraphs, captions and picture widths independently inspected before WeChat draft update",
   "publicSendAuthorized": false,
-  "notes": "Reverted UNPUBLISHED R3 Gallery feature digest to latest explicitly selected Oct12 ACS Catalysis + JACS. Same R2 source-authentic ACS figure cover, exact science narrative and 24 full main/SI evidence figures. JACS cover now latest user-chosen abstract Ni/Zr artwork with no fabricated molecule bonds; user-supplied bytes retained. Independent hashes and figure placement verified; no WeChat write in import."
+  "notes": "R6 prior image-text review invalidated by explicit user. After R7 native SCIENCE review and offline responsive image layout pass, may update only existing cloud draft under approved DOI and mediaId. Must recheck actual draft/get and new relay mobile preview, not mass publish. No source figure pixels or covers changed."
 }

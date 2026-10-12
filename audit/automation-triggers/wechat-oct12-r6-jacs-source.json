@@ -1,0 +1,35 @@
+{
+  "action": "render_owner_pdf_figures_for_review_only",
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r6",
+  "doi": "10.1021/jacs.6c10406",
+  "sourceAdobeUrl": "https://at.adobe.com/ta7tvdemSfIgHFzJ",
+  "sourcePdfSha256": "78da09472d4cf1b6dece3e11b671991ea340f438fffe19c18f4226ed78ae9000",
+  "candidateBounds": {
+    "fig2": {
+      "pdfPage": 4,
+      "bounds": [
+        0.04,
+        0.05,
+        0.96,
+        0.95
+      ]
+    },
+    "fig3": {
+      "pdfPage": 5,
+      "bounds": [
+        0.04,
+        0.05,
+        0.96,
+        0.95
+      ]
+    }
+  },
+  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWIIQfl5GSB19jduNK2sdIdguH6OMYYfkuM8zO65yvnWs",
+  "draftWriteAuthorized": false,
+  "publicSendAuthorized": false,
+  "reason": "Verified owner-provided exact JACS original PDF 4,291,752 bytes; rerun pixel-accurate source Figure 2/3 candidate extraction with rasterizer installed; no WeChat draft/publish.",
+  "assetAccessMode": "Adobe CCAsset downloadUrl rather than preview/rendition",
+  "requestId": "2026-10-12-r6-jacs-publisher-source-poppler-fix",
+  "runAttempt": 3
+}
