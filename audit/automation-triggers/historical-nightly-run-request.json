@@ -1,14 +1,14 @@
 {
   "schema": "gallery-historical-nightly-rescue-v1",
-  "requestedAt": "2026-10-10T17:58:44.890Z",
-  "reason": "user-approved retry after merge-identity production fix PR #533; previous attempt #38073396190 blocked before fetch",
+  "requestedAt": "2026-10-12T04:42:23.528Z",
+  "reason": "User explicitly approved accelerating the complete 16-journal historical backfill and reviewed archive admission; continue from verified staging checkpoint without unsanctioned publication.",
   "mode": "candidate_discovery_only",
   "targetBranch": "staging/historical-archive-nightly",
   "budget": {
     "maxUnits": 8,
     "requestLimit": 80
   },
-  "safety": "Does not change 08:00 release, article acceptance, TOC, figures or PDF",
-  "retryOfRun": 38073396190,
-  "sourcePR": 533
+  "safety": "Candidate-only; keep main publication strictly 08:00 Beijing; do not alter accepted DOI, media or PDF",
+  "triggerScope": "user_authorized_manual_catchup",
+  "previousTriggerAt": "2026-10-10T17:58:44.890Z"
 }
