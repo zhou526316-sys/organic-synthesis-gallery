@@ -1,0 +1,1465 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2026-04-01",
+    "to": "2026-04-30"
+  },
+  "checkedAt": "2026-10-12T08:52:08.901Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "lane": "publication",
+        "total": 29,
+        "count": 29,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 29,
+      "count": 29,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 29,
+      "openalex": 29
+    }
+  },
+  "candidateCount": 29,
+  "alreadyPublished": 0,
+  "unreviewed": 29,
+  "records": [
+    {
+      "doi": "10.1038/s44160-026-01017-4",
+      "title": "Biophotoelectrocatalysis in synthesis",
+      "authors": [
+        "Jinha Jang",
+        "Yonghan Jo",
+        "Chan Beum Park"
+      ],
+      "date": "2026-04-07",
+      "datePrecision": "day",
+      "createdDate": "2026-04-07",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "6",
+        "pages": "819-834",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01017-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01017-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01025-4",
+      "title": "Phase and facet engineering for nanoscale catalyst discovery in electrochemical CO2 reduction",
+      "authors": [
+        "Liangyiqun Xie",
+        "Yi Liu",
+        "Simin Li",
+        "Bo Shen",
+        "Wenlei Zhu"
+      ],
+      "date": "2026-04-02",
+      "datePrecision": "day",
+      "createdDate": "2026-04-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "4",
+        "pages": "489-505",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01025-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01025-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01033-4",
+      "title": "Synthetic routes to advancing perovskite solar cells through interface design",
+      "authors": [
+        "Jin Hou",
+        "Isaiah W. Gilley",
+        "Taylor E. Wiggins",
+        "Cheng Liu",
+        "Yi Yang",
+        "Bin Chen",
+        "Mercouri G. Kanatzidis",
+        "Edward H. Sargent"
+      ],
+      "date": "2026-04-16",
+      "datePrecision": "day",
+      "createdDate": "2026-04-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "7",
+        "pages": "975-988",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01033-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01033-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01039-y",
+      "title": "High-efficiency organo-electrocatalysts enable both anodic and cathodic reactions",
+      "authors": [
+        "Jiarui Yang",
+        "Guo-Wei Lai",
+        "Hai-Tao Tang",
+        "Yong-Zhou Pan",
+        "Ying-Ming Pan",
+        "Wen-hao Li",
+        "Deyan Luan",
+        "Dingsheng Wang",
+        "Yadong Li",
+        "Xiong Wen ‘David’ Lou"
+      ],
+      "date": "2026-04-08",
+      "datePrecision": "day",
+      "createdDate": "2026-04-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "7",
+        "pages": "1032-1042",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01039-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01039-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01040-5",
+      "title": "Organo-electrocatalysts that drive diverse reactions",
+      "authors": [],
+      "date": "2026-04-20",
+      "datePrecision": "day",
+      "createdDate": "2026-04-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "7",
+        "pages": "973-974",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01040-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01040-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01041-4",
+      "title": "Exciton diffusion beyond 2 μm enabled by maximum symmetry in two-dimensional perovskites",
+      "authors": [
+        "Jin Hou",
+        "Jared Fletcher",
+        "Siedah J. Hall",
+        "Hao Zhang",
+        "Marios Zacharias",
+        "George Volonakis",
+        "Claire Welton",
+        "Stefan Zeiske",
+        "Isaiah W. Gilley",
+        "Donghoon Shin",
+        "Faiz Mandani",
+        "Isaac Metcalf",
+        "Shuo Sun",
+        "Bo Zhang",
+        "Yinsheng Guo",
+        "Bin Chen",
+        "G. N. Manjunatha Reddy",
+        "Claudine Katan",
+        "Jacky Even",
+        "Matthew Y. Sfeir",
+        "Mercouri G. Kanatzidis",
+        "Aditya D. Mohite"
+      ],
+      "date": "2026-04-02",
+      "datePrecision": "day",
+      "createdDate": "2026-04-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "8",
+        "pages": "1254-1268",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01041-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01041-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01042-3",
+      "title": "Taming distonic radical cations for precise γ-C–H functionalization of alkylamines",
+      "authors": [
+        "Takumi Kinoshita",
+        "Kazuki Hirate",
+        "Kosuke Hamawaki",
+        "Shoma Chiba",
+        "Kosuke Terada",
+        "Yota Sakakibara",
+        "Kei Murakami"
+      ],
+      "date": "2026-04-14",
+      "datePrecision": "day",
+      "createdDate": "2026-04-14",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "8",
+        "pages": "1198-1207",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01042-3"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01042-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01044-1",
+      "title": "A synthetically tailored conjugated polymer for thermal and charge management in perovskite interfaces",
+      "authors": [
+        "Sibei Mai",
+        "Zhen-Yang Suo",
+        "Chen Lu",
+        "Guo-Bin Xiao",
+        "Xijiao Mu",
+        "Fan Yang",
+        "Yu Tang",
+        "Jing Cao"
+      ],
+      "date": "2026-04-02",
+      "datePrecision": "day",
+      "createdDate": "2026-04-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "8",
+        "pages": "1159-1168",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01044-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01044-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01045-0",
+      "title": "Thiophene-based photocatalyst for exciplex-mediated singlet oxygen generation and H2O2 production",
+      "authors": [
+        "Jinhui Pan",
+        "Zhen Jia Lim",
+        "Naresh Chandra Maurya",
+        "Hyunju Jung",
+        "Afreen",
+        "Xiaocang Han",
+        "Zhiyong Wang",
+        "Jianhua Wu",
+        "Tie Wang",
+        "Ning Yan",
+        "K. V. Adarsh",
+        "Ming Wah Wong",
+        "Kian Ping Loh"
+      ],
+      "date": "2026-04-07",
+      "datePrecision": "day",
+      "createdDate": "2026-04-07",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "8",
+        "pages": "1278-1289",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01045-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01045-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01046-z",
+      "title": "Regio-orthogonal single N-atom insertion into indoles via NO translocation",
+      "authors": [
+        "Mugeon Song",
+        "Ilju Jeong",
+        "Ha Eun Kim",
+        "Jaeseong Jin",
+        "Hyeon Moon",
+        "Jeong Kyun Im",
+        "Jungi Jung",
+        "Junhyuk Jo",
+        "Won-jin Chung"
+      ],
+      "date": "2026-04-28",
+      "datePrecision": "day",
+      "createdDate": "2026-04-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "8",
+        "pages": "1269-1277",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01046-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01046-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01047-y",
+      "title": "Direct electrochemical sulfide oxidation to trisulfide and tetrasulfide reagents by in situ selective capturing",
+      "authors": [
+        "Tao Jiang",
+        "Mengxin Qu",
+        "Xudong Liu",
+        "Wei Du",
+        "Shuangshuang Cha",
+        "Yuanyuan Meng",
+        "Xinchi Zhou",
+        "Zhongqiang Deng",
+        "Ming Gong"
+      ],
+      "date": "2026-04-14",
+      "datePrecision": "day",
+      "createdDate": "2026-04-14",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "8",
+        "pages": "1290-1302",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01047-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01047-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01048-x",
+      "title": "Enantioselective synthesis of 1,3-bicyclo[2.1.1]hexanes as meta-benzene bioisosteres",
+      "authors": [
+        "Carla Pérez-Sánchez",
+        "Pablo Garrido-García",
+        "Daniel Fernández",
+        "Silvia Ortega-Gutiérrez",
+        "Mar Martín-Fontecha",
+        "Daniel González-Pinardo",
+        "Israel Fernández",
+        "Thomas Rigotti",
+        "Mariola Tortosa"
+      ],
+      "date": "2026-04-23",
+      "datePrecision": "day",
+      "createdDate": "2026-04-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1374-1384",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01048-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01048-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01049-w",
+      "title": "A strained bridgehead unsaturated bond between tricoordinate and pentacoordinate boron",
+      "authors": [
+        "Chenting Yan",
+        "Kavita Devi",
+        "Rei Kinjo"
+      ],
+      "date": "2026-04-16",
+      "datePrecision": "day",
+      "createdDate": "2026-04-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "8",
+        "pages": "1190-1197",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01049-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01049-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01051-2",
+      "title": "Ampere-level ammonia synthesis in a tandem plasma–electrolysis system",
+      "authors": [
+        "Xin Geng",
+        "Feng Zhou"
+      ],
+      "date": "2026-04-15",
+      "datePrecision": "day",
+      "createdDate": "2026-04-15",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "8",
+        "pages": "1140-1141",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01051-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01051-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01052-1",
+      "title": "Rationally designed polyradical nanographenes with strong spin entanglement and perturbation resilience via Clar’s goblet extension",
+      "authors": [
+        "En Li",
+        "Manish Kumar",
+        "Xinnan Peng",
+        "Tong Shen",
+        "Diego Soler-Polo",
+        "Yu Wang",
+        "Yu Teng",
+        "Haoyu Zhang",
+        "Jie Su",
+        "Shaotang Song",
+        "Jishan Wu",
+        "Pavel Jelinek",
+        "Jiong Lu"
+      ],
+      "date": "2026-04-21",
+      "datePrecision": "day",
+      "createdDate": "2026-04-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "7",
+        "pages": "989-998",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01052-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01052-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01053-0",
+      "title": "A flexible and affordable self-driving laboratory for automated reaction optimization",
+      "authors": [
+        "Simone Pilon",
+        "Elia Savino",
+        "Oliver M. Bayley",
+        "Michael Vanzella",
+        "Miguel Claros",
+        "Petros Siasiaridis",
+        "Junsong Liu",
+        "Florian Lukas",
+        "Matteo Damian",
+        "Vasilis Tseliou",
+        "Niccolò Intini",
+        "Aidan Slattery",
+        "Jesus SanJosé-Orduna",
+        "Tim den Hartog",
+        "Ron A. H. Peters",
+        "Andrea F. G. Gargano",
+        "Francesco G. Mutti",
+        "Timothy Noël"
+      ],
+      "date": "2026-04-13",
+      "datePrecision": "day",
+      "createdDate": "2026-04-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1552-1564",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01053-0"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01053-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01054-z",
+      "title": "Handle-free attachment of small molecules on single-walled carbon nanotubes",
+      "authors": [
+        "Stanislav S. Piletsky",
+        "Erin E. Keblish",
+        "Alec R. Goffin",
+        "Xiaojia Jin",
+        "In-Jun Hwang",
+        "August Amb",
+        "Dmitri Kilin",
+        "Svetlana Kilina",
+        "Ming Zheng",
+        "Mijin Kim",
+        "Daniel A. Heller"
+      ],
+      "date": "2026-04-21",
+      "datePrecision": "day",
+      "createdDate": "2026-04-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1385-1393",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01054-z"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01054-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01055-y",
+      "title": "Direct plasma synthesis of a high-value C–N–O compound with inert N2 and CH4",
+      "authors": [
+        "Hao Zhang",
+        "Ziming Liu",
+        "Di Li",
+        "Chenxin Wu",
+        "Lei Hua",
+        "Haiyang Li",
+        "Yanhui Yi",
+        "Rui Huang",
+        "Liang Yu",
+        "Dehui Deng"
+      ],
+      "date": "2026-04-21",
+      "datePrecision": "day",
+      "createdDate": "2026-04-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1394-1401",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01055-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01055-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01056-x",
+      "title": "An inorganic bicyclic molecule with a strained bridgehead B=B bond",
+      "authors": [],
+      "date": "2026-04-20",
+      "datePrecision": "day",
+      "createdDate": "2026-04-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "8",
+        "pages": "1142-1143",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01056-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01056-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01057-w",
+      "title": "Paired electrolysis enables selective C–N coupling for the synthesis of nitrogenous aromatics",
+      "authors": [
+        "Yuanqing He",
+        "Shiheng Mo",
+        "Xu Zeng",
+        "Yuhao Zhang",
+        "Ta Thi Thuy Nga",
+        "Chung-Li Dong",
+        "Yulu Yang",
+        "Zhuoran Lu",
+        "Yajing Zhang",
+        "Zhongcheng Xia",
+        "Qinghua Liu",
+        "Shuangyin Wang",
+        "Yuqin Zou"
+      ],
+      "date": "2026-04-30",
+      "datePrecision": "day",
+      "createdDate": "2026-04-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1416-1427",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01057-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01057-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01058-9",
+      "title": "Enzymatic control of enantioselective dimeric cyclotryptamine alkaloid biosynthesis in Calycanthaceae plants",
+      "authors": [
+        "Anan Zhang",
+        "Yunfeng Luo",
+        "Qi Ding",
+        "Benke Hong"
+      ],
+      "date": "2026-04-23",
+      "datePrecision": "day",
+      "createdDate": "2026-04-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1402-1415",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01058-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01058-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01059-8",
+      "title": "Angle-strained cycloalkyne-mediated carbonyl 1,2-transposition",
+      "authors": [
+        "Kanlei Ji",
+        "Yuxiang Liao",
+        "Shenao Deng",
+        "Zhao Wu"
+      ],
+      "date": "2026-04-17",
+      "datePrecision": "day",
+      "createdDate": "2026-04-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1428-1435",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01059-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01059-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01060-1",
+      "title": "Tunable structural colours by cyclic polymers",
+      "authors": [
+        "Bei Zhang"
+      ],
+      "date": "2026-04-02",
+      "datePrecision": "day",
+      "createdDate": "2026-04-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "4",
+        "pages": "480-480",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01060-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01060-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01062-z",
+      "title": "Low temperature CO2 hydrogenation to methanol",
+      "authors": [
+        "Alexandra R. Groves"
+      ],
+      "date": "2026-04-02",
+      "datePrecision": "day",
+      "createdDate": "2026-04-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "4",
+        "pages": "479-479",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01062-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01062-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01063-y",
+      "title": "Publisher Correction: Late-stage synthesis of C4-fluorinated and C4-trifluoromethylaminated pyridines",
+      "authors": [
+        "Longhui Chen",
+        "Chenming Zu",
+        "Fengyuan Zhang",
+        "Yahui Ding",
+        "Yu-Xin Luan",
+        "Li Chen",
+        "Pingping Tang"
+      ],
+      "date": "2026-04-02",
+      "datePrecision": "day",
+      "createdDate": "2026-04-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "8",
+        "pages": "1303-1303",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01063-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01063-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01065-w",
+      "title": "Photoenzymatic synthesis",
+      "authors": [
+        "Peter Seavill"
+      ],
+      "date": "2026-04-28",
+      "datePrecision": "day",
+      "createdDate": "2026-04-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "6",
+        "pages": "806-808",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01065-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01065-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01066-9",
+      "title": "Anchoring order in tellurium nanowire thin films",
+      "authors": [
+        "Zhongzheng Mao",
+        "Zakaria Y. Al Balushi"
+      ],
+      "date": "2026-04-28",
+      "datePrecision": "day",
+      "createdDate": "2026-04-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "644-646",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01066-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01066-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01067-8",
+      "title": "A mechanochemical route to organosodium",
+      "authors": [
+        "Sobi Asako"
+      ],
+      "date": "2026-04-21",
+      "datePrecision": "day",
+      "createdDate": "2026-04-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "5",
+        "pages": "641-643",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01067-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01067-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01073-w",
+      "title": "Author Correction: Synthesis and reactivity of an antimony(III) dication",
+      "authors": [
+        "Deepti Sharma",
+        "Annabel Benny",
+        "Alex P. Andrews",
+        "Thayalan Rajeshkumar",
+        "Laurent Maron",
+        "Ajay Venugopal"
+      ],
+      "date": "2026-04-27",
+      "datePrecision": "day",
+      "createdDate": "2026-04-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "6",
+        "pages": "966-966",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01073-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01073-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

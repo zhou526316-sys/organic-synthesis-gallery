@@ -10,21 +10,23 @@
     "from": "2026-07-01",
     "to": "2026-07-07"
   },
-  "checkedAt": "2026-10-12T05:34:59.787Z",
+  "checkedAt": "2026-10-12T08:51:19.251Z",
   "status": "source_enumeration_complete",
   "sourceStatus": {
     "crossref": [
       {
         "issn": "1463-9262",
-        "total": 0,
-        "count": 0,
+        "lane": "created",
+        "total": 25,
+        "count": 25,
         "pages": 1,
         "complete": true
       },
       {
         "issn": "1463-9270",
-        "total": 0,
-        "count": 0,
+        "lane": "created",
+        "total": 25,
+        "count": 25,
         "pages": 1,
         "complete": true
       }
@@ -40,14 +42,1160 @@
     "complete": true,
     "issues": [],
     "sourceCounts": {
-      "crossref": 0,
+      "crossref": 25,
       "openalex": 0
     }
   },
-  "candidateCount": 0,
+  "candidateCount": 25,
   "alreadyPublished": 0,
-  "unreviewed": 0,
-  "records": [],
+  "unreviewed": 25,
+  "records": [
+    {
+      "doi": "10.1039/d6gc00267f",
+      "title": "Scaling life cycle assessment with augmented data extraction from chemical process models",
+      "authors": [
+        "Lukas Spiekermann",
+        "Hitesh Sewani",
+        "Sebastian Lochmann",
+        "Samuel Hummel",
+        "Yunfei Song",
+        "Johannes Schilling",
+        "Benedikt Winter",
+        "Luca Bosetti",
+        "Jan Seiler",
+        "Sangwon Suh",
+        "André Bardow"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "30",
+        "pages": "12726-12739",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc00267f"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc00267f",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc01044j",
+      "title": "Phenolics via tandem defunctionalization of oxidative catalytic fractionation (OCF) products of lignocellulose using catalytic HCl in hot pressurized water",
+      "authors": [
+        "Mathias Bal",
+        "Yoan Preux",
+        "Albert Makhmudov",
+        "David Vesseur",
+        "Jeremy N. Harvey",
+        "Bert U. W. Maes"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-06",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "28",
+        "pages": "11949-11959",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc01044j"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc01044j",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc01579d",
+      "title": "MgCl 2 ·6H 2 O–NaCl–KCl ternary molten salt-assisted mild-temperature reduction roasting of spent lithium-ion battery cathode materials",
+      "authors": [
+        "Xueshuai Zhu",
+        "Tingxiu Hao",
+        "Tao Liu",
+        "Ping Feng"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "32",
+        "pages": "13279-13291",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc01579d"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc01579d",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc01723a",
+      "title": "A molecular precursor pre-anchoring strategy for constructing stable solid electrolyte interphase in carbonate-based lithium metal batteries",
+      "authors": [
+        "Xinrui Liu",
+        "Wanyang Guo",
+        "Mei Wang",
+        "Huaxin Guo",
+        "Panpan Li",
+        "Li Cao",
+        "Jinfang Zhang",
+        "Xiaofeng Li",
+        "Qingbing Xia"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-03",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "29",
+        "pages": "12321-12333",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc01723a"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc01723a",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc01779g",
+      "title": "Upcycling of waste poly(bisphenol A carbonate) plastic to phenols",
+      "authors": [
+        "Dan Fan",
+        "Zhengyi Wang",
+        "Ping Liu",
+        "Zhimin Liu",
+        "Buxing Han",
+        "Zhengang Ke"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-07",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "29",
+        "pages": "12133-12142",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc01779g"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc01779g",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc01804a",
+      "title": "Life-cycle and economic assessments of an innovative multi-stage bio-thermochemical system for hydrogen production from microalgae",
+      "authors": [
+        "Qian Shen",
+        "Xianqing Zhu",
+        "Decheng Gong",
+        "Chaoyang Wei",
+        "Yun Huang",
+        "Jingmiao Zhang",
+        "Ao Xia",
+        "Xun Zhu",
+        "Qiang Liao"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-03",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "29",
+        "pages": "12168-12184",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc01804a"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc01804a",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc01872f",
+      "title": "Plasma-assisted nitrogen circular economy: from fixation to valorization",
+      "authors": [
+        "Jieping Fan",
+        "Jing Sun",
+        "Junhui Wang",
+        "Ziyang Zhang",
+        "Yongqin Fan",
+        "Tianyu Li",
+        "Rusen Zhou",
+        "Dingxin Liu",
+        "Dorna Esrafilzadeh",
+        "Ali R. Jalili",
+        "Junma Tang",
+        "Renwu Zhou"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-01",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "28",
+        "pages": "11668-11727",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc01872f"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc01872f",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc01884j",
+      "title": "Advanced glycerol organosolv pretreatment of sugarcane bagasse for ethanol and lignin-derived co-products with demonstrated environmental benefits",
+      "authors": [
+        "Xinchi Zhao",
+        "Guojie Song",
+        "Yuanchao Cheng",
+        "Conghui Quan",
+        "Junyao Chen",
+        "Seyed Sajad Hashemi",
+        "Hong Yan",
+        "Chihe Sun",
+        "Meysam Madadi",
+        "Fubao Sun"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-07",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "29",
+        "pages": "12117-12132",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc01884j"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc01884j",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc01904h",
+      "title": "Tailoring lignin reactivity via oxidative microenvironments for lightweight and high-strength binderless composites",
+      "authors": [
+        "Ying Wu",
+        "Zhanjiang Yu",
+        "Xianzhang Wu",
+        "Lei Li",
+        "Sha Luo",
+        "Zhihan Li",
+        "Yan Qing",
+        "Cuihua Tian",
+        "Yiqiang Wu"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-03",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "34",
+        "pages": "13831-13844",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc01904h"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc01904h",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc02002j",
+      "title": "Sustainable and recyclable polymer coloring system via size-tunable, pigment-encapsulated silica microspheres: enabling circular economy of plastics",
+      "authors": [
+        "Hirohisa Iwabayashi",
+        "Kenji Okada",
+        "Arisa Fukatsu",
+        "Ryohei Mori",
+        "Masahide Takahashi"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "35",
+        "pages": "14198-14208",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc02002j"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc02002j",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc02035f",
+      "title": "High-value material recovery from waste photovoltaic modules enabled by a reverse minimalist approach",
+      "authors": [
+        "Libin Mo",
+        "Heran Li",
+        "Xianyang Zhang",
+        "Weiying Ou",
+        "Guanghong Wang",
+        "Chunlan Zhou",
+        "Lei Zhao"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-07",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "30",
+        "pages": "12766-12777",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc02035f"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc02035f",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc02251k",
+      "title": "Dynamic oxidation-state modulation-induced Lewis acid–base synergy for enhanced photocatalytic CO 2 conversion",
+      "authors": [
+        "Zhende Wu",
+        "Jing Xie",
+        "Cuihong Yang",
+        "Yali Cao",
+        "Zhenjiang Lu",
+        "Jindou Hu",
+        "Jixi Guo"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-01",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "29",
+        "pages": "12297-12308",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc02251k"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc02251k",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc02301k",
+      "title": "Engineering Cu/Fe/carbon-based catalysts for efficient CO 2 electroreduction",
+      "authors": [
+        "Zhenyu Chen",
+        "Cong Wang",
+        "Rujie Wang",
+        "Jie Liu",
+        "Shanlong An",
+        "Lidong Wang"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-07",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "30",
+        "pages": "12549-12580",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc02301k"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc02301k",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc02384c",
+      "title": "Harnessing seas and oceans: seawater as a green activating agent for high-yield porous carbons from biomass waste",
+      "authors": [
+        "Yingdong Zhou",
+        "Alicia Callejas",
+        "María Benita Murillo",
+        "Alberto Gonzalo",
+        "Javier Remón"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "28",
+        "pages": "11919-11938",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc02384c"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc02384c",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc02448c",
+      "title": "Reported lignin in coffee and spent coffee grounds is an analytical artefact",
+      "authors": [
+        "Markus Eder",
+        "Stefan Grasboeck",
+        "Gijs van Erven",
+        "Markus Bacher",
+        "Thomas Rosenau",
+        "Antje Potthast"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-01",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "28",
+        "pages": "11867-11876",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc02448c"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc02448c",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc02594c",
+      "title": "Industrial-level green electrosynthesis of glycolic acid and hydrogen using Pt-modified medium-entropy nitrate hydroxide nanosheets",
+      "authors": [
+        "Yiming Luo",
+        "Dan Liu",
+        "Zhouhong Yu",
+        "Kun Chen",
+        "Yun Tong"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-07",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "30",
+        "pages": "12748-12757",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc02594c"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc02594c",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc02798a",
+      "title": "Co-upcycling of plastic and cashew nutshell wastes toward recyclable vitrimers: a maximized closed-loop recycling approach",
+      "authors": [
+        "Mohcen Chahid",
+        "Emilie Rojtman",
+        "Abdelali Elasri",
+        "Camille Bakkali-Hassani",
+        "Sylvain Caillol",
+        "Vincent Lapinte",
+        "Youssef Habibi"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-01",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "29",
+        "pages": "12384-12398",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc02798a"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc02798a",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc03181a",
+      "title": "A practical SEC toolkit for lignin: linking mobile phase, calibration and model-compound anchoring",
+      "authors": [
+        "John Chrysostom Opedun",
+        "Margaritha Ritscher",
+        "Ivan Sumerskii",
+        "Stefan Böhmdorfer",
+        "Ilkka Kilpeläinen",
+        "Thomas Rosenau",
+        "Alexander Bismarck",
+        "Irina Sulaeva",
+        "Antje Potthast"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "30",
+        "pages": "12688-12702",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc03181a"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc03181a",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc03226e",
+      "title": "Acidified montmorillonite (MMT)-supported ultrafine Ru nanoparticles for polyethylene plastic upcycling",
+      "authors": [
+        "Ruoyan Bai",
+        "Roudan Lian",
+        "Jian Zhang",
+        "Maolin Zhang"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-07",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "30",
+        "pages": "12713-12725",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc03226e"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc03226e",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc03305a",
+      "title": "One-pot in situ catalytic preparation of lignin-based adhesives for full-component utilization of lignocellulosic biomass",
+      "authors": [
+        "Guannan Shen",
+        "Xinchuan Yuan",
+        "Shaohua Cheng",
+        "Juncheng Huo",
+        "Yao Chen",
+        "Xingye Hu",
+        "Zhaoxian Xu",
+        "Mingjie Jin"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-03",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "29",
+        "pages": "12371-12383",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc03305a"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc03305a",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc90117d",
+      "title": "Advanced eco-manufacturing and sustainable bioproducts with lignocellulosic biomass",
+      "authors": [
+        "Jhuma Sadhukhan",
+        "Arthur J. Ragauskas",
+        "Jeong Jae Wie",
+        "Chang Geun Yoo"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-01",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "27",
+        "pages": "11328-11330",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc90117d"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc90117d",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc90130a",
+      "title": "Front cover",
+      "authors": [],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-06",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "26",
+        "pages": "10727-10727",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc90130a"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc90130a",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc90131j",
+      "title": "Inside front cover",
+      "authors": [],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-06",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "26",
+        "pages": "10728-10728",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc90131j"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc90131j",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc90132h",
+      "title": "Contents list",
+      "authors": [],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-06",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "26",
+        "pages": "10729-10739",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc90132h"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc90132h",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d6gc90133f",
+      "title": "Back cover",
+      "authors": [],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-07-06",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "26",
+        "pages": "11317-11318",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc90133f"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d6gc90133f",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-07-01",
+        "to": "2026-07-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    }
+  ],
   "noFormalPublication": true,
   "noMediaWrites": true,
   "noPDFAcquisition": true,

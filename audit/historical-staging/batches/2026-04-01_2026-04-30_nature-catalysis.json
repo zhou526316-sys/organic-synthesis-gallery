@@ -1,0 +1,1074 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2026-04-01",
+    "to": "2026-04-30"
+  },
+  "checkedAt": "2026-10-12T08:52:07.898Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "lane": "publication",
+        "total": 21,
+        "count": 21,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 21,
+      "count": 21,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 21,
+      "openalex": 21
+    }
+  },
+  "candidateCount": 21,
+  "alreadyPublished": 0,
+  "unreviewed": 21,
+  "records": [
+    {
+      "doi": "10.1038/s41929-026-01513-y",
+      "title": "Iron-based single-atom catalysts for selective ammoxidation of C(sp3)–H bonds and oxidative C–C cleavage reactions",
+      "authors": [
+        "Zhuang Ma",
+        "Nils Rockstroh",
+        "Zupeng Chen",
+        "Vishakha Goyal",
+        "Chakreshwara Kuloor",
+        "Stephan Bartling",
+        "Zdeněk Baďura",
+        "Jabor Rabeah",
+        "Lin Dong",
+        "Henrik Lund",
+        "Bing Nan",
+        "Radek Zbořil",
+        "Rajenahally V. Jagadeesh",
+        "Matthias Beller"
+      ],
+      "date": "2026-04-08",
+      "datePrecision": "day",
+      "createdDate": "2026-04-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "389-403",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01513-y"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01513-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01514-x",
+      "title": "Dynamics of a Cu/ZnO/Al2O3 catalyst revealed by operando transmission electron microscopy during CO2 hydrogenation",
+      "authors": [
+        "Maxime Boniface",
+        "Thomas Götsch",
+        "Jinhu Dong",
+        "Jutta Kröhnert",
+        "Elias Frei",
+        "Annette Trunschke",
+        "Robert Schlögl",
+        "Beatriz Roldan Cuenya",
+        "Thomas Lunkenbein"
+      ],
+      "date": "2026-04-01",
+      "datePrecision": "day",
+      "createdDate": "2026-04-01",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "404-413",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01514-x"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01514-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01515-w",
+      "title": "Enantioselective C(sp3)–C(sp3) bond formation by synergistic thiamine-dependent radical biocatalysis and photoredox catalysis",
+      "authors": [
+        "Jianlin Chun",
+        "Yuyan Bao",
+        "Qiaoyu Zhang",
+        "Xueli Hou",
+        "Zhouping Wu",
+        "Hailong Sun",
+        "Zhongqiu Xing",
+        "Bin Chen",
+        "Zihan Zhang",
+        "Yue Zhao",
+        "Jiahai Zhou",
+        "Binju Wang",
+        "Xiaoqiang Huang"
+      ],
+      "date": "2026-04-02",
+      "datePrecision": "day",
+      "createdDate": "2026-04-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "414-423",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01515-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01515-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01520-z",
+      "title": "Constrains to improve hydrogenations",
+      "authors": [
+        "Javier Ruiz-Martínez"
+      ],
+      "date": "2026-04-28",
+      "datePrecision": "day",
+      "createdDate": "2026-04-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "368-369",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01520-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01520-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01521-y",
+      "title": "Favourable hydrogenation of pyridines via H2-adsorption modulation on Ni nanoparticles in dealuminated Beta zeolite",
+      "authors": [
+        "Huixin Wu",
+        "Qian Xiang",
+        "Liang Wang",
+        "Hai Wang",
+        "Qingsong Luo",
+        "Yating Lv",
+        "Lifan Deng",
+        "Yuexin Wu",
+        "Yu Hui",
+        "Rui Tang",
+        "Wentao Yuan",
+        "Yong Wang",
+        "Qing Wu",
+        "Xiao-Ming Cao",
+        "Liang Wang",
+        "Feng-Shou Xiao"
+      ],
+      "date": "2026-04-06",
+      "datePrecision": "day",
+      "createdDate": "2026-04-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "424-433",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01521-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01521-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01522-x",
+      "title": "Atroposelective organocatalytic nucleophilic aromatic substitution for C–O bond construction",
+      "authors": [
+        "Yan Guo",
+        "Lu Yu",
+        "Siqiang Fang",
+        "Shanshan Ding",
+        "Zhaowei Bao",
+        "Jixing Che",
+        "Xiao-Song Xue",
+        "Tianli Wang"
+      ],
+      "date": "2026-04-13",
+      "datePrecision": "day",
+      "createdDate": "2026-04-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "448-459",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01522-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01522-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01523-w",
+      "title": "Systematically exploring yeast metabolism through retrobiosynthesis and deep learning",
+      "authors": [
+        "Ke Wu",
+        "Haohao Liu",
+        "Yao Zhou",
+        "Manda Sun",
+        "Runze Mao",
+        "Yindi Jiang",
+        "Eduard J. Kerkhoven",
+        "Yu Chen",
+        "Jens Nielsen",
+        "Hongting Tang",
+        "Feiran Li"
+      ],
+      "date": "2026-04-06",
+      "datePrecision": "day",
+      "createdDate": "2026-04-06",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "434-447",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01523-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01523-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01524-9",
+      "title": "A high-flux membrane electrode assembly for CO2 electroreduction to 4.5 M formate with over 8,000 h stability",
+      "authors": [
+        "Jing-Jing Li",
+        "Hong-Juan Wang",
+        "Chao Zhang",
+        "Yu Li",
+        "Jiqing Jiao",
+        "Lin-Lin Wang",
+        "Cuo Wu",
+        "Di-Chang Zhong",
+        "Zhen-Yu Wu",
+        "Zi-You Yu",
+        "Tong-Bu Lu"
+      ],
+      "date": "2026-04-03",
+      "datePrecision": "day",
+      "createdDate": "2026-04-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "5",
+        "pages": "492-501",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01524-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01524-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01525-8",
+      "title": "Breaking insulating barriers in solid-phase conversion reactions with dual-atom catalysts for high-energy lithium batteries",
+      "authors": [
+        "Tong Yu",
+        "Ru Xiao",
+        "Pei Tang",
+        "Nan Piao",
+        "Ruopian Fang",
+        "Bo-Quan Li",
+        "Zhuangnan Li",
+        "Hui-Ming Cheng",
+        "Zhenhua Sun",
+        "Feng Li"
+      ],
+      "date": "2026-04-15",
+      "datePrecision": "day",
+      "createdDate": "2026-04-15",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "460-470",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01525-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01525-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01526-7",
+      "title": "Peaks and pitfalls of electrocatalytic CO2 reduction descriptor models",
+      "authors": [
+        "Beomil Kim",
+        "Seungchang Han",
+        "Suneon Wang",
+        "Stefan Ringe",
+        "Jihun Oh"
+      ],
+      "date": "2026-04-13",
+      "datePrecision": "day",
+      "createdDate": "2026-04-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "471-481",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01526-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01526-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01527-6",
+      "title": "Catalysing conductivity in solid-phase electroconversions",
+      "authors": [
+        "Zhuojun Zhang",
+        "Xu Xiao",
+        "Peng Tan"
+      ],
+      "date": "2026-04-28",
+      "datePrecision": "day",
+      "createdDate": "2026-04-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "370-371",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01527-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01527-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01528-5",
+      "title": "Photobiocatalytic stereocontrol of two prochiral radicals",
+      "authors": [
+        "Sangoji Dheeraj",
+        "Thangavelu Saravanan"
+      ],
+      "date": "2026-04-28",
+      "datePrecision": "day",
+      "createdDate": "2026-04-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "372-374",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01528-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01528-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01529-4",
+      "title": "Shedding light on the undiscovered pathways of yeast metabolism",
+      "authors": [
+        "Vikas D. Trivedi",
+        "Steve Mathew D A"
+      ],
+      "date": "2026-04-28",
+      "datePrecision": "day",
+      "createdDate": "2026-04-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "375-377",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01529-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01529-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01530-x",
+      "title": "Single-particle imaging uncovers reverse electron transfer efficiency between Shewanella oneidensis MR-1 and shaped haematite",
+      "authors": [
+        "Yong Liu",
+        "Wentao Song",
+        "Weidong Zhang",
+        "Yuanmei Liang",
+        "Mukesh Saini",
+        "Yuanzhi He",
+        "Jing Zhu",
+        "Zhongxin Chen",
+        "Guoliang Zhang",
+        "Jin Xie",
+        "Xiaozhi Xu",
+        "Guillermo C. Bazan",
+        "Jee Loon Foo",
+        "Matthew Wook Chang",
+        "Bin Liu",
+        "Xianwen Mao"
+      ],
+      "date": "2026-04-28",
+      "datePrecision": "day",
+      "createdDate": "2026-04-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "5",
+        "pages": "502-515",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01530-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01530-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01531-w",
+      "title": "Managing the atom migration in zeolite-encapsulated K–Pt–Sn clusters for non-oxidative dehydrogenation of ethane",
+      "authors": [
+        "Zhe He",
+        "Wenying Li",
+        "Tianxiang Chen",
+        "Carlo Marini",
+        "Miguel Lopez Haro",
+        "Hai Xiao",
+        "Lichen Liu"
+      ],
+      "date": "2026-04-29",
+      "datePrecision": "day",
+      "createdDate": "2026-04-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "5",
+        "pages": "516-529",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01531-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01531-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01532-9",
+      "title": "Stereoselective photometallobiocatalytic cross-coupling of organoboron reagents and diazo compounds via an outer-sphere mechanism",
+      "authors": [
+        "Huanan Wang",
+        "Binh Khanh Mai",
+        "Chongtao Li",
+        "Xiao-Wang Chen",
+        "Rachel Weiss",
+        "Bryan Kudisch",
+        "Peng Liu",
+        "Yang Yang"
+      ],
+      "date": "2026-04-29",
+      "datePrecision": "day",
+      "createdDate": "2026-04-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "5",
+        "pages": "530-541",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01532-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01532-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01533-8",
+      "title": "A CO2 electrolyser with high flux for stable production of high-concentration formate",
+      "authors": [],
+      "date": "2026-04-16",
+      "datePrecision": "day",
+      "createdDate": "2026-04-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "5",
+        "pages": "490-491",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01533-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01533-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01534-7",
+      "title": "Supramolecular control of cationic intermediates",
+      "authors": [
+        "Jan-Stefan Völler"
+      ],
+      "date": "2026-04-28",
+      "datePrecision": "day",
+      "createdDate": "2026-04-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "365-365",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01534-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01534-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01536-5",
+      "title": "Zeolites like to move it",
+      "authors": [
+        "Davide Esposito"
+      ],
+      "date": "2026-04-28",
+      "datePrecision": "day",
+      "createdDate": "2026-04-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "366-366",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01536-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01536-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01537-4",
+      "title": "Splitting water under dryness",
+      "authors": [
+        "Benjamin Martindale"
+      ],
+      "date": "2026-04-28",
+      "datePrecision": "day",
+      "createdDate": "2026-04-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "4",
+        "pages": "367-367",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01537-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01537-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01545-4",
+      "title": "Author Correction: Peaks and pitfalls of electrocatalytic CO2 reduction descriptor models",
+      "authors": [
+        "Beomil Kim",
+        "Seungchang Han",
+        "Suneon Wang",
+        "Stefan Ringe",
+        "Jihun Oh"
+      ],
+      "date": "2026-04-30",
+      "datePrecision": "day",
+      "createdDate": "2026-04-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "5",
+        "pages": "565-565",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01545-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01545-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

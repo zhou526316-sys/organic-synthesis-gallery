@@ -1,0 +1,1539 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Chemistry",
+  "issns": [
+    "1755-4330",
+    "1755-4349"
+  ],
+  "range": {
+    "from": "2026-04-01",
+    "to": "2026-04-30"
+  },
+  "checkedAt": "2026-10-12T08:52:10.013Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "1755-4330",
+        "lane": "publication",
+        "total": 29,
+        "count": 29,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1755-4349",
+        "lane": "publication",
+        "total": 29,
+        "count": 29,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 29,
+      "count": 29,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 29,
+      "openalex": 29
+    }
+  },
+  "candidateCount": 29,
+  "alreadyPublished": 0,
+  "unreviewed": 29,
+  "records": [
+    {
+      "doi": "10.1038/s41557-026-02094-w",
+      "title": "Pyrrolysine refusing to stop",
+      "authors": [
+        "Guoqing Jin",
+        "Wenshe Ray Liu"
+      ],
+      "date": "2026-04-08",
+      "datePrecision": "day",
+      "createdDate": "2026-04-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "810-810",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02094-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02094-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02098-6",
+      "title": "Understanding low-pressure CO2 insertion chemistry in epoxide–CO2 copolymerization catalysis",
+      "authors": [
+        "Rosie Thorogood",
+        "Katharina H. S. Eisenhardt",
+        "Madeleine L. Smith",
+        "Charlotte K. Williams"
+      ],
+      "date": "2026-04-30",
+      "datePrecision": "day",
+      "createdDate": "2026-04-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "5",
+        "pages": "931-938",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02098-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02098-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02100-1",
+      "title": "A Cu(I)-catalysed click reaction generates ROS-triggered cleavable linkages in aqueous media",
+      "authors": [
+        "Meagan E. Hackey",
+        "Michele Formica",
+        "Valentin Bauer",
+        "Nahid S. Alavijeh",
+        "Yue Fu",
+        "Elise A. Naudin",
+        "Ali Nikbakht",
+        "Dima Yassine",
+        "Paulo H. S. Paioti",
+        "Juan del Pozo",
+        "Peng Liu",
+        "Amir H. Hoveyda"
+      ],
+      "date": "2026-04-24",
+      "datePrecision": "day",
+      "createdDate": "2026-04-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "6",
+        "pages": "1122-1132",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02100-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02100-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02107-8",
+      "title": "Time-dependent surface polarization breaks static scaling relationship for selective acetylene hydrogenation",
+      "authors": [
+        "Di Xu",
+        "Max J. Hülsey",
+        "Chen Chen",
+        "Chia Wei Lim",
+        "Hongqiu Chen",
+        "Geng Sun",
+        "Philippe Sautet",
+        "Zhaolin Liu",
+        "Ning Yan"
+      ],
+      "date": "2026-04-13",
+      "datePrecision": "day",
+      "createdDate": "2026-04-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1259-1268",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02107-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02107-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02110-z",
+      "title": "Programmable divergent electrochemical ring-opening multifunctionalization of strained rings",
+      "authors": [
+        "Yajuan Li",
+        "Yatao Lang",
+        "Shu-Fan He",
+        "Daixi Li",
+        "Ke-Xin Liu",
+        "Wenying Ai",
+        "Yong Jiang",
+        "Chen Zhu",
+        "Tao Shen"
+      ],
+      "date": "2026-04-02",
+      "datePrecision": "day",
+      "createdDate": "2026-04-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "656-668",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02110-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02110-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02112-x",
+      "title": "KDM3A catalyses the oxidation of acetyl-lysine to hydroxyacetyl-lysine on histone H3K9",
+      "authors": [
+        "Roman Belle",
+        "John-Paul Bukowski",
+        "Rachel Schiller",
+        "Ronald Cutler",
+        "Eidarus Salah",
+        "Robert S. Dawber",
+        "Anthony Tumber",
+        "Joanna Bonnici",
+        "Jessica D. Kindrick",
+        "Loane Serrano",
+        "Patrick Rabe",
+        "Catrine Johansson",
+        "Marie-Hélène Ruchaud",
+        "Richard J. Hopkinson",
+        "William D. Figg, Sr",
+        "Paul E. Brennan",
+        "David R. Mole",
+        "Simone Sidoli",
+        "Akane Kawamura",
+        "Christopher J. Schofield"
+      ],
+      "date": "2026-04-15",
+      "datePrecision": "day",
+      "createdDate": "2026-04-15",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "5",
+        "pages": "823-834",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02112-x"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02112-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02113-w",
+      "title": "Tacticity-independent crystallization of polymers",
+      "authors": [
+        "Leire Sangroniz",
+        "Ainara Sangroniz",
+        "Changxia Shi",
+        "Miriam Scoti",
+        "Marta Ximenis",
+        "Claudio De Rosa",
+        "Eugene Y.-X. Chen",
+        "Haritz Sardon",
+        "Alejandro J. Müller"
+      ],
+      "date": "2026-04-03",
+      "datePrecision": "day",
+      "createdDate": "2026-04-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "625-638",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02113-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02113-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02114-9",
+      "title": "Contrasting single-molecule magnet behaviour in dysprosium and terbium bis(stannolediide) complexes",
+      "authors": [
+        "Xiaofei Sun",
+        "Alexander Hinz",
+        "Stefanie Maier",
+        "Sebastian Gillhuber",
+        "Da Jin",
+        "Masaichi Saito",
+        "Florian Weigend",
+        "Sören Schlittenhardt",
+        "Eufemio Moreno-Pineda",
+        "Wolfgang Wernsdorfer",
+        "Mario Ruben",
+        "Peter W. Roesky"
+      ],
+      "date": "2026-04-13",
+      "datePrecision": "day",
+      "createdDate": "2026-04-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "5",
+        "pages": "872-881",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02114-9"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02114-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02116-7",
+      "title": "Hydrophobic tuning with non-canonical amino acids in a copper metalloenzyme",
+      "authors": [
+        "Sandro Fischer",
+        "Anton Natter Perdiguero",
+        "Kelvin Lau",
+        "Alexandria Deliz Liang"
+      ],
+      "date": "2026-04-13",
+      "datePrecision": "day",
+      "createdDate": "2026-04-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1269-1277",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02116-7"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02116-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02117-6",
+      "title": "Lost in translation",
+      "authors": [
+        "Michelle Francl"
+      ],
+      "date": "2026-04-08",
+      "datePrecision": "day",
+      "createdDate": "2026-04-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "609-610",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02117-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02117-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02118-5",
+      "title": "Polyoxygenative functionalization of strained cyclic amides",
+      "authors": [
+        "Jeremy T. Maddigan-Wyatt",
+        "Daniel B. Werz"
+      ],
+      "date": "2026-04-02",
+      "datePrecision": "day",
+      "createdDate": "2026-04-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "4",
+        "pages": "613-614",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02118-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02118-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02120-x",
+      "title": "Reactions of diazoboranes with oxygen enables the synthesis and isolation of dioxaboriranes",
+      "authors": [
+        "Chonghe Zhang",
+        "Junyi Wang",
+        "Noah D. McMillion",
+        "Chun-Lin Deng",
+        "Robert J. Gilliard",
+        "Christopher C. Cummins"
+      ],
+      "date": "2026-04-24",
+      "datePrecision": "day",
+      "createdDate": "2026-04-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1278-1285",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02120-x"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02120-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02121-w",
+      "title": "De novo chemo-optogenetics through the rational design of photoresponsive molecules and selection of their artificial protein binding pairs",
+      "authors": [
+        "Tomoki Miyazaki",
+        "Tomoshige Fujino",
+        "Tatsuyuki Yoshii",
+        "Haruto Kosugi",
+        "Mamoru Funane",
+        "Naoya Murata",
+        "Kim Chung Nguyen",
+        "Satoru Nagatoishi",
+        "Kouhei Tsumoto",
+        "Gosuke Hayashi",
+        "Hiroshi Murakami",
+        "Shinya Tsukiji"
+      ],
+      "date": "2026-04-23",
+      "datePrecision": "day",
+      "createdDate": "2026-04-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1286-1297",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02121-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02121-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02122-9",
+      "title": "A system of paired polyether epoxide hydrolases enables a mouldable enzyme for consecutive ring cyclization cascades",
+      "authors": [
+        "Nana Yabuno",
+        "Atsushi Minami",
+        "Taro Ozaki",
+        "Yuki Owada",
+        "Kohei Sawada",
+        "Ayaka Arai",
+        "Shusuke Sato",
+        "Aoi Sugiyama",
+        "Takashi Tadokoro",
+        "Tomoyasu Aizawa",
+        "Takuya Dosen",
+        "Tomo Nomai",
+        "Takanori Matsumaru",
+        "Junyang Liu",
+        "Tao Ye",
+        "Atsuji Kodama",
+        "Susumu Uchiyama",
+        "Kowit Hengphasatporn",
+        "Yasuteru Shigeta",
+        "Tomohide Saio",
+        "Katsumi Maenaka",
+        "Min Yao",
+        "Hiroyuki Kumeta",
+        "Hideaki Oikawa",
+        "Toyoyuki Ose"
+      ],
+      "date": "2026-04-16",
+      "datePrecision": "day",
+      "createdDate": "2026-04-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1298-1307",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02122-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02122-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02123-8",
+      "title": "All-metal aromaticity of cyclo-Bi33− in diuranium and dithorium inverse-sandwich-type complexes",
+      "authors": [
+        "Junru Ding",
+        "John A. Seed",
+        "Katrin Beuthert",
+        "Benjamin Peerless",
+        "Julia Rienmüller",
+        "Andreas Schmidt",
+        "Ashley J. Wooles",
+        "Louise S. Natrajan",
+        "Chuan-Ling Chen",
+        "Zhong-Ming Sun",
+        "Florian Weigend",
+        "Stefanie Dehnen",
+        "Jingzhen Du",
+        "Stephen T. Liddle"
+      ],
+      "date": "2026-04-20",
+      "datePrecision": "day",
+      "createdDate": "2026-04-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1308-1317",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02123-8"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02123-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02126-5",
+      "title": "tRNA-deacylase-directed discovery of biosynthetic pathways",
+      "authors": [
+        "Douglas C. Millar",
+        "Yu Zhou",
+        "Jorge A. Marchand",
+        "Helena Roberts-Mataric",
+        "Tavis Chen",
+        "Calvin X. Hu",
+        "Jason Fang",
+        "Shannon Millar",
+        "Elizabeth A. Stone",
+        "Jeffrey G. Pelton",
+        "Max B. Sosa",
+        "Michelle C. Y. Chang"
+      ],
+      "date": "2026-04-13",
+      "datePrecision": "day",
+      "createdDate": "2026-04-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "5",
+        "pages": "863-871",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02126-5"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02126-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02127-4",
+      "title": "Small-molecule binding-site discovery using silyl ether-enabled chemoproteomics",
+      "authors": [
+        "Chau Ngo",
+        "Sho Takechi",
+        "Aditya Sivakumar",
+        "Miranda Villanueva",
+        "Fengchao Yu",
+        "Andréa B. Ball",
+        "Javier Rubio",
+        "Elijah Biletch",
+        "Nikolas R. Burton",
+        "Lisa M. Boatner",
+        "Phillip Kim",
+        "Alexandra C. Turmon",
+        "Nithesh Perumal",
+        "Marc Liesa",
+        "Ajit S. Divakaruni",
+        "Alexey I. Nesvizhskii",
+        "Keriann M. Backus"
+      ],
+      "date": "2026-04-27",
+      "datePrecision": "day",
+      "createdDate": "2026-04-27",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1431-1442",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02127-4"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02127-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02128-3",
+      "title": "Breaking the methanol/dimethyl carbonate azeotrope using a metal–organic framework with tetrahedral potassium-ion cluster gates",
+      "authors": [
+        "Mu-Yang Zhou",
+        "Fang-Di Dong",
+        "Yue Yu",
+        "Xing-Yu Li",
+        "Wen-Yu Su",
+        "Zhi-Shuo Wang",
+        "Rui-Biao Lin",
+        "Dong-Dong Zhou",
+        "Jie-Peng Zhang",
+        "Xiao-Ming Chen"
+      ],
+      "date": "2026-04-23",
+      "datePrecision": "day",
+      "createdDate": "2026-04-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "7",
+        "pages": "1318-1324",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02128-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02128-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02130-9",
+      "title": "Interfacial water controls oxygen evolution beyond the catalyst",
+      "authors": [
+        "Rebecca K. Pittkowski"
+      ],
+      "date": "2026-04-22",
+      "datePrecision": "day",
+      "createdDate": "2026-04-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "5",
+        "pages": "813-814",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02130-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02130-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02131-8",
+      "title": "Persistent compensated ferrimagnetism in the molecular framework Cr(pyrazine)3",
+      "authors": [
+        "Frédéric Aribot",
+        "Maja A. Dunstan",
+        "Nathan J. Yutronkie",
+        "Mariusz Kubus",
+        "Luis Leyva-Parra",
+        "Anton Viborg",
+        "Susanne Mossin",
+        "Fabrice Wilhelm",
+        "Vivian Nassif",
+        "Dawid Pinkowicz",
+        "Wiktor Wolański",
+        "Lukas B. Woodcock",
+        "Stergios Piligkos",
+        "Jesper Bendix",
+        "Sebastian E. Reyes-Lillo",
+        "Andrei Rogalev",
+        "Kasper S. Pedersen"
+      ],
+      "date": "2026-04-23",
+      "datePrecision": "day",
+      "createdDate": "2026-04-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1366-1371",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02131-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02131-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02132-7",
+      "title": "Enantioconvergent vinylcyclopropane–cyclopentene rearrangement with vessel-controlled chemodivergence",
+      "authors": [
+        "Zhong-Tao Jiang",
+        "Bin Li",
+        "Guo Chen",
+        "Jinqi Chen",
+        "Jia-Li Yuan",
+        "Xin Wei",
+        "Ying Xia"
+      ],
+      "date": "2026-04-17",
+      "datePrecision": "day",
+      "createdDate": "2026-04-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "5",
+        "pages": "844-852",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02132-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02132-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02133-6",
+      "title": "Two-dimensional metal–organic frameworks offer all-in-one cocatalysts for photocatalytic overall water splitting",
+      "authors": [
+        "Jingyan Guan",
+        "Hajime Suzuki",
+        "Kazuhide Kamiya",
+        "Takashi Harada",
+        "Rintaro Adachi",
+        "Osamu Tomita",
+        "Hirofumi Kurokawa",
+        "Daisuke Unabara",
+        "Koji Yonekura",
+        "Naoya Fukui",
+        "Hiroaki Maeda",
+        "Kunihisa Sugimoto",
+        "Yuichi Yamaguchi",
+        "Akinori Saeki",
+        "Akira Yamakata",
+        "Akihiko Kudo",
+        "Ryu Abe",
+        "Ryota Sakamoto"
+      ],
+      "date": "2026-04-23",
+      "datePrecision": "day",
+      "createdDate": "2026-04-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "6",
+        "pages": "1053-1061",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02133-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02133-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02134-5",
+      "title": "Vessel material determines product of enantioselective vinylcyclopropane rearrangement",
+      "authors": [
+        "Michael Martin Nielsen"
+      ],
+      "date": "2026-04-17",
+      "datePrecision": "day",
+      "createdDate": "2026-04-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "5",
+        "pages": "817-818",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02134-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02134-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02135-4",
+      "title": "Single-crystal to single-crystal editing of metal–organic frameworks via ligand removal",
+      "authors": [
+        "Aleksandr Sapianik",
+        "Marina Barsukova",
+        "Aleksander Shkurenko",
+        "Mickaele Bonneau",
+        "Prashant M. Bhatt",
+        "Osama Shekhah",
+        "Vincent Guillerm",
+        "Mohamed Eddaoudi"
+      ],
+      "date": "2026-04-24",
+      "datePrecision": "day",
+      "createdDate": "2026-04-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "6",
+        "pages": "994-1003",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02135-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02135-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02136-3",
+      "title": "Single-crystalline two-dimensional vinylene frameworks through topological conversion",
+      "authors": [
+        "Shengxu Li",
+        "Tao Zhang"
+      ],
+      "date": "2026-04-17",
+      "datePrecision": "day",
+      "createdDate": "2026-04-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "5",
+        "pages": "819-820",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02136-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02136-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02137-2",
+      "title": "Diverse radical C–F functionalizations of hexa- to difluoroarenes using boryl radicals as link-and-lose mediators",
+      "authors": [
+        "Tian Ye",
+        "Fang-Song Zhang",
+        "Zhe-Yuan Xu",
+        "Sheng-Qi Zhou",
+        "Yee Lin Phang",
+        "Zhi-Qiang Ding",
+        "Feng-Lian Zhang",
+        "Wen-Chao Yang",
+        "Zhong-Ping Cai",
+        "Yuan Peng",
+        "Bing-Yi Zhou",
+        "Wei-Qun Suo",
+        "Xingwei Guo",
+        "Yao Fu",
+        "Yi-Feng Wang"
+      ],
+      "date": "2026-04-22",
+      "datePrecision": "day",
+      "createdDate": "2026-04-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1451-1461",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02137-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02137-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02139-0",
+      "title": "Transfer RNA deacylases as beacons for non-canonical amino acid biosynthesis",
+      "authors": [
+        "Yu-Hsuan Lee",
+        "Hung-wen Liu"
+      ],
+      "date": "2026-04-23",
+      "datePrecision": "day",
+      "createdDate": "2026-04-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "5",
+        "pages": "815-816",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02139-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02139-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02145-2",
+      "title": "Author Correction: Discovery of chirally dependent protein modifications by D- and L-2-hydroxyglutarates",
+      "authors": [
+        "Zheng Zhang",
+        "Yi-Kai Liu",
+        "Zhuojun Luo",
+        "Meng-Ju Wu",
+        "Claudia N. Evans",
+        "Zihan Qu",
+        "Fanglei Xue",
+        "Zhijian Wang",
+        "Lia Stanciu",
+        "Zhong-Yin Zhang",
+        "Elizabeth I. Parkinson",
+        "Nabeel Bardeesy",
+        "W. Andy Tao"
+      ],
+      "date": "2026-04-10",
+      "datePrecision": "day",
+      "createdDate": "2026-04-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "6",
+        "pages": "1151-1151",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02145-2"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02145-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02149-y",
+      "title": "Stannole dianions for axially coordinated lanthanide single-molecule magnets",
+      "authors": [],
+      "date": "2026-04-21",
+      "datePrecision": "day",
+      "createdDate": "2026-04-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "5",
+        "pages": "821-822",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02149-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02149-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-04-01",
+        "to": "2026-04-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
