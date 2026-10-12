@@ -80,8 +80,18 @@ try{
     && window.__gm['gallery-historical-text-batch-v2:state']?.attempted===0,null,{timeout:10000});
   const count=await page.evaluate(()=>window.__opened.length);
   assert.equal(count,2,'repeated one click should not reopen confirmed indexed DOI');
+
+  const pdfPage=await browser.newPage();
+  await pdfPage.route('https://gallery.gczhouwld.com/**',route=>route.fulfill({
+    status:200,contentType:'text/html',body:'<!doctype html><html><body><h1>PDF reader</h1></body></html>'
+  }));
+  await pdfPage.goto('https://gallery.gczhouwld.com/pdf/');
+  await pdfPage.addScriptTag({content:source});
+  assert.equal(await pdfPage.locator('#osg-historical-batch').count(),0,
+    'historical batch must not overlay private PDF reader');
+  await pdfPage.close();
   console.log('HISTORICAL_TEXT_BATCH_BROWSER_PASS '+JSON.stringify({
     uniqueHistorical:2,filesSaved:status.state.saved,closed:status.closed,
-    publisherTabsForeground:false,otherMediaRequests:0,repeatOpened:0,localSearch:true
+    publisherTabsForeground:false,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false
   }));
 }finally{await browser.close();}
