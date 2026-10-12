@@ -1,7 +1,7 @@
 {
   "date": "2026-10-12",
   "selectionAuthority": "explicit_user_selected_JACS_earlier_paper_and_generated_Ni_Zr_cover",
-  "editorialRevision": "2026-10-12-r6",
+  "editorialRevision": "2026-10-12-r7",
   "paper": {
     "doi": "10.1021/jacs.6c10406",
     "title": "Enantioselective Deaminative Cross-Coupling of Amino Acid Derivatives with Alkylzirconocenes",
@@ -15,11 +15,12 @@
   "lead_figure_position": "before_quick_points",
   "sections": [
     {
-      "heading": "从氨基酸到手性酰胺，最难的是区分两条相似的烷基链",
+      "heading": "从氨基酸出发，为什么难在区分两条相似的烷基链",
       "eyebrow": "",
       "paragraphs": [
-        "上图（原文 Fig. 1C）是一条脱氨不对称交叉偶联路线：先把氨基酸衍生物制成 Katritzky 吡啶鎓盐，再与烯烃来源的烷基锆试剂，在蓝光和手性镍催化下构建 C(sp³)–C(sp³) 键，得到 α-手性酰胺。反应并非直接使用未经活化的游离氨基酸。",
-        "原文 Fig. 1A–B 讨论传统亲电偶联和既有脱氨路线。本文真正挑战不在于能否生成烷基自由基，而是两个自由基相遇时，如何既避免无选择性消耗，又能区分有时只相差一个亚甲基的脂肪族侧链。"
+        "本文通过可见光与手性镍催化，使氨基酸衍生物脱氨后与烯烃来源的烷基片段偶联，在酰胺羰基的 α 位构建新的 C(sp³)–C(sp³) 键。这里使用的是事先由氨基酸制备的 Katritzky 吡啶鎓盐，而非游离氨基酸直接一步反应。",
+        "这一转化的难度不能只用“两个烷基自由基相遇”概括。传统不对称 Negishi 偶联能利用 α-卤代酰胺，但常涉及敏感的有机金属试剂；既有脱氨反应则往往偏向单自由基与烯烃等伙伴的成键路径（图 1A–B，原文引文 14、29–30）。",
+        "作者把问题推向更困难的情况：生成的新手性碳中心两侧可能都是柔性的脂肪链，甚至只差一个亚甲基。催化剂必须在反应性很高、构象差别又很小的体系中建立对映选择性。这一目标决定了后文为何同时关注自由基来源和手性镍环境。"
       ],
       "figures": [
         "jacs_background"
@@ -31,21 +32,25 @@
       }
     },
     {
-      "heading": "烷基锆的设计，把自由基供给与电子供给联系起来",
+      "heading": "烷基锆把自由基供给和还原能力装在同一反应伙伴中",
       "eyebrow": "",
       "paragraphs": [
-        "烯烃先经 Schwartz 试剂 Cp₂Zr(H)Cl 氢锆化，生成烷基锆中间体。作者依据已有光化学提出，光照诱发 Zr–C 键裂解，释放烷基自由基及还原性的 Cp₂Zr(III)Cl；后者可参与镍催化循环的电子平衡。",
-        "因此体系不需额外加入独立光催化剂或牺牲还原剂，却不能被说成“无需还原性试剂”：锆物种本身以化学计量投入。更精确的创新，是同一反应伙伴兼顾烷基片段来源与还原性物种来源。"
+        "作者先以 Schwartz 试剂 Cp₂Zr(H)Cl 对未活化烯烃进行氢锆化，得到烷基锆中间体，再利用蓝光参与后续偶联。这样，常见烯烃可以先转化成适合供给烷基自由基的反应伙伴，而无需直接使用分离的高活性烷基金属试剂。",
+        "关键设计来自烷基锆的双重光化学角色：作者根据既有工作提出，Zr–C 键在光照下裂解，可以同时生成烷基自由基与 Cp₂Zr(III)Cl。后者具有较强的单电子还原性，文中引用的电位约为 −1.70 V（vs SCE）；而 Katritzky 盐的还原电位约 −0.9 V（vs SCE）。",
+        "这组电化学数据说明还原在热力学上有可能发生，但不能单靠电位便认定反应中就是 Zr(III) 直接还原吡啶鎓盐。文章后续对照反而倾向于 Ni(I) 执行主要的脱氨电子转移；锆物种可以为镍循环提供电子。",
+        "因此，“不额外加入光催化剂和独立牺牲还原剂”与“反应没有化学计量还原投入”是两回事。图 1C 的整体设计是将光生自由基和电子补给与同一种烷基锆试剂关联起来，再把复杂的立体选择性交给手性镍催化剂。"
       ],
       "figures": [],
       "figures_after_paragraph": {}
     },
     {
-      "heading": "手性镍为何不可替代：条件优化揭示立体控制",
+      "heading": "配体筛选揭示：提高转化率并不等于建立立体控制",
       "eyebrow": "",
       "paragraphs": [
-        "原文 Table 1 以正缬氨酸来源的吡啶鎓盐为模型；NiBr₂(diglyme)、BOX 配体 L13 在 430–435 nm 蓝光和 0 °C 下给出 79% 核磁收率、95.7% ee。这里是核磁收率，并非分离收率。",
-        "值得读出的不只是“L13 最优”：配体骨架与取代基的变化会显著改变 ee，说明手性催化环境确实参与成键选择。但仅凭筛选表还不能指认哪一个相互作用，或哪一步 Ni 过渡态直接决定绝对构型。"
+        "模型反应采用正缬氨酸来源吡啶鎓盐、NiBr₂(diglyme)（10 mol%）、手性 BOX 配体 L13（12 mol%）和蓝光照射。表 1 的标准条件在 0 °C、12 h 下给出 79% 核磁收率与 95.7% ee；其中的 79% 不能误写为分离收率。",
+        "更值得比较的是配体系列：早期 L1 的 ee 仅约 9.1%，L5 提升至 60.9%，改造桥连基团得到的 L7 为 83.7%，继续优化至 L13 才达到约 96.0% ee。底物与反应类型没有改变，手性环境的结构变化却大幅影响了结果。",
+        "与此同时，缺少镍、缺少烷基锆或无光时均不能正常形成目标产物；换用 NiCl₂(diglyme) 或改变吡啶鎓盐反离子，又明显降低收率或 ee。说明镍来源、配体与阴离子共同构成有效反应环境，不能把高选择性仅归因于“自由基本身的位阻”。",
+        "这些筛选证明催化剂与配体结构对产物选择性高度敏感，但无法单独确定决定 ee 的具体过渡态。作者关于阴离子和低反应性镍氯物种的解释也是机理建议，尚需要独立的配位与动力学证据验证。"
       ],
       "figures": [
         "jacs_table1"
@@ -57,11 +62,14 @@
       }
     },
     {
-      "heading": "底物范围要与低 ee 反例放在一起读",
+      "heading": "底物范围的价值，在于同时展示高 ee 与失效边界",
       "eyebrow": "",
       "paragraphs": [
-        "原文 Fig. 2 显示，酰胺片段和烯烃来源烷基链具有一定兼容性，卤素、醚和一些含杂原子基团能够保留。但叔丁基取代酰胺 3l 仅 71.0% ee，N,N-二取代酰胺 3o 则降至 34.8% ee；高收率不代表立体控制同样可靠。",
-        "原文 Fig. 3A 才更直接回应文章的科学命题：两条侧链仅差一个亚甲基或链内氧原子，产物 7c 仍有 83.5% 分离收率、97.6% ee；7m 则为 47.0% 收率、94.2% ee。这样的实例与前述失效点共同确定方法的有效边界。"
+        "图 2 同时考察酰胺取代、氨基酸衍生物的 α-烷基侧链以及烯烃来源片段。卤素、醚、羟基、硫醚等官能团可以进入产物；部分复杂分子衍生片段也有代表例。这提供了方法适用性的证据，但不应把所有结构混成一个“普遍高 ee”的结论。",
+        "低选择性例子尤其值得读：叔丁基取代酰胺 3l 为 64.9% 分离收率、69.8% ee；N,N-二取代酰胺 3o 的 ee 降至约 34.8%（见 SI）。对于另一类芳基取代的 α-烷基底物 4j，收率为 39.0%，ee 约 70.3%。这些反例提示酰胺环境与自由基反应性均可能影响选择性。",
+        "作者真正想回答的主问题，在图 3A 而不只是底物数量：当新手性中心两侧都属于烷基、位阻差别十分细微时，能否仍获得较高的 ee？产物 7c 两条链仅存在有限碳数差别，给出 83.5% 分离收率和 97.6% ee。",
+        "更进一步，7m 将侧链中一个原子替换为氧，也能得到 47.0% 收率和 94.2% ee。这里的成功并不意味着体系“看见”了某一个孤立原子；它证明这套底物和配体组合确实能把很弱的结构差异转化为可测的对映选择性。",
+        "将 7c、7m 与 3l、3o、4j 并列阅读，才能看到方法学范围的形状：催化剂并非对所有脂肪族自由基通吃，酰胺附近的结构、自由基特征与手性配体的匹配关系仍是关键。到底哪一项相互作用主导 ee，文章并未直接给出单一答案。"
       ],
       "figures": [
         "jacs_scope",
@@ -71,18 +79,19 @@
         "1": [
           "jacs_scope"
         ],
-        "2": [
+        "3": [
           "jacs_minimal"
         ]
       }
     },
     {
-      "heading": "能用烯烃混合物，也不等于一锅操作没有代价",
+      "heading": "合成应用检验了两件不同的事：原料汇聚与步骤兼容",
       "eyebrow": "",
       "paragraphs": [
-        "原文 Fig. 3C 使用位置异构辛烯混合物，经氢锆化/偶联得到汇聚性产物（74.3% 分离收率、92.0% ee），作者将其与氢锆化的链行走特征联系起来；这属于产物层面的汇聚证据，不是所有迁移中间体均被直接观察。",
-        "原文 Fig. 3B 将吡啶鎓盐的制备与偶联顺序衔接，省去中间体分离，却只有 34.0% 收率、95.2% ee；Fig. 3D 的 2.5 mmol 放大则取得 60.0% 分离收率、97.3% ee。三者分别检验原料适应性、步骤兼容性和放大可行性，不能混为“已经具有工业通用性”。",
-        "SI Fig. S6 解释了一锅化为何困难：前一步残留的三乙胺、乙酸及乙酸三乙铵会抑制后续偶联。对方法学设计而言，保持 ee 的同时解决步骤间残留物兼容性，是比单纯展示一锅反应更实际的问题。"
+        "作者尝试将不同位置异构的辛烯作为原料，经过氢锆化及后续偶联，得到相同的主要产物类型（图 3C），分离收率 74.3%、ee 92.0%。这与烷基锆生成过程中可能发生的链行走或区域汇聚相容，但原文并未逐一直接观测所有迁移中间体。",
+        "图 3B 还尝试省去 Katritzky 盐的中间分离，实现脱氨盐形成与偶联的顺序一锅衔接；结果只得到 34.0% 收率，却保持 95.2% ee。图 3D 的 2.5 mmol 放大则达到 60.0% 分离收率、97.3% ee。一个主要考察前后两步的相容性，另一个体现有限规模的制备可行性，不宜互相替代。",
+        "SI 图 S6 给出了原因分析的关键对照：加入三乙胺、乙酸或乙酸三乙铵时，模型产率从标准约 75% 分别降到 55%、61% 与 43%；ee 变化相对较小。前一步残留物可能影响烷基锆或形成竞争反应，因此“一锅化低收率”不应草率归咎于手性镍本身失活。",
+        "从工艺设计看，这三组试验提出了更实际的优化方向：如何保留烯烃原料的宽容度，又能消除吡啶鎓盐生成步骤带来的碱、酸和盐的干扰。当前的结果显示这些问题有潜力分开处理，但尚未达到通用的一锅高效工艺。"
       ],
       "figures": [
         "jacs_application",
@@ -98,12 +107,14 @@
       }
     },
     {
-      "heading": "自由基与手性究竟由什么证据支持",
+      "heading": "哪些实验支持自由基参与，哪些仍不足以指定电子转移路径",
       "eyebrow": "",
       "paragraphs": [
-        "原文 Fig. 4A 中，环丙基自由基钟发生开环，符合自由基中间体参与；使用两种相反构型的吡啶鎓盐，又得到主要构型相同、ee 约 96% 的偶联产物，支持产物立体化学主要受手性催化体系重新控制，而不是简单继承底物原有构型。",
-        "缺少光、镍盐或烷基锆时，完整反应不能正常进行；相关脱氨副产物与电子转移分析还提示，烷基锆来源的还原性物种能够参与电子流转，但不等于它就是正常循环中直接还原吡啶鎓盐的唯一物种。作者倾向由 Ni(I) 承担主要 SET 通道。",
-        "原文 Fig. 4C 显示，配体 ee 与产物 ee 近似线性相关，和单个手性配体参与控制的模型相容。结合自由基钟与立体探针，可支持“自由基参与、镍控制手性”的整体图景，但还不足以还原全部瞬态中间体的先后次序。"
+        "图 4A 的环丙基自由基钟给出开环产物，其中反式与顺式产物分别为 50.2% 和 13.4%；这与脱氨过程中形成碳自由基相符。将不同构型的吡啶鎓盐分别投入反应，又得到同一主要构型、ee 均约 96% 的产物，支持产物的立体信息主要由催化体系重新控制。",
+        "这两项证据各回答一件事：自由基钟支持开壳层中间体，立体汇聚现象支持催化剂控制立体化学；二者合起来也不能直接给出两类自由基被镍捕获的快慢次序。",
+        "图 4B 则涉及电子流向：在黑暗中可检测到约 15.4% 的脱氨副产物；无镍条件下，光照可使该副产物增加至约 34.5%；去掉烷基锆则仅有痕量。这提示锆来源的还原性物种确可参与吡啶鎓盐还原，但不能据此断定其在完整催化循环中承担主要 SET。",
+        "配体 ee 与产物 ee 的关系在图 4C 中近似线性（R²≈0.995），与单个手性配体参与控制的模型相容。非线性效应实验是约束催化剂聚集和配体数目的一条证据，并不是对过渡态构型或镍价态的直接测定。",
+        "综合这些现象，作者倾向由 Ni(I) 与吡啶鎓盐之间的电子转移提供主要脱氨自由基来源，再经金属参与的交叉偶联实现手性控制。这是被对照实验支持的工作判断，不是所有瞬态中间体均已被捕获的结论。"
       ],
       "figures": [
         "jacs_mech_ab",
@@ -113,17 +124,19 @@
         "1": [
           "jacs_mech_ab"
         ],
-        "3": [
+        "4": [
           "jacs_mech_c"
         ]
       }
     },
     {
-      "heading": "Ni(0)/Ni(I)/Ni(II)/Ni(III) 循环仍是工作模型",
+      "heading": "Ni(0)–Ni(III) 催化循环：能解释结果，但还不是被逐步拍到的过程",
       "eyebrow": "",
       "paragraphs": [
-        "原文 Fig. 4D 将两类自由基与镍循环连接起来：光生烷基自由基由低价镍捕获，Ni(I) 可能还原吡啶鎓盐，随后第二个自由基参与高价镍物种的形成和 C–C 键还原消除。这个机理可解释多个对照结果，但图中各价态和每一步先后并非都被直接观测。",
-        "后续最值得检验的是：Ni(I) 的电子转移速率、两类自由基捕获顺序，以及酰胺环境改变为何显著降低 ee。它们是原文 Fig. 2 与 Fig. 4 共同提出的问题，不应在解读中被写成已经得到的答案。"
+        "图 4D 给出了作者综合实验与既有文献提出的循环：光照使烷基锆释放烷基自由基和 Cp₂Zr(III)Cl，后者被认为可将 Ni(II) 前催化剂还原到低价镍。Ni(0) 捕获第一个烷基自由基形成 Ni(I)，随后 Ni(I) 还原 Katritzky 盐，生成第二个碳自由基。",
+        "按照这一模型，第二个自由基与 Ni(II) 物种结合形成高价 Ni(III)，再经还原消除得到手性 C–C 键；残留的 Ni(I) 在锆还原物种参与下回到 Ni(0)。这一网络把自由基产生、电子补给和手性成键连成一个自洽的解释框架。",
+        "需要强调证据层次：自由基钟和控制实验支持开放壳层参与，配体依赖性和立体汇聚支持手性镍的重要性；但作者并未把图中每个 Ni(0)/Ni(I)/Ni(II)/Ni(III) 中间体及全部先后步骤逐个直接观测。不同反应伙伴也可能改变这些步骤的相对速率。",
+        "若继续深入，值得用价态选择性谱学或可解析速率实验区分 Ni(I) 的还原通道、两类自由基的捕获次序与决定 ee 的成键步骤。只有回答这些问题，才能从“提出合理循环”走向“预测新底物的选择性”。"
       ],
       "figures": [
         "jacs_mech_d"
@@ -135,11 +148,12 @@
       }
     },
     {
-      "heading": "方法学启示：分开解决“生成自由基”和“选择性成键”",
+      "heading": "方法学意义：自由基可以由两个来源供给，立体选择性必须由环境建立",
       "eyebrow": "",
       "paragraphs": [
-        "这篇 JACS 的价值在于两条设计线索的汇合：化学计量烷基锆同时提供自由基来源和电子补给，手性镍则为双自由基的交叉成键建立立体选择性。7c 等弱差异侧链上的高 ee 说明这一路径可行，3o 等低 ee 反例则提醒我们，配体与底物环境必须协同设计。",
-        "对更广泛的不对称自由基偶联，这是一条可迁移的研究思路，而非现成的普适规律。能否减少锆试剂消耗、适用于无酰胺辅助底物，或直接观测决定 ee 的金属中间体，仍需新的实验和机理证据。"
+        "这篇工作的设计价值在于把三个问题拆开再组合：烯烃提供可转化的烷基片段，烷基锆兼顾光生自由基与电子供给，手性镍则承担选择性交叉成键。它与传统只依赖两电子氧化加成的烷基偶联相比，提供了另一种设计空间（对照图 1 与原文引文 14、29、48）。",
+        "但有效性有清晰前提：烷基锆以化学计量投入，某些酰胺和芳基取代底物的 ee 明显下降，一锅衔接也面临残留酸碱和盐的问题。高 ee 的 7c、7m 与低 ee 的 3o 提醒我们，光化学生成自由基并不能自动解决立体选择性。",
+        "因此，可迁移的不是把这一套 Ni/BOX/锆条件直接搬到任意双自由基体系，而是先设计可控的自由基供给和电子平衡，再通过有针对性的配体与失效底物实验，逐步缩小立体选择性来源的范围。这一原则由本文条件筛选、底物对照与图 4 的证据共同支持。"
       ],
       "figures": [],
       "figures_after_paragraph": {}
@@ -154,7 +168,7 @@
       "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 1C｜两种烷基自由基与手性镍参与脱氨不对称 C(sp³)–C(sp³) 交叉偶联。",
-      "display_width_pct": 100,
+      "display_width_pct": 88,
       "source_pdf_page": 2,
       "materialized_source_revision": "2026-10-12-r6",
       "source_asset_sha256": "85ab0147d572082ab24767216d09553da12ae561ee3495ea595d990cce156545"
@@ -167,7 +181,7 @@
       "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 1A–B｜二电子亲核偶联与既有单自由基脱氨烷基化策略。",
-      "display_width_pct": 100,
+      "display_width_pct": 84,
       "source_pdf_page": 2,
       "materialized_source_revision": "2026-10-12-r6",
       "source_asset_sha256": "77a84dfc170e218a1a850569c6500462da99da330ecc1ed5ffd9436c09d00a11"
@@ -180,7 +194,7 @@
       "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Table 1｜NiBr₂(diglyme)／手性 BOX 配体 L13、蓝光对照与核磁收率/ee。",
-      "display_width_pct": 100,
+      "display_width_pct": 82,
       "source_pdf_page": 3,
       "materialized_source_revision": "2026-10-12-r6",
       "source_asset_sha256": "6912d9deb584ad65bc8593584c85e9033f50b75992e7ba623ca36f9697e5ee72"
@@ -193,7 +207,7 @@
       "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 2｜酰胺、氨基酸侧链、未活化烯烃三类底物的范围及 ee 失效例子。",
-      "display_width_pct": 100,
+      "display_width_pct": 94,
       "source_pdf_page": 4,
       "materialized_source_revision": "2026-10-12-r6",
       "source_asset_sha256": "222f11aefa072176fa76f422b2f78c2a18f41c795b63a508b6b05dfa53e59f90"
@@ -206,7 +220,7 @@
       "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 3A｜只差亚甲基或杂原子的取代基环境中建立手性碳。",
-      "display_width_pct": 100,
+      "display_width_pct": 92,
       "source_pdf_page": 5,
       "materialized_source_revision": "2026-10-12-r6",
       "source_asset_sha256": "33386c1815a0b65ddd81c7b86ecf7e54e29594ebb236542ff8357781f63e374d"
@@ -219,7 +233,7 @@
       "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 3B–D｜一锅衔接、异构烯烃汇聚、2.5 mmol 放大；不与标准条件混淆。",
-      "display_width_pct": 100,
+      "display_width_pct": 89,
       "source_pdf_page": 5,
       "materialized_source_revision": "2026-10-12-r6",
       "source_asset_sha256": "03133e358a3afad2e0cbbc2d06621e001f241ffb33d77fc354ced8e50a652f1c"
@@ -232,7 +246,7 @@
       "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "补充信息 SI Fig. S6｜残留三乙胺、乙酸及乙酸三乙铵抑制一锅衔接的偶联。",
-      "display_width_pct": 100,
+      "display_width_pct": 86,
       "source_pdf_page": 36,
       "materialized_source_revision": "2026-10-12-r6",
       "source_asset_sha256": "7acca00eb47c6bb68d1ad27387926a5b741df1c33feddd653b9ce73f0e7037e2"
@@ -245,7 +259,7 @@
       "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 4A–B｜自由基钟、立体探针与缺失组分实验。",
-      "display_width_pct": 100,
+      "display_width_pct": 85,
       "source_pdf_page": 6,
       "materialized_source_revision": "2026-10-12-r6",
       "source_asset_sha256": "c4b6fcc65c88631485015816e7d66d92f0d7a4fcb5cf4d7a34a30b916536fcee"
@@ -258,7 +272,7 @@
       "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 4C｜配体 ee 与产物 ee 的近线性相关。",
-      "display_width_pct": 100,
+      "display_width_pct": 79,
       "source_pdf_page": 6,
       "materialized_source_revision": "2026-10-12-r6",
       "source_asset_sha256": "0296b7cefb078e0fe4dbb95ca7f51611fd2724e93862da2c3ef8b819535f11be"
@@ -271,7 +285,7 @@
       "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 4D｜作者提出的 Ni(0)/Ni(I)/Ni(II)/Ni(III) 工作模型，并非全部中间体已直接观测。",
-      "display_width_pct": 100,
+      "display_width_pct": 85,
       "source_pdf_page": 6,
       "materialized_source_revision": "2026-10-12-r6",
       "source_asset_sha256": "5ee591028da8f5941d8e641afe042901842378b0c5ddf75d049e381b83b34884"
@@ -307,5 +321,5 @@
   "digest": "烷基锆光化学与手性镍协同，实现氨基酸衍生物脱氨双自由基不对称偶联；重点讨论近似烷基取代基的 ee 控制和机理证据。",
   "source_url": "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0",
   "ai_notice": "本文由“化之岛”原创策划与整理，AI 辅助生成与校核；机理图中 Ni 价态变化是作者提出的模型，并非所有中间体均已直接观测。",
-  "editorialIntent": "Long-form science-led evidence-specific Chinese narrative; weakly different alpha-amide stereogenic carbons; source-preserving artwork only."
+  "editorialIntent": "Source-grounded research-level explanation of dual-function Zr, BOX-controlled stereoselectivity, weakly differentiated alkyl centers, control-experiment inference and Ni-cycle evidence hierarchy, paired with naturally sized original Fig/SI images."
 }
