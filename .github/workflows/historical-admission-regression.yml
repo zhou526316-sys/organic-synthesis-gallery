@@ -9,6 +9,9 @@ on:
       - 'scripts/validate-pages-literature-authorization.mjs'
       - 'scripts/apply-fixed-slot-literature-release.mjs'
       - 'scripts/fixed-slot-release-handoff.mjs'
+      - 'scripts/pages-release-delivery.mjs'
+      - 'scripts/finalize-fixed-slot-literature-state.mjs'
+      - 'scripts/test-pages-release-delivery.mjs'
       - 'audit/historical-reviewed/**'
       - '.github/workflows/historical-admission-regression.yml'
   push:
@@ -19,6 +22,9 @@ on:
       - 'scripts/validate-pages-literature-authorization.mjs'
       - 'scripts/apply-fixed-slot-literature-release.mjs'
       - 'scripts/fixed-slot-release-handoff.mjs'
+      - 'scripts/pages-release-delivery.mjs'
+      - 'scripts/finalize-fixed-slot-literature-state.mjs'
+      - 'scripts/test-pages-release-delivery.mjs'
       - '.github/workflows/historical-admission-regression.yml'
 permissions:
   contents: read
@@ -40,11 +46,14 @@ jobs:
           node --check scripts/apply-fixed-slot-literature-release.mjs
           node --check scripts/validate-pages-literature-authorization.mjs
           node --check scripts/fixed-slot-release-handoff.mjs
+          node --check scripts/pages-release-delivery.mjs
+          node --check scripts/finalize-fixed-slot-literature-state.mjs
           node --test scripts/test-historical-admission.mjs
       - name: Verify old and new Pages marker partition, historical media policy
         run: |
           set -euo pipefail
           node scripts/test-pages-literature-authorization.mjs
+          node --test scripts/test-pages-release-delivery.mjs
           node scripts/test-historical-media-policy.mjs
           node --test scripts/test-fixed-slot-release-handoff.mjs
       - name: Protected literature and 08-only publication hard gates
@@ -56,3 +65,5 @@ jobs:
           grep -F "historicCard(historyRow)" scripts/apply-fixed-slot-literature-release.mjs
           grep -F "historicalReviewBlobSha" scripts/validate-pages-literature-authorization.mjs
           grep -F "historical_publication_card_contract_mismatch" scripts/validate-pages-literature-authorization.mjs
+          grep -F "historicalPublishedDois" scripts/finalize-fixed-slot-literature-state.mjs
+          grep -F "dailyPublishedDois" scripts/pages-release-delivery.mjs
