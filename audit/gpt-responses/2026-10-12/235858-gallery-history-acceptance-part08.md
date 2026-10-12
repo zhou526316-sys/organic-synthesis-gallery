@@ -1,0 +1,1 @@
+All audits and reply records saved only on independent branch historical-audit-20261012-2340. Main and staging/historical-archive-nightly untouched. No duplicate collector started; no DOI admission or WeChat/newspaper change. Sole official new-paper release 08:00 Beijing; July-Sep old-paper capture TOC only, pre-July metadata_only, existing media retained.
