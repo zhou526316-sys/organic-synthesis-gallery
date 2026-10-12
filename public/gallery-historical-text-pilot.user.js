@@ -524,6 +524,10 @@
     const license=batchLicenseEvidence(root);
     if(!license){storeResult({status:'license_not_verified'});return;}
     if(!capture){storeResult({status:'body_missing',reason:reason.slice(0,90)});return;}
+    const nonAbstractChars=capture.sections.filter(row=>row.type!=='abstract'
+      && !/^abstract$/i.test(String(row.heading||'').trim()))
+      .reduce((total,row)=>total+String(row.text||'').length,0);
+    if(nonAbstractChars<250){storeResult({status:'body_missing',reason:'abstract_only_or_insufficient_body'});return;}
     const canonical=[...capture.sections.map(s=>s.heading+'\n'+s.text),
       ...capture.captions.map(s=>s.label+'\n'+s.text),
       ...capture.tables.map(s=>s.label+'\n'+s.text)].join('\n');
