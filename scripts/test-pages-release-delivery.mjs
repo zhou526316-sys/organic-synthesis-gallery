@@ -92,3 +92,22 @@ test('canonical Pages requires owner PDF button browser verification on the buil
   assert.ok(workflow.includes("- 'tests/private-pdf-access-browser.mjs'"));
   assert.match(workflow, /name: pages-owner-pdf-browser-/);
 });
+
+
+test('historical archive DOI remains separate from daily new in deployment receipt',()=>{
+  const history='10.1021/acs.joc.6c01608';
+  const marked={...marker,productionCards:2,
+    publishableDois:[a,history],historicalAdmittedDois:[history]};
+  const receipt={...evidence,productionCards:2,publishableDois:[a,history]};
+  const state=mergeDeliveryState({},receipt,marked);
+  assert.deepEqual(state.lastPublication.publishedDois,[a]);
+  assert.deepEqual(state.lastPublication.historicalPublishedDois,[history]);
+  assert.deepEqual(state.lastPublication.allPublishedDois,[a,history]);
+  assert.deepEqual(state.lastWebsiteSync.verification.newlyAcceptedDoisPresent,[a]);
+  assert.deepEqual(state.lastWebsiteSync.verification.historicalArchiveDoisPresent,[history]);
+  assert.deepEqual(state.lastWebsiteSync.verification.allAuthorizedDoisPresent,[a,history]);
+});
+test('same DOI cannot count in daily new and historical receipt simultaneously',()=>{
+  const bad={...marker,historicalAdmittedDois:[a]};
+  assert.throws(()=>mergeDeliveryState({},evidence,bad),/historical_delivery_partition_did_not_match/);
+});
