@@ -68,8 +68,9 @@
     // No URL-suffix or title guessing, and no ambiguous DOI.
     return unique.length===1?unique[0]:'';
   }
-  function excluded(node){
-    if(node.closest('nav,aside,footer,form,[role="navigation"],[aria-hidden="true"],figure,table'))return true;
+  function excluded(node, includeMedia=false){
+    if(node.closest('nav,aside,footer,form,[role="navigation"],[aria-hidden="true"]'))return true;
+    if(!includeMedia&&node.closest('figure,table'))return true;
     for(let current=node;current&&current!==document.body;current=current.parentElement){
       if(EXCLUDE_CONTEXT.test(String(current.id||'')+' '+String(current.className||'')))return true;
     }
@@ -103,7 +104,7 @@
     }
     const captions=[];
     for(const node of root.querySelectorAll('figure figcaption, figure .caption')){
-      if(excluded(node.closest('figure')||node))continue;
+      if(excluded(node,true))continue;
       const text=cleanText(node.textContent,6000);
       if(text.length>20&&captions.length<70&&!captions.some(x=>x.text===text)){
         const m=text.match(/^(Scheme|Figure|Fig\.?|Equation)\s*[0-9A-Za-z().-]*/i);
@@ -112,7 +113,7 @@
     }
     const tables=[];
     for(const node of root.querySelectorAll('table')){
-      if(excluded(node.closest('section')||node))continue;
+      if(excluded(node,true))continue;
       const text=cleanText(node.textContent,9000);
       if(text.length>=30&&tables.length<30)tables.push({label:'Table '+String(tables.length+1),text});
     }
