@@ -159,7 +159,7 @@
     const a=document.createElement('a');
     a.href=href;a.download='gallery-historical-'+packet.doi.replace(/[^a-z0-9.-]+/gi,'_')+'.json';
     a.style.display='none';document.body.append(a);a.click();a.remove();
-    setTimeout(()=>URL.revokeObjectURL(href),3000);
+    setTimeout(()=>URL.revokeObjectURL(href),30000);
   }
   async function exportCurrent(){
     try{
