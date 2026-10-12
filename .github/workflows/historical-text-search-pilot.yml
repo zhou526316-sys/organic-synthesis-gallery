@@ -10,6 +10,10 @@ on:
       - 'docs/historical-backfill-media-contract.md'
       - 'docs/historical-text-search-pilot.md'
       - '.github/workflows/historical-text-search-pilot.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/historical-text-search-pilot.yml'
   workflow_dispatch:
     inputs:
       metadata_audit:
@@ -57,7 +61,7 @@ jobs:
           if-no-files-found: warn
 
   official-source-metadata-audit:
-    if: github.event_name == 'workflow_dispatch' && inputs.metadata_audit
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.metadata_audit)
     needs: safety-regression
     runs-on: ubuntu-latest
     timeout-minutes: 12
