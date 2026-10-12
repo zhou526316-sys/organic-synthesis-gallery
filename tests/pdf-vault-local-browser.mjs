@@ -624,7 +624,8 @@ try {
     await page.getByTestId('native-folder-provider-aliyun').click();
     await page.evaluate(() => { window.__pdfVaultFixture.pickerMode = 'cancel'; });
     await page.getByTestId('native-pdf-folder-choose').click();
-    await page.locator('#native-folder-feedback').getByText(/已取消选择/).waitFor({ state: 'visible' });
+    await page.waitForFunction(() =>
+      /已取消选择/.test(document.getElementById('native-folder-feedback')?.textContent || ''));
     await page.locator('#native-folder-close').click();
     assert.equal(await page.locator('#native-folder-modal').isVisible(), false);
     assert.equal(await page.getByTestId('native-pdf-folder-scan').isVisible(), true);
