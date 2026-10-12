@@ -275,8 +275,14 @@ export function mergeDeliveryState(state, evidence, current) {
     assert(sameSet(evidence[name], current[name] || []), `receipt_partition_mismatch:${name}`);
   }
   const historicalPublishedDois=(current.historicalAdmittedDois||[]).map(normalizeDoi);
-  const dailyPublishedDois=(evidence.publishableDois||[]).map(normalizeDoi)
-    .filter(id=>!historicalPublishedDois.includes(id));
+  const dailyPublishedDois=(current.dailyPublishableDois||[]).map(normalizeDoi);
+  if(current.dailyPublishableDois===undefined){
+    // Legacy marker has no separate historic admissions.
+    dailyPublishedDois.push(...(evidence.publishableDois||[]).map(normalizeDoi)
+      .filter(id=>!historicalPublishedDois.includes(id)));
+  }
+  assert(!historicalPublishedDois.some(id=>dailyPublishedDois.includes(id)),
+    'historical_delivery_partition_did_not_match');
   assert(sameSet([...(evidence.publishableDois||[])].map(normalizeDoi),
     [...dailyPublishedDois,...historicalPublishedDois]),
     'historical_delivery_partition_did_not_match');
