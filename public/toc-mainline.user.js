@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.64
+// @version      6.2.65
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -57,7 +57,7 @@
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
   var OCT1_SCOPE_QUEUE_REVISION = '20261008-added-date-only-v1';
-  var INSTALL_REVISION = '6.2.64';
+  var INSTALL_REVISION = '6.2.65';
   var ACS_MEDIA_RECOVERY_REVISION = '20261008-acs-viewer-upload-v1';
   var PUBLISHER_ROUTE_REPAIR_REVISION = '20261010-rsc-articleid-semantic-and-acs-figure1-v2';
   var IMAGE_UPLOAD_TOTAL_BUDGET_MS = 24000;
@@ -98,7 +98,7 @@
   var EVIDENCE_INVENTORY_ENDPOINT = WORKER + '/api/article-summary/evidence-inventory';
   var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';
   var P = 'osg-toc-v6:';
-  var INVENTORY_STARTUP_REVISION = '20261011-historical-official-toc-cache-v2';
+  var INVENTORY_STARTUP_REVISION = '20261012-scoped-registry-plan-v3';
   var INVENTORY_PLAN_CACHE_KEY = P + 'inventory-plan-cache-v1';
   var INVENTORY_PLAN_CACHE_TTL_MS = 10 * 60 * 1000;
   var INVENTORY_HEDGE_DELAY_MS = 900;
