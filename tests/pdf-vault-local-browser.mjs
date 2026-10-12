@@ -569,7 +569,14 @@ try {
     await page.goto(base + '/pdf-vault/open/?doi=' + encodeURIComponent(DOI), { waitUntil: 'domcontentloaded' });
     await page.getByTestId('native-pdf-download-folder').waitFor({ state: 'visible' });
     await page.getByTestId('native-pdf-download-folder').click();
-    await page.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
+    // The initial account-scoped scan must finish before this fixture
+    // simulates a new download followed by navigation. Merely seeing the
+    // file-picker button is not proof that its lazy PDF.js requests ended.
+    await page.waitForFunction(() =>
+      document.documentElement.dataset.nativePdfState === 'unlinked' &&
+      document.getElementById('download-folder')?.disabled === false &&
+      document.getElementById('download-folder-scan')?.hidden === false,
+    null, { timeout: 18000 });
     await page.evaluate(async bytes => {
       const root = await navigator.storage.getDirectory();
       const folder = await root.getDirectoryHandle('picked-directory', { create: true });
@@ -594,7 +601,14 @@ try {
       { waitUntil: 'domcontentloaded' });
     await page.getByTestId('native-pdf-download-folder').waitFor({ state: 'visible' });
     await page.getByTestId('native-pdf-download-folder').click();
-    await page.getByTestId('native-pdf-link').waitFor({ state: 'visible' });
+    // The initial account-scoped scan must finish before this fixture
+    // simulates a new download followed by navigation. Merely seeing the
+    // file-picker button is not proof that its lazy PDF.js requests ended.
+    await page.waitForFunction(() =>
+      document.documentElement.dataset.nativePdfState === 'unlinked' &&
+      document.getElementById('download-folder')?.disabled === false &&
+      document.getElementById('download-folder-scan')?.hidden === false,
+    null, { timeout: 18000 });
 
     await page.evaluate(async ({ bytes, user, doi }) => {
       const root = await navigator.storage.getDirectory();
