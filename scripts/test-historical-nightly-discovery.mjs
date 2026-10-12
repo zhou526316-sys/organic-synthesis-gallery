@@ -712,8 +712,7 @@ test('all 16 registered journals traverse one historical window and roll over in
     assert.deepEqual(result.next,{range:{from:'2026-09-15',to:'2026-09-21'},journalIndex:0});
     assert.equal(result.noPublication,true);
     assert.equal(result.noPdf,true);
-    const names=orderedJournals(),allIssns=names.flatMap(j=>
-      j.issns.flatMap(issn=>requiresRscCreationRescue(j)?[issn,issn]:[issn]));
+    const names=orderedJournals(),allIssns=names.flatMap(j=>j.issns);
     assert.deepEqual(crIssns,allIssns);
     assert.equal(oaFilters.length,16);
     for(const journal of names){
@@ -821,7 +820,7 @@ test('confirmed 2026 RSC year-only deposit date is NOT fabricated into Jan 1 pub
   assert.equal(merged[0].createdDate,'2026-09-15');
 });
 
-test('both RSC journals use created-date rescue in addition to publication-date source',()=>{
+test('both RSC journals use date-precision-safe created-date discovery instead of unreliable published-year date',()=>{
   assert.equal(requiresRscCreationRescue({name:'Chemical Science'}),true);
   assert.equal(requiresRscCreationRescue({name:'Green Chemistry'}),true);
   assert.equal(requiresRscCreationRescue({name:'JACS'}),false);
@@ -876,7 +875,7 @@ test('retrospective RSC zero-source root is safely rechecked without moving chro
     assert.equal(batch.noMediaWrites,true);
     assert.equal(batch.noPDFAcquisition,true);
     assert.equal(JSON.stringify(batch).includes('PUBLISHER_PROTECTED_FULL_ABSTRACT_DO_NOT_COPY'),false);
-    assert.equal(urls.filter(u=>u.hostname==='api.crossref.org').length,4);
+    assert.equal(urls.filter(u=>u.hostname==='api.crossref.org').length,2);
     assert.equal(urls.filter(u=>u.hostname==='api.openalex.org').length,1);
     assert.equal(urls.filter(u=>u.searchParams.get('filter')?.includes('from-created-date:2026-09-15')).length,2);
     assert.equal(saved.attempts[0].attemptKind,'rsc_created_recheck');
@@ -915,5 +914,32 @@ test('failed RSC created-date lane keeps old root intact and flags recheck pendi
     assert.equal(receipt.status,'incomplete_sources');
     assert.match(receipt.consistency.issues.join('|'),/http_429/);
     assert.equal(receipt.consistency.complete,false);
+  },{priorState:state});
+});
+
+
+
+test('Jan 1 RSC false publication-day overload is avoided by created-only lane',async()=>{
+  const state=stage0();
+  state.cursor={range:{from:'2026-01-01',to:'2026-01-01'},journalIndex:14};
+  await isolatedHistoricalRun(async({readBatch})=>{
+    const filters=[];
+    global.fetch=async url=>{
+      const u=new URL(url);
+      if(u.hostname==='api.openalex.org')return emptyOpenAlex();
+      const f=u.searchParams.get('filter')||'';
+      filters.push(f);
+      if(f.includes('from-pub-date:2026-01-01'))throw Error('unsplittable_published_year_january_1');
+      return emptyCrossref();
+    };
+    const result=await runNightly();
+    assert.equal(result.blocked,false);
+    assert.equal(result.completeWindows,1);
+    const batch=await readBatch('2026-01-01_2026-01-01_green-chemistry');
+    assert.equal(batch.consistency.complete,true);
+    assert.equal(batch.candidateCount,0);
+    assert.equal(filters.length,2);
+    assert.ok(filters.every(f=>f.includes('from-created-date:2026-01-01')));
+    assert.equal(batch.sourceStatus.crossref.every(row=>row.lane==='created'),true);
   },{priorState:state});
 });
