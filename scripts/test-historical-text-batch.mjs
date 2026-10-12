@@ -9,7 +9,7 @@ const anchor="  if(location.hostname==='gallery.gczhouwld.com'){";
 assert.ok(original.includes(anchor));
 const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker};\n"+anchor);
 const DOI='10.1021/jacs.6c08636',TOKEN='a'.repeat(24),RUN='b'.repeat(24);
-function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false}={}){
+function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false}={}){
   const values=new Map([['gallery-historical-text-batch-v2:job',{
     doi:DOI,publication:'2026-09-14',journal:'JACS',
     title:'A catalytic process',runId:RUN,token:TOKEN,expiresAt:Date.now()+20000
@@ -20,7 +20,11 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
     ...(abstractOnly?[]:[
       {tagName:'H2',textContent:'Mechanistic Studies'},
       {tagName:'P',textContent:'LMCT ligands modulate radical pathways in experimental investigations. '.repeat(5)}
-    ])
+    ]),
+    ...(rightsNotice?[
+      {tagName:'H2',textContent:'Rights and permissions'},
+      {tagName:'P',textContent:'Open Access This article is licensed under a Creative Commons Attribution 4.0 International License. http://creativecommons.org/licenses/by/4.0/ '.repeat(9)}
+    ]:[])
   ];
   const footer={id:'',className:'',parentElement:null};
   for(const n of nodes)Object.assign(n,{id:'',className:'',parentElement:footer,closest(){return null;}});
@@ -31,6 +35,10 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
     if(selector.startsWith('figure figcaption'))return [figure];
     if(selector==='table')return [table];
     if(selector.startsWith('[itemprop="license"]'))return [];
+    if(selector==='section')return rightsNotice?[{
+      querySelector(query){return query==='h2,h3,h4'?{textContent:'Rights and permissions'}:null;},
+      textContent:'Open Access This article is licensed under a Creative Commons Attribution 4.0 International License. http://creativecommons.org/licenses/by/4.0/'
+    }]:[];
     throw Error('unexpected selector '+selector);
   }};
   const document={body:footer,
@@ -107,6 +115,19 @@ test('worker cannot claim another tab, expired job, or unlicensed article',async
   expired.values.delete('gallery-historical-text-batch-v2:result');
   await expired.context.__batchTest.batchWorker();
   assert.equal(expired.values.has('gallery-historical-text-batch-v2:result'),false);
+});
+test('Nature article legal notice is recognized without indexing legal boilerplate',async()=>{
+  const input=fixture({license:'',rightsNotice:true});
+  const legal=input.context.__batchTest.batchLicenseEvidence(input.root);
+  assert.equal(legal?.kind,'cc-by');
+  assert.equal(legal?.licenseUrl,'https://creativecommons.org/licenses/by/4.0/');
+  await input.context.__batchTest.batchWorker();
+  const reply=input.values.get('gallery-historical-text-batch-v2:result');
+  assert.equal(reply?.status,'ok');
+  assert.ok(reply.packet.sections.every(s=>s.heading!=='Rights and permissions'));
+  const shell=fixture({license:'',rightsNotice:true,abstractOnly:true});
+  await shell.context.__batchTest.batchWorker();
+  assert.equal(shell.values.get('gallery-historical-text-batch-v2:result')?.status,'body_missing');
 });
 test('abstract-only pages are not falsely accepted as historical fulltext',async()=>{
   const x=fixture({abstractOnly:true});
