@@ -1,0 +1,2887 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "ACS Catalysis",
+  "issns": [
+    "2155-5435"
+  ],
+  "range": {
+    "from": "2026-07-22",
+    "to": "2026-07-31"
+  },
+  "checkedAt": "2026-10-12T05:32:11.934Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2155-5435",
+        "total": 60,
+        "count": 60,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 60,
+      "count": 60,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 60,
+      "openalex": 60
+    }
+  },
+  "candidateCount": 60,
+  "alreadyPublished": 3,
+  "unreviewed": 57,
+  "records": [
+    {
+      "doi": "10.1021/acscatal.6c00325",
+      "title": "Surface Memory in Nickel HER Catalysts: Hydroxide Formation at Open-Circuit Potential",
+      "authors": [
+        "Eleanor Ender",
+        "Yifeng Wang",
+        "Cindy Tseng",
+        "Harry E. Taylor",
+        "Liam Dwyer",
+        "Kexue Li",
+        "Hans Becker",
+        "Laura Felisari",
+        "Sarah J. Haigh",
+        "Reshma Rao",
+        "Katie L. Moore",
+        "Alex S. Walton"
+      ],
+      "date": "2026-07-29",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14196-14204",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c00325"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c00325",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c00631",
+      "title": "Operando High-Energy X-Ray Scattering Studies of Pt/Al2O3 Catalysts during LOHC Dehydrogenation",
+      "authors": [
+        "O. Irrazabal Moreda",
+        "A. Sartori",
+        "K. A. Lomachenko",
+        "V. Vinci",
+        "J. O. Fehrs",
+        "F. Schröter",
+        "P. Ros Bosch",
+        "H. A. Suarez Orduz",
+        "T. Hrbek",
+        "P. Kúš",
+        "D. Amedro",
+        "H. Kreissl",
+        "A. Seidel",
+        "C. Paetz",
+        "J. Drnec",
+        "O. M. Magnussen"
+      ],
+      "date": "2026-07-25",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14205-14220",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c00631"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c00631",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c01442",
+      "title": "High-Entropy Metal Nanomaterials for Energy Conversion and Environmental Remediation: Fundamentals, Design Strategies, and Future Directions",
+      "authors": [
+        "Yingzheng Lin",
+        "Zheng Zhou",
+        "Shiqi Wang",
+        "Mario J. Muñoz-Batista",
+        "Md Ariful Ahsan",
+        "Xiangxing Zhang",
+        "Yingying Shi",
+        "Ning Han",
+        "Haowei Huang",
+        "Wenyi Huo",
+        "Yu-Ming Zheng",
+        "Zijian Weng",
+        "Mohamed Noufal",
+        "Alain R. Puente Santiago",
+        "Liming Dai",
+        "Bo Weng"
+      ],
+      "date": "2026-07-27",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "13939-13980",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c01442"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c01442",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c01623",
+      "title": "Accurate Online Quantification of Electrocatalytic Ammonia Production Using a Gas-Selective Electrode",
+      "authors": [
+        "Giacomo Zuliani",
+        "Janina Dowideit",
+        "Maciej J. Glowacki",
+        "Johannes Ackermann",
+        "Anke Krueger",
+        "Elias Klemm",
+        "Marcel Risch"
+      ],
+      "date": "2026-07-25",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14304-14314",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c01623"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c01623",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c01688",
+      "title": "Stabilizing Low-Ruthenium Loaded Cobalt-Based Spinel via Cerium Incorporation for Durable Acidic Oxygen Evolution",
+      "authors": [
+        "Mengyi Shi",
+        "Wei Cao",
+        "Rendian Wan",
+        "Chaoxia Peng",
+        "Tenghui Yuan",
+        "Yuxuan Zhang",
+        "Bing Li",
+        "Haoqing Lin",
+        "Yong Ding",
+        "Quanhui Li",
+        "Weichan Huang",
+        "Linjuan Zhang",
+        "Bote Zhao"
+      ],
+      "date": "2026-07-28",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14315-14327",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c01688"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c01688",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c01963",
+      "title": "Metal-Dependent Reaction Pathways Governing Aromatic Retention and Deep Hydrogenation in Photocatalytic Lignin Hydrodeoxygenation",
+      "authors": [
+        "Arzoo Chauhan",
+        "Rajat Ghalta",
+        "Rajendra Srivastava"
+      ],
+      "date": "2026-07-25",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "16",
+        "pages": "15637-15657",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c01963"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c01963",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c01995",
+      "title": "Defect-Mediated Bioinspired Coordinatively Unsaturated FeOOH Clusters on ZnO for Efficient Methane-to-Liquid Photooxidation",
+      "authors": [
+        "Zhijie Wang",
+        "Ying Li",
+        "Ming Gao",
+        "Chaowei Liang",
+        "Xuanyu Yue",
+        "Zizhong Zhang",
+        "Wenxin Dai",
+        "Xianzhi Fu"
+      ],
+      "date": "2026-07-23",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14361-14372",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c01995"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c01995",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c02079",
+      "title": "Plasmon-Assisted Interfacial Charge Transfer for Selective CO2-to-C2H4 Photoreduction",
+      "authors": [
+        "Hao-wen Zhu",
+        "Ying-hui Liu",
+        "Jiong-ran Lv",
+        "Ming-yang Liu",
+        "Heng-fei Cui",
+        "Cong Liu",
+        "Rui-tang Guo"
+      ],
+      "date": "2026-07-24",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14373-14386",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02079"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c02079",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c02185",
+      "title": "A Heterogenized Molecular Manganese Catalyst for Aqueous CO2-to-Methanol Electroreduction in a Zero-Gap Electrolyzer",
+      "authors": [
+        "Chandan Das",
+        "Rathindranath Biswas",
+        "Abhishek Saini",
+        "Suchismita Ghosh",
+        "Yashwant P. Kharwar",
+        "Goutam K. Lahiri",
+        "Arnab Dutta"
+      ],
+      "date": "2026-07-30",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "16",
+        "pages": "15667-15677",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02185"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c02185",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c02228",
+      "title": "Biocatalytic Routes for Terminal Alkene Synthesis",
+      "authors": [
+        "Suppalak Phaisan",
+        "Wachirawit Chinantuya",
+        "Duangthip Trisrivirat",
+        "Ailada Charoenpol",
+        "Pimchai Chaiyen"
+      ],
+      "date": "2026-07-28",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "16",
+        "pages": "15465-15485",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02228"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c02228",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c02282",
+      "title": "Skeletal Ring Expansion of Indoles to Quinolin-2-ones by Copper-Catalyzed Oxygenative Single-Carbon Migratory Insertion Reaction",
+      "authors": [
+        "Hu-Cheng Yang",
+        "Jun Shi",
+        "Chun-Hua Wang",
+        "Bing-Qing Yang",
+        "Yu-Sheng Peng",
+        "Wei Wu",
+        "Biaobiao Jiang",
+        "Ze-Jun Xu",
+        "Hai Ren"
+      ],
+      "date": "2026-07-29",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14124-14132",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02282"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c02282",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c02332",
+      "title": "Highly Selective Electrochemical Nitrate Conversion to Ammonia on Ru-doped Cu Single-Atom Alloy Catalyst",
+      "authors": [
+        "Adyasa Priyadarsini",
+        "Zhen Meng",
+        "Shikuan Shao",
+        "Gengnan Li",
+        "Yuzi Liu",
+        "Shyam Kattel",
+        "Xiaofeng Feng"
+      ],
+      "date": "2026-07-29",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14387-14398",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02332"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c02332",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c02451",
+      "title": "Surface Reconstruction Unlocks Lattice Oxygen Activity to Promote Selective Oxidation of 5-Hydroxymethylfurfural to 2,5-Furandicarboxylic Acid",
+      "authors": [
+        "Tianli He",
+        "Haoxi Chen",
+        "Senyuan Li",
+        "Yanshuo Jin",
+        "Xiang Yu",
+        "Wenyu Huang",
+        "Fangyan Xie",
+        "Jian Chen",
+        "Dingjie Pan",
+        "Nan Wang",
+        "Hui Meng",
+        "Shaowei Chen"
+      ],
+      "date": "2026-07-29",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14434-14449",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02451"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c02451",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c02525",
+      "title": "Emerging Mechanisms and Synthetic Potential of Nonheme Fe(II)/α-Ketoglutarate-Dependent Dioxygenases",
+      "authors": [
+        "Jun-Bin He",
+        "Shang-Ye Yang",
+        "Kai-Hao Zhu",
+        "Gong-Li Tang"
+      ],
+      "date": "2026-07-25",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "13878-13908",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02525"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c02525",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c02680",
+      "title": "Interfacial Cooperation-Driven Shifts of Volcano Relationships in Ammonia Decomposition",
+      "authors": [
+        "Jungwoo Choi",
+        "Sungwoo Kang",
+        "Byung Chul Yeo",
+        "Donghun Kim"
+      ],
+      "date": "2026-07-23",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14471-14481",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02680"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c02680",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c02698",
+      "title": "A Highly Enantioselective Oxa−Michael Addition Reaction Catalyzed by Chiral Bifunctional N-Heterocyclic Carbenes",
+      "authors": [
+        "Tsz Wang Wong",
+        "En Li",
+        "Yichi Zhang",
+        "Xiaoyun Liao",
+        "Zhuhui Ren",
+        "Zhe Jamie Yung",
+        "Jiean Chen",
+        "Yong Huang"
+      ],
+      "date": "2026-07-27",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "19",
+        "pages": "18923-18934",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02698"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c02698",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c02724",
+      "title": "In Situ Evidence Unveiling the Debate of Mechanism for Piezo-Catalysis",
+      "authors": [
+        "Jie He",
+        "Minxian Zhang",
+        "Xiaoguang Duan",
+        "Mingshan Zhu"
+      ],
+      "date": "2026-07-27",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "13909-13921",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02724"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c02724",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c02881",
+      "title": "Directing CO2 Hydrogenation to Light Aromatics via Molecular Traffic Control in a Dual‑Zeolite Catalyst",
+      "authors": [
+        "Jialing Song",
+        "Bin Chen",
+        "Yikun Zhou",
+        "Kok Bing Tan",
+        "Dongren Cai",
+        "Jiale Huang",
+        "Qingbiao Li",
+        "Youzhu Yuan",
+        "Guowu Zhan"
+      ],
+      "date": "2026-07-30",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "16",
+        "pages": "15758-15769",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02881"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c02881",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c02968",
+      "title": "Alkali Hydride-Iron Oxide-Nanocomposites as Catalysts for Low-Temperature Ammonia Synthesis",
+      "authors": [
+        "Juliette C. Verschoor",
+        "Fabian J. Mohammad",
+        "Masoud Lazemi",
+        "Shusaku Hayama",
+        "Nitya Ramanan",
+        "Frank M. F. de Groot",
+        "Petra E. de Jongh",
+        "Peter Ngene"
+      ],
+      "date": "2026-07-22",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14545-14556",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02968"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c02968",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c02969",
+      "title": "Dynamic Restructuring of Homogeneous Cu–Ag Nanoparticles Enriches Their Interfaces to Boost C2+ Production during CO Electroreduction",
+      "authors": [
+        "Xueli Zhou",
+        "Zhongli Liu",
+        "Deyi Liu",
+        "Weifeng Rong",
+        "Shiquan Ma",
+        "Rui Xu",
+        "Baoju Wang",
+        "Jing Wang",
+        "Wei-Wei Chang",
+        "Fanfei Sun",
+        "Haofei Huang",
+        "Zhijun Zhu",
+        "Xuan Yang"
+      ],
+      "date": "2026-07-28",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14575-14585",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02969"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c02969",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03027",
+      "title": "Understanding Catalytic Synergy in Heterodinuclear Iron/s-Block Complexes for Epoxide/Anhydride Ring-Opening Copolymerization",
+      "authors": [
+        "Frederica Butler",
+        "Katharina H. S. Eisenhardt",
+        "Nora Jannsen",
+        "Thomas M. McGuire",
+        "Egor Kokin",
+        "Michael L. Neidig",
+        "Charlotte K. Williams"
+      ],
+      "date": "2026-07-28",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14586-14598",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03027"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03027",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03084",
+      "title": "Reframing Reaction Pathways in Joule-Heating Catalysis: From Interfacial Heat Transfer to the Complexities of Dynamic Kinetics",
+      "authors": [
+        "Jinghao Li",
+        "Qi Wang",
+        "Jiaqi Li",
+        "Zhengpeng Qin",
+        "Shuaiyu Chen",
+        "Gaowu Qin",
+        "Song Li"
+      ],
+      "date": "2026-07-27",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14006-14028",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03084"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03084",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03184",
+      "title": "Understanding Selectivities in Gold(I)-Catalyzed Intramolecular C(sp3)–H Bond Functionalization through Predictive Statistical Analysis",
+      "authors": [
+        "Omar Arto",
+        "Simone Gallarati",
+        "Shounak Hinge",
+        "Rubén Miguélez",
+        "Isabel Merino",
+        "Jochen Niemeyer",
+        "Matthew S. Sigman",
+        "Pablo Barrio"
+      ],
+      "date": "2026-07-22",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14775-14782",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03184"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03184",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03211",
+      "title": "Potential-Dependent Selectivity in CO2 Electroreduction over Carbon-Supported Cobalt Phthalocyanine",
+      "authors": [
+        "Haobo Zhao",
+        "Yun-Ze Qiu",
+        "Leyu Liu",
+        "Yubing Si",
+        "Hai Xiao",
+        "Jun Li"
+      ],
+      "date": "2026-07-29",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14647-14654",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03211"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03211",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03238",
+      "title": "How Nickel Oxidizes in Alkaline Media: The Initial Stages of Nickel (Hydr)oxide Formation",
+      "authors": [
+        "Ožbej Vodeb",
+        "Dzevad K. Kozlica",
+        "Matej Huš",
+        "Matjaž Finšgar",
+        "Pedro Farinazzo Bergamo Dias Martins",
+        "Milena Martins",
+        "Nejc Hodnik",
+        "Dušan Strmčnik"
+      ],
+      "date": "2026-07-23",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14680-14690",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03238"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03238",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03257",
+      "title": "Broad-Spectrum Glycoside 3-Dehydrogenase with Distinct Features of Glucose–Methanol–Choline Oxidoreductase for Site-Selective Oxidation of Glycosides and Saccharides",
+      "authors": [
+        "Yi Lu",
+        "Martin Pfeiffer",
+        "Lucija Ružić",
+        "Mislav Sušac",
+        "Bernd Nidetzky"
+      ],
+      "date": "2026-07-23",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14701-14715",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03257"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03257",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03290",
+      "title": "Stabilizing Copper Oxide Nanoclusters via Silanol Nests in Silicalite-1 for Oxygen-Lean Propane Combustion",
+      "authors": [
+        "Hongjun Park",
+        "Geun-Ho Han",
+        "Yinan Xu",
+        "Michal Mazur",
+        "Selim Alayoglu",
+        "Jinlei Cui",
+        "Bupmo Kim",
+        "Juan J. de Pablo",
+        "Justin M. Notestein"
+      ],
+      "date": "2026-07-27",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14716-14728",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03290"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03290",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03351",
+      "title": "Engineering Single-Atom Sn-doped ZnIn2S4 for Enhanced Aqueous-Phase Selective Photooxidation of 5-Hydroxymethylfurfural",
+      "authors": [
+        "Kun Chen",
+        "Zhou Wang",
+        "Xuefei Zhou",
+        "Tenghao Ma",
+        "Peng Zhao",
+        "Yuan He",
+        "Zhanwei Chen",
+        "Zhihua Zhou",
+        "Shaowei Yang",
+        "Qiuyu Zhang",
+        "Hepeng Zhang"
+      ],
+      "date": "2026-07-29",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14855-14865",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03351"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03351",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03459",
+      "title": "Regulating Exciton Dissociation and Spin-Dependent Oxygen Activation via Bi-NiO Dual Active Sites for Deep Photocatalytic NO Oxidation",
+      "authors": [
+        "Hongjing Liu",
+        "Shan Ren",
+        "Xiaodi Li",
+        "Manyi Liu",
+        "Peng Chen",
+        "Chi He",
+        "Bofeng Bai",
+        "Shouning Chai",
+        "Fan Dong"
+      ],
+      "date": "2026-07-22",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14804-14817",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03459"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03459",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03508",
+      "title": "Ru-Catalyzed Deoxygenative Aromatization of Succinimides and Oxindoles to Pyrroles and Indoles",
+      "authors": [
+        "Ziqing Zuo",
+        "Tao Yu",
+        "Ross Miller",
+        "Subramanian Karur",
+        "Nicole Cooper",
+        "Jacob Y. Cha"
+      ],
+      "date": "2026-07-31",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "16",
+        "pages": "15943-15948",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03508"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03508",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03676",
+      "title": "Bimetallic 2D Metal−Organic Framework Precatalysts That Enable Electrochemical Glycerol Oxidation",
+      "authors": [
+        "Shahar Binyamin",
+        "Adi Fryder",
+        "Roni Cohen Vaza",
+        "Yanai Pearlmutter",
+        "Jonathan Tzadikov",
+        "Ran Shimoni",
+        "Menny Shalom",
+        "Idan Hod"
+      ],
+      "date": "2026-07-29",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14967-14978",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03676"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03676",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03686",
+      "title": "Synergistic Tuning of Photoreduction Reactivity in Dihydrophenazine Photocatalysts via Fluorination and Annulative π-Extension",
+      "authors": [
+        "Mingli Tian",
+        "Zongwei Li",
+        "Zhiye Wang",
+        "Wei Wang",
+        "Xiaohang Wu",
+        "Yingying Wei",
+        "Jiancheng Yang",
+        "Heng Li",
+        "Bingxin Yuan"
+      ],
+      "date": "2026-07-29",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15022-15035",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03686"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03686",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03726",
+      "title": "N2 Oxidation to Nitrate via a Phase Transition-Based Pathway",
+      "authors": [
+        "Pauline Schütt",
+        "Romain Tort",
+        "Leo Karlsson",
+        "Yu Katayama",
+        "Ifan E. L. Stephens",
+        "Alexander Bagger"
+      ],
+      "date": "2026-07-28",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14923-14931",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03726"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03726",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03729",
+      "title": "Polaron Delocalization Regulating Oxygen Reduction Selectivity and Directional Charge Transfer for Enhanced Dark Photocatalytic H2O2 Synthesis",
+      "authors": [
+        "Mengxin Liu",
+        "Pu Zhang",
+        "Boran Chen",
+        "Zhenyu Yang",
+        "Huinan Che",
+        "Yanhui Ao"
+      ],
+      "date": "2026-07-28",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14932-14942",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03729"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03729",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03737",
+      "title": "Enantioselective Construction of 6–10-Membered Cyclic Allylic Alcohols Containing Exocyclic Alkenes by Synergistic Photoredox/Cobalt-Catalyzed Intramolecular Alkenylation of Aldehydes",
+      "authors": [
+        "Chuiyi Lin",
+        "Jichao Huang",
+        "Tingting Zhang",
+        "Zhihan Zhang",
+        "Heng Wang",
+        "Qinglei Chong",
+        "Fanke Meng"
+      ],
+      "date": "2026-07-23",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14956-14966",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03737"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03737",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03752",
+      "title": "Disentangling Structural and Electronic Roles of Pyridinic- and Pyrrolic-N in Ni-Catalyzed Hydrogenolysis of Aryl Ether Bonds",
+      "authors": [
+        "Jiapei Guo",
+        "Liyun Zhang",
+        "Hajime Hojo",
+        "Hisahiro Einaga"
+      ],
+      "date": "2026-07-30",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "16",
+        "pages": "16029-16040",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03752"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03752",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03766",
+      "title": "Machine-Learning-Guided Genetic Inverse Design of Single-Atom Electrocatalysts for CO2 Reduction",
+      "authors": [
+        "Chen Zhu",
+        "Hua Gui Yang",
+        "Haifeng Wang",
+        "Haiyang Yuan"
+      ],
+      "date": "2026-07-29",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14990-14998",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03766"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03766",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03803",
+      "title": "Statistical Convergence and Uncertainty in Electrocatalytic Benchmarking of Ir and Ru Oxygen Evolution Catalysts",
+      "authors": [
+        "Jonas Forner",
+        "Gustav K. H. Wiberg",
+        "Samia Kausar",
+        "Annabelle Maletzko",
+        "Julia Melke",
+        "Matthias Arenz"
+      ],
+      "date": "2026-07-29",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14999-15011",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03803"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03803",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03844",
+      "title": "Substrate Effects Govern Pd(111) Facet Formation for Efficient Electrochemical Hydrodechlorination",
+      "authors": [
+        "Yining Zhang",
+        "Fuqiang Liu",
+        "Xiaohong Guan"
+      ],
+      "date": "2026-07-28",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14140-14145",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03844"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03844",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03885",
+      "title": "Spatial Electronic and Thermal Microenvironment Engineering of POMOF to Boost Photothermal C–N Cross-Coupling Catalysis",
+      "authors": [
+        "Jiachen Jiao",
+        "Kaixin Guo",
+        "Hui Sun",
+        "Le Liu",
+        "Junwei Zhao",
+        "Pengtao Ma",
+        "Qiuxia Han"
+      ],
+      "date": "2026-07-25",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15036-15047",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03885"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03885",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03926",
+      "title": "Insights into Acidic Oxygen Evolution Reaction over Ru-Pyrochlore Oxide Electrocatalysts: Role of Lanthanide Cations in Dictating Stability",
+      "authors": [
+        "Kunal K. Velinkar",
+        "Rachel A. Yang",
+        "Eranda Nikolla"
+      ],
+      "date": "2026-07-31",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "16",
+        "pages": "16092-16104",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03926"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03926",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03933",
+      "title": "Origin of Pt Nuclearity Dependence of CO Oxidation over Pt/TiO2 Catalysts in the Subnanometer Regime",
+      "authors": [
+        "Md Raian Yousuf",
+        "Malik Albrahim",
+        "Supriti Dutta",
+        "Abhijit Shrotri",
+        "Eli Stavitski",
+        "Adam S. Hoffman",
+        "Simon R. Bare",
+        "Philippe Sautet",
+        "Ayman M. Karim"
+      ],
+      "date": "2026-07-23",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15081-15097",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03933"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03933",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c03959",
+      "title": "Beyond Thermodynamics-Determined Selectivity: Cation-Mediated Interfacial Microenvironment Promotes Desorption Kinetics To Enable Selective Hydroxylamine Electrosynthesis",
+      "authors": [
+        "Yu Wang",
+        "Xin Zhang",
+        "Yafei Li"
+      ],
+      "date": "2026-07-22",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15154-15163",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03959"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c03959",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04013",
+      "title": "Crystal Plane Engineering to Boost the Coke Resistance of a Ni/NaY Catalyst for Dry Reforming of Methane",
+      "authors": [
+        "Chuanrui Pang",
+        "Yuchao Lyu",
+        "Yarui Han",
+        "Caina Song",
+        "Bingrong Liu",
+        "Ruiqi Chai",
+        "Lishuang Ma",
+        "Jianye Fu",
+        "Xinmei Liu"
+      ],
+      "date": "2026-07-28",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15164-15176",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04013"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04013",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04053",
+      "title": "Synergistic Confinement and S-Scheme Charge Transfer Enhance CdS/COF Photocatalysis for Nitrate Reduction",
+      "authors": [
+        "Xuemeng Sun",
+        "Jianan Liu",
+        "Qi Li",
+        "Chen Zhao",
+        "Xudong Xiao",
+        "Baojiang Jiang"
+      ],
+      "date": "2026-07-27",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15199-15211",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04053"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04053",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04193",
+      "title": "Enantioselective C(sp3)–H Sulfilimination via Dual Photoredox/Copper Catalysis",
+      "authors": [
+        "Yiting Liu",
+        "Kefan Wang",
+        "Fu-Sheng He",
+        "Jie Wu"
+      ],
+      "date": "2026-07-22",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15262-15270",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04193"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04193",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04199",
+      "title": "Heterogeneous Palladium(0) Catalysts for C(sp3)–H Activation and Coupling to Form Hindered C–C Bonds",
+      "authors": [
+        "Prakash Basnet",
+        "Bangaru Bhaskararao",
+        "Peter A. Amadeo",
+        "Charles E. Hendrick",
+        "Kelsey F. VanGelder",
+        "John M. Curto",
+        "Dong Yeon Kim",
+        "Gang Hong",
+        "Marisa C. Kozlowski"
+      ],
+      "date": "2026-07-22",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15249-15261",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04199"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04199",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04265",
+      "title": "Low-OSDA SSZ-39 Zeolite Upgrades Methane to Ethylene and Propylene",
+      "authors": [
+        "Peipei Xiao",
+        "Yong Wang",
+        "Hiroto Toyoda",
+        "Yuqin Sun",
+        "Lizhuo Wang",
+        "Jun Huang",
+        "Toshiyuki Yokoi"
+      ],
+      "date": "2026-07-30",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "16",
+        "pages": "16208-16219",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04265"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04265",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04438",
+      "title": "Water Splitting Promotes the Proton-Coupled Electron Transfer Process for Selective Methane Photooxidation",
+      "authors": [
+        "Yanqun Chen",
+        "Haonan Zhang",
+        "Wenjing Wang",
+        "Leixin Mao",
+        "Ruixin Zhang",
+        "Zhihua Gao",
+        "Gangsen Li",
+        "Zhihong Li",
+        "Wei Huang",
+        "Zhijun Zuo",
+        "Lei Liu",
+        "Wenting Wu"
+      ],
+      "date": "2026-07-25",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15282-15291",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04438"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04438",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04455",
+      "title": "Advances in Catalytic Hydrosilylation of Internal Alkenes",
+      "authors": [
+        "Hui Hu",
+        "Dongyang Wang",
+        "Liang Deng"
+      ],
+      "date": "2026-07-30",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "16",
+        "pages": "15574-15592",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04455"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04455",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04479",
+      "title": "Catalytic Enantioselective Allenylation of Zincke Imine",
+      "authors": [
+        "Priyotosh Das",
+        "Kriti Gupta",
+        "Santanu Mukherjee"
+      ],
+      "date": "2026-07-27",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15292-15302",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04479"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04479",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04488",
+      "title": "Why Is Alloying a Prerequisite for Interstitial Carbon Playing a Promotional Role in Selective Acetylene Hydrogenation?",
+      "authors": [
+        "Xin Bai",
+        "Xiaomeng Chen",
+        "Lanyu Li",
+        "Junting Feng",
+        "Haoxiang Xu",
+        "Daojian Cheng"
+      ],
+      "date": "2026-07-29",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15303-15321",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04488"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04488",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04524",
+      "title": "Impact of Site Identity, Location, and Accessibility on Polyethylene Conversion Rates and Product Selectivities over Metal-Free MFI Zeolites",
+      "authors": [
+        "Cole W. Hullfish",
+        "Jun Zhi Tan",
+        "John V. Piorkowski",
+        "Carson J. Repins",
+        "Antara Bhowmick",
+        "Matthew J. Oh",
+        "Darius Rudasingwa Ganza",
+        "Sonia E. Arumuganainar",
+        "Dongxia Liu",
+        "Bruce E. Koel",
+        "Michele L. Sarazen"
+      ],
+      "date": "2026-07-23",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15322-15336",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04524"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04524",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04535",
+      "title": "Integrating S-scheme Heterojunctions and Photothermal Effects for Enhanced Solar-Driven Catalysis",
+      "authors": [
+        "Shuo Wang",
+        "Yang Yang",
+        "Lin Wang",
+        "Weiyou Yang",
+        "Blaž Likozar",
+        "Huilin Hou"
+      ],
+      "date": "2026-07-28",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14080-14123",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04535"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04535",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04601",
+      "title": "Vector-Tailored Built-in Electric Field Elevates Ultrafast Charge Transport Dynamics in Solar Hydrogen Production",
+      "authors": [
+        "Haoyu Long",
+        "Binbin Zhao",
+        "Jianjun Zhang",
+        "Zhen Wu",
+        "Hermenegildo García",
+        "Jiaguo Yu",
+        "Huogen Yu"
+      ],
+      "date": "2026-07-29",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15337-15347",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04601"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04601",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04612",
+      "title": "Fe−N Dual Sites in Porphyrinic Metal−Organic Frameworks for CO2-to-C2H4 Photocatalysis",
+      "authors": [
+        "Baker Rhimi",
+        "Karim Harrath",
+        "Yifan Liu",
+        "Zheyang Liu",
+        "Min Zhou",
+        "Sherif A. El-Khodary",
+        "Weidong Shi",
+        "Zhifeng Jiang"
+      ],
+      "date": "2026-07-24",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15348-15362",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04612"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04612",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04659",
+      "title": "Biocatalytic Dynamic Kinetic Resolutions Enable Enantiodivergent Access to Axially Chiral Biaryl Dimethanols via Transient Seven-Membered Lactols",
+      "authors": [
+        "Jie Chen",
+        "Zhuoting Peng",
+        "Xiaolong Gao",
+        "Dengke Gao",
+        "Qianxi Zhou",
+        "Zhaoxuan Zhu",
+        "Ping Yang",
+        "Jindian Duan",
+        "Zheng Fang",
+        "Yujing Hu",
+        "Kai Guo"
+      ],
+      "date": "2026-07-29",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15394-15405",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04659"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04659",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04802",
+      "title": "Faradaic Control of Adsorbate Coverage during Thermal Catalytic Hydrogenation of Small Unsaturated Carboxylic Acids",
+      "authors": [
+        "Chi-Kai Hung",
+        "Keisuke Obata",
+        "Andrey Lyalin",
+        "Tetsuya Taketsugu",
+        "Kazuhiro Takanabe"
+      ],
+      "date": "2026-07-26",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15406-15419",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04802"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04802",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c04891",
+      "title": "Different Photons, Same Chemistry: Identical Mechanism and Efficiency of Fatty Acid Photodecarboxylase under Blue and UV Excitation",
+      "authors": [
+        "Théodore C. L. Michielin",
+        "Juan J. Romero",
+        "Lison Royer",
+        "Viola C. D’Mello",
+        "Manuel J. Llansola-Portoles",
+        "Damien R. Sorigué",
+        "Pavel Müller"
+      ],
+      "date": "2026-07-30",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "19",
+        "pages": "18838-18844",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04891"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c04891",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acscatal.6c05021",
+      "title": "Thermal Bimolecular Homodimerization Initiates Nickel(I) Catalysis from 2,6-Aryl-Unsubstituted Bipyridyl Nickel(II) Oxidative Addition Complexes",
+      "authors": [
+        "Bhaswati Paul",
+        "L. Reginald Mills"
+      ],
+      "date": "2026-07-23",
+      "datePrecision": "day",
+      "journal": "ACS Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15420-15433",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c05021"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acscatal.6c05021",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

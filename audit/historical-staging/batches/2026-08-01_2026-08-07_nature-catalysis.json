@@ -1,0 +1,222 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2026-08-01",
+    "to": "2026-08-07"
+  },
+  "checkedAt": "2026-10-12T05:31:40.826Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "total": 4,
+        "count": 4,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 4,
+      "count": 4,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 4,
+      "openalex": 4
+    }
+  },
+  "candidateCount": 4,
+  "alreadyPublished": 1,
+  "unreviewed": 3,
+  "records": [
+    {
+      "doi": "10.1038/s41929-026-01557-0",
+      "title": "Multifunctional chiral bis(amidine) organocatalysts enable stereoselective synthesis of phosphorothioate oligonucleotides",
+      "authors": [
+        "Shuai-Shuai Fang",
+        "Guo-Dong Sun",
+        "Jia-Wei Liu",
+        "Ming-Hong Li",
+        "Tian Xie",
+        "Kang-Ning Yuan",
+        "Hong-Qing Yao",
+        "Yue-Ming Cai",
+        "Chunhai Fan",
+        "Ming Shang"
+      ],
+      "date": "2026-08-05",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "8",
+        "pages": "800-811",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01557-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01557-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01575-y",
+      "title": "The active site and its environment",
+      "authors": [
+        "Matteo Maestri"
+      ],
+      "date": "2026-08-03",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "8",
+        "pages": "797-799",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01575-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01575-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01594-9",
+      "title": "Chiral phosphorus by catalyst design",
+      "authors": [
+        "Kyle Knouse",
+        "David Butler"
+      ],
+      "date": "2026-08-05",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "8",
+        "pages": "784-785",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01594-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01594-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01596-7",
+      "title": "The important ingredient in your catalyst you never meant to add",
+      "authors": [
+        "Arun Devaraj"
+      ],
+      "date": "2026-08-07",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "8",
+        "pages": "786-787",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01596-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01596-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

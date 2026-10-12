@@ -1,0 +1,98 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Chemistry",
+  "issns": [
+    "1755-4330",
+    "1755-4349"
+  ],
+  "range": {
+    "from": "2026-08-08",
+    "to": "2026-08-14"
+  },
+  "checkedAt": "2026-10-12T05:31:22.078Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "1755-4330",
+        "total": 1,
+        "count": 1,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1755-4349",
+        "total": 1,
+        "count": 1,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 1,
+      "count": 1,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 1,
+      "openalex": 1
+    }
+  },
+  "candidateCount": 1,
+  "alreadyPublished": 0,
+  "unreviewed": 1,
+  "records": [
+    {
+      "doi": "10.1038/s41557-026-02223-5",
+      "title": "Tailoring packing sequences in van der Waals metal–organic frameworks",
+      "authors": [
+        "Mingyu Yang",
+        "Zheng Meng"
+      ],
+      "date": "2026-08-12",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1537-1538",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02223-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02223-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

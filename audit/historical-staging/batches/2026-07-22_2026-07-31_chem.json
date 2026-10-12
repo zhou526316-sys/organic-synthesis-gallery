@@ -1,0 +1,381 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Chem",
+  "issns": [
+    "2451-9294"
+  ],
+  "range": {
+    "from": "2026-07-22",
+    "to": "2026-07-31"
+  },
+  "checkedAt": "2026-10-12T05:32:13.936Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2451-9294",
+        "total": 0,
+        "count": 0,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 8,
+      "count": 8,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 0,
+      "openalex": 8
+    }
+  },
+  "candidateCount": 8,
+  "alreadyPublished": 0,
+  "unreviewed": 8,
+  "records": [
+    {
+      "doi": "10.1016/j.chempr.2026.103108",
+      "title": "Catalyst: When self-driving labs begin to reason",
+      "authors": [
+        "Milad Abolhasani"
+      ],
+      "date": "2026-07-30",
+      "datePrecision": "day",
+      "journal": "Chem",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "8",
+        "pages": "103108-103108",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2026.103108"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1016/j.chempr.2026.103108",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103137",
+      "title": "Reaction: Electrochemistry needs agentic AI that explains as well as optimizes",
+      "authors": [
+        "Yuxuan Fan",
+        "Chong Liu"
+      ],
+      "date": "2026-07-30",
+      "datePrecision": "day",
+      "journal": "Chem",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "8",
+        "pages": "103137-103137",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2026.103137"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1016/j.chempr.2026.103137",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103138",
+      "title": "Reaction: The art of autonomous chemistry",
+      "authors": [
+        "Florian Boser",
+        "Frank Glorius"
+      ],
+      "date": "2026-07-30",
+      "datePrecision": "day",
+      "journal": "Chem",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "8",
+        "pages": "103138-103138",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2026.103138"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1016/j.chempr.2026.103138",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103147",
+      "title": "Reaction: Navigating the path to reasoning laboratories",
+      "authors": [
+        "Joshua W. Sin",
+        "David Ming Segura",
+        "Ramon Winkler",
+        "Philippe Schwaller"
+      ],
+      "date": "2026-07-30",
+      "datePrecision": "day",
+      "journal": "Chem",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "8",
+        "pages": "103147-103147",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2026.103147"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1016/j.chempr.2026.103147",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103153",
+      "title": "High-entropy-inspired multi-principal single-atom materials",
+      "authors": [
+        "Li Yu",
+        "Zhili Wang",
+        "Zhengxiao Guo",
+        "Hao Ming Chen",
+        "Hsien‐Yi Hsu"
+      ],
+      "date": "2026-07-23",
+      "datePrecision": "day",
+      "journal": "Chem",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "8",
+        "pages": "103153-103153",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2026.103153"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1016/j.chempr.2026.103153",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103159",
+      "title": "Single-chain-water ultrafast transport in COF membrane for dual desalination and devolatilization",
+      "authors": [
+        "Lu Wang",
+        "Cheng Ling",
+        "Jingrui Fan",
+        "Junxuan Yao",
+        "Chunlei Wang",
+        "Xing Liu",
+        "Yuhan Sun",
+        "Guosheng Shi",
+        "Joseph S. Francisco",
+        "Gaofeng Zeng"
+      ],
+      "date": "2026-07-22",
+      "datePrecision": "day",
+      "journal": "Chem",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "8",
+        "pages": "103159-103159",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2026.103159"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1016/j.chempr.2026.103159",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103163",
+      "title": "Reaction: Building trust infrastructure for agentic experimental science beyond fragile eloquence",
+      "authors": [
+        "Alán Aspuru‐Guzik",
+        "Varinia Bernales"
+      ],
+      "date": "2026-07-30",
+      "datePrecision": "day",
+      "journal": "Chem",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "8",
+        "pages": "103163-103163",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2026.103163"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1016/j.chempr.2026.103163",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103196",
+      "title": "Reaction: Self-driving labs need models of the chemical world",
+      "authors": [
+        "Linjiang Chen",
+        "Zikai Xie",
+        "Jun Jiang"
+      ],
+      "date": "2026-07-30",
+      "datePrecision": "day",
+      "journal": "Chem",
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "8",
+        "pages": "103196-103196",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2026.103196"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.1016/j.chempr.2026.103196",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

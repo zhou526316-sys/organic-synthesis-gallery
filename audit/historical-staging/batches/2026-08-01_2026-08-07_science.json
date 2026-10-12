@@ -1,0 +1,1696 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Science",
+  "issns": [
+    "0036-8075",
+    "1095-9203"
+  ],
+  "range": {
+    "from": "2026-08-01",
+    "to": "2026-08-07"
+  },
+  "checkedAt": "2026-10-12T05:31:40.273Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "0036-8075",
+        "total": 36,
+        "count": 36,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1095-9203",
+        "total": 36,
+        "count": 36,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 34,
+      "count": 34,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 36,
+      "openalex": 34
+    }
+  },
+  "candidateCount": 36,
+  "alreadyPublished": 1,
+  "unreviewed": 35,
+  "records": [
+    {
+      "doi": "10.1126/science.adt7323",
+      "title": "Turbulent seismoacoustic imprints during a hurricane landfall",
+      "authors": [
+        "Qing Ji",
+        "Ipshita Dey",
+        "Eric M. Dunham"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "628-632",
+        "articleNumber": "",
+        "doi": "10.1126/science.adt7323"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.adt7323",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.adu6688",
+      "title": "The fungal pathogen Candida auris exposes chitin to trigger IFNγ and persist in hair follicles",
+      "authors": [
+        "Eric Dean Merrill",
+        "Victoria Prudent",
+        "Pauline Basso",
+        "Emilie Rapp",
+        "Parna Moghadam",
+        "Abram Rodriguez",
+        "Ethan Hung",
+        "Charlotte Hurabielle",
+        "Jeffrey Cheng",
+        "Raymond Jaihyun Cho",
+        "Brook Abegaze",
+        "Amanda Buck",
+        "Kennedi Pyper",
+        "Alessandra Veinbachs",
+        "Elina K. C. Wells",
+        "Tiffany C. Scharschmidt",
+        "Michael D. Rosenblum",
+        "Ari B. Molofsky",
+        "Suzanne M. Noble"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "",
+        "articleNumber": "eadu6688",
+        "doi": "10.1126/science.adu6688"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.adu6688",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.adv5441",
+      "title": "The climate benefits of retiring a fully operational internal combustion engine vehicle",
+      "authors": [
+        "J. Elliott Campbell",
+        "Roland Geyer"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "591-595",
+        "articleNumber": "",
+        "doi": "10.1126/science.adv5441"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.adv5441",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.adv8291",
+      "title": "Chemically induced skin tumors arise from long-lived stem cells of the upper hair follicle",
+      "authors": [
+        "Eve Kandyba",
+        "Arnaud Jabouille",
+        "Ferriol Calvet",
+        "Yun Rose Li",
+        "Andrea Curtabbi",
+        "Diana Cristea",
+        "Joyce Shin",
+        "Reyno Delrosario",
+        "Jonathan Anzules",
+        "Di Wu",
+        "David Quigley",
+        "Mark Taylor",
+        "Camila Zanette",
+        "Fang Yin Lo",
+        "Jacob Higgins",
+        "Jesse Salk",
+        "Nuria Lopez-Bigas",
+        "Allan Balmain"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "",
+        "articleNumber": "eadv8291",
+        "doi": "10.1126/science.adv8291"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.adv8291",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.adx1707",
+      "title": "Levitated sensor for magnetometry in ambient environment",
+      "authors": [
+        "Wei Ji",
+        "Changhao Xu",
+        "Guofeng Qu",
+        "Dmitry Budker"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "607-610",
+        "articleNumber": "",
+        "doi": "10.1126/science.adx1707"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.adx1707",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.adx7367",
+      "title": "Calcium tunes snail mucus–based materials to multiple functions",
+      "authors": [
+        "Mariella Gabler",
+        "Emeline Raguin",
+        "Ernesto Scoppola",
+        "Barbara Steigenberger",
+        "Assa Yeroslaviz",
+        "Peter Werner",
+        "Peter Fratzl",
+        "Franziska Jehle"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "596-600",
+        "articleNumber": "",
+        "doi": "10.1126/science.adx7367"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.adx7367",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aea5828",
+      "title": "Decadal doubling of Siberian methane emissions due to warming-induced fires and methanogenesis",
+      "authors": [
+        "Sihong Zhu",
+        "Yi Liu",
+        "Paul I. Palmer",
+        "Liang Feng",
+        "Dongxu Yang",
+        "Shangfeng Chen",
+        "Motoki Sasakawa",
+        "Robert J. Parker",
+        "Hartmut Boesch",
+        "Junji Cao",
+        "Ove Hermansen",
+        "Stephen M. Platt"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "615-621",
+        "articleNumber": "",
+        "doi": "10.1126/science.aea5828"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aea5828",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aec2657",
+      "title": "Generative design of bacteriophages with genome language models",
+      "authors": [
+        "Samuel H. King",
+        "Claudia L. Driscoll",
+        "David B. Li",
+        "Daniel Guo",
+        "Aditi T. Merchant",
+        "Garyk Brixi",
+        "Max E. Wilkinson",
+        "Brian L. Hie"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "",
+        "articleNumber": "eaec2657",
+        "doi": "10.1126/science.aec2657"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aec2657",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aed8437",
+      "title": "A central role for dietary sugars in human evolution",
+      "authors": [
+        "Jennie Brand-Miller",
+        "Karen Hardy",
+        "David Raubenheimer",
+        "Les Copeland"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "574-581",
+        "articleNumber": "",
+        "doi": "10.1126/science.aed8437"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aed8437",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aee3176",
+      "title": "The next Turing tests: Reimagining conceptions and measures of AI",
+      "authors": [
+        "Jose Hernandez-Orallo",
+        "Katherine M. Collins",
+        "Lucy Cheke",
+        "Laura Weidinger",
+        "Umang Bhatt",
+        "Thomas L. Griffiths",
+        "Stephen Cave"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "566-568",
+        "articleNumber": "",
+        "doi": "10.1126/science.aee3176"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aee3176",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aee3541",
+      "title": "Fossil evidence favors a role for vision in the modular evolution of the primate neocortex",
+      "authors": [
+        "Richard F. Kay",
+        "Chris L. Organ",
+        "Paul E. Morse",
+        "Kari L. Allen",
+        "E. Christopher Kirk"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "622-627",
+        "articleNumber": "",
+        "doi": "10.1126/science.aee3541"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aee3541",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aee4205",
+      "title": "Paleogenomic insight into the collapse, recovery, and management of American bison",
+      "authors": [
+        "Jonas Oppenheimer",
+        "Joshua D. Kapp",
+        "Molly Cassatt-Johnstone",
+        "Samuel Sacco",
+        "William E. Seligmann",
+        "Holland C. Conwell",
+        "Sarah Ford",
+        "Cassandra Gunn",
+        "Lael D. Barlow",
+        "Amy Phillips",
+        "Kenneth P. Cannon",
+        "Lawrence C. Todd",
+        "Spencer R. Pelton",
+        "Glen MacKay",
+        "Kyle Forsythe",
+        "Mark A. Edwards",
+        "Mark C. Ball",
+        "David R. W. Bruinsma",
+        "Jessica Z. Metcalfe",
+        "John W. Ives",
+        "Robert J. Losey",
+        "Tatiana Nomokonova",
+        "Tomasin Playford",
+        "Chris Widga",
+        "Craig M. Lee",
+        "Karsten Heuer",
+        "Wes Olson",
+        "Paul Stothard",
+        "John Southon",
+        "Donalee M. Deck",
+        "Christopher N. Jass",
+        "Richard E. Green",
+        "Lee C. Jones",
+        "Gregg P. Adams",
+        "Todd K. Shury",
+        "Gregory A. Wilson",
+        "Beth Shapiro"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "",
+        "articleNumber": "eaee4205",
+        "doi": "10.1126/science.aee4205"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aee4205",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aef0766",
+      "title": "Vicinal disubstitution of alkyl C–X synthons via alkene radical cation generation",
+      "authors": [
+        "Yufei Zhang",
+        "Tamal Das",
+        "Zi Xuan",
+        "Mrinmoy Das",
+        "Hammed O. Bisiriyu",
+        "Alon Nudler",
+        "Ben D. Parasch",
+        "Matthew D. Resmini",
+        "Aubrey E. Graham",
+        "David F. Watson",
+        "Jennifer S. Hirschi",
+        "Patricia Z. Musacchio"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "",
+        "articleNumber": "eaef0766",
+        "doi": "10.1126/science.aef0766"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aef0766",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aef4184",
+      "title": "Adaptive modulation of theta sweeps in the brain’s navigation circuit",
+      "authors": [
+        "Abraham Z. Vollan",
+        "Michael F. Schellenberger",
+        "Richard J. Gardner",
+        "May-Britt Moser",
+        "Edvard I. Moser"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "",
+        "articleNumber": "eaef4184",
+        "doi": "10.1126/science.aef4184"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aef4184",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aef9458",
+      "title": "Heavily doped, highly compensated epitaxial ScN thin films exceed Boltzmann thermopower limits",
+      "authors": [
+        "Renuka Karanje",
+        "Dheemahi Rao",
+        "Diksha Dadhich",
+        "Sourav Rudra",
+        "Ashalatha Indiradevi Kamalasanan Pillai",
+        "Magnus Garbrecht",
+        "Subroto Mukerjee",
+        "Bivas Saha"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "611-614",
+        "articleNumber": "",
+        "doi": "10.1126/science.aef9458"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aef9458",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aeh1475",
+      "title": "A molecular switch for coordinating kinesin and dynein transport of mitochondrial cargo",
+      "authors": [
+        "Christina Gladkova",
+        "Maria G. Paez-Segala",
+        "William P. Grant",
+        "Mark Kittisopikul",
+        "Samuel A. Myers",
+        "Yuxiao Wang",
+        "Ronald D. Vale"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "601-606",
+        "articleNumber": "",
+        "doi": "10.1126/science.aeh1475"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aeh1475",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aei8513",
+      "title": "A harrowing tour of Earth’s sacrificial lands The Vanishing Earth James Crawford Bloomsbury, 2026, 448 pp.",
+      "authors": [
+        "Rasoul Sorkhabi"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "569-569",
+        "articleNumber": "",
+        "doi": "10.1126/science.aei8513"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aei8513",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aej0108",
+      "title": "Change comes for science publishing paradigms How the Internet Disrupted Science Kent Anderson and Joy Moore Prometheus, 2026, 368 pp.",
+      "authors": [
+        "Beth Montague-Hellen"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "570-570",
+        "articleNumber": "",
+        "doi": "10.1126/science.aej0108"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aej0108",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aej6212",
+      "title": "Curb plastic pollution at its source",
+      "authors": [
+        "Nelson Rangel-Buitrago"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "572-572",
+        "articleNumber": "",
+        "doi": "10.1126/science.aej6212"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aej6212",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aej8512",
+      "title": "AI-designed viral genomes",
+      "authors": [
+        "Thomas V. Inglesby",
+        "Moritz S. Hanke"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "563-564",
+        "articleNumber": "",
+        "doi": "10.1126/science.aej8512"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aej8512",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aej9456",
+      "title": "Dengue vaccines need long-term surveillance",
+      "authors": [
+        "Maíra Aguiar"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "572-572",
+        "articleNumber": "",
+        "doi": "10.1126/science.aej9456"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aej9456",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aek0194",
+      "title": "A fungus makes itself at home on skin",
+      "authors": [
+        "Julia A. Segre"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "564-565",
+        "articleNumber": "",
+        "doi": "10.1126/science.aek0194"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aek0194",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aek0207",
+      "title": "The bridge between science and policy: How IPBES redefined global conservation policy and its path to societal impact",
+      "authors": [
+        "Patricia Miloslavich"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "",
+        "articleNumber": "eaek0207",
+        "doi": "10.1126/science.aek0207"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aek0207",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aek0212",
+      "title": "The visual brain hypothesis",
+      "authors": [
+        "Robert A. Barton"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "560-561",
+        "articleNumber": "",
+        "doi": "10.1126/science.aek0212"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aek0212",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aek0553",
+      "title": "Listening to storms as they shake Earth",
+      "authors": [
+        "Ethan F. Williams"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "562-563",
+        "articleNumber": "",
+        "doi": "10.1126/science.aek0553"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aek0553",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aek2112",
+      "title": "Climate extremes expose groundwater risks",
+      "authors": [
+        "Yaqiang Wei",
+        "Xinde Cao"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "571-571",
+        "articleNumber": "",
+        "doi": "10.1126/science.aek2112"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aek2112",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael0463",
+      "title": "How should India approach AI?",
+      "authors": [
+        "Akash Kapur",
+        "Arvind Narayanan"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "545-545",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael0463"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael0463",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael1780",
+      "title": "In Science Journals",
+      "authors": [
+        "Marc S Lavine",
+        "Sacha Vignieri",
+        "Jesse Smith",
+        "Stella M. Hurtley",
+        "Jelena Stajic",
+        "Wei Wong",
+        "Zhonghe Zhou",
+        "Yevgeniya Nusinovich",
+        "Mattia Maroso",
+        "Jake S. Yeston",
+        "Phil Szuromi",
+        "Di Jiang",
+        "Sarah H. Ross",
+        "Angela Hessler",
+        "Daniela Neuhofer",
+        "Claire Olingy",
+        "David Cortez"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "582-584",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael1780"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael1780",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael1781",
+      "title": "In Other Journals",
+      "authors": [
+        "Unnati Sonawala",
+        "Mattia Maroso",
+        "L. Bryan Ray",
+        "Ian S. Osborne",
+        "Corinne Simonti",
+        "Jelena Stajic",
+        "Jack Huang"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "583-584",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael1781"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael1781",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael1782",
+      "title": "The price of my future",
+      "authors": [
+        "Zaid Jangda"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "634-634",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael1782"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael1782",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael2153",
+      "title": "Ebola raged below the radar for months, report says",
+      "authors": [
+        "Kai Kupferschmidt"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "546-547",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael2153"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael2153",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael2154",
+      "title": "NASA’s PUNCH punches up space weather forecasts",
+      "authors": [
+        "Rachel Berkowitz"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "548-549",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael2154"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael2154",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael2155",
+      "title": "Weekly HIV pill moves closer but vaccine studies face new questions",
+      "authors": [
+        "Jon Cohen"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "549-550",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael2155"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael2155",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael2156",
+      "title": "What triggered the atmosphere’s great oxygen surge?",
+      "authors": [
+        "Paul Voosen"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "551-552",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael2156"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael2156",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael2157",
+      "title": "New rules on risky biology studies get mixed reviews",
+      "authors": [
+        "Sara Reardon"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "552-553",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael2157"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael2157",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael2158",
+      "title": "Genes of an icon",
+      "authors": [
+        "Michael Price"
+      ],
+      "date": "2026-08-06",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6811",
+        "pages": "554-559",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael2158"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael2158",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-01",
+        "to": "2026-08-07"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

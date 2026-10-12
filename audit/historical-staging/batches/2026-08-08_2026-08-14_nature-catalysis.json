@@ -1,0 +1,310 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2026-08-08",
+    "to": "2026-08-14"
+  },
+  "checkedAt": "2026-10-12T05:31:20.631Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "total": 5,
+        "count": 5,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 5,
+      "count": 5,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 5,
+      "openalex": 5
+    }
+  },
+  "candidateCount": 5,
+  "alreadyPublished": 2,
+  "unreviewed": 3,
+  "records": [
+    {
+      "doi": "10.1038/s41929-026-01580-1",
+      "title": "In situ generation of active motifs on Ni/Al2O3 during partial oxidation of methane to syngas",
+      "authors": [
+        "Yuanlong Tan",
+        "Qiao Zhao",
+        "Chen Liang",
+        "Chaobin Zeng",
+        "Hongwen Guo",
+        "Fengyuan Liu",
+        "Guang Xian Pei",
+        "James Hayward",
+        "Jingyuan Ma",
+        "Han Zhao",
+        "Xiao Yan Liu",
+        "Wei Liu",
+        "Tao Yang",
+        "Aiqin Wang",
+        "Graham J. Hutchings",
+        "Tao Zhang"
+      ],
+      "date": "2026-08-14",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "8",
+        "pages": "848-857",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01580-1"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01580-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01589-6",
+      "title": "Catalytic asymmetric intermolecular carbonyl–ene-type reactions of unactivated aldehydes and alkenes",
+      "authors": [
+        "Joyce A. A. Grimm",
+        "Lixia Shi",
+        "Nobuya Tsuji",
+        "Chendan Zhu",
+        "Markus Leutzsch",
+        "Jan Samsonowicz-Górski",
+        "Benjamin List"
+      ],
+      "date": "2026-08-12",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "8",
+        "pages": "893-900",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01589-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01589-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01593-w",
+      "title": "Bimodal multiphoton catalysis via structural regeneration",
+      "authors": [
+        "Cristian Rosso",
+        "Giorgia Barison",
+        "Federico Droghetti",
+        "Nicola Michelazzo",
+        "Andrea Sartorel",
+        "Giorgio Pelosi",
+        "Marco Bortolus",
+        "Sara Bonacchi",
+        "Stefano Visentini",
+        "Alessia Marrese",
+        "Giovanni Bistoni",
+        "Sofia Lerda",
+        "Vittoria Burigana",
+        "Elisabetta Collini",
+        "Paolo Costa",
+        "Mirco Natali",
+        "Luca Dell’Amico"
+      ],
+      "date": "2026-08-14",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01593-w"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01593-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01595-8",
+      "title": "Oxygen migration pathways in the methanol oxidation reaction",
+      "authors": [
+        "Fanxu Meng",
+        "Zihan Shen",
+        "Daniel J. Zheng",
+        "Pengfei Song",
+        "Xinlong Lin",
+        "Shibo Xi",
+        "Chao Wu",
+        "Yang Shao-Horn",
+        "Zhichuan J. Xu"
+      ],
+      "date": "2026-08-14",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "8",
+        "pages": "901-911",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01595-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01595-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-026-01599-4",
+      "title": "Single-turnover subparticle imaging reveals kinetic compensation in electrocatalytic surface water dissociation",
+      "authors": [
+        "Lei Fan",
+        "Ebrahim Tayyebi",
+        "Ctirad Červinka",
+        "Hua Li",
+        "Jin Xie",
+        "Weidong Zhang",
+        "Shurui Chen",
+        "Jing Zhu",
+        "Xiaozhi Xu",
+        "Rob Atkin",
+        "Ju Li",
+        "Kai S. Exner",
+        "Xianwen Mao"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "9",
+        "pages": "953-964",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01599-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01599-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

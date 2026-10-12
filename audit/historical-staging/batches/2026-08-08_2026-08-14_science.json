@@ -1,0 +1,1937 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Science",
+  "issns": [
+    "0036-8075",
+    "1095-9203"
+  ],
+  "range": {
+    "from": "2026-08-08",
+    "to": "2026-08-14"
+  },
+  "checkedAt": "2026-10-12T05:31:20.039Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "0036-8075",
+        "total": 40,
+        "count": 40,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1095-9203",
+        "total": 40,
+        "count": 40,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 38,
+      "count": 38,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 40,
+      "openalex": 38
+    }
+  },
+  "candidateCount": 40,
+  "alreadyPublished": 0,
+  "unreviewed": 40,
+  "records": [
+    {
+      "doi": "10.1126/science.adq0420",
+      "title": "Room-temperature multiferroicity in all–van der Waals heterostructures",
+      "authors": [
+        "Qinqin Wang",
+        "Baojuan Xin",
+        "Chen Liu",
+        "Huairuo Zhang",
+        "Yinchang Ma",
+        "Mario Lopez",
+        "Hao Wu",
+        "Qishuo Tan",
+        "Gaojie Zhang",
+        "Haixin Chang",
+        "Xi Ling",
+        "Efrain E. Rodriguez",
+        "Albert V. Davydov",
+        "Xixiang Zhang",
+        "Wei-Hua Wang",
+        "Evgeny Y. Tsymbal",
+        "Cheng Gong"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "714-718",
+        "articleNumber": "",
+        "doi": "10.1126/science.adq0420"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.adq0420",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ads5962",
+      "title": "Tracking the baryon number with nuclear collisions",
+      "authors": [
+        "STAR Collaboration*",
+        "B. E. Aboona",
+        "J. Adam",
+        "L. Adamczyk",
+        "I. Aggarwal",
+        "M. M. Aggarwal",
+        "Z. Ahammed",
+        "A. K. Alshammri",
+        "E. C. Aschenauer",
+        "S. Aslam",
+        "J. Atchison",
+        "V. Bairathi",
+        "X. Bao",
+        "P. Barik",
+        "K. Barish",
+        "S. Behera",
+        "R. Bellwied",
+        "P. Bhagat",
+        "A. Bhasin",
+        "S. Bhatta",
+        "S. R. Bhosale",
+        "J. Bielcik",
+        "J. Bielcikova",
+        "J. D. Brandenburg",
+        "C. Broodo",
+        "X. Z. Cai",
+        "H. Caines",
+        "M. Calderon de la Barca Sánchez",
+        "D. Cebra",
+        "J. Ceska",
+        "I. Chakaberia",
+        "P. Chaloupka",
+        "Y. S. Chang",
+        "Z. Chang",
+        "A. Chatterjee",
+        "D. Chen",
+        "J. Chen",
+        "J. H. Chen",
+        "L. Chen",
+        "Q. Chen",
+        "W. Chen",
+        "Z. Chen",
+        "J. Cheng",
+        "Y. Cheng",
+        "W. Christie",
+        "X. Chu",
+        "S. Corey",
+        "H. J. Crawford",
+        "M. Csanad",
+        "G. Dale-Gau",
+        "A. Das",
+        "D. De Souza Lemos",
+        "I. M. Deppner",
+        "A. Deshpande",
+        "A. Dhamija",
+        "A. Dimri",
+        "P. Dixit",
+        "X. Dong",
+        "J. L. Drachenberg",
+        "E. Duckworth",
+        "J. C. Dunlop",
+        "Y. S. El-Feky",
+        "J. Engelage",
+        "G. Eppley",
+        "S. Esumi",
+        "O. Evdokimov",
+        "O. Eyser",
+        "B. Fan",
+        "Y. Fang",
+        "R. Fatemi",
+        "S. Fazio",
+        "H. Feng",
+        "Y. Feng",
+        "E. Finch",
+        "Y. Fisyak"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "727-731",
+        "articleNumber": "",
+        "doi": "10.1126/science.ads5962"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ads5962",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ady9591",
+      "title": "Promoter-driven recrystallization affording highly textured ruthenium",
+      "authors": [
+        "Youngchul Leem",
+        "Yoonhoo Ha",
+        "Young-Min Lee",
+        "Yong-Ryun Jo",
+        "Jeong Yub Lee",
+        "Eun-Hyoung Cho",
+        "Byeong-Gyu Chae",
+        "Jaewoo Lee",
+        "Gi-Young Jo",
+        "Seong Yong Park",
+        "Kyung-Eun Byun",
+        "Jeehwan Kim",
+        "Sang Won Kim"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "702-707",
+        "articleNumber": "",
+        "doi": "10.1126/science.ady9591"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ady9591",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.adz1083",
+      "title": "The eukaryote chromosome, a two-state system with interconversion by a volume phase transition",
+      "authors": [
+        "Andrew J. Beel",
+        "Pierre-Jean Matteï",
+        "Roger D. Kornberg"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "",
+        "articleNumber": "eadz1083",
+        "doi": "10.1126/science.adz1083"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.adz1083",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.adz7427",
+      "title": "Xylose phosphatase activity of dystroglycan self-regulates its receptor function",
+      "authors": [
+        "Ishita Chandel",
+        "David Venzke",
+        "Bailey A. Wollesen",
+        "Liping Yu",
+        "Kevin P. Campbell"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "690-695",
+        "articleNumber": "",
+        "doi": "10.1126/science.adz7427"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.adz7427",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aea5466",
+      "title": "A joint geophysical-geochemical deep-mantle zoning map beneath East Africa and the Indian Ocean",
+      "authors": [
+        "Xiyuan Bao",
+        "Mathurin Dongmo Wamba",
+        "Andreas Stracke"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "684-689",
+        "articleNumber": "",
+        "doi": "10.1126/science.aea5466"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aea5466",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aea6187",
+      "title": "A cross-organ single-cell analysis of hypertension",
+      "authors": [
+        "Qiongzi Qiu",
+        "Yong Liu",
+        "Hong Xue",
+        "Rajan Pandey",
+        "Jing Liu",
+        "Lishu He",
+        "Pengyuan Liu",
+        "Bhavika Therani",
+        "Vinod Kumar",
+        "Jing Huang",
+        "Shima Sadri",
+        "Maya Guenther",
+        "Kristie Usa",
+        "Michael Grzybowski",
+        "Mark A. Vanden Avond",
+        "Andrew S. Greene",
+        "Allen W. Cowley",
+        "Sridhar Rao",
+        "Aron M. Geurts",
+        "Mingyu Liang"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "",
+        "articleNumber": "eaea6187",
+        "doi": "10.1126/science.aea6187"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aea6187",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aea7605",
+      "title": "Chemovaccination with a late-liver-stage antimalarial induces durable immunity against malaria",
+      "authors": [
+        "Ryan W. J. Steel",
+        "Yu Cheng Chua",
+        "Waail A. I. Abdalla",
+        "Robyn McConville",
+        "Amelia Ford",
+        "Sabrina Caiazzo",
+        "Eva Hesping",
+        "Daniel Fernandez-Ruiz",
+        "Lauren E. Holz",
+        "William R. Heath",
+        "John A. McCauley",
+        "David B. Olsen",
+        "Justin A. Boddey"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "",
+        "articleNumber": "eaea7605",
+        "doi": "10.1126/science.aea7605"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aea7605",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aea9565",
+      "title": "False reporting undermines the integrity of supply chain sustainability initiatives",
+      "authors": [
+        "Federico Cammelli",
+        "Johan Six",
+        "Rachael D. Garrett"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "669-672",
+        "articleNumber": "",
+        "doi": "10.1126/science.aea9565"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aea9565",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aec2144",
+      "title": "Fossil denticles reveal how ocean productivity shapes shark baselines and recovery potential",
+      "authors": [
+        "Erin M. Dillon",
+        "Douglas J. McCauley",
+        "Migdonio González",
+        "Sean R. Connolly",
+        "Brígida de Gracia",
+        "Jonathan D. Cybulski",
+        "Richard D. Norris",
+        "María Mercedes Gómez",
+        "Irene García-Pérez",
+        "Nicole D. Leonard",
+        "Jian-xin Zhao",
+        "Kimberly García-Méndez",
+        "Aaron O’Dea"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "732-735",
+        "articleNumber": "",
+        "doi": "10.1126/science.aec2144"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aec2144",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aec4776",
+      "title": "Forest canopy decline under elevated CO 2 during the Paleocene-Eocene Thermal Maximum",
+      "authors": [
+        "Regan E. Dunn",
+        "Marieke Dechesne",
+        "Brady Z. Foreman",
+        "Keifer Nace",
+        "Jenna M. West",
+        "Ellen D. Currano"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "696-701",
+        "articleNumber": "",
+        "doi": "10.1126/science.aec4776"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aec4776",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aee7004",
+      "title": "Artificial hibernation reveals synaptic engram architecture associated with memory retention",
+      "authors": [
+        "Y. J. Lin",
+        "A. Takahashi-Nakazato",
+        "K. Tsutsumi",
+        "T. Takahashi",
+        "D. Mercier",
+        "H. Ashitomi",
+        "M. C. Chiang",
+        "M. Haberl",
+        "M. Uytiepo",
+        "A. Maximov",
+        "Y. Makino",
+        "T. Nemoto",
+        "R. Enoki",
+        "A. Hirano",
+        "K. Soga",
+        "S. Looprasertkul",
+        "N. Ohno",
+        "Y. Kubota",
+        "T. Sakurai",
+        "K. Z. Tanaka"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "",
+        "articleNumber": "eaee7004",
+        "doi": "10.1126/science.aee7004"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aee7004",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aee8723",
+      "title": "Eco-evolutionary feedback reshapes competitive dynamics in an orchard fly system",
+      "authors": [
+        "Samuel J. Leonard",
+        "Mulin Huan",
+        "Neha Viswanathan",
+        "Austin Kerker",
+        "Paul Schmidt",
+        "Jonathan M. Levine"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "708-713",
+        "articleNumber": "",
+        "doi": "10.1126/science.aee8723"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aee8723",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aeg4720",
+      "title": "A thalamocortical circuit encoding deviations from sensory history",
+      "authors": [
+        "Yi Ning Leow",
+        "Arundhati Natesan",
+        "Alexandria Barlowe",
+        "Sofie Ährlund-Richter",
+        "Tianyu (Cindy) Luo",
+        "Mehrdad Jazayeri",
+        "Mriganka Sur"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "",
+        "articleNumber": "eaeg4720",
+        "doi": "10.1126/science.aeg4720"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aeg4720",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aeh1834",
+      "title": "A CDK1 phospho-switch reprograms TRAIP to unload replisomes in mitosis",
+      "authors": [
+        "Geylani Can",
+        "Maksym Shyian",
+        "Archana Krishnamoorthy",
+        "Samreen Ahmed",
+        "Yang Lim",
+        "Alex Wu",
+        "Raphael Pavani",
+        "Manal S. Zaher",
+        "André Nussenzweig",
+        "Markus Räschle",
+        "Thomas E. Wilson",
+        "Thomas W. Glover",
+        "Johannes C. Walter",
+        "David Pellman"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "",
+        "articleNumber": "eaeh1834",
+        "doi": "10.1126/science.aeh1834"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aeh1834",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aeh2300",
+      "title": "TTF2 processes sites of incomplete DNA replication during mitosis via sister-chromatid exchanges",
+      "authors": [
+        "Ryo Fujisawa",
+        "Karim P. M. Labib"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "",
+        "articleNumber": "eaeh2300",
+        "doi": "10.1126/science.aeh2300"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aeh2300",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aei0132",
+      "title": "Inside the world of aspiring octopus farmers Life on the Octopus Farm Richard Schweid The University of North Carolina Press, 2026. 186 pp.",
+      "authors": [
+        "Barbara J. King"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "666-666",
+        "articleNumber": "",
+        "doi": "10.1126/science.aei0132"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aei0132",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aei0475",
+      "title": "Overcoming the performance ceiling of textured piezoelectric ceramics",
+      "authors": [
+        "Jinjing Zhang",
+        "Zidong Wang",
+        "Shuai Yang",
+        "Ruixuan Liu",
+        "Jianglei Chang",
+        "Haijun Wu",
+        "Mingwen Wang",
+        "Xiaoqing Chen",
+        "Yang Zhang",
+        "Xianghong Zhou",
+        "Chenbo Zhang",
+        "John Daniels",
+        "Yuan-Jinsheng Liu",
+        "Shi Liu",
+        "Yunfei Chang",
+        "Xianjie Wang",
+        "Xinya Feng",
+        "Chunchun Li",
+        "Nan Zhang",
+        "Jinglei Li",
+        "Shujun Zhang",
+        "Fei Li"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "719-726",
+        "articleNumber": "",
+        "doi": "10.1126/science.aei0475"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aei0475",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aej6968",
+      "title": "Equity in pathogen genomic surveillance",
+      "authors": [
+        "Mnotho Ngcobo"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "668-668",
+        "articleNumber": "",
+        "doi": "10.1126/science.aej6968"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aej6968",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aej7857",
+      "title": "Hidden costs of China’s straw-burning ban",
+      "authors": [
+        "Xinhui Feng",
+        "Qirui Zhang",
+        "Yan Li",
+        "Yimin Wang"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "667-667",
+        "articleNumber": "",
+        "doi": "10.1126/science.aej7857"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aej7857",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aek0196",
+      "title": "A boost for chemical vaccination against malaria",
+      "authors": [
+        "Miguel Prudêncio",
+        "Maria M. Mota"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "661-662",
+        "articleNumber": "",
+        "doi": "10.1126/science.aek0196"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aek0196",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aek0549",
+      "title": "The scales of strain on sharks",
+      "authors": [
+        "Peter D. Roopnarine"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "660-661",
+        "articleNumber": "",
+        "doi": "10.1126/science.aek0549"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aek0549",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aek0561",
+      "title": "The phase-shifting architecture of chromosomes",
+      "authors": [
+        "William Gelbart"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "664-665",
+        "articleNumber": "",
+        "doi": "10.1126/science.aek0561"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aek0561",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aek0574",
+      "title": "The proton’s next secret",
+      "authors": [
+        "Wenliang Li"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "663-664",
+        "articleNumber": "",
+        "doi": "10.1126/science.aek0574"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aek0574",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aek2193",
+      "title": "Should humanoid robots in every household really be a top priority?",
+      "authors": [
+        "Aude G. Billard"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "",
+        "articleNumber": "aek2193",
+        "doi": "10.1126/science.aek2193"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aek2193",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.aek7995",
+      "title": "Shark governance requires species identity",
+      "authors": [
+        "Hugo Bornatowski",
+        "Rodrigo Barreto"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "668-668",
+        "articleNumber": "",
+        "doi": "10.1126/science.aek7995"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.aek7995",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael2482",
+      "title": "A democracy tax in support of science",
+      "authors": [
+        "John Palfrey"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "641-641",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael2482"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael2482",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael2764",
+      "title": "Erratum for the Report “Epigenetic regulation of antagonistic receptors confers rice blast resistance with yield balance”",
+      "authors": [],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "",
+        "articleNumber": "eael2764",
+        "doi": "10.1126/science.ael2764"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael2764",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael3842",
+      "title": "In Science Journals",
+      "authors": [
+        "Mattia Maroso",
+        "Stella M. Hurtley",
+        "Bianca Lopez",
+        "Jelena Stajic",
+        "Phil Szuromi",
+        "Angela Hessler",
+        "Leslie Ferrarelli",
+        "Molly Ogle",
+        "Di Jiang",
+        "Yevgeniya Nusinovich",
+        "Sarah H. Ross",
+        "Sacha Vignieri",
+        "Christiana N. Fogg"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "674-676",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael3842"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael3842",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael3843",
+      "title": "In Other Journals",
+      "authors": [
+        "Bianca Lopez",
+        "Sarah H. Ross",
+        "Stella M. Hurtley",
+        "Brad Wible",
+        "Di Jiang",
+        "Michael A. Funk",
+        "Jesse Smith"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "675-676",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael3843"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael3843",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael3844",
+      "title": "Writing the hard way",
+      "authors": [
+        "Bastien Le Guellec"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "738-738",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael3844"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael3844",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael4184",
+      "title": "Magic or realism?",
+      "authors": [
+        "Charles Piller",
+        "Jennie Erin Smith"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "652-659",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael4184"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael4184",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael4188",
+      "title": "Planned satellite constellations risk runaway debris",
+      "authors": [
+        "Hannah Richter"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "642-643",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael4188"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael4188",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael4189",
+      "title": "With lucky dive, scientists get a front-row view of the creation of Earth’s surface",
+      "authors": [
+        "Paul Voosen"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "644-645",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael4189"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael4189",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael4190",
+      "title": "Researchers struggle to improve nonopioid pain drugs",
+      "authors": [
+        "Jennie Erin Smith"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "645-646",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael4190"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael4190",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael4191",
+      "title": "Physicists find strong evidence for elusive ‘glueball’",
+      "authors": [
+        "Julia Vaz"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "647-647",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael4191"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael4191",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael4192",
+      "title": "Fight over Colorado River water threatens ecosystems",
+      "authors": [
+        "Erik Stokstad"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "648-649",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael4192"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael4192",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael4193",
+      "title": "‘Mismatched’ Ebola vaccine may soon be rolled out widely",
+      "authors": [
+        "Kai Kupferschmidt"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "649-650",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael4193"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael4193",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael4194",
+      "title": "Tau can wreak havoc in brain cells’ energy factories",
+      "authors": [
+        "Sara Reardon"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "651-651",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael4194"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael4194",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1126/science.ael5176",
+      "title": "New Products",
+      "authors": [],
+      "date": "2026-08-13",
+      "datePrecision": "unknown",
+      "journal": "Science",
+      "citation": {
+        "year": 2026,
+        "volume": "393",
+        "issue": "6812",
+        "pages": "736-736",
+        "articleNumber": "",
+        "doi": "10.1126/science.ael5176"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1126/science.ael5176",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

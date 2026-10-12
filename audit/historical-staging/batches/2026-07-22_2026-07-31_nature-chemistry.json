@@ -1,0 +1,463 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Chemistry",
+  "issns": [
+    "1755-4330",
+    "1755-4349"
+  ],
+  "range": {
+    "from": "2026-07-22",
+    "to": "2026-07-31"
+  },
+  "checkedAt": "2026-10-12T05:32:06.545Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "1755-4330",
+        "total": 9,
+        "count": 9,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1755-4349",
+        "total": 9,
+        "count": 9,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 9,
+      "count": 9,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 9,
+      "openalex": 9
+    }
+  },
+  "candidateCount": 9,
+  "alreadyPublished": 2,
+  "unreviewed": 7,
+  "records": [
+    {
+      "doi": "10.1038/s41557-026-02200-y",
+      "title": "Oleic acid at the heart of olive oil",
+      "authors": [
+        "Patricia O’Hara"
+      ],
+      "date": "2026-07-31",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1528-1528",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02200-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02200-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02209-3",
+      "title": "Deciphering the infrared spectrum of the hydrated proton using full-dimensional quantum dynamics",
+      "authors": [
+        "David Mendive-Tapia",
+        "Christoph Schran",
+        "Banshi Das",
+        "Fabien Gatti",
+        "Markus Schröder",
+        "Dominik Marx",
+        "Oriol Vendrell"
+      ],
+      "date": "2026-07-27",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1773-1780",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02209-3"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02209-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02212-8",
+      "title": "Highly chemoselective access to alkyl-sulfur compounds via N2 extrusion of alkyl hydrazines",
+      "authors": [
+        "Shuanghu Wang",
+        "David A. Cagan",
+        "Jet Tsien",
+        "Jiapei Zhang",
+        "Thirupathi Gogula",
+        "Appala Venkata Ramana Murthy",
+        "Sampath Kumar Nangunoori",
+        "Gohith Boga",
+        "Martins S. Oderinde",
+        "Adrianna M. Turner",
+        "Howard C. Hang",
+        "Yu Kawamata",
+        "Phil S. Baran"
+      ],
+      "date": "2026-07-22",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1790-1799",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02212-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02212-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02214-6",
+      "title": "A versatile strategy for oligonucleotide functionalization via on-support phosphitylation",
+      "authors": [
+        "Ayan Dasgupta",
+        "Sebastian Golojuch",
+        "Li Xiao",
+        "Nour Eddine Fahmi",
+        "Edward A. Anderson",
+        "Tom Brown"
+      ],
+      "date": "2026-07-22",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1747-1754",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02214-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02214-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02215-5",
+      "title": "Innovation without inventors",
+      "authors": [
+        "Jennifer M. Rampling"
+      ],
+      "date": "2026-07-30",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1352-1353",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02215-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02215-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02217-3",
+      "title": "Aggregation affords productive photocatalysis",
+      "authors": [
+        "Xueliang Shi",
+        "Hai-Bo Yang"
+      ],
+      "date": "2026-07-22",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1354-1355",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02217-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02217-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02220-8",
+      "title": "How webby is the wood-wide web?",
+      "authors": [
+        "Bruce C. Gibb"
+      ],
+      "date": "2026-07-31",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "8",
+        "pages": "1349-1351",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02220-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02220-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02221-7",
+      "title": "Solvent-bridged electrolytes for high-energy Li-ion batteries under extreme conditions",
+      "authors": [
+        "Yawei Chen",
+        "Fanyang Huang",
+        "Qiu Zhang",
+        "Lei Zheng",
+        "Ai-Min Li",
+        "Dejian Dong",
+        "Kangxuan Xia",
+        "Taeyong Lee",
+        "Weiran Zhang",
+        "Zheng Li",
+        "Xin Zhang",
+        "Chang-Xin Zhao",
+        "Fu Chen",
+        "Jiancun Rao",
+        "Karen Gaskell",
+        "Enyuan Hu",
+        "Chunsheng Wang"
+      ],
+      "date": "2026-07-27",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02221-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02221-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-026-02229-z",
+      "title": "On-support phosphitylation for oligonucleotide modification",
+      "authors": [],
+      "date": "2026-07-27",
+      "datePrecision": "day",
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "10",
+        "pages": "1692-1693",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02229-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-026-02229-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-07-22",
+        "to": "2026-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

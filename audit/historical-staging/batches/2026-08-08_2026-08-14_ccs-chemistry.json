@@ -1,0 +1,146 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "CCS Chemistry",
+  "issns": [
+    "2096-5745"
+  ],
+  "range": {
+    "from": "2026-08-08",
+    "to": "2026-08-14"
+  },
+  "checkedAt": "2026-10-12T05:31:30.020Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2096-5745",
+        "total": 0,
+        "count": 0,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 2,
+      "count": 2,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 0,
+      "openalex": 2
+    }
+  },
+  "candidateCount": 2,
+  "alreadyPublished": 0,
+  "unreviewed": 2,
+  "records": [
+    {
+      "doi": "10.31635/ccschem.026.202608181",
+      "title": "Biomimetic Design in a Flexible Macrocyclic Chelator Enables Efficient Uranium Decorporation from Bones",
+      "authors": [
+        "Dehan Cao",
+        "Yiman Guo",
+        "Yaqi Jin",
+        "Ziyi Zhang",
+        "Zongyi Li",
+        "Tianen Zhu",
+        "Xing Dai",
+        "Lei Chen",
+        "Longxiang Wang",
+        "Shiyu Qing",
+        "Ximeng Li",
+        "Duo Zhang",
+        "Hailong Zhang",
+        "Zhifang Chai",
+        "Bin Chen",
+        "Juan Diwu",
+        "Shuao Wang"
+      ],
+      "date": "2026-08-12",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-11",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608181"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.026.202608181",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608227",
+      "title": "Prismatic Bis(tetraoxacalix[2]arene[2]triazine) Cages: An Emergent, Versatile Platform for Diverse Functions",
+      "authors": [
+        "Na Luo",
+        "Wei Wang",
+        "De‐Xian Wang",
+        "Mei-Xiang Wang",
+        "Qi‐Qiang Wang"
+      ],
+      "date": "2026-08-13",
+      "datePrecision": "day",
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "1-19",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.026.202608227"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.026.202608227",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-08-08",
+        "to": "2026-08-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
