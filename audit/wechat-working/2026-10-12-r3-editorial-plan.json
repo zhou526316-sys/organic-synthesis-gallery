@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r3",
+  "userRequest": "withdraw selected ACS Catalysis deep read, keep all five daily cards, focus Gallery user features particularly true local PDF flow since Sep22, future personal library; JACS retrospective unchanged",
+  "dailyOfficialDoiList": [
+    "10.1021/acs.joc.6c02017",
+    "10.1021/acs.orglett.6c04095",
+    "10.1021/acs.orglett.6c04010",
+    "10.1021/acs.orglett.6c03971",
+    "10.1021/acscatal.6c06048"
+  ],
+  "currentProductionCardsAsOf08": 964,
+  "firstArticle": "gallery_daily_product_update",
+  "retrospectiveDoi": "10.1021/jacs.6c10406",
+  "writingThread": "five paper cards → search and link → private local PDF selection/index and native read → personal favorites/notes → responsible future library vision",
+  "sourcesAndConfidence": [
+    {
+      "claim": "Oct 12 five releases and issue inventory 964",
+      "source": "audit/literature-update-state.json lastPublication publicationSlot 2026-10-12T08:00+08",
+      "confidence": "production release verified"
+    },
+    {
+      "claim": "Local PDF button maps DOI to on-device file chosen by user and may search approved folder",
+      "source": "docs/pdf-vault-native-local-open.md 2026-10-11 and 2026-10-12 sections; src/pdf-vault/open.mjs and download-discovery.mjs",
+      "confidence": "implemented path; real end-user permission depends on device"
+    },
+    {
+      "claim": "No automatic cross-device byte/path sync, only current browser permission",
+      "source": "docs/pdf-vault-native-local-open.md Browser and Privacy boundary",
+      "confidence": "explicit limitation"
+    },
+    {
+      "claim": "Source identity validates first-page/metadata DOI and rejects SI/mismatches",
+      "source": "src/pdf-vault/reader.mjs and docs/pdf-vault-native-local-open.md",
+      "confidence": "implemented identity safety"
+    },
+    {
+      "claim": "Native PDF reader continuous scrolling, Ctrl+F in opened PDF",
+      "source": "docs/pdf-vault-native-local-open.md, src/pdf-vault/open.mjs",
+      "confidence": "implemented browser native reader; Ctrl+F depends on browser settings"
+    },
+    {
+      "claim": "Search titles authors DOI and available abstracts; filters",
+      "source": "src/user-ui/search-controller.ts and docs/search-abstract-recall-contract.md",
+      "confidence": "current implemented, coverage not uniformly 100%"
+    },
+    {
+      "claim": "favorites private notes reading status and followed search",
+      "source": "src/user-ui/library-shell.ts verified labels",
+      "confidence": "user-visible; account sync extent not asserted"
+    },
+    {
+      "claim": "personal-cloud storage interfaces, multi-disciplinary and full historical corpus",
+      "source": "architecture/PDF-VAULT-CHINA-V1.md P3-P5 and user future vision",
+      "confidence": "aspirational only; no deployed functionality"
+    }
+  ],
+  "notSupportedAsLive": [
+    "automatic local PDF synchronizes across computers",
+    "site-wide full-text indexing of personal PDF files",
+    "all historical journal DOI already covered",
+    "ready public cloud PDF backup",
+    "automatic publisher bypass"
+  ],
+  "noPublicSend": true
+}
