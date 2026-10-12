@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {
   SCHEMA,normDoi,previousPeriod,orderedJournals,nextCursor,mediaPolicy,
-  bisectDateRange,isTruncationOnly,
+  bisectDateRange,isTruncationOnly,isBudgetOnlyExhaustion,
   fromCrossref,fromOpenAlex,mergeCandidates,completeStatus,runNightly,
   requiresRscCreationRescue,RSC_CREATION_RESCUE_VERSION
 } from './historical-nightly-discovery.mjs';
@@ -646,8 +646,8 @@ test('corrupted completed leaf journal identity cannot be used to close the root
   },{priorState:state});
 });
 
-test('API call budget exhaustion reports incomplete coverage, never split or a false successful DOI window',async()=>{
-  await isolatedHistoricalRun(async({readState,readBatch})=>{
+test('request-budget exhaustion defers a source window without a false outage or partial root',async()=>{
+  await isolatedHistoricalRun(async({readState,root})=>{
     process.env.API_REQUEST_LIMIT='4';
     let remoteCalls=0;
     global.fetch=async url=>{
@@ -656,14 +656,14 @@ test('API call budget exhaustion reports incomplete coverage, never split or a f
       return u.hostname==='api.crossref.org'?saturatedCrossref(u):emptyOpenAlex();
     };
     const result=await runNightly();
-    assert.equal(result.blocked,true);
+    assert.equal(result.blocked,false);
+    assert.equal(result.deferredBudget,true);
+    assert.equal(result.processed,0);
     assert.equal(result.completeWindows,0);
     assert.equal(result.activeSplit,null);
     assert.ok(remoteCalls<=4,'no external request after the configured budget');
     assert.equal((await readState()).cursor.journalIndex,0);
-    const batch=await readBatch('2026-09-22_2026-09-30_jacs');
-    assert.equal(batch.status,'incomplete_sources');
-    assert.match(batch.consistency.issues.join('|'),/nightly_api_budget_exceeded/);
+    await assert.rejects(readFile(join(root,'audit/historical-staging/batches/2026-09-22_2026-09-30_jacs.json')),/ENOENT/);
   });
 });
 
@@ -942,4 +942,46 @@ test('Jan 1 RSC false publication-day overload is avoided by created-only lane',
     assert.ok(filters.every(f=>f.includes('from-created-date:2026-01-01')));
     assert.equal(batch.sourceStatus.crossref.every(row=>row.lane==='created'),true);
   },{priorState:state});
+});
+
+test('budget-only deferral is distinct from source 429, and retains resumed split progress',async()=>{
+  assert.equal(isBudgetOnlyExhaustion({complete:false,issues:[
+    'issn_2041-1723:publication:nightly_api_budget_exceeded',
+    'nightly_api_budget_exceeded']}),true);
+  assert.equal(isBudgetOnlyExhaustion({complete:false,issues:[
+    'issn_2041-1723:publication:nightly_api_budget_exceeded',
+    'openalex:http_429']}),false);
+  const prior=stage0(),id='2026-09-22_2026-09-30_jacs';
+  prior.activeSplit={rootId:id,rootRange:prior.cursor.range,journalName:'JACS',
+    completed:[],pending:[{from:'2026-09-22',to:'2026-09-25'},{from:'2026-09-26',to:'2026-09-30'}]};
+  await isolatedHistoricalRun(async({readState,root})=>{
+    process.env.API_REQUEST_LIMIT='4';
+    global.fetch=async url=>new URL(url).hostname==='api.crossref.org'
+      ?saturatedCrossref(new URL(url)):emptyOpenAlex();
+    const result=await runNightly(),state=await readState();
+    assert.equal(result.deferredBudget,true);
+    assert.equal(result.blocked,false);
+    assert.equal(result.completeWindows,0);
+    assert.deepEqual(state.activeSplit.pending,prior.activeSplit.pending);
+    assert.equal(state.activeSplit.completed.length,0);
+    await assert.rejects(readFile(join(root,'audit/historical-staging/batches/'+id+'__2026-09-22_2026-09-25.json')),/ENOENT/);
+  },{priorState:prior});
+});
+test('a real 429 alongside exhausted budget remains a blocking source failure',async()=>{
+  await isolatedHistoricalRun(async({readState,readBatch})=>{
+    process.env.API_REQUEST_LIMIT='4';
+    global.fetch=async url=>{
+      const u=new URL(url);
+      if(u.hostname==='api.openalex.org')return {ok:false,status:429};
+      return saturatedCrossref(u);
+    };
+    const result=await runNightly();
+    assert.equal(result.blocked,true);
+    assert.equal(result.deferredBudget,false);
+    assert.equal(result.completeWindows,0);
+    assert.equal((await readState()).cursor.journalIndex,0);
+    const record=await readBatch('2026-09-22_2026-09-30_jacs');
+    assert.match(record.consistency.issues.join('|'),/429/);
+    assert.match(record.consistency.issues.join('|'),/nightly_api_budget_exceeded/);
+  });
 });
