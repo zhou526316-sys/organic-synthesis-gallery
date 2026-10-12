@@ -1,0 +1,42 @@
+{
+  "action": "restore_original_source_pdf_image_page_candidates_only",
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r6",
+  "requestId": "oct12-r6-complete-figure-page-audit-20261012-1808",
+  "sources": {
+    "jacs": {
+      "doi": "10.1021/jacs.6c10406",
+      "adobeDownloadUrl": "https://at.adobe.com/ta7tvdemSfIgHFzJ",
+      "sha256": "78da09472d4cf1b6dece3e11b671991ea340f438fffe19c18f4226ed78ae9000",
+      "pages": [
+        2,
+        3,
+        6
+      ]
+    },
+    "acscatal": {
+      "doi": "10.1021/acscatal.6c06048",
+      "adobeDownloadUrl": "https://at.adobe.com/U9T3kT8uYbISoL5I",
+      "sha256": "22315092e88e6ee323bfb261cd92c6c490414b7ad662235321c240ca875b7e99",
+      "pages": [
+        4,
+        5,
+        7,
+        8,
+        9
+      ]
+    },
+    "acscatal_si": {
+      "doi": "10.1021/acscatal.6c06048",
+      "adobeDownloadUrl": "https://at.adobe.com/Wm6MyQbQ3OxjYiks",
+      "sha256": "afb372f65369a2195de68b45fbf9f157c89f8fb3176d11bb81e65415311a37d5",
+      "pages": [
+        27,
+        30
+      ]
+    }
+  },
+  "draftWriteAuthorized": false,
+  "publicSendAuthorized": false,
+  "note": "Visual audit of unmodified original owner-provided JACS/ACS full journal PDFs and ACS SI; intermediate coarse page previews under audit only. Do not write draft, do not publish, never store full PDF in git."
+}
