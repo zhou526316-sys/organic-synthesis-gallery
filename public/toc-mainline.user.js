@@ -2631,7 +2631,7 @@ function embeddedJobDois(value) {
   // when the RSC article shell lacks the original TOC/figure DOM. This is a
   // bounded, first-party, same-session fallback for TWO verified Oct-09 gaps.
   // A PDF first-page preview, generic image, or foreign article is never TOC.
-  var RSC_NATIVE_ABSTRACT_AJAX_REVISION = '20261010-doi-article-id-semantic-v2';
+  var RSC_NATIVE_ABSTRACT_AJAX_REVISION = '20261012-doi-card-semantic-provenance-v3';
   function rscNativeAjaxBoundRoute(job) {
     var doi=normalizeDoi(job&&job.doi);
     if(!/^10\.1039\/[a-z][0-9][a-z]{2}[a-z0-9]+$/i.test(doi)
@@ -2664,6 +2664,21 @@ function embeddedJobDois(value) {
       var id=article.articleId;
       return new RegExp('(?:^|[^0-9])'+id+'(?:[^0-9]|$)').test(decoded)
         && !/\/(?:logo|icon|banner|cover|avatar|site-asset)\b/i.test(decoded);
+    }catch(_){return false;}
+  }
+
+  // A publisher issue card or verified ArticleAbstractAjax response can prove
+  // which DOI owns an image even when the CDN asset filename has no DOI.
+  // Use this ONLY inside a DOI-unique card / articleId-bound semantic abstract
+  // block, never on ordinary article body images or guessed media paths.
+  function rscSemanticCardPublisherAsset(job,value) {
+    if(!candidateBelongsToJob(value,job)||rscPdfPreviewUrl(value)||reject('',value))return false;
+    try{
+      var u=new URL(String(value||''),location.href),host=u.hostname.toLowerCase(),path=u.pathname.toLowerCase();
+      return u.protocol==='https:'&&(host==='pubs.rsc.org'||host==='rscj.silverchair-cdn.com')
+        &&/\.(?:svg|png|jpe?g|webp|gif)$/i.test(path)
+        &&!/\/(?:logo|icon|banner|cover|avatar|site-asset|advert)(?:[./_-]|$)/i.test(path)
+        &&!/\.pdf\.(?:gif|png|jpe?g|webp)$/i.test(path);
     }catch(_){return false;}
   }
 
@@ -2712,7 +2727,7 @@ function embeddedJobDois(value) {
         candidates.slice(0,5).forEach(function(value,rank){
           var url=normalizeUrl(value,route.url);
           if(!url||seen.has(url)||rscPdfPreviewUrl(url)||reject(text,url)
-              ||!rscVerifiedSilverchairMedia(job,url))return;
+              ||!(rscVerifiedSilverchairMedia(job,url)||rscSemanticCardPublisherAsset(job,url)))return;
           try{
             var u=new URL(url);
             if(u.protocol!=='https:'||!(u.hostname==='pubs.rsc.org'||u.hostname.endsWith('.rsc.org')||u.hostname.endsWith('.silverchair-cdn.com')))return;
@@ -2730,7 +2745,7 @@ function embeddedJobDois(value) {
       rscSilverchairVisualCandidates(job,doc,location.href).forEach(function(row){
         if(seen.has(row.url))return;
         if(!rscVerifiedSilverchairMedia(job,row.url)
-          &&String(row.url||'').toLowerCase().indexOf(route.doi.split('/')[1])<0)return;
+          &&!rscSemanticCardPublisherAsset(job,row.url))return;
         seen.add(row.url);
         rows.push(Object.assign({},row,{source:'rsc_verified_abstract_ajax_dom'}));
       });
@@ -2828,7 +2843,7 @@ function embeddedJobDois(value) {
         var css=inline.match(/background-image\s*:\s*url\(\s*["']?([^"')\s]+)/i);
         if(css){var url=normalizeUrl(css[1],base);if(url&&urls.indexOf(url)<0)urls.push(url);}
         urls.forEach(function(url,rank){
-          if(!mediaBound(url)||seen.has(url))return;
+          if(!(mediaBound(url)||visual&&rscSemanticCardPublisherAsset(job,url))||seen.has(url))return;
           seen.add(url);
           rows.push({url:url,kind:kind,assetType:visual?'graphical_abstract':'figure1_fallback',
             score:(visual?990:190)-rank,text:lead||label.slice(0,120),
@@ -2872,8 +2887,13 @@ function embeddedJobDois(value) {
     return rows.sort(function(a,b){return b.score-a.score;});
   }
   function rscDoiFromTextOrHref(value) {
-    var match=String(value||'').toLowerCase().match(/10\.1039\/[a-z0-9._()+\-]+/i);
-    return match?normalizeDoi(match[0]):'';
+    var raw=String(value||'').toLowerCase();
+    var match=raw.match(/10\.1039\/[a-z0-9._()+\-]+/i);
+    if(match)return normalizeDoi(match[0]);
+    // The publisher's old and new issue cards also link articles by
+    // /en/content/articlelanding/YYYY/SC/D6SC... without spelling out DOI.
+    var legacy=raw.match(/\/(?:en\/content\/)?article(?:landing|html)\/20\d{2}\/(sc|gc)\/(d\d(?:sc|gc)[a-z0-9]+)/i);
+    return legacy&&legacy[1]===legacy[2].slice(2,4)?normalizeDoi('10.1039/'+legacy[2]):'';
   }
 
   function rscSearchResultUrl(job) {
@@ -2937,7 +2957,9 @@ function embeddedJobDois(value) {
         var context=contextFor(node)+' '+String(card.textContent||'').slice(0,1000);
         articleFigureImageUrls(node,baseUrl||location.href).forEach(function(url,rank){
           if(!url||rscPdfPreviewUrl(url)||reject(context,url)||seen.has(url))return;
-          if(!candidateBelongsToJob(url,job))return;
+          // The ancestor is DOI-unique; URL may be DOI-less but MUST be an
+          // actual publisher-hosted image in the same verified card.
+          if(!rscSemanticCardPublisherAsset(job,url))return;
           assets.push({url:url,node:node,rank:rank,context:context});
         });
       });
@@ -2945,7 +2967,9 @@ function embeddedJobDois(value) {
       var list=Array.from(unique.values());
       list.forEach(function(item,index){
         var strong=/graphical\s+abstract|visual\s+abstract|table\s+of\s+contents|toc\s+(?:graphic|image)|abstract\s+(?:graphic|image)/i.test(item.context);
-        if(!strong&&list.length!==1)return;
+        // A single generic figure, cover thumbnail, or article teaser is NOT
+        // sufficient to claim a publisher graphical abstract.
+        if(!strong)return;
         seen.add(item.url);
         rows.push({url:item.url,kind:'official',assetType:'graphical_abstract',
           score:(strong?970:910)-item.rank-index,text:'RSC issue card graphical abstract',
