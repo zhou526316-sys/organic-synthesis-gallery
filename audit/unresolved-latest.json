@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-12T23:12:51.517Z",
+  "generatedAt": "2026-10-12T23:15:41.855Z",
   "auditVersion": 5,
   "timeZone": "Asia/Shanghai",
   "startDate": "2026-09-19",
@@ -13,7 +13,7 @@
     "previouslyReviewedExcluded": 2115,
     "missingFromGallery": 98,
     "potentialGaps": 26,
-    "criticalSourceFailures": 2,
+    "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 4,
     "closureCoverageAnomalies": 5,
@@ -24,7 +24,7 @@
     "excludedByPolicy": 0
   },
   "discoveryGate": {
-    "criticalSourceFailures": 2,
+    "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 4,
     "closureCoverageAnomalies": 5,
@@ -1522,6 +1522,7 @@
       "topics": [],
       "sources": [
         "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
         "crossref:0022-3263:created",
         "crossref:1520-6904:online",
         "crossref:1520-6904:published",
@@ -1557,6 +1558,7 @@
       "topics": [],
       "sources": [
         "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
         "crossref:0022-3263:created",
         "crossref:1520-6904:online",
         "crossref:1520-6904:published",
@@ -4014,7 +4016,8 @@
       "authors": [],
       "topics": [],
       "sources": [
-        "crossref:1463-9262:created"
+        "crossref:1463-9262:created",
+        "crossref:1463-9270:created"
       ],
       "activeFrom": "2026-10-01",
       "dateUnverified": true,
@@ -4045,7 +4048,8 @@
       ],
       "topics": [],
       "sources": [
-        "crossref:1463-9262:created"
+        "crossref:1463-9262:created",
+        "crossref:1463-9270:created"
       ],
       "activeFrom": "2026-10-01",
       "dateUnverified": true,
@@ -4069,7 +4073,8 @@
       "authors": [],
       "topics": [],
       "sources": [
-        "crossref:1463-9262:created"
+        "crossref:1463-9262:created",
+        "crossref:1463-9270:created"
       ],
       "activeFrom": "2026-10-01",
       "dateUnverified": true,
@@ -4102,7 +4107,8 @@
       ],
       "topics": [],
       "sources": [
-        "crossref:1463-9262:created"
+        "crossref:1463-9262:created",
+        "crossref:1463-9270:created"
       ],
       "activeFrom": "2026-10-01",
       "dateUnverified": true,
@@ -4126,7 +4132,8 @@
       "authors": [],
       "topics": [],
       "sources": [
-        "crossref:1463-9262:created"
+        "crossref:1463-9262:created",
+        "crossref:1463-9270:created"
       ],
       "activeFrom": "2026-10-01",
       "dateUnverified": true,
@@ -4161,7 +4168,8 @@
       ],
       "topics": [],
       "sources": [
-        "crossref:1463-9262:created"
+        "crossref:1463-9262:created",
+        "crossref:1463-9270:created"
       ],
       "activeFrom": "2026-10-01",
       "dateUnverified": true,

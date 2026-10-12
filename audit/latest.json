@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-10-12T23:12:51.517Z",
+  "generatedAt": "2026-10-12T23:15:41.855Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-with-catchup",
   "lookbackDays": 3,
@@ -174,7 +174,7 @@
     "previouslyReviewedExcluded": 2115,
     "missingFromGallery": 98,
     "potentialGaps": 26,
-    "criticalSourceFailures": 2,
+    "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 4,
     "closureCoverageAnomalies": 5,
@@ -186,13 +186,13 @@
   },
   "closure": {
     "date": "2026-10-12",
-    "status": "blocked-source-failure",
+    "status": "blocked-source-coverage-anomaly",
     "sourceRecords": 85,
     "rawMissingFromGallery": 85,
     "previouslyReviewedExcluded": 1,
     "missingFromGallery": 84,
     "potentialGaps": 24,
-    "criticalSourceFailures": 2,
+    "criticalSourceFailures": 0,
     "sourceCoverageAnomalies": [
       {
         "journal": "Nature",
@@ -1571,7 +1571,7 @@
       "activeFrom": "2026-10-01",
       "effectiveStart": "2026-10-01",
       "crossrefRequests": 6,
-      "crossrefFailures": 1,
+      "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
@@ -1596,7 +1596,7 @@
       "activeFrom": "2026-09-22",
       "effectiveStart": "2026-09-22",
       "crossrefRequests": 6,
-      "crossrefFailures": 1,
+      "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
@@ -1703,7 +1703,7 @@
       "activeFrom": "2026-10-01",
       "effectiveStart": "2026-10-01",
       "crossrefRequests": 6,
-      "crossrefFailures": 1,
+      "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
@@ -2658,9 +2658,9 @@
       "issn": "1463-9270",
       "mode": "created",
       "queryStart": "2026-10-01",
-      "ok": false,
-      "count": 0,
-      "note": "429 https://api.crossref.org/journals/1463-9270/works?filter=from-created-date%3A2026-10-01%2Cuntil-created-date%3A2026-10-13&rows=500&cursor=*"
+      "ok": true,
+      "count": 39,
+      "note": ""
     },
     {
       "source": "openalex",
@@ -2686,9 +2686,9 @@
       "issn": "0022-3263",
       "mode": "published",
       "queryStart": "2026-09-22",
-      "ok": false,
-      "count": 0,
-      "note": "429 https://api.crossref.org/journals/0022-3263/works?filter=from-pub-date%3A2026-09-22%2Cuntil-pub-date%3A2026-10-13&rows=500&cursor=*"
+      "ok": true,
+      "count": 97,
+      "note": ""
     },
     {
       "source": "crossref",
@@ -3864,6 +3864,7 @@
       "topics": [],
       "sources": [
         "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
         "crossref:0022-3263:created",
         "crossref:1520-6904:online",
         "crossref:1520-6904:published",
@@ -3900,6 +3901,7 @@
       "topics": [],
       "sources": [
         "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
         "crossref:0022-3263:created",
         "crossref:1520-6904:online",
         "crossref:1520-6904:published",
@@ -6419,7 +6421,8 @@
       "authors": [],
       "topics": [],
       "sources": [
-        "crossref:1463-9262:created"
+        "crossref:1463-9262:created",
+        "crossref:1463-9270:created"
       ],
       "activeFrom": "2026-10-01",
       "dateUnverified": true,
@@ -6451,7 +6454,8 @@
       ],
       "topics": [],
       "sources": [
-        "crossref:1463-9262:created"
+        "crossref:1463-9262:created",
+        "crossref:1463-9270:created"
       ],
       "activeFrom": "2026-10-01",
       "dateUnverified": true,
@@ -6476,7 +6480,8 @@
       "authors": [],
       "topics": [],
       "sources": [
-        "crossref:1463-9262:created"
+        "crossref:1463-9262:created",
+        "crossref:1463-9270:created"
       ],
       "activeFrom": "2026-10-01",
       "dateUnverified": true,
@@ -6510,7 +6515,8 @@
       ],
       "topics": [],
       "sources": [
-        "crossref:1463-9262:created"
+        "crossref:1463-9262:created",
+        "crossref:1463-9270:created"
       ],
       "activeFrom": "2026-10-01",
       "dateUnverified": true,
@@ -6535,7 +6541,8 @@
       "authors": [],
       "topics": [],
       "sources": [
-        "crossref:1463-9262:created"
+        "crossref:1463-9262:created",
+        "crossref:1463-9270:created"
       ],
       "activeFrom": "2026-10-01",
       "dateUnverified": true,
@@ -6571,7 +6578,8 @@
       ],
       "topics": [],
       "sources": [
-        "crossref:1463-9262:created"
+        "crossref:1463-9262:created",
+        "crossref:1463-9270:created"
       ],
       "activeFrom": "2026-10-01",
       "dateUnverified": true,
@@ -7254,6 +7262,7 @@
       "topics": [],
       "sources": [
         "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
         "crossref:0022-3263:created",
         "crossref:1520-6904:online",
         "crossref:1520-6904:published",
@@ -7551,7 +7560,8 @@
       ],
       "topics": [],
       "sources": [
-        "crossref:1463-9262:created"
+        "crossref:1463-9262:created",
+        "crossref:1463-9270:created"
       ],
       "activeFrom": "2026-10-01",
       "dateUnverified": true,
