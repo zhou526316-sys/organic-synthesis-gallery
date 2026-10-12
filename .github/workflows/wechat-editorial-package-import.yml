@@ -203,6 +203,31 @@ jobs:
                               'public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json',
                               'public/wechat-editions/2026-10-12.json',
                           })
+                      # User explicitly withdrew the Oct12 featured ACS paper and
+                      # requested a five-paper daily digest/product guide + pinned JACS
+                      # retrospective. This one-date override may replace only the
+                      # old first-article manifesto, edition and review gate with SHA leases.
+                      if req.get('revision') == '2026-10-12-r3':
+                          selected = ['10.1021/jacs.6c10406']
+                          fpath = staged / 'public/wechat-featured/2026-10-12.json'
+                          epath = staged / 'public/wechat-editions/2026-10-12.json'
+                          fg = json.loads(fpath.read_text())
+                          ed = json.loads(epath.read_text())
+                          official = ['10.1021/acs.joc.6c02017', '10.1021/acs.orglett.6c04095', '10.1021/acs.orglett.6c04010', '10.1021/acs.orglett.6c03971', '10.1021/acscatal.6c06048']
+                          if (req.get('targetDateBeijing') != '2026-10-12'
+                              or req.get('expectedDois') != selected
+                              or gate.get('selectionDois') != selected
+                              or gate.get('date') != '2026-10-12'
+                              or fg.get('contentType') != 'gallery_daily_product_update'
+                              or ed.get('featured') is not None
+                              or ed.get('dailyReleaseDois') != official
+                              or ed.get('dailySourceUrl') != 'https://gallery.gczhouwld.com/?edition=2026-10-12&summary=0'
+                              or ed.get('retrospective') != 'alkylzirconocene-deaminative-asymmetric-ke-20261012'):
+                              raise RuntimeError('Oct12 daily-guide override scope mismatch')
+                          allowed_mutable.update({
+                              'public/wechat-featured/2026-10-12.json',
+                              'public/wechat-editions/2026-10-12.json',
+                          })
                       if rel not in allowed_mutable or not re.fullmatch(r'[a-f0-9]{40}', old_sha) or blob(target.read_bytes()) != old_sha:
                           raise RuntimeError('Refusing to replace non-matching existing content: '+rel)
                   target.parent.mkdir(parents=True,exist_ok=True); target.write_bytes(payload)
