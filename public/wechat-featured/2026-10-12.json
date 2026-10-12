@@ -1,100 +1,160 @@
 {
   "date": "2026-10-12",
-  "selectionAuthority": "user_explicitly_withdrew_acs_as_featured_kept_daily_releases_2026-10-12",
-  "editorialRevision": "2026-10-12-r3",
-  "contentType": "gallery_daily_product_update",
-  "headline": "从每日上新到本地 PDF：让文献真正成为自己的资料",
-  "kicker": "化之岛 · 文献日报与网站更新",
-  "lead_figure_id": null,
-  "lead_figure_position": "none",
+  "selectionAuthority": "explicit_user_uploaded_pdf_and_si_on_2026-10-12",
+  "editorialRevision": "2026-10-12-r4",
+  "paper": {
+    "doi": "10.1021/acscatal.6c06048",
+    "title": "Mild Heterogeneous Thiophene Hydrogenation Enabled by a Modified Palladium Catalyst",
+    "journal": "ACS Catalysis",
+    "authors": "Steffen Heuvel, Marie-Christin Leusmann, Julius Wiener, Arne Nalop, Bonnie J. Tyler, Mathis J. Karrasch, Frank Glorius"
+  },
+  "headline": "氯仿诱导钯催化剂表面改性，实现噻吩的温和非均相加氢",
+  "kicker": "",
   "quick_points": [],
+  "lead_figure_id": "acs_lead",
+  "lead_figure_position": "before_quick_points",
   "sections": [
     {
-      "heading": "今天的五篇上新，先建立可回访的入口",
+      "heading": "让噻吩饱和而保硫：问题远不止芳香性",
       "eyebrow": "",
       "paragraphs": [
-        "北京时间 10 月 12 日 08:00，Gallery 正式新增 5 篇符合收录范围的论文：Organic Letters 3 篇、JOC 1 篇、ACS Catalysis 1 篇。上方的中英文题名、作者及卡片为当天实际收录的 5 个 DOI，不把未通过本期审核的文章算进“今日新增”。截至本轮正式发布，网站目录共有 964 篇文献卡片。这一数字是当前库存快照，不等于已收录各期刊创刊以来的所有文章。",
-        "读文献的第一步不该只有“今天看了什么”，还应该能在几周后重新找回它。现在你可以从同一张卡片查看题名、DOI、主视觉等信息，按照期刊和日期筛选，再通过完整的 DOI 回到对应论文。日报上方的网页入口及二维码，会带你打开今天的正式文献列表，而不是自动跳到某一篇精选。"
-      ],
-      "figures": [],
-      "figures_after_paragraph": {}
-    },
-    {
-      "heading": "按研究问题检索，而不是在文件名里猜论文",
-      "eyebrow": "",
-      "paragraphs": [
-        "网站这段时间逐步完善了面向研究人员的中英文检索体验：可以从标题、作者、DOI 和可用的摘要信息寻找文献，结合期刊、日期及关键词筛选。多关键词可组合检索，输入拼写存在误差时有相应提示。不同文献的摘要、中文解读覆盖程度并不完全相同，所以检索结果仍以现有实际入库元数据为准。",
-        "一个实用场景是：先输入研究主题找到几篇与实验设计最接近的文章；在网站上确定 DOI，再利用同一 DOI 找到自己早已下载的 PDF。网站检索负责定位“哪一篇”，电脑本地 PDF 则负责把它变成下次能直接打开的资料；这不等于 Gallery 已经索引你全部 PDF 正文。"
+        "上图（原文 Fig. 1C）是一项看似直接的结构编辑：将噻吩环加氢为四氢噻吩（thiolane），使原有硫杂芳环变为饱和硫杂环，尽量保留 C–S 骨架。真正困难之处在于，同一硫原子既是目标结构的一部分，也可能占据钯催化剂用于吸附氢和底物的表面位点；更强的氢化条件还可能转向 C–S 键断裂和加氢脱硫（HDS）。",
+        "作者选择商用 Pd(OH)₂/C（Pearlman 催化剂），通过 CHCl₃ 参与的表面化学改变催化剂行为，而不是从头设计一个结构复杂的新配合物。这使论文的两个问题连在一起：在尽可能温和的条件下保留硫并饱和环骨架；以及这种反应性能为何偏偏依赖氯仿。后一个问题最终成为本文超出“新的加氢条件”的主要贡献。",
+        "原文 Fig. 1A–B 从药物与农化分子中的噻吩出发，指出硫吸附造成的催化剂中毒、底物芳香稳定性和加氢脱硫共同限制选择性。这里没有必要重复基础芳香性教材；需要记住的是：一个合格的体系必须同时证明“保留硫、得到饱和环、催化剂仍能工作”，而非只报告底物消失。"
       ],
       "figures": [
-        "guide_search"
+        "acs_background"
       ],
       "figures_after_paragraph": {
-        "2": [
-          "guide_search"
+        "3": [
+          "acs_background"
         ]
       }
     },
     {
-      "heading": "本地 PDF：让下载的文献留在你自己的文件夹",
+      "heading": "氯仿的效应首先是实验事实，还不是机理解释",
       "eyebrow": "",
       "paragraphs": [
-        "最值得介绍的，是文献卡片上的「本地 PDF」。以电脑端 Edge/Chrome 为例，首次点击某篇文献卡片的这一入口，在新的 PDF 页选择自己保存论文的目录，并给予该目录只读权限。随后从期刊官方页面或拥有访问权限的渠道获得正文 PDF，把文件保存到同一目录。Gallery 不会替你跨越出版社权限，也不能未经授权读取电脑上所有目录。",
-        "今后再点这篇文献的「本地 PDF」，网站会在已授权目录里按 DOI 核对论文身份；关联正确后，直接在浏览器的新标签内显示原文件。文件仍保留在你原来的磁盘位置，不需要先复制到 Gallery 服务器，也不用每次重新浏览文件夹寻找。若已有 PDF 位于桌面、其他硬盘或本地同步的网盘文件夹，也可以按页面提示手动选择并建立关联。",
-        "打开后使用浏览器原生 PDF 阅读器连续向下滚动、缩放，或用阅读器的查找功能定位本篇 PDF 内的词句。特别要区分“网站按标题/摘要检索论文”与“在已打开 PDF 内搜索文字”：后者属于浏览器阅读器能力，当前不能宣传为对电脑全部 PDF 的统一全文检索。"
+        "原文 Table 1 以 2-正丁基噻吩为模型底物：在 60 °C、30 bar H₂ 下，甲苯、甲醇、2-MeTHF 和正庚烷分别给出 27%、17%、25% 和 19% 的目标产物 GC-FID 收率，而 CHCl₃ 提升至 86%。改到 25 °C、30 bar 后，商用湿催化剂得到 61%，同一种催化剂预先干燥则大于 99%。这两组对照不能合并为“更换溶剂后室温必然定量反应”：催化剂含水状态本身也是决定因素。",
+        "在干燥 Pd(OH)₂/C、25 °C 的模型体系中，1 bar H₂ 仅为约 50% 收率，3 bar 提高到 87%，10 bar 达到 98%；水分增加则显著拉低反应。SI Table S2 记录由无额外加水的大于 99%，逐渐降至加 5 当量水时的 43%。因此“温和条件”在本文是对**模型底物、干催化剂、合适氢压**成立的结论，而不是无条件室温或常压。",
+        "其他氯代溶剂没有重现氯仿的效果：CH₂Cl₂、1,2-二氯乙烷和 CCl₄ 均表现更差。单独添加酸、氯盐或 Lewis 酸也没有复制完整促进作用；在另一组 2-MeTHF 条件下补加 HCl 可以把产率从 20% 提升至 54%，但仍不能解释全部差异。这样的筛选为后面提出“表面改性”提供了必要排除证据，却尚未指明具体表面活性位。"
       ],
       "figures": [
-        "guide_local"
+        "acs_table1"
       ],
       "figures_after_paragraph": {
-        "2": [
-          "guide_local"
+        "3": [
+          "acs_table1"
         ]
       }
     },
     {
-      "heading": "识别与隐私：为什么不只看文件名",
+      "heading": "一个关键实验：把“预处理”与“真正加氢”拆开",
       "eyebrow": "",
       "paragraphs": [
-        "目录授权后的关联不是按文件名猜测：系统会尝试从正文 PDF 的元数据和第一页确认 DOI，只把匹配到当前卡片的文件关联起来。补充信息 SI、具有其他 DOI 的文件、无法可靠识别的扫描件或有歧义的文献都会提示，而不是冒险把错稿打开。授权目录支持有界增量扫描及手动「重新搜索已下载 PDF」，可减少每次从头遍历大量文件的等待。",
-        "如果 PDF 被移动、修改，或者浏览器收回了目录权限，网站会提示重新关联或授权。文件路径、PDF 字节与本地文件句柄不会自动同步到公共服务器；目录授权只在当前浏览器/设备有效。这意味着一台电脑上的文件不会仅凭“登录同一个账号”就出现在另一台电脑里。"
-      ],
-      "figures": [],
-      "figures_after_paragraph": {}
-    },
-    {
-      "heading": "收藏、阅读状态和私人备注，让检索结果变成研究工作",
-      "eyebrow": "",
-      "paragraphs": [
-        "除了检索与本地 PDF，网站还提供文献收藏、阅读状态、私人备注以及关注当前检索等面向个人的操作。面对同一研究方向的数十篇文献，你可以把值得重读的文章留在收藏夹，区分待读与已读，在备注中保存自己真正关心的反应设计、底物限制和后续实验问题。",
-        "论文卡片上的 TOC/主图和已经采集的正文图能帮助你先判断研究内容，中文与英文信息也方便跨语言查找；但有些文章的图和摘要仍在持续补齐。对需要核查机理、实验条件或 SI 数据的地方，原文和正式补充材料始终是最终依据。"
-      ],
-      "figures": [],
-      "figures_after_paragraph": {}
-    },
-    {
-      "heading": "今天已经能用的，与下一步想做的",
-      "eyebrow": "",
-      "paragraphs": [
-        "我们希望 Gallery 逐步成为一层面向研究者的资料入口：公开的论文元数据与检索工具在网页上统一呈现，个人 PDF 文件由使用者自己掌握。未来如需接入个人云盘、自建文献库或其他授权存储服务，应该由用户控制数据来源、访问权限与同步方式，不能把共享书目索引和付费论文文件混为一谈。",
-        "历史回溯也会继续推进：目标是在许可和数据质量允许的范围内，把更多日期、更多符合有机合成方法学范围的论文纳入同一检索体系。当前 964 篇还不是“创刊以来全部文献”，更不能把这个愿景写成已经完成。",
-        "如果文献卡片、DOI 身份验证、本地资料关联、个人注释和权限隔离这套逻辑逐渐成熟，它也有机会适配材料、药物、生命科学等其他学科。不过，各领域的文献源、研究对象和版权规则不同，跨学科扩展仍是设想，而非已经上线的另一个站点。"
+        "如果 CHCl₃ 的作用仅是溶剂极性、底物溶解或与反应同时存在的酸性物种，那么把处理过的催化剂取出，再换成不含氯溶剂，其促进效应应当明显消失。原文 Fig. 6 正是针对这两种解释进行设计。作者先在没有噻吩底物时，以 CHCl₃/H₂ 处理干燥 Pd(OH)₂/C，洗涤并分离材料，再把它转移到 2-MeTHF 中进行加氢。",
+        "用这份预活化材料，在 2-MeTHF 中获得 **91% GC-FID 收率**；未经氯仿/氢气处理的干燥 Pd(OH)₂/C 在对照条件下只有 **33%**。另一个制备实验降低氢压，得到 75% 分离收率。两项数字应分开：91% 是分析收率，75% 是分离收率，不能互换。更重要的是，活性在离开 CHCl₃ 之后仍然保留，这使“单纯有利的液相溶剂环境”不足以解释现象。",
+        "预处理本身也不温和：采用约 120 °C、30 bar H₂、16 h；后续 2-MeTHF 加氢例子在 90 °C、10 bar H₂ 下进行。SI Table S10–S12 说明预处理需要 H₂，CH₂Cl₂/H₂ 的效果远逊于 CHCl₃/H₂。这一操作证明了“预活化、后反应”可分离的可能性，但不能据此宣称全程已经实现室温、绿色或无需氯代试剂。"
       ],
       "figures": [
-        "guide_future"
+        "acs_pretreatment"
       ],
       "figures_after_paragraph": {
-        "2": [
-          "guide_future"
+        "3": [
+          "acs_pretreatment"
         ]
       }
     },
     {
-      "heading": "现在就可以尝试",
+      "heading": "表面究竟发生了什么：XPS 与 ToF-SIMS 给出两层证据",
       "eyebrow": "",
       "paragraphs": [
-        "用网页检索一个自己熟悉的反应关键词，点开一篇论文的「本地 PDF」，按提示选择存放 PDF 的目录；从正规渠道下载正文并保存到该目录，之后再从同一文献卡片打开。你会看到，日常“查文献—下载—归档—再阅读”的几步能被一条 DOI 串联起来。",
-        "这条路线目前优先适合电脑端浏览器；手机端可以便捷查看卡片与收藏信息，但不应期待它自动读取电脑硬盘上的文件。对未来更多资料管理能力，我们会在真正可用后逐步介绍，而不是把规划写成既有产品。"
+        "原文 Fig. 7 比较了干燥原始催化剂、直接在 CHCl₃ 中加氢后的样品、CHCl₃/H₂ 预活化样品，以及预活化后在 2-MeTHF 中继续反应的样品。原始材料 Cl 2p 信号主要在约 198–199 eV，符合无机氯环境；预处理后在约 200–201 eV 的组分增强，作者将其归属为与有机氯、C–Cl 型环境相容的表面氯物种。这个变化在转入 2-MeTHF 后仍有保留。",
+        "XPS 只能告诉我们表面元素的化学环境发生变化，不能给出每一个氯原子连接在什么位点。作者进一步用 ToF-SIMS（原文 Fig. 8、SI Table S14）寻找含碳/氯碎片。经氯仿/氢气预处理后，CCl⁻、C₂Cl⁻ 与 CCl₂⁻ 的归一化信号都显著增强；再次加氢之后强度下降，但仍高于原始催化剂。这与某种持久的氯仿来源碳氯表面残留物相容。",
+        "把催化剂转移实验和两种表面表征合起来，可以相当有力地说明 CHCl₃ 不只是一个被动反应介质，而是在 H₂ 存在下改变了支持型钯材料的表面状态。不过，**具体哪一种吸附物就是决定活性的位点、它怎样减弱硫中毒或抑制 C–S 键断裂**，论文尚未在分子尺度直接确认。不能从相关谱峰直接写成已确定的“氯化钯活性中心结构”。"
+      ],
+      "figures": [
+        "acs_xps",
+        "acs_tofsims"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "acs_xps"
+        ],
+        "3": [
+          "acs_tofsims"
+        ]
+      }
+    },
+    {
+      "heading": "模型反应的“室温”与底物拓展的“90 °C”必须分别评价",
+      "eyebrow": "",
+      "paragraphs": [
+        "读 Fig. 5 时最容易产生错觉：前面的优化给出 25 °C、10 bar H₂ 高收率，所以所有复杂噻吩都能室温加氢。事实并非如此。作者承认多官能团和高取代噻吩在温和模型条件下常不反应或发生脱官能化；因此正式底物拓展统一使用 **90 °C、10 bar H₂、16 h、10 mol% Pd**。与优化模型的 25 °C、6 mol% Pd 是不同操作窗口。",
+        "在较高温度的拓展中，2-和 3-位烷基取代、长链烷基及 TMS 衍生物可以得到相应饱和硫杂环；部分芳基取代物也能保留卤素、腈、酯等基团，但产率差异明显。原文 Fig. 5 的含腈芳基例为 **24% 分离收率**、含酯芳基例为 **38%**，说明“有产物”不等于普遍高效。部分芳基取代底物的分离也受到原料/产物共洗脱或产物挥发性影响，需要连同图注评价。",
+        "底物拓展中更有设计启发的是“间隔链效应”。羟基直接靠近噻吩环的底物失败，而把羟基与环隔开两个碳之后可得到 **78%** 分离收率；羧酸系列的链长增加也提升产物生成。这里数据支持通过空间分离降低不利相互作用的经验，但不直接证明所有极性基团失效都来自某一种特定配位。苯并噻吩也可转化为 **2,3-二氢苯并噻吩**；并非把稠合苯环也全部加氢。"
+      ],
+      "figures": [
+        "acs_scope_alkyl",
+        "acs_scope_aryl",
+        "acs_scope_spacer"
+      ],
+      "figures_after_paragraph": {
+        "3": [
+          "acs_scope_alkyl",
+          "acs_scope_aryl",
+          "acs_scope_spacer"
+        ]
+      }
+    },
+    {
+      "heading": "添加剂能幸存，不等于含它的噻吩底物就会成功",
+      "eyebrow": "",
+      "paragraphs": [
+        "原文 Fig. 3 设计了一套氢化特有的 robustness screen：同时测目标噻吩产物形成和外加添加剂的回收。两条读数缺一不可。腈、酰胺、酯、某些芳基溴、羰基和磷膦类添加剂在测试条件下既允许模型噻吩加氢，自身也较多保留；但烯烃、炔烃、缩醛、醛等添加剂即使未明显抑制模型反应，本身也可能大量被消耗。",
+        "反过来，具有强配位或中毒倾向的含氮、含硫添加剂，以及硝基苯、碘苯等能显著抑制产物形成。这套“双读数”体系提醒我们：仅看模型产物收率，会把竞争氢化误判为官能团耐受。更重要的是，添加剂测试与同一分子内部的实际底物测试不同，原文 SI Fig. S2 的直接取代噻吩中有不反应、脱羰、C–O 断裂与脱卤例子。",
+        "论文以含噻吩药物卡格列净（canagliflozin）讨论可能的后期饱和靶标（Fig. 4），但作者**没有对这款药物进行实际加氢实验**。因此封面或正文不得把其结构画作本文获得的加氢产物；把它放在讨论“未来可能的底物选择”位置才忠于原文。"
+      ],
+      "figures": [
+        "acs_robustness",
+        "acs_si_robust",
+        "acs_si_limit",
+        "acs_drugconcept"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "acs_robustness",
+          "acs_si_robust",
+          "acs_si_limit"
+        ],
+        "3": [
+          "acs_drugconcept"
+        ]
+      }
+    },
+    {
+      "heading": "条件敏感性和回收实验揭示真实使用代价",
+      "eyebrow": "",
+      "paragraphs": [
+        "原文 Fig. 2 的条件敏感性雷达图显示，温度、搅拌、浓度等适度变化对模型收率影响较小；低氢压和水则造成明显下降。SI Table S8 给出加约 5.6 当量水时收率降至 **43%**、1 bar H₂ 时降至 **46%**，不能因为某些变量“鲁棒”便认为这一体系可不考虑气液传质、含水量或氢气供应。",
+        "尤其要注意催化剂回收：SI 第 2.7 节的重复实验中，首次反应约 **97–99% GC-FID 收率**，回收催化剂用于第二轮时仅有 **5%** 左右。这是比某些低收率底物更直接的工艺限制。作者说明了预活化材料能在另一个溶剂中使用，却没有证明其经历反复循环依然保持高活性。",
+        "实际方法的评价应同时包括使用商品化支持钯、保留 C–S 环骨架、对部分功能团可用、能够分开催化剂预处理的优点，以及 CHCl₃、加压 H₂、复杂底物较高温度、催化剂再用困难等限制。称这套条件为“无氯、工业绿色室温加氢”是不准确的。"
+      ],
+      "figures": [
+        "acs_sensitivity"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "acs_sensitivity"
+        ]
+      }
+    },
+    {
+      "heading": "把这篇论文的价值落在一个可检验的催化剂设计原则上",
+      "eyebrow": "",
+      "paragraphs": [
+        "本文真正可迁移的思想是：在对硫极其敏感的非均相催化体系中，反应性能可能由**催化剂接触某一化学环境后留下的持久表面状态**决定，而不只是由当前反应溶剂名称决定。通过先预处理、再转移介质，作者把原本难解释的“溶剂效应”改写为可以单独检验的“材料状态效应”。",
+        "这为其它含硫杂芳环的饱和转化提出一个明确的研究问题：可否利用可控的表面修饰，在保证环内 C–S 键保留的同时降低硫吸附带来的活性损失？但要把它移用于噻唑、苯并噻唑或其它催化材料，仍需要新底物、吸附/动力学与原位表面证据，而不能把本文的 XPS/ToF-SIMS 相关性直接当成普遍的催化活性结构定律。"
       ],
       "figures": [],
       "figures_after_paragraph": {}
@@ -102,43 +162,173 @@
   ],
   "figures": [
     {
-      "id": "guide_search",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r3/guide-search-to-pdf-workflow.png",
-      "caption": "功能示意 Fig. 1｜从网站检索到本地 PDF 阅读的三个步骤；依据已上线交互绘制的操作流程图，并非实际网页截图。",
+      "id": "acs_lead",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r2/acs_lead.jpg",
+      "source_figure": "Fig. 1C",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
       "body": true,
-      "source_kind": "non_evidentiary_user_workflow_illustration",
-      "source_figure": "用户流程示意 1",
-      "display_width_pct": 100
+      "caption": "原文 Fig. 1C｜在 CHCl₃ 和 H₂ 条件下 Pd(OH)₂/C 催化噻吩饱和化，保留环内硫原子。",
+      "display_width_pct": 100,
+      "source_pdf_page": 2
     },
     {
-      "id": "guide_local",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r3/guide-local-pdf-three-steps.png",
-      "caption": "功能示意 Fig. 2｜首次授权目录、从期刊合法下载正文，以及以后按 DOI 在本机打开；非真实浏览器截图。",
+      "id": "acs_background",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_background.jpg",
+      "source_figure": "Fig. 1A–B",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
       "body": true,
-      "source_kind": "non_evidentiary_user_workflow_illustration",
-      "source_figure": "用户流程示意 2",
-      "display_width_pct": 100
+      "caption": "原文 Fig. 1A–B｜噻吩骨架利用价值及芳香稳定性、催化剂硫中毒、加氢脱硫的竞争。",
+      "display_width_pct": 100,
+      "source_pdf_page": 2
     },
     {
-      "id": "guide_future",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r3/guide-current-vs-future.png",
-      "caption": "功能示意 Fig. 3｜左侧为当前用户可见功能，右侧为规划方向；尚未上线的功能不应被理解为现有服务。",
+      "id": "acs_table1",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_table1.jpg",
+      "source_figure": "Table 1",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
       "body": true,
-      "source_kind": "non_evidentiary_user_workflow_illustration",
-      "source_figure": "功能与规划示意 3",
-      "display_width_pct": 100
+      "caption": "原文 Table 1｜氯仿效应、催化剂干燥和氢压的比较；产率由 GC-FID 取得。",
+      "display_width_pct": 100,
+      "source_pdf_page": 3
     },
     {
-      "id": "daily_cover",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r3/gallery-daily-pdf-cover.png",
-      "caption": "日报主封面｜五篇新文献与本地 PDF 工具，原生标题使用下方深色安全区；排版示意，无化学结构。",
+      "id": "acs_sensitivity",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_sensitivity.jpg",
+      "source_figure": "Fig. 2",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "body": true,
+      "caption": "原文 Fig. 2｜条件敏感性；低氢压与水是最敏感的两类变量。",
+      "display_width_pct": 100,
+      "source_pdf_page": 4
+    },
+    {
+      "id": "acs_robustness",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_robustness.jpg",
+      "source_figure": "Fig. 3",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "body": true,
+      "caption": "原文 Fig. 3｜添加剂回收与目标产物形成的双读数稳健性评价。",
+      "display_width_pct": 100,
+      "source_pdf_page": 5
+    },
+    {
+      "id": "acs_drugconcept",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_drugconcept.jpg",
+      "source_figure": "Fig. 4",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "body": true,
+      "caption": "原文 Fig. 4｜卡格列净仅作为潜在后期饱和目标示例；作者没有对其进行实测加氢。",
+      "display_width_pct": 100,
+      "source_pdf_page": 5
+    },
+    {
+      "id": "acs_scope_alkyl",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_scope_alkyl.jpg",
+      "source_figure": "Fig. 5（烷基、硅基）",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "body": true,
+      "caption": "原文 Fig. 5 上部｜烷基、硅基取代噻吩的制备底物范围（90 °C、10 bar H₂）。",
+      "display_width_pct": 100,
+      "source_pdf_page": 6
+    },
+    {
+      "id": "acs_scope_aryl",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_scope_aryl.jpg",
+      "source_figure": "Fig. 5（芳基取代）",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "body": true,
+      "caption": "原文 Fig. 5 中部｜芳基取代系列；芳基腈 24%、芳基酯 38% 等低产率同样保留。",
+      "display_width_pct": 100,
+      "source_pdf_page": 6
+    },
+    {
+      "id": "acs_scope_spacer",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_scope_spacer.jpg",
+      "source_figure": "Fig. 5（间隔链与苯并噻吩）",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "body": true,
+      "caption": "原文 Fig. 5 下部｜间隔链效应及苯并噻吩，部分底物失败或产物产率下降。",
+      "display_width_pct": 100,
+      "source_pdf_page": 6
+    },
+    {
+      "id": "acs_pretreatment",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_pretreatment.jpg",
+      "source_figure": "Fig. 6",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "body": true,
+      "caption": "原文 Fig. 6｜CHCl₃/H₂ 预处理支持型钯，再转入 2-MeTHF 加氢，检验持久材料效应。",
+      "display_width_pct": 100,
+      "source_pdf_page": 7
+    },
+    {
+      "id": "acs_xps",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_xps.jpg",
+      "source_figure": "Fig. 7",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "body": true,
+      "caption": "原文 Fig. 7｜Cl 2p XPS 谱图区分无机氯与有机氯/C–Cl 型化学环境；不能据此确定单一位点。",
+      "display_width_pct": 100,
+      "source_pdf_page": 8
+    },
+    {
+      "id": "acs_tofsims",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_tofsims.jpg",
+      "source_figure": "Fig. 8",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "body": true,
+      "caption": "原文 Fig. 8｜ToF-SIMS 中 C₂Cl⁻ 碎片增强并在后续反应后部分保留。",
+      "display_width_pct": 100,
+      "source_pdf_page": 9
+    },
+    {
+      "id": "acs_si_limit",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_si_limit.jpg",
+      "source_figure": "SI Fig. S2",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "body": true,
+      "caption": "补充信息 SI Fig. S2｜直接取代噻吩的失败、脱官能化与副反应边界。",
+      "display_width_pct": 100,
+      "source_pdf_page": 27
+    },
+    {
+      "id": "acs_si_robust",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_si_robust.jpg",
+      "source_figure": "SI Table S9",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "body": true,
+      "caption": "补充信息 SI Table S9｜添加剂回收和产物生成分别报告；部分添加剂被消耗。",
+      "display_width_pct": 100,
+      "source_pdf_page": 30
+    },
+    {
+      "id": "acs_cover",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r2/acs-catalysis-fig1c-native-cover.png",
+      "source_figure": "Fig. 1C 原文裁切与无字深色原生标题安全区",
+      "source_doi": "10.1021/acscatal.6c06048",
+      "source_kind": "editorial_cover",
       "body": false,
-      "source_kind": "user_facing_editorial_cover",
-      "source_figure": "站点功能封面"
+      "caption": "今日精选封面：原文 Fig.1C 未重画的反应式在白色主图面板中等比展示，下方仅原生标题承托区。",
+      "display_width_pct": 100,
+      "source_pdf_page": 2
     }
   ],
   "cover": {
-    "source_figure_id": "daily_cover",
+    "source_figure_id": "acs_cover",
     "canvas": {
       "width": 1880,
       "height": 800,
@@ -146,17 +336,8 @@
     },
     "crop_235_1": "0_0_1_1",
     "crop_1_1": "0.287234_0_0.712766_1",
-    "description": "Source-authored publisher-neutral featured cover for paper-count and local PDF intro. No original chemistry represented and no false website screenshots. White native overlay remains in blue bottom.",
-    "production_cover_image": "user_selected",
-    "pixel_equivalence": "lossless_rgba_same_pixels",
-    "delivery_image_sha256": "97b3f99f1be0b08eba54afadfb869c1dec00f7e3f1bf71747156844ac94eeedf"
+    "description": "Original Fig1C exact reaction-only crop on white 1880x800, no clipped English title, green badge or caption remnants, no additional “今日精选 ACS Catalysis” label, dark space only below at y≥508 for native white headline; 1:1 center crop may show partial contextual edges"
   },
-  "paper": {
-    "doi": null,
-    "title": "Gallery 用户功能更新与本地 PDF",
-    "journal": "化之岛 · Gallery",
-    "authors": ""
-  },
-  "ai_notice": "本期为化之岛文献日报与用户端功能介绍；文献范围及统计以 2026-10-12 08:00 正式上线记录为准；流程图为界面操作示意，功能展望不代表已上线。",
-  "editorialIntent": "No selected featured DOI or featured paper analysis. Publish the authentic five daily index cards and user guide, keep selected JACS retrospective separate."
+  "ai_notice": "本文由“化之岛”原创策划与整理，AI 辅助生成与校核；数据、结构、光谱和机理证据均以原文及补充材料为准。",
+  "editorialIntent": "Focus on CHCl3/H2-persistent modified Pd catalyst surface and evidence hierarchy. Model mild conditions distinct from 90°C scope; no unproven chlorinated-active-site assignment."
 }
