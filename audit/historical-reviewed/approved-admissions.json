@@ -1,0 +1,364 @@
+{
+  "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
+  "mode": "scope_review_only_not_publication",
+  "generatedAt": "2026-10-12T04:54:22.141Z",
+  "nextEligiblePublicationSlot": "2026-10-13T08:00:00+08:00",
+  "scopeRulesVersion": "scope-2026-10-02-v1",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "74978d92a16d353271f16f111425d09e4de84f07",
+  "stagingSourceBranch": "staging/historical-archive-nightly",
+  "catalogSnapshot": {
+    "sha": "cb6e64e3e1e76572aac6ff47ff2757ed59fab8d3",
+    "recordCount": 964
+  },
+  "summary": {
+    "checked": 7,
+    "include": 5,
+    "pending": 2,
+    "published": 0,
+    "sourceCollision": 0
+  },
+  "auditGuards": {
+    "noPublication": true,
+    "noMediaWrites": true,
+    "noPDF": true,
+    "noFullAbstractRepublishing": true,
+    "requiresFixed08Release": true,
+    "requiresHistoricReleaseGateIntegration": true,
+    "notDailyNew": true,
+    "notHot": true,
+    "sourceDateRecheck": true
+  },
+  "accepted": [
+    {
+      "doi": "10.1021/acs.joc.6c01096",
+      "journal": "JOC",
+      "title": "Telescoped Two-Step Deaminative Ni-Catalyzed C(sp 2 )–C(sp 3 ) Cross-Electrophile Coupling for Late-Stage Parallel Library Synthesis",
+      "titleZh": "镍催化两步串联脱氨交叉亲电偶联用于后期并行化合物库合成",
+      "date": "2026-09-10",
+      "authors": [
+        "Carson R. Takaoka",
+        "Kiara L. Tu",
+        "Erin E. Ostrowski",
+        "Emil F. Thomas",
+        "Erika L. Poissant",
+        "Ziyi Quan",
+        "Pedro M. Garcia-Barrantes",
+        "David J. Charboneau"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12861-12882",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01096"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以脂肪族伯胺转化为N-烷基吡啶鎓盐为前置活化，实现药物相关芳基卤化物的镍催化C(sp²)–C(sp³)交叉亲电偶联。",
+      "evidenceBasis": "DOI、作者、正式发表日及引文与历史Crossref/OpenAlex候选批次和ACS出版商的文章页相互核实；官方Abstract明确：官方摘要列举具有α-酯或β-季碳单元等困难烷基底物、不同药物相关芳基卤化物，并报道曲美替尼衍生化并行库的反应成功率85%。",
+      "challengeReason": "独立复核了二步法起始原料类别、生成吡啶鎓盐活化形式及C(sp²)–C(sp³)键构建；85%是并行库的成功率而不是单次分离收率，不能误写成反应产率。",
+      "scopeAssessment": {
+        "primaryContribution": "以脂肪族伯胺转化为N-烷基吡啶鎓盐为前置活化，实现药物相关芳基卤化物的镍催化C(sp²)–C(sp³)交叉亲电偶联。",
+        "preparativeTransformation": "伯胺与吡喃鎓盐缩合，再使吡啶鎓盐在不分离的条件下与芳基卤化物发生交叉亲电偶联，构建芳基-烷基C–C键。",
+        "generalityEvidence": "官方摘要列举具有α-酯或β-季碳单元等困难烷基底物、不同药物相关芳基卤化物，并报道曲美替尼衍生化并行库的反应成功率85%。",
+        "sourceEvidence": "出版社原题和Abstract：https://pubs.acs.org/doi/10.1021/acs.joc.6c01096，出版社Published Online：2026-09-10；历史批次：2026-09-08_2026-09-14_joc（Git blob c5604566a1a9763ce4fbbd2233b424db5c960517）。未摘录原始英文摘要全文。",
+        "boundaryChallenge": "最大的疑点是研究由药物化学并行合成驱动，是否只适用特定药物骨架；摘要对不同烷基和芳基伙伴的可转移偶联条件及药物后期拓展均有直接描述，核心仍是通用C–C键制备。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01096",
+        "publisherOnlineDate": "2026-09-10",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_joc",
+        "stageBatchSha": "c5604566a1a9763ce4fbbd2233b424db5c960517",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01608",
+      "journal": "JOC",
+      "title": "Total Synthesis of Allolaurinterol",
+      "titleZh": "Allolaurinterol 的全合成",
+      "date": "2026-09-11",
+      "authors": [
+        "Takumi Kurashima",
+        "Kazuki Usuguchi",
+        "Shohei Hamada",
+        "Jun-ichi Matsuo",
+        "Tomoyuki Yoshimura"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "13027-13036",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01608"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "完成Allolaurinterol目标分子的全合成，而非停留在单一中间体或形式全合成。",
+      "evidenceBasis": "DOI、作者、正式发表日及引文与历史Crossref/OpenAlex候选批次和ACS出版商的文章页相互核实；官方Abstract明确：ACS官方摘要明确给出自间甲酚出发11步获得Allolaurinterol，总收率7%；C(2′)不理想异构体可通过烯醇盐差向异构化再循环。",
+      "challengeReason": "第二遍检查区分真正完成全合成与仅提出合成设想，并保留11步、总收率7%作为官方摘要给出的目标路线事实，不推断每步收率。",
+      "scopeAssessment": {
+        "primaryContribution": "完成Allolaurinterol目标分子的全合成，而非停留在单一中间体或形式全合成。",
+        "preparativeTransformation": "以间甲酚为原料，经Sc(OTf)₃促进的β-酮酯分子内环化构建环戊酮环，再结合差向异构体回收策略完成目标分子。",
+        "generalityEvidence": "ACS官方摘要明确给出自间甲酚出发11步获得Allolaurinterol，总收率7%；C(2′)不理想异构体可通过烯醇盐差向异构化再循环。",
+        "sourceEvidence": "出版社原题和Abstract：https://pubs.acs.org/doi/10.1021/acs.joc.6c01608，出版社Published Online：2026-09-11；历史批次：2026-09-08_2026-09-14_joc（Git blob c5604566a1a9763ce4fbbd2233b424db5c960517）。未摘录原始英文摘要全文。",
+        "boundaryChallenge": "潜在边界在于仅针对单一天然产物，不能称为广谱环化方法；但已完成的天然产物全合成本身属于当前收录契约明确允许的路线成果。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01608",
+        "publisherOnlineDate": "2026-09-11",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_joc",
+        "stageBatchSha": "c5604566a1a9763ce4fbbd2233b424db5c960517",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01620",
+      "journal": "JOC",
+      "title": "Oxidative Benzannulation of Indoles with 3-Alkynyl-4-pyrones for the Synthesis of Furo[2,3- b ]carbazoles",
+      "titleZh": "吲哚与3-炔基-4-吡喃酮的氧化苯并环化构筑呋喃并咔唑",
+      "date": "2026-09-11",
+      "authors": [
+        "Vladislav V. Fedin",
+        "Egor O. Sofin",
+        "Sergey A. Usachev",
+        "Dmitrii L. Obydennov",
+        "Vyacheslav Y. Sosnovskikh"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "13037-13049",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01620"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "提出一类以吲哚与3-炔基-4-吡喃酮为底物的温和氧化苯并环化策略，主要贡献是新的多环有机骨架制备方法。",
+      "evidenceBasis": "DOI、作者、正式发表日及引文与历史Crossref/OpenAlex候选批次和ACS出版商的文章页相互核实；官方Abstract明确：官方摘要明确反应在室温下进行、仅需甲磺酸促进，能获得一系列多取代产物，最高报告收率92%。",
+      "challengeReason": "第二遍核对92%是最高报告收率而非所有底物共同收率；未从摘要得到的实际产物个数及反应中间体不予补写。",
+      "scopeAssessment": {
+        "primaryContribution": "提出一类以吲哚与3-炔基-4-吡喃酮为底物的温和氧化苯并环化策略，主要贡献是新的多环有机骨架制备方法。",
+        "preparativeTransformation": "2,3-未取代吲哚与3-炔基-4-吡喃酮经串联氧化苯并环化，得到多取代呋喃并[2,3-b]咔唑。",
+        "generalityEvidence": "官方摘要明确反应在室温下进行、仅需甲磺酸促进，能获得一系列多取代产物，最高报告收率92%。",
+        "sourceEvidence": "出版社原题和Abstract：https://pubs.acs.org/doi/10.1021/acs.joc.6c01620，出版社Published Online：2026-09-11；历史批次：2026-09-08_2026-09-14_joc（Git blob c5604566a1a9763ce4fbbd2233b424db5c960517）。未摘录原始英文摘要全文。",
+        "boundaryChallenge": "论文还讨论产物荧光性质，需排查是否为材料性能文章；但方法的核心是两种底物类别的串联芳环构筑与多取代产物范围，光物性是后续表征。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01620",
+        "publisherOnlineDate": "2026-09-11",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_joc",
+        "stageBatchSha": "c5604566a1a9763ce4fbbd2233b424db5c960517",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01793",
+      "journal": "JOC",
+      "title": "Visible-Light-Catalyzed Carboxylation of CO2 with the C(sp3)–O Bond of Benzyl Alcohol",
+      "titleZh": "可见光催化苄醇C(sp³)–O键直接羧化",
+      "date": "2026-09-11",
+      "authors": [
+        "Wenhao Xu",
+        "Zhiyu Cao",
+        "Jiarui Huang",
+        "Chengwen Dong",
+        "Li-Li Zeng",
+        "Jingyu Zhang",
+        "Yingsheng Zhao"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "13078-13085",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01793"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以CO₂为羧基来源，在可见光驱动下对未预官能化苄醇直接进行C(sp³)–O键羧化，形成羧酸类合成方法。",
+      "evidenceBasis": "DOI、作者、正式发表日及引文与历史Crossref/OpenAlex候选批次和ACS出版商的文章页相互核实；官方Abstract明确：ACS官方摘要明确底物涵盖伯、仲、空间位阻较大的叔苄醇，且报告了医药相关分子的合成应用。",
+      "challengeReason": "第二遍核对苄醇C–O活化与CO₂进入产物的证据类型，保留具体机理步骤未在摘要中证实的限制，不推断自由基截获机制已确证。",
+      "scopeAssessment": {
+        "primaryContribution": "以CO₂为羧基来源，在可见光驱动下对未预官能化苄醇直接进行C(sp³)–O键羧化，形成羧酸类合成方法。",
+        "preparativeTransformation": "游离苄醇在Ph₃SiH兼具还原淬灭剂和原位醇活化剂的条件下与CO₂发生羧化，减少先行制备苄基卤化物等离去基的步骤。",
+        "generalityEvidence": "ACS官方摘要明确底物涵盖伯、仲、空间位阻较大的叔苄醇，且报告了医药相关分子的合成应用。",
+        "sourceEvidence": "出版社原题和Abstract：https://pubs.acs.org/doi/10.1021/acs.joc.6c01793，出版社Published Online：2026-09-11；历史批次：2026-09-08_2026-09-14_joc（Git blob c5604566a1a9763ce4fbbd2233b424db5c960517）。未摘录原始英文摘要全文。",
+        "boundaryChallenge": "最强疑点是叔苄醇可能产生苄基自由基副反应或底物受限；摘要仍明确述及三级底物和药物分子应用，支持其作为方法学收录，但不能凭空给出选择性或实验收率。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01793",
+        "publisherOnlineDate": "2026-09-11",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_joc",
+        "stageBatchSha": "c5604566a1a9763ce4fbbd2233b424db5c960517",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05882",
+      "journal": "ACS Catalysis",
+      "title": "Cooperative Base-Metal Catalysis for Decarboxylative Olefination of Carboxylic Acids",
+      "titleZh": "铁/钴协同光催化羧酸直接脱羧烯化",
+      "date": "2026-09-08",
+      "authors": [
+        "Tianyou Peng",
+        "Phong Dam",
+        "Nirina D. Razafindrajao",
+        "Hamada Rezk",
+        "Eszter Baráth",
+        "Olga Bokareva",
+        "Osama El-Sepelgy"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "18",
+        "pages": "18584-18591",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c05882"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立Fe/Co协同催化羧酸光诱导脱羧烯化制备烯烃的方法，核心是地壳丰产金属间耦合的有机自由基合成反应。",
+      "evidenceBasis": "DOI、作者、正式发表日及引文与历史Crossref/OpenAlex候选批次和ACS出版商的文章页相互核实；官方Abstract明确：出版社摘要与正文范围段明确包括初级和次级羧酸、脂肪酸、氨基酸与复杂生物活性分子衍生底物；机理研究涉及动力学、光谱、自旋捕获及DFT，提出DBU的碱/氧化还原媒介双重角色。",
+      "challengeReason": "第二遍区别铁LMCT/钴脱氢作者提出的协同路径与直接实验证明；不把DBU沟通循环的作者机理模型当作不可替代的确证事实。",
+      "scopeAssessment": {
+        "primaryContribution": "建立Fe/Co协同催化羧酸光诱导脱羧烯化制备烯烃的方法，核心是地壳丰产金属间耦合的有机自由基合成反应。",
+        "preparativeTransformation": "铁配合物经LMCT活化羧酸产生自由基，钴催化途径促成脱氢烯化，将脂肪族羧酸转化为烯烃。",
+        "generalityEvidence": "出版社摘要与正文范围段明确包括初级和次级羧酸、脂肪酸、氨基酸与复杂生物活性分子衍生底物；机理研究涉及动力学、光谱、自旋捕获及DFT，提出DBU的碱/氧化还原媒介双重角色。",
+        "sourceEvidence": "出版社原题和Abstract：https://pubs.acs.org/doi/10.1021/acscatal.6c05882，出版社Published Online：2026-09-08；历史批次：2026-09-08_2026-09-14_acs-catalysis（Git blob 7b6d4fb5482e73f01549dd695b2eb8cee8a6feba）。未摘录原始英文摘要全文。",
+        "boundaryChallenge": "可能误将催化循环机制论文视为制备方法；但文中明示广泛羧酸底物经脱羧转为相应烯烃，并含底物范围和分离产率报告，主要贡献兼具通用制备能力。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acscatal.6c05882",
+        "publisherOnlineDate": "2026-09-08",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_acs-catalysis",
+        "stageBatchSha": "7b6d4fb5482e73f01549dd695b2eb8cee8a6feba",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    }
+  ],
+  "pending": [
+    {
+      "doi": "10.1021/acs.joc.6c01483",
+      "journal": "JOC",
+      "title": "NHC-Catalyzed Asymmetric [4 + 2] Annulation of 2-Methylindole-3-Carbaldehydes to Spiro Indole-Fused Heterocycles",
+      "date": "2026-09-10",
+      "reviewStatus": "pending_source_date_conflict",
+      "decision": "pending",
+      "firstPassDecision": "include",
+      "challengeDecision": "pending",
+      "reason": "Crossref/OpenAlex历史暂存日期2026-09-10，与ACS官方文章页标注Published Online 2026-09-11不一致；不可静默采用其一。",
+      "evidenceNeeded": "需要DOI确切在线首发日期及两种来源的出版日期声明证据，不能用期刊所属期号代替首次在线发表时间。",
+      "nextAction": "核实ACS文章页面及Crossref published-online日期字段，按项目已批准的出版日期纠正契约生成DOI级溯源记录后重做第二遍日期与来源审查。",
+      "attemptedEvidencePages": [
+        "https://pubs.acs.org/doi/10.1021/acs.joc.6c01483"
+      ],
+      "publisherOnlineDateClaim": "2026-09-11",
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha": "c5604566a1a9763ce4fbbd2233b424db5c960517"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02374",
+      "journal": "Organic Letters",
+      "title": "Skeletal Editing of Pyridine to Pyridazine via ANRORC (Addition of Nucleophile, Ring Opening, and Ring Closing) Mechanism",
+      "date": "2026-09-08",
+      "reviewStatus": "pending_source_date_conflict",
+      "decision": "pending",
+      "firstPassDecision": "include",
+      "challengeDecision": "pending",
+      "reason": "历史暂存2026-09-08，与ACS官方文章页Published Online 2026-09-01字段不一致；不可误把出版期目录、索引日期或在线日期合并。",
+      "evidenceNeeded": "需要DOI确切在线首发日期及两种来源的出版日期声明证据，不能用期刊所属期号代替首次在线发表时间。",
+      "nextAction": "核对出版社官方Article History的Published Online、Crossref deposited/published-online日期，确认权威日期并留存DOI级证据后判断是否可入库。",
+      "attemptedEvidencePages": [
+        "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02374"
+      ],
+      "publisherOnlineDateClaim": "2026-09-01",
+      "sourceBatchId": "2026-09-08_2026-09-14_organic-letters",
+      "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
+    }
+  ],
+  "note": "Two-pass academic scope assessment completed for five DOI, but not yet formal gallery admissions. Pending DOI are not excluded. Site visibility and authorized release are separate gates."
+}
