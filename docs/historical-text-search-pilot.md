@@ -38,7 +38,7 @@
 node scripts/historical-text-local-evaluator.mjs --dir="D:\文献全文试验" --limit=100 --output="./historical-pilot-report.json"
 ```
 
-默认输出是 DOI 通过数量、文件字节、主题词额外命中数量与失败类别，**不包含正文原文**。请勿把本地导出的出版社正文 JSON 或私有登录态提交至公开 Git 仓库。
+默认输出是 DOI 通过数量、文件字节、相对于标题及文章 Abstract 的主题词额外命中数量与失败类别，**不包含正文原文**。请勿把本地导出的出版社正文 JSON 或私有登录态提交至公开 Git 仓库。
 
 ### C. 验收指标
 
