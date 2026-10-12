@@ -2696,7 +2696,7 @@ function embeddedJobDois(value) {
       var u=new URL(String(value||''),location.href),host=u.hostname.toLowerCase(),path=u.pathname.toLowerCase();
       return u.protocol==='https:'&&(host==='pubs.rsc.org'||host==='rscj.silverchair-cdn.com')
         &&/\.(?:svg|png|jpe?g|webp|gif)$/i.test(path)
-        &&!/\/(?:logo|icon|banner|cover|avatar|site-asset|advert)(?:[./_-]|$)/i.test(path)
+        &&!/(?:^|[\/_-])(?:logo|icon|banner|cover|avatar|site-asset|advert)(?:[./_-]|$)/i.test(path)
         &&!/\.pdf\.(?:gif|png|jpe?g|webp)$/i.test(path);
     }catch(_){return false;}
   }
