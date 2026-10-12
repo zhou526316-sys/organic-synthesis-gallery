@@ -1,7 +1,7 @@
 {
   "date": "2026-10-12",
   "selectionAuthority": "explicit_user_uploaded_pdf_and_si_on_2026-10-12",
-  "editorialRevision": "2026-10-12-r5",
+  "editorialRevision": "2026-10-12-r6",
   "paper": {
     "doi": "10.1021/acscatal.6c06048",
     "title": "Mild Heterogeneous Thiophene Hydrogenation Enabled by a Modified Palladium Catalyst",
@@ -61,6 +61,7 @@
       ],
       "figures": [
         "acs_robustness",
+        "acs_si_robust",
         "acs_si_limit"
       ],
       "figures_after_paragraph": {
@@ -69,6 +70,9 @@
         ],
         "3": [
           "acs_si_limit"
+        ],
+        "2": [
+          "acs_si_robust"
         ]
       }
     },
@@ -186,14 +190,16 @@
     },
     {
       "id": "acs_sensitivity",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_sensitivity.jpg",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_sensitivity.png",
       "source_figure": "Fig. 2",
       "source_doi": "10.1021/acscatal.6c06048",
-      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 2｜条件敏感性；低氢压与水是最敏感的两类变量。",
       "display_width_pct": 100,
-      "source_pdf_page": 4
+      "source_pdf_page": 4,
+      "materialized_source_revision": "2026-10-12-r6",
+      "source_asset_sha256": "2644142cad789b4a79ab96e3aa624985bb9f133328d6108aa707c030da7e81a3"
     },
     {
       "id": "acs_robustness",
@@ -208,107 +214,120 @@
     },
     {
       "id": "acs_drugconcept",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_drugconcept.jpg",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_drugconcept.png",
       "source_figure": "Fig. 4",
       "source_doi": "10.1021/acscatal.6c06048",
-      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 4｜卡格列净仅作为潜在后期饱和目标示例；作者没有对其进行实测加氢。",
       "display_width_pct": 100,
-      "source_pdf_page": 5
+      "source_pdf_page": 5,
+      "materialized_source_revision": "2026-10-12-r6",
+      "source_asset_sha256": "c78926439fa25a4acaf6fb181200028d5c2689c8368312797293d64e43dcfd4e"
     },
     {
       "id": "acs_scope_alkyl",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r5/acs_scope_alkyl-panel-complete.jpg",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_scope_alkyl.png",
       "source_figure": "Fig. 5（烷基、硅基）",
       "source_doi": "10.1021/acscatal.6c06048",
-      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 5 上部｜烷基、硅基取代噻吩的制备底物范围（90 °C、10 bar H₂）。",
       "display_width_pct": 100,
       "source_pdf_page": 6,
-      "materialized_source_revision": "2026-10-12-r5"
+      "materialized_source_revision": "2026-10-12-r6",
+      "source_asset_sha256": "13809477266f1a159d596bdd375eb29668fc7556fca56e51a4a6d7153d78f829"
     },
     {
       "id": "acs_scope_aryl",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r5/acs_scope_aryl-panel-complete.jpg",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_scope_aryl.png",
       "source_figure": "Fig. 5（芳基取代）",
       "source_doi": "10.1021/acscatal.6c06048",
-      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 5 中部｜芳基取代系列；芳基腈 24%、芳基酯 38% 等低产率同样保留。",
       "display_width_pct": 100,
       "source_pdf_page": 6,
-      "materialized_source_revision": "2026-10-12-r5"
+      "materialized_source_revision": "2026-10-12-r6",
+      "source_asset_sha256": "5d30ce6de6eaf7583f2f33e678e2c9da8bb73d3ce4b3e5bbece5e33706cd16e3"
     },
     {
       "id": "acs_scope_spacer",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r5/acs_scope_spacer-panel-complete.jpg",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_scope_spacer.png",
       "source_figure": "Fig. 5（间隔链与苯并噻吩）",
       "source_doi": "10.1021/acscatal.6c06048",
-      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 5 下部｜间隔链效应及苯并噻吩，部分底物失败或产物产率下降。",
       "display_width_pct": 100,
       "source_pdf_page": 6,
-      "materialized_source_revision": "2026-10-12-r5"
+      "materialized_source_revision": "2026-10-12-r6",
+      "source_asset_sha256": "5f66c2ff5617d69aef7499ce2337bc1ad9d38ebcfa340598f13084059528dce6"
     },
     {
       "id": "acs_pretreatment",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_pretreatment.jpg",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_pretreatment.png",
       "source_figure": "Fig. 6",
       "source_doi": "10.1021/acscatal.6c06048",
-      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 6｜CHCl₃/H₂ 预处理支持型钯，再转入 2-MeTHF 加氢，检验持久材料效应。",
       "display_width_pct": 100,
-      "source_pdf_page": 7
+      "source_pdf_page": 7,
+      "materialized_source_revision": "2026-10-12-r6",
+      "source_asset_sha256": "51db22f5a9ec5b0961181df646ce97c6275c9a52dd846ecf6102bcdca21fb3e6"
     },
     {
       "id": "acs_xps",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_xps.jpg",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_xps.png",
       "source_figure": "Fig. 7",
       "source_doi": "10.1021/acscatal.6c06048",
-      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 7｜Cl 2p XPS 谱图区分无机氯与有机氯/C–Cl 型化学环境；不能据此确定单一位点。",
       "display_width_pct": 100,
-      "source_pdf_page": 8
+      "source_pdf_page": 8,
+      "materialized_source_revision": "2026-10-12-r6",
+      "source_asset_sha256": "669a19a1315d99242dbf0f32d4bddd2b3e7122267cdbaee9cf41ac58387c93c9"
     },
     {
       "id": "acs_tofsims",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_tofsims.jpg",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_tofsims.png",
       "source_figure": "Fig. 8",
       "source_doi": "10.1021/acscatal.6c06048",
-      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "原文 Fig. 8｜ToF-SIMS 中 C₂Cl⁻ 碎片增强并在后续反应后部分保留。",
       "display_width_pct": 100,
-      "source_pdf_page": 9
+      "source_pdf_page": 9,
+      "materialized_source_revision": "2026-10-12-r6",
+      "source_asset_sha256": "742129524789d04831fa51d9a8a4761cba013f4469e8d6a3784d74baa0ec0c1a"
     },
     {
       "id": "acs_si_limit",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_si_limit.jpg",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_si_limit.png",
       "source_figure": "SI Fig. S2",
       "source_doi": "10.1021/acscatal.6c06048",
-      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
+      "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
       "body": true,
       "caption": "补充信息 SI Fig. S2｜直接取代噻吩的失败、脱官能化与副反应边界。",
       "display_width_pct": 100,
-      "source_pdf_page": 27
+      "source_pdf_page": 27,
+      "materialized_source_revision": "2026-10-12-r6",
+      "source_asset_sha256": "4a258ded49b81dc12c2ff95199ffc72d9e59a49ca70a61df39adfefad139f761"
     },
     {
       "id": "acs_si_robust",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r1/acs_si_robust.jpg",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-12-r6/acs_si_robust.png",
       "source_figure": "SI Table S9",
       "source_doi": "10.1021/acscatal.6c06048",
-      "source_kind": "exact_pixel_crop_from_user_supplied_publisher_pdf",
-      "body": false,
+      "source_kind": "original_pdf_recovered_and_exact_source_pixel_reviewed",
+      "body": true,
       "caption": "补充信息 SI Table S9｜添加剂回收和产物生成分别报告；部分添加剂被消耗。",
       "display_width_pct": 100,
       "source_pdf_page": 30,
-      "optionalEvidenceImage": true,
-      "imageReview": "excluded_missing_right_table_column_not_raster_safe"
+      "materialized_source_revision": "2026-10-12-r6",
+      "source_asset_sha256": "dded558e8a5280deac4ce716c4eb49255689fa2e456dc7deea8c49ee2f431687"
     },
     {
       "id": "acs_cover",
