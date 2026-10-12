@@ -1,0 +1,223 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2026-09-08",
+    "to": "2026-09-14"
+  },
+  "checkedAt": "2026-10-12T04:42:59.450Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "total": 4,
+        "count": 4,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 4,
+      "count": 4,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 4,
+      "openalex": 4
+    }
+  },
+  "candidateCount": 4,
+  "alreadyPublished": 1,
+  "unreviewed": 3,
+  "records": [
+    {
+      "doi": "10.1038/s44160-026-01146-w",
+      "title": "A coumarin-linked conjugated covalent organic framework for enhanced photocatalytic hydrogen evolution",
+      "authors": [
+        "Yuxiang Zhao",
+        "Juan Li",
+        "Junyi Han",
+        "Guang-En Fu",
+        "Wuxin Zhang",
+        "Tao Chen",
+        "Li-Zhu Wu",
+        "Xu-Bing Li",
+        "Tao Zhang"
+      ],
+      "date": "2026-09-08",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01146-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01146-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-08",
+        "to": "2026-09-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01147-9",
+      "title": "Enantioselective synthesis of chiral 2-azaspiro[3.3]heptanes and their application as piperidine bioisosteres",
+      "authors": [
+        "Yong-Ke Qiu",
+        "Yu-Ping Tang",
+        "Chao-Gang Zhang",
+        "Qingqin Huang",
+        "Jingyang Li",
+        "Liang Chen",
+        "Zhen Wang",
+        "Lei Dai"
+      ],
+      "date": "2026-09-10",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01147-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01147-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-08",
+        "to": "2026-09-14"
+      },
+      "existingGalleryRecord": true,
+      "reviewStatus": "already_published",
+      "needsArticleEvidence": false,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01150-0",
+      "title": "Strain-release strategy for access to diverse azabicyclic bioisosteres",
+      "authors": [],
+      "date": "2026-09-09",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01150-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01150-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-08",
+        "to": "2026-09-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-026-01153-x",
+      "title": "Meet the editors",
+      "authors": [],
+      "date": "2026-09-08",
+      "datePrecision": "day",
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "9",
+        "pages": "1305-1305",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01153-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-026-01153-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-08",
+        "to": "2026-09-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

@@ -1,0 +1,92 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2026-09-08",
+    "to": "2026-09-14"
+  },
+  "checkedAt": "2026-10-12T04:42:59.022Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "total": 1,
+        "count": 1,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 1,
+      "count": 1,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 1,
+      "openalex": 1
+    }
+  },
+  "candidateCount": 1,
+  "alreadyPublished": 0,
+  "unreviewed": 1,
+  "records": [
+    {
+      "doi": "10.1038/s41929-026-01613-9",
+      "title": "Consequences of overtones in Raman spectra for assigning nickel anode surface structures as NiO2 during alkaline electrolysis",
+      "authors": [
+        "Justus Leist",
+        "Annika Neufischer",
+        "Timo Jacob",
+        "Albert K. Engstfeld"
+      ],
+      "date": "2026-09-11",
+      "datePrecision": "day",
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01613-9"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-026-01613-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "discoveredIn": {
+        "from": "2026-09-08",
+        "to": "2026-09-14"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
