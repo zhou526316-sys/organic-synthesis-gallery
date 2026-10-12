@@ -67,8 +67,7 @@ try {
     hasVariableFigureWidths:row.imgStyles.some(st=>/width:\\s*(?:7[5-9]|8\\d|9[0-5])%/.test(st)),
     noAllWideImages:row.imgStyles.filter(st=>/width:\\s*100%/.test(st)).length<row.imgStyles.length-1
   }));
-  const allScience=blocks=>blocks.map(a=>a.innerText);
-  const articleText=allScience([...document.querySelectorAll('article.article-block')]);
+  const articleText=await page.evaluate(()=>[...document.querySelectorAll('article.article-block')].map(a=>a.innerText));
   if(!articleText[0].includes('移走氯仿，活性还能保留吗')||
      !articleText[0].includes('活性提升')||
      !articleText[1].includes('69.8% ee')||
