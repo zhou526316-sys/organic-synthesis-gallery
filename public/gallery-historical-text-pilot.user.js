@@ -548,7 +548,10 @@
   }
 
   if(location.hostname==='gallery.gczhouwld.com'){
-    batchUi=batchPanel();batchUi?.refresh();
+    // Never overlay PDF readers, account pages or other Gallery tools.
+    if(location.pathname==='/'||location.pathname==='/index.html'){
+      batchUi=batchPanel();batchUi?.refresh();
+    }
   }else{
     GM_registerMenuCommand('Gallery：本地导出此历史论文正文（手动）',()=>{void exportCurrent();});
     void batchWorker().catch(()=>{});
