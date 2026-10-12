@@ -44,7 +44,7 @@
   const SOURCE_RESULT_MAX_BYTES=5000000;
   const SCHEMA='gallery-historical-local-text-pilot-v1';
   const DOI=/^10\.\d{4,9}\/\S+$/;
-  const EXCLUDE_HEADING=/^(?:references?|bibliography|acknowledg(?:e)?ments?|author information|associated content|supplementary information|supporting information|funding|conflicts? of interest|data availability)\b/i;
+  const EXCLUDE_HEADING=/^(?:references?|bibliography|acknowledg(?:e)?ments?|author information|author contributions?|author notes?|corresponding author|associated content|supplementary information|supporting information|funding|conflicts? of interest|competing interests?|data availability|code availability|additional information|rights and permissions|licen[cs](?:e|ing)?|open access|about this article|peer review (?:file|information)|reprints?|ethics (?:declarations?|approval)|publisher(?:'s)? note|article information)\b/i;
   const EXCLUDE_CONTEXT=/(?:^|[\s_-])(?:reference|bibliography|related|recommended|navigation|share|cookie|social|advert|footer)(?:$|[\s_-])/i;
   const KNOWN_HOSTS={
     'pubs.acs.org': 'acs',
@@ -108,7 +108,7 @@
       consumed+=value.length;paragraphCount++;
       const key=heading.toLowerCase();
       if(!group.has(key)){
-        const row={type:/abstract/i.test(heading)?'abstract':/mechanis/i.test(heading)?'mechanism':/result|scope|discussion/i.test(heading)?'results':/experimental|methods/i.test(heading)?'experimental':'other',
+        const row={type:/^abstract\b/i.test(heading)?'abstract':/mechanis|control experiments?|catalytic cycle/i.test(heading)?'mechanism':/result|scope|discussion|screening|optimization|structure.reactivity/i.test(heading)?'results':/experimental|methods|materials and methods|procedure/i.test(heading)?'experimental':/introduct|background/i.test(heading)?'introduction':/conclusion|outlook|summary/i.test(heading)?'conclusion':'other',
           heading,text:'',order:sections.length};
         group.set(key,row);sections.push(row);
       }
@@ -338,22 +338,38 @@
       root.querySelectorAll('[itemprop="license"] a[href],a[rel="license"][href],a[href*="creativecommons.org/licenses/"],a[href*="creativecommons.org/publicdomain/zero/"]').forEach(el=>{
         if(!excluded(el,true))candidates.push(String(el.href||el.getAttribute('href')||''));
       });
+      // On verified publisher article pages, the CC URL is frequently written
+      // as plain text (including the publisher's legacy http:// permalink)
+      // under "Rights and permissions" rather than as a <link rel=license>.
+      // Only accept this exact article-scoped legal notice, never a reference
+      // section, citation, recommended article or generic page footer.
+      root.querySelectorAll('section').forEach(section=>{
+        const title=cleanText(section.querySelector('h2,h3,h4')?.textContent||'',120);
+        if(!/^(?:rights and permissions|open access|licen[cs](?:e|ing)?|copyright)\b/i.test(title))return;
+        const text=cleanText(section.textContent,10000);
+        if(!/\bthis article is licensed under a creative commons\b/i.test(text))return;
+        const urls=text.match(/https?:\/\/creativecommons\.org\/(?:licenses\/[\w.-]+(?:\/[\w.-]+)*|publicdomain\/zero\/1\.0)\/?/ig)||[];
+        candidates.push(...urls);
+      });
     }
     const matches=candidates.map(raw=>{
-      try{const url=new URL(raw,location.origin);
-        if(url.protocol!=='https:'||url.hostname!=='creativecommons.org')return null;
+      try{
+        const url=new URL(raw,location.origin);
+        // Creative Commons often uses http in its published license notice.
+        // Normalize ONLY an exact Creative Commons host/path; never fetch it.
+        if(!['http:','https:'].includes(url.protocol)||url.hostname!=='creativecommons.org')
+          return null;
         if(/^\/licenses\/by\/(?:3\.0|4\.0)\/?$/.test(url.pathname))
-          return {kind:'cc-by',licenseUrl:url.origin+url.pathname};
+          return {kind:'cc-by',licenseUrl:'https://creativecommons.org'+url.pathname};
         if(/^\/publicdomain\/zero\/1\.0\/?$/.test(url.pathname))
-          return {kind:'cc0',licenseUrl:url.origin+url.pathname};
+          return {kind:'cc0',licenseUrl:'https://creativecommons.org'+url.pathname};
       }catch(_){}
       return null;
     }).filter(Boolean);
-    // Source URI alone is not authorization to publish raw fulltext. Batch
-    // storage remains device-only pending a separate source/version review.
     const distinct=[...new Set(matches.map(x=>x.licenseUrl))];
     return distinct.length===1?matches[0]:null;
   }
+
   function batchOpenDb(){
     return new Promise((resolve,reject)=>{
       if(typeof indexedDB==='undefined')return reject(Error('IndexedDB unavailable'));
@@ -606,10 +622,10 @@
     const license=batchLicenseEvidence(root);
     if(!license){storeResult({status:'license_not_verified'});return;}
     if(!capture){storeResult({status:'body_missing',reason:reason.slice(0,90)});return;}
-    const nonAbstractChars=capture.sections.filter(row=>row.type!=='abstract'
-      && !/^abstract$/i.test(String(row.heading||'').trim()))
+    const evidenceChars=capture.sections.filter(row=>
+      ['results','mechanism','experimental'].includes(row.type))
       .reduce((total,row)=>total+String(row.text||'').length,0);
-    if(nonAbstractChars<250){storeResult({status:'body_missing',reason:'abstract_only_or_insufficient_body'});return;}
+    if(evidenceChars<250){storeResult({status:'body_missing',reason:'scientific_results_or_methods_missing'});return;}
     const canonical=[...capture.sections.map(s=>s.heading+'\n'+s.text),
       ...capture.captions.map(s=>s.label+'\n'+s.text),
       ...capture.tables.map(s=>s.label+'\n'+s.text)].join('\n');
