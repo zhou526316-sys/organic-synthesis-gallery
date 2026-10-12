@@ -1,0 +1,470 @@
+{
+  "revision": "2026-10-12-r6",
+  "date": "2026-10-12",
+  "status": "awaiting_independent_original_source_pixel_review",
+  "sourceSha256Verified": {
+    "jacs": {
+      "originalSha256": "78da09472d4cf1b6dece3e11b671991ea340f438fffe19c18f4226ed78ae9000",
+      "bytes": 4291752,
+      "doi": "10.1021/jacs.6c10406"
+    },
+    "acscatal": {
+      "originalSha256": "22315092e88e6ee323bfb261cd92c6c490414b7ad662235321c240ca875b7e99",
+      "bytes": 1384988,
+      "doi": "10.1021/acscatal.6c06048"
+    },
+    "acscatal_si": {
+      "originalSha256": "afb372f65369a2195de68b45fbf9f157c89f8fb3176d11bb81e65415311a37d5",
+      "bytes": 6527652,
+      "doi": "10.1021/acscatal.6c06048"
+    }
+  },
+  "candidates": [
+    {
+      "id": "jacs_background",
+      "source": "jacs original journal PDF p2",
+      "page": 2,
+      "originalSourceSize": [
+        1856,
+        2448
+      ],
+      "normalizedBounds": [
+        0.193,
+        0.068,
+        0.809,
+        0.352
+      ],
+      "outputSize": [
+        1144,
+        696
+      ],
+      "sha256": "90b493129d13db8cecb06e57f25deb25758e92fc4f860d82d27646ea7681e7f8",
+      "bytes": 185804,
+      "visualReview": "pending"
+    },
+    {
+      "id": "jacs_lead",
+      "source": "jacs original journal PDF p2",
+      "page": 2,
+      "originalSourceSize": [
+        1856,
+        2448
+      ],
+      "normalizedBounds": [
+        0.193,
+        0.347,
+        0.809,
+        0.562
+      ],
+      "outputSize": [
+        1144,
+        527
+      ],
+      "sha256": "85ab0147d572082ab24767216d09553da12ae561ee3495ea595d990cce156545",
+      "bytes": 154193,
+      "visualReview": "pending"
+    },
+    {
+      "id": "jacs_table1",
+      "source": "jacs original journal PDF p3",
+      "page": 3,
+      "originalSourceSize": [
+        1856,
+        2448
+      ],
+      "normalizedBounds": [
+        0.513,
+        0.064,
+        0.926,
+        0.66
+      ],
+      "outputSize": [
+        767,
+        1459
+      ],
+      "sha256": "9b0a90af633f3f1d09a6ac8c4595e7fbd13ac4751d87446897f8df90b5836c04",
+      "bytes": 402308,
+      "visualReview": "pending"
+    },
+    {
+      "id": "jacs_scope",
+      "source": "jacs original journal PDF p4",
+      "page": 4,
+      "originalSourceSize": [
+        1856,
+        2448
+      ],
+      "normalizedBounds": [
+        0.075,
+        0.065,
+        0.926,
+        0.746
+      ],
+      "outputSize": [
+        1580,
+        1667
+      ],
+      "sha256": "222f11aefa072176fa76f422b2f78c2a18f41c795b63a508b6b05dfa53e59f90",
+      "bytes": 586184,
+      "visualReview": "pending"
+    },
+    {
+      "id": "jacs_minimal",
+      "source": "jacs original journal PDF p5",
+      "page": 5,
+      "originalSourceSize": [
+        1856,
+        2448
+      ],
+      "normalizedBounds": [
+        0.075,
+        0.068,
+        0.925,
+        0.412
+      ],
+      "outputSize": [
+        1578,
+        843
+      ],
+      "sha256": "32e4bcf2476fc8976884e2a92d931b7720e14f68ba10e20b2edb9542d4600179",
+      "bytes": 246692,
+      "visualReview": "pending"
+    },
+    {
+      "id": "jacs_application",
+      "source": "jacs original journal PDF p5",
+      "page": 5,
+      "originalSourceSize": [
+        1856,
+        2448
+      ],
+      "normalizedBounds": [
+        0.075,
+        0.406,
+        0.925,
+        0.737
+      ],
+      "outputSize": [
+        1578,
+        810
+      ],
+      "sha256": "03133e358a3afad2e0cbbc2d06621e001f241ffb33d77fc354ced8e50a652f1c",
+      "bytes": 186723,
+      "visualReview": "pending"
+    },
+    {
+      "id": "jacs_mech_ab",
+      "source": "jacs original journal PDF p6",
+      "page": 6,
+      "originalSourceSize": [
+        1856,
+        2448
+      ],
+      "normalizedBounds": [
+        0.079,
+        0.073,
+        0.568,
+        0.529
+      ],
+      "outputSize": [
+        907,
+        1116
+      ],
+      "sha256": "c4b6fcc65c88631485015816e7d66d92f0d7a4fcb5cf4d7a34a30b916536fcee",
+      "bytes": 241851,
+      "visualReview": "pending"
+    },
+    {
+      "id": "jacs_mech_c",
+      "source": "jacs original journal PDF p6",
+      "page": 6,
+      "originalSourceSize": [
+        1856,
+        2448
+      ],
+      "normalizedBounds": [
+        0.56,
+        0.073,
+        0.919,
+        0.31
+      ],
+      "outputSize": [
+        667,
+        580
+      ],
+      "sha256": "e7138da694dbc3f17d39222e116e14ce1c93361827fa7f775f9097410b8170c1",
+      "bytes": 79283,
+      "visualReview": "pending"
+    },
+    {
+      "id": "jacs_mech_d",
+      "source": "jacs original journal PDF p6",
+      "page": 6,
+      "originalSourceSize": [
+        1856,
+        2448
+      ],
+      "normalizedBounds": [
+        0.56,
+        0.3,
+        0.92,
+        0.531
+      ],
+      "outputSize": [
+        669,
+        566
+      ],
+      "sha256": "5ee591028da8f5941d8e641afe042901842378b0c5ddf75d049e381b83b34884",
+      "bytes": 84958,
+      "visualReview": "pending"
+    },
+    {
+      "id": "jacs_si_onepot",
+      "source": "public/wechat-assets/reviewed/2026-10-12-r1/jacs_si_onepot.jpg",
+      "page": null,
+      "originalSourceSize": [
+        1258,
+        1062
+      ],
+      "normalizedBounds": [
+        0.025,
+        0.057,
+        0.989,
+        0.805
+      ],
+      "outputSize": [
+        1213,
+        794
+      ],
+      "sha256": "7acca00eb47c6bb68d1ad27387926a5b741df1c33feddd653b9ce73f0e7037e2",
+      "bytes": 282521,
+      "visualReview": "pending"
+    },
+    {
+      "id": "acs_sensitivity",
+      "source": "acscatal original journal PDF p4",
+      "page": 4,
+      "originalSourceSize": [
+        1857,
+        2447
+      ],
+      "normalizedBounds": [
+        0.232,
+        0.073,
+        0.781,
+        0.304
+      ],
+      "outputSize": [
+        1019,
+        565
+      ],
+      "sha256": "bc404a4e546ee5bb3915e079b6f6d8884c0d7e3f92e6f721f2e71702f20bab07",
+      "bytes": 127062,
+      "visualReview": "pending"
+    },
+    {
+      "id": "acs_drugconcept",
+      "source": "acscatal original journal PDF p5",
+      "page": 5,
+      "originalSourceSize": [
+        1857,
+        2447
+      ],
+      "normalizedBounds": [
+        0.082,
+        0.681,
+        0.501,
+        0.843
+      ],
+      "outputSize": [
+        778,
+        397
+      ],
+      "sha256": "c78926439fa25a4acaf6fb181200028d5c2689c8368312797293d64e43dcfd4e",
+      "bytes": 45211,
+      "visualReview": "pending"
+    },
+    {
+      "id": "acs_scope_alkyl",
+      "source": "acscatal original journal PDF p6",
+      "page": 6,
+      "originalSourceSize": [
+        1857,
+        2447
+      ],
+      "normalizedBounds": [
+        0.207,
+        0.071,
+        0.798,
+        0.257
+      ],
+      "outputSize": [
+        1098,
+        455
+      ],
+      "sha256": "49a6044da97b855ed4c193437fab2ceb1ada181c81bc6bc0a7e04819dcfa35f1",
+      "bytes": 46000,
+      "visualReview": "pending"
+    },
+    {
+      "id": "acs_scope_aryl",
+      "source": "acscatal original journal PDF p6",
+      "page": 6,
+      "originalSourceSize": [
+        1857,
+        2447
+      ],
+      "normalizedBounds": [
+        0.207,
+        0.251,
+        0.798,
+        0.487
+      ],
+      "outputSize": [
+        1098,
+        578
+      ],
+      "sha256": "be414386eb9a9fdc2a254ad2fe9d8e24e2ddba70f8b9e3acab27c914a3a92d21",
+      "bytes": 49004,
+      "visualReview": "pending"
+    },
+    {
+      "id": "acs_scope_spacer",
+      "source": "acscatal original journal PDF p6",
+      "page": 6,
+      "originalSourceSize": [
+        1857,
+        2447
+      ],
+      "normalizedBounds": [
+        0.207,
+        0.48,
+        0.798,
+        0.669
+      ],
+      "outputSize": [
+        1098,
+        462
+      ],
+      "sha256": "164faae0345b2d0ef421a74823a06e1d39b514cfdaad2951c24544affaf880ee",
+      "bytes": 41308,
+      "visualReview": "pending"
+    },
+    {
+      "id": "acs_pretreatment",
+      "source": "acscatal original journal PDF p7",
+      "page": 7,
+      "originalSourceSize": [
+        1857,
+        2447
+      ],
+      "normalizedBounds": [
+        0.227,
+        0.664,
+        0.783,
+        0.939
+      ],
+      "outputSize": [
+        1032,
+        673
+      ],
+      "sha256": "011123f0a85348b88d2f02fff73676f38349bdd41c4b1d08b8b146179141279c",
+      "bytes": 113629,
+      "visualReview": "pending"
+    },
+    {
+      "id": "acs_xps",
+      "source": "acscatal original journal PDF p8",
+      "page": 8,
+      "originalSourceSize": [
+        1857,
+        2447
+      ],
+      "normalizedBounds": [
+        0.224,
+        0.073,
+        0.783,
+        0.462
+      ],
+      "outputSize": [
+        1038,
+        952
+      ],
+      "sha256": "ffca1897e7081786461cdad701c88070d873150b972faa266561072e152f81f5",
+      "bytes": 172500,
+      "visualReview": "pending"
+    },
+    {
+      "id": "acs_tofsims",
+      "source": "acscatal original journal PDF p9",
+      "page": 9,
+      "originalSourceSize": [
+        1857,
+        2447
+      ],
+      "normalizedBounds": [
+        0.214,
+        0.069,
+        0.806,
+        0.514
+      ],
+      "outputSize": [
+        1100,
+        1089
+      ],
+      "sha256": "249c5bf3acbdcf3f793fabb9d7d0540eaabc311d679a0f3bd957ae48727c3660",
+      "bytes": 173436,
+      "visualReview": "pending"
+    },
+    {
+      "id": "acs_si_limit",
+      "source": "acscatal_si original journal PDF p27",
+      "page": 27,
+      "originalSourceSize": [
+        1819,
+        2573
+      ],
+      "normalizedBounds": [
+        0.072,
+        0.074,
+        0.931,
+        0.843
+      ],
+      "outputSize": [
+        1562,
+        1979
+      ],
+      "sha256": "4a258ded49b81dc12c2ff95199ffc72d9e59a49ca70a61df39adfefad139f761",
+      "bytes": 253996,
+      "visualReview": "pending"
+    },
+    {
+      "id": "acs_si_robust",
+      "source": "acscatal_si original journal PDF p30",
+      "page": 30,
+      "originalSourceSize": [
+        1819,
+        2573
+      ],
+      "normalizedBounds": [
+        0.073,
+        0.073,
+        0.933,
+        0.846
+      ],
+      "outputSize": [
+        1564,
+        1989
+      ],
+      "sha256": "dded558e8a5280deac4ce716c4eb49255689fa2e456dc7deea8c49ee2f431687",
+      "bytes": 315777,
+      "visualReview": "pending"
+    }
+  ],
+  "expectedCount": 20,
+  "editorialManifestsModified": false,
+  "wechatDraftModified": false,
+  "reviewGateApproved": false,
+  "massSent": false,
+  "note": "These are source-authentic image candidates, NOT reviewed/production images. Inspect for cut chemistry, plot axes, scheme branches, table columns, captions and excessive marginal matter prior to promotion."
+}
