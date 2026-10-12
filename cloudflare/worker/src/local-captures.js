@@ -653,11 +653,28 @@ export async function importStagedArticleFigure(request, env, payload) {
     previous.pageDoi === doi && captureBelongsToDoi(previous, doi));
 }
 
-function compactStageCaptureInventory(index, reports) {
-  const byDoi=new Map();
+// The legacy whole-index endpoint remains intact. Controller metadata may
+// request at most 80 exact DOIs per response to avoid multi-megabyte payloads.
+// No filtering may convert an omitted/unreadable row into a negative receipt.
+function requestedInventoryDoiScope(request) {
+  const url = new URL(request.url);
+  if (!url.searchParams.has('dois')) return null;
+  const raw = url.searchParams.get('dois') || '';
+  if (!raw || raw.length > 6500) throw new Error('invalid_inventory_doi_scope');
+  const parts = raw.split(',');
+  if (!parts.length || parts.length > 80) throw new Error('inventory_doi_scope_limit');
+  const dois = parts.map(normalizeDoi);
+  if (dois.some(doi => !/^10\.\d{4,9}\/[^\s/]{4,180}$/i.test(doi)) ||
+      new Set(dois).size !== dois.length) throw new Error('invalid_inventory_doi_scope');
+  return dois;
+}
+
+function compactStageCaptureInventory(index, reports, requestedDois = null) {
+  const byDoi=new Map(),scopeSet=requestedDois?new Set(requestedDois):null;
   function row(doi){if(!byDoi.has(doi))byDoi.set(doi,{doi,figures:{},expectedFigureCount:0,observedAt:0});return byDoi.get(doi);}
   for(const entry of Object.values(index.items||{})){
     const doi=normalizeDoi(entry?.doi);
+    if(scopeSet&&!scopeSet.has(doi))continue;
     if(!doi||entry.captureVersion!=='6.2.20'||Number(entry.mediaGeneration)!==MEDIA_REBUILD_EPOCH||Number(entry.updatedAt)<MEDIA_REBUILD_EPOCH||entry.pageDoi!==doi||!entry.r2Key||!entry.contentHash||!entry.sourceUrl||!captureBelongsToDoi(entry,doi))continue;
     const w=Number(entry.width||0),h=Number(entry.height||0);
     const usable=w>0&&h>0&&(entry.contentType==='image/svg+xml'||(Math.max(w,h)>=600&&Math.min(w,h)>=140&&w*h>=120000));
@@ -667,7 +684,7 @@ function compactStageCaptureInventory(index, reports) {
     if(!old||Number(entry.updatedAt)>old.updatedAt)target.figures[label]={label,sourceUrl:safeUrl(entry.sourceUrl),contentHash:entry.contentHash,width:w,height:h,quality:entry.contentType==='image/svg+xml'?'vector':'usable',updatedAt:Number(entry.updatedAt)};
   }
   for(const report of Object.values(reports.items||{})){
-    const doi=normalizeDoi(report?.doi);if(!doi)continue;
+    const doi=normalizeDoi(report?.doi);if(!doi||(scopeSet&&!scopeSet.has(doi)))continue;
     for(const attempt of [report,...(report.attempts||[])]){
       if(attempt.captureVersion!=='6.2.20'||attempt.final!==true||Number(attempt.updatedAt)<MEDIA_REBUILD_EPOCH||!/(?:figures)/.test(String(attempt.mediaNeed||''))||!captureBelongsToDoi(attempt,doi))continue;
       const count=Math.max(0,Number(attempt.figuresDiscovered||0));
@@ -675,7 +692,9 @@ function compactStageCaptureInventory(index, reports) {
     }
   }
   const items=[...byDoi.values()].sort((a,b)=>a.doi.localeCompare(b.doi));
-  return {schemaVersion:'capture-inventory-v1',mediaGeneration:MEDIA_REBUILD_EPOCH,generatedAt:Date.now(),complete:true,count:items.length,items};
+  return {schemaVersion:'capture-inventory-v1',mediaGeneration:MEDIA_REBUILD_EPOCH,generatedAt:Date.now(),complete:true,count:items.length,items,
+    ...(requestedDois?{scopeRevision:'doi-scoped-inventory-v1',scopeRequestedCount:requestedDois.length,
+      requestedDois}: {})};
 }
 
 async function readStrictCaptureIndex(env,key) {
@@ -693,9 +712,12 @@ export async function getStagedArticleFigures(request, env) {
       .sort((a,b)=>String(a.doi).localeCompare(String(b.doi))||String(a.id).localeCompare(String(b.id))));
   if(new URL(request.url).searchParams.get('inventory')==='1'){
     if(!env?.MEDIA)return {status:503,body:{error:'capture_inventory_unavailable'}};
+    let scope;
+    try{scope=requestedInventoryDoiScope(request);}
+    catch(error){return {status:400,body:{error:String(error.message||error)}};}
     try{
       const [stage,reports]=await Promise.all([readStrictCaptureIndex(env,ARTICLE_FIGURE_STAGE_INDEX_KEY),readStrictCaptureIndex(env,TAMPERMONKEY_REPORT_INDEX_KEY)]);
-      return {status:200,body:compactStageCaptureInventory(stage,reports)};
+      return {status:200,body:compactStageCaptureInventory(stage,reports,scope)};
     }catch{return {status:503,body:{error:'capture_inventory_unavailable'}};}
   }
   if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
@@ -1267,11 +1289,16 @@ export async function purgeRejectedRscPreviewLocalMedia(env, payload = {}) {
 }
 
 export async function getLocalCaptureIndex(request, env) {
+  let scope;
+  try{scope=requestedInventoryDoiScope(request);}
+  catch(error){return {status:400,body:{error:String(error.message||error)}};}
   const index = await readIndex(env);
   const rawItems = Object.values(index.items || {});
+  const scopeSet=scope?new Set(scope):null;
   const validItems = rawItems.filter(item => {
     const doi = normalizeDoi(item?.doi);
-    return Boolean(doi && Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH &&
+    return Boolean(doi && (!scopeSet||scopeSet.has(doi)) &&
+      Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH &&
       captureBelongsToDoi(item, doi) && !isRejectedRscPreviewCapture(item, doi));
   });
   const items = validItems.map(item => ({
@@ -1286,6 +1313,8 @@ export async function getLocalCaptureIndex(request, env) {
       count: items.length,
       invalidFiltered: rawItems.length - validItems.length,
       items,
+      ...(scope?{scopeRevision:'doi-scoped-inventory-v1',scopeRequestedCount:scope.length,
+        requestedDois:scope,complete:true}: {}),
     },
   };
 }

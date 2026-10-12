@@ -26,7 +26,7 @@ function routeContext(){
   };
   vm.createContext(ctx);
   vm.runInContext(['articleUrl','captureRouteClass','rscSilverchairArticleForJob',
-    'rscSilverchairVisualCandidates','rscGraphicalAbstractCandidates']
+    'rscSemanticCardPublisherAsset','rscSilverchairVisualCandidates','rscGraphicalAbstractCandidates']
     .map(extract).join('\n')+'\n globalThis.testFns={articleUrl,captureRouteClass,rscSilverchairArticleForJob,rscSilverchairVisualCandidates,rscGraphicalAbstractCandidates};',ctx);
   return ctx;
 }
@@ -181,7 +181,7 @@ test('five inventory layers never start more than two concurrent network tasks',
    captureJobEligible:x=>x.addedDate>='2026-10-01',
    updateInventoryProgress:()=>{},nowIso:()=>new Date().toISOString(),manualExecutionCurrent:()=>true,controllerPaused:()=>false,
    captureLiveError:e=>String(e),coverageTransient:()=>false,sleep:async()=>{},
-   INVENTORY_REQUEST_TIMEOUT_MS:12000,
+   INVENTORY_REQUEST_TIMEOUT_MS:12000,INVENTORY_SCOPED_BATCH_SIZE:80,
    MEDIA_INVENTORY_ENDPOINT:'https://api.test/media/inventory',
    CAPTURE_INDEX_URL:'https://api.test/media/local-capture-index',
    WORKER:'https://api.test',
@@ -197,8 +197,12 @@ test('five inventory layers never start more than two concurrent network tasks',
      active++;peak=Math.max(peak,active);started.push(options.url);
      await new Promise(resolve=>setImmediate(resolve));active--;
      if(options.url.includes('/media/inventory'))return {items:papers.map(x=>({doi:x.doi}))};
-     if(options.url.includes('/local-capture-index'))return {items:[],count:0};
-     if(options.url.includes('/staged?'))return {schemaVersion:'capture-inventory-v1',complete:true,count:0,items:[]};
+     if(options.url.includes('/local-capture-index')||options.url.includes('/staged?')){
+       const part=new URL(options.url).searchParams.get('dois').split(',');
+       return {version:1,scopeRevision:'doi-scoped-inventory-v1',complete:true,
+         scopeRequestedCount:part.length,requestedDois:part,invalidFiltered:0,count:0,items:[],
+         ...(options.url.includes('/staged?')?{schemaVersion:'capture-inventory-v1',mediaGeneration:1790082000000}:{})};
+     }
      if(options.url.includes('evidence-inventory'))return {schemaVersion:'article-evidence-v2',complete:true,truncated:false,nextCursor:'',count:0,items:[]};
      throw Error('unexpected URL');
    }
@@ -232,7 +236,7 @@ test('PDF owner inventory reads 177 DOI in batches of at most two and preserves 
  };
  vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\n globalThis.load=readOwnerPdfInventory;',ctx);
  const result=await ctx.load(papers,null);
- assert.equal(peak,2);assert.equal(calls,Math.ceil(177/25));
+ assert.equal(peak,2);assert.equal(calls,Math.ceil(177/12));
  assert.equal(result.complete,true);assert.equal(result.items.length,177);
  assert.equal(result.unknown,0);
 });
@@ -279,7 +283,7 @@ test('owner PDF transient timeout splits only the failed small batch and preserv
    sleep:async()=>{},
    inventoryReadMetadataJson:async options=>{
      const items=JSON.parse(options.data).dois;calls++;
-     if(items.length===25&&items[0]===papers[0].doi)throw Error('owner_pdf_inventory_deadline');
+     if(items.length===12&&items[0]===papers[0].doi)throw Error('owner_pdf_inventory_deadline');
      return {schemaVersion:'private-pdf-capture-inventory-v1',complete:true,count:items.length,
        items:items.map(doi=>({doi,status:'ready'}))};
    }
@@ -289,7 +293,7 @@ test('owner PDF transient timeout splits only the failed small batch and preserv
  assert.equal(result.complete,true);
  assert.equal(result.unknown,0);
  assert.equal(result.items.length,53);
- assert.equal(calls,5,'25 initial failed, two split parts, two unaffected batches');
+ assert.equal(calls,7,'first 12 split 6+6; other four bounded DOI batches remain');
 });
 test('owner PDF 403 cannot spawn retry requests or turn unknown into missing',async()=>{
  const papers=Array.from({length:25},(_,i)=>({doi:'10.1021/jacs.6c'+String(i).padStart(5,'0'),addedDate:'2026-10-08'}));
@@ -303,9 +307,9 @@ test('owner PDF 403 cannot spawn retry requests or turn unknown into missing',as
  };
  vm.createContext(ctx);vm.runInContext(extract('readOwnerPdfInventory')+'\n globalThis.load=readOwnerPdfInventory;',ctx);
  const result=await ctx.load(papers,null);
- assert.equal(calls,1);
+ assert.equal(calls,Math.ceil(papers.length/12),'no per-DOI auth-denial retry');
  assert.equal(result.complete,false);
  assert.equal(result.items.length,0);
  assert.equal(result.unknown,25);
- assert.equal(result.errors.length,1);
+ assert.equal(result.errors.length,Math.ceil(papers.length/12));
 });
