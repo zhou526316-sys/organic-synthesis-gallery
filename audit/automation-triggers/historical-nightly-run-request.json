@@ -1,7 +1,7 @@
 {
   "schema": "gallery-historical-nightly-rescue-v1",
-  "requestedAt": "2026-10-12T04:42:23.528Z",
-  "reason": "User explicitly approved accelerating the complete 16-journal historical backfill and reviewed archive admission; continue from verified staging checkpoint without unsanctioned publication.",
+  "requestedAt": "2026-10-12T04:44:26.350Z",
+  "reason": "User-authorized same-day accelerated staging backfill: finish second eight journal windows for September 8-14, 2026; hold all formal admissions until legitimate Beijing 08:00 review.",
   "mode": "candidate_discovery_only",
   "targetBranch": "staging/historical-archive-nightly",
   "budget": {
@@ -10,5 +10,5 @@
   },
   "safety": "Candidate-only; keep main publication strictly 08:00 Beijing; do not alter accepted DOI, media or PDF",
   "triggerScope": "user_authorized_manual_catchup",
-  "previousTriggerAt": "2026-10-10T17:58:44.890Z"
+  "previousTriggerAt": "2026-10-12T04:42:23.528Z"
 }
