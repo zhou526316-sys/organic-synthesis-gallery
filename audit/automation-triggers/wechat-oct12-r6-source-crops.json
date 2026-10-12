@@ -2,7 +2,7 @@
   "action": "render_exact_original_figures_candidates",
   "date": "2026-10-12",
   "revision": "2026-10-12-r6",
-  "requestId": "wechat-oct12-r6-both-paper-complete-source-restoration",
+  "requestId": "wechat-oct12-r6-source-final-original-panel-boundaries-r2",
   "selectedDois": [
     "10.1021/acscatal.6c06048",
     "10.1021/jacs.6c10406"
@@ -33,7 +33,7 @@
         0.193,
         0.068,
         0.809,
-        0.352
+        0.344
       ]
     },
     {
@@ -55,7 +55,7 @@
         0.513,
         0.064,
         0.926,
-        0.66
+        0.646
       ]
     },
     {
@@ -77,7 +77,7 @@
         0.075,
         0.068,
         0.925,
-        0.412
+        0.405
       ]
     },
     {
@@ -110,7 +110,7 @@
         0.56,
         0.073,
         0.919,
-        0.31
+        0.305
       ]
     },
     {
@@ -144,7 +144,7 @@
         0.232,
         0.073,
         0.781,
-        0.304
+        0.289
       ]
     },
     {
@@ -166,7 +166,7 @@
         0.207,
         0.071,
         0.798,
-        0.257
+        0.246
       ]
     },
     {
@@ -175,7 +175,7 @@
       "page": 6,
       "bounds": [
         0.207,
-        0.251,
+        0.243,
         0.798,
         0.487
       ]
@@ -186,9 +186,9 @@
       "page": 6,
       "bounds": [
         0.207,
-        0.48,
+        0.486,
         0.798,
-        0.669
+        0.655
       ]
     },
     {
@@ -197,9 +197,9 @@
       "page": 7,
       "bounds": [
         0.227,
-        0.664,
+        0.68,
         0.783,
-        0.939
+        0.867
       ]
     },
     {
@@ -210,7 +210,7 @@
         0.224,
         0.073,
         0.783,
-        0.462
+        0.392
       ]
     },
     {
@@ -219,9 +219,9 @@
       "page": 9,
       "bounds": [
         0.214,
-        0.069,
+        0.071,
         0.806,
-        0.514
+        0.447
       ]
     },
     {
@@ -249,5 +249,6 @@
   ],
   "draftWriteAuthorized": false,
   "publicSendAuthorized": false,
-  "explanation": "Restore both 10/12 papers original source figures + ACS SI with natural source panel boundaries; no invented chemistry; no authority to edit WeChat draft until independent visual review and source gate."
+  "explanation": "Restore both 10/12 papers original source figures + ACS SI with natural source panel boundaries; no invented chemistry; no authority to edit WeChat draft until independent visual review and source gate.",
+  "visualCorrectionNotes": "Trim only source figure neighboring-panel/caption remnants found in independent R6 visual audit. Preserve all structures and source pixel lines and values. No production or WeChat mutation."
 }
