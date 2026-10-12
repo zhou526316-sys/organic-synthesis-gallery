@@ -12,6 +12,7 @@ const DOI = normalizeDoi(new URLSearchParams(location.search).get('doi') || '');
 const BACKGROUND_RECHECK_AFTER_MS = 60_000;
 const $ = id => document.getElementById(id);
 const status = $('native-status');
+const scanReport = $('native-scan-report');
 const shell = $('native-shell');
 const viewer = $('native-viewer');
 const frame = $('native-frame');
@@ -98,17 +99,49 @@ function messageFor(error) {
   if (error?.name === 'AbortError' || error?.code === 'operation_cancelled') return '本次文件或文件夹选择已取消。';
   return '暂时无法读取此 PDF。可重试、重新授权下载目录或更换 PDF；原文件不会被删除。';
 }
+function showScanDetails(result) {
+  if (!result?.stats) { scanReport.textContent = ''; return; }
+  const s = result.stats;
+  const messages = ['本轮检查 PDF ' + (s.checked || 0) + ' 份',
+    '发现 PDF ' + (s.pdfCandidates || 0) + ' 份',
+    'DOI 不同 ' + (s.differentDoi || 0),
+    '未提取 DOI ' + (s.unrecognized || 0),
+    'DOI 歧义 ' + (s.ambiguous || 0),
+    '补充信息 ' + (s.supporting || 0),
+    '解析失败 ' + (s.parseErrors || 0),
+    '解析超时 ' + (s.timeouts || 0)];
+  if (s.cachedNegative) messages.push('此前识别结果待重试 ' + s.cachedNegative);
+  if (s.pendingFiles || s.remainingDirectories) {
+    messages.push('待继续文件 ' + (s.pendingFiles || 0) +
+      ' / 待检目录 ' + (s.remainingDirectories || 0));
+  }
+  if (s.deepDirectories) messages.push('超过扫描深度的目录 ' + s.deepDirectories);
+  if (!s.checked && !s.pdfCandidates && !s.entriesVisited) {
+    messages.push('未读到可检索 PDF，请核对浏览器实际保存文件夹及文件夹授权');
+  }
+  scanReport.textContent = messages.join('；') + '。仅在本机统计，不上传文件或路径。';
+}
+
 async function updateFolderActions(context) {
   if (!context || context !== account || viewer.hidden === false) return;
   const supported = typeof window.showDirectoryPicker === 'function';
   downloadButton.hidden = !supported;
-  downloadButton.textContent = '授权 PDF 下载目录（只读）';
+  downloadButton.textContent = '第一步：选择 PDF 保存文件夹';
   downloadRestoreButton.hidden = true;
   downloadScanButton.hidden = true;
   try {
     const info = await context.vault.downloadDirectoryInfo();
     assertCurrent(context);
     if (!viewer.hidden) return;
+    // Publisher-controlled downloads cannot be redirected to arbitrary
+    // folders by a regular webpage. The browser's save dialog must use the
+    // same folder that the user grants for local discovery.
+    publisherLink.hidden = supported && !info.selected;
+    publisherLink.textContent = '第二步：去期刊下载正文 PDF（如有权限）';
+    if (!info.selected && supported &&
+        document.documentElement.dataset.nativePdfState === 'unlinked') {
+      setState('unlinked', '首次使用请先选择 PDF 保存文件夹；之后到出版社下载正文并保存进该目录。再次点击本地 PDF 即可检索和打开。');
+    }
     if (info.selected) {
       downloadButton.textContent = '更换下载目录';
       if (info.permission === 'granted') downloadScanButton.hidden = false;
@@ -121,7 +154,7 @@ function showMissing(message = '未找到已核验的正文 PDF。已下载的�
   hideActions();
   linkButton.hidden = typeof window.showOpenFilePicker !== 'function';
   retryButton.hidden = false;
-  $('native-help').textContent = '仅检索明确授权的下载目录。自动关联必须核对 PDF 首页或元数据 DOI；文件和路径不上传，也不移动或删除原件。';
+  $('native-help').textContent = '仅检索已授权文件夹。若 PDF 由出版社网页下载，请在浏览器另存为时选择该文件夹；Gallery 不能替出版社改变下载位置。保存后再点本地 PDF 即可识别。';
   setState('unlinked', message);
   if (account) void updateFolderActions(account);
 }
@@ -224,7 +257,7 @@ async function openCopy(copyId, context) {
   lastCopyId = copyId;
   showNativePdf(result.file, context);
 }
-async function scanDownloads(context, { preserveReader = false } = {}) {
+async function scanDownloads(context, { preserveReader = false, forceRetry = false } = {}) {
   assertCurrent(context);
   const info = await context.vault.downloadDirectoryInfo();
   assertCurrent(context);
@@ -236,13 +269,14 @@ async function scanDownloads(context, { preserveReader = false } = {}) {
   const result = await discoverDownloadedPdf({
     vault: context.vault, doi: DOI, scope: scopeFor(context, info),
     assertCurrent: () => assertCurrent(context),
-    onProgress: progress => {
+    forceRetry, onProgress: progress => {
       if (context === account && viewer.hidden) {
         setState('scanning', '正在按 DOI 核查本地 PDF：已处理 ' + progress.processed + ' / ' + progress.total + '…');
       }
     },
   });
   assertCurrent(context);
+  showScanDetails(result);
   if (result.status === 'matched') {
     await openCopy(result.copyId, context);
   }
@@ -251,6 +285,7 @@ async function scanDownloads(context, { preserveReader = false } = {}) {
 async function inspectSaved(context) {
   assertCurrent(context);
   setState('loading-library', '正在查找本机已关联的 PDF…');
+  scanReport.textContent = '';
   let timeout;
   let snapshot;
   try {
@@ -291,7 +326,7 @@ async function inspectSaved(context) {
     return;
   }
   if (found?.status === 'partial') {
-    showMissing('目录文献较多，本轮已检查部分文件但未找到当前 DOI；可点击“重新搜索已下载 PDF”继续索引。');
+    showMissing('本轮目录扫描尚未完成，可点击“重新搜索已下载 PDF”继续上次进度，不会反复从头开始。');
     return;
   }
   if (lastError && fileIdentityError(lastError)) {
@@ -300,7 +335,7 @@ async function inspectSaved(context) {
   }
   if (lastError) { showFileError(lastError); return; }
   showMissing(found?.status === 'not_found'
-    ? '已检查授权目录，未找到首页 DOI 匹配的正文 PDF。可以检查是否下载到其他目录或手动选择。'
+    ? '本轮授权目录扫描已完成，但尚未确认这篇 DOI 的正文 PDF；下方列出实际扫描及识别失败统计。'
     : undefined);
 }
 async function initializeAccount(user, initialToken, stamp) {
@@ -482,7 +517,7 @@ async function manuallyScan() {
   busy = true;
   try {
     const keep = !viewer.hidden;
-    const found = await scanDownloads(context, { preserveReader: keep });
+    const found = await scanDownloads(context, { preserveReader: keep, forceRetry: true });
     if (!keep && found.status !== 'matched') {
       showMissing(found.status === 'partial'
         ? '目录较大，已扫描一批文献；再次点击可继续扫描。'
