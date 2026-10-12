@@ -1,28 +1,21 @@
 {
-  "requestId": "wechat-2026-10-11-r5-research-grade-deep-explanation-original-toc-enlarged-no-green",
-  "requestedAt": "2026-10-11T14:52:00+08:00",
+  "requestId": "wechat-2026-10-12-r1-acs-catalysis-jacs-deepread-two-paper-reviewed",
+  "requestedAt": "2026-10-12T12:15:00+08:00",
   "action": "import_reviewed_editorial_package",
-  "revision": "2026-10-11-r5",
-  "doi": "10.1038/s44160-026-01127-z",
-  "targetDateBeijing": "2026-10-11",
-  "packageUrl": "https://at.adobe.com/yRp85y5mEmoq9JPZ",
-  "packageSha256": "1e487eb00802690f55ca81ab99c99f92f2b8873cd8173a76a6414f4d3a487cc7",
-  "manifestPath": "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json",
-  "gatePath": "audit/wechat-working/2026-10-11-review-gate.json",
+  "revision": "2026-10-12-r1",
+  "doi": "10.1021/jacs.6c10406",
+  "targetDateBeijing": "2026-10-12",
+  "packageUrl": "https://at.adobe.com/fdFKe1LejqzjPeKD",
+  "packageSha256": "423d4884c58e45c81404e5d8ccfdce4b41c7079758d33daae6772b38c569adf1",
+  "manifestPath": "public/wechat-retrospective/alkylzirconocene-deaminative-asymmetric-ke-20261012.json",
+  "gatePath": "audit/wechat-working/2026-10-12-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
-    "10.1021/jacs.6c15886",
-    "10.1038/s44160-026-01127-z"
+    "10.1021/acscatal.6c06048",
+    "10.1021/jacs.6c10406"
   ],
-  "replaceExisting": {
-    "public/wechat-featured/2026-10-11.json": "b5ae01e27e47465ea871d78079ac6c82f33d9fb5",
-    "public/wechat-retrospective/photo-double-hat-aziridination-liu-20261011.json": "f4356fca36a20ec85fd77f64ea51d3ab986a19d8",
-    "public/wechat-editions/2026-10-11.json": "d259911b23070037b9e73a40520a8bae31013063",
-    "audit/wechat-working/2026-10-11-review-gate.json": "79fdae33d9bd681f47751216a69e8743872336d4"
-  },
   "thisStepWritesDraft": false,
   "publicSendAuthorized": false,
   "sourceOnly": true,
-  "preserveOldWeChatMediaId": true,
-  "note": "Full evidence-first deep original article rewriting for two selected 2026-10-11 papers, 32 unchanged rigorously verified body figures and exact user-chosen Nature cover. JACS first cover now uses unaltered chemistry cropped above the green promotional frame, 1700px max landscape fill, preserving Me/H original legend; blue title region unchanged. Source text reviewed against both main + SI, no fixed opening modules. This import writes repository sources only; WeChat still pending separate same-media draft/update and draft/get after gate verification."
+  "description": "User selected today's published ACS Catalysis 10.1021/acscatal.6c06048 new article, and yesterday's chosen JACS 10.1021/jacs.6c10406 retrospective with exact generated Ni/Zr cover. Package includes both scientific manuscripts, 24 original-paper/SI figure rasters, two covers, source hashes and independent dual QA. Import alone must not create WeChat draft or send."
 }
