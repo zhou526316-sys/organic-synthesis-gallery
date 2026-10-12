@@ -1,0 +1,108 @@
+{
+  "date": "2026-10-12",
+  "revision": "2026-10-12-r6",
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/ab7daf116c9af68cefa965be.html",
+  "status": "content_urls_and_image_count_pass",
+  "readOnly": true,
+  "source": "Playwright in GitHub Actions against real post-draft/get relay HTML",
+  "notNativeWeChatClient": true,
+  "massSent": false,
+  "checkedAt": "2026-10-12T10:47:30.282Z",
+  "articles": [
+    "有机合成文献日报｜10.12｜今日精选｜ACS Catalysis：氯仿诱导钯催化剂表面改性，实现噻吩的温和非均相加氢",
+    "往期精选｜JACS：烷基锆参与的氨基酸衍生物不对称脱氨交叉偶联"
+  ],
+  "sourceLinks": [
+    "https://gallery.gczhouwld.com/?edition=2026-10-12&doi=10.1021%2Facscatal.6c06048&summary=0",
+    "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0"
+  ],
+  "images": {
+    "total": 27,
+    "byArticle": [
+      15,
+      10
+    ],
+    "covers": 2,
+    "expected": [
+      27,
+      14,
+      10,
+      2
+    ],
+    "imageLoadReport": {
+      "observed": 27,
+      "loaded": 27,
+      "missing": [],
+      "coversLoaded": 2
+    }
+  },
+  "evidence": [
+    {
+      "path": "audit/wechat-working/2026-10-12-r6-live-preview/mobile-first-screen.png",
+      "sha256": "b78be0846013c9e79ac4ef2850379c89cfaf91d25042d1c8569e42dd8b2a68f1",
+      "bytes": 301793
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r6-live-preview/mobile-primary-cover.png",
+      "sha256": "2ff0a0a48b83cb7bb06289cf4ef3d7f0354a959e58b21d72e09324f9aaaa0170",
+      "bytes": 97010
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r6-live-preview/mobile-retrospective-cover.png",
+      "sha256": "d2e947bcb176c226ee09a1e04f2d589695b926cc462598f87b41356990731e5d",
+      "bytes": 106030
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r6-live-preview/mobile-ACS-SI-Table-S9.png",
+      "sha256": "25539f10ab19222516407737bcd2d903589c93d87dcd20014074de1745ab38d6",
+      "bytes": 176945
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r6-live-preview/mobile-JACS-Fig2-scope.png",
+      "sha256": "b43c05f3daa525237a94409b6ee2bbd341d4d05d79aacdf4892e6dc3b4fcc915",
+      "bytes": 208656
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r6-live-preview/mobile-JACS-Fig3A-minimal.png",
+      "sha256": "3a2acc49ad7fdd4cc659da1de87ed66354d0d506c87b2d0a8025a81ffc829978",
+      "bytes": 90173
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r6-live-preview/mobile-JACS-Fig4-mechanism.png",
+      "sha256": "030d1b6a4003ebc2fd50bc477ccc4fbf7315c3ea6551d13be772fc4dced56791",
+      "bytes": 115300
+    },
+    {
+      "path": "audit/wechat-working/2026-10-12-r6-live-preview/desktop-two-cover-header.png",
+      "sha256": "78ba09669fe02e5564060c317a4cfd57fa00dd5b38a1ffa88e5f6c6f7756672f",
+      "bytes": 96790
+    }
+  ],
+  "journalCountOnly": true,
+  "ACS_SI_TableS9": true,
+  "contentSectionHeadings": [
+    [
+      "氯仿诱导钯催化剂表面改性，实现噻吩的温和非均相加氢",
+      "为什么饱和一个噻吩环，比普通芳环加氢更难",
+      "第一条线索：氯仿为什么与其他溶剂不同",
+      "官能团耐受，必须同时看两种结果",
+      "底物拓展说明了能力，也画出了边界",
+      "决定性实验：氯仿离开后，促进效应还在吗",
+      "表面表征究竟证明到了哪一步",
+      "这项工作的价值，及其必须支付的代价"
+    ],
+    [
+      "烷基锆参与的氨基酸衍生物不对称脱氨交叉偶联",
+      "从氨基酸到手性酰胺，最难的是区分两条相似的烷基链",
+      "烷基锆的设计，把自由基供给与电子供给联系起来",
+      "手性镍为何不可替代：条件优化揭示立体控制",
+      "底物范围要与低 ee 反例放在一起读",
+      "能用烯烃混合物，也不等于一锅操作没有代价",
+      "自由基与手性究竟由什么证据支持",
+      "Ni(0)/Ni(I)/Ni(II)/Ni(III) 循环仍是工作模型",
+      "方法学启示：分开解决“生成自由基”和“选择性成键”"
+    ]
+  ],
+  "imageDisplayNetworkStatus": "all_loaded",
+  "publicSend": false
+}
