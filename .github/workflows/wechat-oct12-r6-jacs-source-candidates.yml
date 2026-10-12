@@ -60,6 +60,8 @@ jobs:
       - name: Render pages from original PDF without AI redraw
         run: |
           set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
           pdftoppm -f 4 -l 4 -r 220 -png -singlefile /tmp/wechat-oct12-r6/article.pdf /tmp/wechat-oct12-r6/page-4
           pdftoppm -f 5 -l 5 -r 220 -png -singlefile /tmp/wechat-oct12-r6/article.pdf /tmp/wechat-oct12-r6/page-5
           python3 -m pip install -q 'Pillow>=10,<13'
