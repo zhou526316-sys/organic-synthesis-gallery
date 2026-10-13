@@ -1,0 +1,60 @@
+name: Historical Archive D1 real readback (read only)
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ['Literature catalog index shadow sync']
+    types: [completed]
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/historical-archive-live-acceptance.mjs'
+      - 'audit/historical-reviewed/approved-admissions.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/historical-archive-live-acceptance.mjs'
+      - 'scripts/test-historical-archive-live-acceptance.mjs'
+      - '.github/workflows/historical-archive-live-acceptance.yml'
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate historical DOI separation and D1 readback contracts
+        run: |
+          node --check scripts/historical-archive-live-acceptance.mjs
+          node --test scripts/test-historical-archive-live-acceptance.mjs
+  production-readback:
+    if: >-
+      github.event_name != 'pull_request' &&
+      (github.event_name != 'workflow_run' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'main'))
+    needs: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Read real deployed Pages and catalog D1, no publishing
+        env:
+          HISTORICAL_LIVE_REPORT: ${{ runner.temp }}/historical-archive-live-readback.json
+        run: node scripts/historical-archive-live-acceptance.mjs
+      - name: Retain exact live verification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: historical-archive-real-d1-readback
+          path: ${{ runner.temp }}/historical-archive-live-readback.json
+          if-no-files-found: warn
+          retention-days: 21
