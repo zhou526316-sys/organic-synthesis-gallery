@@ -40,3 +40,55 @@ jobs:
         run: |
           node scripts/test-prepublish-readiness.mjs
           node scripts/test-deferred-publication-quality.mjs
+
+  read-only-source-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Checkout proposed branch
+        uses: actions/checkout@v4
+      - name: Node 22
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Test real 16-journal DOI discovery without writing production
+        env:
+          AUDIT_START: '2026-10-11'
+          AUDIT_END: '2026-10-13'
+          AUDIT_OUTPUT: ${{ runner.temp }}/publisher-source-readonly-latest.json
+          AUDIT_UNRESOLVED_OUTPUT: ${{ runner.temp }}/publisher-source-readonly-unresolved.json
+          GALLERY_SITE: https://gallery.gczhouwld.com
+        run: |
+          node cloudflare/scripts/audit-literature.mjs
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          import assert from 'node:assert/strict';
+          const report=JSON.parse(readFileSync(process.env.AUDIT_OUTPUT,'utf8'));
+          const compact=JSON.parse(readFileSync(process.env.AUDIT_UNRESOLVED_OUTPUT,'utf8'));
+          assert.equal(report.endDate,'2026-10-13');
+          assert.equal(report.generatedAt,compact.generatedAt);
+          assert.equal(report.targetJournals.length,16);
+          assert.equal(report.publisherFeeds?.status?.length,16);
+          assert.equal(report.publisherFeeds.completeListing,false);
+          assert.equal(compact.unresolved.length,report.summary.unresolved);
+          assert.equal(compact.publisherFeeds.status.length,16);
+          assert.ok(report.sourceStats?.length>=16);
+          const doi='10.1038/s44160-026-01189-z';
+          assert.ok(report.missingCandidates.some(row=>row.doi===doi),
+            'Known Nature Synthesis pending DOI must remain in actual candidate handoff');
+          console.log('PUBLISHER_READONLY_SMOKE '+JSON.stringify({
+            sourceRecords:report.summary.sourceRecords,
+            unresolved:report.summary.unresolved,
+            publisherOnly:report.summary.publisherFeedOnlyDois,
+            publisherFeedStatuses:report.publisherFeeds.status.map(row=>({
+              journal:row.journal,status:row.status,doiCount:row.doiCount
+            }))
+          }));
+          NODE
+      - name: Upload read-only diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: publisher-source-readonly-smoke
+          path: ${{ runner.temp }}/publisher-source-readonly-*.json
+          retention-days: 7
