@@ -1,0 +1,51 @@
+name: WeChat Oct13 restore original Gallery mini-card artwork (staging)
+on:
+  push:
+    branches: [wechat-oct13-card-visual-diagnostics]
+    paths: [audit/automation-triggers/wechat-oct13-stage-cards.json]
+permissions:
+  contents: write
+concurrency:
+  group: wechat-20261013-real-miniature-recovery-staging
+  cancel-in-progress: false
+jobs:
+  original-media-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Scope restriction
+        run: |
+          python3 - <<'PY'
+          import json
+          r=json.load(open('audit/automation-triggers/wechat-oct13-stage-cards.json'))
+          assert r['action']=='stage_actual_gallery_card_visuals_without_wechat_write'
+          assert r['date']=='2026-10-13'
+          assert r['wechatWrite'] is False and r['massSend'] is False and r['galleryWrite'] is False
+          PY
+      - name: Install real image verification libraries
+        run: python3 -m pip install -q 'Pillow>=10,<13'
+      - name: Fetch original Gallery R2 media for four true mini-cards
+        run: python3 scripts/wechat-oct13-stage-real-gallery-cards.py
+      - name: Store only exact website-derived candidate images on isolated review branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          BR='wechat-oct13-card-visual-diagnostics'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$BR"
+            git reset --hard "origin/$BR"
+            DEST='audit/wechat-working/2026-10-13-r2-real-card-media-candidates'
+            mkdir -p "$DEST"
+            cp -a /tmp/wechat-oct13-gallery-card-candidates/. "$DEST/"
+            git add -- "$DEST"
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'audit: stage four real Gallery TOC/primary mini-card images for WeChat source QA'
+            if git push origin HEAD:"$BR"; then exit 0; fi
+            sleep 2
+          done
+          exit 1
