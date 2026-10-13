@@ -68,7 +68,7 @@ try{
     !initial.paperSummaries[0].includes('原来的氧究竟去了哪里')||
     !initial.paperSummaries[0].includes('46.7 kcal mol')||
     !initial.paperSummaries[1].includes('反应的第一步')||
-    !initial.paperSummaries[1].includes('经典 Mitsunobu')||
+    !initial.paperSummaries[1].includes('PPh₃/DIAD Mitsunobu')||
     !initial.paperSummaries[1].includes('BEHT')||
     !initial.paperSummaries[1].includes('SI Fig. S3'))
      throw Error('R4 evidence-led scientific narrative is missing from actual WeChat cloud draft');
