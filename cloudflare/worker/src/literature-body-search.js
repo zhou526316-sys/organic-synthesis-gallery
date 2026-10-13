@@ -143,23 +143,32 @@ export async function getPublicBodyCoverage(env,catalogId){
   return resp(200,{catalogId,verifiedDoi:Number(q?.dois||0),
     verifiedSections:Number(q?.sections||0),publicEnabled:await publicBodyReadReady(env,catalogId)});
 }
-export async function findPublicBodyMatches(env,{catalogId,query,limit=24}={}){
+export async function findPublicBodyMatches(env,{catalogId,query,limit=24,afterDoi='',afterSectionId=''}={}){
   if(!await publicBodyReadReady(env,catalogId))
     return resp(503,{error:'body_public_search_disabled_or_unready'});
   const expr=searchFtsExpression(query);
   if(!expr)return resp(422,{error:'body_query_too_short'});
+  const cursorDoi=afterDoi?norm(afterDoi):'';
+  if((afterDoi&&(!DOI.test(cursorDoi)||!/^s[0-9]{3}$/.test(afterSectionId)))
+    ||(!afterDoi&&afterSectionId))return resp(400,{error:'body_cursor_invalid'});
   const n=Math.max(1,Math.min(24,Math.floor(Number(limit)||24))),db=env.LITERATURE_INDEX_DB;
   const join=' FROM literature_body_sections_fts f JOIN literature_body_sections_reviewed s '+
     'ON s.catalog_id=f.catalog_id AND s.doi=f.doi AND s.section_id=f.section_id '+
     'JOIN literature_catalog_index i ON i.catalog_id=s.catalog_id AND i.doi=s.doi AND i.revision=s.revision '+
     'WHERE f.catalog_id=? AND literature_body_sections_fts MATCH ?';
   const count=await db.prepare('SELECT COUNT(*) AS c'+join).bind(catalogId,expr).first();
-  const rows=await db.prepare('SELECT s.doi,s.section_id,s.section_type,s.heading,s.license_kind,'+
-    's.license_url,s.article_url,s.completeness'+join+' ORDER BY s.doi,s.section_id LIMIT ?')
-    .bind(catalogId,expr,n).all();
+  const cursorSql=cursorDoi?' AND (s.doi>? OR (s.doi=? AND s.section_id>?))':'';
+  const binds=cursorDoi?[cursorDoi,cursorDoi,afterSectionId]:[];
+  const all=await db.prepare('SELECT s.doi,s.section_id,s.section_type,s.heading,s.license_kind,'+
+    's.license_url,s.article_url,s.completeness'+join+cursorSql+
+    ' ORDER BY s.doi,s.section_id LIMIT ?').bind(catalogId,expr,...binds,n+1).all();
+  const page=(all.results||[]).slice(0,n),more=(all.results||[]).length>n;
+  const last=page.at(-1);
   return resp(200,{catalogId,matchedSections:Number(count?.c||0),
-    count:(rows.results||[]).length,hasMore:Number(count?.c||0)>n,
-    items:(rows.results||[]).map(r=>({doi:r.doi,sectionId:r.section_id,
+    count:page.length,hasMore:more,
+    nextAfterDoi:more&&last?last.doi:null,
+    nextAfterSectionId:more&&last?last.section_id:null,
+    items:page.map(r=>({doi:r.doi,sectionId:r.section_id,
       evidenceType:r.section_type,heading:r.heading,source:'reviewed_public_body',
       licenseKind:r.license_kind,licenseUrl:r.license_url,
       originalArticleUrl:r.article_url,completeness:r.completeness}))});
