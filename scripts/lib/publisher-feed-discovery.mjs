@@ -29,7 +29,9 @@ export const OFFICIAL_PUBLISHER_FEEDS = Object.freeze(FEEDS.map(
 // segment after the DOI. Silverchair ACS <guid> embeds /article/doi/{DOI}/ID/slug,
 // while <prism:doi> carries just {DOI}; both MUST identify one article.
 const journalDoiPattern=feed=>{
-  const escaped=String(feed.doiPrefix).replace(/[.*+?^${}()|[\]\\]/g,'\\const DOI=/10\.\d{4,9}\/[a-z0-9][a-z0-9._;()/:%+-]*/ig;');
+  // All canonical target journal DOI prefixes contain only digits, letters,
+  // dots, slashes and hyphens; dots are the only regexp metacharacter.
+  const escaped=String(feed.doiPrefix).replace(/\./g,'\\.');
   return new RegExp(escaped+'[a-z0-9][a-z0-9._-]*','ig');
 };
 const norm=value=>String(value||'').trim().toLowerCase()
