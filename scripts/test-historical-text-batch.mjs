@@ -191,3 +191,18 @@ test('historical batch does not write into media, PDF or Evidence interfaces',()
   assert.ok(original.includes('一键补抓全部缺项'));
   assert.ok(original.includes('BATCH_MIN_GAP_MS=2000'));
 });
+
+test('retry policy separates temporary errors from license and access blocks',()=>{
+  const api=fixture().context.__batchTest;
+  assert.equal(api.batchRetryAllowed({status:'timeout'},false),true);
+  assert.equal(api.batchRetryAllowed({status:'publisher_unreachable'},false),true);
+  assert.equal(api.batchRetryAllowed({status:'storage_failure'},false),true);
+  assert.equal(api.batchRetryAllowed({status:'response_hash_mismatch'},false),true);
+  assert.equal(api.batchRetryAllowed({status:'license_not_verified'},false),false);
+  assert.equal(api.batchRetryAllowed({status:'license_not_verified'},true),true);
+  assert.equal(api.batchRetryAllowed({status:'body_missing'},false),false);
+  assert.equal(api.batchRetryAllowed({status:'page_access_blocked'},false),false);
+  assert.equal(api.batchRetryAllowed({status:'saved_local'},true),false);
+  assert.equal(api.batchRetryAllowed({status:'publisher_unreachable',httpStatus:429},false),false);
+  assert.equal(api.batchStageForStatus('response_hash_mismatch'),'hash_verify');
+});
