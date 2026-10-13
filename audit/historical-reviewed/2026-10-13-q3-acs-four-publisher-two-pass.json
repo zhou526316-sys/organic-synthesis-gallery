@@ -1,0 +1,294 @@
+{
+  "schemaVersion": "gallery-historical-q3-2026-acs-four-publisher-two-pass-v1",
+  "reviewedAt": "2026-10-13T05:24:41.149Z",
+  "mode": "independent_academic_two_pass_only_not_publication",
+  "publisherVerification": "Official ACS article-history and abstract snippets independently checked against Crossref/OpenAlex archival batch and bibliography; publisher full article requests may be access-restricted.",
+  "catalogVerification": "Four exact DOI absent from GitHub main 984-article public/toc-demand-live.json and from prior 23 approved entries at this review's preflight.",
+  "quarter": "2026-07-01..2026-09-30",
+  "sourceRoots": {
+    "2026-07-22_2026-07-31_acs-catalysis": "4f5e8cbdce63f5488856ee08a27a183611d7905d",
+    "2026-08-22_2026-08-31_organic-letters": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+    "2026-07-22_2026-07-31_joc": "9181de94c2f59b0fb77a470f802a143699524037"
+  },
+  "reviewed": [
+    {
+      "doi": "10.1021/acscatal.6c02698",
+      "journal": "ACS Catalysis",
+      "title": "A Highly Enantioselective Oxa−Michael Addition Reaction Catalyzed by Chiral Bifunctional N-Heterocyclic Carbenes",
+      "titleZh": "手性双功能N-杂环卡宾催化的高对映选择性氧杂Michael加成",
+      "date": "2026-07-27",
+      "authors": [
+        "Tsz Wang Wong",
+        "En Li",
+        "Yichi Zhang",
+        "Xiaoyun Liao",
+        "Zhuhui Ren",
+        "Zhe Jamie Yung",
+        "Jiean Chen",
+        "Yong Huang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "19",
+        "pages": "18923-18934",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c02698"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "reason": "不对称氧亲核试剂共轭加成具有明确可分离的手性有机产物、交叉底物类别和分子内拓展，满足合成方法学范围。",
+      "evidenceBasis": "ACS Catalysis 官方论文页说明Article、在线2026-07-27和上述四种底物类别及分子内转化，16卷19期18923–18934页；计算提出立体决定因素，但不能由此断言唯一机理；出版社官方Article History公开检索内容显示Published Online为2026-07-27，与历史Crossref/OpenAlex批次记录一致；期号日期另记，不作为首次在线日期。 来源批次：2026-07-22_2026-07-31_acs-catalysis；Git blob 4f5e8cbdce63f5488856ee08a27a183611d7905d。未下载或转载原文摘要、全文、图、SI、PDF。",
+      "challengeReason": "独立反向审核该论文是否仅提出NHC-HBD计算选择性模型而无实用制备。其主要内容为多个不同肟/烯酮的手性β-肟基酮制备，并延伸δ/ε-羟基烯酮的分子内环醚化，符合合成范围；不将计算立体模型视为全范围的实验证实，也不夸写未核实的最高ee。",
+      "scopeAssessment": {
+        "primaryContribution": "作者提出手性双功能NHC—氢键供体体系，以非共价方式促进高度对映选择性氧杂Michael加成；贡献是可迁移的氧亲核进攻构筑手性β-氧取代酮，而非只研究催化剂结构。",
+        "preparativeTransformation": "醛肟或酮肟作为氧亲核体与芳基/烷基烯酮进行O-Michael加成，生成相应β-肟基酮；δ/ε-羟基烯酮进一步可经分子内加成得到环醚化合物。不能把NHC-HBD非共价活化误写成已证明的共价NHC催化路径。",
+        "generalityEvidence": "ACS出版社公开摘要点名芳基与烷基烯酮、醛肟与酮肟等多组底物，并报道对应β-肟基酮具有较高对映选择性；还展示δ及ε羟基烯酮的分子内环醚化。缺少逐个底物精确收率与ee原始表格，故不编造数值。",
+        "sourceEvidence": "ACS Catalysis 官方论文页说明Article、在线2026-07-27和上述四种底物类别及分子内转化，16卷19期18923–18934页；计算提出立体决定因素，但不能由此断言唯一机理；出版社官方Article History公开检索内容显示Published Online为2026-07-27，与历史Crossref/OpenAlex批次记录一致；期号日期另记，不作为首次在线日期。 来源批次：2026-07-22_2026-07-31_acs-catalysis；Git blob 4f5e8cbdce63f5488856ee08a27a183611d7905d。未下载或转载原文摘要、全文、图、SI、PDF。",
+        "boundaryChallenge": "第二遍首先怀疑该文是否只是对已知O-Michael反应的单一手性催化条件优化、没有一般性证据；官方摘要实际覆盖两类肟、芳/烷两类烯酮以及额外分子内环醚化，属于可推广的非共价有机催化转化。计算支持模型但并非每个中间体直接实测。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acscatal.6c02698",
+        "publisherOnlineDate": "2026-07-27",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_acs-catalysis",
+        "stageBatchSha": "4f5e8cbdce63f5488856ee08a27a183611d7905d",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "第一遍以不同醛肟／酮肟与芳基／烷基烯酮直接生成手性β-肟基酮为核心，并核对δ／ε-羟基烯酮分子内环醚化，认定实际存在多种氧亲核底物的有机制备能力。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "assessment": "独立反向审核该论文是否仅提出NHC-HBD计算选择性模型而无实用制备。其主要内容为多个不同肟/烯酮的手性β-肟基酮制备，并延伸δ/ε-羟基烯酮的分子内环醚化，符合合成范围；不将计算立体模型视为全范围的实验证实，也不夸写未核实的最高ee。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03391",
+      "journal": "Organic Letters",
+      "title": "Accessing P-Chiral Diphosphines through Nickel-Catalyzed Asymmetric Hydrophosphination",
+      "titleZh": "镍催化不对称氢膦化构建P-手性双膦化合物",
+      "date": "2026-08-31",
+      "authors": [
+        "Chun-Yi Xiong",
+        "Meng-Xiang Li",
+        "Wei-Han Wang",
+        "Qing-Wei Zhang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11350-11355",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03391"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "reason": "镍催化不对称加成直接构筑P-手性双膦骨架，具有炔烃与二级膦底物适用性及可获得手性配体和络合物的制备证据。",
+      "evidenceBasis": "Organic Letters 出版社Article History显示2026-08-31首次在线、2026-09-11编入第36期，2026年28卷11350–11355页；官网摘要给出镍催化、炔烃/二级膦范围、配体脱保护和金属配合物制备；出版社官方Article History公开检索内容显示Published Online为2026-08-31，与历史Crossref/OpenAlex批次记录一致；期号日期另记，不作为首次在线日期。 来源批次：2026-08-22_2026-08-31_organic-letters；Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827。未下载或转载原文摘要、全文、图、SI、PDF。",
+      "challengeReason": "独立反向检查所谓配体应用是否只有设想，以及所谓双膦骨架是否只展示一个产物。ACS摘要同时陈述不同二级膦和炔烃的系列产物、就地脱保护及金属络合物合成，故即使尚无已证实的后续高性能催化例子，合成方法本身已满足收录。首次发表以08-31在线日而非09-11期号日计。",
+      "scopeAssessment": {
+        "primaryContribution": "通过镍催化不对称氢膦化建立获取P-立体中心双膦衍生物的合成方法，目标为手性膦配体砌块和可能用于均相催化的金属配合物。",
+        "preparativeTransformation": "膦硼烷衍生的炔烃与二级膦在镍催化下氢膦化，形成新磷—碳键并构建P-手性双膦衍生物；产物可原位脱保护转成P-手性双膦配体。",
+        "generalityEvidence": "ACS出版社摘要明确报道多种炔烃和二级膦均可用于反应、一系列P-手性双膦衍生物及其脱保护配体，并制备若干手性过渡金属配合物；不凭摘要推断其在实际催化反应中已经有高ee应用。",
+        "sourceEvidence": "Organic Letters 出版社Article History显示2026-08-31首次在线、2026-09-11编入第36期，2026年28卷11350–11355页；官网摘要给出镍催化、炔烃/二级膦范围、配体脱保护和金属配合物制备；出版社官方Article History公开检索内容显示Published Online为2026-08-31，与历史Crossref/OpenAlex批次记录一致；期号日期另记，不作为首次在线日期。 来源批次：2026-08-22_2026-08-31_organic-letters；Git blob 3eb3448b8f413701aed67f8e3f29d518400d7827。未下载或转载原文摘要、全文、图、SI、PDF。",
+        "boundaryChallenge": "第二遍质疑该工作是否仅为材料配位性质或单一手性膦合成：原文摘要有明确C–P成键与两大底物类别范围，配体制备是实际可获得的有机合成结果；未来均相催化潜力不得当作已经验证的催化性能。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03391",
+        "publisherOnlineDate": "2026-08-31",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "第一遍核实镍催化将二级膦加成至膦硼烷衍生炔烃、构建P-手性双膦；原文给出多类炔烃和二级膦，并可去保护为手性双膦配体，直接支持方法学纳入。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "assessment": "独立反向检查所谓配体应用是否只有设想，以及所谓双膦骨架是否只展示一个产物。ACS摘要同时陈述不同二级膦和炔烃的系列产物、就地脱保护及金属络合物合成，故即使尚无已证实的后续高性能催化例子，合成方法本身已满足收录。首次发表以08-31在线日而非09-11期号日计。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01089",
+      "journal": "JOC",
+      "title": "Enantioselective Total Synthesis of (+)-and (−)-Asenapine",
+      "titleZh": "阿塞那平两种对映体的对映选择性全合成",
+      "date": "2026-07-31",
+      "authors": [
+        "Amar D. Belkhede",
+        "Santhosh Sreelekshmi",
+        "Krishna P. Kaliappan"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "32",
+        "pages": "10941-10953",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01089"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "reason": "论文明确完成阿塞那平(+)/(−)两种对映体的全合成；已完成的目标物路线符合天然产物及复杂目标分子全合成范围。",
+      "evidenceBasis": "ACS JOC 2026-07-31在线Article，2026-08-14所属第32期，91卷10941–10953页；摘要明确两对映体完成、Evans辅基控制的关键共轭加成、NaBH4一锅脱辅基/内酯化及5.9:1 dr/98% ee特定步骤；出版社官方Article History公开检索内容显示Published Online为2026-07-31，与历史Crossref/OpenAlex批次记录一致；期号日期另记，不作为首次在线日期。 来源批次：2026-07-22_2026-07-31_joc；Git blob 9181de94c2f59b0fb77a470f802a143699524037。未下载或转载原文摘要、全文、图、SI、PDF。",
+      "challengeReason": "独立审核是否符合一般性方法学：这是针对两种阿塞那平对映体的目标导向全合成而不是通用新催化方法，按完成全合成独立条款纳入。两种对映体通过相反手性Evans辅基获得，不能夸为催化对映选择性，也不能把关键一步的5.9:1 dr及98% ee推广到全路线。",
+      "scopeAssessment": {
+        "primaryContribution": "报道药物分子阿塞那平两种对映体的对映选择性全合成，合成路线和目标产物完成度是主要贡献；该方法依赖手性辅基，不可误说成不对称催化反应。",
+        "preparativeTransformation": "关键步骤是利用Evans手性辅基辅助的乙烯基格氏试剂Michael共轭加成，再经硼氢化钠介导的一锅脱辅基及内酯形成；采用对映体Evans辅基获得相反构型中间体，经过后续路线得到两种阿塞那平对映体。",
+        "generalityEvidence": "出版社官方摘要明确用成功完成两种对映体的total synthesis表述；关键乙烯基格氏试剂1,4-加成的特定步骤记录5.9:1 dr与98% ee。全合成不要求多底物方法学，不能把该步98% ee表述为整个路线或所有中间体的选择性。",
+        "sourceEvidence": "ACS JOC 2026-07-31在线Article，2026-08-14所属第32期，91卷10941–10953页；摘要明确两对映体完成、Evans辅基控制的关键共轭加成、NaBH4一锅脱辅基/内酯化及5.9:1 dr/98% ee特定步骤；出版社官方Article History公开检索内容显示Published Online为2026-07-31，与历史Crossref/OpenAlex批次记录一致；期号日期另记，不作为首次在线日期。 来源批次：2026-07-22_2026-07-31_joc；Git blob 9181de94c2f59b0fb77a470f802a143699524037。未下载或转载原文摘要、全文、图、SI、PDF。",
+        "boundaryChallenge": "第二遍挑战该论文是否只是某个药物中间体的局部不对称合成，而非终产物路线。ACS官方摘要直接称两种Asenapine对映体的成功total synthesis并阐明相反构型得到方法，因此已超越片段路线；不推断全流程产率或体内活性结论。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01089",
+        "publisherOnlineDate": "2026-07-31",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "第一遍独立确认最终产物是(+)-和(−)-Asenapine两种对映体，并非仅合成一个共同中间体；Evans辅基控制乙烯基格氏试剂共轭加成，按完成目标分子全合成条款纳入。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "assessment": "独立审核是否符合一般性方法学：这是针对两种阿塞那平对映体的目标导向全合成而不是通用新催化方法，按完成全合成独立条款纳入。两种对映体通过相反手性Evans辅基获得，不能夸为催化对映选择性，也不能把关键一步的5.9:1 dr及98% ee推广到全路线。"
+        }
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01163",
+      "journal": "JOC",
+      "title": "Electrochemical Synthesis of β-Amino Sulfoxides from Aryl Imines and DMSO under Mild Conditions",
+      "titleZh": "芳基亚胺与DMSO电化学偶联合成β-氨基亚砜",
+      "date": "2026-07-30",
+      "authors": [
+        "Jia-Ming Chen",
+        "Cheng-Qian Zhang",
+        "Min Zhang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "32",
+        "pages": "10974-10980",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01163"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "reason": "由芳基亚胺与二甲基亚砜作为原料电化学构建β-氨基亚砜，有明确的合成转化、底物兼容性与步骤经济性证据。",
+      "evidenceBasis": "ACS JOC Article History显示2026-07-30首次在线、2026-08-14归属第32期，91卷10974–10980页；官方摘要描述芳基亚胺+DMSO的直接电化学制备、底物兼容性和自由基机制初步研究；出版社官方Article History公开检索内容显示Published Online为2026-07-30，与历史Crossref/OpenAlex批次记录一致；期号日期另记，不作为首次在线日期。 来源批次：2026-07-22_2026-07-31_joc；Git blob 9181de94c2f59b0fb77a470f802a143699524037。未下载或转载原文摘要、全文、图、SI、PDF。",
+      "challengeReason": "独立检验是否因电化学新颖性而被过度纳入：正式摘要显示并非仅比较电极电流或原料氧化，而是由芳基亚胺和DMSO制得功能化β-氨基亚砜且具底物兼容性。可纳入，惟不将α-氨基苄基自由基及DMSO自由基的参与程度、精确成键顺序和实测收率写成已核实事实。",
+      "scopeAssessment": {
+        "primaryContribution": "建立无需外加强碱和氧化剂、使用芳基亚胺及DMSO制备β-氨基亚砜的电化学合成方案；重点为目标有机化合物的实用制备，而非电极或装置能效研究。",
+        "preparativeTransformation": "芳基亚胺与DMSO反应，构建含氨基与亚砜官能团的β-氨基亚砜骨架；机理研究提出α-氨基苄基与DMSO衍生自由基可能参与，但不能仅凭摘要声称已经直接捕获全部自由基物种。",
+        "generalityEvidence": "JOC官网正式摘要说明原料易得、无需外加强碱及氧化剂，具有良好底物兼容性和较高步骤、原子经济性；未在未经查阅SI时编造具体底物数、收率和电流或电极材质。",
+        "sourceEvidence": "ACS JOC Article History显示2026-07-30首次在线、2026-08-14归属第32期，91卷10974–10980页；官方摘要描述芳基亚胺+DMSO的直接电化学制备、底物兼容性和自由基机制初步研究；出版社官方Article History公开检索内容显示Published Online为2026-07-30，与历史Crossref/OpenAlex批次记录一致；期号日期另记，不作为首次在线日期。 来源批次：2026-07-22_2026-07-31_joc；Git blob 9181de94c2f59b0fb77a470f802a143699524037。未下载或转载原文摘要、全文、图、SI、PDF。",
+        "boundaryChallenge": "第二遍优先挑战是否只有一例DMSO作为溶剂的反应或仅机理演示。公开摘要直接确认两者为起始原料并明确良好底物兼容性、产物为β-氨基亚砜，因此属于制备方法学；自由基仅被机制研究提示，非直接证明唯一途径。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01163",
+        "publisherOnlineDate": "2026-07-30",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "assessment": "第一遍核查芳基亚胺与DMSO均为电化学制备原料，产物是β-氨基亚砜且具有底物兼容性、无需外加强碱或氧化剂；这是真实有机官能团化方法而不是电极材料性能文章。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "assessment": "独立检验是否因电化学新颖性而被过度纳入：正式摘要显示并非仅比较电极电流或原料氧化，而是由芳基亚胺和DMSO制得功能化β-氨基亚砜且具底物兼容性。可纳入，惟不将α-氨基苄基自由基及DMSO自由基的参与程度、精确成键顺序和实测收率写成已核实事实。"
+        }
+      ]
+    }
+  ],
+  "statutoryRight": "no_republication_of_full_publisher_abstract_or_article_text_no_original_figures_or_PDF",
+  "guards": {
+    "noPublication": true,
+    "onlyFixed08": true,
+    "Q3TOCOnly": true,
+    "unchangedPendingManifest": true,
+    "noD1Queries": true,
+    "noMediaOrPdfWrites": true
+  }
+}

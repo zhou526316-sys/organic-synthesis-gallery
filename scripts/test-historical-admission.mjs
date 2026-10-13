@@ -172,3 +172,32 @@ test('2026-Q3 three independently assessed JOC methods are never marked daily ne
     assert.equal('pdf' in row,false);
   }
 });
+
+test('Q3 ACS online-first reconciliation admits only four independently reviewed synthetic articles',()=>{
+  const expected=new Map([
+    ['10.1021/acscatal.6c02698',['2026-07-27','4f5e8cbdce63f5488856ee08a27a183611d7905d']],
+    ['10.1021/acs.orglett.6c03391',['2026-08-31','3eb3448b8f413701aed67f8e3f29d518400d7827']],
+    ['10.1021/acs.joc.6c01089',['2026-07-31','9181de94c2f59b0fb77a470f802a143699524037']],
+    ['10.1021/acs.joc.6c01163',['2026-07-30','9181de94c2f59b0fb77a470f802a143699524037']]
+  ]);
+  const firstPassReasons=[];
+  for(const [doi,[online,sourceSha]] of expected){
+    const record=root.accepted.find(row=>row.doi===doi);
+    assert.ok(record,'not approved: '+doi);
+    assert.equal(record.date,online,'first-online, not print-issue date: '+doi);
+    assert.equal(record.reviewEvidence.publisherOnlineDate,online);
+    assert.equal(record.reviewEvidence.stageBatchSha,sourceSha);
+    assert.equal(record.firstPassDecision,'include');
+    assert.equal(record.challengeDecision,'include');
+    assert.equal(record.reviewPasses,2);
+    assert.deepEqual(record.independentPasses.map(pass=>pass.decision),['include','include']);
+    assert.ok(record.independentPasses[0].assessment.length>60);
+    firstPassReasons.push(record.independentPasses[0].assessment);
+    assert.equal(record.mediaPolicy,'toc_only');
+    assert.equal(record.new,false);
+    assert.equal(record.addedDate,'');
+    assert.equal(record.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+    assert.equal(record.reviewEvidence.pdfFetched,false);
+  }
+  assert.equal(new Set(firstPassReasons).size,expected.size);
+});
