@@ -805,9 +805,10 @@
     while(Date.now()-start<BATCH_LIMIT_MS){
       if(batchPaused)return {status:'paused'};
       const progress=GM_getValue(BATCH_PROGRESS,null);
+      const progressIdentity=progress?.stage+'|'+(progress?.failed?'failed':'active');
       if(progress?.runId===job.runId&&progress?.token===job.token
-         &&progress?.stage!==lastSeenStage){
-        lastSeenStage=progress.stage;
+         &&progressIdentity!==lastSeenStage){
+        lastSeenStage=progressIdentity;
         batchStatusWrite({currentStage:lastSeenStage});
         if(progress.failed===true&&progress.reasonCode){
           batchQueueDiagnostic(job,'failure_checkpoint','failed',
@@ -947,44 +948,71 @@
     if(typeof GM_getValue!=='function')return;
     const job=GM_getValue(BATCH_JOB,null);
     if(!job||job.expiresAt<Date.now()||!publisher(location.hostname)||!job.token||!job.runId)return;
+    let phase='publisher_page',verified=false,sectionCount=0,evidenceChars=0;
+    const reportStage=(stage,reasonCode='',failed=false)=>{
+      phase=stage;
+      GM_setValue(BATCH_PROGRESS,{runId:job.runId,token:job.token,doi:job.doi,
+        stage,failed,reasonCode,at:Date.now(),pageDoiVerified:verified,
+        sectionCount,evidenceChars,httpStatus:null});
+    };
     const storeResult=data=>{
       const current=GM_getValue(BATCH_JOB,null);
       if(current?.runId!==job.runId||current?.token!==job.token)return;
+      const code=data.status==='ok'?'saved_local':String(data.status||'other');
+      const stage=data.stage||batchStageForStatus(code);
+      reportStage(stage,code,data.status!=='ok');
       GM_setValue(BATCH_RESULT,{runId:job.runId,token:job.token,doi:job.doi,
-        at:Date.now(),...data});
+        at:Date.now(),stage,pageDoiVerified:verified,sectionCount,evidenceChars,
+        httpStatus:null,...data});
     };
     // No need to inherit URL fragments across publisher redirects. The only
     // active tab is DOI-bound and only the explicitly started, live job may run.
     const fragment=/^#gallery-historical-job=([a-f0-9]{24})$/.exec(location.hash||'');
     if(fragment&&fragment[1]!==job.token)return;
     let doi=pageDoi(),capture=null,reason='';
+    reportStage('publisher_page');
     // Other article tabs must never claim the queue's response slot.
     if(doi&&doi!==job.doi)return;
     if(!doi&&!fragment)return;
     for(let i=0;i<8;i++){
       if(doi&&doi!==job.doi)return;
       if(doi===job.doi){
+        verified=true;reportStage('publisher_doi');
         const root=document.querySelector('main article, article, main, [role="main"]');
         const license=batchLicenseEvidence(root);
+        reportStage('license');
         if(license){
-          try{capture=gather();if(capture.characterCount>=250)break;}catch(e){reason=String(e?.message||e);}
-        }else if(i>=2){storeResult({status:'license_not_verified'});return;}
+          reportStage('body_extract');
+          try{
+            capture=gather();
+            sectionCount=capture.sections.length;
+            evidenceChars=capture.characterCount;
+            if(capture.characterCount>=250)break;
+          }catch(_){reason='article_body_not_extracted';}
+        }else if(i>=2){
+          const hint=String(document.title||'')+' '+String(document.body?.innerText||'').slice(0,300);
+          if(/access denied|verify you are human|captcha|log in to (?:continue|access)|institutional sign in/i.test(hint))
+            storeResult({status:'page_access_blocked',stage:'publisher_page'});
+          else storeResult({status:'license_not_verified',stage:'license'});
+          return;
+        }
       }
       await batchWait(700);
       doi=pageDoi();
     }
-    if(doi!==job.doi){storeResult({status:'doi_unverified'});return;}
+    if(doi!==job.doi){storeResult({status:'doi_unverified',stage:'publisher_doi'});return;}
     const root=document.querySelector('main article, article, main, [role="main"]');
     const license=batchLicenseEvidence(root);
-    if(!license){storeResult({status:'license_not_verified'});return;}
-    if(!capture){storeResult({status:'body_missing',reason:reason.slice(0,90)});return;}
+    if(!license){storeResult({status:'license_not_verified',stage:'license'});return;}
+    if(!capture){storeResult({status:'body_missing',stage:'body_extract'});return;}
     const evidenceChars=capture.sections.filter(row=>
       ['results','mechanism','experimental'].includes(row.type))
       .reduce((total,row)=>total+String(row.text||'').length,0);
-    if(evidenceChars<250){storeResult({status:'body_missing',reason:'scientific_results_or_methods_missing'});return;}
+    if(evidenceChars<250){storeResult({status:'body_missing',stage:'body_extract'});return;}
     const canonical=[...capture.sections.map(s=>s.heading+'\n'+s.text),
       ...capture.captions.map(s=>s.label+'\n'+s.text),
       ...capture.tables.map(s=>s.label+'\n'+s.text)].join('\n');
+    reportStage('hash_verify');
     const sourceSha256=await sha256(canonical);
     const packet={schemaVersion:SCHEMA,doi:job.doi,publication:job.publication,
       journal:job.journal,title:job.title,publisher:publisher(location.hostname),
@@ -996,12 +1024,13 @@
       characters:capture.characterCount,sections:capture.sections,
       captions:capture.captions,tables:capture.tables};
     if(JSON.stringify(packet).length>BATCH_MAX_RESPONSE_CHARS){
-      storeResult({status:'too_large'});return;
+      storeResult({status:'too_large',stage:'body_extract'});return;
     }
-    storeResult({status:'ok',packet,sourceSha256});
+    storeResult({status:'ok',stage:'local_store',packet,sourceSha256});
   }
 
   if(location.hostname==='gallery.gczhouwld.com'){
+    batchStartDiagnostics();
     // Never overlay PDF readers, account pages or other Gallery tools.
     if(location.pathname==='/'||location.pathname==='/index.html'){
       batchUi=batchPanel();batchUi?.refresh();
