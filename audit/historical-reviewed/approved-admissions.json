@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-13T07:40:23.604Z",
+  "generatedAt": "2026-10-13T08:21:11.908Z",
   "nextEligiblePublicationSlot": "2026-10-14T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 48,
-    "include": 46,
+    "checked": 54,
+    "include": 52,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -3108,6 +3108,436 @@
           "reason": "独立第二遍审核首先挑战：若只报道一个材料配方的氢化活性，无充足有机底物与产物范围，则不能因题为Sustainable而收录。Wiley官方研究报告具有超过30组底物、最高97%分离产率和真实药物候选合成，核心是氧→氮的杂环转化；因此属于可推广合成方法。Pt团簇较Pt纳米粒子更能抑制过氢化的解释得到催化表征支持，但不得将特定活性位或完整级联顺序说成已逐一直接证明。"
         }
       ]
+    },
+    {
+      "doi": "10.1021/jacs.6c05233",
+      "journal": "JACS",
+      "title": "Regiodivergent Rhodium Catalysis: Enantioselective Hydroacylation of 2-Azetines",
+      "titleZh": "配体控制的铑催化2-氮杂环丁烯区域分歧不对称氢酰化",
+      "date": "2026-07-28",
+      "authors": [
+        "Erin L. Kuker",
+        "Camryn E. Wallace",
+        "Stephanie A. Corio",
+        "Alice E. de Vos",
+        "Jennifer S. Hirschi",
+        "Vy M. Dong"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "31",
+        "pages": "33129-33136",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c05233"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立配体控制的2-氮杂环丁烯（2-azetine）铑催化氢酰化反应，一套富电子Josiphos手性双膦诱导形成对映富集2-酰基氮杂环丁烷，另一套dppe类双膦改变区域选择性制得3-酰基产物。这是合成条件可选择的新区域分歧有机方法学。",
+      "evidenceBasis": "2026年ACS期刊原始论文 DOI 10.1021/jacs.6c05233，出版社公开页面Article History标明Published Online 2026-07-28（与Crossref/OpenAlex 2026 Q3历史候选一致），且卷148期31页33129-33136与文章实际署名/摘要核对；原始出版社文献网址：https://pubs.acs.org/doi/10.1021/jacs.6c05233。GitHub冻结历史来源根2026-07-22_2026-07-31_jacs，批次Git blob SHA 1e3a285d37a0cba1db6fafc15b07af8e3833137f，实际来源家族crossref+openalex。论文直接报告的合成证据：ACS JACS 文章摘要清楚列出两种区域异构产物、因配体而异的立体选择性与亚胺酸酯烯胺(e necarbamate)作为新耦合伙伴，验证可以制备两类高张力N杂环砌块。未查阅底物SI时不编造任何具体ee、产率、规模或通用醛范围。。出版社付费PDF及SI未阅读、抓取或复制，数值仅转述原始摘要中明确报道的上限。",
+      "challengeReason": "独立第二遍纠正可能误写的机制与结果：不是两套配体都产生对映富集产物，dppe型3-酰基主要是区域分歧而未宣称普适不对称控制；Josiphos与非共价相互作用模型来自计算，不能当作已观测过渡态。核心可迁移能力是酰基C–H与四元烯胺的区域可控成键。",
+      "scopeAssessment": {
+        "primaryContribution": "建立配体控制的2-氮杂环丁烯（2-azetine）铑催化氢酰化反应，一套富电子Josiphos手性双膦诱导形成对映富集2-酰基氮杂环丁烷，另一套dppe类双膦改变区域选择性制得3-酰基产物。这是合成条件可选择的新区域分歧有机方法学。",
+        "preparativeTransformation": "以醛的酰基C–H作为氢酰化来源，和2-氮杂环丁烯C=C反应，构筑新的C(acyl)–C(sp3)键；Josiphos配体形成具有手性中心的2-酰基四元氮杂环，dppe体系获得不同位置的3-酰基氮杂环丁烷。",
+        "generalityEvidence": "ACS JACS 文章摘要清楚列出两种区域异构产物、因配体而异的立体选择性与亚胺酸酯烯胺(e necarbamate)作为新耦合伙伴，验证可以制备两类高张力N杂环砌块。未查阅底物SI时不编造任何具体ee、产率、规模或通用醛范围。",
+        "sourceEvidence": "2026年ACS期刊原始论文 DOI 10.1021/jacs.6c05233，出版社公开页面Article History标明Published Online 2026-07-28（与Crossref/OpenAlex 2026 Q3历史候选一致），且卷148期31页33129-33136与文章实际署名/摘要核对；原始出版社文献网址：https://pubs.acs.org/doi/10.1021/jacs.6c05233。GitHub冻结历史来源根2026-07-22_2026-07-31_jacs，批次Git blob SHA 1e3a285d37a0cba1db6fafc15b07af8e3833137f，实际来源家族crossref+openalex。论文直接报告的合成证据：ACS JACS 文章摘要清楚列出两种区域异构产物、因配体而异的立体选择性与亚胺酸酯烯胺(e necarbamate)作为新耦合伙伴，验证可以制备两类高张力N杂环砌块。未查阅底物SI时不编造任何具体ee、产率、规模或通用醛范围。。出版社付费PDF及SI未阅读、抓取或复制，数值仅转述原始摘要中明确报道的上限。",
+        "boundaryChallenge": "反向检验是否只有一个2-azetine底物上的配体切换效应：官方文章摘要陈述实际可分离的两类酰基杂环，并区分手性2-位产物和不含相应手性中心的3-位产物；方法既有化学选择性也有区域分歧。畸变–相互作用计算只是提出选择性的合理模型。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.6c05233",
+        "publisherOnlineDate": "2026-07-28",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_jacs",
+        "stageBatchSha": "1e3a285d37a0cba1db6fafc15b07af8e3833137f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Published_Online_Date+Abstract_cross_checked_frozen_source_Git_sha",
+        "publisherFullTextNotAccessed": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "建立配体控制的2-氮杂环丁烯（2-azetine）铑催化氢酰化反应，一套富电子Josiphos手性双膦诱导形成对映富集2-酰基氮杂环丁烷，另一套dppe类双膦改变区域选择性制得3-酰基产物。这是合成条件可选择的新区域分歧有机方法学。 以醛的酰基C–H作为氢酰化来源，和2-氮杂环丁烯C=C反应，构筑新的C(acyl)–C(sp3)键；Josiphos配体形成具有手性中心的2-酰基四元氮杂环，dppe体系获得不同位置的3-酰基氮杂环丁烷。 ACS JACS 文章摘要清楚列出两种区域异构产物、因配体而异的立体选择性与亚胺酸酯烯胺(e necarbamate)作为新耦合伙伴，验证可以制备两类高张力N杂环砌块。未查阅底物SI时不编造任何具体ee、产率、规模或通用醛范围。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立第二遍纠正可能误写的机制与结果：不是两套配体都产生对映富集产物，dppe型3-酰基主要是区域分歧而未宣称普适不对称控制；Josiphos与非共价相互作用模型来自计算，不能当作已观测过渡态。核心可迁移能力是酰基C–H与四元烯胺的区域可控成键。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反向检验是否只有一个2-azetine底物上的配体切换效应：官方文章摘要陈述实际可分离的两类酰基杂环，并区分手性2-位产物和不含相应手性中心的3-位产物；方法既有化学选择性也有区域分歧。畸变–相互作用计算只是提出选择性的合理模型。"
+    },
+    {
+      "doi": "10.1021/jacs.6c09931",
+      "journal": "JACS",
+      "title": "Total Synthesis and Structural Revision of Rhabdobranin Reveals a Cryptic Gram-Negative Antibiotic",
+      "titleZh": "Rhabdobranin抗生素的汇聚式全合成、立体结构修订与抗菌活性揭示",
+      "date": "2026-08-27",
+      "authors": [
+        "Woonkee S. Jo",
+        "Zaynoun Attieh",
+        "Jan Johannes Crames",
+        "Carl Leonhard Knopp",
+        "Julie Connelly",
+        "Yi-Ming Shi",
+        "Christopher S. Wilson",
+        "Maryam Dehghan",
+        "Peter Grün",
+        "Sunna Chang",
+        "Fathima S. Refai",
+        "Fabio Piano",
+        "Kristin C. Gunsalus",
+        "Tanja Schneider",
+        "Helge B. Bode",
+        "Alan R. Healy"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "35",
+        "pages": "38069-38079",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c09931"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开展Rhabdobranin及其前药相关复杂抗菌天然产物的汇聚式目标合成，合成了拟议pre-rhabdobranin B结构并纠正其N端精氨酸立体化学指派，同时制备Rhabdobranin两种差向异构体以确认真实结构。按完成目标分子全合成路线而非单纯生物机制研究纳入。",
+      "evidenceBasis": "2026年ACS期刊原始论文 DOI 10.1021/jacs.6c09931，出版社公开页面Article History标明Published Online 2026-08-27（与Crossref/OpenAlex 2026 Q3历史候选一致），且卷148期35页38069-38079与文章实际署名/摘要核对；原始出版社文献网址：https://pubs.acs.org/doi/10.1021/jacs.6c09931。GitHub冻结历史来源根2026-08-22_2026-08-31_jacs，批次Git blob SHA ecd439f952961b18f227a8997d7dac259cf10431，实际来源家族crossref+openalex。论文直接报告的合成证据：ACS开放获取全文明确说明提出的pre-rhabdobranin B结构被实际汇聚全合成、合成两个Rhabdobranin端基差向异构体，并以化学合成对比修订立体结构；具体已合成分子与完成度是全合成证据。抗菌评价包括碳青霉烯耐药肺炎克雷伯菌，但其生物活性只是合成应用，不将每种类似物都描述为同等抗菌。。出版社付费PDF及SI未阅读、抓取或复制，数值仅转述原始摘要中明确报道的上限。",
+      "challengeReason": "对抗性复核要区分pre-rhabdobranin B拟议结构、真正Rhabdobranin及两种表异构体，不得虚构所有同系物都完成全合成，亦不可将GNAT型乙酰转移酶RdbK失活机制当成合成方法学的主创新。原文同时证明化学总合成和结构修订，纳入而保留其抗菌机制的非主要地位。",
+      "scopeAssessment": {
+        "primaryContribution": "开展Rhabdobranin及其前药相关复杂抗菌天然产物的汇聚式目标合成，合成了拟议pre-rhabdobranin B结构并纠正其N端精氨酸立体化学指派，同时制备Rhabdobranin两种差向异构体以确认真实结构。按完成目标分子全合成路线而非单纯生物机制研究纳入。",
+        "preparativeTransformation": "采用正交保护的多肽骨架4作为中心汇聚中间体，由两个二肽片段和氨基醇片段组装，隐性叠氮胺前体连接至由醛醇反应追溯的模块；选择性去保护与末端酰化形成前药/天然产物相关系列。不能仅把菌株分离及基因挖掘归为化学合成。",
+        "generalityEvidence": "ACS开放获取全文明确说明提出的pre-rhabdobranin B结构被实际汇聚全合成、合成两个Rhabdobranin端基差向异构体，并以化学合成对比修订立体结构；具体已合成分子与完成度是全合成证据。抗菌评价包括碳青霉烯耐药肺炎克雷伯菌，但其生物活性只是合成应用，不将每种类似物都描述为同等抗菌。",
+        "sourceEvidence": "2026年ACS期刊原始论文 DOI 10.1021/jacs.6c09931，出版社公开页面Article History标明Published Online 2026-08-27（与Crossref/OpenAlex 2026 Q3历史候选一致），且卷148期35页38069-38079与文章实际署名/摘要核对；原始出版社文献网址：https://pubs.acs.org/doi/10.1021/jacs.6c09931。GitHub冻结历史来源根2026-08-22_2026-08-31_jacs，批次Git blob SHA ecd439f952961b18f227a8997d7dac259cf10431，实际来源家族crossref+openalex。论文直接报告的合成证据：ACS开放获取全文明确说明提出的pre-rhabdobranin B结构被实际汇聚全合成、合成两个Rhabdobranin端基差向异构体，并以化学合成对比修订立体结构；具体已合成分子与完成度是全合成证据。抗菌评价包括碳青霉烯耐药肺炎克雷伯菌，但其生物活性只是合成应用，不将每种类似物都描述为同等抗菌。。出版社付费PDF及SI未阅读、抓取或复制，数值仅转述原始摘要中明确报道的上限。",
+        "boundaryChallenge": "第二遍挑战它是否主要是基因组挖掘/蛋白生物机制，没有独立合成路线：文章有明确逆合成分析及可组装的受保护中间体，并以化学全合成修订单个精氨酸立体中心，这一制备贡献足以进入天然产物全合成条款。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.6c09931",
+        "publisherOnlineDate": "2026-08-27",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_jacs",
+        "stageBatchSha": "ecd439f952961b18f227a8997d7dac259cf10431",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Published_Online_Date+Abstract_cross_checked_frozen_source_Git_sha",
+        "publisherFullTextNotAccessed": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "开展Rhabdobranin及其前药相关复杂抗菌天然产物的汇聚式目标合成，合成了拟议pre-rhabdobranin B结构并纠正其N端精氨酸立体化学指派，同时制备Rhabdobranin两种差向异构体以确认真实结构。按完成目标分子全合成路线而非单纯生物机制研究纳入。 采用正交保护的多肽骨架4作为中心汇聚中间体，由两个二肽片段和氨基醇片段组装，隐性叠氮胺前体连接至由醛醇反应追溯的模块；选择性去保护与末端酰化形成前药/天然产物相关系列。不能仅把菌株分离及基因挖掘归为化学合成。 ACS开放获取全文明确说明提出的pre-rhabdobranin B结构被实际汇聚全合成、合成两个Rhabdobranin端基差向异构体，并以化学合成对比修订立体结构；具体已合成分子与完成度是全合成证据。抗菌评价包括碳青霉烯耐药肺炎克雷伯菌，但其生物活性只是合成应用，不将每种类似物都描述为同等抗菌。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "对抗性复核要区分pre-rhabdobranin B拟议结构、真正Rhabdobranin及两种表异构体，不得虚构所有同系物都完成全合成，亦不可将GNAT型乙酰转移酶RdbK失活机制当成合成方法学的主创新。原文同时证明化学总合成和结构修订，纳入而保留其抗菌机制的非主要地位。"
+        }
+      ],
+      "reviewRationaleSecondPass": "第二遍挑战它是否主要是基因组挖掘/蛋白生物机制，没有独立合成路线：文章有明确逆合成分析及可组装的受保护中间体，并以化学全合成修订单个精氨酸立体中心，这一制备贡献足以进入天然产物全合成条款。"
+    },
+    {
+      "doi": "10.1021/acscatal.6c03124",
+      "journal": "ACS Catalysis",
+      "title": "Enantioselective Synthesis of Functionalized Chiral Diarylalkanes via Chiral Phenanthroline-Cu-Catalyzed Alkynylation and Amination of Six-Membered Cyclic Diaryliodonium Salts",
+      "titleZh": "手性菲咯啉铜催化环状二芳基碘鎓盐不对称炔基化与胺化构建手性二芳基烷烃",
+      "date": "2026-07-21",
+      "authors": [
+        "Jun Gao",
+        "Xiang Gao",
+        "Jing Tan",
+        "Shouyi Cen",
+        "Zhipeng Zhang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14761-14774",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03124"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过手性菲咯啉配体控制铜催化六元环二芳基碘鎓盐开环不对称炔基化或胺化，形成高度官能团化的手性二芳基烷烃，证明了不同亲核组分参与的C–C或C–N键制备方法。",
+      "evidenceBasis": "2026年ACS期刊原始论文 DOI 10.1021/acscatal.6c03124，出版社公开页面Article History标明Published Online 2026-07-21（与Crossref/OpenAlex 2026 Q3历史候选一致），且卷16期15页14761-14774与文章实际署名/摘要核对；原始出版社文献网址：https://pubs.acs.org/doi/10.1021/acscatal.6c03124。GitHub冻结历史来源根2026-07-15_2026-07-21_acs-catalysis，批次Git blob SHA e53414018aac39faa8ff9f6cbae508d8783e963d，实际来源家族crossref+openalex。论文直接报告的合成证据：ACS官方摘要报告两类炔基化和胺化产物、最高99%产率及98:2 er，且后续成环保留了大部分对映纯度；最高指标仅针对相应优异实例，不能推广到所有底物，亦不将芳基碘键的后续用途误称已全覆盖。。出版社付费PDF及SI未阅读、抓取或复制，数值仅转述原始摘要中明确报道的上限。",
+      "challengeReason": "二遍反向挑战是否主要讨论铜配体对加成过渡态的手性诱导而缺乏一般性：两类可分离产物与二氢喹啉酮后修饰提供实际制备价值。避免把标题中的‘六元环二芳基碘鎓盐’误写成非环状碘鎓盐，也不能把作者提供的机理讨论提升为直接证明。",
+      "scopeAssessment": {
+        "primaryContribution": "通过手性菲咯啉配体控制铜催化六元环二芳基碘鎓盐开环不对称炔基化或胺化，形成高度官能团化的手性二芳基烷烃，证明了不同亲核组分参与的C–C或C–N键制备方法。",
+        "preparativeTransformation": "六元环二芳基碘鎓盐在手性Cu/菲咯啉配体条件下与炔基化或N-烷氧基磺酰胺胺化试剂反应，构筑带可保留C(sp2)–I键的手性二芳基烷基结构；胺化产物可在一步中转化为手性3,4-二氢喹啉-2(1H)-酮。",
+        "generalityEvidence": "ACS官方摘要报告两类炔基化和胺化产物、最高99%产率及98:2 er，且后续成环保留了大部分对映纯度；最高指标仅针对相应优异实例，不能推广到所有底物，亦不将芳基碘键的后续用途误称已全覆盖。",
+        "sourceEvidence": "2026年ACS期刊原始论文 DOI 10.1021/acscatal.6c03124，出版社公开页面Article History标明Published Online 2026-07-21（与Crossref/OpenAlex 2026 Q3历史候选一致），且卷16期15页14761-14774与文章实际署名/摘要核对；原始出版社文献网址：https://pubs.acs.org/doi/10.1021/acscatal.6c03124。GitHub冻结历史来源根2026-07-15_2026-07-21_acs-catalysis，批次Git blob SHA e53414018aac39faa8ff9f6cbae508d8783e963d，实际来源家族crossref+openalex。论文直接报告的合成证据：ACS官方摘要报告两类炔基化和胺化产物、最高99%产率及98:2 er，且后续成环保留了大部分对映纯度；最高指标仅针对相应优异实例，不能推广到所有底物，亦不将芳基碘键的后续用途误称已全覆盖。。出版社付费PDF及SI未阅读、抓取或复制，数值仅转述原始摘要中明确报道的上限。",
+        "boundaryChallenge": "独立怀疑六元二芳基碘鎓盐底物较特殊且非普通C–H官能团化：属于受限底物类别内明确有C–C/C–N成键、两个亲核试剂类型、后续有机骨架转化的方法学，不需夸为任意芳烃的通用立体控制。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acscatal.6c03124",
+        "publisherOnlineDate": "2026-07-21",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_acs-catalysis",
+        "stageBatchSha": "e53414018aac39faa8ff9f6cbae508d8783e963d",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Published_Online_Date+Abstract_cross_checked_frozen_source_Git_sha",
+        "publisherFullTextNotAccessed": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "通过手性菲咯啉配体控制铜催化六元环二芳基碘鎓盐开环不对称炔基化或胺化，形成高度官能团化的手性二芳基烷烃，证明了不同亲核组分参与的C–C或C–N键制备方法。 六元环二芳基碘鎓盐在手性Cu/菲咯啉配体条件下与炔基化或N-烷氧基磺酰胺胺化试剂反应，构筑带可保留C(sp2)–I键的手性二芳基烷基结构；胺化产物可在一步中转化为手性3,4-二氢喹啉-2(1H)-酮。 ACS官方摘要报告两类炔基化和胺化产物、最高99%产率及98:2 er，且后续成环保留了大部分对映纯度；最高指标仅针对相应优异实例，不能推广到所有底物，亦不将芳基碘键的后续用途误称已全覆盖。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "二遍反向挑战是否主要讨论铜配体对加成过渡态的手性诱导而缺乏一般性：两类可分离产物与二氢喹啉酮后修饰提供实际制备价值。避免把标题中的‘六元环二芳基碘鎓盐’误写成非环状碘鎓盐，也不能把作者提供的机理讨论提升为直接证明。"
+        }
+      ],
+      "reviewRationaleSecondPass": "独立怀疑六元二芳基碘鎓盐底物较特殊且非普通C–H官能团化：属于受限底物类别内明确有C–C/C–N成键、两个亲核试剂类型、后续有机骨架转化的方法学，不需夸为任意芳烃的通用立体控制。"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01104",
+      "journal": "JOC",
+      "title": "Nickel/Photoredox Three-Component Coupling of 1,3-Butadiene, Aldehydes, and Aryl Bromides to Homoallylic Alcohols",
+      "titleZh": "镍与光氧化还原协同催化丁二烯、醛及芳基溴化物三组分偶联合成高烯丙醇",
+      "date": "2026-07-28",
+      "authors": [
+        "Shuto Odagaki",
+        "Tomohiro Yoshida",
+        "Takuya Kurahashi"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "31",
+        "pages": "10774-10779",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01104"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用Ni/光氧化还原双催化与有机Hantzsch酯供还原当量，将1,3-丁二烯、醛和芳基溴化物联合转化为高烯丙醇，避免采用化学计量金属还原剂。此贡献是可推广的三组分C–C键构筑而非仅有催化体系调试。",
+      "evidenceBasis": "2026年ACS期刊原始论文 DOI 10.1021/acs.joc.6c01104，出版社公开页面Article History标明Published Online 2026-07-28（与Crossref/OpenAlex 2026 Q3历史候选一致），且卷91期31页10774-10779与文章实际署名/摘要核对；原始出版社文献网址：https://pubs.acs.org/doi/10.1021/acs.joc.6c01104。GitHub冻结历史来源根2026-07-22_2026-07-31_joc，批次Git blob SHA 9181de94c2f59b0fb77a470f802a143699524037，实际来源家族crossref+openalex。论文直接报告的合成证据：ACS JOC官方摘要明确报告温和条件下丁二烯/多种醛/芳基溴化物三组分还原偶联以及良好区域和立体选择性、较广官能团耐受性。Hantzsch酯起有机还原剂作用；实际精确底物数、ee、产率等未经SI验证不臆造。。出版社付费PDF及SI未阅读、抓取或复制，数值仅转述原始摘要中明确报道的上限。",
+      "challengeReason": "第二遍严格区分亲核π-烯丙基镍为控制实验+DFT支持的作者提出路径而非直接已证成；该反应并没有因报道高立体选择性就必然使用手性催化剂，不应将其误标为对映选择性氢烯丙基化。实际合成方法是丁二烯与醛、芳基溴化物的三组分耦合。",
+      "scopeAssessment": {
+        "primaryContribution": "利用Ni/光氧化还原双催化与有机Hantzsch酯供还原当量，将1,3-丁二烯、醛和芳基溴化物联合转化为高烯丙醇，避免采用化学计量金属还原剂。此贡献是可推广的三组分C–C键构筑而非仅有催化体系调试。",
+        "preparativeTransformation": "镍/光催化促进芳基溴化物活化、丁二烯插入和醛的亲核加成，组合形成高烯丙醇的C–C骨架；机理研究支持亲核π-烯丙基镍中间体对羰基加成，但不能把其视为已经直接截获。",
+        "generalityEvidence": "ACS JOC官方摘要明确报告温和条件下丁二烯/多种醛/芳基溴化物三组分还原偶联以及良好区域和立体选择性、较广官能团耐受性。Hantzsch酯起有机还原剂作用；实际精确底物数、ee、产率等未经SI验证不臆造。",
+        "sourceEvidence": "2026年ACS期刊原始论文 DOI 10.1021/acs.joc.6c01104，出版社公开页面Article History标明Published Online 2026-07-28（与Crossref/OpenAlex 2026 Q3历史候选一致），且卷91期31页10774-10779与文章实际署名/摘要核对；原始出版社文献网址：https://pubs.acs.org/doi/10.1021/acs.joc.6c01104。GitHub冻结历史来源根2026-07-22_2026-07-31_joc，批次Git blob SHA 9181de94c2f59b0fb77a470f802a143699524037，实际来源家族crossref+openalex。论文直接报告的合成证据：ACS JOC官方摘要明确报告温和条件下丁二烯/多种醛/芳基溴化物三组分还原偶联以及良好区域和立体选择性、较广官能团耐受性。Hantzsch酯起有机还原剂作用；实际精确底物数、ee、产率等未经SI验证不臆造。。出版社付费PDF及SI未阅读、抓取或复制，数值仅转述原始摘要中明确报道的上限。",
+        "boundaryChallenge": "对抗检查是否仍依赖化学计量金属还原剂或仅为先前双组分反应的一个例子：原始摘要明确以Hantzsch酯替代金属还原当量，并建立三种伙伴交叉偶联，具独立方法学增量。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01104",
+        "publisherOnlineDate": "2026-07-28",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Published_Online_Date+Abstract_cross_checked_frozen_source_Git_sha",
+        "publisherFullTextNotAccessed": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "利用Ni/光氧化还原双催化与有机Hantzsch酯供还原当量，将1,3-丁二烯、醛和芳基溴化物联合转化为高烯丙醇，避免采用化学计量金属还原剂。此贡献是可推广的三组分C–C键构筑而非仅有催化体系调试。 镍/光催化促进芳基溴化物活化、丁二烯插入和醛的亲核加成，组合形成高烯丙醇的C–C骨架；机理研究支持亲核π-烯丙基镍中间体对羰基加成，但不能把其视为已经直接截获。 ACS JOC官方摘要明确报告温和条件下丁二烯/多种醛/芳基溴化物三组分还原偶联以及良好区域和立体选择性、较广官能团耐受性。Hantzsch酯起有机还原剂作用；实际精确底物数、ee、产率等未经SI验证不臆造。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍严格区分亲核π-烯丙基镍为控制实验+DFT支持的作者提出路径而非直接已证成；该反应并没有因报道高立体选择性就必然使用手性催化剂，不应将其误标为对映选择性氢烯丙基化。实际合成方法是丁二烯与醛、芳基溴化物的三组分耦合。"
+        }
+      ],
+      "reviewRationaleSecondPass": "对抗检查是否仍依赖化学计量金属还原剂或仅为先前双组分反应的一个例子：原始摘要明确以Hantzsch酯替代金属还原当量，并建立三种伙伴交叉偶联，具独立方法学增量。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03458",
+      "journal": "Organic Letters",
+      "title": "Diastereo- and Enantioselective Synthesis of 9-Aryl-1-vinyl-tetrahydro-β-carbolines via Brønsted Acid-Catalyzed Pictet–Spengler Reaction",
+      "titleZh": "手性磷酸催化Pictet–Spengler环化高立体选择性构建C—N轴手性四氢β-咔啉",
+      "date": "2026-08-30",
+      "authors": [
+        "Deyu Zhang",
+        "Min Chen"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11379-11385",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03458"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立由N-吲哚连接的联烯酰胺参与的布朗斯特酸催化Pictet–Spengler环化合成9-芳基-1-乙烯基四氢β-咔啉，进一步以手性磷酸调节C–N轴手性立体构型。",
+      "evidenceBasis": "2026年ACS期刊原始论文 DOI 10.1021/acs.orglett.6c03458，出版社公开页面Article History标明Published Online 2026-08-30（与Crossref/OpenAlex 2026 Q3历史候选一致），且卷28期36页11379-11385与文章实际署名/摘要核对；原始出版社文献网址：https://pubs.acs.org/doi/10.1021/acs.orglett.6c03458。GitHub冻结历史来源根2026-08-22_2026-08-31_organic-letters，批次Git blob SHA 3eb3448b8f413701aed67f8e3f29d518400d7827，实际来源家族crossref+openalex。论文直接报告的合成证据：Organic Letters正式公开摘要给出温和条件、非对映比大于20:1、手性磷酸介导最高98% ee，以及乙烯基位点多样衍生化；邻位酰胺导向基和具体催化剂选择对立体控制关键，最高ee不代表全部底物。。出版社付费PDF及SI未阅读、抓取或复制，数值仅转述原始摘要中明确报道的上限。",
+      "challengeReason": "独立对抗核查'中心手性'和'C–N轴手性'是否被混作所有同一底物必然双高选择性：原文分别陈述>20:1 dr和CPA最高98%ee，不能虚报为统一产物恒有这些指标。羧酸/磷酸助催化选择性仅是具体范围，不能扩大到所有N-杂环。",
+      "scopeAssessment": {
+        "primaryContribution": "建立由N-吲哚连接的联烯酰胺参与的布朗斯特酸催化Pictet–Spengler环化合成9-芳基-1-乙烯基四氢β-咔啉，进一步以手性磷酸调节C–N轴手性立体构型。",
+        "preparativeTransformation": "N-吲哚基链连联烯酰胺在Brønsted酸促进下分子内亲电环化，构筑四氢β-咔啉杂环与乙烯基取代；加入手性磷酸催化可建立轴手性C–N键的高对映选择性产物。",
+        "generalityEvidence": "Organic Letters正式公开摘要给出温和条件、非对映比大于20:1、手性磷酸介导最高98% ee，以及乙烯基位点多样衍生化；邻位酰胺导向基和具体催化剂选择对立体控制关键，最高ee不代表全部底物。",
+        "sourceEvidence": "2026年ACS期刊原始论文 DOI 10.1021/acs.orglett.6c03458，出版社公开页面Article History标明Published Online 2026-08-30（与Crossref/OpenAlex 2026 Q3历史候选一致），且卷28期36页11379-11385与文章实际署名/摘要核对；原始出版社文献网址：https://pubs.acs.org/doi/10.1021/acs.orglett.6c03458。GitHub冻结历史来源根2026-08-22_2026-08-31_organic-letters，批次Git blob SHA 3eb3448b8f413701aed67f8e3f29d518400d7827，实际来源家族crossref+openalex。论文直接报告的合成证据：Organic Letters正式公开摘要给出温和条件、非对映比大于20:1、手性磷酸介导最高98% ee，以及乙烯基位点多样衍生化；邻位酰胺导向基和具体催化剂选择对立体控制关键，最高ee不代表全部底物。。出版社付费PDF及SI未阅读、抓取或复制，数值仅转述原始摘要中明确报道的上限。",
+        "boundaryChallenge": "第二遍反查论文是否其实只有常规Pictet–Spengler缩合而没有新可迁移的立体选择性：底物为N-吲哚连接联烯酰胺并能控制C–N轴向手性，属明确的杂环新合成方法；保留酰胺邻位导向和底物骨架边界。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03458",
+        "publisherOnlineDate": "2026-08-30",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Published_Online_Date+Abstract_cross_checked_frozen_source_Git_sha",
+        "publisherFullTextNotAccessed": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "建立由N-吲哚连接的联烯酰胺参与的布朗斯特酸催化Pictet–Spengler环化合成9-芳基-1-乙烯基四氢β-咔啉，进一步以手性磷酸调节C–N轴手性立体构型。 N-吲哚基链连联烯酰胺在Brønsted酸促进下分子内亲电环化，构筑四氢β-咔啉杂环与乙烯基取代；加入手性磷酸催化可建立轴手性C–N键的高对映选择性产物。 Organic Letters正式公开摘要给出温和条件、非对映比大于20:1、手性磷酸介导最高98% ee，以及乙烯基位点多样衍生化；邻位酰胺导向基和具体催化剂选择对立体控制关键，最高ee不代表全部底物。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立对抗核查'中心手性'和'C–N轴手性'是否被混作所有同一底物必然双高选择性：原文分别陈述>20:1 dr和CPA最高98%ee，不能虚报为统一产物恒有这些指标。羧酸/磷酸助催化选择性仅是具体范围，不能扩大到所有N-杂环。"
+        }
+      ],
+      "reviewRationaleSecondPass": "第二遍反查论文是否其实只有常规Pictet–Spengler缩合而没有新可迁移的立体选择性：底物为N-吲哚连接联烯酰胺并能控制C–N轴向手性，属明确的杂环新合成方法；保留酰胺邻位导向和底物骨架边界。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02691",
+      "journal": "Organic Letters",
+      "title": "Asymmetric Synthesis of Axially Chiral Spiro Aziridines and Spiro Thiazolidinethiones from Sulfonyl Bicyclobutanes",
+      "titleZh": "手性亚磺酰胺辅助双环丁烷开环不对称合成轴手性螺氮杂环丙烷及螺噻唑烷硫酮",
+      "date": "2026-08-27",
+      "authors": [
+        "Mahesh S. Gadhave",
+        "Gangarajulu Kesavulu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11174-11178",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02691"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用含手性亚磺酰胺的磺酰双环丁烷底物，经碱促进开环及螺环构建，制备同时具有轴手性和中心手性的1-氮杂螺[2.3]己烷及螺噻唑烷硫酮砌块；不把这一底物辅助诱导误写成催化不对称过程。",
+      "evidenceBasis": "2026年ACS期刊原始论文 DOI 10.1021/acs.orglett.6c02691，出版社公开页面Article History标明Published Online 2026-08-27（与Crossref/OpenAlex 2026 Q3历史候选一致），且卷28期36页11174-11178与文章实际署名/摘要核对；原始出版社文献网址：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02691。GitHub冻结历史来源根2026-08-22_2026-08-31_organic-letters，批次Git blob SHA 3eb3448b8f413701aed67f8e3f29d518400d7827，实际来源家族crossref+openalex。论文直接报告的合成证据：ACS Organic Letters原始Letter摘要确认从磺酰双环丁烷合成多种1-氮杂螺[2,3]己烷和螺噻唑烷硫酮、具有轴及中心手性，操作无需复杂多金属催化；所需手性亚磺酰胺前体及碱促进路线的适用性不能被描述为原位CPA不对称催化。。出版社付费PDF及SI未阅读、抓取或复制，数值仅转述原始摘要中明确报道的上限。",
+      "challengeReason": "独立核查标题中的'asymmetric'不必然意味着手性金属或有机催化剂；本研究通过预置手性亚磺酰胺与碱促开环实现立体选择性，不能给它补造未存在的CPA/配体。作者原始摘要以产物类别与结构为准，不能推断任意双环丁烷皆能得到高ee。",
+      "scopeAssessment": {
+        "primaryContribution": "利用含手性亚磺酰胺的磺酰双环丁烷底物，经碱促进开环及螺环构建，制备同时具有轴手性和中心手性的1-氮杂螺[2.3]己烷及螺噻唑烷硫酮砌块；不把这一底物辅助诱导误写成催化不对称过程。",
+        "preparativeTransformation": "磺酰双环[1.1.0]丁烷在碱Cs2CO3条件下经由含手性亚磺酰胺基团的前体开环，形成带立体化学的螺氮杂环丙烷；部分底物进一步获得螺噻唑烷硫酮产物，属于小环张力释放建立新N-杂螺环骨架。",
+        "generalityEvidence": "ACS Organic Letters原始Letter摘要确认从磺酰双环丁烷合成多种1-氮杂螺[2,3]己烷和螺噻唑烷硫酮、具有轴及中心手性，操作无需复杂多金属催化；所需手性亚磺酰胺前体及碱促进路线的适用性不能被描述为原位CPA不对称催化。",
+        "sourceEvidence": "2026年ACS期刊原始论文 DOI 10.1021/acs.orglett.6c02691，出版社公开页面Article History标明Published Online 2026-08-27（与Crossref/OpenAlex 2026 Q3历史候选一致），且卷28期36页11174-11178与文章实际署名/摘要核对；原始出版社文献网址：https://pubs.acs.org/doi/10.1021/acs.orglett.6c02691。GitHub冻结历史来源根2026-08-22_2026-08-31_organic-letters，批次Git blob SHA 3eb3448b8f413701aed67f8e3f29d518400d7827，实际来源家族crossref+openalex。论文直接报告的合成证据：ACS Organic Letters原始Letter摘要确认从磺酰双环丁烷合成多种1-氮杂螺[2,3]己烷和螺噻唑烷硫酮、具有轴及中心手性，操作无需复杂多金属催化；所需手性亚磺酰胺前体及碱促进路线的适用性不能被描述为原位CPA不对称催化。。出版社付费PDF及SI未阅读、抓取或复制，数值仅转述原始摘要中明确报道的上限。",
+        "boundaryChallenge": "反向挑战该研究是否只是一种单底物‘轴手性测量’或环化产物无法分离：出版商实验条目和多种具体螺环结构表明具有实际制备路线和产物衍生化，是具有用处的立体富集氮杂螺环砌块制备。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02691",
+        "publisherOnlineDate": "2026-08-27",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Published_Online_Date+Abstract_cross_checked_frozen_source_Git_sha",
+        "publisherFullTextNotAccessed": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "利用含手性亚磺酰胺的磺酰双环丁烷底物，经碱促进开环及螺环构建，制备同时具有轴手性和中心手性的1-氮杂螺[2.3]己烷及螺噻唑烷硫酮砌块；不把这一底物辅助诱导误写成催化不对称过程。 磺酰双环[1.1.0]丁烷在碱Cs2CO3条件下经由含手性亚磺酰胺基团的前体开环，形成带立体化学的螺氮杂环丙烷；部分底物进一步获得螺噻唑烷硫酮产物，属于小环张力释放建立新N-杂螺环骨架。 ACS Organic Letters原始Letter摘要确认从磺酰双环丁烷合成多种1-氮杂螺[2,3]己烷和螺噻唑烷硫酮、具有轴及中心手性，操作无需复杂多金属催化；所需手性亚磺酰胺前体及碱促进路线的适用性不能被描述为原位CPA不对称催化。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立核查标题中的'asymmetric'不必然意味着手性金属或有机催化剂；本研究通过预置手性亚磺酰胺与碱促开环实现立体选择性，不能给它补造未存在的CPA/配体。作者原始摘要以产物类别与结构为准，不能推断任意双环丁烷皆能得到高ee。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反向挑战该研究是否只是一种单底物‘轴手性测量’或环化产物无法分离：出版商实验条目和多种具体螺环结构表明具有实际制备路线和产物衍生化，是具有用处的立体富集氮杂螺环砌块制备。"
     }
   ],
   "pending": [
@@ -3150,5 +3580,5 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "2026-10-13 review of missing Angew original 10.1002/anie.8203203 separately from Nature Synthesis editorial 10.1038/s44160-026-01174-6; 46 passed, 2 pending, 8 previously published, 38 awaiting existing sole fixed 08:00. Q3 toc_only, zero D1, no offslot release."
+  "note": "2026-10-13 independent six ACS DOI two-pass scope with specific original Article History and Crossref/OpenAlex matching source batch: total 52 include, 2 existing pending, 8 previously formal historical, 44 awaiting only original Beijing 08. Q3 firstOnline and all historical classes unchanged, strict toc_only, no D1, no media/PDF, not daily new/Hot/WeChat."
 }
