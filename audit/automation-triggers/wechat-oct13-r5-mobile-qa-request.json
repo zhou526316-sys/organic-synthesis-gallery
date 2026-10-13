@@ -1,0 +1,20 @@
+{
+  "requestId": "wechat-oct13-r5-oct05-reference-independent-mobile-source-test",
+  "action": "offline_image_and_editorial_qa_without_cloud_wechat",
+  "date": "2026-10-13",
+  "revision": "2026-10-13-r5",
+  "cloudDraftWrite": false,
+  "publicSend": false,
+  "selectedDOIs": [
+    "10.1038/s44160-026-01189-z",
+    "10.1038/s41557-026-02213-7"
+  ],
+  "expectedSourceMainAndSIFigures": [
+    12,
+    10
+  ],
+  "expectedOriginalCovers": 2,
+  "expectedJournalTotal": 12,
+  "reviewStandard": "User-uploaded Oct05 JACS PDF critique applied to Oct13 R5. Both manuscripts rely on actual initial questions and negative experiments, 8 research-logical sections each, paragraph/fn image hierarchy checked at 390px and desktop.",
+  "scope": "Source-only QA, no WeChat API calls, no public publishing, no new draft"
+}
