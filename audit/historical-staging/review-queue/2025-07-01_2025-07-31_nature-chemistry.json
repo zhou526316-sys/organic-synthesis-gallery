@@ -1,0 +1,834 @@
+{
+  "schemaVersion": "gallery-history-review-triage-v1",
+  "mode": "review_queue_only_not_publication",
+  "rootId": "2025-07-01_2025-07-31_nature-chemistry",
+  "journal": "Nature Chemistry",
+  "range": {
+    "from": "2025-07-01",
+    "to": "2025-07-31"
+  },
+  "sourceSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+  "sourceCheckedAt": "2026-10-13T20:28:57.012Z",
+  "publisherIssueReconciled": false,
+  "legacyNoDoiRecordsReconciled": false,
+  "titleSignalsAreRankOnly": true,
+  "zeroAutomaticExclusions": true,
+  "completeSourceFamilies": true,
+  "stats": {
+    "candidateOccurrences": 22,
+    "alreadyPublished": 0,
+    "approvedAwaiting08": 0,
+    "evidencePending": 0,
+    "requiresTwoPassReview": 22,
+    "priorityP0": 2,
+    "priorityP1": 5,
+    "priorityP2": 4,
+    "priorityP3": 11,
+    "unverifiedDate": 0,
+    "suspectedNonresearch": 0
+  },
+  "records": [
+    {
+      "doi": "10.1038/s41557-025-01857-1",
+      "title": "Energy transfer-enabled enantioselective photocyclization using a privileged Al–salen catalyst",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-17",
+      "createdDate": "2025-07-17",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "9",
+        "pages": "1383-1390",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01857-1"
+      },
+      "authors": [
+        "Julia Soika",
+        "Carina Onneken",
+        "Thorben Wiegmann",
+        "Timo Stünkel",
+        "Tobias Morack",
+        "Leander Lindfeld",
+        "Marian Hebenbrock",
+        "Christian Mück-Lichtenfeld",
+        "Johannes Neugebauer",
+        "Ryan Gilmour"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P0",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01859-z",
+      "title": "Disordered interfacial H2O promotes electrochemical C–C coupling",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-23",
+      "createdDate": "2025-07-23",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1161-1168",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01859-z"
+      },
+      "authors": [
+        "Hao Zhang",
+        "David Raciti",
+        "Anthony Shoji Hall"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P0",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01864-2",
+      "title": "Strong dipole-promoted N–O bond hydrogenolysis enables ampere-level electrosynthesis of methylamine",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-21",
+      "createdDate": "2025-07-21",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1152-1160",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01864-2"
+      },
+      "authors": [
+        "Rui Li",
+        "Rong Yang",
+        "Qian Li",
+        "Mengmei Qin",
+        "Meng He",
+        "Cuibo Liu",
+        "Bin Zhang"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01868-y",
+      "title": "Metal-centred states control carrier lifetimes in transition metal oxide photocatalysts",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-02",
+      "createdDate": "2025-07-02",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "9",
+        "pages": "1348-1355",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01868-y"
+      },
+      "authors": [
+        "Michael Sachs",
+        "Liam Harnett-Caulfield",
+        "Ernest Pastor",
+        "Bernadette Davies",
+        "Daniel J. C. Sowood",
+        "Benjamin Moss",
+        "Andreas Kafizas",
+        "Jenny Nelson",
+        "Aron Walsh",
+        "James R. Durrant"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01876-y",
+      "title": "Introducing metal–sulfur active sites in metal–organic frameworks via post-synthetic modification for hydrogenation catalysis",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-24",
+      "createdDate": "2025-07-24",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "10",
+        "pages": "1514-1523",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01876-y"
+      },
+      "authors": [
+        "Haomiao Xie",
+        "Milad Ahmadi Khoshooei",
+        "Mukunda Mandal",
+        "Simon M. Vornholt",
+        "Jan Hofmann",
+        "Luke M. Tufaro",
+        "Kent O. Kirlikovali",
+        "Dawson A. Grimes",
+        "Seryeong Lee",
+        "Shengyi Su",
+        "Susanne Reischauer",
+        "Debabrata Sengupta",
+        "Kira Fahy",
+        "Kaikai Ma",
+        "Xiaoliang Wang",
+        "Fanrui Sha",
+        "Wei Gong",
+        "Yongwei Chen",
+        "Jenny G. Vitillo",
+        "John S. Anderson",
+        "Justin M. Notestein",
+        "Karena W. Chapman",
+        "Laura Gagliardi",
+        "Omar K. Farha"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01878-w",
+      "title": "Synthesis of highly strained para-cyclophanes via ring-expansion [5,5]-sigmatropic rearrangement reaction",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-21",
+      "createdDate": "2025-07-21",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1169-1178",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01878-w"
+      },
+      "authors": [
+        "Zhonghong Chen",
+        "Weihao Yang",
+        "Maomao Jia",
+        "Jiarong Shi",
+        "Jiyang Li",
+        "Haohua Chen",
+        "Yang Li"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01894-w",
+      "title": "Flame synthesis achieves compositionally tailorable high-entropy metal-containing nanomaterials",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-30",
+      "createdDate": "2025-07-30",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "10",
+        "pages": "1497-1504",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01894-w"
+      },
+      "authors": [
+        "Zhen Liu",
+        "Eirini Goudeli",
+        "Rui Guo",
+        "Houting Xie",
+        "Qinjian Luo",
+        "Laichun Zhao",
+        "Wanjun Xu",
+        "Joseph J. Richardson",
+        "Weijian Xu",
+        "Frank Caruso",
+        "Shuaijun Pan"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01854-4",
+      "title": "Catalytic C(sp2) homologation of alkylboranes",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-24",
+      "createdDate": "2025-07-24",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "9",
+        "pages": "1418-1424",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01854-4"
+      },
+      "authors": [
+        "Bradley W. Gardner",
+        "Gojko Lalic"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01867-z",
+      "title": "Catalytic and stoichiometric stepwise conversion of side-on bound dinitrogen to ammonia mediated by a uranium complex",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-16",
+      "createdDate": "2025-07-16",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "9",
+        "pages": "1425-1433",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01867-z"
+      },
+      "authors": [
+        "Mikhail S. Batov",
+        "Heather T. Partlow",
+        "Lucile Chatelain",
+        "John A. Seed",
+        "Rosario Scopelliti",
+        "Ivica Zivkovic",
+        "Ralph W. Adams",
+        "Stephen T. Liddle",
+        "Marinella Mazzanti"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01873-1",
+      "title": "Bottom-up computational design of shape-selective organic macrocycles for humid CO2 capture",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-22",
+      "createdDate": "2025-07-22",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "11",
+        "pages": "1696-1704",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01873-1"
+      },
+      "authors": [
+        "Tao Liu",
+        "Hang Qu",
+        "Sam D. Harding",
+        "Isaiah Borne",
+        "Linjiang Chen",
+        "John W. Ward",
+        "Simon C. Weston",
+        "Andrew I. Cooper"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01875-z",
+      "title": "Bright triplet and bright charge-separated singlet excitons in organic diradicals enable optical read-out and writing of spin states",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-29",
+      "createdDate": "2025-07-29",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "9",
+        "pages": "1410-1417",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01875-z"
+      },
+      "authors": [
+        "Rituparno Chowdhury",
+        "Petri Murto",
+        "Naitik A. Panjwani",
+        "Yan Sun",
+        "Pratyush Ghosh",
+        "Yorrick Boeije",
+        "Chiara Delpiano Cordeiro",
+        "Vadim Derkach",
+        "Seung-Je Woo",
+        "Oliver Millington",
+        "Daniel G. Congrave",
+        "Yao Fu",
+        "Tarig B. E. Mustafa",
+        "Miguel Monteverde",
+        "Jesús Cerdá",
+        "Giacomo Londi",
+        "Jan Behrends",
+        "Akshay Rao",
+        "David Beljonne",
+        "Alexei Chepelianskii",
+        "Hugo Bronstein",
+        "Richard H. Friend"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01846-4",
+      "title": "The biophysical requirements that govern the efficient endosomal escape of designed mini-proteins",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-08",
+      "createdDate": "2025-07-08",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1227-1235",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01846-4"
+      },
+      "authors": [
+        "Jonathan Giudice",
+        "Daniel D. Brauer",
+        "Madeline Zoltek",
+        "Angel L. Vázquez-Maldonado",
+        "Neville Dadina",
+        "Mark Kelly",
+        "Alanna Schepartz"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01847-3",
+      "title": "Homotypic RNA clustering accompanies a liquid-to-solid transition inside the core of multi-component biomolecular condensates",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-02",
+      "createdDate": "2025-07-02",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1236-1246",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01847-3"
+      },
+      "authors": [
+        "Tharun Selvam Mahendran",
+        "Gable M. Wadsworth",
+        "Anurag Singh",
+        "Ritika Gupta",
+        "Priya R. Banerjee"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01860-6",
+      "title": "A bright comeback for peri-xanthenoxanthene",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-03",
+      "createdDate": "2025-07-03",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "7",
+        "pages": "1138-1138",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01860-6"
+      },
+      "authors": [
+        "Davide Zanetti",
+        "Cristian De Luca",
+        "Davide Bonifazi"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01871-3",
+      "title": "Engineered reactivity of a bacterial E1-like enzyme enables ATP-driven modification of protein and peptide C termini",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-18",
+      "createdDate": "2025-07-18",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "9",
+        "pages": "1371-1382",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01871-3"
+      },
+      "authors": [
+        "Clara L. Frazier",
+        "Debashrito Deb",
+        "William E. Leiter",
+        "Umasankar Mondal",
+        "Amy M. Weeks"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01872-2",
+      "title": "An enzyme for high-yield, ATP-driven C-terminal thioester generation",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-25",
+      "createdDate": "2025-07-25",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "9",
+        "pages": "1311-1312",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01872-2"
+      },
+      "authors": [],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01874-0",
+      "title": "Navigating protein landscapes with a machine-learned transferable coarse-grained model",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-18",
+      "createdDate": "2025-07-18",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1284-1292",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01874-0"
+      },
+      "authors": [
+        "Nicholas E. Charron",
+        "Klara Bonneau",
+        "Aldo S. Pasos-Trejo",
+        "Andrea Guljas",
+        "Yaoyi Chen",
+        "Félix Musil",
+        "Jacopo Venturin",
+        "Daria Gusew",
+        "Iryna Zaporozhets",
+        "Andreas Krämer",
+        "Clark Templeton",
+        "Atharva Kelkar",
+        "Aleksander E. P. Durumeric",
+        "Simon Olsson",
+        "Adrià Pérez",
+        "Maciej Majewski",
+        "Brooke E. Husic",
+        "Ankit Patel",
+        "Gianni De Fabritiis",
+        "Frank Noé",
+        "Cecilia Clementi"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01877-x",
+      "title": "Expedient access to methylamine with potential",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-22",
+      "createdDate": "2025-07-22",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1144-1145",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01877-x"
+      },
+      "authors": [
+        "Tristan von Münchow",
+        "Lutz Ackermann"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01879-9",
+      "title": "Ring expansion approach to strained para-cyclophanes",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-21",
+      "createdDate": "2025-07-21",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1150-1151",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01879-9"
+      },
+      "authors": [],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01880-2",
+      "title": "Isolation of halogen-substituted silylium ions",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-31",
+      "createdDate": "2025-07-31",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "11",
+        "pages": "1666-1672",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01880-2"
+      },
+      "authors": [
+        "Tobias Randt",
+        "Morten Lehmann",
+        "Elisabeth Irran",
+        "Martin Kaupp",
+        "Hendrik F. T. Klare",
+        "Martin Oestreich"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01881-1",
+      "title": "A bismuth-based analogue of the π-allyl cation",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-29",
+      "createdDate": "2025-07-29",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1148-1149",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01881-1"
+      },
+      "authors": [
+        "Sandeep Kumar",
+        "Kanishk Tomer",
+        "Priyabrata Ghana"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41557-025-01882-0",
+      "title": "Transition state tuning with concentrated electrolytes",
+      "journal": "Nature Chemistry",
+      "date": "2025-07-23",
+      "createdDate": "2025-07-23",
+      "year": 2025,
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "8",
+        "pages": "1146-1147",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01882-0"
+      },
+      "authors": [
+        "Sebastian Z. Oener"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2025-07-01_2025-07-31_nature-chemistry",
+      "sourceBatchSha256": "10f2fe0ea4be23974ef57a6035a335dbd01b0d7477ce4bac4cedb156fa4f90a9",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    }
+  ]
+}
