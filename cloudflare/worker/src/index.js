@@ -488,7 +488,9 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await findPublicBodyMatches(env,{
       catalogId:url.searchParams.get('catalogId')||'',
       query:url.searchParams.get('q')||'',
-      limit:url.searchParams.get('limit')||24
+      limit:url.searchParams.get('limit')||24,
+      afterDoi:url.searchParams.get('afterDoi')||'',
+      afterSectionId:url.searchParams.get('afterSectionId')||''
     }),cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/literature/catalog-view') {
