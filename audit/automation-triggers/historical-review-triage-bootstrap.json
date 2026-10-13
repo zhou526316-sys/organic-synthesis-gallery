@@ -1,11 +1,14 @@
 {
   "version": 1,
-  "purpose": "user_authorized_historical_coverage_triage_bootstrap",
+  "purpose": "user_authorized_historical_unique_doi_year_completeness_refresh",
   "approvedAt": "2026-10-13",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
   "scope": "all_historical_source_candidates_only",
   "maxRoots": 320,
   "formalRelease": false,
-  "autoAcademicDecision": false
+  "autoAcademicDecision": false,
+  "requestedAt": "2026-10-13T01:32:18.865Z",
+  "reason": "Owner-approved full-DOI-global-dedup/year coverage report; rebuild staging-only shards and unique DOI annual ledger from all fully source-enumerated roots; no published corpus write.",
+  "retainsNoScopeAutoApproval": true
 }
