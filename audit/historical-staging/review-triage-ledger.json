@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-history-review-triage-v1",
   "mode": "review_queue_only_not_publication",
-  "nextRootIndex": 371,
+  "nextRootIndex": 320,
   "rootSummaries": {
     "2026-09-22_2026-09-30_jacs": {
       "candidateOccurrences": 155,
@@ -1221,10 +1221,10 @@
     },
     "2026-08-22_2026-08-31_ccs-chemistry": {
       "candidateOccurrences": 28,
-      "alreadyPublished": 0,
+      "alreadyPublished": 1,
       "approvedAwaiting08": 0,
       "evidencePending": 0,
-      "requiresTwoPassReview": 28,
+      "requiresTwoPassReview": 27,
       "priorityP0": 1,
       "priorityP1": 3,
       "priorityP2": 5,
@@ -5940,10 +5940,10 @@
       "legacyNoDoiReconciled": false
     }
   },
-  "generatedAt": "2026-10-13T02:56:54.675Z",
+  "generatedAt": "2026-10-13T03:47:03.368Z",
   "coverageRootsTotal": 371,
   "coverageRootsProcessed": 371,
-  "publishedDoiCount": 979,
+  "publishedDoiCount": 984,
   "publisherIssueVerification": "not_complete",
   "olderNonDoiCoverage": "not_enumerated",
   "productionWrite": false
