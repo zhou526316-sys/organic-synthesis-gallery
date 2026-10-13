@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "kind": "postrelease_exact_next_slot_reviewed_carryover",
+  "generatedAt": "2026-10-13T02:39:10.517Z",
+  "sourcePublicationSlot": "2026-10-13T08:00:00+08:00",
+  "nextPublicationSlot": "2026-10-14T08:00:00+08:00",
+  "originalReviewFile": "audit/review-2026-10-13-0800.json",
+  "sourceReviews": [
+    {
+      "path": "audit/review-2026-10-13-postrelease-evidence-0800.json",
+      "blobSha": "5596d123dc3b83aae2348e256c422f74bd967905"
+    },
+    {
+      "path": "audit/review-2026-10-13-postrelease-late-orglett-03617.json",
+      "blobSha": "55f78925abb581f8cadeb4646fe61ed297c14d35"
+    }
+  ],
+  "reviewedCarryoverDois": [
+    "10.1021/acs.orglett.6c04027",
+    "10.1021/acs.orglett.6c03617"
+  ],
+  "reviewedCarryoverCount": 2,
+  "nextSlotPublicationBacklog": [
+    {
+      "doi": "10.1021/acs.orglett.6c04027",
+      "journal": "Organic Letters",
+      "title": "Synthesis of Diaryl α-Hydroxycarboxylic Acid Derivatives via Three-Component Reactions of o-Quinone Diimides with Alcohols and Diazo Compounds",
+      "titleZh": "铑催化邻醌二亚胺、醇与重氮化合物三组分反应合成二芳基α-羟基羧酸衍生物",
+      "date": "2026-10-12",
+      "originalDate": "2026-10-12",
+      "onlineDate": "2026-10-12",
+      "publishedDate": "2026-10-12",
+      "createdDate": "2026-10-13",
+      "type": "journal-article",
+      "authors": [
+        "Qiu-Le Yang",
+        "Li-Ping Pei",
+        "Shi-Kun Jia",
+        "Guang-Jian Mei"
+      ],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "reviewPriority": "high",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reason": "铑催化邻醌二亚胺、醇与重氮化合物发生高区域选择性三组分反应，形成含氧季碳中心的二芳基α-羟基羧酸衍生物，属于一般性有机制备方法学。",
+      "evidenceBasis": "2026-10-13主分支外只读DOI并集实测 Crossref DOI准确元数据：摘要明确 Rh催化o-quinone diimides/alcohol/diazo 三组分反应，经氧鎓叶立德的Michael型捕获形成二芳基α-羟基羧酸衍生物；描述broad substrate scope、scale-up synthesis、late-stage functionalization，未虚构具体收率或底物例数。",
+      "challengeReason": "反向挑战：该工作是否仅为特定醌二亚胺结构的多组分示例？摘要证明多底物反应、产物骨架分离制备、放大与复杂分子后期衍生化；合成方法贡献独立而明确，符合Organic Letters的通用制备性方法范围。尚未获得原文底物表，收率数值和限制不作断言。",
+      "evidenceSource": "GitHub Actions PR #560 read-only DOI union audit run #38331314358; verified Crossref abstract for DOI 10.1021/acs.orglett.6c04027",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c04027"
+      ],
+      "sourceReviewFile": "audit/review-2026-10-13-postrelease-evidence-0800.json",
+      "discoveryRunId": 38331314358,
+      "sourceAuditArtifact": "publisher-source-readonly-smoke (GitHub artifact 11783295863)",
+      "nextPublicationSlot": "2026-10-14T08:00:00+08:00",
+      "scopeAssessment": {
+        "primaryContribution": "开发铑催化邻醌二亚胺、醇与重氮化合物的高区域选择性三组分反应，合成多取代二芳基α-羟基羧酸衍生物。",
+        "preparativeTransformation": "邻醌二亚胺、醇及重氮化合物经氧鎓叶立德与Michael型捕获，构建含氧季碳中心的二芳基α-羟基羧酸骨架。",
+        "generalityEvidence": "Crossref DOI匹配摘要直接表述宽底物范围、放大制备和复杂分子后期官能化；具体数目和逐个收率未知。",
+        "sourceEvidence": "GitHub Actions 38331314358 的独立Crossref多ISSN online/published/created结果，DOI、作者、题名与日期一致。",
+        "boundaryChallenge": "底物类型以邻醌二亚胺为中心，但存在明确的三组分成键、不同底物拓展及应用；不能按单一机理/材料案例排除。"
+      },
+      "publicationAuthorized": false,
+      "productionDataModified": false,
+      "status": "ready_for_next_slot",
+      "sourceReviewBlobSha": "5596d123dc3b83aae2348e256c422f74bd967905",
+      "discoveredAfterSlot": "2026-10-13T08:00:00+08:00",
+      "evidenceReviewedAt": "2026-10-13T02:39:10.517Z",
+      "pendingPublicationAuthorization": true,
+      "revalidateOnFreshPairedSnapshot": true
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03617",
+      "journal": "Organic Letters",
+      "title": "Iridium-Catalyzed Asymmetric Hydrogenation of Pyridazine Salts under Batch and Flow",
+      "titleZh": "铱催化哒嗪盐的间歇式及连续流不对称氢化",
+      "date": "2026-10-13",
+      "originalDate": "2026-10-13",
+      "onlineDate": "2026-10-13",
+      "publishedDate": "2026-10-13",
+      "createdDate": "2026-10-13",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reviewPriority": "high",
+      "reason": "在铱配合物/手性SunPhos配体作用下，对哒嗪盐实施直接不对称氢化，制备手性六氢哒嗪。报道不同取代底物以及克级、连续流制备，属于有一般制备适用范围的有机不对称合成方法。",
+      "evidenceBasis": "DOI精准匹配的Crossref注册原始摘要：使用[Ir(COD)Cl]₂/(R)-SunPhos，哒嗪盐在温和条件下转化为手性六氢哒嗪；不同取代基适用，最高97%收率、97% ee。摘要直接报告克级合成、连续流、TON最高3720及S/C=4000时94% ee。其余底物数量与SI未核实，未作推断。",
+      "challengeReason": "独立反向挑战：研究是否仅展示一例特别适合氢化的氮杂盐？原始摘要明确写明wide range of substituents，给出较高收率和ee以及克级、连续流和催化剂周转数据，证明可推广的哒嗪盐→手性六氢哒嗪制备能力，而不是单一机理或材料催化示例。未获取具体SI，限制与单个收率未作虚构。",
+      "scopeAssessment": {
+        "primaryContribution": "开发铱/[手性SunPhos]催化的哒嗪盐直接对映选择性氢化与连续流制备方法。",
+        "preparativeTransformation": "芳香六元含二氮杂环哒嗪盐氢化为立体富集六氢哒嗪骨架，形成具有立体中心的饱和含氮杂环。",
+        "generalityEvidence": "Crossref DOI匹配摘要直接说明多取代基底物，最高97%分离收率和97% ee；克级、连续流以及催化剂TON与TOF用于证明制备实用性，未虚构具体底物表。",
+        "sourceEvidence": "2026-10-13T02:05:16.023Z 审计 paired compact `audit/unresolved-latest.json` blob 702421123ff5777c874236b8f402a935e9fbad0f；其Crossref的online/published/created来源、作者和原始摘要与DOI一致。",
+        "boundaryChallenge": "最大范围疑点是氢化仅针对哒嗪盐骨架，但摘要包含较广取代范围、实际可分离产物、非外消旋立体中心及连续流可扩展性，符合独立的可迁移有机制备方法学。"
+      },
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03617",
+        "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03617"
+      ],
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03617"
+      ],
+      "evidenceSource": "DOI-verified Crossref primary abstract from fresh Gallery DOI-union audit; not a full-text/SI claim",
+      "originalHandoffGeneratedAt": "2026-10-13T02:05:16.023Z",
+      "originalHandoffBlobSha": "702421123ff5777c874236b8f402a935e9fbad0f",
+      "nextPublicationSlot": "2026-10-14T08:00:00+08:00",
+      "sourceReviewFile": "audit/review-2026-10-13-postrelease-late-orglett-03617.json",
+      "status": "ready_for_next_slot",
+      "sourceReviewBlobSha": "55f78925abb581f8cadeb4646fe61ed297c14d35",
+      "discoveredAfterSlot": "2026-10-13T08:00:00+08:00",
+      "evidenceReviewedAt": "2026-10-13T02:39:10.517Z",
+      "pendingPublicationAuthorization": true,
+      "revalidateOnFreshPairedSnapshot": true
+    }
+  ],
+  "alreadyPendingNeedsFreshChallenge": [
+    {
+      "doi": "10.1038/s44160-026-01189-z",
+      "originalDate": "2026-10-12",
+      "pendingSourceReviewFile": "audit/review-2026-10-13-0800.json",
+      "additionalEvidenceSourceReviewFile": "audit/review-2026-10-13-postrelease-evidence-0800.json",
+      "additionalEvidenceBlobSha": "5596d123dc3b83aae2348e256c422f74bd967905",
+      "nextReviewSlot": "2026-10-14T08:00:00+08:00",
+      "note": "2026-10-13 original pending remains intact; new publisher abstract generality evidence must be evaluated by fresh 2026-10-14 two-pass prepublish review. Not duplicate next-slot carryover."
+    }
+  ],
+  "coordinationStateBeforeBlobSha": "39bd5f363e1042789218a4f36a3ca804594f0001",
+  "productionDataModified": false,
+  "productionCardsAdded": 0,
+  "fixedWriterTriggered": false,
+  "publicationAuthorized": false,
+  "verifiedThroughAdvanced": false,
+  "note": "Recorded evidence-only next-slot handoff. Single daily Beijing 08:00 writer remains sole admission authority. No off-slot literature card or marker touched."
+}

@@ -1,0 +1,35 @@
+name: Historical DOI-balanced scientific-review worklist contract
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/historical-review-worklist.mjs'
+      - 'scripts/test-historical-review-worklist.mjs'
+      - '.github/workflows/historical-review-worklist-regression.yml'
+      - '.github/workflows/historical-triage-bootstrap.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/historical-review-worklist.mjs'
+      - 'scripts/test-historical-review-worklist.mjs'
+      - '.github/workflows/historical-review-worklist-regression.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify balanced, deduplicated, non-decision worklist
+        run: |
+          node --check scripts/historical-review-worklist.mjs
+          node --test scripts/test-historical-review-worklist.mjs
+      - name: Protect staging-only worklist path and future sole 08:00 release
+        run: |
+          grep -F "HISTORICAL_STAGING_ONLY" scripts/historical-review-worklist.mjs
+          grep -F "noAutomatedIncludesOrExcludes:true" scripts/historical-review-worklist.mjs
+          grep -F "noFormalPublication:true" scripts/historical-review-worklist.mjs

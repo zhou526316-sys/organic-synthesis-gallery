@@ -7,6 +7,12 @@ on:
       - 'cloudflare/scripts/audit-literature.mjs'
       - 'scripts/lib/publisher-feed-discovery.mjs'
       - 'scripts/test-publisher-feed-discovery.mjs'
+      - 'scripts/lib/literature-review-priority.mjs'
+      - 'scripts/test-literature-review-priority.mjs'
+      - 'scripts/lib/crossref-discovery-date-modes.mjs'
+      - 'scripts/test-crossref-discovery-date-modes.mjs'
+      - 'scripts/lib/crossref-deposit-backlog.mjs'
+      - 'scripts/test-crossref-deposit-backlog.mjs'
       - 'scripts/lib/literature-review-queue-guard.mjs'
       - 'scripts/test-literature-review-queue-guard.mjs'
       - 'scripts/lib/literature-exclusion-recheck.mjs'
@@ -38,8 +44,14 @@ jobs:
         run: node --test scripts/test-literature-exclusion-recheck.mjs
       - name: Verify publisher DOI-bound public abstract fallback parser
         run: node --test scripts/test-publisher-abstract-metadata.mjs
+      - name: Verify Crossref late redeposit rescue modes
+        run: node --test scripts/test-crossref-discovery-date-modes.mjs
+      - name: Verify historical redeposit queue retention and date provenance
+        run: node --test scripts/test-crossref-deposit-backlog.mjs
       - name: Validate primary window versus unverified DOI backlog
         run: node --test scripts/test-literature-review-queue-guard.mjs
+      - name: Prevent synthesis-method title misranking
+        run: node --test scripts/test-literature-review-priority.mjs
       - name: Verify core literature source coverage policy
         run: node scripts/test-literature-completeness-capability.mjs
       - name: Verify strict prepublication contract regressions
@@ -95,6 +107,15 @@ jobs:
             report.publisherDateVerificationBacklog.count);
           assert.equal(report.summary.historicalEvidenceChallenges,
             report.historicalEvidenceChallenges.count);
+          assert.equal(report.summary.historicalCrossrefRedepositBacklog,
+            report.historicalCrossrefRedepositBacklog.count);
+          assert.equal(compact.historicalCrossrefRedepositBacklog.count,
+            report.historicalCrossrefRedepositBacklog.items.length);
+          assert.ok(compact.unresolved.every(row=>
+            !row.redepositedInSafetyTail||!row.date
+              ||row.date>=report.lateDepositRescueStartDate
+              ||row.sources.some(s=>s.endsWith(':created'))),
+            'An historic re-deposit cannot masquerade as a recent first-publication DOI');
           assert.ok(compact.unresolved.every(row=>
             !row.recheckPreviousExclusion||row.date>=report.baseStartDate),
             'Historic exclusion with changed abstract must not become a fresh 08:00 candidate');
