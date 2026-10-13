@@ -6,22 +6,24 @@ import {validateHistoricalApproval,selectHistoricalAdmissions,historicCard,HISTO
   from './lib/historical-admission.mjs';
 const root=JSON.parse(readFileSync(HISTORICAL_APPROVED_PATH,'utf8'));
 const clone=()=>structuredClone(root);
-test('first eight source-fingerprinted historic scope approvals are all valid',()=>{
-  assert.equal(validateHistoricalApproval(root).length,8);
-  assert.deepEqual(root.summary,{checked:10,include:8,pending:2,published:0,sourceCollision:0});
-  assert.equal(new Set(root.accepted.map(x=>x.doi)).size,8);
+test('all source-fingerprinted historic scope approvals are valid and cumulatively extensible',()=>{
+  assert.equal(validateHistoricalApproval(root).length,root.summary.include);
+  assert.ok(root.summary.include>=10);
+  assert.equal(root.summary.checked,root.accepted.length+root.pending.length);
+  assert.equal(root.summary.pending,2);
+  assert.equal(new Set(root.accepted.map(x=>x.doi)).size,root.accepted.length);
 });
 test('pilot has distinct pending publication-date conflicts, never included',()=>{
   assert.equal(root.pending.length,2);
   assert.ok(root.pending.every(x=>x.decision==='pending'&&x.challengeDecision==='pending'));
   const selected=selectHistoricalAdmissions(root);
-  assert.equal(selected.length,8);
+  assert.equal(selected.length,root.accepted.length);
   assert.ok(root.pending.every(x=>!selected.some(y=>y.doi===x.doi)));
 });
 test('already-published source DOI is not re-added to formal release',()=>{
   const published=new Set(root.accepted.slice(0,2).map(x=>x.doi));
   const selected=selectHistoricalAdmissions(root,{published});
-  assert.equal(selected.length,6);
+  assert.equal(selected.length,root.accepted.length-2);
   assert.ok(selected.every(x=>!published.has(x.doi)));
 });
 test('cross-scope and daily-DOI collision hard block',()=>{
@@ -101,4 +103,16 @@ test('new three scope-approved historical DOI are uniquely staged and frozen for
     assert.equal(row.new,false);
   }
   assert.equal(root.summary.checked,root.accepted.length+root.pending.length);
+});
+
+test('newly verified missed September JOC chemistry has independent evidence passes',()=>{
+  for(const doi of ['10.1021/acs.joc.6c01580','10.1021/acs.joc.6c01772']){
+    const row=root.accepted.find(x=>x.doi===doi);
+    assert.ok(row,'missing newly reviewed DOI '+doi);
+    assert.equal(row.reviewPasses,2);
+    assert.equal(row.challengeDecision,'include');
+    assert.equal(row.reviewEvidence.stageBatchSha,'c5604566a1a9763ce4fbbd2233b424db5c960517');
+    assert.equal(row.mediaPolicy,'toc_only');
+    assert.equal(row.addedDate,'');
+  }
 });

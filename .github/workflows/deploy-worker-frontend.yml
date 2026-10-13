@@ -118,6 +118,9 @@ jobs:
         timeout-minutes: 2
         run: node --test cloudflare/worker/scripts/test-private-pdf-processing.mjs
 
+      - name: Verify isolated historical text owner diagnostics
+        run: node --test cloudflare/worker/scripts/test-historical-text-diagnostics.mjs
+
       - name: Verify all-DOI PDF evidence and owner-only audit security
         timeout-minutes: 2
         run: |

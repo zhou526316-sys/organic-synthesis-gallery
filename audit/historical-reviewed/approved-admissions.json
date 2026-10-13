@@ -1,8 +1,8 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-12T08:53:53.405Z",
-  "nextEligiblePublicationSlot": "2026-10-13T08:00:00+08:00",
+  "generatedAt": "2026-10-13T01:14:06.547Z",
+  "nextEligiblePublicationSlot": "2026-10-14T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
   "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
@@ -10,14 +10,14 @@
   "scopeCorrectionsBlobSha": "74978d92a16d353271f16f111425d09e4de84f07",
   "stagingSourceBranch": "staging/historical-archive-nightly",
   "catalogSnapshot": {
-    "sha": "cb6e64e3e1e76572aac6ff47ff2757ed59fab8d3",
-    "recordCount": 964
+    "sha": "7ecb63da7ad22fd16b8dccae8b2d0f134b5e4d89",
+    "recordCount": 979
   },
   "summary": {
-    "checked": 10,
-    "include": 8,
+    "checked": 12,
+    "include": 10,
     "pending": 2,
-    "published": 0,
+    "published": 8,
     "sourceCollision": 0
   },
   "auditGuards": {
@@ -483,6 +483,120 @@
         "pdfFetched": false
       },
       "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01580",
+      "journal": "JOC",
+      "title": "Electricity-Driven Halogenation of α-Oxo Ketene Dithioacetals Using Lithium Halides as Dual-Function Electrolyte Reagents",
+      "titleZh": "卤化锂兼作电解质与卤化试剂的α-氧代烯酮二硫缩醛电化学卤化",
+      "date": "2026-09-14",
+      "authors": [
+        "Austin Symon Abacan",
+        "Thao Nguyen Thanh Huynh",
+        "Thanyaporn Kostphan",
+        "Mongkol Sukwattanasinitt",
+        "Sumrit Wacharasindhu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "13020-13026",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01580"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "该文章的主体是有明确底物类别、产物系列和分离数据的电化学有机卤化方法学，不是以电极材料性能或仪器效率为主要结果。",
+      "evidenceBasis": "ACS出版社 DOI 与2026-09-14在线发表日核对一致；正式摘要逐一描述恒电流下采用LiBr/LiCl作为双功能支持电解质/卤化试剂的合成转化、22个溴代和6个氯代产物、最高99%收率、克级电解以及 CV、对照和自由基捕获证据。引文与历史 Crossref/OpenAlex 批次匹配；未读取且不臆造 SI 中具体电流、时长或电极材质。",
+      "challengeReason": "第二遍独立挑战该工作是否只是已知卤化的工艺替代，并检验基于材料/电极性能的误收风险；官方摘要实际提供两类卤化产物的28个制备例子和克级放大，核心仍是普适的有机卤化路线。机理区别仅称支持/提示，不升级为证实。",
+      "scopeAssessment": {
+        "primaryContribution": "以廉价可得的氯化锂或溴化锂同时充当支持电解质和卤素来源，通过恒电流电解提供可用于有机合成的α-氧代烯酮二硫缩醛选择性卤化方法。",
+        "preparativeTransformation": "由α-氧代烯酮二硫缩醛底物与卤化锂反应，分别获得溴代或氯代α-氧代烯酮二硫缩醛，形成可后续转化的卤代有机合成中间体。",
+        "generalityEvidence": "ACS官方摘要列出22个溴代和6个氯代产物，总计28个产物，最高收率99%，描述官能团耐受性和克级电解；不能把最高值误写为全部底物收率。",
+        "sourceEvidence": "ACS 出版社正式 DOI 页面及 Abstract：https://pubs.acs.org/doi/10.1021/acs.joc.6c01580，Published Online 2026-09-14；原 Crossref/OpenAlex 历史批次 2026-09-08_2026-09-14_joc，Git blob SHA c5604566a1a9763ce4fbbd2233b424db5c960517。未转载原始全文摘要，未采 SI 或 PDF。",
+        "boundaryChallenge": "对抗性复核：已知电化学氧化卤离子并非新的反应原理，可能仅属电解条件微调；但双功能锂盐结合成系列的两种卤素制备及可放大性是具体而可迁移的合成方法。CV、自由基捕获与对照实验仅支持作者提出的两种不同阳极氧化路径，不能声称机理已被严格证明。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01580",
+        "publisherOnlineDate": "2026-09-14",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_joc",
+        "stageBatchSha": "c5604566a1a9763ce4fbbd2233b424db5c960517",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01772",
+      "journal": "JOC",
+      "title": "Visible-Light-Promoted Phosphonylation Enabling the Use of Alkyl Thianthrenium Salts",
+      "titleZh": "可见光促进烷基噻蒽鎓盐参与的无光催化剂膦酰化反应",
+      "date": "2026-09-11",
+      "authors": [
+        "Jiayi Chen",
+        "Ze Xu",
+        "Ting Yuan",
+        "Dongwei Zhao",
+        "Zhijun Zuo",
+        "Lu Bai",
+        "Xinjun Luan"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "13068-13077",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01772"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "研究主要贡献为无需外加光催化剂的烷基噻蒽鎓盐—亚膦酸酯C(sp³)–P(V)成键方法，且有范围及后期修饰证据，符合有机合成方法学。",
+      "evidenceBasis": "2026-09-11 ACS出版社正式在线发表，2026年JOC第91卷第38期13068–13077页；官方摘要明确指向可见光、烷基噻蒽鎓盐与亚膦酸酯反应、无额外光催化剂、EDA复合物介导的自由基产生这一作者描述机制，以及广泛底物与复杂分子后期修饰。历史Crossref/OpenAlex保存相同 DOI、作者与引文。原英文Abstract、SI、PDF均未复制至正式审核清单。",
+      "challengeReason": "第二遍独立检查新颖性究竟来自EDA机理还是通用制备：不把作者的光激发模型误认为直接证据，更不推断未见的产率、选择性；即使机理存在替代解释，广泛的烷基磷酸酯C–P成键及后期修饰仍独立支持方法学收录。",
+      "scopeAssessment": {
+        "primaryContribution": "利用可见光促进烷基噻蒽鎓盐与亚膦酸酯形成新的烷基膦酸酯合成路线，避免额外光催化剂；作者将活性生成归因于电子供受体复合物参与的自由基过程。",
+        "preparativeTransformation": "由烷基噻蒽鎓盐作为烷基供体与亚膦酸酯含磷试剂在光照下偶联，构筑C(sp³)–P(V)键，得到多类烷基膦酸酯而不是仅改变有机发光性质。",
+        "generalityEvidence": "ACS官方摘要明确报道较宽底物范围和复杂分子的后期官能团化，构建具有应用价值的烷基膦酸酯；摘要没有给出最高分离收率或准确底物数量，故不补写这些数值。",
+        "sourceEvidence": "ACS 出版社正式 DOI 页面及 Abstract：https://pubs.acs.org/doi/10.1021/acs.joc.6c01772，Published Online 2026-09-11；原 Crossref/OpenAlex 历史批次 2026-09-08_2026-09-14_joc，Git blob SHA c5604566a1a9763ce4fbbd2233b424db5c960517。未转载原始全文摘要，未采 SI 或 PDF。",
+        "boundaryChallenge": "对抗性复核：作者提出的EDA复合物介导自由基产生属于机理解释，若缺乏直接光谱证据不能当作已证实中间体；但正式报道确有有机起始底物到C(sp³)–P键产物的反应，及底物拓展、复杂分子后期修饰，足以区分于纯机理/光物理研究。无需臆测底物个数或量子产率。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01772",
+        "publisherOnlineDate": "2026-09-11",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_joc",
+        "stageBatchSha": "c5604566a1a9763ce4fbbd2233b424db5c960517",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
     }
   ],
   "pending": [
@@ -525,5 +639,5 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "First five freeze-preserved; three additional DOI have independent two-pass synthesis scope review from verified publisher abstracts and staged Crossref/OpenAlex identity. Source or rights gaps remain fail-closed; no off-slot release."
+  "note": "2026-10-13: first eight were published in the sole 08:00 slot; two further ACS/JOC paper-specific publisher-verified two-pass includes are queued only for the next valid 08:00. Date-conflict pending entries remain held; no historic media/PDF/full abstract copied."
 }
