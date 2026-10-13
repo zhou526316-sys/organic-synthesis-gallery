@@ -1,15 +1,19 @@
 {
   "schema": "gallery-historical-nightly-rescue-v1",
-  "requestedAt": "2026-10-13T02:17:57.871Z",
-  "reason": "Second user-approved bounded 220-request staging-only 16-journal archival catch-up after complete 316-source-root / 42,935 unique DOI checkpoint; preserve current December/November 2025 cursor and no publisher false-zero closure.",
+  "requestedAt": "2026-10-13T02:53:42.049Z",
+  "reason": "Continue user-approved 16-journal founding backfill one bounded stage-only batch after confirmed 346 source-complete roots. Protect today's Cloudflare D1 quota: Crossref/OpenAlex requests only, no D1/Workers/production search, no release or media. Fail closed on 429 or incomplete source.",
   "mode": "candidate_discovery_only",
   "targetBranch": "staging/historical-archive-nightly",
   "budget": {
     "maxUnits": 48,
     "requestLimit": 220
   },
-  "safety": "Source metadata candidate intake ONLY; no academic inclusion, formal new DOI release, old PDF/SI/figure, no 18:00, no modification to original Beijing 08:00 writer.",
-  "triggerScope": "20261013_full_history_catchup_316_second_bounded",
-  "previousTriggerAt": "2026-10-13T02:00:36.819Z",
-  "expectedPriorCompletedRoots": 316
+  "safety": "No D1 access, only GitHub staging metadata; formal 08:00 writer, TOC-only/metadata-only media and current production unchanged.",
+  "triggerScope": "20261013_d1_zero_history_source_resume_346_roots",
+  "previousTriggerAt": "2026-10-13T02:17:57.871Z",
+  "expectedPriorCompletedRoots": 346,
+  "d1Allowance": {
+    "rowReads": 0,
+    "rowWrites": 0
+  }
 }
