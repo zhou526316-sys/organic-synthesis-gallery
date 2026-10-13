@@ -1,15 +1,15 @@
 {
   "schema": "gallery-historical-nightly-rescue-v1",
-  "requestedAt": "2026-10-13T02:00:36.819Z",
-  "reason": "User-approved continuation of full 16-journal archival backfill: bounded additional staging-only catch-up after the 295-root checkpoint, resuming December 2025 Nature Communications split without bypassing source verification.",
+  "requestedAt": "2026-10-13T02:17:57.871Z",
+  "reason": "Second user-approved bounded 220-request staging-only 16-journal archival catch-up after complete 316-source-root / 42,935 unique DOI checkpoint; preserve current December/November 2025 cursor and no publisher false-zero closure.",
   "mode": "candidate_discovery_only",
   "targetBranch": "staging/historical-archive-nightly",
   "budget": {
     "maxUnits": 48,
     "requestLimit": 220
   },
-  "safety": "No formal DOI publication or inclusion decisions; preserve 08:00-only writer, source checks, TOC/body/PDF and WeChat daily-new isolation.",
-  "triggerScope": "20261013_bounded_daytime_history_resume_295_roots",
-  "previousTriggerAt": "2026-10-13T01:38:23.700Z",
-  "expectedPriorCompletedRoots": 295
+  "safety": "Source metadata candidate intake ONLY; no academic inclusion, formal new DOI release, old PDF/SI/figure, no 18:00, no modification to original Beijing 08:00 writer.",
+  "triggerScope": "20261013_full_history_catchup_316_second_bounded",
+  "previousTriggerAt": "2026-10-13T02:00:36.819Z",
+  "expectedPriorCompletedRoots": 316
 }
