@@ -1,0 +1,6458 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "JOC",
+  "issns": [
+    "0022-3263",
+    "1520-6904"
+  ],
+  "range": {
+    "from": "2025-08-01",
+    "to": "2025-08-31"
+  },
+  "checkedAt": "2026-10-13T02:56:00.274Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "0022-3263",
+        "lane": "publication",
+        "total": 136,
+        "count": 136,
+        "pages": 2,
+        "complete": true
+      },
+      {
+        "issn": "1520-6904",
+        "lane": "publication",
+        "total": 136,
+        "count": 136,
+        "pages": 2,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 136,
+      "count": 136,
+      "pages": 2,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 136,
+      "openalex": 136
+    }
+  },
+  "candidateCount": 136,
+  "alreadyPublished": 0,
+  "unreviewed": 136,
+  "records": [
+    {
+      "doi": "10.1021/acs.joc.4c03089",
+      "title": "Divergent Synthesis of Functionalized 1,2,4-Triazoles and 1,3,4-Oxadiazoles via a Microwave-Assisted [3 + 2] Annulation of Heteroaryl Carbonitriles with Arylhydrazides: A Synthetic and Density Functional Theory Study",
+      "authors": [
+        "Bolade R. Ajibola",
+        "T. Dalton Andress",
+        "Richard R. Kulbacki",
+        "Allen G. Oliver",
+        "David A. Dixon",
+        "Jesse D. Carrick"
+      ],
+      "date": "2025-08-11",
+      "datePrecision": "day",
+      "createdDate": "2025-08-11",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11765-11779",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.4c03089"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.4c03089",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00475",
+      "title": "Acenaphthylene-Fused Angular and Linear π-Extension of Acridone",
+      "authors": [
+        "Xinxin Chen",
+        "Weifan Wang",
+        "Gang Zhang"
+      ],
+      "date": "2025-08-06",
+      "datePrecision": "day",
+      "createdDate": "2025-08-06",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11415-11422",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00475"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00475",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00518",
+      "title": "O–H Bond Energies of 1-Hydroxy-2,2,6,6-tetramethylpiperidine and Its Derivatives",
+      "authors": [
+        "Xiao Zhao",
+        "Bing Zhong",
+        "Jin-Dong Yang",
+        "Jin-Pei Cheng"
+      ],
+      "date": "2025-08-04",
+      "datePrecision": "day",
+      "createdDate": "2025-08-04",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11423-11430",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00518"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00518",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00574",
+      "title": "Bench-Stable Imine Surrogates for the Synthesis of α-Carbonylenamines",
+      "authors": [
+        "Shun He",
+        "Jizhou Feng",
+        "Huan Yang",
+        "Jun Huang",
+        "Jilan Long",
+        "Huacheng Xu",
+        "Yun He"
+      ],
+      "date": "2025-08-05",
+      "datePrecision": "day",
+      "createdDate": "2025-08-05",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11688-11697",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00574"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00574",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00671",
+      "title": "C- + P to C–P(O) Bond Exchange of Organophosphonium Salts: Synthesis of 3-(Phosphoryl)methylindoles under Additive- and Catalyst-Free Conditions",
+      "authors": [
+        "Yi-Fan Ji",
+        "Chi Zhang",
+        "Ya-Fei Hu",
+        "Ding-Peng Chen",
+        "Xue-Qiang Chu",
+        "Danhua Ge"
+      ],
+      "date": "2025-08-08",
+      "datePrecision": "day",
+      "createdDate": "2025-08-08",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11780-11790",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00671"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00671",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00689",
+      "title": "Catalyst-Free Regioselective 1,6-Aza-Michael Addition of para -Quinone Methides with Tetrazoles in Water",
+      "authors": [
+        "Yanan Li",
+        "Chenpei Yang",
+        "Jianan Sun",
+        "Kuiliang Li",
+        "Yifei Wang",
+        "Rui Zhu",
+        "Jiajing Tan",
+        "Peng Qian"
+      ],
+      "date": "2025-08-13",
+      "datePrecision": "day",
+      "createdDate": "2025-08-13",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11990-12000",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00689"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00689",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00698",
+      "title": "Optimizing the Catalytic Performance of Amine-Functionalized 4CzIPN Derivatives by Investigation of the Twisted Intramolecular Charge Transfer Effect",
+      "authors": [
+        "Angela Münch",
+        "Jonas Klopf",
+        "Laura Sojka",
+        "Laurin Brandhoff",
+        "Holger Helten",
+        "Bernd Engels",
+        "Juergen Seibel"
+      ],
+      "date": "2025-08-04",
+      "datePrecision": "day",
+      "createdDate": "2025-08-04",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11431-11440",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00698"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00698",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00712",
+      "title": "Catalytic Enantioselective Aza-Friedel–Crafts Reaction of Ketimines and Indoles for Constructing Tetrasubstituted Carbon Centers Adjacent to Two Heteroatoms",
+      "authors": [
+        "Min Zhang",
+        "Hai-Hui Liu",
+        "Zhen Yao",
+        "Rui-Rui Li",
+        "Lei Yang",
+        "Xiong-Li Liu",
+        "Jian-Qiang Zhao"
+      ],
+      "date": "2025-08-12",
+      "datePrecision": "day",
+      "createdDate": "2025-08-12",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11802-11810",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00712"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00712",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00736",
+      "title": "Sulfonate Derivative of HOAt (CTSOAt) as a Coupling Reagent for the Construction of C–N, C–O, and C–C Bonds",
+      "authors": [
+        "Sayanta Roy",
+        "Sk Roufur Rahaman",
+        "Avishek Sarkar",
+        "Bhubaneswar Mandal"
+      ],
+      "date": "2025-08-21",
+      "datePrecision": "day",
+      "createdDate": "2025-08-21",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12061-12079",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00736"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00736",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00751",
+      "title": "Benzophenone-Promoted Desulfonylative Borylation of N -Heteroaryl Sulfones with N -Heterocyclic Carbene Borane",
+      "authors": [
+        "Yiduo Zhang",
+        "Yuhui Ying",
+        "Bin Liu"
+      ],
+      "date": "2025-08-27",
+      "datePrecision": "day",
+      "createdDate": "2025-08-27",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12532-12536",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00751"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00751",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00772",
+      "title": "Cu(OAc) 2 /TBPB-Mediated Cross-Dehydrogenative Coupling Reactions of Di/Trifluoromethylated N -Acylhydrazones with Diarylphosphine Oxides",
+      "authors": [
+        "Gaowang Yang",
+        "Danfeng Huang",
+        "Ying Fan",
+        "Ruikang Wang",
+        "Peng Jin",
+        "Zuyu Bai",
+        "Ke-Hu Wang",
+        "Yulai Hu"
+      ],
+      "date": "2025-08-04",
+      "datePrecision": "day",
+      "createdDate": "2025-08-04",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11441-11451",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00772"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00772",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00782",
+      "title": "Palladium-Catalyzed Decarboxylative Cross-Coupling of 2,4-Dienoic Acids and Aryl Halides: Access to Fluorescence Active ( E,E )-1,4-Diarylbutadienes",
+      "authors": [
+        "Suprakash Sahoo",
+        "Arnab Mandal",
+        "Abhijit Patra",
+        "Laksmikanta Adak"
+      ],
+      "date": "2025-08-29",
+      "datePrecision": "day",
+      "createdDate": "2025-08-29",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "40",
+        "pages": "14027-14038",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00782"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00782",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00783",
+      "title": "Synthesis and Recognition Properties of Amide-α-Cyclodextrin Derivatives and Their Imine-Bonded Dimers",
+      "authors": [
+        "Tomoya Endo",
+        "Takashi Nakamura"
+      ],
+      "date": "2025-08-01",
+      "datePrecision": "day",
+      "createdDate": "2025-08-01",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11452-11459",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00783"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00783",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00805",
+      "title": "Anion-Controlled Regioselectivity in Halonium-Mediated Arylations: A Kinetic and Mechanistic Study",
+      "authors": [
+        "Yana V. Safinskaya",
+        "Mikhail V. Il’in",
+        "Alexander S. Novikov",
+        "Alexandra A. Sysoeva",
+        "Dmitrii S. Bolotin"
+      ],
+      "date": "2025-08-19",
+      "datePrecision": "day",
+      "createdDate": "2025-08-19",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12080-12087",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00805"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00805",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00851",
+      "title": "Intramolecular Ring Opening of Azetidines under Transition Metal-Free Conditions",
+      "authors": [
+        "Lindsey G. DeRatt",
+        "Colleen E. Keohane",
+        "Zachary W. Boyer",
+        "Claudia Hernandez Brito",
+        "Henry Shavel",
+        "Scott D. Kuduk"
+      ],
+      "date": "2025-08-25",
+      "datePrecision": "day",
+      "createdDate": "2025-08-25",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12253-12258",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00851"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00851",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00891",
+      "title": "Palladium-Catalyzed Denitrogenative Carbonylation of Benzotriazinones in Batch and Flow: Divergent Synthesis of Phthalimides and Phthalic Diamides",
+      "authors": [
+        "Jorge García-Lacuna",
+        "Ángel Manu Martínez",
+        "Gema Domínguez",
+        "Javier Pérez-Castells"
+      ],
+      "date": "2025-08-05",
+      "datePrecision": "day",
+      "createdDate": "2025-08-05",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11460-11468",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00891"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00891",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00925",
+      "title": "Acidity Scale in a Quaternary Phosphonium Ionic Liquid and Its Implication on Carbon Dioxide Absorption",
+      "authors": [
+        "Zhen Wang",
+        "Qian-Hang Niu",
+        "Wei Liu",
+        "Yongjun Zheng",
+        "Pengju Ji"
+      ],
+      "date": "2025-08-15",
+      "datePrecision": "day",
+      "createdDate": "2025-08-15",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12088-12098",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00925"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00925",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00927",
+      "title": "Practical Machine Learning Strategies 4: Using Neural Networks to Replicate Proton and 13 C NMR Chemical Shifts Obtained from ωB97X-D/6-31G* Density Functional Calculations",
+      "authors": [
+        "Thomas Hehre",
+        "Philip E. Klunzinger",
+        "Bernard J. Deppmeier",
+        "William Sean Ohlinger",
+        "Warren J Hehre"
+      ],
+      "date": "2025-08-05",
+      "datePrecision": "day",
+      "createdDate": "2025-08-05",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11478-11485",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00927"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00927",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00958",
+      "title": "Copper-Mediated Oxidative Coupling of Difluoromethyl Bromides/Chlorides with Primary Amines: Direct Synthesis of α-Ketoamides",
+      "authors": [
+        "Feng Jin",
+        "Guangzhao Xu",
+        "Fahui Li",
+        "Weilong Cao",
+        "Binzhuo Liu",
+        "Yuanyuan Xu",
+        "Yanan Chu",
+        "Weiguo Song",
+        "Peng Peng",
+        "Kairui Feng"
+      ],
+      "date": "2025-08-13",
+      "datePrecision": "day",
+      "createdDate": "2025-08-13",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11811-11817",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00958"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00958",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00973",
+      "title": "Samarium(II) Iodide (SmI 2 )-Mediated Reductive Ring-Opening of Cyclopropanecarboxylates for Site-Selective Deuteration",
+      "authors": [
+        "Ruoxuan Peng",
+        "Yonggang Ma",
+        "Bin Wang"
+      ],
+      "date": "2025-08-08",
+      "datePrecision": "day",
+      "createdDate": "2025-08-08",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11818-11829",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00973"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00973",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00976",
+      "title": "One-Pot Synthesis of Aryl(TMP)iodonium Triflate Salts",
+      "authors": [
+        "Joseph Hatton",
+        "Soocheta Jha",
+        "Nikhil Bonagiri",
+        "David R. Stuart"
+      ],
+      "date": "2025-08-08",
+      "datePrecision": "day",
+      "createdDate": "2025-08-08",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "12001-12006",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00976"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00976",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00985",
+      "title": "Regio- and Stereospecific Nucleophilic C3-Azidation of Spiroaziridine Oxindoles: Synthesis of Enantiopure 3-Azido- and 3-Triazole-2-oxindoles",
+      "authors": [
+        "Ananda Shankar Mondal",
+        "Ankita Biswas",
+        "Arindam Jana",
+        "Kumaresh Ghosh",
+        "Saumen Hajra"
+      ],
+      "date": "2025-08-29",
+      "datePrecision": "day",
+      "createdDate": "2025-08-29",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12558-12572",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00985"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00985",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00987",
+      "title": "Visible-Light-Driven Trifluoroacetylation of Azauracils",
+      "authors": [
+        "Jiangzhen An",
+        "Xi Chen",
+        "Yuankai Zhuang",
+        "Panjie Xiang",
+        "Kai Sun",
+        "Xiaolan Chen",
+        "Peng Liu",
+        "Lingbo Qu",
+        "Bing Yu"
+      ],
+      "date": "2025-08-01",
+      "datePrecision": "day",
+      "createdDate": "2025-08-01",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11486-11500",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00987"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00987",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c00992",
+      "title": "Synthetic, Computational, and Experimental Studies of a Class 3 Atropisomeric α-Naphthyl Tropone",
+      "authors": [
+        "Nana B. Agyemang",
+        "Jordan Nafie",
+        "Mark R. Biscoe",
+        "Ryan P. Murelli"
+      ],
+      "date": "2025-08-05",
+      "datePrecision": "day",
+      "createdDate": "2025-08-05",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11501-11509",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c00992"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c00992",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01034",
+      "title": "All- E -Carotenoid Synthesis via Suzuki Coupling of α,ω-Dibromopentaene: HPLC Optimization of the Catalytic Reaction Conditions",
+      "authors": [
+        "Yang Liu",
+        "Aleksei N. Golikov",
+        "Hansuk Lee",
+        "Sangho Koo"
+      ],
+      "date": "2025-08-04",
+      "datePrecision": "day",
+      "createdDate": "2025-08-04",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "38",
+        "pages": "13430-13439",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01034"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01034",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01048",
+      "title": "Axially Chiral 4,4′-Bithiopyran Atropisomer Dimerized by Thiopyran-Fused [4]Helicene: Synthesis, Chiral Properties, and Supramolecular Behaviors",
+      "authors": [
+        "Min Wang",
+        "Gang Zhou"
+      ],
+      "date": "2025-08-04",
+      "datePrecision": "day",
+      "createdDate": "2025-08-04",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11510-11518",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01048"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01048",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01050",
+      "title": "Palladium-Catalyzed (4 + 1) Cycloaddition of Amido-Tethered Allylic Carbonates with Sulfur Ylides: Synthesis of γ-Lactam Derivatives",
+      "authors": [
+        "Lan Wang",
+        "Yi Tang",
+        "Mengxi Lu",
+        "Xiaojing Sun",
+        "Hongchao Guo"
+      ],
+      "date": "2025-08-11",
+      "datePrecision": "day",
+      "createdDate": "2025-08-11",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11830-11837",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01050"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01050",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01055",
+      "title": "Synthesis of 1-Fluoroalkyl-5-Substituted-1,2,3-Triazoles from Carbonyl-Stabilized Phosphonium Ylides",
+      "authors": [
+        "David Tichý",
+        "Tomáš Černý",
+        "Josef Filgas",
+        "Svatava Voltrová",
+        "Blanka Klepetářová",
+        "Petr Beier"
+      ],
+      "date": "2025-08-11",
+      "datePrecision": "day",
+      "createdDate": "2025-08-11",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11838-11843",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01055"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01055",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01062",
+      "title": "Access to N -aryl-2,2′-diindole via Fluoroarene-induced One-Pot Bicyclization Strategy with t BuOK",
+      "authors": [
+        "Guanxing Zhu’",
+        "Bo Zhang",
+        "Hailong Chen",
+        "Wanwan Wang",
+        "Zhihai Zhang",
+        "Long Xu’",
+        "Gang Zhang’"
+      ],
+      "date": "2025-08-01",
+      "datePrecision": "day",
+      "createdDate": "2025-08-02",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11519-11528",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01062"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01062",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01063",
+      "title": "Brønsted Acid-Promoted Oxa-Pictet–Spengler Reaction for the Synthesis of Indole-Fused Pyran Derivatives",
+      "authors": [
+        "Zhuohao Chen",
+        "Yasheng Cao",
+        "Rong Huang",
+        "Xiangyuan Yao",
+        "Fuhong Xiao",
+        "Guo-Jun Deng"
+      ],
+      "date": "2025-08-04",
+      "datePrecision": "day",
+      "createdDate": "2025-08-04",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11529-11537",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01063"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01063",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01066",
+      "title": "Synergistic Cu/Ag Dual Regioselective Cyclization Catalysis to Access Functionalized 3-Amido and 3-Indolyl Phthalides",
+      "authors": [
+        "Anindya S. Manna",
+        "Tanmoy Ghosh",
+        "Rajesh Nandi",
+        "Subhasis Pal",
+        "Sandip Das",
+        "Prakash K Mandal",
+        "Narendra Nath Ghosh",
+        "Dilip K. Maiti"
+      ],
+      "date": "2025-08-15",
+      "datePrecision": "day",
+      "createdDate": "2025-08-15",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12099-12116",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01066"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01066",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01082",
+      "title": "Pd-Catalyzed One-Pot Synthesis of Indole-3-carboxylic Acids via a Sequential Water-Mediated Nucleophilic Addition to Amides/Esters and Carbon–Heteroatom Cross-Coupling Reaction Strategy",
+      "authors": [
+        "Tengfei Zhang",
+        "Kai Hong",
+        "Ye Wu",
+        "Lianxu Shi",
+        "Gongyuan Zhao",
+        "Zhonghui Sun",
+        "Jinsong Peng",
+        "Chunxia Chen"
+      ],
+      "date": "2025-08-28",
+      "datePrecision": "day",
+      "createdDate": "2025-08-28",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12573-12584",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01082"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01082",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01097",
+      "title": "Synthesis of 4′-SCF 3 –Modified Ribonucleic Acid for Structural Probing by 19 F Nuclear Magnetic Resonance Spectroscopy",
+      "authors": [
+        "Chaochao Fan",
+        "Marko Trajkovski",
+        "Qiang Li",
+        "Yating Chen",
+        "Chaoyu Cui",
+        "Mohan Li",
+        "Kuan Lu",
+        "Yifei Zhou",
+        "Baifan Wang",
+        "Xuncheng Su",
+        "Janez Plavec",
+        "Chuanzheng Zhou"
+      ],
+      "date": "2025-08-04",
+      "datePrecision": "day",
+      "createdDate": "2025-08-04",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11538-11544",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01097"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01097",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01115",
+      "title": "Molecular Editing of Ketones Derived by Pro-aromatic of Dihydroquinazolinones",
+      "authors": [
+        "Xiaoxiao Yang",
+        "Xinyue Ma",
+        "Chao Shu"
+      ],
+      "date": "2025-08-14",
+      "datePrecision": "day",
+      "createdDate": "2025-08-15",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12029-12049",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01115"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01115",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01120",
+      "title": "Unifying Electric Field Catalysis with the Inductive Effect, Electro-Inductive Effect, and Differential Solvation-Induced Catalysis",
+      "authors": [
+        "Vivekananda Samantaray",
+        "Rajeev Ramanan"
+      ],
+      "date": "2025-08-25",
+      "datePrecision": "day",
+      "createdDate": "2025-08-25",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "39",
+        "pages": "13789-13795",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01120"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01120",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01123",
+      "title": "Lewis Acid-Catalyzed Cyclization of o -Hydroxyphenyl Propargylamines with Sodium Sulfinates: Syntheses of 3-Sulfonylbenzofurans",
+      "authors": [
+        "Yu-Qing Wang",
+        "Li-Jia Chen",
+        "Yi Liu",
+        "Rui-Lin Yang",
+        "Jun Ying",
+        "Xiang-Zhi Zhang",
+        "Jin-Bao Peng"
+      ],
+      "date": "2025-08-07",
+      "datePrecision": "day",
+      "createdDate": "2025-08-07",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11545-11554",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01123"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01123",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01134",
+      "title": "Solvatochromism of π-Extended Pyridinium-Thienylene-Phenolates",
+      "authors": [
+        "Matías Vidal",
+        "Simone Morales",
+        "Raúl Mera-Adasme",
+        "Carolina Aliaga",
+        "Moisés Domínguez"
+      ],
+      "date": "2025-08-19",
+      "datePrecision": "day",
+      "createdDate": "2025-08-19",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12117-12125",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01134"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01134",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01138",
+      "title": "Synthesis of Cyclopropyl Carbocyclic Nucleosides via P(NMe 2 ) 3 -Mediated Reductive Cyclopropanation",
+      "authors": [
+        "Ke-Xin Huang",
+        "Ya-Xuan Yu",
+        "Zhao-Yang Chen",
+        "Xue-Guo Liu",
+        "Jia Du",
+        "Meng-Cheng Zhang"
+      ],
+      "date": "2025-08-27",
+      "datePrecision": "day",
+      "createdDate": "2025-08-27",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12585-12590",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01138"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01138",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01147",
+      "title": "Decarbonylative/Acylative Sonogashira Coupling of Biomass-Derived Furandicarbonyl Dichloride: A Route to Unsymmetrically Disubstituted Furans",
+      "authors": [
+        "Shang-Hai Yu",
+        "Xiaoji Wang",
+        "Tian-Jun Gong"
+      ],
+      "date": "2025-08-12",
+      "datePrecision": "day",
+      "createdDate": "2025-08-12",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11844-11851",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01147"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01147",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01152",
+      "title": "Synthesis of 4-Indolylquinoline Bis-Heterocycles from the Reactions of Enone-Tethered Imines with Indoles: Michael/Mannich/Aromatization Sequence",
+      "authors": [
+        "Weiting Chiu",
+        "Sundaram Suresh",
+        "Bo-Xun Du",
+        "Chia-Yen Kuang",
+        "Ching-Fa Yao"
+      ],
+      "date": "2025-08-06",
+      "datePrecision": "day",
+      "createdDate": "2025-08-07",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11706-11715",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01152"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01152",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01154",
+      "title": "Synthesis, Characterization, and Chiroptical Properties of [6]Helicene-Containing Nanographenes from the Modification of Axially Chiral Arenes",
+      "authors": [
+        "Shuangxuan Li",
+        "Chunfang Zhang",
+        "Bihan Leng",
+        "Yi Che",
+        "Mingming Bao",
+        "Zhenwei Li",
+        "Jinchong Xiao"
+      ],
+      "date": "2025-08-05",
+      "datePrecision": "day",
+      "createdDate": "2025-08-05",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11555-11563",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01154"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01154",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01155",
+      "title": "Electrochemical Dehydration of Sulfonic Acids to Their Anhydrides",
+      "authors": [
+        "Enrico Lunghi",
+        "Annemijn M. van Koten",
+        "Johannes Schneider",
+        "Siegfried R. Waldvogel"
+      ],
+      "date": "2025-08-22",
+      "datePrecision": "day",
+      "createdDate": "2025-08-23",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12259-12264",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01155"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01155",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01156",
+      "title": "Annulative Coupling of β-Ketosulfoxonium Ylides, β-Ketothioamides, and Aldehydes: Access to Highly Functionalized Dihydrothiophenes",
+      "authors": [
+        "Rahul Kumar Saini",
+        "Satyendra Kumar Pandey"
+      ],
+      "date": "2025-08-15",
+      "datePrecision": "day",
+      "createdDate": "2025-08-15",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12126-12137",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01156"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01156",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01163",
+      "title": "Diastereoselective Synthesis of CF 3 -Dihydrobenzo[ k ]phenanthridones via Radical-Promoted Annulation of CF 3 -Alkenyl Quinolones with Aldehydes",
+      "authors": [
+        "Jaggaraju Prudhviraj",
+        "Eswar Krishna Balakandu",
+        "Jagadeesh Babu Nanubolu",
+        "Nagender Punna"
+      ],
+      "date": "2025-08-25",
+      "datePrecision": "day",
+      "createdDate": "2025-08-26",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12265-12274",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01163"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01163",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01164",
+      "title": "Controlling the Flipping Motion of Cycloparaphenylene Dimers",
+      "authors": [
+        "Zhuofan Xu",
+        "Xingchi Liu",
+        "Chang Ge",
+        "Xiaoqi Tian",
+        "Xiaonan Ma",
+        "Zhe Sun"
+      ],
+      "date": "2025-08-07",
+      "datePrecision": "day",
+      "createdDate": "2025-08-07",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11564-11571",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01164"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01164",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01171",
+      "title": "Regioselective Deprotonative Metalation of Heteroarenes with a Combination of Lithium Amide and Zinc Chloride Diamine Complex",
+      "authors": [
+        "Yuxuan Feng",
+        "Atsunori Mori",
+        "Kentaro Okano"
+      ],
+      "date": "2025-08-08",
+      "datePrecision": "day",
+      "createdDate": "2025-08-08",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "12007-12016",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01171"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01171",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01191",
+      "title": "Selective Functionalization of 2-Amino-Azoles with Methanol and Ethanol Using a Pincer-(NHC)Mn(I) Complex",
+      "authors": [
+        "Adarsha Mandal",
+        "Manoj Pradhan",
+        "Soumen Giri",
+        "Srabani Nandi",
+        "Sabuj Kundu"
+      ],
+      "date": "2025-08-04",
+      "datePrecision": "day",
+      "createdDate": "2025-08-04",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11572-11586",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01191"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01191",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01206",
+      "title": "Reagent-Controlled One-Pot Assembly of Divergent Indolopyrido-Quinazolinones via Uninterrupted C-Propargylation/N-Annulation",
+      "authors": [
+        "Chada Raji Reddy",
+        "Adla Vijender",
+        "Ankita Kumari",
+        "Dharani Pulukuri",
+        "René Grée"
+      ],
+      "date": "2025-08-01",
+      "datePrecision": "day",
+      "createdDate": "2025-08-01",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11587-11596",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01206"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01206",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01207",
+      "title": "tert -BuONO-Promoted Nitrosation of 4-Nitroisoxazole-Based Enamines: Synthesis of 5-Cyanoisoxazoles and Their Application",
+      "authors": [
+        "Nadezhda E. Astakhova",
+        "Dmitry A. Vasilenko",
+        "Maria S. Kuzmina",
+        "Aleksandr K. Pupeza",
+        "Yuri K. Grishin",
+        "Victor A. Tafeenko",
+        "Elena B. Averina"
+      ],
+      "date": "2025-08-14",
+      "datePrecision": "day",
+      "createdDate": "2025-08-14",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12138-12152",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01207"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01207",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01225",
+      "title": "3-Hydroxyisoindolinones from Keto Acids and Amines: A Mild One-Pot Synthesis with Amidinium and Phosphonium Salts",
+      "authors": [
+        "Arevik S. Saakian",
+        "Dimitri N. Laikov",
+        "Mikhail S. Nechaev",
+        "Victor A. Tafeenko",
+        "Elena K. Beloglazkina",
+        "Alexander V. Finko"
+      ],
+      "date": "2025-08-28",
+      "datePrecision": "day",
+      "createdDate": "2025-08-29",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12621-12632",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01225"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01225",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01233",
+      "title": "Palladium-Catalyzed Monoarylation of Cyclopropylamine",
+      "authors": [
+        "Nicolas Kaiser",
+        "Lea Räkow",
+        "Jens Handelmann",
+        "Viktoria H. Gessner"
+      ],
+      "date": "2025-08-20",
+      "datePrecision": "day",
+      "createdDate": "2025-08-20",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12153-12162",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01233"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01233",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01237",
+      "title": "Accessing 3-Sulfonated Vinylsilanes via Sulfonylation of α-Bromoallylsilane Involving Photoinduced Radical Sulfur Dioxide Insertion",
+      "authors": [
+        "Jie Wang",
+        "Yang Luo",
+        "Shuo Gao",
+        "Xiaoqing Li",
+        "Xiangsheng Xu"
+      ],
+      "date": "2025-08-04",
+      "datePrecision": "day",
+      "createdDate": "2025-08-04",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11716-11721",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01237"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01237",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01249",
+      "title": "Photoredox-Catalyzed Radical Hydromonofluoromethylation of Benzils/Isatins with H 2 CFSO 2 Na",
+      "authors": [
+        "Shaorui Song",
+        "Mingyu Liang",
+        "Jiale Chen",
+        "Jiahao Wu",
+        "Erqiang Zhao",
+        "Yuanyuan Wang",
+        "Ling Huang",
+        "Dongdong Cao",
+        "Dingben Chen"
+      ],
+      "date": "2025-08-06",
+      "datePrecision": "day",
+      "createdDate": "2025-08-06",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11722-11729",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01249"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01249",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01259",
+      "title": "Room Temperature Ruthenium-Catalyzed Coupling of Cyclopropanols and α-Diazo-β-ketoesters to α-Ester-δ-diketones",
+      "authors": [
+        "Lili Fang",
+        "Renpeng Zhou",
+        "Jin Zhu"
+      ],
+      "date": "2025-08-01",
+      "datePrecision": "day",
+      "createdDate": "2025-08-01",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11605-11612",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01259"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01259",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01262",
+      "title": "Access to gem -Diindolylcyclopropanes via Double Indolylation of gem -Difluorocyclopropanes",
+      "authors": [
+        "Lin Che",
+        "Xu Wang",
+        "Chonghang Sun",
+        "Yuyang Ge",
+        "Min Gao",
+        "Xiaolei Jiang",
+        "Ying Xia",
+        "Fangdong Hu"
+      ],
+      "date": "2025-08-05",
+      "datePrecision": "day",
+      "createdDate": "2025-08-05",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11613-11625",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01262"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01262",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01266",
+      "title": "Ligand Control of Geometric Selectivity in Protosilylation of Acyclic α-Substituted α,β-Unsaturated N -Sulfinyl Ketimines",
+      "authors": [
+        "Jing-Wen Ma",
+        "Xiao-Ling Liu",
+        "Chong-Dao Lu"
+      ],
+      "date": "2025-08-05",
+      "datePrecision": "day",
+      "createdDate": "2025-08-05",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11730-11736",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01266"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01266",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01269",
+      "title": "NHC-Catalyzed Enantioselective Access to Pyrazoles with a Nitrile-Containing All-Carbon Quaternary Center",
+      "authors": [
+        "Min Ren",
+        "Haibin Zhu",
+        "Shijie Yang",
+        "Ruqun Li",
+        "Guangyao Dai",
+        "Min Zhou",
+        "Xiaoxiang Zhang",
+        "Zhenqian Fu"
+      ],
+      "date": "2025-08-07",
+      "datePrecision": "day",
+      "createdDate": "2025-08-08",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "12017-12022",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01269"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01269",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01270",
+      "title": "Base-Promoted Tandem Synthesis of Indolo[1,2- b ]isoquinolines from 2-Alkynylaniline and Nitroarenes",
+      "authors": [
+        "Qingxia Zhao",
+        "Haojie Ge",
+        "Huimin Jin",
+        "Lingfeng Chen",
+        "Guang Liang",
+        "Patrick J. Walsh",
+        "Jie Li"
+      ],
+      "date": "2025-08-08",
+      "datePrecision": "day",
+      "createdDate": "2025-08-08",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11852-11859",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01270"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01270",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01281",
+      "title": "Catalyst, Base, Additives, and Solvent: The Tools to Dig a Better CANAL Reaction",
+      "authors": [
+        "Ethan G. Miller",
+        "Kajal",
+        "Tarek Sammakia",
+        "Niels H. Damrauer"
+      ],
+      "date": "2025-08-08",
+      "datePrecision": "day",
+      "createdDate": "2025-08-08",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11870-11882",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01281"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01281",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01284",
+      "title": "Stereoselective Synthesis of Spirocyclic Indolin-3-ones through a Gold(I)-Catalyzed Cascade Cyclization of Azido-alkynes",
+      "authors": [
+        "Daiki Hasegawa",
+        "Norihito Arichi",
+        "Hiroaki Ohno"
+      ],
+      "date": "2025-08-06",
+      "datePrecision": "day",
+      "createdDate": "2025-08-06",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11737-11741",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01284"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01284",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01286",
+      "title": "One-Pot Synthesis of 2,3-Disubstituted Pyrimido[1,2- b ]indazole Skeletons from 3-Aminoindazole and Two Distinct Amino Acids",
+      "authors": [
+        "Yingying Zheng",
+        "Xiaotian Wu",
+        "Xueyan Lv",
+        "Chen Ma"
+      ],
+      "date": "2025-08-13",
+      "datePrecision": "day",
+      "createdDate": "2025-08-13",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11860-11869",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01286"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01286",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01287",
+      "title": "TfOH-Mediated Synthesis of Unsymmetrical Disulfides from Diethyl 2,2’-Disulfanediylbis(4-methyl-6-phenylpyrimidine-5-carboxylate)",
+      "authors": [
+        "Dong-Ping Chen",
+        "Zhao-Zhen Zhou",
+        "Jiao Li",
+        "Ming Li",
+        "Guo-Qing Sun",
+        "Dong-Yu Miao",
+        "Zheng-Jun Quan",
+        "Xi-Cun Wang"
+      ],
+      "date": "2025-08-26",
+      "datePrecision": "day",
+      "createdDate": "2025-08-26",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12275-12281",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01287"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01287",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01291",
+      "title": "Construction of Functionalized Carbazoles via a [Cp*RhCl 2 ] 2 -Catalyzed Formal [5+1] Cyclization",
+      "authors": [
+        "Siyang Xing",
+        "Jingmeng Yang",
+        "Zhi Liu",
+        "Wenyi Pi",
+        "Yanshuo Li",
+        "Yang Liu",
+        "Bolin Zhu"
+      ],
+      "date": "2025-08-07",
+      "datePrecision": "day",
+      "createdDate": "2025-08-07",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11626-11635",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01291"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01291",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01297",
+      "title": "Three-Phase Emulsions during Cross-Coupling Reactions in Water",
+      "authors": [
+        "Yiqing Zhang",
+        "Suzanne A. Blum"
+      ],
+      "date": "2025-08-13",
+      "datePrecision": "day",
+      "createdDate": "2025-08-13",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11883-11889",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01297"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01297",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01301",
+      "title": "Metal-Free Carbamoylation/Annulation Cascade of Aryl Alkynoates: Synthesis of Carbamoylated Coumarins, Coumarin-Decorated Unnatural Amino Acids, and Peptides",
+      "authors": [
+        "Ashish Kumar",
+        "Himadri Saha",
+        "Chandra Shekhar Nishad",
+        "Shashikant Tiwari",
+        "Biplab Banerjee"
+      ],
+      "date": "2025-08-13",
+      "datePrecision": "day",
+      "createdDate": "2025-08-13",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11890-11903",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01301"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01301",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01304",
+      "title": "Selectfluor-Mediated Oxidative S -Arylation of Sulfenamides with β-Naphthols for the Synthesis of Sulfilimines",
+      "authors": [
+        "Chuan-Zhi Yao",
+        "Zhi-Hong Liu",
+        "Zi-Yuan Zhao",
+        "Hua-Jie Jiang",
+        "Qiankun Li",
+        "Jie Yu"
+      ],
+      "date": "2025-08-06",
+      "datePrecision": "day",
+      "createdDate": "2025-08-06",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11742-11752",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01304"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01304",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01305",
+      "title": "Highly Chemoselective Synthesis of 4-Aminocinnolines via Electrophilic Activation Strategy",
+      "authors": [
+        "Jia-Wang Li",
+        "Jia-Cheng Li",
+        "Rui Zhang",
+        "Dewen Dong"
+      ],
+      "date": "2025-08-01",
+      "datePrecision": "day",
+      "createdDate": "2025-08-01",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11636-11649",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01305"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01305",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01315",
+      "title": "Effects of Amino-Substitution on the Gas-Phase Reactivity of Quinoline-Based Singlet Oxenium Cations",
+      "authors": [
+        "Tianyang Dai",
+        "Xin Ma",
+        "John J. Nash",
+        "Hilkka I. Kenttämaa"
+      ],
+      "date": "2025-08-27",
+      "datePrecision": "day",
+      "createdDate": "2025-08-27",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12282-12292",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01315"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01315",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01317",
+      "title": "Sydnone Photochemistry: Formation of Nitrenes",
+      "authors": [
+        "Didier Bégué",
+        "Maryam Miri",
+        "Avat Arman Taherpour",
+        "Manabu Abe",
+        "Curt Wentrup"
+      ],
+      "date": "2025-08-15",
+      "datePrecision": "day",
+      "createdDate": "2025-08-15",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12163-12169",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01317"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01317",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01327",
+      "title": "CuCN-Catalyzed Synthesis of 11-R 1 -5,6-Dihydro-1 H -pyrrolo[2,1- b ][3]benzazepines from 1-R 1 -1-Ethynyl-2-vinyl-1,2,3,4-tetrahydroisoquinolines",
+      "authors": [
+        "Arina Y. Obydennik",
+        "Alexander A. Titov",
+        "Tatiana N. Borisova",
+        "Leonid G. Voskressensky",
+        "Alexey V. Varlamov"
+      ],
+      "date": "2025-08-26",
+      "datePrecision": "day",
+      "createdDate": "2025-08-26",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12490-12495",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01327"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01327",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01329",
+      "title": "How Repulsive Are Lone Pairs? A Rotational Barrier-Based Experimental Study",
+      "authors": [
+        "Binzhou Lin",
+        "Erik C. Vik",
+        "Xiaolong Huang",
+        "Ishwor Karki",
+        "Daniel O. Madukwe",
+        "Ken D. Shimizu"
+      ],
+      "date": "2025-08-23",
+      "datePrecision": "day",
+      "createdDate": "2025-08-23",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12293-12299",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01329"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01329",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01341",
+      "title": "Chiral Amino Alcohols via Catalytic Enantioselective Petasis Borono–Mannich Reactions",
+      "authors": [
+        "John A. Kavouris",
+        "Kathryn E. Kavouris",
+        "Victor Wambua",
+        "Roman Demerzhan",
+        "Philip N. Moquist",
+        "Mathew J. Vetticatt",
+        "Scott E. Schaus"
+      ],
+      "date": "2025-08-18",
+      "datePrecision": "day",
+      "createdDate": "2025-08-18",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12170-12177",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01341"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01341",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01353",
+      "title": "Chiral P,N,N-Ligands for the Manganese-Catalyzed Asymmetric Formal Hydroamination of Allylic Alcohols",
+      "authors": [
+        "Qi Li",
+        "Xin-Yu Song",
+        "Zi-Xin Wu",
+        "Ling Li",
+        "Ting-Ting Zhu",
+        "Xinwei He",
+        "Chuan-Jin Hou"
+      ],
+      "date": "2025-08-07",
+      "datePrecision": "day",
+      "createdDate": "2025-08-08",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11904-11909",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01353"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01353",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01355",
+      "title": "Palladium-Catalyzed Hydroarylation of N -Propargyl Benzamides: A Direct Route to N -Allylbenzamides and Acid-Induced Cyclization to Oxazolines",
+      "authors": [
+        "Gunniga Tanomsiri",
+        "Jumreang Tummatorn",
+        "Charnsak Thongsornkleeb",
+        "Somsak Ruchirawat"
+      ],
+      "date": "2025-08-07",
+      "datePrecision": "day",
+      "createdDate": "2025-08-07",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11655-11665",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01355"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01355",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01357",
+      "title": "A Highly Convergent Synthesis Route for Adda: A Non-Proteinogenic Amino Acid Unit in Cyanobacteria",
+      "authors": [
+        "Meher Prakash",
+        "Naresh M. Venneti",
+        "Judy Westrick",
+        "Jeremy J. Kodanko"
+      ],
+      "date": "2025-08-01",
+      "datePrecision": "day",
+      "createdDate": "2025-08-01",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11753-11756",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01357"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01357",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01362",
+      "title": "Rh(III)-Catalyzed Mild Synthesis of Isoquinoline Derivatives from N -Chloroimines and Alkenes",
+      "authors": [
+        "Hanxiao Xu",
+        "Zhixin Wang",
+        "Xuanzhen Han",
+        "Jin Zhu"
+      ],
+      "date": "2025-08-26",
+      "datePrecision": "day",
+      "createdDate": "2025-08-26",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12300-12315",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01362"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01362",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01363",
+      "title": "Palladium-Catalyzed 2,2’-Dichalcogenation of Cyclic Diaryliodonium Salts",
+      "authors": [
+        "Pingbing Yu",
+        "Hui Xiang",
+        "Zhaoyue Wen",
+        "Wei Chen"
+      ],
+      "date": "2025-08-26",
+      "datePrecision": "day",
+      "createdDate": "2025-08-26",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12496-12500",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01363"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01363",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01385",
+      "title": "Programmable Deoxychlorination/Aromatization of 1-Tetralones to Access Multisubstituted 1-Chloronaphthalenes via an Interrupted Vilsmeier–Haack Reaction",
+      "authors": [
+        "Junwei Li",
+        "Jiajun Hao",
+        "Yiyong Huang",
+        "Yirong Zhou",
+        "Bing Sun",
+        "Fang-Lin Zhang"
+      ],
+      "date": "2025-08-28",
+      "datePrecision": "day",
+      "createdDate": "2025-08-29",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12648-12654",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01385"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01385",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01387",
+      "title": "A Noncarbenoid Approach to Imidazolidines via ZnCl 2 -Catalyzed Annulation of 4-Alkoxycarbonyl-1,2-diaza-1,3-dienes with 1,3,5-Triazinanes",
+      "authors": [
+        "Vittorio Ciccone",
+        "Sara Caselli",
+        "Giacomo Mari",
+        "Fabio Mantellini",
+        "Gianfranco Favi"
+      ],
+      "date": "2025-08-29",
+      "datePrecision": "day",
+      "createdDate": "2025-08-29",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12820-12825",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01387"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01387",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01392",
+      "title": "Deconstructing α-Amidoalkyl Sulfones as Dual d -Sulfonyl/ a -Azomethine Synthons: Synthesis of 3-Sulfonylmethylindole Aminals",
+      "authors": [
+        "Guillermo Domínguez",
+        "Anje Mujika",
+        "Iker Hernández",
+        "Vadim A. Soloshonok",
+        "Aitor Landa",
+        "Mikel Oiarbide"
+      ],
+      "date": "2025-08-07",
+      "datePrecision": "day",
+      "createdDate": "2025-08-08",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11910-11922",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01392"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01392",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01401",
+      "title": "From Rings to Properties: Understanding the Effect of Annelation on Pyrene",
+      "authors": [
+        "Alexandra Wahab",
+        "Renana Gershoni-Poranne"
+      ],
+      "date": "2025-08-29",
+      "datePrecision": "day",
+      "createdDate": "2025-08-29",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12667-12677",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01401"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01401",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01417",
+      "title": "Photoinduced EDA Complex-Enabled Deboronative Arylation of Potassium Alkyltrifluoroborates",
+      "authors": [
+        "Anping Luo",
+        "Jiaxin Yang",
+        "Wenjie Liu",
+        "Jun Zhou",
+        "Sijia Zhang",
+        "Quan Huang",
+        "Cheng Yao",
+        "Qi Miao",
+        "Xin Yu",
+        "Bowen Lei"
+      ],
+      "date": "2025-08-01",
+      "datePrecision": "day",
+      "createdDate": "2025-08-02",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11666-11671",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01417"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01417",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01421",
+      "title": "Divergent Synthesis of Pyrrolizine- and Indolizine-Fused Heterocycles via Pd(II)-Catalyzed Cascade Transformation of Functionalized Alkynes",
+      "authors": [
+        "Tanvi Jandial",
+        "Anish Gupta",
+        "Vellaisamy Sridharan"
+      ],
+      "date": "2025-08-11",
+      "datePrecision": "day",
+      "createdDate": "2025-08-11",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11923-11939",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01421"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01421",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01422",
+      "title": "Regioselectivity Switching in the Tandem Reaction of Skipped Diynones with Allylic Alcohols: Stereoselective Synthesis of 4-Allyl-2-Methylene-3(2 H )-Furanones",
+      "authors": [
+        "Sofia O. Karnakova",
+        "Marina Yu. Dvorko",
+        "Anton V. Kuzmin",
+        "Igor’ A. Ushakov",
+        "Dmitrii A. Shabalin"
+      ],
+      "date": "2025-08-14",
+      "datePrecision": "day",
+      "createdDate": "2025-08-15",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12178-12190",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01422"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01422",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01429",
+      "title": "Enamine-Tautomerization-Driven Mannich Reaction of Alkylazaarenes with Aminals",
+      "authors": [
+        "Kuo Li",
+        "Ling Cheng",
+        "Haibo Guo",
+        "Jiaxin Liu",
+        "Lisha Jing",
+        "Yanxin Song",
+        "Dangui Wang",
+        "Pan Zhou",
+        "Bin Wang"
+      ],
+      "date": "2025-08-13",
+      "datePrecision": "day",
+      "createdDate": "2025-08-13",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11940-11944",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01429"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01429",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01430",
+      "title": "Ni-Catalyzed Asymmetric Reductive Addition of Aromatic Iodides to Isatins: A General Access to Chiral 3-Hydroxy-2-Oxindoles",
+      "authors": [
+        "Jiangyan Tian",
+        "Chi Li",
+        "Hui Lv"
+      ],
+      "date": "2025-08-12",
+      "datePrecision": "day",
+      "createdDate": "2025-08-13",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "12023-12028",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01430"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01430",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01441",
+      "title": "Bromide-Catalyzed Radical Cyclization of Biarylboronic Acids and Se/Te Powder",
+      "authors": [
+        "Zhouting Zeng",
+        "Yanfeng Ma",
+        "Zi Yang",
+        "Mingming Yu",
+        "Jinhui Cai"
+      ],
+      "date": "2025-08-28",
+      "datePrecision": "day",
+      "createdDate": "2025-08-29",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12683-12692",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01441"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01441",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01460",
+      "title": "Three-Way Chemodivergent Derivatization of Non-Activated 2-Arylphenyl Benzyl Ethers",
+      "authors": [
+        "Marta Solas",
+        "Carlos Sedano",
+        "Samuel Suárez-Pantiga",
+        "Sofia Kiriakidi",
+        "Carlos Silva-López",
+        "Roberto Sanz"
+      ],
+      "date": "2025-08-07",
+      "datePrecision": "day",
+      "createdDate": "2025-08-07",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11945-11955",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01460"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01460",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01461",
+      "title": "Theoretical Atomic Charges vs Experimental Observables: Assessment of Predictions by Density Functionals",
+      "authors": [
+        "Boris Galabov",
+        "Diana Cheshmedzhieva",
+        "Ivan Atanasov",
+        "Sonia Ilieva",
+        "Henry F. Schaefer"
+      ],
+      "date": "2025-08-15",
+      "datePrecision": "day",
+      "createdDate": "2025-08-15",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12191-12198",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01461"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01461",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01478",
+      "title": "Domino (2 + 3) Cycloaddition/Self-Oxidation Reaction of S(IV) Intermediates α-Keto Sulfines with Thioureas for Access to Bisthiazole-5-yl Disulfides",
+      "authors": [
+        "Xuehua Zhang",
+        "Xinyi Bao",
+        "Kewen Xu",
+        "Chao Liu",
+        "Jin Fang",
+        "Jun Dong"
+      ],
+      "date": "2025-08-05",
+      "datePrecision": "day",
+      "createdDate": "2025-08-06",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11672-11680",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01478"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01478",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01479",
+      "title": "Synthesis of Fluorinated 3-Pyrroline Aminals by a Pd(0)-Catalyzed Three-Component Hydroamidation/Heck/Tsuji–Trost Reactions",
+      "authors": [
+        "Shiqing He",
+        "Dongliang Zu",
+        "Tianyu Chen",
+        "Yuanjing Xiao"
+      ],
+      "date": "2025-08-07",
+      "datePrecision": "day",
+      "createdDate": "2025-08-07",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11757-11762",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01479"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01479",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01480",
+      "title": "Total Synthesis of Naturally Occurring Amaryllidaceae Alkaloids, (−)-Elwesine and (−)- epi -Crinine",
+      "authors": [
+        "Satyajit Majumder",
+        "Debabrata Mondal",
+        "Abhishek Mondal",
+        "Souvik Pal",
+        "Alakesh Bisai"
+      ],
+      "date": "2025-08-26",
+      "datePrecision": "day",
+      "createdDate": "2025-08-26",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12323-12333",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01480"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01480",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01490",
+      "title": "Synthesis of 2-Trifluoromethylindolines via Rh(III)-Catalyzed Chelation-Assisted C–H Bond Activation and Annulation of Anilines with CF 3 -Imidoyl Sulfoxonium Ylides",
+      "authors": [
+        "Pinyi Li",
+        "Jian Chen",
+        "Zuguang Yang",
+        "Xi Wang",
+        "Zhengkai Chen"
+      ],
+      "date": "2025-08-25",
+      "datePrecision": "day",
+      "createdDate": "2025-08-25",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12359-12370",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01490"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01490",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01496",
+      "title": "Synthesis of Oxasilolanes by TBAT-Catalyzed Hydroxyl-Directed Hydrosilylation",
+      "authors": [
+        "Tess Q. Billmire",
+        "Adam P. Jones",
+        "Sarah M. Maffett",
+        "Robert F. Berger",
+        "Claire Gervais",
+        "Werner Kaminsky",
+        "Gregory W. O’Neil"
+      ],
+      "date": "2025-08-26",
+      "datePrecision": "day",
+      "createdDate": "2025-08-26",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12334-12345",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01496"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01496",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01497",
+      "title": "Net δ-C–H Alkylation of Allyl Alcohols by Ni-Catalyzed Allylic Substitution of Azo-Ene Adducts",
+      "authors": [
+        "Moe Kawajiri",
+        "Yusuke Kuroda",
+        "Kiyosei Takasu"
+      ],
+      "date": "2025-08-29",
+      "datePrecision": "day",
+      "createdDate": "2025-08-30",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12826-12831",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01497"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01497",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01498",
+      "title": "Synthesis of P -Modified Chimeric Oligonucleotides via Chemoselective Condensation of Nucleoside 3′- H -Phosphonothioate",
+      "authors": [
+        "Harumi Okutsu",
+        "Yuhei Takahashi",
+        "Tomomi Shiraishi",
+        "Utako Kashio",
+        "Kazuki Sato",
+        "Takeshi Wada"
+      ],
+      "date": "2025-08-25",
+      "datePrecision": "day",
+      "createdDate": "2025-08-25",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12346-12358",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01498"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01498",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01499",
+      "title": "Double-Activation Catalysis Enables Highly Diastereoselective Cascade Mannich/5- endo-dig Cyclization of 2-(2-Oxoindolin-3-yl)malononitriles with Alkynyl Ketimines",
+      "authors": [
+        "Yanyan Ye",
+        "Zan Yuan",
+        "Bin Liu",
+        "Xiang-Kai Kong",
+        "Rong-Hua Wang",
+        "Song Bai",
+        "Miao Li",
+        "Lu Huang",
+        "Guang-Jun Yang",
+        "Qing He"
+      ],
+      "date": "2025-08-13",
+      "datePrecision": "day",
+      "createdDate": "2025-08-13",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11956-11961",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01499"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01499",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01502",
+      "title": "Palladium-Catalyzed α-Arylation of Nitroalkanes with Aryl Fluorosulfonates for Convenient Access to α-Arylated Nitroalkanes",
+      "authors": [
+        "Chen-Long Zhu",
+        "Fei Zhao",
+        "Yuan-Yuan Wang",
+        "Xue-Qiang Chu",
+        "Hao Xu",
+        "Chengping Miao",
+        "Weidong Rao",
+        "Zhi-Liang Shen"
+      ],
+      "date": "2025-08-14",
+      "datePrecision": "day",
+      "createdDate": "2025-08-14",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12199-12204",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01502"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01502",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01516",
+      "title": "Enantioselective Access to Chiral Vicinal Diamines via Rhodium-Catalyzed Consecutive Reductive Amination/Asymmetric Transfer Hydrogenation of Quinoline-2-carbaldehydes with Anilines",
+      "authors": [
+        "Ji Yang",
+        "Wei Huang",
+        "Zhen Yao",
+        "Zhenni He",
+        "Siwen Meng",
+        "Lijin Xu"
+      ],
+      "date": "2025-08-19",
+      "datePrecision": "day",
+      "createdDate": "2025-08-19",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12240-12246",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01516"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01516",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01538",
+      "title": "Concise, Atom-Economical, and Enantiodivergent Total Synthesis of β-Lycorane via Organocatalyzed [4+2] Cycloaddition Reaction",
+      "authors": [
+        "Suraj Singh",
+        "Ronak Mehta",
+        "Navneet Nandgopal Dubey",
+        "Chandrakumar Appayee"
+      ],
+      "date": "2025-08-12",
+      "datePrecision": "day",
+      "createdDate": "2025-08-12",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11962-11972",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01538"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01538",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01546",
+      "title": "TiO 2 –Photocatalyzed Cyclization of Azobenzenes with Methanol To Access 1,2,4,5-Tetraaryl 1,2,4,5-Tetrazinanes",
+      "authors": [
+        "Jingya Yang",
+        "Bao Huang",
+        "Yating Han",
+        "Qi Dong",
+        "Xiaojun Liu",
+        "Hongyan Zhou"
+      ],
+      "date": "2025-08-05",
+      "datePrecision": "day",
+      "createdDate": "2025-08-06",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11681-11687",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01546"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01546",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01554",
+      "title": "Fe(OTf) 3 -Catalyzed Diastereoselective Synthesis of α-Aminophosphonates via Phosphorylation of N,O -Acetals",
+      "authors": [
+        "Jian-Ting Sun",
+        "Xin Li",
+        "Yu Zhang",
+        "Xiao-Lin Liu",
+        "Bang-Guo Wei"
+      ],
+      "date": "2025-08-26",
+      "datePrecision": "day",
+      "createdDate": "2025-08-26",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12371-12384",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01554"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01554",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01564",
+      "title": "NiH-Catalyzed Regioselective Hydroamidation of Unactivated Alkenes with Dioxazolones",
+      "authors": [
+        "Dong-Jie Li",
+        "Hai-Yang Hu",
+        "Bai-Qun Ruan",
+        "Bi-Qin Wang",
+        "Fei Pan"
+      ],
+      "date": "2025-08-25",
+      "datePrecision": "day",
+      "createdDate": "2025-08-25",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12385-12396",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01564"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01564",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01570",
+      "title": "Gold-Catalyzed Single O -Transfer to Internal CF 3 -Alkynes. Regioselective Synthesis of 4-Trifluoromethylated Oxazoles",
+      "authors": [
+        "Karina O. Mahmedova",
+        "Vadim Yu. Kukushkin",
+        "Alexey Yu. Dubovtsev"
+      ],
+      "date": "2025-08-26",
+      "datePrecision": "day",
+      "createdDate": "2025-08-26",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12397-12408",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01570"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01570",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01600",
+      "title": "Site-Selective Electrochemical Intramolecular C(sp 2 )–H Selenylation for Dibenzoselenophene Synthesis",
+      "authors": [
+        "Indrajit Karmakar",
+        "Yi-Xuan Jian",
+        "Wan-Lin Cheng",
+        "Rekha Bai",
+        "Yu-Hsuan Chen",
+        "Chin-Fa Lee"
+      ],
+      "date": "2025-08-18",
+      "datePrecision": "day",
+      "createdDate": "2025-08-18",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12205-12215",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01600"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01600",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01606",
+      "title": "From Delocalization to Disruption: The Role of Aromaticity in N -Heterocyclic Carbenes’ Reactions with Diazoalkane and Diazoester",
+      "authors": [
+        "Himanshu Sharma",
+        "Israel Fernández",
+        "Kumar Vanka"
+      ],
+      "date": "2025-08-22",
+      "datePrecision": "day",
+      "createdDate": "2025-08-22",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12409-12424",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01606"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01606",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01610",
+      "title": "Photoinduced Synthesis of α-Amino Ketones from Nitroarenes and α-Hydroxy Ketones",
+      "authors": [
+        "Yue Wu",
+        "Tingting Zhou",
+        "Haokun Zhang",
+        "Yuhao Yangzong",
+        "Chengtao Xing",
+        "Leifeng Wang"
+      ],
+      "date": "2025-08-07",
+      "datePrecision": "day",
+      "createdDate": "2025-08-07",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11973-11981",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01610"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01610",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01614",
+      "title": "Computational and Experimental Studies into Photoenamination/Diels–Alder Reactions",
+      "authors": [
+        "James Deng",
+        "Domenic Kronenberg",
+        "Jiao Yu J. Wang",
+        "Asja A. Kroeger",
+        "Michael S. Sherburn",
+        "Michelle L. Coote"
+      ],
+      "date": "2025-08-15",
+      "datePrecision": "day",
+      "createdDate": "2025-08-15",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12216-12225",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01614"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01614",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01619",
+      "title": "Photoredox/Nickel Dual Catalysis for Regio- and Stereoselective Reductive Coupling of Alkynes with Vinyl Phosphonates",
+      "authors": [
+        "Radhakrishnan Sakthiganapathi",
+        "Dhanip Kumar Sharma",
+        "Rituparna Dutta",
+        "Sabyasachi Chakrabortty",
+        "Baburaj Baskar",
+        "Subramaniyan Mannathan"
+      ],
+      "date": "2025-08-29",
+      "datePrecision": "day",
+      "createdDate": "2025-08-29",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12747-12755",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01619"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01619",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01623",
+      "title": "Voacandial and Voacanginone A, Iboga-Type Monoterpenoid Indole Alkaloids from Voacanga africana Root Bark: Isolation, Structure Elucidation, and Asymmetric Total Syntheses",
+      "authors": [
+        "Satoshi Matsumiya",
+        "Masumi Iwai",
+        "Ken Nunettsu Asaba",
+        "Ryota Wada",
+        "Kazunori Miyaji",
+        "Daiki Tadakuma",
+        "Shunsuke Takano",
+        "Noriyuki Kogure",
+        "Hiromitsu Takayama",
+        "Hayato Ishikawa",
+        "Mariko Kitajima"
+      ],
+      "date": "2025-08-28",
+      "datePrecision": "day",
+      "createdDate": "2025-08-28",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12756-12767",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01623"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01623",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01629",
+      "title": "Total Synthesis of Verlamelin A and (5 R )-Verlamelin A with Antifungal Activity",
+      "authors": [
+        "Xin Sun",
+        "Youhong Li",
+        "Wenshen Lin",
+        "Yuyue Li",
+        "Huayan Xu",
+        "Ziqiang Yan",
+        "Bin Yang",
+        "Yonghong Liu",
+        "Bin Wang",
+        "Shengrong Liao"
+      ],
+      "date": "2025-08-26",
+      "datePrecision": "day",
+      "createdDate": "2025-08-26",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12425-12434",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01629"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01629",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01659",
+      "title": "Dual Role of Trifluoromethyl Thianthrenium Triflate in Self-Catalyzed Phototandem Trifluoromethyl/Cyclization of N -Methacryloyl Aldehyde Hydrazones in EtOH",
+      "authors": [
+        "Chang-Hong Liu",
+        "Zhe-Wei Zhang",
+        "Zi-Jian Zhao",
+        "Jun Jiang",
+        "Zi Yang",
+        "Zu-Li Wang",
+        "Wei-Min He"
+      ],
+      "date": "2025-08-10",
+      "datePrecision": "day",
+      "createdDate": "2025-08-10",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "11982-11989",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01659"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01659",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01660",
+      "title": "Aryl Radical-Initiated Synthesis of Unsymmetrically Bicyclo[1.1.1]pentane Sulfides",
+      "authors": [
+        "Yanchuang Zhao",
+        "Qiujin Fan",
+        "Yule Xie",
+        "Weichen Huang",
+        "Yiheng Ji",
+        "Xinxin Shao"
+      ],
+      "date": "2025-08-22",
+      "datePrecision": "day",
+      "createdDate": "2025-08-22",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12435-12445",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01660"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01660",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01671",
+      "title": "Phosphine-Catalyzed [3 + 2] Annulation of Sulfamidate-Derived 1-Azadienes: Synthesis of Spiro[Oxathiazole-Cyclopentene] Scaffolds and Spirocyclic Aziridine Derivatives",
+      "authors": [
+        "Bo Wang",
+        "Siyuan Ding",
+        "Zhiyang Cui",
+        "Honghao Sun",
+        "Jingrong Jin",
+        "Bing Zheng",
+        "Huizhe Lu",
+        "Leijie Zhou",
+        "Hongchao Guo"
+      ],
+      "date": "2025-08-23",
+      "datePrecision": "day",
+      "createdDate": "2025-08-23",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12455-12465",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01671"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01671",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01675",
+      "title": "Visible-Light-Induced Intramolecular Dehydrogenative Cyclization of o -Aryl Benzaldehydes",
+      "authors": [
+        "Yongkai Zhao",
+        "Jipeng Qi",
+        "Wei-Yu Shi",
+        "Hongyu Guo",
+        "Rongfang Liu",
+        "Rong Zhou"
+      ],
+      "date": "2025-08-22",
+      "datePrecision": "day",
+      "createdDate": "2025-08-22",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12446-12454",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01675"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01675",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01683",
+      "title": "Fe (III)-Photocatalyzed Decarboxylative Fluoroalkylation of Unactivated Alkenes via Distal Migration",
+      "authors": [
+        "Yuhua Zhong",
+        "Xiaoyu Li",
+        "Hu Cai",
+        "Wentao Xu"
+      ],
+      "date": "2025-08-18",
+      "datePrecision": "day",
+      "createdDate": "2025-08-18",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12247-12251",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01683"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01683",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01686",
+      "title": "Electrochemically Promoted Three-Component Synthesis for the Functionalization of N -Sulfonylformamidine",
+      "authors": [
+        "Jia-Xiu Liu",
+        "Xue-Yang Guo",
+        "Shi-Jie Bo",
+        "Yi-Le Song",
+        "Ming Li",
+        "Li-Ming Zhang",
+        "Li-Rong Wen",
+        "Weisi Guo",
+        "Lin-Bao Zhang"
+      ],
+      "date": "2025-08-27",
+      "datePrecision": "day",
+      "createdDate": "2025-08-27",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12778-12788",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01686"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01686",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01706",
+      "title": "Synthesis of α-CF 3 -Substituted O-Heterocycles via Ligand-Controlled Cycloaddition of ( E )-β-Trifluoromethylated Enones with π-Allylpalladium 1,4-Dipoles",
+      "authors": [
+        "Haoke Chu",
+        "Xiuxin Lv",
+        "Linhui Yang",
+        "Yue Chen",
+        "Junjie Zeng",
+        "Xiao-Qing Feng",
+        "Hua-Dong Xu",
+        "Fen-Er Chen"
+      ],
+      "date": "2025-08-25",
+      "datePrecision": "day",
+      "createdDate": "2025-08-25",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12501-12506",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01706"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01706",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01707",
+      "title": "Ag(I)-Catalyzed Heterocyclization/[3 + 2] Cycloaddition of α-Alkynylenones with β-Enaminones: Tandem Access to Highly Substituted Cyclopenta[ c ]furans",
+      "authors": [
+        "Vijay Vara",
+        "Kishor R. Thete",
+        "Sera Deepu Panikar",
+        "Akram A. Khan",
+        "M. Muthukrishnan"
+      ],
+      "date": "2025-08-25",
+      "datePrecision": "day",
+      "createdDate": "2025-08-25",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12466-12479",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01707"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01707",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01714",
+      "title": "Electrochemically Driven Nickel-Catalyzed Synthesis of Aryl Alkyl Ketones by the Cross-Coupling of Carboxylic Esters with Alkylpyridinium Salts",
+      "authors": [
+        "Qi-Ying Zhang",
+        "Jing Ma",
+        "Shi-Kun Li",
+        "Qi-Liang Yang",
+        "Hai-Ming Guo"
+      ],
+      "date": "2025-08-29",
+      "datePrecision": "day",
+      "createdDate": "2025-08-29",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12796-12806",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01714"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01714",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01715",
+      "title": "Iodine-Catalyzed Thioglycosylation of Indole and Tryptophan-Containing Peptides with Thioglycosides",
+      "authors": [
+        "Jie Huang",
+        "Feng-lian Wei",
+        "Bin Wu",
+        "Wen-Wu Sun"
+      ],
+      "date": "2025-08-29",
+      "datePrecision": "day",
+      "createdDate": "2025-08-29",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12789-12795",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01715"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01715",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01734",
+      "title": "Synthetic Strategies toward Spiroaspertrione A, Construction of the ABDE Ring System",
+      "authors": [
+        "Michael P. Badart",
+        "Samuel D. L. Harrison",
+        "Bill C. Hawkins"
+      ],
+      "date": "2025-08-23",
+      "datePrecision": "day",
+      "createdDate": "2025-08-23",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12480-12484",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01734"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01734",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01742",
+      "title": "Selective endo -Cyclic α-Functionalization of Saturated N -Alkyl Piperidines",
+      "authors": [
+        "Rachel C. Phillips",
+        "John C. K. Chu",
+        "Alex A. Rafaniello",
+        "Matthew J. Gaunt"
+      ],
+      "date": "2025-08-18",
+      "datePrecision": "day",
+      "createdDate": "2025-08-18",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "12226-12239",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01742"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01742",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": true,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01803",
+      "title": "Correction to “[2 + 2] Photocycloadditions of Conformationally Constrained Styrenes Enabled by Triplet Lifetime Extension”",
+      "authors": [
+        "Christina Cong",
+        "Nicholas J. Fastuca",
+        "Alberto Castanedo",
+        "Peter R. Meinig",
+        "Bradford C. Woodger",
+        "Lingbowei Hu",
+        "Farid W. van der Mei",
+        "Philip R. D. Murray",
+        "Geraint H. M. Davies",
+        "Jillian Zoglio",
+        "Laura Akullian D’Agostino",
+        "Robert R. Knowles"
+      ],
+      "date": "2025-08-06",
+      "datePrecision": "day",
+      "createdDate": "2025-08-06",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "11763-11763",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01803"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01803",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01817",
+      "title": "Zinc-Mediated Radical-Type Cross-Electrophile Couplings of Trifluoromethyl Alkenes with Alkyl Iodides for Accessing gem -Difluoroalkenes in Aqueous Media",
+      "authors": [
+        "Yu-Bing Chen",
+        "Yi-Jie Huang",
+        "Shuang-Feng Song",
+        "Xue-Qiang Chu",
+        "Hao Xu",
+        "Xiaocong Zhou",
+        "Weidong Rao",
+        "Zhi-Liang Shen"
+      ],
+      "date": "2025-08-27",
+      "datePrecision": "day",
+      "createdDate": "2025-08-27",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "36",
+        "pages": "12807-12813",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01817"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01817",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/acs.joc.5c01838",
+      "title": "Regioselective Pd-Catalyzed C1–H Acylation of Carbazoles via Pd/Norbornene Cooperative Catalysis",
+      "authors": [
+        "Faith Herington",
+        "Fahima Jahan Achal",
+        "Dayra Figueroa-Agosto",
+        "Chong Liu",
+        "Haibo Ge"
+      ],
+      "date": "2025-08-21",
+      "datePrecision": "day",
+      "createdDate": "2025-08-21",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "35",
+        "pages": "12485-12489",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c01838"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/acs.joc.5c01838",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jov090i030_1966376",
+      "title": "Issue Publication Information",
+      "authors": [],
+      "date": "2025-08-01",
+      "datePrecision": "day",
+      "createdDate": "2025-08-01",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "30",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1021/jov090i030_1966376"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jov090i030_1966376",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jov090i030_1966377",
+      "title": "Issue Editorial Masthead",
+      "authors": [],
+      "date": "2025-08-01",
+      "datePrecision": "day",
+      "createdDate": "2025-08-01",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "30",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1021/jov090i030_1966377"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jov090i030_1966377",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jov090i031_1969022",
+      "title": "Issue Publication Information",
+      "authors": [],
+      "date": "2025-08-08",
+      "datePrecision": "day",
+      "createdDate": "2025-08-08",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "31",
+        "pages": "",
+        "articleNumber": "jov090i031_1969022",
+        "doi": "10.1021/jov090i031_1969022"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jov090i031_1969022",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jov090i031_1969023",
+      "title": "Issue Editorial Masthead",
+      "authors": [],
+      "date": "2025-08-08",
+      "datePrecision": "day",
+      "createdDate": "2025-08-08",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "31",
+        "pages": "",
+        "articleNumber": "jov090i031_1969023",
+        "doi": "10.1021/jov090i031_1969023"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jov090i031_1969023",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jov090i032_1972722",
+      "title": "Issue Publication Information",
+      "authors": [],
+      "date": "2025-08-15",
+      "datePrecision": "day",
+      "createdDate": "2025-08-15",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "",
+        "articleNumber": "jov090i032_1972722",
+        "doi": "10.1021/jov090i032_1972722"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jov090i032_1972722",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jov090i032_1972723",
+      "title": "Issue Editorial Masthead",
+      "authors": [],
+      "date": "2025-08-15",
+      "datePrecision": "day",
+      "createdDate": "2025-08-15",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "32",
+        "pages": "",
+        "articleNumber": "jov090i032_1972723",
+        "doi": "10.1021/jov090i032_1972723"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jov090i032_1972723",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jov090i033_1975011",
+      "title": "Issue Publication Information",
+      "authors": [],
+      "date": "2025-08-22",
+      "datePrecision": "day",
+      "createdDate": "2025-08-22",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "",
+        "articleNumber": "jov090i033_1975011",
+        "doi": "10.1021/jov090i033_1975011"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jov090i033_1975011",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jov090i033_1975012",
+      "title": "Issue Editorial Masthead",
+      "authors": [],
+      "date": "2025-08-22",
+      "datePrecision": "day",
+      "createdDate": "2025-08-22",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "33",
+        "pages": "",
+        "articleNumber": "jov090i033_1975012",
+        "doi": "10.1021/jov090i033_1975012"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jov090i033_1975012",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jov090i034_1977764",
+      "title": "Issue Publication Information",
+      "authors": [],
+      "date": "2025-08-29",
+      "datePrecision": "day",
+      "createdDate": "2025-08-29",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "",
+        "articleNumber": "jov090i034_1977764",
+        "doi": "10.1021/jov090i034_1977764"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jov090i034_1977764",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1021/jov090i034_1977765",
+      "title": "Issue Editorial Masthead",
+      "authors": [],
+      "date": "2025-08-29",
+      "datePrecision": "day",
+      "createdDate": "2025-08-29",
+      "needsPublisherDateVerification": false,
+      "journal": "The Journal of Organic Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "90",
+        "issue": "34",
+        "pages": "",
+        "articleNumber": "jov090i034_1977765",
+        "doi": "10.1021/jov090i034_1977765"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1021/jov090i034_1977765",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

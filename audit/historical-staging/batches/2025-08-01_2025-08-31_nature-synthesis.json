@@ -1,0 +1,702 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2025-08-01",
+    "to": "2025-08-31"
+  },
+  "checkedAt": "2026-10-13T02:55:16.797Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "lane": "publication",
+        "total": 13,
+        "count": 13,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 13,
+      "count": 13,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 13,
+      "openalex": 13
+    }
+  },
+  "candidateCount": 13,
+  "alreadyPublished": 0,
+  "unreviewed": 13,
+  "records": [
+    {
+      "doi": "10.1038/s44160-025-00842-3",
+      "title": "Pendant phosphine oxide as a guiding hand for stereospecific chemical O-glycosylation",
+      "authors": [
+        "Justin R. Ragains"
+      ],
+      "date": "2025-08-12",
+      "datePrecision": "day",
+      "createdDate": "2025-08-12",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1331-1333",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00842-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00842-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00846-z",
+      "title": "A broadly applicable stereospecific glycosylation",
+      "authors": [
+        "Qing Zhang",
+        "Nils J. Flodén",
+        "Yongliang Zhang",
+        "Jielin Yang",
+        "Philip Kohnke",
+        "José Danglad-Flores",
+        "Eric T. Sletten",
+        "Peter H. Seeberger",
+        "Liming Zhang"
+      ],
+      "date": "2025-08-12",
+      "datePrecision": "day",
+      "createdDate": "2025-08-12",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1369-1375",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00846-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00846-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00851-2",
+      "title": "Ampere-level electrosynthesis of a nylon-6 precursor by local NO coverage tuning",
+      "authors": [
+        "Yongmeng Wu",
+        "Xinyu Liu",
+        "Rong Yang",
+        "Chuanqi Cheng",
+        "Ziyang Song",
+        "Bin Zhang"
+      ],
+      "date": "2025-08-07",
+      "datePrecision": "day",
+      "createdDate": "2025-08-07",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "12",
+        "pages": "1504-1512",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00851-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00851-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00852-1",
+      "title": "Atomically defined two-dimensional assembled nanoclusters for Li-ion batteries",
+      "authors": [
+        "Xiao Wei",
+        "Zhou Huang",
+        "Ximei Sun",
+        "Haoqi Li",
+        "Zhenjie Sun",
+        "Qing Tang",
+        "Lingyun Zhu",
+        "Xi Kang",
+        "Manzhou Zhu"
+      ],
+      "date": "2025-08-18",
+      "datePrecision": "day",
+      "createdDate": "2025-08-18",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1349-1358",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00852-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00852-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00853-0",
+      "title": "Dual-channel energy pathway combining energy molecule supply and electron transfer to support solar-to-chemical production in an E. coli–thylakoid hybrid",
+      "authors": [
+        "Jinghua An",
+        "Tianyu Chen",
+        "Fujie Ge",
+        "Weilang Zhang",
+        "Lu Li",
+        "Bo Tang"
+      ],
+      "date": "2025-08-21",
+      "datePrecision": "day",
+      "createdDate": "2025-08-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1408-1421",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00853-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00853-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00854-z",
+      "title": "Nanoconfined impulse synthesis of high-entropy nanocarbides for active and stable electrocatalysis",
+      "authors": [
+        "Chenyu Li",
+        "Zhichao Zhang",
+        "Kunlei Zhu",
+        "Mingda Liu",
+        "Jiayuan Chen",
+        "Liang Zhou",
+        "Qinghua Zhang",
+        "Yonghuang Wu",
+        "Jing Guo",
+        "Run Shi",
+        "Zeqin Xin",
+        "Yinghui Sun",
+        "Peng Liu",
+        "Hui Wu",
+        "Lin Gu",
+        "Dingsheng Wang",
+        "Rongming Wang",
+        "Yadong Li",
+        "Shoushan Fan",
+        "Jia Li",
+        "Kai Liu"
+      ],
+      "date": "2025-08-12",
+      "datePrecision": "day",
+      "createdDate": "2025-08-12",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1422-1434",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00854-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00854-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00855-y",
+      "title": "Sublayer editing of covalent MAX phase for nanolaminated early transition metal compounds",
+      "authors": [
+        "Ziqian Li",
+        "Ke Chen",
+        "Xudong Wang",
+        "Kan Luo",
+        "Lei Lei",
+        "Mian Li",
+        "Kun Liang",
+        "Degao Wang",
+        "Shiyu Du",
+        "Xiaoping Ouyang",
+        "Zhifang Chai",
+        "Qing Huang"
+      ],
+      "date": "2025-08-18",
+      "datePrecision": "day",
+      "createdDate": "2025-08-18",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1435-1441",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00855-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00855-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00857-w",
+      "title": "Modular construction of α- or β-stereogenic organosilanes and organogermanes via enantioselective alkene hydroalkylation",
+      "authors": [
+        "Xiao Hu",
+        "Chen Wang",
+        "Lu Yu",
+        "Yi-Zhou Tong",
+        "Zhen Li",
+        "Yan Li",
+        "Zhe Chang",
+        "Jun-Yang Zhang",
+        "Jian Kuang",
+        "Deguang Liu",
+        "Changlin Tian",
+        "Yun-He Xu",
+        "Xi Lu",
+        "Yao Fu"
+      ],
+      "date": "2025-08-22",
+      "datePrecision": "day",
+      "createdDate": "2025-08-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1442-1452",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00857-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00857-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00859-8",
+      "title": "Crystalline coumarin-linked covalent organic frameworks",
+      "authors": [
+        "Heyang Zhang",
+        "Zihui Zhou",
+        "Chenhui Zhu",
+        "Omar M. Yaghi"
+      ],
+      "date": "2025-08-22",
+      "datePrecision": "day",
+      "createdDate": "2025-08-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1376-1385",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00859-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00859-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00863-y",
+      "title": "Coumarin linkages for robust frameworks",
+      "authors": [
+        "Xuesong Ding",
+        "Bao-Hang Han"
+      ],
+      "date": "2025-08-22",
+      "datePrecision": "day",
+      "createdDate": "2025-08-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1334-1335",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00863-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00863-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00865-w",
+      "title": "Surface diffusion engineering of a 2D perovskite layer for efficient perovskite photovoltaics",
+      "authors": [
+        "Kun Zhang",
+        "Yang Wang",
+        "Lutong Guo",
+        "Mingquan Tao",
+        "Haodan Guo",
+        "Xiwen Zhang",
+        "Zhaofei Song",
+        "Jinxu Wen",
+        "Yongrui Yang",
+        "Jiangyang Shao",
+        "Huanping Zhou",
+        "Yanlin Song"
+      ],
+      "date": "2025-08-28",
+      "datePrecision": "day",
+      "createdDate": "2025-08-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1386-1395",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00865-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00865-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00866-9",
+      "title": "Photobiocatalytic benzylic C–H acylation enabled by the synergy of a thiamine-dependent enzyme, an organophotocatalyst and hydrogen-atom transfer",
+      "authors": [
+        "Xichao Peng",
+        "Jianqiang Feng",
+        "Fulu Liu",
+        "Wen-Zheng Xie",
+        "Hailong Sun",
+        "Yuanyuan Xu",
+        "Yang Ming",
+        "Zhongqiu Xing",
+        "Yu Zheng",
+        "Binju Wang",
+        "Yi-Tao Long",
+        "Xiaoqiang Huang"
+      ],
+      "date": "2025-08-19",
+      "datePrecision": "day",
+      "createdDate": "2025-08-19",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1453-1461",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00866-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00866-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00867-8",
+      "title": "Phase-pure 2D perovskite passivation layers through surface reaction control",
+      "authors": [],
+      "date": "2025-08-28",
+      "datePrecision": "day",
+      "createdDate": "2025-08-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1336-1337",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00867-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00867-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

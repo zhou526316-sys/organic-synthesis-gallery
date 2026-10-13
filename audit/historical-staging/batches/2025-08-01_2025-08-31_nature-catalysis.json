@@ -1,0 +1,682 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2025-08-01",
+    "to": "2025-08-31"
+  },
+  "checkedAt": "2026-10-13T02:55:16.255Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "lane": "publication",
+        "total": 13,
+        "count": 13,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 13,
+      "count": 13,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 13,
+      "openalex": 13
+    }
+  },
+  "candidateCount": 13,
+  "alreadyPublished": 0,
+  "unreviewed": 13,
+  "records": [
+    {
+      "doi": "10.1038/s41929-025-01384-9",
+      "title": "Redesigning electrolysers in coupled electrolysis",
+      "authors": [
+        "Junting Dong",
+        "Chang Yu",
+        "Jieshan Qiu"
+      ],
+      "date": "2025-08-22",
+      "datePrecision": "day",
+      "createdDate": "2025-08-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "755-757",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01384-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01384-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01386-7",
+      "title": "Iron–sulfur cluster with double duty",
+      "authors": [
+        "Olga A. Esakova",
+        "Squire J. Booker"
+      ],
+      "date": "2025-08-22",
+      "datePrecision": "day",
+      "createdDate": "2025-08-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "758-759",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01386-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01386-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01387-6",
+      "title": "Morphological and chemical state effects in pulsed CO2 electroreduction on Cu(100) unveiled by correlated spectro-microscopy",
+      "authors": [
+        "Liviu C. Tănase",
+        "Mauricio J. Prieto",
+        "Lucas de Souza Caldas",
+        "Aarti Tiwari",
+        "Fabian Scholten",
+        "Philipp Grosse",
+        "Andrea Martini",
+        "Janis Timoshenko",
+        "Thomas Schmidt",
+        "Beatriz Roldan Cuenya"
+      ],
+      "date": "2025-08-20",
+      "datePrecision": "day",
+      "createdDate": "2025-08-20",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "881-890",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01387-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01387-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01388-5",
+      "title": "Metalloradical-driven enzymatic CO2 reduction by a dynamic Ni–Fe cluster",
+      "authors": [
+        "Yudhajeet Basak",
+        "Christian Lorent",
+        "Jae-Hun Jeoung",
+        "Ingo Zebger",
+        "Holger Dobbek"
+      ],
+      "date": "2025-08-01",
+      "datePrecision": "day",
+      "createdDate": "2025-08-01",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "794-803",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01388-5"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01388-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01389-4",
+      "title": "Tailoring the active sites in Cu-SSZ-13 as a catalyst for the selective catalytic reduction of NH3 to minimize HCHO and HCN emissions",
+      "authors": [
+        "Simon Barth",
+        "Deniz Zengel",
+        "Tiago J. Goncalves",
+        "Philipp N. Plessow",
+        "Felix Studt",
+        "Jan-Dierk Grunwaldt",
+        "Maria Casapu"
+      ],
+      "date": "2025-08-18",
+      "datePrecision": "day",
+      "createdDate": "2025-08-18",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "804-821",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01389-4"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01389-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01390-x",
+      "title": "An NAD⁺ analogue enables assembly of structurally diverse artificial photoenzymes for enantiodivergent [2 + 2] cycloadditions",
+      "authors": [
+        "Ping Du",
+        "Jinsi Li",
+        "Tai-Ping Zhou",
+        "Jun Wang",
+        "Wenhao Hu",
+        "Haoyu Li",
+        "Binju Wang",
+        "Hui-Jie Pan"
+      ],
+      "date": "2025-08-12",
+      "datePrecision": "day",
+      "createdDate": "2025-08-12",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "822-832",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01390-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01390-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01392-9",
+      "title": "Electrosynthesis of ethylene glycol from ethylene coupled with CO2 capture",
+      "authors": [
+        "Rong Xia",
+        "Yiqing Chen",
+        "Yuxin Chang",
+        "Heejong Shin",
+        "Huajie Ze",
+        "Hengzhou Liu",
+        "Pengfei Ou",
+        "Roham Dorakhan",
+        "Sungjin Park",
+        "Panos Papangelakis",
+        "Zunmin Guo",
+        "Eduardo G. Machado",
+        "Marcio V. Reboucas",
+        "Mohsen Nikkhoo",
+        "Ricardo G. A. Duarte",
+        "Daojin Zhou",
+        "Yuan Liu",
+        "Weiyan Ni",
+        "Cong Tian",
+        "Yuanjun Chen",
+        "Christine Yu",
+        "Omar K. Farha",
+        "Ke Xie",
+        "Edward H. Sargent"
+      ],
+      "date": "2025-08-18",
+      "datePrecision": "day",
+      "createdDate": "2025-08-18",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "833-842",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01392-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01392-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01395-6",
+      "title": "The critical role of local microenvironments",
+      "authors": [
+        "Hao-Fei Geng",
+        "Yi-Fan Bao",
+        "Xiang Wang",
+        "Bin Ren"
+      ],
+      "date": "2025-08-22",
+      "datePrecision": "day",
+      "createdDate": "2025-08-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "753-754",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01395-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01395-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01396-5",
+      "title": "Resolving non-covalent interactions between surface hydroxyl on Cu and interfacial water in alkaline CO electroreduction",
+      "authors": [
+        "Qiliang Liu",
+        "Wenxing Yang"
+      ],
+      "date": "2025-08-19",
+      "datePrecision": "day",
+      "createdDate": "2025-08-19",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "843-852",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01396-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01396-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01402-w",
+      "title": "Copper-catalysed enantioconvergent O-alkylation of alcohols with racemic α-tertiary haloamides to access enantioenriched hindered dialkyl ethers",
+      "authors": [
+        "Jia-Yong Zhang",
+        "Ji-Jun Chen",
+        "Boming Shen",
+        "Jia-Heng Fang",
+        "Xuan-Yi Du",
+        "Ning-Yuan Yang",
+        "Chang-Jiang Yang",
+        "Wei-Long Liu",
+        "Fu Liu",
+        "Zhong-Liang Li",
+        "Qiang-Shuai Gu",
+        "Zhe Dong",
+        "Peiyuan Yu",
+        "Xin-Yuan Liu"
+      ],
+      "date": "2025-08-28",
+      "datePrecision": "day",
+      "createdDate": "2025-08-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "919-930",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01402-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01402-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01403-9",
+      "title": "Linking surface modifications of Cu(100) to selectivity during dynamic CO2 electroreduction",
+      "authors": [],
+      "date": "2025-08-25",
+      "datePrecision": "day",
+      "createdDate": "2025-08-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "870-871",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01403-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01403-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01404-8",
+      "title": "Site-selective Ru-catalysed saturation of unactivated arenes via directed 6π activation",
+      "authors": [
+        "Congjun Yu",
+        "Linda Yiu",
+        "Zining Zhang",
+        "Guangbin Dong"
+      ],
+      "date": "2025-08-28",
+      "datePrecision": "day",
+      "createdDate": "2025-08-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "931-938",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01404-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01404-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01411-9",
+      "title": "Electrocatalytic upcycling of high-pressure captured CO2 to ethylene",
+      "authors": [
+        "Liang Huang",
+        "Ge Gao",
+        "Jiwu Zhao",
+        "William L. Roberts",
+        "Xu Lu"
+      ],
+      "date": "2025-08-28",
+      "datePrecision": "day",
+      "createdDate": "2025-08-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "968-976",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01411-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01411-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-08-01",
+        "to": "2025-08-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
