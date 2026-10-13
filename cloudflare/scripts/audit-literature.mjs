@@ -11,6 +11,7 @@ import { exclusionEvidenceRecheckReason } from '../../scripts/lib/literature-exc
 import { publisherOnlyReviewEligible, exclusionRecheckBelongsToPrimaryWindow,
   buildUnverifiedPublisherBacklog, mergeHistoricalRecheckBacklog } from '../../scripts/lib/literature-review-queue-guard.mjs';
 import { fetchPublisherMetadataAbstract,publisherMetadataEntryUrl } from '../../scripts/lib/publisher-abstract-metadata.mjs';
+import { CROSSREF_DATE_MODES, crossrefModeQuery, wasRecentlyDeposited } from '../../scripts/lib/crossref-discovery-date-modes.mjs';
 
 const TIME_ZONE = 'Asia/Shanghai';
 
@@ -275,10 +276,10 @@ function mergeCandidate(map, incoming) {
     current.publisherDateUnverified = true;
   }
   if (!current.date && incoming.date) current.date = incoming.date;
-  for (const key of ['onlineDate', 'publishedDate', 'createdDate']) {
+  for (const key of ['onlineDate', 'publishedDate', 'createdDate', 'depositedDate']) {
     const next = clean(incoming[key]);
     if (!next) continue;
-    if (!current[key] || (key === 'createdDate' && next > current[key])) current[key] = next;
+    if (!current[key] || (['createdDate','depositedDate'].includes(key) && next > current[key])) current[key] = next;
   }
   if (!current.type && incoming.type) current.type = incoming.type;
   const incomingAuthors = candidateAuthors(incoming.authors);
@@ -294,14 +295,14 @@ async function fetchCrossref(journal) {
   const journalRescueStart = rescueStartForJournal(journal);
   const journalQueryStart = sourceQueryStartForJournal(journal);
   for (const issn of journal.issns) {
-    for (const mode of ['online', 'published', 'created']) {
-      const filterField = mode === 'online' ? 'online-pub-date' : mode === 'published' ? 'pub-date' : 'created-date';
+    for (const mode of CROSSREF_DATE_MODES) {
+      const {modeStart,filterField,filter:dateFilter}=crossrefModeQuery(mode,{
+        queryStart:journalQueryStart,rescueStart:journalRescueStart,endDate:END
+      });
       // All source families keep a seven-day machine-only safety tail. The
       // three-day START remains the primary semantic-review window; older tail
       // records only matter when they surface a DOI that has not already been
       // accepted, excluded, or marked pending.
-      const modeStart = journalQueryStart;
-      const dateFilter = `from-${filterField}:${modeStart},until-${filterField}:${END}`;
       let cursor = '*';
       let count = 0;
       let ok = true;
@@ -316,6 +317,7 @@ async function fetchCrossref(journal) {
             const online = dateFromParts(item['published-online']);
             const published = dateFromParts(item.published);
             const created = dateFromParts(item.created);
+            const deposited = dateFromParts(item.deposited);
             const date = online || published || '';
             mergeCandidate(map, {
               doi: item.DOI,
@@ -326,6 +328,8 @@ async function fetchCrossref(journal) {
               onlineDate: online,
               publishedDate: published,
               createdDate: created,
+              depositedDate: deposited,
+              depositedDatePrecision: datePrecision(item.deposited),
               onlineDatePrecision: datePrecision(item['published-online']),
               publishedDatePrecision: datePrecision(item.published),
               createdDatePrecision: datePrecision(item.created),
@@ -426,13 +430,15 @@ function compactCandidate(c) {
   const effectiveStart = journal ? auditStartForJournal(journal) : START;
   const createdDiscovered = (c.sources || []).some(source => source.endsWith(':created'));
   const createdInQuery = Boolean(createdDiscovered && c.createdDate && c.createdDate >= (journal ? sourceQueryStartForJournal(journal) : START) && c.createdDate <= END);
-  const futurePublicationDate = Boolean(c.date && c.date > END && createdInQuery);
+  const depositedInQuery = wasRecentlyDeposited(c,journal ? rescueStartForJournal(journal) : RESCUE_START,END);
+  const futurePublicationDate = Boolean(c.date && c.date > END && (createdInQuery || depositedInQuery));
   return {
     ...c,
     activeFrom: journal?.activeFrom || '',
     dateUnverified: !c.date || futurePublicationDate,
     dateConflict: futurePublicationDate ? 'created_in_window_publication_date_in_future' : '',
-    lateIndexed: Boolean(c.date && c.date < effectiveStart && createdInQuery),
+    lateIndexed: Boolean(c.date && c.date < effectiveStart && (createdInQuery || depositedInQuery)),
+    redepositedInSafetyTail:depositedInQuery,
     safetyTail: Boolean(c.date && c.date < effectiveStart && c.date >= (journal ? rescueStartForJournal(journal) : RESCUE_START)),
     reviewPriority: c.scopeCorrection || retainForReview(c) ? 'high' : 'normal',
     abstract: (c.abstract || '').slice(0, 1800),
@@ -543,10 +549,12 @@ const universe = [...merged.values()].filter(c => {
   const createdDiscovered = (c.sources || []).some(source => source.endsWith(':created'));
   const sourceDiscovered = (c.sources || []).length > 0;
   const createdInQuery = Boolean(createdDiscovered && c.createdDate && c.createdDate >= (journal ? sourceQueryStartForJournal(journal) : START) && c.createdDate <= END);
+  const depositedInQuery = wasRecentlyDeposited(c,rescueStart,END);
   if (!c.date) return sourceDiscovered;
   if (c.date < activeFrom) return false;
-  if (c.date > END) return createdInQuery;
-  return c.date >= effectiveStart || (sourceDiscovered && c.date >= rescueStart) || createdInQuery;
+  if (c.date > END) return createdInQuery || depositedInQuery;
+  return c.date >= effectiveStart || (sourceDiscovered && c.date >= rescueStart)
+    || createdInQuery || depositedInQuery;
 });
 const universeDoiSet = new Set(universe.map(candidate => normalizeDoi(candidate.doi)));
 // Review-file journal labels are not proof that a DOI belongs to that journal.
@@ -813,6 +821,8 @@ const report = {
     historicalCoverageLosses: historicalCoverageLosses.length,
     historicalNonJournalRecords: historicalNonJournalRecords.length,
     publisherFeedOnlyDois: publisherOnlyDois.length,
+    redepositedWithinSafetyTail: universe.filter(row=>
+      wasRecentlyDeposited(row,rescueStartForJournal(JOURNAL_BY_NAME.get(row.journal)||{}),END)).length,
     previousExclusionsReopened: exclusionRecheckReasons.size,
     historicalEvidenceChallenges: historicalEvidenceChallengeBacklog.length,
     publisherFirstOnlineBacklog: publisherDateVerificationBacklog.length,
@@ -883,6 +893,9 @@ const unresolvedReviewCandidates = missingCandidates.map(candidate => ({
   onlineDate: candidate.onlineDate || '',
   publishedDate: candidate.publishedDate || '',
   createdDate: candidate.createdDate || '',
+  depositedDate: candidate.depositedDate || '',
+  depositedDatePrecision: candidate.depositedDatePrecision || '',
+  redepositedInSafetyTail: Boolean(candidate.redepositedInSafetyTail),
   onlineDatePrecision: candidate.onlineDatePrecision || '',
   publishedDatePrecision: candidate.publishedDatePrecision || '',
   dateConflict: candidate.dateConflict || '',
