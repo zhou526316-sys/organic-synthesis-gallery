@@ -67,3 +67,24 @@ test('suspicious identity metadata remains visible for DOI-specific review',()=>
   assert.ok(v.flags.includes('suspected_nonresearch_record_verify_at_publisher'));
   assert.equal(v.priority,'P3');
 });
+
+test('unqualified asymmetric in neuroscience/materials does not crowd high-synthesis review priority',()=>{
+  for(const title of [
+    'Asymmetric prefrontal representations for leader–follower dynamics',
+    'Dynamic asymmetric strain imprinted into substrates by an oxide thin film',
+    'Asymmetric flagellar rotation related to neural behavior'
+  ])assert.equal(rankHistoricalCandidate({title,date:'2026-09-01'}).priority,'P3');
+  for(const title of [
+    'Cobalt-Catalyzed Enantioselective Hydroalkylation of Cyclohexenes',
+    'Asymmetric Catalytic Synthesis of New Chiral Heterocycles',
+    'Enantioselective Cross-Coupling through Nickel Catalysis'
+  ])assert.equal(rankHistoricalCandidate({title,date:'2026-09-01'}).priority,'P0');
+});
+test('rank shifts never delete DOI or perform a scope include/exclude',()=>{
+  const src=source([row('6c22222','Asymmetric prefrontal representations for leader–follower dynamics')]);
+  const shard=buildReviewShard(src,{sourceSha256:'abc',sourceId:'2026-09-08_2026-09-14_joc'});
+  assert.equal(shard.records.length,1);
+  assert.equal(shard.records[0].status,'requires_two_pass_review');
+  assert.equal(shard.records[0].priority,'P3');
+  assert.equal(shard.zeroAutomaticExclusions,true);
+});
