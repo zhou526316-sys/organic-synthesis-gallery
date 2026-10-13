@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-13",
+  "revision": "2026-10-13-r4",
+  "status": "science_text_original_images_existing_cloud_draft_readback_and_actual_browser_preview_pass",
+  "verifiedUsing": "GitHub official WeChat publisher receipt + independent read-only Chromium 390px / 980px check of latest cloud draft/get preview",
+  "published": false,
+  "transmission": "existing draft/update only; no mass send",
+  "source": "main",
+  "editorialPR": "https://github.com/zhou526316-sys/organic-synthesis-gallery/pull/600",
+  "cloudQAWorkflowPR": "https://github.com/zhou526316-sys/organic-synthesis-gallery/pull/601",
+  "evidence": {
+    "publisherRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38366160262",
+    "sourceMobileRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38365625121",
+    "actualCloudMobileRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38366816444",
+    "gateBlobSha": "573d84199141d6e71c91e1d5c4a5f0f0faad3560",
+    "cloudReceiptBlobSha": "32cffd635a3362d8e7f4b5bdd05e46cfe82f7439",
+    "realCloudQABlobSha": "ede0c011dd663ba1988f6b4049cf0788010869f6",
+    "media_id": "KhELYUzvwADwB_l1xH1SWO145961Rlw4fMzLxtij2o_6u5Z6Pq_7PK-nw7ZXBk7V",
+    "readback": "ok",
+    "stage": "draft_update",
+    "previewUrl": "https://relay.gczhouwld.com/wechat-preview/28d124eedecdaa92a3ee7916.html",
+    "paperCount": 12,
+    "articleCount": 2,
+    "publishId": null
+  },
+  "papers": [
+    {
+      "article": "今日精选",
+      "doi": "10.1038/s44160-026-01189-z",
+      "figures": 12,
+      "sections": 7,
+      "paragraphs": 18,
+      "approxBodyChars": 2303
+    },
+    {
+      "article": "往期精选",
+      "doi": "10.1038/s41557-026-02213-7",
+      "figures": 10,
+      "sections": 7,
+      "paragraphs": 15,
+      "approxBodyChars": 2112
+    }
+  ],
+  "realCloudChecks": {
+    "titlesMatched": true,
+    "urlsMatched": true,
+    "preciseDeepLinks": [
+      "https://gallery.gczhouwld.com/?edition=2026-10-13&doi=10.1038%2Fs44160-026-01189-z&summary=0",
+      "https://gallery.gczhouwld.com/?doi=10.1038%2Fs41557-026-02213-7&summary=0"
+    ],
+    "totalImages": 25,
+    "coverImages": 2,
+    "sourceBodyImages": [
+      12,
+      10
+    ],
+    "qrImages": 1,
+    "decoded": 25,
+    "broken": [],
+    "countOnlyDailyRoundup": true,
+    "noMobileOverflow": true,
+    "noDesktopOverflow": true,
+    "viewport390": true,
+    "viewport980": true,
+    "screenCaptures": 8
+  },
+  "limitations": [
+    "Cloud draft/get and Chromium preview do not prove native iOS/Android WeChat subscription assistant local draft synchronized; owner device inspection required for that claim.",
+    "The 20-second Gallery card highlight behavior itself was not independently navigated in this WeChat source-preview QA; precise DOI URL and summary=0 were verified.",
+    "The earlier known Gallery mini-card thumbnail placeholder gap is separate and is not proven repaired by checking 25 decoded draft-level images.",
+    "Screenshots were captured in GitHub Actions and programmatically checked; a separate manual pixel-by-pixel viewing pass of all eight captured screenshots was not completed in this chat."
+  ],
+  "finalImageCaptures": [
+    "audit/wechat-working/2026-10-13-r4-live-preview/mobile-first-screen.png",
+    "audit/wechat-working/2026-10-13-r4-live-preview/mobile-featured-cover.png",
+    "audit/wechat-working/2026-10-13-r4-live-preview/mobile-retro-cover.png",
+    "audit/wechat-working/2026-10-13-r4-live-preview/mobile-nature-synthesis-DFT.png",
+    "audit/wechat-working/2026-10-13-r4-live-preview/mobile-nature-synthesis-SI-regioselectivity.png",
+    "audit/wechat-working/2026-10-13-r4-live-preview/mobile-nature-chemistry-SI-bottlenecks.png",
+    "audit/wechat-working/2026-10-13-r4-live-preview/mobile-nature-chemistry-source-comparison.png",
+    "audit/wechat-working/2026-10-13-r4-live-preview/desktop-two-cover-header.png"
+  ],
+  "notes": "R3 cloud draft overwritten as R4 with exact media_id. No duplicate. All 24 SHA-locked original paper/covers reused. Live cloud readback passed. Initial QA false positive matched a stale phrase; corrected to exact PPh3/DIAD Mitsunobu wording and passed on read-only rerun without any additional WeChat update."
+}
