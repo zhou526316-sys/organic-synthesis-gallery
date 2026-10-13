@@ -8,6 +8,7 @@ import { loadScopeCorrections, withScopeCorrections } from '../../scripts/lib/sc
 import { isStandaloneRepositoryDoi } from '../../scripts/lib/literature-doi-provenance.mjs';
 import { fetchOfficialPublisherFeeds, OFFICIAL_PUBLISHER_FEEDS } from '../../scripts/lib/publisher-feed-discovery.mjs';
 import { exclusionEvidenceRecheckReason } from '../../scripts/lib/literature-exclusion-recheck.mjs';
+import { fetchPublisherMetadataAbstract,publisherMetadataEntryUrl } from '../../scripts/lib/publisher-abstract-metadata.mjs';
 
 const TIME_ZONE = 'Asia/Shanghai';
 
@@ -476,6 +477,50 @@ console.log('AUDIT_PUBLISHER_FEEDS '+JSON.stringify({
   publisherOnly:publisherOnlyDois.length
 }));
 
+
+// DOI-verified public abstract-only rescue. This path already existed for
+// metadata work but was not wired into daily semantic review. It must not
+// fetch publisher article bodies, private PDFs or figures, and errors must not
+// masquerade as "no preparative scope".
+const PUB_ABSTRACT_RESCUE_LIMIT=48;
+const pubAbstractTargets=[...merged.values()]
+  .filter(candidate => !galleryDois.has(candidate.doi) && !isExcludedDoi(candidate.doi)
+    && !String(candidate.abstract||'').trim()
+    && (retainForReview(candidate)
+      || ['Nature Synthesis','Organic Letters','JOC','CCS Chemistry'].includes(candidate.journal)))
+  .sort((a,b)=>Number(b.date>=BASE_START)-Number(a.date>=BASE_START)
+    || String(b.date).localeCompare(String(a.date))
+    || String(a.doi).localeCompare(String(b.doi)))
+  .slice(0,PUB_ABSTRACT_RESCUE_LIMIT);
+const pubAbstractResults=[];
+for(let i=0;i<pubAbstractTargets.length;i+=6){
+  const batch=pubAbstractTargets.slice(i,i+6);
+  const results=await Promise.all(batch.map(async item=>{
+    try {
+      const abstract=await fetchPublisherMetadataAbstract(item.doi,{timeout:6500});
+      if(abstract && abstract.length>=140){
+        item.abstract=abstract;
+        item.abstractSource=publisherMetadataEntryUrl(item.doi);
+        item.publisherAbstractVerified=true;
+        item.sources=[...new Set([...(item.sources||[]),'publisher-abstract:'+item.journal])];
+        return {doi:item.doi,journal:item.journal,status:'doi_verified_public_abstract'};
+      }
+      return {doi:item.doi,journal:item.journal,status:'not_retrieved'};
+    }catch(error){
+      return {doi:item.doi,journal:item.journal,status:'blocked_or_unavailable',
+        reason:String(error?.message||error).slice(0,120)};
+    }
+  }));
+  pubAbstractResults.push(...results);
+}
+console.log('AUDIT_PUBLIC_ABSTRACT_RESCUE '+JSON.stringify({
+  attempted:pubAbstractResults.length,
+  verified:pubAbstractResults.filter(r=>r.status==='doi_verified_public_abstract').length,
+  blocked:pubAbstractResults.filter(r=>r.status==='blocked_or_unavailable').length,
+  notRetrieved:pubAbstractResults.filter(r=>r.status==='not_retrieved').length,
+  backlogNotFetched:Math.max(0,[...merged.values()].filter(item=>!galleryDois.has(item.doi)&&!String(item.abstract||'').trim()).length-pubAbstractTargets.length)
+}));
+
 const universe = [...merged.values()].filter(c => {
   const journal = JOURNAL_BY_NAME.get(c.journal);
   const effectiveStart = journal ? auditStartForJournal(journal) : START;
@@ -713,6 +758,8 @@ const report = {
     publisherFeedOnlyDois: publisherOnlyDois.length,
     previousExclusionsReopened: exclusionRecheckReasons.size,
     publisherDateUnverified: publisherDateUnverifiedDois.length,
+    publisherAbstractRescued: pubAbstractResults.filter(row=>row.status==='doi_verified_public_abstract').length,
+    publisherAbstractProbeBlocked: pubAbstractResults.filter(row=>row.status==='blocked_or_unavailable').length,
     unresolved: missing.length,
     scopeCorrectionsPending: missing.filter(candidate => candidate.scopeCorrection).length,
     excludedByPolicy: excludedUniverse.length,
@@ -742,6 +789,8 @@ const report = {
   sourceStats: stats,
   publisherFeeds: {sourceType:'official_partial_feeds',completeListing:false,
     publisherOnlyDois,publisherDateUnverifiedDois,status:publisherFeedStatus},
+  publicPublisherAbstractRescue: {mode:'doi_verified_abstract_only',
+    selected:pubAbstractTargets.length,results:pubAbstractResults},
   missingCandidates,
   potentialGaps,
 };
@@ -768,6 +817,7 @@ const unresolvedReviewCandidates = missingCandidates.map(candidate => ({
   safetyTail: candidate.safetyTail,
   reviewPriority: candidate.reviewPriority,
   ...(candidate.feedDate ? {feedDate:candidate.feedDate} : {}),
+  ...(candidate.publisherAbstractVerified ? {publisherAbstractVerified:true,abstractSource:candidate.abstractSource} : {}),
   ...(candidate.publisherFeedUrl ? {publisherFeedUrl:candidate.publisherFeedUrl,publisherDateUnverified:candidate.publisherDateUnverified} : {}),
   ...(candidate.recheckPreviousExclusion ? {recheckPreviousExclusion:true,recheckReason:candidate.recheckReason,previousReviewFile:candidate.previousReviewFile} : {}),
   ...(candidate.scopeCorrection ? { scopeCorrection: candidate.scopeCorrection } : {}),
