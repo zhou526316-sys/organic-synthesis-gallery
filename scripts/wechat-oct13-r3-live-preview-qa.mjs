@@ -83,10 +83,10 @@ try{
  await shot('mobile-featured-cover',page.locator('.push-card-main'));
  await shot('mobile-retro-cover',page.locator('.push-card-sub'));
  const aa=page.locator('article.article-block');
- await shot('mobile-nature-synthesis-DFT',aa.nth(0).locator('h2').filter({hasText:'计算如何连接'}));
- await shot('mobile-nature-synthesis-SI-regioselectivity',aa.nth(0).locator('h2').filter({hasText:'局限性'}));
- await shot('mobile-nature-chemistry-SI-bottlenecks',aa.nth(1).locator('h2').filter({hasText:'两个看似简单'}));
- await shot('mobile-nature-chemistry-source-comparison',aa.nth(1).locator('h2').filter({hasText:'与光催化路线比较'}));
+ await shot('mobile-nature-synthesis-DFT',aa.nth(0).locator('h2').filter({hasText:'铟究竟如何降低能垒'}));
+ await shot('mobile-nature-synthesis-SI-regioselectivity',aa.nth(0).locator('h2').filter({hasText:'仍然做不成的 2,2-二取代'}));
+ await shot('mobile-nature-chemistry-SI-bottlenecks',aa.nth(1).locator('h2').filter({hasText:'真正棘手的是关环'}));
+ await shot('mobile-nature-chemistry-source-comparison',aa.nth(1).locator('h2').filter({hasText:'为什么作者还要回头复现旧的光催化'}));
  let images=page.locator('img');let decoded=[];
  for(let i=0;i<await images.count();i++){
   const target=images.nth(i);
