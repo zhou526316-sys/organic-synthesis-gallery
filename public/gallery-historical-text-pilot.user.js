@@ -366,6 +366,21 @@
         const urls=text.match(/https?:\/\/creativecommons\.org\/(?:licenses\/[\w.-]+(?:\/[\w.-]+)*|publicdomain\/zero\/1\.0)\/?/ig)||[];
         candidates.push(...urls);
       });
+      // ACS may display a DOI-specific CC BY copyright notice as visible
+      // article metadata without a rel=license link or license URL.
+      // Require the exact publisher/article copyright sentence inside the
+      // current article, not a related card, footer, generic OA badge or TDM hint.
+      if(publisher(location.hostname)==='acs'){
+        const article=document.querySelector('main article, article')||root;
+        let checked=0;
+        for(const node of article.querySelectorAll('p,span,small,div')){
+          if(++checked>800)break;
+          if(node.children?.length||excluded(node,true))continue;
+          const notice=cleanText(node.textContent,550);
+          const match=/^©\s*20\d{2}\s+The Authors\.\s*Published by American Chemical Society\s+This publication is licensed under a Creative Commons Attribution (3\.0|4\.0) International License\.?$/i.exec(notice);
+          if(match)candidates.push('https://creativecommons.org/licenses/by/'+match[1]+'/');
+        }
+      }
     }
     const matches=candidates.map(raw=>{
       try{
