@@ -718,17 +718,13 @@ const closureReviewedExcluded = closureRawMissing.filter(c => reviewedExclusions
 const closureMissing = missingCandidates.filter(c => c.date === CLOSURE_DATE);
 const closurePotentialGaps = closureMissing.filter(c => c.reviewPriority === 'high');
 const closureHistoricalCoverageLosses = historicalCoverageLosses.filter(item => item.date === CLOSURE_DATE);
-const closureStatus = !publisherListingComplete ? 'blocked-incomplete-publisher-lists'
+const closureStatus = criticalFailures.length > 0 ? 'blocked-source-failure'
+  : closureHistoricalCoverageLosses.length > 0 ? 'blocked-historical-coverage-loss'
+  : closureCoverageAnomalies.length > 0 ? 'blocked-source-coverage-anomaly'
+  : closureMissing.length > 0 ? 'requires-assistant-review'
   : publisherDateUnverifiedDois.length > 0 ? 'blocked-unverified-publisher-dates'
-  : criticalFailures.length > 0
-  ? 'blocked-source-failure'
-  : closureHistoricalCoverageLosses.length > 0
-    ? 'blocked-historical-coverage-loss'
-    : closureCoverageAnomalies.length > 0
-    ? 'blocked-source-coverage-anomaly'
-    : closureMissing.length > 0
-      ? 'requires-assistant-review'
-      : 'assistant-decisions-complete';
+  : !publisherListingComplete ? 'blocked-incomplete-publisher-lists'
+  : 'assistant-decisions-complete';
 
 const report = {
   auditVersion: 5,
