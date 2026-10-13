@@ -92,3 +92,37 @@ test('server enforces metadata-only bounds, paginator and DOI/status filters',as
   assert.ok(route.includes("const denied=requireWriteAuthorization(request,env);"),
     'reads must also demand owner token');
 });
+
+test('live Worker route rejects all anonymous reads/writes and confirms owner receipts',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const worker=(await import('../src/index.js')).default;
+  const env={DB:db,BRIDGE_WRITE_TOKEN:'test-only-owner-write-token'};
+  const url='https://api.gczhouwld.com/api/admin/historical-text/reports';
+  const unauthGet=await worker.fetch(new Request(url),env,{waitUntil(){}});
+  assert.equal(unauthGet.status,401);
+  const unauthPost=await worker.fetch(new Request(url,{
+    method:'POST',headers:{'content-type':'application/json'},
+    body:JSON.stringify(base({eventId:'htext_aaaaaaaaaaaaaaaaaa'})),
+  }),env,{waitUntil(){}});
+  assert.equal(unauthPost.status,401);
+  const authorized=await worker.fetch(new Request(url,{
+    method:'POST',headers:{'content-type':'application/json',
+      authorization:'Bearer test-only-owner-write-token',
+      origin:'https://gallery.gczhouwld.com'},
+    body:JSON.stringify(base({eventId:'htext_aaaaaaaaaaaaaaaaaa'})),
+  }),env,{waitUntil(){}});
+  assert.equal(authorized.status,200);
+  const receipt=await authorized.json();
+  assert.equal(receipt.stored,true);
+  assert.equal(receipt.eventId,'htext_aaaaaaaaaaaaaaaaaa');
+  const read=await worker.fetch(new Request(url+'?limit=10',{
+    headers:{authorization:'Bearer test-only-owner-write-token',
+      origin:'https://gallery.gczhouwld.com'},
+  }),env,{waitUntil(){}});
+  assert.equal(read.status,200);
+  const result=await read.json();
+  assert.equal(result.items.length,1);
+  assert.equal(result.items[0].reasonCode,'publisher_no_response');
+  assert.ok(!JSON.stringify(result).includes('test-only-owner-write-token'));
+  assert.equal(read.headers.get('access-control-allow-origin'),'https://gallery.gczhouwld.com');
+});
