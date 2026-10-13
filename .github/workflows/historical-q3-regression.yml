@@ -8,6 +8,7 @@ on:
       - 'scripts/verify-historical-publisher-issues.mjs'
       - 'scripts/test-historical-publisher-issue-receipts.mjs'
       - 'audit/historical-publisher-issues/2026/nature-synthesis-issues-09-10-research.json'
+      - 'audit/historical-publisher-issues/2026/nature-catalysis-issue-09-research.json'
       - '.github/workflows/historical-q3-regression.yml'
       - '.github/workflows/historical-triage-bootstrap.yml'
       - 'docs/historical-2026-q3-catchup-contract.md'
@@ -19,6 +20,7 @@ on:
       - 'scripts/verify-historical-publisher-issues.mjs'
       - 'scripts/test-historical-publisher-issue-receipts.mjs'
       - 'audit/historical-publisher-issues/2026/nature-synthesis-issues-09-10-research.json'
+      - 'audit/historical-publisher-issues/2026/nature-catalysis-issue-09-research.json'
       - '.github/workflows/historical-q3-regression.yml'
 permissions:
   contents: read
