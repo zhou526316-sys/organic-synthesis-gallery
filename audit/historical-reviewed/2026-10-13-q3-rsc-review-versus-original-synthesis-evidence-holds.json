@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "gallery-q3-rsc-synthesis-scope-independent-nonadmissions-v1",
+  "reviewedAt": "2026-10-13T14:35:30.911Z",
+  "mode": "article_specific_evidence_not_automatic_authoritative_exclusion_or_publication",
+  "sourceBranch": "staging/historical-archive-nightly",
+  "decisions": [
+    {
+      "doi": "10.1039/d5sc08413j",
+      "journal": "Chemical Science",
+      "title": "Synthesis and properties of N-(trifluoromethyl)amides",
+      "sourceBatchId": "2026-07-22_2026-07-31_chemical-science",
+      "sourceBatchGitBlobSha": "5c16ab17e0054ae3f93690c089e3b8e87355c9b3",
+      "sourceDateUnknown": true,
+      "DOIExactNlmFirstPublishedDate": "2026-07-30",
+      "authoritativeOriginalEvidenceUrls": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC13482871/",
+        "https://pubmed.ncbi.nlm.nih.gov/42614854/",
+        "https://pubs.rsc.org/sc/article/doi/10.1039/D5SC08413J/1285312"
+      ],
+      "firstPassDecision": "exclude_non_original_review",
+      "firstPassReason": "NLM PMC存有来自RSC的原始文章全文摘要，原文明确写明This review provides a critical overview of strategies for the synthesis of N–CF3 amides，并对物性与药物应用作综述，未以本篇新增实验合成方法或底物-产物实验作为论文原创贡献。标题含Synthesis但其性质是综述。",
+      "challengeDecision": "exclude_non_original_review",
+      "independentChallengeReason": "反向审查作者是否可能以Synthesis and properties命名原创制备与表征研究：原始RSC稿正文直接呈现Review结构，综述既有合成方法并整理物性数据。引用他人实验与自身整理计算/物性表不等于该DOI原创跨底物合成。应作为原始Review排除，而不能把这类题目的所有论文一概排除。",
+      "formalAdmitted": false,
+      "pendingAuthority": false,
+      "needsReconcilerCategorySupport": true,
+      "officialSourceNote": "Publisher original research-format label on direct RSC HTML currently bot-blocked; evidence derived from DOI-matched RSC original text mirrored at PMC and journal-supplied electronic date at PubMed; not falsely marked publisher HTML directly read."
+    },
+    {
+      "doi": "10.1039/d6sc01721e",
+      "journal": "Chemical Science",
+      "title": "Bioinspired peptide cyclisation enables exploration of cytochrome P450 catalysed sequential oxidation in rufomycin biosynthesis",
+      "sourceBatchId": "2026-08-01_2026-08-07_chemical-science",
+      "sourceBatchGitBlobSha": "caade5c88e1bc35a97dda3758f47fa6af5090b47",
+      "sourceDateUnknown": true,
+      "observedPublisherIssueIndexDate": "2026-08-05",
+      "scopeStatus": "unfinished_not_promoted",
+      "firstPassReason": "RSC原始摘要与NLM记录证实该工作使用已开发的肽环化化学制备rufomycin环肽类似物库，进而研究RufM P450催化的逐步氧化及底物容忍度。核心问题可能以酶催化生物合成机理为主，仍有真实可分离的环肽合成操作。",
+      "independentChallengeReason": "不能因研究P450就整类排除；若本文实际发展新可迁移的环肽关环策略，或证明多种可制备氧化肽analogues，则可能符合收录。现阶段未独立确认其相对于既有肽环化方法的新增制备贡献和反应范围，应继续文章特定审查，而不是将机制或材料评价当作通用合成。",
+      "evidenceNeeded": [
+        "NLM DOI精确电子首发日与正式RSC稿版本比对",
+        "确认肽环化是否本论文新方法而非研究工具",
+        "具体不同肽链到环肽、酶氧化产物及可重复制备范围"
+      ],
+      "DOIExactNlmUrl": "https://pubmed.ncbi.nlm.nih.gov/42559174/",
+      "DOIExactOriginalPmcUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13439498/",
+      "formalAdmitted": false,
+      "pendingAuthority": false
+    }
+  ],
+  "guards": {
+    "noMainApprovedChangeForHolds": true,
+    "noProductionD1": true,
+    "notArtificiallySubtractFromQ3Unfinished": true,
+    "noNewMediaOrPDF": true
+  }
+}
