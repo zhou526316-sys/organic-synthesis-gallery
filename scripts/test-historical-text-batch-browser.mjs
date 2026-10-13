@@ -135,6 +135,10 @@ try{
     && window.__gm['gallery-historical-text-batch-v2:state']?.attempted===0,null,{timeout:10000});
   const count=await page.evaluate(()=>window.__opened.length);
   assert.equal(count,2,'repeated one click should not reopen confirmed indexed DOI');
+  assert.equal(await page.getByRole('button',{name:'抽查 ACS 许可项（最多10篇）'}).count(),1);
+  await page.getByRole('button',{name:'抽查 ACS 许可项（最多10篇）'}).click();
+  assert.equal(await page.evaluate(()=>window.__opened.length),2,
+    'targeted ACS sample does not revisit saved or never-failed articles');
 
   // The browser-side outbox is durable before a token is configured.
   const pendingBefore=await page.evaluate(()=>__historicalDiagTest.batchReportKeys().length);
