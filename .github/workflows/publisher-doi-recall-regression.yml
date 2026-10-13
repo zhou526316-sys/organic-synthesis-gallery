@@ -7,6 +7,8 @@ on:
       - 'cloudflare/scripts/audit-literature.mjs'
       - 'scripts/lib/publisher-feed-discovery.mjs'
       - 'scripts/test-publisher-feed-discovery.mjs'
+      - 'scripts/lib/literature-review-priority.mjs'
+      - 'scripts/test-literature-review-priority.mjs'
       - 'scripts/lib/literature-review-queue-guard.mjs'
       - 'scripts/test-literature-review-queue-guard.mjs'
       - 'scripts/lib/literature-exclusion-recheck.mjs'
@@ -40,6 +42,8 @@ jobs:
         run: node --test scripts/test-publisher-abstract-metadata.mjs
       - name: Validate primary window versus unverified DOI backlog
         run: node --test scripts/test-literature-review-queue-guard.mjs
+      - name: Prevent synthesis-method title misranking
+        run: node --test scripts/test-literature-review-priority.mjs
       - name: Verify core literature source coverage policy
         run: node scripts/test-literature-completeness-capability.mjs
       - name: Verify strict prepublication contract regressions
