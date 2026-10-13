@@ -711,6 +711,11 @@
       const pieces=[batchDiagnosticLabel(code),'阶段：'+String(item.stage||'未记录'),
         '时间：'+when,item.httpStatus?'HTTP '+item.httpStatus:'HTTP 未知',
         '报告：'+reported];
+      if(item.rightsSignal)pieces.push('授权证据：'+String(item.rightsSignal));
+      if(item.bodyEvidence?.presence)pieces.push('正文结构：'+String(item.bodyEvidence.presence)
+        +' · 科学正文字符量 '+Number(item.bodyEvidence.scienceChars||0));
+      if(item.bodyCompleteness&&item.bodyCompleteness!=='not_saved')
+        pieces.push('完整性：'+String(item.bodyCompleteness));
       if(item.reasonDetail)pieces.push('说明：'+String(item.reasonDetail).slice(0,70));
       details.textContent=pieces.join(' · ');
       row.append(link,details);area.append(row);
@@ -1192,6 +1197,18 @@
         const evidenceMeta={pageDoiVerified:result.pageDoiVerified===true,
           sectionCount:Number(result.sectionCount||0),evidenceChars:Number(result.evidenceChars||0),
           httpStatus:Number(result.httpStatus||0)||null};
+        const rightsSignal=['cc_reuse_verified','other_license_declared','unverified']
+          .includes(result.rightsSignal)?result.rightsSignal:'unverified';
+        const bodyEvidence=result.bodyEvidence&&
+          ['scientific_sections','partial_science','abstract_only','page_shell']
+            .includes(result.bodyEvidence.presence)?{
+              presence:result.bodyEvidence.presence,
+              scienceChars:Math.min(400000,Math.max(0,Number(result.bodyEvidence.scienceChars||0))),
+              abstractChars:Math.min(400000,Math.max(0,Number(result.bodyEvidence.abstractChars||0))),
+              sectionCount:Math.min(300,Math.max(0,Number(result.bodyEvidence.sectionCount||0))),
+              captionCount:Math.min(200,Math.max(0,Number(result.bodyEvidence.captionCount||0))),
+              tableCount:Math.min(80,Math.max(0,Number(result.bodyEvidence.tableCount||0)))
+            }:null;
         let stage=String(result.stage||batchStageForStatus(status));
         if(result.status==='ok'){
           const packet=result.packet;
@@ -1223,7 +1240,10 @@
           stage,checkedAt:Date.now(),httpStatus:evidenceMeta.httpStatus,
           pageDoiVerified:evidenceMeta.pageDoiVerified,
           sectionCount:evidenceMeta.sectionCount,evidenceChars:evidenceMeta.evidenceChars,
-          runId,jobId:token,captureRevision:BATCH_CAPTURE_REVISION,reportEventId:''};
+          runId,jobId:token,captureRevision:BATCH_CAPTURE_REVISION,
+          rightsSignal,bodyEvidence,bodyCompleteness:
+            status==='saved_local'?String(result.packet?.bodyCompleteness||'partial'):'not_saved',
+          reportEventId:''};
         // Save failure evidence before attempting its upload. Server transmission
         // must never be a prerequisite to finishing a publisher DOI.
         try{
@@ -1303,6 +1323,7 @@
     const job=GM_getValue(BATCH_JOB,null);
     if(!job||job.expiresAt<Date.now()||!publisher(location.hostname)||!job.token||!job.runId)return;
     let phase='publisher_page',verified=false,sectionCount=0,evidenceChars=0;
+    let bodyEvidence=null,rightsSignal='unverified';
     function observedPageHttpStatus(){
       // Read the browser's own navigation timing; never initiate extra publisher requests.
       try{
@@ -1324,7 +1345,7 @@
       reportStage(stage,code,data.status!=='ok');
       GM_setValue(BATCH_RESULT,{runId:job.runId,token:job.token,doi:job.doi,
         at:Date.now(),stage,pageDoiVerified:verified,sectionCount,evidenceChars,
-        httpStatus:observedPageHttpStatus(),...data});
+        httpStatus:observedPageHttpStatus(),bodyEvidence,rightsSignal,...data});
     };
     // No need to inherit URL fragments across publisher redirects. The only
     // active tab is DOI-bound and only the explicitly started, live job may run.
@@ -1352,7 +1373,13 @@
         const root=document.querySelector('main article, article, main, [role="main"]');
         const ready=batchArticlePageReady(root);
         if(ready)sawArticle=true;
-        const license=batchLicenseEvidence(root);
+        // DOI has already been verified. A structural count is not a licence
+        // to copy the text: it is deliberately metadata-only.
+        bodyEvidence=batchBodyStructure(root);
+        const rights=batchReuseRights(root);
+        rightsSignal=rights.signal;
+        const license=rights.license;
+        sectionCount=bodyEvidence.sectionCount;evidenceChars=bodyEvidence.scienceChars;
         reportStage('license');
         if(license){
           sawLicense=true;
@@ -1386,7 +1413,11 @@
     if(!batchArticlePageReady(root)&&!sawArticle){
       storeResult({status:'page_unavailable',stage:'publisher_page'});return;
     }
-    const license=batchLicenseEvidence(root);
+    bodyEvidence=batchBodyStructure(root);
+    const rights=batchReuseRights(root);
+    rightsSignal=rights.signal;
+    const license=rights.license;
+    sectionCount=bodyEvidence.sectionCount;evidenceChars=bodyEvidence.scienceChars;
     if(!license){
       storeResult({status:'license_not_verified',stage:'license'});return;
     }
@@ -1409,7 +1440,8 @@
       rightsBasis:license.kind,licenseUrl:license.licenseUrl,
       indexEligibility:'local_pilot_only',publicUploadAllowed:false,
       pdfDownloaded:false,mediaDownloaded:false,paragraphs:capture.paragraphCount,
-      characters:capture.characterCount,sections:capture.sections,
+      characters:capture.characterCount,coverage:capture.coverage,
+      bodyCompleteness:capture.coverage.completeness,sections:capture.sections,
       captions:capture.captions,tables:capture.tables};
     if(JSON.stringify(packet).length>BATCH_MAX_RESPONSE_CHARS){
       storeResult({status:'too_large',stage:'body_extract'});return;
