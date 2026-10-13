@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-10-13T02:42:03.918Z",
+  "generatedAt": "2026-10-13T02:44:57.356Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-with-catchup",
   "lookbackDays": 3,
@@ -190,8 +190,8 @@
     "publisherAbstractRescued": 0,
     "publisherAbstractProbeBlocked": 34,
     "publisherListingsComplete": 0,
-    "publisherListingsPartial": 14,
-    "publisherListingsUnavailable": 2,
+    "publisherListingsPartial": 13,
+    "publisherListingsUnavailable": 3,
     "unresolved": 13,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 7
@@ -3120,13 +3120,13 @@
       {
         "journal": "Nature Communications",
         "url": "https://www.nature.com/ncomms.rss",
-        "status": "reachable_partial",
-        "items": 8,
+        "status": "blocked_or_unavailable",
+        "completeListing": false,
+        "items": 0,
         "unidentifiable": 0,
         "outOfRange": 0,
-        "completeListing": false,
-        "error": "",
-        "doiCount": 8
+        "error": "fetch failed",
+        "doiCount": 0
       },
       {
         "journal": "JACS",
@@ -14175,8 +14175,7 @@
       {
         "doi": "10.1038/s41557-026-02275-7",
         "journal": "Nature Chemistry",
-        "status": "blocked_or_unavailable",
-        "reason": "publisher_metadata_redirect_host_unrecognized:idp.nature.com"
+        "status": "not_retrieved"
       },
       {
         "doi": "10.1038/s41929-026-01621-9",
@@ -14217,8 +14216,7 @@
       {
         "doi": "10.1038/s44160-026-01194-2",
         "journal": "Nature Synthesis",
-        "status": "blocked_or_unavailable",
-        "reason": "publisher_metadata_redirect_host_unrecognized:idp.nature.com"
+        "status": "not_retrieved"
       },
       {
         "doi": "10.1038/d41586-026-03093-0",
@@ -14228,12 +14226,14 @@
       {
         "doi": "10.1038/d41586-026-03212-x",
         "journal": "Nature",
-        "status": "not_retrieved"
+        "status": "blocked_or_unavailable",
+        "reason": "publisher_metadata_redirect_host_unrecognized:idp.nature.com"
       },
       {
         "doi": "10.1038/s41557-026-02268-6",
         "journal": "Nature Chemistry",
-        "status": "not_retrieved"
+        "status": "blocked_or_unavailable",
+        "reason": "publisher_metadata_redirect_host_unrecognized:idp.nature.com"
       },
       {
         "doi": "10.1038/s41557-026-02284-6",
@@ -14439,7 +14439,7 @@
       "reviewPriority": "high",
       "recheckPreviousExclusion": true,
       "recheckReason": "new_substantive_abstract_after_previous_exclusion",
-      "previousReviewFile": "review-2026-10-11-0800.json"
+      "previousReviewFile": "review-2026-10-13-postrelease-new-evidence-excludes.json"
     },
     {
       "doi": "10.31635/ccschem.026.202608292",
@@ -14728,7 +14728,7 @@
       "reviewPriority": "high",
       "recheckPreviousExclusion": true,
       "recheckReason": "new_substantive_abstract_after_previous_exclusion",
-      "previousReviewFile": "review-2026-10-11-postrelease-late-0800.json"
+      "previousReviewFile": "review-2026-10-13-postrelease-new-evidence-excludes.json"
     },
     {
       "doi": "10.1038/s41467-026-78648-w",
@@ -14789,7 +14789,7 @@
       "reviewPriority": "high",
       "recheckPreviousExclusion": true,
       "recheckReason": "new_substantive_abstract_after_previous_exclusion",
-      "previousReviewFile": "review-2026-10-12-0800.json"
+      "previousReviewFile": "review-2026-10-13-postrelease-new-evidence-excludes.json"
     },
     {
       "doi": "10.1038/s41467-026-78603-9",
@@ -14838,7 +14838,7 @@
       "reviewPriority": "high",
       "recheckPreviousExclusion": true,
       "recheckReason": "new_substantive_abstract_after_previous_exclusion",
-      "previousReviewFile": "review-2026-10-11-0800.json"
+      "previousReviewFile": "review-2026-10-13-postrelease-new-evidence-excludes.json"
     },
     {
       "doi": "10.1038/s41467-026-78575-w",
@@ -14888,7 +14888,7 @@
       "reviewPriority": "high",
       "recheckPreviousExclusion": true,
       "recheckReason": "new_substantive_abstract_after_previous_exclusion",
-      "previousReviewFile": "review-2026-10-11-0800.json"
+      "previousReviewFile": "review-2026-10-13-postrelease-new-evidence-excludes.json"
     },
     {
       "doi": "10.1038/s41467-026-78555-0",
@@ -14937,7 +14937,7 @@
       "reviewPriority": "high",
       "recheckPreviousExclusion": true,
       "recheckReason": "new_substantive_abstract_after_previous_exclusion",
-      "previousReviewFile": "review-2026-10-12-0800.json"
+      "previousReviewFile": "review-2026-10-13-postrelease-new-evidence-excludes.json"
     }
   ],
   "potentialGaps": [
@@ -15027,7 +15027,7 @@
       "reviewPriority": "high",
       "recheckPreviousExclusion": true,
       "recheckReason": "new_substantive_abstract_after_previous_exclusion",
-      "previousReviewFile": "review-2026-10-11-0800.json"
+      "previousReviewFile": "review-2026-10-13-postrelease-new-evidence-excludes.json"
     },
     {
       "doi": "10.31635/ccschem.026.202608292",
@@ -15279,7 +15279,7 @@
       "reviewPriority": "high",
       "recheckPreviousExclusion": true,
       "recheckReason": "new_substantive_abstract_after_previous_exclusion",
-      "previousReviewFile": "review-2026-10-11-postrelease-late-0800.json"
+      "previousReviewFile": "review-2026-10-13-postrelease-new-evidence-excludes.json"
     },
     {
       "doi": "10.1038/s41467-026-78648-w",
@@ -15340,7 +15340,7 @@
       "reviewPriority": "high",
       "recheckPreviousExclusion": true,
       "recheckReason": "new_substantive_abstract_after_previous_exclusion",
-      "previousReviewFile": "review-2026-10-12-0800.json"
+      "previousReviewFile": "review-2026-10-13-postrelease-new-evidence-excludes.json"
     },
     {
       "doi": "10.1038/s41467-026-78603-9",
@@ -15389,7 +15389,7 @@
       "reviewPriority": "high",
       "recheckPreviousExclusion": true,
       "recheckReason": "new_substantive_abstract_after_previous_exclusion",
-      "previousReviewFile": "review-2026-10-11-0800.json"
+      "previousReviewFile": "review-2026-10-13-postrelease-new-evidence-excludes.json"
     },
     {
       "doi": "10.1038/s41467-026-78575-w",
@@ -15439,7 +15439,7 @@
       "reviewPriority": "high",
       "recheckPreviousExclusion": true,
       "recheckReason": "new_substantive_abstract_after_previous_exclusion",
-      "previousReviewFile": "review-2026-10-11-0800.json"
+      "previousReviewFile": "review-2026-10-13-postrelease-new-evidence-excludes.json"
     },
     {
       "doi": "10.1038/s41467-026-78555-0",
@@ -15488,7 +15488,7 @@
       "reviewPriority": "high",
       "recheckPreviousExclusion": true,
       "recheckReason": "new_substantive_abstract_after_previous_exclusion",
-      "previousReviewFile": "review-2026-10-12-0800.json"
+      "previousReviewFile": "review-2026-10-13-postrelease-new-evidence-excludes.json"
     }
   ]
 }
