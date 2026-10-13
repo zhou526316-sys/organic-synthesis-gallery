@@ -34,6 +34,8 @@ jobs:
         run: node --test scripts/test-publisher-feed-discovery.mjs
       - name: Validate improved-evidence exclusion re-review
         run: node --test scripts/test-literature-exclusion-recheck.mjs
+      - name: Verify publisher DOI-bound public abstract fallback parser
+        run: node --test scripts/test-publisher-abstract-metadata.mjs
       - name: Verify core literature source coverage policy
         run: node scripts/test-literature-completeness-capability.mjs
       - name: Verify strict prepublication contract regressions
