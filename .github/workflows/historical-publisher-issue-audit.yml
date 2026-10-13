@@ -1,0 +1,58 @@
+name: Historical official publisher-issue reconciliation
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/historical-publisher-issue-audit.mjs'
+      - 'scripts/test-historical-publisher-issue-audit.mjs'
+      - 'audit/historical-publisher-issues/**'
+      - '.github/workflows/historical-publisher-issue-audit.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/historical-publisher-issue-audit.mjs'
+      - 'audit/historical-publisher-issues/**'
+      - '.github/workflows/historical-publisher-issue-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: No publication side effects, issue-source identity and negative coverage tests
+        run: |
+          node --check scripts/historical-publisher-issue-audit.mjs
+          node --test scripts/test-historical-publisher-issue-audit.mjs
+  official-issue-vs-staging:
+    if: github.event_name != 'pull_request'
+    needs: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fetch historical staging metadata read-only
+        run: git fetch origin '+refs/heads/staging/historical-archive-nightly:refs/remotes/origin/staging/historical-archive-nightly' --no-tags
+      - name: Verify actual frozen 2026 Nature Synthesis issue publisher rows
+        env:
+          HISTORICAL_ISSUE_AUDIT_REPORT: ${{ runner.temp }}/nature-synthesis-v5-i8-source-coverage.json
+        run: node scripts/historical-publisher-issue-audit.mjs
+      - name: Keep read-only issue evidence report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: historical-official-issue-v5-i8
+          path: ${{ runner.temp }}/nature-synthesis-v5-i8-source-coverage.json
+          if-no-files-found: warn
+          retention-days: 30
