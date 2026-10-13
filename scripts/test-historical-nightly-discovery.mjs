@@ -985,3 +985,48 @@ test('a real 429 alongside exhausted budget remains a blocking source failure',a
     assert.match(record.consistency.issues.join('|'),/nightly_api_budget_exceeded/);
   });
 });
+
+
+test('year-only OpenAlex Jan 1 RSC can complete 1,300 source records without false date certainty',async()=>{
+  const prior=stage0();
+  prior.cursor={range:{from:'2026-01-01',to:'2026-01-01'},journalIndex:11};
+  await isolatedHistoricalRun(async({readBatch,readState})=>{
+    global.fetch=async url=>{
+      const u=new URL(url);
+      if(u.hostname==='api.crossref.org')return emptyCrossref();
+      const cursor=u.searchParams.get('cursor');
+      const page=cursor==='*'?0:Number(cursor.slice(1));
+      assert.ok(Number.isInteger(page)&&page>=0&&page<13);
+      return {ok:true,json:async()=>({meta:{count:1300,next_cursor:'p'+(page+1)},
+        results:Array.from({length:100},(_,i)=>({
+          doi:'https://doi.org/10.1039/d6sc'+String(page*100+i).padStart(5,'0')+'a',
+          display_name:'RSC source year-only chemistry '+(page*100+i),
+          publication_date:'2026-01-01',
+          primary_location:{source:{display_name:'Chemical Science'}},
+          biblio:{volume:'17'},
+          authorships:[{author:{display_name:'Test Source Author'}}],
+        }))})};
+    };
+    const report=await runNightly();
+    assert.equal(report.blocked,false);
+    assert.equal(report.completeWindows,1);
+    const batch=await readBatch('2026-01-01_2026-01-01_chemical-science');
+    assert.equal(batch.status,'source_enumeration_complete');
+    assert.equal(batch.candidateCount,1300);
+    assert.equal(batch.sourceStatus.openalex.pages,13);
+    assert.equal(batch.records.length,1300);
+    assert.ok(batch.records.every(x=>x.date===''&&x.needsPublisherDateVerification));
+    assert.ok((await readState()).completed.includes('2026-01-01_2026-01-01_chemical-science'));
+    assert.equal(report.noPublication,true);
+  },{priorState:prior});
+});
+
+test('special OpenAlex pagination is limited to RSC year-only January first',async()=>{
+  const {historicalOpenAlexPageCap}=await import('./historical-nightly-discovery.mjs');
+  const rsc={name:'Chemical Science'},normal={name:'JACS'};
+  assert.equal(historicalOpenAlexPageCap(rsc,{from:'2026-01-01',to:'2026-01-01'}),100);
+  assert.equal(historicalOpenAlexPageCap({name:'Green Chemistry'},{from:'2026-01-01',to:'2026-01-01'}),100);
+  assert.equal(historicalOpenAlexPageCap(rsc,{from:'2026-01-01',to:'2026-01-31'}),10);
+  assert.equal(historicalOpenAlexPageCap(normal,{from:'2026-01-01',to:'2026-01-01'}),10);
+  assert.equal(historicalOpenAlexPageCap(rsc,{from:'2026-01-02',to:'2026-01-02'}),10);
+});
