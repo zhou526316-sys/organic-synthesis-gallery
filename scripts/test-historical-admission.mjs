@@ -279,3 +279,48 @@ test('Green Chemistry Q3 recovered dates are the RSC original Published on impri
  assert.equal(new Set(challengeReasons).size,2);
  assert.equal(root.pending.length,2);
 });
+
+test('2026 Q3 eight ACS originals require exact publisher first-online dates and distinct scientific challenges',()=>{
+  const pairs=[
+    ['10.1021/jacs.6c08244','2026-07-31','1e3a285d37a0cba1db6fafc15b07af8e3833137f'],
+    ['10.1021/jacs.6c11788','2026-07-29','1e3a285d37a0cba1db6fafc15b07af8e3833137f'],
+    ['10.1021/acscatal.6c03737','2026-07-23','4f5e8cbdce63f5488856ee08a27a183611d7905d'],
+    ['10.1021/acscatal.6c04804','2026-08-24','267848d5cc293c65a8c780ffcad4b043fe27cccc'],
+    ['10.1021/acs.orglett.6c03121','2026-09-06','80aca4837373541c9ba22bdcae30cd0bd2f64511'],
+    ['10.1021/acs.orglett.6c02892','2026-07-30','67f6960bccfa31a1d2477390309426061dc65563'],
+    ['10.1021/acs.orglett.6c03201','2026-08-29','3eb3448b8f413701aed67f8e3f29d518400d7827'],
+    ['10.1021/acs.joc.6c01478','2026-08-26','30ad0c3b51b48a210e90d8fe19b56412b1c94f7a']
+  ];
+  const challenges=new Set(),contributions=new Set();
+  for(const [doi,firstOnline,sourceSha] of pairs){
+    const record=root.accepted.find(x=>x.doi===doi);
+    assert.ok(record,'missing Q3 DOI '+doi);
+    assert.equal(record.date,firstOnline);
+    assert.equal(record.reviewEvidence.publisherOnlineDate,firstOnline);
+    assert.equal(record.reviewEvidence.stageBatchSha,sourceSha);
+    assert.match(record.reviewEvidence.publisherPage,/^https:\/\/pubs\.acs\.org\/doi\/10\.1021\//);
+    assert.equal(record.reviewPasses,2);
+    assert.deepEqual(record.independentPasses.map(p=>p.decision),['include','include']);
+    assert.ok(record.independentPasses[0].reason.length>85);
+    assert.ok(record.independentPasses[1].reason.length>70);
+    challenges.add(record.independentPasses[1].reason);
+    contributions.add(record.scopeAssessment.primaryContribution);
+    assert.deepEqual(record.reviewEvidence.crossrefOpenalexSources,['crossref','openalex']);
+    assert.equal(record.ingestionChannel,'historical_backfill');
+    assert.equal(record.mediaPolicy,'toc_only');
+    assert.equal(record.new,false);
+    assert.equal(record.addedDate,'');
+    assert.equal(record.reviewEvidence.pdfFetched,false);
+    assert.equal(record.reviewEvidence.figureFetched,false);
+    assert.equal(record.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+  }
+  assert.equal(challenges.size,pairs.length,'distinct second-pass boundaries');
+  assert.equal(contributions.size,pairs.length,'distinct first-pass evidence');
+  assert.equal(root.pending.length,2,'old date disputes must remain pending');
+  for(const doi of [
+    '10.1038/s41929-026-01597-6','10.1038/s44160-026-01160-y',
+    '10.1038/s44160-026-01174-6','10.1038/s41557-026-02201-x',
+    '10.1038/s41557-026-02246-y'
+  ])assert.equal(root.accepted.some(x=>x.doi===doi),false,
+      'Nature publisher commentary must not masquerade as an original research include');
+});
