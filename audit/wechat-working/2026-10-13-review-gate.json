@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-13",
+  "revision": "2026-10-13-r2",
+  "articleCount": 2,
+  "selectionDois": [
+    "10.1038/s44160-026-01189-z",
+    "10.1038/s41557-026-02213-7"
+  ],
+  "textReview": "pass",
+  "imageReview": "pending",
+  "sources": [],
+  "assets": [],
+  "artifacts": {
+    "textOnly": "audit/wechat-working/2026-10-13-r2-nature-synthesis-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-13-r2-nature-synthesis-images-only.md",
+    "retrospectiveTextOnly": "audit/wechat-working/2026-10-13-r2-nature-chemistry-text-only.md",
+    "retrospectiveImagesOnly": "audit/wechat-working/2026-10-13-r2-nature-chemistry-images-only.md",
+    "scienceQA": "audit/wechat-working/2026-10-13-r2-science-review.json"
+  },
+  "publicSendAuthorized": false,
+  "status": "blocked_until_separate_mobile_and_image_review",
+  "notes": "Direct source-only chemistry. This gate intentionally blocks any WeChat draft write until mobile and original-pixel review."
+}
