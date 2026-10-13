@@ -201,3 +201,47 @@ test('Q3 ACS online-first reconciliation admits only four independently reviewed
   }
   assert.equal(new Set(firstPassReasons).size,expected.size);
 });
+
+test('eight RSC Q3 NLM electronic dates are not substituted with created or issue dates',()=>{
+  const expected=new Map([
+    ['10.1039/d6sc02716d','2026-07-15'],
+    ['10.1039/d6sc02777f','2026-07-08'],
+    ['10.1039/d6sc03998g','2026-07-29'],
+    ['10.1039/d6sc04572c','2026-07-27'],
+    ['10.1039/d6sc05207j','2026-08-05'],
+    ['10.1039/d6sc05589c','2026-08-31'],
+    ['10.1039/d6sc05410b','2026-09-04'],
+    ['10.1039/d6sc06200h','2026-09-22']
+  ]);
+  const firstPasses=new Set(),sourceRoots=new Set();
+  for(const [doi,firstOnline] of expected){
+    const x=root.accepted.find(row=>row.doi===doi);
+    assert.ok(x,'missing Chemical Science DOI '+doi);
+    assert.equal(x.journal,'Chemical Science');
+    assert.equal(x.date,firstOnline,'the NLM electronic date must override unknown Crossref created year');
+    assert.equal(x.reviewEvidence.publisherOnlineDate,firstOnline);
+    assert.equal(x.reviewEvidence.firstOnlineDateEvidence.journalSuppliedDate,firstOnline);
+    assert.match(x.reviewEvidence.firstOnlineDateEvidence.tier,/^NLM_journal_supplied_electronic_date/);
+    assert.equal(x.reviewEvidence.firstOnlineDateEvidence.directPublisherFirstPublishedNotRead,true);
+    assert.equal(x.reviewEvidence.firstOnlineDateEvidence.recordCrossrefDate,'unverified_year_only');
+    assert.equal(x.reviewEvidence.publisherDirectPageStatus,'bot_blocked');
+    assert.match(x.reviewEvidence.firstOnlineDateEvidence.pubmedUrl,/^https:\/\/pubmed\.ncbi\.nlm\.nih\.gov\/\d+\/$/);
+    assert.match(x.reviewEvidence.firstOnlineDateEvidence.pmcUrl,/^https:\/\/pmc\.ncbi\.nlm\.nih\.gov\/articles\/PMC\d+\/$/);
+    assert.ok(x.reviewEvidence.publisherPage.includes('/'+doi));
+    assert.deepEqual(x.reviewEvidence.crossrefOpenalexSources,['crossref']);
+    assert.equal(x.reviewPasses,2);
+    assert.deepEqual(x.independentPasses.map(p=>p.decision),['include','include']);
+    assert.ok(x.independentPasses.every(p=>p.reason.length>60));
+    firstPasses.add(x.independentPasses[0].reason);
+    sourceRoots.add(x.reviewEvidence.stageBatchId);
+    assert.equal(x.ingestionChannel,'historical_backfill');
+    assert.equal(x.mediaPolicy,'toc_only');
+    assert.equal(x.new,false);
+    assert.equal(x.addedDate,'');
+    assert.equal(x.reviewEvidence.pdfFetched,false);
+    assert.equal(x.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+  }
+  assert.equal(firstPasses.size,8,'first passes must be DOI-specific');
+  assert.ok(sourceRoots.size>=6,'batch provenance must not be a single fabricated source');
+  assert.equal(root.pending.length,2,'old date conflicts remain unresolved, not silently accepted');
+});
