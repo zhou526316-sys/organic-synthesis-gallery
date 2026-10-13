@@ -1,0 +1,23 @@
+{
+  "action": "read_only_real_wechat_oct13_draft_get_live_preview",
+  "date": "2026-10-13",
+  "revision": "2026-10-13-r3",
+  "previewUrl": "https://relay.gczhouwld.com/wechat-preview/abfa3442ea5757d062720c03.html",
+  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWO145961Rlw4fMzLxtij2o_6u5Z6Pq_7PK-nw7ZXBk7V",
+  "dois": [
+    "10.1038/s44160-026-01189-z",
+    "10.1038/s41557-026-02213-7"
+  ],
+  "expectedCloudImageCount": 25,
+  "bodyImages": [
+    12,
+    10
+  ],
+  "expectedOriginalCoverImages": 2,
+  "expectedLongform": "innovation-first scientific story aligned with prior Oct05 reference; compare authors' mechanism evidence instead of listing figures",
+  "draftWriteAuthorized": false,
+  "publicSendAuthorized": false,
+  "reason": "Independently inspect newly written R3 exact same 10/13 two-article WeChat cloud draft after fixed-IP draft_update/draft_get. Read-only mobile 390 and desktop preview, verify 25 original assets, sections, links and new mechanistic suspense/narrative. Do not edit or publish.",
+  "requestId": "wechat-oct13-r3-real-preview-qa-anchor-fix-02",
+  "retryReason": "Prior read-only test had stale R2 screenshot heading selectors; cloud draft/get and new R3 scientific content remained correct. Use R3's approved new h2 anchors; do not rewrite the draft."
+}

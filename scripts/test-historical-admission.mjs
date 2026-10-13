@@ -172,3 +172,110 @@ test('2026-Q3 three independently assessed JOC methods are never marked daily ne
     assert.equal('pdf' in row,false);
   }
 });
+
+test('Q3 ACS online-first reconciliation admits only four independently reviewed synthetic articles',()=>{
+  const expected=new Map([
+    ['10.1021/acscatal.6c02698',['2026-07-27','4f5e8cbdce63f5488856ee08a27a183611d7905d']],
+    ['10.1021/acs.orglett.6c03391',['2026-08-31','3eb3448b8f413701aed67f8e3f29d518400d7827']],
+    ['10.1021/acs.joc.6c01089',['2026-07-31','9181de94c2f59b0fb77a470f802a143699524037']],
+    ['10.1021/acs.joc.6c01163',['2026-07-30','9181de94c2f59b0fb77a470f802a143699524037']]
+  ]);
+  const firstPassReasons=[];
+  for(const [doi,[online,sourceSha]] of expected){
+    const record=root.accepted.find(row=>row.doi===doi);
+    assert.ok(record,'not approved: '+doi);
+    assert.equal(record.date,online,'first-online, not print-issue date: '+doi);
+    assert.equal(record.reviewEvidence.publisherOnlineDate,online);
+    assert.equal(record.reviewEvidence.stageBatchSha,sourceSha);
+    assert.equal(record.firstPassDecision,'include');
+    assert.equal(record.challengeDecision,'include');
+    assert.equal(record.reviewPasses,2);
+    assert.deepEqual(record.independentPasses.map(pass=>pass.decision),['include','include']);
+    assert.ok(record.independentPasses[0].assessment.length>60);
+    firstPassReasons.push(record.independentPasses[0].assessment);
+    assert.equal(record.mediaPolicy,'toc_only');
+    assert.equal(record.new,false);
+    assert.equal(record.addedDate,'');
+    assert.equal(record.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+    assert.equal(record.reviewEvidence.pdfFetched,false);
+  }
+  assert.equal(new Set(firstPassReasons).size,expected.size);
+});
+
+test('eight RSC Q3 NLM electronic dates are not substituted with created or issue dates',()=>{
+  const expected=new Map([
+    ['10.1039/d6sc02716d','2026-07-15'],
+    ['10.1039/d6sc02777f','2026-07-08'],
+    ['10.1039/d6sc03998g','2026-07-29'],
+    ['10.1039/d6sc04572c','2026-07-27'],
+    ['10.1039/d6sc05207j','2026-08-05'],
+    ['10.1039/d6sc05589c','2026-08-31'],
+    ['10.1039/d6sc05410b','2026-09-04'],
+    ['10.1039/d6sc06200h','2026-09-22']
+  ]);
+  const firstPasses=new Set(),sourceRoots=new Set();
+  for(const [doi,firstOnline] of expected){
+    const x=root.accepted.find(row=>row.doi===doi);
+    assert.ok(x,'missing Chemical Science DOI '+doi);
+    assert.equal(x.journal,'Chemical Science');
+    assert.equal(x.date,firstOnline,'the NLM electronic date must override unknown Crossref created year');
+    assert.equal(x.reviewEvidence.publisherOnlineDate,firstOnline);
+    assert.equal(x.reviewEvidence.firstOnlineDateEvidence.journalSuppliedDate,firstOnline);
+    assert.match(x.reviewEvidence.firstOnlineDateEvidence.tier,/^NLM_journal_supplied_electronic_date/);
+    assert.equal(x.reviewEvidence.firstOnlineDateEvidence.directPublisherFirstPublishedNotRead,true);
+    assert.equal(x.reviewEvidence.firstOnlineDateEvidence.recordCrossrefDate,'unverified_year_only');
+    assert.equal(x.reviewEvidence.publisherDirectPageStatus,'bot_blocked');
+    assert.match(x.reviewEvidence.firstOnlineDateEvidence.pubmedUrl,/^https:\/\/pubmed\.ncbi\.nlm\.nih\.gov\/\d+\/$/);
+    assert.match(x.reviewEvidence.firstOnlineDateEvidence.pmcUrl,/^https:\/\/pmc\.ncbi\.nlm\.nih\.gov\/articles\/PMC\d+\/$/);
+    assert.ok(x.reviewEvidence.publisherPage.includes('/'+doi));
+    assert.deepEqual(x.reviewEvidence.crossrefOpenalexSources,['crossref']);
+    assert.equal(x.reviewPasses,2);
+    assert.deepEqual(x.independentPasses.map(p=>p.decision),['include','include']);
+    assert.ok(x.independentPasses.every(p=>p.reason.length>60));
+    firstPasses.add(x.independentPasses[0].reason);
+    sourceRoots.add(x.reviewEvidence.stageBatchId);
+    assert.equal(x.ingestionChannel,'historical_backfill');
+    assert.equal(x.mediaPolicy,'toc_only');
+    assert.equal(x.new,false);
+    assert.equal(x.addedDate,'');
+    assert.equal(x.reviewEvidence.pdfFetched,false);
+    assert.equal(x.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+  }
+  assert.equal(firstPasses.size,8,'first passes must be DOI-specific');
+  assert.ok(sourceRoots.size>=6,'batch provenance must not be a single fabricated source');
+  assert.equal(root.pending.length,2,'old date conflicts remain unresolved, not silently accepted');
+});
+
+test('Green Chemistry Q3 recovered dates are the RSC original Published on imprint, never Crossref created dates',()=>{
+ const pairs=[
+  ['10.1039/d6gc02631a','2026-07-09','4807a9c60e560c2830552c36dc7ab703b3249349'],
+  ['10.1039/d6gc02989b','2026-08-05','f5d97aab53d4fe741a09621ec1a53ca5d83e2616']
+ ];
+ const challengeReasons=[];
+ for(const [doi,firstOnline,sourceSha] of pairs){
+   const x=root.accepted.find(r=>r.doi===doi);
+   assert.ok(x,doi);
+   assert.equal(x.journal,'Green Chemistry');
+   assert.equal(x.date,firstOnline);
+   assert.equal(x.reviewEvidence.publisherOnlineDate,firstOnline);
+   assert.equal(x.reviewEvidence.stageBatchSha,sourceSha);
+   assert.equal(x.reviewEvidence.firstOnlineDateEvidence.firstOnlineDate,firstOnline);
+   assert.equal(x.reviewEvidence.firstOnlineDateEvidence.publisherSiteDirectRead,false);
+   assert.equal(x.reviewEvidence.firstOnlineDateEvidence.crossrefFirstPublishedDayUnknown,true);
+   assert.match(x.reviewEvidence.firstOnlineDateEvidence.tier,/^RSC_publisher_typeset_original_imprint_/);
+   assert.match(x.reviewEvidence.firstOnlineDateEvidence.publisherImprint,/^Published on \d\d \w+ 2026$/);
+   assert.match(x.reviewEvidence.firstOnlineDateEvidence.originalPublisherTypesetCopyUrl,/^https:\/\/www\.researchgate\.net\/publication\//);
+   assert.deepEqual(x.reviewEvidence.crossrefOpenalexSources,['crossref']);
+   assert.equal(x.reviewPasses,2);
+   assert.deepEqual(x.independentPasses.map(p=>p.decision),['include','include']);
+   assert.ok(x.independentPasses.every(p=>p.reason.length>70));
+   challengeReasons.push(x.independentPasses[1].reason);
+   assert.equal(x.mediaPolicy,'toc_only');
+   assert.equal(x.new,false);
+   assert.equal(x.addedDate,'');
+   assert.equal(x.reviewEvidence.figureFetched,false);
+   assert.equal(x.reviewEvidence.pdfFetched,false);
+ }
+ assert.equal(new Set(challengeReasons).size,2);
+ assert.equal(root.pending.length,2);
+});
