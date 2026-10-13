@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "gallery-historical-q3-online-date-investigation-v1",
+  "generatedAt": "2026-10-13T08:27:25.639Z",
+  "mode": "three_individual_date_cases_hold_only_not_publication_or_admission",
+  "period": "2026-07-01..2026-09-30",
+  "originalManifestPendingUnmodified": [
+    "10.1021/acs.joc.6c01483",
+    "10.1021/acs.orglett.6c02374"
+  ],
+  "cases": [
+    {
+      "doi": "10.1021/acs.joc.6c00852",
+      "journal": "JOC",
+      "title": "Modular Assembly of Unsymmetric 3,4-Dihydro-BINAP Derivatives via Electrophilic Phosphinative Cyclization of Alkynes and Sequential C–P Cross-Coupling",
+      "sourceDate": "2026-08-31",
+      "sourceBatch": "2026-08-22_2026-08-31_joc",
+      "sourceGitSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+      "holdType": "publisher_website_published_online_field_conflict",
+      "status": "held_date_evidence_not_approved_or_published",
+      "officialClaims": [
+        {
+          "date": "2026-08-31",
+          "field": "Published Online",
+          "url": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00852",
+          "pageContext": "Official DOI canonical-style route"
+        },
+        {
+          "date": "2026-09-01",
+          "field": "Published Online",
+          "url": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c00852/5391001/Modular-Assembly-of-Unsymmetric-3-4-Dihydro-BINAP",
+          "pageContext": "Official ACS Silverchair alternate DOI route"
+        }
+      ],
+      "scientificScope": "Original Article presents Tf2O-promoted electrophilic phosphinative cyclization of naphthyl alkynes with diarylphosphine oxides, then Ni-catalyzed C–P cross-coupling to modular unsymmetric 3,4-dihydro-BINAP ligand scaffolds with preliminary synthetic-catalyst use. Real new C–P bonds and independent modular scope. Academic relevance plausible, not a final include while first-online date provenance conflicts.",
+      "challenge": "Catalyst-performance proof in two trial reactions is not itself general phosphine-ligand superiority; the novel modular organic P-heteroatom synthesis may justify inclusion, but first resolve same publisher Published Online difference without assuming issue page or DOI route is always correct.",
+      "nextAction": "Check exact ACS Article History production revision/first-online record (timestamp and timezone), Crossref published-online vs issued field and Wayback publication route; preserve snapshots/hash, only then complete individual independent science/date challenge."
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02707",
+      "journal": "Organic Letters",
+      "title": "Visible-Light-Driven Palladium-Catalyzed Cyclocarbonylative Synthesis of Aliphatic Lactones",
+      "sourceDate": "2026-07-30",
+      "sourceBatch": "2026-07-22_2026-07-31_organic-letters",
+      "sourceGitSha": "67f6960bccfa31a1d2477390309426061dc65563",
+      "holdType": "publisher_website_published_online_field_conflict",
+      "status": "held_date_evidence_not_approved_or_published",
+      "officialClaims": [
+        {
+          "date": "2026-07-31",
+          "field": "Published Online",
+          "url": "https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c02707/5237556/Visible-Light-Driven-Palladium-Catalyzed",
+          "pageContext": "Official ACS article-DOI route"
+        },
+        {
+          "date": "2026-07-30",
+          "field": "Published Online",
+          "url": "https://pubs.acs.org/orlef7/article/28/32/10265/5237556/Visible-Light-Driven-Palladium-Catalyzed",
+          "pageContext": "Official ACS issue/volume route"
+        }
+      ],
+      "scientificScope": "Original Letter describes photoexcited Pd-catalyzed CO insertion/cyclocarbonylation of aliphatic bromoalcohols to five-membered substituted lactones, based on C(sp3)–Br activation plus thermal reductive elimination. This is a tangible synthetic method but source first-online date remains disputed.",
+      "challenge": "Visible-light Pd catalysis and five-membered lactone preparation is not merely catalytic photophysics, but do not infer free-radical versus organopalladium mechanism as uniquely proven and do not force the two conflicting ACS Article History dates into one unverified accepted record.",
+      "nextAction": "Verify which of the two official ACS online fields refers to initial publication vs platform migrated/updated record; cross-check Crossref published-online/issued and the original manuscript/version history. Do not use issue publication date as a proxy."
+    },
+    {
+      "doi": "10.1126/sciadv.aeh8194",
+      "journal": "Science Advances",
+      "title": "Palladium-catalyzed enantioselective alkenylation of acyclic alkenols: Broad scope with alkenyl bromides",
+      "sourceDate": "2026-08-14",
+      "sourceBatch": "2026-08-08_2026-08-14_science-advances",
+      "sourceGitSha": "b3333a0b72bdf78820f68bfeeb3c273029f9524a",
+      "holdType": "issue_date_vs_NLM_epublish_not_yet_independently_confirmed_at_publisher",
+      "status": "held_date_evidence_not_approved_or_published",
+      "officialClaims": [
+        {
+          "date": "2026-08-12",
+          "field": "PubMed Epub",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/42585335/",
+          "pageContext": "U.S. National Library of Medicine journal-supplied electronic publication date, PMID42585335"
+        },
+        {
+          "date": "2026-08-14",
+          "field": "Science Advances 12(33) journal issue date",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/42585335/",
+          "pageContext": "PubMed issue label; corresponds to Crossref/OpenAlex candidate day, but not necessarily earliest online day"
+        }
+      ],
+      "scientificScope": "Title and original journal identity indicate a Pd-catalyzed asymmetric alkenylation reaction on acyclic alkenols using alkenyl bromide coupling partners; full generality and actual asymmetric control must be checked in primary journal experimental Abstract/article, not inferred from title alone.",
+      "challenge": "NLM explicitly distinguishes electronic-first August 12 from issue August 14, which is an evidence classification problem rather than proof that the publisher posted two conflicting first-online dates. Do not call Aug14 a verified first-online date just because Crossref placed it in the August14 source batch.",
+      "nextAction": "Retrieve AAAS/Science DOI article information for direct Published online date 2026-08-12, check NLM Epub/crossref published-online vs issued, then complete two-pass preparative scope review and correct manuscript date with frozen provenance."
+    }
+  ],
+  "summary": {
+    "newPublisherFieldConflicts": 2,
+    "sourceIssueVersusEpubSemanticMismatch": 1,
+    "newHistoryManifestPending": 0,
+    "sourceDoisRemainInUnreviewedQueue": 3
+  },
+  "classificationRule": "Do not silently reconcile two conflicting 'Published Online' fields; do distinguish an issue date from a verified Epub date. These are evidence investigations, not approved historical publication date corrections.",
+  "guards": {
+    "noPublication": true,
+    "noPendingManifestMutation": true,
+    "noAutomaticIncludeOrExclude": true,
+    "noCloudflareD1": true,
+    "onlySole08": true,
+    "noMediaPdfOrSi": true
+  }
+}

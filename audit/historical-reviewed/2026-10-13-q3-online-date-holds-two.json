@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "gallery-historical-q3-article-online-date-holds-v1",
+  "createdAt": "2026-10-13T11:12:22.408Z",
+  "mode": "evidence_only_not_manifest_pending_not_approval",
+  "period": "2026-07-01..2026-09-30",
+  "scope": "exact DOI date dispute only",
+  "items": [
+    {
+      "doi": "10.1021/acs.orglett.6c03028",
+      "journal": "Organic Letters",
+      "title": "Organocatalytic Enantioselective Synthesis of C–N Axially Chiral N-Arylindole Amino Esters via Oxidative Esterification with Dynamic Kinetic Resolution",
+      "stageDate": "2026-07-30",
+      "stageRoot": "2026-07-22_2026-07-31_organic-letters",
+      "stageGitBlobSha": "67f6960bccfa31a1d2477390309426061dc65563",
+      "publisherDirectDate": "2026-07-31",
+      "publisherUrl": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03028",
+      "publisherField": "Article History: Published Online",
+      "otherEvidenceUrl": "https://doi.org/10.1021/acs.orglett.6c03028",
+      "dateDisposition": "unresolved_crossref_source_vs_ACS_original_one_day",
+      "academicPreliminary": "high_potential_requires_first_online_adjudication_then_full_two_pass",
+      "chemicalBasis": "NHC催化N-芳基吲哚氨基醛动态动力学拆分、氧化酯化以构筑C–N轴手性氨基酯；官方摘要提示多个底物与克级实例，但日期差异阻止自动纳入。",
+      "nextEvidence": "Verify immutable publisher DOI Article History, first-online publication version and UTC/local conversion, then independently confirm with archive/source update timing; retain both fields and recheck precise DOI before academic final include."
+    },
+    {
+      "doi": "10.1126/sciadv.aeh2073",
+      "journal": "Science Advances",
+      "title": "Catalytic asymmetric synthesis of inherently chiral tricyclic diazepinones: Access to (+)-telenzepine",
+      "stageDate": "2026-07-24",
+      "stageRoot": "2026-07-22_2026-07-31_science-advances",
+      "stageGitBlobSha": "d871cc041a63ae8b1724ed8c6115de79616d1fac",
+      "publisherDirectDate": null,
+      "publisherUrl": "https://www.science.org/doi/10.1126/sciadv.aeh2073",
+      "publisherField": "AAAS publisher first-online day not yet independently read",
+      "otherEvidenceUrl": "https://pubmed.ncbi.nlm.nih.gov/42490447/",
+      "nlmArticleDate": "2026-07-23",
+      "nlmPublicationDate": "2026-07-24",
+      "nlmPublicationStatus": "ppublish",
+      "dateDisposition": "NLM_article_date_one_day_before_NLM_issue_date_and_stage_created_publication_date_not_conclusive",
+      "academicPreliminary": "high_potential_requires_AAAS_first_online_adjudication_then_full_two_pass",
+      "chemicalBasis": "有机催化末期N–H烷基化锁定非平面三环二氮杂酮构象，实现固有手性三环与(+)-telenzepine路线；合成内容明确但须厘清文章电子首发日期。",
+      "nextEvidence": "Check actual AAAS Science Advances article original First Published field versus NLM article_date / ppublish issue date; do not set publisherOnlineDate by guessing from NLM or stage."
+    }
+  ],
+  "guards": {
+    "noAutomaticAcademicDecision": true,
+    "doNotModifyOldTwoManifestPending": true,
+    "noD1": true,
+    "noFormalRelease": true,
+    "notNewDaily": true,
+    "Q3TocOnly": true,
+    "noMediaOrPDF": true
+  }
+}
