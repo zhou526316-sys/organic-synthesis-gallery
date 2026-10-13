@@ -7,6 +7,8 @@ on:
       - 'scripts/historical-nightly-discovery.mjs'
       - 'scripts/historical-review-triage.mjs'
       - 'scripts/test-historical-review-triage.mjs'
+      - 'scripts/historical-global-coverage.mjs'
+      - 'scripts/test-historical-global-coverage.mjs'
       - '.github/workflows/historical-triage-regression.yml'
       - '.github/workflows/historical-triage-bootstrap.yml'
       - 'docs/historical-coverage-triage-contract.md'
@@ -34,8 +36,9 @@ jobs:
           set -euo pipefail
           node --check shared/historical-journal-founding.mjs
           node --check scripts/historical-review-triage.mjs
+          node --check scripts/historical-global-coverage.mjs
           node --check scripts/historical-nightly-discovery.mjs
-          node --test scripts/test-historical-review-triage.mjs scripts/test-historical-nightly-discovery.mjs scripts/test-historical-nightly-schedule-gate.mjs
+          node --test scripts/test-historical-review-triage.mjs scripts/test-historical-global-coverage.mjs scripts/test-historical-nightly-discovery.mjs scripts/test-historical-nightly-schedule-gate.mjs
       - name: Check publisher source and publication isolation invariants
         run: |
           grep -F "candidate_discovery_only" scripts/historical-nightly-discovery.mjs
