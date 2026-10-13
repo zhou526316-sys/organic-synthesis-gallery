@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 1,
+  "kind": "scientific-evidence-handoff-not-formal-review_or_admission",
+  "status": "prepared_for_next_scheduled_review_only",
+  "targetBeijingSlot": "2026-10-14T08:00:00+08:00",
+  "observedAtBeijing": "2026-10-13 after verified 08:00 production slot",
+  "publicationPolicy": "Only the pre-existing 08:00 Asia/Shanghai official writer may admit new literature. This packet does not schedule, trigger, publish, or change formal decisions.",
+  "baseline": {
+    "releaseMarker": "audit/publication-release-state.json",
+    "releaseMarkerBlobSha": "509bc8436721c8e787f2800f0071b2abdc26dd30",
+    "publicationSlot": "2026-10-13T08:00:00+08:00",
+    "productionCards": 979,
+    "persistedState": "audit/literature-update-state.json",
+    "persistedStateBlobSha": "8668b26156eafa60e03f4653caa19f28dcc93078",
+    "compactHandoff": "audit/unresolved-latest.json",
+    "compactBlobSha": "bedaf90b35c264517f3dea22cc18dcc60df52a0d",
+    "compactGeneratedAt": "2026-10-13T02:47:19.397Z",
+    "unresolvedDois": [
+      "10.1021/acs.orglett.6c03617",
+      "10.31635/ccschem.026.202608292",
+      "10.31635/ccschem.026.202607973",
+      "10.31635/ccschem.026.202608252",
+      "10.1038/s44160-026-01189-z",
+      "10.1021/acs.orglett.6c03893",
+      "10.1021/acs.orglett.6c04027"
+    ],
+    "sourceRecords": 2703,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 4,
+    "closureCoverageAnomalies": 6,
+    "officialPublisherComplete": false
+  },
+  "scientificScope": {
+    "path": "docs/literature-scope-contract.md",
+    "blobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+    "version": "scope-2026-10-02-v1"
+  },
+  "readyFromPostReleaseDoubleReview": {
+    "count": 2,
+    "publicationReadiness": "individually evidence-approved but requires next-slot paired-source revalidation and exact DOI admission",
+    "items": [
+      {
+        "doi": "10.1021/acs.orglett.6c04027",
+        "journal": "Organic Letters",
+        "title": "Synthesis of Diaryl α-Hydroxycarboxylic Acid Derivatives via Three-Component Reactions of o-Quinone Diimides with Alcohols and Diazo Compounds",
+        "titleZh": "铑催化邻醌二亚胺、醇与重氮化合物三组分反应合成二芳基α-羟基羧酸衍生物",
+        "decision": "include",
+        "firstPassDecision": "include",
+        "challengeDecision": "include",
+        "primaryContribution": "开发铑催化邻醌二亚胺、醇与重氮化合物的高区域选择性三组分反应，合成多取代二芳基α-羟基羧酸衍生物。",
+        "preparativeTransformation": "邻醌二亚胺、醇及重氮化合物经氧鎓叶立德与Michael型捕获，构建含氧季碳中心的二芳基α-羟基羧酸骨架。",
+        "generalityEvidence": "Crossref DOI匹配摘要直接表述宽底物范围、放大制备和复杂分子后期官能化；具体数目和逐个收率未知。",
+        "sourceEvidence": "GitHub Actions 38331314358 的独立Crossref多ISSN online/published/created结果，DOI、作者、题名与日期一致。",
+        "boundaryChallenge": "底物类型以邻醌二亚胺为中心，但存在明确的三组分成键、不同底物拓展及应用；不能按单一机理/材料案例排除。",
+        "evidenceBasis": "2026-10-13主分支外只读DOI并集实测 Crossref DOI准确元数据：摘要明确 Rh催化o-quinone diimides/alcohol/diazo 三组分反应，经氧鎓叶立德的Michael型捕获形成二芳基α-羟基羧酸衍生物；描述broad substrate scope、scale-up synthesis、late-stage functionalization，未虚构具体收率或底物例数。",
+        "challengeReason": "反向挑战：该工作是否仅为特定醌二亚胺结构的多组分示例？摘要证明多底物反应、产物骨架分离制备、放大与复杂分子后期衍生化；合成方法贡献独立而明确，符合Organic Letters的通用制备性方法范围。尚未获得原文底物表，收率数值和限制不作断言。",
+        "sourceReviewFile": "audit/review-2026-10-13-postrelease-evidence-0800.json"
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c03617",
+        "journal": "Organic Letters",
+        "title": "Iridium-Catalyzed Asymmetric Hydrogenation of Pyridazine Salts under Batch and Flow",
+        "titleZh": "铱催化哒嗪盐的间歇式及连续流不对称氢化",
+        "decision": "include",
+        "firstPassDecision": "include",
+        "challengeDecision": "include",
+        "primaryContribution": "开发铱/[手性SunPhos]催化的哒嗪盐直接对映选择性氢化与连续流制备方法。",
+        "preparativeTransformation": "芳香六元含二氮杂环哒嗪盐氢化为立体富集六氢哒嗪骨架，形成具有立体中心的饱和含氮杂环。",
+        "generalityEvidence": "Crossref DOI匹配摘要直接说明多取代基底物，最高97%分离收率和97% ee；克级、连续流以及催化剂TON与TOF用于证明制备实用性，未虚构具体底物表。",
+        "sourceEvidence": "2026-10-13T02:05:16.023Z 审计 paired compact `audit/unresolved-latest.json` blob 702421123ff5777c874236b8f402a935e9fbad0f；其Crossref的online/published/created来源、作者和原始摘要与DOI一致。",
+        "boundaryChallenge": "最大范围疑点是氢化仅针对哒嗪盐骨架，但摘要包含较广取代范围、实际可分离产物、非外消旋立体中心及连续流可扩展性，符合独立的可迁移有机制备方法学。",
+        "evidenceBasis": "DOI精准匹配的Crossref注册原始摘要：使用[Ir(COD)Cl]₂/(R)-SunPhos，哒嗪盐在温和条件下转化为手性六氢哒嗪；不同取代基适用，最高97%收率、97% ee。摘要直接报告克级合成、连续流、TON最高3720及S/C=4000时94% ee。其余底物数量与SI未核实，未作推断。",
+        "challengeReason": "独立反向挑战：研究是否仅展示一例特别适合氢化的氮杂盐？原始摘要明确写明wide range of substituents，给出较高收率和ee以及克级、连续流和催化剂周转数据，证明可推广的哒嗪盐→手性六氢哒嗪制备能力，而不是单一机理或材料催化示例。未获取具体SI，限制与单个收率未作虚构。",
+        "sourceReviewFile": "audit/review-2026-10-13-postrelease-late-orglett-03617.json"
+      }
+    ],
+    "sourceReviewBlobShas": {
+      "audit/review-2026-10-13-postrelease-evidence-0800.json": "5596d123dc3b83aae2348e256c422f74bd967905",
+      "audit/review-2026-10-13-postrelease-late-orglett-03617.json": "55f78925abb581f8cadeb4646fe61ed297c14d35"
+    }
+  },
+  "previouslyPendingWithPostReleaseResolvedEvidence": {
+    "count": 1,
+    "frozenFormalDecision": "pending in 2026-10-13 official review; DO NOT rewrite or dual-register in ready carryover for that released slot",
+    "targetAction": "Next fresh slot must explicitly challenge the old evidenceNeeded against newer official full abstract + verified figure captions, then include if same DOI/date/scope still passes",
+    "items": [
+      {
+        "doi": "10.1038/s44160-026-01189-z",
+        "journal": "Nature Synthesis",
+        "title": "One-step skeletal editing of oxetanes to thietanes using thiourea",
+        "titleZh": "硫脲介导氧杂环丁烷一步骨架编辑制备硫杂环丁烷",
+        "decision": "include",
+        "firstPassDecision": "include",
+        "challengeDecision": "include",
+        "primaryContribution": "硫脲介导氧杂环丁烷到硫杂环丁烷的一步氧→硫骨架编辑策略。",
+        "preparativeTransformation": "以含氧四元杂环氧杂环丁烷为底物、硫脲为硫源，一步转化为含硫四元杂环硫杂环丁烷；实现C–O骨架位点的O→S替换。",
+        "generalityEvidence": "Nature原文摘要明示broad substrate scope及functional group tolerance，Fig.3标注底物范围、Fig.4标注制备实用的硫杂环丁烷砌块，支持不同取代氧杂环丁烷和复杂药物样分子适用性；未主张未读取的具体数值。",
+        "sourceEvidence": "Nature Synthesis DOI 10.1038/s44160-026-01189-z，官方公开摘要、Fig.1–Fig.4图题及2026年10月12日Research Article目录；文章作者Luo等，和原始待定DOI一致。",
+        "boundaryChallenge": "可能仅聚焦一种O→S反应模式，但原文直接提供多底物通用性及复杂分子应用，核心贡献为可转移的有机小分子制备方法学，因此应纳入。",
+        "evidenceBasis": "2026-10-12 Nature Synthesis DOI精准原文的公开Abstract明确one-step oxetane-to-thietane skeletal editing using thiourea，broad substrate scope，functional group tolerance和structurally complex drug-like molecules应用。该论文公开图题为Fig.3 Substrate scope of oxetanes、Fig.4 synthetically valuable thietanes（另有Fig.1反应构想和Fig.2条件开发）。未虚构底物例数、收率或更具体局限。",
+        "challengeReason": "反向挑战：只有一种O→S骨架交换是否属于单骨架示例？出版社原始摘要直接陈述广泛取代氧杂环丁烷底物和官能团容忍，Fig.3展示底物范围，Fig.4示合成砌块价值并有复杂药物样分子应用；不属于单一底物展示。机制级论断仅遵循原文公开摘要描述。",
+        "sourceReviewFile": "audit/review-2026-10-13-postrelease-evidence-0800.json",
+        "originalPending": {
+          "doi": "10.1038/s44160-026-01189-z",
+          "journal": "Nature Synthesis",
+          "title": "One-step skeletal editing of oxetanes to thietanes using thiourea",
+          "abstract": "",
+          "date": "2026-10-12",
+          "type": "journal-article",
+          "authors": [
+            "Like Luo",
+            "Deguang Liu",
+            "Dayu Tian",
+            "Xian Xiao",
+            "Guang Chen",
+            "Liqiang Zhang",
+            "Jiaxin Wang",
+            "Yuqing Wang",
+            "Xiaocheng Wang",
+            "Yao Fu",
+            "Hai-Jun Zhang"
+          ],
+          "topics": [],
+          "sources": [
+            "crossref:2731-0582:online",
+            "crossref:2731-0582:published",
+            "crossref:2731-0582:created"
+          ],
+          "activeFrom": "2026-07-01",
+          "dateUnverified": false,
+          "onlineDate": "2026-10-12",
+          "publishedDate": "2026-10-12",
+          "createdDate": "2026-10-12",
+          "onlineDatePrecision": "day",
+          "publishedDatePrecision": "day",
+          "dateConflict": "",
+          "lateIndexed": false,
+          "safetyTail": false,
+          "reviewPriority": "normal",
+          "evidencePages": [
+            "https://www.nature.com/articles/s44160-026-01189-z",
+            "https://doi.org/10.1038/s44160-026-01189-z"
+          ],
+          "attemptedEvidencePages": [
+            "https://www.nature.com/articles/s44160-026-01189-z",
+            "https://doi.org/10.1038/s44160-026-01189-z"
+          ],
+          "evidenceSource": "fresh compact plus attempted primary publisher evidence",
+          "firstPassDecision": "pending",
+          "challengeDecision": "pending",
+          "decision": "pending",
+          "reason": "合成相关性较高，但已取得证据仍不足以完成可靠的最终纳入/排除。",
+          "evidenceBasis": "Nature Synthesis出版社搜索摘要确认用硫脲把易得氧杂环丁烷一步直接转为硫杂环丁烷；但文章页被Nature IDP阻断，同代compact无摘要，未取得取代模式、官能团耐受和产物分离范围。",
+          "challengeReason": "第一遍认为O→S骨架编辑是明确合成转化；第二遍要求至少确认多种氧杂环丁烷底物与可分离硫杂环丁烷，不能只凭“一步策略”题名直接放行。",
+          "evidenceNeeded": "取得出版社完整摘要/正文/SI中的氧杂环丁烷取代范围、硫杂环丁烷产品、收率和局限。",
+          "nextAction": "次日08:00前重试Nature摘要/全文并补齐骨架编辑适用范围。",
+          "firstPendingDate": "2026-10-13",
+          "originalDate": "2026-10-12",
+          "nextReviewSlot": "2026-10-14T08:00:00+08:00",
+          "sourceReviewFile": "audit/review-2026-10-13-0800.json",
+          "scopeAssessment": {
+            "primaryContribution": "硫脲介导氧杂环丁烷向硫杂环丁烷的一步O→S骨架编辑。",
+            "preparativeTransformation": "四元含氧杂环直接换氧为硫，生成四元含硫杂环。",
+            "generalityEvidence": "出版社搜索仅称readily available oxetanes；具体取代范围和分离收率未知。",
+            "sourceEvidence": "同代compact题名、Nature出版社搜索摘要；文章页IDP阻断。",
+            "boundaryChallenge": "转化本身高度相关，但尚不能证明不是单一或极窄底物演示。"
+          }
+        },
+        "officialSourceUrl": "https://www.nature.com/articles/s44160-026-01189-z"
+      }
+    ]
+  },
+  "awaitingMorePrimaryEvidence": {
+    "count": 4,
+    "items": [
+      {
+        "doi": "10.31635/ccschem.026.202608292",
+        "journal": "CCS Chemistry",
+        "title": "Circularly Polarized Light-Driven Absolute Asymmetric Photodimerization via Dynamic Prochiral Supramolecular Assembly",
+        "nextReviewSlot": "2026-10-14T08:00:00+08:00",
+        "decision": "pending",
+        "evidenceNeeded": "取得出版社摘要/正文或SI中的前体结构、二聚产物、对映/非对映选择性、底物范围和分离制备数据。",
+        "attemptedEvidencePages": [
+          "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608292"
+        ],
+        "sourceReviewFile": "audit/pending-review-2026-10-13-0800.json",
+        "requiredAction": "Retrieve DOI-matched publisher original abstract/full paper/SI that explicitly supports article's main contribution and general preparative scope; otherwise remain pending"
+      },
+      {
+        "doi": "10.31635/ccschem.026.202607973",
+        "journal": "CCS Chemistry",
+        "title": "Kinetic Investigation to Elucidate the Mechanism of Protonated Phenanthroline Catalyzed and Self-Promoted Glycosylation Pathways: Towards Late-Stage Assembly of C2-Branched β-Glycoconjugates",
+        "nextReviewSlot": "2026-10-14T08:00:00+08:00",
+        "decision": "pending",
+        "evidenceNeeded": "取得完整摘要/正文/SI，确认糖基供体与受体类型、C2支链β-糖缀合物范围、立体选择性和分离收率。",
+        "attemptedEvidencePages": [
+          "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607973",
+          "https://www.chinesechemsoc.org/doi/pdf/10.31635/ccschem.026.202607973"
+        ],
+        "sourceReviewFile": "audit/pending-review-2026-10-13-0800.json",
+        "requiredAction": "Retrieve DOI-matched publisher original abstract/full paper/SI that explicitly supports article's main contribution and general preparative scope; otherwise remain pending"
+      },
+      {
+        "doi": "10.31635/ccschem.026.202608252",
+        "journal": "CCS Chemistry",
+        "title": "Unleashing the Electrophilicity of N 2 -Derived Rhenium(V) Nitrides",
+        "nextReviewSlot": "2026-10-14T08:00:00+08:00",
+        "decision": "pending",
+        "evidenceNeeded": "取得摘要/正文/SI，确认氮化物与哪些有机亲核体成键、产物身份、底物范围及分离制备结果。",
+        "attemptedEvidencePages": [
+          "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608252"
+        ],
+        "sourceReviewFile": "audit/pending-review-2026-10-13-0800.json",
+        "requiredAction": "Retrieve DOI-matched publisher original abstract/full paper/SI that explicitly supports article's main contribution and general preparative scope; otherwise remain pending"
+      },
+      {
+        "doi": "10.1021/acs.orglett.6c03893",
+        "journal": "Organic Letters",
+        "title": "A Charge-Enhanced Hydrogen Bonding Strategy for Halogen Bond Activation in Catalysis",
+        "nextReviewSlot": "2026-10-14T08:00:00+08:00",
+        "decision": "pending",
+        "evidenceNeeded": "取得正文/SI确认该平台催化的具体有机反应、起始物、产物、底物范围和分离收率。",
+        "attemptedEvidencePages": [
+          "https://doi.org/10.1021/acs.orglett.6c03893",
+          "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03893"
+        ],
+        "sourceReviewFile": "audit/pending-review-2026-10-13-0800.json",
+        "requiredAction": "Retrieve DOI-matched publisher original abstract/full paper/SI that explicitly supports article's main contribution and general preparative scope; otherwise remain pending"
+      }
+    ]
+  },
+  "releaseGates": [
+    "Preserve 2026-10-13 formal accepted/rejected/pending and official publication marker; do not add any DOI before 2026-10-14 08:00",
+    "Next 06:55 machine discovery must be fresh, cover all 16 journals plus tail/redeposit rescue; 07:05/07:35 two-pass review must ingest complete paired audit and all durable pending/ready carryovers",
+    "Use scope-2026-10-02-v1 with independent DOI-specific two-pass challenges and verified Chinese title for each final include; leave four evidence gaps pending if still unresolved",
+    "Once a fresh paired audit and same-slot prepublish record pass validate-prepublish-review and check-prepublish-readiness, use existing fixed-slot writer only within technical grace",
+    "Run Pages delivery/live DOI-set verification and subsequent quality gate; keep publisher coverage closure warnings separate from valid per-DOI publication",
+    "Keep historical metadata-only/Tampermonkey media permissions and no evening additions unchanged"
+  ],
+  "revalidationNotes": [
+    "Cross-source warnings and blocked publisher listing mean 7 is the actual known unresolved DOI set in the latest audit, not proof that the 16-journal universe has zero undetected articles.",
+    "Nature Synthesis 10.1038/s44160-026-01189-z publisher primary abstract directly confirms breadth, functional-group tolerance, complex molecule applicability; figures 3, 4, 5 named accordingly. Do not invent precise yields without fulltext.",
+    "Do not treat scientific post-release approval as pre-authorizing a 2026-10-13 retroactive release.",
+    "Official live production snapshot remains 979, as confirmed in archived release marker."
+  ]
+}

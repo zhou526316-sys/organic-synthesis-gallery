@@ -1,0 +1,39 @@
+name: Historical 2026-Q3 completeness/source/review isolation regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/historical-q3-reconciliation.mjs'
+      - 'scripts/test-historical-q3-reconciliation.mjs'
+      - '.github/workflows/historical-q3-regression.yml'
+      - '.github/workflows/historical-triage-bootstrap.yml'
+      - 'docs/historical-2026-q3-catchup-contract.md'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/historical-q3-reconciliation.mjs'
+      - 'scripts/test-historical-q3-reconciliation.mjs'
+      - '.github/workflows/historical-q3-regression.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate 192 source roots, publisher dates, DOI dedup and 1000 non-quota rule
+        run: |
+          set -euo pipefail
+          node --check scripts/historical-q3-reconciliation.mjs
+          node --test scripts/test-historical-q3-reconciliation.mjs
+      - name: Enforce no Cloudflare D1 access, no auto-include, no off-slot publication
+        run: |
+          grep -F "q3_staging_only_guard" scripts/historical-q3-reconciliation.mjs
+          grep -F "noD1QueriesOrWrites:true" scripts/historical-q3-reconciliation.mjs
+          grep -F "actualMissingEligibleCountUnknown:true" scripts/historical-q3-reconciliation.mjs
+          grep -F "historical-q3-reconciliation.mjs" .github/workflows/historical-triage-bootstrap.yml
+          grep -F "quarter-2026-q3-review-worklist.json" .github/workflows/historical-triage-bootstrap.yml

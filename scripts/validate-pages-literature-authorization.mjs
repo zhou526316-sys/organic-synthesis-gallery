@@ -129,6 +129,10 @@ export async function authorize(root = process.cwd()) {
   const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 }).trim();
   const marker = JSON.parse(await readFile(path.join(root, markerPath), 'utf8'));
   if (marker.mode === 'scope-correction') return authorizeScopeCorrection(root);
+  if (marker.mode === 'slot-release' && marker.ownerCatchup) {
+    const { authorizeOwnerCatchup } = await import('./lib/owner-one-time-catchup.mjs');
+    return authorizeOwnerCatchup(root);
+  }
   const actual = {};
   for (const file of PROTECTED_FILES) {
     try { actual[file] = git(['hash-object', '--', file]); } catch { actual[file] = null; }
