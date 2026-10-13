@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.4
+// @version      0.2.5
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -95,9 +95,9 @@
     if(!root)throw Error('找不到可验证的文章正文容器');
     const sections=[], group=new Map();
     let heading='Article body', isReferences=false, consumed=0, paragraphCount=0;
-    for(const node of root.querySelectorAll('h2,h3,p')){
+    for(const node of root.querySelectorAll('h2,h3,h4,p')){
       if(excluded(node))continue;
-      if(/^H[23]$/.test(node.tagName)){
+      if(/^H[234]$/.test(node.tagName)){
         heading=cleanText(node.textContent,300)||'Article body';
         isReferences=EXCLUDE_HEADING.test(heading);
         continue;
@@ -109,7 +109,7 @@
       consumed+=value.length;paragraphCount++;
       const key=heading.toLowerCase();
       if(!group.has(key)){
-        const row={type:/^abstract\b/i.test(heading)?'abstract':/mechanis|control experiments?|catalytic cycle/i.test(heading)?'mechanism':/result|scope|discussion|screening|optimization|structure.reactivity/i.test(heading)?'results':/experimental|methods|materials and methods|procedure/i.test(heading)?'experimental':/introduct|background/i.test(heading)?'introduction':/conclusion|outlook|summary/i.test(heading)?'conclusion':'other',
+        const row={type:/^abstract\b/i.test(heading)?'abstract':/mechanis|control experiments?|catalytic cycle/i.test(heading)?'mechanism':/result|scope|discussion|screening|optimization|structure.reactivity|synthes|synthetic applications?|substrate|reaction development/i.test(heading)?'results':/experimental|methods|materials and methods|procedure/i.test(heading)?'experimental':/introduct|background/i.test(heading)?'introduction':/conclusion|outlook|summary/i.test(heading)?'conclusion':'other',
           heading,text:'',order:sections.length};
         group.set(key,row);sections.push(row);
       }
@@ -204,7 +204,9 @@
 
   // Isolated batch protocol. Never share storage keys, leases, queue writes or
   // controller lifecycle with the production TOC/figure/private-PDF scripts.
-  const BATCH_SCRIPT_VERSION='0.2.4';
+  const BATCH_SCRIPT_VERSION='0.2.5';
+  // Bump only when rights/body extraction gains new evidence: old uncertain DOI get ONE fresh check.
+  const BATCH_CAPTURE_REVISION='historic-body-science-v025';
   const BATCH_PREFIX='gallery-historical-text-batch-v2:';
   const BATCH_STATE=BATCH_PREFIX+'state';
   const BATCH_JOB=BATCH_PREFIX+'job';
@@ -572,12 +574,17 @@
   function batchRetryAllowed(prior,manualBlocked=false){
     if(!prior)return true;
     if(prior.status==='saved_local')return false;
-    const noAutomatic=new Set(['license_not_verified','body_missing','doi_unverified',
-      'page_access_blocked','unsupported_publisher']);
-    if(noAutomatic.has(prior.status))return manualBlocked===true;
-    // Transient timeouts and transport failures can be retried at the user's next click.
-    // Explicit HTTP 429/403 signals must not be ignored or bypassed.
+    // Never treat a documented 403/429 or login challenge as a reason to force a visit.
     if([403,429].includes(Number(prior.httpStatus||0)))return manualBlocked===true;
+    if(prior.status==='page_access_blocked'||prior.status==='doi_unverified'
+      ||prior.status==='unsupported_publisher')return manualBlocked===true;
+    // The scientific-body parser/ACS license adapter changed: re-evaluate prior
+    // DOI-verified false negatives ONCE, and record the revision on the next attempt.
+    if((prior.status==='license_not_verified'||prior.status==='body_missing')
+      &&prior.pageDoiVerified===true
+      &&prior.captureRevision!==BATCH_CAPTURE_REVISION)return true;
+    if(prior.status==='license_not_verified'||prior.status==='body_missing')
+      return manualBlocked===true;
     return true;
   }
   function batchNormalizedStatus(raw){
@@ -1029,7 +1036,7 @@
           stage,checkedAt:Date.now(),httpStatus:evidenceMeta.httpStatus,
           pageDoiVerified:evidenceMeta.pageDoiVerified,
           sectionCount:evidenceMeta.sectionCount,evidenceChars:evidenceMeta.evidenceChars,
-          runId,jobId:token,reportEventId:''};
+          runId,jobId:token,captureRevision:BATCH_CAPTURE_REVISION,reportEventId:''};
         // Save failure evidence before attempting its upload. Server transmission
         // must never be a prerequisite to finishing a publisher DOI.
         try{
@@ -1100,7 +1107,7 @@
   }
   function batchArticlePageReady(root){
     if(!root||document.readyState==='loading')return false;
-    try{return root.querySelectorAll('h2,h3,p').length>=2;}
+    try{return root.querySelectorAll('h2,h3,h4,p').length>=2;}
     catch(_){return false;}
   }
 
@@ -1171,7 +1178,7 @@
         }else if(ready){
           // Distinguish a stable rendered article missing its licence tag from
           // a still-hydrating article; no CC licence => no text persistence.
-          const signature=String(root?.querySelectorAll('h2,h3,p').length||0)
+          const signature=String(root?.querySelectorAll('h2,h3,h4,p').length||0)
             +':'+String(root?.querySelectorAll('section').length||0);
           if(previousState===signature)unchangedReady++;
           else unchangedReady=0;
