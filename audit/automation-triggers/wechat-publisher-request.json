@@ -1,32 +1,32 @@
 {
-  "requestId": "wechat-2026-10-12-r7-restore-research-discussion-and-scaled-original-figures",
-  "publicationDate": "2026-10-12",
+  "requestId": "wechat-2026-10-13-nature-synthesis-nature-chemistry-r2-exact-science-image-reviewed",
+  "publicationDate": "2026-10-13",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-12-r7",
-  "approvedGate": "audit/wechat-working/2026-10-12-review-gate.json",
+  "editorialRevision": "2026-10-13-r2",
+  "approvedGate": "audit/wechat-working/2026-10-13-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
-    "10.1021/acscatal.6c06048",
-    "10.1021/jacs.6c10406"
+    "10.1038/s44160-026-01189-z",
+    "10.1038/s41557-026-02213-7"
   ],
-  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWIIQfl5GSB19jduNK2sdIdguH6OMYYfkuM8zO65yvnWs",
-  "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-12&doi=10.1021%2Facscatal.6c06048&summary=0",
-  "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1021%2Fjacs.6c10406&summary=0",
-  "expectedReviewedBodyImages": 24,
-  "expectedReviewedAssets": 26,
-  "sourceImportRunId": 38240990420,
+  "expectedFirstReadOriginalUrl": "https://gallery.gczhouwld.com/?edition=2026-10-13&doi=10.1038%2Fs44160-026-01189-z&summary=0",
+  "expectedSecondReadOriginalUrl": "https://gallery.gczhouwld.com/?doi=10.1038%2Fs41557-026-02213-7&summary=0",
+  "expectedReviewedBodyImages": 22,
+  "expectedReviewedAssets": 24,
+  "sourceImportRunId": 38353006248,
+  "offlineVisualRunId": 38353056214,
+  "imageOriginalShaReview": "audit/wechat-working/2026-10-13-r2-source-image-qa.json",
+  "publisherSourceQa": "audit/wechat-working/2026-10-13-r2-science-review.json",
+  "sourceCoverSha256": {
+    "featured": "944f2cb54266c114b7399903761c56e7bddc9c036e6ddc07b039934d92914843",
+    "retrospective": "4ecd2188f646f728a0315fb7da154d279d5591f35cf3d0f2e88dfc43de3deef8"
+  },
   "draftOnly": true,
   "publicSendAuthorized": false,
   "requireDraftGetReadback": true,
   "requireArticleOrderAndExactDois": true,
   "linkOnly": false,
-  "updatePolicy": "update_exact_existing_2026_10_12_media_id_only_fail_closed_no_duplicates",
-  "userSelectedRetrospectiveCover": "latest 1254x1254 Ni/Zr blue abstract artwork with no molecular bond schemes; exact SHA256 96ca40c385776838e7d5ce4f59f1ffbc483a8c54604d1adf428497c9d8829a4d",
-  "reason": "Owner expressly requests a balanced expert-level scientific narrative instead of R6 text starvation and 100% wide pictures. R7 independently source-checked, ACS 3513/JACS 3628 characters with 14/10 unchanged source figures sized according to content (78-94%). Pre-draft 390px/740px Playwright visual QA passed, 24/24 images decoded without overflow; user-approved source-only covers unchanged. STRICTLY UPDATE EXISTING Oct12 TWO-ARTICLE DRAFT ONLY; keep original media_id, two DOI/summary=0 read-original URLs, article order and accurate journal counts. No draft/add, no clone, no send; require draft/get and fresh real relay preview.",
-  "imageOriginalShaReview": "audit/wechat-working/2026-10-12-r7-layout-acceptance.json",
-  "publisherSourceQa": "audit/wechat-working/2026-10-12-r7-science-text-review.json",
-  "expectedSourceTextChars": {
-    "acs": 3513,
-    "jacs": 3628
-  }
+  "noDuplicatePolicy": "create_daily_2026_10_13_if_missing_else_update_same_date_only_no_different_date_mutation",
+  "journalTotalCount": 12,
+  "reason": "User explicitly authorizes producing the 10/13 two-article WeChat Official Account DRAFT ONLY, using existing fixed-IP API secrets. Two Nature original+SI scientific reports approved via source-exclusive fig review and final R2c 390px browser QA; precise DOI links, all official 08:00+catchup papers. Exactly one creation/update; do not mass send or alter prior-day draft; require real draft/get and new preview."
 }
