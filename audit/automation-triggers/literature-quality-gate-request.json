@@ -1,26 +1,17 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-13T02:49:30.786Z",
+  "requestedAt": "2026-10-13T04:03:53.629Z",
   "publicationSlot": "2026-10-13T08:00:00+08:00",
-  "releaseCommit": "c7f7748975eb56c1cf11a83397ae9c49ac9cf5d4",
-  "baselineMain": "902bba70175402c0d2a28f267a74d4f3d6341414",
-  "postReleaseAuditRunId": 38338456615,
-  "postReleaseAuditGeneratedAt": "2026-10-13T02:47:19.397Z",
-  "pairedLatestBlobSha": "acb31f9d67983ee818d0518e7dce051943222cbe",
-  "pairedCompactBlobSha": "bedaf90b35c264517f3dea22cc18dcc60df52a0d",
-  "expectedProductionCards": 979,
-  "expectedDeferredDois": [
-    "10.31635/ccschem.026.202608292",
-    "10.31635/ccschem.026.202607973",
-    "10.31635/ccschem.026.202608252",
-    "10.1038/s44160-026-01189-z",
-    "10.1021/acs.orglett.6c03893"
-  ],
-  "reviewedNextSlotDois": [
-    "10.1021/acs.orglett.6c04027",
-    "10.1021/acs.orglett.6c03617"
-  ],
-  "observedUnresolvedCount": 7,
-  "pagesRunId": 38334513326,
-  "purpose": "Read-only post-release exact DOI-union quality check after immutable 10-13 release: original five documented pending plus two DOI-specific reviewed next-08 carryovers exactly cover seven unresolved. No off-slot literature admission, no workflow reschedule or authoritative review/marker mutation."
+  "releaseCommit": "b9dcbc10c7d58ce41f172289d40610b10e3aa676",
+  "baselineMain": "3f2ba91bb16cb8aff39d3a72b6c8c954ae8d9a92",
+  "postReleaseAuditRunId": 38342776912,
+  "postReleaseAuditGeneratedAt": "2026-10-13T03:41:25.992Z",
+  "pairedLatestBlobSha": "2cd67c5b8b0b31e57f4b60191c00fe698aa662a7",
+  "pairedCompactBlobSha": "f2e0997026296dac04a6cf5e9beffa5c1f9dca14",
+  "expectedProductionCards": 984,
+  "expectedDeferredDois": [],
+  "reviewedNextSlotDois": [],
+  "observedUnresolvedCount": 0,
+  "pagesRunId": 38342963897,
+  "purpose": "Read-only completed one-time owner 5-include 2-exclude online-quality check after actual 984-DOI Pages deployment at 2026-10-13T04:02:16.687Z. Verify exact new DOI membership, rejected absent, zero unfinished owner candidates, publisher coverage warnings retained; no off-slot admission mutation or schedule change."
 }
