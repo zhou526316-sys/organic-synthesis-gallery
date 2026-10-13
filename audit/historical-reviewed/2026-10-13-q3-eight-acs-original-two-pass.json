@@ -1,0 +1,637 @@
+{
+  "schemaVersion": "gallery-historical-q3-eight-acs-publisher-article-two-pass-v1",
+  "reviewedAt": "2026-10-13T07:27:07.145Z",
+  "mode": "independent_DOI_scientific_two_pass_review_not_publication",
+  "period": "2026-07-01..2026-09-30",
+  "publisherArticleType": "Original Article/Letter, not editorial, highlight or news commentary",
+  "dateEvidenceTier": "ACS_official_online_Article_History_public_index_concordant_with_historical_Crossref_OpenAlex",
+  "reviews": [
+    {
+      "doi": "10.1021/jacs.6c08244",
+      "journal": "JACS",
+      "title": "π-Extended Redox-Active Ligand-Promoted Cobalt-Catalyzed Diastereo- and Enantioselective Borylcyclopropanation of Alkenes",
+      "titleZh": "π扩展氧化还原活性配体促进钴催化烯烃非对映及对映选择性硼基环丙烷化",
+      "date": "2026-07-31",
+      "authors": [
+        "Jiale Ying",
+        "Jin Yang",
+        "Chenggong Zheng",
+        "Yan Tan",
+        "Zhan Lu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "31",
+        "pages": "33422-33432",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08244"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以π扩展氧化还原活性配体控制钴催化烯烃硼基环丙烷化，直接建立具有确定顺式相对构型和对映富集特征的顺式环丙基硼酸酯制备方法，而不是单纯的催化剂电子结构研究。",
+      "evidenceBasis": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-07-31，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷148期31页33422-33432，署名作者与 2026-07-22_2026-07-31_jacs Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 1e3a285d37a0cba1db6fafc15b07af8e3833137f，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/jacs.6c08244。具体化学证据：ACS正式公开摘要记载市售起始原料、可扩展合成、各种顺式环丙基硼酸酯以及其立体保持衍生化，ee通常大于99%、dr通常大于20:1；'通常'不是所有例子的最低值。底物具体个数与全范围产率在未读SI时不推测。",
+      "challengeReason": "对抗性审核重点检查Co–卡宾/烯烃[2+2]路径和π扩展配体控制取向是否经直接观测，以及>99% ee是否被宣称为全部底物的保证。论文只称机理研究支持该极化Co–卡宾模型；制备范围与下游官能团化是真实贡献，机理不是纳入所需的完全确证。",
+      "scopeAssessment": {
+        "primaryContribution": "以π扩展氧化还原活性配体控制钴催化烯烃硼基环丙烷化，直接建立具有确定顺式相对构型和对映富集特征的顺式环丙基硼酸酯制备方法，而不是单纯的催化剂电子结构研究。",
+        "preparativeTransformation": "简单烯烃在钴催化硼基环丙烷化过程中形成三元碳环及带硼取代的环丙烷骨架，得到手性cis-环丙基硼酸酯；C–B键可保留立体信息进一步转化成顺式环丙基胺及其它功能化环丙烷。",
+        "generalityEvidence": "ACS正式公开摘要记载市售起始原料、可扩展合成、各种顺式环丙基硼酸酯以及其立体保持衍生化，ee通常大于99%、dr通常大于20:1；'通常'不是所有例子的最低值。底物具体个数与全范围产率在未读SI时不推测。",
+        "sourceEvidence": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-07-31，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷148期31页33422-33432，署名作者与 2026-07-22_2026-07-31_jacs Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 1e3a285d37a0cba1db6fafc15b07af8e3833137f，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/jacs.6c08244。具体化学证据：ACS正式公开摘要记载市售起始原料、可扩展合成、各种顺式环丙基硼酸酯以及其立体保持衍生化，ee通常大于99%、dr通常大于20:1；'通常'不是所有例子的最低值。底物具体个数与全范围产率在未读SI时不推测。",
+        "boundaryChallenge": "第二遍挑战：红氧配体研究是否以Co电子性质为主、缺乏可推广有机制备。作者实际合成系列可分离的手性顺式环丙基硼酸酯，进一步立体保持转化得到胺和药物相关砌块，因此是明确方法学。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.6c08244",
+        "publisherOnlineDate": "2026-07-31",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_jacs",
+        "stageBatchSha": "1e3a285d37a0cba1db6fafc15b07af8e3833137f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_ACS_Article_History_live_article_body_may_403",
+        "publisherEvidenceTier": "official_ACS_Article_History_and_Abstract_web_search_index_cross_checked_with_stage"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "以π扩展氧化还原活性配体控制钴催化烯烃硼基环丙烷化，直接建立具有确定顺式相对构型和对映富集特征的顺式环丙基硼酸酯制备方法，而不是单纯的催化剂电子结构研究。 简单烯烃在钴催化硼基环丙烷化过程中形成三元碳环及带硼取代的环丙烷骨架，得到手性cis-环丙基硼酸酯；C–B键可保留立体信息进一步转化成顺式环丙基胺及其它功能化环丙烷。 ACS正式公开摘要记载市售起始原料、可扩展合成、各种顺式环丙基硼酸酯以及其立体保持衍生化，ee通常大于99%、dr通常大于20:1；'通常'不是所有例子的最低值。底物具体个数与全范围产率在未读SI时不推测。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "对抗性审核重点检查Co–卡宾/烯烃[2+2]路径和π扩展配体控制取向是否经直接观测，以及>99% ee是否被宣称为全部底物的保证。论文只称机理研究支持该极化Co–卡宾模型；制备范围与下游官能团化是真实贡献，机理不是纳入所需的完全确证。"
+        }
+      ],
+      "sourceFamilyForReview": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1021/jacs.6c11788",
+      "journal": "JACS",
+      "title": "Harnessing Arynes for Catalytic Enantioselective Construction of Axially Chiral Biaryls",
+      "titleZh": "钯催化芳炔与芳基炔烃的不对称［2＋2＋2］环加成构建轴手性联芳基",
+      "date": "2026-07-29",
+      "authors": [
+        "Jia-Hao Zhao",
+        "Wen-Jing You",
+        "Chao Sun",
+        "Hui-Lin Luo",
+        "Wen-Cong Li",
+        "Yihe Cao",
+        "Hao Sun",
+        "Mei-Lin Feng",
+        "Shufeng Chen",
+        "Li−Li Liao",
+        "Jialin Ming"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "31",
+        "pages": "33913-33924",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c11788"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "采用新设计的手性P,N配体（R）-JiaPhos与钯催化，在芳炔高反应性和短寿命条件下实现催化轴向对映控制，构筑多种轴手性联芳基骨架，而非仅进行芳炔捕获机理研究。",
+      "evidenceBasis": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-07-29，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷148期31页33913-33924，署名作者与 2026-07-22_2026-07-31_jacs Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 1e3a285d37a0cba1db6fafc15b07af8e3833137f，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/jacs.6c11788。具体化学证据：ACS官方摘要写明包括碳芳基及杂芳基伙伴、内/端芳基炔烃、三/四邻位取代联芳基且取得良好至优异化学选择性与对映选择性；膦氧化物经还原可制备MOP及DavePhos类手性配体。作者提出'首个'的文献比较为作者主张，并非另行验证的历史结论。",
+      "challengeReason": "独立第二遍反驳：芳炔前体只略过量可能牵涉偶然高选择性；实际发表有多种C–C/C–N/C–B轴手性骨架与后修饰，证据超出单例。不能把构象/过渡态选择性模型误当成已被直接捕获的机制，也不能将'first'按本项目直接认证。",
+      "scopeAssessment": {
+        "primaryContribution": "采用新设计的手性P,N配体（R）-JiaPhos与钯催化，在芳炔高反应性和短寿命条件下实现催化轴向对映控制，构筑多种轴手性联芳基骨架，而非仅进行芳炔捕获机理研究。",
+        "preparativeTransformation": "芳炔与内炔或端炔芳基炔烃经Pd催化阻转选择性[2+2+2]环加成构筑新的芳香碳骨架和联芳基轴，合成三邻位及四邻位取代轴手性产物；作者报道C–C、C–N、C–B不同旋转轴类型。",
+        "generalityEvidence": "ACS官方摘要写明包括碳芳基及杂芳基伙伴、内/端芳基炔烃、三/四邻位取代联芳基且取得良好至优异化学选择性与对映选择性；膦氧化物经还原可制备MOP及DavePhos类手性配体。作者提出'首个'的文献比较为作者主张，并非另行验证的历史结论。",
+        "sourceEvidence": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-07-29，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷148期31页33913-33924，署名作者与 2026-07-22_2026-07-31_jacs Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 1e3a285d37a0cba1db6fafc15b07af8e3833137f，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/jacs.6c11788。具体化学证据：ACS官方摘要写明包括碳芳基及杂芳基伙伴、内/端芳基炔烃、三/四邻位取代联芳基且取得良好至优异化学选择性与对映选择性；膦氧化物经还原可制备MOP及DavePhos类手性配体。作者提出'首个'的文献比较为作者主张，并非另行验证的历史结论。",
+        "boundaryChallenge": "反向审查是否仅展示一例瞬态芳炔被捕获，无法广泛制备；原始摘要明确跨炔类别、轴类型、芳基类别的系列产物及配体衍生，符合方法学一般性。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.6c11788",
+        "publisherOnlineDate": "2026-07-29",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_jacs",
+        "stageBatchSha": "1e3a285d37a0cba1db6fafc15b07af8e3833137f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_ACS_Article_History_live_article_body_may_403",
+        "publisherEvidenceTier": "official_ACS_Article_History_and_Abstract_web_search_index_cross_checked_with_stage"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "采用新设计的手性P,N配体（R）-JiaPhos与钯催化，在芳炔高反应性和短寿命条件下实现催化轴向对映控制，构筑多种轴手性联芳基骨架，而非仅进行芳炔捕获机理研究。 芳炔与内炔或端炔芳基炔烃经Pd催化阻转选择性[2+2+2]环加成构筑新的芳香碳骨架和联芳基轴，合成三邻位及四邻位取代轴手性产物；作者报道C–C、C–N、C–B不同旋转轴类型。 ACS官方摘要写明包括碳芳基及杂芳基伙伴、内/端芳基炔烃、三/四邻位取代联芳基且取得良好至优异化学选择性与对映选择性；膦氧化物经还原可制备MOP及DavePhos类手性配体。作者提出'首个'的文献比较为作者主张，并非另行验证的历史结论。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立第二遍反驳：芳炔前体只略过量可能牵涉偶然高选择性；实际发表有多种C–C/C–N/C–B轴手性骨架与后修饰，证据超出单例。不能把构象/过渡态选择性模型误当成已被直接捕获的机制，也不能将'first'按本项目直接认证。"
+        }
+      ],
+      "sourceFamilyForReview": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1021/acscatal.6c03737",
+      "journal": "ACS Catalysis",
+      "title": "Enantioselective Construction of 6–10-Membered Cyclic Allylic Alcohols Containing Exocyclic Alkenes by Synergistic Photoredox/Cobalt-Catalyzed Intramolecular Alkenylation of Aldehydes",
+      "titleZh": "光氧化还原与钴协同催化醛分子内不对称烯基化构建六至十元环烯丙醇",
+      "date": "2026-07-23",
+      "authors": [
+        "Chuiyi Lin",
+        "Jichao Huang",
+        "Tingting Zhang",
+        "Zhihan Zhang",
+        "Heng Wang",
+        "Qinglei Chong",
+        "Fanke Meng"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14956-14966",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03737"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发光氧化还原/钴双催化醛分子内烯基化，克服中大环烯丙醇合成与不对称立体控制瓶颈，在有机分子结构中形成新碳碳键和环化骨架。",
+      "evidenceBasis": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-07-23，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷16期15页14956-14966，署名作者与 2026-07-22_2026-07-31_acs-catalysis Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 4f5e8cbdce63f5488856ee08a27a183611d7905d，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/acscatal.6c03737。具体化学证据：ACS官方摘要明确覆盖6–10元环尺寸、不同环外烯烃的中等环结构系列和中心/轴手性同时构建的应用；机械实验与DFT涉及烯基自由基中间体及立体诱导模型，但不能编造每种环大小对应的绝对构型或具体收率。",
+      "challengeReason": "独立质疑六至十元环是否都得到相同高ee、中心与轴手性是否每一底物均同时存在。官方摘要只陈述系列环状烯丙醇及部分双重立体中心应用，未给具体最高/最低数据，因此只据真实底物类别与变换纳入；烯基自由基途径是作者机理证据支持，不断言唯一途径。",
+      "scopeAssessment": {
+        "primaryContribution": "开发光氧化还原/钴双催化醛分子内烯基化，克服中大环烯丙醇合成与不对称立体控制瓶颈，在有机分子结构中形成新碳碳键和环化骨架。",
+        "preparativeTransformation": "含可反应烯基链的醛在协同光氧化还原及钴催化下发生分子内烯基化，形成含环外C=C键的6至10元环烯丙醇；在作者部分适用底物中同时建立中心和轴手性。",
+        "generalityEvidence": "ACS官方摘要明确覆盖6–10元环尺寸、不同环外烯烃的中等环结构系列和中心/轴手性同时构建的应用；机械实验与DFT涉及烯基自由基中间体及立体诱导模型，但不能编造每种环大小对应的绝对构型或具体收率。",
+        "sourceEvidence": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-07-23，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷16期15页14956-14966，署名作者与 2026-07-22_2026-07-31_acs-catalysis Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 4f5e8cbdce63f5488856ee08a27a183611d7905d，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/acscatal.6c03737。具体化学证据：ACS官方摘要明确覆盖6–10元环尺寸、不同环外烯烃的中等环结构系列和中心/轴手性同时构建的应用；机械实验与DFT涉及烯基自由基中间体及立体诱导模型，但不能编造每种环大小对应的绝对构型或具体收率。",
+        "boundaryChallenge": "第二遍检查此文是否仅为钴光氧化还原协同效应理论论文：标题和原始摘要列出多个环尺寸实际获得的烯丙醇及不对称诱导，属于具有产物范围的有机合成转化。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acscatal.6c03737",
+        "publisherOnlineDate": "2026-07-23",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_acs-catalysis",
+        "stageBatchSha": "4f5e8cbdce63f5488856ee08a27a183611d7905d",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_ACS_Article_History_live_article_body_may_403",
+        "publisherEvidenceTier": "official_ACS_Article_History_and_Abstract_web_search_index_cross_checked_with_stage"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "开发光氧化还原/钴双催化醛分子内烯基化，克服中大环烯丙醇合成与不对称立体控制瓶颈，在有机分子结构中形成新碳碳键和环化骨架。 含可反应烯基链的醛在协同光氧化还原及钴催化下发生分子内烯基化，形成含环外C=C键的6至10元环烯丙醇；在作者部分适用底物中同时建立中心和轴手性。 ACS官方摘要明确覆盖6–10元环尺寸、不同环外烯烃的中等环结构系列和中心/轴手性同时构建的应用；机械实验与DFT涉及烯基自由基中间体及立体诱导模型，但不能编造每种环大小对应的绝对构型或具体收率。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立质疑六至十元环是否都得到相同高ee、中心与轴手性是否每一底物均同时存在。官方摘要只陈述系列环状烯丙醇及部分双重立体中心应用，未给具体最高/最低数据，因此只据真实底物类别与变换纳入；烯基自由基途径是作者机理证据支持，不断言唯一途径。"
+        }
+      ],
+      "sourceFamilyForReview": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1021/acscatal.6c04804",
+      "journal": "ACS Catalysis",
+      "title": "Construction of Chiral [5,5]-Spiroketals through Cobalt-Catalyzed Asymmetric Arylation/Spiroketalization Cascade of Esteric Keto-Aldehydes and Arylboronic Acids",
+      "titleZh": "钴催化酮醛与芳基硼酸不对称芳基化－螺缩酮化串联合成手性［5,5］螺缩酮",
+      "date": "2026-08-24",
+      "authors": [
+        "Jian Chen",
+        "Wen-Hao Deng",
+        "Kai Xue",
+        "Qing-Xian Xie",
+        "Rong-Zhen Liao",
+        "Yong-Gui Zhou",
+        "Bo Wu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "17",
+        "pages": "17416-17423",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04804"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用地丰度钴催化体系，将不对称芳基化与分子内螺缩酮环化串联以制备含两个立体中心的手性[5,5]螺缩酮，这是具有明确合成产物的催化方法，而非以Co材料催化性能为主的研究。",
+      "evidenceBasis": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-08-24，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷16期17页17416-17423，署名作者与 2026-08-22_2026-08-31_acs-catalysis Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 267848d5cc293c65a8c780ffcad4b043fe27cccc，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/acscatal.6c04804。具体化学证据：ACS官方摘要明确报道从酯型酮醛和芳基硼酸出发得到一系列手性[5,5]螺缩酮，且具有较好的对映与非对映选择性；并未直接获得完整SI来确认每个具体底物的收率或最高ee数值，故不作数字扩张。",
+      "challengeReason": "第二遍重新审视底物类别偏窄（酯型酮醛+芳基硼酸）是否不足以构成方法学。该限制需保留，但以明示的螺缩酮构筑与两个立体中心的催化选择性为主要贡献；不能把该体系声称适用于任意开链二羰基物或所有螺缩酮，也不对具体催化中间体下定论。",
+      "scopeAssessment": {
+        "primaryContribution": "利用地丰度钴催化体系，将不对称芳基化与分子内螺缩酮环化串联以制备含两个立体中心的手性[5,5]螺缩酮，这是具有明确合成产物的催化方法，而非以Co材料催化性能为主的研究。",
+        "preparativeTransformation": "酯型酮醛前体与芳基硼酸在钴催化下经历芳基化/螺缩酮化串联步骤，形成新的C–C键和缩酮环骨架，获得具有两个手性中心的[5,5]双环螺缩酮。",
+        "generalityEvidence": "ACS官方摘要明确报道从酯型酮醛和芳基硼酸出发得到一系列手性[5,5]螺缩酮，且具有较好的对映与非对映选择性；并未直接获得完整SI来确认每个具体底物的收率或最高ee数值，故不作数字扩张。",
+        "sourceEvidence": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-08-24，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷16期17页17416-17423，署名作者与 2026-08-22_2026-08-31_acs-catalysis Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 267848d5cc293c65a8c780ffcad4b043fe27cccc，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/acscatal.6c04804。具体化学证据：ACS官方摘要明确报道从酯型酮醛和芳基硼酸出发得到一系列手性[5,5]螺缩酮，且具有较好的对映与非对映选择性；并未直接获得完整SI来确认每个具体底物的收率或最高ee数值，故不作数字扩张。",
+        "boundaryChallenge": "反向挑战：若研究仅做Co催化金属中心手性判别而没有结构骨架一般性，便不应纳入；论文是实际芳基硼酸与酮醛的成键及螺环构筑，明确两个立体中心及系列产物。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acscatal.6c04804",
+        "publisherOnlineDate": "2026-08-24",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_acs-catalysis",
+        "stageBatchSha": "267848d5cc293c65a8c780ffcad4b043fe27cccc",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_ACS_Article_History_live_article_body_may_403",
+        "publisherEvidenceTier": "official_ACS_Article_History_and_Abstract_web_search_index_cross_checked_with_stage"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "利用地丰度钴催化体系，将不对称芳基化与分子内螺缩酮环化串联以制备含两个立体中心的手性[5,5]螺缩酮，这是具有明确合成产物的催化方法，而非以Co材料催化性能为主的研究。 酯型酮醛前体与芳基硼酸在钴催化下经历芳基化/螺缩酮化串联步骤，形成新的C–C键和缩酮环骨架，获得具有两个手性中心的[5,5]双环螺缩酮。 ACS官方摘要明确报道从酯型酮醛和芳基硼酸出发得到一系列手性[5,5]螺缩酮，且具有较好的对映与非对映选择性；并未直接获得完整SI来确认每个具体底物的收率或最高ee数值，故不作数字扩张。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍重新审视底物类别偏窄（酯型酮醛+芳基硼酸）是否不足以构成方法学。该限制需保留，但以明示的螺缩酮构筑与两个立体中心的催化选择性为主要贡献；不能把该体系声称适用于任意开链二羰基物或所有螺缩酮，也不对具体催化中间体下定论。"
+        }
+      ],
+      "sourceFamilyForReview": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03121",
+      "journal": "Organic Letters",
+      "title": "Electrochemical Nickel-Catalyzed Cross-Electrophile Coupling: A Sustainable Platform for C(sp3)–C(sp3)/C(sp2) Bond Construction",
+      "titleZh": "电化学镍催化环状硫鎓盐与有机碘化物交叉亲电偶联构建碳碳键",
+      "date": "2026-09-06",
+      "authors": [
+        "Yong-Fei Huang",
+        "Jinxia Li",
+        "Miao Yan",
+        "Li-Jie Wang",
+        "Mu-Jia Luo",
+        "Chaozhihui Cheng",
+        "Qiang Xiao"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "37",
+        "pages": "11552-11557",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03121"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立有机碘化物与环状硫鎓盐的电化学镍催化交叉亲电偶联，提供不同杂环或脂肪骨架的C(sp³)–C(sp³)/C(sp³)–C(sp²)键构筑路线。",
+      "evidenceBasis": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-09-06，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷28期37页11552-11557，署名作者与 2026-09-01_2026-09-07_organic-letters Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 80aca4837373541c9ba22bdcae30cd0bd2f64511，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/acs.orglett.6c03121。具体化学证据：ACS原始Letter摘要直接报告sp³/sp²碘化物较广适用范围、官能团耐受性及复杂分子的后期官能团化；公开SI目录确有自由基抑制、EPR、CV、电流开关等机理研究，但本次未下载SI，不自称读到其实验曲线。",
+      "challengeReason": "独立校验题名的C(sp³)-C(sp²)是否包含sp²–sp²偶联：论文指sp³烷基端连接sp²伙伴，并未证明全部sp²–sp²。不能把EPR实验目录推出自由基机理已逐步确证；合成范围与复杂底物应用构成直接收录证据。",
+      "scopeAssessment": {
+        "primaryContribution": "建立有机碘化物与环状硫鎓盐的电化学镍催化交叉亲电偶联，提供不同杂环或脂肪骨架的C(sp³)–C(sp³)/C(sp³)–C(sp²)键构筑路线。",
+        "preparativeTransformation": "环状硫鎓盐作为烷基化亲电伙伴，与sp³或sp²碘化物在无隔膜电解槽及镍催化体系下发生交叉亲电偶联，生成新的C(sp³)–C(sp³)或C(sp³)–C(sp²)键；不要将它误写为传统亲核烷基化或全部卤化物均有效。",
+        "generalityEvidence": "ACS原始Letter摘要直接报告sp³/sp²碘化物较广适用范围、官能团耐受性及复杂分子的后期官能团化；公开SI目录确有自由基抑制、EPR、CV、电流开关等机理研究，但本次未下载SI，不自称读到其实验曲线。",
+        "sourceEvidence": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-09-06，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷28期37页11552-11557，署名作者与 2026-09-01_2026-09-07_organic-letters Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 80aca4837373541c9ba22bdcae30cd0bd2f64511，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/acs.orglett.6c03121。具体化学证据：ACS原始Letter摘要直接报告sp³/sp²碘化物较广适用范围、官能团耐受性及复杂分子的后期官能团化；公开SI目录确有自由基抑制、EPR、CV、电流开关等机理研究，但本次未下载SI，不自称读到其实验曲线。",
+        "boundaryChallenge": "第二遍质疑是否以'绿色'电解代替真实化学新方法：底物双方均为有机亲电试剂且产物实际形成两类碳碳键，有广泛碘化物及后期功能化，满足一般性制备标准。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03121",
+        "publisherOnlineDate": "2026-09-06",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_organic-letters",
+        "stageBatchSha": "80aca4837373541c9ba22bdcae30cd0bd2f64511",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_ACS_Article_History_live_article_body_may_403",
+        "publisherEvidenceTier": "official_ACS_Article_History_and_Abstract_web_search_index_cross_checked_with_stage"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "建立有机碘化物与环状硫鎓盐的电化学镍催化交叉亲电偶联，提供不同杂环或脂肪骨架的C(sp³)–C(sp³)/C(sp³)–C(sp²)键构筑路线。 环状硫鎓盐作为烷基化亲电伙伴，与sp³或sp²碘化物在无隔膜电解槽及镍催化体系下发生交叉亲电偶联，生成新的C(sp³)–C(sp³)或C(sp³)–C(sp²)键；不要将它误写为传统亲核烷基化或全部卤化物均有效。 ACS原始Letter摘要直接报告sp³/sp²碘化物较广适用范围、官能团耐受性及复杂分子的后期官能团化；公开SI目录确有自由基抑制、EPR、CV、电流开关等机理研究，但本次未下载SI，不自称读到其实验曲线。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立校验题名的C(sp³)-C(sp²)是否包含sp²–sp²偶联：论文指sp³烷基端连接sp²伙伴，并未证明全部sp²–sp²。不能把EPR实验目录推出自由基机理已逐步确证；合成范围与复杂底物应用构成直接收录证据。"
+        }
+      ],
+      "sourceFamilyForReview": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02892",
+      "journal": "Organic Letters",
+      "title": "Copper-Catalyzed Ring-Opening Addition of Cyclopropanols to Imines: Enantioselective Synthesis of γ-Sulfonamido Ketones",
+      "titleZh": "铜催化环丙醇开环加成N-磺酰亚胺不对称合成γ-磺酰胺基酮",
+      "date": "2026-07-30",
+      "authors": [
+        "Zhiyong Chi",
+        "Xiaoling Cheng",
+        "Longxiao Chi",
+        "Shaofeng Wu",
+        "Guo Tang",
+        "Lei Gong"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "32",
+        "pages": "10341-10346",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02892"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "作者利用环丙醇张力释放开环与N-磺酰亚胺加成，建立手性γ-氨基酮的铜催化不对称制备，并形成新季碳立体中心而不仅是环丙醇机理研究。",
+      "evidenceBasis": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-07-30，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷28期32页10341-10346，署名作者与 2026-07-22_2026-07-31_organic-letters Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 67f6960bccfa31a1d2477390309426061dc65563，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02892。具体化学证据：ACS原始Organic Letters摘要明确报告γ-磺酰胺基酮系列产物，分离收率最高98%、ee最高93%；未阅读SI前不推测体系中使用的具体铜盐、配体或所有底物的相似选择性。",
+      "challengeReason": "独立挑战亚胺必须N-磺酰保护、环丙醇底物结构可能局限，不能将方法放大成所有酮与所有亚胺的不对称偶联；文章提供真实开环生成新季碳立体中心及可分离产物，最高98%/93%是上限，不是普适值。",
+      "scopeAssessment": {
+        "primaryContribution": "作者利用环丙醇张力释放开环与N-磺酰亚胺加成，建立手性γ-氨基酮的铜催化不对称制备，并形成新季碳立体中心而不仅是环丙醇机理研究。",
+        "preparativeTransformation": "环丙醇与N-磺酰亚胺在铜催化下发生开环加成，产生C–C连接与γ-磺酰胺基酮骨架；在适用底物中形成季碳立体中心。",
+        "generalityEvidence": "ACS原始Organic Letters摘要明确报告γ-磺酰胺基酮系列产物，分离收率最高98%、ee最高93%；未阅读SI前不推测体系中使用的具体铜盐、配体或所有底物的相似选择性。",
+        "sourceEvidence": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-07-30，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷28期32页10341-10346，署名作者与 2026-07-22_2026-07-31_organic-letters Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 67f6960bccfa31a1d2477390309426061dc65563，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/acs.orglett.6c02892。具体化学证据：ACS原始Organic Letters摘要明确报告γ-磺酰胺基酮系列产物，分离收率最高98%、ee最高93%；未阅读SI前不推测体系中使用的具体铜盐、配体或所有底物的相似选择性。",
+        "boundaryChallenge": "第二遍担忧报道单一环丙醇与单一亚胺反应且只有过渡态推断；ACS原始论文发表的是直接开环加成并制得高选择性γ-磺酰胺基酮，收录理由是实际制备方法而非宣称机理已经完全确证。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02892",
+        "publisherOnlineDate": "2026-07-30",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_ACS_Article_History_live_article_body_may_403",
+        "publisherEvidenceTier": "official_ACS_Article_History_and_Abstract_web_search_index_cross_checked_with_stage"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "作者利用环丙醇张力释放开环与N-磺酰亚胺加成，建立手性γ-氨基酮的铜催化不对称制备，并形成新季碳立体中心而不仅是环丙醇机理研究。 环丙醇与N-磺酰亚胺在铜催化下发生开环加成，产生C–C连接与γ-磺酰胺基酮骨架；在适用底物中形成季碳立体中心。 ACS原始Organic Letters摘要明确报告γ-磺酰胺基酮系列产物，分离收率最高98%、ee最高93%；未阅读SI前不推测体系中使用的具体铜盐、配体或所有底物的相似选择性。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立挑战亚胺必须N-磺酰保护、环丙醇底物结构可能局限，不能将方法放大成所有酮与所有亚胺的不对称偶联；文章提供真实开环生成新季碳立体中心及可分离产物，最高98%/93%是上限，不是普适值。"
+        }
+      ],
+      "sourceFamilyForReview": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03201",
+      "journal": "Organic Letters",
+      "title": "Stereocontrolled Synthesis of (Hetero)aryl/vinyl Selenoglycosides via a Silver-Catalyzed Aqueous C–Se Cross-Coupling Reaction",
+      "titleZh": "银催化水相碳硒交叉偶联立体选择性合成芳基及烯基硒糖苷",
+      "date": "2026-08-29",
+      "authors": [
+        "Zhiheng Yue",
+        "Xiaoxue Tao",
+        "Qili Jiang",
+        "Zhihua Xia",
+        "Yuanwei Dai"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11264-11270",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03201"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展温和水相兼容银催化C–Se交叉偶联，为有机硒糖苷的立体选择性合成提供可推广制备方法，主要贡献是糖苷C–Se键构筑而非其潜在生物效应。",
+      "evidenceBasis": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-08-29，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷28期36页11264-11270，署名作者与 2026-08-22_2026-08-31_organic-letters Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 3eb3448b8f413701aed67f8e3f29d518400d7827，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/acs.orglett.6c03201。具体化学证据：官方摘要明确指出多类（杂）芳基/烯基硒糖苷、优良立体选择性、官能团耐受性，以及硒型列净（selenogliflozin）类似物制备；机理研究与自由基途径相符，但并非直接证明任何可能的糖基构型在所有条件下均不变化。",
+      "challengeReason": "独立核查C–Se偶联与C–C糖苷化混淆风险：反应实际生成Se-糖苷C–Se键，作者报道立体选择性和水相耐受，不能把所有硒糖苷的生物活性当成本研究已证实。机理自由基由研究提示，不扩张为直接捕获全部中间体。",
+      "scopeAssessment": {
+        "primaryContribution": "发展温和水相兼容银催化C–Se交叉偶联，为有机硒糖苷的立体选择性合成提供可推广制备方法，主要贡献是糖苷C–Se键构筑而非其潜在生物效应。",
+        "preparativeTransformation": "糖基硒磺酸酯与芳基、杂芳基或烯基硼酸在银催化下发生C–Se交叉偶联，合成（杂）芳基及烯基硒糖苷，并保持底物所需糖苷立体控制。",
+        "generalityEvidence": "官方摘要明确指出多类（杂）芳基/烯基硒糖苷、优良立体选择性、官能团耐受性，以及硒型列净（selenogliflozin）类似物制备；机理研究与自由基途径相符，但并非直接证明任何可能的糖基构型在所有条件下均不变化。",
+        "sourceEvidence": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-08-29，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷28期36页11264-11270，署名作者与 2026-08-22_2026-08-31_organic-letters Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 3eb3448b8f413701aed67f8e3f29d518400d7827，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/acs.orglett.6c03201。具体化学证据：官方摘要明确指出多类（杂）芳基/烯基硒糖苷、优良立体选择性、官能团耐受性，以及硒型列净（selenogliflozin）类似物制备；机理研究与自由基途径相符，但并非直接证明任何可能的糖基构型在所有条件下均不变化。",
+        "boundaryChallenge": "第二遍排查文章是否只是修饰一类已存在糖苷用于SGLT2生物活性，缺乏方法学：存在独立的糖基硒磺酸酯+多类硼酸C–Se偶联范围与实际药物类似物，因此纳入。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03201",
+        "publisherOnlineDate": "2026-08-29",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_ACS_Article_History_live_article_body_may_403",
+        "publisherEvidenceTier": "official_ACS_Article_History_and_Abstract_web_search_index_cross_checked_with_stage"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "发展温和水相兼容银催化C–Se交叉偶联，为有机硒糖苷的立体选择性合成提供可推广制备方法，主要贡献是糖苷C–Se键构筑而非其潜在生物效应。 糖基硒磺酸酯与芳基、杂芳基或烯基硼酸在银催化下发生C–Se交叉偶联，合成（杂）芳基及烯基硒糖苷，并保持底物所需糖苷立体控制。 官方摘要明确指出多类（杂）芳基/烯基硒糖苷、优良立体选择性、官能团耐受性，以及硒型列净（selenogliflozin）类似物制备；机理研究与自由基途径相符，但并非直接证明任何可能的糖基构型在所有条件下均不变化。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立核查C–Se偶联与C–C糖苷化混淆风险：反应实际生成Se-糖苷C–Se键，作者报道立体选择性和水相耐受，不能把所有硒糖苷的生物活性当成本研究已证实。机理自由基由研究提示，不扩张为直接捕获全部中间体。"
+        }
+      ],
+      "sourceFamilyForReview": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01478",
+      "journal": "JOC",
+      "title": "Synthetic Exploration and Divergent Total Synthesis of Tacaman Monoterpenoid Indole Alkaloids",
+      "titleZh": "Tacaman类单萜吲哚生物碱的分歧式全合成与形式全合成",
+      "date": "2026-08-26",
+      "authors": [
+        "Xiao-Feng Guo",
+        "Hai-Rui Du",
+        "Ya-Kui Sun",
+        "Hui Shao",
+        "Yu-Ming Zhao"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "36",
+        "pages": "12290-12297",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01478"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "作者基于先前通用关键中间体建立分歧合成路线，真正完成三种Tacaman类单萜吲哚生物碱的全合成，并进一步对两种相关目标完成形式全合成；这属于天然产物目标导向合成。",
+      "evidenceBasis": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-08-26，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷91期36页12290-12297，署名作者与 2026-08-22_2026-08-31_joc Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/acs.joc.6c01478。具体化学证据：ACS JOC官方摘要确认tacamonine、tabercamine K、19S-hydroxyapotacamine完成全合成，而descarbomethoxy-tacamine和17-β-hydroxy-tacamonine只达到形式全合成。分别记录完成层级，不能把五种全称为完整总合成；没有获取SI时不补全每条路线总步数和总收率。",
+      "challengeReason": "独立核查标题里的'Synthetic Exploration'是否只是零散中间体衍生：原始摘要具体列出三种天然产物完整总合成和两种形式全合成，具备完整路线/形式到已知先导中间体的证据。反向排除把形式全合成误宣称达到了游离最终产物。",
+      "scopeAssessment": {
+        "primaryContribution": "作者基于先前通用关键中间体建立分歧合成路线，真正完成三种Tacaman类单萜吲哚生物碱的全合成，并进一步对两种相关目标完成形式全合成；这属于天然产物目标导向合成。",
+        "preparativeTransformation": "以共同吲哚生物碱前体通过环丙烷中间体介导的形式1,2-迁移、极性反转促进retro-aza-Michael/后续酰胺化、三取代烯烃位置可控形式水合等步骤实现多路线分流构筑各天然产物骨架。",
+        "generalityEvidence": "ACS JOC官方摘要确认tacamonine、tabercamine K、19S-hydroxyapotacamine完成全合成，而descarbomethoxy-tacamine和17-β-hydroxy-tacamonine只达到形式全合成。分别记录完成层级，不能把五种全称为完整总合成；没有获取SI时不补全每条路线总步数和总收率。",
+        "sourceEvidence": "ACS期刊官方Article History对本篇DOI明确列为Article/Letter、Published Online 2026-08-26，不以纸刊期号或created替代；ACS官方网页的公开索引检索提供本篇摘要及版权可引用的有限事实，但正文付费部分不声称已访问。2026年卷91期36页12290-12297，署名作者与 2026-08-22_2026-08-31_joc Crossref/OpenAlex历史候选一致；冻结该候选原始Git blob SHA 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，已对照出版标题与第一在线日。官方原文链接 https://pubs.acs.org/doi/10.1021/acs.joc.6c01478。具体化学证据：ACS JOC官方摘要确认tacamonine、tabercamine K、19S-hydroxyapotacamine完成全合成，而descarbomethoxy-tacamine和17-β-hydroxy-tacamonine只达到形式全合成。分别记录完成层级，不能把五种全称为完整总合成；没有获取SI时不补全每条路线总步数和总收率。",
+        "boundaryChallenge": "第二遍重点反驳‘五种目标是否都已全合成’：仅三种是完成全合成，另外两种明确是formal synthesis，均符合网站既定的全合成/形式全合成范围，但必须标注各自完成程度。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01478",
+        "publisherOnlineDate": "2026-08-26",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_ACS_Article_History_live_article_body_may_403",
+        "publisherEvidenceTier": "official_ACS_Article_History_and_Abstract_web_search_index_cross_checked_with_stage"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "作者基于先前通用关键中间体建立分歧合成路线，真正完成三种Tacaman类单萜吲哚生物碱的全合成，并进一步对两种相关目标完成形式全合成；这属于天然产物目标导向合成。 以共同吲哚生物碱前体通过环丙烷中间体介导的形式1,2-迁移、极性反转促进retro-aza-Michael/后续酰胺化、三取代烯烃位置可控形式水合等步骤实现多路线分流构筑各天然产物骨架。 ACS JOC官方摘要确认tacamonine、tabercamine K、19S-hydroxyapotacamine完成全合成，而descarbomethoxy-tacamine和17-β-hydroxy-tacamonine只达到形式全合成。分别记录完成层级，不能把五种全称为完整总合成；没有获取SI时不补全每条路线总步数和总收率。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立核查标题里的'Synthetic Exploration'是否只是零散中间体衍生：原始摘要具体列出三种天然产物完整总合成和两种形式全合成，具备完整路线/形式到已知先导中间体的证据。反向排除把形式全合成误宣称达到了游离最终产物。"
+        }
+      ],
+      "sourceFamilyForReview": [
+        "crossref",
+        "openalex"
+      ]
+    }
+  ],
+  "sourceWindowBlobs": {
+    "2026-07-22_2026-07-31_acs-catalysis": "4f5e8cbdce63f5488856ee08a27a183611d7905d",
+    "2026-07-22_2026-07-31_jacs": "1e3a285d37a0cba1db6fafc15b07af8e3833137f",
+    "2026-09-01_2026-09-07_organic-letters": "80aca4837373541c9ba22bdcae30cd0bd2f64511",
+    "2026-08-22_2026-08-31_acs-catalysis": "267848d5cc293c65a8c780ffcad4b043fe27cccc",
+    "2026-07-22_2026-07-31_organic-letters": "67f6960bccfa31a1d2477390309426061dc65563",
+    "2026-08-22_2026-08-31_organic-letters": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+    "2026-08-22_2026-08-31_joc": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a"
+  },
+  "formalSnapshot": {
+    "sha": "433d7e710d9035a7cd26175d4e835dfb7359c760",
+    "count": 984
+  },
+  "noCopyOfOriginalAbstract": true,
+  "guards": {
+    "noPublication": true,
+    "onlyExisting08": true,
+    "Q3TOCOnly": true,
+    "noCloudflareD1": true,
+    "noPdfSiOrBodyCapture": true,
+    "notTodayHotOrWeChat": true
+  }
+}
