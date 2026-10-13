@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "owner_authorized_Q3_review_and_publisher_date_recount_after_four_RSC_two_pass_approvals",
+  "purpose": "owner_authorized_Q3_staging_only_count_refresh_after_five_publisher_verified_organic_syntheses",
   "approvedAt": "2026-10-13",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-13T14:17:47.202Z",
-  "reason": "Merged CI-green PR #617 commit 9beae7ef5b21e63178674e6cecfa09db4f15808e independently approved 4 Q3 RSC original syntheses with publisher-index vs NLM-ePub first-online date authority. From main 86 academic include, 2 authoritative pending, 8 previously formal historic, 984 formal catalog; hold D6SC05552D is outside authoritative include/pending awaiting final publisher science source. Recount source-root and Q3 review worklist only in historical staging, NO live D1/API, media/SI/PDF/body, daily-new, off-slot production or new task.",
+  "requestedAt": "2026-10-13T14:49:48.212Z",
+  "reason": "After independently verified CI-green PR #619 merged as 746022c86fe32fd3a839b25e8f7c2684f2a030ab, recompute Q3 staging only. Historical academic approvals 91, authoritative pending 2, 8 prior historical officially admitted, formal catalog baseline 984. Five Q3 new double-reviewed papers; two distinct ACS DOI first-online date publisher-vs-publisher contradictions explicitly remain held; one Chemical Science non-original Review has independent evidence but must not be silently removed without approved reconciler type gate. No live D1 or website API, media/PDF/SI/body figures, new tasks or off-slot publication.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261013_q3_after_86_approved_four_rsc_date_provenance_review_refresh",
+  "triggerScope": "20261013_q3_after_91_approved_five_source_dated_syntheses_and_dual_publisher_date_holds",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 984,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -20,8 +20,8 @@
   "expectedQ3CompletedRoots": 192,
   "expectedStageCompletedRootsAtRequest": 371,
   "expectedStageCompletedRoots": 371,
-  "expectedAcademicInclude": 86,
-  "academicDecisionSource": "latest_main_two_pass_approved_admissions_86_include_2_old_pending",
+  "expectedAcademicInclude": 91,
+  "academicDecisionSource": "latest_main_two_pass_approved_admissions_91_include_2_existing_pending",
   "publisherResearchIssueComplete": false,
   "publisherNonResearchExactCount": 5,
   "trustedScopeRulesSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
@@ -29,6 +29,12 @@
   "publisherIssueVerifiedReceipts": 2,
   "newFormalReleaseTask": false,
   "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028",
-  "lastRelatedMergeCommit": "9beae7ef5b21e63178674e6cecfa09db4f15808e",
-  "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d"
+  "lastRelatedMergeCommit": "746022c86fe32fd3a839b25e8f7c2684f2a030ab",
+  "separatelyHeldRscFinalScienceDoi": "10.1039/d6sc05552d",
+  "unresolvedDualOfficialPublisherDates": [
+    "10.1021/acs.joc.6c00852",
+    "10.1021/acs.orglett.6c02707",
+    "10.1021/acs.orglett.6c03028"
+  ],
+  "reviewedNonOriginalNotYetInReconciler": "10.1039/d5sc08413j"
 }

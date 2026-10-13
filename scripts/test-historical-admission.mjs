@@ -740,3 +740,69 @@ test('four Q3 RSC publisher-index or NLM dated independent two-pass syntheses pr
  assert.equal(hold.notInAuthoritativePendingManifest,true);
  assert.ok(hold.evidenceNeeded.length>=2);
 });
+
+
+test('five Q3 originals pass independent synthesis audit; dual-official ACS online conflicts remain held',()=>{
+ const expected=[
+  ['10.1039/d6gc02423h','2026-07-22','3cf217e8d9212bf4ac2fe5463c0ad28b184e3e22','RSC_official_First_published_index','Green Chemistry'],
+  ['10.1039/d6gc03989h','2026-09-16','c269a7de443c62a777b870983678a3494327e641','RSC_official_First_published_index','Green Chemistry'],
+  ['10.1039/d6gc03534e','2026-09-09','5c018472ac0030285fd9a3494472c1c3167de91a','RSC_official_First_published_index','Green Chemistry'],
+  ['10.1021/acscatal.6c05275','2026-08-26','267848d5cc293c65a8c780ffcad4b043fe27cccc','ACS_official_Published_Online_plus_Crossref_day_corrob','ACS Catalysis'],
+  ['10.1021/acs.orglett.6c02796','2026-08-25','3eb3448b8f413701aed67f8e3f29d518400d7827','ACS_official_Published_Online_plus_Crossref_day_corrob','Organic Letters']
+ ];
+ const first=new Set(),second=new Set(),boundaries=new Set();
+ for(const [doi,date,blob,tier,journal] of expected){
+  const xs=root.accepted.filter(x=>x.doi===doi);
+  assert.equal(xs.length,1,'exactly one approved DOI: '+doi);
+  const x=xs[0];
+  assert.equal(x.journal,journal);assert.equal(x.date,date);
+  assert.equal(x.reviewEvidence.publisherOnlineDate,date);
+  assert.equal(x.reviewEvidence.stageBatchSha,blob);
+  assert.equal(x.reviewEvidence.firstOnlineDateEvidence.tier,tier);
+  assert.equal(x.reviewEvidence.firstOnlineDateEvidence.officialPublisherFirstOnline,date);
+  assert.equal(x.reviewPasses,2);
+  assert.deepEqual(x.independentPasses.map(p=>p.decision),['include','include']);
+  assert.ok(x.independentPasses[0].reason.length>150);
+  assert.ok(x.independentPasses[1].reason.length>110);
+  assert.ok(x.scopeAssessment.primaryContribution.length>=36);
+  assert.ok(x.scopeAssessment.preparativeTransformation.length>60);
+  assert.ok(x.scopeAssessment.generalityEvidence.length>90);
+  assert.ok(x.scopeAssessment.boundaryChallenge.length>60);
+  assert.ok(x.scopeAssessment.sourceEvidence.includes(blob));
+  assert.ok(x.scopeAssessment.sourceEvidence.includes(doi));
+  assert.equal(x.ingestionChannel,'historical_backfill');
+  assert.equal(x.addedDate,'');assert.equal(x.new,false);
+  assert.equal(x.mediaPolicy,'toc_only');
+  assert.equal(x.reviewEvidence.abstractCopied,false);
+  assert.equal(x.reviewEvidence.figureFetched,false);
+  assert.equal(x.reviewEvidence.pdfFetched,false);
+  assert.equal(x.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+  assert.equal(x.citation.doi,doi);assert.equal(x.citation.year,2026);
+  assert.ok(x.titleZh.length>8);assert.ok(x.authors.length>=3);
+  first.add(x.independentPasses[0].reason);
+  second.add(x.independentPasses[1].reason);
+  boundaries.add(x.scopeAssessment.boundaryChallenge);
+ }
+ assert.equal(first.size,expected.length);
+ assert.equal(second.size,expected.length);
+ assert.equal(boundaries.size,expected.length);
+ const waveform=root.accepted.find(x=>x.doi==='10.1039/d6gc03534e');
+ assert.match(waveform.challengeReason,/波形/);
+ assert.match(waveform.challengeReason,/ee/);
+ const iron=root.accepted.find(x=>x.doi==='10.1021/acscatal.6c05275');
+ assert.match(iron.scopeAssessment.generalityEvidence,/6000/);
+ const thiirane=root.accepted.find(x=>x.doi==='10.1039/d6gc03989h');
+ assert.deepEqual([thiirane.citation.volume,thiirane.citation.issue,thiirane.citation.pages],['28','39','15803-15811']);
+ for(const heldDoi of ['10.1021/acs.joc.6c00852','10.1021/acs.orglett.6c02707','10.1021/acs.orglett.6c03028']){
+  assert.equal(root.accepted.some(x=>x.doi===heldDoi),false,'publisher-versus-publisher first online contradiction remains unresolved: '+heldDoi);
+ }
+ assert.equal(root.pending.length,2,'preserve both original manifest date disputes');
+ assert.equal(root.accepted.some(x=>x.doi==='10.1039/d6sc05552d'),false);
+ const exceptions=JSON.parse(readFileSync('audit/historical-reviewed/2026-10-13-q3-rsc-review-versus-original-synthesis-evidence-holds.json','utf8'));
+ assert.equal(exceptions.decisions[0].doi,'10.1039/d5sc08413j');
+ assert.equal(exceptions.decisions[0].formalAdmitted,false);
+ assert.equal(exceptions.decisions[0].needsReconcilerCategorySupport,true);
+ assert.equal(exceptions.decisions[1].doi,'10.1039/d6sc01721e');
+ assert.equal(exceptions.decisions[1].scopeStatus,'unfinished_not_promoted');
+ assert.equal(root.accepted.some(x=>exceptions.decisions.some(d=>d.doi===x.doi)),false);
+});
