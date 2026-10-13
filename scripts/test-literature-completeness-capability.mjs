@@ -4,6 +4,7 @@ import { TARGET_JOURNALS, effectiveJournalStart } from '../shared/literature-jou
 import { isStandaloneRepositoryDoi } from './lib/literature-doi-provenance.mjs';
 import { OFFICIAL_PUBLISHER_FEEDS,parseOfficialPublisherFeed } from './lib/publisher-feed-discovery.mjs';
 import { exclusionEvidenceRecheckReason } from './lib/literature-exclusion-recheck.mjs';
+import { isHighRelevanceCandidate } from './lib/literature-review-priority.mjs';
 import { publisherOnlyReviewEligible,exclusionRecheckBelongsToPrimaryWindow } from './lib/literature-review-queue-guard.mjs';
 
 const auditSource = await readFile(new URL('../cloudflare/scripts/audit-literature.mjs', import.meta.url), 'utf8');
@@ -73,6 +74,7 @@ assert.ok(auditSource.includes('blocked-historical-coverage-loss'), 'Known DOI d
 assert.ok(auditSource.includes('closureHistoricalCoverageLosses.length === 0'), 'verifiedThrough eligibility must require zero closure-day historical DOI losses');
 assert.ok(auditSource.includes('const compact=compactCandidate(candidate)'), 'All unresolved DOI differences must flow into review output');
 assert.ok(auditSource.includes('fetchOfficialPublisherFeeds'), 'Independent official publisher DOI candidates must enter machine audit');
+assert.ok(auditSource.includes('const retainForReview = isHighRelevanceCandidate'), 'High-relevance synthesis titles must use a consistent tested ranking helper');
 assert.ok(auditSource.includes('fetchPublisherMetadataAbstract'), 'Blank-abstract synthesis candidates must receive DOI-verified publisher abstract rescue attempts');
 assert.ok(auditSource.includes('pubAbstractResults'), 'Publisher abstract rescue successes and failures must be logged, not silently reported as zero gaps');
 assert.ok(auditSource.includes('publisherDateVerificationBacklog'), 'Unverified publisher-only DOI must remain visible beyond RSS rotation');
@@ -116,6 +118,12 @@ const oldFeed={publisherFeedUrl:'https://onlinelibrary.wiley.com/feed/15213773/m
 assert.equal(publisherOnlyReviewEligible(oldFeed,'2026-10-11','2026-10-13'),false);
 assert.equal(exclusionRecheckBelongsToPrimaryWindow({date:'2026-09-19'},'2026-10-11','2026-10-13'),false);
 
+for(const title of ['One-step skeletal editing of oxetanes to thietanes using thiourea',
+  'Iridium-Catalyzed Asymmetric Hydrogenation of Pyridazine Salts under Batch and Flow',
+  'Enantioselective Photocycloaddition of Quinone Methides']){
+  assert.equal(isHighRelevanceCandidate({title,journal:'Nature Synthesis',abstract:''}),true,
+    'High-relevance first-online synthesis title must rank high without abstract');
+}
 console.log(JSON.stringify({
   targetJournals: TARGET_JOURNALS.length,
   prospectiveFrom: { existingAdditions: '2026-09-19', rscAdditions: '2026-10-01', JOC: '2026-09-22' },
