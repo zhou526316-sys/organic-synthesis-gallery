@@ -68,7 +68,11 @@ assert.ok(auditSource.includes('const reviewInput = {'), 'Audit must construct a
 assert.ok(auditSource.includes('AUDIT_REVIEW_INPUT'), 'Audit must report compact review-input generation in logs');
 assert.ok(auditSource.includes('blocked-historical-coverage-loss'), 'Known DOI disappearance must block closure eligibility');
 assert.ok(auditSource.includes('closureHistoricalCoverageLosses.length === 0'), 'verifiedThrough eligibility must require zero closure-day historical DOI losses');
-assert.ok(auditSource.includes('.map(compactCandidate)'), 'All unresolved DOI differences must flow into review output');
+assert.ok(auditSource.includes('const compact=compactCandidate(candidate)'), 'All unresolved DOI differences must flow into review output');
+assert.ok(auditSource.includes('fetchOfficialPublisherFeeds'), 'Independent official publisher DOI candidates must enter machine audit');
+assert.ok(auditSource.includes('publisherOnlyDois'), 'Publisher-only DOI differences must be reported');
+assert.ok(auditSource.includes('previousExclusionsReopened'), 'Prior exclusions must be reconsidered on substantive new evidence');
+assert.ok(auditSource.includes('publisherDateUnverifiedDois.length === 0'), 'Unverified publisher feed dates must block closure, not per-DOI publication');
 assert.ok(!auditSource.includes('.filter(retainForReview)'), 'Keyword screening must not silently remove DOI differences from review');
 
 
