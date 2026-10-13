@@ -127,7 +127,9 @@ jobs:
         run: node scripts/pages-release-delivery.mjs resolve
       - name: Test literature deployment authorization
         if: steps.resolve.outputs.should_deploy == 'true'
-        run: node scripts/test-pages-literature-authorization.mjs
+        run: |
+          node scripts/test-pages-literature-authorization.mjs
+          node scripts/test-one-time-owner-catchup-20261013.mjs
       - name: Enforce fixed literature publication slot
         if: steps.resolve.outputs.should_deploy == 'true'
         shell: bash
