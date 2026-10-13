@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-10-13T02:47:19.397Z",
+  "generatedAt": "2026-10-13T03:16:50.801Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-with-catchup",
   "lookbackDays": 3,
@@ -188,7 +188,7 @@
     "publisherFirstOnlineBacklog": 0,
     "publisherDateUnverified": 0,
     "publisherAbstractRescued": 0,
-    "publisherAbstractProbeBlocked": 34,
+    "publisherAbstractProbeBlocked": 35,
     "publisherListingsComplete": 0,
     "publisherListingsPartial": 14,
     "publisherListingsUnavailable": 2,
@@ -14181,7 +14181,8 @@
       {
         "doi": "10.1038/s41929-026-01621-9",
         "journal": "Nature Catalysis",
-        "status": "not_retrieved"
+        "status": "blocked_or_unavailable",
+        "reason": "publisher_metadata_redirect_host_unrecognized:idp.nature.com"
       },
       {
         "doi": "10.1126/sciadv.aem6775",
