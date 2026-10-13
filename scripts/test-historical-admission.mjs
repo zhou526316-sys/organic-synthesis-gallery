@@ -180,6 +180,7 @@ test('Q3 ACS online-first reconciliation admits only four independently reviewed
     ['10.1021/acs.joc.6c01089',['2026-07-31','9181de94c2f59b0fb77a470f802a143699524037']],
     ['10.1021/acs.joc.6c01163',['2026-07-30','9181de94c2f59b0fb77a470f802a143699524037']]
   ]);
+  const firstPassReasons=[];
   for(const [doi,[online,sourceSha]] of expected){
     const record=root.accepted.find(row=>row.doi===doi);
     assert.ok(record,'not approved: '+doi);
@@ -190,10 +191,13 @@ test('Q3 ACS online-first reconciliation admits only four independently reviewed
     assert.equal(record.challengeDecision,'include');
     assert.equal(record.reviewPasses,2);
     assert.deepEqual(record.independentPasses.map(pass=>pass.decision),['include','include']);
+    assert.ok(record.independentPasses[0].assessment.length>60);
+    firstPassReasons.push(record.independentPasses[0].assessment);
     assert.equal(record.mediaPolicy,'toc_only');
     assert.equal(record.new,false);
     assert.equal(record.addedDate,'');
     assert.equal(record.publisherAbstractRights,'not_verified_do_not_republish_full_text');
     assert.equal(record.reviewEvidence.pdfFetched,false);
   }
+  assert.equal(new Set(firstPassReasons).size,expected.size);
 });
