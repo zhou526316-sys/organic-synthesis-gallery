@@ -38,7 +38,7 @@ test('card projection excludes historic from daily new/hot and PDF capture',()=>
     assert.equal(card.new,false);
     assert.equal(card.addedDate,'');
     assert.equal(card.ingestionChannel,'historical_backfill');
-    assert.equal(card.mediaPolicy,'toc_only');
+    assert.equal(card.mediaPolicy,x.date<'2026-07-01'?'metadata_only':'toc_only');
     assert.equal(card.doi,x.doi);
     assert.equal(card.titleZh,x.titleZh);
     assert.equal('abstract' in card,false);
