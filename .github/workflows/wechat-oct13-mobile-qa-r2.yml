@@ -1,0 +1,68 @@
+name: WeChat Oct13 R2 independent mobile/desktop source-science QA
+on:
+  push:
+    branches: [wechat-oct13-two-nature-r2-source-media]
+    paths: [audit/automation-triggers/wechat-oct13-mobile-qa-request.json]
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct13-r2-independent-layout-qa
+  cancel-in-progress: false
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Scope and source validation
+        run: |
+          python3 - <<'PY'
+          import json
+          r=json.load(open('audit/automation-triggers/wechat-oct13-mobile-qa-request.json'))
+          assert r['action']=='offline_image_and_editorial_qa_without_cloud_wechat'
+          assert r['date']=='2026-10-13' and r['revision']=='2026-10-13-r2'
+          assert r['cloudDraftWrite'] is False and r['publicSend'] is False
+          print('Isolated offline review; zero WeChat writes')
+          PY
+      - name: Render exact candidate WeChat HTML from 08:00 release
+        run: python3 scripts/wechat-oct13-r2-render-offline.py
+      - name: Install pinned Chromium
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps chromium >/tmp/wechat-oct13-install.log 2>&1 || { tail -50 /tmp/wechat-oct13-install.log; exit 1; }
+      - name: Inspect original-pixel body figures and covers at 390 and 740 CSS widths
+        run: node scripts/wechat-oct13-r2-offline-preview-qa.mjs
+      - name: Save independent evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wechat-oct13-r2-two-nature-source-visuals
+          path: audit/wechat-working/2026-10-13-r2-offline-preview/
+          retention-days: 30
+      - name: Persist QA only on review branch
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/wx-oct13-offline
+          cp -a audit/wechat-working/2026-10-13-r2-offline-preview/. /tmp/wx-oct13-offline/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          BR='wechat-oct13-two-nature-r2-source-media'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$BR"
+            git reset --hard "origin/$BR"
+            mkdir -p audit/wechat-working/2026-10-13-r2-offline-preview
+            cp -a /tmp/wx-oct13-offline/. audit/wechat-working/2026-10-13-r2-offline-preview/
+            git add -- audit/wechat-working/2026-10-13-r2-offline-preview/
+            git diff --cached --quiet && exit 0
+            git commit -m 'audit: Oct13 R2 390px and desktop source-figure mobile visual screenshots'
+            git push origin HEAD:"$BR" && exit 0
+            sleep 2
+          done
+          exit 1
