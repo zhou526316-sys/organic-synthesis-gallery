@@ -821,6 +821,8 @@
     const upload=document.createElement('button');upload.textContent='立即上传待发诊断';
     const recheck=document.createElement('button');recheck.textContent='复查受阻项';
     const acsRecheck=document.createElement('button');acsRecheck.textContent='抽查 ACS 许可项（最多10篇）';
+    const evidencePilot=document.createElement('button');
+    evidencePilot.textContent='跨期刊正文证据核验（12篇）';
     const search=document.createElement('input');search.placeholder='检索本机正文（LMCT/CO₂等）';
     search.style.cssText='width:100%;box-sizing:border-box;margin:8px 0 4px;padding:5px';
     const results=document.createElement('div');
@@ -836,10 +838,10 @@
     const saveSecret=document.createElement('button');saveSecret.textContent='保存并上传诊断';
     saveSecret.style.cssText='display:none;cursor:pointer;border:1px solid #b8c9df;border-radius:6px;padding:5px';
     results.style.cssText='max-height:140px;overflow:auto;font-size:12px;word-break:break-word';
-    for(const btn of [start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,hide]){
+    for(const btn of [start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot,hide]){
       btn.style.cssText='cursor:pointer;background:#eaf1f9;border:1px solid #b8c9df;border-radius:6px;padding:4px 8px;color:#172439';
     }
-    controls.append(start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck);
+    controls.append(start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,evidencePilot);
     panel.append(message,controls,coverageDetails,ownerSecret,saveSecret,filter,failureDetails,search,results);
     head.append(label,hide);root.append(head,panel);
     document.body.append(root);
@@ -906,6 +908,9 @@
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
     acsRecheck.addEventListener('click',()=>void batchStart(true,'acs_license').catch(error=>{
+      batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
+    }));
+    evidencePilot.addEventListener('click',()=>void batchStart(true,'pilot').catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
     failures.addEventListener('click',()=>{
@@ -1123,9 +1128,28 @@
       if(mode==='acs_license'
         &&(batchPublisher(paper.doi)!=='acs'||prior?.status!=='license_not_verified'))
         continue;
+      // Real publisher pilot is an explicitly initiated, bounded DOI sample.
+      // Exclude observed publisher denial/challenge; do not bypass auth.
+      if(mode==='pilot'&&(!prior||prior.pageDoiVerified!==true
+        ||!['license_not_verified','body_missing'].includes(prior.status)
+        ||[403,429].includes(Number(prior.httpStatus||0))))continue;
       if(!batchRetryAllowed(prior,manualBlocked))continue;
       selected.push(paper);
       if(mode==='acs_license'&&selected.length>=10)break;
+    }
+    if(mode==='pilot'){
+      const groups=new Map();
+      for(const paper of selected){
+        if(!groups.has(paper.journal))groups.set(paper.journal,[]);
+        groups.get(paper.journal).push(paper);
+      }
+      const balanced=[];
+      while(balanced.length<12&&[...groups.values()].some(g=>g.length)){
+        for(const group of groups.values()){
+          if(group.length&&balanced.length<12)balanced.push(group.shift());
+        }
+      }
+      return balanced;
     }
     return selected;
   }
@@ -1153,7 +1177,8 @@
         currentStage:'finished',lastError:'当前筛选范围无须访问的 DOI'});
       return;
     }
-    const label=mode==='acs_license'?'仅抽查此前许可待核实的 ACS 文章'
+    const label=mode==='pilot'?'跨期刊正文/许可证证据核验（不保证保存）'
+      :mode==='acs_license'?'仅抽查此前许可待核实的 ACS 文章'
       :mode==='blocked'?'重新检查此前已受阻的文章':'开始独立补抓';
     if(!window.confirm(label+'：'+selected.length+' 篇正式历史 DOI？\n逐篇打开出版社页面，仅保存有明确 CC BY/CC0 授权的本文正文到本机；不抓 PDF/图/SI，不触碰媒体队列。浏览器需保持开启。')){
       db.close();return;
