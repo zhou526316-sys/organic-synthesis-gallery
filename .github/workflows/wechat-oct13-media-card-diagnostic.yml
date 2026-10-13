@@ -1,0 +1,30 @@
+name: WeChat Oct13 Gallery card visual provenance (read-only)
+on:
+  push:
+    branches: [wechat-oct13-card-visual-diagnostics]
+    paths: [audit/automation-triggers/wechat-oct13-media-card-readonly.json]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Confirm read-only scope
+        run: |
+          python3 - <<'PY'
+          import json
+          j=json.load(open('audit/automation-triggers/wechat-oct13-media-card-readonly.json'))
+          assert j['action']=='diagnose_gallery_card_coverage_only' and j['date']=='2026-10-13'
+          assert j['wechatDraftWrite'] is False and j['publicSend'] is False and j['galleryWrite'] is False
+          PY
+      - name: Inspect actual 12 DOI media/batch response without writes
+        run: python3 scripts/wechat-oct13-card-image-readonly-diagnostic.py
+      - name: Preserve diagnostic JSON artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wechat-oct13-gallery-media-diagnostic
+          path: /tmp/wechat-oct13-media-diagnostic.json
+          retention-days: 7
