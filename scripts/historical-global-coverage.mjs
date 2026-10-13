@@ -15,7 +15,8 @@ export const COVERAGE_SCHEMA='gallery-historical-global-coverage-v1';
 const ROOT='audit/historical-staging';
 const countNew=()=>({candidateOccurrences:0,distinctCandidateDois:0,
   alreadyPublished:0,approvedAwaiting08:0,evidencePending:0,requiresTwoPassReview:0,
-  ambiguousStatus:0,unverifiedPublicationDate:0,suspectedNonresearch:0});
+  ambiguousStatus:0,unverifiedPublicationDate:0,suspectedNonresearch:0,
+  staleReviewerStatusRecords:0});
 const norm=s=>String(s||'').trim().toLowerCase();
 const sha256=s=>createHash('sha256').update(s).digest('hex');
 const statuses=['already_published','two_pass_approved_awaiting_08',
@@ -48,11 +49,17 @@ export function historicalYearPlan(journals=TARGET_JOURNALS,{from=START,floor='1
   }
   return map;
 }
-export function mergeHistoricalReviewShards(state,triage,shards,{journals=TARGET_JOURNALS}={}){
+export function mergeHistoricalReviewShards(state,triage,shards,{
+  journals=TARGET_JOURNALS,currentPublishedDois=null,currentApprovedDois=null,currentPendingDois=null}={}){
   if(state?.schema!=='gallery-historical-nightly-staging-v1'
     ||state.mode!=='candidate_discovery_only'||!Array.isArray(state.completed)
     ||triage?.schemaVersion!==TRIAGE_SCHEMA||triage.mode!=='review_queue_only_not_publication'
     ||!triage.rootSummaries||!Array.isArray(shards))throw Error('untrusted_global_history_snapshot');
+  const freshStatus=Boolean(currentPublishedDois!==null||currentApprovedDois!==null||currentPendingDois!==null);
+  if(freshStatus&&[currentPublishedDois,currentApprovedDois,currentPendingDois].some(x=>!(x instanceof Set)))
+    throw Error('incomplete_formal_history_membership_authority');
+  if(freshStatus&&[...currentApprovedDois].some(id=>currentPendingDois.has(id)))
+    throw Error('historical_review_pending_include_conflict');
   const completed=new Set(state.completed);
   if(completed.size!==state.completed.length)throw Error('duplicate_completed_historical_roots');
   const byYear=historicalYearPlan(journals);
@@ -112,10 +119,18 @@ export function mergeHistoricalReviewShards(state,triage,shards,{journals=TARGET
     const [journal,year]=key.split('|');
     byYear.get(journal).get(year).distinctCandidateDois=set.size;
   }
-  for(const row of statusesByDoi.values()){
+  for(const [id,row] of statusesByDoi){
     counters.distinctCandidateDois++;
-    if(row.statuses.size!==1){counters.ambiguousStatus++;continue;}
-    const st=[...row.statuses][0];
+    let st;
+    if(freshStatus){
+      st=currentPublishedDois.has(id)?'already_published':
+        currentApprovedDois.has(id)?'two_pass_approved_awaiting_08':
+        currentPendingDois.has(id)?'evidence_pending':'requires_two_pass_review';
+      if(row.statuses.size!==1||!row.statuses.has(st))counters.staleReviewerStatusRecords++;
+    }else{
+      if(row.statuses.size!==1){counters.ambiguousStatus++;continue;}
+      st=[...row.statuses][0];
+    }
     if(st==='already_published')counters.alreadyPublished++;
     if(st==='two_pass_approved_awaiting_08')counters.approvedAwaiting08++;
     if(st==='evidence_pending')counters.evidencePending++;
@@ -161,7 +176,11 @@ export function mergeHistoricalReviewShards(state,triage,shards,{journals=TARGET
     yearly,
     guards:{reviewOrPublicationWrites:false,publisherIssueCompletenessUnknown:true,
       DOIlessLegacyNotScanned:true,publisherLicensesNotResolved:true,
-      keywordSignalsNeverExclude:true,sourceApiCompleteNotPublisherComplete:true},
+      keywordSignalsNeverExclude:true,sourceApiCompleteNotPublisherComplete:true,
+      liveStatusReconciledAgainstPublishedAndApproved:freshStatus},
+    ...(freshStatus?{currentFormalDoiMembershipSnapshot:currentPublishedDois.size,
+      currentDoubleReviewedInputCount:currentApprovedDois.size,
+      currentPendingSourceConflicts:currentPendingDois.size}:{}),
   };
 }
 function journalNameBySlug(slug,journals){
@@ -171,9 +190,21 @@ export async function runHistoricalCoverage({root=ROOT}={}){
   if(process.env.HISTORICAL_STAGING_ONLY!=='1'
     ||process.env.HISTORICAL_STAGING_BRANCH!=='1')
     throw Error('historical_coverage_staging_only_guard_required');
-  const [state,triage]=await Promise.all([
+  const [state,triage,queue,manifest]=await Promise.all([
     readFile(root+'/state.json','utf8').then(JSON.parse),
-    readFile(root+'/review-triage-ledger.json','utf8').then(JSON.parse)]);
+    readFile(root+'/review-triage-ledger.json','utf8').then(JSON.parse),
+    readFile('public/toc-demand-live.json','utf8').then(JSON.parse),
+    readFile('audit/historical-reviewed/approved-admissions.json','utf8').then(JSON.parse)]);
+  if(!Array.isArray(queue.articles)||queue.articles.length!==queue.webpageDoiCount
+    ||!Array.isArray(manifest.accepted)||!Array.isArray(manifest.pending))
+    throw Error('invalid_live_formal_history_status_sources');
+  const publishedDois=new Set(queue.articles.map(x=>norm(x.doi)));
+  const reviewedApprovedDois=new Set(manifest.accepted.map(x=>norm(x.doi)));
+  const reviewPendingDois=new Set(manifest.pending.map(x=>norm(x.doi)));
+  if(publishedDois.size!==queue.articles.length
+    ||reviewedApprovedDois.size!==manifest.accepted.length
+    ||reviewPendingDois.size!==manifest.pending.length)
+    throw Error('duplicate_live_formal_history_doi');
   const shards=[];
   for(const id of state.completed){
     if(!triage.rootSummaries[id])continue;
@@ -182,7 +213,9 @@ export async function runHistoricalCoverage({root=ROOT}={}){
     // Preserve exact batch SHA in the shard/ledger, but never modify or copy publisher media.
     shards.push(shard);
   }
-  const output=mergeHistoricalReviewShards(state,triage,shards);
+  const output=mergeHistoricalReviewShards(state,triage,shards,{
+    currentPublishedDois:publishedDois,currentApprovedDois:reviewedApprovedDois,
+    currentPendingDois:reviewPendingDois});
   const dest=root+'/global-coverage-ledger.json';
   await mkdir(dirname(dest),{recursive:true});
   const temp=dest+'.tmp.'+process.pid;

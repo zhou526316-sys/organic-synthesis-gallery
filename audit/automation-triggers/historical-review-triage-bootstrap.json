@@ -8,7 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-13T01:32:18.865Z",
-  "reason": "Owner-approved full-DOI-global-dedup/year coverage report; rebuild staging-only shards and unique DOI annual ledger from all fully source-enumerated roots; no published corpus write.",
-  "retainsNoScopeAutoApproval": true
+  "requestedAt": "2026-10-13T02:17:00.269Z",
+  "reason": "Refresh 316 completed history source roots after publisher-reviewed 20/2 manifest and PR #575 authoritative DOI status fix; source-verified staging-only global ledger real readback. No source API calls, no formal publisher or media writes.",
+  "retainsNoScopeAutoApproval": true,
+  "triggerScope": "20261013_post_review20_global_unique_doi_reconcile",
+  "expectedCompleteRootCount": 316,
+  "expectedPublishedCatalogMembers": 979
 }

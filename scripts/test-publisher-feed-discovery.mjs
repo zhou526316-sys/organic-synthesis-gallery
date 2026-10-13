@@ -30,6 +30,32 @@ test('ACS publisher feed discovers missing DOI without treating an unrelated abs
   assert.equal(p.completeListing,false);
   assert.equal(p.unidentifiable,1);
 });
+test('ACS Silverchair GUID contains DOI followed by article id and slug; prism:doi must agree',()=>{
+  // Captured from the official October 11, 2026 Organic Letters ASAP feed.
+  const xml='<rss><channel><item>'+
+    '<title>Direct Enantioselective α-Alkoxylation of β-Keto Esters</title>'+
+    '<guid>https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c04095/5448613/Direct-Enantioselective-Alkoxylation-of-Keto</guid>'+
+    '<prism:doi>10.1021/acs.orglett.6c04095</prism:doi>'+
+    '<pubdate>Sun, 11 Oct 2026 14:00:39 GMT</pubdate>'+
+    '</item><item>'+
+    '<guid>https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c04010/5448612/Enantioselective-Pericyclization-of-Naphthol</guid>'+
+    '<prism:doi>10.1021/acs.orglett.6c04010</prism:doi>'+
+    '</item></channel></rss>';
+  const p=parseOfficialPublisherFeed(xml,ol,{startDate:'2026-10-10',endDate:'2026-10-13'});
+  assert.equal(p.items,2);
+  assert.equal(p.unidentifiable,0);
+  assert.deepEqual(p.records.map(x=>x.doi).sort(),[
+    '10.1021/acs.orglett.6c04010','10.1021/acs.orglett.6c04095']);
+  assert.equal(p.records.find(x=>x.doi.endsWith('04095')).feedDate,'2026-10-11');
+});
+test('conflicting precise ACS prism DOI versus GUID should remain unresolved rather than guessed',()=>{
+  const xml='<rss><item><guid>https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c04010/123/title</guid>'+
+    '<prism:doi>10.1021/acs.orglett.6c04095</prism:doi></item></rss>';
+  const p=parseOfficialPublisherFeed(xml,ol);
+  assert.equal(p.records.length,0);
+  assert.equal(p.unidentifiable,1);
+});
+
 test('recover the exact Nature Synthesis missed DOI from public article RSS identity',()=>{
   const xml='<rss><channel><item>'+
     '<title>One-step skeletal editing of oxetanes to thietanes using thiourea</title>'+
