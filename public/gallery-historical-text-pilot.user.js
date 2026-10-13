@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.1
+// @version      0.2.2
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -23,6 +23,7 @@
 // @noframes
 // @grant        GM_registerMenuCommand
 // @grant        GM_getValue
+// @grant        GM_listValues
 // @grant        GM_setValue
 // @grant        GM_deleteValue
 // @grant        GM_openInTab
@@ -209,9 +210,17 @@
   const BATCH_RESULT=BATCH_PREFIX+'result';
   const BATCH_LEASE=BATCH_PREFIX+'lease';
   const BATCH_DB='gallery-historical-text-local-v2';
+  const BATCH_REPORT_ENDPOINT='https://api.gczhouwld.com/api/admin/historical-text/reports';
+  const BATCH_DIAG_PREFIX=BATCH_PREFIX+'diagnostics-outbox-v1:';
+  const BATCH_DIAG_TOKEN=BATCH_PREFIX+'diagnostics-owner-token';
+  const BATCH_DIAG_ACK=BATCH_PREFIX+'diagnostics-acks-v1';
+  const BATCH_DIAG_STATE=BATCH_PREFIX+'diagnostics-state-v1';
+  const BATCH_PROGRESS=BATCH_PREFIX+'publisher-progress-v1';
+  const BATCH_DIAG_MAX_PENDING=1500;
+  const BATCH_DIAG_SCHEMA='historical-text-diagnostic-v1';
   const BATCH_LIMIT_MS=24000;
   const BATCH_LEASE_MS=40000;
-  const BATCH_RETRY_MS=24*3600*1000;
+  const BATCH_RETRY_MS=0; // No blanket 24h lockout; reason-dependent rechecking below.
   const BATCH_MAX_RESPONSE_CHARS=350000;
   const BATCH_MIN_GAP_MS=2000;
   const BATCH_DOI_LIMIT=100000;
@@ -219,6 +228,7 @@
     'license_not_verified','body_missing','too_large','timeout','invalid_response','storage_failure',
     'response_hash_mismatch','capture_failed','unsupported_publisher']);
   let batchActive=false,batchPaused=false,batchTab=null,batchStatus=null,batchRunId='',batchUi=null;
+  let batchDiagBusy=false,batchDiagStarted=false;
   const batchWait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   function batchId(){
     const bytes=new Uint8Array(12);
@@ -388,9 +398,13 @@
       const tx=db.transaction(store,method==='get'||method==='getAllKeys'?'readonly':'readwrite');
       const request=method==='getAllKeys'?tx.objectStore(store).getAllKeys()
         :tx.objectStore(store)[method](value);
-      request.onsuccess=()=>resolve(request.result);
+      let completedValue;
+      request.onsuccess=()=>{completedValue=request.result;};
       request.onerror=()=>reject(request.error||Error('local_db_request_failed'));
-      tx.onabort=()=>reject(tx.error||Error('local_db_transaction_failed'));
+      tx.onerror=()=>reject(tx.error||Error('local_db_transaction_failed'));
+      tx.onabort=()=>reject(tx.error||Error('local_db_transaction_aborted'));
+      // A request succeeding does not prove the IndexedDB transaction committed.
+      tx.oncomplete=()=>resolve(completedValue);
     });
   }
   function batchStatusWrite(patch){
