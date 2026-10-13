@@ -2,7 +2,7 @@ name: WeChat Oct13 R3 independent mobile/desktop source-science QA
 on:
   push:
     branches: [wechat-oct13-r3-innovation-driven-story]
-    paths: [audit/automation-triggers/wechat-oct13-mobile-qa-request.json]
+    paths: [audit/automation-triggers/wechat-oct13-r3-mobile-qa-request.json]
 permissions:
   contents: write
 concurrency:
@@ -23,7 +23,7 @@ jobs:
         run: |
           python3 - <<'PY'
           import json
-          r=json.load(open('audit/automation-triggers/wechat-oct13-mobile-qa-request.json'))
+          r=json.load(open('audit/automation-triggers/wechat-oct13-r3-mobile-qa-request.json'))
           assert r['action']=='offline_image_and_editorial_qa_without_cloud_wechat'
           assert r['date']=='2026-10-13' and r['revision']=='2026-10-13-r3'
           assert r['cloudDraftWrite'] is False and r['publicSend'] is False
