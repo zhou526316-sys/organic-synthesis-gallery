@@ -222,12 +222,20 @@ test('publisher evidence HTTP 403 is recorded only from observed navigation stat
   assert.equal(r.status,'page_http_error');
   assert.equal(r.httpStatus,403);
   assert.equal(r.stage,'publisher_page');
+  const throttled=fixture({navigationStatus:429});
+  await throttled.context.__batchTest.batchWorker();
+  const retryAfter=throttled.values.get('gallery-historical-text-batch-v2:result');
+  assert.equal(retryAfter.status,'page_http_error');
+  assert.equal(retryAfter.httpStatus,429);
+  assert.equal(retryAfter.stage,'publisher_page');
 });
 
 test('publisher HTTP error and access block remain intact in final results and stages',()=>{
   const api=fixture().context.__batchTest;
   assert.equal(api.batchNormalizedStatus('page_http_error'),'page_http_error');
   assert.equal(api.batchStageForStatus('page_http_error'),'publisher_page');
+  assert.equal(api.batchNormalizedStatus('page_unavailable'),'page_unavailable');
+  assert.equal(api.batchStageForStatus('page_unavailable'),'publisher_page');
   assert.equal(api.batchNormalizedStatus('page_access_blocked'),'page_access_blocked');
   assert.equal(api.batchStageForStatus('page_access_blocked'),'publisher_page');
   assert.equal(api.batchNormalizedStatus('publisher_no_response'),'publisher_no_response');
