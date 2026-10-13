@@ -55,7 +55,7 @@ function packet(){
     text:'Ligand-to-metal charge transfer (LMCT) is supported by electrochemical spectroscopy and isolated control experiments.'
   },{
     sectionId:'s002',type:'results',heading:'Synthetic scope',
-    text:'This organic synthesis method functionalizes a broad range of substrates with a well-defined set of carbon-carbon bond formations.'
+    text:'This organic synthesis method functionalizes a broad range of substrates with spectroscopy-confirmed carbon-carbon bond formations.'
   }].map(s=>({...s,sha256:sha(s.text)}));
   const sourceSha256=sha(sections.map(s=>s.sectionId+'\n'+s.heading+'\n'+s.text).join('\n\n'));
   return {schemaVersion:BODY_SECTION_SCHEMA,catalogId:GEN.catalogId,doi:DOI,revision:REV,
@@ -115,6 +115,13 @@ test('reviewed public CC by sections can be indexed but remain private until exp
   assert.equal(evidence.body.items[0].evidenceType,'mechanism');
   assert.equal(evidence.body.items[0].source,'reviewed_public_body');
   assert.equal(Object.hasOwn(evidence.body.items[0],'text'),false);
+  const p1=await findPublicBodyMatches(env,{catalogId:GEN.catalogId,query:'spectroscopy',limit:1});
+  assert.equal(p1.status,200);assert.equal(p1.body.matchedSections,2);
+  assert.equal(p1.body.hasMore,true);assert.equal(p1.body.items.length,1);
+  const p2=await findPublicBodyMatches(env,{catalogId:GEN.catalogId,query:'spectroscopy',limit:1,
+    afterDoi:p1.body.nextAfterDoi,afterSectionId:p1.body.nextAfterSectionId});
+  assert.equal(p2.body.items.length,1);assert.equal(p2.body.hasMore,false);
+  assert.notEqual(p1.body.items[0].sectionId,p2.body.items[0].sectionId);
   const firstPage=await findPublicBodyMatches(env,{catalogId:GEN.catalogId,query:'LMCT',limit:1});
   assert.equal(firstPage.body.matchedSections,1);
   assert.equal(firstPage.body.hasMore,false);
