@@ -15,7 +15,7 @@ const norm=v=>String(v||'').trim().toLowerCase().replace(/^https?:\/\/(?:dx\.)?d
 const fileDigest=content=>createHash('sha256').update(content).digest('hex');
 const filenameId=id=>/^\d{4}-\d\d-\d\d_\d{4}-\d\d-\d\d_[a-z][a-z-]+$/.test(id);
 const priorityWords=[
-  /total synthesis|formal synthesis|enantioselective|(?:asymmetric|stereoselective)\s+(?:synthesis|cataly\w*|coupl\w*|hydroalkylat\w*|hydrogenat\w*|cycliz\w*|annulat\w*|functionaliz\w*|reaction|reductive\w*)|cross.coupling|decarboxylative|carbonylative|electrochemical.*(reaction|synthesis|coupling)|photoredox.*(reaction|coupling|synthesis)/i,
+  /(?:total synthesis|formal synthesis|enantioselective|(?:asymmetric|stereoselective)[^\n]{0,90}(?:synthes(?:is|es|ized)|cataly[sz]ed|hydroalkylation|hydrophosphinylation|propargylation|alkylation|arylation|difunctionalization|functionalization|cross.coupling|Mannich|annulation|cyclization|olefination|esterification|hydrogenation|desymmetri[sz]ation)|cross.coupling|decarboxylative|carbonylative|electrochemical.*(?:reaction|synthesis|coupling)|photoredox.*(?:reaction|coupling|synthesis))/i,
   /synthe|annulation|cyclization|cyclisation|functionalization|functionalisation|olefination|amination|alkylation|arylation|hydroboration|phosphonylation|rearrangement|carboxylation|electrosynthesis|photocataly/i,
   /reaction|cataly|transformation|organic|carbon|radical|enantio|chirality|enantioselect/i,
 ];
