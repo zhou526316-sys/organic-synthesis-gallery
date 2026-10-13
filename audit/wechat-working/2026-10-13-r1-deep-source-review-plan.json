@@ -1,0 +1,166 @@
+{
+  "date": "2026-10-13",
+  "revision": "2026-10-13-r1-scientific-review",
+  "task": "owner-supplied two-paper deep read before official WeChat draft",
+  "selection": [
+    {
+      "column": "今日精选",
+      "journal": "Nature Synthesis",
+      "doi": "10.1038/s44160-026-01189-z",
+      "title": "One-step skeletal editing of oxetanes to thietanes using thiourea",
+      "source": "Owner-provided publisher main PDF + 171-page SI",
+      "authors": "Like Luo, Deguang Liu, Dayu Tian et al.",
+      "researchCore": "Direct O-to-S editing without predibromination: In(OTf)3-assisted thiourea ring-opening, O-cyclization, C–S rearrangement, intramolecular 4-exo-tet closure; stepwise cascade in one operational step",
+      "centralControls": [
+        "Without In(OTf)3 no reaction (Fig6a; SI FigS6)",
+        "Independent bromohydrin 63 at 150C gives 55% without In, 64% with In (Fig6b; SI S7)",
+        "99% ee S64 to 96% ee R65 (Fig6c; SI S8-12)",
+        "Regio-probe 66 gives only 67 at 34%, NOT target 69 (Fig6d; SI S13)",
+        "Oxetane 18O 76% -> cyclic urea 18O 74% in CH3CN isotope experiment (Fig6e; SI S14-22)",
+        "DFT In-assisted ring opening 27 vs uncatalyzed 46.7 kcal/mol; distortion interaction -42.4 vs -14.1 (Fig7/8; SI S24-25)"
+      ],
+      "scopeLimitations": [
+        "2,2-disubstituted oxetanes fail and may isomerize (SI FigS26)",
+        "2-substituted substrates sometimes require 20-30 mol% In, 72h",
+        "Pendant alkyl halides compete with thiourea SN2",
+        "100 C, 24h, 2 equiv ethylene thiourea are material conditions",
+        "Bioactivity/potency and price comparisons partly originate in earlier cited data/Apr2026 price snapshots"
+      ],
+      "bodySources": [
+        [
+          "Fig1",
+          2
+        ],
+        [
+          "Fig2",
+          3
+        ],
+        [
+          "Fig3",
+          4
+        ],
+        [
+          "Fig4",
+          5
+        ],
+        [
+          "Fig5",
+          6
+        ],
+        [
+          "Fig6",
+          7
+        ],
+        [
+          "Fig7",
+          8
+        ],
+        [
+          "Fig8",
+          9
+        ]
+      ],
+      "supportingSources": [
+        [
+          "FigS4",
+          54
+        ],
+        [
+          "FigS14",
+          66
+        ],
+        [
+          "FigS25",
+          75
+        ],
+        [
+          "FigS26",
+          78
+        ]
+      ]
+    },
+    {
+      "column": "往期精选",
+      "journal": "Nature Chemistry",
+      "doi": "10.1038/s41557-026-02213-7",
+      "title": "Oxetane-to-azetidine skeletal editing",
+      "source": "Owner-provided publisher main PDF + 191-page SI",
+      "authors": "Dayu Tian, Like Luo, Xian Xiao et al.",
+      "researchCore": "Orthogonal nonredox two-stage one-pot O-to-N editing: Lewis acid aminolysis to isolated 1,3-aminoalcohol, BEHT triflate-mediated intramolecular dehydrative closure",
+      "centralControls": [
+        "B(C6F5)3 gives 90% NMR yield of ring-opened 1,3-aminoalcohol; no Lewis acid no productive ring opening (Fig2; SI TableS1)",
+        "Traditional PPh3/DIAD, acid, MsCl/TsCl activation fail; BEHT 85% NMR ring closure (Fig2; SI TableS2)",
+        "Ring-opened intermediate 3 isolated at 80% and final 4 isolated at 80% (SI characterization)",
+        "Aromatic primary amines 1.1 equiv B(C6F5)3 10 mol% 60 C; aliphatic primary amines 1.5 equiv Yb(OTf)3 20 mol% 120 C (main Methods/SI)",
+        "3,3-disubstituted S1 Koh photocatalytic comparison 32% versus current 75%; Koh photocatalytic complex substrates 69/71/73 fail under authors tested conditions (SI FigS2/3)"
+      ],
+      "scopeLimitations": [
+        "Certain oxetanes and amine nucleophiles completely fail (SI Tables S4/S5)",
+        "Some conditions require LiBF4 2 eq or Yb(OTf)3 50 mol%, hotter solvents and BEHT 2.4 eq",
+        "Some 2/3-monosubstituted oxetanes have 33-50% yields",
+        "No isotope-labeling/DFT proof for exact oxyphosphonium transition state; mechanistic inference from isolated intermediate and optimization",
+        "Pharmacology examples in main Fig1c are referenced precedents, not generalized newly measured SAR"
+      ],
+      "bodySources": [
+        [
+          "Fig1",
+          2
+        ],
+        [
+          "Fig2",
+          2
+        ],
+        [
+          "Table1",
+          3
+        ],
+        [
+          "Table2",
+          4
+        ],
+        [
+          "Fig3",
+          5
+        ],
+        [
+          "Fig4",
+          6
+        ]
+      ],
+      "supportingSources": [
+        [
+          "TableS1/S2",
+          4
+        ],
+        [
+          "FigS2",
+          63
+        ],
+        [
+          "FigS3",
+          64
+        ],
+        [
+          "TableS4/S5",
+          65
+        ]
+      ]
+    }
+  ],
+  "editorialPolicy": "Follow docs/wechat-editorial-master-rules.md: two separate articles, scientifically dense but balanced readable Chinese, original figures with semantic placement, full source captions and no invented chemistry; accurate daily journals + Gallery cards only, no full bibliography in daily digest.",
+  "sourceReviewStatus": "science-deep-read-first-pass-draft-prepared; figure-crop-candidate-qa-required; independent prose reviews pending",
+  "productionStatus": "do_not_trigger_wechat_draft_add_or_update_until_selection/release discrepancy and DOI card positioning verified; no public send",
+  "gallery20261013": {
+    "publicationSlot": "2026-10-13T08:00:00+08:00",
+    "newlyPublishedDOIsCount": 7,
+    "historicalOnlyDOIsCount": 8,
+    "doi01189InDeferredDois": true,
+    "reason": "Owner selected paper as 今日精选 but site does not yet show it in official 08:00 new publication and precise DOI Gallery card may not be addressable. This is a provenance and preview-link gate, not a reason to replace the owner's selection."
+  },
+  "originalSourceFigurePolicy": "All images extracted from the four user-provided PDFs. Crop candidate filenames, source PDF pages and SHA256 are in the local research package; no chemistry re-drawn. Crop visual/mobilereadability gate not yet passed.",
+  "notifications": {
+    "noDuplicateDraft": true,
+    "noMassSend": true,
+    "oldOct12DraftUntouched": true
+  }
+}
