@@ -115,6 +115,13 @@ test('reviewed public CC by sections can be indexed but remain private until exp
   assert.equal(evidence.body.items[0].evidenceType,'mechanism');
   assert.equal(evidence.body.items[0].source,'reviewed_public_body');
   assert.equal(Object.hasOwn(evidence.body.items[0],'text'),false);
+  const firstPage=await findPublicBodyMatches(env,{catalogId:GEN.catalogId,query:'LMCT',limit:1});
+  assert.equal(firstPage.body.matchedSections,1);
+  assert.equal(firstPage.body.hasMore,false);
+  const allPage=await findPublicBodyMatches(env,{catalogId:GEN.catalogId,query:'synthetic',limit:1});
+  assert.equal(allPage.body.matchedSections,1);
+  assert.equal((await findPublicBodyMatches(env,{catalogId:GEN.catalogId,query:'synthetic',
+    afterDoi:'10.1021/jacs.invalid',afterSectionId:'bad'})).status,400);
   const conflict={...data,sections:[{...data.sections[0],text:'Changed scientific content with required minimum length and complete uncertainty.'.repeat(2)}]};
   conflict.sections[0].sha256=sha(conflict.sections[0].text);
   conflict.sourceSha256=sha(conflict.sections.map(s=>s.sectionId+'\n'+s.heading+'\n'+s.text).join('\n\n'));
