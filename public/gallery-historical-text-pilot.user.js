@@ -748,6 +748,7 @@
     message.style.cssText='margin:7px 0;font-size:12px;line-height:1.5;color:#41576e;white-space:pre-wrap';
     const controls=document.createElement('div');controls.style.cssText='display:flex;gap:6px;flex-wrap:wrap';
     const start=document.createElement('button');start.textContent='一键补抓全部缺项';
+    const coverageButton=document.createElement('button');coverageButton.textContent='全库正文覆盖';
     const pause=document.createElement('button');pause.textContent='暂停';
     const failures=document.createElement('button');failures.textContent='失败详情';
     const server=document.createElement('button');server.textContent='服务器报告';
@@ -758,6 +759,8 @@
     const search=document.createElement('input');search.placeholder='检索本机正文（LMCT/CO₂等）';
     search.style.cssText='width:100%;box-sizing:border-box;margin:8px 0 4px;padding:5px';
     const results=document.createElement('div');
+    const coverageDetails=document.createElement('div');
+    coverageDetails.style.cssText='white-space:pre-wrap;max-height:180px;overflow:auto;font-size:12px;display:none;margin:6px 0';
     const filter=document.createElement('input');
     filter.placeholder='筛选失败 DOI／原因';filter.style.cssText='width:100%;box-sizing:border-box;margin:6px 0;padding:5px;display:none';
     const failureDetails=document.createElement('div');
@@ -768,11 +771,11 @@
     const saveSecret=document.createElement('button');saveSecret.textContent='保存并上传诊断';
     saveSecret.style.cssText='display:none;cursor:pointer;border:1px solid #b8c9df;border-radius:6px;padding:5px';
     results.style.cssText='max-height:140px;overflow:auto;font-size:12px;word-break:break-word';
-    for(const btn of [start,pause,failures,server,configure,upload,recheck,acsRecheck,hide]){
+    for(const btn of [start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck,hide]){
       btn.style.cssText='cursor:pointer;background:#eaf1f9;border:1px solid #b8c9df;border-radius:6px;padding:4px 8px;color:#172439';
     }
-    controls.append(start,pause,failures,server,configure,upload,recheck,acsRecheck);
-    panel.append(message,controls,ownerSecret,saveSecret,filter,failureDetails,search,results);
+    controls.append(start,coverageButton,pause,failures,server,configure,upload,recheck,acsRecheck);
+    panel.append(message,controls,coverageDetails,ownerSecret,saveSecret,filter,failureDetails,search,results);
     head.append(label,hide);root.append(head,panel);
     document.body.append(root);
     let collapsed=false;hide.addEventListener('click',()=>{
@@ -800,9 +803,36 @@
         +' · 待发 '+batchReportKeys().length);
       message.textContent=progress.join('\n');
       start.disabled=batchActive;
+      coverageButton.disabled=false;
       pause.disabled=!batchActive;
       pause.textContent=batchPaused?'准备暂停…':'暂停';
     };
+    coverageButton.addEventListener('click',()=>{
+      coverageDetails.style.display='block';
+      coverageDetails.textContent='正在对齐正式 DOI 与本机正文台账…';
+      void (async()=>{
+        const catalog=await batchLoadCanonicalCatalog();
+        const db=await batchOpenDb();
+        let keys,attempts;
+        try{
+          keys=await batchDbOp(db,'packets','getAllKeys');
+          attempts=await batchDbOp(db,'attempts','getAll');
+        }finally{db.close();}
+        const c=batchCoverageSummary(catalog,keys,attempts);
+        const first=c.neverAttempted,post=c.parserRecheckEligible;
+        coverageDetails.textContent=[
+          '正式目录 '+c.formalDois+' 篇；已核实日期的历史 DOI '+c.historicalWithVerifiedDate+' 篇',
+          '历史日期待核验／非目标：'+c.historicalWithoutVerifiedDate+' 篇',
+          '本机已存科学正文 '+c.savedLocal+' 篇；从未访问 '+first+' 篇',
+          '许可待核实 '+c.licensePending+'；科学正文不足 '+c.bodyMissing,
+          '访问／身份受阻 '+c.accessBlocked+'；暂时故障 '+c.temporaryFailure,
+          '其他待核查 '+c.otherFailure+'；新版解析可复查一次 '+post,
+          '普通批次计划访问 '+c.scheduledByNormalBatch+' 篇（不等于历史母数）',
+          '本机数据不会自动进入 Gallery 公共全文索引。'
+        ].join('\\n');
+      })().catch(()=>{coverageDetails.textContent=
+        '正式目录或本机数据库暂时无法完整读取；未推断任何历史 DOI 已完成。';});
+    });
     start.addEventListener('click',()=>void batchStart(false).catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
@@ -920,6 +950,36 @@
       await batchWait(350);
     }
     return {status:'timeout',stage:'publisher_wait',reasonCode:'publisher_no_response'};
+  }
+  function batchCoverageSummary(catalog,existingKeys,attemptRows){
+    const papers=batchHistoricalPapers(catalog);
+    const saved=new Set(existingKeys||[]);
+    const previous=new Map((attemptRows||[]).map(row=>[row.doi,row]));
+    const coverage={formalDois:Number(catalog?.formalCount||0),
+      historicalWithVerifiedDate:papers.length,
+      historicalWithoutVerifiedDate:Math.max(0,Number(catalog?.articles?.length||0)-papers.length),
+      savedLocal:0,neverAttempted:0,licensePending:0,bodyMissing:0,
+      accessBlocked:0,temporaryFailure:0,otherFailure:0,
+      scheduledByNormalBatch:0,parserRecheckEligible:0};
+    for(const paper of papers){
+      if(saved.has(paper.doi)){coverage.savedLocal++;continue;}
+      const prior=previous.get(paper.doi);
+      if(!prior){coverage.neverAttempted++;continue;}
+      if(prior.status==='license_not_verified')coverage.licensePending++;
+      else if(prior.status==='body_missing')coverage.bodyMissing++;
+      else if(['page_access_blocked','page_http_error','doi_unverified'].includes(prior.status)
+        ||[403,429].includes(Number(prior.httpStatus||0)))coverage.accessBlocked++;
+      else if(['timeout','publisher_no_response','publisher_unreachable',
+        'storage_failure','local_storage_failed','response_hash_mismatch'].includes(prior.status))
+        coverage.temporaryFailure++;
+      else coverage.otherFailure++;
+      if((prior.status==='license_not_verified'||prior.status==='body_missing')
+        &&prior.pageDoiVerified===true&&prior.captureRevision!==BATCH_CAPTURE_REVISION
+        &&![403,429].includes(Number(prior.httpStatus||0)))coverage.parserRecheckEligible++;
+    }
+    coverage.scheduledByNormalBatch=batchSelectCandidates(
+      papers,saved,attemptRows,false,'all').length;
+    return coverage;
   }
   function batchSelectCandidates(papers,existing,attemptRows,manualBlocked=false,mode='all'){
     const previous=new Map((attemptRows||[]).map(x=>[x.doi,x]));
