@@ -1,7 +1,7 @@
 {
   "date": "2026-10-13",
   "revision": "2026-10-13-r4",
-  "status": "source_science_review_complete_visual_layout_pending",
+  "status": "source_grounded_science_text_and_pinned_raster_mobile_desktop_layout_pass",
   "baseline": "2026-10-13-r3",
   "scope": "same two existing WeChat draft articles; preserve 22 source rasters, 2 covers, date, 12 published journal-only counts and two precise URLs",
   "sourcePapers": [
@@ -95,8 +95,21 @@
     }
   ],
   "narrative": "Opening gives one concrete molecule-level conflict; each evidence panel changes one reaction hypothesis. No continuous redundant baseline sections, no simulated author motivation beyond paper, no reproduced fictitious mechanism or made-up drug effect.",
-  "textReview": "scientific_content_checked_against_original_main_SI_r3_and_current_edited_text",
-  "imageReview": "all_original_image_sha_pinned_and_semantic_map_checked_pending_real_390px_layout",
+  "textReview": "pass",
+  "imageReview": "pass",
   "cloudDraftUpdated": false,
-  "publicSent": false
+  "publicSent": false,
+  "visualQA": {
+    "workflowRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38365625121",
+    "artifact": "audit/wechat-working/2026-10-13-r4-offline-preview/offline-qa.json",
+    "dateTimeUTC": "2026-10-13T07:54:50Z",
+    "mobileViewport": 390,
+    "desktopViewport": 740,
+    "bodySourceImages": 22,
+    "covers": 2,
+    "screenshots": 14,
+    "noMobileOverflow": true,
+    "loadedAll": true
+  },
+  "scienceReview": "main papers and SI experimental boundaries checked; numbers refer to original reported conditions with their limitations; no new chemistry or source raster"
 }
