@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { TARGET_JOURNALS, effectiveJournalStart } from '../shared/literature-journals.js';
 import { isStandaloneRepositoryDoi } from './lib/literature-doi-provenance.mjs';
+import { OFFICIAL_PUBLISHER_FEEDS,parseOfficialPublisherFeed } from './lib/publisher-feed-discovery.mjs';
+import { exclusionEvidenceRecheckReason } from './lib/literature-exclusion-recheck.mjs';
 
 const auditSource = await readFile(new URL('../cloudflare/scripts/audit-literature.mjs', import.meta.url), 'utf8');
 
@@ -68,7 +70,13 @@ assert.ok(auditSource.includes('const reviewInput = {'), 'Audit must construct a
 assert.ok(auditSource.includes('AUDIT_REVIEW_INPUT'), 'Audit must report compact review-input generation in logs');
 assert.ok(auditSource.includes('blocked-historical-coverage-loss'), 'Known DOI disappearance must block closure eligibility');
 assert.ok(auditSource.includes('closureHistoricalCoverageLosses.length === 0'), 'verifiedThrough eligibility must require zero closure-day historical DOI losses');
-assert.ok(auditSource.includes('.map(compactCandidate)'), 'All unresolved DOI differences must flow into review output');
+assert.ok(auditSource.includes('const compact=compactCandidate(candidate)'), 'All unresolved DOI differences must flow into review output');
+assert.ok(auditSource.includes('fetchOfficialPublisherFeeds'), 'Independent official publisher DOI candidates must enter machine audit');
+assert.ok(auditSource.includes('fetchPublisherMetadataAbstract'), 'Blank-abstract synthesis candidates must receive DOI-verified publisher abstract rescue attempts');
+assert.ok(auditSource.includes('pubAbstractResults'), 'Publisher abstract rescue successes and failures must be logged, not silently reported as zero gaps');
+assert.ok(auditSource.includes('publisherOnlyDois'), 'Publisher-only DOI differences must be reported');
+assert.ok(auditSource.includes('previousExclusionsReopened'), 'Prior exclusions must be reconsidered on substantive new evidence');
+assert.ok(auditSource.includes('publisherDateUnverifiedDois.length === 0'), 'Unverified publisher feed dates must block closure, not per-DOI publication');
 assert.ok(!auditSource.includes('.filter(retainForReview)'), 'Keyword screening must not silently remove DOI differences from review');
 
 
@@ -81,6 +89,25 @@ assert.equal(isStandaloneRepositoryDoi('10.1038/s41467-026-78459-z'), false);
 assert.equal(isStandaloneRepositoryDoi('10.1021/jacs.6c14748'), false);
 assert.ok(auditSource.includes('isStandaloneRepositoryDoi(item.doi)'), 'Non-journal provenance must be assessed within historical loss detection');
 assert.ok(auditSource.includes('historicalNonJournalRecords,'), 'Historical non-journal corrections must remain auditable');
+
+// These functional checks also run in the unchanged 06:55 machine-audit job.
+const olFeed=OFFICIAL_PUBLISHER_FEEDS.find(row=>row.journal==='Organic Letters');
+const synthFeed=OFFICIAL_PUBLISHER_FEEDS.find(row=>row.journal==='Nature Synthesis');
+assert.ok(olFeed&&synthFeed,'Independent official publisher feeds must cover at least ACS and Nature Synthesis');
+const exactPublisher=parseOfficialPublisherFeed(
+  '<rss><item><guid>https://www.nature.com/articles/s44160-026-01189-z</guid></item></rss>',
+  synthFeed,{startDate:'2026-10-11',endDate:'2026-10-13'});
+assert.equal(exactPublisher.records[0]?.doi,'10.1038/s44160-026-01189-z',
+  'Known Nature Synthesis omission must have an independent DOI discovery route');
+assert.equal(exactPublisher.records[0]?.date,'',
+  'RSS packaging must not fabricate authoritative first-publication date');
+const beforeExclude={doi:'10.1038/s44160-026-01189-z',decision:'exclude',title:'Skeletal editing',
+  abstract:'',date:'2026-10-12'};
+const afterEvidence={...beforeExclude,abstract:'A'.repeat(180)};
+assert.equal(exclusionEvidenceRecheckReason(afterEvidence,beforeExclude),
+  'new_substantive_abstract_after_previous_exclusion');
+assert.equal(exclusionEvidenceRecheckReason(afterEvidence,beforeExclude,{confirmedExcluded:true}),'',
+  'Confirmed DOI exclusions must remain authoritative despite metadata changes');
 
 console.log(JSON.stringify({
   targetJournals: TARGET_JOURNALS.length,
