@@ -1,22 +1,26 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-08T01:29:19.586Z",
-  "publicationSlot": "2026-10-08T08:00:00+08:00",
-  "releaseCommit": "3d4bd44146d9b2cab2bda35e09b159161b0b7195",
-  "baselineMain": "ff40455d55ac408e46baba1fcfc189114abdad5b",
-  "postReleaseAuditRunId": 37709307724,
-  "postReleaseAuditGeneratedAt": "2026-10-08T00:45:14.247Z",
-  "expectedProductionCards": 887,
+  "requestedAt": "2026-10-13T02:49:30.786Z",
+  "publicationSlot": "2026-10-13T08:00:00+08:00",
+  "releaseCommit": "c7f7748975eb56c1cf11a83397ae9c49ac9cf5d4",
+  "baselineMain": "902bba70175402c0d2a28f267a74d4f3d6341414",
+  "postReleaseAuditRunId": 38338456615,
+  "postReleaseAuditGeneratedAt": "2026-10-13T02:47:19.397Z",
+  "pairedLatestBlobSha": "acb31f9d67983ee818d0518e7dce051943222cbe",
+  "pairedCompactBlobSha": "bedaf90b35c264517f3dea22cc18dcc60df52a0d",
+  "expectedProductionCards": 979,
   "expectedDeferredDois": [
-    "10.31635/ccschem.026.202608019",
-    "10.1021/acscatal.6c06578",
-    "10.31635/ccschem.026.202608090",
-    "10.31635/ccschem.026.202607590",
-    "10.31635/ccschem.026.202607612",
-    "10.31635/ccschem.026.202608472",
-    "10.31635/ccschem.026.202608262"
+    "10.31635/ccschem.026.202608292",
+    "10.31635/ccschem.026.202607973",
+    "10.31635/ccschem.026.202608252",
+    "10.1038/s44160-026-01189-z",
+    "10.1021/acs.orglett.6c03893"
+  ],
+  "reviewedNextSlotDois": [
+    "10.1021/acs.orglett.6c04027",
+    "10.1021/acs.orglett.6c03617"
   ],
   "observedUnresolvedCount": 7,
-  "pagesRunId": 37711099940,
-  "purpose": "Post-delivery quality validation of real 887 DOI live union and 28 Oct-08 admitted DOI, with exactly seven durable evidence-scoped pending. Read-only quality check; no production admissions, deletions, workflow schedule changes, or bypass."
+  "pagesRunId": 38334513326,
+  "purpose": "Read-only post-release exact DOI-union quality check after immutable 10-13 release: original five documented pending plus two DOI-specific reviewed next-08 carryovers exactly cover seven unresolved. No off-slot literature admission, no workflow reschedule or authoritative review/marker mutation."
 }
