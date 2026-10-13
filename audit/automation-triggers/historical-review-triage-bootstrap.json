@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "user_requested_2026_q3_prospective_month_date_science_ledger_refresh_after_52_includes_and_two_Nature_issue_receipts",
+  "purpose": "owner_authorized_Q3_complete_review_refresh_after_six_ACS_two_pass_approvals",
   "approvedAt": "2026-10-13",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-13T08:34:00.545Z",
-  "reason": "After merged PR #602 official Nature Synthesis Sep/Oct Research DOI 26 and date/issue separation, and merged PR #603 six specific ACS original Q3 independent two-pass scientific approvals. Source roots remain 371 including all 192 Q3; formal catalog984 including Q3 743; total historic52 academically accepted, two earlier date-pending, five Nature publisher-confirmed nonresearch DOIs; 3 newly found date investigations are not academic approvals. Strict staging-only, zero D1, no media, no publications or new release slots.",
+  "requestedAt": "2026-10-13T13:13:12.122Z",
+  "reason": "After fully merged and CI-verified PR #613 (6 additional 2026-Q3 ACS synthetic original DOI two-pass approvals), recompute exact-source Q3 status, approved 74 with 2 original pending, catalog 984 formal. Independently held Org Lett 10.1021/acs.orglett.6c03028 has ACS publisher-vs-publisher July30/July31 online date conflict; cannot automatically treat as approved/published/pending override. Staging Q3 192/192 Crossref/OpenAlex roots among 371 completed all-time windows. Strictly GitHub staging only; no production Cloudflare D1/API queries, no release or new media.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261013_q3_after_52_accepted_two_verified_issue_receipts",
+  "triggerScope": "20261013_q3_after_74_approved_exact_source_review_refresh",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 984,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -20,11 +20,13 @@
   "expectedQ3CompletedRoots": 192,
   "expectedStageCompletedRootsAtRequest": 371,
   "expectedStageCompletedRoots": 371,
-  "expectedAcademicInclude": 52,
-  "academicDecisionSource": "main_history_manifest_52_individual_include_two_original_pending",
+  "expectedAcademicInclude": 74,
+  "academicDecisionSource": "latest_main_two_pass_approved_admissions_74_include_2_old_pending",
   "publisherResearchIssueComplete": false,
   "publisherNonResearchExactCount": 5,
   "trustedScopeRulesSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
   "trustedScopeCorrectionsSha": "74978d92a16d353271f16f111425d09e4de84f07",
-  "publisherIssueVerifiedReceipts": 2
+  "publisherIssueVerifiedReceipts": 2,
+  "newFormalReleaseTask": false,
+  "reviewedDateConflictHeldOutsideApproved": "10.1021/acs.orglett.6c03028"
 }
