@@ -633,32 +633,80 @@
       row.append(link,details);area.append(row);
     }
   }
+  // Preserve checkpoints without making two events appear as two failed papers.
+  // The scope is one publisher attempt, uniquely keyed by DOI and task jobId.
+  function batchGroupServerEvents(items){
+    const groups=new Map();
+    for(const event of Array.isArray(items)?items:[]){
+      if(!event||typeof event!=='object'||!event.doi||!event.jobId)continue;
+      const key=String(event.doi)+'|'+String(event.jobId);
+      if(!groups.has(key))groups.set(key,{
+        doi:String(event.doi),jobId:String(event.jobId),events:[],display:null});
+      groups.get(key).events.push(event);
+    }
+    return [...groups.values()].map(group=>{
+      group.events.sort((a,b)=>Number(b.receivedAt||0)-Number(a.receivedAt||0));
+      // A final result, when present, supersedes interim publisher checkpoints.
+      group.display=group.events.find(e=>e.kind==='final_result')||group.events[0];
+      group.latestAt=Math.max(...group.events.map(x=>Number(x.receivedAt||0)));
+      return group;
+    }).sort((a,b)=>b.latestAt-a.latestAt);
+  }
   async function batchShowServerReports(area){
     const token=batchReportToken();
     if(!token){area.textContent='请先配置诊断上报密钥，服务器报告仅管理员可查。';return;}
     area.textContent='正在核对服务器记录…';
     try{
       const response=await batchHttpRequest({method:'GET',
-        url:BATCH_REPORT_ENDPOINT+'?limit=25',
+        url:BATCH_REPORT_ENDPOINT+'?limit=100',
         headers:{authorization:'Bearer '+token,accept:'application/json'}});
       const body=JSON.parse(String(response.responseText||'{}'));
       if(Number(response.status)!==200||!Array.isArray(body.items))
         throw Error('no_valid_read_receipt');
+      const groups=batchGroupServerEvents(body.items);
+      const uniqueDois=new Set(groups.map(x=>x.doi)).size;
       area.replaceChildren();
       const header=document.createElement('div');
-      header.textContent='服务器已保存 '+body.items.length+' 条最近记录（只读）';
+      header.textContent='服务器返回 '+body.items.length+' 条事件，归并 '+groups.length
+        +' 次尝试／'+uniqueDois+' 篇 DOI（仅最近100条，不是全库统计）';
       area.append(header);
-      for(const item of body.items){
-        const row=document.createElement('div');
-        row.style.cssText='padding:4px 0;border-top:1px solid #ddd';
-        row.textContent=String(item.doi||'')+' · '+batchDiagnosticLabel(item.reasonCode)
-          +' · '+String(item.stage||'')
-          +' · '+new Date(Number(item.receivedAt||0)).toLocaleString();
-        area.append(row);
+      for(const group of groups.slice(0,45)){
+        const event=group.display;
+        const wrapper=document.createElement('details');
+        wrapper.style.cssText='padding:5px 0;border-top:1px solid #ddd';
+        const heading=document.createElement('summary');
+        heading.style.cssText='cursor:pointer;word-break:break-word';
+        const code=String(event.reasonCode||'other');
+        heading.textContent=group.doi+' · '+batchDiagnosticLabel(code)
+          +' ['+code+'] · '+String(event.stage||'未知阶段')
+          +' · '+(Number.isInteger(event.httpStatus)?'HTTP '+event.httpStatus:'HTTP 未知')
+          +' · '+(event.kind==='final_result'?'最终结果':'中途检查点')
+          +' · '+new Date(group.latestAt).toLocaleString();
+        wrapper.append(heading);
+        const context=document.createElement('div');
+        context.textContent='尝试标识：'+group.jobId.slice(-12)
+          +' · 本次 '+group.events.length+' 条事件'
+          +' · DOI 已核验：'+(event.pageDoiVerified===true?'是':'否/未确认')
+          +' · 科学正文字符数：'+Number(event.evidenceChars||0);
+        wrapper.append(context);
+        for(const stage of group.events){
+          const line=document.createElement('div');
+          line.textContent='  '+(stage.kind==='final_result'?'最终':'检查点')+' · '
+            +batchDiagnosticLabel(stage.reasonCode)+' ['+String(stage.reasonCode)+']'
+            +' · '+String(stage.stage||'')
+            +' · '+(Number.isInteger(stage.httpStatus)?'HTTP '+stage.httpStatus:'HTTP 未知')
+            +' · '+new Date(Number(stage.receivedAt||0)).toLocaleString();
+          wrapper.append(line);
+        }
+        area.append(wrapper);
+      }
+      if(body.hasMore===true){
+        const more=document.createElement('div');
+        more.textContent='还有更早的事件未显示，请按 DOI 精准复查；当前不是全库日志。';
+        area.append(more);
       }
     }catch(_){area.textContent='暂时无法读取服务器报告；本机诊断不受影响。';}
   }
-
   function batchPanel(){
     if(document.getElementById('osg-historical-batch'))return null;
     const root=document.createElement('div');
