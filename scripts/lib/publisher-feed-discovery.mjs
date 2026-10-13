@@ -15,10 +15,13 @@ const FEEDS = [
   ['Science','https://www.science.org/action/showFeed?type=etoc&feed=rss&jc=science','10.1126/science.'],
   ['Science Advances','https://www.science.org/action/showFeed?type=etoc&feed=rss&jc=sciadv','10.1126/sciadv.'],
   ['Chem','https://www.cell.com/chem/current.rss','10.1016/j.chempr.'],
+  ['CCS Chemistry','https://www.chinesechemsoc.org/action/showFeed?type=etoc&feed=rss&jc=ccschem','10.31635/ccschem.'],
+  ['Chemical Science','https://pubs.rsc.org/en/journals/rss?journalcode=sc','10.1039/'],
+  ['Green Chemistry','https://pubs.rsc.org/en/journals/rss?journalcode=gc','10.1039/'],
 ];
-// Do not invent official RSS URLs for CCS Chemistry, Chemical Science or Green
-// Chemistry. They remain explicitly unverified until an official source is
-// independently verified and configured.
+// Each publisher route is independently attempted. In particular, CCS and RSC
+// may reject automated access; a successful URL guess never counts as full
+// publisher completeness. Unreadable or unparseable routes stay explicit gaps.
 export const OFFICIAL_PUBLISHER_FEEDS = Object.freeze(FEEDS.map(
   ([journal,url,doiPrefix])=>Object.freeze({journal,url,doiPrefix})
 ));
@@ -52,6 +55,17 @@ function identityStrings(item) {
   }
   return values;
 }
+function belongsToFeed(doi,feed) {
+  if(!doi.startsWith(feed.doiPrefix))return false;
+  // RSC shares the 10.1039/ prefix across all journals. Verify the journal
+  // code in the actual DOI, never infer journal from host alone.
+  if(feed.journal==='Chemical Science')
+    return /^10\.1039\/[a-z]\d{2}sc[a-z0-9]+$/i.test(doi);
+  if(feed.journal==='Green Chemistry')
+    return /^10\.1039\/[a-z]\d{2}gc[a-z0-9]+$/i.test(doi);
+  return true;
+}
+
 function itemIdentity(item, feed) {
   const candidates=[];
   for (const value of identityStrings(item)) {
@@ -60,7 +74,7 @@ function itemIdentity(item, feed) {
     const nature=/https?:\/\/(?:www\.)?nature\.com\/articles\/(s\d{5}-\d{3}-\d{5}-[a-z0-9]+)/i.exec(value);
     if(nature&&feed.doiPrefix.startsWith('10.1038/'))candidates.push('10.1038/'+nature[1].toLowerCase());
   }
-  const unique=[...new Set(candidates.filter(doi=>doi.startsWith(feed.doiPrefix)))];
+  const unique=[...new Set(candidates.filter(doi=>belongsToFeed(doi,feed)))];
   // Multiple identifiers are ambiguous: never guess which DOI is the article.
   if(unique.length!==1)return '';
   return unique[0];
