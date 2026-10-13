@@ -927,7 +927,7 @@
       }
       if(first<0)continue;
       const score=ranks[row.type]||3;
-      if(best&&best.score>score)continue;
+      if(best&&best.score>=score)continue;
       best={kind:row.kind,label:row.label,type:row.type,score,
         excerpt:row.text.slice(Math.max(0,first-50),Math.min(row.text.length,first+140))};
     }
