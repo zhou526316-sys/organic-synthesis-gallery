@@ -56,3 +56,26 @@ test('unsupported/missing evidence never counted complete',()=>{
   const bad={...shard,sourceSha256:'invalid'};
   assert.throws(()=>mergeHistoricalReviewShards(root,triage,[bad]),/historical_triage_shard_or_source_hash_invalid/);
 });
+
+test('current authoritative formal status overrides stale reviewer shard snapshot',()=>{
+  const out=mergeHistoricalReviewShards(root,triage,[shard],{
+    currentPublishedDois:new Set(['10.1021/jacs.6c00002']),
+    currentApprovedDois:new Set(['10.1021/jacs.6c00001']),
+    currentPendingDois:new Set()});
+  assert.equal(out.counters.candidateOccurrences,2);
+  assert.equal(out.counters.distinctCandidateDois,2);
+  assert.equal(out.counters.alreadyPublished,1);
+  assert.equal(out.counters.approvedAwaiting08,1);
+  assert.equal(out.counters.requiresTwoPassReview,0);
+  assert.equal(out.counters.staleReviewerStatusRecords,2);
+  assert.equal(out.guards.liveStatusReconciledAgainstPublishedAndApproved,true);
+  assert.equal(out.currentFormalDoiMembershipSnapshot,1);
+});
+test('incomplete publisher/member/approval input must fail closed',()=>{
+  assert.throws(()=>mergeHistoricalReviewShards(root,triage,[shard],{
+    currentPublishedDois:new Set()}),/incomplete_formal_history_membership_authority/);
+  assert.throws(()=>mergeHistoricalReviewShards(root,triage,[shard],{
+    currentPublishedDois:new Set(),currentApprovedDois:new Set(['10.1021/jacs.6c00001']),
+    currentPendingDois:new Set(['10.1021/jacs.6c00001'])}),
+    /historical_review_pending_include_conflict/);
+});
