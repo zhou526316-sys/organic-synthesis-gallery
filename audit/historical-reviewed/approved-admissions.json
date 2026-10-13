@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-13T07:27:36.819Z",
+  "generatedAt": "2026-10-13T07:40:23.604Z",
   "nextEligiblePublicationSlot": "2026-10-14T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 47,
-    "include": 45,
+    "checked": 48,
+    "include": 46,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -3037,6 +3037,77 @@
         "crossref",
         "openalex"
       ]
+    },
+    {
+      "doi": "10.1002/anie.8203203",
+      "journal": "Angew",
+      "title": "Sustainable Access to N ‐Heterocycles: One‐Pot Cascade Synthesis of Pyrroles From Bio‐Derived Furans",
+      "titleZh": "Pt团簇与酸性分子筛协同催化生物质呋喃和硝基芳烃一锅合成吡咯",
+      "date": "2026-09-08",
+      "authors": [
+        "Haifeng Qi",
+        "Germán López Robledo",
+        "Jianglin Duan",
+        "Yujing Ren",
+        "Kathrin Junge",
+        "Matthias Beller"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "e8203203",
+        "doi": "10.1002/anie.8203203"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "该研究并非仅制备和表征Pt/HY负载催化材料。作者开发以生物质呋喃衍生物与硝基芳烃为原料的一锅串联有机反应：Pt团簇选择性还原硝基芳烃生成苯胺，酸性分子筛促进呋喃开环与缩合，将含氧芳杂环转化为N-取代吡咯，实现明确的杂环合成。",
+      "evidenceBasis": "Wiley Angewandte Chemie International Edition正式研究论文公开页面（https://onlinelibrary.wiley.com/doi/10.1002/anie.8203203）显示First published: 08 September 2026、原始英文题目与摘要，并指出一锅N-取代吡咯制备、Pt团簇与酸性HY协同、常压H2、30余例、最高97%和抗分枝杆菌药物候选应用。该内容不是Nature Synthesis 2026-09-28 Seavill Research Highlight DOI 10.1038/s44160-026-01174-6；高亮摘要与原文机理描述吻合但不是替代正式研究身份的证据。冻结源批次 2026-09-08_2026-09-14_angew Crossref/OpenAlex 原始文件Git blob SHA 162e2cc6724fd2e87dd5ca5300bcbdbea06edc37，两源记录的标题/作者/首次在线日期/引文一致。受访问控制的全文或原始PDF未获取/转载，未虚构具体每个底物的数据。",
+      "challengeReason": "独立第二遍审核首先挑战：若只报道一个材料配方的氢化活性，无充足有机底物与产物范围，则不能因题为Sustainable而收录。Wiley官方研究报告具有超过30组底物、最高97%分离产率和真实药物候选合成，核心是氧→氮的杂环转化；因此属于可推广合成方法。Pt团簇较Pt纳米粒子更能抑制过氢化的解释得到催化表征支持，但不得将特定活性位或完整级联顺序说成已逐一直接证明。",
+      "scopeAssessment": {
+        "primaryContribution": "该研究并非仅制备和表征Pt/HY负载催化材料。作者开发以生物质呋喃衍生物与硝基芳烃为原料的一锅串联有机反应：Pt团簇选择性还原硝基芳烃生成苯胺，酸性分子筛促进呋喃开环与缩合，将含氧芳杂环转化为N-取代吡咯，实现明确的杂环合成。",
+        "preparativeTransformation": "生物质来源的呋喃与硝基芳烃在常压氢气、Pt团簇/Brønsted酸性HY分子筛双功能催化体系中进行选择性硝基还原、呋喃开环和缩合串联，得到N-取代吡咯并改变环杂原子类型；不是仅把硝基化合物还原成苯胺或把呋喃加氢。",
+        "generalityEvidence": "Wiley官方出版商初版摘要明确记载30多个不同底物实例、功能团耐受、最高97%的吡咯产率，并展示具有抗分枝杆菌活性的药物候选分子高效制备；这些是作者实际报告的制备证据，最高97%不代表每个底物的收率，药物活性结果不作为主要收录理由。",
+        "sourceEvidence": "Wiley Angewandte Chemie International Edition正式研究论文公开页面（https://onlinelibrary.wiley.com/doi/10.1002/anie.8203203）显示First published: 08 September 2026、原始英文题目与摘要，并指出一锅N-取代吡咯制备、Pt团簇与酸性HY协同、常压H2、30余例、最高97%和抗分枝杆菌药物候选应用。该内容不是Nature Synthesis 2026-09-28 Seavill Research Highlight DOI 10.1038/s44160-026-01174-6；高亮摘要与原文机理描述吻合但不是替代正式研究身份的证据。冻结源批次 2026-09-08_2026-09-14_angew Crossref/OpenAlex 原始文件Git blob SHA 162e2cc6724fd2e87dd5ca5300bcbdbea06edc37，两源记录的标题/作者/首次在线日期/引文一致。受访问控制的全文或原始PDF未获取/转载，未虚构具体每个底物的数据。",
+        "boundaryChallenge": "反向排查范围边界：文章较多讨论Pt团簇与Pt纳米粒子电子结构、TEM/XAS及选择性氢化机制，可能属于材料催化优化；但其方法直接用于>30例有机底物的C–N杂环制备，并完成药物候选分子的合成应用，已满足项目要求的一般制备证据。硝基芳烃/呋喃两类原料边界应明确，不以材料表征替代有机化学证据。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.8203203",
+        "publisherOnlineDate": "2026-09-08",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_angew",
+        "stageBatchSha": "162e2cc6724fd2e87dd5ca5300bcbdbea06edc37",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherOfficialFirstPublishedConfirmed": true,
+        "natureSynthesisSeparateHighlight": "10.1038/s44160-026-01174-6"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "该研究并非仅制备和表征Pt/HY负载催化材料。作者开发以生物质呋喃衍生物与硝基芳烃为原料的一锅串联有机反应：Pt团簇选择性还原硝基芳烃生成苯胺，酸性分子筛促进呋喃开环与缩合，将含氧芳杂环转化为N-取代吡咯，实现明确的杂环合成。 生物质来源的呋喃与硝基芳烃在常压氢气、Pt团簇/Brønsted酸性HY分子筛双功能催化体系中进行选择性硝基还原、呋喃开环和缩合串联，得到N-取代吡咯并改变环杂原子类型；不是仅把硝基化合物还原成苯胺或把呋喃加氢。 Wiley官方出版商初版摘要明确记载30多个不同底物实例、功能团耐受、最高97%的吡咯产率，并展示具有抗分枝杆菌活性的药物候选分子高效制备；这些是作者实际报告的制备证据，最高97%不代表每个底物的收率，药物活性结果不作为主要收录理由。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立第二遍审核首先挑战：若只报道一个材料配方的氢化活性，无充足有机底物与产物范围，则不能因题为Sustainable而收录。Wiley官方研究报告具有超过30组底物、最高97%分离产率和真实药物候选合成，核心是氧→氮的杂环转化；因此属于可推广合成方法。Pt团簇较Pt纳米粒子更能抑制过氢化的解释得到催化表征支持，但不得将特定活性位或完整级联顺序说成已逐一直接证明。"
+        }
+      ]
     }
   ],
   "pending": [
@@ -3079,5 +3150,5 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "2026-10-13 quarterly ACS direct publisher index evidence: eight independent two-pass original synthesis research approvals, not Nature News & Views/Highlights. 45 accepted, 2 original pending date conflicts, 8 prior historical formally admitted, 37 await solely the original fixed Beijing 08:00 writer. Zero D1, protected published data, media, body/SI/PDF or off-slot admission."
+  "note": "2026-10-13 review of missing Angew original 10.1002/anie.8203203 separately from Nature Synthesis editorial 10.1038/s44160-026-01174-6; 46 passed, 2 pending, 8 previously published, 38 awaiting existing sole fixed 08:00. Q3 toc_only, zero D1, no offslot release."
 }
