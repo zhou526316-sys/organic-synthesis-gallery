@@ -324,3 +324,30 @@ test('2026 Q3 eight ACS originals require exact publisher first-online dates and
   ])assert.equal(root.accepted.some(x=>x.doi===doi),false,
       'Nature publisher commentary must not masquerade as an original research include');
 });
+
+test('Angew original pyrrole research is distinct from Nature Synthesis Research Highlight',()=>{
+  const doi='10.1002/anie.8203203',highlight='10.1038/s44160-026-01174-6';
+  const item=root.accepted.find(x=>x.doi===doi);
+  assert.ok(item,'publisher-verified experimental paper absent');
+  assert.equal(item.journal,'Angew');
+  assert.equal(item.date,'2026-09-08');
+  assert.equal(item.reviewEvidence.publisherOnlineDate,'2026-09-08');
+  assert.equal(item.reviewEvidence.stageBatchId,'2026-09-08_2026-09-14_angew');
+  assert.equal(item.reviewEvidence.stageBatchSha,'162e2cc6724fd2e87dd5ca5300bcbdbea06edc37');
+  assert.deepEqual(item.reviewEvidence.crossrefOpenalexSources,['crossref','openalex']);
+  assert.equal(item.reviewEvidence.natureSynthesisSeparateHighlight,highlight);
+  assert.equal(item.reviewEvidence.publisherOfficialFirstPublishedConfirmed,true);
+  assert.equal(item.reviewPasses,2);
+  assert.deepEqual(item.independentPasses.map(x=>x.decision),['include','include']);
+  assert.ok(item.independentPasses[0].reason.length>90);
+  assert.ok(item.independentPasses[1].reason.length>80);
+  assert.match(item.scopeAssessment.generalityEvidence,/30/);
+  assert.match(item.scopeAssessment.boundaryChallenge,/Pt/);
+  assert.equal(item.mediaPolicy,'toc_only');
+  assert.equal(item.new,false);
+  assert.equal(item.addedDate,'');
+  assert.equal(item.reviewEvidence.figureFetched,false);
+  assert.equal(item.reviewEvidence.pdfFetched,false);
+  assert.equal(root.accepted.some(x=>x.doi===highlight),false);
+  assert.equal(root.pending.length,2);
+});
