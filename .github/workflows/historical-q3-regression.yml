@@ -5,6 +5,9 @@ on:
     paths:
       - 'scripts/historical-q3-reconciliation.mjs'
       - 'scripts/test-historical-q3-reconciliation.mjs'
+      - 'scripts/verify-historical-publisher-issues.mjs'
+      - 'scripts/test-historical-publisher-issue-receipts.mjs'
+      - 'audit/historical-publisher-issues/2026/nature-synthesis-issues-09-10-research.json'
       - '.github/workflows/historical-q3-regression.yml'
       - '.github/workflows/historical-triage-bootstrap.yml'
       - 'docs/historical-2026-q3-catchup-contract.md'
@@ -13,6 +16,9 @@ on:
     paths:
       - 'scripts/historical-q3-reconciliation.mjs'
       - 'scripts/test-historical-q3-reconciliation.mjs'
+      - 'scripts/verify-historical-publisher-issues.mjs'
+      - 'scripts/test-historical-publisher-issue-receipts.mjs'
+      - 'audit/historical-publisher-issues/2026/nature-synthesis-issues-09-10-research.json'
       - '.github/workflows/historical-q3-regression.yml'
 permissions:
   contents: read
@@ -30,6 +36,12 @@ jobs:
           set -euo pipefail
           node --check scripts/historical-q3-reconciliation.mjs
           node --test scripts/test-historical-q3-reconciliation.mjs
+      - name: Validate exact publisher Research DOI and issue-versus-first-online dates
+        run: |
+          set -euo pipefail
+          node --check scripts/verify-historical-publisher-issues.mjs
+          node --test scripts/test-historical-publisher-issue-receipts.mjs
+          node scripts/verify-historical-publisher-issues.mjs
       - name: Enforce no Cloudflare D1 access, no auto-include, no off-slot publication
         run: |
           grep -F "q3_staging_only_guard" scripts/historical-q3-reconciliation.mjs
