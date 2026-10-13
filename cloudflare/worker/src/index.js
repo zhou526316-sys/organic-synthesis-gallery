@@ -54,6 +54,7 @@ import {
 import { parseCatalogViewGetParams } from './literature-catalog-get-query.js';
 import { beginSearchEnrichment, importSearchEnrichment, finalizeSearchEnrichment, getSearchAbstract, getSearchEnrichmentCoverage, refreshSearchEnrichmentAbstracts } from './literature-search-enrichment.js';
 import { getBasicAbstractCoverage, importBasicAbstractReviews, listBasicAbstractReviewCandidates } from './literature-basic-abstracts.js';
+import {importReviewedPublicBodySections,getPublicBodyCoverage,findPublicBodyMatches} from './literature-body-search.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus, userLibraryRowShadowEnabled } from './user-library-shadow.js';
 import {
@@ -133,6 +134,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/literature/supplement',
   '/api/literature/catalog-view',
   '/api/literature/abstract',
+  '/api/literature/body-matches',
   '/api/toc',
   '/api/article-figures',
   '/api/article-figures/staged',
@@ -472,6 +474,23 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await finalizeSearchEnrichment(env,await readJson(request)),cors);
   }
 
+  // Independently rights-reviewed section evidence. No route imports an
+  // administrator's local Tampermonkey text packets by default.
+  if(request.method==='POST'&&url.pathname==='/api/admin/literature-body-sections/import'){
+    const denied=requireWriteAuthorization(request,env);if(denied)return denied;
+    return resultResponse(await importReviewedPublicBodySections(env,await readJson(request)),cors);
+  }
+  if(request.method==='GET'&&url.pathname==='/api/admin/literature-body-sections/coverage'){
+    const denied=requireWriteAuthorization(request,env);if(denied)return denied;
+    return resultResponse(await getPublicBodyCoverage(env,url.searchParams.get('catalogId')||''),cors);
+  }
+  if(request.method==='GET'&&url.pathname==='/api/literature/body-matches'){
+    return resultResponse(await findPublicBodyMatches(env,{
+      catalogId:url.searchParams.get('catalogId')||'',
+      query:url.searchParams.get('q')||'',
+      limit:url.searchParams.get('limit')||24
+    }),cors);
+  }
   if (request.method === 'GET' && url.pathname === '/api/literature/catalog-view') {
     const input = parseCatalogViewGetParams(url.searchParams);
     if (!input.ok) return json({error:input.error}, {status:400,headers:cors});
