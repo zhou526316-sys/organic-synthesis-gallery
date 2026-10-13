@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 95,
-    "include": 93,
+    "checked": 93,
+    "include": 91,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -6409,86 +6409,6 @@
       "reviewRationaleSecondPass": "多种芳基酮、>50实际制备手性醇和药物前体应用是真实合成通用性依据，非单纯光谱或非线性机制研究；不得将最优TON、溶剂条件、产率与ee叠加为任意底物普遍结果。"
     },
     {
-      "doi": "10.1021/acs.orglett.6c02707",
-      "journal": "Organic Letters",
-      "title": "Visible-Light-Driven Palladium-Catalyzed Cyclocarbonylative Synthesis of Aliphatic Lactones",
-      "titleZh": "可见光驱动钯催化脂肪族溴代醇环羰基化合成五元内酯",
-      "date": "2026-07-30",
-      "authors": [
-        "Cuihan Zhou",
-        "Benjamin J. Ennifer",
-        "Bruce A. Arndtsen"
-      ],
-      "citation": {
-        "year": 2026,
-        "volume": "28",
-        "issue": "32",
-        "pages": "10265-10270",
-        "articleNumber": "",
-        "doi": "10.1021/acs.orglett.6c02707"
-      },
-      "ingestionChannel": "historical_backfill",
-      "mediaPolicy": "toc_only",
-      "addedDate": "",
-      "new": false,
-      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
-      "decision": "include",
-      "firstPassDecision": "include",
-      "challengeDecision": "include",
-      "reviewPasses": 2,
-      "reason": "发展可见光驱动的钯催化环羰基化，将易得脂肪族溴代醇转化为取代五元环内酯。",
-      "evidenceBasis": "DOI 10.1021/acs.orglett.6c02707；ACS Organic Letters 28(32) Article History Published Online July 30, 2026，Crossref online字段同日，issue August 14不等于首发。 原始出版社页面：https://pubs.acs.org/orlef7/article/28/32/10265/5237556/Visible-Light-Driven-Palladium-Catalyzed；历史源批次staging/historical-archive-nightly/audit/historical-staging/batches/2026-07-22_2026-07-31_organic-letters.json，Git blob SHA 67f6960bccfa31a1d2477390309426061dc65563，源族 crossref + openalex。论文研究的真实制备依据：ACS原创摘要确证可由aliphatic bromoalcohols在温和条件下制备substituted five-membered lactones；方法使用可获得原料和底物控制区域选择性。未在摘要得到多底物百分比或具体放大数据，不编造。 本轮只读取经DOI核验的公开摘要/书目信息，未获取或转载历史全文、图、SI及PDF。",
-      "challengeReason": "第二遍检查是否只是Pd光谱机理演示：作者直接以溴代醇制备可分离脂肪族内酯，满足路线制备能力；光激发Pd活化C–Br与热还原消除是文章提出的机理分工，不能夸大成所有中间体直接证实。",
-      "scopeAssessment": {
-        "primaryContribution": "发展可见光驱动的钯催化环羰基化，将易得脂肪族溴代醇转化为取代五元环内酯。",
-        "preparativeTransformation": "脂肪族溴代醇中C(sp³)–Br键经光激发钯催化体系活化，再结合羰基化及分子内成环建立内酯酯键，产物为取代五元环内酯，区域选择性主要由底物预组织决定。",
-        "generalityEvidence": "ACS原创摘要确证可由aliphatic bromoalcohols在温和条件下制备substituted five-membered lactones；方法使用可获得原料和底物控制区域选择性。未在摘要得到多底物百分比或具体放大数据，不编造。",
-        "sourceEvidence": "DOI 10.1021/acs.orglett.6c02707；ACS Organic Letters 28(32) Article History Published Online July 30, 2026，Crossref online字段同日，issue August 14不等于首发。 原始出版社页面：https://pubs.acs.org/orlef7/article/28/32/10265/5237556/Visible-Light-Driven-Palladium-Catalyzed；历史源批次staging/historical-archive-nightly/audit/historical-staging/batches/2026-07-22_2026-07-31_organic-letters.json，Git blob SHA 67f6960bccfa31a1d2477390309426061dc65563，源族 crossref + openalex。论文研究的真实制备依据：ACS原创摘要确证可由aliphatic bromoalcohols在温和条件下制备substituted five-membered lactones；方法使用可获得原料和底物控制区域选择性。未在摘要得到多底物百分比或具体放大数据，不编造。 本轮只读取经DOI核验的公开摘要/书目信息，未获取或转载历史全文、图、SI及PDF。",
-        "boundaryChallenge": "与传统芳基卤化物羰基化不同，本文强调脂肪族C(sp³)–Br环羰基化制备取代五元内酯，且有作者报告底物区域选择性约束；未验证六元/七元内酯普适，不能随意扩写。"
-      },
-      "reviewEvidence": {
-        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02707",
-        "publisherLandingUrl": "https://pubs.acs.org/orlef7/article/28/32/10265/5237556/Visible-Light-Driven-Palladium-Catalyzed",
-        "publisherOnlineDate": "2026-07-30",
-        "stageBranch": "staging/historical-archive-nightly",
-        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
-        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
-        "crossrefOpenalexSources": [
-          "crossref",
-          "openalex"
-        ],
-        "abstractCopied": false,
-        "figureFetched": false,
-        "pdfFetched": false,
-        "publisherDirectPageStatus": "indexed_publisher_article_history_not_live_html_readback",
-        "firstOnlineDateEvidence": {
-          "tier": "ACS_official_Published_Online_plus_Crossref_day_corrob",
-          "officialPublisherIndexedUrl": "https://pubs.acs.org/orlef7/article/28/32/10265/5237556/Visible-Light-Driven-Palladium-Catalyzed",
-          "officialPublisherFirstOnline": "2026-07-30",
-          "sourceApiDate": "2026-07-30",
-          "sourceApiDatePrecision": "day",
-          "sourceCreatedDate": null,
-          "publisherDayOverrodeCrossref": false,
-          "method": "DOI_exact_publisher_search_index_and_Crossref_metadata"
-        },
-        "originalPublisherJournalName": "Organic Letters"
-      },
-      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
-      "independentPasses": [
-        {
-          "pass": 1,
-          "decision": "include",
-          "reason": "发展可见光驱动的钯催化环羰基化，将易得脂肪族溴代醇转化为取代五元环内酯。 脂肪族溴代醇中C(sp³)–Br键经光激发钯催化体系活化，再结合羰基化及分子内成环建立内酯酯键，产物为取代五元环内酯，区域选择性主要由底物预组织决定。 ACS原创摘要确证可由aliphatic bromoalcohols在温和条件下制备substituted five-membered lactones；方法使用可获得原料和底物控制区域选择性。未在摘要得到多底物百分比或具体放大数据，不编造。"
-        },
-        {
-          "pass": 2,
-          "decision": "include",
-          "reason": "第二遍检查是否只是Pd光谱机理演示：作者直接以溴代醇制备可分离脂肪族内酯，满足路线制备能力；光激发Pd活化C–Br与热还原消除是文章提出的机理分工，不能夸大成所有中间体直接证实。 与传统芳基卤化物羰基化不同，本文强调脂肪族C(sp³)–Br环羰基化制备取代五元内酯，且有作者报告底物区域选择性约束；未验证六元/七元内酯普适，不能随意扩写。"
-        }
-      ],
-      "reviewRationaleSecondPass": "与传统芳基卤化物羰基化不同，本文强调脂肪族C(sp³)–Br环羰基化制备取代五元内酯，且有作者报告底物区域选择性约束；未验证六元/七元内酯普适，不能随意扩写。"
-    },
-    {
       "doi": "10.1021/acs.orglett.6c02796",
       "journal": "Organic Letters",
       "title": "Conversion of Phenyliodine(III) Dicarboxylates to Carbonyl Compounds via Hantzsch Ester-Enabled Decarboxylative Oxygenation",
@@ -6572,90 +6492,6 @@
         }
       ],
       "reviewRationaleSecondPass": "主要成果是从羧酸衍生物获取醛/酮的有机方法而非单纯高价碘反应性测定；Hantzsch ester与PhIO均参与具体条件，不可泛称无试剂催化转换。"
-    },
-    {
-      "doi": "10.1021/acs.joc.6c00852",
-      "journal": "JOC",
-      "title": "Modular Assembly of Unsymmetric 3,4-Dihydro-BINAP Derivatives via Electrophilic Phosphinative Cyclization of Alkynes and Sequential C–P Cross-Coupling",
-      "titleZh": "炔烃亲电膦化环化与后续C–P偶联模块化合成非对称3,4-二氢BINAP衍生物",
-      "date": "2026-09-01",
-      "authors": [
-        "Liqiao Han",
-        "Zhe Tang",
-        "Dawei Wang",
-        "Xixi Song",
-        "Zhongxian Li",
-        "Junliang Wu"
-      ],
-      "citation": {
-        "year": 2026,
-        "volume": "91",
-        "issue": "36",
-        "pages": "12435-12444",
-        "articleNumber": "",
-        "doi": "10.1021/acs.joc.6c00852"
-      },
-      "ingestionChannel": "historical_backfill",
-      "mediaPolicy": "toc_only",
-      "addedDate": "",
-      "new": false,
-      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
-      "decision": "include",
-      "firstPassDecision": "include",
-      "challengeDecision": "include",
-      "reviewPasses": 2,
-      "reason": "建立模块化BINAP型有机膦配体合成路线，通过3,4-二氢联萘骨架构建及连续C–P键形成实现非对称双膦设计。",
-      "evidenceBasis": "DOI 10.1021/acs.joc.6c00852；ACS JOC官方原始Article History（Original Article permalink）明确Published Online September 01, 2026；Crossref published-online及stage为August 31, 2026，存在一级元数据源日期不一致，出版方原始Article History为首发权威；两个日期均保留，未混用issue Sep11。 原始出版社页面：https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c00852/5391001/Modular-Assembly-of-Unsymmetric-3-4-Dihydro-BINAP；历史源批次staging/historical-archive-nightly/audit/historical-staging/batches/2026-08-22_2026-08-31_joc.json，Git blob SHA 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，源族 crossref + openalex。论文研究的真实制备依据：ACS公开摘要明确此路线整合4种可调模块，且报道初步2个催化应用中3,4-二氢BINAP优于原型BINAP。合成入库根据模块化新配体的实际制备路线成立，不把仅2个催化应用写成全面催化优势。 本轮只读取经DOI核验的公开摘要/书目信息，未获取或转载历史全文、图、SI及PDF。",
-      "challengeReason": "第二遍反向挑战若论文仅对配体性能做少量测试：作者展示具体膦化环化及Ni催化C–P偶联，并合成非对称双膦产物，具有可迁移砌块合成价值。两个初始催化实例不足以声称此类配体在所有不对称反应优于BINAP。",
-      "scopeAssessment": {
-        "primaryContribution": "建立模块化BINAP型有机膦配体合成路线，通过3,4-二氢联萘骨架构建及连续C–P键形成实现非对称双膦设计。",
-        "preparativeTransformation": "携带萘基模块的炔烃先与二芳基膦氧及Tf₂O进行亲电膦化/环化串联，形成3,4-二氢萘结构和第一个膦模块；继而Ni催化芳基三氟甲磺酸酯C–P交叉偶联引入另一膦模块，并可独立修改膦氧/膦硫单元。",
-        "generalityEvidence": "ACS公开摘要明确此路线整合4种可调模块，且报道初步2个催化应用中3,4-二氢BINAP优于原型BINAP。合成入库根据模块化新配体的实际制备路线成立，不把仅2个催化应用写成全面催化优势。",
-        "sourceEvidence": "DOI 10.1021/acs.joc.6c00852；ACS JOC官方原始Article History（Original Article permalink）明确Published Online September 01, 2026；Crossref published-online及stage为August 31, 2026，存在一级元数据源日期不一致，出版方原始Article History为首发权威；两个日期均保留，未混用issue Sep11。 原始出版社页面：https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c00852/5391001/Modular-Assembly-of-Unsymmetric-3-4-Dihydro-BINAP；历史源批次staging/historical-archive-nightly/audit/historical-staging/batches/2026-08-22_2026-08-31_joc.json，Git blob SHA 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a，源族 crossref + openalex。论文研究的真实制备依据：ACS公开摘要明确此路线整合4种可调模块，且报道初步2个催化应用中3,4-二氢BINAP优于原型BINAP。合成入库根据模块化新配体的实际制备路线成立，不把仅2个催化应用写成全面催化优势。 本轮只读取经DOI核验的公开摘要/书目信息，未获取或转载历史全文、图、SI及PDF。",
-        "boundaryChallenge": "注意稿件发表于JOC的原始在线日期与Crossref相差一天：ACS Article History明确2026-09-01，而Crossref published-online返回2026-08-31，应优先官方Published Online，保留差异作为可追溯证据，不强行将其归8月。期刊issue 2026-09-11也不是首次在线。"
-      },
-      "reviewEvidence": {
-        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00852",
-        "publisherLandingUrl": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c00852/5391001/Modular-Assembly-of-Unsymmetric-3-4-Dihydro-BINAP",
-        "publisherOnlineDate": "2026-09-01",
-        "stageBranch": "staging/historical-archive-nightly",
-        "stageBatchId": "2026-08-22_2026-08-31_joc",
-        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
-        "crossrefOpenalexSources": [
-          "crossref",
-          "openalex"
-        ],
-        "abstractCopied": false,
-        "figureFetched": false,
-        "pdfFetched": false,
-        "publisherDirectPageStatus": "indexed_publisher_article_history_not_live_html_readback",
-        "firstOnlineDateEvidence": {
-          "tier": "ACS_official_Published_Online_overriding_Crossref_day_disagreement",
-          "officialPublisherIndexedUrl": "https://pubs.acs.org/joceah/article/doi/10.1021/acs.joc.6c00852/5391001/Modular-Assembly-of-Unsymmetric-3-4-Dihydro-BINAP",
-          "officialPublisherFirstOnline": "2026-09-01",
-          "sourceApiDate": "2026-08-31",
-          "sourceApiDatePrecision": "day",
-          "sourceCreatedDate": null,
-          "publisherDayOverrodeCrossref": true,
-          "method": "DOI_exact_publisher_search_index_and_Crossref_metadata"
-        },
-        "originalPublisherJournalName": "The Journal of Organic Chemistry",
-        "crossrefOnlineDateInconsistent": "2026-08-31"
-      },
-      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
-      "independentPasses": [
-        {
-          "pass": 1,
-          "decision": "include",
-          "reason": "建立模块化BINAP型有机膦配体合成路线，通过3,4-二氢联萘骨架构建及连续C–P键形成实现非对称双膦设计。 携带萘基模块的炔烃先与二芳基膦氧及Tf₂O进行亲电膦化/环化串联，形成3,4-二氢萘结构和第一个膦模块；继而Ni催化芳基三氟甲磺酸酯C–P交叉偶联引入另一膦模块，并可独立修改膦氧/膦硫单元。 ACS公开摘要明确此路线整合4种可调模块，且报道初步2个催化应用中3,4-二氢BINAP优于原型BINAP。合成入库根据模块化新配体的实际制备路线成立，不把仅2个催化应用写成全面催化优势。"
-        },
-        {
-          "pass": 2,
-          "decision": "include",
-          "reason": "第二遍反向挑战若论文仅对配体性能做少量测试：作者展示具体膦化环化及Ni催化C–P偶联，并合成非对称双膦产物，具有可迁移砌块合成价值。两个初始催化实例不足以声称此类配体在所有不对称反应优于BINAP。 注意稿件发表于JOC的原始在线日期与Crossref相差一天：ACS Article History明确2026-09-01，而Crossref published-online返回2026-08-31，应优先官方Published Online，保留差异作为可追溯证据，不强行将其归8月。期刊issue 2026-09-11也不是首次在线。"
-        }
-      ],
-      "reviewRationaleSecondPass": "注意稿件发表于JOC的原始在线日期与Crossref相差一天：ACS Article History明确2026-09-01，而Crossref published-online返回2026-08-31，应优先官方Published Online，保留差异作为可追溯证据，不强行将其归8月。期刊issue 2026-09-11也不是首次在线。"
     }
   ],
   "pending": [
