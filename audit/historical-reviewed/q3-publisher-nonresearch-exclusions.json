@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-q3-publisher-type-exclusions-v1",
   "mode": "publisher_verified_non_original_doi_only_not_publication",
-  "generatedAt": "2026-10-13T07:31:24.353Z",
+  "generatedAt": "2026-10-13T07:42:31.589Z",
   "period": "2026-07-01..2026-09-30",
   "reviewed": [
     {
@@ -85,12 +85,12 @@
       "firstPassDecision": "exclude",
       "challengeDecision": "exclude",
       "reviewPasses": 2,
-      "firstPassReason": "出版社页面Article Type是Research Highlight，Seavill作为Nature Synthesis编辑介绍Pt/酸性分子筛推动硝基芳烃与呋喃转化为吡咯的催化研究；此DOI不是报道实验底物与条件的研究Article。",
-      "independentChallengeReason": "虽然亮点文字提及底物耐受、接近定量产率和药物候选应用，但这些是编辑报道的他人结果，且并非Seavill本文的独立研究；真正原始文献必须另以其独立DOI核验，不能从亮点直接建档。",
+      "firstPassReason": "出版社页面Article Type是Research Highlight，Seavill作为Nature Synthesis编辑介绍Pt/酸性分子筛推动硝基芳烃与呋喃转化为吡咯的催化研究；此DOI不是报道实验底物与条件的研究Article。 Wiley原研究《Sustainable Access to N-Heterocycles: One-Pot Cascade Synthesis of Pyrroles From Bio-Derived Furans》DOI 10.1002/anie.8203203已通过Wiley官方摘要的Pt/HY催化剂、常压H2和呋喃/硝基芳烃制备吡咯证据匹配，首次在线2026-09-08。",
+      "independentChallengeReason": "虽然亮点文字提及底物耐受、接近定量产率和药物候选应用，但这些是编辑报道的他人结果，且并非Seavill本文的独立研究；真正原始文献必须另以其独立DOI核验，不能从亮点直接建档。 其原研究明确属于Angew 2026-09-08，而非Nature Synthesis 2026-09-28的本高亮文章，保留独立学术审查和独立准入权。",
       "reason": "Original research paper requirement: Research Highlight is not a standalone original synthetic-method study under this DOI.",
       "evidenceBasis": "Springer Nature corresponding DOI page explicitly labels this item Research Highlight; the first paragraph/related research citation identifies it as commentary/briefing/highlight. Verified original article is distinct where identified. First-online date 2026-09-28 is the commentary's publication date, not the underlying original research's date. Publisher: https://www.nature.com/articles/s44160-026-01174-6. Source window: 2026-09-22_2026-09-30_nature-synthesis; frozen Git blob 8173009c325d31a44974085043e442d4ef63103c.",
-      "underlyingOriginalResearchDoi": null,
-      "underlyingOriginalAlreadyFormal": null,
+      "underlyingOriginalResearchDoi": "10.1002/anie.8203203",
+      "underlyingOriginalAlreadyFormal": false,
       "reviewEvidence": {
         "publisherPage": "https://www.nature.com/articles/s44160-026-01174-6",
         "publisherArticleType": "Research Highlight",
@@ -110,7 +110,9 @@
         "noPublisherMediaAcquisition": true,
         "originalResearchDoiHandledSeparately": true
       },
-      "publisherArticleType": "Research Highlight"
+      "publisherArticleType": "Research Highlight",
+      "underlyingOriginalResearchPublishedOnline": "2026-09-08",
+      "underlyingOriginalPublisherUrl": "https://onlinelibrary.wiley.com/doi/10.1002/anie.8203203"
     },
     {
       "doi": "10.1038/s41557-026-02201-x",
