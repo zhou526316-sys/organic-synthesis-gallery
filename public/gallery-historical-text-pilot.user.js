@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.1
+// @version      0.2.2
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -23,6 +23,7 @@
 // @noframes
 // @grant        GM_registerMenuCommand
 // @grant        GM_getValue
+// @grant        GM_listValues
 // @grant        GM_setValue
 // @grant        GM_deleteValue
 // @grant        GM_openInTab
@@ -209,9 +210,17 @@
   const BATCH_RESULT=BATCH_PREFIX+'result';
   const BATCH_LEASE=BATCH_PREFIX+'lease';
   const BATCH_DB='gallery-historical-text-local-v2';
+  const BATCH_REPORT_ENDPOINT='https://api.gczhouwld.com/api/admin/historical-text/reports';
+  const BATCH_DIAG_PREFIX=BATCH_PREFIX+'diagnostics-outbox-v1:';
+  const BATCH_DIAG_TOKEN=BATCH_PREFIX+'diagnostics-owner-token';
+  const BATCH_DIAG_ACK=BATCH_PREFIX+'diagnostics-acks-v1';
+  const BATCH_DIAG_STATE=BATCH_PREFIX+'diagnostics-state-v1';
+  const BATCH_PROGRESS=BATCH_PREFIX+'publisher-progress-v1';
+  const BATCH_DIAG_MAX_PENDING=1500;
+  const BATCH_DIAG_SCHEMA='historical-text-diagnostic-v1';
   const BATCH_LIMIT_MS=24000;
   const BATCH_LEASE_MS=40000;
-  const BATCH_RETRY_MS=24*3600*1000;
+  const BATCH_RETRY_MS=0; // No blanket 24h lockout; reason-dependent rechecking below.
   const BATCH_MAX_RESPONSE_CHARS=350000;
   const BATCH_MIN_GAP_MS=2000;
   const BATCH_DOI_LIMIT=100000;
@@ -219,6 +228,7 @@
     'license_not_verified','body_missing','too_large','timeout','invalid_response','storage_failure',
     'response_hash_mismatch','capture_failed','unsupported_publisher']);
   let batchActive=false,batchPaused=false,batchTab=null,batchStatus=null,batchRunId='',batchUi=null;
+  let batchDiagBusy=false,batchDiagStarted=false;
   const batchWait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   function batchId(){
     const bytes=new Uint8Array(12);
@@ -388,16 +398,259 @@
       const tx=db.transaction(store,method==='get'||method==='getAllKeys'?'readonly':'readwrite');
       const request=method==='getAllKeys'?tx.objectStore(store).getAllKeys()
         :tx.objectStore(store)[method](value);
-      request.onsuccess=()=>resolve(request.result);
+      let completedValue;
+      request.onsuccess=()=>{completedValue=request.result;};
       request.onerror=()=>reject(request.error||Error('local_db_request_failed'));
-      tx.onabort=()=>reject(tx.error||Error('local_db_transaction_failed'));
+      tx.onerror=()=>reject(tx.error||Error('local_db_transaction_failed'));
+      tx.onabort=()=>reject(tx.error||Error('local_db_transaction_aborted'));
+      // A request succeeding does not prove the IndexedDB transaction committed.
+      tx.oncomplete=()=>resolve(completedValue);
     });
   }
+  const BATCH_STATUS_LABELS={
+    saved_local:'已存入本机',license_not_verified:'未核实本文许可',
+    body_missing:'科学正文不足',doi_unverified:'出版社 DOI 不匹配',
+    publisher_unreachable:'未能打开出版社页面',publisher_no_response:'出版社标签页未回传',
+    timeout:'出版社页面无回执（原因未明）',page_unavailable:'文章页不可用',
+    page_access_blocked:'页面要求登录或人工验证',page_http_error:'已观察到页面 HTTP 错误',
+    too_large:'正文数据超过体积上限',invalid_response:'采集回执结构无效',
+    capture_failed:'正文提取异常',unsupported_publisher:'不支持该出版社页面',
+    response_hash_mismatch:'正文来源哈希不一致',
+    storage_failure:'本机数据库写入未完成',local_storage_failed:'本机存储不可用',
+    publisher_script_not_confirmed:'出版社脚本未启动或未确认',
+    report_upload_failed:'服务器诊断上报失败',other:'未能确认具体原因'
+  };
+  function batchDiagnosticLabel(code){
+    return BATCH_STATUS_LABELS[String(code||'')]||BATCH_STATUS_LABELS.other;
+  }
+  function batchPublisher(doi){
+    const s=String(doi||'');
+    return s.startsWith('10.1021/')?'acs':s.startsWith('10.1002/')?'wiley'
+      :s.startsWith('10.1038/')?'nature':s.startsWith('10.1126/')?'science'
+      :s.startsWith('10.1039/')?'rsc':s.startsWith('10.1016/')?'elsevier'
+      :s.startsWith('10.31635/')?'ccs':'unknown';
+  }
+  function batchReportToken(){
+    return String(GM_getValue(BATCH_DIAG_TOKEN,'')||'').trim();
+  }
+  function batchReportKeys(){
+    try{return GM_listValues().filter(key=>String(key).startsWith(BATCH_DIAG_PREFIX));}
+    catch(_){return [];}
+  }
+  function batchReportStatus(patch){
+    const prev=GM_getValue(BATCH_DIAG_STATE,{})||{};
+    GM_setValue(BATCH_DIAG_STATE,Object.assign({},prev,patch,{at:Date.now()}));
+    batchUi?.refresh();
+  }
+  function batchQueueDiagnostic(job,kind,status,stage,reasonCode,details={}){
+    try{
+      const keys=batchReportKeys();
+      if(keys.length>=BATCH_DIAG_MAX_PENDING){
+        batchReportStatus({state:'outbox_full',pending:keys.length,
+          error:'历史诊断待发队列已满，已有记录不会被丢弃'});
+        return false;
+      }
+      const eventId='htext_'+batchId();
+      const sourceReason=String(reasonCode||'other');
+      const allowed=['started','publisher_unreachable','publisher_no_response','doi_unverified',
+        'license_not_verified','body_missing','page_unavailable','page_access_blocked',
+        'page_http_error','too_large','timeout','invalid_response','capture_failed',
+        'unsupported_publisher','response_hash_mismatch','storage_failure',
+        'local_storage_failed','publisher_script_not_confirmed','report_upload_failed',
+        'saved_local','other'];
+      const code=allowed.includes(sourceReason)?sourceReason:'other';
+      const payload={schemaVersion:BATCH_DIAG_SCHEMA,eventId,doi:job.doi,
+        runId:'hist_'+job.runId,jobId:'hist_'+job.token,kind,
+        status,stage,reasonCode:code,
+        httpStatus:Number.isInteger(details.httpStatus)&&details.httpStatus>=100
+          &&details.httpStatus<=599?details.httpStatus:null,
+        publisher:batchPublisher(job.doi),
+        pageDoiVerified:details.pageDoiVerified===true,
+        sectionCount:Math.min(300,Math.max(0,Number(details.sectionCount||0))),
+        evidenceChars:Math.min(400000,Math.max(0,Number(details.evidenceChars||0))),
+        scriptVersion:'0.2.2',occurredAt:new Date().toISOString()};
+      GM_setValue(BATCH_DIAG_PREFIX+eventId,{payload,createdAt:Date.now(),tries:0,nextAt:0});
+      batchReportStatus({state:batchReportToken()?'queued':'token_missing',
+        pending:keys.length+1,error:''});
+      // A diagnostic failure must never interrupt, block or mark text acquisition successful.
+      void batchDrainReports();
+      return eventId;
+    }catch(_){return false;}
+  }
+  function batchHttpRequest(options){
+    return new Promise((resolve,reject)=>{
+      try{
+        GM_xmlhttpRequest({...options,
+          timeout:10000,
+          onload:r=>resolve(r),
+          onerror:()=>reject(Error('diagnostic_transport_error')),
+          ontimeout:()=>reject(Error('diagnostic_transport_timeout'))});
+      }catch(_){reject(Error('diagnostic_transport_error'));}
+    });
+  }
+  async function batchDrainReports(){
+    if(location.hostname!=='gallery.gczhouwld.com'||batchDiagBusy)return;
+    const token=batchReportToken();
+    if(!token){
+      if(batchReportKeys().length)batchReportStatus({state:'token_missing',
+        pending:batchReportKeys().length,error:'未设置历史诊断上报密钥，记录保留本机'});
+      return;
+    }
+    batchDiagBusy=true;
+    try{
+      const ready=batchReportKeys().map(key=>({key,item:GM_getValue(key,null)}))
+        .filter(row=>row.item&&Number(row.item.nextAt||0)<=Date.now())
+        .sort((a,b)=>Number(a.item.createdAt||0)-Number(b.item.createdAt||0));
+      for(const {key,item} of ready.slice(0,4)){
+        try{
+          const response=await batchHttpRequest({method:'POST',url:BATCH_REPORT_ENDPOINT,
+            headers:{'content-type':'application/json',authorization:'Bearer '+token},
+            data:JSON.stringify(item.payload)});
+          let body={};try{body=JSON.parse(String(response.responseText||'{}'));}catch(_){}
+          if(Number(response.status)!==200||body.stored!==true
+            ||body.eventId!==item.payload.eventId||body.doi!==item.payload.doi
+            ||body.attemptId!==item.payload.jobId)throw Error(
+              Number(response.status)===401?'diagnostic_owner_auth_required':
+                'diagnostic_receipt_not_confirmed');
+          const current=GM_getValue(key,null);
+          if(current?.payload?.eventId===item.payload.eventId)GM_deleteValue(key);
+          const acks=GM_getValue(BATCH_DIAG_ACK,{})||{};
+          acks[item.payload.doi]={eventId:item.payload.eventId,confirmedAt:Date.now(),
+            attemptId:body.attemptId,status:item.payload.status};
+          const trimmed=Object.entries(acks)
+            .sort((a,b)=>Number(b[1]?.confirmedAt||0)-Number(a[1]?.confirmedAt||0))
+            .slice(0,1200);
+          GM_setValue(BATCH_DIAG_ACK,Object.fromEntries(trimmed));
+          batchReportStatus({state:'delivered',lastDoi:item.payload.doi,
+            lastAttempt:body.attemptId,pending:batchReportKeys().length,error:''});
+        }catch(error){
+          const now=Date.now();
+          const next=GM_getValue(key,null);
+          if(next?.payload?.eventId===item.payload.eventId){
+            const attempts=Math.min(12,Number(next.tries||0)+1);
+            next.tries=attempts;
+            next.nextAt=now+Math.min(300000,5000*(2**Math.min(attempts,6)));
+            GM_setValue(key,next);
+          }
+          // Never transmit/echo Authorization headers, publisher URLs or raw exception strings.
+          const type=String(error?.message||'').startsWith('diagnostic_owner_auth')
+            ?'密钥未通过服务器验证':'服务器不可用或尚未确认接收';
+          batchReportStatus({state:type.startsWith('密钥')?'auth_failed':'retry',
+            pending:batchReportKeys().length,error:type});
+          if(type.startsWith('密钥'))break;
+        }
+      }
+    }finally{batchDiagBusy=false;}
+  }
+  function batchStartDiagnostics(){
+    if(batchDiagStarted||location.hostname!=='gallery.gczhouwld.com')return;
+    batchDiagStarted=true;
+    // One independent outbox sender on Gallery. No media controller state or token read.
+    setInterval(()=>{void batchDrainReports();},10000);
+    void batchDrainReports();
+  }
+  function batchRetryAllowed(prior,manualBlocked=false){
+    if(!prior)return true;
+    if(prior.status==='saved_local')return false;
+    const noAutomatic=new Set(['license_not_verified','body_missing','doi_unverified',
+      'page_access_blocked','unsupported_publisher']);
+    if(noAutomatic.has(prior.status))return manualBlocked===true;
+    // Transient timeouts and transport failures can be retried at the user's next click.
+    // Explicit HTTP 429/403 signals must not be ignored or bypassed.
+    if([403,429].includes(Number(prior.httpStatus||0)))return manualBlocked===true;
+    return true;
+  }
+  function batchStageForStatus(status){
+    const code=String(status||'');
+    if(code==='license_not_verified')return 'license';
+    if(code==='body_missing'||code==='capture_failed'||code==='too_large')return 'body_extract';
+    if(code==='doi_unverified')return 'publisher_doi';
+    if(code==='response_hash_mismatch')return 'hash_verify';
+    if(code==='storage_failure'||code==='local_storage_failed'||code==='saved_local')return 'local_store';
+    if(code==='publisher_unreachable')return 'publisher_open';
+    if(code==='timeout'||code==='publisher_no_response'||code==='publisher_script_not_confirmed')
+      return 'publisher_wait';
+    return 'finished';
+  }
+
   function batchStatusWrite(patch){
     batchStatus=Object.assign({},batchStatus||{},patch,{at:Date.now()});
     GM_setValue(BATCH_STATE,batchStatus);
     if(batchUi)batchUi.refresh();
   }
+  async function batchShowFailures(area,term=''){
+    const db=await batchOpenDb(),rows=[];
+    await new Promise((resolve,reject)=>{
+      const transaction=db.transaction('attempts','readonly');
+      const request=transaction.objectStore('attempts').openCursor();
+      request.onerror=()=>reject(request.error||Error('attempts_cursor_error'));
+      request.onsuccess=()=>{
+        const cur=request.result;
+        if(!cur)return resolve();
+        rows.push(cur.value);
+        cur.continue();
+      };
+      transaction.onabort=()=>reject(transaction.error||Error('attempts_transaction_error'));
+    });
+    db.close();
+    const needle=String(term||'').trim().toLowerCase();
+    const filtered=rows.filter(x=>x.status!=='saved_local'
+      &&(!needle||[x.doi,x.journal,x.status,x.stage,batchDiagnosticLabel(x.status)]
+        .some(v=>String(v||'').toLowerCase().includes(needle))))
+      .sort((a,b)=>Number(b.checkedAt||0)-Number(a.checkedAt||0));
+    area.replaceChildren();
+    const heading=document.createElement('div');
+    heading.textContent='本机受阻记录 '+filtered.length+' 篇（最新 40 篇；不代表全库失败）';
+    area.append(heading);
+    const acks=GM_getValue(BATCH_DIAG_ACK,{})||{};
+    for(const item of filtered.slice(0,40)){
+      const row=document.createElement('div');
+      row.style.cssText='padding:5px 0;border-top:1px solid #ddd';
+      const link=document.createElement('a');
+      link.href='https://doi.org/'+item.doi;
+      link.target='_blank';link.rel='noopener noreferrer';link.textContent=item.doi;
+      const details=document.createElement('div');
+      const ack=acks[item.doi];
+      const reported=item.reportEventId
+        ?(ack?.eventId===item.reportEventId?'服务器已确认':'报告待发送／待确认')
+        :'旧版历史记录，尚未上报';
+      const when=Number.isFinite(Number(item.checkedAt))
+        ?new Date(Number(item.checkedAt)).toLocaleString():'时间未知';
+      const code=String(item.reasonCode||item.status||'other');
+      const pieces=[batchDiagnosticLabel(code),'阶段：'+String(item.stage||'未记录'),
+        '时间：'+when,item.httpStatus?'HTTP '+item.httpStatus:'HTTP 未知',
+        '报告：'+reported];
+      if(item.reasonDetail)pieces.push('说明：'+String(item.reasonDetail).slice(0,70));
+      details.textContent=pieces.join(' · ');
+      row.append(link,details);area.append(row);
+    }
+  }
+  async function batchShowServerReports(area){
+    const token=batchReportToken();
+    if(!token){area.textContent='请先配置诊断上报密钥，服务器报告仅管理员可查。';return;}
+    area.textContent='正在核对服务器记录…';
+    try{
+      const response=await batchHttpRequest({method:'GET',
+        url:BATCH_REPORT_ENDPOINT+'?limit=25',
+        headers:{authorization:'Bearer '+token,accept:'application/json'}});
+      const body=JSON.parse(String(response.responseText||'{}'));
+      if(Number(response.status)!==200||!Array.isArray(body.items))
+        throw Error('no_valid_read_receipt');
+      area.replaceChildren();
+      const header=document.createElement('div');
+      header.textContent='服务器已保存 '+body.items.length+' 条最近记录（只读）';
+      area.append(header);
+      for(const item of body.items){
+        const row=document.createElement('div');
+        row.style.cssText='padding:4px 0;border-top:1px solid #ddd';
+        row.textContent=String(item.doi||'')+' · '+batchDiagnosticLabel(item.reasonCode)
+          +' · '+String(item.stage||'')
+          +' · '+new Date(Number(item.receivedAt||0)).toLocaleString();
+        area.append(row);
+      }
+    }catch(_){area.textContent='暂时无法读取服务器报告；本机诊断不受影响。';}
+  }
+
   function batchPanel(){
     if(document.getElementById('osg-historical-batch'))return null;
     const root=document.createElement('div');
@@ -413,15 +666,28 @@
     const controls=document.createElement('div');controls.style.cssText='display:flex;gap:6px;flex-wrap:wrap';
     const start=document.createElement('button');start.textContent='一键补抓全部缺项';
     const pause=document.createElement('button');pause.textContent='暂停';
+    const failures=document.createElement('button');failures.textContent='失败详情';
+    const server=document.createElement('button');server.textContent='服务器报告';
+    const configure=document.createElement('button');configure.textContent='配置诊断上报';
+    const recheck=document.createElement('button');recheck.textContent='复查受阻项';
     const search=document.createElement('input');search.placeholder='检索本机正文（LMCT/CO₂等）';
     search.style.cssText='width:100%;box-sizing:border-box;margin:8px 0 4px;padding:5px';
     const results=document.createElement('div');
+    const filter=document.createElement('input');
+    filter.placeholder='筛选失败 DOI／原因';filter.style.cssText='width:100%;box-sizing:border-box;margin:6px 0;padding:5px;display:none';
+    const failureDetails=document.createElement('div');
+    failureDetails.style.cssText='max-height:220px;overflow:auto;display:none;font-size:11px;word-break:break-word';
+    const ownerSecret=document.createElement('input');
+    ownerSecret.type='password';ownerSecret.placeholder='本机管理员 Bridge 上报密钥';
+    ownerSecret.autocomplete='off';ownerSecret.style.cssText='width:100%;box-sizing:border-box;margin:6px 0;padding:5px;display:none';
+    const saveSecret=document.createElement('button');saveSecret.textContent='保存并上传诊断';
+    saveSecret.style.cssText='display:none;cursor:pointer;border:1px solid #b8c9df;border-radius:6px;padding:5px';
     results.style.cssText='max-height:140px;overflow:auto;font-size:12px;word-break:break-word';
-    for(const btn of [start,pause,hide]){
+    for(const btn of [start,pause,failures,server,configure,recheck,hide]){
       btn.style.cssText='cursor:pointer;background:#eaf1f9;border:1px solid #b8c9df;border-radius:6px;padding:4px 8px;color:#172439';
     }
-    controls.append(start,pause);
-    panel.append(message,controls,search,results);
+    controls.append(start,pause,failures,server,configure,recheck);
+    panel.append(message,controls,ownerSecret,saveSecret,filter,failureDetails,search,results);
     head.append(label,hide);root.append(head,panel);
     document.body.append(root);
     let collapsed=false;hide.addEventListener('click',()=>{
@@ -433,16 +699,61 @@
         '已尝试 '+Number(s.attempted||0)+' / '+Number(s.total||0),
         '本机新增 '+Number(s.saved||0)+'；已存在 '+Number(s.existing||0),
         '无权限/无许可 '+Number(s.rightsPending||0)+'；其他受阻 '+Number(s.failed||0),
-        s.lastDoi?'当前/最近：'+s.lastDoi:''].filter(Boolean);
+        s.currentStage?'当前阶段：'+s.currentStage:'',
+        s.lastDoi?'当前/最近：'+s.lastDoi:'',
+        s.lastError?'本地错误：'+String(s.lastError).slice(0,85):''].filter(Boolean);
+      const diag=GM_getValue(BATCH_DIAG_STATE,{})||{};
+      progress.push('诊断报告：'+(diag.state==='delivered'?'服务器已确认':
+        diag.state==='auth_failed'?'上报密钥无效':
+        diag.state==='token_missing'?'未配置密钥（仅本机）':
+        diag.state==='retry'?'网络失败待重传':
+        diag.state==='outbox_full'?'待发队列已满':'本机待发送')
+        +' · 待发 '+batchReportKeys().length);
       message.textContent=progress.join('\n');
       start.disabled=batchActive;
       pause.disabled=!batchActive;
       pause.textContent=batchPaused?'准备暂停…':'暂停';
     };
-    start.addEventListener('click',()=>void batchStart().catch(error=>{
+    start.addEventListener('click',()=>void batchStart(false).catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
     pause.addEventListener('click',()=>{batchPaused=true;pause.disabled=true;batchStatusWrite({state:'pausing'});});
+    recheck.addEventListener('click',()=>void batchStart(true).catch(error=>{
+      batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
+    }));
+    failures.addEventListener('click',()=>{
+      const showing=failureDetails.style.display==='none';
+      failureDetails.style.display=showing?'block':'none';
+      filter.style.display=showing?'block':'none';
+      if(showing)void batchShowFailures(failureDetails,filter.value).catch(()=>{
+        failureDetails.textContent='本机失败记录读取失败';
+      });
+    });
+    filter.addEventListener('input',()=>void batchShowFailures(failureDetails,filter.value).catch(()=>{
+      failureDetails.textContent='筛选失败记录时出错';
+    }));
+    server.addEventListener('click',()=>{
+      failureDetails.style.display='block';filter.style.display='none';
+      void batchShowServerReports(failureDetails);
+    });
+    configure.addEventListener('click',()=>{
+      const show=ownerSecret.style.display==='none';
+      ownerSecret.style.display=show?'block':'none';
+      saveSecret.style.display=show?'inline-block':'none';
+      ownerSecret.value='';
+    });
+    saveSecret.addEventListener('click',()=>{
+      const token=ownerSecret.value.trim();
+      if(!token||token.length<12||token.length>512){
+        window.alert('管理员密钥长度无效。请在本机填入现有 Bridge 写入密钥，不要发送到聊天。');
+        return;
+      }
+      GM_setValue(BATCH_DIAG_TOKEN,token);
+      ownerSecret.value='';ownerSecret.style.display='none';
+      saveSecret.style.display='none';
+      batchReportStatus({state:'queued',error:'',pending:batchReportKeys().length});
+      void batchDrainReports();
+    });
     let searchToken=0;
     search.addEventListener('keydown',event=>{
       if(event.key!=='Enter')return;
@@ -490,16 +801,32 @@
   }
   async function batchAwaitResponse(job){
     const start=Date.now();
+    let lastSeenStage='';
     while(Date.now()-start<BATCH_LIMIT_MS){
       if(batchPaused)return {status:'paused'};
+      const progress=GM_getValue(BATCH_PROGRESS,null);
+      const progressIdentity=progress?.stage+'|'+(progress?.failed?'failed':'active');
+      if(progress?.runId===job.runId&&progress?.token===job.token
+         &&progressIdentity!==lastSeenStage){
+        lastSeenStage=progressIdentity;
+        batchStatusWrite({currentStage:progress.stage});
+        if(progress.failed===true&&progress.reasonCode){
+          batchQueueDiagnostic(job,'failure_checkpoint','failed',
+            batchStageForStatus(progress.reasonCode),progress.reasonCode,{
+              pageDoiVerified:progress.pageDoiVerified===true,
+              sectionCount:progress.sectionCount||0,evidenceChars:progress.evidenceChars||0,
+              httpStatus:progress.httpStatus??null
+            });
+        }
+      }
       const value=GM_getValue(BATCH_RESULT,null);
       if(value&&value.token===job.token&&value.doi===job.doi
         &&value.runId===job.runId)return value;
       await batchWait(350);
     }
-    return {status:'timeout'};
+    return {status:'timeout',stage:'publisher_wait',reasonCode:'publisher_no_response'};
   }
-  async function batchStart(){
+  async function batchStart(manualBlocked=false){
     if(batchActive)return;
     const current=GM_getValue(BATCH_LEASE,null);
     if(current&&current.until>Date.now()){
@@ -509,7 +836,7 @@
     const catalog=await batchLoadCanonicalCatalog();
     const papers=batchHistoricalPapers(catalog);
     if(!papers.length){window.alert('正式目录中暂无 2026-10-01 前的文献');return;}
-    if(!window.confirm('开始独立补抓 '+papers.length+' 篇正式历史 DOI？\n将逐篇在后台打开出版社页面，仅在明确可验证的 CC BY/CC0 许可下保存文本到当前浏览器；不抓 PDF/正文图/SI，不上传原文，也不修改 TOC 队列。浏览器需要保持开启。'))return;
+    if(!window.confirm((manualBlocked?'重新检查包括许可／正文受阻项在内的全部候选：':'开始独立补抓 ') +papers.length+' 篇正式历史 DOI？\n逐篇打开出版社页面，仅保存有明确 CC BY/CC0 授权的本文正文到本机；不抓 PDF/图/SI，不触碰媒体队列。浏览器需保持开启。'))return;
     const competing=GM_getValue(BATCH_LEASE,null);
     if(competing&&competing.until>Date.now()){
       window.alert('已有历史正文批次正在运行，未建立第二个队列。');return;
@@ -524,25 +851,25 @@
     },4000);
     GM_setValue(BATCH_LEASE,{runId,until:Date.now()+BATCH_LEASE_MS});
     batchStatusWrite({state:'running',runId,total:papers.length,attempted:0,
-      saved:0,existing:existing.size,rightsPending:0,failed:0,skipped:0,startedAt:Date.now(),lastDoi:''});
+      saved:0,existing:existing.size,rightsPending:0,failed:0,skipped:0,
+      currentStage:'queued',lastError:'',startedAt:Date.now(),lastDoi:''});
     try{
       for(const paper of papers){
         if(batchPaused)break;
         if(existing.has(paper.doi)){skipped++;continue;}
         const prior=await batchDbOp(db,'attempts','get',paper.doi);
-        if(prior&&Date.now()-Number(prior.checkedAt||0)<BATCH_RETRY_MS
-          &&prior.status!=='storage_failure'&&prior.status!=='paused'){skipped++;continue;}
+        if(!batchRetryAllowed(prior,manualBlocked)){skipped++;continue;}
         const token=batchId();
         const job={runId,token,doi:paper.doi,publication:paper.publication,
           title:paper.title,journal:paper.journal,expiresAt:Date.now()+BATCH_LIMIT_MS};
-        GM_deleteValue(BATCH_RESULT);GM_setValue(BATCH_JOB,job);
-        batchStatusWrite({lastDoi:paper.doi});
-        let result={status:'publisher_unreachable'};
+        GM_deleteValue(BATCH_RESULT);GM_deleteValue(BATCH_PROGRESS);GM_setValue(BATCH_JOB,job);
+        batchStatusWrite({lastDoi:paper.doi,currentStage:'publisher_open'});
+        let result={status:'publisher_unreachable',stage:'publisher_open'};
         try{
           batchTab=GM_openInTab('https://doi.org/'+paper.doi+'#gallery-historical-job='+token,
             {active:false,insert:false,setParent:true});
           result=await batchAwaitResponse(job);
-        }catch(_){result={status:'publisher_unreachable'};}
+        }catch(_){result={status:'publisher_unreachable',stage:'publisher_open'};}
         finally{
           try{batchTab?.close?.();}catch(_){}
           batchTab=null;GM_deleteValue(BATCH_JOB);GM_deleteValue(BATCH_RESULT);
@@ -550,6 +877,10 @@
         if(result.status==='paused')break;
         attempted++;
         let status=BATCH_ERRORS.has(result.status)?result.status:'invalid_response';
+        const evidenceMeta={pageDoiVerified:result.pageDoiVerified===true,
+          sectionCount:Number(result.sectionCount||0),evidenceChars:Number(result.evidenceChars||0),
+          httpStatus:Number(result.httpStatus||0)||null};
+        let stage=String(result.stage||batchStageForStatus(status));
         if(result.status==='ok'){
           const packet=result.packet;
           if(packet?.doi===paper.doi&&packet?.publication===paper.publication
@@ -562,17 +893,43 @@
               const canonical=[...packet.sections.map(x=>x.heading+'\n'+x.text),
                 ...packet.captions.map(x=>x.label+'\n'+x.text),
                 ...packet.tables.map(x=>x.label+'\n'+x.text)].join('\n');
-              if(await sha256(canonical)!==packet.sourceSha256)
-                throw Error('response_hash_mismatch');
-              await batchDbOp(db,'packets','put',{doi:paper.doi,packet,checkedAt:Date.now()});
-              saved++;existing.add(paper.doi);status='saved_local';
-            }catch(_){status='storage_failure';}
+              if(await sha256(canonical)!==packet.sourceSha256){
+                status='response_hash_mismatch';stage='hash_verify';
+              }else{
+                await batchDbOp(db,'packets','put',{doi:paper.doi,packet,checkedAt:Date.now()});
+                saved++;existing.add(paper.doi);status='saved_local';stage='local_store';
+                evidenceMeta.pageDoiVerified=true;
+                evidenceMeta.sectionCount=packet.sections.length;
+                evidenceMeta.evidenceChars=Number(packet.characters||canonical.length);
+              }
+            }catch(_){status='storage_failure';stage='local_store';}
           }
         }
         if(status==='license_not_verified')rightsPending++;
         else if(status!=='saved_local')failed++;
-        await batchDbOp(db,'attempts','put',{doi:paper.doi,status,checkedAt:Date.now()});
-        batchStatusWrite({attempted,saved,rightsPending,failed,skipped,lastDoi:paper.doi});
+        const localRecord={doi:paper.doi,journal:paper.journal,status,reasonCode:status,
+          stage,checkedAt:Date.now(),httpStatus:evidenceMeta.httpStatus,
+          pageDoiVerified:evidenceMeta.pageDoiVerified,
+          sectionCount:evidenceMeta.sectionCount,evidenceChars:evidenceMeta.evidenceChars,
+          runId,jobId:token,reportEventId:''};
+        // Save failure evidence before attempting its upload. Server transmission
+        // must never be a prerequisite to finishing a publisher DOI.
+        try{
+          await batchDbOp(db,'attempts','put',localRecord);
+        }catch(_){
+          batchStatusWrite({lastError:'当前 DOI 的本机诊断保存失败：'+paper.doi});
+        }
+        const serverStatus=status==='saved_local'?'success':
+          status==='license_not_verified'||status==='page_access_blocked'?'blocked':'failed';
+        const eventId=batchQueueDiagnostic(job,'final_result',serverStatus,
+          stage,status,evidenceMeta);
+        if(eventId&&typeof eventId==='string'){
+          localRecord.reportEventId=eventId;
+          try{await batchDbOp(db,'attempts','put',localRecord);}catch(_){}
+        }
+        batchStatusWrite({attempted,saved,rightsPending,failed,skipped,lastDoi:paper.doi,
+          currentStage:stage,lastError:status==='saved_local'?'':batchDiagnosticLabel(status)});
+        GM_deleteValue(BATCH_PROGRESS);
         // One article tab, bounded requests and non-overlapping registry/lease.
         // This delay avoids monopolizing publisher traffic alongside media capture.
         if(!batchPaused)await batchWait(BATCH_MIN_GAP_MS);
@@ -591,44 +948,81 @@
     if(typeof GM_getValue!=='function')return;
     const job=GM_getValue(BATCH_JOB,null);
     if(!job||job.expiresAt<Date.now()||!publisher(location.hostname)||!job.token||!job.runId)return;
+    let phase='publisher_page',verified=false,sectionCount=0,evidenceChars=0;
+    function observedPageHttpStatus(){
+      // Read the browser's own navigation timing; never initiate extra publisher requests.
+      try{
+        const response=Number(performance.getEntriesByType('navigation')?.[0]?.responseStatus||0);
+        return Number.isInteger(response)&&response>=100&&response<=599?response:null;
+      }catch(_){return null;}
+    }
+    const reportStage=(stage,reasonCode='',failed=false)=>{
+      phase=stage;
+      GM_setValue(BATCH_PROGRESS,{runId:job.runId,token:job.token,doi:job.doi,
+        stage,failed,reasonCode,at:Date.now(),pageDoiVerified:verified,
+        sectionCount,evidenceChars,httpStatus:observedPageHttpStatus()});
+    };
     const storeResult=data=>{
       const current=GM_getValue(BATCH_JOB,null);
       if(current?.runId!==job.runId||current?.token!==job.token)return;
+      const code=data.status==='ok'?'saved_local':String(data.status||'other');
+      const stage=data.stage||batchStageForStatus(code);
+      reportStage(stage,code,data.status!=='ok');
       GM_setValue(BATCH_RESULT,{runId:job.runId,token:job.token,doi:job.doi,
-        at:Date.now(),...data});
+        at:Date.now(),stage,pageDoiVerified:verified,sectionCount,evidenceChars,
+        httpStatus:observedPageHttpStatus(),...data});
     };
     // No need to inherit URL fragments across publisher redirects. The only
     // active tab is DOI-bound and only the explicitly started, live job may run.
     const fragment=/^#gallery-historical-job=([a-f0-9]{24})$/.exec(location.hash||'');
     if(fragment&&fragment[1]!==job.token)return;
     let doi=pageDoi(),capture=null,reason='';
+    reportStage('publisher_page');
+    if([403,429].includes(observedPageHttpStatus())){
+      storeResult({status:'page_http_error',stage:'publisher_page'});return;
+    }
     // Other article tabs must never claim the queue's response slot.
     if(doi&&doi!==job.doi)return;
     if(!doi&&!fragment)return;
     for(let i=0;i<8;i++){
       if(doi&&doi!==job.doi)return;
       if(doi===job.doi){
+        verified=true;reportStage('publisher_doi');
         const root=document.querySelector('main article, article, main, [role="main"]');
         const license=batchLicenseEvidence(root);
+        reportStage('license');
         if(license){
-          try{capture=gather();if(capture.characterCount>=250)break;}catch(e){reason=String(e?.message||e);}
-        }else if(i>=2){storeResult({status:'license_not_verified'});return;}
+          reportStage('body_extract');
+          try{
+            capture=gather();
+            sectionCount=capture.sections.length;
+            evidenceChars=capture.characterCount;
+            if(capture.characterCount>=250)break;
+          }catch(_){reason='article_body_not_extracted';}
+        }else if(i>=2){
+          const hint=String(document.title||'')+' '+String(document.body?.innerText||'').slice(0,300);
+          if(/access denied|verify you are human|captcha|log in to (?:continue|access)|institutional sign in/i.test(hint))
+            storeResult({status:'page_access_blocked',stage:'publisher_page'});
+          else storeResult({status:'license_not_verified',stage:'license'});
+          return;
+        }
       }
       await batchWait(700);
       doi=pageDoi();
     }
-    if(doi!==job.doi){storeResult({status:'doi_unverified'});return;}
+    if(doi!==job.doi){storeResult({status:'doi_unverified',stage:'publisher_doi'});return;}
     const root=document.querySelector('main article, article, main, [role="main"]');
     const license=batchLicenseEvidence(root);
-    if(!license){storeResult({status:'license_not_verified'});return;}
-    if(!capture){storeResult({status:'body_missing',reason:reason.slice(0,90)});return;}
-    const evidenceChars=capture.sections.filter(row=>
+    if(!license){storeResult({status:'license_not_verified',stage:'license'});return;}
+    if(!capture){storeResult({status:'body_missing',stage:'body_extract'});return;}
+    const verifiedScientificChars=capture.sections.filter(row=>
       ['results','mechanism','experimental'].includes(row.type))
       .reduce((total,row)=>total+String(row.text||'').length,0);
-    if(evidenceChars<250){storeResult({status:'body_missing',reason:'scientific_results_or_methods_missing'});return;}
+    if(verifiedScientificChars<250){storeResult({status:'body_missing',stage:'body_extract'});return;}
     const canonical=[...capture.sections.map(s=>s.heading+'\n'+s.text),
       ...capture.captions.map(s=>s.label+'\n'+s.text),
       ...capture.tables.map(s=>s.label+'\n'+s.text)].join('\n');
+    reportStage('hash_verify');
     const sourceSha256=await sha256(canonical);
     const packet={schemaVersion:SCHEMA,doi:job.doi,publication:job.publication,
       journal:job.journal,title:job.title,publisher:publisher(location.hostname),
@@ -640,15 +1034,16 @@
       characters:capture.characterCount,sections:capture.sections,
       captions:capture.captions,tables:capture.tables};
     if(JSON.stringify(packet).length>BATCH_MAX_RESPONSE_CHARS){
-      storeResult({status:'too_large'});return;
+      storeResult({status:'too_large',stage:'body_extract'});return;
     }
-    storeResult({status:'ok',packet,sourceSha256});
+    storeResult({status:'ok',stage:'local_store',packet,sourceSha256});
   }
 
   if(location.hostname==='gallery.gczhouwld.com'){
-    // Never overlay PDF readers, account pages or other Gallery tools.
+    // Historical upload sender and UI must not run on PDF or account pages.
     if(location.pathname==='/'||location.pathname==='/index.html'){
       batchUi=batchPanel();batchUi?.refresh();
+      batchStartDiagnostics();
     }
   }else{
     GM_registerMenuCommand('Gallery：本地导出此历史论文正文（手动）',()=>{void exportCurrent();});

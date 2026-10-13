@@ -7,9 +7,9 @@ import vm from 'node:vm';
 const original=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
 const anchor="  if(location.hostname==='gallery.gczhouwld.com'){";
 assert.ok(original.includes(anchor));
-const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog};\n"+anchor);
+const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus};\n"+anchor);
 const DOI='10.1021/jacs.6c08636',TOKEN='a'.repeat(24),RUN='b'.repeat(24);
-function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false}={}){
+function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false,navigationStatus=null}={}){
   const values=new Map([['gallery-historical-text-batch-v2:job',{
     doi:DOI,publication:'2026-09-14',journal:'JACS',
     title:'A catalytic process',runId:RUN,token:TOKEN,expiresAt:Date.now()+20000
@@ -54,6 +54,7 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
     location:{hostname:'pubs.acs.org',origin:'https://pubs.acs.org',
       pathname:'/doi/'+DOI,hash:'#gallery-historical-job='+TOKEN},
     document,window:{alert(){},confirm:()=>true},TextEncoder,Blob,crypto:webcrypto,URL,URLSearchParams,
+    performance:{getEntriesByType:()=>[{responseStatus:navigationStatus||0}]},
     GM_getValue:(key,def)=>values.has(key)?values.get(key):def,
     GM_setValue:(key,value)=>values.set(key,value),
     GM_deleteValue:key=>values.delete(key),
@@ -190,4 +191,31 @@ test('historical batch does not write into media, PDF or Evidence interfaces',()
   assert.ok(original.includes("GM_openInTab('https://doi.org/'"));
   assert.ok(original.includes('一键补抓全部缺项'));
   assert.ok(original.includes('BATCH_MIN_GAP_MS=2000'));
+});
+
+test('retry policy separates temporary errors from license and access blocks',()=>{
+  const api=fixture().context.__batchTest;
+  assert.equal(api.batchRetryAllowed({status:'timeout'},false),true);
+  assert.equal(api.batchRetryAllowed({status:'publisher_unreachable'},false),true);
+  assert.equal(api.batchRetryAllowed({status:'storage_failure'},false),true);
+  assert.equal(api.batchRetryAllowed({status:'response_hash_mismatch'},false),true);
+  assert.equal(api.batchRetryAllowed({status:'license_not_verified'},false),false);
+  assert.equal(api.batchRetryAllowed({status:'license_not_verified'},true),true);
+  assert.equal(api.batchRetryAllowed({status:'body_missing'},false),false);
+  assert.equal(api.batchRetryAllowed({status:'page_access_blocked'},false),false);
+  assert.equal(api.batchRetryAllowed({status:'saved_local'},true),false);
+  assert.equal(api.batchRetryAllowed({status:'publisher_unreachable',httpStatus:429},false),false);
+  assert.equal(api.batchStageForStatus('response_hash_mismatch'),'hash_verify');
+});
+
+test('publisher evidence HTTP 403 is recorded only from observed navigation status',async()=>{
+  const noEvidence=fixture({navigationStatus:null});
+  await noEvidence.context.__batchTest.batchWorker();
+  assert.equal(noEvidence.values.get('gallery-historical-text-batch-v2:result')?.httpStatus,null);
+  const denied=fixture({navigationStatus:403});
+  await denied.context.__batchTest.batchWorker();
+  const r=denied.values.get('gallery-historical-text-batch-v2:result');
+  assert.equal(r.status,'page_http_error');
+  assert.equal(r.httpStatus,403);
+  assert.equal(r.stage,'publisher_page');
 });
