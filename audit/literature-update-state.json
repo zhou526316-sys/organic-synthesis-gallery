@@ -870,13 +870,13 @@
     "accepted": 24,
     "rejected": 98,
     "pending": 2,
-    "updatedAt": "2026-10-13T23:18:14.684Z",
-    "publicationChecksPassed": false,
-    "reviewCommitSha": null,
-    "reviewBlobSha": null,
-    "gateRunId": null,
-    "gateJobId": null,
-    "gateConclusion": "pending",
+    "updatedAt": "2026-10-13T23:21:51.140Z",
+    "publicationChecksPassed": true,
+    "reviewCommitSha": "0704bf8a9c6728162ee3e391e7e442895836f5fc",
+    "reviewBlobSha": "6b5180f2f894a8fcc33e07f6963f9b830d027eaa",
+    "gateRunId": 38483634565,
+    "gateJobId": 115591934287,
+    "gateConclusion": "success",
     "gateFailure": null
   },
   "publicationChecksPassed": true,
@@ -1388,7 +1388,7 @@
     "closureCoverageAnomalies": 1,
     "note": "No off-slot admission or deletion-only correction was performed. The next publication slot remains the normal 18:00 Beijing slot."
   },
-  "updatedAt": "2026-10-13T23:18:14.684Z",
+  "updatedAt": "2026-10-13T23:21:51.140Z",
   "lastDeploymentAttempt": {
     "schemaVersion": 2,
     "ok": true,
@@ -1645,13 +1645,13 @@
     "accepted": 24,
     "rejected": 98,
     "pending": 2,
-    "updatedAt": "2026-10-13T23:18:14.684Z",
-    "publicationChecksPassed": false,
-    "reviewCommitSha": null,
-    "reviewBlobSha": null,
-    "gateRunId": null,
-    "gateJobId": null,
-    "gateConclusion": "pending",
+    "updatedAt": "2026-10-13T23:21:51.140Z",
+    "publicationChecksPassed": true,
+    "reviewCommitSha": "0704bf8a9c6728162ee3e391e7e442895836f5fc",
+    "reviewBlobSha": "6b5180f2f894a8fcc33e07f6963f9b830d027eaa",
+    "gateRunId": 38483634565,
+    "gateJobId": 115591934287,
+    "gateConclusion": "success",
     "gateFailure": null
   },
   "discoveryCoverageRepair": {
@@ -1838,5 +1838,39 @@
     "10.31635/ccschem.026.202608538",
     "10.1021/acs.joc.6c01296"
   ],
-  "note": "2026-10-14 08:00 prepublish primary review staged: 24 include, 98 exclude, 2 evidence-backed pending; production unchanged; awaiting GitHub prepublish gate."
+  "note": "2026-10-14 08:00 prepublish primary review ready_with_pending: 24 include, 98 exclude, 2 evidence-backed pending. Dedicated GitHub prepublish gate succeeded; production unchanged; fixed-slot writer must reconcile formal review/marker/backlog.",
+  "prepublishPrimaryGate": {
+    "runId": 38483634565,
+    "jobId": 115591934287,
+    "runUrl": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38483634565",
+    "conclusion": "success",
+    "headCommitSha": "0704bf8a9c6728162ee3e391e7e442895836f5fc",
+    "validatedStagingBlobSha": "6b5180f2f894a8fcc33e07f6963f9b830d027eaa",
+    "recordValidationPassed": true,
+    "semanticDecisionSetComplete": true,
+    "semanticFieldFailures": 0,
+    "snapshotFreshForSlot": true,
+    "publicationReady": true,
+    "releaseStatus": "ready_with_pending",
+    "reviewComplete": false,
+    "conversionValid": true,
+    "directStrictValidator": "validate-prepublish-review.mjs --allow-deferred --require-ready: success",
+    "strictReadinessCommand": "check-prepublish-readiness.mjs --allow-deferred --require-ready: success",
+    "formalConversionPreview": "success",
+    "strictReleaseBundle": "success",
+    "productionDataModified": false
+  },
+  "prepublishRepositoryWideQualityGate": {
+    "runId": 38483634504,
+    "jobId": 115591933898,
+    "runUrl": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38483634504",
+    "conclusion": "failure",
+    "failedStep": "Validate discovery, semantic review, deployment, and regression invariants",
+    "failures": [
+      "deferred: state backlog does not equal formal pending decisions",
+      "discovery: unresolved DOI is neither formal pending nor reviewed next-slot carryover"
+    ],
+    "interpretation": "The repository-wide gate still evaluates the 2026-10-13 formal review/release marker against the fresh 2026-10-14 unresolved audit. This is an expected pre-writer staging mismatch; the dedicated prepublish gate independently validated the complete 124-DOI decision set and strict 24-DOI allowlist. The 08:00 formal writer must atomically reconcile review, marker and canonical pending backlog before production publication.",
+    "productionDataModified": false
+  }
 }

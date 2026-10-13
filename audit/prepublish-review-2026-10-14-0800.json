@@ -4,7 +4,7 @@
   "executionMode": "scheduled_noninteractive_main_only",
   "publicationSlot": "2026-10-14T08:00:00+08:00",
   "createdAt": "2026-10-13T23:18:14.684Z",
-  "updatedAt": "2026-10-13T23:18:14.684Z",
+  "updatedAt": "2026-10-13T23:21:51.140Z",
   "evidenceAsOf": "2026-10-13T23:18:14.684Z",
   "handoffGeneratedAt": "2026-10-13T23:09:49.225Z",
   "freshAuditGeneratedAt": "2026-10-13T23:09:49.225Z",
@@ -4606,10 +4606,37 @@
     "userDoiExceptions": 0,
     "missingFullTextEvidenceNotFabricated": true,
     "prepublishGate": {
-      "conclusion": "pending_actions_validation",
-      "recordValidationPassed": false,
+      "runId": 38483634565,
+      "jobId": 115591934287,
+      "runUrl": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38483634565",
+      "conclusion": "success",
+      "headCommitSha": "0704bf8a9c6728162ee3e391e7e442895836f5fc",
+      "validatedStagingBlobSha": "6b5180f2f894a8fcc33e07f6963f9b830d027eaa",
+      "recordValidationPassed": true,
+      "semanticDecisionSetComplete": true,
+      "semanticFieldFailures": 0,
       "snapshotFreshForSlot": true,
-      "publicationReady": false,
+      "publicationReady": true,
+      "releaseStatus": "ready_with_pending",
+      "reviewComplete": false,
+      "conversionValid": true,
+      "directStrictValidator": "validate-prepublish-review.mjs --allow-deferred --require-ready: success",
+      "strictReadinessCommand": "check-prepublish-readiness.mjs --allow-deferred --require-ready: success",
+      "formalConversionPreview": "success",
+      "strictReleaseBundle": "success",
+      "productionDataModified": false
+    },
+    "repositoryWideQualityGate": {
+      "runId": 38483634504,
+      "jobId": 115591933898,
+      "runUrl": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38483634504",
+      "conclusion": "failure",
+      "failedStep": "Validate discovery, semantic review, deployment, and regression invariants",
+      "failures": [
+        "deferred: state backlog does not equal formal pending decisions",
+        "discovery: unresolved DOI is neither formal pending nor reviewed next-slot carryover"
+      ],
+      "interpretation": "The repository-wide gate still evaluates the 2026-10-13 formal review/release marker against the fresh 2026-10-14 unresolved audit. This is an expected pre-writer staging mismatch; the dedicated prepublish gate independently validated the complete 124-DOI decision set and strict 24-DOI allowlist. The 08:00 formal writer must atomically reconcile review, marker and canonical pending backlog before production publication.",
       "productionDataModified": false
     }
   },
@@ -4621,7 +4648,8 @@
   "summary": "完整审核124篇：24篇可发布、98篇排除、2篇待补证。发布仅允许publishableDois；待补证条目延至2026-10-15T08:00:00+08:00。",
   "notes": [
     "协议blob=f60ecda25f4346539d46add94230be7596c71bf9；固定槽handoff文档blob=63853aa74fd25aa1313b38303569c1eb6a98ae41；能力记录blob=fbb0ecbf97a7ffde789b28264a83473901e8c9c9。",
-    "本任务未修改生产卡片、TOC demand、媒体或Pages，也未执行新文献发布。"
+    "本任务未修改生产卡片、TOC demand、媒体或Pages，也未执行新文献发布。",
+    "GitHub dedicated prepublish gate completed all 17 validation/conversion/bundle steps successfully. Repository-wide quality gate remains intentionally unreconciled until the fixed-slot writer creates the formal review/marker; no production write was performed here."
   ],
   "productionDataModified": false,
   "mediaAcquisitionPerformed": false,
