@@ -10,7 +10,7 @@ assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.4'/);
 assert.match(original,/scriptVersion:BATCH_SCRIPT_VERSION/);
 const anchor="  if(location.hostname==='gallery.gczhouwld.com'){";
 assert.ok(original.includes(anchor));
-const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents};\n"+anchor);
+const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents,batchSelectCandidates};\n"+anchor);
 const DOI='10.1021/jacs.6c08636',TOKEN='a'.repeat(24),RUN='b'.repeat(24);
 function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false,navigationStatus=null,licenseAfter=0,readyAfter=0,pageTitle='',acsNotice='',acsNoticeOutside=false}={}){
   const values=new Map([['gallery-historical-text-batch-v2:job',{
@@ -231,6 +231,18 @@ test('retry policy separates temporary errors from license and access blocks',()
   assert.equal(api.batchStageForStatus('response_hash_mismatch'),'hash_verify');
 });
 
+test('ACS licence review samples at most ten genuine prior blocks, not the full historical queue',()=>{
+  const api=fixture().context.__batchTest;
+  const papers=Array.from({length:25},(_,i)=>({doi:'10.1021/jacs.sample'+i}));
+  papers.push({doi:'10.1038/nature.open',journal:'Nature'});
+  const rows=papers.map(p=>({doi:p.doi,status:'license_not_verified'}));
+  rows[2].status='page_http_error';
+  const result=api.batchSelectCandidates(papers,new Set([papers[0].doi]),rows,true,'acs_license');
+  assert.equal(result.length,10);
+  assert.ok(result.every(p=>p.doi.startsWith('10.1021/')&&p.doi!==papers[0].doi&&p.doi!==papers[2].doi));
+  assert.equal(api.batchSelectCandidates(papers,new Set(),[],true,'blocked').length,0);
+  assert.equal(api.batchSelectCandidates(papers,new Set(),[],false,'all').length,papers.length);
+});
 test('publisher evidence HTTP 403 is recorded only from observed navigation status',async()=>{
   const noEvidence=fixture({navigationStatus:null});
   await noEvidence.context.__batchTest.batchWorker();
