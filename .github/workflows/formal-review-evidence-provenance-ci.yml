@@ -1,0 +1,29 @@
+name: Formal review DOI abstract evidence regression
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/formal-review-evidence-provenance-ci.yml'
+      - 'scripts/convert-prepublish-review.mjs'
+      - 'scripts/test-formal-review-conversion.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  abstract-handoff-provenance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Confirm deterministic review JSON and preserve same-DOI abstract
+        run: |
+          node --check scripts/convert-prepublish-review.mjs
+          node scripts/test-formal-review-conversion.mjs
+      - name: Validate deferred DOI evidence and scope constraints
+        run: node scripts/test-deferred-publication-quality.mjs

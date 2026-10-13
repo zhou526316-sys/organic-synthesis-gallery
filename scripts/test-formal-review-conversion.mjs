@@ -17,7 +17,7 @@ const challenge = 'Synthetic challenge records the same outcome using the fixtur
 function fixture() {
   const input = [
     { doi: '10.99999/converter-include', journal: 'JACS', date: '2026-09-22', title: 'Synthetic general organic methodology', reviewPriority: 'high', authors: ['Synthetic Author'], abstract: evidence },
-    { doi: '10.99999/converter-exclude', journal: 'Angew', date: '2026-09-22', title: 'Synthetic material characterization article', reviewPriority: 'normal', authors: ['Synthetic Author B'] },
+    { doi: '10.99999/converter-exclude', journal: 'Angew', date: '2026-09-22', title: 'Synthetic material characterization article', reviewPriority: 'normal', authors: ['Synthetic Author B'], abstract: evidence },
     { doi: '10.99999/converter-pending', journal: 'CCS Chemistry', date: '2026-09-22', title: 'Synthetic ambiguous paired electrochemistry article', reviewPriority: 'high', abstract: '' },
   ];
   const active = TARGET_JOURNALS.filter(row => row.activeFrom <= '2026-09-22');
@@ -27,6 +27,7 @@ function fixture() {
   const decisions = input.map((row, i) => ({ doi: row.doi, title: row.title,
     decision: ['include', 'exclude', 'pending'][i], firstPassDecision: ['include', 'exclude', 'pending'][i],
     challengeDecision: ['include', 'exclude', 'pending'][i], evidenceBasis: evidence, challengeReason: challenge }));
+  decisions[1].abstract = ''; // Broken old staging: empty text overrides DOI handoff evidence.
   Object.assign(decisions[2], { evidenceNeeded: 'Obtain the missing synthetic product and substrate scope evidence from the fixture publisher.',
     attemptedEvidencePages: ['https://example.invalid/fixture-paper'], nextAction: 'Recheck the missing preparative scope evidence at the next fixed review slot.' });
   const staging = {
@@ -55,6 +56,8 @@ test('exact_partition_reason_mapping_and_source_metadata_preserved', () => {
   assert.equal(out.formalReview.accepted[0].reasonDerivedFrom, 'evidenceBasis');
   assert.deepEqual(out.formalReview.accepted[0].authors, ['Synthetic Author']);
   assert.equal(out.formalReview.accepted[0].reviewPriority, 'high');
+  assert.equal(out.formalReview.rejected[0].abstract, evidence);
+  assert.equal(out.formalReview.rejected[0].abstractEvidenceSource, 'paired_doi_handoff');
   assert.equal(out.formalReview.pending[0].date, '2026-09-22');
   assert.equal(out.formalReview.reviewComplete, false);
   assert.deepEqual(out.formalReview.sourceChecks, data.staging.sourceChecks);
