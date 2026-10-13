@@ -1,4 +1,5 @@
 import { STAGE_STORAGE_REVISION } from './stage-storage.js';
+import { importHistoricalDiagnostic, listHistoricalDiagnostics } from './historical-text-diagnostics.js';
 import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport, promoteOfficialLocalTocs, promoteStagedArticleFigures, promoteStagedNatureSciencePrimaryVisuals, purgeCrossDoiLocalMedia, purgeRejectedRscPreviewLocalMedia } from './local-captures.js';
 import {
   bridgeQueue,
@@ -144,6 +145,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/media/capture-capabilities',
   '/api/media/local-diagnostics',
   '/api/media/tampermonkey-reports',
+  '/api/admin/historical-text/reports',
   '/api/private-pdf/capture-inventory',
   '/api/article-summary/evidence-inventory',
   '/api/article-summary/scheduled-handoff',
@@ -153,6 +155,7 @@ const BROWSER_READ_PATHS = new Set([
 const TAMPERMONKEY_CORS_WRITE_PATHS = new Set([
   '/api/article-figures/stage',
   '/api/article-summary/fulltext/import',
+  '/api/admin/historical-text/reports',
   '/api/media/local-capture/import',
   '/api/media/local-diagnostics/import',
   '/api/media/tampermonkey-report/import',
@@ -950,6 +953,19 @@ async function handleApi(request, env, ctx) {
   if (request.method === 'GET' && url.pathname === '/api/media/local-diagnostics') {
     return resultResponse(await getLocalDiagnostics(env), cors);
   }
+  // Historical body diagnostics are independent of TOC/media/PDF report objects.
+  // Both reads and writes require the existing owner Bridge token.
+  if (request.method === 'GET' && url.pathname === '/api/admin/historical-text/reports') {
+    const denied=requireWriteAuthorization(request,env);
+    if(denied)return denied;
+    return resultResponse(await listHistoricalDiagnostics(env,{
+      doi:url.searchParams.get('doi')||'',
+      status:url.searchParams.get('status')||'',
+      limit:url.searchParams.get('limit')||'50',
+      before:url.searchParams.get('before')||'0',
+      beforeEventId:url.searchParams.get('beforeEventId')||'',
+    }),cors);
+  }
   if (request.method === 'GET' && url.pathname === '/api/media/tampermonkey-reports') {
     return resultResponse(await getTampermonkeyReports(request, env), cors);
   }
@@ -990,6 +1006,7 @@ async function handleApi(request, env, ctx) {
       '/api/admin/media/promote-staged-nature-science-primary',
       '/api/media/local-diagnostics/import',
       '/api/media/tampermonkey-report/import',
+      '/api/admin/historical-text/reports',
       '/api/media/jobs/claim',
       '/api/media/jobs/start',
       '/api/media/jobs/complete',
@@ -1084,6 +1101,9 @@ async function handleApi(request, env, ctx) {
   }
   if (request.method === 'POST' && url.pathname === '/api/media/local-diagnostics/import') {
     return resultResponse(await importLocalDiagnostics(request, env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/historical-text/reports') {
+    return resultResponse(await importHistoricalDiagnostic(env,await readJson(request)),cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/media/tampermonkey-report/import') {
     return resultResponse(await importTampermonkeyReport(request, env, await readJson(request)));
