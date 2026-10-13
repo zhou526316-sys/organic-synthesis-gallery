@@ -56,27 +56,29 @@
     },
     {
       "name": "NC_SI_FigS2_pdfp063.png",
-      "bytes": 162930,
+      "bytes": 47102,
       "dimensions": [
-        1256,
-        886
+        1090,
+        365
       ],
-      "sha256": "59dddfbf00178892107d9afc27357111e400e483df6e89df45707d299a33407c",
+      "sha256": "a8bf8f9143ec294680b056f8517627f5615490b9a7253b4a8a7d29aee1138064",
       "originalSourceSha256": "59dddfbf00178892107d9afc27357111e400e483df6e89df45707d299a33407c",
-      "process": "exact_original_source_crop",
-      "sourcePage": 63
+      "process": "source_pdf_full_figure_recut_PyMuPDF_actual_original_pixels_without_added_chemistry",
+      "sourcePage": 63,
+      "quality_note": "SI FigS2 structure and complete caption, no adjoining partial English methods; SI FigS3 four full control rows A-D and complete Figure S3 caption."
     },
     {
       "name": "NC_SI_FigS3_pdfp064.png",
-      "bytes": 122086,
+      "bytes": 150756,
       "dimensions": [
-        1256,
-        878
+        1078,
+        998
       ],
-      "sha256": "e4c62558f5e62792f1730cf9517139cbb23ae833c58aa9e451ba7081a96038bf",
+      "sha256": "83c5ae97607fb57f0982d2737abcb0e26ec30e88ee910dc5202984c91adf3318",
       "originalSourceSha256": "e4c62558f5e62792f1730cf9517139cbb23ae833c58aa9e451ba7081a96038bf",
-      "process": "exact_original_source_crop",
-      "sourcePage": 64
+      "process": "source_pdf_full_figure_recut_PyMuPDF_actual_original_pixels_without_added_chemistry",
+      "sourcePage": 64,
+      "quality_note": "SI FigS2 structure and complete caption, no adjoining partial English methods; SI FigS3 four full control rows A-D and complete Figure S3 caption."
     },
     {
       "name": "NC_SI_TableS1_S2_pdfp004.png",
@@ -295,6 +297,6 @@
       "sourcePage": null
     }
   ],
-  "reviewPolicy": "Original full main and SI PDF figure raster bits only; source-only cover collage with true molecular pixel cutouts; no AI chemistry. Three bottom clipping and two SI panel trims applied and documented.",
+  "reviewPolicy": "Original main and SI figure pixels only; NC SI FigS2 and FigS3 re-cut direct from original publisher SI to remove orphaned text and restore complete fourth control row, all chemistry original.",
   "journalCountsAudit": "derive dynamically from latest publication publishedDois, exclude historicalPublishedDois"
 }
