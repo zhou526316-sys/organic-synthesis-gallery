@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "reviewType": "post_release_new_evidence_next_slot_only",
-  "generatedAt": "2026-10-13T01:14:12.268Z",
+  "generatedAt": "2026-10-13T01:18:58.865Z",
   "sourcePublicationSlot": "2026-10-13T08:00:00+08:00",
   "nextPublicationSlot": "2026-10-14T08:00:00+08:00",
   "originalPendingReview": "audit/review-2026-10-13-0800.json",
   "originalPendingQueue": "audit/pending-review-2026-10-13-0800.json",
   "originalPendingQueueBlobSha": "a09e31fc7bbfbf0f07791548a532ae5260fab6d4",
   "sourcePublisher": "https://www.nature.com/articles/s44160-026-01189-z",
-  "reviewed": 1,
+  "reviewed": 2,
   "accepted": [
     {
       "doi": "10.1038/s44160-026-01189-z",
@@ -83,6 +83,56 @@
         "nextReviewSlot": "2026-10-14T08:00:00+08:00",
         "sourceReviewFile": "audit/review-2026-10-13-0800.json"
       }
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c04027",
+      "journal": "Organic Letters",
+      "title": "Synthesis of Diaryl α-Hydroxycarboxylic Acid Derivatives via Three-Component Reactions of o-Quinone Diimides with Alcohols and Diazo Compounds",
+      "titleZh": "铑催化邻醌二亚胺、醇与重氮化合物三组分反应合成二芳基α-羟基羧酸衍生物",
+      "date": "2026-10-12",
+      "originalDate": "2026-10-12",
+      "onlineDate": "2026-10-12",
+      "publishedDate": "2026-10-12",
+      "createdDate": "2026-10-13",
+      "type": "journal-article",
+      "authors": [
+        "Qiu-Le Yang",
+        "Li-Ping Pei",
+        "Shi-Kun Jia",
+        "Guang-Jian Mei"
+      ],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "reviewPriority": "high",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "decision": "include",
+      "reason": "铑催化邻醌二亚胺、醇与重氮化合物发生高区域选择性三组分反应，形成含氧季碳中心的二芳基α-羟基羧酸衍生物，属于一般性有机制备方法学。",
+      "evidenceBasis": "2026-10-13主分支外只读DOI并集实测 Crossref DOI准确元数据：摘要明确 Rh催化o-quinone diimides/alcohol/diazo 三组分反应，经氧鎓叶立德的Michael型捕获形成二芳基α-羟基羧酸衍生物；描述broad substrate scope、scale-up synthesis、late-stage functionalization，未虚构具体收率或底物例数。",
+      "challengeReason": "反向挑战：该工作是否仅为特定醌二亚胺结构的多组分示例？摘要证明多底物反应、产物骨架分离制备、放大与复杂分子后期衍生化；合成方法贡献独立而明确，符合Organic Letters的通用制备性方法范围。尚未获得原文底物表，收率数值和限制不作断言。",
+      "evidenceSource": "GitHub Actions PR #560 read-only DOI union audit run #38331314358; verified Crossref abstract for DOI 10.1021/acs.orglett.6c04027",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c04027"
+      ],
+      "sourceReviewFile": "audit/review-2026-10-13-postrelease-evidence-0800.json",
+      "discoveryRunId": 38331314358,
+      "sourceAuditArtifact": "publisher-source-readonly-smoke (GitHub artifact 11783295863)",
+      "nextPublicationSlot": "2026-10-14T08:00:00+08:00",
+      "scopeAssessment": {
+        "primaryContribution": "开发铑催化邻醌二亚胺、醇与重氮化合物的高区域选择性三组分反应，合成多取代二芳基α-羟基羧酸衍生物。",
+        "preparativeTransformation": "邻醌二亚胺、醇及重氮化合物经氧鎓叶立德与Michael型捕获，构建含氧季碳中心的二芳基α-羟基羧酸骨架。",
+        "generalityEvidence": "Crossref DOI匹配摘要直接表述宽底物范围、放大制备和复杂分子后期官能化；具体数目和逐个收率未知。",
+        "sourceEvidence": "GitHub Actions 38331314358 的独立Crossref多ISSN online/published/created结果，DOI、作者、题名与日期一致。",
+        "boundaryChallenge": "底物类型以邻醌二亚胺为中心，但存在明确的三组分成键、不同底物拓展及应用；不能按单一机理/材料案例排除。"
+      },
+      "publicationAuthorized": false,
+      "productionDataModified": false
     }
   ],
   "rejected": [],
@@ -92,5 +142,5 @@
   "fixedSlotWriterTriggered": false,
   "publicationAuthorized": false,
   "handoffRequiredAtNextSlot": true,
-  "note": "Evidence-backed post-slot two-pass re-evaluation only; not an admission or change to immutable 2026-10-13 marker. Revalidate DOI, rules/corrections, fresh compact, complete source coverage and original date at 2026-10-14 08:00 fixed slot. Preserve old pending evidence."
+  "note": "Next-slot scientific evidence only: 2026-10-12 Nature Synthesis pending resolved in new public publisher evidence, plus late indexed Organic Letters Crossref DOI. Neither paper is a 2026-10-13 off-slot production admission. Every paper must be revalidated on fresh paired handoff before 2026-10-14 08:00 fixed writer."
 }
