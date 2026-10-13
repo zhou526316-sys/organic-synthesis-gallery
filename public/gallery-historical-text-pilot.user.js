@@ -747,6 +747,7 @@
     const configure=document.createElement('button');configure.textContent='配置诊断密钥';
     const upload=document.createElement('button');upload.textContent='立即上传待发诊断';
     const recheck=document.createElement('button');recheck.textContent='复查受阻项';
+    const acsRecheck=document.createElement('button');acsRecheck.textContent='抽查 ACS 许可项（最多10篇）';
     const search=document.createElement('input');search.placeholder='检索本机正文（LMCT/CO₂等）';
     search.style.cssText='width:100%;box-sizing:border-box;margin:8px 0 4px;padding:5px';
     const results=document.createElement('div');
@@ -760,10 +761,10 @@
     const saveSecret=document.createElement('button');saveSecret.textContent='保存并上传诊断';
     saveSecret.style.cssText='display:none;cursor:pointer;border:1px solid #b8c9df;border-radius:6px;padding:5px';
     results.style.cssText='max-height:140px;overflow:auto;font-size:12px;word-break:break-word';
-    for(const btn of [start,pause,failures,server,configure,upload,recheck,hide]){
+    for(const btn of [start,pause,failures,server,configure,upload,recheck,acsRecheck,hide]){
       btn.style.cssText='cursor:pointer;background:#eaf1f9;border:1px solid #b8c9df;border-radius:6px;padding:4px 8px;color:#172439';
     }
-    controls.append(start,pause,failures,server,configure,upload,recheck);
+    controls.append(start,pause,failures,server,configure,upload,recheck,acsRecheck);
     panel.append(message,controls,ownerSecret,saveSecret,filter,failureDetails,search,results);
     head.append(label,hide);root.append(head,panel);
     document.body.append(root);
@@ -799,7 +800,10 @@
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
     pause.addEventListener('click',()=>{batchPaused=true;pause.disabled=true;batchStatusWrite({state:'pausing'});});
-    recheck.addEventListener('click',()=>void batchStart(true).catch(error=>{
+    recheck.addEventListener('click',()=>void batchStart(true,'blocked').catch(error=>{
+      batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
+    }));
+    acsRecheck.addEventListener('click',()=>void batchStart(true,'acs_license').catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
     failures.addEventListener('click',()=>{
@@ -910,7 +914,23 @@
     }
     return {status:'timeout',stage:'publisher_wait',reasonCode:'publisher_no_response'};
   }
-  async function batchStart(manualBlocked=false){
+  function batchSelectCandidates(papers,existing,attemptRows,manualBlocked=false,mode='all'){
+    const previous=new Map((attemptRows||[]).map(x=>[x.doi,x]));
+    const selected=[];
+    for(const paper of papers){
+      if(existing.has(paper.doi))continue;
+      const prior=previous.get(paper.doi);
+      if(mode==='blocked'&&!prior)continue;
+      if(mode==='acs_license'
+        &&(batchPublisher(paper.doi)!=='acs'||prior?.status!=='license_not_verified'))
+        continue;
+      if(!batchRetryAllowed(prior,manualBlocked))continue;
+      selected.push(paper);
+      if(mode==='acs_license'&&selected.length>=10)break;
+    }
+    return selected;
+  }
+  async function batchStart(manualBlocked=false,mode='all'){
     if(batchActive)return;
     const current=GM_getValue(BATCH_LEASE,null);
     if(current&&current.until>Date.now()){
@@ -920,29 +940,43 @@
     const catalog=await batchLoadCanonicalCatalog();
     const papers=batchHistoricalPapers(catalog);
     if(!papers.length){window.alert('正式目录中暂无 2026-10-01 前的文献');return;}
-    if(!window.confirm((manualBlocked?'重新检查包括许可／正文受阻项在内的全部候选：':'开始独立补抓 ') +papers.length+' 篇正式历史 DOI？\n逐篇打开出版社页面，仅保存有明确 CC BY/CC0 授权的本文正文到本机；不抓 PDF/图/SI，不触碰媒体队列。浏览器需保持开启。'))return;
+    const db=await batchOpenDb();
+    let existing,attempts,selected;
+    try{
+      existing=new Set(await batchDbOp(db,'packets','getAllKeys'));
+      attempts=await batchDbOp(db,'attempts','getAll');
+      selected=batchSelectCandidates(papers,existing,attempts,manualBlocked,mode);
+    }catch(error){db.close();throw error;}
+    if(!selected.length){
+      db.close();
+      batchStatusWrite({state:'finished',total:0,attempted:0,saved:0,
+        existing:existing.size,rightsPending:0,failed:0,skipped:papers.length,
+        currentStage:'finished',lastError:'当前筛选范围无须访问的 DOI'});
+      return;
+    }
+    const label=mode==='acs_license'?'仅抽查此前许可待核实的 ACS 文章'
+      :mode==='blocked'?'重新检查此前已受阻的文章':'开始独立补抓';
+    if(!window.confirm(label+'：'+selected.length+' 篇正式历史 DOI？\n逐篇打开出版社页面，仅保存有明确 CC BY/CC0 授权的本文正文到本机；不抓 PDF/图/SI，不触碰媒体队列。浏览器需保持开启。')){
+      db.close();return;
+    }
     const competing=GM_getValue(BATCH_LEASE,null);
     if(competing&&competing.until>Date.now()){
-      window.alert('已有历史正文批次正在运行，未建立第二个队列。');return;
+      db.close();window.alert('已有历史正文批次正在运行，未建立第二个队列。');return;
     }
-    const db=await batchOpenDb();
-    const existing=new Set(await batchDbOp(db,'packets','getAllKeys'));
     const runId=batchId();
     batchRunId=runId;batchActive=true;batchPaused=false;
-    let attempted=0,saved=0,rightsPending=0,failed=0,skipped=0;
+    let attempted=0,saved=0,rightsPending=0,failed=0,
+      skipped=papers.length-selected.length;
     const leaseTimer=setInterval(()=>{
       if(batchActive)GM_setValue(BATCH_LEASE,{runId,until:Date.now()+BATCH_LEASE_MS});
     },4000);
     GM_setValue(BATCH_LEASE,{runId,until:Date.now()+BATCH_LEASE_MS});
-    batchStatusWrite({state:'running',runId,total:papers.length,attempted:0,
+    batchStatusWrite({state:'running',runId,total:selected.length,attempted:0,
       saved:0,existing:existing.size,rightsPending:0,failed:0,skipped:0,
       currentStage:'queued',lastError:'',startedAt:Date.now(),lastDoi:''});
     try{
-      for(const paper of papers){
+      for(const paper of selected){
         if(batchPaused)break;
-        if(existing.has(paper.doi)){skipped++;continue;}
-        const prior=await batchDbOp(db,'attempts','get',paper.doi);
-        if(!batchRetryAllowed(prior,manualBlocked)){skipped++;continue;}
         const token=batchId();
         const job={runId,token,doi:paper.doi,publication:paper.publication,
           title:paper.title,journal:paper.journal,expiresAt:Date.now()+BATCH_LIMIT_MS};
