@@ -12,6 +12,7 @@ import { publisherOnlyReviewEligible, exclusionRecheckBelongsToPrimaryWindow,
   buildUnverifiedPublisherBacklog, mergeHistoricalRecheckBacklog } from '../../scripts/lib/literature-review-queue-guard.mjs';
 import { fetchPublisherMetadataAbstract,publisherMetadataEntryUrl } from '../../scripts/lib/publisher-abstract-metadata.mjs';
 import { CROSSREF_DATE_MODES, crossrefModeQuery, wasRecentlyDeposited } from '../../scripts/lib/crossref-discovery-date-modes.mjs';
+import { needsHistoricalDepositReview, buildHistoricalCrossrefDepositBacklog } from '../../scripts/lib/crossref-deposit-backlog.mjs';
 
 const TIME_ZONE = 'Asia/Shanghai';
 
@@ -541,6 +542,24 @@ console.log('AUDIT_PUBLIC_ABSTRACT_RESCUE '+JSON.stringify({
   backlogNotFetched:Math.max(0,[...merged.values()].filter(item=>!galleryDois.has(item.doi)&&!String(item.abstract||'').trim()).length-pubAbstractTargets.length)
 }));
 
+// Never confuse a recently REDEPOSITED historic article with today's first
+// online publication. Preserve its DOI/evidence for an independent review.
+const historicalRedepositRows=[];
+for(const candidate of merged.values()){
+  const journal=JOURNAL_BY_NAME.get(candidate.journal);
+  if(!journal)continue;
+  const rescueStart=rescueStartForJournal(journal);
+  if(!wasRecentlyDeposited(candidate,rescueStart,END))continue;
+  const createdRecently=(candidate.sources||[]).some(s=>s.endsWith(':created'))
+    && candidate.createdDate>=sourceQueryStartForJournal(journal)
+    && candidate.createdDate<=END;
+  const otherSource=(candidate.sources||[]).some(s=>s.startsWith('openalex:')
+    ||s.endsWith(':online')||s.endsWith(':published'));
+  if(needsHistoricalDepositReview(candidate,{
+    journalRescueStart:rescueStart,endDate:END,
+    createdRecently,hasIndependentPublicationDiscovery:otherSource
+  }))historicalRedepositRows.push(candidate);
+}
 const universe = [...merged.values()].filter(c => {
   const journal = JOURNAL_BY_NAME.get(c.journal);
   const effectiveStart = journal ? auditStartForJournal(journal) : START;
@@ -550,11 +569,17 @@ const universe = [...merged.values()].filter(c => {
   const sourceDiscovered = (c.sources || []).length > 0;
   const createdInQuery = Boolean(createdDiscovered && c.createdDate && c.createdDate >= (journal ? sourceQueryStartForJournal(journal) : START) && c.createdDate <= END);
   const depositedInQuery = wasRecentlyDeposited(c,rescueStart,END);
-  if (!c.date) return sourceDiscovered;
+  const independentlyDiscovered=(c.sources||[]).some(s=>
+    s.startsWith('openalex:')||s.endsWith(':online')||s.endsWith(':published')||s.endsWith(':created'));
+  if (!c.date) return sourceDiscovered && (!depositedInQuery || independentlyDiscovered);
   if (c.date < activeFrom) return false;
-  if (c.date > END) return createdInQuery || depositedInQuery;
+  // A future dated record found via deposit-only remains a date-check
+  // backlog. A first-created-date collision is retained as before.
+  if (c.date > END) return createdInQuery;
+  // Old re-deposited records enter a history rescue queue; their real
+  // original date is not rewritten into the primary publication window.
   return c.date >= effectiveStart || (sourceDiscovered && c.date >= rescueStart)
-    || createdInQuery || depositedInQuery;
+    || createdInQuery;
 });
 const universeDoiSet = new Set(universe.map(candidate => normalizeDoi(candidate.doi)));
 // Review-file journal labels are not proof that a DOI belongs to that journal.
@@ -639,6 +664,8 @@ const publisherDateUnverifiedDois = missingCandidates
    ? previousAudit.publisherDateVerificationBacklog.items
    : (previousAudit.missingCandidates||[]).filter(row=>
        row.publisherFeedUrl && row.publisherDateUnverified && !row.date);
+ const previousHistoricalRedeposits=Array.isArray(previousAudit.historicalCrossrefRedepositBacklog?.items)
+   ? previousAudit.historicalCrossrefRedepositBacklog.items : [];
  const previousHistoricalChallenges=Array.isArray(previousAudit.historicalEvidenceChallenges?.items)
    ? previousAudit.historicalEvidenceChallenges.items
    : (previousAudit.missingCandidates||[]).filter(row=>
@@ -656,10 +683,17 @@ const publisherDateUnverifiedDois = missingCandidates
  const historicalEvidenceChallengeBacklog=mergeHistoricalRecheckBacklog(
    previousHistoricalChallenges,historicalEvidenceRechecks,
    reviewedHistory,confirmedScopeExclusionDois);
+ const historicalCrossrefRedepositBacklog=buildHistoricalCrossrefDepositBacklog(
+   previousHistoricalRedeposits,historicalRedepositRows,{
+     acceptedDois:galleryDois,confirmedExcludedDois:confirmedScopeExclusionDois,
+     reviewedHistory,recheckReason:exclusionEvidenceRecheckReason,
+     journalActivationDates:new Map(JOURNALS.map(j=>[j.name,j.activeFrom||'']))
+   });
  console.log('AUDIT_RECALL_BACKLOG '+JSON.stringify({
    publisherFirstOnlineUnverified:publisherDateVerificationBacklog.length,
    historicalExclusionEvidenceChanges:historicalEvidenceChallengeBacklog.length,
-   recentExclusionsReopened:exclusionRecheckReasons.size
+   recentExclusionsReopened:exclusionRecheckReasons.size,
+   historicalRedeposits:historicalCrossrefRedepositBacklog.length
  }));
 
 
@@ -825,6 +859,7 @@ const report = {
       wasRecentlyDeposited(row,rescueStartForJournal(JOURNAL_BY_NAME.get(row.journal)||{}),END)).length,
     previousExclusionsReopened: exclusionRecheckReasons.size,
     historicalEvidenceChallenges: historicalEvidenceChallengeBacklog.length,
+    historicalCrossrefRedepositBacklog: historicalCrossrefRedepositBacklog.length,
     publisherFirstOnlineBacklog: publisherDateVerificationBacklog.length,
     publisherDateUnverified: publisherDateUnverifiedDois.length,
     publisherAbstractRescued: pubAbstractResults.filter(row=>row.status==='doi_verified_public_abstract').length,
@@ -849,6 +884,7 @@ const report = {
     historicalCoverageLosses: closureHistoricalCoverageLosses,
     verifiedThroughEligible: publisherListingComplete && publisherDateUnverifiedDois.length === 0
       && publisherDateVerificationBacklog.length === 0 && historicalEvidenceChallengeBacklog.length === 0
+      && historicalCrossrefRedepositBacklog.length === 0
       && criticalFailures.length === 0 && closureCoverageAnomalies.length === 0
       && closureHistoricalCoverageLosses.length === 0 && closureMissing.length === 0,
     note: 'Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, critical source failures must be zero, and closure-day Crossref/OpenAlex coverage must not show a severe one-family collapse.',
@@ -871,6 +907,10 @@ const report = {
   historicalEvidenceChallenges: {
     status:'independent_two_pass_recheck_required',
     count:historicalEvidenceChallengeBacklog.length,items:historicalEvidenceChallengeBacklog
+  },
+  historicalCrossrefRedepositBacklog: {
+    status:'independent_doi_date_and_science_review_required',
+    count:historicalCrossrefRedepositBacklog.length,items:historicalCrossrefRedepositBacklog
   },
   publicPublisherAbstractRescue: {mode:'doi_verified_abstract_only',
     selected:pubAbstractTargets.length,results:pubAbstractResults},
@@ -948,6 +988,7 @@ const reviewInput = {
     publisherDateUnverified: report.summary.publisherDateUnverified,
     previousExclusionsReopened: report.summary.previousExclusionsReopened,
     historicalEvidenceChallenges: report.summary.historicalEvidenceChallenges,
+    historicalCrossrefRedepositBacklog: report.summary.historicalCrossrefRedepositBacklog,
     publisherFirstOnlineBacklog: report.summary.publisherFirstOnlineBacklog,
   },
   activeJournals: report.targetJournals.map(journal => ({
@@ -967,6 +1008,9 @@ const reviewInput = {
   },
   historicalEvidenceChallenges: {
     count:historicalEvidenceChallengeBacklog.length,items:historicalEvidenceChallengeBacklog
+  },
+  historicalCrossrefRedepositBacklog: {
+    count:historicalCrossrefRedepositBacklog.length,items:historicalCrossrefRedepositBacklog
   },
 };
 
