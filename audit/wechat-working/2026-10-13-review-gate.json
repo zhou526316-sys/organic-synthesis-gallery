@@ -1,53 +1,57 @@
 {
   "date": "2026-10-13",
-  "revision": "2026-10-13-r3",
+  "revision": "2026-10-13-r5",
   "articleCount": 2,
   "selectionDois": [
     "10.1038/s44160-026-01189-z",
     "10.1038/s41557-026-02213-7"
   ],
-  "selectionAuthority": "user_explicit_2026_10_13_request_storytelling_style_comparison_to_prior_oct05_long_form_reference",
+  "selectionAuthority": "user explicitly required Oct05 published JACS PDF as exemplary reasoning and layout reference for already-authorized same Oct13 draft correction",
   "textReview": "pass",
   "imageReview": "pass",
-  "reviewedAtBeijing": "2026-10-13T14:52:59+08:00",
+  "reviewedAtBeijing": "2026-10-13T16:29:48+08:00",
   "materializedCropReviewRequired": true,
   "strictFigurePlacement": true,
   "sources": [
     {
       "path": "public/wechat-editions/2026-10-13.json",
-      "blobSha": "4cfd66627d57423cec596465bc1915146c138165"
+      "blobSha": "7a251c833c85db3a107884f7a61acfcd42a47e13"
     },
     {
       "path": "public/wechat-featured/2026-10-13.json",
-      "blobSha": "d8fa07ee3ed00a6a7fa3f75fcd1a9a2fb1d02987"
+      "blobSha": "4d6d9ef9742e5220a2a551c08f5bb486b3511b44"
     },
     {
       "path": "public/wechat-retrospective/oxetane-to-azetidine-skeletal-editing-20261013.json",
-      "blobSha": "55d24c3eff314b1845573a368c00eddf5c064ffd"
+      "blobSha": "828b7ef8c44cb5b5ac7098c89401f7225d9fb5d9"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r3-nature-synthesis-text-only.md",
-      "blobSha": "96ea64f517b22137b490d1d9ba2738e9919f3d6e"
+      "path": "audit/wechat-working/2026-10-13-r5-nature-synthesis-text-only.md",
+      "blobSha": "f739bd49b8776ac30c72531642bcfe71f3be6bcc"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r3-nature-synthesis-images-only.md",
-      "blobSha": "c6645a0e62604163ae5749909047dc8d6f1f414b"
+      "path": "audit/wechat-working/2026-10-13-r5-nature-synthesis-images-only.md",
+      "blobSha": "2bcd1cba0746099781d7c9da34f3392e225d964a"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r3-nature-chemistry-text-only.md",
-      "blobSha": "d97547f14919e281ae0fce46a9e907a458acfff5"
+      "path": "audit/wechat-working/2026-10-13-r5-nature-chemistry-text-only.md",
+      "blobSha": "e551415bb3d547ec38bb7cab3794d144434fd217"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r3-nature-chemistry-images-only.md",
-      "blobSha": "168f9ea042e90793b6d870e1c0f0ce7fcc114ef0"
+      "path": "audit/wechat-working/2026-10-13-r5-nature-chemistry-images-only.md",
+      "blobSha": "9df19aa9f66c151eee495a371340e1f7ae767217"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r3-science-story-review.json",
-      "blobSha": "ff335463d2512502c67c546beede830126b15d9b"
+      "path": "audit/wechat-working/2026-10-13-r5-science-presentation-review.json",
+      "blobSha": "99fdc25eeec887e0c34d7ff58c73b789cc25352a"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r3-offline-preview/offline-qa.json",
-      "blobSha": "a4436254a9754c3275ec4cdfb6181c926a8e8ecf"
+      "path": "audit/wechat-working/2026-10-13-r5-oct05-published-reference-comparison.md",
+      "blobSha": "d21d11ca08f5631f7b02999058d71c33698db90d"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-13-r5-offline-preview/offline-qa.json",
+      "blobSha": "96d6f57d29dac32d555ddd20ddc062b3beb88f04"
     }
   ],
   "assets": [
@@ -221,44 +225,52 @@
     }
   ],
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-13-r3-nature-synthesis-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-13-r3-nature-synthesis-images-only.md",
-    "retrospectiveTextOnly": "audit/wechat-working/2026-10-13-r3-nature-chemistry-text-only.md",
-    "retrospectiveImagesOnly": "audit/wechat-working/2026-10-13-r3-nature-chemistry-images-only.md",
-    "scienceReview": "audit/wechat-working/2026-10-13-r3-science-story-review.json",
-    "visualQA": "audit/wechat-working/2026-10-13-r3-offline-preview/offline-qa.json"
+    "textOnly": "audit/wechat-working/2026-10-13-r5-nature-synthesis-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-13-r5-nature-synthesis-images-only.md",
+    "retrospectiveTextOnly": "audit/wechat-working/2026-10-13-r5-nature-chemistry-text-only.md",
+    "retrospectiveImagesOnly": "audit/wechat-working/2026-10-13-r5-nature-chemistry-images-only.md",
+    "scienceReview": "audit/wechat-working/2026-10-13-r5-science-presentation-review.json",
+    "exemplarComparison": "audit/wechat-working/2026-10-13-r5-oct05-published-reference-comparison.md",
+    "visualQA": "audit/wechat-working/2026-10-13-r5-offline-preview/offline-qa.json"
   },
-  "referenceExemplar": "public/wechat-featured/2026-10-05.json",
-  "referenceIssue": "The user-provided link was a Tampermonkey historical-text-pilot.userscript, not a WeChat article. User's separately established Oct05 JACS long-form was used as valid narrative model.",
+  "referenceExemplar": "User-uploaded 2026-10-05 JACS 8-page published PDF, compared against current main's public/wechat-featured/2026-10-05.json",
+  "imageSourceProvenance": "Original 22 primary/SI images plus 2 user-selected covers retain R2 source bytes; only captions, widths and paragraph placement change.",
+  "scopeBoundary": "Revision of two existing Oct13 articles; leaves daily 12 journal-only records, card thumbnails, DOI links, selection and covers intact.",
   "improvement": {
     "NS": {
-      "sections": 9,
-      "paragraphs": 35,
-      "characters": 4481,
+      "sections": 8,
+      "paragraphs": 24,
+      "characters": 3572,
+      "quickGuides": 2,
       "figures": 12,
-      "story": "molecular O/S isostere need → synthetic obstruction → thiourea cascade → In matching → evidence for O atom fate → stage-dependent In DFT → failure boundary"
+      "nonEmptyEyebrow": true
     },
     "NC": {
-      "sections": 9,
-      "paragraphs": 34,
-      "characters": 4109,
+      "sections": 8,
+      "paragraphs": 24,
+      "characters": 3418,
+      "quickGuides": 2,
       "figures": 10,
-      "story": "medicinal O/N pairs → amine/Lewis acid mutual binding trap → isolable ring-opened aminoalcohol → failed classic Mitsunobu → BEHT rescue → substrate/amine dual scope → mechanism limits"
+      "nonEmptyEyebrow": true
     }
   },
-  "cover": {
-    "featuredOriginalSHA256": "944f2cb54266c114b7399903761c56e7bddc9c036e6ddc07b039934d92914843",
-    "retroOriginalSHA256": "4ecd2188f646f728a0315fb7da154d279d5591f35cf3d0f2e88dfc43de3deef8"
-  },
   "unchanged24OriginalImages": true,
+  "covers": {
+    "featuredOriginalSHA256": "944f2cb54266c114b7399903761c56e7bddc9c036e6ddc07b039934d92914843",
+    "retrospectiveOriginalSHA256": "4ecd2188f646f728a0315fb7da154d279d5591f35cf3d0f2e88dfc43de3deef8"
+  },
   "mobileBrowserQA": {
-    "run": 38358972058,
+    "run": 38369533720,
     "cssViewport": 390,
     "desktopViewport": 740,
     "screenshots": 14,
-    "expectedTotalBodyFigures": 22,
-    "figuresLoaded": 24,
-    "overflow": false
+    "expectedBodyFigures": [
+      12,
+      10
+    ],
+    "imageLoaded": true,
+    "mobileHorizontalOverflow": false,
+    "sourceImageHashPinned": true
   },
   "exactReadOriginal": [
     "https://gallery.gczhouwld.com/?edition=2026-10-13&doi=10.1038%2Fs44160-026-01189-z&summary=0",
@@ -269,5 +281,5 @@
   "draftWriteAuthorized": true,
   "publicSendAuthorized": false,
   "publishId": null,
-  "notes": "R2 cloud draft already exists and remains the sole Oct13 draft. R3 only changes scientific explanation and image semantic placement, not any raster, caption, title, original DOI URL, cover or daily-journal-count widget. Do NOT draft_add or touch prior-day draft. Run one fixed-IP draft/update and draft/get then real mobile preview. Native client not yet checked."
+  "notes": "Based on real user-uploaded Oct05 JACS reference PDF, not generic rewriting. Independently reviewed causal evidence, natural professional Chinese and 390px/740px source layout. Existing 24 original chemical image and cover bytes unchanged. Publisher may perform one same media_id draft/update ONLY after R5 merge, then must draft/get, compare two source URLs, count 25 actual web images and mobile native headlines. PDF export blank areas in Oct05 are not proof original WeChat missing images, so R5 independent actual-cloud image check required."
 }

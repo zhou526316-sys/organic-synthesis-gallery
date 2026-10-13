@@ -1,0 +1,115 @@
+{
+  "date": "2026-10-13",
+  "revision": "2026-10-13-r4",
+  "status": "source_grounded_science_text_and_pinned_raster_mobile_desktop_layout_pass",
+  "baseline": "2026-10-13-r3",
+  "scope": "same two existing WeChat draft articles; preserve 22 source rasters, 2 covers, date, 12 published journal-only counts and two precise URLs",
+  "sourcePapers": [
+    "10.1038/s44160-026-01189-z",
+    "10.1038/s41557-026-02213-7"
+  ],
+  "priorR3": {
+    "todayChars": 4481,
+    "retroChars": 4109,
+    "todayParagraphs": 35,
+    "retroParagraphs": 34
+  },
+  "r4": {
+    "todayChars": 2303,
+    "retroChars": 2112,
+    "todayParagraphs": 18,
+    "retroParagraphs": 15,
+    "todaySections": 7,
+    "retroSections": 7,
+    "originalSourceImages": [
+      12,
+      10
+    ]
+  },
+  "evidence": [
+    {
+      "claim": "O/S pairing motivates editable thietanes",
+      "type": "literature_pharmacological_example",
+      "source": "NS Fig1b",
+      "boundary": "52 vs 17 nM is previously cited data, not new clinical screening"
+    },
+    {
+      "claim": "Old O/S route used dibromide stage",
+      "type": "prior_art_in_paper",
+      "source": "NS Fig1c + SI S4",
+      "boundary": "old method is not generally invalidated"
+    },
+    {
+      "claim": "In needed to activate ring",
+      "type": "control",
+      "source": "NS Fig2 + Fig6a",
+      "boundary": "cannot infer same role at every intermediate"
+    },
+    {
+      "claim": "O exchanged into cyclic urea",
+      "type": "isotope_direct",
+      "source": "NS Fig6e + SI FigS14",
+      "boundary": "oxygen destination tracked; not all intermediates observed"
+    },
+    {
+      "claim": "In lowers computed barrier through interactions",
+      "type": "computation",
+      "source": "NS Fig7 Fig8 + SI FigS25",
+      "boundary": "calculated 27.0/46.7 kcal/mol not experimentally measured"
+    },
+    {
+      "claim": "2,2 substituted oxetanes isomerize instead of swap",
+      "type": "negative_observed",
+      "source": "NS SI FigS26",
+      "boundary": "specific substrates tested"
+    },
+    {
+      "claim": "O/N first ring opening, then BEHT closure",
+      "type": "stepwise_observed",
+      "source": "NC Fig2 + SI Tables S1-S2",
+      "boundary": "oxyphosphonium pathway remains proposed model"
+    },
+    {
+      "claim": "Lewis acid varies with amine type",
+      "type": "scope_correlation",
+      "source": "NC Table2",
+      "boundary": "competitive complexation is a plausible interpretation not directly measured speciation"
+    },
+    {
+      "claim": "Azetidine late-stage editing demonstrated",
+      "type": "isolated_products",
+      "source": "NC Fig4",
+      "boundary": "not biological potency improvement"
+    },
+    {
+      "claim": "Comparative photocatalytic failures are substrate-specific",
+      "type": "reproduction",
+      "source": "NC SI Figs S2-S3",
+      "boundary": "limited experiments, no universal superiority"
+    },
+    {
+      "claim": "Scope has clear negative boundaries",
+      "type": "failed_substrates",
+      "source": "NC SI Tables S4-S5",
+      "boundary": "not arbitrarily expandable to every primary amine"
+    }
+  ],
+  "narrative": "Opening gives one concrete molecule-level conflict; each evidence panel changes one reaction hypothesis. No continuous redundant baseline sections, no simulated author motivation beyond paper, no reproduced fictitious mechanism or made-up drug effect.",
+  "textReview": "pass",
+  "imageReview": "pass",
+  "cloudDraftUpdated": false,
+  "publicSent": false,
+  "visualQA": {
+    "workflowRun": "https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/38365625121",
+    "artifact": "audit/wechat-working/2026-10-13-r4-offline-preview/offline-qa.json",
+    "dateTimeUTC": "2026-10-13T07:54:50Z",
+    "mobileViewport": 390,
+    "desktopViewport": 740,
+    "bodySourceImages": 22,
+    "covers": 2,
+    "screenshots": 14,
+    "noMobileOverflow": true,
+    "loadedAll": true
+  },
+  "scienceReview": "main papers and SI experimental boundaries checked; numbers refer to original reported conditions with their limitations; no new chemistry or source raster"
+}

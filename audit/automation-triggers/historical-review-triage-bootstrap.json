@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "owner_authorized_2026_q3_source_original_article_type_audit_refresh",
+  "purpose": "user_requested_2026_q3_prospective_month_date_science_ledger_refresh_after_52_includes_and_two_Nature_issue_receipts",
   "approvedAt": "2026-10-13",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-13T07:49:01.861Z",
-  "reason": "Post PR #597 (8 ACS research academic approvals), PR #598 (five Nature publisher-verified commentary/highlight/briefing exact DOI exclusions and Q3 reconciliation code), PR #599 (original Angew pyrrole synthetic Article behind Nature highlight). Source roots 371, Q3 192/192; formal 984, Q3 743, 46 independent include/2 original pending, eight previously formal; source DOI count immutable, original source date uncertainty remains distinct. GitHub staging only, zero Cloudflare production D1, no new publisher media or any off-slot publication.",
+  "requestedAt": "2026-10-13T08:34:00.545Z",
+  "reason": "After merged PR #602 official Nature Synthesis Sep/Oct Research DOI 26 and date/issue separation, and merged PR #603 six specific ACS original Q3 independent two-pass scientific approvals. Source roots remain 371 including all 192 Q3; formal catalog984 including Q3 743; total historic52 academically accepted, two earlier date-pending, five Nature publisher-confirmed nonresearch DOIs; 3 newly found date investigations are not academic approvals. Strict staging-only, zero D1, no media, no publications or new release slots.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261013_q3_after_46_approved_5_exact_publisher_type_excluded",
+  "triggerScope": "20261013_q3_after_52_accepted_two_verified_issue_receipts",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 984,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -20,10 +20,11 @@
   "expectedQ3CompletedRoots": 192,
   "expectedStageCompletedRootsAtRequest": 371,
   "expectedStageCompletedRoots": 371,
-  "expectedAcademicInclude": 46,
-  "academicDecisionSource": "main_approved_manifest_46_include_2_pending",
+  "expectedAcademicInclude": 52,
+  "academicDecisionSource": "main_history_manifest_52_individual_include_two_original_pending",
   "publisherResearchIssueComplete": false,
   "publisherNonResearchExactCount": 5,
   "trustedScopeRulesSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
-  "trustedScopeCorrectionsSha": "74978d92a16d353271f16f111425d09e4de84f07"
+  "trustedScopeCorrectionsSha": "74978d92a16d353271f16f111425d09e4de84f07",
+  "publisherIssueVerifiedReceipts": 2
 }

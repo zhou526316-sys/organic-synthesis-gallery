@@ -1,0 +1,20 @@
+{
+  "action": "offline_image_and_editorial_qa_without_cloud_wechat",
+  "date": "2026-10-13",
+  "revision": "2026-10-13-r4",
+  "sourceManifestPaths": [
+    "public/wechat-featured/2026-10-13.json",
+    "public/wechat-retrospective/oxetane-to-azetidine-skeletal-editing-20261013.json"
+  ],
+  "cloudDraftWrite": false,
+  "publicSend": false,
+  "expectedSourceMainAndSIFigures": [
+    12,
+    10
+  ],
+  "expectedOriginalCovers": 2,
+  "expectedJournalTotal": 12,
+  "semanticAlignmentRequired": true,
+  "reason": "Source real-pixel raster and 390px/740px review only after science-heavy compression. Never call WeChat API in this job.",
+  "requestId": "wechat-oct13-r4-mobile-qa-rescheduled-correct-branch-20261013"
+}
