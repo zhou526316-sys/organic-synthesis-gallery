@@ -1,0 +1,36 @@
+name: WeChat Oct13 source retrieval feasibility (staging, no WeChat)
+on:
+  push:
+    branches: [wechat-oct13-two-nature-r2-source-media]
+    paths:
+      - audit/automation-triggers/wechat-oct13-source-check.json
+permissions:
+  contents: read
+jobs:
+  verify-public-publisher-asset-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test paper's original publisher image and SI PDF URLs
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib,subprocess
+          sources={
+            'NS_Fig1':'https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs44160-026-01189-z/MediaObjects/44160_2026_1189_Fig1_HTML.png',
+            'NC_Fig1':'https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02213-7/MediaObjects/41557_2026_2213_Fig1_HTML.png',
+            'NS_SI':'https://static-content.springer.com/esm/art%3A10.1038%2Fs44160-026-01189-z/MediaObjects/44160_2026_1189_MOESM1_ESM.pdf',
+            'NC_SI':'https://static-content.springer.com/esm/art%3A10.1038%2Fs41557-026-02213-7/MediaObjects/41557_2026_2213_MOESM1_ESM.pdf',
+          }
+          for key,url in sources.items():
+            dst='/tmp/'+key
+            try:
+              v=subprocess.run(['curl','-fSL','--max-time','42','--connect-timeout','8','-A','Mozilla/5.0','-o',dst,'-w','status:%{http_code} content_type:%{content_type} downloaded:%{size_download}',url],capture_output=True,text=True,timeout=50)
+              if v.returncode==0:
+                b=open(dst,'rb').read()
+                assert b.startswith((b'%PDF-',b'\x89PNG',b'\xff\xd8')),'INVALID_DATA'
+                print(key,'PASS',v.stdout,'bytes',len(b),'SHA256',hashlib.sha256(b).hexdigest())
+              else:print(key,'FAIL',v.returncode,v.stdout,v.stderr[-180:])
+            except Exception as e: print(key,'ERROR',type(e).__name__,str(e)[:160])
+          PY
