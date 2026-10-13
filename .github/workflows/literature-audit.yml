@@ -19,6 +19,8 @@ on:
     paths:
       - '.github/workflows/literature-audit.yml'
       - 'cloudflare/scripts/audit-literature.mjs'
+      - 'scripts/lib/publisher-feed-discovery.mjs'
+      - 'scripts/test-publisher-feed-discovery.mjs'
       - 'shared/literature-journals.js'
       - 'scripts/test-literature-completeness-capability.mjs'
       - 'public/curated-supplement.json'
@@ -50,6 +52,9 @@ jobs:
 
       - name: Verify completeness capability guard
         run: node scripts/test-literature-completeness-capability.mjs
+
+      - name: Validate independent publisher identity, date and fallback regressions
+        run: node --test scripts/test-publisher-feed-discovery.mjs
 
       - name: Build DOI-union audit report
         env:
