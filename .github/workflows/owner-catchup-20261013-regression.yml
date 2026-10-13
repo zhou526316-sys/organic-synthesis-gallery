@@ -13,6 +13,8 @@ on:
     paths:
       - 'scripts/lib/owner-one-time-catchup.mjs'
       - 'scripts/test-one-time-owner-catchup-20261013.mjs'
+      - 'audit/publication-release-state.json'
+      - '.github/workflows/owner-catchup-20261013-regression.yml'
 permissions:
   contents: read
 jobs:
