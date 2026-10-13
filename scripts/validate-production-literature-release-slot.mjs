@@ -12,6 +12,12 @@ const BOOTSTRAP_MARKER_COMMIT = '3c9bcd16ab34a24fcbe0efda5a7e1d5905ca71fa';
 const SINGLE_DAILY_SLOT_CUTOVER_COMMIT = '0a88cd948049081479d33040b93ea20a80d83ca9';
 
 const marker = JSON.parse(await readFile(MARKER, 'utf8'));
+if (marker.mode === 'slot-release' && marker.ownerCatchup) {
+  const { authorizeOwnerCatchup } = await import('./lib/owner-one-time-catchup.mjs');
+  const authorized = await authorizeOwnerCatchup(ROOT);
+  console.log(JSON.stringify(authorized, null, 2));
+  process.exit(authorized.ok ? 0 : 1);
+}
 if (marker.mode === 'scope-correction') {
   const { authorizeScopeCorrection } = await import('./lib/immediate-scope-correction.mjs');
   const correction = await authorizeScopeCorrection(ROOT);

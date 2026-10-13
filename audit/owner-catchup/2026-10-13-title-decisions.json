@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "ownerApprovalId": "owner-2026-10-13-seven-dois-single-catchup",
+  "decisionDateBeijing": "2026-10-13",
+  "userInstruction": "这是我对今天剩余7篇文献的人工审核决定：1. 氧杂环丁烷→硫杂环丁烷：纳入；2. 三组分合成 α-羟基羧酸：纳入；3. 哒嗪盐不对称氢化：纳入；4. 绝对不对称光二聚：排除；5. C2-支链糖缀合物糖基化：排除；6. 铼(V)氮化物亲电反应：纳入；7. 卤键活化催化策略：纳入。请按这些决定继续执行今天的一次性补发；随后建立新的正式发布定时任务并停用原正式发布任务。",
+  "publicationAuthorization": "One-time explicit owner exception to admit reviewed DOI set after 09:00 on 2026-10-13, without changing any future 08:00 scheduled publication window or weakening production integrity checks.",
+  "originalSlot": "2026-10-13T08:00:00+08:00",
+  "approved": [
+    {
+      "doi": "10.1038/s44160-026-01189-z",
+      "label": "氧杂环丁烷→硫杂环丁烷"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c04027",
+      "label": "三组分合成 α-羟基羧酸"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03617",
+      "label": "哒嗪盐不对称氢化"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608252",
+      "label": "铼(V)氮化物亲电反应"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03893",
+      "label": "卤键活化催化策略"
+    }
+  ],
+  "excluded": [
+    {
+      "doi": "10.31635/ccschem.026.202608292",
+      "label": "绝对不对称光二聚"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607973",
+      "label": "C2-支链糖缀合物糖基化"
+    }
+  ],
+  "excludedDispositions": "Record explicit owner exclusion; do not remove any previously published DOI or amend unrelated scope corrections.",
+  "ownerEvidenceTransparency": "For the rhenium nitride and HBeXB entries, this is an owner title-based admission despite incomplete detailed preparative evidence. Do not invent substrate scope, reactions, experimental yields, or two independent reviewers.",
+  "noOtherProductionChanges": true,
+  "noNewPublicationSchedule": true,
+  "oneTimeOnly": true
+}
