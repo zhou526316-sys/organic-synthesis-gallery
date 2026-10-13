@@ -1,8 +1,8 @@
 {
-  "requestId": "wechat-2026-10-13-nature-synthesis-nature-chemistry-r2-exact-science-image-reviewed",
+  "requestId": "wechat-2026-10-13-r3-same-draft-story-first-innovation-science-20261013",
   "publicationDate": "2026-10-13",
   "action": "sync_daily_draft",
-  "editorialRevision": "2026-10-13-r2",
+  "editorialRevision": "2026-10-13-r3",
   "approvedGate": "audit/wechat-working/2026-10-13-review-gate.json",
   "expectedArticleCount": 2,
   "expectedDois": [
@@ -14,9 +14,9 @@
   "expectedReviewedBodyImages": 22,
   "expectedReviewedAssets": 24,
   "sourceImportRunId": 38353006248,
-  "offlineVisualRunId": 38353056214,
+  "offlineVisualRunId": 38358972058,
   "imageOriginalShaReview": "audit/wechat-working/2026-10-13-r2-source-image-qa.json",
-  "publisherSourceQa": "audit/wechat-working/2026-10-13-r2-science-review.json",
+  "publisherSourceQa": "audit/wechat-working/2026-10-13-r3-science-story-review.json",
   "sourceCoverSha256": {
     "featured": "944f2cb54266c114b7399903761c56e7bddc9c036e6ddc07b039934d92914843",
     "retrospective": "4ecd2188f646f728a0315fb7da154d279d5591f35cf3d0f2e88dfc43de3deef8"
@@ -26,7 +26,13 @@
   "requireDraftGetReadback": true,
   "requireArticleOrderAndExactDois": true,
   "linkOnly": false,
-  "noDuplicatePolicy": "create_daily_2026_10_13_if_missing_else_update_same_date_only_no_different_date_mutation",
+  "noDuplicatePolicy": "strict_update_existing_oct13_media_id_only_refuse_mismatch_no_fallback_add",
   "journalTotalCount": 12,
-  "reason": "User explicitly authorizes producing the 10/13 two-article WeChat Official Account DRAFT ONLY, using existing fixed-IP API secrets. Two Nature original+SI scientific reports approved via source-exclusive fig review and final R2c 390px browser QA; precise DOI links, all official 08:00+catchup papers. Exactly one creation/update; do not mass send or alter prior-day draft; require real draft/get and new preview."
+  "reason": "User review says initial draft is too flat and obscures core scientific innovation. Explicitly revise both pre-existing Oct13 article bodies according to Oct05 JACS evidence-first narrative: research contradiction, experimental design decisions, discriminating control, isotope/DFT limits, transferability. Preserve all exact original 22 paper/SI image rasters, 2 covers, 12 verified 08:00 journals/cards, 2 original article titles, selected DOI/summary=0 URLs and article order. R3 scientific story review and 390px/740px browser QA pass. MUST draft_update existing exact Oct13 media ID and draft/get; DO NOT create/clone duplicate and never mass send.",
+  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWO145961Rlw4fMzLxtij2o_6u5Z6Pq_7PK-nw7ZXBk7V",
+  "expectedScienceCharacters": {
+    "NatureSynthesis": 4481,
+    "NatureChemistry": 4109
+  },
+  "unchangedAssetFingerprints": true
 }
