@@ -72,6 +72,8 @@ assert.ok(auditSource.includes('blocked-historical-coverage-loss'), 'Known DOI d
 assert.ok(auditSource.includes('closureHistoricalCoverageLosses.length === 0'), 'verifiedThrough eligibility must require zero closure-day historical DOI losses');
 assert.ok(auditSource.includes('const compact=compactCandidate(candidate)'), 'All unresolved DOI differences must flow into review output');
 assert.ok(auditSource.includes('fetchOfficialPublisherFeeds'), 'Independent official publisher DOI candidates must enter machine audit');
+assert.ok(auditSource.includes('fetchPublisherMetadataAbstract'), 'Blank-abstract synthesis candidates must receive DOI-verified publisher abstract rescue attempts');
+assert.ok(auditSource.includes('pubAbstractResults'), 'Publisher abstract rescue successes and failures must be logged, not silently reported as zero gaps');
 assert.ok(auditSource.includes('publisherOnlyDois'), 'Publisher-only DOI differences must be reported');
 assert.ok(auditSource.includes('previousExclusionsReopened'), 'Prior exclusions must be reconsidered on substantive new evidence');
 assert.ok(auditSource.includes('publisherDateUnverifiedDois.length === 0'), 'Unverified publisher feed dates must block closure, not per-DOI publication');
