@@ -1,6 +1,12 @@
 name: Historical Archive D1 real readback (read only)
 on:
   workflow_dispatch:
+    inputs:
+      force_d1_readback:
+        description: 'Explicitly allow a repeat D1 query for the same release slot'
+        type: boolean
+        required: false
+        default: false
   workflow_run:
     workflows: ['Literature catalog index shadow sync']
     types: [completed]
@@ -8,7 +14,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/historical-archive-live-acceptance.mjs'
-      - 'audit/historical-reviewed/approved-admissions.json'
+      - 'scripts/test-historical-archive-live-acceptance.mjs'
+      - '.github/workflows/historical-archive-live-acceptance.yml'
   pull_request:
     branches: [main]
     paths:
@@ -17,6 +24,9 @@ on:
       - '.github/workflows/historical-archive-live-acceptance.yml'
 permissions:
   contents: read
+concurrency:
+  group: historical-archive-d1-slot-budget
+  cancel-in-progress: false
 jobs:
   contract:
     runs-on: ubuntu-latest
@@ -26,16 +36,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validate historical DOI separation and D1 readback contracts
+      - name: Validate history membership and bounded D1 readback policy
         run: |
           node --check scripts/historical-archive-live-acceptance.mjs
           node --test scripts/test-historical-archive-live-acceptance.mjs
+
   production-readback:
+    # Git push and PR never query D1. A successful official catalog-index
+    # sync can check at most once per 08:00 release slot.
     if: >-
-      github.event_name != 'pull_request' &&
-      (github.event_name != 'workflow_run' ||
-       (github.event.workflow_run.conclusion == 'success' &&
-        github.event.workflow_run.head_branch == 'main'))
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main') ||
+      (github.event_name == 'workflow_dispatch' && inputs.force_d1_readback == true)
     needs: contract
     runs-on: ubuntu-latest
     timeout-minutes: 7
@@ -46,15 +59,62 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Read real deployed Pages and catalog D1, no publishing
+      - name: Determine authoritative Beijing 08 release slot from Git
+        id: slot
+        run: |
+          node --input-type=module <<'NODE'
+          import {readFileSync,appendFileSync} from 'node:fs';
+          const marker=JSON.parse(readFileSync('audit/publication-release-state.json','utf8'));
+          const slot=String(marker.publicationSlot||'');
+          if(!/^\d{4}-\d\d-\d\dT08:00:00\+08:00$/.test(slot))
+            throw Error('not_a_real_beijing_08_publication_marker');
+          appendFileSync(process.env.GITHUB_OUTPUT,'day='+slot.slice(0,10)+'\n');
+          appendFileSync(process.env.GITHUB_OUTPUT,'hasHistory='+
+            (Array.isArray(marker.historicalAdmittedDois)&&marker.historicalAdmittedDois.length>0?'true':'false')+'\n');
+          NODE
+      - name: Check previously reserved readback slot without accessing D1
+        if: steps.slot.outputs.hasHistory == 'true'
+        id: slot_cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/historical-d1-slot-reservation.json
+          key: gallery-historical-d1-reservation-v1-${{ steps.slot.outputs.day }}
+      - name: Reserve the slot before issuing any D1 query
+        if: >-
+          steps.slot.outputs.hasHistory == 'true' &&
+          steps.slot_cache.outputs.cache-hit != 'true'
+        run: |
+          printf '{"slot":"%s","purpose":"one bounded history verification attempt"}\n' \
+            "${{ steps.slot.outputs.day }}" > "${{ runner.temp }}/historical-d1-slot-reservation.json"
+      - name: Persist reservation in GitHub cache before D1 access
+        if: >-
+          steps.slot.outputs.hasHistory == 'true' &&
+          steps.slot_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/historical-d1-slot-reservation.json
+          key: gallery-historical-d1-reservation-v1-${{ steps.slot.outputs.day }}
+      - name: Verify actual Pages and D1 under strict query cap
+        id: d1_readback
+        if: >-
+          steps.slot.outputs.hasHistory == 'true' &&
+          (steps.slot_cache.outputs.cache-hit != 'true' ||
+           (github.event_name == 'workflow_dispatch' && inputs.force_d1_readback == true))
         env:
           HISTORICAL_LIVE_REPORT: ${{ runner.temp }}/historical-archive-live-readback.json
+          HISTORICAL_D1_MAX_API_QUERIES: '16'
         run: node scripts/historical-archive-live-acceptance.mjs
-      - name: Retain exact live verification report
+      - name: Report safe skip without querying D1
+        if: >-
+          steps.slot.outputs.hasHistory != 'true' ||
+          (steps.slot_cache.outputs.cache-hit == 'true' &&
+           !(github.event_name == 'workflow_dispatch' && inputs.force_d1_readback == true))
+        run: echo "HISTORICAL_D1_READBACK_SKIPPED existing release-slot reservation or no historical DOI"
+      - name: Preserve exact readback or failure report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: historical-archive-real-d1-readback
           path: ${{ runner.temp }}/historical-archive-live-readback.json
-          if-no-files-found: warn
+          if-no-files-found: ignore
           retention-days: 21

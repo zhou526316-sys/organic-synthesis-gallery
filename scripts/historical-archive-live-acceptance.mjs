@@ -9,6 +9,19 @@ import {fileURLToPath} from 'node:url';
 export const REPORT_SCHEMA='gallery-historical-archive-live-acceptance-v1';
 const norm=v=>String(v||'').trim().toLowerCase();
 const assert=(condition,message)=>{if(!condition)throw Error(message)};
+export function historicalD1Budget(value=16){
+  const limit=Number(value);
+  assert(Number.isSafeInteger(limit)&&limit>=1&&limit<=24,'historical_d1_budget_invalid');
+  let used=0;
+  return {
+    get used(){return used},
+    get limit(){return limit},
+    charge(){
+      if(used>=limit)throw Error('historical_d1_readback_query_budget_exhausted:'+used+'/'+limit);
+      used++;
+    }
+  };
+}
 const unique=x=>[...new Set(x)];
 export function expectedHistory(marker,manifest){
   if(marker?.mode!=='slot-release'||marker.publicationSlot?.includes('T08:00:00')!==true)
@@ -61,9 +74,14 @@ async function fetchJson(url){
   try{return JSON.parse(raw)}catch{throw Error('archive_read_invalid_json')}
 }
 export async function inspectProduction({site='https://gallery.gczhouwld.com/',
-  api='https://api.gczhouwld.com/',marker,manifest,maxPagesPerDay=12}={}){
+  api='https://api.gczhouwld.com/',marker,manifest,maxPagesPerDay=3,
+  maxD1Queries=Number(process.env.HISTORICAL_D1_MAX_API_QUERIES||16)}={}){
+  const budget=historicalD1Budget(maxD1Queries);
   const report={schemaVersion:REPORT_SCHEMA,startedAt:new Date().toISOString(),
-    publicationSlot:marker?.publicationSlot,ok:false,readOnly:true};
+    publicationSlot:marker?.publicationSlot,ok:false,readOnly:true,
+    d1ReadbackQueryCap:budget.limit,d1RowsReadMeasured:false,
+    d1AccountRemainingQuota:'not_available_from_public_api',
+    candidateAcquisitionD1Queries:0};
   const expected=expectedHistory(marker,manifest);
   report.expectedHistoricalDois=expected.map(x=>x.doi);
   if(!expected.length){report.status='latest_release_contains_no_historical_admissions';report.ok=true;return report;}
@@ -88,6 +106,7 @@ export async function inspectProduction({site='https://gallery.gczhouwld.com/',
       url.searchParams.set('sort','oldest');
       url.searchParams.set('limit','100');
       if(cursor)url.searchParams.set('cursor',cursor);
+      budget.charge();
       const payload=await fetchJson(url);
       const outcome=verifyIndexedDay(payload,catalogId,required);
       pages++;
@@ -98,6 +117,7 @@ export async function inspectProduction({site='https://gallery.gczhouwld.com/',
     if(required.size)missing.push(...required);
   }
   assert(!missing.length,'historical_d1_archive_missing:'+missing.join(','));
+  report.d1ReadbackQueriesUsed=budget.used;
   report.status='pages_and_d1_historical_doi_verified';
   report.verifiedDois=expected.map(x=>x.doi);
   report.pagesAndIndexParity=true;
