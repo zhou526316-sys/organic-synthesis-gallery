@@ -1,0 +1,51 @@
+name: Verified public scientific body search index
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cloudflare/worker/src/literature-body-search.js'
+      - 'cloudflare/worker/src/literature-catalog-index.js'
+      - 'cloudflare/worker/src/index.js'
+      - 'cloudflare/worker/scripts/test-literature-body-search.mjs'
+      - 'cloudflare/worker/package.json'
+      - 'docs/verified-scientific-body-index.md'
+      - '.github/workflows/literature-body-search-regression.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'cloudflare/worker/src/literature-body-search.js'
+      - '.github/workflows/literature-body-search-regression.yml'
+permissions:
+  contents: read
+concurrency:
+  group: reviewed-science-body-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v5
+        with: {node-version: '22'}
+      - name: Check parse and rights-gated SQLite/FTS behavior
+        working-directory: cloudflare/worker
+        run: |
+          node --check src/literature-body-search.js
+          node --check src/literature-catalog-index.js
+          node --check src/index.js
+          node --test scripts/test-literature-body-search.mjs scripts/test-literature-search-enrichment.mjs scripts/test-literature-catalog-index.mjs
+      - name: Build Worker without activating public section index
+        working-directory: cloudflare/worker
+        run: |
+          npm install --no-audit --no-fund
+          npx wrangler deploy --dry-run --outdir "$RUNNER_TEMP/reviewed-body-worker"
+      - name: Retain build-only evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reviewed-science-body-build-${{ github.run_id }}
+          path: ${{ runner.temp }}/reviewed-body-worker
+          retention-days: 5
+          if-no-files-found: ignore
