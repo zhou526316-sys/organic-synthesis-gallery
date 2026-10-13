@@ -1,0 +1,38 @@
+name: Read historical text diagnostic aggregates (owner only)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/historical-text-diagnostic-read.yml'
+      - 'audit/automation-triggers/historical-text-diagnostic-read.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: historical-text-diagnostic-readonly
+  cancel-in-progress: false
+jobs:
+  aggregate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify reader syntax
+        run: node --check scripts/audit-historical-text-diagnostics.mjs
+      - name: Aggregate at most 200 private D1 metadata events without exporting DOI or credentials
+        env:
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: node scripts/audit-historical-text-diagnostics.mjs
+      - name: Retain only aggregate statistics (no raw logs)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-historical-text-diag-aggregate-${{ github.run_id }}
+          path: ${{ runner.temp }}/historical-text-aggregate.json
+          retention-days: 3
+          if-no-files-found: warn
