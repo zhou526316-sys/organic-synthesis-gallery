@@ -545,7 +545,7 @@
           if(type.startsWith('密钥'))break;
         }
       }
-    }finally{batchDiagBusy=false;}
+    }finally{batchDiagBusy=false;batchUi?.refresh();}
   }
   function batchStartDiagnostics(){
     if(batchDiagStarted||location.hostname!=='gallery.gczhouwld.com')return;
