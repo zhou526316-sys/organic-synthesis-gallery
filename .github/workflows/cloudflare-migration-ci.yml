@@ -93,6 +93,9 @@ jobs:
           node --check ../../scripts/sync-literature-catalog-index-shadow.mjs
           node --test ../../scripts/test-literature-catalog-index-shadow-deployment-contract.mjs ../../scripts/test-literature-catalog-index-shadow-sync-contract.mjs
 
+      - name: Verify independent historical text diagnostics and owner protection
+        run: node --test scripts/test-historical-text-diagnostics.mjs
+
       - name: Wrangler dry-run build
         run: npm run check
 
