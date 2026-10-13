@@ -86,6 +86,8 @@ test('publisher issue research receipt cannot be used to auto-include/exclude el
   missing.formalCatalogReadback.present=true;
   assert.throws(()=>verifyCatalysisIssueResearchReceipt(f),/natcatal_formal_date_mismatch|natcatal_counts/);
   const g=cloneCatalysis();
-  g.articles[2].formalCatalogReadback.storedDate='2026-07-14';
+  const alreadyFormal=g.articles.find(row=>row.doi==='10.1038/s41929-026-01578-9');
+  assert.ok(alreadyFormal?.formalCatalogReadback.present,'fixture must target an already formal DOI');
+  alreadyFormal.formalCatalogReadback.storedDate='2026-07-14';
   assert.throws(()=>verifyCatalysisIssueResearchReceipt(g),/natcatal_formal_date_mismatch/);
 });
