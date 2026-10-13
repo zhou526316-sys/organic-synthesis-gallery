@@ -68,6 +68,16 @@ export function convertPrepublishReview(staging, handoff, { generatedAt, sourceS
     const doi = normalizeDoi(original.doi), candidate = candidates.get(doi);
     requireValue(['include', 'exclude', 'pending'].includes(original.decision), `invalid_decision:${doi}`);
     const row = { ...structuredClone(candidate), ...structuredClone(original), doi };
+    // The source abstract is DOI-bound to the immutable paired handoff.
+    // A staging decision's empty abstract must not erase it: otherwise
+    // tomorrow's evidence-difference audit repeatedly reopens this DOI as
+    // "new abstract found" even though today's challenge already used it.
+    // Do not synthesize missing abstracts or overwrite a substantive,
+    // separately verified staging abstract.
+    if (!text(original.abstract) && text(candidate.abstract)) {
+      row.abstract = candidate.abstract;
+      row.abstractEvidenceSource = 'paired_doi_handoff';
+    }
     for (const key of ['title', 'journal', 'date']) row[key] = text(original[key]) || text(candidate[key]);
     const exactPublicationDate = /^\d{4}-\d{2}-\d{2}$/.test(row.date);
     // Some Crossref deposit records have only partial publication dates.
