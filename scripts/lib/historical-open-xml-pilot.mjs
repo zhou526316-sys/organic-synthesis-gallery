@@ -8,7 +8,8 @@ export function sample(registry,release,limit=20){
  const allowed=new Set(release.dois.map(doi));if(allowed.size!==release.dois.length)throw Error('formal_doi_duplicate');
  const g=new Map(),seen=new Set();
  for(const a of registry.articles){const id=doi(a.doi),date=String(a.date||''),journal=String(a.journal||'');if(!allowed.has(id)||seen.has(id)||!journal||!/^\d{4}-\d{2}-\d{2}$/.test(date)||date>='2026-10-01')continue;seen.add(id);if(!g.has(journal))g.set(journal,[]);g.get(journal).push({doi:id,journal,date});}
- for(const rows of g.values())rows.sort((a,b)=>b.date.localeCompare(a.date)||a.doi.localeCompare(b.doi));
+ // Prefer earliest eligible papers: repository OA deposits can lag online publication.
+ for(const rows of g.values())rows.sort((a,b)=>a.date.localeCompare(b.date)||a.doi.localeCompare(b.doi));
  const selected=[],cap=Math.min(20,Math.max(1,Number(limit)||20));
  for(const [j,count] of quota){const rows=g.get(j)||[];for(let i=0;i<count&&rows.length&&selected.length<cap;i++)selected.push(rows.shift());}
  while(selected.length<cap){let changed=false;for(const j of [...g.keys()].sort()){const rows=g.get(j);if(rows.length&&selected.length<cap){selected.push(rows.shift());changed=true;}}if(!changed)break;}
