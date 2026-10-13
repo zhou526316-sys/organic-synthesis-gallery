@@ -73,6 +73,13 @@ function itemIdentity(item, feed) {
     // Nature's public RSS sometimes uses a DOI-less article landing URL.
     const nature=/https?:\/\/(?:www\.)?nature\.com\/articles\/(s\d{5}-\d{3}-\d{5}-[a-z0-9]+)/i.exec(value);
     if(nature&&feed.doiPrefix.startsWith('10.1038/'))candidates.push('10.1038/'+nature[1].toLowerCase());
+    // RSC RSS identities can use a journal-coded article landing path rather
+    // than a DOI URL. The official domain + journal + manuscript code jointly
+    // establish a canonical 10.1039 DOI; unrelated references are ignored.
+    const rsc=/https?:\/\/(?:www\.)?pubs\.rsc\.org\/(?:en\/)?content\/article(?:landing|html|pdf)\/\d{4}\/(sc|gc)\/([a-z]\d{2}(?:sc|gc)[a-z0-9]+)/i.exec(value);
+    if(rsc && ((feed.journal==='Chemical Science'&&rsc[1].toLowerCase()==='sc') ||
+               (feed.journal==='Green Chemistry'&&rsc[1].toLowerCase()==='gc')))
+      candidates.push('10.1039/'+rsc[2].toLowerCase());
   }
   const unique=[...new Set(candidates.filter(doi=>belongsToFeed(doi,feed)))];
   // Multiple identifiers are ambiguous: never guess which DOI is the article.
