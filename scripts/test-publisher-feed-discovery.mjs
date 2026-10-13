@@ -49,6 +49,9 @@ test('RSC feed DOI identity must contain its own journal-specific DOI code',()=>
     '<item><guid>https://doi.org/10.1039/d6gc03891b</guid></item></channel></rss>';
   assert.deepEqual(parseOfficialPublisherFeed(xml,sc).records.map(x=>x.doi),['10.1039/d6sc06521a']);
   assert.deepEqual(parseOfficialPublisherFeed(xml,gc).records.map(x=>x.doi),['10.1039/d6gc03891b']);
+  const landing='<rss><item><guid>https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc07522a</guid></item></rss>';
+  assert.deepEqual(parseOfficialPublisherFeed(landing,sc).records.map(x=>x.doi),['10.1039/d6sc07522a']);
+  assert.equal(parseOfficialPublisherFeed(landing,gc).records.length,0);
 });
 
 test('do not select an ambiguous multi-DOI identity or silently drop XML access failures',async()=>{
