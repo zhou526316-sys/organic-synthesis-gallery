@@ -462,3 +462,58 @@ test('2026-Q3 ACS eight late-evening source-verified synthesis reviews stay DOI-
   ])assert.equal(root.accepted.some(x=>x.doi===doi),false,
     'online-first provenance disagreement must not be silently admitted');
 });
+
+test('five Chemical Science 2026-Q3 NLM electronic dates, original research and adversarial synthesis scope stay exact',()=>{
+  const expected=new Map([
+    ['10.1039/d6sc04876e',['2026-07-20','23ac5a9257123c4e7dabb2aba825d51241a02701','42499571','PMC13398419']],
+    ['10.1039/d6sc03931f',['2026-09-09','e65d5e91e6207110df14ce67755882749e965abe','42746267','PMC13575756']],
+    ['10.1039/d6sc04627d',['2026-07-16','23ac5a9257123c4e7dabb2aba825d51241a02701','42483152','PMC13387387']],
+    ['10.1039/d6sc04786f',['2026-08-14','224567f8d5dce6264260ce196db5bad6fe0da63b','42630940','PMC13494953']],
+    ['10.1039/d6sc04861g',['2026-08-17','5c83c1766a593fc8fd856e02a941e8f09340b319','42639426','PMC13501473']]
+  ]);
+  const titles=new Set(),transforms=new Set(),challenges=new Set();
+  for(const [doi,[date,blobSha,pmid,pmc]] of expected){
+    const x=root.accepted.find(r=>r.doi===doi);
+    assert.ok(x,'Q3 NLM-dated original not approved: '+doi);
+    assert.equal(x.journal,'Chemical Science');
+    assert.equal(x.date,date);
+    assert.equal(x.reviewEvidence.publisherOnlineDate,date);
+    assert.equal(x.reviewEvidence.stageBatchSha,blobSha);
+    assert.equal(x.reviewEvidence.firstOnlineDateEvidence.journalSuppliedDate,date);
+    assert.equal(x.reviewEvidence.firstOnlineDateEvidence.pubmedUrl,'https://pubmed.ncbi.nlm.nih.gov/'+pmid+'/');
+    assert.equal(x.reviewEvidence.firstOnlineDateEvidence.pmcUrl,'https://pmc.ncbi.nlm.nih.gov/articles/'+pmc+'/');
+    assert.equal(x.reviewEvidence.firstOnlineDateEvidence.recordCrossrefDate,'unverified_year_only');
+    assert.equal(x.reviewEvidence.firstOnlineDateEvidence.directPublisherFirstPublishedNotRead,true);
+    assert.match(x.reviewEvidence.firstOnlineDateEvidence.tier,/^NLM_journal_supplied_electronic_date/);
+    assert.deepEqual(x.reviewEvidence.crossrefOpenalexSources,['crossref'],'do not fabricate second provenance');
+    assert.equal(x.reviewPasses,2);
+    assert.deepEqual(x.independentPasses.map(r=>r.decision),['include','include']);
+    assert.ok(x.independentPasses.every(r=>r.reason.length>=85));
+    assert.ok(x.scopeAssessment.generalityEvidence.length>=65);
+    assert.ok(x.scopeAssessment.boundaryChallenge.length>=65);
+    assert.equal(x.mediaPolicy,'toc_only');
+    assert.equal(x.ingestionChannel,'historical_backfill');
+    assert.equal(x.addedDate,'');
+    assert.equal(x.new,false);
+    assert.equal(x.reviewEvidence.abstractCopied,false);
+    assert.equal(x.reviewEvidence.figureFetched,false);
+    assert.equal(x.reviewEvidence.pdfFetched,false);
+    assert.equal(x.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+    titles.add(x.titleZh);
+    transforms.add(x.scopeAssessment.preparativeTransformation);
+    challenges.add(x.independentPasses[1].reason);
+  }
+  assert.equal(titles.size,5,'separate real translation for all articles');
+  assert.equal(transforms.size,5,'not a generic synthetic scope template');
+  assert.equal(challenges.size,5,'distinct adversarial academic second pass');
+  const ang=root.accepted.find(x=>x.doi==='10.1039/d6sc04876e');
+  assert.match(ang.scopeAssessment.boundaryChallenge,/16/);
+  assert.match(ang.scopeAssessment.preparativeTransformation,/Ru/);
+  const adam=root.accepted.find(x=>x.doi==='10.1039/d6sc04786f');
+  assert.match(adam.scopeAssessment.boundaryChallenge,/砌块/);
+  assert.match(adam.scopeAssessment.preparativeTransformation,/LMCT/);
+  const carborane=root.accepted.find(x=>x.doi==='10.1039/d6sc04861g');
+  assert.match(carborane.scopeAssessment.boundaryChallenge,/器件/);
+  assert.match(carborane.scopeAssessment.generalityEvidence,/Zn/);
+  assert.equal(root.pending.length,2,'prior ACS date conflicts not automatically resolved');
+});

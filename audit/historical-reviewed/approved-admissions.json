@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-13T11:08:17.923Z",
+  "generatedAt": "2026-10-13T11:53:00.200Z",
   "nextEligiblePublicationSlot": "2026-10-14T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 62,
-    "include": 60,
+    "checked": 67,
+    "include": 65,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -4113,6 +4113,403 @@
         }
       ],
       "reviewRationaleSecondPass": "独立反查含硫试剂对镍的毒化研究是否只是保护金属表面的材料论文：真实体系通过多个烯基溴化物形成C–S键并获得硫中心手性产物，独立满足合成方法学。"
+    },
+    {
+      "doi": "10.1039/d6sc04876e",
+      "journal": "Chemical Science",
+      "title": "Stereodivergent total synthesis of C5/C6-oxygenated angucyclines: stereochemical reassignment and antitumor activities",
+      "titleZh": "C5/C6含氧Angucycline天然产物的立体分歧式全合成及Himalaquinone G构型修订",
+      "date": "2026-07-20",
+      "authors": [
+        "Yuting Cheng",
+        "Zihao Dai",
+        "Peng Xu",
+        "Yingjie Wang",
+        "Biao Yu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "35",
+        "pages": "16974-16980",
+        "articleNumber": "",
+        "doi": "10.1039/d6sc04876e"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "研究核心是以统一碳骨架实现多种C5/C6二醇立体异构体的真正天然产物全合成，合成PD-116740、TAN-1085和himalaquinone G及其同系物合计16个立体明确的Angucycline，并通过合成与光谱对照将himalaquinone G由原指派的cis-(5R,6S)修订为trans-(5R,6R)，不是只评价抗癌生物活性。",
+      "evidenceBasis": "NLM PubMed journal-supplied electronic publication record for exact DOI 10.1039/d6sc04876e gives 2026-07-20 (PMID 42499571, status epublish); PMC open archive PMC13398419 preserves original Royal Society of Chemistry Chemical Science research, accessed through article body or indexed original text. The 2026 Crossref archival source batch 2026-07-15_2026-07-21_chemical-science (GitHub immutable blob SHA 23ac5a9257123c4e7dabb2aba825d51241a02701, source family crossref only) holds year-only/unknown date, so it must NOT be used as independent day-level proof; issue compilation date also must not replace electronic publication. RSC official landing requests are bot-blocked or inaccessible, so publisher-direct article date verification is explicitly not asserted. Chemistry evidence: PMC保存的RSC原始Article含Scheme 1–4的完整合成路线、共16种立体明确产物，以及天然产物和非天然立体异构体的结构修订/总合成；正文明确报道20 g规模前段[2+2]三环中间体、后续全合成PD-116740 11步最长线性8%总收率、TAN-1085 13步最长线性2%总收率。这些数据只对应相应路线而非全体16个产物。",
+      "challengeReason": "独立对抗审核发现：早期Davis氧化存在批次ee波动，作者改用Ru-ATH作催化剂控制的二醇构型调节，不可断言是动态动力学拆分（原文指出不是DKR）。完整全合成与结构修订均有主文路线证据，故纳入；IC50只属于个别分子而非16种普适结论。",
+      "scopeAssessment": {
+        "primaryContribution": "研究核心是以统一碳骨架实现多种C5/C6二醇立体异构体的真正天然产物全合成，合成PD-116740、TAN-1085和himalaquinone G及其同系物合计16个立体明确的Angucycline，并通过合成与光谱对照将himalaquinone G由原指派的cis-(5R,6S)修订为trans-(5R,6R)，不是只评价抗癌生物活性。",
+        "preparativeTransformation": "路线先通过炔-联烯酮分子内[2+2]环加成形成6/6/4稠环骨架，再用酸催化水合与retro-Friedel–Crafts开环构建Angucycline核心；利用Davis氧化和Ru催化Noyori不对称转移氢化可控获得全部四种C5/C6二醇构型，后期氧化芳酚偶联封闭B环及糖基化等步骤完成目标天然产物。",
+        "generalityEvidence": "PMC保存的RSC原始Article含Scheme 1–4的完整合成路线、共16种立体明确产物，以及天然产物和非天然立体异构体的结构修订/总合成；正文明确报道20 g规模前段[2+2]三环中间体、后续全合成PD-116740 11步最长线性8%总收率、TAN-1085 13步最长线性2%总收率。这些数据只对应相应路线而非全体16个产物。",
+        "sourceEvidence": "NLM PubMed journal-supplied electronic publication record for exact DOI 10.1039/d6sc04876e gives 2026-07-20 (PMID 42499571, status epublish); PMC open archive PMC13398419 preserves original Royal Society of Chemistry Chemical Science research, accessed through article body or indexed original text. The 2026 Crossref archival source batch 2026-07-15_2026-07-21_chemical-science (GitHub immutable blob SHA 23ac5a9257123c4e7dabb2aba825d51241a02701, source family crossref only) holds year-only/unknown date, so it must NOT be used as independent day-level proof; issue compilation date also must not replace electronic publication. RSC official landing requests are bot-blocked or inaccessible, so publisher-direct article date verification is explicitly not asserted. Chemistry evidence: PMC保存的RSC原始Article含Scheme 1–4的完整合成路线、共16种立体明确产物，以及天然产物和非天然立体异构体的结构修订/总合成；正文明确报道20 g规模前段[2+2]三环中间体、后续全合成PD-116740 11步最长线性8%总收率、TAN-1085 13步最长线性2%总收率。这些数据只对应相应路线而非全体16个产物。",
+        "boundaryChallenge": "反向挑战是否把16个筛选产物全部称为16种天然产物：真实自然产物是数个目标，16指构型明确的Angucycline及其同系物集合。生物活性是合成应用，不应作为范围证据；主要依据已完成的目标路线及立体分歧制备。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/sc/article/doi/10.1039/d6sc04876e",
+        "publisherLandingUrl": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc04876e",
+        "publisherOnlineDate": "2026-07-20",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_chemical-science",
+        "stageBatchSha": "23ac5a9257123c4e7dabb2aba825d51241a02701",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "bot_blocked_or_inaccessible",
+        "firstOnlineDateEvidence": {
+          "tier": "NLM_journal_supplied_electronic_date_crosschecked_with_RSC_original_in_PMC",
+          "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/42499571/",
+          "pmcUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13398419/",
+          "pubmedPublicationStatus": "epublish",
+          "journalSuppliedDate": "2026-07-20",
+          "directPublisherFirstPublishedNotRead": true,
+          "recordCrossrefDate": "unverified_year_only"
+        }
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "研究核心是以统一碳骨架实现多种C5/C6二醇立体异构体的真正天然产物全合成，合成PD-116740、TAN-1085和himalaquinone G及其同系物合计16个立体明确的Angucycline，并通过合成与光谱对照将himalaquinone G由原指派的cis-(5R,6S)修订为trans-(5R,6R)，不是只评价抗癌生物活性。 路线先通过炔-联烯酮分子内[2+2]环加成形成6/6/4稠环骨架，再用酸催化水合与retro-Friedel–Crafts开环构建Angucycline核心；利用Davis氧化和Ru催化Noyori不对称转移氢化可控获得全部四种C5/C6二醇构型，后期氧化芳酚偶联封闭B环及糖基化等步骤完成目标天然产物。 PMC保存的RSC原始Article含Scheme 1–4的完整合成路线、共16种立体明确产物，以及天然产物和非天然立体异构体的结构修订/总合成；正文明确报道20 g规模前段[2+2]三环中间体、后续全合成PD-116740 11步最长线性8%总收率、TAN-1085 13步最长线性2%总收率。这些数据只对应相应路线而非全体16个产物。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立对抗审核发现：早期Davis氧化存在批次ee波动，作者改用Ru-ATH作催化剂控制的二醇构型调节，不可断言是动态动力学拆分（原文指出不是DKR）。完整全合成与结构修订均有主文路线证据，故纳入；IC50只属于个别分子而非16种普适结论。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反向挑战是否把16个筛选产物全部称为16种天然产物：真实自然产物是数个目标，16指构型明确的Angucycline及其同系物集合。生物活性是合成应用，不应作为范围证据；主要依据已完成的目标路线及立体分歧制备。"
+    },
+    {
+      "doi": "10.1039/d6sc03931f",
+      "journal": "Chemical Science",
+      "title": "Remote desymmetrization of tetraoxacalix[2]arene[2]triazines enables the asymmetric synthesis of inherently chiral heteracalix[4]aromatics",
+      "titleZh": "手性磷酸催化四氧杂杯芳烃远程去对称化构建固有手性杂杯[4]芳烃",
+      "date": "2026-09-09",
+      "authors": [
+        "Zhanpeng Lin",
+        "Xinjie Wu",
+        "Xinyi Li",
+        "Yuanxing Kuang",
+        "Zhen Huang",
+        "Guofeng Li",
+        "Ming Zhang",
+        "Liang Hong"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1039/d6sc03931f"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以手性磷酸催化柔性tetraoxacalix[2]arene[2]triazine宏环的远程去对称化，获得固有手性杂杯[4]芳烃，是具有实际底物-产物及对映控制证据的新型非环化不对称合成方法。",
+      "evidenceBasis": "NLM PubMed journal-supplied electronic publication record for exact DOI 10.1039/d6sc03931f gives 2026-09-09 (PMID 42746267, status aheadofprint); PMC open archive PMC13575756 preserves original Royal Society of Chemistry Chemical Science research, accessed through article body or indexed original text. The 2026 Crossref archival source batch 2026-09-08_2026-09-14_chemical-science (GitHub immutable blob SHA e65d5e91e6207110df14ce67755882749e965abe, source family crossref only) holds year-only/unknown date, so it must NOT be used as independent day-level proof; issue compilation date also must not replace electronic publication. RSC official landing requests are bot-blocked or inaccessible, so publisher-direct article date verification is explicitly not asserted. Chemistry evidence: NLM PubMed的作者摘要确认多种固有手性杂杯芳烃底物、较好分离收率、ee最高99%，还可构建二取代产物与后期衍生。应当把首次胺化形成N–H识别位点与第二次CPA控制的拆分区分开，不将最高ee当作所有宏环的选择性。",
+      "challengeReason": "对抗审核关注其是否等同于柔性宏环整体直接对映选择性环化：真实是已有宏环上的分步亲核芳香取代、单胺化后CPA催化动力学拆分。不能声称全部产物来自单步去对称化或已直接证实氢键的唯一过渡态结构；明确有限机理证据后仍可纳入。",
+      "scopeAssessment": {
+        "primaryContribution": "以手性磷酸催化柔性tetraoxacalix[2]arene[2]triazine宏环的远程去对称化，获得固有手性杂杯[4]芳烃，是具有实际底物-产物及对映控制证据的新型非环化不对称合成方法。",
+        "preparativeTransformation": "多氧杂杯芳烃三嗪宏环先经SNAr胺化引入具有N–H的苯胺控制手柄；随后的CPA催化第二次SNAr胺化通过远程氢键识别及构象抑制实现不对称位点分化与动力学拆分，构建具有固有手性的heteracalix[4]aromatic产物。",
+        "generalityEvidence": "NLM PubMed的作者摘要确认多种固有手性杂杯芳烃底物、较好分离收率、ee最高99%，还可构建二取代产物与后期衍生。应当把首次胺化形成N–H识别位点与第二次CPA控制的拆分区分开，不将最高ee当作所有宏环的选择性。",
+        "sourceEvidence": "NLM PubMed journal-supplied electronic publication record for exact DOI 10.1039/d6sc03931f gives 2026-09-09 (PMID 42746267, status aheadofprint); PMC open archive PMC13575756 preserves original Royal Society of Chemistry Chemical Science research, accessed through article body or indexed original text. The 2026 Crossref archival source batch 2026-09-08_2026-09-14_chemical-science (GitHub immutable blob SHA e65d5e91e6207110df14ce67755882749e965abe, source family crossref only) holds year-only/unknown date, so it must NOT be used as independent day-level proof; issue compilation date also must not replace electronic publication. RSC official landing requests are bot-blocked or inaccessible, so publisher-direct article date verification is explicitly not asserted. Chemistry evidence: NLM PubMed的作者摘要确认多种固有手性杂杯芳烃底物、较好分离收率、ee最高99%，还可构建二取代产物与后期衍生。应当把首次胺化形成N–H识别位点与第二次CPA控制的拆分区分开，不将最高ee当作所有宏环的选择性。",
+        "boundaryChallenge": "反查该工作是否只是分子识别和结晶手性表征而无合成新转化：原文中心在CPA催化SNAr胺化及远程不对称去对称化，新C–N键、构型控制和多种产物均有实验证据，符合有机合成。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/sc/article/doi/10.1039/d6sc03931f",
+        "publisherLandingUrl": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc03931f",
+        "publisherOnlineDate": "2026-09-09",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_chemical-science",
+        "stageBatchSha": "e65d5e91e6207110df14ce67755882749e965abe",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "bot_blocked_or_inaccessible",
+        "firstOnlineDateEvidence": {
+          "tier": "NLM_journal_supplied_electronic_date_crosschecked_with_RSC_original_in_PMC",
+          "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/42746267/",
+          "pmcUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13575756/",
+          "pubmedPublicationStatus": "aheadofprint",
+          "journalSuppliedDate": "2026-09-09",
+          "directPublisherFirstPublishedNotRead": true,
+          "recordCrossrefDate": "unverified_year_only"
+        }
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "以手性磷酸催化柔性tetraoxacalix[2]arene[2]triazine宏环的远程去对称化，获得固有手性杂杯[4]芳烃，是具有实际底物-产物及对映控制证据的新型非环化不对称合成方法。 多氧杂杯芳烃三嗪宏环先经SNAr胺化引入具有N–H的苯胺控制手柄；随后的CPA催化第二次SNAr胺化通过远程氢键识别及构象抑制实现不对称位点分化与动力学拆分，构建具有固有手性的heteracalix[4]aromatic产物。 NLM PubMed的作者摘要确认多种固有手性杂杯芳烃底物、较好分离收率、ee最高99%，还可构建二取代产物与后期衍生。应当把首次胺化形成N–H识别位点与第二次CPA控制的拆分区分开，不将最高ee当作所有宏环的选择性。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "对抗审核关注其是否等同于柔性宏环整体直接对映选择性环化：真实是已有宏环上的分步亲核芳香取代、单胺化后CPA催化动力学拆分。不能声称全部产物来自单步去对称化或已直接证实氢键的唯一过渡态结构；明确有限机理证据后仍可纳入。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反查该工作是否只是分子识别和结晶手性表征而无合成新转化：原文中心在CPA催化SNAr胺化及远程不对称去对称化，新C–N键、构型控制和多种产物均有实验证据，符合有机合成。"
+    },
+    {
+      "doi": "10.1039/d6sc04627d",
+      "journal": "Chemical Science",
+      "title": "Chiral 3-acyl-2-pyrrolines as strategic hubs toward polycyclic pyrrolidines via enantioselective silver-catalyzed Michael addition–cyclization",
+      "titleZh": "银催化异氰基乙酸酯与非活化烷基烯酮不对称Michael加成-环化构筑多环吡咯烷前体",
+      "date": "2026-07-16",
+      "authors": [
+        "Satoshi Sakai",
+        "Kakeru Maeda",
+        "Yohei Shimizu",
+        "Masaya Sawamura"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "35",
+        "pages": "16892-16898",
+        "articleNumber": "",
+        "doi": "10.1039/d6sc04627d"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展手性脯氨醇-膦-仲胺配体控制Ag催化异氰基乙酸酯对非活化β-取代烷基烯酮的不对称Michael加成-环化，制备相邻立体中心且含拥挤季碳位点的3-酰基-2-吡咯啉，进而将其作为不同多环吡咯烷路线的共同合成枢纽。",
+      "evidenceBasis": "NLM PubMed journal-supplied electronic publication record for exact DOI 10.1039/d6sc04627d gives 2026-07-16 (PMID 42483152, status epublish); PMC open archive PMC13387387 preserves original Royal Society of Chemistry Chemical Science research, accessed through article body or indexed original text. The 2026 Crossref archival source batch 2026-07-15_2026-07-21_chemical-science (GitHub immutable blob SHA 23ac5a9257123c4e7dabb2aba825d51241a02701, source family crossref only) holds year-only/unknown date, so it must NOT be used as independent day-level proof; issue compilation date also must not replace electronic publication. RSC official landing requests are bot-blocked or inaccessible, so publisher-direct article date verification is explicitly not asserted. Chemistry evidence: RSC原文及NLM摘要明确指出可用非活化β-烷基烯酮，而非仅有易活化查耳酮；不同E/Z烯酮可导向同一主要构型，显示立体汇聚，成对相邻手性中心包括四取代碳中心，并有分子内外Diels–Alder具体衍生应用。",
+      "challengeReason": "反向审核要区分银催化生成3-酰基吡咯啉和后续Diels–Alder合成多环吡咯烷，后者不应一概称为银催化；同时E/Z汇聚只对已测试烯酮成立。已有分离产物与衍生化证明真正方法学，纳入。",
+      "scopeAssessment": {
+        "primaryContribution": "发展手性脯氨醇-膦-仲胺配体控制Ag催化异氰基乙酸酯对非活化β-取代烷基烯酮的不对称Michael加成-环化，制备相邻立体中心且含拥挤季碳位点的3-酰基-2-吡咯啉，进而将其作为不同多环吡咯烷路线的共同合成枢纽。",
+        "preparativeTransformation": "α-取代异氰基乙酸酯与β-取代脂肪烯酮经银配合物促进的碳碳Michael加成、随后分子内环化形成手性3-acyl-2-pyrroline；所得含活化双键的手性吡咯啉继续与多种双烯参与分子间或分子内Diels–Alder反应，建立多环吡咯烷骨架。",
+        "generalityEvidence": "RSC原文及NLM摘要明确指出可用非活化β-烷基烯酮，而非仅有易活化查耳酮；不同E/Z烯酮可导向同一主要构型，显示立体汇聚，成对相邻手性中心包括四取代碳中心，并有分子内外Diels–Alder具体衍生应用。",
+        "sourceEvidence": "NLM PubMed journal-supplied electronic publication record for exact DOI 10.1039/d6sc04627d gives 2026-07-16 (PMID 42483152, status epublish); PMC open archive PMC13387387 preserves original Royal Society of Chemistry Chemical Science research, accessed through article body or indexed original text. The 2026 Crossref archival source batch 2026-07-15_2026-07-21_chemical-science (GitHub immutable blob SHA 23ac5a9257123c4e7dabb2aba825d51241a02701, source family crossref only) holds year-only/unknown date, so it must NOT be used as independent day-level proof; issue compilation date also must not replace electronic publication. RSC official landing requests are bot-blocked or inaccessible, so publisher-direct article date verification is explicitly not asserted. Chemistry evidence: RSC原文及NLM摘要明确指出可用非活化β-烷基烯酮，而非仅有易活化查耳酮；不同E/Z烯酮可导向同一主要构型，显示立体汇聚，成对相邻手性中心包括四取代碳中心，并有分子内外Diels–Alder具体衍生应用。",
+        "boundaryChallenge": "第二遍质疑作者是否只提出药物类似物多样性构想并未制备多环产物：原文给出环化产物以及后续Diels–Alder实际转化，是明确有机制备策略；药物活性评估属于未来工作，不能当作已完成。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/sc/article/doi/10.1039/d6sc04627d",
+        "publisherLandingUrl": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc04627d",
+        "publisherOnlineDate": "2026-07-16",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_chemical-science",
+        "stageBatchSha": "23ac5a9257123c4e7dabb2aba825d51241a02701",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "bot_blocked_or_inaccessible",
+        "firstOnlineDateEvidence": {
+          "tier": "NLM_journal_supplied_electronic_date_crosschecked_with_RSC_original_in_PMC",
+          "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/42483152/",
+          "pmcUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13387387/",
+          "pubmedPublicationStatus": "epublish",
+          "journalSuppliedDate": "2026-07-16",
+          "directPublisherFirstPublishedNotRead": true,
+          "recordCrossrefDate": "unverified_year_only"
+        }
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "发展手性脯氨醇-膦-仲胺配体控制Ag催化异氰基乙酸酯对非活化β-取代烷基烯酮的不对称Michael加成-环化，制备相邻立体中心且含拥挤季碳位点的3-酰基-2-吡咯啉，进而将其作为不同多环吡咯烷路线的共同合成枢纽。 α-取代异氰基乙酸酯与β-取代脂肪烯酮经银配合物促进的碳碳Michael加成、随后分子内环化形成手性3-acyl-2-pyrroline；所得含活化双键的手性吡咯啉继续与多种双烯参与分子间或分子内Diels–Alder反应，建立多环吡咯烷骨架。 RSC原文及NLM摘要明确指出可用非活化β-烷基烯酮，而非仅有易活化查耳酮；不同E/Z烯酮可导向同一主要构型，显示立体汇聚，成对相邻手性中心包括四取代碳中心，并有分子内外Diels–Alder具体衍生应用。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "反向审核要区分银催化生成3-酰基吡咯啉和后续Diels–Alder合成多环吡咯烷，后者不应一概称为银催化；同时E/Z汇聚只对已测试烯酮成立。已有分离产物与衍生化证明真正方法学，纳入。"
+        }
+      ],
+      "reviewRationaleSecondPass": "第二遍质疑作者是否只提出药物类似物多样性构想并未制备多环产物：原文给出环化产物以及后续Diels–Alder实际转化，是明确有机制备策略；药物活性评估属于未来工作，不能当作已完成。"
+    },
+    {
+      "doi": "10.1039/d6sc04786f",
+      "journal": "Chemical Science",
+      "title": "Decarboxylative functionalization strategy for rapid assembly of bifunctional adamantane meta -arene bioisosteres",
+      "titleZh": "金刚烷二羧酸脱羧官能团化模块化构建1,3-双取代间位芳烃生物电子等排体",
+      "date": "2026-08-14",
+      "authors": [
+        "Cade A. MacAllister",
+        "Omar A. Solis",
+        "Alexander J. Reif",
+        "Nicole C. Goodwin",
+        "Tehshik P. Yoon"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1039/d6sc04786f"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用可商业获得的1,3-金刚烷二羧酸，建立有机合成砌块模块化路线，通过两羧基或单酯/单酸正交控制导入C–N、C–O、C–C取代基，实现空间定位类似间位二取代苯的双官能团化饱和笼状骨架；主要结果是能够实际获得一系列含不同取代位点的金刚烷砌块。",
+      "evidenceBasis": "NLM PubMed journal-supplied electronic publication record for exact DOI 10.1039/d6sc04786f gives 2026-08-14 (PMID 42630940, status PMC_online_ahead_of_print); PMC open archive PMC13494953 preserves original Royal Society of Chemistry Chemical Science research, accessed through article body or indexed original text. The 2026 Crossref archival source batch 2026-08-08_2026-08-14_chemical-science (GitHub immutable blob SHA 224567f8d5dce6264260ce196db5bad6fe0da63b, source family crossref only) holds year-only/unknown date, so it must NOT be used as independent day-level proof; issue compilation date also must not replace electronic publication. RSC official landing requests are bot-blocked or inaccessible, so publisher-direct article date verification is explicitly not asserted. Chemistry evidence: PMC保存的RSC原始全文给出多个正交官能团组合，几类C–N、C–O、C–C键形成与药物相关衍生化实例。RSC说明LMCT氧化性脱羧需相应金属盐和光照；并非全部无金属或全部催化量，也非原创发明每一种单独Giese/Minisci反应。",
+      "challengeReason": "对抗性审核同时指出：该文不是宣称发明Cu/Fe-LMCT本身，也不能将单独药物性质优势视为合成入库依据；只有二羧酸骨架、顺序脱羧和多种实际制备产物支持纳入。对每个衍生反应不同的催化和试剂条件分别理解，不伪造一个通用标准条件。",
+      "scopeAssessment": {
+        "primaryContribution": "利用可商业获得的1,3-金刚烷二羧酸，建立有机合成砌块模块化路线，通过两羧基或单酯/单酸正交控制导入C–N、C–O、C–C取代基，实现空间定位类似间位二取代苯的双官能团化饱和笼状骨架；主要结果是能够实际获得一系列含不同取代位点的金刚烷砌块。",
+        "preparativeTransformation": "由1,3-金刚烷二羧酸转为单酯单酸前体；Cu(II)/Fe(III)与羧酸盐经LMCT生成脱羧碳自由基，与磺酰胺、水/醇等亲核伙伴氧化偶联形成C–N/C–O键，再组合Giese和Minisci及传统酰胺/酯化或后续脱羧步骤形成C–C键、不同二取代金刚烷。并非宣称所有这些反应都是同一个新LMCT机理。",
+        "generalityEvidence": "PMC保存的RSC原始全文给出多个正交官能团组合，几类C–N、C–O、C–C键形成与药物相关衍生化实例。RSC说明LMCT氧化性脱羧需相应金属盐和光照；并非全部无金属或全部催化量，也非原创发明每一种单独Giese/Minisci反应。",
+        "sourceEvidence": "NLM PubMed journal-supplied electronic publication record for exact DOI 10.1039/d6sc04786f gives 2026-08-14 (PMID 42630940, status PMC_online_ahead_of_print); PMC open archive PMC13494953 preserves original Royal Society of Chemistry Chemical Science research, accessed through article body or indexed original text. The 2026 Crossref archival source batch 2026-08-08_2026-08-14_chemical-science (GitHub immutable blob SHA 224567f8d5dce6264260ce196db5bad6fe0da63b, source family crossref only) holds year-only/unknown date, so it must NOT be used as independent day-level proof; issue compilation date also must not replace electronic publication. RSC official landing requests are bot-blocked or inaccessible, so publisher-direct article date verification is explicitly not asserted. Chemistry evidence: PMC保存的RSC原始全文给出多个正交官能团组合，几类C–N、C–O、C–C键形成与药物相关衍生化实例。RSC说明LMCT氧化性脱羧需相应金属盐和光照；并非全部无金属或全部催化量，也非原创发明每一种单独Giese/Minisci反应。",
+        "boundaryChallenge": "严格挑战它是否只是用既有脱羧方法单例展示金刚烷性质、主创新停留药代评估：论文系统设计廉价1,3-二羧酸→单酯/单酸→正交双官能团化路线并实际制得多类C–N/C–O/C–C双取代实体，具有独立可推广砌块制备价值，符合用户认可的通用合成路线/Building blocks条款。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/sc/article/doi/10.1039/d6sc04786f",
+        "publisherLandingUrl": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc04786f",
+        "publisherOnlineDate": "2026-08-14",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-08_2026-08-14_chemical-science",
+        "stageBatchSha": "224567f8d5dce6264260ce196db5bad6fe0da63b",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "bot_blocked_or_inaccessible",
+        "firstOnlineDateEvidence": {
+          "tier": "NLM_journal_supplied_electronic_date_crosschecked_with_RSC_original_in_PMC",
+          "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/42630940/",
+          "pmcUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13494953/",
+          "pubmedPublicationStatus": "PMC_online_ahead_of_print",
+          "journalSuppliedDate": "2026-08-14",
+          "directPublisherFirstPublishedNotRead": true,
+          "recordCrossrefDate": "unverified_year_only"
+        }
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "利用可商业获得的1,3-金刚烷二羧酸，建立有机合成砌块模块化路线，通过两羧基或单酯/单酸正交控制导入C–N、C–O、C–C取代基，实现空间定位类似间位二取代苯的双官能团化饱和笼状骨架；主要结果是能够实际获得一系列含不同取代位点的金刚烷砌块。 由1,3-金刚烷二羧酸转为单酯单酸前体；Cu(II)/Fe(III)与羧酸盐经LMCT生成脱羧碳自由基，与磺酰胺、水/醇等亲核伙伴氧化偶联形成C–N/C–O键，再组合Giese和Minisci及传统酰胺/酯化或后续脱羧步骤形成C–C键、不同二取代金刚烷。并非宣称所有这些反应都是同一个新LMCT机理。 PMC保存的RSC原始全文给出多个正交官能团组合，几类C–N、C–O、C–C键形成与药物相关衍生化实例。RSC说明LMCT氧化性脱羧需相应金属盐和光照；并非全部无金属或全部催化量，也非原创发明每一种单独Giese/Minisci反应。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "对抗性审核同时指出：该文不是宣称发明Cu/Fe-LMCT本身，也不能将单独药物性质优势视为合成入库依据；只有二羧酸骨架、顺序脱羧和多种实际制备产物支持纳入。对每个衍生反应不同的催化和试剂条件分别理解，不伪造一个通用标准条件。"
+        }
+      ],
+      "reviewRationaleSecondPass": "严格挑战它是否只是用既有脱羧方法单例展示金刚烷性质、主创新停留药代评估：论文系统设计廉价1,3-二羧酸→单酯/单酸→正交双官能团化路线并实际制得多类C–N/C–O/C–C双取代实体，具有独立可推广砌块制备价值，符合用户认可的通用合成路线/Building blocks条款。"
+    },
+    {
+      "doi": "10.1039/d6sc04861g",
+      "journal": "Chemical Science",
+      "title": "Visible-light-promoted nickel-catalyzed cross-coupling of B-iodocarboranes with styrenes",
+      "titleZh": "可见光促进镍催化B-碘代碳硼烷与苯乙烯区域分歧交叉偶联",
+      "date": "2026-08-17",
+      "authors": [
+        "Xueyu Wang",
+        "Hangcheng Ni",
+        "Zhipeng Wang",
+        "Xinyao Li",
+        "Shimeng Li"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1039/d6sc04861g"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "建立B-碘代o-/m-碳硼烷在可见光/镍催化下与苯乙烯、乙烯等直接发生C–B(硼簇端)烯基化偶联的合成方法，解决碳硼烷B位区域可控修饰及双烯基化问题。这里的产物是有机取代碳硼烷砌块，而不是单纯的催化剂或电极材料。",
+      "evidenceBasis": "NLM PubMed journal-supplied electronic publication record for exact DOI 10.1039/d6sc04861g gives 2026-08-17 (PMID 42639426, status aheadofprint); PMC open archive PMC13501473 preserves original Royal Society of Chemistry Chemical Science research, accessed through article body or indexed original text. The 2026 Crossref archival source batch 2026-08-15_2026-08-21_chemical-science (GitHub immutable blob SHA 5c83c1766a593fc8fd856e02a941e8f09340b319, source family crossref only) holds year-only/unknown date, so it must NOT be used as independent day-level proof; issue compilation date also must not replace electronic publication. RSC official landing requests are bot-blocked or inaccessible, so publisher-direct article date verification is explicitly not asserted. Chemistry evidence: PMC原文有不同给/吸电子取代苯乙烯、2-乙烯噻吩、简单乙烯和多种碳硼烷位点的实际产物，连同9,12-双烯基化例子；自由基捕获及钟实验与DFT支持B中心自由基途径。原文以Zn作为还原剂，因此不能错称为不依赖任何牺牲还原剂的photoredox。",
+      "challengeReason": "二遍挑战不能把碳硼烷B–I键活化写成普通芳基碘的C–I交叉偶联，也不能误说经常规经典Pd-Heck反应：原文提出Ni/光活化B–I并通过碳硼烷自由基加成/氧化/去质子化的Heck型过程，精确机理仍属提出模型，实际B位底物/苯乙烯范围是真实收录依据。",
+      "scopeAssessment": {
+        "primaryContribution": "建立B-碘代o-/m-碳硼烷在可见光/镍催化下与苯乙烯、乙烯等直接发生C–B(硼簇端)烯基化偶联的合成方法，解决碳硼烷B位区域可控修饰及双烯基化问题。这里的产物是有机取代碳硼烷砌块，而不是单纯的催化剂或电极材料。",
+        "preparativeTransformation": "9-碘代o-碳硼烷等B–I位点经蓝光激发Ni体系活化形成碳硼烷基自由基，向苯乙烯C=C加成后经氧化/去质子化得到烯基取代B-碳硼烷；作者也测试不同B3/B4/B9位置、9,12-双碘碳硼烷及m-碳硼烷。",
+        "generalityEvidence": "PMC原文有不同给/吸电子取代苯乙烯、2-乙烯噻吩、简单乙烯和多种碳硼烷位点的实际产物，连同9,12-双烯基化例子；自由基捕获及钟实验与DFT支持B中心自由基途径。原文以Zn作为还原剂，因此不能错称为不依赖任何牺牲还原剂的photoredox。",
+        "sourceEvidence": "NLM PubMed journal-supplied electronic publication record for exact DOI 10.1039/d6sc04861g gives 2026-08-17 (PMID 42639426, status aheadofprint); PMC open archive PMC13501473 preserves original Royal Society of Chemistry Chemical Science research, accessed through article body or indexed original text. The 2026 Crossref archival source batch 2026-08-15_2026-08-21_chemical-science (GitHub immutable blob SHA 5c83c1766a593fc8fd856e02a941e8f09340b319, source family crossref only) holds year-only/unknown date, so it must NOT be used as independent day-level proof; issue compilation date also must not replace electronic publication. RSC official landing requests are bot-blocked or inaccessible, so publisher-direct article date verification is explicitly not asserted. Chemistry evidence: PMC原文有不同给/吸电子取代苯乙烯、2-乙烯噻吩、简单乙烯和多种碳硼烷位点的实际产物，连同9,12-双烯基化例子；自由基捕获及钟实验与DFT支持B中心自由基途径。原文以Zn作为还原剂，因此不能错称为不依赖任何牺牲还原剂的photoredox。",
+        "boundaryChallenge": "检验是否只是硼簇材料衍生化和物性测试：论文有多类苯乙烯及碳硼烷立体位点制备和可分离多种烯基官能团化产物，主要是有机硼簇合成方法，不依赖器件性质为创新。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/sc/article/doi/10.1039/d6sc04861g",
+        "publisherLandingUrl": "https://pubs.rsc.org/en/content/articlelanding/2026/sc/d6sc04861g",
+        "publisherOnlineDate": "2026-08-17",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-15_2026-08-21_chemical-science",
+        "stageBatchSha": "5c83c1766a593fc8fd856e02a941e8f09340b319",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "bot_blocked_or_inaccessible",
+        "firstOnlineDateEvidence": {
+          "tier": "NLM_journal_supplied_electronic_date_crosschecked_with_RSC_original_in_PMC",
+          "pubmedUrl": "https://pubmed.ncbi.nlm.nih.gov/42639426/",
+          "pmcUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13501473/",
+          "pubmedPublicationStatus": "aheadofprint",
+          "journalSuppliedDate": "2026-08-17",
+          "directPublisherFirstPublishedNotRead": true,
+          "recordCrossrefDate": "unverified_year_only"
+        }
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "建立B-碘代o-/m-碳硼烷在可见光/镍催化下与苯乙烯、乙烯等直接发生C–B(硼簇端)烯基化偶联的合成方法，解决碳硼烷B位区域可控修饰及双烯基化问题。这里的产物是有机取代碳硼烷砌块，而不是单纯的催化剂或电极材料。 9-碘代o-碳硼烷等B–I位点经蓝光激发Ni体系活化形成碳硼烷基自由基，向苯乙烯C=C加成后经氧化/去质子化得到烯基取代B-碳硼烷；作者也测试不同B3/B4/B9位置、9,12-双碘碳硼烷及m-碳硼烷。 PMC原文有不同给/吸电子取代苯乙烯、2-乙烯噻吩、简单乙烯和多种碳硼烷位点的实际产物，连同9,12-双烯基化例子；自由基捕获及钟实验与DFT支持B中心自由基途径。原文以Zn作为还原剂，因此不能错称为不依赖任何牺牲还原剂的photoredox。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "二遍挑战不能把碳硼烷B–I键活化写成普通芳基碘的C–I交叉偶联，也不能误说经常规经典Pd-Heck反应：原文提出Ni/光活化B–I并通过碳硼烷自由基加成/氧化/去质子化的Heck型过程，精确机理仍属提出模型，实际B位底物/苯乙烯范围是真实收录依据。"
+        }
+      ],
+      "reviewRationaleSecondPass": "检验是否只是硼簇材料衍生化和物性测试：论文有多类苯乙烯及碳硼烷立体位点制备和可分离多种烯基官能团化产物，主要是有机硼簇合成方法，不依赖器件性质为创新。"
     }
   ],
   "pending": [
@@ -4155,5 +4552,5 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "2026-10-13 late-evening Q3 eight ACS original methods approved after publisher Published Online indexed article evidence and independently challenged two-pass chemistry review. 60 accepted, 2 old date pending unchanged; 8 previously formally historical, 52 awaiting sole 08:00 writer. 10.1021/acs.orglett.6c03028 one-day discrepancy remains unapproved. Q3 toc_only, old pre-July metadata_only, zero production D1/media/offslot publication."
+  "note": "2026-10-13 Q3-first Chemical Science NLM epublish rescue: 5 additional DOI-specific original research double-pass academic approvals, RSC official publisher pages blocked, original article text/metadata corroborated via NLM PMID/PMC. Include 65, existing 2 date disputes pending; 8 previously formal historical, 57 total awaiting next original Beijing 08:00 writer; protected DOI data unchanged. Raw Crossref source-year uncertainty preserved, Q3 toc_only, pre-July metadata_only, no D1 or early media."
 }
