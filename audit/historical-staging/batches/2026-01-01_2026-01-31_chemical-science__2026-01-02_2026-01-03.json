@@ -1,0 +1,432 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_segment_evidence",
+  "parentBatchId": "2026-01-01_2026-01-31_chemical-science",
+  "journal": "Chemical Science",
+  "issns": [
+    "2041-6520",
+    "2041-6539"
+  ],
+  "range": {
+    "from": "2026-01-02",
+    "to": "2026-01-03"
+  },
+  "checkedAt": "2026-10-13T01:39:17.444Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2041-6520",
+        "lane": "created",
+        "total": 8,
+        "count": 8,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "2041-6539",
+        "lane": "created",
+        "total": 8,
+        "count": 8,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 0,
+      "count": 0,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 8,
+      "openalex": 0
+    }
+  },
+  "candidateCount": 8,
+  "alreadyPublished": 0,
+  "unreviewed": 8,
+  "records": [
+    {
+      "doi": "10.1039/d5sc06402c",
+      "title": "Latent thermodynamic flows: unified representation learning and generative modeling of temperature-dependent behaviors from limited data",
+      "authors": [
+        "Yunrui Qiu",
+        "Richard John",
+        "Lukas Herron",
+        "Pratyush Tiwary"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Chemical Science",
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "7",
+        "pages": "3743-3757",
+        "articleNumber": "",
+        "doi": "10.1039/d5sc06402c"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5sc06402c",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5sc07223a",
+      "title": "Controlled intra- and extracellular localization of bioorthogonal polymeric nanozymes",
+      "authors": [
+        "Cristina-Maria Hirschbiegel",
+        "Mathangi Shrikanth",
+        "Yagiz Anil Cicek",
+        "Nourina Nasim",
+        "Joe Truong",
+        "Junwhee Yang",
+        "Alexander Ribbe",
+        "Maged Abdelaziz",
+        "Vincent M. Rotello"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Chemical Science",
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "8",
+        "pages": "4050-4060",
+        "articleNumber": "",
+        "doi": "10.1039/d5sc07223a"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5sc07223a",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5sc07227a",
+      "title": "New theoretical insights into doping-induced enhancement of ORR activity in molybdenum disulfide: d–p hybridization or the Jahn–Teller effect?",
+      "authors": [
+        "Jia-Cheng Chen",
+        "Mao-Jun Pei",
+        "Wen-Bei Yu",
+        "Xiang Gao",
+        "Qing Zeng",
+        "Jia-Ming Xu",
+        "Wei Yan",
+        "Yao Liu",
+        "Guo-Qiang Luo",
+        "Jiujun Zhang"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Chemical Science",
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "7",
+        "pages": "3758-3774",
+        "articleNumber": "",
+        "doi": "10.1039/d5sc07227a"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5sc07227a",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5sc08209a",
+      "title": "Rh( iii )-catalyzed heteroannular-selective heteroarylation of biaryls: facile access to heteroacenes with sulfur-embedded 5–7 ring topology",
+      "authors": [
+        "Zhanhui He",
+        "Li Yang",
+        "Menghang Zhou",
+        "Yue Zhong",
+        "Zheng Liu",
+        "Ziao Zhang",
+        "Feiyang Xia",
+        "Xuezhe Deng",
+        "Shuang Yan",
+        "Cheng Xu",
+        "Cheng Zhang",
+        "Guodong Yin"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-03",
+      "needsPublisherDateVerification": true,
+      "journal": "Chemical Science",
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "9",
+        "pages": "4594-4600",
+        "articleNumber": "",
+        "doi": "10.1039/d5sc08209a"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5sc08209a",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5sc08541a",
+      "title": "The relevance of Cr defects and photoelectrochemical water oxidation activity of monoclinic PbCrO 4 films",
+      "authors": [
+        "Jiahe Li",
+        "Gaili Ke",
+        "Minji Yang",
+        "Guoliang Lv",
+        "Lanyi Cao",
+        "Wenjun Li",
+        "Tao Han",
+        "Wenrong Wang",
+        "Yong Zhou",
+        "Huichao He"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Chemical Science",
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "10",
+        "pages": "5103-5114",
+        "articleNumber": "",
+        "doi": "10.1039/d5sc08541a"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5sc08541a",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5sc08659k",
+      "title": "Photocatalytic CO 2 reduction using a diazabenzacenaphthenium photosensitizer and a Mn catalyst",
+      "authors": [
+        "Kei Kamogawa",
+        "Shintaro Okumura",
+        "Osamu Ishitani"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Chemical Science",
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "9",
+        "pages": "4518-4528",
+        "articleNumber": "",
+        "doi": "10.1039/d5sc08659k"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5sc08659k",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5sc09722c",
+      "title": "Regio- and stereoselective tert -butylthiolation of internal alkynes with thioethers initiated and maintained by silylium-ion catalysis",
+      "authors": [
+        "Dáiríne M. Morgan",
+        "Hendrik F. T. Klare",
+        "Martin Oestreich"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Chemical Science",
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "8",
+        "pages": "4307-4311",
+        "articleNumber": "",
+        "doi": "10.1039/d5sc09722c"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5sc09722c",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5sc09889k",
+      "title": "Biomimetic sulfur-catalyzed carbonyl transfer enables the carbonylative difunctionalization of unactivated alkenes",
+      "authors": [
+        "Yuanrui Wang",
+        "Xiao-Feng Wu"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Chemical Science",
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "7",
+        "pages": "3683-3690",
+        "articleNumber": "",
+        "doi": "10.1039/d5sc09889k"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5sc09889k",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

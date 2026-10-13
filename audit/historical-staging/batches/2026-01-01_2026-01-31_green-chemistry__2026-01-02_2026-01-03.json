@@ -1,0 +1,487 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_segment_evidence",
+  "parentBatchId": "2026-01-01_2026-01-31_green-chemistry",
+  "journal": "Green Chemistry",
+  "issns": [
+    "1463-9262",
+    "1463-9270"
+  ],
+  "range": {
+    "from": "2026-01-02",
+    "to": "2026-01-03"
+  },
+  "checkedAt": "2026-10-13T01:39:42.127Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "1463-9262",
+        "lane": "created",
+        "total": 9,
+        "count": 9,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1463-9270",
+        "lane": "created",
+        "total": 9,
+        "count": 9,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 0,
+      "count": 0,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 9,
+      "openalex": 0
+    }
+  },
+  "candidateCount": 9,
+  "alreadyPublished": 0,
+  "unreviewed": 9,
+  "records": [
+    {
+      "doi": "10.1039/d5gc02571k",
+      "title": "Green chemistry design of one-step extraction of multi-functionalized lignin-precursors directly from biomass",
+      "authors": [
+        "Kavya Ganesan",
+        "James Sternberg",
+        "Srikanth Pilla"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "7",
+        "pages": "3150-3166",
+        "articleNumber": "",
+        "doi": "10.1039/d5gc02571k"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5gc02571k",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5gc05112f",
+      "title": "Cysteamine-modified Pd sites in a covalent organic framework for the efficient electrocatalytic semi-hydrogenation of terminal alkynes",
+      "authors": [
+        "Shuai Liu",
+        "Haoyan Zhang",
+        "Pengxin Ren",
+        "Jiangsheng Han",
+        "Pengpeng Shao",
+        "Yuyang Ge",
+        "Guixian Chen",
+        "Li Ma",
+        "Ling Wang",
+        "Zhengfeng Zhao",
+        "Baoying Li",
+        "Siyuan Liu",
+        "Yuehui Li",
+        "Yongli Du",
+        "Zunqi Liu",
+        "Jianbin Chen"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-03",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "6",
+        "pages": "2761-2769",
+        "articleNumber": "",
+        "doi": "10.1039/d5gc05112f"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5gc05112f",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5gc05204a",
+      "title": "Catalyst-free polyesterification enables the formation of multifunctional and sustainable polyesters",
+      "authors": [
+        "Hongjie Zhang",
+        "Miaomiao Wang",
+        "Shihao Niu",
+        "Qiuquan Cai",
+        "Wenxing Chen",
+        "Wangyang Lu"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "6",
+        "pages": "2948-2957",
+        "articleNumber": "",
+        "doi": "10.1039/d5gc05204a"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5gc05204a",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5gc05207f",
+      "title": "Bilayered V 2 O 5 nanostrands with a PVA-based cathode slurry for high-performance and sustainable zinc-ion batteries",
+      "authors": [
+        "Kudachchige Asanga G. de Alwis",
+        "Zhenhuan Chen",
+        "Dasun P. W. Guruge",
+        "Chathushka D. Hettige Dharmasiri",
+        "Chao Zhang",
+        "Joseph F. S. Fernando",
+        "Konstantin L. Firestein",
+        "Dmitri V. Golberg"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "5",
+        "pages": "2519-2531",
+        "articleNumber": "",
+        "doi": "10.1039/d5gc05207f"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5gc05207f",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5gc05514h",
+      "title": "Greener citrate-assisted extraction of sodium alginate: process optimization and the mechanical performance of alginate-based films",
+      "authors": [
+        "Hayley A. Smith",
+        "Julie Zhou",
+        "Heather L. Buckley"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-03",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "6",
+        "pages": "2846-2862",
+        "articleNumber": "",
+        "doi": "10.1039/d5gc05514h"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5gc05514h",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5gc05710h",
+      "title": "Catalysis for electrocatalytic C–N coupling towards amino acid synthesis",
+      "authors": [
+        "Xulin Nong",
+        "Chunqi Yang",
+        "Jingwen Zhuang",
+        "Yuhang Li",
+        "Chunzhong Li"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "3",
+        "pages": "1491-1506",
+        "articleNumber": "",
+        "doi": "10.1039/d5gc05710h"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5gc05710h",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5gc05810d",
+      "title": "Electrochemical sulfinylation-driven skeletal rearrangement of Baylis–Hillman adducts",
+      "authors": [
+        "Indrajit Karmakar",
+        "Xiang-Wei Huang",
+        "Hsiu-Te Hung",
+        "Rekha Bai",
+        "Ci-Yang Sun",
+        "Chien-Wei Chiang",
+        "Chin-Fa Lee"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "4",
+        "pages": "2109-2122",
+        "articleNumber": "",
+        "doi": "10.1039/d5gc05810d"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5gc05810d",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5gc06175j",
+      "title": "Green direct recycling of spent LiFePO 4 via electronic structure reconstruction and reinforced Fe–O d–p orbital hybridization for enhanced energy storage performance",
+      "authors": [
+        "Zonghao Xu",
+        "Zongyu Guan",
+        "Yan Song",
+        "Xiran Zhao",
+        "Yaodong Yuan",
+        "Zhipeng Yan",
+        "Junhang Tian",
+        "Xueyi Sun",
+        "Biwei Xiao",
+        "Weidong Zhuang"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-03",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "5",
+        "pages": "2463-2474",
+        "articleNumber": "",
+        "doi": "10.1039/d5gc06175j"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5gc06175j",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.1039/d5gc90242h",
+      "title": "Correction: Cesium chemistry enables microporous carbon nanofibers with biomimetic ion transport channels for zinc-ion capacitors",
+      "authors": [
+        "Zhenye Yin",
+        "Xuan Luo",
+        "Qian Zhang",
+        "Guangjie Yang",
+        "Chunmei Zhang",
+        "Zhenlu Liu",
+        "Xue Li",
+        "Jian Song",
+        "Haoqi Yang",
+        "Shuijian He"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2026-01-02",
+      "needsPublisherDateVerification": true,
+      "journal": "Green Chemistry",
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "2",
+        "pages": "1269-1270",
+        "articleNumber": "",
+        "doi": "10.1039/d5gc90242h"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1039/d5gc90242h",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-02",
+        "to": "2026-01-03"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

@@ -1,0 +1,615 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Chemistry",
+  "issns": [
+    "1755-4330",
+    "1755-4349"
+  ],
+  "range": {
+    "from": "2025-12-01",
+    "to": "2025-12-31"
+  },
+  "checkedAt": "2026-10-13T01:40:16.068Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "1755-4330",
+        "lane": "publication",
+        "total": 12,
+        "count": 12,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1755-4349",
+        "lane": "publication",
+        "total": 12,
+        "count": 12,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 12,
+      "count": 12,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 12,
+      "openalex": 12
+    }
+  },
+  "candidateCount": 12,
+  "alreadyPublished": 0,
+  "unreviewed": 12,
+  "records": [
+    {
+      "doi": "10.1038/s41557-025-01969-8",
+      "title": "Charging imide anions for batteries",
+      "authors": [
+        "Lidan Xing",
+        "Kang Xu"
+      ],
+      "date": "2025-12-02",
+      "datePrecision": "day",
+      "createdDate": "2025-12-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "12",
+        "pages": "1976-1976",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01969-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01969-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-02008-2",
+      "title": "Iridium(III)-catalysed ionic hydrogenation of pyridines to multisubstituted piperidines",
+      "authors": [
+        "Arthur Despois",
+        "Nicolai Cramer"
+      ],
+      "date": "2025-12-02",
+      "datePrecision": "day",
+      "createdDate": "2025-12-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "3",
+        "pages": "526-534",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-02008-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-02008-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-02009-1",
+      "title": "Electrolyte reduction on cathodes to enhance the performance of high-energy batteries",
+      "authors": [
+        "Xiyue Zhang",
+        "Panxing Bai",
+        "Travis P. Pollard",
+        "Xiaoming Ren",
+        "Zheng Li",
+        "Minsung Baek",
+        "Guorui Cai",
+        "Caitlin D. Parke",
+        "Yijie Liu",
+        "Wenhao Xu",
+        "Yue Li",
+        "Xilin Chen",
+        "Paul Albertus",
+        "Oleg Borodin",
+        "Chunsheng Wang"
+      ],
+      "date": "2025-12-19",
+      "datePrecision": "day",
+      "createdDate": "2025-12-19",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "2",
+        "pages": "418-427",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-02009-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-02009-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-02010-8",
+      "title": "Revealing the impact of microenvironment on gold-catalysed CO2 electroreduction via Marcus–Hush–Chidsey kinetics",
+      "authors": [
+        "Yifei Xu",
+        "Yunze Qiu",
+        "Xiaoxia Chang",
+        "Hai Xiao",
+        "Bingjun Xu"
+      ],
+      "date": "2025-12-05",
+      "datePrecision": "day",
+      "createdDate": "2025-12-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "3",
+        "pages": "544-551",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-02010-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-02010-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-02011-7",
+      "title": "Photoswitchable olefins as latent metathesis monomers for controlled polymerization",
+      "authors": [
+        "Nir Lemcoff",
+        "Ronny Niv",
+        "Keren Iudanov",
+        "Gil Gordon",
+        "Aritra Biswas",
+        "Uri Ben-Nun",
+        "Ofir Shelonchik",
+        "N. Gabriel Lemcoff",
+        "Yossi Weizmann"
+      ],
+      "date": "2025-12-08",
+      "datePrecision": "day",
+      "createdDate": "2025-12-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "1",
+        "pages": "51-60",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-02011-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-02011-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-02013-5",
+      "title": "Photoswitchable latent monomers enable on‑demand metathesis",
+      "authors": [],
+      "date": "2025-12-10",
+      "datePrecision": "day",
+      "createdDate": "2025-12-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "1",
+        "pages": "12-13",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-02013-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-02013-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-02014-4",
+      "title": "Hydration entropy of cations regulates chloride ion diffusion during electrochemical chlorine evolution",
+      "authors": [
+        "Taejung Lim",
+        "Hideshi Ooka",
+        "Yuhang Yu",
+        "Takeharu Murakami",
+        "Satoshi Wada",
+        "Ryuhei Nakamura"
+      ],
+      "date": "2025-12-08",
+      "datePrecision": "day",
+      "createdDate": "2025-12-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "3",
+        "pages": "552-560",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-02014-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-02014-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-02015-3",
+      "title": "Scientific teamwork",
+      "authors": [
+        "Shira Joudan"
+      ],
+      "date": "2025-12-02",
+      "datePrecision": "day",
+      "createdDate": "2025-12-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "12",
+        "pages": "1800-1801",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-02015-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-02015-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-02029-x",
+      "title": "Sensing RNA",
+      "authors": [],
+      "date": "2025-12-02",
+      "datePrecision": "day",
+      "createdDate": "2025-12-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "12",
+        "pages": "1799-1799",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-02029-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-02029-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-02031-3",
+      "title": "A framework for chemists",
+      "authors": [
+        "Joan Serrano-Plana"
+      ],
+      "date": "2025-12-02",
+      "datePrecision": "day",
+      "createdDate": "2025-12-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "12",
+        "pages": "1802-1802",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-02031-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-02031-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-02042-0",
+      "title": "Author Correction: Extinguishing the saturation horizon",
+      "authors": [
+        "Bruce C. Gibb"
+      ],
+      "date": "2025-12-08",
+      "datePrecision": "day",
+      "createdDate": "2025-12-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "1",
+        "pages": "208-208",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-02042-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-02042-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-02043-z",
+      "title": "Publisher Correction: Metal-hydroxyls mediate intramolecular proton transfer in heterogeneous O–O bond formation",
+      "authors": [
+        "Hao Yang",
+        "Fusheng Li",
+        "Shaoqi Zhan",
+        "Yawen Liu",
+        "Tianqi Liu",
+        "Linqin Wang",
+        "Wenlong Li",
+        "Mårten S. G. Ahlquist",
+        "Sumbal Farid",
+        "Rile Ge",
+        "Junhu Wang",
+        "Marc T. M. Koper",
+        "Licheng Sun"
+      ],
+      "date": "2025-12-08",
+      "datePrecision": "day",
+      "createdDate": "2025-12-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "6",
+        "pages": "1151-1151",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-02043-z"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-02043-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
