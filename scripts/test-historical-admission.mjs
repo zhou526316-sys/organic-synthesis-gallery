@@ -351,3 +351,54 @@ test('Angew original pyrrole research is distinct from Nature Synthesis Research
   assert.equal(root.accepted.some(x=>x.doi===highlight),false);
   assert.equal(root.pending.length,2);
 });
+
+test('Q3 third ACS batch six individual two-pass syntheses pass real first-online and bibliographic guards',()=>{
+  const cases=[
+    ['10.1021/jacs.6c05233','2026-07-28','1e3a285d37a0cba1db6fafc15b07af8e3833137f'],
+    ['10.1021/jacs.6c09931','2026-08-27','ecd439f952961b18f227a8997d7dac259cf10431'],
+    ['10.1021/acscatal.6c03124','2026-07-21','e53414018aac39faa8ff9f6cbae508d8783e963d'],
+    ['10.1021/acs.joc.6c01104','2026-07-28','9181de94c2f59b0fb77a470f802a143699524037'],
+    ['10.1021/acs.orglett.6c03458','2026-08-30','3eb3448b8f413701aed67f8e3f29d518400d7827'],
+    ['10.1021/acs.orglett.6c02691','2026-08-27','3eb3448b8f413701aed67f8e3f29d518400d7827']
+  ];
+  const names=new Set(),challengers=new Set(),sources=new Set();
+  for(const [doi,date,sourceSha] of cases){
+    const x=root.accepted.find(x=>x.doi===doi);
+    assert.ok(x,'approved missing '+doi);
+    assert.equal(x.date,date);
+    assert.equal(x.reviewEvidence.publisherOnlineDate,date);
+    assert.equal(x.reviewEvidence.stageBatchSha,sourceSha);
+    assert.deepEqual(x.reviewEvidence.crossrefOpenalexSources,['crossref','openalex']);
+    assert.equal(x.reviewPasses,2);
+    assert.deepEqual(x.independentPasses.map(pass=>pass.decision),['include','include']);
+    assert.ok(x.independentPasses[0].reason.length>90);
+    assert.ok(x.independentPasses[1].reason.length>75);
+    assert.ok(x.scopeAssessment.generalityEvidence.length>70);
+    assert.equal(x.citation.doi,doi);
+    assert.ok(x.authors.length>=2);
+    assert.equal(x.ingestionChannel,'historical_backfill');
+    assert.equal(x.mediaPolicy,'toc_only');
+    assert.equal(x.new,false);
+    assert.equal(x.addedDate,'');
+    assert.equal(x.reviewEvidence.abstractCopied,false);
+    assert.equal(x.reviewEvidence.figureFetched,false);
+    assert.equal(x.reviewEvidence.pdfFetched,false);
+    assert.equal(x.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+    names.add(x.titleZh);challengers.add(x.independentPasses[1].reason);
+    sources.add(x.reviewEvidence.stageBatchId);
+  }
+  assert.equal(names.size,6,'independent meaningful translated titles');
+  assert.equal(challengers.size,6,'independent adversarial second pass');
+  assert.ok(sources.size>=5,'independent immutable publisher/source root receipts');
+  const r=root.accepted.find(x=>x.doi==='10.1021/jacs.6c05233');
+  assert.match(r.scopeAssessment.primaryContribution,/Josiphos/);
+  assert.match(r.challengeReason,/dppe/);
+  const t=root.accepted.find(x=>x.doi==='10.1021/jacs.6c09931');
+  assert.match(t.scopeAssessment.primaryContribution,/全合成/);
+  const s=root.accepted.find(x=>x.doi==='10.1021/acs.orglett.6c02691');
+  assert.match(s.challengeReason,/手性亚磺酰胺/);
+  assert.equal(root.pending.length,2,'preserve old source-date disputes');
+  for(const unresolved of ['10.1021/acs.joc.6c00852','10.1021/acs.orglett.6c02707']){
+    assert.equal(root.accepted.some(x=>x.doi===unresolved),false,'ACS conflicting online date must not auto-approve');
+  }
+});
