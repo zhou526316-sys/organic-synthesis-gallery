@@ -7,6 +7,8 @@ on:
       - 'cloudflare/scripts/audit-literature.mjs'
       - 'scripts/lib/publisher-feed-discovery.mjs'
       - 'scripts/test-publisher-feed-discovery.mjs'
+      - 'scripts/lib/literature-exclusion-recheck.mjs'
+      - 'scripts/test-literature-exclusion-recheck.mjs'
       - 'scripts/test-literature-completeness-capability.mjs'
       - 'scripts/validate-prepublish-review.mjs'
   workflow_dispatch:
@@ -30,6 +32,8 @@ jobs:
           node --check cloudflare/scripts/audit-literature.mjs
       - name: Validate official feed DOI identity and known omission
         run: node --test scripts/test-publisher-feed-discovery.mjs
+      - name: Validate improved-evidence exclusion re-review
+        run: node --test scripts/test-literature-exclusion-recheck.mjs
       - name: Verify core literature source coverage policy
         run: node scripts/test-literature-completeness-capability.mjs
       - name: Verify strict prepublication contract regressions
