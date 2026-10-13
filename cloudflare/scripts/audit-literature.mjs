@@ -7,6 +7,7 @@ import { TARGET_JOURNALS, effectiveJournalStart } from '../../shared/literature-
 import { loadScopeCorrections, withScopeCorrections } from '../../scripts/lib/scope-corrections.mjs';
 import { isStandaloneRepositoryDoi } from '../../scripts/lib/literature-doi-provenance.mjs';
 import { fetchOfficialPublisherFeeds, OFFICIAL_PUBLISHER_FEEDS } from '../../scripts/lib/publisher-feed-discovery.mjs';
+import { exclusionEvidenceRecheckReason } from '../../scripts/lib/literature-exclusion-recheck.mjs';
 
 const TIME_ZONE = 'Asia/Shanghai';
 
@@ -521,26 +522,12 @@ const reviewableMissing = rawMissing.filter(c => !isExcludedDoi(c.doi));
 
 // Earlier exclude is not permanent when newly obtained DOI-verified metadata
 // changes the evidence. Explicit confirmed scope corrections stay excluded.
-function exclusionRecheckReason(candidate,previous) {
-  if(!previous||previous.decision!=='exclude'||isExcludedDoi(candidate.doi)||confirmedScopeExclusionDois.has(candidate.doi))return '';
-  const title=clean(candidate.title).toLowerCase(),oldTitle=clean(previous.title).toLowerCase();
-  const abstract=clean(candidate.abstract),oldAbstract=clean(previous.abstract);
-  if(abstract.length>=140 && oldAbstract.length<140)
-    return 'new_substantive_abstract_after_previous_exclusion';
-  if(abstract.length>=220 && oldAbstract.length>=140 &&
-      abstract.slice(0,180).toLowerCase()!==oldAbstract.slice(0,180).toLowerCase())
-    return 'changed_substantive_abstract';
-  if(title && oldTitle && title!==oldTitle)return 'changed_article_title';
-  if(candidate.journal&&previous.journal&&candidate.journal!==previous.journal)
-    return 'changed_journal_identity';
-  if(candidate.date&&previous.date&&candidate.date!==previous.date)
-    return 'changed_publication_date';
-  return '';
-}
 const exclusionRecheckReasons = new Map();
 for (const candidate of reviewableMissing) {
   if(!reviewedExclusions.has(candidate.doi))continue;
-  const reason=exclusionRecheckReason(candidate,reviewedHistory.get(candidate.doi));
+  const reason=exclusionEvidenceRecheckReason(candidate,reviewedHistory.get(candidate.doi),{
+    confirmedExcluded: isExcludedDoi(candidate.doi) || confirmedScopeExclusionDois.has(candidate.doi)
+  });
   if(reason)exclusionRecheckReasons.set(candidate.doi,reason);
 }
 
