@@ -116,3 +116,19 @@ test('newly verified missed September JOC chemistry has independent evidence pas
     assert.equal(row.addedDate,'');
   }
 });
+
+test('four additional DOI source-verified synthesis decisions keep 08-only and legal media boundary',()=>{
+  const expected=['10.1021/acs.joc.6c00818','10.1021/acs.joc.6c01133',
+    '10.1021/acs.joc.6c01465','10.1021/acs.joc.6c01523'];
+  for(const doi of expected){
+    const x=root.accepted.find(a=>a.doi===doi);
+    assert.ok(x,'missing publisher-verified review '+doi);
+    assert.equal(x.reviewPasses,2);
+    assert.equal(x.firstPassDecision,'include');
+    assert.equal(x.challengeDecision,'include');
+    assert.equal(x.reviewEvidence.stageBatchSha,'c5604566a1a9763ce4fbbd2233b424db5c960517');
+    assert.equal(x.mediaPolicy,'toc_only');
+    assert.equal(x.new,false);
+    assert.equal(x.addedDate,'');
+  }
+});

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-13T01:14:06.547Z",
+  "generatedAt": "2026-10-13T01:58:11.296Z",
   "nextEligiblePublicationSlot": "2026-10-14T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 979
   },
   "summary": {
-    "checked": 12,
-    "include": 10,
+    "checked": 16,
+    "include": 14,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -597,6 +597,230 @@
         "pdfFetched": false
       },
       "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00818",
+      "journal": "JOC",
+      "title": "TsCl-Mediated, Copper-Catalyzed Deoxygenative Difluoromethoxylation Reaction of Quinoline-N-Oxides",
+      "titleZh": "对甲苯磺酰氯介导铜催化喹啉N-氧化物脱氧二氟甲氧基化反应",
+      "date": "2026-09-14",
+      "authors": [
+        "Linda Wang",
+        "Xi Zhang",
+        "Wenhui Wang",
+        "Jingxuan Lin",
+        "Zhuolun Huyan",
+        "Ying Fu",
+        "Zhengyin Du"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12792-12799",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00818"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "论文核心是将喹啉N-氧化物作为可转化底物建立制备含二氟甲氧基喹啉产物的方法，而不是只讨论机理或医药应用。",
+      "evidenceBasis": "ACS官方2026-09-14在线发表文章页明确原料喹啉N-氧化物、溴二氟乙酸乙酯、TsCl/铜协同介导与2-二氟甲氧基喹啉产物，报道好至优产率和研究体系中水作为产物氧来源；从原文摘要不能推出所有产物的通用定量收率或规模化。",
+      "challengeReason": "第二遍专门挑战‘是否仅做一例含氟衍生化’及氧原子归属：官方明确报告一系列喹啉底物、好到优秀的产品收率而非单分子示范；水是氧来源属于作者机理研究结论，不将之改写为所有反应步骤完全证实。限定适用范围后支持收录。",
+      "scopeAssessment": {
+        "primaryContribution": "开发TsCl介导、铜催化的喹啉N-氧化物脱氧二氟甲氧基化反应，获得2-二氟甲氧基喹啉，为含氟杂芳基醚类化合物提供具体制备路径。",
+        "preparativeTransformation": "喹啉N-氧化物与溴二氟乙酸乙酯作为二氟甲基来源，在TsCl/铜催化条件下生成2-(二氟甲氧基)喹啉；关键转化为杂芳环2位C–O–CF2H结构构建与N-氧化物脱氧。",
+        "generalityEvidence": "ACS官方Abstract记载一系列2-(二氟甲氧基)喹啉衍生物，产率为good to excellent，所需原料为不同喹啉N-氧化物；摘要没有公布可准确引用的底物数目或最高孤立收率。",
+        "sourceEvidence": "ACS出版社正式文章 DOI 页面 https://pubs.acs.org/doi/10.1021/acs.joc.6c00818 的原题、作者、Published Online (2026-09-14)、引文与 Abstract 交叉核查；Crossref/OpenAlex 历史批次 2026-09-08_2026-09-14_joc Git blob c5604566a1a9763ce4fbbd2233b424db5c960517。未复制受限英文摘要全文、SI或PDF。",
+        "boundaryChallenge": "反向疑点是该转化可能限于喹啉C2位、缺乏多类杂芳环通用性。现有证据足以证明同一结构类别上的合成方法，但只能报告喹啉N-氧化物制备范围，不能扩展为所有杂芳环二氟甲氧基化。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00818",
+        "publisherOnlineDate": "2026-09-14",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_joc",
+        "stageBatchSha": "c5604566a1a9763ce4fbbd2233b424db5c960517",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01133",
+      "journal": "JOC",
+      "title": "Substrate-Controlled Construction of Spiro-3-Oxoindolines and Eight-Membered-Ring Lactams under Bubbling Air Conditions",
+      "titleZh": "鼓泡空气条件下底物控制构建螺环氧化吲哚及八元内酰胺",
+      "date": "2026-09-11",
+      "authors": [
+        "Xiao Zhang",
+        "Jiahao Zhang",
+        "Dan Mou",
+        "Shuai Zhang",
+        "Yanqi Diao",
+        "Yang Yu",
+        "Hao Li"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12902-12911",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01133"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "中心成果是构筑两类有机杂环骨架及选择性氧化重排的可迁移制备模式，分离产物与下游功能化是合成证据，非仅空气传质或药理研究。",
+      "evidenceBasis": "ACS正式文章页Published Online 2026-09-11和Crossref/OpenAlex源一致；Abstract明确bubbling air、cyclic 2,3-dialkyl indoles、tetrahydrocarbazoles与heteroatom-replaced analogues生成spiro-3-oxoindolines，tetrahydrocyclopenta[b]indoles经C(sp2)–C(sp2)断裂给八元内酰胺；进一步Suzuki路线的93%是后处理步骤。",
+      "challengeReason": "独立第二遍检查该文是否以气液接触/安全参数为主要贡献。ACS摘要把含两类底物的产物骨架转化置于核心，反应意义不依赖空气传质数据；同时不将后续Suzuki 93%产率错误对应到氧化重排，限定作者初步机理推论。支持收录。",
+      "scopeAssessment": {
+        "primaryContribution": "提出鼓泡空气条件下以底物环骨架控制氧化重排的合成策略，使两类取代吲哚选择性转化为螺环氧化吲哚或八元内酰胺。",
+        "preparativeTransformation": "环状2,3-二烷基取代吲哚的氧化重排：四氢咔唑及O/N置换同系物可构建螺环3-氧化吲哚；四氢环戊并吲哚通过选择性C(sp²)–C(sp²)键断裂生成八元环内酰胺。",
+        "generalityEvidence": "作者官方摘要明确区分四氢咔唑/杂原子替换同系物与五元环并吲哚两种底物类别及不同产物骨架，还展示后续Suzuki偶联获得一药物相关产物；该后续步骤的93%收率不得冒充氧化重排本身的收率。",
+        "sourceEvidence": "ACS出版社正式文章 DOI 页面 https://pubs.acs.org/doi/10.1021/acs.joc.6c01133 的原题、作者、Published Online (2026-09-11)、引文与 Abstract 交叉核查；Crossref/OpenAlex 历史批次 2026-09-08_2026-09-14_joc Git blob c5604566a1a9763ce4fbbd2233b424db5c960517。未复制受限英文摘要全文、SI或PDF。",
+        "boundaryChallenge": "对抗性疑点：鼓泡空气对气液界面和安全性研究也有份量，不能只凭工艺优化收录；但两个底物环尺寸和杂原子类别导致的可控骨架选择性是明确合成策略。DMSO的作用和安全实验属于辅助证据，不等于全体机理已验证。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01133",
+        "publisherOnlineDate": "2026-09-11",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_joc",
+        "stageBatchSha": "c5604566a1a9763ce4fbbd2233b424db5c960517",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01465",
+      "journal": "JOC",
+      "title": "Microwave-Enabled Oxidative Alkoxycyclization of 2′-Aminochalcones by Gold Catalysis",
+      "titleZh": "微波辅助金催化2′-氨基查尔酮氧化烷氧基环化反应",
+      "date": "2026-09-14",
+      "authors": [
+        "Chandrasekar Praveen",
+        "Gabriel de Paula Bueno",
+        "Franco Jazon Caires",
+        "Giuliano C. Clososki"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12958-12970",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01465"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "不同醇类型、杂环骨架拓展以及可控制反应终点的合成证据充分，属于有机杂环合成方法而不只是微波设备条件研究。",
+      "evidenceBasis": "ACS 2026-09-14 Published Online，JOC 91(38)12958–12970。官方Abstract对AuCl3、微波、2′-氨基查尔酮与醇反应、不同醇类别、graveolinine和benzofuropyridines等均有直接描述；未复制Abstract正文，未推断未出现的克级产率或量子效率。",
+      "challengeReason": "第二遍挑战微波方法是否只是一组技术参数而不是新制备：底物伙伴类别、4-烷氧基喹啉产物范围、天然碱与苯并呋喃并吡啶拓展构成独立合成价值。机理限于作者初步研究支持，不宣称确定唯一环化路径；据此确认include。",
+      "scopeAssessment": {
+        "primaryContribution": "微波条件下AuCl3促进2′-氨基查尔酮与醇经氧化环化一锅制备4-烷氧基喹啉，并可扩展到苯并呋喃并吡啶骨架。",
+        "preparativeTransformation": "2′-氨基查尔酮与醇反应，经金催化含氮环化与醇亲核加成构筑4-烷氧基喹啉；当醇改成甲苯时选择性停留在迈克尔环化的二氢喹啉酮阶段。",
+        "generalityEvidence": "官方摘要明确采用直链、支链、环状以及萜类醇，产物中等至良好收率，一步获得4-甲氧基-2-苯基喹啉和graveolinine等天然碱，并扩展至benzofuropyridines。",
+        "sourceEvidence": "ACS出版社正式文章 DOI 页面 https://pubs.acs.org/doi/10.1021/acs.joc.6c01465 的原题、作者、Published Online (2026-09-14)、引文与 Abstract 交叉核查；Crossref/OpenAlex 历史批次 2026-09-08_2026-09-14_joc Git blob c5604566a1a9763ce4fbbd2233b424db5c960517。未复制受限英文摘要全文、SI或PDF。",
+        "boundaryChallenge": "需防止把作者的初步机理推测（AuCl3双重作用、氧化序列）视为已证明的唯一过程。微波并不是普遍适用于所有杂环的证明，但原文已给出多类醇及两种杂环策略的明确范围。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01465",
+        "publisherOnlineDate": "2026-09-14",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_joc",
+        "stageBatchSha": "c5604566a1a9763ce4fbbd2233b424db5c960517",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01523",
+      "journal": "JOC",
+      "title": "Stereoselective Synthesis of (−)-Ambrox via Metalloporphyrin-Catalyzed C(sp3)–H Bond Oxidation of Hydrocarbons",
+      "titleZh": "经金属卟啉催化碳氢键氧化实现（−）-Ambrox的立体选择性全合成",
+      "date": "2026-09-09",
+      "authors": [
+        "Cun Wang",
+        "Zhong Jin"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12664-12673",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01523"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "属于收录规则明确包含的已经完成的天然产物全合成，且具有明确的核心C–H键羟基化、环化及手性引入步骤，不是仅合成中间体。",
+      "evidenceBasis": "ACS官方Published Online 2026-09-09，JOC 91(37)12664–12673。Abstract给出10步外消旋Ambrox20.7%与11步不对称（−）-Ambrox14.9%，主要路线涉及Brønsted酸仿生环化、(CO)RuII(TPFPP)催化烃C(sp3)–H羟基化和Ru催化不对称氢化；两种路线不可混同。",
+      "challengeReason": "第二遍逐项重核全文摘要中的两条路线：10步/20.7%是外消旋路线，11步/14.9%才是不对称（−）-Ambrox路线；以避免把外消旋成果误写为不对称高产路线。即使缺乏通用底物拓展，已完成天然产物不对称全合成直接满足现有范围；不把全合成结论升格为广谱方法。",
+      "scopeAssessment": {
+        "primaryContribution": "完成香龙涎醚Ambrox的外消旋与不对称全合成路线，以酸介导仿生环化及后期金属卟啉钌催化C(sp³)–H羟基化为关键步骤。",
+        "preparativeTransformation": "由商业可得的dihydroboronal原料经10步线性序列获得外消旋Ambrox，总收率20.7%；另由二氢β-紫罗兰酮关联手性醇中间体和Ru不对称氢化，采用11步线性路线得到（−）-Ambrox，总收率14.9%。",
+        "generalityEvidence": "ACS正式摘要分别给出完整的外消旋和不对称目标产物、10/11步线性合成以及20.7%/14.9%路线总收率；天然产物全合成无需凭空扩大为广谱C–H氧化方法。",
+        "sourceEvidence": "ACS出版社正式文章 DOI 页面 https://pubs.acs.org/doi/10.1021/acs.joc.6c01523 的原题、作者、Published Online (2026-09-09)、引文与 Abstract 交叉核查；Crossref/OpenAlex 历史批次 2026-09-08_2026-09-14_joc Git blob c5604566a1a9763ce4fbbd2233b424db5c960517。未复制受限英文摘要全文、SI或PDF。",
+        "boundaryChallenge": "最大的逆向疑问是多步路线只服务Ambrox这一目标，不能宣称C(sp³)–H羟基化已对一系列药物骨架广谱有效。现有规则明确允许真正完成的单一天然产物全合成，因此需要审的核心是是否最终获得Ambrox目标及步骤/收率对应是否准确。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01523",
+        "publisherOnlineDate": "2026-09-09",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_joc",
+        "stageBatchSha": "c5604566a1a9763ce4fbbd2233b424db5c960517",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
     }
   ],
   "pending": [
@@ -639,5 +863,5 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "2026-10-13: first eight were published in the sole 08:00 slot; two further ACS/JOC paper-specific publisher-verified two-pass includes are queued only for the next valid 08:00. Date-conflict pending entries remain held; no historic media/PDF/full abstract copied."
+  "note": "2026-10-13 publisher-reviewed four further DOI with independent first/challenge synthesis scope assessment and frozen source fingerprint. Next ONLY valid 2026-10-14 08:00 release."
 }
