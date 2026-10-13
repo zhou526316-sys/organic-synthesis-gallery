@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {reconcileQ3,expectedQ3Roots,Q3_SCHEMA}
+import {reconcileQ3,expectedQ3Roots,Q3_SCHEMA,PUBLISHER_NONRESEARCH_SCHEMA}
   from './historical-q3-reconciliation.mjs';
 const journals=[{name:'JOC'},{name:'Chemical Science'}];
 const j1='2026-07-01_2026-07-07_joc',
@@ -116,4 +116,61 @@ test('bad source fingerprint, DOI collision or forced benchmark fail closed',()=
   assert.throws(()=>reconcileQ3({...input,
     formal:{webpageDoiCount:3,articles:formal.articles}}),
     /q3_invalid_formal_authority/);
+});
+
+test('five publisher-verified non-original research DOI remain source-counted but not academically unfinished',()=>{
+  const review={
+    doi:'10.1021/acs.joc.6c00006',
+    journal:'JOC',
+    date:'2026-07-12',
+    title:'Genuine unreviewed synthesis',
+    publisherArticleType:'News & Views',
+    decision:'exclude',firstPassDecision:'exclude',challengeDecision:'exclude',
+    reviewPasses:2,
+    firstPassReason:'Publisher explicitly labels the DOI as a News & Views commentary, rather than an original experimental organic-synthesis research article.',
+    independentChallengeReason:'Even if the title contains a relevant synthesis transformation, the experiment was published under another distinct original DOI; do not create duplicate synthesis cards from commentary.',
+    reviewEvidence:{
+      publisherPage:'https://pubs.acs.org/doi/10.1021/acs.joc.6c00006',
+      publisherArticleType:'News & Views',publisherArticleDate:'2026-07-12',
+      sourceRootId:j2,stageSourceSha256:sha(j2),stageBatchGitBlobSha:'e'.repeat(40),
+      verificationKind:'publisher_direct_article_type_and_original_work_provenance'
+    }
+  };
+  const publisherNonResearch={
+    schemaVersion:PUBLISHER_NONRESEARCH_SCHEMA,
+    mode:'publisher_verified_non_original_doi_only_not_publication',
+    reviewed:[review]
+  };
+  const {coverage,worklist}=reconcileQ3({...input,publisherNonResearch});
+  assert.equal(coverage.counters.uniqueSourceDois,7,'the DOI remains present in the source census');
+  assert.equal(coverage.counters.sourcePublisherNonResearchExcluded,1);
+  assert.equal(coverage.counters.sourceExplicitlyExcluded,1,'owner DOI corrections stay separate');
+  assert.equal(coverage.counters.unfinishedQ3OrDateVerification,2);
+  assert.equal(worklist.verifiedPublisherNonResearchExcluded,1);
+  assert.ok(!worklist.rows.some(x=>x.doi===review.doi));
+  assert.equal(worklist.noAutomaticAcademicDecision,true);
+  assert.equal(coverage.guards.publisherNonResearchExclusionsAreDOISpecificOnly,true);
+  assert.throws(()=>reconcileQ3({...input,publisherNonResearch:{
+    ...publisherNonResearch,reviewed:[{...review,reviewEvidence:{
+      ...review.reviewEvidence,publisherArticleType:'Article'
+    }}]}}),/q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...input,publisherNonResearch:{
+    ...publisherNonResearch,reviewed:[{...review,reviewEvidence:{
+      ...review.reviewEvidence,publisherPage:'https://www.example.com/not-same-paper'
+    }}]}}),/q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...input,publisherNonResearch:{
+    ...publisherNonResearch,reviewed:[{...review,reviewEvidence:{
+      ...review.reviewEvidence,stageSourceSha256:'0'.repeat(64)
+    }}]}}),/q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...input,publisherNonResearch:{
+    ...publisherNonResearch,reviewed:[{...review,date:'2026-07-13'}]
+  }}),/q3_nonresearch_publisher_evidence_invalid/);
+  assert.throws(()=>reconcileQ3({...input,publisherNonResearch:{
+    ...publisherNonResearch,reviewed:[review,review]
+  }}),/q3_nonresearch_doi_missing_or_colliding/);
+  assert.throws(()=>reconcileQ3({...input,publisherNonResearch:{
+    ...publisherNonResearch,reviewed:[{...review,doi:'10.1021/acs.joc.6c00001'}]
+  }}),/q3_nonresearch_doi_missing_or_colliding/);
+  assert.throws(()=>reconcileQ3({...input,publisherNonResearch:{reviewed:[]}}),
+    /q3_nonresearch_ledger_untrusted_schema/);
 });
