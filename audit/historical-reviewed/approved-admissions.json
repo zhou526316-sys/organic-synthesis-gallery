@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-13T08:21:11.908Z",
+  "generatedAt": "2026-10-13T11:08:17.923Z",
   "nextEligiblePublicationSlot": "2026-10-14T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 54,
-    "include": 52,
+    "checked": 62,
+    "include": 60,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -3538,6 +3538,581 @@
         }
       ],
       "reviewRationaleSecondPass": "反向挑战该研究是否只是一种单底物‘轴手性测量’或环化产物无法分离：出版商实验条目和多种具体螺环结构表明具有实际制备路线和产物衍生化，是具有用处的立体富集氮杂螺环砌块制备。"
+    },
+    {
+      "doi": "10.1021/jacs.6c02262",
+      "journal": "JACS",
+      "title": "Catalytic Stereochemical Relay for the Enantioselective Synthesis of Acyclic Quaternary Stereocenters",
+      "titleZh": "铱催化不对称烯丙基烷基化与Cope重排串联构筑非环状季碳手性中心",
+      "date": "2026-07-30",
+      "authors": [
+        "Hengmu Xie",
+        "Donghun Hwang",
+        "Seok Yeol Yoo",
+        "Jinjin Ma",
+        "Graeme W. Howe",
+        "Mu-Hyun Baik",
+        "P. Andrew Evans"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "38",
+        "pages": "40651-40659",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c02262"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "作者将铱催化α,β-不饱和丙二腈的不对称烯丙基烷基化与立体专一Cope[3,3]重排连接，在不依赖邻近手性诱导中心的条件下构筑远程γ-季碳立体中心。主要贡献是可转移的非环状季碳立体控制策略。",
+      "evidenceBasis": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-07-30（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/jacs.6c02262，Crossref+OpenAlex冻结批次 2026-07-22_2026-07-31_jacs，Git blob SHA 1e3a285d37a0cba1db6fafc15b07af8e3833137f；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+      "challengeReason": "第二遍着重挑战DFT可逆α烯丙基化与低势垒Cope重排是否足以证明唯一反应路径：这些仍是作者计算支持的机理模型。实际分离的γ季碳产物、对映富集和衍生化有独立合成证据；不能把所有计算过渡态当作实测，也不能将论文称为任意非环状季碳都能构建。",
+      "scopeAssessment": {
+        "primaryContribution": "作者将铱催化α,β-不饱和丙二腈的不对称烯丙基烷基化与立体专一Cope[3,3]重排连接，在不依赖邻近手性诱导中心的条件下构筑远程γ-季碳立体中心。主要贡献是可转移的非环状季碳立体控制策略。",
+        "preparativeTransformation": "α,β-不饱和丙二腈与烯丙基供体在Ir催化下形成可重排的α-烯丙基中间体，随后立体专一Cope重排构筑新的C–C键并生成γ-季碳腈衍生物。作者另通过共同中间体衍生形成α、β、γ不同季碳骨架。",
+        "generalityEvidence": "ACS JACS原始摘要报告最高96% ee、良好的区域和对映控制，以及由共同中间体对α/β/γ季碳中心的模块化衍生和规模化潜力；96%为最高上限，不可填作全部底物的ee，也不能假定重排后所有手性中心都在同一步形成。",
+        "sourceEvidence": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-07-30（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/jacs.6c02262，Crossref+OpenAlex冻结批次 2026-07-22_2026-07-31_jacs，Git blob SHA 1e3a285d37a0cba1db6fafc15b07af8e3833137f；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+        "boundaryChallenge": "反向疑问：Ir催化的烯丙基烷基化本身并非新反应，是否只是已知Cope重排的机理展示。本文将远程季碳中心的立体转移与多位置产物制备纳入统一路线，提供实际制备能力，不是仅理论计算。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.6c02262",
+        "publisherOnlineDate": "2026-07-30",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_jacs",
+        "stageBatchSha": "1e3a285d37a0cba1db6fafc15b07af8e3833137f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_Published_Online_original_Article_History_index_with_Crossref_OpenAlex_source_commit",
+        "noProtectedFullTextAssumed": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "作者将铱催化α,β-不饱和丙二腈的不对称烯丙基烷基化与立体专一Cope[3,3]重排连接，在不依赖邻近手性诱导中心的条件下构筑远程γ-季碳立体中心。主要贡献是可转移的非环状季碳立体控制策略。 α,β-不饱和丙二腈与烯丙基供体在Ir催化下形成可重排的α-烯丙基中间体，随后立体专一Cope重排构筑新的C–C键并生成γ-季碳腈衍生物。作者另通过共同中间体衍生形成α、β、γ不同季碳骨架。 ACS JACS原始摘要报告最高96% ee、良好的区域和对映控制，以及由共同中间体对α/β/γ季碳中心的模块化衍生和规模化潜力；96%为最高上限，不可填作全部底物的ee，也不能假定重排后所有手性中心都在同一步形成。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍着重挑战DFT可逆α烯丙基化与低势垒Cope重排是否足以证明唯一反应路径：这些仍是作者计算支持的机理模型。实际分离的γ季碳产物、对映富集和衍生化有独立合成证据；不能把所有计算过渡态当作实测，也不能将论文称为任意非环状季碳都能构建。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反向疑问：Ir催化的烯丙基烷基化本身并非新反应，是否只是已知Cope重排的机理展示。本文将远程季碳中心的立体转移与多位置产物制备纳入统一路线，提供实际制备能力，不是仅理论计算。"
+    },
+    {
+      "doi": "10.1021/acscatal.6c04393",
+      "journal": "ACS Catalysis",
+      "title": "Palladium-Catalyzed Enantioselective Cyclopropanation of Unactivated Alkenes with Sulfoxonium Ylides Using a Chiral Monodentate Oxazoline Ligand",
+      "titleZh": "手性单齿噁唑啉配体促进钯催化非活化烯烃不对称环丙烷化",
+      "date": "2026-07-20",
+      "authors": [
+        "Bo-Yang Sun",
+        "Zeng-Hui Wei",
+        "Qian-Kun Fan",
+        "Gang He",
+        "Xiaoming Feng",
+        "Gong Chen",
+        "Hao Wang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "15271-15281",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04393"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过特设手性单齿噁唑啉（MOX）配体，使不活化末端烯烃与稳定亚砜鎓叶立德的Pd催化环丙烷化具有高效的对映选择性，解决无活化烯烃的面选择性控制问题。",
+      "evidenceBasis": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-07-20（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/acscatal.6c04393，Crossref+OpenAlex冻结批次 2026-07-15_2026-07-21_acs-catalysis，Git blob SHA e53414018aac39faa8ff9f6cbae508d8783e963d；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+      "challengeReason": "独立验证作者机制中的MOX预催化剂解聚与‘programmed ligand dissociation’是机理研究提出的解释，不能当作每个循环已直接观测。也不能从'非活化'扩张为所有内烯烃、1,1-二取代和高度位阻烯烃均高效。审定范围为末端烯烃/亚砜鎓叶立德的手性环丙烷制备。",
+      "scopeAssessment": {
+        "primaryContribution": "通过特设手性单齿噁唑啉（MOX）配体，使不活化末端烯烃与稳定亚砜鎓叶立德的Pd催化环丙烷化具有高效的对映选择性，解决无活化烯烃的面选择性控制问题。",
+        "preparativeTransformation": "非活化末端烯烃与可台面稳定保存的亚砜鎓叶立德发生Pd催化环丙烷化，在烯烃两碳间建立三元碳环并形成带顺式相对构型的手性环丙烷产物。",
+        "generalityEvidence": "ACS Catalysis官方摘要确认较广底物范围、系列顺式环丙烷，分离收率最高99%，对映体比最高97:3 er；这些均为文章上限。MOX配体的双重作用有机械研究证据：促进Pd3(OAc)6解聚并在插入前暂时立体诱导。",
+        "sourceEvidence": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-07-20（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/acscatal.6c04393，Crossref+OpenAlex冻结批次 2026-07-15_2026-07-21_acs-catalysis，Git blob SHA e53414018aac39faa8ff9f6cbae508d8783e963d；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+        "boundaryChallenge": "反向挑战该工作是否只是改变Pd前体聚合状态的催化材料或计算研究：实际报道多个含手性cis-环丙烷有机产物，具底物范围与分离收率，满足有机合成方法学。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acscatal.6c04393",
+        "publisherOnlineDate": "2026-07-20",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_acs-catalysis",
+        "stageBatchSha": "e53414018aac39faa8ff9f6cbae508d8783e963d",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_Published_Online_original_Article_History_index_with_Crossref_OpenAlex_source_commit",
+        "noProtectedFullTextAssumed": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "通过特设手性单齿噁唑啉（MOX）配体，使不活化末端烯烃与稳定亚砜鎓叶立德的Pd催化环丙烷化具有高效的对映选择性，解决无活化烯烃的面选择性控制问题。 非活化末端烯烃与可台面稳定保存的亚砜鎓叶立德发生Pd催化环丙烷化，在烯烃两碳间建立三元碳环并形成带顺式相对构型的手性环丙烷产物。 ACS Catalysis官方摘要确认较广底物范围、系列顺式环丙烷，分离收率最高99%，对映体比最高97:3 er；这些均为文章上限。MOX配体的双重作用有机械研究证据：促进Pd3(OAc)6解聚并在插入前暂时立体诱导。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立验证作者机制中的MOX预催化剂解聚与‘programmed ligand dissociation’是机理研究提出的解释，不能当作每个循环已直接观测。也不能从'非活化'扩张为所有内烯烃、1,1-二取代和高度位阻烯烃均高效。审定范围为末端烯烃/亚砜鎓叶立德的手性环丙烷制备。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反向挑战该工作是否只是改变Pd前体聚合状态的催化材料或计算研究：实际报道多个含手性cis-环丙烷有机产物，具底物范围与分离收率，满足有机合成方法学。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02929",
+      "journal": "Organic Letters",
+      "title": "Introducing Azaindole Thianthrenium Salt: An Electrophilic Coupling Partner for Cross-Coupling Reaction",
+      "titleZh": "通过噻蒽鎓盐实现氮杂吲哚C3位选择性活化及多类型交叉偶联",
+      "date": "2026-08-27",
+      "authors": [
+        "Siddhartha Paul",
+        "Vishal Talukdar",
+        "Parthasarathi Das"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "36",
+        "pages": "11205-11210",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02929"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "将氮杂吲哚的C3–H直接转化为可分离/可利用的噻蒽鎓盐亲电砌块，提供在难选择性改造的氮杂吲哚上通向多类C3官能化产物的共同合成平台。",
+      "evidenceBasis": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-08-27（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/acs.orglett.6c02929，Crossref+OpenAlex冻结批次 2026-08-22_2026-08-31_organic-letters，Git blob SHA 3eb3448b8f413701aed67f8e3f29d518400d7827；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+      "challengeReason": "独立审查‘C3–H官能化’不是一步直接以所有偶联伙伴替换H，而是先形成噻蒽鎓盐，再交叉偶联；不能把盐的通用性夸张成完全无区域异构或所有氮杂芳烃都适用。制备优势以真实的Suzuki/Heck/Sonogashira/Hiyama/Barluenga–Valdés例证判断。",
+      "scopeAssessment": {
+        "primaryContribution": "将氮杂吲哚的C3–H直接转化为可分离/可利用的噻蒽鎓盐亲电砌块，提供在难选择性改造的氮杂吲哚上通向多类C3官能化产物的共同合成平台。",
+        "preparativeTransformation": "氮杂吲哚C3–H经噻蒽化形成芳基噻蒽鎓盐，再以该盐作为亲电配偶伙伴进行Suzuki、Heck、Sonogashira、Hiyama和Barluenga–Valdés型交叉偶联，构筑新的C–C键并合成不同取代氮杂吲哚。",
+        "generalityEvidence": "ACS Organic Letters官方摘要明确列举五种不同偶联反应类型并强调官能团和产物多样性，这是超出单一模型底物的砌块通用性证据；论文只证明特定氮杂吲哚盐的C3化学，不虚构对吡啶其它未活化位点的区域控制。",
+        "sourceEvidence": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-08-27（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/acs.orglett.6c02929，Crossref+OpenAlex冻结批次 2026-08-22_2026-08-31_organic-letters，Git blob SHA 3eb3448b8f413701aed67f8e3f29d518400d7827；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+        "boundaryChallenge": "反向质疑噻蒽鎓盐是否仅为分离中间体而无后续方法学：官方摘要列明五种实际成功的交叉偶联及各类氮杂吲哚衍生物，具备明确的合成转化范围。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02929",
+        "publisherOnlineDate": "2026-08-27",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_Published_Online_original_Article_History_index_with_Crossref_OpenAlex_source_commit",
+        "noProtectedFullTextAssumed": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "将氮杂吲哚的C3–H直接转化为可分离/可利用的噻蒽鎓盐亲电砌块，提供在难选择性改造的氮杂吲哚上通向多类C3官能化产物的共同合成平台。 氮杂吲哚C3–H经噻蒽化形成芳基噻蒽鎓盐，再以该盐作为亲电配偶伙伴进行Suzuki、Heck、Sonogashira、Hiyama和Barluenga–Valdés型交叉偶联，构筑新的C–C键并合成不同取代氮杂吲哚。 ACS Organic Letters官方摘要明确列举五种不同偶联反应类型并强调官能团和产物多样性，这是超出单一模型底物的砌块通用性证据；论文只证明特定氮杂吲哚盐的C3化学，不虚构对吡啶其它未活化位点的区域控制。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立审查‘C3–H官能化’不是一步直接以所有偶联伙伴替换H，而是先形成噻蒽鎓盐，再交叉偶联；不能把盐的通用性夸张成完全无区域异构或所有氮杂芳烃都适用。制备优势以真实的Suzuki/Heck/Sonogashira/Hiyama/Barluenga–Valdés例证判断。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反向质疑噻蒽鎓盐是否仅为分离中间体而无后续方法学：官方摘要列明五种实际成功的交叉偶联及各类氮杂吲哚衍生物，具备明确的合成转化范围。"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00772",
+      "journal": "JOC",
+      "title": "Visible-Light-Induced Metallaphotoredox-Catalyzed Synthesis of β-Cyanoketones Using Aryl Acetonitriles and Bromoacetophenones",
+      "titleZh": "曙红Y与钴协同可见光催化芳基乙腈及溴代苯乙酮合成β-氰基酮",
+      "date": "2026-07-27",
+      "authors": [
+        "Mayank Murthy",
+        "Shiv Chand",
+        "Saurabh Kumar",
+        "Abhinay Shukla",
+        "Krishna Nand Singh"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "31",
+        "pages": "10643-10651",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00772"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过可见光曙红Y/醋酸钴双催化促进芳基乙腈与2-溴代苯乙酮类α-溴代酮交叉成键，发展温和β-氰基酮制备方法而非纯光谱机理研究。",
+      "evidenceBasis": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-07-27（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/acs.joc.6c00772，Crossref+OpenAlex冻结批次 2026-07-22_2026-07-31_joc，Git blob SHA 9181de94c2f59b0fb77a470f802a143699524037；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+      "challengeReason": "独立核查C–C成键和拟议自由基路径的证据层级：作者将该反应解释为自由基交叉偶联，但未据公开摘要证明每一自由基中间体均被直接截获；不得声称一切脂肪乙腈或任何卤代酮都有效。主要结论限于芳基乙腈+2-溴代苯乙酮类别。",
+      "scopeAssessment": {
+        "primaryContribution": "通过可见光曙红Y/醋酸钴双催化促进芳基乙腈与2-溴代苯乙酮类α-溴代酮交叉成键，发展温和β-氰基酮制备方法而非纯光谱机理研究。",
+        "preparativeTransformation": "芳基乙腈与2-溴代苯乙酮在Eosin Y/Co(OAc)2·4H2O/DBU和蓝光照射下建立新的C–C键，形成同时携带氰基与酮羰基的β-氰基酮骨架。",
+        "generalityEvidence": "JOC原始摘要确认温和条件、高产率和广泛官能团耐受性，并公开SI目录中多种3a–3aa产物的NMR原始数据，因此存在多个真实制备例子；不在未逐一查阅SI时编造各产物绝对收率或辐照功率。",
+        "sourceEvidence": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-07-27（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/acs.joc.6c00772，Crossref+OpenAlex冻结批次 2026-07-22_2026-07-31_joc，Git blob SHA 9181de94c2f59b0fb77a470f802a143699524037；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+        "boundaryChallenge": "第二遍排查所谓metallaphotoredox是否只是催化剂激发态测量，缺乏有机成键：原文明确以两类现成有机原料合成系列β-氰基酮，符合一般制备方法。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00772",
+        "publisherOnlineDate": "2026-07-27",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_joc",
+        "stageBatchSha": "9181de94c2f59b0fb77a470f802a143699524037",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_Published_Online_original_Article_History_index_with_Crossref_OpenAlex_source_commit",
+        "noProtectedFullTextAssumed": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "通过可见光曙红Y/醋酸钴双催化促进芳基乙腈与2-溴代苯乙酮类α-溴代酮交叉成键，发展温和β-氰基酮制备方法而非纯光谱机理研究。 芳基乙腈与2-溴代苯乙酮在Eosin Y/Co(OAc)2·4H2O/DBU和蓝光照射下建立新的C–C键，形成同时携带氰基与酮羰基的β-氰基酮骨架。 JOC原始摘要确认温和条件、高产率和广泛官能团耐受性，并公开SI目录中多种3a–3aa产物的NMR原始数据，因此存在多个真实制备例子；不在未逐一查阅SI时编造各产物绝对收率或辐照功率。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立核查C–C成键和拟议自由基路径的证据层级：作者将该反应解释为自由基交叉偶联，但未据公开摘要证明每一自由基中间体均被直接截获；不得声称一切脂肪乙腈或任何卤代酮都有效。主要结论限于芳基乙腈+2-溴代苯乙酮类别。"
+        }
+      ],
+      "reviewRationaleSecondPass": "第二遍排查所谓metallaphotoredox是否只是催化剂激发态测量，缺乏有机成键：原文明确以两类现成有机原料合成系列β-氰基酮，符合一般制备方法。"
+    },
+    {
+      "doi": "10.1021/jacs.6c08775",
+      "journal": "JACS",
+      "title": "Directed Evolution of Nonheme Fe Enzymes for Enantioselective and Regiodivergent 1,3- and 1,4-Nitrogen Migration: Biocatalytic Asymmetric Synthesis of Noncanonical α- and β-Amino Acids",
+      "titleZh": "定向进化非血红素铁酶实现区域分歧的1,3／1,4氮迁移不对称合成非天然α／β-氨基酸",
+      "date": "2026-07-27",
+      "authors": [
+        "Huichong Liu",
+        "Liu-Peng Zhao",
+        "Shijia Li",
+        "Shengchun Wang",
+        "Ruiqi Ding",
+        "Peng Liu",
+        "Yang Yang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "30",
+        "pages": "32384-32395",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.6c08775"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "经定向进化PhyACCO非血红素铁酶得到两个互补氮迁移酶ACCO-Nimα和ACCO-Nimβ，可分别通过不同HAT位置选择性实现1,3/1,4氮迁移，在惰性C(sp3)–H位点产生新的C–N键，实现非天然α和β氨基酸的实际手性合成。",
+      "evidenceBasis": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-07-27（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/jacs.6c08775，Crossref+OpenAlex冻结批次 2026-07-22_2026-07-31_jacs，Git blob SHA 1e3a285d37a0cba1db6fafc15b07af8e3833137f；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+      "challengeReason": "独立审查1,5-/1,6-HAT过渡态选择性模型来自KIE/动力学和计算的组合证据，不能声称酶定向进化改变了氢转移本身的固有过渡态性质，恰恰原文称两类变体KIE相近。不能将定向进化产生的新催化物种误表述为全化学小分子催化体系；其实际制备能力是双位点非天然氨基酸选择性合成。",
+      "scopeAssessment": {
+        "primaryContribution": "经定向进化PhyACCO非血红素铁酶得到两个互补氮迁移酶ACCO-Nimα和ACCO-Nimβ，可分别通过不同HAT位置选择性实现1,3/1,4氮迁移，在惰性C(sp3)–H位点产生新的C–N键，实现非天然α和β氨基酸的实际手性合成。",
+        "preparativeTransformation": "从羧酸衍生的氮转移前体在酶催化下对次级或三级C(sp3)–H进行非天然胺化，经氮迁移生成非天然α-氨基酸或β-氨基酸；Nimα偏向1,5-HAT导向的α位转移，Nimβ可利用1,6-HAT路径实现β位氨基化。",
+        "generalityEvidence": "JACS原始摘要给出多样非天然α氨基酸制备、消旋底物对映汇聚合成α,α-双取代氨基酸以及独立β-氨基酸制备范围；Nimα最高1900 TTN、kcat 1560 min−1，且动力学/分子内氢氘竞争证明HAT动力学相关。酶动力学指标是催化性能，不等于每种产物的分离收率。",
+        "sourceEvidence": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-07-27（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/jacs.6c08775，Crossref+OpenAlex冻结批次 2026-07-22_2026-07-31_jacs，Git blob SHA 1e3a285d37a0cba1db6fafc15b07af8e3833137f；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+        "boundaryChallenge": "反向重点排查是否属于仅有蛋白表达/序列优化，借‘asymmetric’关键词误收。尽管采用定向进化，报道明确合成多种可分离非天然α/β氨基酸并控制区域与立体化学，满足有机合成方法学合同中对生物催化的例外准入。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.6c08775",
+        "publisherOnlineDate": "2026-07-27",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_jacs",
+        "stageBatchSha": "1e3a285d37a0cba1db6fafc15b07af8e3833137f",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_Published_Online_original_Article_History_index_with_Crossref_OpenAlex_source_commit",
+        "noProtectedFullTextAssumed": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "经定向进化PhyACCO非血红素铁酶得到两个互补氮迁移酶ACCO-Nimα和ACCO-Nimβ，可分别通过不同HAT位置选择性实现1,3/1,4氮迁移，在惰性C(sp3)–H位点产生新的C–N键，实现非天然α和β氨基酸的实际手性合成。 从羧酸衍生的氮转移前体在酶催化下对次级或三级C(sp3)–H进行非天然胺化，经氮迁移生成非天然α-氨基酸或β-氨基酸；Nimα偏向1,5-HAT导向的α位转移，Nimβ可利用1,6-HAT路径实现β位氨基化。 JACS原始摘要给出多样非天然α氨基酸制备、消旋底物对映汇聚合成α,α-双取代氨基酸以及独立β-氨基酸制备范围；Nimα最高1900 TTN、kcat 1560 min−1，且动力学/分子内氢氘竞争证明HAT动力学相关。酶动力学指标是催化性能，不等于每种产物的分离收率。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立审查1,5-/1,6-HAT过渡态选择性模型来自KIE/动力学和计算的组合证据，不能声称酶定向进化改变了氢转移本身的固有过渡态性质，恰恰原文称两类变体KIE相近。不能将定向进化产生的新催化物种误表述为全化学小分子催化体系；其实际制备能力是双位点非天然氨基酸选择性合成。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反向重点排查是否属于仅有蛋白表达/序列优化，借‘asymmetric’关键词误收。尽管采用定向进化，报道明确合成多种可分离非天然α/β氨基酸并控制区域与立体化学，满足有机合成方法学合同中对生物催化的例外准入。"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05226",
+      "journal": "ACS Catalysis",
+      "title": "Enantioselective Synthesis of Heterohelicenes via Organocatalyzed Oxidative Formal [3 + 2] Cycloadditions between Polycyclic Indoles and Quinones",
+      "titleZh": "手性磷酸催化多环吲哚与醌酯氧化形式［3＋2］环加成不对称合成杂螺旋烃",
+      "date": "2026-08-20",
+      "authors": [
+        "Wansen Xie",
+        "Tianren Qin",
+        "Yuheng Ma",
+        "Huanchao Gu",
+        "Zidan Ye",
+        "Xiaoyu Yang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "17",
+        "pages": "17501-17513",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c05226"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "通过手性磷酸催化多环吲哚与醌酯间的氧化形式[3+2]环加成，构筑含呋喃和吡咯两类杂环的手性hetero[6]/[7]helicene，而非仅进行螺旋手性光物性测定。",
+      "evidenceBasis": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-08-20（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/acscatal.6c05226，Crossref+OpenAlex冻结批次 2026-08-15_2026-08-21_acs-catalysis，Git blob SHA ddeadf49303e5cb9524c42d1f63e28006ed4ce82；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+      "challengeReason": "独立挑战‘formal [3+2]’和一步协同环加成的概念混淆：实验和DFT更支持顺序吲哚芳基化/氧化/环化过程，不应宣称观察到单步协同环加成。‘[7]/[6]’只是骨架环数类别，也不能把稳定性与手性选择性在所有产物推广到同一数值。",
+      "scopeAssessment": {
+        "primaryContribution": "通过手性磷酸催化多环吲哚与醌酯间的氧化形式[3+2]环加成，构筑含呋喃和吡咯两类杂环的手性hetero[6]/[7]helicene，而非仅进行螺旋手性光物性测定。",
+        "preparativeTransformation": "多环吲哚与醌酯在CPA催化及氧化条件下依次经历吲哚C3位芳基化、氢醌氧化及分子内1,6-加成，形成新的C–C及C–O连接并闭合为含呋喃/吡咯融合结构的杂螺旋芳香骨架。",
+        "generalityEvidence": "ACS官方摘要明确得到多种杂[6]/[7]螺旋烃并报告较好至较高的收率及对映选择性，构型稳定且可进一步官能团化；控制实验支持顺序串联，DFT提出初始加成是主要手性决定步骤并探讨氢醌添加剂的促进作用。",
+        "sourceEvidence": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-08-20（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/acscatal.6c05226，Crossref+OpenAlex冻结批次 2026-08-15_2026-08-21_acs-catalysis，Git blob SHA ddeadf49303e5cb9524c42d1f63e28006ed4ce82；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+        "boundaryChallenge": "反向质疑是否以分子手性发光或光谱应用为主，只是偶然分离一个样品。原始摘要以CPA不对称多底物氧化环加成制备为首要贡献，且提供潜在的衍生化，不因光物性表征而排除。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acscatal.6c05226",
+        "publisherOnlineDate": "2026-08-20",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-15_2026-08-21_acs-catalysis",
+        "stageBatchSha": "ddeadf49303e5cb9524c42d1f63e28006ed4ce82",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_Published_Online_original_Article_History_index_with_Crossref_OpenAlex_source_commit",
+        "noProtectedFullTextAssumed": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "通过手性磷酸催化多环吲哚与醌酯间的氧化形式[3+2]环加成，构筑含呋喃和吡咯两类杂环的手性hetero[6]/[7]helicene，而非仅进行螺旋手性光物性测定。 多环吲哚与醌酯在CPA催化及氧化条件下依次经历吲哚C3位芳基化、氢醌氧化及分子内1,6-加成，形成新的C–C及C–O连接并闭合为含呋喃/吡咯融合结构的杂螺旋芳香骨架。 ACS官方摘要明确得到多种杂[6]/[7]螺旋烃并报告较好至较高的收率及对映选择性，构型稳定且可进一步官能团化；控制实验支持顺序串联，DFT提出初始加成是主要手性决定步骤并探讨氢醌添加剂的促进作用。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "独立挑战‘formal [3+2]’和一步协同环加成的概念混淆：实验和DFT更支持顺序吲哚芳基化/氧化/环化过程，不应宣称观察到单步协同环加成。‘[7]/[6]’只是骨架环数类别，也不能把稳定性与手性选择性在所有产物推广到同一数值。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反向质疑是否以分子手性发光或光谱应用为主，只是偶然分离一个样品。原始摘要以CPA不对称多底物氧化环加成制备为首要贡献，且提供潜在的衍生化，不因光物性表征而排除。"
+    },
+    {
+      "doi": "10.1021/acscatal.6c04677",
+      "journal": "ACS Catalysis",
+      "title": "Harnessing Noncovalent Interactions in Transition-Metal Catalysis: An Asymmetric Allylation/Lactonization Cascade to Chiral γ-Butyrolactones",
+      "titleZh": "铱／钯催化不对称烯丙基化－内酯化串联构建邻近双立体中心γ-丁内酯",
+      "date": "2026-08-19",
+      "authors": [
+        "Guang-Jin Zhen",
+        "Wenjing Liu",
+        "Bing-Ke Zhu",
+        "Yanfeng Dang",
+        "Xiu-Qin Dong",
+        "Chun-Jiang Wang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "17",
+        "pages": "17392-17405",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c04677"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "借助催化中心与底物之间弱非共价相互作用重新控制共轭烯内酯（olefinic azlactone）的区域选择性，将原本倾向γ位的反应重定向为α位不对称烯丙基化，再经内酯化形成含邻近季碳和叔碳中心的手性γ-丁内酯。",
+      "evidenceBasis": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-08-19（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/acscatal.6c04677，Crossref+OpenAlex冻结批次 2026-08-15_2026-08-21_acs-catalysis，Git blob SHA ddeadf49303e5cb9524c42d1f63e28006ed4ce82；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+      "challengeReason": "第二遍重点区分Ir/Pd是可选择反应模式，不应说同时在同一锅里形成共同杂双金属络合物；DFT认为色散作用主导α/γ区域性、氢键帮助缔合，只能称作者机理模型，不能断言氢键完全不存在。产物真实双立体中心与合成衍生化构成准入证据。",
+      "scopeAssessment": {
+        "primaryContribution": "借助催化中心与底物之间弱非共价相互作用重新控制共轭烯内酯（olefinic azlactone）的区域选择性，将原本倾向γ位的反应重定向为α位不对称烯丙基化，再经内酯化形成含邻近季碳和叔碳中心的手性γ-丁内酯。",
+        "preparativeTransformation": "烯烃取代的azlactones作为掩蔽二烯醇盐，与Ir/Pd π-烯丙基电亲试剂发生近端α位选择性成键、随后内酯化，生成可分离的手性γ-丁内酯，控制α/γ、E/Z、dr和ee。",
+        "generalityEvidence": "ACS官方文章摘要报告完全α区域选择性与高E/Z、dr、ee，同时给出放大实验与不同官能化衍生物；使用Ir和Pd两种反应模式，二者机制不同（Ir动力学拆分，Pd快速互变下动态动力学不对称转化）。具体收率和底物种数未获完整SI，故不臆造。",
+        "sourceEvidence": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-08-19（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/acscatal.6c04677，Crossref+OpenAlex冻结批次 2026-08-15_2026-08-21_acs-catalysis，Git blob SHA ddeadf49303e5cb9524c42d1f63e28006ed4ce82；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+        "boundaryChallenge": "反向核查论文是否只有对非共价相互作用做DFT计算：其直接产物为多例实用γ-丁内酯骨架，完整α位选择性并有放大及后续功能化，满足方法学证据。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acscatal.6c04677",
+        "publisherOnlineDate": "2026-08-19",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-15_2026-08-21_acs-catalysis",
+        "stageBatchSha": "ddeadf49303e5cb9524c42d1f63e28006ed4ce82",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_Published_Online_original_Article_History_index_with_Crossref_OpenAlex_source_commit",
+        "noProtectedFullTextAssumed": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "借助催化中心与底物之间弱非共价相互作用重新控制共轭烯内酯（olefinic azlactone）的区域选择性，将原本倾向γ位的反应重定向为α位不对称烯丙基化，再经内酯化形成含邻近季碳和叔碳中心的手性γ-丁内酯。 烯烃取代的azlactones作为掩蔽二烯醇盐，与Ir/Pd π-烯丙基电亲试剂发生近端α位选择性成键、随后内酯化，生成可分离的手性γ-丁内酯，控制α/γ、E/Z、dr和ee。 ACS官方文章摘要报告完全α区域选择性与高E/Z、dr、ee，同时给出放大实验与不同官能化衍生物；使用Ir和Pd两种反应模式，二者机制不同（Ir动力学拆分，Pd快速互变下动态动力学不对称转化）。具体收率和底物种数未获完整SI，故不臆造。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍重点区分Ir/Pd是可选择反应模式，不应说同时在同一锅里形成共同杂双金属络合物；DFT认为色散作用主导α/γ区域性、氢键帮助缔合，只能称作者机理模型，不能断言氢键完全不存在。产物真实双立体中心与合成衍生化构成准入证据。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反向核查论文是否只有对非共价相互作用做DFT计算：其直接产物为多例实用γ-丁内酯骨架，完整α位选择性并有放大及后续功能化，满足方法学证据。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02954",
+      "journal": "Organic Letters",
+      "title": "Nickel-Catalyzed Enantioselective Synthesis of Chiral Alkenyl Sulfoxides",
+      "titleZh": "镍催化烯基溴化物与原位次磺酸根不对称碳硫偶联合成烯基亚砜",
+      "date": "2026-09-03",
+      "authors": [
+        "Li Gao",
+        "Jing-Wen Wang",
+        "Meng-Xiang Li",
+        "Ya-Qian Zhang",
+        "Lin Liu",
+        "Qing-Wei Zhang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "37",
+        "pages": "11451-11456",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02954"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "作者通过现场产生的次磺酸根（sulfenate）与烯基溴化物发生镍催化不对称C(sp2)–S交叉偶联，构建硫中心手性烯基亚砜，提供易催化剂毒化含硫体系的通用解决策略。",
+      "evidenceBasis": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-09-03（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/acs.orglett.6c02954，Crossref+OpenAlex冻结批次 2026-09-01_2026-09-07_organic-letters，Git blob SHA 80aca4837373541c9ba22bdcae30cd0bd2f64511；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+      "challengeReason": "第二遍严格区分sulfenate anion与sulfinate（亚磺酸盐）或sulfone，前者与烯基溴化物偶联后获得手性亚砜，不能把起始物当作最终烯基亚砜的硫中心原本已固定。配体稳定机理为作者实验解释，不能假定所有硫亲核试剂都不会毒化催化剂。",
+      "scopeAssessment": {
+        "primaryContribution": "作者通过现场产生的次磺酸根（sulfenate）与烯基溴化物发生镍催化不对称C(sp2)–S交叉偶联，构建硫中心手性烯基亚砜，提供易催化剂毒化含硫体系的通用解决策略。",
+        "preparativeTransformation": "烯基溴化物作为有机亲电伙伴，与反应体系中原位生成的次磺酸根物种发生Ni-双膦配体催化的C(sp2)–S交叉偶联，制备多个具有立体构型的烯基亚砜；不能把产物误称为含硫砜或硫醚。",
+        "generalityEvidence": "ACS Organic Letters官方摘要明确报告结构多样的手性烯基亚砜制备、磷配体调节减缓硫试剂毒化与复杂手性亚砜骨架的后续分歧合成；详细底物列表/单个ee没有直接证据，不补写。",
+        "sourceEvidence": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-09-03（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/acs.orglett.6c02954，Crossref+OpenAlex冻结批次 2026-09-01_2026-09-07_organic-letters，Git blob SHA 80aca4837373541c9ba22bdcae30cd0bd2f64511；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
+        "boundaryChallenge": "独立反查含硫试剂对镍的毒化研究是否只是保护金属表面的材料论文：真实体系通过多个烯基溴化物形成C–S键并获得硫中心手性产物，独立满足合成方法学。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02954",
+        "publisherOnlineDate": "2026-09-03",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_organic-letters",
+        "stageBatchSha": "80aca4837373541c9ba22bdcae30cd0bd2f64511",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_Published_Online_original_Article_History_index_with_Crossref_OpenAlex_source_commit",
+        "noProtectedFullTextAssumed": true
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "作者通过现场产生的次磺酸根（sulfenate）与烯基溴化物发生镍催化不对称C(sp2)–S交叉偶联，构建硫中心手性烯基亚砜，提供易催化剂毒化含硫体系的通用解决策略。 烯基溴化物作为有机亲电伙伴，与反应体系中原位生成的次磺酸根物种发生Ni-双膦配体催化的C(sp2)–S交叉偶联，制备多个具有立体构型的烯基亚砜；不能把产物误称为含硫砜或硫醚。 ACS Organic Letters官方摘要明确报告结构多样的手性烯基亚砜制备、磷配体调节减缓硫试剂毒化与复杂手性亚砜骨架的后续分歧合成；详细底物列表/单个ee没有直接证据，不补写。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍严格区分sulfenate anion与sulfinate（亚磺酸盐）或sulfone，前者与烯基溴化物偶联后获得手性亚砜，不能把起始物当作最终烯基亚砜的硫中心原本已固定。配体稳定机理为作者实验解释，不能假定所有硫亲核试剂都不会毒化催化剂。"
+        }
+      ],
+      "reviewRationaleSecondPass": "独立反查含硫试剂对镍的毒化研究是否只是保护金属表面的材料论文：真实体系通过多个烯基溴化物形成C–S键并获得硫中心手性产物，独立满足合成方法学。"
     }
   ],
   "pending": [
@@ -3580,5 +4155,5 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "2026-10-13 independent six ACS DOI two-pass scope with specific original Article History and Crossref/OpenAlex matching source batch: total 52 include, 2 existing pending, 8 previously formal historical, 44 awaiting only original Beijing 08. Q3 firstOnline and all historical classes unchanged, strict toc_only, no D1, no media/PDF, not daily new/Hot/WeChat."
+  "note": "2026-10-13 late-evening Q3 eight ACS original methods approved after publisher Published Online indexed article evidence and independently challenged two-pass chemistry review. 60 accepted, 2 old date pending unchanged; 8 previously formally historical, 52 awaiting sole 08:00 writer. 10.1021/acs.orglett.6c03028 one-day discrepancy remains unapproved. Q3 toc_only, old pre-July metadata_only, zero production D1/media/offslot publication."
 }
