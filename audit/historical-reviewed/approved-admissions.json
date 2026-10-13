@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-13T02:05:59.869Z",
+  "generatedAt": "2026-10-13T03:41:09.787Z",
   "nextEligiblePublicationSlot": "2026-10-14T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 979
   },
   "summary": {
-    "checked": 22,
-    "include": 20,
+    "checked": 25,
+    "include": 23,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -1190,6 +1190,172 @@
       "publisherAbstractRights": "not_verified_do_not_republish_full_text",
       "firstPassScopeDecision": "include",
       "independentChallengeEvidence": "第二遍检验是否只能偶联高度特定的多氟代卤芳烃以及是否因Ni(0)假说错误而失去合成价值：出版社明确报告宽范围、应用于实际含氟化合物，足以支持范围内收录；Ni0物种作用按研究提示而非必然排除NiI路径。对复杂分子只称相关化合物应用，不无证据地宣称整个药物总合成。"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00587",
+      "journal": "JOC",
+      "title": "Acetic Acid-Assisted Electrochemical Ipso -Nitration of Aryl Borides Using Ferric Nitrate Nonahydrate",
+      "titleZh": "乙酸促进九水合硝酸铁参与的芳基硼化物电化学ipso硝化",
+      "date": "2026-07-02",
+      "authors": [
+        "Chunping Dong",
+        "Qiaoting Zhang",
+        "Wenqian Qin",
+        "Caijuan Hu",
+        "Xiaojiao Du",
+        "Jian Li"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "27",
+        "pages": "9319-9327",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00587"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "这是一篇有明确芳基硼化物底物、硝基芳烃产物、可推广的官能团耐受性与可扩展制备证据的电化学合成方法学论文。",
+      "evidenceBasis": "ACS出版社在2026-07-02在线发表的原始Article Abstract明示Fe(NO3)3·9H2O与AcOH、电化学ipso硝化、两小时反应、硝基芳烃良好至优异收率、官能团耐受性与可放大性；同时给出CV和自由基捕获机理研究。出版社卷91期27页9319–9327及作者和Crossref/OpenAlex历史批次一致；未把原始摘要全文复制至审稿记录。",
+      "challengeReason": "独立第二遍排查‘ipso硝化是否已有常规制法而此文仅属电解条件变化’和‘硝基自由基是否缺乏直接实证’。作者真正给出可分离的系列硝基芳烃产物、官能团耐受性和反应放大，达到一般性制备标准；机制只按CV与捕获试验的支持强度记载，不把所有芳基C–H硝化混入其适用范围。",
+      "scopeAssessment": {
+        "primaryContribution": "作者针对芳基硼化物的电化学去硼硝化建立可用于合成硝基芳烃的方法，利用乙酸促进含氮氧化试剂作用；论文的主要贡献是有机芳环硝基化转化而非电极材料本身的性能评价。",
+        "preparativeTransformation": "芳基硼化物与九水合硝酸铁在乙酸促进的电解条件下发生ipso取代，将原有芳基—硼键位置转化为芳基—硝基键，得到可分离的硝基芳烃；不能把该反应误写为芳环未经活化的直接C–H硝化。",
+        "generalityEvidence": "出版社正式摘要显示芳基硼化物底物具有广泛官能团耐受性，硝基芳烃获得良好至优异收率，可进行反应规模扩展；电解反应在作者报告条件下两小时内完成，没有在未读SI时编造每个具体例子的收率或规模。",
+        "sourceEvidence": "ACS出版社在2026-07-02在线发表的原始Article Abstract明示Fe(NO3)3·9H2O与AcOH、电化学ipso硝化、两小时反应、硝基芳烃良好至优异收率、官能团耐受性与可放大性；同时给出CV和自由基捕获机理研究。出版社卷91期27页9319–9327及作者和Crossref/OpenAlex历史批次一致；未把原始摘要全文复制至审稿记录。 原始ACS出版社页面：https://pubs.acs.org/doi/10.1021/acs.joc.6c00587。 历史来源根：2026-07-01_2026-07-07_joc，Git blob SHA：158a2415687e4a0ecf0c588356f417cc1679d70a；Crossref/OpenAlex元数据与出版社在线日已交叉核对。",
+        "boundaryChallenge": "第二遍重点质疑：硝基自由基途径是否已经被确证，以及本工作是否只优化电化学设备。作者的CV和自由基捕获结果支持硝基自由基参与但并不排除其他路径，实际存在跨底物类别的制备与规模化证据，故可作为有机合成方法学收录。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00587",
+        "publisherOnlineDate": "2026-07-02",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-01_2026-07-07_joc",
+        "stageBatchSha": "158a2415687e4a0ecf0c588356f417cc1679d70a",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00860",
+      "journal": "JOC",
+      "title": "Total Synthesis of Scytonemin and Reduced Scytonemin",
+      "titleZh": "Scytonemin及其还原形式的全合成",
+      "date": "2026-08-05",
+      "authors": [
+        "Yutaro Udagawa",
+        "Seijiro Hosokawa"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "32",
+        "pages": "10850-10855",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00860"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "出版社确认scytonemin和还原形式均已达到实际全合成终产物，有明确的关键Mannich关环、二聚以及氧化步骤，符合天然产物全合成类别。",
+      "evidenceBasis": "ACS JOC出版社正式Article在线发表于2026-08-05，91卷32期10850–10855页；官方Abstract明确两种目标产物的总合成、aminal与硅氧烯烃分子内Mannich构建三环半结构、二聚、叔丁基次氯酸酯和DDQ步骤、两种保护形式互变，CV是附加表征。两位作者和引文数据均与8月1—7日Crossref/OpenAlex候选批次一致；未复制原始全文摘要或付费PDF。",
+      "challengeReason": "独立核查两种目标产物确实进入作者已完成合成的结论，而不是合成中间体或只有形式合成；Publisher摘要已直接表述完成总合成并列出终末氧化路径。反向检查其所谓分子机器用途仍只是潜力描述及循环伏安数据，并非跨领域功能验证。因完整天然产物路线存在，最终判定纳入。",
+      "scopeAssessment": {
+        "primaryContribution": "该研究完成天然产物scytonemin及其还原形式reduced scytonemin的两条终产物制备，并提供由半分子骨架经二聚、氧化及氧化还原相互转化的完整合成路线，而非仅研究天然产物光物理或电化学行为。",
+        "preparativeTransformation": "以靛红与TIPS保护的树莓酮参与醛醇反应得到的中间体为基础，利用aminal和硅氧烯烃之间的分子内Mannich反应构筑三环半分子骨架，再二聚得到完整二聚骨架，依次利用叔丁基次氯酸酯和DDQ实现侧链双键与目标产物scytonemin，且报道保护的还原形式与氧化形式互变。",
+        "generalityEvidence": "官方摘要明确称已经完成scytonemin及reduced scytonemin的总合成，记载关键Mannich成环、二聚、t-BuOCl区域和立体选择性烯烃生成、DDQ形成目标骨架；总合成路线的目标产物完成度构成范围证据，不虚构化合物库底物个数、总体收率或任何未读原文的反应条件。",
+        "sourceEvidence": "ACS JOC出版社正式Article在线发表于2026-08-05，91卷32期10850–10855页；官方Abstract明确两种目标产物的总合成、aminal与硅氧烯烃分子内Mannich构建三环半结构、二聚、叔丁基次氯酸酯和DDQ步骤、两种保护形式互变，CV是附加表征。两位作者和引文数据均与8月1—7日Crossref/OpenAlex候选批次一致；未复制原始全文摘要或付费PDF。 原始ACS出版社页面：https://pubs.acs.org/doi/10.1021/acs.joc.6c00860。 历史来源根：2026-08-01_2026-08-07_joc，Git blob SHA：fdbac4c465d92dcc0817d7507348d985349331f3；Crossref/OpenAlex元数据与出版社在线日已交叉核对。",
+        "boundaryChallenge": "第二遍挑战该文是否主要在讨论潜在分子机器或还原形式的循环伏安，而非真正完成全合成。原始出版社页面明确报告两个目标scytonemin形式已被化学合成，CV只是一项额外表征；潜在分子机器只是作者展望，不能提升为已实现的器件功能。按已完成天然产物全合成收录，不需要硬凑方法学底物数。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00860",
+        "publisherOnlineDate": "2026-08-05",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_joc",
+        "stageBatchSha": "fdbac4c465d92dcc0817d7507348d985349331f3",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
+    },
+    {
+      "doi": "10.1021/acs.joc.5c03271",
+      "journal": "JOC",
+      "title": "Organocatalytic Cascade Aza-Mannich/Michael Addition Sequence for the Synthesis of Chiral ε-Sultam Derivatives",
+      "titleZh": "双功能氢键有机催化串联aza-Mannich／Michael加成不对称构建手性ε-磺内酰胺",
+      "date": "2026-08-01",
+      "authors": [
+        "Jun Huang",
+        "Qianru Wu",
+        "Siyi Chen",
+        "Xin Liu",
+        "Shoulei Wang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "32",
+        "pages": "11193-11197",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c03271"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "反应具有明确的氨基烯酮和七元N-磺酰亚胺起始底物、环化C–N成键、多个产物及高立体选择性，并有克级与后期产物转化证据，属于不对称有机合成方法学。",
+      "evidenceBasis": "ACS JOC出版社2026-08-01 Published Online，91卷32期11193–11197页；原始Abstract阐述双功能氢键催化、氨基烯酮与七元N-磺酰亚胺的[3+2]及[4+2]环加成，系列产物、良好收率、最高>20:1 dr和99:1 er、克级规模及化学衍生化。历史源批次作者和引用信息匹配；未转载受限制原摘要全文、PDF或SI。",
+      "challengeReason": "第二遍独立挑战该方法是否存在局限于氨基烯酮和N-磺酰亚胺的骨架偏窄问题，并检查最高dr/er是否被不当夸大为全范围表现；原始摘要存在两种环化模式与一系列产物、实际放大和后修饰，符合可迁移的窄类别方法学，但不主张任意亚胺或任意底物均适用，也不推测未核实绝对构型。",
+      "scopeAssessment": {
+        "primaryContribution": "报道双功能氢键有机催化体系驱动七元环N-磺酰亚胺与氨基烯酮的串联环化，使不同环化模式下的手性ε-磺内酰胺骨架能够以良好对映和非对映选择性构建。",
+        "preparativeTransformation": "氨基烯酮与七元环N-磺酰亚胺作为反应伙伴，在有机氢键催化下通过作者报道的[3+2]和[4+2]环化序列构建手性ε-磺内酰胺及新C–N键；标题描述aza-Mannich/Michael串联，但不能仅凭标题断言每个底物均经过相同可捕获中间体。",
+        "generalityEvidence": "ACS官网摘要明确报道一系列ε-磺内酰胺衍生物具有良好收率、最高大于20:1 dr与最高99:1 er，并提供克级制备和对产物的后续化学转化；最高选择性仅为报道上限，不代表全部底物均达到该水平。",
+        "sourceEvidence": "ACS JOC出版社2026-08-01 Published Online，91卷32期11193–11197页；原始Abstract阐述双功能氢键催化、氨基烯酮与七元N-磺酰亚胺的[3+2]及[4+2]环加成，系列产物、良好收率、最高>20:1 dr和99:1 er、克级规模及化学衍生化。历史源批次作者和引用信息匹配；未转载受限制原摘要全文、PDF或SI。 原始ACS出版社页面：https://pubs.acs.org/doi/10.1021/acs.joc.5c03271。 历史来源根：2026-08-01_2026-08-07_joc，Git blob SHA：fdbac4c465d92dcc0817d7507348d985349331f3；Crossref/OpenAlex元数据与出版社在线日已交叉核对。",
+        "boundaryChallenge": "对抗性第二遍检验：如果七元环N-磺酰亚胺体系仅是一次特定骨架展示，是否缺乏可迁移的合成能力？官方原始摘要同时呈现两类不同环加成模式、一系列底物、克级放大和产物转化，足以证明特定底物类别内的一般制备贡献。对选择性控制的分子级催化机制并无直接源证时只保留为作者方案。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.5c03271",
+        "publisherOnlineDate": "2026-08-01",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_joc",
+        "stageBatchSha": "fdbac4c465d92dcc0817d7507348d985349331f3",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text"
     }
   ],
   "pending": [
@@ -1232,5 +1398,5 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "2026-10-13 cross-journal historical source reviews appended in distinct article-specific two passes; 8 previously admitted at 08:00, 12 newly approved awaiting next 2026-10-14 08:00 ONLY; source-date-conflict DOI pending, no raw copyrighted text/media/PDF; no off-slot publication."
+  "note": "2026-10-13 Q3-first intake: three JOC papers with ACS official first-online dates and paper-specific independent two-pass evidence; 8 already published at previous 08:00, Q3 TOC only, no other off-slot publishing."
 }

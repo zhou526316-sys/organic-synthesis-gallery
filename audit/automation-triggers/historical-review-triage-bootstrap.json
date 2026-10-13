@@ -8,15 +8,17 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-13T03:46:36.429Z",
-  "reason": "Owner-approved 2026-Q3 FIRST completeness / benchmark-diagnostic (not quota). Build 192-source-window, DOI-unique, 16-journal x month and real 320-source-review-page report from staging after merged PR #588; local GitHub metadata only, ZERO D1, no old media, no paper publication.",
+  "requestedAt": "2026-10-13T03:49:21.265Z",
+  "reason": "After merged owner-authorized PR #589 (three ACS-verified Jul/Aug JOC independent two-pass reviews), recompute Q3 source/DOI/scope ledger and balanced 320-paper worklist from same 371 trusted roots. GitHub staging ONLY: zero Cloudflare D1, no formal release or old PDF/SI/figures.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261013_owner_q3_first_quarter_census_192_sources",
+  "triggerScope": "20261013_q3_reconcile_after_23_approvals",
   "expectedCompleteRootCount": 346,
   "expectedPublishedCatalogMembers": 979,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
   "approvalSource": "user approved full historical comprehensive backfill and explicitly protect today's D1 quota",
   "allowedCloudflareD1Queries": 0,
   "expectedQ3CompletedRoots": 192,
-  "expectedStageCompletedRootsAtRequest": 371
+  "expectedStageCompletedRootsAtRequest": 371,
+  "expectedStageCompletedRoots": 371,
+  "expectedAcademicInclude": 23
 }
