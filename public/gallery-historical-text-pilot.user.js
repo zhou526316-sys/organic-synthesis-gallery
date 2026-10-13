@@ -474,7 +474,7 @@
         pending:keys.length+1,error:''});
       // A diagnostic failure must never interrupt, block or mark text acquisition successful.
       void batchDrainReports();
-      return true;
+      return eventId;
     }catch(_){return false;}
   }
   function batchHttpRequest(options){
@@ -801,16 +801,31 @@
   }
   async function batchAwaitResponse(job){
     const start=Date.now();
+    let lastSeenStage='';
     while(Date.now()-start<BATCH_LIMIT_MS){
       if(batchPaused)return {status:'paused'};
+      const progress=GM_getValue(BATCH_PROGRESS,null);
+      if(progress?.runId===job.runId&&progress?.token===job.token
+         &&progress?.stage!==lastSeenStage){
+        lastSeenStage=progress.stage;
+        batchStatusWrite({currentStage:lastSeenStage});
+        if(progress.failed===true&&progress.reasonCode){
+          batchQueueDiagnostic(job,'failure_checkpoint','failed',
+            batchStageForStatus(progress.reasonCode),progress.reasonCode,{
+              pageDoiVerified:progress.pageDoiVerified===true,
+              sectionCount:progress.sectionCount||0,evidenceChars:progress.evidenceChars||0,
+              httpStatus:progress.httpStatus??null
+            });
+        }
+      }
       const value=GM_getValue(BATCH_RESULT,null);
       if(value&&value.token===job.token&&value.doi===job.doi
         &&value.runId===job.runId)return value;
       await batchWait(350);
     }
-    return {status:'timeout'};
+    return {status:'timeout',stage:'publisher_wait',reasonCode:'publisher_no_response'};
   }
-  async function batchStart(){
+  async function batchStart(manualBlocked=false){
     if(batchActive)return;
     const current=GM_getValue(BATCH_LEASE,null);
     if(current&&current.until>Date.now()){
@@ -820,7 +835,7 @@
     const catalog=await batchLoadCanonicalCatalog();
     const papers=batchHistoricalPapers(catalog);
     if(!papers.length){window.alert('正式目录中暂无 2026-10-01 前的文献');return;}
-    if(!window.confirm('开始独立补抓 '+papers.length+' 篇正式历史 DOI？\n将逐篇在后台打开出版社页面，仅在明确可验证的 CC BY/CC0 许可下保存文本到当前浏览器；不抓 PDF/正文图/SI，不上传原文，也不修改 TOC 队列。浏览器需要保持开启。'))return;
+    if(!window.confirm((manualBlocked?'重新检查包括许可／正文受阻项在内的全部候选：':'开始独立补抓 ') +papers.length+' 篇正式历史 DOI？\n逐篇打开出版社页面，仅保存有明确 CC BY/CC0 授权的本文正文到本机；不抓 PDF/图/SI，不触碰媒体队列。浏览器需保持开启。'))return;
     const competing=GM_getValue(BATCH_LEASE,null);
     if(competing&&competing.until>Date.now()){
       window.alert('已有历史正文批次正在运行，未建立第二个队列。');return;
@@ -835,25 +850,25 @@
     },4000);
     GM_setValue(BATCH_LEASE,{runId,until:Date.now()+BATCH_LEASE_MS});
     batchStatusWrite({state:'running',runId,total:papers.length,attempted:0,
-      saved:0,existing:existing.size,rightsPending:0,failed:0,skipped:0,startedAt:Date.now(),lastDoi:''});
+      saved:0,existing:existing.size,rightsPending:0,failed:0,skipped:0,
+      currentStage:'queued',lastError:'',startedAt:Date.now(),lastDoi:''});
     try{
       for(const paper of papers){
         if(batchPaused)break;
         if(existing.has(paper.doi)){skipped++;continue;}
         const prior=await batchDbOp(db,'attempts','get',paper.doi);
-        if(prior&&Date.now()-Number(prior.checkedAt||0)<BATCH_RETRY_MS
-          &&prior.status!=='storage_failure'&&prior.status!=='paused'){skipped++;continue;}
+        if(!batchRetryAllowed(prior,manualBlocked)){skipped++;continue;}
         const token=batchId();
         const job={runId,token,doi:paper.doi,publication:paper.publication,
           title:paper.title,journal:paper.journal,expiresAt:Date.now()+BATCH_LIMIT_MS};
-        GM_deleteValue(BATCH_RESULT);GM_setValue(BATCH_JOB,job);
-        batchStatusWrite({lastDoi:paper.doi});
-        let result={status:'publisher_unreachable'};
+        GM_deleteValue(BATCH_RESULT);GM_deleteValue(BATCH_PROGRESS);GM_setValue(BATCH_JOB,job);
+        batchStatusWrite({lastDoi:paper.doi,currentStage:'publisher_open'});
+        let result={status:'publisher_unreachable',stage:'publisher_open'};
         try{
           batchTab=GM_openInTab('https://doi.org/'+paper.doi+'#gallery-historical-job='+token,
             {active:false,insert:false,setParent:true});
           result=await batchAwaitResponse(job);
-        }catch(_){result={status:'publisher_unreachable'};}
+        }catch(_){result={status:'publisher_unreachable',stage:'publisher_open'};}
         finally{
           try{batchTab?.close?.();}catch(_){}
           batchTab=null;GM_deleteValue(BATCH_JOB);GM_deleteValue(BATCH_RESULT);
@@ -861,6 +876,10 @@
         if(result.status==='paused')break;
         attempted++;
         let status=BATCH_ERRORS.has(result.status)?result.status:'invalid_response';
+        const evidenceMeta={pageDoiVerified:result.pageDoiVerified===true,
+          sectionCount:Number(result.sectionCount||0),evidenceChars:Number(result.evidenceChars||0),
+          httpStatus:Number(result.httpStatus||0)||null};
+        let stage=String(result.stage||batchStageForStatus(status));
         if(result.status==='ok'){
           const packet=result.packet;
           if(packet?.doi===paper.doi&&packet?.publication===paper.publication
@@ -873,17 +892,43 @@
               const canonical=[...packet.sections.map(x=>x.heading+'\n'+x.text),
                 ...packet.captions.map(x=>x.label+'\n'+x.text),
                 ...packet.tables.map(x=>x.label+'\n'+x.text)].join('\n');
-              if(await sha256(canonical)!==packet.sourceSha256)
-                throw Error('response_hash_mismatch');
-              await batchDbOp(db,'packets','put',{doi:paper.doi,packet,checkedAt:Date.now()});
-              saved++;existing.add(paper.doi);status='saved_local';
-            }catch(_){status='storage_failure';}
+              if(await sha256(canonical)!==packet.sourceSha256){
+                status='response_hash_mismatch';stage='hash_verify';
+              }else{
+                await batchDbOp(db,'packets','put',{doi:paper.doi,packet,checkedAt:Date.now()});
+                saved++;existing.add(paper.doi);status='saved_local';stage='local_store';
+                evidenceMeta.pageDoiVerified=true;
+                evidenceMeta.sectionCount=packet.sections.length;
+                evidenceMeta.evidenceChars=Number(packet.characters||canonical.length);
+              }
+            }catch(_){status='storage_failure';stage='local_store';}
           }
         }
         if(status==='license_not_verified')rightsPending++;
         else if(status!=='saved_local')failed++;
-        await batchDbOp(db,'attempts','put',{doi:paper.doi,status,checkedAt:Date.now()});
-        batchStatusWrite({attempted,saved,rightsPending,failed,skipped,lastDoi:paper.doi});
+        const localRecord={doi:paper.doi,journal:paper.journal,status,reasonCode:status,
+          stage,checkedAt:Date.now(),httpStatus:evidenceMeta.httpStatus,
+          pageDoiVerified:evidenceMeta.pageDoiVerified,
+          sectionCount:evidenceMeta.sectionCount,evidenceChars:evidenceMeta.evidenceChars,
+          runId,jobId:token,reportEventId:''};
+        // Save failure evidence before attempting its upload. Server transmission
+        // must never be a prerequisite to finishing a publisher DOI.
+        try{
+          await batchDbOp(db,'attempts','put',localRecord);
+        }catch(_){
+          batchStatusWrite({lastError:'当前 DOI 的本机诊断保存失败：'+paper.doi});
+        }
+        const serverStatus=status==='saved_local'?'success':
+          status==='license_not_verified'||status==='page_access_blocked'?'blocked':'failed';
+        const eventId=batchQueueDiagnostic(job,'final_result',serverStatus,
+          stage,status,evidenceMeta);
+        if(eventId&&typeof eventId==='string'){
+          localRecord.reportEventId=eventId;
+          try{await batchDbOp(db,'attempts','put',localRecord);}catch(_){}
+        }
+        batchStatusWrite({attempted,saved,rightsPending,failed,skipped,lastDoi:paper.doi,
+          currentStage:stage,lastError:status==='saved_local'?'':batchDiagnosticLabel(status)});
+        GM_deleteValue(BATCH_PROGRESS);
         // One article tab, bounded requests and non-overlapping registry/lease.
         // This delay avoids monopolizing publisher traffic alongside media capture.
         if(!batchPaused)await batchWait(BATCH_MIN_GAP_MS);
