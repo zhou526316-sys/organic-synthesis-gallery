@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "owner_authorized_2026_q3_16journal_post_RSC_review_reconciliation",
+  "purpose": "owner_authorized_2026_q3_source_original_article_type_audit_refresh",
   "approvedAt": "2026-10-13",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,10 +8,10 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-13T07:01:09.104Z",
-  "reason": "Refresh 192/192 Crossref/OpenAlex Q3 source roots and 320-row staging-only reviewer worklist after main PR #594 (8 Chemical Science first-online NLM journal-ePub dates) and #595 (2 Green Chemistry original RSC publisher-imprint online dates); 37 individually double-reviewed include and 2 prior unresolved pending, 984 formal DOI, Q3 743 formal. No D1, no Media, no off-slot production publication. Preserve actual raw metadata unknown dates separately from newly independently resolved evidence.",
+  "requestedAt": "2026-10-13T07:49:01.861Z",
+  "reason": "Post PR #597 (8 ACS research academic approvals), PR #598 (five Nature publisher-verified commentary/highlight/briefing exact DOI exclusions and Q3 reconciliation code), PR #599 (original Angew pyrrole synthetic Article behind Nature highlight). Source roots 371, Q3 192/192; formal 984, Q3 743, 46 independent include/2 original pending, eight previously formal; source DOI count immutable, original source date uncertainty remains distinct. GitHub staging only, zero Cloudflare production D1, no new publisher media or any off-slot publication.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261013_q3_reconcile_after_37_approvals",
+  "triggerScope": "20261013_q3_after_46_approved_5_exact_publisher_type_excluded",
   "expectedCompleteRootCount": 371,
   "expectedPublishedCatalogMembers": 984,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
@@ -20,7 +20,10 @@
   "expectedQ3CompletedRoots": 192,
   "expectedStageCompletedRootsAtRequest": 371,
   "expectedStageCompletedRoots": 371,
-  "expectedAcademicInclude": 37,
-  "academicDecisionSource": "latest_main_approved_admissions_37_include_two_pass_two_old_pending",
-  "publisherResearchIssueComplete": false
+  "expectedAcademicInclude": 46,
+  "academicDecisionSource": "main_approved_manifest_46_include_2_pending",
+  "publisherResearchIssueComplete": false,
+  "publisherNonResearchExactCount": 5,
+  "trustedScopeRulesSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
+  "trustedScopeCorrectionsSha": "74978d92a16d353271f16f111425d09e4de84f07"
 }

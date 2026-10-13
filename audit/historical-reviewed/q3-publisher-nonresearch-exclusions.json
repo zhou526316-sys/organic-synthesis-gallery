@@ -1,0 +1,200 @@
+{
+  "schemaVersion": "gallery-historical-q3-publisher-type-exclusions-v1",
+  "mode": "publisher_verified_non_original_doi_only_not_publication",
+  "generatedAt": "2026-10-13T07:42:31.589Z",
+  "period": "2026-07-01..2026-09-30",
+  "reviewed": [
+    {
+      "doi": "10.1038/s41929-026-01597-6",
+      "journal": "Nature Catalysis",
+      "title": "Ketene-driven Mizoroki–Heck cross-coupling",
+      "date": "2026-08-28",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "出版社页面明确标注News & Views；作者Melchiorre与Bismuto解读另篇Zhao等人的酮烯-止转Heck偶联。这里没有以该DOI自身提出新的Pd催化实验方法。",
+      "independentChallengeReason": "尽管标题直接出现Mizoroki–Heck cross-coupling并讨论酮烯原位生成和α,β-不饱和酮，它是评论其他论文而非原创研究；应将真正方法学归到Zhao等人的独立DOI，不能为同一方法重复创建Gallery原创卡片。",
+      "reason": "Original research paper requirement: News & Views is not a standalone original synthetic-method study under this DOI.",
+      "evidenceBasis": "Springer Nature corresponding DOI page explicitly labels this item News & Views; the first paragraph/related research citation identifies it as commentary/briefing/highlight. Verified original article is distinct where identified. First-online date 2026-08-28 is the commentary's publication date, not the underlying original research's date. Publisher: https://www.nature.com/articles/s41929-026-01597-6. Source window: 2026-08-22_2026-08-31_nature-catalysis; frozen Git blob edc6ff7e93578d3a71acac866af7c3d2ec484634.",
+      "underlyingOriginalResearchDoi": "10.1038/s41929-026-01579-8",
+      "underlyingOriginalAlreadyFormal": true,
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41929-026-01597-6",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-08-28",
+        "sourceRootId": "2026-08-22_2026-08-31_nature-catalysis",
+        "stageSourceSha256": "02b13a33cbd4f3d8f42a6c8e8d8650717ed3cfa854a87c2d8424679e21a2ac41",
+        "stageBatchGitBlobSha": "edc6ff7e93578d3a71acac866af7c3d2ec484634",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "publisherArticleType": "News & Views"
+    },
+    {
+      "doi": "10.1038/s44160-026-01160-y",
+      "journal": "Nature Synthesis",
+      "title": "Electroreductive oxime carboxylation with CO2 produces arylglycines",
+      "date": "2026-09-24",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "Nature Synthesis出版社Article Type明确是News & Views，作者Zhang、Li与Zeng为另篇Sun等人的CO2+NO2-+醛电化学合成芳基甘氨酸作解读。",
+      "independentChallengeReason": "文中叙述两步电还原羧化与芳基甘氨酸产物，表面上满足关键词，但没有在此DOI下建立新的底物与制备数据；原方法论文已在Gallery正式目录，评论不得作为第二篇合成方法纳入。",
+      "reason": "Original research paper requirement: News & Views is not a standalone original synthetic-method study under this DOI.",
+      "evidenceBasis": "Springer Nature corresponding DOI page explicitly labels this item News & Views; the first paragraph/related research citation identifies it as commentary/briefing/highlight. Verified original article is distinct where identified. First-online date 2026-09-24 is the commentary's publication date, not the underlying original research's date. Publisher: https://www.nature.com/articles/s44160-026-01160-y. Source window: 2026-09-22_2026-09-30_nature-synthesis; frozen Git blob 8173009c325d31a44974085043e442d4ef63103c.",
+      "underlyingOriginalResearchDoi": "10.1038/s44160-026-01161-x",
+      "underlyingOriginalAlreadyFormal": true,
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01160-y",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-09-24",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-synthesis",
+        "stageSourceSha256": "84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e",
+        "stageBatchGitBlobSha": "8173009c325d31a44974085043e442d4ef63103c",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "publisherArticleType": "News & Views"
+    },
+    {
+      "doi": "10.1038/s44160-026-01174-6",
+      "journal": "Nature Synthesis",
+      "title": "Sustainable pyrrole synthesis",
+      "date": "2026-09-28",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "出版社页面Article Type是Research Highlight，Seavill作为Nature Synthesis编辑介绍Pt/酸性分子筛推动硝基芳烃与呋喃转化为吡咯的催化研究；此DOI不是报道实验底物与条件的研究Article。 Wiley原研究《Sustainable Access to N-Heterocycles: One-Pot Cascade Synthesis of Pyrroles From Bio-Derived Furans》DOI 10.1002/anie.8203203已通过Wiley官方摘要的Pt/HY催化剂、常压H2和呋喃/硝基芳烃制备吡咯证据匹配，首次在线2026-09-08。",
+      "independentChallengeReason": "虽然亮点文字提及底物耐受、接近定量产率和药物候选应用，但这些是编辑报道的他人结果，且并非Seavill本文的独立研究；真正原始文献必须另以其独立DOI核验，不能从亮点直接建档。 其原研究明确属于Angew 2026-09-08，而非Nature Synthesis 2026-09-28的本高亮文章，保留独立学术审查和独立准入权。",
+      "reason": "Original research paper requirement: Research Highlight is not a standalone original synthetic-method study under this DOI.",
+      "evidenceBasis": "Springer Nature corresponding DOI page explicitly labels this item Research Highlight; the first paragraph/related research citation identifies it as commentary/briefing/highlight. Verified original article is distinct where identified. First-online date 2026-09-28 is the commentary's publication date, not the underlying original research's date. Publisher: https://www.nature.com/articles/s44160-026-01174-6. Source window: 2026-09-22_2026-09-30_nature-synthesis; frozen Git blob 8173009c325d31a44974085043e442d4ef63103c.",
+      "underlyingOriginalResearchDoi": "10.1002/anie.8203203",
+      "underlyingOriginalAlreadyFormal": false,
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01174-6",
+        "publisherArticleType": "Research Highlight",
+        "publisherArticleDate": "2026-09-28",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-synthesis",
+        "stageSourceSha256": "84375252df777925be0c8f6c7c398a59d2229c889f14f6d98f5feaef49fd392e",
+        "stageBatchGitBlobSha": "8173009c325d31a44974085043e442d4ef63103c",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "publisherArticleType": "Research Highlight",
+      "underlyingOriginalResearchPublishedOnline": "2026-09-08",
+      "underlyingOriginalPublisherUrl": "https://onlinelibrary.wiley.com/doi/10.1002/anie.8203203"
+    },
+    {
+      "doi": "10.1038/s41557-026-02201-x",
+      "journal": "Nature Chemistry",
+      "title": "Endo-selective [2+2] cycloaddition of norbornadienes enables the synthesis of homocubanes",
+      "date": "2026-07-10",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "Nature Chemistry官方页面标注News & Views，Rigotti介绍Dai等人的镍催化降冰片二烯内面选择性[2+2]环加成及高张力homocubane合成；被评论的研究2026-06-05在线发表，不属于本季度首发。",
+      "independentChallengeReason": "标题似乎是新的[2+2]反应，但其单作者评论没有报告本篇独立底物范围，原始研究DOI是6月5日已发表的独立Article。不得错误将评论7月10日作为原研究的首次在线发表日或把两篇都纳入。",
+      "reason": "Original research paper requirement: News & Views is not a standalone original synthetic-method study under this DOI.",
+      "evidenceBasis": "Springer Nature corresponding DOI page explicitly labels this item News & Views; the first paragraph/related research citation identifies it as commentary/briefing/highlight. Verified original article is distinct where identified. First-online date 2026-07-10 is the commentary's publication date, not the underlying original research's date. Publisher: https://www.nature.com/articles/s41557-026-02201-x. Source window: 2026-07-08_2026-07-14_nature-chemistry; frozen Git blob 5e87a3c838982b0a69b95b9412a960de3ab1f261.",
+      "underlyingOriginalResearchDoi": "10.1038/s41557-026-02167-w",
+      "underlyingOriginalAlreadyFormal": false,
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02201-x",
+        "publisherArticleType": "News & Views",
+        "publisherArticleDate": "2026-07-10",
+        "sourceRootId": "2026-07-08_2026-07-14_nature-chemistry",
+        "stageSourceSha256": "b94659315c82d6c0e353a59ab003a57022e5f89d2dcb1d1281cd6ed62b1b8878",
+        "stageBatchGitBlobSha": "5e87a3c838982b0a69b95b9412a960de3ab1f261",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "publisherArticleType": "News & Views"
+    },
+    {
+      "doi": "10.1038/s41557-026-02246-y",
+      "journal": "Nature Chemistry",
+      "title": "Breaking N-alkyl aziridines for cross-coupling reactions",
+      "date": "2026-09-23",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reviewPasses": 2,
+      "firstPassReason": "出版社在本篇标明Research Briefing并明确写出'这是Peng等人Nature Chemistry原研究的总结'；原研究利用硼烷配位/硼自由基β裂解使N-烷基氮杂环丙烷开环。",
+      "independentChallengeReason": "尽管该简报以跨偶联为题且讨论多种胺产物，原创实验、Cu/镍体系与底物通用性均属于另一个Article DOI，后者已在正式Gallery；简报不是第二个可纳入的独立合成方法。",
+      "reason": "Original research paper requirement: Research Briefing is not a standalone original synthetic-method study under this DOI.",
+      "evidenceBasis": "Springer Nature corresponding DOI page explicitly labels this item Research Briefing; the first paragraph/related research citation identifies it as commentary/briefing/highlight. Verified original article is distinct where identified. First-online date 2026-09-23 is the commentary's publication date, not the underlying original research's date. Publisher: https://www.nature.com/articles/s41557-026-02246-y. Source window: 2026-09-22_2026-09-30_nature-chemistry; frozen Git blob ef85949eabfe8dc46703c6463cf2498a317c17f8.",
+      "underlyingOriginalResearchDoi": "10.1038/s41557-026-02247-x",
+      "underlyingOriginalAlreadyFormal": true,
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s41557-026-02246-y",
+        "publisherArticleType": "Research Briefing",
+        "publisherArticleDate": "2026-09-23",
+        "sourceRootId": "2026-09-22_2026-09-30_nature-chemistry",
+        "stageSourceSha256": "8dbd9d68d34ae7a66c9f62d2239ca8e2e482e781622104fa5b26f39ee0cf825f",
+        "stageBatchGitBlobSha": "ef85949eabfe8dc46703c6463cf2498a317c17f8",
+        "verificationKind": "publisher_direct_article_type_and_original_work_provenance",
+        "sourceFamilies": [
+          "crossref",
+          "openalex"
+        ]
+      },
+      "guards": {
+        "notAutomaticTitleExclusion": true,
+        "notGlobalJournalExclusion": true,
+        "noPublisherMediaAcquisition": true,
+        "originalResearchDoiHandledSeparately": true
+      },
+      "publisherArticleType": "Research Briefing"
+    }
+  ],
+  "purpose": "Publisher article types establish these five exact DOI are commentary/highlights/briefings and not the original synthetic research they discuss; no keyword-only decisions",
+  "guards": {
+    "strictDoiOnly": true,
+    "noAutomaticResearchMethodExclusion": true,
+    "noFullIssueClosureClaims": true,
+    "noD1Queries": true,
+    "noMediaOrPDF": true,
+    "remainingSourceCandidatesKept": true,
+    "noProductionPublication": true
+  }
+}

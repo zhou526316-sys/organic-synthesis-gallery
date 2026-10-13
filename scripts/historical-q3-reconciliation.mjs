@@ -9,6 +9,12 @@ import {fileURLToPath} from 'node:url';
 import {TARGET_JOURNALS} from '../shared/literature-journals.js';
 import {TRIAGE_SCHEMA} from './historical-review-triage.mjs';
 export const Q3_SCHEMA='gallery-historical-q3-source-and-scope-v1';
+export const PUBLISHER_NONRESEARCH_SCHEMA='gallery-historical-q3-publisher-type-exclusions-v1';
+export const EMPTY_PUBLISHER_NONRESEARCH=Object.freeze({
+  schemaVersion:PUBLISHER_NONRESEARCH_SCHEMA,
+  mode:'publisher_verified_non_original_doi_only_not_publication',
+  reviewed:[]
+});
 export const MONTHS=Object.freeze(['2026-07','2026-08','2026-09']);
 const normalize=s=>String(s||'').trim().toLowerCase();
 const ensure=(ok,msg)=>{if(!ok)throw Error(msg)};
@@ -37,10 +43,12 @@ const cell=(journal,month)=>({journal,month,expectedSourceRoots:4,
   completedSourceRoots:0,formalQ3:0,uniqueSourceCandidates:0,
   apiQ3DatedCandidates:0,undatedOrAmbiguousSourceCandidates:0,
   alreadyPublished:0,approvedWaiting08:0,sourcePending:0,explicitExcluded:0,
+  publisherNonResearchExcluded:0,
   unreviewed:0,publisherResearchIssueComplete:false,
   firstOnlineDateFullyPublisherVerified:false});
 export function reconcileQ3({
   state,triage,shards,formal,manifest,corrections,
+  publisherNonResearch=EMPTY_PUBLISHER_NONRESEARCH,
   journals=TARGET_JOURNALS,limit=320,page=0,reference=1000
 }={}){
   ensure(state?.schema==='gallery-historical-nightly-staging-v1'
@@ -53,6 +61,10 @@ export function reconcileQ3({
     &&formal.articles.length===formal.webpageDoiCount
     &&Array.isArray(manifest?.accepted)&&Array.isArray(manifest?.pending)
     &&Array.isArray(corrections?.items),'q3_invalid_formal_authority');
+  ensure(publisherNonResearch?.schemaVersion===PUBLISHER_NONRESEARCH_SCHEMA
+    &&publisherNonResearch.mode==='publisher_verified_non_original_doi_only_not_publication'
+    &&Array.isArray(publisherNonResearch.reviewed),
+    'q3_nonresearch_ledger_untrusted_schema');
   ensure(Number.isSafeInteger(limit)&&limit>=1&&limit<=400
     &&Number.isSafeInteger(page)&&page>=0&&page<=10000
     &&reference===1000,'q3_reference_or_page_invalid');
@@ -116,6 +128,39 @@ export function reconcileQ3({
     &&![...accepted].some(id=>pending.has(id)),
     'q3_formal_doi_partition_conflict');
 
+  // Exact publisher-verified commentary exclusions; never keyword inference.
+  // Each exclusion is separate from the owner's permanent DOI corrections.
+  const publisherNonOriginal=new Set();
+  const allowedArticleTypes=new Set(['News & Views','Research Highlight','Research Briefing']);
+  for(const item of publisherNonResearch.reviewed){
+    const id=normalize(item?.doi),src=all.get(id),ev=item?.reviewEvidence;
+    ensure(validDoi(id)&&id===item.doi&&src&&!publisherNonOriginal.has(id)
+      &&!pub.has(id)&&!accepted.has(id)&&!pending.has(id)&&!excluded.has(id),
+      'q3_nonresearch_doi_missing_or_colliding:'+id);
+    let url;
+    try{url=new URL(ev?.publisherPage||'')}catch{url=null}
+    const host=url?.hostname||'',path=url?.pathname.toLowerCase()||'';
+    const isOfficial=host==='www.nature.com'||host==='nature.com'
+      ? path==='/articles/'+id.split('/')[1]
+      : host==='pubs.acs.org'
+        ? path.includes('/doi/'+id)
+        : false;
+    ensure(isOfficial&&allowedArticleTypes.has(ev?.publisherArticleType)
+      &&ev?.publisherArticleType===item.publisherArticleType
+      &&item.decision==='exclude'&&item.firstPassDecision==='exclude'
+      &&item.challengeDecision==='exclude'&&item.reviewPasses===2
+      &&typeof item.firstPassReason==='string'&&item.firstPassReason.length>=60
+      &&typeof item.independentChallengeReason==='string'
+      &&item.independentChallengeReason.length>=60
+      &&item.date===src.date&&ev?.publisherArticleDate===item.date
+      &&src.sourceRoots.includes(ev.sourceRootId)
+      &&src.sourceHashes.includes(ev.stageSourceSha256)
+      &&/^[a-f0-9]{40}$/.test(ev.stageBatchGitBlobSha||'')
+      &&ev.verificationKind==='publisher_direct_article_type_and_original_work_provenance',
+      'q3_nonresearch_publisher_evidence_invalid:'+id);
+    publisherNonOriginal.add(id);
+  }
+
   let formalCount=0;
   for(const paper of formal.articles)if(publishedQ3(paper.date)){
     const c=cells.get(cellId(paper.journal,paper.date.slice(0,7)));
@@ -127,7 +172,8 @@ export function reconcileQ3({
     apiDatedQ3Candidates:0,unknownPublisherOnlineDate:0,
     knownOutsideQ3:0,sourceJournalConflicts:0,sourceDateConflicts:0,
     sourceAlreadyPublished:0,sourceApprovedWaiting08:0,sourcePending:0,
-    sourceExplicitlyExcluded:0,unfinishedQ3OrDateVerification:0,
+    sourceExplicitlyExcluded:0,sourcePublisherNonResearchExcluded:0,
+    unfinishedQ3OrDateVerification:0,
     formalQ3Count:formalCount,reviewedQ3Waiting08:0,
     missingFormalQ3FromSource:0,sourceCompletedRoots:shardIds.size,
     expectedSourceRoots:expected.length,missingSourceRoots:missingRoots.length,
@@ -159,11 +205,15 @@ export function reconcileQ3({
     const status=pub.has(row.doi)?'published':
       accepted.has(row.doi)?'approved_waiting08':
       pending.has(row.doi)?'pending_date_or_scope':
-      excluded.has(row.doi)?'explicit_excluded':'unfinished';
+      excluded.has(row.doi)?'explicit_excluded':
+      publisherNonOriginal.has(row.doi)?'publisher_nonresearch_excluded':'unfinished';
     if(status==='published'){c.alreadyPublished++;counters.sourceAlreadyPublished++;}
     if(status==='approved_waiting08'){c.approvedWaiting08++;counters.sourceApprovedWaiting08++;}
     if(status==='pending_date_or_scope'){c.sourcePending++;counters.sourcePending++;}
     if(status==='explicit_excluded'){c.explicitExcluded++;counters.sourceExplicitlyExcluded++;}
+    if(status==='publisher_nonresearch_excluded'){
+      c.publisherNonResearchExcluded++;counters.sourcePublisherNonResearchExcluded++;
+    }
     if(status!=='unfinished')continue;
     // An unquestionably out-of-Q3 first-online date remains in the global
     // historical backlog; a source-created date is NEVER guessed as online.
@@ -225,14 +275,16 @@ export function reconcileQ3({
     guards:{noD1QueriesOrWrites:true,noMediaOrPdfAcquisition:true,
       noAutoInclusionOrExclusion:true,noEightEveningRelease:true,
       publisherOnlineDateNotEqualsCreatedDate:true,
-      officialPublisherIssueCompletenessNotEstablished:true}};
+      officialPublisherIssueCompletenessNotEstablished:true,
+      publisherNonResearchExclusionsAreDOISpecificOnly:true}};
   const worklist={schemaVersion:Q3_SCHEMA,generatedAt,mode:'bounded_review_queue_not_admission',
     page,pageSize:limit,totalPages:Math.ceil(unreviewed.length/limit),
     totalUnreviewedCandidates:unreviewed.length,
     selected:selected.length,nextPage:first+selected.length<allOrdered.length?page+1:null,
     byJournal,byMonth,byPriority,requiringDateVerification:requiringDate,
     sourceWindowsComplete:missingRoots.length===0,
-    rows:selected,noAutomaticAcademicDecision:true,noCloudflareD1Access:true};
+    rows:selected,noAutomaticAcademicDecision:true,noCloudflareD1Access:true,
+    verifiedPublisherNonResearchExcluded:counters.sourcePublisherNonResearchExcluded};
   return {coverage,worklist};
 }
 async function readJson(file){return JSON.parse(await readFile(file,'utf8'));}
@@ -248,17 +300,18 @@ export async function runQuarterAudit({
 }={}){
   ensure(process.env.HISTORICAL_STAGING_ONLY==='1'&&
     process.env.HISTORICAL_STAGING_BRANCH==='1','q3_staging_only_guard');
-  const [state,triage,formal,manifest,corrections]=await Promise.all([
+  const [state,triage,formal,manifest,corrections,publisherNonResearch]=await Promise.all([
     readJson(root+'/state.json'),readJson(root+'/review-triage-ledger.json'),
     readJson('public/toc-demand-live.json'),
     readJson('audit/historical-reviewed/approved-admissions.json'),
-    readJson('audit/literature-scope-corrections.json')
+    readJson('audit/literature-scope-corrections.json'),
+    readJson('audit/historical-reviewed/q3-publisher-nonresearch-exclusions.json')
   ]);
   const relevant=new Set(expectedQ3Roots().map(x=>x.id)),shards=[];
   for(const id of state.completed)if(relevant.has(id))
     shards.push(await readJson(root+'/review-queue/'+id+'.json'));
   const {coverage,worklist}=reconcileQ3({
-    state,triage,shards,formal,manifest,corrections,page
+    state,triage,shards,formal,manifest,corrections,publisherNonResearch,page
   });
   await writeAtomic(root+'/quarter-2026-q3-coverage.json',coverage);
   await writeAtomic(root+'/quarter-2026-q3-review-worklist.json',worklist);
@@ -269,6 +322,7 @@ export async function runQuarterAudit({
     sourceDois:coverage.counters.uniqueSourceDois,
     unknownOnlineDate:coverage.counters.unknownPublisherOnlineDate,
     worklist:worklist.selected,worklistPage:page,
+    publisherNonResearchExcluded:coverage.counters.sourcePublisherNonResearchExcluded,
     zeroD1:true,noPublication:true
   }));
   return {coverage,worklist};
