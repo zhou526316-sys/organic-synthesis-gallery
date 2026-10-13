@@ -562,6 +562,7 @@ test('Science Advances paper Epub or ArticleDate prevails over distinct issue pu
   const nhc=root.accepted.find(x=>x.doi==='10.1126/sciadv.aeg0999');
   assert.match(nhc.scopeAssessment.generalityEvidence,/70/);
   const telenzepine=root.accepted.find(x=>x.doi==='10.1126/sciadv.aeh2073');
-  assert.match(telenzepine.scopeAssessment.boundaryChallenge,/全合成/);
+  assert.match(telenzepine.scopeAssessment.generalityEvidence,/全合成/);
+  assert.match(telenzepine.scopeAssessment.boundaryChallenge,/固有手性/);
   assert.equal(root.accepted.filter(x=>expected.has(x.doi)).length,3);
 });
