@@ -1000,6 +1000,48 @@
       batchPaused=false;
     }
   }
+  // Wait for relevant DOM hydration, not a long fixed sleep or blind 24s timeout.
+  // No extra article requests are made. This helps dynamic publishers while
+  // allowing a stable, fully loaded page to fail quickly if permission is absent.
+  function batchAwaitPublisherDomChange(root,maxMs=420){
+    const delay=Math.max(100,Math.min(650,Number(maxMs)||420));
+    if(typeof MutationObserver!=='function'||!document.documentElement)
+      return batchWait(delay);
+    return new Promise(resolve=>{
+      let ended=false,obs,timeout;
+      const finish=()=>{
+        if(ended)return;
+        ended=true;
+        try{obs?.disconnect();}catch(_){}
+        clearTimeout(timeout);resolve();
+      };
+      try{
+        obs=new MutationObserver(records=>{
+          if(records.some(r=>r.type==='childList'||r.type==='characterData'
+            ||r.attributeName==='href'||r.attributeName==='content'))finish();
+        });
+        // Licence can appear in metadata or within the article legal notice.
+        obs.observe(document.head||document.documentElement,{
+          attributes:true,attributeFilter:['href','content'],childList:true,subtree:false
+        });
+        if(root)obs.observe(root,{childList:true,subtree:true,characterData:true,
+          attributes:true,attributeFilter:['href','content']});
+        else obs.observe(document.documentElement,{childList:true,subtree:true});
+      }catch(_){finish();return;}
+      timeout=setTimeout(finish,delay);
+    });
+  }
+  function batchPublisherPageBlocked(){
+    const sample=(String(document.title||'')+' '+String(document.body?.innerText||'').slice(0,500))
+      .toLowerCase();
+    return /access denied|verify you are human|captcha|log in to (?:continue|access)|institutional sign in|challenge required|sign in to continue|automated requests blocked/i.test(sample);
+  }
+  function batchArticlePageReady(root){
+    if(!root||document.readyState==='loading')return false;
+    try{return root.querySelectorAll('h2,h3,p').length>=2;}
+    catch(_){return false;}
+  }
+
   async function batchWorker(){
     if(typeof GM_getValue!=='function')return;
     const job=GM_getValue(BATCH_JOB,null);
@@ -1032,45 +1074,77 @@
     // active tab is DOI-bound and only the explicitly started, live job may run.
     const fragment=/^#gallery-historical-job=([a-f0-9]{24})$/.exec(location.hash||'');
     if(fragment&&fragment[1]!==job.token)return;
-    let doi=pageDoi(),capture=null,reason='';
+    let doi=pageDoi(),capture=null;
+    // Unrelated tabs must not report into an active historical attempt.
+    if(doi&&doi!==job.doi){
+      if(fragment?.[1]===job.token)
+        storeResult({status:'doi_unverified',stage:'publisher_doi'});
+      return;
+    }
+    if(!doi&&!fragment)return;
     reportStage('publisher_page');
     if([403,429].includes(observedPageHttpStatus())){
       storeResult({status:'page_http_error',stage:'publisher_page'});return;
     }
-    // Other article tabs must never claim the queue's response slot.
-    if(doi&&doi!==job.doi)return;
-    if(!doi&&!fragment)return;
-    for(let i=0;i<8;i++){
-      if(doi&&doi!==job.doi)return;
+    const begun=Date.now(),maxProbeMs=3200;
+    let sawArticle=false,sawLicense=false,unchangedReady=0;
+    let previousState='';
+    while(Date.now()-begun<=maxProbeMs&&Date.now()<job.expiresAt){
+      doi=pageDoi();
+      if(doi&&doi!==job.doi){
+        if(fragment?.[1]===job.token)
+          storeResult({status:'doi_unverified',stage:'publisher_doi'});
+        return;
+      }
       if(doi===job.doi){
         verified=true;reportStage('publisher_doi');
+        if(batchPublisherPageBlocked()){
+          storeResult({status:'page_access_blocked',stage:'publisher_page'});return;
+        }
         const root=document.querySelector('main article, article, main, [role="main"]');
+        const ready=batchArticlePageReady(root);
+        if(ready)sawArticle=true;
         const license=batchLicenseEvidence(root);
         reportStage('license');
         if(license){
+          sawLicense=true;
           reportStage('body_extract');
           try{
             capture=gather();
-            sectionCount=capture.sections.length;
-            evidenceChars=capture.characterCount;
+            sectionCount=capture.sections.length;evidenceChars=capture.characterCount;
             if(capture.characterCount>=250)break;
-          }catch(_){reason='article_body_not_extracted';}
-        }else if(i>=2){
-          const hint=String(document.title||'')+' '+String(document.body?.innerText||'').slice(0,300);
-          if(/access denied|verify you are human|captcha|log in to (?:continue|access)|institutional sign in/i.test(hint))
-            storeResult({status:'page_access_blocked',stage:'publisher_page'});
-          else storeResult({status:'license_not_verified',stage:'license'});
-          return;
+          }catch(_){capture=null;}
+        }else if(ready){
+          // Distinguish a stable rendered article missing its licence tag from
+          // a still-hydrating article; no CC licence => no text persistence.
+          const signature=String(root?.querySelectorAll('h2,h3,p').length||0)
+            +':'+String(root?.querySelectorAll('section').length||0);
+          if(previousState===signature)unchangedReady++;
+          else unchangedReady=0;
+          previousState=signature;
+          if(unchangedReady>=1){
+            storeResult({status:'license_not_verified',stage:'license'});return;
+          }
         }
+        await batchAwaitPublisherDomChange(root,ready?420:320);
+      }else{
+        await batchAwaitPublisherDomChange(null,320);
       }
-      await batchWait(700);
-      doi=pageDoi();
     }
-    if(doi!==job.doi){storeResult({status:'doi_unverified',stage:'publisher_doi'});return;}
+    if(doi!==job.doi){
+      storeResult({status:'page_unavailable',stage:'publisher_page'});return;
+    }
     const root=document.querySelector('main article, article, main, [role="main"]');
+    if(!batchArticlePageReady(root)&&!sawArticle){
+      storeResult({status:'page_unavailable',stage:'publisher_page'});return;
+    }
     const license=batchLicenseEvidence(root);
-    if(!license){storeResult({status:'license_not_verified',stage:'license'});return;}
-    if(!capture){storeResult({status:'body_missing',stage:'body_extract'});return;}
+    if(!license){
+      storeResult({status:'license_not_verified',stage:'license'});return;
+    }
+    if(!capture){
+      storeResult({status:'body_missing',stage:'body_extract'});return;
+    }
     const verifiedScientificChars=capture.sections.filter(row=>
       ['results','mechanism','experimental'].includes(row.type))
       .reduce((total,row)=>total+String(row.text||'').length,0);
