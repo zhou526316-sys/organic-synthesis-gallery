@@ -82,3 +82,18 @@ node scripts/historical-text-local-evaluator.mjs --dir="D:\文献全文试验" -
 4. 正文提取明确排除 `Rights and permissions`、`About this article`、`Author information`、`Additional information` 等法律、引用与行政信息。不得把这些长段或孤立 Abstract 当成有效 Results/Methods/Mechanism。标记 `stored` 要求至少有实质科学研究章节文字，不满足则 `body_missing`。
 5. 保留与现有 TOC/正文图/PDF controller、队列、回执、上传路径完全独立，不增加 PDF 请求、正文图下载、SI 下载、服务器全文复制或全库正式发行时刻。
 6. 以最新 userscript `@version 0.2.1` 显式更新，要求相应 Pages 构建与线上原始脚本版本回读；0.2.0 的成功构建不代表修订已上线。
+
+
+## 2026-10-13 — 0.2.2 逐 DOI 失败详情和实时诊断（用户明确批准）
+
+用户批准历史正文补抓沿用 TOC/正文图的诊断可靠性机制，但必须与 TOC、正文图、PDF 采集逻辑及队列完全隔离。历史正文脚本 `public/gallery-historical-text-pilot.user.js` 升级至 `0.2.2`：
+
+- Gallery 首页历史正文面板提供「失败详情」和 DOI/失败原因筛选。每个历史记录显示 DOI、期刊、失败阶段、状态代码对应的明确含义、尝试时间及 HTTP 状态是否真正已观察，避免把没有出版社回复的 `timeout` 假称 403/版权问题。尚未上传的记录也可在当前浏览器本地查看。
+- 「服务器报告」供授权管理员查询独立的 `GET /api/admin/historical-text/reports`，**未经管理员 Bridge 写入密钥授权不能访问**。该诊断服务严格区别于 `/api/media/tampermonkey-reports`，不借用媒体控制器、队列或报告索引。
+- 「配置诊断上报」允许管理员在浏览器**仅输入一次**其现有 Bridge 写入密钥（只保存在此独立 Tampermonkey 脚本的 GM 本地存储）。该凭证不自动跨 Tampermonkey 脚本读取，不能在聊天、GitHub、图片或任何诊断上传数据中复制。未配置时 UI 必须标记「未配置密钥」，报告留在本机待发送，不能宣称服务器收到了。
+- 仅上传 `historical-text-diagnostic-v1` 中固定字段：DOI、任务标识、脚本版本、阶段、失败代码、实证 HTTP 状态（未知一律 null）、科学正文部分字数／段数、时间。**禁止正文、PDF、图、SI、登录凭证、Cookie、完整用户当前 URL、原始异常堆栈**，服务器拒绝任何未知字段及非法状态。
+- 近实时上报：每篇事件首先持久化到独立 `gallery-historical-text-batch-v2:diagnostics-outbox-v1:` 命名空间；Gallery 页面每约 10 秒检查最多四个待发事件，只有服务端返回 `stored=true` 且 eventId、DOI、jobId 回执严格相符才删除本机待发事件。网络故障、401、503、假的成功响应均保留，待管理员修复密钥或网络后重传，服务端基于 eventId 幂等去重。**上报失败不得阻断正文捕获**。
+- 可靠落盘：IndexedDB 请求成功但整个事务 abort 不再记为成功；哈希不匹配独立标记为 `response_hash_mismatch`，与真正 `storage_failure` 区别。失败按 DOI 存本机 `attempts`，保留时间、原因、阶段、已知 HTTP 和服务器回执关联。
+- 「复查受阻项」由管理员单独手动触发，允许复查明确许可不明、正文不足、身份受阻等项，但绝不能绕过登录、验证码或反爬限制。一般一键任务不再统一冻结 24 小时：`timeout`、出版社标签失败与本机存储失败下轮可重试，未知许可证和已明确访问限制的项默认跳过。HTTP 403/429 只能在有真实状态码证据时显示与保护性拦截。
+- 当前浏览器关闭后不会在云端继续访问出版社，但已经保存的待发送诊断仍留在本机；下次从 Gallery 首页打开自动检查发送（已配置密钥时）。离线本机报告不是公开全站全文检索。
+- 后端 `cloudflare/worker/src/historical-text-diagnostics.js` 在现有 `env.DB` 中创建独立的历史诊断表；GET/POST 都经现有 `BRIDGE_WRITE_TOKEN` 管理员授权。与媒体 R2 报告、TOC 控制器、每日 08:00 正式发布隔离，只有轻量失败诊断数据。正式 Worker 部署验收要求匿名 GET/POST=401、授权真实报告 POST=200 回执、授权 GET 可查，未真实跑用户浏览器前不得伪称全部历史论文已有完整失败原因。
