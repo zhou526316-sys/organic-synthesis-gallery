@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-13",
+  "revision": "2026-10-13-r3",
+  "status": "source_grounded_scientific_story_review_pass_mobile_visual_review_pending",
+  "basis": "10月5日用户明确认可的JACS化学矛盾/决策/反常识证据式推文。用户后续提供的 .user.js 链接经检查为历史正文抓取脚本，绝非公众号文章，不能作为学术推文叙述来源。",
+  "dois": [
+    "10.1038/s44160-026-01189-z",
+    "10.1038/s41557-026-02213-7"
+  ],
+  "originalSourceEvidence": "Original owner-provided Nature Synthesis/Nature Chemistry full main papers and SI were read in R1/R2 and frozen as 22 authentic original image rasters; original R2 QA/PDF SHA retained.",
+  "referenceArticle": "public/wechat-featured/2026-10-05.json",
+  "R2Problem": "R2 was factually dense but enumerated journal Fig1→Fig2→scope→mechanism in an expository voice; neither asked a strong motivating chemical question early nor offered an evolving explanation until each experiment had been introduced.",
+  "R3SciencePlot": {
+    "NatureSynthesis": [
+      "Pharmacology seeks O/S matched pairs but conventional syntheses require separate routes",
+      "Thiourea strategies for epoxides cannot directly solve oxetane ring opening and strained 4-exo-tet closure",
+      "In(OTf)3+cyclic thiourea make a linked cascade rather than two free steps",
+      "Alternative Lewis acids and temperature/conversion data constrain catalyst function",
+      "Scope and competing thiourea SN2 reactions reveal actual limitations",
+      "Isotope-traced O transfer to cyclic urea is decisive",
+      "Alcohol-bromide surrogate and stereochemical probes distinguish stage-specific roles",
+      "DFT matched-distance interaction stabilization explains why In helps despite larger distortion",
+      "2,2-disubstituted isomerization imposes the next challenge."
+    ],
+    "NatureChemistry": [
+      "Matched O/N medicinal-chemistry analogs are hard to access without rebuilding routes",
+      "Amines simultaneously act as nucleophiles and Lewis-acid ligands, threatening initial oxetane activation",
+      "Isolated 1,3-aminoalcohol validates step1 but creates a severe 4-exo-tet ring-closing problem",
+      "Standard Mitsunobu fails while BEHT uniquely provides appropriate activation",
+      "Distinct acid families solve different amine coordination regimes",
+      "Two orthogonal scopes and negative SI delineate actual breadth",
+      "Late-stage complex amines vs late-stage O/N scaffold edits must be distinguished",
+      "Koh original photocatalytic method only compared on exact specified substrates",
+      "Unobserved phosphonium intermediates and atom fate remain author models, not direct proof."
+    ]
+  },
+  "articleLengths": {
+    "NS": 4481,
+    "NC": 4109
+  },
+  "sections": {
+    "NS": 9,
+    "NC": 9
+  },
+  "paragraphs": {
+    "NS": 35,
+    "NC": 34
+  },
+  "sourceImagesPlaced": {
+    "NS": 12,
+    "NC": 10
+  },
+  "allOriginalImageBytesUnchangedFromR2": true,
+  "originalSquareRetroCoverUnchanged": true,
+  "originalFeaturedCoverUnchanged": true,
+  "scientificValidation": {
+    "authorSelections": true,
+    "revisionConsistent": true,
+    "NS_core_problem": true,
+    "NS_initial_method": true,
+    "NS_conditions": true,
+    "NS_scope_failure": true,
+    "NS_isotope_trace": true,
+    "NS_comparison": true,
+    "NS_DFT_evidence": true,
+    "NS_science_boundary": true,
+    "NC_amine_Lewis_acid_competition": true,
+    "NC_direct_intermediate": true,
+    "NC_ringclosing_negative": true,
+    "NC_BEHT": true,
+    "NC_amine_type_split": true,
+    "NC_scope_and_SI_failures": true,
+    "NC_original_comparator": true,
+    "NC_no_fictitious_isotope": true,
+    "NC_author_model_boundary": true
+  },
+  "evidenceTaxonomy": "Directly observed/published measurement vs compatible inference vs calculated mechanistic pathway vs unsettled inference stated separately. Original source figure and SI item references adjacent to each claim.",
+  "publication": "DRAFT_UPDATE_ONLY_SAME_MEDIA_ID_AFTER_VISUAL_QA",
+  "published": false,
+  "cloudDraftUpdated": false
+}
