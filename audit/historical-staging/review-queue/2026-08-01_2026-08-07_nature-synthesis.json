@@ -1,0 +1,120 @@
+{
+  "schemaVersion": "gallery-history-review-triage-v1",
+  "mode": "review_queue_only_not_publication",
+  "rootId": "2026-08-01_2026-08-07_nature-synthesis",
+  "journal": "Nature Synthesis",
+  "range": {
+    "from": "2026-08-01",
+    "to": "2026-08-07"
+  },
+  "sourceSha256": "dcb55651ff611d0341a00a7644b844caee9ccbcc9d793628707d6b31924eecf3",
+  "sourceCheckedAt": "2026-10-12T05:31:41.606Z",
+  "publisherIssueReconciled": false,
+  "legacyNoDoiRecordsReconciled": false,
+  "titleSignalsAreRankOnly": true,
+  "zeroAutomaticExclusions": true,
+  "completeSourceFamilies": true,
+  "stats": {
+    "candidateOccurrences": 2,
+    "alreadyPublished": 0,
+    "approvedAwaiting08": 0,
+    "evidencePending": 0,
+    "requiresTwoPassReview": 2,
+    "priorityP0": 0,
+    "priorityP1": 1,
+    "priorityP2": 0,
+    "priorityP3": 1,
+    "unverifiedDate": 0,
+    "suspectedNonresearch": 0
+  },
+  "records": [
+    {
+      "doi": "10.1038/s44160-026-01126-0",
+      "title": "Ordered heteronuclear metal pairs facilitate urea electrosynthesis",
+      "journal": "Nature Synthesis",
+      "date": "2026-08-03",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01126-0"
+      },
+      "authors": [
+        "Yuntong Sun",
+        "Zhen Shan",
+        "Meng Tian",
+        "Wenjun Fan",
+        "Qian Wu",
+        "Pengfei Song",
+        "Liming Dai",
+        "Lei Yu",
+        "Heng Wang",
+        "Gen Zhang",
+        "Junwu Zhu",
+        "Zhichuan J. Xu"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-01_2026-08-07_nature-synthesis",
+      "sourceBatchSha256": "dcb55651ff611d0341a00a7644b844caee9ccbcc9d793628707d6b31924eecf3",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s44160-026-01131-3",
+      "title": "Towards self-driving laboratories in the biopharmaceutical industry",
+      "journal": "Nature Synthesis",
+      "date": "2026-08-04",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1494-1505",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01131-3"
+      },
+      "authors": [
+        "Samagra Dvivedi",
+        "Nitin Minocha",
+        "Shuang Chen",
+        "Beata Chertok",
+        "Daniel Estabrook",
+        "Yuchen Fan",
+        "Suyong Han",
+        "Deepak Jain",
+        "Manish S. Kelkar",
+        "Alison Lui",
+        "Nandkishor K. Nere",
+        "Phenil J. Patel",
+        "Kenneth G. Rodriguez",
+        "Eric R. Sacia",
+        "Priyanka G. Singh",
+        "Dimitri Skliar",
+        "Emad I. Wafa",
+        "Meenesh R. Singh"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-01_2026-08-07_nature-synthesis",
+      "sourceBatchSha256": "dcb55651ff611d0341a00a7644b844caee9ccbcc9d793628707d6b31924eecf3",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    }
+  ]
+}

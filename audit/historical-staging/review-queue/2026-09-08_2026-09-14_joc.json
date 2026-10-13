@@ -1,0 +1,1336 @@
+{
+  "schemaVersion": "gallery-history-review-triage-v1",
+  "mode": "review_queue_only_not_publication",
+  "rootId": "2026-09-08_2026-09-14_joc",
+  "journal": "JOC",
+  "range": {
+    "from": "2026-09-08",
+    "to": "2026-09-14"
+  },
+  "sourceSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+  "sourceCheckedAt": "2026-10-12T04:44:53.090Z",
+  "publisherIssueReconciled": false,
+  "legacyNoDoiRecordsReconciled": false,
+  "titleSignalsAreRankOnly": true,
+  "zeroAutomaticExclusions": true,
+  "completeSourceFamilies": true,
+  "stats": {
+    "candidateOccurrences": 38,
+    "alreadyPublished": 5,
+    "approvedAwaiting08": 0,
+    "evidencePending": 1,
+    "requiresTwoPassReview": 32,
+    "priorityP0": 4,
+    "priorityP1": 17,
+    "priorityP2": 6,
+    "priorityP3": 11,
+    "unverifiedDate": 0,
+    "suspectedNonresearch": 2
+  },
+  "records": [
+    {
+      "doi": "10.1021/acs.joc.6c01432",
+      "title": "Intramolecular Hydride Transfer Racemization Coupled with Enzymatic Kinetic Resolution Enables Asymmetric Syntheses of Caged Compounds",
+      "journal": "JOC",
+      "date": "2026-09-13",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01432"
+      },
+      "authors": [
+        "Simon J. Cooper",
+        "Pingyu Jiang",
+        "Said Byadi",
+        "Mingoo Jin",
+        "Pavel Sidorov",
+        "Tsuyoshi Mita",
+        "Hiroki Hayashi"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P0",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01483",
+      "title": "NHC-Catalyzed Asymmetric [4 + 2] Annulation of 2-Methylindole-3-Carbaldehydes to Spiro Indole-Fused Heterocycles",
+      "journal": "JOC",
+      "date": "2026-09-10",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "13013-13019",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01483"
+      },
+      "authors": [
+        "Yihui Zhang",
+        "Xiaoran Wang",
+        "Mengjie Qi",
+        "Yi Wu",
+        "Kai Ding",
+        "Guofu Zhong",
+        "Limin Yang"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P0",
+      "flags": [],
+      "status": "evidence_pending",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01608",
+      "title": "Total Synthesis of Allolaurinterol",
+      "journal": "JOC",
+      "date": "2026-09-11",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "13027-13036",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01608"
+      },
+      "authors": [
+        "Takumi Kurashima",
+        "Kazuki Usuguchi",
+        "Shohei Hamada",
+        "Jun-ichi Matsuo",
+        "Tomoyuki Yoshimura"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P0",
+      "flags": [],
+      "status": "already_published",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01788",
+      "title": "Highly Enantioselective Synthesis of Chiral Thiourea Derivatives via a Three-Component Mannich Reaction",
+      "journal": "JOC",
+      "date": "2026-09-08",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12712-12718",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01788"
+      },
+      "authors": [
+        "Zhe Li",
+        "Lingkai Kong",
+        "Qiuhan Li",
+        "Jisheng Cai",
+        "Guangliang Zhang",
+        "Suoqin Zhang"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P0",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00934",
+      "title": "Line-Graph Node Centrality in Retrosynthesis",
+      "journal": "JOC",
+      "date": "2026-09-14",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12775-12784",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00934"
+      },
+      "authors": [
+        "Zarko Boskovic"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00985",
+      "title": "Visible-Light-Induced Radical-Cascade Brominative/Spirocyclization of Biaryl Ynones and CBr4: Synthesis of Spiro[5.5]trienones without External Additives",
+      "journal": "JOC",
+      "date": "2026-09-09",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12737-12743",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00985"
+      },
+      "authors": [
+        "Ge-Feng Long",
+        "Zheng-Wei Wu",
+        "Han-Han Kong",
+        "Tian-Yu Long",
+        "Qing-Qing Yang",
+        "Long Wang"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01047",
+      "title": "Solvent and Temperature Dependent Selectivity in the [4 + 2] Annulation-Initiated Cascade Reactions of Nitroindoles with Curcumins: Access to Linear and Angular Polycycles",
+      "journal": "JOC",
+      "date": "2026-09-11",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12817-12829",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01047"
+      },
+      "authors": [
+        "Banamali Laha",
+        "Abhishek Pareek",
+        "Dipankar Das",
+        "Bishwajit Ganguly",
+        "Samir Maji",
+        "Irishi N. N. Namboothiri"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01086",
+      "title": "Redirection of the Beckmann Rearrangement to Form Pyrrolidino[1,2- a ]benzimidazoles and Application to an Independent Synthetic Route to the Core of Balinatunfib",
+      "journal": "JOC",
+      "date": "2026-09-09",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12554-12560",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01086"
+      },
+      "authors": [
+        "Ignacio Rubio",
+        "Aurélie Dos Santos",
+        "Myriam Benisty",
+        "Marie-Pierre Delage",
+        "François J. Alvey",
+        "Luke J. Alvey"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01096",
+      "title": "Telescoped Two-Step Deaminative Ni-Catalyzed C(sp 2 )–C(sp 3 ) Cross-Electrophile Coupling for Late-Stage Parallel Library Synthesis",
+      "journal": "JOC",
+      "date": "2026-09-10",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12861-12882",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01096"
+      },
+      "authors": [
+        "Carson R. Takaoka",
+        "Kiara L. Tu",
+        "Erin E. Ostrowski",
+        "Emil F. Thomas",
+        "Erika L. Poissant",
+        "Ziyi Quan",
+        "Pedro M. Garcia-Barrantes",
+        "David J. Charboneau"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "already_published",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01103",
+      "title": "Vicinal Halothiolcarbonates as Pseudo-Ambident Electrophiles: Carbamate Synthesis, Unified Thiol Reactivity, and Architecture-Dependent Antibacterial Activity of Ciprofloxacin Glycoconjugates",
+      "journal": "JOC",
+      "date": "2026-09-12",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12883-12901",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01103"
+      },
+      "authors": [
+        "Siwar Mejri",
+        "Khouloud Chakroun",
+        "Lamia Nakhle",
+        "David Lesur",
+        "Thomas Dayez",
+        "Mohamed Amine Ben Maaouia",
+        "Abed Bil",
+        "David Mathiron",
+        "Adam Duong",
+        "Christine Cézard",
+        "Rym Abidi",
+        "Isabelle Gosselin",
+        "Corentin Lefebvre",
+        "Mohammed Benazza"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01152",
+      "title": "Design and Synthesis of Highly Stable N2O2-Type Azadipyrromethene NIR-II Dyes",
+      "journal": "JOC",
+      "date": "2026-09-12",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12912-12921",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01152"
+      },
+      "authors": [
+        "Zhiwu Wei",
+        "Wenliang Li",
+        "Sifan Tu",
+        "Xiaohong Zhao",
+        "Yu Hu",
+        "Zhongyi Yuan"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01373",
+      "title": "Aliphatic Diazirines Synthesis Mediated by Mild N -Chlorosuccinimide Oxidation",
+      "journal": "JOC",
+      "date": "2026-09-10",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12599-12606",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01373"
+      },
+      "authors": [
+        "Isabelle Toubia",
+        "Chloé Rémondin",
+        "Luca Marchisio",
+        "Sébastien Balieu",
+        "Pierre-Yves Renard",
+        "Victor Flon",
+        "Cyrille Sabot"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01465",
+      "title": "Microwave-Enabled Oxidative Alkoxycyclization of 2′-Aminochalcones by Gold Catalysis",
+      "journal": "JOC",
+      "date": "2026-09-14",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12958-12970",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01465"
+      },
+      "authors": [
+        "Chandrasekar Praveen",
+        "Gabriel de Paula Bueno",
+        "Franco Jazon Caires",
+        "Giuliano C. Clososki"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01489",
+      "title": "I2-Photocatalyzed Cascade Reaction of 1-Isothiocyanatonaphthalenes with Amines to Give Naphtho[1,2- d ]thiazol-2-Amines",
+      "journal": "JOC",
+      "date": "2026-09-11",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12971-12980",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01489"
+      },
+      "authors": [
+        "Da-Liang Zhu",
+        "Hao Wang",
+        "Qi Wu",
+        "David J. Young",
+        "Hong-Xi Li"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01513",
+      "title": "Automated Flow Synthesis of Nature-Derived, Engineered, and De Novo -Designed Functional Luciferases",
+      "journal": "JOC",
+      "date": "2026-09-14",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12996-13007",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01513"
+      },
+      "authors": [
+        "David Sarabia-Castillo",
+        "Amanda E. Cowfer Chavez",
+        "Sunit Pal",
+        "Charlotte E. Farquhar",
+        "Andrei Loas",
+        "Bradley L. Pentelute"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01523",
+      "title": "Stereoselective Synthesis of (−)-Ambrox via Metalloporphyrin-Catalyzed C( sp 3)–H Bond Oxidation of Hydrocarbons",
+      "journal": "JOC",
+      "date": "2026-09-09",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12664-12673",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01523"
+      },
+      "authors": [
+        "Cun Wang",
+        "Zhong Jin"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01620",
+      "title": "Oxidative Benzannulation of Indoles with 3-Alkynyl-4-pyrones for the Synthesis of Furo[2,3- b ]carbazoles",
+      "journal": "JOC",
+      "date": "2026-09-11",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "13037-13049",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01620"
+      },
+      "authors": [
+        "Vladislav V. Fedin",
+        "Egor O. Sofin",
+        "Sergey A. Usachev",
+        "Dmitrii L. Obydennov",
+        "Vyacheslav Y. Sosnovskikh"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "already_published",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01638",
+      "title": "Synthesis of C29- or C30-Oxidized Oleananes via Allylic Bromination and Ring Expansion: Application to the Semisynthesis of Adinandrolide",
+      "journal": "JOC",
+      "date": "2026-09-08",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12768-12773",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01638"
+      },
+      "authors": [
+        "Maki Yamanaka",
+        "Chihiro Tsukano"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01660",
+      "title": "Synthesis, Chemical, and Biological Evaluation of Actinomycin Tetracyclic Oxazinone Derivatives and Application to Small-Molecule Drug Conjugates",
+      "journal": "JOC",
+      "date": "2026-09-08",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12691-12705",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01660"
+      },
+      "authors": [
+        "Seitaro Takahashi",
+        "Kenta Asao",
+        "Satoshi Ichikawa"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01772",
+      "title": "Visible-Light-Promoted Phosphonylation Enabling the Use of Alkyl Thianthrenium Salts",
+      "journal": "JOC",
+      "date": "2026-09-11",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "13068-13077",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01772"
+      },
+      "authors": [
+        "Jiayi Chen",
+        "Ze Xu",
+        "Ting Yuan",
+        "Dongwei Zhao",
+        "Zhijun Zuo",
+        "Lu Bai",
+        "Xinjun Luan"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01793",
+      "title": "Visible-Light-Catalyzed Carboxylation of CO2 with the C(sp3)–O Bond of Benzyl Alcohol",
+      "journal": "JOC",
+      "date": "2026-09-11",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "13078-13085",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01793"
+      },
+      "authors": [
+        "Wenhao Xu",
+        "Zhiyu Cao",
+        "Jiarui Huang",
+        "Chengwen Dong",
+        "Li-Li Zeng",
+        "Jingyu Zhang",
+        "Yingsheng Zhao"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P1",
+      "flags": [],
+      "status": "already_published",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00818",
+      "title": "TsCl-Mediated, Copper-Catalyzed Deoxygenative Difluoromethoxylation Reaction of Quinoline- N -Oxides",
+      "journal": "JOC",
+      "date": "2026-09-14",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12792-12799",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00818"
+      },
+      "authors": [
+        "Linda Wang",
+        "Xi Zhang",
+        "Wenhui Wang",
+        "Jingxuan Lin",
+        "Zhuolun Huyan",
+        "Ying Fu",
+        "Zhengyin Du"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01029",
+      "title": "Bis-Nitrene Prevails: Ligand-Controlled Divergence from the Conventional Mononitrene Pathway in Dirhodium Catalysis",
+      "journal": "JOC",
+      "date": "2026-09-08",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12503-12511",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01029"
+      },
+      "authors": [
+        "Fenghui Lu",
+        "Zhuofeng Ke",
+        "Xinfang Xu",
+        "David Lee Phillips",
+        "Xiting Zhang"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01403",
+      "title": "N -Heterocyclic Carbene-Carbodiimide (NHC-CDI) Adducts as a Tunable Scaffold for Distonic Radical Cation and Dication Stabilization",
+      "journal": "JOC",
+      "date": "2026-09-09",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12629-12635",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01403"
+      },
+      "authors": [
+        "Rolando Calderón-Oliver",
+        "Le Dung Pham",
+        "Anthony W. Schlimgen",
+        "Anna C. Brezny",
+        "Avery D. Sames",
+        "Jessica R. Lamb"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01439",
+      "title": "Mechanism and Stereocontrol in Chiral Phosphoric Acid-Catalyzed Ynamide-Mediated Atroposelective Couplings of Carboxylic Acids with Amines and Alcohols",
+      "journal": "JOC",
+      "date": "2026-09-11",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12947-12957",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01439"
+      },
+      "authors": [
+        "Li-Gao Liu",
+        "Ji-Ren Liu",
+        "Hong-Li Wu",
+        "Shuo-Qing Zhang",
+        "Xin Hong"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01556",
+      "title": "A Fast-Slow-Fast Strategy for Exploring Three-Component Reactions of Formaldehyde",
+      "journal": "JOC",
+      "date": "2026-09-08",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12681-12690",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01556"
+      },
+      "authors": [
+        "Gul Khanda Sajjad",
+        "Muhammad Noman Haider Tariq",
+        "Yanlong Gu"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c02039",
+      "title": "Diastereodivergent Morita–Baylis–Hillman Reaction of α,β-Unsaturated N-tert -Butanesulfinyl Imines and Trifluoromethyl Ketones",
+      "journal": "JOC",
+      "date": "2026-09-12",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "13086-13092",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c02039"
+      },
+      "authors": [
+        "Ana Sirvent",
+        "Ester Blanco-López",
+        "Carmen Nájera",
+        "Miguel Yus",
+        "Francisco Foubelo",
+        "José M. Sansano",
+        "María de Gracia Retamosa"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00602",
+      "title": "Alkoxide Base-Mediated Methyl Boration of Aryl Alkenes and Arylidenecyclopropanes",
+      "journal": "JOC",
+      "date": "2026-09-11",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12785-12791",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00602"
+      },
+      "authors": [
+        "Ximei Tian",
+        "Lipeng Wu"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P3",
+      "flags": [],
+      "status": "already_published",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00855",
+      "title": "Wavelength-Dependent Photochemistry of 2-Formyl Thiazole in Solid Argon: High-Energy Conformational Trapping vs Ring-Opening Channels",
+      "journal": "JOC",
+      "date": "2026-09-11",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12800-12810",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00855"
+      },
+      "authors": [
+        "Piyush Kumar",
+        "Shabana Butt",
+        "Gaurav Jhaa",
+        "Priyakumari Chakkingal Parambil",
+        "Sugumar Venkataramani"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00884",
+      "title": "Regioselective Transition Metal-Free C–H Chalcogeno-Coupling of 8-Hydroxyquinolines: Experimental and DFT Exploration",
+      "journal": "JOC",
+      "date": "2026-09-12",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12830-12844",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00884"
+      },
+      "authors": [
+        "Suman Majee",
+        "Km Anjali",
+        "Akhilesh Mahato",
+        "Ranjan Patra",
+        "Anup Pramanik",
+        "Dharmik M. Patel",
+        "Subhash Chandra Ghosh",
+        "Biswajit Saha",
+        "Devalina Ray"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01057",
+      "title": "Decoding Stability and Selectivity in Unnatural DNA Base Pairs with Spatially Separated Recognition Interfaces",
+      "journal": "JOC",
+      "date": "2026-09-10",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "37",
+        "pages": "12512-12521",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01057"
+      },
+      "authors": [
+        "Andreu Bermejo",
+        "Josep Maria Bofill",
+        "Jordi Poater"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01124",
+      "title": "Gas Phase Studies of Purine Base Analogs: Intrinsic Properties and Hypoxanthine-Guanine-(Xanthine) Phosphoribosyltransferase (HG(X)PRT)",
+      "journal": "JOC",
+      "date": "2026-09-09",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "40",
+        "pages": "13339-13350",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01124"
+      },
+      "authors": [
+        "Xiao Ding",
+        "Lanxin Zhang",
+        "G. S. M. Kiruba",
+        "Jeehiun K. Lee"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01133",
+      "title": "Substrate-Controlled Construction of Spiro-3-Oxoindolines and Eight-Membered-Ring Lactams under Bubbling Air Conditions",
+      "journal": "JOC",
+      "date": "2026-09-11",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12902-12911",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01133"
+      },
+      "authors": [
+        "Xiao Zhang",
+        "Jiahao Zhang",
+        "Dan Mou",
+        "Shuai Zhang",
+        "Yanqi Diao",
+        "Yang Yu",
+        "Hao Li"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01154",
+      "title": "Turning Darkness into Light: Supramolecular Control of Emission in Push–Pull Chromophores",
+      "journal": "JOC",
+      "date": "2026-09-10",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01154"
+      },
+      "authors": [
+        "Kritika Nag",
+        "Sarita Kumari",
+        "Pooja Das",
+        "Surajit Samui",
+        "Ashish Sharma",
+        "Ramendra Sundar Dey",
+        "Md. Ehesan Ali",
+        "Govindasamy Jayamurugan"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01487",
+      "title": "Gas-Phase Reactivity of Naphthalene-Based Singlet Oxenium Cations",
+      "journal": "JOC",
+      "date": "2026-09-14",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "12981-12995",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01487"
+      },
+      "authors": [
+        "Tianyang Dai",
+        "Fan Ji",
+        "John J. Nash",
+        "Hilkka I. Kenttämaa"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01580",
+      "title": "Electricity-Driven Halogenation of α -Oxo Ketene Dithioacetals Using Lithium Halides as Dual-Function Electrolyte Reagents",
+      "journal": "JOC",
+      "date": "2026-09-14",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "38",
+        "pages": "13020-13026",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01580"
+      },
+      "authors": [
+        "Austin Symon Abacan",
+        "Thao Nguyen Thanh Huynh",
+        "Thanyaporn Kostphan",
+        "Mongkol Sukwattanasinitt",
+        "Sumrit Wacharasindhu"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/jov091i036_2128227",
+      "title": "Issue Publication Information",
+      "journal": "JOC",
+      "date": "2026-09-11",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "36",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1021/jov091i036_2128227"
+      },
+      "authors": [],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P3",
+      "flags": [
+        "suspected_nonresearch_record_verify_at_publisher"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1021/jov091i036_2128228",
+      "title": "Issue Editorial Masthead",
+      "journal": "JOC",
+      "date": "2026-09-11",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "36",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1021/jov091i036_2128228"
+      },
+      "authors": [],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_joc",
+      "sourceBatchSha256": "f0da1c52dcca8b76338f982a53a4c24e592e342e142bfcad92f29048429d3f14",
+      "priority": "P3",
+      "flags": [
+        "suspected_nonresearch_record_verify_at_publisher"
+      ],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    }
+  ]
+}

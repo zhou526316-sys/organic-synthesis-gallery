@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "gallery-history-review-triage-v1",
+  "mode": "review_queue_only_not_publication",
+  "rootId": "2026-09-22_2026-09-30_chem",
+  "journal": "Chem",
+  "range": {
+    "from": "2026-09-22",
+    "to": "2026-09-30"
+  },
+  "sourceSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d",
+  "sourceCheckedAt": "2026-10-10T19:05:06.293Z",
+  "publisherIssueReconciled": false,
+  "legacyNoDoiRecordsReconciled": false,
+  "titleSignalsAreRankOnly": true,
+  "zeroAutomaticExclusions": true,
+  "completeSourceFamilies": true,
+  "stats": {
+    "candidateOccurrences": 3,
+    "alreadyPublished": 0,
+    "approvedAwaiting08": 0,
+    "evidencePending": 0,
+    "requiresTwoPassReview": 3,
+    "priorityP0": 0,
+    "priorityP1": 2,
+    "priorityP2": 1,
+    "priorityP3": 0,
+    "unverifiedDate": 0,
+    "suspectedNonresearch": 0
+  },
+  "records": [
+    {
+      "doi": "10.1016/j.chempr.2026.103244",
+      "title": "Synthesis and optimization of ionizable lipids for RNA delivery",
+      "journal": "Chem",
+      "date": "2026-09-24",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "10",
+        "pages": "103244-103244",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2026.103244"
+      },
+      "authors": [
+        "Bowen Wu",
+        "Xuehe Lu",
+        "Marshall Scott Padilla",
+        "Ether Dharmesh",
+        "Ying Xu",
+        "Michael J. Mitchell",
+        "Xuexiang Han"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-22_2026-09-30_chem",
+      "sourceBatchSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103254",
+      "title": "Opportunities for merging biosynthesis and biocatalysis",
+      "journal": "Chem",
+      "date": "2026-09-25",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "10",
+        "pages": "103254-103254",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2026.103254"
+      },
+      "authors": [
+        "Dongshan Wu",
+        "Jin Wang",
+        "Xiaoguang Lei"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-22_2026-09-30_chem",
+      "sourceBatchSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1016/j.chempr.2026.103264",
+      "title": "The recycle reality: A process-level perspective on catalytic CO2 hydrogenation to methanol",
+      "journal": "Chem",
+      "date": "2026-09-24",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "12",
+        "issue": "10",
+        "pages": "103264-103264",
+        "articleNumber": "",
+        "doi": "10.1016/j.chempr.2026.103264"
+      },
+      "authors": [
+        "Lukas Spiekermann",
+        "Thaylan Pinheiro Araújo",
+        "Tangsheng Zou",
+        "Jan Seiler",
+        "Benedikt Winter",
+        "Javier Pérez‐Ramírez",
+        "André Bardow"
+      ],
+      "sourceFamilies": [
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-22_2026-09-30_chem",
+      "sourceBatchSha256": "a4d0fc7868cd95b14a923cefff8f1ab6c376d60c99247418957ef4df586a3b2d",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    }
+  ]
+}

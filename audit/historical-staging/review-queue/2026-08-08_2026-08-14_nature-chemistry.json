@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "gallery-history-review-triage-v1",
+  "mode": "review_queue_only_not_publication",
+  "rootId": "2026-08-08_2026-08-14_nature-chemistry",
+  "journal": "Nature Chemistry",
+  "range": {
+    "from": "2026-08-08",
+    "to": "2026-08-14"
+  },
+  "sourceSha256": "c1a4fc74b0343f764dbef2f2ec1910cdfcd42eace01168b18c8a0b00ec8c1fb1",
+  "sourceCheckedAt": "2026-10-12T05:31:22.078Z",
+  "publisherIssueReconciled": false,
+  "legacyNoDoiRecordsReconciled": false,
+  "titleSignalsAreRankOnly": true,
+  "zeroAutomaticExclusions": true,
+  "completeSourceFamilies": true,
+  "stats": {
+    "candidateOccurrences": 1,
+    "alreadyPublished": 0,
+    "approvedAwaiting08": 0,
+    "evidencePending": 0,
+    "requiresTwoPassReview": 1,
+    "priorityP0": 0,
+    "priorityP1": 0,
+    "priorityP2": 1,
+    "priorityP3": 0,
+    "unverifiedDate": 0,
+    "suspectedNonresearch": 0
+  },
+  "records": [
+    {
+      "doi": "10.1038/s41557-026-02223-5",
+      "title": "Tailoring packing sequences in van der Waals metal–organic frameworks",
+      "journal": "Nature Chemistry",
+      "date": "2026-08-12",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "18",
+        "issue": "9",
+        "pages": "1537-1538",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-026-02223-5"
+      },
+      "authors": [
+        "Mingyu Yang",
+        "Zheng Meng"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-08_2026-08-14_nature-chemistry",
+      "sourceBatchSha256": "c1a4fc74b0343f764dbef2f2ec1910cdfcd42eace01168b18c8a0b00ec8c1fb1",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    }
+  ]
+}

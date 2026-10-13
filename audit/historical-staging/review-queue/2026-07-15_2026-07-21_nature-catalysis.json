@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "gallery-history-review-triage-v1",
+  "mode": "review_queue_only_not_publication",
+  "rootId": "2026-07-15_2026-07-21_nature-catalysis",
+  "journal": "Nature Catalysis",
+  "range": {
+    "from": "2026-07-15",
+    "to": "2026-07-21"
+  },
+  "sourceSha256": "f157cdd689c93ee8d8fa530c8938d36c52bcaadd3e45b3d2b7357bdc52fdece2",
+  "sourceCheckedAt": "2026-10-12T05:34:19.419Z",
+  "publisherIssueReconciled": false,
+  "legacyNoDoiRecordsReconciled": false,
+  "titleSignalsAreRankOnly": true,
+  "zeroAutomaticExclusions": true,
+  "completeSourceFamilies": true,
+  "stats": {
+    "candidateOccurrences": 2,
+    "alreadyPublished": 1,
+    "approvedAwaiting08": 0,
+    "evidencePending": 0,
+    "requiresTwoPassReview": 1,
+    "priorityP0": 0,
+    "priorityP1": 0,
+    "priorityP2": 0,
+    "priorityP3": 2,
+    "unverifiedDate": 0,
+    "suspectedNonresearch": 0
+  },
+  "records": [
+    {
+      "doi": "10.1038/s41929-026-01576-x",
+      "title": "A tailored CoA ligase–N-acyltransferase cascade for on-DNA amide bond formation gives access to broad substrate scope",
+      "journal": "Nature Catalysis",
+      "date": "2026-07-17",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "8",
+        "pages": "834-847",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01576-x"
+      },
+      "authors": [
+        "Daniela Schaub",
+        "Alice Lessing",
+        "Fabian Meyer",
+        "Peter Stockinger",
+        "Miquel Estévez-Gay",
+        "Michael Eichenberger",
+        "Gerlis von Haugwitz",
+        "Andreas Gloger",
+        "Jörg Scheuermann",
+        "Rebecca Buller"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-07-15_2026-07-21_nature-catalysis",
+      "sourceBatchSha256": "f157cdd689c93ee8d8fa530c8938d36c52bcaadd3e45b3d2b7357bdc52fdece2",
+      "priority": "P3",
+      "flags": [],
+      "status": "already_published",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41929-026-01582-z",
+      "title": "Atomic-layer titration reveals optimal SrO termination for oxygen incorporation in perovskite oxides",
+      "journal": "Nature Catalysis",
+      "date": "2026-07-15",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "7",
+        "pages": "697-698",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01582-z"
+      },
+      "authors": [],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-07-15_2026-07-21_nature-catalysis",
+      "sourceBatchSha256": "f157cdd689c93ee8d8fa530c8938d36c52bcaadd3e45b3d2b7357bdc52fdece2",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    }
+  ]
+}

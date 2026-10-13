@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "gallery-history-review-triage-v1",
+  "mode": "review_queue_only_not_publication",
+  "rootId": "2026-09-08_2026-09-14_nature-catalysis",
+  "journal": "Nature Catalysis",
+  "range": {
+    "from": "2026-09-08",
+    "to": "2026-09-14"
+  },
+  "sourceSha256": "ce91a360b874087818e02ad8fa9b61472131e80de4fa3f672b1891f2a89a58ad",
+  "sourceCheckedAt": "2026-10-12T04:42:59.022Z",
+  "publisherIssueReconciled": false,
+  "legacyNoDoiRecordsReconciled": false,
+  "titleSignalsAreRankOnly": true,
+  "zeroAutomaticExclusions": true,
+  "completeSourceFamilies": true,
+  "stats": {
+    "candidateOccurrences": 1,
+    "alreadyPublished": 0,
+    "approvedAwaiting08": 0,
+    "evidencePending": 0,
+    "requiresTwoPassReview": 1,
+    "priorityP0": 0,
+    "priorityP1": 0,
+    "priorityP2": 0,
+    "priorityP3": 1,
+    "unverifiedDate": 0,
+    "suspectedNonresearch": 0
+  },
+  "records": [
+    {
+      "doi": "10.1038/s41929-026-01613-9",
+      "title": "Consequences of overtones in Raman spectra for assigning nickel anode surface structures as NiO2 during alkaline electrolysis",
+      "journal": "Nature Catalysis",
+      "date": "2026-09-11",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01613-9"
+      },
+      "authors": [
+        "Justus Leist",
+        "Annika Neufischer",
+        "Timo Jacob",
+        "Albert K. Engstfeld"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-08_2026-09-14_nature-catalysis",
+      "sourceBatchSha256": "ce91a360b874087818e02ad8fa9b61472131e80de4fa3f672b1891f2a89a58ad",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "gallery-history-review-triage-v1",
+  "mode": "review_queue_only_not_publication",
+  "rootId": "2026-09-01_2026-09-07_nature-synthesis",
+  "journal": "Nature Synthesis",
+  "range": {
+    "from": "2026-09-01",
+    "to": "2026-09-07"
+  },
+  "sourceSha256": "3e0955866c973da3d60941cf953fb92f99ab31636c691d65824ff02f3608bce4",
+  "sourceCheckedAt": "2026-10-12T05:10:23.859Z",
+  "publisherIssueReconciled": false,
+  "legacyNoDoiRecordsReconciled": false,
+  "titleSignalsAreRankOnly": true,
+  "zeroAutomaticExclusions": true,
+  "completeSourceFamilies": true,
+  "stats": {
+    "candidateOccurrences": 3,
+    "alreadyPublished": 1,
+    "approvedAwaiting08": 0,
+    "evidencePending": 0,
+    "requiresTwoPassReview": 2,
+    "priorityP0": 0,
+    "priorityP1": 1,
+    "priorityP2": 0,
+    "priorityP3": 2,
+    "unverifiedDate": 0,
+    "suspectedNonresearch": 0
+  },
+  "records": [
+    {
+      "doi": "10.1038/s44160-026-01165-7",
+      "title": "Author Correction: Accelerating synthesis at scale requires a coordinated ecosystem",
+      "journal": "Nature Synthesis",
+      "date": "2026-09-02",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1658-1658",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01165-7"
+      },
+      "authors": [
+        "Brandon R. Sutherland",
+        "Varinia Bernales",
+        "Alán Aspuru-Guzik"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-01_2026-09-07_nature-synthesis",
+      "sourceBatchSha256": "3e0955866c973da3d60941cf953fb92f99ab31636c691d65824ff02f3608bce4",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s44160-026-01149-7",
+      "title": "Modular assembly of bioisosteric bridged aza-frameworks via ring strain release",
+      "journal": "Nature Synthesis",
+      "date": "2026-09-02",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01149-7"
+      },
+      "authors": [
+        "Haotian Jiang",
+        "Yuxia Dai",
+        "Kai Tang",
+        "Bo Pan",
+        "Hongming Jin",
+        "Xiangyang Chen",
+        "Yangyang Yang"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-01_2026-09-07_nature-synthesis",
+      "sourceBatchSha256": "3e0955866c973da3d60941cf953fb92f99ab31636c691d65824ff02f3608bce4",
+      "priority": "P3",
+      "flags": [],
+      "status": "already_published",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s44160-026-01166-6",
+      "title": "Author Correction: Gram-per-litre-scale production of lutein by engineered Corynebacterium",
+      "journal": "Nature Synthesis",
+      "date": "2026-09-07",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "10",
+        "pages": "1659-1659",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01166-6"
+      },
+      "authors": [
+        "Hyunmin Eun",
+        "Cindy Pricilia Surya Prabowo",
+        "Sang Yup Lee"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-01_2026-09-07_nature-synthesis",
+      "sourceBatchSha256": "3e0955866c973da3d60941cf953fb92f99ab31636c691d65824ff02f3608bce4",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    }
+  ]
+}

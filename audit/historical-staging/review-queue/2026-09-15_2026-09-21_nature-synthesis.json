@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "gallery-history-review-triage-v1",
+  "mode": "review_queue_only_not_publication",
+  "rootId": "2026-09-15_2026-09-21_nature-synthesis",
+  "journal": "Nature Synthesis",
+  "range": {
+    "from": "2026-09-15",
+    "to": "2026-09-21"
+  },
+  "sourceSha256": "42fadf38c35ee688558f01bdb3cf33981990d54886b23db0b7d9b685e4ef1b9c",
+  "sourceCheckedAt": "2026-10-11T19:17:26.804Z",
+  "publisherIssueReconciled": false,
+  "legacyNoDoiRecordsReconciled": false,
+  "titleSignalsAreRankOnly": true,
+  "zeroAutomaticExclusions": true,
+  "completeSourceFamilies": true,
+  "stats": {
+    "candidateOccurrences": 3,
+    "alreadyPublished": 1,
+    "approvedAwaiting08": 0,
+    "evidencePending": 0,
+    "requiresTwoPassReview": 2,
+    "priorityP0": 0,
+    "priorityP1": 1,
+    "priorityP2": 0,
+    "priorityP3": 2,
+    "unverifiedDate": 0,
+    "suspectedNonresearch": 0
+  },
+  "records": [
+    {
+      "doi": "10.1038/s44160-026-01158-6",
+      "title": "Chemoselective Ni-catalysed directed C(sp2)–H alkylation at low temperature using alkyl sulfonylhydrazides",
+      "journal": "Nature Synthesis",
+      "date": "2026-09-17",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01158-6"
+      },
+      "authors": [
+        "Shuanghu Wang",
+        "David A. Cagan",
+        "Yilin Cao",
+        "Benjamin P. Vokits",
+        "Maximilian D. Palkowitz",
+        "Yu Kawamata",
+        "Phil S. Baran",
+        "Keary M. Engle"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-15_2026-09-21_nature-synthesis",
+      "sourceBatchSha256": "42fadf38c35ee688558f01bdb3cf33981990d54886b23db0b7d9b685e4ef1b9c",
+      "priority": "P1",
+      "flags": [],
+      "status": "already_published",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s44160-026-01151-z",
+      "title": "Rethinking selectivity in alkene hydrogenation",
+      "journal": "Nature Synthesis",
+      "date": "2026-09-16",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01151-z"
+      },
+      "authors": [
+        "Maria Koutiva",
+        "Christopher J. Teskey"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-15_2026-09-21_nature-synthesis",
+      "sourceBatchSha256": "42fadf38c35ee688558f01bdb3cf33981990d54886b23db0b7d9b685e4ef1b9c",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s44160-026-01159-5",
+      "title": "Through-space conductive pathways for polyoxometalate electronics",
+      "journal": "Nature Synthesis",
+      "date": "2026-09-18",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01159-5"
+      },
+      "authors": [
+        "Lin-Mei Zhang",
+        "Tao Wu"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-15_2026-09-21_nature-synthesis",
+      "sourceBatchSha256": "42fadf38c35ee688558f01bdb3cf33981990d54886b23db0b7d9b685e4ef1b9c",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    }
+  ]
+}

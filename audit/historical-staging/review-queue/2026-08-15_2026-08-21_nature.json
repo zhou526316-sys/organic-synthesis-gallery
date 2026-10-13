@@ -1,0 +1,2723 @@
+{
+  "schemaVersion": "gallery-history-review-triage-v1",
+  "mode": "review_queue_only_not_publication",
+  "rootId": "2026-08-15_2026-08-21_nature",
+  "journal": "Nature",
+  "range": {
+    "from": "2026-08-15",
+    "to": "2026-08-21"
+  },
+  "sourceSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+  "sourceCheckedAt": "2026-10-12T05:10:59.794Z",
+  "publisherIssueReconciled": false,
+  "legacyNoDoiRecordsReconciled": false,
+  "titleSignalsAreRankOnly": true,
+  "zeroAutomaticExclusions": true,
+  "completeSourceFamilies": true,
+  "stats": {
+    "candidateOccurrences": 76,
+    "alreadyPublished": 4,
+    "approvedAwaiting08": 0,
+    "evidencePending": 0,
+    "requiresTwoPassReview": 72,
+    "priorityP0": 1,
+    "priorityP1": 3,
+    "priorityP2": 2,
+    "priorityP3": 70,
+    "unverifiedDate": 0,
+    "suspectedNonresearch": 0
+  },
+  "records": [
+    {
+      "doi": "10.1038/s41586-026-10900-1",
+      "title": "Asymmetric prefrontal representations for leader–follower dynamics",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "658",
+        "issue": "8134",
+        "pages": "174-185",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10900-1"
+      },
+      "authors": [
+        "Yuan Cheng",
+        "Yusi Chen",
+        "Myungji Kwak",
+        "Ross P. Kempner",
+        "Rudramani Singha",
+        "Jared Winslow",
+        "Runqi Liu",
+        "Umais Khan",
+        "Tessa Spangler",
+        "Alvi Khan",
+        "Talmo Pereira",
+        "Matthew Whiteway",
+        "Evan S. Schaffer",
+        "Nuttida Rungratsameetaweemana",
+        "Nan Yang",
+        "Herbert Zheng Wu"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P0",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10933-6",
+      "title": "Synthesis of pyrroles from isoxazoles by an O-to-C skeletal edit",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8130",
+        "pages": "135-141",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10933-6"
+      },
+      "authors": [
+        "Abigail J. Bracken",
+        "Alexandra P. Lawrie",
+        "Isabella F. Romita",
+        "Mark D. Levin"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P1",
+      "flags": [],
+      "status": "already_published",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10995-6",
+      "title": "Author Correction: Synthetic vulnerabilities of mesenchymal subpopulations in pancreatic cancer",
+      "journal": "Nature",
+      "date": "2026-08-17",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8130",
+        "pages": "E6-E6",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10995-6"
+      },
+      "authors": [
+        "Giannicola Genovese",
+        "Alessandro Carugo",
+        "James Tepper",
+        "Frederick Scott Robinson",
+        "Liren Li",
+        "Maria Svelto",
+        "Luigi Nezi",
+        "Denise Corti",
+        "Rosalba Minelli",
+        "Piergiorgio Pettazzoni",
+        "Tony Gutschner",
+        "Chia-Chin Wu",
+        "Sahil Seth",
+        "Kadir Caner Akdemir",
+        "Elisabetta Leo",
+        "Samirkumar Amin",
+        "Marco Dal Molin",
+        "Haoqiang Ying",
+        "Lawrence N. Kwong",
+        "Simona Colla",
+        "Koichi Takahashi",
+        "Papia Ghosh",
+        "Virginia Giuliani",
+        "Florian Muller",
+        "Prasenjit Dey",
+        "Shan Jiang",
+        "Jill Garvey",
+        "Chang-Gong Liu",
+        "Jianhua Zhang",
+        "Timothy P. Heffernan",
+        "Carlo Toniatti",
+        "Jason B. Fleming",
+        "Michael G. Goggins",
+        "Laura D. Wood",
+        "Alessandro Sgambato",
+        "Abbas Agaimy",
+        "Anirban Maitra",
+        "Charles W. M. Roberts",
+        "Huamin Wang",
+        "Andrea Viale",
+        "Ronald A. DePinho",
+        "Giulio F. Draetta",
+        "Lynda Chin"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P1",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-11043-z",
+      "title": "Dialkyl ether synthesis through heteroatom homolytic substitution",
+      "journal": "Nature",
+      "date": "2026-08-20",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "658",
+        "issue": "8134",
+        "pages": "103-112",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-11043-z"
+      },
+      "authors": [
+        "Johannes J. Großkopf",
+        "Johnny Z. Wang",
+        "Jacqueline W. Gu",
+        "Cheng Bi",
+        "Sarah N. Dishman",
+        "Xiaoshen Ma",
+        "Yu-hong Lam",
+        "David W. C. MacMillan"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P1",
+      "flags": [],
+      "status": "already_published",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02373-z",
+      "title": "Activity of solar-driven polymer catalysts unleashed to produce a potential green fuel",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "569-570",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02373-z"
+      },
+      "authors": [
+        "Filip Podjaski"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P2",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-11009-1",
+      "title": "Programmable remodelling of carbon–nitrogen connectivity in amines",
+      "journal": "Nature",
+      "date": "2026-08-17",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "658",
+        "issue": "8134",
+        "pages": "94-102",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-11009-1"
+      },
+      "authors": [
+        "James D. Robinson",
+        "François Richard",
+        "Kohl A. Ratkovich",
+        "Joseph M. Phelps",
+        "Matthew J. Gaunt"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P2",
+      "flags": [],
+      "status": "already_published",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-01932-8",
+      "title": "How to get the most out of an informational interview",
+      "journal": "Nature",
+      "date": "2026-08-18",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-01932-8"
+      },
+      "authors": [
+        "Alaina Levine"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02037-y",
+      "title": "Twenty-two easy ways to power up your lab meetings",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "1065-1067",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02037-y"
+      },
+      "authors": [
+        "Hannah Docter-Loeb"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02352-4",
+      "title": "Sleuth identifies dozens of studies that used the wrong antibody",
+      "journal": "Nature",
+      "date": "2026-08-21",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02352-4"
+      },
+      "authors": [
+        "Holly Else"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02375-x",
+      "title": "Computational ‘gym’ trains AI models to control turbulence",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8131",
+        "pages": "355-356",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02375-x"
+      },
+      "authors": [
+        "Clara M. Velte"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02376-w",
+      "title": "The Antarctic ice sheet has gained mass — but probably not for long",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "828-829",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02376-w"
+      },
+      "authors": [
+        "Jonathan Wille"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02377-9",
+      "title": "Psychedelics tune the brain to the environment",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "830-831",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02377-9"
+      },
+      "authors": [
+        "Stefan Borgwardt",
+        "Mihai Avram"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02381-z",
+      "title": "Scientific expedition makes the best of bad weather",
+      "journal": "Nature",
+      "date": "2026-08-18",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "574-574",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02381-z"
+      },
+      "authors": [],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02410-x",
+      "title": "Delisted",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02410-x"
+      },
+      "authors": [
+        "Ximing Zhang"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02455-y",
+      "title": "Researcher, heal thyself: meet the scientists studying their own diseases",
+      "journal": "Nature",
+      "date": "2026-08-20",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8130",
+        "pages": "305-307",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02455-y"
+      },
+      "authors": [
+        "Josie Glausiusz"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02466-9",
+      "title": "Mathematics holds the secret to ‘ladder-proof’ knitting",
+      "journal": "Nature",
+      "date": "2026-08-18",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "831-832",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02466-9"
+      },
+      "authors": [
+        "Vishal P. Patil"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02495-4",
+      "title": "AI tool lets researchers ‘vibe code’ in the quantum realm",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "800-801",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02495-4"
+      },
+      "authors": [
+        "Davide Castelvecchi"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02516-2",
+      "title": "South Africa’s scientists must register with official body or risk prison, according to draft law",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "804-805",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02516-2"
+      },
+      "authors": [
+        "Sarah Wild"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02524-2",
+      "title": "A revolutionary stem-cell therapy must proceed responsibly to achieve its full potential",
+      "journal": "Nature",
+      "date": "2026-08-18",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "539-539",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02524-2"
+      },
+      "authors": [],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02526-0",
+      "title": "Universities must stop protecting bullies — or more people will leave science",
+      "journal": "Nature",
+      "date": "2026-08-17",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "541-541",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02526-0"
+      },
+      "authors": [
+        "Morteza Mahmoudi"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02527-z",
+      "title": "Will you be wearing an exoskeleton in ten years? The tech that could change how we move",
+      "journal": "Nature",
+      "date": "2026-08-18",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "552-553",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02527-z"
+      },
+      "authors": [
+        "Chris Stokel-Walker"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02528-y",
+      "title": "Screening babies’ genomes could save lives. Here’s how it would work",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "554-556",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02528-y"
+      },
+      "authors": [
+        "Uzma Rentia"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02529-x",
+      "title": "Why AI systems are most useful as designers of new scientific tools",
+      "journal": "Nature",
+      "date": "2026-08-17",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "557-558",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02529-x"
+      },
+      "authors": [
+        "James Evans"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02530-4",
+      "title": "How the story of life and our planet unfolded — together",
+      "journal": "Nature",
+      "date": "2026-08-17",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "559-561",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02530-4"
+      },
+      "authors": [
+        "Dianne K. Newman"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02531-3",
+      "title": "How the Middle East can become a hub for sustainable aviation fuels",
+      "journal": "Nature",
+      "date": "2026-08-18",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "565-567",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02531-3"
+      },
+      "authors": [
+        "Ying Jiang",
+        "Samuel S. Mao"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02532-2",
+      "title": "Too hot to sleep? How heatwaves at night affect our health",
+      "journal": "Nature",
+      "date": "2026-08-17",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "562-564",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02532-2"
+      },
+      "authors": [
+        "Pixin Gong",
+        "Li Lan",
+        "Ruiqi Guo",
+        "Shu Jiang",
+        "Zisheng Huang",
+        "Zhentao Wang",
+        "Yanbing Lin",
+        "Hui Xu"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02535-z",
+      "title": "Five ways 3D printing is improving lab work",
+      "journal": "Nature",
+      "date": "2026-08-18",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "783-784",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02535-z"
+      },
+      "authors": [
+        "Neil Savage"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02537-x",
+      "title": "Virus deploys a ‘loose cannon’ enzyme to overpower bacterial defences",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02537-x"
+      },
+      "authors": [],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02549-7",
+      "title": "Investors’ sneak peak: can this AI tool spot the science that will lead to patents?",
+      "journal": "Nature",
+      "date": "2026-08-20",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02549-7"
+      },
+      "authors": [
+        "Chris Stokel-Walker"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02551-z",
+      "title": "Staggering 90% of biomedical papers now show signs of AI help",
+      "journal": "Nature",
+      "date": "2026-08-20",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8130",
+        "pages": "20-20",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02551-z"
+      },
+      "authors": [
+        "Kaia Glickman"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02552-y",
+      "title": "First-of-its-kind narcolepsy drug opens door to new therapies for the brain",
+      "journal": "Nature",
+      "date": "2026-08-17",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "805-806",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02552-y"
+      },
+      "authors": [
+        "Amanda Heidt"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02553-x",
+      "title": "To shield the fetus, link a protein to these drugs",
+      "journal": "Nature",
+      "date": "2026-08-20",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "797-797",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02553-x"
+      },
+      "authors": [],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02554-w",
+      "title": "Too much mate choice overwhelms frogs",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "797-797",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02554-w"
+      },
+      "authors": [],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02555-9",
+      "title": "Hidden volcanoes hint at Moon’s turbulent past",
+      "journal": "Nature",
+      "date": "2026-08-20",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "797-797",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02555-9"
+      },
+      "authors": [],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02556-8",
+      "title": "Astronaut vest cuts radiation exposure in half",
+      "journal": "Nature",
+      "date": "2026-08-20",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "797-797",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02556-8"
+      },
+      "authors": [],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02566-6",
+      "title": "Why we must stop talking about artificial general intelligence — and instead build ‘pro-worker’ AI",
+      "journal": "Nature",
+      "date": "2026-08-21",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "795-795",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02566-6"
+      },
+      "authors": [
+        "Daron Acemoglu"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02574-6",
+      "title": "Exclusive: NSF set to issue lowest number of new grants in four decades",
+      "journal": "Nature",
+      "date": "2026-08-20",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8130",
+        "pages": "18-19",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02574-6"
+      },
+      "authors": [
+        "Dan Garisto"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02575-5",
+      "title": "Treat biological databases as infrastructure, not projects",
+      "journal": "Nature",
+      "date": "2026-08-18",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "786-786",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02575-5"
+      },
+      "authors": [
+        "Neil Hall",
+        "Katja Röper",
+        "Valerie Wood",
+        "Paul Nurse"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02576-4",
+      "title": "Asia’s longevity gains must be translated into better health",
+      "journal": "Nature",
+      "date": "2026-08-18",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "786-786",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02576-4"
+      },
+      "authors": [
+        "Chiranjib Chakraborty"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02577-3",
+      "title": "Heatwaves expose weak links in food systems",
+      "journal": "Nature",
+      "date": "2026-08-18",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "786-786",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02577-3"
+      },
+      "authors": [
+        "Zongyin Zhao",
+        "Chengchao Zuo",
+        "Xinli Ke",
+        "Shuyu Yang"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02578-2",
+      "title": "Europe must adapt to live with megafires",
+      "journal": "Nature",
+      "date": "2026-08-18",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "786-786",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02578-2"
+      },
+      "authors": [
+        "Jorge Tobajas",
+        "Víctor Resco de Dios",
+        "Antoni Margalida"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02584-4",
+      "title": "NIH proposes major revamp of how it scores research grant proposals",
+      "journal": "Nature",
+      "date": "2026-08-18",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02584-4"
+      },
+      "authors": [
+        "Max Kozlov"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02585-3",
+      "title": "Human organoids that mimic brain development grown for years in lab",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "799-800",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02585-3"
+      },
+      "authors": [
+        "Rachel Fieldhouse"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02586-2",
+      "title": "These trees are making air quality in cities worse",
+      "journal": "Nature",
+      "date": "2026-08-20",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8130",
+        "pages": "15-16",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02586-2"
+      },
+      "authors": [
+        "Mohana Basu"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02587-1",
+      "title": "How do people live beyond 110? Abundance of cancer-killing cells might be key",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "803-804",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02587-1"
+      },
+      "authors": [
+        "Katherine Bourzac"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02589-z",
+      "title": "Daily briefing: Narcolepsy drug could kick off an Ozempic-style moment for the brain",
+      "journal": "Nature",
+      "date": "2026-08-17",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02589-z"
+      },
+      "authors": [
+        "Flora Graham"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02596-0",
+      "title": "Earth-shaking thunder probes underground geology",
+      "journal": "Nature",
+      "date": "2026-08-21",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8130",
+        "pages": "11-11",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02596-0"
+      },
+      "authors": [],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02600-7",
+      "title": "Daily briefing: ‘Too hot to sleep’ is harmful to your health",
+      "journal": "Nature",
+      "date": "2026-08-18",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02600-7"
+      },
+      "authors": [
+        "Flora Graham"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02607-0",
+      "title": "A black hole's spin could finally be measured by a high-speed star",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02607-0"
+      },
+      "authors": [
+        "Benjamin Thompson",
+        "Nick Petrić Howe"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02610-5",
+      "title": "Rudolph A. Marcus obituary: theoretical chemist who explained how electrons jump between molecules",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8130",
+        "pages": "33-33",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02610-5"
+      },
+      "authors": [
+        "Garnet Kin-Lic Chan",
+        "Kenneth H. Marcus"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02612-3",
+      "title": "Moderna cancer vaccine stops melanoma returning: what’s next for personalized treatments?",
+      "journal": "Nature",
+      "date": "2026-08-20",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8130",
+        "pages": "16-17",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02612-3"
+      },
+      "authors": [
+        "Rachel Fieldhouse",
+        "Mohana Basu"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02614-1",
+      "title": "Daily briefing: How 3D printers are changing lab work",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02614-1"
+      },
+      "authors": [
+        "Flora Graham"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02617-y",
+      "title": "Daily briefing: People older than 100 have more cancer-killing cells",
+      "journal": "Nature",
+      "date": "2026-08-20",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02617-y"
+      },
+      "authors": [
+        "Flora Graham"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02626-x",
+      "title": "Briefing Chat: New narcolepsy drug could unlock host of novel brain therapies",
+      "journal": "Nature",
+      "date": "2026-08-21",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02626-x"
+      },
+      "authors": [
+        "Nick Petrić Howe",
+        "Maren Hunsberger"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/d41586-026-02638-7",
+      "title": "Daily briefing: Personalized mRNA vaccine shows promise for cancer",
+      "journal": "Nature",
+      "date": "2026-08-21",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/d41586-026-02638-7"
+      },
+      "authors": [
+        "Flora Graham"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10687-1",
+      "title": "Safety and security of large language models in healthcare",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "577-589",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10687-1"
+      },
+      "authors": [
+        "Jan Clusmann",
+        "Oscar Freyer",
+        "Max Ostermann",
+        "Dyke Ferber",
+        "Narmin Ghaffari Laleh",
+        "Lars Hilgers",
+        "Fiona R. Kolbinger",
+        "Carolin V. Schneider",
+        "Andrea Downing",
+        "Magdalena Katharina Wekenborg",
+        "Stephen Gilbert",
+        "Sebastian Foersch",
+        "Daniel Truhn",
+        "Isabella C. Wiest",
+        "Jakob Nikolas Kather"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10776-1",
+      "title": "Reply to: Artefacts in single-cell mtDNA analyses misinform phylogenies",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "E32-E38",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10776-1"
+      },
+      "authors": [
+        "Chen Weng",
+        "Jonathan S. Weissman",
+        "Vijay G. Sankaran"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10777-0",
+      "title": "Artefacts in single-cell mtDNA analyses misinform phylogenies",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8128",
+        "pages": "E25-E31",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10777-0"
+      },
+      "authors": [
+        "Caleb A. Lareau",
+        "Michael Spencer Chapman",
+        "Livius Penter",
+        "Tal Nawy",
+        "Dana Pe’er",
+        "Leif S. Ludwig"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10877-x",
+      "title": "Human brain organoids record the passage of time over multiple years",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8132",
+        "pages": "713-723",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10877-x"
+      },
+      "authors": [
+        "Irene Faravelli",
+        "Noelia Antón-Bolaños",
+        "Anqi Wei",
+        "Tyler Faits",
+        "Abhishek Sampath Kumar",
+        "Sophia Andreadis",
+        "Rahel Kastli",
+        "Marta Montero Crespo",
+        "Mara Steiger",
+        "Daniel Leible",
+        "Elizabeth Zhang",
+        "Bobae An",
+        "Yaron Meirovitch",
+        "Sayara Silwal",
+        "Sung Min Yang",
+        "Alexander Kovacsovics",
+        "Xian Adiconis",
+        "Helene Kretzmer",
+        "Joshua Z. Levin",
+        "Edward S. Boyden",
+        "Jeff Lichtman",
+        "Aviv Regev",
+        "Alexander Meissner",
+        "Paola Arlotta"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10892-y",
+      "title": "A biased allosteric modulator is a molecular glue for β2AR dimerization",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "658",
+        "issue": "8135",
+        "pages": "556-564",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10892-y"
+      },
+      "authors": [
+        "Jiemin Shen",
+        "Teja Nikhil Peddada",
+        "Konstantin E. Komolov",
+        "Francesco De Pascali",
+        "Alexander M. Garces",
+        "Haoqing Wang",
+        "Muhammad Ehsan",
+        "Pil Seok Chae",
+        "Michael T. Lerch",
+        "Jeffrey L. Benovic",
+        "Jun Xu",
+        "Brian K. Kobilka"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10894-w",
+      "title": "Discovery of a star sensitive to the spin of Sagittarius A*",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8131",
+        "pages": "359-363",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10894-w"
+      },
+      "authors": [
+        "K. Abd El Dayem",
+        "R. Abuter",
+        "N. Aimar",
+        "P. Amaro-Seoane",
+        "A. Berdeu",
+        "J.-P. Berger",
+        "G. Bourdarot",
+        "W. Brandner",
+        "A. Burkert",
+        "D. Caldéron",
+        "C. Correia",
+        "J. Cuadra",
+        "R. Davies",
+        "D. Defrère",
+        "L. Delit",
+        "A. Drescher",
+        "F. Eisenhauer",
+        "L. Esteras Otal",
+        "M. Fabricius",
+        "H. Feuchtgruber",
+        "S. Flesch",
+        "N. M. Förster Schreiber",
+        "A. Foschi",
+        "Q. Fournier",
+        "P. Garcia",
+        "R. Garcia Lopez",
+        "A. Generozov",
+        "R. Genzel",
+        "S. Gillessen",
+        "F. Gonté",
+        "X. Haubois",
+        "S. F. Hönig",
+        "M. Houllé",
+        "S. Joharle",
+        "A. Kaufer",
+        "J. Kammerer",
+        "P. Kervella",
+        "J. Kolb",
+        "L. Kreidberg",
+        "L. Labadie",
+        "S. Lacour",
+        "O. Lai",
+        "R. Laugier",
+        "J.-B. Le Bouquin",
+        "J. Leftley",
+        "R. Li",
+        "B. Lopez",
+        "D. Lutz",
+        "F. Mang",
+        "A. Mérand",
+        "F. Millour",
+        "M. Montargès",
+        "N. Morujão",
+        "H. Nowacki",
+        "M. Nowak",
+        "S. Oberti",
+        "J. Osorno",
+        "T. Ott",
+        "T. Paumard",
+        "C. Paladini",
+        "S. Pappert",
+        "H. B. Perets",
+        "K. Perraut",
+        "G. Perrin",
+        "R. Petrov",
+        "P. O. Petrucci",
+        "T. Piran",
+        "N. Pourré",
+        "S. Rabien",
+        "D. C. Ribeiro",
+        "S. Robbe-Dubois",
+        "M. Sadun Bordoni",
+        "J. Sanchez-Bermudez",
+        "D. Santos",
+        "R. Sari"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10904-x",
+      "title": "Observation of conformal field theory spectra in a quantum simulator",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8130",
+        "pages": "98-106",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10904-x"
+      },
+      "authors": [
+        "Xiangkai Sun",
+        "Yuan Le",
+        "Stephen Naus",
+        "Richard Bing-Shiun Tsai",
+        "Lewis R. B. Picard",
+        "Sara Murciano",
+        "Michael Knap",
+        "Jason Alicea",
+        "Manuel Endres"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10910-z",
+      "title": "Psychedelics align brain activity with context",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "936-947",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10910-z"
+      },
+      "authors": [
+        "Devon Stoliker",
+        "Leonardo Novelli",
+        "Moein Khajehnejad",
+        "Mana Biabani",
+        "Matthew D. Greaves",
+        "Tamrin Barta",
+        "Martin Williams",
+        "Sidhant Chopra",
+        "Olivier Bazin",
+        "Otto Simonsson",
+        "Richard Chambers",
+        "Frederick S. Barrett",
+        "Gustavo Deco",
+        "Katrin H. Preller",
+        "Robin L. Carhart-Harris",
+        "Anil K. Seth",
+        "Suresh Sundram",
+        "Gary F. Egan",
+        "Adeel Razi"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10912-x",
+      "title": "Multiyear tropical warm pool warming drives slowdown in Antarctic mass loss",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "656",
+        "issue": "8129",
+        "pages": "897-904",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10912-x"
+      },
+      "authors": [
+        "Yunhe Wang",
+        "Qinghua Ding",
+        "Xiaofeng Li",
+        "Thomas J. Ballinger",
+        "Yoshihiro Nakayama",
+        "Dániel Topál",
+        "Eric J. Steig"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10914-9",
+      "title": "Atomic-scale double-slit interferometry with a focused electron probe",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8130",
+        "pages": "107-113",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10914-9"
+      },
+      "authors": [
+        "Koudai Tabata",
+        "Takehito Seki",
+        "Toma Susi",
+        "Ryo Ishikawa",
+        "Naoya Shibata"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10917-6",
+      "title": "The HydroGym reinforcement learning platform for fluid dynamics",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8131",
+        "pages": "369-376",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10917-6"
+      },
+      "authors": [
+        "Christian Lagemann",
+        "Sajeda Mokbel",
+        "Miro Gondrum",
+        "Mario Rüttgers",
+        "Yuning Wang",
+        "Pol Suárez",
+        "Ludger Paehler",
+        "Deniz A. Bezgin",
+        "Aaron B. Buhendwa",
+        "Jared L. Callaham",
+        "Samuel Ahnert",
+        "Nicholas Zolman",
+        "Xiao Shao",
+        "Jean-Christophe Loiseau",
+        "Nikolaus A. Adams",
+        "Matthias Meinke",
+        "Wolfgang Schröder",
+        "Kai Lagemann",
+        "Esther Lagemann",
+        "Ricardo Vinuesa",
+        "Steven L. Brunton"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10924-7",
+      "title": "An Icelandic pangenome reference",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "658",
+        "issue": "8135",
+        "pages": "421-429",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10924-7"
+      },
+      "authors": [
+        "Guillaume Holley",
+        "Hannes P. Eggertsson",
+        "Snaedis Kristmundsdottir",
+        "Doruk Beyter",
+        "Astros Th Skuladottir",
+        "Kristjan H. S. Moore",
+        "Pall I. Olason",
+        "Arnaldur Gylfason",
+        "Olafur T. Magnusson",
+        "Asmundur Oddsson",
+        "Hreinn Stefansson",
+        "Agnar Helgason",
+        "Gisli Masson",
+        "Patrick Sulem",
+        "Daniel F. Gudbjartsson",
+        "Kari Stefansson",
+        "Bjarni V. Halldorsson"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10926-5",
+      "title": "Family genetic designs in MoBa provide insights into health and functioning",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10926-5"
+      },
+      "authors": [
+        "Elizabeth C. Corfield",
+        "Alexey A. Shadrin",
+        "Oleksandr Frei",
+        "Zillur Rahman",
+        "Bayram Cevdet Akdeniz",
+        "Tahir Tekin Filiz",
+        "Aihua Lin",
+        "Isabella Badini",
+        "Laura Hegemann",
+        "Lavinia Athanasiu",
+        "Robyn E. Wootton",
+        "Chloe Austerberry",
+        "Amanda M. Hughes",
+        "Martin Tesli",
+        "Espen Hagen",
+        "Ragnhild E. Brandlistuen",
+        "Espen Moen Eilertsen",
+        "Lars T. Westlye",
+        "Pål R. Njølstad",
+        "Per Magnus",
+        "Eivind Hovig",
+        "Tetyana Zayats",
+        "Helga Ask",
+        "Ted Reichborn-Kjennerud",
+        "Gibran Hemani",
+        "Neil M. Davies",
+        "Laurie J. Hannigan",
+        "Ole A. Andreassen",
+        "Alexandra Karoline Havdahl"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10928-3",
+      "title": "Wake-activated neuronal populations that regulate sleep drive",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10928-3"
+      },
+      "authors": [
+        "William Joo",
+        "Clare Diester",
+        "Vassilis Bitsikas",
+        "Myrto Panopoulou",
+        "Amelia Hidalgo",
+        "Konstantinos Ntemos",
+        "Rodrigo C. G. Pena",
+        "Fabia Imhof",
+        "Iris Odstrcil",
+        "Flavio Donato",
+        "Geoffrey Fucile",
+        "Daniel Kroeger",
+        "Thomas E. Scammell",
+        "Alexander F. Schier"
+      ],
+      "sourceFamilies": [
+        "crossref"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10934-5",
+      "title": "Pervasive phosphorylation by phage T7 kinase disarms bacterial defences",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "658",
+        "issue": "8135",
+        "pages": "454-464",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10934-5"
+      },
+      "authors": [
+        "Tara Bartolec",
+        "Karin Mitosch",
+        "Clément Potel",
+        "Federico Corona",
+        "Alessio Ling Jie Yang",
+        "Nicolai Karcher",
+        "Mira Lea Burtscher",
+        "Alexandra Koumoutsi",
+        "Isabelle Becher",
+        "Lena Sarah Müller",
+        "Jacob Bobonis",
+        "Manjeet Kumar",
+        "Marco Galardini",
+        "Athanasios Typas",
+        "Mikhail M. Savitski"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10935-4",
+      "title": "Increasing CO2 levels fertilize C4 grass production",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "658",
+        "issue": "8135",
+        "pages": "415-420",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10935-4"
+      },
+      "authors": [
+        "Kimberley J. Simpson",
+        "A. Carla Staver",
+        "James A. King",
+        "William J. Bond",
+        "Corli Coetsee",
+        "Nita C. M. Pallett",
+        "Adam F. A. Pellegrini",
+        "Sarah L. Raubenheimer",
+        "Brad S. Ripley",
+        "Maria Val Martin",
+        "Colin P. Osborne"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10938-1",
+      "title": "A global atmospheric methane record from a tropical ice core",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8131",
+        "pages": "409-413",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10938-1"
+      },
+      "authors": [
+        "Kara A. Lamantia",
+        "Lonnie G. Thompson",
+        "Mary E. Davis",
+        "Ben Riddell-Young",
+        "Ivo Strawson",
+        "Emilie Beaudon",
+        "Ellen Mosley-Thompson",
+        "Newton Nguyen",
+        "Edward J. Brook"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-10951-4",
+      "title": "Functional role of skull lymphoid structures in CNS immunosurveillance",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "658",
+        "issue": "8134",
+        "pages": "196-204",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-10951-4"
+      },
+      "authors": [
+        "Jang Hyun Park",
+        "Daviti Abramishvili",
+        "Gustavo Gastão Davanzo",
+        "Ruben Silva",
+        "Xingxing Gu",
+        "Siling Du",
+        "Daniel D. Lee",
+        "Bernd H. Zinselmeyer",
+        "Jackson S. Turner",
+        "Gwendalyn J. Randolph",
+        "Igor Smirnov",
+        "Jonathan Kipnis"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-11006-4",
+      "title": "Positional isomerization of pyridine through nitrogen transposition",
+      "journal": "Nature",
+      "date": "2026-08-17",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8133",
+        "pages": "950-956",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-11006-4"
+      },
+      "authors": [
+        "Wonjun Choi",
+        "Hyewon Ju",
+        "Jiyong Park",
+        "Sungwoo Hong"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "already_published",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-11010-8",
+      "title": "Defect passivation and optical management of triple-junction solar cells",
+      "journal": "Nature",
+      "date": "2026-08-17",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "658",
+        "issue": "8134",
+        "pages": "86-93",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-11010-8"
+      },
+      "authors": [
+        "Ye Xu",
+        "Zhijie Wang",
+        "Chen Deng",
+        "Lianlian Qi",
+        "Yi Mo",
+        "Qianqian Wang",
+        "Danni Yu",
+        "Yao Wang",
+        "Yifan Chen",
+        "Yiqin Tian",
+        "Pengcheng Zhao",
+        "Ming Luo",
+        "Dongrui Jiang",
+        "Haiyun Li",
+        "Xiaobing Ding",
+        "Rui Xia",
+        "Dongdong Yan",
+        "Pengcheng Ge",
+        "Delei Xin",
+        "Huifeng Yao",
+        "Shangqian Zhu",
+        "Kaihu Xian",
+        "Chengyue Zhou",
+        "Guangtao Yang",
+        "Li Yin",
+        "Yingguo Yang",
+        "Anurag Krishna",
+        "Wallace C. H. Choy",
+        "Pietro P. Altermatt",
+        "Jianlu Wang",
+        "Zhigang Xie",
+        "Xueling Zhang",
+        "Junhao Chu",
+        "Hong Zhang",
+        "Jifan Gao",
+        "Yifeng Chen"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41586-026-11037-x",
+      "title": "Evidence for vacuum-enhanced superconductivity in NbSe2",
+      "journal": "Nature",
+      "date": "2026-08-19",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "657",
+        "issue": "8133",
+        "pages": "912-917",
+        "articleNumber": "",
+        "doi": "10.1038/s41586-026-11037-x"
+      },
+      "authors": [
+        "Zheyan Wang",
+        "Gabriel Cardoso",
+        "Liu Yang",
+        "Xun Gong",
+        "Chi Zhang",
+        "Yufei Zhu",
+        "Dongbo Zhang",
+        "Nan Pan",
+        "Hongbing Cai",
+        "Yong P. Chen",
+        "Qing-Dong Jiang",
+        "Guanghui Cheng",
+        "Frank Wilczek",
+        "Changgan Zeng"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-08-15_2026-08-21_nature",
+      "sourceBatchSha256": "eed6819f7637a0b287c1a6469c92ec5fbbbe93c55d005b304ed86fdd878ced83",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    }
+  ]
+}

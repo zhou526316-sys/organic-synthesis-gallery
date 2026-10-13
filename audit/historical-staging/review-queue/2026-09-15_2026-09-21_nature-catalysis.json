@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "gallery-history-review-triage-v1",
+  "mode": "review_queue_only_not_publication",
+  "rootId": "2026-09-15_2026-09-21_nature-catalysis",
+  "journal": "Nature Catalysis",
+  "range": {
+    "from": "2026-09-15",
+    "to": "2026-09-21"
+  },
+  "sourceSha256": "e5eaa091cd13e21451abedeff1bb90a4a0b061e8f46ab8163b1249a4299ca5f2",
+  "sourceCheckedAt": "2026-10-11T19:17:26.393Z",
+  "publisherIssueReconciled": false,
+  "legacyNoDoiRecordsReconciled": false,
+  "titleSignalsAreRankOnly": true,
+  "zeroAutomaticExclusions": true,
+  "completeSourceFamilies": true,
+  "stats": {
+    "candidateOccurrences": 2,
+    "alreadyPublished": 1,
+    "approvedAwaiting08": 0,
+    "evidencePending": 0,
+    "requiresTwoPassReview": 1,
+    "priorityP0": 0,
+    "priorityP1": 1,
+    "priorityP2": 0,
+    "priorityP3": 1,
+    "unverifiedDate": 0,
+    "suspectedNonresearch": 0
+  },
+  "records": [
+    {
+      "doi": "10.1038/s41929-026-01600-0",
+      "title": "Anti-Markovnikov alkene hydroalkylation via iron photocatalysis",
+      "journal": "Nature Catalysis",
+      "date": "2026-09-15",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "9",
+        "issue": "9",
+        "pages": "976-988",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01600-0"
+      },
+      "authors": [
+        "Shih-Chieh Kao",
+        "Kang-Jie Bian",
+        "Jess C. Tang",
+        "Shijin Yu",
+        "Yongchen Wang",
+        "Ying Chen",
+        "Xiaowei Chen",
+        "Julian G. West"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-15_2026-09-21_nature-catalysis",
+      "sourceBatchSha256": "e5eaa091cd13e21451abedeff1bb90a4a0b061e8f46ab8163b1249a4299ca5f2",
+      "priority": "P1",
+      "flags": [],
+      "status": "already_published",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    },
+    {
+      "doi": "10.1038/s41929-026-01612-w",
+      "title": "Operando single-atom tracking in individual Pt nanoparticles detects the coexistence of Langmuir and Taylor active sites",
+      "journal": "Nature Catalysis",
+      "date": "2026-09-21",
+      "createdDate": "",
+      "year": 2026,
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-026-01612-w"
+      },
+      "authors": [
+        "K. Jenkinson",
+        "T. Stoops",
+        "A. De Backer",
+        "E. Arslan Irmak",
+        "A. Pedrazo-Tardajos",
+        "N. Claes",
+        "T. Altantzis",
+        "A. Sánchez-Iglesias",
+        "L. M. Liz-Marzán",
+        "S. Van Aert",
+        "B. M. Weckhuysen",
+        "S. Bals"
+      ],
+      "sourceFamilies": [
+        "crossref",
+        "openalex"
+      ],
+      "sourceBatchId": "2026-09-15_2026-09-21_nature-catalysis",
+      "sourceBatchSha256": "e5eaa091cd13e21451abedeff1bb90a4a0b061e8f46ab8163b1249a4299ca5f2",
+      "priority": "P3",
+      "flags": [],
+      "status": "requires_two_pass_review",
+      "articleEvidenceReview": "not_performed_by_triage",
+      "publicationRights": "unverified_no_full_abstract_or_body"
+    }
+  ]
+}
