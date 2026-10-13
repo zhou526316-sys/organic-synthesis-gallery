@@ -1,0 +1,1001 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2025-10-01",
+    "to": "2025-10-31"
+  },
+  "checkedAt": "2026-10-13T02:19:17.238Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "lane": "publication",
+        "total": 20,
+        "count": 20,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 17,
+      "count": 17,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 20,
+      "openalex": 17
+    }
+  },
+  "candidateCount": 20,
+  "alreadyPublished": 0,
+  "unreviewed": 20,
+  "records": [
+    {
+      "doi": "10.1038/s44160-025-00890-9",
+      "title": "Electrochemical oxidation enables aromatic C–H amination with dual mechanisms",
+      "authors": [
+        "Griffin Stewart",
+        "Eva Maria Alvarez",
+        "Chris Rapala",
+        "Jonathan H. Sklar",
+        "Julia A. Kalow",
+        "Christian A. Malapit"
+      ],
+      "date": "2025-10-16",
+      "datePrecision": "day",
+      "createdDate": "2025-10-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "1",
+        "pages": "55-63",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00890-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00890-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00891-8",
+      "title": "Electrosynthesis to convert aromatic C–H bonds to aryl amines",
+      "authors": [],
+      "date": "2025-10-16",
+      "datePrecision": "day",
+      "createdDate": "2025-10-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "1",
+        "pages": "10-11",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00891-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00891-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00898-1",
+      "title": "Programmable enzyme catalysis based on multiscale confinements",
+      "authors": [
+        "Yufei Cao",
+        "Weili Qiao",
+        "Canyu Zhang",
+        "Mengyu Zhu",
+        "Qilu Wu",
+        "Wen-Yong Lou",
+        "Itamar Willner",
+        "Richard N. Zare",
+        "Jun Ge"
+      ],
+      "date": "2025-10-24",
+      "datePrecision": "day",
+      "createdDate": "2025-10-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1338-1348",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00898-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00898-1",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00899-0",
+      "title": "Pyrrole-stabilized free carbenes generated from alkynyl imidates or aldimines and electrophilic alkynes give pyrrolone- or pyrrole-containing products",
+      "authors": [
+        "Qian Xu",
+        "Jingyang Shi",
+        "Thomas R. Hoye"
+      ],
+      "date": "2025-10-16",
+      "datePrecision": "day",
+      "createdDate": "2025-10-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "1",
+        "pages": "95-102",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00899-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00899-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00902-8",
+      "title": "Wireless electrochemical synthesis",
+      "authors": [
+        "Stephanie Greed"
+      ],
+      "date": "2025-10-13",
+      "datePrecision": "day",
+      "createdDate": "2025-10-13",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "12",
+        "pages": "1473-1474",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00902-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00902-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00903-7",
+      "title": "Model thiophene-decorated nickel porphyrins for tandem CO2 reduction",
+      "authors": [
+        "Yi-Hsuan Lu",
+        "Yu-Jhih Shen",
+        "Hsin-Jung Tsai",
+        "Yen-Hua Lee",
+        "Yong-Yi Huang",
+        "Zih-Yi Lin",
+        "Wen-Yang Huang",
+        "Tsung-Ju Lee",
+        "Guan-Lin Chen",
+        "Nozomu Hiraoka",
+        "Hirofumi Ishii",
+        "Hsueh-Ju Liu",
+        "Shao-Hui Hsu",
+        "Chun-Chih Chang",
+        "Aoni Xu",
+        "Sung-Fu Hung"
+      ],
+      "date": "2025-10-09",
+      "datePrecision": "day",
+      "createdDate": "2025-10-09",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "2",
+        "pages": "189-198",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00903-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00903-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00904-6",
+      "title": "Mechanically interlocked polymer scaffolds enable high-efficiency printed flexible perovskite photovoltaics",
+      "authors": [
+        "Siyi Shi",
+        "Chenxiang Gong",
+        "Minqin Tao",
+        "Cong Wang",
+        "Baojin Fan",
+        "Hao Yuan",
+        "Huawei Hu",
+        "Muhammad Bilal Khan Niazi",
+        "Xuzhou Yan",
+        "Xiaotian Hu",
+        "Yiwang Chen"
+      ],
+      "date": "2025-10-21",
+      "datePrecision": "day",
+      "createdDate": "2025-10-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "2",
+        "pages": "209-220",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00904-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00904-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00906-4",
+      "title": "Palladium makes agostic C–H bonds more acidic",
+      "authors": [
+        "Eric J. Piechota"
+      ],
+      "date": "2025-10-08",
+      "datePrecision": "day",
+      "createdDate": "2025-10-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1174-1174",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00906-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00906-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00907-3",
+      "title": "Discovery and engineering of the biosynthesis of rotenoids",
+      "authors": [
+        "Wenying Cao",
+        "Jie Yang",
+        "Benke Hong"
+      ],
+      "date": "2025-10-21",
+      "datePrecision": "day",
+      "createdDate": "2025-10-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "1",
+        "pages": "103-116",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00907-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00907-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00908-2",
+      "title": "A chiral mesostructured photocatalyst for efficient solar-driven CO2 reduction to ethanol",
+      "authors": [
+        "Yongping Cui",
+        "Yao Wang",
+        "Yanhang Ma",
+        "Xiaozhi Su",
+        "Renzhong Tai",
+        "Menghui Jia",
+        "Jinquan Chen",
+        "Aokun Liu",
+        "Lu Yu",
+        "Changlin Tian",
+        "Wanning Zhang",
+        "Lu Han",
+        "Shunai Che",
+        "Yuxi Fang"
+      ],
+      "date": "2025-10-23",
+      "datePrecision": "day",
+      "createdDate": "2025-10-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "1",
+        "pages": "117-128",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00908-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00908-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00909-1",
+      "title": "Helical polymer metal–organic framework hybrids",
+      "authors": [
+        "Xinfa Chen",
+        "Xiaofeng Zhang",
+        "Can Leng",
+        "Chao Jiang",
+        "Wei Gong",
+        "Yan Liu",
+        "Yong Cui"
+      ],
+      "date": "2025-10-21",
+      "datePrecision": "day",
+      "createdDate": "2025-10-21",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "1",
+        "pages": "46-54",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00909-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00909-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00910-8",
+      "title": "Symmetric molecules for long-range ordered π–π stacked hole-transport materials",
+      "authors": [],
+      "date": "2025-10-01",
+      "datePrecision": "day",
+      "createdDate": "2025-10-01",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "1",
+        "pages": "12-13",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00910-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00910-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00911-7",
+      "title": "Adaptive metal–organic frameworks with crystalline dynamicity for durable gas separation",
+      "authors": [
+        "Cheng-Xia Chen",
+        "Xili Cui",
+        "Yang-Yang Xiong",
+        "Pui Ching Lan",
+        "Kui Tan",
+        "Zhang-Wen Wei",
+        "Zheng Niu",
+        "Chuan Shan",
+        "Lifeng Yang",
+        "Shengqian Ma",
+        "Cheng-Yong Su"
+      ],
+      "date": "2025-10-24",
+      "datePrecision": "day",
+      "createdDate": "2025-10-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "1",
+        "pages": "129-138",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00911-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00911-7",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00912-6",
+      "title": "Aromatic cation−π-dominated pathway control in living supramolecular polymerization",
+      "authors": [
+        "Zhelin Zhang",
+        "Junlong Su",
+        "Xuxu Xie",
+        "Xiaotian Li",
+        "Shuai Qiu",
+        "Wei Tian"
+      ],
+      "date": "2025-10-23",
+      "datePrecision": "day",
+      "createdDate": "2025-10-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "1",
+        "pages": "139-150",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00912-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00912-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00913-5",
+      "title": "A porous molecularly woven fabric for dynamic separation of water isotopologues",
+      "authors": [
+        "Ding Xiao",
+        "Dingyue Hu",
+        "Siyuan Yang",
+        "Xue Yang",
+        "Zhewen Guo",
+        "Liya Chen",
+        "Rahul Navik",
+        "Tianyu Shan",
+        "Yuling Pan",
+        "Xiaohe Miao",
+        "Ming Liu",
+        "Guangfeng Li",
+        "Feihe Huang"
+      ],
+      "date": "2025-10-23",
+      "datePrecision": "day",
+      "createdDate": "2025-10-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "2",
+        "pages": "180-188",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00913-5"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00913-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00916-2",
+      "title": "Deposition of uniform perovskite films facilitated by mechanically interlocked scaffolds",
+      "authors": [],
+      "date": "2025-10-24",
+      "datePrecision": "day",
+      "createdDate": "2025-10-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "2",
+        "pages": "160-161",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00916-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00916-2",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00918-0",
+      "title": "Aromaticity and through-space electronic coupling in [2]catenanes comprising two intertwined globally electron-delocalized octaphyrinoid rings",
+      "authors": [
+        "Yuguang Sui",
+        "Zipeng Wang",
+        "Jiahang Hao",
+        "Shaofei Wu",
+        "Longbin Ren",
+        "Zebing Zeng",
+        "Jishan Wu",
+        "Yong Ni"
+      ],
+      "date": "2025-10-30",
+      "datePrecision": "day",
+      "createdDate": "2025-10-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "2",
+        "pages": "230-239",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00918-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00918-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00922-4",
+      "title": "Pure-violet oxygen-doped carbon quantum rings with near-unity quantum yield and a full-width at half-maximum of 18 nm",
+      "authors": [
+        "Xianzhi Song",
+        "Chen Zhang",
+        "Diandong Tang",
+        "Yang Zhang",
+        "Ting Yuan",
+        "Ting Meng",
+        "Yuxin Shi",
+        "Jing Guo",
+        "Lin Shen",
+        "Xiaohong Li",
+        "Yunchao Li",
+        "Zhan’ao Tan",
+        "Fanglong Yuan",
+        "Louzhen Fan"
+      ],
+      "date": "2025-10-30",
+      "datePrecision": "day",
+      "createdDate": "2025-10-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "2",
+        "pages": "262-271",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00922-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00922-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00924-2",
+      "title": "Synthesis of crystalline helical polymers within metal–organic frameworks",
+      "authors": [],
+      "date": "2025-10-30",
+      "datePrecision": "day",
+      "createdDate": "2025-10-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "1",
+        "pages": "8-9",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00924-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00924-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00926-0",
+      "title": "Coupling reactions for the growth of covalent organic frameworks",
+      "authors": [],
+      "date": "2025-10-30",
+      "datePrecision": "day",
+      "createdDate": "2025-10-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "5",
+        "issue": "2",
+        "pages": "158-159",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00926-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00926-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-10-01",
+        "to": "2025-10-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

@@ -1,0 +1,827 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2025-09-01",
+    "to": "2025-09-30"
+  },
+  "checkedAt": "2026-10-13T02:19:56.429Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "lane": "publication",
+        "total": 17,
+        "count": 17,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 17,
+      "count": 17,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 17,
+      "openalex": 17
+    }
+  },
+  "candidateCount": 17,
+  "alreadyPublished": 0,
+  "unreviewed": 17,
+  "records": [
+    {
+      "doi": "10.1038/s41929-025-01397-4",
+      "title": "The (mis)uses of Tafel slope",
+      "authors": [
+        "Valentin Briega-Martos",
+        "Rafael Guzman-Soriano",
+        "Jiahong Jiang",
+        "Yao Yang"
+      ],
+      "date": "2025-09-24",
+      "datePrecision": "day",
+      "createdDate": "2025-09-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "863-866",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01397-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01397-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01398-3",
+      "title": "General reactive element-based machine learning potentials for heterogeneous catalysis",
+      "authors": [
+        "Changxi Yang",
+        "Chenyu Wu",
+        "Wenbo Xie",
+        "Daiqian Xie",
+        "P. Hu"
+      ],
+      "date": "2025-09-23",
+      "datePrecision": "day",
+      "createdDate": "2025-09-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "891-904",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01398-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01398-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01399-2",
+      "title": "Microenvironment effects in electrochemical CO2 reduction from first-principles multiscale modelling",
+      "authors": [
+        "Francesca Lorenzutti",
+        "Ranga Rohit Seemakurthi",
+        "Evan F. Johnson",
+        "Santiago Morandi",
+        "Pavle Nikačević",
+        "Núria López",
+        "Sophia Haussener"
+      ],
+      "date": "2025-09-08",
+      "datePrecision": "day",
+      "createdDate": "2025-09-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "905-918",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01399-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01399-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01400-y",
+      "title": "From descriptive to quantitative biocatalysis",
+      "authors": [
+        "Peter Westh",
+        "Jeppe Kari"
+      ],
+      "date": "2025-09-24",
+      "datePrecision": "day",
+      "createdDate": "2025-09-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "859-860",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01400-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01400-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01401-x",
+      "title": "From isotherms to modern kinetics",
+      "authors": [
+        "Dmitry Yu. Murzin"
+      ],
+      "date": "2025-09-24",
+      "datePrecision": "day",
+      "createdDate": "2025-09-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "861-862",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01401-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01401-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01405-7",
+      "title": "A modular synthesis of azetidines from reactive triplet imine intermediates using an intermolecular aza Paternò–Büchi reaction",
+      "authors": [
+        "Benedict A. Williams",
+        "Michael J. Tilby",
+        "Nicholas A. Parker",
+        "Mycah R. Uehling",
+        "J. Caleb Hethcox",
+        "Dipannita Kalyani",
+        "Michael C. Willis"
+      ],
+      "date": "2025-09-05",
+      "datePrecision": "day",
+      "createdDate": "2025-09-05",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "939-947",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01405-7"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01405-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01407-5",
+      "title": "Achieving mono-selective palladium(II)-catalysed C–H activation of arenes with protein ligands",
+      "authors": [
+        "Hua-Jin Xu",
+        "Zhoulong Fan",
+        "Bin-Bin Nian",
+        "Chen-Hao Gu",
+        "Shuo-Jie Shen",
+        "Wei Zhang",
+        "Yi Hu",
+        "Jin-Quan Yu"
+      ],
+      "date": "2025-09-08",
+      "datePrecision": "day",
+      "createdDate": "2025-09-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "948-956",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01407-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01407-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01408-4",
+      "title": "Enantioselective radical α-enolation of esters via electrochemical chiral isothiourea catalysis",
+      "authors": [
+        "Ning Li",
+        "Xuzhen Ye",
+        "Yong Liu",
+        "Jin Song"
+      ],
+      "date": "2025-09-08",
+      "datePrecision": "day",
+      "createdDate": "2025-09-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "957-967",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01408-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01408-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01410-w",
+      "title": "Quantum computing for faster enzyme discovery and engineering",
+      "authors": [
+        "Jiri Damborsky",
+        "Petr Kouba",
+        "Josef Sivic",
+        "Michal Vasina",
+        "David Bednar",
+        "Stanislav Mazurenko"
+      ],
+      "date": "2025-09-24",
+      "datePrecision": "day",
+      "createdDate": "2025-09-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "872-880",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01410-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01410-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01412-8",
+      "title": "Oxidative cleavage of hexopyranose by a TIM-barrel isomerase",
+      "authors": [
+        "Pengwei Li",
+        "Dacheng Wang",
+        "Lu Guo",
+        "Yanru Chen",
+        "Huijin Mao",
+        "Zelian Zhao",
+        "Min Wang",
+        "Meng Chen",
+        "Zhengren Xu",
+        "Binju Wang",
+        "Defeng Li",
+        "Yihua Chen"
+      ],
+      "date": "2025-09-24",
+      "datePrecision": "day",
+      "createdDate": "2025-09-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "10",
+        "pages": "1010-1022",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01412-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01412-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01413-7",
+      "title": "A TIM-barrel metalloenzyme with sugar-cleavage activity",
+      "authors": [],
+      "date": "2025-09-24",
+      "datePrecision": "day",
+      "createdDate": "2025-09-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "10",
+        "pages": "984-985",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01413-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01413-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01415-5",
+      "title": "Pushing the boundaries of biocatalysis",
+      "authors": [
+        "Rudi Fasan"
+      ],
+      "date": "2025-09-24",
+      "datePrecision": "day",
+      "createdDate": "2025-09-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "867-869",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01415-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01415-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01417-3",
+      "title": "Predictive model for the discovery of sinter-resistant supports for metallic nanoparticle catalysts by interpretable machine learning",
+      "authors": [
+        "Chenggong Jiang",
+        "Bill Yan",
+        "Bryan R. Goldsmith",
+        "Suljo Linic"
+      ],
+      "date": "2025-09-29",
+      "datePrecision": "day",
+      "createdDate": "2025-09-29",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "10",
+        "pages": "1038-1050",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01417-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01417-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01419-1",
+      "title": "Substrate promiscuity fuels biosynthesis success",
+      "authors": [
+        "Jan-Stefan Völler"
+      ],
+      "date": "2025-09-24",
+      "datePrecision": "day",
+      "createdDate": "2025-09-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "855-855",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01419-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01419-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01422-6",
+      "title": "Dynamic and durable",
+      "authors": [
+        "Lin Li"
+      ],
+      "date": "2025-09-24",
+      "datePrecision": "day",
+      "createdDate": "2025-09-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "856-856",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01422-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01422-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01423-5",
+      "title": "Establishing coupling trends",
+      "authors": [
+        "Marçal Capdevila-Cortada"
+      ],
+      "date": "2025-09-24",
+      "datePrecision": "day",
+      "createdDate": "2025-09-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "857-857",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01423-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01423-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01424-4",
+      "title": "Electrolysis in tandem",
+      "authors": [
+        "Benjamin Martindale"
+      ],
+      "date": "2025-09-24",
+      "datePrecision": "day",
+      "createdDate": "2025-09-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "9",
+        "pages": "858-858",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01424-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01424-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

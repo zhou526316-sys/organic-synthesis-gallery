@@ -1,0 +1,1736 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Chemistry",
+  "issns": [
+    "1755-4330",
+    "1755-4349"
+  ],
+  "range": {
+    "from": "2025-09-01",
+    "to": "2025-09-30"
+  },
+  "checkedAt": "2026-10-13T02:19:58.160Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "1755-4330",
+        "lane": "publication",
+        "total": 34,
+        "count": 34,
+        "pages": 1,
+        "complete": true
+      },
+      {
+        "issn": "1755-4349",
+        "lane": "publication",
+        "total": 34,
+        "count": 34,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 34,
+      "count": 34,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 34,
+      "openalex": 34
+    }
+  },
+  "candidateCount": 34,
+  "alreadyPublished": 0,
+  "unreviewed": 34,
+  "records": [
+    {
+      "doi": "10.1038/s41557-025-01892-y",
+      "title": "Stable single-site organonickel catalyst preferentially hydrogenolyses branched polyolefin C–C bonds",
+      "authors": [
+        "Qingheng Lai",
+        "Xinrui Zhang",
+        "Shan Jiang",
+        "Matthew D. Krzyaniak",
+        "Selim Alayoglu",
+        "Amol Agarwal",
+        "Yukun Liu",
+        "Wilson C. Edenfield",
+        "Takeshi Kobayashi",
+        "Yuyang Wang",
+        "Vinayak Dravid",
+        "Michael R. Wasielewski",
+        "Jeffery T. Miller",
+        "Yosi Kratish",
+        "Tobin J. Marks"
+      ],
+      "date": "2025-09-02",
+      "datePrecision": "day",
+      "createdDate": "2025-09-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "10",
+        "pages": "1488-1496",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01892-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01892-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01903-y",
+      "title": "Head–tail carboboration of multisubstituted alkenes enabled by chain recognition",
+      "authors": [
+        "Weiyu Kong",
+        "Dong Wu",
+        "Hong Wei",
+        "Ben Gao",
+        "Penghui Li",
+        "Yuqiang Li",
+        "Yangyang Li",
+        "Guoyin Yin"
+      ],
+      "date": "2025-09-01",
+      "datePrecision": "day",
+      "createdDate": "2025-09-01",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "11",
+        "pages": "1768-1776",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01903-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01903-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01904-x",
+      "title": "Carbon-to-nitrogen atom swap enables direct access to benzimidazoles from drug-like indoles",
+      "authors": [
+        "Ann-Sophie K. Paschke",
+        "Yannick Brägger",
+        "Bence B. Botlik",
+        "Erich Staudinger",
+        "Ori Green",
+        "Bill Morandi"
+      ],
+      "date": "2025-09-02",
+      "datePrecision": "day",
+      "createdDate": "2025-09-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "11",
+        "pages": "1750-1756",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01904-x"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01904-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01905-w",
+      "title": "Understanding single-molecule reactions using nanopore-based techniques",
+      "authors": [
+        "Yi-Lun Ying",
+        "Chao-Nan Yang",
+        "Wei Liu",
+        "Xue-Yuan Wu",
+        "Yi-Tao Long"
+      ],
+      "date": "2025-09-30",
+      "datePrecision": "day",
+      "createdDate": "2025-09-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "10",
+        "pages": "1450-1461",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01905-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01905-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01909-6",
+      "title": "Magnetic activation of spherical nucleic acids enables the remote control of synthetic cells",
+      "authors": [
+        "Ellen Parkes",
+        "Assala Al Samad",
+        "Giacomo Mazzotti",
+        "Charlie Newell",
+        "Brian Ng",
+        "Amy Radford",
+        "Michael J. Booth"
+      ],
+      "date": "2025-09-02",
+      "datePrecision": "day",
+      "createdDate": "2025-09-02",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "10",
+        "pages": "1505-1513",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01909-6"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01909-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01910-z",
+      "title": "Repurposing magnetic hyperthermia therapy to control biosynthesis in synthetic cells",
+      "authors": [],
+      "date": "2025-09-03",
+      "datePrecision": "day",
+      "createdDate": "2025-09-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "10",
+        "pages": "1448-1449",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01910-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01910-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01918-5",
+      "title": "Agree to disagree",
+      "authors": [
+        "Shira Joudan"
+      ],
+      "date": "2025-09-04",
+      "datePrecision": "day",
+      "createdDate": "2025-09-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "9",
+        "pages": "1297-1298",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01918-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01918-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01922-9",
+      "title": "Future-proofing calcium fluoride",
+      "authors": [
+        "Thomas Schlatzer",
+        "Véronique Gouverneur"
+      ],
+      "date": "2025-09-04",
+      "datePrecision": "day",
+      "createdDate": "2025-09-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "9",
+        "pages": "1434-1434",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01922-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01922-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01927-4",
+      "title": "Single-site catalyst cuts branched polyolefins to pieces",
+      "authors": [
+        "Leo Brody",
+        "Julie Rorrer"
+      ],
+      "date": "2025-09-16",
+      "datePrecision": "day",
+      "createdDate": "2025-09-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "10",
+        "pages": "1442-1444",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01927-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01927-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01928-3",
+      "title": "A label-free method for measuring the composition of multicomponent biomolecular condensates",
+      "authors": [
+        "Patrick M. McCall",
+        "Kyoohyun Kim",
+        "Anna Shevchenko",
+        "Martine Ruer-Gruß",
+        "Jan Peychl",
+        "Jochen Guck",
+        "Andrej Shevchenko",
+        "Anthony A. Hyman",
+        "Jan Brugués"
+      ],
+      "date": "2025-09-03",
+      "datePrecision": "day",
+      "createdDate": "2025-09-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "12",
+        "pages": "1891-1902",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01928-3"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01928-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01930-9",
+      "title": "Tumour-specific STING agonist synthesis via a two-component prodrug system",
+      "authors": [
+        "Nai-Shu Hsu",
+        "Cong Tang",
+        "Raquel V. Mendes",
+        "Carlos Labão-Almeida",
+        "Caio V. dos Reis",
+        "Ana R. Coelho",
+        "Marta C. Marques",
+        "Mar Cabeza Cabrerizo",
+        "Roman Misteli",
+        "Timothy P. C. Rooney",
+        "Marko Hyvönen",
+        "Francisco Corzana",
+        "Rita Fior",
+        "Gonçalo J. L. Bernardes"
+      ],
+      "date": "2025-09-16",
+      "datePrecision": "day",
+      "createdDate": "2025-09-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "12",
+        "pages": "1941-1951",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01930-9"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01930-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01931-8",
+      "title": "Energy-transfer photoproximity labelling in live cells using an organic cofactor",
+      "authors": [
+        "Leander B. Crocker",
+        "Jan Vincent V. Arafiles",
+        "Judith M. Müchler",
+        "Max Ruwolt",
+        "Kristin Kemnitz-Hassanin",
+        "Kilian Roßmann",
+        "Christian E. Stieger",
+        "Fan Liu",
+        "Nataliya Archipowa",
+        "Roger Jan Kutta",
+        "Christian P. R. Hackenberger"
+      ],
+      "date": "2025-09-17",
+      "datePrecision": "day",
+      "createdDate": "2025-09-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "12",
+        "pages": "1928-1940",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01931-8"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01931-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01932-7",
+      "title": "Interfacial solvation pre-organizes the transition state of the oxygen evolution reaction",
+      "authors": [
+        "Ricardo Martínez-Hincapié",
+        "Janis Timoshenko",
+        "Timon Wagner",
+        "Eduardo Ortega",
+        "Jody Druce",
+        "Mariana C. O. Monteiro",
+        "Martina Rüscher",
+        "Joonbaek Jang",
+        "Elif Öykü Alagöz",
+        "Samuele Lasagna",
+        "Leon Jacobse",
+        "Arno Bergmann",
+        "Beatriz Roldan Cuenya",
+        "Sebastian Z. Oener"
+      ],
+      "date": "2025-09-03",
+      "datePrecision": "day",
+      "createdDate": "2025-09-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "5",
+        "pages": "835-843",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01932-7"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01932-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01934-5",
+      "title": "Isotope-dependent Tafel analysis probes proton transfer kinetics during electrocatalytic water splitting",
+      "authors": [
+        "Jinzhen Huang",
+        "Ran Wang",
+        "Hongyuan Sheng",
+        "Xiaorong Zhu",
+        "R. Dominic Ross",
+        "Daxing Hua",
+        "Lei Lin",
+        "Yafei Li",
+        "Qinghua Zhang",
+        "Lin Gu",
+        "Xianjie Wang",
+        "Ping Xu",
+        "Jun Lu",
+        "Sida Jiang",
+        "Jiecai Han",
+        "Bo Song",
+        "Song Jin"
+      ],
+      "date": "2025-09-09",
+      "datePrecision": "day",
+      "createdDate": "2025-09-09",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "4",
+        "pages": "669-676",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01934-5"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01934-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01935-4",
+      "title": "Chemical and ribosomal synthesis of atropisomeric and macrocyclic peptides with embedded quinolines",
+      "authors": [
+        "Isaac J. Knudson",
+        "Taylor L. Dover",
+        "Diondra A. Dilworth",
+        "Cameron Paloutzian",
+        "Orel Paz",
+        "Jieye Lin",
+        "Hannah Cho",
+        "Tamir Gonen",
+        "Alanna Schepartz",
+        "Scott J. Miller"
+      ],
+      "date": "2025-09-17",
+      "datePrecision": "day",
+      "createdDate": "2025-09-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "1",
+        "pages": "61-72",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01935-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01935-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01936-3",
+      "title": "Diastereo- and enantioselective 1,3-hydrofunctionalization of trisubstituted alkenes by a directing relay",
+      "authors": [
+        "Wei Zhao",
+        "En-Ze Lin",
+        "Ke-Zhi Chen",
+        "Yu-Wen Sun",
+        "Bi-Jie Li"
+      ],
+      "date": "2025-09-17",
+      "datePrecision": "day",
+      "createdDate": "2025-09-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "1",
+        "pages": "73-83",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01936-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01936-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01937-2",
+      "title": "A pyridoxal radical carboligase and imine reductase photobiocatalytic cascade for stereoselective synthesis of unnatural prolines",
+      "authors": [
+        "Chen Zhang",
+        "Jun Zhou",
+        "Binh Khanh Mai",
+        "Zijun Qin",
+        "James Finnigan",
+        "Samantha Gittings",
+        "Peng Liu",
+        "Yang Yang"
+      ],
+      "date": "2025-09-25",
+      "datePrecision": "day",
+      "createdDate": "2025-09-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "1",
+        "pages": "101-108",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01937-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01937-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01938-1",
+      "title": "Organocatalysed three-component modular synthesis of BN isosteres and BN-2,1-azaboranaphthalenes via Wolff-type rearrangement",
+      "authors": [
+        "Akansha Singh",
+        "Ruchir Kant",
+        "Mary Grellier",
+        "Ravindra Kumar"
+      ],
+      "date": "2025-09-09",
+      "datePrecision": "day",
+      "createdDate": "2025-09-09",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "1",
+        "pages": "92-100",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01938-1"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01938-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01940-7",
+      "title": "Electrifying industrial hydrogen peroxide production via soft interfacial molecular mediation",
+      "authors": [
+        "Dawei Xi",
+        "Yuheng Wu",
+        "Yuli Li",
+        "Zifei Yan",
+        "Richard Y. Liu",
+        "Michael J. Aziz"
+      ],
+      "date": "2025-09-22",
+      "datePrecision": "day",
+      "createdDate": "2025-09-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "12",
+        "pages": "1883-1890",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01940-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01940-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01942-5",
+      "title": "Reserved charges in a long-lived NiOOH phase drive catalytic water oxidation",
+      "authors": [
+        "Xin Cui",
+        "Yunxuan Ding",
+        "Feiyang Zhang",
+        "Xing Cao",
+        "Yu Guo",
+        "Licheng Sun",
+        "Biaobiao Zhang"
+      ],
+      "date": "2025-09-15",
+      "datePrecision": "day",
+      "createdDate": "2025-09-15",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "1",
+        "pages": "120-127",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01942-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01942-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01944-3",
+      "title": "Cooperative ligands enable cobalt-catalysed hydrogenation",
+      "authors": [
+        "Hongyu Zhong"
+      ],
+      "date": "2025-09-26",
+      "datePrecision": "day",
+      "createdDate": "2025-09-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "10",
+        "pages": "1437-1438",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01944-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01944-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01945-2",
+      "title": "Tunable cobalt-catalysed hydrogenation of allenes enabled by multiple metal–ligand cooperative functionalities",
+      "authors": [
+        "Xianle Rong",
+        "Yunjuan Ren",
+        "Yongshun Chen",
+        "Chongyao Li",
+        "Jie Wang",
+        "Zhaoqiang Chen",
+        "Lizhi Tao",
+        "Zhihong Wei",
+        "Shengming Ma",
+        "Qiang Liu"
+      ],
+      "date": "2025-09-26",
+      "datePrecision": "day",
+      "createdDate": "2025-09-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "10",
+        "pages": "1469-1479",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01945-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01945-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01946-1",
+      "title": "Photocatalytic labelling-enabled subcellular-resolved RNA profiling and synchronous multi-omics investigation",
+      "authors": [
+        "Yunpeng Bi",
+        "Lishan Yu",
+        "Qidong Deng",
+        "Linghao Kong",
+        "Fuhu Guo",
+        "Yuchen Zhang",
+        "Ruixiang Wang",
+        "Peng R. Chen",
+        "Jun Liu",
+        "Xinyuan Fan"
+      ],
+      "date": "2025-09-16",
+      "datePrecision": "day",
+      "createdDate": "2025-09-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "12",
+        "pages": "1871-1882",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01946-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01946-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01947-0",
+      "title": "Dual dynamic helical poly(disulfide)s with conformational adaptivity and configurational recyclability",
+      "authors": [
+        "Qi Zhang",
+        "Valentin P. Nicu",
+        "Wybren Jan Buma",
+        "He Tian",
+        "Da-Hui Qu",
+        "Ben L. Feringa"
+      ],
+      "date": "2025-09-30",
+      "datePrecision": "day",
+      "createdDate": "2025-09-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "10",
+        "pages": "1462-1468",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01947-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01947-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01948-z",
+      "title": "Bulk water redox chemistry enables radical-mediated C–C coupling in CO2 electroreduction",
+      "authors": [
+        "Lei Li",
+        "Chunhua Cui"
+      ],
+      "date": "2025-09-22",
+      "datePrecision": "day",
+      "createdDate": "2025-09-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "4",
+        "pages": "648-655",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01948-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01948-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01949-y",
+      "title": "A two-metalloenzyme cascade constructs the azetidine-containing pharmacophore",
+      "authors": [
+        "Rong Gong",
+        "Yao Qu",
+        "Jia Liu",
+        "Xuan Zhang",
+        "Liwei Zhou",
+        "Zhu Tian",
+        "Xinyue Zeng",
+        "Boyu Jin",
+        "Zhen Li",
+        "Le Yu",
+        "Ruyi Chen",
+        "Yang Zhou",
+        "Langxing Liao",
+        "Liulin Yang",
+        "Xuemin Song",
+        "You-Sheng Cai",
+        "Kun Shen",
+        "Zixin Deng",
+        "Zhengyu Zhang",
+        "Binju Wang",
+        "Wenqing Chen"
+      ],
+      "date": "2025-09-30",
+      "datePrecision": "day",
+      "createdDate": "2025-09-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "3",
+        "pages": "482-491",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01949-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01949-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01950-5",
+      "title": "Quantification of enantiomorphs in chiral crystalline powders through three-dimensional electron diffraction",
+      "authors": [
+        "Junyi Hu",
+        "Zhuoya Dong",
+        "Chaoyang Chu",
+        "Yanhang Ma"
+      ],
+      "date": "2025-09-24",
+      "datePrecision": "day",
+      "createdDate": "2025-09-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "12",
+        "pages": "1819-1825",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01950-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01950-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01952-3",
+      "title": "Olefin π-coordination chemistry at low-oxidation-state boron",
+      "authors": [
+        "Maximilian Michel",
+        "Marco Weber",
+        "Arumugam Jayaraman",
+        "Rian D. Dewhurst",
+        "Ivo Krummenacher",
+        "Christian Voigt",
+        "Marcel Härterich",
+        "Alfredo Vargas",
+        "Holger Braunschweig"
+      ],
+      "date": "2025-09-19",
+      "datePrecision": "day",
+      "createdDate": "2025-09-19",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "1",
+        "pages": "135-141",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01952-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01952-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01955-0",
+      "title": "Colorimetric indication of hidden catalysis",
+      "authors": [
+        "Julie Macleod",
+        "Stephen P. Thomas"
+      ],
+      "date": "2025-09-16",
+      "datePrecision": "day",
+      "createdDate": "2025-09-16",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "18",
+        "issue": "1",
+        "pages": "173-179",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01955-0"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01955-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01956-z",
+      "title": "Mechanochemical upcycling technologies for sustainable circular fluorine economy",
+      "authors": [
+        "Asuka Matsunami",
+        "Takashi Okazoe"
+      ],
+      "date": "2025-09-25",
+      "datePrecision": "day",
+      "createdDate": "2025-09-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "10",
+        "pages": "1439-1441",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01956-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01956-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01959-w",
+      "title": "High-entropy nanomaterials by candlelight",
+      "authors": [
+        "Shuo Liu",
+        "Chaochao Dun",
+        "Mark T. Swihart"
+      ],
+      "date": "2025-09-23",
+      "datePrecision": "day",
+      "createdDate": "2025-09-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "10",
+        "pages": "1445-1447",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01959-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01959-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01963-0",
+      "title": "Simultaneous subcellular RNA–protein profiling with photocatalytic labelling",
+      "authors": [],
+      "date": "2025-09-22",
+      "datePrecision": "day",
+      "createdDate": "2025-09-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "12",
+        "pages": "1817-1818",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01963-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01963-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01966-x",
+      "title": "Live-cell imaging with fluorogenic radical-trapping antioxidant probes reveals the onset and progression of ferroptosis",
+      "authors": [
+        "Laiyi Xu",
+        "Wenzhou Zhang",
+        "Juan F. Sánchez Tejeda",
+        "Denys Holovan",
+        "Julia McCain",
+        "Terri C. Lovell",
+        "Gonzalo Cosa"
+      ],
+      "date": "2025-09-26",
+      "datePrecision": "day",
+      "createdDate": "2025-09-26",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "12",
+        "pages": "1963-1973",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01966-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01966-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41557-025-01980-z",
+      "title": "Author Correction: Introducing metal–sulfur active sites in metal–organic frameworks via post-synthetic modification for hydrogenation catalysis",
+      "authors": [
+        "Haomiao Xie",
+        "Milad Ahmadi Khoshooei",
+        "Mukunda Mandal",
+        "Simon M. Vornholt",
+        "Jan Hofmann",
+        "Luke M. Tufaro",
+        "Kent O. Kirlikovali",
+        "Dawson A. Grimes",
+        "Seryeong Lee",
+        "Shengyi Su",
+        "Susanne Reischauer",
+        "Debabrata Sengupta",
+        "Kira Fahy",
+        "Kaikai Ma",
+        "Xiaoliang Wang",
+        "Fanrui Sha",
+        "Wei Gong",
+        "Yongwei Chen",
+        "Jenny G. Vitillo",
+        "John S. Anderson",
+        "Justin M. Notestein",
+        "Karena W. Chapman",
+        "Laura Gagliardi",
+        "Omar K. Farha"
+      ],
+      "date": "2025-09-23",
+      "datePrecision": "day",
+      "createdDate": "2025-09-23",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "17",
+        "issue": "11",
+        "pages": "1795-1795",
+        "articleNumber": "",
+        "doi": "10.1038/s41557-025-01980-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41557-025-01980-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-09-01",
+        "to": "2025-09-30"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
