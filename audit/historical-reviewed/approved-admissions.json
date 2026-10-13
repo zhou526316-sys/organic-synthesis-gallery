@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-13T14:05:40.689Z",
+  "generatedAt": "2026-10-13T14:33:54.332Z",
   "nextEligiblePublicationSlot": "2026-10-14T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 88,
-    "include": 86,
+    "checked": 93,
+    "include": 91,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -6070,6 +6070,428 @@
         }
       ],
       "reviewRationaleSecondPass": "不同取代硫烯酰胺的实际胺化和后续S(VI)制备满足通用有机制备；与无外加催化剂/反应溶剂相容的真实条件限制需完整保留。"
+    },
+    {
+      "doi": "10.1039/d6gc02423h",
+      "journal": "Green Chemistry",
+      "title": "Modular synthesis of unsymmetric 1,4-diketones via photocatalytic cross-coupling of enamides and sulfoxonium ylides",
+      "titleZh": "光催化烯酰胺与硫氧鎓叶立德交叉偶联模块化制备非对称1,4-二酮",
+      "date": "2026-07-22",
+      "authors": [
+        "Jian Han",
+        "Li-Li Zeng",
+        "Yi-Lin Wang",
+        "Yue Zhou",
+        "Ya-Jing Liu",
+        "Qiu-Ru Zhang",
+        "Yu-Qing Li",
+        "Fen-Er Chen"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "12881-12889",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc02423h"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "报道光催化烯酰胺与硫氧鎓叶立德交叉偶联的新制备策略，构筑非对称1,4-二酮的双羰基骨架，属于具有可迁移产物类别的有机合成方法。",
+      "evidenceBasis": "DOI 10.1039/d6gc02423h；RSC官方Green Chemistry卷28期31原始Article History搜索索引明确First published 22 July 2026；编期页面2026-08-10不是首发日。RSC直连内容受限制，日期来自出版社页面搜索索引，而非现场HTML回读。 原始出版社页面：https://pubs.rsc.org/gc/article/28/31/12881/1284149/Modular-synthesis-of-unsymmetric-1-4-diketones-via；历史源批次staging/historical-archive-nightly/audit/historical-staging/batches/2026-07-22_2026-07-31_green-chemistry.json，Git blob SHA 3cf217e8d9212bf4ac2fe5463c0ad28b184e3e22，源族 crossref。论文研究的真实制备依据：RSC原始论文题目与由RSC提供给Crossref的摘要明确称general and efficient strategy及modular assembly of unsymmetric 1,4-diketones；以两种可更换的有机起始物类别形成非对称1,4-二酮。当前仅有公开摘要，不编造单个产物收率、底物数、溶剂和克级。 本轮只读取经DOI核验的公开摘要/书目信息，未获取或转载历史全文、图、SI及PDF。",
+      "challengeReason": "第二遍反向检验：若文章主要只是环境指标宣传而无制备能力，应排除；但原始摘要明确说明不同有机反应伙伴的交叉偶联获得具体非对称1,4-二酮骨架。所谓green条件不能替代底物证据，未核实的电子转移步骤不得写为证明。",
+      "scopeAssessment": {
+        "primaryContribution": "报道光催化烯酰胺与硫氧鎓叶立德交叉偶联的新制备策略，构筑非对称1,4-二酮的双羰基骨架，属于具有可迁移产物类别的有机合成方法。",
+        "preparativeTransformation": "烯酰胺（enamide）与硫氧鎓叶立德（sulfoxonium ylide）在光催化条件下发生交叉偶联并最终形成两端取代不同的1,4-二羰基酮产物，而不是一般的硫氧鎓叶立德S–H插入或酰胺单官能化。",
+        "generalityEvidence": "RSC原始论文题目与由RSC提供给Crossref的摘要明确称general and efficient strategy及modular assembly of unsymmetric 1,4-diketones；以两种可更换的有机起始物类别形成非对称1,4-二酮。当前仅有公开摘要，不编造单个产物收率、底物数、溶剂和克级。",
+        "sourceEvidence": "DOI 10.1039/d6gc02423h；RSC官方Green Chemistry卷28期31原始Article History搜索索引明确First published 22 July 2026；编期页面2026-08-10不是首发日。RSC直连内容受限制，日期来自出版社页面搜索索引，而非现场HTML回读。 原始出版社页面：https://pubs.rsc.org/gc/article/28/31/12881/1284149/Modular-synthesis-of-unsymmetric-1-4-diketones-via；历史源批次staging/historical-archive-nightly/audit/historical-staging/batches/2026-07-22_2026-07-31_green-chemistry.json，Git blob SHA 3cf217e8d9212bf4ac2fe5463c0ad28b184e3e22，源族 crossref。论文研究的真实制备依据：RSC原始论文题目与由RSC提供给Crossref的摘要明确称general and efficient strategy及modular assembly of unsymmetric 1,4-diketones；以两种可更换的有机起始物类别形成非对称1,4-二酮。当前仅有公开摘要，不编造单个产物收率、底物数、溶剂和克级。 本轮只读取经DOI核验的公开摘要/书目信息，未获取或转载历史全文、图、SI及PDF。",
+        "boundaryChallenge": "核心是烯酰胺和硫氧鎓叶立德之间新C–C成键带来的双羰基制备方法，而非只检测光催化剂性质；摘要无法确定每步机理或全部耐受基团，必须保持限制。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/gc/article/doi/10.1039/d6gc02423h",
+        "publisherLandingUrl": "https://pubs.rsc.org/gc/article/28/31/12881/1284149/Modular-synthesis-of-unsymmetric-1-4-diketones-via",
+        "publisherOnlineDate": "2026-07-22",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_green-chemistry",
+        "stageBatchSha": "3cf217e8d9212bf4ac2fe5463c0ad28b184e3e22",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_publisher_article_history_not_live_html_readback",
+        "firstOnlineDateEvidence": {
+          "tier": "RSC_official_First_published_index",
+          "officialPublisherIndexedUrl": "https://pubs.rsc.org/gc/article/28/31/12881/1284149/Modular-synthesis-of-unsymmetric-1-4-diketones-via",
+          "officialPublisherFirstOnline": "2026-07-22",
+          "sourceApiDate": null,
+          "sourceApiDatePrecision": "year_only",
+          "sourceCreatedDate": "2026-07-22",
+          "publisherDayOverrodeCrossref": "",
+          "method": "DOI_exact_publisher_search_index_and_Crossref_metadata"
+        },
+        "originalPublisherJournalName": "Green Chemistry"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "报道光催化烯酰胺与硫氧鎓叶立德交叉偶联的新制备策略，构筑非对称1,4-二酮的双羰基骨架，属于具有可迁移产物类别的有机合成方法。 烯酰胺（enamide）与硫氧鎓叶立德（sulfoxonium ylide）在光催化条件下发生交叉偶联并最终形成两端取代不同的1,4-二羰基酮产物，而不是一般的硫氧鎓叶立德S–H插入或酰胺单官能化。 RSC原始论文题目与由RSC提供给Crossref的摘要明确称general and efficient strategy及modular assembly of unsymmetric 1,4-diketones；以两种可更换的有机起始物类别形成非对称1,4-二酮。当前仅有公开摘要，不编造单个产物收率、底物数、溶剂和克级。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍反向检验：若文章主要只是环境指标宣传而无制备能力，应排除；但原始摘要明确说明不同有机反应伙伴的交叉偶联获得具体非对称1,4-二酮骨架。所谓green条件不能替代底物证据，未核实的电子转移步骤不得写为证明。 核心是烯酰胺和硫氧鎓叶立德之间新C–C成键带来的双羰基制备方法，而非只检测光催化剂性质；摘要无法确定每步机理或全部耐受基团，必须保持限制。"
+        }
+      ],
+      "reviewRationaleSecondPass": "核心是烯酰胺和硫氧鎓叶立德之间新C–C成键带来的双羰基制备方法，而非只检测光催化剂性质；摘要无法确定每步机理或全部耐受基团，必须保持限制。"
+    },
+    {
+      "doi": "10.1039/d6gc03989h",
+      "journal": "Green Chemistry",
+      "title": "Electrochemical ring-strain release of thiirane derivatives: enabling excellent chemo-/stereoselectivity in S–S coupling",
+      "titleZh": "电化学硫杂环丙烷氧化开环实现化学与立体选择性S–S偶联",
+      "date": "2026-09-16",
+      "authors": [
+        "Guo-Wei Lai",
+        "Bin Zeng",
+        "Yu-Xin Long",
+        "Haibo Wu",
+        "Xiu-Jin Meng",
+        "Rui Lin",
+        "Jun Jiang",
+        "Hai-Tao Tang",
+        "Ying-Ming Pan"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "39",
+        "pages": "15803-15811",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc03989h"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用电化学单电子氧化开启硫杂环丙烷张力释放并实现S–S键选择性形成，为含硫功能化烯烃产物提供有机制备方法。",
+      "evidenceBasis": "DOI 10.1039/d6gc03989h；RSC官方Green Chemistry原始doi文章页两处独立搜索索引均明确First published 16 September 2026；不能把随后的卷28期39出现日期当成首次在线。 原始出版社页面：https://pubs.rsc.org/gc/article/doi/10.1039/D6GC03989H/1356561；历史源批次staging/historical-archive-nightly/audit/historical-staging/batches/2026-09-15_2026-09-21_green-chemistry.json，Git blob SHA c269a7de443c62a777b870983678a3494327e641，源族 crossref。论文研究的真实制备依据：RSC交付Crossref的原始摘要明确diverse products、excellent yields与Z-selectivity；已有多个可分离产物类别的制备陈述，但当前无法直接核验单个底物表，不把excellent换算为虚构的具体百分比。 本轮只读取经DOI核验的公开摘要/书目信息，未获取或转载历史全文、图、SI及PDF。 近期Crossref书目补齐Green Chemistry 2026,28(39),15803–15811，原staging冻结来源当时未带卷期页，因此明确区分两次元数据版本。",
+      "challengeReason": "第二遍纠正可能的误判：该反应不是普通还原性硫醇二聚，也不是只研究三元环氧化电位；确有电化学构建新S–S键及Z-选择性的产物。SET与张力释放为论文所提机理，不能认为每个自由基中间体已被直接观察。",
+      "scopeAssessment": {
+        "primaryContribution": "利用电化学单电子氧化开启硫杂环丙烷张力释放并实现S–S键选择性形成，为含硫功能化烯烃产物提供有机制备方法。",
+        "preparativeTransformation": "硫杂环丙烷（thiirane）在电化学单电子氧化条件下经历三元含硫环的开环/张力释放，并进一步形成S–S键的偶联产物；作者特别报告Z几何异构体的选择性。",
+        "generalityEvidence": "RSC交付Crossref的原始摘要明确diverse products、excellent yields与Z-selectivity；已有多个可分离产物类别的制备陈述，但当前无法直接核验单个底物表，不把excellent换算为虚构的具体百分比。",
+        "sourceEvidence": "DOI 10.1039/d6gc03989h；RSC官方Green Chemistry原始doi文章页两处独立搜索索引均明确First published 16 September 2026；不能把随后的卷28期39出现日期当成首次在线。 原始出版社页面：https://pubs.rsc.org/gc/article/doi/10.1039/D6GC03989H/1356561；历史源批次staging/historical-archive-nightly/audit/historical-staging/batches/2026-09-15_2026-09-21_green-chemistry.json，Git blob SHA c269a7de443c62a777b870983678a3494327e641，源族 crossref。论文研究的真实制备依据：RSC交付Crossref的原始摘要明确diverse products、excellent yields与Z-selectivity；已有多个可分离产物类别的制备陈述，但当前无法直接核验单个底物表，不把excellent换算为虚构的具体百分比。 本轮只读取经DOI核验的公开摘要/书目信息，未获取或转载历史全文、图、SI及PDF。 近期Crossref书目补齐Green Chemistry 2026,28(39),15803–15811，原staging冻结来源当时未带卷期页，因此明确区分两次元数据版本。",
+        "boundaryChallenge": "以可迁移的硫杂环丙烷电化学开环和选择性S–S构建作为核心制备证据；若进一步声称对所有硫杂环丙烷普适或只得到单一几何异构体则超出摘要证据。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/gc/article/doi/10.1039/d6gc03989h",
+        "publisherLandingUrl": "https://pubs.rsc.org/gc/article/doi/10.1039/D6GC03989H/1356561",
+        "publisherOnlineDate": "2026-09-16",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-15_2026-09-21_green-chemistry",
+        "stageBatchSha": "c269a7de443c62a777b870983678a3494327e641",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_publisher_article_history_not_live_html_readback",
+        "firstOnlineDateEvidence": {
+          "tier": "RSC_official_First_published_index",
+          "officialPublisherIndexedUrl": "https://pubs.rsc.org/gc/article/doi/10.1039/D6GC03989H/1356561",
+          "officialPublisherFirstOnline": "2026-09-16",
+          "sourceApiDate": null,
+          "sourceApiDatePrecision": "year_only",
+          "sourceCreatedDate": "2026-09-16",
+          "publisherDayOverrodeCrossref": "",
+          "method": "DOI_exact_publisher_search_index_and_Crossref_metadata"
+        },
+        "originalPublisherJournalName": "Green Chemistry"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "利用电化学单电子氧化开启硫杂环丙烷张力释放并实现S–S键选择性形成，为含硫功能化烯烃产物提供有机制备方法。 硫杂环丙烷（thiirane）在电化学单电子氧化条件下经历三元含硫环的开环/张力释放，并进一步形成S–S键的偶联产物；作者特别报告Z几何异构体的选择性。 RSC交付Crossref的原始摘要明确diverse products、excellent yields与Z-selectivity；已有多个可分离产物类别的制备陈述，但当前无法直接核验单个底物表，不把excellent换算为虚构的具体百分比。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍纠正可能的误判：该反应不是普通还原性硫醇二聚，也不是只研究三元环氧化电位；确有电化学构建新S–S键及Z-选择性的产物。SET与张力释放为论文所提机理，不能认为每个自由基中间体已被直接观察。 以可迁移的硫杂环丙烷电化学开环和选择性S–S构建作为核心制备证据；若进一步声称对所有硫杂环丙烷普适或只得到单一几何异构体则超出摘要证据。"
+        }
+      ],
+      "reviewRationaleSecondPass": "以可迁移的硫杂环丙烷电化学开环和选择性S–S构建作为核心制备证据；若进一步声称对所有硫杂环丙烷普适或只得到单一几何异构体则超出摘要证据。"
+    },
+    {
+      "doi": "10.1039/d6gc03534e",
+      "journal": "Green Chemistry",
+      "title": "Asymmetric-wave alternating current electrolysis for C–N bond cleavage in benzylamines",
+      "titleZh": "非对称方波交流电解实现苄胺C–N键还原断裂",
+      "date": "2026-09-09",
+      "authors": [
+        "Linna Zhu",
+        "Zhi-Jiang Jiang",
+        "Haoxuan Zheng",
+        "Jian-Fei Bai",
+        "Qing Yan",
+        "Jia Chen",
+        "Kan Chen",
+        "Zhanghua Gao"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "37",
+        "pages": "14972-14977",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc03534e"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "提出非对称方波交流电解用于苄胺底物的选择性还原C–N键断裂与去苄基化，减少传统活化试剂需求。",
+      "evidenceBasis": "DOI 10.1039/d6gc03534e；RSC官方Green Chemistry卷28期37文章原始索引明确First published 09 September 2026；2026-09-28的issue页面日期不是online first。 原始出版社页面：https://pubs.rsc.org/gc/article/28/37/14972/1355371/Asymmetric-wave-alternating-current-electrolysis；历史源批次staging/historical-archive-nightly/audit/historical-staging/batches/2026-09-08_2026-09-14_green-chemistry.json，Git blob SHA 5c018472ac0030285fd9a3494472c1c3167de91a，源族 crossref。论文研究的真实制备依据：RSC出版社原始摘要记载asymmetric square-wave AC electrolysis enables direct reductive cleavage of C–N bonds in benzylamines且避免外加活化剂；同时指出锡阳极腐蚀受到抑制。当前可验证的是这一类底物转换及工艺优势，不宣称具体底物数量或已测试药物结构。 本轮只读取经DOI核验的公开摘要/书目信息，未获取或转载历史全文、图、SI及PDF。",
+      "challengeReason": "第二遍从学术范围挑战：降低锡阳极腐蚀可能属于电极工艺研究，不可代替制备能力；但原文核心操作为苄胺C–N键可选择性还原断裂的去保护/脱氨方法。所谓asymmetric对应不等占空比交流波形，不能错误记作不对称有机合成或报告虚假的ee。",
+      "scopeAssessment": {
+        "primaryContribution": "提出非对称方波交流电解用于苄胺底物的选择性还原C–N键断裂与去苄基化，减少传统活化试剂需求。",
+        "preparativeTransformation": "苄胺类化合物在非对称方波交流电条件下进行还原性C–N键切断，完成脱氨/去苄基化的结构转化。研究对象是交流电波形不对称性，不是手性催化的对映选择性。",
+        "generalityEvidence": "RSC出版社原始摘要记载asymmetric square-wave AC electrolysis enables direct reductive cleavage of C–N bonds in benzylamines且避免外加活化剂；同时指出锡阳极腐蚀受到抑制。当前可验证的是这一类底物转换及工艺优势，不宣称具体底物数量或已测试药物结构。",
+        "sourceEvidence": "DOI 10.1039/d6gc03534e；RSC官方Green Chemistry卷28期37文章原始索引明确First published 09 September 2026；2026-09-28的issue页面日期不是online first。 原始出版社页面：https://pubs.rsc.org/gc/article/28/37/14972/1355371/Asymmetric-wave-alternating-current-electrolysis；历史源批次staging/historical-archive-nightly/audit/historical-staging/batches/2026-09-08_2026-09-14_green-chemistry.json，Git blob SHA 5c018472ac0030285fd9a3494472c1c3167de91a，源族 crossref。论文研究的真实制备依据：RSC出版社原始摘要记载asymmetric square-wave AC electrolysis enables direct reductive cleavage of C–N bonds in benzylamines且避免外加活化剂；同时指出锡阳极腐蚀受到抑制。当前可验证的是这一类底物转换及工艺优势，不宣称具体底物数量或已测试药物结构。 本轮只读取经DOI核验的公开摘要/书目信息，未获取或转载历史全文、图、SI及PDF。",
+        "boundaryChallenge": "官能团脱保护/去苄基化与C–N键切断有实际有机底物-产物制备意义，但目前公开摘要仅支持方法类别，不补编所需电极、波形参数、电流效率或复杂底物成功率。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/gc/article/doi/10.1039/d6gc03534e",
+        "publisherLandingUrl": "https://pubs.rsc.org/gc/article/28/37/14972/1355371/Asymmetric-wave-alternating-current-electrolysis",
+        "publisherOnlineDate": "2026-09-09",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-08_2026-09-14_green-chemistry",
+        "stageBatchSha": "5c018472ac0030285fd9a3494472c1c3167de91a",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_publisher_article_history_not_live_html_readback",
+        "firstOnlineDateEvidence": {
+          "tier": "RSC_official_First_published_index",
+          "officialPublisherIndexedUrl": "https://pubs.rsc.org/gc/article/28/37/14972/1355371/Asymmetric-wave-alternating-current-electrolysis",
+          "officialPublisherFirstOnline": "2026-09-09",
+          "sourceApiDate": null,
+          "sourceApiDatePrecision": "year_only",
+          "sourceCreatedDate": "2026-09-09",
+          "publisherDayOverrodeCrossref": "",
+          "method": "DOI_exact_publisher_search_index_and_Crossref_metadata"
+        },
+        "originalPublisherJournalName": "Green Chemistry"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "提出非对称方波交流电解用于苄胺底物的选择性还原C–N键断裂与去苄基化，减少传统活化试剂需求。 苄胺类化合物在非对称方波交流电条件下进行还原性C–N键切断，完成脱氨/去苄基化的结构转化。研究对象是交流电波形不对称性，不是手性催化的对映选择性。 RSC出版社原始摘要记载asymmetric square-wave AC electrolysis enables direct reductive cleavage of C–N bonds in benzylamines且避免外加活化剂；同时指出锡阳极腐蚀受到抑制。当前可验证的是这一类底物转换及工艺优势，不宣称具体底物数量或已测试药物结构。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍从学术范围挑战：降低锡阳极腐蚀可能属于电极工艺研究，不可代替制备能力；但原文核心操作为苄胺C–N键可选择性还原断裂的去保护/脱氨方法。所谓asymmetric对应不等占空比交流波形，不能错误记作不对称有机合成或报告虚假的ee。 官能团脱保护/去苄基化与C–N键切断有实际有机底物-产物制备意义，但目前公开摘要仅支持方法类别，不补编所需电极、波形参数、电流效率或复杂底物成功率。"
+        }
+      ],
+      "reviewRationaleSecondPass": "官能团脱保护/去苄基化与C–N键切断有实际有机底物-产物制备意义，但目前公开摘要仅支持方法类别，不补编所需电极、波形参数、电流效率或复杂底物成功率。"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05275",
+      "journal": "ACS Catalysis",
+      "title": "Highly Efficient Iron-Catalyzed Asymmetric Hydrosilylation: Photo-acceleration and Positive Non-linear Effect",
+      "titleZh": "铁中心手性催化芳基酮高效不对称氢硅化：蓝光加速与正非线性效应",
+      "date": "2026-08-26",
+      "authors": [
+        "Dominik Baran",
+        "Felix Jakobi",
+        "Till Jakob Balthasar Zähringer",
+        "Marco Villa",
+        "Sergei I. Ivlev",
+        "Paola Ceroni",
+        "Eric Meggers"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "17",
+        "pages": "17514-17524",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c05275"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "发展以手性铁金属中心而非手性配体构型为主要手性来源的芳基酮不对称氢硅化体系，研究蓝光加速及正非线性效应。",
+      "evidenceBasis": "DOI 10.1021/acscatal.6c05275；ACS Catalysis官方Article History写明Published Online August 26, 2026，原始Crossref明确published-online 2026-08-26（issue 2026-09-04），并与冻结双源stage批次吻合。 原始出版社页面：https://pubs.acs.org/accacs/article/16/17/17514/5330464/Highly-Efficient-Iron-Catalyzed-Asymmetric；历史源批次staging/historical-archive-nightly/audit/historical-staging/batches/2026-08-22_2026-08-31_acs-catalysis.json，Git blob SHA 267848d5cc293c65a8c780ffcad4b043fe27cccc，源族 crossref + openalex。论文研究的真实制备依据：ACS原始摘要明确合成超过50种手性醇、收率最高>99%、ee最高>99%，催化剂最低0.01 mol%、TON最高6000，部分实例可在无外加溶剂条件运行，并用于Emend、Aficamten和Crizotinib相关前体的制备。所有数字均为单项上限或特定实例。 本轮只读取经DOI核验的公开摘要/书目信息，未获取或转载历史全文、图、SI及PDF。",
+      "challengeReason": "第二遍独立区分光化学促进与光催化机制：作者观察到蓝光显著加速，不得直接认定为新的光氧化还原循环；正非线性效应被解释为外消旋催化剂沉淀，不能泛化为所有低ee催化剂必得高ee产物。",
+      "scopeAssessment": {
+        "primaryContribution": "发展以手性铁金属中心而非手性配体构型为主要手性来源的芳基酮不对称氢硅化体系，研究蓝光加速及正非线性效应。",
+        "preparativeTransformation": "芳基酮在手性铁配合物催化下与氢硅烷反应，以C=O选择性还原形成可转化为富集对映体的仲醇产物；金属中心具有固定手性配位环境，配体本身为非手性。",
+        "generalityEvidence": "ACS原始摘要明确合成超过50种手性醇、收率最高>99%、ee最高>99%，催化剂最低0.01 mol%、TON最高6000，部分实例可在无外加溶剂条件运行，并用于Emend、Aficamten和Crizotinib相关前体的制备。所有数字均为单项上限或特定实例。",
+        "sourceEvidence": "DOI 10.1021/acscatal.6c05275；ACS Catalysis官方Article History写明Published Online August 26, 2026，原始Crossref明确published-online 2026-08-26（issue 2026-09-04），并与冻结双源stage批次吻合。 原始出版社页面：https://pubs.acs.org/accacs/article/16/17/17514/5330464/Highly-Efficient-Iron-Catalyzed-Asymmetric；历史源批次staging/historical-archive-nightly/audit/historical-staging/batches/2026-08-22_2026-08-31_acs-catalysis.json，Git blob SHA 267848d5cc293c65a8c780ffcad4b043fe27cccc，源族 crossref + openalex。论文研究的真实制备依据：ACS原始摘要明确合成超过50种手性醇、收率最高>99%、ee最高>99%，催化剂最低0.01 mol%、TON最高6000，部分实例可在无外加溶剂条件运行，并用于Emend、Aficamten和Crizotinib相关前体的制备。所有数字均为单项上限或特定实例。 本轮只读取经DOI核验的公开摘要/书目信息，未获取或转载历史全文、图、SI及PDF。",
+        "boundaryChallenge": "多种芳基酮、>50实际制备手性醇和药物前体应用是真实合成通用性依据，非单纯光谱或非线性机制研究；不得将最优TON、溶剂条件、产率与ee叠加为任意底物普遍结果。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acscatal.6c05275",
+        "publisherLandingUrl": "https://pubs.acs.org/accacs/article/16/17/17514/5330464/Highly-Efficient-Iron-Catalyzed-Asymmetric",
+        "publisherOnlineDate": "2026-08-26",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_acs-catalysis",
+        "stageBatchSha": "267848d5cc293c65a8c780ffcad4b043fe27cccc",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_publisher_article_history_not_live_html_readback",
+        "firstOnlineDateEvidence": {
+          "tier": "ACS_official_Published_Online_plus_Crossref_day_corrob",
+          "officialPublisherIndexedUrl": "https://pubs.acs.org/accacs/article/16/17/17514/5330464/Highly-Efficient-Iron-Catalyzed-Asymmetric",
+          "officialPublisherFirstOnline": "2026-08-26",
+          "sourceApiDate": "2026-08-26",
+          "sourceApiDatePrecision": "day",
+          "sourceCreatedDate": null,
+          "publisherDayOverrodeCrossref": false,
+          "method": "DOI_exact_publisher_search_index_and_Crossref_metadata"
+        },
+        "originalPublisherJournalName": "ACS Catalysis"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "发展以手性铁金属中心而非手性配体构型为主要手性来源的芳基酮不对称氢硅化体系，研究蓝光加速及正非线性效应。 芳基酮在手性铁配合物催化下与氢硅烷反应，以C=O选择性还原形成可转化为富集对映体的仲醇产物；金属中心具有固定手性配位环境，配体本身为非手性。 ACS原始摘要明确合成超过50种手性醇、收率最高>99%、ee最高>99%，催化剂最低0.01 mol%、TON最高6000，部分实例可在无外加溶剂条件运行，并用于Emend、Aficamten和Crizotinib相关前体的制备。所有数字均为单项上限或特定实例。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍独立区分光化学促进与光催化机制：作者观察到蓝光显著加速，不得直接认定为新的光氧化还原循环；正非线性效应被解释为外消旋催化剂沉淀，不能泛化为所有低ee催化剂必得高ee产物。 多种芳基酮、>50实际制备手性醇和药物前体应用是真实合成通用性依据，非单纯光谱或非线性机制研究；不得将最优TON、溶剂条件、产率与ee叠加为任意底物普遍结果。"
+        }
+      ],
+      "reviewRationaleSecondPass": "多种芳基酮、>50实际制备手性醇和药物前体应用是真实合成通用性依据，非单纯光谱或非线性机制研究；不得将最优TON、溶剂条件、产率与ee叠加为任意底物普遍结果。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02796",
+      "journal": "Organic Letters",
+      "title": "Conversion of Phenyliodine(III) Dicarboxylates to Carbonyl Compounds via Hantzsch Ester-Enabled Decarboxylative Oxygenation",
+      "titleZh": "汉斯酯促进苯基碘(III)二羧酸盐脱羧氧化制备醛与酮",
+      "date": "2026-08-25",
+      "authors": [
+        "Qingye Fang",
+        "Jiaxin He",
+        "Kaiyue Yang",
+        "Dan Xiao",
+        "Yilin Wang",
+        "Zhijian Wang",
+        "Yunfei Du",
+        "Kang Zhao"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "35",
+        "pages": "10924-10929",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02796"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "提出汉斯酯促进的脱羧氧化转化，将苯基碘(III)二羧酸盐前体转变为一系列醛和酮，提供羧酸衍生物制备羰基化合物的新路径。",
+      "evidenceBasis": "DOI 10.1021/acs.orglett.6c02796；ACS Org Lett官方Article History明确Published Online August 25, 2026（Issue September 4），Crossref原始online为同日，stage双源相符。 原始出版社页面：https://pubs.acs.org/orlef7/article/28/35/10924/5328957/Conversion-of-Phenyliodine-III-Dicarboxylates-to；历史源批次staging/historical-archive-nightly/audit/historical-staging/batches/2026-08-22_2026-08-31_organic-letters.json，Git blob SHA 3eb3448b8f413701aed67f8e3f29d518400d7827，源族 crossref + openalex。论文研究的真实制备依据：ACS原始摘要明确series of phenyliodine(III) dicarboxylates及a wide variety of corresponding aldehydes and ketones，且直接记述由carboxylic acids + PhIO原位形成前体，能支持制备适用性但不提供单例产率。 本轮只读取经DOI核验的公开摘要/书目信息，未获取或转载历史全文、图、SI及PDF。",
+      "challengeReason": "第二遍不把空气O₂氧化过程误称为直接CO₂羧化，也不能推断羧酸碳骨架所有C–C键均保留；作者机理研究强烈支持氢过氧化物关键中间体，不等于所有氧化步骤都已直接结构确证。",
+      "scopeAssessment": {
+        "primaryContribution": "提出汉斯酯促进的脱羧氧化转化，将苯基碘(III)二羧酸盐前体转变为一系列醛和酮，提供羧酸衍生物制备羰基化合物的新路径。",
+        "preparativeTransformation": "羧酸先与PhIO原位生成苯基碘(III)二羧酸盐，经汉斯酯介导脱羧、空气中的O₂参与氧化形成与对应羧酸烷基或芳烷基片段相匹配的醛/酮；氧分子为外源氧化剂。",
+        "generalityEvidence": "ACS原始摘要明确series of phenyliodine(III) dicarboxylates及a wide variety of corresponding aldehydes and ketones，且直接记述由carboxylic acids + PhIO原位形成前体，能支持制备适用性但不提供单例产率。",
+        "sourceEvidence": "DOI 10.1021/acs.orglett.6c02796；ACS Org Lett官方Article History明确Published Online August 25, 2026（Issue September 4），Crossref原始online为同日，stage双源相符。 原始出版社页面：https://pubs.acs.org/orlef7/article/28/35/10924/5328957/Conversion-of-Phenyliodine-III-Dicarboxylates-to；历史源批次staging/historical-archive-nightly/audit/historical-staging/batches/2026-08-22_2026-08-31_organic-letters.json，Git blob SHA 3eb3448b8f413701aed67f8e3f29d518400d7827，源族 crossref + openalex。论文研究的真实制备依据：ACS原始摘要明确series of phenyliodine(III) dicarboxylates及a wide variety of corresponding aldehydes and ketones，且直接记述由carboxylic acids + PhIO原位形成前体，能支持制备适用性但不提供单例产率。 本轮只读取经DOI核验的公开摘要/书目信息，未获取或转载历史全文、图、SI及PDF。",
+        "boundaryChallenge": "主要成果是从羧酸衍生物获取醛/酮的有机方法而非单纯高价碘反应性测定；Hantzsch ester与PhIO均参与具体条件，不可泛称无试剂催化转换。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02796",
+        "publisherLandingUrl": "https://pubs.acs.org/orlef7/article/28/35/10924/5328957/Conversion-of-Phenyliodine-III-Dicarboxylates-to",
+        "publisherOnlineDate": "2026-08-25",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_organic-letters",
+        "stageBatchSha": "3eb3448b8f413701aed67f8e3f29d518400d7827",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "indexed_publisher_article_history_not_live_html_readback",
+        "firstOnlineDateEvidence": {
+          "tier": "ACS_official_Published_Online_plus_Crossref_day_corrob",
+          "officialPublisherIndexedUrl": "https://pubs.acs.org/orlef7/article/28/35/10924/5328957/Conversion-of-Phenyliodine-III-Dicarboxylates-to",
+          "officialPublisherFirstOnline": "2026-08-25",
+          "sourceApiDate": "2026-08-25",
+          "sourceApiDatePrecision": "day",
+          "sourceCreatedDate": null,
+          "publisherDayOverrodeCrossref": false,
+          "method": "DOI_exact_publisher_search_index_and_Crossref_metadata"
+        },
+        "originalPublisherJournalName": "Organic Letters"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "提出汉斯酯促进的脱羧氧化转化，将苯基碘(III)二羧酸盐前体转变为一系列醛和酮，提供羧酸衍生物制备羰基化合物的新路径。 羧酸先与PhIO原位生成苯基碘(III)二羧酸盐，经汉斯酯介导脱羧、空气中的O₂参与氧化形成与对应羧酸烷基或芳烷基片段相匹配的醛/酮；氧分子为外源氧化剂。 ACS原始摘要明确series of phenyliodine(III) dicarboxylates及a wide variety of corresponding aldehydes and ketones，且直接记述由carboxylic acids + PhIO原位形成前体，能支持制备适用性但不提供单例产率。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍不把空气O₂氧化过程误称为直接CO₂羧化，也不能推断羧酸碳骨架所有C–C键均保留；作者机理研究强烈支持氢过氧化物关键中间体，不等于所有氧化步骤都已直接结构确证。 主要成果是从羧酸衍生物获取醛/酮的有机方法而非单纯高价碘反应性测定；Hantzsch ester与PhIO均参与具体条件，不可泛称无试剂催化转换。"
+        }
+      ],
+      "reviewRationaleSecondPass": "主要成果是从羧酸衍生物获取醛/酮的有机方法而非单纯高价碘反应性测定；Hantzsch ester与PhIO均参与具体条件，不可泛称无试剂催化转换。"
     }
   ],
   "pending": [
