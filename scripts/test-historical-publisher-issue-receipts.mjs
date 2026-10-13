@@ -81,7 +81,9 @@ test('publisher issue research receipt cannot be used to auto-include/exclude el
   e.articles[4].doi=e.articles[0].doi;
   assert.throws(()=>verifyCatalysisIssueResearchReceipt(e),/natcatal_DOI_or_Article/);
   const f=cloneCatalysis();
-  f.articles[4].formalCatalogReadback.present=true;
+  const missing=f.articles.find(row=>row.doi==='10.1038/s41929-026-01601-z');
+  assert.equal(missing.formalCatalogReadback.present,false,'fixture must select an absent DOI');
+  missing.formalCatalogReadback.present=true;
   assert.throws(()=>verifyCatalysisIssueResearchReceipt(f),/natcatal_formal_date_mismatch|natcatal_counts/);
   const g=cloneCatalysis();
   g.articles[2].formalCatalogReadback.storedDate='2026-07-14';
