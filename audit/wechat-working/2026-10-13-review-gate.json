@@ -1,53 +1,57 @@
 {
   "date": "2026-10-13",
-  "revision": "2026-10-13-r4",
+  "revision": "2026-10-13-r5",
   "articleCount": 2,
   "selectionDois": [
     "10.1038/s44160-026-01189-z",
     "10.1038/s41557-026-02213-7"
   ],
-  "selectionAuthority": "owner_decision_to_rewrite_both_existing_oct13_articles_2026-10-13",
+  "selectionAuthority": "user explicitly required Oct05 published JACS PDF as exemplary reasoning and layout reference for already-authorized same Oct13 draft correction",
   "textReview": "pass",
   "imageReview": "pass",
-  "reviewedAtBeijing": "2026-10-13T15:54:50+08:00",
+  "reviewedAtBeijing": "2026-10-13T16:29:48+08:00",
   "materializedCropReviewRequired": true,
   "strictFigurePlacement": true,
   "sources": [
     {
       "path": "public/wechat-editions/2026-10-13.json",
-      "blobSha": "83b515f3b217674dabbb53e8995dbd75bcb81623"
+      "blobSha": "7a251c833c85db3a107884f7a61acfcd42a47e13"
     },
     {
       "path": "public/wechat-featured/2026-10-13.json",
-      "blobSha": "2804b42942cf75bbd3e4590fd54faa7c42d9b365"
+      "blobSha": "4d6d9ef9742e5220a2a551c08f5bb486b3511b44"
     },
     {
       "path": "public/wechat-retrospective/oxetane-to-azetidine-skeletal-editing-20261013.json",
-      "blobSha": "75ad0bcf9b61a582a5e734420d6a0751c09000f1"
+      "blobSha": "828b7ef8c44cb5b5ac7098c89401f7225d9fb5d9"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r4-nature-synthesis-text-only.md",
-      "blobSha": "680f6690e536f575972d6c662a569ad6c06ab8d9"
+      "path": "audit/wechat-working/2026-10-13-r5-nature-synthesis-text-only.md",
+      "blobSha": "f739bd49b8776ac30c72531642bcfe71f3be6bcc"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r4-nature-synthesis-images-only.md",
-      "blobSha": "0ac0a967b976a3d53a316afa92ada355c9b52a28"
+      "path": "audit/wechat-working/2026-10-13-r5-nature-synthesis-images-only.md",
+      "blobSha": "2bcd1cba0746099781d7c9da34f3392e225d964a"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r4-nature-chemistry-text-only.md",
-      "blobSha": "d495782b4e24415a11dcd9e4980c9821f0b52830"
+      "path": "audit/wechat-working/2026-10-13-r5-nature-chemistry-text-only.md",
+      "blobSha": "e551415bb3d547ec38bb7cab3794d144434fd217"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r4-nature-chemistry-images-only.md",
-      "blobSha": "a2b9c472f4725e4f2c02dfff841abeea316a61d1"
+      "path": "audit/wechat-working/2026-10-13-r5-nature-chemistry-images-only.md",
+      "blobSha": "9df19aa9f66c151eee495a371340e1f7ae767217"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r4-science-story-review.json",
-      "blobSha": "4ebe690d85f03dba794cc57f0fa4c4c2f2779ba8"
+      "path": "audit/wechat-working/2026-10-13-r5-science-presentation-review.json",
+      "blobSha": "99fdc25eeec887e0c34d7ff58c73b789cc25352a"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r4-offline-preview/offline-qa.json",
-      "blobSha": "677231023361d5d13fa0f46f770475dfaec0669d"
+      "path": "audit/wechat-working/2026-10-13-r5-oct05-published-reference-comparison.md",
+      "blobSha": "d21d11ca08f5631f7b02999058d71c33698db90d"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-13-r5-offline-preview/offline-qa.json",
+      "blobSha": "96d6f57d29dac32d555ddd20ddc062b3beb88f04"
     }
   ],
   "assets": [
@@ -221,43 +225,52 @@
     }
   ],
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-13-r4-nature-synthesis-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-13-r4-nature-synthesis-images-only.md",
-    "retrospectiveTextOnly": "audit/wechat-working/2026-10-13-r4-nature-chemistry-text-only.md",
-    "retrospectiveImagesOnly": "audit/wechat-working/2026-10-13-r4-nature-chemistry-images-only.md",
-    "scienceReview": "audit/wechat-working/2026-10-13-r4-science-story-review.json",
-    "visualQA": "audit/wechat-working/2026-10-13-r4-offline-preview/offline-qa.json"
+    "textOnly": "audit/wechat-working/2026-10-13-r5-nature-synthesis-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-13-r5-nature-synthesis-images-only.md",
+    "retrospectiveTextOnly": "audit/wechat-working/2026-10-13-r5-nature-chemistry-text-only.md",
+    "retrospectiveImagesOnly": "audit/wechat-working/2026-10-13-r5-nature-chemistry-images-only.md",
+    "scienceReview": "audit/wechat-working/2026-10-13-r5-science-presentation-review.json",
+    "exemplarComparison": "audit/wechat-working/2026-10-13-r5-oct05-published-reference-comparison.md",
+    "visualQA": "audit/wechat-working/2026-10-13-r5-offline-preview/offline-qa.json"
   },
-  "referenceExemplar": "public/wechat-featured/2026-10-05.json",
+  "referenceExemplar": "User-uploaded 2026-10-05 JACS 8-page published PDF, compared against current main's public/wechat-featured/2026-10-05.json",
+  "imageSourceProvenance": "Original 22 primary/SI images plus 2 user-selected covers retain R2 source bytes; only captions, widths and paragraph placement change.",
+  "scopeBoundary": "Revision of two existing Oct13 articles; leaves daily 12 journal-only records, card thumbnails, DOI links, selection and covers intact.",
   "improvement": {
     "NS": {
-      "sections": 7,
-      "paragraphs": 18,
-      "characters": 2303,
-      "figures": 12
+      "sections": 8,
+      "paragraphs": 24,
+      "characters": 3572,
+      "quickGuides": 2,
+      "figures": 12,
+      "nonEmptyEyebrow": true
     },
     "NC": {
-      "sections": 7,
-      "paragraphs": 15,
-      "characters": 2112,
-      "figures": 10
+      "sections": 8,
+      "paragraphs": 24,
+      "characters": 3418,
+      "quickGuides": 2,
+      "figures": 10,
+      "nonEmptyEyebrow": true
     }
   },
-  "cover": {
-    "featuredOriginalSHA256": "944f2cb54266c114b7399903761c56e7bddc9c036e6ddc07b039934d92914843",
-    "retroOriginalSHA256": "4ecd2188f646f728a0315fb7da154d279d5591f35cf3d0f2e88dfc43de3deef8"
-  },
   "unchanged24OriginalImages": true,
+  "covers": {
+    "featuredOriginalSHA256": "944f2cb54266c114b7399903761c56e7bddc9c036e6ddc07b039934d92914843",
+    "retrospectiveOriginalSHA256": "4ecd2188f646f728a0315fb7da154d279d5591f35cf3d0f2e88dfc43de3deef8"
+  },
   "mobileBrowserQA": {
-    "run": 38365625121,
+    "run": 38369533720,
     "cssViewport": 390,
     "desktopViewport": 740,
     "screenshots": 14,
-    "bodyImages": 22,
-    "covers": 2,
-    "figuresLoaded": 24,
-    "overflow": false,
-    "sourceRasterNoByteChanges": true
+    "expectedBodyFigures": [
+      12,
+      10
+    ],
+    "imageLoaded": true,
+    "mobileHorizontalOverflow": false,
+    "sourceImageHashPinned": true
   },
   "exactReadOriginal": [
     "https://gallery.gczhouwld.com/?edition=2026-10-13&doi=10.1038%2Fs44160-026-01189-z&summary=0",
@@ -268,5 +281,5 @@
   "draftWriteAuthorized": true,
   "publicSendAuthorized": false,
   "publishId": null,
-  "notes": "Replaces R3 source text and figure placement only; preserves all original chemistry raster bytes, both user-selected covers, 12 verified 08:00 journal-only additions/cards and exact DOI links. Text-only + images-only reviewed, independent R4 mobile/desktop 390px/740px preview completed in GitHub Actions. Only update existing Oct13 media_id ONCE and require actual draft/get; do not create/add/clone, don't send. The native mobile WeChat client is not checked by offline QA."
+  "notes": "Based on real user-uploaded Oct05 JACS reference PDF, not generic rewriting. Independently reviewed causal evidence, natural professional Chinese and 390px/740px source layout. Existing 24 original chemical image and cover bytes unchanged. Publisher may perform one same media_id draft/update ONLY after R5 merge, then must draft/get, compare two source URLs, count 25 actual web images and mobile native headlines. PDF export blank areas in Oct05 are not proof original WeChat missing images, so R5 independent actual-cloud image check required."
 }
