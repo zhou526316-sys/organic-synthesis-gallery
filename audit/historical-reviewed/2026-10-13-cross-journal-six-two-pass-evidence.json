@@ -1,0 +1,386 @@
+{
+  "schemaVersion": "gallery-historical-cross-journal-individual-review-v1",
+  "generatedAt": "2026-10-13T02:04:15.878Z",
+  "mode": "evidence_only_not_approved_manifest_or_publication",
+  "scopeContract": "docs/literature-scope-contract.md",
+  "distinctPapers": 6,
+  "sourceRootCount": 4,
+  "stateGuards": {
+    "noPublication": true,
+    "notDailyNew": true,
+    "preJulyMetadataOnly": true,
+    "noOldImageOrSIOrPDF": true,
+    "noRawFullAbstractCopy": true
+  },
+  "reviewed": [
+    {
+      "doi": "10.1038/s44160-026-01023-6",
+      "journal": "Nature Synthesis",
+      "title": "Peripheral aryl group transposition on pyridines using photoredox catalysis",
+      "titleZh": "光氧化还原催化实现吡啶外围芳基的位置迁移",
+      "date": "2026-03-04",
+      "authors": [
+        "Eugene Yew Kun Tan",
+        "Tian-Yu Peng",
+        "Taku Wakabayashi",
+        "Shunsuke Chiba"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "8",
+        "pages": "1169-1178",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01023-6"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以难以实现的吡啶位点芳基迁移为核心制备转化，明确多种区域置换模式、底物适用性和放大案例，属于有机合成方法学。",
+      "evidenceBasis": "出版社2026-03-04正式页面与Crossref/OpenAlex历史根批次逐一核对身份、作者和文献信息。Nature Synthesis官方摘要及正文图2证实不同位点迁移、底物和药物相关衍生物，表1显示67%分离收率、10 mmol规模，机理图3和正文提示初始3DPAFIPN转化为光活性色团。未抓取或复制任何图像、PDF、SI及完整正文。",
+      "challengeReason": "独立重审了位点转移方向、对初始芳基预安装的依赖、底物电子效应限制与光催化剂原位转化。与直接吡啶间位C–H芳基化不同，但原文多类受控异构化产物与10 mmol实证说明具有可推广合成价值；自由基/电子转移路径仅按实验与作者模型分层陈述。",
+      "scopeAssessment": {
+        "primaryContribution": "开发可见光氧化还原催化吡啶外围芳基迁移策略，以临时去芳构化及后续芳构化实现难以直接引入的间位芳基吡啶制备。",
+        "preparativeTransformation": "预装在吡啶邻位或对位的芳基，通过暂态二氢吡啶及氮杂环己二烯基自由基的1,2-芳基迁移转换芳基在吡啶环上的位置，重新芳构化获得异构化芳基吡啶。",
+        "generalityEvidence": "Nature Synthesis全文及图2报告多种芳基、杂芳基、电子吸拉基团和复杂分子片段适用，形成不同位置迁移产物；C4→C5代表性体系67%分离收率并开展10 mmol规模；不能把特定示例产率推广到全部底物。",
+        "sourceEvidence": "出版社2026-03-04正式页面与Crossref/OpenAlex历史根批次逐一核对身份、作者和文献信息。Nature Synthesis官方摘要及正文图2证实不同位点迁移、底物和药物相关衍生物，表1显示67%分离收率、10 mmol规模，机理图3和正文提示初始3DPAFIPN转化为光活性色团。未抓取或复制任何图像、PDF、SI及完整正文。 来源页：https://www.nature.com/articles/s44160-026-01023-6；冻结历史批次：2026-03-01_2026-03-31_nature-synthesis，Git blob f9944fa5e49364304e8522bd4b3ff649031a89ce。",
+        "boundaryChallenge": "第二遍重点质疑所谓光催化体系中真正活性物种：原文表明初始3DPAFIPN经历光反应生成咔唑类色团，作者据此提出更复杂的原位光氧化还原过程，因此不能简单断言初始光催化剂直接催化完整循环。另须区分芳基迁移与从简单吡啶直接C–H间位芳基化；前者需预装芳基，但仍能提供可迁移的分子骨架编辑方法。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01023-6",
+        "publisherOnlineDate": "2026-03-04",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-03-01_2026-03-31_nature-synthesis",
+        "stageBatchSha": "f9944fa5e49364304e8522bd4b3ff649031a89ce",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "firstPassScopeDecision": "include",
+      "independentChallengeEvidence": "独立重审了位点转移方向、对初始芳基预安装的依赖、底物电子效应限制与光催化剂原位转化。与直接吡啶间位C–H芳基化不同，但原文多类受控异构化产物与10 mmol实证说明具有可推广合成价值；自由基/电子转移路径仅按实验与作者模型分层陈述。"
+    },
+    {
+      "doi": "10.1038/s44160-026-01036-1",
+      "journal": "Nature Synthesis",
+      "title": "Reversing the reduction sequence of aldehydes and nitriles for electrochemical C–N coupling",
+      "titleZh": "反转醛与腈的还原次序实现电化学碳氮偶联",
+      "date": "2026-03-19",
+      "authors": [
+        "Yuping Pan",
+        "Yu Jing",
+        "Tianze Xu",
+        "Tianyang Liu",
+        "Rong Miao",
+        "Chongyang Ma",
+        "Qizheng An",
+        "Ta Thi Thuy Nga",
+        "Yunhui Yan",
+        "Zhenyi Xiao",
+        "Yun Fan",
+        "Zhongcheng Xia",
+        "Yutong Huang",
+        "Dianke Xie",
+        "Chung-Li Dong",
+        "Qinghua Liu",
+        "Yuqin Zou",
+        "Shuangyin Wang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "5",
+        "issue": "8",
+        "pages": "1231-1241",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-026-01036-1"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "虽兼具电极材料设计与机理研究，但有目标有机C–N键制备的98%实测收率和其它醛腈底物扩展，存在独立可推广的电化学还原偶联合成贡献。",
+      "evidenceBasis": "Nature Synthesis出版社2026-03-19 Published及volume5 pages1231-1241，与历史根Crossref来源身份相符。摘要报告糠醛与乙腈在Fe–CuOx电催化剂上的EFYA收率98%、对其它醛和腈扩展及Fe3+/Fe2+/Cu2+位点解释；正文Fig.6题注显示制备二级胺底物适用性，非仅装置性能。未获得授权转载任何原摘要/正文或PDF。",
+      "challengeReason": "单一糠醛/乙腈体系的高收率不能自动证明普适性，电极氧化态维持也不足以定义有机合成。独立挑战检查出版社正文图6及官方摘要指向其它醛/腈二级胺合成，综合判定确有可迁移制备模式；将电极活性位点路径视为有条件支持的作者机理，不凭空推断广泛官能团或常温规模化生产。",
+      "scopeAssessment": {
+        "primaryContribution": "以Fe–CuOx电催化剂调节醛与腈的相对还原活性，使生物质衍生糠醛与乙腈发生电化学C–N偶联并得到目标二级胺；论文进一步展示其他醛及腈的制备适用性。",
+        "preparativeTransformation": "糠醛和乙腈为起始原料，电还原生成乙基糠甲胺类含氮化合物；扩展到其他醛与腈伙伴形成新的C–N键，产物为可分离的二级胺，而非仅考察电极析氢或电流效率。",
+        "generalityEvidence": "官方Nature Synthesis摘要明确报告典型产物EFYA 98%收率，并指明其他醛与腈可以扩展制备二级胺，图6专门展示了化学底物适用性。未从来源获得全部底物数、独立反应分离收率或广谱耐受性的更细证据，因此这些细节不补写。",
+        "sourceEvidence": "Nature Synthesis出版社2026-03-19 Published及volume5 pages1231-1241，与历史根Crossref来源身份相符。摘要报告糠醛与乙腈在Fe–CuOx电催化剂上的EFYA收率98%、对其它醛和腈扩展及Fe3+/Fe2+/Cu2+位点解释；正文Fig.6题注显示制备二级胺底物适用性，非仅装置性能。未获得授权转载任何原摘要/正文或PDF。 来源页：https://www.nature.com/articles/s44160-026-01036-1；冻结历史批次：2026-03-01_2026-03-31_nature-synthesis，Git blob f9944fa5e49364304e8522bd4b3ff649031a89ce。",
+        "boundaryChallenge": "最大风险是文章也大量研究Fe/CuOx位点、价态稳定与电催化机理，容易把纯材料性能研究误认为有机合成。第二遍明确要求不仅依赖材料活性和稳定性，而引用98%目标有机胺收率以及图6的其他醛/腈伙伴制备，从而证明方法超出单一电极性能评价。Fe3+/Fe2+稳定Cu2+及次序反转机制区分作者证据与其机理解释。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://www.nature.com/articles/s44160-026-01036-1",
+        "publisherOnlineDate": "2026-03-19",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-03-01_2026-03-31_nature-synthesis",
+        "stageBatchSha": "f9944fa5e49364304e8522bd4b3ff649031a89ce",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "firstPassScopeDecision": "include",
+      "independentChallengeEvidence": "单一糠醛/乙腈体系的高收率不能自动证明普适性，电极氧化态维持也不足以定义有机合成。独立挑战检查出版社正文图6及官方摘要指向其它醛/腈二级胺合成，综合判定确有可迁移制备模式；将电极活性位点路径视为有条件支持的作者机理，不凭空推断广泛官能团或常温规模化生产。"
+    },
+    {
+      "doi": "10.1021/jacs.5c13553",
+      "journal": "JACS",
+      "title": "Modular Synthesis of Chiral Multi-Substituted Cyclohexanes via Cobalt-Catalyzed Enantioselective Desymmetrizing Hydroalkylation",
+      "titleZh": "钴催化不对称去对称化氢烷基化模块化合成手性多取代环己烷",
+      "date": "2026-01-05",
+      "authors": [
+        "Xuchao Wang",
+        "Jing Xue",
+        "Wen-Jing Yu",
+        "Siming Zheng",
+        "Mengyang Shen",
+        "Zhen Zhao",
+        "Shao-Fei Ni",
+        "Xiaohui Ji",
+        "Zhenchao Wang",
+        "Yiyun Fang",
+        "Wei Huang",
+        "Zi-Qiang Rong"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "2",
+        "pages": "2249-2259",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.5c13553"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "文章主体是钴催化远端立体选择性的C–C键构建与多取代手性环己烷模块化制备，明显具备有机合成方法学贡献。",
+      "evidenceBasis": "ACS JACS出版社Article Published Online 2026-01-05、Volume148 Issue2 2249-2259及官方Abstract，与2026-01 JACS历史Crossref/OpenAlex核对；摘要明确描述钴催化不对称remote hydroalkylation、宽范围、温和条件与优秀的远程区域和对映选择性。未将摘要全文、图或SI存入数据库。",
+      "challengeReason": "第二遍独立审查反应是否仅用于个别药物骨架或仅解释钴配位机理：出版社同时描述多个底物上的实际烷基化及区域/对映选择性，故收录。把反应限于特定可去对称化的环己烯体系，不泛化到所有饱和环烷烃，也不臆造选择性数值。",
+      "scopeAssessment": {
+        "primaryContribution": "针对富sp³六元碳环多个远端立体中心的构建，提出钴催化环己烯衍生物不对称远程氢烷基化及去对称化策略。",
+        "preparativeTransformation": "以可去对称化的环己烯类底物参与钴催化氢烷基化，在环烯烃骨架上引入烷基并同时进行远端区域、对映选择性控制，生成多个取代基及立体中心的手性六元碳环。",
+        "generalityEvidence": "JACS官方摘要表示具有较宽底物适用范围，反应条件温和且区域/对映选择性优良，可模块化获得多取代手性环己烷；未观察具体全库底物个数和最高ee的权威数值，故不擅自填写。",
+        "sourceEvidence": "ACS JACS出版社Article Published Online 2026-01-05、Volume148 Issue2 2249-2259及官方Abstract，与2026-01 JACS历史Crossref/OpenAlex核对；摘要明确描述钴催化不对称remote hydroalkylation、宽范围、温和条件与优秀的远程区域和对映选择性。未将摘要全文、图或SI存入数据库。 来源页：https://pubs.acs.org/doi/10.1021/jacs.5c13553；冻结历史批次：2026-01-01_2026-01-31_jacs，Git blob 93956083e17072c31b6cd79959af3a945f19adcc。",
+        "boundaryChallenge": "对抗性检查重点：具有药物或农药应用潜力的手性环己烷并不自动证明催化方法学，需要实际形成C–C键、对映选择性与多个不同底物范围。ACS官方摘要均明确报告；同时不把远程立体控制表述为能在任意未活化环己烷C–H键上进行烷基化。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.5c13553",
+        "publisherOnlineDate": "2026-01-05",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-01-01_2026-01-31_jacs",
+        "stageBatchSha": "93956083e17072c31b6cd79959af3a945f19adcc",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "firstPassScopeDecision": "include",
+      "independentChallengeEvidence": "第二遍独立审查反应是否仅用于个别药物骨架或仅解释钴配位机理：出版社同时描述多个底物上的实际烷基化及区域/对映选择性，故收录。把反应限于特定可去对称化的环己烯体系，不泛化到所有饱和环烷烃，也不臆造选择性数值。"
+    },
+    {
+      "doi": "10.1021/jacs.5c14490",
+      "journal": "JACS",
+      "title": "Divergent Total Synthesis of the Harziane Diterpenoids",
+      "titleZh": "Harziane二萜类天然产物的发散式全合成",
+      "date": "2026-01-04",
+      "authors": [
+        "Philipp M. Gemmel",
+        "Sohee Kim",
+        "Zhiyao Zhou",
+        "Justin R. Bossenbroek",
+        "Noel Cercizi",
+        "Scott A. Snyder"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "148",
+        "issue": "1",
+        "pages": "504-514",
+        "articleNumber": "",
+        "doi": "10.1021/jacs.5c14490"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "具有清晰目标、关键关环和共同晚期中间体的多种二萜天然产物发散式全合成，属于现行范围明确允许的天然产物合成成果。",
+      "evidenceBasis": "ACS JACS出版社2026-01-04 Published Online、Volume148 Issue1 504-514及官方摘要，结合2026-01历史JACS Crossref/OpenAlex批次；出版社明确Harziane二萜四环骨架，Au(I)催化环异构化、半频哪醇收缩、晚期氧化还原，三种天然产物及第四种提议结构的路线，并另有四种形式合成。未复制任何原文段落或补充材料。",
+      "challengeReason": "第二遍独立核查作者对三项真实天然产物、第四拟定结构以及四项形式全合成的界限，并确认共通中间体及金催化关环/半频哪醇重排是具体完成的制备步骤；避免将形式合成或结构拟定写为已验证天然产物。最终仍具有充分、独立的合成路线价值而符合收录。",
+      "scopeAssessment": {
+        "primaryContribution": "围绕Harziane二萜类6/5/7/4四环骨架和共同后期中间体，完成多个天然产物的发散式路线及系列形式全合成。",
+        "preparativeTransformation": "通过金(I)催化环异构化构建双环[5.2.0]壬烷相关骨架，结合半频哪醇环收缩及位点/化学选择性氧化还原，从共通后期中间体按1至3步的末端序列导向不同Harziane二萜目标分子。",
+        "generalityEvidence": "ACS官方摘要明确区分三种真实天然产物及第四种提议结构的合成（四者均从共同晚期中间体1–3步可达），并另涉及四种天然产物的形式合成；首次合成的结构共三种。不能将提议结构无条件视为已证实天然产物，更不可把形式全合成说成已实际分离全部目标产物。",
+        "sourceEvidence": "ACS JACS出版社2026-01-04 Published Online、Volume148 Issue1 504-514及官方摘要，结合2026-01历史JACS Crossref/OpenAlex批次；出版社明确Harziane二萜四环骨架，Au(I)催化环异构化、半频哪醇收缩、晚期氧化还原，三种天然产物及第四种提议结构的路线，并另有四种形式合成。未复制任何原文段落或补充材料。 来源页：https://pubs.acs.org/doi/10.1021/jacs.5c14490；冻结历史批次：2026-01-01_2026-01-31_jacs，Git blob 93956083e17072c31b6cd79959af3a945f19adcc。",
+        "boundaryChallenge": "第二遍重点辨析‘天然产物全合成’与‘形式全合成’以及‘拟定结构的制备’三种成果层级。作者的产物总数不是仅凭摘要直接相加就是八种完整独立全合成；四种形式合成和对第四种假定结构的终态合成必须按原论文字段分开。合成方法学收录并不依赖广谱底物例数，因为已完成的目标天然产物路线本身符合现行契约。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/jacs.5c14490",
+        "publisherOnlineDate": "2026-01-04",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-01-01_2026-01-31_jacs",
+        "stageBatchSha": "93956083e17072c31b6cd79959af3a945f19adcc",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "firstPassScopeDecision": "include",
+      "independentChallengeEvidence": "第二遍独立核查作者对三项真实天然产物、第四拟定结构以及四项形式全合成的界限，并确认共通中间体及金催化关环/半频哪醇重排是具体完成的制备步骤；避免将形式合成或结构拟定写为已验证天然产物。最终仍具有充分、独立的合成路线价值而符合收录。"
+    },
+    {
+      "doi": "10.1021/acs.joc.5c02749",
+      "journal": "JOC",
+      "title": "Organocatalytic Enantioselective Mannich Reaction of Cyclic N -Sulfonyl Ketimines to Tryptanthrin-Derived Ketimines",
+      "titleZh": "有机催化环状N-磺酰酮亚胺与Tryptanthrin衍生酮亚胺的不对称Mannich反应",
+      "date": "2026-03-27",
+      "authors": [
+        "Ji-Gang Jia",
+        "Yao-Yao Mei",
+        "Rui-Qi Jiang",
+        "Meng-Qin Chang",
+        "Feng Sha",
+        "Xin-Yan Wu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "14",
+        "pages": "4867-4881",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.5c02749"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "有明确的双反应伙伴、不对称C–C成键及实际产率与ee底物范围，主要贡献为不对称杂环制备方法。",
+      "evidenceBasis": "2026-03-27 ACS JOC正式Published Online、Volume91 Issue14 pages4867-4881；历史2026-03 JOC DOI作者引文一致。出版社官方Abstract报告叔胺-方酰胺、环状N-磺酰酮亚胺与Tryptanthrin衍生酮亚胺Mannich反应、up to99% yield及90–99% ee。未复制原始Abstract全文或SI。",
+      "challengeReason": "第二遍独立检验高度特定Tryptanthrin骨架是否将此项变为一例结构修饰；ACS报道多种两类酮亚胺底物、有持续高ee与实际收率，足够构成此类别的反应方法学，不应夸大为普适任意酮亚胺反应。保留收率上限99%与范围90–99% ee的真实层级。",
+      "scopeAssessment": {
+        "primaryContribution": "开发双功能手性叔胺-方酰胺催化的酮亚胺对酮亚胺不对称Mannich加成，合成带有多个连接骨架的手性含氮杂环产物。",
+        "preparativeTransformation": "以环状N-磺酰酮亚胺与Tryptanthrin衍生酮亚胺为两个反应伙伴，发生不对称C–C键形成的Mannich型加成，获得6,6-二取代indolo[2,1-b]quinazolinone骨架以及环状N-磺酰酮亚胺片段。",
+        "generalityEvidence": "JOC官方摘要报告多种底物的中等到优良收率、最高99%产率、90–99% ee，并指明双功能手性叔胺—方酰胺催化剂；文中存在范围与对映选择性数据，但不能把最高收率误认为每个底物都适用。",
+        "sourceEvidence": "2026-03-27 ACS JOC正式Published Online、Volume91 Issue14 pages4867-4881；历史2026-03 JOC DOI作者引文一致。出版社官方Abstract报告叔胺-方酰胺、环状N-磺酰酮亚胺与Tryptanthrin衍生酮亚胺Mannich反应、up to99% yield及90–99% ee。未复制原始Abstract全文或SI。 来源页：https://pubs.acs.org/doi/10.1021/acs.joc.5c02749；冻结历史批次：2026-03-01_2026-03-31_joc，Git blob 60ab850051a5556497cb6e97748fcd1965a80241。",
+        "boundaryChallenge": "对抗性复核：Tryptanthrin衍生骨架可能偏专门化，因而不应宣称可普遍适用于所有酮亚胺；但官方摘要明确有成系列的两类酮亚胺和90–99% ee的实证，构成特定且可拓展的非对称C–C键制备方法。无足够证据不能把99% ee以外的数字或催化剂机理加入。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.5c02749",
+        "publisherOnlineDate": "2026-03-27",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-03-01_2026-03-31_joc",
+        "stageBatchSha": "60ab850051a5556497cb6e97748fcd1965a80241",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "firstPassScopeDecision": "include",
+      "independentChallengeEvidence": "第二遍独立检验高度特定Tryptanthrin骨架是否将此项变为一例结构修饰；ACS报道多种两类酮亚胺底物、有持续高ee与实际收率，足够构成此类别的反应方法学，不应夸大为普适任意酮亚胺反应。保留收率上限99%与范围90–99% ee的真实层级。"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00214",
+      "journal": "JOC",
+      "title": "A Radical Strategy for the Synthesis of Polyfluorinated Biaromatic Hydrocarbons via Nickel-Catalyzed Reductive Cross-Coupling",
+      "titleZh": "镍催化还原交叉偶联自由基策略合成多氟代联芳烃",
+      "date": "2026-06-02",
+      "authors": [
+        "Wenhao Xu",
+        "Jie Tan",
+        "Zhengling Wu",
+        "Jingyu Zhang",
+        "Yingsheng Zhao"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "23",
+        "pages": "7716-7729",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c00214"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "其主要工作是镍催化芳基卤化物还原交叉偶联制备多氟代联芳烃，具有一般性底物和实际复杂骨架合成应用，而非仅电极性能或机理假说。",
+      "evidenceBasis": "ACS JOC 2026-06-02 Published Online，Volume91 Issue23 pages7716-7729；2026-06历史JOC Crossref/OpenAlex元数据匹配。出版社正式摘要明确镍催化卤代芳烃还原交叉偶联，广泛底物和多个有机氟化合物应用，并描述Ni(0)参与多氟芳基溴化物活化。未转载摘要全文或 PDF/SI。",
+      "challengeReason": "第二遍检验是否只能偶联高度特定的多氟代卤芳烃以及是否因Ni(0)假说错误而失去合成价值：出版社明确报告宽范围、应用于实际含氟化合物，足以支持范围内收录；Ni0物种作用按研究提示而非必然排除NiI路径。对复杂分子只称相关化合物应用，不无证据地宣称整个药物总合成。",
+      "scopeAssessment": {
+        "primaryContribution": "通过镍催化含卤芳烃间的还原交叉偶联，以自由基生成策略制备多氟代联芳烃并减少此类骨架构建的前处理步骤。",
+        "preparativeTransformation": "利用多氟代芳基卤化物与另一芳基卤化物发生镍催化还原交叉偶联，形成两芳环间新的C(sp²)–C(sp²)键，获得多氟代联芳基产物。",
+        "generalityEvidence": "ACS官方摘要明言广泛底物适用性，合成液晶、非甾体抗炎药diflunisal及氨肽酶抑制剂相关氟代化合物；并描述可简化此前多步制备。没有摘要层面详尽底物数、单独产率或对所有药物直接合成的证据，因此不夸写。",
+        "sourceEvidence": "ACS JOC 2026-06-02 Published Online，Volume91 Issue23 pages7716-7729；2026-06历史JOC Crossref/OpenAlex元数据匹配。出版社正式摘要明确镍催化卤代芳烃还原交叉偶联，广泛底物和多个有机氟化合物应用，并描述Ni(0)参与多氟芳基溴化物活化。未转载摘要全文或 PDF/SI。 来源页：https://pubs.acs.org/doi/10.1021/acs.joc.6c00214；冻结历史批次：2026-06-01_2026-06-30_joc，Git blob 54b8d784143ed4cc92e694a22663e5d2246c7e79。",
+        "boundaryChallenge": "第二遍对Ni(0)机制断言提出挑战：作者机理研究提示Ni(0)活化多氟代芳基溴化物并产生关键自由基，但不能由摘要独证只有Ni(0)启动、没有Ni(I)等其他路径。反应具有真实可分离的C–C成键及广泛底物适用性，不应因为电子转移机理存在争议而否认主要合成方法价值。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c00214",
+        "publisherOnlineDate": "2026-06-02",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-06-01_2026-06-30_joc",
+        "stageBatchSha": "54b8d784143ed4cc92e694a22663e5d2246c7e79",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "firstPassScopeDecision": "include",
+      "independentChallengeEvidence": "第二遍检验是否只能偶联高度特定的多氟代卤芳烃以及是否因Ni(0)假说错误而失去合成价值：出版社明确报告宽范围、应用于实际含氟化合物，足以支持范围内收录；Ni0物种作用按研究提示而非必然排除NiI路径。对复杂分子只称相关化合物应用，不无证据地宣称整个药物总合成。"
+    }
+  ]
+}
