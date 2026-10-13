@@ -60,9 +60,9 @@ function belongsToFeed(doi,feed) {
   // RSC shares the 10.1039/ prefix across all journals. Verify the journal
   // code in the actual DOI, never infer journal from host alone.
   if(feed.journal==='Chemical Science')
-    return /^10\.1039\/[a-z]\d{2}sc[a-z0-9]+$/i.test(doi);
+    return /^10\.1039\/[a-z]\d{1,2}sc[a-z0-9]+$/i.test(doi);
   if(feed.journal==='Green Chemistry')
-    return /^10\.1039\/[a-z]\d{2}gc[a-z0-9]+$/i.test(doi);
+    return /^10\.1039\/[a-z]\d{1,2}gc[a-z0-9]+$/i.test(doi);
   return true;
 }
 
@@ -76,7 +76,7 @@ function itemIdentity(item, feed) {
     // RSC RSS identities can use a journal-coded article landing path rather
     // than a DOI URL. The official domain + journal + manuscript code jointly
     // establish a canonical 10.1039 DOI; unrelated references are ignored.
-    const rsc=/https?:\/\/(?:www\.)?pubs\.rsc\.org\/(?:en\/)?content\/article(?:landing|html|pdf)\/\d{4}\/(sc|gc)\/([a-z]\d{2}(?:sc|gc)[a-z0-9]+)/i.exec(value);
+    const rsc=/https?:\/\/(?:www\.)?pubs\.rsc\.org\/(?:en\/)?content\/article(?:landing|html|pdf)\/\d{4}\/(sc|gc)\/([a-z]\d{1,2}(?:sc|gc)[a-z0-9]+)/i.exec(value);
     if(rsc && ((feed.journal==='Chemical Science'&&rsc[1].toLowerCase()==='sc') ||
                (feed.journal==='Green Chemistry'&&rsc[1].toLowerCase()==='gc')))
       candidates.push('10.1039/'+rsc[2].toLowerCase());
