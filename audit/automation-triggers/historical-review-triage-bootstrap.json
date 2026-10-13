@@ -8,10 +8,12 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-13T02:17:00.269Z",
-  "reason": "Refresh 316 completed history source roots after publisher-reviewed 20/2 manifest and PR #575 authoritative DOI status fix; source-verified staging-only global ledger real readback. No source API calls, no formal publisher or media writes.",
+  "requestedAt": "2026-10-13T02:47:37.829Z",
+  "reason": "Owner-approved resume: generate real DOI-unique 320-study fair scientific reviewer worklist from all 346 source-complete 16-journal staged roots after PR #579, using GitHub staging files only; do not call D1 or publisher APIs, do not alter protected publications.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261013_post_review20_global_unique_doi_reconcile",
-  "expectedCompleteRootCount": 316,
-  "expectedPublishedCatalogMembers": 979
+  "triggerScope": "20261013_balanced_320_science_review_worklist_real_staging",
+  "expectedCompleteRootCount": 346,
+  "expectedPublishedCatalogMembers": 979,
+  "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
+  "approvalSource": "user approved full historical comprehensive backfill and explicitly protect today's D1 quota"
 }
