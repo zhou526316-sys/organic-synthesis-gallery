@@ -457,8 +457,9 @@ test('2026-Q3 ACS eight late-evening source-verified synthesis reviews stay DOI-
   for(const doi of [
     '10.1021/acs.orglett.6c03028',
     '10.1021/acs.joc.6c00852',
-    '10.1021/acs.orglett.6c02707',
-    '10.1126/sciadv.aeh8194'
+    '10.1021/acs.orglett.6c02707'
+    // sciadv.aeh8194 is now independently dated by NLM Epub on Aug 12,
+    // unlike these ACS DOI, whose first-online dates remain unresolved.
   ])assert.equal(root.accepted.some(x=>x.doi===doi),false,
     'online-first provenance disagreement must not be silently admitted');
 });
@@ -557,7 +558,7 @@ test('Science Advances paper Epub or ArticleDate prevails over distinct issue pu
   assert.equal(zhtitles.size,3);
   assert.equal(root.pending.length,2);
   const heck=root.accepted.find(x=>x.doi==='10.1126/sciadv.aeh8194');
-  assert.match(heck.scopeAssessment.boundaryChallenge,/β-H/);
+  assert.match(heck.scopeAssessment.preparativeTransformation,/β-H/);
   const nhc=root.accepted.find(x=>x.doi==='10.1126/sciadv.aeg0999');
   assert.match(nhc.scopeAssessment.generalityEvidence,/70/);
   const telenzepine=root.accepted.find(x=>x.doi==='10.1126/sciadv.aeh2073');
