@@ -32,6 +32,24 @@ try{
     window.GM_xmlhttpRequest=options=>{
       window.__requests.push({method:options.method,url:options.url});
       const url=new URL(options.url),id='a'.repeat(64);
+      if(options.method==='GET'&&url.pathname==='/api/admin/historical-text/reports'){
+        const at=Date.now(),first=registry.articles[0].doi,second=registry.articles[1].doi;
+        const events=[
+          {doi:first,jobId:'hist_mock_capture_1',kind:'failure_checkpoint',
+            reasonCode:'page_http_error',stage:'publisher_page',httpStatus:403,
+            pageDoiVerified:true,evidenceChars:0,receivedAt:at-30},
+          {doi:first,jobId:'hist_mock_capture_1',kind:'final_result',
+            reasonCode:'page_http_error',stage:'publisher_page',httpStatus:403,
+            pageDoiVerified:true,evidenceChars:0,receivedAt:at-15},
+          {doi:second,jobId:'hist_mock_capture_2',kind:'final_result',
+            reasonCode:'license_not_verified',stage:'license',httpStatus:null,
+            pageDoiVerified:true,evidenceChars:0,receivedAt:at-5},
+        ];
+        queueMicrotask(()=>options.onload({status:200,
+          responseText:JSON.stringify({schemaVersion:'historical-text-diagnostic-v1',
+            count:events.length,hasMore:false,items:events})}));
+        return;
+      }
       if(options.method==='POST'&&url.pathname==='/api/admin/historical-text/reports'){
         const payload=JSON.parse(options.data);
         window.__postHeaders.push({auth:options.headers.authorization,
@@ -181,6 +199,15 @@ try{
   assert.ok((await page.locator('#osg-historical-batch').innerText())
     .includes('出版社标签页未回传'));
 
+  // Server response shows 3 events but only 2 DOI attempts, with HTTP proof.
+  await page.evaluate(()=>{window.__diagAuth=true;});
+  await page.getByRole('button',{name:'服务器报告'}).click();
+  await page.getByText(/服务器返回 3 条事件，归并 2 次尝试／2 篇 DOI/).waitFor({timeout:4000});
+  const serverSummaries=await page.locator('#osg-historical-batch details summary').allTextContents();
+  assert.equal(serverSummaries.length,2,'checkpoint+final for one job must appear as one attempt');
+  assert.ok(serverSummaries.some(x=>x.includes('HTTP 403')&&x.includes('最终结果')));
+  assert.ok(serverSummaries.some(x=>x.includes('HTTP 未知')&&x.includes('license_not_verified')));
+
   const pdfPage=await browser.newPage();
   await pdfPage.route('https://gallery.gczhouwld.com/**',route=>route.fulfill({
     status:200,contentType:'text/html',body:'<!doctype html><html><body><h1>PDF reader</h1></body></html>'
@@ -192,6 +219,6 @@ try{
   await pdfPage.close();
   console.log('HISTORICAL_TEXT_BATCH_BROWSER_PASS '+JSON.stringify({
     uniqueHistorical:2,filesSaved:status.state.saved,closed:status.closed,
-    publisherTabsForeground:false,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true
+    publisherTabsForeground:false,officialCatalogReads:status.requests.length,otherMediaRequests:0,repeatOpened:0,localSearch:true,pdfReaderOverlay:false,serverReceipts:2,unauthorizedOutboxRetained:true,localFailureDetails:true,serverAttemptGroups:2
   }));
 }finally{await browser.close();}

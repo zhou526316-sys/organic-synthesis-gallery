@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.2
+// @version      0.2.3
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -224,8 +224,12 @@
   const BATCH_MAX_RESPONSE_CHARS=350000;
   const BATCH_MIN_GAP_MS=2000;
   const BATCH_DOI_LIMIT=100000;
+  // Keep final-result classification aligned with Worker diagnostic reason enums.
+  // A genuine publisher 403/429 must not become 'invalid_response'.
   const BATCH_ERRORS=new Set(['doi_unverified','publisher_unreachable','page_unavailable',
-    'license_not_verified','body_missing','too_large','timeout','invalid_response','storage_failure',
+    'page_access_blocked','page_http_error','publisher_no_response',
+    'publisher_script_not_confirmed','license_not_verified','body_missing','too_large',
+    'timeout','invalid_response','storage_failure','local_storage_failed',
     'response_hash_mismatch','capture_failed','unsupported_publisher']);
   let batchActive=false,batchPaused=false,batchTab=null,batchStatus=null,batchRunId='',batchUi=null;
   let batchDiagBusy=false,batchDiagStarted=false;
@@ -408,12 +412,12 @@
     });
   }
   const BATCH_STATUS_LABELS={
-    saved_local:'已存入本机',license_not_verified:'未核实本文许可',
+    saved_local:'已存入本机',license_not_verified:'文章网页尚未识别到可验证许可（不代表无权阅读）',
     body_missing:'科学正文不足',doi_unverified:'出版社 DOI 不匹配',
     publisher_unreachable:'未能打开出版社页面',publisher_no_response:'出版社标签页未回传',
     timeout:'出版社页面无回执（原因未明）',page_unavailable:'文章页不可用',
-    page_access_blocked:'页面要求登录或人工验证',page_http_error:'已观察到页面 HTTP 错误',
-    too_large:'正文数据超过体积上限',invalid_response:'采集回执结构无效',
+    page_access_blocked:'检测到登录／人机验证页',page_http_error:'已观察到出版社页面 HTTP 错误',
+    too_large:'正文数据超过体积上限',invalid_response:'采集回执无法识别（与网页 HTTP 错误不同）',
     capture_failed:'正文提取异常',unsupported_publisher:'不支持该出版社页面',
     response_hash_mismatch:'正文来源哈希不一致',
     storage_failure:'本机数据库写入未完成',local_storage_failed:'本机存储不可用',
@@ -560,15 +564,19 @@
     if([403,429].includes(Number(prior.httpStatus||0)))return manualBlocked===true;
     return true;
   }
+  function batchNormalizedStatus(raw){
+    return BATCH_ERRORS.has(String(raw||''))?String(raw):'invalid_response';
+  }
   function batchStageForStatus(status){
     const code=String(status||'');
     if(code==='license_not_verified')return 'license';
     if(code==='body_missing'||code==='capture_failed'||code==='too_large')return 'body_extract';
     if(code==='doi_unverified')return 'publisher_doi';
+    if(['page_http_error','page_access_blocked','page_unavailable'].includes(code))return 'publisher_page';
     if(code==='response_hash_mismatch')return 'hash_verify';
     if(code==='storage_failure'||code==='local_storage_failed'||code==='saved_local')return 'local_store';
     if(code==='publisher_unreachable')return 'publisher_open';
-    if(code==='timeout'||code==='publisher_no_response'||code==='publisher_script_not_confirmed')
+    if(code==='timeout'||code==='publisher_no_response'||code==='publisher_script_not_confirmed'||code==='invalid_response')
       return 'publisher_wait';
     return 'finished';
   }
@@ -625,32 +633,80 @@
       row.append(link,details);area.append(row);
     }
   }
+  // Preserve checkpoints without making two events appear as two failed papers.
+  // The scope is one publisher attempt, uniquely keyed by DOI and task jobId.
+  function batchGroupServerEvents(items){
+    const groups=new Map();
+    for(const event of Array.isArray(items)?items:[]){
+      if(!event||typeof event!=='object'||!event.doi||!event.jobId)continue;
+      const key=String(event.doi)+'|'+String(event.jobId);
+      if(!groups.has(key))groups.set(key,{
+        doi:String(event.doi),jobId:String(event.jobId),events:[],display:null});
+      groups.get(key).events.push(event);
+    }
+    return [...groups.values()].map(group=>{
+      group.events.sort((a,b)=>Number(b.receivedAt||0)-Number(a.receivedAt||0));
+      // A final result, when present, supersedes interim publisher checkpoints.
+      group.display=group.events.find(e=>e.kind==='final_result')||group.events[0];
+      group.latestAt=Math.max(...group.events.map(x=>Number(x.receivedAt||0)));
+      return group;
+    }).sort((a,b)=>b.latestAt-a.latestAt);
+  }
   async function batchShowServerReports(area){
     const token=batchReportToken();
     if(!token){area.textContent='请先配置诊断上报密钥，服务器报告仅管理员可查。';return;}
     area.textContent='正在核对服务器记录…';
     try{
       const response=await batchHttpRequest({method:'GET',
-        url:BATCH_REPORT_ENDPOINT+'?limit=25',
+        url:BATCH_REPORT_ENDPOINT+'?limit=100',
         headers:{authorization:'Bearer '+token,accept:'application/json'}});
       const body=JSON.parse(String(response.responseText||'{}'));
       if(Number(response.status)!==200||!Array.isArray(body.items))
         throw Error('no_valid_read_receipt');
+      const groups=batchGroupServerEvents(body.items);
+      const uniqueDois=new Set(groups.map(x=>x.doi)).size;
       area.replaceChildren();
       const header=document.createElement('div');
-      header.textContent='服务器已保存 '+body.items.length+' 条最近记录（只读）';
+      header.textContent='服务器返回 '+body.items.length+' 条事件，归并 '+groups.length
+        +' 次尝试／'+uniqueDois+' 篇 DOI（仅最近100条，不是全库统计）';
       area.append(header);
-      for(const item of body.items){
-        const row=document.createElement('div');
-        row.style.cssText='padding:4px 0;border-top:1px solid #ddd';
-        row.textContent=String(item.doi||'')+' · '+batchDiagnosticLabel(item.reasonCode)
-          +' · '+String(item.stage||'')
-          +' · '+new Date(Number(item.receivedAt||0)).toLocaleString();
-        area.append(row);
+      for(const group of groups.slice(0,45)){
+        const event=group.display;
+        const wrapper=document.createElement('details');
+        wrapper.style.cssText='padding:5px 0;border-top:1px solid #ddd';
+        const heading=document.createElement('summary');
+        heading.style.cssText='cursor:pointer;word-break:break-word';
+        const code=String(event.reasonCode||'other');
+        heading.textContent=group.doi+' · '+batchDiagnosticLabel(code)
+          +' ['+code+'] · '+String(event.stage||'未知阶段')
+          +' · '+(Number.isInteger(event.httpStatus)?'HTTP '+event.httpStatus:'HTTP 未知')
+          +' · '+(event.kind==='final_result'?'最终结果':'中途检查点')
+          +' · '+new Date(group.latestAt).toLocaleString();
+        wrapper.append(heading);
+        const context=document.createElement('div');
+        context.textContent='尝试标识：'+group.jobId.slice(-12)
+          +' · 本次 '+group.events.length+' 条事件'
+          +' · DOI 已核验：'+(event.pageDoiVerified===true?'是':'否/未确认')
+          +' · 科学正文字符数：'+Number(event.evidenceChars||0);
+        wrapper.append(context);
+        for(const stage of group.events){
+          const line=document.createElement('div');
+          line.textContent='  '+(stage.kind==='final_result'?'最终':'检查点')+' · '
+            +batchDiagnosticLabel(stage.reasonCode)+' ['+String(stage.reasonCode)+']'
+            +' · '+String(stage.stage||'')
+            +' · '+(Number.isInteger(stage.httpStatus)?'HTTP '+stage.httpStatus:'HTTP 未知')
+            +' · '+new Date(Number(stage.receivedAt||0)).toLocaleString();
+          wrapper.append(line);
+        }
+        area.append(wrapper);
+      }
+      if(body.hasMore===true){
+        const more=document.createElement('div');
+        more.textContent='还有更早的事件未显示，请按 DOI 精准复查；当前不是全库日志。';
+        area.append(more);
       }
     }catch(_){area.textContent='暂时无法读取服务器报告；本机诊断不受影响。';}
   }
-
   function batchPanel(){
     if(document.getElementById('osg-historical-batch'))return null;
     const root=document.createElement('div');
@@ -698,7 +754,7 @@
       const progress=[s.state==='running'?'运行中':s.state==='paused'?'已暂停':s.state==='finished'?'本轮结束':'未启动',
         '已尝试 '+Number(s.attempted||0)+' / '+Number(s.total||0),
         '本机新增 '+Number(s.saved||0)+'；已存在 '+Number(s.existing||0),
-        '无权限/无许可 '+Number(s.rightsPending||0)+'；其他受阻 '+Number(s.failed||0),
+        '许可待核实 '+Number(s.rightsPending||0)+'；其他受阻 '+Number(s.failed||0),
         s.currentStage?'当前阶段：'+s.currentStage:'',
         s.lastDoi?'当前/最近：'+s.lastDoi:'',
         s.lastError?'本地错误：'+String(s.lastError).slice(0,85):''].filter(Boolean);
@@ -876,7 +932,7 @@
         }
         if(result.status==='paused')break;
         attempted++;
-        let status=BATCH_ERRORS.has(result.status)?result.status:'invalid_response';
+        let status=batchNormalizedStatus(result.status);
         const evidenceMeta={pageDoiVerified:result.pageDoiVerified===true,
           sectionCount:Number(result.sectionCount||0),evidenceChars:Number(result.evidenceChars||0),
           httpStatus:Number(result.httpStatus||0)||null};
@@ -944,6 +1000,48 @@
       batchPaused=false;
     }
   }
+  // Wait for relevant DOM hydration, not a long fixed sleep or blind 24s timeout.
+  // No extra article requests are made. This helps dynamic publishers while
+  // allowing a stable, fully loaded page to fail quickly if permission is absent.
+  function batchAwaitPublisherDomChange(root,maxMs=420){
+    const delay=Math.max(100,Math.min(650,Number(maxMs)||420));
+    if(typeof MutationObserver!=='function'||!document.documentElement)
+      return batchWait(delay);
+    return new Promise(resolve=>{
+      let ended=false,obs,timeout;
+      const finish=()=>{
+        if(ended)return;
+        ended=true;
+        try{obs?.disconnect();}catch(_){}
+        clearTimeout(timeout);resolve();
+      };
+      try{
+        obs=new MutationObserver(records=>{
+          if(records.some(r=>r.type==='childList'||r.type==='characterData'
+            ||r.attributeName==='href'||r.attributeName==='content'))finish();
+        });
+        // Licence can appear in metadata or within the article legal notice.
+        obs.observe(document.head||document.documentElement,{
+          attributes:true,attributeFilter:['href','content'],childList:true,subtree:false
+        });
+        if(root)obs.observe(root,{childList:true,subtree:true,characterData:true,
+          attributes:true,attributeFilter:['href','content']});
+        else obs.observe(document.documentElement,{childList:true,subtree:true});
+      }catch(_){finish();return;}
+      timeout=setTimeout(finish,delay);
+    });
+  }
+  function batchPublisherPageBlocked(){
+    const sample=(String(document.title||'')+' '+String(document.body?.innerText||'').slice(0,500))
+      .toLowerCase();
+    return /access denied|verify you are human|captcha|log in to (?:continue|access)|institutional sign in|challenge required|sign in to continue|automated requests blocked/i.test(sample);
+  }
+  function batchArticlePageReady(root){
+    if(!root||document.readyState==='loading')return false;
+    try{return root.querySelectorAll('h2,h3,p').length>=2;}
+    catch(_){return false;}
+  }
+
   async function batchWorker(){
     if(typeof GM_getValue!=='function')return;
     const job=GM_getValue(BATCH_JOB,null);
@@ -976,45 +1074,69 @@
     // active tab is DOI-bound and only the explicitly started, live job may run.
     const fragment=/^#gallery-historical-job=([a-f0-9]{24})$/.exec(location.hash||'');
     if(fragment&&fragment[1]!==job.token)return;
-    let doi=pageDoi(),capture=null,reason='';
+    let doi=pageDoi(),capture=null;
+    // Unrelated tabs must not report into an active historical attempt.
+    if(doi&&doi!==job.doi)return;
+    if(!doi&&!fragment)return;
     reportStage('publisher_page');
     if([403,429].includes(observedPageHttpStatus())){
       storeResult({status:'page_http_error',stage:'publisher_page'});return;
     }
-    // Other article tabs must never claim the queue's response slot.
-    if(doi&&doi!==job.doi)return;
-    if(!doi&&!fragment)return;
-    for(let i=0;i<8;i++){
+    const begun=Date.now(),maxProbeMs=3200;
+    let sawArticle=false,sawLicense=false,unchangedReady=0;
+    let previousState='';
+    while(Date.now()-begun<=maxProbeMs&&Date.now()<job.expiresAt){
+      doi=pageDoi();
       if(doi&&doi!==job.doi)return;
       if(doi===job.doi){
         verified=true;reportStage('publisher_doi');
+        if(batchPublisherPageBlocked()){
+          storeResult({status:'page_access_blocked',stage:'publisher_page'});return;
+        }
         const root=document.querySelector('main article, article, main, [role="main"]');
+        const ready=batchArticlePageReady(root);
+        if(ready)sawArticle=true;
         const license=batchLicenseEvidence(root);
         reportStage('license');
         if(license){
+          sawLicense=true;
           reportStage('body_extract');
           try{
             capture=gather();
-            sectionCount=capture.sections.length;
-            evidenceChars=capture.characterCount;
+            sectionCount=capture.sections.length;evidenceChars=capture.characterCount;
             if(capture.characterCount>=250)break;
-          }catch(_){reason='article_body_not_extracted';}
-        }else if(i>=2){
-          const hint=String(document.title||'')+' '+String(document.body?.innerText||'').slice(0,300);
-          if(/access denied|verify you are human|captcha|log in to (?:continue|access)|institutional sign in/i.test(hint))
-            storeResult({status:'page_access_blocked',stage:'publisher_page'});
-          else storeResult({status:'license_not_verified',stage:'license'});
-          return;
+          }catch(_){capture=null;}
+        }else if(ready){
+          // Distinguish a stable rendered article missing its licence tag from
+          // a still-hydrating article; no CC licence => no text persistence.
+          const signature=String(root?.querySelectorAll('h2,h3,p').length||0)
+            +':'+String(root?.querySelectorAll('section').length||0);
+          if(previousState===signature)unchangedReady++;
+          else unchangedReady=0;
+          previousState=signature;
+          if(unchangedReady>=1){
+            storeResult({status:'license_not_verified',stage:'license'});return;
+          }
         }
+        await batchAwaitPublisherDomChange(root,ready?420:320);
+      }else{
+        await batchAwaitPublisherDomChange(null,320);
       }
-      await batchWait(700);
-      doi=pageDoi();
     }
-    if(doi!==job.doi){storeResult({status:'doi_unverified',stage:'publisher_doi'});return;}
+    if(doi!==job.doi){
+      storeResult({status:'page_unavailable',stage:'publisher_page'});return;
+    }
     const root=document.querySelector('main article, article, main, [role="main"]');
+    if(!batchArticlePageReady(root)&&!sawArticle){
+      storeResult({status:'page_unavailable',stage:'publisher_page'});return;
+    }
     const license=batchLicenseEvidence(root);
-    if(!license){storeResult({status:'license_not_verified',stage:'license'});return;}
-    if(!capture){storeResult({status:'body_missing',stage:'body_extract'});return;}
+    if(!license){
+      storeResult({status:'license_not_verified',stage:'license'});return;
+    }
+    if(!capture){
+      storeResult({status:'body_missing',stage:'body_extract'});return;
+    }
     const verifiedScientificChars=capture.sections.filter(row=>
       ['results','mechanism','experimental'].includes(row.type))
       .reduce((total,row)=>total+String(row.text||'').length,0);

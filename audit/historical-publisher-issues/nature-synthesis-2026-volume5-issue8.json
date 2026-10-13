@@ -1,0 +1,163 @@
+{
+  "schemaVersion": "gallery-publisher-issue-research-reconciliation-v1",
+  "mode": "publisher_issue_review_source_only",
+  "checkedAt": "2026-10-13T02:21:43.097Z",
+  "publisher": "Springer Nature",
+  "journal": "Nature Synthesis",
+  "publisherIssuePage": "https://www.nature.com/natsynth/volumes/5/issues/8",
+  "publisherIssue": {
+    "volume": "5",
+    "issue": "8",
+    "displayMonth": "2026-08"
+  },
+  "publisherSection": "Research",
+  "issuePublisherResearchTitlesCaptured": true,
+  "publisherHtmlCryptographicSnapshotAvailable": false,
+  "publisherHtmlSnapNote": "Research section was inspected on live public publisher issue page; external HTML bytes not archived. Revise evidence if publisher changes the listing.",
+  "articleCountOnPublisherPage": 13,
+  "sourceSnapshots": [
+    {
+      "path": "audit/historical-staging/batches/2026-03-01_2026-03-31_nature-synthesis.json",
+      "gitBlobSha": "f9944fa5e49364304e8522bd4b3ff649031a89ce",
+      "sourceStatus": "source_enumeration_complete"
+    },
+    {
+      "path": "audit/historical-staging/batches/2026-04-01_2026-04-30_nature-synthesis.json",
+      "gitBlobSha": "f33e7060bb5b04a4305c2a1c374586ac39ff5f91",
+      "sourceStatus": "source_enumeration_complete"
+    }
+  ],
+  "researchArticles": [
+    {
+      "position": 1,
+      "doi": "10.1038/s44160-026-01044-1",
+      "title": "A synthetically tailored conjugated polymer for thermal and charge management in perovskite interfaces",
+      "firstOnlineDate": "2026-04-02",
+      "sourceBatchId": "2026-04-01_2026-04-30_nature-synthesis",
+      "sourceBatchSha": "f33e7060bb5b04a4305c2a1c374586ac39ff5f91"
+    },
+    {
+      "position": 2,
+      "doi": "10.1038/s44160-026-01023-6",
+      "title": "Peripheral aryl group transposition on pyridines using photoredox catalysis",
+      "firstOnlineDate": "2026-03-04",
+      "sourceBatchId": "2026-03-01_2026-03-31_nature-synthesis",
+      "sourceBatchSha": "f9944fa5e49364304e8522bd4b3ff649031a89ce"
+    },
+    {
+      "position": 3,
+      "doi": "10.1038/s44160-026-01026-3",
+      "title": "Ampere-level ammonia synthesis through grain boundary engineering",
+      "firstOnlineDate": "2026-03-18",
+      "sourceBatchId": "2026-03-01_2026-03-31_nature-synthesis",
+      "sourceBatchSha": "f9944fa5e49364304e8522bd4b3ff649031a89ce"
+    },
+    {
+      "position": 4,
+      "doi": "10.1038/s44160-026-01049-w",
+      "title": "A strained bridgehead unsaturated bond between tricoordinate and pentacoordinate boron",
+      "firstOnlineDate": "2026-04-16",
+      "sourceBatchId": "2026-04-01_2026-04-30_nature-synthesis",
+      "sourceBatchSha": "f33e7060bb5b04a4305c2a1c374586ac39ff5f91"
+    },
+    {
+      "position": 5,
+      "doi": "10.1038/s44160-026-01042-3",
+      "title": "Taming distonic radical cations for precise γ-C–H functionalization of alkylamines",
+      "firstOnlineDate": "2026-04-14",
+      "sourceBatchId": "2026-04-01_2026-04-30_nature-synthesis",
+      "sourceBatchSha": "f33e7060bb5b04a4305c2a1c374586ac39ff5f91"
+    },
+    {
+      "position": 6,
+      "doi": "10.1038/s44160-026-01019-2",
+      "title": "Single-step synthesis of delaminated MXenes in deep eutectic solvents",
+      "firstOnlineDate": "2026-03-11",
+      "sourceBatchId": "2026-03-01_2026-03-31_nature-synthesis",
+      "sourceBatchSha": "f9944fa5e49364304e8522bd4b3ff649031a89ce"
+    },
+    {
+      "position": 7,
+      "doi": "10.1038/s44160-026-01035-2",
+      "title": "Late-stage synthesis of C4-fluorinated and C4-trifluoromethylaminated pyridines",
+      "firstOnlineDate": "2026-03-24",
+      "sourceBatchId": "2026-03-01_2026-03-31_nature-synthesis",
+      "sourceBatchSha": "f9944fa5e49364304e8522bd4b3ff649031a89ce"
+    },
+    {
+      "position": 8,
+      "doi": "10.1038/s44160-026-01036-1",
+      "title": "Reversing the reduction sequence of aldehydes and nitriles for electrochemical C–N coupling",
+      "firstOnlineDate": "2026-03-19",
+      "sourceBatchId": "2026-03-01_2026-03-31_nature-synthesis",
+      "sourceBatchSha": "f9944fa5e49364304e8522bd4b3ff649031a89ce"
+    },
+    {
+      "position": 9,
+      "doi": "10.1038/s44160-026-01037-0",
+      "title": "Machine learning-accelerated discovery of covalent organic frameworks for hydrogen peroxide photosynthesis",
+      "firstOnlineDate": "2026-03-25",
+      "sourceBatchId": "2026-03-01_2026-03-31_nature-synthesis",
+      "sourceBatchSha": "f9944fa5e49364304e8522bd4b3ff649031a89ce"
+    },
+    {
+      "position": 10,
+      "doi": "10.1038/s44160-026-01041-4",
+      "title": "Exciton diffusion beyond 2 μm enabled by maximum symmetry in two-dimensional perovskites",
+      "firstOnlineDate": "2026-04-02",
+      "sourceBatchId": "2026-04-01_2026-04-30_nature-synthesis",
+      "sourceBatchSha": "f33e7060bb5b04a4305c2a1c374586ac39ff5f91"
+    },
+    {
+      "position": 11,
+      "doi": "10.1038/s44160-026-01046-z",
+      "title": "Regio-orthogonal single N-atom insertion into indoles via NO translocation",
+      "firstOnlineDate": "2026-04-28",
+      "sourceBatchId": "2026-04-01_2026-04-30_nature-synthesis",
+      "sourceBatchSha": "f33e7060bb5b04a4305c2a1c374586ac39ff5f91"
+    },
+    {
+      "position": 12,
+      "doi": "10.1038/s44160-026-01045-0",
+      "title": "Thiophene-based photocatalyst for exciplex-mediated singlet oxygen generation and H2O2 production",
+      "firstOnlineDate": "2026-04-07",
+      "sourceBatchId": "2026-04-01_2026-04-30_nature-synthesis",
+      "sourceBatchSha": "f33e7060bb5b04a4305c2a1c374586ac39ff5f91"
+    },
+    {
+      "position": 13,
+      "doi": "10.1038/s44160-026-01047-y",
+      "title": "Direct electrochemical sulfide oxidation to trisulfide and tetrasulfide reagents by in situ selective capturing",
+      "firstOnlineDate": "2026-04-14",
+      "sourceBatchId": "2026-04-01_2026-04-30_nature-synthesis",
+      "sourceBatchSha": "f33e7060bb5b04a4305c2a1c374586ac39ff5f91"
+    }
+  ],
+  "excludedOtherIssueContent": [
+    {
+      "doi": "10.1038/s44160-026-01051-2",
+      "publisherSection": "News & Views",
+      "reason": "commentary on a research article, not a Research article"
+    },
+    {
+      "doi": "10.1038/s44160-026-01056-x",
+      "publisherSection": "Research Briefings",
+      "reason": "short synopsis, not the primary Research article"
+    },
+    {
+      "doi": "10.1038/s44160-026-01063-y",
+      "publisherSection": "Amendments & Corrections",
+      "reason": "publisher correction, not original Research"
+    }
+  ],
+  "policy": {
+    "articleOnlineDateNotIssueMonth": true,
+    "sourceApiCoverageIsNotAllIssueSections": true,
+    "notAPublisherLicensingStatement": true,
+    "noRawAbstractBodyImagesOrPdfCopied": true,
+    "only13ResearchArticlesChecked": true,
+    "notProofOfWhole16JournalArchive": true,
+    "noAutomaticScopeInclusion": true,
+    "productionChanges": false
+  }
+}
