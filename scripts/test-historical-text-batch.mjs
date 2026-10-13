@@ -5,12 +5,13 @@ import {webcrypto} from 'node:crypto';
 import vm from 'node:vm';
 
 const original=await readFile('public/gallery-historical-text-pilot.user.js','utf8');
-assert.match(original,/\/\/ @version\s+0\.2\.4/);
-assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.4'/);
+assert.match(original,/\/\/ @version\s+0\.2\.5/);
+assert.match(original,/const BATCH_SCRIPT_VERSION='0\.2\.5'/);
+assert.match(original,/const BATCH_CAPTURE_REVISION='historic-body-science-v025'/);
 assert.match(original,/scriptVersion:BATCH_SCRIPT_VERSION/);
 const anchor="  if(location.hostname==='gallery.gczhouwld.com'){";
 assert.ok(original.includes(anchor));
-const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents,batchSelectCandidates};\n"+anchor);
+const source=original.replace(anchor,"  globalThis.__batchTest={batchHistoricalPapers,batchLicenseEvidence,batchWorker,batchLoadCanonicalCatalog,batchRetryAllowed,batchStageForStatus,batchNormalizedStatus,batchGroupServerEvents,batchSelectCandidates,batchCoverageSummary,batchLocalSearchTerms,batchLocalEvidenceMatch};\n"+anchor);
 const DOI='10.1021/jacs.6c08636',TOKEN='a'.repeat(24),RUN='b'.repeat(24);
 function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi=DOI,abstractOnly=false,rightsNotice=false,navigationStatus=null,licenseAfter=0,readyAfter=0,pageTitle='',acsNotice='',acsNoticeOutside=false}={}){
   const values=new Map([['gallery-historical-text-batch-v2:job',{
@@ -36,7 +37,7 @@ function fixture({license='https://creativecommons.org/licenses/by/4.0/',pageDoi
   const figure={textContent:'Scheme 1. Photoredox reaction mechanism',id:'',className:'',parentElement:footer,closest(){return null;}};
   const table={textContent:'Table 1. Reaction optimization data',id:'',className:'',parentElement:footer,closest(){return null;}};
   const root={querySelectorAll(selector){
-    if(selector==='h2,h3,p')return nodes;
+    if(selector==='h2,h3,h4,p')return nodes;
     if(selector.startsWith('figure figcaption'))return [figure];
     if(selector==='table')return [table];
     if(selector==='p,span,small,div')return acsNotice?[copyrightNode]:[];
@@ -242,6 +243,54 @@ test('ACS licence review samples at most ten genuine prior blocks, not the full 
   assert.ok(result.every(p=>p.doi.startsWith('10.1021/')&&p.doi!==papers[0].doi&&p.doi!==papers[2].doi));
   assert.equal(api.batchSelectCandidates(papers,new Set(),[],true,'blocked').length,0);
   assert.equal(api.batchSelectCandidates(papers,new Set(),[],false,'all').length,papers.length);
+});
+test('old DOI-verified ambiguous licensing/body is rechecked exactly once after parser upgrade',()=>{
+  const api=fixture().context.__batchTest;
+  const prior={doi:DOI,status:'license_not_verified',pageDoiVerified:true,captureRevision:'old'};
+  assert.equal(api.batchRetryAllowed(prior,false),true);
+  assert.equal(api.batchRetryAllowed({...prior,captureRevision:'historic-body-science-v025'},false),false);
+  assert.equal(api.batchRetryAllowed({...prior,status:'body_missing',captureRevision:'old'},false),true);
+  assert.equal(api.batchRetryAllowed({...prior,status:'page_access_blocked'},false),false);
+  assert.equal(api.batchRetryAllowed({...prior,httpStatus:403},false),false);
+  assert.equal(api.batchRetryAllowed({...prior,httpStatus:429},false),false);
+  const papers=[{doi:DOI},{doi:'10.1021/acs.joc.other'}];
+  const chosen=api.batchSelectCandidates(papers,new Set(),[prior],false,'all');
+  assert.equal(chosen.length,2,'previous rights unknown and never-attempted both remain in corpus sweep');
+});
+test('full inventory reports actual formal DOI, saved science, unresolved rights and never-attempted separately',()=>{
+  const api=fixture().context.__batchTest;
+  const catalog={pairedCaptureRegistry:true,webpageDoiCount:4,formalCount:6,articles:[
+    {doi:DOI,date:'2026-09-01',journal:'JACS'},
+    {doi:'10.1021/jacs.other1',date:'2026-09-02',journal:'JACS'},
+    {doi:'10.1021/jacs.other2',date:'2026-09-03',journal:'JACS'},
+    {doi:'10.1021/jacs.undated',date:'',journal:'JACS'}
+  ]};
+  const rows=[{doi:'10.1021/jacs.other1',status:'license_not_verified',pageDoiVerified:true}];
+  const c=api.batchCoverageSummary(catalog,[DOI],rows);
+  assert.equal(c.formalDois,6);
+  assert.equal(c.historicalWithVerifiedDate,3);
+  assert.equal(c.historicalWithoutVerifiedDate,1);
+  assert.equal(c.savedLocal,1);
+  assert.equal(c.licensePending,1);
+  assert.equal(c.neverAttempted,1);
+  assert.equal(c.parserRecheckEligible,1);
+  assert.equal(c.scheduledByNormalBatch,2);
+});
+test('local body search includes core chapters captions and tables, not only first 20',()=>{
+  const api=fixture().context.__batchTest;
+  assert.ok(api.batchLocalSearchTerms('LMCT').includes('ligand-to-metal charge transfer'));
+  const p={doi:DOI,sections:[
+    {type:'introduction',heading:'Background',text:'LMCT was discussed in prior work.'},
+    {type:'mechanism',heading:'Mechanistic Studies',text:'The ligand-to-metal charge transfer is established by spectroscopy.'}
+  ],captions:[{label:'Scheme 2',text:'LMCT mechanism'}],tables:[{label:'Table 1',text:'LMCT control'}]};
+  const chosen=api.batchLocalEvidenceMatch(p,api.batchLocalSearchTerms('LMCT'));
+  assert.equal(chosen.type,'mechanism');
+  assert.equal(chosen.kind,'正文');
+  const cap=api.batchLocalEvidenceMatch({...p,sections:[]},['lmct']);
+  assert.equal(cap.kind,'图注');
+  const tab=api.batchLocalEvidenceMatch({...p,sections:[],captions:[]},['lmct']);
+  assert.equal(tab.kind,'表格');
+  assert.equal(api.batchLocalEvidenceMatch({...p,sections:[{type:'results',text:'Hydrogenation only.'}],captions:[],tables:[]},['lmct']),null);
 });
 test('publisher evidence HTTP 403 is recorded only from observed navigation status',async()=>{
   const noEvidence=fixture({navigationStatus:null});
