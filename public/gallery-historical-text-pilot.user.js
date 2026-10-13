@@ -809,7 +809,7 @@
       if(progress?.runId===job.runId&&progress?.token===job.token
          &&progressIdentity!==lastSeenStage){
         lastSeenStage=progressIdentity;
-        batchStatusWrite({currentStage:lastSeenStage});
+        batchStatusWrite({currentStage:progress.stage});
         if(progress.failed===true&&progress.reasonCode){
           batchQueueDiagnostic(job,'failure_checkpoint','failed',
             batchStageForStatus(progress.reasonCode),progress.reasonCode,{
@@ -1005,10 +1005,10 @@
     const license=batchLicenseEvidence(root);
     if(!license){storeResult({status:'license_not_verified',stage:'license'});return;}
     if(!capture){storeResult({status:'body_missing',stage:'body_extract'});return;}
-    const evidenceChars=capture.sections.filter(row=>
+    const verifiedScientificChars=capture.sections.filter(row=>
       ['results','mechanism','experimental'].includes(row.type))
       .reduce((total,row)=>total+String(row.text||'').length,0);
-    if(evidenceChars<250){storeResult({status:'body_missing',stage:'body_extract'});return;}
+    if(verifiedScientificChars<250){storeResult({status:'body_missing',stage:'body_extract'});return;}
     const canonical=[...capture.sections.map(s=>s.heading+'\n'+s.text),
       ...capture.captions.map(s=>s.label+'\n'+s.text),
       ...capture.tables.map(s=>s.label+'\n'+s.text)].join('\n');
@@ -1030,10 +1030,10 @@
   }
 
   if(location.hostname==='gallery.gczhouwld.com'){
-    batchStartDiagnostics();
-    // Never overlay PDF readers, account pages or other Gallery tools.
+    // Historical upload sender and UI must not run on PDF or account pages.
     if(location.pathname==='/'||location.pathname==='/index.html'){
       batchUi=batchPanel();batchUi?.refresh();
+      batchStartDiagnostics();
     }
   }else{
     GM_registerMenuCommand('Gallery：本地导出此历史论文正文（手动）',()=>{void exportCurrent();});
