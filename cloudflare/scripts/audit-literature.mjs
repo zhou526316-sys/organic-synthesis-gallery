@@ -8,6 +8,7 @@ import { loadScopeCorrections, withScopeCorrections } from '../../scripts/lib/sc
 import { isStandaloneRepositoryDoi } from '../../scripts/lib/literature-doi-provenance.mjs';
 import { fetchOfficialPublisherFeeds, OFFICIAL_PUBLISHER_FEEDS } from '../../scripts/lib/publisher-feed-discovery.mjs';
 import { exclusionEvidenceRecheckReason } from '../../scripts/lib/literature-exclusion-recheck.mjs';
+import { isHighRelevanceCandidate } from '../../scripts/lib/literature-review-priority.mjs';
 import { publisherOnlyReviewEligible, exclusionRecheckBelongsToPrimaryWindow,
   buildUnverifiedPublisherBacklog, mergeHistoricalRecheckBacklog } from '../../scripts/lib/literature-review-queue-guard.mjs';
 import { fetchPublisherMetadataAbstract,publisherMetadataEntryUrl } from '../../scripts/lib/publisher-abstract-metadata.mjs';
@@ -407,19 +408,9 @@ async function fetchOpenAlex(journal) {
   return { candidates: [...map.values()], stats };
 }
 
-const synthRe = /\b(synthesi[sz]|synthetic|reaction|cataly|coupl|functionaliz|cycloadd|cyclization|annulation|dearomat|radical|photoredox|electrochem|asymmetric|enantio|stereoselect|boryl|silyl|arylat|alkylat|aminat|amidat|acylat|hydroamination|hydroalkylation|olefination|metathesis|rearrangement|decarbox|carboxyl|glycosyl|amination|cross-electrophile|skeletal edit|bond formation|substrate scope|late-stage)\b/i;
-const chemistryTopicRe = /(organic chemistry|synthetic chemistry|catalysis|stereochemistry|organometallic|photochemistry|chemical synthesis|organic synthesis)/i;
-const nonResearchRe = /\b(review|perspective|editorial|correction|retraction|news|commentary|protocol)\b/i;
-const strongNonSynthRe = /\b(patient|clinical|tumou?r|cancer|genome|transcriptome|neuron|mouse|mice|immune|battery|photovoltaic|semiconductor|geophysical|astronom|machine learning|neural network)\b/i;
-
-function retainForReview(c) {
-  const text = `${c.title || ''}\n${c.abstract || ''}\n${(c.topics || []).join(' ')}`;
-  if (nonResearchRe.test(c.type || '') || nonResearchRe.test(c.title || '')) return false;
-  if (synthRe.test(text)) return true;
-  if (chemistryTopicRe.test(text)) return true;
-  if (c.journal === 'Organic Letters' && !strongNonSynthRe.test(text)) return true;
-  return false;
-}
+// Ranking is never a DOI inclusion/exclusion filter. Real scientific scope is
+// decided by independent DOI-specific semantic review and evidence.
+const retainForReview = isHighRelevanceCandidate;
 
 function compactCandidate(c) {
   const journal = JOURNAL_BY_NAME.get(c.journal);
