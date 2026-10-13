@@ -1,7 +1,7 @@
 {
   "schemaVersion": "gallery-historical-scope-reviewed-pilot-v1",
   "mode": "scope_review_only_not_publication",
-  "generatedAt": "2026-10-13T12:03:54.692Z",
+  "generatedAt": "2026-10-13T13:04:06.991Z",
   "nextEligiblePublicationSlot": "2026-10-14T08:00:00+08:00",
   "scopeRulesVersion": "scope-2026-10-02-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
@@ -14,8 +14,8 @@
     "recordCount": 984
   },
   "summary": {
-    "checked": 70,
-    "include": 68,
+    "checked": 76,
+    "include": 74,
     "pending": 2,
     "published": 8,
     "sourceCollision": 0
@@ -4756,6 +4756,429 @@
         }
       ],
       "reviewRationaleSecondPass": "严格检查N–H烷基化是否只为药物前体简单保护基变化或构象测量：作者针对可翻转三环骨架通过催化不对称烷基化直接赋予分离稳定的固有手性，并展示目标药物，属于实质不对称合成策略。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03383",
+      "journal": "Organic Letters",
+      "title": "Divergent Total Synthesis of 17- nor -Excelsinidine and Geissoschizoline",
+      "titleZh": "17-去甲基依西西尼丁和吉索西佐林的分歧式全合成",
+      "date": "2026-09-07",
+      "authors": [
+        "Zhi-Qi Cao",
+        "Ya-Kui Sun",
+        "Hui Shao",
+        "Yu-Ming Zhao"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "37",
+        "pages": "11720-11725",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c03383"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以共同单萜吲哚生物碱中间体完成17-nor-excelsinidine及geissoschizoline两种目标天然产物全合成，另实现dehydrogeissoschizoline形式全合成，具明确完成路线的有机合成贡献。",
+      "evidenceBasis": "ACS原创Article或Letter的官方Article History核实Published Online 2026-09-07，原文DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03383；出版社原始期刊名Organic Letters、2026年卷28期37页11720-11725、作者与标题和历史Crossref/OpenAlex批次2026-09-01_2026-09-07_organic-letters对齐，冻结批次Git SHA 80aca4837373541c9ba22bdcae30cd0bd2f64511。合成实据：ACS官方摘要明确两种完成的天然产物全合成和一种形式全合成，故不要求方法学多底物表；避免把形式全合成误当第三种已完成全合成。。仅依公开官方摘要与书目信息；受限正文、SI和PDF均未抓取也不推断未报告实验条件。",
+      "challengeReason": "第二遍逐个区分17-nor-excelsinidine与geissoschizoline属于完成全合成，而dehydrogeissoschizoline仅形式全合成；不能因提到三种名字就称三种全合成。Mn(OAc)3串联与七步最长线性仅归于相应路线，不外推所有产品。",
+      "scopeAssessment": {
+        "primaryContribution": "以共同单萜吲哚生物碱中间体完成17-nor-excelsinidine及geissoschizoline两种目标天然产物全合成，另实现dehydrogeissoschizoline形式全合成，具明确完成路线的有机合成贡献。",
+        "preparativeTransformation": "17-nor-excelsinidine路线使用氧化环化及分子内N-烷基化；geissoschizoline路线通过Mn(OAc)3介导的氧化环化与骨架重组串联，最长线性7步。",
+        "generalityEvidence": "ACS官方摘要明确两种完成的天然产物全合成和一种形式全合成，故不要求方法学多底物表；避免把形式全合成误当第三种已完成全合成。",
+        "sourceEvidence": "ACS原创Article或Letter的官方Article History核实Published Online 2026-09-07，原文DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c03383；出版社原始期刊名Organic Letters、2026年卷28期37页11720-11725、作者与标题和历史Crossref/OpenAlex批次2026-09-01_2026-09-07_organic-letters对齐，冻结批次Git SHA 80aca4837373541c9ba22bdcae30cd0bd2f64511。合成实据：ACS官方摘要明确两种完成的天然产物全合成和一种形式全合成，故不要求方法学多底物表；避免把形式全合成误当第三种已完成全合成。。仅依公开官方摘要与书目信息；受限正文、SI和PDF均未抓取也不推断未报告实验条件。",
+        "boundaryChallenge": "若只继承此前中间体却没抵达终产物则不能纳入；ACS摘要确认两条全合成真实到达目标，另一个formal synthesis有不同完成层级。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03383",
+        "publisherOnlineDate": "2026-09-07",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_organic-letters",
+        "stageBatchSha": "80aca4837373541c9ba22bdcae30cd0bd2f64511",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Published_Online_plus_frozen_source_crosscheck",
+        "originalPublisherJournalName": "Organic Letters"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "以共同单萜吲哚生物碱中间体完成17-nor-excelsinidine及geissoschizoline两种目标天然产物全合成，另实现dehydrogeissoschizoline形式全合成，具明确完成路线的有机合成贡献。 17-nor-excelsinidine路线使用氧化环化及分子内N-烷基化；geissoschizoline路线通过Mn(OAc)3介导的氧化环化与骨架重组串联，最长线性7步。 ACS官方摘要明确两种完成的天然产物全合成和一种形式全合成，故不要求方法学多底物表；避免把形式全合成误当第三种已完成全合成。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍逐个区分17-nor-excelsinidine与geissoschizoline属于完成全合成，而dehydrogeissoschizoline仅形式全合成；不能因提到三种名字就称三种全合成。Mn(OAc)3串联与七步最长线性仅归于相应路线，不外推所有产品。"
+        }
+      ],
+      "reviewRationaleSecondPass": "若只继承此前中间体却没抵达终产物则不能纳入；ACS摘要确认两条全合成真实到达目标，另一个formal synthesis有不同完成层级。"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01571",
+      "journal": "JOC",
+      "title": "Total Synthesis and Biofilm Inhibitory Studies of Knightine Cembranoid Diterpenes",
+      "titleZh": "Knightol、Knightal和Knightol acetate西松烷二萜的首次全合成",
+      "date": "2026-08-24",
+      "authors": [
+        "Learnmore Jeremia",
+        "Elise L. Bezold",
+        "William M. Wuest"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "35",
+        "pages": "12120-12125",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01571"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "该论文从法呢醇合成珊瑚来源的knightol、knightal、knightol acetate三种西松烷二萜天然产物，目标物全合成是主体贡献，而非金黄色葡萄球菌生物膜活性检测。",
+      "evidenceBasis": "ACS原创Article或Letter的官方Article History核实Published Online 2026-08-24，原文DOI https://pubs.acs.org/doi/10.1021/acs.joc.6c01571；出版社原始期刊名The Journal of Organic Chemistry、2026年卷91期35页12120-12125、作者与标题和历史Crossref/OpenAlex批次2026-08-22_2026-08-31_joc对齐，冻结批次Git SHA 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a。合成实据：ACS JOC正式摘要明确使用first total synthesis描述这三个目标，路线两个关键步骤具化学制备实质；生物膜抑制活性仅适度，不等于临床有效抗菌药。。仅依公开官方摘要与书目信息；受限正文、SI和PDF均未抓取也不推断未报告实验条件。",
+      "challengeReason": "第二遍核实三种完成全合成的对象名称，避免将标题的Knightine错作单一结构；从farnesol、后期Shi环氧化及HWE大环化可支持合成贡献，但不能编造总收率、每个步骤ee或临床效力。",
+      "scopeAssessment": {
+        "primaryContribution": "该论文从法呢醇合成珊瑚来源的knightol、knightal、knightol acetate三种西松烷二萜天然产物，目标物全合成是主体贡献，而非金黄色葡萄球菌生物膜活性检测。",
+        "preparativeTransformation": "从farnesol开始组装碳骨架，后期使用Shi环氧化和倒数第二步Horner–Wadsworth–Emmons大环化，建立西松烷型大环结构并分别完成三种天然产物。",
+        "generalityEvidence": "ACS JOC正式摘要明确使用first total synthesis描述这三个目标，路线两个关键步骤具化学制备实质；生物膜抑制活性仅适度，不等于临床有效抗菌药。",
+        "sourceEvidence": "ACS原创Article或Letter的官方Article History核实Published Online 2026-08-24，原文DOI https://pubs.acs.org/doi/10.1021/acs.joc.6c01571；出版社原始期刊名The Journal of Organic Chemistry、2026年卷91期35页12120-12125、作者与标题和历史Crossref/OpenAlex批次2026-08-22_2026-08-31_joc对齐，冻结批次Git SHA 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a。合成实据：ACS JOC正式摘要明确使用first total synthesis描述这三个目标，路线两个关键步骤具化学制备实质；生物膜抑制活性仅适度，不等于临床有效抗菌药。。仅依公开官方摘要与书目信息；受限正文、SI和PDF均未抓取也不推断未报告实验条件。",
+        "boundaryChallenge": "审查是否只获得天然产物片段或药物活性数据：出版社列出最终完成knightol、knightal和knightol acetate且给出大环构建路线，符合全合成独立纳入条款。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01571",
+        "publisherOnlineDate": "2026-08-24",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Published_Online_plus_frozen_source_crosscheck",
+        "originalPublisherJournalName": "The Journal of Organic Chemistry"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "该论文从法呢醇合成珊瑚来源的knightol、knightal、knightol acetate三种西松烷二萜天然产物，目标物全合成是主体贡献，而非金黄色葡萄球菌生物膜活性检测。 从farnesol开始组装碳骨架，后期使用Shi环氧化和倒数第二步Horner–Wadsworth–Emmons大环化，建立西松烷型大环结构并分别完成三种天然产物。 ACS JOC正式摘要明确使用first total synthesis描述这三个目标，路线两个关键步骤具化学制备实质；生物膜抑制活性仅适度，不等于临床有效抗菌药。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍核实三种完成全合成的对象名称，避免将标题的Knightine错作单一结构；从farnesol、后期Shi环氧化及HWE大环化可支持合成贡献，但不能编造总收率、每个步骤ee或临床效力。"
+        }
+      ],
+      "reviewRationaleSecondPass": "审查是否只获得天然产物片段或药物活性数据：出版社列出最终完成knightol、knightal和knightol acetate且给出大环构建路线，符合全合成独立纳入条款。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02567",
+      "journal": "Organic Letters",
+      "title": "Palladium-Catalyzed Carbonylative Negishi-Type Coupling of Alkyl Zinc Reagents with Benzyl Bromides",
+      "titleZh": "钯催化苄基溴与烷基锌羰基化Negishi型偶联合成苄基烷基酮",
+      "date": "2026-07-29",
+      "authors": [
+        "Dmitrii V. Kalinin",
+        "Jakob B. Jeppesen",
+        "Trond Ulven"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "31",
+        "pages": "9973-9978",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02567"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "开发Pd催化两个C(sp3)构件——苄基溴与烷基有机锌——的羰基化Negishi型偶联，引入CO形成苄基烷基酮，是具有制备适用性的有机羰基化方法。",
+      "evidenceBasis": "ACS原创Article或Letter的官方Article History核实Published Online 2026-07-29，原文DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c02567；出版社原始期刊名Organic Letters、2026年卷28期31页9973-9978、作者与标题和历史Crossref/OpenAlex批次2026-07-22_2026-07-31_organic-letters对齐，冻结批次Git SHA 67f6960bccfa31a1d2477390309426061dc65563。合成实据：原始ACS摘要明确官能团耐受范围较广、常压CO和过量CO兼容、无需专门装置，得到苄基烷基酮系列；不虚构每个底物产率和具体规模。。仅依公开官方摘要与书目信息；受限正文、SI和PDF均未抓取也不推断未报告实验条件。",
+      "challengeReason": "第二遍严格避免把烷基锌写成第二个亲电试剂，或把外部CO气球误称CO2羰基化；产物为苄基烷基酮而非无羰基直接Negishi偶联，底物耐受与机理边界应保留。",
+      "scopeAssessment": {
+        "primaryContribution": "开发Pd催化两个C(sp3)构件——苄基溴与烷基有机锌——的羰基化Negishi型偶联，引入CO形成苄基烷基酮，是具有制备适用性的有机羰基化方法。",
+        "preparativeTransformation": "采用PEPPSI–IPr钯预催化剂、外部发生的常压CO气球体系，让苄基溴与烷基有机锌反应，形成苄基-CO-烷基酮羰基骨架，而不是简单不羰基化的C(sp3)–C(sp3)直接偶联。",
+        "generalityEvidence": "原始ACS摘要明确官能团耐受范围较广、常压CO和过量CO兼容、无需专门装置，得到苄基烷基酮系列；不虚构每个底物产率和具体规模。",
+        "sourceEvidence": "ACS原创Article或Letter的官方Article History核实Published Online 2026-07-29，原文DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c02567；出版社原始期刊名Organic Letters、2026年卷28期31页9973-9978、作者与标题和历史Crossref/OpenAlex批次2026-07-22_2026-07-31_organic-letters对齐，冻结批次Git SHA 67f6960bccfa31a1d2477390309426061dc65563。合成实据：原始ACS摘要明确官能团耐受范围较广、常压CO和过量CO兼容、无需专门装置，得到苄基烷基酮系列；不虚构每个底物产率和具体规模。。仅依公开官方摘要与书目信息；受限正文、SI和PDF均未抓取也不推断未报告实验条件。",
+        "boundaryChallenge": "逆向检验是否只是使用不同CO气源的旧反应：苄基溴与烷基锌的sp3/sp3组合在CO插入条件下构筑酮键，有可分离合成产物和官能团范围，满足方法学。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02567",
+        "publisherOnlineDate": "2026-07-29",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-22_2026-07-31_organic-letters",
+        "stageBatchSha": "67f6960bccfa31a1d2477390309426061dc65563",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Published_Online_plus_frozen_source_crosscheck",
+        "originalPublisherJournalName": "Organic Letters"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "开发Pd催化两个C(sp3)构件——苄基溴与烷基有机锌——的羰基化Negishi型偶联，引入CO形成苄基烷基酮，是具有制备适用性的有机羰基化方法。 采用PEPPSI–IPr钯预催化剂、外部发生的常压CO气球体系，让苄基溴与烷基有机锌反应，形成苄基-CO-烷基酮羰基骨架，而不是简单不羰基化的C(sp3)–C(sp3)直接偶联。 原始ACS摘要明确官能团耐受范围较广、常压CO和过量CO兼容、无需专门装置，得到苄基烷基酮系列；不虚构每个底物产率和具体规模。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍严格避免把烷基锌写成第二个亲电试剂，或把外部CO气球误称CO2羰基化；产物为苄基烷基酮而非无羰基直接Negishi偶联，底物耐受与机理边界应保留。"
+        }
+      ],
+      "reviewRationaleSecondPass": "逆向检验是否只是使用不同CO气源的旧反应：苄基溴与烷基锌的sp3/sp3组合在CO插入条件下构筑酮键，有可分离合成产物和官能团范围，满足方法学。"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01578",
+      "journal": "JOC",
+      "title": "Chiral Macrocyclic Borane-Catalyzed Asymmetric Hydrogenation of 2-Substituted Quinolines",
+      "titleZh": "手性大环硼烷催化2-取代喹啉无金属不对称氢化",
+      "date": "2026-08-26",
+      "authors": [
+        "Ru Zhang",
+        "Xiangqing Feng",
+        "Haifeng Du"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "91",
+        "issue": "36",
+        "pages": "12462-12465",
+        "articleNumber": "",
+        "doi": "10.1021/acs.joc.6c01578"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "以手性大环硼烷催化剂实现金属自由的不对称氢化，将2-烷基喹啉转化为C2手性四氢喹啉；主要贡献是制备手性氮杂饱和杂环。",
+      "evidenceBasis": "ACS原创Article或Letter的官方Article History核实Published Online 2026-08-26，原文DOI https://pubs.acs.org/doi/10.1021/acs.joc.6c01578；出版社原始期刊名The Journal of Organic Chemistry、2026年卷91期36页12462-12465、作者与标题和历史Crossref/OpenAlex批次2026-08-22_2026-08-31_joc对齐，冻结批次Git SHA 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a。合成实据：ACS JOC摘要给出2-烷基喹啉87–98%收率及79–96%ee的报告区间，也明确2-苯基喹啉只有中等立体选择性，不能称所有芳基喹啉均高ee。。仅依公开官方摘要与书目信息；受限正文、SI和PDF均未抓取也不推断未报告实验条件。",
+      "challengeReason": "第二遍独立检查87–98%产率和79–96%ee只对应报道的2-烷基喹啉，2-苯基喹啉是限制项；无金属硼烷催化不可错写为Pd/Ni催化，亦不将催化机理补为直接观察事实。",
+      "scopeAssessment": {
+        "primaryContribution": "以手性大环硼烷催化剂实现金属自由的不对称氢化，将2-烷基喹啉转化为C2手性四氢喹啉；主要贡献是制备手性氮杂饱和杂环。",
+        "preparativeTransformation": "2-取代喹啉的含氮芳香杂环被选择性氢化，生成对映富集2-取代四氢喹啉；手性大环硼烷相较无环对照具有更高活性和对映选择性。",
+        "generalityEvidence": "ACS JOC摘要给出2-烷基喹啉87–98%收率及79–96%ee的报告区间，也明确2-苯基喹啉只有中等立体选择性，不能称所有芳基喹啉均高ee。",
+        "sourceEvidence": "ACS原创Article或Letter的官方Article History核实Published Online 2026-08-26，原文DOI https://pubs.acs.org/doi/10.1021/acs.joc.6c01578；出版社原始期刊名The Journal of Organic Chemistry、2026年卷91期36页12462-12465、作者与标题和历史Crossref/OpenAlex批次2026-08-22_2026-08-31_joc对齐，冻结批次Git SHA 30ad0c3b51b48a210e90d8fe19b56412b1c94f7a。合成实据：ACS JOC摘要给出2-烷基喹啉87–98%收率及79–96%ee的报告区间，也明确2-苯基喹啉只有中等立体选择性，不能称所有芳基喹啉均高ee。。仅依公开官方摘要与书目信息；受限正文、SI和PDF均未抓取也不推断未报告实验条件。",
+        "boundaryChallenge": "质疑这是否仅是制备一种手性硼烷催化剂、没有有机底物范围：出版商摘要给出多种2-烷基喹啉实际产物及收率/ee区间，合成贡献成立。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.joc.6c01578",
+        "publisherOnlineDate": "2026-08-26",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-22_2026-08-31_joc",
+        "stageBatchSha": "30ad0c3b51b48a210e90d8fe19b56412b1c94f7a",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Published_Online_plus_frozen_source_crosscheck",
+        "originalPublisherJournalName": "The Journal of Organic Chemistry"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "以手性大环硼烷催化剂实现金属自由的不对称氢化，将2-烷基喹啉转化为C2手性四氢喹啉；主要贡献是制备手性氮杂饱和杂环。 2-取代喹啉的含氮芳香杂环被选择性氢化，生成对映富集2-取代四氢喹啉；手性大环硼烷相较无环对照具有更高活性和对映选择性。 ACS JOC摘要给出2-烷基喹啉87–98%收率及79–96%ee的报告区间，也明确2-苯基喹啉只有中等立体选择性，不能称所有芳基喹啉均高ee。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍独立检查87–98%产率和79–96%ee只对应报道的2-烷基喹啉，2-苯基喹啉是限制项；无金属硼烷催化不可错写为Pd/Ni催化，亦不将催化机理补为直接观察事实。"
+        }
+      ],
+      "reviewRationaleSecondPass": "质疑这是否仅是制备一种手性硼烷催化剂、没有有机底物范围：出版商摘要给出多种2-烷基喹啉实际产物及收率/ee区间，合成贡献成立。"
+    },
+    {
+      "doi": "10.1021/acscatal.6c03374",
+      "journal": "ACS Catalysis",
+      "title": "Diastereo- and Enantioselective Rh-Catalyzed Si−H Insertion of N -Triftosylhydrazones: From Carbon to Silicon-Stereogenic Centers",
+      "titleZh": "铑催化磺酰腙不对称Si–H插入构建碳中心和硅中心手性",
+      "date": "2026-07-16",
+      "authors": [
+        "Xin-Long Yu",
+        "An-Jiu Wen",
+        "Zheng Xu",
+        "Jian Cao",
+        "Samuel Couve-Bonnaire",
+        "Jean-Philippe Bouillon",
+        "Li-Wen Xu"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "16",
+        "issue": "15",
+        "pages": "14818-14830",
+        "articleNumber": "",
+        "doi": "10.1021/acscatal.6c03374"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "利用N-Tfs腙原位生成铑卡宾，并与外消旋硅中心单氢硅烷发生不对称Si–H插入及动力学拆分，在有机硅产物中建立碳中心和硅中心双重立体信息。",
+      "evidenceBasis": "ACS原创Article或Letter的官方Article History核实Published Online 2026-07-16，原文DOI https://pubs.acs.org/doi/10.1021/acscatal.6c03374；出版社原始期刊名ACS Catalysis、2026年卷16期15页14818-14830、作者与标题和历史Crossref/OpenAlex批次2026-07-15_2026-07-21_acs-catalysis对齐，冻结批次Git SHA e53414018aac39faa8ff9f6cbae508d8783e963d。合成实据：ACS Catalysis摘要报道动力学拆分选择性因子最高s=397，且明确邻CF3效应与四芳香环手性二铑催化剂π壁相互作用模型；上限和计算机理不能推广为每个底物已证实。。仅依公开官方摘要与书目信息；受限正文、SI和PDF均未抓取也不推断未报告实验条件。",
+      "challengeReason": "第二遍区分通过卡宾插入建立碳立体中心与通过动力学拆分富集已有外消旋Si中心的两个过程；最高s=397非普遍保证，芳香π相互作用为作者机理证据支持模型，不宜宣称唯一机制。",
+      "scopeAssessment": {
+        "primaryContribution": "利用N-Tfs腙原位生成铑卡宾，并与外消旋硅中心单氢硅烷发生不对称Si–H插入及动力学拆分，在有机硅产物中建立碳中心和硅中心双重立体信息。",
+        "preparativeTransformation": "N-(邻三氟甲基芳基磺酰)腙经Rh催化生成卡宾，对具有不同硅取代基的Si–H键插入并形成C–Si键；手性铑催化剂还对外消旋硅手性单氢硅烷进行差速动力学拆分。",
+        "generalityEvidence": "ACS Catalysis摘要报道动力学拆分选择性因子最高s=397，且明确邻CF3效应与四芳香环手性二铑催化剂π壁相互作用模型；上限和计算机理不能推广为每个底物已证实。",
+        "sourceEvidence": "ACS原创Article或Letter的官方Article History核实Published Online 2026-07-16，原文DOI https://pubs.acs.org/doi/10.1021/acscatal.6c03374；出版社原始期刊名ACS Catalysis、2026年卷16期15页14818-14830、作者与标题和历史Crossref/OpenAlex批次2026-07-15_2026-07-21_acs-catalysis对齐，冻结批次Git SHA e53414018aac39faa8ff9f6cbae508d8783e963d。合成实据：ACS Catalysis摘要报道动力学拆分选择性因子最高s=397，且明确邻CF3效应与四芳香环手性二铑催化剂π壁相互作用模型；上限和计算机理不能推广为每个底物已证实。。仅依公开官方摘要与书目信息；受限正文、SI和PDF均未抓取也不推断未报告实验条件。",
+        "boundaryChallenge": "反向审查研究是否仅讨论弱芳香相互作用的理论：实际由腙与氢硅烷制得含C和Si两个立体中心的硅烷，并通过动力学拆分建立制备价值。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acscatal.6c03374",
+        "publisherOnlineDate": "2026-07-16",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-15_2026-07-21_acs-catalysis",
+        "stageBatchSha": "e53414018aac39faa8ff9f6cbae508d8783e963d",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Published_Online_plus_frozen_source_crosscheck",
+        "originalPublisherJournalName": "ACS Catalysis"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "利用N-Tfs腙原位生成铑卡宾，并与外消旋硅中心单氢硅烷发生不对称Si–H插入及动力学拆分，在有机硅产物中建立碳中心和硅中心双重立体信息。 N-(邻三氟甲基芳基磺酰)腙经Rh催化生成卡宾，对具有不同硅取代基的Si–H键插入并形成C–Si键；手性铑催化剂还对外消旋硅手性单氢硅烷进行差速动力学拆分。 ACS Catalysis摘要报道动力学拆分选择性因子最高s=397，且明确邻CF3效应与四芳香环手性二铑催化剂π壁相互作用模型；上限和计算机理不能推广为每个底物已证实。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍区分通过卡宾插入建立碳立体中心与通过动力学拆分富集已有外消旋Si中心的两个过程；最高s=397非普遍保证，芳香π相互作用为作者机理证据支持模型，不宜宣称唯一机制。"
+        }
+      ],
+      "reviewRationaleSecondPass": "反向审查研究是否仅讨论弱芳香相互作用的理论：实际由腙与氢硅烷制得含C和Si两个立体中心的硅烷，并通过动力学拆分建立制备价值。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02816",
+      "journal": "Organic Letters",
+      "title": "Catalytic Asymmetric Dearomative Inverse-Electron-Demand Azo-Diels–Alder Reaction of Azoindoles with 2-Vinylindoles",
+      "titleZh": "偶氮吲哚与2-乙烯基吲哚不对称去芳构化逆电子需求偶氮Diels–Alder反应",
+      "date": "2026-09-02",
+      "authors": [
+        "Shen-Xu Xu",
+        "Yin Zhang",
+        "Jia-Yu Ding",
+        "Ke Chen",
+        "Xiang Wang",
+        "Wen-Juan Hao",
+        "Bo Jiang"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "37",
+        "pages": "11412-11417",
+        "articleNumber": "",
+        "doi": "10.1021/acs.orglett.6c02816"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "报道催化不对称去芳构化逆电子需求偶氮Diels–Alder反应，结合偶氮吲哚与2-乙烯基吲哚合成具有高立体选择性的多环cis-pyridazino[4,3-b]indole骨架。",
+      "evidenceBasis": "ACS原创Article或Letter的官方Article History核实Published Online 2026-09-02，原文DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c02816；出版社原始期刊名Organic Letters、2026年卷28期37页11412-11417、作者与标题和历史Crossref/OpenAlex批次2026-09-01_2026-09-07_organic-letters对齐，冻结批次Git SHA 80aca4837373541c9ba22bdcae30cd0bd2f64511。合成实据：ACS Org Lett摘要给出一系列cis-pyridazino[4,3-b]indoles与最高94%收率、>99%ee、dr>20:1；C3-偶氮和N1-磺酰共同作用抑制再芳构化，未虚构所有底物达到上限。。仅依公开官方摘要与书目信息；受限正文、SI和PDF均未抓取也不推断未报告实验条件。",
+      "challengeReason": "第二遍严守azo-Diels–Alder与一般aza-Diels–Alder的区别；本文同时涉及吲哚去芳构化与氮氮环构建，最高收率/ee/dr不能当成所有底物的常量，也不能推断SI中具体催化剂立体结构。",
+      "scopeAssessment": {
+        "primaryContribution": "报道催化不对称去芳构化逆电子需求偶氮Diels–Alder反应，结合偶氮吲哚与2-乙烯基吲哚合成具有高立体选择性的多环cis-pyridazino[4,3-b]indole骨架。",
+        "preparativeTransformation": "C3偶氮、N1磺酰取代的偶氮吲哚作为反应伙伴，与2-乙烯基吲哚发生逆电子需求偶氮Diels–Alder去芳构化环加成，形成氮氮稠合的哒嗪并吲哚环。",
+        "generalityEvidence": "ACS Org Lett摘要给出一系列cis-pyridazino[4,3-b]indoles与最高94%收率、>99%ee、dr>20:1；C3-偶氮和N1-磺酰共同作用抑制再芳构化，未虚构所有底物达到上限。",
+        "sourceEvidence": "ACS原创Article或Letter的官方Article History核实Published Online 2026-09-02，原文DOI https://pubs.acs.org/doi/10.1021/acs.orglett.6c02816；出版社原始期刊名Organic Letters、2026年卷28期37页11412-11417、作者与标题和历史Crossref/OpenAlex批次2026-09-01_2026-09-07_organic-letters对齐，冻结批次Git SHA 80aca4837373541c9ba22bdcae30cd0bd2f64511。合成实据：ACS Org Lett摘要给出一系列cis-pyridazino[4,3-b]indoles与最高94%收率、>99%ee、dr>20:1；C3-偶氮和N1-磺酰共同作用抑制再芳构化，未虚构所有底物达到上限。。仅依公开官方摘要与书目信息；受限正文、SI和PDF均未抓取也不推断未报告实验条件。",
+        "boundaryChallenge": "逆向挑战因必须使用C3偶氮和N1磺酰两种取代而底物较窄：文献确有多种可分离的含氮多环产物以及反应通用性与立体选择性，因此合成贡献独立成立。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.acs.org/doi/10.1021/acs.orglett.6c02816",
+        "publisherOnlineDate": "2026-09-02",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-09-01_2026-09-07_organic-letters",
+        "stageBatchSha": "80aca4837373541c9ba22bdcae30cd0bd2f64511",
+        "crossrefOpenalexSources": [
+          "crossref",
+          "openalex"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherEvidenceTier": "ACS_official_Published_Online_plus_frozen_source_crosscheck",
+        "originalPublisherJournalName": "Organic Letters"
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "报道催化不对称去芳构化逆电子需求偶氮Diels–Alder反应，结合偶氮吲哚与2-乙烯基吲哚合成具有高立体选择性的多环cis-pyridazino[4,3-b]indole骨架。 C3偶氮、N1磺酰取代的偶氮吲哚作为反应伙伴，与2-乙烯基吲哚发生逆电子需求偶氮Diels–Alder去芳构化环加成，形成氮氮稠合的哒嗪并吲哚环。 ACS Org Lett摘要给出一系列cis-pyridazino[4,3-b]indoles与最高94%收率、>99%ee、dr>20:1；C3-偶氮和N1-磺酰共同作用抑制再芳构化，未虚构所有底物达到上限。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍严守azo-Diels–Alder与一般aza-Diels–Alder的区别；本文同时涉及吲哚去芳构化与氮氮环构建，最高收率/ee/dr不能当成所有底物的常量，也不能推断SI中具体催化剂立体结构。"
+        }
+      ],
+      "reviewRationaleSecondPass": "逆向挑战因必须使用C3偶氮和N1磺酰两种取代而底物较窄：文献确有多种可分离的含氮多环产物以及反应通用性与立体选择性，因此合成贡献独立成立。"
     }
   ],
   "pending": [
@@ -4798,5 +5221,5 @@
       "sourceBatchSha": "36d41e331c1163bd4e26004ce2c179d4d6e8cec0"
     }
   ],
-  "note": "2026-10-13 3 Science Advances independently double-reviewed synthetic methodology admissions; NLM PubMed Epub/ArticleDate authoritative electronic-first date over crossref source issue date for doi aeh8194 (Aug12 vs Aug14) and aeh2073 (Jul23 vs Jul24), no source metadata rewrite. 68 total approved, 2 ACS old pending; 8 historical previously formal, 60 await original next 08:00 fixed writer. No D1, media, off-slot production or old PDF."
+  "note": "2026-10-13 Q3 6 original ACS DOI added through publisher Article History and independent two-pass synthesis review. 74 accepted, 2 original manifest date pending, 8 prior historical formally included, 66 await sole Beijing 08:00 writer. Separate 10.1021/acs.orglett.6c03028 July30/31 conflicting publisher pages preserved in audit without automatic manifest include or date substitution. Zero D1, media or off-slot publishing."
 }

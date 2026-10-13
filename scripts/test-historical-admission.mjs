@@ -566,3 +566,61 @@ test('Science Advances paper Epub or ArticleDate prevails over distinct issue pu
   assert.match(telenzepine.scopeAssessment.boundaryChallenge,/固有手性/);
   assert.equal(root.accepted.filter(x=>expected.has(x.doi)).length,3);
 });
+
+test('Q3 additional six ACS syntheses have publisher first-online and paper-specific two-pass evidence',()=>{
+ const cases=[
+  ['10.1021/acs.orglett.6c03383','2026-09-07','80aca4837373541c9ba22bdcae30cd0bd2f64511'],
+  ['10.1021/acs.joc.6c01571','2026-08-24','30ad0c3b51b48a210e90d8fe19b56412b1c94f7a'],
+  ['10.1021/acs.orglett.6c02567','2026-07-29','67f6960bccfa31a1d2477390309426061dc65563'],
+  ['10.1021/acs.joc.6c01578','2026-08-26','30ad0c3b51b48a210e90d8fe19b56412b1c94f7a'],
+  ['10.1021/acscatal.6c03374','2026-07-16','e53414018aac39faa8ff9f6cbae508d8783e963d'],
+  ['10.1021/acs.orglett.6c02816','2026-09-02','80aca4837373541c9ba22bdcae30cd0bd2f64511']
+ ];
+ const synth=new Set(),challenges=new Set(),names=new Set();
+ for(const [doi,date,blob] of cases){
+  const x=root.accepted.find(v=>v.doi===doi);
+  assert.ok(x,'source-verified DOI missing '+doi);
+  assert.equal(x.date,date);
+  assert.equal(x.reviewEvidence.publisherOnlineDate,date);
+  assert.equal(x.reviewEvidence.stageBatchSha,blob);
+  assert.equal(x.reviewPasses,2);
+  assert.deepEqual(x.independentPasses.map(p=>p.decision),['include','include']);
+  assert.ok(x.independentPasses[0].reason.length>90);
+  assert.ok(x.independentPasses[1].reason.length>70);
+  assert.equal(x.reviewEvidence.publisherPage,'https://pubs.acs.org/doi/'+doi);
+  assert.deepEqual(x.reviewEvidence.crossrefOpenalexSources,['crossref','openalex']);
+  assert.equal(x.mediaPolicy,'toc_only');
+  assert.equal(x.new,false);assert.equal(x.addedDate,'');
+  assert.equal(x.reviewEvidence.figureFetched,false);assert.equal(x.reviewEvidence.pdfFetched,false);
+  assert.equal(x.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+  assert.ok(/JOC|Organic Letters|ACS Catalysis/.test(x.journal));
+  assert.ok(x.titleZh.length>8);
+  names.add(x.titleZh);
+  synth.add(x.scopeAssessment.preparativeTransformation);
+  challenges.add(x.independentPasses[1].reason);
+ }
+ assert.equal(synth.size,cases.length);
+ assert.equal(challenges.size,cases.length);
+ assert.equal(names.size,cases.length);
+ const total=root.accepted.find(x=>x.doi==='10.1021/acs.orglett.6c03383');
+ assert.match(total.scopeAssessment.generalityEvidence,/形式全合成/);
+ const quinoline=root.accepted.find(x=>x.doi==='10.1021/acs.joc.6c01578');
+ assert.match(quinoline.scopeAssessment.generalityEvidence,/2-苯基/);
+ const rhodium=root.accepted.find(x=>x.doi==='10.1021/acscatal.6c03374');
+ assert.match(rhodium.scopeAssessment.generalityEvidence,/397/);
+ assert.equal(root.pending.length,2,'prior manifest date disputes preserved');
+});
+test('new publisher-vs-publisher online day contradiction is explicitly held, not guessed',()=>{
+ const file='audit/historical-reviewed/2026-10-13-q3-orglett-6c03028-date-conflict-hold.json';
+ const q=JSON.parse(readFileSync(file,'utf8'));
+ assert.equal(q.doi,'10.1021/acs.orglett.6c03028');
+ assert.equal(q.status,'pending_exact_first_online_date_not_approved');
+ assert.equal(q.source.sourceCandidateDate,'2026-07-30');
+ assert.equal(q.source.gitBlobSha,'67f6960bccfa31a1d2477390309426061dc65563');
+ assert.deepEqual(new Set(q.publisherConflictingClaims.map(x=>x.publishedOnline)),
+  new Set(['2026-07-30','2026-07-31']));
+ assert.ok(q.publisherConflictingClaims.every(x=>x.url.startsWith('https://pubs.acs.org/')));
+ assert.equal(q.notInApprovedAdmissions,true);
+ assert.equal(root.accepted.some(x=>x.doi===q.doi),false);
+ assert.equal(root.pending.some(x=>x.doi===q.doi),false,'held evidence remains unresolved outside the two existing authoritative pending records');
+});
