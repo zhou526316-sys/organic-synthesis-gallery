@@ -6,6 +6,7 @@ import { TARGET_JOURNALS, effectiveJournalStart } from '../../shared/literature-
 
 import { loadScopeCorrections, withScopeCorrections } from '../../scripts/lib/scope-corrections.mjs';
 import { isStandaloneRepositoryDoi } from '../../scripts/lib/literature-doi-provenance.mjs';
+import { fetchOfficialPublisherFeeds, OFFICIAL_PUBLISHER_FEEDS } from '../../scripts/lib/publisher-feed-discovery.mjs';
 
 const TIME_ZONE = 'Asia/Shanghai';
 
@@ -217,6 +218,7 @@ async function loadReviewedHistory() {
             journal: clean(item?.journal),
             date: clean(item?.date),
             title: clean(item?.title),
+            abstract: clean(item?.abstract),
             decision,
             reviewFile: file,
           });
@@ -235,6 +237,7 @@ async function loadReviewedHistory() {
           journal: clean(item?.journal),
           date: clean(item?.date),
           title: clean(item?.title),
+          abstract: clean(item?.abstract),
           decision,
           reviewFile: file,
         });
@@ -441,6 +444,32 @@ for (const journal of JOURNALS) {
   console.log(`AUDIT_SOURCE ${journal.name} crossref=${crossref.candidates.length} openalex=${openalex.candidates.length} rawUnion=${rawUnion.size}`);
 }
 
+
+// Independent, non-exhaustive official publisher feeds. Publisher-only DOI
+// records enter the SAME semantic handoff, never straight into production.
+const publisherFeedAudit = await fetchOfficialPublisherFeeds({
+  startDate: RESCUE_START, endDate: END
+});
+const publisherOnlyDois = [];
+for (const candidate of publisherFeedAudit.candidates) {
+  if (!merged.has(normalizeDoi(candidate.doi))) publisherOnlyDois.push(normalizeDoi(candidate.doi));
+  mergeCandidate(merged, candidate);
+}
+const configuredFeedJournals = new Set(OFFICIAL_PUBLISHER_FEEDS.map(feed => feed.journal));
+const publisherFeedStatus = [
+  ...publisherFeedAudit.status,
+  ...JOURNALS.filter(journal => !configuredFeedJournals.has(journal.name)).map(journal => ({
+    journal: journal.name,status: 'not_configured',doiCount: 0,
+    completeListing: false,error: 'No independently verified official feed endpoint'
+  }))
+];
+console.log('AUDIT_PUBLISHER_FEEDS '+JSON.stringify({
+  reachablePartial: publisherFeedStatus.filter(row=>row.status==='reachable_partial').length,
+  blockedOrUnavailable: publisherFeedStatus.filter(row=>row.status==='blocked_or_unavailable').length,
+  notConfigured: publisherFeedStatus.filter(row=>row.status==='not_configured').length,
+  publisherOnly:publisherOnlyDois.length
+}));
+
 const universe = [...merged.values()].filter(c => {
   const journal = JOURNAL_BY_NAME.get(c.journal);
   const effectiveStart = journal ? auditStartForJournal(journal) : START;
@@ -482,16 +511,51 @@ const historicalCoverageLosses = [...reviewedHistory.values()].filter(item => {
 const excludedUniverse = universe.filter(c => isExcludedDoi(c.doi));
 const rawMissing = universe.filter(c => !galleryDois.has(c.doi));
 const reviewableMissing = rawMissing.filter(c => !isExcludedDoi(c.doi));
-const reviewedExcluded = reviewableMissing.filter(c => reviewedExclusions.has(c.doi));
-const missing = reviewableMissing.filter(c => !reviewedExclusions.has(c.doi));
+
+// Earlier exclude is not permanent when newly obtained DOI-verified metadata
+// changes the evidence. Explicit confirmed scope corrections stay excluded.
+function exclusionRecheckReason(candidate,previous) {
+  if(!previous||previous.decision!=='exclude'||isExcludedDoi(candidate.doi))return '';
+  const title=clean(candidate.title).toLowerCase(),oldTitle=clean(previous.title).toLowerCase();
+  const abstract=clean(candidate.abstract),oldAbstract=clean(previous.abstract);
+  if(abstract.length>=140 && oldAbstract.length<140)
+    return 'new_substantive_abstract_after_previous_exclusion';
+  if(abstract.length>=220 && oldAbstract.length>=140 &&
+      abstract.slice(0,180).toLowerCase()!==oldAbstract.slice(0,180).toLowerCase())
+    return 'changed_substantive_abstract';
+  if(title && oldTitle && title!==oldTitle)return 'changed_article_title';
+  if(candidate.journal&&previous.journal&&candidate.journal!==previous.journal)
+    return 'changed_journal_identity';
+  if(candidate.date&&previous.date&&candidate.date!==previous.date)
+    return 'changed_publication_date';
+  return '';
+}
+const exclusionRecheckReasons = new Map();
+for (const candidate of reviewableMissing) {
+  if(!reviewedExclusions.has(candidate.doi))continue;
+  const reason=exclusionRecheckReason(candidate,reviewedHistory.get(candidate.doi));
+  if(reason)exclusionRecheckReasons.set(candidate.doi,reason);
+}
+
+const reviewedExcluded = reviewableMissing.filter(c => reviewedExclusions.has(c.doi) && !exclusionRecheckReasons.has(c.doi));
+const missing = reviewableMissing.filter(c => !reviewedExclusions.has(c.doi) || exclusionRecheckReasons.has(c.doi));
 // Existing wrong cards are not discovered by a missing-DOI-only audit.
 // Add explicit correction candidates without inflating source-family counts.
 const scopeCorrections = await loadScopeCorrections();
 missing.splice(0, missing.length, ...withScopeCorrections(missing, scopeCorrections, galleryDois));
 const missingCandidates = missing
   .sort((a, b) => String(b.date).localeCompare(String(a.date)) || a.journal.localeCompare(b.journal) || String(a.title).localeCompare(String(b.title)))
-  .map(compactCandidate);
+  .map(candidate => {
+    const compact=compactCandidate(candidate);
+    const recheckReason=exclusionRecheckReasons.get(compact.doi);
+    return recheckReason ? {
+      ...compact,reviewPriority:'high',recheckPreviousExclusion:true,
+      recheckReason,previousReviewFile:reviewedHistory.get(compact.doi)?.reviewFile||''
+    } : compact;
+  });
 const potentialGaps = missingCandidates.filter(c => c.reviewPriority === 'high');
+const publisherDateUnverifiedDois = missingCandidates
+  .filter(c => c.publisherDateUnverified && !c.date).map(c => c.doi);
 
 const criticalFailures = stats.filter(s => !s.ok);
 const hasSource = (candidate, prefix) => (candidate.sources || []).some(source => source.startsWith(prefix));
@@ -614,7 +678,8 @@ const closureReviewedExcluded = closureRawMissing.filter(c => reviewedExclusions
 const closureMissing = missingCandidates.filter(c => c.date === CLOSURE_DATE);
 const closurePotentialGaps = closureMissing.filter(c => c.reviewPriority === 'high');
 const closureHistoricalCoverageLosses = historicalCoverageLosses.filter(item => item.date === CLOSURE_DATE);
-const closureStatus = criticalFailures.length > 0
+const closureStatus = publisherDateUnverifiedDois.length > 0 ? 'blocked-unverified-publisher-dates'
+  : criticalFailures.length > 0
   ? 'blocked-source-failure'
   : closureHistoricalCoverageLosses.length > 0
     ? 'blocked-historical-coverage-loss'
@@ -652,6 +717,9 @@ const report = {
     closureCoverageAnomalies: closureCoverageAnomalies.length,
     historicalCoverageLosses: historicalCoverageLosses.length,
     historicalNonJournalRecords: historicalNonJournalRecords.length,
+    publisherFeedOnlyDois: publisherOnlyDois.length,
+    previousExclusionsReopened: exclusionRecheckReasons.size,
+    publisherDateUnverified: publisherDateUnverifiedDois.length,
     unresolved: missing.length,
     scopeCorrectionsPending: missing.filter(candidate => candidate.scopeCorrection).length,
     excludedByPolicy: excludedUniverse.length,
@@ -667,7 +735,7 @@ const report = {
     criticalSourceFailures: criticalFailures.length,
     sourceCoverageAnomalies: closureCoverageAnomalies,
     historicalCoverageLosses: closureHistoricalCoverageLosses,
-    verifiedThroughEligible: criticalFailures.length === 0 && closureCoverageAnomalies.length === 0 && closureHistoricalCoverageLosses.length === 0 && closureMissing.length === 0,
+    verifiedThroughEligible: publisherDateUnverifiedDois.length === 0 && criticalFailures.length === 0 && closureCoverageAnomalies.length === 0 && closureHistoricalCoverageLosses.length === 0 && closureMissing.length === 0,
     note: 'Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, critical source failures must be zero, and closure-day Crossref/OpenAlex coverage must not show a severe one-family collapse.',
   },
   byDate,
@@ -679,6 +747,8 @@ const report = {
   historicalCoverageLosses,
   historicalNonJournalRecords,
   sourceStats: stats,
+  publisherFeeds: {sourceType:'official_partial_feeds',completeListing:false,
+    publisherOnlyDois,publisherDateUnverifiedDois,status:publisherFeedStatus},
   missingCandidates,
   potentialGaps,
 };
@@ -704,6 +774,9 @@ const unresolvedReviewCandidates = missingCandidates.map(candidate => ({
   lateIndexed: candidate.lateIndexed,
   safetyTail: candidate.safetyTail,
   reviewPriority: candidate.reviewPriority,
+  ...(candidate.feedDate ? {feedDate:candidate.feedDate} : {}),
+  ...(candidate.publisherFeedUrl ? {publisherFeedUrl:candidate.publisherFeedUrl,publisherDateUnverified:candidate.publisherDateUnverified} : {}),
+  ...(candidate.recheckPreviousExclusion ? {recheckPreviousExclusion:true,recheckReason:candidate.recheckReason,previousReviewFile:candidate.previousReviewFile} : {}),
   ...(candidate.scopeCorrection ? { scopeCorrection: candidate.scopeCorrection } : {}),
 }));
 
@@ -743,6 +816,8 @@ const reviewInput = {
     sourceCoverageAnomalies: report.summary.sourceCoverageAnomalies,
     closureCoverageAnomalies: report.summary.closureCoverageAnomalies,
     historicalCoverageLosses: report.summary.historicalCoverageLosses,
+    publisherDateUnverified: report.summary.publisherDateUnverified,
+    previousExclusionsReopened: report.summary.previousExclusionsReopened,
   },
   activeJournals: report.targetJournals.map(journal => ({
     name: journal.name,
@@ -752,6 +827,8 @@ const reviewInput = {
   })),
   unresolved: unresolvedReviewCandidates,
   potentialGapDois: potentialGaps.map(candidate => candidate.doi),
+  publisherFeeds: {sourceType:'official_partial_feeds',completeListing:false,
+    publisherOnlyDois,status:publisherFeedStatus},
 };
 
 await mkdir(path.dirname(OUT), { recursive: true });
