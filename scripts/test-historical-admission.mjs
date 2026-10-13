@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {validChineseTitle} from '../shared/chinese-title-overrides.js';
 import {test} from 'node:test';
-import {validateHistoricalApproval,selectHistoricalAdmissions,historicCard,HISTORICAL_APPROVED_PATH}
+import {validateHistoricalApproval,selectHistoricalAdmissions,historicCard,HISTORICAL_APPROVED_PATH,historicalPublisherPageMatchesDoi}
   from './lib/historical-admission.mjs';
 const root=JSON.parse(readFileSync(HISTORICAL_APPROVED_PATH,'utf8'));
 const clone=()=>structuredClone(root);
@@ -38,7 +38,7 @@ test('card projection excludes historic from daily new/hot and PDF capture',()=>
     assert.equal(card.new,false);
     assert.equal(card.addedDate,'');
     assert.equal(card.ingestionChannel,'historical_backfill');
-    assert.equal(card.mediaPolicy,'toc_only');
+    assert.equal(card.mediaPolicy,x.date<'2026-07-01'?'metadata_only':'toc_only');
     assert.equal(card.doi,x.doi);
     assert.equal(card.titleZh,x.titleZh);
     assert.equal('abstract' in card,false);
@@ -115,4 +115,34 @@ test('newly verified missed September JOC chemistry has independent evidence pas
     assert.equal(row.mediaPolicy,'toc_only');
     assert.equal(row.addedDate,'');
   }
+});
+
+test('multi-journal old synthesis admission requires official Nature publisher URLs and no old media',()=>{
+  assert.equal(root.accepted.length,20);
+  for(const id of [
+    '10.1021/acs.joc.6c00818','10.1021/acs.joc.6c01133',
+    '10.1021/acs.joc.6c01465','10.1021/acs.joc.6c01523',
+    '10.1038/s44160-026-01023-6','10.1038/s44160-026-01036-1',
+    '10.1021/jacs.5c13553','10.1021/jacs.5c14490',
+    '10.1021/acs.joc.5c02749','10.1021/acs.joc.6c00214']){
+    const row=root.accepted.find(x=>x.doi===id);
+    assert.ok(row,'missing approved source-reviewed DOI '+id);
+    assert.equal(row.reviewPasses,2);
+    assert.equal(row.challengeDecision,'include');
+    assert.equal(row.reviewEvidence.publisherOnlineDate,row.date);
+    assert.equal(row.ingestionChannel,'historical_backfill');
+    assert.equal(row.mediaPolicy,row.date<'2026-07-01'?'metadata_only':'toc_only');
+    assert.equal(row.addedDate,'');
+    assert.equal(row.new,false);
+  }
+  const names=root.accepted.filter(x=>x.doi.startsWith('10.1038/'));
+  assert.ok(names.length>=2);
+  for(const x of names){
+    assert.ok(x.reviewEvidence.publisherPage.startsWith('https://www.nature.com/articles/'));
+    assert.ok(historicalPublisherPageMatchesDoi(x.doi,x.reviewEvidence.publisherPage));
+  }
+  assert.equal(historicalPublisherPageMatchesDoi(
+    '10.1038/s44160-026-01023-6','https://www.nature.com/articles/s44160-026-01234-0'),false);
+  assert.equal(historicalPublisherPageMatchesDoi(
+    '10.1038/s44160-026-01023-6','http://www.nature.com/articles/s44160-026-01023-6'),false);
 });

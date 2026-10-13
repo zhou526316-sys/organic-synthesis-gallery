@@ -5,6 +5,8 @@ import { isStandaloneRepositoryDoi } from './lib/literature-doi-provenance.mjs';
 import { OFFICIAL_PUBLISHER_FEEDS,parseOfficialPublisherFeed } from './lib/publisher-feed-discovery.mjs';
 import { exclusionEvidenceRecheckReason } from './lib/literature-exclusion-recheck.mjs';
 import { isHighRelevanceCandidate } from './lib/literature-review-priority.mjs';
+import { CROSSREF_DATE_MODES, crossrefModeQuery } from './lib/crossref-discovery-date-modes.mjs';
+import { needsHistoricalDepositReview } from './lib/crossref-deposit-backlog.mjs';
 import { publisherOnlyReviewEligible,exclusionRecheckBelongsToPrimaryWindow } from './lib/literature-review-queue-guard.mjs';
 
 const auditSource = await readFile(new URL('../cloudflare/scripts/audit-literature.mjs', import.meta.url), 'utf8');
@@ -42,10 +44,13 @@ assert.match(auditSource, /DEFAULT_LOOKBACK_DAYS\s*=\s*3/, 'Default publication 
 assert.match(auditSource, /DEFAULT_LATE_DEPOSIT_RESCUE_DAYS\s*=\s*7/, 'Late-deposit rescue must remain at least seven days');
 assert.ok(auditSource.includes('catchupStart'), 'Audit must automatically catch up from verifiedThrough when closure falls behind');
 assert.ok(auditSource.includes('sourceQueryStartForJournal'), 'Source queries must use the earlier of catch-up and safety-tail starts');
-assert.ok(auditSource.includes('const modeStart = journalQueryStart'), 'Crossref source modes must widen to verifiedThrough catch-up when it predates the seven-day tail');
+assert.ok(auditSource.includes('queryStart:journalQueryStart'), 'Crossref online/published/created must use verifiedThrough catch-up query window');
+assert.ok(auditSource.includes('rescueStart:journalRescueStart'), 'Crossref deposit rescue must use bounded seven-day machine safety tail');
 assert.ok(auditSource.includes('from_publication_date:${sourceQueryStartForJournal(journal)}'), 'OpenAlex must widen to verifiedThrough catch-up when it predates the seven-day tail');
 assert.ok(auditSource.includes('safetyTail'), 'Safety-tail records must remain observable without becoming routine re-review work');
-assert.ok(auditSource.includes("['online', 'published', 'created']"), 'Crossref discovery must union online, published and created dates');
+assert.deepEqual(CROSSREF_DATE_MODES,['online','published','created','deposited']);
+assert.ok(auditSource.includes('for (const mode of CROSSREF_DATE_MODES)'), 'Crossref must union online, published, created and redeposited');
+assert.equal(crossrefModeQuery('deposited',{queryStart:'2026-09-19',rescueStart:'2026-10-07',endDate:'2026-10-13'}).modeStart,'2026-10-07');
 assert.ok(auditSource.includes('createdDiscovered'), 'Late-deposit rescue must remain enabled');
 assert.ok(auditSource.includes('createdDate'), 'Crossref created date must be retained independently of publication date');
 assert.ok(auditSource.includes("if (!Array.isArray(p) || !p[0] || !p[1] || !p[2]) return '';"), 'Partial Crossref dates must stay unknown instead of being coerced to January/day 1');
@@ -78,6 +83,7 @@ assert.ok(auditSource.includes('const retainForReview = isHighRelevanceCandidate
 assert.ok(auditSource.includes('fetchPublisherMetadataAbstract'), 'Blank-abstract synthesis candidates must receive DOI-verified publisher abstract rescue attempts');
 assert.ok(auditSource.includes('pubAbstractResults'), 'Publisher abstract rescue successes and failures must be logged, not silently reported as zero gaps');
 assert.ok(auditSource.includes('publisherDateVerificationBacklog'), 'Unverified publisher-only DOI must remain visible beyond RSS rotation');
+assert.ok(auditSource.includes('historicalCrossrefRedepositBacklog'), 'Old redeposited DOI must be durable without causing a false primary 08:00 backlog');
 assert.ok(auditSource.includes('historicalEvidenceChallenges'), 'Historical changed-evidence exclusions must be visible without overwhelming primary review');
 assert.ok(auditSource.includes('publisherOnlyDois'), 'Publisher-only DOI differences must be reported');
 assert.ok(auditSource.includes('previousExclusionsReopened'), 'Prior exclusions must be reconsidered on substantive new evidence');
@@ -114,6 +120,9 @@ assert.equal(exclusionEvidenceRecheckReason(afterEvidence,beforeExclude),
 assert.equal(exclusionEvidenceRecheckReason(afterEvidence,beforeExclude,{confirmedExcluded:true}),'',
   'Confirmed DOI exclusions must remain authoritative despite metadata changes');
 
+const oldDeposit={date:'2026-09-25',depositedDate:'2026-10-12'};
+assert.equal(needsHistoricalDepositReview(oldDeposit,{
+  journalRescueStart:'2026-10-07',endDate:'2026-10-13'}),true);
 const oldFeed={publisherFeedUrl:'https://onlinelibrary.wiley.com/feed/15213773/most-recent',date:'',feedDate:'2026-10-10',sources:['publisher-feed:Angew']};
 assert.equal(publisherOnlyReviewEligible(oldFeed,'2026-10-11','2026-10-13'),false);
 assert.equal(exclusionRecheckBelongsToPrimaryWindow({date:'2026-09-19'},'2026-10-11','2026-10-13'),false);
@@ -131,7 +140,7 @@ console.log(JSON.stringify({
   lateDepositRescueDays: 7,
   verifiedThroughCatchup: true,
   multiSourceSafetyTail: true,
-  crossrefModes: ['online', 'published', 'created'],
+  crossrefModes: CROSSREF_DATE_MODES,
   openAlex: true,
   lateDepositRescue: true,
   sourceFamilyHealth: true,
