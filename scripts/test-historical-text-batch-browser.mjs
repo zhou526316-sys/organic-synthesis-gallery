@@ -173,6 +173,10 @@ try{
   assert.equal(await localLinks.count(),27,'every local matching DOI remains accessible via pagination');
 
   // The browser-side outbox is durable before a token is configured.
+  assert.equal(await page.getByRole('button',{name:'跨期刊正文证据核验（12篇）'}).count(),1);
+  await page.getByRole('button',{name:'跨期刊正文证据核验（12篇）'}).click();
+  assert.equal(await page.evaluate(()=>window.__opened.length),2,
+    'journal-balanced pilot must not reopen already saved articles');
   const pendingBefore=await page.evaluate(()=>__historicalDiagTest.batchReportKeys().length);
   assert.equal(pendingBefore,2,'one terminal diagnostic receipt per DOI must be queued');
   await page.getByRole('button',{name:'配置诊断密钥'}).click();
