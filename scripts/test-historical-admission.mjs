@@ -245,3 +245,37 @@ test('eight RSC Q3 NLM electronic dates are not substituted with created or issu
   assert.ok(sourceRoots.size>=6,'batch provenance must not be a single fabricated source');
   assert.equal(root.pending.length,2,'old date conflicts remain unresolved, not silently accepted');
 });
+
+test('Green Chemistry Q3 recovered dates are the RSC original Published on imprint, never Crossref created dates',()=>{
+ const pairs=[
+  ['10.1039/d6gc02631a','2026-07-09','4807a9c60e560c2830552c36dc7ab703b3249349'],
+  ['10.1039/d6gc02989b','2026-08-05','f5d97aab53d4fe741a09621ec1a53ca5d83e2616']
+ ];
+ const challengeReasons=[];
+ for(const [doi,firstOnline,sourceSha] of pairs){
+   const x=root.accepted.find(r=>r.doi===doi);
+   assert.ok(x,doi);
+   assert.equal(x.journal,'Green Chemistry');
+   assert.equal(x.date,firstOnline);
+   assert.equal(x.reviewEvidence.publisherOnlineDate,firstOnline);
+   assert.equal(x.reviewEvidence.stageBatchSha,sourceSha);
+   assert.equal(x.reviewEvidence.firstOnlineDateEvidence.firstOnlineDate,firstOnline);
+   assert.equal(x.reviewEvidence.firstOnlineDateEvidence.publisherSiteDirectRead,false);
+   assert.equal(x.reviewEvidence.firstOnlineDateEvidence.crossrefFirstPublishedDayUnknown,true);
+   assert.match(x.reviewEvidence.firstOnlineDateEvidence.tier,/^RSC_publisher_typeset_original_imprint_/);
+   assert.match(x.reviewEvidence.firstOnlineDateEvidence.publisherImprint,/^Published on \d\d \w+ 2026$/);
+   assert.match(x.reviewEvidence.firstOnlineDateEvidence.originalPublisherTypesetCopyUrl,/^https:\/\/www\.researchgate\.net\/publication\//);
+   assert.deepEqual(x.reviewEvidence.crossrefOpenalexSources,['crossref']);
+   assert.equal(x.reviewPasses,2);
+   assert.deepEqual(x.independentPasses.map(p=>p.decision),['include','include']);
+   assert.ok(x.independentPasses.every(p=>p.reason.length>70));
+   challengeReasons.push(x.independentPasses[1].reason);
+   assert.equal(x.mediaPolicy,'toc_only');
+   assert.equal(x.new,false);
+   assert.equal(x.addedDate,'');
+   assert.equal(x.reviewEvidence.figureFetched,false);
+   assert.equal(x.reviewEvidence.pdfFetched,false);
+ }
+ assert.equal(new Set(challengeReasons).size,2);
+ assert.equal(root.pending.length,2);
+});

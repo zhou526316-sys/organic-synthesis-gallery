@@ -1,0 +1,180 @@
+{
+  "schemaVersion": "gallery-historical-q3-2026-green-chem-publisher-imprint-two-pass-v1",
+  "reviewedAt": "2026-10-13T06:52:12.510Z",
+  "mode": "academic_two_pass_review_only_not_publication",
+  "provenance": "RSC typeset original publisher article Published on date, mirrored on ResearchGate, not direct RSC webpage Article History",
+  "publisherOnlineDateSourceTier": "original_publisher_typeset_imprint_preserved_by_independent_mirror",
+  "reviewCount": 2,
+  "formalAtReview": 984,
+  "sourceWorklistSha": "a4d4eb7618dca4c56a9beaead481093fbf047142",
+  "reviewed": [
+    {
+      "doi": "10.1039/d6gc02631a",
+      "journal": "Green Chemistry",
+      "title": "Direct decarboxylative alkylation of bicycloalkyl and cubane carboxylic acids enabled by redox-mediated visible-light photoorganocatalysis",
+      "titleZh": "可见光有机光催化介导双环烷基及立方烷羧酸直接脱羧烷基化",
+      "date": "2026-07-09",
+      "authors": [
+        "Elena Cassera",
+        "Alessandra M. Del Tito",
+        "Daniele Merli",
+        "Davide Ravelli",
+        "Quentin Lefebvre",
+        "Maurizio Fagnoni"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "30",
+        "pages": "12740-12747",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc02631a"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "作者针对未经预活化的桥环、立方烷羧酸难以直接氧化脱羧的问题，建立可见光下非金属的氧化还原介导Giese烷基化，直接形成药物设计相关三维骨架的新C(sp³)–C(sp³)键；文章的首要贡献是合成方法学而非仅评价材料性能。",
+      "evidenceBasis": "2026 Green Chemistry RSC原始排版论文公开镜像文本页脚明确标注“Published on 2026-07-09”，此为出版社在原始文章中印制的在线发表日期证据，并非第三方网页更新时间；来源镜像 https://www.researchgate.net/publication/408651420_Direct_decarboxylative_alkylation_of_bicycloalkyl_and_cubane_carboxylic_acids_enabled_by_redox-mediated_visible-light_photoorganocatalysis。RSC线上articlelanding自动访问遭bot_blocked，因而保留证据等级original_publisher_imprint_third_party_mirror，而不虚报已直接从RSC官网读取Article History。Crossref staging源日期为year-only空值，精确DOI历史来源批次2026-07-08_2026-07-14_green-chemistry，Git blob SHA 4807a9c60e560c2830552c36dc7ab703b3249349；按论文实际反应摘要及公开正文范围核验：RSC原始排版论文的表2及表3给出了不同取代BCP羧酸、含酯/腈/卤/保护胺官能团衍生物与酯、酮、腈、砜及2-乙烯基吡啶等亲电烯烃的组合，并扩展至立方烷、其他双环体系；正文报告部分流动反应放大至3 mmol，最高86%产率是研究报告上限，不宣称全部组合都如此。",
+      "challengeReason": "第二遍首先挑战是否仅对一个桥环羧酸与富马酸酯有效，以及所谓无金属是否掩盖新式红氧酯预活化。原始论文另提供不同桥环、立方烷与不同Michael受体的分离产物及流动放大，且酸直接作为底物，因此实际可推广；机理中的联苯自由基阳离子氧化羧酸盐由光物理/电化学/计算相容证据支持，不把每个自由基物种称为直接观测。",
+      "scopeAssessment": {
+        "primaryContribution": "作者针对未经预活化的桥环、立方烷羧酸难以直接氧化脱羧的问题，建立可见光下非金属的氧化还原介导Giese烷基化，直接形成药物设计相关三维骨架的新C(sp³)–C(sp³)键；文章的首要贡献是合成方法学而非仅评价材料性能。",
+        "preparativeTransformation": "bicyclo[1.1.1]pentane及其他bicyclo[x.y.z]alkane/2-氧杂双环/立方烷羧酸在吖啶鎓有机光催化、亚化学计量联苯氧化还原介体和无机碱存在下直接脱羧，生成笼状碳自由基，对富电子性相反的电子缺陷烯烃如富马酸二甲酯发生Giese加成，构筑笼状C(sp³)–C(sp³)键。此路线不先将酸制成NHPI酯。",
+        "generalityEvidence": "RSC原始排版论文的表2及表3给出了不同取代BCP羧酸、含酯/腈/卤/保护胺官能团衍生物与酯、酮、腈、砜及2-乙烯基吡啶等亲电烯烃的组合，并扩展至立方烷、其他双环体系；正文报告部分流动反应放大至3 mmol，最高86%产率是研究报告上限，不宣称全部组合都如此。",
+        "sourceEvidence": "2026 Green Chemistry RSC原始排版论文公开镜像文本页脚明确标注“Published on 2026-07-09”，此为出版社在原始文章中印制的在线发表日期证据，并非第三方网页更新时间；来源镜像 https://www.researchgate.net/publication/408651420_Direct_decarboxylative_alkylation_of_bicycloalkyl_and_cubane_carboxylic_acids_enabled_by_redox-mediated_visible-light_photoorganocatalysis。RSC线上articlelanding自动访问遭bot_blocked，因而保留证据等级original_publisher_imprint_third_party_mirror，而不虚报已直接从RSC官网读取Article History。Crossref staging源日期为year-only空值，精确DOI历史来源批次2026-07-08_2026-07-14_green-chemistry，Git blob SHA 4807a9c60e560c2830552c36dc7ab703b3249349；按论文实际反应摘要及公开正文范围核验：RSC原始排版论文的表2及表3给出了不同取代BCP羧酸、含酯/腈/卤/保护胺官能团衍生物与酯、酮、腈、砜及2-乙烯基吡啶等亲电烯烃的组合，并扩展至立方烷、其他双环体系；正文报告部分流动反应放大至3 mmol，最高86%产率是研究报告上限，不宣称全部组合都如此。",
+        "boundaryChallenge": "RSC论文确有不同笼状羧酸和多个亲电烯烃的制备范围，避免仅凭医学药效应用纳入；该方法依赖强氧化吖啶鎓、碱及联苯介体，不能夸为所有羧酸、所有烯烃和完全无副反应的普适方式，也不能凭机理图宣称明确唯一链传递路径。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/gc/article/doi/10.1039/d6gc02631a",
+        "publisherOnlineDate": "2026-07-09",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-07-08_2026-07-14_green-chemistry",
+        "stageBatchSha": "4807a9c60e560c2830552c36dc7ab703b3249349",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "bot_blocked",
+        "firstOnlineDateEvidence": {
+          "tier": "RSC_publisher_typeset_original_imprint_Published_on_preserved_by_third_party",
+          "publisherImprint": "Published on 09 July 2026",
+          "originalPublisherTypesetCopyUrl": "https://www.researchgate.net/publication/408651420_Direct_decarboxylative_alkylation_of_bicycloalkyl_and_cubane_carboxylic_acids_enabled_by_redox-mediated_visible-light_photoorganocatalysis",
+          "verifiedPrintedOn": "publisher_RSC_typeset_article_original_footnote",
+          "publisherSiteDirectRead": false,
+          "crossrefFirstPublishedDayUnknown": true,
+          "articleReceivedAndAcceptedNotSubstitute": true,
+          "firstOnlineDate": "2026-07-09"
+        }
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "作者针对未经预活化的桥环、立方烷羧酸难以直接氧化脱羧的问题，建立可见光下非金属的氧化还原介导Giese烷基化，直接形成药物设计相关三维骨架的新C(sp³)–C(sp³)键；文章的首要贡献是合成方法学而非仅评价材料性能。 bicyclo[1.1.1]pentane及其他bicyclo[x.y.z]alkane/2-氧杂双环/立方烷羧酸在吖啶鎓有机光催化、亚化学计量联苯氧化还原介体和无机碱存在下直接脱羧，生成笼状碳自由基，对富电子性相反的电子缺陷烯烃如富马酸二甲酯发生Giese加成，构筑笼状C(sp³)–C(sp³)键。此路线不先将酸制成NHPI酯。 RSC原始排版论文的表2及表3给出了不同取代BCP羧酸、含酯/腈/卤/保护胺官能团衍生物与酯、酮、腈、砜及2-乙烯基吡啶等亲电烯烃的组合，并扩展至立方烷、其他双环体系；正文报告部分流动反应放大至3 mmol，最高86%产率是研究报告上限，不宣称全部组合都如此。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍首先挑战是否仅对一个桥环羧酸与富马酸酯有效，以及所谓无金属是否掩盖新式红氧酯预活化。原始论文另提供不同桥环、立方烷与不同Michael受体的分离产物及流动放大，且酸直接作为底物，因此实际可推广；机理中的联苯自由基阳离子氧化羧酸盐由光物理/电化学/计算相容证据支持，不把每个自由基物种称为直接观测。"
+        }
+      ],
+      "reviewRationaleSecondPass": "RSC论文确有不同笼状羧酸和多个亲电烯烃的制备范围，避免仅凭医学药效应用纳入；该方法依赖强氧化吖啶鎓、碱及联苯介体，不能夸为所有羧酸、所有烯烃和完全无副反应的普适方式，也不能凭机理图宣称明确唯一链传递路径。"
+    },
+    {
+      "doi": "10.1039/d6gc02989b",
+      "journal": "Green Chemistry",
+      "title": "Enantioselective total synthesis of colchicine using electrochemical and mechanochemical methods",
+      "titleZh": "电化学与机械化学协同实现（+）-秋水仙碱的对映选择性全合成",
+      "date": "2026-08-05",
+      "authors": [
+        "S. M. Shakib Kazmi",
+        "Prabir Sarkar",
+        "Sigitas Stončius",
+        "Aleksander E. Rubtsov",
+        "Andrei V. Malkov"
+      ],
+      "citation": {
+        "year": 2026,
+        "volume": "28",
+        "issue": "33",
+        "pages": "13752-13759",
+        "articleNumber": "",
+        "doi": "10.1039/d6gc02989b"
+      },
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "toc_only",
+      "addedDate": "",
+      "new": false,
+      "reviewStatus": "two_pass_scope_include_awaiting_fixed_slot",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reviewPasses": 2,
+      "reason": "作者完成(+)-colchicine的八步对映选择性全合成，整合机械化学无溶剂醛醇缩合、电化学氧化环化及去芳构化、手性有机催化还原和后期环丙烷化/重排，为目标复杂分子提供具体可执行合成路线，而非单纯讲绿色化学理念或天然产物活性。",
+      "evidenceBasis": "2026 Green Chemistry RSC原始排版论文公开镜像文本页脚明确标注“Published on 2026-08-05”，此为出版社在原始文章中印制的在线发表日期证据，并非第三方网页更新时间；来源镜像 https://www.researchgate.net/publication/411515414_Enantioselective_total_synthesis_of_colchicine_using_electrochemical_and_mechanochemical_methods。RSC线上articlelanding自动访问遭bot_blocked，因而保留证据等级original_publisher_imprint_third_party_mirror，而不虚报已直接从RSC官网读取Article History。Crossref staging源日期为year-only空值，精确DOI历史来源批次2026-08-01_2026-08-07_green-chemistry，Git blob SHA f5d97aab53d4fe741a09621ec1a53ca5d83e2616；按论文实际反应摘要及公开正文范围核验：RSC原始论文公开摘要明确说完成(+)-秋水仙碱八步全合成，给出机械化学预制查耳酮、氧化酚偶联、电化学去芳构化、对映选择性亚胺还原和环丙烷化重排；既是完成全合成，不依赖强行计算广泛底物库或虚构总收率，也不声称合成(-)-秋水仙碱。",
+      "challengeReason": "第二遍质疑该文可能只报道秋水仙碱合成构想或停在保留手性的先导中间体；原始排版文章与大学作者科研成果条目均指向八步完成(+)-colchicine而非formal synthesis。电化学生成高价碘进行酚偶联是解决瓶颈的具体步骤，但不能无视有机催化不对称还原和后续重排；按目标完成的全合成条款纳入。",
+      "scopeAssessment": {
+        "primaryContribution": "作者完成(+)-colchicine的八步对映选择性全合成，整合机械化学无溶剂醛醇缩合、电化学氧化环化及去芳构化、手性有机催化还原和后期环丙烷化/重排，为目标复杂分子提供具体可执行合成路线，而非单纯讲绿色化学理念或天然产物活性。",
+        "preparativeTransformation": "机械化学无溶剂醛醇反应生成查耳酮前体，电化学生成高价碘(III)中间体促进酚氧化偶联，接着经有机催化亚胺不对称还原建立手性，经电化学去芳构化以及末端环丙烷化—重排形成秋水仙碱目标骨架；不把高价碘参与描述为完全排除所有化学试剂。",
+        "generalityEvidence": "RSC原始论文公开摘要明确说完成(+)-秋水仙碱八步全合成，给出机械化学预制查耳酮、氧化酚偶联、电化学去芳构化、对映选择性亚胺还原和环丙烷化重排；既是完成全合成，不依赖强行计算广泛底物库或虚构总收率，也不声称合成(-)-秋水仙碱。",
+        "sourceEvidence": "2026 Green Chemistry RSC原始排版论文公开镜像文本页脚明确标注“Published on 2026-08-05”，此为出版社在原始文章中印制的在线发表日期证据，并非第三方网页更新时间；来源镜像 https://www.researchgate.net/publication/411515414_Enantioselective_total_synthesis_of_colchicine_using_electrochemical_and_mechanochemical_methods。RSC线上articlelanding自动访问遭bot_blocked，因而保留证据等级original_publisher_imprint_third_party_mirror，而不虚报已直接从RSC官网读取Article History。Crossref staging源日期为year-only空值，精确DOI历史来源批次2026-08-01_2026-08-07_green-chemistry，Git blob SHA f5d97aab53d4fe741a09621ec1a53ca5d83e2616；按论文实际反应摘要及公开正文范围核验：RSC原始论文公开摘要明确说完成(+)-秋水仙碱八步全合成，给出机械化学预制查耳酮、氧化酚偶联、电化学去芳构化、对映选择性亚胺还原和环丙烷化重排；既是完成全合成，不依赖强行计算广泛底物库或虚构总收率，也不声称合成(-)-秋水仙碱。",
+        "boundaryChallenge": "是否仅为少溶剂工艺性能比较而非真正的新合成能力：工作实际给出完整目标产物与多次实质成键、氧化和手性构筑过程，因此是有机全合成；但不能把每步环境指标升级为普遍优于所有既有路线的结论，也不夸大为多天然产物并行全合成。"
+      },
+      "reviewEvidence": {
+        "publisherPage": "https://pubs.rsc.org/gc/article/doi/10.1039/d6gc02989b",
+        "publisherOnlineDate": "2026-08-05",
+        "stageBranch": "staging/historical-archive-nightly",
+        "stageBatchId": "2026-08-01_2026-08-07_green-chemistry",
+        "stageBatchSha": "f5d97aab53d4fe741a09621ec1a53ca5d83e2616",
+        "crossrefOpenalexSources": [
+          "crossref"
+        ],
+        "abstractCopied": false,
+        "figureFetched": false,
+        "pdfFetched": false,
+        "publisherDirectPageStatus": "bot_blocked",
+        "firstOnlineDateEvidence": {
+          "tier": "RSC_publisher_typeset_original_imprint_Published_on_preserved_by_third_party",
+          "publisherImprint": "Published on 05 August 2026",
+          "originalPublisherTypesetCopyUrl": "https://www.researchgate.net/publication/411515414_Enantioselective_total_synthesis_of_colchicine_using_electrochemical_and_mechanochemical_methods",
+          "verifiedPrintedOn": "publisher_RSC_typeset_article_original_footnote",
+          "publisherSiteDirectRead": false,
+          "crossrefFirstPublishedDayUnknown": true,
+          "articleReceivedAndAcceptedNotSubstitute": true,
+          "firstOnlineDate": "2026-08-05"
+        }
+      },
+      "publisherAbstractRights": "not_verified_do_not_republish_full_text",
+      "independentPasses": [
+        {
+          "pass": 1,
+          "decision": "include",
+          "reason": "作者完成(+)-colchicine的八步对映选择性全合成，整合机械化学无溶剂醛醇缩合、电化学氧化环化及去芳构化、手性有机催化还原和后期环丙烷化/重排，为目标复杂分子提供具体可执行合成路线，而非单纯讲绿色化学理念或天然产物活性。 机械化学无溶剂醛醇反应生成查耳酮前体，电化学生成高价碘(III)中间体促进酚氧化偶联，接着经有机催化亚胺不对称还原建立手性，经电化学去芳构化以及末端环丙烷化—重排形成秋水仙碱目标骨架；不把高价碘参与描述为完全排除所有化学试剂。 RSC原始论文公开摘要明确说完成(+)-秋水仙碱八步全合成，给出机械化学预制查耳酮、氧化酚偶联、电化学去芳构化、对映选择性亚胺还原和环丙烷化重排；既是完成全合成，不依赖强行计算广泛底物库或虚构总收率，也不声称合成(-)-秋水仙碱。"
+        },
+        {
+          "pass": 2,
+          "decision": "include",
+          "reason": "第二遍质疑该文可能只报道秋水仙碱合成构想或停在保留手性的先导中间体；原始排版文章与大学作者科研成果条目均指向八步完成(+)-colchicine而非formal synthesis。电化学生成高价碘进行酚偶联是解决瓶颈的具体步骤，但不能无视有机催化不对称还原和后续重排；按目标完成的全合成条款纳入。"
+        }
+      ],
+      "reviewRationaleSecondPass": "是否仅为少溶剂工艺性能比较而非真正的新合成能力：工作实际给出完整目标产物与多次实质成键、氧化和手性构筑过程，因此是有机全合成；但不能把每步环境指标升级为普遍优于所有既有路线的结论，也不夸大为多天然产物并行全合成。"
+    }
+  ],
+  "guards": {
+    "noPublication": true,
+    "onlySoleFixed08": true,
+    "Q3TOCOnly": true,
+    "noBodyFiguresSIOrPdf": true,
+    "noTodayHotWeChat": true,
+    "noD1Queries": true,
+    "otherRscOnlineDatesRemainUnknown": true
+  }
+}
