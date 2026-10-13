@@ -624,3 +624,59 @@ test('new publisher-vs-publisher online day contradiction is explicitly held, no
  assert.equal(root.accepted.some(x=>x.doi===q.doi),false);
  assert.equal(root.pending.some(x=>x.doi===q.doi),false,'held evidence remains unresolved outside the two existing authoritative pending records');
 });
+
+
+test('eight new Q3 ACS syntheses have independently dated, full DOI, bibliography and challenged preparative evidence',()=>{
+ const cases=[
+  ['10.1021/jacs.6c06565','2026-07-08','61e868f071a0bcb14496af0828937e0ab903f134'],
+  ['10.1021/jacs.6c08998','2026-08-12','8c61c23c75f16b59480d3381d78ca036ea3e6cf5'],
+  ['10.1021/jacs.6c10775','2026-08-08','8c61c23c75f16b59480d3381d78ca036ea3e6cf5'],
+  ['10.1021/acs.orglett.6c02441','2026-07-27','67f6960bccfa31a1d2477390309426061dc65563'],
+  ['10.1021/acs.orglett.6c03102','2026-09-01','80aca4837373541c9ba22bdcae30cd0bd2f64511'],
+  ['10.1021/acs.joc.6c01369','2026-08-20','3d4d816718e709f3b0a87a056039c32689cba701'],
+  ['10.1021/acs.joc.6c01375','2026-08-18','3d4d816718e709f3b0a87a056039c32689cba701'],
+  ['10.1021/acscatal.6c04411','2026-08-03','8170ee7aca54bb199f18c0d0e91bfff4527e0874']
+ ];
+ const firstReasons=new Set(),secondReasons=new Set(),challenges=new Set();
+ for(const [doi,date,blob] of cases){
+  const matched=root.accepted.filter(x=>x.doi===doi);
+  assert.equal(matched.length,1,'one approved identity per DOI: '+doi);
+  const x=matched[0];
+  assert.equal(x.date,date);
+  assert.equal(x.reviewEvidence.publisherOnlineDate,date);
+  assert.equal(x.reviewEvidence.stageBatchSha,blob);
+  assert.equal(x.reviewEvidence.publisherPage,'https://pubs.acs.org/doi/'+doi);
+  assert.deepEqual(x.reviewEvidence.crossrefOpenalexSources,['crossref','openalex']);
+  assert.equal(x.reviewPasses,2);
+  assert.deepEqual(x.independentPasses.map(p=>p.decision),['include','include']);
+  assert.ok(x.independentPasses[0].reason.length>100);
+  assert.ok(x.independentPasses[1].reason.length>75);
+  assert.equal(x.addedDate,'');
+  assert.equal(x.new,false);
+  assert.equal(x.ingestionChannel,'historical_backfill');
+  assert.equal(x.mediaPolicy,'toc_only');
+  assert.equal(x.reviewEvidence.abstractCopied,false);
+  assert.equal(x.reviewEvidence.figureFetched,false);
+  assert.equal(x.reviewEvidence.pdfFetched,false);
+  assert.equal(x.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+  assert.ok(x.titleZh.length>8);
+  assert.ok(x.authors.length>=2);
+  assert.ok(Number(x.citation.volume)>0&&Number(x.citation.issue)>0);
+  assert.ok(/^\d+-\d+$/.test(x.citation.pages));
+  assert.ok(x.scopeAssessment.primaryContribution.length>=40);
+  assert.ok(x.scopeAssessment.preparativeTransformation.length>40);
+  assert.ok(x.scopeAssessment.generalityEvidence.length>40);
+  assert.ok(x.scopeAssessment.sourceEvidence.includes(blob));
+  assert.ok(x.scopeAssessment.boundaryChallenge.length>40);
+  firstReasons.add(x.independentPasses[0].reason);
+  secondReasons.add(x.independentPasses[1].reason);
+  challenges.add(x.scopeAssessment.boundaryChallenge);
+ }
+ assert.equal(firstReasons.size,8);assert.equal(secondReasons.size,8);assert.equal(challenges.size,8);
+ assert.match(root.accepted.find(x=>x.doi==='10.1021/jacs.6c10775').scopeAssessment.boundaryChallenge,/终产物/);
+ assert.match(root.accepted.find(x=>x.doi==='10.1021/jacs.6c08998').challengeReason,/DFT/);
+ assert.match(root.accepted.find(x=>x.doi==='10.1021/acscatal.6c04411').challengeReason,/98%/);
+ assert.equal(root.pending.length,2,'only earlier manifest date conflicts remain pending');
+ const dateHold='10.1021/acs.orglett.6c03028';
+ assert.ok(!root.accepted.some(x=>x.doi===dateHold),'conflicting publisher online days must remain held');
+});
