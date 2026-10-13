@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.3
+// @version      0.2.4
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -204,6 +204,7 @@
 
   // Isolated batch protocol. Never share storage keys, leases, queue writes or
   // controller lifecycle with the production TOC/figure/private-PDF scripts.
+  const BATCH_SCRIPT_VERSION='0.2.4';
   const BATCH_PREFIX='gallery-historical-text-batch-v2:';
   const BATCH_STATE=BATCH_PREFIX+'state';
   const BATCH_JOB=BATCH_PREFIX+'job';
@@ -365,6 +366,21 @@
         const urls=text.match(/https?:\/\/creativecommons\.org\/(?:licenses\/[\w.-]+(?:\/[\w.-]+)*|publicdomain\/zero\/1\.0)\/?/ig)||[];
         candidates.push(...urls);
       });
+      // ACS may display a DOI-specific CC BY copyright notice as visible
+      // article metadata without a rel=license link or license URL.
+      // Require the exact publisher/article copyright sentence inside the
+      // current article, not a related card, footer, generic OA badge or TDM hint.
+      if(publisher(location.hostname)==='acs'){
+        const article=document.querySelector('main article, article')||root;
+        let checked=0;
+        for(const node of article.querySelectorAll('p,span,small,div')){
+          if(++checked>800)break;
+          if(node.children?.length||excluded(node,true))continue;
+          const notice=cleanText(node.textContent,550);
+          const match=/^©\s*20\d{2}\s+The Authors\.\s*Published by American Chemical Society\s+This publication is licensed under a Creative Commons Attribution (3\.0|4\.0) International License\.?$/i.exec(notice);
+          if(match)candidates.push('https://creativecommons.org/licenses/by/'+match[1]+'/');
+        }
+      }
     }
     const matches=candidates.map(raw=>{
       try{
@@ -472,7 +488,7 @@
         pageDoiVerified:details.pageDoiVerified===true,
         sectionCount:Math.min(300,Math.max(0,Number(details.sectionCount||0))),
         evidenceChars:Math.min(400000,Math.max(0,Number(details.evidenceChars||0))),
-        scriptVersion:'0.2.2',occurredAt:new Date().toISOString()};
+        scriptVersion:BATCH_SCRIPT_VERSION,occurredAt:new Date().toISOString()};
       GM_setValue(BATCH_DIAG_PREFIX+eventId,{payload,createdAt:Date.now(),tries:0,nextAt:0});
       batchReportStatus({state:batchReportToken()?'queued':'token_missing',
         pending:keys.length+1,error:''});
@@ -492,7 +508,7 @@
       }catch(_){reject(Error('diagnostic_transport_error'));}
     });
   }
-  async function batchDrainReports(){
+  async function batchDrainReports(force=false){
     if(location.hostname!=='gallery.gczhouwld.com'||batchDiagBusy)return;
     const token=batchReportToken();
     if(!token){
@@ -503,7 +519,7 @@
     batchDiagBusy=true;
     try{
       const ready=batchReportKeys().map(key=>({key,item:GM_getValue(key,null)}))
-        .filter(row=>row.item&&Number(row.item.nextAt||0)<=Date.now())
+        .filter(row=>row.item&&(force||Number(row.item.nextAt||0)<=Date.now()))
         .sort((a,b)=>Number(a.item.createdAt||0)-Number(b.item.createdAt||0));
       for(const {key,item} of ready.slice(0,4)){
         try{
@@ -544,7 +560,7 @@
           if(type.startsWith('密钥'))break;
         }
       }
-    }finally{batchDiagBusy=false;}
+    }finally{batchDiagBusy=false;batchUi?.refresh();}
   }
   function batchStartDiagnostics(){
     if(batchDiagStarted||location.hostname!=='gallery.gczhouwld.com')return;
@@ -661,6 +677,10 @@
         url:BATCH_REPORT_ENDPOINT+'?limit=100',
         headers:{authorization:'Bearer '+token,accept:'application/json'}});
       const body=JSON.parse(String(response.responseText||'{}'));
+      if(Number(response.status)===401){
+        area.textContent='密钥已保存，但服务器返回 HTTP 401；如凭证已更换，请点击「更换诊断密钥」。';
+        return;
+      }
       if(Number(response.status)!==200||!Array.isArray(body.items))
         throw Error('no_valid_read_receipt');
       const groups=batchGroupServerEvents(body.items);
@@ -724,8 +744,10 @@
     const pause=document.createElement('button');pause.textContent='暂停';
     const failures=document.createElement('button');failures.textContent='失败详情';
     const server=document.createElement('button');server.textContent='服务器报告';
-    const configure=document.createElement('button');configure.textContent='配置诊断上报';
+    const configure=document.createElement('button');configure.textContent='配置诊断密钥';
+    const upload=document.createElement('button');upload.textContent='立即上传待发诊断';
     const recheck=document.createElement('button');recheck.textContent='复查受阻项';
+    const acsRecheck=document.createElement('button');acsRecheck.textContent='抽查 ACS 许可项（最多10篇）';
     const search=document.createElement('input');search.placeholder='检索本机正文（LMCT/CO₂等）';
     search.style.cssText='width:100%;box-sizing:border-box;margin:8px 0 4px;padding:5px';
     const results=document.createElement('div');
@@ -739,10 +761,10 @@
     const saveSecret=document.createElement('button');saveSecret.textContent='保存并上传诊断';
     saveSecret.style.cssText='display:none;cursor:pointer;border:1px solid #b8c9df;border-radius:6px;padding:5px';
     results.style.cssText='max-height:140px;overflow:auto;font-size:12px;word-break:break-word';
-    for(const btn of [start,pause,failures,server,configure,recheck,hide]){
+    for(const btn of [start,pause,failures,server,configure,upload,recheck,acsRecheck,hide]){
       btn.style.cssText='cursor:pointer;background:#eaf1f9;border:1px solid #b8c9df;border-radius:6px;padding:4px 8px;color:#172439';
     }
-    controls.append(start,pause,failures,server,configure,recheck);
+    controls.append(start,pause,failures,server,configure,upload,recheck,acsRecheck);
     panel.append(message,controls,ownerSecret,saveSecret,filter,failureDetails,search,results);
     head.append(label,hide);root.append(head,panel);
     document.body.append(root);
@@ -759,6 +781,10 @@
         s.lastDoi?'当前/最近：'+s.lastDoi:'',
         s.lastError?'本地错误：'+String(s.lastError).slice(0,85):''].filter(Boolean);
       const diag=GM_getValue(BATCH_DIAG_STATE,{})||{};
+      const tokenConfigured=Boolean(batchReportToken());
+      configure.textContent=tokenConfigured?'更换诊断密钥':'配置诊断密钥';
+      upload.disabled=!tokenConfigured||batchDiagBusy||batchReportKeys().length===0;
+      progress.push('诊断密钥：'+(tokenConfigured?'已保存（仅本浏览器脚本）':'尚未配置'));
       progress.push('诊断报告：'+(diag.state==='delivered'?'服务器已确认':
         diag.state==='auth_failed'?'上报密钥无效':
         diag.state==='token_missing'?'未配置密钥（仅本机）':
@@ -774,7 +800,10 @@
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
     pause.addEventListener('click',()=>{batchPaused=true;pause.disabled=true;batchStatusWrite({state:'pausing'});});
-    recheck.addEventListener('click',()=>void batchStart(true).catch(error=>{
+    recheck.addEventListener('click',()=>void batchStart(true,'blocked').catch(error=>{
+      batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
+    }));
+    acsRecheck.addEventListener('click',()=>void batchStart(true,'acs_license').catch(error=>{
       batchActive=false;batchStatusWrite({state:'paused',lastError:String(error?.message||error).slice(0,140)});
     }));
     failures.addEventListener('click',()=>{
@@ -798,6 +827,9 @@
       saveSecret.style.display=show?'inline-block':'none';
       ownerSecret.value='';
     });
+    upload.addEventListener('click',()=>{
+      if(batchReportToken())void batchDrainReports(true);
+    });
     saveSecret.addEventListener('click',()=>{
       const token=ownerSecret.value.trim();
       if(!token||token.length<12||token.length>512){
@@ -808,7 +840,7 @@
       ownerSecret.value='';ownerSecret.style.display='none';
       saveSecret.style.display='none';
       batchReportStatus({state:'queued',error:'',pending:batchReportKeys().length});
-      void batchDrainReports();
+      void batchDrainReports(true);
     });
     let searchToken=0;
     search.addEventListener('keydown',event=>{
@@ -882,7 +914,23 @@
     }
     return {status:'timeout',stage:'publisher_wait',reasonCode:'publisher_no_response'};
   }
-  async function batchStart(manualBlocked=false){
+  function batchSelectCandidates(papers,existing,attemptRows,manualBlocked=false,mode='all'){
+    const previous=new Map((attemptRows||[]).map(x=>[x.doi,x]));
+    const selected=[];
+    for(const paper of papers){
+      if(existing.has(paper.doi))continue;
+      const prior=previous.get(paper.doi);
+      if(mode==='blocked'&&!prior)continue;
+      if(mode==='acs_license'
+        &&(batchPublisher(paper.doi)!=='acs'||prior?.status!=='license_not_verified'))
+        continue;
+      if(!batchRetryAllowed(prior,manualBlocked))continue;
+      selected.push(paper);
+      if(mode==='acs_license'&&selected.length>=10)break;
+    }
+    return selected;
+  }
+  async function batchStart(manualBlocked=false,mode='all'){
     if(batchActive)return;
     const current=GM_getValue(BATCH_LEASE,null);
     if(current&&current.until>Date.now()){
@@ -892,29 +940,43 @@
     const catalog=await batchLoadCanonicalCatalog();
     const papers=batchHistoricalPapers(catalog);
     if(!papers.length){window.alert('正式目录中暂无 2026-10-01 前的文献');return;}
-    if(!window.confirm((manualBlocked?'重新检查包括许可／正文受阻项在内的全部候选：':'开始独立补抓 ') +papers.length+' 篇正式历史 DOI？\n逐篇打开出版社页面，仅保存有明确 CC BY/CC0 授权的本文正文到本机；不抓 PDF/图/SI，不触碰媒体队列。浏览器需保持开启。'))return;
+    const db=await batchOpenDb();
+    let existing,attempts,selected;
+    try{
+      existing=new Set(await batchDbOp(db,'packets','getAllKeys'));
+      attempts=await batchDbOp(db,'attempts','getAll');
+      selected=batchSelectCandidates(papers,existing,attempts,manualBlocked,mode);
+    }catch(error){db.close();throw error;}
+    if(!selected.length){
+      db.close();
+      batchStatusWrite({state:'finished',total:0,attempted:0,saved:0,
+        existing:existing.size,rightsPending:0,failed:0,skipped:papers.length,
+        currentStage:'finished',lastError:'当前筛选范围无须访问的 DOI'});
+      return;
+    }
+    const label=mode==='acs_license'?'仅抽查此前许可待核实的 ACS 文章'
+      :mode==='blocked'?'重新检查此前已受阻的文章':'开始独立补抓';
+    if(!window.confirm(label+'：'+selected.length+' 篇正式历史 DOI？\n逐篇打开出版社页面，仅保存有明确 CC BY/CC0 授权的本文正文到本机；不抓 PDF/图/SI，不触碰媒体队列。浏览器需保持开启。')){
+      db.close();return;
+    }
     const competing=GM_getValue(BATCH_LEASE,null);
     if(competing&&competing.until>Date.now()){
-      window.alert('已有历史正文批次正在运行，未建立第二个队列。');return;
+      db.close();window.alert('已有历史正文批次正在运行，未建立第二个队列。');return;
     }
-    const db=await batchOpenDb();
-    const existing=new Set(await batchDbOp(db,'packets','getAllKeys'));
     const runId=batchId();
     batchRunId=runId;batchActive=true;batchPaused=false;
-    let attempted=0,saved=0,rightsPending=0,failed=0,skipped=0;
+    let attempted=0,saved=0,rightsPending=0,failed=0,
+      skipped=papers.length-selected.length;
     const leaseTimer=setInterval(()=>{
       if(batchActive)GM_setValue(BATCH_LEASE,{runId,until:Date.now()+BATCH_LEASE_MS});
     },4000);
     GM_setValue(BATCH_LEASE,{runId,until:Date.now()+BATCH_LEASE_MS});
-    batchStatusWrite({state:'running',runId,total:papers.length,attempted:0,
+    batchStatusWrite({state:'running',runId,total:selected.length,attempted:0,
       saved:0,existing:existing.size,rightsPending:0,failed:0,skipped:0,
       currentStage:'queued',lastError:'',startedAt:Date.now(),lastDoi:''});
     try{
-      for(const paper of papers){
+      for(const paper of selected){
         if(batchPaused)break;
-        if(existing.has(paper.doi)){skipped++;continue;}
-        const prior=await batchDbOp(db,'attempts','get',paper.doi);
-        if(!batchRetryAllowed(prior,manualBlocked)){skipped++;continue;}
         const token=batchId();
         const job={runId,token,doi:paper.doi,publication:paper.publication,
           title:paper.title,journal:paper.journal,expiresAt:Date.now()+BATCH_LIMIT_MS};
