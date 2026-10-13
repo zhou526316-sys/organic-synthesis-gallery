@@ -13,6 +13,18 @@ const doi=v=>String(v||'').trim().toLowerCase();
 const s=v=>typeof v==='string'?v.trim():'';
 function requireValid(ok,message){if(!ok)throw Error(message)}
 export const normalizeHistoricalDoi=doi;
+export function historicalPublisherPageMatchesDoi(id,page) {
+  const value=s(page);
+  if(!value.startsWith('https://'))return false;
+  let u;
+  try{u=new URL(value)}catch{return false}
+  const key=doi(id);
+  if(u.href.toLowerCase().includes('/'+key))return true;
+  const articleSlug=key.startsWith('10.1038/')?key.slice('10.1038/'.length):'';
+  return Boolean(articleSlug && (u.hostname==='www.nature.com'||u.hostname==='nature.com')
+    &&u.pathname.toLowerCase()==='/articles/'+articleSlug);
+}
+
 export function validateHistoricalApproval(artifact){
   requireValid(artifact?.schemaVersion==='gallery-historical-scope-reviewed-pilot-v1'
     &&artifact.mode==='scope_review_only_not_publication'
@@ -68,7 +80,7 @@ export function validateHistoricalApproval(artifact){
     requireValid(ev?.publisherOnlineDate===item.date
       &&typeof ev.publisherPage==='string'
       &&ev.publisherPage.startsWith('https://')
-      &&ev.publisherPage.toLowerCase().includes('/'+id)
+      &&historicalPublisherPageMatchesDoi(id,ev.publisherPage)
       &&ev.stageBranch==='staging/historical-archive-nightly'
       &&SHA.test(s(ev.stageBatchSha))
       &&s(ev.stageBatchId).includes('_')
