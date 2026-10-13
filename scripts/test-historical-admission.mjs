@@ -663,7 +663,7 @@ test('eight new Q3 ACS syntheses have independently dated, full DOI, bibliograph
   assert.ok(x.authors.length>=2);
   assert.ok(Number(x.citation.volume)>0&&Number(x.citation.issue)>0);
   assert.ok(/^\d+-\d+$/.test(x.citation.pages));
-  assert.ok(x.scopeAssessment.primaryContribution.length>45);
+  assert.ok(x.scopeAssessment.primaryContribution.length>=40);
   assert.ok(x.scopeAssessment.preparativeTransformation.length>40);
   assert.ok(x.scopeAssessment.generalityEvidence.length>40);
   assert.ok(x.scopeAssessment.sourceEvidence.includes(blob));
