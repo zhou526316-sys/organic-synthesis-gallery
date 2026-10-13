@@ -1,0 +1,3123 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "CCS Chemistry",
+  "issns": [
+    "2096-5745"
+  ],
+  "range": {
+    "from": "2025-12-01",
+    "to": "2025-12-31"
+  },
+  "checkedAt": "2026-10-13T02:01:46.803Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2096-5745",
+        "lane": "publication",
+        "total": 28,
+        "count": 28,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 39,
+      "count": 39,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 28,
+      "openalex": 39
+    }
+  },
+  "candidateCount": 66,
+  "alreadyPublished": 0,
+  "unreviewed": 66,
+  "records": [
+    {
+      "doi": "10.31635/ccschem.025.202405209",
+      "title": "A Chlorine and Ester Substituted Monothiophene Enabling New Polymer Donor for High-Performance and Eco-Friendly All-Polymer Solar Cells",
+      "authors": [
+        "Henan Li",
+        "Suxiang Ma",
+        "Qiming Liang",
+        "Sang Young Jeong",
+        "Qingqing Bai",
+        "Ruijie Ma",
+        "Qian Liu",
+        "Junyi Lu",
+        "Bin Liu",
+        "Bolin Li",
+        "Pei Cheng",
+        "Qifan Xue",
+        "Agnieszka Iwan",
+        "Guangye Zhang",
+        "Han Young Woo",
+        "Junwu Chen",
+        "Xugang Guo",
+        "Li Niu",
+        "Huiliang Sun"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-04-02",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3794-3806",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202405209"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202405209",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202501122ed1",
+      "title": "Editorial",
+      "authors": [],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-11-30",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3530-3534",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202501122ed1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202501122ed1",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202501122ed2",
+      "title": "Author Spotlight",
+      "authors": [],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-11-30",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3535-3539",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202501122ed2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202501122ed2",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202501222ed1",
+      "title": "Editorial",
+      "authors": [],
+      "date": "2025-12-31",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "1-8",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202501222ed1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202501222ed1",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202505435",
+      "title": "BODIPY-Cycloparaphenylene Nanorings",
+      "authors": [
+        "Ningchao Liu",
+        "Yoonji Choi",
+        "Zhaohui Zong",
+        "Tianming Feng",
+        "Taeyeon Kim",
+        "Xian-Sheng Ke"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-03-13",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3650-3663",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202505435"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202505435",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202505538",
+      "title": "Realizing Tighter Molecular Packing of Nonfullerene Acceptor with Trichloro-Terminal for Highly Efficient and Stable Organic Photovoltaics",
+      "authors": [
+        "Yimei Zhang",
+        "Mengting Wang",
+        "Shuixing Li",
+        "Jinyang Yu",
+        "Xiu-Kun Ye",
+        "Adiljan Wupur",
+        "Yongmin Luo",
+        "Jiaying Wu",
+        "Chang-Zhi Li",
+        "Minmin Shi",
+        "Hongzheng Chen"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-04-12",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3745-3756",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202505538"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202505538",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202505596",
+      "title": "A Cooperative Noncovalent-Covalent Strategy for Amplified Circularly Polarized Luminescence and Multiple Information Encryption within Chiral Liquid Crystals",
+      "authors": [
+        "Jingxiao Ren",
+        "Lukang Ji",
+        "Chengyu Jiang",
+        "Pengfei Duan",
+        "Guanghui Ouyang",
+        "Minghua Liu"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-04-01",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3664-3675",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202505596"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202505596",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202505649",
+      "title": "Visualizing DNA Circuits with a G-Quadruplex-Based Colorimetric Reporter",
+      "authors": [
+        "Junlan Liu",
+        "Fangfang Xia",
+        "Min Li",
+        "Weihong Tan"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-06-09",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3700-3710",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202505649"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202505649",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202505699",
+      "title": "Asymmetric [3 + 2] Annulation of N -Sulfonyl Ketimines and Alkynes via Synergistic Photoredox/Cobalt Catalysis",
+      "authors": [
+        "Wei Xiong",
+        "Rui-Rui Zhao",
+        "Hui-Shuang Wang",
+        "Liang-Qiu Lu",
+        "Ke Gao",
+        "Wen-Jing Xiao"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-07-05",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3616-3626",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202505699"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202505699",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202505838",
+      "title": "Self-Reinforced Polyphenolic Nanoantioxidants",
+      "authors": [
+        "Weijie Liu",
+        "Bo Liang",
+        "Xianheng Wang",
+        "Jianhua Zhang",
+        "Haotian Li",
+        "Tianyou Wang",
+        "Hengjie Zhang",
+        "Lei Yang",
+        "Yiwen Li"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-05-09",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3687-3699",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202505838"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202505838",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202505887",
+      "title": "Kinetically Trapped Supramolecular Fluorophores: Suppressing Molecular Motion for Enhanced Brightness and Stability in Water",
+      "authors": [
+        "Xianjia Yan",
+        "Yuqing Lei",
+        "Huiying Guo",
+        "Xu Yu",
+        "Jiajia Guo",
+        "Qiao Song"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-06-09",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3711-3722",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202505887"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202505887",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202505923",
+      "title": "Catalyst-Free Upcycling of Thermoset Polyurethane Foams into Recyclable Carbon Fiber Composites",
+      "authors": [
+        "Xingqun Pu",
+        "Xiaoyu Zhang",
+        "Jiada Chen",
+        "Wenjun Peng",
+        "Ning Zheng",
+        "Qian Zhao",
+        "Zizheng Fang",
+        "Tao Xie"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-06-12",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3723-3731",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202505923"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202505923",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202505963",
+      "title": "Accelerating Reverse Intersystem Crossing by Bridging Two Multiresonant Thermally Activated Delayed Fluorescence Emitters with [2.2]Paracyclophane",
+      "authors": [
+        "Yan Xu",
+        "Dongyang Chen",
+        "Sen Wu",
+        "Dominic J. Black",
+        "Hui Wang",
+        "Robert Pal",
+        "Xiaohong Zhang",
+        "Eli Zysman-Colman"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-08-22",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3635-3649",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202505963"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202505963",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506040",
+      "title": "Switching Mono- and Diselective Ortho Aromatic C–H Bond Activations via Extrinsic Fe Atoms on Metal Surfaces",
+      "authors": [
+        "Junbo Wang",
+        "Kaifeng Niu",
+        "Huaming Zhu",
+        "Biao Yang",
+        "Jun Hu",
+        "Honghe Ding",
+        "Chuan Deng",
+        "Xing Fan",
+        "Chenchen Mai",
+        "Peipei Huang",
+        "Haiping Lin",
+        "Junfa Zhu",
+        "Lifeng Chi",
+        "Qing Li"
+      ],
+      "date": "2025-12-13",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "3554-3565",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506040"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506040",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506059",
+      "title": "Tailored Morphological Control Through Donor–Acceptor Crystallization Balance for Efficient Large-Area Organic Solar Cells",
+      "authors": [
+        "Jiawei Deng",
+        "Rui Zeng",
+        "Zhao Qin",
+        "Lixuan Kan",
+        "Jiaxin Zhuang",
+        "Senke Tan",
+        "Jinge Zhu",
+        "Haisheng Ma",
+        "Yaqi Pei",
+        "Xunchang Wang",
+        "Renqiang Yang",
+        "Feng Liu",
+        "Yanming Sun"
+      ],
+      "date": "2025-12-11",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "3442-3454",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506059"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506059",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506078",
+      "title": "Single-Cell Microgel Microrobot for Targeted and Imaging-Guided Cell Therapy",
+      "authors": [
+        "Xiuyu Wang",
+        "Wangqing Li",
+        "Qi Lou",
+        "Wenchao Li",
+        "Liyuan Zhang",
+        "David A. Weitz"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-07-14",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3732-3744",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506078"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506078",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506100",
+      "title": "Supramolecular Dissociation as a Tool for Engineering Material Properties",
+      "authors": [
+        "Shaolei Qu",
+        "Jingxi Deng",
+        "Wenbin Wang",
+        "Yuhang Liu",
+        "Mengling Yang",
+        "Li Yang",
+        "Wenzhe Gao",
+        "Guoquan Liu",
+        "Yuanhao Wang",
+        "Yi Ding",
+        "Lin Cheng",
+        "Wei Yu",
+        "Zhaoming Zhang",
+        "Xuzhou Yan"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-08-29",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3849-3859",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506100"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506100",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506113",
+      "title": "meta -Selective C–H Amination of Aryl Amines via Protonation-Enabled Polarity Inversion in Homolytic Aromatic Substitution",
+      "authors": [
+        "Shi-Xiong Tang",
+        "Guan-Wang Huang",
+        "Jin-Kai Cheng",
+        "Fei Wang"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-07-15",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3606-3615",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506113"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506113",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506135",
+      "title": "Mechanically Strong, Chemical Recycling Supramolecular Elastomers via Boron-Based Dynamic Bonds",
+      "authors": [
+        "Xin Jiang",
+        "Yingchao Zhang",
+        "Zhi Li",
+        "Lei Ge",
+        "Hongbing Chen",
+        "Xiaoyu Li",
+        "Quan Chen",
+        "Huajian Gao",
+        "Jing Yu"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-07-28",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3757-3770",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506135"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506135",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506177",
+      "title": "Zeolite-Encapsulated PtCu Alloy Catalysts Enabled by Metal Replacement for Propane Dehydrogenation",
+      "authors": [
+        "Jialiang Li",
+        "Qiang Zhang",
+        "Zhili Pang",
+        "Lin Li",
+        "Tianjun Zhang",
+        "Wei Zhang",
+        "Jihong Yu"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-08-08",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3785-3793",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506177"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506177",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506204",
+      "title": "Metal-Free Regioselective Ring-Opening Polymerization of Methyl Glycolide and Crystallization-Controlled Tuning of Poly(lactic- co -glycolic Acid) Performance",
+      "authors": [
+        "Guanyu Liu",
+        "Linyao Zhou",
+        "Yanlong Liu",
+        "Xinchao Bian",
+        "Tianchang Wang",
+        "Jinbo Hu",
+        "Wenbo Wang",
+        "Yeqi Du",
+        "Ranlong Duan",
+        "Xuesi Chen"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-07-30",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3771-3784",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506204"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506204",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506212",
+      "title": "Seeded and Confined Li Plating Enabled by Capsule Additives: Achieving Safe 6 C Charging on 180 μm-Thick Graphite Anodes",
+      "authors": [
+        "Luoyi Ding",
+        "Xinyang Yue",
+        "Xubing Dong",
+        "Yongteng Dong",
+        "Mingming Fang",
+        "Zheng Liang"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-08-18",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3836-3848",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506212"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506212",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506216",
+      "title": "Alkynyl Aldehyde: A Thiol-Specific Reagent Carrying a Versatile Formyl Group",
+      "authors": [
+        "Bohan Li",
+        "Zhenguo Zhang",
+        "Daniel Paniroi Situmorang",
+        "Qian Ning Lim",
+        "Yaquan Liang",
+        "Yuan Qiao",
+        "Teck‐Peng Loh"
+      ],
+      "date": "2025-12-09",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "2",
+        "pages": "781-792",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506216"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506216",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506233",
+      "title": "Advances in Nanocrystal Scintillators for X-Ray Imaging and Biomedical Applications",
+      "authors": [
+        "Zhijian Yang",
+        "Chen Chen",
+        "Yu He",
+        "Lili Xie",
+        "Qiushui Chen",
+        "Huanghao Yang"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-09-02",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3553-3568",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506233"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506233",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506272",
+      "title": "Molecular Design of Ion-Dipole Interactions for Flexible Ionic Conductors",
+      "authors": [
+        "Zhekai Jin",
+        "Yuncong Liu",
+        "Chao Wang"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-08-28",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3569-3590",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506272"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506272",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506274",
+      "title": "Enhanced Rate Performance of Lithium-Ion Batteries Enabled by Ethynylene-Linked Conjugated Microporous Polymers",
+      "authors": [
+        "Qiucheng Xu",
+        "Wenhan Ou",
+        "Xiaoyu Fang",
+        "Hongxuan Chen",
+        "Brandon Bishop",
+        "Louis Corcoran",
+        "Michael F Toney",
+        "Wei Zhang"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-09-10",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3676-3686",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506274"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506274",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506277",
+      "title": "Ring-Opening Polymerization of Unprotected Hydroxyproline N -Carboxyanhydride for the Facile Synthesis of Linear and Branched Poly- l -hydroxyproline",
+      "authors": [
+        "Letian Wang",
+        "Wencan Wang",
+        "Xinyi Zhu",
+        "Chenming Tang",
+        "Xiaodong Jing",
+        "Yahui He",
+        "Justin Amengual",
+        "Yao Lin",
+        "Zhixiang Yu",
+        "Hua Lu"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-08-15",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3807-3822",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506277"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506277",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506280",
+      "title": "Ultrastrong Graphene Films Through Confined Assembly for Extreme Environmental Applications",
+      "authors": [
+        "Luping Zheng",
+        "Aoxin Qi",
+        "Zejun Zhang",
+        "Wangwei Lian",
+        "Yunfei Tian",
+        "Qunfeng Cheng"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-09-19",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3823-3835",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506280"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506280",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506288",
+      "title": "Skeletal Editing of Cyclic Scaffolds",
+      "authors": [
+        "Xihe Bi",
+        "Wei Hao",
+        "Hongjian Lü",
+        "Song Song"
+      ],
+      "date": "2025-12-09",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "2",
+        "pages": "607-692",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506288"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506288",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506292",
+      "title": "Recent Progress on Overall Water Splitting Using Particulate Inorganic Photocatalysts with Wide Visible Light Utilization",
+      "authors": [
+        "Yu Qi",
+        "Fuxiang Zhang"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-09-03",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3591-3605",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506292"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506292",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506332",
+      "title": "Potassium Ion Enrichment via Hollow Porous N-Doped Carbon Nanofibers Encapsulating Nickel Nanoparticles Boosts Acidic CO 2 -to-CO Electroreduction",
+      "authors": [
+        "Zhaozhao Zhu",
+        "Wu Tang",
+        "Xun Huang",
+        "Junjie Wang",
+        "Xiaobin Niu",
+        "Jun Song Chen",
+        "Bin Liu",
+        "Rui Fen Wu",
+        "Zidong Wei"
+      ],
+      "date": "2025-12-15",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "3365-3376",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506332"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506332",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506343",
+      "title": "Efficient Precision Labeling of Proteins in Live Cells via Highly Selective Thiol-Chemistry Illustrated by In-Cell 19 F-NMR",
+      "authors": [
+        "Shuli Guo",
+        "Xing Zhang",
+        "Bin Li",
+        "Chao‐Yu Cui",
+        "Mohan Li",
+        "Bin-Bin Pan",
+        "Jialong Zhao",
+        "Xun‐Cheng Su"
+      ],
+      "date": "2025-12-15",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "3889-3906",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506343"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506343",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506367",
+      "title": "Matching Zeolites with Metal Species for Efficient Catalysis",
+      "authors": [
+        "Hai Wang",
+        "Liang Wang",
+        "Feng-Shou Xiao"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-08-29",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3540-3552",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506367"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506367",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506372",
+      "title": "PtZn Versus PtGa in CO 2 Hydrogenation: When Alloy Stability and Redox Dynamics Drive Selectivity",
+      "authors": [
+        "Wei Dong Zhou",
+        "C. S. Praveen",
+        "Wei Wang",
+        "Chenxi He",
+        "Takashi Toyao",
+        "Ken‐ichi Shimizu",
+        "Ryo Toyoshima",
+        "Hiroshi Kondoh",
+        "Yuhao Wang",
+        "Chunliang Wang",
+        "James Paterson",
+        "Jamie Southouse",
+        "Carlo Federico Pauletti",
+        "Aleix Comas‐Vives",
+        "Christophe Copéret"
+      ],
+      "date": "2025-12-08",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "479-490",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506372"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506372",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506397",
+      "title": "On Click–Clip Reactions",
+      "authors": [
+        "Jiantao Zhao",
+        "Huacheng Yu",
+        "Jiang-Fei Xu",
+        "Xi Zhang"
+      ],
+      "date": "2025-12-10",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "185-193",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506397"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506397",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506418",
+      "title": "Superselectivity in Weakly Multivalent Targeting of Supported Lipid Bilayers",
+      "authors": [
+        "Mark L. Verheijden",
+        "Jurriaan Huskens",
+        "Pascal Jonkheijm"
+      ],
+      "date": "",
+      "datePrecision": "unknown",
+      "createdDate": "2025-09-12",
+      "needsPublisherDateVerification": true,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "7",
+        "issue": "12",
+        "pages": "3627-3634",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506418"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202506418",
+      "sources": [
+        "crossref"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": true
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506464",
+      "title": "Highly-Stable Near-Infrared-Emissive π-Extended Covalent Macrocycles with Ring-Size-Dependent Photoswitching",
+      "authors": [
+        "Xiaomin Zhang",
+        "Chun‐Lin Sun",
+        "Lijian Ning",
+        "Gang Chang",
+        "Chao Feng",
+        "Jinkun Feng",
+        "Yanli Wang",
+        "Yuhui Song",
+        "Lu Liu",
+        "Jiarong Li",
+        "Yanfen Li",
+        "Mingming Zhang",
+        "Shuai Xue",
+        "Feng Liu",
+        "Qichun Zhang",
+        "Yiyong Mai",
+        "Yinjuan Huang"
+      ],
+      "date": "2025-12-11",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "3479-3491",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506464"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506464",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506531",
+      "title": "Redox-Free and Modular Access to Oxacyclic Phosphines Enabled by a Robust Ambiphilic Phosphine Reagent",
+      "authors": [
+        "Bin Lü",
+        "Jianchao Yu",
+        "Hao Sun",
+        "Renwei Xiao",
+        "Ruonan Chen",
+        "Xumu Zhang",
+        "Gen‐Qiang Chen"
+      ],
+      "date": "2025-12-09",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "6",
+        "pages": "3089-3099",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506531"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506531",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506541",
+      "title": "One-Dimensional Lanthanide Magnetic Chains with Fluoride Single Bridge from Slow Hydrolytic Release",
+      "authors": [
+        "Tao-Xiao Wen",
+        "Ze‐Yu Ruan",
+        "Yanru Chen",
+        "Yan‐Cong Chen",
+        "Si‐Guo Wu",
+        "Shan‐Nan Du",
+        "Wei Deng",
+        "Jun‐Liang Liu",
+        "Ming‐Liang Tong"
+      ],
+      "date": "2025-12-08",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "6",
+        "pages": "3075-3088",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506541"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506541",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506573",
+      "title": "Ion-Selective, Amide-Free Membranes with Exceptional Acid Tolerance for Lithium and Acid Recovery from Waste Batteries",
+      "authors": [
+        "Zilin Zhao",
+        "Wangxi Fang",
+        "Dianyu Dong",
+        "Xinke Zhang",
+        "Ying Liu",
+        "Yu Zhu",
+        "Kai Yang",
+        "Jian Jin"
+      ],
+      "date": "2025-12-12",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "3577-3585",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506573"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506573",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506640",
+      "title": "Cation-Tuning and Carbon Dioxide Preadsorption in RHO Zeolite Flips Acetylene/Carbon Dioxide Selectivity with Accelerated Adsorption Kinetics",
+      "authors": [
+        "Ruobing Bai",
+        "Nana Yan",
+        "Wenli Bao",
+        "Peng Guo",
+        "Donghai Mei",
+        "Wenfu Yan",
+        "Jihong Yu"
+      ],
+      "date": "2025-12-11",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "3542-3553",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506640"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506640",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506666",
+      "title": "Zeolite Nanosheet-Confined Pt–FeO x Catalysts for Reversible Hydrogen Cycling via the Methylcyclohexane–Toluene System",
+      "authors": [
+        "Chengxu Li",
+        "Yuanxin Gu",
+        "Tianjun Zhang",
+        "Manyi Yang",
+        "Qiming Sun"
+      ],
+      "date": "2025-12-02",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "3907-3920",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506666"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506666",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506686",
+      "title": "Sono-Switch Nanocatchers for Spatiotemporally Controlled In Situ Tumor Antigen Capture",
+      "authors": [
+        "Linjie Cui",
+        "Yanfei Song",
+        "Xitong Ren",
+        "Weidong Zhao",
+        "Lili Ma",
+        "Zhilin Liu",
+        "Zhaohui Tang",
+        "Xuesi Chen"
+      ],
+      "date": "2025-12-10",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "6",
+        "pages": "3121-3136",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506686"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506686",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506704",
+      "title": "Photoredox-Induced Radical-Polar Crossover ipso , para -Difunctionalization of Aniline Derivatives via Delayed Aryl Migration",
+      "authors": [
+        "Binghong Teng",
+        "Yunliang Guo",
+        "Lan Hu",
+        "Lihan Zhu",
+        "Kehan Jiao",
+        "Tao Xiong",
+        "Guangfan Zheng",
+        "Qian Zhang"
+      ],
+      "date": "2025-12-09",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "6",
+        "pages": "3100-3110",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506704"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506704",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506718",
+      "title": "Visible Light-Driven Deracemization of α-Aryl Ketones by Synergistic Aryl Thiol and Chiral Phosphoric Acid Catalysis",
+      "authors": [
+        "Yue Zhang",
+        "Tiangong Liu",
+        "Zhen Liu",
+        "Zhongqi Peng",
+        "Hanliang Zheng",
+        "Lixia Chen",
+        "Weidong Zhang",
+        "Xin Li"
+      ],
+      "date": "2025-12-11",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "3959-3970",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506718"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506718",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506723",
+      "title": "Advances and Perspectives in the Electrochemical Coupling of CO 2 and N 2",
+      "authors": [
+        "Hengan Wang",
+        "Jiankang Liu",
+        "Xinchen Kang",
+        "Buxing Han"
+      ],
+      "date": "2025-12-26",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "3",
+        "pages": "1249-1266",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506723"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506723",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506750",
+      "title": "Stereoselective β-Mannosylation and β-Rhamnosylation Through the Modulation of Tetrahydrofuran",
+      "authors": [
+        "Fuzhu Yang",
+        "Ya-Nan Wang",
+        "Huanlin Li",
+        "Yishan Sun",
+        "Xiajing Chen",
+        "Xu Peng",
+        "Ruopeng Bai",
+        "Dapeng Zhu",
+        "Biao Yu"
+      ],
+      "date": "2025-12-09",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "3880-3888",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506750"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506750",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506773",
+      "title": "Systematic Coordination Symmetry Engineering in Eu-Metal–Organic Frameworks for Luminescence Recognition of Perfluorooctanoic Acid",
+      "authors": [
+        "Zongsu Han",
+        "Zhaoyi Liu",
+        "Kunyu Wang",
+        "Yuewei Wu",
+        "Jiatong Huo",
+        "Yihao Yang",
+        "Rong‐Ran Liang",
+        "Wei Shi",
+        "Hong-Cai “Joe” Zhou"
+      ],
+      "date": "2025-12-12",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "219-225",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506773"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506773",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506810",
+      "title": "Unlocking Aliphatic Tertiary Amides as Versatile Substrates for Photocatalytic Reductive Cross-Coupling Reactions",
+      "authors": [
+        "Zheng-Yun Weng",
+        "Yuqing Li",
+        "Wen-Xin He",
+        "Ziyi Chen",
+        "Pei‐Qiang Huang"
+      ],
+      "date": "2025-12-09",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "3932-3945",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506810"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506810",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506819",
+      "title": "On-Demand Upcycling of Polyethylene Wastes to Recyclable Multifunctional Materials by LEGO Strategy",
+      "authors": [
+        "Chengfeng Shen",
+        "Xiangyue Wei",
+        "Qiuyue Chen",
+        "Lei Yan",
+        "Xuan Zhao",
+        "Xuehui Liu",
+        "Shimei Xu",
+        "Yuzhong Wang"
+      ],
+      "date": "2025-12-18",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "568-578",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506819"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506819",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506829",
+      "title": "Trace Ionic Liquid-Enhanced Polymer Electrolytes for Low-Voltage Stretchable Field-Effect Transistor Sweat Sensors",
+      "authors": [
+        "Xiangxiang Li",
+        "Weiyu Wang",
+        "Hongchen Jiang",
+        "Xiaoying Zhang",
+        "Xinran Zheng",
+        "Huiqi Yang",
+        "Yan Wang",
+        "Jianning Han",
+        "Xin Ye",
+        "Yunfeng Deng",
+        "Hui Yang",
+        "Wenping Hu"
+      ],
+      "date": "2025-12-27",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "3644-3656",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506829"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506829",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506831",
+      "title": "Pore Wall Engineering of Conjugated Three-Dimensional Covalent Organic Frameworks for Enhanced Hydrogen Peroxide Photosynthesis",
+      "authors": [
+        "Xin Zhao",
+        "G. Yu",
+        "Xuhan Zheng",
+        "Yuanping Yi",
+        "Guangchao Han",
+        "Yingjie Zhao",
+        "Yuancheng Wang"
+      ],
+      "date": "2025-12-10",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "1985-1996",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506831"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506831",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506834",
+      "title": "Rotary Motion Controls Translational Motion in a Single Molecular Machine",
+      "authors": [
+        "Shilong Zhang",
+        "Yongmei Chai",
+        "Guofu Zhou",
+        "Hong Liu",
+        "Yan Wang",
+        "Ben L. Feringa",
+        "Jiawen Chen"
+      ],
+      "date": "2025-12-18",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "282-292",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506834"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506834",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506840",
+      "title": "Pd/Cu Dual Catalysis for Stereodivergent Allylic Alkylation of α-F-Substituted Azaaryl Acetates and Acetamides with Morita–Baylis–Hillman Carbonates",
+      "authors": [
+        "Zibo Liu",
+        "Zheng Wang",
+        "Kuiling Ding"
+      ],
+      "date": "2025-12-10",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "3921-3931",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506840"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506840",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506841",
+      "title": "Retina-inspired Photoelectric-Ionic Nanofluidic Computing Based on Cascaded van der Waals Heterojunction Membranes",
+      "authors": [
+        "Yifan Guo",
+        "Xi Wang",
+        "Xinyu Chen",
+        "Kai Chen",
+        "Liwen Xie",
+        "Zhe Li",
+        "Tianyun Jing",
+        "Xinyan Jiang",
+        "Yixiang Wang",
+        "Shuqi Wang",
+        "Naijia Zhao",
+        "Zhen Zhang",
+        "Lei Jiang"
+      ],
+      "date": "2025-12-26",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "",
+        "issue": "",
+        "pages": "1-38",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506841"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506841",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506871",
+      "title": "Accelerated Bidirectional Photochromism via Excited Bridge",
+      "authors": [
+        "Jin-Ai Fan",
+        "Hao Yu",
+        "Xu-Ying Yu",
+        "Weichao Yang",
+        "Cai Sun",
+        "Shou‐Tian Zheng"
+      ],
+      "date": "2025-12-12",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "1801-1808",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506871"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506871",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506881",
+      "title": "Fully Fused Conjugated Dimeric Heterocycloarenes",
+      "authors": [
+        "Jiangyu Zhu",
+        "Dongyue An",
+        "Ying Song",
+        "Teng Wang",
+        "Yunqi Liu",
+        "Xue Feng Lu"
+      ],
+      "date": "2025-12-11",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "3599-3608",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506881"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506881",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506884",
+      "title": "Light-Driven Organocatalytic Enantioselective Radical α-Carbamoylation of Amines",
+      "authors": [
+        "Yuhan Liu",
+        "Shujie Ji",
+        "Jian Wang"
+      ],
+      "date": "2025-12-02",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "3",
+        "pages": "1284-1294",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506884"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506884",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506889",
+      "title": "Large-Scale Synthesis of Janus Polymer Nanorods via Electrostatics-Mediated Reversible Addition-Fragmentation Chain Transfer Polymerization in Concentrated Solutions",
+      "authors": [
+        "Zhendong Wen",
+        "FengLin Li",
+        "Kairu Qu",
+        "Dayin Sun",
+        "Hua Yang",
+        "Jintao Zhu",
+        "Zhihong Nie",
+        "Zhiqun Lin",
+        "Zhenzhong Yang"
+      ],
+      "date": "2025-12-29",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "1",
+        "pages": "246-260",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506889"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506889",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506895",
+      "title": "Giant Arenecage Enhancing Binding Affinity of Little Blue Box for Naphthalene Guests Through Host-in-Host Mechanism",
+      "authors": [
+        "Xiaoyun Dong",
+        "Congying Guo",
+        "Jiangshan Zhang",
+        "Qiao-Yan Qi",
+        "Hui Wang",
+        "Myongsoo Lee",
+        "Dan-Wei Zhang",
+        "Zhan‐Ting Li"
+      ],
+      "date": "2025-12-15",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "3971-3984",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506895"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506895",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506897",
+      "title": "Asymmetric Carbonyl Addition of Unactivated Homobenzyl Radicals Enabled by Noncovalent Interactions",
+      "authors": [
+        "Haigen Shen",
+        "Hou–Yong Yu",
+        "Zhaoxin Shi",
+        "Zhaobin Wang"
+      ],
+      "date": "2025-12-17",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "4017-4031",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506897"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506897",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506951",
+      "title": "Sustainable Electrochemical Ammonia Synthesis Mediated by Nitrogen Oxides",
+      "authors": [
+        "Yunfan Fu",
+        "Shuyun Zhu",
+        "Yanpeng Song",
+        "Pengfei Wei",
+        "Guoxiong Wang",
+        "Xinhe Bao"
+      ],
+      "date": "2025-12-27",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "4",
+        "pages": "1780-1790",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506951"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506951",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202506960",
+      "title": "Copper-Catalyzed Asymmetric Sulfilimination of Diverse Radical Precursors via Nitrogen-Centered Radical-Enabled C–H and C–C Cleavage",
+      "authors": [
+        "Bin Wei",
+        "Jiangtao Wang",
+        "Lihan Zhu",
+        "Xiao‐Xi Li",
+        "Kehan Jiao",
+        "Jichao Xiao",
+        "Guangfan Zheng",
+        "Xingwei Li"
+      ],
+      "date": "2025-12-11",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "3946-3958",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202506960"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202506960",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202507036",
+      "title": "Strong and Tough Single-Network Elastomers Enabled by a Rigid, High-Threshold Nonscissile Mechanophore-Activated Chain Extender",
+      "authors": [
+        "Xiaofei Chen",
+        "Jun Hu",
+        "Jiaxiang Huang",
+        "Zhiyang Liu",
+        "Shuai Huang",
+        "Meng Wang",
+        "Hong Yang"
+      ],
+      "date": "2025-12-19",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "",
+        "issue": "",
+        "pages": "1-25",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202507036"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202507036",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202507156",
+      "title": "A Versatile Strategy for Embedding Functional Sequences into Polymer Backbones via Controlled Macrocyclic Radical Ring-Opening Polymerization",
+      "authors": [
+        "Jiaman Du",
+        "Yongjin Wang",
+        "Jiayang He",
+        "Hanchu Huang"
+      ],
+      "date": "2025-12-16",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "3",
+        "pages": "1420-1432",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202507156"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.31635/ccschem.025.202507156",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.31635/ccschem.025.202507176",
+      "title": "Triggering Ubiquitin-mediated Ribosomal Proteins Degradation by a Mitochondria-Targeted Re(I) Complex via Intervening Zinc/Copper Ion Homeostasis for Chemo-immunotherapy",
+      "authors": [
+        "Yu Liu",
+        "Kun Peng",
+        "Qian Cao",
+        "Zongwan Mao"
+      ],
+      "date": "2025-12-24",
+      "datePrecision": "day",
+      "createdDate": "2025-12-24",
+      "needsPublisherDateVerification": false,
+      "journal": "CCS Chemistry",
+      "citation": {
+        "year": 2025,
+        "volume": "",
+        "issue": "",
+        "pages": "1-25",
+        "articleNumber": "",
+        "doi": "10.31635/ccschem.025.202507176"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.31635/ccschem.025.202507176",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-12-01",
+        "to": "2025-12-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
