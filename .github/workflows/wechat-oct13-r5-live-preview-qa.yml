@@ -1,0 +1,77 @@
+name: WeChat Oct13 R5 Actual Draft/Get Two Nature 390px QA (Read Only)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/wechat-oct13-r5-live-preview-request.json'
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct13-r5-cloud-draft-only-visual-qa
+  cancel-in-progress: false
+jobs:
+  real-source-cloud-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify no mutation and pinned current-date official draft
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('audit/automation-triggers/wechat-oct13-r5-live-preview-request.json').read_text())
+          g=json.loads(Path('audit/wechat-working/2026-10-13-review-gate.json').read_text())
+          p=json.loads(Path('audit/wechat-publisher/latest.json').read_text())
+          assert r['action']=='read_only_real_wechat_oct13_draft_get_live_preview'
+          assert r['date']=='2026-10-13' and r['revision']=='2026-10-13-r5'
+          assert r['draftWriteAuthorized'] is False and r['publicSendAuthorized'] is False
+          assert g['revision']==r['revision'] and g['textReview']==g['imageReview']=='pass'
+          assert p['stage']=='draft_update' and p['draft_readback']=='ok' and p['publish_id'] is None
+          assert p['publicationSlot']=='2026-10-13T08:00:00+08:00'
+          assert p['media_id']==r['expectedExistingMediaId']
+          assert p['preview_url']==r['previewUrl']
+          assert p['article_count']==2 and p['paper_count']==12
+          assert r['dois']==g['selectionDois']
+          print('Read-only live cloud draft QA scoped to the new Oct13 two-article draft; no mutation.')
+          PY
+      - name: Install pinned Chromium (read-only)
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps chromium >/tmp/20261013-wechat-QA-chromium.log 2>&1 || { tail -70 /tmp/20261013-wechat-QA-chromium.log; exit 1; }
+      - name: Capture real post-draft/get WeChat source images, scientific prose, original links and mobile covers
+        run: node scripts/wechat-oct13-r5-live-preview-qa.mjs
+      - name: Retain read-only screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wechat-20261013-r4-original-cloud-draft-visual-evidence
+          path: audit/wechat-working/2026-10-13-r5-live-preview/
+          retention-days: 30
+      - name: Commit screenshot provenance on newest main without changing publisher
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/wechat-oct13-cloud-preview
+          cp -a audit/wechat-working/2026-10-13-r5-live-preview/. /tmp/wechat-oct13-cloud-preview/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p audit/wechat-working/2026-10-13-r5-live-preview
+            cp -a /tmp/wechat-oct13-cloud-preview/. audit/wechat-working/2026-10-13-r5-live-preview/
+            git add -- audit/wechat-working/2026-10-13-r5-live-preview/
+            git diff --cached --quiet && exit 0
+            git commit -m 'audit: real Oct13 WeChat two-paper draft/get exact DOI and 390px preview QA'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
