@@ -1,0 +1,1090 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Catalysis",
+  "issns": [
+    "2520-1158"
+  ],
+  "range": {
+    "from": "2025-07-01",
+    "to": "2025-07-31"
+  },
+  "checkedAt": "2026-10-13T20:28:54.469Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2520-1158",
+        "lane": "publication",
+        "total": 21,
+        "count": 21,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 21,
+      "count": 21,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 21,
+      "openalex": 21
+    }
+  },
+  "candidateCount": 21,
+  "alreadyPublished": 0,
+  "unreviewed": 21,
+  "records": [
+    {
+      "doi": "10.1038/s41929-025-01350-5",
+      "title": "Unlocking Lewis acid catalysis in non-haem enzymes for an abiotic ene reaction",
+      "authors": [
+        "Xinpeng Mu",
+        "Xinyuan Ji",
+        "Xiahe Chen",
+        "Hongli Wu",
+        "Jinyan Rui",
+        "Xin Hong",
+        "Madison M. Worth",
+        "Abigail D. Reitz",
+        "Lucie T. M. Goldberg",
+        "Marc Garcia-Borràs",
+        "Sarah L. J. Michel",
+        "Yunfang Yang",
+        "Xiongyi Huang"
+      ],
+      "date": "2025-07-04",
+      "datePrecision": "day",
+      "createdDate": "2025-07-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "635-644",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01350-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01350-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01353-2",
+      "title": "A copper enzyme for Lewis acid biocatalysis",
+      "authors": [
+        "Franco Della-Felice",
+        "Gerard Roelfes"
+      ],
+      "date": "2025-07-24",
+      "datePrecision": "day",
+      "createdDate": "2025-07-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "633-634",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01353-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01353-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01363-0",
+      "title": "High-selectivity room-temperature partial oxidation of methane to methanol enabled by electrochemical oxygen promotion on IrO2 catalysts",
+      "authors": [
+        "Cheolho Kim",
+        "Jaehyun Lee",
+        "Sungwoo Lee",
+        "Wonho Jung",
+        "Heewon Min",
+        "Jiyun Choi",
+        "Sungwon Kim",
+        "Yong Tae Kim",
+        "Jinwon Lee",
+        "Jong Suk Yoo",
+        "Jun Hyuk Moon"
+      ],
+      "date": "2025-07-04",
+      "datePrecision": "day",
+      "createdDate": "2025-07-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "688-696",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01363-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01363-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01364-z",
+      "title": "Asymmetric biomimetic aldol reaction of glycinate enables highly efficient synthesis of chiral β-hydroxy-α-amino acid derivatives",
+      "authors": [
+        "Hanyu Liang",
+        "Peng Ren",
+        "Lei Wang",
+        "Dongchen Cai",
+        "Sheng Gong",
+        "Siqi Liu",
+        "Xiao Xiao",
+        "Kuiling Ding",
+        "Baoguo Zhao"
+      ],
+      "date": "2025-07-10",
+      "datePrecision": "day",
+      "createdDate": "2025-07-10",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "668-677",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01364-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01364-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01365-y",
+      "title": "Ligand binding to a Ni–Fe cluster orchestrates conformational changes of the CO-dehydrogenase–acetyl-CoA synthase complex",
+      "authors": [
+        "Jakob Ruickoldt",
+        "Julian Kreibich",
+        "Thomas Bick",
+        "Jae-Hun Jeoung",
+        "Benjamin R. Duffus",
+        "Silke Leimkühler",
+        "Holger Dobbek",
+        "Petra Wendler"
+      ],
+      "date": "2025-07-11",
+      "datePrecision": "day",
+      "createdDate": "2025-07-11",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "657-667",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01365-y"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01365-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01366-x",
+      "title": "Enantioselective Pd-catalysed nucleophilic C(sp3)–H (radio)fluorination",
+      "authors": [
+        "Nikita Chekshin",
+        "Luo-Yan Liu",
+        "D. Quang Phan",
+        "David J. Donnelly",
+        "Yuxin Ouyang",
+        "Kap-Sun Yeung",
+        "Jennifer X. Qiao",
+        "Jin-Quan Yu"
+      ],
+      "date": "2025-07-14",
+      "datePrecision": "day",
+      "createdDate": "2025-07-14",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "678-687",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01366-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01366-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01367-w",
+      "title": "Radical S-adenosyl-l-methionine FeS cluster implicated as the sulfur donor during albomycin biosynthesis",
+      "authors": [
+        "Richiro Ushimaru",
+        "Ziyang Zheng",
+        "Jin Xiong",
+        "Takahiro Mori",
+        "Ikuro Abe",
+        "Yisong Guo",
+        "Hung-wen Liu"
+      ],
+      "date": "2025-07-15",
+      "datePrecision": "day",
+      "createdDate": "2025-07-15",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "760-770",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01367-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01367-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01368-9",
+      "title": "Unveiling the reconstruction of copper bimetallic catalysts during CO2 electroreduction",
+      "authors": [
+        "Intae Kim",
+        "Gi-Baek Lee",
+        "Sungin Kim",
+        "Hyun Dong Jung",
+        "Ji-Yong Kim",
+        "Taemin Lee",
+        "Hyesung Choi",
+        "Jaeyeon Jo",
+        "Geosan Kang",
+        "Sang-Ho Oh",
+        "Woosuck Kwon",
+        "Deokgi Hong",
+        "Hyoung Gyun Kim",
+        "Yujin Lee",
+        "Unggi Kim",
+        "Hyeontae Kim",
+        "Miyoung Kim",
+        "Seoin Back",
+        "Jungwon Park",
+        "Young-Chang Joo",
+        "Dae-Hyun Nam"
+      ],
+      "date": "2025-07-14",
+      "datePrecision": "day",
+      "createdDate": "2025-07-14",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "697-713",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01368-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01368-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01369-8",
+      "title": "Reticular copper dual sites embedded with semiconductor particles for selective CO2-to-C2H4 photoreduction",
+      "authors": [
+        "Qixin Zhou",
+        "Yan Guo",
+        "Yongfa Zhu"
+      ],
+      "date": "2025-07-11",
+      "datePrecision": "day",
+      "createdDate": "2025-07-11",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "728-739",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01369-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01369-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01370-1",
+      "title": "Controlling hydrocarbon chain growth and degree of branching in CO2 electroreduction on fluorine-doped nickel catalysts",
+      "authors": [
+        "Yingqing Ou",
+        "Lu Liu",
+        "Ranga Rohit Seemakurthi",
+        "Futian You",
+        "Haibin Ma",
+        "Javier Pérez-Ramírez",
+        "Núria López",
+        "Boon Siang Yeo"
+      ],
+      "date": "2025-07-17",
+      "datePrecision": "day",
+      "createdDate": "2025-07-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "714-727",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01370-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01370-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01372-z",
+      "title": "Steering oxygen-centred radicals with ground-state ene-reductases for enantioselective intermolecular hydroalkoxylations",
+      "authors": [
+        "Bin Chen",
+        "Qiaoyu Zhang",
+        "Jinhai Yu",
+        "Beibei Zhao",
+        "Ran Ge",
+        "Zihan Zhang",
+        "Ding Luo",
+        "Binju Wang",
+        "Xiaoqiang Huang"
+      ],
+      "date": "2025-07-04",
+      "datePrecision": "day",
+      "createdDate": "2025-07-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "740-748",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01372-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01372-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01374-x",
+      "title": "Selective electrooxidation of 5-hydroxymethylfurfural at pilot scale by engineering a solid polymer electrolyte reactor",
+      "authors": [
+        "Yue Ren",
+        "Wei Kong",
+        "Yang Li",
+        "Wang Zhan",
+        "Chunyu Zhang",
+        "Yuhang Miao",
+        "Bingxin Yao",
+        "Shengnan Li",
+        "Zhenhua Li",
+        "Xiang Liu",
+        "Sheng Zhan",
+        "Hua Zhou",
+        "Mingfei Shao",
+        "Haohong Duan"
+      ],
+      "date": "2025-07-17",
+      "datePrecision": "day",
+      "createdDate": "2025-07-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "771-783",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01374-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01374-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01379-6",
+      "title": "Boron clusters as efficient shuttles for electrocatalytic deuterium labelling via radical H/D exchange",
+      "authors": [
+        "Meng He",
+        "Xuefan Deng",
+        "Fengze Yao",
+        "Yachun Wang",
+        "Yuan Gao",
+        "Pengjie Wang",
+        "Qiongqiong Wan",
+        "Kaixiang Chen",
+        "Liwei Wang",
+        "Hong Yi",
+        "Haibo Zhang",
+        "Wu Li",
+        "Aiwen Lei"
+      ],
+      "date": "2025-07-15",
+      "datePrecision": "day",
+      "createdDate": "2025-07-15",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "784-793",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01379-6"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01379-6",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01380-z",
+      "title": "Cobalt hydride-mediated photocatalytic semihydrogenation of acetylene impurities for continuous-flow production of polymer-grade ethylene",
+      "authors": [
+        "Haojie Dai",
+        "Yuhan Wang",
+        "Kailin Wang",
+        "Hao Kang",
+        "Xiangyang Chen",
+        "Bei Ding",
+        "Xudan Chen",
+        "Ying Du",
+        "Lize Dong",
+        "Wen Zhong",
+        "Ning Sun",
+        "Pengyu Liu",
+        "Chunyang Yu",
+        "Jingyuan Ma",
+        "Fei Song",
+        "Yongfeng Hu",
+        "Shan Tang",
+        "Yannan Liu",
+        "Wenfeng Jiang",
+        "Yuanhai Su",
+        "Jun Li",
+        "Yongfeng Zhou"
+      ],
+      "date": "2025-07-22",
+      "datePrecision": "day",
+      "createdDate": "2025-07-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "645-656",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01380-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01380-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01381-y",
+      "title": "Tethered oxygen turns methane into methanol",
+      "authors": [
+        "Aditya Prajapati"
+      ],
+      "date": "2025-07-24",
+      "datePrecision": "day",
+      "createdDate": "2025-07-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "629-630",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01381-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01381-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01382-x",
+      "title": "A radical way to ethylene",
+      "authors": [
+        "Luka Ðorđević",
+        "Francesca Arcudi"
+      ],
+      "date": "2025-07-24",
+      "datePrecision": "day",
+      "createdDate": "2025-07-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "625-626",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01382-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01382-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01383-w",
+      "title": "Biomimetic aldol reaction of glycinate",
+      "authors": [
+        "Luca Bernardi"
+      ],
+      "date": "2025-07-24",
+      "datePrecision": "day",
+      "createdDate": "2025-07-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "627-628",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01383-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01383-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01385-8",
+      "title": "Semiconductors in pores",
+      "authors": [
+        "Zhuo Jiang",
+        "Xiaofan Shi",
+        "Hexiang Deng"
+      ],
+      "date": "2025-07-24",
+      "datePrecision": "day",
+      "createdDate": "2025-07-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "631-632",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01385-8"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01385-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01391-w",
+      "title": "Biocompatible Lossen rearrangement",
+      "authors": [
+        "Jan-Stefan Völler"
+      ],
+      "date": "2025-07-24",
+      "datePrecision": "day",
+      "createdDate": "2025-07-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "624-624",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01391-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01391-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01393-8",
+      "title": "Author Correction: Exploring mesoscopic mass transport effects on electrocatalytic selectivity",
+      "authors": [
+        "Hendrik H. Heenen",
+        "Hemanth S. Pillai",
+        "Karsten Reuter",
+        "Vanessa J. Bukas"
+      ],
+      "date": "2025-07-17",
+      "datePrecision": "day",
+      "createdDate": "2025-07-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "8",
+        "pages": "853-854",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01393-8"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01393-8",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41929-025-01394-7",
+      "title": "Behind the curtain",
+      "authors": [],
+      "date": "2025-07-24",
+      "datePrecision": "day",
+      "createdDate": "2025-07-24",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Catalysis",
+      "citation": {
+        "year": 2025,
+        "volume": "8",
+        "issue": "7",
+        "pages": "623-623",
+        "articleNumber": "",
+        "doi": "10.1038/s41929-025-01394-7"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41929-025-01394-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}

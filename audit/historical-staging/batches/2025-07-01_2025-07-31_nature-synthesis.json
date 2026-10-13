@@ -1,0 +1,841 @@
+{
+  "schema": "gallery-historical-nightly-staging-v1",
+  "recordType": "historical_discovery_candidate_only",
+  "journal": "Nature Synthesis",
+  "issns": [
+    "2731-0582"
+  ],
+  "range": {
+    "from": "2025-07-01",
+    "to": "2025-07-31"
+  },
+  "checkedAt": "2026-10-13T20:28:55.732Z",
+  "status": "source_enumeration_complete",
+  "sourceStatus": {
+    "crossref": [
+      {
+        "issn": "2731-0582",
+        "lane": "publication",
+        "total": 17,
+        "count": 17,
+        "pages": 1,
+        "complete": true
+      }
+    ],
+    "openalex": {
+      "total": 17,
+      "count": 17,
+      "pages": 1,
+      "issues": []
+    }
+  },
+  "consistency": {
+    "complete": true,
+    "issues": [],
+    "sourceCounts": {
+      "crossref": 17,
+      "openalex": 17
+    }
+  },
+  "candidateCount": 17,
+  "alreadyPublished": 0,
+  "unreviewed": 17,
+  "records": [
+    {
+      "doi": "10.1038/s44160-025-00826-3",
+      "title": "Gram-per-litre-scale production of lutein by engineered Corynebacterium",
+      "authors": [
+        "Hyunmin Eun",
+        "Cindy Pricilia Surya Prabowo",
+        "Sang Yup Lee"
+      ],
+      "date": "2025-07-04",
+      "datePrecision": "day",
+      "createdDate": "2025-07-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1200-1211",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00826-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00826-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00832-5",
+      "title": "Supramolecular templating for two-dimensional crystalline polymers with mechanical bonds",
+      "authors": [
+        "Dejing Xu",
+        "Yuping Wang"
+      ],
+      "date": "2025-07-04",
+      "datePrecision": "day",
+      "createdDate": "2025-07-04",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "905-906",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00832-5"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00832-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00833-4",
+      "title": "Base-promoted azaarene and polyazaarene synthesis through C–C bond cleavage and alkyl transfer",
+      "authors": [
+        "Yong-Ze Chen",
+        "Xiang-Huan Shan",
+        "Bo Yang",
+        "Lin Tie",
+        "Yu Liu",
+        "Jia-Le Fu",
+        "Jian-Ping Qu",
+        "Yan-Biao Kang"
+      ],
+      "date": "2025-07-17",
+      "datePrecision": "day",
+      "createdDate": "2025-07-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1288-1296",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00833-4"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00833-4",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00835-2",
+      "title": "Building complex biochemicals from one-carbon compounds",
+      "authors": [
+        "Blake J. Rasor",
+        "Simone Giaveri",
+        "Andreas M. Küffner",
+        "Tobias J. Erb"
+      ],
+      "date": "2025-07-08",
+      "datePrecision": "day",
+      "createdDate": "2025-07-08",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "787-798",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00835-2"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00835-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00837-0",
+      "title": "Topochemical exfoliation of metal oxyhydroxides for the electrolytic oxygen evolution reaction",
+      "authors": [
+        "Sihong Wang",
+        "Qu Jiang",
+        "Chuan Hu",
+        "Haoyue Zhang",
+        "Ruohan Feng",
+        "Chaoran Zhang",
+        "Chia-Shuo Hsu",
+        "Cuiping Guo",
+        "Hao Ming Chen",
+        "Young Moo Lee",
+        "Di Zhang",
+        "Fang Song"
+      ],
+      "date": "2025-07-07",
+      "datePrecision": "day",
+      "createdDate": "2025-07-07",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1308-1318",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00837-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00837-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00838-z",
+      "title": "Generating reliable and reproducible data for reusable quantum chemical reaction free-energy profiles",
+      "authors": [
+        "Maren Podewitz"
+      ],
+      "date": "2025-07-28",
+      "datePrecision": "day",
+      "createdDate": "2025-07-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "913-921",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00838-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00838-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00839-y",
+      "title": "Strain-dependent enantioselectivity in mechanochemically coupled catalytic hydrogenation",
+      "authors": [
+        "Xujun Zheng",
+        "Chun-Yu Chiou",
+        "Robert T. O’Neill",
+        "Chenghao Duan",
+        "Yichen Yu",
+        "Jack Malek",
+        "Nelson A. Rivera",
+        "Roman Boulatov",
+        "Stephen L. Craig",
+        "Ross A. Widenhoefer"
+      ],
+      "date": "2025-07-17",
+      "datePrecision": "day",
+      "createdDate": "2025-07-17",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "10",
+        "pages": "1319-1328",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00839-y"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00839-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00844-1",
+      "title": "Light-fuelled growth dynamics and structural transition of synthetic protocells",
+      "authors": [
+        "Ke Shi",
+        "Peiyong Song",
+        "Jianwei Li",
+        "Yan Qiao",
+        "Yiyang Lin"
+      ],
+      "date": "2025-07-22",
+      "datePrecision": "day",
+      "createdDate": "2025-07-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1359-1368",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00844-1"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00844-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00847-y",
+      "title": "Plasmonic printing",
+      "authors": [
+        "Alexandra R. Groves"
+      ],
+      "date": "2025-07-03",
+      "datePrecision": "day",
+      "createdDate": "2025-07-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "778-778",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00847-y"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00847-y",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00848-x",
+      "title": "Tunable porosity in 3D bioprinting",
+      "authors": [
+        "Johannes Kreutzer"
+      ],
+      "date": "2025-07-03",
+      "datePrecision": "day",
+      "createdDate": "2025-07-03",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "7",
+        "pages": "780-780",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00848-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00848-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00849-w",
+      "title": "From light to life-like protocells",
+      "authors": [
+        "Claudia Contini"
+      ],
+      "date": "2025-07-22",
+      "datePrecision": "day",
+      "createdDate": "2025-07-22",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1329-1330",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00849-w"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00849-w",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00850-3",
+      "title": "Ethylene electrosynthesis at low voltages enabled by dopant-induced modulation of the rate-determining step",
+      "authors": [
+        "Qin Yang",
+        "Xiu Wang",
+        "Jiguang Zhang",
+        "Yu Mao",
+        "Shibo Xi",
+        "Yu-Chun Liu",
+        "Yung-Hsi Hsu",
+        "Longzhou Zhang",
+        "Surani Bin Dolmanan",
+        "Meng Wang",
+        "Bingqing Wang",
+        "Yipeng Zang",
+        "Mingsheng Zhang",
+        "Wan Ru Leow",
+        "Sung-Fu Hung",
+        "Ziyun Wang",
+        "Yanwei Lum"
+      ],
+      "date": "2025-07-25",
+      "datePrecision": "day",
+      "createdDate": "2025-07-25",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "11",
+        "pages": "1396-1407",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00850-3"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00850-3",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00856-x",
+      "title": "Pyrroles to pyridines",
+      "authors": [
+        "Peter W. Seavill"
+      ],
+      "date": "2025-07-28",
+      "datePrecision": "day",
+      "createdDate": "2025-07-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "902-902",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00856-x"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00856-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00858-9",
+      "title": "Accessing cyclopropyl boronates",
+      "authors": [
+        "Joel Cejas-Sánchez"
+      ],
+      "date": "2025-07-28",
+      "datePrecision": "day",
+      "createdDate": "2025-07-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "901-901",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00858-9"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00858-9",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00861-0",
+      "title": "Phosphine resolution using chiral supporting electrolytes",
+      "authors": [
+        "Thomas West"
+      ],
+      "date": "2025-07-28",
+      "datePrecision": "day",
+      "createdDate": "2025-07-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "903-903",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00861-0"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00861-0",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00862-z",
+      "title": "Pushing the bounds for metal alloys",
+      "authors": [
+        "Yanfei Zhu"
+      ],
+      "date": "2025-07-28",
+      "datePrecision": "day",
+      "createdDate": "2025-07-28",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "904-904",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00862-z"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00862-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s44160-025-00864-x",
+      "title": "Author Correction: Synthesis of micrometre-thick oriented 2D covalent organic framework films by a kinetic polymerization pathway",
+      "authors": [
+        "Luca Cusin",
+        "Piotr Cieciórski",
+        "Samuel Van Gele",
+        "Fabian Heck",
+        "Simon Krause",
+        "Pawel W. Majewski",
+        "Bettina V. Lotsch",
+        "Wojciech Danowski",
+        "Paolo Samorì"
+      ],
+      "date": "2025-07-30",
+      "datePrecision": "day",
+      "createdDate": "2025-07-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Synthesis",
+      "citation": {
+        "year": 2025,
+        "volume": "4",
+        "issue": "8",
+        "pages": "1018-1018",
+        "articleNumber": "",
+        "doi": "10.1038/s44160-025-00864-x"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s44160-025-00864-x",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2025-07-01",
+        "to": "2025-07-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    }
+  ],
+  "noFormalPublication": true,
+  "noMediaWrites": true,
+  "noPDFAcquisition": true,
+  "abstractTextsCopied": false
+}
