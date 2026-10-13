@@ -7,6 +7,8 @@ on:
       - 'cloudflare/scripts/audit-literature.mjs'
       - 'scripts/lib/publisher-feed-discovery.mjs'
       - 'scripts/test-publisher-feed-discovery.mjs'
+      - 'scripts/lib/literature-review-queue-guard.mjs'
+      - 'scripts/test-literature-review-queue-guard.mjs'
       - 'scripts/lib/literature-exclusion-recheck.mjs'
       - 'scripts/test-literature-exclusion-recheck.mjs'
       - 'scripts/test-literature-completeness-capability.mjs'
@@ -36,6 +38,8 @@ jobs:
         run: node --test scripts/test-literature-exclusion-recheck.mjs
       - name: Verify publisher DOI-bound public abstract fallback parser
         run: node --test scripts/test-publisher-abstract-metadata.mjs
+      - name: Validate primary window versus unverified DOI backlog
+        run: node --test scripts/test-literature-review-queue-guard.mjs
       - name: Verify core literature source coverage policy
         run: node scripts/test-literature-completeness-capability.mjs
       - name: Verify strict prepublication contract regressions
@@ -55,7 +59,7 @@ jobs:
           node-version: '22'
       - name: Test real 16-journal DOI discovery without writing production
         env:
-          AUDIT_START: '2026-10-11'
+          AUDIT_START: ''
           AUDIT_END: '2026-10-13'
           AUDIT_OUTPUT: ${{ runner.temp }}/publisher-source-readonly-latest.json
           AUDIT_UNRESOLVED_OUTPUT: ${{ runner.temp }}/publisher-source-readonly-unresolved.json
@@ -74,6 +78,31 @@ jobs:
           assert.equal(report.publisherFeeds.completeListing,false);
           assert.equal(compact.unresolved.length,report.summary.unresolved);
           assert.equal(compact.publisherFeeds.status.length,16);
+          assert.equal(compact.publisherDateVerificationBacklog.count,
+            report.publisherDateVerificationBacklog.count);
+          assert.equal(compact.historicalEvidenceChallenges.count,
+            report.historicalEvidenceChallenges.count);
+          assert.equal(report.publisherDateVerificationBacklog.items.length,
+            report.publisherDateVerificationBacklog.count);
+          assert.equal(report.historicalEvidenceChallenges.items.length,
+            report.historicalEvidenceChallenges.count);
+          const primary=report.baseStartDate;
+          assert.ok(compact.unresolved.every(row=>
+            !row.publisherFeedUrl||row.date||!row.publisherDateUnverified||
+            !row.feedDate||row.feedDate>=primary),
+            'An undated RSS item with old packaging date cannot enter primary handoff');
+          assert.equal(report.summary.publisherFirstOnlineBacklog,
+            report.publisherDateVerificationBacklog.count);
+          assert.equal(report.summary.historicalEvidenceChallenges,
+            report.historicalEvidenceChallenges.count);
+          assert.ok(compact.unresolved.every(row=>
+            !row.recheckPreviousExclusion||row.date>=report.baseStartDate),
+            'Historic exclusion with changed abstract must not become a fresh 08:00 candidate');
+          assert.ok(report.historicalEvidenceChallenges.items.every(row=>
+            row.date<report.baseStartDate||!row.date),
+            'Changed evidence within the current primary date window must be reviewed, not hidden in backlog');
+          assert.equal(report.summary.publisherFirstOnlineBacklog,
+            report.publisherDateVerificationBacklog.items.length);
           assert.ok(report.sourceStats?.length>=16);
           const doi='10.1038/s44160-026-01189-z';
           assert.ok(report.missingCandidates.some(row=>row.doi===doi),

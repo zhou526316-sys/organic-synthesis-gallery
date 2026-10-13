@@ -8,6 +8,8 @@ import { loadScopeCorrections, withScopeCorrections } from '../../scripts/lib/sc
 import { isStandaloneRepositoryDoi } from '../../scripts/lib/literature-doi-provenance.mjs';
 import { fetchOfficialPublisherFeeds, OFFICIAL_PUBLISHER_FEEDS } from '../../scripts/lib/publisher-feed-discovery.mjs';
 import { exclusionEvidenceRecheckReason } from '../../scripts/lib/literature-exclusion-recheck.mjs';
+import { publisherOnlyReviewEligible, exclusionRecheckBelongsToPrimaryWindow,
+  buildUnverifiedPublisherBacklog, mergeHistoricalRecheckBacklog } from '../../scripts/lib/literature-review-queue-guard.mjs';
 import { fetchPublisherMetadataAbstract,publisherMetadataEntryUrl } from '../../scripts/lib/publisher-abstract-metadata.mjs';
 
 const TIME_ZONE = 'Asia/Shanghai';
@@ -454,12 +456,22 @@ for (const journal of JOURNALS) {
 
 // Independent, non-exhaustive official publisher feeds. Publisher-only DOI
 // records enter the SAME semantic handoff, never straight into production.
+const registeredDoiSet = new Set(merged.keys());
+const publisherOnlyUnverified = [];
 const publisherFeedAudit = await fetchOfficialPublisherFeeds({
   startDate: RESCUE_START, endDate: END
 });
 const publisherOnlyDois = [];
 for (const candidate of publisherFeedAudit.candidates) {
-  if (!merged.has(normalizeDoi(candidate.doi))) publisherOnlyDois.push(normalizeDoi(candidate.doi));
+  const doi=normalizeDoi(candidate.doi);
+  if (!registeredDoiSet.has(doi)) {
+    publisherOnlyDois.push(doi);
+    // Publisher feed event dates can be issue rebundling timestamps.
+    // Preserve uncertain article identities, but avoid treating last week's
+    // packaging date as a first-online date for tomorrow's semantic queue.
+    publisherOnlyUnverified.push(candidate);
+    if (!publisherOnlyReviewEligible(candidate,BASE_START,END)) continue;
+  }
   mergeCandidate(merged, candidate);
 }
 const configuredFeedJournals = new Set(OFFICIAL_PUBLISHER_FEEDS.map(feed => feed.journal));
@@ -570,12 +582,22 @@ const reviewableMissing = rawMissing.filter(c => !isExcludedDoi(c.doi));
 // Earlier exclude is not permanent when newly obtained DOI-verified metadata
 // changes the evidence. Explicit confirmed scope corrections stay excluded.
 const exclusionRecheckReasons = new Map();
+const historicalEvidenceRechecks = [];
 for (const candidate of reviewableMissing) {
   if(!reviewedExclusions.has(candidate.doi))continue;
   const reason=exclusionEvidenceRecheckReason(candidate,reviewedHistory.get(candidate.doi),{
     confirmedExcluded: isExcludedDoi(candidate.doi) || confirmedScopeExclusionDois.has(candidate.doi)
   });
-  if(reason)exclusionRecheckReasons.set(candidate.doi,reason);
+  if(!reason)continue;
+  if(exclusionRecheckBelongsToPrimaryWindow(candidate,BASE_START,END)) {
+    exclusionRecheckReasons.set(candidate.doi,reason);
+  } else {
+    historicalEvidenceRechecks.push({
+      doi:candidate.doi,journal:candidate.journal,title:candidate.title,
+      date:candidate.date,reason,previousReviewFile:reviewedHistory.get(candidate.doi)?.reviewFile||'',
+      reviewPriority:retainForReview(candidate)?'high':'normal'
+    });
+  }
 }
 
 const reviewedExcluded = reviewableMissing.filter(c => reviewedExclusions.has(c.doi) && !exclusionRecheckReasons.has(c.doi));
@@ -596,6 +618,42 @@ const missingCandidates = missing
 const potentialGaps = missingCandidates.filter(c => c.reviewPriority === 'high');
 const publisherDateUnverifiedDois = missingCandidates
   .filter(c => c.publisherDateUnverified && !c.date).map(c => c.doi);
+
+ // Preserve source-only DOI identity and historical evidence challenges from
+ // earlier daily snapshots, even if the RSS window rolls forward or verifiedThrough
+ // eventually advances. They are not suppressed or labelled as exclusions.
+ let previousAudit={};
+ try {
+   const currentSnapshot=JSON.parse(await readFile(OUT,'utf8'));
+   if(currentSnapshot?.auditVersion===5) previousAudit=currentSnapshot;
+ } catch { /* PR temp-run has no prior snapshot; do not invent one. */ }
+ const previousPublisherHoldouts=Array.isArray(previousAudit.publisherDateVerificationBacklog?.items)
+   ? previousAudit.publisherDateVerificationBacklog.items
+   : (previousAudit.missingCandidates||[]).filter(row=>
+       row.publisherFeedUrl && row.publisherDateUnverified && !row.date);
+ const previousHistoricalChallenges=Array.isArray(previousAudit.historicalEvidenceChallenges?.items)
+   ? previousAudit.historicalEvidenceChallenges.items
+   : (previousAudit.missingCandidates||[]).filter(row=>
+       row.recheckPreviousExclusion && !exclusionRecheckBelongsToPrimaryWindow(row,BASE_START,END))
+       .map(row=>({
+         doi:row.doi,journal:row.journal,title:row.title,date:row.date,
+         reason:row.recheckReason,previousReviewFile:row.previousReviewFile,
+         reviewPriority:row.reviewPriority
+       }));
+ const publisherDateVerificationBacklog=buildUnverifiedPublisherBacklog(
+   previousPublisherHoldouts,publisherOnlyUnverified,{
+     discoveredDoiSet:registeredDoiSet,galleryDoiSet:galleryDois,
+     confirmedExclusionDoiSet:confirmedScopeExclusionDois
+   });
+ const historicalEvidenceChallengeBacklog=mergeHistoricalRecheckBacklog(
+   previousHistoricalChallenges,historicalEvidenceRechecks,
+   reviewedHistory,confirmedScopeExclusionDois);
+ console.log('AUDIT_RECALL_BACKLOG '+JSON.stringify({
+   publisherFirstOnlineUnverified:publisherDateVerificationBacklog.length,
+   historicalExclusionEvidenceChanges:historicalEvidenceChallengeBacklog.length,
+   recentExclusionsReopened:exclusionRecheckReasons.size
+ }));
+
 
 const criticalFailures = stats.filter(s => !s.ok);
 const hasSource = (candidate, prefix) => (candidate.sources || []).some(source => source.startsWith(prefix));
@@ -756,6 +814,8 @@ const report = {
     historicalNonJournalRecords: historicalNonJournalRecords.length,
     publisherFeedOnlyDois: publisherOnlyDois.length,
     previousExclusionsReopened: exclusionRecheckReasons.size,
+    historicalEvidenceChallenges: historicalEvidenceChallengeBacklog.length,
+    publisherFirstOnlineBacklog: publisherDateVerificationBacklog.length,
     publisherDateUnverified: publisherDateUnverifiedDois.length,
     publisherAbstractRescued: pubAbstractResults.filter(row=>row.status==='doi_verified_public_abstract').length,
     publisherAbstractProbeBlocked: pubAbstractResults.filter(row=>row.status==='blocked_or_unavailable').length,
@@ -777,7 +837,10 @@ const report = {
     criticalSourceFailures: criticalFailures.length,
     sourceCoverageAnomalies: closureCoverageAnomalies,
     historicalCoverageLosses: closureHistoricalCoverageLosses,
-    verifiedThroughEligible: publisherListingComplete && publisherDateUnverifiedDois.length === 0 && criticalFailures.length === 0 && closureCoverageAnomalies.length === 0 && closureHistoricalCoverageLosses.length === 0 && closureMissing.length === 0,
+    verifiedThroughEligible: publisherListingComplete && publisherDateUnverifiedDois.length === 0
+      && publisherDateVerificationBacklog.length === 0 && historicalEvidenceChallengeBacklog.length === 0
+      && criticalFailures.length === 0 && closureCoverageAnomalies.length === 0
+      && closureHistoricalCoverageLosses.length === 0 && closureMissing.length === 0,
     note: 'Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, critical source failures must be zero, and closure-day Crossref/OpenAlex coverage must not show a severe one-family collapse.',
   },
   byDate,
@@ -791,6 +854,14 @@ const report = {
   sourceStats: stats,
   publisherFeeds: {sourceType:'official_partial_feeds',completeListing:publisherListingComplete,
     publisherOnlyDois,publisherDateUnverifiedDois,status:publisherFeedStatus},
+  publisherDateVerificationBacklog: {
+    status:'not_admissible_until_first_online_date_verified',
+    count:publisherDateVerificationBacklog.length,items:publisherDateVerificationBacklog
+  },
+  historicalEvidenceChallenges: {
+    status:'independent_two_pass_recheck_required',
+    count:historicalEvidenceChallengeBacklog.length,items:historicalEvidenceChallengeBacklog
+  },
   publicPublisherAbstractRescue: {mode:'doi_verified_abstract_only',
     selected:pubAbstractTargets.length,results:pubAbstractResults},
   missingCandidates,
@@ -863,6 +934,8 @@ const reviewInput = {
     historicalCoverageLosses: report.summary.historicalCoverageLosses,
     publisherDateUnverified: report.summary.publisherDateUnverified,
     previousExclusionsReopened: report.summary.previousExclusionsReopened,
+    historicalEvidenceChallenges: report.summary.historicalEvidenceChallenges,
+    publisherFirstOnlineBacklog: report.summary.publisherFirstOnlineBacklog,
   },
   activeJournals: report.targetJournals.map(journal => ({
     name: journal.name,
@@ -874,6 +947,14 @@ const reviewInput = {
   potentialGapDois: potentialGaps.map(candidate => candidate.doi),
   publisherFeeds: {sourceType:'official_partial_feeds',completeListing:publisherListingComplete,
     publisherOnlyDois,status:publisherFeedStatus},
+  // These are durable metadata/evidence investigation queues, never
+  // secretly dropped DOI differences or same-slot publication candidates.
+  publisherDateVerificationBacklog: {
+    count:publisherDateVerificationBacklog.length,items:publisherDateVerificationBacklog
+  },
+  historicalEvidenceChallenges: {
+    count:historicalEvidenceChallengeBacklog.length,items:historicalEvidenceChallengeBacklog
+  },
 };
 
 await mkdir(path.dirname(OUT), { recursive: true });
