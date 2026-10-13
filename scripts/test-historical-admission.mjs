@@ -462,3 +462,47 @@ test('2026-Q3 ACS eight late-evening source-verified synthesis reviews stay DOI-
   ])assert.equal(root.accepted.some(x=>x.doi===doi),false,
     'online-first provenance disagreement must not be silently admitted');
 });
+
+test('2026-Q3 two Science Advances NLM-dated preparative papers have distinct two-pass scope',()=>{
+  const rows=[
+    ['10.1126/sciadv.aeg0999','2026-07-17','022c24c12dfb71cfe3703352b13822e90ea2f2f5','42467759'],
+    ['10.1126/sciadv.aeg8852','2026-09-04','913145190cc1233259f63e8875d974875451e816','42696577']
+  ];
+  const reasons=new Set();
+  for(const [doi,day,sha,pmid] of rows){
+    const paper=root.accepted.find(r=>r.doi===doi);
+    assert.ok(paper,doi);
+    assert.equal(paper.journal,'Science Advances');
+    assert.equal(paper.date,day);
+    assert.equal(paper.reviewEvidence.publisherOnlineDate,day);
+    assert.equal(paper.reviewEvidence.firstOnlineDateEvidence.date,day);
+    assert.equal(paper.reviewEvidence.stageBatchSha,sha);
+    assert.equal(paper.reviewEvidence.firstOnlineDateEvidence.pubmedUrl,
+      'https://pubmed.ncbi.nlm.nih.gov/'+pmid+'/');
+    assert.match(paper.reviewEvidence.firstOnlineDateEvidence.tier,
+      /^NLM_journal_supplied_article_date/);
+    assert.equal(paper.reviewEvidence.firstOnlineDateEvidence.AAASPublisherPageDirectAccess,false);
+    assert.deepEqual(paper.reviewEvidence.crossrefOpenalexSources,['crossref','openalex']);
+    assert.equal(paper.reviewPasses,2);
+    assert.deepEqual(paper.independentPasses.map(x=>x.decision),['include','include']);
+    assert.ok(paper.independentPasses[0].reason.length>90);
+    assert.ok(paper.independentPasses[1].reason.length>80);
+    assert.equal(paper.ingestionChannel,'historical_backfill');
+    assert.equal(paper.mediaPolicy,'toc_only');
+    assert.equal(paper.new,false);
+    assert.equal(paper.addedDate,'');
+    assert.equal(paper.reviewEvidence.abstractCopied,false);
+    assert.equal(paper.reviewEvidence.figureFetched,false);
+    assert.equal(paper.reviewEvidence.pdfFetched,false);
+    reasons.add(paper.independentPasses[1].reason);
+  }
+  assert.equal(reasons.size,2);
+  const nhc=root.accepted.find(x=>x.doi==='10.1126/sciadv.aeg0999');
+  assert.match(nhc.scopeAssessment.generalityEvidence,/70/);
+  assert.match(nhc.scopeAssessment.boundaryChallenge,/烷基醛/);
+  const formal=root.accepted.find(x=>x.doi==='10.1126/sciadv.aeg8852');
+  assert.match(formal.reason,/形式全合成/);
+  assert.match(formal.challengeReason,/并非方法学|大.*研究|药.*研究|药理/);
+  assert.doesNotMatch(formal.reason,/完成Cortistatin A全合成/);
+  assert.equal(root.pending.length,2,'old ACS date disputes not silently altered');
+});
