@@ -532,7 +532,7 @@
       "doi": "10.1021/acs.orglett.6c02954",
       "journal": "Organic Letters",
       "title": "Nickel-Catalyzed Enantioselective Synthesis of Chiral Alkenyl Sulfoxides",
-      "titleZh": "镍催化烯基溴化物与原位亚磺酸根不对称碳硫偶联合成烯基亚砜",
+      "titleZh": "镍催化烯基溴化物与原位次磺酸根不对称碳硫偶联合成烯基亚砜",
       "date": "2026-09-03",
       "authors": [
         "Li Gao",
@@ -559,12 +559,12 @@
       "firstPassDecision": "include",
       "challengeDecision": "include",
       "reviewPasses": 2,
-      "reason": "作者通过现场产生的亚磺酸根（sulfenate）与烯基溴化物发生镍催化不对称C(sp2)–S交叉偶联，构建硫中心手性烯基亚砜，提供易催化剂毒化含硫体系的通用解决策略。",
+      "reason": "作者通过现场产生的次磺酸根（sulfenate）与烯基溴化物发生镍催化不对称C(sp2)–S交叉偶联，构建硫中心手性烯基亚砜，提供易催化剂毒化含硫体系的通用解决策略。",
       "evidenceBasis": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-09-03（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/acs.orglett.6c02954，Crossref+OpenAlex冻结批次 2026-09-01_2026-09-07_organic-letters，Git blob SHA 80aca4837373541c9ba22bdcae30cd0bd2f64511；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
       "challengeReason": "第二遍严格区分sulfenate anion与sulfinate（亚磺酸盐）或sulfone，前者与烯基溴化物偶联后获得手性亚砜，不能把起始物当作最终烯基亚砜的硫中心原本已固定。配体稳定机理为作者实验解释，不能假定所有硫亲核试剂都不会毒化催化剂。",
       "scopeAssessment": {
-        "primaryContribution": "作者通过现场产生的亚磺酸根（sulfenate）与烯基溴化物发生镍催化不对称C(sp2)–S交叉偶联，构建硫中心手性烯基亚砜，提供易催化剂毒化含硫体系的通用解决策略。",
-        "preparativeTransformation": "烯基溴化物作为有机亲电伙伴，与反应体系中原位生成的亚磺酸根物种发生Ni-双膦配体催化的C(sp2)–S交叉偶联，制备多个具有立体构型的烯基亚砜；不能把产物误称为含硫砜或硫醚。",
+        "primaryContribution": "作者通过现场产生的次磺酸根（sulfenate）与烯基溴化物发生镍催化不对称C(sp2)–S交叉偶联，构建硫中心手性烯基亚砜，提供易催化剂毒化含硫体系的通用解决策略。",
+        "preparativeTransformation": "烯基溴化物作为有机亲电伙伴，与反应体系中原位生成的次磺酸根物种发生Ni-双膦配体催化的C(sp2)–S交叉偶联，制备多个具有立体构型的烯基亚砜；不能把产物误称为含硫砜或硫醚。",
         "generalityEvidence": "ACS Organic Letters官方摘要明确报告结构多样的手性烯基亚砜制备、磷配体调节减缓硫试剂毒化与复杂手性亚砜骨架的后续分歧合成；详细底物列表/单个ee没有直接证据，不补写。",
         "sourceEvidence": "ACS正式Article/Letter页面与公开检索索引标注Published Online 2026-09-03（不是纸刊Issue日期）；作者、标题、卷期和页码与历史来源一致。Publisher https://pubs.acs.org/doi/10.1021/acs.orglett.6c02954，Crossref+OpenAlex冻结批次 2026-09-01_2026-09-07_organic-letters，Git blob SHA 80aca4837373541c9ba22bdcae30cd0bd2f64511；出版社受版权控制全文和SI未复制或当作已完整审阅。科学证据：undefined",
         "boundaryChallenge": "独立反查含硫试剂对镍的毒化研究是否只是保护金属表面的材料论文：真实体系通过多个烯基溴化物形成C–S键并获得硫中心手性产物，独立满足合成方法学。"
@@ -590,7 +590,7 @@
         {
           "pass": 1,
           "decision": "include",
-          "reason": "作者通过现场产生的亚磺酸根（sulfenate）与烯基溴化物发生镍催化不对称C(sp2)–S交叉偶联，构建硫中心手性烯基亚砜，提供易催化剂毒化含硫体系的通用解决策略。 烯基溴化物作为有机亲电伙伴，与反应体系中原位生成的亚磺酸根物种发生Ni-双膦配体催化的C(sp2)–S交叉偶联，制备多个具有立体构型的烯基亚砜；不能把产物误称为含硫砜或硫醚。 ACS Organic Letters官方摘要明确报告结构多样的手性烯基亚砜制备、磷配体调节减缓硫试剂毒化与复杂手性亚砜骨架的后续分歧合成；详细底物列表/单个ee没有直接证据，不补写。"
+          "reason": "作者通过现场产生的次磺酸根（sulfenate）与烯基溴化物发生镍催化不对称C(sp2)–S交叉偶联，构建硫中心手性烯基亚砜，提供易催化剂毒化含硫体系的通用解决策略。 烯基溴化物作为有机亲电伙伴，与反应体系中原位生成的次磺酸根物种发生Ni-双膦配体催化的C(sp2)–S交叉偶联，制备多个具有立体构型的烯基亚砜；不能把产物误称为含硫砜或硫醚。 ACS Organic Letters官方摘要明确报告结构多样的手性烯基亚砜制备、磷配体调节减缓硫试剂毒化与复杂手性亚砜骨架的后续分歧合成；详细底物列表/单个ee没有直接证据，不补写。"
         },
         {
           "pass": 2,
