@@ -949,11 +949,18 @@
     const job=GM_getValue(BATCH_JOB,null);
     if(!job||job.expiresAt<Date.now()||!publisher(location.hostname)||!job.token||!job.runId)return;
     let phase='publisher_page',verified=false,sectionCount=0,evidenceChars=0;
+    function observedPageHttpStatus(){
+      // Read the browser's own navigation timing; never initiate extra publisher requests.
+      try{
+        const response=Number(performance.getEntriesByType('navigation')?.[0]?.responseStatus||0);
+        return Number.isInteger(response)&&response>=100&&response<=599?response:null;
+      }catch(_){return null;}
+    }
     const reportStage=(stage,reasonCode='',failed=false)=>{
       phase=stage;
       GM_setValue(BATCH_PROGRESS,{runId:job.runId,token:job.token,doi:job.doi,
         stage,failed,reasonCode,at:Date.now(),pageDoiVerified:verified,
-        sectionCount,evidenceChars,httpStatus:null});
+        sectionCount,evidenceChars,httpStatus:observedPageHttpStatus()});
     };
     const storeResult=data=>{
       const current=GM_getValue(BATCH_JOB,null);
@@ -963,7 +970,7 @@
       reportStage(stage,code,data.status!=='ok');
       GM_setValue(BATCH_RESULT,{runId:job.runId,token:job.token,doi:job.doi,
         at:Date.now(),stage,pageDoiVerified:verified,sectionCount,evidenceChars,
-        httpStatus:null,...data});
+        httpStatus:observedPageHttpStatus(),...data});
     };
     // No need to inherit URL fragments across publisher redirects. The only
     // active tab is DOI-bound and only the explicitly started, live job may run.
@@ -971,6 +978,9 @@
     if(fragment&&fragment[1]!==job.token)return;
     let doi=pageDoi(),capture=null,reason='';
     reportStage('publisher_page');
+    if([403,429].includes(observedPageHttpStatus())){
+      storeResult({status:'page_http_error',stage:'publisher_page'});return;
+    }
     // Other article tabs must never claim the queue's response slot.
     if(doi&&doi!==job.doi)return;
     if(!doi&&!fragment)return;
