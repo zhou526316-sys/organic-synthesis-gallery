@@ -77,7 +77,10 @@ test('unqualified asymmetric in neuroscience/materials does not crowd high-synth
   for(const title of [
     'Cobalt-Catalyzed Enantioselective Hydroalkylation of Cyclohexenes',
     'Asymmetric Catalytic Synthesis of New Chiral Heterocycles',
-    'Enantioselective Cross-Coupling through Nickel Catalysis'
+    'Enantioselective Cross-Coupling through Nickel Catalysis',
+    'Asymmetric Copper-Catalyzed Propargylation of Aminopyrazoles',
+    'Asymmetric vicinal C(sp3)–H difunctionalization of cyclic amines via photoredox',
+    'Enantiodivergent Synthesis of 2-phosphoryl-chromanones via Asymmetric Hydrophosphinylation'
   ])assert.equal(rankHistoricalCandidate({title,date:'2026-09-01'}).priority,'P0');
 });
 test('rank shifts never delete DOI or perform a scope include/exclude',()=>{
