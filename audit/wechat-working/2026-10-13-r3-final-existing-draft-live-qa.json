@@ -1,0 +1,103 @@
+{
+  "date": "2026-10-13",
+  "revision": "2026-10-13-r3",
+  "status": "reviewed_science_story_and_official_existing_two_article_cloud_draft_live_preview_pass",
+  "verifiedAtBeijing": "2026-10-13T15:00:21+08:00",
+  "paperDois": [
+    "10.1038/s44160-026-01189-z",
+    "10.1038/s41557-026-02213-7"
+  ],
+  "originOfReference": "The provided .user.js is not a WeChat article. Owner's expressly established Oct05 JACS narrative exemplar was used.",
+  "productionBranch": "main",
+  "mergedPR": 596,
+  "mergedCommit": "31c5284ae69272faebc8d25dacc21fe9181dc5da",
+  "draftResult": {
+    "stage": "draft_update",
+    "readback": "ok",
+    "mediaId": "KhELYUzvwADwB_l1xH1SWO145961Rlw4fMzLxtij2o_6u5Z6Pq_7PK-nw7ZXBk7V",
+    "originalOct13MediaPreserved": true,
+    "previewUrl": "https://relay.gczhouwld.com/wechat-preview/abfa3442ea5757d062720c03.html",
+    "publishId": null,
+    "noNewDuplicateDraft": true,
+    "Oct12PriorDraftUnaffected": true
+  },
+  "science": {
+    "NS": {
+      "characters": 4481,
+      "paragraphs": 35,
+      "sourceMainSIImages": 12
+    },
+    "NC": {
+      "characters": 4109,
+      "paragraphs": 34,
+      "sourceMainSIImages": 10
+    },
+    "narrativeFocus": "Failed historical activation → explicit molecular kinetic dilemma → distinct design interventions → comparative and isotope/DFT/negative evidence → level-of-evidence boundaries → transferability and limitations.",
+    "sourceFactReviewStatus": "passed_with_numerical_evidence_checks"
+  },
+  "figureProof": {
+    "sourceImageCount": 24,
+    "bodyImages": 22,
+    "covers": 2,
+    "qr": 1,
+    "webImgTags": 25,
+    "loaded": 25,
+    "broken": [],
+    "oldImageAssetsUnchanged": true,
+    "oldCoverAssetsUnchanged": true,
+    "offlineStatus": "original_source_figures_science_prose_and_mobile_desktop_layout_pass",
+    "liveStatus": "cloud_draft_get_and_real_mobile_desktop_preview_pass",
+    "screenshotPaths": [
+      "audit/wechat-working/2026-10-13-r3-live-preview/mobile-first-screen.png",
+      "audit/wechat-working/2026-10-13-r3-live-preview/mobile-featured-cover.png",
+      "audit/wechat-working/2026-10-13-r3-live-preview/mobile-retro-cover.png",
+      "audit/wechat-working/2026-10-13-r3-live-preview/mobile-nature-synthesis-DFT.png",
+      "audit/wechat-working/2026-10-13-r3-live-preview/mobile-nature-synthesis-SI-regioselectivity.png",
+      "audit/wechat-working/2026-10-13-r3-live-preview/mobile-nature-chemistry-SI-bottlenecks.png",
+      "audit/wechat-working/2026-10-13-r3-live-preview/mobile-nature-chemistry-source-comparison.png",
+      "audit/wechat-working/2026-10-13-r3-live-preview/desktop-two-cover-header.png"
+    ],
+    "nativeWeChatMobileClientInspected": false
+  },
+  "links": [
+    "https://gallery.gczhouwld.com/?edition=2026-10-13&doi=10.1038%2Fs44160-026-01189-z&summary=0",
+    "https://gallery.gczhouwld.com/?doi=10.1038%2Fs41557-026-02213-7&summary=0"
+  ],
+  "counts": {
+    "dailyPaperTotal": 12,
+    "journalOnly": true
+  },
+  "sourcesReviewed": [
+    {
+      "path": "audit/wechat-working/2026-10-13-review-gate.json",
+      "gitBlobSHA": "a60e99d585b21e4e9a518262babe2db965651a16"
+    },
+    {
+      "path": "audit/wechat-publisher/latest.json",
+      "gitBlobSHA": "33007d4572a89952ddc435dfed974c74e2ecb0f2"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-13-r3-science-story-review.json",
+      "gitBlobSHA": "ff335463d2512502c67c546beede830126b15d9b"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-13-r3-offline-preview/offline-qa.json",
+      "gitBlobSHA": "a4436254a9754c3275ec4cdfb6181c926a8e8ecf"
+    },
+    {
+      "path": "audit/wechat-working/2026-10-13-r3-live-preview/live-qa.json",
+      "gitBlobSHA": "ac7b4ed0e0bfe1010c89d6ba8cf93a28d3ebba9a"
+    }
+  ],
+  "runs": {
+    "offline": 38358972058,
+    "publisher": 38359406755,
+    "firstLiveSelectorOnlyFailure": 38359568131,
+    "correctedLiveSuccess": 38359765077
+  },
+  "remainingKnownIssue": "Some Gallery daily mini-card thumbnails in the real R3 WeChat source preview still render neutral grey CSS placeholders when Gallery TOC/primary visual URL is unavailable. This is distinct from the 25 successfully decoded images and NOT marked fixed. Did not modify PDF, publication, search, or media system to repair it in this editorial task.",
+  "safety": {
+    "massSent": false,
+    "publishId": null
+  }
+}
