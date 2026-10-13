@@ -983,7 +983,7 @@
     "mediaAcquisitionPerformed": false,
     "note": "20篇fresh compact候选完成逐篇双遍审核；5项进入唯一08:00发布白名单，15项排除，0项待定。两项严格GitHub预发布门禁和转换均成功；本任务未修改生产卡片或触发部署。"
   },
-  "publicationChecksPassed": false,
+  "publicationChecksPassed": true,
   "reviewComplete": true,
   "lastPublication": {
     "publicationSlot": "2026-10-13T08:00:00+08:00",
@@ -1133,33 +1133,24 @@
     "deploymentVerifiedAt": "2026-10-13T04:02:16.687Z"
   },
   "lastQualityGate": {
-    "runId": 38338744104,
+    "runId": 38344656381,
     "conclusion": "success",
     "publicationSlot": "2026-10-13T08:00:00+08:00",
-    "triggerCommit": "781c2ae01fdbb2ff7606af9564f1481474f3ab2c",
-    "verifiedAt": "2026-10-13T02:49:59.631Z",
-    "auditGeneratedAt": "2026-10-13T02:47:19.397Z",
-    "auditBlobSha": "acb31f9d67983ee818d0518e7dce051943222cbe",
-    "reviewFile": "audit/review-2026-10-13-0800.json",
-    "reviewBlobSha": "1256941dd50fad6aa0d7bdc452e686b04286c3b2",
-    "sourceCards": 979,
-    "deployedCards": 979,
-    "pendingDois": [
-      "10.31635/ccschem.026.202608292",
-      "10.31635/ccschem.026.202607973",
-      "10.31635/ccschem.026.202608252",
-      "10.1038/s44160-026-01189-z",
-      "10.1021/acs.orglett.6c03893"
-    ],
-    "nextSlotPublicationDois": [
-      "10.1021/acs.orglett.6c04027",
-      "10.1021/acs.orglett.6c03617"
-    ],
+    "triggerCommit": "bdf2a854a064929b01b40726906cbbb50bd240f8",
+    "verifiedAt": "2026-10-13T04:04:15Z",
+    "auditGeneratedAt": "2026-10-13T03:41:25.992Z",
+    "auditBlobSha": "2cd67c5b8b0b31e57f4b60191c00fe698aa662a7",
+    "reviewFile": "audit/review-2026-10-13-owner-catchup.json",
+    "reviewBlobSha": "86d737b212dd7b6cdf7e4fa5f2965d4931503820",
+    "sourceCards": 984,
+    "deployedCards": 984,
+    "pendingDois": [],
+    "nextSlotPublicationDois": [],
     "incompletePublisherCoverage": true,
     "sourceCoverageAnomalies": 4,
     "closureCoverageAnomalies": 6,
     "qualityGatePassedForReviewedSubset": true,
-    "reviewComplete": false
+    "reviewComplete": true
   },
   "lastScopeCorrection": {
     "id": "scope-correction-20261005012904928",
@@ -1501,7 +1492,7 @@
     "closureCoverageAnomalies": 1,
     "note": "No off-slot admission or deletion-only correction was performed. The next publication slot remains the normal 18:00 Beijing slot."
   },
-  "updatedAt": "2026-10-12T23:36:22.000Z",
+  "updatedAt": "2026-10-13T12:04:55.538+08:00",
   "lastDeploymentAttempt": {
     "schemaVersion": 2,
     "ok": true,
@@ -1920,7 +1911,7 @@
     "originalSlot": "2026-10-13T08:00:00+08:00",
     "expectedProductionCards": 984,
     "startedAt": "2026-10-13T11:39:40.266+08:00",
-    "status": "repository_committed_awaiting_pages_and_quality",
+    "status": "deployed_live_verified_quality_passed",
     "acceptedDois": [
       "10.1038/s44160-026-01189-z",
       "10.1021/acs.orglett.6c04027",
@@ -1935,6 +1926,16 @@
     "reviewFile": "audit/review-2026-10-13-owner-catchup.json",
     "sourceAuditSha": "34477951d3b3e77e167c6a3b14024b4ea8745dde",
     "sourceCompactSha": "aa78f8df31cfba1350f6394f237aa01019e6b571",
-    "evidenceLimitations": "Two owner title-based admitted papers have no additional fulltext substrate evidence; no experimental values fabricated."
+    "evidenceLimitations": "Two owner title-based admitted papers have no additional fulltext substrate evidence; no experimental values fabricated.",
+    "publishedAt": "2026-10-13T04:02:16.687Z",
+    "pagesRun": 38342963897,
+    "qualityGateRun": 38344656381,
+    "sourceCards": 984,
+    "deployedCards": 984,
+    "ownerReviewBlobSha": "86d737b212dd7b6cdf7e4fa5f2965d4931503820",
+    "markerBlobSha": "a973d224010260e935c6c4529367153d72c75d9b",
+    "remainingUnresolved": 0,
+    "sourceCoverageAnomalies": 4,
+    "closureCoverageAnomalies": 6
   }
 }
