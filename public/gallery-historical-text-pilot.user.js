@@ -829,7 +829,7 @@
           '其他待核查 '+c.otherFailure+'；新版解析可复查一次 '+post,
           '普通批次计划访问 '+c.scheduledByNormalBatch+' 篇（不等于历史母数）',
           '本机数据不会自动进入 Gallery 公共全文索引。'
-        ].join('\\n');
+        ].join('\n');
       })().catch(()=>{coverageDetails.textContent=
         '正式目录或本机数据库暂时无法完整读取；未推断任何历史 DOI 已完成。';});
     });
@@ -884,7 +884,7 @@
       if(event.key!=='Enter')return;
       event.preventDefault();
       const ticket=++searchToken;
-      void batchSearchLocal(search.value,results).catch(()=>{
+      void batchSearchLocal(search.value,results,()=>ticket===searchToken).catch(()=>{
         if(ticket===searchToken)results.textContent='本机索引读取失败';
       });
     });
@@ -893,36 +893,103 @@
     });
     return {refresh};
   }
-  async function batchSearchLocal(query,area){
-    const needle=cleanText(query,100).toLocaleLowerCase();
-    if(needle.length<2){area.textContent='至少输入两个字符';return;}
-    area.textContent='查询本机索引…';
-    const db=await batchOpenDb();
-    const hits=[];
-    await new Promise((resolve,reject)=>{
-      const req=db.transaction('packets','readonly').objectStore('packets').openCursor();
-      req.onerror=()=>reject(req.error||Error('cursor'));
-      req.onsuccess=()=>{
-        const cur=req.result;
-        if(!cur||hits.length>=20)return resolve();
-        const packet=cur.value.packet;
-        for(const sec of packet?.sections||[]){
-          const raw=String(sec.text||'');
-          const idx=raw.toLocaleLowerCase().indexOf(needle);
-          if(idx!==-1){hits.push({doi:packet.doi,heading:sec.heading||'正文',fragment:raw.slice(Math.max(0,idx-35),idx+100)});break;}
-        }
-        cur.continue();
-      };
-    });
-    db.close();
-    area.textContent='';
-    if(!hits.length){area.textContent='本机尚无命中（不能代表全站无文献）';return;}
-    for(const item of hits){
-      const a=document.createElement('a');a.href='https://doi.org/'+item.doi;a.target='_blank';a.rel='noopener noreferrer';
-      a.textContent=item.doi+' · '+item.heading;
-      const desc=document.createElement('div');desc.textContent=item.fragment;
-      const row=document.createElement('div');row.style.cssText='border-top:1px solid #ddd;padding:5px 0';row.append(a,desc);area.append(row);
+  function batchLocalSearchTerms(query){
+    const value=cleanText(query,150).toLocaleLowerCase();
+    // Chemistry-specific exact equivalents, never broad Ce/Fe/free-radical substitutions.
+    const groups={
+      lmct:['lmct','ligand-to-metal charge transfer','ligand to metal charge transfer',
+        '配体到金属电荷转移','配体-金属电荷转移'],
+      cpa:['cpa','chiral phosphoric acid','chiral phosphoric acids','手性磷酸'],
+      '手性磷酸':['手性磷酸','chiral phosphoric acid','chiral phosphoric acids','cpa'],
+      '轴手性':['轴手性','axial chirality','atropisomer','atroposelectiv','axially chiral']
+    };
+    return [...new Set(groups[value]||[value])];
+  }
+  function batchLocalEvidenceMatch(packet,terms){
+    if(!packet||!Array.isArray(packet.sections))return null;
+    const rows=[
+      ...packet.sections.map(s=>({kind:'正文',label:s.heading||'正文',
+        type:String(s.type||'other'),text:String(s.text||'')})),
+      ...(packet.captions||[]).map(c=>({kind:'图注',label:c.label||'图注',
+        type:'caption',text:String(c.text||'')})),
+      ...(packet.tables||[]).map(t=>({kind:'表格',label:t.label||'表格',
+        type:'table',text:String(t.text||'')}))
+    ];
+    const ranks={results:6,scope:6,mechanism:6,experimental:5,
+      caption:5,table:5,other:3,conclusion:3,abstract:2,introduction:1};
+    let best=null;
+    for(const row of rows){
+      const text=row.text.toLocaleLowerCase();
+      let first=-1;
+      for(const term of terms){
+        const idx=text.indexOf(term);
+        if(idx>=0&&(first<0||idx<first))first=idx;
+      }
+      if(first<0)continue;
+      const score=ranks[row.type]||3;
+      if(best&&best.score>score)continue;
+      best={kind:row.kind,label:row.label,type:row.type,score,
+        excerpt:row.text.slice(Math.max(0,first-50),Math.min(row.text.length,first+140))};
     }
+    return best;
+  }
+  async function batchSearchLocal(query,area,isCurrent=()=>true){
+    const needle=cleanText(query,150);
+    if(needle.length<2){area.textContent='至少输入两个字符';return;}
+    const terms=batchLocalSearchTerms(needle);
+    area.textContent='扫描当前浏览器已存的科学正文、图注及表格…';
+    const db=await batchOpenDb();
+    const matches=[];
+    try{
+      await new Promise((resolve,reject)=>{
+        const tx=db.transaction('packets','readonly');
+        const req=tx.objectStore('packets').openCursor();
+        req.onerror=()=>reject(req.error||Error('local_search_cursor'));
+        tx.onerror=()=>reject(tx.error||Error('local_search_transaction'));
+        tx.onabort=()=>reject(tx.error||Error('local_search_aborted'));
+        req.onsuccess=()=>{
+          const cur=req.result;
+          if(!cur)return;
+          const packet=cur.value?.packet;
+          const evidence=batchLocalEvidenceMatch(packet,terms);
+          if(evidence&&packet?.doi)matches.push({doi:packet.doi,...evidence});
+          cur.continue();
+        };
+        tx.oncomplete=resolve;
+      });
+    }finally{db.close();}
+    if(!isCurrent())return;
+    matches.sort((a,b)=>b.score-a.score||a.doi.localeCompare(b.doi));
+    let shown=0;
+    const render=()=>{
+      if(!isCurrent())return;
+      area.replaceChildren();
+      const count=document.createElement('div');
+      count.textContent='本机正文命中 '+matches.length+' 篇（仅当前浏览器，非全站）；'
+        +'段落提及不代表文章主要贡献。';
+      area.append(count);
+      if(!matches.length)return;
+      for(const item of matches.slice(0,shown)){
+        const a=document.createElement('a');
+        a.href='https://doi.org/'+item.doi;a.target='_blank';a.rel='noopener noreferrer';
+        a.textContent=item.doi+' · '+item.kind+' · '+item.label;
+        const desc=document.createElement('div');desc.textContent=item.excerpt;
+        const row=document.createElement('div');
+        row.style.cssText='border-top:1px solid #ddd;padding:5px 0;word-break:break-word';
+        row.append(a,desc);area.append(row);
+      }
+      if(shown<matches.length){
+        const more=document.createElement('button');
+        more.textContent='显示更多命中（剩余 '+(matches.length-shown)+' 篇）';
+        more.style.cssText='cursor:pointer;margin-top:6px';
+        more.addEventListener('click',()=>{
+          shown=Math.min(matches.length,shown+20);render();
+        });
+        area.append(more);
+      }
+    };
+    shown=Math.min(matches.length,20);
+    render();
   }
   async function batchAwaitResponse(job){
     const start=Date.now();
