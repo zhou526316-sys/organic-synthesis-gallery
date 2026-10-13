@@ -1021,7 +1021,7 @@ test('year-only OpenAlex Jan 1 RSC can complete 1,300 source records without fal
   },{priorState:prior});
 });
 
-test('special OpenAlex pagination is limited to RSC year-only January first',()=>{
+test('special OpenAlex pagination is limited to RSC year-only January first',async()=>{
   const {historicalOpenAlexPageCap}=await import('./historical-nightly-discovery.mjs');
   const rsc={name:'Chemical Science'},normal={name:'JACS'};
   assert.equal(historicalOpenAlexPageCap(rsc,{from:'2026-01-01',to:'2026-01-01'}),100);
