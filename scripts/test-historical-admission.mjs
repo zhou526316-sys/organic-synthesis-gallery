@@ -680,3 +680,63 @@ test('eight new Q3 ACS syntheses have independently dated, full DOI, bibliograph
  const dateHold='10.1021/acs.orglett.6c03028';
  assert.ok(!root.accepted.some(x=>x.doi===dateHold),'conflicting publisher online days must remain held');
 });
+
+
+test('four Q3 RSC publisher-index or NLM dated independent two-pass syntheses preserve original provenance',()=>{
+ const expected=[
+  ['10.1039/d6sc05170g','2026-07-09','12def19ecb8634d2c042f2ff5b88a41e7320d9a6','NLM_journal_supplied_electronic_date_plus_TUBerlin_author_advance_article'],
+  ['10.1039/d6sc05630j','2026-08-21','5c83c1766a593fc8fd856e02a941e8f09340b319','NLM_journal_supplied_electronic_date_crosschecked_with_RSC_original_in_PMC'],
+  ['10.1039/d6gc01864e','2026-07-31','3cf217e8d9212bf4ac2fe5463c0ad28b184e3e22','RSC_official_first_published_index'],
+  ['10.1039/d6gc03080g','2026-09-17','c269a7de443c62a777b870983678a3494327e641','RSC_official_first_published_index']
+ ];
+ let reasons=new Set(),boundaries=new Set(),first=new Set();
+ for(const [doi,date,blob,tier] of expected){
+  const matches=root.accepted.filter(x=>x.doi===doi);
+  assert.equal(matches.length,1,'unique RSC approved DOI: '+doi);
+  const x=matches[0];
+  assert.equal(x.date,date);
+  assert.equal(x.reviewEvidence.publisherOnlineDate,date);
+  assert.equal(x.reviewEvidence.stageBatchSha,blob);
+  assert.equal(x.reviewEvidence.firstOnlineDateEvidence.tier,tier);
+  assert.deepEqual(x.reviewEvidence.crossrefOpenalexSources,['crossref']);
+  assert.ok(x.reviewEvidence.publisherPage.endsWith('/'+doi));
+  assert.ok(x.scopeAssessment.sourceEvidence.includes(blob));
+  assert.ok(/Crossref/.test(x.scopeAssessment.sourceEvidence));
+  assert.equal(x.reviewPasses,2);
+  assert.deepEqual(x.independentPasses.map(z=>z.decision),['include','include']);
+  assert.ok(x.independentPasses[0].reason.length>85);
+  assert.ok(x.independentPasses[1].reason.length>100);
+  assert.ok(x.scopeAssessment.preparativeTransformation.length>55);
+  assert.ok(x.scopeAssessment.generalityEvidence.length>80);
+  assert.ok(x.scopeAssessment.boundaryChallenge.length>55);
+  assert.equal(x.new,false);assert.equal(x.addedDate,'');
+  assert.equal(x.ingestionChannel,'historical_backfill');assert.equal(x.mediaPolicy,'toc_only');
+  assert.equal(x.reviewEvidence.abstractCopied,false);
+  assert.equal(x.reviewEvidence.figureFetched,false);
+  assert.equal(x.reviewEvidence.pdfFetched,false);
+  assert.equal(x.publisherAbstractRights,'not_verified_do_not_republish_full_text');
+  reasons.add(x.independentPasses[1].reason);
+  boundaries.add(x.scopeAssessment.boundaryChallenge);
+  first.add(x.independentPasses[0].reason);
+ }
+ assert.equal(reasons.size,4);
+ assert.equal(boundaries.size,4);
+ assert.equal(first.size,4);
+ const cobalt=root.accepted.find(x=>x.doi==='10.1039/d6gc01864e');
+ assert.match(cobalt.challengeReason,/溶剂/);
+ const mech=root.accepted.find(x=>x.doi==='10.1039/d6gc03080g');
+ assert.match(mech.challengeReason,/K₂CO₃/);
+ const nickel=root.accepted.find(x=>x.doi==='10.1039/d6sc05630j');
+ assert.equal(nickel.reviewEvidence.firstOnlineDateEvidence.directPublisherFirstPublishedNotRead,true);
+ assert.equal(root.pending.length,2);
+ const heldDoi='10.1039/d6sc05552d';
+ assert.equal(root.accepted.some(x=>x.doi===heldDoi),false);
+ assert.equal(root.pending.some(x=>x.doi===heldDoi),false);
+ const hold=JSON.parse(readFileSync('audit/historical-reviewed/2026-10-13-q3-chem-sci-d6sc05552d-publisher-date-scope-hold.json','utf8'));
+ assert.equal(hold.doi,heldDoi);
+ assert.equal(hold.publisherFirstOnlineDate,'2026-09-29');
+ assert.equal(hold.status,'publisher_online_date_verified_synthetic_scope_not_approved');
+ assert.equal(hold.notInApprovedAdmissions,true);
+ assert.equal(hold.notInAuthoritativePendingManifest,true);
+ assert.ok(hold.evidenceNeeded.length>=2);
+});
