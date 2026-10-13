@@ -1,14 +1,14 @@
 {
   "schemaVersion": "gallery-historical-global-coverage-v1",
   "mode": "candidate_discovery_and_review_coverage_only",
-  "generatedAt": "2026-10-13T01:32:41.811Z",
-  "sourceCompletedAt": "2026-10-13T01:27:41.968Z",
+  "generatedAt": "2026-10-13T01:41:13.698Z",
+  "sourceCompletedAt": "2026-10-13T01:40:38.987Z",
   "currentCursor": {
     "range": {
-      "from": "2026-01-01",
-      "to": "2026-01-31"
+      "from": "2025-12-01",
+      "to": "2025-12-31"
     },
-    "journalIndex": 11
+    "journalIndex": 7
   },
   "scannedPeriodStart": {
     "from": "2026-09-22",
@@ -17,19 +17,19 @@
   "stageSchema": "gallery-historical-nightly-staging-v1",
   "triageSchema": "gallery-history-review-triage-v1",
   "counters": {
-    "candidateOccurrences": 34941,
-    "distinctCandidateDois": 34510,
-    "alreadyPublished": 760,
+    "candidateOccurrences": 39596,
+    "distinctCandidateDois": 36759,
+    "alreadyPublished": 782,
     "approvedAwaiting08": 0,
     "evidencePending": 2,
-    "requiresTwoPassReview": 33748,
+    "requiresTwoPassReview": 35975,
     "ambiguousStatus": 0,
-    "unverifiedPublicationDate": 2540,
-    "suspectedNonresearch": 579,
-    "duplicateDoiOccurrences": 431,
+    "unverifiedPublicationDate": 3029,
+    "suspectedNonresearch": 631,
+    "duplicateDoiOccurrences": 2837,
     "sourcePlannedRoots": 3600,
-    "sourceCompletedRoots": 283,
-    "reviewQueueRoots": 283,
+    "sourceCompletedRoots": 295,
+    "reviewQueueRoots": 295,
     "completedRootsWithoutQueue": 0,
     "publisherIssueMatchedRoots": 0,
     "noDoiArchiveSourceComplete": false,
@@ -40,36 +40,36 @@
       "journal": "Nature",
       "foundedYear": 1869,
       "plannedRoots": 441,
-      "sourceCompleteRoots": 18,
-      "queuedRoots": 18
+      "sourceCompleteRoots": 19,
+      "queuedRoots": 19
     },
     "Science": {
       "journal": "Science",
       "foundedYear": 1880,
       "plannedRoots": 430,
-      "sourceCompleteRoots": 18,
-      "queuedRoots": 18
+      "sourceCompleteRoots": 19,
+      "queuedRoots": 19
     },
     "Nature Catalysis": {
       "journal": "Nature Catalysis",
       "foundedYear": 2018,
       "plannedRoots": 114,
-      "sourceCompleteRoots": 18,
-      "queuedRoots": 18
+      "sourceCompleteRoots": 19,
+      "queuedRoots": 19
     },
     "Nature Synthesis": {
       "journal": "Nature Synthesis",
       "foundedYear": 2022,
       "plannedRoots": 66,
-      "sourceCompleteRoots": 18,
-      "queuedRoots": 18
+      "sourceCompleteRoots": 19,
+      "queuedRoots": 19
     },
     "Nature Chemistry": {
       "journal": "Nature Chemistry",
       "foundedYear": 2009,
       "plannedRoots": 174,
-      "sourceCompleteRoots": 18,
-      "queuedRoots": 18
+      "sourceCompleteRoots": 19,
+      "queuedRoots": 19
     },
     "Nature Communications": {
       "journal": "Nature Communications",
@@ -82,15 +82,15 @@
       "journal": "JACS",
       "foundedYear": 1879,
       "plannedRoots": 431,
-      "sourceCompleteRoots": 18,
-      "queuedRoots": 18
+      "sourceCompleteRoots": 19,
+      "queuedRoots": 19
     },
     "Angew": {
       "journal": "Angew",
       "foundedYear": 1962,
       "plannedRoots": 286,
-      "sourceCompleteRoots": 18,
-      "queuedRoots": 18
+      "sourceCompleteRoots": 19,
+      "queuedRoots": 19
     },
     "ACS Catalysis": {
       "journal": "ACS Catalysis",
@@ -117,36 +117,36 @@
       "journal": "Chemical Science",
       "foundedYear": 2010,
       "plannedRoots": 170,
-      "sourceCompleteRoots": 17,
-      "queuedRoots": 17
+      "sourceCompleteRoots": 18,
+      "queuedRoots": 18
     },
     "CCS Chemistry": {
       "journal": "CCS Chemistry",
       "foundedYear": 2019,
       "plannedRoots": 102,
-      "sourceCompleteRoots": 17,
-      "queuedRoots": 17
+      "sourceCompleteRoots": 18,
+      "queuedRoots": 18
     },
     "Science Advances": {
       "journal": "Science Advances",
       "foundedYear": 2015,
       "plannedRoots": 150,
-      "sourceCompleteRoots": 17,
-      "queuedRoots": 17
+      "sourceCompleteRoots": 18,
+      "queuedRoots": 18
     },
     "Green Chemistry": {
       "journal": "Green Chemistry",
       "foundedYear": 1999,
       "plannedRoots": 212,
-      "sourceCompleteRoots": 17,
-      "queuedRoots": 17
+      "sourceCompleteRoots": 18,
+      "queuedRoots": 18
     },
     "JOC": {
       "journal": "JOC",
       "foundedYear": 1936,
       "plannedRoots": 338,
-      "sourceCompleteRoots": 17,
-      "queuedRoots": 17
+      "sourceCompleteRoots": 18,
+      "queuedRoots": 18
     }
   },
   "yearly": [
@@ -170,13 +170,13 @@
       "sourceWindowYear": "2025",
       "foundedYear": 1869,
       "plannedRoots": 12,
-      "completedRoots": 0,
-      "queuedRoots": 0,
-      "sourceCandidateOccurrences": 0,
-      "distinctCandidateDois": 0,
+      "completedRoots": 1,
+      "queuedRoots": 1,
+      "sourceCandidateOccurrences": 266,
+      "distinctCandidateDois": 266,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 12,
+      "outstandingRoots": 11,
       "sourceCoverageStatus": "incomplete_source_api_windows",
       "candidateCountsAreScopeDecisions": false
     },
@@ -2540,13 +2540,13 @@
       "sourceWindowYear": "2025",
       "foundedYear": 1880,
       "plannedRoots": 12,
-      "completedRoots": 0,
-      "queuedRoots": 0,
-      "sourceCandidateOccurrences": 0,
-      "distinctCandidateDois": 0,
+      "completedRoots": 1,
+      "queuedRoots": 1,
+      "sourceCandidateOccurrences": 139,
+      "distinctCandidateDois": 139,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 12,
+      "outstandingRoots": 11,
       "sourceCoverageStatus": "incomplete_source_api_windows",
       "candidateCountsAreScopeDecisions": false
     },
@@ -4745,13 +4745,13 @@
       "sourceWindowYear": "2025",
       "foundedYear": 2018,
       "plannedRoots": 12,
-      "completedRoots": 0,
-      "queuedRoots": 0,
-      "sourceCandidateOccurrences": 0,
-      "distinctCandidateDois": 0,
+      "completedRoots": 1,
+      "queuedRoots": 1,
+      "sourceCandidateOccurrences": 14,
+      "distinctCandidateDois": 14,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 12,
+      "outstandingRoots": 11,
       "sourceCoverageStatus": "incomplete_source_api_windows",
       "candidateCountsAreScopeDecisions": false
     },
@@ -4880,13 +4880,13 @@
       "sourceWindowYear": "2025",
       "foundedYear": 2022,
       "plannedRoots": 12,
-      "completedRoots": 0,
-      "queuedRoots": 0,
-      "sourceCandidateOccurrences": 0,
-      "distinctCandidateDois": 0,
+      "completedRoots": 1,
+      "queuedRoots": 1,
+      "sourceCandidateOccurrences": 12,
+      "distinctCandidateDois": 12,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 12,
+      "outstandingRoots": 11,
       "sourceCoverageStatus": "incomplete_source_api_windows",
       "candidateCountsAreScopeDecisions": false
     },
@@ -4955,13 +4955,13 @@
       "sourceWindowYear": "2025",
       "foundedYear": 2009,
       "plannedRoots": 12,
-      "completedRoots": 0,
-      "queuedRoots": 0,
-      "sourceCandidateOccurrences": 0,
-      "distinctCandidateDois": 0,
+      "completedRoots": 1,
+      "queuedRoots": 1,
+      "sourceCandidateOccurrences": 12,
+      "distinctCandidateDois": 12,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 12,
+      "outstandingRoots": 11,
       "sourceCoverageStatus": "incomplete_source_api_windows",
       "candidateCountsAreScopeDecisions": false
     },
@@ -5480,13 +5480,13 @@
       "sourceWindowYear": "2025",
       "foundedYear": 1879,
       "plannedRoots": 12,
-      "completedRoots": 0,
-      "queuedRoots": 0,
-      "sourceCandidateOccurrences": 0,
-      "distinctCandidateDois": 0,
+      "completedRoots": 1,
+      "queuedRoots": 1,
+      "sourceCandidateOccurrences": 420,
+      "distinctCandidateDois": 420,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 12,
+      "outstandingRoots": 11,
       "sourceCoverageStatus": "incomplete_source_api_windows",
       "candidateCountsAreScopeDecisions": false
     },
@@ -7700,13 +7700,13 @@
       "sourceWindowYear": "2025",
       "foundedYear": 1962,
       "plannedRoots": 12,
-      "completedRoots": 0,
-      "queuedRoots": 0,
-      "sourceCandidateOccurrences": 0,
-      "distinctCandidateDois": 0,
+      "completedRoots": 1,
+      "queuedRoots": 1,
+      "sourceCandidateOccurrences": 426,
+      "distinctCandidateDois": 426,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 12,
+      "outstandingRoots": 11,
       "sourceCoverageStatus": "incomplete_source_api_windows",
       "candidateCountsAreScopeDecisions": false
     },
@@ -9485,14 +9485,14 @@
       "sourceWindowYear": "2026",
       "foundedYear": 2010,
       "plannedRoots": 18,
-      "completedRoots": 17,
-      "queuedRoots": 17,
-      "sourceCandidateOccurrences": 1428,
-      "distinctCandidateDois": 1428,
+      "completedRoots": 18,
+      "queuedRoots": 18,
+      "sourceCandidateOccurrences": 3120,
+      "distinctCandidateDois": 1694,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 1,
-      "sourceCoverageStatus": "incomplete_source_api_windows",
+      "outstandingRoots": 0,
+      "sourceCoverageStatus": "source_api_windows_complete_publisher_unverified",
       "candidateCountsAreScopeDecisions": false
     },
     {
@@ -9740,14 +9740,14 @@
       "sourceWindowYear": "2026",
       "foundedYear": 2019,
       "plannedRoots": 18,
-      "completedRoots": 17,
-      "queuedRoots": 17,
-      "sourceCandidateOccurrences": 644,
-      "distinctCandidateDois": 477,
+      "completedRoots": 18,
+      "queuedRoots": 18,
+      "sourceCandidateOccurrences": 728,
+      "distinctCandidateDois": 539,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 1,
-      "sourceCoverageStatus": "incomplete_source_api_windows",
+      "outstandingRoots": 0,
+      "sourceCoverageStatus": "source_api_windows_complete_publisher_unverified",
       "candidateCountsAreScopeDecisions": false
     },
     {
@@ -9860,14 +9860,14 @@
       "sourceWindowYear": "2026",
       "foundedYear": 2015,
       "plannedRoots": 18,
-      "completedRoots": 17,
-      "queuedRoots": 17,
-      "sourceCandidateOccurrences": 2509,
-      "distinctCandidateDois": 2474,
+      "completedRoots": 18,
+      "queuedRoots": 18,
+      "sourceCandidateOccurrences": 2795,
+      "distinctCandidateDois": 2760,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 1,
-      "sourceCoverageStatus": "incomplete_source_api_windows",
+      "outstandingRoots": 0,
+      "sourceCoverageStatus": "source_api_windows_complete_publisher_unverified",
       "candidateCountsAreScopeDecisions": false
     },
     {
@@ -10040,14 +10040,14 @@
       "sourceWindowYear": "2026",
       "foundedYear": 1999,
       "plannedRoots": 18,
-      "completedRoots": 17,
-      "queuedRoots": 17,
-      "sourceCandidateOccurrences": 959,
-      "distinctCandidateDois": 959,
+      "completedRoots": 18,
+      "queuedRoots": 18,
+      "sourceCandidateOccurrences": 2087,
+      "distinctCandidateDois": 1142,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 1,
-      "sourceCoverageStatus": "incomplete_source_api_windows",
+      "outstandingRoots": 0,
+      "sourceCoverageStatus": "source_api_windows_complete_publisher_unverified",
       "candidateCountsAreScopeDecisions": false
     },
     {
@@ -10460,14 +10460,14 @@
       "sourceWindowYear": "2026",
       "foundedYear": 1936,
       "plannedRoots": 18,
-      "completedRoots": 17,
-      "queuedRoots": 17,
-      "sourceCandidateOccurrences": 1236,
-      "distinctCandidateDois": 1236,
+      "completedRoots": 18,
+      "queuedRoots": 18,
+      "sourceCandidateOccurrences": 1412,
+      "distinctCandidateDois": 1412,
       "missingPublisherIssueReconciliation": true,
       "missingNoDoiIssueCoverage": true,
-      "outstandingRoots": 1,
-      "sourceCoverageStatus": "incomplete_source_api_windows",
+      "outstandingRoots": 0,
+      "sourceCoverageStatus": "source_api_windows_complete_publisher_unverified",
       "candidateCountsAreScopeDecisions": false
     },
     {
