@@ -9,7 +9,10 @@ test('official feed registry preserves independent RSS paths without pretending 
   assert.ok(OFFICIAL_PUBLISHER_FEEDS.length>=12);
   assert.equal(ol.url,'https://pubs.acs.org/rss/orlef7/asap.xml');
   assert.equal(ns.doiPrefix,'10.1038/s44160-');
-  assert.equal(OFFICIAL_PUBLISHER_FEEDS.some(x=>x.journal==='Green Chemistry'),false);
+  assert.equal(OFFICIAL_PUBLISHER_FEEDS.length,16);
+  assert.ok(OFFICIAL_PUBLISHER_FEEDS.some(x=>x.journal==='Green Chemistry'));
+  assert.ok(OFFICIAL_PUBLISHER_FEEDS.some(x=>x.journal==='Chemical Science'));
+  assert.ok(OFFICIAL_PUBLISHER_FEEDS.some(x=>x.journal==='CCS Chemistry'));
 });
 test('ACS publisher feed discovers missing DOI without treating an unrelated abstract citation as item identity',()=>{
   const xml='<rss><channel>'+
@@ -38,6 +41,16 @@ test('recover the exact Nature Synthesis missed DOI from public article RSS iden
   assert.equal(p.records[0].sources[0],'publisher-feed:Nature Synthesis');
   assert.equal(p.records[0].date,'');
 });
+test('RSC feed DOI identity must contain its own journal-specific DOI code',()=>{
+  const sc=OFFICIAL_PUBLISHER_FEEDS.find(feed=>feed.journal==='Chemical Science');
+  const gc=OFFICIAL_PUBLISHER_FEEDS.find(feed=>feed.journal==='Green Chemistry');
+  const xml='<rss><channel>'+
+    '<item><guid>https://doi.org/10.1039/d6sc06521a</guid></item>'+
+    '<item><guid>https://doi.org/10.1039/d6gc03891b</guid></item></channel></rss>';
+  assert.deepEqual(parseOfficialPublisherFeed(xml,sc).records.map(x=>x.doi),['10.1039/d6sc06521a']);
+  assert.deepEqual(parseOfficialPublisherFeed(xml,gc).records.map(x=>x.doi),['10.1039/d6gc03891b']);
+});
+
 test('do not select an ambiguous multi-DOI identity or silently drop XML access failures',async()=>{
   const xml='<rss><channel><item><guid>doi:10.1021/acs.orglett.6c04095</guid>'+
     '<dc:identifier>doi:10.1021/acs.orglett.6c04010</dc:identifier>'+
