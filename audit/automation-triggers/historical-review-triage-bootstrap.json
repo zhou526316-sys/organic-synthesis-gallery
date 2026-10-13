@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "user_authorized_historical_unique_doi_year_completeness_refresh",
+  "purpose": "owner_authorized_2026_q3_16journal_post_RSC_review_reconciliation",
   "approvedAt": "2026-10-13",
   "sourceRef": "staging/historical-archive-nightly",
   "targetRef": "staging/historical-archive-nightly",
@@ -8,17 +8,19 @@
   "maxRoots": 320,
   "formalRelease": false,
   "autoAcademicDecision": false,
-  "requestedAt": "2026-10-13T03:49:21.265Z",
-  "reason": "After merged owner-authorized PR #589 (three ACS-verified Jul/Aug JOC independent two-pass reviews), recompute Q3 source/DOI/scope ledger and balanced 320-paper worklist from same 371 trusted roots. GitHub staging ONLY: zero Cloudflare D1, no formal release or old PDF/SI/figures.",
+  "requestedAt": "2026-10-13T07:01:09.104Z",
+  "reason": "Refresh 192/192 Crossref/OpenAlex Q3 source roots and 320-row staging-only reviewer worklist after main PR #594 (8 Chemical Science first-online NLM journal-ePub dates) and #595 (2 Green Chemistry original RSC publisher-imprint online dates); 37 individually double-reviewed include and 2 prior unresolved pending, 984 formal DOI, Q3 743 formal. No D1, no Media, no off-slot production publication. Preserve actual raw metadata unknown dates separately from newly independently resolved evidence.",
   "retainsNoScopeAutoApproval": true,
-  "triggerScope": "20261013_q3_reconcile_after_23_approvals",
-  "expectedCompleteRootCount": 346,
-  "expectedPublishedCatalogMembers": 979,
+  "triggerScope": "20261013_q3_reconcile_after_37_approvals",
+  "expectedCompleteRootCount": 371,
+  "expectedPublishedCatalogMembers": 984,
   "d1UsagePolicy": "zero_D1_queries_or_writes_in_historical_triage",
   "approvalSource": "user approved full historical comprehensive backfill and explicitly protect today's D1 quota",
   "allowedCloudflareD1Queries": 0,
   "expectedQ3CompletedRoots": 192,
   "expectedStageCompletedRootsAtRequest": 371,
   "expectedStageCompletedRoots": 371,
-  "expectedAcademicInclude": 23
+  "expectedAcademicInclude": 37,
+  "academicDecisionSource": "latest_main_approved_admissions_37_include_two_pass_two_old_pending",
+  "publisherResearchIssueComplete": false
 }
