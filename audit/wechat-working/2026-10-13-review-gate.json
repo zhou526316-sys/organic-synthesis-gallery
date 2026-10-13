@@ -1,53 +1,53 @@
 {
   "date": "2026-10-13",
-  "revision": "2026-10-13-r2",
+  "revision": "2026-10-13-r3",
   "articleCount": 2,
   "selectionDois": [
     "10.1038/s44160-026-01189-z",
     "10.1038/s41557-026-02213-7"
   ],
+  "selectionAuthority": "user_explicit_2026_10_13_request_storytelling_style_comparison_to_prior_oct05_long_form_reference",
   "textReview": "pass",
   "imageReview": "pass",
+  "reviewedAtBeijing": "2026-10-13T14:52:59+08:00",
+  "materializedCropReviewRequired": true,
+  "strictFigurePlacement": true,
   "sources": [
     {
       "path": "public/wechat-editions/2026-10-13.json",
-      "blobSha": "b2a113c703b74b0eb83cfe520919e3f8a6db3df0"
+      "blobSha": "4cfd66627d57423cec596465bc1915146c138165"
     },
     {
       "path": "public/wechat-featured/2026-10-13.json",
-      "blobSha": "8701c79d11baebe28eae4fd4dee370366b7b83be"
+      "blobSha": "d8fa07ee3ed00a6a7fa3f75fcd1a9a2fb1d02987"
     },
     {
       "path": "public/wechat-retrospective/oxetane-to-azetidine-skeletal-editing-20261013.json",
-      "blobSha": "37f725c84d29079381332158909fc4c837a6f748"
+      "blobSha": "55d24c3eff314b1845573a368c00eddf5c064ffd"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r2-nature-synthesis-text-only.md",
-      "blobSha": "7fe54873c5521967d6b6cc86ea3bf466aacbcba7"
+      "path": "audit/wechat-working/2026-10-13-r3-nature-synthesis-text-only.md",
+      "blobSha": "96ea64f517b22137b490d1d9ba2738e9919f3d6e"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r2-nature-synthesis-images-only.md",
-      "blobSha": "96ea28fa3fc24a594127ddd15575c51d04fe43af"
+      "path": "audit/wechat-working/2026-10-13-r3-nature-synthesis-images-only.md",
+      "blobSha": "c6645a0e62604163ae5749909047dc8d6f1f414b"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r2-nature-chemistry-text-only.md",
-      "blobSha": "e099b7c134f636533683980e51f57cab25a85ee2"
+      "path": "audit/wechat-working/2026-10-13-r3-nature-chemistry-text-only.md",
+      "blobSha": "d97547f14919e281ae0fce46a9e907a458acfff5"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r2-nature-chemistry-images-only.md",
-      "blobSha": "527dd5206a50d242712381fd6993cebc40adf65b"
+      "path": "audit/wechat-working/2026-10-13-r3-nature-chemistry-images-only.md",
+      "blobSha": "168f9ea042e90793b6d870e1c0f0ce7fcc114ef0"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r2-science-review.json",
-      "blobSha": "885b04d3a8de505dee27ea005ccb5a0c42bc555b"
+      "path": "audit/wechat-working/2026-10-13-r3-science-story-review.json",
+      "blobSha": "ff335463d2512502c67c546beede830126b15d9b"
     },
     {
-      "path": "audit/wechat-working/2026-10-13-r2-source-image-qa.json",
-      "blobSha": "3cfddbb52169a94c00f0829e218e496b746bb7ae"
-    },
-    {
-      "path": "audit/wechat-working/2026-10-13-r2-offline-preview/offline-qa.json",
-      "blobSha": "d101002407050020efec002850253b2eda1b4208"
+      "path": "audit/wechat-working/2026-10-13-r3-offline-preview/offline-qa.json",
+      "blobSha": "a4436254a9754c3275ec4cdfb6181c926a8e8ecf"
     }
   ],
   "assets": [
@@ -221,52 +221,53 @@
     }
   ],
   "artifacts": {
-    "textOnly": "audit/wechat-working/2026-10-13-r2-nature-synthesis-text-only.md",
-    "imagesOnly": "audit/wechat-working/2026-10-13-r2-nature-synthesis-images-only.md",
-    "retrospectiveTextOnly": "audit/wechat-working/2026-10-13-r2-nature-chemistry-text-only.md",
-    "retrospectiveImagesOnly": "audit/wechat-working/2026-10-13-r2-nature-chemistry-images-only.md",
-    "scienceQA": "audit/wechat-working/2026-10-13-r2-science-review.json"
+    "textOnly": "audit/wechat-working/2026-10-13-r3-nature-synthesis-text-only.md",
+    "imagesOnly": "audit/wechat-working/2026-10-13-r3-nature-synthesis-images-only.md",
+    "retrospectiveTextOnly": "audit/wechat-working/2026-10-13-r3-nature-chemistry-text-only.md",
+    "retrospectiveImagesOnly": "audit/wechat-working/2026-10-13-r3-nature-chemistry-images-only.md",
+    "scienceReview": "audit/wechat-working/2026-10-13-r3-science-story-review.json",
+    "visualQA": "audit/wechat-working/2026-10-13-r3-offline-preview/offline-qa.json"
   },
-  "publicSendAuthorized": false,
-  "status": "scientific_manuscript_and_24_original_source_assets_390px_layout_approved_for_draft_only",
-  "notes": "Original content and SI source figures 22, exact-source cover two. Main source figure completeness checked visually. SI Fig S2 source-only intact and complete; SI Fig S3 all four A–D rows restored. Featured Fig1e direct screenshot enlarged and centered; retrospective 1254-square concept uses only original pixel crops, no AI chemistry. Scientific and paragraph placement audited 390px and desktop. Authorizes *draft only*, no group send. After write must independently verify draft/get and live preview.",
-  "reviewedAtBeijing": "2026-10-13T13:47:16+08:00",
-  "materializedCropReviewRequired": true,
-  "strictFigurePlacement": true,
-  "extraArtfacts": {
-    "sourceQA": "audit/wechat-working/2026-10-13-r2-source-image-qa.json",
-    "browserQA": "audit/wechat-working/2026-10-13-r2-offline-preview/offline-qa.json",
-    "scienceQA": "audit/wechat-working/2026-10-13-r2-science-review.json"
+  "referenceExemplar": "public/wechat-featured/2026-10-05.json",
+  "referenceIssue": "The user-provided link was a Tampermonkey historical-text-pilot.userscript, not a WeChat article. User's separately established Oct05 JACS long-form was used as valid narrative model.",
+  "improvement": {
+    "NS": {
+      "sections": 9,
+      "paragraphs": 35,
+      "characters": 4481,
+      "figures": 12,
+      "story": "molecular O/S isostere need → synthetic obstruction → thiourea cascade → In matching → evidence for O atom fate → stage-dependent In DFT → failure boundary"
+    },
+    "NC": {
+      "sections": 9,
+      "paragraphs": 34,
+      "characters": 4109,
+      "figures": 10,
+      "story": "medicinal O/N pairs → amine/Lewis acid mutual binding trap → isolable ring-opened aminoalcohol → failed classic Mitsunobu → BEHT rescue → substrate/amine dual scope → mechanism limits"
+    }
   },
-  "reviewedBodyImages": {
-    "featured": 12,
-    "retrospective": 10
+  "cover": {
+    "featuredOriginalSHA256": "944f2cb54266c114b7399903761c56e7bddc9c036e6ddc07b039934d92914843",
+    "retroOriginalSHA256": "4ecd2188f646f728a0315fb7da154d279d5591f35cf3d0f2e88dfc43de3deef8"
   },
-  "reviewedCoverImages": {
-    "featured": 1,
-    "retrospective": 1
-  },
-  "sourceSHA256Pin": {
-    "sourcePackage": "b89e45794727a006dce0e7149da069a540bb74164dee9e729bd6ed4e217466b8",
-    "natureChemistrySi": "0008587772165a752ad021cd80bfe016ce5baf5c3d79d69f64396c35cb016c7d",
-    "natureSynthesisSi": "ab5ec11498ded7fcd122ca64e5faa22dacf53503302ae9da75059895a639b070"
-  },
-  "actualMobileAudit": {
-    "runId": 38353056214,
+  "unchanged24OriginalImages": true,
+  "mobileBrowserQA": {
+    "run": 38358972058,
+    "cssViewport": 390,
+    "desktopViewport": 740,
     "screenshots": 14,
-    "mobileViewport": "390x844",
-    "desktopViewport": "740x945",
-    "sourceImagesLoaded": 24,
-    "overflow": false,
-    "SI_FigS3_ABCD": true
+    "expectedTotalBodyFigures": 22,
+    "figuresLoaded": 24,
+    "overflow": false
   },
-  "safety": {
-    "massSend": false,
-    "existingOldOct12DraftUnaffected": true,
-    "noDuplicateOct13WithoutCloudIdentity": true
-  },
-  "userSelected20261013": [
-    "10.1038/s44160-026-01189-z",
-    "10.1038/s41557-026-02213-7"
-  ]
+  "exactReadOriginal": [
+    "https://gallery.gczhouwld.com/?edition=2026-10-13&doi=10.1038%2Fs44160-026-01189-z&summary=0",
+    "https://gallery.gczhouwld.com/?doi=10.1038%2Fs41557-026-02213-7&summary=0"
+  ],
+  "expectedExistingMediaId": "KhELYUzvwADwB_l1xH1SWO145961Rlw4fMzLxtij2o_6u5Z6Pq_7PK-nw7ZXBk7V",
+  "expectedStage": "draft_update_same_original_date",
+  "draftWriteAuthorized": true,
+  "publicSendAuthorized": false,
+  "publishId": null,
+  "notes": "R2 cloud draft already exists and remains the sole Oct13 draft. R3 only changes scientific explanation and image semantic placement, not any raster, caption, title, original DOI URL, cover or daily-journal-count widget. Do NOT draft_add or touch prior-day draft. Run one fixed-IP draft/update and draft/get then real mobile preview. Native client not yet checked."
 }
