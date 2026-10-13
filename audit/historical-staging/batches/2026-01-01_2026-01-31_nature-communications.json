@@ -9,42 +9,39 @@
     "from": "2026-01-01",
     "to": "2026-01-31"
   },
-  "checkedAt": "2026-10-12T22:22:39.708Z",
-  "status": "superseded_by_subwindow_split",
+  "checkedAt": "2026-10-13T01:27:14.323Z",
+  "status": "source_enumeration_complete",
   "sourceStatus": {
-    "crossref": [
+    "splitSegments": [
       {
-        "issn": "2041-1723",
-        "lane": "publication",
-        "total": 1049,
-        "count": 1000,
-        "pages": 10,
-        "complete": false
+        "id": "2026-01-01_2026-01-31_nature-communications__2026-01-01_2026-01-15",
+        "range": {
+          "from": "2026-01-01",
+          "to": "2026-01-15"
+        },
+        "candidates": 483
+      },
+      {
+        "id": "2026-01-01_2026-01-31_nature-communications__2026-01-16_2026-01-31",
+        "range": {
+          "from": "2026-01-16",
+          "to": "2026-01-31"
+        },
+        "candidates": 576
       }
-    ],
-    "openalex": {
-      "total": 1059,
-      "count": 1000,
-      "pages": 10,
-      "issues": [
-        "openalex:truncated_or_inconsistent"
-      ]
-    }
+    ]
   },
   "consistency": {
-    "complete": false,
-    "issues": [
-      "issn_2041-1723:publication:crossref:truncated_or_inconsistent",
-      "openalex:truncated_or_inconsistent"
-    ],
+    "complete": true,
+    "issues": [],
     "sourceCounts": {
-      "crossref": 1000,
-      "openalex": 1000
+      "crossref": 1049,
+      "openalex": 1059
     }
   },
-  "candidateCount": 1045,
+  "candidateCount": 1059,
   "alreadyPublished": 0,
-  "unreviewed": 1045,
+  "unreviewed": 1059,
   "records": [
     {
       "doi": "10.1038/s41467-025-64829-6",
@@ -5429,16 +5426,18 @@
         "doi": "10.1038/s41467-025-67406-z"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-025-67406-z",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -8991,14 +8990,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-025-67781-7",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -23940,16 +23941,18 @@
         "doi": "10.1038/s41467-025-68233-y"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-025-68233-y",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -29261,14 +29264,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68339-x",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -29355,16 +29360,18 @@
         "doi": "10.1038/s41467-026-68341-3"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68341-3",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -29514,16 +29521,18 @@
         "doi": "10.1038/s41467-026-68344-0"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68344-0",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -30741,16 +30750,18 @@
         "doi": "10.1038/s41467-026-68371-x"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68371-x",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -31074,16 +31085,18 @@
         "doi": "10.1038/s41467-026-68377-5"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68377-5",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -32719,6 +32732,57 @@
       "publicationDateMayDiffer": false
     },
     {
+      "doi": "10.1038/s41467-026-68408-1",
+      "title": "Author Correction: Ocean fronts and eddies force atmospheric rivers and heavy precipitation in western North America",
+      "authors": [
+        "Xue Liu",
+        "Xiaohui Ma",
+        "Ping Chang",
+        "Yinglai Jia",
+        "Dan Fu",
+        "Guangzhi Xu",
+        "Lixin Wu",
+        "R. Saravanan",
+        "Christina Marie Patricola-DiRosario"
+      ],
+      "date": "2026-01-30",
+      "datePrecision": "day",
+      "createdDate": "2026-01-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Communications",
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "1",
+        "pages": "",
+        "articleNumber": "1205",
+        "doi": "10.1038/s41467-026-68408-1"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41467-026-68408-1",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
       "doi": "10.1038/s41467-026-68409-0",
       "title": "NALIRIFOX versus gemcitabine plus nab-paclitaxel in Chinese patients with advanced pancreatic adenocarcinoma: a randomized, open-label phase II trial",
       "authors": [
@@ -33143,16 +33207,18 @@
         "doi": "10.1038/s41467-026-68418-z"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68418-z",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -34688,16 +34754,18 @@
         "doi": "10.1038/s41467-026-68449-6"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68449-6",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -35280,16 +35348,18 @@
         "doi": "10.1038/s41467-026-68461-w"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68461-w",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -35895,14 +35965,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68472-7",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -36571,16 +36643,18 @@
         "doi": "10.1038/s41467-026-68485-2"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68485-2",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -38491,16 +38565,18 @@
         "doi": "10.1038/s41467-026-68527-9"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68527-9",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -39789,14 +39865,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68558-2",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -41171,14 +41249,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68589-9",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -42329,16 +42409,18 @@
         "doi": "10.1038/s41467-026-68613-y"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68613-y",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -42538,16 +42620,18 @@
         "doi": "10.1038/s41467-026-68617-8"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68617-8",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -42701,14 +42785,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68620-z",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -43032,16 +43118,18 @@
         "doi": "10.1038/s41467-026-68627-6"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68627-6",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -43690,14 +43778,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68645-4",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -44278,14 +44368,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68662-3",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -44325,16 +44417,18 @@
         "doi": "10.1038/s41467-026-68663-2"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68663-2",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -44516,11 +44610,12 @@
         "Qian Ai",
         "Shan Zhou",
         "Kaustubh S. Panse",
-        "Ricardo Alexandrino Garcia",
+        "Ricardo Garcia",
         "Yingjie Zhang"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -44528,20 +44623,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2230",
         "doi": "10.1038/s41467-026-68667-y"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68667-y",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -44774,16 +44871,18 @@
         "doi": "10.1038/s41467-026-68671-2"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68671-2",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -45411,13 +45510,13 @@
       "doi": "10.1038/s41467-026-68684-x",
       "title": "High-throughput methods leveraging robotics and computer vision for the development of therapeutic phage cocktails",
       "authors": [
-        "Taylor J.R. Penke",
+        "Taylor J. R. Penke",
         "Aeron Tynes Hammack",
         "Lana J. McMillan",
         "Ethan Baker",
         "Pearl Wilcock",
         "Nick Healy",
-        "Morgan K. Wall",
+        "Morgan K. Y. Wall",
         "Naomi Chavez",
         "Iain Wright",
         "Hannah H. Tuson",
@@ -45428,10 +45527,11 @@
         "Ava Ghobadian",
         "David G. Ousterout",
         "Nicholas R. Conley",
-        "Paul M. Garofolo"
+        "Paul Garofolo"
       ],
       "date": "2026-01-30",
       "datePrecision": "day",
+      "createdDate": "2026-01-30",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -45439,20 +45539,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2192",
         "doi": "10.1038/s41467-026-68684-x"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68684-x",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -45547,14 +45649,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68686-9",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -45823,14 +45927,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68692-x",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -46080,14 +46186,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68697-6",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -46347,14 +46455,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68703-x",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -46721,18 +46831,18 @@
       "title": "Aeromonas in South Asia: genomic insights into an environmental pathogen and reservoir of antimicrobial resistance",
       "authors": [
         "Nisha Singh",
-        "Rahma Ordofa Golicha",
+        "Rahma O. Golicha",
         "Chetan Thakur",
         "Mathew A. Beale",
         "Matthew J. Dorman",
-        "Adrián Cazares",
-        "Alyce Taylor–Brown",
-        "Fatema‐Tuz Johura",
-        "Mahamud‐ur Rashid",
+        "Adrian Cazares",
+        "Alyce Taylor-Brown",
+        "Fatema-Tuz Johura",
+        "Mahamud-ur Rashid",
         "Shirajum Monira",
         "Fatema Zohura",
         "Tahmina Parvin",
-        "SH Bhuiyan",
+        "Sazzadul Islam Bhuiyan",
         "Marzia Sultana",
         "Balvinder Mohan",
         "Daryl Domman",
@@ -46744,6 +46854,7 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -46751,20 +46862,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2214",
         "doi": "10.1038/s41467-026-68712-w"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68712-w",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -47178,11 +47291,12 @@
         "Jefferson Zhe Liu",
         "Jian-Feng Li",
         "Weishu Liu",
-        "Y.H. Wang",
+        "Yao-Hui Wang",
         "Nicholas X. Fang"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -47190,20 +47304,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2209",
         "doi": "10.1038/s41467-026-68721-9"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68721-9",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -47274,7 +47390,7 @@
         "Nadiya Matukhno",
         "Jens-Christian Drawer",
         "Sven Stephan",
-        "Falk X. Eilenberger",
+        "Falk Eilenberger",
         "Naga Prathibha Jasti",
         "David Cahen",
         "Oleksandr Kyriienko",
@@ -47283,27 +47399,30 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
         "year": 2026,
         "volume": "17",
         "issue": "1",
-        "pages": "1261-1261",
-        "articleNumber": "",
+        "pages": "",
+        "articleNumber": "1261",
         "doi": "10.1038/s41467-026-68723-7"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68723-7",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -47474,10 +47593,11 @@
         "Lin Wu",
         "Yi Jin",
         "Sailing He",
-        "Cheng‐Wei Qiu"
+        "Cheng-Wei Qiu"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -47485,20 +47605,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2217",
         "doi": "10.1038/s41467-026-68728-2"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68728-2",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -47868,16 +47990,18 @@
         "doi": "10.1038/s41467-026-68736-2"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68736-2",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -48995,14 +49119,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68764-y",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -49051,16 +49177,18 @@
         "doi": "10.1038/s41467-026-68765-x"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68765-x",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -49107,16 +49235,18 @@
         "doi": "10.1038/s41467-026-68766-w"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68766-w",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -50480,14 +50610,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68801-w",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -50612,6 +50744,7 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -50619,20 +50752,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2225",
         "doi": "10.1038/s41467-026-68806-5"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68806-5",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -50728,16 +50863,18 @@
         "doi": "10.1038/s41467-026-68809-2"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68809-2",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -50965,16 +51102,18 @@
         "doi": "10.1038/s41467-026-68814-5"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68814-5",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -51201,17 +51340,18 @@
       "authors": [
         "Ao Luo",
         "Yifei Cui",
-        "Wang Guo-dong",
+        "Guodong Wang",
         "Jiayan Nie",
         "Chuansheng Xu",
         "Zihan Zhang",
         "Jun Zhang",
         "Yang Li",
-        "Qi Lin Zhao",
-        "HuaiYu HE"
+        "Qi Zhao",
+        "Huaiyu He"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -51219,20 +51359,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2220",
         "doi": "10.1038/s41467-026-68824-3"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68824-3",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -51504,7 +51646,7 @@
         "Hongbo Li",
         "Tianchen Xia",
         "Qi Jia",
-        "Li Peidong",
+        "Peidong Li",
         "Qing Shan",
         "Changqian Li",
         "Hui Li",
@@ -51512,12 +51654,13 @@
         "Tao Lin",
         "Lianyi Zang",
         "Tao Zhou",
-        "Jin‐Wei Wei",
+        "Jin-Wei Wei",
         "Xiaoping Zhu",
         "Biao Gong"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -51525,20 +51668,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2229",
         "doi": "10.1038/s41467-026-68832-3"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68832-3",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -51556,11 +51701,11 @@
       "authors": [
         "Linos Vandekerckhove",
         "Julie Fox",
-        "Borja Mora‐Peris",
+        "Borja Mora-Peris",
         "Jordi Navarro",
-        "Sabine Danielle Allard",
+        "Sabine D. Allard",
         "Alison J. Uriel",
-        "Santiago Moreno Guillen",
+        "Santiago Moreno Guillén",
         "Marta Boffito",
         "Frank A. Post",
         "Vicente Estrada",
@@ -51570,21 +51715,22 @@
         "Haseeb Rahman",
         "James Clubley",
         "Agatha Treveil",
-        "Jonathan M. G. Chamberlain",
+        "Jonathan Chamberlain",
         "Rory Harrison",
-        "M. Benjamin Hock",
+        "Miriam Hock",
         "Yuan Yuan",
         "Jason Wustner",
         "Sylvie Moureau",
         "Andrew D. Whale",
         "Zoë Wallace",
-        "Praveen Singh",
+        "Praveen K. Singh",
         "Kehmia Titanji",
         "Lucy Dorrell",
-        "Sarah J. Fidler"
+        "Sarah Fidler"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -51592,20 +51738,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2207",
         "doi": "10.1038/s41467-026-68833-2"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68833-2",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -51886,11 +52034,12 @@
         "Pyeongjae Park",
         "Woonghee Cho",
         "Cristian D. Batista",
-        "Je‐Geun Park",
+        "Je-Geun Park",
         "Scott A. Crooker"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -51898,20 +52047,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2212",
         "doi": "10.1038/s41467-026-68843-0"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68843-0",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -51984,10 +52135,11 @@
         "Wei Chen",
         "Xiaole Weng",
         "Zheng Wang",
-        "Le Yi Shi"
+        "Le Shi"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -51995,20 +52147,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2221",
         "doi": "10.1038/s41467-026-68845-y"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68845-y",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -52199,7 +52353,7 @@
       "title": "Printed origami thermoelectric generator achieves > 20 Wm−² from low-grade heat via material and process design",
       "authors": [
         "Nan Luo",
-        "Z. B. Wang",
+        "Zirui Wang",
         "Ajay Kumar Verma",
         "Muhammad Irfan Khan",
         "Leonard Franke",
@@ -52216,27 +52370,30 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
         "year": 2026,
         "volume": "17",
         "issue": "1",
-        "pages": "1259-1259",
-        "articleNumber": "",
+        "pages": "",
+        "articleNumber": "1259",
         "doi": "10.1038/s41467-026-68852-z"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68852-z",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -52363,29 +52520,30 @@
       "doi": "10.1038/s41467-026-68857-8",
       "title": "Early detection of aberrant cell fate and repair using circulating progenitor cells in patients with heterotopic ossification",
       "authors": [
-        "Johanna H. Nunez",
+        "Johanna Nunez",
         "Matilda Holtz",
         "Sneha Korlakunta",
         "Hanil Kang",
-        "Florence Min Lin",
+        "Florence Lin",
         "Hannah Stowe",
         "Chase A. Pagani",
         "Achira Shah",
         "Elise C. Jeffery",
         "Meriam Elhamad",
         "Saeed Nazemidashtarjandi",
-        "Robert J. Tower",
+        "Robert Tower",
         "Ji Hae Choi",
         "Heeseog Kang",
-        "Alexandra K. Callan",
-        "A. Y. Chen",
+        "Alexandra Callan",
+        "Antonia F. Chen",
         "Cenk Ayata",
         "Mehmet Toner",
-        "Benjamin Lévi",
-        "Murat Karabacak"
+        "Benjamin Levi",
+        "N. Murat Karabacak"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -52393,20 +52551,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2231",
         "doi": "10.1038/s41467-026-68857-8"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68857-8",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -52474,32 +52634,35 @@
         "Menghui Ren",
         "Tingting Qi",
         "Changcai Han",
-        "Ying‐Jin Yuan",
+        "Yingjin Yuan",
         "Weigang Chen"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
         "year": 2026,
         "volume": "17",
         "issue": "1",
-        "pages": "1704-1704",
-        "articleNumber": "",
+        "pages": "",
+        "articleNumber": "1704",
         "doi": "10.1038/s41467-026-68861-y"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68861-y",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -52590,16 +52753,18 @@
         "doi": "10.1038/s41467-026-68868-5"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68868-5",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -52726,20 +52891,22 @@
         "Bikash Shrestha",
         "Miguel F. Romero",
         "Juan C. Villada",
-        "Katherine Mcmahon",
-        "Ramūnas Stepanauskas",
+        "Plastid MAG Consortium",
+        "Katherine McMahon",
+        "Ramunas Stepanauskas",
         "Alison Buchan",
-        "Thomas Möck",
-        "Kirsten M. Fisher",
-        "Joan L. Slonczewski",
-        "Luce M. Ward",
-        "Sean A. Crowe",
-        "William P. Inskeep",
-        "Crysten Blaby",
+        "Thomas Mock",
+        "Kirsten Fisher",
+        "Joan Slonczewski",
+        "Luce Ward",
+        "Sean Crowe",
+        "William Inskeep",
+        "Crysten E. Blaby-Haas",
         "Frederik Schulz"
       ],
       "date": "2026-01-30",
       "datePrecision": "day",
+      "createdDate": "2026-01-30",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -52747,20 +52914,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2194",
         "doi": "10.1038/s41467-026-68871-w"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68871-w",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -52799,14 +52968,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68876-5",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -52984,12 +53155,12 @@
         "Zhen Zhang",
         "Wenqiang Li",
         "Fanze Meng",
-        "Yanmin Jin",
+        "Yanming Jin",
         "Wentao Sun",
         "Qina Kuang",
         "Shichao Ren",
         "Wei Liu",
-        "L. Zhang",
+        "Liang Zhang",
         "Lei Qin",
         "Bo Lv",
         "Haiyang Jia",
@@ -52997,6 +53168,7 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -53004,20 +53176,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2215",
         "doi": "10.1038/s41467-026-68881-8"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68881-8",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -53065,16 +53239,18 @@
         "doi": "10.1038/s41467-026-68882-7"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68882-7",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -53175,16 +53351,18 @@
         "doi": "10.1038/s41467-026-68887-2"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68887-2",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -53228,16 +53406,18 @@
         "doi": "10.1038/s41467-026-68888-1"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68888-1",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -53526,14 +53706,16 @@
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68899-y",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -53552,13 +53734,14 @@
         "Zhaoli Liu",
         "Yixuan Gao",
         "Long Chen",
-        "Alistair G.L. Borthwick",
+        "Alistair G. L. Borthwick",
         "Weiliang Sun",
         "Peishen Li",
         "Wen Liu"
       ],
       "date": "2026-01-30",
       "datePrecision": "day",
+      "createdDate": "2026-01-30",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -53566,20 +53749,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2195",
         "doi": "10.1038/s41467-026-68901-7"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68901-7",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -53709,15 +53894,14 @@
         "Pubao Peng",
         "Guizhong Li",
         "Yang Zhang",
-        "Yang Zhang",
         "Xiaobing Liu",
-        "Yongsheng Zhang",
         "Yongsheng Zhang",
         "Haijun Wu",
         "Guodong Tang"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -53725,20 +53909,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2205",
         "doi": "10.1038/s41467-026-68908-0"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68908-0",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -53764,13 +53950,14 @@
         "Chengneng Mi",
         "Gengfan Wu",
         "Fengfang Li",
-        "Yong‐Xin Li",
-        "Kin Kuan Hoi",
+        "Yong-Xin Li",
+        "Kin Kuan HOI",
         "Xiaojing Pan",
         "Xiaoyu Tang"
       ],
       "date": "2026-01-30",
       "datePrecision": "day",
+      "createdDate": "2026-01-30",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -53778,20 +53965,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2196",
         "doi": "10.1038/s41467-026-68910-6"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68910-6",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -53964,11 +54153,12 @@
         "Weijing Tang",
         "Kristen Vallejo",
         "Yu Chen Liu",
-        "Marcos Otero‐García",
+        "Marcos Otero-Garcia",
         "Inma Cobos"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -53976,20 +54166,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2223",
         "doi": "10.1038/s41467-026-68920-4"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68920-4",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -54085,16 +54277,18 @@
         "doi": "10.1038/s41467-026-68922-2"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68922-2",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -54186,6 +54380,7 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -54193,20 +54388,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2471",
         "doi": "10.1038/s41467-026-68925-z"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68925-z",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -54274,6 +54471,52 @@
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68930-2",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41467-026-68934-y",
+      "title": "Architectural and evolutionary features of TE-derived TSSs shape tissue-specific promoter activity in the human genome",
+      "authors": [
+        "Ya Zhang",
+        "Yahan Fan",
+        "Huang Wu",
+        "Xiao-Ou Zhang"
+      ],
+      "date": "2026-01-31",
+      "datePrecision": "day",
+      "createdDate": "2026-01-31",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Communications",
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "1",
+        "pages": "",
+        "articleNumber": "2219",
+        "doi": "10.1038/s41467-026-68934-y"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41467-026-68934-y",
       "sources": [
         "crossref",
         "openalex"
@@ -54406,10 +54649,11 @@
       "title": "Developments and challenges in hit progression within fragment-based drug discovery",
       "authors": [
         "Harold Grosjean",
-        "Philip Charles Biggin"
+        "Philip C. Biggin"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -54417,20 +54661,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2226",
         "doi": "10.1038/s41467-026-68941-z"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68941-z",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -54560,7 +54806,7 @@
         "Ziyu Wang",
         "Feng Xiong",
         "Lifang Liu",
-        "Z. G. Zhen",
+        "Ziting Zhen",
         "Yongkang Jin",
         "Mulin Qin",
         "Jianwen Su",
@@ -54571,6 +54817,7 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -54578,20 +54825,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2228",
         "doi": "10.1038/s41467-026-68951-x"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68951-x",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -54616,12 +54865,13 @@
         "Xing-Chi Li",
         "Haruya Hattori",
         "Qian He",
-        "Ya‐Wen Zhang",
+        "Ya-Wen Zhang",
         "Kyungho Lee",
         "Ning Yan"
       ],
       "date": "2026-01-30",
       "datePrecision": "day",
+      "createdDate": "2026-01-30",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -54629,20 +54879,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2465",
         "doi": "10.1038/s41467-026-68952-w"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68952-w",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -54710,17 +54962,18 @@
         "Wenjun Guo",
         "Ziye Dong",
         "Sarang S. Bhagwat",
-        "Shih‐I Tan",
+        "Shih-I Tan",
         "Zhixin Zhu",
         "Andrew Johnson",
         "Jeremy S. Guest",
-        "Rick Q. Honaker",
+        "Rick Honaker",
         "Dan M. Park",
         "Yongqin Jiao",
         "Huimin Zhao"
       ],
       "date": "2026-01-30",
       "datePrecision": "day",
+      "createdDate": "2026-01-30",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -54728,20 +54981,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2193",
         "doi": "10.1038/s41467-026-68957-5"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68957-5",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -55064,12 +55319,13 @@
         "Fan Yang",
         "Rui Jin",
         "Yuhang Zhong",
-        "Yi-Xiang Wang",
+        "Junjie Wang",
         "Xuankang Wu",
         "Fei Gao"
       ],
       "date": "2026-01-30",
       "datePrecision": "day",
+      "createdDate": "2026-01-30",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -55077,20 +55333,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2200",
         "doi": "10.1038/s41467-026-68967-3"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68967-3",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -55127,16 +55385,18 @@
         "doi": "10.1038/s41467-026-68970-8"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68970-8",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -55156,7 +55416,7 @@
         "Kaixuan Li",
         "Puchen Zhou",
         "Yingyu Cheng",
-        "Yiran Vicky Zhao",
+        "Yiran Zhao",
         "Xia Meng",
         "Yue Niu",
         "Geng Zong",
@@ -55166,6 +55426,7 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -55173,20 +55434,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2206",
         "doi": "10.1038/s41467-026-68972-6"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68972-6",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -55290,16 +55553,18 @@
         "doi": "10.1038/s41467-026-68975-3"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68975-3",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -55319,32 +55584,33 @@
         "Jason M. Link",
         "Alykhan Premji",
         "Serena Zheng",
-        "Michael K. Srienc",
+        "Michael Srienc",
         "McKensie Hammons",
-        "Shineui Kim",
+        "Shineui E. Kim",
         "Luyi Li",
         "Zeyu Liu",
         "Olga Tsvetkova",
         "Evan R. Abt",
-        "Lee S. Rosen",
-        "Stephen S. Kim",
+        "Lee Rosen",
+        "Stephen Kim",
         "Jonathan King",
-        "Oscar Joe Hines",
+        "O. Joe Hines",
         "Mark Girgis",
         "Saeed Sadeghi",
-        "Olga M. Olevsky",
-        "D. Wong",
+        "Olga Olevsky",
+        "Deborah Wong",
         "Lisa Yonemoto",
         "Ann Marie Siney",
         "Kim Kelly",
         "Christine Kivork",
-        "Chi-hong Tseng",
+        "Chi-Hong Tseng",
         "Caius G. Radu",
         "David W. Dawson",
         "Timothy R. Donahue"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -55352,20 +55618,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2232",
         "doi": "10.1038/s41467-026-68976-2"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68976-2",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -55553,6 +55821,7 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -55560,20 +55829,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2204",
         "doi": "10.1038/s41467-026-68991-3"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68991-3",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -55602,6 +55873,7 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -55609,20 +55881,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2216",
         "doi": "10.1038/s41467-026-68995-z"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68995-z",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -55739,27 +56013,30 @@
       ],
       "date": "2026-01-30",
       "datePrecision": "day",
+      "createdDate": "2026-01-30",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
         "year": 2026,
         "volume": "17",
         "issue": "1",
-        "pages": "1257-1257",
-        "articleNumber": "",
+        "pages": "",
+        "articleNumber": "1257",
         "doi": "10.1038/s41467-026-68999-9"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-68999-9",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -55778,7 +56055,7 @@
         "Yuanyuan Huang",
         "Miya Su",
         "Yuwei Zhang",
-        "Jun pan",
+        "Jun Pan",
         "Yu Wang",
         "Dongsheng Chen",
         "Xuran Chen",
@@ -55790,10 +56067,11 @@
         "Wei Jiang",
         "Shuhang Li",
         "Di Xie",
-        "Li Ping Bai"
+        "Li Bai"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -55801,20 +56079,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2227",
         "doi": "10.1038/s41467-026-69000-3"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-69000-3",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -55885,36 +56165,36 @@
         "Sirish Kaushik Lakkaraju",
         "Xiaoliang Zhuo",
         "Yuka Amako",
-        "R. M. Borzilleri",
+        "Robert M. Borzilleri",
         "Srividya B. Balachander",
         "Lisa Chourb",
         "Rita L. Civiello",
-        "Ashok R. Dongré",
+        "Ashok R. Dongre",
         "Daniel P. Downes",
         "Dieter M. Drexler",
         "Brianne M. Dudiak",
         "Liudmila Dzhekieva",
         "Miriam El-Samin",
         "Brian E. Fink",
-        "Kosea S. Frederick",
+        "Kosea Frederick",
         "Cherrie Huang",
         "Javed Khan",
-        "Emma M. Lees",
+        "Emma Lees",
         "Christopher G. Levins",
-        "Courtney T. McCarthy",
+        "Courtney McCarthy",
         "Gabriel A. Mintier",
         "Katherine Mosure",
         "Michael F. Parker",
-        "Ryan L. Powles",
+        "Ryan Powles",
         "Jie Qi",
         "Max Ruzanov",
         "Sanya Sharma",
-        "S. Sheriff",
-        "Ashish Kumar Singh",
+        "Steven Sheriff",
+        "Ashish K. Singh",
         "Justin Stedman",
         "Nicolas Szapiel",
         "Rebecca L. Thompson",
-        "Wayne D. Vaccaro",
+        "Wayne Vaccaro",
         "Tai Wang",
         "Tianfu Yang",
         "Dan You",
@@ -55924,6 +56204,7 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -55931,20 +56212,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2233",
         "doi": "10.1038/s41467-026-69003-0"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-69003-0",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -56029,6 +56312,7 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -56036,20 +56320,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2208",
         "doi": "10.1038/s41467-026-69009-8"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-69009-8",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -56085,16 +56371,18 @@
         "doi": "10.1038/s41467-026-69012-z"
       },
       "abstract": {
-        "available": false,
+        "available": true,
         "displayPermission": "not_verified",
-        "source": "crossref",
+        "source": "crossref+openalex",
         "storedText": false
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-69012-z",
       "sources": [
-        "crossref"
+        "crossref",
+        "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -56111,12 +56399,13 @@
       "title": "Transition to bio-based plastic packaging reveals complex climate–biodiversity trade-offs",
       "authors": [
         "Bilal Erradhouani",
-        "Véronique Coma",
+        "Veronique Coma",
         "Guido Sonnemann",
         "Philippe Loubet"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -56124,20 +56413,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "3630",
         "doi": "10.1038/s41467-026-69016-9"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-69016-9",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -56215,7 +56506,7 @@
         "Jieyong Wang",
         "Jinwei Dong",
         "Qixing Yao",
-        "Li Juan Jing",
+        "Jing Li",
         "Ruixing Hou",
         "Zehong Li",
         "Yitao Zhang",
@@ -56224,27 +56515,30 @@
       ],
       "date": "2026-01-30",
       "datePrecision": "day",
+      "createdDate": "2026-01-30",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
         "year": 2026,
         "volume": "17",
         "issue": "1",
-        "pages": "1488-1488",
-        "articleNumber": "",
+        "pages": "",
+        "articleNumber": "1488",
         "doi": "10.1038/s41467-026-69018-7"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-69018-7",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -56281,6 +56575,54 @@
       },
       "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-69020-z",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41467-026-69025-8",
+      "title": "Supercharging-enhanced nDIA-MS enables global profiling of drug-induced proteome solubility shifts",
+      "authors": [
+        "Yun Xiong",
+        "Huimin Zhang",
+        "Lin Tan",
+        "Bo Wei",
+        "John N. Weinstein",
+        "Philip L. Lorenzi"
+      ],
+      "date": "2026-01-30",
+      "datePrecision": "day",
+      "createdDate": "2026-01-30",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Communications",
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "1",
+        "pages": "",
+        "articleNumber": "2350",
+        "doi": "10.1038/s41467-026-69025-8"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41467-026-69025-8",
       "sources": [
         "crossref",
         "openalex"
@@ -56356,6 +56698,7 @@
       ],
       "date": "2026-01-30",
       "datePrecision": "day",
+      "createdDate": "2026-01-30",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -56363,20 +56706,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2198",
         "doi": "10.1038/s41467-026-69043-6"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-69043-6",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -56454,19 +56799,20 @@
         "Qun Wang",
         "Kangjie Li",
         "Peipei Hao",
-        "Han-Pu Liang",
+        "Hanpu Liang",
         "Yang Huang",
         "Yunbo Wu",
         "Shengtao Cui",
         "Zhe Sun",
-        "T. K. Kim",
-        "Céphise Cacho",
-        "D. S. Dessau",
+        "Timur K. Kim",
+        "Cephise Cacho",
+        "Daniel S. Dessau",
         "Benjamin T. Zhou",
         "Haoxiang Li"
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -56474,20 +56820,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2213",
         "doi": "10.1038/s41467-026-69049-0"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-69049-0",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -56509,7 +56857,7 @@
         "Stuart Newman",
         "Jiraporn Panmanee",
         "Leonard C. Schalkwyk",
-        "Greg Nicholas Brooke",
+        "Greg N. Brooke",
         "Fiona E. Benson",
         "James S. Trimmer",
         "Daryl A. Bosco",
@@ -56521,6 +56869,7 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -56528,20 +56877,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2222",
         "doi": "10.1038/s41467-026-69057-0"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-69057-0",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -56576,6 +56927,7 @@
       ],
       "date": "2026-01-30",
       "datePrecision": "day",
+      "createdDate": "2026-01-30",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -56583,20 +56935,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2199",
         "doi": "10.1038/s41467-026-69062-3"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-69062-3",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -56613,7 +56967,7 @@
       "title": "Insights into the structure and modulation of human TWIK-2",
       "authors": [
         "Qianqian Ma",
-        "Ciria C. Hernández",
+        "Ciria C. Hernandez",
         "Vikas Navratna",
         "Arvind Kumar",
         "Jaimin K. Rana",
@@ -56621,8 +56975,9 @@
         "Abraham Lee",
         "Shyamal Mosalaganti"
       ],
-      "date": "2026-01-30",
+      "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-30",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -56630,20 +56985,77 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2201",
         "doi": "10.1038/s41467-026-69072-1"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-69072-1",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.1038/s41467-026-69088-7",
+      "title": "Ultra-coherent meta-emitter tailors arbitrary thermal wavefront",
+      "authors": [
+        "Rui Chen",
+        "Tianle Chen",
+        "Mengqi Liu",
+        "Xingsi Liu",
+        "Sen Zhang",
+        "Faizan Raza",
+        "Hongguang Dong",
+        "Yongdi Dang",
+        "Zejie Yu",
+        "Huan Hu",
+        "Jianbin Xu",
+        "Cheng-Wei Qiu",
+        "Yungui Ma"
+      ],
+      "date": "2026-01-31",
+      "datePrecision": "day",
+      "createdDate": "2026-01-31",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Communications",
+      "citation": {
+        "year": 2026,
+        "volume": "17",
+        "issue": "1",
+        "pages": "",
+        "articleNumber": "2210",
+        "doi": "10.1038/s41467-026-69088-7"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41467-026-69088-7",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -56667,6 +57079,7 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -56674,20 +57087,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2218",
         "doi": "10.1038/s41467-026-69099-4"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-69099-4",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -56708,6 +57123,7 @@
       ],
       "date": "2026-01-30",
       "datePrecision": "day",
+      "createdDate": "2026-01-30",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -56715,20 +57131,22 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2197",
         "doi": "10.1038/s41467-026-69104-w"
       },
       "abstract": {
         "available": true,
         "displayPermission": "not_verified",
-        "source": "openalex",
+        "source": "crossref+openalex",
         "storedText": false
       },
-      "source": "openalex",
+      "source": "crossref",
       "url": "https://doi.org/10.1038/s41467-026-69104-w",
       "sources": [
+        "crossref",
         "openalex"
       ],
+      "titleSourceConflict": false,
       "ingestionChannel": "historical_backfill",
       "mediaPolicy": "metadata_only",
       "discoveredIn": {
@@ -56759,6 +57177,7 @@
       ],
       "date": "2026-01-31",
       "datePrecision": "day",
+      "createdDate": "2026-01-31",
       "needsPublisherDateVerification": false,
       "journal": "Nature Communications",
       "citation": {
@@ -56766,8 +57185,503 @@
         "volume": "17",
         "issue": "1",
         "pages": "",
-        "articleNumber": "",
+        "articleNumber": "2211",
         "doi": "10.1038/s41467-026-69109-5"
+      },
+      "abstract": {
+        "available": true,
+        "displayPermission": "not_verified",
+        "source": "crossref+openalex",
+        "storedText": false
+      },
+      "source": "crossref",
+      "url": "https://doi.org/10.1038/s41467-026-69109-5",
+      "sources": [
+        "crossref",
+        "openalex"
+      ],
+      "titleSourceConflict": false,
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.18154/rwth-2026-01590",
+      "title": "Demonstration of measurement-free universal logical quantum computation",
+      "authors": [
+        "Friederike Butt",
+        "Ivan Pogorelov",
+        "Freund, Robert",
+        "Alex Steiner",
+        "Marcel Meyer",
+        "Thomas Monz",
+        "Markus Michael Müller"
+      ],
+      "date": "2026-01-01",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Communications",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.18154/rwth-2026-01590"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.18154/rwth-2026-01590",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.18154/rwth-2026-01792",
+      "title": "Divergent photochemical ring-replacement of isoxazoles",
+      "authors": [
+        "Yan Xu",
+        "Lorenzo Poletti",
+        "Enrique M. Arpa",
+        "Baptiste Roure",
+        "Alessandro Ruffoni",
+        "Daniele Leonori"
+      ],
+      "date": "2026-01-01",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Communications",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.18154/rwth-2026-01792"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.18154/rwth-2026-01792",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.18154/rwth-2026-03705",
+      "title": "Passivating pinholes for large-area and high-efficiency silicon solar cells with tunnel oxide passivated contact",
+      "authors": [
+        "Wenqian Zhang",
+        "Kangping Zhang",
+        "Yuhua Bai",
+        "Yuanyuan Zhang",
+        "Kuan Yang",
+        "Bingbing Chen",
+        "Xueliang Yang",
+        "J P Li",
+        "Yanan Sun",
+        "Yan Wu",
+        "lingzhi Li",
+        "Xuning Zhang",
+        "Qing Gao",
+        "Yuke Ren",
+        "Jing Guo",
+        "Lu Zhang",
+        "Dehua Yang",
+        "Jingwei Chen",
+        "Xuan Chang",
+        "Liu, Yanxin",
+        "Xingyuan San",
+        "Dengyuan Song",
+        "Jianhui Chen"
+      ],
+      "date": "2026-01-01",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Communications",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.18154/rwth-2026-03705"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.18154/rwth-2026-03705",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.18154/rwth-2026-04166",
+      "title": "Accelerating hybrid XOR–CNF Boolean satisfiability problems natively with in-memory computing",
+      "authors": [
+        "Haesol Im",
+        "Fabian Böhm",
+        "Giacomo Pedretti",
+        "Noriyuki Kushida",
+        "Moslem Noori",
+        "Valiante, Elisabetta",
+        "Xiangyi Zhang",
+        "Chuhong Yang",
+        "Tinish Bhattacharya",
+        "Xia Sheng",
+        "Jim Ignowski",
+        "Arne Heittmann",
+        "John Paul Strachan",
+        "Masoud Mohseni",
+        "Raymond Beausoleil",
+        "Thomas Van Vaerenbergh",
+        "Ignacio Rozada"
+      ],
+      "date": "2026-01-01",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Communications",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.18154/rwth-2026-04166"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.18154/rwth-2026-04166",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.18154/rwth-2026-04557",
+      "title": "Demonstration of high-fidelity entangled logical qubits using transmons",
+      "authors": [
+        "Arian Vezvaee",
+        "Vinay Tripathi",
+        "Mario Morford-Oberst",
+        "Friederike Butt",
+        "Victor Kasatkin",
+        "Daniel A. Lidar"
+      ],
+      "date": "2026-01-01",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Communications",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.18154/rwth-2026-04557"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.18154/rwth-2026-04557",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.18154/rwth-2026-04982",
+      "title": "Mechanism and mitigation of stainless steel dissolution in LiFSI-based lithium-ion battery electrolytes",
+      "authors": [
+        "Yan, Peng",
+        "Marian Cristian Stan",
+        "Kazem Zhour",
+        "Diddo Diddens",
+        "Christian Wölke",
+        "Rayan Guerdelli",
+        "Martin Winter",
+        "Isidora Cekić-Lasković"
+      ],
+      "date": "2026-01-01",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Communications",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.18154/rwth-2026-04982"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.18154/rwth-2026-04982",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.18154/rwth-2026-05416",
+      "title": "Preparatory phase of large earthquakes illuminated by unsupervised categorization of earthquake catalog features",
+      "authors": [
+        "Sadegh Karimpouli",
+        "Patricia Martínez‐Garzón",
+        "Sebastián Núñez-Jara",
+        "Matteo Picozzi",
+        "Daniele Spallarossa",
+        "Grzegorz Kwiatek",
+        "Georg Dresen",
+        "Marco Bohnhoff",
+        "Gregory C. Beroza"
+      ],
+      "date": "2026-01-01",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Communications",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.18154/rwth-2026-05416"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.18154/rwth-2026-05416",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.18154/rwth-2026-06394",
+      "title": "Slow slip modulates low-frequency seismicity on the Parkfield segment of the San Andreas Fault",
+      "authors": [
+        "Zahra Zali",
+        "Patricia Martínez‐Garzón",
+        "David J. Mencin",
+        "Gregory C. Beroza"
+      ],
+      "date": "2026-01-01",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Communications",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.18154/rwth-2026-06394"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.18154/rwth-2026-06394",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.18154/rwth-2026-08415",
+      "title": "Direct air capture enables sustainable methanol production in water-scarce regions",
+      "authors": [
+        "Henrik Wenzel",
+        "Thomas Schöb",
+        "David S. Sholl",
+        "Jochen Linßen",
+        "Detlef Stolten",
+        "Jann Michael Weinand"
+      ],
+      "date": "2026-01-01",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Communications",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.18154/rwth-2026-08415"
+      },
+      "abstract": {
+        "available": false,
+        "displayPermission": "not_verified",
+        "source": "openalex",
+        "storedText": false
+      },
+      "source": "openalex",
+      "url": "https://doi.org/10.18154/rwth-2026-08415",
+      "sources": [
+        "openalex"
+      ],
+      "ingestionChannel": "historical_backfill",
+      "mediaPolicy": "metadata_only",
+      "discoveredIn": {
+        "from": "2026-01-01",
+        "to": "2026-01-31"
+      },
+      "existingGalleryRecord": false,
+      "reviewStatus": "unfinished",
+      "needsArticleEvidence": true,
+      "publicationDateMayDiffer": false
+    },
+    {
+      "doi": "10.48548/pubdata-2903",
+      "title": "Asynchrony and functional diversity couple herbivore community dynamics to host plant diversity",
+      "authors": [
+        "Ming‐Qiang Wang",
+        "Georg Albert",
+        "Carlo L. Seifert",
+        "Douglas Chesters",
+        "Helge Bruelheide",
+        "Yi Li",
+        "Jing‐Ting Chen",
+        "Andréa Davrinche",
+        "Sylvia Simone Rebekka Haider",
+        "Shan Li",
+        "Goddert von Oheimb",
+        "Tobias Proß",
+        "Keping Ma",
+        "Xiaojuan Liu",
+        "Arong Luo",
+        "Andreas Schuldt",
+        "Chao-Dong Zhu"
+      ],
+      "date": "2026-01-15",
+      "datePrecision": "day",
+      "needsPublisherDateVerification": false,
+      "journal": "Nature Communications",
+      "citation": {
+        "year": 2026,
+        "volume": "",
+        "issue": "",
+        "pages": "",
+        "articleNumber": "",
+        "doi": "10.48548/pubdata-2903"
       },
       "abstract": {
         "available": true,
@@ -56776,7 +57690,7 @@
         "storedText": false
       },
       "source": "openalex",
-      "url": "https://doi.org/10.1038/s41467-026-69109-5",
+      "url": "https://doi.org/10.48548/pubdata-2903",
       "sources": [
         "openalex"
       ],
@@ -56792,6 +57706,8 @@
       "publicationDateMayDiffer": false
     }
   ],
+  "completedBySubwindows": true,
+  "duplicateDoisAcrossSubwindows": 0,
   "noFormalPublication": true,
   "noMediaWrites": true,
   "noPDFAcquisition": true,
