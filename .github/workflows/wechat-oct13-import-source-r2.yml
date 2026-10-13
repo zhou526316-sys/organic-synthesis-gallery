@@ -1,0 +1,58 @@
+name: WeChat Oct13 stage original images and science (no draft)
+on:
+  push:
+    branches: [wechat-oct13-two-nature-r2-source-media]
+    paths:
+      - 'audit/automation-triggers/wechat-oct13-import-request.json'
+permissions:
+  contents: write
+concurrency:
+  group: wechat-oct13-owner-original-science-staging
+  cancel-in-progress: false
+jobs:
+  owner-original-source-reconstruction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install image verifier
+        run: python3 -m pip install -q 'Pillow>=10,<13'
+      - name: Retrieve user-uploaded immutable R2 review image bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_URL="$(python3 - <<'PY'
+          import json
+          r=json.load(open('audit/automation-triggers/wechat-oct13-import-request.json'))
+          assert r['action']=='stage_source_authentic_media_for_science_and_visual_review'
+          assert r['publicSendAuthorized'] is False and r['wechatWriteAuthorized'] is False
+          assert r['sourcePackageUrl'].startswith('https://at.adobe.com/')
+          print(r['sourcePackageUrl'])
+          PY
+          )"
+          curl -fsSL --retry 3 --retry-delay 2 --connect-timeout 12 --max-time 180 \
+            -o /tmp/wechat-oct13-r2-source.zip "$SOURCE_URL"
+          python3 ops/wechat-publisher/import-oct13-source-package-r2.py
+      - name: Stage exact source PNGs and prose only on isolated branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          BR='wechat-oct13-two-nature-r2-source-media'
+          for attempt in 1 2 3 4; do
+            git fetch origin "$BR"
+            git reset --hard "origin/$BR"
+            cp -a /tmp/wechat-oct13-r2-reviewed-tree/. .
+            git add -- public/wechat-assets/reviewed/2026-10-13-r2/ \
+              public/wechat-editions/2026-10-13.json public/wechat-featured/2026-10-13.json \
+              public/wechat-retrospective/oxetane-to-azetidine-skeletal-editing-20261013.json \
+              audit/wechat-working/2026-10-13-r2-* audit/wechat-working/2026-10-13-review-gate.json
+            if git diff --cached --quiet;then exit 0;fi
+            git commit -m 'audit: stage exact original Oct13 Nature chemical figures and source science manuscripts'
+            if git push origin HEAD:"$BR";then exit 0;fi
+            sleep 2
+          done
+          exit 1
