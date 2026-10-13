@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gallery Historical Text Search — Local Pilot
 // @namespace    https://gallery.gczhouwld.com/
-// @version      0.2.2
+// @version      0.2.3
 // @description  One-click independent historical text batch; DOI/license gated local search, no TOC/figures/PDF writes.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -224,8 +224,12 @@
   const BATCH_MAX_RESPONSE_CHARS=350000;
   const BATCH_MIN_GAP_MS=2000;
   const BATCH_DOI_LIMIT=100000;
+  // Keep final-result classification aligned with Worker diagnostic reason enums.
+  // A genuine publisher 403/429 must not become 'invalid_response'.
   const BATCH_ERRORS=new Set(['doi_unverified','publisher_unreachable','page_unavailable',
-    'license_not_verified','body_missing','too_large','timeout','invalid_response','storage_failure',
+    'page_access_blocked','page_http_error','publisher_no_response',
+    'publisher_script_not_confirmed','license_not_verified','body_missing','too_large',
+    'timeout','invalid_response','storage_failure','local_storage_failed',
     'response_hash_mismatch','capture_failed','unsupported_publisher']);
   let batchActive=false,batchPaused=false,batchTab=null,batchStatus=null,batchRunId='',batchUi=null;
   let batchDiagBusy=false,batchDiagStarted=false;
@@ -408,12 +412,12 @@
     });
   }
   const BATCH_STATUS_LABELS={
-    saved_local:'已存入本机',license_not_verified:'未核实本文许可',
+    saved_local:'已存入本机',license_not_verified:'文章网页尚未识别到可验证许可（不代表无权阅读）',
     body_missing:'科学正文不足',doi_unverified:'出版社 DOI 不匹配',
     publisher_unreachable:'未能打开出版社页面',publisher_no_response:'出版社标签页未回传',
     timeout:'出版社页面无回执（原因未明）',page_unavailable:'文章页不可用',
-    page_access_blocked:'页面要求登录或人工验证',page_http_error:'已观察到页面 HTTP 错误',
-    too_large:'正文数据超过体积上限',invalid_response:'采集回执结构无效',
+    page_access_blocked:'检测到登录／人机验证页',page_http_error:'已观察到出版社页面 HTTP 错误',
+    too_large:'正文数据超过体积上限',invalid_response:'采集回执无法识别（与网页 HTTP 错误不同）',
     capture_failed:'正文提取异常',unsupported_publisher:'不支持该出版社页面',
     response_hash_mismatch:'正文来源哈希不一致',
     storage_failure:'本机数据库写入未完成',local_storage_failed:'本机存储不可用',
@@ -560,15 +564,19 @@
     if([403,429].includes(Number(prior.httpStatus||0)))return manualBlocked===true;
     return true;
   }
+  function batchNormalizedStatus(raw){
+    return BATCH_ERRORS.has(String(raw||''))?String(raw):'invalid_response';
+  }
   function batchStageForStatus(status){
     const code=String(status||'');
     if(code==='license_not_verified')return 'license';
     if(code==='body_missing'||code==='capture_failed'||code==='too_large')return 'body_extract';
     if(code==='doi_unverified')return 'publisher_doi';
+    if(['page_http_error','page_access_blocked','page_unavailable'].includes(code))return 'publisher_page';
     if(code==='response_hash_mismatch')return 'hash_verify';
     if(code==='storage_failure'||code==='local_storage_failed'||code==='saved_local')return 'local_store';
     if(code==='publisher_unreachable')return 'publisher_open';
-    if(code==='timeout'||code==='publisher_no_response'||code==='publisher_script_not_confirmed')
+    if(code==='timeout'||code==='publisher_no_response'||code==='publisher_script_not_confirmed'||code==='invalid_response')
       return 'publisher_wait';
     return 'finished';
   }
@@ -698,7 +706,7 @@
       const progress=[s.state==='running'?'运行中':s.state==='paused'?'已暂停':s.state==='finished'?'本轮结束':'未启动',
         '已尝试 '+Number(s.attempted||0)+' / '+Number(s.total||0),
         '本机新增 '+Number(s.saved||0)+'；已存在 '+Number(s.existing||0),
-        '无权限/无许可 '+Number(s.rightsPending||0)+'；其他受阻 '+Number(s.failed||0),
+        '许可待核实 '+Number(s.rightsPending||0)+'；其他受阻 '+Number(s.failed||0),
         s.currentStage?'当前阶段：'+s.currentStage:'',
         s.lastDoi?'当前/最近：'+s.lastDoi:'',
         s.lastError?'本地错误：'+String(s.lastError).slice(0,85):''].filter(Boolean);
@@ -876,7 +884,7 @@
         }
         if(result.status==='paused')break;
         attempted++;
-        let status=BATCH_ERRORS.has(result.status)?result.status:'invalid_response';
+        let status=batchNormalizedStatus(result.status);
         const evidenceMeta={pageDoiVerified:result.pageDoiVerified===true,
           sectionCount:Number(result.sectionCount||0),evidenceChars:Number(result.evidenceChars||0),
           httpStatus:Number(result.httpStatus||0)||null};
